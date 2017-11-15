@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <CSP id="PIC32CZ2038CA70144">
-    <CoreModule path="${__FRAMEWORK_ROOT}/framework/core"/>
+    <CoreModule path="${__FRAMEWORK_ROOT}/core"/>
     <DataSheet name="Some datasheet number"/>
-    <ADTF path="PIC32CZ2038CA70144.atdf"/>
 </CSP>
