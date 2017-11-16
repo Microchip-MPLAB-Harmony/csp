@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Module name="Core" id="ba6d8738-aec0-45f0-bad4-307aae573c25" version="1.0.0">
+    <ConfigRoot path="config/module.py"/>
+</Module>
