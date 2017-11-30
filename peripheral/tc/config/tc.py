@@ -1,7 +1,7 @@
 def instantiateComponent(tcComponent):
 	tcMenu = tcComponent.createMenuSymbol(None, None)
-	tcMenu.setLabel("TC Driver")
+	tcMenu.setLabel("Hardware Settings")
 	
-	usetimer = tcComponent.createBooleanSymbol("TIMER_OPTION_FOO", tcMenu)
-	usetimer.setLabel("Use Timer Option Foo?")
-	usetimer.setDescription("Enables timer driver option foo")
+	tcConfig1 = tcComponent.createBooleanSymbol("Config1", tcMenu)
+	tcConfig1.setLabel("Config 1")
+	tcConfig1.setDescription("Set value for Config 1")

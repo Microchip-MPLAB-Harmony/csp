@@ -1,8 +1,11 @@
 def instantiateComponent(usartComponent):
 
-	usartMenu = usartComponent.createMenuSymbol(None, None)
-	usartMenu.setLabel("USART ")
+	num = usartComponent.getID()[-1:]
+	print("Running USART" + str(num))
 
-	useUsart = usartComponent.createBooleanSymbol("USE_USART_", usartMenu)
-	useUsart.setLabel("Use USART ")
+	usartMenu = usartComponent.createMenuSymbol(None, None)
+	usartMenu.setLabel("Hardware Settings ")
+
+	UsartConfig1 = usartComponent.createBooleanSymbol("Config1", usartMenu)
+	UsartConfig1.setLabel("Config 1")
 
