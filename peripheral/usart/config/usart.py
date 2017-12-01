@@ -7,5 +7,6 @@ def instantiateComponent(usartComponent):
 	usartMenu.setLabel("Hardware Settings ")
 
 	UsartConfig1 = usartComponent.createBooleanSymbol("Config1", usartMenu)
+	print(UsartConfig1)
 	UsartConfig1.setLabel("Config 1")
 
