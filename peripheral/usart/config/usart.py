@@ -6,7 +6,18 @@ def instantiateComponent(usartComponent):
 	usartMenu = usartComponent.createMenuSymbol(None, None)
 	usartMenu.setLabel("Hardware Settings ")
 
-	UsartConfig1 = usartComponent.createBooleanSymbol("Config1", usartMenu)
-	print(UsartConfig1)
-	UsartConfig1.setLabel("Config 1")
+	usartConfig1 = usartComponent.createBooleanSymbol("Config1", usartMenu)
+	print(usartConfig1)
+	usartConfig1.setLabel("Config 1")
+
+	usartIndex = usartComponent.createIntegerSymbol("INDEX", usartMenu)
+	usartIndex.setVisible(False)
+	usartIndex.setDefaultValue(int(num))
+
+	configName = Variables.get("__CONFIGURATION_NAME")
+
+	usartSource1File = usartComponent.createFileSymbol(None, None)
+	usartSource1File.setSourcePath("../peripheral/usart/templates/usart.c.ftl")
+	usartSource1File.setDestPath("system_config/" + configName + "/usart" + str(num) + ".c")
+	usartSource1File.setType("SOURCE")
 
