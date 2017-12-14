@@ -1,4 +1,4 @@
-print("Loading PIC32CZ2038CA70144 Pin Manager")
+print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 
 portsMenu = coreComponent.createMenuSymbol(None, None)
 portsMenu.setLabel("Ports")
