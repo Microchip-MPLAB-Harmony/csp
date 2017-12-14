@@ -5,6 +5,14 @@ if (Peripheral.moduleExists("USART")):
 		usartComponent.addCapability("USART")
 else:
 	print("No USART peripheral")
+	
+if (Peripheral.moduleExists("UART")):
+	for uartCount in range(0, Peripheral.getModuleInstanceCount("UART")):
+		print("create component: Peripheral UART" + str(uartCount))
+		uartComponent = Module.CreateComponent("uart"+str(uartCount), "UART"+str(uartCount), "/Peripherals/UART/", "../peripheral/uart/config/uart.py")
+		uartComponent.addCapability("USART")
+else:
+	print("No UART peripheral")
 
 if (Peripheral.moduleExists("TC")):
 	for tcCount in range(0, Peripheral.getModuleInstanceCount("TC")):
