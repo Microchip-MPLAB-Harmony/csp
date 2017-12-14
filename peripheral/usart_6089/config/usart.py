@@ -17,7 +17,7 @@ def instantiateComponent(usartComponent):
 	configName = Variables.get("__CONFIGURATION_NAME")
 
 	usartSource1File = usartComponent.createFileSymbol(None, None)
-	usartSource1File.setSourcePath("../peripheral/usart/templates/usart.c.ftl")
+	usartSource1File.setSourcePath("../peripheral/usart_6089/templates/usart.c.ftl")
 	usartSource1File.setOutputName("usart" + str(num) + ".c")
 	usartSource1File.setDestPath("system_config/" + configName +"/peripheral/usart/")
 	usartSource1File.setProjectPath("system_config/" + configName +"/peripheral/usart/")

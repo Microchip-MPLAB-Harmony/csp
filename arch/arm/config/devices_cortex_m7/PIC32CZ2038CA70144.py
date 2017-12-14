@@ -1,10 +1,10 @@
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 # load clock manager information
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/pmc/config/pmc.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_e70/config/clk.py")
 
 # load pin manager information
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio/config/pio.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
 
 devMenu = coreComponent.createMenuSymbol(None, None)
 devMenu.setLabel("Device & Project Configuration")
