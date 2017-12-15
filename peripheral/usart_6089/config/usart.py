@@ -49,6 +49,16 @@ def instantiateComponent(usartComponent):
 	usartStopBits.setLabel(stopBitsField.getDescription())
 	usartStopBits.setDefaultValue("_1_BIT")
 
+	names = stopBitsValueGroup.getValueNames()
+	s = "Description:\n\r"
+	for name in names:
+		value = stopBitsValueGroup.getValue(name)
+		s = s+("{} ({}) = {}\n\r".format(value.getName(), value.getValue(), value.getDescription()))
+	print s
+	usartStopBits.setDescription(s)
+
+
+
 	usartSyncMode = usartComponent.createBooleanSymbol("sync", usartMenu)
 	print(usartSyncMode)
 	usartSyncMode.setLabel(syncField.getDescription())
