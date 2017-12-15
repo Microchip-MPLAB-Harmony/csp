@@ -1,3 +1,4 @@
+# add USART PLib =======================================================
 if (Peripheral.moduleExists("USART")):
 	usartModule = Register.getRegisterModule("USART")
 	for usartCount in range(0, Peripheral.getModuleInstanceCount("USART")):
@@ -6,7 +7,7 @@ if (Peripheral.moduleExists("USART")):
 		usartComponent.addCapability("USART")
 else:
 	print("No USART peripheral")
-
+# add TC PLib ==========================================================
 if (Peripheral.moduleExists("TC")):
 	tcModule = Register.getRegisterModule("TC")
 	for tcCount in range(0, Peripheral.getModuleInstanceCount("TC")):
