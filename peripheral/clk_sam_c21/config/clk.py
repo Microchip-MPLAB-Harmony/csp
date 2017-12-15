@@ -1,4 +1,4 @@
-print("Loading PIC32CZ2038CA70144 Clock Manager")
+print("Loading Clock Manager for " + Variables.get("__PROCESSOR"))
 
 clkMenu = coreComponent.createMenuSymbol(None, None)
 clkMenu.setLabel("Clock")

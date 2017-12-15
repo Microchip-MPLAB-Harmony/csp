@@ -61,14 +61,14 @@ def instantiateComponent(usartComponent):
 	configName = Variables.get("__CONFIGURATION_NAME")
 
 	usartHeader1File = usartComponent.createFileSymbol(None, None)
-	usartHeader1File.setSourcePath("../peripheral/usart/templates/plib_usart.h.ftl")
+	usartHeader1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.h.ftl")
 	usartHeader1File.setOutputName("plib_usart" + str(num) + ".h")
 	usartHeader1File.setDestPath("system_config/" + configName +"/peripheral/usart/")
 	usartHeader1File.setProjectPath("system_config/" + configName +"/peripheral/usart/")
 	usartHeader1File.setType("HEADER")
 	
 	usartSource1File = usartComponent.createFileSymbol(None, None)
-	usartSource1File.setSourcePath("../peripheral/usart/templates/plib_usart.c.ftl")
+	usartSource1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.c.ftl")
 	usartSource1File.setOutputName("plib_usart" + str(num) + ".c")
 	usartSource1File.setDestPath("system_config/" + configName +"/peripheral/usart/")
 	usartSource1File.setProjectPath("system_config/" + configName +"/peripheral/usart/")
