@@ -34,3 +34,21 @@ if (Peripheral.moduleExists("EFC")):
 	eefcComponent.addCapability("EEFC")
 else:
 	print("No EEFC peripheral")
+
+# add WDT PLib ==========================================================
+if (Peripheral.moduleExists("WDT")):
+	wdtModule = Register.getRegisterModule("WDT")
+	print("create component: Peripheral WDT" + " (ID = " + wdtModule.getID() + ")")
+	wdtComponent = Module.CreateComponent("WDT", "WDT", "/Peripherals/WDT/", "../peripheral/wdt_" + wdtModule.getID() + "/config/wdt.py")
+	wdtComponent.addCapability("WDT")
+else:
+	print("No WDT peripheral")
+
+#add RSWDT PLib ==========================================================
+if (Peripheral.moduleExists("RSWDT")):
+	rswdtModule = Register.getRegisterModule("RSWDT")
+	print("create component: Peripheral RSWDT" + " (ID = " + rswdtModule.getID() + ")")
+	rswdtComponent = Module.CreateComponent("RSWDT", "RSWDT", "/Peripherals/RSWDT/", "../peripheral/rswdt_" + rswdtModule.getID() + "/config/rswdt.py")
+	rswdtComponent.addCapability("RSWDT")
+else:
+	print("No RSWDT peripheral")
