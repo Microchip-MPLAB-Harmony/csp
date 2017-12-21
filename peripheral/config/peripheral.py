@@ -52,3 +52,13 @@ if (Peripheral.moduleExists("RSWDT")):
 	rswdtComponent.addCapability("RSWDT")
 else:
 	print("No RSWDT peripheral")
+
+# add TRNG PLib ==========================================================
+if (Peripheral.moduleExists("TRNG")):
+	trngModule = Register.getRegisterModule("TRNG")
+	print("create component: Peripheral TRNG" + " (ID = " + trngModule.getID() + ")")
+	trngComponent = Module.CreateComponent("TRNG", "TRNG", "/Peripherals/TRNG/", "../peripheral/trng_" + trngModule.getID() + "/config/trng.py")
+	trngComponent.addCapability("TRNG")
+else:
+	print("No TRNG peripheral")
+
