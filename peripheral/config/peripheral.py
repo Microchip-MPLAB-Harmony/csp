@@ -26,3 +26,11 @@ if (Peripheral.moduleExists("USART")):
 else:
 	print("No USART peripheral")
 
+# add EEFC PLib ==========================================================
+if (Peripheral.moduleExists("EFC")):
+	eefcModule = Register.getRegisterModule("EFC")
+	print("create component: Peripheral EEFC" + " (ID = " + eefcModule.getID() + ")")
+	eefcComponent = Module.CreateComponent("EEFC", "EEFC", "/Peripherals/EEFC/", "../peripheral/eefc_" + eefcModule.getID() + "/config/eefc.py")
+	eefcComponent.addCapability("EEFC")
+else:
+	print("No EEFC peripheral")
