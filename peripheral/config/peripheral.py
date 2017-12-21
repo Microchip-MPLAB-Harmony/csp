@@ -62,3 +62,12 @@ if (Peripheral.moduleExists("TRNG")):
 else:
 	print("No TRNG peripheral")
 
+# add RTCC PLib ==========================================================
+if (Peripheral.moduleExists("RTC")):
+	rtccModule = Register.getRegisterModule("RTC")
+	print("create component: Peripheral RTCC" + " (ID = " + rtccModule.getID() + ")")
+	rtccComponent = Module.CreateComponent("RTCC", "RTCC", "/Peripherals/RTCC/", "../peripheral/rtcc_" + rtccModule.getID() + "/config/rtcc.py")
+	rtccComponent.addCapability("RTCC")
+else:
+	print("No RTCC peripheral")
+
