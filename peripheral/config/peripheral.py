@@ -1,32 +1,34 @@
 import os.path
 
-periphlNames = Register.getRegisterModuleNames()
+periphNames = map(str, Register.getRegisterModuleNames())
+periphNames.sort()
 
-for periphCount in range(0, Register.getRegisterModuleCount()):
-	periphName = str(periphlNames[periphCount])
+for periphName in periphNames:
 	periphModule =  Register.getRegisterModule(periphName)
 	periphInstanceCount = Peripheral.getModuleInstanceCount(periphName)
-	periphName = periphName.lower()
 	periphID = periphModule.getID()
-	periphScript = Variables.get("__CSP_DIR") + "/peripheral/" + periphName + "_" + periphID + "/config/" + periphName + ".py"
+	periphScript = "/peripheral/" + periphName.lower() + "_" + periphID + \
+					"/config/" + periphName.lower() + ".py"
 
 	# port/pio is instantiated as part of system service and not part of peripherals
-	if (periphName == "port" or periphName == "pio"):
+	if (periphName == "PORT" or periphName == "PIO"):
 		print("CSP: System Peripheral [" + periphName + " id=" + periphID + "]")
 		continue
 
 	# Check if peripheral has implementation
-	if (os.path.isfile(periphScript)):
+	if (os.path.isfile(Variables.get("__CSP_DIR") + periphScript)):
 		for periphInstance in range(0, periphInstanceCount):
-			print("CSP: create component: Peripheral " + periphName + str(periphInstance) + " (ID = " + periphID + ")")
-			periphComponent = Module.CreateComponent(periphName+str(periphInstance), periphName.upper()+str(periphInstance), "/Peripherals/"+periphName.upper()+"/", "../peripheral/"+periphName+"_"+periphID+"/config/"+periphName+".py")
-
-			if (periphName == "uart"):
+			print("CSP: create component: Peripheral " + periphName + 
+					str(periphInstance) + " (ID = " + periphID + ")")
+			periphComponent = Module.CreateComponent(periphName.lower() +
+							str(periphInstance), periphName.upper() +
+							str(periphInstance), "/Peripherals/" +
+							periphName.upper() + "/", ".." + periphScript)
+			periphComponent.addCapability(periphName)
+			if (periphName == "UART"):
 				periphComponent.addCapability("USART")
-			else:
-				periphComponent.addCapability(periphName.upper())
-
 	else:
-		print("CSP: Peripheral [" + periphName + " id=" + periphID + "] is not supported in MCC")
+		print("CSP: Peripheral [" + periphName + " id=" + periphID + 
+				"] is not supported in MCC")
 
 
