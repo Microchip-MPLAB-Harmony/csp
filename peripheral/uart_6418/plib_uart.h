@@ -51,8 +51,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_UARTx_H    // Guards against multiple inclusion
-#define _PLIB_UARTx_H
+#ifndef PLIB_UARTx_H    // Guards against multiple inclusion
+#define PLIB_UARTx_H
 
 
 // *****************************************************************************
@@ -649,4 +649,4 @@ bool UARTx_ReadyStatusGet( UART_DIRECTION direction );
 #endif
 // DOM-IGNORE-END
 
-#endif //_PLIB_UARTx_H
+#endif //PLIB_UARTx_H
