@@ -39,6 +39,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #ifndef _EEFC_H    // Guards against multiple inclusion
 #define _EEFC_H
+#endif
 
 // *****************************************************************************
 // *****************************************************************************
@@ -82,6 +83,7 @@ EEFC_BUSY = 0x5
 } EEFC_STATUS;
 
 <#if eefcEnableInterrupt == true>
+	<#lt>typedef void (*EEFC_CALLBACK)(uintptr_t context);
 	<#lt>typedef struct
 	<#lt>{
 		<#lt>	EEFC_CALLBACK          callback;
@@ -89,7 +91,7 @@ EEFC_BUSY = 0x5
 	<#lt>} EEFC_OBJECT ;
 
 	<#lt>EEFC_OBJECT eefc;
-	<#lt>typedef void (*EEFC_CALLBACK)(uintptr_t context);
+	
 </#if>
 
 void EEFC_WriteQuadWord( uint32_t address, uint32_t* data );
@@ -107,8 +109,10 @@ void EEFC_RegionUnlock(uint32_t address);
 </#if>
 
 <#if eefcEnableInterrupt == true>
-<#lt>void inline EEFC_OPR_Handler( void )
+<#lt>static void inline EEFC_OPR_Handler( void )
 <#lt>{
+	<#lt>	uint32_t ul_fmr = EFC->EEFC_FMR;
+	<#lt>	EFC->EEFC_FMR = ( ul_fmr & (~EEFC_FMR_FRDY));
 	<#lt>	if(eefc.callback != NULL)
 	<#lt>        {
 		<#lt>            eefc.callback(eefc.context);
@@ -121,4 +125,3 @@ void EEFC_RegionUnlock(uint32_t address);
 }
 #endif
 // DOM-IGNORE-END
-#endif
