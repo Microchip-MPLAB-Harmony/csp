@@ -49,7 +49,9 @@ void EEFC_EraseRow( uint32_t address )
 
 	/*Calculate the Page number to be passed for FARG register*/
 	page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
-
+	<#if eefcEnableInterrupt == true>
+		<#lt>_EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY;
+	</#if>
 	/* Issue the FLASH erase operation*/
 	_EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_EPA|EEFC_FCR_FARG(page_number|0x2)|EEFC_FCR_FKEY_PASSWD);
 
@@ -65,7 +67,9 @@ void EEFC_WritePage( uint32_t address, uint32_t* data )
 	{
 	*((uint32_t *)( IFLASH_ADDR + ( page_number * IFLASH_PAGE_SIZE ) + i )) =	*(( data++ ));
 	}
-
+	<#if eefcEnableInterrupt == true>
+		<#lt>	_EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY;
+	</#if>
 	/* Issue the FLASH write operation*/
 	_EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
@@ -86,7 +90,9 @@ void EEFC_WriteQuadWord( uint32_t address, uint32_t* data )
 	{
 	*((uint32_t *)(( address ) + i )) =	*((uint32_t *)( data++ ));
 	}
-
+	<#if eefcEnableInterrupt == true>
+		<#lt>	_EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY;
+	</#if>
 	/* Issue the FLASH write operation*/
 	_EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 	//status = _EFC_REGS->EEFC_FSR.w;
@@ -98,7 +104,7 @@ uint16_t EEFC_GetPageSize( void )
 {
 	return 0x200;
 }
-EEFC_Status EEFC_StatusGet( void )
+EEFC_STATUS EEFC_StatusGet( void )
 {
 	uint32_t status =  _EFC_REGS->EEFC_FSR.w;
 	if (status & EEFC_FSR_FLERR_Msk)
@@ -135,6 +141,9 @@ void EEFC_RegionLock(uint32_t address)
 	volatile uint16_t page_number;
 	/*Calculate the Page number to be passed for FARG register*/
 	page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
+	<#if eefcEnableInterrupt == true>
+		<#lt>	_EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY;
+	</#if>
 	_EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_SLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 }
 
@@ -143,6 +152,9 @@ void EEFC_RegionUnlock(uint32_t address)
 	volatile uint16_t page_number;
 	/*Calculate the Page number to be passed for FARG register*/
 	page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
+	<#if eefcEnableInterrupt == true>
+		<#lt>	_EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY;
+	</#if>
 	_EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_CLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 }
 
