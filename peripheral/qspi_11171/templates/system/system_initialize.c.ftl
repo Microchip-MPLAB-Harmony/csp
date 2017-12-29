@@ -1,0 +1,1 @@
+    QSPI${INDEX?string}_Initialize();
