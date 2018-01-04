@@ -59,7 +59,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 <#if trngEnableInterrupt == true>
-	<#lt>typedef void (*TRNG_CALLBACK)(uintptr_t context);
+	<#lt>typedef void (*TRNG_CALLBACK)(uintptr_t context, uint32_t random);
 </#if>
 
 <#if trngEnableInterrupt == true>
@@ -83,6 +83,7 @@ void TRNG_RandomNumberGenerate( void );
 <#if trngEnableInterrupt == true>
 	<#lt>void inline TRNG_DATARDY_Handler( void )
 	<#lt>{
+	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD;
 	<#lt>	TRNG.data = _TRNG_REGS->TRNG_ODATA.w;
 	<#lt>	if(TRNG.callback != NULL)
     <#lt>        {

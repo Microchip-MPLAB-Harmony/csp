@@ -139,13 +139,13 @@ void TRNG_RandomNumberGenerate( void );
 	uint32_t TRNG_ReadData( void )
 	
  Summary:
-	Reads the generated Random number from the output register of TRNG peripheral.
+	Generates and return a 32-bit random number 
 	
  Description:
 	This function returns a 32-bit random integer.
 	
  Precondition:
-	TRNG_RandomNumberGenerate should be called prior to reading data
+	None
 	
  Parameters:
 	None.
@@ -155,7 +155,6 @@ void TRNG_RandomNumberGenerate( void );
 	
  Example:
 	<code>
-		TRNG_TRNG_RandomNumberGenerate();
 		uint32_t data = TRNG_ReadData();
 	</code>
 	
