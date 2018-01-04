@@ -11,21 +11,20 @@ def instantiateComponent(rtccComponent):
 	rtccInterrupt.setLabel("Enable Alarm")
 	rtccInterrupt.setDefaultValue(True)
 	
-	configName = Variables.get("__CONFIGURATION_NAME")
 	#Generate Output Header
 	rtccHeaderFile = rtccComponent.createFileSymbol(None, None)
 	rtccHeaderFile.setSourcePath("../peripheral/rtcc_6056/templates/plib_rtcc.h.ftl")
 	rtccHeaderFile.setOutputName("plib_rtcc.h")
 	rtccHeaderFile.setOverwrite(True)
-	rtccHeaderFile.setDestPath("system_config/" + configName +"/peripheral/rtcc/")
-	rtccHeaderFile.setProjectPath("system_config/" + configName +"/peripheral/rtcc/")
+	rtccHeaderFile.setDestPath("peripheral/rtcc/")
+	rtccHeaderFile.setProjectPath("peripheral/rtcc/")
 	rtccHeaderFile.setType("HEADER")
 	#Generate Output source
 	rtccSourceFile = rtccComponent.createFileSymbol(None, None)
 	rtccSourceFile.setSourcePath("../peripheral/rtcc_6056/templates/plib_rtcc.c.ftl")
 	rtccSourceFile.setOutputName("plib_rtcc.c")
 	rtccSourceFile.setOverwrite(True)
-	rtccSourceFile.setDestPath("system_config/" + configName +"/peripheral/rtcc/")
-	rtccSourceFile.setProjectPath("system_config/" + configName +"/peripheral/rtcc/")
+	rtccSourceFile.setDestPath("peripheral/rtcc/")
+	rtccSourceFile.setProjectPath("peripheral/rtcc/")
 	rtccSourceFile.setType("SOURCE")
 

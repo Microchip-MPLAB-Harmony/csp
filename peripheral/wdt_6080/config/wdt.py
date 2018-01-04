@@ -37,20 +37,18 @@ def instantiateComponent(wdtComponent):
 	wdtIdleHalt.setLabel("Enable Idle halt")
 	wdtIdleHalt.setDefaultValue(False)	
 	
-	configName = Variables.get("__CONFIGURATION_NAME")
-
 	wdtHeader1File = wdtComponent.createFileSymbol(None, None)
 	wdtHeader1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.h.ftl")
 	wdtHeader1File.setOutputName("plib_wdt.h")
-	wdtHeader1File.setDestPath("system_config/" + configName +"/peripheral/wdt/")
-	wdtHeader1File.setProjectPath("system_config/" + configName +"/peripheral/wdt/")
+	wdtHeader1File.setDestPath("peripheral/wdt/")
+	wdtHeader1File.setProjectPath("peripheral/wdt/")
 	wdtHeader1File.setType("HEADER")
 	
 	wdtSource1File = wdtComponent.createFileSymbol(None, None)
 	wdtSource1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.c.ftl")
 	wdtSource1File.setOutputName("plib_wdt.c")
-	wdtSource1File.setDestPath("system_config/" + configName +"/peripheral/wdt/")
-	wdtSource1File.setProjectPath("system_config/" + configName +"/peripheral/wdt/")
+	wdtSource1File.setDestPath("peripheral/wdt/")
+	wdtSource1File.setProjectPath("peripheral/wdt/")
 	wdtSource1File.setType("SOURCE")
 
 def wdtResetEnable(wdtInterrupt,test):

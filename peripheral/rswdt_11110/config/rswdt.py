@@ -32,20 +32,18 @@ def instantiateComponent(rswdtComponent):
 	rswdtIdleHalt.setLabel("Enable Idle halt")
 	rswdtIdleHalt.setDefaultValue(False)	
 	
-	configName = Variables.get("__CONFIGURATION_NAME")
-
 	rswdtHeader1File = rswdtComponent.createFileSymbol(None, None)
 	rswdtHeader1File.setSourcePath("../peripheral/rswdt_11110/templates/plib_rswdt.h.ftl")
 	rswdtHeader1File.setOutputName("plib_rswdt.h")
-	rswdtHeader1File.setDestPath("system_config/" + configName +"/peripheral/rswdt/")
-	rswdtHeader1File.setProjectPath("system_config/" + configName +"/peripheral/rswdt/")
+	rswdtHeader1File.setDestPath("peripheral/rswdt/")
+	rswdtHeader1File.setProjectPath("peripheral/rswdt/")
 	rswdtHeader1File.setType("HEADER")
 	
 	rswdtSource1File = rswdtComponent.createFileSymbol(None, None)
 	rswdtSource1File.setSourcePath("../peripheral/rswdt_11110/templates/plib_rswdt.c.ftl")
 	rswdtSource1File.setOutputName("plib_rswdt.c")
-	rswdtSource1File.setDestPath("system_config/" + configName +"/peripheral/rswdt/")
-	rswdtSource1File.setProjectPath("system_config/" + configName +"/peripheral/rswdt/")
+	rswdtSource1File.setDestPath("peripheral/rswdt/")
+	rswdtSource1File.setProjectPath("peripheral/rswdt/")
 	rswdtSource1File.setType("SOURCE")
 
 def rswdtResetEnable(rswdtInterrupt,test):
