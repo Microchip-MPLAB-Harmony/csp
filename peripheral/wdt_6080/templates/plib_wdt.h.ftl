@@ -80,6 +80,7 @@ void WDT_Clear( void );
 <#if wdtinterruptMode == true>
 	<#lt>void inline WDT_TIMEOUT_Handler( void )
 	<#lt>{
+	<#lt>   volatile uint32_t status = _WDT_REGS->WDT_SR.w;
 	<#lt>	if(wdt.callback != NULL)
     <#lt>        {
     <#lt>            wdt.callback(wdt.context);
