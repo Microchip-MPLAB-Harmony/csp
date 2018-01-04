@@ -670,18 +670,16 @@ pcer1 = coreComponent.createStringSymbol("SYS_CLK_PMC_PCER1", None)
 pcer1.setVisible(False)
 
 #File handling
-configName = Variables.get("__CONFIGURATION_NAME")
-
 clkHeaderFile = coreComponent.createFileSymbol(None, None)
 clkHeaderFile.setSourcePath("../peripheral/clk_sam_e70/sys_clk.h")
 clkHeaderFile.setOutputName("sys_clk.h")
-clkHeaderFile.setDestPath("system_config/" + configName +"/peripheral/clk/")
-clkHeaderFile.setProjectPath("system_config/" + configName +"/peripheral/clk/")
+clkHeaderFile.setDestPath("peripheral/clk/")
+clkHeaderFile.setProjectPath("peripheral/clk/")
 clkHeaderFile.setType("HEADER")
 
 clkSourceFile = coreComponent.createFileSymbol(None, None)
 clkSourceFile.setSourcePath("../peripheral/clk_sam_e70/templates/sys_clk_static_pic32cz.c.ftl")
 clkSourceFile.setOutputName("sys_clk_static.c")
-clkSourceFile.setDestPath("system_config/" + configName +"/peripheral/clk/")
-clkSourceFile.setProjectPath("system_config/" + configName +"/peripheral/clk/")
+clkSourceFile.setDestPath("peripheral/clk/")
+clkSourceFile.setProjectPath("peripheral/clk/")
 clkSourceFile.setType("SOURCE")

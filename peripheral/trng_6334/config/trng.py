@@ -11,21 +11,20 @@ def instantiateComponent(trngComponent):
 	trngInterrupt.setLabel("Enable Interrupts")
 	trngInterrupt.setDefaultValue(False)
 	
-	configName = Variables.get("__CONFIGURATION_NAME")
 	#Generate Output Header
 	trngHeaderFile = trngComponent.createFileSymbol(None, None)
 	trngHeaderFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.h.ftl")
 	trngHeaderFile.setOutputName("plib_trng.h")
 	trngHeaderFile.setOverwrite(True)
-	trngHeaderFile.setDestPath("system_config/" + configName +"/peripheral/trng/")
-	trngHeaderFile.setProjectPath("system_config/" + configName +"/peripheral/trng/")
+	trngHeaderFile.setDestPath("peripheral/trng/")
+	trngHeaderFile.setProjectPath("peripheral/trng/")
 	trngHeaderFile.setType("HEADER")
 	#Generate Output source
 	trngSourceFile = trngComponent.createFileSymbol(None, None)
 	trngSourceFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.c.ftl")
 	trngSourceFile.setOutputName("plib_trng.c")
 	trngSourceFile.setOverwrite(True)
-	trngSourceFile.setDestPath("system_config/" + configName +"/peripheral/trng/")
-	trngSourceFile.setProjectPath("system_config/" + configName +"/peripheral/trng/")
+	trngSourceFile.setDestPath("peripheral/trng/")
+	trngSourceFile.setProjectPath("peripheral/trng/")
 	trngSourceFile.setType("SOURCE")
 
