@@ -40,15 +40,12 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 #include "plib_trng.h"
 
-void TRNG_RandomNumberGenerate( void )
-{
-	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
-	<#if trngEnableInterrupt == false>
-		<#lt>while(_TRNG_REGS->TRNG_ISR.w & TRNG_ISR_DATRDY_Msk);
-	</#if>
-}
-
 <#if trngEnableInterrupt == true>
+	<#lt>void TRNG_RandomNumberGenerate( void )
+	<#lt>{
+	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
+	<#lt>}
+
 	<#lt>void TRNG_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	TRNG.callback = callback;
@@ -59,6 +56,8 @@ void TRNG_RandomNumberGenerate( void )
 <#if trngEnableInterrupt == false>
 	<#lt>uint32_t TRNG_ReadData( void )
 	<#lt>{
+	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
+	<#lt>	while(_TRNG_REGS->TRNG_ISR.w & TRNG_ISR_DATRDY_Msk);			
 	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD;
 	<#lt>	return (_TRNG_REGS->TRNG_ODATA.w);
 	<#lt>}
