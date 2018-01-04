@@ -80,6 +80,7 @@ void RSWDT_Clear( void );
 <#if rswdtinterruptMode == true>
 	<#lt>void inline RSWDT_TIMEOUT_Handler( void )
 	<#lt>{
+	<#lt>   volatile uint32_t status = _RSWDT_REGS->RSWDT_SR.w;	
 	<#lt>	if(rswdt.callback != NULL)
     <#lt>        {
     <#lt>            rswdt.callback(rswdt.context);
