@@ -22,10 +22,20 @@ def instantiateComponent(wdtComponent):
 	wdtCounterValue.setMax(0x1ff)
 	wdtCounterValue.setDefaultValue(0x1ff)
 	
+	wdtCounterValueTime = wdtComponent.createIntegerSymbol("wdtWDVTIME", wdtMenu)
+	wdtCounterValueTime.setLabel("Counter value in ms")
+	wdtCounterValueTime.setDependencies(wdtcounter_cal, ["wdtWDV"])
+	wdtCounterValueTime.setReadOnly(True)
+	
 	wdtDeltaValue = wdtComponent.createIntegerSymbol("wdtWDD", wdtMenu)
 	wdtDeltaValue.setLabel("Delta value")
 	wdtDeltaValue.setMax(0x1ff)
 	wdtDeltaValue.setDefaultValue(0x1ff)
+	
+	wdtDeltaValueTime = wdtComponent.createIntegerSymbol("wdtWDDTIME", wdtMenu)
+	wdtDeltaValueTime.setLabel("Counter value in ms")
+	wdtDeltaValueTime.setDependencies(wdtdelta_cal, ["wdtWDD"])
+	wdtDeltaValueTime.setReadOnly(True)
 	
 	wdtDebugHalt = wdtComponent.createBooleanSymbol("wdtdebugHalt", wdtMenu)
 	print(wdtDebugHalt)
@@ -56,3 +66,11 @@ def wdtResetEnable(wdtInterrupt,test):
 		wdtInterrupt.setVisible(False)
 	else:
 		wdtInterrupt.setVisible(True)
+
+def	wdtdelta_cal(wdtDeltaValueTime,test):
+	data = test.getValue() * 3.90625
+	wdtDeltaValueTime.setValue("wdtWDDTIME",data,300)
+	
+def	wdtcounter_cal(wdtCounterValueTime,test):
+	data = test.getValue() * 3.90625
+	wdtCounterValueTime.setValue("wdtWDVTIME",data,300)
