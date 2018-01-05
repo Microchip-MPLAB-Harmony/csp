@@ -1,14 +1,14 @@
 /*******************************************************************************
-  RTCC Peripheral Library
+  RTC Peripheral Library
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_rtcc.c
+    plib_rtc.c
 
   Summary:
-    RTCC Source File
+    RTC Source File
 
   Description:
     None
@@ -38,12 +38,18 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#include "plib_rtcc.h"
+#include "plib_rtc.h"
 
 #define decimaltobcd(x)					(((x/10)<<4)+((x - ((x/10)*10))))
 #define bcdtodecimal(x)					((x & 0xF0) >> 4) * 10 + (x & 0x0F)
 
-void RTCC_TimeSet( struct tm *Time )
+void RTC_Initialize( void )
+{
+	_RTC_REGS->RTC_MR.w = RTC_MR_${RTC_MR_OUT0}_Msk | RTC_MR_${RTC_MR_OUT1}_Msk | RTC_MR_${RTC_MR_THIGH}_Msk | RTC_MR_${RTC_MR_TPERIOD}_Msk;
+	_RTC_REGS->RTC_CR.w = RTC_CR_${RTC_CR_TIMEVSEL}_Msk | RTC_CR_${RTC_CR_CALEVSEL}_Msk;
+}
+
+void RTC_TimeSet( struct tm *Time )
 {
 	uint32_t data_cal =  (decimaltobcd(Time->tm_year / 100)) | \
 			 (decimaltobcd((Time->tm_year - ((Time->tm_year/100)*100)))<< 8) | \
@@ -63,7 +69,7 @@ void RTCC_TimeSet( struct tm *Time )
 	_RTC_REGS->RTC_TIMR.w = data_time;
 	_RTC_REGS->RTC_CR.w &= ~(RTC_CR_UPDCAL_Msk|RTC_CR_UPDTIM_Msk);	
 }
-void RTCC_TimeGet( struct tm *Time )
+void RTC_TimeGet( struct tm *Time )
 {
 	uint32_t data_time = _RTC_REGS->RTC_TIMR.w;
 	uint32_t data_cal  = _RTC_REGS->RTC_CALR.w;
@@ -78,11 +84,11 @@ void RTCC_TimeGet( struct tm *Time )
 	
 	
 }
-<#if rtccEnableInterrupt == true>
-	<#lt>void RTCC_AlarmSet( struct tm *Time, RTCC_ALARM_MASK mask )
+<#if rtcEnableInterrupt == true>
+	<#lt>void RTC_AlarmSet( struct tm *Time, RTC_ALARM_MASK mask )
 	<#lt>{
-	<#lt>	uint32_t alarm_cal = (mask & 0x10) << 18 | (mask & 0x08) << 27;
-	<#lt>	uint32_t alarm_tmr = (mask & 0x04) << 18 | (mask & 0x02) << 18 | (mask & 0x01) << 18;
+	<#lt>	uint32_t alarm_cal;
+	<#lt>	uint32_t alarm_tmr;	
 	<#lt>	uint32_t data_cal =		(decimaltobcd(Time->tm_mon)<<16)| \
 	<#lt>									(decimaltobcd(Time->tm_mday)<<24) ;
 	<#lt>	uint32_t data_time = (decimaltobcd(Time->tm_sec)) | (decimaltobcd(Time->tm_min) << 8) \
@@ -99,9 +105,9 @@ void RTCC_TimeGet( struct tm *Time )
 	<#lt>	_RTC_REGS->RTC_IER.w |= RTC_IER_ALREN_Msk;
 	<#lt>}
 
-	<#lt>void RTCC_ALARM_CALLBACKRegister( RTCC_ALARM_CALLBACK callback, uintptr_t context )
+	<#lt>void RTC_ALARM_CALLBACKRegister( RTC_ALARM_CALLBACK callback, uintptr_t context )
 	<#lt>{
-	<#lt>	RTCC.callback = callback;
-	<#lt>	RTCC.context = context;
+	<#lt>	RTC.callback = callback;
+	<#lt>	RTC.context = context;
 	<#lt>}
 </#if>

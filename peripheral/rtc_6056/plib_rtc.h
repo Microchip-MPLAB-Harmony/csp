@@ -1,17 +1,17 @@
 /*******************************************************************************
-  Interface definition of RTCC PLIB.
+  Interface definition of RTC PLIB.
  
   Company:
     Microchip Technology Inc.
  
   File Name:
-    plib_rtcc.h
+    plib_rtc.h
  
   Summary:
-    Interface definition of the Real Time Counter and Calendar (RTCC) Plib.
+    Interface definition of the Real Time Counter and Calendar (RTC) Plib.
  
   Description:
-    This file defines the interface for the RTCC Plib.
+    This file defines the interface for the RTC Plib.
     It allows user to setup alarm and retrieve current date and time.
 *******************************************************************************/
  
@@ -40,8 +40,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
  
-#ifndef _RTCC_H    // Guards against multiple inclusion
-#define _RTCC_H
+#ifndef _RTC_H    // Guards against multiple inclusion
+#define _RTC_H
  
 // *****************************************************************************
 // *****************************************************************************
@@ -70,35 +70,65 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
  
+ /* RTC Alarm Mask
+
+   Summary:
+    Defines the data type for the RTC_Alarm Mask.
+
+   Description:
+    This is used to set up the alarm for RTC.
+
+   Remarks:
+    None.
+*/
+
  typedef enum
  {
- RTCC_ALARM_MASK_OFF = 0x00,         // NO Alarm
- RTCC_ALARM_MASK_SS = 0x01 ,          // Every minute, seconds alarm enable
- RTCC_ALARM_MASK_MI = 0x02,          // Minute alarm enable
- RTCC_ALARM_MASK_HH = 0x04,          // Hour alarm enable
- RTCC_ALARM_MASK_DD = 0x08,          // Date alarm enable
- RTCC_ALARM_MASK_MO = 0x10,          // Month alarm enable
- RTCC_ALARM_MASK_MISS = 0x03,        // Every hour
- RTCC_ALARM_MASK_HHMISS = 0x07,      // Every day
- RTCC_ALARM_MASK_DDHHMISS = 0x0f,    // Every month
- RTCC_ALARM_MASK_MODDHHMISS = 0x1f  // Every year
- } RTCC_ALARM_MASK;
+ RTC_ALARM_MASK_OFF = 0x00,         // NO Alarm
+ RTC_ALARM_MASK_SS = 0x01 ,          // Every minute, seconds alarm enable
+ RTC_ALARM_MASK_MI = 0x02,          // Minute alarm enable
+ RTC_ALARM_MASK_HH = 0x04,          // Hour alarm enable
+ RTC_ALARM_MASK_DD = 0x08,          // Date alarm enable
+ RTC_ALARM_MASK_MO = 0x10,          // Month alarm enable
+ RTC_ALARM_MASK_MISS = 0x03,        // Every hour
+ RTC_ALARM_MASK_HHMISS = 0x07,      // Every day
+ RTC_ALARM_MASK_DDHHMISS = 0x0f,    // Every month
+ RTC_ALARM_MASK_MODDHHMISS = 0x1f  // Every year
+ } RTC_ALARM_MASK;
  
+ /* RTC Interrupt Mask
+
+   Summary:
+    Defines the Interrupt mask for RTC events.
+
+   Description:
+    This may be used to check the interrupt source for RTC.
+
+   Remarks:
+    None.
+*/
+
+ typedef enum 
+{
+	RTC_INT_ALARM = 0x02,          // Alarm Event
+	RTC_INT_TIME = 0x08 ,          // Time Event
+	RTC_INT_CALENDAR = 0x10,          // Calendar enable
+} RTC_INT_MASK;	
  
 // *****************************************************************************
 // *****************************************************************************
 /* Callback Function Pointer
  Summary:
-	Defines the data type and function signature for the RTCC peripheral
+	Defines the data type and function signature for the RTC peripheral
 	callback function.
  
  Description:
-	This data type defines the function signature for the RTCC peripheral
-	callback function. The RTCC peripheral will call back the client's
+	This data type defines the function signature for the RTC peripheral
+	callback function. The RTC peripheral will call back the client's
 	function with this signature once the alarm match occurs.
  
  Precondition:
-	RTCC_CallbackRegister must have been called to set the
+	RTC_CallbackRegister must have been called to set the
 	function to be called.
  
  Parameters:
@@ -108,7 +138,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  Returns:
 	None.
 */
-typedef void (*RTCC_ALARM_CALLBACK)(uintptr_t context);
+typedef void (*RTC_ALARM_CALLBACK)(uintptr_t context);
  
 // *****************************************************************************
 // *****************************************************************************
@@ -122,13 +152,41 @@ typedef void (*RTCC_ALARM_CALLBACK)(uintptr_t context);
 // *****************************************************************************
 
 /* Function:
-	void RTCC_TimeSet( struct tm *time )
+    void RTC_Initialize( void )
+
+   Summary:
+     Initializes given instance of the RTC peripheral.
+
+   Description:
+     This function initializes the given instance of the RTC peripheral as
+     configured by the user from within the MCC.  
+
+   Precondition:
+     None.
+
+   Parameters:
+    None.
+  
+   Returns:
+    None.
+
+   Example:
+    <code>
+    RTC_Initialize();
+    </code>
+
+*/
+
+void RTC_Initialize( void );
+
+/* Function:
+	void RTC_TimeSet( struct tm *time )
 	
  Summary:
-	Sets the Time for the RTCC peripheral.
+	Sets the Time for the RTC peripheral.
 	
  Description:
-	This function updates the time for RTCC peripheral as
+	This function updates the time for RTC peripheral as
 	configured by the user.
 	
  Precondition:
@@ -156,22 +214,22 @@ typedef void (*RTCC_ALARM_CALLBACK)(uintptr_t context);
         dateTime.tm_mday = 14;
         //day of the week
         dateTime.tm_wday = 1;
-        RTCC_TimeSet( &dateTime );
+        RTC_TimeSet( &dateTime );
 	</code>
  Remarks:
 	The structure can be deleted once the API returns to free up the memory
  
 */
- void RTCC_TimeSet( struct tm *time );
+ void RTC_TimeSet( struct tm *time );
  
 /* Function:
-	void RTCC_TimeGet( struct tm *time );
+	void RTC_TimeGet( struct tm *time );
 	
  Summary:
 	Reads the current time
 	
  Description:
-	This function is used to read the current date and time from the RTCC.
+	This function is used to read the current date and time from the RTC.
 	
  Precondition:
 	None.
@@ -185,13 +243,13 @@ typedef void (*RTCC_ALARM_CALLBACK)(uintptr_t context);
 	<code>
 		struct tm dateTime;
 		//get the current date and time
-		RTCC_TimeGet( &dateTime );
+		RTC_TimeGet( &dateTime );
 	</code>
 */
-void RTCC_TimeGet( struct tm *time );
+void RTC_TimeGet( struct tm *time );
  
 /* Function:
-	void RTCC_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK mask );
+	void RTC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
 	
  Summary:
 	Sets up the Alarm
@@ -226,16 +284,16 @@ void RTCC_TimeGet( struct tm *time );
         //day of the month
         alarmTime.tm_mday = 14;
         //set up alarm for every month
-        RTCC_AlarmSet( &alarmTime, RTCC_ALARM_MASK_DDHHMISS );
+        RTC_AlarmSet( &alarmTime, RTC_ALARM_MASK_DDHHMISS );
 	</code>
 	
  Remark:
 	The structure can be deleted once the API returns to free up the memory
 */
-void RTCC_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK mask );
+void RTC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
  
 /* Function:
-	void RTCC_CallbackRegister( RTCC_CALLBACK callback, uintptr_t context )
+	void RTC_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
 	
  Summary:
 	Sets the pointer to the function (and it's context) to be called when the
@@ -252,7 +310,7 @@ void RTCC_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK mask );
 	
  Parameters:
 	callback - A pointer to a function with a calling signature defined
-				by the RTCC_CALLBACK data type.
+				by the RTC_CALLBACK data type.
 	context - A value (usually a pointer) passed (unused) into the function
 				identified by the callback parameter.
 				
@@ -261,16 +319,16 @@ void RTCC_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK mask );
 	
  Example:
 	<code>
-		RTCC_CallbackRegister(MyCallback, &myData);
+		RTC_CallbackRegister(MyCallback, &myData);
 	</code>
 	
  Remarks:
 	The context value may be set to NULL if it is not required. In this case the
 	value NULL will be passed to the callback function.
 	To disable the callback function, pass a NULL for the callback parameter.
-	See the RTCC_CALLBACK type definition for additional information.
+	See the RTC_CALLBACK type definition for additional information.
 */
-void RTCC_CallbackRegister( RTCC_ALARM_CALLBACK callback, uintptr_t context );
+void RTC_CallbackRegister( RTC_ALARM_CALLBACK callback, uintptr_t context );
  
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

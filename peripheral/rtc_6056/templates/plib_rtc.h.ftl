@@ -1,17 +1,17 @@
 /*******************************************************************************
-  Interface definition of RTCC PLIB.
+  Interface definition of RTC PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_rtcc.h
+    plib_rtc.h
 
   Summary:
-    Interface definition of the Watch Dog Timer Plib (RTCC).
+    Interface definition of the Watch Dog Timer Plib (RTC).
 
   Description:
-    This file defines the interface for the RTCC Plib.
+    This file defines the interface for the RTC Plib.
     It allows user to setup alarm duration and access current date and time.
 *******************************************************************************/
 
@@ -38,8 +38,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef _RTCC_H    // Guards against multiple inclusion
-#define _RTCC_H
+#ifndef _RTC_H    // Guards against multiple inclusion
+#define _RTC_H
 
 #include <xc.h>
 #include <stdint.h>
@@ -58,46 +58,55 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-<#if rtccEnableInterrupt == true>
-	<#lt>typedef void (*RTCC_ALARM_CALLBACK)(uintptr_t context);
+<#if rtcEnableInterrupt == true>
+	<#lt>typedef void (*RTC_ALARM_CALLBACK)(uintptr_t context, uint32_t int_cause);
 </#if>
 
-<#if rtccEnableInterrupt == true>
+<#if rtcEnableInterrupt == true>
 	<#lt>typedef enum 
 	<#lt>{
-	<#lt>	RTCC_ALARM_MASK_OFF = 0x00,         // NO Alarm
-	<#lt>	RTCC_ALARM_MASK_SS = 0x01 ,          // Every minute, seconds alarm enable
-	<#lt>	RTCC_ALARM_MASK_MI = 0x02,          // Minute alarm enable
-	<#lt>	RTCC_ALARM_MASK_HH = 0x04,          // Hour alarm enable
-	<#lt>	RTCC_ALARM_MASK_DD = 0x08,          // Date alarm enable
-	<#lt>	RTCC_ALARM_MASK_MO = 0x10,          // Month alarm enable
-	<#lt>	RTCC_ALARM_MASK_MISS = 0x03,        // Every hour
-	<#lt>	RTCC_ALARM_MASK_HHMISS = 0x07,      // Every day
-	<#lt>	RTCC_ALARM_MASK_DDHHMISS = 0x0f,    // Every month
-	<#lt>	RTCC_ALARM_MASK_MODDHHMISS = 0x1f  // Every year
-	<#lt>} RTCC_ALARM_MASK;	
+	<#lt>	RTC_ALARM_MASK_OFF = 0x00,         // NO Alarm
+	<#lt>	RTC_ALARM_MASK_SS = 0x01 ,          // Every minute, seconds alarm enable
+	<#lt>	RTC_ALARM_MASK_MI = 0x02,          // Minute alarm enable
+	<#lt>	RTC_ALARM_MASK_HH = 0x04,          // Hour alarm enable
+	<#lt>	RTC_ALARM_MASK_DD = 0x08,          // Date alarm enable
+	<#lt>	RTC_ALARM_MASK_MO = 0x10,          // Month alarm enable
+	<#lt>	RTC_ALARM_MASK_MISS = 0x03,        // Every hour
+	<#lt>	RTC_ALARM_MASK_HHMISS = 0x07,      // Every day
+	<#lt>	RTC_ALARM_MASK_DDHHMISS = 0x0f,    // Every month
+	<#lt>	RTC_ALARM_MASK_MODDHHMISS = 0x1f  // Every year
+	<#lt>} RTC_ALARM_MASK;	
 
+	<#lt>typedef enum 
+	<#lt>{
+	<#lt>	RTC_INT_ALARM = 0x02,          // Alarm Event
+	<#lt>	RTC_INT_TIME = 0x08 ,          // Time Event
+	<#lt>	RTC_INT_CALENDAR = 0x10,          // Calendar enable
+	<#lt>} RTC_INT_MASK;	
+	
 	<#lt>typedef struct
 	<#lt>{
-	<#lt>	RTCC_ALARM_CALLBACK          callback; 
+	<#lt>	RTC_ALARM_CALLBACK          callback; 
 	<#lt>	uintptr_t               context;
-	<#lt>} RTCC_OBJECT ;
+	<#lt>} RTC_OBJECT ;
 
-	<#lt>RTCC_OBJECT RTCC;
+	<#lt>RTC_OBJECT RTC;
 </#if>
-/***************************** RTCC API *******************************/
-void RTCC_TimeSet( struct tm *Time );
-void RTCC_TimeGet( struct tm *Time );
-<#if rtccEnableInterrupt == true>
-	<#lt>void RTCC_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK mask );
-	<#lt>void RTCC_ALARM_CALLBACKRegister( RTCC_ALARM_CALLBACK callback, uintptr_t context );
+/***************************** RTC API *******************************/
+void RTC_Initialize( void );
+void RTC_TimeSet( struct tm *Time );
+void RTC_TimeGet( struct tm *Time );
+<#if rtcEnableInterrupt == true>
+	<#lt>void RTC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
+	<#lt>void RTC_ALARM_CALLBACKRegister( RTC_ALARM_CALLBACK callback, uintptr_t context );
 </#if>	
-<#if rtccEnableInterrupt == true>
-	<#lt>void inline RTCC_ALARM_Handler( void )
+<#if rtcEnableInterrupt == true>
+	<#lt>void inline RTC_ALARM_Handler( void )
 	<#lt>{
-	<#lt>	if(RTCC.callback != NULL)
+	<#lt>	volatile uint32_t status = _RTC_REGS->RTC_SR.w;
+	<#lt>	if(RTC.callback != NULL)
     <#lt>        {
-    <#lt>            RTCC.callback(RTCC.context);
+    <#lt>            RTC.callback(RTC.context, status);
     <#lt>        }
 	<#lt>}
 </#if>	
