@@ -2,6 +2,15 @@
 def instantiateComponent(trngComponent):
 
 	print("Running TRNG")
+
+	trngReserved = trngComponent.createBooleanSymbol("TRNG_Reserved", None)
+	trngReserved.setLabel("TRNG Reserved")
+
+	trngWarning = trngComponent.createCommentSymbol("TRNG_COMMENT", None)
+	trngWarning.setLabel("**** Warning: This module is used and configured by Crypto Library ****")
+	trngWarning.setDependencies(showWarning, ["TRNG_Reserved"])
+	trngWarning.setVisible(True)
+
 	#Create the top menu
 	trngMenu = trngComponent.createMenuSymbol(None, None)
 	trngMenu.setLabel("Hardware Settings ")
@@ -28,3 +37,5 @@ def instantiateComponent(trngComponent):
 	trngSourceFile.setProjectPath("peripheral/trng/")
 	trngSourceFile.setType("SOURCE")
 
+def showWarning(trngWarning, trngReserved):
+	trngWarning.setVisible(trngReserved.getValue())
