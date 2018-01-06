@@ -9,11 +9,13 @@ def instantiateComponent(trngComponent):
 	trngWarning = trngComponent.createCommentSymbol("TRNG_COMMENT", None)
 	trngWarning.setLabel("**** Warning: This module is used and configured by Crypto Library ****")
 	trngWarning.setDependencies(showWarning, ["TRNG_Reserved"])
-	trngWarning.setVisible(True)
+	trngWarning.setVisible(False)
 
 	#Create the top menu
 	trngMenu = trngComponent.createMenuSymbol(None, None)
 	trngMenu.setLabel("Hardware Settings ")
+	trngMenu.setDependencies(showMenu, ["TRNG_Reserved"])
+
 	#Create a Checkbox to enable disable interrupts
 	trngInterrupt = trngComponent.createBooleanSymbol("trngEnableInterrupt", trngMenu)
 	print(trngInterrupt)
@@ -39,3 +41,6 @@ def instantiateComponent(trngComponent):
 
 def showWarning(trngWarning, trngReserved):
 	trngWarning.setVisible(trngReserved.getValue())
+
+def showMenu(trngMenu, trngReserved):
+	trngMenu.setVisible(not trngReserved.getValue())
