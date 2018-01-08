@@ -16,6 +16,9 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
 # load device specific nvic manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
 
+# load dma manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
+
 wdtDisable = coreComponent.createBooleanSymbol("wdtDISABLE", devCfgMenu)
 print(wdtDisable)
 wdtDisable.setLabel("Disable Watchdog")
