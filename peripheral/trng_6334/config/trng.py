@@ -5,6 +5,7 @@ def instantiateComponent(trngComponent):
 
 	trngReserved = trngComponent.createBooleanSymbol("TRNG_Reserved", None)
 	trngReserved.setLabel("TRNG Reserved")
+	trngReserved.setVisible(False)
 
 	trngWarning = trngComponent.createCommentSymbol("TRNG_COMMENT", None)
 	trngWarning.setLabel("**** Warning: This module is used and configured by Crypto Library ****")
@@ -26,6 +27,7 @@ def instantiateComponent(trngComponent):
 	trngHeaderFile = trngComponent.createFileSymbol(None, None)
 	trngHeaderFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.h.ftl")
 	trngHeaderFile.setOutputName("plib_trng.h")
+	trngHeaderFile.setMarkup(True)
 	trngHeaderFile.setOverwrite(True)
 	trngHeaderFile.setDestPath("peripheral/trng/")
 	trngHeaderFile.setProjectPath("peripheral/trng/")
@@ -34,6 +36,7 @@ def instantiateComponent(trngComponent):
 	trngSourceFile = trngComponent.createFileSymbol(None, None)
 	trngSourceFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.c.ftl")
 	trngSourceFile.setOutputName("plib_trng.c")
+	trngSourceFile.setMarkup(True)
 	trngSourceFile.setOverwrite(True)
 	trngSourceFile.setDestPath("peripheral/trng/")
 	trngSourceFile.setProjectPath("peripheral/trng/")

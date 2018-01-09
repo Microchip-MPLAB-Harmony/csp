@@ -38,6 +38,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
+<#macro GenerateCode>
 #include "plib_trng.h"
 
 <#if trngEnableInterrupt == true>
@@ -62,3 +63,11 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 	<#lt>	return (_TRNG_REGS->TRNG_ODATA.w);
 	<#lt>}
 </#if>
+</#macro>
+
+<#if TRNG_Reserved == false>
+<@GenerateCode/>
+<#else>
+/**** Warning: This module is used and configured by Crypto Library ****/
+</#if>
+

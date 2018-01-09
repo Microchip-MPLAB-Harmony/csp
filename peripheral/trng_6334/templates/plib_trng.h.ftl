@@ -38,6 +38,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
+<#macro GenerateCode>
 #ifndef _TRNG_H    // Guards against multiple inclusion
 #define _TRNG_H
 
@@ -96,3 +97,11 @@ void TRNG_RandomNumberGenerate( void );
 #endif
 
 #endif 
+</#macro>
+
+<#if TRNG_Reserved == false>
+<@GenerateCode/>
+<#else>
+/**** Warning: This module is used and configured by Crypto Library ****/
+</#if>
+
