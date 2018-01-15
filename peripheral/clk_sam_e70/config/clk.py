@@ -683,3 +683,6 @@ clkSourceFile.setOutputName("sys_clk_static.c")
 clkSourceFile.setDestPath("peripheral/clk/")
 clkSourceFile.setProjectPath("peripheral/clk/")
 clkSourceFile.setType("SOURCE")
+
+#Add clock related code to common files
+systemDefinitionsHeadersList.addValue("#include \"peripheral/clk/sys_clk.h\"")
