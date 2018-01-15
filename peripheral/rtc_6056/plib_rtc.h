@@ -40,8 +40,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
  
-#ifndef _RTC_H    // Guards against multiple inclusion
-#define _RTC_H
+#ifndef RTC_H    // Guards against multiple inclusion
+#define RTC_H
  
 // *****************************************************************************
 // *****************************************************************************
@@ -58,6 +58,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stddef.h>
 #include <sys/attribs.h>
 #include <time.h>
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 	extern "C" {
@@ -152,7 +153,7 @@ typedef void (*RTC_ALARM_CALLBACK)(uintptr_t context);
 // *****************************************************************************
 
 /* Function:
-    void RTC_Initialize( void )
+    void RTCx_Initialize( void )
 
    Summary:
      Initializes given instance of the RTC peripheral.
@@ -172,15 +173,16 @@ typedef void (*RTC_ALARM_CALLBACK)(uintptr_t context);
 
    Example:
     <code>
-    RTC_Initialize();
+    RTC0_Initialize();
     </code>
 
 */
 
-void RTC_Initialize( void );
+void RTCx_Initialize( void );
+
 
 /* Function:
-	void RTC_TimeSet( struct tm *time )
+	void RTCx_TimeSet( struct tm *time )
 	
  Summary:
 	Sets the Time for the RTC peripheral.
@@ -214,16 +216,16 @@ void RTC_Initialize( void );
         dateTime.tm_mday = 14;
         //day of the week
         dateTime.tm_wday = 1;
-        RTC_TimeSet( &dateTime );
+        RTC0_TimeSet( &dateTime );
 	</code>
  Remarks:
 	The structure can be deleted once the API returns to free up the memory
  
 */
- void RTC_TimeSet( struct tm *time );
+ void RTCx_TimeSet( struct tm *time );
  
 /* Function:
-	void RTC_TimeGet( struct tm *time );
+	void RTCx_TimeGet( struct tm *time );
 	
  Summary:
 	Reads the current time
@@ -243,13 +245,13 @@ void RTC_Initialize( void );
 	<code>
 		struct tm dateTime;
 		//get the current date and time
-		RTC_TimeGet( &dateTime );
+		RTC0_TimeGet( &dateTime );
 	</code>
 */
-void RTC_TimeGet( struct tm *time );
+void RTCx_TimeGet( struct tm *time );
  
 /* Function:
-	void RTC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
+	void RTCx_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
 	
  Summary:
 	Sets up the Alarm
@@ -284,16 +286,66 @@ void RTC_TimeGet( struct tm *time );
         //day of the month
         alarmTime.tm_mday = 14;
         //set up alarm for every month
-        RTC_AlarmSet( &alarmTime, RTC_ALARM_MASK_DDHHMISS );
+        RTC0_AlarmSet( &alarmTime, RTC_ALARM_MASK_DDHHMISS );
 	</code>
 	
  Remark:
 	The structure can be deleted once the API returns to free up the memory
 */
-void RTC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
+void RTCx_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
+
+/* Function:
+	void RTCx_InterruptDisable(RTC_INT_MASK interrupt)
+	
+ Summary:
+	Disables the specified RTC interrupt
+	
+ Description:
+	This function is used to disable a specific RTC interrupt source
+	
+ Precondition:
+	None.
+	
+ Parameters:
+	interrupt:- Interrupt source to be disabled.
+ 
+ Returns:
+	None.
+ Example:
+	<code>
+		RTC0_InterruptDisable(RTC_INT_ALARM);
+	</code>
+ 
+*/
+void RTCx_InterruptDisable(RTC_INT_MASK interrupt);
  
 /* Function:
-	void RTC_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
+	void RTCx_InterruptEnable(RTC_INT_MASK interrupt)
+	
+ Summary:
+	Enables the specified RTC interrupt
+	
+ Description:
+	This function is used to enable a specific RTC interrupt source
+	
+ Precondition:
+	None.
+	
+ Parameters:
+	interrupt:- Interrupt source to be enabled.
+ 
+ Returns:
+	None.
+ Example:
+	<code>
+		RTC0_InterruptEnable(RTC_INT_ALARM);
+	</code>
+ 
+*/
+void RTCx_InterruptEnable(RTC_INT_MASK interrupt);
+  
+/* Function:
+	void RTCx_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
 	
  Summary:
 	Sets the pointer to the function (and it's context) to be called when the
@@ -319,7 +371,7 @@ void RTC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
 	
  Example:
 	<code>
-		RTC_CallbackRegister(MyCallback, &myData);
+		RTC0_CallbackRegister(MyCallback, &myData);
 	</code>
 	
  Remarks:
@@ -328,7 +380,7 @@ void RTC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
 	To disable the callback function, pass a NULL for the callback parameter.
 	See the RTC_CALLBACK type definition for additional information.
 */
-void RTC_CallbackRegister( RTC_ALARM_CALLBACK callback, uintptr_t context );
+void RTCx_CallbackRegister( RTC_ALARM_CALLBACK callback, uintptr_t context );
  
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

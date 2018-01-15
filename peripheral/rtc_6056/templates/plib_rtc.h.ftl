@@ -38,8 +38,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef _RTC_H    // Guards against multiple inclusion
-#define _RTC_H
+#ifndef RTC${INDEX?string}_H    // Guards against multiple inclusion
+#define RTC${INDEX?string}_H
+
 
 #include <xc.h>
 #include <stdint.h>
@@ -47,6 +48,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stddef.h>
 #include <sys/attribs.h>
 #include <time.h>
+
 #ifdef __cplusplus // Provide C++ Compatibility
  extern "C" {
 #endif
@@ -90,23 +92,26 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	uintptr_t               context;
 	<#lt>} RTC_OBJECT ;
 
-	<#lt>RTC_OBJECT RTC;
+	<#lt>RTC_OBJECT rtc;
 </#if>
 /***************************** RTC API *******************************/
-void RTC_Initialize( void );
-void RTC_TimeSet( struct tm *Time );
-void RTC_TimeGet( struct tm *Time );
+void RTC${INDEX?string}_Initialize( void );
+bool RTC${INDEX?string}_TimeSet( struct tm *Time );
+void RTC${INDEX?string}_TimeGet( struct tm *Time );
 <#if rtcEnableInterrupt == true>
-	<#lt>void RTC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
-	<#lt>void RTC_ALARM_CALLBACKRegister( RTC_ALARM_CALLBACK callback, uintptr_t context );
+	<#lt>bool RTC${INDEX?string}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
+	<#lt>void RTC${INDEX?string}_CallbackRegister( RTC_ALARM_CALLBACK callback, uintptr_t context );
+	<#lt>void RTC${INDEX?string}_InterruptDisable(RTC_INT_MASK interrupt);
+	<#lt>void RTC${INDEX?string}_InterruptEnable(RTC_INT_MASK interrupt);
 </#if>	
 <#if rtcEnableInterrupt == true>
-	<#lt>void inline RTC_ALARM_Handler( void )
+	<#lt>static void inline RTC${INDEX?string}_ALARM_Handler( void )
 	<#lt>{
 	<#lt>	volatile uint32_t status = _RTC_REGS->RTC_SR.w;
-	<#lt>	if(RTC.callback != NULL)
+	<#lt>	_RTC_REGS->RTC_SCCR |= RTC_SCCR_ALRCLR_Msk | RTC_SCCR_TIMCLR_Msk |  RTC_SCCR_CALCLR_Msk;
+	<#lt>	if(rtc.callback != NULL)
     <#lt>        {
-    <#lt>            RTC.callback(RTC.context, status);
+    <#lt>            rtc.callback(rtc.context, status);
     <#lt>        }
 	<#lt>}
 </#if>	
@@ -114,4 +119,4 @@ void RTC_TimeGet( struct tm *Time );
  }
 #endif
 
-#endif 
+#endif

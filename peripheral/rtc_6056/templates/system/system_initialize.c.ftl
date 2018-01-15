@@ -1,0 +1,1 @@
+	RTC${INDEX?string}_Initialize();
