@@ -38,6 +38,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
+<#macro GenerateCode>
 #ifndef TRNG${INDEX?string}_H    // Guards against multiple inclusion
 #define TRNG${INDEX?string}_H
 
