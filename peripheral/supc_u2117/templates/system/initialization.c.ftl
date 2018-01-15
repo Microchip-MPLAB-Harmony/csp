@@ -1,0 +1,1 @@
+    SUPC${SUPC_INDEX}_Initialize();
