@@ -39,23 +39,24 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 <#macro GenerateCode>
-#include "plib_trng.h"
+#include "plib_trng${INDEX?string}.h"
 
 <#if trngEnableInterrupt == true>
-	<#lt>void TRNG_RandomNumberGenerate( void )
+	<#lt>void TRNG${INDEX?string}_RandomNumberGenerate( void )
 	<#lt>{
 	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
+	<#lt>	_TRNG_REGS->TRNG_IER.w = TRNG_IER_DATRDY_Msk;
 	<#lt>}
 
-	<#lt>void TRNG_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
+	<#lt>void TRNG${INDEX?string}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
 	<#lt>{
-	<#lt>	TRNG.callback = callback;
-	<#lt>	TRNG.context = context;
+	<#lt>	trng.callback = callback;
+	<#lt>	trng.context = context;
 	<#lt>}
 </#if>
 
 <#if trngEnableInterrupt == false>
-	<#lt>uint32_t TRNG_ReadData( void )
+	<#lt>uint32_t TRNG${INDEX?string}_ReadData( void )
 	<#lt>{
 	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
 	<#lt>	while(_TRNG_REGS->TRNG_ISR.w & TRNG_ISR_DATRDY_Msk);			

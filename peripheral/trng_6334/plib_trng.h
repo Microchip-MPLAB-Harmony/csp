@@ -5,7 +5,7 @@
 	Microchip Technology Inc.
 	
  File Name:
-	TRNG.h
+	plib_trng.h
 	
  Summary:
 	Interface definition of the True Random Number Generator Plib (TRNG).
@@ -38,8 +38,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _TRNG_H // Guards against multiple inclusion
-#define _TRNG_H
+#ifndef TRNG_H // Guards against multiple inclusion
+#define TRNG_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -79,7 +79,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	function with this signature when the random data is ready to be read.
 	
  Precondition:
-	TRNG_CallbackRegister must have been called to set the
+	TRNGx_CallbackRegister must have been called to set the
 	function to be called.
 	
  Parameters:
@@ -105,7 +105,7 @@ this interface.
 
 // *****************************************************************************
 /* Function:
-	void TRNG_RandomNumberGenerate( void )
+	void TRNGx_RandomNumberGenerate( void )
 	
  Summary:
 	Initiates generation of random number using the TRNG peripheral.
@@ -126,17 +126,16 @@ this interface.
 	
  Example:
 	<code>
-		// This should the operation when the library is configured in blocking mode.
-		uint32_t randomValue;
-		TRNG_RandomNumberGenerate();
-		randomValue = TRNG_ReadData();
+		TRNG0_RandomNumberGenerate();
 	</code>
+ Remarks:
+	This API should be used when the library is configured in interrupt mode.
 */
 
-void TRNG_RandomNumberGenerate( void );
+void TRNGx_RandomNumberGenerate( void );
 
 /* Function:
-	uint32_t TRNG_ReadData( void )
+	uint32_t TRNGx_ReadData( void )
 	
  Summary:
 	Generates and return a 32-bit random number 
@@ -155,7 +154,7 @@ void TRNG_RandomNumberGenerate( void );
 	
  Example:
 	<code>
-		uint32_t data = TRNG_ReadData();
+		uint32_t data = TRNG0_ReadData();
 	</code>
 	
  Remarks:
@@ -163,10 +162,10 @@ void TRNG_RandomNumberGenerate( void );
 	In non-blocking mode the random number will be passed via callback.
 */
 
-uint32_t TRNG_ReadData( void );
+uint32_t TRNGx_ReadData( void );
 
 /* Function:
-	void TRNG_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
+	void TRNGx_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
 	
  Summary:
 	Sets the pointer to the function (and it's context) to be called when the
@@ -197,7 +196,7 @@ uint32_t TRNG_ReadData( void );
 		{
 			randomValue= random;
 		}
-		TRNG_CallbackRegister(testCallback, NULL);
+		TRNG0_CallbackRegister(testCallback, NULL);
 	</code>
 	
  Remarks:
@@ -207,12 +206,11 @@ uint32_t TRNG_ReadData( void );
 	See the TRNG_CALLBACK type definition for additional information.
 */
 
-void TRNG_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
+void TRNGx_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 	}
 #endif
 // DOM-IGNORE-END
-
 #endif
