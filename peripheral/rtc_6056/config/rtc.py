@@ -60,6 +60,8 @@ def instantiateComponent(rtcComponent):
 	rtcSym_CR_CALEVSEL.setLabel("Calendar Event Selection")
 	rtcSym_CR_CALEVSEL.setDefaultValue("WEEK")
 	
+	configName = Variables.get("__CONFIGURATION_NAME")
+
 	#Generate Output Header
 	rtcHeaderFile = rtcComponent.createFileSymbol(None, None)
 	rtcHeaderFile.setSourcePath("../peripheral/rtc_6056/templates/plib_rtc.h.ftl")
@@ -67,7 +69,7 @@ def instantiateComponent(rtcComponent):
 	rtcHeaderFile.setOutputName("plib_rtc.h")
 	rtcHeaderFile.setOverwrite(True)
 	rtcHeaderFile.setDestPath("peripheral/rtc/")
-	rtcHeaderFile.setProjectPath("peripheral/rtc/")
+	rtcHeaderFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
 	rtcHeaderFile.setType("HEADER")
 	#Generate Output source
 	rtcSourceFile = rtcComponent.createFileSymbol(None, None)
@@ -76,6 +78,6 @@ def instantiateComponent(rtcComponent):
 	rtcSourceFile.setOutputName("plib_rtc.c")
 	rtcSourceFile.setOverwrite(True)
 	rtcSourceFile.setDestPath("peripheral/rtc/")
-	rtcSourceFile.setProjectPath("peripheral/rtc/")
+	rtcSourceFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
 	rtcSourceFile.setType("SOURCE")
 

@@ -28,7 +28,8 @@ def instantiateComponent(trngComponent):
 	trngIndex.setVisible(False)
 	trngIndex.setDefaultValue(int(num))
 
-	
+	configName = Variables.get("__CONFIGURATION_NAME")
+
 	#Generate Output Header
 	trngHeaderFile = trngComponent.createFileSymbol(None, None)
 	trngHeaderFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.h.ftl")
@@ -37,7 +38,7 @@ def instantiateComponent(trngComponent):
 	trngHeaderFile.setMarkup(True)
 	trngHeaderFile.setOverwrite(True)
 	trngHeaderFile.setDestPath("peripheral/trng/")
-	trngHeaderFile.setProjectPath("peripheral/trng/")
+	trngHeaderFile.setProjectPath("config/" + configName + "/peripheral/trng/")
 	trngHeaderFile.setType("HEADER")
 	#Generate Output source
 	
@@ -48,7 +49,7 @@ def instantiateComponent(trngComponent):
 	trngSourceFile.setMarkup(True)
 	trngSourceFile.setOverwrite(True)
 	trngSourceFile.setDestPath("peripheral/trng/")
-	trngSourceFile.setProjectPath("peripheral/trng/")
+	trngSourceFile.setProjectPath("config/" + configName + "/peripheral/trng/")
 	trngSourceFile.setType("SOURCE")
 
 def showWarning(trngWarning, trngReserved):

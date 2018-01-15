@@ -44,11 +44,13 @@ def instantiateComponent(uartComponent):
 	uartSym_MR_PAR.setLabel(uartBitField_MR_PAR.getDescription())
 	uartSym_MR_PAR.setDefaultValue("NO")
 
+	configName = Variables.get("__CONFIGURATION_NAME")
+
 	uartHeaderFile = uartComponent.createFileSymbol(None, None)
 	uartHeaderFile.setSourcePath("../peripheral/uart_6418/templates/plib_uart.h")
 	uartHeaderFile.setOutputName("plib_uart.h")
 	uartHeaderFile.setDestPath("peripheral/uart/")
-	uartHeaderFile.setProjectPath("peripheral/uart/")
+	uartHeaderFile.setProjectPath("config/" + configName + "/peripheral/uart/")
 	uartHeaderFile.setType("HEADER")
 	uartHeaderFile.setOverwrite(True)
 	
@@ -56,7 +58,7 @@ def instantiateComponent(uartComponent):
 	uartHeader1File.setSourcePath("../peripheral/uart_6418/templates/plib_uart.h.ftl")
 	uartHeader1File.setOutputName("plib_uart" + str(num) + ".h")
 	uartHeader1File.setDestPath("peripheral/uart/")
-	uartHeader1File.setProjectPath("peripheral/uart/")
+	uartHeader1File.setProjectPath("config/" + configName + "/peripheral/uart/")
 	uartHeader1File.setType("HEADER")
 	uartHeader1File.setOverwrite(True)
 	
@@ -64,7 +66,7 @@ def instantiateComponent(uartComponent):
 	uartSource1File.setSourcePath("../peripheral/uart_6418/templates/plib_uart.c.ftl")
 	uartSource1File.setOutputName("plib_uart" + str(num) + ".c")
 	uartSource1File.setDestPath("peripheral/uart/")
-	uartSource1File.setProjectPath("peripheral/uart/")
+	uartSource1File.setProjectPath("config/" + configName + "/peripheral/uart/")
 	uartSource1File.setType("SOURCE")
 	uartSource1File.setOverwrite(True)
 
