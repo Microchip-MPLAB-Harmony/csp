@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    TRNG.h
+    plib_trng.h
 
   Summary:
     Interface definition of the Watch Dog Timer Plib (TRNG).
@@ -38,9 +38,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-<#macro GenerateCode>
-#ifndef _TRNG_H    // Guards against multiple inclusion
-#define _TRNG_H
+#ifndef TRNG${INDEX?string}_H    // Guards against multiple inclusion
+#define TRNG${INDEX?string}_H
+
 
 #include <xc.h>
 #include <stdint.h>
@@ -71,25 +71,27 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	uint32_t				data;
 	<#lt>} TRNG_OBJECT ;
 	
-	<#lt>TRNG_OBJECT TRNG;
+	<#lt>TRNG_OBJECT trng;
 </#if>
 /***************************** TRNG API *******************************/
-void TRNG_RandomNumberGenerate( void );
+<#if trngEnableInterrupt == true>
+	<#lt>void TRNG${INDEX?string}_RandomNumberGenerate( void );
+</#if>
 <#if trngEnableInterrupt == false>
-	<#lt>uint32_t TRNG_ReadData( void );
+	<#lt>uint32_t TRNG${INDEX?string}_ReadData( void );
 </#if>
 <#if trngEnableInterrupt == true>
-	<#lt>void TRNG_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
+	<#lt>void TRNG${INDEX?string}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
 </#if>	
 <#if trngEnableInterrupt == true>
-	<#lt>void inline TRNG_DATARDY_Handler( void )
+	<#lt>static void inline TRNG${INDEX?string}_DATARDY_Handler( void )
 	<#lt>{
 	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD;
-	<#lt>	TRNG.data = _TRNG_REGS->TRNG_ODATA.w;
-	<#lt>	if(TRNG.callback != NULL)
-    <#lt>        {
-    <#lt>            TRNG.callback(TRNG.context,TRNG.data);
-    <#lt>        }
+	<#lt>	trng.data = _TRNG_REGS->TRNG_ODATA.w;
+	<#lt>	if(trng.callback != NULL)
+    <#lt>   {
+    <#lt>   	trng.callback(trng.context,trng.data);
+    <#lt>   }
 	<#lt>}
 </#if>	
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -104,4 +106,3 @@ void TRNG_RandomNumberGenerate( void );
 <#else>
 /**** Warning: This module is used and configured by Crypto Library ****/
 </#if>
-
