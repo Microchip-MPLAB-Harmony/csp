@@ -141,8 +141,45 @@ void SYS_Initialize( void *data );
 */
 
 void SYS_Tasks ( void );
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Type Definitions
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+/* System Objects
+
+  Summary:
+    Structure holding the system's object handles
+
+  Description:
+    This structure contains the object handles for all objects in the
+    MPLAB Harmony project's system configuration.
+
+  Remarks:
+    These handles are returned from the "Initialize" functions for each module
+    and must be passed into the "Tasks" function for each module.
+*/
+
+typedef struct
+{
+${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
+} SYSTEM_OBJECTS;
 </#if>
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: extern declarations
+// *****************************************************************************
+// *****************************************************************************
+
+${LIST_SYSTEM_DEFINITIONS_H_EXTERNS}
+
+<#if CoreGenAppFiles == true >
+extern SYSTEM_OBJECTS sysObj;
+</#if>
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

@@ -80,11 +80,13 @@ def instantiateComponent(usartComponent):
 	usartSym_MR_SYNC.setLabel(usartBitField_MR_SYNC.getDescription())
 	usartSym_MR_SYNC.setDefaultValue(False)
 
+	configName = Variables.get("__CONFIGURATION_NAME")
+
 	usartHeaderFile = usartComponent.createFileSymbol(None, None)
 	usartHeaderFile.setSourcePath("../peripheral/usart_6089/templates/plib_usart.h")
 	usartHeaderFile.setOutputName("plib_usart.h")
 	usartHeaderFile.setDestPath("peripheral/usart/")
-	usartHeaderFile.setProjectPath("peripheral/usart/")
+	usartHeaderFile.setProjectPath("config/" + configName + "/peripheral/usart/")
 	usartHeaderFile.setType("HEADER")
 	usartHeaderFile.setOverwrite(True)
 	
@@ -92,7 +94,7 @@ def instantiateComponent(usartComponent):
 	usartHeader1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.h.ftl")
 	usartHeader1File.setOutputName("plib_usart" + str(num) + ".h")
 	usartHeader1File.setDestPath("peripheral/usart/")
-	usartHeader1File.setProjectPath("peripheral/usart/")
+	usartHeader1File.setProjectPath("config/" + configName + "/peripheral/usart/")
 	usartHeader1File.setType("HEADER")
 	usartHeader1File.setOverwrite(True)
 	
@@ -100,7 +102,7 @@ def instantiateComponent(usartComponent):
 	usartSource1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.c.ftl")
 	usartSource1File.setOutputName("plib_usart" + str(num) + ".c")
 	usartSource1File.setDestPath("peripheral/usart/")
-	usartSource1File.setProjectPath("peripheral/usart/")
+	usartSource1File.setProjectPath("config/" + configName + "/peripheral/usart/")
 	usartSource1File.setType("SOURCE")
 	usartSource1File.setOverwrite(True)
 

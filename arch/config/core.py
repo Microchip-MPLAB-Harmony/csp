@@ -14,6 +14,7 @@ def instantiateComponent(coreComponent):
 	genAppFiles = coreComponent.createBooleanSymbol("CoreGenAppFiles", prjMenu)
 	genAppFiles.setLabel("Generate Harmony Application Files?")
 
+	configName = Variables.get("__CONFIGURATION_NAME")
 
 	#generate main.c file
 	mainSourceFile = coreComponent.createFileSymbol(None, None)
@@ -22,7 +23,7 @@ def instantiateComponent(coreComponent):
 	mainSourceFile.setMarkup(True)
 	mainSourceFile.setOverwrite(True)
 	mainSourceFile.setDestPath("../../")
-	mainSourceFile.setProjectPath("../../")
+	mainSourceFile.setProjectPath("")
 	mainSourceFile.setType("SOURCE")
 
 	#generate system_init.c file
@@ -32,7 +33,7 @@ def instantiateComponent(coreComponent):
 	initSourceFile.setMarkup(True)
 	initSourceFile.setOverwrite(True)
 	initSourceFile.setDestPath("")
-	initSourceFile.setProjectPath("")
+	initSourceFile.setProjectPath("config/" + configName + "/")
 	initSourceFile.setType("SOURCE")
 
 	#generate system_config.h file
@@ -42,7 +43,7 @@ def instantiateComponent(coreComponent):
 	confHeaderFile.setMarkup(True)
 	confHeaderFile.setOverwrite(True)
 	confHeaderFile.setDestPath("")
-	confHeaderFile.setProjectPath("")
+	confHeaderFile.setProjectPath("config/" + configName + "/")
 	confHeaderFile.setType("HEADER")
 
 	#generate system_definitions.h file
@@ -52,10 +53,11 @@ def instantiateComponent(coreComponent):
 	defHeaderFile.setMarkup(True)
 	defHeaderFile.setOverwrite(True)
 	defHeaderFile.setDestPath("")
-	defHeaderFile.setProjectPath("")
+	defHeaderFile.setProjectPath("config/" + configName + "/")
 	defHeaderFile.setType("HEADER")
-
 	systemDefinitionsHeadersList = coreComponent.createListSymbol("LIST_SYSTEM_DEFINITIONS_H_INCLUDES", None)
+	systemDefinitionsObjList = coreComponent.createListSymbol("LIST_SYSTEM_DEFINITIONS_H_OBJECTS", None)
+	systemDefinitionsExternsList = coreComponent.createListSymbol("LIST_SYSTEM_DEFINITIONS_H_EXTERNS", None)
 
 
 	#generate system_interrupt.c file
@@ -65,7 +67,7 @@ def instantiateComponent(coreComponent):
 	intSourceFile.setMarkup(True)
 	intSourceFile.setOverwrite(True)
 	intSourceFile.setDestPath("")
-	intSourceFile.setProjectPath("")
+	intSourceFile.setProjectPath("config/" + configName + "/")
 	intSourceFile.setType("SOURCE")
 
 	#generate app.c file
@@ -75,7 +77,7 @@ def instantiateComponent(coreComponent):
 	appSourceFile.setMarkup(True)
 	appSourceFile.setOverwrite(True)
 	appSourceFile.setDestPath("../../")
-	appSourceFile.setProjectPath("../../")
+	appSourceFile.setProjectPath("")
 	appSourceFile.setType("SOURCE")
 	appSourceFile.setEnabled(False)
 	appSourceFile.setDependencies(genAppSourceFile, ["CoreGenAppFiles"])
@@ -87,7 +89,7 @@ def instantiateComponent(coreComponent):
 	appHeaderFile.setMarkup(True)
 	appHeaderFile.setOverwrite(True)
 	appHeaderFile.setDestPath("../../")
-	appHeaderFile.setProjectPath("../../")
+	appHeaderFile.setProjectPath("")
 	appHeaderFile.setType("HEADER")
 	appHeaderFile.setEnabled(False)
 	appHeaderFile.setDependencies(genAppHeaderFile, ["CoreGenAppFiles"])

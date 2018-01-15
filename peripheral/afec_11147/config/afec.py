@@ -571,22 +571,22 @@ def instantiateComponent(afecComponent):
 	afecHeaderFile = afecComponent.createFileSymbol(None, None)
 	afecHeaderFile.setSourcePath("../peripheral/afec_"+afecRegModule.getID()+"/templates/plib_afec.h.ftl")
 	afecHeaderFile.setOutputName("plib_afec" + str(num) + ".h")
-	afecHeaderFile.setDestPath("system_config/" + configName +"/peripheral/afec/")
-	afecHeaderFile.setProjectPath("system_config/" + configName +"/peripheral/afec/")
+	afecHeaderFile.setDestPath("peripheral/afec/")
+	afecHeaderFile.setProjectPath("config/" + configName +"/peripheral/afec/")
 	afecHeaderFile.setType("HEADER")
 	
 	afecGlobalHeaderFile = afecComponent.createFileSymbol(None, None)
 	afecGlobalHeaderFile.setSourcePath("../peripheral/afec_"+afecRegModule.getID() + "/plib_afec.h")
 	afecGlobalHeaderFile.setOutputName("plib_afec.h")
-	afecGlobalHeaderFile.setDestPath("system_config/" + configName +"/peripheral/afec/")
-	afecGlobalHeaderFile.setProjectPath("system_config/" + configName +"/peripheral/afec/")
+	afecGlobalHeaderFile.setDestPath("peripheral/afec/")
+	afecGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/afec/")
 	afecGlobalHeaderFile.setType("HEADER")
 	
 	afecSource1File = afecComponent.createFileSymbol(None, None)
 	afecSource1File.setSourcePath("../peripheral/afec_"+afecRegModule.getID()+"/templates/plib_afec.c.ftl")
 	afecSource1File.setOutputName("plib_afec" + str(num) + ".c")
-	afecSource1File.setDestPath("system_config/" + configName +"/peripheral/afec/")
-	afecSource1File.setProjectPath("system_config/" + configName +"/peripheral/afec/")
+	afecSource1File.setDestPath("peripheral/afec/")
+	afecSource1File.setProjectPath("config/" + configName +"/peripheral/afec/")
 	afecSource1File.setType("SOURCE")
 	
 

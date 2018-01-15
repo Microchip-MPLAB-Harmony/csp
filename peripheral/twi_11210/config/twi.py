@@ -60,16 +60,18 @@ def instantiateComponent(twiComponent):
 		twiMasterHeaderFile.setSourcePath("../peripheral/twi_" + REG_MODULE_TWI.getID() + "/plib_twi_master.h")
 		twiMasterHeaderFile.setOutputName("plib_twi_master.h")
 		twiMasterHeaderFile.setDestPath("/peripheral/twi/")
-		twiMasterHeaderFile.setProjectPath("/peripheral/twi/")
+		twiMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/twi/")
 		twiMasterHeaderFile.setType("HEADER")
 		twiMasterHeaderFile.setOverwrite(False)
+
+	configName = Variables.get("__CONFIGURATION_NAME")
 
 	#Source File
 	twiMainSourceFile = twiComponent.createFileSymbol(None, None)
 	twiMainSourceFile.setSourcePath("../peripheral/twi_" + REG_MODULE_TWI.getID() + "/templates/plib_twi.c.ftl")
 	twiMainSourceFile.setOutputName("plib_twi" + str(num) + ".c")
 	twiMainSourceFile.setDestPath("/peripheral/twi/")
-	twiMainSourceFile.setProjectPath("/peripheral/twi/")
+	twiMainSourceFile.setProjectPath("config/" + configName + "/peripheral/twi/")
 	twiMainSourceFile.setType("SOURCE")
 	twiMainSourceFile.setMarkup(True)
 	
@@ -78,7 +80,7 @@ def instantiateComponent(twiComponent):
 	twiInstHeaderFile.setSourcePath("../peripheral/twi_" + REG_MODULE_TWI.getID() + "/templates/plib_twi.h.ftl")
 	twiInstHeaderFile.setOutputName("plib_twi" + str(num) + ".h")
 	twiInstHeaderFile.setDestPath("/peripheral/twi/")
-	twiInstHeaderFile.setProjectPath("/peripheral/twi/")
+	twiInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/twi/")
 	twiInstHeaderFile.setType("HEADER")
 	twiInstHeaderFile.setMarkup(True)
 
