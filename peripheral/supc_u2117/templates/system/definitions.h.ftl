@@ -1,0 +1,1 @@
+#include "peripheral/supc/plib_supc${SUPC_INDEX}.h"
