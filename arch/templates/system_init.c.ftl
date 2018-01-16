@@ -53,36 +53,45 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Configuration Bits
 // ****************************************************************************
 // ****************************************************************************
+${LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION}
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Driver Initialization Data
 // *****************************************************************************
 // *****************************************************************************
+${LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA}
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Data
 // *****************************************************************************
 // *****************************************************************************
+<#if CoreGenAppFiles == true >
+/* Structure to hold the object handles for the modules in the system. */
+SYSTEM_OBJECTS sysObj;
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Module Initialization Data
 // *****************************************************************************
 // *****************************************************************************
+${LIST_SYSTEM_INIT_C_MODULE_INITIALIZATION_DATA}
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Library/Stack Initialization Data
 // *****************************************************************************
 // *****************************************************************************
+${LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA}
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Initialization
 // *****************************************************************************
 // *****************************************************************************
+${LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION}
 
 /*******************************************************************************
   Function:
@@ -96,11 +105,17 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 void SYS_Initialize ( void* data )
 {
-    /* Core Processor Initialization */
-<#if clkEnable == true>
-    SYS_CLK_Initialize( NULL );
-</#if>
+${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DATA}
+${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
 
+${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS}
+${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS}
+${LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES}
+${LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE}
+
+<#if CoreGenAppFiles == true >
+	APP_Initialize();
+</#if>
 }
 
 

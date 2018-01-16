@@ -688,3 +688,10 @@ clkSourceFile.setType("SOURCE")
 
 #Add clock related code to common files
 systemDefinitionsHeadersList.addValue("#include \"peripheral/clk/sys_clk.h\"")
+
+clkSystemInitFile = coreComponent.createFileSymbol(None, None)
+clkSystemInitFile.setType("STRING")
+clkSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+clkSystemInitFile.setSourcePath("../peripheral/clk_sam_e70/templates/sys_clk_system_init.c.ftl")
+clkSystemInitFile.setMarkup(True)
+

@@ -53,7 +53,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
+${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
+<#if CoreGenAppFiles == true >
+#include "app.h"
+</#if>
 #include "system_definitions.h"
 
 // *****************************************************************************
@@ -61,6 +64,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: System Interrupt Vector Functions
 // *****************************************************************************
 // *****************************************************************************
+${LIST_SYSTEM_INTERRUPT_C_VECTORS}
 
 
 
