@@ -97,6 +97,7 @@ def instantiateComponent(usartComponent):
 	usartHeader1File.setProjectPath("config/" + configName + "/peripheral/usart/")
 	usartHeader1File.setType("HEADER")
 	usartHeader1File.setOverwrite(True)
+	usartHeader1File.setMarkup(True)
 	
 	usartSource1File = usartComponent.createFileSymbol(None, None)
 	usartSource1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.c.ftl")
@@ -105,6 +106,13 @@ def instantiateComponent(usartComponent):
 	usartSource1File.setProjectPath("config/" + configName + "/peripheral/usart/")
 	usartSource1File.setType("SOURCE")
 	usartSource1File.setOverwrite(True)
+	usartSource1File.setMarkup(True)
+
+	initList = Database.getSymbolByID("core", "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+	initList.addValue("\tUSART" + str(num) + "_Initialize();")
+
+	headerList = Database.getSymbolByID("core", "LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	headerList.addValue("#include \"peripheral/usart/plib_usart" + str(num) + ".h\"")
 
 def setOversampling(usartSym_MR_OVER, baudRate):
 	if (lBaudClock >= (16 * baudRate.getValue())):

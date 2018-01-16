@@ -35,6 +35,17 @@ def instantiateComponent(coreComponent):
 	initSourceFile.setDestPath("")
 	initSourceFile.setProjectPath("config/" + configName + "/")
 	initSourceFile.setType("SOURCE")
+	systemInitFuseList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION", None)
+	systemInitDrvList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA", None)
+	systemInitModuleList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_MODULE_INITIALIZATION_DATA", None)
+	systemInitLibList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA", None)
+	systemInitSysList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION", None)
+	systemInitDataList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DATA", None)
+	systemInitCoreList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE", None)
+	systemInitDriver1List = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS", None)
+	systemInitDriver2List = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS", None)
+	systemInitSysList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES", None)
+	systemInitMWList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE", None)
 
 	#generate system_config.h file
 	confHeaderFile = coreComponent.createFileSymbol(None, None)
@@ -45,6 +56,11 @@ def instantiateComponent(coreComponent):
 	confHeaderFile.setDestPath("")
 	confHeaderFile.setProjectPath("config/" + configName + "/")
 	confHeaderFile.setType("HEADER")
+	systemConfigIncludesList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_GLOBAL_INCLUDES", None)
+	systemConfigSysList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_SYSTEM_SERVICE_CONFIGURATION", None)
+	systemConfigDrvList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_DRIVER_CONFIGURATION", None)
+	systemConfigMWList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION", None)
+	systemConfigAppList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_APPLICATION_CONFIGURATION", None)
 
 	#generate system_definitions.h file
 	defHeaderFile = coreComponent.createFileSymbol(None, None)
@@ -69,6 +85,8 @@ def instantiateComponent(coreComponent):
 	intSourceFile.setDestPath("")
 	intSourceFile.setProjectPath("config/" + configName + "/")
 	intSourceFile.setType("SOURCE")
+	systemIntHeadersList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_C_INCLUDES", None)
+	systemIntVectorsList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_C_VECTORS", None)
 
 	#generate app.c file
 	appSourceFile = coreComponent.createFileSymbol(None, None)
@@ -93,9 +111,6 @@ def instantiateComponent(coreComponent):
 	appHeaderFile.setType("HEADER")
 	appHeaderFile.setEnabled(False)
 	appHeaderFile.setDependencies(genAppHeaderFile, ["CoreGenAppFiles"])
-
-	#leoSymbol = Database.getSymbolByID("core", "LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	#systemDefinitionsHeadersList.addValue("String2")
 
 	# load device specific information, clock and pin manager
 	execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")
