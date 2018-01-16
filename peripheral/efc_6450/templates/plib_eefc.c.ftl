@@ -36,28 +36,25 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#include "plib_eefc.h"
+#include "plib_eefc${INDEX?string}.h"
 
-uint16_t EEFC_GetRowSize( void )
-{
-	return (0x2000);
-}
+static uint32_t status = 0;
 
-void EEFC_EraseRow( uint32_t address )
+void EEFC${INDEX?string}_EraseRow( uint32_t address )
 {
 	volatile uint16_t page_number;
 
 	/*Calculate the Page number to be passed for FARG register*/
 	page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
 	<#if eefcEnableInterrupt == true>
-		<#lt>_EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY;
+		<#lt>	_EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY;
 	</#if>
 	/* Issue the FLASH erase operation*/
 	_EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_EPA|EEFC_FCR_FARG(page_number|0x2)|EEFC_FCR_FKEY_PASSWD);
 
 }
 
-void EEFC_WritePage( uint32_t address, uint32_t* data )
+void EEFC${INDEX?string}_WritePage( uint32_t address, uint32_t* data )
 {
 	volatile uint16_t page_number;
 	/*Calculate the Page number to be passed for FARG register*/
@@ -75,12 +72,8 @@ void EEFC_WritePage( uint32_t address, uint32_t* data )
 
 }
 
-void EEFC_WriteQuadWord( uint32_t address, uint32_t* data )
+void EEFC${INDEX?string}_WriteQuadWord( uint32_t address, uint32_t* data )
 {
-	if((address & 0x0000000f))
-	{
-	return;
-	}
 	volatile uint16_t page_number;
 
 	/*Calculate the Page number to be passed for FARG register*/
@@ -95,29 +88,15 @@ void EEFC_WriteQuadWord( uint32_t address, uint32_t* data )
 	</#if>
 	/* Issue the FLASH write operation*/
 	_EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
-	//status = _EFC_REGS->EEFC_FSR.w;
-	/*Wait for the FLASH operation to complete*/
 
 }
 
-uint16_t EEFC_GetPageSize( void )
+EEFC_STATUS EEFC${INDEX?string}_StatusGet( void )
 {
-	return 0x200;
-}
-EEFC_STATUS EEFC_StatusGet( void )
-{
-	uint32_t status =  _EFC_REGS->EEFC_FSR.w;
-	if (status & EEFC_FSR_FLERR_Msk)
+	status =  _EFC_REGS->EEFC_FSR.w;
+	if (status & (EEFC_FSR_FLERR_Msk |  EEFC_FSR_FLOCKE_Msk | 0x000f0000))
 	{
 		return EEFC_ERROR;
-	}
-	else if (status & EEFC_FSR_FLOCKE_Msk)
-	{
-		return EEFC_LOCK_ERROR;
-	}
-	else if (status & 0x000f0000)
-	{
-		return EEFC_ECC_ERROR;
 	}
 	else if (status & EEFC_FSR_FRDY_Msk)
 	{
@@ -126,17 +105,12 @@ EEFC_STATUS EEFC_StatusGet( void )
 	return EEFC_BUSY;
 }
 
-bool EEFC_IsBusy( void )
+uint32_t EEFC${INDEX?string}_ErrorGet( void )
 {
-	return(_EFC_REGS->EEFC_FSR.w & EEFC_FSR_FRDY_Msk);
+	return(status);
 }
 
-uint16_t EEFC_GetLockRegionSize( void )
-{
-	return(IFLASH_SIZE / 128);
-}
-
-void EEFC_RegionLock(uint32_t address)
+void EEFC${INDEX?string}_RegionLock(uint32_t address)
 {
 	volatile uint16_t page_number;
 	/*Calculate the Page number to be passed for FARG register*/
@@ -147,7 +121,7 @@ void EEFC_RegionLock(uint32_t address)
 	_EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_SLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 }
 
-void EEFC_RegionUnlock(uint32_t address)
+void EEFC${INDEX?string}_RegionUnlock(uint32_t address)
 {
 	volatile uint16_t page_number;
 	/*Calculate the Page number to be passed for FARG register*/
@@ -159,7 +133,7 @@ void EEFC_RegionUnlock(uint32_t address)
 }
 
 <#if eefcEnableInterrupt == true>
-	<#lt>void EEFC_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context )
+	<#lt>void EEFC${INDEX?string}_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	eefc.callback = callback;
 	<#lt>	eefc.context = context;

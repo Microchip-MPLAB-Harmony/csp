@@ -37,9 +37,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _EEFC_H    // Guards against multiple inclusion
-#define _EEFC_H
-#endif
+#ifndef EEFC${INDEX?string}_H    // Guards against multiple inclusion
+#define EEFC${INDEX?string}_H
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -68,19 +68,31 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+#define EEFC_ROWSIZE					0x2000
+#define EEFC_PAGESIZE					0x200
+#define	EEFC_LOCKSIZE					0x4000
+
 typedef enum
 {
-/* FLASH operation completed successfully */
-EEFC_SUCCESS = 0x1,
-/* FLASH operation lead to an error */
-EEFC_ERROR = 0x2,
-/*Flash region is locked*/
-EEFC_LOCK_ERROR = 0x3,
-/*Flash Encountered an ECC error*/
-EEFC_ECC_ERROR = 0x4,
-/*Flash Operation is not complete*/
-EEFC_BUSY = 0x5
+	/* FLASH operation completed successfully */
+	EEFC_SUCCESS = 0x1,
+	/*Flash Operation is not complete*/
+	EEFC_BUSY,
+	/* FLASH operation lead to an error */
+	EEFC_ERROR
 } EEFC_STATUS;
+
+typedef enum
+{
+	/*In-valid command*/
+	EEFC_CMD_ERROR = 0x2,
+	/*Flash region is locked*/
+	EEFC_LOCK_ERROR = 0x4,
+	/*Flash Error*/
+	EEFC_FLERR_ERROR = 0x8,
+	/*Flash Encountered an ECC error*/
+	EEFC_ECC_ERROR = 0xF0000,
+} EEFC_ERR;
 
 <#if eefcEnableInterrupt == true>
 	<#lt>typedef void (*EEFC_CALLBACK)(uintptr_t context);
@@ -94,22 +106,19 @@ EEFC_BUSY = 0x5
 	
 </#if>
 
-void EEFC_WriteQuadWord( uint32_t address, uint32_t* data );
-void EEFC_WritePage( uint32_t address, uint32_t* data );
-void EEFC_EraseRow( uint32_t address );
-bool EEFC_IsBusy( void );
-uint16_t EEFC_GetPageSize( void );
-uint16_t EEFC_GetRowSize( void );
-uint16_t EEFC_GetLockRegionSize( void );
-EEFC_STATUS EEFC_StatusGet( void );
-void EEFC_RegionLock(uint32_t address);
-void EEFC_RegionUnlock(uint32_t address);
+void EEFC${INDEX?string}_WriteQuadWord( uint32_t address, uint32_t* data );
+void EEFC${INDEX?string}_WritePage( uint32_t address, uint32_t* data );
+void EEFC${INDEX?string}_EraseRow( uint32_t address );
+uint32_t EEFC${INDEX?string}_ErrorGet( void );
+EEFC_STATUS EEFC${INDEX?string}_StatusGet( void );
+void EEFC${INDEX?string}_RegionLock(uint32_t address);
+void EEFC${INDEX?string}_RegionUnlock(uint32_t address);
 <#if eefcEnableInterrupt == true>
-	<#lt>void EEFC_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context );
+	<#lt>void EEFC${INDEX?string}_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context );
 </#if>
 
 <#if eefcEnableInterrupt == true>
-<#lt>static void inline EEFC_OPR_Handler( void )
+<#lt>static void inline EEFC${INDEX?string}_OPR_Handler( void )
 <#lt>{
 	<#lt>	uint32_t ul_fmr = EFC->EEFC_FMR;
 	<#lt>	EFC->EEFC_FMR = ( ul_fmr & (~EEFC_FMR_FRDY));
@@ -125,3 +134,5 @@ void EEFC_RegionUnlock(uint32_t address);
 }
 #endif
 // DOM-IGNORE-END
+
+#endif
