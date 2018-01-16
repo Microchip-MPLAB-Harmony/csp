@@ -37,8 +37,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _EEFC_H    // Guards against multiple inclusion
-#define _EEFC_H
+#ifndef EEFC_H    // Guards against multiple inclusion
+#define EEFC_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -80,17 +80,35 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 typedef enum
 {
-/* FLASH operation completed successfully */
-EEFC_SUCCESS = 0x1,
-/* FLASH operation lead to an error */
-EEFC_ERROR = 0x2,
-/*Flash region is locked*/
-EEFC_LOCK_ERROR = 0x3,
-/*Flash Encountered an ECC error*/
-EEFC_ECC_ERROR = 0x4,
-/*Flash Operation is not complete*/
-EEFC_BUSY = 0x5
+	/* FLASH operation completed successfully */
+	EEFC_SUCCESS = 0x1,
+	/*Flash Operation is not complete*/
+	EEFC_BUSY,
+	/* FLASH operation lead to an error */
+	EEFC_ERROR
 } EEFC_STATUS;
+
+/* EEFC ERR
+ Summary:
+	Defines the data type for the EEFC Error.
+	
+ Description:
+	This enum is used to define error encountered during last Flash operation.
+	
+ Remarks:
+	None.
+*/ 
+typedef enum
+{
+	/*In-valid command*/
+	EEFC_CMD_ERROR = 0x2,
+	/*Flash region is locked*/
+	EEFC_LOCK_ERROR = 0x4,
+	/*Flash Error*/
+	EEFC_FLERR_ERROR = 0x8,
+	/*Flash Encountered an ECC error*/
+	EEFC_ECC_ERROR = 0xF0000,
+} EEFC_ERR;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -136,7 +154,7 @@ this interface.
 	the given location in FLASH memory.
 	
  Precondition:
-	Validate if EEFC controller is ready to accept new request by calling EEFC_IsBusy()
+	None
 	
  Parameters:
 	address:- FLASH address to be modified
@@ -147,28 +165,27 @@ this interface.
 	
  Example:
 	<code>
-		bool status = EEFC_IsBusy();
-		if (status)
+		EEFC0_WriteQuadWord( 0x500000, &buffer);
+		do 
 		{
-			EEFC_WriteQuadWord( 0x400000, &buffer);
-		}
-		while(EEFC_StatusGet() != EEFC_SUCCESS);
+			status = EEFC0_StatusGet();
+		} while (status != EEFC_SUCCESS);
 	</code>
 */
-void EEFC_WriteQuadWord( uint32_t address, uint32_t* data );
+void EEFCx_WriteQuadWord( uint32_t address, uint32_t* data );
 
 /* Function:
-	void EEFC_WriteRow( uint32_t address, uint32_t* data )
+	void EEFCx_WritePage( uint32_t address, uint32_t* data )
 	
  Summary:
-	Writes data of size equivalent to row size to a given FLASH address.
+	Writes data of size equivalent to page size to a given FLASH address.
 	
  Description:
-	This function takes a 32-bit address, a pointer to data of size equivalent to row size
+	This function takes a 32-bit address, a pointer to data of size equivalent to page size
 	and writes it to the given location in FLASH memory.
 	
  Precondition:
-	Validate if EEFC controller is ready to accept new request by calling EEFC_IsBusy()
+	None.
 	
  Parameters:
 	address:- FLASH address to be modified
@@ -179,28 +196,26 @@ void EEFC_WriteQuadWord( uint32_t address, uint32_t* data );
 	
  Example:
 	<code>
-		bool status = EEFC_IsBusy();
-		if (!status)
+		EEFC0_WritePage( 0x500000, &buffer);
+		do 
 		{
-			EEFC_WriteRow( 0x400000, &buffer);
-		}
-		while(EEFC_StatusGet() != EEFC_SUCCESS);
+			status = EEFC0_StatusGet();
+		} while (status != EEFC_SUCCESS);
 	</code>
 */
-void EEFC_WriteRow( uint32_t address, uint32_t* data );
+void EEFCx_WritePage( uint32_t address, uint32_t* data );
 
 /* Function:
-	void EEFC_ErasePage( uint32_t address)
+	void EEFCx_EraseRow( uint32_t address)
 	
  Summary:
-	Erases a Page in the FLASH.
+	Erases a Row in the FLASH.
 	
  Description:
-	This function takes a 32-bit address and calculates the page number to be erased
-	Finally it issues a FLASH Erase command for the calculated Page number.
+	This function is used to erase a row (collection of pages).
 	
  Precondition:
-	Validate if EEFC controller is ready to accept new request by calling EEFC_IsBusy()
+	None.
 	
  Parameters:
 	address:- FLASH address to be Erased  
@@ -210,23 +225,23 @@ void EEFC_WriteRow( uint32_t address, uint32_t* data );
 	
  Example:
 	<code>
-		bool status = EEFC_IsBusy();
-		if (!status)
+		EEFC0_EraseRow( 0x500000 );
+		do 
 		{
-			EEFC_ErasePage( 0x400000 );
-		}while(EEFC_StatusGet() != EEFC_SUCCESS);
+			status = EEFC0_StatusGet();
+		} while (status != EEFC_SUCCESS);		
 	</code>
 */
-void EEFC_ErasePage( uint32_t address );
+void EEFCx_EraseRow( uint32_t address );
 
 /* Function:
-	bool EEFC_IsBusy( void )
+	uint32_t EEFCx_ErrorGet( void )
 	
  Summary:
-	Returns the current state of EEFC controller.
+	Returns the error encountered by EEFC controller.
 	
  Description:
-	This function is used to check if EEFC controller is ready to accept new request.
+	This function is used to check error encountered by EEFC controller.
 	
  Precondition:
 	None.
@@ -235,102 +250,22 @@ void EEFC_ErasePage( uint32_t address );
 	None
 	
  Returns:
-	bool :- EEFC controller is busy or not
+	uint32_t :- EEFC controller error type
 	
  Example:
 	<code>
-		bool status = EEFC_IsBusy();
+		uint32_t error;
+		if (EEFC0_StatusGet() == EEFC_ERROR)
+		{
+			error = EEFC0_ErrorGet();
+		}
 	</code>
 */
 
-bool EEFC_IsBusy( void );
+uint32_t EEFCx_ErrorGet( void );
 
 /* Function:
-	uint16_t EEFC_GetPageSize( void )
-	
- Summary:
-	Returns the Page size of on-chip FLASH.
-	
- Description:
-	This function is used to find the Page Size of the on-chip FLASH.
-	
- Precondition:
-	None.
-	
- Parameters:
-	None
-	
- Returns:
-	uint16_t :- Page Size
-	
- Example:
-	<code>
-		uint_16t size = EEFC_GetPageSize();
-		//calculate number of erasable blocks on flash
-		uint32_t eraseBlocks = DRV_MEDIA_SIZE/size;
-	</code>
-*/
-
-uint16_t EEFC_GetPageSize( void );
-
-/* Function:
-	uint16_t EEFC_GetRowSize( void )
-	
- Summary:
-	Returns the Row size of on-chip FLASH.
-	
- Description:
-	This function is used to find the row size of the on-chip FLASH.
-	
- Precondition:
-	None.
-	
- Parameters:
-	None
-	
- Returns:
-	uint16_t :- Row Size
-	
- Example:
-	<code>
-		bool size = EEFC_GetRowSize();
-		//calculate number of writable blocks on Flash
-		uint32_t writeBlocks = DRV_MEDIA_SIZE/size;
-	</code>
-*/
-
-uint16_t EEFC_GetRowSize( void );
-
-/* Function:
-	uint16_t EEFC_GetLockRegionSize( void )
-	
- Summary:
-	Returns the minimum region size of on-chip FLASH that can be locked.
-	
- Description:
-	This function is used to find the minimum region size size of the on-chip FLASH.
-	
- Precondition:
-	None.
-	
- Parameters:
-	None
-	
- Returns:
-	uint16_t :- Region Size
-	
- Example:
-	<code>
-		bool size = EEFC_GetLockRegionSize();
-		//calculate number of lockable blocks on Flash
-		uint32_t numberRegions = DRV_MEDIA_SIZE/size;
-	</code>
-*/
-
-uint16_t EEFC_GetLockRegionSize( void );
-
-/* Function:
-	EEFC_Status EEFC_StatusGet( void )
+	EEFC_Status EEFCx_StatusGet( void )
 	
  Summary:
 	Returns the current status of EEFC controller.
@@ -348,14 +283,14 @@ uint16_t EEFC_GetLockRegionSize( void );
 	
  Example:
 	<code>
-		uint8_t status = EEFC_StatusGet();
+		uint8_t status = EEFC0_StatusGet();
 	</code>
 */
 
-EEFC_STATUS EEFC_StatusGet( void );
+EEFC_STATUS EEFCx_StatusGet( void );
 
 /* Function:
-	void EEFC_RegionLock(uint32_t address);
+	void EEFCx_RegionLock(uint32_t address);
 	
  Summary:
 	Locks a Flash region.
@@ -375,18 +310,18 @@ EEFC_STATUS EEFC_StatusGet( void );
 	
  Example:
 	<code>
-		bool status = EEFC_IsBusy();
-		if (!status)
+		EEFC0_RegionLock(0x00500000);
+		do 
 		{
-		EEFC_RegionLock(0x00500000);
-		}
+			status = EEFC0_StatusGet();
+		} while (status != EEFC_SUCCESS);		
 	</code>
 */
 
-void EEFC_RegionLock(uint32_t address);
+void EEFCx_RegionLock(uint32_t address);
 
 /* Function:
-	void EEFC_RegionUnlock(uint32_t address);
+	void EEFCx_RegionUnlock(uint32_t address);
 	
  Summary:
 	Unlocks a Flash region.
@@ -406,18 +341,19 @@ void EEFC_RegionLock(uint32_t address);
 	
  Example:
 	<code>
-		bool status = EEFC_IsBusy();
-		if (!status)
+		EEFC0_RegionUnlock(0x00500000);
+		do 
 		{
-		EEFC_RegionUnlock(0x00500000);
+			status = EEFC0_StatusGet();
+		} while (status != EEFC_SUCCESS);
 		}
 	</code>
 */
 
-void EEFC_RegionUnlock(uint32_t address);
+void EEFCx_RegionUnlock(uint32_t address);
 
 /* Function:
-	void EEFC_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context )
+	void EEFCx_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context )
 	
  Summary:
 	Sets the pointer to the function (and it's context) to be called when the
@@ -443,7 +379,7 @@ void EEFC_RegionUnlock(uint32_t address);
 	
  Example:
 	<code>
-		EEFC_CallbackRegister(MyCallback, &myData);
+		EEFCx_CallbackRegister(MyCallback, &myData);
 	</code>
 	
  Remarks:
@@ -453,7 +389,7 @@ void EEFC_RegionUnlock(uint32_t address);
 	See the EEFC_CALLBACK type definition for additional information.
 */
 
-void EEFC_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context );
+void EEFCx_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
