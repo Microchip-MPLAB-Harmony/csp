@@ -1,6 +1,6 @@
 def instantiateComponent(wdtComponent):
 
-	num = wdtComponent.getID()
+	num = wdtComponent.getID()[-1:]
 	print("Running WDT" )
 
 	wdtMenu = wdtComponent.createMenuSymbol(None, None)
@@ -19,18 +19,22 @@ def instantiateComponent(wdtComponent):
 	
 	wdtCounterValue = wdtComponent.createIntegerSymbol("wdtWDV", wdtMenu)
 	wdtCounterValue.setLabel("Counter value")
-	wdtCounterValue.setMax(0x1ff)
-	wdtCounterValue.setDefaultValue(0x1ff)
+	wdtCounterValue.setMax(0xfff)
+	wdtCounterValue.setDefaultValue(0xfff)
 	
 	wdtCounterValueTime = wdtComponent.createIntegerSymbol("wdtWDVTIME", wdtMenu)
 	wdtCounterValueTime.setLabel("Counter value in ms")
 	wdtCounterValueTime.setDependencies(wdtcounter_cal, ["wdtWDV"])
 	wdtCounterValueTime.setReadOnly(True)
 	
+	wdtIndex = wdtComponent.createIntegerSymbol("INDEX", wdtMenu)
+	wdtIndex.setVisible(False)
+	wdtIndex.setDefaultValue(int(num))
+	
 	wdtDeltaValue = wdtComponent.createIntegerSymbol("wdtWDD", wdtMenu)
 	wdtDeltaValue.setLabel("Delta value")
-	wdtDeltaValue.setMax(0x1ff)
-	wdtDeltaValue.setDefaultValue(0x1ff)
+	wdtDeltaValue.setMax(0xfff)
+	wdtDeltaValue.setDefaultValue(0xfff)
 	
 	wdtDeltaValueTime = wdtComponent.createIntegerSymbol("wdtWDDTIME", wdtMenu)
 	wdtDeltaValueTime.setLabel("Counter value in ms")
@@ -51,28 +55,50 @@ def instantiateComponent(wdtComponent):
 
 	wdtHeader1File = wdtComponent.createFileSymbol(None, None)
 	wdtHeader1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.h.ftl")
-	wdtHeader1File.setOutputName("plib_wdt.h")
+	wdtHeader1File.setOutputName("plib_wdt" + str(num) + ".h")
 	wdtHeader1File.setDestPath("peripheral/wdt/")
 	wdtHeader1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
 	wdtHeader1File.setType("HEADER")
+	wdtHeader1File.setMarkup(True)
 	
 	wdtSource1File = wdtComponent.createFileSymbol(None, None)
 	wdtSource1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.c.ftl")
-	wdtSource1File.setOutputName("plib_wdt.c")
+	wdtSource1File.setOutputName("plib_wdt" + str(num) + ".c")
 	wdtSource1File.setDestPath("peripheral/wdt/")
 	wdtSource1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
 	wdtSource1File.setType("SOURCE")
+	wdtSource1File.setMarkup(True)
+	
+	
+	wdtSystemInitFile = wdtComponent.createFileSymbol(None, None)
+	wdtSystemInitFile.setType("STRING")
+	wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+	wdtSystemInitFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_initialize.h.ftl")
+	wdtSystemInitFile.setMarkup(True)
+
+	wdtSystemIntFile = wdtComponent.createFileSymbol(None, None)
+	wdtSystemIntFile.setType("STRING")
+	wdtSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
+	wdtSystemIntFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_interrupt.c.ftl")
+	wdtSystemIntFile.setMarkup(True)
+
+	wdtSystemDefFile = wdtComponent.createFileSymbol(None, None)
+	wdtSystemDefFile.setType("STRING")
+	wdtSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	wdtSystemDefFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_definitions.h.ftl")
+	wdtSystemDefFile.setMarkup(True)
 
 def wdtResetEnable(wdtInterrupt,test):
 	if test.getValue() == True:
 		wdtInterrupt.setVisible(False)
+		wdtInterrupt.setValue("wdtinterruptMode", False, 2)
 	else:
 		wdtInterrupt.setVisible(True)
 
 def	wdtdelta_cal(wdtDeltaValueTime,test):
 	data = test.getValue() * 3.90625
-	wdtDeltaValueTime.setValue("wdtWDDTIME",data,300)
+	wdtDeltaValueTime.setValue("wdtWDDTIME",int(round(data)),2)
 	
 def	wdtcounter_cal(wdtCounterValueTime,test):
 	data = test.getValue() * 3.90625
-	wdtCounterValueTime.setValue("wdtWDVTIME",data,300)
+	wdtCounterValueTime.setValue("wdtWDVTIME",int(round(data)),2)
