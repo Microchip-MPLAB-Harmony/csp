@@ -38,22 +38,22 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#include "plib_rswdt.h"
+#include "plib_rswdt${INDEX?string}.h"
 
-void RSWDT_Initialize( void )
+void RSWDT${INDEX?string}_Initialize( void )
 {
 	_RSWDT_REGS->RSWDT_MR.w = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}) \
 							${rswdtdebugHalt?then(' | RSWDT_MR_WDDBGHLT_Msk','')}${rswdtidleHalt?then(' | RSWDT_MR_WDIDLEHLT_Msk','')}${rswdtEnableReset?then(' | RSWDT_MR_WDRSTEN_Msk','')}${rswdtinterruptMode?then(' | RSWDT_MR_WDFIEN_Msk','')};
 							
 }
 
-void RSWDT_Clear(void)
+void RSWDT${INDEX?string}_Clear(void)
 {
 	_RSWDT_REGS->RSWDT_CR.w = (RSWDT_CR_KEY_PASSWD|RSWDT_CR_WDRSTT_Msk);
 }
 
 <#if rswdtinterruptMode == true>
-	<#lt>void RSWDT_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context )
+	<#lt>void RSWDT${INDEX?string}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	rswdt.callback = callback;
 	<#lt>	rswdt.context = context;
