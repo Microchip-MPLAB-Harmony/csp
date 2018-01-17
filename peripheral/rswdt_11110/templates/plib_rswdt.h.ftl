@@ -38,8 +38,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef _RSWDT_H    // Guards against multiple inclusion
-#define _RSWDT_H
+#ifndef RSWDT${INDEX?string}_H    // Guards against multiple inclusion
+#define RSWDT${INDEX?string}_H
 
 #include <xc.h>
 #include <stdint.h>
@@ -72,15 +72,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>RSWDT_OBJECT rswdt;
 </#if>
 /***************************** RSWDT API *******************************/
-void RSWDT_Initialize( void );
-void RSWDT_Clear( void );
+void RSWDT${INDEX?string}_Initialize( void );
+void RSWDT${INDEX?string}_Clear( void );
 <#if rswdtinterruptMode == true>
-	<#lt>void RSWDT_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context );
+	<#lt>void RSWDT${INDEX?string}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context );
 </#if>	
 <#if rswdtinterruptMode == true>
-	<#lt>void inline RSWDT_TIMEOUT_Handler( void )
+	<#lt>static void inline RSWDT${INDEX?string}_TIMEOUT_Handler( void )
 	<#lt>{
-	<#lt>   volatile uint32_t status = _RSWDT_REGS->RSWDT_SR.w;	
+	<#lt>   _RSWDT_REGS->RSWDT_SR.w;	
 	<#lt>	if(rswdt.callback != NULL)
     <#lt>        {
     <#lt>            rswdt.callback(rswdt.context);

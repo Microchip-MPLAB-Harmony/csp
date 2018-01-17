@@ -1,0 +1,1 @@
+#include "peripheral/wdt/plib_rswdt${INDEX?string}.h"
