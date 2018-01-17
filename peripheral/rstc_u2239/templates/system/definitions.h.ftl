@@ -1,0 +1,1 @@
+#include "peripheral/rstc/plib_rstc${RSTC_INDEX}.h"
