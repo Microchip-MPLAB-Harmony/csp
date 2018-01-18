@@ -684,6 +684,7 @@ clkSourceFile.setSourcePath("../peripheral/clk_sam_e70/templates/sys_clk_static_
 clkSourceFile.setOutputName("sys_clk_static.c")
 clkSourceFile.setDestPath("peripheral/clk/")
 clkSourceFile.setProjectPath("config/" + configName + "/peripheral/clk/")
+clkSourceFile.setMarkup(True)
 clkSourceFile.setType("SOURCE")
 
 #Add clock related code to common files
