@@ -72,11 +72,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
+	${LIST_SYSTEM_TASKS_C_CALL_SYSTEM_TASKS}
 
     /* Maintain Device Drivers */
+	${LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS}
 
     /* Maintain Middleware & Other Libraries */
-	${LIST_SYSTEM_TASKS_C_FUNC}
+	${LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS}
+
     /* Maintain the application's state machine. */
     APP_Tasks();
 }

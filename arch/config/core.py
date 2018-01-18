@@ -113,7 +113,7 @@ def instantiateComponent(coreComponent):
 	appHeaderFile.setDependencies(genAppHeaderFile, ["CoreGenAppFiles"])
 	
 	
-	#generate system_interrupt.c file
+	#generate system_tasks.c file
 	taskSourceFile = coreComponent.createFileSymbol(None, None)
 	taskSourceFile.setSourcePath("templates/system_tasks.c.ftl")
 	taskSourceFile.setOutputName("system_tasks.c")
@@ -123,7 +123,9 @@ def instantiateComponent(coreComponent):
 	taskSourceFile.setProjectPath("config/" + configName + "/")
 	taskSourceFile.setType("SOURCE")
 	taskSourceFile.setEnabled(False)
-	systemTaskList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_FUNC", None)
+	taskSysList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_CALL_SYSTEM_TASKS", None)
+	taskDrvList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS", None)
+	taskLibList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS", None)
 	taskSourceFile.setDependencies(genTaskSourceFile, ["CoreGenAppFiles"])
 	
 	# load device specific information, clock and pin manager

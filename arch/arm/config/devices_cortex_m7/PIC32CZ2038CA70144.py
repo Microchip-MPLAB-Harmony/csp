@@ -28,3 +28,6 @@ rswdtDisable.setDependencies(RSWDT_DISABLE, ["wdtDISABLE"])
 devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)
 devCfgComment.setLabel("Note: Set Device Configuration Bits via Programming Tool")
 
+# load family specific configuration
+execfile(Variables.get("__ARCH_DIR") + "/PIC32CZ_CA70.py")
+
