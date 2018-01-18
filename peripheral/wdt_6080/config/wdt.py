@@ -51,42 +51,45 @@ def instantiateComponent(wdtComponent):
 	wdtIdleHalt.setLabel("Enable Idle halt")
 	wdtIdleHalt.setDefaultValue(False)	
 	
-	configName = Variables.get("__CONFIGURATION_NAME")
-
-	wdtHeader1File = wdtComponent.createFileSymbol(None, None)
-	wdtHeader1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.h.ftl")
-	wdtHeader1File.setOutputName("plib_wdt" + str(num) + ".h")
-	wdtHeader1File.setDestPath("peripheral/wdt/")
-	wdtHeader1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
-	wdtHeader1File.setType("HEADER")
-	wdtHeader1File.setMarkup(True)
+	wdtDisableValue = Database.getSymbolValue("core", "wdtDISABLE")
 	
-	wdtSource1File = wdtComponent.createFileSymbol(None, None)
-	wdtSource1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.c.ftl")
-	wdtSource1File.setOutputName("plib_wdt" + str(num) + ".c")
-	wdtSource1File.setDestPath("peripheral/wdt/")
-	wdtSource1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
-	wdtSource1File.setType("SOURCE")
-	wdtSource1File.setMarkup(True)
-	
-	
-	wdtSystemInitFile = wdtComponent.createFileSymbol(None, None)
-	wdtSystemInitFile.setType("STRING")
-	wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-	wdtSystemInitFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_initialize.h.ftl")
-	wdtSystemInitFile.setMarkup(True)
+	if wdtDisableValue == False:
+		configName = Variables.get("__CONFIGURATION_NAME")
 
-	wdtSystemIntFile = wdtComponent.createFileSymbol(None, None)
-	wdtSystemIntFile.setType("STRING")
-	wdtSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
-	wdtSystemIntFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_interrupt.c.ftl")
-	wdtSystemIntFile.setMarkup(True)
+		wdtHeader1File = wdtComponent.createFileSymbol(None, None)
+		wdtHeader1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.h.ftl")
+		wdtHeader1File.setOutputName("plib_wdt" + str(num) + ".h")
+		wdtHeader1File.setDestPath("peripheral/wdt/")
+		wdtHeader1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
+		wdtHeader1File.setType("HEADER")
+		wdtHeader1File.setMarkup(True)
+		
+		wdtSource1File = wdtComponent.createFileSymbol(None, None)
+		wdtSource1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.c.ftl")
+		wdtSource1File.setOutputName("plib_wdt" + str(num) + ".c")
+		wdtSource1File.setDestPath("peripheral/wdt/")
+		wdtSource1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
+		wdtSource1File.setType("SOURCE")
+		wdtSource1File.setMarkup(True)
+		
+		
+		wdtSystemInitFile = wdtComponent.createFileSymbol(None, None)
+		wdtSystemInitFile.setType("STRING")
+		wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+		wdtSystemInitFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_initialize.h.ftl")
+		wdtSystemInitFile.setMarkup(True)
 
-	wdtSystemDefFile = wdtComponent.createFileSymbol(None, None)
-	wdtSystemDefFile.setType("STRING")
-	wdtSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	wdtSystemDefFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_definitions.h.ftl")
-	wdtSystemDefFile.setMarkup(True)
+		wdtSystemIntFile = wdtComponent.createFileSymbol(None, None)
+		wdtSystemIntFile.setType("STRING")
+		wdtSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
+		wdtSystemIntFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_interrupt.c.ftl")
+		wdtSystemIntFile.setMarkup(True)
+
+		wdtSystemDefFile = wdtComponent.createFileSymbol(None, None)
+		wdtSystemDefFile.setType("STRING")
+		wdtSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+		wdtSystemDefFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_definitions.h.ftl")
+		wdtSystemDefFile.setMarkup(True)
 
 def wdtResetEnable(wdtInterrupt,test):
 	if test.getValue() == True:
