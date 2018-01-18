@@ -111,7 +111,21 @@ def instantiateComponent(coreComponent):
 	appHeaderFile.setType("HEADER")
 	appHeaderFile.setEnabled(False)
 	appHeaderFile.setDependencies(genAppHeaderFile, ["CoreGenAppFiles"])
-
+	
+	
+	#generate system_interrupt.c file
+	taskSourceFile = coreComponent.createFileSymbol(None, None)
+	taskSourceFile.setSourcePath("templates/system_tasks.c.ftl")
+	taskSourceFile.setOutputName("system_tasks.c")
+	taskSourceFile.setMarkup(True)
+	taskSourceFile.setOverwrite(True)
+	taskSourceFile.setDestPath("")
+	taskSourceFile.setProjectPath("config/" + configName + "/")
+	taskSourceFile.setType("SOURCE")
+	taskSourceFile.setEnabled(False)
+	systemTaskList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_FUNC", None)
+	taskSourceFile.setDependencies(genTaskSourceFile, ["CoreGenAppFiles"])
+	
 	# load device specific information, clock and pin manager
 	execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")
 
@@ -120,3 +134,6 @@ def genAppSourceFile(appSourceFile, genAppFiles):
 
 def genAppHeaderFile(appHeaderFile, genAppFiles):
 	appHeaderFile.setEnabled(genAppFiles.getValue())
+
+def genTaskSourceFile(taskSourceFile, genTaskFiles):
+	taskSourceFile.setEnabled(genTaskFiles.getValue())

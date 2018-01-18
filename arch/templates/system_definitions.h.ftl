@@ -49,9 +49,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stddef.h>
 #include <stdbool.h>
 ${LIST_SYSTEM_DEFINITIONS_H_INCLUDES}
-
+#include "app.h"
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
 #endif
-// DOM-IGNORE-END
+//DOM-IGNORE-END
+
 
 // *****************************************************************************
 // *****************************************************************************
