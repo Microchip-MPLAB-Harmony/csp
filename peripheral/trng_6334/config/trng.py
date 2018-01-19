@@ -51,6 +51,18 @@ def instantiateComponent(trngComponent):
 	trngSourceFile.setDestPath("peripheral/trng/")
 	trngSourceFile.setProjectPath("config/" + configName + "/peripheral/trng/")
 	trngSourceFile.setType("SOURCE")
+	
+	trngSystemIntFile = trngComponent.createFileSymbol(None, None)
+	trngSystemIntFile.setType("STRING")
+	trngSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
+	trngSystemIntFile.setSourcePath("../peripheral/trng_6334/templates/system/system_interrupt.c.ftl")
+	trngSystemIntFile.setMarkup(True)
+
+	trngSystemDefFile = trngComponent.createFileSymbol(None, None)
+	trngSystemDefFile.setType("STRING")
+	trngSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	trngSystemDefFile.setSourcePath("../peripheral/trng_6334/templates/system/system_definitions.h.ftl")
+	trngSystemDefFile.setMarkup(True)
 
 def showWarning(trngWarning, trngReserved):
 	trngWarning.setVisible(trngReserved.getValue())
