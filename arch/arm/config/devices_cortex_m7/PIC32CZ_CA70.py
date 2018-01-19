@@ -102,7 +102,7 @@ def genArchHeaderFile(archHeaderFile, CoreUseMPU):
 
 archHeaderFile.setDependencies(genArchHeaderFile, ["CoreUseMPU", "CoreUseTimer"])
 
-#Add code to initialize MPU and Core Timer
+#Add code to initialize Core Timer
 archInitFile = coreComponent.createFileSymbol(None, None)
 archInitFile.setType("STRING")
 archInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
@@ -133,10 +133,12 @@ armSysCallSourceFile.setType("SOURCE")
 #generate device specific header file
 armDeviceHeaderFile = coreComponent.createFileSymbol(None, None)
 armDeviceHeaderFile.setSourcePath("arm/templates/devices_cortex_m7.h.ftl")
-armDeviceHeaderFile.setOutputName(Variables.get("__PROCESSOR") + ".h")
+armDeviceHeaderFile.setOutputName("device_" + Variables.get("__PROCESSOR") + ".h")
 armDeviceHeaderFile.setMarkup(True)
 armDeviceHeaderFile.setOverwrite(True)
 armDeviceHeaderFile.setDestPath("arch/arm/")
 armDeviceHeaderFile.setProjectPath("config/" + configName + "/arch/arm/")
 armDeviceHeaderFile.setType("HEADER")
+
+systemDefinitionsHeadersList.addValue("#include \"arch/arm/device_" + Variables.get("__PROCESSOR") + ".h\"")
 
