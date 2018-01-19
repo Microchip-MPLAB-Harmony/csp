@@ -50,12 +50,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 #include "system_config.h"
-#include "system/common/sys_module.h"
-
-#if defined(__PIC32MX__) || defined(__PIC32MZ__) || \
-    defined(__PIC32MK__) || defined(__PIC32WK__)
-    #include "peripheral/osc/plib_osc.h"
-#endif
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -1013,36 +1007,7 @@ typedef void ( *SYS_CLK_ERROR_HANDLER )  ( CLK_SOURCES_SYSTEM systemSource, uint
 
 typedef    struct
 {
-#if defined(__PIC32MX__) || defined(__PIC32MZ__) || \
-    defined(__PIC32MK__) || defined(__PIC32WK__)
-
     /* System module initialization */
-    SYS_MODULE_INIT          moduleInit;
-
-    /* Initializations for System clock  */
-    CLK_SOURCES_SYSTEM       systemClockSource;
-
-    /* Set the System clock frequency */
-    uint32_t                 systemClockFrequencyHz;
-
-    /* Wait until the clock switch operation is completed */
-    bool                     waitTillComplete;
-
-    /* Even though the secondary oscillator is not used, keeping the
-    oscillator running, allows a fast switch to the lower system
-    clock for low-power operation */
-    bool                    secondaryOscKeepEnabled;
-
-    /* System action on a 'Wait' instruction */
-    OSC_OPERATION_ON_WAIT   onWaitInstruction;
-
-#else
-
-    /* System module initialization */
-    SYS_MODULE_INIT         moduleInit;
-
-#endif
-
 } SYS_CLK_INIT;
 
 
@@ -2243,16 +2208,6 @@ void SYS_CLK_PeripheralEnable ( int peripheralId );
  */
 
 void SYS_CLK_PeripheralDisable ( int peripheralId );
-
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: File includes for the APIs which are required for backward
-//          compatibility.
-// *****************************************************************************
-// *****************************************************************************
-
-#include "system/clk/sys_clk_compatibility.h"
 
 
 //DOM-IGNORE-BEGIN

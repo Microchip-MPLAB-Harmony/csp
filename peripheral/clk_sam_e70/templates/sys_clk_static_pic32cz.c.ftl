@@ -83,7 +83,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "system_config.h"
 #include "system_definitions.h"
-#include "system/clk/sys_clk.h"
+#include "peripheral/clk/sys_clk.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -148,11 +148,11 @@ void SYS_CLK_Initialize( const SYS_CLK_INIT const* clkInit )
     mainSetup.bypassXtal = ${SYS_CLK_CKGR_MOR_MOSCXTBY?c};
     mainSetup.enableRcOsc = ${SYS_CLK_CKGR_MOR_MOSCRCEN?c};
 <#if SYS_CLK_CKGR_MOR_MOSCRCEN >
-    mainSetup.rcOscFrequency = ${SYS_CLK_CKGR_MOR_MOSCRCF_VALUE};
+    //mainSetup.rcOscFrequency = ${SYS_CLK_CKGR_MOR_MOSCRCF_VALUE};
 <#else>
     mainSetup.rcOscFrequency = SYS_CLK_RC_FREQUENCY_4_MHZ;
 </#if>
-    mainSetup.source = ${SYS_CLK_CKGR_MOR_MOSCSEL_VALUE};
+    //mainSetup.source = ${SYS_CLK_CKGR_MOR_MOSCSEL_VALUE};
     SYS_CLK_MainClockSetup ( &mainSetup );
 <#if SYS_CLK_CKGR_PLLAR_DIVA0_MULA0>
 
@@ -180,9 +180,9 @@ void SYS_CLK_Initialize( const SYS_CLK_INIT const* clkInit )
 </#if>
 
     /* Configure master clock controller */
-    masterSetup.source = ${SYS_CLK_PMC_MCKR_CSS_VALUE};
-    masterSetup.prescaler = ${SYS_CLK_PMC_MCKR_PRES_VALUE};
-    masterSetup.divider = ${SYS_CLK_PMC_MCKR_MDIV_VALUE};
+    //masterSetup.source = ${SYS_CLK_PMC_MCKR_CSS_VALUE};
+    //masterSetup.prescaler = ${SYS_CLK_PMC_MCKR_PRES_VALUE};
+    //masterSetup.divider = ${SYS_CLK_PMC_MCKR_MDIV_VALUE};
     SYS_CLK_MasterClockSetup ( &masterSetup );
 
 <@CONFIGURE_PCR 0 SYS_CLK_PMC_PCR_EN0 SYS_CLK_PMC_PCR_GCLKEN0 SYS_CLK_PMC_PCR_GCLKCSS0_VALUE SYS_CLK_PMC_PCR_GCLKDIV0 />
@@ -197,8 +197,8 @@ void SYS_CLK_Initialize( const SYS_CLK_INIT const* clkInit )
 <@CONFIGURE_PCK INDEX=7 ENABLED=SYS_CLK_PMC_SCER_PCK7 CSS=SYS_CLK_PMC_PCK7_CSS_VALUE PRES=SYS_CLK_PMC_PCK7_PRES />
 
     /* - Enable the peripheral clock selected by MHC/peripheral driver */
-   	_PMC_REGS->PMC_PCER0.w=${SYS_CLK_PMC_PCER0};
-    _PMC_REGS->PMC_PCER1.w=${SYS_CLK_PMC_PCER1};
+   	//_PMC_REGS->PMC_PCER0.w=${SYS_CLK_PMC_PCER0};
+    //_PMC_REGS->PMC_PCER1.w=${SYS_CLK_PMC_PCER1};
 
 
 }

@@ -127,6 +127,13 @@ def instantiateComponent(coreComponent):
 	taskDrvList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS", None)
 	taskLibList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS", None)
 	taskSourceFile.setDependencies(genTaskSourceFile, ["CoreGenAppFiles"])
+
+	#set XC32 include path
+	defSym = coreComponent.createSettingSymbol(None, None)
+	defSym.setCategory("C32")
+	defSym.setKey("extra-include-directories")
+	defSym.setValue("../src;../src/config/"+configName+";../src/packs/"+Variables.get("__PROCESSOR")+"_DFP;../src/packs/CMSIS")
+	defSym.setAppend(True, ";")
 	
 	# load device specific information, clock and pin manager
 	execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")

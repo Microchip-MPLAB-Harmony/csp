@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "arch/arm/${__PROCESSOR?lower_case}.h" /* for vectors structure and default handler names and CMSIS API */
+#include "arch/arm/device_${__PROCESSOR?lower_case}.h" /* for vectors structure and default handler names and CMSIS API */
 <#if CoreUseMPU == true>
 #include "arch/arch.h" /* for ARCH_CORE_MPU_Initialize() defintion */
 #include "arch/arm/arm_cm_mpu.h"

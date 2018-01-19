@@ -35,7 +35,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
 
-#include "arch/arm/${__PROCESSOR?lower_case}.h"
+#include "arch/arm/device_${__PROCESSOR?lower_case}.h"
 #include "arch/arm/arm_cm_mpu.h"
 
 const uint32_t mpu_system_regions[] =
