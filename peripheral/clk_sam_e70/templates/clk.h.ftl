@@ -1,6 +1,6 @@
 <#--
 /*******************************************************************************
-Copyright (c) 2013-2014 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -22,25 +22,60 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
  -->
-// <editor-fold defaultstate="collapsed" desc="SYS_CLK Initialization Data">
+
+#ifndef CLK_H
+#define CLK_H
+
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
+ 
 // *****************************************************************************
-/* System Clock Initialization Data
+// *****************************************************************************
+// Section: CLK Module System Interface Routines
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+/* Function:
+    void CLK_Initialize ( void )
+
+  Summary:
+    Initializes hardware of the System Clock and Peripheral Clock.
+    
+  Description:
+    This function initializes the hardware of System Clock and Peripheral Clocks.
+
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    //Example 1: Do not alter the configuration bit settings
+    CLK_Initialize ( );
+
+    </code>
+
+  Remarks:
+    None.
 */
-<#if SYS_CLK_MODE = "DYNAMIC">
-const SYS_CLK_INIT sysClkInit =
-{
-    .moduleInit = {0},
-<#if SYS_CLK_SOURCE?has_content>
-    .systemClockSource = SYS_CLK_SOURCE,
-</#if>
-<#if SYS_CLK_FREQ?has_content>
-    .systemClockFrequencyHz = SYS_CLK_FREQ,
-</#if>
-<#else>
-    .waitTillComplete = false,
-</#if>
-};
-// </editor-fold>
+
+void CLK_Initialize ( void );
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif //CLK_H
+
 <#--
 /*******************************************************************************
  End of File
