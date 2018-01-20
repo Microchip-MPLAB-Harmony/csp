@@ -1,15 +1,15 @@
 <#--
 /*******************************************************************************
-  System Clock Initialization call 
+  Clock Initialization call 
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    sys_clk_system_init.c.ftl
+    clk_system_init.c.ftl
 
   Summary:
-    This template is referenced in system_init.c.ftl to call System Clock 
+    This template is referenced in system_init.c.ftl to call Clock 
 	Initialization routine.
 
   Description:
@@ -20,7 +20,7 @@
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2013 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -43,10 +43,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 //DOM-IGNORE-END
 -->
-<#if clkEnable == true>
     /*Initialize System Clocks */
-    SYS_CLK_Initialize( NULL );
-</#if>
+    CLK_Initialize( NULL );
 <#--
 /*******************************************************************************
  End of File
