@@ -5,52 +5,69 @@ print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 ###################################################################################################
 
 # Function to enable PORT Channel specific interrupt when any of the pins has interrupt enabled on that particular channel.
-def setupInterrupt(portInterruptLocal, pinInterrupt):
-    if pinInterrupt.getValue() != "":
-        i = []
-        # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
+def setupInterrupt(portInterruptLocal, pinInterruptLocal):
+    i = []
+    # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
+    
+    # Split the id name by "_" and put all the splitted names in the list "i"
+    i = pinInterruptLocal.getID().split("_")
+    
+    # 2nd element of the list is suppose to be the pin number which we want, get the channel name of that pin in J
+    j = pinChannel[int(i[1])-1].getValue()
+    # find the index of the string "j" in the list "channel" and save it in k.
+    k = channel.index(j)
         
-        # Split the id name by "_" and put all the splitted names in the list "i"
-        i = pinInterrupt.getID().split("_")
-        
-        # 2nd element of the list is suppose to be the pin number which we want, get that in J
-        j = pinChannel[int(i[1])].getValue()
-        
-        # find the index of the string "j" in the list "channel" and save it in k.
-        k = channel.index(j)
-        
+    if pinInterruptLocal.getValue() != "":
         portInterrupt[k].setValue(portInterruptLocal.getID() + "INT_VALUE", True, 1)
-
+    else:
+        # if interrupt has been disabled for a particular pin, then see if is it disabled for all the pins of
+        # corresponding channel; if so, then uncheck corresponding port interrupt in GUI.
+        boolValue = False
+        for pinNumber in range(1, packagePinCount+1):
+            if j == pinChannel[pinNumber-1].getValue():
+                if pinInterrupt[pinNumber-1].getValue() != "":
+                    boolValue = True
+                    break
+        if boolValue == False:
+            portInterrupt[k].setValue(portInterruptLocal.getID() + "INT_VALUE_1", False, 1)    
+            
 # Function to enable PORT Channel when any of the pins is using the particular channel.
 # Once the PORT channel is enabled, option of corresponding channel interrupt also starts showing up.        
-def setupPort(usePort, pinChannel):
-
-  #  if ((pinChannel.getValue() == "B" and usePort.getID() == "PIO_INST_IDX1") or (pinChannel.getValue() == "A" and usePort.getID == "PIO_INST_IDX0") or (pinChannel.getValue() == "C" and usePort.getID == "PIO_INST_IDX2") or (pinChannel.getValue() == "D" and usePort.getID == "PIO_INST_IDX3") or (pinChannel.getValue() == "E" and usePort.getID == "PIO_INST_IDX4")):
+def setupPort(usePort, pinChannelLocal):
+    
+    # Split the id name by "_" and put all the splitted names in the list "i"
+    # 2nd element in the list will be the port name
+    i = usePort.getID().split("_")
+    # find the index of the string i[1] in the list "channel" and save it in k.
+    k = channel.index(i[1])
+    
+  #  if ((pinChannelLocal.getValue() == "B" and usePort.getID() == "PIO_B_USED") or (pinChannelLocal.getValue() == "A" and usePort.getID == "PIO_A_USED") or (pinChannelLocal.getValue() == "C" and usePort.getID == "PIO_C_USED") or (pinChannelLocal.getValue() == "D" and usePort.getID == "PIO_D_USED") or (pinChannelLocal.getValue() == "E" and usePort.getID == "PIO_E_USED")):
     # the above "if" statement is not working for some strange reasons, thats why it has been divided in "if-elif" below.
-    if(pinChannel.getValue() == "A" and usePort.getID() == "PIO_INST_IDX0"):
-        i = usePort.getID()[-1]
+    if(pinChannelLocal.getValue() == "A" and usePort.getID() == "PIO_A_USED"):
+            
+     #   i = usePort.getID()[-1]
         usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
-        portInterrupt[int(i)].setVisible(True)
+        portInterrupt[k].setVisible(True)
         
-    elif(pinChannel.getValue() == "B" and usePort.getID() == "PIO_INST_IDX1"):
-        i = usePort.getID()[-1]
+    elif(pinChannelLocal.getValue() == "B" and usePort.getID() == "PIO_B_USED"):
+     #   i = usePort.getID()[-1]
         usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
-        portInterrupt[int(i)].setVisible(True)
+        portInterrupt[k].setVisible(True)
         
-    elif(pinChannel.getValue() == "C" and usePort.getID() == "PIO_INST_IDX2"):
-        i = usePort.getID()[-1]
+    elif(pinChannelLocal.getValue() == "C" and usePort.getID() == "PIO_C_USED"):
+      #  i = usePort.getID()[-1]
         usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
-        portInterrupt[int(i)].setVisible(True)
+        portInterrupt[k].setVisible(True)
         
-    elif(pinChannel.getValue() == "D" and usePort.getID() == "PIO_INST_IDX3"):
-        i = usePort.getID()[-1]
+    elif(pinChannelLocal.getValue() == "D" and usePort.getID() == "PIO_D_USED"):
+     #   i = usePort.getID()[-1]
         usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
-        portInterrupt[int(i)].setVisible(True)
+        portInterrupt[k].setVisible(True)
         
-    elif(pinChannel.getValue() == "E" and usePort.getID() == "PIO_INST_IDX4"):
-        i = usePort.getID()[-1]
+    elif(pinChannelLocal.getValue() == "E" and usePort.getID() == "PIO_E_USED"):
+      #  i = usePort.getID()[-1]
         usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
-        portInterrupt[int(i)].setVisible(True)
+        portInterrupt[k].setVisible(True)
 
 
 ###################################################################################################
@@ -59,7 +76,7 @@ def setupPort(usePort, pinChannel):
         
 pioMenu = coreComponent.createMenuSymbol(None, None)
 pioMenu.setLabel("PIO")
-pioMenu.setDescription("Configuraiton for PIO PLIB")
+pioMenu.setDescription("Configuration for PIO PLIB")
 
 pioEnable = coreComponent.createBooleanSymbol("PIO_ENABLE", pioMenu)
 pioEnable.setLabel("Use PIO PLIB?")
@@ -76,7 +93,7 @@ pioPackage.setLabel("Pin Package")
     
 pinConfiguration = coreComponent.createMenuSymbol(None, pioEnable)
 pinConfiguration.setLabel("Pin Configuration")
-pinConfiguration.setDescription("Configuraiton for PIO Pins")
+pinConfiguration.setDescription("Configuration for PIO Pins")
 
 pin = []
 pinName = []
@@ -91,77 +108,82 @@ pinLatch = []
 pinOpenDrain = []
 pinPullUp = []
 pinPullDown = []
+global pinInterrupt
 pinInterrupt = []
 
 pinChannelList = []
 pinInterruptList = []
 
+global packagePinCount
 packagePinCount = Pin.getPackagePinCount(pioPackage.getValue())
 
-for pinNumber in range(0, packagePinCount):
+# Note that all the lists below starts from 0th index and goes till "packagePinCount-1"
+# But actual pin numbers on the device starts from 1 (not from 0) and goes till "packagePinCount"
+# that is why "pinNumber-1" is used to index the lists wherever applicable.
+for pinNumber in range(1, packagePinCount + 1):
     pin.append(pinNumber)
-    pin[pinNumber]= coreComponent.createMenuSymbol(None, pinConfiguration)
-    pin[pinNumber].setLabel("Pin " + str(pinNumber))
-    pin[pinNumber].setDescription("Configuraiton for Pin " + str(pinNumber) )
+    pin[pinNumber-1]= coreComponent.createMenuSymbol(None, pinConfiguration)
+    pin[pinNumber-1].setLabel("Pin " + str(pinNumber))
+    pin[pinNumber-1].setDescription("Configuration for Pin " + str(pinNumber) )
     
     pinName.append(pinNumber)
-    pinName[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber])
-    pinName[pinNumber].setLabel("Name")
-    pinName[pinNumber].setDefaultValue("")
+    pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
+    pinName[pinNumber-1].setLabel("Name")
+    pinName[pinNumber-1].setDefaultValue("")
     
     pinType.append(pinNumber)
-    pinType[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pin[pinNumber])
-    pinType[pinNumber].setLabel("Type")
+    pinType[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pin[pinNumber-1])
+    pinType[pinNumber-1].setLabel("Type")
     
     pinPeripheralFunction.append(pinNumber)
-    pinPeripheralFunction[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber])
-    pinPeripheralFunction[pinNumber].setLabel("Peripheral Selection")
+    pinPeripheralFunction[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber-1])
+    pinPeripheralFunction[pinNumber-1].setLabel("Peripheral Selection")
     
     pinBitPosition.append(pinNumber)
-    pinBitPosition[pinNumber] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PIO_PIN", pin[pinNumber])
-    pinBitPosition[pinNumber].setLabel("Bit Position")
+    pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PIO_PIN", pin[pinNumber-1])
+    pinBitPosition[pinNumber-1].setLabel("Bit Position")
     
     pinChannel.append(pinNumber)
-    pinChannel[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_CHANNEL", pin[pinNumber])
-    pinChannel[pinNumber].setLabel("Channel")
-    pinChannel[pinNumber].setDefaultValue("")
+    pinChannel[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_CHANNEL", pin[pinNumber-1])
+    pinChannel[pinNumber-1].setLabel("Channel")
+    pinChannel[pinNumber-1].setDefaultValue("")
     
     pinMode.append(pinNumber)
-    pinMode[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_MODE", pin[pinNumber])
-    pinMode[pinNumber].setLabel("Mode")
+    pinMode[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_MODE", pin[pinNumber-1])
+    pinMode[pinNumber-1].setLabel("Mode")
     
     pinDirection.append(pinNumber)
-    pinDirection[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pin[pinNumber])
-    pinDirection[pinNumber].setLabel("Direction")
+    pinDirection[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pin[pinNumber-1])
+    pinDirection[pinNumber-1].setLabel("Direction")
 
     pinLatch.append(pinNumber)
-    pinLatch[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pin[pinNumber])
-    pinLatch[pinNumber].setLabel("Initial Latch Value")
+    pinLatch[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pin[pinNumber-1])
+    pinLatch[pinNumber-1].setLabel("Initial Latch Value")
     
     pinOpenDrain.append(pinNumber)
-    pinOpenDrain[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OD", pin[pinNumber])
-    pinOpenDrain[pinNumber].setLabel("Open Drain")
+    pinOpenDrain[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OD", pin[pinNumber-1])
+    pinOpenDrain[pinNumber-1].setLabel("Open Drain")
     
     pinPullUp.append(pinNumber)
-    pinPullUp[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PU", pin[pinNumber])
-    pinPullUp[pinNumber].setLabel("Pull Up")
+    pinPullUp[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PU", pin[pinNumber-1])
+    pinPullUp[pinNumber-1].setLabel("Pull Up")
     
     pinPullDown.append(pinNumber)
-    pinPullDown[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PD", pin[pinNumber])
-    pinPullDown[pinNumber].setLabel("Pull Down")
+    pinPullDown[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PD", pin[pinNumber-1])
+    pinPullDown[pinNumber-1].setLabel("Pull Down")
     
     pinInterrupt.append(pinNumber)
     # This symbol ID name is split and pin number is extracted and used inside "setupInterrupt" function. so be careful while changing the name of this ID.
-    pinInterrupt[pinNumber] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT", pin[pinNumber])
-    pinInterrupt[pinNumber].setLabel("PIO Interrupt")
+    pinInterrupt[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT", pin[pinNumber-1])
+    pinInterrupt[pinNumber-1].setLabel("PIO Interrupt")
 
     #list created only for dependecy
     pinChannelList.append(pinNumber)
-    pinChannelList[pinNumber] = "PIN_" + str(pinNumber) +"_PIO_CHANNEL"
+    pinChannelList[pinNumber-1] = "PIN_" + str(pinNumber) +"_PIO_CHANNEL"
     
     #list created only for dependecy
     pinInterruptList.append(pinNumber)
-    pinInterruptList[pinNumber] = "PIN_" + str(pinNumber) +"_PIO_INTERRUPT"
+    pinInterruptList[pinNumber-1] = "PIN_" + str(pinNumber) +"_PIO_INTERRUPT"
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
@@ -179,6 +201,7 @@ global portInterrupt
 portInterrupt = [] 
    
 pioSym_PIO_PER = []
+global pioSym_PIO_ABCDSR1
 pioSym_PIO_ABCDSR1 = []
 pioSym_PIO_ABCDSR2 = []
 pioSym_PIO_IER = []
@@ -200,7 +223,7 @@ for portNumber in range(0, len(channel)):
 
     
     usePort.append(portNumber)
-    usePort[portNumber]= coreComponent.createBooleanSymbol("PIO_INST_IDX" + str(portNumber), port[portNumber])
+    usePort[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(channel[portNumber]) + "_USED", port[portNumber])
     usePort[portNumber].setLabel("Use PORT " + channel[portNumber])
     usePort[portNumber].setDependencies(setupPort, pinChannelList)
     
@@ -212,76 +235,81 @@ for portNumber in range(0, len(channel)):
     portInterrupt[portNumber].setDependencies(setupInterrupt, pinInterruptList)
     
     pioSym_PIO_PER.append(portNumber)
-    pioSym_PIO_PER[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_PER_VALUE", port[portNumber])
+    pioSym_PIO_PER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_PER_VALUE", port[portNumber])
     pioSym_PIO_PER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_PER")
-    pioSym_PIO_PER[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_PER[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_ABCDSR1.append(portNumber)
-    pioSym_PIO_ABCDSR1[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_ABCDSR1_VALUE", port[portNumber])
+    pioSym_PIO_ABCDSR1[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_ABCDSR1_VALUE", port[portNumber])
     pioSym_PIO_ABCDSR1[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_ABCDSR1")
-    pioSym_PIO_ABCDSR1[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_ABCDSR1[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_ABCDSR2.append(portNumber)
-    pioSym_PIO_ABCDSR2[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_ABCDSR2_VALUE", port[portNumber])
+    pioSym_PIO_ABCDSR2[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_ABCDSR2_VALUE", port[portNumber])
     pioSym_PIO_ABCDSR2[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_ABCDSR2")
-    pioSym_PIO_ABCDSR2[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_ABCDSR2[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_IER.append(portNumber)
-    pioSym_PIO_IER[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_IER_VALUE", port[portNumber])
+    pioSym_PIO_IER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_IER_VALUE", port[portNumber])
     pioSym_PIO_IER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_IER")
-    pioSym_PIO_IER[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_IER[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_AIMER.append(portNumber)
-    pioSym_PIO_AIMER[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_AIMER_VALUE", port[portNumber])
+    pioSym_PIO_AIMER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_AIMER_VALUE", port[portNumber])
     pioSym_PIO_AIMER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_AIMER")
-    pioSym_PIO_AIMER[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_AIMER[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_ESR.append(portNumber)
-    pioSym_PIO_ESR[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_ESR_VALUE", port[portNumber])
+    pioSym_PIO_ESR[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_ESR_VALUE", port[portNumber])
     pioSym_PIO_ESR[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_ESR")
-    pioSym_PIO_ESR[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_ESR[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_REHLSR.append(portNumber)
-    pioSym_PIO_REHLSR[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_REHLSR_VALUE", port[portNumber])
+    pioSym_PIO_REHLSR[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_REHLSR_VALUE", port[portNumber])
     pioSym_PIO_REHLSR[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_REHLSR")
-    pioSym_PIO_REHLSR[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_REHLSR[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_OER.append(portNumber)
-    pioSym_PIO_OER[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_OER_VALUE", port[portNumber])
+    pioSym_PIO_OER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_OER_VALUE", port[portNumber])
     pioSym_PIO_OER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_OER")
-    pioSym_PIO_OER[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_OER[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_PUER.append(portNumber)
-    pioSym_PIO_PUER[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_PUER_VALUE", port[portNumber])
+    pioSym_PIO_PUER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_PUER_VALUE", port[portNumber])
     pioSym_PIO_PUER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_PUER")
-    pioSym_PIO_PUER[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_PUER[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_PPDEN.append(portNumber)
-    pioSym_PIO_PPDEN[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_PPDEN_VALUE", port[portNumber])
+    pioSym_PIO_PPDEN[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_PPDEN_VALUE", port[portNumber])
     pioSym_PIO_PPDEN[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_PPDEN")
-    pioSym_PIO_PPDEN[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_PPDEN[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_MDER.append(portNumber)
-    pioSym_PIO_MDER[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_MDER_VALUE", port[portNumber])
+    pioSym_PIO_MDER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_MDER_VALUE", port[portNumber])
     pioSym_PIO_MDER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_MDER")
-    pioSym_PIO_MDER[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_MDER[portNumber].setDefaultValue("0x00000000")
     
     pioSym_PIO_SODR.append(portNumber)
-    pioSym_PIO_SODR[portNumber] = coreComponent.createHexSymbol("PIO" + str(channel[portNumber]) + "_SODR_VALUE", port[portNumber])
+    pioSym_PIO_SODR[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_SODR_VALUE", port[portNumber])
     pioSym_PIO_SODR[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_SODR")
-    pioSym_PIO_SODR[portNumber].setDefaultValue(00000000)
+    pioSym_PIO_SODR[portNumber].setDefaultValue("0x00000000")
     
-pioSym_AFEC0_CHER = coreComponent.createHexSymbol("PIO_AFEC0_CHER_VALUE", portConfiguration)
+pioSym_AFEC0_CHER = coreComponent.createStringSymbol("PIO_AFEC0_CHER_VALUE", portConfiguration)
 pioSym_AFEC0_CHER.setLabel("AFEC0_CHER")
-pioSym_AFEC0_CHER.setDefaultValue(00000000)
+pioSym_AFEC0_CHER.setDefaultValue("0x00000000")
 
-pioSym_AFEC1_CHER = coreComponent.createHexSymbol("PIO_AFEC1_CHER_VALUE", portConfiguration)
+pioSym_AFEC1_CHER = coreComponent.createStringSymbol("PIO_AFEC1_CHER_VALUE", portConfiguration)
 pioSym_AFEC1_CHER.setLabel("AFEC1_CHER")
-pioSym_AFEC1_CHER.setDefaultValue(00000000)
+pioSym_AFEC1_CHER.setDefaultValue("0x00000000")
 
-pioSym_DACC_CHER = coreComponent.createHexSymbol("PIO_DACC_CHER_VALUE", portConfiguration)
+pioSym_DACC_CHER = coreComponent.createStringSymbol("PIO_DACC_CHER_VALUE", portConfiguration)
 pioSym_DACC_CHER.setLabel("DACC_CHER")
-pioSym_DACC_CHER.setDefaultValue(00000000)
+pioSym_DACC_CHER.setDefaultValue("0x00000000")
+
+pioMatrixSym_CCFG_SYSIO = coreComponent.createStringSymbol("PIO_CCFG_SYSIO_VALUE", portConfiguration)
+pioMatrixSym_CCFG_SYSIO.setLabel("CCFG_SYSIO")
+pioMatrixSym_CCFG_SYSIO.setDescription("System Pins as GPIO")
+pioMatrixSym_CCFG_SYSIO.setDefaultValue("0x000010F0")
 
 ###################################################################################################
 ################################### Pin Type related code  ########################################
@@ -346,22 +374,7 @@ for pinTypeNumber in range(0, 20):
     typePinInterrupt[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_PIO_INTERRUPT" + str(pinTypeNumber), type[pinTypeNumber])
     typePinInterrupt[pinTypeNumber].setLabel("PIO Interrupt")
 
-#print("==============================================")
-#print("Pin Information")
-#print("")
-#
-#print("Package count: " + str(Pin.getPackageCount()))
-#portsPackageNames = Pin.getPackageNames()
-#print('Package names: [%s]' % ', '.join(map(str, portsPackageNames)))
-#print("Pin count for package " + portsPackageNames[0] + ": " + str(Pin.getPackagePinCount(portsPackageNames[0])))
-#print("Largest package: " + Pin.getLargestPackageName())
-#portsPinNames = Pin.getPinPositions(portsPackageNames[0])
-#print('Pin positions for package ' + portsPackageNames[0] + ': [%s]' % ', '.join(map(str, portsPinNames)))
-#print(" Pin " + portsPinNames[0] + " is " + Pin.getPinPad(portsPackageNames[0], portsPinNames[0]))
-#print(" Pin " + portsPinNames[1] + " is " + Pin.getPinPad(portsPackageNames[0], portsPinNames[1]))
-#print(" Pin " + portsPinNames[2] + " is " + Pin.getPinPad(portsPackageNames[0], portsPinNames[2]))
-#print(" Pin " + portsPinNames[3] + " is " + Pin.getPinPad(portsPackageNames[0], portsPinNames[3]))
-#print("==============================================")
+
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
@@ -372,39 +385,34 @@ configName = Variables.get("__CONFIGURATION_NAME")
 pioHeader1File = coreComponent.createFileSymbol(None, None)
 pioHeader1File.setSourcePath("../peripheral/pio_11004/templates/plib_pio.h.ftl")
 pioHeader1File.setOutputName("plib_pio.h")
-pioHeader1File.setDestPath("system_config/" + configName +"/peripheral/pio/")
-pioHeader1File.setProjectPath("system_config/" + configName +"/peripheral/pio/")
+pioHeader1File.setDestPath("/peripheral/pio/")
+pioHeader1File.setProjectPath("config/" + configName +"/peripheral/pio/")
 pioHeader1File.setType("HEADER")
 pioHeader1File.setMarkup(True)
 
 pioSource1File = coreComponent.createFileSymbol(None, None)
 pioSource1File.setSourcePath("../peripheral/pio_11004/templates/plib_pio.c.ftl")
 pioSource1File.setOutputName("plib_pio.c")
-pioSource1File.setDestPath("system_config/" + configName +"/peripheral/pio/")
-pioSource1File.setProjectPath("system_config/" + configName +"/peripheral/pio/")
+pioSource1File.setDestPath("/peripheral/pio/")
+pioSource1File.setProjectPath("config/" + configName +"/peripheral/pio/")
 pioSource1File.setType("SOURCE")
 pioSource1File.setMarkup(True)
 
-pioInterruptSource1File = coreComponent.createFileSymbol(None, None)
-pioInterruptSource1File.setSourcePath("../peripheral/pio_11004/templates/pio_interrupt.c.ftl")
-pioInterruptSource1File.setOutputName("pio_interrupt.c")
-pioInterruptSource1File.setDestPath("system_config/" + configName +"/peripheral/pio/")
-pioInterruptSource1File.setProjectPath("system_config/" + configName +"/peripheral/pio/")
-pioInterruptSource1File.setType("SOURCE")
-pioInterruptSource1File.setMarkup(True)
 
-#pioSystemConfigFile = coreComponent.createFileSymbol(None, None)
-#pioSystemConfigFile.setSourcePath("../peripheral/pio_11004/templates/pio_system_config.h.ftl")
-#pioSystemConfigFile.setOutputName("pio_system_config.h")
-#pioSystemConfigFile.setDestPath("system_config/" + configName +"/peripheral/pio/")
-#pioSystemConfigFile.setProjectPath("system_config/" + configName +"/peripheral/pio/")
-#pioSystemConfigFile.setType("HEADER")
-#pioSystemConfigFile.setMarkup(True)
+pioSystemInitFile = coreComponent.createFileSymbol(None, None)
+pioSystemInitFile.setType("STRING")
+pioSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+pioSystemInitFile.setSourcePath("../peripheral/pio_11004/templates/system/system_initialize.c.ftl")
+pioSystemInitFile.setMarkup(True)
 
-pioLocalHeader1File = coreComponent.createFileSymbol(None, None)
-pioLocalHeader1File.setSourcePath("../peripheral/pio_11004/plib_pio_local.h")
-pioLocalHeader1File.setOutputName("plib_pio_local.h")
-pioLocalHeader1File.setDestPath("system_config/" + configName +"/peripheral/pio/")
-pioLocalHeader1File.setProjectPath("system_config/" + configName +"/peripheral/pio/")
-pioLocalHeader1File.setType("HEADER")
-pioLocalHeader1File.setMarkup(False)
+pioSystemIntFile = coreComponent.createFileSymbol(None, None)
+pioSystemIntFile.setType("STRING")
+pioSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
+pioSystemIntFile.setSourcePath("../peripheral/pio_11004/templates/system/system_interrupt.c.ftl")
+pioSystemIntFile.setMarkup(True)
+
+pioSystemDefFile = coreComponent.createFileSymbol(None, None)
+pioSystemDefFile.setType("STRING")
+pioSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+pioSystemDefFile.setSourcePath("../peripheral/pio_11004/templates/system/system_definitions.h.ftl")
+pioSystemDefFile.setMarkup(True)
