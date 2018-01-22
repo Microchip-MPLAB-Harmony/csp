@@ -1,7 +1,13 @@
 def instantiateComponent(cmsisComponent):
 
-	cmsisVersion = cmsisComponent.createCommentSymbol("cmsisVersion", None)
-	cmsisVersion.setLabel("Version: " + "TBD")
+	cmsisInformation = cmsisComponent.createCommentSymbol("cmsisInformation", None)
+
+	import xml.etree.ElementTree as ET
+	cmsisDescriptionFile = open(Variables.get("__CMSIS_PACK_DIR") + "/ARM.CMSIS.pdsc", "r")
+	cmsisDescription = ET.fromstring(cmsisDescriptionFile.read())
+	for release in cmsisDescription.iter("release"):
+		cmsisInformation.setLabel("Release Information: " + str(release.attrib))
+		break
 
 	headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "tz_context.h", "arm_common_tables.h", "arm_const_structs.h", "arm_math.h"]
 

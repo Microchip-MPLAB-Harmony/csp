@@ -1,16 +1,27 @@
 def instantiateComponent(dfpComponent):
 
+	from os import listdir
+	import xml.etree.ElementTree as ET
+
 	dfpDevice = dfpComponent.createCommentSymbol("dfpDevice", None)
 	dfpDevice.setLabel("Device: " + Variables.get("__PROCESSOR"))
 
-	dfpVersion = dfpComponent.createCommentSymbol("dfpVersion", None)
-	dfpVersion.setLabel("Version: " + "TBD")
+	#get pack information
+	dfpInformation = dfpComponent.createCommentSymbol("dfpInformation", None)
 
-	from os import listdir
+	dfpFiles = listdir(Variables.get("__DFP_PACK_DIR"))
+	for dfpFile in dfpFiles:
+		if dfpFile.find(".pdsc") != -1:
+			dfpDescriptionFile = open(Variables.get("__DFP_PACK_DIR") + "/" + dfpFile, "r")
+			dfpDescription = ET.fromstring(dfpDescriptionFile.read())
+			for release in dfpDescription.iter("release"):
+				dfpInformation.setLabel("Release Information: " + str(release.attrib))
+				break
 
-	headerFileNames = listdir(Variables.get("__DFP_PACK_DIR") + "/mcc/component")
 
 	#add pack files to a project
+	headerFileNames = listdir(Variables.get("__DFP_PACK_DIR") + "/mcc/component")
+
 	for headerFileName in headerFileNames:
 		headerFile = dfpComponent.createFileSymbol(None, None)
 		headerFile.setRelative(False)
