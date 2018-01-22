@@ -1,0 +1,1 @@
+	UART${INDEX?string}_Initialize();
