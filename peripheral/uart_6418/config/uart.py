@@ -53,7 +53,7 @@ def instantiateComponent(uartComponent):
 	uartHeaderFile.setProjectPath("config/" + configName + "/peripheral/uart/")
 	uartHeaderFile.setType("HEADER")
 	uartHeaderFile.setOverwrite(True)
-	
+
 	uartHeader1File = uartComponent.createFileSymbol(None, None)
 	uartHeader1File.setSourcePath("../peripheral/uart_6418/templates/plib_uart.h.ftl")
 	uartHeader1File.setOutputName("plib_uart" + str(num) + ".h")
@@ -61,7 +61,8 @@ def instantiateComponent(uartComponent):
 	uartHeader1File.setProjectPath("config/" + configName + "/peripheral/uart/")
 	uartHeader1File.setType("HEADER")
 	uartHeader1File.setOverwrite(True)
-	
+	uartHeader1File.setMarkup(True)
+
 	uartSource1File = uartComponent.createFileSymbol(None, None)
 	uartSource1File.setSourcePath("../peripheral/uart_6418/templates/plib_uart.c.ftl")
 	uartSource1File.setOutputName("plib_uart" + str(num) + ".c")
@@ -69,6 +70,25 @@ def instantiateComponent(uartComponent):
 	uartSource1File.setProjectPath("config/" + configName + "/peripheral/uart/")
 	uartSource1File.setType("SOURCE")
 	uartSource1File.setOverwrite(True)
+	uartSource1File.setMarkup(True)
+
+	uartSystemInitFile = uartComponent.createFileSymbol(None, None)
+	uartSystemInitFile.setType("STRING")
+	uartSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+	uartSystemInitFile.setSourcePath("../peripheral/uart_6418/templates/system/system_initialize.h.ftl")
+	uartSystemInitFile.setMarkup(True)
+
+	uartSystemIntFile = uartComponent.createFileSymbol(None, None)
+	uartSystemIntFile.setType("STRING")
+	uartSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
+	uartSystemIntFile.setSourcePath("../peripheral/uart_6418/templates/system/system_interrupt.c.ftl")
+	uartSystemIntFile.setMarkup(True)
+
+	uartSystemDefFile = uartComponent.createFileSymbol(None, None)
+	uartSystemDefFile.setType("STRING")
+	uartSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	uartSystemDefFile.setSourcePath("../peripheral/uart_6418/templates/system/system_definitions.h.ftl")
+	uartSystemDefFile.setMarkup(True)
 
 def calculateBRGValue(uartBRGValue, baudRate):
 	brgCD = (lBaudClock / (16 * baudRate.getValue()))
