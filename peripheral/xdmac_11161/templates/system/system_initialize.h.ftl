@@ -1,0 +1,1 @@
+	XDMAC_Initialize();
