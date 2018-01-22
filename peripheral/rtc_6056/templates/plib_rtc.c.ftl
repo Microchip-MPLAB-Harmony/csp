@@ -138,7 +138,7 @@ void RTC${INDEX?string}_TimeGet( struct tm *Time )
 
 	<#lt>void RTC${INDEX?string}_InterruptDisable(RTC_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	_RTC_REGS->RTC_IER.w &= ~(RTC_IER_ALREN_Msk);
+	<#lt>	_RTC_REGS->RTC_IER.w &= ~(interrupt);
 	<#lt>}
 
 	<#lt>void RTC${INDEX?string}_CallbackRegister( RTC_ALARM_CALLBACK callback, uintptr_t context )

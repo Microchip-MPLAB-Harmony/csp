@@ -114,7 +114,7 @@ def rtcTHIGH(rtcSym_MR_THIGH,test):
 	data = rtcSym_MR_THIGH.getComponent()
 	rtcOUT0 = data.getSymbolValue("RTC_MR_OUT0")
 	rtcOUT1 = data.getSymbolValue("RTC_MR_OUT1")
-	if rtcOUT0 == "NO_WAVE" and rtcOUT1 == "NO_WAVE":
+	if rtcOUT0 != "PROG_PULSE" and rtcOUT1 != "PROG_PULSE":
 		rtcSym_MR_THIGH.setVisible(False)
 	else:
 		rtcSym_MR_THIGH.setVisible(True)
@@ -123,7 +123,7 @@ def rtcTPERIOD(rtcSym_MR_TPERIOD,test):
 	data = rtcSym_MR_TPERIOD.getComponent()
 	rtcOUT0 = data.getSymbolValue("RTC_MR_OUT0")
 	rtcOUT1 = data.getSymbolValue("RTC_MR_OUT1")
-	if rtcOUT0 == "NO_WAVE" and rtcOUT1 == "NO_WAVE":
+	if rtcOUT0 != "PROG_PULSE" and rtcOUT1 != "PROG_PULSE":
 		rtcSym_MR_TPERIOD.setVisible(False)
 	else:
 		rtcSym_MR_TPERIOD.setVisible(True)
