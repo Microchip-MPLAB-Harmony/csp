@@ -1,0 +1,1 @@
+	USART${INDEX?string}_Initialize();

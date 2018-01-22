@@ -55,7 +55,6 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #endif
 // DOM-IGNORE-END
 
-<#--Interface To Use-->
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface
