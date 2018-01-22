@@ -108,11 +108,23 @@ def instantiateComponent(usartComponent):
 	usartSource1File.setOverwrite(True)
 	usartSource1File.setMarkup(True)
 
-	initList = Database.getSymbolByID("core", "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
-	initList.addValue("\tUSART" + str(num) + "_Initialize();")
+	usartSystemInitFile = usartComponent.createFileSymbol(None, None)
+	usartSystemInitFile.setType("STRING")
+	usartSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+	usartSystemInitFile.setSourcePath("../peripheral/usart_6089/templates/system/system_initialize.h.ftl")
+	usartSystemInitFile.setMarkup(True)
 
-	headerList = Database.getSymbolByID("core", "LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	headerList.addValue("#include \"peripheral/usart/plib_usart" + str(num) + ".h\"")
+	usartSystemIntFile = usartComponent.createFileSymbol(None, None)
+	usartSystemIntFile.setType("STRING")
+	usartSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
+	usartSystemIntFile.setSourcePath("../peripheral/usart_6089/templates/system/system_interrupt.c.ftl")
+	usartSystemIntFile.setMarkup(True)
+
+	usartSystemDefFile = usartComponent.createFileSymbol(None, None)
+	usartSystemDefFile.setType("STRING")
+	usartSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	usartSystemDefFile.setSourcePath("../peripheral/usart_6089/templates/system/system_definitions.h.ftl")
+	usartSystemDefFile.setMarkup(True)
 
 def setOversampling(usartSym_MR_OVER, baudRate):
 	if (lBaudClock >= (16 * baudRate.getValue())):
