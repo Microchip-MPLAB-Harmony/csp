@@ -39,8 +39,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef _PLIB_PIO_H
-#define _PLIB_PIO_H
+#ifndef PLIB_PIO_H
+#define PLIB_PIO_H
 
 #include <xc.h>
 #include <stdint.h>
@@ -63,49 +63,49 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 
 // *****************************************************************************
-/* PIO Channel
-
+/* PIO Port
+  
   Summary:
-    Identifies the available Ports channels.
-
+    Identifies the available PIO Ports.
+  
   Description:
-    This enumeration identifies the available Ports channels.
-
+    This enumeration identifies the available PIO Ports.
+  
   Remarks:
     The caller should not rely on the specific numbers assigned to any of
     these values as they may change from one processor to the next.
-
-    Not all channels are available on all devices.  Refer to the specific
-    device data sheet to determine which channels are supported.
+  
+    Not all ports are available on all devices.  Refer to the specific
+    device data sheet to determine which ports are supported.
 */
 
 typedef enum
 {
-    /* Port A */
-    PIO_CHANNEL_A = _PORTA_BASE_ADDRESS,
+    /* Port A Pins */
+    PIO_PORT_A = _PORTA_BASE_ADDRESS,
     
-    /* Port B */
-    PIO_CHANNEL_B = _PORTB_BASE_ADDRESS,
+    /* Port B Pins */
+    PIO_PORT_B = _PORTB_BASE_ADDRESS,
 
-    /* Port C */
-    PIO_CHANNEL_C = _PORTC_BASE_ADDRESS,
+    /* Port C Pins */
+    PIO_PORT_C = _PORTC_BASE_ADDRESS,
 
-    /* Port D */
-    PIO_CHANNEL_D = _PORTD_BASE_ADDRESS,
+    /* Port D Pins */
+    PIO_PORT_D = _PORTD_BASE_ADDRESS,
 
-    /* Port E */
-    PIO_CHANNEL_E = _PORTE_BASE_ADDRESS  
+    /* Port E Pins */
+    PIO_PORT_E = _PORTE_BASE_ADDRESS  
 
-} PIO_CHANNEL;
+} PIO_PORT;
 
 // *****************************************************************************
-/* PIO Pins
+/* PIO Port Pins
 
   Summary:
-    Identifies the available Ports pins.
+    Identifies the available PIO port pins.
 
   Description:
-    This enumeration identifies the available Ports pins.
+    This enumeration identifies the available PIO port pins.
 
   Remarks:
     The caller should not rely on the specific numbers assigned to any of
@@ -632,38 +632,42 @@ typedef enum {
 } PIO_INTERRUPT_TYPE;
 
 // *****************************************************************************
-/* PIO Event Handler Function Pointer
+/* PIO Pin-Event Handler Function Pointer
 
    Summary:
-    Pointer to a PIO Event handler function.
+    Pointer to a PIO Pin-Event handler function.
 
    Description:
     This data type defines the required function signature for the 
-    PIO event handling callback function. Application must register
+    PIO pin-event handling callback function.  The client must register
     a pointer to an event handling function whose function signature (parameter
     and return value types) match the types specified by this function pointer
-    in order to receive event calls back from the PLIB.
+    in order to receive calls back from the PLIB when a configured pin event
+    occurs.
 
     The parameters and return values are described here and a partial example
     implementation is provided.
 
   Parameters:
-    pin             - One of the IO pins from the enum PIO_PIN
-
-    context         - Value identifying the context of the application that
+    context         - Value identifying the context of the client that
                       registered the event handling function
 
   Returns:
     None.
 
   Example:
+    A function matching this signature:
     <code>
-    PIO_PinCallbackRegister(PIO_PIN_PA5, &APP_PIOInterruptHandler, NULL);
-    void APP_PIOInterruptHandler(PIO_PIN pin, uintptr_t contextHandle)
+    void APP_PinEventHandler(uintptr_t context)
     {
         // Do Something
     }
     </code>
+    Is registered as follows:
+    <code>
+    PIO_PinCallbackRegister(PIO_PIN_PA5, &APP_PinEventHandler, NULL);
+    </code>
+    <code>
 
   Remarks:
     The context parameter contains the a handle to the client context,
@@ -677,7 +681,7 @@ typedef enum {
     context. It is recommended of the application to not perform process
     intensive or blocking operations with in this function.
 */
-typedef  void (*PIO_EVENT_HANDLER) (PIO_PIN pin,  void* context);
+typedef  void (*PIO_EVENT_HANDLER_PIN) ( void* context);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -690,11 +694,11 @@ typedef  void (*PIO_EVENT_HANDLER) (PIO_PIN pin,  void* context);
     void PIO_Initialize(void)
 
   Summary:
-    Initialize the Pin Manager.
+    Initialize the PIO library.
 
   Description:
-    This function Initializes all port channels/pins with the configurations
-    selected in the Pin Manager.
+    This function initializes the PIO library and all ports and pins configured
+    in the MCC Pin Manager.
 
   Precondition:
     None.
@@ -719,10 +723,11 @@ void PIO_Initialize(void);
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Generated APIs based on custom name selected in Pin Manager
+// Section: Generated Functions based on custom name selected in Pin Manager
 // *****************************************************************************
 // *****************************************************************************
-// TBD
+/* Warning!  Use of custom interface function names is not recommended.
+*/
 //// Sets the pin by name <custom name>. The pin name is configured in Pin Manager.
 //void <custom name>_Set(void);
 //
@@ -749,7 +754,7 @@ void PIO_Initialize(void);
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: PIO APIs which operates on one pin at a time
+// Section: PIO Functions which operates on one pin at a time
 // *****************************************************************************
 // *****************************************************************************
 
@@ -768,15 +773,16 @@ void PIO_Initialize(void);
 
   Parameters:
     pin       - One of the IO pins from the enum PIO_PIN
-    value     - value to be written on the selected pin
+    value     - value to be written on the selected pin:
+                true  = set pin to high (1).
+                false = clear pin to low (0).
     
   Returns:
     None.
 
   Example:
     <code>   
-        bool value = true;
-        PIO_PinWrite(PIO_PIN_PB3, value);                                                              
+    PIO_PinWrite(PIO_PIN_PB3, true);                                                            
     </code>
 
   Remarks:
@@ -816,13 +822,13 @@ void PIO_PinWrite(PIO_PIN pin, bool value);
     </code>
 
   Remarks:
-	To read the latched value on this pin, PIO_PinLatchRead API should be used.
+       To read the latched value on this pin, PIO_PinReadLatch API should be used.
 */
 bool PIO_PinRead(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
-    bool PIO_PinLatchRead(PIO_PIN pin)
+    bool PIO_PinReadLatch ( PIO_PIN pin )
 
   Summary:
     Read the value driven on the selected pin.
@@ -845,14 +851,14 @@ bool PIO_PinRead(PIO_PIN pin);
     <code>
     
     bool value;
-    value = PIO_PinLatchRead(PIO_PIN_PB3);
+    value = PIO_PinReadLatch(PIO_PIN_PB3);
                                                                 
     </code>
 
   Remarks:
 	To read actual pin value, PIO_PinRead API should be used.
 */
-bool PIO_PinLatchRead(PIO_PIN pin);
+bool PIO_PinReadLatch ( PIO_PIN pin );
 
 // *****************************************************************************
 /* Function:
@@ -951,7 +957,7 @@ void PIO_PinClear(PIO_PIN pin);
 /* Function:
     void PIO_PinCallbackRegister(
         PIO_PIN pin, 
-        PIO_EVENT_HANDLER callback,
+        const PIO_EVENT_HANDLER_PIN callBack,
         void* context
     );
 
@@ -991,7 +997,7 @@ void PIO_PinClear(PIO_PIN pin);
 */
 void PIO_PinCallbackRegister(
     PIO_PIN pin, 
-    PIO_EVENT_HANDLER callback,
+    const   PIO_EVENT_HANDLER_PIN callBack,
     void* context
 );
 
@@ -1122,21 +1128,25 @@ void PIO_PinOutputEnable(PIO_PIN pin);
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: PIO APIs which operates on multiple pins of a channel
+// Section: PIO Functions which operates on multiple pins of a port
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
 /* Function:
-    uint32_t PIO_PortRead(PIO_CHANNEL channel)
+    uint32_t PIO_PortRead(PIO_PORT port)
 
   Summary:
-    Read all the I/O lines of the selected port channel.
+    Read all the I/O lines of the selected port port.
 
   Description:
-    This function reads all the I/O lines of the selected port channel.
-    it reads the value regardless of pin configuration, whether uniquely as an
-    input, or driven by the PIO Controller, or driven by peripheral.
+    This function reads the live data values on all the I/O lines of the
+    selected port.  Bit values returned in each position indicate corresponding
+    pin levels.
+    1 = Pin is high.
+    0 = Pin is low.
+    This function reads the value regardless of pin configuration, whether it is
+    set as as an input, driven by the PIO Controller, or driven by a peripheral.
 
   Precondition:
     Reading the I/O line levels requires the clock of the PIO Controller to be
@@ -1144,115 +1154,121 @@ void PIO_PinOutputEnable(PIO_PIN pin);
     time the clock was disabled.
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
+    port       - One of the IO ports from the enum PIO_PORT
 
   Returns:
-    Returns the read value of all the I/O lines of the selected port channel.
+    Returns the read value of all the I/O lines of the selected port port.
 
   Example:
     <code>
     
     uint32_t value;
-    value = PIO_PortRead(PIO_CHANNEL_C);
+    value = PIO_PortRead(PIO_PORT_C);
                                                                 
     </code>
 
   Remarks:
-	None.
+    If the port has less than 32-bits, unimplemented pins will read as
+    low (0).
+    Implemented pins are Right aligned in the 32-bit return value.
 */
-uint32_t PIO_PortRead(PIO_CHANNEL channel);
+uint32_t PIO_PortRead(PIO_PORT port);
 
 // *****************************************************************************
 /* Function:
-    uint32_t PIO_PortLatchRead(PIO_CHANNEL channel)
+    uint32_t PIO_PortReadLatch ( PIO_PORT port )
 
   Summary:
-    Read the data driven on all the I/O lines of the selected port channel.
+    Read the latched value on all the I/O lines of the selected port.
 
   Description:
-    This function reads the data driven on all the I/O lines of the selected
-    port channel.
-    Whatever data is written/driven on I/O lines by using any of the PIO PLIB
-    APIs, will be read by this API.
+    This function reads the latched data values on all the I/O lines of the
+    selected port.  Bit values returned in each position indicate corresponding
+    pin levels.
+    1 = Pin is high.
+    0 = Pin is low.
 
   Precondition:
     None.
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
+    port       - One of the IO ports from the enum PIO_PORT
 
   Returns:
-    Returns the data driven on all the I/O lines of the selected port channel.
+    Returns the data driven on all the I/O lines of the selected port.
 
   Example:
     <code>
     
     uint32_t value;
-    value = PIO_PortLatchRead(PIO_CHANNEL_C);
+    value = PIO_PortReadLatch(PIO_PORT_C);
                                                                 
     </code>
 
   Remarks:
-	None.
+    If the port has less than 32-bits, unimplemented pins will read as
+    low (0).
+    Implemented pins are Right aligned in the 32-bit return value.
 */
-uint32_t PIO_PortLatchRead(PIO_CHANNEL channel);
+uint32_t PIO_PortReadLatch ( PIO_PORT port );
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortWrite(PIO_CHANNEL channel, uint32_t value);
+    void PIO_PortWrite(PIO_PORT port, uint32_t value);
 
   Summary:
-    Write the value on all the I/O lines of the selected port channel.
+    Write the value on all the I/O lines of the selected port.
 
   Description:
-    This function writes/drives the value on all the I/O lines of the selected
-    port channel.
+    This function writes the data values driven on all the output lines of the
+    selected port.  Bit values in each position indicate corresponding pin
+    levels.
+    1 = Pin is driven high.
+    0 = Pin is driven low.
 
   Precondition:
-    The I/O lines of the selected channel must be made to work as output.
+    The desired pins lines of the selected port must be setup as output(s).
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
+    port       - One of the IO ports from the enum PIO_PORT
     value         - 32bit value which has to be written/driven on all the I/O
-                    lines of the selected channel.
+                    lines of the selected port.
   Returns:
     None.
 
   Example:
     <code>
     
-    PIO_PortWrite(PIO_CHANNEL_C, 0x7563D45F);
+    PIO_PortWrite(PIO_PORT_C, 0x7563D45F);
                                                                 
     </code>
 
   Remarks:
-	None.
+    If the port has less than 32-bits, unimplemented pins will be ignored.
+ 
+    Implemented pins are Right aligned in the 32-bit value.
 */
-void PIO_PortWrite(PIO_CHANNEL channel, uint32_t value);
+void PIO_PortWrite(PIO_PORT port, uint32_t value);
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortSet(PIO_CHANNEL channel, uint32_t mask)
+    void PIO_PortSet(PIO_PORT port, uint32_t mask)
 
   Summary:
-    Set the selected IO pins of a channel.
+    Set the selected IO pins of a port.
 
   Description:
-    This function sets (to '1') the selected IO pins of a channel.
+    This function sets (to '1') the selected IO pins of a port.
 
   Precondition:
     None.
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
-    mask          - It is a 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected channel will be set. 
-                    The bit positions of mask value which are set as 1,
-                    corresponding IO pin of the selected channel will be set
-                    (to '1').
-                    The bit positions of mask value which are set as 0,
-                    corresponding IO pin of the selected channel will remain
-                    unchanged.
+    port       - One of the IO ports from the enum PIO_PORT
+    mask          - A 32 bit value in which positions of 0s and 1s decide
+                    which IO pins of the selected port will be set. 
+                    1's - Will set corresponding IO pins to high (to 1).
+                    0's - Will remain unchanged.
   Returns:
     None.
 
@@ -1260,38 +1276,36 @@ void PIO_PortWrite(PIO_CHANNEL channel, uint32_t value);
     <code>
     
     // Set PC5 and PC7 pins to 1
-    PIO_PortSet(PIO_CHANNEL_C, 0x00A0);
+    PIO_PortSet(PIO_PORT_C, 0x00A0);
                                                                 
     </code>
 
   Remarks:
-	None.
+    If the port has less than 32-bits, unimplemented pins will be ignored.
+ 
+    Implemented pins are Right aligned in the 32-bit value.
 */
-void PIO_PortSet(PIO_CHANNEL channel, uint32_t mask);
+void PIO_PortSet(PIO_PORT port, uint32_t mask);
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortClear(PIO_CHANNEL channel, uint32_t mask)
+    void PIO_PortClear(PIO_PORT port, uint32_t mask)
 
   Summary:
-    Clear the selected IO pins of a channel.
+    Clear the selected IO pins of a port.
 
   Description:
-    This function clears (to '0') the selected IO pins of a channel.
+    This function clears (to '0') the selected IO pins of a port.
 
   Precondition:
     None.
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
-    mask          - It is a 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected channel will be cleared. 
-                    The bit positions of mask value which are set as 1,
-                    corresponding IO pin of the selected channel will be cleared
-                    (to '0').
-                    The bit positions of mask value which are set as 0,
-                    corresponding IO pin of the selected channel will remain
-                    unchanged.
+    port       - One of the IO ports from the enum PIO_PORT
+    mask          - A 32 bit value in which positions of 0s and 1s decide
+                    which IO pins of the selected port will be cleared. 
+                    1's - Will clear corresponding IO pins to low (to 0).
+                    0's - Will remain unchanged.
   Returns:
     None.
 
@@ -1299,37 +1313,36 @@ void PIO_PortSet(PIO_CHANNEL channel, uint32_t mask);
     <code>
     
     // Clear PC5 and PC7 pins to 0
-    PIO_PortClear(PIO_CHANNEL_C, 0x00A0);
+    PIO_PortClear(PIO_PORT_C, 0x00A0);
                                                                 
     </code>
 
   Remarks:
-	None.
+    If the port has less than 32-bits, unimplemented pins will be ignored.
+ 
+    Implemented pins are Right aligned in the 32-bit value.
 */
-void PIO_PortClear(PIO_CHANNEL channel, uint32_t mask);
+void PIO_PortClear(PIO_PORT port, uint32_t mask);
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortToggle(PIO_CHANNEL channel, uint32_t mask)
+    void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 
   Summary:
-    Toggles the selected IO pins of a channel.
+    Toggles the selected IO pins of a port.
 
   Description:
-    This function toggles (or invert) the selected IO pins of a channel.
+    This function toggles (or invert) the selected IO pins of a port.
 
   Precondition:
     None.
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
-    mask          - It is a 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected channel will be toggled. 
-                    The bit positions of mask value which are set as 1,
-                    corresponding IO pin of the selected channel will be toggled.
-                    The bit positions of mask value which are set as 0,
-                    corresponding IO pin of the selected channel will remain
-                    unchanged.
+    port       - One of the IO ports from the enum PIO_PORT
+    mask          - A 32 bit value in which positions of 0s and 1s decide
+                    which IO pins of the selected port will be toggled. 
+                    1's - Will toggle (invert) corresponding IO pins.
+                    0's - Will remain unchanged.
   Returns:
     None.
 
@@ -1337,43 +1350,45 @@ void PIO_PortClear(PIO_CHANNEL channel, uint32_t mask);
     <code>
     
     // Toggles PC5 and PC7 pins
-    PIO_PortToggle(PIO_CHANNEL_C, 0x00A0);
+    PIO_PortToggle(PIO_PORT_C, 0x00A0);
                                                                 
     </code>
 
   Remarks:
-	None.
+    If the port has less than 32-bits, unimplemented pins will be ignored.
+ 
+    Implemented pins are Right aligned in the 32-bit value.
 */
-void PIO_PortToggle(PIO_CHANNEL channel, uint32_t mask);
+void PIO_PortToggle(PIO_PORT port, uint32_t mask);
 // *****************************************************************************
 /* Function:
     void PIO_PortInterruptEnable(
-        PIO_CHANNEL channel,
+        PIO_PORT port,
         uint32_t mask,
         PIO_INTERRUPT_TYPE interruptType
         )
 
   Summary:
-    Enables IO interrupt on selected IO pins of a channel.
+    Enables IO interrupt on selected IO pins of a port.
 
   Description:
     This function enables selected type of IO interrupt on selected IO pins of
-    selected channel.
+    selected port.
 
   Precondition:
     None.
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
-    mask          - It is a 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected channel will have interrupt
-                    enabled. 
-                    The bit positions of mask value which are set as 1, IO
-                    interrupt of corresponding IO pin of the selected channel
-                    will be enabled.
-                    The bit positions of mask value which are set as 0, IO
-                    interrupt of corresponding IO pin of the selected channel
-                    will remain unchanged.
+    port       - One of the IO ports from the enum PIO_PORT
+ 
+    mask       - Is a 32 bit value in which positions of 0s and 1s decide
+                 which IO pins of the selected port will have interrupt
+                 enabled.  The bit positions of mask value which are set as 1,
+                 IO interrupt of corresponding IO pin of the selected port
+                 will be enabled.  The bit positions of mask value which are
+                 cleared to 0, IO interrupt of corresponding IO pin of the
+                 selected port will remain unchanged.
+		    
     interruptType - One of the interrupt types from the enum PIO_INTERRUPT_TYPE
     
   Returns:
@@ -1383,7 +1398,7 @@ void PIO_PortToggle(PIO_CHANNEL channel, uint32_t mask);
     <code>
     
     // Enable IO interrupt on Rising edge for PC5 and PC7 pins
-    PIO_PortInterruptEnable(PIO_CHANNEL_C, 0x00A0, PIO_INTERRUPT_RISING_EDGE);
+    PIO_PortInterruptEnable(PIO_PORT_C, 0x00A0, PIO_INTERRUPT_RISING_EDGE);
                                                                 
     </code>
 
@@ -1391,35 +1406,33 @@ void PIO_PortToggle(PIO_CHANNEL channel, uint32_t mask);
 	None.
 */
 void PIO_PortInterruptEnable(
-        PIO_CHANNEL channel,
+        PIO_PORT port,
         uint32_t mask,
         PIO_INTERRUPT_TYPE interruptType
         );
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortInterruptDisable(PIO_CHANNEL channel, uint32_t mask)
+    void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 
   Summary:
-    Disables IO interrupt on selected IO pins of a channel.
+    Disables IO interrupt on selected IO pins of a port.
 
   Description:
-    This function disables IO interrupt on selected IO pins of selected channel.
+    This function disables IO interrupt on selected IO pins of selected port.
 
   Precondition:
     None.
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
-    mask          - It is a 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected channel will have interrupt
-                    disabled. 
-                    The bit positions of mask value which are set as 1, IO
-                    interrupt of corresponding IO pin of the selected channel
-                    will be disabled.
-                    The bit positions of mask value which are set as 0, IO
-                    interrupt of corresponding IO pin of the selected channel
-                    will remain unchanged.
+    port       - One of the IO ports from the enum PIO_PORT
+    mask       - Is a 32 bit value in which positions of 0s and 1s decide
+                    which IO pins of the selected port will have interrupt
+                 disabled.  The bit positions of mask value which are set as 1,
+                 IO interrupt of corresponding IO pin of the selected port
+                 will be disabled.  The bit positions of mask value which are
+                 cleared to 0, IO interrupt of corresponding IO pin of the
+                 selected port will remain unchanged.
   Returns:
     None.
 
@@ -1427,38 +1440,35 @@ void PIO_PortInterruptEnable(
     <code>
     
     // Disable IO interrupt for PB9 and PB1 pins
-    PIO_PortInterruptDisable(PIO_CHANNEL_C, 0x0202);
+    PIO_PortInterruptDisable(PIO_PORT_C, 0x0202);
                                                                 
     </code>
 
   Remarks:
 	None.
 */
-void PIO_PortInterruptDisable(PIO_CHANNEL channel, uint32_t mask);
+void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask);
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortInputEnable(PIO_CHANNEL channel, uint32_t mask)
+    void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 
   Summary:
-    Enables selected IO pins of a channel as input.
+    Enables selected IO pins of a port as input.
 
   Description:
-    This function enables selected IO pins of a channel as input.
+    This function enables selected IO pins of a port as input.
 
   Precondition:
     None.
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
-    mask          - It is a 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected channel will be input. 
-                    The bit positions of mask value which are set as 1,
-                    direction of corresponding IO pins of the selected channel
-                    will be input.
-                    The bit positions of mask value which are set as 0,
-                    direction of corresponding IO pins of the selected channel
-                    will remain unchanged.
+    port          - One or more of the of the IO ports from the enum PIO_PORT.
+    mask          - A 32 bit value in which positions of 0s and 1s decide
+                    which IO pins of the selected port will be setup as inputs.
+                    1's - Will set corresponding IO pins as input(s).
+                    0's - Will cause the direction of the corresponding IO pins
+                          to remain unchanged.
   Returns:
     None.
 
@@ -1466,38 +1476,35 @@ void PIO_PortInterruptDisable(PIO_CHANNEL channel, uint32_t mask);
     <code>
     
     // Make PC5 and PC7 pins as input
-    PIO_PortInputEnable(PIO_CHANNEL_C, 0x00A0);
+    PIO_PortInputEnable(PIO_PORT_C, 0x00A0);
                                                                 
     </code>
 
   Remarks:
 	None.
 */
-void PIO_PortInputEnable(PIO_CHANNEL channel, uint32_t mask);
+void PIO_PortInputEnable(PIO_PORT port, uint32_t mask);
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortOutputEnable(PIO_CHANNEL channel, uint32_t mask)
+    void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 
   Summary:
-    Enables selected IO pins of a channel as output.
+    Enables selected IO pins of a port as output(s).
 
   Description:
-    This function enables selected IO pins of a channel as output.
+    This function enables selected IO pins of the given port as output(s).
 
   Precondition:
     None.
 
   Parameters:
-    channel       - One of the IO channels from the enum PIO_CHANNEL
-    mask          - It is a 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected channel will be output. 
-                    The bit positions of mask value which are set as 1,
-                    direction of corresponding IO pins of the selected channel
-                    will be output.
-                    The bit positions of mask value which are set as 0,
-                    direction of corresponding IO pins of the selected channel
-                    will remain unchanged.
+    port       - One of the IO ports from the enum PIO_PORT
+    mask          - A 32 bit value in which positions of 0s and 1s decide
+                    which IO pins of the selected port will be setup as outputs.
+                    1's - Will set corresponding IO pins as output(s).
+                    0's - Will cause the direction of the corresponding IO pins
+                          to remain unchanged.
   Returns:
     None.
 
@@ -1505,15 +1512,61 @@ void PIO_PortInputEnable(PIO_CHANNEL channel, uint32_t mask);
     <code>
     
     // Make PC5 and PC7 pins as output
-    PIO_PortOutputEnable(PIO_CHANNEL_C, 0x00A0);
+    PIO_PortOutputEnable(PIO_PORT_C, 0x00A0);
                                                                 
     </code>
 
   Remarks:
 	None.
 */
-void PIO_PortOutputEnable(PIO_CHANNEL channel, uint32_t mask);
+void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask);
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local Data types and Prototypes
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+/* PIO Pin Callback Object
+
+  Summary:
+    Structure to hold callback related details
+
+  Description:
+    This structure is used internally by the PIO Plib to hold pin specific
+    callback details.
+
+  Remarks:
+    None.
+*/
+typedef struct {
+
+    /* target pin */
+    uint8_t                 bitPosition;
+
+    /* Callback for event on target pin*/
+    PIO_EVENT_HANDLER_PIN       callback;
+
+    /* Callback Context */
+    void*                   context;
+
+} PIO_PIN_CALLBACK_OBJ;
+
+// *****************************************************************************
+/* Function:
+    void _PIO_Interrupt_Handler ( PIO_PORT port )
+
+  Summary:
+    Interrupt handler for a selected port.
+
+  Description:
+    This function defines the Interrupt handler for a selected port.
+
+  Remarks:
+	It is an internal function used by the library, user need not call it.
+*/
+void _PIO_Interrupt_Handler ( PIO_PORT port );
 
 
 // DOM-IGNORE-BEGIN
@@ -1523,4 +1576,4 @@ void PIO_PortOutputEnable(PIO_CHANNEL channel, uint32_t mask);
 
 #endif
 // DOM-IGNORE-END
-#endif // _PLIB_PIO_H
+#endif // PLIB_PIO_H
