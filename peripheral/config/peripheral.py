@@ -10,8 +10,8 @@ for periphName in periphNames:
 	periphScript = "/peripheral/" + periphName.lower() + "_" + periphID + \
 					"/config/" + periphName.lower() + ".py"
 
-	# port/pio is instantiated as part of system service and not part of peripherals
-	if (periphName == "PORT" or periphName == "PIO"):
+	# Don't load system services. They will be loaded by family specific script
+	if any(x in periphName for x in ["PORT", "PIO", "NVIC", "XDMAC", "OSCILLATOR", "PMC"]):
 		print("CSP: System Peripheral [" + periphName + " id=" + periphID + "]")
 		continue
 
