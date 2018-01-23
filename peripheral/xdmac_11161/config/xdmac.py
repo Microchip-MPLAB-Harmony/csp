@@ -37,7 +37,7 @@ xdmacBitField_CC_MBSIZE = xdmacReg_CC.getBitfield("MBSIZE")
 xdmacValGrp_CC_MBSIZE = xdmacRegModule.getValueGroup(xdmacBitField_CC_MBSIZE.getValueGroupName())
 
 def xdmacTransferType(xdmacSym, type):
-	print(type.getValue())
+	#print(type.getValue())
 	if (type.getValue() == "PER_TRAN"):
 		xdmacSym.setVisible(True)
 	else :
@@ -59,61 +59,61 @@ for channelID in range(0, 24):
 	xdmacChannelMenu.setDescription("Configuration for DMA Channel"+ str(channelID))
 
 	xdmacSym_CC_TYPE = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_TYPE", xdmacChannelMenu, xdmacValGrp_CC_TYPE.getValueNames())
-	print(xdmacSym_CC_TYPE)
+	#print(xdmacSym_CC_TYPE)
 	xdmacSym_CC_TYPE.setLabel(xdmacBitField_CC_TYPE.getDescription())
 	# Default value is set later to trigger business logic initially
 	
 	xdmacSym_CC_PERID = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_PERID", xdmacChannelMenu, xdmacValGrp_CC_PERID.getValueNames())
-	print(xdmacSym_CC_PERID)
+	#print(xdmacSym_CC_PERID)
 	xdmacSym_CC_PERID.setLabel(xdmacBitField_CC_PERID.getDescription())
 	xdmacSym_CC_PERID.setDefaultValue("HSMCI_TX")
 	xdmacSym_CC_PERID.setDependencies(xdmacTransferType, ["XDMAC_CC"+ str(channelID)+"_TYPE"])
 	
 	xdmacSym_CC_DSYNC = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_DSYNC", xdmacChannelMenu, xdmacValGrp_CC_DSYNC.getValueNames())
-	print(xdmacSym_CC_DSYNC)
+	#print(xdmacSym_CC_DSYNC)
 	xdmacSym_CC_DSYNC.setLabel(xdmacBitField_CC_DSYNC.getDescription())
 	xdmacSym_CC_DSYNC.setDefaultValue("PER2MEM")
 	xdmacSym_CC_DSYNC.setDependencies(xdmacTransferType, ["XDMAC_CC"+ str(channelID)+"_TYPE"])
 	
 	xdmacSym_CC_SWREQ = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_SWREQ", xdmacChannelMenu, xdmacValGrp_CC_SWREQ.getValueNames())
-	print(xdmacSym_CC_SWREQ)
+	#print(xdmacSym_CC_SWREQ)
 	xdmacSym_CC_SWREQ.setLabel(xdmacBitField_CC_SWREQ.getDescription())
 	xdmacSym_CC_SWREQ.setDefaultValue("HWR_CONNECTED")
 	xdmacSym_CC_SWREQ.setDependencies(xdmacTransferType, ["XDMAC_CC"+ str(channelID)+"_TYPE"])
 	xdmacSym_CC_TYPE.setDefaultValue("MEM_TRAN")
 	
 	xdmacSym_CC_SAM = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_SAM", xdmacChannelMenu, xdmacValGrp_CC_SAM.getValueNames())
-	print(xdmacSym_CC_SAM)
+	#print(xdmacSym_CC_SAM)
 	xdmacSym_CC_SAM.setLabel(xdmacBitField_CC_SAM.getDescription())
 	xdmacSym_CC_SAM.setDefaultValue("INCREMENTED_AM")
 	
 	xdmacSym_CC_DAM = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_DAM", xdmacChannelMenu, xdmacValGrp_CC_DAM.getValueNames())
-	print(xdmacSym_CC_DAM)
+	#print(xdmacSym_CC_DAM)
 	xdmacSym_CC_DAM.setLabel(xdmacBitField_CC_DAM.getDescription())
 	xdmacSym_CC_DAM.setDefaultValue("INCREMENTED_AM")
 	
 	xdmacSym_CC_SIF = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_SIF", xdmacChannelMenu, xdmacValGrp_CC_SIF.getValueNames())
-	print(xdmacSym_CC_SIF)
+	#print(xdmacSym_CC_SIF)
 	xdmacSym_CC_SIF.setLabel(xdmacBitField_CC_SIF.getDescription())
 	xdmacSym_CC_SIF.setDefaultValue("AHB_IF1")
 	
 	xdmacSym_CC_DIF = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_DIF", xdmacChannelMenu, xdmacValGrp_CC_DIF.getValueNames())
-	print(xdmacSym_CC_DIF)
+	#print(xdmacSym_CC_DIF)
 	xdmacSym_CC_DIF.setLabel(xdmacBitField_CC_DIF.getDescription())
 	xdmacSym_CC_DIF.setDefaultValue("AHB_IF1")
 	
 	xdmacSym_CC_DWIDTH = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_DWIDTH", xdmacChannelMenu, xdmacValGrp_CC_DWIDTH.getValueNames())
-	print(xdmacSym_CC_DWIDTH)
+	#print(xdmacSym_CC_DWIDTH)
 	xdmacSym_CC_DWIDTH.setLabel(xdmacBitField_CC_DWIDTH.getDescription())
 	xdmacSym_CC_DWIDTH.setDefaultValue("BYTE")
 	
 	xdmacSym_CC_CSIZE = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_CSIZE", xdmacChannelMenu, xdmacValGrp_CC_CSIZE.getValueNames())
-	print(xdmacSym_CC_CSIZE)
+	#print(xdmacSym_CC_CSIZE)
 	xdmacSym_CC_CSIZE.setLabel(xdmacBitField_CC_CSIZE.getDescription())
 	xdmacSym_CC_CSIZE.setDefaultValue("CHK_1")
 	
 	xdmacSym_CC_MBSIZE = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_MBSIZE", xdmacChannelMenu, xdmacValGrp_CC_MBSIZE.getValueNames())
-	print(xdmacSym_CC_MBSIZE)
+	#print(xdmacSym_CC_MBSIZE)
 	xdmacSym_CC_MBSIZE.setLabel(xdmacBitField_CC_MBSIZE.getDescription())
 	xdmacSym_CC_MBSIZE.setDefaultValue("SINGLE")
 	
