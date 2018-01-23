@@ -250,6 +250,9 @@ void XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t descriptor
 // *****************************************************************************
 
 /***************************** XDMAC Inline *******************************/
+
+/* Macro for limiting XDMAC objects to highest channel enabled */
+#define XDMAC_ACTIVE_CHANNELS_MAX ${XDMAC_HIGHEST_CHANNEL}
 <#if XDMAC_LL_ENABLE == true>
 
 #define XDMAC_UBLEN_BIT_WIDTH 24
@@ -264,7 +267,7 @@ typedef struct
 
 } XDMAC_CH_OBJECT ;
 
-extern XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_CHANNELS_NUMBER];
+extern XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_ACTIVE_CHANNELS_MAX];
 
 void inline XDMAC_ISR_Handler( void )
 {
@@ -273,7 +276,7 @@ void inline XDMAC_ISR_Handler( void )
 	volatile uint32_t chanIntStatus = 0;
 
     /* Iterate all channels */
-    for (channel = 0; channel < XDMAC_CHANNELS_NUMBER; channel++)
+    for (channel = 0; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
     {
         /* Process events only on active channels */
         if (1 == xdmacChObj->inUse)
