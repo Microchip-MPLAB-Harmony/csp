@@ -40,7 +40,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 #include "plib_xdmac.h"
 
-XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_CHANNELS_NUMBER];
+XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_ACTIVE_CHANNELS_MAX];
 
 <#--Implementation-->
 // *****************************************************************************
@@ -55,7 +55,7 @@ void XDMAC_Initialize( void )
     uint8_t channel = 0;
 
     /* Initialize channel objects */
-	for(channel = 0; channel < XDMAC_CHANNELS_NUMBER; channel++)
+	for(channel = 0; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
 	{
 		xdmacChObj->inUse = 0;
 		xdmacChObj->event = XDMAC_TRANSFER_ERROR;
@@ -78,15 +78,15 @@ void XDMAC_Initialize( void )
 	<#assign XDMAC_CC_DWIDTH = "XDMAC_CC" + i + "_DWIDTH">
 	<#assign XDMAC_CC_CSIZE = "XDMAC_CC" + i + "_CSIZE">
 	<#assign XDMAC_CC_MBSIZE = "XDMAC_CC" + i + "_MBSIZE">
-	<#assign XDMAC_CC_PERID = "XDMAC_CC" + i + "_PERID">
+	<#assign XDMAC_CC_PERID_VAL = "XDMAC_CC" + i + "_PERID_VAL">
         <#if .vars[XDMAC_CH_ENABLE]?has_content>
             <#if (.vars[XDMAC_CH_ENABLE] != false)>
 	/* Configure Channel ${i} */
 				<#if .vars[XDMAC_CC_TYPE]?has_content>
 					<#if (.vars[XDMAC_CC_TYPE] == "PER_TRAN")>
-	_XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CC.w = (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_PERID_${.vars[XDMAC_CC_PERID]} | XDMAC_CC_DSYNC_${.vars[XDMAC_CC_DSYNC]} | XDMAC_CC_SWREQ_${.vars[XDMAC_CC_SWREQ]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_CSIZE_${.vars[XDMAC_CC_CSIZE]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
+	_XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CC.w = (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_PERID(${.vars[XDMAC_CC_PERID_VAL]}) | XDMAC_CC_DSYNC_${.vars[XDMAC_CC_DSYNC]} | XDMAC_CC_SWREQ_${.vars[XDMAC_CC_SWREQ]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_CSIZE_${.vars[XDMAC_CC_CSIZE]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
 					<#elseif (.vars[XDMAC_CC_TYPE] == "MEM_TRAN")>
-	_XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CC.w = (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_CSIZE_${.vars[XDMAC_CC_CSIZE]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
+	_XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CC.w = (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
 					</#if>
 				</#if>
 	_XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CIE.w = (XDMAC_CIE_BIE_Msk | XDMAC_CIE_RBIE_Msk | XDMAC_CIE_WBIE_Msk | XDMAC_CIE_ROIE_Msk);
