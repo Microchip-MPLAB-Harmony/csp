@@ -20,7 +20,7 @@ def checkVectorAvailability(nvicSym, vector):
 		nvicSym.setVisible(True)
 
 nvicMenu = coreComponent.createMenuSymbol(None, None)
-nvicMenu.setLabel("NVIC")
+nvicMenu.setLabel("Interrupts (NVIC)")
 nvicMenu.setDescription("Configuration for NVIC Initialization")
 
 nvicEnable = coreComponent.createBooleanSymbol("nvicEnable", nvicMenu)

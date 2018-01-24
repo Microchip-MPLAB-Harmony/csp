@@ -38,8 +38,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef WDT${INDEX?string}_H    // Guards against multiple inclusion
-#define WDT${INDEX?string}_H
+#ifndef WDT${wdtIndex?string}_H    // Guards against multiple inclusion
+#define WDT${wdtIndex?string}_H
 
 #include <xc.h>
 #include <stdint.h>
@@ -72,13 +72,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>WDT_OBJECT wdt;
 </#if>
 /***************************** WDT API *******************************/
-void WDT${INDEX?string}_Initialize( void );
-void WDT${INDEX?string}_Clear( void );
+void WDT${wdtIndex?string}_Initialize( void );
+void WDT${wdtIndex?string}_Clear( void );
 <#if wdtinterruptMode == true>
-	<#lt>void WDT${INDEX?string}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
+	<#lt>void WDT${wdtIndex?string}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
 </#if>	
 <#if wdtinterruptMode == true>
-	<#lt>static void inline WDT${INDEX?string}_TIMEOUT_Handler( void )
+	<#lt>static void inline WDT${wdtIndex?string}_TIMEOUT_Handler( void )
 	<#lt>{
 	<#lt>   _WDT_REGS->WDT_SR.w;
 	<#lt>	if(wdt.callback != NULL)

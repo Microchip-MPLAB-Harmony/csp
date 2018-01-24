@@ -1,7 +1,7 @@
 print("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 
 xdmacMenu = coreComponent.createMenuSymbol(None, None)
-xdmacMenu.setLabel("DMA")
+xdmacMenu.setLabel("DMA (XDMAC)")
 xdmacMenu.setDescription("Configuration for DMA Service")
 
 xdmacEnable = coreComponent.createBooleanSymbol("xdmacEnable", xdmacMenu)

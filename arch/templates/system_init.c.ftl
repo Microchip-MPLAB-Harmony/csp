@@ -105,15 +105,6 @@ ${LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION}
 
 void SYS_Initialize ( void* data )
 {
-	<#if wdtDISABLE == true>
-		<#lt>	/*Disable Watchdog Timer*/
-		<#lt>	WDT->WDT_MR |= WDT_MR_WDDIS_Msk;
-	</#if>
-	
-	<#if rswdtDISABLE == true>
-		<#lt>	/*Disable Reinforced Safety Watchdog Timer*/
-		<#lt>	RSWDT->RSWDT_MR |= RSWDT_MR_WDDIS_Msk;
-	</#if>
 	<#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DATA}
 	<#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
 	<#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS}
