@@ -1,95 +1,38 @@
-def instantiateComponent(wdtComponent):
+print("Loading WDT for " + Variables.get("__PROCESSOR"))
 
-	num = wdtComponent.getID()[-1:]
-	print("Running WDT" )
+wdtMenu = coreComponent.createMenuSymbol(None, None)
+wdtMenu.setLabel("WDT")
 
-	wdtMenu = wdtComponent.createMenuSymbol(None, None)
-	wdtMenu.setLabel("Hardware Settings ")
-	
-	wdtReset = wdtComponent.createBooleanSymbol("wdtEnableReset", wdtMenu)
-	print(wdtReset)
-	wdtReset.setLabel("Enable Reset")
-	wdtReset.setDefaultValue(False)
-	
-	wdtInterrupt = wdtComponent.createBooleanSymbol("wdtinterruptMode", wdtMenu)
-	print(wdtInterrupt)
-	wdtInterrupt.setLabel("Enable Interrupts")
-	wdtInterrupt.setDefaultValue(True)
-	wdtInterrupt.setDependencies(wdtResetEnable, ["wdtEnableReset"])
-	
-	wdtCounterValue = wdtComponent.createIntegerSymbol("wdtWDV", wdtMenu)
-	wdtCounterValue.setLabel("Counter value")
-	wdtCounterValue.setMax(0xfff)
-	wdtCounterValue.setDefaultValue(0xfff)
-	
-	wdtCounterValueTime = wdtComponent.createIntegerSymbol("wdtWDVTIME", wdtMenu)
-	wdtCounterValueTime.setLabel("Counter value in ms")
-	wdtCounterValueTime.setDependencies(wdtcounter_cal, ["wdtWDV"])
-	wdtCounterValueTime.setReadOnly(True)
-	
-	wdtIndex = wdtComponent.createIntegerSymbol("INDEX", wdtMenu)
-	wdtIndex.setVisible(False)
-	wdtIndex.setDefaultValue(int(num))
-	
-	wdtDeltaValue = wdtComponent.createIntegerSymbol("wdtWDD", wdtMenu)
-	wdtDeltaValue.setLabel("Delta value")
-	wdtDeltaValue.setMax(0xfff)
-	wdtDeltaValue.setDefaultValue(0xfff)
-	
-	wdtDeltaValueTime = wdtComponent.createIntegerSymbol("wdtWDDTIME", wdtMenu)
-	wdtDeltaValueTime.setLabel("Counter value in ms")
-	wdtDeltaValueTime.setDependencies(wdtdelta_cal, ["wdtWDD"])
-	wdtDeltaValueTime.setReadOnly(True)
-	
-	wdtDebugHalt = wdtComponent.createBooleanSymbol("wdtdebugHalt", wdtMenu)
-	print(wdtDebugHalt)
-	wdtDebugHalt.setLabel("Enable Debug halt")
-	wdtDebugHalt.setDefaultValue(False)
+wdtEnable = coreComponent.createBooleanSymbol("wdtENABLE", wdtMenu)
+wdtEnable.setLabel("Enable Watchdog Timer?")
+wdtEnable.setDefaultValue(True)
 
-	wdtIdleHalt = wdtComponent.createBooleanSymbol("wdtidleHalt", wdtMenu)
-	print(wdtIdleHalt)
-	wdtIdleHalt.setLabel("Enable Idle halt")
-	wdtIdleHalt.setDefaultValue(False)	
-	
-	wdtDisableValue = Database.getSymbolValue("core", "wdtDISABLE")
-	
-	if wdtDisableValue == False:
-		configName = Variables.get("__CONFIGURATION_NAME")
+def wdtEnableCfgMenu(wdtCfgMenu, wdtEnable):
+	wdtCfgMenu.setVisible(wdtEnable.getValue())
 
-		wdtHeader1File = wdtComponent.createFileSymbol(None, None)
-		wdtHeader1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.h.ftl")
-		wdtHeader1File.setOutputName("plib_wdt" + str(num) + ".h")
-		wdtHeader1File.setDestPath("peripheral/wdt/")
-		wdtHeader1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
-		wdtHeader1File.setType("HEADER")
-		wdtHeader1File.setMarkup(True)
-		
-		wdtSource1File = wdtComponent.createFileSymbol(None, None)
-		wdtSource1File.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.c.ftl")
-		wdtSource1File.setOutputName("plib_wdt" + str(num) + ".c")
-		wdtSource1File.setDestPath("peripheral/wdt/")
-		wdtSource1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
-		wdtSource1File.setType("SOURCE")
-		wdtSource1File.setMarkup(True)
-		
-		
-		wdtSystemInitFile = wdtComponent.createFileSymbol(None, None)
-		wdtSystemInitFile.setType("STRING")
-		wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-		wdtSystemInitFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_initialize.h.ftl")
-		wdtSystemInitFile.setMarkup(True)
+	wdtHeaderFile = Database.getSymbolByID("core","wdtHeaderFile")
+	wdtHeaderFile.setEnabled(wdtEnable.getValue())
 
-		wdtSystemIntFile = wdtComponent.createFileSymbol(None, None)
-		wdtSystemIntFile.setType("STRING")
-		wdtSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
-		wdtSystemIntFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_interrupt.c.ftl")
-		wdtSystemIntFile.setMarkup(True)
+	wdtSourceFile = Database.getSymbolByID("core","wdtSourceFile")
+	wdtSourceFile.setEnabled(wdtEnable.getValue())
 
-		wdtSystemDefFile = wdtComponent.createFileSymbol(None, None)
-		wdtSystemDefFile.setType("STRING")
-		wdtSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-		wdtSystemDefFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_definitions.h.ftl")
-		wdtSystemDefFile.setMarkup(True)
+	wdtSystemIntFile = Database.getSymbolByID("core","wdtSystemIntFile")
+	wdtSystemIntFile.setEnabled(wdtEnable.getValue())
+
+	wdtSystemDefFile = Database.getSymbolByID("core","wdtSystemDefFile")
+	wdtSystemDefFile.setEnabled(wdtEnable.getValue())
+
+	wdtRswdtEnable = Database.getSymbolByID("core","rswdtENABLE")
+	if wdtEnable.getValue() == False:
+		wdtRswdtEnable.setValue("wdtRswdtEnable",False,1)
+
+wdtCfgMenu = coreComponent.createMenuSymbol(None, wdtMenu)
+wdtCfgMenu.setLabel("WDT Configuration")
+wdtCfgMenu.setDependencies(wdtEnableCfgMenu, ["wdtENABLE"])
+
+wdtReset = coreComponent.createBooleanSymbol("wdtEnableReset", wdtCfgMenu)
+wdtReset.setLabel("Enable Reset")
+wdtReset.setDefaultValue(False)
 
 def wdtResetEnable(wdtInterrupt,test):
 	if test.getValue() == True:
@@ -98,10 +41,83 @@ def wdtResetEnable(wdtInterrupt,test):
 	else:
 		wdtInterrupt.setVisible(True)
 
+wdtInterrupt = coreComponent.createBooleanSymbol("wdtinterruptMode", wdtCfgMenu)
+wdtInterrupt.setLabel("Enable Interrupts")
+wdtInterrupt.setDefaultValue(True)
+wdtInterrupt.setDependencies(wdtResetEnable, ["wdtEnableReset"])
+
+wdtCounterValue = coreComponent.createIntegerSymbol("wdtWDV", wdtCfgMenu)
+wdtCounterValue.setLabel("Counter value")
+wdtCounterValue.setMax(0xfff)
+wdtCounterValue.setDefaultValue(0xfff)
+
+def	wdtcounter_cal(wdtCounterValueTime,test):
+	data = test.getValue() * 3.90625
+	wdtCounterValueTime.setValue("wdtWDVTIME",int(round(data)),2)
+
+wdtCounterValueTime = coreComponent.createIntegerSymbol("wdtWDVTIME", wdtCfgMenu)
+wdtCounterValueTime.setLabel("Counter value in ms")
+wdtCounterValueTime.setDependencies(wdtcounter_cal, ["wdtWDV"])
+wdtCounterValueTime.setReadOnly(True)
+
+wdtIndex = coreComponent.createIntegerSymbol("wdtIndex", wdtCfgMenu)
+wdtIndex.setVisible(False)
+wdtIndex.setDefaultValue(0)
+
+wdtDeltaValue = coreComponent.createIntegerSymbol("wdtWDD", wdtCfgMenu)
+wdtDeltaValue.setLabel("Delta value")
+wdtDeltaValue.setMax(0xfff)
+wdtDeltaValue.setDefaultValue(0xfff)
+
 def	wdtdelta_cal(wdtDeltaValueTime,test):
 	data = test.getValue() * 3.90625
 	wdtDeltaValueTime.setValue("wdtWDDTIME",int(round(data)),2)
 	
-def	wdtcounter_cal(wdtCounterValueTime,test):
-	data = test.getValue() * 3.90625
-	wdtCounterValueTime.setValue("wdtWDVTIME",int(round(data)),2)
+wdtDeltaValueTime = coreComponent.createIntegerSymbol("wdtWDDTIME", wdtCfgMenu)
+wdtDeltaValueTime.setLabel("Counter value in ms")
+wdtDeltaValueTime.setDependencies(wdtdelta_cal, ["wdtWDD"])
+wdtDeltaValueTime.setReadOnly(True)
+	
+wdtDebugHalt = coreComponent.createBooleanSymbol("wdtdebugHalt", wdtCfgMenu)
+wdtDebugHalt.setLabel("Enable Debug halt")
+wdtDebugHalt.setDefaultValue(False)
+
+wdtIdleHalt = coreComponent.createBooleanSymbol("wdtidleHalt", wdtCfgMenu)
+wdtIdleHalt.setLabel("Enable Idle halt")
+wdtIdleHalt.setDefaultValue(False)	
+
+configName = Variables.get("__CONFIGURATION_NAME")
+
+wdtHeaderFile = coreComponent.createFileSymbol("wdtHeaderFile", None)
+wdtHeaderFile.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.h.ftl")
+wdtHeaderFile.setOutputName("plib_wdt0.h")
+wdtHeaderFile.setDestPath("peripheral/wdt/")
+wdtHeaderFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
+wdtHeaderFile.setType("HEADER")
+wdtHeaderFile.setMarkup(True)
+
+wdtSourceFile = coreComponent.createFileSymbol("wdtSourceFile", None)
+wdtSourceFile.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.c.ftl")
+wdtSourceFile.setOutputName("plib_wdt0.c")
+wdtSourceFile.setDestPath("peripheral/wdt/")
+wdtSourceFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
+wdtSourceFile.setType("SOURCE")
+wdtSourceFile.setMarkup(True)
+
+wdtSystemInitFile = coreComponent.createFileSymbol("wdtSystemInitFile", None)
+wdtSystemInitFile.setType("STRING")
+wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+wdtSystemInitFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_initialize.c.ftl")
+wdtSystemInitFile.setMarkup(True)
+
+wdtSystemIntFile = coreComponent.createFileSymbol("wdtSystemIntFile", None)
+wdtSystemIntFile.setType("STRING")
+wdtSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
+wdtSystemIntFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_interrupt.c.ftl")
+wdtSystemIntFile.setMarkup(True)
+
+wdtSystemDefFile = coreComponent.createFileSymbol("wdtSystemDefFile", None)
+wdtSystemDefFile.setType("STRING")
+wdtSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+wdtSystemDefFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_definitions.h.ftl")
+wdtSystemDefFile.setMarkup(True)

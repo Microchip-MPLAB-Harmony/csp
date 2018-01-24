@@ -1,1 +1,1 @@
-#include "peripheral/rswdt/plib_rswdt${INDEX?string}.h"
+#include "peripheral/rswdt/plib_rswdt${rswdtIndex?string}.h"

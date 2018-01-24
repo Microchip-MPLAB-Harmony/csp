@@ -1,1 +1,0 @@
-	WDT${INDEX?string}_Initialize();

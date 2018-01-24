@@ -1,1 +1,0 @@
-	RSWDT${INDEX?string}_Initialize();

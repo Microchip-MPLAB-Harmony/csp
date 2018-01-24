@@ -75,7 +75,7 @@ def setupPort(usePort, pinChannelLocal):
 ###################################################################################################
         
 pioMenu = coreComponent.createMenuSymbol(None, None)
-pioMenu.setLabel("PIO")
+pioMenu.setLabel("Ports (PIO)")
 pioMenu.setDescription("Configuration for PIO PLIB")
 
 pioEnable = coreComponent.createBooleanSymbol("PIO_ENABLE", pioMenu)

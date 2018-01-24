@@ -1,1 +1,1 @@
-#include "peripheral/wdt/plib_wdt${INDEX?string}.h"
+#include "peripheral/wdt/plib_wdt${wdtIndex?string}.h"

@@ -38,22 +38,22 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#include "plib_wdt${INDEX?string}.h"
+#include "plib_wdt${wdtIndex?string}.h"
 
-void WDT${INDEX?string}_Initialize( void )
+void WDT${wdtIndex?string}_Initialize( void )
 {
 	_WDT_REGS->WDT_MR.w = WDT_MR_WDD (${wdtWDD}) | WDT_MR_WDV(${wdtWDV}) \
 							${wdtdebugHalt?then(' | WDT_MR_WDDBGHLT_Msk','')}${wdtidleHalt?then(' | WDT_MR_WDIDLEHLT_Msk','')}${wdtEnableReset?then(' | WDT_MR_WDRSTEN_Msk','')}${wdtinterruptMode?then(' | WDT_MR_WDFIEN_Msk','')};
 							
 }
 
-void WDT${INDEX?string}_Clear(void)
+void WDT${wdtIndex?string}_Clear(void)
 {
 	_WDT_REGS->WDT_CR.w = (WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT_Msk);
 }
 
 <#if wdtinterruptMode == true>
-	<#lt>void WDT${INDEX?string}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
+	<#lt>void WDT${wdtIndex?string}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	wdt.callback = callback;
 	<#lt>	wdt.context = context;
