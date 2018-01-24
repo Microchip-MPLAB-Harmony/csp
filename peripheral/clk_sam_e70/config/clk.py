@@ -1,4 +1,7 @@
-			   
+
+from os.path import join
+from xml.etree import ElementTree
+
 #PLLA Configuration
 def setDividerVisibleProperty(pllaDivider, pllaClkEnable):
 	if (pllaClkEnable.getValue() == True):
@@ -32,16 +35,24 @@ def setGenericClkSrcVisible(genericClk0Src, genericClk0Enable):
         print("GCLK Disabled")
         genericClk0Src.setVisible(False)
 
-def setGenericClkDivVisible(genericClk0Divider, genericClk0Enable):
-    if(genericClk0Enable.getValue() == True):
+def setGenericClkDivVisible(genericClkDivider, genericClkEnable):
+    if(genericClkEnable.getValue() == True):
         print("GCLK Enabled")
-        genericClk0Divider.setVisible(True)
+        genericClkDivider.setVisible(True)
     else :
         print("GCLK Disabled")
-        genericClk0Divider.setVisible(False)
+        genericClkDivider.setVisible(False)
+
+#set/reset the readOnly property of Slow Clock Frequency
+def resetReadOnlySlowClkFreq(clkSymExtClkInputFreq, clkSym_SUPC_MR_OSCBYPASS):
+
+	if clkSym_SUPC_MR_OSCBYPASS.getValue is True:
+		clkSymExtClkInputFreq.readOnly(True)
+	else:
+		clkSymExtClkInputFreq.readOnly(False)
 
 # slow RC/Crystal Oscillator 
-def slowClock(clkComponent, clkSymMenu, supcRegModule):
+def slowClock(clkComponent, clkSymMenu, supcRegModule, resetReadOnlySlowClkFreq):
 
     # creates Slow Clock Configuration Menu
 	clkSymMenu = clkComponent.createMenuSymbol("CLK_SLOW", clkSymMenu)
@@ -67,6 +78,7 @@ def slowClock(clkComponent, clkSymMenu, supcRegModule):
 	clkSymExtClkInputFreq.setLabel("External Slow Clock Input Frequency (Hz)")
 	clkSymExtClkInputFreq.setDefaultValue(32768)
 	clkSymExtClkInputFreq.setReadOnly(True)
+	clkSymExtClkInputFreq.setDependencies(resetReadOnlySlowClkFreq, ["SUPC_MR_OSCBYPASS"])
 	
 	# get SUPC_MR Register
 	supcReg_SUPC_MR = supcRegGroup.getRegister("SUPC_MR")
@@ -77,6 +89,7 @@ def slowClock(clkComponent, clkSymMenu, supcRegModule):
 	# Create Boolean symbol for OSCBYPASS Bitfield of SUPC_MR Register
 	clkSym_SUPC_MR_OSCBYPASS = clkComponent.createBooleanSymbol("SUPC_MR_OSCBYPASS", clkSym_SUPC_CR_XTALSEL)
 	clkSym_SUPC_MR_OSCBYPASS.setLabel(supcBitField_SUPC_MR_OSCBYPASS.getDescription())
+	clkSym_SUPC_MR_OSCBYPASS.setDefaultValue(False)
 
 # Main RC/Crystal Oscillator
 def mainClock(clkComponent, clkSymMenu, pmcRegModule):
@@ -384,71 +397,31 @@ def genericClk(clkComponent, clkSymMenu, pmcRegModule, setGenericClkDivVisible, 
 		clkSym_PMC_PCR_GCLKCSS.setVisible(False)
 		clkSym_PMC_PCR_GCLKCSS.setDependencies(setGenericClkSrcVisible, ["PMC_PCR_GCLK" + str(i) + "EN"])
 
-def peripheralClk(clkComponent, clkSymMenu):
+def peripheralClk(clkComponent, clkSymMenu, join, ElementTree):
 
 	# create symbol for peripheral clock
 	clkSymMenu = clkComponent.createMenuSymbol("CLK_PERIPHERAL", clkSymMenu)
 	clkSymMenu.setLabel("Peripheral Clock Enable Configuration")
 	
-	# create peripheral list
-	peripheralInfo = {"PMC_ID_ACC"		: "ACC",
-	                  "PMC_ID_AES"		: "AES",
-                          "PMC_ID_AFEC0"	: "AFEC 0",
-                          "PMC_ID_AFEC1"	: "AFEC 1",
-                          "PMC_ID_DACC"		: "DACC",
-                          "PMC_ID_GMAC"		: "GMAC",
-                          "PMC_ID_HSMCI"  	: "HSMCI",
-                          "PMC_ID_ICM"		: "ICM",
-                          "PMC_ID_ISI" 		: "ISI",
-                          "PMC_ID_MCAN0" 	: "MCAN 0",
-                          "PMC_ID_MCAN1"	: "MCAN 1",
-                          "PMC_ID_MLB" 		: "MLB",
-                          "PMC_ID_PORTA"  	: "Port A", 
-	                  "PMC_ID_PORTB"  	: "Port B",
-                          "PMC_ID_PORTC"  	: "Port C",
-                          "PMC_ID_PORTD"  	: "Port D",
-                          "PMC_ID_PORTE" 	: "Port E",
-                          "PMC_ID_PWMC0"	: "PWMC 0",
-                          "PMC_ID_PWMC1"	: "PWMC 1",
-                          "PMC_ID_QSPI" 	: "QSPI",
-                          "PMC_ID_SMC"    	: "SMC",
-                          "PMC_ID_SPI0"   	: "SPI 0",
-                          "PMC_ID_SPI1"   	: "SPI 1",
-                          "PMC_ID_SSC"    	: "SSC",
-                          "PMC_ID_TC0_CHANNEL0" : "TC0 Channel 0",
-                          "PMC_ID_TC0_CHANNEL1" : "TC0 Channel 1",
-                          "PMC_ID_TC0_CHANNEL2" : "TC0 Channel 2",
-                          "PMC_ID_TC1_CHANNEL0" : "TC1 Channel 0",
-                          "PMC_ID_TC1_CHANNEL1" : "TC1 Channel 1",
-                          "PMC_ID_TC1_CHANNEL2" : "TC1 Channel 2",
-                          "PMC_ID_TC2_CHANNEL0" : "TC2 Channel 0",
-                          "PMC_ID_TC2_CHANNEL1" : "TC2 Channel 1",
-                          "PMC_ID_TC2_CHANNEL2" : "TC2 Channel 2",
-                          "PMC_ID_TC3_CHANNEL0" : "TC3 Channel 0",
-                          "PMC_ID_TC3_CHANNEL1" : "TC3 Channel 1",
-                          "PMC_ID_TC3_CHANNEL2" : "TC3 Channel 2",
-                          "PMC_ID_TRNG" 	: "TRNG",
-                          "PMC_ID_TWI0"   	: "TWI 0",
-                          "PMC_ID_TWI1"   	: "TWI 1",
-                          "PMC_ID_TWI2" 	: "TWI 2",
-                          "PMC_ID_UART0"  	: "UART 0",
-                          "PMC_ID_UART1"  	: "UART 1",
-                          "PMC_ID_UART2"  	: "UART 2",
-                          "PMC_ID_UART3"  	: "UART 3",
-                          "PMC_ID_UART4"  	: "UART 4",
-                          "PMC_ID_USART0" 	: "USART 0",
-                          "PMC_ID_USART1" 	: "USART 1",
-                          "PMC_ID_USART2" 	: "USART 2",
-                          "PMC_ID_USBHS"	: "USBHS",
-                          "PMC_ID_XDMAC"	: "XDMAC" }
+	atdfFilePath = join(Variables.get("__DFP_PACK_DIR") ,"atdf", Variables.get("__PROCESSOR") + ".atdf")
 	
-	# create symbol for each peripheral
-	for peripheralId in sorted(peripheralInfo.iterkeys()):
+	try:
+		atdfFile = open(atdfFilePath, "r")
+	except:
+		print("clk.py peripheral clock: Error!!! while opening atdf file")
 		
-		clkSymPeripheral = clkComponent.createBooleanSymbol(peripheralId, clkSymMenu)
-		clkSymPeripheral.setLabel(peripheralInfo[peripheralId])
-		clkSymPeripheral.setDefaultValue(False)
-		clkSymPeripheral.setReadOnly(True)
+	atdfContent = ElementTree.fromstring(atdfFile.read())
+	
+	# parse atdf xml file to get instance name 
+	# for the peripheral which has clock id
+	for peripheral in atdfContent.iter("module"):
+		for instance in peripheral.iter("instance"):
+			for param in instance.iter("param"):
+				if param.attrib['name'] == "CLOCK_ID":
+					clkSymPeripheral = clkComponent.createBooleanSymbol("PMC_ID_" + instance.attrib['name'], clkSymMenu)
+					clkSymPeripheral.setLabel(instance.attrib['name'])
+					clkSymPeripheral.setDefaultValue(False)
+					clkSymPeripheral.setReadOnly(True)
 	
 	# create symbol for PMC_PCERx register values
 	clkSym_PMC_PCER0 = clkComponent.createStringSymbol("PMC_PCER0", clkSymMenu)
@@ -601,7 +574,7 @@ clkSymMenu.setDescription("Configuration for Clock System Service")
 
 clkSymManagerSelect = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", clkSymMenu)
 clkSymManagerSelect.setVisible(False)
-clkSymManagerSelect.setDefaultValue("pic32cz:SAMV71ClockModel")
+clkSymManagerSelect.setDefaultValue("SAME70:SAME70ClockModel")
 
 clkSymMenuComment = coreComponent.createCommentSymbol("clkSettingsComment", clkSymMenu)
 clkSymMenuComment.setLabel("**** All settings listed here can be configured using the Clock Configurator ****")
@@ -611,7 +584,7 @@ supcRegModule = Register.getRegisterModule("SUPC")
 utmiRegModule = Register.getRegisterModule("UTMI")
 
 # Create slow clock menu
-slowClock(coreComponent, clkSymMenu, supcRegModule)
+slowClock(coreComponent, clkSymMenu, supcRegModule, resetReadOnlySlowClkFreq)
 
 # create main clock menu
 mainClock(coreComponent, clkSymMenu, pmcRegModule)
@@ -629,7 +602,7 @@ usbClock(coreComponent, clkSymMenu, pmcRegModule, utmiRegModule, setUSBDividerVi
 genericClk(coreComponent, clkSymMenu, pmcRegModule, setGenericClkDivVisible, setGenericClkSrcVisible)
 
 # peripheral clock
-peripheralClk(coreComponent, clkSymMenu)
+peripheralClk(coreComponent, clkSymMenu, join, ElementTree)
 
 # programmable clock
 programmableClock(coreComponent, clkSymMenu, pmcRegModule)
