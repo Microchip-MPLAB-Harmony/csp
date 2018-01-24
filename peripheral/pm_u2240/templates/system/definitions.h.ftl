@@ -1,0 +1,1 @@
+#include "peripheral/pm/plib_pm${PM_INDEX}.h"
