@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<pinfile>
+	<packages>
+		<package diagram="JEDEC_MS_026D_BFB_LQFP144" id="1" name="LQFP144" />
+		<package diagram="JEDEC_MO_275A_EEAD_1_TFBGA144" id="2" name="TFBGA_LFBGA_144" />
+	</packages>
+</pinfile>

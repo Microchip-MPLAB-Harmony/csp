@@ -1,6 +1,8 @@
 def loadModule():
 	coreComponent = Module.CreateSharedComponent("core", "System", "/", "config/core.py")
-
+	coreComponent.addPlugin("plugin/clock/clockmanager.jar")
+	coreComponent.addPlugin("plugin/pin/SAME70pinmanager.jar")
+	
 	print("Load Module: Device Family Pack (DFP)")
 
 	#supportedProcessors = [] 
