@@ -73,13 +73,6 @@ def slowClock(clkComponent, clkSymMenu, supcRegModule, resetReadOnlySlowClkFreq)
 	clkSym_SUPC_CR_XTALSEL.setLabel(supcBitField_SUPC_CR_XTALSEL.getDescription())
 	clkSym_SUPC_CR_XTALSEL.setDefaultValue(True)
 
-	# set slow clock input frequency
-	clkSymExtClkInputFreq = clkComponent.createIntegerSymbol("CLK_SLOW_XTAL", clkSym_SUPC_CR_XTALSEL)
-	clkSymExtClkInputFreq.setLabel("External Slow Clock Input Frequency (Hz)")
-	clkSymExtClkInputFreq.setDefaultValue(32768)
-	clkSymExtClkInputFreq.setReadOnly(True)
-	clkSymExtClkInputFreq.setDependencies(resetReadOnlySlowClkFreq, ["SUPC_MR_OSCBYPASS"])
-	
 	# get SUPC_MR Register
 	supcReg_SUPC_MR = supcRegGroup.getRegister("SUPC_MR")
 	
@@ -90,6 +83,13 @@ def slowClock(clkComponent, clkSymMenu, supcRegModule, resetReadOnlySlowClkFreq)
 	clkSym_SUPC_MR_OSCBYPASS = clkComponent.createBooleanSymbol("SUPC_MR_OSCBYPASS", clkSym_SUPC_CR_XTALSEL)
 	clkSym_SUPC_MR_OSCBYPASS.setLabel(supcBitField_SUPC_MR_OSCBYPASS.getDescription())
 	clkSym_SUPC_MR_OSCBYPASS.setDefaultValue(False)
+
+	# set slow clock input frequency
+	clkSymExtClkInputFreq = clkComponent.createIntegerSymbol("CLK_SLOW_XTAL", clkSym_SUPC_CR_XTALSEL)
+	clkSymExtClkInputFreq.setLabel("External Slow Clock Input Frequency (Hz)")
+	clkSymExtClkInputFreq.setDefaultValue(32768)
+	clkSymExtClkInputFreq.setReadOnly(True)
+	clkSymExtClkInputFreq.setDependencies(resetReadOnlySlowClkFreq, ["SUPC_MR_OSCBYPASS"])
 
 # Main RC/Crystal Oscillator
 def mainClock(clkComponent, clkSymMenu, pmcRegModule):
