@@ -630,7 +630,10 @@ clkSourceFile.setType("SOURCE")
 clkSourceFile.setMarkup(True)
 
 #Add clock related code to common files
-systemDefinitionsHeadersList.addValue("#include \"peripheral/clk/clk.h\"")
+clkHeaderFileListEntry = coreComponent.createListEntrySymbol(None, None)
+clkHeaderFileListEntry.setTarget("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+clkHeaderFileListEntry.addValue("#include \"peripheral/clk/clk.h\"")
+
 
 clkSystemInitFile = coreComponent.createFileSymbol(None, None)
 clkSystemInitFile.setType("STRING")

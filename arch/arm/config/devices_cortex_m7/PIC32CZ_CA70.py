@@ -71,6 +71,15 @@ def genSysMPUSourceFile(armSysMPUSourceFile, CoreUseMPU):
 armSysMPUSourceFile.setDependencies(genSysMPUSourceFile, ["CoreUseMPU"])
 
 #generate arch.h file
+def genArchHeaderFile(archHeaderFile, CoreUseMPU):
+	coreUseMPU = archHeaderFile.getComponent().getSymbolValue("CoreUseMPU")
+	coreUseTimer = archHeaderFile.getComponent().getSymbolValue("CoreUseTimer")
+
+	if(coreUseMPU or coreUseTimer):
+		archHeaderFile.setEnabled(True)
+	else:
+		archHeaderFile.setEnabled(False)
+
 archHeaderFile = coreComponent.createFileSymbol(None, None)
 archHeaderFile.setSourcePath("arm/templates/arch.h.ftl")
 archHeaderFile.setOutputName("arch.h")
@@ -80,27 +89,22 @@ archHeaderFile.setDestPath("arch/")
 archHeaderFile.setProjectPath("config/" + configName + "/arch/")
 archHeaderFile.setType("HEADER")
 archHeaderFile.setEnabled(False)
+archHeaderFile.setDependencies(genArchHeaderFile, ["CoreUseMPU", "CoreUseTimer"])
 
-def genArchHeaderFile(archHeaderFile, CoreUseMPU):
-	coreUseMPU = archHeaderFile.getComponent().getSymbolValue("CoreUseMPU")
-	coreUseTimer = archHeaderFile.getComponent().getSymbolValue("CoreUseTimer")
-
-	#if arch.h is generated, add to system_definitions.h
-	headerList = Database.getSymbolByID("core", "LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	headerValues = headerList.getValues()
-	if("#include \"arch/arch.h\"" in headerValues):
-		headerValues.remove("#include \"arch/arch.h\"")
-	headerList.clearValues()
-	for headerValue in headerValues:
-		headerList.addValue(headerValue)
+def genArchHeaderFileList(archHeaderFileListEntry, CoreUseMPU):
+	coreUseMPU = archHeaderFileListEntry.getComponent().getSymbolValue("CoreUseMPU")
+	coreUseTimer = archHeaderFileListEntry.getComponent().getSymbolValue("CoreUseTimer")
 
 	if(coreUseMPU or coreUseTimer):
-		archHeaderFile.setEnabled(True)
-		headerList.addValue("#include \"arch/arch.h\"")
+		archHeaderFileListEntry.setEnabled(True)
 	else:
-		archHeaderFile.setEnabled(False)
+		archHeaderFileListEntry.setEnabled(False)
 
-archHeaderFile.setDependencies(genArchHeaderFile, ["CoreUseMPU", "CoreUseTimer"])
+archHeaderFileListEntry = coreComponent.createListEntrySymbol(None, None)
+archHeaderFileListEntry.setTarget("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+archHeaderFileListEntry.addValue("#include \"arch/arch.h\"")
+archHeaderFileListEntry.setEnabled(False)
+archHeaderFileListEntry.setDependencies(genArchHeaderFileList, ["CoreUseMPU", "CoreUseTimer"])
 
 #Add code to initialize Core Timer
 archInitFile = coreComponent.createFileSymbol(None, None)
@@ -140,5 +144,6 @@ armDeviceHeaderFile.setDestPath("arch/arm/")
 armDeviceHeaderFile.setProjectPath("config/" + configName + "/arch/arm/")
 armDeviceHeaderFile.setType("HEADER")
 
-systemDefinitionsHeadersList.addValue("#include \"arch/arm/device_" + Variables.get("__PROCESSOR") + ".h\"")
-
+armDeviceHeaderFileListEntry = coreComponent.createListEntrySymbol(None, None)
+armDeviceHeaderFileListEntry.setTarget("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+armDeviceHeaderFileListEntry.addValue("#include \"arch/arm/device_" + Variables.get("__PROCESSOR") + ".h\"")
