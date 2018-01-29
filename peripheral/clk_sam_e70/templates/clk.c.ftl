@@ -23,6 +23,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  *******************************************************************************/
  -->
 
+
 #include "clk.h"
 
 <#macro CONFIGURE_GCLK INDEX PCLKEN GCLKEN GCLKCSS GCLKDIV>
@@ -79,6 +80,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 void CLK_Initialize( void )
 {
+#if 0
     uint32_t mckr;
 <#if PMC_CKGR_MOR_MOSCRCEN>
     uint32_t mor;
@@ -233,7 +235,9 @@ void CLK_Initialize( void )
    	_PMC_REGS->PMC_PCER0.w=${PMC_PCER0};
     _PMC_REGS->PMC_PCER1.w=${PMC_PCER1};
 	
+#endif
 }
+
 
 <#--
 /*******************************************************************************

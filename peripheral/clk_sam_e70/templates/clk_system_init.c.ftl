@@ -44,7 +44,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 //DOM-IGNORE-END
 -->
     /*Initialize System Clocks */
-    CLK_Initialize( NULL );
+    CLK_Initialize();
 <#--
 /*******************************************************************************
  End of File
