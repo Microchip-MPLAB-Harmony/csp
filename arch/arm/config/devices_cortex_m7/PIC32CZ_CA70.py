@@ -7,6 +7,7 @@ coreComponent.addPlugin("../peripheral/clk_sam_e70/plugin/clockmanager.jar")
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
+coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 
 # load device specific nvic manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
