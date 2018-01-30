@@ -26,6 +26,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifndef CLK_H
 #define CLK_H
 
+#include <xc.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <sys/attribs.h>
+
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     extern "C" {
