@@ -1,7 +1,5 @@
 def loadModule():
 	coreComponent = Module.CreateSharedComponent("core", "System", "/", "config/core.py")
-	coreComponent.addPlugin("plugin/clock/clockmanager.jar")
-	coreComponent.addPlugin("plugin/pin/SAME70pinmanager.jar")
 	
 	print("Load Module: Device Family Pack (DFP)")
 
@@ -13,6 +11,7 @@ def loadModule():
 	#else:
 	#	print("Can't Load PIC32CZ-CA70 DFP: " + selectedProcessor + " is not supported.")
 
+	print("Load Module: CMSIS Pack")
 	cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis.py")
 
 
