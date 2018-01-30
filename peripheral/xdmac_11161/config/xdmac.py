@@ -43,6 +43,11 @@ def xdmacTransferType(xdmacSym, type):
 	else :
 		xdmacSym.setVisible(False)
 
+		
+clkManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
+clkManagerSelect.setVisible(False)
+clkManagerSelect.setDefaultValue("SAME70:SAME70DMAModel")
+		
 xdmacChannelLinkedList = coreComponent.createBooleanSymbol("XDMAC_LL_ENABLE", xdmacMenu)
 xdmacChannelLinkedList.setLabel("Use Linked List Mode?")
 xdmacChannelLinkedList.setDefaultValue(False)
