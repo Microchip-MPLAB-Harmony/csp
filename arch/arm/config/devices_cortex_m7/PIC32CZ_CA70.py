@@ -1,4 +1,26 @@
 # load family specific configurations 
+print("Loading System Services for " + Variables.get("__PROCESSOR"))
+
+# load clock manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_e70/config/clk.py")
+coreComponent.addPlugin("../peripheral/clk_sam_e70/plugin/clockmanager.jar")
+
+# load dma manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
+
+# load device specific nvic manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
+
+# load device specific pin manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
+coreComponent.addPlugin("../peripheral/pio_11004/plugin/SAME70pinmanager.jar")
+
+# load rswdt
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/rswdt_11110/config/rswdt.py")
+
+# load wdt
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
+
 coreUseMPU = coreComponent.createBooleanSymbol("CoreUseMPU", devCfgMenu)
 coreUseMPU.setLabel("Enable MPU?")
 
