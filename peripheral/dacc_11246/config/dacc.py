@@ -156,14 +156,12 @@ def calcDacFrequency(symbol,prescaler):
         symbol.setLabel("**** DAC Frequency = "+str(dacFreq) + " MHz is greater than 12MHz, Increase the prescaler value ****")
 
 def triggerVisibility(symbol,convMode):
-    dacc=symbol.getComponent()
-
     id = symbol.getID()[-1]
     channelID = int(id)
 
-    print("Trigger Visibility: DAC Conversion mode = "+str(convMode.getKey(dacc.getSymbolValue("CONVERSION_MODE_CH"+str(channelID)))))
+#    print("Trigger Visibility: DAC Conversion mode = "+str(convMode.getSelectedKey()))
 
-    if (convMode.getKey(dacc.getSymbolValue("CONVERSION_MODE_CH"+str(channelID))) == "TRIGGER_MODE"):
+    if (convMode.getSelectedKey() == "TRIGGER_MODE"):
         dacChannelTriggerSelect[channelID].setVisible(True)
         dacChannelOSR[channelID].setVisible(True)
     else:
@@ -171,28 +169,24 @@ def triggerVisibility(symbol,convMode):
         dacChannelOSR[channelID].setVisible(False)
 
 def channel1Visibility(symbol,outputMode):
-    dacc=symbol.getComponent()
-    if (outputMode.getKey(dacc.getSymbolValue("DACC_MR_DIFF")) == "DIFFERENTIAL"):
-#        dacChannelMenu[1].clearValue("DACC_CHER_CH1")
-#        dacChannelMenu[1].setValue("DACC_CHER_CH1", False, 1)
+    if (outputMode.getSelectedKey() == "DIFFERENTIAL"):
         dacChannelMenu[1].setVisible(False)
     else:
         dacChannelMenu[1].setVisible(True)
 
 def setupModeBits(symbol, convMode):
-    dacc=symbol.getComponent()
     id = symbol.getID()[-1]
     channelID = int(id)
-    print("Setup Mode: DAC Conversion mode = "+str(convMode.getKey(dacc.getSymbolValue("CONVERSION_MODE_CH"+str(channelID)))))
+#    print("Setup Mode: DAC Conversion mode = "+str(convMode.getSelectedKey()))
 
-    if (convMode.getKey(dacc.getSymbolValue("CONVERSION_MODE_CH"+str(channelID))) == "MAX_SPEED_MODE"):
+    if (convMode.getSelectedKey() == "MAX_SPEED_MODE"):
         dacChannelMaxSpeed[channelID].clearValue("DACC_MR_MAXS"+str(channelID))
         dacChannelMaxSpeed[channelID].setValue("DACC_MR_MAXS"+str(channelID), True, 1)
     else:
         dacChannelMaxSpeed[channelID].clearValue("DACC_MR_MAXS"+str(channelID))
         dacChannelMaxSpeed[channelID].setValue("DACC_MR_MAXS"+str(channelID), False, 1)
 
-    if (convMode.getKey(dacc.getSymbolValue("CONVERSION_MODE_CH"+str(channelID))) == "TRIGGER_MODE"):
+    if (convMode.getSelectedKey() == "TRIGGER_MODE"):
         dacChannelTriggerEnable[channelID].clearValue("DACC_TRIGR_TRGEN"+str(channelID))
         dacChannelTriggerEnable[channelID].setValue("DACC_TRIGR_TRGEN"+str(channelID), True, 1)
     else:
@@ -200,14 +194,13 @@ def setupModeBits(symbol, convMode):
         dacChannelTriggerEnable[channelID].setValue("DACC_TRIGR_TRGEN"+str(channelID), False, 1)
 
 def setDacSpeed(symbol, convMode):
-    dacc=symbol.getComponent()
     id = symbol.getID()[-1]
     channelID = int(id)
-    print("DAC Speed: DAC Conversion mode = "+str(convMode.getKey(dacc.getSymbolValue("CONVERSION_MODE_CH"+str(channelID)))))
+#    print("DAC Speed: DAC Conversion mode = "+str(convMode.getSelectedKey()))
 
-    if (convMode.getKey(dacc.getSymbolValue("CONVERSION_MODE_CH"+str(channelID))) == "MAX_SPEED_MODE"):
-        dacChannelBiasCurrent[channelID].clearValue("DACC_ACR_IBCTLCH"+str(channelID))
-        dacChannelBiasCurrent[channelID].setValue("DACC_ACR_IBCTLCH"+str(channelID),2,1)
-        dacChannelBiasCurrent[channelID].setVisible(False)
+    if (convMode.getSelectedKey() == "MAX_SPEED_MODE"):
+		convMode.clearValue("DACC_ACR_IBCTLCH"+str(channelID))
+		convMode.setSelectedKey("DACC_ACR_IBCTLCH"+str(channelID),"1M",1)
+		dacChannelBiasCurrent[channelID].setVisible(False)
     else:
         dacChannelBiasCurrent[channelID].setVisible(True)
