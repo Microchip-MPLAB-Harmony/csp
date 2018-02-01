@@ -13,7 +13,7 @@ def instantiateComponent(cmsisComponent):
 	for release in cmsisDescription.iter("release"):
 		cmsisInformation.setLabel("Release Information: " + str(release.attrib))
 		if release.attrib['version'] != cmsisSupportedVersion:
-			print("Error: This version of CMSIS Pack is not supported! Supported version is " + cmsisSupportedVersion)
+			Log.writeErrorMessage("Error: This version of CMSIS Pack is not supported! Supported version is " + cmsisSupportedVersion)
 			cmsisError.setVisible(True)
 			return
 		break
