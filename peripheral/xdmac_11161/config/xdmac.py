@@ -179,6 +179,10 @@ def xdmacTriggerCalc(xdmacPERIDVal, xdmacPERID):
 	xdmacPERIDVal.setValue(peridValueID, int(peridValueList[peridIndex]), 2)
 
 
+dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
+dmaManagerSelect.setVisible(False)
+dmaManagerSelect.setDefaultValue("SAME70:SAME70DMAModel")	
+
 xdmacMenu = coreComponent.createMenuSymbol(None, None)
 xdmacMenu.setLabel("DMA (XDMAC)")
 xdmacMenu.setDescription("DMA (XDMAC) Configuration")
