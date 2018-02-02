@@ -6,7 +6,7 @@ daccValGrp_TRIGR_OSR0 = daccRegModule.getValueGroup("DACC_TRIGR__OSR0")
 
 dacChannelMenu = []
 dacChannelBiasCurrent = []
-dacChannelCoversionMode = []
+dacChannelConversionMode = []
 dacChannelTriggerSelect = []
 dacChannelOSR = []
 dacChannelMaxSpeed = []
@@ -57,15 +57,15 @@ def instantiateComponent(daccComponent):
         dacChannelMenu[channelID].setLabel("Enable Channel "+str(channelID))
         dacChannelMenu[channelID].setDependencies(channel1Visibility, ["DACC_MR_DIFF"])
 
-        dacChannelCoversionMode.append(channelID)
-        dacChannelCoversionMode[channelID] = daccComponent.createKeyValueSetSymbol("CONVERSION_MODE_CH"+str(channelID), dacChannelMenu[channelID])
-        dacChannelCoversionMode[channelID].setLabel("Select Conversion Mode")
-        dacChannelCoversionMode[channelID].addKey("FREE_RUNNING_MODE", "0", "Free-Running Mode")
-        dacChannelCoversionMode[channelID].addKey("MAX_SPEED_MODE", "1", "Maximum-Speed Mode")
-        dacChannelCoversionMode[channelID].addKey("TRIGGER_MODE", "2", "External Trigger Mode")
-        dacChannelCoversionMode[channelID].setOutputMode("Key")
-        dacChannelCoversionMode[channelID].setDisplayMode("Description")
-        dacChannelCoversionMode[channelID].setDefaultValue(0)
+        dacChannelConversionMode.append(channelID)
+        dacChannelConversionMode[channelID] = daccComponent.createKeyValueSetSymbol("CONVERSION_MODE_CH"+str(channelID), dacChannelMenu[channelID])
+        dacChannelConversionMode[channelID].setLabel("Select Conversion Mode")
+        dacChannelConversionMode[channelID].addKey("FREE_RUNNING_MODE", "0", "Free-Running Mode")
+        dacChannelConversionMode[channelID].addKey("MAX_SPEED_MODE", "1", "Maximum-Speed Mode")
+        dacChannelConversionMode[channelID].addKey("TRIGGER_MODE", "2", "External Trigger Mode")
+        dacChannelConversionMode[channelID].setOutputMode("Key")
+        dacChannelConversionMode[channelID].setDisplayMode("Description")
+        dacChannelConversionMode[channelID].setDefaultValue(0)
 
 
         dacChannelBiasCurrent.append(channelID)
@@ -142,7 +142,9 @@ def instantiateComponent(daccComponent):
 
 #TODO Read from clock manager
 def daccGetMasterClockFrequency():
-    return 150000000.00
+    main_clk_sym = Database.getSymbolByID("core", "MASTERCLK_FREQ")
+    main_clk_freq = int(main_clk_sym.getValue())
+    return main_clk_freq
 
 def calcDacFrequency(symbol,prescaler):
     dacFreq=daccGetMasterClockFrequency()/(prescaler.getValue()*1000000)
@@ -158,8 +160,6 @@ def calcDacFrequency(symbol,prescaler):
 def triggerVisibility(symbol,convMode):
     id = symbol.getID()[-1]
     channelID = int(id)
-
-#    print("Trigger Visibility: DAC Conversion mode = "+str(convMode.getSelectedKey()))
 
     if (convMode.getSelectedKey() == "TRIGGER_MODE"):
         dacChannelTriggerSelect[channelID].setVisible(True)
@@ -177,7 +177,6 @@ def channel1Visibility(symbol,outputMode):
 def setupModeBits(symbol, convMode):
     id = symbol.getID()[-1]
     channelID = int(id)
-#    print("Setup Mode: DAC Conversion mode = "+str(convMode.getSelectedKey()))
 
     if (convMode.getSelectedKey() == "MAX_SPEED_MODE"):
         dacChannelMaxSpeed[channelID].clearValue("DACC_MR_MAXS"+str(channelID))
@@ -196,11 +195,10 @@ def setupModeBits(symbol, convMode):
 def setDacSpeed(symbol, convMode):
     id = symbol.getID()[-1]
     channelID = int(id)
-#    print("DAC Speed: DAC Conversion mode = "+str(convMode.getSelectedKey()))
 
     if (convMode.getSelectedKey() == "MAX_SPEED_MODE"):
-		convMode.clearValue("DACC_ACR_IBCTLCH"+str(channelID))
-		convMode.setSelectedKey("DACC_ACR_IBCTLCH"+str(channelID),"1M",1)
+		dacChannelBiasCurrent[channelID].clearValue("DACC_ACR_IBCTLCH"+str(channelID))
+		dacChannelBiasCurrent[channelID].setSelectedKey("DACC_ACR_IBCTLCH"+str(channelID),"1M",1)
 		dacChannelBiasCurrent[channelID].setVisible(False)
     else:
-        dacChannelBiasCurrent[channelID].setVisible(True)
+		dacChannelBiasCurrent[channelID].setVisible(True)
