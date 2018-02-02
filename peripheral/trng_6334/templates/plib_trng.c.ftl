@@ -59,7 +59,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 	<#lt>uint32_t TRNG${INDEX?string}_ReadData( void )
 	<#lt>{
 	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
-	<#lt>	while(_TRNG_REGS->TRNG_ISR.w & TRNG_ISR_DATRDY_Msk);			
+	<#lt>	while(((_TRNG_REGS->TRNG_ISR.w) & (TRNG_ISR_DATRDY_Msk)) != TRNG_ISR_DATRDY_Msk);			
 	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD;
 	<#lt>	return (_TRNG_REGS->TRNG_ODATA.w);
 	<#lt>}
