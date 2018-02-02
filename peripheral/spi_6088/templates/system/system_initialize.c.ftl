@@ -1,0 +1,1 @@
+	SPI${SPI_INDEX?string}_Initialize();
