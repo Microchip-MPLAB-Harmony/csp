@@ -3,5 +3,5 @@
 	WDT${wdtIndex?string}_Initialize();
 <#else>
 	/*Disable Watchdog Timer*/
-	WDT->WDT_MR |= WDT_MR_WDDIS_Msk;
+	_WDT_REGS->WDT_MR.w |= WDT_MR_WDDIS_Msk;
 </#if>
