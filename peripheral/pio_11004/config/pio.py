@@ -311,69 +311,6 @@ pioMatrixSym_CCFG_SYSIO.setLabel("CCFG_SYSIO")
 pioMatrixSym_CCFG_SYSIO.setDescription("System Pins as GPIO")
 pioMatrixSym_CCFG_SYSIO.setDefaultValue("0x00000000")
 
-###################################################################################################
-################################### Pin Type related code  ########################################
-###################################################################################################
-
-pinType = coreComponent.createMenuSymbol(None, pioEnable)
-pinType.setLabel("Pin Types")
-pinType.setDescription("Type of PIO Pins")
-
-type = []
-typeName = []
-typePinMode = []
-typePinDirection = []
-typePinLatch = []
-typePinOpenDrain = []
-typePinCN = []
-typePinPullUp = []
-typePinPullDown = []
-typePinInterrupt = []
-
-
-for pinTypeNumber in range(0, 20):
-
-    type.append(pinTypeNumber)
-    type[pinTypeNumber]= coreComponent.createMenuSymbol(None, pinType)
-    type[pinTypeNumber].setLabel("Type " + str(pinTypeNumber))
-    
-    typeName.append(pinTypeNumber)
-    typeName[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_TYPE" + str(pinTypeNumber), type[pinTypeNumber])
-    typeName[pinTypeNumber].setLabel("Type Name")
-    typeName[pinTypeNumber].setDefaultValue("")
-    
-    typePinMode.append(pinTypeNumber)
-    typePinMode[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_MODE" + str(pinTypeNumber), type[pinTypeNumber])
-    typePinMode[pinTypeNumber].setLabel("Mode")
-    
-    typePinDirection.append(pinTypeNumber)
-    typePinDirection[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_DIR" + str(pinTypeNumber), type[pinTypeNumber])
-    typePinDirection[pinTypeNumber].setLabel("Direction")
-
-    typePinLatch.append(pinTypeNumber)
-    typePinLatch[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_LAT" + str(pinTypeNumber), type[pinTypeNumber])
-    typePinLatch[pinTypeNumber].setLabel("Initial Latch Value")
-    
-    typePinOpenDrain.append(pinTypeNumber)
-    typePinOpenDrain[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_OD" + str(pinTypeNumber), type[pinTypeNumber])
-    typePinOpenDrain[pinTypeNumber].setLabel("Open Drain")
-    
-    typePinCN.append(pinTypeNumber)
-    typePinCN[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_CN" + str(pinTypeNumber), type[pinTypeNumber])
-    typePinCN[pinTypeNumber].setLabel("Change Notice")
-    
-    typePinPullUp.append(pinTypeNumber)
-    typePinPullUp[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_PU" + str(pinTypeNumber), type[pinTypeNumber])
-    typePinPullUp[pinTypeNumber].setLabel("Pull Up")
-    
-    typePinPullDown.append(pinTypeNumber)
-    typePinPullDown[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_PD" + str(pinTypeNumber), type[pinTypeNumber])
-    typePinPullDown[pinTypeNumber].setLabel("Pull Down")
-    
-    typePinInterrupt.append(pinTypeNumber)
-    typePinInterrupt[pinTypeNumber] = coreComponent.createStringSymbol("BSP_CUSTOM_PIO_INTERRUPT" + str(pinTypeNumber), type[pinTypeNumber])
-    typePinInterrupt[pinTypeNumber].setLabel("PIO Interrupt")
-
 
 
 ###################################################################################################
