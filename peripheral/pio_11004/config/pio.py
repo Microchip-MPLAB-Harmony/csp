@@ -309,7 +309,7 @@ pioSym_DACC_CHER.setDefaultValue("0x00000000")
 pioMatrixSym_CCFG_SYSIO = coreComponent.createStringSymbol("PIO_CCFG_SYSIO_VALUE", portConfiguration)
 pioMatrixSym_CCFG_SYSIO.setLabel("CCFG_SYSIO")
 pioMatrixSym_CCFG_SYSIO.setDescription("System Pins as GPIO")
-pioMatrixSym_CCFG_SYSIO.setDefaultValue("0x000010F0")
+pioMatrixSym_CCFG_SYSIO.setDefaultValue("0x00000000")
 
 ###################################################################################################
 ################################### Pin Type related code  ########################################
