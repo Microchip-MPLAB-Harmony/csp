@@ -3,6 +3,8 @@ def instantiateComponent(dfpComponent):
 	from os import listdir
 	import xml.etree.ElementTree as ET
 
+    MCC_HEADERS_SUBPATH = "/include_mcc"
+
 	dfpDevice = dfpComponent.createCommentSymbol("dfpDevice", None)
 	dfpDevice.setLabel("Device: " + Variables.get("__PROCESSOR"))
 
@@ -20,12 +22,12 @@ def instantiateComponent(dfpComponent):
 
 
 	#add pack files to a project
-	headerFileNames = listdir(Variables.get("__DFP_PACK_DIR") + "/mcc/component")
+	headerFileNames = listdir(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/component")
 
 	for headerFileName in headerFileNames:
 		headerFile = dfpComponent.createFileSymbol(None, None)
 		headerFile.setRelative(False)
-		headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + "/mcc/component/" + headerFileName)
+		headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/component/" + headerFileName)
 		headerFile.setOutputName(headerFileName)
 		headerFile.setMarkup(False)
 		headerFile.setOverwrite(True)
@@ -37,7 +39,7 @@ def instantiateComponent(dfpComponent):
 
 	headerFile = dfpComponent.createFileSymbol(None, None)
 	headerFile.setRelative(False)
-	headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + "/mcc/" + processorName.lower() + ".h")
+	headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/" + processorName.lower() + ".h")
 	headerFile.setOutputName(processorName.lower() + ".h")
 	headerFile.setMarkup(False)
 	headerFile.setOverwrite(True)
@@ -47,7 +49,7 @@ def instantiateComponent(dfpComponent):
 
 	headerFile = dfpComponent.createFileSymbol(None, None)
 	headerFile.setRelative(False)
-	headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + "/mcc/pio/" + processorName.lower() + ".h")
+	headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/pio/" + processorName.lower() + ".h")
 	headerFile.setOutputName(processorName.lower() + ".h")
 	headerFile.setMarkup(False)
 	headerFile.setOverwrite(True)
