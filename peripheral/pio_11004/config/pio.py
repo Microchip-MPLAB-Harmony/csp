@@ -357,7 +357,7 @@ pioSystemDefFile.setMarkup(True)
 pioSysConfFile = coreComponent.createFileSymbol("BSP_PIN_CONFIG", None)
 pioSysConfFile.setType("STRING")
 pioSysConfFile.setOutputName("core.LIST_SYSTEM_CONFIG_H_APPLICATION_CONFIGURATION")
-pioSysConfFile.setSourcePath("../../bsp/templates/system_config.h.ftl")
+pioSysConfFile.setSourcePath(Variables.get("__BSP_DIR") + "/templates/system_config.h.ftl")
 pioSysConfFile.setMarkup(True)
 pioSysConfFile.setEnabled(False)
 
