@@ -1,0 +1,1 @@
+#include "peripheral/adc/plib_adc${ADC_INDEX}.h"
