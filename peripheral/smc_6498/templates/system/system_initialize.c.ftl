@@ -1,0 +1,1 @@
+    SMC${INDEX?string}_Initialize();
