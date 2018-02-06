@@ -354,10 +354,3 @@ pioSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 pioSystemDefFile.setSourcePath("../peripheral/pio_11004/templates/system/system_definitions.h.ftl")
 pioSystemDefFile.setMarkup(True)
 
-pioSysConfFile = coreComponent.createFileSymbol("BSP_PIN_CONFIG", None)
-pioSysConfFile.setType("STRING")
-pioSysConfFile.setOutputName("core.LIST_SYSTEM_CONFIG_H_APPLICATION_CONFIGURATION")
-pioSysConfFile.setSourcePath(Variables.get("__BSP_DIR") + "/templates/system_config.h.ftl")
-pioSysConfFile.setMarkup(True)
-pioSysConfFile.setEnabled(False)
-
