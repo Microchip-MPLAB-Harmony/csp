@@ -3,7 +3,7 @@ def instantiateComponent(dfpComponent):
 	from os import listdir
 	import xml.etree.ElementTree as ET
 
-    MCC_HEADERS_SUBPATH = "/include_mcc"
+	MCC_HEADERS_SUBPATH = "/include_mcc"
 
 	dfpDevice = dfpComponent.createCommentSymbol("dfpDevice", None)
 	dfpDevice.setLabel("Device: " + Variables.get("__PROCESSOR"))
