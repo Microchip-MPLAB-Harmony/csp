@@ -1,0 +1,1 @@
+    ADC${ADC_INDEX}_Initialize();
