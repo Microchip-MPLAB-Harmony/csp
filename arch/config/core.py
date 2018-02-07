@@ -138,11 +138,11 @@ def instantiateComponent(coreComponent):
 	# load device specific information, clock and pin manager
 	execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")
 
-def genAppSourceFile(appSourceFile, genAppFiles):
-	appSourceFile.setEnabled(genAppFiles.getValue())
+def genAppSourceFile(appSourceFile, event):
+	appSourceFile.setEnabled(event["value"])
 
-def genAppHeaderFile(appHeaderFile, genAppFiles):
-	appHeaderFile.setEnabled(genAppFiles.getValue())
+def genAppHeaderFile(appHeaderFile, event):
+	appHeaderFile.setEnabled(event["value"])
 
-def genTaskSourceFile(taskSourceFile, genTaskFiles):
-	taskSourceFile.setEnabled(genTaskFiles.getValue())
+def genTaskSourceFile(taskSourceFile, event):
+	taskSourceFile.setEnabled(event["value"])

@@ -4,12 +4,12 @@ from xml.etree import ElementTree
 
 global fwsMaxFreqList
 
-def updateFWSValue(clkSymFlashWaitStates, masterClkFreq):
+def updateFWSValue(clkSymFlashWaitStates, event):
 
 	minFreq = maxFreq = 0
 	for fws in range(0, len(fwsMaxFreqList), 1):
 		
-		mckFreq = int(masterClkFreq.getValue())
+		mckFreq = int(event["value"])
 		maxFreq = int(fwsMaxFreqList[fws])
 		
 		if mckFreq <= maxFreq and mckFreq > minFreq:
@@ -19,48 +19,48 @@ def updateFWSValue(clkSymFlashWaitStates, masterClkFreq):
 		minFreq = maxFreq
 	
 #PLLA Configuration
-def setDividerVisibleProperty(pllaDivider, pllaClkEnable):
-	if (pllaClkEnable.getValue() == True):
+def setDividerVisibleProperty(pllaDivider, event):
+	if (event["value"] == True):
 		pllaDivider.setVisible(True)
 	else :
 		pllaDivider.setVisible(False)
 
-def setMultiplierVisibleProperty(pllaMultiplier, pllaClkEnable):
-	if (pllaClkEnable.getValue() == True):
+def setMultiplierVisibleProperty(pllaMultiplier, event):
+	if (event["value"] == True):
 		pllaMultiplier.setVisible(True)
 	else :
 		pllaMultiplier.setVisible(False)
 
 #USB Clock Configuration
-def setUSBDividerVisibleProperty(upllDivider, usbHSClk):
-	if (usbHSClk.getValue() == True):
+def setUSBDividerVisibleProperty(upllDivider, event):
+	if (event["value"] == True):
 		upllDivider.setVisible(True)
 	else :
 		upllDivider.setVisible(False)
 
 #Peripheral clock generator configuration options
-def setGenericClkSrcVisible(genericClk0Src, genericClk0Enable):
-    if(genericClk0Enable.getValue() == True):
+def setGenericClkSrcVisible(genericClk0Src, event):
+    if(event["value"] == True):
         genericClk0Src.setVisible(True)
     else :
         genericClk0Src.setVisible(False)
 
-def setGenericClkDivVisible(genericClkDivider, genericClkEnable):
-    if(genericClkEnable.getValue() == True):
+def setGenericClkDivVisible(genericClkDivider, event):
+    if(event["value"] == True):
         genericClkDivider.setVisible(True)
     else :
         genericClkDivider.setVisible(False)
 
 #set/reset the readOnly property of Slow Clock Frequency
-def resetReadOnlySlowClkFreq(clkSymExtClkInputFreq, clkSym_SUPC_MR_OSCBYPASS):
+def resetReadOnlySlowClkFreq(clkSymExtClkInputFreq, event):
 
-	if clkSym_SUPC_MR_OSCBYPASS.getValue() is True:
+	if event["value"] is True:
 		clkSymExtClkInputFreq.setReadOnly(True)
 	else:
 		clkSymExtClkInputFreq.setReadOnly(False)
 
-def updateExtXtalEnable(clkSymCrystalOscEnable, clkSymOscBypass):
-	if clkSymOscBypass.getValue() is True:
+def updateExtXtalEnable(clkSymCrystalOscEnable, event):
+	if event["value"] is True:
 		clkSymCrystalOscEnable.clearValue("PMC_CKGR_MOR_MOSCXTEN")
 		clkSymCrystalOscEnable.setValue("PMC_CKGR_MOR_MOSCXTEN", False, 1)
 
@@ -611,7 +611,7 @@ def calculatedClockFrequencies(clkComponent, clkSymMenu, updateFWSValue, join, E
 		maxFreq = int(fwsMaxFreqList[fws])
 		
 		if mckFreq <= maxFreq and mckFreq > minFreq:
-			clkSymFlashWaitStates.setValue("EEFC_FMR_FWS", str(fws), 1)
+			clkSymFlashWaitStates.setValue(str(fws), 1)
 			return
 			
 		minFreq = maxFreq

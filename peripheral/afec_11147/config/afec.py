@@ -20,22 +20,22 @@ afecBitField_MR_TRGSEL = afecReg_MR.getBitfield("TRGSEL")
 adcValGroup_MR_TRGSEL = afecRegModule.getValueGroup("AFEC_MR__TRGSEL")
 adcValGroup_MR_TRGSELDefault = adcValGroup_MR_TRGSEL.getValue("AFEC_TRIG0")
 
-def afecCH1MenuVisible(afecCH1Menu, afecSym_CH0_NEG_INP):
-	if (afecSym_CH0_NEG_INP.getValue() != "GND"):
+def afecCH1MenuVisible(afecCH1Menu, event):
+	if (event["value"] != "GND"):
 		print("ch0 diff mode activated")
 		afecCH1Menu.setVisible(False)
 	else:
 		print ("ch0 diff mode disabled")
 		afecCH1Menu.setVisible(True)
 
-def afecCalcPrescal(afecSym_MR_PRESCAL, afecSym_Clock ):
-	afecSym_MR_PRESCAL.setValue("AFEC_MR_PRESCAL", int(ceil(150/afecSym_Clock.getValue())), 1)
+def afecCalcPrescal(afecSym_MR_PRESCAL, event):
+	afecSym_MR_PRESCAL.setValue("AFEC_MR_PRESCAL", int(ceil(150/event["value"])), 1)
 	print ("afecCalcPrescal:" + str(afecSym_MR_PRESCAL.getValue()))
 	
-def afecCalcConversionTime(afecSym_CONV_TIME, afecSym_Clock):
-	afecDummyPrescaler = 150/afecSym_Clock.getValue()
+def afecCalcConversionTime(afecSym_CONV_TIME, event):
+	afecDummyPrescaler = 150/event["value"]
 
-	afecSym_CONV_TIME.setValue("AFEC_CONV_TIME", (((afecDummyPrescaler * 1000000) / 150) * 23 ), 1)
+	afecSym_CONV_TIME.setValue((((afecDummyPrescaler * 1000000) / 150) * 23 ), 1)
 	print ("Conversion Time" + str(afecSym_CONV_TIME.getValue()))
 	
 def instantiateComponent(afecComponent):

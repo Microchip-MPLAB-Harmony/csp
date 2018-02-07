@@ -90,6 +90,6 @@ def instantiateComponent(uartComponent):
 	uartSystemDefFile.setSourcePath("../peripheral/uart_6418/templates/system/system_definitions.h.ftl")
 	uartSystemDefFile.setMarkup(True)
 
-def calculateBRGValue(uartBRGValue, baudRate):
-	brgCD = (lBaudClock / (16 * baudRate.getValue()))
+def calculateBRGValue(uartBRGValue, event):
+	brgCD = (lBaudClock / (16 * event["value"]))
 	uartBRGValue.setValue("BRG_VALUE", brgCD, 2)
