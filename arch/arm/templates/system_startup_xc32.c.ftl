@@ -43,15 +43,11 @@
 /* Initialize segments */
 extern uint32_t _sfixed;
 extern uint32_t __svectors;
-extern uint32_t _stack;
 extern uint32_t _dinit_size;
 extern uint32_t _dinit_addr;
 
 int main(void);
 extern void __attribute__((long_call)) __libc_init_array(void);
-
-/* Default empty handler */
-void __attribute__((optimize("-O1"), long_call)) Dummy_Handler(void);
 
 /* Declaration of Reset handler (may be custom) */
 void <#if CoreUseCustomVector == true>
@@ -60,56 +56,7 @@ ${CustomVectorName}
 Reset_Handler
 </#if>(void) __attribute__((optimize("-O1"), long_call));
 
-/* Cortex-M core handlers */
-void NonMaskableInt_Handler   ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void HardFault_Handler        ( void ) __attribute__((weak, alias("Dummy_Handler")));
-<#if (CoreArchitecture == "CORTEX-M4") || (CoreArchitecture == "CORTEX-M7")>
-void MemoryManagement_Handler ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void BusFault_Handler         ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void UsageFault_Handler       ( void ) __attribute__((weak, alias("Dummy_Handler")));
-</#if>
-void SVCall_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
-<#if (CoreArchitecture == "CORTEX-M4") || (CoreArchitecture == "CORTEX-M7")>
-void DebugMonitor_Handler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
-</#if>
-void PendSV_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
-
-/* Exception Table */
-__attribute__ ((section(".vectors")))
-const DeviceVectors exception_table=
-{
-  /* Configure Initial Stack Pointer, using linker-generated symbols */
-  .pvStack = (void*) (&_stack),
-
-<#if CoreUseCustomVector == true>
-  .pfnReset_Handler              = (void*) ${CustomVectorName},
-<#else>
-  .pfnReset_Handler              = (void*) Reset_Handler,
-</#if>
-  .pfnNonMaskableInt_Handler     = (void*) NonMaskableInt_Handler,
-  .pfnHardFault_Handler          = (void*) HardFault_Handler,
-<#if CoreArchitecture == "CORTEX-M0PLUS">
-  .pvReservedC12                 = (void*) (0UL), /* Reserved */
-  .pvReservedC11                 = (void*) (0UL), /* Reserved */
-  .pvReservedC10                 = (void*) (0UL), /* Reserved */
-  .pvReservedC4                  = (void*) (0UL), /* Reserved */
-</#if>
-<#if (CoreArchitecture == "CORTEX-M4") || (CoreArchitecture == "CORTEX-M7")>
-  .pfnMemoryManagement_Handler   = (void*) MemoryManagement_Handler,
-  .pfnBusFault_Handler           = (void*) BusFault_Handler,
-  .pfnUsageFault_Handler         = (void*) UsageFault_Handler,
-  .pfnDebugMonitor_Handler       = (void*) DebugMonitor_Handler,
-</#if>
-  .pvReservedC9                  = (void*) (0UL), /* Reserved */
-  .pvReservedC8                  = (void*) (0UL), /* Reserved */
-  .pvReservedC7                  = (void*) (0UL), /* Reserved */
-  .pvReservedC6                  = (void*) (0UL), /* Reserved */
-  .pfnSVCall_Handler             = (void*) SVCall_Handler,
-  .pvReservedC3                  = (void*) (0UL), /* Reserved */
-  .pfnPendSV_Handler             = (void*) PendSV_Handler,
-
-${LIST_SYSTEM_STARTUP_INTERRUPT_HANDLERS}
-};
+/* Device Vector information is available in system_interrupt.c file */
 
 <#if CoreArchitecture == "CORTEX-M7">
 <#include "system_startup_xc32_cortex_m7.c.ftl">
@@ -213,18 +160,4 @@ void Reset_Handler(void)
 #endif
     /* Infinite loop */
     while (1) {}
-}
-
-/**
-* \brief Default interrupt handler for unused IRQs.
-*/
-void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call))
-Dummy_Handler(void)
-{
-#if defined(__DEBUG) || defined(__DEBUG_D)
-    __builtin_software_breakpoint();
-#endif
-    while (1)
-    {
-    }
 }

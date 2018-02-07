@@ -148,7 +148,6 @@ armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
 armSysStartSourceFile.setProjectPath("config/" + configName + "/")
 armSysStartSourceFile.setType("SOURCE")
-armSysStartHandlersList = coreComponent.createListSymbol("LIST_SYSTEM_STARTUP_INTERRUPT_HANDLERS", None)
 
 #generate newlib_syscalls_xc32.c file
 armSysCallSourceFile = coreComponent.createFileSymbol(None, None)
