@@ -1,2 +1,2 @@
     /*Initialize System Interrupts */
-	NVIC_Initialize();
+    NVIC_Initialize();

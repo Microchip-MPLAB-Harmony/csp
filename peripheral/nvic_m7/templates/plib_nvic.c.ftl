@@ -1,5 +1,5 @@
 /*******************************************************************************
-  NVIC PLIB Header
+  NVIC PLIB Implementation
 
   Company:
     Microchip Technology Inc.
@@ -8,7 +8,7 @@
     plib_nvic.h
 
   Summary:
-    NVIC PLIB Header File
+    NVIC PLIB Source File
 
   Description:
     None
@@ -38,30 +38,37 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_NVIC_H
-#define PLIB_NVIC_H
+#include "${__PROCESSOR}.h"
+#include "plib_nvic.h"
 
-#include <stddef.h>
+// *****************************************************************************
+// *****************************************************************************
+// Section: NVIC Implementation
+// *****************************************************************************
+// *****************************************************************************
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+void NVIC_Initialize( void )
+{
+    /* Priority 0 to 7 and no sub-priority. 0 is the highest priority */
+    NVIC_SetPriorityGrouping( 0x04 );
 
-    extern "C" {
+    /* Enable NVIC Controller */
+    __DMB();
+    __enable_irq();
 
-#endif
-// DOM-IGNORE-END
+    /* Enable the interrupt sources and configure the priorities as configured
+     * from within the "Interrupt Manager" of MCC. */
+<#list 0..NVIC_VECTOR_MAX as i>
+    <#assign NVIC_VECTOR_ENABLE = "NVIC_" + i + "_ENABLE">
+    <#assign NVIC_VECTOR_NAME = "NVIC_" + i + "_VECTOR">
+    <#assign NVIC_VECTOR_PRIORITY = "NVIC_" + i + "_PRIORITY">
+        <#if .vars[NVIC_VECTOR_ENABLE]?has_content>
+            <#if (.vars[NVIC_VECTOR_ENABLE] != false)>
+    NVIC_SetPriority(${.vars[NVIC_VECTOR_NAME]}_IRQn, ${.vars[NVIC_VECTOR_PRIORITY]});
+    NVIC_EnableIRQ(${.vars[NVIC_VECTOR_NAME]}_IRQn);
+            </#if>
+        </#if>
+</#list>
 
-
-/***************************** NVIC Inline *******************************/
-
-void NVIC_Initialize( void );
-
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    }
-
-#endif
-// DOM-IGNORE-END
-#endif // PLIB_NVIC_H
+    return;
+}

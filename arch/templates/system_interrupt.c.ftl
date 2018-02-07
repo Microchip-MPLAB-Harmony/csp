@@ -64,8 +64,8 @@ ${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 // Section: System Interrupt Vector Functions
 // *****************************************************************************
 // *****************************************************************************
-${LIST_SYSTEM_INTERRUPT_C_VECTORS}
 
+<#include "system_interrupt_xc32_cortex_m.c.ftl">
 
 
 /*******************************************************************************

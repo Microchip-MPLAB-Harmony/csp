@@ -87,6 +87,8 @@ def instantiateComponent(coreComponent):
 	intSourceFile.setType("SOURCE")
 	systemIntHeadersList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_C_INCLUDES", None)
 	systemIntVectorsList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_C_VECTORS", None)
+	systemIntVectorsWeakHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS", None)
+	systemIntVectorsHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_HANDLERS", None)
 
 	#generate app.c file
 	appSourceFile = coreComponent.createFileSymbol(None, None)
