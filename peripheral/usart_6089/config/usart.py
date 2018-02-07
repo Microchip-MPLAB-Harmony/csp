@@ -126,15 +126,15 @@ def instantiateComponent(usartComponent):
 	usartSystemDefFile.setSourcePath("../peripheral/usart_6089/templates/system/system_definitions.h.ftl")
 	usartSystemDefFile.setMarkup(True)
 
-def setOversampling(usartSym_MR_OVER, baudRate):
-	if (lBaudClock >= (16 * baudRate.getValue())):
+def setOversampling(usartSym_MR_OVER, event):
+	if (lBaudClock >= (16 * event["value"])):
 		usartSym_MR_OVER.setValue("USART_MR_OVER", 0, 2)
 	else :
 		usartSym_MR_OVER.setValue("USART_MR_OVER", 1, 2)
 
-def calculateBRGValue(usartBRGValue, baudRate):
-	if (lBaudClock >= (16 * baudRate.getValue())):
-		brgCD = (lBaudClock / (16 * baudRate.getValue()))
+def calculateBRGValue(usartBRGValue, event):
+	if (lBaudClock >= (16 * event["value"])):
+		brgCD = (lBaudClock / (16 * event["value"]))
 	else :
-		brgCD = (lBaudClock / (8 * baudRate.getValue()))
+		brgCD = (lBaudClock / (8 * event["value"]))
 	usartBRGValue.setValue("BRG_VALUE", brgCD, 2)

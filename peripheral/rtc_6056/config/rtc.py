@@ -5,19 +5,19 @@ def instantiateComponent(rtcComponent):
 	print("Running RTC")
 	
 	rtcRegModule = Register.getRegisterModule("RTC")
-        rtcRegGroup = rtcRegModule.getRegisterGroup("RTC")
+		rtcRegGroup = rtcRegModule.getRegisterGroup("RTC")
 
-        rtcReg_MR = rtcRegGroup.getRegister("RTC_MR")
+		rtcReg_MR = rtcRegGroup.getRegister("RTC_MR")
 	rtcReg_CR = rtcRegGroup.getRegister("RTC_CR");
-        rtcBitField_MR_OUT0 = rtcReg_MR.getBitfield("OUT0")
-        rtcBitField_MR_OUT1 = rtcReg_MR.getBitfield("OUT1")
-        rtcBitField_MR_THIGH = rtcReg_MR.getBitfield("THIGH")
+		rtcBitField_MR_OUT0 = rtcReg_MR.getBitfield("OUT0")
+		rtcBitField_MR_OUT1 = rtcReg_MR.getBitfield("OUT1")
+		rtcBitField_MR_THIGH = rtcReg_MR.getBitfield("THIGH")
 	rtcBitField_MR_TPERIOD = rtcReg_MR.getBitfield("TPERIOD")
 	rtcBitField_CR_TIMEVSEL = rtcReg_CR.getBitfield("TIMEVSEL")
 	rtcBitField_CR_CALEVSEL = rtcReg_CR.getBitfield("CALEVSEL")
 	rtcValGrp_MR_OUT0 = rtcRegModule.getValueGroup(rtcBitField_MR_OUT0.getValueGroupName())
-        rtcValGrp_MR_OUT1 = rtcRegModule.getValueGroup(rtcBitField_MR_OUT1.getValueGroupName())
-        rtcValGrp_MR_THIGH = rtcRegModule.getValueGroup(rtcBitField_MR_THIGH.getValueGroupName())
+		rtcValGrp_MR_OUT1 = rtcRegModule.getValueGroup(rtcBitField_MR_OUT1.getValueGroupName())
+		rtcValGrp_MR_THIGH = rtcRegModule.getValueGroup(rtcBitField_MR_THIGH.getValueGroupName())
 	rtcValGrp_MR_TPERIOD = rtcRegModule.getValueGroup(rtcBitField_MR_TPERIOD.getValueGroupName())
 	rtcValGrp_CR_TIMEVSEL = rtcRegModule.getValueGroup(rtcBitField_CR_TIMEVSEL.getValueGroupName())
 	rtcValGrp_CR_CALEVSEL = rtcRegModule.getValueGroup(rtcBitField_CR_CALEVSEL.getValueGroupName())
@@ -110,7 +110,7 @@ def instantiateComponent(rtcComponent):
 	rtcSystemDefFile.setMarkup(True)
 
 	
-def rtcTHIGH(rtcSym_MR_THIGH,test):
+def rtcTHIGH(rtcSym_MR_THIGH, event):
 	data = rtcSym_MR_THIGH.getComponent()
 	rtcOUT0 = data.getSymbolValue("RTC_MR_OUT0")
 	rtcOUT1 = data.getSymbolValue("RTC_MR_OUT1")
@@ -119,7 +119,7 @@ def rtcTHIGH(rtcSym_MR_THIGH,test):
 	else:
 		rtcSym_MR_THIGH.setVisible(True)
 		
-def rtcTPERIOD(rtcSym_MR_TPERIOD,test):
+def rtcTPERIOD(rtcSym_MR_TPERIOD, event):
 	data = rtcSym_MR_TPERIOD.getComponent()
 	rtcOUT0 = data.getSymbolValue("RTC_MR_OUT0")
 	rtcOUT1 = data.getSymbolValue("RTC_MR_OUT1")

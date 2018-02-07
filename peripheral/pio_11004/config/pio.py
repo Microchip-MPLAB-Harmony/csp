@@ -5,10 +5,12 @@ print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 ###################################################################################################
 
 # Function to enable PORT Channel specific interrupt when any of the pins has interrupt enabled on that particular channel.
-def setupInterrupt(portInterruptLocal, pinInterruptLocal):
+def setupInterrupt(portInterruptLocal, event):
     i = []
     # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
     
+    pinInterruptLocal = usePort.getComponent().getSymbolByID(event["id"])
+
     # Split the id name by "_" and put all the splitted names in the list "i"
     i = pinInterruptLocal.getID().split("_")
     
@@ -33,13 +35,15 @@ def setupInterrupt(portInterruptLocal, pinInterruptLocal):
             
 # Function to enable PORT Channel when any of the pins is using the particular channel.
 # Once the PORT channel is enabled, option of corresponding channel interrupt also starts showing up.        
-def setupPort(usePort, pinChannelLocal):
+def setupPort(usePort, event):
     
     # Split the id name by "_" and put all the splitted names in the list "i"
     # 2nd element in the list will be the port name
     i = usePort.getID().split("_")
     # find the index of the string i[1] in the list "channel" and save it in k.
     k = channel.index(i[1])
+
+    pinChannelLocal = usePort.getComponent().getSymbolByID(event["id"])
     
   #  if ((pinChannelLocal.getValue() == "B" and usePort.getID() == "PIO_B_USED") or (pinChannelLocal.getValue() == "A" and usePort.getID == "PIO_A_USED") or (pinChannelLocal.getValue() == "C" and usePort.getID == "PIO_C_USED") or (pinChannelLocal.getValue() == "D" and usePort.getID == "PIO_D_USED") or (pinChannelLocal.getValue() == "E" and usePort.getID == "PIO_E_USED")):
     # the above "if" statement is not working for some strange reasons, thats why it has been divided in "if-elif" below.

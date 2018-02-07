@@ -36,9 +36,9 @@ xdmacValGrp_CC_CSIZE = xdmacRegModule.getValueGroup(xdmacBitField_CC_CSIZE.getVa
 xdmacBitField_CC_MBSIZE = xdmacReg_CC.getBitfield("MBSIZE")
 xdmacValGrp_CC_MBSIZE = xdmacRegModule.getValueGroup(xdmacBitField_CC_MBSIZE.getValueGroupName())
 
-def xdmacTransferType(xdmacSym, type):
+def xdmacTransferType(xdmacSym, event):
 	#print(type.getValue())
-	if (type.getValue() == "PER_TRAN"):
+	if (event["value"] == "PER_TRAN"):
 		xdmacSym.setVisible(True)
 	else :
 		xdmacSym.setVisible(False)

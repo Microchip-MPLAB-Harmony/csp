@@ -7,20 +7,14 @@ rswdtEnable = coreComponent.createBooleanSymbol("rswdtENABLE", rswdtMenu)
 rswdtEnable.setLabel("Enable Reinforced Safety Watchdog Timer (RSWDT)?")
 rswdtEnable.setDefaultValue(True)
 
-def rswdtEnableCfgMenu(rswdtCfgMenu, rswdtEnable):
-	rswdtCfgMenu.setVisible(rswdtEnable.getValue())
-
-	rswdtHeaderFile = Database.getSymbolByID("core","rswdtHeaderFile")
-	rswdtHeaderFile.setEnabled(rswdtEnable.getValue())
-
-	rswdtSourceFile = Database.getSymbolByID("core","rswdtSourceFile")
-	rswdtSourceFile.setEnabled(rswdtEnable.getValue())
-
-	rswdtSystemIntFile = Database.getSymbolByID("core","rswdtSystemIntFile")
-	rswdtSystemIntFile.setEnabled(rswdtEnable.getValue())
-
-	rswdtSystemDefFile = Database.getSymbolByID("core","rswdtSystemDefFile")
-	rswdtSystemDefFile.setEnabled(rswdtEnable.getValue())
+def rswdtEnableCfgMenu(rswdtCfgMenu, event):
+	rswdtCfgMenu.setVisible(event["value"])
+	
+	component = rswdtCfgMenu.getComponent()
+	component.getSymbolByID("rswdtHeaderFile").setEnabled(event["value"])
+	component.getSymbolByID("rswdtSourceFile").setEnabled(event["value"])
+	component.getSymbolByID("rswdtSystemIntFile").setEnabled(event["value"])
+	component.getSymbolByID("rswdtSystemDefFile").setEnabled(event["value"])
 
 rswdtCfgMenu = coreComponent.createMenuSymbol(None, rswdtMenu)
 rswdtCfgMenu.setLabel("RSWDT Configuration")
@@ -30,10 +24,10 @@ rswdtReset = coreComponent.createBooleanSymbol("rswdtEnableReset", rswdtCfgMenu)
 rswdtReset.setLabel("Enable Reset")
 rswdtReset.setDefaultValue(False)
 
-def rswdtResetEnable(rswdtInterrupt,test):
-	if test.getValue() == True:
+def rswdtResetEnable(rswdtInterrupt,event):
+	if event["value"] == True:
 		rswdtInterrupt.setVisible(False)
-		rswdtInterrupt.setValue("rswdtinterruptMode",False,2)
+		rswdtInterrupt.setValue(False,2)
 	else:
 		rswdtInterrupt.setVisible(True)
 
@@ -47,9 +41,9 @@ rswdtCounterValue.setLabel("Counter value")
 rswdtCounterValue.setMax(0xfff)
 rswdtCounterValue.setDefaultValue(0xfff)
 
-def	rswdtcounter_cal(rswdtCounterValueTime,test):
-	data = test.getValue() * 3.90625
-	rswdtCounterValueTime.setValue("rswdtWDVTIME",int(round(data)),2)
+def	rswdtcounter_cal(rswdtCounterValueTime, event):
+	data = event["value"] * 3.90625
+	rswdtCounterValueTime.setValue(int(round(data)),2)
 
 rswdtCounterValueTime = coreComponent.createIntegerSymbol("rswdtWDVTIME", rswdtCfgMenu)
 rswdtCounterValueTime.setLabel("Counter value in ms")
