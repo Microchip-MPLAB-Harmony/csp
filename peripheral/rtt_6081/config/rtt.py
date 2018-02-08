@@ -72,13 +72,13 @@ def instantiateComponent(rttComponent):
 	rttSystemDefFile.setSourcePath("../peripheral/rtt_6081/templates/system/system_definitions.h.ftl")
 	rttSystemDefFile.setMarkup(True)
 
-def rttPrescaleHide(rttPrescaleValue,test):
-	if test.getValue() == True:
+def rttPrescaleHide(rttPrescaleValue, event):
+	if event["value"] == True:
 		rttPrescaleValue.setVisible(False)
 	else:
 		rttPrescaleValue.setVisible(True)
 		
-def	rttFreq_cal(rttFreq,test):
+def	rttFreq_cal(rttFreq, event):
 	data = rttFreq.getComponent()
 	rttData = str(float(65536) / 32768)
 	rtt1K = data.getSymbolValue("rttRTC1HZ")

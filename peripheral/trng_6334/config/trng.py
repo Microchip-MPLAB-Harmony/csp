@@ -64,8 +64,8 @@ def instantiateComponent(trngComponent):
 	trngSystemDefFile.setSourcePath("../peripheral/trng_6334/templates/system/system_definitions.h.ftl")
 	trngSystemDefFile.setMarkup(True)
 
-def showWarning(trngWarning, trngReserved):
-	trngWarning.setVisible(trngReserved.getValue())
+def showWarning(trngWarning, event):
+	trngWarning.setVisible(event["value"])
 
-def showMenu(trngMenu, trngReserved):
-	trngMenu.setVisible(not trngReserved.getValue())
+def showMenu(trngMenu, event):
+	trngMenu.setVisible(not event["value"])

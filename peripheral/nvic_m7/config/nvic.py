@@ -13,8 +13,8 @@ nvicVectorName = []
 nvicVectorPriority = []
 nvicVectorHandler = []
 
-def checkVectorAvailability(nvicSym, vector):
-	if (vector.getValue() == "None"):
+def checkVectorAvailability(nvicSym, event):
+	if (event["value"] == "None"):
 		nvicSym.setVisible(False)
 	else :
 		nvicSym.setVisible(True)

@@ -82,30 +82,30 @@ triggerSettings = {"Software Trigger"	: ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED",
 				"UART4_Receive"			: ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"]}
 				# All triggers are yet to be added.
 
-def xdmacTriggerLogic(xdmacSym, chPERID):
+def xdmacTriggerLogic(xdmacSym, event):
 	global triggerSettings
 	SymID = xdmacSym.getID()
 	xdmacSym.clearValue(SymID)
 	if "TYPE" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][0]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][0]), 2)
 	if "DSYNC" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][1]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][1]), 2)
 	if "SWREQ" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][2]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][2]), 2)
 	if "SAM" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][3]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][3]), 2)
 	if "DAM" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][4]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][4]), 2)
 	if "SIF" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][5]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][5]), 2)
 	if "DIF" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][6]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][6]), 2)
 	if "DWIDTH" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][7]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][7]), 2)
 	if "CSIZE" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][8]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][8]), 2)
 	if "MBSIZE" in str(SymID):
-		xdmacSym.setValue(SymID, str(triggerSettings[str(chPERID.getValue())][9]), 2)
+		xdmacSym.setValue(str(triggerSettings[event["value"]][9]), 2)
 
 # The following business logic creates a list of enabled DMA channels and sorts
 # them in the descending order. The left most channel number will be the highest
@@ -116,10 +116,10 @@ def xdmacTriggerLogic(xdmacSym, chPERID):
 global xdmacActiveChannels
 xdmacActiveChannels = []
 
-def xdmacGlobalLogic(xdmacGlobalSym, chEnable):
+def xdmacGlobalLogic(xdmacGlobalSym, event):
 	global xdmacActiveChannels
 
-	index = chEnable.getID().strip("XDMAC_CH")
+	index = event["id"].strip("XDMAC_CH")
 	index = index.strip("_ENABLE")
 	try:
 		index = int(index)
@@ -129,7 +129,7 @@ def xdmacGlobalLogic(xdmacGlobalSym, chEnable):
 	globalSymID = xdmacGlobalSym.getID()
 	xdmacGlobalSym.clearValue(globalSymID)
 
-	if chEnable.getValue() is True:
+	if event["value"] is True:
 		if index not in xdmacActiveChannels:
 			xdmacActiveChannels.append(index)
 	else :
@@ -142,41 +142,41 @@ def xdmacGlobalLogic(xdmacGlobalSym, chEnable):
 	# Check if the list is not empty first since list element is accessed in the code
 	if xdmacActiveChannels:
 		if str(globalSymID) == "XDMAC_HIGHEST_CHANNEL":
-			xdmacGlobalSym.setValue(globalSymID, int(xdmacActiveChannels[0]) + 1, 2)
+			xdmacGlobalSym.setValue(int(xdmacActiveChannels[0]) + 1, 2)
 
 	if str(globalSymID) == "XDMAC_ENABLE":
 		if xdmacActiveChannels and xdmacGlobalSym.getValue() is False:
-			xdmacGlobalSym.setValue(globalSymID, True, 2)
+			xdmacGlobalSym.setValue(True, 2)
 
 		if not xdmacActiveChannels:
-			xdmacGlobalSym.setValue(globalSymID, False, 2)
+			xdmacGlobalSym.setValue(False, 2)
 
-def xdmacFileGenLogic(xdmacFileGen, xdmacEnable):
+def xdmacFileGenLogic(xdmacFileGen, event):
 
 	xdmacHeaderFile = Database.getSymbolByID("core","xdmacHeaderFile")
-	xdmacHeaderFile.setEnabled(xdmacEnable.getValue())
+	xdmacHeaderFile.setEnabled(event["value"])
 
 	xdmacSourceFile = Database.getSymbolByID("core","xdmacSourceFile")
-	xdmacSourceFile.setEnabled(xdmacEnable.getValue())
+	xdmacSourceFile.setEnabled(event["value"])
 
 	xdmacSystemInitFile = Database.getSymbolByID("core","xdmacSystemInitFile")
-	xdmacSystemInitFile.setEnabled(xdmacEnable.getValue())
+	xdmacSystemInitFile.setEnabled(event["value"])
 
 	xdmacSystemIntFile = Database.getSymbolByID("core","xdmacSystemIntFile")
-	xdmacSystemIntFile.setEnabled(xdmacEnable.getValue())
+	xdmacSystemIntFile.setEnabled(event["value"])
 
 	xdmacSystemDefFile = Database.getSymbolByID("core","xdmacSystemDefFile")
-	xdmacSystemDefFile.setEnabled(xdmacEnable.getValue())
+	xdmacSystemDefFile.setEnabled(event["value"])
 
-def xdmacTriggerCalc(xdmacPERIDVal, xdmacPERID):
+def xdmacTriggerCalc(xdmacPERIDVal, event):
 	global peridList
 	global peridValueList
 
-	perid = xdmacPERID.getValue()
+	perid = event["value"]
 	peridIndex = peridList.index(perid)
 	peridValueID = xdmacPERIDVal.getID()
 	xdmacPERIDVal.clearValue(peridValueID)
-	xdmacPERIDVal.setValue(peridValueID, int(peridValueList[peridIndex]), 2)
+	xdmacPERIDVal.setValue(int(peridValueList[peridIndex]), 2)
 
 
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
