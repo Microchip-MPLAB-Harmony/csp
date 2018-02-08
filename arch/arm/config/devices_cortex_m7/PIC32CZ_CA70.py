@@ -7,11 +7,11 @@ coreComponent.addPlugin("../peripheral/clk_sam_e70/plugin/clockmanager.jar")
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
-coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
+#coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 
 # load device specific nvic manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic_m7/plugin/ARM_M7_NVICmanager.jar")
+#coreComponent.addPlugin("../peripheral/nvic_m7/plugin/ARM_M7_NVICmanager.jar")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
@@ -57,8 +57,8 @@ armMPUSourceFile.setProjectPath("config/" + configName + "/arch/arm/")
 armMPUSourceFile.setType("SOURCE")
 armMPUSourceFile.setEnabled(False)
 
-def genMPUSourceFile(armMPUSourceFile, CoreUseMPU):
-	armMPUSourceFile.setEnabled(CoreUseMPU.getValue())
+def genMPUSourceFile(armMPUSourceFile, event):
+	armMPUSourceFile.setEnabled(event["value"])
 
 armMPUSourceFile.setDependencies(genMPUSourceFile, ["CoreUseMPU"])
 
@@ -73,8 +73,8 @@ armMPUHeaderFile.setProjectPath("config/" + configName + "/arch/arm/")
 armMPUHeaderFile.setType("HEADER")
 armMPUHeaderFile.setEnabled(False)
 
-def genMPUHeaderFile(armMPUHeaderFile, CoreUseMPU):
-	armMPUHeaderFile.setEnabled(CoreUseMPU.getValue())
+def genMPUHeaderFile(armMPUHeaderFile, event):
+	armMPUHeaderFile.setEnabled(event["value"])
 
 armMPUHeaderFile.setDependencies(genMPUHeaderFile, ["CoreUseMPU"])
 
@@ -89,15 +89,16 @@ armSysMPUSourceFile.setProjectPath("config/" + configName + "/arch/arm/")
 armSysMPUSourceFile.setType("SOURCE")
 armSysMPUSourceFile.setEnabled(False)
 
-def genSysMPUSourceFile(armSysMPUSourceFile, CoreUseMPU):
-	armSysMPUSourceFile.setEnabled(CoreUseMPU.getValue())
+def genSysMPUSourceFile(armSysMPUSourceFile, event):
+	armSysMPUSourceFile.setEnabled(event["value"])
 
 armSysMPUSourceFile.setDependencies(genSysMPUSourceFile, ["CoreUseMPU"])
 
 #generate arch.h file
-def genArchHeaderFile(archHeaderFile, CoreUseMPU):
-	coreUseMPU = archHeaderFile.getComponent().getSymbolValue("CoreUseMPU")
-	coreUseTimer = archHeaderFile.getComponent().getSymbolValue("CoreUseTimer")
+def genArchHeaderFile(archHeaderFile, event):
+	comp = archHeaderFile.getComponent()
+	coreUseMPU = comp.getSymbolValue("CoreUseMPU")
+	coreUseTimer = comp.getSymbolValue("CoreUseTimer")
 
 	if(coreUseMPU or coreUseTimer):
 		archHeaderFile.setEnabled(True)
@@ -115,9 +116,10 @@ archHeaderFile.setType("HEADER")
 archHeaderFile.setEnabled(False)
 archHeaderFile.setDependencies(genArchHeaderFile, ["CoreUseMPU", "CoreUseTimer"])
 
-def genArchHeaderFileList(archHeaderFileListEntry, CoreUseMPU):
-	coreUseMPU = archHeaderFileListEntry.getComponent().getSymbolValue("CoreUseMPU")
-	coreUseTimer = archHeaderFileListEntry.getComponent().getSymbolValue("CoreUseTimer")
+def genArchHeaderFileList(archHeaderFileListEntry, event):
+	comp = archHeaderFileListEntry.getComponent()
+	coreUseMPU = comp.getSymbolValue("CoreUseMPU")
+	coreUseTimer = comp.getSymbolValue("CoreUseTimer")
 
 	if(coreUseMPU or coreUseTimer):
 		archHeaderFileListEntry.setEnabled(True)

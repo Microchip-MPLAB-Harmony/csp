@@ -8,23 +8,16 @@ wdtEnable.setLabel("Enable Watchdog Timer?")
 wdtEnable.setDefaultValue(True)
 
 def wdtEnableCfgMenu(wdtCfgMenu, wdtEnable):
-	wdtCfgMenu.setVisible(wdtEnable.getValue())
+	wdtCfgMenu.setVisible(event["value"])
 
-	wdtHeaderFile = Database.getSymbolByID("core","wdtHeaderFile")
-	wdtHeaderFile.setEnabled(wdtEnable.getValue())
+	component = wdtCfgMenu.getComponent()
+	component.getSymbolByID("wdtHeaderFile").setEnabled(event["value"])
+	component.getSymbolByID("wdtSourceFile").setEnabled(event["value"])
+	component.getSymbolByID("wdtSystemIntFile").setEnabled(event["value"])
+	component.getSymbolByID("wdtSystemDefFile").setEnabled(event["value"])
 
-	wdtSourceFile = Database.getSymbolByID("core","wdtSourceFile")
-	wdtSourceFile.setEnabled(wdtEnable.getValue())
-
-	wdtSystemIntFile = Database.getSymbolByID("core","wdtSystemIntFile")
-	wdtSystemIntFile.setEnabled(wdtEnable.getValue())
-
-	wdtSystemDefFile = Database.getSymbolByID("core","wdtSystemDefFile")
-	wdtSystemDefFile.setEnabled(wdtEnable.getValue())
-
-	wdtRswdtEnable = Database.getSymbolByID("core","rswdtENABLE")
-	if wdtEnable.getValue() == False:
-		wdtRswdtEnable.setValue("wdtRswdtEnable",False,1)
+	if event["value"] == False:
+		component.getSymbolByID("wdtRswdtEnable").setValue(False, 1)
 
 wdtCfgMenu = coreComponent.createMenuSymbol(None, wdtMenu)
 wdtCfgMenu.setLabel("WDT Configuration")
@@ -34,8 +27,8 @@ wdtReset = coreComponent.createBooleanSymbol("wdtEnableReset", wdtCfgMenu)
 wdtReset.setLabel("Enable Reset")
 wdtReset.setDefaultValue(False)
 
-def wdtResetEnable(wdtInterrupt,test):
-	if test.getValue() == True:
+def wdtResetEnable(wdtInterrupt, event):
+	if event["value"] == True:
 		wdtInterrupt.setVisible(False)
 		wdtInterrupt.setValue("wdtinterruptMode", False, 2)
 	else:
@@ -51,8 +44,8 @@ wdtCounterValue.setLabel("Counter value")
 wdtCounterValue.setMax(0xfff)
 wdtCounterValue.setDefaultValue(0xfff)
 
-def	wdtcounter_cal(wdtCounterValueTime,test):
-	data = test.getValue() * 3.90625
+def	wdtcounter_cal(wdtCounterValueTime, event):
+	data = event["value"] * 3.90625
 	wdtCounterValueTime.setValue("wdtWDVTIME",int(round(data)),2)
 
 wdtCounterValueTime = coreComponent.createIntegerSymbol("wdtWDVTIME", wdtCfgMenu)
@@ -69,8 +62,8 @@ wdtDeltaValue.setLabel("Delta value")
 wdtDeltaValue.setMax(0xfff)
 wdtDeltaValue.setDefaultValue(0xfff)
 
-def	wdtdelta_cal(wdtDeltaValueTime,test):
-	data = test.getValue() * 3.90625
+def	wdtdelta_cal(wdtDeltaValueTime, event):
+	data = event["value"] * 3.90625
 	wdtDeltaValueTime.setValue("wdtWDDTIME",int(round(data)),2)
 	
 wdtDeltaValueTime = coreComponent.createIntegerSymbol("wdtWDDTIME", wdtCfgMenu)
