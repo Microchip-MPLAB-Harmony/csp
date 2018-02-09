@@ -13,7 +13,7 @@ def updateFWSValue(clkSymFlashWaitStates, event):
 		maxFreq = int(fwsMaxFreqList[fws])
 		
 		if mckFreq <= maxFreq and mckFreq > minFreq:
-			clkSymFlashWaitStates.setValue("EEFC_FMR_FWS", str(fws), 1)
+			clkSymFlashWaitStates.setValue(str(fws), 1)
 			return
 			
 		minFreq = maxFreq
