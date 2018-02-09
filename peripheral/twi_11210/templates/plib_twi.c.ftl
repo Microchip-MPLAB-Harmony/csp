@@ -438,7 +438,7 @@ void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contex
    Remarks:
 */
 
-void TWI${INDEX?string}_Handler(void)
+void TWI${INDEX?string}_InterruptHandler(void)
 {
     uint32_t status;
 	static uint32_t currentTRB = 0;

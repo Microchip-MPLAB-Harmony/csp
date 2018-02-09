@@ -492,7 +492,7 @@ void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contex
 	enabled user need to call it from the main while loop of the application.
 */
 
-void TWI${INDEX?string}_Handler(void);
+void TWI${INDEX?string}_InterruptHandler(void);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
