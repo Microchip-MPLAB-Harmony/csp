@@ -9,7 +9,7 @@ def setupInterrupt(portInterruptLocal, event):
     i = []
     # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
     
-    pinInterruptLocal = usePort.getComponent().getSymbolByID(event["id"])
+    pinInterruptLocal = portInterruptLocal.getComponent().getSymbolByID(event["id"])
 
     # Split the id name by "_" and put all the splitted names in the list "i"
     i = pinInterruptLocal.getID().split("_")
@@ -31,7 +31,7 @@ def setupInterrupt(portInterruptLocal, event):
                     boolValue = True
                     break
         if boolValue == False:
-            portInterrupt[k].setValue(portInterruptLocal.getID() + "INT_VALUE_1", False, 1)    
+            portInterrupt[k].setValue(False, 1)    
             
 # Function to enable PORT Channel when any of the pins is using the particular channel.
 # Once the PORT channel is enabled, option of corresponding channel interrupt also starts showing up.        
@@ -50,27 +50,27 @@ def setupPort(usePort, event):
     if(pinChannelLocal.getValue() == "A" and usePort.getID() == "PIO_A_USED"):
             
      #   i = usePort.getID()[-1]
-        usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
+        usePort.setValue(True, 1)
         portInterrupt[k].setVisible(True)
         
     elif(pinChannelLocal.getValue() == "B" and usePort.getID() == "PIO_B_USED"):
      #   i = usePort.getID()[-1]
-        usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
+        usePort.setValue(True, 1)
         portInterrupt[k].setVisible(True)
         
     elif(pinChannelLocal.getValue() == "C" and usePort.getID() == "PIO_C_USED"):
       #  i = usePort.getID()[-1]
-        usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
+        usePort.setValue(True, 1)
         portInterrupt[k].setVisible(True)
         
     elif(pinChannelLocal.getValue() == "D" and usePort.getID() == "PIO_D_USED"):
      #   i = usePort.getID()[-1]
-        usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
+        usePort.setValue(True, 1)
         portInterrupt[k].setVisible(True)
         
     elif(pinChannelLocal.getValue() == "E" and usePort.getID() == "PIO_E_USED"):
       #  i = usePort.getID()[-1]
-        usePort.setValue(usePort.getID() + "DYN_VALUE", True, 1)
+        usePort.setValue(True, 1)
         portInterrupt[k].setVisible(True)
 
 
