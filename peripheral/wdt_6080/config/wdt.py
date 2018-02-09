@@ -7,7 +7,7 @@ wdtEnable = coreComponent.createBooleanSymbol("wdtENABLE", wdtMenu)
 wdtEnable.setLabel("Enable Watchdog Timer?")
 wdtEnable.setDefaultValue(True)
 
-def wdtEnableCfgMenu(wdtCfgMenu, wdtEnable):
+def wdtEnableCfgMenu(wdtCfgMenu, event):
 	wdtCfgMenu.setVisible(event["value"])
 
 	component = wdtCfgMenu.getComponent()
@@ -17,7 +17,8 @@ def wdtEnableCfgMenu(wdtCfgMenu, wdtEnable):
 	component.getSymbolByID("wdtSystemDefFile").setEnabled(event["value"])
 
 	if event["value"] == False:
-		component.getSymbolByID("wdtRswdtEnable").setValue(False, 1)
+		Database.clearSymbolValue("core", "rswdtENABLE")		
+		Database.setSymbolValue("core", "rswdtENABLE", False, 1)
 
 wdtCfgMenu = coreComponent.createMenuSymbol(None, wdtMenu)
 wdtCfgMenu.setLabel("WDT Configuration")
