@@ -42,11 +42,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define RTC${INDEX?string}_H
 
 
-#include <xc.h>
+#include "${__PROCESSOR}.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
 #include <time.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -103,18 +102,8 @@ void RTC${INDEX?string}_TimeGet( struct tm *Time );
 	<#lt>void RTC${INDEX?string}_CallbackRegister( RTC_ALARM_CALLBACK callback, uintptr_t context );
 	<#lt>void RTC${INDEX?string}_InterruptDisable(RTC_INT_MASK interrupt);
 	<#lt>void RTC${INDEX?string}_InterruptEnable(RTC_INT_MASK interrupt);
-</#if>	
-<#if rtcEnableInterrupt == true>
-	<#lt>static void inline RTC${INDEX?string}_ALARM_Handler( void )
-	<#lt>{
-	<#lt>	volatile uint32_t status = _RTC_REGS->RTC_SR.w;
-	<#lt>	_RTC_REGS->RTC_SCCR |= RTC_SCCR_ALRCLR_Msk | RTC_SCCR_TIMCLR_Msk |  RTC_SCCR_CALCLR_Msk;
-	<#lt>	if(rtc.callback != NULL)
-    <#lt>        {
-    <#lt>            rtc.callback(rtc.context, status);
-    <#lt>        }
-	<#lt>}
-</#if>	
+</#if>
+	
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif
