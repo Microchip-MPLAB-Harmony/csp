@@ -40,30 +40,30 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 void RTT${INDEX?string}_Initialize(void)
 {
-	RTT->RTT_MR = RTT_MR_RTTRST;
-	RTT->RTT_MR = RTT_MR_RTPRES(${rttRTPRES}) | RTT_MR_RTTDIS ${rttINCIEN?then(' | RTT_MR_RTTINCIEN','')}${rttALMIEN?then(' | RTT_MR_ALMIEN','')}${rttRTC1HZ?then(' | RTT_MR_RTC1HZ','')};
+	_RTT_REGS->RTT_MR.w = RTT_MR_RTTRST_Msk;
+	_RTT_REGS->RTT_MR.w = RTT_MR_RTPRES(${rttRTPRES}) | RTT_MR_RTTDIS_Msk ${rttINCIEN?then(' | RTT_MR_RTTINCIEN_Msk','')}${rttALMIEN?then(' | RTT_MR_ALMIEN_Msk','')}${rttRTC1HZ?then(' | RTT_MR_RTC1HZ_Msk','')};
 }
 
 void RTT${INDEX?string}_Enable(void)
 {
-	RTT->RTT_MR |= RTT_MR_RTTRST;
-	RTT->RTT_MR &= ~(RTT_MR_RTTDIS);
+	_RTT_REGS->RTT_MR.w |= RTT_MR_RTTRST_Msk;
+	_RTT_REGS->RTT_MR.w &= ~(RTT_MR_RTTDIS_Msk);
 }
 
 void RTT${INDEX?string}_Disable(void)
 {
-	RTT->RTT_MR |= RTT_MR_RTTDIS;
+	_RTT_REGS->RTT_MR.w |= RTT_MR_RTTDIS_Msk;
 }
 
 void RTT${INDEX?string}_PrescalarUpdate(uint16_t prescale)
 {
-	uint32_t rtt_mr = RTT->RTT_MR;
+	uint32_t rtt_mr = _RTT_REGS->RTT_MR.w;
 	uint32_t flag = rtt_mr & RTT_MR_RTTINCIEN_Msk;
 	rtt_mr &= ~(RTT_MR_RTPRES_Msk | RTT_MR_RTTINCIEN_Msk);
-	RTT->RTT_MR = rtt_mr | prescale | RTT_MR_RTTRST;
+	_RTT_REGS->RTT_MR.w = rtt_mr | prescale | RTT_MR_RTTRST_Msk;
 	if (flag)
 	{
-		RTT->RTT_MR |=  RTT_MR_RTTINCIEN_Msk;
+		_RTT_REGS->RTT_MR.w |=  RTT_MR_RTTINCIEN_Msk;
 	}
 }
 
@@ -71,24 +71,24 @@ void RTT${INDEX?string}_PrescalarUpdate(uint16_t prescale)
 	<#lt>void RTT${INDEX?string}_AlarmValueSet(uint32_t alarm)
 	<#lt>{
 	<#lt>	uint32_t flag = 0;
-	<#lt>	flag = RTT->RTT_MR & (RTT_MR_ALMIEN_Msk);
-	<#lt>	RTT->RTT_MR &= ~(RTT_MR_ALMIEN_Msk);
-	<#lt>	RTT->RTT_AR = alarm;
+	<#lt>	flag = _RTT_REGS->RTT_MR.w & (RTT_MR_ALMIEN_Msk);
+	<#lt>	_RTT_REGS->RTT_MR.w &= ~(RTT_MR_ALMIEN_Msk);
+	<#lt>	_RTT_REGS->RTT_AR.w = alarm;
 	<#lt>	if (flag)
 	<#lt>	{
-	<#lt>		RTT->RTT_MR |= RTT_MR_ALMIEN_Msk;
+	<#lt>		_RTT_REGS->RTT_MR.w |= RTT_MR_ALMIEN_Msk;
 	<#lt>	}
 	<#lt>	
 	<#lt>}
 	<#lt>
 	<#lt>void RTT${INDEX?string}_EnableInterrupt (RTT_INTERRUPT_TYPE type)
 	<#lt>{
-	<#lt>	RTT->RTT_MR |= type;
+	<#lt>	_RTT_REGS->RTT_MR.w |= type;
 	<#lt>}
 	<#lt>
 	<#lt>void RTT${INDEX?string}_DisableInterrupt(RTT_INTERRUPT_TYPE type)
 	<#lt>{
-	<#lt>	RTT->RTT_MR &= ~(type);
+	<#lt>	_RTT_REGS->RTT_MR.w &= ~(type);
 	<#lt>}
 	<#lt>
 	<#lt>void RTT${INDEX?string}_CallbackRegister( RTT_CALLBACK callback, uintptr_t context )
@@ -100,10 +100,10 @@ void RTT${INDEX?string}_PrescalarUpdate(uint16_t prescale)
  
 uint32_t RTT${INDEX?string}_TimerValueGet(void)
 {
-	uint32_t rtt_val = RTT->RTT_VR;
-	while (rtt_val != RTT->RTT_VR) 
+	uint32_t rtt_val = _RTT_REGS->RTT_VR.w;
+	while (rtt_val != _RTT_REGS->RTT_VR.w) 
 	{
-		rtt_val = RTT->RTT_VR;
+		rtt_val = _RTT_REGS->RTT_VR.w;
 	}
 	return rtt_val;
 }
@@ -112,7 +112,7 @@ uint32_t RTT${INDEX?string}_FrequencyGet(void)
 {
 	uint32_t flag = 0;
 	
-	flag =  (RTT->RTT_MR) & (RTT_MR_RTC1HZ_Msk);
+	flag =  (_RTT_REGS->RTT_MR.w) & (RTT_MR_RTC1HZ_Msk);
 	
 	if (flag)
 	{
@@ -120,7 +120,7 @@ uint32_t RTT${INDEX?string}_FrequencyGet(void)
 	}
 	else
 	{
-		flag = (RTT->RTT_MR) & (RTT_MR_RTPRES_Msk);
+		flag = (_RTT_REGS->RTT_MR.w) & (RTT_MR_RTPRES_Msk);
 		if (flag == 0)
 		{
 			return (32768 / 65536);
