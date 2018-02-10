@@ -1,18 +1,15 @@
 def instantiateComponent(rttComponent):
 
 	num = rttComponent.getID()[-1:]
-	print("Running RTT" )
 
 	rttMenu = rttComponent.createMenuSymbol(None, None)
 	rttMenu.setLabel("Hardware Settings ")
 	
 	rttPeriodicInterrupt = rttComponent.createBooleanSymbol("rttINCIEN", rttMenu)
-	print(rttPeriodicInterrupt)
 	rttPeriodicInterrupt.setLabel("Enable Prescale Rollover Interrupt")
 	rttPeriodicInterrupt.setDefaultValue(False)
 	
 	rttAlarm = rttComponent.createBooleanSymbol("rttALMIEN", rttMenu)
-	print(rttAlarm)
 	rttAlarm.setLabel("Enable Alarm Interrupt")
 	rttAlarm.setDefaultValue(False)
 	
@@ -21,7 +18,6 @@ def instantiateComponent(rttComponent):
 	rttIndex.setDefaultValue(int(num))
 	
 	rttClkSrc = rttComponent.createBooleanSymbol("rttRTC1HZ", rttMenu)
-	print(rttClkSrc)
 	rttClkSrc.setLabel("Use RTC 1Hz as clock Source")
 	rttClkSrc.setDefaultValue(False)	
 	
@@ -83,14 +79,15 @@ def	rttFreq_cal(rttFreq, event):
 	rttData = str(float(65536) / 32768)
 	rtt1K = data.getSymbolValue("rttRTC1HZ")
 	if rtt1K == True:
-		rttFreq.setValue("rttFREQ",str(1),2)
+		rttFreq.clearValue("rttFREQ")
+		rttFreq.setValue(str(1),2)
 	else:
 		rttPres = data.getSymbolValue("rttRTPRES")
 		if rttPres == 0:
 			rttData = str(float(65536) / 32768)
-			print str(rttData)
-			rttFreq.setValue("rttFREQ",rttData,2)
+			rttFreq.clearValue("rttFREQ")
+			rttFreq.setValue(str(rttData),2)
 		else:
 			rttData = str(float(rttPres) / 32768)
-			print str(rttData)
-			rttFreq.setValue("rttFREQ",rttData,2)
+			rttFreq.clearValue("rttFREQ")
+			rttFreq.setValue(str(rttData),2)
