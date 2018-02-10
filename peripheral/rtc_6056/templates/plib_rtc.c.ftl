@@ -52,22 +52,21 @@ void RTC${INDEX?string}_Initialize( void )
 bool RTC${INDEX?string}_TimeSet( struct tm *Time )
 {
 	Time->tm_year += 1900;
-	Time->tm_wday += 1;
 	uint32_t data_cal =  (decimaltobcd(Time->tm_year / 100)) | \
 			 (decimaltobcd((Time->tm_year - ((Time->tm_year/100)*100)))<< 8) | \
 			   (decimaltobcd(Time->tm_mon + 1)<<16)| \
 			 (decimaltobcd(Time->tm_mday)<<24) | \
-			 (decimaltobcd(Time->tm_wday + 1)<<21);
+			 ((Time->tm_wday) << 21);
 	uint32_t data_time = (decimaltobcd(Time->tm_sec)) | (decimaltobcd(Time->tm_min) << 8) | (decimaltobcd(Time->tm_hour)<< 16);
 	_RTC_REGS->RTC_CR.w &= ~(RTC_CR_UPDCAL_Msk|RTC_CR_UPDTIM_Msk);
 	_RTC_REGS->RTC_SCCR.w = (1<<2) ;
-	while ((_RTC_REGS->RTC_SR & RTC_SR_SEC_Msk) != RTC_SR_SEC_Msk );
+	while ((_RTC_REGS->RTC_SR.w & RTC_SR_SEC_Msk) != RTC_SR_SEC_Msk );
 		    /* - request RTC Configuration */
 	_RTC_REGS->RTC_CR.w |= (RTC_CR_UPDCAL_Msk) | RTC_CR_UPDTIM_Msk;
 		    /* - Wait for ack */
 	while (!((_RTC_REGS->RTC_SR.w) & (RTC_SR_ACKUPD_Msk)));
 		    /* - Clear ACK flag */
-	_RTC_REGS->RTC_SCCR |= RTC_SCCR_ACKCLR_Msk | RTC_SCCR_ALRCLR_Msk | RTC_SCCR_TIMCLR_Msk;
+	_RTC_REGS->RTC_SCCR.w |= RTC_SCCR_ACKCLR_Msk | RTC_SCCR_ALRCLR_Msk | RTC_SCCR_TIMCLR_Msk;
 	_RTC_REGS->RTC_CALR.w = data_cal;
 	_RTC_REGS->RTC_TIMR.w = data_time;
 	_RTC_REGS->RTC_CR.w &= ~(RTC_CR_UPDCAL_Msk|RTC_CR_UPDTIM_Msk);
@@ -115,16 +114,16 @@ void RTC${INDEX?string}_TimeGet( struct tm *Time )
 	<#lt>	alarm_cal = _RTC_REGS->RTC_CALALR.w;
 	<#lt>	_RTC_REGS->RTC_CALALR.w = data_cal;
 	<#lt>
-	<#lt>	if(_RTC_REGS->RTC_VER.w & 0xC)
-	<#lt>	{
-	<#lt>		return false;
-	<#lt>	}
-	<#lt>
 	<#lt>	alarm_cal = (mask & 0x10) << 19 | (mask & 0x08) << 28;
 	<#lt>	alarm_tmr = (mask & 0x04) << 21 | (mask & 0x02) << 14 | (mask & 0x01) << 7;
 	<#lt>  
 	<#lt>	_RTC_REGS->RTC_TIMALR.w |= alarm_tmr;
 	<#lt>	_RTC_REGS->RTC_CALALR.w |= alarm_cal;
+	<#lt>
+	<#lt>	if(_RTC_REGS->RTC_VER.w & 0xC)
+	<#lt>	{
+	<#lt>		return false;
+	<#lt>	}
 	<#lt>
 	<#lt>	_RTC_REGS->RTC_IER.w |= RTC_IER_ALREN_Msk;
 	<#lt>
@@ -147,3 +146,15 @@ void RTC${INDEX?string}_TimeGet( struct tm *Time )
 	<#lt>	rtc.context = context;
 	<#lt>}
 </#if>
+
+<#if rtcEnableInterrupt == true>
+	<#lt>void RTC${INDEX?string}_InterruptHandler( void )
+	<#lt>{
+	<#lt>	volatile uint32_t status = _RTC_REGS->RTC_SR.w;
+	<#lt>	_RTC_REGS->RTC_SCCR.w |= RTC_SCCR_ALRCLR_Msk | RTC_SCCR_TIMCLR_Msk |  RTC_SCCR_CALCLR_Msk;
+	<#lt>	if(rtc.callback != NULL)
+    <#lt>        {
+    <#lt>            rtc.callback(rtc.context, status);
+    <#lt>        }
+	<#lt>}
+</#if>	

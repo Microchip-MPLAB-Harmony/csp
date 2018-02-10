@@ -71,6 +71,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
  
+// *****************************************************************************
  /* RTC Alarm Mask
 
    Summary:
@@ -97,6 +98,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  RTC_ALARM_MASK_MODDHHMISS = 0x1f  // Every year
  } RTC_ALARM_MASK;
  
+// *****************************************************************************
  /* RTC Interrupt Mask
 
    Summary:
@@ -151,7 +153,6 @@ typedef void (*RTC_ALARM_CALLBACK)(uintptr_t context);
  this interface.
 */
 // *****************************************************************************
-
 /* Function:
     void RTCx_Initialize( void )
 
@@ -180,7 +181,7 @@ typedef void (*RTC_ALARM_CALLBACK)(uintptr_t context);
 
 void RTCx_Initialize( void );
 
-
+// *****************************************************************************
 /* Function:
 	void RTCx_TimeSet( struct tm *time )
 	
@@ -223,7 +224,8 @@ void RTCx_Initialize( void );
  
 */
  void RTCx_TimeSet( struct tm *time );
- 
+
+// ***************************************************************************** 
 /* Function:
 	void RTCx_TimeGet( struct tm *time );
 	
@@ -249,7 +251,8 @@ void RTCx_Initialize( void );
 	</code>
 */
 void RTCx_TimeGet( struct tm *time );
- 
+
+// ***************************************************************************** 
 /* Function:
 	void RTCx_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
 	
@@ -294,6 +297,7 @@ void RTCx_TimeGet( struct tm *time );
 */
 void RTCx_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
 
+// *****************************************************************************
 /* Function:
 	void RTCx_InterruptDisable(RTC_INT_MASK interrupt)
 	
@@ -318,7 +322,8 @@ void RTCx_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
  
 */
 void RTCx_InterruptDisable(RTC_INT_MASK interrupt);
- 
+
+// ***************************************************************************** 
 /* Function:
 	void RTCx_InterruptEnable(RTC_INT_MASK interrupt)
 	
@@ -343,7 +348,8 @@ void RTCx_InterruptDisable(RTC_INT_MASK interrupt);
  
 */
 void RTCx_InterruptEnable(RTC_INT_MASK interrupt);
-  
+
+// *****************************************************************************  
 /* Function:
 	void RTCx_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
 	
