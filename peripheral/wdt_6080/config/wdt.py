@@ -26,19 +26,20 @@ wdtCfgMenu.setDependencies(wdtEnableCfgMenu, ["wdtENABLE"])
 
 wdtReset = coreComponent.createBooleanSymbol("wdtEnableReset", wdtCfgMenu)
 wdtReset.setLabel("Enable Reset")
-wdtReset.setDefaultValue(False)
+wdtReset.setDefaultValue(True)
 
 def wdtResetEnable(wdtInterrupt, event):
 	if event["value"] == True:
 		wdtInterrupt.setVisible(False)
-		wdtInterrupt.setValue("wdtinterruptMode", False, 2)
+		wdtInterrupt.setValue(False, 2)
 	else:
 		wdtInterrupt.setVisible(True)
 
 wdtInterrupt = coreComponent.createBooleanSymbol("wdtinterruptMode", wdtCfgMenu)
 wdtInterrupt.setLabel("Enable Interrupts")
-wdtInterrupt.setDefaultValue(True)
+wdtInterrupt.setDefaultValue(False)
 wdtInterrupt.setDependencies(wdtResetEnable, ["wdtEnableReset"])
+wdtInterrupt.setVisible(False)
 
 wdtCounterValue = coreComponent.createIntegerSymbol("wdtWDV", wdtCfgMenu)
 wdtCounterValue.setLabel("Counter value")
@@ -47,7 +48,7 @@ wdtCounterValue.setDefaultValue(0xfff)
 
 def	wdtcounter_cal(wdtCounterValueTime, event):
 	data = event["value"] * 3.90625
-	wdtCounterValueTime.setValue("wdtWDVTIME",int(round(data)),2)
+	wdtCounterValueTime.setValue(int(round(data)),2)
 
 wdtCounterValueTime = coreComponent.createIntegerSymbol("wdtWDVTIME", wdtCfgMenu)
 wdtCounterValueTime.setLabel("Counter value in ms")
@@ -65,7 +66,7 @@ wdtDeltaValue.setDefaultValue(0xfff)
 
 def	wdtdelta_cal(wdtDeltaValueTime, event):
 	data = event["value"] * 3.90625
-	wdtDeltaValueTime.setValue("wdtWDDTIME",int(round(data)),2)
+	wdtDeltaValueTime.setValue(int(round(data)),2)
 	
 wdtDeltaValueTime = coreComponent.createIntegerSymbol("wdtWDDTIME", wdtCfgMenu)
 wdtDeltaValueTime.setLabel("Counter value in ms")
