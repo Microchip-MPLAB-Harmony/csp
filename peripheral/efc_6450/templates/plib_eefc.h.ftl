@@ -68,9 +68,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#define EEFC_ROWSIZE					0x2000
-#define EEFC_PAGESIZE					0x200
-#define	EEFC_LOCKSIZE					0x4000
+#define EEFC0_ROWSIZE					0x2000
+#define EEFC0_PAGESIZE					0x200
+#define	EEFC0_LOCKSIZE					0x4000
 
 typedef enum
 {
@@ -120,8 +120,8 @@ void EEFC${INDEX?string}_RegionUnlock(uint32_t address);
 <#if eefcEnableInterrupt == true>
 <#lt>static void inline EEFC${INDEX?string}_OPR_Handler( void )
 <#lt>{
-	<#lt>	uint32_t ul_fmr = EFC->EEFC_FMR;
-	<#lt>	EFC->EEFC_FMR = ( ul_fmr & (~EEFC_FMR_FRDY));
+	<#lt>	uint32_t ul_fmr = _EFC_REGS->EEFC_FMR.w;
+	<#lt>	_EFC_REGS->EEFC_FMR.w = ( ul_fmr & (~EEFC_FMR_FRDY_Msk));
 	<#lt>	if(eefc.callback != NULL)
 	<#lt>        {
 		<#lt>            eefc.callback(eefc.context);
