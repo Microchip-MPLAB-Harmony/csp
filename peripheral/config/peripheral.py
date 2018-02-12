@@ -24,9 +24,9 @@ for periphName in periphNames:
 							str(periphInstance), periphName.upper() +
 							str(periphInstance), "/Peripherals/" +
 							periphName.upper() + "/", ".." + periphScript)
-			periphComponent.addCapability(periphName)
+			periphComponent.addCapability(periphName + "_" + str(periphInstance), periphName)
 			if (periphName == "UART"):
-				periphComponent.addCapability("USART")
+				periphComponent.addCapability("USART_" + str(periphInstance), "USART")
 	else:
 		print("CSP: Peripheral [" + periphName + " id=" + periphID + 
 				"] is not supported in MCC")
