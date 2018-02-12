@@ -525,9 +525,10 @@ static void CLK_PeripheralClockInitialize(void)
 */
 
 void CLK_Initialize( void )
-{	
-    /* Set maximum possible Flash Wait States value */
-    _EFC_REGS->EEFC_FMR.w = EEFC_FMR_FWS(${EEFC_FMR_FWS});
+{ 
+    /* Set Flash Wait States and 
+       Enable Code Loop Optimization */
+    _EFC_REGS->EEFC_FMR.w = EEFC_FMR_FWS(${EEFC_FMR_FWS}) | EEFC_FMR_CLOE_Msk;
 	
 <#if SUPC_CR_XTALSEL>
 	/* Initialize Slow Clock */
