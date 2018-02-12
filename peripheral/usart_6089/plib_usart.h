@@ -51,8 +51,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_USARTx_H    // Guards against multiple inclusion
-#define _PLIB_USARTx_H
+#ifndef PLIB_USARTx_H    // Guards against multiple inclusion
+#define PLIB_USARTx_H
 
 
 // *****************************************************************************
@@ -64,11 +64,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*  This section lists the other files that are included in this file.
 */
 
-#include <xc.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -649,4 +645,4 @@ bool USARTx_ReadyStatusGet( USART_DIRECTION direction );
 #endif
 // DOM-IGNORE-END
 
-#endif //_PLIB_USARTx_H
+#endif //PLIB_USARTx_H
