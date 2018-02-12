@@ -23,8 +23,8 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/rswdt_11110/config/rswdt.
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
-coreUseMPU = coreComponent.createBooleanSymbol("CoreUseMPU", devCfgMenu)
-coreUseMPU.setLabel("Enable MPU?")
+#load mpu
+execfile(Variables.get("__CORE_DIR") + "/arm/config/devices_cortex_m7/mpu.py")
 
 coreUseTimer = coreComponent.createBooleanSymbol("CoreUseTimer", devCfgMenu)
 coreUseTimer.setLabel("Enable Core Timer?")
