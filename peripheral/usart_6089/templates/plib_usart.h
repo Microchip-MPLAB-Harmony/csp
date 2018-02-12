@@ -38,14 +38,10 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef _PLIB_USART_H
-#define _PLIB_USART_H
+#ifndef PLIB_USART_H
+#define PLIB_USART_H
 
-#include <xc.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -156,4 +152,4 @@ typedef struct
 
 #endif
 // DOM-IGNORE-END
-#endif // _PLIB_USART_H
+#endif // PLIB_USART_H
