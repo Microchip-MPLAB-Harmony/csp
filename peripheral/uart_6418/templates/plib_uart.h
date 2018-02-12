@@ -41,11 +41,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #ifndef PLIB_UART_H
 #define PLIB_UART_H
 
-#include <xc.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
