@@ -41,11 +41,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #ifndef PLIB_XDMAC_H
 #define PLIB_XDMAC_H
 
-#include <xc.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -146,13 +142,13 @@ typedef union {
 typedef struct {
 
     /* Next Descriptor Address number. */
-	uint32_t mbr_nda;
+    uint32_t mbr_nda;
 
-	/* Micro-block Control Member. */
-	XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    /* Micro-block Control Member. */
+    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
 
     /* Destination Address Member. */
-	uint32_t mbr_da;
+    uint32_t mbr_da;
 
 } XDMAC_DESCRIPTOR_VIEW_0;
 
@@ -160,16 +156,16 @@ typedef struct {
 typedef struct {
 
     /* Next Descriptor Address number. */
-	uint32_t mbr_nda;
+    uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-	XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
 
     /* Source Address Member. */
-	uint32_t mbr_sa;
+    uint32_t mbr_sa;
 
     /* Destination Address Member. */
-	uint32_t mbr_da;
+    uint32_t mbr_da;
 
 } XDMAC_DESCRIPTOR_VIEW_1;
 
@@ -177,19 +173,19 @@ typedef struct {
 typedef struct {
 
     /* Next Descriptor Address number. */
-	uint32_t mbr_nda;
+    uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-	XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
 
     /* Source Address Member. */
-	uint32_t mbr_sa;
+    uint32_t mbr_sa;
 
     /* Destination Address Member. */
-	uint32_t mbr_da;
+    uint32_t mbr_da;
 
     /* Configuration Register. */
-	uint32_t mbr_cfg;
+    uint32_t mbr_cfg;
 
 } XDMAC_DESCRIPTOR_VIEW_2;
 
@@ -197,31 +193,31 @@ typedef struct {
 typedef struct {
 
     /* Next Descriptor Address number. */
-	uint32_t mbr_nda;
+    uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-	XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
 
     /* Source Address Member. */
-	uint32_t mbr_sa;
+    uint32_t mbr_sa;
 
     /* Destination Address Member. */
-	uint32_t mbr_da;
+    uint32_t mbr_da;
 
     /* Configuration Register. */
-	uint32_t mbr_cfg;
+    uint32_t mbr_cfg;
 
     /* Block Control Member. */
-	uint32_t mbr_bc;
+    uint32_t mbr_bc;
 
     /* Data Stride Member. */
-	uint32_t mbr_ds;
+    uint32_t mbr_ds;
 
     /* Source Micro-block Stride Member. */
-	uint32_t mbr_sus;
+    uint32_t mbr_sus;
 
     /* Destination Micro-block Stride Member. */
-	uint32_t mbr_dus;
+    uint32_t mbr_dus;
 
 } XDMAC_DESCRIPTOR_VIEW_3;
 </#if>
@@ -249,62 +245,8 @@ void XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t descriptor
 // *****************************************************************************
 // *****************************************************************************
 
-/***************************** XDMAC Inline *******************************/
+void XDMAC_InterruptHandler(void);
 
-/* Macro for limiting XDMAC objects to highest channel enabled */
-#define XDMAC_ACTIVE_CHANNELS_MAX ${XDMAC_HIGHEST_CHANNEL}
-<#if XDMAC_LL_ENABLE == true>
-
-#define XDMAC_UBLEN_BIT_WIDTH 24
-</#if>
-
-typedef struct
-{
-    uint8_t                inUse;
-    XDMAC_CHANNEL_CALLBACK callback;
-    uintptr_t              context;
-    XDMAC_TRANSFER_EVENT   event;
-
-} XDMAC_CH_OBJECT ;
-
-extern XDMAC_CH_OBJECT xdmacChannelObj[XDMAC_ACTIVE_CHANNELS_MAX];
-
-void inline XDMAC_ISR_Handler( void )
-{
-    XDMAC_CH_OBJECT *xdmacChObj = (XDMAC_CH_OBJECT *)&xdmacChannelObj[0];
-    uint8_t channel = 0;
-	volatile uint32_t chanIntStatus = 0;
-
-    /* Iterate all channels */
-    for (channel = 0; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
-    {
-        /* Process events only on active channels */
-        if (1 == xdmacChObj->inUse)
-        {
-			/* Read the interrupt status for the active DMA channel */
-			chanIntStatus = _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS.w;
-
-			if (chanIntStatus & ( XDMAC_CIS_RBEIS_Msk | XDMAC_CIS_WBEIS_Msk | XDMAC_CIS_ROIS_Msk))
-			{
-				/* It's an error interrupt */
-			    xdmacChObj->event = XDMAC_TRANSFER_ERROR;
-			}
-			else if (chanIntStatus & XDMAC_CIS_BIS_Msk)
-			{
-				/* It's a block transfer complete interrupt */
-				xdmacChObj->event = XDMAC_TRANSFER_COMPLETE;
-			}
-
-			if (NULL != xdmacChObj->callback)
-			{
-				xdmacChObj->callback(xdmacChObj->event, xdmacChObj->context);
-			}
-        }
-
-        /* Point to next channel object */
-        xdmacChObj += 1;
-    }
-}
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
