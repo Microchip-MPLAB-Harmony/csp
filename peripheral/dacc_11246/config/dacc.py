@@ -181,27 +181,27 @@ def setupModeBits(symbol, event):
     id = symbol.getID()[-1]
     channelID = int(id)
     
-    if (event["key"] == "MAX_SPEED_MODE"):
-        dacChannelMaxSpeed[channelID].clearValue("DACC_MR_MAXS"+str(channelID))
-        dacChannelMaxSpeed[channelID].setValue("DACC_MR_MAXS"+str(channelID), True, 1)
+    if (event["symbol"].getSelectedKey() == "MAX_SPEED_MODE"):
+        #dacChannelMaxSpeed[channelID].clearValue()
+        dacChannelMaxSpeed[channelID].setValue(True, 1)
     else:
-        dacChannelMaxSpeed[channelID].clearValue("DACC_MR_MAXS"+str(channelID))
-        dacChannelMaxSpeed[channelID].setValue("DACC_MR_MAXS"+str(channelID), False, 1)
+        #dacChannelMaxSpeed[channelID].clearValue()
+        dacChannelMaxSpeed[channelID].setValue(False, 1)
 
-    if (event["key"] == "TRIGGER_MODE"):
-        dacChannelTriggerEnable[channelID].clearValue("DACC_TRIGR_TRGEN"+str(channelID))
-        dacChannelTriggerEnable[channelID].setValue("DACC_TRIGR_TRGEN"+str(channelID), True, 1)
+    if (event["symbol"].getSelectedKey() == "TRIGGER_MODE"):
+        #dacChannelTriggerEnable[channelID].clearValue(channelID)
+        dacChannelTriggerEnable[channelID].setValue(True, 1)
     else:
-        dacChannelTriggerEnable[channelID].clearValue("DACC_TRIGR_TRGEN"+str(channelID))
-        dacChannelTriggerEnable[channelID].setValue("DACC_TRIGR_TRGEN"+str(channelID), False, 1)
+        #dacChannelTriggerEnable[channelID].clearValue(channelID)
+        dacChannelTriggerEnable[channelID].setValue(False, 1)
 
 def setDacSpeed(symbol, event):
     id = symbol.getID()[-1]
     channelID = int(id)
 
-    if (event["key"] == "MAX_SPEED_MODE"):
-        dacChannelBiasCurrent[channelID].clearValue("DACC_ACR_IBCTLCH"+str(channelID))
-        dacChannelBiasCurrent[channelID].setSelectedKey("DACC_ACR_IBCTLCH"+str(channelID),"1M",1)
+    if (event["symbol"].getSelectedKey() == "MAX_SPEED_MODE"):
+        #dacChannelBiasCurrent[channelID].clearValue()
+        dacChannelBiasCurrent[channelID].setSelectedKey("1M",1)
         dacChannelBiasCurrent[channelID].setVisible(False)
     else:
         dacChannelBiasCurrent[channelID].setVisible(True)
