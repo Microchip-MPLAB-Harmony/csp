@@ -16,6 +16,10 @@ dacChannelTriggerEnable = []
 
 #Function for initiating the UI
 def instantiateComponent(daccComponent):
+
+    Database.clearSymbolValue("core", "PMC_ID_DACC")
+    Database.setSymbolValue("core", "PMC_ID_DACC", True, 1)
+    
     num = daccComponent.getID()[-1:]
     print("Running DACC" + str(num))
 
@@ -47,7 +51,7 @@ def instantiateComponent(daccComponent):
     daccSym_MR_DIFF.addKey("DIFFERENTIAL", "1", "Differential Output")
     daccSym_MR_DIFF.setOutputMode("Key")
     daccSym_MR_DIFF.setDisplayMode("Description")
-    daccSym_MR_DIFF.setDefaultValue(0)
+    daccSym_MR_DIFF.setSelectedKey("SINGLE_ENDED",1)
 
     # ------------------------------------------------------------------------------------------------------------------
     for channelID in range(0, 2):
@@ -65,8 +69,7 @@ def instantiateComponent(daccComponent):
         dacChannelConversionMode[channelID].addKey("TRIGGER_MODE", "2", "External Trigger Mode")
         dacChannelConversionMode[channelID].setOutputMode("Key")
         dacChannelConversionMode[channelID].setDisplayMode("Description")
-        dacChannelConversionMode[channelID].setDefaultValue(0)
-
+        dacChannelConversionMode[channelID].setSelectedKey("FREE_RUNNING_MODE",1)
 
         dacChannelBiasCurrent.append(channelID)
         dacChannelBiasCurrent[channelID] = daccComponent.createKeyValueSetSymbol("DACC_ACR_IBCTLCH"+str(channelID), dacChannelMenu[channelID])
@@ -76,7 +79,7 @@ def instantiateComponent(daccComponent):
         dacChannelBiasCurrent[channelID].addKey("1M", "3", "Up to 1 Msps Conversion speed")
         dacChannelBiasCurrent[channelID].setOutputMode("Value")
         dacChannelBiasCurrent[channelID].setDisplayMode("Description")
-        dacChannelBiasCurrent[channelID].setDefaultValue(0)
+        dacChannelBiasCurrent[channelID].setSelectedKey("1M",1)
         dacChannelBiasCurrent[channelID].setDependencies(setDacSpeed, ["CONVERSION_MODE_CH"+str(channelID)])
 
 
@@ -84,12 +87,13 @@ def instantiateComponent(daccComponent):
         dacChannelMaxSpeed[channelID] = daccComponent.createBooleanSymbol("DACC_MR_MAXS"+str(channelID), dacChannelMenu[channelID])
         dacChannelMaxSpeed[channelID].setLabel("Max Speed Mode")
         dacChannelMaxSpeed[channelID].setVisible(False)
+        dacChannelMaxSpeed[channelID].setDependencies(enableMaxSpeedMode, ["CONVERSION_MODE_CH"+str(channelID)])
 
         dacChannelTriggerEnable.append(channelID)
         dacChannelTriggerEnable[channelID] = daccComponent.createBooleanSymbol("DACC_TRIGR_TRGEN"+str(channelID), dacChannelMenu[channelID])
         dacChannelTriggerEnable[channelID].setLabel("Enable Trigger Mode")
         dacChannelTriggerEnable[channelID].setVisible(False)
-        dacChannelTriggerEnable[channelID].setDependencies(setupModeBits, ["CONVERSION_MODE_CH"+str(channelID)])
+        dacChannelTriggerEnable[channelID].setDependencies(enableTriggerMode, ["CONVERSION_MODE_CH"+str(channelID)])
 
         dacChannelTriggerSelect.append(channelID)
         dacChannelTriggerSelect[channelID] = daccComponent.createKeyValueSetSymbol("DACC_TRIGR_TRGSEL"+str(channelID), dacChannelMenu[channelID])
@@ -98,7 +102,7 @@ def instantiateComponent(daccComponent):
         dacChannelTriggerSelect[channelID].setOutputMode("Key")
         dacChannelTriggerSelect[channelID].setDisplayMode("Description")
         dacChannelTriggerSelect[channelID].setVisible(False)
-        dacChannelTriggerSelect[channelID].setDependencies(triggerVisibility, ["CONVERSION_MODE_CH"+str(channelID)])
+        dacChannelTriggerSelect[channelID].setDependencies(triggerSelectVisibility, ["CONVERSION_MODE_CH"+str(channelID)])
 
         count = daccValGrp_TRIGR_TRGSEL0.getValueCount()
         for id in range(0,count):
@@ -112,13 +116,13 @@ def instantiateComponent(daccComponent):
         dacChannelOSR[channelID].setOutputMode("Key")
         dacChannelOSR[channelID].setDisplayMode("Description")
         dacChannelOSR[channelID].setVisible(False)
+        dacChannelOSR[channelID].setDependencies(OSRVisibility, ["CONVERSION_MODE_CH"+str(channelID)])
         count = daccValGrp_TRIGR_OSR0.getValueCount()
         for id in range(0,count):
             valueName = daccValGrp_TRIGR_OSR0.getValueNames()[id]
             dacChannelOSR[channelID].addKey(valueName, daccValGrp_TRIGR_OSR0.getValue(valueName).getValue(), daccValGrp_TRIGR_OSR0.getValue(valueName).getDescription())
 
     # ------------------------------------------------------------------------------------------------------------------
-
     daccHeader1File = daccComponent.createFileSymbol(None, None)
     daccHeader1File.setSourcePath("../peripheral/dacc_11246/templates/plib_dacc.h.ftl")
     daccHeader1File.setOutputName("plib_dacc" + str(num) + ".h")
@@ -140,7 +144,6 @@ def instantiateComponent(daccComponent):
 #-----------------------------------------------------------------------------------------------------------------------
 #Callback Functions
 
-#TODO Read from clock manager
 def daccGetMasterClockFrequency():
     main_clk_freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
     return main_clk_freq
@@ -156,52 +159,45 @@ def calcDacFrequency(symbol,event):
     else:
         symbol.setLabel("**** DAC Frequency = "+str(dacFreq) + " MHz is greater than 12MHz, Increase the prescaler value ****")
 
-def triggerVisibility(symbol, event):
-    id = symbol.getID()[-1]
-    channelID = int(id)
-    
-    convMode = symbol.getComponent().getSymbolByID(event["id"])
-
-    if (convMode.getSelectedKey() == "TRIGGER_MODE"):
-        dacChannelTriggerSelect[channelID].setVisible(True)
-        dacChannelOSR[channelID].setVisible(True)
+def triggerSelectVisibility(symbol, event):
+    if (event["key"] == "TRIGGER_MODE"):
+        symbol.setVisible(True)
     else:
-        dacChannelTriggerSelect[channelID].setVisible(False)
-        dacChannelOSR[channelID].setVisible(False)
+        symbol.setVisible(False)
 
+def OSRVisibility(symbol, event):
+    if (event["key"] == "TRIGGER_MODE"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+        
 def channel1Visibility(symbol,event):
-    outputMode = symbol.getComponent().getSymbolByID(event["id"])
-    
-    if (outputMode.getSelectedKey() == "DIFFERENTIAL"):
+    if (event["key"]  == "DIFFERENTIAL"):
         dacChannelMenu[1].setVisible(False)
     else:
         dacChannelMenu[1].setVisible(True)
 
-def setupModeBits(symbol, event):
-    id = symbol.getID()[-1]
-    channelID = int(id)
-    
-    if (event["key"] == "MAX_SPEED_MODE"):
-        dacChannelMaxSpeed[channelID].clearValue("DACC_MR_MAXS"+str(channelID))
-        dacChannelMaxSpeed[channelID].setValue("DACC_MR_MAXS"+str(channelID), True, 1)
-    else:
-        dacChannelMaxSpeed[channelID].clearValue("DACC_MR_MAXS"+str(channelID))
-        dacChannelMaxSpeed[channelID].setValue("DACC_MR_MAXS"+str(channelID), False, 1)
-
+def enableTriggerMode(symbol, event):  
     if (event["key"] == "TRIGGER_MODE"):
-        dacChannelTriggerEnable[channelID].clearValue("DACC_TRIGR_TRGEN"+str(channelID))
-        dacChannelTriggerEnable[channelID].setValue("DACC_TRIGR_TRGEN"+str(channelID), True, 1)
+        symbol.clearValue()
+        symbol.setValue(True, 1)
     else:
-        dacChannelTriggerEnable[channelID].clearValue("DACC_TRIGR_TRGEN"+str(channelID))
-        dacChannelTriggerEnable[channelID].setValue("DACC_TRIGR_TRGEN"+str(channelID), False, 1)
+        symbol.clearValue()
+        symbol.setValue(False, 1)
+
+def enableMaxSpeedMode(symbol, event):
+    if (event["key"] == "MAX_SPEED_MODE"):
+        symbol.clearValue()
+        symbol.setValue(True, 1)
+    else:
+        symbol.clearValue()
+        symbol.setValue(False, 1)
 
 def setDacSpeed(symbol, event):
-    id = symbol.getID()[-1]
-    channelID = int(id)
-
     if (event["key"] == "MAX_SPEED_MODE"):
-        dacChannelBiasCurrent[channelID].clearValue("DACC_ACR_IBCTLCH"+str(channelID))
-        dacChannelBiasCurrent[channelID].setSelectedKey("DACC_ACR_IBCTLCH"+str(channelID),"1M",1)
-        dacChannelBiasCurrent[channelID].setVisible(False)
+        symbol.clearValue()
+        symbol.setSelectedKey("1M",1)
+        symbol.setVisible(False)
     else:
-        dacChannelBiasCurrent[channelID].setVisible(True)
+        symbol.setVisible(True)
+        
