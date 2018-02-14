@@ -8,17 +8,17 @@
     plib_pio.c
 
   Summary:
-    PIO function implementations for the Ports plib.
+    PIO function implementations for the PIO PLIB.
 
   Description:
-    The PIO Plib provides a simple interface to manage peripheral
+    The PIO PLIB provides a simple interface to manage peripheral
     input-output controller.
 
 *******************************************************************************/
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -43,7 +43,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "plib_pio.h"
 
-
+<#compress>
 <#if PIO_ENABLE == true>
     <#assign PIO_A_NUM_INT_PINS = 0>
     <#assign PIO_B_NUM_INT_PINS = 0>
@@ -72,52 +72,71 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
                 </#if>
             </#if>
         </#if>
-    </#list>
+    </#list>    
 </#if>
 
 <#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT PIO_OD PIO_PU PIO_PD PIO_PER PIO_ABCD1
-                       PIO_ABCD2 PIO_INT PIO_INT_TYPE PIO_INT_EDGE PIO_INT_RE_HL PIO_INTERRUPT>
-    /* PORT${PIO_PORT} ABCD 1 */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ABCDSR[0].w = ${PIO_ABCD1};
-    /* PORT${PIO_PORT} ABCD 2 */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ABCDSR[1].w = ${PIO_ABCD2};
-    /* PORT${PIO_PORT} Pio enable */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PDR.w = ~${PIO_PER};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PER.w = ${PIO_PER};
-    /* PORT${PIO_PORT} Active state */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_CODR.w = ~${PIO_LAT};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_SODR.w = ${PIO_LAT};
-    /* PORT${PIO_PORT} Open drain state */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_MDDR.w = ~${PIO_OD};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_MDER.w = ${PIO_OD};
-    /* PORT${PIO_PORT} Pull Up */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PUDR.w = ~${PIO_PU};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PUER.w = ${PIO_PU};
-    /* PORT${PIO_PORT} Pull Down */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PPDDR.w = ~${PIO_PD};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PPDER.w = ${PIO_PD};
-    /* PORT${PIO_PORT} Direction */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ODR.w = ~${PIO_DIR};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_OER.w = ${PIO_DIR};
-<#if PIO_INTERRUPT == true>
-    /* PORT${PIO_PORT} system level interrupt enable */
-    SYS_INT_SourceEnable(PORT${PIO_PORT}_IRQn);
-    /* PORT${PIO_PORT} Type of interrupt(alternate) */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_AIMDR.w = ~${PIO_INT_TYPE};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_AIMER.w = ${PIO_INT_TYPE};
-    /* PORT${PIO_PORT} If edge, type of edge */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_LSR.w = ~${PIO_INT_EDGE};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ESR.w = ${PIO_INT_EDGE};
-    /* PORT${PIO_PORT} Rising/high level */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_FELLSR.w = ~${PIO_INT_RE_HL};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_REHLSR.w = ${PIO_INT_RE_HL};
-    /* PORT${PIO_PORT} module level Interrupt enable */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_IDR.w = ~${PIO_INT};
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_IER.w = ${PIO_INT};
-<#else>
-    /* PORT${PIO_PORT} module level Interrupt disable */
-    ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_IDR.w = ~${PIO_INT};
-</#if>
+                       PIO_ABCD2 PIO_INT_TYPE PIO_INT_EDGE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INT_FE_LL PIO_INTERRUPT>
+    <#lt>   /************************ PORT ${PIO_PORT} Initialization ************************/
+    <#if (PIO_ABCD1 != "0x00000000") | (PIO_ABCD2 != "0x00000000")>
+        <#lt>   /* PORT${PIO_PORT} Peripheral Function Selection */
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ABCDSR[0].w = ${PIO_ABCD1};
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ABCDSR[1].w = ${PIO_ABCD2};
+    </#if>
+    <#if PIO_PER != "0xFFFFFFFF">
+        <#lt>   /* PORT${PIO_PORT} PIO Disable and Peripheral Enable*/
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PDR.w = ~${PIO_PER};
+    </#if>
+    <#if PIO_LAT != "0x00000000">
+        <#lt>   /* PORT${PIO_PORT} Initial state High */
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_SODR.w = ${PIO_LAT};
+    </#if>
+    <#if PIO_OD != "0x00000000">
+        <#lt>   /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_MDER.w = ${PIO_OD};
+    </#if>
+    <#if PIO_PU != "0x00000000">
+        <#lt>   /* PORT${PIO_PORT} Pull Up Enable */
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PUER.w = ${PIO_PU};
+    </#if>
+    <#if PIO_PD != "0x00000000">
+        <#lt>   /* PORT${PIO_PORT} Pull Down Enable */
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PPDER.w = ${PIO_PD};
+    </#if>
+    <#if PIO_DIR != "0x00000000">
+        <#lt>   /* PORT${PIO_PORT} Output Direction Enable */
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_OER.w = ${PIO_DIR};
+    </#if>
+    <#if PIO_INTERRUPT == true>
+        <#if PIO_INT_TYPE != "0x00000000">
+            <#lt>   /* PORT${PIO_PORT} Additional interrupt mode Enable */
+            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_AIMER.w = ${PIO_INT_TYPE};
+        <#else>
+        
+            <#lt>   /* If PIO Interrupt is selected for both edge, it doesn't need any register
+            <#lt>      configuration */
+        </#if>
+        <#if PIO_INT_LEVEL != "0x00000000">
+            <#lt>   /* PORT${PIO_PORT} Level type interrupt Enable */
+            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_LSR.w = ~${PIO_INT_LEVEL};
+        </#if>
+        <#if PIO_INT_EDGE != "0x00000000">
+            <#lt>   /* PORT${PIO_PORT} Edge type interrupt Enable */
+            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ESR.w = ${PIO_INT_EDGE};
+        </#if>
+        <#if PIO_INT_FE_LL != "0x00000000">
+            <#lt>   /* PORT${PIO_PORT} Falling Edge or Low Level Interrupt Enable */
+            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_FELLSR.w = ~${PIO_INT_FE_LL};
+        </#if>
+        <#if PIO_INT_RE_HL != "0x00000000">
+            <#lt>   /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
+            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_REHLSR.w = ${PIO_INT_RE_HL};
+        </#if>
+        
+        <#lt>   /* PORT${PIO_PORT} system level interrupt will be enabled by NVIC Manager */
+        <#lt>   /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
+        <#lt>      by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
+    </#if>
 </#macro>
 
 <#macro PIO_INT_CALLBACK PIO_PORT PORT_NUM_INT_PINS PIO_INTERRUPT>
@@ -127,12 +146,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
         <#lt>/* port ${PIO_PORT} maximum number of callbacks */
         <#lt>uint8_t port${PIO_PORT}MaxNumCb = ${PORT_NUM_INT_PINS};
-
+        
         <#lt>/* port ${PIO_PORT} callback objects */
         <#lt>PIO_PIN_CALLBACK_OBJ port${PIO_PORT}PinCbObj[${PORT_NUM_INT_PINS}];
-
     </#if>
 </#macro>
+
 
 <@PIO_INT_CALLBACK 
     PIO_PORT = "A" 
@@ -159,6 +178,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     PORT_NUM_INT_PINS = "${PIO_E_NUM_INT_PINS}" 
     PIO_INTERRUPT = PIO_E_INTERRUPT_USED
 />
+</#compress>
+
 
 /******************************************************************************
   Function:
@@ -168,7 +189,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     Initialize the PIO library.
   
   Description:
-    This function initializes the PIO library and all ports and pins configured
+    This function initializes the PIO library and all ports & pins configured
     in the MCC Pin Manager.
 
   Remarks:
@@ -176,13 +197,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 void PIO_Initialize ( void )
 {
-    <#if PIO_CCFG_SYSIO_VALUE?has_content>
-        <#lt>   /* Initialize the Debug pins as GPIO pins */
+    <#if PIO_CCFG_SYSIO_VALUE != "0x00000000">
+        <#lt>   /* Selected System IO pins are configured as GPIO */
         <#lt>   _MATRIX_REGS->CCFG_SYSIO.w |= ${PIO_CCFG_SYSIO_VALUE};
     </#if>
-
     <#if PIO_A_USED == true>
-        <#lt>   /********** PORT A Initialization **********/
         <@PIO_INITIALIZE
             PIO_PORT = "A"
             PIO_DIR = "${PIOA_OER_VALUE}"
@@ -193,16 +212,16 @@ void PIO_Initialize ( void )
             PIO_PER = "${PIOA_PER_VALUE}"
             PIO_ABCD1 = "${PIOA_ABCDSR1_VALUE}"
             PIO_ABCD2 = "${PIOA_ABCDSR2_VALUE}"
-            PIO_INT = "${PIOA_IER_VALUE}"
             PIO_INT_TYPE = "${PIOA_AIMER_VALUE}"
             PIO_INT_EDGE = "${PIOA_ESR_VALUE}"
+            PIO_INT_LEVEL = "${PIOA_LSR_VALUE}"
             PIO_INT_RE_HL = "${PIOA_REHLSR_VALUE}"
+            PIO_INT_FE_LL = "${PIOA_FELLSR_VALUE}"
             PIO_INTERRUPT = PIO_A_INTERRUPT_USED
         />
     </#if>
 
     <#if PIO_B_USED == true>
-        <#lt>   /********** PORT B Initialization **********/
         <@PIO_INITIALIZE
             PIO_PORT = "B"
             PIO_DIR = "${PIOB_OER_VALUE}"
@@ -213,16 +232,16 @@ void PIO_Initialize ( void )
             PIO_PER = "${PIOB_PER_VALUE}"
             PIO_ABCD1 = "${PIOB_ABCDSR1_VALUE}"
             PIO_ABCD2 = "${PIOB_ABCDSR2_VALUE}"
-            PIO_INT = "${PIOB_IER_VALUE}"
             PIO_INT_TYPE = "${PIOB_AIMER_VALUE}"
             PIO_INT_EDGE = "${PIOB_ESR_VALUE}"
+            PIO_INT_LEVEL = "${PIOB_LSR_VALUE}"
             PIO_INT_RE_HL = "${PIOB_REHLSR_VALUE}"
+            PIO_INT_FE_LL = "${PIOB_FELLSR_VALUE}"
             PIO_INTERRUPT = PIO_B_INTERRUPT_USED
         />
     </#if>
 
     <#if PIO_C_USED == true>
-        <#lt>   /********** PORT C Initialization **********/
         <@PIO_INITIALIZE
             PIO_PORT = "C"
             PIO_DIR = "${PIOC_OER_VALUE}"
@@ -233,16 +252,16 @@ void PIO_Initialize ( void )
             PIO_PER = "${PIOC_PER_VALUE}"
             PIO_ABCD1 = "${PIOC_ABCDSR1_VALUE}"
             PIO_ABCD2 = "${PIOC_ABCDSR2_VALUE}"
-            PIO_INT = "${PIOC_IER_VALUE}"
             PIO_INT_TYPE = "${PIOC_AIMER_VALUE}"
             PIO_INT_EDGE = "${PIOC_ESR_VALUE}"
+            PIO_INT_LEVEL = "${PIOC_LSR_VALUE}"
             PIO_INT_RE_HL = "${PIOC_REHLSR_VALUE}"
+            PIO_INT_FE_LL = "${PIOC_FELLSR_VALUE}"
             PIO_INTERRUPT = PIO_C_INTERRUPT_USED
         />
     </#if>
 
     <#if PIO_D_USED == true>
-        <#lt>   /********** PORT D Initialization **********/
         <@PIO_INITIALIZE
             PIO_PORT = "D"
             PIO_DIR = "${PIOD_OER_VALUE}"
@@ -253,16 +272,16 @@ void PIO_Initialize ( void )
             PIO_PER = "${PIOD_PER_VALUE}"
             PIO_ABCD1 = "${PIOD_ABCDSR1_VALUE}"
             PIO_ABCD2 = "${PIOD_ABCDSR2_VALUE}"
-            PIO_INT = "${PIOD_IER_VALUE}"
             PIO_INT_TYPE = "${PIOD_AIMER_VALUE}"
             PIO_INT_EDGE = "${PIOD_ESR_VALUE}"
+            PIO_INT_LEVEL = "${PIOD_LSR_VALUE}"
             PIO_INT_RE_HL = "${PIOD_REHLSR_VALUE}"
+            PIO_INT_FE_LL = "${PIOD_FELLSR_VALUE}"
             PIO_INTERRUPT = PIO_D_INTERRUPT_USED
         />
     </#if>
 
     <#if PIO_E_USED == true>
-        <#lt>   /********** PORT E Initialization **********/
         <@PIO_INITIALIZE
             PIO_PORT = "E"
             PIO_DIR = "${PIOE_OER_VALUE}"
@@ -273,282 +292,26 @@ void PIO_Initialize ( void )
             PIO_PER = "${PIOE_PER_VALUE}"
             PIO_ABCD1 = "${PIOE_ABCDSR1_VALUE}"
             PIO_ABCD2 = "${PIOE_ABCDSR2_VALUE}"
-            PIO_INT = "${PIOE_IER_VALUE}"
             PIO_INT_TYPE = "${PIOE_AIMER_VALUE}"
             PIO_INT_EDGE = "${PIOE_ESR_VALUE}"
+            PIO_INT_LEVEL = "${PIOE_LSR_VALUE}"
             PIO_INT_RE_HL = "${PIOE_REHLSR_VALUE}"
+            PIO_INT_FE_LL = "${PIOE_FELLSR_VALUE}"
             PIO_INTERRUPT = PIO_E_INTERRUPT_USED
         />
     </#if>
-
-    /* Analog pins Initialization */
-    _AFEC0_REGS->AFEC_CHER.w = ${PIO_AFEC0_CHER_VALUE};
-    _AFEC1_REGS->AFEC_CHER.w = ${PIO_AFEC1_CHER_VALUE};
-    _DACC_REGS->DACC_CHER.w = ${PIO_DACC_CHER_VALUE};
-}
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: PIO APIs which operates on one pin at a time
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinWrite(PIO_PIN pin, bool value)
-
-  Summary:
-    Writes the selected pin.
-  
-  Description:
-    This function writes/drives the "value" on the selected I/O line/pin.
-  
-  Remarks:
-	None.
-*/
-void PIO_PinWrite(PIO_PIN pin, bool value)
-{
-    uint32_t portIndex, port, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    if (value == false)
-    {
-        ((port_registers_t*)port)->PORT_CODR.w = 1 << bitPos;
-    }
-    else
-    {
-        ((port_registers_t*)port)->PORT_SODR.w = 1 << bitPos;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    bool PIO_PinRead(PIO_PIN pin)
-
-  Summary:
-    Read the selected pin value.
-  
-  Description:
-    This function reads the selected pin value.
-    it reads the value regardless of pin configuration, whether uniquely as an
-    input, or driven by the PIO Controller, or driven by peripheral.
-
-  Remarks:
-	To read the latched value on this pin, PIO_PinReadLatch API should be used.
-*/
-bool PIO_PinRead(PIO_PIN pin)
-{
-    uint32_t port, portIndex, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    return (bool)((((port_registers_t*)port)->PORT_PDSR.w >> bitPos) & 0x00000001);
-}
-
-// *****************************************************************************
-/* Function:
-    bool PIO_PinReadLatch ( PIO_PIN pin )
-  
-  Summary:
-    Read the value driven on the selected pin.
-  
-  Description:
-    This function reads the data driven on the selected I/O line/pin.
-    Whatever data is written/driven on I/O line by using any of the PIO PLIB
-    APIs, will be read by this API.
-
-  Remarks:
-	To read actual pin value, PIO_PinRead API should be used.
-*/
-bool PIO_PinReadLatch(PIO_PIN pin)
-{
-    uint32_t port, portIndex, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    return (bool)((((port_registers_t*)port)->PORT_ODSR.w >> bitPos) & 0x00000001);
-}
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinToggle(PIO_PIN pin)
-
-  Summary:
-    Toggles the selected pin.
-
-  Description:
-    This function toggles/inverts the value on the selected I/O line/pin.
-
-  Remarks:
-	None.
-*/
-void PIO_PinToggle(PIO_PIN pin)
-{
-    uint32_t port, portIndex, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    if ( ((((port_registers_t*)port)->PORT_ODSR.w >> bitPos) & 1) == 1 )
-    {
-        ((port_registers_t*)port)->PORT_CODR.w = 1 << bitPos;
-    }
-    else
-    {
-        ((port_registers_t*)port)->PORT_SODR.w = 1 << bitPos;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinSet(PIO_PIN pin)
-
-  Summary:
-    Sets the selected pin.
-
-  Description:
-    This function drives '1' on the selected I/O line/pin.
-
-  Remarks:
-	None.
-*/
-void PIO_PinSet(PIO_PIN pin)
-{
-    uint32_t port, portIndex, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    ((port_registers_t*)port)->PORT_SODR.w = 1 << bitPos;
-}
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinClear(PIO_PIN pin)
-
-  Summary:
-    Clears the selected pin.
-
-  Description:
-    This function drives '0' on the selected I/O line/pin.
-
-  Remarks:
-	None.
-*/
-void PIO_PinClear(PIO_PIN pin)
-{
-    uint32_t port, portIndex, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    ((port_registers_t*)port)->PORT_CODR.w = 1 << bitPos;
-}
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinInterruptEnable(PIO_PIN pin, PIO_INTERRUPT_TYPE interruptType)
-
-  Summary:
-    Enables IO interrupt on selected IO pin.
-
-  Description:
-    This function enables selected type of IO interrupt on selected IO pin.
-
-  Remarks:
-	None.
-*/
-void PIO_PinInterruptEnable(PIO_PIN pin, PIO_INTERRUPT_TYPE interruptType)
-{
-    uint32_t port, portIndex, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    PIO_PortInterruptEnable(port, 1 << bitPos, interruptType);
-}
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinInterruptDisable(PIO_PIN pin)
-
-  Summary:
-    Disables IO interrupt on selected IO pin.     
-
-  Description:
-    This function disables IO interrupt on selected IO pin.
-
-  Remarks:
-	None.
-*/
-void PIO_PinInterruptDisable(PIO_PIN pin)
-{
-    uint32_t port, portIndex, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    ((port_registers_t*)port)->PORT_IDR.w = 1 << bitPos;
-}
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinInputEnable(PIO_PIN pin)
-
-  Summary:
-    Enables selected IO pin as input.
-
-  Description:
-    This function enables selected IO pin as input.
-
-  Remarks:
-	None.
-*/
-void PIO_PinInputEnable(PIO_PIN pin)
-{
-    uint32_t port, portIndex, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    ((port_registers_t*)port)->PORT_ODR.w = 1 << bitPos;
-}
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinOutputEnable(PIO_PIN pin)
-
-  Summary:
-    Enables selected IO pin as output.
-
-  Description:
-    This function enables selected IO pin as output.
-
-  Remarks:
-	None.
-*/
-void PIO_PinOutputEnable(PIO_PIN pin)
-{
-    uint32_t port, portIndex, bitPos;
-
-    portIndex = pin >> 5;
-    bitPos = pin & 0x1F;
-    port = _PORTA_BASE_ADDRESS + (0x200 * portIndex);
-    
-    ((port_registers_t*)port)->PORT_OER.w = 1 << bitPos;
+    <#if (PIO_AFEC0_CHER_VALUE != "0x00000000") | (PIO_AFEC1_CHER_VALUE != "0x00000000") | (PIO_DACC_CHER_VALUE != "0x00000000")>
+        <#lt>   /* Analog pins Initialization */
+    </#if>
+    <#if PIO_AFEC0_CHER_VALUE != "0x00000000">
+        <#lt>   _AFEC0_REGS->AFEC_CHER.w = ${PIO_AFEC0_CHER_VALUE};
+    </#if>
+    <#if PIO_AFEC1_CHER_VALUE != "0x00000000">
+        <#lt>   _AFEC1_REGS->AFEC_CHER.w = ${PIO_AFEC1_CHER_VALUE};
+    </#if>
+    <#if PIO_DACC_CHER_VALUE != "0x00000000">    
+        <#lt>   _DACC_REGS->DACC_CHER.w = ${PIO_DACC_CHER_VALUE};
+    </#if>
 }
 
 // *****************************************************************************
@@ -700,84 +463,6 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortInterruptEnable(
-        PIO_PORT port,
-        uint32_t mask,
-        PIO_INTERRUPT_TYPE interruptType
-        )
-
-  Summary:
-    Enables IO interrupt on selected IO pins of a port.
-
-  Description:
-    This function enables IO interrupt on selected IO pins of selected port.
-
-  Remarks:
-	None.
-*/
-void PIO_PortInterruptEnable(
-    PIO_PORT port,
-    uint32_t mask,
-    PIO_INTERRUPT_TYPE interruptType
-    )
-{
-    switch (interruptType)
-    {
-        case PIO_INTERRUPT_RISING_EDGE:
-            ((port_registers_t*)port)->PORT_AIMER.w = mask;
-            ((port_registers_t*)port)->PORT_ESR.w = mask;
-            ((port_registers_t*)port)->PORT_REHLSR.w = mask;
-            break;
-
-        case PIO_INTERRUPT_FALLING_EDGE:
-            ((port_registers_t*)port)->PORT_AIMER.w = mask;
-            ((port_registers_t*)port)->PORT_ESR.w = mask;
-            ((port_registers_t*)port)->PORT_FELLSR.w = mask;
-            break;
-
-        case PIO_INTERRUPT_HIGH_LEVEL:
-            ((port_registers_t*)port)->PORT_AIMER.w = mask;
-            ((port_registers_t*)port)->PORT_LSR.w = mask;
-            ((port_registers_t*)port)->PORT_REHLSR.w = mask;
-            break;
-
-        case PIO_INTERRUPT_LOW_LEVEL:
-            ((port_registers_t*)port)->PORT_AIMER.w = mask;
-            ((port_registers_t*)port)->PORT_LSR.w = mask;
-            ((port_registers_t*)port)->PORT_FELLSR.w = mask;
-            break;
-            
-        case PIO_INTERRUPT_BOTH_EDGE:
-            /* For both the edge interrupts, we have to disable additional interrupt */
-            ((port_registers_t*)port)->PORT_AIMDR.w = mask;
-            break;
-        default:
-            break;
-    }
-    
-    ((port_registers_t*)port)->PORT_IER.w = mask;
-}
-
-// *****************************************************************************
-/* Function:
-    void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
-
-  Summary:
-    Disables IO interrupt on selected IO pins of a port.
-
-  Description:
-    This function disables IO interrupt on selected IO pins of selected port.
-
-  Remarks:
-	None.
-*/
-void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
-{
-    ((port_registers_t*)port)->PORT_IDR.w = mask;
-}
-
-// *****************************************************************************
-/* Function:
     void PIO_PortInputEnable ( PIO_PORT port, uint32_t mask )
   
   Summary:
@@ -812,15 +497,56 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
     ((port_registers_t*)port)->PORT_OER.w = mask;
 }
 
+// *****************************************************************************
+/* Function:
+    void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
+
+  Summary:
+    Enables IO interrupt on selected IO pins of a port.
+
+  Description:
+    This function enables IO interrupt on selected IO pins of selected port.
+
+  Remarks:
+	None.
+*/
+void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
+{   
+    ((port_registers_t*)port)->PORT_IER.w = mask;
+}
+
+// *****************************************************************************
+/* Function:
+    void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
+
+  Summary:
+    Disables IO interrupt on selected IO pins of a port.
+
+  Description:
+    This function disables IO interrupt on selected IO pins of selected port.
+
+  Remarks:
+	None.
+*/
+void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
+{
+    ((port_registers_t*)port)->PORT_IDR.w = mask;
+}
+
 <#if PIO_A_INTERRUPT_USED == true ||
      PIO_B_INTERRUPT_USED == true ||
      PIO_C_INTERRUPT_USED == true ||
      PIO_D_INTERRUPT_USED == true ||
      PIO_E_INTERRUPT_USED == true >
+// *****************************************************************************
+// *****************************************************************************
+// Section: PIO APIs which operates on one pin at a time
+// *****************************************************************************
+// *****************************************************************************
 
 // *****************************************************************************
 /* Function:
-    void PIO_PinCallbackRegister(
+    void PIO_PinInterruptCallbackRegister(
         PIO_PIN pin, 
         const PIO_EVENT_HANDLER_PIN callback,
         void* context
@@ -839,18 +565,15 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
   Remarks:
     None.
 */
-void PIO_PinCallbackRegister(
+void PIO_PinInterruptCallbackRegister(
     PIO_PIN pin, 
     const PIO_EVENT_HANDLER_PIN callback,
     void* context
 )
 {
-    uint32_t portIndex;
-    uint8_t  bitPosition;
-    
+    uint8_t portIndex;
     portIndex = pin >> 5;
-    bitPosition = (uint8_t) (pin & 0x1F);
-    
+  
     switch( portIndex )
     {
     <#if PIO_A_INTERRUPT_USED == true>
@@ -858,7 +581,7 @@ void PIO_PinCallbackRegister(
         {
             if( portACurNumCb < portAMaxNumCb )
             {
-                portAPinCbObj[ portACurNumCb ].bitPosition   = bitPosition;
+                portAPinCbObj[ portACurNumCb ].pin   = pin;
                 portAPinCbObj[ portACurNumCb ].callback = callback;
                 portAPinCbObj[ portACurNumCb ].context  = context;
                 portACurNumCb++;
@@ -871,7 +594,7 @@ void PIO_PinCallbackRegister(
         {
             if( portBCurNumCb < portBMaxNumCb )
             {
-                portBPinCbObj[ portBCurNumCb ].bitPosition   = bitPosition;
+                portBPinCbObj[ portBCurNumCb ].pin   = pin;
                 portBPinCbObj[ portBCurNumCb ].callback = callback;
                 portBPinCbObj[ portBCurNumCb ].context  = context;
                 portBCurNumCb++;
@@ -884,7 +607,7 @@ void PIO_PinCallbackRegister(
         {
             if( portCCurNumCb < portCMaxNumCb )
             {
-                portCPinCbObj[ portCCurNumCb ].bitPosition   = bitPosition;
+                portCPinCbObj[ portCCurNumCb ].pin   = pin;
                 portCPinCbObj[ portCCurNumCb ].callback = callback;
                 portCPinCbObj[ portCCurNumCb ].context  = context;
                 portCCurNumCb++;
@@ -897,7 +620,7 @@ void PIO_PinCallbackRegister(
         {
             if( portDCurNumCb < portDMaxNumCb )
             {
-                portDPinCbObj[ portDCurNumCb ].bitPosition   = bitPosition;
+                portDPinCbObj[ portDCurNumCb ].pin   = pin;
                 portDPinCbObj[ portDCurNumCb ].callback = callback;
                 portDPinCbObj[ portDCurNumCb ].context  = context;
                 portDCurNumCb++;
@@ -910,7 +633,7 @@ void PIO_PinCallbackRegister(
         {
             if( portECurNumCb < portEMaxNumCb )
             {
-                portEPinCbObj[ portECurNumCb ].bitPosition   = bitPosition;
+                portEPinCbObj[ portECurNumCb ].pin   = pin;
                 portEPinCbObj[ portECurNumCb ].callback = callback;
                 portEPinCbObj[ portECurNumCb ].context  = context;
                 portECurNumCb++;
@@ -924,6 +647,50 @@ void PIO_PinCallbackRegister(
         }
     }
 }
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interrupt Service Routine (ISR) Implementation(s)
+// *****************************************************************************
+// *****************************************************************************
+</#if>
+
+<#if PIO_A_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="A"
+    />
+</#if>
+<#if PIO_B_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="B"
+    />
+</#if>
+<#if PIO_C_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="C"
+    />
+</#if>
+<#if PIO_D_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="D"
+    />
+</#if>
+<#if PIO_E_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="E"
+    />
+</#if>
+
+<#if PIO_A_INTERRUPT_USED == true ||
+     PIO_B_INTERRUPT_USED == true ||
+     PIO_C_INTERRUPT_USED == true ||
+     PIO_D_INTERRUPT_USED == true ||
+     PIO_E_INTERRUPT_USED == true >
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local Function Implementation
+// *****************************************************************************
+// *****************************************************************************
 
 // *****************************************************************************
 /* Function:
@@ -954,10 +721,10 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
         {
             for( i = 0; i < portACurNumCb; i++ )
             {
-                if( ( status & ( 1 << (portAPinCbObj[i].bitPosition) ) ) &&
+                if( ( status & ( 1 << (portAPinCbObj[i].pin & 0x1F) ) ) &&
                     portAPinCbObj[i].callback != NULL )
                 {
-                    portAPinCbObj[i].callback ( portAPinCbObj[i].context );
+                    portAPinCbObj[i].callback ( portAPinCbObj[i].pin, portAPinCbObj[i].context );
                 }
             }
             break;
@@ -968,10 +735,10 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
         {
             for( i = 0; i < portBCurNumCb; i++ )
             {
-                if( ( status & ( 1 << (portBPinCbObj[i].bitPosition) ) ) &&
+                if( ( status & ( 1 << (portBPinCbObj[i].pin & 0x1F) ) ) &&
                     portBPinCbObj[i].callback != NULL )
                 {
-                    portBPinCbObj[i].callback ( portBPinCbObj[i].context );
+                    portBPinCbObj[i].callback ( portBPinCbObj[i].pin, portBPinCbObj[i].context );
                 }
             }
             break;
@@ -982,10 +749,10 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
         {
             for( i = 0; i < portCCurNumCb; i++ )
             {
-                if( ( status & ( 1 << (portCPinCbObj[i].bitPosition) ) ) &&
+                if( ( status & ( 1 << (portCPinCbObj[i].pin & 0x1F) ) ) &&
                     portCPinCbObj[i].callback != NULL )
                 {
-                    portCPinCbObj[i].callback ( portCPinCbObj[i].context );
+                    portCPinCbObj[i].callback ( portCPinCbObj[i].pin, portCPinCbObj[i].context );
                 }
             }
             break;
@@ -996,10 +763,10 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
         {
             for( i = 0; i < portDCurNumCb; i++ )
             {
-                if( ( status & ( 1 << (portDPinCbObj[i].bitPosition) ) ) &&
+                if( ( status & ( 1 << (portDPinCbObj[i].pin & 0x1F) ) ) &&
                     portDPinCbObj[i].callback != NULL )
                 {
-                    portDPinCbObj[i].callback ( portDPinCbObj[i].context );
+                    portDPinCbObj[i].callback ( portDPinCbObj[i].pin, portDPinCbObj[i].context );
                 }
             }
             break;
@@ -1010,10 +777,10 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
         {
             for( i = 0; i < portECurNumCb; i++ )
             {
-                if( ( status & ( 1 << (portEPinCbObj[i].bitPosition) ) ) &&
+                if( ( status & ( 1 << (portEPinCbObj[i].pin & 0x1F) ) ) &&
                     portEPinCbObj[i].callback != NULL )
                 {
-                    portEPinCbObj[i].callback ( portEPinCbObj[i].context );
+                    portEPinCbObj[i].callback ( portEPinCbObj[i].pin, portEPinCbObj[i].context );
                 }
             }
             break;
@@ -1026,6 +793,30 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
     }
 }
 </#if>
+
+<#macro PIO_ISR_HANDLER PIO_CHANNEL>
+// *****************************************************************************
+/* Function:
+    void PORT${PIO_CHANNEL}_InterruptHandler (void)
+
+  Summary:
+    Interrupt handler for PORT${PIO_CHANNEL}.
+
+  Description:
+    This function defines the Interrupt service routine for PORT${PIO_CHANNEL}.
+    This is the function which by default gets into Interrupt Vector Table.
+    
+  Remarks:
+    User should not call this function.
+*/
+void PORT${PIO_CHANNEL}_InterruptHandler(void)
+{
+    /* Local PIO Interrupt Handler */
+    _PIO_Interrupt_Handler(PIO_PORT_${PIO_CHANNEL});
+}
+</#macro>
+
+
 /*******************************************************************************
  End of File
 */
