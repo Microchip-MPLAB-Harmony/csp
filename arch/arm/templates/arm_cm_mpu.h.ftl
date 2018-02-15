@@ -6,7 +6,7 @@
  *        Headers
  *----------------------------------------------------------------------------*/
 
-#include "arch/arm/device_${__PROCESSOR?lower_case}.h"
+#include "arch/arm/device_${__PROCESSOR}.h"
 
 /* Region Address and Index */
 #define MPU_RASR_SIZE(value) ((MPU_RASR_SIZE_Msk & ((value) << MPU_RASR_SIZE_Pos)))
