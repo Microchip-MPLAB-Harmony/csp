@@ -16,4 +16,5 @@ def loadModule():
 
 
 	# load device specific peripherals
-	Module.execfile("../../csp/peripheral/config/peripheral.py")
+	d = dict(locals(), **globals())
+	execfile(Module.getPath() + "../../csp/peripheral/config/peripheral.py", d, d)
