@@ -50,11 +50,7 @@ int main(void);
 extern void __attribute__((long_call)) __libc_init_array(void);
 
 /* Declaration of Reset handler (may be custom) */
-void <#if CoreUseCustomVector == true>
-${CustomVectorName}
-<#else>
-Reset_Handler
-</#if>(void) __attribute__((optimize("-O1"), long_call));
+void Reset_Handler (void) __attribute__((optimize("-O1"), long_call));
 
 /* Device Vector information is available in system_interrupt.c file */
 
@@ -82,11 +78,7 @@ static void _on_reset(void)
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
  */
-<#if CoreUseCustomVector == true>
-void ${CustomVectorName}(void)
-<#else>
 void Reset_Handler(void)
-</#if>
 {
     uint32_t *pSrc;
 

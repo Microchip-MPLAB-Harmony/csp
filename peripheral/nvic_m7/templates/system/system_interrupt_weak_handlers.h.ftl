@@ -1,4 +1,4 @@
-<#list 0..NVIC_VECTOR_MAX as i>
+<#list NVIC_VECTOR_MIN..NVIC_VECTOR_MAX as i>
     <#assign NVIC_VECTOR = "NVIC_" + i + "_VECTOR">
     <#assign NVIC_VECTOR_HANDLER = "NVIC_" + i + "_HANDLER">
     <#if .vars[NVIC_VECTOR]?has_content>

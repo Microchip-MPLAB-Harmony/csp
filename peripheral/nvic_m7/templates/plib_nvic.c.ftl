@@ -58,14 +58,25 @@ void NVIC_Initialize( void )
 
     /* Enable the interrupt sources and configure the priorities as configured
      * from within the "Interrupt Manager" of MCC. */
-<#list 0..NVIC_VECTOR_MAX as i>
+<#list NVIC_VECTOR_MIN..NVIC_VECTOR_MAX as i>
     <#assign NVIC_VECTOR_ENABLE = "NVIC_" + i + "_ENABLE">
     <#assign NVIC_VECTOR_NAME = "NVIC_" + i + "_VECTOR">
+    <#assign NVIC_VECTOR_CORE = "NVIC_" + i + "_CORE">
+    <#assign NVIC_VECTOR_CORE_FIXED = "NVIC_" + i + "_CORE_FIXED">
     <#assign NVIC_VECTOR_PRIORITY = "NVIC_" + i + "_PRIORITY">
-        <#if .vars[NVIC_VECTOR_ENABLE]?has_content>
-            <#if (.vars[NVIC_VECTOR_ENABLE] != false)>
+        <#if .vars[NVIC_VECTOR_CORE_FIXED]?has_content && (.vars[NVIC_VECTOR_CORE_FIXED] == false)>
+            <#if .vars[NVIC_VECTOR_ENABLE]?has_content && (.vars[NVIC_VECTOR_ENABLE] != false)>
+                <#if .vars[NVIC_VECTOR_CORE]?has_content && (.vars[NVIC_VECTOR_CORE] == true)>
+                    <#if .vars[NVIC_VECTOR_PRIORITY]?has_content && (.vars[NVIC_VECTOR_PRIORITY]?number != 0)>
     NVIC_SetPriority(${.vars[NVIC_VECTOR_NAME]}_IRQn, ${.vars[NVIC_VECTOR_PRIORITY]});
+                    </#if>
+                </#if>
+                <#if .vars[NVIC_VECTOR_CORE]?has_content && (.vars[NVIC_VECTOR_CORE] == false)>
+                    <#if .vars[NVIC_VECTOR_PRIORITY]?has_content && (.vars[NVIC_VECTOR_PRIORITY]?number != 7)>
+    NVIC_SetPriority(${.vars[NVIC_VECTOR_NAME]}_IRQn, ${.vars[NVIC_VECTOR_PRIORITY]});
+                    </#if>
     NVIC_EnableIRQ(${.vars[NVIC_VECTOR_NAME]}_IRQn);
+                </#if>
             </#if>
         </#if>
 </#list>

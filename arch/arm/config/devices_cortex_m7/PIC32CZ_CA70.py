@@ -30,12 +30,6 @@ coreUseTimer = coreComponent.createBooleanSymbol("CoreUseTimer", devCfgMenu)
 coreUseTimer.setLabel("Enable Core Timer?")
 coreUseTimer.setReadOnly(True)
 
-coreUseCustomVector = coreComponent.createBooleanSymbol("CoreUseCustomVector", devCfgMenu)
-coreUseCustomVector.setLabel("Enable Customizable Interrupt Handlers?")
-
-customVectorName = coreComponent.createStringSymbol("CustomVectorName", coreUseCustomVector)
-customVectorName.setLabel("Reset Handler Name")
-
 coreArch = coreComponent.createStringSymbol("CoreArchitecture", devCfgMenu)
 coreArch.setLabel("Core Architecture")
 coreArch.setDefaultValue("CORTEX-M7")
