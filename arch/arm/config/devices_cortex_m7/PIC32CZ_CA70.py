@@ -26,9 +26,8 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 #load mpu
 execfile(Variables.get("__CORE_DIR") + "/arm/config/devices_cortex_m7/mpu.py")
 
-coreUseTimer = coreComponent.createBooleanSymbol("CoreUseTimer", devCfgMenu)
-coreUseTimer.setLabel("Enable Core Timer?")
-coreUseTimer.setReadOnly(True)
+#load systick
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
 coreArch = coreComponent.createStringSymbol("CoreArchitecture", devCfgMenu)
 coreArch.setLabel("Core Architecture")
