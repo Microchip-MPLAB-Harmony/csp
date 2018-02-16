@@ -56,8 +56,8 @@ armMPUSourceFile.setProjectPath("config/" + configName + "/arch/arm/")
 armMPUSourceFile.setType("SOURCE")
 armMPUSourceFile.setEnabled(False)
 
-def genMPUSourceFile(armMPUSourceFile, CoreUseMPU):
-	armMPUSourceFile.setEnabled(CoreUseMPU.getValue())
+def genMPUSourceFile(armMPUSourceFile, event):
+	armMPUSourceFile.setEnabled(event["value"])
 
 armMPUSourceFile.setDependencies(genMPUSourceFile, ["CoreUseMPU"])
 
@@ -72,8 +72,8 @@ armMPUHeaderFile.setProjectPath("config/" + configName + "/arch/arm/")
 armMPUHeaderFile.setType("HEADER")
 armMPUHeaderFile.setEnabled(False)
 
-def genMPUHeaderFile(armMPUHeaderFile, CoreUseMPU):
-	armMPUHeaderFile.setEnabled(CoreUseMPU.getValue())
+def genMPUHeaderFile(armMPUHeaderFile, event):
+	armMPUHeaderFile.setEnabled(event["value"])
 
 armMPUHeaderFile.setDependencies(genMPUHeaderFile, ["CoreUseMPU"])
 
@@ -88,15 +88,16 @@ armSysMPUSourceFile.setProjectPath("config/" + configName + "/arch/arm/")
 armSysMPUSourceFile.setType("SOURCE")
 armSysMPUSourceFile.setEnabled(False)
 
-def genSysMPUSourceFile(armSysMPUSourceFile, CoreUseMPU):
-	armSysMPUSourceFile.setEnabled(CoreUseMPU.getValue())
+def genSysMPUSourceFile(armSysMPUSourceFile, event):
+	armSysMPUSourceFile.setEnabled(event["value"])
 
 armSysMPUSourceFile.setDependencies(genSysMPUSourceFile, ["CoreUseMPU"])
 
 #generate arch.h file
-def genArchHeaderFile(archHeaderFile, CoreUseMPU):
-	coreUseMPU = archHeaderFile.getComponent().getSymbolValue("CoreUseMPU")
-	coreUseTimer = archHeaderFile.getComponent().getSymbolValue("CoreUseTimer")
+def genArchHeaderFile(archHeaderFile, event):
+	comp = archHeaderFile.getComponent()
+	coreUseMPU = comp.getSymbolValue("CoreUseMPU")
+	coreUseTimer = comp.getSymbolValue("CoreUseTimer")
 
 	if(coreUseMPU or coreUseTimer):
 		archHeaderFile.setEnabled(True)
@@ -114,9 +115,10 @@ archHeaderFile.setType("HEADER")
 archHeaderFile.setEnabled(False)
 archHeaderFile.setDependencies(genArchHeaderFile, ["CoreUseMPU", "CoreUseTimer"])
 
-def genArchHeaderFileList(archHeaderFileListEntry, CoreUseMPU):
-	coreUseMPU = archHeaderFileListEntry.getComponent().getSymbolValue("CoreUseMPU")
-	coreUseTimer = archHeaderFileListEntry.getComponent().getSymbolValue("CoreUseTimer")
+def genArchHeaderFileList(archHeaderFileListEntry, event):
+	comp = archHeaderFileListEntry.getComponent()
+	coreUseMPU = comp.getSymbolValue("CoreUseMPU")
+	coreUseTimer = comp.getSymbolValue("CoreUseTimer")
 
 	if(coreUseMPU or coreUseTimer):
 		archHeaderFileListEntry.setEnabled(True)
@@ -145,7 +147,6 @@ armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
 armSysStartSourceFile.setProjectPath("config/" + configName + "/")
 armSysStartSourceFile.setType("SOURCE")
-armSysStartHandlersList = coreComponent.createListSymbol("LIST_SYSTEM_STARTUP_INTERRUPT_HANDLERS", None)
 
 #generate newlib_syscalls_xc32.c file
 armSysCallSourceFile = coreComponent.createFileSymbol(None, None)
