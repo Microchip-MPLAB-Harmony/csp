@@ -56,12 +56,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*  This section lists the other files that are included in this file.
 */
 
-#include <xc.h>
-#include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
-
 #include "plib_twi_master.h"
 
 // DOM-IGNORE-BEGIN
