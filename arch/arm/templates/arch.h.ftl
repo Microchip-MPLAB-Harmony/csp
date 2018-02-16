@@ -48,24 +48,6 @@ extern "C"
 {
 #endif
 
-<#if CoreUseTimer == true>
-/******************************************************************************
-  Function:
-    ARCH_CORE_TIMER_Initialize(void)
-
-  Summary:
-    Initializes Core Timer Service (ARM Cortex-M Systick)
-
-  Description:
-    This function initializes the system core timer (ARM Cortex-M Systick)
-    according to the selected configuration.
-
-  Remarks:
-    None.
-*/
-void ARCH_CORE_TIMER_Initialize(void);
-</#if>
-
 <#if CoreUseMPU == true>
 /******************************************************************************
   Function:
