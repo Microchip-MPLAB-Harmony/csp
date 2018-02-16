@@ -41,6 +41,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
+#include "${__PROCESSOR}.h"
 #include "plib_twi${INDEX?string}.h"
 
 static TWI_OBJ twi${INDEX?string}Obj;
