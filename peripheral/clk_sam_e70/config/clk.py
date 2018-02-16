@@ -132,16 +132,9 @@ def mainClock(clkComponent, clkSymMenu, pmcRegModule, updateExtXtalEnable):
 	pmcValGrp_CKGR_MOR_MOSCRCF = pmcRegModule.getValueGroup(pmcBitField_CKGR_MOR_MOSCRCF.getValueGroupName())
 	
 	# create symbol for MOSCRCF Bitfield of CKGR_MOR Register
-	clkSymRCFreq = clkComponent.createKeyValueSetSymbol("PMC_CKGR_MOR_MOSCRCF", clkSymRCEnable)
+	clkSymRCFreq = clkComponent.createComboSymbol("PMC_CKGR_MOR_MOSCRCF", clkSymRCEnable, pmcValGrp_CKGR_MOR_MOSCRCF.getValueNames())
 	clkSymRCFreq.setLabel(pmcBitField_CKGR_MOR_MOSCRCF.getDescription())
-	clkSymRCFreq.setDefaultValue(2)
-	clkSymRCFreq.setOutputMode("Key")
-	clkSymRCFreq.setDisplayMode("Description")
-	
-	count = pmcValGrp_CKGR_MOR_MOSCRCF.getValueCount()
-	for id in range(0,count):
-		valueName = pmcValGrp_CKGR_MOR_MOSCRCF.getValueNames()[id]
-		clkSymRCFreq.addKey(valueName, pmcValGrp_CKGR_MOR_MOSCRCF.getValue(valueName).getValue(), pmcValGrp_CKGR_MOR_MOSCRCF.getValue(valueName).getDescription())
+	clkSymRCFreq.setDefaultValue("_12_MHz")
 	
 	# get MOSCXTBY Bitfield of CKGR_MOR Register
 	pmcBitField_CKGR_MOR_MOSCXTBY = pmcReg_CKGR_MOR.getBitfield("MOSCXTBY")
@@ -242,16 +235,9 @@ def masterClock(clkComponent, clkSymMenu, pmcRegModule):
 	pmcValGrp_PMC_MCKR_CSS = pmcRegModule.getValueGroup(pmcBitField_PMC_MCKR_CSS.getValueGroupName())
 	
 	# create symbol for CSS Bitfield of PMC_MCKR register
-	clkSym_PMC_MCKR_CSS = clkComponent.createKeyValueSetSymbol("PMC_MCKR_CSS", clkSymMenu)
+	clkSym_PMC_MCKR_CSS = clkComponent.createComboSymbol("PMC_MCKR_CSS", clkSymMenu, pmcValGrp_PMC_MCKR_CSS.getValueNames())
 	clkSym_PMC_MCKR_CSS.setLabel(pmcBitField_PMC_MCKR_CSS.getDescription())
-	clkSym_PMC_MCKR_CSS.setDefaultValue(2)
-	clkSym_PMC_MCKR_CSS.setOutputMode("Key")
-	clkSym_PMC_MCKR_CSS.setDisplayMode("Description")
-	
-	count = pmcValGrp_PMC_MCKR_CSS.getValueCount()
-	for id in range(0,count):
-		valueName = pmcValGrp_PMC_MCKR_CSS.getValueNames()[id]
-		clkSym_PMC_MCKR_CSS.addKey(valueName, pmcValGrp_PMC_MCKR_CSS.getValue(valueName).getValue(), pmcValGrp_PMC_MCKR_CSS.getValue(valueName).getDescription())
+	clkSym_PMC_MCKR_CSS.setDefaultValue("PLLA_CLK")
 	
 	# get PRES Bitfield of PMC_MCKR register
 	pmcBitField_PMC_MCKR_PRES = pmcReg_PMC_MCKR.getBitfield("PRES")
@@ -260,16 +246,9 @@ def masterClock(clkComponent, clkSymMenu, pmcRegModule):
 	pmcValGrp_PMC_MCKR_PRES = pmcRegModule.getValueGroup(pmcBitField_PMC_MCKR_PRES.getValueGroupName())
 
 	# create symbol for PRES Bitfield of PMC_MCKR register
-	clkSym_PMC_MCKR_PRES = clkComponent.createKeyValueSetSymbol("PMC_MCKR_PRES", clkSymMenu)
+	clkSym_PMC_MCKR_PRES = clkComponent.createComboSymbol("PMC_MCKR_PRES", clkSymMenu, pmcValGrp_PMC_MCKR_PRES.getValueNames())
 	clkSym_PMC_MCKR_PRES.setLabel(pmcBitField_PMC_MCKR_PRES.getDescription())
-	clkSym_PMC_MCKR_PRES.setDefaultValue(4)
-	clkSym_PMC_MCKR_PRES.setOutputMode("Key")
-	clkSym_PMC_MCKR_PRES.setDisplayMode("Description")
-	
-	count = pmcValGrp_PMC_MCKR_PRES.getValueCount()
-	for id in range(0,count):
-		valueName = pmcValGrp_PMC_MCKR_PRES.getValueNames()[id]
-		clkSym_PMC_MCKR_PRES.addKey(valueName, pmcValGrp_PMC_MCKR_PRES.getValue(valueName).getValue(), pmcValGrp_PMC_MCKR_PRES.getValue(valueName).getDescription())
+	clkSym_PMC_MCKR_PRES.setDefaultValue("CLK_1")
 
 	# get MDIV Bitfield of PMC_MCKR register
 	pmcBitField_PMC_MCKR_MDIV = pmcReg_PMC_MCKR.getBitfield("MDIV")
@@ -278,16 +257,9 @@ def masterClock(clkComponent, clkSymMenu, pmcRegModule):
 	pmcValGrp_PMC_MCKR_MDIV = pmcRegModule.getValueGroup(pmcBitField_PMC_MCKR_MDIV.getValueGroupName())
 	
 	# create symbol for MDIV Bitfield of PMC_MCKR register
-	clkSym_PMC_MCKR_MDIV = clkComponent.createKeyValueSetSymbol("PMC_MCKR_MDIV", clkSymMenu)
+	clkSym_PMC_MCKR_MDIV = clkComponent.createComboSymbol("PMC_MCKR_MDIV", clkSymMenu, pmcValGrp_PMC_MCKR_MDIV.getValueNames())
 	clkSym_PMC_MCKR_MDIV.setLabel(pmcBitField_PMC_MCKR_MDIV.getDescription())
-	clkSym_PMC_MCKR_MDIV.setDefaultValue(2)
-	clkSym_PMC_MCKR_MDIV.setOutputMode("Key")
-	clkSym_PMC_MCKR_MDIV.setDisplayMode("Description")
-	
-	count = pmcValGrp_PMC_MCKR_MDIV.getValueCount()
-	for id in range(0,count):
-		valueName = pmcValGrp_PMC_MCKR_MDIV.getValueNames()[id]
-		clkSym_PMC_MCKR_MDIV.addKey(valueName, pmcValGrp_PMC_MCKR_MDIV.getValue(valueName).getValue(), pmcValGrp_PMC_MCKR_MDIV.getValue(valueName).getDescription())
+	clkSym_PMC_MCKR_MDIV.setDefaultValue("PCK_DIV2")
 	
 def usbClock(clkComponent, clkSymMenu, pmcRegModule, utmiRegModule, setUSBDividerVisibleProperty):
 
@@ -358,14 +330,9 @@ def usbClock(clkComponent, clkSymMenu, pmcRegModule, utmiRegModule, setUSBDivide
 	pmcValGrp_PMC_USB_USBS = pmcRegModule.getValueGroup(pmcBitField_PMC_USB_USBS.getValueGroupName())
 
 	# create symbol for USBS bitfield of PMC_USB register
-	clkSym_PMC_USB_USBS = clkComponent.createKeyValueSetSymbol("PMC_USB_USBS", clkSymMenu)
+	clkSym_PMC_USB_USBS = clkComponent.createComboSymbol("PMC_USB_USBS", clkPMC_SCER_USBCLK,["PLLA_CLK", "UPLL_CLK"])
 	clkSym_PMC_USB_USBS.setLabel(pmcBitField_PMC_USB_USBS.getDescription())
-	clkSym_PMC_USB_USBS.setDefaultValue(1)
-	clkSym_PMC_USB_USBS.setOutputMode("Key")
-	clkSym_PMC_USB_USBS.setDisplayMode("Description")
-	
-	clkSym_PMC_USB_USBS.addKey("PLLA_CLK", "PLLA_CLK", "PLLA Clock is Selected")
-	clkSym_PMC_USB_USBS.addKey("UPLL_CLK", "UPLL_CLK", "UPLL Clock is Selected")
+	clkSym_PMC_USB_USBS.setDefaultValue("UPLL_CLK")
 
 	# get USBDIV bitfield of PMC_USB register
 	pmcBitField_PMC_USB_USBDIV = pmcReg_PMC_USB.getBitfield("USBDIV")
@@ -438,18 +405,11 @@ def genericClk(clkComponent, clkSymMenu, pmcRegModule, setGenericClkDivVisible, 
 		pmcValGrp_PMC_PCR_GCLKCSS = pmcRegModule.getValueGroup(pmcBitField_PMC_PCR_GCLKCSS.getValueGroupName())
 		
 		# create symbol for GCLKCSS bitfield of PMC_PCR register
-		clkSym_PMC_PCR_GCLKCSS = clkComponent.createKeyValueSetSymbol("PMC_PCR_GCLK" + str(i) + "CSS", clkSymGenericMenu)
+		clkSym_PMC_PCR_GCLKCSS = clkComponent.createComboSymbol("PMC_PCR_GCLK" + str(i) + "CSS", clkSymGenericMenu, pmcValGrp_PMC_PCR_GCLKCSS.getValueNames())
 		clkSym_PMC_PCR_GCLKCSS.setLabel(pmcBitField_PMC_PCR_GCLKCSS.getDescription())
-		clkSym_PMC_PCR_GCLKCSS.setDefaultValue(0)
-		clkSym_PMC_PCR_GCLKCSS.setOutputMode("Key")
-		clkSym_PMC_PCR_GCLKCSS.setDisplayMode("Description")
+		clkSym_PMC_PCR_GCLKCSS.setDefaultValue("SLOW_CLK")
 		clkSym_PMC_PCR_GCLKCSS.setVisible(False)
 		clkSym_PMC_PCR_GCLKCSS.setDependencies(setGenericClkSrcVisible, ["PMC_PCR_GCLK" + str(i) + "EN"])
-	
-		count = pmcValGrp_PMC_PCR_GCLKCSS.getValueCount()
-		for id in range(0,count):
-			valueName = pmcValGrp_PMC_PCR_GCLKCSS.getValueNames()[id]
-			clkSym_PMC_PCR_GCLKCSS.addKey(valueName, pmcValGrp_PMC_PCR_GCLKCSS.getValue(valueName).getValue(), pmcValGrp_PMC_PCR_GCLKCSS.getValue(valueName).getDescription())
 
 def peripheralClk(clkComponent, clkSymMenu, join, ElementTree):
 
@@ -525,16 +485,9 @@ def programmableClock(clkComponent, clkSymMenu, pmcRegModule):
 		pmcValGrp_PMC_PCK_CSS = pmcRegModule.getValueGroup(pmcBitField_PMC_PCK_CSS.getValueGroupName())
 		
 		# create symbol for CSS bitfield of PMC_PCK# register
-		clkSym_PMC_PCK_CSS = clkComponent.createKeyValueSetSymbol("PMC_PCK" + str(i) + "_CSS", clkSym_PMC_SCER_PCK)
+		clkSym_PMC_PCK_CSS = clkComponent.createComboSymbol("PMC_PCK" + str(i) + "_CSS", clkSym_PMC_SCER_PCK, pmcValGrp_PMC_PCK_CSS.getValueNames())
 		clkSym_PMC_PCK_CSS.setLabel(pmcBitField_PMC_PCK_CSS.getDescription())
-		clkSym_PMC_PCK_CSS.setDefaultValue(0)
-		clkSym_PMC_PCK_CSS.setOutputMode("Key")
-		clkSym_PMC_PCK_CSS.setDisplayMode("Description")
-	
-		count = pmcValGrp_PMC_PCK_CSS.getValueCount()
-		for id in range(0,count):
-			valueName = pmcValGrp_PMC_PCK_CSS.getValueNames()[id]
-			clkSym_PMC_PCK_CSS.addKey(valueName, pmcValGrp_PMC_PCK_CSS.getValue(valueName).getValue(), pmcValGrp_PMC_PCK_CSS.getValue(valueName).getDescription())
+		clkSym_PMC_PCK_CSS.setDefaultValue("SLOW_CLK")
 
 		# get PRES bitfield of PMC_PCK# register
 		pmcBitField_PMC_PCK_PRES = pmcReg_PMC_PCK.getBitfield("PRES")
