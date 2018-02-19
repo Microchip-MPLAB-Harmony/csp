@@ -1,8 +1,32 @@
 #Function for initiating the UI
-def instantiateComponent(trngComponent):
+global peripId
+global NVICVector
+global NVICHandler
+global instance 
 
-	num = trngComponent.getID()[-1:]
-	print("Running TRNG" + str(num))
+def NVICControl(NVIC, event):
+    Database.clearSymbolValue("core", NVICVector)
+    Database.clearSymbolValue("core", NVICHandler)
+    if (event["value"] == True):
+        Database.setSymbolValue("core", NVICVector, True, 2)
+        Database.setSymbolValue("core", NVICHandler, "TRNG" + str(instance) + "_InterruptHandler", 2)
+    else :
+        Database.setSymbolValue("core", NVICVector, False, 2)
+        Database.setSymbolValue("core", NVICHandler, "TRNG_Handler", 2)
+		
+def instantiateComponent(trngComponent):
+	global NVICVector
+	global NVICHandler
+	global peripId
+	global instance
+	
+	peripId = Interrupt.getInterruptIndex("TRNG")
+	NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
+	NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
+	NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+	
+	instance = trngComponent.getID()[-1:]
+	Log.writeInfoMessage("Running TRNG" + str(instance))
 
 	trngReserved = trngComponent.createBooleanSymbol("TRNG_Reserved", None)
 	trngReserved.setLabel("TRNG Reserved")
@@ -20,13 +44,27 @@ def instantiateComponent(trngComponent):
 
 	#Create a Checkbox to enable disable interrupts
 	trngInterrupt = trngComponent.createBooleanSymbol("trngEnableInterrupt", trngMenu)
-	print(trngInterrupt)
 	trngInterrupt.setLabel("Enable Interrupts")
 	trngInterrupt.setDefaultValue(False)
 	
+	# Initial settings for CLK and NVIC
+	Database.clearSymbolValue("core", "PMC_ID_TRNG")
+	Database.setSymbolValue("core", "PMC_ID_TRNG", True, 2)
+	Database.clearSymbolValue("core", NVICVector)
+	Database.setSymbolValue("core", NVICVector, True, 2)
+	Database.clearSymbolValue("core", NVICHandler)
+	Database.setSymbolValue("core", NVICHandler, "TRNG" + str(instance) + "_InterruptHandler", 2)
+	Database.clearSymbolValue("core", NVICHandlerLock)
+	Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+
+	# NVIC Dynamic settings
+	trngNVICControl = trngComponent.createBooleanSymbol("NVIC_TRNG_ENABLE", None)
+	trngNVICControl.setDependencies(NVICControl, ["trngEnableInterrupt"])
+	trngNVICControl.setVisible(False)
+	
 	trngIndex = trngComponent.createIntegerSymbol("INDEX", trngMenu)
 	trngIndex.setVisible(False)
-	trngIndex.setDefaultValue(int(num))
+	trngIndex.setDefaultValue(int(instance))
 
 	configName = Variables.get("__CONFIGURATION_NAME")
 
@@ -34,7 +72,7 @@ def instantiateComponent(trngComponent):
 	trngHeaderFile = trngComponent.createFileSymbol(None, None)
 	trngHeaderFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.h.ftl")
 	trngHeaderFile.setMarkup(True)
-	trngHeaderFile.setOutputName("plib_trng" + str(num) + ".h")
+	trngHeaderFile.setOutputName("plib_trng" + str(instance) + ".h")
 	trngHeaderFile.setMarkup(True)
 	trngHeaderFile.setOverwrite(True)
 	trngHeaderFile.setDestPath("peripheral/trng/")
@@ -45,18 +83,12 @@ def instantiateComponent(trngComponent):
 	trngSourceFile = trngComponent.createFileSymbol(None, None)
 	trngSourceFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.c.ftl")
 	trngSourceFile.setMarkup(True)
-	trngSourceFile.setOutputName("plib_trng" + str(num) + ".c")
+	trngSourceFile.setOutputName("plib_trng" + str(instance) + ".c")
 	trngSourceFile.setMarkup(True)
 	trngSourceFile.setOverwrite(True)
 	trngSourceFile.setDestPath("peripheral/trng/")
 	trngSourceFile.setProjectPath("config/" + configName + "/peripheral/trng/")
 	trngSourceFile.setType("SOURCE")
-	
-	trngSystemIntFile = trngComponent.createFileSymbol(None, None)
-	trngSystemIntFile.setType("STRING")
-	trngSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
-	trngSystemIntFile.setSourcePath("../peripheral/trng_6334/templates/system/system_interrupt.c.ftl")
-	trngSystemIntFile.setMarkup(True)
 
 	trngSystemDefFile = trngComponent.createFileSymbol(None, None)
 	trngSystemDefFile.setType("STRING")

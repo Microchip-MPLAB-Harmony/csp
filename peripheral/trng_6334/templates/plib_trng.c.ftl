@@ -64,6 +64,18 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 	<#lt>	return (_TRNG_REGS->TRNG_ODATA.w);
 	<#lt>}
 </#if>
+
+<#if trngEnableInterrupt == true>
+	<#lt>void TRNG${INDEX?string}_InterruptHandler( void )
+	<#lt>{
+	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD;
+	<#lt>	trng.data = _TRNG_REGS->TRNG_ODATA.w;
+	<#lt>	if(trng.callback != NULL)
+    <#lt>   {
+    <#lt>   	trng.callback(trng.context,trng.data);
+    <#lt>   }
+	<#lt>}
+</#if>	
 </#macro>
 
 <#if TRNG_Reserved == false>

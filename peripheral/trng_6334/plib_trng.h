@@ -18,7 +18,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc. All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc. All rights reserved.
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
 controller that is integrated into your product or third party product
@@ -134,6 +134,7 @@ this interface.
 
 void TRNGx_RandomNumberGenerate( void );
 
+// *****************************************************************************
 /* Function:
 	uint32_t TRNGx_ReadData( void )
 	
@@ -164,6 +165,7 @@ void TRNGx_RandomNumberGenerate( void );
 
 uint32_t TRNGx_ReadData( void );
 
+// *****************************************************************************
 /* Function:
 	void TRNGx_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
 	
