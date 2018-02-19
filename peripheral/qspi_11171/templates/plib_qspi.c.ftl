@@ -117,7 +117,7 @@ static bool qspi${INDEX?string}_setup_transfer( qspi_memory_xfer_t *qspi_memory_
     return true;
 }
 
-bool QSPI${INDEX?string}_WriteCommand( qspi_command_xfer_t *qspi_command_xfer, uint32_t address )
+bool QSPI${INDEX?string}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address )
 {
     uint32_t mask = 0;
 
@@ -145,7 +145,7 @@ bool QSPI${INDEX?string}_WriteCommand( qspi_command_xfer_t *qspi_command_xfer, u
     return true;
 }
 
-bool QSPI${INDEX?string}_ReadRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length )
+bool QSPI${INDEX?string}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length )
 {
     uint32_t *qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
     uint32_t mask = 0;
@@ -181,7 +181,7 @@ bool QSPI${INDEX?string}_ReadRegister( qspi_register_xfer_t *qspi_register_xfer,
     return true;
 }
 
-bool QSPI${INDEX?string}_WriteRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length )
+bool QSPI${INDEX?string}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length )
 {
     uint32_t *qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
     uint32_t mask = 0;
@@ -215,7 +215,7 @@ bool QSPI${INDEX?string}_WriteRegister( qspi_register_xfer_t *qspi_register_xfer
     return true;
 }
 
-bool QSPI${INDEX?string}_ReadMemory( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
+bool QSPI${INDEX?string}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
 {
     uint32_t *qspi_mem = (uint32_t *)(QSPIMEM_ADDR | address);
     uint32_t length_32bit, length_8bit;
@@ -250,7 +250,7 @@ bool QSPI${INDEX?string}_ReadMemory( qspi_memory_xfer_t *qspi_memory_xfer, uint3
     return true;
 }
 
-bool QSPI${INDEX?string}_WriteMemory( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
+bool QSPI${INDEX?string}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
 {
     uint32_t *qspi_mem = (uint32_t *)(QSPIMEM_ADDR | address);
     uint32_t length_32bit, length_8bit;

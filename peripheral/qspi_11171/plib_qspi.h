@@ -233,7 +233,7 @@ this interface.
 void QSPI_Initialize( void );
 
 /* Function:
-    bool QSPI_WriteCommand( qspi_command_xfer_t *qspi_command_xfer, uint32_t address )
+    bool QSPI_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address )
 
  Summary:
     Writes command to QSPI slave device.
@@ -272,17 +272,17 @@ void QSPI_Initialize( void );
         // Send Write enable command
         qspi_command_xfer->qspi_code.instruction = WRITE_ENABLE_CODE;
 
-        if (TRUE != QSPI_SendCommand(&qspi_command_xfer, 0))
+        if (TRUE != QSPI_CommandWrite(&qspi_command_xfer, 0))
         {
             // Handle Error
         }
 
     </code>
 */
-bool QSPI_WriteCommand( qspi_command_xfer_t *qspi_command_xfer, uint32_t address );
+bool QSPI_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address );
 
 /* Function:
-    bool QSPI_ReadRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length )
+    bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length )
 
  Summary:
     Reads particular register of QSPI slave device.
@@ -324,17 +324,17 @@ bool QSPI_WriteCommand( qspi_command_xfer_t *qspi_command_xfer, uint32_t address
         // Read status register of 1 Byte width
         qspi_register_xfer.instruction = READ_STATUS_REG_CODE;
 
-        if (TRUE != QSPI_ReadRegister(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
+        if (TRUE != QSPI_RegisterRead(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
         {
             // Handle Error
         }
 
     </code>
 */
-bool QSPI_ReadRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length );
+bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length );
 
 /* Function:
-    bool QSPI_WriteRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length )
+    bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length )
 
  Summary:
     Writes to particular register of QSPI slave device.
@@ -383,7 +383,7 @@ bool QSPI_ReadRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
         // Read status register of 1 Byte width
         qspi_register_xfer.instruction = READ_STATUS_REG_CODE;
 
-        if (TRUE != QSPI_ReadRegister(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
+        if (TRUE != QSPI_RegisterRead(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
         {
             // Handle Error
         }
@@ -394,7 +394,7 @@ bool QSPI_ReadRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
         // Use QAUD SPI Lane
         qspi_command_xfer.width = QUAD_CMD;
 
-        if (TRUE != QSPI_WriteCommand(&qspi_command_xfer, 0))
+        if (TRUE != QSPI_CommandWrite(&qspi_command_xfer, 0))
         {
             // Handle Error
         }
@@ -407,17 +407,17 @@ bool QSPI_ReadRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
         // Write status register of 1 Byte width
         qspi_register_xfer.instruction = WRITE_STATUS_REG_CODE;
 
-        if (TRUE != QSPI_WriteRegister(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
+        if (TRUE != QSPI_RegisterWrite(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
         {
             // Handle Error
         }
 
     </code>
 */
-bool QSPI_WriteRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length );
+bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length );
 
 /* Function:
-    bool QSPI_ReadMemory( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
+    bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
 
  Summary:
     Reads from the specified address of the serial flash device.
@@ -462,17 +462,17 @@ bool QSPI_WriteRegister( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_
         qspi_memory_xfer.width = QUAD_CMD;
         qspi_memory_xfer.dummy_cycles = 6;
 
-        if (TRUE != QSPI_ReadMemory(&qspi_memory_xfer, buffer, sizeof(buffer), address))
+        if (TRUE != QSPI_MemoryRead(&qspi_memory_xfer, buffer, sizeof(buffer), address))
         {
             // Handle Error
         }
 
     </code>
 */
-bool QSPI_ReadMemory( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
+bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
 
 /* Function:
-    bool QSPI_WriteMemory( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
+    bool QSPI_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
 
  Summary:
     Writes to the specified address of the serial flash device.
@@ -522,7 +522,7 @@ bool QSPI_ReadMemory( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
         // Use QAUD SPI Lane
         qspi_command_xfer.width = QUAD_CMD;
 
-        if (TRUE != QSPI_WriteCommand(qspi_command_xfer, 0))
+        if (TRUE != QSPI_CommandWrite(qspi_command_xfer, 0))
         {
             // Handle Error
         }
@@ -536,14 +536,14 @@ bool QSPI_ReadMemory( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
         // Use QAUD SPI Lane
         qspi_memory_xfer.width = QUAD_CMD;
 
-        if (TRUE != QSPI_WriteMemory(&qspi_memory_xfer, buffer, sizeof(buffer), address))
+        if (TRUE != QSPI_MemoryWrite(&qspi_memory_xfer, buffer, sizeof(buffer), address))
         {
             // Handle Error
         }
 
     </code>
 */
-bool QSPI_WriteMemory( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address );
+bool QSPI_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
