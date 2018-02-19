@@ -134,12 +134,20 @@ def instantiateComponent(qspiComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     qspiHeader1File = qspiComponent.createFileSymbol(None, None)
+    qspiHeader1File.setSourcePath("../peripheral/qspi_" + qspiRegModule.getID() + "/templates/plib_qspi.h")
+    qspiHeader1File.setOutputName("plib_qspi.h")
+    qspiHeader1File.setDestPath("/peripheral/qspi/")
+    qspiHeader1File.setProjectPath("config/" + configName + "/peripheral/qspi/")
+    qspiHeader1File.setType("HEADER")
+
+    qspiHeader1File = qspiComponent.createFileSymbol(None, None)
     qspiHeader1File.setSourcePath("../peripheral/qspi_" + qspiRegModule.getID() + "/templates/plib_qspi.h.ftl")
     qspiHeader1File.setOutputName("plib_qspi" + str(num) + ".h")
     qspiHeader1File.setDestPath("/peripheral/qspi/")
     qspiHeader1File.setProjectPath("config/" + configName + "/peripheral/qspi/")
     qspiHeader1File.setType("HEADER")
     qspiHeader1File.setMarkup(True)
+    qspiHeader1File.setOverwrite(True)
 
     qspiSource1File = qspiComponent.createFileSymbol(None, None)
     qspiSource1File.setSourcePath("../peripheral/qspi_" + qspiRegModule.getID() + "/templates/plib_qspi.c.ftl")
@@ -148,6 +156,7 @@ def instantiateComponent(qspiComponent):
     qspiSource1File.setProjectPath("config/" + configName + "/peripheral/qspi/")
     qspiSource1File.setType("SOURCE")
     qspiSource1File.setMarkup(True)
+    qspiSource1File.setOverwrite(True)
 
     #QSPI Initialize 
     qspiSystemInitFile = qspiComponent.createFileSymbol(None, None)

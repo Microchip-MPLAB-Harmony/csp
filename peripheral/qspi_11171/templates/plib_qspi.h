@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_QSPI${INDEX?string}_H // Guards against multiple inclusion
-#define PLIB_QSPI${INDEX?string}_H
+#ifndef PLIB_QSPI_H // Guards against multiple inclusion
+#define PLIB_QSPI_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -53,8 +53,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "${__PROCESSOR?lower_case}.h"
-#include "plib_qspi.h"
+#include <stdbool.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -68,23 +67,63 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
+typedef enum
+{
+    ADDRL_24_BIT = QSPI_IFR_ADDRL_24_BIT,
+    ADDRL_32_BIT = QSPI_IFR_ADDRL_32_BIT
+} QSPI_ADDRESS_LENGTH;
 
-void QSPI${INDEX?string}_Initialize( void );
+typedef enum
+{
+    SINGLE_BIT_SPI = QSPI_IFR_WIDTH_SINGLE_BIT_SPI,
+    DUAL_OUTPUT = QSPI_IFR_WIDTH_DUAL_OUTPUT,
+    QUAD_OUTPUT = QSPI_IFR_WIDTH_QUAD_OUTPUT,
+    DUAL_IO = QSPI_IFR_WIDTH_DUAL_IO,
+    QUAD_IO = QSPI_IFR_WIDTH_QUAD_IO,
+    DUAL_CMD = QSPI_IFR_WIDTH_DUAL_CMD,
+    QUAD_CMD = QSPI_IFR_WIDTH_QUAD_CMD	
+} QSPI_LANE_WIDTH;
 
-bool QSPI${INDEX?string}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address );
+typedef enum
+{
+    OPTL_1_BIT = QSPI_IFR_OPTL_OPTION_1BIT,
+    OPTL_2_BIT = QSPI_IFR_OPTL_OPTION_2BIT,
+    OPTL_4_BIT = QSPI_IFR_OPTL_OPTION_4BIT,
+    OPTL_8_BIT = QSPI_IFR_OPTL_OPTION_8BIT
+} QSPI_OPTION_LENGTH;
 
-bool QSPI${INDEX?string}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length );
+typedef struct {
+    /* QSPI instruction code */
+    uint8_t instruction;
+    /* QSPI instruction Frame register informations */
+    QSPI_LANE_WIDTH width;
+    bool addr_en;
+    QSPI_ADDRESS_LENGTH addr_len;
+} qspi_command_xfer_t;
 
-bool QSPI${INDEX?string}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length );
+typedef struct {
+    /* QSPI instruction code */
+    uint8_t instruction;
+    /* QSPI instruction Frame register informations */
+    QSPI_LANE_WIDTH width;
+    /* For Read Register */
+    uint8_t dummy_cycles;
+} qspi_register_xfer_t;
 
-bool QSPI${INDEX?string}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address );
+typedef struct {
+    /* QSPI instruction code */
+    uint8_t instruction;
+    /* QSPI option code */
+    uint8_t option;
+    /* QSPI instruction Frame register informations */
+    QSPI_LANE_WIDTH width;
+    QSPI_ADDRESS_LENGTH addr_len;
+    bool option_en;
+    QSPI_OPTION_LENGTH option_len;
+    /* For Read memory */
+    uint8_t dummy_cycles;
+} qspi_memory_xfer_t;
 
-bool QSPI${INDEX?string}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -92,4 +131,4 @@ bool QSPI${INDEX?string}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_QSPI${INDEX?string}_H */
+#endif /* PLIB_QSPI_H */
