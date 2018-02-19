@@ -17,7 +17,7 @@ Description:
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
 controller that is integrated into your product or third party product
@@ -131,3 +131,28 @@ uint32_t RTT${INDEX?string}_FrequencyGet(void)
 		}
 	}
 }
+<#if rttINCIEN == true || rttALMIEN == true>
+
+	<#lt>void RTT${INDEX?string}_InterruptHandler()
+	<#lt>{
+	<#lt>	volatile uint32_t status = _RTT_REGS->RTT_SR.w;
+	<#lt>	uint32_t flags = _RTT_REGS->RTT_MR.w;
+	<#lt>	_RTT_REGS->RTT_MR.w &= ~(RTT_MR_ALMIEN_Msk | RTT_MR_RTTINCIEN_Msk);
+	<#lt>	if(flags & RTT_MR_RTTINCIEN_Msk)
+	<#lt>	{
+	<#lt>		if(status & RTT_SR_RTTINC_Msk)
+	<#lt>		{
+	<#lt>			rtt.callback(rtt.context, RTT_PERIODIC);
+	<#lt>		}
+	<#lt>		_RTT_REGS->RTT_MR.w |= (RTT_MR_RTTINCIEN_Msk);
+	<#lt>	}
+	<#lt>	if(flags & RTT_MR_ALMIEN_Msk)
+	<#lt>	{
+	<#lt>		if(status & RTT_SR_ALMS_Msk)
+	<#lt>		{
+	<#lt>			rtt.callback(rtt.context, RTT_ALARM);
+	<#lt>		}
+	<#lt>		_RTT_REGS->RTT_MR.w |= (RTT_MR_ALMIEN_Msk);
+	<#lt>	}	
+	<#lt>}
+</#if>

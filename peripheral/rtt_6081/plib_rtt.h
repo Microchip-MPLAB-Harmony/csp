@@ -72,7 +72,7 @@ typedef enum
 	RTT_ALARM	 = 0x10000	// One time Alarm
 }RTT_INTERRUPT_TYPE;
 
-
+// *****************************************************************************
 /* Callback Function Pointer
  Summary:
 	Defines the data type and function signature for the RTT peripheral
@@ -144,7 +144,7 @@ typedef struct
 
 void RTTx_Initialize(void);
 
-
+// *****************************************************************************
 /* Function:
 	void RTTx_Enable(void);
 	
@@ -173,7 +173,7 @@ void RTTx_Initialize(void);
 
 void RTTx_Enable(void);
 
-
+// *****************************************************************************
 /* Function:
 	void RTTx_Disable( struct tm *time )
 	
@@ -215,7 +215,7 @@ void RTTx_Enable(void);
 
 void RTTx_Disable(void);
 
-
+// *****************************************************************************
 /* Function:
 	void RTTx_PrescalarUpdate(uint16_t prescale);
 	
@@ -243,7 +243,7 @@ void RTTx_Disable(void);
 
 void RTTx_PrescalarUpdate(uint16_t prescale);
 
-
+// *****************************************************************************
 /* Function:
 	void RTTx_AlarmValueSet(uint32_t alarm);
 	
@@ -271,7 +271,7 @@ void RTTx_PrescalarUpdate(uint16_t prescale);
 
 void RTTx_AlarmValueSet(uint32_t alarm);
 
-
+// *****************************************************************************
 /* Function:
 	void RTTx_EnableInterrupt (RTT_INTERRUPT_TYPE type);
 	
@@ -299,7 +299,7 @@ void RTTx_AlarmValueSet(uint32_t alarm);
 
 void RTTx_EnableInterrupt (RTT_INTERRUPT_TYPE type);
 
-
+// *****************************************************************************
 /* Function:
 	void RTTx_DisableInterrupt(RTT_INTERRUPT_TYPE type);
 	
@@ -327,7 +327,7 @@ void RTTx_EnableInterrupt (RTT_INTERRUPT_TYPE type);
 
 void RTTx_DisableInterrupt(RTT_INTERRUPT_TYPE type);
 
-
+// *****************************************************************************
 /* Function:
 	uint32_t RTTx_TimerValueGet(void);
 	
@@ -362,7 +362,7 @@ void RTTx_DisableInterrupt(RTT_INTERRUPT_TYPE type);
 
 uint32_t RTTx_TimerValueGet(void);
 
-
+// *****************************************************************************
 /* Function:
 	uint32_t RTTx_FrequencyGet(void)
 	
@@ -390,7 +390,7 @@ uint32_t RTTx_TimerValueGet(void);
 
 uint32_t RTTx_FrequencyGet(void);
 
- 
+// ***************************************************************************** 
 /* Function:
 	void RTTx_CallbackRegister( RTT_CALLBACK callback, uintptr_t context );
 	
