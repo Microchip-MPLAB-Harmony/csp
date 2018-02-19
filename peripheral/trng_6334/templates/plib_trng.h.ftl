@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -43,11 +43,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define TRNG${INDEX?string}_H
 
 
-#include <xc.h>
+#include "${__PROCESSOR}.h"
 #include <stdint.h>
-#include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
  extern "C" {
@@ -84,17 +82,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#if trngEnableInterrupt == true>
 	<#lt>void TRNG${INDEX?string}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
 </#if>	
-<#if trngEnableInterrupt == true>
-	<#lt>static void inline TRNG${INDEX?string}_DATARDY_Handler( void )
-	<#lt>{
-	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD;
-	<#lt>	trng.data = _TRNG_REGS->TRNG_ODATA.w;
-	<#lt>	if(trng.callback != NULL)
-    <#lt>   {
-    <#lt>   	trng.callback(trng.context,trng.data);
-    <#lt>   }
-	<#lt>}
-</#if>	
+
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif
