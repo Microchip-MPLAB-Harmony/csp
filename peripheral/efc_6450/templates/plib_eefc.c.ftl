@@ -17,7 +17,7 @@ It allows user to Program, Erase and lock the on-chip FLASH memory.
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
 controller that is integrated into your product or third party product
@@ -89,23 +89,21 @@ void EEFC${INDEX?string}_WriteQuadWord( uint32_t address, uint32_t* data )
 	</#if>
 }
 
-EEFC_STATUS EEFC${INDEX?string}_StatusGet( void )
+
+bool EEFC${INDEX?string}_IsBusy(void)
 {
-	status =  _EFC_REGS->EEFC_FSR.w;
-	if (status & (EEFC_FSR_FLERR_Msk |  EEFC_FSR_FLOCKE_Msk | 0x000f0000))
-	{
-		return EEFC_ERROR;
-	}
-	else if (status & EEFC_FSR_FRDY_Msk)
-	{
-		return EEFC_SUCCESS;
-	}
-	return EEFC_BUSY;
+	status |= _EFC_REGS->EEFC_FSR.w;
+	return (bool)(!(status & EEFC_FSR_FRDY_Msk));
 }
 
-uint32_t EEFC${INDEX?string}_ErrorGet( void )
+
+EEFC_ERR EEFC${INDEX?string}_ErrorGet( void )
 {
-	return(status);
+	uint32_t retval = 0;
+	status |= _EFC_REGS->EEFC_FSR.w;
+	retval = (status & ~(EEFC_FSR_FRDY_Msk));
+	status = 0;
+	return retval;
 }
 
 void EEFC${INDEX?string}_RegionLock(uint32_t address)
@@ -136,4 +134,16 @@ void EEFC${INDEX?string}_RegionUnlock(uint32_t address)
 	<#lt>	eefc.callback = callback;
 	<#lt>	eefc.context = context;
 	<#lt>}
+</#if>
+
+<#if eefcEnableInterrupt == true>
+<#lt>void EEFC${INDEX?string}_InterruptHandler( void )
+<#lt>{
+	<#lt>	uint32_t ul_fmr = _EFC_REGS->EEFC_FMR.w;
+	<#lt>	_EFC_REGS->EEFC_FMR.w = ( ul_fmr & (~EEFC_FMR_FRDY_Msk));
+	<#lt>	if(eefc.callback != NULL)
+	<#lt>        {
+		<#lt>            eefc.callback(eefc.context);
+	<#lt>        }
+<#lt>}
 </#if>
