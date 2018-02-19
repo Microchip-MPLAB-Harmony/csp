@@ -17,7 +17,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
 controller that is integrated into your product or third party product
@@ -67,27 +67,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-/* EEFC STATUS
- Summary:
-	Defines the data type for the EEFC STATUS.
-	
- Description:
-	This enum is used to define status of last Flash operation.
-	
- Remarks:
-	None.
-*/
+// *****************************************************************************
 
-typedef enum
-{
-	/* FLASH operation completed successfully */
-	EEFC_SUCCESS = 0x1,
-	/*Flash Operation is not complete*/
-	EEFC_BUSY,
-	/* FLASH operation lead to an error */
-	EEFC_ERROR
-} EEFC_STATUS;
-
+// *****************************************************************************
 /* EEFC ERR
  Summary:
 	Defines the data type for the EEFC Error.
@@ -174,6 +156,7 @@ this interface.
 */
 void EEFCx_WriteQuadWord( uint32_t address, uint32_t* data );
 
+// *****************************************************************************
 /* Function:
 	void EEFCx_WritePage( uint32_t address, uint32_t* data )
 	
@@ -205,6 +188,7 @@ void EEFCx_WriteQuadWord( uint32_t address, uint32_t* data );
 */
 void EEFCx_WritePage( uint32_t address, uint32_t* data );
 
+// *****************************************************************************
 /* Function:
 	void EEFCx_EraseRow( uint32_t address)
 	
@@ -234,6 +218,7 @@ void EEFCx_WritePage( uint32_t address, uint32_t* data );
 */
 void EEFCx_EraseRow( uint32_t address );
 
+// *****************************************************************************
 /* Function:
 	uint32_t EEFCx_ErrorGet( void )
 	
@@ -264,14 +249,15 @@ void EEFCx_EraseRow( uint32_t address );
 
 uint32_t EEFCx_ErrorGet( void );
 
+// *****************************************************************************
 /* Function:
-	EEFC_Status EEFCx_StatusGet( void )
+	bool EEFC_IsBusy(void)
 	
  Summary:
 	Returns the current status of EEFC controller.
 	
  Description:
-	This function is used to check status of the last EEFC operation
+	This function is used to check is EEFC is busy or not
 	
  Precondition:
 	None.
@@ -279,16 +265,17 @@ uint32_t EEFCx_ErrorGet( void );
  Parameters:
 	None
  Returns:
-	EEFC_Status :- EEFC status for the last operation
+	bool :- EEFC status 
 	
  Example:
 	<code>
-		uint8_t status = EEFC0_StatusGet();
+		bool status = EEFC0_IsBusy(void);
 	</code>
 */
 
-EEFC_STATUS EEFCx_StatusGet( void );
+bool EEFCx_IsBusy(void);
 
+// *****************************************************************************
 /* Function:
 	void EEFCx_RegionLock(uint32_t address);
 	
@@ -320,6 +307,7 @@ EEFC_STATUS EEFCx_StatusGet( void );
 
 void EEFCx_RegionLock(uint32_t address);
 
+// *****************************************************************************
 /* Function:
 	void EEFCx_RegionUnlock(uint32_t address);
 	
@@ -352,6 +340,7 @@ void EEFCx_RegionLock(uint32_t address);
 
 void EEFCx_RegionUnlock(uint32_t address);
 
+// *****************************************************************************
 /* Function:
 	void EEFCx_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context )
 	

@@ -51,10 +51,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include <xc.h>
+#include "${__PROCESSOR}.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include <stddef.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -72,15 +71,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define EEFC0_PAGESIZE					0x200
 #define	EEFC0_LOCKSIZE					0x4000
 
-typedef enum
-{
-	/* FLASH operation completed successfully */
-	EEFC_SUCCESS = 0x1,
-	/*Flash Operation is not complete*/
-	EEFC_BUSY,
-	/* FLASH operation lead to an error */
-	EEFC_ERROR
-} EEFC_STATUS;
 
 typedef enum
 {
@@ -109,25 +99,14 @@ typedef enum
 void EEFC${INDEX?string}_WriteQuadWord( uint32_t address, uint32_t* data );
 void EEFC${INDEX?string}_WritePage( uint32_t address, uint32_t* data );
 void EEFC${INDEX?string}_EraseRow( uint32_t address );
-uint32_t EEFC${INDEX?string}_ErrorGet( void );
-EEFC_STATUS EEFC${INDEX?string}_StatusGet( void );
+EEFC_ERR EEFC${INDEX?string}_ErrorGet( void );
+bool EEFC${INDEX?string}_IsBusy(void);
 void EEFC${INDEX?string}_RegionLock(uint32_t address);
 void EEFC${INDEX?string}_RegionUnlock(uint32_t address);
 <#if eefcEnableInterrupt == true>
 	<#lt>void EEFC${INDEX?string}_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context );
 </#if>
 
-<#if eefcEnableInterrupt == true>
-<#lt>static void inline EEFC${INDEX?string}_OPR_Handler( void )
-<#lt>{
-	<#lt>	uint32_t ul_fmr = _EFC_REGS->EEFC_FMR.w;
-	<#lt>	_EFC_REGS->EEFC_FMR.w = ( ul_fmr & (~EEFC_FMR_FRDY_Msk));
-	<#lt>	if(eefc.callback != NULL)
-	<#lt>        {
-		<#lt>            eefc.callback(eefc.context);
-	<#lt>        }
-<#lt>}
-</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
