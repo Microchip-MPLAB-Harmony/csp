@@ -1,0 +1,1 @@
+    SDRAMC${INDEX?string}_Initialize();
