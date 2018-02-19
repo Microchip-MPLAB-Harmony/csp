@@ -59,3 +59,14 @@ void WDT${wdtIndex?string}_Clear(void)
 	<#lt>	wdt.context = context;
 	<#lt>}
 </#if>
+
+<#if wdtinterruptMode == true>
+	<#lt>void WDT${wdtIndex?string}_InterruptHandler( void )
+	<#lt>{
+	<#lt>   _WDT_REGS->WDT_SR.w;
+	<#lt>	if(wdt.callback != NULL)
+    <#lt>        {
+    <#lt>            wdt.callback(wdt.context);
+    <#lt>        }
+	<#lt>}
+</#if>

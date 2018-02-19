@@ -17,7 +17,7 @@ Interface definition of WDT PLIB.
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc. All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc. All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -70,6 +70,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+// *****************************************************************************
 /* WDT Mode
 
  Summary:
@@ -151,6 +152,7 @@ this interface.
 */
 void WDT_Initialize( void );
 
+// *****************************************************************************
 /* Function:
 	void WDT_Enable( bool windowmode )
 	
@@ -181,6 +183,7 @@ void WDT_Initialize( void );
 
 void WDT_Enable( WDT_MODE mode );
 
+// *****************************************************************************
 /* Function:
 	void WDT_Disable( void )
  Summary:
@@ -208,6 +211,7 @@ void WDT_Enable( WDT_MODE mode );
 */
 void WDT_Disable( void );
 
+// *****************************************************************************
 /* Function:
 	void WDT_Clear( void )
  Summary:
@@ -234,6 +238,7 @@ void WDT_Disable( void );
 
 void WDT_Clear( void );
 
+// *****************************************************************************
 /* Function:
 	void WDT_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
 	
