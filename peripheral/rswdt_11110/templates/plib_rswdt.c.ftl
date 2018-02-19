@@ -59,3 +59,14 @@ void RSWDT${rswdtIndex?string}_Clear(void)
 	<#lt>	rswdt.context = context;
 	<#lt>}
 </#if>
+
+<#if rswdtinterruptMode == true>
+	<#lt>void RSWDT${rswdtIndex?string}_TIMEOUT_Handler( void )
+	<#lt>{
+	<#lt>   _RSWDT_REGS->RSWDT_SR.w;	
+	<#lt>	if(rswdt.callback != NULL)
+    <#lt>        {
+    <#lt>            rswdt.callback(rswdt.context);
+    <#lt>        }
+	<#lt>}
+</#if>	

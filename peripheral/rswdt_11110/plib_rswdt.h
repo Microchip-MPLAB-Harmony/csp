@@ -17,7 +17,7 @@ Interface definition of RSWDT PLIB.
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc. All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc. All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -70,6 +70,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+// *****************************************************************************
 /* RSWDT Mode
 
  Summary:
@@ -151,6 +152,7 @@ this interface.
 */
 void RSWDT_Initialize( void );
 
+// *****************************************************************************
 /* Function:
 	void RSWDT_Enable( bool windowmode )
 	
@@ -179,6 +181,7 @@ void RSWDT_Initialize( void );
 	Certain devices does not allow disabling Watchdog timers.
 */
 
+// *****************************************************************************
 void RSWDT_Enable( RSWDT_MODE mode );
 
 /* Function:
@@ -208,6 +211,7 @@ void RSWDT_Enable( RSWDT_MODE mode );
 */
 void RSWDT_Disable( void );
 
+// *****************************************************************************
 /* Function:
 	void RSWDT_Clear( void )
  Summary:
@@ -234,6 +238,7 @@ void RSWDT_Disable( void );
 
 void RSWDT_Clear( void );
 
+// *****************************************************************************
 /* Function:
 	void RSWDT_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context )
 	
