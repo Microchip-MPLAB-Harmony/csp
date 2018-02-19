@@ -1,4 +1,4 @@
-print("Loading WDT for " + Variables.get("__PROCESSOR"))
+Log.writeInfoMessage("Loading WDT for " + Variables.get("__PROCESSOR"))
 
 wdtMenu = coreComponent.createMenuSymbol(None, None)
 wdtMenu.setLabel("WDT")
@@ -13,7 +13,6 @@ def wdtEnableCfgMenu(wdtCfgMenu, event):
 	component = wdtCfgMenu.getComponent()
 	component.getSymbolByID("wdtHeaderFile").setEnabled(event["value"])
 	component.getSymbolByID("wdtSourceFile").setEnabled(event["value"])
-	component.getSymbolByID("wdtSystemIntFile").setEnabled(event["value"])
 	component.getSymbolByID("wdtSystemDefFile").setEnabled(event["value"])
 
 	if event["value"] == False:
@@ -81,6 +80,35 @@ wdtIdleHalt = coreComponent.createBooleanSymbol("wdtidleHalt", wdtCfgMenu)
 wdtIdleHalt.setLabel("Enable Idle halt")
 wdtIdleHalt.setDefaultValue(False)	
 
+peripId = Interrupt.getInterruptIndex("WDT")
+NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
+NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
+NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+
+Database.clearSymbolValue("core", NVICVector)
+Database.setSymbolValue("core", NVICVector, True, 2)
+Database.clearSymbolValue("core", NVICHandler)
+Database.setSymbolValue("core", NVICHandler, "WDT0_InterruptHandler", 2)
+Database.clearSymbolValue("core", NVICHandlerLock)
+Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+
+def NVICControl(NVIC, event):
+    Database.clearSymbolValue("core", NVICVector)
+    Database.clearSymbolValue("core", NVICHandler)
+    if (event["value"] == True):
+        Database.setSymbolValue("core", NVICVector, True, 2)
+        Database.setSymbolValue("core", NVICHandler, "WDT0_InterruptHandler", 2)
+    else :
+        Database.setSymbolValue("core", NVICVector, False, 2)
+        Database.setSymbolValue("core", NVICHandler, "WDT0_Handler", 2)
+		
+# NVIC Dynamic settings
+wdtNVICControl = coreComponent.createBooleanSymbol("NVIC_WDT_ENABLE", None)
+wdtNVICControl.setDependencies(NVICControl, ["wdtinterruptMode"])
+wdtNVICControl.setVisible(False)
+
+
+		
 configName = Variables.get("__CONFIGURATION_NAME")
 
 wdtHeaderFile = coreComponent.createFileSymbol("wdtHeaderFile", None)
@@ -104,12 +132,6 @@ wdtSystemInitFile.setType("STRING")
 wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 wdtSystemInitFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_initialize.c.ftl")
 wdtSystemInitFile.setMarkup(True)
-
-wdtSystemIntFile = coreComponent.createFileSymbol("wdtSystemIntFile", None)
-wdtSystemIntFile.setType("STRING")
-wdtSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
-wdtSystemIntFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_interrupt.c.ftl")
-wdtSystemIntFile.setMarkup(True)
 
 wdtSystemDefFile = coreComponent.createFileSymbol("wdtSystemDefFile", None)
 wdtSystemDefFile.setType("STRING")

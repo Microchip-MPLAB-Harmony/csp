@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -41,11 +41,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifndef WDT${wdtIndex?string}_H    // Guards against multiple inclusion
 #define WDT${wdtIndex?string}_H
 
-#include <xc.h>
+#include "${__PROCESSOR}.h"
 #include <stdint.h>
-#include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
  extern "C" {
@@ -77,16 +75,7 @@ void WDT${wdtIndex?string}_Clear( void );
 <#if wdtinterruptMode == true>
 	<#lt>void WDT${wdtIndex?string}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
 </#if>	
-<#if wdtinterruptMode == true>
-	<#lt>static void inline WDT${wdtIndex?string}_TIMEOUT_Handler( void )
-	<#lt>{
-	<#lt>   _WDT_REGS->WDT_SR.w;
-	<#lt>	if(wdt.callback != NULL)
-    <#lt>        {
-    <#lt>            wdt.callback(wdt.context);
-    <#lt>        }
-	<#lt>}
-</#if>	
+	
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif
