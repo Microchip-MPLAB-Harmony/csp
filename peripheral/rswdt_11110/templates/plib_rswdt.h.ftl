@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -41,11 +41,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifndef RSWDT${rswdtIndex?string}_H    // Guards against multiple inclusion
 #define RSWDT${rswdtIndex?string}_H
 
-#include <xc.h>
+#include "${__PROCESSOR}.h"
 #include <stdint.h>
-#include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
  extern "C" {
@@ -77,16 +75,7 @@ void RSWDT${rswdtIndex?string}_Clear( void );
 <#if rswdtinterruptMode == true>
 	<#lt>void RSWDT${rswdtIndex?string}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context );
 </#if>	
-<#if rswdtinterruptMode == true>
-	<#lt>static void inline RSWDT${rswdtIndex?string}_TIMEOUT_Handler( void )
-	<#lt>{
-	<#lt>   _RSWDT_REGS->RSWDT_SR.w;	
-	<#lt>	if(rswdt.callback != NULL)
-    <#lt>        {
-    <#lt>            rswdt.callback(rswdt.context);
-    <#lt>        }
-	<#lt>}
-</#if>	
+
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif
