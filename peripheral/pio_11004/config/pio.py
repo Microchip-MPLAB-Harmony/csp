@@ -342,7 +342,7 @@ pioSource1File.setMarkup(True)
 
 pioSystemInitFile = coreComponent.createFileSymbol(None, None)
 pioSystemInitFile.setType("STRING")
-pioSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+pioSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES")
 pioSystemInitFile.setSourcePath("../peripheral/pio_11004/templates/system/system_initialize.c.ftl")
 pioSystemInitFile.setMarkup(True)
 
