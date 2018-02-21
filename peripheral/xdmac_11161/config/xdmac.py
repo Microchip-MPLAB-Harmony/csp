@@ -235,7 +235,7 @@ xdmacFileGen.setVisible(False)
 xdmacHighestCh = coreComponent.createIntegerSymbol("XDMAC_HIGHEST_CHANNEL", xdmacEnable)
 xdmacHighestCh.setLabel("DMA (XDMAC) Highest Active Channel")
 xdmacHighestCh.setVisible(False)
-
+	
 xdmacChannelLinkedList = coreComponent.createBooleanSymbol("XDMAC_LL_ENABLE", xdmacMenu)
 xdmacChannelLinkedList.setLabel("Use Linked List Mode?")
 xdmacChannelLinkedList.setDefaultValue(False)
