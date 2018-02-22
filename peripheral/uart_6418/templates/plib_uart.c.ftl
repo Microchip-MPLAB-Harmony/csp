@@ -51,33 +51,9 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 UART_OBJECT uart${INDEX?string}Obj;
 
-void static UART${INDEX?string}_ISR_ERR_Handler( void )
-{
-    uint8_t dummyData = 0u;
-
-    /* Clear all error flags */
-    _UART${INDEX?string}_REGS->UART_CR.w |= UART_CR_RSTSTA_Msk;
-
-    /* Flush existing error bytes from the RX FIFO */
-    while( UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk) )
-    {
-        dummyData = (_UART${INDEX?string}_REGS->UART_RHR.w & UART_RHR_RXCHR_Msk);
-    }
-
-    /* Ignore the warning */
-    (void)dummyData;
-
-    uart${INDEX?string}Obj.rxStatus = UART_TRANSFER_ERROR;
-
-    if( uart${INDEX?string}Obj.callback != NULL )
-    {
-        uart${INDEX?string}Obj.callback(UART_TRANSFER_ERROR, UART_DIRECTION_RX, uart${INDEX?string}Obj.context);
-    }
-}
-
 void static UART${INDEX?string}_ISR_RX_Handler( void )
 {
-    if(uart${INDEX?string}Obj.rxStatus == UART_TRANSFER_PROCESSING)
+    if(uart${INDEX?string}Obj.rxBusyStatus == true)
     {
         while((UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk)) && (uart${INDEX?string}Obj.rxSize > uart${INDEX?string}Obj.rxProcessedSize) )
         {
@@ -87,14 +63,14 @@ void static UART${INDEX?string}_ISR_RX_Handler( void )
         /* Check if the buffer is done */
         if(uart${INDEX?string}Obj.rxProcessedSize >= uart${INDEX?string}Obj.rxSize)
         {
-            uart${INDEX?string}Obj.rxStatus = UART_TRANSFER_COMPLETE;
+            uart${INDEX?string}Obj.rxBusyStatus = false;
             uart${INDEX?string}Obj.rxSize = 0;
             uart${INDEX?string}Obj.rxProcessedSize = 0;
             _UART${INDEX?string}_REGS->UART_IDR.w |= UART_IDR_RXRDY_Msk;
 
-            if(uart${INDEX?string}Obj.callback != NULL)
+            if(uart${INDEX?string}Obj.rxCallback != NULL)
             {
-                uart${INDEX?string}Obj.callback(UART_TRANSFER_COMPLETE, UART_DIRECTION_RX, uart${INDEX?string}Obj.context);
+                uart${INDEX?string}Obj.rxCallback(uart${INDEX?string}Obj.rxContext);
             }
         }
     }
@@ -103,11 +79,13 @@ void static UART${INDEX?string}_ISR_RX_Handler( void )
         /* Nothing to process */
         ;
     }
+
+    return;
 }
 
 void static UART${INDEX?string}_ISR_TX_Handler( void )
 {
-    if(uart${INDEX?string}Obj.txStatus == UART_TRANSFER_PROCESSING)
+    if(uart${INDEX?string}Obj.txBusyStatus == true)
     {
         while((UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk)) && (uart${INDEX?string}Obj.txSize > uart${INDEX?string}Obj.txProcessedSize) )
         {
@@ -117,14 +95,14 @@ void static UART${INDEX?string}_ISR_TX_Handler( void )
         /* Check if the buffer is done */
         if(uart${INDEX?string}Obj.txProcessedSize >= uart${INDEX?string}Obj.txSize)
         {
-            uart${INDEX?string}Obj.txStatus = UART_TRANSFER_COMPLETE;
+            uart${INDEX?string}Obj.txBusyStatus = false;
             uart${INDEX?string}Obj.txSize = 0;
             uart${INDEX?string}Obj.txProcessedSize = 0;
             _UART${INDEX?string}_REGS->UART_IDR.w |= UART_IDR_TXEMPTY_Msk;
 
-            if(uart${INDEX?string}Obj.callback != NULL)
+            if(uart${INDEX?string}Obj.txCallback != NULL)
             {
-                uart${INDEX?string}Obj.callback(UART_TRANSFER_COMPLETE, UART_DIRECTION_TX, uart${INDEX?string}Obj.context);
+                uart${INDEX?string}Obj.txCallback(uart${INDEX?string}Obj.txContext);
             }
         }
     }
@@ -133,26 +111,40 @@ void static UART${INDEX?string}_ISR_TX_Handler( void )
         /* Nothing to process */
         ;
     }
+
+    return;
 }
 
 void UART${INDEX?string}_InterruptHandler( void )
 {
-    uart${INDEX?string}Obj.error = (_UART${INDEX?string}_REGS->UART_SR.w & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
+    /* Error status */
+    uint32_t errorStatus = (_UART${INDEX?string}_REGS->UART_SR.w & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
 
-    if(uart${INDEX?string}Obj.error != UART_ERROR_NONE)
+    if(errorStatus != 0)
     {
-        UART${INDEX?string}_ISR_ERR_Handler();
+        /* Client must call UARTx_ErrorGet() function to clear the errors */
+
+        /* UART errors are normally associated with the receiver, hence calling
+         * receiver context */
+        if( uart${INDEX?string}Obj.rxCallback != NULL )
+        {
+            uart${INDEX?string}Obj.rxCallback(uart${INDEX?string}Obj.rxContext);
+        }
     }
 
+    /* Receiver status */
     if(UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk))
     {
         UART${INDEX?string}_ISR_RX_Handler();
     }
 
+    /* Transmitter status */
     if(UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk))
     {
         UART${INDEX?string}_ISR_TX_Handler();
     }
+
+    return;
 }
 
 </#if>
@@ -166,7 +158,7 @@ void UART${INDEX?string}_Initialize( void )
     _UART${INDEX?string}_REGS->UART_CR.w = (UART_CR_TXEN_Msk | UART_CR_RXEN_Msk);
 
     /* Configure UART${INDEX?string} mode */
-    _UART${INDEX?string}_REGS->UART_MR.w = (UART_MR_PAR_${UART_MR_PAR});
+    _UART${INDEX?string}_REGS->UART_MR.w = ((UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
 
     /* Configure UART${INDEX?string} Baud Rate */
     _UART${INDEX?string}_REGS->UART_BRGR.w = UART_BRGR_CD(${BRG_VALUE});
@@ -179,13 +171,13 @@ void UART${INDEX?string}_Initialize( void )
     uart${INDEX?string}Obj.rxBuffer = NULL;
     uart${INDEX?string}Obj.rxSize = 0;
     uart${INDEX?string}Obj.rxProcessedSize = 0;
-    uart${INDEX?string}Obj.rxStatus = UART_TRANSFER_IDLE;
+    uart${INDEX?string}Obj.rxBusyStatus = false;
+    uart${INDEX?string}Obj.rxCallback = NULL;
     uart${INDEX?string}Obj.txBuffer = NULL;
     uart${INDEX?string}Obj.txSize = 0;
     uart${INDEX?string}Obj.txProcessedSize = 0;
-    uart${INDEX?string}Obj.txStatus = UART_TRANSFER_IDLE;
-    uart${INDEX?string}Obj.callback = NULL;
-    uart${INDEX?string}Obj.error = UART_ERROR_NONE;
+    uart${INDEX?string}Obj.txBusyStatus = false;
+    uart${INDEX?string}Obj.txCallback = NULL;
 </#if>
 
     return;
@@ -193,12 +185,46 @@ void UART${INDEX?string}_Initialize( void )
 
 UART_ERROR UART${INDEX?string}_ErrorGet( void )
 {
-    return (UART_ERROR)(_UART${INDEX?string}_REGS->UART_SR.w & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
+    UART_ERROR errors = UART_ERROR_NONE;
+    uint8_t dummyData = 0u;
+    uint32_t status = _UART${INDEX?string}_REGS->UART_SR.w;
+
+    /* Collect all errors */
+    if(status & UART_SR_OVRE_Msk)
+    {
+        errors = UART_ERROR_OVERRUN;
+    }
+    if(status & UART_SR_PARE_Msk)
+    {
+        errors |= UART_ERROR_PARITY;
+    }
+    if(status & UART_SR_FRAME_Msk)
+    {
+        errors |= UART_ERROR_FRAMING;
+    }
+
+    /* Clear all error flags */
+    if(errors != UART_ERROR_NONE)
+    {
+        _UART${INDEX?string}_REGS->UART_CR.w |= UART_CR_RSTSTA_Msk;
+
+        /* Flush existing error bytes from the RX FIFO */
+        while( UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk) )
+        {
+            dummyData = (_UART${INDEX?string}_REGS->UART_RHR.w & UART_RHR_RXCHR_Msk);
+        }
+
+        /* Ignore the warning */
+        (void)dummyData;
+    }
+
+    /* All errors are cleared, but send the previous error state */
+    return errors;
 }
 
-int32_t UART${INDEX?string}_Read( void *buffer, const size_t size )
+size_t UART${INDEX?string}_Read( void *buffer, const size_t size )
 {
-    int32_t processedSize = 0;
+    size_t processedSize = 0;
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
@@ -213,12 +239,13 @@ int32_t UART${INDEX?string}_Read( void *buffer, const size_t size )
             }
         }
 <#else>
-        if(uart${INDEX?string}Obj.rxStatus != UART_TRANSFER_PROCESSING)
+        /* Check if receive request is in progress */
+        if(uart${INDEX?string}Obj.rxBusyStatus == false)
         {
             uart${INDEX?string}Obj.rxBuffer = lBuffer;
             uart${INDEX?string}Obj.rxSize = size;
             uart${INDEX?string}Obj.rxProcessedSize = 0;
-            uart${INDEX?string}Obj.rxStatus = UART_TRANSFER_PROCESSING;
+            uart${INDEX?string}Obj.rxBusyStatus = true;
 
             _UART${INDEX?string}_REGS->UART_IER.w = UART_IER_RXRDY_Msk;
         }
@@ -236,9 +263,9 @@ int32_t UART${INDEX?string}_Read( void *buffer, const size_t size )
     return processedSize;
 }
 
-int32_t UART${INDEX?string}_Write( void *buffer, const size_t size )
+size_t UART${INDEX?string}_Write( void *buffer, const size_t size )
 {
-    int32_t processedSize = 0;
+    size_t processedSize = 0;
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
@@ -253,12 +280,13 @@ int32_t UART${INDEX?string}_Write( void *buffer, const size_t size )
             }
         }
 <#else>
-        if(uart${INDEX?string}Obj.txStatus != UART_TRANSFER_PROCESSING)
+        /* Check if transmit request is in progress */
+        if(uart${INDEX?string}Obj.txBusyStatus == false)
         {
             uart${INDEX?string}Obj.txBuffer = lBuffer;
             uart${INDEX?string}Obj.txSize = size;
             uart${INDEX?string}Obj.txProcessedSize = 0;
-            uart${INDEX?string}Obj.txStatus = UART_TRANSFER_PROCESSING;
+            uart${INDEX?string}Obj.txBusyStatus = true;
 
             /* Initiate the transfer by sending first byte */
             if(UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk))
@@ -284,42 +312,66 @@ int32_t UART${INDEX?string}_Write( void *buffer, const size_t size )
 }
 
 <#if INTERRUPT_MODE == true>
-void UART${INDEX?string}_CallbackRegister( UART_CALLBACK callback, uintptr_t context )
+bool UART${INDEX?string}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
-    uart${INDEX?string}Obj.callback = callback;
-    uart${INDEX?string}Obj.context = context;
+    uart${INDEX?string}Obj.txCallback = callback;
+    uart${INDEX?string}Obj.txContext = context;
+
+    return true;
 }
 
-UART_TRANSFER_STATUS UART${INDEX?string}_TransferStatusGet( UART_DIRECTION direction )
+bool UART${INDEX?string}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
-    UART_TRANSFER_STATUS status;
+    uart${INDEX?string}Obj.rxCallback = callback;
+    uart${INDEX?string}Obj.rxContext = context;
 
-    if(UART_DIRECTION_TX == direction)
+    return true;
+}
+
+bool UART${INDEX?string}_WriteIsBusy( void )
+{
+    return uart${INDEX?string}Obj.txBusyStatus;
+}
+
+bool UART${INDEX?string}_ReadIsBusy( void )
+{
+    return uart${INDEX?string}Obj.rxBusyStatus;
+}
+
+size_t UART${INDEX?string}_WriteCountGet( void )
+{
+    return uart${INDEX?string}Obj.txProcessedSize;
+}
+
+size_t UART${INDEX?string}_ReadCountGet( void )
+{
+    return uart${INDEX?string}Obj.rxProcessedSize;
+}
+
+</#if>
+<#if INTERRUPT_MODE == false>
+bool UART${INDEX?string}_TransmitterIsReady( void )
+{
+    bool status = false;
+
+    if(UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk))
     {
-        status = uart${INDEX?string}Obj.txStatus;
-    }
-    else
-    {
-        status = uart${INDEX?string}Obj.rxStatus;
+        status = true;
     }
 
     return status;
 }
 
-size_t UART${INDEX?string}_TransferCountGet( UART_DIRECTION direction )
+bool UART${INDEX?string}_ReceiverIsReady( void )
 {
-    size_t count;
+    bool status = false;
 
-    if(UART_DIRECTION_TX == direction)
+    if(UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk))
     {
-        count = uart${INDEX?string}Obj.txProcessedSize;
-    }
-    else
-    {
-        count = uart${INDEX?string}Obj.rxProcessedSize;
+        status = true;
     }
 
-    return count;
+    return status;
 }
 
 </#if>

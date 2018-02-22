@@ -7,6 +7,7 @@ uartRegGroup = uartRegModule.getRegisterGroup("UART")
 uartReg_MR = uartRegGroup.getRegister("UART_MR")
 uartBitField_MR_PAR = uartReg_MR.getBitfield("PAR")
 uartValGrp_MR_PAR = uartRegModule.getValueGroup(uartBitField_MR_PAR.getValueGroupName())
+uartBitField_MR_FILTER = uartReg_MR.getBitfield("FILTER")
 
 ################################################################################
 #### Global Variables ####
@@ -90,9 +91,23 @@ def instantiateComponent(uartComponent):
     uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core.MASTERCLK_FREQ"])
     uartBRGValue.setDefaultValue(brgVal)
 
+    uartDataWidth = uartComponent.createComboSymbol("UART_MR_DATA_WIDTH", None, ["8_BIT", "9_BIT"])
+    uartDataWidth.setLabel("Data Width")
+    uartDataWidth.setDefaultValue("8_BIT")
+    uartDataWidth.setReadOnly(True)
+
     uartSym_MR_PAR = uartComponent.createComboSymbol("UART_MR_PAR", None, uartValGrp_MR_PAR.getValueNames())
     uartSym_MR_PAR.setLabel(uartBitField_MR_PAR.getDescription())
     uartSym_MR_PAR.setDefaultValue("NO")
+
+    uartDataWidth = uartComponent.createComboSymbol("UART_MR_STOP_BITS", None, ["1_BIT", "2_BIT"])
+    uartDataWidth.setLabel("Stop Bits")
+    uartDataWidth.setDefaultValue("1_BIT")
+    uartDataWidth.setReadOnly(True)
+
+    uartSym_MR_FILTER = uartComponent.createBooleanSymbol("UART_MR_FILTER", None)
+    uartSym_MR_FILTER.setLabel(uartBitField_MR_FILTER.getDescription())
+    uartSym_MR_FILTER.setDefaultValue(False)
 
     ############################################################################
     #### Dependency ####
