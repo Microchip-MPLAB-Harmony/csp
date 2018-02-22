@@ -38,8 +38,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef _PLIB_USART${INDEX?string}_H
-#define _PLIB_USART${INDEX?string}_H
+#ifndef PLIB_USART${INDEX?string}_H
+#define PLIB_USART${INDEX?string}_H
 
 #include "plib_usart.h"
 
@@ -59,21 +59,33 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 
 /****************************** USART${INDEX?string} API *********************************/
+
 void USART${INDEX?string}_Initialize( void );
 
 USART_ERROR USART${INDEX?string}_ErrorGet( void );
 
-int32_t USART${INDEX?string}_Read( void *buffer, const size_t size );
+size_t USART${INDEX?string}_Write( void *buffer, const size_t size );
 
-int32_t USART${INDEX?string}_Write( void *buffer, const size_t size );
+size_t USART${INDEX?string}_Read( void *buffer, const size_t size );
 
+<#if INTERRUPT_MODE == false>
+bool USART${INDEX?string}_TransmitterIsReady( void );
+
+bool USART${INDEX?string}_ReceiverIsReady( void );
+
+</#if>
 <#if INTERRUPT_MODE == true>
-void USART${INDEX?string}_CallbackRegister( USART_CALLBACK callback, uintptr_t context );
+bool USART${INDEX?string}_WriteIsBusy( void );
 
-USART_TRANSFER_STATUS USART${INDEX?string}_TransferStatusGet( USART_DIRECTION direction );
+bool USART${INDEX?string}_ReadIsBusy( void );
 
-size_t USART${INDEX?string}_TransferCountGet( USART_DIRECTION direction );
+size_t USART${INDEX?string}_WriteCountGet( void );
 
+size_t USART${INDEX?string}_ReadCountGet( void );
+
+bool USART${INDEX?string}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context );
+
+bool USART${INDEX?string}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context );
 
 // *****************************************************************************
 // *****************************************************************************
@@ -92,4 +104,4 @@ void USART${INDEX?string}_InterruptHandler( void );
 
 #endif
 // DOM-IGNORE-END
-#endif // _PLIB_USART${INDEX?string}_H
+#endif // PLIB_USART${INDEX?string}_H
