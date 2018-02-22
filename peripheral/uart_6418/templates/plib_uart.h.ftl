@@ -59,21 +59,33 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 
 /****************************** UART${INDEX?string} API *********************************/
+
 void UART${INDEX?string}_Initialize( void );
 
 UART_ERROR UART${INDEX?string}_ErrorGet( void );
 
-int32_t UART${INDEX?string}_Read( void *buffer, const size_t size );
+size_t UART${INDEX?string}_Write( void *buffer, const size_t size );
 
-int32_t UART${INDEX?string}_Write( void *buffer, const size_t size );
+size_t UART${INDEX?string}_Read( void *buffer, const size_t size );
 
+<#if INTERRUPT_MODE == false>
+bool UART${INDEX?string}_TransmitterIsReady( void );
+
+bool UART${INDEX?string}_ReceiverIsReady( void );
+
+</#if>
 <#if INTERRUPT_MODE == true>
-void UART${INDEX?string}_CallbackRegister( UART_CALLBACK callback, uintptr_t context );
+bool UART${INDEX?string}_WriteIsBusy( void );
 
-UART_TRANSFER_STATUS UART${INDEX?string}_TransferStatusGet( UART_DIRECTION direction );
+bool UART${INDEX?string}_ReadIsBusy( void );
 
-size_t UART${INDEX?string}_TransferCountGet( UART_DIRECTION direction );
+size_t UART${INDEX?string}_WriteCountGet( void );
 
+size_t UART${INDEX?string}_ReadCountGet( void );
+
+bool UART${INDEX?string}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+
+bool UART${INDEX?string}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
 
 // *****************************************************************************
 // *****************************************************************************
