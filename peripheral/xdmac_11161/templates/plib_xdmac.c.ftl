@@ -53,7 +53,6 @@ typedef struct
     uint8_t                inUse;
     XDMAC_CHANNEL_CALLBACK callback;
     uintptr_t              context;
-    XDMAC_TRANSFER_EVENT   event;
 
 } XDMAC_CH_OBJECT ;
 
@@ -84,17 +83,18 @@ void XDMAC_InterruptHandler( void )
             if (chanIntStatus & ( XDMAC_CIS_RBEIS_Msk | XDMAC_CIS_WBEIS_Msk | XDMAC_CIS_ROIS_Msk))
             {
                 /* It's an error interrupt */
-                xdmacChObj->event = XDMAC_TRANSFER_ERROR;
+                if (NULL != xdmacChObj->callback)
+                {
+                    xdmacChObj->callback(XDMAC_TRANSFER_ERROR, xdmacChObj->context);
+                }
             }
             else if (chanIntStatus & XDMAC_CIS_BIS_Msk)
             {
                 /* It's a block transfer complete interrupt */
-                xdmacChObj->event = XDMAC_TRANSFER_COMPLETE;
-            }
-
-            if (NULL != xdmacChObj->callback)
-            {
-                xdmacChObj->callback(xdmacChObj->event, xdmacChObj->context);
+                if (NULL != xdmacChObj->callback)
+                {
+                    xdmacChObj->callback(XDMAC_TRANSFER_COMPLETE, xdmacChObj->context);
+                }
             }
         }
 
@@ -112,7 +112,6 @@ void XDMAC_Initialize( void )
     for(channel = 0; channel < XDMAC_ACTIVE_CHANNELS_MAX; channel++)
     {
         xdmacChObj->inUse = 0;
-        xdmacChObj->event = XDMAC_TRANSFER_ERROR;
         xdmacChObj->callback = NULL;
         xdmacChObj->context = 0;
 
@@ -120,7 +119,7 @@ void XDMAC_Initialize( void )
         xdmacChObj += 1;
     }
 
-    <#list 0..23 as i>
+    <#list 0..XDMAC_CHANNEL_COUNT as i>
     <#assign XDMAC_CH_ENABLE = "XDMAC_CH" + i + "_ENABLE">
     <#assign XDMAC_CC_TYPE = "XDMAC_CC" + i + "_TYPE">
     <#assign XDMAC_CC_DSYNC = "XDMAC_CC" + i + "_DSYNC">
