@@ -41,14 +41,7 @@ global xdmacSourceFile
 global xdmacSystemInitFile
 global xdmacSystemIntFile
 global xdmacSystemDefFile
-global NVICVector
-global NVICHandler
-global NVICHandlerLock
-
-peripId = Interrupt.getInterruptIndex("XDMAC")
-NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+global xdmacSystemConfigFile
 
 # Parse atdf xml file to get instance name for the peripheral which has DMA id.
 # And construct a list of PERIDs
@@ -59,6 +52,9 @@ peridList.insert(0, "Software Trigger")
 global peridValueList
 peridValueList = []
 peridValueList.insert(0, 200)
+
+global peridValueListSymbols
+peridValueListSymbols = []
 
 global xdmacActiveChannels
 xdmacActiveChannels = []
@@ -89,23 +85,23 @@ for peripheral in atdfContent.iter("module"):
 # "xdmacTriggerLogic" business logic will override the XDMAC setting values
 # based on the trigger source selected.
 global triggerSettings
-triggerSettings = {"Software Trigger"    : ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "USART0_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "USART0_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "USART1_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "USART1_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "USART2_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "USART2_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART0_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART0_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART1_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART1_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART2_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART2_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART3_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART3_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART4_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "UART4_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"]}
+triggerSettings = {"Software Trigger"    : ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "None"],
+                "USART0_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART0_REGS->US_THR"],
+                "USART0_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART0_REGS->US_RHR"],
+                "USART1_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART1_REGS->US_THR"],
+                "USART1_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART1_REGS->US_RHR"],
+                "USART2_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART2_REGS->US_THR"],
+                "USART2_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART2_REGS->US_RHR"],
+                "UART0_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART0_REGS->UART_THR"],
+                "UART0_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART0_REGS->UART_RHR"],
+                "UART1_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART1_REGS->UART_THR"],
+                "UART1_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART1_REGS->UART_RHR"],
+                "UART2_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART2_REGS->UART_THR"],
+                "UART2_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART2_REGS->UART_RHR"],
+                "UART3_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART3_REGS->UART_THR"],
+                "UART3_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART3_REGS->UART_RHR"],
+                "UART4_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART4_REGS->UART_THR"],
+                "UART4_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART4_REGS->UART_RHR"]}
                 # All triggers are yet to be added.
 
 ################################################################################
@@ -141,6 +137,8 @@ def xdmacTriggerLogic(xdmacSym, event):
         xdmacSym.setValue(str(triggerSettings[event["value"]][8]), 2)
     if "MBSIZE" in str(SymID):
         xdmacSym.setValue(str(triggerSettings[event["value"]][9]), 2)
+    if "PER_REGISTER" in str(SymID):
+        xdmacSym.setValue(str(triggerSettings[event["value"]][10]), 2)
 
 # The following business logic creates a list of enabled DMA channels and sorts
 # them in the descending order. The left most channel number will be the highest
@@ -181,7 +179,10 @@ def xdmacGlobalLogic(xdmacGlobalSym, event):
             xdmacGlobalSym.setValue(False, 2)
 
 def onGlobalEnableLogic(xdmacFileGen, event):
-    global NVICVector
+    peripId = Interrupt.getInterruptIndex("XDMAC")
+    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
+    NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
+    NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
     # Initial settings for CLK and NVIC
     Database.clearSymbolValue("core", "PMC_ID_XDMAC")
@@ -201,6 +202,7 @@ def onGlobalEnableLogic(xdmacFileGen, event):
     xdmacSourceFile.setEnabled(event["value"])
     xdmacSystemInitFile.setEnabled(event["value"])
     xdmacSystemDefFile.setEnabled(event["value"])
+    xdmacSystemConfigFile.setEnabled(event["value"])
 
 def xdmacTriggerCalc(xdmacPERIDVal, event):
     global peridList
@@ -210,6 +212,52 @@ def xdmacTriggerCalc(xdmacPERIDVal, event):
     peridIndex = peridList.index(perid)
     xdmacPERIDVal.clearValue()
     xdmacPERIDVal.setValue(int(peridValueList[peridIndex]), 2)
+
+# This function enables DMA channel and selects respective trigger if DMA mode
+# is selected for any peripheral ID.
+# And once the DMA mode is unselected, then the corresponding DMA channel will
+# be disabled and trigger source will be reset to "Software trigger"
+def xdmacChannelAllocLogic(Sym, event):
+    dmaChannelCount = Database.getSymbolValue("core", "XDMAC_CHANNEL_COUNT")
+    perID = event["id"].strip('DMA_CH_NEEDED_FOR_')
+    channelAllocated = False
+
+    for i in range(0, dmaChannelCount):
+        dmaChannelEnable = Database.getSymbolValue("core", "XDMAC_CH"+str(i)+"_ENABLE")
+        dmaChannelPerID = str(Database.getSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID"))
+
+        # Client requested to allocate channel
+        if event["value"] == True:
+            # Reserve the first available free channel
+            if dmaChannelEnable == False:
+                Database.clearSymbolValue("core", "XDMAC_CH"+str(i)+"_ENABLE")
+                Database.setSymbolValue("core", "XDMAC_CH"+str(i)+"_ENABLE", True, 2)
+
+                Database.clearSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID")
+                Database.setSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID", perID, 2)
+
+                Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
+                Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, i, 2)
+
+                channelAllocated = True
+                i = 0
+                break
+
+        # Client requested to deallocate channel
+        else:
+            # Reset the previously allocated channel
+            if perID == dmaChannelPerID and dmaChannelEnable == True:
+                Database.clearSymbolValue("core", "XDMAC_CH"+str(i)+"_ENABLE")
+                Database.setSymbolValue("core", "XDMAC_CH"+str(i)+"_ENABLE", False, 2)
+                Database.clearSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID")
+                Database.setSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID", "Software Trigger", 2)
+                Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
+                Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
+
+    if event["value"] == True and channelAllocated == False:
+        # Couldn't find any free DMA channel, hence set warning.
+        Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
+        Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
 
 ################################################################################
 #### Component ####
@@ -235,13 +283,17 @@ xdmacFileGen.setVisible(False)
 xdmacHighestCh = coreComponent.createIntegerSymbol("XDMAC_HIGHEST_CHANNEL", xdmacEnable)
 xdmacHighestCh.setLabel("DMA (XDMAC) Highest Active Channel")
 xdmacHighestCh.setVisible(False)
-	
+
+xdmacChCount = coreComponent.createIntegerSymbol("XDMAC_CHANNEL_COUNT", xdmacEnable)
+xdmacChCount.setLabel("DMA (XDMAC) Channels Count")
+xdmacChCount.setDefaultValue(24)
+xdmacChCount.setVisible(False)
+
 xdmacChannelLinkedList = coreComponent.createBooleanSymbol("XDMAC_LL_ENABLE", xdmacMenu)
 xdmacChannelLinkedList.setLabel("Use Linked List Mode?")
 xdmacChannelLinkedList.setDefaultValue(False)
 
-# Number of channels value is not available as symbol in ATDF, hence hard coded.
-for channelID in range(0, 24):
+for channelID in range(0, xdmacChCount.getValue()):
 
     xdmacChannelEnable = coreComponent.createBooleanSymbol("XDMAC_CH"+str(channelID)+"_ENABLE", xdmacMenu)
     xdmacChannelEnable.setLabel("Use XDMAC Channel "+ str(channelID))
@@ -255,6 +307,12 @@ for channelID in range(0, 24):
     xdmacSym_CC_PERID = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_PERID", xdmacChannelMenu, peridList)
     xdmacSym_CC_PERID.setLabel(xdmacBitField_CC_PERID.getDescription())
     xdmacSym_CC_PERID.setDefaultValue("Software Trigger")
+
+    xdmacPeripheralRegister = coreComponent.createStringSymbol("XDMAC_CH"+ str(channelID)+"_PER_REGISTER", xdmacChannelMenu)
+    xdmacPeripheralRegister.setLabel("Peripheral Register associated with the DMA Channel")
+    xdmacPeripheralRegister.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+    xdmacPeripheralRegister.setDefaultValue("None")
+    xdmacPeripheralRegister.setReadOnly(True)
 
     xdmacSym_CC_PERID_Val = coreComponent.createIntegerSymbol("XDMAC_CC"+ str(channelID)+"_PERID_VAL", xdmacChannelMenu)
     xdmacSym_CC_PERID_Val.setLabel("PERID Value")
@@ -315,20 +373,28 @@ for channelID in range(0, 24):
 xdmacEnable.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
 xdmacHighestCh.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
 
-############################################################################
+# Interface for Peripheral clients
+for per in peridList:
+    xdmacChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(per), xdmacChannelMenu)
+    xdmacChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(per))
+    xdmacChannelNeeded.setDefaultValue(False)
+    xdmacChannelNeeded.setVisible(False)
+    peridValueListSymbols.append("DMA_CH_NEEDED_FOR_" + str(per))
+
+    xdmacChannel = coreComponent.createIntegerSymbol("DMA_CH_FOR_" + str(per), xdmacChannelMenu)
+    xdmacChannel.setLabel("Local DMA_CH_FOR_" + str(per))
+    xdmacChannel.setDefaultValue(-1)
+    xdmacChannel.setVisible(False)
+
+xdmacPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", xdmacChannelMenu)
+xdmacPERIDChannelUpdate.setLabel("Local xdmacChannelAllocLogic")
+xdmacPERIDChannelUpdate.setDefaultValue(False)
+xdmacPERIDChannelUpdate.setVisible(False)
+xdmacPERIDChannelUpdate.setDependencies(xdmacChannelAllocLogic, peridValueListSymbols)
+################################################################################
 #### Dependency ####
-############################################################################
+################################################################################
 
-# Dependency Status
-xdmacSymClkEnComment = coreComponent.createCommentSymbol("XDMAC_CLK_ENABLE_COMMENT", None)
-xdmacSymClkEnComment.setVisible(False)
-xdmacSymClkEnComment.setLabel("Warning!!! XDMAC Peripheral Clock is Disabled in Clock Manager")
-xdmacSymClkEnComment.setDependencies(dependencyStatus, ["core.PMC_ID_XDMAC"])
-
-xdmacSymIntEnComment = coreComponent.createCommentSymbol("XDMAC_NVIC_ENABLE_COMMENT", None)
-xdmacSymIntEnComment.setVisible(False)
-xdmacSymIntEnComment.setLabel("Warning!!! XDMAC Interrupt is Disabled in Interrupt Manager")
-xdmacSymIntEnComment.setDependencies(dependencyStatus, ["core." + NVICVector])
 
 ################################################################################
 #### Code Generation ####
@@ -368,3 +434,10 @@ xdmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 xdmacSystemDefFile.setSourcePath("../peripheral/xdmac_11161/templates/system/system_definitions.h.ftl")
 xdmacSystemDefFile.setMarkup(True)
 xdmacSystemDefFile.setEnabled(False)
+
+xdmacSystemConfigFile = coreComponent.createFileSymbol("xdmacSystemConfigFile", None)
+xdmacSystemConfigFile.setType("STRING")
+xdmacSystemConfigFile.setOutputName("core.LIST_SYSTEM_CONFIG_H_SYSTEM_SERVICE_CONFIGURATION")
+xdmacSystemConfigFile.setSourcePath("../peripheral/xdmac_11161/templates/system/system_config.h.ftl")
+xdmacSystemConfigFile.setMarkup(True)
+xdmacSystemConfigFile.setEnabled(False)

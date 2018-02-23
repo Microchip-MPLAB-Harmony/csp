@@ -61,31 +61,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 /****************************** XDMAC Data Types ******************************/
 
 typedef enum {
-
-    XDMAC_CHANNEL_0,
-    XDMAC_CHANNEL_1,
-    XDMAC_CHANNEL_2,
-    XDMAC_CHANNEL_3,
-    XDMAC_CHANNEL_4,
-    XDMAC_CHANNEL_5,
-    XDMAC_CHANNEL_6,
-    XDMAC_CHANNEL_7,
-    XDMAC_CHANNEL_8,
-    XDMAC_CHANNEL_9,
-    XDMAC_CHANNEL_10,
-    XDMAC_CHANNEL_11,
-    XDMAC_CHANNEL_12,
-    XDMAC_CHANNEL_13,
-    XDMAC_CHANNEL_14,
-    XDMAC_CHANNEL_15,
-    XDMAC_CHANNEL_16,
-    XDMAC_CHANNEL_17,
-    XDMAC_CHANNEL_18,
-    XDMAC_CHANNEL_19,
-    XDMAC_CHANNEL_20,
-    XDMAC_CHANNEL_21,
-    XDMAC_CHANNEL_22,
-    XDMAC_CHANNEL_23,
+    <#list 0..XDMAC_CHANNEL_COUNT as i>
+    <#assign XDMAC_CH_ENABLE = "XDMAC_CH" + i + "_ENABLE">
+        <#if .vars[XDMAC_CH_ENABLE]?has_content>
+            <#if (.vars[XDMAC_CH_ENABLE] != false)>
+    XDMAC_CHANNEL_${i},
+            </#if>
+        </#if>
+    </#list>
     XDMAC_CHANNELS_NUMBER
 
 } XDMAC_CHANNEL;
