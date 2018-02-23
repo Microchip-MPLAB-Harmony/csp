@@ -41,13 +41,13 @@ coreMPUComment = []
 
 
 	
-regionNamesDefault = (	'ITCM','FLASH','DTCM','System RAM','System RAM'',
+regionNamesDefault = (	'ITCM','FLASH','DTCM','System RAM','System RAM',
 						'PERIPHERAL','EBI','SDRAM', 'QSPI', 'USB RAM', 'ARM PRIVATE BUS', 
-						'System RAM', 'System RAM', 'System RAM', 'System RAM', 'System RAM')
+						'System RAM', 'System RAM', 'System RAM', 'System RAM', 'System RAM','','')
 						
 regAddressDefault = (0x0, 0x400000, 0x20000000, 0x20400000, 0x2045F000, 
 			  0x40000000, 0x60000000, 0x70000000, 0x80000000,
-			  0xA0100000, 0xE0000000, 0x0, 0x0, 0x0, 0x0, 0x0)
+			  0xA0100000, 0xE0000000, 0x20400000, 0x20400000, 0x20400000, 0x20400000, 0x20400000)
 
 regSizeDefault = 	(21, 21, 21, 22, 11, 27,
 					27, 27, 27, 19, 19,
@@ -82,9 +82,11 @@ def numRegions(region, count):
 	regNumber = region.getComponent()
 	for i in range(0,16):
 		regNumber.getSymbolByID("MPU_Region_" + str(i)).setVisible(i < count["value"])
+		regNumber.getSymbolByID("MPU_Region_" + str(i)).setValue(i < count["value"], 2)
 
 def showRegMenu(region, enable):
 	region.setVisible(enable["value"])
+
 	
 def mpuSizeCal(region, size):
 	data = 2**(size["value"] + 1)
@@ -94,7 +96,10 @@ def setAddress(region, name):
 	region.clearValue()
 	region.setValue(regionNames.get(name["value"]), 2)
 	
-for i in range(0,14):
+def setName(region, enable):
+	region.setVisible(enable["value"])
+	
+for i in range(0,16):
 	coreMPURegion.append(i)
 	coreMPURegion[i] = coreComponent.createBooleanSymbol(("MPU_Region_" + str(i)), coreMPUMenu)
 	coreMPURegion[i].setLabel("Region" + str(i))
@@ -114,6 +119,7 @@ for i in range(0,14):
 	coreMPURegName[i].setLabel("Memory type")
 	coreMPURegName[i].setVisible(i < 10)
 	coreMPURegName[i].setDefaultValue(regionNamesDefault[i])
+	coreMPURegName[i].setDependencies(setName, ["MPU_Region_" + str(i)])	
 	
 	coreMPURegAddress.append(i)
 	coreMPURegAddress[i] = coreComponent.createHexSymbol(("MPU_Region_" + str(i) + "_Address"), coreMPURegMenu[i])
