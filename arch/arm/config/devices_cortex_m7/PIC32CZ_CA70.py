@@ -125,13 +125,6 @@ archHeaderFileListEntry.addValue("#include \"arch/arch.h\"")
 archHeaderFileListEntry.setEnabled(False)
 archHeaderFileListEntry.setDependencies(genArchHeaderFileList, ["CoreUseMPU", "CoreUseTimer"])
 
-#Add code to initialize Core Timer
-archInitFile = coreComponent.createFileSymbol(None, None)
-archInitFile.setType("STRING")
-archInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-archInitFile.setSourcePath("arm/templates/arch_system_init.c.ftl")
-archInitFile.setMarkup(True)
-
 #generate system_startup_xc32.c file
 armSysStartSourceFile = coreComponent.createFileSymbol(None, None)
 armSysStartSourceFile.setSourcePath("arm/templates/system_startup_xc32.c.ftl")

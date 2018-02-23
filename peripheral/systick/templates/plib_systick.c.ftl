@@ -44,10 +44,10 @@ void SYSTICK_TimerInitialize ( void )
 {
 	SysTick->CTRL = 0;
 	SysTick->VAL = 0;
-	<#if SYSTICK_PERIOD == 1>
-		<#lt>SysTick->LOAD = ${SYSTICK_PERIOD};
+	<#if SYSTICK_PERIOD == "1" >
+		<#lt>SysTick->LOAD = (0x${SYSTICK_PERIOD});
 	<#else>
-		<#lt>SysTick->LOAD = ${SYSTICK_PERIOD} - 1;
+		<#lt>SysTick->LOAD = (0x${SYSTICK_PERIOD} - 1);
 	</#if>
 	<#if USE_SYSTICK_INTERRUPT == true && SYSTICK_CLOCK == "0">
 		<#lt>	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk;
