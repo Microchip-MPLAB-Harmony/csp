@@ -201,7 +201,7 @@ void SPIx_Setup (SPI_SETUP *setupOptions);
         Application can check the data exchange completion status via
         callback or polling mechanism. In case of callback, it needs to be
         registered prior to calling the Exchange API. Data exchange status
-        polling can be done using "SPIx_ExchangeIsBusy" API.
+        polling can be done using "SPIx_IsBusy" API.
         
   Precondition:
     The SPIx_Initialize function must have been called.
@@ -274,7 +274,7 @@ bool SPIx_Exchange(
 
 // *****************************************************************************
 /* Function:
-    bool SPIx_ExchangeIsBusy (void):
+    bool SPIx_IsBusy (void):
     
   Summary:
     Returns exchange status of particular request on SPI x
@@ -296,7 +296,7 @@ bool SPIx_Exchange(
     
   Example:
     <code>
-        if (false == SPI1_ExchangeIsBusy())
+        if (false == SPI1_IsBusy())
         {
             //Data Exchange is complete, do something else.
         }
@@ -305,7 +305,7 @@ bool SPIx_Exchange(
   Remarks:
     None.
 */
-bool SPIx_ExchangeIsBusy (void):
+bool SPIx_IsBusy (void):
 
 // *****************************************************************************
 /* Function:
