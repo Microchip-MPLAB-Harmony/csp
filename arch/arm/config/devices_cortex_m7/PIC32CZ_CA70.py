@@ -24,7 +24,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/rswdt_11110/config/rswdt.
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
 #load mpu
-execfile(Variables.get("__CORE_DIR") + "/arm/config/devices_cortex_m7/mpu.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
 
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
@@ -39,91 +39,6 @@ deviceFamily.setLabel("Device Family")
 deviceFamily.setDefaultValue("SAM_E70_S70_V70_V71")
 deviceFamily.setReadOnly(True)
 
-#generate arm_cm_mpu.c file
-armMPUSourceFile = coreComponent.createFileSymbol(None, None)
-armMPUSourceFile.setSourcePath("arm/templates/arm_cm_mpu.c.ftl")
-armMPUSourceFile.setOutputName("arm_cm_mpu.c")
-armMPUSourceFile.setMarkup(True)
-armMPUSourceFile.setOverwrite(True)
-armMPUSourceFile.setDestPath("arch/arm/")
-armMPUSourceFile.setProjectPath("config/" + configName + "/arch/arm/")
-armMPUSourceFile.setType("SOURCE")
-armMPUSourceFile.setEnabled(False)
-
-def genMPUSourceFile(armMPUSourceFile, event):
-	armMPUSourceFile.setEnabled(event["value"])
-
-armMPUSourceFile.setDependencies(genMPUSourceFile, ["CoreUseMPU"])
-
-#generate arm_cm_mpu.h file
-armMPUHeaderFile = coreComponent.createFileSymbol(None, None)
-armMPUHeaderFile.setSourcePath("arm/templates/arm_cm_mpu.h.ftl")
-armMPUHeaderFile.setOutputName("arm_cm_mpu.h")
-armMPUHeaderFile.setMarkup(True)
-armMPUHeaderFile.setOverwrite(True)
-armMPUHeaderFile.setDestPath("arch/arm/")
-armMPUHeaderFile.setProjectPath("config/" + configName + "/arch/arm/")
-armMPUHeaderFile.setType("HEADER")
-armMPUHeaderFile.setEnabled(False)
-
-def genMPUHeaderFile(armMPUHeaderFile, event):
-	armMPUHeaderFile.setEnabled(event["value"])
-
-armMPUHeaderFile.setDependencies(genMPUHeaderFile, ["CoreUseMPU"])
-
-#generate system_core_mpu.c file
-armSysMPUSourceFile = coreComponent.createFileSymbol(None, None)
-armSysMPUSourceFile.setSourcePath("arm/templates/system_core_mpu.c.ftl")
-armSysMPUSourceFile.setOutputName("system_core_mpu.c")
-armSysMPUSourceFile.setMarkup(True)
-armSysMPUSourceFile.setOverwrite(True)
-armSysMPUSourceFile.setDestPath("arch/arm/")
-armSysMPUSourceFile.setProjectPath("config/" + configName + "/arch/arm/")
-armSysMPUSourceFile.setType("SOURCE")
-armSysMPUSourceFile.setEnabled(False)
-
-def genSysMPUSourceFile(armSysMPUSourceFile, event):
-	armSysMPUSourceFile.setEnabled(event["value"])
-
-armSysMPUSourceFile.setDependencies(genSysMPUSourceFile, ["CoreUseMPU"])
-
-#generate arch.h file
-def genArchHeaderFile(archHeaderFile, event):
-	comp = archHeaderFile.getComponent()
-	coreUseMPU = comp.getSymbolValue("CoreUseMPU")
-	coreUseTimer = comp.getSymbolValue("CoreUseTimer")
-
-	if(coreUseMPU or coreUseTimer):
-		archHeaderFile.setEnabled(True)
-	else:
-		archHeaderFile.setEnabled(False)
-
-archHeaderFile = coreComponent.createFileSymbol(None, None)
-archHeaderFile.setSourcePath("arm/templates/arch.h.ftl")
-archHeaderFile.setOutputName("arch.h")
-archHeaderFile.setMarkup(True)
-archHeaderFile.setOverwrite(True)
-archHeaderFile.setDestPath("arch/")
-archHeaderFile.setProjectPath("config/" + configName + "/arch/")
-archHeaderFile.setType("HEADER")
-archHeaderFile.setEnabled(False)
-archHeaderFile.setDependencies(genArchHeaderFile, ["CoreUseMPU", "CoreUseTimer"])
-
-def genArchHeaderFileList(archHeaderFileListEntry, event):
-	comp = archHeaderFileListEntry.getComponent()
-	coreUseMPU = comp.getSymbolValue("CoreUseMPU")
-	coreUseTimer = comp.getSymbolValue("CoreUseTimer")
-
-	if(coreUseMPU or coreUseTimer):
-		archHeaderFileListEntry.setEnabled(True)
-	else:
-		archHeaderFileListEntry.setEnabled(False)
-
-archHeaderFileListEntry = coreComponent.createListEntrySymbol(None, None)
-archHeaderFileListEntry.setTarget("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-archHeaderFileListEntry.addValue("#include \"arch/arch.h\"")
-archHeaderFileListEntry.setEnabled(False)
-archHeaderFileListEntry.setDependencies(genArchHeaderFileList, ["CoreUseMPU", "CoreUseTimer"])
 
 #generate system_startup_xc32.c file
 armSysStartSourceFile = coreComponent.createFileSymbol(None, None)
@@ -145,16 +60,3 @@ armSysCallSourceFile.setDestPath("")
 armSysCallSourceFile.setProjectPath("config/" + configName + "/")
 armSysCallSourceFile.setType("SOURCE")
 
-#generate device specific header file
-armDeviceHeaderFile = coreComponent.createFileSymbol(None, None)
-armDeviceHeaderFile.setSourcePath("arm/templates/devices_cortex_m7.h.ftl")
-armDeviceHeaderFile.setOutputName("device_" + Variables.get("__PROCESSOR") + ".h")
-armDeviceHeaderFile.setMarkup(True)
-armDeviceHeaderFile.setOverwrite(True)
-armDeviceHeaderFile.setDestPath("arch/arm/")
-armDeviceHeaderFile.setProjectPath("config/" + configName + "/arch/arm/")
-armDeviceHeaderFile.setType("HEADER")
-
-armDeviceHeaderFileListEntry = coreComponent.createListEntrySymbol(None, None)
-armDeviceHeaderFileListEntry.setTarget("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-armDeviceHeaderFileListEntry.addValue("#include \"arch/arm/device_" + Variables.get("__PROCESSOR") + ".h\"")

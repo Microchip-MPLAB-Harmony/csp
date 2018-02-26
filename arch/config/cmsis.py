@@ -19,7 +19,7 @@ def instantiateComponent(cmsisComponent):
 		break
 
 	#add core header files
-	headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "tz_context.h"]
+	headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "tz_context.h", "core_cm7.h", "mpu_armv7.h"]
 
 	for headerFileName in headerFileNames:
 		headerFile = cmsisComponent.createFileSymbol(None, None)
