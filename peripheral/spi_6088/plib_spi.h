@@ -1,5 +1,5 @@
 /*******************************************************************************
-  SPI Plib
+  SPI PLIB
 
   Company:
     Microchip Technology Inc.
@@ -8,16 +8,17 @@
     plib_spi.h
 
   Summary:
-    SPI Plib Header File
+    SPI PLIB Header File for documentation
 
   Description:
-    This library provides an interface to control and interact with an instance
-    of a Serial Peripheral Interface (SPI) controller.
-
+    This library provides documentation of all the interfaces which can be used
+    to control and interact with an instance of a Serial Peripheral Interface (SPI)
+    controller.
+    This file must not be included in any MPLAB Project.
 *******************************************************************************/
 
 /*******************************************************************************
-Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -38,80 +39,6 @@ CONSEQUENTIAL DAMAGES, LOST  PROFITS  OR  LOST  DATA,  COST  OF  PROCUREMENT  OF
 SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
-
-#ifndef _PLIB_SPI_H
-#define _PLIB_SPI_H
-
-#include <xc.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <sys/attribs.h>
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    extern "C" {
-
-#endif
-// DOM-IGNORE-END
-// *****************************************************************************
-/* SPI Errors
-
-   Summary:
-    Identifies SPI Errors.
-
-   Description:
-    This enumeration identifies the possible SPI Errors.
-
-   Remarks:
-    None.
-*/
-typedef enum {
-    
-    /* Slave Frame Error */
-    SPI_ERROR_FRAME  
-    /*DOM-IGNORE-BEGIN*/ = 1 << 12 /*DOM-IGNORE-END*/,
-    
-    /* Underrun Error */
-    SPI_ERROR_UNDERRUN  
-    /*DOM-IGNORE-BEGIN*/ = 1 << 10 /*DOM-IGNORE-END*/,
-    
-    /* Overrun Error */
-    SPI_ERROR_OVERRUN
-    /*DOM-IGNORE-BEGIN*/ = 1 << 3 /*DOM-IGNORE-END*/,
-    
-    /* Mode Fault Error */ 
-    SPI_ERROR_MODE_FAULT
-    /*DOM-IGNORE-BEGIN*/ = 1 << 2 /*DOM-IGNORE-END*/,
-
-}SPI_ERROR;
-
-// *****************************************************************************
-/* SPI Exchange Status
-
-   Summary:
-    Identifies possible SPI Exchange status.
-
-   Description:
-    This enumeration identifies the possiblities which can happen while
-    processing a SPI buffer request.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    /* Peripheral is busy and cannot accept new request */
-    SPI_EXCHANGE_BUSY,
-    
-    /* Previous request is completed successfully and can accept new request */
-    SPI_EXCHANGE_SUCCESS,
-     
-    /* Error occurred in processing the previous request and can accept new request */
-    SPI_EXCHANGE_ERROR
-    
-}SPI_EXCHANGE_STATUS;
 
 // *****************************************************************************
 /* SPI Setup Parameters
@@ -144,6 +71,28 @@ typedef struct
 }SPI_SETUP;
 
 // *****************************************************************************
+/* SPI Errors
+
+   Summary:
+    Identifies SPI Errors.
+
+   Description:
+    This enumeration identifies the possible SPI Errors.
+
+   Remarks:
+    None.
+*/
+typedef enum 
+{
+    /* No Error */
+    SPI_ERROR_NONE,
+    
+    /* Overrun Error */
+    SPI_ERROR_OVERRUN
+    
+}SPI_ERROR;
+
+// *****************************************************************************
 /* Function:
     void SPIx_Initialize (void);
     
@@ -170,7 +119,7 @@ typedef struct
     </code>
     
   Remarks:
-    This function must be called before any other SPI function is
+    This function must be called only once and before any other SPI function is
     called.                                            
 */
 void SPIx_Initialize (void);
@@ -211,48 +160,54 @@ void SPIx_Setup (SPI_SETUP *setupOptions);
 
 // *****************************************************************************
 /* Function:
-    size_t SPIx_Exchange(
+    bool SPIx_Exchange(
         void* pTransmitData,
         void* pReceiveData, 
-        size_t wordCount
+        size_t wordSize
     );
 
   Summary:
     Exchange data on SPI x peripheral 
 
   Description:
-    This function should be used to exchange "wordCount" number of words on
+    This function should be used to exchange "wordSize" number of words on
     SPI x module. Data pointed by pTransmitData is transmitted and received
     data is saved in the location pointed by pReceiveData. if pTransmitData
     is NULL, that means only reading is intended and if pReceiveData is NULL,
-    that means only writing is intended. 
+    that means only writing is intended. If pTransmitData and pReceiveData
+    points to same location, then also this API works well and received data
+    is saved in location pointed by pReceiveData (or pTransmitData)
+    overwriting the data which was transmitted.
+    
     The function will work differently as per the configuration done in
     MCC as described below:
     
-    1.  Blocking Configuration: when blocking configuration is selected in MCC,
-        corresponding SPI interrupt will be disabled. The API will not return
-        until all the requested data is exchanged.
+    1.  Blocking Configuration (Non-Interrupt mode): When "Interrupt Mode"
+        option is unchecked in GUI, the generated code for that particular
+        SPI PLIb instance will be blocking. In this particular mode, the
+        Exchange API will not return until all the requested data is exchanged.
                 
-        after exchanging all the data, boolean status 'True' is returned
-        indicating successfull operation.
+        After exchanging all the data, boolean status 'True' is returned
+        indicating operation completion.
 
-    2.  Non-Blocking Interrupt mode Configuration: in this configuration,
-        interrupt will be enabled, application will give the data reading
-        responsiblity to the plib and come back and start doing other
-        activities. SPI Data transaction will happen in the corresponding ISR.
-        in this mode, the transmit and receive data buffers must remain
-        valid until the data change is complete or an error occurs.
-        Application can check the data reading completion status via
-        callback or polling mechanism. in case of callback, it needs to be
-        registered prior to calling this API.
-        Data exchange status polling can be done using "SPIx_ExchangeCountGet"
-        and "SPIx_ExchangeStatusGet" APIs.
+    2.  Non-Blocking Configuration (Interrupt mode): When "Interrupt Mode"
+        option is checked (or selected) in GUI, the generated code for that
+        particular SPI PLIb instance will be Non-blocking in nature. In this
+        particular mode, application will give the data exchanging
+        responsiblity to the PLIB and come back and start doing other
+        activities, SPI Data transaction will happen in the corresponding ISR.
+        in this mode, the transmit and receive data buffers provided by user 
+        must remain valid until the data exchange is complete.
+        Application can check the data exchange completion status via
+        callback or polling mechanism. In case of callback, it needs to be
+        registered prior to calling the Exchange API. Data exchange status
+        polling can be done using "SPIx_ExchangeIsBusy" API.
         
   Precondition:
     The SPIx_Initialize function must have been called.
     
     Callback has to be registered using SPIx_CallbackRegister API if the
-    peripheral instance has been configured in Non-Blocking Interrupt mode and
+    peripheral instance has been configured in Interrupt mode and
     buffer completion status needs to be communicated back to application via
     callback.
 
@@ -271,18 +226,19 @@ void SPIx_Setup (SPI_SETUP *setupOptions);
                     Type of the pointer should be appropriately selected by the user
                     based on datawidth selected for SPI. for 8 bit mode, pointer
                     type should be uint8_t and for 9 to 16 bit mode, pointer
-                    type should be uint16_t. For 9 to 15bit mode, data should
-                    be right aligned in the 16 bit memory location.
-    wordCount       Number of words to be exchanged. Note that it is not number
-                    of byte count.
+                    type should be uint16_t. For 9 to 15bit mode, received data
+                    will be right aligned in the 16 bit memory location.
+    wordSize        Number of words to be exchanged.
 
   Returns:
     In Blocking mode, API returns True once the exchange is complete. It returns
-    False if txBuffer and rxBuffer both are NULL.
+    False if txBuffer and rxBuffer both are NULL or wordSize is 0.
+    
     In interrupt mode, API returns true if the exchange request is accepted and
     False otherwise. If previous buffer request is not completed and a new
     exchange request comes, then this API will reject the new request and will
-    return "False".
+    return "False". same as blocking mode, It returns False if txBuffer and
+    rxBuffer both are NULL or wordSize is 0.
 
   Example:
     <code>
@@ -293,49 +249,39 @@ void SPIx_Setup (SPI_SETUP *setupOptions);
     
     SPI1_Initialize();
     
+    // Interrupt mode
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
     reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size);
 
-    void APP_SPITransferHandler(SPI_EXCHANGE_STATUS status, uintptr_t contextHandle)
+    void APP_SPITransferHandler(void* contextHandle)
     {
-        switch(status)
-        {
-            case SPI_EXCHANGE_STATUS_COMPLETE:
-                // This means the data was transferred. 
-                break;
-            
-            case SPI_EXCHANGE_STATUS_ERROR:
-                // Error handling here.
-                break;
-
-            default:
-                break;
-        }
+        // Exchange is completed, user can check if any error occurred.
     }
     </code>
 
   Remarks:
     Non-blocking interrupt mode configuration implementation of this function
     will be used by Harmony driver implementation of DRV_SPI_BufferRead/Write
-    API.
+    APIs.
     
 */
-size_t SPIx_Exchange(
+bool SPIx_Exchange(
     void* pTransmitData,
     void* pReceiveData, 
-    size_t wordCount
+    size_t wordSize
 );
 
 // *****************************************************************************
 /* Function:
-    SPI_EXCHANGE_STATUS SPIx_ExchangeStatusGet (void):
+    bool SPIx_ExchangeIsBusy (void):
     
   Summary:
-    Returns exchange status of SPI x module
+    Returns exchange status of particular request on SPI x
     
   Description:
-    This function returns exchange status of SPI x module in non-blocking mode.
+    This function returns exchange status of particular request on SPI x module
+    in interrupt mode.
   
   Precondition:
     None.
@@ -344,50 +290,22 @@ size_t SPIx_Exchange(
     None.
   
   Returns:
-    Returns the current status of exchange happening on SPI x. it will return
-    one of the elements of the enum SPI_EXCHANGE_STATUS.
+    Returns the current status of exchange happening on SPI x.
+        true: Exchange is completed
+        false: Exchange is still in progress
     
   Example:
     <code>
-        SPI_EXCHANGE_STATUS   spi1Status;
-        spi1Status = SPI1_ExchangeStatusGet():
+        if (false == SPI1_ExchangeIsBusy())
+        {
+            //Data Exchange is complete, do something else.
+        }
     </code>
     
   Remarks:
     None.
 */
-SPI_EXCHANGE_STATUS SPIx_ExchangeStatusGet (void):
-
-// *****************************************************************************
-/* Function:
-    size_t SPIx_ExchangeCountGet (void):
-    
-  Summary:
-    Returns number of words exchanged by SPI x module
-    
-  Description:
-    This function returns number of words successfully exchanged by SPI x module
-    in non-blocking mode.
-  
-  Precondition:
-    None.
-  
-  Parameters:
-    None.
-  
-  Returns:
-    Number of words successfully exchanged.
-    
-  Example:
-    <code>
-        size_t count;
-        count = SPI1_ExchangeCountGet():
-    </code>
-    
-  Remarks:
-    None.
-*/
-size_t SPIx_ExchangeCountGet (void):
+bool SPIx_ExchangeIsBusy (void):
 
 // *****************************************************************************
 /* Function:
@@ -398,10 +316,12 @@ size_t SPIx_ExchangeCountGet (void):
 
    Description:
     This function returns the errors associated with the given SPI peripheral 
-    instance. After reading the error, if any, they will be cleared.
+    instance. After completing any echange, this API should be called and
+    verified if any error occurred in the exchange or not. After reading the
+    error, if any, they will be cleared.
 
    Precondition:
-    SPIx_Initialize must have been called for the associated SPI instance.
+    None.
 
    Parameters:
     None.
@@ -440,8 +360,6 @@ SPI_ERROR SPIx_ErrorGet( void );
     implementation is provided.
 
   Parameters:
-    exchangeStatus  - Identifies the SPI exchange status
-
     context         - Value identifying the context of the application that
                       registered the event handling function
 
@@ -451,31 +369,16 @@ SPI_ERROR SPIx_ErrorGet( void );
   Example:
     <code>
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
-    void APP_SPITransferHandler(SPI_EXCHANGE_STATUS status, uintptr_t contextHandle)
+    void APP_SPITransferHandler(uintptr_t contextHandle)
     {
-        switch(status)
+        if( SPI_ERROR_NONE == SPI1_ErrorGet())
         {
-            case SPI_EXCHANGE_STATUS_COMPLETE:
-                // This means the data was transferred. 
-                break;
-            
-            case SPI_EXCHANGE_STATUS_ERROR:
-                // Error handling here.
-                break;
-
-            default:
-                break;
+            Exchange was completed without error, do something else now.
         }
     }
     </code>
 
   Remarks:
-    If the status is SPI_EXCHANGE_COMPLETE, it means that the
-    data was exchanged successfully.
-
-    If the status is SPI_EXCHANGE_ERROR, it means that the data
-    was not exchanged successfully due to some error.
-
     The context parameter contains the a handle to the client context,
     provided at the time the event handling function was  registered using the
     SPIx_CallbackRegister function. This context handle value is
@@ -484,12 +387,11 @@ SPI_ERROR SPIx_ErrorGet( void );
     context or instance  of the client that made the data exchange
     request.
 
-    The event handler function executes in the PLIB's interrupt
-    context when the PLIB is configured for interrupt mode operation. It is
+    The event handler function executes in the PLIB's interrupt context. It is
     recommended of the application to not perform process intensive or blocking
     operations with in this function.
 */
-typedef  void (*SPI_EVENT_HANDLER) (SPI_EXCHANGE_STATUS exchangeStatus,  void* context);
+typedef  void (*SPI_EVENT_HANDLER) (void* context);
 
 // *****************************************************************************
 /* Function:
@@ -540,20 +442,11 @@ typedef  void (*SPI_EVENT_HANDLER) (SPI_EXCHANGE_STATUS exchangeStatus,  void* c
 
     reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size);
 
-    void APP_SPITransferHandler(SPI_EXCHANGE_STATUS status, uintptr_t contextHandle)
+    void APP_SPITransferHandler(void* contextHandle)
     {
-        switch(status)
+        if( SPI_ERROR_NONE == SPI1_ErrorGet())
         {
-            case SPI_EXCHANGE_STATUS_COMPLETE:
-                // This means the data was transferred. 
-                break;
-            
-            case SPI_EXCHANGE_STATUS_ERROR:
-                // Error handling here.
-                break;
-
-            default:
-                break;
+            Exchange was completed without error, do something else now.
         }
     }
     </code>
@@ -563,12 +456,3 @@ typedef  void (*SPI_EVENT_HANDLER) (SPI_EXCHANGE_STATUS exchangeStatus,  void* c
     has completed, it does not need to register a callback.
 */
 void SPIx_CallbackRegister(const SPI_EVENT_HANDLER* eventHandler, void* context);
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    }
-
-#endif
-// DOM-IGNORE-END
-#endif // _PLIB_SPI_H

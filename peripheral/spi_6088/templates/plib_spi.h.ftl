@@ -1,17 +1,18 @@
 /*******************************************************************************
-  SPI Plib
+  SPI PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_spi.h
+    plib_spi${SPI_INDEX?string}.h
 
   Summary:
-    SPI Plib Header File
+    SPI${SPI_INDEX?string} PLIB Header File
 
   Description:
-    None
+    This file has prototype of all the interfaces provided for particular
+    SPI peripheral.
 
 *******************************************************************************/
 
@@ -41,123 +42,77 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #ifndef PLIB_SPI${SPI_INDEX?string}_H
 #define PLIB_SPI${SPI_INDEX?string}_H
 
-#include "plib_spi.h"
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+/* Provide C++ Compatibility */
+#ifdef __cplusplus  
 
     extern "C" {
 
 #endif
-// DOM-IGNORE-END
 
+/****************************** SPI${SPI_INDEX?string} Interface *********************************/
+typedef struct
+{
+    uint32_t    baudRate;
+    bool        clockPhase;
+    bool        clockPolarity;
+    
+}SPI_SETUP;
 
-/****************************** SPI${SPI_INDEX?string} API *********************************/
+typedef enum 
+{
+    SPI_ERROR_NONE = 0,
+    SPI_OVERRUN_ERROR = 1 << 3
+
+}SPI_ERROR;
+
 void SPI${SPI_INDEX?string}_Initialize ( void );
 
-void SPI${SPI_INDEX?string}_ConfigSet ( SPI_CONFIG * spiConfig );
+bool SPI${SPI_INDEX?string}_Exchange(void* pTransmitData,void* pReceiveData, size_t wordSize);
 
 SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
 
-bool SPI${SPI_INDEX?string}_Exchange(void* pTransmitData,void* pReceiveData, size_t wordCount);
+void SPI${SPI_INDEX?string}_Setup ( SPI_SETUP * spiSetup );
 
- <#if SPI_INTERRUPT_MODE == true>     
-SPI_EXCHANGE_STATUS SPI${SPI_INDEX?string}_ExchangeStatusGet (void);
+<#if SPI_INTERRUPT_MODE == true>     
+bool SPI${SPI_INDEX?string}_ExchangeIsBusy(void);
 
-size_t SPI${SPI_INDEX?string}_ExchangeCountGet (void);
+typedef  void (*SPI_EVENT_HANDLER) (void* context);
 
 void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_EVENT_HANDLER eventHandler, void* context);
 
+void SPI${SPI_INDEX?string}_InterruptHandler(void);   
 
 
-/***************************** SPI${SPI_INDEX?string} Inline *******************************/
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local: **** Do Not Use ****
+// *****************************************************************************
+// *****************************************************************************
 
-extern SPI_OBJECT spi${SPI_INDEX?string}Obj;
-
-void inline SPI${SPI_INDEX?string}_ISR_Error_Handler(void)
-{        
-    /* Read the error if any, error flag will be cleared by reading it */
-    spi${SPI_INDEX?string}Obj.error = (_SPI${SPI_INDEX?string}_REGS->SPI_SR.w & (SPI_SR_OVRES_Msk | SPI_SR_MODF_Msk | SPI_SR_UNDES_Msk));
-   
-    if(spi${SPI_INDEX?string}Obj.error != SPI_ERROR_NONE)
-    {            
-        spi${SPI_INDEX?string}Obj.exchangeStatus = SPI_EXCHANGE_ERROR;
-    
-        /* Callback operations */
-        if( spi${SPI_INDEX?string}Obj.callback != NULL )
-        {            
-            spi${SPI_INDEX?string}Obj.callback(SPI_EXCHANGE_ERROR, spi${SPI_INDEX?string}Obj.context);
-        }
-    }
-}
-
-void inline SPI${SPI_INDEX?string}_ISR_Exchange_Handler(void)
+typedef struct
 {
-    if(spi${SPI_INDEX?string}Obj.exchangeStatus == SPI_EXCHANGE_BUSY)
-    {
-        if(spi${SPI_INDEX?string}Obj.exchangedCount < spi${SPI_INDEX?string}Obj.exchangeSize)
-        {
-            if ((false == spi${SPI_INDEX?string}Obj.dataInProgress) && (true  == _SPI${SPI_INDEX?string}_REGS->SPI_SR.TDRE ))
-            {
-                if (NULL == spi${SPI_INDEX?string}Obj.txBuffer )
-                {   
-                    // do a dummy write
-                    _SPI${SPI_INDEX?string}_REGS->SPI_TDR.TD = 0xFF;
-                }
-                else
-                {
-                    _SPI${SPI_INDEX?string}_REGS->SPI_TDR.TD = *((uint8_t*)spi${SPI_INDEX?string}Obj.txBuffer);
-                    spi${SPI_INDEX?string}Obj.txBuffer += 1;
-                }
-                spi${SPI_INDEX?string}Obj.dataInProgress = true;
-            }
-            if ( true == _SPI${SPI_INDEX?string}_REGS->SPI_SR.RDRF )
-            {
-                if (NULL == spi${SPI_INDEX?string}Obj.rxBuffer )
-                {
-                    // Dummy Read
-                    _SPI${SPI_INDEX?string}_REGS->SPI_RDR.RD;
-                }
-                else
-                { 
-                    *((uint8_t*)spi${SPI_INDEX?string}Obj.rxBuffer) = _SPI${SPI_INDEX?string}_REGS->SPI_RDR.RD;
-                    spi${SPI_INDEX?string}Obj.rxBuffer += 1;
-                }
-                spi${SPI_INDEX?string}Obj.dataInProgress = false;
-                spi${SPI_INDEX?string}Obj.exchangedCount++;
-            }
-        }  
-        else if(spi${SPI_INDEX?string}Obj.exchangedCount == spi${SPI_INDEX?string}Obj.exchangeSize)
-        {
-            spi${SPI_INDEX?string}Obj.exchangeStatus = SPI_EXCHANGE_SUCCESS;
-            spi${SPI_INDEX?string}Obj.exchangeSize = 0;
-            spi${SPI_INDEX?string}Obj.exchangedCount = 0;
-            _SPI${SPI_INDEX?string}_REGS->SPI_IDR.w |= SPI_IDR_TDRE_Msk;
-            
-            /* This means the buffer is completed. If there
-               is a callback registered with client, then
-               call it */
-            if(spi${SPI_INDEX?string}Obj.callback != NULL)
-            {
-                spi${SPI_INDEX?string}Obj.callback(SPI_EXCHANGE_SUCCESS, spi${SPI_INDEX?string}Obj.context);
-            }
-        }
-    }
-    else
-    {
-        /* Nothing to process */
-        ;
-    }
-}
+    void*                   txBuffer;    
+    void*                   rxBuffer;
+    size_t                  exchangeSize;
+    size_t                  rxCount;
+    size_t                  txCount;
+    bool                    exchangeIsBusy;
+    SPI_EVENT_HANDLER       callback; 
+    void*                   context;
+} SPI_OBJECT ;
 </#if>
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+/* Provide C++ Compatibility */
+#ifdef __cplusplus
 
     }
-
+    
 #endif
-// DOM-IGNORE-END
+
 #endif // PLIB_SPI${SPI_INDEX?string}_H
 
 /*******************************************************************************
