@@ -194,7 +194,7 @@ void SPI${SPI_INDEX?string}_CallbackRegister (SPI_EVENT_HANDLER eventHandler, vo
 }
 
 
-bool SPI${SPI_INDEX?string}_ExchangeIsBusy()
+bool SPI${SPI_INDEX?string}_IsBusy()
 {  
     return spi${SPI_INDEX?string}Obj.exchangeIsBusy;
 }

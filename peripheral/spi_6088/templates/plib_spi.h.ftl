@@ -78,7 +78,7 @@ SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
 void SPI${SPI_INDEX?string}_Setup ( SPI_SETUP * spiSetup );
 
 <#if SPI_INTERRUPT_MODE == true>     
-bool SPI${SPI_INDEX?string}_ExchangeIsBusy(void);
+bool SPI${SPI_INDEX?string}_IsBusy(void);
 
 typedef  void (*SPI_EVENT_HANDLER) (void* context);
 
