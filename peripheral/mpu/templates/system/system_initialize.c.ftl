@@ -1,0 +1,1 @@
+	MPU_Initialize();

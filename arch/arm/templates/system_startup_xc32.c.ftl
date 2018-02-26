@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-#include "arch/arm/device_${__PROCESSOR?lower_case}.h" /* for vectors structure and default handler names and CMSIS API */
-<#if CoreUseMPU == true>
-#include "arch/arch.h" /* for ARCH_CORE_MPU_Initialize() defintion */
-#include "arch/arm/arm_cm_mpu.h"
-</#if>
 #include "system_definitions.h" /* for potential custom handler names */
 #include <libpic32c.h>
 #include <sys/cdefs.h>
@@ -69,9 +64,7 @@ extern void __attribute__((weak,long_call)) _on_bootstrap(void);
  */
 static void _on_reset(void)
 {
-<#if CoreUseMPU == true>
-    ARCH_CORE_MPU_Initialize();
-</#if>
+
 }
 
 /**
