@@ -13,11 +13,11 @@ def setupInterruptHandler(spiInterrupt, event):
         
     if (event["value"] == True):
         Database.setSymbolValue("core", NVICVector, True, 1)
-        Database.setSymbolValue("core", NVICHandler, "SPI" + str(num) + "_InterruptHandler", 1)
+        Database.setSymbolValue("core", NVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
         Database.setSymbolValue("core", NVICHandlerLock, True, 1)
     else :
         Database.setSymbolValue("core", NVICVector, False, 1)
-        Database.setSymbolValue("core", NVICHandler, "SPI" + str(num) + "_Handler", 1)
+        Database.setSymbolValue("core", NVICHandler, "SPI" + str(spiInstance) + "_Handler", 1)
         Database.setSymbolValue("core", NVICHandlerLock, False, 1)
     
     # control warning message
@@ -37,7 +37,15 @@ def showMasterDependencies(spiSym_MR_Dependencies, event):
         spiSym_MR_Dependencies.setVisible(False)
 
 def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
-    SCBR = getMasterClockFreq()/event["value"]
+    clk = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    baud = Database.getSymbolValue("spi" + str(spiInstance), "SPI_BAUD_RATE")
+    
+    if event["id"] == "SPI_BAUD_RATE":
+        baud = event["value"]
+    if event["id"] == "MASTERCLK_FREQ":
+        clk = int(event["value"])
+    
+    SCBR = clk/baud
     if SCBR == 0:
         SCBR = 1
     elif SCBR > 255:
@@ -67,7 +75,7 @@ spiBitField_CSR_NCPHA = spiReg_CSR.getBitfield("NCPHA")
 spiValGrp_CSR_NCPHA = spiRegModule.getValueGroup(spiBitField_CSR_NCPHA.getValueGroupName())
 
 def instantiateComponent(spiComponent):
-    global num
+    global spiInstance
     global NVICVector
     global NVICHandler
     global NVICHandlerLock
@@ -75,23 +83,23 @@ def instantiateComponent(spiComponent):
     
     InternalNVICVectorChange = False
     
-    num = spiComponent.getID()[-1:]
+    spiInstance = spiComponent.getID()[-1:]
     
-    peripId = Interrupt.getInterruptIndex("SPI" + str(num))
+    peripId = Interrupt.getInterruptIndex("SPI" + str(spiInstance))
     #IDs used in NVIC Manager
     NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
     NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
     NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
     
     # Enable clock for SPI
-    Database.setSymbolValue("core", "PMC_ID_SPI" + str(num), True, 1)
+    Database.setSymbolValue("core", "PMC_ID_SPI" + str(spiInstance), True, 1)
 
     spiMenu = spiComponent.createMenuSymbol(None, None)
     spiMenu.setLabel("Hardware Settings ")
     
     spiIndex = spiComponent.createIntegerSymbol("SPI_INDEX", spiMenu)
     spiIndex.setVisible(False)
-    spiIndex.setDefaultValue(int(num))
+    spiIndex.setDefaultValue(int(spiInstance))
     
     spiInterrupt = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", spiMenu)
     spiInterrupt.setLabel("Interrupt Mode")
@@ -99,7 +107,7 @@ def instantiateComponent(spiComponent):
     spiInterrupt.setDefaultValue(True)
     spiInterrupt.setDependencies(setupInterruptHandler, ["SPI_INTERRUPT_MODE"])
     Database.setSymbolValue("core", NVICVector, True, 1)
-    Database.setSymbolValue("core", NVICHandler, "SPI" + str(num) + "_InterruptHandler", 1)
+    Database.setSymbolValue("core", NVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
     Database.setSymbolValue("core", NVICHandlerLock, True, 1)   
     
     spiSym_MR_MSTR = spiComponent.createKeyValueSetSymbol("SPI_MR_MSTR", spiMenu)
@@ -113,17 +121,19 @@ def instantiateComponent(spiComponent):
     for id in range(0,count):
         valueName = spiValGrp_MR_MSTR.getValueNames()[id]
         spiSym_MR_MSTR.addKey(valueName, spiValGrp_MR_MSTR.getValue(valueName).getValue(), spiValGrp_MR_MSTR.getValue(valueName).getDescription())
-            
+    
+    defaultbaudRate = 1000000
     spiSym_CSR_SCBR = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", spiMenu)
     spiSym_CSR_SCBR.setLabel("Baud Rate in Hz")
-    spiSym_CSR_SCBR.setDefaultValue(1000000)
+    spiSym_CSR_SCBR.setDefaultValue(defaultbaudRate)
     spiSym_CSR_SCBR.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
     
+    defaultSCBR = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))/defaultbaudRate
     #local variable for code generation
-    spiSym_CSR_SCBR_VALUE = spiComponent.createHexSymbol("SPI_CSR_SCBR_VALUE", spiMenu)
-    spiSym_CSR_SCBR_VALUE.setDefaultValue(0x96)
+    spiSym_CSR_SCBR_VALUE = spiComponent.createIntegerSymbol("SPI_CSR_SCBR_VALUE", spiMenu)
+    spiSym_CSR_SCBR_VALUE.setDefaultValue(defaultSCBR)
     spiSym_CSR_SCBR_VALUE.setVisible(False)
-    spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE"])
+    spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE", "core.MASTERCLK_FREQ"])
         
     spiSym_MR_PCS = spiComponent.createKeyValueSetSymbol("SPI_MR_PCS", spiMenu)
     spiSym_MR_PCS.setLabel(spiBitField_MR_PCS.getDescription())
@@ -179,22 +189,30 @@ def instantiateComponent(spiComponent):
      
     # Dependency Status for interrupt
     global spiSymIntEnComment
-    spiSymIntEnComment = spiComponent.createCommentSymbol("SPI" + str(num) + "_NVIC_ENABLE_COMMENT", spiMenu)
+    spiSymIntEnComment = spiComponent.createCommentSymbol("SPI" + str(spiInstance) + "_NVIC_ENABLE_COMMENT", spiMenu)
     spiSymIntEnComment.setVisible(False)
-    spiSymIntEnComment.setLabel("Warning!!! SPI" + str(num) + " Interrupt is Disabled in Interrupt Manager")
+    spiSymIntEnComment.setLabel("Warning!!! SPI" + str(spiInstance) + " Interrupt is Disabled in Interrupt Manager")
     spiSymIntEnComment.setDependencies(ClockInterruptStatusWarning, ["core." + NVICVector])
     
     # Dependency Status for clock
-    spiSymClkEnComment = spiComponent.createCommentSymbol("SPI" + str(num) + "_CLK_ENABLE_COMMENT", spiMenu)
+    spiSymClkEnComment = spiComponent.createCommentSymbol("SPI" + str(spiInstance) + "_CLK_ENABLE_COMMENT", spiMenu)
     spiSymClkEnComment.setVisible(False)
-    spiSymClkEnComment.setLabel("Warning!!! SPI" + str(num) + " Peripheral Clock is Disabled in Clock Manager")
-    spiSymClkEnComment.setDependencies(ClockInterruptStatusWarning, ["core.PMC_ID_SPI" + str(num)])
+    spiSymClkEnComment.setLabel("Warning!!! SPI" + str(spiInstance) + " Peripheral Clock is Disabled in Clock Manager")
+    spiSymClkEnComment.setDependencies(ClockInterruptStatusWarning, ["core.PMC_ID_SPI" + str(spiInstance)])
     
     configName = Variables.get("__CONFIGURATION_NAME")
     
+    spiHeaderFile = spiComponent.createFileSymbol(None, None)
+    spiHeaderFile.setSourcePath("../peripheral/spi_6088/templates/plib_spi.h")
+    spiHeaderFile.setOutputName("plib_spi.h")
+    spiHeaderFile.setDestPath("peripheral/spi/")
+    spiHeaderFile.setProjectPath("config/" + configName + "/peripheral/spi/")
+    spiHeaderFile.setType("HEADER")
+    spiHeaderFile.setOverwrite(True)
+    
     spiHeader1File = spiComponent.createFileSymbol(None, None)
     spiHeader1File.setSourcePath("../peripheral/spi_6088/templates/plib_spi.h.ftl")
-    spiHeader1File.setOutputName("plib_spi" + str(num) + ".h")
+    spiHeader1File.setOutputName("plib_spi" + str(spiInstance) + ".h")
     spiHeader1File.setDestPath("/peripheral/spi/")
     spiHeader1File.setProjectPath("config/" + configName +"/peripheral/spi/")
     spiHeader1File.setType("HEADER")
@@ -202,7 +220,7 @@ def instantiateComponent(spiComponent):
     
     spiSource1File = spiComponent.createFileSymbol(None, None)
     spiSource1File.setSourcePath("../peripheral/spi_6088/templates/plib_spi.c.ftl")
-    spiSource1File.setOutputName("plib_spi" + str(num) + ".c")
+    spiSource1File.setOutputName("plib_spi" + str(spiInstance) + ".c")
     spiSource1File.setDestPath("/peripheral/spi/")
     spiSource1File.setProjectPath("config/" + configName +"/peripheral/spi/")
     spiSource1File.setType("SOURCE")
