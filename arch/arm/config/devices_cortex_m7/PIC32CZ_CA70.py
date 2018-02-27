@@ -25,6 +25,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
 #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
+coreComponent.addPlugin("../peripheral/mpu/plugin/MPUmanager.jar")
 
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
