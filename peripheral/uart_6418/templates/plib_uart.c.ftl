@@ -38,7 +38,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#include "${__PROCESSOR}.h"
+#include "${__PROCESSOR?lower_case}.h"
 #include "plib_uart${INDEX?string}.h"
 
 <#--Implementation-->

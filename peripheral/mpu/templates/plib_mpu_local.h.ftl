@@ -41,7 +41,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #ifndef PLIB_MPU_LOCAL_H
 #define PLIB_MPU_LOCAL_H
 
-#include "${__PROCESSOR}.h"
+#include "${__PROCESSOR?lower_case}.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

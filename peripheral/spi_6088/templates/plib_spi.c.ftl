@@ -40,7 +40,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 #include "plib_spi${SPI_INDEX?string}.h"
-#include "${__PROCESSOR}.h"
+#include "${__PROCESSOR?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************

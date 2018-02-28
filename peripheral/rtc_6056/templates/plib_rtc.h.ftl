@@ -42,7 +42,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define RTC${INDEX?string}_H
 
 
-#include "${__PROCESSOR}.h"
+#include "${__PROCESSOR?lower_case}.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>

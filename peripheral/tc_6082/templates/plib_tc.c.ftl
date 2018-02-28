@@ -50,7 +50,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 /*  This section lists the other files that are included in this file.
 */
-#include "${__PROCESSOR}.h"
+#include "${__PROCESSOR?lower_case}.h"
 #include "plib_tc${INDEX}.h"
 <#assign start = 0> 
 <#-- start index of the for loop. In quadrature position mode channel 0 and channel 1 are used. And in quadrature speed mode, all 3 channels are used -->

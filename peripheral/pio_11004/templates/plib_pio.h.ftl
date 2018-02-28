@@ -42,7 +42,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #ifndef PLIB_PIO_H
 #define PLIB_PIO_H
 
-#include "${__PROCESSOR}.h"
+#include "${__PROCESSOR?lower_case}.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
