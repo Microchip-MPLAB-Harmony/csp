@@ -38,6 +38,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
+#include "${__PROCESSOR}.h"
 #include "plib_dacc${INDEX?string}.h"
 
 <#--Implementation-->
@@ -97,12 +98,12 @@ void DACC${INDEX?string}_Initialize (void)
     </#if>
 }
 
-bool DACC${INDEX?string}_StatusGet (DACC${INDEX?string}_CHANNEL_NUM chId)
+bool DACC${INDEX?string}_StatusGet (DACC_CHANNEL_NUM chId)
 {
     return ((_DACC_REGS->DACC_ISR.w >> chId) & 0x1U);
 }
 
-void DACC${INDEX?string}_DataWrite (DACC${INDEX?string}_CHANNEL_NUM chId, uint32_t data)
+void DACC${INDEX?string}_DataWrite (DACC_CHANNEL_NUM chId, uint32_t data)
 {
     _DACC_REGS->DACC_CDR[chId].w = data;  
 }

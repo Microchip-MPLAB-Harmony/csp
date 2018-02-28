@@ -1,0 +1,1 @@
+	DACC${INDEX?string}_Initialize();

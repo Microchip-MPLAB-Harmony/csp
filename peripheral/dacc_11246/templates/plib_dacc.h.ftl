@@ -41,11 +41,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #ifndef _PLIB_DACC${INDEX?string}_H
 #define _PLIB_DACC${INDEX?string}_H
 
-#include <xc.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <sys/attribs.h>
+#include "plib_dacc.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -56,27 +52,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // DOM-IGNORE-END
 
 
-// *****************************************************************************
-/* DACC${INDEX?string} Channel Index
 
-  Summary:
-    Identifies the Channel index of DACC module.
-
-  Description:
-    This data type identifies the Channel index of DACC module.
-
-  Remarks:
-    Refer to the specific device data sheet to determine availability.
-*/
-typedef enum
-{
-    /* Channel 0 */
-    DACC${INDEX?string}_CHANNEL_0, 
-            
-    /* Channel 1 */
-    DACC${INDEX?string}_CHANNEL_1         
-        
-} DACC${INDEX?string}_CHANNEL_NUM;
 // *****************************************************************************
 // Section: Interface
 // *****************************************************************************
@@ -85,9 +61,9 @@ typedef enum
 /****************************** DACC API *********************************/
 void DACC${INDEX?string}_Initialize( void );
 
-bool DACC${INDEX?string}_StatusGet( DACC${INDEX?string}_CHANNEL_NUM channel );
+bool DACC${INDEX?string}_StatusGet( DACC_CHANNEL_NUM channel );
 
-void DACC${INDEX?string}_DataWrite( DACC${INDEX?string}_CHANNEL_NUM channel, uint32_t data );
+void DACC${INDEX?string}_DataWrite( DACC_CHANNEL_NUM channel, uint32_t data );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
