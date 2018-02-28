@@ -38,7 +38,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 // DOM-IGNORE-END
-#include "${__PROCESSOR}.h" 
+#include "${__PROCESSOR?lower_case}.h" 
 #include "plib_afec${INDEX}.h"
 
 #define AFEC_SEQ1_CHANNEL_NUM (8U)

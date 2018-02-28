@@ -58,7 +58,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Include Files
 // *****************************************************************************
 // *****************************************************************************
-#include "${__PROCESSOR?lower_case}.h"
+#include "${__PROCESSOR?lower_case?lower_case}.h"
 #include <stdint.h>
 #include <sys/attribs.h>
 
