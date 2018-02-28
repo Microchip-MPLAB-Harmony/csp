@@ -55,6 +55,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 /*  This section lists the other files that are included in this file.
 */
+#include <stdbool.h>
+#include <stddef.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -149,10 +151,7 @@ typedef enum {
 */
 
 typedef void (*TWI_CALLBACK) 
-( 
-    /* Transfer event */
-    TWI_TRANSFER_STATUS  event,   
-  
+(   
     /* Transfer context */
     uintptr_t contextHandle 
 );
@@ -187,7 +186,27 @@ typedef struct
     /* Transfer context */
     uintptr_t context;	
 
-} TWI_OBJ; 
+} TWI_OBJ;
+
+// *****************************************************************************
+/* Transaction Request Block
+
+   Summary:
+    Transaction Request Block Structure.
+
+   Description:
+    This data structure defines the Transaction Request Block.
+
+   Remarks:
+    None.
+*/
+
+typedef struct 
+{
+    /* TWI Clock Speed */
+    uint32_t clkSpeed;
+
+} TWI_TRANSFER_SETUP;
 
 // *****************************************************************************
 /* Transaction Request Block

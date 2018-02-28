@@ -64,11 +64,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*  This section lists the other files that are included in this file.
 */
 
-#include <xc.h>
-#include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <sys/attribs.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -216,7 +213,7 @@ void TWIx_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    bool TWIx_ReadTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIx_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Allocates and Builds the Read Transaction Request Block.
@@ -241,7 +238,7 @@ void TWIx_Initialize(void);
     <code>
 	    uint8_t myData [NUM_BYTES];
 	  
-	    if(!TWIx_ReadTRBBuild( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!TWIx_TRBBuildRead( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -254,15 +251,15 @@ void TWIx_Initialize(void);
     </code>
 
    Remarks:
-    Number of times TWIx_ReadTRBBuild is called is limited to number of TRB's
+    Number of times TWIx_TRBBuildRead is called is limited to number of TRB's
 	available.
 */
 
-bool TWIx_ReadTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIx_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWIx_WriteTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIx_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Allocates and Builds the Read Transaction Request Block.
@@ -287,7 +284,7 @@ bool TWIx_ReadTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length);
     <code>
 	    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
 	  
-	    if(!TWIx_WriteTRBBuild( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!TWIx_TRBBuildWrite( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -300,11 +297,11 @@ bool TWIx_ReadTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length);
     </code>
 
    Remarks:
-    Number of times TWIx_WriteTRBBuild is called is limited to number of TRB's
+    Number of times TWIx_TRBBuildWrite is called is limited to number of TRB's
 	available.
 */
 
-bool TWIx_WriteTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIx_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length);
 
 // *****************************************************************************
 /* Function:
@@ -314,8 +311,8 @@ bool TWIx_WriteTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length);
     Submits all TRB's build for processing. 
 
    Description:
-    This function submits all TRB's built by calling TWIx_ReadTRBBuild and 
-	TWIx_WriteTRBBuild. Once all TRB's are submitted for processing, transfer
+    This function submits all TRB's built by calling TWIx_TRBBuildRead and 
+	TWIx_TRBBuildWrite. Once all TRB's are submitted for processing, transfer
 	starts. A repeated start will occur on completion of a single TRB. Master 
 	will generate Stop only after it process all TRB's.
 	
@@ -335,12 +332,12 @@ bool TWIx_WriteTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length);
 	    uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
 		uint8_t myRxData [NUM_BYTES] = {0};
 	  
-	    if(!TWIx_WriteTRBBuild( SLAVE_ADDR, &myTxData[0], NUM_BYTES ))
+	    if(!TWIx_TRBBuildWrite( SLAVE_ADDR, &myTxData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
 		
-		if(!TWIx_ReadTRBBuild( SLAVE_ADDR, &myRxData[0], NUM_BYTES ))
+		if(!TWIx_TRBBuildRead( SLAVE_ADDR, &myRxData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -564,30 +561,31 @@ void TWIx_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle);
 
 // *****************************************************************************
 /* Function:
-    void TWIx_Handler(void)
-	
+    void TWIx_InterruptHandler(void)
+
    Summary:
-    TWI instance task routine.
+    TWIx Peripheral Interrupt Handler.
 
    Description:
-    This function is TWI's peripheral instance task routine.
+    This function is TWIx Peripheral Interrupt Handler and will
+    called on every TWIx interrupt.
 
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
+    None.
 
    Parameters:
     None.
-	
+  
    Returns:
     None.
 
    Remarks:
     The function is called as peripheral instance's interrupt handler if the 
-	instance interrupt is enabled. If peripheral instance's interrupt is not
-	enabled user need to call it from the main while loop of the application.
+	instance interrupt is enabled. If peripheral instance's interrupt is
+	disabled, user need to call it from the main while loop of the application.
 */
 
-void TWIx_Handler(void);
+void TWIx_InterruptHandler(void);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

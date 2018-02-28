@@ -41,16 +41,47 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
+// *****************************************************************************
+// *****************************************************************************
+// Included Files
+// *****************************************************************************
+// *****************************************************************************
+
 #include "${__PROCESSOR?lower_case}.h"
 #include "plib_twi${INDEX?string}.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Local Data Type Definitions
+// *****************************************************************************
+// *****************************************************************************
+
+#define TWI_MASTER_MAX_BAUDRATE        (400000U)
+#define TWI_LOW_LEVEL_TIME_LIMIT       (384000U)
+#define TWI_CLK_DIVIDER                     (2U)
+#define TWI_CLK_CALC_ARGU                   (3U)
+#define TWI_CLK_DIV_MAX                  (0xFFU)
+#define TWI_CLK_DIV_MIN                     (7U)
+
+// *****************************************************************************
+// *****************************************************************************
+// Global Data
+// *****************************************************************************
+// *****************************************************************************
 
 static TWI_OBJ twi${INDEX?string}Obj;
 static TWI_TRANSACTION_REQUEST_BLOCK twi${INDEX?string}TRBsList[${TWI_NUM_TRBS}];
 static twi_registers_t *TWI${INDEX?string}_Module = (twi_registers_t *)TWI_ID_${INDEX?string};
 
 // *****************************************************************************
+// *****************************************************************************
+// TWI${INDEX?string} PLib Interface Routines
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
 /* Function:
-    void TWIx_Initialize(void)
+    void TWI${INDEX?string}_Initialize(void)
 
    Summary:
     Initializes given instance of the TWI peripheral.
@@ -96,10 +127,126 @@ void TWI${INDEX?string}_Initialize(void)
 	twi${INDEX?string}Obj.numTRBs = 0;		
 }
 
+// *****************************************************************************
+/* Function:
+    void TWI${INDEX?string}_TransferSetup(TWI_TRANSFER_SETUP setup, uint32_t twiClockSrcFreq)
+
+   Summary:
+    Dynamic setup of TWI Peripheral.
+
+   Precondition:
+    None.
+	
+   Parameters:
+    None.
+	
+   Returns:
+    None
+*/
+
+bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t twiClockSrcFreq )
+{
+    uint32_t clockSrcFreq;
+    uint32_t twiClkSpeed;
+    uint32_t ckdiv = 0;
+    uint32_t cldiv = 0; 
+    uint32_t chdiv = 0;
+	uint32_t c_lh_div = 0;
+    
+    // Check for ongoing transfer
+	if( twi${INDEX?string}Obj.state != TWI_STATE_IDLE )
+	{
+	    return false;
+	}
+    
+    if( twiClockSrcFreq )
+    {
+        clockSrcFreq = twiClockSrcFreq;
+    }
+    else
+    {
+        clockSrcFreq = ${TWI_CLK_SRC_FREQ};
+    }
+    
+    twiClkSpeed = setup->clkSpeed;
+    
+    /* Set Clock */
+    if( TWI_MASTER_MAX_BAUDRATE < twiClkSpeed  )
+    {
+        return (false);
+    }
+    
+	/* Low level time not less than 1.3us of I2C Fast Mode. */
+	if ( twiClkSpeed > TWI_LOW_LEVEL_TIME_LIMIT ) 
+    {
+		/* Low level of time fixed for 1.3us. */
+		cldiv = clockSrcFreq / ( TWI_LOW_LEVEL_TIME_LIMIT * 
+                                    TWI_CLK_DIVIDER ) - 
+                                    TWI_CLK_CALC_ARGU;
+        
+		chdiv = clockSrcFreq / (( twiClkSpeed + 
+                            ( twiClkSpeed - TWI_LOW_LEVEL_TIME_LIMIT)) * 
+                              TWI_CLK_DIVIDER ) - 
+                              TWI_CLK_CALC_ARGU;
+		
+		/* cldiv must fit in 8 bits, ckdiv must fit in 3 bits */
+		while (( cldiv > TWI_CLK_DIV_MAX ) && 
+               ( ckdiv < TWI_CLK_DIV_MIN )) 
+        {
+			/* Increase clock divider */
+			ckdiv++;
+            
+			/* Divide cldiv value */
+			cldiv /= TWI_CLK_DIVIDER;
+		}
+        
+		/* chdiv must fit in 8 bits, ckdiv must fit in 3 bits */
+		while (( chdiv > TWI_CLK_DIV_MAX ) && 
+               ( ckdiv < TWI_CLK_DIV_MIN )) 
+        {
+			/* Increase clock divider */
+			ckdiv++;
+            
+			/* Divide cldiv value */
+			chdiv /= TWI_CLK_DIVIDER;
+		}
+
+		/* set clock waveform generator register */
+        TWI${INDEX?string}_Module->TWI_CWGR.w = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR.w ) |
+                                  ( TWI_CWGR_CLDIV(cldiv) | 
+                                    TWI_CWGR_CHDIV(chdiv) |
+                                    TWI_CWGR_CKDIV(ckdiv) );
+	} 
+    else 
+    {
+		c_lh_div = clockSrcFreq / ( twiClkSpeed * TWI_CLK_DIVIDER ) - 
+                   TWI_CLK_CALC_ARGU;
+
+		/* cldiv must fit in 8 bits, ckdiv must fit in 3 bits */
+		while (( c_lh_div > TWI_CLK_DIV_MAX ) && 
+               ( ckdiv < TWI_CLK_DIV_MIN )) 
+        {
+			/* Increase clock divider */
+			ckdiv++;
+            
+			/* Divide cldiv value */
+			c_lh_div /= TWI_CLK_DIVIDER;
+		}
+
+		/* set clock waveform generator register */
+        TWI${INDEX?string}_Module->TWI_CWGR.w = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR.w ) |
+                                  ( TWI_CWGR_CLDIV(c_lh_div) | 
+                                    TWI_CWGR_CHDIV(c_lh_div) |
+                                    TWI_CWGR_CKDIV(ckdiv) )  ;
+	}
+    
+    return (true);
+
+}
 
 // *****************************************************************************
 /* Function:
-    bool TWIx_ReadTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Allocates and Builds the Read Transaction Request Block.
@@ -118,7 +265,7 @@ void TWI${INDEX?string}_Initialize(void)
 	false - Failure while submitting TRB.
 */
 
-bool TWI${INDEX?string}_ReadTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length)
+bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
 {
 	TWI_TRANSACTION_REQUEST_BLOCK * trb = NULL;
 	
@@ -150,7 +297,7 @@ bool TWI${INDEX?string}_ReadTRBBuild(uint16_t address, uint8_t *pdata, uint8_t l
 
 // *****************************************************************************
 /* Function:
-    bool TWIx_WriteTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Allocates and Builds the Read Transaction Request Block.
@@ -169,7 +316,7 @@ bool TWI${INDEX?string}_ReadTRBBuild(uint16_t address, uint8_t *pdata, uint8_t l
 	false - Failure while submitting TRB.
 */
 
-bool TWI${INDEX?string}_WriteTRBBuild(uint16_t address, uint8_t *pdata, uint8_t length)
+bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
 {
     TWI_TRANSACTION_REQUEST_BLOCK * trb = NULL;
 	
@@ -201,7 +348,7 @@ bool TWI${INDEX?string}_WriteTRBBuild(uint16_t address, uint8_t *pdata, uint8_t 
 
 // *****************************************************************************
 /* Function:
-    bool TWIx_TRBTransfer(void)
+    bool TWI${INDEX?string}_TRBTransfer(void)
 	
    Summary:
     Submits all TRB's build for processing. 
@@ -245,7 +392,7 @@ bool TWI${INDEX?string}_TRBTransfer(void)
 
 // *****************************************************************************
 /* Function:
-    bool TWIx_Read(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Reads data from the slave.
@@ -268,7 +415,7 @@ bool TWI${INDEX?string}_TRBTransfer(void)
 bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 {
     // Build Read TRB
-    if ( !TWI${INDEX?string}_ReadTRBBuild( address, pdata, length ) )
+    if ( !TWI${INDEX?string}_TRBBuildRead( address, pdata, length ) )
 	{
 	    return false;
 	}
@@ -284,7 +431,7 @@ bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 
 // *****************************************************************************
 /* Function:
-    bool TWIx_Write(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Writes data onto the slave.
@@ -307,7 +454,7 @@ bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
 {
     // Build Write TRB
-    if ( !TWI${INDEX?string}_WriteTRBBuild( address, pdata, length ) )
+    if ( !TWI${INDEX?string}_TRBBuildWrite( address, pdata, length ) )
 	{
 	    return false;
 	}
@@ -323,7 +470,7 @@ bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
 
 // *****************************************************************************
 /* Function:
-    bool TWIx_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
+    bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
 	
    Summary:
     Write and Read data from Slave.
@@ -348,13 +495,13 @@ bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
 bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
 {
     // Build Write TRB
-    if ( !TWI${INDEX?string}_WriteTRBBuild( address, wdata, wlength ) )
+    if ( !TWI${INDEX?string}_TRBBuildWrite( address, wdata, wlength ) )
 	{
 	    return false;
 	}
 	
 	// Build Read TRB
-	if ( !TWI${INDEX?string}_ReadTRBBuild( address, rdata, rlength ) )
+	if ( !TWI${INDEX?string}_TRBBuildRead( address, rdata, rlength ) )
 	{
 	    return false;
 	}
@@ -370,7 +517,7 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
 
 // *****************************************************************************
 /* Function:
-    TWI_TRANSFER_STATUS TWIx_TransferStatusGet(void)
+    TWI_TRANSFER_STATUS TWI${INDEX?string}_TransferStatusGet(void)
 	
    Summary:
     Returns the transfer status associated with the given TWI peripheral instance.
@@ -392,7 +539,7 @@ TWI_TRANSFER_STATUS TWI${INDEX?string}_TransferStatusGet(void)
 
 // *****************************************************************************
 /* Function:
-    void TWIx_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
+    void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
 	
    Summary:
     Sets the pointer to the function (and it's context) to be called when the 
@@ -425,18 +572,28 @@ void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contex
 
 // *****************************************************************************
 /* Function:
+    void TWI${INDEX?string}_InterruptHandler(void)
 
    Summary:
+    TWI${INDEX?string} Peripheral Interrupt Handler.
 
    Description:
+    This function is TWI${INDEX?string} Peripheral Interrupt Handler and will
+    called on every TWI${INDEX?string} interrupt.
 
    Precondition:
+    None.
 
    Parameters:
+    None.
   
    Returns:
+    None.
 
    Remarks:
+    The function is called as peripheral instance's interrupt handler if the 
+	instance interrupt is enabled. If peripheral instance's interrupt is not
+	enabled user need to call it from the main while loop of the application.
 */
 
 void TWI${INDEX?string}_InterruptHandler(void)
@@ -601,7 +758,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
 		
 		if ( twi${INDEX?string}Obj.callback != NULL )
 		{
-		    twi${INDEX?string}Obj.callback( twi${INDEX?string}Obj.status, twi${INDEX?string}Obj.context );
+		    twi${INDEX?string}Obj.callback( twi${INDEX?string}Obj.context );
 		}
 		
 		// Reset the PLib objects and Interrupts
@@ -623,7 +780,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
 			
 			if ( twi${INDEX?string}Obj.callback != NULL )
 		    {
-		        twi${INDEX?string}Obj.callback( twi${INDEX?string}Obj.status, twi${INDEX?string}Obj.context );
+		        twi${INDEX?string}Obj.callback( twi${INDEX?string}Obj.context );
 		    }
 			
 			// Reset the PLib objects and Interrupts
