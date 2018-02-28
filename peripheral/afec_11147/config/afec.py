@@ -1,24 +1,4 @@
 from math import ceil
-from os.path import join
-from xml.etree import ElementTree
-
-###################################################################################################
-########################### Register Interface   #################################
-###################################################################################################	
-
-afecRegModule = Register.getRegisterModule("AFEC")
-afecRegGroup = afecRegModule.getRegisterGroup("AFEC")
-
-#Result resolution
-afecReg_EMR = afecRegGroup.getRegister("AFEC_EMR")
-afecBitField_EMR_RES = afecReg_EMR.getBitfield("RES")
-adcValGroup_EMR_RES = afecRegModule.getValueGroup("AFEC_EMR__RES")
-adcValGroup_EMR_RESDefault = adcValGroup_EMR_RES.getValue("NO_AVERAGE")
-
-#Result sign
-afecBitField_SIGNMODE = afecReg_EMR.getBitfield("SIGNMODE")
-adcValGroup_EMR_SIGNMODE = afecRegModule.getValueGroup("AFEC_EMR__SIGNMODE")
-adcValGroup_EMR_SIGNMODEDefault = adcValGroup_EMR_SIGNMODE.getValue("SE_UNSG_DF_SIGN")
 
 ###################################################################################################
 ########################### Global variables   #################################
@@ -232,42 +212,25 @@ def instantiateComponent(afecComponent):
 	#------------------------- ATDF Read -------------------------------------
 	packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
 	availablePins = []		# array to save available pins
-	channel = [False, False, False, False, False, False, False, False, False, False, False, False] #array t0 save available channels
+	channel = [False, False, False, False, False, False, False, False, False, False, False, False] #array to save available channels
 	afecChannelsValues = [] #array used for combo symbol
 	afecChannelsValues.append("NONE")
-	i = 0
 	
-	#Read atdf file
-	atdfFilePath = join(Variables.get("__DFP_PACK_DIR") ,"atdf", Variables.get("__PROCESSOR") + ".atdf")
+	children = []
+	val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(packageName)+"\"]")
+	children = val.getChildren()
+	for pad in range (0, len(children)):
+		availablePins.append(children[pad].getAttribute("pad"))
 	
-	try:
-		atdfFile = open(atdfFilePath, "r")
-	except:
-		Log.writeInfoMessage("afec.py peripheral AFEC: Error!!! while opening atdf file")
-		
-	atdfContent = ElementTree.fromstring(atdfFile.read())
-	
-	# Save pins in availablePins array as per selected package 
-	for package in atdfContent.iter("pinout"):
-		if packageName in package.attrib["name"]:
-			for pad in package.iter("pin"):
-				availablePins.append(pad.attrib["pad"])
-	
-	#Find available channels
-	for peripheral in atdfContent.iter("module"):
-		if "AFEC" in peripheral.attrib["name"]:
-			for instance in peripheral.iter("instance"):
-				if "AFEC"+str(num) in instance.attrib["name"]:
-					for signal in instance.iter("signals"):
-						for pad in signal.iter("signal"):
-							if "index" in pad.attrib:
-								pin = pad.attrib["pad"]
-								if pin in availablePins:
-									channel[i] = (True)
-									afecChannelsValues.append("CH"+str(pad.attrib["index"]))
-								else:
-									channel[i] = (False)
-								i = i + 1
+	afec_signals = []
+	afec = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]/instance@[name=\"AFEC"+str(num)+"\"]/signals")
+	afec_signals = afec.getChildren()
+	for pad in range (0 , len(afec_signals)):
+		if "index" in afec_signals[pad].getAttributeList():
+			padSignal = afec_signals[pad].getAttribute("pad")
+			if padSignal in availablePins :
+				channel[int(afec_signals[pad].getAttribute("index"))] = True
+				afecChannelsValues.append("CH"+afec_signals[pad].getAttribute("index"))
 
 	# Clock dynamic settings
 	afecSym_ClockControl = afecComponent.createBooleanSymbol("AFEC_CLOCK_ENABLE", None)
@@ -309,13 +272,14 @@ def instantiateComponent(afecComponent):
 	global afecSym_EMR_RES_VALUE
 	afecSym_EMR_RES_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_RES_VALUE", afecMenu)
 	afecSym_EMR_RES_VALUE.setLabel ("Result Resolution")
-	afecSym_EMR_RES_VALUE.setDefaultValue(3)
+	afecSym_EMR_RES_VALUE.setDefaultValue(0)
 	afecSym_EMR_RES_VALUE.setOutputMode("Key")
 	afecSym_EMR_RES_VALUE.setDisplayMode("Description")
-	count = adcValGroup_EMR_RES.getValueCount()
-	for id in range(0,count):
-		valueName = adcValGroup_EMR_RES.getValueNames()[id]
-		afecSym_EMR_RES_VALUE.addKey(valueName, adcValGroup_EMR_RES.getValue(valueName).getValue(), adcValGroup_EMR_RES.getValue(valueName).getDescription())
+	resolution = []
+	afec = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AFEC\"]/value-group@[name=\"AFEC_EMR__RES\"]")
+	resolution = afec.getChildren()	
+	for param in range (0 , len(resolution)):
+		afecSym_EMR_RES_VALUE.addKey(resolution[param].getAttribute("name"), resolution[param].getAttribute("value"), resolution[param].getAttribute("caption"))	
 
 	#Single trigger mode
 	afecSym_EMR_STM = afecComponent.createBooleanSymbol("AFEC_EMR_STM", afecMenu)
@@ -337,13 +301,14 @@ def instantiateComponent(afecComponent):
 	#Result sign
 	afecSym_EMR_SIGNMODE_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_SIGNMODE_VALUE", afecMenu)
 	afecSym_EMR_SIGNMODE_VALUE.setLabel ("Result Sign")
-	afecSym_EMR_SIGNMODE_VALUE.setDefaultValue(3)
+	afecSym_EMR_SIGNMODE_VALUE.setDefaultValue(0)
 	afecSym_EMR_SIGNMODE_VALUE.setOutputMode("Key")
 	afecSym_EMR_SIGNMODE_VALUE.setDisplayMode("Description")
-	count = adcValGroup_EMR_SIGNMODE.getValueCount()
-	for id in range(0,count):
-		valueName = adcValGroup_EMR_SIGNMODE.getValueNames()[id]
-		afecSym_EMR_SIGNMODE_VALUE.addKey(valueName, adcValGroup_EMR_SIGNMODE.getValue(valueName).getValue(), adcValGroup_EMR_SIGNMODE.getValue(valueName).getDescription())
+	signMode = []
+	afec = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AFEC\"]/value-group@[name=\"AFEC_EMR__SIGNMODE\"]")
+	signMode = afec.getChildren()	
+	for param in range (0 , len(signMode)):
+		afecSym_EMR_SIGNMODE_VALUE.addKey(signMode[param].getAttribute("name"), signMode[param].getAttribute("value"), signMode[param].getAttribute("caption"))		
 	
 	#Free run mode
 	afecSym_MR_FREERUN = afecComponent.createBooleanSymbol("AFEC_MR_FREERUN", afecMenu)
@@ -361,15 +326,13 @@ def instantiateComponent(afecComponent):
 	afecSym_MR_TRGSEL_VALUE.setDefaultValue(1)
 	afecSym_MR_TRGSEL_VALUE.setOutputMode("Key")
 	afecSym_MR_TRGSEL_VALUE.setDisplayMode("Description")
-	for peripheral in atdfContent.iter("module"):
-		if "AFEC" in peripheral.attrib["name"]:
-			for instance in peripheral.iter("instance"):
-				if "AFEC"+str(num) in instance.attrib["name"]:
-					for param in instance.iter("parameters"):
-						for trigger in param.iter("param"):
-							if "TRGSEL" in trigger.attrib["name"]:
-								afecSym_MR_TRGSEL_VALUE.addKey(trigger.attrib["name"], trigger.attrib["value"], trigger.attrib["caption"])
-	
+	trigger_values = []
+	afec = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]/instance@[name=\"AFEC"+str(num)+"\"]/parameters")
+	trigger_values = afec.getChildren()	
+	for param in range (0 , len(trigger_values)):
+		if "TRGSEL" in trigger_values[param].getAttribute("name"):
+			afecSym_MR_TRGSEL_VALUE.addKey(trigger_values[param].getAttribute("name"), trigger_values[param].getAttribute("value"), trigger_values[param].getAttribute("caption"))
+
 	#------------------------------------------------------------------------------------
 	#user sequence menu
 	afecUserSeq = afecComponent.createMenuSymbol("AFEC_USER_SEQ", None)
@@ -501,9 +464,11 @@ def instantiateComponent(afecComponent):
 ###################################################################################################
 ########################### Code Generation   #################################
 ###################################################################################################		
-
+	afec = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AFEC\"]")
+	afecID = afec.getAttribute("id")
+	
 	afecHeaderFile = afecComponent.createFileSymbol(None, None)
-	afecHeaderFile.setSourcePath("../peripheral/afec_"+afecRegModule.getID()+"/templates/plib_afec.h.ftl")
+	afecHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/plib_afec.h.ftl")
 	afecHeaderFile.setOutputName("plib_afec" + str(num) + ".h")
 	afecHeaderFile.setDestPath("peripheral/afec/")
 	afecHeaderFile.setProjectPath("config/" + configName +"/peripheral/afec/")
@@ -511,14 +476,14 @@ def instantiateComponent(afecComponent):
 	afecHeaderFile.setMarkup(True)
 	
 	afecGlobalHeaderFile = afecComponent.createFileSymbol(None, None)
-	afecGlobalHeaderFile.setSourcePath("../peripheral/afec_"+afecRegModule.getID() + "/plib_afec.h")
+	afecGlobalHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID) + "/plib_afec.h")
 	afecGlobalHeaderFile.setOutputName("plib_afec.h")
 	afecGlobalHeaderFile.setDestPath("peripheral/afec/")
 	afecGlobalHeaderFile.setProjectPath("/peripheral/afec/")
 	afecGlobalHeaderFile.setType("HEADER")
 	
 	afecSource1File = afecComponent.createFileSymbol(None, None)
-	afecSource1File.setSourcePath("../peripheral/afec_"+afecRegModule.getID()+"/templates/plib_afec.c.ftl")
+	afecSource1File.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/plib_afec.c.ftl")
 	afecSource1File.setOutputName("plib_afec" + str(num) + ".c")
 	afecSource1File.setDestPath("peripheral/afec/")
 	afecSource1File.setProjectPath("/peripheral/afec/")
@@ -528,11 +493,11 @@ def instantiateComponent(afecComponent):
 	afecSystemInitFile = afecComponent.createFileSymbol(None, None)
 	afecSystemInitFile.setType("STRING")
 	afecSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
-	afecSystemInitFile.setSourcePath("../peripheral/afec_"+afecRegModule.getID()+"/templates/system/system_initialize.h.ftl")
+	afecSystemInitFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_initialize.h.ftl")
 	afecSystemInitFile.setMarkup(True)
 
 	afecSystemDefFile = afecComponent.createFileSymbol(None, None)
 	afecSystemDefFile.setType("STRING")
 	afecSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	afecSystemDefFile.setSourcePath("../peripheral/afec_"+afecRegModule.getID()+"/templates/system/system_definitions.h.ftl")
+	afecSystemDefFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_definitions.h.ftl")
 	afecSystemDefFile.setMarkup(True)
