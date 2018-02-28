@@ -51,9 +51,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _DACCx_H    // Guards against multiple inclusion
-#define _DACCx_H
-
+#ifndef _DACC_H    // Guards against multiple inclusion
+#define _DACC_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -61,6 +60,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+#include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
 /*  This section lists the other files that are included in this file.
 */
 
@@ -83,7 +85,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 // *****************************************************************************
-/* DACC Channel Index
+/* DACCx Channel Index
 
   Summary:
     Identifies the Channel index of DACC module.
@@ -103,134 +105,8 @@ typedef enum
     /* Channel 1 */
     DACC_CHANNEL_1         
         
-} DACC_CHANNEL_NUM
+} DACC_CHANNEL_NUM;
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of 
-   this interface.
-*/
-
-// *****************************************************************************
-/* Function:
-    void DACCx_Initialize (void)
-
-   Summary:
-     Initializes given instance of the DACC peripheral.
-
-   Description:
-     This function initializes the given instance of the DACC peripheral as
-     configured in MCC.  
-
-   Precondition:
-     None.
-
-   Parameters:
-    None.
-  
-   Returns:
-    None.
-
-   Example:
-    <code>
-    DACC0_Initialize();
-    </code>
-
-   Remarks:
-    None.
-*/
-
-void DACCx_Initialize (void);
-
-// *****************************************************************************
-/* Function:
-    bool DACCx_StatusGet(DACCx_CHANNEL_NUM chId)
-
-   Summary:
-    Checks whether DACC is ready to accecpt new conversion request or not.
-
-   Description:
-    This function checks whether DACC is ready to accecpt new conversion request
-    or not. 
-    
-   Precondition:
-    DACCx_Initialize must have been called for the associated DACC instance.
-
-   Parameters:
-    chId   - Points to DACC Channel Id.
-  
-   Returns:
-    true      - When DACC is ready to accept new conversion request.
-    false     - When DACC is not ready to accept new conversion request.
-
-  Example:
-    <code>
-    
-    bool status = false;
-
-    if (true == DACC0_StatusGet (DACC0_CHANNEL_1))
-    {
-       DACC0_DataWrite (DACC0_CHANNEL_1, 0xff) 
-    }
-    else
-    {
-       //DACC is not ready to accept new conversion request
-       //User Application code
-    }
-    
-    </code>
-
-  Remarks:
-    None.
-*/
-
-bool DACCx_StatusGet (DACCx_CHANNEL_NUM channel);
-
-// *****************************************************************************
-/* Function:
-    void DACCx_DataWrite (DACCx_CHANNEL_NUM channel, uint32_t data)
-
-   Summary:
-    Converts a Digital data to Analog value.
-
-   Description:
-    This function converts a Digital data to Analog value.
-    The behavior of this function call will vary based on the mode selected 
-    within MCC.
-    This function call is always blocking. 
-    
-   Precondition:
-    DACCx_Initialize must have been called for the associated DACC instance.
-
-   Parameters:
-    channel   - Channel number
-    data   - Digital data to be converted to Analog value.
-  
-   Returns:
-    None
-
-  Example:
-    <code>
-    //Example to use in polled and blocking mode
-    char myData[COUNT] = {"0xff","0x3E","0x7A","0x3F"};//COUNT is user dependent
-    bool status = false;
-    
-    //considering count=4
-    for (uint8_t i = 0; i<4; i++)
-    {
-       DACC0_DataWrite (DACC0_CHANNEL_0, myData[i]);
-    }
-    
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void DACCx_DataWrite (DACCx_CHANNEL_NUM channel, uint32_t data);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -240,7 +116,7 @@ void DACCx_DataWrite (DACCx_CHANNEL_NUM channel, uint32_t data);
 #endif
 // DOM-IGNORE-END
 
-#endif //_DACCx_H
+#endif //_DACC_H
 
 /**
  End of File
