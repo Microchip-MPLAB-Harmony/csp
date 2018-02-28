@@ -82,6 +82,12 @@ def instantiateComponent(twiComponent):
     Database.clearSymbolValue("core", "NVIC_" + str(peripId) + "_HANDLER")
     Database.setSymbolValue("core", "NVIC_" + str(peripId) + "_HANDLER", "TWI" + str(num) + "_InterruptHandler", 1)
     
+    # Master Clock Frequency
+    twiSymMasterClkFreq = twiComponent.createStringSymbol("TWI_CLK_SRC_FREQ", twiMenu)
+    twiSymMasterClkFreq.setVisible(False)
+    twiSymMasterClkFreq.setDefaultValue(Database.getSymbolValue("core","MASTERCLK_FREQ"))
+    twiSymMasterClkFreq.setDependencies(setClockSourceFreq, ["core.MASTERCLK_FREQ"])
+    
     # Warning for change in Clock Enable Symbol
     twiSymClkEnComment = twiComponent.createCommentSymbol("TWI_CLK_EN_COMMENT", twiMenu)
     twiSymClkEnComment.setVisible(False)
@@ -203,11 +209,15 @@ def setClockDividerValue( twiSymDivider, event):
     # set CKDIV Value
     Database.setSymbolValue("twi" + str(num), "TWI_CWGR_CKDIV", ckdiv, 1)
     
-def setEnCommentVisibility( twiSymComment, event):
+def setEnCommentVisibility( twiSymComment, event ):
     if event["value"] is False:
         twiSymComment.setVisible(True)
     else:
         twiSymComment.setVisible(False)
+        
+def setClockSourceFreq( twiSymClockFreq, event ):
+    masterClockFreq = Database.getSymbolValue("core", "MASTERCLK_FREQ")
+    twiSymClockFreq.setValue(masterClockFreq, 1)
 
 '''********************************End of the file*************************'''
     
