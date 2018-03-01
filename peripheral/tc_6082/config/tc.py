@@ -1,62 +1,3 @@
-from os.path import join
-from xml.etree import ElementTree
-
-###################################################################################################
-########################### Register Interface   #################################
-###################################################################################################
-tcRegModule = Register.getRegisterModule("TC")
-tcRegGroup = tcRegModule.getRegisterGroup("TC_CHANNEL")
-
-#LDRA
-tcReg_CMR = tcRegGroup.getRegister("TC_CMR")
-tcBitField_LDRA = tcReg_CMR.getBitfield("LDRA")
-tcValGroup_LDRA = tcRegModule.getValueGroup("TC_CMR0__LDRA")
-tcValGroup_LDRADefault = tcValGroup_LDRA.getValue("RISING")
-
-#LDRB
-tcBitField_LDRB = tcReg_CMR.getBitfield("LDRB")
-tcValGroup_LDRB = tcRegModule.getValueGroup("TC_CMR0__LDRB")
-tcValGroup_LDRBDefault = tcValGroup_LDRB.getValue("FALLING")
-
-#ETRGEDG
-tcBitField_ETRGEDG = tcReg_CMR.getBitfield("ETRGEDG")
-tcValGroup_ETRGEDG = tcRegModule.getValueGroup("TC_CMR0__ETRGEDG")
-tcValGroup_ETRGEDGDefault = tcValGroup_ETRGEDG.getValue("NONE")
-
-#EEVT
-tcBitField_EEVT = tcReg_CMR.getBitfield("EEVT")
-tcValGroup_EEVT = tcRegModule.getValueGroup("TC_CMR0__EEVT")
-
-#ACPA
-tcBitField_ACPA = tcReg_CMR.getBitfield("ACPA")
-tcValGroup_ACPA = tcRegModule.getValueGroup("TC_CMR0__ACPA")
-tcValGroup_ACPADefault = tcValGroup_ACPA.getValue("SET")
-
-#ACPC
-tcBitField_ACPC = tcReg_CMR.getBitfield("ACPC")
-tcValGroup_ACPC = tcRegModule.getValueGroup("TC_CMR0__ACPC")
-tcValGroup_ACPCDefault = tcValGroup_ACPC.getValue("CLEAR")
-
-#AEEVT
-tcBitField_AEEVT = tcReg_CMR.getBitfield("AEEVT")
-tcValGroup_AEEVT = tcRegModule.getValueGroup("TC_CMR0__AEEVT")
-tcValGroup_AEEVTDefault = tcValGroup_AEEVT.getValue("CLEAR")
-
-#BCPB
-tcBitField_BCPB = tcReg_CMR.getBitfield("BCPB")
-tcValGroup_BCPB = tcRegModule.getValueGroup("TC_CMR0__BCPB")
-tcValGroup_BCPBDefault = tcValGroup_BCPB.getValue("SET")
-
-#BCPC
-tcBitField_BCPC = tcReg_CMR.getBitfield("BCPC")
-tcValGroup_BCPC = tcRegModule.getValueGroup("TC_CMR0__BCPC")
-tcValGroup_BCPCDefault = tcValGroup_BCPC.getValue("CLEAR")
-
-#BEEVT
-tcBitField_BEEVT = tcReg_CMR.getBitfield("BEEVT")
-tcValGroup_BEEVT = tcRegModule.getValueGroup("TC_CMR0__BEEVT")
-tcValGroup_BEEVTDefault = tcValGroup_BEEVT.getValue("CLEAR")
-
 ###################################################################################################
 ########################### Global Variables   #################################
 ###################################################################################################
@@ -134,8 +75,12 @@ def tcClockControl(symbol, event):
 			Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2")
 			Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2" , True, 2)
 		else:
-			Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2")
-			Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2" , False, 2)			
+			if(tcSym_CH_Enable[2].getValue() == True):
+				Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2")
+				Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2" , True, 2)	
+			else:
+				Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2")
+				Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2" , False, 2)					
 	else:
 		if(tcSym_CH_Enable[channelID].getValue() == True):
 			Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID))
@@ -425,7 +370,8 @@ def tcCompareMaxCalc(tcCompare, event):
 def tcWaveformBVisible(tcWaveformB, event):
 	id = tcWaveformB.getID()
 	channelID = int(id[2])
-	input = event["key"]
+	symObj = event["symbol"]
+	input = symObj.getSelectedKey()
 	if (input == "TIOB"):
 		tcCompareBMenu[channelID].setVisible(False)
 	else:
@@ -563,43 +509,31 @@ def instantiateComponent(tcComponent):
 	channel = [False, False, False] #array to save available channels
 	global extClock
 	extClock = [False, False, False] #array to save if ext clock pin is available
-
-	#Read atdf file
-	atdfFilePath = join(Variables.get("__DFP_PACK_DIR") ,"atdf", Variables.get("__PROCESSOR") + ".atdf")
-	
-	try:
-		atdfFile = open(atdfFilePath, "r")
-	except:
-		print("tc.py peripheral TC: Error!!! while opening atdf file")
-		
-	atdfContent = ElementTree.fromstring(atdfFile.read())
 	
 	# Save pins in availablePins array as per selected package 
-	for package in atdfContent.iter("pinout"):
-		if packageName in package.attrib["name"]:
-			for pad in package.iter("pin"):
-				availablePins.append(pad.attrib["pad"])
+	children = []
+	val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(packageName)+"\"]")
+	children = val.getChildren()
+	for pad in range (0, len(children)):
+		availablePins.append(children[pad].getAttribute("pad"))
 	
-	#Find available channels
-	for peripheral in atdfContent.iter("module"):
-		if "TC" in peripheral.attrib["name"]:
-			for instance in peripheral.iter("instance"):
-				if "TC"+str(num) in instance.attrib["name"]:
-					for signal in instance.iter("signals"):
-						for pad in signal.iter("signal"):
-							if "TIOA" in pad.attrib["group"]:
-								pin = pad.attrib["pad"]
-								if pin in availablePins:
-									channel[int(pad.attrib["index"])%3] = (True)
-								else:
-									channel[int(pad.attrib["index"])%3] = (False)
-									
-							if "TCLK" in pad.attrib["group"]:
-								pin = pad.attrib["pad"]
-								if pin in availablePins:
-									extClock[int(pad.attrib["index"])%3] = (True)
-								else:
-									extClock[int(pad.attrib["index"])%3] = (False)								
+	#Find available channels and available external clock pins
+	tc_signals = []
+	tc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\"TC"+str(num)+"\"]/signals")
+	tc_signals = tc.getChildren()
+	for pad in range (0 , len(tc_signals)):
+		if "TIOA" in tc_signals[pad].getAttribute("group"):
+			padSignal = tc_signals[pad].getAttribute("pad")
+			if padSignal in availablePins :
+				channel[int(tc_signals[pad].getAttribute("index"))%3] = True
+			else:
+				channel[int(tc_signals[pad].getAttribute("index"))%3] = False
+		if "TCLK" in tc_signals[pad].getAttribute("group"):
+			padSignal = tc_signals[pad].getAttribute("pad")
+			if padSignal in availablePins :
+				extClock[int(tc_signals[pad].getAttribute("index"))%3] = True
+			else:
+				extClock[int(tc_signals[pad].getAttribute("index"))%3] = False
 	
 	#*****************************QUADRATURE******************************	
 	#channel enable
@@ -805,16 +739,28 @@ def instantiateComponent(tcComponent):
 		
 		#edge for capture A
 		global tcSym_CH_CMR_LDRA
+		childrenNodes = []
+		loadEdgeA = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__LDRA\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			loadEdgeA.append(childrenNodes[param].getAttribute("name"))
 		tcSym_CH_CMR_LDRA.append(channelID)
-		tcSym_CH_CMR_LDRA[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_LDRA", tcCaptureMenu[channelID], tcValGroup_LDRA.getValueNames())
+		tcSym_CH_CMR_LDRA[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_LDRA", tcCaptureMenu[channelID], loadEdgeA)
 		tcSym_CH_CMR_LDRA[channelID].setLabel("Select TIOA Input Edge for Capture A")
-		tcSym_CH_CMR_LDRA[channelID].setDefaultValue(tcValGroup_LDRADefault.getName())
+		tcSym_CH_CMR_LDRA[channelID].setDefaultValue(loadEdgeA[1])
 		
 		#edge for capture B
+		childrenNodes = []
+		loadEdgeB = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__LDRB\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			loadEdgeB.append(childrenNodes[param].getAttribute("name"))
 		tcSym_CH_CMR_LDRB.append(channelID)
-		tcSym_CH_CMR_LDRB[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_LDRB", tcCaptureMenu[channelID], tcValGroup_LDRB.getValueNames())
+		tcSym_CH_CMR_LDRB[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_LDRB", tcCaptureMenu[channelID], loadEdgeB)
 		tcSym_CH_CMR_LDRB[channelID].setLabel("Select TIOA Input Edge for Capture B")
-		tcSym_CH_CMR_LDRB[channelID].setDefaultValue(tcValGroup_LDRBDefault.getName())
+		tcSym_CH_CMR_LDRB[channelID].setDefaultValue(loadEdgeB[2])
 		
 		#Capture external reset
 		global tcSym_CH_CAPTURE_EXT_RESET
@@ -832,10 +778,16 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_CMR_ABETRG[channelID].setDefaultValue("TIOA")
 		
 		#external event edge
+		childrenNodes = []
+		comboOptions = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__ETRGEDG\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			comboOptions.append(childrenNodes[param].getAttribute("name"))		
 		tcSym_CH_CMR_ETRGEDG.append(channelID)
-		tcSym_CH_CMR_ETRGEDG[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_ETRGEDG", tcSym_CH_CAPTURE_EXT_RESET[channelID], tcValGroup_ETRGEDG.getValueNames())
+		tcSym_CH_CMR_ETRGEDG[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_ETRGEDG", tcSym_CH_CAPTURE_EXT_RESET[channelID], comboOptions)
 		tcSym_CH_CMR_ETRGEDG[channelID].setLabel("Select External Event Edge")
-		tcSym_CH_CMR_ETRGEDG[channelID].setDefaultValue(tcValGroup_ETRGEDGDefault.getName())
+		tcSym_CH_CMR_ETRGEDG[channelID].setDefaultValue(comboOptions[2])
 		
 		#external event edge comment
 		tcSym_CH_CMR_ETRGEDG_COMMENT.append(channelID)
@@ -916,19 +868,26 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_CMR_EEVT.append(channelID)
 		tcSym_CH_CMR_EEVT[channelID] = tcComponent.createKeyValueSetSymbol("TC"+str(channelID)+"_CMR_EEVT", tcEventMenu[channelID])
 		tcSym_CH_CMR_EEVT[channelID].setLabel("Select External Event Input")
-		count = tcValGroup_EEVT.getValueCount()
-		for id in range(0,count):
-			valueName = tcValGroup_EEVT.getValueNames()[id]
-			tcSym_CH_CMR_EEVT[channelID].addKey(valueName, tcValGroup_EEVT.getValue(valueName).getValue(), tcValGroup_EEVT.getValue(valueName).getDescription())
+		childrenNodes = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__EEVT\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			tcSym_CH_CMR_EEVT[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))	
 		tcSym_CH_CMR_EEVT[channelID].setDefaultValue(0)
 		tcSym_CH_CMR_EEVT[channelID].setDisplayMode("Description")
 		tcSym_CH_CMR_EEVT[channelID].setOutputMode("Key")
 		
 		#External reset edge
+		childrenNodes = []
+		comboOptions = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__EEVTEDG\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			comboOptions.append(childrenNodes[param].getAttribute("name"))		
 		tcSym_CH_CMP_CMR_ETRGEDG.append(channelID)
-		tcSym_CH_CMP_CMR_ETRGEDG[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMP_CMR_ETRGEDG", tcEventMenu[channelID], tcValGroup_ETRGEDG.getValueNames())
+		tcSym_CH_CMP_CMR_ETRGEDG[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMP_CMR_ETRGEDG", tcEventMenu[channelID], comboOptions)
 		tcSym_CH_CMP_CMR_ETRGEDG[channelID].setLabel("Select External Event Edge")
-		tcSym_CH_CMP_CMR_ETRGEDG[channelID].setDefaultValue(tcValGroup_ETRGEDGDefault.getName())
+		tcSym_CH_CMP_CMR_ETRGEDG[channelID].setDefaultValue(comboOptions[0])
 		
 		#Waveform A menu
 		tcCompareAMenu.append(channelID)
@@ -946,22 +905,40 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_CompareA[channelID].setDependencies(tcCompareMaxCalc, ["TC"+str(channelID)+"_COMPARE_PERIOD_COUNT"])
 		
 		#action on compare A
+		childrenNodes = []
+		comboOptions = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__ACPA\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			comboOptions.append(childrenNodes[param].getAttribute("name"))			
 		tcSym_CH_CMR_ACPA.append(channelID)
-		tcSym_CH_CMR_ACPA[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_ACPA", tcCompareAMenu[channelID], tcValGroup_ACPA.getValueNames())
+		tcSym_CH_CMR_ACPA[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_ACPA", tcCompareAMenu[channelID], comboOptions)
 		tcSym_CH_CMR_ACPA[channelID].setLabel("Action on Compare Match A")
-		tcSym_CH_CMR_ACPA[channelID].setDefaultValue(tcValGroup_ACPADefault.getName())
+		tcSym_CH_CMR_ACPA[channelID].setDefaultValue(comboOptions[1])
 		
 		#action on compare C
+		childrenNodes = []
+		comboOptions = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__ACPC\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			comboOptions.append(childrenNodes[param].getAttribute("name"))			
 		tcSym_CH_CMR_ACPC.append(channelID)
-		tcSym_CH_CMR_ACPC[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_ACPC", tcCompareAMenu[channelID], tcValGroup_ACPC.getValueNames())
+		tcSym_CH_CMR_ACPC[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_ACPC", tcCompareAMenu[channelID], comboOptions)
 		tcSym_CH_CMR_ACPC[channelID].setLabel("Action on Compare Match C")
-		tcSym_CH_CMR_ACPC[channelID].setDefaultValue(tcValGroup_ACPCDefault.getName())
+		tcSym_CH_CMR_ACPC[channelID].setDefaultValue(comboOptions[2])
 		
 		#action on external event
+		childrenNodes = []
+		comboOptions = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__AEEVT\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			comboOptions.append(childrenNodes[param].getAttribute("name"))			
 		tcSym_CH_CMR_AEEVT.append(channelID)
-		tcSym_CH_CMR_AEEVT[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_AEEVT", tcCompareAMenu[channelID], tcValGroup_AEEVT.getValueNames())
+		tcSym_CH_CMR_AEEVT[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_AEEVT", tcCompareAMenu[channelID], comboOptions)
 		tcSym_CH_CMR_AEEVT[channelID].setLabel("Action on External Event")
-		tcSym_CH_CMR_AEEVT[channelID].setDefaultValue(tcValGroup_AEEVTDefault.getName())
+		tcSym_CH_CMR_AEEVT[channelID].setDefaultValue(comboOptions[2])
 		tcSym_CH_CMR_AEEVT[channelID].setDependencies(tcActionExtEvtVisible, ["TC"+str(channelID)+"_CMP_CMR_ETRGEDG"])
 		tcSym_CH_CMR_AEEVT[channelID].setVisible(False)
 		
@@ -982,22 +959,40 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_CompareB[channelID].setDependencies(tcCompareMaxCalc, ["TC"+str(channelID)+"_COMPARE_PERIOD_COUNT"])
 		
 		#Action on compare B
+		childrenNodes = []
+		comboOptions = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__BCPB\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			comboOptions.append(childrenNodes[param].getAttribute("name"))			
 		tcSym_CH_CMR_BCPB.append(channelID)
-		tcSym_CH_CMR_BCPB[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_BCPB", tcCompareBMenu[channelID], tcValGroup_BCPB.getValueNames())
+		tcSym_CH_CMR_BCPB[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_BCPB", tcCompareBMenu[channelID], comboOptions)
 		tcSym_CH_CMR_BCPB[channelID].setLabel("Action on Compare Match B")
-		tcSym_CH_CMR_BCPB[channelID].setDefaultValue(tcValGroup_BCPBDefault.getName())
+		tcSym_CH_CMR_BCPB[channelID].setDefaultValue(comboOptions[1])
 		
 		#Action on compare C
+		childrenNodes = []
+		comboOptions = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__BCPC\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			comboOptions.append(childrenNodes[param].getAttribute("name"))			
 		tcSym_CH_CMR_BCPC.append(channelID)
-		tcSym_CH_CMR_BCPC[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_BCPC", tcCompareBMenu[channelID], tcValGroup_BCPC.getValueNames())
+		tcSym_CH_CMR_BCPC[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_BCPC", tcCompareBMenu[channelID], comboOptions)
 		tcSym_CH_CMR_BCPC[channelID].setLabel("Action on Compare Match C")
-		tcSym_CH_CMR_BCPC[channelID].setDefaultValue(tcValGroup_BCPCDefault.getName())	
+		tcSym_CH_CMR_BCPC[channelID].setDefaultValue(comboOptions[2])	
 		
 		#Action on external event
+		childrenNodes = []
+		comboOptions = []
+		tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__BEEVT\"]")
+		childrenNodes = tc.getChildren()	
+		for param in range (0 , len(childrenNodes)):
+			comboOptions.append(childrenNodes[param].getAttribute("name"))			
 		tcSym_CH_CMR_BEEVT.append(channelID)
-		tcSym_CH_CMR_BEEVT[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_BEEVT", tcCompareBMenu[channelID], tcValGroup_BEEVT.getValueNames())
+		tcSym_CH_CMR_BEEVT[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_BEEVT", tcCompareBMenu[channelID], comboOptions)
 		tcSym_CH_CMR_BEEVT[channelID].setLabel("Action on External Event")
-		tcSym_CH_CMR_BEEVT[channelID].setDefaultValue(tcValGroup_BEEVTDefault.getName())
+		tcSym_CH_CMR_BEEVT[channelID].setDefaultValue(comboOptions[2])
 		tcSym_CH_CMR_BEEVT[channelID].setDependencies(tcActionExtEvtVisible, ["TC"+str(channelID)+"_CMP_CMR_ETRGEDG"])
 		tcSym_CH_CMR_BEEVT[channelID].setVisible(False)
 		
@@ -1016,9 +1011,11 @@ def instantiateComponent(tcComponent):
 ###################################################################################################
 ########################### Code Generation   #################################
 ###################################################################################################	
+	tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]")
+	tcID = tc.getAttribute("id")	
 	
 	tcHeaderFile = tcComponent.createFileSymbol(None, None)
-	tcHeaderFile.setSourcePath("../peripheral/tc_"+tcRegModule.getID()+"/templates/plib_tc.h.ftl")
+	tcHeaderFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/plib_tc.h.ftl")
 	tcHeaderFile.setOutputName("plib_tc" + str(num) + ".h")
 	tcHeaderFile.setDestPath("/peripheral/tc/")
 	tcHeaderFile.setProjectPath("/peripheral/tc/")
@@ -1027,7 +1024,7 @@ def instantiateComponent(tcComponent):
 	tcHeaderFile.setMarkup(True)
 		
 	tcSource1File = tcComponent.createFileSymbol(None, None)
-	tcSource1File.setSourcePath("../peripheral/tc_"+tcRegModule.getID()+"/templates/plib_tc.c.ftl")
+	tcSource1File.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/plib_tc.c.ftl")
 	tcSource1File.setOutputName("plib_tc" + str(num) + ".c")
 	tcSource1File.setDestPath("/peripheral/tc/")
 	tcSource1File.setProjectPath("/peripheral/tc/")
@@ -1036,7 +1033,7 @@ def instantiateComponent(tcComponent):
 	tcSource1File.setMarkup(True)
 
 	tcGlobalHeaderFile = tcComponent.createFileSymbol(None, None)
-	tcGlobalHeaderFile.setSourcePath("../peripheral/tc_"+tcRegModule.getID()+"/plib_tc.h")
+	tcGlobalHeaderFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/plib_tc.h")
 	tcGlobalHeaderFile.setOutputName("plib_tc" + ".h")
 	tcGlobalHeaderFile.setDestPath("/peripheral/tc/")
 	tcGlobalHeaderFile.setProjectPath("/peripheral/tc/")
@@ -1046,11 +1043,11 @@ def instantiateComponent(tcComponent):
 	tcSystemInitFile = tcComponent.createFileSymbol(None, None)
 	tcSystemInitFile.setType("STRING")
 	tcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
-	tcSystemInitFile.setSourcePath("../peripheral/tc_"+tcRegModule.getID()+"/templates/system/system_init.c.ftl")
+	tcSystemInitFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/system/system_init.c.ftl")
 	tcSystemInitFile.setMarkup(True)
 
 	tcSystemDefinitionFile = tcComponent.createFileSymbol(None, None)
 	tcSystemDefinitionFile.setType("STRING")
 	tcSystemDefinitionFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	tcSystemDefinitionFile.setSourcePath("../peripheral/tc_"+tcRegModule.getID()+"/templates/system/system_definitions.h.ftl")
+	tcSystemDefinitionFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/system/system_definitions.h.ftl")
 	tcSystemDefinitionFile.setMarkup(True)
