@@ -1,0 +1,1 @@
+	ACC${INDEX?string}_Initialize();
