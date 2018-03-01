@@ -4,13 +4,13 @@
 <#assign TC_NUM = i >
 <#if .vars[TC_CH_ENABLE] == true>
 	<#if .vars[TC_CH_OPERATINGMODE] == "TIMER">
-	<#lt>	TC${INDEX}_CH${TC_NUM}_TimerInitialize (void);
+	<#lt>	TC${INDEX}_CH${TC_NUM}_TimerInitialize ();
 	</#if> <#-- TIMER -->
 	<#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
-	<#lt>	TC${INDEX}_CH${TC_NUM}_CaptureInitialize (void);
+	<#lt>	TC${INDEX}_CH${TC_NUM}_CaptureInitialize ();
 	</#if> <#-- CAPTURE -->
 	<#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
-	<#lt>	TC${INDEX}_CH${TC_NUM}_CompareInitialize (void);
+	<#lt>	TC${INDEX}_CH${TC_NUM}_CompareInitialize ();
 	</#if> <#-- COMPARE -->
 </#if> <#-- CH_ENABLE -->
 </#list>
