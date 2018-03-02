@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_afec.c
+    plib_afec${INDEX}.c
 
   Summary
-    AFEC peripheral library source.
+    AFEC${INDEX} peripheral library source.
 
   Description
     This file implements the AFEC peripheral library.  
@@ -173,6 +173,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#list>
 </#compress>
 <#-- *********************************************************************************************** -->
+// *****************************************************************************
+// *****************************************************************************
+// Section: AFEC${INDEX} Implementation
+// *****************************************************************************
+// *****************************************************************************
 <#if AFEC_INTERRUPT == true>
 	<#lt>/* Object to hold callback function and context */
 	<#lt>AFEC_CALLBACK_OBJECT AFEC${INDEX}_CallbackObj;
@@ -196,17 +201,17 @@ void AFEC${INDEX}_Initialize()
 	/* Enable gain amplifiers */
 	_AFEC${INDEX}_REGS->AFEC_ACR.w = AFEC_ACR_PGA0EN_Msk | AFEC_ACR_PGA1EN_Msk;
 	
-<#if AFEC_CGR_GAIN?hasContent>
+<#if AFEC_CGR_GAIN?has_content>
 	/* Gain */
 	_AFEC${INDEX}_REGS->AFEC_CGR.w = ${AFEC_CGR_GAIN};
 	
 </#if>
-<#if AFEC_DIFFR_DIFF?hasContent>
+<#if AFEC_DIFFR_DIFF?has_content>
 	/* Differential mode */
 	_AFEC${INDEX}_REGS->AFEC_DIFFR.w = ${AFEC_DIFFR_DIFF};
 	
 </#if>
-<#if AFEC_SHMR_DUAL?hasContent>
+<#if AFEC_SHMR_DUAL?has_content>
 	/* Dual sample and hold mode */
 	_AFEC${INDEX}_REGS->AFEC_SHMR.w = ${AFEC_SHMR_DUAL};
 	
@@ -232,20 +237,20 @@ void AFEC${INDEX}_Initialize()
 <#if AFEC_MR_USEQ == true>
 	/* User defined channel conversion sequence */
 	_AFEC${INDEX}_REGS->AFEC_MR.w |= AFEC_MR_USEQ_Msk;
-	<#if AFEC_SEQ1R_USCH?hasContent>
+	<#if AFEC_SEQ1R_USCH?has_content>
 	<#lt>	_AFEC${INDEX}_REGS->AFEC_SEQ1R.w = ${AFEC_SEQ1R_USCH};
 	</#if>
-	<#if AFEC_SEQ2R_USCH?hasContent>
+	<#if AFEC_SEQ2R_USCH?has_content>
 	<#lt>	_AFEC${INDEX}_REGS->AFEC_SEQ2R.w = ${AFEC_SEQ2R_USCH}; 
 	</#if>
 </#if>
 	
-<#if AFEC_IER_EOC?hasContent>
+<#if AFEC_IER_EOC?has_content>
 	/* Enable interrupt */
 	_AFEC${INDEX}_REGS->AFEC_IER.w = ${AFEC_IER_EOC};
 </#if>
 	
-<#if AFEC_CHER_CH?hasContent>
+<#if AFEC_CHER_CH?has_content>
 	/* Enable channel */
 	_AFEC${INDEX}_REGS->AFEC_CHER.w = ${AFEC_CHER_CH};
 </#if>
