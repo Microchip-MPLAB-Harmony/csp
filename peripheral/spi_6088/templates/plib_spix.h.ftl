@@ -5,14 +5,14 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_spi.h
+    plib_spi${SPI_INDEX?string}.h
 
   Summary:
-    SPI PLIB Common Header File
+    SPI${SPI_INDEX?string} PLIB Header File
 
   Description:
-    This file has prototype of all the interfaces which are common for all the
-    SPI peripherals.
+    This file has prototype of all the interfaces provided for particular
+    SPI peripheral.
 
 *******************************************************************************/
 
@@ -39,12 +39,10 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_SPI_H
-#define PLIB_SPI_H
+#ifndef PLIB_SPI${SPI_INDEX?string}_H
+#define PLIB_SPI${SPI_INDEX?string}_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
+#include "plib_spi.h"
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus  
@@ -54,40 +52,22 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #endif
 
 /****************************** SPI${SPI_INDEX?string} Interface *********************************/
-typedef struct
-{
-    uint32_t    baudRate;
-    bool        clockPhase;
-    bool        clockPolarity;
-    
-}SPI_SETUP;
 
-typedef enum 
-{
-    SPI_ERROR_NONE = 0,
-    SPI_OVERRUN_ERROR = 1 << 3
+void SPI${SPI_INDEX?string}_Initialize ( void );
 
-}SPI_ERROR;
+bool SPI${SPI_INDEX?string}_Exchange(void* pTransmitData,void* pReceiveData, size_t size, SPI_CHIP_SELECT chipSelect);
 
-typedef  void (*SPI_EVENT_HANDLER) (void* context);
+SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
+bool SPI${SPI_INDEX?string}_SlaveSetup (uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup );
 
-typedef struct
-{
-    void*                   txBuffer;    
-    void*                   rxBuffer;
-    size_t                  exchangeSize;
-    size_t                  rxCount;
-    size_t                  txCount;
-    bool                    exchangeIsBusy;
-    SPI_EVENT_HANDLER       callback; 
-    void*                   context;
-} SPI_OBJECT ;
+<#if SPI_INTERRUPT_MODE == true>     
+bool SPI${SPI_INDEX?string}_IsBusy(void);
+
+void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_EVENT_HANDLER eventHandler, void* context);
+
+void SPI${SPI_INDEX?string}_InterruptHandler(void);
+</#if>
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
@@ -96,7 +76,7 @@ typedef struct
     
 #endif
 
-#endif // PLIB_SPI_H
+#endif // PLIB_SPI${SPI_INDEX?string}_H
 
 /*******************************************************************************
  End of File

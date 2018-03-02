@@ -5,7 +5,7 @@ def ClockInterruptStatusWarning(symbol, event):
    else:
        symbol.setVisible(False)
     
-def setupInterruptHandler(spiInterrupt, event): 
+def setuspiSym_CSRterruptHandler(spiInterrupt, event): 
     global NVICVector
     global NVICHandler
     global NVICHandlerLock
@@ -37,14 +37,15 @@ def showMasterDependencies(spiSym_MR_Dependencies, event):
         spiSym_MR_Dependencies.setVisible(False)
 
 def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
-    clk = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
-    baud = Database.getSymbolValue("spi" + str(spiInstance), "SPI_BAUD_RATE")
     
-    if event["id"] == "SPI_BAUD_RATE":
-        baud = event["value"]
     if event["id"] == "MASTERCLK_FREQ":
         clk = int(event["value"])
-    
+        baud = Database.getSymbolValue("spi" + str(spiInstance), "SPI_BAUD_RATE" + spiSym_CSR_SCBR_VALUE.getID()[-1])
+    else:
+        #This means there is change in baud rate provided by user in GUI
+        baud = event["value"]
+        clk = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+        
     SCBR = clk/baud
     if SCBR == 0:
         SCBR = 1
@@ -52,6 +53,12 @@ def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
         SCBR = 255
     spiSym_CSR_SCBR_VALUE.setValue(SCBR, 1)
 
+def ChipSelectDependency(spiSym_CSR_SCBR, event):
+    if event["value"] == True:
+        spiSym_CSR_SCBR.setVisible(True)
+    else:
+        spiSym_CSR_SCBR.setVisible(False)
+    
         
 spiRegModule = Register.getRegisterModule("SPI")
 spiRegGroup = spiRegModule.getRegisterGroup("SPI")
@@ -94,7 +101,7 @@ def instantiateComponent(spiComponent):
     # Enable clock for SPI
     Database.setSymbolValue("core", "PMC_ID_SPI" + str(spiInstance), True, 1)
 
-    spiMenu = spiComponent.createMenuSymbol(None, None)
+    spiMenu = spiComponent.createMenuSymbol(SPI_MENU, None)
     spiMenu.setLabel("Hardware Settings ")
     
     spiIndex = spiComponent.createIntegerSymbol("SPI_INDEX", spiMenu)
@@ -105,7 +112,7 @@ def instantiateComponent(spiComponent):
     spiInterrupt.setLabel("Interrupt Mode")
     #By Default interrupt mode is enabled and corresponding information is passed to NVIC manager
     spiInterrupt.setDefaultValue(True)
-    spiInterrupt.setDependencies(setupInterruptHandler, ["SPI_INTERRUPT_MODE"])
+    spiInterrupt.setDependencies(setuspiSym_CSRterruptHandler, ["SPI_INTERRUPT_MODE"])
     Database.setSymbolValue("core", NVICVector, True, 1)
     Database.setSymbolValue("core", NVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
     Database.setSymbolValue("core", NVICHandlerLock, True, 1)   
@@ -122,69 +129,84 @@ def instantiateComponent(spiComponent):
         valueName = spiValGrp_MR_MSTR.getValueNames()[id]
         spiSym_MR_MSTR.addKey(valueName, spiValGrp_MR_MSTR.getValue(valueName).getValue(), spiValGrp_MR_MSTR.getValue(valueName).getDescription())
     
+    
     defaultbaudRate = 1000000
-    spiSym_CSR_SCBR = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", spiMenu)
-    spiSym_CSR_SCBR.setLabel("Baud Rate in Hz")
-    spiSym_CSR_SCBR.setDefaultValue(defaultbaudRate)
-    spiSym_CSR_SCBR.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
-    
     defaultSCBR = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))/defaultbaudRate
-    #local variable for code generation
-    spiSym_CSR_SCBR_VALUE = spiComponent.createIntegerSymbol("SPI_CSR_SCBR_VALUE", spiMenu)
-    spiSym_CSR_SCBR_VALUE.setDefaultValue(defaultSCBR)
-    spiSym_CSR_SCBR_VALUE.setVisible(False)
-    spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE", "core.MASTERCLK_FREQ"])
+    spiSym_CSR = []
+    spiSym_CSR_SCBR = []
+    spiSym_CSR_SCBR_VALUE = []
+    spiSym_CSR_BITS = []
+    spiSym_CSR_CPOL = []
+    spiSym_CSR_NCPHA = []
+    
+    # Used to pass master clock frequency to SPI FTL
+    spiSymMasterClock = spiComponent.createIntegerSymbol("SPI_MASTER_CLOCK", spiMenu)
+    spiSymMasterClock.setDefaultValue(getMasterClockFreq())
+    spiSymMasterClock.setVisible(False)
+    
+    for CSNumber in range(0,4):
+        spiSym_CSR.append(CSNumber)
+        spiSym_CSR[CSNumber]= spiComponent.createBooleanSymbol("SPI_CHIP_SELECT" + str(CSNumber), spiMenu)
+        spiSym_CSR[CSNumber].setLabel("NPCS" + str(CSNumber) + " Pin As Slave Select")
+        spiSym_CSR[CSNumber].setDefaultValue(False)
+        spiSym_CSR[CSNumber].setVisible(True)
+        spiSym_CSR[CSNumber].setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
         
-    spiSym_MR_PCS = spiComponent.createKeyValueSetSymbol("SPI_MR_PCS", spiMenu)
-    spiSym_MR_PCS.setLabel(spiBitField_MR_PCS.getDescription())
-    spiSym_MR_PCS.setOutputMode("Key")
-    spiSym_MR_PCS.setDisplayMode("Description")
-    spiSym_MR_PCS.setDefaultValue(0)
-    spiSym_MR_PCS.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
+        spiSym_CSR_SCBR.append(CSNumber)
+        spiSym_CSR_SCBR[CSNumber] = spiComponent.createIntegerSymbol("SPI_BAUD_RATE" + str(CSNumber), spiSym_CSR[CSNumber])
+        spiSym_CSR_SCBR[CSNumber].setLabel("Baud Rate in Hz")
+        spiSym_CSR_SCBR[CSNumber].setDefaultValue(defaultbaudRate)
+        spiSym_CSR_SCBR[CSNumber].setVisible(False)
+        spiSym_CSR_SCBR[CSNumber].setDependencies(ChipSelectDependency, ["SPI_CHIP_SELECT" + str(CSNumber)])
 
-    count = spiValGrp_MR_PCS.getValueCount()
-    for id in range(0,count):
-        valueName = spiValGrp_MR_PCS.getValueNames()[id]
-        spiSym_MR_PCS.addKey(valueName, spiValGrp_MR_PCS.getValue(valueName).getValue(), spiValGrp_MR_PCS.getValue(valueName).getDescription())       
+        #local variable for code generation
+        spiSym_CSR_SCBR_VALUE.append(CSNumber)
+        spiSym_CSR_SCBR_VALUE[CSNumber] = spiComponent.createIntegerSymbol("SPI_CSR_SCBR_VALUE" + str(CSNumber), spiSym_CSR[CSNumber])
+        spiSym_CSR_SCBR_VALUE[CSNumber].setDefaultValue(defaultSCBR)
+        spiSym_CSR_SCBR_VALUE[CSNumber].setVisible(False)
+        spiSym_CSR_SCBR_VALUE[CSNumber].setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE" + str(CSNumber), "core.MASTERCLK_FREQ"])      
     
-    
-    spiSym_CSR_BITS = spiComponent.createKeyValueSetSymbol("SPI_CSR_BITS", spiMenu)
-    spiSym_CSR_BITS.setLabel(spiBitField_CSR_BITS.getDescription())
-    spiSym_CSR_BITS.setOutputMode("Key")
-    spiSym_CSR_BITS.setDisplayMode("Description")
-    spiSym_CSR_BITS.setDefaultValue(0)
-    spiSym_CSR_BITS.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
-
-    count = spiValGrp_CSR_BITS.getValueCount()
-    for id in range(0,count):
-        valueName = spiValGrp_CSR_BITS.getValueNames()[id]
-        spiSym_CSR_BITS.addKey(valueName, spiValGrp_CSR_BITS.getValue(valueName).getValue(), spiValGrp_CSR_BITS.getValue(valueName).getDescription())
- 
+        spiSym_CSR_BITS.append(CSNumber)
+        spiSym_CSR_BITS[CSNumber] = spiComponent.createKeyValueSetSymbol("SPI_CSR_BITS" + str(CSNumber), spiSym_CSR[CSNumber])
+        spiSym_CSR_BITS[CSNumber].setLabel(spiBitField_CSR_BITS.getDescription())
+        spiSym_CSR_BITS[CSNumber].setOutputMode("Key")
+        spiSym_CSR_BITS[CSNumber].setDisplayMode("Description")
+        spiSym_CSR_BITS[CSNumber].setDefaultValue(0)
+        spiSym_CSR_BITS[CSNumber].setVisible(False)
+        spiSym_CSR_BITS[CSNumber].setDependencies(ChipSelectDependency, ["SPI_CHIP_SELECT" + str(CSNumber)])
         
-    spiSym_CSR_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CSR_CPOL", spiMenu)
-    spiSym_CSR_CPOL.setLabel(spiBitField_CSR_CPOL.getDescription())
-    spiSym_CSR_CPOL.setOutputMode("Key")
-    spiSym_CSR_CPOL.setDisplayMode("Description")
-    spiSym_CSR_CPOL.setDefaultValue(0)
-    spiSym_CSR_CPOL.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
-
-    count = spiValGrp_CSR_CPOL.getValueCount()
-    for id in range(0,count):
-        valueName = spiValGrp_CSR_CPOL.getValueNames()[id]
-        spiSym_CSR_CPOL.addKey(valueName, spiValGrp_CSR_CPOL.getValue(valueName).getValue(), spiValGrp_CSR_CPOL.getValue(valueName).getDescription())
-
-    
-    spiSym_CSR_NCPHA = spiComponent.createKeyValueSetSymbol("SPI_CSR_NCPHA", spiMenu)
-    spiSym_CSR_NCPHA.setLabel(spiBitField_CSR_NCPHA.getDescription())
-    spiSym_CSR_NCPHA.setOutputMode("Key")
-    spiSym_CSR_NCPHA.setDisplayMode("Description")
-    spiSym_CSR_NCPHA.setDefaultValue(0)
-    spiSym_CSR_NCPHA.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
-
-    count = spiValGrp_CSR_NCPHA.getValueCount()
-    for id in range(0,count):
-        valueName = spiValGrp_CSR_NCPHA.getValueNames()[id]
-        spiSym_CSR_NCPHA.addKey(valueName, spiValGrp_CSR_NCPHA.getValue(valueName).getValue(), spiValGrp_CSR_NCPHA.getValue(valueName).getDescription())
+        count = spiValGrp_CSR_BITS.getValueCount()
+        for id in range(0,count):
+            valueName = spiValGrp_CSR_BITS.getValueNames()[id]
+            spiSym_CSR_BITS[CSNumber].addKey(valueName, spiValGrp_CSR_BITS.getValue(valueName).getValue(), spiValGrp_CSR_BITS.getValue(valueName).getDescription())
+        
+        spiSym_CSR_CPOL.append(CSNumber)    
+        spiSym_CSR_CPOL[CSNumber] = spiComponent.createKeyValueSetSymbol("SPI_CSR_CPOL" + str(CSNumber), spiSym_CSR[CSNumber])
+        spiSym_CSR_CPOL[CSNumber].setLabel(spiBitField_CSR_CPOL.getDescription())
+        spiSym_CSR_CPOL[CSNumber].setOutputMode("Key")
+        spiSym_CSR_CPOL[CSNumber].setDisplayMode("Description")
+        spiSym_CSR_CPOL[CSNumber].setDefaultValue(0)
+        spiSym_CSR_CPOL[CSNumber].setVisible(False)
+        spiSym_CSR_CPOL[CSNumber].setDependencies(ChipSelectDependency, ["SPI_CHIP_SELECT" + str(CSNumber)])
+        
+        count = spiValGrp_CSR_CPOL.getValueCount()
+        for id in range(0,count):
+            valueName = spiValGrp_CSR_CPOL.getValueNames()[id]
+            spiSym_CSR_CPOL[CSNumber].addKey(valueName, spiValGrp_CSR_CPOL.getValue(valueName).getValue(), spiValGrp_CSR_CPOL.getValue(valueName).getDescription())
+        
+        spiSym_CSR_NCPHA.append(CSNumber)
+        spiSym_CSR_NCPHA[CSNumber] = spiComponent.createKeyValueSetSymbol("SPI_CSR_NCPHA" + str(CSNumber), spiSym_CSR[CSNumber])
+        spiSym_CSR_NCPHA[CSNumber].setLabel(spiBitField_CSR_NCPHA.getDescription())
+        spiSym_CSR_NCPHA[CSNumber].setOutputMode("Key")
+        spiSym_CSR_NCPHA[CSNumber].setDisplayMode("Description")
+        spiSym_CSR_NCPHA[CSNumber].setDefaultValue(0)
+        spiSym_CSR_NCPHA[CSNumber].setVisible(False)
+        spiSym_CSR_NCPHA[CSNumber].setDependencies(ChipSelectDependency, ["SPI_CHIP_SELECT" + str(CSNumber)])
+        
+        count = spiValGrp_CSR_NCPHA.getValueCount()
+        for id in range(0,count):
+            valueName = spiValGrp_CSR_NCPHA.getValueNames()[id]
+            spiSym_CSR_NCPHA[CSNumber].addKey(valueName, spiValGrp_CSR_NCPHA.getValue(valueName).getValue(), spiValGrp_CSR_NCPHA.getValue(valueName).getDescription())
      
      
     # Dependency Status for interrupt
@@ -202,37 +224,38 @@ def instantiateComponent(spiComponent):
     
     configName = Variables.get("__CONFIGURATION_NAME")
     
-    spiHeaderFile = spiComponent.createFileSymbol(None, None)
-    spiHeaderFile.setSourcePath("../peripheral/spi_6088/templates/plib_spi.h")
+    spiHeaderFile = spiComponent.createFileSymbol(SPI_COMMON_HEADER, None)
+    spiHeaderFile.setSourcePath("../peripheral/spi_6088/templates/plib_spi.h.ftl")
     spiHeaderFile.setOutputName("plib_spi.h")
     spiHeaderFile.setDestPath("peripheral/spi/")
     spiHeaderFile.setProjectPath("config/" + configName + "/peripheral/spi/")
     spiHeaderFile.setType("HEADER")
+    spiHeaderFile.setMarkup(True)
     spiHeaderFile.setOverwrite(True)
     
-    spiHeader1File = spiComponent.createFileSymbol(None, None)
-    spiHeader1File.setSourcePath("../peripheral/spi_6088/templates/plib_spi.h.ftl")
+    spiHeader1File = spiComponent.createFileSymbol(SPI_HEADER, None)
+    spiHeader1File.setSourcePath("../peripheral/spi_6088/templates/plib_spix.h.ftl")
     spiHeader1File.setOutputName("plib_spi" + str(spiInstance) + ".h")
     spiHeader1File.setDestPath("/peripheral/spi/")
     spiHeader1File.setProjectPath("config/" + configName +"/peripheral/spi/")
     spiHeader1File.setType("HEADER")
     spiHeader1File.setMarkup(True)
     
-    spiSource1File = spiComponent.createFileSymbol(None, None)
-    spiSource1File.setSourcePath("../peripheral/spi_6088/templates/plib_spi.c.ftl")
+    spiSource1File = spiComponent.createFileSymbol(SPI_SOURCE, None)
+    spiSource1File.setSourcePath("../peripheral/spi_6088/templates/plib_spix.c.ftl")
     spiSource1File.setOutputName("plib_spi" + str(spiInstance) + ".c")
     spiSource1File.setDestPath("/peripheral/spi/")
     spiSource1File.setProjectPath("config/" + configName +"/peripheral/spi/")
     spiSource1File.setType("SOURCE")
     spiSource1File.setMarkup(True)
     
-    spiSystemInitFile = spiComponent.createFileSymbol(None, None)
+    spiSystemInitFile = spiComponent.createFileSymbol(SPI_INIT, None)
     spiSystemInitFile.setType("STRING")
     spiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     spiSystemInitFile.setSourcePath("../peripheral/spi_6088/templates/system/system_initialize.c.ftl")
     spiSystemInitFile.setMarkup(True)
     
-    spiSystemDefFile = spiComponent.createFileSymbol(None, None)
+    spiSystemDefFile = spiComponent.createFileSymbol(SPI_DEF, None)
     spiSystemDefFile.setType("STRING")
     spiSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     spiSystemDefFile.setSourcePath("../peripheral/spi_6088/templates/system/system_definitions.h.ftl")

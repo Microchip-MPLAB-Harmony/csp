@@ -41,7 +41,133 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 // *****************************************************************************
-/* SPI Setup Parameters
+/* SPI Clock Phase
+
+   Summary:
+    Identifies SPI Clock Phase Options
+
+   Description:
+    This enumeration identifies possible SPI Clock Phase Options.
+
+   Remarks:
+    None.
+*/
+typedef enum
+{
+    /* Input data is valid on clock trailing edge and
+    output data is ready on leading edge */
+    DATA_VALID_ON_CLOCK_TRAILING_EDGE,
+    
+    /* Input data is valid on clock leading edge and
+    output data is ready on trailing edge */
+    DATA_VALID_ON_CLOCK_LEADING_EDGE
+    
+}SPI_CLOCK_PHASE;
+
+// *****************************************************************************
+/* SPI Clock Polarity
+
+   Summary:
+    Identifies SPI Clock Polarity Options
+
+   Description:
+    This enumeration identifies possible SPI Clock Polarity Options.
+
+   Remarks:
+    None.
+*/
+typedef enum
+{
+    /* The inactive state value of clock is logic level zero */
+    SPI_CLOCK_POLARITY_IDLE_LOW,
+    
+    /* The inactive state value of clock is logic level one */
+    SPI_CLOCK_POLARITY_IDLE_HIGH
+    
+}SPI_CLOCK_POLARITY;
+
+// *****************************************************************************
+/* SPI Data Bits
+
+   Summary:
+    Identifies SPI bits per transfer
+
+   Description:
+    This enumeration identifies number of bits per SPI transfer.
+
+   Remarks:
+    For 9 to 15bit modes, data should be right aligned in the 16 bit
+    memory location.
+*/
+typedef enum
+{
+    /* 8 bits per transfer */
+    SPI_DATA_BITS_8,
+    
+    /* 9 bits per transfer */    
+    SPI_DATA_BITS_9,
+    
+    /* 10 bits per transfer */
+    SPI_DATA_BITS_10,
+    
+    /* 11 bits per transfer */
+    SPI_DATA_BITS_11,
+    
+    /* 12 bits per transfer */
+    SPI_DATA_BITS_12,
+    
+    /* 13 bits per transfer */
+    SPI_DATA_BITS_13,
+    
+    /* 14 bits per transfer */
+    SPI_DATA_BITS_14,
+    
+    /* 15 bits per transfer */
+    SPI_DATA_BITS_15,
+    
+    /* 16 bits per transfer */
+    SPI_DATA_BITS_16
+
+}SPI_DATA_BITS;
+
+// *****************************************************************************
+/* SPI Chip Selects
+
+   Summary:
+    Identifies SPI Chip Select Options.
+
+   Description:
+    This enumeration identifies the possible SPI Chip Select lines.
+
+   Remarks:
+    User need to make sure that a particular pin on the device has
+    been mapped to be used as selected chip select pin. it can
+    be easily done by MHC Pin Manager tool.
+    
+    If user wants to use some GPIO pin for chip select instead of
+    one of the NPCS pins, then also he needs to select and
+    configure one of the NPCS pins for SlaveSeelct and Exchange
+    operations; just that, in that case he should not map any pin
+    to work as NPCS pin in Pin Manager.
+*/
+typedef enum
+{
+    /* Chip Select line NPCS0 */
+    SPI_CHIP_SELECT_NPCS0,
+    
+    /* Chip Select line NPCS1 */
+    SPI_CHIP_SELECT_NPCS1,
+    
+    /* Chip Select line NPCS2 */
+    SPI_CHIP_SELECT_NPCS2,
+    
+    /* Chip Select line NPCS3 */
+    SPI_CHIP_SELECT_NPCS3
+    
+}SPI_CHIP_SELECT;
+
+// *****************************************************************************
+/* SPI Slave Setup Parameters
 
    Summary
     Identifies the setup parameters which can be changed dynamically.
@@ -56,19 +182,22 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 typedef struct
 {   
 
-    /* Baud Rate */
-    uint32_t        baudRate;
+    /* Baud Rate or clock frequency */
+    uint32_t            clockFrequency;
     
     /* Clock Phase */
-    bool            clockPhase;
+    SPI_CLOCK_PHASE     clockPhase;
     
     /* Clock Polarity */
-    bool            clockPolarity;
+    SPI_CLOCK_POLARITY  clockPolarity;
     
+    /* Number of bits per transfer */
+    SPI_DATA_BITS       dataBits;
+
     /* Chip Select Pin*/
-    PIO_PIN        chipSelectPin;
+    SPI_CHIP_SELECT     chipSelect;
     
-}SPI_SETUP;
+}SPI_SLAVE_SETUP;
 
 // *****************************************************************************
 /* SPI Errors
@@ -126,51 +255,69 @@ void SPIx_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-    void SPIx_Setup(SPI_SETUP *setupOptions);
+    bool SPIx_SlaveSetup(uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup);
     
   Summary:
     Setup SPI operational parameters as desired by the client.
     
   Description:
     This function setup SPI x with the values needed for the new client.
+    This function allows user to change the setup dynamically. User need not
+    call this function if he has configured the setup in GUI and there is no
+    dynamic change needed in any of the parameters.
   
   Precondition:
     SPI x must first be initialized using SPIx_Initialize().
   
   Parameters :
-    *setupOptions   pointer to the data structure of type SPI_SETUP which has the
-                list of elements to be setup for new client.
+    spiSourceClock  Source Clock frequency in Hz on which SPI module is running.
+                    If 0 is passed, then clock frequency set in MHC clock manager
+                    will be taken by default.
+    *setup   pointer to the data structure of type SPI_SLAVE_SETUP which has the
+             list of elements to be setup for new client.
   
   Returns:
-    None.
+    true:   if setup was succesfull, API returns true.
+    false:  if spiSourceClock and spi clock frequencies are such that resultant
+            SCBR value is out of the possible range, then API returns false.
     
   Example:
     <code> 
-        SPI_SETUP spiSetup;
-        spiSetup.baudRate = 1000000;
+        SPI_SLAVE_SETUP setup;
+        setup.clockFrequency = 1000000;
+        setup.clockPhase = DATA_VALID_ON_CLOCK_TRAILING_EDGE;
+        setup.clockPolarity = SPI_CLOCK_POLARITY_IDLE_LOW;
+        setup.dataBits = SPI_DATA_BITS_8;
+        setup.chipSelect = SPI_CHIP_SELECT_NPCS0;
         
-        SPI1_Setup (&spiSetup);
+        // Assuming 150 MHz as peripheral Master clock frequency
+        if (false == SPI1_SlaveSetup (150000000, &setup))
+        {
+            // this means setup could not be done, debug the reason.
+        }
+        
     </code>
     
   Remarks:
-    This function is needed to be called if SPI x peripheral has to be used by
-    a new client now which has different configuration requirements.
+    User need not call this function if he has configured the setup in
+    GUI and there is no dynamic change needed in any of the parameters.
 */
-void SPIx_Setup (SPI_SETUP *setupOptions);
+bool SPIx_SlaveSetup (uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup);
 
 // *****************************************************************************
 /* Function:
     bool SPIx_Exchange(
         void* pTransmitData,
         void* pReceiveData, 
-        size_t wordSize
+        size_t size,
+        SPI_CHIP_SELECT chipSelect
     );
 
   Summary:
     Exchange data on SPI x peripheral 
 
   Description:
-    This function should be used to exchange "wordSize" number of words on
+    This function should be used to exchange "size" number of bytes on
     SPI x module. Data pointed by pTransmitData is transmitted and received
     data is saved in the location pointed by pReceiveData. if pTransmitData
     is NULL, that means only reading is intended and if pReceiveData is NULL,
@@ -184,14 +331,14 @@ void SPIx_Setup (SPI_SETUP *setupOptions);
     
     1.  Blocking Configuration (Non-Interrupt mode): When "Interrupt Mode"
         option is unchecked in GUI, the generated code for that particular
-        SPI PLIb instance will be blocking. In this particular mode, the
+        SPI PLIB instance will be blocking. In this particular mode, the
         Exchange API will not return until all the requested data is exchanged.
                 
         After exchanging all the data, boolean status 'True' is returned
         indicating operation completion.
 
     2.  Non-Blocking Configuration (Interrupt mode): When "Interrupt Mode"
-        option is checked (or selected) in GUI, the generated code for that
+        option is selected in GUI, the generated code for that
         particular SPI PLIb instance will be Non-blocking in nature. In this
         particular mode, application will give the data exchanging
         responsiblity to the PLIB and come back and start doing other
@@ -213,32 +360,37 @@ void SPIx_Setup (SPI_SETUP *setupOptions);
 
   Parameters:
     *pTransmitData  Pointer to the data which has to be transmitted. if it is
-                    NULL, that means only data receiving is expected. Type of
-                    the pointer should be appropriately selected by the user
-                    based on datawidth selected for SPI. for 8 bit mode, pointer
-                    type should be uint8_t and for 9 to 16 bit mode, pointer
-                    type should be uint16_t. For 9 to 15bit mode, data should
-                    be right aligned in the 16 bit memory location.
+                    NULL, that means only data receiving is expected. For 9
+                    to 15bit mode, data should be right aligned in the 16 bit
+                    memory location.
     *pReceiveData   Pointer to the location where received data has to be stored.
                     It is user's responsibility to ensure pointed location has
                     sufficient memory to store the read data.
                     if it is NULL, that means only data transmission is expected.
-                    Type of the pointer should be appropriately selected by the user
-                    based on datawidth selected for SPI. for 8 bit mode, pointer
-                    type should be uint8_t and for 9 to 16 bit mode, pointer
-                    type should be uint16_t. For 9 to 15bit mode, received data
-                    will be right aligned in the 16 bit memory location.
-    wordSize        Number of words to be exchanged.
+                    For 9 to 15bit mode, received data will be right aligned in
+                    the 16 bit memory location.
+    size            Number of bytes to be exchanged. For 9 to 15bit mode, size
+                    should be given as if it is 16bit mode.
+    chipSelect      One of the elements of the enum SPI_CHIP_SELECT. With this
+                    parameter, user can decide data exchange will happen for which
+                    chip select line. 
+                    
+                    User need to make sure that a particular pin on the device has
+                    been configured to be used as selected chip select pin. it can
+                    be easily done by MHC Pin Manager tool.
+                    If user wants to use some GPIO pin for chip select instead of
+                    one of the NPCS pins, then also he needs to select and
+                    configure one of the NPCS pins; just that, in that case he
+                    should not map any pin to work as NPCS pin in Pin Manager.
 
   Returns:
     In Blocking mode, API returns True once the exchange is complete. It returns
-    False if txBuffer and rxBuffer both are NULL or wordSize is 0.
+    False if size parameter is 0.
     
     In interrupt mode, API returns true if the exchange request is accepted and
     False otherwise. If previous buffer request is not completed and a new
     exchange request comes, then this API will reject the new request and will
-    return "False". same as blocking mode, It returns False if txBuffer and
-    rxBuffer both are NULL or wordSize is 0.
+    return "False". Same as blocking mode, It returns False if size parameter is 0.
 
   Example:
     <code>
@@ -252,7 +404,7 @@ void SPIx_Setup (SPI_SETUP *setupOptions);
     // Interrupt mode
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
-    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size);
+    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size, SPI_CHIP_SELECT_NPCS0);
 
     void APP_SPITransferHandler(void* contextHandle)
     {
@@ -269,7 +421,8 @@ void SPIx_Setup (SPI_SETUP *setupOptions);
 bool SPIx_Exchange(
     void* pTransmitData,
     void* pReceiveData, 
-    size_t wordSize
+    size_t size,
+    SPI_CHIP_SELECT chipSelect
 );
 
 // *****************************************************************************
@@ -440,7 +593,7 @@ typedef  void (*SPI_EVENT_HANDLER) (void* context);
     
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
-    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size);
+    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size, SPI_CHIP_SELECT_NPCS0);
 
     void APP_SPITransferHandler(void* contextHandle)
     {
