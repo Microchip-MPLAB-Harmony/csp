@@ -5,14 +5,14 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_spi${SPI_INDEX?string}.h
+    plib_spi.h
 
   Summary:
-    SPI${SPI_INDEX?string} PLIB Header File
+    SPI PLIB Common Header File
 
   Description:
-    This file has prototype of all the interfaces provided for particular
-    SPI peripheral.
+    This file has prototype of all the interfaces which are common for all the
+    SPI peripherals.
 
 *******************************************************************************/
 
@@ -39,10 +39,13 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_SPI${SPI_INDEX?string}_H
-#define PLIB_SPI${SPI_INDEX?string}_H
+#ifndef PLIB_SPI_H
+#define PLIB_SPI_H
 
-#include "plib_spi.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
+#include "${__PROCESSOR?lower_case}.h"
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus  
@@ -53,21 +56,80 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 /****************************** SPI${SPI_INDEX?string} Interface *********************************/
 
-void SPI${SPI_INDEX?string}_Initialize ( void );
+typedef enum
+{
+    DATA_VALID_ON_CLOCK_TRAILING_EDGE = 0 << SPI_CSR_NCPHA_Pos,
+    DATA_VALID_ON_CLOCK_LEADING_EDGE = 1 << SPI_CSR_NCPHA_Pos
+    
+}SPI_CLOCK_PHASE;
 
-bool SPI${SPI_INDEX?string}_Exchange(void* pTransmitData,void* pReceiveData, size_t wordSize);
+typedef enum
+{
+    SPI_CLOCK_POLARITY_IDLE_LOW = 0 << SPI_CSR_CPOL_Pos,
+    SPI_CLOCK_POLARITY_IDLE_HIGH = 1 << SPI_CSR_CPOL_Pos
+    
+}SPI_CLOCK_POLARITY;
 
-SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
+typedef enum
+{
+    SPI_DATA_BITS_8 = SPI_CSR_BITS_8_BIT_Val,
+    SPI_DATA_BITS_9 = SPI_CSR_BITS_9_BIT_Val,
+    SPI_DATA_BITS_10 = SPI_CSR_BITS_10_BIT_Val,
+    SPI_DATA_BITS_11 = SPI_CSR_BITS_11_BIT_Val,
+    SPI_DATA_BITS_12 = SPI_CSR_BITS_12_BIT_Val,
+    SPI_DATA_BITS_13 = SPI_CSR_BITS_13_BIT_Val,
+    SPI_DATA_BITS_14 = SPI_CSR_BITS_14_BIT_Val,
+    SPI_DATA_BITS_15 = SPI_CSR_BITS_15_BIT_Val,
+    SPI_DATA_BITS_16 = SPI_CSR_BITS_16_BIT_Val
 
-void SPI${SPI_INDEX?string}_Setup ( SPI_SETUP * spiSetup );
+}SPI_DATA_BITS;
 
-<#if SPI_INTERRUPT_MODE == true>     
-bool SPI${SPI_INDEX?string}_IsBusy(void);
+typedef enum
+{
+    SPI_CHIP_SELECT_NPCS0 = SPI_TDR_PCS_NPCS0 | 0x00,
+    SPI_CHIP_SELECT_NPCS1 = SPI_TDR_PCS_NPCS1 | 0x01,
+    SPI_CHIP_SELECT_NPCS2 = SPI_TDR_PCS_NPCS2 | 0x02,
+    SPI_CHIP_SELECT_NPCS3 = SPI_TDR_PCS_NPCS3 | 0x03,
+    
+}SPI_CHIP_SELECT;
 
-void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_EVENT_HANDLER eventHandler, void* context);
+typedef struct
+{     
+    uint32_t    clockFrequency;
+    SPI_CLOCK_PHASE clockPhase;
+    SPI_CLOCK_POLARITY clockPolarity;
+    SPI_DATA_BITS   dataBits;
+    SPI_CHIP_SELECT chipSelect;
 
-void SPI${SPI_INDEX?string}_InterruptHandler(void);
-</#if>
+}SPI_SLAVE_SETUP;
+
+typedef enum 
+{
+    SPI_ERROR_NONE = 0,
+    SPI_OVERRUN_ERROR = 1 << SPI_SR_OVRES_Pos
+
+}SPI_ERROR;
+
+typedef  void (*SPI_EVENT_HANDLER) (void* context);
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local: **** Do Not Use ****
+// *****************************************************************************
+// *****************************************************************************
+
+typedef struct
+{
+    void*                   txBuffer;    
+    void*                   rxBuffer;
+    size_t                  exchangeSize;
+    size_t                  rxCount;
+    size_t                  txCount;
+    bool                    exchangeIsBusy;
+    SPI_EVENT_HANDLER       callback; 
+    void*                   context;
+    SPI_CHIP_SELECT         chipSelect;
+} SPI_OBJECT ;
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
@@ -76,7 +138,7 @@ void SPI${SPI_INDEX?string}_InterruptHandler(void);
     
 #endif
 
-#endif // PLIB_SPI${SPI_INDEX?string}_H
+#endif // PLIB_SPI_H
 
 /*******************************************************************************
  End of File
