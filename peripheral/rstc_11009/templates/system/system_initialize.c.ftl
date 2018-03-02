@@ -1,0 +1,1 @@
+	RSTC${INDEX?string}_Initialize();
