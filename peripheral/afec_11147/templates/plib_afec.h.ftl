@@ -8,7 +8,7 @@
     plib_afec${INDEX}.h
 
   Summary
-    AFEC peripheral library interface.
+    AFEC${INDEX} peripheral library interface.
 
   Description
     This file defines the interface to the AFEC peripheral library.  This 

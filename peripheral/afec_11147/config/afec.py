@@ -479,20 +479,20 @@ def instantiateComponent(afecComponent):
 	afecGlobalHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID) + "/plib_afec.h")
 	afecGlobalHeaderFile.setOutputName("plib_afec.h")
 	afecGlobalHeaderFile.setDestPath("peripheral/afec/")
-	afecGlobalHeaderFile.setProjectPath("/peripheral/afec/")
+	afecGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/afec/")
 	afecGlobalHeaderFile.setType("HEADER")
 	
 	afecSource1File = afecComponent.createFileSymbol(None, None)
 	afecSource1File.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/plib_afec.c.ftl")
 	afecSource1File.setOutputName("plib_afec" + str(num) + ".c")
 	afecSource1File.setDestPath("peripheral/afec/")
-	afecSource1File.setProjectPath("/peripheral/afec/")
+	afecSource1File.setProjectPath("config/" + configName +"/peripheral/afec/")
 	afecSource1File.setType("SOURCE")
 	afecSource1File.setMarkup(True)
 
 	afecSystemInitFile = afecComponent.createFileSymbol(None, None)
 	afecSystemInitFile.setType("STRING")
-	afecSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+	afecSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 	afecSystemInitFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_initialize.h.ftl")
 	afecSystemInitFile.setMarkup(True)
 
