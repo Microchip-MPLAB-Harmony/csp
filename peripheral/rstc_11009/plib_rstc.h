@@ -57,7 +57,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "PIC32CZ2038CA70144.h"
 #include <stdbool.h>
 
 // DOM-IGNORE-BEGIN
