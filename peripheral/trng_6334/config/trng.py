@@ -5,14 +5,16 @@ global NVICHandler
 global instance 
 
 def NVICControl(NVIC, event):
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "TRNG" + str(instance) + "_InterruptHandler", 2)
-    else :
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "TRNG_Handler", 2)
+	global NVICVector
+	global NVICHandler
+	Database.clearSymbolValue("core", NVICVector)
+	Database.clearSymbolValue("core", NVICHandler)
+	if (event["value"] == True):
+		Database.setSymbolValue("core", NVICVector, True, 2)
+		Database.setSymbolValue("core", NVICHandler, "TRNG" + str(instance) + "_InterruptHandler", 2)
+	else :
+		Database.setSymbolValue("core", NVICVector, False, 2)
+		Database.setSymbolValue("core", NVICHandler, "TRNG_Handler", 2)
 		
 def instantiateComponent(trngComponent):
 	global NVICVector
@@ -51,7 +53,7 @@ def instantiateComponent(trngComponent):
 	Database.clearSymbolValue("core", "PMC_ID_TRNG")
 	Database.setSymbolValue("core", "PMC_ID_TRNG", True, 2)
 	Database.clearSymbolValue("core", NVICVector)
-	Database.setSymbolValue("core", NVICVector, True, 2)
+	Database.setSymbolValue("core", NVICVector, False, 2)
 	Database.clearSymbolValue("core", NVICHandler)
 	Database.setSymbolValue("core", NVICHandler, "TRNG" + str(instance) + "_InterruptHandler", 2)
 	Database.clearSymbolValue("core", NVICHandlerLock)

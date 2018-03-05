@@ -42,8 +42,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifndef TRNG${INDEX?string}_H    // Guards against multiple inclusion
 #define TRNG${INDEX?string}_H
 
-
-#include "${__PROCESSOR?lower_case}.h"
 #include <stdint.h>
 #include <stddef.h>
 
