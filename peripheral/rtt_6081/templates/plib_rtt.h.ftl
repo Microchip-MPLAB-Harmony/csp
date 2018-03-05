@@ -40,19 +40,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifndef RTT${INDEX?string}_H    // Guards against multiple inclusion
 #define RTT${INDEX?string}_H
 
-
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
-/*  This section lists the other files that are included in this file.
-*/
-/* This section lists the other files that are included in this file.
-*/
-
-#include "${__PROCESSOR?lower_case}.h"
 #include <stdint.h>
 #include <stddef.h>
 
