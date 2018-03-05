@@ -4,14 +4,16 @@ global NVICVector
 global NVICHandler
 
 def NVICControl(rttNVIC, event):
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "RTT" + str(instance) + "_InterruptHandler", 2)
-    else :
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "RTT" + str(instance) + "_Handler", 2)
+	global NVICVector
+	global NVICHandler
+	Database.clearSymbolValue("core", NVICVector)
+	Database.clearSymbolValue("core", NVICHandler)
+	if (event["value"] == True):
+		Database.setSymbolValue("core", NVICVector, True, 2)
+		Database.setSymbolValue("core", NVICHandler, "RTT" + str(instance) + "_InterruptHandler", 2)
+	else :
+		Database.setSymbolValue("core", NVICVector, False, 2)
+		Database.setSymbolValue("core", NVICHandler, "RTT" + str(instance) + "_Handler", 2)
 
 def instantiateComponent(rttComponent):
 	
@@ -58,7 +60,7 @@ def instantiateComponent(rttComponent):
 	NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
 	Database.clearSymbolValue("core", NVICVector)
-	Database.setSymbolValue("core", NVICVector, True, 2)
+	Database.setSymbolValue("core", NVICVector, False, 2)
 	Database.clearSymbolValue("core", NVICHandler)
 	Database.setSymbolValue("core", NVICHandler, "RTT" + str(instance) + "_InterruptHandler", 2)
 	Database.clearSymbolValue("core", NVICHandlerLock)
