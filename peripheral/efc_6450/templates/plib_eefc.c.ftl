@@ -36,6 +36,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
+
+#include "${__PROCESSOR?lower_case}.h"
 #include "plib_eefc${INDEX?string}.h"
 
 static uint32_t status = 0;
