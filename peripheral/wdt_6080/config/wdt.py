@@ -5,7 +5,7 @@ wdtMenu.setLabel("WDT")
 
 wdtEnable = coreComponent.createBooleanSymbol("wdtENABLE", wdtMenu)
 wdtEnable.setLabel("Enable Watchdog Timer?")
-wdtEnable.setDefaultValue(True)
+wdtEnable.setDefaultValue(False)
 
 def wdtEnableCfgMenu(wdtCfgMenu, event):
 	wdtCfgMenu.setVisible(event["value"])
@@ -80,27 +80,34 @@ wdtIdleHalt = coreComponent.createBooleanSymbol("wdtidleHalt", wdtCfgMenu)
 wdtIdleHalt.setLabel("Enable Idle halt")
 wdtIdleHalt.setDefaultValue(False)	
 
+global peripId
+global NVICVector
+global NVICHandler
+global NVICHandlerLock
+
 peripId = Interrupt.getInterruptIndex("WDT")
 NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
 NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
 NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
 Database.clearSymbolValue("core", NVICVector)
-Database.setSymbolValue("core", NVICVector, True, 2)
+Database.setSymbolValue("core", NVICVector, False, 2)
 Database.clearSymbolValue("core", NVICHandler)
 Database.setSymbolValue("core", NVICHandler, "WDT0_InterruptHandler", 2)
 Database.clearSymbolValue("core", NVICHandlerLock)
 Database.setSymbolValue("core", NVICHandlerLock, True, 2)
 
 def NVICControl(NVIC, event):
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "WDT0_InterruptHandler", 2)
-    else :
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "WDT0_Handler", 2)
+	global NVICVector
+	global NVICHandler
+	Database.clearSymbolValue("core", NVICVector)
+	Database.clearSymbolValue("core", NVICHandler)
+	if (event["value"] == True):
+		Database.setSymbolValue("core", NVICVector, True, 2)
+		Database.setSymbolValue("core", NVICHandler, "WDT0_InterruptHandler", 2)
+	else :
+		Database.setSymbolValue("core", NVICVector, False, 2)
+		Database.setSymbolValue("core", NVICHandler, "WDT0_Handler", 2)
 		
 # NVIC Dynamic settings
 wdtNVICControl = coreComponent.createBooleanSymbol("NVIC_WDT_ENABLE", None)
