@@ -39,6 +39,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 <#macro GenerateCode>
+#include "${__PROCESSOR?lower_case}.h"
 #include "plib_trng${INDEX?string}.h"
 
 <#if trngEnableInterrupt == true>
