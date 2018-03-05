@@ -41,7 +41,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifndef RSWDT${rswdtIndex?string}_H    // Guards against multiple inclusion
 #define RSWDT${rswdtIndex?string}_H
 
-#include "${__PROCESSOR?lower_case}.h"
 #include <stdint.h>
 #include <stddef.h>
 
