@@ -38,6 +38,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
+#include "${__PROCESSOR?lower_case}.h"
 #include "peripheral/systick/plib_systick.h"
 
 void SYSTICK_TimerInitialize ( void ) 

@@ -4,15 +4,25 @@ systickMax = 0x00ffffff
 systickDefault = 0x0000927c
 
 systickEnable = coreComponent.createBooleanSymbol("systickEnable", devCfgMenu)
-systickEnable.setLabel("Enable SysTick?")
+systickEnable.setLabel("Use SysTick?")
 
 def showMenu(menu, show):
 	menu.setVisible(show["value"])
+
+def sysTickEnableCfgMenu(CfgMenu, event):
+	CfgMenu.setVisible(event["value"])
+
+	component = CfgMenu.getComponent()
+	component.getSymbolByID("systickHeaderFile").setEnabled(event["value"])
+	component.getSymbolByID("systickSourceFile").setEnabled(event["value"])
+	component.getSymbolByID("systickSystemDefFile").setEnabled(event["value"])
+	component.getSymbolByID("systickSystemInitFile").setEnabled(event["value"])
 	
 systickMenu = coreComponent.createMenuSymbol(None, systickEnable)
 systickMenu.setLabel("SysTick Configuration")
 systickMenu.setDependencies(showMenu, ["systickEnable"])
 systickMenu.setVisible(False)
+systickMenu.setDependencies(sysTickEnableCfgMenu, ["systickEnable"])
 
 systickInterrupt = coreComponent.createBooleanSymbol("USE_SYSTICK_INTERRUPT", systickMenu)
 systickInterrupt.setLabel("Enable Interrupt")
@@ -59,6 +69,7 @@ systickHeaderFile.setDestPath("/peripheral/systick/")
 systickHeaderFile.setProjectPath("config/" + configName + "/peripheral/systick/")
 systickHeaderFile.setType("HEADER")
 systickHeaderFile.setOverwrite(True)
+systickHeaderFile.setEnabled(False)
 systickHeaderFile.setMarkup(True)
 
 systickSourceFile = coreComponent.createFileSymbol(None, None)
@@ -69,15 +80,18 @@ systickSourceFile.setProjectPath("config/" + configName + "/peripheral/systick/"
 systickSourceFile.setType("SOURCE")
 systickSourceFile.setOverwrite(True)
 systickSourceFile.setMarkup(True)
+systickSourceFile.setEnabled(False)
 
 systickSystemDefFile = coreComponent.createFileSymbol(None, None)
 systickSystemDefFile.setType("STRING")
 systickSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 systickSystemDefFile.setSourcePath("../peripheral/systick/templates/system/system_definitions.h.ftl")
 systickSystemDefFile.setMarkup(True)
+systickSystemDefFile.setEnabled(False)
 
 systickSystemInitFile = coreComponent.createFileSymbol("systickSystemInitFile", None)
 systickSystemInitFile.setType("STRING")
 systickSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 systickSystemInitFile.setSourcePath("../peripheral/systick/templates/system/system_initialize.c.ftl")
 systickSystemInitFile.setMarkup(True)
+systickSystemInitFile.setEnabled(False)
