@@ -1,11 +1,14 @@
 Log.writeInfoMessage("Loading RSWDT for " + Variables.get("__PROCESSOR"))
 
+global NVICVector
+global NVICHandler
+
 rswdtMenu = coreComponent.createMenuSymbol(None, None)
 rswdtMenu.setLabel("RSWDT")
 
 rswdtEnable = coreComponent.createBooleanSymbol("rswdtENABLE", rswdtMenu)
 rswdtEnable.setLabel("Enable Reinforced Safety Watchdog Timer (RSWDT)?")
-rswdtEnable.setDefaultValue(True)
+rswdtEnable.setDefaultValue(False)
 
 def rswdtEnableCfgMenu(rswdtCfgMenu, event):
 	rswdtCfgMenu.setVisible(event["value"])
@@ -67,21 +70,23 @@ NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
 NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
 Database.clearSymbolValue("core", NVICVector)
-Database.setSymbolValue("core", NVICVector, True, 2)
+Database.setSymbolValue("core", NVICVector, False, 2)
 Database.clearSymbolValue("core", NVICHandler)
 Database.setSymbolValue("core", NVICHandler, "RSWDT0_InterruptHandler", 2)
 Database.clearSymbolValue("core", NVICHandlerLock)
 Database.setSymbolValue("core", NVICHandlerLock, True, 2)
 
 def NVICControl(NVIC, event):
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "RSWDT0_InterruptHandler", 2)
-    else :
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "RSWDT0_Handler", 2)
+	global NVICVector
+	global NVICHandler
+	Database.clearSymbolValue("core", NVICVector)
+	Database.clearSymbolValue("core", NVICHandler)
+	if (event["value"] == True):
+		Database.setSymbolValue("core", NVICVector, True, 2)
+		Database.setSymbolValue("core", NVICHandler, "RSWDT0_InterruptHandler", 2)
+	else :
+		Database.setSymbolValue("core", NVICVector, False, 2)
+		Database.setSymbolValue("core", NVICHandler, "RSWDT0_Handler", 2)
 		
 # NVIC Dynamic settings
 rswdtNVICControl = coreComponent.createBooleanSymbol("NVIC_RSWDT_ENABLE", None)
