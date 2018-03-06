@@ -493,7 +493,7 @@ def instantiateComponent(afecComponent):
 	afecSystemInitFile = afecComponent.createFileSymbol(None, None)
 	afecSystemInitFile.setType("STRING")
 	afecSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-	afecSystemInitFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_initialize.h.ftl")
+	afecSystemInitFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_initialize.c.ftl")
 	afecSystemInitFile.setMarkup(True)
 
 	afecSystemDefFile = afecComponent.createFileSymbol(None, None)

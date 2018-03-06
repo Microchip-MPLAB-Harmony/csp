@@ -113,7 +113,7 @@ rswdtSourceFile.setMarkup(True)
 		
 rswdtSystemInitFile = coreComponent.createFileSymbol("rswdtSystemInitFile", None)
 rswdtSystemInitFile.setType("STRING")
-rswdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+rswdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 rswdtSystemInitFile.setSourcePath("../peripheral/rswdt_11110/templates/system/system_initialize.c.ftl")
 rswdtSystemInitFile.setMarkup(True)
 

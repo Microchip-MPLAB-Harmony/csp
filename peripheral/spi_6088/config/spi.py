@@ -228,7 +228,7 @@ def instantiateComponent(spiComponent):
     
     spiSystemInitFile = spiComponent.createFileSymbol(None, None)
     spiSystemInitFile.setType("STRING")
-    spiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+    spiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     spiSystemInitFile.setSourcePath("../peripheral/spi_6088/templates/system/system_initialize.c.ftl")
     spiSystemInitFile.setMarkup(True)
     

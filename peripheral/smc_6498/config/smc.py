@@ -443,7 +443,7 @@ def instantiateComponent(smcComponent):
 	smcHeader1File.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/plib_smc.h.ftl")
 	smcHeader1File.setOutputName("plib_smc" + str(num) + ".h")
 	smcHeader1File.setDestPath("/peripheral/smc/")
-	smcHeader1File.setProjectPath("/peripheral/smc/")
+	smcHeader1File.setProjectPath("config/" + configName + "/peripheral/smc/")
 	smcHeader1File.setType("HEADER")
 	smcHeader1File.setMarkup(True)
 
@@ -451,7 +451,7 @@ def instantiateComponent(smcComponent):
 	smcSource1File.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/plib_smc.c.ftl")
 	smcSource1File.setOutputName("plib_smc" + str(num) + ".c")
 	smcSource1File.setDestPath("/peripheral/smc/")
-	smcSource1File.setProjectPath("/peripheral/smc/")
+	smcSource1File.setProjectPath("config/" + configName + "/peripheral/smc/")
 	smcSource1File.setType("SOURCE")
 	smcSource1File.setMarkup(True)
 
@@ -464,6 +464,6 @@ def instantiateComponent(smcComponent):
 
 	smcSystemInitFile = smcComponent.createFileSymbol("smcSystemInitFile", None)
 	smcSystemInitFile.setType("STRING")
-	smcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+	smcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 	smcSystemInitFile.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/system/system_initialize.c.ftl")
 	smcSystemInitFile.setMarkup(True)

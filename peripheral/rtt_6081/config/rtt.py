@@ -91,7 +91,7 @@ def instantiateComponent(rttComponent):
 	
 	rttSystemInitFile = rttComponent.createFileSymbol(None, None)
 	rttSystemInitFile.setType("STRING")
-	rttSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+	rttSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 	rttSystemInitFile.setSourcePath("../peripheral/rtt_6081/templates/system/system_initialize.c.ftl")
 	rttSystemInitFile.setMarkup(True)
 

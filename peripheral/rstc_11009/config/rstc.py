@@ -123,7 +123,7 @@ def instantiateComponent(rstcComponent):
     
     rstcSystemInitFile = rstcComponent.createFileSymbol(None, None)
     rstcSystemInitFile.setType("STRING")
-    rstcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+    rstcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     rstcSystemInitFile.setSourcePath("../peripheral/rstc_11009/templates/system/system_initialize.c.ftl")
     rstcSystemInitFile.setMarkup(True)
 

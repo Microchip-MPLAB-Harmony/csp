@@ -236,7 +236,7 @@ mpuSourceFile.setEnabled(False)
 
 mpuSystemInitFile = coreComponent.createFileSymbol(None, None)
 mpuSystemInitFile.setType("STRING")
-mpuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+mpuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_MPU")
 mpuSystemInitFile.setSourcePath("../peripheral/mpu/templates/system/system_initialize.c.ftl")
 mpuSystemInitFile.setMarkup(True)
 mpuSystemInitFile.setEnabled(False)

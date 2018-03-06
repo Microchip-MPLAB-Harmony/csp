@@ -161,7 +161,7 @@ def instantiateComponent(qspiComponent):
     #QSPI Initialize 
     qspiSystemInitFile = qspiComponent.createFileSymbol(None, None)
     qspiSystemInitFile.setType("STRING")
-    qspiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+    qspiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     qspiSystemInitFile.setSourcePath("../peripheral/qspi_" + qspiRegModule.getID() + "/templates/system/system_initialize.c.ftl")
     qspiSystemInitFile.setMarkup(True)
 
