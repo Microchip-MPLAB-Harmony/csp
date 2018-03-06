@@ -1,5 +1,6 @@
 /*******************************************************************************
-  DACC Peripheral Library Interface Header File
+  Data Type definition of Digital-to-Analog Converter Controller (DACC) 
+  Peripheral Library(PLIB).
 
   Company
     Microchip Technology Inc.
@@ -8,22 +9,11 @@
     plib_dacc.h
 
   Summary
-    DACC peripheral library interface.
+    Data Type definition of the DACC Peripheral Interface Plib.
 
   Description
-    This file defines the interface to the DACC peripheral library.  This 
-    library provides access to and control of the associated peripheral 
-    instance.
+    This file defines the Data Types for the DACC Plib.
 
-  Remarks:
-    This header is for documentation only.  The actual dacc<x> headers will be
-    generated as required by the MCC (where <x> is the peripheral instance 
-    number).
-
-    Every interface symbol has a lower-case 'x' in it following the "DACC" 
-    abbreviation.  This 'x' will be replaced by the peripheral instance number
-    in the generated headers.  These are the actual functions that should be
-    used.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -85,7 +75,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 // *****************************************************************************
-/* DACCx Channel Index
+/* DACC Channel Index
 
   Summary:
     Identifies the Channel index of DACC module.

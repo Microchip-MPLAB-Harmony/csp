@@ -1,5 +1,5 @@
 /*******************************************************************************
-  DACC Peripheral Library
+  Digital-to-Analog Converter Controller (DACC) Peripheral Library
 
   Company:
     Microchip Technology Inc.
@@ -38,7 +38,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#include "${__PROCESSOR}.h"
+#include "${__PROCESSOR?lower_case}.h"
 #include "plib_dacc${INDEX?string}.h"
 
 <#--Implementation-->
@@ -98,12 +98,12 @@ void DACC${INDEX?string}_Initialize (void)
     </#if>
 }
 
-bool DACC${INDEX?string}_StatusGet (DACC_CHANNEL_NUM chId)
+bool DACC${INDEX?string}_IsReady (DACC_CHANNEL_NUM channel)
 {
-    return ((_DACC_REGS->DACC_ISR.w >> chId) & 0x1U);
+    return (bool)(((_DACC_REGS->DACC_ISR.w >> channel) & DACC_ISR_TXRDY0_Msk) == DACC_ISR_TXRDY0_Msk);
 }
 
-void DACC${INDEX?string}_DataWrite (DACC_CHANNEL_NUM chId, uint32_t data)
+void DACC${INDEX?string}_DataWrite (DACC_CHANNEL_NUM channel, uint32_t data)
 {
-    _DACC_REGS->DACC_CDR[chId].w = data;  
+    _DACC_REGS->DACC_CDR[channel].w = data;  
 }
