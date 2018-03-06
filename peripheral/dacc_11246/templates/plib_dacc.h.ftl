@@ -59,11 +59,11 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 
 /****************************** DACC API *********************************/
-void DACC${INDEX?string}_Initialize( void );
+void DACC${INDEX?string}_Initialize (void);
 
-bool DACC${INDEX?string}_StatusGet( DACC_CHANNEL_NUM channel );
+bool DACC${INDEX?string}_IsReady (DACC_CHANNEL_NUM channel);
 
-void DACC${INDEX?string}_DataWrite( DACC_CHANNEL_NUM channel, uint32_t data );
+void DACC${INDEX?string}_DataWrite (DACC_CHANNEL_NUM channel, uint32_t data);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

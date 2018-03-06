@@ -1,5 +1,6 @@
 /*******************************************************************************
-  DACC Peripheral Library Interface Header File
+  Digital-to-Analog Converter Controller (DACC) Peripheral Library(PLIB) 
+  Interface Header File
 
   Company
     Microchip Technology Inc.
@@ -147,7 +148,7 @@ void DACCx_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-    bool DACCx_StatusGet(DACCx_CHANNEL_NUM chId)
+    bool DACCx_IsReady(DACC_CHANNEL_NUM channel)
 
    Summary:
     Checks whether DACC is ready to accecpt new conversion request or not.
@@ -160,7 +161,7 @@ void DACCx_Initialize (void);
     DACCx_Initialize must have been called for the associated DACC instance.
 
    Parameters:
-    chId   - Points to DACC Channel Id.
+    channel   - Points to DACC Channel.
   
    Returns:
     true      - When DACC is ready to accept new conversion request.
@@ -171,9 +172,9 @@ void DACCx_Initialize (void);
     
     bool status = false;
 
-    if (true == DACC0_StatusGet (DACC0_CHANNEL_1))
+    if (true == DACC0_IsReady (DACC_CHANNEL_1))
     {
-       DACC0_DataWrite (DACC0_CHANNEL_1, 0xff) 
+       DACC0_DataWrite (DACC_CHANNEL_1, 0xff) 
     }
     else
     {
@@ -187,11 +188,11 @@ void DACCx_Initialize (void);
     None.
 */
 
-bool DACCx_StatusGet (DACCx_CHANNEL_NUM channel);
+bool DACCx_IsReady (DACC_CHANNEL_NUM channel);
 
 // *****************************************************************************
 /* Function:
-    void DACCx_DataWrite (DACCx_CHANNEL_NUM channel, uint32_t data)
+    void DACCx_DataWrite (DACC_CHANNEL_NUM channel, uint32_t data)
 
    Summary:
     Converts a Digital data to Analog value.
@@ -206,8 +207,8 @@ bool DACCx_StatusGet (DACCx_CHANNEL_NUM channel);
     DACCx_Initialize must have been called for the associated DACC instance.
 
    Parameters:
-    channel   - Channel number
-    data   - Digital data to be converted to Analog value.
+    channel - Channel number
+    data    - Digital data to be converted to Analog value.
   
    Returns:
     None
@@ -221,7 +222,7 @@ bool DACCx_StatusGet (DACCx_CHANNEL_NUM channel);
     //considering count=4
     for (uint8_t i = 0; i<4; i++)
     {
-       DACC0_DataWrite (DACC0_CHANNEL_0, myData[i]);
+       DACC0_DataWrite (DACC_CHANNEL_0, myData[i]);
     }
     
     </code>
