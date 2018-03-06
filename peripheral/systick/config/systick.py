@@ -30,7 +30,6 @@ def sysTickEnableCfgMenu(CfgMenu, event):
         systickHeaderFile.setEnabled(False)
         systickSourceFile.setEnabled(False)
         systickSystemDefFile.setEnabled(False)
-        mpuSystemInitFile.setEnabled(False)
         systickSystemInitFile.setEnabled(False)
         
 systickMenu = coreComponent.createMenuSymbol(None, systickEnable)
