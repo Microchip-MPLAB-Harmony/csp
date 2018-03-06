@@ -682,15 +682,17 @@ clkSourceFile.setType("SOURCE")
 clkSourceFile.setMarkup(True)
 
 #Add clock related code to common files
-clkHeaderFileListEntry = coreComponent.createListEntrySymbol(None, None)
-clkHeaderFileListEntry.setTarget("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-clkHeaderFileListEntry.addValue("#include \"peripheral/clk/clk.h\"")
+clkHeaderFileListEntry = coreComponent.createFileSymbol(None, None)
+clkHeaderFileListEntry.setType("STRING")
+clkHeaderFileListEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+clkHeaderFileListEntry.setSourcePath("../peripheral/clk_sam_e70/templates/system/system_definitions.h.ftl")
+clkHeaderFileListEntry.setMarkup(True)
 
 
 clkSystemInitFile = coreComponent.createFileSymbol(None, None)
 clkSystemInitFile.setType("STRING")
 clkSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-clkSystemInitFile.setSourcePath("../peripheral/clk_sam_e70/templates/clk_system_init.c.ftl")
+clkSystemInitFile.setSourcePath("../peripheral/clk_sam_e70/templates/system/system_initialize.c.ftl")
 clkSystemInitFile.setMarkup(True)
 
 

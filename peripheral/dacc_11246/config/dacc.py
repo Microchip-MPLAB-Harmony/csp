@@ -233,7 +233,7 @@ def instantiateComponent(daccComponent):
 
     daccSystemInitFile = daccComponent.createFileSymbol(None, None)
     daccSystemInitFile.setType("STRING")
-    daccSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+    daccSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     daccSystemInitFile.setSourcePath("../peripheral/dacc_11246/templates/system/system_initialize.c.ftl")
     daccSystemInitFile.setMarkup(True)
 

@@ -179,8 +179,8 @@ nvicHeaderFile.setOverwrite(True)
 
 nvicSystemInitFile = coreComponent.createFileSymbol(None, None)
 nvicSystemInitFile.setType("STRING")
-nvicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-nvicSystemInitFile.setSourcePath("../peripheral/nvic_m7/templates/system/system_initialize.h.ftl")
+nvicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+nvicSystemInitFile.setSourcePath("../peripheral/nvic_m7/templates/system/system_initialize.c.ftl")
 nvicSystemInitFile.setMarkup(True)
 
 nvicSystemDefFile = coreComponent.createFileSymbol(None, None)

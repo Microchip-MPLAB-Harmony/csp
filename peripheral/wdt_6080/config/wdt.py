@@ -136,7 +136,7 @@ wdtSourceFile.setMarkup(True)
 
 wdtSystemInitFile = coreComponent.createFileSymbol("wdtSystemInitFile", None)
 wdtSystemInitFile.setType("STRING")
-wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 wdtSystemInitFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_initialize.c.ftl")
 wdtSystemInitFile.setMarkup(True)
 

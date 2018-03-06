@@ -445,6 +445,6 @@ def instantiateComponent(sdramcComponent):
 
 	sdramSystemInitFile = sdramcComponent.createFileSymbol(None, None)
 	sdramSystemInitFile.setType("STRING")
-	sdramSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+	sdramSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 	sdramSystemInitFile.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/system/system_initialize.c.ftl")
 	sdramSystemInitFile.setMarkup(True)

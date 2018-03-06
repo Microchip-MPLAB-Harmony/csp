@@ -191,7 +191,7 @@ def instantiateComponent(accComponent):
 
     accSystemInitFile = accComponent.createFileSymbol(None, None)
     accSystemInitFile.setType("STRING")
-    accSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+    accSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     accSystemInitFile.setSourcePath("../peripheral/acc_6490/templates/system/system_initialize.c.ftl")
     accSystemInitFile.setMarkup(True)
 

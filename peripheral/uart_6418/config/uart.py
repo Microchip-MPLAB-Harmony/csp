@@ -176,8 +176,8 @@ def instantiateComponent(uartComponent):
 
     uartSystemInitFile = uartComponent.createFileSymbol(None, None)
     uartSystemInitFile.setType("STRING")
-    uartSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
-    uartSystemInitFile.setSourcePath("../peripheral/uart_6418/templates/system/system_initialize.h.ftl")
+    uartSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    uartSystemInitFile.setSourcePath("../peripheral/uart_6418/templates/system/system_initialize.c.ftl")
     uartSystemInitFile.setMarkup(True)
 
     uartSystemDefFile = uartComponent.createFileSymbol(None, None)

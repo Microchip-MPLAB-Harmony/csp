@@ -135,9 +135,8 @@ def instantiateComponent(twiComponent):
     
     #TWI Initialize 
     twiSystemInitFile = twiComponent.createFileSymbol(None, None)
-    
     twiSystemInitFile.setType("STRING")
-    twiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+    twiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     twiSystemInitFile.setSourcePath("../peripheral/twi_" + REG_MODULE_TWI.getID() + "/templates/system/system_initialize.c.ftl")
     twiSystemInitFile.setMarkup(True)
 
