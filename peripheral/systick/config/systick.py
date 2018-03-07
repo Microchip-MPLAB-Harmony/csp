@@ -21,7 +21,7 @@ def showMenu(menu, show):
 def sysTickEnableCfgMenu(CfgMenu, event):
     CfgMenu.setVisible(event["value"])
 
-    if(event["value"]==True):
+    if(event["value"] == True):
         systickHeaderFile.setEnabled(True)
         systickSourceFile.setEnabled(True)
         systickSystemDefFile.setEnabled(True)
