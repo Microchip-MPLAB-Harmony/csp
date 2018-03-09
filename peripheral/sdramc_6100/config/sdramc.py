@@ -43,14 +43,6 @@ SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE = 32
 ################################################################################
 #### Business Logic ####
 ################################################################################
-# Function to get Core Clock Frequency
-def getCoreClkFrequency():
-    return int(Database.getSymbolValue("core", "PROCESSORCLK_FREQ"))
-
-# Function to get Master Clock Frequency
-def getMasterClkFrequency():
-    return int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
-
 
 # Function to Enable/Disable SDRAM Low-Power Configurations
 def lowPowerVisibility(symbol, event) :
@@ -121,19 +113,13 @@ def instantiateComponent(sdramcComponent):
     sdramcIndex.setVisible(False)
     sdramcIndex.setDefaultValue(int(instance))
 
-    sdramcSymCoreClockFreq = getCoreClkFrequency()
+    cpuclk = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+    cpuclk = int(cpuclk)
 
-    sdramcSymClkFreq = sdramcComponent.createIntegerSymbol("SDRAMC_CORE_CLK_FREQ", None)
+    sdramcSymClkFreq = sdramcComponent.createIntegerSymbol("SDRAMC_CPU_CLK_FREQ", None)
     sdramcSymClkFreq.setLabel("Get Core Clock Frequency")
     sdramcSymClkFreq.setVisible(False)
-    sdramcSymClkFreq.setDefaultValue(sdramcSymCoreClockFreq)
-
-    sdramcSymMasterClockFreq = getMasterClkFrequency()
-
-    sdramcSymMasterClkFreq = sdramcComponent.createIntegerSymbol("SDRAMC_MASTER_CLK_FREQ", None)
-    sdramcSymMasterClkFreq.setLabel("Get System Clock Frequency")
-    sdramcSymMasterClkFreq.setVisible(False)
-    sdramcSymMasterClkFreq.setDefaultValue(sdramcSymMasterClockFreq)
+    sdramcSymClkFreq.setDefaultValue(cpuclk)
 
     # SDRAMC Features
     sdramcSymMenu_features = sdramcComponent.createMenuSymbol("SDRAMC_FEATURE_MENU", None)

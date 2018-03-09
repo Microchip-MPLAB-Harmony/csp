@@ -43,11 +43,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: SDRAMC Implementation
 // *****************************************************************************
 // *****************************************************************************
-void SW_DelayUs(uint32_t microSec)
+void SW_DelayUs(uint32_t delay)
 {
-    uint32_t uSec;
+    uint32_t i, count;
 
-    for (uSec = 0; uSec < microSec; uSec++);
+    /* delay * (CPU_FREQ/1000000) / 6 */
+    count = delay *  (${SDRAMC_CPU_CLK_FREQ}/1000000)/6;
+
+    /* 6 CPU cycles per iteration */
+    for (i = 0; i < count; i++)
+        __NOP();
 }
 
 void SDRAMC${INDEX?string}_Initialize( void )
