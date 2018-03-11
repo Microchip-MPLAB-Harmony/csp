@@ -67,9 +67,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	uintptr_t               context;
 	<#lt>	uint32_t				data;
 	<#lt>} TRNG_OBJECT ;
-	
-	<#lt>TRNG_OBJECT trng;
 </#if>
+
 /***************************** TRNG API *******************************/
 <#if trngEnableInterrupt == true>
 	<#lt>void TRNG${INDEX?string}_RandomNumberGenerate( void );

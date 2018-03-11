@@ -42,7 +42,9 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include "${__PROCESSOR?lower_case}.h"
 #include "plib_trng${INDEX?string}.h"
 
-<#if trngEnableInterrupt == true>
+<#if trngEnableInterrupt == true
+	<#lt>TRNG_OBJECT trng;
+	
 	<#lt>void TRNG${INDEX?string}_RandomNumberGenerate( void )
 	<#lt>{
 	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;

@@ -63,8 +63,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	RTT_CALLBACK          callback;
 	<#lt>	uintptr_t             context;
 	<#lt>} RTT_OBJECT ;
-
-	<#lt>RTT_OBJECT rtt;
 </#if>
 
 void RTT${INDEX?string}_Initialize(void);

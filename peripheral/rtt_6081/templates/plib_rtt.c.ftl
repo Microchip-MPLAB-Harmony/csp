@@ -39,6 +39,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "${__PROCESSOR?lower_case}.h"
 #include "plib_rtt${INDEX?string}.h"
 
+<#if rttINCIEN == true || rttALMIEN == true>
+	<#lt>RTT_OBJECT rtt;
+</#if>
+	
 void RTT${INDEX?string}_Initialize(void)
 {
 	_RTT_REGS->RTT_MR.w = RTT_MR_RTTRST_Msk;

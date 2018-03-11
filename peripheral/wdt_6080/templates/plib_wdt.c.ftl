@@ -41,6 +41,10 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include "${__PROCESSOR?lower_case}.h"
 #include "plib_wdt${wdtIndex?string}.h"
 
+<#if wdtinterruptMode == true>	
+	<#lt>WDT_OBJECT wdt;
+</#if>
+
 void WDT${wdtIndex?string}_Initialize( void )
 {
 	_WDT_REGS->WDT_MR.w = WDT_MR_WDD (${wdtWDD}) | WDT_MR_WDV(${wdtWDV}) \

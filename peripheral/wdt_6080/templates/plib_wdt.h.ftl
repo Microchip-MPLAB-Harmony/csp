@@ -65,9 +65,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	WDT_CALLBACK          callback; 
 	<#lt>	uintptr_t               context;
 	<#lt>} WDT_OBJECT ;
-	
-	<#lt>WDT_OBJECT wdt;
 </#if>
+
 /***************************** WDT API *******************************/
 void WDT${wdtIndex?string}_Initialize( void );
 void WDT${wdtIndex?string}_Clear( void );

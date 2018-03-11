@@ -65,9 +65,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	RSWDT_CALLBACK          callback; 
 	<#lt>	uintptr_t               context;
 	<#lt>} RSWDT_OBJECT ;
-	
-	<#lt>RSWDT_OBJECT rswdt;
 </#if>
+
 /***************************** RSWDT API *******************************/
 void RSWDT${rswdtIndex?string}_Initialize( void );
 void RSWDT${rswdtIndex?string}_Clear( void );

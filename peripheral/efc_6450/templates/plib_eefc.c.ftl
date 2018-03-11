@@ -42,6 +42,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 static uint32_t status = 0;
 
+<#if eefcEnableInterrupt == true>
+	<#lt>EEFC_OBJECT eefc;
+</#if>
+	
 void EEFC${INDEX?string}_EraseRow( uint32_t address )
 {
 	volatile uint16_t page_number;

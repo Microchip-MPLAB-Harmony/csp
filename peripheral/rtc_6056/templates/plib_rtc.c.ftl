@@ -44,6 +44,10 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #define decimaltobcd(x)					(((x/10)<<4)+((x - ((x/10)*10))))
 #define bcdtodecimal(x)					((x & 0xF0) >> 4) * 10 + (x & 0x0F)
 
+<#if rtcEnableInterrupt == true>
+	<#lt>RTC_OBJECT rtc;
+</#if>
+
 void RTC${INDEX?string}_Initialize( void )
 {
 	_RTC_REGS->RTC_MR.w = RTC_MR_OUT0_${RTC_MR_OUT0} | RTC_MR_OUT1_${RTC_MR_OUT1} | RTC_MR_THIGH_${RTC_MR_THIGH} | RTC_MR_TPERIOD_${RTC_MR_TPERIOD};

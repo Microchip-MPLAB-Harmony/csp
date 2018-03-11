@@ -42,6 +42,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
 	extern "C" {
@@ -64,8 +65,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	SYSTICK_CALLBACK          callback; 
 	<#lt>	uintptr_t               context;
 	<#lt>} SYSTICK_OBJECT ;
-	
-	<#lt>SYSTICK_OBJECT systick;
 </#if>
 /***************************** SYSTICK API *******************************/
 void SYSTICK_TimerInitialize ( void );

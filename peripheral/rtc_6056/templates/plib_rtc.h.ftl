@@ -88,8 +88,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	RTC_ALARM_CALLBACK          callback; 
 	<#lt>	uintptr_t               context;
 	<#lt>} RTC_OBJECT ;
-
-	<#lt>RTC_OBJECT rtc;
 </#if>
 /***************************** RTC API *******************************/
 void RTC${INDEX?string}_Initialize( void );
