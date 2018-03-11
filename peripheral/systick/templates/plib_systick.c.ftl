@@ -41,6 +41,10 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include "${__PROCESSOR?lower_case}.h"
 #include "peripheral/systick/plib_systick.h"
 
+<#if USE_SYSTICK_INTERRUPT == true>
+	<#lt>SYSTICK_OBJECT systick;
+</#if>
+	
 void SYSTICK_TimerInitialize ( void ) 
 {
 	SysTick->CTRL = 0;
@@ -114,6 +118,9 @@ uint32_t SYSTICK_TimerFrequencyGet ( void )
 
 	<#lt>void SysTick_Handler()
 	<#lt>{
-	<#lt>	systick.callback(systick.context);
+	<#lt>	if(systick.callback != NULL)
+	<#lt>	{
+	<#lt>		systick.callback(systick.context);
+	<#lt>	}
 	<#lt>}
 </#if>

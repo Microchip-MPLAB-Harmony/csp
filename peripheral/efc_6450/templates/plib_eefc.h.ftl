@@ -79,10 +79,7 @@ typedef enum
 	<#lt>{
 		<#lt>	EEFC_CALLBACK          callback;
 		<#lt>	uintptr_t               context;
-	<#lt>} EEFC_OBJECT ;
-
-	<#lt>EEFC_OBJECT eefc;
-	
+	<#lt>} EEFC_OBJECT ;	
 </#if>
 
 void EEFC${INDEX?string}_WriteQuadWord( uint32_t address, uint32_t* data );

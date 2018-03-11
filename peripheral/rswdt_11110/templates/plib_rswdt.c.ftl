@@ -41,6 +41,10 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include "${__PROCESSOR?lower_case}.h"
 #include "plib_rswdt${rswdtIndex?string}.h"
 
+<#if rswdtinterruptMode == true>
+	<#lt>RSWDT_OBJECT rswdt;
+</#if>
+
 void RSWDT${rswdtIndex?string}_Initialize( void )
 {
 	_RSWDT_REGS->RSWDT_MR.w = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}) \
