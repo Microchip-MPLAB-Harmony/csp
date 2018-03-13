@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Reset Controller (RSTC) PLIB
+  Reset Controller (RSTC) Peripheral Library (PLIB)
 
   Company:
     Microchip Technology Inc.
@@ -40,8 +40,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_RSTC${INDEX?string}_H // Guards against multiple inclusion
-#define _PLIB_RSTC${INDEX?string}_H
+#ifndef PLIB_RSTC${INDEX?string}_H // Guards against multiple inclusion
+#define PLIB_RSTC${INDEX?string}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -85,4 +85,4 @@ void RSTC${INDEX?string}_CallbackRegister (RSTC_CALLBACK callback, uintptr_t con
 #endif
 // DOM-IGNORE-END
 
-#endif // _PLIB_RSTC${INDEX?string}_H
+#endif // PLIB_RSTC${INDEX?string}_H

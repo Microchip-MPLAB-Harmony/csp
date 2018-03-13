@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Reset Controller (RSTC) Peripheral Library 
+  Reset Controller (RSTC) Peripheral Library(PLIB) Source file 
 
   Company:
     Microchip Technology Inc.

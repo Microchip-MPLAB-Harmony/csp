@@ -1,5 +1,5 @@
 /*******************************************************************************
-Data Type definition of Reset Controller (RSTC) PLIB.
+Data Type definition of Reset Controller (RSTC) Peripheral Library (PLIB).
 
  Company:
     Microchip Technology Inc.
@@ -124,7 +124,6 @@ typedef enum
     
 } RSTC_RESET_TYPE;
 
-
 typedef void (*RSTC_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
@@ -135,8 +134,9 @@ typedef void (*RSTC_CALLBACK) (uintptr_t context);
 
 typedef struct
 {
-    RSTC_CALLBACK          callback; 
-    uintptr_t               context;
+    RSTC_CALLBACK callback; 
+    uintptr_t     context;
+    
 } RSTC_OBJECT ;
 
 

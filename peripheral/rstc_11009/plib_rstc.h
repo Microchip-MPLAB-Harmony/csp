@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Reset Controller (RSTC) Peripheral Library Interface Header File
+  Reset Controller (RSTC) Peripheral Library(PLIB) Interface Header File
 
   Company
     Microchip Technology Inc.
@@ -45,8 +45,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef RSTC_H    // Guards against multiple inclusion
-#define RSTC_H
+#ifndef PLIB_RSTCx_H    // Guards against multiple inclusion
+#define PLIB_RSTCx_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -130,7 +130,6 @@ typedef enum
     
 } RSTC_RESET_TYPE;
 
-typedef void (*RSTC_CALLBACK) (uintptr_t context);
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -164,7 +163,6 @@ typedef void (*RSTC_CALLBACK) (uintptr_t context);
     This function must be called before any other RSTC function is called.                                           
 
 */
-
 void RSTCx_Initialize (void);
 
 // *****************************************************************************
@@ -172,21 +170,22 @@ void RSTCx_Initialize (void);
     void RSTCx_Reset (RSTC_RESET_TYPE type)
 
    Summary:
-     Resets the processor and all the embedded peripherals, if RSTC_RESET type is
-     "RSTC_RESET_PROC ".
+     Resets the processor and all the embedded peripherals, if RSTC_RESET type 
+     is "RSTC_RESET_PROC ".
      Asserts the NRST pin, if RSTC_RESET type is "RSTC_RESET_EXT ".
 
    Description:
-     This function resets the processor and all the embedded peripherals including the memory system
-     and, in particular, the Remap Commandor  or this function asserts NRST Pin.
+     This function resets the processor and all the embedded peripherals 
+     including the memory system and, in particular, the Remap Commandor or this
+     function asserts NRST Pin.
 
    Precondition:
      None.
 
    Parameters:
      RSTC_RESET - "RSTC_RESET_PROC", For Processor reset.
-                               "RSTC_RESET_EXT", For External Reset
-                               "RSTC_RESET_EXT_PROC", For both Processor and External Reset
+                  "RSTC_RESET_EXT", For External Reset
+                  "RSTC_RESET_EXT_PROC", For both Processor and External Reset
 
    Returns:        
      None.
@@ -223,7 +222,7 @@ void RSTCx_Reset (RSTC_RESET_TYPE type);
   
    Returns:
     bool - Returns True when NRST pin is high
-              Returns False when NRST pin is Low
+           Returns False when NRST pin is Low
 
   Example:
     <code>
@@ -238,7 +237,6 @@ void RSTCx_Reset (RSTC_RESET_TYPE type);
   Remarks:
     None.
 */
-
 bool RSTCx_NRSTPinRead (void);
 
 // *****************************************************************************
@@ -259,7 +257,7 @@ bool RSTCx_NRSTPinRead (void);
   
    Returns:
     RSTC_RESET_CAUSE - Identifies cause of reset. Either General, Backup,
-                                          Watchdog, Software or User Reset
+                       Watchdog, Software or User Reset
 
   Example:
     <code>
@@ -274,8 +272,38 @@ bool RSTCx_NRSTPinRead (void);
   Remarks:
     None.
 */
-
 RSTC_RESET_CAUSE RSTCx_ResetCauseGet (void);
+
+// *****************************************************************************
+/* RSTC Callback Function pointer
+   typedef void (*RSTC_CALLBACK) (uintptr_t context)
+
+  Summary:
+    Pointer to a RSTC callback function
+
+  Description:
+    This data type defines the required function signature for the RSTC Callback 
+    function.
+    A client must register a pointer to a callback function whose function
+    signature (parameter and return value types) match the types specified by
+    this function pointer in order to receive event callback.
+    The parameters and return values and are described here and a partial
+    example implementation is provided.
+
+  Parameters:
+    context - Value identifying the context of the application that registered
+              the callback function.
+
+  Returns:
+    None.
+
+   Example:
+    Refer to the RSTCx_CallbackRegister( ) function code example.
+
+  Remarks:
+    None
+*/
+typedef void (*RSTC_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
 /* Function:
@@ -305,7 +333,7 @@ RSTC_RESET_CAUSE RSTCx_ResetCauseGet (void);
   Example:
     <code>
     MY_APP_OBJ myAppObj;
-    void APP_RSTC_EventHandler(uintptr_t context)
+    void APP_RSTC_CallbackFunction(uintptr_t context)
     {  
         // The context was set to an application specific object.
         // It is now retrievable easily in the event handler.
@@ -313,14 +341,13 @@ RSTC_RESET_CAUSE RSTCx_ResetCauseGet (void);
         //Application related tasks
     }
                   
-    RSTC0_CallbackRegister (APP_RSTC_EventHandler, (uintptr_t)&myAppObj);
+    RSTC0_CallbackRegister (APP_RSTC_CallbackFunction, (uintptr_t)&myAppObj);
     </code>
 
   Remarks:
     None.
 
 */
-
 void RSTCx_CallbackRegister (RSTC_CALLBACK callback, uintptr_t context);
 
 // DOM-IGNORE-BEGIN
@@ -331,7 +358,7 @@ void RSTCx_CallbackRegister (RSTC_CALLBACK callback, uintptr_t context);
 #endif
 // DOM-IGNORE-END
 
-#endif //RSTC_H
+#endif //PLIB_RSTCx_H
 
 /**
  End of File
