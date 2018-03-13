@@ -86,7 +86,7 @@ def setupPort(usePortLocal, event):
 ######################################### PIO Main Menu  ##########################################
 ###################################################################################################
         
-pioMenu = coreComponent.createMenuSymbol(None, None)
+pioMenu = coreComponent.createMenuSymbol(PIO_MENU, None)
 pioMenu.setLabel("Ports (PIO)")
 pioMenu.setDescription("Configuration for PIO PLIB")
 
@@ -104,7 +104,7 @@ pioPackage.setReadOnly(True)
 ################################# Pin Configuration related code ##################################
 ###################################################################################################
     
-pinConfiguration = coreComponent.createMenuSymbol(None, pioEnable)
+pinConfiguration = coreComponent.createMenuSymbol(PIO_PIN_CONFIGURATION, pioEnable)
 pinConfiguration.setLabel("Pin Configuration")
 pinConfiguration.setDescription("Configuration for PIO Pins")
 
@@ -135,7 +135,7 @@ packagePinCount = Pin.getPackagePinCount(pioPackage.getValue())
 # that is why "pinNumber-1" is used to index the lists wherever applicable.
 for pinNumber in range(1, packagePinCount + 1):
     pin.append(pinNumber)
-    pin[pinNumber-1]= coreComponent.createMenuSymbol(None, pinConfiguration)
+    pin[pinNumber-1]= coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION" + pinNumber - 1, pinConfiguration)
     pin[pinNumber-1].setLabel("Pin " + str(pinNumber))
     pin[pinNumber-1].setDescription("Configuration for Pin " + str(pinNumber) )
     
@@ -217,7 +217,7 @@ for pinNumber in range(1, packagePinCount + 1):
 ################################# PORT Configuration related code #################################
 ###################################################################################################
 
-portConfiguration = coreComponent.createMenuSymbol(None, pioEnable)
+portConfiguration = coreComponent.createMenuSymbol(PORT_CONFIGURATION, pioEnable)
 portConfiguration.setLabel("Port Registers Configuration")
 
 global channel
@@ -259,7 +259,7 @@ pioSymIntEnComment = []
 for portNumber in range(0, len(channel)):
 
     port.append(portNumber)
-    port[portNumber]= coreComponent.createMenuSymbol(None, portConfiguration)
+    port[portNumber]= coreComponent.createMenuSymbol("PORT_CONFIGURATION" + portNumber, portConfiguration)
     port[portNumber].setLabel("PORT " + channel[portNumber] + " Configuration")
 
     global usePort
@@ -442,7 +442,7 @@ pioMatrixSym_CCFG_SYSIO.setReadOnly(True)
 
 configName = Variables.get("__CONFIGURATION_NAME")
     
-pioHeader1File = coreComponent.createFileSymbol(None, None)
+pioHeader1File = coreComponent.createFileSymbol(PIO_HEADER, None)
 pioHeader1File.setSourcePath("../peripheral/pio_11004/templates/plib_pio.h.ftl")
 pioHeader1File.setOutputName("plib_pio.h")
 pioHeader1File.setDestPath("/peripheral/pio/")
@@ -450,7 +450,7 @@ pioHeader1File.setProjectPath("config/" + configName +"/peripheral/pio/")
 pioHeader1File.setType("HEADER")
 pioHeader1File.setMarkup(True)
 
-pioSource1File = coreComponent.createFileSymbol(None, None)
+pioSource1File = coreComponent.createFileSymbol(PIO_SOURCE, None)
 pioSource1File.setSourcePath("../peripheral/pio_11004/templates/plib_pio.c.ftl")
 pioSource1File.setOutputName("plib_pio.c")
 pioSource1File.setDestPath("/peripheral/pio/")
@@ -459,13 +459,13 @@ pioSource1File.setType("SOURCE")
 pioSource1File.setMarkup(True)
 
 
-pioSystemInitFile = coreComponent.createFileSymbol(None, None)
+pioSystemInitFile = coreComponent.createFileSymbol(PIO_INIT, None)
 pioSystemInitFile.setType("STRING")
 pioSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 pioSystemInitFile.setSourcePath("../peripheral/pio_11004/templates/system/system_initialize.c.ftl")
 pioSystemInitFile.setMarkup(True)
 
-pioSystemDefFile = coreComponent.createFileSymbol(None, None)
+pioSystemDefFile = coreComponent.createFileSymbol(PIO_DEF, None)
 pioSystemDefFile.setType("STRING")
 pioSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 pioSystemDefFile.setSourcePath("../peripheral/pio_11004/templates/system/system_definitions.h.ftl")
