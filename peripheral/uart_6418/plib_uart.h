@@ -211,7 +211,7 @@ void UARTx_Initialize( void );
 
 // *****************************************************************************
 /* Function:
-    size_t UARTx_Write( void *buffer, const size_t size )
+    bool UARTx_Write( void *buffer, const size_t size )
 
    Summary:
     Submits a write buffer to the given UART peripheral to transfer.
@@ -238,22 +238,22 @@ void UARTx_Initialize( void );
     size - Number of bytes to be transferred.
 
    Returns:
-    Number of bytes processed.
-    Returns -1 if the arguments are not valid or if the library is in an error
-    state.
+    Write request status.
+    True - Write request was successful.
+    False - Write request has failed.
 
   Example:
     <code>
     //Example to use in non-interrupt mode
     char myData[COUNT] = {"hello"}; //COUNT is user message size
 
-    if(-1 != UART1_Write(&myData, COUNT))
+    if(false != UART1_Write(&myData, COUNT))
     {
         //The transfer is completed
     }
     else
     {
-        //Invalid arguments
+        //Write failed
     }
     </code>
 
@@ -261,12 +261,12 @@ void UARTx_Initialize( void );
     None.
 */
 
-size_t UARTx_Write( void *buffer, const size_t size );
+bool UARTx_Write( void *buffer, const size_t size );
 
 
 // *****************************************************************************
 /* Function:
-    size_t UARTx_Read( void *buffer, const size_t size )
+    bool UARTx_Read( void *buffer, const size_t size )
 
    Summary:
     Submits a read buffer to the given UART peripheral to process.
@@ -293,22 +293,22 @@ size_t UARTx_Write( void *buffer, const size_t size );
     size - Number of bytes to be transferred.
 
    Returns:
-    Number of bytes processed.
-    Returns -1 if the arguments are not valid or if the library is in an error
-    state.
+    Read request status.
+    True - Read request was successful.
+    False - Read request has failed.
 
   Example:
     <code>
     //Example to use in non-interrupt
     char rxData[COUNT] = {}; //COUNT is expected size
 
-    if(-1 != UART1_Read(&rxData, COUNT))
+    if(false != UART1_Read(&rxData, COUNT))
     {
         //The transfer is completed
     }
     else
     {
-        //Invalid arguments
+        //Read failed
     }
     </code>
 
@@ -316,7 +316,7 @@ size_t UARTx_Write( void *buffer, const size_t size );
     None.
 */
 
-size_t UARTx_Read( void *buffer, const size_t size );
+bool UARTx_Read( void *buffer, const size_t size );
 
 
 // *****************************************************************************
