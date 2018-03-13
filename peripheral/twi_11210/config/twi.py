@@ -9,7 +9,7 @@ def instantiateComponent(twiComponent):
     print("Running TWI" + str(num))
 
     #main menu
-    twiMenu = twiComponent.createMenuSymbol(None, None)
+    twiMenu = twiComponent.createMenuSymbol(TWI_MENU_MAIN, None)
     
     twiMenu.setLabel("Hardware Settings ")
 
@@ -105,7 +105,7 @@ def instantiateComponent(twiComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
     
     #Master Header
-    twiMasterHeaderFile = twiComponent.createFileSymbol(None, None)
+    twiMasterHeaderFile = twiComponent.createFileSymbol("TWI_FILE_MASTER_HEADER", None)
     
     twiMasterHeaderFile.setSourcePath("../peripheral/twi_" + REG_MODULE_TWI.getID() + "/plib_twi_master.h")
     twiMasterHeaderFile.setOutputName("plib_twi_master.h")
@@ -114,7 +114,7 @@ def instantiateComponent(twiComponent):
     twiMasterHeaderFile.setType("HEADER")
 
     #Source File
-    twiMainSourceFile = twiComponent.createFileSymbol(None, None)
+    twiMainSourceFile = twiComponent.createFileSymbol("TWI_FILE_SRC_MAIN", None)
     
     twiMainSourceFile.setSourcePath("../peripheral/twi_" + REG_MODULE_TWI.getID() + "/templates/plib_twi.c.ftl")
     twiMainSourceFile.setOutputName("plib_twi" + str(num) + ".c")
@@ -124,7 +124,7 @@ def instantiateComponent(twiComponent):
     twiMainSourceFile.setMarkup(True)
     
     #Instance Header File
-    twiInstHeaderFile = twiComponent.createFileSymbol(None, None)
+    twiInstHeaderFile = twiComponent.createFileSymbol("TWI_FILE_MAIN_HEADER", None)
     
     twiInstHeaderFile.setSourcePath("../peripheral/twi_" + REG_MODULE_TWI.getID() + "/templates/plib_twi.h.ftl")
     twiInstHeaderFile.setOutputName("plib_twi" + str(num) + ".h")
@@ -134,14 +134,14 @@ def instantiateComponent(twiComponent):
     twiInstHeaderFile.setMarkup(True)
     
     #TWI Initialize 
-    twiSystemInitFile = twiComponent.createFileSymbol(None, None)
+    twiSystemInitFile = twiComponent.createFileSymbol("TWI_FILE_SYS_INIT", None)
     twiSystemInitFile.setType("STRING")
     twiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     twiSystemInitFile.setSourcePath("../peripheral/twi_" + REG_MODULE_TWI.getID() + "/templates/system/system_initialize.c.ftl")
     twiSystemInitFile.setMarkup(True)
 
     #TWI definitions header
-    twiSystemDefFile = twiComponent.createFileSymbol(None, None)
+    twiSystemDefFile = twiComponent.createFileSymbol("TWI_FILE_SYS_DEF", None)
     
     twiSystemDefFile.setType("STRING")
     twiSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
