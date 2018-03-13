@@ -126,8 +126,8 @@ typedef enum {
     Enumeration of possible XDMAC transfer events.
 
    Description:
-    This data type provides an enumeration of all possible XDMAC transfer 
-	events.
+    This data type provides an enumeration of all possible XDMAC transfer
+    events.
 
    Remarks:
     None.
@@ -154,8 +154,8 @@ typedef enum
     This data type defines the descriptor control for linked list operation.
 
   Remarks:
-    This feature may not be available on all devices. Refer to the specific 
-	device data sheet to determine availability.
+    This feature may not be available on all devices. Refer to the specific
+    device data sheet to determine availability.
 */
 
 typedef union {
@@ -203,21 +203,21 @@ typedef union {
     This data type defines the different descriptor views available.
 
   Remarks:
-    This feature may not be available on all devices. Refer to the specific 
-	device data sheet to determine availability.
+    This feature may not be available on all devices. Refer to the specific
+    device data sheet to determine availability.
 */
 
 /* View 0 */
 typedef struct {
 
     /* Next Descriptor Address number. */
-	uint32_t mbr_nda;
+    uint32_t mbr_nda;
 
-	/* Micro-block Control Member. */
-	XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    /* Micro-block Control Member. */
+    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
 
     /* Destination Address Member. */
-	uint32_t mbr_da;
+    uint32_t mbr_da;
 
 } XDMAC_DESCRIPTOR_VIEW_0;
 
@@ -225,16 +225,16 @@ typedef struct {
 typedef struct {
 
     /* Next Descriptor Address number. */
-	uint32_t mbr_nda;
+    uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-	XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
 
     /* Source Address Member. */
-	uint32_t mbr_sa;
+    uint32_t mbr_sa;
 
     /* Destination Address Member. */
-	uint32_t mbr_da;
+    uint32_t mbr_da;
 
 } XDMAC_DESCRIPTOR_VIEW_1;
 
@@ -242,20 +242,20 @@ typedef struct {
 typedef struct {
 
     /* Next Descriptor Address number. */
-	uint32_t mbr_nda;
+    uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-	XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
 
     /* Source Address Member. */
-	uint32_t mbr_sa;
+    uint32_t mbr_sa;
 
     /* Destination Address Member. */
-	uint32_t mbr_da;
+    uint32_t mbr_da;
 
     /* Configuration Register. */
     /* TODO: Redefine type to XDMAC_CC white updating to N type */
-	uint32_t mbr_cfg;
+    uint32_t mbr_cfg;
 
 } XDMAC_DESCRIPTOR_VIEW_2;
 
@@ -263,31 +263,31 @@ typedef struct {
 typedef struct {
 
     /* Next Descriptor Address number. */
-	uint32_t mbr_nda;
+    uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-	XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
 
     /* Source Address Member. */
-	uint32_t mbr_sa;
+    uint32_t mbr_sa;
 
     /* Destination Address Member. */
-	uint32_t mbr_da;
+    uint32_t mbr_da;
 
     /* Configuration Register. */
-	uint32_t mbr_cfg;
+    uint32_t mbr_cfg;
 
     /* Block Control Member. */
-	uint32_t mbr_bc;
+    uint32_t mbr_bc;
 
     /* Data Stride Member. */
-	uint32_t mbr_ds;
+    uint32_t mbr_ds;
 
     /* Source Micro-block Stride Member. */
-	uint32_t mbr_sus;
+    uint32_t mbr_sus;
 
     /* Destination Micro-block Stride Member. */
-	uint32_t mbr_dus;
+    uint32_t mbr_dus;
 
 } XDMAC_DESCRIPTOR_VIEW_3;
 
@@ -302,7 +302,7 @@ typedef struct {
     This data type defines a XDMAC Transfer Event Handler Function.
 
     A XDMAC PLIB client must register a transfer event handler function of this
-	type to receive transfer related events from the PLIB.
+    type to receive transfer related events from the PLIB.
 
     If the event is XDMAC_TRANSFER_EVENT_COMPLETE, this means that the data
     was transferred successfully.
@@ -314,11 +314,11 @@ typedef struct {
     the client at the time of registering the event handler. This context handle
     can be anything that the client consider helpful or necessary to identify
     the client context object associated with the channel of the XDMAC PLIB that
-	generated the event.
+    generated the event.
 
     The event handler function executes in an interrupt context of XDMAC.
-	It is recommended to the application not to perform process intensive
-	operations with in this function.
+    It is recommended to the application not to perform process intensive
+    operations with in this function.
 
    Remarks:
     None.
@@ -345,7 +345,7 @@ typedef void (*XDMAC_CHANNEL_CALLBACK) (XDMAC_TRANSFER_EVENT event, uintptr_t co
 
    Description:
     This function initializes the XDMAC controller of the device as configured
-	by the user from within the XDMAC manager of MCC.
+    by the user from within the XDMAC manager of MCC.
 
    Precondition:
     None.
@@ -384,7 +384,7 @@ void XDMAC_Initialize( void );
   Description:
     This function allows a client to set an event handler. The client may want
     to receive transfer related events in cases when it submits a XDMAC PLIB
-	transfer request. The event handler should be set before the client
+    transfer request. The event handler should be set before the client
     intends to perform operations that could generate events.
 
     This function accepts a contextHandle parameter. This parameter could be
@@ -399,8 +399,8 @@ void XDMAC_Initialize( void );
 
     eventHandler - Pointer to the event handler function.
 
-    contextHandle - Value identifying the context of the 
-	application/driver/middleware that registered the event handling function.
+    contextHandle - Value identifying the context of the
+    application/driver/middleware that registered the event handling function.
 
   Returns:
     None.
@@ -455,12 +455,12 @@ void XDMAC_ChannelCallbackRegister (XDMAC_CHANNEL channel, const XDMAC_CHANNEL_C
 
   Description:
     This function adds a single block data transfer characteristics for a
-	specific XDMAC channel. It also enables the channel to start data transfer.
+    specific XDMAC channel. It also enables the channel to start data transfer.
 
     If the requesting client registered an event callback with the PLIB,
     the PLIB will issue a XDMAC_TRANSFER_COMPLETE event if the transfer was
-	processed successfully and XDMAC_TRANSFER_ERROR event if the transfer was 
-	not processed successfully.
+    processed successfully and XDMAC_TRANSFER_ERROR event if the transfer was
+    not processed successfully.
 
   Precondition:
     XDMAC should have been initialized by calling XDMAC_Initialize.
@@ -470,9 +470,9 @@ void XDMAC_ChannelCallbackRegister (XDMAC_CHANNEL channel, const XDMAC_CHANNEL_C
 
     srcAddr - Source of the XDMAC transfer
 
-	destAddr - Destination of the XDMAC transfer
+    destAddr - Destination of the XDMAC transfer
 
-	blockSize - Size of the transfer block
+    blockSize - Size of the transfer block
 
   Returns:
     None.
@@ -495,12 +495,12 @@ void XDMAC_ChannelCallbackRegister (XDMAC_CHANNEL channel, const XDMAC_CHANNEL_C
 
   Remarks:
     The source/destination buffers should be made coherent and aligned to the
-	device cache line size to avoid the cache coherency issues.
+    device cache line size to avoid the cache coherency issues.
     For example:
-	<code>
+    <code>
     uint8_t buffer[1024];
     uint8_t __attribute__((coherent)) __attribute__((aligned(32))) buffer[1024];
-	</code>
+    </code>
 */
 
 void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
@@ -510,10 +510,10 @@ void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const vo
 /* Function:
     void XDMAC_ChannelLinkedListTransfer
     (
-		XDMAC_CHANNEL channel,
-		uint32_t descriptor,
-		XDMAC_DESCRIPTOR_CONTROL* descriptorControl
-	)
+        XDMAC_CHANNEL channel,
+        uint32_t descriptor,
+        XDMAC_DESCRIPTOR_CONTROL* descriptorControl
+    )
 
   Summary:
     Sets up a multi-block data transfer on a specified XDMAC channel using
@@ -526,26 +526,26 @@ void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const vo
     Each descriptor can be defined in any available descriptor view formats and
     the views are available as XDMAC_DESCRIPTOR_VIEW_x.
 
-    Specified XDMAC channel will be enabled by default upon linked list 
-	addition. Upon each block transfer completion XDMAC PLIB will call event 
-	handler if the event handler is registered through 
-	XDMAC_ChannelCallbackRegister.
+    Specified XDMAC channel will be enabled by default upon linked list
+    addition. Upon each block transfer completion XDMAC PLIB will call event
+    handler if the event handler is registered through
+    XDMAC_ChannelCallbackRegister.
 
   Precondition:
     XDMAC should have been initialized by calling XDMAC_Initialize.
     Linked list with descriptors in any available descriptor view formats must
-	be defined.
+    be defined.
 
   Parameters:
     channel - A specific XDMAC channel
 
     descriptor - Address of the first descriptor of the linked list.
     All descriptors must be defined in the device specific view formats
-	available as XDMAC_DESCRIPTOR_VIEW_x and must be cache line aligned.
+    available as XDMAC_DESCRIPTOR_VIEW_x and must be cache line aligned.
 
     descriptorControl - Control settings for the first descriptor.
-    This must be defined in device specific view format, 
-	XDMAC_DESCRIPTOR_CONTROL and must be cache line aligned.
+    This must be defined in device specific view format,
+    XDMAC_DESCRIPTOR_CONTROL and must be cache line aligned.
 
   Returns:
     None.
@@ -560,7 +560,7 @@ void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const vo
 
     //Cache line aligned first descriptor control, "descptr_crtl"
     //Cache line aligned linked list with descriptors in any supported view,
-	//"linkedList1[2]" with 2 descriptors of different source addresses.
+    //"linkedList1[2]" with 2 descriptors of different source addresses.
 
     // User registers an event handler with PLIB.
     XDMAC_ChannelCallbackRegister(handle, APP_XDMAC_TransferEventHandler,
@@ -568,16 +568,64 @@ void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const vo
 
     // Add linked list to the XDMAC PLIB, channel will be enabled by default.
     XDMAC_ChannelLinkedListTransfer(XDMAC_CHANNEL_1, (uint32_t)&linkedList1[0],
-		&descptr_crtl);
+        &descptr_crtl);
     </code>
 
   Remarks:
     This is supported by only the devices with multi-block transfer feature.
-	The "descriptorControl" parameter is a XDMAC hardware version specific
-	requirement and may not be needed in some of the devices.
+    The "descriptorControl" parameter is a XDMAC hardware version specific
+    requirement and may not be needed in some of the devices.
 */
 
 void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t descriptor, XDMAC_DESCRIPTOR_CONTROL* descriptorControl);
+
+
+//******************************************************************************
+/* Function:
+    bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel)
+
+  Summary:
+    Returns the busy status of a specific XDMAC Channel.
+
+  Description:
+    This function returns the busy status of the XDMAC channel.
+    XDMAC channel will be busy if any transfer is in progress.
+
+    This function can be used to check the status of the channel prior to
+    submitting a transfer request. And this can also be used to check the status
+    of the submitted request if callback mechanism is not preferred.
+
+  Precondition:
+    XDMAC should have been initialized by calling XDMAC_Initialize.
+
+  Parameters:
+    channel - A specific XDMAC channel
+
+  Returns:
+    Busy status of the specific channel.
+    True - Channel is busy
+    False - Channel is free
+
+  Example:
+    <code>
+    // Transfer 10 bytes of data to UART TX using XDMAC channel 1
+    MY_APP_OBJ myAppObj;
+    uint8_t buf[10] = {0,1,2,3,4,5,6,7,8,9};
+    void *srcAddr = (uint8_t *) buf;
+    void *destAddr = (uin8_t*) &U1TXREG;
+    size_t size = 10;
+
+    if(false == XDMAC_ChannelIsBusy(XDMAC_CHANNEL_1))
+    {
+        XDMAC_ChannelTransfer(XDMAC_CHANNEL_1, srcAddr, destAddr, size);
+    }
+    </code>
+
+  Remarks:
+    None.
+*/
+
+bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel);
 
 
 // DOM-IGNORE-BEGIN
