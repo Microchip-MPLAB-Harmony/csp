@@ -258,7 +258,7 @@ def instantiateComponent(afecComponent):
 	afecSym_IntEnComment.setLabel("Warning!!! AFEC" +str(num)+" Interrupt is Disabled in Interrupt Manager")
 	afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + NVICVector])
 		
-	afecMenu = afecComponent.createMenuSymbol(None, None)
+	afecMenu = afecComponent.createMenuSymbol("AFEC_MENU", None)
 	afecMenu.setLabel("ADC Configuration")
 	
 	#clock selection
@@ -467,7 +467,7 @@ def instantiateComponent(afecComponent):
 	afec = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AFEC\"]")
 	afecID = afec.getAttribute("id")
 	
-	afecHeaderFile = afecComponent.createFileSymbol(None, None)
+	afecHeaderFile = afecComponent.createFileSymbol("AFEC_HEADER", None)
 	afecHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/plib_afec.h.ftl")
 	afecHeaderFile.setOutputName("plib_afec" + str(num) + ".h")
 	afecHeaderFile.setDestPath("peripheral/afec/")
@@ -475,14 +475,14 @@ def instantiateComponent(afecComponent):
 	afecHeaderFile.setType("HEADER")
 	afecHeaderFile.setMarkup(True)
 	
-	afecGlobalHeaderFile = afecComponent.createFileSymbol(None, None)
+	afecGlobalHeaderFile = afecComponent.createFileSymbol("AFEC_GLOBALHEADER", None)
 	afecGlobalHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID) + "/plib_afec.h")
 	afecGlobalHeaderFile.setOutputName("plib_afec.h")
 	afecGlobalHeaderFile.setDestPath("peripheral/afec/")
 	afecGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/afec/")
 	afecGlobalHeaderFile.setType("HEADER")
 	
-	afecSource1File = afecComponent.createFileSymbol(None, None)
+	afecSource1File = afecComponent.createFileSymbol("AFEC_SOURCE", None)
 	afecSource1File.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/plib_afec.c.ftl")
 	afecSource1File.setOutputName("plib_afec" + str(num) + ".c")
 	afecSource1File.setDestPath("peripheral/afec/")
@@ -490,13 +490,13 @@ def instantiateComponent(afecComponent):
 	afecSource1File.setType("SOURCE")
 	afecSource1File.setMarkup(True)
 
-	afecSystemInitFile = afecComponent.createFileSymbol(None, None)
+	afecSystemInitFile = afecComponent.createFileSymbol("AFEC_INIT", None)
 	afecSystemInitFile.setType("STRING")
 	afecSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 	afecSystemInitFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_initialize.c.ftl")
 	afecSystemInitFile.setMarkup(True)
 
-	afecSystemDefFile = afecComponent.createFileSymbol(None, None)
+	afecSystemDefFile = afecComponent.createFileSymbol("AFEC_DEF", None)
 	afecSystemDefFile.setType("STRING")
 	afecSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 	afecSystemDefFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_definitions.h.ftl")
