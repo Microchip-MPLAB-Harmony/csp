@@ -88,7 +88,7 @@ def checkVectorAvailability(nvicSym, event):
 ################################################################################
 #### Component ####
 ################################################################################
-nvicMenu = coreComponent.createMenuSymbol(None, None)
+nvicMenu = coreComponent.createMenuSymbol("NVIC_MENU", None)
 nvicMenu.setLabel("Interrupts (NVIC)")
 nvicMenu.setDescription("Configuration for NVIC Initialization")
 
@@ -159,7 +159,7 @@ for nvicNumber in range(lowestID, highestID+1):
 ############################################################################
 configName = Variables.get("__CONFIGURATION_NAME")
 
-nvicHeaderFile = coreComponent.createFileSymbol(None, None)
+nvicHeaderFile = coreComponent.createFileSymbol("NVIC_HEADER", None)
 nvicHeaderFile.setMarkup(True)
 nvicHeaderFile.setSourcePath("../peripheral/nvic_m7/templates/plib_nvic.h.ftl")
 nvicHeaderFile.setOutputName("plib_nvic.h")
@@ -168,34 +168,34 @@ nvicHeaderFile.setProjectPath("config/" + configName + "/peripheral/nvic/")
 nvicHeaderFile.setType("HEADER")
 nvicHeaderFile.setOverwrite(True)
 
-nvicHeaderFile = coreComponent.createFileSymbol(None, None)
-nvicHeaderFile.setMarkup(True)
-nvicHeaderFile.setSourcePath("../peripheral/nvic_m7/templates/plib_nvic.c.ftl")
-nvicHeaderFile.setOutputName("plib_nvic.c")
-nvicHeaderFile.setDestPath("/peripheral/nvic/")
-nvicHeaderFile.setProjectPath("config/" + configName + "/peripheral/nvic/")
-nvicHeaderFile.setType("SOURCE")
-nvicHeaderFile.setOverwrite(True)
+nvicSourceFile = coreComponent.createFileSymbol("NVIC_SOURCE", None)
+nvicSourceFile.setMarkup(True)
+nvicSourceFile.setSourcePath("../peripheral/nvic_m7/templates/plib_nvic.c.ftl")
+nvicSourceFile.setOutputName("plib_nvic.c")
+nvicSourceFile.setDestPath("/peripheral/nvic/")
+nvicSourceFile.setProjectPath("config/" + configName + "/peripheral/nvic/")
+nvicSourceFile.setType("SOURCE")
+nvicSourceFile.setOverwrite(True)
 
-nvicSystemInitFile = coreComponent.createFileSymbol(None, None)
+nvicSystemInitFile = coreComponent.createFileSymbol("NVIC_INIT", None)
 nvicSystemInitFile.setType("STRING")
 nvicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 nvicSystemInitFile.setSourcePath("../peripheral/nvic_m7/templates/system/system_initialize.c.ftl")
 nvicSystemInitFile.setMarkup(True)
 
-nvicSystemDefFile = coreComponent.createFileSymbol(None, None)
+nvicSystemDefFile = coreComponent.createFileSymbol("NVIC_DEF", None)
 nvicSystemDefFile.setType("STRING")
 nvicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 nvicSystemDefFile.setSourcePath("../peripheral/nvic_m7/templates/system/system_definitions.h.ftl")
 nvicSystemDefFile.setMarkup(True)
 
-nvicSystemIntWeakHandleFile = coreComponent.createFileSymbol(None, None)
+nvicSystemIntWeakHandleFile = coreComponent.createFileSymbol("NVIC_INT_HANDLER", None)
 nvicSystemIntWeakHandleFile.setType("STRING")
 nvicSystemIntWeakHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS")
 nvicSystemIntWeakHandleFile.setSourcePath("../peripheral/nvic_m7/templates/system/system_interrupt_weak_handlers.h.ftl")
 nvicSystemIntWeakHandleFile.setMarkup(True)
 
-nvicSystemIntTableFile = coreComponent.createFileSymbol(None, None)
+nvicSystemIntTableFile = coreComponent.createFileSymbol("NVIC_INT_TABLE", None)
 nvicSystemIntTableFile.setType("STRING")
 nvicSystemIntTableFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_HANDLERS")
 nvicSystemIntTableFile.setSourcePath("../peripheral/nvic_m7/templates/system/system_interrupt_vector_table.h.ftl")
