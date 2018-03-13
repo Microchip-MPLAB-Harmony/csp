@@ -620,7 +620,7 @@ def calculatedClockFrequencies(clkComponent, clkSymMenu, updateFWSValue, join, E
 # Clock Manager Configuration Menu
 print("Loading Clock Manager for " + Variables.get("__PROCESSOR"))
 
-clkSymMenu = coreComponent.createMenuSymbol(None, None)
+clkSymMenu = coreComponent.createMenuSymbol("CLK_MENU_MAIN", None)
 clkSymMenu.setLabel("Clock (PMC)")
 clkSymMenu.setDescription("Configuration for Clock System Service")
 
@@ -665,7 +665,7 @@ calculatedClockFrequencies(coreComponent, clkSymMenu, updateFWSValue, join, Elem
 #File handling
 configName = Variables.get("__CONFIGURATION_NAME")
 
-clkHeaderFile = coreComponent.createFileSymbol(None, None)
+clkHeaderFile = coreComponent.createFileSymbol("CLK_FILE_MAIN_HEADER", None)
 clkHeaderFile.setSourcePath("../peripheral/clk_sam_e70/templates/clk.h.ftl")
 clkHeaderFile.setOutputName("clk.h")
 clkHeaderFile.setDestPath("/peripheral/clk/")
@@ -673,7 +673,7 @@ clkHeaderFile.setProjectPath("config/" + configName + "/peripheral/clk/")
 clkHeaderFile.setType("HEADER")
 clkHeaderFile.setMarkup(True)
 
-clkSourceFile = coreComponent.createFileSymbol(None, None)
+clkSourceFile = coreComponent.createFileSymbol("CLK_FILE_MAIN_SRC", None)
 clkSourceFile.setSourcePath("../peripheral/clk_sam_e70/templates/clk.c.ftl")
 clkSourceFile.setOutputName("clk.c")
 clkSourceFile.setDestPath("/peripheral/clk/")
@@ -682,14 +682,14 @@ clkSourceFile.setType("SOURCE")
 clkSourceFile.setMarkup(True)
 
 #Add clock related code to common files
-clkHeaderFileListEntry = coreComponent.createFileSymbol(None, None)
+clkHeaderFileListEntry = coreComponent.createFileSymbol("CLK_FILE_SYS_DEF", None)
 clkHeaderFileListEntry.setType("STRING")
 clkHeaderFileListEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 clkHeaderFileListEntry.setSourcePath("../peripheral/clk_sam_e70/templates/system/system_definitions.h.ftl")
 clkHeaderFileListEntry.setMarkup(True)
 
 
-clkSystemInitFile = coreComponent.createFileSymbol(None, None)
+clkSystemInitFile = coreComponent.createFileSymbol("CLK_FILE_SYS_INIT", None)
 clkSystemInitFile.setType("STRING")
 clkSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 clkSystemInitFile.setSourcePath("../peripheral/clk_sam_e70/templates/system/system_initialize.c.ftl")
