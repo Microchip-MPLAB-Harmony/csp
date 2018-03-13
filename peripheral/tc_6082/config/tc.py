@@ -1014,7 +1014,7 @@ def instantiateComponent(tcComponent):
 	tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]")
 	tcID = tc.getAttribute("id")	
 	
-	tcHeaderFile = tcComponent.createFileSymbol(None, None)
+	tcHeaderFile = tcComponent.createFileSymbol("TC_HEADER", None)
 	tcHeaderFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/plib_tc.h.ftl")
 	tcHeaderFile.setOutputName("plib_tc" + str(num) + ".h")
 	tcHeaderFile.setDestPath("/peripheral/tc/")
@@ -1023,7 +1023,7 @@ def instantiateComponent(tcComponent):
 	tcHeaderFile.setOverwrite(True)
 	tcHeaderFile.setMarkup(True)
 		
-	tcSource1File = tcComponent.createFileSymbol(None, None)
+	tcSource1File = tcComponent.createFileSymbol("TC_SOURCE", None)
 	tcSource1File.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/plib_tc.c.ftl")
 	tcSource1File.setOutputName("plib_tc" + str(num) + ".c")
 	tcSource1File.setDestPath("/peripheral/tc/")
@@ -1032,7 +1032,7 @@ def instantiateComponent(tcComponent):
 	tcSource1File.setOverwrite(True)	
 	tcSource1File.setMarkup(True)
 
-	tcGlobalHeaderFile = tcComponent.createFileSymbol(None, None)
+	tcGlobalHeaderFile = tcComponent.createFileSymbol("TC_GLOBALHEADER", None)
 	tcGlobalHeaderFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/plib_tc.h")
 	tcGlobalHeaderFile.setOutputName("plib_tc" + ".h")
 	tcGlobalHeaderFile.setDestPath("/peripheral/tc/")
@@ -1040,13 +1040,13 @@ def instantiateComponent(tcComponent):
 	tcGlobalHeaderFile.setType("HEADER")
 	tcGlobalHeaderFile.setMarkup(False)
 	
-	tcSystemInitFile = tcComponent.createFileSymbol(None, None)
+	tcSystemInitFile = tcComponent.createFileSymbol("TC_INIT", None)
 	tcSystemInitFile.setType("STRING")
 	tcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 	tcSystemInitFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/system/system_initialize.c.ftl")
 	tcSystemInitFile.setMarkup(True)
 
-	tcSystemDefinitionFile = tcComponent.createFileSymbol(None, None)
+	tcSystemDefinitionFile = tcComponent.createFileSymbol("TC_DEF", None)
 	tcSystemDefinitionFile.setType("STRING")
 	tcSystemDefinitionFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 	tcSystemDefinitionFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/system/system_definitions.h.ftl")
