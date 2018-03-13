@@ -1,4 +1,4 @@
-# load family specific configurations 
+# load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 # load clock manager information
@@ -42,7 +42,7 @@ deviceFamily.setReadOnly(True)
 
 
 #generate system_startup_xc32.c file
-armSysStartSourceFile = coreComponent.createFileSymbol(None, None)
+armSysStartSourceFile = coreComponent.createFileSymbol("SYSTEM_STARTUP_C", None)
 armSysStartSourceFile.setSourcePath("arm/templates/system_startup_xc32.c.ftl")
 armSysStartSourceFile.setOutputName("system_startup.c")
 armSysStartSourceFile.setMarkup(True)
@@ -52,7 +52,7 @@ armSysStartSourceFile.setProjectPath("config/" + configName + "/")
 armSysStartSourceFile.setType("SOURCE")
 
 #generate newlib_syscalls_xc32.c file
-armSysCallSourceFile = coreComponent.createFileSymbol(None, None)
+armSysCallSourceFile = coreComponent.createFileSymbol("NEWLIB_SYSCALLS_XC32_C", None)
 armSysCallSourceFile.setSourcePath("arm/templates/newlib_syscalls_xc32.c.ftl")
 armSysCallSourceFile.setOutputName("newlib_syscalls_xc32.c")
 armSysCallSourceFile.setMarkup(True)
