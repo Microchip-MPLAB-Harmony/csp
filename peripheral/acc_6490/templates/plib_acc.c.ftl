@@ -1,5 +1,5 @@
 /*******************************************************************************
-  ACC Peripheral Library
+  Analog Comparator Controller (ACC) Peripheral Library (PLIB)
 
   Company:
     Microchip Technology Inc.
@@ -71,7 +71,7 @@ void ACC${INDEX?string}_Initialize (void)
 
 bool ACC${INDEX?string}_StatusGet (ACC_STATUS_SOURCE status)
 {
-       return (bool)(_ACC_REGS->ACC_ISR.w & status); 
+    return (bool)(_ACC_REGS->ACC_ISR.w & status); 
 }
 
 <#if INTERRUPT_MODE == true>
@@ -82,19 +82,17 @@ void ACC${INDEX?string}_CallbackRegister (ACC_CALLBACK callback, uintptr_t conte
 {
     acc${INDEX?string}Obj.callback = callback;
     acc${INDEX?string}Obj.context = context;
-
 }
 
 void ACC${INDEX?string}_InterruptHandler( void )
 {
 	// Clear the interrupt
-     _ACC_REGS->ACC_ISR.w; 
+    _ACC_REGS->ACC_ISR.w; 
 
 	// Callback user function 
 	if(acc${INDEX?string}Obj.callback != NULL)
 	{
-        acc${INDEX?string}Obj.callback(acc${INDEX?string}Obj.context);
-		
+        acc${INDEX?string}Obj.callback(acc${INDEX?string}Obj.context);		
 	}
 }
 </#if>
