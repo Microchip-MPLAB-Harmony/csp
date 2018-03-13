@@ -16,10 +16,10 @@ def wdtEnableCfgMenu(wdtCfgMenu, event):
 	component.getSymbolByID("wdtSystemDefFile").setEnabled(event["value"])
 
 	if event["value"] == False:
-		Database.clearSymbolValue("core", "rswdtENABLE")		
+		Database.clearSymbolValue("core", "rswdtENABLE")
 		Database.setSymbolValue("core", "rswdtENABLE", False, 1)
 
-wdtCfgMenu = coreComponent.createMenuSymbol(None, wdtMenu)
+wdtCfgMenu = coreComponent.createMenuSymbol("WDT_SUBMENU", wdtMenu)
 wdtCfgMenu.setLabel("WDT Configuration")
 wdtCfgMenu.setDependencies(wdtEnableCfgMenu, ["wdtENABLE"])
 
@@ -66,19 +66,19 @@ wdtDeltaValue.setDefaultValue(0xfff)
 def	wdtdelta_cal(wdtDeltaValueTime, event):
 	data = event["value"] * 3.90625
 	wdtDeltaValueTime.setValue(int(round(data)),2)
-	
+
 wdtDeltaValueTime = coreComponent.createIntegerSymbol("wdtWDDTIME", wdtCfgMenu)
 wdtDeltaValueTime.setLabel("Counter value in ms")
 wdtDeltaValueTime.setDependencies(wdtdelta_cal, ["wdtWDD"])
 wdtDeltaValueTime.setReadOnly(True)
-	
+
 wdtDebugHalt = coreComponent.createBooleanSymbol("wdtdebugHalt", wdtCfgMenu)
 wdtDebugHalt.setLabel("Enable Debug halt")
 wdtDebugHalt.setDefaultValue(False)
 
 wdtIdleHalt = coreComponent.createBooleanSymbol("wdtidleHalt", wdtCfgMenu)
 wdtIdleHalt.setLabel("Enable Idle halt")
-wdtIdleHalt.setDefaultValue(False)	
+wdtIdleHalt.setDefaultValue(False)
 
 global peripId
 global NVICVector
@@ -108,14 +108,14 @@ def NVICControl(NVIC, event):
 	else :
 		Database.setSymbolValue("core", NVICVector, False, 2)
 		Database.setSymbolValue("core", NVICHandler, "WDT0_Handler", 2)
-		
+
 # NVIC Dynamic settings
 wdtNVICControl = coreComponent.createBooleanSymbol("NVIC_WDT_ENABLE", None)
 wdtNVICControl.setDependencies(NVICControl, ["wdtinterruptMode"])
 wdtNVICControl.setVisible(False)
 
 
-		
+
 configName = Variables.get("__CONFIGURATION_NAME")
 
 wdtHeaderFile = coreComponent.createFileSymbol("wdtHeaderFile", None)

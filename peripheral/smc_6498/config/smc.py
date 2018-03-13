@@ -28,7 +28,7 @@ def smcMemScrambChipSelVisible(symbol, event):
 	elif (2 == smcChipSelNum) :
 		smcSym_OCMS_CSSE[smcChipSelNum].setDefaultValue(smcRegBitField_OCMS_CS2SE_MASK)
 	elif (3 == smcChipSelNum) :
-		smcSym_OCMS_CSSE[smcChipSelNum].setDefaultValue(smcRegBitField_OCMS_CS3SE_MASK)		
+		smcSym_OCMS_CSSE[smcChipSelNum].setDefaultValue(smcRegBitField_OCMS_CS3SE_MASK)
 
 
 	if (smcGetScramble == True and smcGetChipSelEn == True):
@@ -43,7 +43,7 @@ def smcMemScrambChipSelVisible(symbol, event):
 	else :
 		smcSym_CS_Setting[smcChipSelNum].setVisible(False)
 
-# Dependency function definition to enable visibility based on selection of Page Mode Enable	
+# Dependency function definition to enable visibility based on selection of Page Mode Enable
 def smcMemoryPageSizeModeVisible(symbol, event):
 	id = symbol.getID()[-1]
 	smcChipSelNum = int(id)
@@ -232,7 +232,7 @@ def instantiateComponent(smcComponent):
 	smcChipSelCount = smcRegGroup.getRegisterCount()
 	print("Total available SMC Chip Select Count is : " + str(smcChipSelCount))
 
-	smcMenu = smcComponent.createMenuSymbol(None, None)
+	smcMenu = smcComponent.createMenuSymbol("SMC_MENU", None)
 	smcMenu.setLabel("SMC Configurations")
 
 	# SMC Global features
@@ -266,7 +266,7 @@ def instantiateComponent(smcComponent):
 		smcSym_CS[smcChipSelNum].setLabel("Enable Chip Select "+ str(smcChipSelNum))
 
 		if (smcChipSelNum == 0):
-			smcSym_CS[smcChipSelNum].setDefaultValue(True)	
+			smcSym_CS[smcChipSelNum].setDefaultValue(True)
 		else :
 			smcSym_CS[smcChipSelNum].setDefaultValue(False)
 
@@ -286,7 +286,7 @@ def instantiateComponent(smcComponent):
 		smcSym_CS_Setting[smcChipSelNum].setLabel("Chip Select " + str(smcChipSelNum) + " Setup")
 
 		if (smcChipSelNum == 0):
-			smcSym_CS_Setting[smcChipSelNum].setVisible(True)	
+			smcSym_CS_Setting[smcChipSelNum].setVisible(True)
 		else :
 			smcSym_CS_Setting[smcChipSelNum].setVisible(False)
 
@@ -431,15 +431,15 @@ def instantiateComponent(smcComponent):
 		smcSym_MODE_WRITE.append(smcChipSelNum)
 		smcSym_MODE_WRITE[smcChipSelNum] = smcComponent.createBooleanSymbol("SMC_WRITE_MODE_CS" + str(smcChipSelNum), smcSym_MODE_CS_REGISTER[smcChipSelNum])
 		smcSym_MODE_WRITE[smcChipSelNum].setLabel("Enable Write Mode Configuration")
-		smcSym_MODE_WRITE[smcChipSelNum].setDefaultValue(False)	
+		smcSym_MODE_WRITE[smcChipSelNum].setDefaultValue(False)
 
 	smcIndex = smcComponent.createIntegerSymbol("INDEX", smcMenu)
 	smcIndex.setVisible(False)
-	smcIndex.setDefaultValue(int(num))	
+	smcIndex.setDefaultValue(int(num))
 
 	configName = Variables.get("__CONFIGURATION_NAME")
 
-	smcHeader1File = smcComponent.createFileSymbol(None, None)
+	smcHeader1File = smcComponent.createFileSymbol("PLIB_SMC_H", None)
 	smcHeader1File.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/plib_smc.h.ftl")
 	smcHeader1File.setOutputName("plib_smc" + str(num) + ".h")
 	smcHeader1File.setDestPath("/peripheral/smc/")
@@ -447,7 +447,7 @@ def instantiateComponent(smcComponent):
 	smcHeader1File.setType("HEADER")
 	smcHeader1File.setMarkup(True)
 
-	smcSource1File = smcComponent.createFileSymbol(None, None)
+	smcSource1File = smcComponent.createFileSymbol("PLIB_SMC_C", None)
 	smcSource1File.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/plib_smc.c.ftl")
 	smcSource1File.setOutputName("plib_smc" + str(num) + ".c")
 	smcSource1File.setDestPath("/peripheral/smc/")
@@ -456,13 +456,13 @@ def instantiateComponent(smcComponent):
 	smcSource1File.setMarkup(True)
 
 	#Add SMC related code to common files
-	smcHeader1FileEntry = smcComponent.createFileSymbol("smcHeader1FileEntry", None)
+	smcHeader1FileEntry = smcComponent.createFileSymbol("PLIB_SMC_DEFINITIONS_H", None)
 	smcHeader1FileEntry.setType("STRING")
 	smcHeader1FileEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 	smcHeader1FileEntry.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/system/system_definitions.h.ftl")
 	smcHeader1FileEntry.setMarkup(True)
 
-	smcSystemInitFile = smcComponent.createFileSymbol("smcSystemInitFile", None)
+	smcSystemInitFile = smcComponent.createFileSymbol("PLIB_SMC_INITIALIZE_H", None)
 	smcSystemInitFile.setType("STRING")
 	smcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 	smcSystemInitFile.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/system/system_initialize.c.ftl")
