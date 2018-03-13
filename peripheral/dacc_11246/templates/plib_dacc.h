@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _DACC_H    // Guards against multiple inclusion
-#define _DACC_H
+#ifndef PLIB_DACC_H    // Guards against multiple inclusion
+#define PLIB_DACC_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -106,7 +106,7 @@ typedef enum
 #endif
 // DOM-IGNORE-END
 
-#endif //_DACC_H
+#endif //PLIB_DACC_H
 
 /**
  End of File

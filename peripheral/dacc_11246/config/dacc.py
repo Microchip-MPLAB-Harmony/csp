@@ -205,7 +205,7 @@ def instantiateComponent(daccComponent):
 #### Code Generation ####
 ############################################################################
     configName = Variables.get("__CONFIGURATION_NAME")
-    daccHeaderFile = daccComponent.createFileSymbol(None, None)
+    daccHeaderFile = daccComponent.createFileSymbol("DACC_HEADER", None)
     daccHeaderFile.setSourcePath("../peripheral/dacc_11246/templates/plib_dacc.h")
     daccHeaderFile.setOutputName("plib_dacc.h")
     daccHeaderFile.setDestPath("peripheral/dacc/")
@@ -213,7 +213,7 @@ def instantiateComponent(daccComponent):
     daccHeaderFile.setType("HEADER")
     daccHeaderFile.setOverwrite(True)
     
-    daccHeader1File = daccComponent.createFileSymbol(None, None)
+    daccHeader1File = daccComponent.createFileSymbol("DACC_HEADER1", None)
     daccHeader1File.setSourcePath("../peripheral/dacc_11246/templates/plib_dacc.h.ftl")
     daccHeader1File.setOutputName("plib_dacc" + str(instance) + ".h")
     daccHeader1File.setMarkup(True)
@@ -222,7 +222,7 @@ def instantiateComponent(daccComponent):
     daccHeader1File.setType("HEADER")
     daccHeader1File.setOverwrite(True)
 
-    daccSource1File = daccComponent.createFileSymbol(None, None)
+    daccSource1File = daccComponent.createFileSymbol("DACC_SOURCE", None)
     daccSource1File.setSourcePath("../peripheral/dacc_11246/templates/plib_dacc.c.ftl")
     daccSource1File.setOutputName("plib_dacc" + str(instance) + ".c")
     daccSource1File.setMarkup(True)
@@ -231,13 +231,13 @@ def instantiateComponent(daccComponent):
     daccSource1File.setType("SOURCE")
     daccSource1File.setOverwrite(True)
 
-    daccSystemInitFile = daccComponent.createFileSymbol(None, None)
+    daccSystemInitFile = daccComponent.createFileSymbol("DACC_INIT", None)
     daccSystemInitFile.setType("STRING")
     daccSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     daccSystemInitFile.setSourcePath("../peripheral/dacc_11246/templates/system/system_initialize.c.ftl")
     daccSystemInitFile.setMarkup(True)
 
-    daccSystemDefFile = daccComponent.createFileSymbol(None, None)
+    daccSystemDefFile = daccComponent.createFileSymbol("DACC_DEF", None)
     daccSystemDefFile.setType("STRING")
     daccSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     daccSystemDefFile.setSourcePath("../peripheral/dacc_11246/templates/system/system_definitions.h.ftl")

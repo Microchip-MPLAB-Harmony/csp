@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Digital-to-Analog Converter Controller (DACC) Peripheral Library
+  Digital-to-Analog Converter Controller (DACC) Peripheral Library (PLIB)
 
   Company:
     Microchip Technology Inc.

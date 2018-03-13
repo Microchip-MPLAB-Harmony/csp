@@ -1,5 +1,6 @@
 /*******************************************************************************
-  DACC PLIB
+  Digital-to-Analog Converter Controller (DACC) Peripheral Library (PLIB) header
+  file
 
   Company:
     Microchip Technology Inc.
@@ -38,8 +39,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef _PLIB_DACC${INDEX?string}_H
-#define _PLIB_DACC${INDEX?string}_H
+#ifndef PLIB_DACC${INDEX?string}_H
+#define PLIB_DACC${INDEX?string}_H
 
 #include "plib_dacc.h"
 
@@ -72,4 +73,4 @@ void DACC${INDEX?string}_DataWrite (DACC_CHANNEL_NUM channel, uint32_t data);
 
 #endif
 // DOM-IGNORE-END
-#endif // _PLIB_DACC${INDEX?string}_H
+#endif // PLIB_DACC${INDEX?string}_H
