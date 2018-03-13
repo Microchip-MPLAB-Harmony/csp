@@ -207,3 +207,15 @@ void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t descriptor
     return;
 }
 </#if>
+
+bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel)
+{
+    bool status = false;
+
+    if( (XDMAC_CC_WRIP_Msk == (_XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC.w & XDMAC_CC_WRIP_Msk)) || (XDMAC_CC_RDIP_Msk == (_XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC.w & XDMAC_CC_RDIP_Msk)) )
+    {
+        status = true;
+    }
+
+    return status;
+}

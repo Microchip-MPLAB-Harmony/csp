@@ -221,6 +221,7 @@ void XDMAC_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const vo
 void XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t descriptor, XDMAC_DESCRIPTOR_CONTROL* descriptorControl );
 </#if>
 
+bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel);
 
 // *****************************************************************************
 // *****************************************************************************
