@@ -1,8 +1,8 @@
 print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 
-portsMenu = coreComponent.createMenuSymbol(None, None)
+portsMenu = coreComponent.createMenuSymbol("PORT_MENU", None)
 portsMenu.setLabel("Ports")
-portsMenu.setDescription("Configuraiton for Ports System Service")
+portsMenu.setDescription("Configuration for Ports System Service")
 
 portsEnable = coreComponent.createBooleanSymbol("portsEnable", portsMenu)
 portsEnable.setLabel("Use Ports System Service?")

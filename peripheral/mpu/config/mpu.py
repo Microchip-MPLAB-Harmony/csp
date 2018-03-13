@@ -7,32 +7,32 @@ global  mpuHeaderFile2
 global  mpuSourceFile
 global  mpuSystemInitFile
 global  mpuSystemDefFile
-    
+
 ################################################################################
 #### Business Logic ####
-################################################################################    
+################################################################################
 global mpuSettings
 # Memory Type, Data Access Permission, Instruction Access Permission, Shared Memory, Start Address, Size
 mpuSettings = {"ITCM"           : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00000000",   "4MB"   ],
                 "FLASH"         : ["MPU_ATTR_NORMAL_WT",        "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00400000",   "4MB"   ],
                 "DTCM"          : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "4MB"   ],
                 "SRAM_CACHED"   : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20400000",   "8MB"   ],
-                "SRAM_UNCACHED" : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x2045F000",   "4KB"   ],              
+                "SRAM_UNCACHED" : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x2045F000",   "4KB"   ],
                 "PERIPHERALS"   : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
                 "EBI_SMC"       : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x60000000",   "256MB" ],
                 "EBI_SDRAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x70000000",   "256MB" ],
                 "QSPI"          : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x80000000",   "256MB" ],
-                "USBHS_RAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xA0100000",   "1MB"   ],             
+                "USBHS_RAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xA0100000",   "1MB"   ],
                 "SYSTEM"        : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ]}
 
 mpuSetUpLogicList = ['ITCM', 'FLASH', 'DTCM', 'SRAM_CACHED', 'SRAM_UNCACHED', 'PERIPHERALS', 'EBI_SMC', 'EBI_SDRAM', 'QSPI', 'USBHS_RAM', 'SYSTEM']
-                
+
 def mpuSetUpLogic(mpuSym, event):
     global mpuSettings
-        
+
     if event["value"] in mpuSettings:
         SymID = mpuSym.getID()
-    
+
         mpuSym.clearValue()
         if "_Type" in str(SymID):
             mpuSym.setSelectedKey(str(mpuSettings[event["value"]][0]), 2)
@@ -48,7 +48,7 @@ def mpuSetUpLogic(mpuSym, event):
             mpuSym.setValue(hex_int,2)
         if "_Size" in str(SymID):
             mpuSym.setSelectedKey(str(mpuSettings[event["value"]][5]), 2)
-            
+
 
 def enableFileGen(coreMPUMenu, event):
     if(event["value"]==True):
@@ -68,8 +68,8 @@ def storeLength(symbol, event):
     symObj=event["symbol"]
     key=symObj.getSelectedKey()
     symbol.setValue(key,2)
-    
-            
+
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -92,34 +92,34 @@ coreUseMPUPRIVDEFENA = coreComponent.createBooleanSymbol("CoreMPU_PRIVDEFENA", c
 coreUseMPUPRIVDEFENA.setLabel("PRIVDEFENA")
 coreUseMPUPRIVDEFENA.setDefaultValue(False)
 coreUseMPUPRIVDEFENA.setDescription("Enables privileged software access to the default memory map")
-    
+
 for i in range(0,16):
 
     coreMPURegEnable = coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Enable"), coreUseMPU)
     coreMPURegEnable.setLabel("Enable MPU Region" + str(i))
-   
+
     if i<len(mpuSettings):
         coreMPURegEnable.setDefaultValue(True)
     else:
         coreMPURegEnable.setDefaultValue(False)
 
- 
-    coreMPURegMenu = coreComponent.createMenuSymbol("MPU_MENU_0", coreMPURegEnable)
+
+    coreMPURegMenu = coreComponent.createMenuSymbol("MPU_MENU_" + str(i), coreMPURegEnable)
     coreMPURegMenu.setLabel("MPU Region " + str(i) + " Settings")
     coreMPURegMenu.setDescription("Configuration for MPU Region"+ str(channelID))
 
     coreMPURegNameOptions = coreComponent.createComboSymbol(("MPU_Region_Name" + str(i) +"_Options"), coreMPURegMenu, mpuSettings.keys())
     coreMPURegNameOptions.setLabel("Region Name Options")
     coreMPURegNameOptions.setVisible(False)
- 
+
     coreMPURegName = coreComponent.createStringSymbol(("MPU_Region_Name" + str(i)), coreMPURegMenu)
     coreMPURegName.setLabel("Region Name")
     # Default value is set later to trigger business logic for the first time
-    
+
     coreMPURegAddress = coreComponent.createHexSymbol(("MPU_Region_" + str(i) + "_Address"), coreMPURegMenu)
     coreMPURegAddress.setLabel("Base Address")
     coreMPURegAddress.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
-    
+
     coreMPURegSize = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Size"), coreMPURegMenu)
     coreMPURegSize.setLabel("Size")
     coreMPURegSize.setOutputMode("Value")
@@ -159,7 +159,7 @@ for i in range(0,16):
     coreMPURegLength.setVisible(False)
     coreMPURegLength.setDependencies(storeLength, ["MPU_Region_" + str(i) + "_Size"])
 
-    
+
     coreMPURegType = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Type"), coreMPURegMenu)
     coreMPURegType.setLabel("Memory Type and Cache policy")
     coreMPURegType.setOutputMode("Key")
@@ -172,7 +172,7 @@ for i in range(0,16):
     coreMPURegType.addKey("MPU_ATTR_NORMAL", str(5) , "Normal memory, Non-cacheable" )
     coreMPURegType.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
-    
+
     coreMPURegAccess = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Access"), coreMPURegMenu)
     coreMPURegAccess.setLabel("Data Access Permission")
     coreMPURegAccess.setOutputMode("Key")
@@ -189,7 +189,7 @@ for i in range(0,16):
     coreMPURegExecute.setLabel("Instruction Access Permission")
     coreMPURegExecute.setDefaultValue(False)
     coreMPURegExecute.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
-    
+
     coreMPURegShare= coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Share" ), coreMPURegMenu)
     coreMPURegShare.setLabel("Shareable Attribute")
     coreMPURegShare.setDefaultValue(False)
@@ -198,13 +198,13 @@ for i in range(0,16):
     if i<len(mpuSettings):
         coreMPURegName.setDefaultValue(mpuSetUpLogicList[i])
 
-        
+
 ############################################################################
 #### Code Generation ####
 ############################################################################
 configName = Variables.get("__CONFIGURATION_NAME")
 
-mpuHeaderFile1 = coreComponent.createFileSymbol("MPU_FILE_0", None)
+mpuHeaderFile1 = coreComponent.createFileSymbol("PLIB_MPU_H", None)
 mpuHeaderFile1.setMarkup(True)
 mpuHeaderFile1.setSourcePath("../peripheral/mpu/templates/plib_mpu.h.ftl")
 mpuHeaderFile1.setOutputName("plib_mpu.h")
@@ -214,7 +214,7 @@ mpuHeaderFile1.setType("HEADER")
 mpuHeaderFile1.setOverwrite(True)
 mpuHeaderFile1.setEnabled(False)
 
-mpuHeaderFile2 = coreComponent.createFileSymbol("MPU_FILE_1", None)
+mpuHeaderFile2 = coreComponent.createFileSymbol("PLIB_MPU_LOCAL_H", None)
 mpuHeaderFile2.setMarkup(True)
 mpuHeaderFile2.setSourcePath("../peripheral/mpu/templates/plib_mpu_local.h.ftl")
 mpuHeaderFile2.setOutputName("plib_mpu_local.h")
@@ -224,7 +224,7 @@ mpuHeaderFile2.setType("HEADER")
 mpuHeaderFile2.setOverwrite(True)
 mpuHeaderFile2.setEnabled(False)
 
-mpuSourceFile = coreComponent.createFileSymbol("MPU_FILE_2", None)
+mpuSourceFile = coreComponent.createFileSymbol("PLIB_MPU_C", None)
 mpuSourceFile.setMarkup(True)
 mpuSourceFile.setSourcePath("../peripheral/mpu/templates/plib_mpu.c.ftl")
 mpuSourceFile.setOutputName("plib_mpu.c")
@@ -234,7 +234,7 @@ mpuSourceFile.setType("SOURCE")
 mpuSourceFile.setOverwrite(True)
 mpuSourceFile.setEnabled(False)
 
-mpuSystemInitFile = coreComponent.createFileSymbol("MPU_FILE_3", None)
+mpuSystemInitFile = coreComponent.createFileSymbol("MPU_SYSTEM_INITIALIZE_H", None)
 mpuSystemInitFile.setType("STRING")
 mpuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_MPU")
 mpuSystemInitFile.setSourcePath("../peripheral/mpu/templates/system/system_initialize.c.ftl")
@@ -242,7 +242,7 @@ mpuSystemInitFile.setMarkup(True)
 mpuSystemInitFile.setEnabled(False)
 
 
-mpuSystemDefFile = coreComponent.createFileSymbol(None, None)
+mpuSystemDefFile = coreComponent.createFileSymbol("MPU_SYSTEM_DEFINITIONS_H", None)
 mpuSystemDefFile.setType("STRING")
 mpuSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 mpuSystemDefFile.setSourcePath("../peripheral/mpu/templates/system/system_definitions.h.ftl")

@@ -1,6 +1,6 @@
 print("Loading Clock Manager for " + Variables.get("__PROCESSOR"))
 
-clkMenu = coreComponent.createMenuSymbol(None, None)
+clkMenu = coreComponent.createMenuSymbol("SAMD21_CLK_MENU", None)
 clkMenu.setLabel("Clock")
 clkMenu.setDescription("Configuraiton for Clock System Service")
 

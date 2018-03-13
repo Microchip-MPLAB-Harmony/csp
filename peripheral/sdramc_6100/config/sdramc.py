@@ -312,7 +312,7 @@ def instantiateComponent(sdramcComponent):
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    sdramcHeader1File = sdramcComponent.createFileSymbol(None, None)
+    sdramcHeader1File = sdramcComponent.createFileSymbol("SDRAMC_H", None)
     sdramcHeader1File.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/plib_sdramc.h.ftl")
     sdramcHeader1File.setOutputName("plib_sdramc" + str(instance) + ".h")
     sdramcHeader1File.setDestPath("/peripheral/sdramc/")
@@ -320,7 +320,7 @@ def instantiateComponent(sdramcComponent):
     sdramcHeader1File.setType("HEADER")
     sdramcHeader1File.setMarkup(True)
 
-    sdramcSource1File = sdramcComponent.createFileSymbol(None, None)
+    sdramcSource1File = sdramcComponent.createFileSymbol("SDRAMC_C", None)
     sdramcSource1File.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/plib_sdramc.c.ftl")
     sdramcSource1File.setOutputName("plib_sdramc" + str(instance) + ".c")
     sdramcSource1File.setDestPath("/peripheral/sdramc/")
@@ -329,13 +329,13 @@ def instantiateComponent(sdramcComponent):
     sdramcSource1File.setMarkup(True)
 
     #Add SDRAMC related code to common files
-    sdramcHeader1FileEntry = sdramcComponent.createFileSymbol(None, None)
+    sdramcHeader1FileEntry = sdramcComponent.createFileSymbol("SDRAMC_SYSTEM_DEFINITIONS_H", None)
     sdramcHeader1FileEntry.setType("STRING")
     sdramcHeader1FileEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     sdramcHeader1FileEntry.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/system/system_definitions.h.ftl")
     sdramcHeader1FileEntry.setMarkup(True)
 
-    sdramSystemInitFile = sdramcComponent.createFileSymbol(None, None)
+    sdramSystemInitFile = sdramcComponent.createFileSymbol("SDRAMC_SYSTEM_INITIALIZE_C", None)
     sdramSystemInitFile.setType("STRING")
     sdramSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
     sdramSystemInitFile.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/system/system_initialize.c.ftl")
