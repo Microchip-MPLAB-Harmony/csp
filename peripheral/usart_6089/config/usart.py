@@ -169,7 +169,7 @@ def instantiateComponent(usartComponent):
     ############################################################################
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    usartHeaderFile = usartComponent.createFileSymbol(None, None)
+    usartHeaderFile = usartComponent.createFileSymbol("USART_HEADER", None)
     usartHeaderFile.setSourcePath("../peripheral/usart_6089/templates/plib_usart.h")
     usartHeaderFile.setOutputName("plib_usart.h")
     usartHeaderFile.setDestPath("peripheral/usart/")
@@ -177,7 +177,7 @@ def instantiateComponent(usartComponent):
     usartHeaderFile.setType("HEADER")
     usartHeaderFile.setOverwrite(True)
 
-    usartHeader1File = usartComponent.createFileSymbol(None, None)
+    usartHeader1File = usartComponent.createFileSymbol("USART_HEADER1", None)
     usartHeader1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.h.ftl")
     usartHeader1File.setOutputName("plib_usart" + str(usartInstance) + ".h")
     usartHeader1File.setDestPath("peripheral/usart/")
@@ -186,7 +186,7 @@ def instantiateComponent(usartComponent):
     usartHeader1File.setOverwrite(True)
     usartHeader1File.setMarkup(True)
 
-    usartSource1File = usartComponent.createFileSymbol(None, None)
+    usartSource1File = usartComponent.createFileSymbol("USART_SOURCE1", None)
     usartSource1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.c.ftl")
     usartSource1File.setOutputName("plib_usart" + str(usartInstance) + ".c")
     usartSource1File.setDestPath("peripheral/usart/")
@@ -195,13 +195,13 @@ def instantiateComponent(usartComponent):
     usartSource1File.setOverwrite(True)
     usartSource1File.setMarkup(True)
 
-    usartSystemInitFile = usartComponent.createFileSymbol(None, None)
+    usartSystemInitFile = usartComponent.createFileSymbol("USART_INIT", None)
     usartSystemInitFile.setType("STRING")
     usartSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     usartSystemInitFile.setSourcePath("../peripheral/usart_6089/templates/system/system_initialize.c.ftl")
     usartSystemInitFile.setMarkup(True)
 
-    usartSystemDefFile = usartComponent.createFileSymbol(None, None)
+    usartSystemDefFile = usartComponent.createFileSymbol("USART_DEF", None)
     usartSystemDefFile.setType("STRING")
     usartSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     usartSystemDefFile.setSourcePath("../peripheral/usart_6089/templates/system/system_definitions.h.ftl")
