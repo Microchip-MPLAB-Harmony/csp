@@ -43,7 +43,7 @@ def instantiateComponent(rtcComponent):
 	rtcValGrp_CR_CALEVSEL = rtcRegModule.getValueGroup(rtcBitField_CR_CALEVSEL.getValueGroupName())
 	
 	#Create the top menu
-	rtcMenu = rtcComponent.createMenuSymbol(None, None)
+	rtcMenu = rtcComponent.createMenuSymbol("RTC_MENU_0", None)
 	rtcMenu.setLabel("Hardware Settings ")
 	#Create a Checkbox to enable disable interrupts
 	rtcInterrupt = rtcComponent.createBooleanSymbol("rtcEnableInterrupt", rtcMenu)
@@ -104,7 +104,7 @@ def instantiateComponent(rtcComponent):
 	configName = Variables.get("__CONFIGURATION_NAME")
 
 	#Generate Output Header
-	rtcHeaderFile = rtcComponent.createFileSymbol(None, None)
+	rtcHeaderFile = rtcComponent.createFileSymbol("RTC_FILE_0", None)
 	rtcHeaderFile.setSourcePath("../peripheral/rtc_6056/templates/plib_rtc.h.ftl")
 	rtcHeaderFile.setMarkup(True)
 	rtcHeaderFile.setOutputName("plib_rtc" + str(instance) + ".h")
@@ -113,7 +113,7 @@ def instantiateComponent(rtcComponent):
 	rtcHeaderFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
 	rtcHeaderFile.setType("HEADER")
 	#Generate Output source
-	rtcSourceFile = rtcComponent.createFileSymbol(None, None)
+	rtcSourceFile = rtcComponent.createFileSymbol("RTC_FILE_1", None)
 	rtcSourceFile.setSourcePath("../peripheral/rtc_6056/templates/plib_rtc.c.ftl")
 	rtcSourceFile.setMarkup(True)
 	rtcSourceFile.setOutputName("plib_rtc" + str(instance) + ".c")
@@ -122,13 +122,13 @@ def instantiateComponent(rtcComponent):
 	rtcSourceFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
 	rtcSourceFile.setType("SOURCE")
 	
-	rtcSystemInitFile = rtcComponent.createFileSymbol(None, None)
+	rtcSystemInitFile = rtcComponent.createFileSymbol("RTC_FILE_2", None)
 	rtcSystemInitFile.setType("STRING")
 	rtcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 	rtcSystemInitFile.setSourcePath("../peripheral/rtc_6056/templates/system/system_initialize.c.ftl")
 	rtcSystemInitFile.setMarkup(True)
 
-	rtcSystemDefFile = rtcComponent.createFileSymbol(None, None)
+	rtcSystemDefFile = rtcComponent.createFileSymbol("RTC_FILE_3", None)
 	rtcSystemDefFile.setType("STRING")
 	rtcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 	rtcSystemDefFile.setSourcePath("../peripheral/rtc_6056/templates/system/system_definitions.h.ftl")

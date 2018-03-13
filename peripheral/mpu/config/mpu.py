@@ -77,7 +77,7 @@ coreUseMPU = coreComponent.createBooleanSymbol("CoreUseMPU", devCfgMenu)
 coreUseMPU.setLabel("Enable MPU?")
 
 
-mpuFileGen = coreComponent.createBooleanSymbol(None, coreUseMPU)
+mpuFileGen = coreComponent.createBooleanSymbol("MPU_BOOL_0", coreUseMPU)
 mpuFileGen.setLabel("MPU File Generation")
 mpuFileGen.setDependencies(enableFileGen, ["CoreUseMPU"])
 mpuFileGen.setVisible(False)
@@ -104,7 +104,7 @@ for i in range(0,16):
         coreMPURegEnable.setDefaultValue(False)
 
  
-    coreMPURegMenu = coreComponent.createMenuSymbol(None, coreMPURegEnable)
+    coreMPURegMenu = coreComponent.createMenuSymbol("MPU_MENU_0", coreMPURegEnable)
     coreMPURegMenu.setLabel("MPU Region " + str(i) + " Settings")
     coreMPURegMenu.setDescription("Configuration for MPU Region"+ str(channelID))
 
@@ -204,7 +204,7 @@ for i in range(0,16):
 ############################################################################
 configName = Variables.get("__CONFIGURATION_NAME")
 
-mpuHeaderFile1 = coreComponent.createFileSymbol(None, None)
+mpuHeaderFile1 = coreComponent.createFileSymbol("MPU_FILE_0", None)
 mpuHeaderFile1.setMarkup(True)
 mpuHeaderFile1.setSourcePath("../peripheral/mpu/templates/plib_mpu.h.ftl")
 mpuHeaderFile1.setOutputName("plib_mpu.h")
@@ -214,7 +214,7 @@ mpuHeaderFile1.setType("HEADER")
 mpuHeaderFile1.setOverwrite(True)
 mpuHeaderFile1.setEnabled(False)
 
-mpuHeaderFile2 = coreComponent.createFileSymbol(None, None)
+mpuHeaderFile2 = coreComponent.createFileSymbol("MPU_FILE_1", None)
 mpuHeaderFile2.setMarkup(True)
 mpuHeaderFile2.setSourcePath("../peripheral/mpu/templates/plib_mpu_local.h.ftl")
 mpuHeaderFile2.setOutputName("plib_mpu_local.h")
@@ -224,7 +224,7 @@ mpuHeaderFile2.setType("HEADER")
 mpuHeaderFile2.setOverwrite(True)
 mpuHeaderFile2.setEnabled(False)
 
-mpuSourceFile = coreComponent.createFileSymbol(None, None)
+mpuSourceFile = coreComponent.createFileSymbol("MPU_FILE_2", None)
 mpuSourceFile.setMarkup(True)
 mpuSourceFile.setSourcePath("../peripheral/mpu/templates/plib_mpu.c.ftl")
 mpuSourceFile.setOutputName("plib_mpu.c")
@@ -234,7 +234,7 @@ mpuSourceFile.setType("SOURCE")
 mpuSourceFile.setOverwrite(True)
 mpuSourceFile.setEnabled(False)
 
-mpuSystemInitFile = coreComponent.createFileSymbol(None, None)
+mpuSystemInitFile = coreComponent.createFileSymbol("MPU_FILE_3", None)
 mpuSystemInitFile.setType("STRING")
 mpuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_MPU")
 mpuSystemInitFile.setSourcePath("../peripheral/mpu/templates/system/system_initialize.c.ftl")

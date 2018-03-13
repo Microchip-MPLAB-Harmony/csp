@@ -40,7 +40,7 @@ def instantiateComponent(trngComponent):
 	trngWarning.setVisible(False)
 	
 	#Create the top menu
-	trngMenu = trngComponent.createMenuSymbol(None, None)
+	trngMenu = trngComponent.createMenuSymbol("TRNG_MENU_0", None)
 	trngMenu.setLabel("Hardware Settings ")
 	trngMenu.setDependencies(showMenu, ["TRNG_Reserved"])
 
@@ -71,7 +71,7 @@ def instantiateComponent(trngComponent):
 	configName = Variables.get("__CONFIGURATION_NAME")
 
 	#Generate Output Header
-	trngHeaderFile = trngComponent.createFileSymbol(None, None)
+	trngHeaderFile = trngComponent.createFileSymbol("TRNG_FILE_0", None)
 	trngHeaderFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.h.ftl")
 	trngHeaderFile.setMarkup(True)
 	trngHeaderFile.setOutputName("plib_trng" + str(instance) + ".h")
@@ -82,7 +82,7 @@ def instantiateComponent(trngComponent):
 	trngHeaderFile.setType("HEADER")
 	#Generate Output source
 	
-	trngSourceFile = trngComponent.createFileSymbol(None, None)
+	trngSourceFile = trngComponent.createFileSymbol("TRNG_FILE_1", None)
 	trngSourceFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.c.ftl")
 	trngSourceFile.setMarkup(True)
 	trngSourceFile.setOutputName("plib_trng" + str(instance) + ".c")
@@ -92,7 +92,7 @@ def instantiateComponent(trngComponent):
 	trngSourceFile.setProjectPath("config/" + configName + "/peripheral/trng/")
 	trngSourceFile.setType("SOURCE")
 
-	trngSystemDefFile = trngComponent.createFileSymbol(None, None)
+	trngSystemDefFile = trngComponent.createFileSymbol("TRNG_FILE_2", None)
 	trngSystemDefFile.setType("STRING")
 	trngSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 	trngSystemDefFile.setSourcePath("../peripheral/trng_6334/templates/system/system_definitions.h.ftl")

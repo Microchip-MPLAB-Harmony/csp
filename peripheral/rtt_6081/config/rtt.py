@@ -23,7 +23,7 @@ def instantiateComponent(rttComponent):
 	global NVICHandler
 	instance = rttComponent.getID()[-1:]
 
-	rttMenu = rttComponent.createMenuSymbol(None, None)
+	rttMenu = rttComponent.createMenuSymbol("RTT_MENU_0", None)
 	rttMenu.setLabel("Hardware Settings ")
 	
 	rttPeriodicInterrupt = rttComponent.createBooleanSymbol("rttINCIEN", rttMenu)
@@ -73,7 +73,7 @@ def instantiateComponent(rttComponent):
 	
 	configName = Variables.get("__CONFIGURATION_NAME")
 
-	rttHeader1File = rttComponent.createFileSymbol(None, None)
+	rttHeader1File = rttComponent.createFileSymbol("RTT_FILE_0", None)
 	rttHeader1File.setSourcePath("../peripheral/rtt_6081/templates/plib_rtt.h.ftl")
 	rttHeader1File.setMarkup(True)
 	rttHeader1File.setOutputName("plib_rtt" + str(instance) + ".h")
@@ -81,7 +81,7 @@ def instantiateComponent(rttComponent):
 	rttHeader1File.setProjectPath("config/" + configName + "/peripheral/rtt/")
 	rttHeader1File.setType("HEADER")
 	
-	rttSource1File = rttComponent.createFileSymbol(None, None)
+	rttSource1File = rttComponent.createFileSymbol("RTT_FILE_1", None)
 	rttSource1File.setSourcePath("../peripheral/rtt_6081/templates/plib_rtt.c.ftl")
 	rttSource1File.setMarkup(True)
 	rttSource1File.setOutputName("plib_rtt" + str(instance) + ".c")
@@ -89,13 +89,13 @@ def instantiateComponent(rttComponent):
 	rttSource1File.setProjectPath("config/" + configName + "/peripheral/rtt/")
 	rttSource1File.setType("SOURCE")
 	
-	rttSystemInitFile = rttComponent.createFileSymbol(None, None)
+	rttSystemInitFile = rttComponent.createFileSymbol("RTT_FILE_2", None)
 	rttSystemInitFile.setType("STRING")
 	rttSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 	rttSystemInitFile.setSourcePath("../peripheral/rtt_6081/templates/system/system_initialize.c.ftl")
 	rttSystemInitFile.setMarkup(True)
 
-	rttSystemDefFile = rttComponent.createFileSymbol(None, None)
+	rttSystemDefFile = rttComponent.createFileSymbol("RTT_FILE_3", None)
 	rttSystemDefFile.setType("STRING")
 	rttSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 	rttSystemDefFile.setSourcePath("../peripheral/rtt_6081/templates/system/system_definitions.h.ftl")

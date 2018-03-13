@@ -3,7 +3,7 @@ Log.writeInfoMessage("Loading RSWDT for " + Variables.get("__PROCESSOR"))
 global NVICVector
 global NVICHandler
 
-rswdtMenu = coreComponent.createMenuSymbol(None, None)
+rswdtMenu = coreComponent.createMenuSymbol("RSWDT_MENU_0", None)
 rswdtMenu.setLabel("RSWDT")
 
 rswdtEnable = coreComponent.createBooleanSymbol("rswdtENABLE", rswdtMenu)
@@ -18,7 +18,7 @@ def rswdtEnableCfgMenu(rswdtCfgMenu, event):
 	component.getSymbolByID("rswdtSourceFile").setEnabled(event["value"])
 	component.getSymbolByID("rswdtSystemDefFile").setEnabled(event["value"])
 
-rswdtCfgMenu = coreComponent.createMenuSymbol(None, rswdtMenu)
+rswdtCfgMenu = coreComponent.createMenuSymbol("RSWDT_MENU_1", rswdtMenu)
 rswdtCfgMenu.setLabel("RSWDT Configuration")
 rswdtCfgMenu.setDependencies(rswdtEnableCfgMenu, ["rswdtENABLE"])
 
