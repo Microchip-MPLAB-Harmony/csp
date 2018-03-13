@@ -86,16 +86,16 @@ def instantiateComponent(rstcComponent):
     NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
       
     # NVIC Dynamic settings
-    accNVICControl = rstcComponent.createBooleanSymbol("NVIC_RSTC_ENABLE", None)
-    accNVICControl.setDependencies(NVICControl, ["RSTC_MR_URSTEN"])
-    accNVICControl.setVisible(False)
+    rstcNVICControl = rstcComponent.createBooleanSymbol("NVIC_RSTC_ENABLE", None)
+    rstcNVICControl.setDependencies(NVICControl, ["RSTC_MR_URSTEN"])
+    rstcNVICControl.setVisible(False)
     
 ############################################################################
 #### Code Generation ####
 ############################################################################
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    rstcHeader1File = rstcComponent.createFileSymbol(None, None)
+    rstcHeader1File = rstcComponent.createFileSymbol("RSTC_HEADER1", None)
     rstcHeader1File.setSourcePath("../peripheral/rstc_11009/templates/plib_rstc.h")
     rstcHeader1File.setOutputName("plib_rstc.h")
     rstcHeader1File.setDestPath("peripheral/rstc/")
@@ -103,7 +103,7 @@ def instantiateComponent(rstcComponent):
     rstcHeader1File.setType("HEADER")
     rstcHeader1File.setOverwrite(True)  
     
-    rstcHeader2File = rstcComponent.createFileSymbol(None, None)
+    rstcHeader2File = rstcComponent.createFileSymbol("RSTC_HEADER2", None)
     rstcHeader2File.setMarkup(True)    
     rstcHeader2File.setSourcePath("../peripheral/rstc_11009/templates/plib_rstc.h.ftl")
     rstcHeader2File.setOutputName("plib_rstc" + str(instance) + ".h")
@@ -112,7 +112,7 @@ def instantiateComponent(rstcComponent):
     rstcHeader2File.setType("HEADER")
     rstcHeader2File.setOverwrite(True)
 
-    rstcSource1File = rstcComponent.createFileSymbol(None, None)
+    rstcSource1File = rstcComponent.createFileSymbol("RSTC_SOURCE1", None)
     rstcSource1File.setMarkup(True)    
     rstcSource1File.setSourcePath("../peripheral/rstc_11009/templates/plib_rstc.c.ftl")
     rstcSource1File.setOutputName("plib_rstc" + str(instance) + ".c")
@@ -121,13 +121,13 @@ def instantiateComponent(rstcComponent):
     rstcSource1File.setType("SOURCE")
     rstcSource1File.setOverwrite(True)
     
-    rstcSystemInitFile = rstcComponent.createFileSymbol(None, None)
+    rstcSystemInitFile = rstcComponent.createFileSymbol("RSTC_INIT", None)
     rstcSystemInitFile.setType("STRING")
     rstcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     rstcSystemInitFile.setSourcePath("../peripheral/rstc_11009/templates/system/system_initialize.c.ftl")
     rstcSystemInitFile.setMarkup(True)
 
-    rstcSystemDefFile = rstcComponent.createFileSymbol(None, None)
+    rstcSystemDefFile = rstcComponent.createFileSymbol("RSTC_DEF", None)
     rstcSystemDefFile.setType("STRING")
     rstcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     rstcSystemDefFile.setSourcePath("../peripheral/rstc_11009/templates/system/system_definitions.h.ftl")
