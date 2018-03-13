@@ -266,7 +266,7 @@ dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT",
 dmaManagerSelect.setVisible(False)
 dmaManagerSelect.setDefaultValue("SAME70:SAME70DMAModel")
 
-xdmacMenu = coreComponent.createMenuSymbol(None, None)
+xdmacMenu = coreComponent.createMenuSymbol("XDMAC_MENU", None)
 xdmacMenu.setLabel("DMA (XDMAC)")
 xdmacMenu.setDescription("DMA (XDMAC) Configuration")
 
@@ -275,7 +275,7 @@ xdmacEnable.setLabel("Use DMA Service?")
 xdmacEnable.setVisible(False)
 xdmacEnable.setDefaultValue(False)
 
-xdmacFileGen = coreComponent.createBooleanSymbol(None, xdmacEnable)
+xdmacFileGen = coreComponent.createBooleanSymbol("XDMAC_FILE_GEN", xdmacEnable)
 xdmacFileGen.setLabel("DMA (XDMAC) File Generation")
 xdmacFileGen.setDependencies(onGlobalEnableLogic, ["XDMAC_ENABLE"])
 xdmacFileGen.setVisible(False)
