@@ -1,4 +1,3 @@
-
 ################################################################################
 #### Register Information ####
 ################################################################################
@@ -16,7 +15,6 @@ global NVICVector
 global NVICHandler
 global instance
 global peripId
-
 
 ################################################################################
 #### Business Logic ####
@@ -36,7 +34,6 @@ def accFaultSourceSelect(symbol,event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-        
         
 ################################################################################
 #### Component ####
@@ -163,7 +160,7 @@ def instantiateComponent(accComponent):
 ############################################################################
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    accHeaderFile = accComponent.createFileSymbol(None, None)
+    accHeaderFile = accComponent.createFileSymbol("ACC_HEADER", None)
     accHeaderFile.setSourcePath("../peripheral/acc_6490/templates/plib_acc.h")
     accHeaderFile.setOutputName("plib_acc.h")
     accHeaderFile.setDestPath("peripheral/acc/")
@@ -171,7 +168,7 @@ def instantiateComponent(accComponent):
     accHeaderFile.setType("HEADER")
     accHeaderFile.setOverwrite(True)
     
-    accHeader1File = accComponent.createFileSymbol(None, None)
+    accHeader1File = accComponent.createFileSymbol("ACC_HEADER1", None)
     accHeader1File.setMarkup(True)
     accHeader1File.setSourcePath("../peripheral/acc_6490/templates/plib_acc.h.ftl")
     accHeader1File.setOutputName("plib_acc" + str(instance) + ".h")
@@ -180,7 +177,7 @@ def instantiateComponent(accComponent):
     accHeader1File.setType("HEADER")
     accHeader1File.setOverwrite(True)
 
-    accSource1File = accComponent.createFileSymbol(None, None)
+    accSource1File = accComponent.createFileSymbol("ACC_SOURCE1", None)
     accSource1File.setMarkup(True)
     accSource1File.setSourcePath("../peripheral/acc_6490/templates/plib_acc.c.ftl")
     accSource1File.setOutputName("plib_acc" + str(instance) + ".c")
@@ -189,13 +186,13 @@ def instantiateComponent(accComponent):
     accSource1File.setType("SOURCE")
     accSource1File.setOverwrite(True)
 
-    accSystemInitFile = accComponent.createFileSymbol(None, None)
+    accSystemInitFile = accComponent.createFileSymbol("ACC_INIT", None)
     accSystemInitFile.setType("STRING")
     accSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     accSystemInitFile.setSourcePath("../peripheral/acc_6490/templates/system/system_initialize.c.ftl")
     accSystemInitFile.setMarkup(True)
 
-    accSystemDefFile = accComponent.createFileSymbol(None, None)
+    accSystemDefFile = accComponent.createFileSymbol("ACC_DEF", None)
     accSystemDefFile.setType("STRING")
     accSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     accSystemDefFile.setSourcePath("../peripheral/acc_6490/templates/system/system_definitions.h.ftl")

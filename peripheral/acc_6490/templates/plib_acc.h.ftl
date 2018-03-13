@@ -1,5 +1,5 @@
 /*******************************************************************************
-  ACC PLIB
+  Analog Comparator Controller(ACC) Peripheral Library Interface Header File
 
   Company:
     Microchip Technology Inc.
@@ -49,33 +49,28 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-
     extern "C" {
-
 #endif
 // DOM-IGNORE-END
-
 
 // *****************************************************************************
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
 
-/****************************** ACC${INDEX?string} API *********************************/
+/*************************** ACC${INDEX?string} API ***************************/
 void ACC${INDEX?string}_Initialize (void);
+
 bool ACC${INDEX?string}_StatusGet (ACC_STATUS_SOURCE status);
 
 <#if INTERRUPT_MODE == true>
-void ACC${INDEX?string}_CallbackRegister( ACC_CALLBACK callback, uintptr_t context );
+void ACC${INDEX?string}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context);
 </#if>
-
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-
     }
-
 #endif
+
 // DOM-IGNORE-END
 #endif // _PLIB_ACC${INDEX?string}_H

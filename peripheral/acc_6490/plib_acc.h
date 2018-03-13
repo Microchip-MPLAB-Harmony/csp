@@ -46,17 +46,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _ACCx_H    // Guards against multiple inclusion
-#define _ACCx_H
+#ifndef PLIB_ACCx_H    // Guards against multiple inclusion
+#define PLIB_ACCx_H
 
 #include <stddef.h>
 #include <stdbool.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-
     extern "C" {
-
 #endif
 // DOM-IGNORE-END
 
@@ -84,10 +82,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 typedef enum
 {
     /*ACC Output*/
-    ACC_STATUS_SOURCE_COMPARATOR_OUTPUT,      
+    ACC_STATUS_SOURCE_COMPARATOR_OUTPUT = ACC_ISR_SCO_Msk,      
 
     /*ACC Interrupt*/
-    ACC_STATUS_SOURCE_COMPARISON_EDGE,
+    ACC_STATUS_SOURCE_COMPARISON_EDGE = ACC_ISR_CE_Msk,
 
 } ACC_STATUS_SOURCE;
 
@@ -96,10 +94,6 @@ typedef enum
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-
-/* The following functions make up the methods (set of possible operations) of
-   this interface.
-*/
 
 // *****************************************************************************
 /* Function:
@@ -131,7 +125,7 @@ typedef enum
     should be called only once.
 */
 
-void ACCx_Initialize(void);
+void ACCx_Initialize (void);
 
 // *****************************************************************************
 /* Function:
@@ -148,9 +142,11 @@ void ACCx_Initialize(void);
     function.
 
   Parameters:
-    status - ACC_STATUS_SOURCE_COMPARATOR_OUTPUT, To know the comparator output status
-             ACC_STATUS_SOURCE_COMPARISON_EDGE, To know a selected egde occurred on comparator
-             output or not
+    status - ACC_STATUS_SOURCE_COMPARATOR_OUTPUT, To know the comparator output 
+             status
+             ACC_STATUS_SOURCE_COMPARISON_EDGE, To know a selected egde occurred
+             on comparator output or not
+             
   Returns:
    Returns the comparison status.
 
@@ -168,20 +164,19 @@ void ACCx_Initialize(void);
     None.
 
 */
-
-bool ACCx_StatusGet(ACC_STATUS_SOURCE status);
+bool ACCx_StatusGet (ACC_STATUS_SOURCE status);
 
 // *****************************************************************************
-/* ACC Event Handle Function pointer
-   typedef void (*ACC_EVENT_HANDLER) (uintptr_t context)
+/* ACC Callback Function pointer
+   typedef void (*ACC_CALLBACK) (uintptr_t context)
 
   Summary:
-    Pointer to a ACC Event handler function
+    Pointer to a ACC callback function
 
   Description:
-    This data type defines the required function signature for the ACC event
-    handling callback function.
-    A client must register a pointer to a event handling function whose function
+    This data type defines the required function signature for the ACC Callback 
+    function.
+    A client must register a pointer to a callback function whose function
     signature (parameter and return value types) match the types specified by
     this function pointer in order to receive event callback.
     The parameters and return values and are described here and a partial
@@ -189,40 +184,39 @@ bool ACCx_StatusGet(ACC_STATUS_SOURCE status);
 
   Parameters:
     context - Value identifying the context of the application that registered
-              the event handling function.
+              the callback function.
 
   Returns:
     None.
 
    Example:
-    Refer to the ACC_EventHandlerSet( ) function code example.
+    Refer to the ACCx_CallbackRegister( ) function code example.
 
   Remarks:
+    None
 */
-typedef void (*ACCx_EVENT_HANDLER) (uintptr_t context);
+typedef void (*ACC_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
 /* Function:
-    void ACCx_EventHandlerSet(ACCx_EVENT_HANDLER eventHandler, uintptr_t context)
-
+    void ACCx_CallbackRegister (ACC_CALLBACK callback, uintptr_t context);
   Summary:
-    Allows a client to identify a event handling function to callback.
+    Allows a client to identify a callback function.
 
   Description:
-    This routine allows a client to identify a event handling function to
-    callback.
+    This routine allows a client to identify a callback function.
 
   Precondition:
     Function ACCx_Initialize should have been called before calling this
     function.
 
   Parameters:
-    eventHandler - Pointer to the event handler function.
-    context      - The value of parameter will be passed back to the client
-                   unchanged, when the eventHandler function is called.  It can
-                   be used to identify any client specific data object that
-                   identifies the instance of the client module (for example,
-                   it may be a pointer to the client module's state structure).   
+    callback - Pointer to the callback function.
+    context  - The value of parameter will be passed back to the client
+               unchanged, when the callback function is called.  It can be 
+               used to identify any client specific data object that identifies
+               the instance of the client module (for example, it may be a
+               pointer to the client module's state structure).   
 
   Returns:
    None.
@@ -230,30 +224,27 @@ typedef void (*ACCx_EVENT_HANDLER) (uintptr_t context);
   Example:
     <code>
     MY_APP_OBJ myAppObj;
-    void APP_ACC_EventHandler(uintptr_t context)
+    
+    void APP_ACC_CallbackFunction (uintptr_t context)
     {  
         // The context was set to an application specific object.
-        // It is now retrievable easily in the event handler.
+        // It is now retrievable easily in Callback function.
            MY_APP_OBJ myAppObj = (MY_APP_OBJ *) context;
         //Application related tasks
     }
                   
-    ACC1_EventHandlerSet(APP_ACC_EventHandler, (uintptr_t)&myAppObj);  
+    ACC1_CallbackRegister (APP_ACC_CallbackFunction, (uintptr_t)&myAppObj);  
     </code>
 
   Remarks:
     None.
 
 */
-
-void ACCx_EventHandlerSet (ACCx_EVENT_HANDLER eventHandler, uintptr_t context);
-
+void ACCx_CallbackRegister (ACC_CALLBACK callback, uintptr_t context);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-
     }
-
 #endif
 // DOM-IGNORE-END
-#endif // _ACCx_H
+#endif // PLIB_ACCx_H
