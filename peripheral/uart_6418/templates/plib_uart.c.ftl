@@ -222,8 +222,9 @@ UART_ERROR UART${INDEX?string}_ErrorGet( void )
     return errors;
 }
 
-size_t UART${INDEX?string}_Read( void *buffer, const size_t size )
+bool UART${INDEX?string}_Read( void *buffer, const size_t size )
 {
+    bool status = false;
     size_t processedSize = 0;
     uint8_t * lBuffer = (uint8_t *)buffer;
 
@@ -238,6 +239,8 @@ size_t UART${INDEX?string}_Read( void *buffer, const size_t size )
                 processedSize++;
             }
         }
+
+        status = true;
 <#else>
         /* Check if receive request is in progress */
         if(uart${INDEX?string}Obj.rxBusyStatus == false)
@@ -246,25 +249,19 @@ size_t UART${INDEX?string}_Read( void *buffer, const size_t size )
             uart${INDEX?string}Obj.rxSize = size;
             uart${INDEX?string}Obj.rxProcessedSize = 0;
             uart${INDEX?string}Obj.rxBusyStatus = true;
+            status = true;
 
             _UART${INDEX?string}_REGS->UART_IER.w = UART_IER_RXRDY_Msk;
         }
-        else
-        {
-            processedSize = -1;
-        }
 </#if>
     }
-    else
-    {
-        processedSize = -1;
-    }
 
-    return processedSize;
+    return status;
 }
 
-size_t UART${INDEX?string}_Write( void *buffer, const size_t size )
+bool UART${INDEX?string}_Write( void *buffer, const size_t size )
 {
+    bool status = false;
     size_t processedSize = 0;
     uint8_t * lBuffer = (uint8_t *)buffer;
 
@@ -279,6 +276,8 @@ size_t UART${INDEX?string}_Write( void *buffer, const size_t size )
                 processedSize++;
             }
         }
+
+        status = true;
 <#else>
         /* Check if transmit request is in progress */
         if(uart${INDEX?string}Obj.txBusyStatus == false)
@@ -287,6 +286,7 @@ size_t UART${INDEX?string}_Write( void *buffer, const size_t size )
             uart${INDEX?string}Obj.txSize = size;
             uart${INDEX?string}Obj.txProcessedSize = 0;
             uart${INDEX?string}Obj.txBusyStatus = true;
+            status = true;
 
             /* Initiate the transfer by sending first byte */
             if(UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk))
@@ -297,18 +297,10 @@ size_t UART${INDEX?string}_Write( void *buffer, const size_t size )
 
             _UART${INDEX?string}_REGS->UART_IER.w = UART_IER_TXEMPTY_Msk;
         }
-        else
-        {
-            processedSize = -1;
-        }
 </#if>
     }
-    else
-    {
-        processedSize = -1;
-    }
 
-    return processedSize;
+    return status;
 }
 
 <#if INTERRUPT_MODE == true>

@@ -64,9 +64,9 @@ void UART${INDEX?string}_Initialize( void );
 
 UART_ERROR UART${INDEX?string}_ErrorGet( void );
 
-size_t UART${INDEX?string}_Write( void *buffer, const size_t size );
+bool UART${INDEX?string}_Write( void *buffer, const size_t size );
 
-size_t UART${INDEX?string}_Read( void *buffer, const size_t size );
+bool UART${INDEX?string}_Read( void *buffer, const size_t size );
 
 <#if INTERRUPT_MODE == false>
 bool UART${INDEX?string}_TransmitterIsReady( void );
