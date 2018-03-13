@@ -211,7 +211,7 @@ void USARTx_Initialize( void );
 
 // *****************************************************************************
 /* Function:
-    size_t USARTx_Write( void *buffer, const size_t size )
+    bool USARTx_Write( void *buffer, const size_t size )
 
    Summary:
     Submits a write buffer to the given USART peripheral to transfer.
@@ -238,22 +238,22 @@ void USARTx_Initialize( void );
     size - Number of bytes to be transferred.
 
    Returns:
-    Number of bytes processed.
-    Returns -1 if the arguments are not valid or if the library is in an error
-    state.
+    Write request status.
+    True - Write request was successful.
+    False - Write request has failed.
 
   Example:
     <code>
     //Example to use in non-interrupt mode
     char myData[COUNT] = {"hello"}; //COUNT is user message size
 
-    if(-1 != USART1_Write(&myData, COUNT))
+    if(false != USART1_Write(&myData, COUNT))
     {
         //The transfer is completed
     }
     else
     {
-        //Invalid arguments
+        //Write failed
     }
     </code>
 
@@ -261,12 +261,12 @@ void USARTx_Initialize( void );
     None.
 */
 
-size_t USARTx_Write( void *buffer, const size_t size );
+bool USARTx_Write( void *buffer, const size_t size );
 
 
 // *****************************************************************************
 /* Function:
-    size_t USARTx_Read( void *buffer, const size_t size )
+    bool USARTx_Read( void *buffer, const size_t size )
 
    Summary:
     Submits a read buffer to the given USART peripheral to process.
@@ -293,22 +293,22 @@ size_t USARTx_Write( void *buffer, const size_t size );
     size - Number of bytes to be transferred.
 
    Returns:
-    Number of bytes processed.
-    Returns -1 if the arguments are not valid or if the library is in an error
-    state.
+    Read request status.
+    True - Read request was successful.
+    False - Read request has failed.
 
   Example:
     <code>
     //Example to use in non-interrupt
     char rxData[COUNT] = {}; //COUNT is expected size
 
-    if(-1 != USART1_Read(&rxData, COUNT))
+    if(false != USART1_Read(&rxData, COUNT))
     {
         //The transfer is completed
     }
     else
     {
-        //Invalid arguments
+        //Read Failed
     }
     </code>
 
@@ -316,7 +316,7 @@ size_t USARTx_Write( void *buffer, const size_t size );
     None.
 */
 
-size_t USARTx_Read( void *buffer, const size_t size );
+bool USARTx_Read( void *buffer, const size_t size );
 
 
 // *****************************************************************************
