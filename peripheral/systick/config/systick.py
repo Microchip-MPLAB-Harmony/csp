@@ -32,7 +32,7 @@ def sysTickEnableCfgMenu(CfgMenu, event):
         systickSystemDefFile.setEnabled(False)
         systickSystemInitFile.setEnabled(False)
         
-systickMenu = coreComponent.createMenuSymbol(None, systickEnable)
+systickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU_0", systickEnable)
 systickMenu.setLabel("SysTick Configuration")
 systickMenu.setDependencies(showMenu, ["systickEnable"])
 systickMenu.setVisible(False)
@@ -76,7 +76,7 @@ systickPeriodComment.setDependencies(systickCal, ["core.SYSTICK", "SYSTICK_PERIO
 ############################################################################
 configName = Variables.get("__CONFIGURATION_NAME")
 
-systickHeaderFile = coreComponent.createFileSymbol(None, None)
+systickHeaderFile = coreComponent.createFileSymbol("SYSTICK_FILE_0", None)
 systickHeaderFile.setSourcePath("../peripheral/systick/templates/plib_systick.h.ftl")
 systickHeaderFile.setOutputName("plib_systick.h")
 systickHeaderFile.setDestPath("/peripheral/systick/")
@@ -86,7 +86,7 @@ systickHeaderFile.setOverwrite(True)
 systickHeaderFile.setEnabled(False)
 systickHeaderFile.setMarkup(True)
 
-systickSourceFile = coreComponent.createFileSymbol(None, None)
+systickSourceFile = coreComponent.createFileSymbol("SYSTICK_FILE_1", None)
 systickSourceFile.setSourcePath("../peripheral/systick/templates/plib_systick.c.ftl")
 systickSourceFile.setOutputName("plib_systick.c")
 systickSourceFile.setDestPath("/peripheral/systick/")
@@ -96,7 +96,7 @@ systickSourceFile.setOverwrite(True)
 systickSourceFile.setMarkup(True)
 systickSourceFile.setEnabled(False)
 
-systickSystemDefFile = coreComponent.createFileSymbol(None, None)
+systickSystemDefFile = coreComponent.createFileSymbol("SYSTICK_FILE_2", None)
 systickSystemDefFile.setType("STRING")
 systickSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 systickSystemDefFile.setSourcePath("../peripheral/systick/templates/system/system_definitions.h.ftl")

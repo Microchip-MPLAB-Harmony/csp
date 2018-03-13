@@ -26,7 +26,7 @@ def instantiateComponent(efcComponent):
 	instance = efcComponent.getID()[-1:]
 	Log.writeInfoMessage("Running EEFC")
 	#Create the top menu
-	eefcMenu = efcComponent.createMenuSymbol(None, None)
+	eefcMenu = efcComponent.createMenuSymbol("EFC_MENU_0", None)
 	eefcMenu.setLabel("Hardware Settings ")
 	#Create a Checkbox to enable disable interrupts
 	eefcInterrupt = efcComponent.createBooleanSymbol("eefcEnableInterrupt", eefcMenu)
@@ -57,7 +57,7 @@ def instantiateComponent(efcComponent):
 	
 	configName = Variables.get("__CONFIGURATION_NAME")
 	#Generate Output Header
-	eefcHeaderFile = efcComponent.createFileSymbol(None, None)
+	eefcHeaderFile = efcComponent.createFileSymbol("EFC_FILE_0", None)
 	eefcHeaderFile.setSourcePath("../peripheral/efc_6450/templates/plib_eefc.h.ftl")
 	eefcHeaderFile.setMarkup(True)
 	eefcHeaderFile.setOutputName("plib_eefc" + str(instance) + ".h")
@@ -66,7 +66,7 @@ def instantiateComponent(efcComponent):
 	eefcHeaderFile.setProjectPath("config/" + configName + "/peripheral/eefc/")
 	eefcHeaderFile.setType("HEADER")
 	#Generate Output source
-	eefcSourceFile = efcComponent.createFileSymbol(None, None)
+	eefcSourceFile = efcComponent.createFileSymbol("EFC_FILE_1", None)
 	eefcSourceFile.setSourcePath("../peripheral/efc_6450/templates/plib_eefc.c.ftl")
 	eefcSourceFile.setMarkup(True)
 	eefcSourceFile.setOutputName("plib_eefc" + str(instance) + ".c")
@@ -75,7 +75,7 @@ def instantiateComponent(efcComponent):
 	eefcSourceFile.setProjectPath("config/" + configName + "/peripheral/eefc/")
 	eefcSourceFile.setType("SOURCE")
 
-	eefcSystemDefFile = efcComponent.createFileSymbol(None, None)
+	eefcSystemDefFile = efcComponent.createFileSymbol("EFC_FILE_2", None)
 	eefcSystemDefFile.setType("STRING")
 	eefcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 	eefcSystemDefFile.setSourcePath("../peripheral/efc_6450/templates/system/system_definitions.h.ftl")

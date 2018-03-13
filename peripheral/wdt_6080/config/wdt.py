@@ -1,6 +1,6 @@
 Log.writeInfoMessage("Loading WDT for " + Variables.get("__PROCESSOR"))
 
-wdtMenu = coreComponent.createMenuSymbol(None, None)
+wdtMenu = coreComponent.createMenuSymbol("WDT_MENU_0", None)
 wdtMenu.setLabel("WDT")
 
 wdtEnable = coreComponent.createBooleanSymbol("wdtENABLE", wdtMenu)
