@@ -148,7 +148,7 @@ def instantiateComponent(uartComponent):
     ############################################################################
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    uartHeaderFile = uartComponent.createFileSymbol(None, None)
+    uartHeaderFile = uartComponent.createFileSymbol("UART_HEADER", None)
     uartHeaderFile.setSourcePath("../peripheral/uart_6418/templates/plib_uart.h")
     uartHeaderFile.setOutputName("plib_uart.h")
     uartHeaderFile.setDestPath("peripheral/uart/")
@@ -156,7 +156,7 @@ def instantiateComponent(uartComponent):
     uartHeaderFile.setType("HEADER")
     uartHeaderFile.setOverwrite(True)
 
-    uartHeader1File = uartComponent.createFileSymbol(None, None)
+    uartHeader1File = uartComponent.createFileSymbol("UART_HEADER1", None)
     uartHeader1File.setSourcePath("../peripheral/uart_6418/templates/plib_uart.h.ftl")
     uartHeader1File.setOutputName("plib_uart" + str(uartInstance) + ".h")
     uartHeader1File.setDestPath("peripheral/uart/")
@@ -165,7 +165,7 @@ def instantiateComponent(uartComponent):
     uartHeader1File.setOverwrite(True)
     uartHeader1File.setMarkup(True)
 
-    uartSource1File = uartComponent.createFileSymbol(None, None)
+    uartSource1File = uartComponent.createFileSymbol("UART_SOURCE1", None)
     uartSource1File.setSourcePath("../peripheral/uart_6418/templates/plib_uart.c.ftl")
     uartSource1File.setOutputName("plib_uart" + str(uartInstance) + ".c")
     uartSource1File.setDestPath("peripheral/uart/")
@@ -174,13 +174,13 @@ def instantiateComponent(uartComponent):
     uartSource1File.setOverwrite(True)
     uartSource1File.setMarkup(True)
 
-    uartSystemInitFile = uartComponent.createFileSymbol(None, None)
+    uartSystemInitFile = uartComponent.createFileSymbol("UART_INIT", None)
     uartSystemInitFile.setType("STRING")
     uartSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     uartSystemInitFile.setSourcePath("../peripheral/uart_6418/templates/system/system_initialize.c.ftl")
     uartSystemInitFile.setMarkup(True)
 
-    uartSystemDefFile = uartComponent.createFileSymbol(None, None)
+    uartSystemDefFile = uartComponent.createFileSymbol("UART_DEF", None)
     uartSystemDefFile.setType("STRING")
     uartSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     uartSystemDefFile.setSourcePath("../peripheral/uart_6418/templates/system/system_definitions.h.ftl")
