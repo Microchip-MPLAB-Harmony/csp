@@ -52,9 +52,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _DACCx_H    // Guards against multiple inclusion
-#define _DACCx_H
-
+#ifndef PLIB_DACCx_H    // Guards against multiple inclusion
+#define PLIB_DACCx_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -148,7 +147,7 @@ void DACCx_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-    bool DACCx_IsReady(DACC_CHANNEL_NUM channel)
+    bool DACCx_IsReady (DACC_CHANNEL_NUM channel)
 
    Summary:
     Checks whether DACC is ready to accecpt new conversion request or not.
@@ -230,8 +229,7 @@ bool DACCx_IsReady (DACC_CHANNEL_NUM channel);
   Remarks:
     None.
 */
-
-void DACCx_DataWrite (DACCx_CHANNEL_NUM channel, uint32_t data);
+void DACCx_DataWrite (DACC_CHANNEL_NUM channel, uint32_t data);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -241,7 +239,7 @@ void DACCx_DataWrite (DACCx_CHANNEL_NUM channel, uint32_t data);
 #endif
 // DOM-IGNORE-END
 
-#endif //_DACCx_H
+#endif //PLIB_DACCx_H
 
 /**
  End of File
