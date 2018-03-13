@@ -64,9 +64,9 @@ void USART${INDEX?string}_Initialize( void );
 
 USART_ERROR USART${INDEX?string}_ErrorGet( void );
 
-size_t USART${INDEX?string}_Write( void *buffer, const size_t size );
+bool USART${INDEX?string}_Write( void *buffer, const size_t size );
 
-size_t USART${INDEX?string}_Read( void *buffer, const size_t size );
+bool USART${INDEX?string}_Read( void *buffer, const size_t size );
 
 <#if INTERRUPT_MODE == false>
 bool USART${INDEX?string}_TransmitterIsReady( void );
