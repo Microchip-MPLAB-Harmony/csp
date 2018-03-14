@@ -227,7 +227,7 @@ void AFEC${INDEX}_Initialize()
 	<#if .vars[AFEC_CH_CHER] == true>
 		<#if (i % 2 != 0) && (.vars[AFEC_CH_DIFF_PAIR] != "GND")>
 		<#else>
-			/* Offset */
+		<#lt>	/* Offset */
 		<#lt>	_AFEC${INDEX}_REGS->AFEC_CSELR.w = AFEC_CH${i};
 		<#lt>	_AFEC${INDEX}_REGS->AFEC_COCR.w = ${.vars[AFEC_CH_OFFSET]}U;
 		</#if>
@@ -287,7 +287,7 @@ void AFEC${INDEX}_ConversionStart(void)
 }
 
 /*Check if conversion result is available */
-bool AFEC${INDEX}_ChannelResultReady(AFEC_CHANNEL_NUM channel)
+bool AFEC${INDEX}_ChannelResultIsReady(AFEC_CHANNEL_NUM channel)
 {
 	return (_AFEC${INDEX}_REGS->AFEC_ISR.w >> channel) & 0x1U;
 }
@@ -337,7 +337,7 @@ void AFEC${INDEX}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset)
 
 <#if AFEC_INTERRUPT == true>
 	<#lt>/* Register the callback function */
-	<#lt>void AFEC${INDEX}_CallbackSet(AFEC_CALLBACK callback, uintptr_t context)
+	<#lt>void AFEC${INDEX}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context)
 	<#lt>{
 	<#lt>	AFEC${INDEX}_CallbackObj.callback_fn = callback;
 	<#lt>	AFEC${INDEX}_CallbackObj.context = context;
@@ -350,8 +350,7 @@ void AFEC${INDEX}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset)
 	<#lt>{
 	<#lt>	if (AFEC${INDEX}_CallbackObj.callback_fn != NULL)
 	<#lt>	{
-	<#lt>		AFEC${INDEX}_CallbackObj.callback_fn(AFEC${INDEX}_CallbackObj.context, 
-	<#lt>										 _AFEC${INDEX}_REGS->AFEC_ISR.w);
+	<#lt>		AFEC${INDEX}_CallbackObj.callback_fn(AFEC${INDEX}_CallbackObj.context);
 	<#lt>	}
 	<#lt>}
 </#if>

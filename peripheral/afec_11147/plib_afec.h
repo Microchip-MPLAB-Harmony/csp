@@ -204,35 +204,32 @@ typedef enum
     function with this signature at the end of conversion.
 
    Function:
-    void (*AFEC_CALLBACK)( uintptr_t context, AFEC_INTERRUPT_MASK event_status )
+    void (*AFEC_CALLBACK)( uintptr_t context )
 
    Precondition:
     AFEC_Initialize must have been called for the given afec peripheral 
-    instance and AFEC_ChannelCallbackSet must have been called to set the 
+    instance and AFEC_CallbackRegister must have been called to set the 
     function to be called.
 
    Parameters:
     context  - Allows the caller to provide a context value (usually a pointer
     to the callers context for multi-instance clients).
-	
-	event_status - mask of the channels for which conversion result is ready
-	at the time of calling the callback function
   
    Returns:
     None.
 
    Example:
     <code>
-	void AFEC_ChCallback (uintptr_t context, AFEC_INTERRUPT_MASK event_status);
+	void AFEC_ChCallback (uintptr_t context);
 	
-	AFEC_ChannelCallbackSet(AFEC_ChCallback, NULL);
+	AFEC_CallbackRegister(AFEC_ChCallback, NULL);
     </code>
 
     Remarks:
     None.
 */
 
-typedef void (*AFEC_CALLBACK)( uintptr_t context, AFEC_INTERRUPT_MASK event_status );
+typedef void (*AFEC_CALLBACK)( uintptr_t context);
 // *****************************************************************************
 /* Callback structure 
 
@@ -452,7 +449,7 @@ void AFECx_ConversionStart(void);
 // *****************************************************************************
 
 /* Function:
-    bool AFECx_ChannelResultReady(AFEC_CHANNEL channel);
+    bool AFECx_ChannelResultIsReady(AFEC_CHANNEL channel);
     
   Summary:
     Returns the status of the channel conversion
@@ -478,13 +475,13 @@ void AFECx_ConversionStart(void);
 		AFEC0_Initialize();
 		AFEC0_ChannelsEnable(AFEC_CH0);
 		AFEC0_ConversionStart();
-		ch_status = AFECx_ChannelResultReady(AFEC_CH0);
+		ch_status = AFEC0_ChannelResultIsReady(AFEC_CH0);
     </code>
     
   Remarks:
     None
 */
-bool AFECx_ChannelResultReady(AFEC_CHANNEL_NUM channel);
+bool AFECx_ChannelResultIsReady(AFEC_CHANNEL_NUM channel);
 // *****************************************************************************
 
 /* Function:
@@ -512,7 +509,7 @@ bool AFECx_ChannelResultReady(AFEC_CHANNEL_NUM channel);
 		AFEC0_Initialize();
 		AFEC0_ChannelsEnable(AFEC_CH0);
 		AFEC0_ConversionStart();
-		status = AFEC0_ChannelResultReady(AFEC_CH0);
+		status = AFEC0_ChannelResultIsReady(AFEC_CH0);
 		if (status)
 		{
 			result = AFEC0_ChannelResultGet(AFEC_CH0);
@@ -521,8 +518,8 @@ bool AFECx_ChannelResultReady(AFEC_CHANNEL_NUM channel);
     
   Remarks:
      This function can be called from interrupt or by polling the status when result is available.
-	 User should decode the result based on sign mode (signed or unsigned result) and averaging 
-	 (12, 13, 14, 15 or 16 bit result) configuration. 
+	 User should decode the result based on result sign mode (signed or unsigned result) and result  
+	 resolution (12, 13, 14, 15 or 16 bit result) configuration. 
 */
 uint16_t AFECx_ChannelResultGet(AFEC_CHANNEL_NUM channel);
 
@@ -622,12 +619,12 @@ void AFECx_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL_GAIN gain);
   Example:
     <code>
 		AFEC0_Initialize();
-        AFEC0_ChannelOffsetSet(AFEC_CH0, 512);
+        AFEC0_ChannelOffsetSet(AFEC_CH0, 512U);
     </code>
     
   Remarks:
-     Offset should be set at the initialization. If this function is called when conversion is on-going, offset will be
-	 applied from the next conversion.   
+    Offset should be set at the initialization. If this function is called when conversion is on-going, offset will be
+	applied from the next conversion.   
 	Offset is added to the sample value and thus offset limits the input voltage range. 
 	Offset less than Vref/2 will result in ADC saturation for input voltage greater than Vref/2. 
 */
@@ -635,7 +632,7 @@ void AFECx_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset);
 // *****************************************************************************
 
 /* Function:
-    void AFECx_CallbackSet (AFECx_CALLBACK callback, uintptr_t context);
+    void AFECx_CallbackRegister (AFECx_CALLBACK callback, uintptr_t context);
     
   Summary:
     Registers the function to be called from interrupt
@@ -656,17 +653,17 @@ void AFECx_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset);
     
   Example:
     <code>
-		void AFECx_Callback_Fn(uintptr_t context, AFEC_INTERRUPT_MASK event_status);
+		void AFECx_Callback_Fn(uintptr_t context);
 		
 		AFEC0_Initialize();
-        AFEC0_CallbackSet(AFEC_Callback_Fn, NULL);
+        AFEC0_CallbackRegister(AFEC_Callback_Fn, NULL);
     </code>
     
   Remarks:
     Context value can be set to NULL if not required. 
 	To disable callback function, pass NULL for the callback parameter. 
 */
-void AFECx_CallbackSet(AFEC_CALLBACK callback, uintptr_t context);
+void AFECx_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context);
 
 
 

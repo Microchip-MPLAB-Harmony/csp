@@ -198,7 +198,7 @@ void AFEC${INDEX}_ChannelsInterruptDisable (AFEC_INTERRUPT_MASK channelsInterrup
 
 void AFEC${INDEX}_ConversionStart(void);
 
-bool AFEC${INDEX}_ChannelResultReady(AFEC_CHANNEL_NUM channel);
+bool AFEC${INDEX}_ChannelResultIsReady(AFEC_CHANNEL_NUM channel);
 
 uint16_t AFEC${INDEX}_ChannelResultGet(AFEC_CHANNEL_NUM channel);
 
@@ -209,7 +209,7 @@ void AFEC${INDEX}_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL_GAIN gai
 void AFEC${INDEX}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset);
 
 <#if AFEC_INTERRUPT == true>
-	<#lt>void AFEC${INDEX}_CallbackSet(AFEC_CALLBACK callback, uintptr_t context);
+	<#lt>void AFEC${INDEX}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context);
 </#if>
 // *****************************************************************************
 

@@ -55,28 +55,43 @@ def afecNVICControl(symbol, event):
 		Database.setSymbolValue("core", NVICHandlerLock, False, 2)
 
 def dependencyClockStatus(symbol, event):
-    if (event["value"] == False):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
+	clockSet = False
+	clock = bool(Database.getSymbolValue("core", "PMC_ID_AFEC" + str(num)))
+	for channelID in range(0, 12):
+		if (afecSym_CH_CHER[channelID].getValue() == True):
+			clockSet = True
+	if(clockSet == True and clock == False):
+		symbol.setVisible(True)
+	else:
+		symbol.setVisible(False)
 
 def dependencyIntStatus(symbol, event):
-    if (event["value"] == False):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)		
+	nvicSet = False
+	peripId = Interrupt.getInterruptIndex("AFEC" + str(num))
+	NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
+	nvic = bool(Database.getSymbolValue("core",NVICVector))
+	for channelID in range(0, 12):
+		if (afecSym_CH_IER_EOC[channelID].getValue() == True):
+			nvicSet = True
+	if(nvicSet == True and nvic == False):
+		symbol.setVisible(True)
+	else:
+		symbol.setVisible(False)
 		
 def afecGetMasterClock():
 	main_clk_freq = int(Database.getSymbolValue("core","MASTERCLK_FREQ"))
 	return main_clk_freq
 	
 def afecCalcPrescal(afecSym_MR_PRESCAL, event ):
+	global afecSym_Clock
 	clock = afecGetMasterClock()
-	afecSym_MR_PRESCAL.setValue(int(ceil(clock/afecSym_Clock.getValue())), 1)
+	afecSym_MR_PRESCAL.clearValue()
+	afecSym_MR_PRESCAL.setValue(int(ceil(clock/afecSym_Clock.getValue()) - 1), 2)
 	
 def afecCalcConversionTime(afecSym_CONV_TIME, event):
-	global afecSym_MR_PRESCAL
-	prescaler = afecSym_MR_PRESCAL.getValue()
+	global afecSym_Clock
+	clock = afecGetMasterClock()
+	prescaler = int(ceil(clock/afecSym_Clock.getValue()))
 	result_resolution = afecSym_EMR_RES_VALUE.getSelectedKey()
 	multiplier = 1
 	if (result_resolution == "NO_AVERAGE"):
@@ -89,7 +104,7 @@ def afecCalcConversionTime(afecSym_CONV_TIME, event):
 		multiplier = 64
 	if (result_resolution == "OSR256"):
 		multiplier = 256
-	conv_time = (prescaler * 23.0 * 1000000.0 * multiplier) / afecGetMasterClock()
+	conv_time = (prescaler * 23.0 * 1000000.0 * multiplier) / clock
 	afecSym_CONV_TIME.setLabel("**** Conversion Time is "+str(conv_time)+" us ****")
 
 def afecUserSeqVisible(afecSym_SEQ1R_USCHLocal, event):
@@ -201,6 +216,11 @@ def afecCHEnable(symbol, event):
 		else:
 			afecCHMenu[channelID].setVisible(True)
 
+def afecTriggerVisible(symbol, event):
+	if(event["value"] == True):
+		symbol.setVisible(True)
+	else:
+		symbol.setVisible(False)
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################				
@@ -248,7 +268,8 @@ def instantiateComponent(afecComponent):
 	afecSym_ClkEnComment = afecComponent.createCommentSymbol("AFEC_CLK_ENABLE_COMMENT", None)
 	afecSym_ClkEnComment.setVisible(False)
 	afecSym_ClkEnComment.setLabel("Warning!!! AFEC" +str(num)+" Peripheral Clock is Disabled in Clock Manager")
-	afecSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core.PMC_ID_AFEC" + str(num)])
+	afecSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core.PMC_ID_AFEC" + str(num), "AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
+	"AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
 	
 	periphId = Interrupt.getInterruptIndex("AFEC" + str(num))
 	NVICVector = "NVIC_" + str(periphId) + "_ENABLE"
@@ -256,12 +277,14 @@ def instantiateComponent(afecComponent):
 	afecSym_IntEnComment = afecComponent.createCommentSymbol("AFEC_NVIC_ENABLE_COMMENT", None)
 	afecSym_IntEnComment.setVisible(False)
 	afecSym_IntEnComment.setLabel("Warning!!! AFEC" +str(num)+" Interrupt is Disabled in Interrupt Manager")
-	afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + NVICVector])
+	afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + NVICVector, "AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
+	"AFEC_5_IER_EOC","AFEC_6_IER_EOC","AFEC_7_IER_EOC","AFEC_8_IER_EOC","AFEC_9_IER_EOC","AFEC_10_IER_EOC","AFEC_11_IER_EOC"])
 		
 	afecMenu = afecComponent.createMenuSymbol("AFEC_MENU", None)
 	afecMenu.setLabel("ADC Configuration")
 	
 	#clock selection
+	global afecSym_Clock
 	afecSym_Clock = afecComponent.createIntegerSymbol("AFEC_CLK", afecMenu)
 	afecSym_Clock.setLabel("Clock Frequency (Hz)")
 	afecSym_Clock.setMin(4000000)
@@ -290,12 +313,14 @@ def instantiateComponent(afecComponent):
 	global afecSym_MR_PRESCAL
 	afecSym_MR_PRESCAL = afecComponent.createIntegerSymbol("AFEC_MR_PRESCAL", afecMenu)
 	afecSym_MR_PRESCAL.setVisible(False)
-	afecSym_MR_PRESCAL.setDefaultValue(5)
+	afecSym_MR_PRESCAL.setDefaultValue(6)
+	afecSym_MR_PRESCAL.setMin(1)
+	afecSym_MR_PRESCAL.setMin(255)
 	afecSym_MR_PRESCAL.setDependencies(afecCalcPrescal, ["AFEC_CLK", "core.MASTERCLK_FREQ"])
 	
 	#Conversion time
 	afecSym_CONV_TIME = afecComponent.createCommentSymbol("AFEC_CONV_TIME", afecMenu)
-	afecSym_CONV_TIME.setLabel("**** Conversion Time is 1.15 us ****")
+	afecSym_CONV_TIME.setLabel("**** Conversion Time is 1.0733 us ****")
 	afecSym_CONV_TIME.setDependencies(afecCalcConversionTime, ["AFEC_CLK", "AFEC_EMR_RES_VALUE", "core.MASTERCLK_FREQ"])
 	
 	#Result sign
@@ -323,6 +348,7 @@ def instantiateComponent(afecComponent):
 	#Trigger
 	afecSym_MR_TRGSEL_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_MR_TRGSEL_VALUE", afecSym_MR_TRGEN)
 	afecSym_MR_TRGSEL_VALUE.setLabel ("Select External Trigger Input")
+	afecSym_MR_TRGSEL_VALUE.setVisible(False)
 	afecSym_MR_TRGSEL_VALUE.setDefaultValue(1)
 	afecSym_MR_TRGSEL_VALUE.setOutputMode("Key")
 	afecSym_MR_TRGSEL_VALUE.setDisplayMode("Description")
@@ -332,7 +358,7 @@ def instantiateComponent(afecComponent):
 	for param in range (0 , len(trigger_values)):
 		if "TRGSEL" in trigger_values[param].getAttribute("name"):
 			afecSym_MR_TRGSEL_VALUE.addKey(trigger_values[param].getAttribute("name"), trigger_values[param].getAttribute("value"), trigger_values[param].getAttribute("caption"))
-
+	afecSym_MR_TRGSEL_VALUE.setDependencies(afecTriggerVisible, ["AFEC_MR_TRGEN"])
 	#------------------------------------------------------------------------------------
 	#user sequence menu
 	afecUserSeq = afecComponent.createMenuSymbol("AFEC_USER_SEQ", None)
@@ -425,7 +451,7 @@ def instantiateComponent(afecComponent):
 		afecSym_CH_DUAL_CHANNEL.append(channelID)
 		if(channelID < 6 ):
 			afecSym_CH_DUAL_CHANNEL[channelID] = afecComponent.createCommentSymbol("AFEC_"+str(channelID)+"_DUAL_CHANNEL", afecSym_CH_CHER[channelID])
-			afecSym_CH_DUAL_CHANNEL[channelID].setLabel("**** Channel "+str(channelID + 6)+" is converted along with Channel "+str(channelID)+ ". Configure CHANNEL "+str(channelID + 6) + " ****")
+			afecSym_CH_DUAL_CHANNEL[channelID].setLabel("**** Channel "+str(channelID + 6)+" is sampled along with Channel "+str(channelID)+ ". Configure CHANNEL "+str(channelID + 6) + " ****")
 			afecSym_CH_DUAL_CHANNEL[channelID].setVisible(False)
 			afecSym_CH_DUAL_CHANNEL[channelID].setDependencies(afecCHDualCommentVisible, ["AFEC_"+str(channelID)+"_SHMR_DUAL"])
 			
@@ -444,6 +470,8 @@ def instantiateComponent(afecComponent):
 		afecSym_CH_COCR_AOFF[channelID].setLabel("Offset")
 		afecSym_CH_COCR_AOFF[channelID].setDefaultValue(512)
 		afecSym_CH_COCR_AOFF[channelID].setVisible(False)
+		afecSym_CH_COCR_AOFF[channelID].setMin(0)
+		afecSym_CH_COCR_AOFF[channelID].setMax(1024)
 		afecSym_CH_COCR_AOFF[channelID].setDependencies(afecCHOffsetVisible, ["AFEC_"+str(channelID)+"_CHER"])
 		
 		#Channel interrupt
