@@ -55,14 +55,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 void SPI${SPI_INDEX?string}_Initialize ( void );
 
-bool SPI${SPI_INDEX?string}_Exchange(void* pTransmitData,void* pReceiveData, size_t size, SPI_CHIP_SELECT chipSelect);
-
-SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
+bool SPI${SPI_INDEX?string}_Exchange(void* pTransmitData,void* pReceiveData, size_t size);
 
 bool SPI${SPI_INDEX?string}_SlaveSetup (uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup );
 
 <#if SPI_INTERRUPT_MODE == true>     
 bool SPI${SPI_INDEX?string}_IsBusy(void);
+
+SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
 
 void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_EVENT_HANDLER eventHandler, void* context);
 

@@ -131,42 +131,6 @@ typedef enum
 }SPI_DATA_BITS;
 
 // *****************************************************************************
-/* SPI Chip Selects
-
-   Summary:
-    Identifies SPI Chip Select Options.
-
-   Description:
-    This enumeration identifies the possible SPI Chip Select lines.
-
-   Remarks:
-    User need to make sure that a particular pin on the device has
-    been mapped to be used as selected chip select pin. it can
-    be easily done by MHC Pin Manager tool.
-    
-    If user wants to use some GPIO pin for chip select instead of
-    one of the NPCS pins, then also he needs to select and
-    configure one of the NPCS pins for SlaveSeelct and Exchange
-    operations; just that, in that case he should not map any pin
-    to work as NPCS pin in Pin Manager.
-*/
-typedef enum
-{
-    /* Chip Select line NPCS0 */
-    SPI_CHIP_SELECT_NPCS0,
-    
-    /* Chip Select line NPCS1 */
-    SPI_CHIP_SELECT_NPCS1,
-    
-    /* Chip Select line NPCS2 */
-    SPI_CHIP_SELECT_NPCS2,
-    
-    /* Chip Select line NPCS3 */
-    SPI_CHIP_SELECT_NPCS3
-    
-}SPI_CHIP_SELECT;
-
-// *****************************************************************************
 /* SPI Slave Setup Parameters
 
    Summary
@@ -193,9 +157,6 @@ typedef struct
     
     /* Number of bits per transfer */
     SPI_DATA_BITS       dataBits;
-
-    /* Chip Select Pin*/
-    SPI_CHIP_SELECT     chipSelect;
     
 }SPI_SLAVE_SETUP;
 
@@ -288,7 +249,6 @@ void SPIx_Initialize (void);
         setup.clockPhase = DATA_VALID_ON_CLOCK_TRAILING_EDGE;
         setup.clockPolarity = SPI_CLOCK_POLARITY_IDLE_LOW;
         setup.dataBits = SPI_DATA_BITS_8;
-        setup.chipSelect = SPI_CHIP_SELECT_NPCS0;
         
         // Assuming 150 MHz as peripheral Master clock frequency
         if (false == SPI1_SlaveSetup (150000000, &setup))
@@ -309,8 +269,7 @@ bool SPIx_SlaveSetup (uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup);
     bool SPIx_Exchange(
         void* pTransmitData,
         void* pReceiveData, 
-        size_t size,
-        SPI_CHIP_SELECT chipSelect
+        size_t size
     );
 
   Summary:
@@ -371,17 +330,6 @@ bool SPIx_SlaveSetup (uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup);
                     the 16 bit memory location.
     size            Number of bytes to be exchanged. For 9 to 15bit mode, size
                     should be given as if it is 16bit mode.
-    chipSelect      One of the elements of the enum SPI_CHIP_SELECT. With this
-                    parameter, user can decide data exchange will happen for which
-                    chip select line. 
-                    
-                    User need to make sure that a particular pin on the device has
-                    been configured to be used as selected chip select pin. it can
-                    be easily done by MHC Pin Manager tool.
-                    If user wants to use some GPIO pin for chip select instead of
-                    one of the NPCS pins, then also he needs to select and
-                    configure one of the NPCS pins; just that, in that case he
-                    should not map any pin to work as NPCS pin in Pin Manager.
 
   Returns:
     In Blocking mode, API returns True once the exchange is complete. It returns
@@ -404,7 +352,7 @@ bool SPIx_SlaveSetup (uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup);
     // Interrupt mode
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
-    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size, SPI_CHIP_SELECT_NPCS0);
+    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size);
 
     void APP_SPITransferHandler(void* contextHandle)
     {
@@ -421,8 +369,7 @@ bool SPIx_SlaveSetup (uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup);
 bool SPIx_Exchange(
     void* pTransmitData,
     void* pReceiveData, 
-    size_t size,
-    SPI_CHIP_SELECT chipSelect
+    size_t size
 );
 
 // *****************************************************************************
@@ -470,8 +417,7 @@ bool SPIx_IsBusy (void):
    Description:
     This function returns the errors associated with the given SPI peripheral 
     instance. After completing any echange, this API should be called and
-    verified if any error occurred in the exchange or not. After reading the
-    error, if any, they will be cleared.
+    verified if any error occurred in the exchange or not.
 
    Precondition:
     None.
@@ -491,7 +437,8 @@ bool SPIx_IsBusy (void):
     </code>
 
   Remarks:
-    None.
+    This API is available only for interrupt mode as blocking mode will
+    not have any error.
 */
 
 SPI_ERROR SPIx_ErrorGet( void );
@@ -593,7 +540,7 @@ typedef  void (*SPI_EVENT_HANDLER) (void* context);
     
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
-    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size, SPI_CHIP_SELECT_NPCS0);
+    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size);
 
     void APP_SPITransferHandler(void* contextHandle)
     {
