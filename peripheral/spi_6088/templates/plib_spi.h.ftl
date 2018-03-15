@@ -84,22 +84,12 @@ typedef enum
 
 }SPI_DATA_BITS;
 
-typedef enum
-{
-    SPI_CHIP_SELECT_NPCS0 = SPI_TDR_PCS_NPCS0 | 0x00,
-    SPI_CHIP_SELECT_NPCS1 = SPI_TDR_PCS_NPCS1 | 0x01,
-    SPI_CHIP_SELECT_NPCS2 = SPI_TDR_PCS_NPCS2 | 0x02,
-    SPI_CHIP_SELECT_NPCS3 = SPI_TDR_PCS_NPCS3 | 0x03,
-    
-}SPI_CHIP_SELECT;
-
 typedef struct
 {     
     uint32_t    clockFrequency;
     SPI_CLOCK_PHASE clockPhase;
     SPI_CLOCK_POLARITY clockPolarity;
     SPI_DATA_BITS   dataBits;
-    SPI_CHIP_SELECT chipSelect;
 
 }SPI_SLAVE_SETUP;
 
@@ -128,7 +118,8 @@ typedef struct
     bool                    exchangeIsBusy;
     SPI_EVENT_HANDLER       callback; 
     void*                   context;
-    SPI_CHIP_SELECT         chipSelect;
+    uint32_t                status;
+    
 } SPI_OBJECT ;
 
 /* Provide C++ Compatibility */
