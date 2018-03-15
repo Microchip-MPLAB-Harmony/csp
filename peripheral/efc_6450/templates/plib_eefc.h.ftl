@@ -63,6 +63,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 typedef enum
 {
+	EEFC_SUCCESS = 0x1,	
 	/*In-valid command*/
 	EEFC_CMD_ERROR = 0x2,
 	/*Flash region is locked*/
@@ -71,7 +72,7 @@ typedef enum
 	EEFC_FLERR_ERROR = 0x8,
 	/*Flash Encountered an ECC error*/
 	EEFC_ECC_ERROR = 0xF0000,
-} EEFC_ERR;
+} EEFC_STATUS;
 
 <#if eefcEnableInterrupt == true>
 	<#lt>typedef void (*EEFC_CALLBACK)(uintptr_t context);
@@ -85,7 +86,7 @@ typedef enum
 void EEFC${INDEX?string}_WriteQuadWord( uint32_t address, uint32_t* data );
 void EEFC${INDEX?string}_WritePage( uint32_t address, uint32_t* data );
 void EEFC${INDEX?string}_EraseRow( uint32_t address );
-EEFC_ERR EEFC${INDEX?string}_ErrorGet( void );
+EEFC_STATUS EEFC${INDEX?string}_StatusGet( void );
 bool EEFC${INDEX?string}_IsBusy(void);
 void EEFC${INDEX?string}_RegionLock(uint32_t address);
 void EEFC${INDEX?string}_RegionUnlock(uint32_t address);
