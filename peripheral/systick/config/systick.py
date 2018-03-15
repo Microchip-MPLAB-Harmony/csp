@@ -12,9 +12,22 @@ Log.writeInfoMessage("Loading SYSTICK for " + Variables.get("__PROCESSOR"))
 systickMax = 0x00ffffff
 systickDefault = 0x0000927c
 
+def systickUse(systickEnable, osal):
+	if osal["value"] == 0:
+		systickEnable.setVisible(True)
+	else:
+		systickEnable.setVisible(False)
+		systickHeaderFile.setEnabled(False)
+		systickSourceFile.setEnabled(False)
+		systickSystemDefFile.setEnabled(False)
+		systickSystemInitFile.setEnabled(False)
+	
 systickEnable = coreComponent.createBooleanSymbol("systickEnable", devCfgMenu)
 systickEnable.setLabel("Use SysTick?")
+systickEnable.setDependencies(systickUse, ["OSAL.OSAL_RTOS"])
 
+
+	
 def showMenu(menu, show):
     menu.setVisible(show["value"])
 
