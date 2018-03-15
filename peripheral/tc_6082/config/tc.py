@@ -113,7 +113,7 @@ def tcNVICControl(symbol, event):
 		Database.clearSymbolValue("core", NVICVector)
 		Database.clearSymbolValue("core", NVICHandler)
 		if(tcSym_CH_Enable[channelID].getValue() == True):
-			if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER"):
+			if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
 				Database.setSymbolValue("core", NVICVector, True, 2)
 				Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
 			elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
@@ -130,7 +130,7 @@ def tcNVICControl(symbol, event):
 			Database.setSymbolValue("core", NVICVector, False, 2)
 			Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)	
 
-def dependencyClockStatus(symbol, event):
+def tcdependencyClockStatus(symbol, event):
 	id = symbol.getID()
 	channelID = int(id[2])
 	clock = bool(Database.getSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID)))
@@ -140,20 +140,26 @@ def dependencyClockStatus(symbol, event):
 	else:
 		tcSym_CH_ClkEnComment[channelID].setVisible(False)
 		
-def dependencyIntStatus(symbol, event):
+def tcdependencyIntStatus(symbol, event):
 	id = symbol.getID()
 	channelID = int(id[2])
 	global tcSym_CH_Enable
 	periphId = Interrupt.getInterruptIndex("TC" + str(num)+ "_CH"+str(channelID))
 	NVICVector = "NVIC_" + str(periphId) + "_ENABLE"
 	nvic = bool(Database.getSymbolValue("core", NVICVector))
-	if (tcSym_CH_Enable[channelID].getValue() == True):
-		if (nvic == False):
+	if(tcSym_CH_Enable[channelID].getValue() == True):
+		if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True and nvic == False):
+			tcSym_CH_IntEnComment[channelID].setVisible(True)
+		elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and nvic == False and 
+			(tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
+			tcSym_CH_IntEnComment[channelID].setVisible(True)		
+		elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True and nvic == False):
 			tcSym_CH_IntEnComment[channelID].setVisible(True)
 		else:
 			tcSym_CH_IntEnComment[channelID].setVisible(False)
 	else:
-		tcSym_CH_IntEnComment[channelID].setVisible(False)		
+		tcSym_CH_IntEnComment[channelID].setVisible(False)
+		
 
 def tcQEIDependencyClockStatus(symbol, event):
 	clock0 = bool(Database.getSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL0"))
@@ -650,7 +656,7 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_NVICControl[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_NVIC_ENABLE", None)
 		tcSym_CH_NVICControl[channelID].setDependencies(tcNVICControl, ["TC"+str(channelID)+"_ENABLE", "TC_ENABLE_QEI", "TC"+str(channelID)+"_OPERATING_MODE", \
 			"TC"+str(channelID)+"_CAPTURE_IER_LDRAS", "TC"+str(channelID)+"_CAPTURE_IER_LDRBS", "TC"+str(channelID)+"_CAPTURE_IER_COVFS", \
-			"TC"+str(channelID)+"_COMPARE_IER_CPCS", "TC_QIER_IDX", "TC_QIER_QERR"])
+			"TC"+str(channelID)+"_COMPARE_IER_CPCS", "TC"+str(channelID)+"_IER_CPCS", "TC_QIER_IDX", "TC_QIER_QERR"])
 		tcSym_CH_NVICControl[channelID].setVisible(False)
 		
 		# Dependency Status
@@ -658,7 +664,7 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_ClkEnComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_CLK_ENABLE_COMMENT", tcChannelMenu[channelID])
 		tcSym_CH_ClkEnComment[channelID].setVisible(False)
 		tcSym_CH_ClkEnComment[channelID].setLabel("Warning!!! TC" +str(num)+"_CH"+str(channelID)+" Peripheral Clock is Disabled in Clock Manager")
-		tcSym_CH_ClkEnComment[channelID].setDependencies(dependencyClockStatus, ["core.PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID), "TC"+str(channelID)+"_ENABLE"])
+		tcSym_CH_ClkEnComment[channelID].setDependencies(tcdependencyClockStatus, ["core.PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID), "TC"+str(channelID)+"_ENABLE"])
 		
 		periphId = Interrupt.getInterruptIndex("TC" + str(num)+ "_CH" + str(channelID))
 		NVICVector = "NVIC_" + str(periphId) + "_ENABLE"
@@ -667,7 +673,9 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_IntEnComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_NVIC_ENABLE_COMMENT", tcChannelMenu[channelID])
 		tcSym_CH_IntEnComment[channelID].setVisible(False)
 		tcSym_CH_IntEnComment[channelID].setLabel("Warning!!! TC" +str(num)+"_CH"+str(channelID)+" Interrupt is Disabled in Interrupt Manager")
-		tcSym_CH_IntEnComment[channelID].setDependencies(dependencyIntStatus, ["core." + NVICVector, "TC"+str(channelID)+"_ENABLE"])
+		tcSym_CH_IntEnComment[channelID].setDependencies(tcdependencyIntStatus, ["core." + NVICVector, "TC"+str(channelID)+"_ENABLE", "TC"+str(channelID)+"_OPERATING_MODE", \
+			"TC"+str(channelID)+"_CAPTURE_IER_LDRAS", "TC"+str(channelID)+"_CAPTURE_IER_LDRBS", "TC"+str(channelID)+"_CAPTURE_IER_COVFS", \
+			"TC"+str(channelID)+"_COMPARE_IER_CPCS", "TC"+str(channelID)+"_IER_CPCS"])
 		
 		############################################################################
 		#### Dependency END ####
@@ -720,7 +728,6 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_IER_CPCS.append(channelID)
 		tcSym_CH_IER_CPCS[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_IER_CPCS", tcTimerMenu[channelID])
 		tcSym_CH_IER_CPCS[channelID].setLabel("Enable Period Interrupt")
-		tcSym_CH_IER_CPCS[channelID].setReadOnly(True)
 		tcSym_CH_IER_CPCS[channelID].setDefaultValue(True)
 		
 		#****************************CAPTURE*****************************
@@ -873,7 +880,7 @@ def instantiateComponent(tcComponent):
 		childrenNodes = tc.getChildren()	
 		for param in range (0 , len(childrenNodes)):
 			tcSym_CH_CMR_EEVT[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))	
-		tcSym_CH_CMR_EEVT[channelID].setDefaultValue(0)
+		tcSym_CH_CMR_EEVT[channelID].setDefaultValue(1)
 		tcSym_CH_CMR_EEVT[channelID].setDisplayMode("Description")
 		tcSym_CH_CMR_EEVT[channelID].setOutputMode("Key")
 		

@@ -25,13 +25,13 @@
     in the generated headers.  These are the actual functions that should be
     used.
 
-    This interface supports the following different modes of the TC peripehral.
+    This interface supports the following different modes of the TC peripheral.
         * Timer Mode
         * Capture Mode
         * Compare Mode
         * Quadrature Mode
-    Only one of these modes (and only the associated interface fuctions) will 
-    be active (and thus will be generated at a time.
+    Only one of these modes (and only the associated interface functions) will 
+    be active (and thus will be generated at a time.)
 *******************************************************************************/
  
 // DOM-IGNORE-BEGIN
@@ -91,7 +91,71 @@ extern "C" {
     interface and should be considered part it.
 */
  
+/* Interrupt source mask for compare mode
+
+   Summary:
+    Identifies channel interrupt source mask
+
+   Description:
+    This enumeration identifies TC compare mode interrupt source mask.
+	
+   Remarks:
+    None.
+*/
+typedef enum 
+{
+	TC_COMPARE_A = (1U << 2U),
+	TC_COMPARE_B = (1U << 3U),
+	TC_COMPARE_C = (1U << 4U),
+	TC_COMPARE_STATUS_MSK = 0x1C
+}TC_COMPARE_STATUS; 
+ 
 // *****************************************************************************
+
+/* Interrupt source mask for capture mode
+
+   Summary:
+    Identifies channel interrupt source mask
+
+   Description:
+    This enumeration identifies TC capture mode interrupt source mask.
+	
+   Remarks:
+    None.
+*/
+typedef enum 
+{
+	TC_CAPTURE_COUNTER_OVERFLOW = (1U << 0U),
+	TC_CAPTURE_LOAD_OVERRUN = (1U << 1U),
+	TC_CAPTURE_A_LOAD = (1U << 5U),
+	TC_CAPTURE_B_LOAD = (1U << 6U),
+	TC_CAPTURE_STATUS_MSK = 0x63
+}TC_CAPTURE_STATUS; 
+
+// *****************************************************************************
+
+/* Interrupt source mask for quadrature mode
+
+   Summary:
+    Identifies channel interrupt source mask
+
+   Description:
+    This enumeration identifies TC quadrature mode interrupt source mask.
+	
+   Remarks:
+    None.
+*/
+typedef enum 
+{
+	TC_QUADRATURE_INDEX = (1U << 0U),
+	TC_QUADRATURE_DIR_CHANGE= (1U << 1U),
+	TC_QUADRATURE_ERROR = (1U << 2U),
+	TC_QUADRATURE_MISSING_PULSE = (1U << 3U),
+	TC_QUADRATURE_STATUS_MSK = 0xF
+}TC_QUADRATURE_STATUS; 
+ 
+// *****************************************************************************
+
 /* Callback Function Pointer
  
    Summary:
@@ -108,13 +172,12 @@ extern "C" {
  
    Precondition:
     TCx_Initialize must have been called for the given TC channel
-    instance and TCx_CallbackSet must have been called to register the
+    instance and TCx_CallbackRegister must have been called to register the
     function to be called.
  
    Parameters:
     context  - Allows the caller to provide a context value (usually a pointer
                to the callers context for multi-instance clients).
-	event_status - status of the events occurred at the time of callback. 
  
    Returns:
     None.
@@ -124,7 +187,7 @@ extern "C" {
     <code>
     void TC_CallbackFn ( uintptr_t context );
  
-    TC0_CH1_TimerCallbackSet(TC_CallbackFn, NULL);
+    TC0_CH1_TimerCallbackRegister(TC_CallbackFn, NULL);
     </code>
  
     Remarks:
@@ -135,7 +198,7 @@ extern "C" {
             routine.
 */
 
-typedef void (*TC_CALLBACK) ( uintptr_t context, uint32_t event_status );
+typedef void (*TC_CALLBACK) ( uintptr_t context);
 // *****************************************************************************
 
 /* Callback structure 
@@ -267,14 +330,14 @@ void TCx_CHy_TimerStop ( void );
 
 // *****************************************************************************
 /* Function:
-    void TCx_CHy_TimerPeriodSet ( uint32_t period );
+    void TCx_CHy_TimerPeriodSet ( uint16_t period );
    
   Summary:
     Sets the period value of a given timer channel.
    
   Description:
     This function writes the period value.  When timer counter matches period 
-    value counter is reset and interrupt can be generated.
+    value, counter is reset and interrupt can be generated.
  
   Precondition:
     TCx_CHy_TimerInitialize function must have been called first for the given 
@@ -293,16 +356,15 @@ void TCx_CHy_TimerStop ( void );
     </code>
    
   Remarks:
-    The caller must know the number of significant bits of timer. Period
-    value is right-aligned.
+	None
 */
 
-void TCx_CHy_TimerPeriodSet ( uint32_t period );
+void TCx_CHy_TimerPeriodSet ( uint16_t period );
 
 
 // *****************************************************************************
 /* Function:
-    uint32_t TCx_CHy_TimerPeriodGet ( void );
+    uint16_t TCx_CHy_TimerPeriodGet ( void );
    
   Summary:
     Reads the period value of given timer channel
@@ -322,23 +384,22 @@ void TCx_CHy_TimerPeriodSet ( uint32_t period );
    
   Example:
     <code>
-    uint32_t period;
+    uint16_t period;
 
     TC0_CH1_TimerInitialize();
     period = TC0_CH1_TimerPeriodGet();
     </code>
    
   Remarks:
-    The caller must know the number of significant bits of timer. Period
-    value is right-aligned.
+	None
 */
 
-uint32_t TCx_CHy_TimerPeriodGet ( void );
+uint16_t TCx_CHy_TimerPeriodGet ( void );
 
 
 // *****************************************************************************
 /* Function:
-    uint32_t TCx_CHy_TimerCounterGet ( void );
+    uint16_t TCx_CHy_TimerCounterGet ( void );
    
   Summary:
     Reads the timer channel counter value
@@ -358,7 +419,7 @@ uint32_t TCx_CHy_TimerPeriodGet ( void );
    
   Example:
     <code>
-    uint32_t counter;
+    uint16_t counter;
 
     TC0_CH2_TimerInitialize();
     TC0_CH2_TimerStart();
@@ -366,11 +427,10 @@ uint32_t TCx_CHy_TimerPeriodGet ( void );
     </code>
    
   Remarks:
-    The caller must know the number of significant bits of timer. Period
-    value is right-aligned.
+	None
 */
 
-uint32_t TCx_CHy_TimerCounterGet ( void );
+uint16_t TCx_CHy_TimerCounterGet ( void );
 
 
 // ***************************************************************************** 
@@ -409,10 +469,44 @@ uint32_t TCx_CHy_TimerCounterGet ( void );
 
 uint32_t TCx_CHy_TimerFrequencyGet ( void );
 
+// ***************************************************************************** 
+/* Function:
+    bool TCx_CHy_TimerPeriodHasExpired ( void );
+   
+  Summary:
+    Checks whether timer period is elapsed
+   
+  Description:
+    This function checks the status of the timer period interrupt.
+ 
+  Precondition:
+    TCx_CHy_TimerInitialize() function must have been called first for the given 
+    channel.
+ 
+  Parameters:
+	None
+ 
+  Returns:
+	true - timer period has expired
+	false - timer period is not expired      
+   
+  Example:
+    <code>
+    bool status;
+
+    TC0_CH1_TimerInitialize();
+    status = TC0_CH1_TimerPeriodHasExpired();
+    </code>
+   
+  Remarks:
+    None
+*/
+bool TCx_CHy_TimerPeriodHasExpired(void);
+
 
 // *****************************************************************************
 /* Function:
-    void TCx_CHy_TimerCallbackSet ( TC_CALLBACK callback, uintptr_t context );
+    void TCx_CHy_TimerCallbackRegister ( TC_CALLBACK callback, uintptr_t context );
    
   Summary:
     Registers the function to be called from interrupt
@@ -604,7 +698,7 @@ void TCx_CHy_CaptureCallbackRegister ( TC_CALLBACK callback, uintptr_t context )
    
   Description:
     This function provides the Capture-A value that was stored when the selected 
-    event occured on the input signal.  The caller should call the 
+    event occurred on the input signal.  The caller should call the 
     TCx_CHy_CaptureAEventOccured function to identify if the Capture-A value 
     has been updated by the selected signal event.
  
@@ -676,17 +770,15 @@ uint16_t TCx_CHy_CaptureAGet ( void );
 
 uint16_t TCx_CHy_CaptureBGet ( void );
 
-
 // *****************************************************************************
 /* Function:
-    bool TCx_CHy_CaptureAEventOccured ( void )
+    TC_CAPTURE_STATUS TCx_CHy_CaptureStatusGet ( void )
    
   Summary:
-    Identifies if the Capture-A event has occurred.
+    Identifies status of the capture events
    
   Description:
-    This function identifies if the selected Capture-A signal event has occured
-    since the last time the TCx_CHy_CaptureAEventOccured reported true.
+    This function returns the status of the events that occur in capture mode.
 
   Precondition:
     TCx_CHy_TimerInitialize() function must have been called first for the given 
@@ -696,72 +788,24 @@ uint16_t TCx_CHy_CaptureBGet ( void );
     None
  
   Returns:
-    false  - The Capture-A event has not occurred since the last time it was 
-             checked.
-
-    true   - The Capture-A event has occurred since the last time it was checked.
+	TC_CAPTURE_STATUS - status of the capture events
 
   Example:
     <code>
     uint16_t capture;
 
-
-    if (TC0_CH1_CaptureAEventOccured() == true)
+    if ((TC0_CH1_CaptureStatusGet() & TC_CAPTURE_A_LOAD) == true)
     {
         capture = TC0_CH1_CaptureAGet();
     }
     </code>
    
   Remarks:
-    This function is applicable only for capture mode.
+    This function is applicable only for capture mode. Event status bits are cleared 
+	after reading the status register. 
 */
 
-bool TCx_CHy_CaptureAEventOccured ( void );
-
-
-
-// *****************************************************************************
-/* Function:
-    bool TCx_CHy_CaptureBEventOccured ( void )
-   
-  Summary:
-    Identifies if the Capture-B event has occurred.
-   
-  Description:
-    This function identifies if the selected Capture-B signal event has occurred
-    since the last time the TCx_CHy_CaptureBEventOccured reported true.
-
-  Precondition:
-    TCx_CHy_TimerInitialize() function must have been called first for the given 
-    channel to configure channel in capture mode.
- 
-  Parameters:
-    None
- 
-  Returns:
-    false  - The Capture-B event has not occurred since the last time it was 
-             checked.
-
-    true   - The Capture-B event has occurred since the last time it was checked.
-
-  Example:
-    <code>
-    uint16_t capture;
-
-
-    if (TC0_CH1_CaptureBEventOccured() == true)
-    {
-        capture = TC0_CH1_CaptureBGet();
-    }
-    </code>
-   
-  Remarks:
-    This function is applicable only for capture mode.
-*/
-
-bool TCx_CHy_CaptureBEventOccured ( void );
-
-
+TC_CAPTURE_STATUS TCx_CHy_CaptureStatusGet ( void );
 
 // *****************************************************************************
 /* Function:
@@ -894,7 +938,7 @@ void TCx_CHy_CompareStop ( void );
   Example:
     <code>
     TC0_CH1_CompareInitialize();
-    TC0_CH1_ComparePeriodSet(0x500);
+    TC0_CH1_ComparePeriodSet(0x500U);
     </code>
    
   Remarks:
@@ -939,45 +983,6 @@ void TCx_CHy_ComparePeriodSet ( uint32_t period );
 
 uint32_t TCx_CHy_ComparePeriodGet ( void );
 
-
-// *****************************************************************************
-/* Function:
-    uint32_t TCx_CHy_CompareCounterGet ( void )
-   
-  Summary:
-    Reads the counter value of the given timer channel in compare mode.
-   
-  Description:
-    This function reads the counter value of the given timer channel in compare 
-    mode.
- 
-  Precondition:
-    TCx_CHy_CompareInitialize function must have been called first for the given 
-    channel.
- 
-  Parameters:
-    None
- 
-  Returns:
-    The timer's counter value.
-   
-  Example:
-    <code>
-    uint32_t counter;
-
-    TC0_CH=1_CompareInitialize();
-    TC0_CH1_CompareStart();
-    counter = TC0_CH1_CompareCounterGet();
-    </code>
-   
-  Remarks:
-    The caller must know the number of significant bits of timer.  Period
-    value is right-aligned.
-*/
-
-uint32_t TCx_CHy_CompareCounterGet ( void );
-
-
 // *****************************************************************************
 /* Function:
     uint32_t TCx_CHy_CompareFrequencyGet ( void )
@@ -1013,10 +1018,9 @@ uint32_t TCx_CHy_CompareCounterGet ( void );
 
 uint32_t TCx_CHy_CompareFrequencyGet ( void );
 
-
 // ***************************************************************************** 
 /* Function:
-    void TCx_CHy_CompareCallbackSet ( TC_CALLBACK callback, uintptr_t context )
+    void TCx_CHy_CompareCallbackRegister ( TC_CALLBACK callback, uintptr_t context )
    
   Summary:
     Registers the function to be called from interrupt.
@@ -1122,6 +1126,43 @@ void TCx_CHy_CompareBSet ( uint16_t value );
 
 // *****************************************************************************
 /* Function:
+    TC_COMPARE_STATUS TCx_CHy_CompareStatusGet ( void )
+   
+  Summary:
+    Identifies status of the compare events
+   
+  Description:
+    This function returns the status of the events that occur in compare mode.
+
+  Precondition:
+    TCx_CHy_CompareInitialize() function must have been called first for the given 
+    channel to configure channel in capture mode.
+ 
+  Parameters:
+    None
+ 
+  Returns:
+	TC_COMPARE_STATUS - status of the capture events
+
+  Example:
+    <code>
+
+    if ((TC0_CH1_CompareStatusGet() & TC_COMPARE_C) == true)
+    {
+        TC0_CH1_CompareASet(0x1000U);
+		TC0_CH1_CompareBSet(0x500U);
+    }
+    </code>
+   
+  Remarks:
+    This function is applicable only for compare mode. Event status bits are cleared 
+	after reading the status register. 
+*/
+
+TC_COMPARE_STATUS TCx_CHy_CompareStatusGet ( void );
+
+// *****************************************************************************
+/* Function:
     void TCx_QuadratureInitialize ( void );
    
   Summary:
@@ -1154,7 +1195,6 @@ void TCx_CHy_CompareBSet ( uint16_t value );
 
 void TCx_QuadratureInitialize ( void );
 
-
 // *****************************************************************************
 /* Function:
     void TCx_QuadratureStart ( void )
@@ -1164,7 +1204,7 @@ void TCx_QuadratureInitialize ( void );
    
   Description:
     This function enables the clock and starts the counter of associated channel
-    in quadrature mode, allowing the TC to begin tracking the quarature signals.
+    in quadrature mode, allowing the TC to begin tracking the quadrature signals.
 
   Precondition:
     TCx_QuadratureInitialize function must have been called first for the given 
@@ -1187,7 +1227,6 @@ void TCx_QuadratureInitialize ( void );
 */
 
 void TCx_QuadratureStart ( void );
-
 
 // *****************************************************************************
 /* Function:
@@ -1222,8 +1261,6 @@ void TCx_QuadratureStart ( void );
 */
 
 void TCx_QuadratureStop ( void );
-
-
 // *****************************************************************************
 /* Function:
     uint32_t TCx_QuadraturePositionGet ( void )
@@ -1261,8 +1298,6 @@ void TCx_QuadratureStop ( void );
 */
 
 uint32_t TCx_QuadraturePositionGet ( void );
-
-
 // *****************************************************************************
 /* Function:
     uint32_t TCx_QuadratureSpeedGet ( void )
@@ -1299,6 +1334,45 @@ uint32_t TCx_QuadraturePositionGet ( void );
 */
 
 uint32_t TCx_QuadratureSpeedGet ( void );
+
+// *****************************************************************************
+/* Function:
+    TC_QUADRATURE_STATUS TCx_CHy_QuadratureStatusGet (void)
+   
+  Summary:
+    Identifies status of the quadrature events
+   
+  Description:
+    This function returns the status of the events that occur in quadrature mode.
+
+  Precondition:
+    TCx_CHy_QuadratureInitialize() function must have been called first for the given 
+    channel to configure channel in quadrature mode.
+ 
+  Parameters:
+    None
+ 
+  Returns:
+	TC_QUADRATURE_STATUS - status of the capture events
+
+  Example:
+    <code>
+	
+	uint32_t position;
+
+    if ((TC0_QuadratureStatusGet() & TC_QUADRATURE_INDEX) == true)
+    {
+        position = TC0_QuadraturePositionGet()
+    }
+    </code>
+   
+  Remarks:
+    This function is applicable only for compare mode. Event status bits are cleared 
+	after reading the status register. 
+*/
+
+TC_QUADRATURE_STATUS TCx_QuadratureStatusGet ( void );
+
 
 
 // DOM-IGNORE-BEGIN
