@@ -44,7 +44,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 <#if USE_SYSTICK_INTERRUPT == true>
 	<#lt>SYSTICK_OBJECT systick;
 </#if>
-	
+
 void SYSTICK_TimerInitialize ( void ) 
 {
 	SysTick->CTRL = 0;
@@ -99,7 +99,7 @@ uint32_t SYSTICK_TimerCounterGet ( void )
 
 uint32_t SYSTICK_TimerFrequencyGet ( void )
 {
-	return (${SYSTICK});
+	return (SYSTICK_FREQ);	
 }
 
 <#if USE_SYSTICK_INTERRUPT == false>
