@@ -51,10 +51,11 @@ nvicVectorHandlerLock = []
 def coreVectorsEnable(nvicSym, event):
     global coreVectors
     for vector in coreVectors:
-        if (event["value"] == str(vector)):
-            nvicSym.setReadOnly(True)
-            nvicSym.clearValue()
-            nvicSym.setValue(True, 2)
+        if (event["value"] == str(vector)): 
+			if (event["value"] != "SVCall" or event["value"] != "PendSV" or event["value"] != "SysTick"):
+				nvicSym.setReadOnly(True)
+				nvicSym.clearValue()
+				nvicSym.setValue(True, 2)
 
 def coreVectorsFixed(nvicSym, event):
     global coreVectors
@@ -72,8 +73,14 @@ def coreVectorsPriority(nvicSym, event):
 
     for vectorIndex in range(3,10):
         if (event["value"] == str(coreVectors[vectorIndex])):
-            nvicSym.clearValue()
-            nvicSym.setValue("0", 2)
+			if (event["value"] == "PendSV" or event["value"] == "SysTick"):
+				nvicSym.clearValue()
+				nvicSym.setValue("7", 2)
+				nvicSym.setVisible(False)
+				nvicSym.setReadOnly(True)
+			else :
+				nvicSym.clearValue()
+				nvicSym.setValue("0", 2)
 
 def checkVectorAvailability(nvicSym, event):
     global coreVectorsEnable
