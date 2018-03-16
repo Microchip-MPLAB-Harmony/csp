@@ -55,6 +55,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+<#if SYSTICK_CLOCK == "0">
+	<#lt>#define SYSTICK_FREQ		${SYSTICK}
+</#if>
+<#if SYSTICK_CLOCK == "1">
+	<#lt>#define SYSTICK_FREQ	${PROCESSORCLK_FREQ};
+</#if>
+
 <#if USE_SYSTICK_INTERRUPT == true>
 	<#lt>typedef void (*SYSTICK_CALLBACK)(uintptr_t context);
 </#if>
