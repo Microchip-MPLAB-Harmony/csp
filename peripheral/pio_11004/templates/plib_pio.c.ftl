@@ -137,6 +137,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>   /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
         <#lt>      by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
     </#if>
+        <#lt>   /* PORT${PIO_PORT} Output Write Enable */	
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_OWER.w = PORT_OWER_Msk;
 </#macro>
 
 <#macro PIO_INT_CALLBACK PIO_PORT PORT_NUM_INT_PINS PIO_INTERRUPT>
@@ -367,9 +369,6 @@ uint32_t PIO_PortRead(PIO_PORT port)
 */
 void PIO_PortWrite(PIO_PORT port, uint32_t value)
 {
-    /* Enable write to the selected port */
-    ((port_registers_t*)port)->PORT_OWER.w = PORT_OWER_Msk;
-
     /* Write the desired value */
     ((port_registers_t*)port)->PORT_ODSR.w = value;
 }
@@ -452,13 +451,8 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 {
-    uint32_t statusReg = 0;
-
-    statusReg = ((port_registers_t*)port)->PORT_ODSR.w;
-
     /* Write into Clr and Set registers */
-    ((port_registers_t*)port)->PORT_CODR.w = ( mask & (statusReg));
-    ((port_registers_t*)port)->PORT_SODR.w = ( mask & (~statusReg));
+    ((port_registers_t*)port)->PORT_ODSR.w ^= mask;
 }
 
 // *****************************************************************************
