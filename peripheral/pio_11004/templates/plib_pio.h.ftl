@@ -106,14 +106,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 <#if  gpioName?counter ==  gpioChannel?counter><#if  gpioName?counter ==  gpioPinPos?counter>
 
 /*** Functions for ${gpioName} pin ***/
-#define ${gpioName}_Set() 				(_PORTA_REGS${gpioChannel}->PORT_SODR.w = (1<<${gpioPinPos}))
-#define ${gpioName}_Clear()				(_PORTA_REGS${gpioChannel}->PORT_CODR.w = (1<<${gpioPinPos})) 
-#define ${gpioName}_Toggle() 			(_PORTA_REGS${gpioChannel}->PORT_ODSR.w ^= (1<<${gpioPinPos})) 
-#define ${gpioName}_Get() 				((_PORTA_REGS${gpioChannel}->PORT_PDSR.w >> ${gpioPinPos}) & 0x1) 
-#define ${gpioName}_OutputEnable() 		(_PORTA_REGS${gpioChannel}->PORT_OER.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InputEnable() 		(_PORTA_REGS${gpioChannel}->PORT_ODR.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InterruptEnable() 	(_PORTA_REGS${gpioChannel}->PORT_IER.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InterruptDisable()	(_PORTA_REGS${gpioChannel}->PORT_IDR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_Set()               (_PORTA_REGS${gpioChannel}->PORT_SODR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_Clear()             (_PORTA_REGS${gpioChannel}->PORT_CODR.w = (1<<${gpioPinPos})) 
+#define ${gpioName}_Toggle()            (_PORTA_REGS${gpioChannel}->PORT_ODSR.w ^= (1<<${gpioPinPos})) 
+#define ${gpioName}_Get()               ((_PORTA_REGS${gpioChannel}->PORT_PDSR.w >> ${gpioPinPos}) & 0x1) 
+#define ${gpioName}_OutputEnable()      (_PORTA_REGS${gpioChannel}->PORT_OER.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InputEnable()       (_PORTA_REGS${gpioChannel}->PORT_ODR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptEnable()   (_PORTA_REGS${gpioChannel}->PORT_IER.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptDisable()  (_PORTA_REGS${gpioChannel}->PORT_IDR.w = (1<<${gpioPinPos}))
 </#if></#if>
 </#list>
 </#list>
@@ -751,7 +751,7 @@ typedef  void (*PIO_EVENT_HANDLER_PIN) ( PIO_PIN pin, void* context);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 void PIO_Initialize(void);
 
@@ -789,7 +789,7 @@ void PIO_Initialize(void);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 #define PIO_PinWrite(pin,value)   PIO_PortWrite(_PORTA_BASE_ADDRESS + (0x200 * (pin>>5)), (uint32_t)(value) << (pin & 0x1f))
 
@@ -859,7 +859,7 @@ void PIO_Initialize(void);
     </code>
 
   Remarks:
-	To read actual pin value, PIO_PinRead API should be used.
+    To read actual pin value, PIO_PinRead API should be used.
 */
 #define PIO_PinReadLatch(pin)    ((bool)PIO_PortReadLatch(_PORTA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F))
 
@@ -890,7 +890,7 @@ void PIO_Initialize(void);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 #define PIO_PinToggle(pin)      PIO_PortToggle(_PORTA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
 
@@ -921,7 +921,7 @@ void PIO_Initialize(void);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 #define PIO_PinSet(pin)     PIO_PortSet(_PORTA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
 
@@ -952,7 +952,7 @@ void PIO_Initialize(void);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 #define PIO_PinClear(pin)     PIO_PortClear(_PORTA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
 
@@ -983,7 +983,7 @@ void PIO_Initialize(void);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 #define PIO_PinInputEnable(pin)     PIO_PortInputEnable(_PORTA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
 
@@ -1014,7 +1014,7 @@ void PIO_Initialize(void);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 #define PIO_PinOutputEnable(pin)     PIO_PortOutputEnable(_PORTA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
 
@@ -1045,7 +1045,7 @@ void PIO_Initialize(void);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 #define PIO_PinInterruptEnable(pin)     PIO_PortInterruptEnable(_PORTA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
 
@@ -1076,7 +1076,7 @@ void PIO_Initialize(void);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 #define PIO_PinInterruptDisable(pin)     PIO_PortInterruptDisable(_PORTA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
 
@@ -1400,7 +1400,7 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 void PIO_PortInputEnable(PIO_PORT port, uint32_t mask);
 
@@ -1436,7 +1436,7 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask);
 
@@ -1476,7 +1476,7 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask);
 
@@ -1514,7 +1514,7 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask);
     </code>
 
   Remarks:
-	None.
+    None.
 */
 void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask);
 
@@ -1597,7 +1597,7 @@ typedef struct {
     PORT Channel.
 
   Remarks:
-	It is an internal function used by the library, user need not call it.
+    It is an internal function used by the library, user need not call it.
 */
 void _PIO_Interrupt_Handler ( PIO_PORT port );
 
@@ -1625,7 +1625,7 @@ void _PIO_Interrupt_Handler ( PIO_PORT port );
     None.
     
   Remarks:
-	User should not call this function.
+    User should not call this function.
 */
 void PORT${PIO_CHANNEL}_InterruptHandler (void);
 </#macro>
