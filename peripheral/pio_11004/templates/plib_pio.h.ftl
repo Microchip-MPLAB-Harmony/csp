@@ -61,6 +61,68 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+<#compress> <#-- To remove unwanted new lines -->
+
+<#--  =====================
+      MACRO mhc_process_gpio
+      ===================== -->
+<#macro mhc_process_gpio>
+<#assign GPIO_Name_List = []>
+<#assign GPIO_PortPin_List = []>
+<#assign GPIO_PortChannel_List = []>
+<#list 1..350 as i>
+<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
+<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
+<#assign pinport = "PIN_" + i + "_PIO_PIN">
+<#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
+
+<#if .vars[functype]?has_content>
+<#if .vars[functype] == "GPIO">
+<#if .vars[funcname]?has_content>
+<#if .vars[pinport]?has_content>
+<#if .vars[pinchannel]?has_content>
+
+<#assign GPIO_Name_List = GPIO_Name_List + [.vars[funcname]]>
+<#assign GPIO_PortPin_List = GPIO_PortPin_List + [.vars[pinport]]>
+<#assign GPIO_PortChannel_List = GPIO_PortChannel_List + [.vars[pinchannel]]>
+</#if>
+</#if>
+</#if>
+</#if>
+</#if>
+</#list>
+</#macro>
+<#--  =====================
+      MACRO execution
+      ===================== -->
+
+<@mhc_process_gpio/>
+</#compress>
+
+<#if (GPIO_Name_List?size > 0)>
+<#list GPIO_Name_List as gpioName>
+<#list GPIO_PortChannel_List as gpioChannel>
+<#list GPIO_PortPin_List as gpioPinPos>
+<#if  gpioName?counter ==  gpioChannel?counter><#if  gpioName?counter ==  gpioPinPos?counter>
+
+/*** Functions for ${gpioName} pin ***/
+#define ${gpioName}_Set() 				(_PORTA_REGS${gpioChannel}->PORT_SODR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_Clear()				(_PORTA_REGS${gpioChannel}->PORT_CODR.w = (1<<${gpioPinPos})) 
+#define ${gpioName}_Toggle() 			(_PORTA_REGS${gpioChannel}->PORT_ODSR.w ^= (1<<${gpioPinPos})) 
+#define ${gpioName}_Get() 				((_PORTA_REGS${gpioChannel}->PORT_PDSR.w >> ${gpioPinPos}) & 0x1) 
+#define ${gpioName}_OutputEnable() 		(_PORTA_REGS${gpioChannel}->PORT_OER.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InputEnable() 		(_PORTA_REGS${gpioChannel}->PORT_ODR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptEnable() 	(_PORTA_REGS${gpioChannel}->PORT_IER.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptDisable()	(_PORTA_REGS${gpioChannel}->PORT_IDR.w = (1<<${gpioPinPos}))
+</#if></#if>
+</#list>
+</#list>
+</#list>
+</#if>
+
+
+
+
 // *****************************************************************************
 /* PIO Port
   
