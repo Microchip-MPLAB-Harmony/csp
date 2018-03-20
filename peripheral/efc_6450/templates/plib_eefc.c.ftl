@@ -133,9 +133,10 @@ bool EEFC${INDEX?string}_IsBusy(void)
 }
 
 
-EEFC_STATUS EEFC${INDEX?string}_ErrorGet( void )
+EEFC_ERR EEFC${INDEX?string}_ErrorGet( void )
 {
-	return 	(status | _EFC_REGS->EEFC_FSR.w);
+	status |= _EFC_REGS->EEFC_FSR.w;
+	return 	(status & ~(EEFC_FSR_FRDY_Msk));
 }
 
 <#if eefcEnableInterrupt == true>
