@@ -217,12 +217,12 @@ def instantiateComponent(spiComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
     
     spiHeaderFile = spiComponent.createFileSymbol("SPI_COMMON_HEADER", None)
-    spiHeaderFile.setSourcePath("../peripheral/spi_6088/templates/plib_spi.h.ftl")
+    spiHeaderFile.setSourcePath("../peripheral/spi_6088/templates/plib_spi.h")
     spiHeaderFile.setOutputName("plib_spi.h")
     spiHeaderFile.setDestPath("peripheral/spi/")
     spiHeaderFile.setProjectPath("config/" + configName + "/peripheral/spi/")
     spiHeaderFile.setType("HEADER")
-    spiHeaderFile.setMarkup(True)
+    spiHeaderFile.setMarkup(False)
     spiHeaderFile.setOverwrite(True)
     
     spiHeader1File = spiComponent.createFileSymbol("SPI_HEADER", None)

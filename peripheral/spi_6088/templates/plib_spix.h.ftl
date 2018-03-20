@@ -42,6 +42,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #ifndef PLIB_SPI${SPI_INDEX?string}_H
 #define PLIB_SPI${SPI_INDEX?string}_H
 
+#include "${__PROCESSOR?lower_case}.h"
 #include "plib_spi.h"
 
 /* Provide C++ Compatibility */
@@ -57,7 +58,7 @@ void SPI${SPI_INDEX?string}_Initialize ( void );
 
 bool SPI${SPI_INDEX?string}_Exchange(void* pTransmitData,void* pReceiveData, size_t size);
 
-bool SPI${SPI_INDEX?string}_SlaveSetup (uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup );
+bool SPI${SPI_INDEX?string}_Setup (uint32_t spiSourceClock, SPI_SETUP *setup );
 
 <#if SPI_INTERRUPT_MODE == true>     
 bool SPI${SPI_INDEX?string}_IsBusy(void);
