@@ -64,7 +64,6 @@ extern void __attribute__((weak,long_call)) _on_bootstrap(void);
  */
 static void _on_reset(void)
 {
-
 }
 
 /**
@@ -77,21 +76,6 @@ void Reset_Handler(void)
 
     /* Call the optional user-provided _on_reset() function. */
     _on_reset();
-
-#if (__ARM_FP==14)
-    /* Enable the FPU iff the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
-    fpu_enable();
-#endif
-
-#if !defined(__XC32_SKIP_CACHE_INIT)
-    /* Enable Caches */
-#  if (__ICACHE_PRESENT==1U)
-    SCB_EnableICache();
-#  endif
-#  if (__DCACHE_PRESENT==1U)
-    SCB_EnableDCache();
-#  endif
-#endif
 
     /* TCM config and init */
 #if ((__ITCM_PRESENT==1) && (__DTCM_PRESENT==1))
@@ -116,6 +100,25 @@ void Reset_Handler(void)
 
 #if defined(__XC32_STACK_IN_TCM)
     __pic32c_TCM_StackInit();
+#endif
+
+<#if CoreUseMPU>
+	MPU_Initialize();
+</#if>
+
+#if (__ARM_FP==14)
+    /* Enable the FPU iff the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
+    fpu_enable();
+#endif
+
+#if !defined(__XC32_SKIP_CACHE_INIT)
+    /* Enable Caches */
+#  if (__ICACHE_PRESENT==1U)
+    SCB_EnableICache();
+#  endif
+#  if (__DCACHE_PRESENT==1U)
+    SCB_EnableDCache();
+#  endif
 #endif
 
 #if !defined(__XC32_SKIP_STARTUP_VTOR_INIT)
