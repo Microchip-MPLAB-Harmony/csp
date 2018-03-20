@@ -45,7 +45,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "${__PROCESSOR?lower_case}.h"
+
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus  
@@ -91,7 +91,7 @@ typedef struct
     SPI_CLOCK_POLARITY clockPolarity;
     SPI_DATA_BITS   dataBits;
 
-}SPI_SLAVE_SETUP;
+}SPI_SETUP;
 
 typedef enum 
 {

@@ -173,7 +173,7 @@ bool SPI${SPI_INDEX?string}_Exchange (void* pTransmitData, void* pReceiveData, s
     return requestAccepted;
 }
 
-bool SPI${SPI_INDEX?string}_SlaveSetup ( uint32_t spiSourceClock, SPI_SLAVE_SETUP * setup )
+bool SPI${SPI_INDEX?string}_Setup ( uint32_t spiSourceClock, SPI_SETUP * setup )
 {
     uint32_t scbr;
     if(0 == spiSourceClock)
@@ -182,9 +182,13 @@ bool SPI${SPI_INDEX?string}_SlaveSetup ( uint32_t spiSourceClock, SPI_SLAVE_SETU
         spiSourceClock = ${SPI_MASTER_CLOCK};
     }
     scbr = spiSourceClock/ setup->clockFrequency;
-    if ((0 == scbr) || (scbr > 255)) 
+    if(0 == scbr)
     {
-        return false;
+        scbr = 1;
+    }
+    else if(scbr > 255)
+    {
+        scbr = 255;
     }
     _SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}].w = setup->clockPolarity | setup->clockPhase | SPI_CSR_BITS(setup->dataBits) | SPI_CSR_SCBR(scbr);
 

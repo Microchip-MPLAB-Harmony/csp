@@ -131,7 +131,7 @@ typedef enum
 }SPI_DATA_BITS;
 
 // *****************************************************************************
-/* SPI Slave Setup Parameters
+/* SPI Setup Parameters
 
    Summary
     Identifies the setup parameters which can be changed dynamically.
@@ -158,7 +158,7 @@ typedef struct
     /* Number of bits per transfer */
     SPI_DATA_BITS       dataBits;
     
-}SPI_SLAVE_SETUP;
+}SPI_SETUP;
 
 // *****************************************************************************
 /* SPI Errors
@@ -216,16 +216,15 @@ void SPIx_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-    bool SPIx_SlaveSetup(uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup);
+    bool SPIx_Setup(uint32_t spiSourceClock, SPI_SETUP *setup);
     
   Summary:
     Setup SPI operational parameters as desired by the client.
     
   Description:
-    This function setup SPI x with the values needed for the new client.
-    This function allows user to change the setup dynamically. User need not
-    call this function if he has configured the setup in GUI and there is no
-    dynamic change needed in any of the parameters.
+    This function setup SPI x with the values needed by the client dynamically.
+    User need not call this function if he has configured the setup in GUI and
+    there is no dynamic change needed in any of the parameters.
   
   Precondition:
     SPI x must first be initialized using SPIx_Initialize().
@@ -234,8 +233,8 @@ void SPIx_Initialize (void);
     spiSourceClock  Source Clock frequency in Hz on which SPI module is running.
                     If 0 is passed, then clock frequency set in MHC clock manager
                     will be taken by default.
-    *setup   pointer to the data structure of type SPI_SLAVE_SETUP which has the
-             list of elements to be setup for new client.
+    *setup   pointer to the data structure of type SPI_SETUP which has the
+             list of elements to be setup for a client.
   
   Returns:
     true:   if setup was succesfull, API returns true.
@@ -244,14 +243,14 @@ void SPIx_Initialize (void);
     
   Example:
     <code> 
-        SPI_SLAVE_SETUP setup;
+        SPI_SETUP setup;
         setup.clockFrequency = 1000000;
         setup.clockPhase = DATA_VALID_ON_CLOCK_TRAILING_EDGE;
         setup.clockPolarity = SPI_CLOCK_POLARITY_IDLE_LOW;
         setup.dataBits = SPI_DATA_BITS_8;
         
         // Assuming 150 MHz as peripheral Master clock frequency
-        if (false == SPI1_SlaveSetup (150000000, &setup))
+        if (false == SPI1_Setup (150000000, &setup))
         {
             // this means setup could not be done, debug the reason.
         }
@@ -262,7 +261,7 @@ void SPIx_Initialize (void);
     User need not call this function if he has configured the setup in
     GUI and there is no dynamic change needed in any of the parameters.
 */
-bool SPIx_SlaveSetup (uint32_t spiSourceClock, SPI_SLAVE_SETUP *setup);
+bool SPIx_Setup (uint32_t spiSourceClock, SPI_SETUP *setup);
 
 // *****************************************************************************
 /* Function:
