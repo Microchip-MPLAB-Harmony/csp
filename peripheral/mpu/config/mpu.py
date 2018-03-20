@@ -55,13 +55,11 @@ def enableFileGen(coreMPUMenu, event):
         mpuHeaderFile1.setEnabled(True)
         mpuHeaderFile2.setEnabled(True)
         mpuSourceFile.setEnabled(True)
-        mpuSystemInitFile.setEnabled(True)
         mpuSystemDefFile.setEnabled(True)
     else:
         mpuHeaderFile1.setEnabled(False)
         mpuHeaderFile2.setEnabled(False)
         mpuSourceFile.setEnabled(False)
-        mpuSystemInitFile.setEnabled(False)
         mpuSystemDefFile.setEnabled(False)
 
 def storeLength(symbol, event):
@@ -233,14 +231,6 @@ mpuSourceFile.setProjectPath("config/" + configName + "/peripheral/mpu/")
 mpuSourceFile.setType("SOURCE")
 mpuSourceFile.setOverwrite(True)
 mpuSourceFile.setEnabled(False)
-
-mpuSystemInitFile = coreComponent.createFileSymbol("MPU_SYSTEM_INITIALIZE_H", None)
-mpuSystemInitFile.setType("STRING")
-mpuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_MPU")
-mpuSystemInitFile.setSourcePath("../peripheral/mpu/templates/system/system_initialize.c.ftl")
-mpuSystemInitFile.setMarkup(True)
-mpuSystemInitFile.setEnabled(False)
-
 
 mpuSystemDefFile = coreComponent.createFileSymbol("MPU_SYSTEM_DEFINITIONS_H", None)
 mpuSystemDefFile.setType("STRING")
