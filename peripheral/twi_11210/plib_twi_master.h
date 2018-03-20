@@ -87,16 +87,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 typedef enum
 {	
-	/* Busy*/
-    TWI_TRANSFER_BUSY,
+	/* No Error */
+    TWI_ERROR_NONE,
 	
-	/* Transfer Successful */
-    TWI_TRANSFER_SUCCESS,
+	/* Slave returned Nack */
+    TWI_ERROR_NACK,
 	
-	/* Transfer Error */
-    TWI_TRANSFER_ERROR,
-	
-} TWI_TRANSFER_STATUS;
+} TWI_ERROR;
 
 // *****************************************************************************
 /* TWI State.
@@ -178,7 +175,7 @@ typedef struct
 	TWI_STATE state;
 	
 	/* Transfer status */
-    TWI_TRANSFER_STATUS status;
+    TWI_ERROR error;
 	
 	/* Transfer Event Callback */
 	TWI_CALLBACK callback;

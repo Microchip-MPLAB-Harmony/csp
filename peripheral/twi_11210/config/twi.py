@@ -9,7 +9,7 @@ def instantiateComponent(twiComponent):
     print("Running TWI" + str(num))
 
     #main menu
-    twiMenu = twiComponent.createMenuSymbol(TWI_MENU_MAIN, None)
+    twiMenu = twiComponent.createMenuSymbol("TWI_MENU_MAIN", None)
     
     twiMenu.setLabel("Hardware Settings ")
 
@@ -31,7 +31,7 @@ def instantiateComponent(twiComponent):
     twiNumTRBs = twiComponent.createIntegerSymbol("TWI_NUM_TRBS", twiMenu)
     
     twiNumTRBs.setLabel("Number of TRB's")
-    twiNumTRBs.setDefaultValue(1)
+    twiNumTRBs.setDefaultValue(2)
     twiNumTRBs.setMax(255)
 
     #Clock speed
