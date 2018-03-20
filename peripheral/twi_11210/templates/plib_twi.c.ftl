@@ -122,14 +122,47 @@ void TWI${INDEX?string}_Initialize(void)
     TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_MSEN_Msk;
 	
 	// Initialize the twi PLib Object
-	twi${INDEX?string}Obj.status  = TWI_TRANSFER_SUCCESS;
+	twi${INDEX?string}Obj.error   = TWI_ERROR_NONE;
 	twi${INDEX?string}Obj.state   = TWI_STATE_IDLE;
 	twi${INDEX?string}Obj.numTRBs = 0;		
 }
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_TransferSetup(TWI_TRANSFER_SETUP setup, uint32_t twiClockSrcFreq)
+    void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
+	
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the 
+    given TWI's transfer events occur.
+
+   Precondition:
+    TWIx_Initialize must have been called for the associated TWI instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined 
+	by the TWI_CALLBACK data type.
+
+    context - A value (usually a pointer) passed (unused) into the function 
+	identified by the callback parameter.
+  
+   Returns:
+    None.
+*/
+
+void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+	{
+	    return;
+	}
+	
+	twi${INDEX?string}Obj.callback = callback;
+	twi${INDEX?string}Obj.context = contextHandle;
+}
+
+// *****************************************************************************
+/* Function:
+    void TWI${INDEX?string}_TransferSetup(TWI_TRANSFER_SETUP setup, uint32_t srcClkFreq)
 
    Summary:
     Dynamic setup of TWI Peripheral.
@@ -144,7 +177,7 @@ void TWI${INDEX?string}_Initialize(void)
     None
 */
 
-bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t twiClockSrcFreq )
+bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t srcClkFreq )
 {
     uint32_t clockSrcFreq;
     uint32_t twiClkSpeed;
@@ -159,9 +192,9 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t twiC
 	    return false;
 	}
     
-    if( twiClockSrcFreq )
+    if( srcClkFreq )
     {
-        clockSrcFreq = twiClockSrcFreq;
+        clockSrcFreq = srcClkFreq;
     }
     else
     {
@@ -242,6 +275,36 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t twiC
     
     return (true);
 
+}
+
+// *****************************************************************************
+/* Function:
+    bool TWI${INDEX?string}_IsBusy(void)
+	
+   Summary:
+    Returns the Peripheral busy status.
+
+   Precondition:
+    TWIx_Initialize must have been called for the associated TWI instance.
+
+   Parameters:
+    None.
+	
+   Returns:
+    true - Busy.
+    false - Not busy.
+*/
+
+bool TWI${INDEX?string}_IsBusy(void)
+{
+    if( twi${INDEX?string}Obj.state == TWI_STATE_IDLE )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 // *****************************************************************************
@@ -381,7 +444,7 @@ bool TWI${INDEX?string}_TRBTransfer(void)
 	
 	// Initiate Transfer
 	twi${INDEX?string}Obj.state = TWI_STATE_ADDR_SEND;
-	twi${INDEX?string}Obj.status = TWI_TRANSFER_BUSY;
+    twi${INDEX?string}Obj.error = TWI_ERROR_NONE;
 	
 	TWI${INDEX?string}_Module->TWI_IER.w = TWI_IER_TXCOMP_Msk | 
 	                                       TWI_IER_TXRDY_Msk  |
@@ -517,10 +580,10 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
 
 // *****************************************************************************
 /* Function:
-    TWI_TRANSFER_STATUS TWI${INDEX?string}_TransferStatusGet(void)
+    TWI_ERROR TWI${INDEX?string}_ErrorGet(void)
 	
    Summary:
-    Returns the transfer status associated with the given TWI peripheral instance.
+    Returns the error during transfer.
 
    Precondition:
     TWIx_Initialize must have been called for the associated TWI instance.
@@ -529,45 +592,17 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
     None.
 	
    Returns:
-    Status of the transfer.
+    Error during transfer.
 */
 
-TWI_TRANSFER_STATUS TWI${INDEX?string}_TransferStatusGet(void)
+TWI_ERROR TWI${INDEX?string}_ErrorGet(void)
 {
-    return twi${INDEX?string}Obj.status;
-}
+    TWI_ERROR error;
 
-// *****************************************************************************
-/* Function:
-    void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
-	
-   Summary:
-    Sets the pointer to the function (and it's context) to be called when the 
-    given TWI's transfer events occur.
+    error = twi${INDEX?string}Obj.error;
+    twi${INDEX?string}Obj.error = TWI_ERROR_NONE;
 
-   Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
-
-   Parameters:
-    callback - A pointer to a function with a calling signature defined 
-	by the TWI_CALLBACK data type.
-
-    context - A value (usually a pointer) passed (unused) into the function 
-	identified by the callback parameter.
-  
-   Returns:
-    None.
-*/
-
-void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
-{
-    if (callback == NULL)
-	{
-	    return;
-	}
-	
-	twi${INDEX?string}Obj.callback = callback;
-	twi${INDEX?string}Obj.context = contextHandle;
+    return error;
 }
 
 // *****************************************************************************
@@ -621,6 +656,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
     if( status & TWI_SR_NACK_Msk ) 
     {
         twi${INDEX?string}Obj.state = TWI_STATE_ERROR;
+        twi${INDEX?string}Obj.error = TWI_ERROR_NACK;
     }
 
     /* checks if the arbitration is lost in multi-master scenario */
@@ -753,9 +789,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
 	
 	/* Check for error during transmission */
     if( TWI_STATE_ERROR == twi${INDEX?string}Obj.state )
-    {
-	    twi${INDEX?string}Obj.status = TWI_TRANSFER_ERROR;
-		
+    {	
 		if ( twi${INDEX?string}Obj.callback != NULL )
 		{
 		    twi${INDEX?string}Obj.callback( twi${INDEX?string}Obj.context );
@@ -776,7 +810,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
 	    // Call callback on completion of last TRB.
 	    if ( currentTRB == (twi${INDEX?string}Obj.numTRBs - 1) )
 		{
-		    twi${INDEX?string}Obj.status = TWI_TRANSFER_SUCCESS;
+		    twi${INDEX?string}Obj.error = TWI_ERROR_NONE;
 			
 			if ( twi${INDEX?string}Obj.callback != NULL )
 		    {

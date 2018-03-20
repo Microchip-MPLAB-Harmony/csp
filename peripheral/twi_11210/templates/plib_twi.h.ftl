@@ -114,7 +114,47 @@ void TWI${INDEX?string}_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_TransferSetup(TWI_TRANSFER_SETUP * setup, uint32_t twiClockSrcFreq)
+    void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
+	
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the 
+    given TWI's transfer events occur.
+
+   Description:
+    This function sets the pointer to a client function to be called "back" 
+    when the given TWI's transfer events occur. It also passes a context value 
+    (usually a pointer to a context structure) that is passed into the
+    function when it is called.
+
+   Precondition:
+    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined 
+	by the TWI_CALLBACK data type.
+
+    context - A value (usually a pointer) passed (unused) into the function 
+	identified by the callback parameter.
+  
+   Returns:
+    None.
+
+   Example:
+    <code>
+    TWI${INDEX?string}_CallbackRegister(MyTWICallback, &myData);
+    </code>
+
+   Remarks:
+    The context parameter is ignored if the pointer passed is NULL.
+    To disable the callback function, pass a NULL for the callback parameter.
+    See the TWI_CALLBACK type definition for additional information.
+*/
+
+void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle);
+
+// *****************************************************************************
+/* Function:
+    void TWI${INDEX?string}_TransferSetup(TWI_TRANSFER_SETUP * setup, uint32_t srcClkFreq)
 
    Summary:
     Dynamic setup of TWI Peripheral.
@@ -125,7 +165,7 @@ void TWI${INDEX?string}_Initialize(void);
 	
    Parameters:
     setup - Pointer to the structure containing the transfer setup.
-    twiClockSrcFreq - TWI Peripheral Clock Source Frequency.
+    srcClkFreq - TWI Peripheral Clock Source Frequency.
 	
    Returns:
     true - Transfer setup was updated Successfully.
@@ -139,11 +179,52 @@ void TWI${INDEX?string}_Initialize(void);
     </code>
 
    Remarks:
-    twiClockSrcFreq overrides any change in the peripheral clock frequency. 
+    srcClkFreq overrides any change in the peripheral clock frequency. 
     If configured to zero PLib takes the peripheral clock frequency from MHC.
 */
 
-bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP *setup, uint32_t twiClockSrcFreq );
+bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP *setup, uint32_t srcClkFreq );
+
+// *****************************************************************************
+/* Function:
+    bool TWI${INDEX?string}_IsBusy(void)
+	
+   Summary:
+    Returns the Peripheral busy status.
+    
+   Description:
+    This function returns the peripheral's busy status.
+
+   Precondition:
+    TWIx_Initialize must have been called for the associated TWI instance.
+
+   Parameters:
+    None.
+	
+   Returns:
+    true - Busy.
+    false - Not busy.
+    
+   Example:
+    <code>
+        uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
+	  
+        // wait for the current transfer to complete
+	    while(TWI${INDEX?string}_IsBusy( ));
+	    
+        // perform the next transfer
+	    if(!TWI${INDEX?string}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    {
+		    // error handling
+	    }
+    
+    </code>
+
+   Remarks:
+    None.
+*/
+
+bool TWI${INDEX?string}_IsBusy(void);
 
 // *****************************************************************************
 /* Function:
@@ -421,14 +502,13 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
 
 // *****************************************************************************
 /* Function:
-    TWI_TRANSFER_STATUS TWI${INDEX?string}_TransferStatusGet(void)
+    TWI_ERROR TWI${INDEX?string}_ErrorGet(void)
 	
    Summary:
-    Returns the transfer status associated with the given TWI peripheral instance.
+    Returns the error during transfer.
 
    Description:
-    This function returns the complete or error transfer status associated with 
-    the given TWI peripheral instance.
+    This function returns the error during transfer.
 
    Precondition:
     TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
@@ -441,7 +521,7 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
 	
    Example:
     <code>
-    if(TWI_TRANSFER_COMPLETE == TWI${INDEX?string}_TransferStatusGet())
+    if(TWI_ERROR_NONE == TWI${INDEX?string}_ErrorGet())
     {
         //TWI transfer is completed, go to next state.
     }
@@ -451,47 +531,7 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
     None.
 */
 
-TWI_TRANSFER_STATUS TWI${INDEX?string}_TransferStatusGet(void);
-
-// *****************************************************************************
-/* Function:
-    void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
-	
-   Summary:
-    Sets the pointer to the function (and it's context) to be called when the 
-    given TWI's transfer events occur.
-
-   Description:
-    This function sets the pointer to a client function to be called "back" 
-    when the given TWI's transfer events occur. It also passes a context value 
-    (usually a pointer to a context structure) that is passed into the
-    function when it is called.
-
-   Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
-
-   Parameters:
-    callback - A pointer to a function with a calling signature defined 
-	by the TWI_CALLBACK data type.
-
-    context - A value (usually a pointer) passed (unused) into the function 
-	identified by the callback parameter.
-  
-   Returns:
-    None.
-
-   Example:
-    <code>
-    TWI${INDEX?string}_CallbackRegister(MyTWICallback, &myData);
-    </code>
-
-   Remarks:
-    The context parameter is ignored if the pointer passed is NULL.
-    To disable the callback function, pass a NULL for the callback parameter.
-    See the TWI_CALLBACK type definition for additional information.
-*/
-
-void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle);
+TWI_ERROR TWI${INDEX?string}_ErrorGet(void);
 
 // *****************************************************************************
 /* Function:
