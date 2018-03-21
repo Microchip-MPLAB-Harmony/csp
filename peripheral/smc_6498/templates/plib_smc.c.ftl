@@ -40,15 +40,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 #include "plib_smc${INDEX}.h"
+#include "${__PROCESSOR?lower_case}.h"
 
 /* Function:
-    void SMC${INDEX}_Initialize( void )
+	void SMC${INDEX}_Initialize( void )
 
   Summary:
-    Initializes hardware and data for the given instance of the SMC module.
+	Initializes hardware and data for the given instance of the SMC module.
 
   Description:
-    This function initializes the SMC timings according to the external parralel device requirements.
+	This function initializes the SMC timings according to the external parralel device requirements.
 
   Returns:
   None.
@@ -56,71 +57,80 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 void SMC${INDEX?string}_Initialize( void )
 {
-    volatile uint32_t config = 0x0;
-    <#list 0..(SMC_CHIP_SELECT_COUNT - 1) as i>
+	volatile uint32_t config = 0x0;
+<#list 0..(SMC_CHIP_SELECT_COUNT - 1) as i>
 	<#assign SMC_CHIP_SELECT = "SMC_CHIP_SELECT" + i>
-		<#if .vars[SMC_CHIP_SELECT]?has_content>
-			<#if (.vars[SMC_CHIP_SELECT] != false)>
+	<#assign SMC_DATA_BUS_CS = "SMC_DATA_BUS_CS" + i>
+	<#assign SMC_NWE_SETUP_CS = "SMC_NWE_SETUP_CS" + i>
+	<#assign SMC_NCS_WR_SETUP_CS = "SMC_NCS_WR_SETUP_CS" + i>
+	<#assign SMC_NRD_SETUP_CS = "SMC_NRD_SETUP_CS" + i>
+	<#assign SMC_NCS_RD_SETUP_CS = "SMC_NCS_RD_SETUP_CS" + i>
+	<#assign SMC_NWE_PULSE_CS = "SMC_NWE_PULSE_CS" + i>
+	<#assign SMC_NCS_WR_PULSE_CS = "SMC_NCS_WR_PULSE_CS" + i>
+	<#assign SMC_NRD_PULSE_CS = "SMC_NRD_PULSE_CS" + i>
+	<#assign SMC_NCS_RD_PULSE_CS = "SMC_NCS_RD_PULSE_CS" +i>
+	<#assign SMC_NWE_CYCLE_CS = "SMC_NWE_CYCLE_CS" + i>
+	<#assign SMC_NRD_CYCLE_CS = "SMC_NRD_CYCLE_CS" + i>
+	<#assign SMC_PS_CS = "SMC_PS_CS" +i>
+	<#assign SMC_TDF_MODE_CS = "SMC_TDF_MODE_CS" + i>
+	<#assign SMC_TDF_CYCLES_CS = "SMC_TDF_CYCLES_CS" +i>
+	<#assign SMC_NWAIT_MODE_CS = "SMC_NWAIT_MODE_CS" +i>
+	<#assign SMC_PMEN_CS = "SMC_PMEN_CS" + i>
+	<#assign SMC_MEM_SCRAMBLING_CS = "SMC_MEM_SCRAMBLING_CS" + i>
+	<#assign SMC_OCMS_CSSE_MASK = "SMC_OCMS_CS" + i>
+	<#assign SMC_WRITE_MODE_CS = "SMC_WRITE_MODE_CS" + i>
+	<#assign SMC_READ_MODE_CS = "SMC_READ_MODE_CS" + i>
+	<#assign SMC_BAT_CS = "SMC_BAT_CS" + i>
+	<#if .vars[SMC_CHIP_SELECT]?has_content>
+		<#if (.vars[SMC_CHIP_SELECT] != false)>
 
 	/* Chip Select CS${i} Timings */
 	/* Setup SMC SETUP register */
-	config = 0x01010101; /* Setup register reset value */
-	config = SMC_SETUP_NWE_SETUP(SMC_NWE_SETUP_CS${i}) | SMC_SETUP_NCS_WR_SETUP(SMC_NCS_WR_SETUP_CS${i}) | SMC_SETUP_NRD_SETUP(SMC_NRD_SETUP_CS${i}) | SMC_SETUP_NCS_RD_SETUP(SMC_NCS_RD_SETUP_CS${i});
-	_SMC_REGS->SMC_CS_NUMBER[${i}].SMC_SETUP.w = (uint32_t)(config << 0);
-		
+	_SMC_REGS->SMC_CS_NUMBER[${i}].SMC_SETUP.w = SMC_SETUP_NWE_SETUP(${.vars[SMC_NWE_SETUP_CS]}) | SMC_SETUP_NCS_WR_SETUP(${.vars[SMC_NCS_WR_SETUP_CS]}) | SMC_SETUP_NRD_SETUP(${.vars[SMC_NRD_SETUP_CS]}) | SMC_SETUP_NCS_RD_SETUP(${.vars[SMC_NCS_RD_SETUP_CS]});
+
 	/* Setup SMC CYCLE register */
-    config = 0x00030003; /* Cycle register reset value */
-    config = SMC_CYCLE_NWE_CYCLE(SMC_NWE_CYCLE_CS${i}) | SMC_CYCLE_NRD_CYCLE(SMC_NRD_CYCLE_CS${i});
-    _SMC_REGS->SMC_CS_NUMBER[${i}].SMC_CYCLE.w = (uint32_t)config;
-	
+	_SMC_REGS->SMC_CS_NUMBER[${i}].SMC_CYCLE.w = SMC_CYCLE_NWE_CYCLE(${.vars[SMC_NWE_CYCLE_CS]}) | SMC_CYCLE_NRD_CYCLE(${.vars[SMC_NRD_CYCLE_CS]});
+
 	/* Setup SMC_PULSE register */
-    config = 0x01010101; /* Pulse register reset value */
-    config = SMC_PULSE_NWE_PULSE(SMC_NWE_PULSE_CS${i}) | SMC_PULSE_NCS_WR_PULSE(SMC_NCS_WR_PULSE_CS${i}) | SMC_PULSE_NRD_PULSE(SMC_NRD_PULSE_CS${i}) | SMC_PULSE_NCS_RD_PULSE(SMC_NCS_RD_PULSE_CS${i});
-    _SMC_REGS->SMC_CS_NUMBER[${i}].SMC_PULSE.w = (uint32_t)config;
+	_SMC_REGS->SMC_CS_NUMBER[${i}].SMC_PULSE.w = SMC_PULSE_NWE_PULSE(${.vars[SMC_NWE_PULSE_CS]}) | SMC_PULSE_NCS_WR_PULSE(${.vars[SMC_NCS_WR_PULSE_CS]}) | SMC_PULSE_NRD_PULSE(${.vars[SMC_NRD_PULSE_CS]}) | SMC_PULSE_NCS_RD_PULSE(${.vars[SMC_NCS_RD_PULSE_CS]});
 
 	/* Setup SMC MODE register */
-    config = 0x10001003; /* Mode register reset value */
-    config = (( SMC_MODE_READ_MODE_Msk & ((SMC_READ_MODE_CS${i}) <<  SMC_MODE_READ_MODE_Pos)) | (SMC_MODE_WRITE_MODE_Msk & ((SMC_WRITE_MODE_CS${i}) <<  SMC_MODE_WRITE_MODE_Pos)) | SMC_NWAIT_MODE_CS${i} | (SMC_MODE_TDF_MODE_Msk & ((SMC_TDF_MODE_CS${i}) << SMC_MODE_TDF_MODE_Pos)) | SMC_MODE_TDF_CYCLES(SMC_TDF_CYCLES_CS${i}));
+	config = (( SMC_MODE_READ_MODE_Msk & ((${.vars[SMC_READ_MODE_CS]}) <<  SMC_MODE_READ_MODE_Pos)) | (SMC_MODE_WRITE_MODE_Msk & ((${.vars[SMC_WRITE_MODE_CS]}) <<  SMC_MODE_WRITE_MODE_Pos)) | ${.vars[SMC_NWAIT_MODE_CS]} | (SMC_MODE_TDF_MODE_Msk & ((${.vars[SMC_TDF_MODE_CS]}) << SMC_MODE_TDF_MODE_Pos)) | SMC_MODE_TDF_CYCLES(${.vars[SMC_TDF_CYCLES_CS]}));
 
-	/* Byte Access Type  setup , used only in 16-bit data bus */
-    if (SMC_DATA_BUS_CS${i} == SMC_DATA_BUS_WIDTH_16_BIT && SMC_BAT_CS${i} == BAT_TYPE_WRITE)
-    {
-        config |= SMC_DATA_BUS_CS${i} | BAT_BYTE_WRITE;
-    }
-    if (SMC_DATA_BUS_CS${i} == SMC_DATA_BUS_WIDTH_16_BIT && SMC_BAT_CS${i} == BAT_TYPE_SELECT)
-    {
-        config |= SMC_DATA_BUS_CS${i} | BAT_BYTE_SELECT;
-    }
-    if (SMC_DATA_BUS_CS${i} ==  SMC_DATA_BUS_WIDTH_8_BIT)
-    {
-        config |= SMC_DATA_BUS_CS${i};
-    }
+	/* Byte Access Type Configurations */
+			<#if (.vars[SMC_DATA_BUS_CS] == "SMC_MODE_DBW_16_BIT") && (.vars[SMC_BAT_CS] == "SMC_MODE_BAT_BYTE_WRITE")>
+	/* Byte Access Type  setup is configured for 16-bit data bus width and byte write mode */
+	config |= SMC_MODE_DBW_16_BIT | SMC_MODE_BAT_BYTE_WRITE;
+			</#if>
+			<#if (.vars[SMC_DATA_BUS_CS] == "SMC_MODE_DBW_16_BIT") && (.vars[SMC_BAT_CS] == "SMC_MODE_BAT_BYTE_SELECT")>
+	/* Byte Access Type  setup is configured for 16-bit data bus width and byte select mode */
+	config |= SMC_MODE_DBW_16_BIT | SMC_MODE_BAT_BYTE_SELECT;
+			</#if>
+			<#if (.vars[SMC_DATA_BUS_CS] == "SMC_MODE_DBW_8_BIT")>
+	/* 8-bit Byte Access Type Selected */
+	config |= SMC_MODE_DBW_8_BIT;
+			</#if>
 
-    if (SMC_PMEN_CS${i} == ASYNC_READ_PAGE_MODE)
-    {
-        config |= ASYNC_READ_PAGE_MODE | SMC_PS_CS${i};
-    }
-    else
-    {
-        config |= STD_READ_PAGE_MODE;
-    }
-	
-    _SMC_REGS->SMC_CS_NUMBER[${i}].SMC_MODE.w = (uint32_t)config;
-    
-	config = 0x0;
-	/* Enable Off-chip Memory Scrambling */
-    if (SMC_MEM_SCRAMBLING_CS${i} == MEM_SCRAMBLING_ON)
-    {
-		_SMC_REGS->SMC_OCMS.w |= SMC_OCMS_CS${i}SE_Msk;
-    }
-    else // SMC_MEM_SCRAMBLING_CS0 == MEM_SCRAMBLING_OFF
-    {
-		_SMC_REGS->SMC_OCMS.w &= ~(SMC_OCMS_CS${i}SE_Msk);
-    }
-	/* End of Chip Select CS${i} Settings */
+			<#if (.vars[SMC_PMEN_CS] == true)>
+	/* Enabled External Memory Page mode */
+	config |= SMC_MODE_PMEN_Msk | ${.vars[SMC_PS_CS]};
+			</#if>
+
+	_SMC_REGS->SMC_CS_NUMBER[${i}].SMC_MODE.w = (uint32_t)config;
+
+			<#if (.vars[SMC_MEM_SCRAMBLING_CS] == true)>
+	/* Enabled Off-chip Memory Scrambling */
+	_SMC_REGS->SMC_OCMS.w |= SMC_OCMS_CS${i}SE_Msk;
 			</#if>
 		</#if>
-    </#list>
+	</#if>
+	/* End of Chip Select CS${i} Settings */
+</#list>
+
+<#if SMC_WRITE_PROTECTION>
+	/* Enable Write Protection */
+	_SMC_REGS->SMC_WPMR.w = (SMC_WPMR_WPKEY_PASSWD | SMC_WPMR_WPEN_Msk);
+</#if>
 } /* SMC${INDEX?string}_Initialize */
 
 /*******************************************************************************
