@@ -45,12 +45,12 @@ extern void _exit(int status)
     }
 }
 
-int _mon_getc(int canblock)
+int _mon_getc(int canblock) __attribute__((weak))
 {
     return 0;
 }
 
-void _mon_putc(char c)
+void _mon_putc(char c) __attribute__((weak))
 {
 }
 
