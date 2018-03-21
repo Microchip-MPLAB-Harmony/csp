@@ -27,8 +27,9 @@ for periphName in periphNames:
 			periphComponent.addCapability(periphName + "_" + str(periphInstance), periphName)
 			if (periphName == "UART"):
 				periphComponent.addCapability("USART_" + str(periphInstance), "USART")
+			if (periphName == "USART" or periphName == "UART"):
+				periphComponent.addCapability("debug" + "_" + str(periphInstance) , "debug_console")
 	else:
 		print("CSP: Peripheral [" + periphName + " id=" + periphID + 
 				"] is not supported in MCC")
-
 
