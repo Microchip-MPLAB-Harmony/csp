@@ -24,7 +24,12 @@ for periphName in periphNames:
 							str(periphInstance), periphName.upper() +
 							str(periphInstance), "/Peripherals/" +
 							periphName.upper() + "/", ".." + periphScript)
+
 			periphComponent.addCapability(periphName + "_" + str(periphInstance), periphName)
+
+			if (periphName == "EFC"):
+				periphComponent.addCapability(periphName + "_" + str(periphInstance) + "_memroy_dev", "memory_dev")
+
 			if (periphName == "UART"):
 				periphComponent.addCapability("USART_" + str(periphInstance), "USART")
 			if (periphName == "USART" or periphName == "UART"):

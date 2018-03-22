@@ -30,6 +30,7 @@ def instantiateComponent(efcComponent):
     global NVICVector
     global NVICHandler
     instance = efcComponent.getID()[-1:]
+
     Log.writeInfoMessage("Running EEFC")
     #Create the top menu
     efcMenu = efcComponent.createMenuSymbol(None, None)
@@ -37,11 +38,13 @@ def instantiateComponent(efcComponent):
     #Create a Checkbox to enable disable interrupts
     efcInterrupt = efcComponent.createBooleanSymbol("INTERRUPT_ENABLE", efcMenu)
     efcInterrupt.setLabel("Enable Interrupts")
-    efcInterrupt.setDefaultValue(False)
+    efcInterrupt.setDefaultValue(True)
 
     efcInterruptSource = efcComponent.createStringSymbol("INTERRUPT_SOURCE", efcMenu)
     efcInterruptSource.setLabel("EFC Interrupt Source")
-    efcInterruptSource.setVisible(False)
+    efcInterruptSource.setVisible(True)
+    efcInterruptSource.setReadOnly(True)
+    efcInterruptSource.setDefaultValue("EFC_IRQn")
     efcInterruptSource.setDependencies(efcSetMemoryDependency, ["INTERRUPT_ENABLE"])
 
     efcMemoryDriver = efcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", efcMenu)
@@ -50,13 +53,15 @@ def instantiateComponent(efcComponent):
     efcMemoryDriver.setDefaultValue(False)
 
     efcMemoryStartAddr = efcComponent.createHexSymbol("START_ADDRESS", efcMenu)
-    efcMemoryStartAddr.setLabel("EFC Start Address")
+    efcMemoryStartAddr.setLabel("NVM Offset for File System")
     efcMemoryStartAddr.setVisible(False)
+    efcMemoryStartAddr.setDefaultValue(0x500000)
     efcMemoryStartAddr.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     efcMemoryEraseBufferSize = efcComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", efcMenu)
     efcMemoryEraseBufferSize.setLabel("EFC Erase Buffer Size")
     efcMemoryEraseBufferSize.setVisible(False)
+    efcMemoryEraseBufferSize.setDefaultValue(8192)
     efcMemoryEraseBufferSize.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     efcMemoryEraseComment = efcComponent.createCommentSymbol("ERASE_COMMENT", efcMenu)
