@@ -1,1 +1,1 @@
-#include "peripheral/eefc/plib_eefc${INDEX?string}.h"
+#include "peripheral/efc/plib_efc${INDEX?string}.h"
