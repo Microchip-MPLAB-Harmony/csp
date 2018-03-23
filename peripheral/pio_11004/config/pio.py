@@ -223,6 +223,7 @@ portConfiguration.setLabel("Port Registers Configuration")
 global channel
 channel = ["A", "B", "C", "D", "E"]
 port = []
+global usePort
 usePort = []
 
 global portInterrupt
@@ -262,7 +263,6 @@ for portNumber in range(0, len(channel)):
     port[portNumber]= coreComponent.createMenuSymbol("PORT_CONFIGURATION" + str(portNumber), portConfiguration)
     port[portNumber].setLabel("PORT " + channel[portNumber] + " Configuration")
 
-    global usePort
     usePort.append(portNumber)
     usePort[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(channel[portNumber]) + "_USED", port[portNumber])
     usePort[portNumber].setLabel("Use PORT " + channel[portNumber])
@@ -381,9 +381,6 @@ for portNumber in range(0, len(channel)):
     NVICHandler[portNumber] = "NVIC_" + str(peripId[portNumber]) + "_HANDLER"
     NVICHandlerLock.append(portNumber)
     NVICHandlerLock[portNumber] = "NVIC_" + str(peripId[portNumber]) + "_HANDLER_LOCK"
-    global InternalNVICVectorChange
-    InternalNVICVectorChange.append(portNumber)
-    InternalNVICVectorChange[portNumber] = False
 
     # Dependency Status for interrupt
     pioSymIntEnComment.append(portNumber)
