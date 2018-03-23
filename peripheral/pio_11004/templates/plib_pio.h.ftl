@@ -656,7 +656,11 @@ typedef enum
     PIO_PIN_PE30,
 
     /* PE31 pin */
-    PIO_PIN_PE31
+    PIO_PIN_PE31,
+    
+    /* This element should not be used in any of the PIO APIs.
+       It will be used by other modules or application to denote that none of the PIO Pin is used */
+    PIO_PIN_NONE
   
 } PIO_PIN;
 
