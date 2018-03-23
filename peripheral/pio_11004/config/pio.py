@@ -1,8 +1,5 @@
 print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 
-portInterruptList = []
-InternalNVICVectorChange = []
-
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
@@ -16,34 +13,36 @@ def ClockInterruptStatusWarning(symbol, event):
        symbol.setVisible(False)
 
 # Dependency Function to pass interrupt related info to NVIC Manager.
-# This function will be entered only by internal change happening to PORT Channel interrupt, never by manual
+# This function will be entered only by internal change happening to PORT channel interrupt, never by manual
 # change because channel interrupt is not user configurable directly.
 def NVICControl(pioNVIC, event):
     i = []
     # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
     # Split the id name by "_" and put all the splitted names in the list "i"
     i = event["id"].split("_")
-    k = channel.index(i[1])
-
-    global NVICHandlerLock
+    k = pioSymChannel.index(i[1])
+    
+    global pioSymNVICVector    
+    global pioSymNVICHandler
+    global pioSymNVICHandlerLock
     global pioSymIntEnComment
 
     if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector[k], True, 1)
-        Database.setSymbolValue("core", NVICHandler[k], "PORT" + i[1] + "_InterruptHandler", 1)
-        Database.setSymbolValue("core", NVICHandlerLock[k], True, 1)
+        Database.setSymbolValue("core", pioSymNVICVector[k], True, 1)
+        Database.setSymbolValue("core", pioSymNVICHandler[k], "PORT" + i[1] + "_InterruptHandler", 1)
+        Database.setSymbolValue("core", pioSymNVICHandlerLock[k], True, 1)
     else :
-        Database.setSymbolValue("core", NVICVector[k], False, 1)
-        Database.setSymbolValue("core", NVICHandler[k], "PORT" + i[1] + "_Handler", 1)
-        Database.setSymbolValue("core", NVICHandlerLock[k], False, 1)
+        Database.setSymbolValue("core", pioSymNVICVector[k], False, 1)
+        Database.setSymbolValue("core", pioSymNVICHandler[k], "PORT" + i[1] + "_Handler", 1)
+        Database.setSymbolValue("core", pioSymNVICHandlerLock[k], False, 1)
 
     # show or hide the warning message depending on Interrupt enable/disable status from PIN Manager.
-    if (portInterrupt[k].getValue() == True and Database.getSymbolValue("core", NVICVector[k]) == False):
+    if (portInterrupt[k].getValue() == True and Database.getSymbolValue("core", pioSymNVICVector[k]) == False):
         pioSymIntEnComment[k].setVisible(True)
     else:
         pioSymIntEnComment[k].setVisible(False)
 
-# Function to enable PORT Channel specific interrupt when any of the pins has interrupt enabled on that particular channel.
+# Function to enable PORT channel specific interrupt when any of the pins has interrupt enabled on that particular channel.
 def setupInterrupt(portInterruptLocal, event):
     i = []
     # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
@@ -52,8 +51,8 @@ def setupInterrupt(portInterruptLocal, event):
 
     # 2nd element of the list is suppose to be the pin number which we want, get the channel name of that pin in J
     j = pinChannel[int(i[1])-1].getValue()
-    # find the index of the string "j" in the list "channel" and save it in k.
-    k = channel.index(j)
+    # find the index of the string "j" in the list "pioSymChannel" and save it in k.
+    k = pioSymChannel.index(j)
     if event["value"] != "":
         portInterrupt[k].setValue(True, 1)
     else:
@@ -68,13 +67,13 @@ def setupInterrupt(portInterruptLocal, event):
         if boolValue == False:
             portInterrupt[k].setValue(False, 1)
 
-# Function to enable PORT Channel and corresponding clock when any of the pins is using the particular channel.
-# Once the PORT channel is enabled, option of corresponding channel interrupt also starts showing up.
+# Function to enable PORT Channel and corresponding clock when any of the pins is using the particular Channel.
+# Once the PORT Channel is enabled, option of corresponding Channel interrupt also starts showing up.
 def setupPort(usePortLocal, event):
     global usePort
 
-    # find the index of the string coming from event["value"] in the list "channel" and save it in k.
-    k = channel.index(event["value"])
+    # find the index of the string coming from event["value"] in the list "pioSymChannel" and save it in k.
+    k = pioSymChannel.index(event["value"])
 
     usePort[k].setValue(True, 1)
     portInterrupt[k].setVisible(True)
@@ -220,11 +219,13 @@ for pinNumber in range(1, packagePinCount + 1):
 portConfiguration = coreComponent.createMenuSymbol("PORT_CONFIGURATION", pioEnable)
 portConfiguration.setLabel("Port Registers Configuration")
 
-global channel
-channel = ["A", "B", "C", "D", "E"]
+global pioSymChannel
+pioSymChannel = ["A", "B", "C", "D", "E"]
 port = []
 global usePort
 usePort = []
+
+portInterruptList = []
 
 global portInterrupt
 portInterrupt = []
@@ -245,156 +246,156 @@ pioSym_PIO_PPDEN = []
 pioSym_PIO_MDER = []
 pioSym_PIO_SODR = []
 
-peripId = []
-global NVICVector
-NVICVector = []
-global NVICHandler
-NVICHandler = []
-global NVICHandlerLock
-NVICHandlerLock = []
+pioSymPeripheralId = []
+global pioSymNVICVector
+pioSymNVICVector = []
+global pioSymNVICHandler
+pioSymNVICHandler = []
+global pioSymNVICHandlerLock
+pioSymNVICHandlerLock = []
 pioSymClkEnComment = []
 global pioSymIntEnComment
 pioSymIntEnComment = []
 
 
-for portNumber in range(0, len(channel)):
+for portNumber in range(0, len(pioSymChannel)):
 
     port.append(portNumber)
     port[portNumber]= coreComponent.createMenuSymbol("PORT_CONFIGURATION" + str(portNumber), portConfiguration)
-    port[portNumber].setLabel("PORT " + channel[portNumber] + " Configuration")
+    port[portNumber].setLabel("PORT " + pioSymChannel[portNumber] + " Configuration")
 
     usePort.append(portNumber)
-    usePort[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(channel[portNumber]) + "_USED", port[portNumber])
-    usePort[portNumber].setLabel("Use PORT " + channel[portNumber])
+    usePort[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_USED", port[portNumber])
+    usePort[portNumber].setLabel("Use PORT " + pioSymChannel[portNumber])
     usePort[portNumber].setReadOnly(True)
 
     portInterrupt.append(portNumber)
-    portInterrupt[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(channel[portNumber]) + "_INTERRUPT_USED", usePort[portNumber])
-    portInterrupt[portNumber].setLabel("Use Interrupt for PORT " + channel[portNumber])
+    portInterrupt[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED", usePort[portNumber])
+    portInterrupt[portNumber].setLabel("Use Interrupt for PORT " + pioSymChannel[portNumber])
     portInterrupt[portNumber].setDefaultValue(False)
     portInterrupt[portNumber].setVisible(False)
     portInterrupt[portNumber].setReadOnly(True)
 
     #list created only for dependency
     portInterruptList.append(portNumber)
-    portInterruptList[portNumber] = "PIO_" + str(channel[portNumber]) + "_INTERRUPT_USED"
+    portInterruptList[portNumber] = "PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED"
 
     pioSym_PIO_PER.append(portNumber)
-    pioSym_PIO_PER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_PER_VALUE", port[portNumber])
-    pioSym_PIO_PER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_PER")
+    pioSym_PIO_PER[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PER_VALUE", port[portNumber])
+    pioSym_PIO_PER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PER")
     pioSym_PIO_PER[portNumber].setDefaultValue("0xFFFFFFFF")
     pioSym_PIO_PER[portNumber].setReadOnly(True)
 
     pioSym_PIO_ABCDSR1.append(portNumber)
-    pioSym_PIO_ABCDSR1[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_ABCDSR1_VALUE", port[portNumber])
-    pioSym_PIO_ABCDSR1[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_ABCDSR1")
+    pioSym_PIO_ABCDSR1[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR1_VALUE", port[portNumber])
+    pioSym_PIO_ABCDSR1[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR1")
     pioSym_PIO_ABCDSR1[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_ABCDSR1[portNumber].setReadOnly(True)
 
     pioSym_PIO_ABCDSR2.append(portNumber)
-    pioSym_PIO_ABCDSR2[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_ABCDSR2_VALUE", port[portNumber])
-    pioSym_PIO_ABCDSR2[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_ABCDSR2")
+    pioSym_PIO_ABCDSR2[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR2_VALUE", port[portNumber])
+    pioSym_PIO_ABCDSR2[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR2")
     pioSym_PIO_ABCDSR2[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_ABCDSR2[portNumber].setReadOnly(True)
 
     pioSym_PIO_OER.append(portNumber)
-    pioSym_PIO_OER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_OER_VALUE", port[portNumber])
-    pioSym_PIO_OER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_OER")
+    pioSym_PIO_OER[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_OER_VALUE", port[portNumber])
+    pioSym_PIO_OER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_OER")
     pioSym_PIO_OER[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_OER[portNumber].setReadOnly(True)
 
     pioSym_PIO_SODR.append(portNumber)
-    pioSym_PIO_SODR[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_SODR_VALUE", port[portNumber])
-    pioSym_PIO_SODR[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_SODR")
+    pioSym_PIO_SODR[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_SODR_VALUE", port[portNumber])
+    pioSym_PIO_SODR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SODR")
     pioSym_PIO_SODR[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_SODR[portNumber].setReadOnly(True)
 
    # IER register is not needed to be configured in PIO_Initialize
    #pioSym_PIO_IER.append(portNumber)
-   #pioSym_PIO_IER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_IER_VALUE", port[portNumber])
-   #pioSym_PIO_IER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_IER")
+   #pioSym_PIO_IER[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_IER_VALUE", port[portNumber])
+   #pioSym_PIO_IER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_IER")
    #pioSym_PIO_IER[portNumber].setDefaultValue("0x00000000")
    #pioSym_PIO_IER[portNumber].setReadOnly(True)
 
     pioSym_PIO_AIMER.append(portNumber)
-    pioSym_PIO_AIMER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_AIMER_VALUE", port[portNumber])
-    pioSym_PIO_AIMER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_AIMER")
+    pioSym_PIO_AIMER[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_AIMER_VALUE", port[portNumber])
+    pioSym_PIO_AIMER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_AIMER")
     pioSym_PIO_AIMER[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_AIMER[portNumber].setReadOnly(True)
 
     pioSym_PIO_ESR.append(portNumber)
-    pioSym_PIO_ESR[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_ESR_VALUE", port[portNumber])
-    pioSym_PIO_ESR[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_ESR")
+    pioSym_PIO_ESR[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_ESR_VALUE", port[portNumber])
+    pioSym_PIO_ESR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_ESR")
     pioSym_PIO_ESR[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_ESR[portNumber].setReadOnly(True)
 
     pioSym_PIO_LSR.append(portNumber)
-    pioSym_PIO_LSR[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_LSR_VALUE", port[portNumber])
-    pioSym_PIO_LSR[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_LSR")
+    pioSym_PIO_LSR[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_LSR_VALUE", port[portNumber])
+    pioSym_PIO_LSR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_LSR")
     pioSym_PIO_LSR[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_LSR[portNumber].setReadOnly(True)
 
     pioSym_PIO_REHLSR.append(portNumber)
-    pioSym_PIO_REHLSR[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_REHLSR_VALUE", port[portNumber])
-    pioSym_PIO_REHLSR[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_REHLSR")
+    pioSym_PIO_REHLSR[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_REHLSR_VALUE", port[portNumber])
+    pioSym_PIO_REHLSR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_REHLSR")
     pioSym_PIO_REHLSR[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_REHLSR[portNumber].setReadOnly(True)
 
     pioSym_PIO_FELLSR.append(portNumber)
-    pioSym_PIO_FELLSR[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_FELLSR_VALUE", port[portNumber])
-    pioSym_PIO_FELLSR[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_FELLSR")
+    pioSym_PIO_FELLSR[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_FELLSR_VALUE", port[portNumber])
+    pioSym_PIO_FELLSR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_FELLSR")
     pioSym_PIO_FELLSR[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_FELLSR[portNumber].setReadOnly(True)
 
     pioSym_PIO_PUER.append(portNumber)
-    pioSym_PIO_PUER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_PUER_VALUE", port[portNumber])
-    pioSym_PIO_PUER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_PUER")
+    pioSym_PIO_PUER[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PUER_VALUE", port[portNumber])
+    pioSym_PIO_PUER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PUER")
     pioSym_PIO_PUER[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_PUER[portNumber].setReadOnly(True)
 
     pioSym_PIO_PPDEN.append(portNumber)
-    pioSym_PIO_PPDEN[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_PPDEN_VALUE", port[portNumber])
-    pioSym_PIO_PPDEN[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_PPDEN")
+    pioSym_PIO_PPDEN[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN_VALUE", port[portNumber])
+    pioSym_PIO_PPDEN[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN")
     pioSym_PIO_PPDEN[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_PPDEN[portNumber].setReadOnly(True)
 
     pioSym_PIO_MDER.append(portNumber)
-    pioSym_PIO_MDER[portNumber] = coreComponent.createStringSymbol("PIO" + str(channel[portNumber]) + "_MDER_VALUE", port[portNumber])
-    pioSym_PIO_MDER[portNumber].setLabel("PIO" + str(channel[portNumber]) + "_MDER")
+    pioSym_PIO_MDER[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_MDER_VALUE", port[portNumber])
+    pioSym_PIO_MDER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_MDER")
     pioSym_PIO_MDER[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_MDER[portNumber].setReadOnly(True)
 
-    ##TBD. these are needed to count number of particular channel interrupt. Right now this logic is there in FTL, it can be shifted here.
+    ##TBD. these are needed to count number of particular Channel interrupt. Right now this logic is there in FTL, it can be shifted here.
     ##Symbols created only for internal calculations
-    ##number of pins enabled for particular interrupt channel
+    ##number of pins enabled for particular interrupt Channel
     #pioSym_NumOfInterrupts.append(portNumber)
     #pioSym_NumOfInterrupts[portNumber] = coreComponent.createIntegerSymbol("NUMBER_OF_CHANNEL" + str(pinNumber) + "INTERRUPTS", portConfiguration)
     #pioSym_NumOfInterrupts[portNumber].setDefaultValue(0)
     #pioSym_NumOfInterrupts[portNumber].setVisible(False)
 
     #symbols and variables for interrupt handling
-    peripId.append(portNumber)
-    peripId[portNumber] = Interrupt.getInterruptIndex("PORT" + str(channel[portNumber]))
-    NVICVector.append(portNumber)
-    NVICVector[portNumber] = "NVIC_" + str(peripId[portNumber]) + "_ENABLE"
-    NVICHandler.append(portNumber)
-    NVICHandler[portNumber] = "NVIC_" + str(peripId[portNumber]) + "_HANDLER"
-    NVICHandlerLock.append(portNumber)
-    NVICHandlerLock[portNumber] = "NVIC_" + str(peripId[portNumber]) + "_HANDLER_LOCK"
+    pioSymPeripheralId.append(portNumber)
+    pioSymPeripheralId[portNumber] = Interrupt.getInterruptIndex("PORT" + str(pioSymChannel[portNumber]))
+    pioSymNVICVector.append(portNumber)
+    pioSymNVICVector[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_ENABLE"
+    pioSymNVICHandler.append(portNumber)
+    pioSymNVICHandler[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER"
+    pioSymNVICHandlerLock.append(portNumber)
+    pioSymNVICHandlerLock[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER_LOCK"
 
     # Dependency Status for interrupt
     pioSymIntEnComment.append(portNumber)
-    pioSymIntEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(channel[portNumber]) + "_NVIC_ENABLE_COMMENT", pioMenu)
+    pioSymIntEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_NVIC_ENABLE_COMMENT", pioMenu)
     pioSymIntEnComment[portNumber].setVisible(False)
-    pioSymIntEnComment[portNumber].setLabel("Warning!!! PORT" + str(channel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
-    pioSymIntEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core." + NVICVector[portNumber]])
+    pioSymIntEnComment[portNumber].setLabel("Warning!!! PORT" + str(pioSymChannel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
+    pioSymIntEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core." + pioSymNVICVector[portNumber]])
 
     # Dependency Status for clock
     pioSymClkEnComment.append(portNumber)
-    pioSymClkEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(channel[portNumber]) + "_CLK_ENABLE_COMMENT", pioMenu)
+    pioSymClkEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_CLK_ENABLE_COMMENT", pioMenu)
     pioSymClkEnComment[portNumber].setVisible(False)
-    pioSymClkEnComment[portNumber].setLabel("Warning!!! PORT" + str(channel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
-    pioSymClkEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core.PMC_ID_PORT" + str(channel[portNumber])])
+    pioSymClkEnComment[portNumber].setLabel("Warning!!! PORT" + str(pioSymChannel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
+    pioSymClkEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core.PMC_ID_PORT" + str(pioSymChannel[portNumber])])
 
 
 # NVIC Dynamic settings
@@ -402,12 +403,12 @@ pioNVICControl = coreComponent.createBooleanSymbol("NVIC_PIO_ENABLE", None)
 pioNVICControl.setDependencies(NVICControl, portInterruptList)
 pioNVICControl.setVisible(False)
 
-# Call "setupPort" function to update status of port channel and its clock whenever there is any change in any of the pin status
+# Call "setupPort" function to update status of port Channel and its clock whenever there is any change in any of the pin status
 # index for "usePort[]" is used as 0 because it is irrelevent here. either of the values 0,1,2,3.. can be used here.
 usePort[0].setDependencies(setupPort, pinChannelList)
 
 
-# Call "setupInterrupt" function to update status of port channel interrupt whenever there is any change in any of the pin interrupt enable/disable status
+# Call "setupInterrupt" function to update status of port Channel interrupt whenever there is any change in any of the pin interrupt enable/disable status
 # index for "portInterrupt[]" is used as 0 because it is irrelevent here. either of the values 0,1,2,3.. can be used here.
 portInterrupt[0].setDependencies(setupInterrupt, pinInterruptList)
 
