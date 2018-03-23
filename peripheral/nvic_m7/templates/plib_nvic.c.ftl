@@ -66,15 +66,10 @@ void NVIC_Initialize( void )
     <#assign NVIC_VECTOR_PRIORITY = "NVIC_" + i + "_PRIORITY">
         <#if .vars[NVIC_VECTOR_CORE_FIXED]?has_content && (.vars[NVIC_VECTOR_CORE_FIXED] == false)>
             <#if .vars[NVIC_VECTOR_ENABLE]?has_content && (.vars[NVIC_VECTOR_ENABLE] != false)>
-                <#if .vars[NVIC_VECTOR_CORE]?has_content && (.vars[NVIC_VECTOR_CORE] == true)>
-                    <#if .vars[NVIC_VECTOR_PRIORITY]?has_content && (.vars[NVIC_VECTOR_PRIORITY]?number != 0)>
+                <#if .vars[NVIC_VECTOR_PRIORITY]?has_content && (.vars[NVIC_VECTOR_PRIORITY]?number != 0)>
     NVIC_SetPriority(${.vars[NVIC_VECTOR_NAME]}_IRQn, ${.vars[NVIC_VECTOR_PRIORITY]});
-                    </#if>
                 </#if>
                 <#if .vars[NVIC_VECTOR_CORE]?has_content && (.vars[NVIC_VECTOR_CORE] == false)>
-                    <#if .vars[NVIC_VECTOR_PRIORITY]?has_content && (.vars[NVIC_VECTOR_PRIORITY]?number != 7)>
-    NVIC_SetPriority(${.vars[NVIC_VECTOR_NAME]}_IRQn, ${.vars[NVIC_VECTOR_PRIORITY]});
-                    </#if>
     NVIC_EnableIRQ(${.vars[NVIC_VECTOR_NAME]}_IRQn);
                 </#if>
             </#if>
