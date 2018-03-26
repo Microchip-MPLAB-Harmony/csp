@@ -56,6 +56,16 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 void NVIC_Initialize( void );
 
+/* Brief default interrupt handlers for core IRQs.*/
+void NonMaskableInt_Handler(void);
+void HardFault_Handler(void);
+void DebugMonitor_Handler(void);
+#if (defined __CM7_REV) || (defined __CM4_REV)
+void MemoryManagement_Handler(void);
+void BusFault_Handler(void);
+void UsageFault_Handler(void);
+#endif
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

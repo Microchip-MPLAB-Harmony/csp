@@ -129,6 +129,10 @@ void Reset_Handler(void)
     pSrc = (uint32_t *) & __svectors;
     SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 #  endif /* SCB_VTOR_TBLOFF_Msk */
+#if (defined __CM7_REV) || (defined __CM4_REV)
+    /* Enable Usage, Bus and Memory fault vectors */
+    SCB->SHCSR |= SCB_SHCSR_USGFAULTENA_Msk | SCB_SHCSR_BUSFAULTENA_Msk | SCB_SHCSR_MEMFAULTENA_Msk;
+#endif
 #endif /* __XC32_SKIP_STARTUP_VTOR_INIT */
 
     /* Initialize the C library */
@@ -143,7 +147,7 @@ void Reset_Handler(void)
     /* Branch to main function */
     main();
 
-#if defined(__DEBUG) || defined(__DEBUG_D)
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     __builtin_software_breakpoint();
 #endif
     /* Infinite loop */
