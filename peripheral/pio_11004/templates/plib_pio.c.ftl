@@ -132,6 +132,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
             <#lt>   /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
             <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_REHLSR.w = ${PIO_INT_RE_HL};
         </#if>
+        <#lt>   /* PORT${PIO_PORT} Interrupt Status Clear */	
+        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ISR.w;
         
         <#lt>   /* PORT${PIO_PORT} system level interrupt will be enabled by NVIC Manager */
         <#lt>   /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
