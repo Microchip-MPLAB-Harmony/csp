@@ -1,0 +1,1 @@
+	SUPC${INDEX?string}_Initialize();
