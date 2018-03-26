@@ -78,3 +78,66 @@ void NVIC_Initialize( void )
 
     return;
 }
+
+/* Brief default interrupt handlers for core IRQs.*/
+void NonMaskableInt_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+
+void HardFault_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+
+void DebugMonitor_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+
+#if (defined __CM7_REV) || (defined __CM4_REV)
+void MemoryManagement_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+
+void BusFault_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+
+void UsageFault_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+#endif
