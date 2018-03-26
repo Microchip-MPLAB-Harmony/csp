@@ -147,6 +147,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#list>
 </#compress>
 
+static uint32_t PWM${INDEX}_status;  /* Saves interrupt status */
+
 <#if PWM_INTERRUPT == true>
 	<#lt>/* Object to hold callback function and context */ 
 	<#lt>PWM_CALLBACK_OBJECT PWM${INDEX}_CallbackObj;
@@ -199,7 +201,8 @@ void PWM${INDEX}_Initialize (void)
 					| PWMC_CMR_CPOL_${.vars[PWM_CMR_CPOL]} ${.vars[PWM_CMR_DTE]?then('| (PWMC_CMR_DTE_Msk)', '')};
 			<#else>
 				<#lt>	_PWMC${INDEX}_REGS->PWMC_CH_NUM[${CH_NUM}].PWMC_CMR.w = PWMC_CMR_CPRE_${.vars[PWM_CMR_CPRE]} | PWMC_CMR_CALG_${.vars[PWM_CMR_CALG]}
-					| PWMC_CMR_CPOL_${.vars[PWM_CMR_CPOL]} | PWMC_CMR_UPDS_${.vars[PWM_CMR_UPDS]} | PWMC_CMR_CES_${.vars[PWM_CMR_CES]} ${.vars[PWM_CMR_DTE]?then('| (PWMC_CMR_DTE_Msk)', '')};		
+					| PWMC_CMR_CPOL_${.vars[PWM_CMR_CPOL]} | PWMC_CMR_UPDS_${.vars[PWM_CMR_UPDS]} \
+					| PWMC_CMR_CES_${.vars[PWM_CMR_CES]} ${.vars[PWM_CMR_DTE]?then('| (PWMC_CMR_DTE_Msk)', '')};		
 			</#if>
 			
 			<#lt>	/* PWM period */
@@ -315,7 +318,10 @@ void PWM${INDEX}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMask)
 /* Check the status of counter event */
 bool PWM${INDEX}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
 {
-	return (bool)((_PWMC${INDEX}_REGS->PWMC_ISR1.w >> channel) & 0x1U);
+	bool status;
+	status = PWM${INDEX}_status | ((_PWMC${INDEX}_REGS->PWMC_ISR1.w >> channel) & 0x1U);
+	PWM${INDEX}_status = 0x0U;
+	return status;
 }
 
 /* Enable synchronous update */
@@ -341,6 +347,7 @@ void PWM${INDEX}_FaultStatusClear(PWM_FAULT_ID fault_id)
 	<#lt>/* Interrupt Handler */
 	<#lt>void PWM${INDEX}_InterruptHandler(void)
 	<#lt>{
+	<#lt>	PWM${INDEX}_status = _PWMC${INDEX}_REGS->PWMC_ISR1.w;
 	<#lt>	if (PWM${INDEX}_CallbackObj.callback_fn != NULL)
 	<#lt>	{
 	<#lt>		PWM${INDEX}_CallbackObj.callback_fn(PWM${INDEX}_CallbackObj.context);
