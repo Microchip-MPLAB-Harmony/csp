@@ -62,7 +62,7 @@ def instantiateComponent(dfpComponent):
 	headerFile = dfpComponent.createFileSymbol("PART_IO_DEFS", None)
 	headerFile.setRelative(False)
 	headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/pio/" + processorName.replace("ATSAM", "SAM").lower() + ".h")
-	headerFile.setOutputName(processorName.lower() + ".h")
+	headerFile.setOutputName(processorName.replace("ATSAM", "SAM").lower() + ".h")
 	headerFile.setMarkup(False)
 	headerFile.setOverwrite(True)
 	headerFile.setDestPath("../../packs/" + Variables.get("__PROCESSOR") + "_DFP/pio/")
