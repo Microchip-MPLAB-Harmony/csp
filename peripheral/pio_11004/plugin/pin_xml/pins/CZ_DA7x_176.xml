@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<pinfile>
-    <packages>
-        <package diagram="JEDEC_MS_026D_BGA_LQFP176" id="1" name="LQFP176" />
-        <package diagram="CZDA7x_TFBGA176" id="2" name="TFBGA176" />
-    </packages>
-    <pins/>
-</pinfile>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<pinfile>
-    <packages>
-        <package diagram="JEDEC_MS_026D_BED_LQFP100" id="1" name="LQFP100" />
-        <package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="2" name="TFBGA100_VFBGA100" />
-        <package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="3" name="TFBGA100_VFBGA100" />
-    </packages>
-    <pins/>
-</pinfile>
