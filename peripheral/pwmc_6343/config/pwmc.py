@@ -41,7 +41,7 @@ pwmSym_PWM_FPV_FPVL = []
 global pwmPeriphId
 global pwmNVICVector
 global pwmNVICHandler
-
+global pwmNVICHandlerLock
 
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
@@ -51,7 +51,7 @@ global pwmNVICHandler
 def pwmNVICControl(symbol, event):
 	Database.clearSymbolValue("core", pwmNVICVector)
 	Database.clearSymbolValue("core", pwmNVICHandler)
-
+	Database.clearSymbolValue("core", pwmNVICHandlerLock)	
 	nvicEnable = False
 	for channelID in range(0, 4):
 		if (pwmSym_PWM_IER1_CHID[channelID].getValue() == True):
@@ -60,11 +60,11 @@ def pwmNVICControl(symbol, event):
 	if(nvicEnable == True):
 		Database.setSymbolValue("core", pwmNVICVector, True, 2)
 		Database.setSymbolValue("core", pwmNVICHandler, "PWM" + str(pwmNum) + "_InterruptHandler", 2)
-
+		Database.setSymbolValue("core", pwmNVICHandlerLock, True, 2)
 	else :
 		Database.setSymbolValue("core", pwmNVICVector, False, 2)
 		Database.setSymbolValue("core", pwmNVICHandler, "PWM" + str(pwmNum) + "_Handler", 2)
-
+		Database.setSymbolValue("core", pwmNVICHandlerLock, False, 2)
 
 def pwmClockControl(symbol, event):
 	clockEnable = False
@@ -308,12 +308,12 @@ def instantiateComponent(pwmComponent):
 	global pwmPeriphId
 	global pwmNVICVector
 	global pwmNVICHandler
-
+	global pwmNVICHandlerLock
 
 	pwmPeriphId = Interrupt.getInterruptIndex("PWMC" + str(pwmNum))
 	pwmNVICVector = "NVIC_" + str(pwmPeriphId) + "_ENABLE"
 	pwmNVICHandler = "NVIC_" + str(pwmPeriphId) + "_HANDLER"
-	
+	pwmNVICHandlerLock = "NVIC_" + str(pwmPeriphId) + "_HANDLER_LOCK"	
 
     # NVIC Dynamic settings
 	pwmSym_NVICControl = pwmComponent.createBooleanSymbol("PWM_NVIC_ENABLE", None)
