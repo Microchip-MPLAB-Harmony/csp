@@ -106,14 +106,15 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 <#if  gpioName?counter ==  gpioChannel?counter><#if  gpioName?counter ==  gpioPinPos?counter>
 
 /*** Functions for ${gpioName} pin ***/
-#define ${gpioName}_Set()               (_PORTA_REGS${gpioChannel}->PORT_SODR.w = (1<<${gpioPinPos}))
-#define ${gpioName}_Clear()             (_PORTA_REGS${gpioChannel}->PORT_CODR.w = (1<<${gpioPinPos})) 
-#define ${gpioName}_Toggle()            (_PORTA_REGS${gpioChannel}->PORT_ODSR.w ^= (1<<${gpioPinPos})) 
-#define ${gpioName}_Get()               ((_PORTA_REGS${gpioChannel}->PORT_PDSR.w >> ${gpioPinPos}) & 0x1) 
-#define ${gpioName}_OutputEnable()      (_PORTA_REGS${gpioChannel}->PORT_OER.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InputEnable()       (_PORTA_REGS${gpioChannel}->PORT_ODR.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InterruptEnable()   (_PORTA_REGS${gpioChannel}->PORT_IER.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InterruptDisable()  (_PORTA_REGS${gpioChannel}->PORT_IDR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_Set()               (_PORT${gpioChannel}_REGS->PORT_SODR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_Clear()             (_PORT${gpioChannel}_REGS->PORT_CODR.w = (1<<${gpioPinPos})) 
+#define ${gpioName}_Toggle()            (_PORT${gpioChannel}_REGS->PORT_ODSR.w ^= (1<<${gpioPinPos})) 
+#define ${gpioName}_Get()               ((_PORT${gpioChannel}_REGS->PORT_PDSR.w >> ${gpioPinPos}) & 0x1) 
+#define ${gpioName}_OutputEnable()      (_PORT${gpioChannel}_REGS->PORT_OER.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InputEnable()       (_PORT${gpioChannel}_REGS->PORT_ODR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptEnable()   (_PORT${gpioChannel}_REGS->PORT_IER.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptDisable()  (_PORT${gpioChannel}_REGS->PORT_IDR.w = (1<<${gpioPinPos}))
+
 </#if></#if>
 </#list>
 </#list>
