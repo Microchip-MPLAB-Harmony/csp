@@ -2,7 +2,7 @@
 ########################### Global variables   #################################
 ###################################################################################################	
 
-global num
+global pwmNum
 pwmChannelMenu = []
 pwmSym_CH_Enable = []
 pwmSym_CH_SyncEnable = []
@@ -38,9 +38,10 @@ pwmSym_PWM_FMR_FMOD = []
 pwmSym_PWM_FPV_FPVH = []
 pwmSym_PWM_FPV_FPVL = []
 
-global peripId
-global NVICVector
-global NVICHandler
+global pwmPeriphId
+global pwmNVICVector
+global pwmNVICHandler
+
 
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
@@ -48,19 +49,22 @@ global NVICHandler
 #channel number is extracted as 2nd character in ID. like PWM0_xxx, PWM1_xxx
 
 def pwmNVICControl(symbol, event):
-	Database.clearSymbolValue("core", NVICVector)
-	Database.clearSymbolValue("core", NVICHandler)
+	Database.clearSymbolValue("core", pwmNVICVector)
+	Database.clearSymbolValue("core", pwmNVICHandler)
+
 	nvicEnable = False
 	for channelID in range(0, 4):
 		if (pwmSym_PWM_IER1_CHID[channelID].getValue() == True):
 			nvicEnable = True
 
 	if(nvicEnable == True):
-		Database.setSymbolValue("core", NVICVector, True, 2)
-		Database.setSymbolValue("core", NVICHandler, "PWM" + str(num) + "_InterruptHandler", 2)
+		Database.setSymbolValue("core", pwmNVICVector, True, 2)
+		Database.setSymbolValue("core", pwmNVICHandler, "PWM" + str(pwmNum) + "_InterruptHandler", 2)
+
 	else :
-		Database.setSymbolValue("core", NVICVector, False, 2)
-		Database.setSymbolValue("core", NVICHandler, "PWM" + str(num) + "_Handler", 2)
+		Database.setSymbolValue("core", pwmNVICVector, False, 2)
+		Database.setSymbolValue("core", pwmNVICHandler, "PWM" + str(pwmNum) + "_Handler", 2)
+
 
 def pwmClockControl(symbol, event):
 	clockEnable = False
@@ -69,29 +73,27 @@ def pwmClockControl(symbol, event):
 			clockEnable = True
 			
 	if (clockEnable == True):
-		Database.setSymbolValue("core", "PMC_ID_PWMC" + str(num), True, 2)
+		Database.setSymbolValue("core", "PMC_ID_PWMC" + str(pwmNum), True, 2)
 	else :
-		Database.setSymbolValue("core", "PMC_ID_PWMC" + str(num), False, 2)	
+		Database.setSymbolValue("core", "PMC_ID_PWMC" + str(pwmNum), False, 2)	
 
 def pwmClkDependencyStatus(symbol, event):
-	clock = bool(Database.getSymbolValue("core", "PMC_ID_PWMC" + str(num)))
+	clock = bool(Database.getSymbolValue("core", "PMC_ID_PWMC" + str(pwmNum)))
 	if ((clock == False) and (pwmSym_CH_Enable[0].getValue() == True or pwmSym_CH_Enable[1].getValue() == True or pwmSym_CH_Enable[2].getValue() == True or pwmSym_CH_Enable[3].getValue() == True)):
 		symbol.setVisible(True)
 	else:
 		symbol.setVisible(False)
 		
 def pwmNVICDependencyStatus(symbol, event):
-	nvic = bool(Database.getSymbolValue("core", NVICVector))
+	nvic = bool(Database.getSymbolValue("core", pwmNVICVector))
 	
 	if(pwmSym_CH_Enable[0].getValue() == True or pwmSym_CH_Enable[1].getValue() == True or pwmSym_CH_Enable[2].getValue() == True or pwmSym_CH_Enable[3].getValue() == True):
 		if ((nvic == False) and (pwmSym_PWM_IER1_CHID[0].getValue() == True or pwmSym_PWM_IER1_CHID[1].getValue() == True or pwmSym_PWM_IER1_CHID[2].getValue() == True or pwmSym_PWM_IER1_CHID[3].getValue() == True)):
 			symbol.setVisible(True)
-			print("channel enabled and nvic disabled")
 		else:
 			symbol.setVisible(False)
 	else:
 		symbol.setVisible(False)
-		print("channels disabled")
 
 def pwmAlignmentVisible(symbol, event):
 	if (event["value"] == 1):
@@ -298,18 +300,20 @@ def pwmCompMenuVisible(symbol, event):
 ########################### Component   #################################
 ###################################################################################################	
 def instantiateComponent(pwmComponent):
-	global num
-	num = pwmComponent.getID()[-1:]
-	Log.writeInfoMessage("Running PWM" + str(num))
+	global pwmNum
+	pwmNum = pwmComponent.getID()[-1:]
+	Log.writeInfoMessage("Running PWM" + str(pwmNum))
 	
 	#--------------------- Dependency ----------------------------------------
-	global peripId
-	global NVICVector
-	global NVICHandler
+	global pwmPeriphId
+	global pwmNVICVector
+	global pwmNVICHandler
 
-	peripId = Interrupt.getInterruptIndex("PWMC" + str(num))
-	NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-	NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
+
+	pwmPeriphId = Interrupt.getInterruptIndex("PWMC" + str(pwmNum))
+	pwmNVICVector = "NVIC_" + str(pwmPeriphId) + "_ENABLE"
+	pwmNVICHandler = "NVIC_" + str(pwmPeriphId) + "_HANDLER"
+	
 
     # NVIC Dynamic settings
 	pwmSym_NVICControl = pwmComponent.createBooleanSymbol("PWM_NVIC_ENABLE", None)
@@ -325,12 +329,12 @@ def instantiateComponent(pwmComponent):
 	pwmSymClkEnComment = pwmComponent.createCommentSymbol("PWM_CLK_ENABLE_COMMENT", None)
 	pwmSymClkEnComment.setVisible(False)
 	pwmSymClkEnComment.setLabel("Warning!!! PWM Peripheral Clock is Disabled in Clock Manager")
-	pwmSymClkEnComment.setDependencies(pwmClkDependencyStatus, ["core.PMC_ID_PWMC" + str(num), "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
+	pwmSymClkEnComment.setDependencies(pwmClkDependencyStatus, ["core.PMC_ID_PWMC" + str(pwmNum), "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
 
 	pwmSymIntEnComment = pwmComponent.createCommentSymbol("PWM_NVIC_ENABLE_COMMENT", None)
 	pwmSymIntEnComment.setVisible(False)
 	pwmSymIntEnComment.setLabel("Warning!!! PWM Interrupt is Disabled in Interrupt Manager")
-	pwmSymIntEnComment.setDependencies(pwmNVICDependencyStatus, ["core." + NVICVector , "PWM_CH_0_IER1_CHID", "PWM_CH_1_IER1_CHID", "PWM_CH_2_IER1_CHID", "PWM_CH_3_IER1_CHID", \
+	pwmSymIntEnComment.setDependencies(pwmNVICDependencyStatus, ["core." + pwmNVICVector , "PWM_CH_0_IER1_CHID", "PWM_CH_1_IER1_CHID", "PWM_CH_2_IER1_CHID", "PWM_CH_3_IER1_CHID", \
 		"PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])	
 	
 	#-----------------------------------------------------------------------------------------------------------
@@ -348,7 +352,7 @@ def instantiateComponent(pwmComponent):
 		
 	#Find available channels and available external clock pins
 	pwm_signals = []
-	pwm = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PWMC\"]/instance@[name=\"PWMC"+str(num)+"\"]/signals")
+	pwm = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PWMC\"]/instance@[name=\"PWMC"+str(pwmNum)+"\"]/signals")
 	pwm_signals = pwm.getChildren()
 	for pad in range (0 , len(pwm_signals)):
 		if "PWMH" in pwm_signals[pad].getAttribute("group"):
@@ -603,7 +607,7 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_FPE[channelID].setDefaultValue(0)	
 		pwmSym_PWM_FPE[channelID].setVisible(False)
 		fault_id = []
-		pwm = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PWMC\"]/instance@[name=\"PWMC"+str(num)+"\"]/parameters")
+		pwm = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PWMC\"]/instance@[name=\"PWMC"+str(pwmNum)+"\"]/parameters")
 		fault_id = pwm.getChildren()	
 		for param in range (0 , len(fault_id)):
 			if "FAULT" in fault_id[param].getAttribute("name"):
@@ -778,7 +782,7 @@ def instantiateComponent(pwmComponent):
 	#-----------------------------------------------------------------------------------------------------------	
 	pwmIndex = pwmComponent.createIntegerSymbol("INDEX", pwmChannelMenu[channelID])
 	pwmIndex.setVisible(False)
-	pwmIndex.setDefaultValue(int(num))
+	pwmIndex.setDefaultValue(int(pwmNum))
 
 	configName = Variables.get("__CONFIGURATION_NAME")
 	
@@ -791,7 +795,7 @@ def instantiateComponent(pwmComponent):
 	
 	pwmHeaderFile = pwmComponent.createFileSymbol(None, None)
 	pwmHeaderFile.setSourcePath("../peripheral/pwmc_"+str(pwmID)+"/templates/plib_pwm.h.ftl")
-	pwmHeaderFile.setOutputName("plib_pwm" + str(num) + ".h")
+	pwmHeaderFile.setOutputName("plib_pwm" + str(pwmNum) + ".h")
 	pwmHeaderFile.setDestPath("/peripheral/pwm/")
 	pwmHeaderFile.setProjectPath("config/" + configName +"/peripheral/pwm/")
 	pwmHeaderFile.setType("HEADER")
@@ -800,7 +804,7 @@ def instantiateComponent(pwmComponent):
 		
 	pwmSource1File = pwmComponent.createFileSymbol(None, None)
 	pwmSource1File.setSourcePath("../peripheral/pwmc_"+str(pwmID)+"/templates/plib_pwm.c.ftl")
-	pwmSource1File.setOutputName("plib_pwm" + str(num) + ".c")
+	pwmSource1File.setOutputName("plib_pwm" + str(pwmNum) + ".c")
 	pwmSource1File.setDestPath("/peripheral/pwm/")
 	pwmSource1File.setProjectPath("config/" + configName +"/peripheral/pwm/")
 	pwmSource1File.setType("SOURCE")
