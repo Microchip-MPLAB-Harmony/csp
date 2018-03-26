@@ -145,6 +145,24 @@ typedef enum
 
 
 // *****************************************************************************
+/* DMA Channel Settings
+
+  Summary:
+    Defines the channel settings.
+
+  Description:
+    This data type defines the channel settings and can be used to update the
+    channel settings dynamically .
+
+  Remarks:
+    This feature may not be available on all devices. Refer to the specific
+    device data sheet to determine availability.
+*/
+
+typedef uint32_t XDMAC_CHANNEL_CONFIG;
+
+
+// *****************************************************************************
 /* DMA descriptor control
 
   Summary:
@@ -627,6 +645,89 @@ void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t descriptor
 
 bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel);
 
+
+//******************************************************************************
+/* Function:
+    XDMAC_CHANNEL_SETTINGS XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel)
+
+  Summary:
+    Returns the channel settings of a specific XDMAC Channel.
+
+  Description:
+    This function returns the channel settings of the XDMAC channel.
+
+    This function can be used along with the XDMAC_ChannelSettingsSet to update
+    any specific setting of the XDMAC channel.
+
+  Precondition:
+    XDMAC should have been initialized by calling XDMAC_Initialize.
+
+  Parameters:
+    channel - A specific XDMAC channel
+
+  Returns:
+    Settings of a specific channel.
+
+  Example:
+    <code>
+    //Update the transfer direction dynamically which was set to
+    //PER2MEM from within DMA manager to MEM2PER.
+    XDMAC_CHANNEL_CONFIG settings = 0;
+    settings = XDMAC_ChannelSettingsGet(XDMAC_CHANNEL_0);
+    settings = (settings & ~XDMAC_CC_DSYNC_Msk) | XDMAC_CC_DSYNC_MEM2PER;
+    XDMAC_ChannelSettingsSet(XDMAC_CHANNEL_0, settings);
+    </code>
+
+  Remarks:
+    Use macro definitions from the packs header to compare with the settings.
+*/
+
+XDMAC_CHANNEL_CONFIG XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel);
+
+
+//******************************************************************************
+/* Function:
+    bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel,
+        XDMAC_CHANNEL_SETTINGS setting)
+
+  Summary:
+    Sets the channel settings of a specific XDMAC Channel.
+
+  Description:
+    This function sets the channel settings of the XDMAC channel.
+
+    This function can be used along with the XDMAC_ChannelSettingsGet to update
+    any specific setting of the XDMAC channel.
+    Any ongoing transaction of the specified XDMAC channel will be aborted when
+    this function is called.
+
+  Precondition:
+    XDMAC should have been initialized by calling XDMAC_Initialize.
+
+  Parameters:
+    channel - A specific XDMAC channel
+    setting - Settings for a channel
+
+  Returns:
+    Settings update status.
+    True - Channel settings are updated successfully.
+    False - Channel settings update failed.
+
+  Example:
+    <code>
+    //Update the transfer direction dynamically which was set to
+    //PER2MEM from within DMA manager to MEM2PER.
+    XDMAC_CHANNEL_CONFIG settings = 0;
+    settings = XDMAC_ChannelSettingsGet(XDMAC_CHANNEL_0);
+    settings = (settings & ~XDMAC_CC_DSYNC_Msk) | XDMAC_CC_DSYNC_MEM2PER;
+    XDMAC_ChannelSettingsSet(XDMAC_CHANNEL_0, settings);
+    </code>
+
+  Remarks:
+    Use macro definitions from the packs header to construct a new setting.
+*/
+
+bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setting);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

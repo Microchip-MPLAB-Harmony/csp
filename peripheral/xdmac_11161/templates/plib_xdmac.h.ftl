@@ -42,6 +42,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #define PLIB_XDMAC_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -83,8 +84,9 @@ typedef enum
     XDMAC_TRANSFER_ERROR
 
 } XDMAC_TRANSFER_EVENT;
-<#if XDMAC_LL_ENABLE == true>
 
+typedef uint32_t XDMAC_CHANNEL_CONFIG;
+<#if XDMAC_LL_ENABLE == true>
 
 typedef union {
 
@@ -222,6 +224,10 @@ void XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t descriptor
 </#if>
 
 bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel);
+
+XDMAC_CHANNEL_CONFIG XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel);
+
+bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setting);
 
 // *****************************************************************************
 // *****************************************************************************
