@@ -74,11 +74,16 @@ for peripheral in atdfContent.iter("module"):
             name = param.attrib['name']
             if "DMAC_ID" in name:
                 name = name.strip('DMAC_ID_')
-                name = name.replace('TX', 'Transmit')
-                name = name.replace('RX', 'Receive')
-                name = name.replace('LEFT', 'Left')
-                name = name.replace('RIGHT', 'Right')
-                peridList.append(instance.attrib['name'] + "_" + name)
+                module = str(instance.attrib['name'])
+                if "HSMCI" == module:
+                    if "HSMCI" not in peridList:
+                        peridList.append("HSMCI")
+                else:
+                    name = name.replace('TX', 'Transmit')
+                    name = name.replace('RX', 'Receive')
+                    name = name.replace('LEFT', 'Left')
+                    name = name.replace('RIGHT', 'Right')
+                    peridList.append(module + "_" + name)
                 peridValueList.append(param.attrib['value'])
 
 # This is the dictionary for all trigger sources and corresponding XDMAC settings.
