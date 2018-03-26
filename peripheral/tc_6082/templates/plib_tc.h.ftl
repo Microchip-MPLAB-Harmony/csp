@@ -110,6 +110,8 @@ uint32_t TC${INDEX}_QuadraturePositionGet (void);
 uint32_t TC${INDEX}_QuadratureSpeedGet (void);
 </#if>
 
+TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
+
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true>
 	<#lt>/* Register callback for quadrature interrupt */
 	<#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
@@ -173,9 +175,7 @@ uint16_t TC${INDEX}_CH${CH_NUM}_CaptureAGet (void);
 
 uint16_t TC${INDEX}_CH${CH_NUM}_CaptureBGet (void);
 
-bool TC${INDEX}_CH${CH_NUM}_CaptureAEventOccured (void);
-
-bool TC${INDEX}_CH${CH_NUM}_CaptureBEventOccured (void);
+TC_CAPTURE_STATUS TC${INDEX}_CH${CH_NUM}_CaptureStatusGet(void);
 
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 void TC${INDEX}_CH${CH_NUM}_CaptureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
@@ -202,6 +202,8 @@ uint16_t TC${INDEX}_CH${CH_NUM}_ComparePeriodGet (void);
 void TC${INDEX}_CH${CH_NUM}_CompareASet (uint16_t value);
 
 void TC${INDEX}_CH${CH_NUM}_CompareBSet (uint16_t value);
+
+TC_COMPARE_STATUS TC${INDEX}_CH${CH_NUM}_CompareStatusGet(void);
 
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 void TC${INDEX}_CH${CH_NUM}_CompareCallbackRegister(TC_CALLBACK callback, uintptr_t context);
