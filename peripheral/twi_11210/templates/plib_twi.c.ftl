@@ -99,27 +99,27 @@ static twi_registers_t *TWI${INDEX?string}_Module = (twi_registers_t *)TWI_ID_${
 void TWI${INDEX?string}_Initialize(void)
 {    
     // Reset the i2c Module
-    TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_SWRST_Msk;
+    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_SWRST_Msk;
         
     // Disable the I2C Master/Slave Mode
-    TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_MSDIS_Msk | 
+    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_MSDIS_Msk | 
 	                                      TWI_CR_SVDIS_Msk;
 	
     // Set Baud rate 
-	TWI${INDEX?string}_Module->TWI_CWGR.w = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR.w ) |
+	TWI${INDEX?string}_Module->TWI_CWGR = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR) |
 											( TWI_CWGR_CLDIV(${TWI_CWGR_CLDIV}) | 
 											  TWI_CWGR_CHDIV(${TWI_CWGR_CHDIV}) | 
 											  TWI_CWGR_CKDIV(${TWI_CWGR_CKDIV}) );
 	
 	// Starts the transfer by clearing the transmit hold register 
-    TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_THRCLR_Msk;
+    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_THRCLR_Msk;
 	
 	// Enables interrupt on nack and arbitration lost 
-    TWI${INDEX?string}_Module->TWI_IER.w = TWI_IER_NACK_Msk | 
+    TWI${INDEX?string}_Module->TWI_IER = TWI_IER_NACK_Msk | 
 	                                       TWI_IER_ARBLST_Msk;
 	
 	// Enable Master Mode 
-    TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_MSEN_Msk;
+    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_MSEN_Msk;
 	
 	// Initialize the twi PLib Object
 	twi${INDEX?string}Obj.error   = TWI_ERROR_NONE;
@@ -245,7 +245,7 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t srcC
 		}
 
 		/* set clock waveform generator register */
-        TWI${INDEX?string}_Module->TWI_CWGR.w = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR.w ) |
+        TWI${INDEX?string}_Module->TWI_CWGR = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR) |
                                   ( TWI_CWGR_CLDIV(cldiv) | 
                                     TWI_CWGR_CHDIV(chdiv) |
                                     TWI_CWGR_CKDIV(ckdiv) );
@@ -267,7 +267,7 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t srcC
 		}
 
 		/* set clock waveform generator register */
-        TWI${INDEX?string}_Module->TWI_CWGR.w = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR.w ) |
+        TWI${INDEX?string}_Module->TWI_CWGR = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR) |
                                   ( TWI_CWGR_CLDIV(c_lh_div) | 
                                     TWI_CWGR_CHDIV(c_lh_div) |
                                     TWI_CWGR_CKDIV(ckdiv) )  ;
@@ -446,7 +446,7 @@ bool TWI${INDEX?string}_TRBTransfer(void)
 	twi${INDEX?string}Obj.state = TWI_STATE_ADDR_SEND;
     twi${INDEX?string}Obj.error = TWI_ERROR_NONE;
 	
-	TWI${INDEX?string}_Module->TWI_IER.w = TWI_IER_TXCOMP_Msk | 
+	TWI${INDEX?string}_Module->TWI_IER = TWI_IER_TXCOMP_Msk | 
 	                                       TWI_IER_TXRDY_Msk  |
                                            TWI_IER_RXRDY_Msk;
 						   
@@ -650,7 +650,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
 	}
 	
 	// Read the peripheral status
-	status = TWI${INDEX?string}_Module->TWI_SR.w;
+	status = TWI${INDEX?string}_Module->TWI_SR;
 	
 	/* checks if Slave has Nacked */
     if( status & TWI_SR_NACK_Msk ) 
@@ -685,13 +685,13 @@ void TWI${INDEX?string}_InterruptHandler(void)
                     if( currentTRB == (twi${INDEX?string}Obj.numTRBs - 1) )
                     {
                         // Send Stop before last byte is received
-                        TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_STOP_Msk;
+                        TWI${INDEX?string}_Module->TWI_CR = TWI_CR_STOP_Msk;
                     }
 					// not the last TRB
                     else
                     {
                         // Send a Repeated Start
-                        TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_START_Msk;
+                        TWI${INDEX?string}_Module->TWI_CR = TWI_CR_START_Msk;
                     }
                 }
 
@@ -706,7 +706,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
                     {
                         /* read the module status again to know if 
                            tranmission complete flag is set */
-                        status = TWI${INDEX?string}_Module->TWI_SR.w;
+                        status = TWI${INDEX?string}_Module->TWI_SR;
                         if( status & TWI_SR_TXCOMP_Msk )
                         {
                             twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_DONE;					
@@ -723,7 +723,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
                     }
                     
                     /* Disable the RXRDY interrupt*/
-                    TWI${INDEX?string}_Module->TWI_IDR.w = TWI_IDR_RXRDY_Msk;
+                    TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_RXRDY_Msk;
                 }
 			}
 		    break;
@@ -735,7 +735,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
             if( status & TWI_SR_TXRDY_Msk )
             {
                 /* byte by byte data transmit */
-                TWI${INDEX?string}_Module->TWI_THR.w = TWI_THR_TXDATA(*(trb->pbuffer++));
+                TWI${INDEX?string}_Module->TWI_THR = TWI_THR_TXDATA(*(trb->pbuffer++));
                 trb->length--;
                 
                 if( 0 == trb->length )
@@ -744,11 +744,11 @@ void TWI${INDEX?string}_InterruptHandler(void)
                     if( currentTRB == (twi${INDEX?string}Obj.numTRBs - 1))
                     {
                         // Sends a stop bit
-                        TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_STOP_Msk;
+                        TWI${INDEX?string}_Module->TWI_CR = TWI_CR_STOP_Msk;
 
                         /* read the module status again to know if 
                            tranmission complete flag is set */
-                        status = TWI${INDEX?string}_Module->TWI_SR.w;
+                        status = TWI${INDEX?string}_Module->TWI_SR;
                         if( status & TWI_SR_TXCOMP_Msk )
                         {
                             twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_DONE;
@@ -765,7 +765,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
                     }
                     
                     // Disable the RXRDY interrupt
-                    TWI${INDEX?string}_Module->TWI_IDR.w = TWI_IDR_TXRDY_Msk;
+                    TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_TXRDY_Msk;
 				}
 			}
 
@@ -799,7 +799,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
 		twi${INDEX?string}Obj.numTRBs = 0;
 		currentTRB = 0;
         twi${INDEX?string}Obj.state = TWI_STATE_IDLE;
-        TWI${INDEX?string}_Module->TWI_IDR.w = TWI_IDR_TXCOMP_Msk | 
+        TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_TXCOMP_Msk | 
                                  TWI_IDR_TXRDY_Msk  |
                                  TWI_IDR_RXRDY_Msk;
 	}
@@ -821,7 +821,7 @@ void TWI${INDEX?string}_InterruptHandler(void)
 			twi${INDEX?string}Obj.numTRBs = 0;
             currentTRB = 0;
             twi${INDEX?string}Obj.state = TWI_STATE_IDLE;
-            TWI${INDEX?string}_Module->TWI_IDR.w = TWI_IDR_TXCOMP_Msk | 
+            TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_TXCOMP_Msk | 
                                      TWI_IDR_TXRDY_Msk  |
                                      TWI_IDR_RXRDY_Msk;
 
@@ -836,30 +836,30 @@ void TWI${INDEX?string}_InterruptHandler(void)
     {
         trb = &twi${INDEX?string}TRBsList[currentTRB];
         
-        TWI${INDEX?string}_Module->TWI_MMR.w = 0;
+        TWI${INDEX?string}_Module->TWI_MMR = 0;
         
         // 10-bit Slave Address
         if( trb->address > 0x007F)
         {
-            TWI${INDEX?string}_Module->TWI_MMR.w = TWI_MMR_DADR((trb->address & 0x00007F00) >> 8) | 
+            TWI${INDEX?string}_Module->TWI_MMR = TWI_MMR_DADR((trb->address & 0x00007F00) >> 8) | 
                                                    TWI_MMR_IADRSZ(1);
 
             // Set internal address
-            TWI${INDEX?string}_Module->TWI_IADR.w = TWI_IADR_IADR( trb->address & 0x000000FF );
+            TWI${INDEX?string}_Module->TWI_IADR = TWI_IADR_IADR( trb->address & 0x000000FF );
         }
         // 7-bit Slave Address
         else
         {
-            TWI${INDEX?string}_Module->TWI_MMR.w = TWI_MMR_DADR(trb->address) | 
+            TWI${INDEX?string}_Module->TWI_MMR = TWI_MMR_DADR(trb->address) | 
                                                    TWI_MMR_IADRSZ(0);
         }
 
         if( trb->read )
         {
-            TWI${INDEX?string}_Module->TWI_MMR.w |= TWI_MMR_MREAD_Msk; 
+            TWI${INDEX?string}_Module->TWI_MMR|= TWI_MMR_MREAD_Msk; 
 
             // Send a START Condition
-            TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_START_Msk;
+            TWI${INDEX?string}_Module->TWI_CR = TWI_CR_START_Msk;
 
             if( 1 == trb->length )
             {
@@ -867,30 +867,30 @@ void TWI${INDEX?string}_InterruptHandler(void)
                 {
                     /* Send Stop at the same time as start 
                      * if size of data to be received is 1*/
-                    TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_STOP_Msk;
+                    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_STOP_Msk;
                 }
                 else
                 {
                     // Send a Repeated Start
-                    TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_START_Msk;
+                    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_START_Msk;
                 }
             }
 
             twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_READ;
-            TWI${INDEX?string}_Module->TWI_IDR.w = TWI_IDR_TXRDY_Msk;
-            TWI${INDEX?string}_Module->TWI_IER.w = TWI_IER_RXRDY_Msk;
+            TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_TXRDY_Msk;
+            TWI${INDEX?string}_Module->TWI_IER = TWI_IER_RXRDY_Msk;
         }
         else
         {
             if( currentTRB > 0 )
             {
                 // Send a Repeated Start
-                TWI${INDEX?string}_Module->TWI_CR.w = TWI_CR_START_Msk;
+                TWI${INDEX?string}_Module->TWI_CR = TWI_CR_START_Msk;
             }
             
             twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_WRITE;
-            TWI${INDEX?string}_Module->TWI_IDR.w = TWI_IDR_RXRDY_Msk;
-            TWI${INDEX?string}_Module->TWI_IER.w = TWI_IER_TXRDY_Msk;
+            TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_RXRDY_Msk;
+            TWI${INDEX?string}_Module->TWI_IER = TWI_IER_TXRDY_Msk;
         }
     }
 	

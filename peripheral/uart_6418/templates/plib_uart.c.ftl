@@ -55,9 +55,9 @@ void static UART${INDEX?string}_ISR_RX_Handler( void )
 {
     if(uart${INDEX?string}Obj.rxBusyStatus == true)
     {
-        while((UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk)) && (uart${INDEX?string}Obj.rxSize > uart${INDEX?string}Obj.rxProcessedSize) )
+        while((UART_SR_RXRDY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_RXRDY_Msk)) && (uart${INDEX?string}Obj.rxSize > uart${INDEX?string}Obj.rxProcessedSize) )
         {
-            uart${INDEX?string}Obj.rxBuffer[uart${INDEX?string}Obj.rxProcessedSize++] = (_UART${INDEX?string}_REGS->UART_RHR.w & UART_RHR_RXCHR_Msk);
+            uart${INDEX?string}Obj.rxBuffer[uart${INDEX?string}Obj.rxProcessedSize++] = (UART${INDEX?string}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
         }
 
         /* Check if the buffer is done */
@@ -66,7 +66,7 @@ void static UART${INDEX?string}_ISR_RX_Handler( void )
             uart${INDEX?string}Obj.rxBusyStatus = false;
             uart${INDEX?string}Obj.rxSize = 0;
             uart${INDEX?string}Obj.rxProcessedSize = 0;
-            _UART${INDEX?string}_REGS->UART_IDR.w |= UART_IDR_RXRDY_Msk;
+            UART${INDEX?string}_REGS->UART_IDR|= UART_IDR_RXRDY_Msk;
 
             if(uart${INDEX?string}Obj.rxCallback != NULL)
             {
@@ -87,9 +87,9 @@ void static UART${INDEX?string}_ISR_TX_Handler( void )
 {
     if(uart${INDEX?string}Obj.txBusyStatus == true)
     {
-        while((UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk)) && (uart${INDEX?string}Obj.txSize > uart${INDEX?string}Obj.txProcessedSize) )
+        while((UART_SR_TXEMPTY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_TXEMPTY_Msk)) && (uart${INDEX?string}Obj.txSize > uart${INDEX?string}Obj.txProcessedSize) )
         {
-            _UART${INDEX?string}_REGS->UART_THR.w |= uart${INDEX?string}Obj.txBuffer[uart${INDEX?string}Obj.txProcessedSize++];
+            UART${INDEX?string}_REGS->UART_THR|= uart${INDEX?string}Obj.txBuffer[uart${INDEX?string}Obj.txProcessedSize++];
         }
 
         /* Check if the buffer is done */
@@ -98,7 +98,7 @@ void static UART${INDEX?string}_ISR_TX_Handler( void )
             uart${INDEX?string}Obj.txBusyStatus = false;
             uart${INDEX?string}Obj.txSize = 0;
             uart${INDEX?string}Obj.txProcessedSize = 0;
-            _UART${INDEX?string}_REGS->UART_IDR.w |= UART_IDR_TXEMPTY_Msk;
+            UART${INDEX?string}_REGS->UART_IDR|= UART_IDR_TXEMPTY_Msk;
 
             if(uart${INDEX?string}Obj.txCallback != NULL)
             {
@@ -118,7 +118,7 @@ void static UART${INDEX?string}_ISR_TX_Handler( void )
 void UART${INDEX?string}_InterruptHandler( void )
 {
     /* Error status */
-    uint32_t errorStatus = (_UART${INDEX?string}_REGS->UART_SR.w & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
+    uint32_t errorStatus = (UART${INDEX?string}_REGS->UART_SR& (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
 
     if(errorStatus != 0)
     {
@@ -133,13 +133,13 @@ void UART${INDEX?string}_InterruptHandler( void )
     }
 
     /* Receiver status */
-    if(UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk))
+    if(UART_SR_RXRDY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_RXRDY_Msk))
     {
         UART${INDEX?string}_ISR_RX_Handler();
     }
 
     /* Transmitter status */
-    if(UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk))
+    if(UART_SR_TXEMPTY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
     {
         UART${INDEX?string}_ISR_TX_Handler();
     }
@@ -152,20 +152,20 @@ void UART${INDEX?string}_InterruptHandler( void )
 void UART${INDEX?string}_Initialize( void )
 {
     /* Reset UART${INDEX?string} */
-    _UART${INDEX?string}_REGS->UART_CR.w = (UART_CR_RSTRX_Msk | UART_CR_RSTTX_Msk | UART_CR_RSTSTA_Msk);
+    UART${INDEX?string}_REGS->UART_CR = (UART_CR_RSTRX_Msk | UART_CR_RSTTX_Msk | UART_CR_RSTSTA_Msk);
 
     /* Enable UART${INDEX?string} */
-    _UART${INDEX?string}_REGS->UART_CR.w = (UART_CR_TXEN_Msk | UART_CR_RXEN_Msk);
+    UART${INDEX?string}_REGS->UART_CR = (UART_CR_TXEN_Msk | UART_CR_RXEN_Msk);
 
     /* Configure UART${INDEX?string} mode */
-    _UART${INDEX?string}_REGS->UART_MR.w = ((UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
+    UART${INDEX?string}_REGS->UART_MR = ((UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
 
     /* Configure UART${INDEX?string} Baud Rate */
-    _UART${INDEX?string}_REGS->UART_BRGR.w = UART_BRGR_CD(${BRG_VALUE});
+    UART${INDEX?string}_REGS->UART_BRGR = UART_BRGR_CD(${BRG_VALUE});
 <#if INTERRUPT_MODE == true>
 
     /* Enable Overrun, Parity and Framing error interrupts */
-    _UART${INDEX?string}_REGS->UART_IER.w = (UART_IER_FRAME_Msk | UART_IER_PARE_Msk | UART_IER_OVRE_Msk);
+    UART${INDEX?string}_REGS->UART_IER = (UART_IER_FRAME_Msk | UART_IER_PARE_Msk | UART_IER_OVRE_Msk);
 
     /* Initialize instance object */
     uart${INDEX?string}Obj.rxBuffer = NULL;
@@ -187,7 +187,7 @@ UART_ERROR UART${INDEX?string}_ErrorGet( void )
 {
     UART_ERROR errors = UART_ERROR_NONE;
     uint8_t dummyData = 0u;
-    uint32_t status = _UART${INDEX?string}_REGS->UART_SR.w;
+    uint32_t status = UART${INDEX?string}_REGS->UART_SR;
 
     /* Collect all errors */
     if(status & UART_SR_OVRE_Msk)
@@ -206,12 +206,12 @@ UART_ERROR UART${INDEX?string}_ErrorGet( void )
     /* Clear all error flags */
     if(errors != UART_ERROR_NONE)
     {
-        _UART${INDEX?string}_REGS->UART_CR.w |= UART_CR_RSTSTA_Msk;
+        UART${INDEX?string}_REGS->UART_CR|= UART_CR_RSTSTA_Msk;
 
         /* Flush existing error bytes from the RX FIFO */
-        while( UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk) )
+        while( UART_SR_RXRDY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_RXRDY_Msk) )
         {
-            dummyData = (_UART${INDEX?string}_REGS->UART_RHR.w & UART_RHR_RXCHR_Msk);
+            dummyData = (UART${INDEX?string}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
         }
 
         /* Ignore the warning */
@@ -225,7 +225,10 @@ UART_ERROR UART${INDEX?string}_ErrorGet( void )
 bool UART${INDEX?string}_Read( void *buffer, const size_t size )
 {
     bool status = false;
+<#if INTERRUPT_MODE == false>
     size_t processedSize = 0;
+</#if>
+
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
@@ -233,9 +236,9 @@ bool UART${INDEX?string}_Read( void *buffer, const size_t size )
 <#if INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk))
+            if(UART_SR_RXRDY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_RXRDY_Msk))
             {
-                *lBuffer++ = (_UART${INDEX?string}_REGS->UART_RHR.w & UART_RHR_RXCHR_Msk);
+                *lBuffer++ = (UART${INDEX?string}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
                 processedSize++;
             }
         }
@@ -251,7 +254,7 @@ bool UART${INDEX?string}_Read( void *buffer, const size_t size )
             uart${INDEX?string}Obj.rxBusyStatus = true;
             status = true;
 
-            _UART${INDEX?string}_REGS->UART_IER.w = UART_IER_RXRDY_Msk;
+            UART${INDEX?string}_REGS->UART_IER = UART_IER_RXRDY_Msk;
         }
 </#if>
     }
@@ -262,7 +265,9 @@ bool UART${INDEX?string}_Read( void *buffer, const size_t size )
 bool UART${INDEX?string}_Write( void *buffer, const size_t size )
 {
     bool status = false;
+<#if INTERRUPT_MODE == false>
     size_t processedSize = 0;
+</#if>
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
@@ -270,9 +275,9 @@ bool UART${INDEX?string}_Write( void *buffer, const size_t size )
 <#if INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk))
+            if(UART_SR_TXEMPTY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
             {
-                _UART${INDEX?string}_REGS->UART_THR.w = (UART_THR_TXCHR(*lBuffer++) & UART_THR_TXCHR_Msk);
+                UART${INDEX?string}_REGS->UART_THR = (UART_THR_TXCHR(*lBuffer++) & UART_THR_TXCHR_Msk);
                 processedSize++;
             }
         }
@@ -289,13 +294,13 @@ bool UART${INDEX?string}_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk))
+            if(UART_SR_TXEMPTY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
             {
-                _UART${INDEX?string}_REGS->UART_THR.w = (UART_THR_TXCHR(*lBuffer) & UART_THR_TXCHR_Msk);
+                UART${INDEX?string}_REGS->UART_THR = (UART_THR_TXCHR(*lBuffer) & UART_THR_TXCHR_Msk);
                 uart${INDEX?string}Obj.txProcessedSize++;
             }
 
-            _UART${INDEX?string}_REGS->UART_IER.w = UART_IER_TXEMPTY_Msk;
+            UART${INDEX?string}_REGS->UART_IER = UART_IER_TXEMPTY_Msk;
         }
 </#if>
     }
@@ -346,7 +351,7 @@ bool UART${INDEX?string}_TransmitterIsReady( void )
 {
     bool status = false;
 
-    if(UART_SR_TXEMPTY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_TXEMPTY_Msk))
+    if(UART_SR_TXEMPTY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
     {
         status = true;
     }
@@ -358,7 +363,7 @@ bool UART${INDEX?string}_ReceiverIsReady( void )
 {
     bool status = false;
 
-    if(UART_SR_RXRDY_Msk == (_UART${INDEX?string}_REGS->UART_SR.w & UART_SR_RXRDY_Msk))
+    if(UART_SR_RXRDY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_RXRDY_Msk))
     {
         status = true;
     }

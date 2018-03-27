@@ -76,35 +76,35 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#-- Fault configuration preparation -->
 <#if .vars[PWM_CH_ENABLE] == true && .vars[PWM_Fault_Enable] == true>
 	<#if PWM_FPE_VAL != "">
-		<#assign PWM_FPE_VAL = PWM_FPE_VAL + " | \n\t\t (0x1U << (${.vars[PWM_FPE]}U + (PWMC_FPE_FPE${CH_NUM}_Pos)))">
+		<#assign PWM_FPE_VAL = PWM_FPE_VAL + " | \n\t\t (0x1U << (${.vars[PWM_FPE]}U + (PWM_FPE_FPE${CH_NUM}_Pos)))">
 	<#else>
-		<#assign PWM_FPE_VAL = "(0x1U << (${.vars[PWM_FPE]}U + (PWMC_FPE_FPE${CH_NUM}_Pos)))">
+		<#assign PWM_FPE_VAL = "(0x1U << (${.vars[PWM_FPE]}U + (PWM_FPE_FPE${CH_NUM}_Pos)))">
 	</#if> 
 	<#-- Register values of PWM_FPV1 and PWM_FPV2 -->
 	<#if .vars[PWM_FPV_FPVH] != "2">
 		<#if PWM_FPV1_VAL != "">
-			<#assign PWM_FPV1_VAL = PWM_FPV1_VAL + "\n\t\t | (${.vars[PWM_FPV_FPVH]} << PWMC_FPV1_FPVH${CH_NUM}_Pos)">
+			<#assign PWM_FPV1_VAL = PWM_FPV1_VAL + "\n\t\t | (${.vars[PWM_FPV_FPVH]} << PWM_FPV1_FPVH${CH_NUM}_Pos)">
 		<#else>
-			<#assign PWM_FPV1_VAL = "(${.vars[PWM_FPV_FPVH]} << PWMC_FPV1_FPVH${CH_NUM}_Pos)">
+			<#assign PWM_FPV1_VAL = "(${.vars[PWM_FPV_FPVH]} << PWM_FPV1_FPVH${CH_NUM}_Pos)">
 		</#if>
 	<#else>
 		<#if PWM_FPV2_VAL != "">
-			<#assign PWM_FPV2_VAL = PWM_FPV2_VAL + " | (PWMC_FPV2_FPZH${CH_NUM}_Msk)">
+			<#assign PWM_FPV2_VAL = PWM_FPV2_VAL + " | (PWM_FPV2_FPZH${CH_NUM}_Msk)">
 		<#else>
-			<#assign PWM_FPV2_VAL = "(PWMC_FPV2_FPZH${CH_NUM}_Msk)">
+			<#assign PWM_FPV2_VAL = "(PWM_FPV2_FPZH${CH_NUM}_Msk)">
 		</#if>
 	</#if>
 	<#if .vars[PWM_FPV_FPVL] != "2">
 		<#if PWM_FPV1_VAL != "">
-			<#assign PWM_FPV1_VAL = PWM_FPV1_VAL + " | (${.vars[PWM_FPV_FPVL]} << PWMC_FPV1_FPVL${CH_NUM}_Pos)">
+			<#assign PWM_FPV1_VAL = PWM_FPV1_VAL + " | (${.vars[PWM_FPV_FPVL]} << PWM_FPV1_FPVL${CH_NUM}_Pos)">
 		<#else>
-			<#assign PWM_FPV1_VAL = "(${.vars[PWM_FPV_FPVH]} << PWMC_FPV1_FPVH${CH_NUM}_Pos)">
+			<#assign PWM_FPV1_VAL = "(${.vars[PWM_FPV_FPVH]} << PWM_FPV1_FPVH${CH_NUM}_Pos)">
 		</#if>	
 	<#else>
 		<#if PWM_FPV2_VAL != "">
-			<#assign PWM_FPV2_VAL = PWM_FPV2_VAL + " | (PWMC_FPV2_FPZL${CH_NUM}_Msk)">
+			<#assign PWM_FPV2_VAL = PWM_FPV2_VAL + " | (PWM_FPV2_FPZL${CH_NUM}_Msk)">
 		<#else>
-			<#assign PWM_FPV2_VAL = "(PWMC_FPV2_FPZH${CH_NUM}_Msk)">
+			<#assign PWM_FPV2_VAL = "(PWM_FPV2_FPZH${CH_NUM}_Msk)">
 		</#if>			
 	</#if>
 </#if>
@@ -115,9 +115,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 <#if .vars[PWM_CH_ENABLE] == true && .vars[PWM_CH_SYNCENABLE] == true>
 	<#if PWM_SCM_VAL != "">
-		<#assign PWM_SCM_VAL = PWM_SCM_VAL + "| PWMC_SCM_SYNC${CH_NUM}_Msk">
+		<#assign PWM_SCM_VAL = PWM_SCM_VAL + "| PWM_SCM_SYNC${CH_NUM}_Msk">
 	<#else>
-		<#assign PWM_SCM_VAL = "PWMC_SCM_SYNC0_Msk | PWMC_SCM_SYNC${CH_NUM}_Msk">
+		<#assign PWM_SCM_VAL = "PWM_SCM_SYNC0_Msk | PWM_SCM_SYNC${CH_NUM}_Msk">
 	</#if>
 </#if>
 </#list>
@@ -131,16 +131,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#if .vars[PWM_CMPM_CEN] == true>
 	<#if .vars[PWM_ELMR0_CSEL] == true>
 		<#if PWM_ELMR0_VAL != "">
-			<#assign PWM_ELMR0_VAL = PWM_ELMR0_VAL + " | PWMC_ELMR_CSEL${COMPARE_ID}_Msk">
+			<#assign PWM_ELMR0_VAL = PWM_ELMR0_VAL + " | PWM_ELMR_CSEL${COMPARE_ID}_Msk">
 		<#else>
-			<#assign PWM_ELMR0_VAL = "PWMC_ELMR_CSEL${COMPARE_ID}_Msk">
+			<#assign PWM_ELMR0_VAL = "PWM_ELMR_CSEL${COMPARE_ID}_Msk">
 		</#if>
 	</#if>
 	<#if .vars[PWM_ELMR1_CSEL] == true>
 		<#if PWM_ELMR1_VAL != "">
-			<#assign PWM_ELMR1_VAL = PWM_ELMR1_VAL + " | PWMC_ELMR_CSEL${COMPARE_ID}_Msk">
+			<#assign PWM_ELMR1_VAL = PWM_ELMR1_VAL + " | PWM_ELMR_CSEL${COMPARE_ID}_Msk">
 		<#else>
-			<#assign PWM_ELMR1_VAL = "PWMC_ELMR_CSEL${COMPARE_ID}_Msk">
+			<#assign PWM_ELMR1_VAL = "PWM_ELMR_CSEL${COMPARE_ID}_Msk">
 		</#if>
 	</#if>	
 </#if>
@@ -159,20 +159,20 @@ void PWM${INDEX}_Initialize (void)
 {
 <#if PWM_CLK_A_ENABLE == true && PWM_CLK_B_ENABLE == true>
 	/* Clock configuration */
-	_PWMC${INDEX}_REGS->PWMC_CLK.w = PWMC_CLK_PREA_${PWM_CLK_PREA} | PWMC_CLK_DIVA(${PWM_CLK_DIVA}) | 
-		PWMC_CLK_PREB_${PWM_CLK_PREB} | PWMC_CLK_DIVB(${PWM_CLK_DIVB});
+	_PWM${INDEX}_REGS->PWM_CLK= PWM_CLK_PREA_${PWM_CLK_PREA} | PWM_CLK_DIVA(${PWM_CLK_DIVA}) | 
+		PWM_CLK_PREB_${PWM_CLK_PREB} | PWM_CLK_DIVB(${PWM_CLK_DIVB});
 <#elseif PWM_CLK_A_ENABLE == true>
 	/* Clock configuration */
-	_PWMC${INDEX}_REGS->PWMC_CLK.w = PWMC_CLK_PREA_${PWM_CLK_PREA} | PWMC_CLK_DIVA(${PWM_CLK_DIVA});
+	_PWM${INDEX}_REGS->PWM_CLK= PWM_CLK_PREA_${PWM_CLK_PREA} | PWM_CLK_DIVA(${PWM_CLK_DIVA});
 <#elseif PWM_CLK_B_ENABLE == true>
 	/* Clock configuration */
-	_PWMC${INDEX}_REGS->PWMC_CLK.w = PWMC_CLK_PREB_${PWM_CLK_PREB} | PWMC_CLK_DIVB(${PWM_CLK_DIVB});
+	_PWM${INDEX}_REGS->PWM_CLK= PWM_CLK_PREB_${PWM_CLK_PREB} | PWM_CLK_DIVB(${PWM_CLK_DIVB});
 </#if>
 		
 <#if PWM_SCM_VAL?has_content >
 	/* Synchronous channels configuration */
-	_PWMC${INDEX}_REGS->PWMC_SCM.w = ${PWM_SCM_VAL} | PWMC_SCM_UPDM_${PWM_SCM_UPDM};
-	_PWMC${INDEX}_REGS->PWMC_SCUP.w = PWMC_SCUP_UPR(${PWM_SCUP_UPR}U);
+	_PWM${INDEX}_REGS->PWM_SCM= ${PWM_SCM_VAL} | PWM_SCM_UPDM_${PWM_SCM_UPDM};
+	_PWM${INDEX}_REGS->PWM_SCUP= PWM_SCUP_UPR(${PWM_SCUP_UPR}U);
 </#if>
 	
 <#list 0..3 as i>
@@ -197,28 +197,28 @@ void PWM${INDEX}_Initialize (void)
 		<#if .vars[PWM_CH_SYNC_ENABLE] == false>
 			<#lt>	/* PWM channel mode configurations */
 			<#if .vars[PWM_CMR_CALG] == "LEFT_ALIGNED">
-				<#lt>	_PWMC${INDEX}_REGS->PWMC_CH_NUM[${CH_NUM}].PWMC_CMR.w = PWMC_CMR_CPRE_${.vars[PWM_CMR_CPRE]} | PWMC_CMR_CALG_${.vars[PWM_CMR_CALG]}
-					| PWMC_CMR_CPOL_${.vars[PWM_CMR_CPOL]} ${.vars[PWM_CMR_DTE]?then('| (PWMC_CMR_DTE_Msk)', '')};
+				<#lt>	_PWM${INDEX}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_CMR = PWM_CMR_CPRE_${.vars[PWM_CMR_CPRE]} | PWM_CMR_CALG_${.vars[PWM_CMR_CALG]}
+					| PWM_CMR_CPOL_${.vars[PWM_CMR_CPOL]} ${.vars[PWM_CMR_DTE]?then('| (PWM_CMR_DTE_Msk)', '')};
 			<#else>
-				<#lt>	_PWMC${INDEX}_REGS->PWMC_CH_NUM[${CH_NUM}].PWMC_CMR.w = PWMC_CMR_CPRE_${.vars[PWM_CMR_CPRE]} | PWMC_CMR_CALG_${.vars[PWM_CMR_CALG]}
-					| PWMC_CMR_CPOL_${.vars[PWM_CMR_CPOL]} | PWMC_CMR_UPDS_${.vars[PWM_CMR_UPDS]} \
-					| PWMC_CMR_CES_${.vars[PWM_CMR_CES]} ${.vars[PWM_CMR_DTE]?then('| (PWMC_CMR_DTE_Msk)', '')};		
+				<#lt>	_PWM${INDEX}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_CMR = PWM_CMR_CPRE_${.vars[PWM_CMR_CPRE]} | PWM_CMR_CALG_${.vars[PWM_CMR_CALG]}
+					| PWM_CMR_CPOL_${.vars[PWM_CMR_CPOL]} | PWM_CMR_UPDS_${.vars[PWM_CMR_UPDS]} \
+					| PWM_CMR_CES_${.vars[PWM_CMR_CES]} ${.vars[PWM_CMR_DTE]?then('| (PWM_CMR_DTE_Msk)', '')};		
 			</#if>
 			
 			<#lt>	/* PWM period */
-			<#lt>	_PWMC${INDEX}_REGS->PWMC_CH_NUM[${CH_NUM}].PWMC_CPRD.w = ${.vars[PWM_CPRD]}U;
+			<#lt>	_PWM${INDEX}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_CPRD= ${.vars[PWM_CPRD]}U;
 		</#if>
 		
 		<#lt>	/* PWM duty cycle */
-		<#lt>	_PWMC${INDEX}_REGS->PWMC_CH_NUM[${CH_NUM}].PWMC_CDTY.w = ${.vars[PWM_CDTY]}U;
+		<#lt>	_PWM${INDEX}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_CDTY= ${.vars[PWM_CDTY]}U;
 		<#if .vars[PWM_CMR_DTE] == true>
 		
 			<#lt>	/* Dead time */
-			<#lt>	_PWMC${INDEX}_REGS->PWMC_CH_NUM[${CH_NUM}].PWMC_DT.w = (${.vars[PWM_DT_DTL]}U << PWMC_DT_DTL_Pos) | (${.vars[PWM_DT_DTH]}U);
+			<#lt>	_PWM${INDEX}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_DT= (${.vars[PWM_DT_DTL]}U << PWM_DT_DTL_Pos) | (${.vars[PWM_DT_DTH]}U);
 		</#if> <#-- PWM_CMR_DTE -->
 		<#if .vars[PWM_IER1_CHID] == true>		
 		<#lt>	/* Enable counter event */
-		<#lt>	_PWMC${INDEX}_REGS->PWMC_IER1.w = (0x1U << ${CH_NUM}U);
+		<#lt>	_PWM${INDEX}_REGS->PWM_IER1= (0x1U << ${CH_NUM}U);
 		</#if>
 	</#if> <#-- PWM_CH_ENABLE -->
 </#list>
@@ -226,14 +226,14 @@ void PWM${INDEX}_Initialize (void)
 <#if PWM_FPE_VAL?has_content>
 	/*************************** Fault ************************/
 	/* Enable fault input */
-	_PWMC${INDEX}_REGS->PWMC_FPE.w = ${PWM_FPE_VAL};
-	_PWMC${INDEX}_REGS->PWMC_FPV1.w = ${PWM_FPV1_VAL};
+	_PWM${INDEX}_REGS->PWM_FPE= ${PWM_FPE_VAL};
+	_PWM${INDEX}_REGS->PWM_FPV1= ${PWM_FPV1_VAL};
 	<#if PWM_FPV2_VAL?has_content>
-	<#lt>	_PWMC${INDEX}_REGS->PWMC_FPV2.w = ${PWM_FPV2_VAL};
+	<#lt>	_PWM${INDEX}_REGS->PWM_FPV2= ${PWM_FPV2_VAL};
 	</#if>
 	/* Fault mode configuration */
-	_PWMC${INDEX}_REGS->PWMC_FMR.w = PWMC_FMR_FPOL(0b${PWM_FAULT_7_FMR_FPOL}${PWM_FAULT_6_FMR_FPOL}${PWM_FAULT_5_FMR_FPOL}${PWM_FAULT_4_FMR_FPOL}${PWM_FAULT_3_FMR_FPOL}${PWM_FAULT_2_FMR_FPOL}${PWM_FAULT_1_FMR_FPOL}${PWM_FAULT_0_FMR_FPOL}) |
-		PWMC_FMR_FMOD(0b${PWM_FAULT_7_FMR_FMOD}${PWM_FAULT_6_FMR_FMOD}${PWM_FAULT_5_FMR_FMOD}${PWM_FAULT_4_FMR_FMOD}${PWM_FAULT_3_FMR_FMOD}${PWM_FAULT_2_FMR_FMOD}${PWM_FAULT_1_FMR_FMOD}${PWM_FAULT_0_FMR_FMOD});	
+	_PWM${INDEX}_REGS->PWM_FMR = PWM_FMR_FPOL(0b${PWM_FAULT_7_FMR_FPOL}${PWM_FAULT_6_FMR_FPOL}${PWM_FAULT_5_FMR_FPOL}${PWM_FAULT_4_FMR_FPOL}${PWM_FAULT_3_FMR_FPOL}${PWM_FAULT_2_FMR_FPOL}${PWM_FAULT_1_FMR_FPOL}${PWM_FAULT_0_FMR_FPOL}) |
+		PWM_FMR_FMOD(0b${PWM_FAULT_7_FMR_FMOD}${PWM_FAULT_6_FMR_FMOD}${PWM_FAULT_5_FMR_FMOD}${PWM_FAULT_4_FMR_FMOD}${PWM_FAULT_3_FMR_FMOD}${PWM_FAULT_2_FMR_FMOD}${PWM_FAULT_1_FMR_FMOD}${PWM_FAULT_0_FMR_FMOD});	
 </#if>
 
 <#list 0..7 as i>
@@ -247,79 +247,79 @@ void PWM${INDEX}_Initialize (void)
 	<#if .vars[PWM_CMPM_CEN] == true>
 	/************* Compare Unit ${COMP_ID} **************************/
 	<#lt>	/* Compare unit configurations */
-	<#lt>	_PWMC${INDEX}_REGS->PWMC_CMP[${COMP_ID}].PWMC_CMPM.w = PWMC_CMPM_CEN_Msk | PWMC_CMPM_CTR(${.vars[PWM_CMPM_CTR]}U) | PWMC_CMPM_CPR(${.vars[PWM_CMPM_CPR]}U)
-					| PWMC_CMPM_CUPR(${.vars[PWM_CMPM_CUPR]}U);
-	<#lt>	_PWMC${INDEX}_REGS->PWMC_CMP[${COMP_ID}].PWMC_CMPV.w = PWMC_CMPV_CV(${.vars[PWM_CMPV_CV]}U) | PWMC_CMPV_CVM_${.vars[PWM_CMPV_CVM]};
+	<#lt>	_PWM${INDEX}_REGS->PWM_CMP[${COMP_ID}].PWM_CMPM= PWM_CMPM_CEN_Msk | PWM_CMPM_CTR(${.vars[PWM_CMPM_CTR]}U) | PWM_CMPM_CPR(${.vars[PWM_CMPM_CPR]}U)
+					| PWM_CMPM_CUPR(${.vars[PWM_CMPM_CUPR]}U);
+	<#lt>	_PWM${INDEX}_REGS->PWM_CMP[${COMP_ID}].PWM_CMPV= PWM_CMPV_CV(${.vars[PWM_CMPV_CV]}U) | PWM_CMPV_CVM_${.vars[PWM_CMPV_CVM]};
 	</#if>
 </#list>
 
 	<#if PWM_ELMR0_VAL?has_content>
-	<#lt>	_PWMC${INDEX}_REGS->PWMC_ELMR[0].w = ${PWM_ELMR0_VAL};
+	<#lt>	_PWM${INDEX}_REGS->PWM_ELMR[0]= ${PWM_ELMR0_VAL};
 	</#if>
 	<#if PWM_ELMR1_VAL?has_content>
-	<#lt>	_PWMC${INDEX}_REGS->PWMC_ELMR[1].w = ${PWM_ELMR1_VAL};
+	<#lt>	_PWM${INDEX}_REGS->PWM_ELMR[1]= ${PWM_ELMR1_VAL};
 	</#if>
 }
 
 /* Start the PWM generation */
 void PWM${INDEX}_ChannelsStart (PWM_CHANNEL_MASK channelMask)
 {
-	_PWMC${INDEX}_REGS->PWMC_ENA.w = channelMask;
+	_PWM${INDEX}_REGS->PWM_ENA= channelMask;
 }
 
 /* Stop the PWM generation */
 void PWM${INDEX}_ChannelsStop (PWM_CHANNEL_MASK channelMask)
 {
-	_PWMC${INDEX}_REGS->PWMC_DIS.w = channelMask;
+	_PWM${INDEX}_REGS->PWM_DIS= channelMask;
 }
 
 /* configure PWM period */
 void PWM${INDEX}_ChannelPeriodSet (PWM_CHANNEL_NUM channel, uint16_t period)
 {
-	_PWMC${INDEX}_REGS->PWMC_CH_NUM[channel].PWMC_CPRDUPD.w = period;
+	_PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_CPRDUPD= period;
 }
 
 /* Read PWM period */
 uint16_t PWM${INDEX}_ChannelPeriodGet (PWM_CHANNEL_NUM channel)
 {
-	return (uint16_t)_PWMC${INDEX}_REGS->PWMC_CH_NUM[channel].PWMC_CPRDUPD.w;
+	return (uint16_t)_PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_CPRDUPD;
 }
 
 /* Configure PWM duty cycle */
 void PWM${INDEX}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
 {
-	_PWMC${INDEX}_REGS->PWMC_CH_NUM[channel].PWMC_CDTYUPD.w = duty;
+	_PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_CDTYUPD= duty;
 }
 
 /* Configure dead time */
 void PWM${INDEX}_ChannelDeadTimeSet (PWM_CHANNEL_NUM channel, uint16_t deadtime_high, uint16_t deadtime_low)
 {
-	_PWMC${INDEX}_REGS->PWMC_CH_NUM[channel].PWMC_DTUPD.w = ((deadtime_low << PWMC_DT_DTL_Pos) | deadtime_high);
+	_PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_DTUPD= ((deadtime_low << PWM_DT_DTL_Pos) | deadtime_high);
 }
 
 /* Configure compare unit value */
 void PWM${INDEX}_CompareValueSet (PWM_COMPARE cmp_unit, uint16_t cmp_value)
 {
-	_PWMC${INDEX}_REGS->PWMC_CMP[cmp_unit].PWMC_CMPVUPD.w = cmp_value;
+	_PWM${INDEX}_REGS->PWM_CMP[cmp_unit].PWM_CMPVUPD= cmp_value;
 }
 
 /* Enable counter event */
 void PWM${INDEX}_ChannelCounterEventEnable (PWM_CHANNEL_MASK channelMask)
 {
-	_PWMC${INDEX}_REGS->PWMC_IER1.w = channelMask;
+	_PWM${INDEX}_REGS->PWM_IER1= channelMask;
 }
 
 /* Disable counter event */
 void PWM${INDEX}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMask)
 {
-	_PWMC${INDEX}_REGS->PWMC_IDR1.w = channelMask;
+	_PWM${INDEX}_REGS->PWM_IDR1= channelMask;
 }
 
 /* Check the status of counter event */
 bool PWM${INDEX}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
 {
 	bool status;
-	status = PWM${INDEX}_status | ((_PWMC${INDEX}_REGS->PWMC_ISR1.w >> channel) & 0x1U);
+	status = PWM${INDEX}_status | ((_PWM${INDEX}_REGS->PWM_ISR1>> channel) & 0x1U);
 	PWM${INDEX}_status = 0x0U;
 	return status;
 }
@@ -327,13 +327,13 @@ bool PWM${INDEX}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
 /* Enable synchronous update */
 void PWM${INDEX}_SyncUpdateEnable (void)
 {
-	_PWMC${INDEX}_REGS->PWMC_SCUC.w = PWMC_SCUC_UPDULOCK_Msk;
+	_PWM${INDEX}_REGS->PWM_SCUC= PWM_SCUC_UPDULOCK_Msk;
 }
 
 /* Clear the fault status */
 void PWM${INDEX}_FaultStatusClear(PWM_FAULT_ID fault_id)
 {
-	_PWMC${INDEX}_REGS->PWMC_FCR.w = 0x1U << fault_id;
+	_PWM${INDEX}_REGS->PWM_FCR = 0x1U << fault_id;
 }
 
 <#if PWM_INTERRUPT == true>
@@ -347,7 +347,7 @@ void PWM${INDEX}_FaultStatusClear(PWM_FAULT_ID fault_id)
 	<#lt>/* Interrupt Handler */
 	<#lt>void PWM${INDEX}_InterruptHandler(void)
 	<#lt>{
-	<#lt>	PWM${INDEX}_status = _PWMC${INDEX}_REGS->PWMC_ISR1.w;
+	<#lt>	PWM${INDEX}_status = _PWM${INDEX}_REGS->PWM_ISR1;
 	<#lt>	if (PWM${INDEX}_CallbackObj.callback_fn != NULL)
 	<#lt>	{
 	<#lt>		PWM${INDEX}_CallbackObj.callback_fn(PWM${INDEX}_CallbackObj.context);

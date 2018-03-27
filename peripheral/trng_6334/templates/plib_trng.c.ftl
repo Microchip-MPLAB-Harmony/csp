@@ -42,13 +42,13 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include "${__PROCESSOR?lower_case}.h"
 #include "plib_trng${INDEX?string}.h"
 
-<#if trngEnableInterrupt == true
+<#if trngEnableInterrupt == true>
 	<#lt>TRNG_OBJECT trng;
 	
 	<#lt>void TRNG${INDEX?string}_RandomNumberGenerate( void )
 	<#lt>{
-	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
-	<#lt>	_TRNG_REGS->TRNG_IER.w = TRNG_IER_DATRDY_Msk;
+	<#lt>	TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
+	<#lt>	TRNG_REGS->TRNG_IER = TRNG_IER_DATRDY_Msk;
 	<#lt>}
 
 	<#lt>void TRNG${INDEX?string}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
@@ -61,18 +61,18 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 <#if trngEnableInterrupt == false>
 	<#lt>uint32_t TRNG${INDEX?string}_ReadData( void )
 	<#lt>{
-	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
-	<#lt>	while(((_TRNG_REGS->TRNG_ISR.w) & (TRNG_ISR_DATRDY_Msk)) != TRNG_ISR_DATRDY_Msk);			
-	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD;
-	<#lt>	return (_TRNG_REGS->TRNG_ODATA.w);
+	<#lt>	TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
+	<#lt>	while(((TRNG_REGS->TRNG_ISR) & (TRNG_ISR_DATRDY_Msk)) != TRNG_ISR_DATRDY_Msk);			
+	<#lt>	TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD;
+	<#lt>	return (TRNG_REGS->TRNG_ODATA);
 	<#lt>}
 </#if>
 
 <#if trngEnableInterrupt == true>
 	<#lt>void TRNG${INDEX?string}_InterruptHandler( void )
 	<#lt>{
-	<#lt>	_TRNG_REGS->TRNG_CR.w = TRNG_CR_KEY_PASSWD;
-	<#lt>	trng.data = _TRNG_REGS->TRNG_ODATA.w;
+	<#lt>	TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD;
+	<#lt>	trng.data = TRNG_REGS->TRNG_ODATA;
 	<#lt>	if(trng.callback != NULL)
     <#lt>   {
     <#lt>   	trng.callback(trng.context,trng.data);

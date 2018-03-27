@@ -47,14 +47,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 void RSWDT${rswdtIndex?string}_Initialize( void )
 {
-	_RSWDT_REGS->RSWDT_MR.w = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}) \
+	RSWDT_REGS->RSWDT_MR = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}) \
 							${rswdtdebugHalt?then(' | RSWDT_MR_WDDBGHLT_Msk','')}${rswdtidleHalt?then(' | RSWDT_MR_WDIDLEHLT_Msk','')}${rswdtEnableReset?then(' | RSWDT_MR_WDRSTEN_Msk','')}${rswdtinterruptMode?then(' | RSWDT_MR_WDFIEN_Msk','')};
 							
 }
 
 void RSWDT${rswdtIndex?string}_Clear(void)
 {
-	_RSWDT_REGS->RSWDT_CR.w = (RSWDT_CR_KEY_PASSWD|RSWDT_CR_WDRSTT_Msk);
+	RSWDT_REGS->RSWDT_CR = (RSWDT_CR_KEY_PASSWD|RSWDT_CR_WDRSTT_Msk);
 }
 
 <#if rswdtinterruptMode == true>
@@ -68,7 +68,7 @@ void RSWDT${rswdtIndex?string}_Clear(void)
 <#if rswdtinterruptMode == true>
 	<#lt>void RSWDT${rswdtIndex?string}_TIMEOUT_Handler( void )
 	<#lt>{
-	<#lt>   _RSWDT_REGS->RSWDT_SR.w;	
+	<#lt>   RSWDT_REGS->RSWDT_SR;	
 	<#lt>	if(rswdt.callback != NULL)
     <#lt>        {
     <#lt>            rswdt.callback(rswdt.context);
