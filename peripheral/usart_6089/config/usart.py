@@ -57,20 +57,49 @@ def baudRateCalc(clk, baud):
 
 def baudRateTrigger(symbol, event):
     global usartInstance
-    clk = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    clk = Database.getSymbolValue("usart" + str(usartInstance), "USART_CLOCK_FREQ")
     baud = Database.getSymbolValue("usart" + str(usartInstance), "BAUD_RATE")
     if event["id"] == "BAUD_RATE":
         baud = event["value"]
-    if event["id"] == "MASTERCLK_FREQ":
+    if event["id"] == "USART_CLOCK_FREQ":
         clk = int(event["value"])
 
     brgVal, overSamp = baudRateCalc(clk, baud)
+
+    if(brgVal < 1):
+        Log.writeErrorMessage("USART Clock source value is low for the desired baud rate")
 
     symbol.clearValue()
     if symbol.getID() == "BRG_VALUE":
         symbol.setValue(brgVal, 2)
     if symbol.getID() == "USART_MR_OVER":
         symbol.setValue(overSamp, 2)
+
+def clockSourceFreq(symbol, event):
+    if (event["id"] == "USART_CLK_SRC"):
+        symbol.clearValue()
+        if (event["value"] == 0):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 2)
+        if (event["value"] == 1):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")) / 8, 2)
+        if (event["value"] == 2):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_FREQ")), 2)
+    if (event["id"] == "PCK4_FREQ") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 2):
+        symbol.clearValue()
+        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_FREQ")), 2)
+    if (event["id"] == "MASTERCLK_FREQ") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 0):
+        symbol.clearValue()
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 2)
+    if (event["id"] == "MASTERCLK_FREQ") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 1):
+        symbol.clearValue()
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ") / 8), 2)
+
+def dataWidthLogic(symbol, event):
+    symbol.clearValue()
+    if(event["value"] == 4):
+        symbol.setValue(True, 2)
+    else:
+        symbol.setValue(False, 2)
 
 ################################################################################
 #### Component ####
@@ -92,39 +121,68 @@ def instantiateComponent(usartComponent):
     usartInterrupt.setLabel("Interrupt Mode")
     usartInterrupt.setDefaultValue(True)
 
+    usartClkSrc = usartComponent.createKeyValueSetSymbol("USART_CLK_SRC", None)
+    usartClkSrc.setLabel("Select Clock Source")
+    usartClkSrc.addKey("MCK", "0", "MCK")
+    usartClkSrc.addKey("MCK/8", "1", "MCK/8")
+    usartClkSrc.addKey("PCK4", "2", "PCK4")
+    usartClkSrc.setDisplayMode("Description")
+    usartClkSrc.setOutputMode("Key")
+    usartClkSrc.setDefaultValue(0)
+
+    usartClkValue = usartComponent.createIntegerSymbol("USART_CLOCK_FREQ", None)
+    usartClkValue.setLabel("Clock Source Value")
+    usartClkValue.setReadOnly(True)
+    usartClkValue.setDependencies(clockSourceFreq, ["USART_CLK_SRC", "core.PCK4_FREQ", "core.MASTERCLK_FREQ"])
+    usartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")))
+
     usartBaud = usartComponent.createIntegerSymbol("BAUD_RATE", None)
     usartBaud.setLabel("Baud Rate")
     usartBaud.setDefaultValue(9600)
 
-    brgVal, overSamp = baudRateCalc(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 9600)
+    brgVal, overSamp = baudRateCalc(usartClkValue.getValue(), usartBaud.getValue())
 
     usartSym_MR_OVER = usartComponent.createIntegerSymbol("USART_MR_OVER", None)
     usartSym_MR_OVER.setVisible(False)
-    usartSym_MR_OVER.setDependencies(baudRateTrigger, ["BAUD_RATE", "core.MASTERCLK_FREQ"])
+    usartSym_MR_OVER.setDependencies(baudRateTrigger, ["BAUD_RATE", "USART_CLOCK_FREQ"])
     usartSym_MR_OVER.setDefaultValue(overSamp)
 
     usartBRGValue = usartComponent.createIntegerSymbol("BRG_VALUE", None)
     usartBRGValue.setVisible(False)
-    usartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core.MASTERCLK_FREQ"])
+    usartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "USART_CLOCK_FREQ"])
     usartBRGValue.setDefaultValue(brgVal)
 
+    usartSym_MR_CHRL = usartComponent.createKeyValueSetSymbol("USART_MR_CHRL", None)
+    usartSym_MR_CHRL.setLabel("Data")
+    usartSym_MR_CHRL.addKey("_5_BIT", "0", "5 BIT")
+    usartSym_MR_CHRL.addKey("_6_BIT", "1", "6 BIT")
+    usartSym_MR_CHRL.addKey("_7_BIT", "2", "7 BIT")
+    usartSym_MR_CHRL.addKey("_8_BIT", "3", "8 BIT")
+    # There is no 9 bit available under MR_CHRL, but added here just for menu.
+    # usartSym_MR_MODE9 will use this value
+    usartSym_MR_CHRL.addKey("_8_BIT", "4", "9 BIT")
+    usartSym_MR_CHRL.setDisplayMode("Description")
+    usartSym_MR_CHRL.setOutputMode("Key")
+    usartSym_MR_CHRL.setDefaultValue(3)
+
     usartSym_MR_MODE9 = usartComponent.createBooleanSymbol("USART_MR_MODE9", None)
-    usartSym_MR_MODE9.setLabel(usartBitField_MR_MODE9.getDescription())
+    usartSym_MR_MODE9.setVisible(False)
+    usartSym_MR_MODE9.setDependencies(dataWidthLogic, ["USART_MR_CHRL"])
+    usartSym_MR_MODE9.setLabel("9 Bit Data Width")
     usartSym_MR_MODE9.setDefaultValue(False)
 
     usartSym_MR_PAR = usartComponent.createComboSymbol("USART_MR_PAR", None, usartValGrp_MR_PAR.getValueNames())
-    usartSym_MR_PAR.setLabel(usartBitField_MR_PAR.getDescription())
+    usartSym_MR_PAR.setLabel("Parity")
     usartSym_MR_PAR.setDefaultValue("NO")
 
-    usartSym_MR_NBSTOP = usartComponent.createComboSymbol("USART_MR_NBSTOP", None, usartValGrp_MR_NBSTOP.getValueNames())
-    usartSym_MR_NBSTOP.setLabel(usartBitField_MR_NBSTOP.getDescription())
-    usartSym_MR_NBSTOP.setDefaultValue("_1_BIT")
-
-    # Here for the future use, by default only 8 and 9 bit available for now.
-    usartSym_MR_CHRL = usartComponent.createComboSymbol("USART_MR_CHRL", None, usartValGrp_MR_CHRL.getValueNames())
-    usartSym_MR_CHRL.setVisible(False)
-    usartSym_MR_CHRL.setLabel(usartBitField_MR_CHRL.getDescription())
-    usartSym_MR_CHRL.setDefaultValue("_8_BIT")
+    usartSym_MR_NBSTOP = usartComponent.createKeyValueSetSymbol("USART_MR_NBSTOP", None)
+    usartSym_MR_NBSTOP.setLabel("Stop")
+    usartSym_MR_NBSTOP.addKey("_1_BIT", "0", "1 BIT")
+    usartSym_MR_NBSTOP.addKey("_1_5_BIT", "2", "1.5 BIT")
+    usartSym_MR_NBSTOP.addKey("_2_BIT", "1", "2 BIT")
+    usartSym_MR_NBSTOP.setDisplayMode("Description")
+    usartSym_MR_NBSTOP.setOutputMode("Key")
+    usartSym_MR_NBSTOP.setDefaultValue(0)
 
     usartSym_MR_SYNC = usartComponent.createBooleanSymbol("USART_MR_SYNC", None)
     usartSym_MR_SYNC.setLabel(usartBitField_MR_SYNC.getDescription())
