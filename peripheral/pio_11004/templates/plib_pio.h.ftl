@@ -661,7 +661,7 @@ typedef enum
     
     /* This element should not be used in any of the PIO APIs.
        It will be used by other modules or application to denote that none of the PIO Pin is used */
-    PIO_PIN_NONE
+    PIO_PIN_NONE = -1
   
 } PIO_PIN;
 
