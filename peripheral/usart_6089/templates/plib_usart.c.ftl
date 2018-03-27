@@ -66,7 +66,9 @@ void static USART${INDEX?string}_ISR_RX_Handler( void )
             usart${INDEX?string}Obj.rxBusyStatus = false;
             usart${INDEX?string}Obj.rxSize = 0;
             usart${INDEX?string}Obj.rxProcessedSize = 0;
-            USART${INDEX?string}_REGS->US_IDR|= US_IDR_RXRDY_Msk;
+
+            /* Disable Read, Overrun, Parity and Framing error interrupts */
+            USART${INDEX?string}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
 
             if(usart${INDEX?string}Obj.rxCallback != NULL)
             {
@@ -98,7 +100,7 @@ void static USART${INDEX?string}_ISR_TX_Handler( void )
             usart${INDEX?string}Obj.txBusyStatus = false;
             usart${INDEX?string}Obj.txSize = 0;
             usart${INDEX?string}Obj.txProcessedSize = 0;
-            USART${INDEX?string}_REGS->US_IDR|= US_IDR_TXEMPTY_Msk;
+            USART${INDEX?string}_REGS->US_IDR = US_IDR_TXEMPTY_Msk;
 
             if(usart${INDEX?string}Obj.txCallback != NULL)
             {
@@ -118,7 +120,7 @@ void static USART${INDEX?string}_ISR_TX_Handler( void )
 void USART${INDEX?string}_InterruptHandler( void )
 {
     /* Error status */
-    uint32_t errorStatus = (USART${INDEX?string}_REGS->US_CSR& (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
+    uint32_t errorStatus = (USART${INDEX?string}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
 
     if(errorStatus != 0)
     {
@@ -149,6 +151,24 @@ void USART${INDEX?string}_InterruptHandler( void )
 
 </#if>
 
+void static USART${INDEX?string}_ErrorClear( void )
+{
+    uint8_t dummyData = 0u;
+
+    USART${INDEX?string}_REGS->US_CR|= US_CR_RSTSTA_Msk;
+
+    /* Flush existing error bytes from the RX FIFO */
+    while( US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk) )
+    {
+        dummyData = (USART${INDEX?string}_REGS->US_RHR& US_RHR_RXCHR_Msk);
+    }
+
+    /* Ignore the warning */
+    (void)dummyData;
+
+    return;
+}
+
 void USART${INDEX?string}_Initialize( void )
 {
     /* Reset USART${INDEX?string} */
@@ -163,9 +183,6 @@ void USART${INDEX?string}_Initialize( void )
     /* Configure USART${INDEX?string} Baud Rate */
     USART${INDEX?string}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
 <#if INTERRUPT_MODE == true>
-
-    /* Enable Overrun, Parity and Framing error interrupts */
-    USART${INDEX?string}_REGS->US_IER = (US_IER_FRAME_Msk | US_IER_PARE_Msk | US_IER_OVRE_Msk);
 
     /* Initialize instance object */
     usart${INDEX?string}Obj.rxBuffer = NULL;
@@ -186,7 +203,6 @@ void USART${INDEX?string}_Initialize( void )
 USART_ERROR USART${INDEX?string}_ErrorGet( void )
 {
     USART_ERROR errors = USART_ERROR_NONE;
-    uint8_t dummyData = 0u;
     uint32_t status = USART${INDEX?string}_REGS->US_CSR;
 
     /* Collect all errors */
@@ -203,46 +219,176 @@ USART_ERROR USART${INDEX?string}_ErrorGet( void )
         errors |= USART_ERROR_FRAMING;
     }
 
-    /* Clear all error flags */
     if(errors != USART_ERROR_NONE)
     {
-        USART${INDEX?string}_REGS->US_CR|= US_CR_RSTSTA_Msk;
-
-        /* Flush existing error bytes from the RX FIFO */
-        while( US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk) )
-        {
-            dummyData = (USART${INDEX?string}_REGS->US_RHR& US_RHR_RXCHR_Msk);
-        }
-
-        /* Ignore the warning */
-        (void)dummyData;
+        USART${INDEX?string}_ErrorClear();
     }
 
     /* All errors are cleared, but send the previous error state */
     return errors;
 }
 
+bool USART${INDEX?string}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
+{
+    bool status = true;
+    uint32_t clk = srcClkFreq;
+    uint32_t baud = setup->baudRate;
+    uint32_t brgVal = 0;
+    uint32_t overSampVal = 0;
+    uint32_t mode9Val = 0;
+    uint32_t charLengthVal = 0;
+    uint32_t parityVal = 0;
+    uint32_t stopBitsVal = 0;
+
+<#if INTERRUPT_MODE == true>
+    if((usart${INDEX?string}Obj.rxBusyStatus == true) || (usart${INDEX?string}Obj.txBusyStatus == true))
+    {
+        /* Transaction is in progress, so return without updating settings */
+        return false;
+    }
+
+</#if>
+    if(clk == 0)
+    {
+        clk = USART${INDEX?string}_FrequencyGet();
+    }
+
+    /* Calculate BRG value */
+    if (clk >= (16 * baud))
+    {
+        brgVal = (clk / (16 * baud));
+    }
+    else
+    {
+        brgVal = (clk / (8 * baud));
+        overSampVal = (1 << US_MR_OVER_Pos) & US_MR_OVER_Msk;
+    }
+
+    /* Get Data width values */
+    switch(setup->dataWidth)
+    {
+        case USART_DATA_5_BIT:
+        case USART_DATA_6_BIT:
+        case USART_DATA_7_BIT:
+        case USART_DATA_8_BIT:
+        {
+            charLengthVal = US_MR_CHRL(setup->dataWidth);
+            break;
+        }
+        case USART_DATA_9_BIT:
+        {
+            mode9Val = (1 << US_MR_MODE9_Pos) & US_MR_MODE9_Msk;
+            break;
+        }
+        default:
+        {
+            status = false;
+            break;
+        }
+    }
+
+    /* Get Parity values */
+    switch(setup->parity)
+    {
+        case USART_PARITY_ODD:
+        case USART_PARITY_MARK:
+        {
+            parityVal = US_MR_PAR(setup->parity);
+            break;
+        }
+        case USART_PARITY_NONE:
+        {
+            parityVal = US_MR_PAR_NO;
+            break;
+        }
+        case USART_PARITY_EVEN:
+        {
+            parityVal = US_MR_PAR_EVEN;
+            break;
+        }
+        case USART_PARITY_SPACE:
+        {
+            parityVal = US_MR_PAR_SPACE;
+            break;
+        }
+        case USART_PARITY_MULTIDROP:
+        {
+            parityVal = US_MR_PAR_MULTIDROP;
+            break;
+        }
+        default:
+        {
+            status = false;
+            break;
+        }
+    }
+
+    /* Get Stop bit values */
+    switch(setup->stopBits)
+    {
+        case USART_STOP_1_BIT:
+        case USART_STOP_1_5_BIT:
+        case USART_STOP_2_BIT:
+        {
+            stopBitsVal = US_MR_NBSTOP(setup->stopBits);
+            break;
+        }
+        default:
+        {
+            status = false;
+            break;
+        }
+    }
+
+    if(status != false)
+    {
+        /* Configure USART${INDEX?string} mode */
+        USART${INDEX?string}_REGS->US_MR = (mode9Val | charLengthVal | parityVal | stopBitsVal | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | overSampVal);
+
+        /* Configure USART${INDEX?string} Baud Rate */
+        USART${INDEX?string}_REGS->US_BRGR = US_BRGR_CD(brgVal);
+    }
+
+    return status;
+}
+
 bool USART${INDEX?string}_Read( void *buffer, const size_t size )
 {
     bool status = false;
 <#if INTERRUPT_MODE == false>
+    uint32_t errorStatus = 0;
     size_t processedSize = 0;
 </#if>
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
     {
+        /* Clear errors before submitting the request */
+        USART${INDEX?string}_ErrorClear();
+
 <#if INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk))
+            /* Error status */
+            errorStatus = (USART${INDEX?string}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
+
+            if(errorStatus != 0)
+            {
+                break;
+            }
+
+            if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR & US_CSR_RXRDY_Msk))
             {
                 *lBuffer++ = (USART${INDEX?string}_REGS->US_RHR& US_RHR_RXCHR_Msk);
                 processedSize++;
             }
         }
 
-        status = true;
+        if(size == processedSize)
+        {
+            status = true;
+        }
+
 <#else>
         /* Check if receive request is in progress */
         if(usart${INDEX?string}Obj.rxBusyStatus == false)
@@ -253,7 +399,8 @@ bool USART${INDEX?string}_Read( void *buffer, const size_t size )
             usart${INDEX?string}Obj.rxBusyStatus = true;
             status = true;
 
-            USART${INDEX?string}_REGS->US_IER = US_IER_RXRDY_Msk;
+            /* Enable Read, Overrun, Parity and Framing error interrupts */
+            USART${INDEX?string}_REGS->US_IER = (US_IER_RXRDY_Msk | US_IER_FRAME_Msk | US_IER_PARE_Msk | US_IER_OVRE_Msk);
         }
 </#if>
     }

@@ -67,6 +67,44 @@ typedef enum
 
 } USART_ERROR;
 
+typedef enum
+{
+    USART_DATA_5_BIT = 0,
+    USART_DATA_6_BIT = 1,
+    USART_DATA_7_BIT = 2,
+    USART_DATA_8_BIT = 3,
+    USART_DATA_9_BIT = 4
+
+} USART_DATA;
+
+typedef enum
+{
+    USART_PARITY_NONE = 0,
+    USART_PARITY_ODD = 1,
+    USART_PARITY_EVEN = 2,
+    USART_PARITY_MARK = 3,
+    USART_PARITY_SPACE = 4,
+    USART_PARITY_MULTIDROP = 5
+
+} USART_PARITY;
+
+typedef enum
+{
+    USART_STOP_1_BIT = 0,
+    USART_STOP_1_5_BIT = 1,
+    USART_STOP_2_BIT = 2
+
+} USART_STOP;
+
+typedef struct
+{
+    uint32_t baudRate;
+    USART_DATA dataWidth;
+    USART_PARITY parity;
+    USART_STOP stopBits;
+
+} USART_SERIAL_SETUP;
+
 typedef void (* USART_CALLBACK)( uintptr_t context );
 
 

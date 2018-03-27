@@ -110,6 +110,73 @@ typedef enum
 
 
 // *****************************************************************************
+/* USART Serial Setup
+
+   Summary:
+    Defines the data type for the USART serial setup.
+
+   Description:
+    This can be used to define a serial setup which may then be used to change
+    the serial setup of the USART dynamically.
+
+   Remarks:
+    None.
+*/
+
+typedef enum
+{
+    USART_DATA_BIT_5 = 0,
+
+    USART_DATA_BIT_6 = 1,
+
+    USART_DATA_BIT_7 = 2,
+
+    USART_DATA_BIT_8 = 3,
+
+    USART_DATA_BIT_9 = 4
+
+} USART_DATA_BIT;
+
+typedef enum
+{
+    USART_PARITY_NONE = 0,
+
+    USART_PARITY_ODD = 1,
+
+    USART_PARITY_EVEN = 2,
+
+    USART_PARITY_MARK = 3,
+
+    USART_PARITY_SPACE = 4,
+
+    USART_PARITY_MULTIDROP = 5
+
+} USART_PARITY;
+
+typedef enum
+{
+    USART_STOP_BIT_1 = 0,
+
+    USART_STOP_BIT_1_5 = 1,
+
+    USART_STOP_BIT_2 = 2
+
+} USART_STOP_BIT;
+
+typedef struct
+{
+    uint32_t baudRate;
+
+    USART_DATA_BIT dataWidth;
+
+    USART_PARITY parity;
+
+    USART_STOP_BIT stopBits;
+
+} USART_SERIAL_SETUP;
+
+
+// *****************************************************************************
 /* Callback Function Pointer
 
    Summary:
@@ -640,6 +707,49 @@ bool USARTx_ReceiverIsReady( void );
 */
 
 USART_ERROR USARTx_ErrorGet( void );
+
+
+// *****************************************************************************
+/* Function:
+    void USARTx_SerialSetup(USART_SERIAL_SETUP * setup, uint32_t srcClkFreq)
+
+   Summary:
+    Sets the USART serial communication settings dynamically.
+
+   Description:
+    This function sets the USART serial communication settings dynamically.
+
+   Precondition:
+    USARTx_Initialize must have been called for the associated USART instance.
+    The USART transmit or receive transfer status should not be busy.
+
+   Parameters:
+    setup - Pointer to the structure containing the serial setup.
+    srcClkFreq - USART Peripheral Clock Source Frequency.
+
+   Returns:
+    true - Serial setup was updated Successfully.
+    false - Failure while updating serial setup.
+
+   Example:
+    <code>
+    USART_SERIAL_SETUP setup = {
+            115200,
+            USART_DATA_8_BIT,
+            USART_PARITY_ODD,
+            USART_STOP_1_BIT
+        };
+
+    USART1_SerialSetup(&setup, 0);
+    </code>
+
+   Remarks:
+    srcClkFreq overrides any change in the peripheral clock frequency.
+    If configured to zero PLib takes the peripheral clock frequency from MHC.
+*/
+
+bool USARTx_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
+
 
 // *****************************************************************************
 // *****************************************************************************
