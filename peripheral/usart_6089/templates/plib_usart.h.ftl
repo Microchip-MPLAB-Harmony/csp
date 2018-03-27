@@ -57,12 +57,15 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+#define USART${INDEX?string}_FrequencyGet()    (uint32_t)(${USART_CLOCK_FREQ}UL)
 
 /****************************** USART${INDEX?string} API *********************************/
 
 void USART${INDEX?string}_Initialize( void );
 
 USART_ERROR USART${INDEX?string}_ErrorGet( void );
+
+bool USART${INDEX?string}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
 bool USART${INDEX?string}_Write( void *buffer, const size_t size );
 
