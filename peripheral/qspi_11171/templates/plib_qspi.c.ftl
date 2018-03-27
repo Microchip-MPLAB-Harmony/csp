@@ -43,25 +43,24 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "plib_qspi${INDEX?string}.h"
 
-static qspi_registers_t *QSPI${INDEX?string}_Module = (qspi_registers_t *)QSPI_ID_${INDEX?string};
 
 void QSPI${INDEX?string}_Initialize(void)
 {
     // Reset and Disable the qspi Module
-    QSPI${INDEX?string}_Module->QSPI_CR.w = QSPI_CR_SWRST_Msk | QSPI_CR_QSPIDIS_Msk;
+    QSPI_REGS->QSPI_CR = QSPI_CR_SWRST_Msk | QSPI_CR_QSPIDIS_Msk;
 
-    while(QSPI${INDEX?string}_Module->QSPI_SR.w & QSPI_SR_QSPIENS_Msk);
+    while(QSPI_REGS->QSPI_SR& QSPI_SR_QSPIENS_Msk);
 
     // Set Mode Register values
-    QSPI${INDEX?string}_Module->QSPI_MR.w = ( QSPI_MR_SMM_${QSPI_SMM} );
+    QSPI_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} );
 
     // Set serial clock register
-    QSPI${INDEX?string}_Module->QSPI_SCR.w = (QSPI_SCR_SCBR(${QSPI_SCBR})) <#if QSPI_CPOL=="HIGH"> | QSPI_SCR_CPOL_Msk </#if> <#if QSPI_CPHA=="FALLING"> | QSPI_SCR_CPHA_Msk </#if>;
+    QSPI_REGS->QSPI_SCR = (QSPI_SCR_SCBR(${QSPI_SCBR})) <#if QSPI_CPOL=="HIGH"> | QSPI_SCR_CPOL_Msk </#if> <#if QSPI_CPHA=="FALLING"> | QSPI_SCR_CPHA_Msk </#if>;
 
     // Enable the qspi Module
-    QSPI${INDEX?string}_Module->QSPI_CR.w = QSPI_CR_QSPIEN_Msk;
+    QSPI_REGS->QSPI_CR = QSPI_CR_QSPIEN_Msk;
 
-    while(!(QSPI${INDEX?string}_Module->QSPI_SR.w & QSPI_SR_QSPIENS_Msk));
+    while(!(QSPI_REGS->QSPI_SR& QSPI_SR_QSPIENS_Msk));
 }
 
 static void qspi${INDEX?string}_memcpy_32bit(uint32_t* dst, uint32_t* src, uint32_t count)
@@ -80,7 +79,7 @@ static void qspi${INDEX?string}_memcpy_8bit(uint8_t* dst, uint8_t* src, uint32_t
 
 static inline void qspi${INDEX?string}_end_transfer( void )
 {
-    QSPI${INDEX?string}_Module->QSPI_CR.w = QSPI_CR_LASTXFER_Msk;
+    QSPI_REGS->QSPI_CR = QSPI_CR_LASTXFER_Msk;
 }
 
 static bool qspi${INDEX?string}_setup_transfer( qspi_memory_xfer_t *qspi_memory_xfer, uint8_t tfr_type, uint32_t address )
@@ -88,10 +87,10 @@ static bool qspi${INDEX?string}_setup_transfer( qspi_memory_xfer_t *qspi_memory_
     uint32_t mask = 0;
 
     /* Set instruction address register */
-    QSPI${INDEX?string}_Module->QSPI_IAR.w = QSPI_IAR_ADDR(address);
+    QSPI_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
 
     /* Set Instruction code register */
-    QSPI${INDEX?string}_Module->QSPI_ICR.w = (QSPI_ICR_INST(qspi_memory_xfer->instruction)) | (QSPI_ICR_OPT(qspi_memory_xfer->option));
+    QSPI_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_memory_xfer->instruction)) | (QSPI_ICR_OPT(qspi_memory_xfer->option));
 
     /* Set Instruction Frame register*/
 
@@ -109,10 +108,10 @@ static bool qspi${INDEX?string}_setup_transfer( qspi_memory_xfer_t *qspi_memory_
 
     mask |= QSPI_IFR_TFRTYP(tfr_type);
 
-    QSPI${INDEX?string}_Module->QSPI_IFR.w = mask;
+    QSPI_REGS->QSPI_IFR = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)QSPI${INDEX?string}_Module->QSPI_IFR.w;
+    (volatile uint32_t)QSPI_REGS->QSPI_IFR;
 
     return true;
 }
@@ -123,24 +122,24 @@ bool QSPI${INDEX?string}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, u
 
     /* Configure address */
     if(qspi_command_xfer->addr_en) {
-        QSPI${INDEX?string}_Module->QSPI_IAR.w = QSPI_IAR_ADDR(address);
+        QSPI_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
 
         mask |= QSPI_IFR_ADDREN_Msk;
         mask |= qspi_command_xfer->addr_len;
     }
 
     /* Configure instruction */
-    QSPI${INDEX?string}_Module->QSPI_ICR.w = (QSPI_ICR_INST(qspi_command_xfer->instruction));
+    QSPI_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_command_xfer->instruction));
 
     /* Configure instruction frame */
     mask |= qspi_command_xfer->width;
     mask |= QSPI_IFR_INSTEN_Msk;
     mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_READ_Val);
 
-    QSPI${INDEX?string}_Module->QSPI_IFR.w = mask;
+    QSPI_REGS->QSPI_IFR = mask;
 
     /* Poll Status register to know status if instruction has end */
-    while(!(QSPI${INDEX?string}_Module->QSPI_SR.w & QSPI_SR_INSTRE_Msk));
+    while(!(QSPI_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
     return true;
 }
@@ -151,7 +150,7 @@ bool QSPI${INDEX?string}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer,
     uint32_t mask = 0;
 
     /* Configure Instruction */
-    QSPI${INDEX?string}_Module->QSPI_ICR.w = (QSPI_ICR_INST(qspi_register_xfer->instruction));
+    QSPI_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
 
     /* Configure Instruction Frame */
     mask |= qspi_register_xfer->width;
@@ -162,10 +161,10 @@ bool QSPI${INDEX?string}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer,
 
     mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_READ_Val);
 
-    QSPI${INDEX?string}_Module->QSPI_IFR.w = mask;
+    QSPI_REGS->QSPI_IFR = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)QSPI${INDEX?string}_Module->QSPI_IFR.w;
+    (volatile uint32_t)QSPI_REGS->QSPI_IFR;
 
     /* Read the register content */
     qspi${INDEX?string}_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_buffer,  rx_data_length);
@@ -176,7 +175,7 @@ bool QSPI${INDEX?string}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer,
     qspi${INDEX?string}_end_transfer();
 
     /* Poll Status register to know status if instruction has end */
-    while(!(QSPI${INDEX?string}_Module->QSPI_SR.w & QSPI_SR_INSTRE_Msk));
+    while(!(QSPI_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
     return true;
 }
@@ -187,7 +186,7 @@ bool QSPI${INDEX?string}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer
     uint32_t mask = 0;
 
     /* Configure Instruction */
-    QSPI${INDEX?string}_Module->QSPI_ICR.w = (QSPI_ICR_INST(qspi_register_xfer->instruction));
+    QSPI_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
 
     /* Configure Instruction Frame */
     mask |= qspi_register_xfer->width;
@@ -196,10 +195,10 @@ bool QSPI${INDEX?string}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer
 
     mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_WRITE_Val);
 
-    QSPI${INDEX?string}_Module->QSPI_IFR.w = mask;
+    QSPI_REGS->QSPI_IFR = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)QSPI${INDEX?string}_Module->QSPI_IFR.w;
+    (volatile uint32_t)QSPI_REGS->QSPI_IFR;
 
     /* Write the content to register */
     qspi${INDEX?string}_memcpy_8bit((uint8_t *)qspi_buffer, (uint8_t *)tx_data, tx_data_length);
@@ -210,7 +209,7 @@ bool QSPI${INDEX?string}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer
     qspi${INDEX?string}_end_transfer();
 
     /* Poll Status register to know status if instruction has end */
-    while(!(QSPI${INDEX?string}_Module->QSPI_SR.w & QSPI_SR_INSTRE_Msk));
+    while(!(QSPI_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
     return true;
 }
@@ -237,7 +236,7 @@ bool QSPI${INDEX?string}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint3
         qspi${INDEX?string}_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_mem,  length_8bit);
 
     /* Dummy Read to clear QSPI_SR.INSTRE and QSPI_SR.CSR */
-    (volatile uint32_t)QSPI${INDEX?string}_Module->QSPI_SR.w;
+    (volatile uint32_t)QSPI_REGS->QSPI_SR;
 
     __DSB();
     __ISB();
@@ -245,7 +244,7 @@ bool QSPI${INDEX?string}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint3
     qspi${INDEX?string}_end_transfer();
 
     /* Poll Status register to know status if instruction has end */
-    while(!(QSPI${INDEX?string}_Module->QSPI_SR.w & QSPI_SR_INSTRE_Msk));
+    while(!(QSPI_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
     return true;
 }
@@ -277,7 +276,7 @@ bool QSPI${INDEX?string}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint
     qspi${INDEX?string}_end_transfer();
 
     /* Poll Status register to know status if instruction has end */
-    while(!(QSPI${INDEX?string}_Module->QSPI_SR.w & QSPI_SR_INSTRE_Msk));
+    while(!(QSPI_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
     return true;
 }

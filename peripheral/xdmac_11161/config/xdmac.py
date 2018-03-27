@@ -91,22 +91,22 @@ for peripheral in atdfContent.iter("module"):
 # based on the trigger source selected.
 global triggerSettings
 triggerSettings = {"Software Trigger"    : ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "None"],
-                "USART0_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART0_REGS->US_THR"],
-                "USART0_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART0_REGS->US_RHR"],
-                "USART1_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART1_REGS->US_THR"],
-                "USART1_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART1_REGS->US_RHR"],
-                "USART2_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART2_REGS->US_THR"],
-                "USART2_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_USART2_REGS->US_RHR"],
-                "UART0_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART0_REGS->UART_THR"],
-                "UART0_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART0_REGS->UART_RHR"],
-                "UART1_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART1_REGS->UART_THR"],
-                "UART1_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART1_REGS->UART_RHR"],
-                "UART2_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART2_REGS->UART_THR"],
-                "UART2_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART2_REGS->UART_RHR"],
-                "UART3_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART3_REGS->UART_THR"],
-                "UART3_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART3_REGS->UART_RHR"],
-                "UART4_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART4_REGS->UART_THR"],
-                "UART4_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "_UART4_REGS->UART_RHR"]}
+                "USART0_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "USART0_REGS->US_THR"],
+                "USART0_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "USART0_REGS->US_RHR"],
+                "USART1_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "USART1_REGS->US_THR"],
+                "USART1_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "USART1_REGS->US_RHR"],
+                "USART2_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "USART2_REGS->US_THR"],
+                "USART2_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "USART2_REGS->US_RHR"],
+                "UART0_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART0_REGS->UART_THR"],
+                "UART0_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART0_REGS->UART_RHR"],
+                "UART1_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART1_REGS->UART_THR"],
+                "UART1_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART1_REGS->UART_RHR"],
+                "UART2_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART2_REGS->UART_THR"],
+                "UART2_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART2_REGS->UART_RHR"],
+                "UART3_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART3_REGS->UART_THR"],
+                "UART3_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART3_REGS->UART_RHR"],
+                "UART4_Transmit"        : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART4_REGS->UART_THR"],
+                "UART4_Receive"            : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE", "UART4_REGS->UART_RHR"]}
                 # All triggers are yet to be added.
 
 ################################################################################

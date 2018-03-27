@@ -59,12 +59,12 @@ bool EFC${INDEX?string}_SectorErase( uint32_t address )
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
     /* Issue the FLASH erase operation*/
-    _EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_EPA|EEFC_FCR_FARG(page_number|0x2)|EEFC_FCR_FKEY_PASSWD);
+    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_EPA|EEFC_FCR_FARG(page_number|0x2)|EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>    _EFC_REGS->EEFC_FMR.w |= EEFC_FMR_FRDY_Msk;
+        <#lt>    EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
     </#if>
 
     return true;
@@ -81,12 +81,12 @@ bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address )
     *((uint32_t *)( IFLASH_ADDR + ( page_number * IFLASH_PAGE_SIZE ) + i )) =    *(( data++ ));
     }
     /* Issue the FLASH write operation*/
-    _EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
+    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>        _EFC_REGS->EEFC_FMR.w |= EEFC_FMR_FRDY_Msk;
+        <#lt>        EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
     </#if>
 
     return true;
@@ -104,12 +104,12 @@ bool EFC${INDEX?string}_WriteQuadWord( uint32_t *data, uint32_t address )
     *((uint32_t *)(( address ) + i )) =    *((uint32_t *)( data++ ));
     }
     /* Issue the FLASH write operation*/
-    _EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
+    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>        _EFC_REGS->EEFC_FMR.w |= EEFC_FMR_FRDY_Msk;
+        <#lt>        EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
     </#if>
 
     return true;
@@ -120,12 +120,12 @@ void EFC${INDEX?string}_RegionLock(uint32_t address)
     volatile uint16_t page_number;
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
-    _EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_SLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
+    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_SLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>        _EFC_REGS->EEFC_FMR.w |= EEFC_FMR_FRDY_Msk;
+        <#lt>        EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
     </#if>
 }
 
@@ -134,24 +134,24 @@ void EFC${INDEX?string}_RegionUnlock(uint32_t address)
     volatile uint16_t page_number;
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
-    _EFC_REGS->EEFC_FCR.w = (EEFC_FCR_FCMD_CLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
+    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_CLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>        _EFC_REGS->EEFC_FMR.w |= EEFC_FMR_FRDY_Msk;
+        <#lt>        EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
     </#if>
 }
 
 bool EFC${INDEX?string}_IsBusy(void)
 {
-    status |= _EFC_REGS->EEFC_FSR.w;
+    status |= EFC_REGS->EEFC_FSR;
     return (bool)(!(status & EEFC_FSR_FRDY_Msk));
 }
 
 EFC_ERR EFC${INDEX?string}_ErrorGet( void )
 {
-    status |= _EFC_REGS->EEFC_FSR.w;
+    status |= EFC_REGS->EEFC_FSR;
     return status;
 }
 
@@ -166,8 +166,8 @@ EFC_ERR EFC${INDEX?string}_ErrorGet( void )
 <#if INTERRUPT_ENABLE == true>
     <#lt>void EFC${INDEX?string}_InterruptHandler( void )
     <#lt>{
-    <#lt>    uint32_t ul_fmr = _EFC_REGS->EEFC_FMR.w;
-    <#lt>    _EFC_REGS->EEFC_FMR.w = ( ul_fmr & (~EEFC_FMR_FRDY_Msk));
+    <#lt>    uint32_t ul_fmr = EFC_REGS->EEFC_FMR;
+    <#lt>    EFC_REGS->EEFC_FMR = ( ul_fmr & (~EEFC_FMR_FRDY_Msk));
     <#lt>    if(efc.callback != NULL)
     <#lt>        {
         <#lt>            efc.callback(efc.context);

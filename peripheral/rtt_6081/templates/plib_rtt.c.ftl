@@ -45,30 +45,30 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	
 void RTT${INDEX?string}_Initialize(void)
 {
-	_RTT_REGS->RTT_MR.w = RTT_MR_RTTRST_Msk;
-	_RTT_REGS->RTT_MR.w = RTT_MR_RTPRES(${rttRTPRES}) | RTT_MR_RTTDIS_Msk ${rttINCIEN?then(' | RTT_MR_RTTINCIEN_Msk','')}${rttALMIEN?then(' | RTT_MR_ALMIEN_Msk','')}${rttRTC1HZ?then(' | RTT_MR_RTC1HZ_Msk','')};
+	RTT_REGS->RTT_MR = RTT_MR_RTTRST_Msk;
+	RTT_REGS->RTT_MR = RTT_MR_RTPRES(${rttRTPRES}) | RTT_MR_RTTDIS_Msk ${rttINCIEN?then(' | RTT_MR_RTTINCIEN_Msk','')}${rttALMIEN?then(' | RTT_MR_ALMIEN_Msk','')}${rttRTC1HZ?then(' | RTT_MR_RTC1HZ_Msk','')};
 }
 
 void RTT${INDEX?string}_Enable(void)
 {
-	_RTT_REGS->RTT_MR.w |= RTT_MR_RTTRST_Msk;
-	_RTT_REGS->RTT_MR.w &= ~(RTT_MR_RTTDIS_Msk);
+	RTT_REGS->RTT_MR|= RTT_MR_RTTRST_Msk;
+	RTT_REGS->RTT_MR&= ~(RTT_MR_RTTDIS_Msk);
 }
 
 void RTT${INDEX?string}_Disable(void)
 {
-	_RTT_REGS->RTT_MR.w |= RTT_MR_RTTDIS_Msk;
+	RTT_REGS->RTT_MR|= RTT_MR_RTTDIS_Msk;
 }
 
 void RTT${INDEX?string}_PrescalarUpdate(uint16_t prescale)
 {
-	uint32_t rtt_mr = _RTT_REGS->RTT_MR.w;
+	uint32_t rtt_mr = RTT_REGS->RTT_MR;
 	uint32_t flag = rtt_mr & RTT_MR_RTTINCIEN_Msk;
 	rtt_mr &= ~(RTT_MR_RTPRES_Msk | RTT_MR_RTTINCIEN_Msk);
-	_RTT_REGS->RTT_MR.w = rtt_mr | prescale | RTT_MR_RTTRST_Msk;
+	RTT_REGS->RTT_MR = rtt_mr | prescale | RTT_MR_RTTRST_Msk;
 	if (flag)
 	{
-		_RTT_REGS->RTT_MR.w |=  RTT_MR_RTTINCIEN_Msk;
+		RTT_REGS->RTT_MR|=  RTT_MR_RTTINCIEN_Msk;
 	}
 }
 
@@ -76,24 +76,24 @@ void RTT${INDEX?string}_PrescalarUpdate(uint16_t prescale)
 	<#lt>void RTT${INDEX?string}_AlarmValueSet(uint32_t alarm)
 	<#lt>{
 	<#lt>	uint32_t flag = 0;
-	<#lt>	flag = _RTT_REGS->RTT_MR.w & (RTT_MR_ALMIEN_Msk);
-	<#lt>	_RTT_REGS->RTT_MR.w &= ~(RTT_MR_ALMIEN_Msk);
-	<#lt>	_RTT_REGS->RTT_AR.w = alarm;
+	<#lt>	flag = RTT_REGS->RTT_MR& (RTT_MR_ALMIEN_Msk);
+	<#lt>	RTT_REGS->RTT_MR&= ~(RTT_MR_ALMIEN_Msk);
+	<#lt>	RTT_REGS->RTT_AR = alarm;
 	<#lt>	if (flag)
 	<#lt>	{
-	<#lt>		_RTT_REGS->RTT_MR.w |= RTT_MR_ALMIEN_Msk;
+	<#lt>		RTT_REGS->RTT_MR|= RTT_MR_ALMIEN_Msk;
 	<#lt>	}
 	<#lt>	
 	<#lt>}
 	<#lt>
 	<#lt>void RTT${INDEX?string}_EnableInterrupt (RTT_INTERRUPT_TYPE type)
 	<#lt>{
-	<#lt>	_RTT_REGS->RTT_MR.w |= type;
+	<#lt>	RTT_REGS->RTT_MR|= type;
 	<#lt>}
 	<#lt>
 	<#lt>void RTT${INDEX?string}_DisableInterrupt(RTT_INTERRUPT_TYPE type)
 	<#lt>{
-	<#lt>	_RTT_REGS->RTT_MR.w &= ~(type);
+	<#lt>	RTT_REGS->RTT_MR&= ~(type);
 	<#lt>}
 	<#lt>
 	<#lt>void RTT${INDEX?string}_CallbackRegister( RTT_CALLBACK callback, uintptr_t context )
@@ -105,10 +105,10 @@ void RTT${INDEX?string}_PrescalarUpdate(uint16_t prescale)
  
 uint32_t RTT${INDEX?string}_TimerValueGet(void)
 {
-	uint32_t rtt_val = _RTT_REGS->RTT_VR.w;
-	while (rtt_val != _RTT_REGS->RTT_VR.w) 
+	uint32_t rtt_val = RTT_REGS->RTT_VR;
+	while (rtt_val != RTT_REGS->RTT_VR) 
 	{
-		rtt_val = _RTT_REGS->RTT_VR.w;
+		rtt_val = RTT_REGS->RTT_VR;
 	}
 	return rtt_val;
 }
@@ -117,7 +117,7 @@ uint32_t RTT${INDEX?string}_FrequencyGet(void)
 {
 	uint32_t flag = 0;
 	
-	flag =  (_RTT_REGS->RTT_MR.w) & (RTT_MR_RTC1HZ_Msk);
+	flag =  (RTT_REGS->RTT_MR) & (RTT_MR_RTC1HZ_Msk);
 	
 	if (flag)
 	{
@@ -125,7 +125,7 @@ uint32_t RTT${INDEX?string}_FrequencyGet(void)
 	}
 	else
 	{
-		flag = (_RTT_REGS->RTT_MR.w) & (RTT_MR_RTPRES_Msk);
+		flag = (RTT_REGS->RTT_MR) & (RTT_MR_RTPRES_Msk);
 		if (flag == 0)
 		{
 			return (32768 / 65536);
@@ -140,16 +140,16 @@ uint32_t RTT${INDEX?string}_FrequencyGet(void)
 
 	<#lt>void RTT${INDEX?string}_InterruptHandler()
 	<#lt>{
-	<#lt>	volatile uint32_t status = _RTT_REGS->RTT_SR.w;
-	<#lt>	uint32_t flags = _RTT_REGS->RTT_MR.w;
-	<#lt>	_RTT_REGS->RTT_MR.w &= ~(RTT_MR_ALMIEN_Msk | RTT_MR_RTTINCIEN_Msk);
+	<#lt>	volatile uint32_t status = RTT_REGS->RTT_SR;
+	<#lt>	uint32_t flags = RTT_REGS->RTT_MR;
+	<#lt>	RTT_REGS->RTT_MR&= ~(RTT_MR_ALMIEN_Msk | RTT_MR_RTTINCIEN_Msk);
 	<#lt>	if(flags & RTT_MR_RTTINCIEN_Msk)
 	<#lt>	{
 	<#lt>		if(status & RTT_SR_RTTINC_Msk)
 	<#lt>		{
 	<#lt>			rtt.callback(rtt.context, RTT_PERIODIC);
 	<#lt>		}
-	<#lt>		_RTT_REGS->RTT_MR.w |= (RTT_MR_RTTINCIEN_Msk);
+	<#lt>		RTT_REGS->RTT_MR|= (RTT_MR_RTTINCIEN_Msk);
 	<#lt>	}
 	<#lt>	if(flags & RTT_MR_ALMIEN_Msk)
 	<#lt>	{
@@ -157,7 +157,7 @@ uint32_t RTT${INDEX?string}_FrequencyGet(void)
 	<#lt>		{
 	<#lt>			rtt.callback(rtt.context, RTT_ALARM);
 	<#lt>		}
-	<#lt>		_RTT_REGS->RTT_MR.w |= (RTT_MR_ALMIEN_Msk);
+	<#lt>		RTT_REGS->RTT_MR|= (RTT_MR_ALMIEN_Msk);
 	<#lt>	}	
 	<#lt>}
 </#if>

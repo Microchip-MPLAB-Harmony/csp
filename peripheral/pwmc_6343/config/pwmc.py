@@ -73,12 +73,12 @@ def pwmClockControl(symbol, event):
 			clockEnable = True
 			
 	if (clockEnable == True):
-		Database.setSymbolValue("core", "PMC_ID_PWMC" + str(pwmNum), True, 2)
+		Database.setSymbolValue("core", "PMC_ID_PWM" + str(pwmNum), True, 2)
 	else :
-		Database.setSymbolValue("core", "PMC_ID_PWMC" + str(pwmNum), False, 2)	
+		Database.setSymbolValue("core", "PMC_ID_PWM" + str(pwmNum), False, 2)	
 
 def pwmClkDependencyStatus(symbol, event):
-	clock = bool(Database.getSymbolValue("core", "PMC_ID_PWMC" + str(pwmNum)))
+	clock = bool(Database.getSymbolValue("core", "PMC_ID_PWM" + str(pwmNum)))
 	if ((clock == False) and (pwmSym_CH_Enable[0].getValue() == True or pwmSym_CH_Enable[1].getValue() == True or pwmSym_CH_Enable[2].getValue() == True or pwmSym_CH_Enable[3].getValue() == True)):
 		symbol.setVisible(True)
 	else:
@@ -310,7 +310,7 @@ def instantiateComponent(pwmComponent):
 	global pwmNVICHandler
 	global pwmNVICHandlerLock
 
-	pwmPeriphId = Interrupt.getInterruptIndex("PWMC" + str(pwmNum))
+	pwmPeriphId = Interrupt.getInterruptIndex("PWM" + str(pwmNum))
 	pwmNVICVector = "NVIC_" + str(pwmPeriphId) + "_ENABLE"
 	pwmNVICHandler = "NVIC_" + str(pwmPeriphId) + "_HANDLER"
 	pwmNVICHandlerLock = "NVIC_" + str(pwmPeriphId) + "_HANDLER_LOCK"	
@@ -329,7 +329,7 @@ def instantiateComponent(pwmComponent):
 	pwmSymClkEnComment = pwmComponent.createCommentSymbol("PWM_CLK_ENABLE_COMMENT", None)
 	pwmSymClkEnComment.setVisible(False)
 	pwmSymClkEnComment.setLabel("Warning!!! PWM Peripheral Clock is Disabled in Clock Manager")
-	pwmSymClkEnComment.setDependencies(pwmClkDependencyStatus, ["core.PMC_ID_PWMC" + str(pwmNum), "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
+	pwmSymClkEnComment.setDependencies(pwmClkDependencyStatus, ["core.PMC_ID_PWM" + str(pwmNum), "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
 
 	pwmSymIntEnComment = pwmComponent.createCommentSymbol("PWM_NVIC_ENABLE_COMMENT", None)
 	pwmSymIntEnComment.setVisible(False)
@@ -352,7 +352,7 @@ def instantiateComponent(pwmComponent):
 		
 	#Find available channels and available external clock pins
 	pwm_signals = []
-	pwm = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PWMC\"]/instance@[name=\"PWMC"+str(pwmNum)+"\"]/signals")
+	pwm = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PWM\"]/instance@[name=\"PWM"+str(pwmNum)+"\"]/signals")
 	pwm_signals = pwm.getChildren()
 	for pad in range (0 , len(pwm_signals)):
 		if "PWMH" in pwm_signals[pad].getAttribute("group"):
@@ -377,7 +377,7 @@ def instantiateComponent(pwmComponent):
 	pwmSym_PWM_CLK_PREA = pwmComponent.createKeyValueSetSymbol("PWM_CLK_PREA", pwmSym_PWM_CLKA_ENABLE)
 	pwmSym_PWM_CLK_PREA.setLabel("Select Clock A Source")
 	childrenNodes = []
-	pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]/value-group@[name=\"PWMC_CLK__PREA\"]")
+	pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CLK__PREA\"]")
 	childrenNodes = pwm.getChildren()
 	for param in range(0, len(childrenNodes)):
 		pwmSym_PWM_CLK_PREA.addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
@@ -406,7 +406,7 @@ def instantiateComponent(pwmComponent):
 	pwmSym_PWM_CLK_PREB = pwmComponent.createKeyValueSetSymbol("PWM_CLK_PREB", pwmSym_PWM_CLKB_ENABLE)
 	pwmSym_PWM_CLK_PREB.setLabel("Select Clock B Source")
 	childrenNodes = []
-	pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]/value-group@[name=\"PWMC_CLK__PREB\"]")
+	pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CLK__PREB\"]")
 	childrenNodes = pwm.getChildren()
 	for param in range(0, len(childrenNodes)):
 		pwmSym_PWM_CLK_PREB.addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
@@ -465,7 +465,7 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_CMR_CPRE[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_CH_"+str(channelID)+"_CMR_CPRE", pwmSym_CH_Enable[channelID])
 		pwmSym_PWM_CMR_CPRE[channelID].setLabel("Select Channel Clock")
 		childrenNodes = []
-		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]/value-group@[name=\"PWMC_CMR0__CPRE\"]")
+		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__CPRE\"]")
 		childrenNodes = pwm.getChildren()
 		for param in range(0, len(childrenNodes)):
 			pwmSym_PWM_CMR_CPRE[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))		
@@ -487,7 +487,7 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_CMR_CALG[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_CH_"+str(channelID)+"_CMR_CALG", pwmSym_CH_Enable[channelID])
 		pwmSym_PWM_CMR_CALG[channelID].setLabel("Select Alignment")
 		childrenNodes = []
-		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]/value-group@[name=\"PWMC_CMR0__CALG\"]")
+		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__CALG\"]")
 		childrenNodes = pwm.getChildren()
 		for param in range(0, len(childrenNodes)):
 			pwmSym_PWM_CMR_CALG[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))		
@@ -502,7 +502,7 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_CMR_UPDS[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_CH_"+str(channelID)+"_CMR_UPDS", pwmSym_PWM_CMR_CALG[channelID])
 		pwmSym_PWM_CMR_UPDS[channelID].setLabel("Select Duty-Cycle Update Trigger")
 		childrenNodes = []
-		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]/value-group@[name=\"PWMC_CMR0__UPDS\"]")
+		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__UPDS\"]")
 		childrenNodes = pwm.getChildren()
 		for param in range(0, len(childrenNodes)):
 			pwmSym_PWM_CMR_UPDS[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))				
@@ -515,7 +515,7 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_CMR_CES[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_CH_"+str(channelID)+"_CMR_CES", pwmSym_PWM_CMR_CALG[channelID])
 		pwmSym_PWM_CMR_CES[channelID].setLabel("Select Counter Event Occurrence")
 		childrenNodes = []
-		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]/value-group@[name=\"PWMC_CMR0__CES\"]")
+		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__CES\"]")
 		childrenNodes = pwm.getChildren()
 		for param in range(0, len(childrenNodes)):
 			pwmSym_PWM_CMR_CES[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))		
@@ -528,7 +528,7 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_CMR_CPOL[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_CH_"+str(channelID)+"_CMR_CPOL", pwmSym_CH_Enable[channelID])
 		pwmSym_PWM_CMR_CPOL[channelID].setLabel("Output Polarity")
 		childrenNodes = []
-		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]/value-group@[name=\"PWMC_CMR0__CPOL\"]")
+		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMR0__CPOL\"]")
 		childrenNodes = pwm.getChildren()
 		for param in range(0, len(childrenNodes)):
 			pwmSym_PWM_CMR_CPOL[channelID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))		
@@ -607,7 +607,7 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_FPE[channelID].setDefaultValue(0)	
 		pwmSym_PWM_FPE[channelID].setVisible(False)
 		fault_id = []
-		pwm = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PWMC\"]/instance@[name=\"PWMC"+str(pwmNum)+"\"]/parameters")
+		pwm = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PWM\"]/instance@[name=\"PWM"+str(pwmNum)+"\"]/parameters")
 		fault_id = pwm.getChildren()	
 		for param in range (0 , len(fault_id)):
 			if "FAULT" in fault_id[param].getAttribute("name"):
@@ -693,7 +693,7 @@ def instantiateComponent(pwmComponent):
 	pwmSym_PWM_SCM_UPDM = pwmComponent.createKeyValueSetSymbol("PWM_SCM_UPDM", pwmSyncChMenu)
 	pwmSym_PWM_SCM_UPDM.setLabel("Select Synchronous Channel Update Mode")
 	childrenNodes = []
-	pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]/value-group@[name=\"PWMC_SCM__UPDM\"]")
+	pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_SCM__UPDM\"]")
 	childrenNodes = pwm.getChildren()
 	for param in range(0, (len(childrenNodes) - 1)):
 		pwmSym_PWM_SCM_UPDM.addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))		
@@ -747,7 +747,7 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_CMPV_CVM[compareID] = pwmComponent.createKeyValueSetSymbol("PWM_COMP_"+str(compareID)+"_CMPV_CVM", pwmSym_PWM_CMPM_CEN[compareID])
 		pwmSym_PWM_CMPV_CVM[compareID].setLabel("Comparison Mode")
 		childrenNodes = []
-		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]/value-group@[name=\"PWMC_CMPV0__CVM\"]")
+		pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]/value-group@[name=\"PWM_CMPV0__CVM\"]")
 		childrenNodes = pwm.getChildren()
 		for param in range(0, len(childrenNodes)):
 			pwmSym_PWM_CMPV_CVM[compareID].addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))		
@@ -790,7 +790,7 @@ def instantiateComponent(pwmComponent):
 ########################### Code Generation   #################################
 ###################################################################################################		
 
-	pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWMC\"]")
+	pwm = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PWM\"]")
 	pwmID = pwm.getAttribute("id")
 	
 	pwmHeaderFile = pwmComponent.createFileSymbol(None, None)

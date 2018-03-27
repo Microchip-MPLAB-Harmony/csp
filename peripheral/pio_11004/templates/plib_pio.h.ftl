@@ -106,15 +106,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 <#if  gpioName?counter ==  gpioChannel?counter><#if  gpioName?counter ==  gpioPinPos?counter>
 
 /*** Functions for ${gpioName} pin ***/
-#define ${gpioName}_Set()               (_PORT${gpioChannel}_REGS->PORT_SODR.w = (1<<${gpioPinPos}))
-#define ${gpioName}_Clear()             (_PORT${gpioChannel}_REGS->PORT_CODR.w = (1<<${gpioPinPos})) 
-#define ${gpioName}_Toggle()            (_PORT${gpioChannel}_REGS->PORT_ODSR.w ^= (1<<${gpioPinPos})) 
-#define ${gpioName}_Get()               ((_PORT${gpioChannel}_REGS->PORT_PDSR.w >> ${gpioPinPos}) & 0x1) 
-#define ${gpioName}_OutputEnable()      (_PORT${gpioChannel}_REGS->PORT_OER.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InputEnable()       (_PORT${gpioChannel}_REGS->PORT_ODR.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InterruptEnable()   (_PORT${gpioChannel}_REGS->PORT_IER.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InterruptDisable()  (_PORT${gpioChannel}_REGS->PORT_IDR.w = (1<<${gpioPinPos}))
-
+#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_SODR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_Clear()             (PIO${gpioChannel}_REGS->PIO_CODR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_Toggle()            (PIO${gpioChannel}_REGS->PIO_ODSR.w ^= (1<<${gpioPinPos}))
+#define ${gpioName}_Get()               ((PIO${gpioChannel}_REGS->PIO_PDSR.w >> ${gpioPinPos}) & 0x1)
+#define ${gpioName}_OutputEnable()      (PIO${gpioChannel}_REGS->PIO_OER.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InputEnable()       (PIO${gpioChannel}_REGS->PIO_ODR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptEnable()   (PIO${gpioChannel}_REGS->PIO_IER.w = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptDisable()  (PIO${gpioChannel}_REGS->PIO_IDR.w = (1<<${gpioPinPos}))
 </#if></#if>
 </#list>
 </#list>
@@ -126,17 +125,17 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 // *****************************************************************************
 /* PIO Port
-  
+
   Summary:
     Identifies the available PIO Ports.
-  
+
   Description:
     This enumeration identifies the available PIO Ports.
-  
+
   Remarks:
     The caller should not rely on the specific numbers assigned to any of
     these values as they may change from one processor to the next.
-  
+
     Not all ports are available on all devices.  Refer to the specific
     device data sheet to determine which ports are supported.
 */
@@ -144,19 +143,19 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 typedef enum
 {
     /* Port A Pins */
-    PIO_PORT_A = _PORTA_BASE_ADDRESS,
-    
+    PIO_PORT_A = PIOA_BASE_ADDRESS,
+
     /* Port B Pins */
-    PIO_PORT_B = _PORTB_BASE_ADDRESS,
+    PIO_PORT_B = PIOB_BASE_ADDRESS,
 
     /* Port C Pins */
-    PIO_PORT_C = _PORTC_BASE_ADDRESS,
+    PIO_PORT_C = PIOC_BASE_ADDRESS,
 
     /* Port D Pins */
-    PIO_PORT_D = _PORTD_BASE_ADDRESS,
+    PIO_PORT_D = PIOD_BASE_ADDRESS,
 
     /* Port E Pins */
-    PIO_PORT_E = _PORTE_BASE_ADDRESS  
+    PIO_PORT_E = PIOE_BASE_ADDRESS
 
 } PIO_PORT;
 
@@ -181,7 +180,7 @@ typedef enum
 {
     /* PA0 pin */
     PIO_PIN_PA0,
-    
+
     /* PA1 pin */
     PIO_PIN_PA1,
 
@@ -192,11 +191,11 @@ typedef enum
     PIO_PIN_PA3,
 
     /* PA4 pin */
-    PIO_PIN_PA4,  
+    PIO_PIN_PA4,
 
     /* PA5 pin */
     PIO_PIN_PA5,
-    
+
     /* PA6 pin */
     PIO_PIN_PA6,
 
@@ -208,10 +207,10 @@ typedef enum
 
     /* PA9 pin */
     PIO_PIN_PA9,
- 
+
     /* PA10 pin */
     PIO_PIN_PA10,
-    
+
     /* PA11 pin */
     PIO_PIN_PA11,
 
@@ -222,11 +221,11 @@ typedef enum
     PIO_PIN_PA13,
 
     /* PA14 pin */
-    PIO_PIN_PA14,  
+    PIO_PIN_PA14,
 
     /* PA15 pin */
     PIO_PIN_PA15,
-    
+
     /* PA16 pin */
     PIO_PIN_PA16,
 
@@ -238,10 +237,10 @@ typedef enum
 
     /* PA19 pin */
     PIO_PIN_PA19,
-    
+
     /* PA20 pin */
     PIO_PIN_PA20,
-    
+
     /* PA21 pin */
     PIO_PIN_PA21,
 
@@ -252,11 +251,11 @@ typedef enum
     PIO_PIN_PA23,
 
     /* PA24 pin */
-    PIO_PIN_PA24,  
+    PIO_PIN_PA24,
 
     /* PA25 pin */
     PIO_PIN_PA25,
-    
+
     /* PA26 pin */
     PIO_PIN_PA26,
 
@@ -268,16 +267,16 @@ typedef enum
 
     /* PA29 pin */
     PIO_PIN_PA29,
-  
+
     /* PA30 pin */
     PIO_PIN_PA30,
 
     /* PA31 pin */
     PIO_PIN_PA31,
-  
+
     /* PB0 pin */
     PIO_PIN_PB0,
-    
+
     /* PB1 pin */
     PIO_PIN_PB1,
 
@@ -288,11 +287,11 @@ typedef enum
     PIO_PIN_PB3,
 
     /* PB4 pin */
-    PIO_PIN_PB4,  
+    PIO_PIN_PB4,
 
     /* PB5 pin */
     PIO_PIN_PB5,
-    
+
     /* PB6 pin */
     PIO_PIN_PB6,
 
@@ -304,10 +303,10 @@ typedef enum
 
     /* PB9 pin */
     PIO_PIN_PB9,
- 
+
     /* PB10 pin */
     PIO_PIN_PB10,
-    
+
     /* PB11 pin */
     PIO_PIN_PB11,
 
@@ -318,11 +317,11 @@ typedef enum
     PIO_PIN_PB13,
 
     /* PB14 pin */
-    PIO_PIN_PB14,  
+    PIO_PIN_PB14,
 
     /* PB15 pin */
     PIO_PIN_PB15,
-    
+
     /* PB16 pin */
     PIO_PIN_PB16,
 
@@ -334,10 +333,10 @@ typedef enum
 
     /* PB19 pin */
     PIO_PIN_PB19,
-    
+
     /* PB20 pin */
     PIO_PIN_PB20,
-    
+
     /* PB21 pin */
     PIO_PIN_PB21,
 
@@ -348,11 +347,11 @@ typedef enum
     PIO_PIN_PB23,
 
     /* PB24 pin */
-    PIO_PIN_PB24,  
+    PIO_PIN_PB24,
 
     /* PB25 pin */
     PIO_PIN_PB25,
-    
+
     /* PB26 pin */
     PIO_PIN_PB26,
 
@@ -364,16 +363,16 @@ typedef enum
 
     /* PB29 pin */
     PIO_PIN_PB29,
-  
+
     /* PB30 pin */
     PIO_PIN_PB30,
 
     /* PB31 pin */
     PIO_PIN_PB31,
- 
+
     /* PC0 pin */
     PIO_PIN_PC0,
-    
+
     /* PC1 pin */
     PIO_PIN_PC1,
 
@@ -384,11 +383,11 @@ typedef enum
     PIO_PIN_PC3,
 
     /* PC4 pin */
-    PIO_PIN_PC4,  
+    PIO_PIN_PC4,
 
     /* PC5 pin */
     PIO_PIN_PC5,
-    
+
     /* PC6 pin */
     PIO_PIN_PC6,
 
@@ -400,10 +399,10 @@ typedef enum
 
     /* PC9 pin */
     PIO_PIN_PC9,
- 
+
     /* PC10 pin */
     PIO_PIN_PC10,
-    
+
     /* PC11 pin */
     PIO_PIN_PC11,
 
@@ -414,11 +413,11 @@ typedef enum
     PIO_PIN_PC13,
 
     /* PC14 pin */
-    PIO_PIN_PC14,  
+    PIO_PIN_PC14,
 
     /* PC15 pin */
     PIO_PIN_PC15,
-    
+
     /* PC16 pin */
     PIO_PIN_PC16,
 
@@ -430,10 +429,10 @@ typedef enum
 
     /* PC19 pin */
     PIO_PIN_PC19,
-    
+
     /* PC20 pin */
     PIO_PIN_PC20,
-    
+
     /* PC21 pin */
     PIO_PIN_PC21,
 
@@ -444,11 +443,11 @@ typedef enum
     PIO_PIN_PC23,
 
     /* PC24 pin */
-    PIO_PIN_PC24,  
+    PIO_PIN_PC24,
 
     /* PC25 pin */
     PIO_PIN_PC25,
-    
+
     /* PC26 pin */
     PIO_PIN_PC26,
 
@@ -460,16 +459,16 @@ typedef enum
 
     /* PC29 pin */
     PIO_PIN_PC29,
-  
+
     /* PC30 pin */
     PIO_PIN_PC30,
 
     /* PC31 pin */
     PIO_PIN_PC31,
- 
+
     /* PD0 pin */
     PIO_PIN_PD0,
-    
+
     /* PD1 pin */
     PIO_PIN_PD1,
 
@@ -480,11 +479,11 @@ typedef enum
     PIO_PIN_PD3,
 
     /* PD4 pin */
-    PIO_PIN_PD4,  
+    PIO_PIN_PD4,
 
     /* PD5 pin */
     PIO_PIN_PD5,
-    
+
     /* PD6 pin */
     PIO_PIN_PD6,
 
@@ -496,10 +495,10 @@ typedef enum
 
     /* PD9 pin */
     PIO_PIN_PD9,
- 
+
     /* PD10 pin */
     PIO_PIN_PD10,
-    
+
     /* PD11 pin */
     PIO_PIN_PD11,
 
@@ -510,11 +509,11 @@ typedef enum
     PIO_PIN_PD13,
 
     /* PD14 pin */
-    PIO_PIN_PD14,  
+    PIO_PIN_PD14,
 
     /* PD15 pin */
     PIO_PIN_PD15,
-    
+
     /* PD16 pin */
     PIO_PIN_PD16,
 
@@ -526,10 +525,10 @@ typedef enum
 
     /* PD19 pin */
     PIO_PIN_PD19,
-    
+
     /* PD20 pin */
     PIO_PIN_PD20,
-    
+
     /* PD21 pin */
     PIO_PIN_PD21,
 
@@ -540,11 +539,11 @@ typedef enum
     PIO_PIN_PD23,
 
     /* PD24 pin */
-    PIO_PIN_PD24,  
+    PIO_PIN_PD24,
 
     /* PD25 pin */
     PIO_PIN_PD25,
-    
+
     /* PD26 pin */
     PIO_PIN_PD26,
 
@@ -556,16 +555,16 @@ typedef enum
 
     /* PD29 pin */
     PIO_PIN_PD29,
-  
+
     /* PD30 pin */
     PIO_PIN_PD30,
 
     /* PD31 pin */
     PIO_PIN_PD31,
- 
+
     /* PE0 pin */
     PIO_PIN_PE0,
-    
+
     /* PE1 pin */
     PIO_PIN_PE1,
 
@@ -576,11 +575,11 @@ typedef enum
     PIO_PIN_PE3,
 
     /* PE4 pin */
-    PIO_PIN_PE4,  
+    PIO_PIN_PE4,
 
     /* PE5 pin */
     PIO_PIN_PE5,
-    
+
     /* PE6 pin */
     PIO_PIN_PE6,
 
@@ -592,10 +591,10 @@ typedef enum
 
     /* PE9 pin */
     PIO_PIN_PE9,
- 
+
     /* PE10 pin */
     PIO_PIN_PE10,
-    
+
     /* PE11 pin */
     PIO_PIN_PE11,
 
@@ -606,11 +605,11 @@ typedef enum
     PIO_PIN_PE13,
 
     /* PE14 pin */
-    PIO_PIN_PE14,  
+    PIO_PIN_PE14,
 
     /* PE15 pin */
     PIO_PIN_PE15,
-    
+
     /* PE16 pin */
     PIO_PIN_PE16,
 
@@ -622,10 +621,10 @@ typedef enum
 
     /* PE19 pin */
     PIO_PIN_PE19,
-    
+
     /* PE20 pin */
     PIO_PIN_PE20,
-    
+
     /* PE21 pin */
     PIO_PIN_PE21,
 
@@ -636,11 +635,11 @@ typedef enum
     PIO_PIN_PE23,
 
     /* PE24 pin */
-    PIO_PIN_PE24,  
+    PIO_PIN_PE24,
 
     /* PE25 pin */
     PIO_PIN_PE25,
-    
+
     /* PE26 pin */
     PIO_PIN_PE26,
 
@@ -652,17 +651,22 @@ typedef enum
 
     /* PE29 pin */
     PIO_PIN_PE29,
-  
+
     /* PE30 pin */
     PIO_PIN_PE30,
 
     /* PE31 pin */
+<<<<<<< HEAD
     PIO_PIN_PE31,
-    
+
     /* This element should not be used in any of the PIO APIs.
        It will be used by other modules or application to denote that none of the PIO Pin is used */
     PIO_PIN_NONE = -1
-  
+
+=======
+    PIO_PIN_PE31
+
+>>>>>>> [all] Fix build issues after product header switch
 } PIO_PIN;
 
 <#if PIO_A_INTERRUPT_USED == true ||
@@ -677,7 +681,7 @@ typedef enum
     Pointer to a PIO Pin-Event handler function.
 
    Description:
-    This data type defines the required function signature for the 
+    This data type defines the required function signature for the
     PIO pin-event handling callback function.  The client must register
     a pointer to an event handling function whose function signature (parameter
     and return value types) match the types specified by this function pointer
@@ -744,15 +748,15 @@ typedef  void (*PIO_EVENT_HANDLER_PIN) ( PIO_PIN pin, void* context);
 
   Parameters:
     None.
-    
+
   Returns:
     None.
 
   Example:
     <code>
-    
+
     PIO_Initialize();
-                                                                
+
     </code>
 
   Remarks:
@@ -784,13 +788,13 @@ void PIO_Initialize(void);
     value     - value to be written on the selected pin:
                 true  = set pin to high (1).
                 false = clear pin to low (0).
-    
+
   Returns:
     None.
 
   Example:
-    <code>   
-    PIO_PinWrite(PIO_PIN_PB3, true);                                                            
+    <code>
+    PIO_PinWrite(PIO_PIN_PB3, true);
     </code>
 
   Remarks:
@@ -823,10 +827,10 @@ void PIO_Initialize(void);
 
   Example:
     <code>
-    
+
     bool value;
     value = PIO_PinRead(PIO_PIN_PB3);
-                                                                
+
     </code>
 
   Remarks:
@@ -857,10 +861,10 @@ void PIO_Initialize(void);
 
   Example:
     <code>
-    
+
     bool value;
     value = PIO_PinReadLatch(PIO_PIN_PB3);
-                                                                
+
     </code>
 
   Remarks:
@@ -883,15 +887,15 @@ void PIO_Initialize(void);
 
   Parameters:
     pin       - One of the IO pins from the enum PIO_PIN
-    
+
   Returns:
     None.
 
   Example:
     <code>
-    
+
     PIO_PinToggle(PIO_PIN_PB3);
-                                                                
+
     </code>
 
   Remarks:
@@ -914,15 +918,15 @@ void PIO_Initialize(void);
 
   Parameters:
     pin       - One of the IO pins from the enum PIO_PIN
-    
+
   Returns:
     None.
 
   Example:
     <code>
-    
+
     PIO_PinSet(PIO_PIN_PB3);
-                                                                
+
     </code>
 
   Remarks:
@@ -945,15 +949,15 @@ void PIO_Initialize(void);
 
   Parameters:
     pin       - One of the IO pins from the enum PIO_PIN
-    
+
   Returns:
     None.
 
   Example:
     <code>
-    
+
     PIO_PinClear(PIO_PIN_PB3);
-                                                                
+
     </code>
 
   Remarks:
@@ -976,15 +980,15 @@ void PIO_Initialize(void);
 
   Parameters:
     pin       - One of the IO pins from the enum PIO_PIN
-    
+
   Returns:
     None.
 
   Example:
     <code>
-    
+
     PIO_PinInputEnable(PIO_PIN_PB3);
-                                                                
+
     </code>
 
   Remarks:
@@ -1007,15 +1011,15 @@ void PIO_Initialize(void);
 
   Parameters:
     pin       - One of the IO pins from the enum PIO_PIN
-    
+
   Returns:
     None.
 
   Example:
     <code>
-    
+
     PIO_PinOutputEnable(PIO_PIN_PB3);
-                                                                
+
     </code>
 
   Remarks:
@@ -1038,15 +1042,15 @@ void PIO_Initialize(void);
 
   Parameters:
     pin           - One of the IO pins from the enum PIO_PIN
-    
+
   Returns:
     None.
 
   Example:
     <code>
-    
+
     PIO_PinInterruptEnable(PIO_PIN_PB3);
-                                                                
+
     </code>
 
   Remarks:
@@ -1069,15 +1073,15 @@ void PIO_Initialize(void);
 
   Parameters:
     pin       - One of the IO pins from the enum PIO_PIN
-    
+
   Returns:
     None.
 
   Example:
     <code>
-    
+
     PIO_PinInterruptDisable(PIO_PIN_PB3);
-                                                                
+
     </code>
 
   Remarks:
@@ -1093,7 +1097,7 @@ void PIO_Initialize(void);
 // *****************************************************************************
 /* Function:
     void PIO_PinInterruptCallbackRegister(
-        PIO_PIN pin, 
+        PIO_PIN pin,
         const PIO_EVENT_HANDLER_PIN callBack,
         void* context
     );
@@ -1124,7 +1128,7 @@ void PIO_Initialize(void);
 
   Example:
     <code>
-    
+
     PIO_PinInterruptCallbackRegister(PIO_PIN_PB3, &APP_PinHandler, NULL);
 
     </code>
@@ -1133,7 +1137,7 @@ void PIO_Initialize(void);
     None.
 */
 void PIO_PinInterruptCallbackRegister(
-    PIO_PIN pin, 
+    PIO_PIN pin,
     const   PIO_EVENT_HANDLER_PIN callBack,
     void* context
 );
@@ -1173,10 +1177,10 @@ void PIO_PinInterruptCallbackRegister(
 
   Example:
     <code>
-    
+
     uint32_t value;
     value = PIO_PortRead(PIO_PORT_C);
-                                                                
+
     </code>
 
   Remarks:
@@ -1212,14 +1216,14 @@ uint32_t PIO_PortRead(PIO_PORT port);
 
   Example:
     <code>
-    
+
     PIO_PortWrite(PIO_PORT_C, 0x7563D45F);
-                                                                
+
     </code>
 
   Remarks:
     If the port has less than 32-bits, unimplemented pins will be ignored.
- 
+
     Implemented pins are Right aligned in the 32-bit value.
 */
 void PIO_PortWrite(PIO_PORT port, uint32_t value);
@@ -1249,10 +1253,10 @@ void PIO_PortWrite(PIO_PORT port, uint32_t value);
 
   Example:
     <code>
-    
+
     uint32_t value;
     value = PIO_PortReadLatch(PIO_PORT_C);
-                                                                
+
     </code>
 
   Remarks:
@@ -1278,7 +1282,7 @@ uint32_t PIO_PortReadLatch ( PIO_PORT port );
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
     mask          - A 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected port will be set. 
+                    which IO pins of the selected port will be set.
                     1's - Will set corresponding IO pins to high (to 1).
                     0's - Will remain unchanged.
   Returns:
@@ -1286,15 +1290,15 @@ uint32_t PIO_PortReadLatch ( PIO_PORT port );
 
   Example:
     <code>
-    
+
     // Set PC5 and PC7 pins to 1
     PIO_PortSet(PIO_PORT_C, 0x00A0);
-                                                                
+
     </code>
 
   Remarks:
     If the port has less than 32-bits, unimplemented pins will be ignored.
- 
+
     Implemented pins are Right aligned in the 32-bit value.
 */
 void PIO_PortSet(PIO_PORT port, uint32_t mask);
@@ -1315,7 +1319,7 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask);
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
     mask          - A 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected port will be cleared. 
+                    which IO pins of the selected port will be cleared.
                     1's - Will clear corresponding IO pins to low (to 0).
                     0's - Will remain unchanged.
   Returns:
@@ -1323,15 +1327,15 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask);
 
   Example:
     <code>
-    
+
     // Clear PC5 and PC7 pins to 0
     PIO_PortClear(PIO_PORT_C, 0x00A0);
-                                                                
+
     </code>
 
   Remarks:
     If the port has less than 32-bits, unimplemented pins will be ignored.
- 
+
     Implemented pins are Right aligned in the 32-bit value.
 */
 void PIO_PortClear(PIO_PORT port, uint32_t mask);
@@ -1352,7 +1356,7 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask);
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
     mask          - A 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected port will be toggled. 
+                    which IO pins of the selected port will be toggled.
                     1's - Will toggle (invert) corresponding IO pins.
                     0's - Will remain unchanged.
   Returns:
@@ -1360,15 +1364,15 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask);
 
   Example:
     <code>
-    
+
     // Toggles PC5 and PC7 pins
     PIO_PortToggle(PIO_PORT_C, 0x00A0);
-                                                                
+
     </code>
 
   Remarks:
     If the port has less than 32-bits, unimplemented pins will be ignored.
- 
+
     Implemented pins are Right aligned in the 32-bit value.
 */
 void PIO_PortToggle(PIO_PORT port, uint32_t mask);
@@ -1398,10 +1402,10 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask);
 
   Example:
     <code>
-    
+
     // Make PC5 and PC7 pins as input
     PIO_PortInputEnable(PIO_PORT_C, 0x00A0);
-                                                                
+
     </code>
 
   Remarks:
@@ -1434,10 +1438,10 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask);
 
   Example:
     <code>
-    
+
     // Make PC5 and PC7 pins as output
     PIO_PortOutputEnable(PIO_PORT_C, 0x00A0);
-                                                                
+
     </code>
 
   Remarks:
@@ -1460,7 +1464,7 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask);
 
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
- 
+
     mask       - Is a 32 bit value in which positions of 0s and 1s decide
                  which IO pins of the selected port will have interrupt
                  enabled.  The bit positions of mask value which are set as 1,
@@ -1468,16 +1472,16 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask);
                  will be enabled.  The bit positions of mask value which are
                  cleared to 0, IO interrupt of corresponding IO pin of the
                  selected port will remain unchanged.
-    
+
   Returns:
     None.
 
   Example:
     <code>
-    
+
     // Enable IO interrupt for PC5 and PC7 pins
     PIO_PortInterruptEnable(PIO_PORT_C, 0x00A0);
-                                                                
+
     </code>
 
   Remarks:
@@ -1512,10 +1516,10 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask);
 
   Example:
     <code>
-    
+
     // Disable IO interrupt for PB9 and PB1 pins
     PIO_PortInterruptDisable(PIO_PORT_C, 0x0202);
-                                                                
+
     </code>
 
   Remarks:
@@ -1619,16 +1623,16 @@ void _PIO_Interrupt_Handler ( PIO_PORT port );
   Description:
     This function defines the Interrupt handler for PORT${PIO_CHANNEL}.
     This is the function which by default gets into Interrupt Vector Table.
-    
+
   Precondition:
     None.
 
   Parameters:
     None.
-    
+
   Returns:
     None.
-    
+
   Remarks:
     User should not call this function.
 */

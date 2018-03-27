@@ -50,30 +50,30 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 void RSTC${INDEX?string}_Initialize (void)
 {
     <#if RSTC_MR_URSTEN == "RESET">
-    _RSTC_REGS->RSTC_MR.w = (RSTC_MR_URSTEN_Msk | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}) | RSTC_MR_KEY_PASSWD);
+    RSTC_REGS->RSTC_MR = (RSTC_MR_URSTEN_Msk | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}) | RSTC_MR_KEY_PASSWD);
     <#else>
-    _RSTC_REGS->RSTC_MR.w |= (RSTC_MR_URSTIEN_Msk | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}) | RSTC_MR_KEY_PASSWD);
+    RSTC_REGS->RSTC_MR|= (RSTC_MR_URSTIEN_Msk | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}) | RSTC_MR_KEY_PASSWD);
     </#if>
 }
 
 void RSTC${INDEX?string}_Reset (RSTC_RESET_TYPE type)
 {
 	/* Issue reset command 				*/
-    _RSTC_REGS->RSTC_CR.w = RSTC_CR_KEY_PASSWD | type; 
+    RSTC_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type; 
 	
     /*Wait for processing reset command */
-    while (_RSTC_REGS->RSTC_SR.w & (uint32_t) RSTC_SR_SRCMP_Msk);  
+    while (RSTC_REGS->RSTC_SR& (uint32_t) RSTC_SR_SRCMP_Msk);  
 }
 
 RSTC_RESET_CAUSE RSTC${INDEX?string}_ResetCauseGet (void)
 {
-    return (RSTC_RESET_CAUSE) (_RSTC_REGS->RSTC_SR.w & RSTC_SR_RSTTYP_Msk);
+    return (RSTC_RESET_CAUSE) (RSTC_REGS->RSTC_SR& RSTC_SR_RSTTYP_Msk);
 }
 
 <#if RSTC_MR_URSTEN == "GPIO">
 bool RSTC${INDEX?string}_NRSTPinRead (void)
 {
-    return  (bool) (_RSTC_REGS->RSTC_SR.w & RSTC_SR_NRSTL_Msk);
+    return  (bool) (RSTC_REGS->RSTC_SR& RSTC_SR_NRSTL_Msk);
 }
 </#if>
 
@@ -89,7 +89,7 @@ void RSTC${INDEX?string}_CallbackRegister (RSTC_CALLBACK callback, uintptr_t con
 void RSTC${INDEX?string}_InterruptHandler( void )
 {
 	// Clear the interrupt flag
-	_RSTC_REGS->RSTC_SR.w;
+	RSTC_REGS->RSTC_SR;
 
 	// Callback user function
 	if(rstcObj.callback != NULL)

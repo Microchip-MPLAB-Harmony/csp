@@ -80,37 +80,37 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     <#lt>   /************************ PORT ${PIO_PORT} Initialization ************************/
     <#if (PIO_ABCD1 != "0x00000000") | (PIO_ABCD2 != "0x00000000")>
         <#lt>   /* PORT${PIO_PORT} Peripheral Function Selection */
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ABCDSR[0].w = ${PIO_ABCD1};
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ABCDSR[1].w = ${PIO_ABCD2};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[0]= ${PIO_ABCD1};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[1]= ${PIO_ABCD2};
     </#if>
     <#if PIO_PER != "0xFFFFFFFF">
         <#lt>   /* PORT${PIO_PORT} PIO Disable and Peripheral Enable*/
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PDR.w = ~${PIO_PER};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = ~${PIO_PER};
     </#if>
     <#if PIO_LAT != "0x00000000">
         <#lt>   /* PORT${PIO_PORT} Initial state High */
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_SODR.w = ${PIO_LAT};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SODR = ${PIO_LAT};
     </#if>
     <#if PIO_OD != "0x00000000">
         <#lt>   /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_MDER.w = ${PIO_OD};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = ${PIO_OD};
     </#if>
     <#if PIO_PU != "0x00000000">
         <#lt>   /* PORT${PIO_PORT} Pull Up Enable */
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PUER.w = ${PIO_PU};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = ${PIO_PU};
     </#if>
     <#if PIO_PD != "0x00000000">
         <#lt>   /* PORT${PIO_PORT} Pull Down Enable */
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_PPDER.w = ${PIO_PD};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = ${PIO_PD};
     </#if>
     <#if PIO_DIR != "0x00000000">
         <#lt>   /* PORT${PIO_PORT} Output Direction Enable */
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_OER.w = ${PIO_DIR};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = ${PIO_DIR};
     </#if>
     <#if PIO_INTERRUPT == true>
         <#if PIO_INT_TYPE != "0x00000000">
             <#lt>   /* PORT${PIO_PORT} Additional interrupt mode Enable */
-            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_AIMER.w = ${PIO_INT_TYPE};
+            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_AIMER = ${PIO_INT_TYPE};
         <#else>
         
             <#lt>   /* If PIO Interrupt is selected for both edge, it doesn't need any register
@@ -118,19 +118,19 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         </#if>
         <#if PIO_INT_LEVEL != "0x00000000">
             <#lt>   /* PORT${PIO_PORT} Level type interrupt Enable */
-            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_LSR.w = ~${PIO_INT_LEVEL};
+            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_LSR = ~${PIO_INT_LEVEL};
         </#if>
         <#if PIO_INT_EDGE != "0x00000000">
             <#lt>   /* PORT${PIO_PORT} Edge type interrupt Enable */
-            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ESR.w = ${PIO_INT_EDGE};
+            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ESR = ${PIO_INT_EDGE};
         </#if>
         <#if PIO_INT_FE_LL != "0x00000000">
             <#lt>   /* PORT${PIO_PORT} Falling Edge or Low Level Interrupt Enable */
-            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_FELLSR.w = ~${PIO_INT_FE_LL};
+            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_FELLSR = ~${PIO_INT_FE_LL};
         </#if>
         <#if PIO_INT_RE_HL != "0x00000000">
             <#lt>   /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
-            <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_REHLSR.w = ${PIO_INT_RE_HL};
+            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = ${PIO_INT_RE_HL};
         </#if>
         <#lt>   /* PORT${PIO_PORT} Interrupt Status Clear */	
         <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ISR.w;
@@ -140,7 +140,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>      by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
     </#if>
         <#lt>   /* PORT${PIO_PORT} Output Write Enable */	
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_OWER.w = PORT_OWER_Msk;
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PORT_OWER_Msk;
 </#macro>
 
 <#macro PIO_INT_CALLBACK PIO_PORT PORT_NUM_INT_PINS PIO_INTERRUPT>
@@ -203,7 +203,7 @@ void PIO_Initialize ( void )
 {
     <#if PIO_CCFG_SYSIO_VALUE != "0x00000000">
         <#lt>   /* Selected System IO pins are configured as GPIO */
-        <#lt>   _MATRIX_REGS->CCFG_SYSIO.w |= ${PIO_CCFG_SYSIO_VALUE};
+        <#lt>   MATRIX_REGS->CCFG_SYSIO|= ${PIO_CCFG_SYSIO_VALUE};
     </#if>
     <#if PIO_A_USED == true>
         <@PIO_INITIALIZE
@@ -308,13 +308,13 @@ void PIO_Initialize ( void )
         <#lt>   /* Analog pins Initialization */
     </#if>
     <#if PIO_AFEC0_CHER_VALUE != "0x00000000">
-        <#lt>   _AFEC0_REGS->AFEC_CHER.w = ${PIO_AFEC0_CHER_VALUE};
+        <#lt>   AFEC0_REGS->AFEC_CHER = ${PIO_AFEC0_CHER_VALUE};
     </#if>
     <#if PIO_AFEC1_CHER_VALUE != "0x00000000">
-        <#lt>   _AFEC1_REGS->AFEC_CHER.w = ${PIO_AFEC1_CHER_VALUE};
+        <#lt>   AFEC1_REGS->AFEC_CHER = ${PIO_AFEC1_CHER_VALUE};
     </#if>
     <#if PIO_DACC_CHER_VALUE != "0x00000000">    
-        <#lt>   _DACC_REGS->DACC_CHER.w = ${PIO_DACC_CHER_VALUE};
+        <#lt>   DACC_REGS->DACC_CHER = ${PIO_DACC_CHER_VALUE};
     </#if>
 }
 
@@ -348,7 +348,7 @@ void PIO_Initialize ( void )
 */
 uint32_t PIO_PortRead(PIO_PORT port)
 {
-    return ((port_registers_t*)port)->PORT_PDSR.w;
+    return ((pio_registers_t*)port)->PIO_PDSR;
 }
 
 // *****************************************************************************
@@ -372,7 +372,7 @@ uint32_t PIO_PortRead(PIO_PORT port)
 void PIO_PortWrite(PIO_PORT port, uint32_t value)
 {
     /* Write the desired value */
-    ((port_registers_t*)port)->PORT_ODSR.w = value;
+    ((pio_registers_t*)port)->PIO_ODSR = value;
 }
 
 // *****************************************************************************
@@ -396,7 +396,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t value)
 */
 uint32_t PIO_PortReadLatch(PIO_PORT port)
 {
-    return ((port_registers_t*)port)->PORT_ODSR.w;
+    return ((pio_registers_t*)port)->PIO_ODSR;
 }
 
 // *****************************************************************************
@@ -415,7 +415,7 @@ uint32_t PIO_PortReadLatch(PIO_PORT port)
 */
 void PIO_PortSet(PIO_PORT port, uint32_t mask)
 {
-    ((port_registers_t*)port)->PORT_SODR.w = mask;
+    ((pio_registers_t*)port)->PIO_SODR = mask;
 }
 
 // *****************************************************************************
@@ -434,7 +434,7 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortClear(PIO_PORT port, uint32_t mask)
 {
-    ((port_registers_t*)port)->PORT_CODR.w = mask;
+    ((pio_registers_t*)port)->PIO_CODR = mask;
 }
 
 // *****************************************************************************
@@ -454,7 +454,7 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask)
 void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 {
     /* Write into Clr and Set registers */
-    ((port_registers_t*)port)->PORT_ODSR.w ^= mask;
+    ((pio_registers_t*)port)->PIO_ODSR^= mask;
 }
 
 // *****************************************************************************
@@ -472,7 +472,7 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 {
-    ((port_registers_t*)port)->PORT_ODR.w = mask;
+    ((pio_registers_t*)port)->PIO_ODR = mask;
 }
 
 // *****************************************************************************
@@ -490,7 +490,7 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 {
-    ((port_registers_t*)port)->PORT_OER.w = mask;
+    ((pio_registers_t*)port)->PIO_OER = mask;
 }
 
 // *****************************************************************************
@@ -508,7 +508,7 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
 {   
-    ((port_registers_t*)port)->PORT_IER.w = mask;
+    ((pio_registers_t*)port)->PIO_IER = mask;
 }
 
 // *****************************************************************************
@@ -526,7 +526,7 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 {
-    ((port_registers_t*)port)->PORT_IDR.w = mask;
+    ((pio_registers_t*)port)->PIO_IDR = mask;
 }
 
 <#if PIO_A_INTERRUPT_USED == true ||
@@ -706,8 +706,8 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
     uint32_t status;
     uint32_t i;
 
-    status  = ((port_registers_t*)port)->PORT_ISR.w;
-    status &= ((port_registers_t*)port)->PORT_IMR.w;
+    status  = ((pio_registers_t*)port)->PIO_ISR;
+    status &= ((pio_registers_t*)port)->PIO_IMR;
 
     /* Check pending events */
     switch( port )

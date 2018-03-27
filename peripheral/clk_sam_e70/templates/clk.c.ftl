@@ -35,19 +35,19 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	    <#else>
 	regValue |= PMC_PCR_PID(70);
 	    </#if>
-    _PMC_REGS->PMC_PCR.w = regValue;
+    PMC_REGS->PMC_PCR = regValue;
 	</#if>
 </#macro>
 
 <#macro CONFIGURE_PCK INDEX ENABLED CSS PRES>
 	<#if ENABLED>
     /* Configure Programmable Clock Generator ${INDEX} Clock Source and Clock Divider */
-    _PMC_REGS->PMC_SCDR.w = (1 << ${INDEX}) << PMC_SCDR_PCK_Pos;
-	_PMC_REGS->PMC_PCK[${INDEX}].w = PMC_PCK_CSS_${CSS} | PMC_PCK_PRES(${PRES} - 1);
-    _PMC_REGS->PMC_SCER.w = (1 << ${INDEX}) << PMC_SCER_PCK_Pos;
+    PMC_REGS->PMC_SCDR = (1 << ${INDEX}) << PMC_SCDR_PCK_Pos;
+	PMC_REGS->PMC_PCK[${INDEX}]= PMC_PCK_CSS_${CSS} | PMC_PCK_PRES(${PRES} - 1);
+    PMC_REGS->PMC_SCER = (1 << ${INDEX}) << PMC_SCER_PCK_Pos;
 	
    /* Wait until PCK${INDEX} clock output is ready */
-    while( !(_PMC_REGS->PMC_SR.w & ((1 << ${INDEX}) << PMC_SR_PCKRDY_Pos) ) )
+    while( !(PMC_REGS->PMC_SR& ((1 << ${INDEX}) << PMC_SR_PCKRDY_Pos) ) )
     {
     }
 	
@@ -80,23 +80,23 @@ static void CLK_SlowClockInitialize(void)
 <#if SUPC_MR_OSCBYPASS && SUPC_CR_XTALSEL>
     /* External clock signal on XIN32 pin is selected as the Slow Clock (SLCK) source.
 	   Bypass 32K Crystal Oscillator  */
-    _SUPC_REGS->SUPC_MR.w |= SUPC_MR_OSCBYPASS_BYPASS;
-	_SUPC_REGS->SUPC_CR.w |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL_CRYSTAL_SEL;
+    SUPC_REGS->SUPC_MR|= SUPC_MR_OSCBYPASS_BYPASS;
+	SUPC_REGS->SUPC_CR|= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL_CRYSTAL_SEL;
 	
 	/* Wait until the external clock signal is ready and 
 	   Slow Clock (SLCK) is switched to external clock signal */
-    while (!(_SUPC_REGS->SUPC_SR.w &SUPC_SR_OSCSEL_Msk) &&  !(_PMC_REGS->PMC_SR.w & PMC_SR_MOSCRCS_Msk))
+    while (!(SUPC_REGS->SUPC_SR&SUPC_SR_OSCSEL_Msk) &&  !(PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk))
     {
     }
 	
 <#elseif SUPC_CR_XTALSEL>
 	/* 32KHz Crystal Oscillator is selected as the Slow Clock (SLCK) source.
 	   Enable 32KHz Crystal Oscillator  */
-	_SUPC_REGS->SUPC_CR.w |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL_CRYSTAL_SEL;
+	SUPC_REGS->SUPC_CR|= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL_CRYSTAL_SEL;
 	
 	/* Wait until the 32K Crystal oscillator clock is ready and 
 	   Slow Clock (SLCK) is switched to 32KHz Oscillator */
-    while (!(_SUPC_REGS->SUPC_SR.w &SUPC_SR_OSCSEL_Msk) &&  !(_PMC_REGS->PMC_SR.w & PMC_SR_MOSCRCS_Msk))
+    while (!(SUPC_REGS->SUPC_SR&SUPC_SR_OSCSEL_Msk) &&  !(PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk))
     {
     }
 </#if>
@@ -129,66 +129,66 @@ static void CLK_MainClockInitialize(void)
 	
 <#if PMC_CKGR_MOR_MOSCRCEN >
     /* Enable the RC Oscillator */
-	_PMC_REGS->CKGR_MOR.w |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN_Msk;
+	PMC_REGS->CKGR_MOR|= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN_Msk;
 
     /* Wait until the RC oscillator clock is ready. */
-    while( !(_PMC_REGS->PMC_SR.w & PMC_SR_MOSCRCS_Msk) )
+    while( !(PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk) )
     {
     }
 	
 	/* Configure the RC Oscillator frequency */
-    regValue = _PMC_REGS->CKGR_MOR.w & ~(uint32_t)CKGR_MOR_MOSCRCF_Msk;
-	regValue |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCF${PMC_CKGR_MOR_MOSCRCF};
-	_PMC_REGS->CKGR_MOR.w = regValue;
+    regValue = PMC_REGS->CKGR_MOR& ~(uint32_t)CKGR_MOR_MOSCRCF_Msk;
+	regValue |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCF_${PMC_CKGR_MOR_MOSCRCF};
+	PMC_REGS->CKGR_MOR = regValue;
 
     /* Wait until the RC oscillator clock is ready */
-    while( !(_PMC_REGS->PMC_SR.w & PMC_SR_MOSCRCS_Msk) )
+    while( !(PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk) )
     {
     }
 
 	<#if !PMC_CKGR_MOR_MOSCSEL>
 	/* Main RC Oscillator is selected as the Main Clock (MAINCK) source. 
 	   Switch Main Clock (MAINCK) to the RC Oscillator clock */
-	regValue = 	_PMC_REGS->CKGR_MOR.w & ~CKGR_MOR_MOSCSEL_Msk;
-    _PMC_REGS->CKGR_MOR.w = regValue | CKGR_MOR_KEY_PASSWD;
+	regValue = 	PMC_REGS->CKGR_MOR& ~CKGR_MOR_MOSCSEL_Msk;
+    PMC_REGS->CKGR_MOR = regValue | CKGR_MOR_KEY_PASSWD;
 	</#if>
 </#if>
 
 <#if PMC_CKGR_MOR_MOSCXTBY>
     /* Disable Main Crystal Oscillator and Enable External Clock Signal on XIN pin  */
-	regValue = _PMC_REGS->CKGR_MOR.w & ~(uint32_t)CKGR_MOR_MOSCXTEN_Msk;
+	regValue = PMC_REGS->CKGR_MOR& ~(uint32_t)CKGR_MOR_MOSCXTEN_Msk;
 	regValue |=CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTBY_Msk;
-    _PMC_REGS->CKGR_MOR.w = regValue;
+    PMC_REGS->CKGR_MOR = regValue;
 
 	<#if PMC_CKGR_MOR_MOSCSEL>
 	 /* External clock signal (XIN pin) is selected as the Main Clock (MAINCK) source.
 	    Switch Main Clock (MAINCK) to External signal on XIN pin */
-    _PMC_REGS->CKGR_MOR.w |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
+    PMC_REGS->CKGR_MOR|= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
 
 	/* Wait until MAINCK is switched to External Clock Signal (XIN pin) */
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MOSCSELS_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MOSCSELS_Msk) )
     {
     }
 	</#if>
 	
 <#elseif PMC_CKGR_MOR_MOSCXTEN>
     /* Enable Main Crystal Oscillator */
-	regValue = _PMC_REGS->CKGR_MOR.w & ~(uint32_t)CKGR_MOR_MOSCXTST_Msk;
+	regValue = PMC_REGS->CKGR_MOR& ~(uint32_t)CKGR_MOR_MOSCXTST_Msk;
 	regValue |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTST(${PMC_CKGR_MOR_MOSCXTST}) | CKGR_MOR_MOSCXTEN_Msk;
-    _PMC_REGS->CKGR_MOR.w = regValue;
+    PMC_REGS->CKGR_MOR = regValue;
 
 	/* Wait until the main oscillator clock is ready */
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MOSCXTS_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MOSCXTS_Msk) )
     {
     }
 	
 	<#if PMC_CKGR_MOR_MOSCSEL>
     /* Main Crystal Oscillator is selected as the Main Clock (MAINCK) source. 
 	Switch Main Clock (MAINCK) to Main Crystal Oscillator clock */
-    _PMC_REGS->CKGR_MOR.w |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
+    PMC_REGS->CKGR_MOR|= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
 
 	/* Wait until MAINCK is switched to Main Crystal Oscillator */
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MOSCSELS_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MOSCSELS_Msk) )
     {
     }
 	</#if>
@@ -219,15 +219,15 @@ static void CLK_PLLAInitialize(void)
 {
     /* configure PLLA */
 <#if CLK_PLLA_ENABLE>
-    _PMC_REGS->CKGR_PLLAR.w = CKGR_PLLAR_ONE_Msk | CKGR_PLLAR_PLLACOUNT(0x3f) |
+    PMC_REGS->CKGR_PLLAR = CKGR_PLLAR_ONE_Msk | CKGR_PLLAR_PLLACOUNT(0x3f) |
                               CKGR_PLLAR_MULA(${PMC_CKGR_PLLAR_MULA} - 1) |
                               CKGR_PLLAR_DIVA(${PMC_CKGR_PLLAR_DIVA});
 
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_LOCKA_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_LOCKA_Msk) )
     {
     }
 <#else>
-	_PMC_REGS->CKGR_PLLAR.w = CKGR_PLLAR_ONE_Msk | CKGR_PLLAR_PLLACOUNT(0) |
+	PMC_REGS->CKGR_PLLAR = CKGR_PLLAR_ONE_Msk | CKGR_PLLAR_PLLACOUNT(0) |
 							CKGR_PLLAR_MULA(0) | CKGR_PLLAR_DIVA(0);
 </#if>
 }
@@ -259,27 +259,27 @@ static void CLK_UTMIPLLInitialize(void)
        UPLL multiplication factor is x40 to generate 480MHz from 12MHz
        UPLL multiplication factor is x30 to generate 480MHz from 16MHz	   */
 	<#if UTMI_CKTRIM_FREQ == "XTAL12">
-	_UTMI_REGS->UTMI_CKTRIM.w = UTMI_CKTRIM_FREQ_XTAL12;
+	UTMI_REGS->UTMI_CKTRIM= UTMI_CKTRIM_FREQ_XTAL12;
 	<#else>
-	_UTMI_REGS->UTMI_CKTRIM.w = UTMI_CKTRIM_FREQ_XTAL16;
+	UTMI_REGS->UTMI_CKTRIM= UTMI_CKTRIM_FREQ_XTAL16;
 	</#if>
 	
 	/* Enable UPLL and configure UPLL lock time */
-	_PMC_REGS->CKGR_UCKR.w = CKGR_UCKR_UPLLEN_Msk | CKGR_UCKR_UPLLCOUNT(0x3F);
+	PMC_REGS->CKGR_UCKR = CKGR_UCKR_UPLLEN_Msk | CKGR_UCKR_UPLLCOUNT(0x3F);
 	
 	/* Wait until PLL Lock occurs */
-    while (0 == (_PMC_REGS->PMC_SR.w & PMC_SR_LOCKU_Msk));
+    while (0 == (PMC_REGS->PMC_SR& PMC_SR_LOCKU_Msk));
 	
 	<#if PMC_MCKR_UPLLDIV2>
 	/* UPLL clock frequency is 240Mhz (Divider=2) */
-	_PMC_REGS->PMC_MCKR.w |= PMC_MCKR_UPLLDIV2_Msk;
+	PMC_REGS->PMC_MCKR|= PMC_MCKR_UPLLDIV2_Msk;
 	<#else>
 	/* UPLL clock frequency is 480MHz (Divider=1) */
-	_PMC_REGS->PMC_MCKR.w &= ~PMC_MCKR_UPLLDIV2_Msk;
+	PMC_REGS->PMC_MCKR&= ~PMC_MCKR_UPLLDIV2_Msk;
 	</#if>
 	
 	/* Wait until clock is ready */
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MCKRDY_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MCKRDY_Msk) )
     {
     }
 }
@@ -317,27 +317,27 @@ static void CLK_MasterClockInitialize(void)
        e. Program PMC_MCKR.CSS.
        f. Wait for PMC_SR.MCKRDY to be set.   */
 	   
-	regValue = _PMC_REGS->PMC_MCKR.w & ~PMC_MCKR_PRES_Msk;
+	regValue = PMC_REGS->PMC_MCKR& ~PMC_MCKR_PRES_Msk;
 	regValue|= PMC_MCKR_PRES_${PMC_MCKR_PRES};
-    _PMC_REGS->PMC_MCKR.w = regValue;
+    PMC_REGS->PMC_MCKR = regValue;
 	
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MCKRDY_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MCKRDY_Msk) )
     {
     }
 	
-	regValue = _PMC_REGS->PMC_MCKR.w & ~PMC_MCKR_MDIV_Msk;
+	regValue = PMC_REGS->PMC_MCKR& ~PMC_MCKR_MDIV_Msk;
 	regValue|= PMC_MCKR_MDIV_${PMC_MCKR_MDIV};
-    _PMC_REGS->PMC_MCKR.w = regValue;	
+    PMC_REGS->PMC_MCKR = regValue;	
 	
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MCKRDY_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MCKRDY_Msk) )
     {
     }
 
-	regValue = _PMC_REGS->PMC_MCKR.w & ~PMC_MCKR_CSS_Msk;
+	regValue = PMC_REGS->PMC_MCKR& ~PMC_MCKR_CSS_Msk;
 	regValue|= PMC_MCKR_CSS_${PMC_MCKR_CSS};
-    _PMC_REGS->PMC_MCKR.w = regValue;
+    PMC_REGS->PMC_MCKR = regValue;
 	
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MCKRDY_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MCKRDY_Msk) )
     {
     }	
 </#if>
@@ -350,27 +350,27 @@ static void CLK_MasterClockInitialize(void)
         e. Program PMC_MCKR.MDIV.
         f. Wait for PMC_SR.MCKRDY to be set.	*/
 		
-	regValue = _PMC_REGS->PMC_MCKR.w & ~PMC_MCKR_CSS_Msk;
+	regValue = PMC_REGS->PMC_MCKR& ~PMC_MCKR_CSS_Msk;
 	regValue|= PMC_MCKR_CSS_${PMC_MCKR_CSS};
-    _PMC_REGS->PMC_MCKR.w = regValue;
+    PMC_REGS->PMC_MCKR = regValue;
 	
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MCKRDY_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MCKRDY_Msk) )
     {
     }			
 
-		regValue = _PMC_REGS->PMC_MCKR.w & ~PMC_MCKR_PRES_Msk;
+		regValue = PMC_REGS->PMC_MCKR& ~PMC_MCKR_PRES_Msk;
 	regValue|= PMC_MCKR_PRES_${PMC_MCKR_PRES};
-    _PMC_REGS->PMC_MCKR.w = regValue;
+    PMC_REGS->PMC_MCKR = regValue;
 	
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MCKRDY_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MCKRDY_Msk) )
     {
     }
 
-	regValue = _PMC_REGS->PMC_MCKR.w & ~PMC_MCKR_MDIV_Msk;
+	regValue = PMC_REGS->PMC_MCKR& ~PMC_MCKR_MDIV_Msk;
 	regValue|= PMC_MCKR_MDIV_${PMC_MCKR_MDIV};
-    _PMC_REGS->PMC_MCKR.w = regValue;	
+    PMC_REGS->PMC_MCKR = regValue;	
 	
-    while ( !(_PMC_REGS->PMC_SR.w & PMC_SR_MCKRDY_Msk) )
+    while ( !(PMC_REGS->PMC_SR& PMC_SR_MCKRDY_Msk) )
     {
     }	
 </#if>
@@ -407,10 +407,10 @@ static void CLK_USBClockInitialize ( void )
     <#if PMC_USB_USBS == "UPLL_CLK">
     regValue |= PMC_USB_USBS_Msk;
     </#if>
-    _PMC_REGS->PMC_USB.w = regValue;
+    PMC_REGS->PMC_USB= regValue;
 	
 	/* Enable Full-Speed USB Clock Output */
-    _PMC_REGS->PMC_SCER.w = PMC_SCER_USBCLK_Msk;
+    PMC_REGS->PMC_SCER = PMC_SCER_USBCLK_Msk;
 }
 </#if>
 
@@ -501,8 +501,8 @@ static void CLK_ProgrammableClockInitialize(void)
 static void CLK_PeripheralClockInitialize(void)
 {
     /* - Enable the peripheral clock selected by MHC/peripheral driver */
-   	_PMC_REGS->PMC_PCER0.w=${PMC_PCER0};
-    _PMC_REGS->PMC_PCER1.w=${PMC_PCER1};
+   	PMC_REGS->PMC_PCER0=${PMC_PCER0};
+    PMC_REGS->PMC_PCER1=${PMC_PCER1};
 }
 
 // *****************************************************************************
@@ -529,7 +529,7 @@ void CLK_Initialize( void )
 { 
     /* Set Flash Wait States and 
        Enable Code Loop Optimization */
-    _EFC_REGS->EEFC_FMR.w = EEFC_FMR_FWS(${EEFC_FMR_FWS}) | EEFC_FMR_CLOE_Msk;
+    EFC_REGS->EEFC_FMR = EEFC_FMR_FWS(${EEFC_FMR_FWS}) | EEFC_FMR_CLOE_Msk;
 	
 <#if SUPC_CR_XTALSEL>
 	/* Initialize Slow Clock */

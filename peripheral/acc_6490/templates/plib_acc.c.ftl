@@ -49,29 +49,29 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 void ACC${INDEX?string}_Initialize (void)
 {
     /*Reset ACC registers*/
-	_ACC_REGS->ACC_CR.w = ACC_CR_SWRST_Msk;
+	ACC_REGS->ACC_CR = ACC_CR_SWRST_Msk;
     
     /*Set Comparator Positive and Negative Input, Output Invert status to 
       Enable/Disable, Fault Generation to Enable/Disable, Set Fault source and 
       Output Edge type*/
-	_ACC_REGS->ACC_MR.w = ACC_MR_SELMINUS(${ACC_MR_SELMINUS})| ACC_MR_SELPLUS(${ACC_MR_SELPLUS}) | ACC_MR_EDGETYP(${ACC_MR_EDGETYPE}) \
+	ACC_REGS->ACC_MR = ACC_MR_SELMINUS(${ACC_MR_SELMINUS})| ACC_MR_SELPLUS(${ACC_MR_SELPLUS}) | ACC_MR_EDGETYP(${ACC_MR_EDGETYPE}) \
 							${ACC_ACR_INV?then('| ACC_MR_INV_Msk', '')} ${ACC_ACR_FE?then('| ACC_MR_FE_Msk', '')} | ACC_MR_SELFS_${ACC_MR_SELFS} | ACC_MR_ACEN_Msk;
 
     /*Set Current level and Hysteresis level*/    
-    _ACC_REGS->ACC_ACR.w = ACC_ACR_ISEL_${ACC_ACR_ISEL} | ACC_ACR_HYST(${ACC_ACR_HYST});       
+    ACC_REGS->ACC_ACR = ACC_ACR_ISEL_${ACC_ACR_ISEL} | ACC_ACR_HYST(${ACC_ACR_HYST});       
 
     <#if INTERRUPT_MODE == true>
 	/* Enable Interrupt 	*/
-    _ACC_REGS->ACC_IER.w = ACC_IER_CE_Msk;
+    ACC_REGS->ACC_IER = ACC_IER_CE_Msk;
     </#if>
 	
     /*Wait till output mask period gets over*/
-    while (_ACC_REGS->ACC_ISR.w & (uint32_t) ACC_ISR_MASK_Msk);  
+    while (ACC_REGS->ACC_ISR& (uint32_t) ACC_ISR_MASK_Msk);  
 }
 
 bool ACC${INDEX?string}_StatusGet (ACC_STATUS_SOURCE status)
 {
-    return (bool)(_ACC_REGS->ACC_ISR.w & status); 
+    return (bool)(ACC_REGS->ACC_ISR& status); 
 }
 
 <#if INTERRUPT_MODE == true>
@@ -87,7 +87,7 @@ void ACC${INDEX?string}_CallbackRegister (ACC_CALLBACK callback, uintptr_t conte
 void ACC${INDEX?string}_InterruptHandler( void )
 {
 	// Clear the interrupt
-    _ACC_REGS->ACC_ISR.w; 
+    ACC_REGS->ACC_ISR; 
 
 	// Callback user function 
 	if(acc${INDEX?string}Obj.callback != NULL)

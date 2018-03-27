@@ -55,9 +55,9 @@ void static USART${INDEX?string}_ISR_RX_Handler( void )
 {
     if(usart${INDEX?string}Obj.rxBusyStatus == true)
     {
-        while((US_CSR_RXRDY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_RXRDY_Msk)) && (usart${INDEX?string}Obj.rxSize > usart${INDEX?string}Obj.rxProcessedSize) )
+        while((US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk)) && (usart${INDEX?string}Obj.rxSize > usart${INDEX?string}Obj.rxProcessedSize) )
         {
-            usart${INDEX?string}Obj.rxBuffer[usart${INDEX?string}Obj.rxProcessedSize++] = (_USART${INDEX?string}_REGS->US_RHR.w & US_RHR_RXCHR_Msk);
+            usart${INDEX?string}Obj.rxBuffer[usart${INDEX?string}Obj.rxProcessedSize++] = (USART${INDEX?string}_REGS->US_RHR& US_RHR_RXCHR_Msk);
         }
 
         /* Check if the buffer is done */
@@ -66,7 +66,7 @@ void static USART${INDEX?string}_ISR_RX_Handler( void )
             usart${INDEX?string}Obj.rxBusyStatus = false;
             usart${INDEX?string}Obj.rxSize = 0;
             usart${INDEX?string}Obj.rxProcessedSize = 0;
-            _USART${INDEX?string}_REGS->US_IDR.w |= US_IDR_RXRDY_Msk;
+            USART${INDEX?string}_REGS->US_IDR|= US_IDR_RXRDY_Msk;
 
             if(usart${INDEX?string}Obj.rxCallback != NULL)
             {
@@ -87,9 +87,9 @@ void static USART${INDEX?string}_ISR_TX_Handler( void )
 {
     if(usart${INDEX?string}Obj.txBusyStatus == true)
     {
-        while((US_CSR_TXEMPTY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_TXEMPTY_Msk)) && (usart${INDEX?string}Obj.txSize > usart${INDEX?string}Obj.txProcessedSize) )
+        while((US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) && (usart${INDEX?string}Obj.txSize > usart${INDEX?string}Obj.txProcessedSize) )
         {
-            _USART${INDEX?string}_REGS->US_THR.w |= usart${INDEX?string}Obj.txBuffer[usart${INDEX?string}Obj.txProcessedSize++];
+            USART${INDEX?string}_REGS->US_THR|= usart${INDEX?string}Obj.txBuffer[usart${INDEX?string}Obj.txProcessedSize++];
         }
 
         /* Check if the buffer is done */
@@ -98,7 +98,7 @@ void static USART${INDEX?string}_ISR_TX_Handler( void )
             usart${INDEX?string}Obj.txBusyStatus = false;
             usart${INDEX?string}Obj.txSize = 0;
             usart${INDEX?string}Obj.txProcessedSize = 0;
-            _USART${INDEX?string}_REGS->US_IDR.w |= US_IDR_TXEMPTY_Msk;
+            USART${INDEX?string}_REGS->US_IDR|= US_IDR_TXEMPTY_Msk;
 
             if(usart${INDEX?string}Obj.txCallback != NULL)
             {
@@ -118,7 +118,7 @@ void static USART${INDEX?string}_ISR_TX_Handler( void )
 void USART${INDEX?string}_InterruptHandler( void )
 {
     /* Error status */
-    uint32_t errorStatus = (_USART${INDEX?string}_REGS->US_CSR.w & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
+    uint32_t errorStatus = (USART${INDEX?string}_REGS->US_CSR& (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
 
     if(errorStatus != 0)
     {
@@ -133,13 +133,13 @@ void USART${INDEX?string}_InterruptHandler( void )
     }
 
     /* Receiver status */
-    if(US_CSR_RXRDY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_RXRDY_Msk))
+    if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk))
     {
         USART${INDEX?string}_ISR_RX_Handler();
     }
 
     /* Transmitter status */
-    if(US_CSR_TXEMPTY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_TXEMPTY_Msk))
+    if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
     {
         USART${INDEX?string}_ISR_TX_Handler();
     }
@@ -152,20 +152,20 @@ void USART${INDEX?string}_InterruptHandler( void )
 void USART${INDEX?string}_Initialize( void )
 {
     /* Reset USART${INDEX?string} */
-    _USART${INDEX?string}_REGS->US_CR.w = (US_CR_RSTRX_Msk | US_CR_RSTTX_Msk | US_CR_RSTSTA_Msk);
+    USART${INDEX?string}_REGS->US_CR = (US_CR_RSTRX_Msk | US_CR_RSTTX_Msk | US_CR_RSTSTA_Msk);
 
     /* Enable USART${INDEX?string} */
-    _USART${INDEX?string}_REGS->US_CR.w = (US_CR_TXEN_Msk | US_CR_RXEN_Msk);
+    USART${INDEX?string}_REGS->US_CR = (US_CR_TXEN_Msk | US_CR_RXEN_Msk);
 
     /* Configure USART${INDEX?string} mode */
-    _USART${INDEX?string}_REGS->US_MR.w = ((${USART_MR_MODE9?then(1,0)} << US_MR_MODE9_Pos) | US_MR_CHRL${USART_MR_CHRL} | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP${USART_MR_NBSTOP} | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
+    USART${INDEX?string}_REGS->US_MR = ((${USART_MR_MODE9?then(1,0)} << US_MR_MODE9_Pos) | US_MR_CHRL_${USART_MR_CHRL} | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
 
     /* Configure USART${INDEX?string} Baud Rate */
-    _USART${INDEX?string}_REGS->US_BRGR.w = US_BRGR_CD(${BRG_VALUE});
+    USART${INDEX?string}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
 <#if INTERRUPT_MODE == true>
 
     /* Enable Overrun, Parity and Framing error interrupts */
-    _USART${INDEX?string}_REGS->US_IER.w = (US_IER_FRAME_Msk | US_IER_PARE_Msk | US_IER_OVRE_Msk);
+    USART${INDEX?string}_REGS->US_IER = (US_IER_FRAME_Msk | US_IER_PARE_Msk | US_IER_OVRE_Msk);
 
     /* Initialize instance object */
     usart${INDEX?string}Obj.rxBuffer = NULL;
@@ -187,7 +187,7 @@ USART_ERROR USART${INDEX?string}_ErrorGet( void )
 {
     USART_ERROR errors = USART_ERROR_NONE;
     uint8_t dummyData = 0u;
-    uint32_t status = _USART${INDEX?string}_REGS->US_CSR.w;
+    uint32_t status = USART${INDEX?string}_REGS->US_CSR;
 
     /* Collect all errors */
     if(status & US_CSR_OVRE_Msk)
@@ -206,12 +206,12 @@ USART_ERROR USART${INDEX?string}_ErrorGet( void )
     /* Clear all error flags */
     if(errors != USART_ERROR_NONE)
     {
-        _USART${INDEX?string}_REGS->US_CR.w |= US_CR_RSTSTA_Msk;
+        USART${INDEX?string}_REGS->US_CR|= US_CR_RSTSTA_Msk;
 
         /* Flush existing error bytes from the RX FIFO */
-        while( US_CSR_RXRDY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_RXRDY_Msk) )
+        while( US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk) )
         {
-            dummyData = (_USART${INDEX?string}_REGS->US_RHR.w & US_RHR_RXCHR_Msk);
+            dummyData = (USART${INDEX?string}_REGS->US_RHR& US_RHR_RXCHR_Msk);
         }
 
         /* Ignore the warning */
@@ -225,7 +225,9 @@ USART_ERROR USART${INDEX?string}_ErrorGet( void )
 bool USART${INDEX?string}_Read( void *buffer, const size_t size )
 {
     bool status = false;
+<#if INTERRUPT_MODE == false>
     size_t processedSize = 0;
+</#if>
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
@@ -233,9 +235,9 @@ bool USART${INDEX?string}_Read( void *buffer, const size_t size )
 <#if INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(US_CSR_RXRDY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_RXRDY_Msk))
+            if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk))
             {
-                *lBuffer++ = (_USART${INDEX?string}_REGS->US_RHR.w & US_RHR_RXCHR_Msk);
+                *lBuffer++ = (USART${INDEX?string}_REGS->US_RHR& US_RHR_RXCHR_Msk);
                 processedSize++;
             }
         }
@@ -251,7 +253,7 @@ bool USART${INDEX?string}_Read( void *buffer, const size_t size )
             usart${INDEX?string}Obj.rxBusyStatus = true;
             status = true;
 
-            _USART${INDEX?string}_REGS->US_IER.w = US_IER_RXRDY_Msk;
+            USART${INDEX?string}_REGS->US_IER = US_IER_RXRDY_Msk;
         }
 </#if>
     }
@@ -262,7 +264,9 @@ bool USART${INDEX?string}_Read( void *buffer, const size_t size )
 bool USART${INDEX?string}_Write( void *buffer, const size_t size )
 {
     bool status = false;
+<#if INTERRUPT_MODE == false>
     size_t processedSize = 0;
+</#if>
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
@@ -270,9 +274,9 @@ bool USART${INDEX?string}_Write( void *buffer, const size_t size )
 <#if INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(US_CSR_TXEMPTY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
             {
-                _USART${INDEX?string}_REGS->US_THR.w = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
+                USART${INDEX?string}_REGS->US_THR = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
                 processedSize++;
             }
         }
@@ -289,13 +293,13 @@ bool USART${INDEX?string}_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(US_CSR_TXEMPTY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
             {
-                _USART${INDEX?string}_REGS->US_THR.w = (US_THR_TXCHR(*lBuffer) & US_THR_TXCHR_Msk);
+                USART${INDEX?string}_REGS->US_THR = (US_THR_TXCHR(*lBuffer) & US_THR_TXCHR_Msk);
                 usart${INDEX?string}Obj.txProcessedSize++;
             }
 
-            _USART${INDEX?string}_REGS->US_IER.w = US_IER_TXEMPTY_Msk;
+            USART${INDEX?string}_REGS->US_IER = US_IER_TXEMPTY_Msk;
         }
 </#if>
     }
@@ -346,7 +350,7 @@ bool USART${INDEX?string}_TransmitterIsReady( void )
 {
     bool status = false;
 
-    if(US_CSR_TXEMPTY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_TXEMPTY_Msk))
+    if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
     {
         status = true;
     }
@@ -358,7 +362,7 @@ bool USART${INDEX?string}_ReceiverIsReady( void )
 {
     bool status = false;
 
-    if(US_CSR_RXRDY_Msk == (_USART${INDEX?string}_REGS->US_CSR.w & US_CSR_RXRDY_Msk))
+    if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk))
     {
         status = true;
     }

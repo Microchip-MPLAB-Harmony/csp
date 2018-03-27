@@ -187,33 +187,33 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void AFEC${INDEX}_Initialize()
 {
 	/* Software reset */
-	_AFEC${INDEX}_REGS->AFEC_CR.w = AFEC_CR_SWRST_Msk;
+	AFEC${INDEX}_REGS->AFEC_CR = AFEC_CR_SWRST_Msk;
 	
 	/* Prescaler and different time settings as per CLOCK section  */
-	_AFEC${INDEX}_REGS->AFEC_MR.w = AFEC_MR_PRESCAL(${AFEC_MR_PRESCAL}U) | AFEC_MR_TRACKTIM(15U) |
+	AFEC${INDEX}_REGS->AFEC_MR = AFEC_MR_PRESCAL(${AFEC_MR_PRESCAL}U) | AFEC_MR_TRACKTIM(15U) |
 		AFEC_MR_TRANSFER(2U) | AFEC_MR_ONE_Msk ${AFEC_MR_FREERUN?then('| AFEC_MR_FREERUN_Msk', '')} <#rt>
 		<#lt>${AFEC_MR_TRGEN?then('| (AFEC_MR_TRGEN_Msk) | (AFEC_MR_${AFEC_MR_TRGSEL_VALUE})', '')};
 		
 	/* resolution and sign mode of result */
-	_AFEC${INDEX}_REGS->AFEC_EMR.w = AFEC_EMR_RES_${AFEC_EMR_RES_VALUE} 
+	AFEC${INDEX}_REGS->AFEC_EMR = AFEC_EMR_RES_${AFEC_EMR_RES_VALUE} 
 		${AFEC_EMR_STM?then(' | (AFEC_EMR_STM_Mask)', '')} | AFEC_EMR_SIGNMODE_${AFEC_EMR_SIGNMODE_VALUE} | AFEC_EMR_TAG_Msk;
 		
 	/* Enable gain amplifiers */
-	_AFEC${INDEX}_REGS->AFEC_ACR.w = AFEC_ACR_PGA0EN_Msk | AFEC_ACR_PGA1EN_Msk;
+	AFEC${INDEX}_REGS->AFEC_ACR = AFEC_ACR_PGA0EN_Msk | AFEC_ACR_PGA1EN_Msk;
 	
 <#if AFEC_CGR_GAIN?has_content>
 	/* Gain */
-	_AFEC${INDEX}_REGS->AFEC_CGR.w = ${AFEC_CGR_GAIN};
+	AFEC${INDEX}_REGS->AFEC_CGR = ${AFEC_CGR_GAIN};
 	
 </#if>
 <#if AFEC_DIFFR_DIFF?has_content>
 	/* Differential mode */
-	_AFEC${INDEX}_REGS->AFEC_DIFFR.w = ${AFEC_DIFFR_DIFF};
+	AFEC${INDEX}_REGS->AFEC_DIFFR = ${AFEC_DIFFR_DIFF};
 	
 </#if>
 <#if AFEC_SHMR_DUAL?has_content>
 	/* Dual sample and hold mode */
-	_AFEC${INDEX}_REGS->AFEC_SHMR.w = ${AFEC_SHMR_DUAL};
+	AFEC${INDEX}_REGS->AFEC_SHMR = ${AFEC_SHMR_DUAL};
 	
 </#if>
 <#list 0..11 as i>
@@ -228,95 +228,95 @@ void AFEC${INDEX}_Initialize()
 		<#if (i % 2 != 0) && (.vars[AFEC_CH_DIFF_PAIR] != "GND")>
 		<#else>
 		<#lt>	/* Offset */
-		<#lt>	_AFEC${INDEX}_REGS->AFEC_CSELR.w = AFEC_CH${i};
-		<#lt>	_AFEC${INDEX}_REGS->AFEC_COCR.w = ${.vars[AFEC_CH_OFFSET]}U;
+		<#lt>	AFEC${INDEX}_REGS->AFEC_CSELR = AFEC_CH${i};
+		<#lt>	AFEC${INDEX}_REGS->AFEC_COCR = ${.vars[AFEC_CH_OFFSET]}U;
 		</#if>
 	</#if>
 </#list>
 
 <#if AFEC_MR_USEQ == true>
 	/* User defined channel conversion sequence */
-	_AFEC${INDEX}_REGS->AFEC_MR.w |= AFEC_MR_USEQ_Msk;
+	AFEC${INDEX}_REGS->AFEC_MR|= AFEC_MR_USEQ_Msk;
 	<#if AFEC_SEQ1R_USCH?has_content>
-	<#lt>	_AFEC${INDEX}_REGS->AFEC_SEQ1R.w = ${AFEC_SEQ1R_USCH};
+	<#lt>	AFEC${INDEX}_REGS->AFEC_SEQ1R = ${AFEC_SEQ1R_USCH};
 	</#if>
 	<#if AFEC_SEQ2R_USCH?has_content>
-	<#lt>	_AFEC${INDEX}_REGS->AFEC_SEQ2R.w = ${AFEC_SEQ2R_USCH}; 
+	<#lt>	AFEC${INDEX}_REGS->AFEC_SEQ2R = ${AFEC_SEQ2R_USCH}; 
 	</#if>
 </#if>
 	
 <#if AFEC_IER_EOC?has_content>
 	/* Enable interrupt */
-	_AFEC${INDEX}_REGS->AFEC_IER.w = ${AFEC_IER_EOC};
+	AFEC${INDEX}_REGS->AFEC_IER = ${AFEC_IER_EOC};
 </#if>
 	
 <#if AFEC_CHER_CH?has_content>
 	/* Enable channel */
-	_AFEC${INDEX}_REGS->AFEC_CHER.w = ${AFEC_CHER_CH};
+	AFEC${INDEX}_REGS->AFEC_CHER = ${AFEC_CHER_CH};
 </#if>
 }
 
 /* Enable AFEC channels */
 void AFEC${INDEX}_ChannelsEnable (AFEC_CHANNEL_MASK channelsMask)
 {
-	_AFEC${INDEX}_REGS->AFEC_CHER.w |= channelsMask;
+	AFEC${INDEX}_REGS->AFEC_CHER|= channelsMask;
 }
 
 /* Disable AFEC channels */
 void AFEC${INDEX}_ChannelsDisable (AFEC_CHANNEL_MASK channelsMask)
 {
-	_AFEC${INDEX}_REGS->AFEC_CHDR.w |= channelsMask;
+	AFEC${INDEX}_REGS->AFEC_CHDR|= channelsMask;
 }
 
 /* Enable channel end of conversion interrupt */
 void AFEC${INDEX}_ChannelsInterruptEnable (AFEC_INTERRUPT_MASK channelsInterruptMask)
 {
-	_AFEC${INDEX}_REGS->AFEC_IER.w |= channelsInterruptMask;
+	AFEC${INDEX}_REGS->AFEC_IER|= channelsInterruptMask;
 }
 
 /* Disable channel end of conversion interrupt */
 void AFEC${INDEX}_ChannelsInterruptDisable (AFEC_INTERRUPT_MASK channelsInterruptMask)
 {
-	_AFEC${INDEX}_REGS->AFEC_IDR.w |= channelsInterruptMask;
+	AFEC${INDEX}_REGS->AFEC_IDR|= channelsInterruptMask;
 }
 
 /* Start the conversion with software trigger */
 void AFEC${INDEX}_ConversionStart(void)
 {
-	_AFEC${INDEX}_REGS->AFEC_CR.w = 0x1U << AFEC_CR_START_Pos;
+	AFEC${INDEX}_REGS->AFEC_CR = 0x1U << AFEC_CR_START_Pos;
 }
 
 /*Check if conversion result is available */
 bool AFEC${INDEX}_ChannelResultIsReady(AFEC_CHANNEL_NUM channel)
 {
-	return (_AFEC${INDEX}_REGS->AFEC_ISR.w >> channel) & 0x1U;
+	return (AFEC${INDEX}_REGS->AFEC_ISR>> channel) & 0x1U;
 }
 
 /* Read the conversion result */
 uint16_t AFEC${INDEX}_ChannelResultGet(AFEC_CHANNEL_NUM channel)
 {
-	_AFEC${INDEX}_REGS->AFEC_CSELR.w = channel;
-	return (_AFEC${INDEX}_REGS->AFEC_CDR.w);
+	AFEC${INDEX}_REGS->AFEC_CSELR = channel;
+	return (AFEC${INDEX}_REGS->AFEC_CDR);
 }
 
 /* Configure the user defined conversion sequence */
 void AFEC${INDEX}_ConversionSequenceSet(AFEC_CHANNEL_NUM *channelList, uint8_t numChannel)
 {
 	uint8_t channelIndex;
-	_AFEC${INDEX}_REGS->AFEC_SEQ1R.w = 0U;
-	_AFEC${INDEX}_REGS->AFEC_SEQ2R.w = 0U;
+	AFEC${INDEX}_REGS->AFEC_SEQ1R = 0U;
+	AFEC${INDEX}_REGS->AFEC_SEQ2R = 0U;
 
 	for (channelIndex = 0U; channelIndex < AFEC_SEQ1_CHANNEL_NUM; channelIndex++)
 	{
 		if (channelIndex >= numChannel) 
 			break;
-		_AFEC${INDEX}_REGS->AFEC_SEQ1R.w |= channelList[channelIndex] << (channelIndex * 4U);
+		AFEC${INDEX}_REGS->AFEC_SEQ1R|= channelList[channelIndex] << (channelIndex * 4U);
 	}
 	if (numChannel > AFEC_SEQ1_CHANNEL_NUM)
 	{
 		for (channelIndex = 0U; channelIndex < (numChannel - AFEC_SEQ1_CHANNEL_NUM); channelIndex++)
 		{
-			_AFEC${INDEX}_REGS->AFEC_SEQ2R.w |= channelList[channelIndex + AFEC_SEQ1_CHANNEL_NUM] << (channelIndex * 4U);
+			AFEC${INDEX}_REGS->AFEC_SEQ2R|= channelList[channelIndex + AFEC_SEQ1_CHANNEL_NUM] << (channelIndex * 4U);
 		}
 	}
 }
@@ -324,15 +324,15 @@ void AFEC${INDEX}_ConversionSequenceSet(AFEC_CHANNEL_NUM *channelList, uint8_t n
 /* Set the channel gain */
 void AFEC${INDEX}_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL_GAIN gain)
 {
-	_AFEC${INDEX}_REGS->AFEC_CGR.w &= ~(0x03U << (2U * channel));
-	_AFEC${INDEX}_REGS->AFEC_CGR.w |= (gain << ( 2U * channel));
+	AFEC${INDEX}_REGS->AFEC_CGR&= ~(0x03U << (2U * channel));
+	AFEC${INDEX}_REGS->AFEC_CGR|= (gain << ( 2U * channel));
 }
 
 /* Set the channel offset */
 void AFEC${INDEX}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset)
 {
-	_AFEC${INDEX}_REGS->AFEC_CSELR.w = channel;
-	_AFEC${INDEX}_REGS->AFEC_COCR.w = offset;
+	AFEC${INDEX}_REGS->AFEC_CSELR = channel;
+	AFEC${INDEX}_REGS->AFEC_COCR = offset;
 }
 
 <#if AFEC_INTERRUPT == true>

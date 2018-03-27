@@ -78,7 +78,7 @@ void XDMAC_InterruptHandler( void )
         if (1 == xdmacChObj->inUse)
         {
             /* Read the interrupt status for the active DMA channel */
-            chanIntStatus = _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS.w;
+            chanIntStatus = XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS;
 
             if (chanIntStatus & ( XDMAC_CIS_RBEIS_Msk | XDMAC_CIS_WBEIS_Msk | XDMAC_CIS_ROIS_Msk))
             {
@@ -137,13 +137,13 @@ void XDMAC_Initialize( void )
     /* Configure Channel ${i} */
                 <#if .vars[XDMAC_CC_TYPE]?has_content>
                     <#if (.vars[XDMAC_CC_TYPE] == "PER_TRAN")>
-    _XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CC.w = (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_PERID(${.vars[XDMAC_CC_PERID_VAL]}) | XDMAC_CC_DSYNC_${.vars[XDMAC_CC_DSYNC]} | XDMAC_CC_SWREQ_${.vars[XDMAC_CC_SWREQ]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_CSIZE_${.vars[XDMAC_CC_CSIZE]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
+    XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CC= (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_PERID(${.vars[XDMAC_CC_PERID_VAL]}) | XDMAC_CC_DSYNC_${.vars[XDMAC_CC_DSYNC]} | XDMAC_CC_SWREQ_${.vars[XDMAC_CC_SWREQ]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_CSIZE_${.vars[XDMAC_CC_CSIZE]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
                     <#elseif (.vars[XDMAC_CC_TYPE] == "MEM_TRAN")>
-    _XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CC.w = (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
+    XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CC= (XDMAC_CC_TYPE_${.vars[XDMAC_CC_TYPE]} | XDMAC_CC_DAM_${.vars[XDMAC_CC_DAM]} | XDMAC_CC_SAM_${.vars[XDMAC_CC_SAM]} | XDMAC_CC_SIF_${.vars[XDMAC_CC_SIF]} | XDMAC_CC_DIF_${.vars[XDMAC_CC_DIF]} | XDMAC_CC_DWIDTH_${.vars[XDMAC_CC_DWIDTH]} | XDMAC_CC_MBSIZE_${.vars[XDMAC_CC_MBSIZE]});
                     </#if>
                 </#if>
-    _XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CIE.w = (XDMAC_CIE_BIE_Msk | XDMAC_CIE_RBIE_Msk | XDMAC_CIE_WBIE_Msk | XDMAC_CIE_ROIE_Msk);
-    _XDMAC_REGS->XDMAC_GIE.w = (XDMAC_GIE_IE0_Msk << ${i});
+    XDMAC_REGS->XDMAC_CHID[${i}].XDMAC_CIE= (XDMAC_CIE_BIE_Msk | XDMAC_CIE_RBIE_Msk | XDMAC_CIE_WBIE_Msk | XDMAC_CIE_ROIE_Msk);
+    XDMAC_REGS->XDMAC_GIE= (XDMAC_GIE_IE0_Msk << ${i});
     xdmacChannelObj[${i}].inUse = 1;
 
             </#if>
@@ -165,20 +165,20 @@ void XDMAC_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const vo
     volatile uint32_t status = 0;
 
     /* Clear channel level status before adding transfer parameters */
-    status = _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS.w;
+    status = XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS;
     (void)status;
 
     /*Set source address */
-    _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CSA.w = (uint32_t)srcAddr;
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CSA= (uint32_t)srcAddr;
 
     /* Set destination address */
-    _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CDA.w = (uint32_t)destAddr;
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CDA= (uint32_t)destAddr;
 
     /* Set block size */
-    _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CUBC.w = XDMAC_CUBC_UBLEN(blockSize);
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CUBC= XDMAC_CUBC_UBLEN(blockSize);
 
     /* Enable the channel */
-    _XDMAC_REGS->XDMAC_GE.w = (XDMAC_GE_EN0_Msk << channel);
+    XDMAC_REGS->XDMAC_GE= (XDMAC_GE_EN0_Msk << channel);
 
     return;
 }
@@ -189,20 +189,20 @@ void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t descriptor
     volatile uint32_t status = 0;
 
     /* Clear channel level status before adding transfer parameters */
-    status = _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS.w;
+    status = XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS;
     (void)status;
 
     /* First descriptor control set */
-    _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDC.w = (descriptorControl->mbr_ubc >> XDMAC_UBLEN_BIT_WIDTH);
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDC= (descriptorControl->mbr_ubc >> XDMAC_UBLEN_BIT_WIDTH);
 
     /* First descriptor address set */
-    _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDA.w = ( (descriptor & XDMAC_CNDA_NDA_Msk) | XDMAC_CNDA_NDAIF_Msk ) ;
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDA= ( (descriptor & XDMAC_CNDA_NDA_Msk) | XDMAC_CNDA_NDAIF_Msk ) ;
 
     /* Enable end of linked list interrupt source */
-    _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIE.w = XDMAC_CIE_LIE_Msk ;
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIE= XDMAC_CIE_LIE_Msk ;
 
     /* Enable the channel */
-    _XDMAC_REGS->XDMAC_GE.w = (XDMAC_GE_EN0_Msk << channel);
+    XDMAC_REGS->XDMAC_GE= (XDMAC_GE_EN0_Msk << channel);
 
     return;
 }
@@ -212,7 +212,7 @@ bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel)
 {
     bool status = false;
 
-    if( (XDMAC_CC_WRIP_Msk == (_XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC.w & XDMAC_CC_WRIP_Msk)) || (XDMAC_CC_RDIP_Msk == (_XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC.w & XDMAC_CC_RDIP_Msk)) )
+    if( (XDMAC_CC_WRIP_Msk == (XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC& XDMAC_CC_WRIP_Msk)) || (XDMAC_CC_RDIP_Msk == (XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC& XDMAC_CC_RDIP_Msk)) )
     {
         status = true;
     }
@@ -222,16 +222,16 @@ bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel)
 
 XDMAC_CHANNEL_CONFIG XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel)
 {
-    return (XDMAC_CHANNEL_CONFIG)_XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC.w;
+    return (XDMAC_CHANNEL_CONFIG)XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC;
 }
 
 bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setting)
 {
     /* Disable the channel */
-    _XDMAC_REGS->XDMAC_GD.w = (XDMAC_GD_DI0_Msk << channel);
+    XDMAC_REGS->XDMAC_GD= (XDMAC_GD_DI0_Msk << channel);
 
     /* Set the new settings */
-    _XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC.w = setting;
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC= setting;
 
     return true;
 }

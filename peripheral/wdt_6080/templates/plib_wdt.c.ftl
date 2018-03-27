@@ -47,14 +47,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 void WDT${wdtIndex?string}_Initialize( void )
 {
-	_WDT_REGS->WDT_MR.w = WDT_MR_WDD (${wdtWDD}) | WDT_MR_WDV(${wdtWDV}) \
+	WDT_REGS->WDT_MR = WDT_MR_WDD (${wdtWDD}) | WDT_MR_WDV(${wdtWDV}) \
 							${wdtdebugHalt?then(' | WDT_MR_WDDBGHLT_Msk','')}${wdtidleHalt?then(' | WDT_MR_WDIDLEHLT_Msk','')}${wdtEnableReset?then(' | WDT_MR_WDRSTEN_Msk','')}${wdtinterruptMode?then(' | WDT_MR_WDFIEN_Msk','')};
 							
 }
 
 void WDT${wdtIndex?string}_Clear(void)
 {
-	_WDT_REGS->WDT_CR.w = (WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT_Msk);
+	WDT_REGS->WDT_CR = (WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT_Msk);
 }
 
 <#if wdtinterruptMode == true>
@@ -68,7 +68,7 @@ void WDT${wdtIndex?string}_Clear(void)
 <#if wdtinterruptMode == true>
 	<#lt>void WDT${wdtIndex?string}_InterruptHandler( void )
 	<#lt>{
-	<#lt>   _WDT_REGS->WDT_SR.w;
+	<#lt>   WDT_REGS->WDT_SR;
 	<#lt>	if(wdt.callback != NULL)
     <#lt>        {
     <#lt>            wdt.callback(wdt.context);
