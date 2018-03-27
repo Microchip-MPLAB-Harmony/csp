@@ -656,17 +656,7 @@ typedef enum
     PIO_PIN_PE30,
 
     /* PE31 pin */
-<<<<<<< HEAD
-    PIO_PIN_PE31,
-
-    /* This element should not be used in any of the PIO APIs.
-       It will be used by other modules or application to denote that none of the PIO Pin is used */
-    PIO_PIN_NONE = -1
-
-=======
     PIO_PIN_PE31
-
->>>>>>> [all] Fix build issues after product header switch
 } PIO_PIN;
 
 <#if PIO_A_INTERRUPT_USED == true ||
