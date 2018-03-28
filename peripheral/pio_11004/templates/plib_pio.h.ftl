@@ -106,14 +106,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 <#if  gpioName?counter ==  gpioChannel?counter><#if  gpioName?counter ==  gpioPinPos?counter>
 
 /*** Functions for ${gpioName} pin ***/
-#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_SODR.w = (1<<${gpioPinPos}))
-#define ${gpioName}_Clear()             (PIO${gpioChannel}_REGS->PIO_CODR.w = (1<<${gpioPinPos}))
-#define ${gpioName}_Toggle()            (PIO${gpioChannel}_REGS->PIO_ODSR.w ^= (1<<${gpioPinPos}))
-#define ${gpioName}_Get()               ((PIO${gpioChannel}_REGS->PIO_PDSR.w >> ${gpioPinPos}) & 0x1)
-#define ${gpioName}_OutputEnable()      (PIO${gpioChannel}_REGS->PIO_OER.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InputEnable()       (PIO${gpioChannel}_REGS->PIO_ODR.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InterruptEnable()   (PIO${gpioChannel}_REGS->PIO_IER.w = (1<<${gpioPinPos}))
-#define ${gpioName}_InterruptDisable()  (PIO${gpioChannel}_REGS->PIO_IDR.w = (1<<${gpioPinPos}))
+#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_SODR = (1<<${gpioPinPos}))
+#define ${gpioName}_Clear()             (PIO${gpioChannel}_REGS->PIO_CODR = (1<<${gpioPinPos}))
+#define ${gpioName}_Toggle()            (PIO${gpioChannel}_REGS->PIO_ODSR ^= (1<<${gpioPinPos}))
+#define ${gpioName}_Get()               ((PIO${gpioChannel}_REGS->PIO_PDSR >> ${gpioPinPos}) & 0x1)
+#define ${gpioName}_OutputEnable()      (PIO${gpioChannel}_REGS->PIO_OER = (1<<${gpioPinPos}))
+#define ${gpioName}_InputEnable()       (PIO${gpioChannel}_REGS->PIO_ODR = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptEnable()   (PIO${gpioChannel}_REGS->PIO_IER = (1<<${gpioPinPos}))
+#define ${gpioName}_InterruptDisable()  (PIO${gpioChannel}_REGS->PIO_IDR = (1<<${gpioPinPos}))
 </#if></#if>
 </#list>
 </#list>

@@ -133,14 +133,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
             <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = ${PIO_INT_RE_HL};
         </#if>
         <#lt>   /* PORT${PIO_PORT} Interrupt Status Clear */	
-        <#lt>   ((port_registers_t*)PIO_PORT_${PIO_PORT})->PORT_ISR.w;
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ISR;
         
         <#lt>   /* PORT${PIO_PORT} system level interrupt will be enabled by NVIC Manager */
         <#lt>   /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
         <#lt>      by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
     </#if>
         <#lt>   /* PORT${PIO_PORT} Output Write Enable */	
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PORT_OWER_Msk;
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
 </#macro>
 
 <#macro PIO_INT_CALLBACK PIO_PORT PORT_NUM_INT_PINS PIO_INTERRUPT>
