@@ -794,7 +794,7 @@ def instantiateComponent(pwmComponent):
 	pwmID = pwm.getAttribute("id")
 	
 	pwmHeaderFile = pwmComponent.createFileSymbol(None, None)
-	pwmHeaderFile.setSourcePath("../peripheral/pwmc_"+str(pwmID)+"/templates/plib_pwm.h.ftl")
+	pwmHeaderFile.setSourcePath("../peripheral/pwm_"+str(pwmID)+"/templates/plib_pwm.h.ftl")
 	pwmHeaderFile.setOutputName("plib_pwm" + str(pwmNum) + ".h")
 	pwmHeaderFile.setDestPath("/peripheral/pwm/")
 	pwmHeaderFile.setProjectPath("config/" + configName +"/peripheral/pwm/")
@@ -803,7 +803,7 @@ def instantiateComponent(pwmComponent):
 	pwmHeaderFile.setMarkup(True)
 		
 	pwmSource1File = pwmComponent.createFileSymbol(None, None)
-	pwmSource1File.setSourcePath("../peripheral/pwmc_"+str(pwmID)+"/templates/plib_pwm.c.ftl")
+	pwmSource1File.setSourcePath("../peripheral/pwm_"+str(pwmID)+"/templates/plib_pwm.c.ftl")
 	pwmSource1File.setOutputName("plib_pwm" + str(pwmNum) + ".c")
 	pwmSource1File.setDestPath("/peripheral/pwm/")
 	pwmSource1File.setProjectPath("config/" + configName +"/peripheral/pwm/")
@@ -812,7 +812,7 @@ def instantiateComponent(pwmComponent):
 	pwmSource1File.setMarkup(True)
 
 	pwmGlobalHeaderFile = pwmComponent.createFileSymbol(None, None)
-	pwmGlobalHeaderFile.setSourcePath("../peripheral/pwmc_"+str(pwmID)+"/plib_pwm.h")
+	pwmGlobalHeaderFile.setSourcePath("../peripheral/pwm_"+str(pwmID)+"/plib_pwm.h")
 	pwmGlobalHeaderFile.setOutputName("plib_pwm" + ".h")
 	pwmGlobalHeaderFile.setDestPath("/peripheral/pwm/")
 	pwmGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/pwm/")
@@ -822,11 +822,11 @@ def instantiateComponent(pwmComponent):
 	pwmSystemInitFile = pwmComponent.createFileSymbol(None, None)
 	pwmSystemInitFile.setType("STRING")
 	pwmSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-	pwmSystemInitFile.setSourcePath("../peripheral/pwmc_"+str(pwmID)+"/templates/system/system_initialize.c.ftl")
+	pwmSystemInitFile.setSourcePath("../peripheral/pwm_"+str(pwmID)+"/templates/system/system_initialize.c.ftl")
 	pwmSystemInitFile.setMarkup(True)
 
 	pwmSystemDefinitionFile = pwmComponent.createFileSymbol(None, None)
 	pwmSystemDefinitionFile.setType("STRING")
 	pwmSystemDefinitionFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	pwmSystemDefinitionFile.setSourcePath("../peripheral/pwmc_"+str(pwmID)+"/templates/system/system_definitions.h.ftl")
+	pwmSystemDefinitionFile.setSourcePath("../peripheral/pwm_"+str(pwmID)+"/templates/system/system_definitions.h.ftl")
 	pwmSystemDefinitionFile.setMarkup(True)
