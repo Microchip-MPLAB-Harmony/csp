@@ -246,7 +246,8 @@ def instantiateComponent(afecComponent):
 	afec = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]/instance@[name=\"AFEC"+str(num)+"\"]/signals")
 	afec_signals = afec.getChildren()
 	for pad in range (0 , len(afec_signals)):
-		if "index" in afec_signals[pad].getAttributeList():
+		group = afec_signals[pad].getAttribute("group")
+		if (group == "AD"):
 			padSignal = afec_signals[pad].getAttribute("pad")
 			if padSignal in availablePins :
 				channel[int(afec_signals[pad].getAttribute("index"))] = True
