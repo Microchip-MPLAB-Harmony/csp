@@ -48,14 +48,36 @@ nvicVectorHandlerLock = []
 ################################################################################
 #### Business Logic ####
 ################################################################################
+def getInterruptName(index):
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
+    interrupts = node.getChildren()
+    for interrupt in range (0 , len(interrupts)):
+        if "index" in interrupts[interrupt].getAttributeList():
+            if str(index) == interrupts[interrupt].getAttribute("index"):
+                if "header:alternate-name" in interrupts[interrupt].getAttributeList():
+                    return interrupts[interrupt].getAttribute("header:alternate-name")
+                else:
+                    return interrupts[interrupt].getAttribute("name")
+
+def getInterruptDescription(index):
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
+    interrupts = node.getChildren()
+    for interrupt in range (0 , len(interrupts)):
+        if "index" in interrupts[interrupt].getAttributeList():
+            if str(index) == interrupts[interrupt].getAttribute("index"):
+                if "header:alternate-caption" in interrupts[interrupt].getAttributeList():
+                    return interrupts[interrupt].getAttribute("header:alternate-caption")
+                else:
+                    return interrupts[interrupt].getAttribute("caption")
+
 def coreVectorsEnable(nvicSym, event):
     global coreVectors
     for vector in coreVectors:
         if (event["value"] == str(vector)): 
-			if (event["value"] != "SVCall" or event["value"] != "PendSV" or event["value"] != "SysTick"):
-				nvicSym.setReadOnly(True)
-				nvicSym.clearValue()
-				nvicSym.setValue(True, 2)
+            if (event["value"] != "SVCall" or event["value"] != "PendSV" or event["value"] != "SysTick"):
+                nvicSym.setReadOnly(True)
+                nvicSym.clearValue()
+                nvicSym.setValue(True, 2)
 
 def coreVectorsFixed(nvicSym, event):
     global coreVectors
@@ -73,14 +95,14 @@ def coreVectorsPriority(nvicSym, event):
 
     for vectorIndex in range(3,10):
         if (event["value"] == str(coreVectors[vectorIndex])):
-			if (event["value"] == "PendSV" or event["value"] == "SysTick"):
-				nvicSym.clearValue()
-				nvicSym.setValue("7", 2)
-				nvicSym.setVisible(False)
-				nvicSym.setReadOnly(True)
-			else :
-				nvicSym.clearValue()
-				nvicSym.setValue("0", 2)
+            if (event["value"] == "PendSV" or event["value"] == "SysTick"):
+                nvicSym.clearValue()
+                nvicSym.setValue("7", 2)
+                nvicSym.setVisible(False)
+                nvicSym.setReadOnly(True)
+            else :
+                nvicSym.clearValue()
+                nvicSym.setValue("0", 2)
 
 def checkVectorAvailability(nvicSym, event):
     global coreVectorsEnable
@@ -138,7 +160,7 @@ for nvicNumber in range(lowestID, highestID+1):
 
     nvicVectorEnable.append(index)
     nvicVectorEnable[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_ENABLE", nvicMenu)
-    nvicVectorEnable[index].setLabel("Enable " + str(Interrupt.getInterruptDescription(nvicNumber)) + " Interrupt")
+    nvicVectorEnable[index].setLabel("Enable " + str(getInterruptDescription(nvicNumber)) + " Interrupt")
     nvicVectorEnable[index].setDependencies(checkVectorAvailability, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
     nvicVectorEnable[index].setDefaultValue(False)
 
@@ -151,7 +173,7 @@ for nvicNumber in range(lowestID, highestID+1):
     nvicVectorHandler.append(index)
     nvicVectorHandler[index] = coreComponent.createStringSymbol("NVIC_" + str(nvicNumber) + "_HANDLER", nvicVectorEnable[index])
     nvicVectorHandler[index].setLabel("Handler")
-    nvicVectorHandler[index].setDefaultValue(str(Interrupt.getInterruptName(nvicNumber)) + "_Handler")
+    nvicVectorHandler[index].setDefaultValue(str(getInterruptName(nvicNumber)) + "_Handler")
 
     nvicVectorHandlerLock.append(index)
     nvicVectorHandlerLock[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_HANDLER_LOCK", nvicVectorEnable[index])
@@ -159,7 +181,7 @@ for nvicNumber in range(lowestID, highestID+1):
     nvicVectorHandlerLock[index].setVisible(False)
     nvicVectorHandlerLock[index].setDefaultValue(False)
 
-    nvicVectorName[index].setDefaultValue(str(Interrupt.getInterruptName(nvicNumber)))
+    nvicVectorName[index].setDefaultValue(str(getInterruptName(nvicNumber)))
 
 ############################################################################
 #### Code Generation ####
