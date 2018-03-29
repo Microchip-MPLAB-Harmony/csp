@@ -91,7 +91,7 @@ typedef struct
     SPI_CLOCK_POLARITY clockPolarity;
     SPI_DATA_BITS   dataBits;
 
-}SPI_SETUP;
+}SPI_TRANSFER_SETUP;
 
 typedef enum 
 {
@@ -100,7 +100,7 @@ typedef enum
 
 }SPI_ERROR;
 
-typedef  void (*SPI_EVENT_HANDLER) (void* context);
+typedef  void (*SPI_CALLBACK) (void* context);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -112,11 +112,13 @@ typedef struct
 {
     void*                   txBuffer;    
     void*                   rxBuffer;
-    size_t                  exchangeSize;
+    size_t                  txSize;
+	size_t                  rxSize;
+	size_t                  dummySize;
     size_t                  rxCount;
     size_t                  txCount;
-    bool                    exchangeIsBusy;
-    SPI_EVENT_HANDLER       callback; 
+    bool                    transferIsBusy;
+    SPI_CALLBACK       		callback; 
     void*                   context;
     uint32_t                status;
     

@@ -56,16 +56,20 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 void SPI${SPI_INDEX?string}_Initialize ( void );
 
-bool SPI${SPI_INDEX?string}_Exchange(void* pTransmitData,void* pReceiveData, size_t size);
+bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
 
-bool SPI${SPI_INDEX?string}_Setup (uint32_t spiSourceClock, SPI_SETUP *setup );
+#define SPI${SPI_INDEX?string}_Write(pTransmitData, txSize)    ((bool)(SPI${SPI_INDEX?string}_WriteRead(pTransmitData, txSize, NULL, 0)))
+
+#define SPI${SPI_INDEX?string}_Read(pReceiveData, rxSize)      ((bool)(SPI${SPI_INDEX?string}_WriteRead(NULL, 0, pReceiveData, rxSize)))
+
+bool SPI${SPI_INDEX?string}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
 <#if SPI_INTERRUPT_MODE == true>     
 bool SPI${SPI_INDEX?string}_IsBusy(void);
 
 SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
 
-void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_EVENT_HANDLER eventHandler, void* context);
+void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_CALLBACK callback, void* context);
 
 void SPI${SPI_INDEX?string}_InterruptHandler(void);
 </#if>
