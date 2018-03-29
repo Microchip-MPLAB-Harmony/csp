@@ -57,12 +57,15 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+#define UART${INDEX?string}_FrequencyGet()    (uint32_t)(${UART_CLOCK_FREQ}UL)
 
 /****************************** UART${INDEX?string} API *********************************/
 
 void UART${INDEX?string}_Initialize( void );
 
 UART_ERROR UART${INDEX?string}_ErrorGet( void );
+
+bool UART${INDEX?string}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
 bool UART${INDEX?string}_Write( void *buffer, const size_t size );
 
