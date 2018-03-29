@@ -110,6 +110,43 @@ typedef enum
 
 
 // *****************************************************************************
+/* UART Serial Setup
+
+   Summary:
+    Defines the data type for the UART serial setup.
+
+   Description:
+    This can be used to define a serial setup which may then be used to change
+    the serial setup of the UART dynamically.
+
+   Remarks:
+    None.
+*/
+
+typedef enum
+{
+    UART_PARITY_NONE = 0,
+
+    UART_PARITY_ODD = 1,
+
+    UART_PARITY_EVEN = 2,
+
+    UART_PARITY_MARK = 3,
+
+    UART_PARITY_SPACE = 4
+
+} UART_PARITY;
+
+typedef struct
+{
+    uint32_t baudRate;
+
+    UART_PARITY parity;
+
+} UART_SERIAL_SETUP;
+
+
+// *****************************************************************************
 /* Callback Function Pointer
 
    Summary:
@@ -640,6 +677,46 @@ bool UARTx_ReceiverIsReady( void );
 */
 
 UART_ERROR UARTx_ErrorGet( void );
+
+
+// *****************************************************************************
+/* Function:
+    void UARTx_SerialSetup(UART_SERIAL_SETUP * setup, uint32_t srcClkFreq)
+
+   Summary:
+    Sets the UART serial communication settings dynamically.
+
+   Description:
+    This function sets the UART serial communication settings dynamically.
+
+   Precondition:
+    UARTx_Initialize must have been called for the associated UART instance.
+    The UART transmit or receive transfer status should not be busy.
+
+   Parameters:
+    setup - Pointer to the structure containing the serial setup.
+    srcClkFreq - UART Peripheral Clock Source Frequency.
+
+   Returns:
+    true - Serial setup was updated Successfully.
+    false - Failure while updating serial setup.
+
+   Example:
+    <code>
+    UART_SERIAL_SETUP setup = {
+            115200,
+            UART_PARITY_ODD
+        };
+
+    UART1_SerialSetup(&setup, 0);
+    </code>
+
+   Remarks:
+    srcClkFreq overrides any change in the peripheral clock frequency.
+    If configured to zero PLib takes the peripheral clock frequency from MHC.
+*/
+
+bool UARTx_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
 // *****************************************************************************
 // *****************************************************************************

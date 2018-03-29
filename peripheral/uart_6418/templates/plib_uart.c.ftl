@@ -66,7 +66,9 @@ void static UART${INDEX?string}_ISR_RX_Handler( void )
             uart${INDEX?string}Obj.rxBusyStatus = false;
             uart${INDEX?string}Obj.rxSize = 0;
             uart${INDEX?string}Obj.rxProcessedSize = 0;
-            UART${INDEX?string}_REGS->UART_IDR|= UART_IDR_RXRDY_Msk;
+
+            /* Disable Read, Overrun, Parity and Framing error interrupts */
+            UART${INDEX?string}_REGS->UART_IDR = (UART_IDR_RXRDY_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
 
             if(uart${INDEX?string}Obj.rxCallback != NULL)
             {
@@ -98,7 +100,7 @@ void static UART${INDEX?string}_ISR_TX_Handler( void )
             uart${INDEX?string}Obj.txBusyStatus = false;
             uart${INDEX?string}Obj.txSize = 0;
             uart${INDEX?string}Obj.txProcessedSize = 0;
-            UART${INDEX?string}_REGS->UART_IDR|= UART_IDR_TXEMPTY_Msk;
+            UART${INDEX?string}_REGS->UART_IDR = UART_IDR_TXEMPTY_Msk;
 
             if(uart${INDEX?string}Obj.txCallback != NULL)
             {
@@ -118,7 +120,7 @@ void static UART${INDEX?string}_ISR_TX_Handler( void )
 void UART${INDEX?string}_InterruptHandler( void )
 {
     /* Error status */
-    uint32_t errorStatus = (UART${INDEX?string}_REGS->UART_SR& (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
+    uint32_t errorStatus = (UART${INDEX?string}_REGS->UART_SR & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
 
     if(errorStatus != 0)
     {
@@ -149,6 +151,24 @@ void UART${INDEX?string}_InterruptHandler( void )
 
 </#if>
 
+void static UART${INDEX?string}_ErrorClear( void )
+{
+    uint8_t dummyData = 0u;
+
+    UART${INDEX?string}_REGS->UART_CR|= UART_CR_RSTSTA_Msk;
+
+    /* Flush existing error bytes from the RX FIFO */
+    while( UART_SR_RXRDY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_RXRDY_Msk) )
+    {
+        dummyData = (UART${INDEX?string}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+    }
+
+    /* Ignore the warning */
+    (void)dummyData;
+
+    return;
+}
+
 void UART${INDEX?string}_Initialize( void )
 {
     /* Reset UART${INDEX?string} */
@@ -163,9 +183,6 @@ void UART${INDEX?string}_Initialize( void )
     /* Configure UART${INDEX?string} Baud Rate */
     UART${INDEX?string}_REGS->UART_BRGR = UART_BRGR_CD(${BRG_VALUE});
 <#if INTERRUPT_MODE == true>
-
-    /* Enable Overrun, Parity and Framing error interrupts */
-    UART${INDEX?string}_REGS->UART_IER = (UART_IER_FRAME_Msk | UART_IER_PARE_Msk | UART_IER_OVRE_Msk);
 
     /* Initialize instance object */
     uart${INDEX?string}Obj.rxBuffer = NULL;
@@ -186,7 +203,6 @@ void UART${INDEX?string}_Initialize( void )
 UART_ERROR UART${INDEX?string}_ErrorGet( void )
 {
     UART_ERROR errors = UART_ERROR_NONE;
-    uint8_t dummyData = 0u;
     uint32_t status = UART${INDEX?string}_REGS->UART_SR;
 
     /* Collect all errors */
@@ -203,29 +219,94 @@ UART_ERROR UART${INDEX?string}_ErrorGet( void )
         errors |= UART_ERROR_FRAMING;
     }
 
-    /* Clear all error flags */
     if(errors != UART_ERROR_NONE)
     {
-        UART${INDEX?string}_REGS->UART_CR|= UART_CR_RSTSTA_Msk;
-
-        /* Flush existing error bytes from the RX FIFO */
-        while( UART_SR_RXRDY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_RXRDY_Msk) )
-        {
-            dummyData = (UART${INDEX?string}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
-        }
-
-        /* Ignore the warning */
-        (void)dummyData;
+        UART${INDEX?string}_ErrorClear();
     }
 
     /* All errors are cleared, but send the previous error state */
     return errors;
 }
 
+bool UART${INDEX?string}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
+{
+    bool status = true;
+    uint32_t clk = srcClkFreq;
+    uint32_t baud = setup->baudRate;
+    uint32_t brgVal = 0;
+    uint32_t parityVal = 0;
+
+<#if INTERRUPT_MODE == true>
+    if((uart${INDEX?string}Obj.rxBusyStatus == true) || (uart${INDEX?string}Obj.txBusyStatus == true))
+    {
+        /* Transaction is in progress, so return without updating settings */
+        return false;
+    }
+
+</#if>
+    if(clk == 0)
+    {
+        clk = UART${INDEX?string}_FrequencyGet();
+    }
+
+    /* Calculate BRG value */
+    if (clk >= (16 * baud))
+    {
+        brgVal = (clk / (16 * baud));
+    }
+    else
+    {
+        brgVal = (clk / (8 * baud));
+    }
+
+    /* Get Parity values */
+    switch(setup->parity)
+    {
+        case UART_PARITY_ODD:
+        case UART_PARITY_MARK:
+        {
+            parityVal = UART_MR_PAR(setup->parity);
+            break;
+        }
+        case UART_PARITY_NONE:
+        {
+            parityVal = UART_MR_PAR_NO;
+            break;
+        }
+        case UART_PARITY_EVEN:
+        {
+            parityVal = UART_MR_PAR_EVEN;
+            break;
+        }
+        case UART_PARITY_SPACE:
+        {
+            parityVal = UART_MR_PAR_SPACE;
+            break;
+        }
+        default:
+        {
+            status = false;
+            break;
+        }
+    }
+
+    if(status != false)
+    {
+        /* Configure UART${INDEX?string} mode */
+        UART${INDEX?string}_REGS->UART_MR = (parityVal | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
+
+        /* Configure UART${INDEX?string} Baud Rate */
+        UART${INDEX?string}_REGS->UART_BRGR = UART_BRGR_CD(brgVal);
+    }
+
+    return status;
+}
+
 bool UART${INDEX?string}_Read( void *buffer, const size_t size )
 {
     bool status = false;
 <#if INTERRUPT_MODE == false>
+    uint32_t errorStatus = 0;
     size_t processedSize = 0;
 </#if>
 
@@ -233,17 +314,31 @@ bool UART${INDEX?string}_Read( void *buffer, const size_t size )
 
     if(NULL != lBuffer)
     {
+        /* Clear errors before submitting the request */
+        UART${INDEX?string}_ErrorClear();
+
 <#if INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(UART_SR_RXRDY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_RXRDY_Msk))
+            /* Error status */
+            errorStatus = (UART${INDEX?string}_REGS->UART_SR & (UART_SR_OVRE_Msk | UART_SR_FRAME_Msk | UART_SR_PARE_Msk));
+
+            if(errorStatus != 0)
+            {
+                break;
+            }
+
+            if(UART_SR_RXRDY_Msk == (UART${INDEX?string}_REGS->UART_SR & UART_SR_RXRDY_Msk))
             {
                 *lBuffer++ = (UART${INDEX?string}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
                 processedSize++;
             }
         }
 
-        status = true;
+        if(size == processedSize)
+        {
+            status = true;
+        }
 <#else>
         /* Check if receive request is in progress */
         if(uart${INDEX?string}Obj.rxBusyStatus == false)
@@ -254,7 +349,8 @@ bool UART${INDEX?string}_Read( void *buffer, const size_t size )
             uart${INDEX?string}Obj.rxBusyStatus = true;
             status = true;
 
-            UART${INDEX?string}_REGS->UART_IER = UART_IER_RXRDY_Msk;
+            /* Enable Read, Overrun, Parity and Framing error interrupts */
+            UART${INDEX?string}_REGS->UART_IER = (UART_IER_RXRDY_Msk | UART_IER_FRAME_Msk | UART_IER_PARE_Msk | UART_IER_OVRE_Msk);
         }
 </#if>
     }

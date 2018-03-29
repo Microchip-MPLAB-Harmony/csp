@@ -67,6 +67,28 @@ typedef enum
 
 } UART_ERROR;
 
+typedef enum
+{
+    UART_PARITY_NONE = 0,
+
+    UART_PARITY_ODD = 1,
+
+    UART_PARITY_EVEN = 2,
+
+    UART_PARITY_MARK = 3,
+
+    UART_PARITY_SPACE = 4
+
+} UART_PARITY;
+
+typedef struct
+{
+    uint32_t baudRate;
+
+    UART_PARITY parity;
+
+} UART_SERIAL_SETUP;
+
 typedef void (* UART_CALLBACK)( uintptr_t context );
 
 
