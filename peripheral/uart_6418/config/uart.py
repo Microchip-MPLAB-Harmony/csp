@@ -48,17 +48,34 @@ def baudRateCalc(clk, baud):
 
 def baudRateTrigger(symbol, event):
     global uartInstance
-    clk = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    clk = Database.getSymbolValue("uart" + str(uartInstance), "UART_CLOCK_FREQ")
     baud = Database.getSymbolValue("uart" + str(uartInstance), "BAUD_RATE")
     if event["id"] == "BAUD_RATE":
         baud = event["value"]
-    if event["id"] == "MASTERCLK_FREQ":
+    if event["id"] == "UART_CLOCK_FREQ":
         clk = int(event["value"])
 
     brgVal = baudRateCalc(clk, baud)
 
+    if(brgVal < 1):
+        Log.writeErrorMessage("UART Clock source value is low for the desired baud rate")
+
     symbol.clearValue()
     symbol.setValue(brgVal, 2)
+
+def clockSourceFreq(symbol, event):
+    if (event["id"] == "UART_CLK_SRC"):
+        symbol.clearValue()
+        if (event["value"] == 0):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 2)
+        if (event["value"] == 1):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_FREQ")), 2)
+    if (event["id"] == "PCK4_FREQ") and (Database.getSymbolValue("uart" + str(uartInstance), "UART_CLK_SRC") == 1):
+        symbol.clearValue()
+        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_FREQ")), 2)
+    if (event["id"] == "MASTERCLK_FREQ") and (Database.getSymbolValue("uart" + str(uartInstance), "UART_CLK_SRC") == 0):
+        symbol.clearValue()
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 2)
 
 ################################################################################
 #### Component ####
@@ -80,28 +97,42 @@ def instantiateComponent(uartComponent):
     uartInterrupt.setLabel("Interrupt Mode")
     uartInterrupt.setDefaultValue(True)
 
+    uartClkSrc = uartComponent.createKeyValueSetSymbol("UART_CLK_SRC", None)
+    uartClkSrc.setLabel("Select Clock Source")
+    uartClkSrc.addKey("MCK", "0", "MCK")
+    uartClkSrc.addKey("PCK4", "1", "PCK4")
+    uartClkSrc.setDisplayMode("Description")
+    uartClkSrc.setOutputMode("Key")
+    uartClkSrc.setDefaultValue(0)
+
+    uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
+    uartClkValue.setLabel("Clock Source Value")
+    uartClkValue.setReadOnly(True)
+    uartClkValue.setDependencies(clockSourceFreq, ["UART_CLK_SRC", "core.PCK4_FREQ", "core.MASTERCLK_FREQ"])
+    uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")))
+
     uartBaud = uartComponent.createIntegerSymbol("BAUD_RATE", None)
     uartBaud.setLabel("Baud Rate")
     uartBaud.setDefaultValue(9600)
 
-    brgVal = baudRateCalc(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 9600)
+    brgVal = baudRateCalc(uartClkValue.getValue(), uartBaud.getValue())
 
     uartBRGValue = uartComponent.createIntegerSymbol("BRG_VALUE", None)
     uartBRGValue.setVisible(False)
-    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core.MASTERCLK_FREQ"])
+    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "UART_CLOCK_FREQ"])
     uartBRGValue.setDefaultValue(brgVal)
 
-    uartDataWidth = uartComponent.createComboSymbol("UART_MR_DATA_WIDTH", None, ["8_BIT", "9_BIT"])
-    uartDataWidth.setLabel("Data Width")
+    uartDataWidth = uartComponent.createComboSymbol("UART_MR_DATA_WIDTH", None, ["8 BIT"])
+    uartDataWidth.setLabel("Data")
     uartDataWidth.setDefaultValue("8_BIT")
     uartDataWidth.setReadOnly(True)
 
     uartSym_MR_PAR = uartComponent.createComboSymbol("UART_MR_PAR", None, uartValGrp_MR_PAR.getValueNames())
-    uartSym_MR_PAR.setLabel(uartBitField_MR_PAR.getDescription())
+    uartSym_MR_PAR.setLabel("Parity")
     uartSym_MR_PAR.setDefaultValue("NO")
 
-    uartDataWidth = uartComponent.createComboSymbol("UART_MR_STOP_BITS", None, ["1_BIT", "2_BIT"])
-    uartDataWidth.setLabel("Stop Bits")
+    uartDataWidth = uartComponent.createComboSymbol("UART_MR_STOP_BITS", None, ["1 BIT"])
+    uartDataWidth.setLabel("Stop")
     uartDataWidth.setDefaultValue("1_BIT")
     uartDataWidth.setReadOnly(True)
 
