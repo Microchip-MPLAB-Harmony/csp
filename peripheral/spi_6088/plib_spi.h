@@ -158,7 +158,7 @@ typedef struct
     /* Number of bits per transfer */
     SPI_DATA_BITS       dataBits;
     
-}SPI_SETUP;
+}SPI_TRANSFER_SETUP;
 
 // *****************************************************************************
 /* SPI Errors
@@ -191,8 +191,8 @@ typedef enum
     
   Description:
     This function initializes SPI x module of the device with the values
-    configured in MCC GUI. Once the peripheral is initialized, exchange
-    APIs can be used to exchange the data.
+    configured in MHC GUI. Once the peripheral is initialized, transfer
+    APIs can be used to transfer the data.
   
   Precondition:
     MCC GUI should be configured with the right values.
@@ -216,7 +216,7 @@ void SPIx_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-    bool SPIx_Setup(uint32_t spiSourceClock, SPI_SETUP *setup);
+    bool SPIx_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
     
   Summary:
     Setup SPI operational parameters as desired by the client.
@@ -233,7 +233,7 @@ void SPIx_Initialize (void);
     spiSourceClock  Source Clock frequency in Hz on which SPI module is running.
                     If 0 is passed, then clock frequency set in MHC clock manager
                     will be taken by default.
-    *setup   pointer to the data structure of type SPI_SETUP which has the
+    *setup   pointer to the data structure of type SPI_TRANSFER_SETUP which has the
              list of elements to be setup for a client.
   
   Returns:
@@ -243,14 +243,14 @@ void SPIx_Initialize (void);
     
   Example:
     <code> 
-        SPI_SETUP setup;
+        SPI_TRANSFER_SETUP setup;
         setup.clockFrequency = 1000000;
         setup.clockPhase = DATA_VALID_ON_CLOCK_TRAILING_EDGE;
         setup.clockPolarity = SPI_CLOCK_POLARITY_IDLE_LOW;
         setup.dataBits = SPI_DATA_BITS_8;
         
         // Assuming 150 MHz as peripheral Master clock frequency
-        if (false == SPI1_Setup (150000000, &setup))
+        if (false == SPI1_TransferSetup (&setup, 150000000))
         {
             // this means setup could not be done, debug the reason.
         }
@@ -261,28 +261,25 @@ void SPIx_Initialize (void);
     User need not call this function if he has configured the setup in
     GUI and there is no dynamic change needed in any of the parameters.
 */
-bool SPIx_Setup (uint32_t spiSourceClock, SPI_SETUP *setup);
+bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
 // *****************************************************************************
 /* Function:
-    bool SPIx_Exchange(
-        void* pTransmitData,
-        void* pReceiveData, 
-        size_t size
-    );
+    bool SPIx_WriteRead
+	(
+		void* pTransmitData,
+		size_t txSize,
+		void* pReceiveData,
+		size_t rxSize
+	);
 
   Summary:
-    Exchange data on SPI x peripheral 
+    Write and Read data on SPI x peripheral 
 
   Description:
-    This function should be used to exchange "size" number of bytes on
+    This function should be used to write "txSize" number of bytes and read "rxSize" number of bytes on
     SPI x module. Data pointed by pTransmitData is transmitted and received
-    data is saved in the location pointed by pReceiveData. if pTransmitData
-    is NULL, that means only reading is intended and if pReceiveData is NULL,
-    that means only writing is intended. If pTransmitData and pReceiveData
-    points to same location, then also this API works well and received data
-    is saved in location pointed by pReceiveData (or pTransmitData)
-    overwriting the data which was transmitted.
+    data is saved in the location pointed by pReceiveData.
     
     The function will work differently as per the configuration done in
     MCC as described below:
@@ -290,22 +287,22 @@ bool SPIx_Setup (uint32_t spiSourceClock, SPI_SETUP *setup);
     1.  Blocking Configuration (Non-Interrupt mode): When "Interrupt Mode"
         option is unchecked in GUI, the generated code for that particular
         SPI PLIB instance will be blocking. In this particular mode, the
-        Exchange API will not return until all the requested data is exchanged.
+        WriteRead API will not return until all the requested data is transferred.
                 
-        After exchanging all the data, boolean status 'True' is returned
+        After transferring all the data, boolean status 'True' is returned
         indicating operation completion.
 
     2.  Non-Blocking Configuration (Interrupt mode): When "Interrupt Mode"
         option is selected in GUI, the generated code for that
-        particular SPI PLIb instance will be Non-blocking in nature. In this
-        particular mode, application will give the data exchanging
+        particular SPI PLIB instance will be Non-blocking in nature. In this
+        particular mode, application will give the data transfer
         responsiblity to the PLIB and come back and start doing other
         activities, SPI Data transaction will happen in the corresponding ISR.
-        in this mode, the transmit and receive data buffers provided by user 
-        must remain valid until the data exchange is complete.
-        Application can check the data exchange completion status via
+        in this mode, the transmit and receive data locations provided by user 
+        must remain valid until the data transfer is complete.
+        Application can check the data transfer completion status via
         callback or polling mechanism. In case of callback, it needs to be
-        registered prior to calling the Exchange API. Data exchange status
+        registered prior to calling the WriteRead API. Data transfer status
         polling can be done using "SPIx_IsBusy" API.
         
   Precondition:
@@ -313,7 +310,7 @@ bool SPIx_Setup (uint32_t spiSourceClock, SPI_SETUP *setup);
     
     Callback has to be registered using SPIx_CallbackRegister API if the
     peripheral instance has been configured in Interrupt mode and
-    buffer completion status needs to be communicated back to application via
+    transfer completion status needs to be communicated back to application via
     callback.
 
   Parameters:
@@ -321,66 +318,251 @@ bool SPIx_Setup (uint32_t spiSourceClock, SPI_SETUP *setup);
                     NULL, that means only data receiving is expected. For 9
                     to 15bit mode, data should be right aligned in the 16 bit
                     memory location.
+    txSize          Number of bytes to be transmitted. For 9 to 15bit mode, size
+                    should be given as if it is 16bit mode.
     *pReceiveData   Pointer to the location where received data has to be stored.
                     It is user's responsibility to ensure pointed location has
                     sufficient memory to store the read data.
                     if it is NULL, that means only data transmission is expected.
                     For 9 to 15bit mode, received data will be right aligned in
                     the 16 bit memory location.
-    size            Number of bytes to be exchanged. For 9 to 15bit mode, size
+    rxSize          Number of bytes to be received. For 9 to 15bit mode, size
                     should be given as if it is 16bit mode.
+                    if "n" number of bytes has to be received AFTER transmitting
+                    "m" number of bytes, then "rxSize" should be set as "m+n".
 
   Returns:
-    In Blocking mode, API returns True once the exchange is complete. It returns
-    False if size parameter is 0.
+    In Blocking mode, API returns True once the transfer is complete. It returns
+    False if either of the size parameters are 0 and corresponding data pointer
+    is NULL.
     
-    In interrupt mode, API returns true if the exchange request is accepted and
-    False otherwise. If previous buffer request is not completed and a new
-    exchange request comes, then this API will reject the new request and will
-    return "False". Same as blocking mode, It returns False if size parameter is 0.
+    In interrupt mode, if previous buffer request is not completed and a new
+    transfer request comes, then this API will reject the new request and will
+    return "False". Also, Same as blocking mode, It returns False if either of
+    the size parameters are 0 and corresponding data pointer is NULL.
 
   Example:
     <code>
-    uint8_t     txBuffer[10];
+    uint8_t     txBuffer[4];
     uint8_t     rxBuffer[10];
-    size_t      size = 10;    
+    size_t      txSize = 4; 
+    size_t      rxSize = 10;
     bool        reqAccepted;
     
     SPI1_Initialize();
     
-    // Interrupt mode
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
-    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size);
+    reqAccepted = SPI1_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
 
-    void APP_SPITransferHandler(void* contextHandle)
+    void APP_SPITransferHandler(void* context)
     {
-        // Exchange is completed, user can check if any error occurred.
+        if( SPI_ERROR_NONE == SPI1_ErrorGet())
+        {
+            Transfer was completed without error, do something else now.
+        }
     }
     </code>
 
   Remarks:
     Non-blocking interrupt mode configuration implementation of this function
-    will be used by Harmony driver implementation of DRV_SPI_BufferRead/Write
-    APIs.
+    will be used by Harmony driver implementation APIs.
     
 */
-bool SPIx_Exchange(
-    void* pTransmitData,
-    void* pReceiveData, 
-    size_t size
-);
+bool SPIx_WriteRead(
+	void* pTransmitData,
+	size_t txSize,
+	void* pReceiveData,
+	size_t rxSize);
 
+// *****************************************************************************
+/* Function:
+    bool SPIx_Write(void* pTransmitData, size_t txSize);
+
+  Summary:
+    Write data on SPI x peripheral 
+
+  Description:
+    This function should be used to write "txSize" number of bytes on
+    SPI x module. Data pointed by pTransmitData is transmitted.
+    
+    The function will work differently as per the configuration done in
+    MCC as described below:
+    
+    1.  Blocking Configuration (Non-Interrupt mode): When "Interrupt Mode"
+        option is unchecked in GUI, the generated code for that particular
+        SPI PLIB instance will be blocking. In this particular mode, the
+        Write API will not return until all the requested data is transferred.
+                
+        After transferring all the data, boolean status 'True' is returned
+        indicating operation completion.
+
+    2.  Non-Blocking Configuration (Interrupt mode): When "Interrupt Mode"
+        option is selected in GUI, the generated code for that
+        particular SPI PLIB instance will be Non-blocking in nature. In this
+        particular mode, application will give the data transfer
+        responsiblity to the PLIB and come back and start doing other
+        activities, SPI Data transaction will happen in the corresponding ISR.
+        in this mode, the transmit data locations provided by user 
+        must remain valid until the data transfer is complete.
+        Application can check the data transfer completion status via
+        callback or polling mechanism. In case of callback, it needs to be
+        registered prior to calling the Write API. Data transfer status
+        polling can be done using "SPIx_IsBusy" API.
+        
+  Precondition:
+    The SPIx_Initialize function must have been called.
+    
+    Callback has to be registered using SPIx_CallbackRegister API if the
+    peripheral instance has been configured in Interrupt mode and
+    transfer completion status needs to be communicated back to application via
+    callback.
+
+  Parameters:
+    *pTransmitData  Pointer to the data which has to be transmitted. if it is
+                    NULL, that means only data receiving is expected. For 9
+                    to 15bit mode, data should be right aligned in the 16 bit
+                    memory location.
+    txSize          Number of bytes to be transmitted. For 9 to 15bit mode, size
+                    should be given as if it is 16bit mode.
+
+  Returns:
+    In Blocking mode, API returns True once the transfer is complete. It returns
+    False if txSize parameter is 0 and transmit data pointer is NULL.
+    
+    In interrupt mode, if previous buffer request is not completed and a new
+    transfer request comes, then this API will reject the new request and will
+    return "False". Also, Same as blocking mode, It returns False if txSize
+    parameter is 0 and transmit data pointer is NULL.
+
+  Example:
+    <code>
+    uint8_t     txBuffer[4];
+    size_t      txSize = 4; 
+    bool        reqAccepted;
+    
+    SPI1_Initialize();
+    
+    SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
+
+    reqAccepted = SPI1_Write(&txBuffer, txSize);
+
+    void APP_SPITransferHandler(void* context)
+    {
+        if( SPI_ERROR_NONE == SPI1_ErrorGet())
+        {
+            Transfer was completed without error, do something else now.
+        }
+    }
+    </code>
+
+  Remarks:
+    Non-blocking interrupt mode configuration implementation of this function
+    will be used by Harmony driver implementation APIs.
+    
+*/
+bool SPIx_Write(void* pTransmitData, size_t txSize);
+    
+// *****************************************************************************
+/* Function:
+    bool SPIx_Read(void* pReceiveData, size_t rxSize);
+
+  Summary:
+    Read data on SPI x peripheral 
+
+  Description:
+    This function should be used to read "rxSize" number of bytes on
+    SPI x module. Received data is saved in the location pointed by pReceiveData.
+    
+    The function will work differently as per the configuration done in
+    MCC as described below:
+    
+    1.  Blocking Configuration (Non-Interrupt mode): When "Interrupt Mode"
+        option is unchecked in GUI, the generated code for that particular
+        SPI PLIB instance will be blocking. In this particular mode, the
+        Read API will not return until all the requested data is transferred.
+                
+        After transferring all the data, boolean status 'True' is returned
+        indicating operation completion.
+
+    2.  Non-Blocking Configuration (Interrupt mode): When "Interrupt Mode"
+        option is selected in GUI, the generated code for that
+        particular SPI PLIB instance will be Non-blocking in nature. In this
+        particular mode, application will give the data transfer
+        responsiblity to the PLIB and come back and start doing other
+        activities, SPI Data transaction will happen in the corresponding ISR.
+        in this mode, the receive data locations provided by user 
+        must remain valid until the data transfer is complete.
+        Application can check the data transfer completion status via
+        callback or polling mechanism. In case of callback, it needs to be
+        registered prior to calling the Read API. Data transfer status
+        polling can be done using "SPIx_IsBusy" API.
+        
+  Precondition:
+    The SPIx_Initialize function must have been called.
+    
+    Callback has to be registered using SPIx_CallbackRegister API if the
+    peripheral instance has been configured in Interrupt mode and
+    transfer completion status needs to be communicated back to application via
+    callback.
+
+  Parameters:
+    *pReceiveData   Pointer to the location where received data has to be stored.
+                    It is user's responsibility to ensure pointed location has
+                    sufficient memory to store the read data.
+                    if it is NULL, that means only data transmission is expected.
+                    For 9 to 15bit mode, received data will be right aligned in
+                    the 16 bit memory location.
+    rxSize          Number of bytes to be received. For 9 to 15bit mode, size
+                    should be given as if it is 16bit mode.
+
+  Returns:
+    In Blocking mode, API returns True once the transfer is complete. It returns
+    False if rxSize is 0 and receive data pointer is NULL.
+    
+    In interrupt mode, if previous buffer request is not completed and a new
+    transfer request comes, then this API will reject the new request and will
+    return "False". Also, Same as blocking mode, It returns False if rxSize is
+    0 and receive data pointer is NULL.
+
+  Example:
+    <code>
+    uint8_t     rxBuffer[10]; 
+    size_t      rxSize = 10;
+    bool        reqAccepted;
+    
+    SPI1_Initialize();
+    
+    SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
+
+    reqAccepted = SPI1_Read(&rxBuffer, rxSize);
+
+    void APP_SPITransferHandler(void* context)
+    {
+        if( SPI_ERROR_NONE == SPI1_ErrorGet())
+        {
+            Transfer was completed without error, do something else now.
+        }
+    }
+    </code>
+
+  Remarks:
+    Non-blocking interrupt mode configuration implementation of this function
+    will be used by Harmony driver implementation APIs.
+    
+*/
+bool SPIx_Read(void* pReceiveData, size_t rxSize);
+    
 // *****************************************************************************
 /* Function:
     bool SPIx_IsBusy (void):
     
   Summary:
-    Returns exchange status of particular request on SPI x
+    Returns transfer status of SPI x
     
   Description:
-    This function returns exchange status of particular request on SPI x module
-    in interrupt mode.
+    This function returns transfer status of last succesfull Write, Read or
+    WriteRead request on SPI x module in interrupt mode.
   
   Precondition:
     None.
@@ -389,20 +571,21 @@ bool SPIx_Exchange(
     None.
   
   Returns:
-    Returns the current status of exchange happening on SPI x.
-        true: Exchange is completed
-        false: Exchange is still in progress
+    Returns the current status of transfer happening on SPI x.
+        true:  Transfer is completed
+        false: Transfer is still in progress
     
   Example:
     <code>
         if (false == SPI1_IsBusy())
         {
-            //Data Exchange is complete, do something else.
+            //Data Transfer is complete, do something else.
         }
     </code>
     
   Remarks:
-    None.
+    This API is available only for interrupt mode as blocking mode transfer
+    APIs will always return only after completing the transfer.
 */
 bool SPIx_IsBusy (void):
 
@@ -415,8 +598,8 @@ bool SPIx_IsBusy (void):
 
    Description:
     This function returns the errors associated with the given SPI peripheral 
-    instance. After completing any echange, this API should be called and
-    verified if any error occurred in the exchange or not.
+    instance. After completing any transfer in interrupt mode, this API should
+    be called and verified if any error occurred in the transfer or not.
 
    Precondition:
     None.
@@ -443,24 +626,24 @@ bool SPIx_IsBusy (void):
 SPI_ERROR SPIx_ErrorGet( void );
 
 // *****************************************************************************
-/* SPI Event Handler Function Pointer
+/* SPI Callback Function Pointer
 
    Summary:
-    Pointer to a SPI Event handler function.
+    Pointer to a SPI Callback function.
 
    Description:
-    This data type defines the required function signature for the 
-    SPI event handling callback function. Application must register
-    a pointer to an event handling function whose function signature (parameter
-    and return value types) match the types specified by this function pointer
-    in order to receive event calls back from the PLIB.
+    This data type defines the required function signature for the SPI
+    callback function. Application must register a pointer to a callback
+    function whose function signature (parameter and return value types)
+    match the types specified by this function pointer in order to
+    receive callback from the PLIB.
 
     The parameters and return values are described here and a partial example
     implementation is provided.
 
   Parameters:
     context         - Value identifying the context of the application that
-                      registered the event handling function
+                      registered the callback function
 
   Returns:
     None.
@@ -468,35 +651,35 @@ SPI_ERROR SPIx_ErrorGet( void );
   Example:
     <code>
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
-    void APP_SPITransferHandler(uintptr_t contextHandle)
+    void APP_SPITransferHandler(void* context)
     {
         if( SPI_ERROR_NONE == SPI1_ErrorGet())
         {
-            Exchange was completed without error, do something else now.
+            Transfer was completed without error, do something else now.
         }
     }
     </code>
 
   Remarks:
     The context parameter contains the a handle to the client context,
-    provided at the time the event handling function was  registered using the
+    provided at the time the callback function was registered using the
     SPIx_CallbackRegister function. This context handle value is
     passed back to the client as the "context" parameter.  It can be any value
     (such as a pointer to the client's data) necessary to identify the client
-    context or instance  of the client that made the data exchange
+    context or instance  of the client that made the data transfer
     request.
 
-    The event handler function executes in the PLIB's interrupt context. It is
+    The callback function executes in the PLIB's interrupt context. It is
     recommended of the application to not perform process intensive or blocking
     operations with in this function.
 */
-typedef  void (*SPI_EVENT_HANDLER) (void* context);
+typedef  void (*SPI_CALLBACK) (void* context);
 
 // *****************************************************************************
 /* Function:
     void SPIx_CallbackRegister
     (
-        const SPI_EVENT_HANDLER* eventHandler,
+        const SPI_CALLBACK* callback,
         void* context
     );
 
@@ -504,23 +687,23 @@ typedef  void (*SPI_EVENT_HANDLER) (void* context);
     Allows application to register callback with PLIB.
 
   Description:
-    This function allows application to register an event handling function
-    for the PLIB to call back when requested data exchange operation has completed or
-    any error has occurred.
+    This function allows application to register a callback function for the PLIB
+    to call back when requested data transfer operation has completed or any error
+    has occurred.
 
-    The callback should be registered before the client performs exchange operation. 
+    The callback should be registered before the client performs transfer operation. 
     
     At any point if application wants to stop the callback, it can call this function
-    with "eventHandler" value as NULL.
+    with "callback" value as NULL.
 
   Precondition:
     The SPIx_Initialize function must have been called.
 
   Parameters:
-    eventHandler - Pointer to the event handler function implemented by the user
+    callback -     Pointer to the callback function implemented by the user
 
-    context      - The value of parameter will be passed back to the application
-                   unchanged, when the eventHandler function is called. It can
+    context  -     The value of parameter will be passed back to the application
+                   unchanged, when the callback function is called. It can
                    be used to identify any application specific value that
                    identifies the instance of the client module (for example,
                    it may be a pointer to the client module's state structure).
@@ -530,22 +713,23 @@ typedef  void (*SPI_EVENT_HANDLER) (void* context);
 
   Example:
     <code>
-    uint8_t     txBuffer[10];
+    uint8_t     txBuffer[4];
     uint8_t     rxBuffer[10];
-    size_t      size = 10;    
-    size_t      reqAccepted;
+    size_t      txSize = 4; 
+    size_t      rxSize = 10;
+    bool        reqAccepted;
     
     SPI1_Initialize();
     
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
-    reqAccepted = SPI1_Exchange(&txBuffer, &rxBuffer, size);
+    reqAccepted = SPI1_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
 
-    void APP_SPITransferHandler(void* contextHandle)
+    void APP_SPITransferHandler(void* context)
     {
         if( SPI_ERROR_NONE == SPI1_ErrorGet())
         {
-            Exchange was completed without error, do something else now.
+            Transfer was completed without error, do something else now.
         }
     }
     </code>
@@ -554,4 +738,4 @@ typedef  void (*SPI_EVENT_HANDLER) (void* context);
     If the client does not want to be notified when the queued operation
     has completed, it does not need to register a callback.
 */
-void SPIx_CallbackRegister(const SPI_EVENT_HANDLER* eventHandler, void* context);
+void SPIx_CallbackRegister(const SPI_CALLBACK* callback, void* context);

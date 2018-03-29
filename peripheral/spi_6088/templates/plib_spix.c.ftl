@@ -69,7 +69,7 @@ void SPI${SPI_INDEX?string}_Initialize ( void )
        
 <#if SPI_INTERRUPT_MODE == true >
     /* Initialize global variables */
-    spi${SPI_INDEX?string}Obj.exchangeIsBusy = false;
+    spi${SPI_INDEX?string}Obj.transferIsBusy = false;
     spi${SPI_INDEX?string}Obj.callback = NULL;
     spi${SPI_INDEX?string}Obj.status = SPI_ERROR_NONE;
 </#if>
@@ -79,109 +79,197 @@ void SPI${SPI_INDEX?string}_Initialize ( void )
     return;
 }
 
-bool SPI${SPI_INDEX?string}_Exchange (void* pTransmitData, void* pReceiveData, size_t size)
-{
-    bool requestAccepted = false;
-
 <#if SPI_INTERRUPT_MODE == false >
-    uint32_t dataExchangedCount = 0; 
-    uint32_t wordSize;
+bool SPI${SPI_INDEX?string}_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+{
+    size_t txCount = 0;
+    size_t rxCount = 0;
+    size_t dummySize = 0;
+    size_t receivedData;
     uint32_t dataBits;
+    bool isSuccess = false;
     
-    dataBits = SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}]& SPI_CSR_BITS_Msk;
-    /* Validate the argument */
-    if(0 != size)
-    {
-        if(SPI_CSR_BITS_8_BIT == dataBits)
+    /* Verify the request */
+    if (((txSize > 0) && (NULL != pTransmitData)) || ((rxSize > 0) && (NULL != pReceiveData)))
+    {                
+        dataBits = SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;    
+
+        /* Flush out any unread data in SPI read buffer from the previous transfer */
+        receivedData = (SPI${SPI_INDEX?string}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;     
+
+        if (rxSize > txSize)
         {
-            wordSize = size;
+            dummySize = rxSize - txSize;
         }
-        else
+        if (SPI_CSR_BITS_8_BIT != dataBits)
         {
-            wordSize = size >> 1;
-        }     
-        while(dataExchangedCount < wordSize)
-        {
-            if (NULL == pTransmitData )
+            rxSize >>= 1;
+            txSize >>= 1;
+            dummySize >>= 1;
+        }
+        
+        /* Make sure TDR is empty */
+        while(false == (bool)((SPI${SPI_INDEX?string}_REGS->SPI_SR & SPI_SR_TDRE_Msk) >> SPI_SR_TDRE_Pos));
+
+        while ((txCount != txSize) || (dummySize != 0))
+        {            
+            if (txCount != txSize)
             {
-                // do a dummy write
-                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFFFF;
+                if(SPI_CSR_BITS_8_BIT == dataBits)
+                {
+                    SPI${SPI_INDEX?string}_REGS->SPI_TDR = ((uint8_t*)pTransmitData)[txCount++];
+                }
+                else
+                {
+                    SPI${SPI_INDEX?string}_REGS->SPI_TDR = ((uint16_t*)pTransmitData)[txCount++];
+                }
             }
-            else if(SPI_CSR_BITS_8_BIT == dataBits)
-            {
-                SPI${SPI_INDEX?string}_REGS->SPI_TDR = ((uint8_t*)pTransmitData)[dataExchangedCount];
+            else if (dummySize > 0)
+            {                        
+                if(SPI_CSR_BITS_8_BIT == dataBits)
+                {
+                    SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFF;            
+                }
+                else
+                {
+                    SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFFFF;            
+                }            
+                dummySize--;
+            }
+            
+            if (0 == rxSize)
+            {            
+                /* For transmit only request, wait for TDR to become empty */
+                while(false == (bool)((SPI${SPI_INDEX?string}_REGS->SPI_SR & SPI_SR_TDRE_Msk) >> SPI_SR_TDRE_Pos));
             }
             else
             {
-                SPI${SPI_INDEX?string}_REGS->SPI_TDR = ((uint16_t*)pTransmitData)[dataExchangedCount];
+                /* If data is read, wait for the Receiver Data Register to become full*/
+                while(false == (bool)((SPI${SPI_INDEX?string}_REGS->SPI_SR & SPI_SR_RDRF_Msk) >> SPI_SR_RDRF_Pos))
+				{
+				}
+				
+				receivedData = (SPI${SPI_INDEX?string}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
+				
+                if (rxCount < rxSize)
+                {
+                    if(SPI_CSR_BITS_8_BIT == dataBits)
+                    {
+                        ((uint8_t*)pReceiveData)[rxCount++] = receivedData;
+                    }
+                    else
+                    {
+                        ((uint16_t*)pReceiveData)[rxCount++] = receivedData;
+                    }
+                }
             }
-            
-            /* Wait until data is received */
-            while( false == SPI${SPI_INDEX?string}_REGS->SPI_SR.RDRF );
-            
-            if (NULL == pReceiveData )
-            {
-                // dummy read
-                SPI${SPI_INDEX?string}_REGS->SPI_RDR.RD;
-            }
-            else if(SPI_CSR_BITS_8_BIT == dataBits)
-            {
-                ((uint8_t*)pReceiveData)[dataExchangedCount] = SPI${SPI_INDEX?string}_REGS->SPI_RDR.RD;
-            }
-            else
-            {
-                ((uint16_t*)pReceiveData)[dataExchangedCount] = SPI${SPI_INDEX?string}_REGS->SPI_RDR.RD;
-            }          
-            dataExchangedCount++;            
         }
-        requestAccepted = true;
+
+        /* Make sure no data is pending in the shift register */
+        while (false == (bool)((SPI${SPI_INDEX?string}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) >> SPI_SR_TXEMPTY_Pos));
+        
+        isSuccess = true;                
     }
+	    return isSuccess;
+}
 <#else>
-    /* Validate the argument */
-    if((0 != size) && (false == spi${SPI_INDEX?string}Obj.exchangeIsBusy))
+bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+{
+    bool isRequestAccepted = false; 
+    uint32_t dummyData;        
+    
+    /* Verify the request */
+    if(((txSize > 0) && (NULL != pTransmitData)) || ((rxSize > 0) && (NULL != pReceiveData)))
     {
-        requestAccepted = true;
+        return isRequestAccepted;
+    }
+    
+    /* Validate the argument */
+    if(false == spi${SPI_INDEX?string}Obj.transferIsBusy)
+    {        
+        isRequestAccepted = true;
         spi${SPI_INDEX?string}Obj.txBuffer = pTransmitData;
         spi${SPI_INDEX?string}Obj.rxBuffer = pReceiveData;
         spi${SPI_INDEX?string}Obj.rxCount = 0;
         spi${SPI_INDEX?string}Obj.txCount = 0;
-        spi${SPI_INDEX?string}Obj.exchangeIsBusy = true;
+        spi${SPI_INDEX?string}Obj.dummySize = 0;
+        spi${SPI_INDEX?string}Obj.txSize = txSize;
+        spi${SPI_INDEX?string}Obj.rxSize = rxSize;
+        spi${SPI_INDEX?string}Obj.transferIsBusy = true;        
         spi${SPI_INDEX?string}Obj.status = SPI_ERROR_NONE;
         
-        /* Start the first write here itself, rest will happen in ISR context */
-        if (NULL == spi${SPI_INDEX?string}Obj.txBuffer )
-        {   
-            // Do a dummy write
-            SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFFFF;
-        }
-        else if(SPI_CSR_BITS_8_BIT == (SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}]& SPI_CSR_BITS_Msk))
+        /* Flush out any unread data in SPI read buffer */
+        dummyData = (SPI${SPI_INDEX?string}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos; 
+        (void)dummyData;
+        
+        if (spi${SPI_INDEX?string}Obj.rxSize > spi${SPI_INDEX?string}Obj.txSize)
         {
-            SPI${SPI_INDEX?string}_REGS->SPI_TDR = *((uint8_t*)spi${SPI_INDEX?string}Obj.txBuffer);
-            spi${SPI_INDEX?string}Obj.exchangeSize = size;
+            spi${SPI_INDEX?string}Obj.dummySize = spi${SPI_INDEX?string}Obj.rxSize - spi${SPI_INDEX?string}Obj.txSize;
+        }
+                
+        /* Start the first write here itself, rest will happen in ISR context */
+        if(SPI_CSR_BITS_8_BIT == (SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk))
+        {
+            if (spi${SPI_INDEX?string}Obj.txCount < spi${SPI_INDEX?string}Obj.txSize)
+            {
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = *((uint8_t*)spi${SPI_INDEX?string}Obj.txBuffer);
+                spi${SPI_INDEX?string}Obj.txCount++;
+            }
+            else if (spi${SPI_INDEX?string}Obj.dummySize > 0)
+            {
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFF;
+                spi${SPI_INDEX?string}Obj.dummySize--;
+            }           
         }
         else
         {
-            SPI${SPI_INDEX?string}_REGS->SPI_TDR = *((uint16_t*)spi${SPI_INDEX?string}Obj.txBuffer);
-            spi${SPI_INDEX?string}Obj.exchangeSize = size >> 1;
+            spi${SPI_INDEX?string}Obj.txSize >>= 1;
+            spi${SPI_INDEX?string}Obj.dummySize >>= 1;
+            spi${SPI_INDEX?string}Obj.rxSize >>= 1;
+            
+            if (spi${SPI_INDEX?string}Obj.txCount < spi${SPI_INDEX?string}Obj.txSize)
+            {
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = *((uint16_t*)spi${SPI_INDEX?string}Obj.txBuffer);                
+                spi${SPI_INDEX?string}Obj.txCount++;                
+            }
+            else if (spi${SPI_INDEX?string}Obj.dummySize > 0)
+            {
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFFFF;                
+                spi${SPI_INDEX?string}Obj.dummySize--;                                
+            }                        
+        }       
+                                        
+        if (rxSize > 0)
+        {
+            /* Enable receive interrupt to complete the transfer in ISR context */                    
+            SPI${SPI_INDEX?string}_REGS->SPI_IER = SPI_IER_RDRF_Msk;                        
         }
-        spi${SPI_INDEX?string}Obj.txCount++;
-        
-        /* Enable transmit interrupt to complete the exchange in ISR context */
-        SPI${SPI_INDEX?string}_REGS->SPI_IER = SPI_IER_TDRE_Msk;
+        else
+        {
+            /* Enable transmit interrupt to complete the transfer in ISR context */        
+            SPI${SPI_INDEX?string}_REGS->SPI_IER = SPI_IER_TDRE_Msk;
+        }       
     }
-</#if>
-    return requestAccepted;
+    
+    return isRequestAccepted;
 }
+</#if>
 
-bool SPI${SPI_INDEX?string}_Setup ( uint32_t spiSourceClock, SPI_SETUP * setup )
+bool SPI${SPI_INDEX?string}_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
+    if (0 == setup->clockFrequency)
+	{
+		return false;
+	}
     if(0 == spiSourceClock)
     {
         // Fetch Master Clock Frequency directly
         spiSourceClock = ${SPI_MASTER_CLOCK};
     }
-    scbr = spiSourceClock/ setup->clockFrequency;
+
+    scbr = spiSourceClock/setup->clockFrequency;
+    
     if(0 == scbr)
     {
         scbr = 1;
@@ -190,105 +278,111 @@ bool SPI${SPI_INDEX?string}_Setup ( uint32_t spiSourceClock, SPI_SETUP * setup )
     {
         scbr = 255;
     }
+    
     SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}]= setup->clockPolarity | setup->clockPhase | SPI_CSR_BITS(setup->dataBits) | SPI_CSR_SCBR(scbr);
 
     return true;
 }
 
 <#if SPI_INTERRUPT_MODE == true >
-
 SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void )
 {
     return (SPI_ERROR)(spi${SPI_INDEX?string}Obj.status & (SPI_SR_OVRES_Msk));
 }
 
-void SPI${SPI_INDEX?string}_CallbackRegister (SPI_EVENT_HANDLER eventHandler, void* context)
+void SPI${SPI_INDEX?string}_CallbackRegister (SPI_CALLBACK callback, void* context)
 {
-    spi${SPI_INDEX?string}Obj.callback = eventHandler;
+    spi${SPI_INDEX?string}Obj.callback = callback;
     spi${SPI_INDEX?string}Obj.context = context;
 }
 
-
 bool SPI${SPI_INDEX?string}_IsBusy()
 {  
-    return spi${SPI_INDEX?string}Obj.exchangeIsBusy;
+    return spi${SPI_INDEX?string}Obj.transferIsBusy;
 }
 
 void SPI${SPI_INDEX?string}_InterruptHandler(void)
 {   
     uint32_t dataBits ;
-    dataBits = SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}]& SPI_CSR_BITS_Msk;
+    uint32_t receivedData;    
+    dataBits = SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;    
     
     /* save the status in global object before it gets cleared */
-    spi${SPI_INDEX?string}Obj.status = SPI${SPI_INDEX?string}_REGS->SPI_SR;
-    
-    /* Since the write cycle had started in Exchange API itself, start with read cycle here */
-    if ( true == SPI${SPI_INDEX?string}_REGS->SPI_SR.RDRF )
-    {
-        if (NULL == spi${SPI_INDEX?string}Obj.rxBuffer)
-        {
-            // Dummy Read
-            SPI${SPI_INDEX?string}_REGS->SPI_RDR.RD;
-        }
-        else if(SPI_CSR_BITS_8_BIT == dataBits)
-        {
-            ((uint8_t*)spi${SPI_INDEX?string}Obj.rxBuffer)[spi${SPI_INDEX?string}Obj.rxCount] = SPI${SPI_INDEX?string}_REGS->SPI_RDR.RD;
-        }
-        else
-        {
-            ((uint16_t*)spi${SPI_INDEX?string}Obj.rxBuffer)[spi${SPI_INDEX?string}Obj.rxCount] = SPI${SPI_INDEX?string}_REGS->SPI_RDR.RD;
-        }
-        spi${SPI_INDEX?string}Obj.rxCount++;
-    } 
-   
-    /* If there are more words to be transmitted, then transmit them here and keep track of the count */
-    if((spi${SPI_INDEX?string}Obj.txCount < spi${SPI_INDEX?string}Obj.exchangeSize) && (true == SPI${SPI_INDEX?string}_REGS->SPI_SR.TDRE))
-    {   
-        if (NULL == spi${SPI_INDEX?string}Obj.txBuffer )
-        {   
-            // do a dummy write
-            SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFFFF;
-        }
-        else if(SPI_CSR_BITS_8_BIT == dataBits)
-        {
-            SPI${SPI_INDEX?string}_REGS->SPI_TDR = ((uint8_t*)spi${SPI_INDEX?string}Obj.txBuffer)[spi${SPI_INDEX?string}Obj.txCount];
-        }
-        else
-        {
-            SPI${SPI_INDEX?string}_REGS->SPI_TDR = ((uint16_t*)spi${SPI_INDEX?string}Obj.txBuffer)[spi${SPI_INDEX?string}Obj.txCount];
-        }            
-        spi${SPI_INDEX?string}Obj.txCount++;
+    spi${SPI_INDEX?string}Obj.status = SPI${SPI_INDEX?string}_REGS->SPI_SR;              
         
-        if(spi${SPI_INDEX?string}Obj.txCount == spi${SPI_INDEX?string}Obj.exchangeSize)
+    if ( SPI_SR_RDRF_Msk == (SPI${SPI_INDEX?string}_REGS->SPI_SR & SPI_SR_RDRF_Msk ))
+    {                                           
+        receivedData = (SPI${SPI_INDEX?string}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos; 
+            
+        if (spi${SPI_INDEX?string}Obj.rxCount < spi${SPI_INDEX?string}Obj.rxSize)
         {
-            /* There is nothing more to be transmitted, but there are couple
-            of words yet to be received, so disable TX interrupt and enable
-            RX interrupt for optimum calls to ISR */
-            //Disable TX interrupt           
-            SPI${SPI_INDEX?string}_REGS->SPI_IDR|= SPI_IDR_TDRE_Msk;
-            //Enable RX interrupt
-            SPI${SPI_INDEX?string}_REGS->SPI_IER|= SPI_IER_RDRF_Msk;        
+            if(SPI_CSR_BITS_8_BIT == dataBits)
+            {
+                ((uint8_t*)spi${SPI_INDEX?string}Obj.rxBuffer)[spi${SPI_INDEX?string}Obj.rxCount++] = receivedData;
+            }
+            else
+            {
+                ((uint16_t*)spi${SPI_INDEX?string}Obj.rxBuffer)[spi${SPI_INDEX?string}Obj.rxCount++] = receivedData;
+            }                
+        }                                   
+    }    
+        
+    /* If there are more words to be transmitted, then transmit them here and keep track of the count */
+    if(SPI_SR_TDRE_Msk == (SPI${SPI_INDEX?string}_REGS->SPI_SR & SPI_SR_TDRE_Msk))
+    {                           
+        if(SPI_CSR_BITS_8_BIT == dataBits)
+        {
+            if (spi${SPI_INDEX?string}Obj.txCount < spi${SPI_INDEX?string}Obj.txSize)
+            {
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = ((uint8_t*)spi${SPI_INDEX?string}Obj.txBuffer)[spi${SPI_INDEX?string}Obj.txCount++];                
+            }
+            else if (spi${SPI_INDEX?string}Obj.dummySize > 0)
+            {
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFF;
+                spi${SPI_INDEX?string}Obj.dummySize--;
+            }                                          
+        }
+        else
+        {
+            if (spi${SPI_INDEX?string}Obj.txCount < spi${SPI_INDEX?string}Obj.txSize)
+            {
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = ((uint16_t*)spi${SPI_INDEX?string}Obj.txBuffer)[spi${SPI_INDEX?string}Obj.txCount++];                
+            }
+            else if (spi${SPI_INDEX?string}Obj.dummySize > 0)
+            {
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFFFF;
+                spi${SPI_INDEX?string}Obj.dummySize--;
+            }              
+        }       
+        if ((spi${SPI_INDEX?string}Obj.txCount == spi${SPI_INDEX?string}Obj.txSize) && (0 == spi${SPI_INDEX?string}Obj.dummySize))
+        {            
+            /* Disable the TDRE interrupt and enable TXEMPTY interrupt to ensure
+             * no data is present in the shift register before CS is de-selected  
+             */
+            SPI${SPI_INDEX?string}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk; 
+            SPI${SPI_INDEX?string}_REGS->SPI_IER = SPI_IER_TXEMPTY_Msk;                                         
+        }     
+    }       
+                    
+    /* See if Exchange is complete */        
+    if ((SPI_IMR_TXEMPTY_Msk == (SPI${SPI_INDEX?string}_REGS->SPI_IMR & SPI_IMR_TXEMPTY_Msk)) && (SPI_SR_TXEMPTY_Msk == (SPI${SPI_INDEX?string}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk)))        
+    {        
+        if (spi${SPI_INDEX?string}Obj.rxCount == spi${SPI_INDEX?string}Obj.rxSize)
+        {
+            spi${SPI_INDEX?string}Obj.transferIsBusy = false;                        
+            
+            /* Disable TDRE, RDRF and TXEMPTY interrupts */
+            SPI${SPI_INDEX?string}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk | SPI_IDR_RDRF_Msk | SPI_IDR_TXEMPTY_Msk;                  
+            
+            /* Flush out any pending SPI IRQ with NVIC */
+            NVIC_ClearPendingIRQ(SPI0_IRQn);                        
+                                           
+            if(spi${SPI_INDEX?string}Obj.callback != NULL)
+            {
+                spi${SPI_INDEX?string}Obj.callback(spi${SPI_INDEX?string}Obj.context);
+            }                                   
         }
     }
-    
-    /* See if Exchange is complete */
-    if (spi${SPI_INDEX?string}Obj.rxCount == spi${SPI_INDEX?string}Obj.exchangeSize)
-    {
-        spi${SPI_INDEX?string}Obj.exchangeIsBusy = false;
-
-        //Disable TX and RX interrupts
-        // if it was one word transfer, then RX interrupt should already be disabled, disable both anyways.
-        // if it was more than a word transfer, then TX interrupt should already be disabled, disable both anyways.
-        SPI${SPI_INDEX?string}_REGS->SPI_IDR|= SPI_IER_TDRE_Msk | SPI_IER_RDRF_Msk;
-        
-        /* This means the buffer is completed. If there
-           is a callback registered with client, then
-           call it */
-        if(spi${SPI_INDEX?string}Obj.callback != NULL)
-        {
-            spi${SPI_INDEX?string}Obj.callback(spi${SPI_INDEX?string}Obj.context);
-        }             
-    } 
 }
 </#if>
 
