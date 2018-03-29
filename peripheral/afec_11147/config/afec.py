@@ -1,5 +1,3 @@
-from math import ceil
-
 ###################################################################################################
 ########################### Global variables   #################################
 ###################################################################################################	
@@ -82,16 +80,31 @@ def afecGetMasterClock():
 	main_clk_freq = int(Database.getSymbolValue("core","MASTERCLK_FREQ"))
 	return main_clk_freq
 	
-def afecCalcPrescal(afecSym_MR_PRESCAL, event ):
-	global afecSym_Clock
+def afecPrescalWarning(symbol, event ):
 	clock = afecGetMasterClock()
-	afecSym_MR_PRESCAL.clearValue()
-	afecSym_MR_PRESCAL.setValue(int(ceil(clock/afecSym_Clock.getValue()) - 1), 2)
-	
+	prescaler = afecSym_MR_PRESCAL.getValue() + 1
+	afecFreq = clock / prescaler
+	if (afecFreq > 40000000):
+		symbol.setLabel("**** AFEC Frequency = " + str(afecFreq) + "Hz which is greater than max frequency of 40000000 ****")
+		symbol.setVisible(True)
+	else:
+		symbol.setVisible(False)
+	if (afecFreq < 4000000):
+		symbol.setLabel("**** AFEC Frequency = " + str(afecFreq) + "Hz which is less than min frequency of 4000000 ****")
+		symbol.setVisible(True)
+	else:
+		symbol.setVisible(False)
+		
+def afecFreqCalc(symbol, event):
+	clock = afecGetMasterClock()
+	prescaler = afecSym_MR_PRESCAL.getValue() + 1
+	afecFreq = clock / prescaler
+	symbol.clearValue()
+	symbol.setValue(afecFreq, 2)
+		
 def afecCalcConversionTime(afecSym_CONV_TIME, event):
-	global afecSym_Clock
 	clock = afecGetMasterClock()
-	prescaler = int(ceil(clock/afecSym_Clock.getValue()))
+	prescaler = afecSym_MR_PRESCAL.getValue() + 1
 	result_resolution = afecSym_EMR_RES_VALUE.getSelectedKey()
 	multiplier = 1
 	if (result_resolution == "NO_AVERAGE"):
@@ -217,7 +230,8 @@ def afecCHEnable(symbol, event):
 			afecCHMenu[channelID].setVisible(True)
 
 def afecTriggerVisible(symbol, event):
-	if(event["value"] == True):
+	symObj = event["symbol"]
+	if(symObj.getSelectedKey() == "HW_TRIGGER"):
 		symbol.setVisible(True)
 	else:
 		symbol.setVisible(False)
@@ -284,45 +298,50 @@ def instantiateComponent(afecComponent):
 	afecMenu = afecComponent.createMenuSymbol("AFEC_MENU", None)
 	afecMenu.setLabel("ADC Configuration")
 	
+	#Clock prescaler
+	global afecSym_MR_PRESCAL
+	afecSym_MR_PRESCAL = afecComponent.createIntegerSymbol("AFEC_MR_PRESCAL", afecMenu)
+	afecSym_MR_PRESCAL.setLabel("Select Prescaler")
+	afecSym_MR_PRESCAL.setDefaultValue(7)
+	afecSym_MR_PRESCAL.setMin(1)
+	afecSym_MR_PRESCAL.setMax(255)
+	
 	#clock selection
 	global afecSym_Clock
 	afecSym_Clock = afecComponent.createIntegerSymbol("AFEC_CLK", afecMenu)
 	afecSym_Clock.setLabel("Clock Frequency (Hz)")
-	afecSym_Clock.setMin(4000000)
-	afecSym_Clock.setMax(40000000)
-	afecSym_Clock.setDefaultValue(20000000)
+	afecSym_Clock.setDefaultValue(18750000)
+	afecSym_Clock.setVisible(True)
+	afecSym_Clock.setReadOnly(True)
+	afecSym_Clock.setDependencies(afecFreqCalc, ["AFEC_MR_PRESCAL", "core.MASTERCLK_FREQ"])
+	
+	afecSym_PRESCAL_WARNING = afecComponent.createCommentSymbol("AFEC_PRESCAL_WARNING", afecMenu)
+	afecSym_PRESCAL_WARNING.setLabel("**** AFEC Frequency = 18750000 Hz. ****")
+	afecSym_PRESCAL_WARNING.setVisible(False)
+	afecSym_PRESCAL_WARNING.setDependencies(afecPrescalWarning, ["AFEC_MR_PRESCAL", "core.MASTERCLK_FREQ"])
 
 	#Result resolution
+	#Added keys here as combining two bit-fields EMR_STM and EMR_RES
 	global afecSym_EMR_RES_VALUE
 	afecSym_EMR_RES_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_RES_VALUE", afecMenu)
 	afecSym_EMR_RES_VALUE.setLabel ("Result Resolution")
 	afecSym_EMR_RES_VALUE.setDefaultValue(0)
-	afecSym_EMR_RES_VALUE.setOutputMode("Key")
+	afecSym_EMR_RES_VALUE.setOutputMode("Value")
 	afecSym_EMR_RES_VALUE.setDisplayMode("Description")
-	resolution = []
-	afec = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AFEC\"]/value-group@[name=\"AFEC_EMR__RES\"]")
-	resolution = afec.getChildren()	
-	for param in range (0 , len(resolution)):
-		afecSym_EMR_RES_VALUE.addKey(resolution[param].getAttribute("name"), resolution[param].getAttribute("value"), resolution[param].getAttribute("caption"))	
-
-	#Single trigger mode
-	afecSym_EMR_STM = afecComponent.createBooleanSymbol("AFEC_EMR_STM", afecMenu)
-	afecSym_EMR_STM.setLabel("Averaging Single Trigger Mode")
-	afecSym_EMR_STM.setDefaultValue(False)
-		
-	#Clock prescaler
-	global afecSym_MR_PRESCAL
-	afecSym_MR_PRESCAL = afecComponent.createIntegerSymbol("AFEC_MR_PRESCAL", afecMenu)
-	afecSym_MR_PRESCAL.setVisible(False)
-	afecSym_MR_PRESCAL.setDefaultValue(6)
-	afecSym_MR_PRESCAL.setMin(1)
-	afecSym_MR_PRESCAL.setMin(255)
-	afecSym_MR_PRESCAL.setDependencies(afecCalcPrescal, ["AFEC_CLK", "core.MASTERCLK_FREQ"])
+	afecSym_EMR_RES_VALUE.addKey("NO_AVERAGE", "0", "12-bit")
+	afecSym_EMR_RES_VALUE.addKey("OSR4", "1", "13-bit - single trigger averaging")
+	afecSym_EMR_RES_VALUE.addKey("OSR4", "2", "13-bit - multi trigger averaging")
+	afecSym_EMR_RES_VALUE.addKey("OSR16", "3", "14-bit - single trigger averaging")
+	afecSym_EMR_RES_VALUE.addKey("OSR16", "4", "14-bit - multi trigger averaging")
+	afecSym_EMR_RES_VALUE.addKey("OSR64", "5", "15-bit - single trigger averaging")
+	afecSym_EMR_RES_VALUE.addKey("OSR64", "6", "15-bit - multi trigger averaging")
+	afecSym_EMR_RES_VALUE.addKey("OSR256", "7", "16-bit - single trigger averaging")
+	afecSym_EMR_RES_VALUE.addKey("OSR256", "8", "16-bit - multi trigger averaging")
 	
 	#Conversion time
 	afecSym_CONV_TIME = afecComponent.createCommentSymbol("AFEC_CONV_TIME", afecMenu)
 	afecSym_CONV_TIME.setLabel("**** Conversion Time is 1.0733 us ****")
-	afecSym_CONV_TIME.setDependencies(afecCalcConversionTime, ["AFEC_CLK", "AFEC_EMR_RES_VALUE", "core.MASTERCLK_FREQ"])
+	afecSym_CONV_TIME.setDependencies(afecCalcConversionTime, ["AFEC_MR_PRESCAL", "AFEC_EMR_RES_VALUE", "core.MASTERCLK_FREQ"])
 	
 	#Result sign
 	afecSym_EMR_SIGNMODE_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_SIGNMODE_VALUE", afecMenu)
@@ -330,24 +349,22 @@ def instantiateComponent(afecComponent):
 	afecSym_EMR_SIGNMODE_VALUE.setDefaultValue(0)
 	afecSym_EMR_SIGNMODE_VALUE.setOutputMode("Key")
 	afecSym_EMR_SIGNMODE_VALUE.setDisplayMode("Description")
-	signMode = []
-	afec = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AFEC\"]/value-group@[name=\"AFEC_EMR__SIGNMODE\"]")
-	signMode = afec.getChildren()	
-	for param in range (0 , len(signMode)):
-		afecSym_EMR_SIGNMODE_VALUE.addKey(signMode[param].getAttribute("name"), signMode[param].getAttribute("value"), signMode[param].getAttribute("caption"))		
+	afecSym_EMR_SIGNMODE_VALUE.addKey("SE_UNSG_DF_SIGN", "0", "Single Ended: Unsigned, Differential: Signed")
+	afecSym_EMR_SIGNMODE_VALUE.addKey("SE_SIGN_DF_UNSG", "1", "Single Ended: Signed, Differential: Unsigned")
+	afecSym_EMR_SIGNMODE_VALUE.addKey("ALL_UNSIGNED", "2", "Single Ended: Unsigned, Differential: Unsigned")
+	afecSym_EMR_SIGNMODE_VALUE.addKey("ALL_SIGNED", "3", "Single Ended: Signed, Differential: Signed")
 	
-	#Free run mode
-	afecSym_MR_FREERUN = afecComponent.createBooleanSymbol("AFEC_MR_FREERUN", afecMenu)
-	afecSym_MR_FREERUN.setLabel("Enable Free Running Mode")
-	afecSym_MR_FREERUN.setDefaultValue(False)
-	
-	#Conversion trigger
-	afecSym_MR_TRGEN = afecComponent.createBooleanSymbol("AFEC_MR_TRGEN", afecMenu)
-	afecSym_MR_TRGEN.setLabel("Enable External Trigger Mode")
-	afecSym_MR_TRGEN.setDefaultValue(False)
+	afecSym_CONV_MODE = afecComponent.createKeyValueSetSymbol("AFEC_CONV_MODE", afecMenu)
+	afecSym_CONV_MODE.setLabel("Conversion Mode")
+	afecSym_CONV_MODE.setDefaultValue(0)
+	afecSym_CONV_MODE.setOutputMode("Value")
+	afecSym_CONV_MODE.setDisplayMode("Description")
+	afecSym_CONV_MODE.addKey("FREERUN", "0", "Free Run")
+	afecSym_CONV_MODE.addKey("SW_TRIGGER", "1", "Software Trigger")
+	afecSym_CONV_MODE.addKey("HW_TRIGGER", "2", "Hardware Trigger")	
 	
 	#Trigger
-	afecSym_MR_TRGSEL_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_MR_TRGSEL_VALUE", afecSym_MR_TRGEN)
+	afecSym_MR_TRGSEL_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_MR_TRGSEL_VALUE", afecSym_CONV_MODE)
 	afecSym_MR_TRGSEL_VALUE.setLabel ("Select External Trigger Input")
 	afecSym_MR_TRGSEL_VALUE.setVisible(False)
 	afecSym_MR_TRGSEL_VALUE.setDefaultValue(1)
@@ -359,7 +376,7 @@ def instantiateComponent(afecComponent):
 	for param in range (0 , len(trigger_values)):
 		if "TRGSEL" in trigger_values[param].getAttribute("name"):
 			afecSym_MR_TRGSEL_VALUE.addKey(trigger_values[param].getAttribute("name"), trigger_values[param].getAttribute("value"), trigger_values[param].getAttribute("caption"))
-	afecSym_MR_TRGSEL_VALUE.setDependencies(afecTriggerVisible, ["AFEC_MR_TRGEN"])
+	afecSym_MR_TRGSEL_VALUE.setDependencies(afecTriggerVisible, ["AFEC_CONV_MODE"])
 	#------------------------------------------------------------------------------------
 	#user sequence menu
 	afecUserSeq = afecComponent.createMenuSymbol("AFEC_USER_SEQ", None)
@@ -433,8 +450,15 @@ def instantiateComponent(afecComponent):
 		
 		#Channel negative input
 		afecSym_CH_NegativeInput.append(channelID)
-		afecSym_CH0_NEG_INPValues = ["GND", "AN"+str(channelID+1)]
-		afecSym_CH_NegativeInput[channelID] = afecComponent.createComboSymbol("AFEC_"+str(channelID)+"_NEG_INP", afecSym_CH_CHER[channelID], afecSym_CH0_NEG_INPValues)
+		afec_EvenChNegInput = ["GND", "AN"+str(channelID+1)]
+		afec_OddChNegInput = ["GND"]
+		if (channelID % 2 == 1):
+			afecSym_CH_NegativeInput[channelID] = afecComponent.createComboSymbol("AFEC_"+str(channelID)+"_NEG_INP", afecSym_CH_CHER[channelID], afec_OddChNegInput)
+			afecSym_CH_NegativeInput[channelID].setReadOnly(True)
+		else:
+			afecSym_CH_NegativeInput[channelID] = afecComponent.createComboSymbol("AFEC_"+str(channelID)+"_NEG_INP", afecSym_CH_CHER[channelID], afec_EvenChNegInput)
+			if (channel[channelID + 1] == False):
+				afecSym_CH_NegativeInput[channelID].setReadOnly(True)
 		afecSym_CH_NegativeInput[channelID].setLabel ("Negative Input")
 		afecSym_CH_NegativeInput[channelID].setDefaultValue("GND")
 		afecSym_CH_NegativeInput[channelID].setVisible(False)
