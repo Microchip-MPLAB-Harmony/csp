@@ -56,6 +56,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#assign AFEC_SEQ1R_USCH = "">
 <#assign AFEC_SEQ2R_USCH = "">
 <#assign AFEC_INTERRUPT = false>
+<#assign AFEC_RES = "">
+<#assign AFEC_STM = "">
 
 <#list 0..11 as i>
 <#assign AFEC_CH_CHER = "AFEC_"+i+"_CHER">
@@ -171,7 +173,38 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#if>
 
 </#list>
+
+<#if AFEC_EMR_RES_VALUE == "0">
+	<#assign AFEC_RES = "AFEC_EMR_RES_NO_AVERAGE">
+	<#assign AFEC_STM = "">
+<#elseif AFEC_EMR_RES_VALUE == "1">
+	<#assign AFEC_RES = "AFEC_EMR_RES_OSR4">
+	<#assign AFEC_STM = "| (AFEC_EMR_STM_Msk)">
+<#elseif AFEC_EMR_RES_VALUE == "2">
+	<#assign AFEC_RES = "AFEC_EMR_RES_OSR4">
+	<#assign AFEC_STM = "">
+<#elseif AFEC_EMR_RES_VALUE == "3">
+	<#assign AFEC_RES = "AFEC_EMR_RES_OSR16">
+	<#assign AFEC_STM = "| (AFEC_EMR_STM_Msk)">
+<#elseif AFEC_EMR_RES_VALUE == "4">
+	<#assign AFEC_RES = "AFEC_EMR_RES_OSR16">
+	<#assign AFEC_STM = "">
+<#elseif AFEC_EMR_RES_VALUE == "5">
+	<#assign AFEC_RES = "AFEC_EMR_RES_OSR64">
+	<#assign AFEC_STM = "| (AFEC_EMR_STM_Msk)">
+<#elseif AFEC_EMR_RES_VALUE == "6">
+	<#assign AFEC_RES = "AFEC_EMR_RES_OSR64">
+	<#assign AFEC_STM = "">
+<#elseif AFEC_EMR_RES_VALUE == "7">
+	<#assign AFEC_RES = "AFEC_EMR_RES_OSR256">
+	<#assign AFEC_STM = "| (AFEC_EMR_STM_Msk)">
+<#elseif AFEC_EMR_RES_VALUE == "8">
+	<#assign AFEC_RES = "AFEC_EMR_RES_OSR256">
+	<#assign AFEC_STM = "">
+</#if>
+
 </#compress>
+
 <#-- *********************************************************************************************** -->
 // *****************************************************************************
 // *****************************************************************************
@@ -191,12 +224,12 @@ void AFEC${INDEX}_Initialize()
 	
 	/* Prescaler and different time settings as per CLOCK section  */
 	AFEC${INDEX}_REGS->AFEC_MR = AFEC_MR_PRESCAL(${AFEC_MR_PRESCAL}U) | AFEC_MR_TRACKTIM(15U) |
-		AFEC_MR_TRANSFER(2U) | AFEC_MR_ONE_Msk ${AFEC_MR_FREERUN?then('| AFEC_MR_FREERUN_Msk', '')} <#rt>
-		<#lt>${AFEC_MR_TRGEN?then('| (AFEC_MR_TRGEN_Msk) | (AFEC_MR_${AFEC_MR_TRGSEL_VALUE})', '')};
+		AFEC_MR_TRANSFER(2U) | AFEC_MR_ONE_Msk ${(AFEC_CONV_MODE == "0")?then('| AFEC_MR_FREERUN_Msk', '')} <#rt>
+		<#lt> ${(AFEC_CONV_MODE == "2")?then('| (AFEC_MR_TRGEN_Msk) | (AFEC_MR_${AFEC_MR_TRGSEL_VALUE})', '')};
 		
 	/* resolution and sign mode of result */
-	AFEC${INDEX}_REGS->AFEC_EMR = AFEC_EMR_RES_${AFEC_EMR_RES_VALUE} 
-		${AFEC_EMR_STM?then(' | (AFEC_EMR_STM_Mask)', '')} | AFEC_EMR_SIGNMODE_${AFEC_EMR_SIGNMODE_VALUE} | AFEC_EMR_TAG_Msk;
+	AFEC${INDEX}_REGS->AFEC_EMR = ${AFEC_RES} ${AFEC_STM}
+		 | AFEC_EMR_SIGNMODE_${AFEC_EMR_SIGNMODE_VALUE} | AFEC_EMR_TAG_Msk;
 		
 	/* Enable gain amplifiers */
 	AFEC${INDEX}_REGS->AFEC_ACR = AFEC_ACR_PGA0EN_Msk | AFEC_ACR_PGA1EN_Msk;
