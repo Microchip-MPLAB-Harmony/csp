@@ -179,7 +179,7 @@ bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void*
     uint32_t dummyData;        
     
     /* Verify the request */
-    if(((txSize > 0) && (NULL != pTransmitData)) || ((rxSize > 0) && (NULL != pReceiveData)) || (false == spi${SPI_INDEX?string}Obj.transferIsBusy))
+    if((((txSize > 0) && (NULL != pTransmitData)) || ((rxSize > 0) && (NULL != pReceiveData))) && (false == spi${SPI_INDEX?string}Obj.transferIsBusy))
     {       
         isRequestAccepted = true;
         spi${SPI_INDEX?string}Obj.txBuffer = pTransmitData;
