@@ -75,7 +75,7 @@ extern "C" {
 */
 <#assign AFEC_INTERRUPT = false>
 <#compress>
-<#list 0..11 as i>
+<#list 0..(AFEC_NUM_CHANNELS - 1) as i>
 	<#assign AFEC_CH_ENABLE = "AFEC_"+i+"_CHER">
 	<#assign AFEC_CH_NEG_INP = "AFEC_"+i+"_NEG_INP">
 	<#assign AFEC_CH_NAME = "AFEC_"+i+"_NAME">
