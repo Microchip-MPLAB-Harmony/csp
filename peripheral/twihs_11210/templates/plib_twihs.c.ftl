@@ -1,14 +1,14 @@
 /*******************************************************************************
-  TWI Peripheral Library Source File
+  TWIHS Peripheral Library Source File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    twi.c
+    twihs.c
 
   Summary
-    TWI peripheral library interface.
+    TWIHS peripheral library interface.
 
   Description
 
@@ -48,7 +48,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "${__PROCESSOR?lower_case}.h"
-#include "plib_twi${INDEX?string}.h"
+#include "plib_twihs${INDEX?string}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -56,12 +56,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#define TWI_MASTER_MAX_BAUDRATE        (400000U)
-#define TWI_LOW_LEVEL_TIME_LIMIT       (384000U)
-#define TWI_CLK_DIVIDER                     (2U)
-#define TWI_CLK_CALC_ARGU                   (3U)
-#define TWI_CLK_DIV_MAX                  (0xFFU)
-#define TWI_CLK_DIV_MIN                     (7U)
+#define TWIHS_MASTER_MAX_BAUDRATE        (400000U)
+#define TWIHS_LOW_LEVEL_TIME_LIMIT       (384000U)
+#define TWIHS_CLK_DIVIDER                     (2U)
+#define TWIHS_CLK_CALC_ARGU                   (3U)
+#define TWIHS_CLK_DIV_MAX                  (0xFFU)
+#define TWIHS_CLK_DIV_MIN                     (7U)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -69,22 +69,22 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-static TWI_OBJ twi${INDEX?string}Obj;
-static TWI_TRANSACTION_REQUEST_BLOCK twi${INDEX?string}TRBsList[${TWI_NUM_TRBS}];
-static twi_registers_t *TWI${INDEX?string}_Module = (twi_registers_t *)TWI_ID_${INDEX?string};
+static TWIHS_OBJ twihs${INDEX?string}Obj;
+static TWIHS_TRANSACTION_REQUEST_BLOCK twihs${INDEX?string}TRBsList[${TWIHS_NUM_TRBS}];
+static twihs_registers_t *TWIHS${INDEX?string}_Module = TWIHS${INDEX?string}_REGS;
 
 // *****************************************************************************
 // *****************************************************************************
-// TWI${INDEX?string} PLib Interface Routines
+// TWIHS${INDEX?string} PLib Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_Initialize(void)
+    void TWIHS${INDEX?string}_Initialize(void)
 
    Summary:
-    Initializes given instance of the TWI peripheral.
+    Initializes given instance of the TWIHS peripheral.
 
    Precondition:
     None.
@@ -96,51 +96,51 @@ static twi_registers_t *TWI${INDEX?string}_Module = (twi_registers_t *)TWI_ID_${
     None
 */
 
-void TWI${INDEX?string}_Initialize(void)
+void TWIHS${INDEX?string}_Initialize(void)
 {    
     // Reset the i2c Module
-    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_SWRST_Msk;
+    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_SWRST_Msk;
         
     // Disable the I2C Master/Slave Mode
-    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_MSDIS_Msk | 
-	                                      TWI_CR_SVDIS_Msk;
+    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_MSDIS_Msk | 
+	                                      TWIHS_CR_SVDIS_Msk;
 	
     // Set Baud rate 
-	TWI${INDEX?string}_Module->TWI_CWGR = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR) |
-											( TWI_CWGR_CLDIV(${TWI_CWGR_CLDIV}) | 
-											  TWI_CWGR_CHDIV(${TWI_CWGR_CHDIV}) | 
-											  TWI_CWGR_CKDIV(${TWI_CWGR_CKDIV}) );
+	TWIHS${INDEX?string}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS${INDEX?string}_Module->TWIHS_CWGR) |
+											( TWIHS_CWGR_CLDIV(${TWIHS_CWGR_CLDIV}) | 
+											  TWIHS_CWGR_CHDIV(${TWIHS_CWGR_CHDIV}) | 
+											  TWIHS_CWGR_CKDIV(${TWIHS_CWGR_CKDIV}) );
 	
 	// Starts the transfer by clearing the transmit hold register 
-    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_THRCLR_Msk;
+    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_THRCLR_Msk;
 	
 	// Enables interrupt on nack and arbitration lost 
-    TWI${INDEX?string}_Module->TWI_IER = TWI_IER_NACK_Msk | 
-	                                       TWI_IER_ARBLST_Msk;
+    TWIHS${INDEX?string}_Module->TWIHS_IER = TWIHS_IER_NACK_Msk | 
+	                                       TWIHS_IER_ARBLST_Msk;
 	
 	// Enable Master Mode 
-    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_MSEN_Msk;
+    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_MSEN_Msk;
 	
-	// Initialize the twi PLib Object
-	twi${INDEX?string}Obj.error   = TWI_ERROR_NONE;
-	twi${INDEX?string}Obj.state   = TWI_STATE_IDLE;
-	twi${INDEX?string}Obj.numTRBs = 0;		
+	// Initialize the twihs PLib Object
+	twihs${INDEX?string}Obj.error   = TWIHS_ERROR_NONE;
+	twihs${INDEX?string}Obj.state   = TWIHS_STATE_IDLE;
+	twihs${INDEX?string}Obj.numTRBs = 0;		
 }
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
+    void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
 	
    Summary:
     Sets the pointer to the function (and it's context) to be called when the 
-    given TWI's transfer events occur.
+    given TWIHS's transfer events occur.
 
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     callback - A pointer to a function with a calling signature defined 
-	by the TWI_CALLBACK data type.
+	by the TWIHS_CALLBACK data type.
 
     context - A value (usually a pointer) passed (unused) into the function 
 	identified by the callback parameter.
@@ -149,23 +149,23 @@ void TWI${INDEX?string}_Initialize(void)
     None.
 */
 
-void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
+void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
 {
     if (callback == NULL)
 	{
 	    return;
 	}
 	
-	twi${INDEX?string}Obj.callback = callback;
-	twi${INDEX?string}Obj.context = contextHandle;
+	twihs${INDEX?string}Obj.callback = callback;
+	twihs${INDEX?string}Obj.context = contextHandle;
 }
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_TransferSetup(TWI_TRANSFER_SETUP setup, uint32_t srcClkFreq)
+    void TWIHS${INDEX?string}_TransferSetup(TWIHS_TRANSFER_SETUP setup, uint32_t srcClkFreq)
 
    Summary:
-    Dynamic setup of TWI Peripheral.
+    Dynamic setup of TWIHS Peripheral.
 
    Precondition:
     None.
@@ -177,17 +177,17 @@ void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contex
     None
 */
 
-bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t srcClkFreq )
+bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP * setup, uint32_t srcClkFreq )
 {
     uint32_t clockSrcFreq;
-    uint32_t twiClkSpeed;
+    uint32_t twihsClkSpeed;
     uint32_t ckdiv = 0;
     uint32_t cldiv = 0; 
     uint32_t chdiv = 0;
 	uint32_t c_lh_div = 0;
     
     // Check for ongoing transfer
-	if( twi${INDEX?string}Obj.state != TWI_STATE_IDLE )
+	if( twihs${INDEX?string}Obj.state != TWIHS_STATE_IDLE )
 	{
 	    return false;
 	}
@@ -198,79 +198,79 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t srcC
     }
     else
     {
-        clockSrcFreq = ${TWI_CLK_SRC_FREQ};
+        clockSrcFreq = ${TWIHS_CLK_SRC_FREQ};
     }
     
-    twiClkSpeed = setup->clkSpeed;
+    twihsClkSpeed = setup->clkSpeed;
     
     /* Set Clock */
-    if( TWI_MASTER_MAX_BAUDRATE < twiClkSpeed  )
+    if( TWIHS_MASTER_MAX_BAUDRATE < twihsClkSpeed  )
     {
         return (false);
     }
     
 	/* Low level time not less than 1.3us of I2C Fast Mode. */
-	if ( twiClkSpeed > TWI_LOW_LEVEL_TIME_LIMIT ) 
+	if ( twihsClkSpeed > TWIHS_LOW_LEVEL_TIME_LIMIT ) 
     {
 		/* Low level of time fixed for 1.3us. */
-		cldiv = clockSrcFreq / ( TWI_LOW_LEVEL_TIME_LIMIT * 
-                                    TWI_CLK_DIVIDER ) - 
-                                    TWI_CLK_CALC_ARGU;
+		cldiv = clockSrcFreq / ( TWIHS_LOW_LEVEL_TIME_LIMIT * 
+                                    TWIHS_CLK_DIVIDER ) - 
+                                    TWIHS_CLK_CALC_ARGU;
         
-		chdiv = clockSrcFreq / (( twiClkSpeed + 
-                            ( twiClkSpeed - TWI_LOW_LEVEL_TIME_LIMIT)) * 
-                              TWI_CLK_DIVIDER ) - 
-                              TWI_CLK_CALC_ARGU;
+		chdiv = clockSrcFreq / (( twihsClkSpeed + 
+                            ( twihsClkSpeed - TWIHS_LOW_LEVEL_TIME_LIMIT)) * 
+                              TWIHS_CLK_DIVIDER ) - 
+                              TWIHS_CLK_CALC_ARGU;
 		
 		/* cldiv must fit in 8 bits, ckdiv must fit in 3 bits */
-		while (( cldiv > TWI_CLK_DIV_MAX ) && 
-               ( ckdiv < TWI_CLK_DIV_MIN )) 
+		while (( cldiv > TWIHS_CLK_DIV_MAX ) && 
+               ( ckdiv < TWIHS_CLK_DIV_MIN )) 
         {
 			/* Increase clock divider */
 			ckdiv++;
             
 			/* Divide cldiv value */
-			cldiv /= TWI_CLK_DIVIDER;
+			cldiv /= TWIHS_CLK_DIVIDER;
 		}
         
 		/* chdiv must fit in 8 bits, ckdiv must fit in 3 bits */
-		while (( chdiv > TWI_CLK_DIV_MAX ) && 
-               ( ckdiv < TWI_CLK_DIV_MIN )) 
+		while (( chdiv > TWIHS_CLK_DIV_MAX ) && 
+               ( ckdiv < TWIHS_CLK_DIV_MIN )) 
         {
 			/* Increase clock divider */
 			ckdiv++;
             
 			/* Divide cldiv value */
-			chdiv /= TWI_CLK_DIVIDER;
+			chdiv /= TWIHS_CLK_DIVIDER;
 		}
 
 		/* set clock waveform generator register */
-        TWI${INDEX?string}_Module->TWI_CWGR = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR) |
-                                  ( TWI_CWGR_CLDIV(cldiv) | 
-                                    TWI_CWGR_CHDIV(chdiv) |
-                                    TWI_CWGR_CKDIV(ckdiv) );
+        TWIHS${INDEX?string}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS${INDEX?string}_Module->TWIHS_CWGR) |
+                                  ( TWIHS_CWGR_CLDIV(cldiv) | 
+                                    TWIHS_CWGR_CHDIV(chdiv) |
+                                    TWIHS_CWGR_CKDIV(ckdiv) );
 	} 
     else 
     {
-		c_lh_div = clockSrcFreq / ( twiClkSpeed * TWI_CLK_DIVIDER ) - 
-                   TWI_CLK_CALC_ARGU;
+		c_lh_div = clockSrcFreq / ( twihsClkSpeed * TWIHS_CLK_DIVIDER ) - 
+                   TWIHS_CLK_CALC_ARGU;
 
 		/* cldiv must fit in 8 bits, ckdiv must fit in 3 bits */
-		while (( c_lh_div > TWI_CLK_DIV_MAX ) && 
-               ( ckdiv < TWI_CLK_DIV_MIN )) 
+		while (( c_lh_div > TWIHS_CLK_DIV_MAX ) && 
+               ( ckdiv < TWIHS_CLK_DIV_MIN )) 
         {
 			/* Increase clock divider */
 			ckdiv++;
             
 			/* Divide cldiv value */
-			c_lh_div /= TWI_CLK_DIVIDER;
+			c_lh_div /= TWIHS_CLK_DIVIDER;
 		}
 
 		/* set clock waveform generator register */
-        TWI${INDEX?string}_Module->TWI_CWGR = ( TWI_CWGR_HOLD_Msk & TWI${INDEX?string}_Module->TWI_CWGR) |
-                                  ( TWI_CWGR_CLDIV(c_lh_div) | 
-                                    TWI_CWGR_CHDIV(c_lh_div) |
-                                    TWI_CWGR_CKDIV(ckdiv) )  ;
+        TWIHS${INDEX?string}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS${INDEX?string}_Module->TWIHS_CWGR) |
+                                  ( TWIHS_CWGR_CLDIV(c_lh_div) | 
+                                    TWIHS_CWGR_CHDIV(c_lh_div) |
+                                    TWIHS_CWGR_CKDIV(ckdiv) )  ;
 	}
     
     return (true);
@@ -279,13 +279,13 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t srcC
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_IsBusy(void)
+    bool TWIHS${INDEX?string}_IsBusy(void)
 	
    Summary:
     Returns the Peripheral busy status.
 
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     None.
@@ -295,9 +295,9 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP * setup, uint32_t srcC
     false - Not busy.
 */
 
-bool TWI${INDEX?string}_IsBusy(void)
+bool TWIHS${INDEX?string}_IsBusy(void)
 {
-    if( twi${INDEX?string}Obj.state == TWI_STATE_IDLE )
+    if( twihs${INDEX?string}Obj.state == TWIHS_STATE_IDLE )
     {
         return false;
     }
@@ -309,13 +309,13 @@ bool TWI${INDEX?string}_IsBusy(void)
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Allocates and Builds the Read Transaction Request Block.
 
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
 	The transfer status should not be busy.
 
    Parameters:
@@ -328,23 +328,23 @@ bool TWI${INDEX?string}_IsBusy(void)
 	false - Failure while submitting TRB.
 */
 
-bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
+bool TWIHS${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
 {
-	TWI_TRANSACTION_REQUEST_BLOCK * trb = NULL;
+	TWIHS_TRANSACTION_REQUEST_BLOCK * trb = NULL;
 	
 	// current TRB index cannot be more than available TRB's
-    if( twi${INDEX?string}Obj.numTRBs >= ${TWI_NUM_TRBS})
+    if( twihs${INDEX?string}Obj.numTRBs >= ${TWIHS_NUM_TRBS})
 	{
 	    return false;
 	}
 	
 	// Check for ongoing transfer
-	if( twi${INDEX?string}Obj.state != TWI_STATE_IDLE )
+	if( twihs${INDEX?string}Obj.state != TWIHS_STATE_IDLE )
 	{
 	    return false;
 	}
 	
-	trb = &twi${INDEX?string}TRBsList[twi${INDEX?string}Obj.numTRBs];
+	trb = &twihs${INDEX?string}TRBsList[twihs${INDEX?string}Obj.numTRBs];
 	
 	// Fill the TRB
 	trb->address = address;
@@ -353,20 +353,20 @@ bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t l
 	trb->pbuffer = pdata;
 	
 	// Increment current TRB index
-	twi${INDEX?string}Obj.numTRBs++;
+	twihs${INDEX?string}Obj.numTRBs++;
 	
 	return true;
 }
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Allocates and Builds the Read Transaction Request Block.
 	
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
 	The transfer status should not be busy.
 
    Parameters:
@@ -379,23 +379,23 @@ bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t l
 	false - Failure while submitting TRB.
 */
 
-bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
+bool TWIHS${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
 {
-    TWI_TRANSACTION_REQUEST_BLOCK * trb = NULL;
+    TWIHS_TRANSACTION_REQUEST_BLOCK * trb = NULL;
 	
 	// current TRB index cannot be more than available TRB's
-    if( twi${INDEX?string}Obj.numTRBs >= ${TWI_NUM_TRBS})
+    if( twihs${INDEX?string}Obj.numTRBs >= ${TWIHS_NUM_TRBS})
 	{
 	    return false;
 	}
 	
 	// Check for ongoing transfer
-	if( twi${INDEX?string}Obj.state != TWI_STATE_IDLE )
+	if( twihs${INDEX?string}Obj.state != TWIHS_STATE_IDLE )
 	{
 	    return false;
 	}
 	
-	trb = &twi${INDEX?string}TRBsList[twi${INDEX?string}Obj.numTRBs];
+	trb = &twihs${INDEX?string}TRBsList[twihs${INDEX?string}Obj.numTRBs];
 	
 	// Fill the TRB
 	trb->address = address;
@@ -404,21 +404,21 @@ bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t 
 	trb->pbuffer = pdata;
 	
 	// Increment current TRB index
-	twi${INDEX?string}Obj.numTRBs++;
+	twihs${INDEX?string}Obj.numTRBs++;
 	
 	return true;
 }
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_TRBTransfer(void)
+    bool TWIHS${INDEX?string}_TRBTransfer(void)
 	
    Summary:
     Submits all TRB's build for processing. 
 	
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
-	The transfer status should not be busy before calling TWIx_TRBTransfer.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
+	The transfer status should not be busy before calling TWIHSx_TRBTransfer.
 
    Parameters:
     None.
@@ -428,41 +428,41 @@ bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t 
 	false - Failure while submitting TRB.
 */
 
-bool TWI${INDEX?string}_TRBTransfer(void)
+bool TWIHS${INDEX?string}_TRBTransfer(void)
 {
     // Minimum one filled TRB must be available
-    if(  twi${INDEX?string}Obj.numTRBs == 0 )
+    if(  twihs${INDEX?string}Obj.numTRBs == 0 )
 	{
 	    return false;
 	}
 	
 	// Check for ongoing transfer
-    if( twi${INDEX?string}Obj.state != TWI_STATE_IDLE )
+    if( twihs${INDEX?string}Obj.state != TWIHS_STATE_IDLE )
 	{
 	    return false;
 	}
 	
 	// Initiate Transfer
-	twi${INDEX?string}Obj.state = TWI_STATE_ADDR_SEND;
-    twi${INDEX?string}Obj.error = TWI_ERROR_NONE;
+	twihs${INDEX?string}Obj.state = TWIHS_STATE_ADDR_SEND;
+    twihs${INDEX?string}Obj.error = TWIHS_ERROR_NONE;
 	
-	TWI${INDEX?string}_Module->TWI_IER = TWI_IER_TXCOMP_Msk | 
-	                                       TWI_IER_TXRDY_Msk  |
-                                           TWI_IER_RXRDY_Msk;
+	TWIHS${INDEX?string}_Module->TWIHS_IER = TWIHS_IER_TXCOMP_Msk | 
+	                                       TWIHS_IER_TXRDY_Msk  |
+                                           TWIHS_IER_RXRDY_Msk;
 						   
 	return true;
 }
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Reads data from the slave.
 
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
-	The transfer status should not be busy before calling TWIx_TRBTransfer.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
+	The transfer status should not be busy before calling TWIHSx_TRBTransfer.
 	Minimum one TRB should be available.
 
    Parameters:
@@ -475,16 +475,16 @@ bool TWI${INDEX?string}_TRBTransfer(void)
 	false - Failure while submitting TRB.
 */
 
-bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
+bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 {
     // Build Read TRB
-    if ( !TWI${INDEX?string}_TRBBuildRead( address, pdata, length ) )
+    if ( !TWIHS${INDEX?string}_TRBBuildRead( address, pdata, length ) )
 	{
 	    return false;
 	}
 	
 	// Initiate transfer
-	if ( !TWI${INDEX?string}_TRBTransfer( ) )
+	if ( !TWIHS${INDEX?string}_TRBTransfer( ) )
 	{
 	    return false;
 	}
@@ -494,14 +494,14 @@ bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Writes data onto the slave.
 
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
-	The transfer status should not be busy before calling TWIx_TRBTransfer.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
+	The transfer status should not be busy before calling TWIHSx_TRBTransfer.
 	Minimum one TRB should be available.
 
    Parameters:
@@ -514,16 +514,16 @@ bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 	false - Failure while submitting TRB.
 */
 
-bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
+bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
 {
     // Build Write TRB
-    if ( !TWI${INDEX?string}_TRBBuildWrite( address, pdata, length ) )
+    if ( !TWIHS${INDEX?string}_TRBBuildWrite( address, pdata, length ) )
 	{
 	    return false;
 	}
 	
 	// Initiate transfer
-	if ( !TWI${INDEX?string}_TRBTransfer( ) )
+	if ( !TWIHS${INDEX?string}_TRBTransfer( ) )
 	{
 	    return false;
 	}
@@ -533,14 +533,14 @@ bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
+    bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
 	
    Summary:
     Write and Read data from Slave.
 
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
-	The transfer status should not be busy before calling TWIx_TRBTransfer.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
+	The transfer status should not be busy before calling TWIHSx_TRBTransfer.
 	Minimum two TRB's should be available.
 
    Parameters:
@@ -555,22 +555,22 @@ bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
 	false - Failure while submitting TRB.
 */
 
-bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
+bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
 {
     // Build Write TRB
-    if ( !TWI${INDEX?string}_TRBBuildWrite( address, wdata, wlength ) )
+    if ( !TWIHS${INDEX?string}_TRBBuildWrite( address, wdata, wlength ) )
 	{
 	    return false;
 	}
 	
 	// Build Read TRB
-	if ( !TWI${INDEX?string}_TRBBuildRead( address, rdata, rlength ) )
+	if ( !TWIHS${INDEX?string}_TRBBuildRead( address, rdata, rlength ) )
 	{
 	    return false;
 	}
 	
 	// Initiate transfer
-	if ( !TWI${INDEX?string}_TRBTransfer( ) )
+	if ( !TWIHS${INDEX?string}_TRBTransfer( ) )
 	{
 	    return false;
 	}
@@ -580,13 +580,13 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
 
 // *****************************************************************************
 /* Function:
-    TWI_ERROR TWI${INDEX?string}_ErrorGet(void)
+    TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void)
 	
    Summary:
     Returns the error during transfer.
 
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     None.
@@ -595,26 +595,26 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
     Error during transfer.
 */
 
-TWI_ERROR TWI${INDEX?string}_ErrorGet(void)
+TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void)
 {
-    TWI_ERROR error;
+    TWIHS_ERROR error;
 
-    error = twi${INDEX?string}Obj.error;
-    twi${INDEX?string}Obj.error = TWI_ERROR_NONE;
+    error = twihs${INDEX?string}Obj.error;
+    twihs${INDEX?string}Obj.error = TWIHS_ERROR_NONE;
 
     return error;
 }
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_InterruptHandler(void)
+    void TWIHS${INDEX?string}_InterruptHandler(void)
 
    Summary:
-    TWI${INDEX?string} Peripheral Interrupt Handler.
+    TWIHS${INDEX?string} Peripheral Interrupt Handler.
 
    Description:
-    This function is TWI${INDEX?string} Peripheral Interrupt Handler and will
-    called on every TWI${INDEX?string} interrupt.
+    This function is TWIHS${INDEX?string} Peripheral Interrupt Handler and will
+    called on every TWIHS${INDEX?string} interrupt.
 
    Precondition:
     None.
@@ -631,152 +631,152 @@ TWI_ERROR TWI${INDEX?string}_ErrorGet(void)
 	enabled user need to call it from the main while loop of the application.
 */
 
-void TWI${INDEX?string}_InterruptHandler(void)
+void TWIHS${INDEX?string}_InterruptHandler(void)
 {
     uint32_t status;
 	static uint32_t currentTRB = 0;
-	TWI_TRANSACTION_REQUEST_BLOCK * trb;
+	TWIHS_TRANSACTION_REQUEST_BLOCK * trb;
 	
 	// check if transfer is initiated
-    if ( twi${INDEX?string}Obj.state == TWI_STATE_IDLE )
+    if ( twihs${INDEX?string}Obj.state == TWIHS_STATE_IDLE )
 	{
 	    return;
 	}
 	
 	// Minimum one filled TRB must be available
-	if ( twi${INDEX?string}Obj.numTRBs == 0 )
+	if ( twihs${INDEX?string}Obj.numTRBs == 0 )
 	{
 	    return;
 	}
 	
 	// Read the peripheral status
-	status = TWI${INDEX?string}_Module->TWI_SR;
+	status = TWIHS${INDEX?string}_Module->TWIHS_SR;
 	
 	/* checks if Slave has Nacked */
-    if( status & TWI_SR_NACK_Msk ) 
+    if( status & TWIHS_SR_NACK_Msk ) 
     {
-        twi${INDEX?string}Obj.state = TWI_STATE_ERROR;
-        twi${INDEX?string}Obj.error = TWI_ERROR_NACK;
+        twihs${INDEX?string}Obj.state = TWIHS_STATE_ERROR;
+        twihs${INDEX?string}Obj.error = TWIHS_ERROR_NACK;
     }
 
     /* checks if the arbitration is lost in multi-master scenario */
-    if( status & TWI_SR_ARBLST_Msk )
+    if( status & TWIHS_SR_ARBLST_Msk )
     {
         /* Re-initiate the transfer if arbitration is lost in 
          * between of the transfer 
          */
-        twi${INDEX?string}Obj.state = TWI_STATE_ADDR_SEND;
+        twihs${INDEX?string}Obj.state = TWIHS_STATE_ADDR_SEND;
     }
 	
-	trb = &twi${INDEX?string}TRBsList[currentTRB];
+	trb = &twihs${INDEX?string}TRBsList[currentTRB];
 	
-    switch( twi${INDEX?string}Obj.state )
+    switch( twihs${INDEX?string}Obj.state )
 	{	
-		case TWI_STATE_TRANSFER_READ:
+		case TWIHS_STATE_TRANSFER_READ:
 		{
 		    /* checks if master has received the data */
-            if( status & TWI_SR_RXRDY_Msk )
+            if( status & TWIHS_SR_RXRDY_Msk )
             {
 			    trb->length --;
 				
                 if( 1 == trb->length )
                 {
 				    // check for last TRB
-                    if( currentTRB == (twi${INDEX?string}Obj.numTRBs - 1) )
+                    if( currentTRB == (twihs${INDEX?string}Obj.numTRBs - 1) )
                     {
                         // Send Stop before last byte is received
-                        TWI${INDEX?string}_Module->TWI_CR = TWI_CR_STOP_Msk;
+                        TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_STOP_Msk;
                     }
 					// not the last TRB
                     else
                     {
                         // Send a Repeated Start
-                        TWI${INDEX?string}_Module->TWI_CR = TWI_CR_START_Msk;
+                        TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_START_Msk;
                     }
                 }
 
                 /* read the received data */
-                *(trb->pbuffer++) = TWI${INDEX?string}_Module->TWI_RHR.RXDATA;
+                *(trb->pbuffer++) = (uint8_t)(TWIHS${INDEX?string}_Module->TWIHS_RHR & TWIHS_RHR_RXDATA_Msk);
                 
                 /* checks if transmission has reached at the end */
                 if( 0 == trb->length )
                 {
 				    // check for last TRB
-                    if( currentTRB == (twi${INDEX?string}Obj.numTRBs - 1) )
+                    if( currentTRB == (twihs${INDEX?string}Obj.numTRBs - 1) )
                     {
                         /* read the module status again to know if 
                            tranmission complete flag is set */
-                        status = TWI${INDEX?string}_Module->TWI_SR;
-                        if( status & TWI_SR_TXCOMP_Msk )
+                        status = TWIHS${INDEX?string}_Module->TWIHS_SR;
+                        if( status & TWIHS_SR_TXCOMP_Msk )
                         {
-                            twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_DONE;					
+                            twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_DONE;					
                         }
                         else
                         {
-                            twi${INDEX?string}Obj.state = TWI_STATE_WAIT_FOR_TXCOMP;    
+                            twihs${INDEX?string}Obj.state = TWIHS_STATE_WAIT_FOR_TXCOMP;    
                         }
                     }
 					// not the last TRB
                     else
                     {
-                        twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_DONE;
+                        twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_DONE;
                     }
                     
                     /* Disable the RXRDY interrupt*/
-                    TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_RXRDY_Msk;
+                    TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_RXRDY_Msk;
                 }
 			}
 		    break;
 		}
 		
-		case TWI_STATE_TRANSFER_WRITE:
+		case TWIHS_STATE_TRANSFER_WRITE:
 		{
 		    /* checks if master is ready to transmit */
-            if( status & TWI_SR_TXRDY_Msk )
+            if( status & TWIHS_SR_TXRDY_Msk )
             {
                 /* byte by byte data transmit */
-                TWI${INDEX?string}_Module->TWI_THR = TWI_THR_TXDATA(*(trb->pbuffer++));
+                TWIHS${INDEX?string}_Module->TWIHS_THR = TWIHS_THR_TXDATA(*(trb->pbuffer++));
                 trb->length--;
                 
                 if( 0 == trb->length )
 				{
 				    // check for last TRB
-                    if( currentTRB == (twi${INDEX?string}Obj.numTRBs - 1))
+                    if( currentTRB == (twihs${INDEX?string}Obj.numTRBs - 1))
                     {
                         // Sends a stop bit
-                        TWI${INDEX?string}_Module->TWI_CR = TWI_CR_STOP_Msk;
+                        TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_STOP_Msk;
 
                         /* read the module status again to know if 
                            tranmission complete flag is set */
-                        status = TWI${INDEX?string}_Module->TWI_SR;
-                        if( status & TWI_SR_TXCOMP_Msk )
+                        status = TWIHS${INDEX?string}_Module->TWIHS_SR;
+                        if( status & TWIHS_SR_TXCOMP_Msk )
                         {
-                            twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_DONE;
+                            twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_DONE;
                         }
                         else
                         {
-                            twi${INDEX?string}Obj.state = TWI_STATE_WAIT_FOR_TXCOMP;    
+                            twihs${INDEX?string}Obj.state = TWIHS_STATE_WAIT_FOR_TXCOMP;    
                         }
                     }
 					// not the last TRB
                     else
                     {
-                        twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_DONE;
+                        twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_DONE;
                     }
                     
                     // Disable the RXRDY interrupt
-                    TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_TXRDY_Msk;
+                    TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXRDY_Msk;
 				}
 			}
 
 		    break;
 		}
 		
-		case TWI_STATE_WAIT_FOR_TXCOMP:
+		case TWIHS_STATE_WAIT_FOR_TXCOMP:
 		{
-		    if( status & TWI_SR_TXCOMP_Msk )
+		    if( status & TWIHS_SR_TXCOMP_Msk )
             {
-                twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_DONE;					
+                twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_DONE;					
             }
 		    break;
 		}
@@ -788,109 +788,109 @@ void TWI${INDEX?string}_InterruptHandler(void)
 	}
 	
 	/* Check for error during transmission */
-    if( TWI_STATE_ERROR == twi${INDEX?string}Obj.state )
+    if( TWIHS_STATE_ERROR == twihs${INDEX?string}Obj.state )
     {	
-		if ( twi${INDEX?string}Obj.callback != NULL )
+		if ( twihs${INDEX?string}Obj.callback != NULL )
 		{
-		    twi${INDEX?string}Obj.callback( twi${INDEX?string}Obj.context );
+		    twihs${INDEX?string}Obj.callback( twihs${INDEX?string}Obj.context );
 		}
 		
 		// Reset the PLib objects and Interrupts
-		twi${INDEX?string}Obj.numTRBs = 0;
+		twihs${INDEX?string}Obj.numTRBs = 0;
 		currentTRB = 0;
-        twi${INDEX?string}Obj.state = TWI_STATE_IDLE;
-        TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_TXCOMP_Msk | 
-                                 TWI_IDR_TXRDY_Msk  |
-                                 TWI_IDR_RXRDY_Msk;
+        twihs${INDEX?string}Obj.state = TWIHS_STATE_IDLE;
+        TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk | 
+                                 TWIHS_IDR_TXRDY_Msk  |
+                                 TWIHS_IDR_RXRDY_Msk;
 	}
 	
 	// check for completion of transfer
-	if( TWI_STATE_TRANSFER_DONE  == twi${INDEX?string}Obj.state )
+	if( TWIHS_STATE_TRANSFER_DONE  == twihs${INDEX?string}Obj.state )
 	{
 	    // Call callback on completion of last TRB.
-	    if ( currentTRB == (twi${INDEX?string}Obj.numTRBs - 1) )
+	    if ( currentTRB == (twihs${INDEX?string}Obj.numTRBs - 1) )
 		{
-		    twi${INDEX?string}Obj.error = TWI_ERROR_NONE;
+		    twihs${INDEX?string}Obj.error = TWIHS_ERROR_NONE;
 			
-			if ( twi${INDEX?string}Obj.callback != NULL )
+			if ( twihs${INDEX?string}Obj.callback != NULL )
 		    {
-		        twi${INDEX?string}Obj.callback( twi${INDEX?string}Obj.context );
+		        twihs${INDEX?string}Obj.callback( twihs${INDEX?string}Obj.context );
 		    }
 			
 			// Reset the PLib objects and Interrupts
-			twi${INDEX?string}Obj.numTRBs = 0;
+			twihs${INDEX?string}Obj.numTRBs = 0;
             currentTRB = 0;
-            twi${INDEX?string}Obj.state = TWI_STATE_IDLE;
-            TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_TXCOMP_Msk | 
-                                     TWI_IDR_TXRDY_Msk  |
-                                     TWI_IDR_RXRDY_Msk;
+            twihs${INDEX?string}Obj.state = TWIHS_STATE_IDLE;
+            TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk | 
+                                     TWIHS_IDR_TXRDY_Msk  |
+                                     TWIHS_IDR_RXRDY_Msk;
 
 			return;
 		}
 		
         currentTRB ++;
-		twi${INDEX?string}Obj.state = TWI_STATE_ADDR_SEND;   
+		twihs${INDEX?string}Obj.state = TWIHS_STATE_ADDR_SEND;   
 	}
     
-    if( TWI_STATE_ADDR_SEND  == twi${INDEX?string}Obj.state )
+    if( TWIHS_STATE_ADDR_SEND  == twihs${INDEX?string}Obj.state )
     {
-        trb = &twi${INDEX?string}TRBsList[currentTRB];
+        trb = &twihs${INDEX?string}TRBsList[currentTRB];
         
-        TWI${INDEX?string}_Module->TWI_MMR = 0;
+        TWIHS${INDEX?string}_Module->TWIHS_MMR = 0;
         
         // 10-bit Slave Address
         if( trb->address > 0x007F)
         {
-            TWI${INDEX?string}_Module->TWI_MMR = TWI_MMR_DADR((trb->address & 0x00007F00) >> 8) | 
-                                                   TWI_MMR_IADRSZ(1);
+            TWIHS${INDEX?string}_Module->TWIHS_MMR = TWIHS_MMR_DADR((trb->address & 0x00007F00) >> 8) | 
+                                                   TWIHS_MMR_IADRSZ(1);
 
             // Set internal address
-            TWI${INDEX?string}_Module->TWI_IADR = TWI_IADR_IADR( trb->address & 0x000000FF );
+            TWIHS${INDEX?string}_Module->TWIHS_IADR = TWIHS_IADR_IADR( trb->address & 0x000000FF );
         }
         // 7-bit Slave Address
         else
         {
-            TWI${INDEX?string}_Module->TWI_MMR = TWI_MMR_DADR(trb->address) | 
-                                                   TWI_MMR_IADRSZ(0);
+            TWIHS${INDEX?string}_Module->TWIHS_MMR = TWIHS_MMR_DADR(trb->address) | 
+                                                   TWIHS_MMR_IADRSZ(0);
         }
 
         if( trb->read )
         {
-            TWI${INDEX?string}_Module->TWI_MMR|= TWI_MMR_MREAD_Msk; 
+            TWIHS${INDEX?string}_Module->TWIHS_MMR|= TWIHS_MMR_MREAD_Msk; 
 
             // Send a START Condition
-            TWI${INDEX?string}_Module->TWI_CR = TWI_CR_START_Msk;
+            TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_START_Msk;
 
             if( 1 == trb->length )
             {
-                if( currentTRB == (twi${INDEX?string}Obj.numTRBs - 1) )
+                if( currentTRB == (twihs${INDEX?string}Obj.numTRBs - 1) )
                 {
                     /* Send Stop at the same time as start 
                      * if size of data to be received is 1*/
-                    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_STOP_Msk;
+                    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_STOP_Msk;
                 }
                 else
                 {
                     // Send a Repeated Start
-                    TWI${INDEX?string}_Module->TWI_CR = TWI_CR_START_Msk;
+                    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_START_Msk;
                 }
             }
 
-            twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_READ;
-            TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_TXRDY_Msk;
-            TWI${INDEX?string}_Module->TWI_IER = TWI_IER_RXRDY_Msk;
+            twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_READ;
+            TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXRDY_Msk;
+            TWIHS${INDEX?string}_Module->TWIHS_IER = TWIHS_IER_RXRDY_Msk;
         }
         else
         {
             if( currentTRB > 0 )
             {
                 // Send a Repeated Start
-                TWI${INDEX?string}_Module->TWI_CR = TWI_CR_START_Msk;
+                TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_START_Msk;
             }
             
-            twi${INDEX?string}Obj.state = TWI_STATE_TRANSFER_WRITE;
-            TWI${INDEX?string}_Module->TWI_IDR = TWI_IDR_RXRDY_Msk;
-            TWI${INDEX?string}_Module->TWI_IER = TWI_IER_TXRDY_Msk;
+            twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_WRITE;
+            TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_RXRDY_Msk;
+            TWIHS${INDEX?string}_Module->TWIHS_IER = TWIHS_IER_TXRDY_Msk;
         }
     }
 	

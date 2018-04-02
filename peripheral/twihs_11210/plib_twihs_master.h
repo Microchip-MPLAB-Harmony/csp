@@ -1,17 +1,17 @@
 /*******************************************************************************
-  TWI Peripheral Library Interface Header File
+  TWIHS Peripheral Library Interface Header File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    twi_master.h
+    twihs_master.h
 
   Summary
-    TWI peripheral library interface.
+    TWIHS peripheral library interface.
 
   Description
-    This file defines the interface to the TWI peripheral library.  This 
+    This file defines the interface to the TWIHS peripheral library.  This 
     library provides access to and control of the associated peripheral 
     instance.
 
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TWI_MASTER_H   
-#define PLIB_TWI_MASTER_H
+#ifndef PLIB_TWIHS_MASTER_H   
+#define PLIB_TWIHS_MASTER_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -73,13 +73,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 // *****************************************************************************
-/* TWI Transfer Status
+/* TWIHS Transfer Status
 
    Summary:
-    TWI Transfer Status data type.
+    TWIHS Transfer Status data type.
 
    Description:
-    This data type defines the TWI Transfer Status.
+    This data type defines the TWIHS Transfer Status.
 
    Remarks:
     None.
@@ -88,21 +88,21 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 typedef enum
 {	
 	/* No Error */
-    TWI_ERROR_NONE,
+    TWIHS_ERROR_NONE,
 	
 	/* Slave returned Nack */
-    TWI_ERROR_NACK,
+    TWIHS_ERROR_NACK,
 	
-} TWI_ERROR;
+} TWIHS_ERROR;
 
 // *****************************************************************************
-/* TWI State.
+/* TWIHS State.
 
    Summary:
-    TWI PLib Task State.
+    TWIHS PLib Task State.
 
    Description:
-    This data type defines the TWI PLib Task State.
+    This data type defines the TWIHS PLib Task State.
 
    Remarks:
     None.
@@ -111,56 +111,56 @@ typedef enum
 
 typedef enum {
 
-    /* TWI PLib Task Error State */
-	TWI_STATE_ERROR = -1,
+    /* TWIHS PLib Task Error State */
+	TWIHS_STATE_ERROR = -1,
 	
-	/* TWI PLib Task Idle State */
-	TWI_STATE_IDLE,
+	/* TWIHS PLib Task Idle State */
+	TWIHS_STATE_IDLE,
 	
-	/* TWI PLib Task Address Send State */
-	TWI_STATE_ADDR_SEND,
+	/* TWIHS PLib Task Address Send State */
+	TWIHS_STATE_ADDR_SEND,
 	
-	/* TWI PLib Task Read Transfer State */
-	TWI_STATE_TRANSFER_READ,
+	/* TWIHS PLib Task Read Transfer State */
+	TWIHS_STATE_TRANSFER_READ,
 	
-	/* TWI PLib Task Write Transfer State */
-	TWI_STATE_TRANSFER_WRITE,
+	/* TWIHS PLib Task Write Transfer State */
+	TWIHS_STATE_TRANSFER_WRITE,
 	
-	/* TWI PLib Task Transfer Complete State */
-	TWI_STATE_WAIT_FOR_TXCOMP,
+	/* TWIHS PLib Task Transfer Complete State */
+	TWIHS_STATE_WAIT_FOR_TXCOMP,
 	
-	/* TWI PLib Task Transfer Done State */
-	TWI_STATE_TRANSFER_DONE,
+	/* TWIHS PLib Task Transfer Done State */
+	TWIHS_STATE_TRANSFER_DONE,
 
-} TWI_STATE;
+} TWIHS_STATE;
 
 // *****************************************************************************
-/* TWI Callback
+/* TWIHS Callback
 
    Summary:
-    TWI Callback Function Pointer.
+    TWIHS Callback Function Pointer.
 
    Description:
-    This data type defines the TWI Callback Function Pointer.
+    This data type defines the TWIHS Callback Function Pointer.
 
    Remarks:
     None.
 */
 
-typedef void (*TWI_CALLBACK) 
+typedef void (*TWIHS_CALLBACK) 
 (   
     /* Transfer context */
     uintptr_t contextHandle 
 );
 
 // *****************************************************************************
-/* TWI PLib Instance Object
+/* TWIHS PLib Instance Object
 
    Summary:
-    TWI PLib Object structure.
+    TWIHS PLib Object structure.
 
    Description:
-    This data structure defines the TWI PLib Instance Object.
+    This data structure defines the TWIHS PLib Instance Object.
 
    Remarks:
     None.
@@ -172,18 +172,18 @@ typedef struct
     uint32_t numTRBs;
 	
 	/* State */
-	TWI_STATE state;
+	TWIHS_STATE state;
 	
 	/* Transfer status */
-    TWI_ERROR error;
+    TWIHS_ERROR error;
 	
 	/* Transfer Event Callback */
-	TWI_CALLBACK callback;
+	TWIHS_CALLBACK callback;
 
     /* Transfer context */
     uintptr_t context;	
 
-} TWI_OBJ;
+} TWIHS_OBJ;
 
 // *****************************************************************************
 /* Transaction Request Block
@@ -200,10 +200,10 @@ typedef struct
 
 typedef struct 
 {
-    /* TWI Clock Speed */
+    /* TWIHS Clock Speed */
     uint32_t clkSpeed;
 
-} TWI_TRANSFER_SETUP;
+} TWIHS_TRANSFER_SETUP;
 
 // *****************************************************************************
 /* Transaction Request Block
@@ -232,7 +232,7 @@ typedef struct
 	/* data buffer pointer */
 	uint8_t *pbuffer;
 
-} TWI_TRANSACTION_REQUEST_BLOCK;
+} TWIHS_TRANSACTION_REQUEST_BLOCK;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -242,7 +242,7 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_TWI_MASTER_H
+#endif // PLIB_TWIHS_MASTER_H
 
 /*******************************************************************************
  End of File
