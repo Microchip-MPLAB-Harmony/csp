@@ -59,7 +59,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#assign AFEC_RES = "">
 <#assign AFEC_STM = "">
 
-<#list 0..11 as i>
+<#list 0..(AFEC_NUM_CHANNELS - 1) as i>
 <#assign AFEC_CH_CHER = "AFEC_"+i+"_CHER">
 <#assign AFEC_CH_POS_INP = "AFEC_"+i+"_POS_INP">
 <#assign AFEC_CH_NEG_INP = "AFEC_"+i+"_NEG_INP">
@@ -249,7 +249,7 @@ void AFEC${INDEX}_Initialize()
 	AFEC${INDEX}_REGS->AFEC_SHMR = ${AFEC_SHMR_DUAL};
 	
 </#if>
-<#list 0..11 as i>
+<#list 0..(AFEC_NUM_CHANNELS - 1) as i>
 	<#assign AFEC_CH_CHER = "AFEC_"+i+"_CHER">
 	<#assign AFEC_CH_OFFSET = "AFEC_"+i+"_COCR_AOFF">
 	<#assign AFEC_CH_NEG_INP = "AFEC_"+i+"_NEG_INP">

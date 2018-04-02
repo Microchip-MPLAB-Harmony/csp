@@ -298,6 +298,11 @@ def instantiateComponent(afecComponent):
 	afecMenu = afecComponent.createMenuSymbol("AFEC_MENU", None)
 	afecMenu.setLabel("ADC Configuration")
 	
+	#max no of channels
+	afecSym_NUM_CHANNELS = afecComponent.createIntegerSymbol("AFEC_NUM_CHANNELS", afecMenu)
+	afecSym_NUM_CHANNELS.setDefaultValue(12)
+	afecSym_NUM_CHANNELS.setVisible(False)	
+	
 	#Clock prescaler
 	global afecSym_MR_PRESCAL
 	afecSym_MR_PRESCAL = afecComponent.createIntegerSymbol("AFEC_MR_PRESCAL", afecMenu)
@@ -391,7 +396,7 @@ def instantiateComponent(afecComponent):
 	afecSym_MR_USEQ.setLabel("Enable User Sequence Mode")
 	afecSym_MR_USEQ.setDefaultValue(False)
 	
-	for channelID in range(0, 12):
+	for channelID in range(0, len(channel)):
 		#channel selection for user sequence
 		afecSym_SEQ1R_USCH.append(channelID)
 		afecSym_SEQ1R_USCH[channelID] = afecComponent.createComboSymbol("AFEC_SEQ1R_USCH"+str(channelID), afecSym_MR_USEQ, afecChannelsValues)
@@ -405,7 +410,7 @@ def instantiateComponent(afecComponent):
 	afecCHConfMenu.setLabel("Channel Configuration")
 	
 	# Loop runs for 12 channels and visibility of the channel is controlled as per available pins
-	for channelID in range(0, 12):
+	for channelID in range(0, len(channel)):
 		#Channel menu
 		global afecCHMenu
 		afecCHMenu.append(channelID)
@@ -423,7 +428,7 @@ def instantiateComponent(afecComponent):
 		#enable corresponding channel pair of dual mode
 		#e.g. for dual mode, CH0 and CH6
 		#for diff mode, CH0 and CH1
-		if((channelID > 5)):
+		if((channelID > ((len(channel) - 1) / 2))):
 			if (channelID % 2 == 1):
 				afecSym_CH_CHER[channelID].setDependencies(afecCHEnable, ["AFEC_"+str(channelID-6)+"_SHMR_DUAL", "AFEC_"+str(channelID-1)+"_NEG_INP"])
 			else:
@@ -466,7 +471,7 @@ def instantiateComponent(afecComponent):
 
 		#Dual mode
 		afecSym_CH_SHMR_DUAL.append(channelID)
-		if(channelID < 6 ):
+		if(channelID < len(channel)/2 ):
 			afecSym_CH_SHMR_DUAL[channelID] = afecComponent.createBooleanSymbol("AFEC_"+str(channelID)+"_SHMR_DUAL", afecSym_CH_CHER[channelID])
 			afecSym_CH_SHMR_DUAL[channelID].setLabel("Dual Sample and Hold")
 			afecSym_CH_SHMR_DUAL[channelID].setDefaultValue(False)
@@ -474,7 +479,7 @@ def instantiateComponent(afecComponent):
 			afecSym_CH_SHMR_DUAL[channelID].setDependencies(afecCHDualVisible, ["AFEC_"+str(channelID)+"_CHER"])
 			
 		afecSym_CH_DUAL_CHANNEL.append(channelID)
-		if(channelID < 6 ):
+		if(channelID < len(channel)/2 ):
 			afecSym_CH_DUAL_CHANNEL[channelID] = afecComponent.createCommentSymbol("AFEC_"+str(channelID)+"_DUAL_CHANNEL", afecSym_CH_CHER[channelID])
 			afecSym_CH_DUAL_CHANNEL[channelID].setLabel("**** Channel "+str(channelID + 6)+" is sampled along with Channel "+str(channelID)+ ". Configure CHANNEL "+str(channelID + 6) + " ****")
 			afecSym_CH_DUAL_CHANNEL[channelID].setVisible(False)
