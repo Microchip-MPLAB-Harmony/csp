@@ -1,17 +1,17 @@
 /*******************************************************************************
-  TWI Peripheral Library Interface Header File
+  TWIHS Peripheral Library Interface Header File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    twi.h
+    twihs.h
 
   Summary
-    TWI peripheral library interface.
+    TWIHS peripheral library interface.
 
   Description
-    This file defines the interface to the TWI peripheral library.  This 
+    This file defines the interface to the TWIHS peripheral library.  This 
     library provides access to and control of the associated peripheral 
     instance.
 
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TWI${INDEX?string}_H   
-#define PLIB_TWI${INDEX?string}_H
+#ifndef PLIB_TWIHS${INDEX?string}_H   
+#define PLIB_TWIHS${INDEX?string}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -55,7 +55,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 /*  This section lists the other files that are included in this file.
 */
-#include "plib_twi_master.h"
+#include "plib_twihs_master.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -83,13 +83,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_Initialize(void)
+    void TWIHS${INDEX?string}_Initialize(void)
 
    Summary:
-    Initializes given instance of the TWI peripheral.
+    Initializes given instance of the TWIHS peripheral.
 	
    Description:
-    This function initializes the given instance of the TWI peripheral as
+    This function initializes the given instance of the TWIHS peripheral as
     configured by the user from within the MCC.
 
    Precondition:
@@ -103,35 +103,35 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
    Example:
     <code>
-    TWI1_Initialize();
+    TWIHS1_Initialize();
     </code>
 
    Remarks:
-    Stops the TWI if it was already running and reinitializes it.
+    Stops the TWIHS if it was already running and reinitializes it.
 */
 
-void TWI${INDEX?string}_Initialize(void);
+void TWIHS${INDEX?string}_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle)
+    void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
 	
    Summary:
     Sets the pointer to the function (and it's context) to be called when the 
-    given TWI's transfer events occur.
+    given TWIHS's transfer events occur.
 
    Description:
     This function sets the pointer to a client function to be called "back" 
-    when the given TWI's transfer events occur. It also passes a context value 
+    when the given TWIHS's transfer events occur. It also passes a context value 
     (usually a pointer to a context structure) that is passed into the
     function when it is called.
 
    Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
+    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     callback - A pointer to a function with a calling signature defined 
-	by the TWI_CALLBACK data type.
+	by the TWIHS_CALLBACK data type.
 
     context - A value (usually a pointer) passed (unused) into the function 
 	identified by the callback parameter.
@@ -141,31 +141,31 @@ void TWI${INDEX?string}_Initialize(void);
 
    Example:
     <code>
-    TWI${INDEX?string}_CallbackRegister(MyTWICallback, &myData);
+    TWIHS${INDEX?string}_CallbackRegister(MyTWIHSCallback, &myData);
     </code>
 
    Remarks:
     The context parameter is ignored if the pointer passed is NULL.
     To disable the callback function, pass a NULL for the callback parameter.
-    See the TWI_CALLBACK type definition for additional information.
+    See the TWIHS_CALLBACK type definition for additional information.
 */
 
-void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contextHandle);
+void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle);
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_TransferSetup(TWI_TRANSFER_SETUP * setup, uint32_t srcClkFreq)
+    void TWIHS${INDEX?string}_TransferSetup(TWIHS_TRANSFER_SETUP * setup, uint32_t srcClkFreq)
 
    Summary:
-    Dynamic setup of TWI Peripheral.
+    Dynamic setup of TWIHS Peripheral.
 
    Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
+    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
 	The transfer status should not be busy.
 	
    Parameters:
     setup - Pointer to the structure containing the transfer setup.
-    srcClkFreq - TWI Peripheral Clock Source Frequency.
+    srcClkFreq - TWIHS Peripheral Clock Source Frequency.
 	
    Returns:
     true - Transfer setup was updated Successfully.
@@ -173,9 +173,9 @@ void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contex
     
    Example:
     <code>
-    TWI_TRANSFER_SETUP setup = { 400000 };
+    TWIHS_TRANSFER_SETUP setup = { 400000 };
     
-    TWI1_TransferSetup( &setup, 0 );
+    TWIHS1_TransferSetup( &setup, 0 );
     </code>
 
    Remarks:
@@ -183,11 +183,11 @@ void TWI${INDEX?string}_CallbackRegister(TWI_CALLBACK callback, uintptr_t contex
     If configured to zero PLib takes the peripheral clock frequency from MHC.
 */
 
-bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP *setup, uint32_t srcClkFreq );
+bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP *setup, uint32_t srcClkFreq );
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_IsBusy(void)
+    bool TWIHS${INDEX?string}_IsBusy(void)
 	
    Summary:
     Returns the Peripheral busy status.
@@ -196,7 +196,7 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP *setup, uint32_t srcCl
     This function returns the peripheral's busy status.
 
    Precondition:
-    TWIx_Initialize must have been called for the associated TWI instance.
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     None.
@@ -210,10 +210,10 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP *setup, uint32_t srcCl
         uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
 	  
         // wait for the current transfer to complete
-	    while(TWI${INDEX?string}_IsBusy( ));
+	    while(TWIHS${INDEX?string}_IsBusy( ));
 	    
         // perform the next transfer
-	    if(!TWI${INDEX?string}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!TWIHS${INDEX?string}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -224,11 +224,11 @@ bool TWI${INDEX?string}_TransferSetup( TWI_TRANSFER_SETUP *setup, uint32_t srcCl
     None.
 */
 
-bool TWI${INDEX?string}_IsBusy(void);
+bool TWIHS${INDEX?string}_IsBusy(void);
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Allocates and Builds the Read Transaction Request Block.
@@ -237,7 +237,7 @@ bool TWI${INDEX?string}_IsBusy(void);
     This function allocates and builds the Read Transaction Block.
 
    Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
+    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
 	The transfer status should not be busy.
 
    Parameters:
@@ -253,12 +253,12 @@ bool TWI${INDEX?string}_IsBusy(void);
     <code>
 	    uint8_t myData [NUM_BYTES];
 	  
-	    if(!TWI${INDEX?string}_TRBBuildRead( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!TWIHS${INDEX?string}_TRBBuildRead( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
 	  
-	    if(!TWI${INDEX?string}_TRBTransfer())
+	    if(!TWIHS${INDEX?string}_TRBTransfer())
 	    {
 		    // error handling  
 	    }
@@ -266,15 +266,15 @@ bool TWI${INDEX?string}_IsBusy(void);
     </code>
 
    Remarks:
-    Number of times TWI${INDEX?string}_TRBBuildRead is called is limited to number of TRB's
+    Number of times TWIHS${INDEX?string}_TRBBuildRead is called is limited to number of TRB's
 	available.
 */
 
-bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIHS${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Allocates and Builds the Read Transaction Request Block.
@@ -283,7 +283,7 @@ bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t l
     This function allocates and builds the Read Transaction Block.
 
    Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
+    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
 	The transfer status should not be busy.
 
    Parameters:
@@ -299,12 +299,12 @@ bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t l
     <code>
 	    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
 	  
-	    if(!TWI${INDEX?string}_TRBBuildWrite( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!TWIHS${INDEX?string}_TRBBuildWrite( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
 	  
-	    if(!TWI${INDEX?string}_TRBTransfer())
+	    if(!TWIHS${INDEX?string}_TRBTransfer())
 	    {
 		    // error handling  
 	    }
@@ -312,28 +312,28 @@ bool TWI${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t l
     </code>
 
    Remarks:
-    Number of times TWI${INDEX?string}_TRBBuildWrite is called is limited to number of TRB's
+    Number of times TWIHS${INDEX?string}_TRBBuildWrite is called is limited to number of TRB's
 	available.
 */
 
-bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIHS${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_TRBTransfer(void)
+    bool TWIHS${INDEX?string}_TRBTransfer(void)
 	
    Summary:
     Submits all TRB's build for processing. 
 
    Description:
-    This function submits all TRB's built by calling TWI${INDEX?string}_TRBBuildRead and 
-	TWI${INDEX?string}_TRBBuildWrite. Once all TRB's are submitted for processing, transfer
+    This function submits all TRB's built by calling TWIHS${INDEX?string}_TRBBuildRead and 
+	TWIHS${INDEX?string}_TRBBuildWrite. Once all TRB's are submitted for processing, transfer
 	starts. A repeated start will occur on completion of a single TRB. Master 
 	will generate Stop only after it process all TRB's.
 	
    Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
-	The transfer status should not be busy before calling TWI${INDEX?string}_TRBTransfer.
+    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+	The transfer status should not be busy before calling TWIHS${INDEX?string}_TRBTransfer.
 
    Parameters:
     None.
@@ -347,17 +347,17 @@ bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t 
 	    uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
 		uint8_t myRxData [NUM_BYTES] = {0};
 	  
-	    if(!TWI${INDEX?string}_TRBBuildWrite( SLAVE_ADDR, &myTxData[0], NUM_BYTES ))
+	    if(!TWIHS${INDEX?string}_TRBBuildWrite( SLAVE_ADDR, &myTxData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
 		
-		if(!TWI${INDEX?string}_TRBBuildRead( SLAVE_ADDR, &myRxData[0], NUM_BYTES ))
+		if(!TWIHS${INDEX?string}_TRBBuildRead( SLAVE_ADDR, &myRxData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
 	  
-	    if(!TWI${INDEX?string}_TRBTransfer())
+	    if(!TWIHS${INDEX?string}_TRBTransfer())
 	    {
 		    // error handling  
 	    }
@@ -368,11 +368,11 @@ bool TWI${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t 
     None.
 */
 
-bool TWI${INDEX?string}_TRBTransfer(void);
+bool TWIHS${INDEX?string}_TRBTransfer(void);
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Reads data from the slave.
@@ -383,8 +383,8 @@ bool TWI${INDEX?string}_TRBTransfer(void);
 	completion of the read.
 
    Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
-	The transfer status should not be busy before calling TWI${INDEX?string}_TRBTransfer.
+    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+	The transfer status should not be busy before calling TWIHS${INDEX?string}_TRBTransfer.
 	Minimum one TRB should be available.
 
    Parameters:
@@ -400,7 +400,7 @@ bool TWI${INDEX?string}_TRBTransfer(void);
     <code>
 	    uint8_t myData [NUM_BYTES];
 	  
-	    if(!TWI${INDEX?string}_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!TWIHS${INDEX?string}_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -410,11 +410,11 @@ bool TWI${INDEX?string}_TRBTransfer(void);
     None.
 */
 
-bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
 	
    Summary:
     Writes data onto the slave.
@@ -425,8 +425,8 @@ bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length);
 	condition after completion of the write.
 
    Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
-	The transfer status should not be busy before calling TWI${INDEX?string}_TRBTransfer.
+    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+	The transfer status should not be busy before calling TWIHS${INDEX?string}_TRBTransfer.
 	Minimum one TRB should be available.
 
    Parameters:
@@ -442,7 +442,7 @@ bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length);
     <code>
 	    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
 	  
-	    if(!TWI${INDEX?string}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!TWIHS${INDEX?string}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -452,11 +452,11 @@ bool TWI${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length);
     None.
 */
 
-bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
+    bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
 	
    Summary:
     Write and Read data from Slave.
@@ -469,8 +469,8 @@ bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length);
 	condition after reading the data.
 
    Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
-	The transfer status should not be busy before calling TWI${INDEX?string}_TRBTransfer.
+    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+	The transfer status should not be busy before calling TWIHS${INDEX?string}_TRBTransfer.
 	Minimum two TRB's should be available.
 
    Parameters:
@@ -489,7 +489,7 @@ bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length);
 	    uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
 		uint8_t myRxData [NUM_BYTES] = {0};
 	  
-	    if(!TWI${INDEX?string}_WriteRead( SLAVE_ADDR, &myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
+	    if(!TWIHS${INDEX?string}_WriteRead( SLAVE_ADDR, &myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -498,11 +498,11 @@ bool TWI${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length);
    Remarks:
 */
 
-bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);
+bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);
 
 // *****************************************************************************
 /* Function:
-    TWI_ERROR TWI${INDEX?string}_ErrorGet(void)
+    TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void)
 	
    Summary:
     Returns the error during transfer.
@@ -511,7 +511,7 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
     This function returns the error during transfer.
 
    Precondition:
-    TWI${INDEX?string}_Initialize must have been called for the associated TWI instance.
+    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     None.
@@ -521,9 +521,9 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
 	
    Example:
     <code>
-    if(TWI_ERROR_NONE == TWI${INDEX?string}_ErrorGet())
+    if(TWIHS_ERROR_NONE == TWIHS${INDEX?string}_ErrorGet())
     {
-        //TWI transfer is completed, go to next state.
+        //TWIHS transfer is completed, go to next state.
     }
     </code>
 
@@ -531,18 +531,18 @@ bool TWI${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlen
     None.
 */
 
-TWI_ERROR TWI${INDEX?string}_ErrorGet(void);
+TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void);
 
 // *****************************************************************************
 /* Function:
-    void TWI${INDEX?string}_InterruptHandler(void)
+    void TWIHS${INDEX?string}_InterruptHandler(void)
 
    Summary:
-    TWI${INDEX?string} Peripheral Interrupt Handler.
+    TWIHS${INDEX?string} Peripheral Interrupt Handler.
 
    Description:
-    This function is TWI${INDEX?string} Peripheral Interrupt Handler and will
-    called on every TWI${INDEX?string} interrupt.
+    This function is TWIHS${INDEX?string} Peripheral Interrupt Handler and will
+    called on every TWIHS${INDEX?string} interrupt.
 
    Precondition:
     None.
@@ -559,7 +559,7 @@ TWI_ERROR TWI${INDEX?string}_ErrorGet(void);
 	enabled user need to call it from the main while loop of the application.
 */
 
-void TWI${INDEX?string}_InterruptHandler(void);
+void TWIHS${INDEX?string}_InterruptHandler(void);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -569,7 +569,7 @@ void TWI${INDEX?string}_InterruptHandler(void);
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_TWI${INDEX?string}_H
+#endif //PLIB_TWIHS${INDEX?string}_H
 
 /*******************************************************************************
  End of File
