@@ -42,12 +42,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#macro CONFIGURE_PCK INDEX ENABLED CSS PRES>
 	<#if ENABLED>
     /* Configure Programmable Clock Generator ${INDEX} Clock Source and Clock Divider */
-    PMC_REGS->PMC_SCDR = (1 << ${INDEX}) << PMC_SCDR_PCK_Pos;
+    PMC_REGS->PMC_SCDR = PMC_SCDR_PCK${INDEX}_Msk;
 	PMC_REGS->PMC_PCK[${INDEX}]= PMC_PCK_CSS_${CSS} | PMC_PCK_PRES(${PRES} - 1);
-    PMC_REGS->PMC_SCER = (1 << ${INDEX}) << PMC_SCER_PCK_Pos;
+    PMC_REGS->PMC_SCER = PMC_SCER_PCK${INDEX}_Msk;
 	
    /* Wait until PCK${INDEX} clock output is ready */
-    while( !(PMC_REGS->PMC_SR& ((1 << ${INDEX}) << PMC_SR_PCKRDY_Pos) ) )
+    while( !(PMC_REGS->PMC_SR & PMC_SR_PCKRDY${INDEX}_Msk) )
     {
     }
 	
