@@ -56,6 +56,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 // *****************************************************************************
 // *****************************************************************************
