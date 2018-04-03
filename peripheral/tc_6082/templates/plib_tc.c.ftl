@@ -67,7 +67,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 static uint32_t TC${INDEX}_quadratureStatus = 0U; /* saves interrupt status */	
 	
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true>
-/* Callback object for TC0 */
+/* Callback object for channel 0 */
 TC_CALLBACK_OBJECT TC${INDEX}_CallbackObj;
 </#if>
 /* Initialize channel in timer mode */
@@ -171,8 +171,8 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
 </#if>
 </#if> <#-- QUADRATURE -->
 
-<#list start..2 as i>
-	<#if i == 3>
+<#list start..(TC_MAX_CHANNELS - 1) as i>
+	<#if i == TC_MAX_CHANNELS>
 		<#break>
 	</#if> <#-- break the loop if quadrature speed mode is used -->
 <#assign TC_CH_ENABLE = "TC" + i + "_ENABLE">
@@ -216,7 +216,7 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
 static uint32_t TC${INDEX}_CH${CH_NUM}_TimerStatus;  /* saves interrupt status */	
 
 <#if .vars[TC_TIMER_IER_CPCS] == true>
-/* Callback object for ${CH_NUM} */
+/* Callback object for channel ${CH_NUM} */
 TC_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
 </#if>
 
@@ -308,7 +308,7 @@ void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void)
 <#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
 static uint32_t TC${INDEX}_CH${CH_NUM}_CaptureStatus;    /* saves interrupt status */	
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
-/* Callback object for ${CH_NUM} */
+/* Callback object for channel ${CH_NUM} */
 TC_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
 </#if>
 
@@ -403,7 +403,7 @@ void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void)
 <#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
 static uint32_t TC${INDEX}_CH${CH_NUM}_CompareStatus;   /* saves interrupt status */	
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
-/* Callback object for ${CH_NUM} */
+/* Callback object for channel ${CH_NUM} */
 TC_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
 </#if>
 

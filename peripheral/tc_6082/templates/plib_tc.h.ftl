@@ -120,8 +120,8 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
 	
 </#if>
 </#if>
-<#list start..2 as i>
-	<#if i == 3>
+<#list start..(TC_MAX_CHANNELS-1) as i>
+	<#if i == TC_MAX_CHANNELS>
 		<#break>
 	</#if> <#-- break the loop if quadrature mode is enabled -->
 <#assign TC_CH_ENABLE = "TC" + i + "_ENABLE">
