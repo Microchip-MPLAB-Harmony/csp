@@ -509,6 +509,10 @@ def instantiateComponent(tcComponent):
 	num = tcComponent.getID()[-1:]
 	print("Running TC" + str(num))
 	
+	tcSym_MAX_CHANNELS = tcComponent.createIntegerSymbol("TC_MAX_CHANNELS", None)
+	tcSym_MAX_CHANNELS.setDefaultValue(3)
+	tcSym_MAX_CHANNELS.setVisible(False)
+	
 	#*********** Restrict the channel mode as per ATDF file **************************
 	packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
 	availablePins = []		# array to save available pins
@@ -629,7 +633,7 @@ def instantiateComponent(tcComponent):
 	tcSym_CH_QIER_QERR.setDefaultValue(False)	
 	
 	#*************************CHANNEL CONFIGURATIONS ******************************
-	for channelID in range(0, 3):
+	for channelID in range(0, len(channel)):
 		#channel menu
 		tcChannelMenu.append(channelID)
 		tcChannelMenu[channelID] = tcComponent.createMenuSymbol("Channel "+str(channelID), None)
@@ -665,7 +669,7 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_ClkEnComment[channelID].setVisible(False)
 		tcSym_CH_ClkEnComment[channelID].setLabel("Warning!!! TC" +str(num)+"_CH"+str(channelID)+" Peripheral Clock is Disabled in Clock Manager")
 		tcSym_CH_ClkEnComment[channelID].setDependencies(tcdependencyClockStatus, ["core.PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID), "TC"+str(channelID)+"_ENABLE"])
-		
+	
 		periphId = Interrupt.getInterruptIndex("TC" + str(num)+ "_CH" + str(channelID))
 		NVICVector = "NVIC_" + str(periphId) + "_ENABLE"
 
