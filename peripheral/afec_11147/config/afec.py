@@ -84,13 +84,11 @@ def afecPrescalWarning(symbol, event ):
 	clock = afecGetMasterClock()
 	prescaler = afecSym_MR_PRESCAL.getValue() + 1
 	afecFreq = clock / prescaler
-	if (afecFreq > 40000000):
-		symbol.setLabel("**** AFEC Frequency = " + str(afecFreq) + "Hz which is greater than max frequency of 40000000 ****")
-		symbol.setVisible(True)
-	else:
-		symbol.setVisible(False)
 	if (afecFreq < 4000000):
-		symbol.setLabel("**** AFEC Frequency = " + str(afecFreq) + "Hz which is less than min frequency of 4000000 ****")
+		symbol.setLabel("AFEC Frequency < 4,000,000 Hz. Decrease prescaler value. ")
+		symbol.setVisible(True)
+	elif (afecFreq > 40000000):
+		symbol.setLabel("AFEC Frequency > 40,000,000 Hz. Increase prescaler value. ")
 		symbol.setVisible(True)
 	else:
 		symbol.setVisible(False)
