@@ -6,7 +6,7 @@ def instantiateComponent(twihsComponent):
     global num
     
     num = twihsComponent.getID()[-1:]
-    print("Running TWIHSHS" + str(num))
+    print("Running TWIHS" + str(num))
 
     #main menu
     twihsMenu = twihsComponent.createMenuSymbol("TWIHS_MENU_MAIN", None)
