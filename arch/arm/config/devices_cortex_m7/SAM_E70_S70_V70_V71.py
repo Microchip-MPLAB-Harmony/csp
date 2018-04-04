@@ -17,6 +17,9 @@ coreComponent.addPlugin("../peripheral/nvic_m7/plugin/ARM_M7_NVICmanager.jar")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11004/plugin/SAME70pinmanager.jar")
 
+# load device specific adc manager information
+coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
+
 # load rswdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/rswdt_11110/config/rswdt.py")
 
