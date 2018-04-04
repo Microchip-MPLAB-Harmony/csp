@@ -259,7 +259,7 @@ def instantiateComponent(afecComponent):
 	afec_signals = afec.getChildren()
 	for pad in range (0 , len(afec_signals)):
 		group = afec_signals[pad].getAttribute("group")
-		if (group == "AD"):
+		if (("AD" in group) and ("index" in afec_signals[pad].getAttributeList())):
 			padSignal = afec_signals[pad].getAttribute("pad")
 			if padSignal in availablePins :
 				channel[int(afec_signals[pad].getAttribute("index"))] = True
