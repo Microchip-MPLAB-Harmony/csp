@@ -38,7 +38,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#include "${__PROCESSOR?lower_case}.h"
+#include "device.h"
 #include "peripheral/systick/plib_systick.h"
 
 <#if USE_SYSTICK_INTERRUPT == true>

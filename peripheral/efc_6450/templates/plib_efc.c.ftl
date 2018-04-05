@@ -37,7 +37,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 
 #include <string.h>
-#include "${__PROCESSOR?lower_case}.h"
+#include "device.h"
 #include "plib_efc${INDEX?string}.h"
 
 static uint32_t status = 0;

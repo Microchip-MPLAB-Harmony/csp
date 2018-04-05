@@ -36,7 +36,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 #include "plib_sdramc${INDEX}.h"
-#include "${__PROCESSOR?lower_case}.h"
+#include "device.h"
 
 // *****************************************************************************
 // *****************************************************************************

@@ -1,18 +1,18 @@
 /*******************************************************************************
-  SPI PLIB
+  Device Header File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_spi${SPI_INDEX?string}.h
+    device.h
 
   Summary:
-    SPI${SPI_INDEX?string} PLIB Header File
+    This file includes the selected device from within the project.
+    The device will provide access to respective device packs.
 
   Description:
-    This file has prototype of all the interfaces provided for particular
-    SPI peripheral.
+    None
 
 *******************************************************************************/
 
@@ -39,50 +39,4 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_SPI${SPI_INDEX?string}_H
-#define PLIB_SPI${SPI_INDEX?string}_H
-
-#include "device.h"
-#include "plib_spi.h"
-
-/* Provide C++ Compatibility */
-#ifdef __cplusplus  
-
-    extern "C" {
-
-#endif
-
-/****************************** SPI${SPI_INDEX?string} Interface *********************************/
-
-void SPI${SPI_INDEX?string}_Initialize ( void );
-
-bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
-
-#define SPI${SPI_INDEX?string}_Write(pTransmitData, txSize)    ((bool)(SPI${SPI_INDEX?string}_WriteRead(pTransmitData, txSize, NULL, 0)))
-
-#define SPI${SPI_INDEX?string}_Read(pReceiveData, rxSize)      ((bool)(SPI${SPI_INDEX?string}_WriteRead(NULL, 0, pReceiveData, rxSize)))
-
-bool SPI${SPI_INDEX?string}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
-
-<#if SPI_INTERRUPT_MODE == true>     
-bool SPI${SPI_INDEX?string}_IsBusy(void);
-
-SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
-
-void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_CALLBACK callback, void* context);
-
-void SPI${SPI_INDEX?string}_InterruptHandler(void);
-</#if>
-
-/* Provide C++ Compatibility */
-#ifdef __cplusplus
-
-    }
-    
-#endif
-
-#endif // PLIB_SPI${SPI_INDEX?string}_H
-
-/*******************************************************************************
- End of File
-*/
+#include "${__PROCESSOR?lower_case}.h"

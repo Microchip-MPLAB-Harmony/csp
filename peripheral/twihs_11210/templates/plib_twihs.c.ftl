@@ -47,7 +47,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#include "${__PROCESSOR?lower_case}.h"
+#include "device.h"
 #include "plib_twihs${INDEX?string}.h"
 
 // *****************************************************************************
