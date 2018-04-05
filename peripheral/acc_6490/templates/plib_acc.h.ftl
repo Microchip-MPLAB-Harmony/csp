@@ -44,7 +44,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "${__PROCESSOR?lower_case}.h"
+#include "device.h"
 #include "plib_acc.h"
 
 // DOM-IGNORE-BEGIN

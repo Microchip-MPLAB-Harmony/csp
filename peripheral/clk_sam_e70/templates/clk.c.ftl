@@ -23,7 +23,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  *******************************************************************************/
  -->
 
-#include "${__PROCESSOR?lower_case}.h"
+#include "device.h"
 #include "clk.h"
 
 <#macro CONFIGURE_GCLK INDEX PCLKEN GCLKEN GCLKCSS GCLKDIV>

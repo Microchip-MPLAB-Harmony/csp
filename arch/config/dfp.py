@@ -49,6 +49,15 @@ def instantiateComponent(dfpComponent):
 
 	processorName = Variables.get("__PROCESSOR")
 
+	deviceHeaderFile = dfpComponent.createFileSymbol("deviceHeaderFile", None)
+	deviceHeaderFile.setMarkup(True)
+	deviceHeaderFile.setSourcePath("templates/device.h.ftl")
+	deviceHeaderFile.setOutputName("device.h")
+	deviceHeaderFile.setDestPath("../../packs/" + Variables.get("__PROCESSOR") + "_DFP/")
+	deviceHeaderFile.setProjectPath("packs/" + Variables.get("__PROCESSOR") + "_DFP/")
+	deviceHeaderFile.setType("HEADER")
+	deviceHeaderFile.setOverwrite(True)
+
 	headerFile = dfpComponent.createFileSymbol("PART_MAIN_DEFS", None)
 	headerFile.setRelative(False)
 	headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/" + processorName.replace("ATSAM", "SAM").lower() + ".h")
