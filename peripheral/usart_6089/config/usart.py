@@ -154,13 +154,13 @@ def instantiateComponent(usartComponent):
 
     usartSym_MR_CHRL = usartComponent.createKeyValueSetSymbol("USART_MR_CHRL", None)
     usartSym_MR_CHRL.setLabel("Data")
-    usartSym_MR_CHRL.addKey("_5_BIT", "0", "5 BIT")
-    usartSym_MR_CHRL.addKey("_6_BIT", "1", "6 BIT")
-    usartSym_MR_CHRL.addKey("_7_BIT", "2", "7 BIT")
-    usartSym_MR_CHRL.addKey("_8_BIT", "3", "8 BIT")
+    usartSym_MR_CHRL.addKey("5_BIT", "0", "5 BIT")
+    usartSym_MR_CHRL.addKey("6_BIT", "1", "6 BIT")
+    usartSym_MR_CHRL.addKey("7_BIT", "2", "7 BIT")
+    usartSym_MR_CHRL.addKey("8_BIT", "3", "8 BIT")
     # There is no 9 bit available under MR_CHRL, but added here just for menu.
     # usartSym_MR_MODE9 will use this value
-    usartSym_MR_CHRL.addKey("_8_BIT", "4", "9 BIT")
+    usartSym_MR_CHRL.addKey("8_BIT", "4", "9 BIT")
     usartSym_MR_CHRL.setDisplayMode("Description")
     usartSym_MR_CHRL.setOutputMode("Key")
     usartSym_MR_CHRL.setDefaultValue(3)
@@ -177,9 +177,9 @@ def instantiateComponent(usartComponent):
 
     usartSym_MR_NBSTOP = usartComponent.createKeyValueSetSymbol("USART_MR_NBSTOP", None)
     usartSym_MR_NBSTOP.setLabel("Stop")
-    usartSym_MR_NBSTOP.addKey("_1_BIT", "0", "1 BIT")
-    usartSym_MR_NBSTOP.addKey("_1_5_BIT", "2", "1.5 BIT")
-    usartSym_MR_NBSTOP.addKey("_2_BIT", "1", "2 BIT")
+    usartSym_MR_NBSTOP.addKey("1_BIT", "0", "1 BIT")
+    usartSym_MR_NBSTOP.addKey("1_5_BIT", "2", "1.5 BIT")
+    usartSym_MR_NBSTOP.addKey("2_BIT", "1", "2 BIT")
     usartSym_MR_NBSTOP.setDisplayMode("Description")
     usartSym_MR_NBSTOP.setOutputMode("Key")
     usartSym_MR_NBSTOP.setDefaultValue(0)
