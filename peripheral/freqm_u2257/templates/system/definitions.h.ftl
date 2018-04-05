@@ -1,0 +1,1 @@
+#include "peripheral/freqm/plib_freqm${FREQM_INDEX}.h"
