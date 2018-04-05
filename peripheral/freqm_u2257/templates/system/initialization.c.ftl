@@ -1,0 +1,1 @@
+    FREQM${FREQM_INDEX}_Initialize();
