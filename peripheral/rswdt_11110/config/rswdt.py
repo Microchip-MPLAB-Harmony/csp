@@ -1,7 +1,7 @@
 Log.writeInfoMessage("Loading RSWDT for " + Variables.get("__PROCESSOR"))
 
-global NVICVector
-global NVICHandler
+global rswdtNVICVector
+global rswdtNVICHandler
 
 rswdtMenu = coreComponent.createMenuSymbol("RSWDT_MENU_0", None)
 rswdtMenu.setLabel("RSWDT")
@@ -21,6 +21,7 @@ def rswdtEnableCfgMenu(rswdtCfgMenu, event):
 rswdtCfgMenu = coreComponent.createMenuSymbol("RSWDT_MENU_1", rswdtMenu)
 rswdtCfgMenu.setLabel("RSWDT Configuration")
 rswdtCfgMenu.setDependencies(rswdtEnableCfgMenu, ["rswdtENABLE"])
+rswdtCfgMenu.setVisible(False)
 
 rswdtReset = coreComponent.createBooleanSymbol("rswdtEnableReset", rswdtCfgMenu)
 rswdtReset.setLabel("Enable Reset")
@@ -37,6 +38,7 @@ rswdtInterrupt = coreComponent.createBooleanSymbol("rswdtinterruptMode", rswdtCf
 rswdtInterrupt.setLabel("Enable Interrupts")
 rswdtInterrupt.setDefaultValue(False)
 rswdtInterrupt.setDependencies(rswdtResetEnable, ["rswdtEnableReset"])
+rswdtInterrupt.setVisible(False)
 
 rswdtCounterValue = coreComponent.createIntegerSymbol("rswdtWDV", rswdtCfgMenu)
 rswdtCounterValue.setLabel("Counter value")
@@ -51,6 +53,7 @@ rswdtCounterValueTime = coreComponent.createIntegerSymbol("rswdtWDVTIME", rswdtC
 rswdtCounterValueTime.setLabel("Counter value in ms")
 rswdtCounterValueTime.setDependencies(rswdtcounter_cal, ["rswdtWDV"])
 rswdtCounterValueTime.setReadOnly(True)
+rswdtCounterValueTime.setDefaultValue(15996)
 
 rswdtDebugHalt = coreComponent.createBooleanSymbol("rswdtdebugHalt", rswdtCfgMenu)
 rswdtDebugHalt.setLabel("Enable Debug halt")
@@ -65,28 +68,28 @@ rswdtIdleHalt.setLabel("Enable Idle halt")
 rswdtIdleHalt.setDefaultValue(False)	
 
 peripId = Interrupt.getInterruptIndex("RSWDT")
-NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+rswdtNVICVector = "NVIC_" + str(peripId) + "_ENABLE"
+rswdtNVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
+rswdtNVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
-Database.clearSymbolValue("core", NVICVector)
-Database.setSymbolValue("core", NVICVector, False, 2)
-Database.clearSymbolValue("core", NVICHandler)
-Database.setSymbolValue("core", NVICHandler, "RSWDT0_InterruptHandler", 2)
-Database.clearSymbolValue("core", NVICHandlerLock)
-Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+Database.clearSymbolValue("core", rswdtNVICVector)
+Database.setSymbolValue("core", rswdtNVICVector, False, 2)
+Database.clearSymbolValue("core", rswdtNVICHandler)
+Database.setSymbolValue("core", rswdtNVICHandler, "RSWDT0_Handler", 2)
+Database.clearSymbolValue("core", rswdtNVICHandlerLock)
+Database.setSymbolValue("core", rswdtNVICHandlerLock, True, 2)
 
 def NVICControl(NVIC, event):
-	global NVICVector
-	global NVICHandler
-	Database.clearSymbolValue("core", NVICVector)
-	Database.clearSymbolValue("core", NVICHandler)
+	global rswdtNVICVector
+	global rswdtNVICHandler
+	Database.clearSymbolValue("core", rswdtNVICVector)
+	Database.clearSymbolValue("core", rswdtNVICHandler)
 	if (event["value"] == True):
-		Database.setSymbolValue("core", NVICVector, True, 2)
-		Database.setSymbolValue("core", NVICHandler, "RSWDT0_InterruptHandler", 2)
+		Database.setSymbolValue("core", rswdtNVICVector, True, 2)
+		Database.setSymbolValue("core", rswdtNVICHandler, "RSWDT0_InterruptHandler", 2)
 	else :
-		Database.setSymbolValue("core", NVICVector, False, 2)
-		Database.setSymbolValue("core", NVICHandler, "RSWDT0_Handler", 2)
+		Database.setSymbolValue("core", rswdtNVICVector, False, 2)
+		Database.setSymbolValue("core", rswdtNVICHandler, "RSWDT0_Handler", 2)
 		
 # NVIC Dynamic settings
 rswdtNVICControl = coreComponent.createBooleanSymbol("NVIC_RSWDT_ENABLE", None)
@@ -102,7 +105,8 @@ rswdtHeaderFile.setDestPath("peripheral/rswdt/")
 rswdtHeaderFile.setProjectPath("config/" + configName + "/peripheral/rswdt/")
 rswdtHeaderFile.setType("HEADER")
 rswdtHeaderFile.setMarkup(True)
-	
+rswdtHeaderFile.setEnabled(False)	
+
 rswdtSourceFile = coreComponent.createFileSymbol("rswdtSourceFile", None)
 rswdtSourceFile.setSourcePath("../peripheral/rswdt_11110/templates/plib_rswdt.c.ftl")
 rswdtSourceFile.setOutputName("plib_rswdt0.c")
@@ -110,6 +114,7 @@ rswdtSourceFile.setDestPath("peripheral/rswdt/")
 rswdtSourceFile.setProjectPath("config/" + configName + "/peripheral/rswdt/")
 rswdtSourceFile.setType("SOURCE")
 rswdtSourceFile.setMarkup(True)
+rswdtSourceFile.setEnabled(False)	
 		
 rswdtSystemInitFile = coreComponent.createFileSymbol("rswdtSystemInitFile", None)
 rswdtSystemInitFile.setType("STRING")
@@ -122,6 +127,6 @@ rswdtSystemDefFile.setType("STRING")
 rswdtSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 rswdtSystemDefFile.setSourcePath("../peripheral/rswdt_11110/templates/system/system_definitions.h.ftl")
 rswdtSystemDefFile.setMarkup(True)
-
+rswdtSystemDefFile.setEnabled(False)	
 
 
