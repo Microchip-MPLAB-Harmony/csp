@@ -2,7 +2,7 @@
   System Configuration Header
 
   File Name:
-    system_config.h
+    configuration.h
 
   Summary:
     Build-time configuration header for the system defined by this project.
@@ -14,13 +14,13 @@
   Remarks:
     This configuration header must not define any prototypes or data
     definitions (or include any files that do).  It only provides macro
-    definitions for build-time configuration options 
+    definitions for build-time configuration options
 
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2013-2015 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017-2018 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -43,8 +43,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef SYSTEM_CONFIG_H
-#define SYSTEM_CONFIG_H
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -55,7 +55,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     define this configuration.
 */
 ${LIST_SYSTEM_CONFIG_H_GLOBAL_INCLUDES}
-
+#include "user.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -99,7 +99,7 @@ ${LIST_SYSTEM_CONFIG_H_APPLICATION_CONFIGURATION}
 #endif
 //DOM-IGNORE-END
 
-#endif // SYSTEM_CONFIG_H
+#endif // CONFIGURATION_H
 /*******************************************************************************
  End of File
 */

@@ -2,7 +2,7 @@
   System Definitions
 
   File Name:
-    system_definitions.h
+    definitions.h
 
   Summary:
     project system definitions.
@@ -14,7 +14,7 @@
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2013-2014 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017-2018 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -37,8 +37,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  *******************************************************************************/
 //DOM-IGNORE-END
 
-#ifndef SYS_DEFINITIONS_H
-#define SYS_DEFINITIONS_H
+#ifndef DEFINITIONS_H
+#define DEFINITIONS_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -195,7 +195,7 @@ extern SYSTEM_OBJECTS sysObj;
 #endif
 //DOM-IGNORE-END
 
-#endif /* _SYS_DEFINITIONS_H */
+#endif /* DEFINITIONS_H */
 /*******************************************************************************
  End of File
 */

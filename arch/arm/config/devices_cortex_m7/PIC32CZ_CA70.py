@@ -41,23 +41,23 @@ deviceFamily.setDefaultValue("SAM_E70_S70_V70_V71")
 deviceFamily.setReadOnly(True)
 
 
-#generate system_startup_xc32.c file
-armSysStartSourceFile = coreComponent.createFileSymbol("SYSTEM_STARTUP_C", None)
-armSysStartSourceFile.setSourcePath("arm/templates/system_startup_xc32.c.ftl")
-armSysStartSourceFile.setOutputName("system_startup.c")
+#generate startup_xc32.c file
+armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
+armSysStartSourceFile.setSourcePath("arm/templates/startup_xc32.c.ftl")
+armSysStartSourceFile.setOutputName("startup.c")
 armSysStartSourceFile.setMarkup(True)
 armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
 armSysStartSourceFile.setProjectPath("config/" + configName + "/")
 armSysStartSourceFile.setType("SOURCE")
 
-#generate newlib_syscalls_xc32.c file
-armSysCallSourceFile = coreComponent.createFileSymbol("NEWLIB_SYSCALLS_XC32_C", None)
-armSysCallSourceFile.setSourcePath("arm/templates/newlib_syscalls_xc32.c.ftl")
-armSysCallSourceFile.setOutputName("newlib_syscalls_xc32.c")
-armSysCallSourceFile.setMarkup(True)
-armSysCallSourceFile.setOverwrite(True)
-armSysCallSourceFile.setDestPath("")
-armSysCallSourceFile.setProjectPath("config/" + configName + "/")
-armSysCallSourceFile.setType("SOURCE")
+#generate libc_syscalls.c file
+armLibCSourceFile = coreComponent.createFileSymbol("LIBC_SYSCALLS_C", None)
+armLibCSourceFile.setSourcePath("arm/templates/libc_syscalls.c.ftl")
+armLibCSourceFile.setOutputName("libc_syscalls.c")
+armLibCSourceFile.setMarkup(True)
+armLibCSourceFile.setOverwrite(True)
+armLibCSourceFile.setDestPath("")
+armLibCSourceFile.setProjectPath("config/" + configName + "/")
+armLibCSourceFile.setType("SOURCE")
 

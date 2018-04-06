@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "system_definitions.h" /* for potential custom handler names */
+#include "definitions.h" /* for potential custom handler names */
 #include <libpic32c.h>
 #include <sys/cdefs.h>
 #include <stdbool.h>
@@ -47,12 +47,12 @@ extern void __attribute__((long_call)) __libc_init_array(void);
 /* Declaration of Reset handler (may be custom) */
 void Reset_Handler (void) __attribute__((optimize("-O1"), long_call));
 
-/* Device Vector information is available in system_interrupt.c file */
+/* Device Vector information is available in interrupt.c file */
 
 <#if CoreArchitecture == "CORTEX-M7">
-<#include "system_startup_xc32_cortex_m7.c.ftl">
+<#include "startup_xc32_cortex_m7.c.ftl">
 </#if>
-<#include "system_startup_xc32_${DeviceFamily}.c.ftl">
+<#include "startup_xc32_${DeviceFamily}.c.ftl">
 
 /* Optional user-provided functions */
 // extern void __attribute__((weak,long_call)) _on_reset(void); // Harmony: present in this file
@@ -104,6 +104,10 @@ void Reset_Handler(void)
 
 <#if CoreUseMPU>
 	MPU_Initialize();
+#if (defined __CM7_REV) || (defined __CM4_REV)
+    /* Enable Usage, Bus and Memory fault vectors */
+    SCB->SHCSR |= SCB_SHCSR_USGFAULTENA_Msk | SCB_SHCSR_BUSFAULTENA_Msk | SCB_SHCSR_MEMFAULTENA_Msk;
+#endif
 </#if>
 
 #if (__ARM_FP==14)
@@ -129,10 +133,6 @@ void Reset_Handler(void)
     pSrc = (uint32_t *) & __svectors;
     SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 #  endif /* SCB_VTOR_TBLOFF_Msk */
-#if (defined __CM7_REV) || (defined __CM4_REV)
-    /* Enable Usage, Bus and Memory fault vectors */
-    SCB->SHCSR |= SCB_SHCSR_USGFAULTENA_Msk | SCB_SHCSR_BUSFAULTENA_Msk | SCB_SHCSR_MEMFAULTENA_Msk;
-#endif
 #endif /* __XC32_SKIP_STARTUP_VTOR_INIT */
 
     /* Initialize the C library */

@@ -2,16 +2,15 @@
  System Tasks File
 
   File Name:
-    system_tasks.c
+    tasks.c
 
   Summary:
-    This file contains source code necessary to maintain system's polled state
-    machines.
+    This file contains source code necessary to maintain system's polled tasks.
 
   Description:
-    This file contains source code necessary to maintain system's polled state
-    machines.  It implements the "SYS_Tasks" function that calls the individual
-    "Tasks" functions for all polled MPLAB Harmony modules in the system.
+    This file contains source code necessary to maintain system's polled tasks.
+    It implements the "SYS_Tasks" function that calls the individual "Tasks"
+    functions for all polled MPLAB Harmony modules in the system.
 
   Remarks:
     This file requires access to the systemObjects global data structure that
@@ -51,8 +50,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#include "system_config.h"
-#include "system_definitions.h"
+<#if CoreGenAppFiles == true >
+#include "configuration.h"
+</#if>
+#include "definitions.h"
 
 
 // *****************************************************************************
@@ -72,13 +73,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
-	${LIST_SYSTEM_TASKS_C_CALL_SYSTEM_TASKS}
+    ${LIST_SYSTEM_TASKS_C_CALL_SYSTEM_TASKS}
 
     /* Maintain Device Drivers */
-	${LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS}
+    ${LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS}
 
     /* Maintain Middleware & Other Libraries */
-	${LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS}
+    ${LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS}
 
     /* Maintain the application's state machine. */
     APP_Tasks();
