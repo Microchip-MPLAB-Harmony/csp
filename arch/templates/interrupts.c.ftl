@@ -2,7 +2,7 @@
  System Interrupts File
 
   File Name:
-    system_interrupt.c
+    interrupt.c
 
   Summary:
     Raw ISR definitions.
@@ -17,15 +17,15 @@
 
   Description:
     This file contains source code for the interrupt vector functions in the
-    system. 
+    system.
 
-  
+
   Remarks:
  *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2011-2014 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017-2018 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -55,9 +55,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 ${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 <#if CoreGenAppFiles == true >
-#include "app.h"
+#include "configuration.h"
 </#if>
-#include "system_definitions.h"
+#include "definitions.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -65,7 +65,7 @@ ${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 // *****************************************************************************
 // *****************************************************************************
 
-<#include "system_interrupt_xc32_cortex_m.c.ftl">
+<#include "interrupts_xc32_cortex_m.c.ftl">
 
 
 /*******************************************************************************

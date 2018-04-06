@@ -2,7 +2,7 @@
   System Initialization File
 
   File Name:
-    system_init.c
+    initialization.c
 
   Summary:
     This file contains source code necessary to initialize the system.
@@ -15,7 +15,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2013-2015 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017-2018 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -44,8 +44,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#include "system_config.h"
-#include "system_definitions.h"
+<#if CoreGenAppFiles == true >
+#include "configuration.h"
+</#if>
+#include "definitions.h"
 
 
 // ****************************************************************************
@@ -106,18 +108,18 @@ ${LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION}
 void SYS_Initialize ( void* data )
 {
 
-	<#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DATA}
-	<#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_MPU}
-	<#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
-	<#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS}
-	<#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS}
-	<#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS}
-	<#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES}
-	<#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE}
+    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DATA}
+    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_MPU}
+    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
+    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS}
+    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS}
+    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS}
+    <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES}
+    <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE}
 
-	<#lt><#if CoreGenAppFiles == true >
-			<#lt>	APP_Initialize();
-	<#lt></#if>
+    <#lt><#if CoreGenAppFiles == true >
+            <#lt>    APP_Initialize();
+    <#lt></#if>
 }
 
 

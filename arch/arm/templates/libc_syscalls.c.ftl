@@ -18,7 +18,7 @@
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <xc.h> /* for ARM CMSIS __BKPT() */
+#include <device.h> /* for ARM CMSIS __BKPT() */
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,8 +28,6 @@ extern "C" {
  * We implement only the syscalls we want over the stubs provided by libpic32c
  */
 extern void _exit(int status);
-int _mon_getc(int canblock);
-void _mon_putc (char c);
 
 extern void _exit(int status)
 {
@@ -43,15 +41,6 @@ extern void _exit(int status)
     while (1)
     {
     }
-}
-
-int __attribute__((weak)) _mon_getc(int canblock)
-{
-    return 0;
-}
-
-void __attribute__((weak)) _mon_putc(char c)
-{
 }
 
 #ifdef __cplusplus
