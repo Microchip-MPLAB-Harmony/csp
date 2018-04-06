@@ -22,6 +22,7 @@ def wdtEnableCfgMenu(wdtCfgMenu, event):
 wdtCfgMenu = coreComponent.createMenuSymbol("WDT_SUBMENU", wdtMenu)
 wdtCfgMenu.setLabel("WDT Configuration")
 wdtCfgMenu.setDependencies(wdtEnableCfgMenu, ["wdtENABLE"])
+wdtCfgMenu.setVisible(False)
 
 wdtReset = coreComponent.createBooleanSymbol("wdtEnableReset", wdtCfgMenu)
 wdtReset.setLabel("Enable Reset")
@@ -50,9 +51,10 @@ def	wdtcounter_cal(wdtCounterValueTime, event):
 	wdtCounterValueTime.setValue(int(round(data)),2)
 
 wdtCounterValueTime = coreComponent.createIntegerSymbol("wdtWDVTIME", wdtCfgMenu)
-wdtCounterValueTime.setLabel("Counter value in ms")
+wdtCounterValueTime.setLabel("WDT Counter value in ms")
 wdtCounterValueTime.setDependencies(wdtcounter_cal, ["wdtWDV"])
 wdtCounterValueTime.setReadOnly(True)
+wdtCounterValueTime.setDefaultValue(15996)
 
 wdtIndex = coreComponent.createIntegerSymbol("wdtIndex", wdtCfgMenu)
 wdtIndex.setVisible(False)
@@ -68,9 +70,10 @@ def	wdtdelta_cal(wdtDeltaValueTime, event):
 	wdtDeltaValueTime.setValue(int(round(data)),2)
 
 wdtDeltaValueTime = coreComponent.createIntegerSymbol("wdtWDDTIME", wdtCfgMenu)
-wdtDeltaValueTime.setLabel("Counter value in ms")
+wdtDeltaValueTime.setLabel("WDT Delta value in ms")
 wdtDeltaValueTime.setDependencies(wdtdelta_cal, ["wdtWDD"])
 wdtDeltaValueTime.setReadOnly(True)
+wdtDeltaValueTime.setDefaultValue(15996)
 
 wdtDebugHalt = coreComponent.createBooleanSymbol("wdtdebugHalt", wdtCfgMenu)
 wdtDebugHalt.setLabel("Enable Debug halt")
@@ -81,33 +84,33 @@ wdtIdleHalt.setLabel("Enable Idle halt")
 wdtIdleHalt.setDefaultValue(False)
 
 global peripId
-global NVICVector
-global NVICHandler
-global NVICHandlerLock
+global wdtNVICVector
+global wdtNVICHandler
+global wdtNVICHandlerLock
 
 peripId = Interrupt.getInterruptIndex("WDT")
-NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+wdtNVICVector = "NVIC_" + str(peripId) + "_ENABLE"
+wdtNVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
+wdtNVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
-Database.clearSymbolValue("core", NVICVector)
-Database.setSymbolValue("core", NVICVector, False, 2)
-Database.clearSymbolValue("core", NVICHandler)
-Database.setSymbolValue("core", NVICHandler, "WDT0_InterruptHandler", 2)
-Database.clearSymbolValue("core", NVICHandlerLock)
-Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+Database.clearSymbolValue("core", wdtNVICVector)
+Database.setSymbolValue("core", wdtNVICVector, False, 2)
+Database.clearSymbolValue("core", wdtNVICHandler)
+Database.setSymbolValue("core", wdtNVICHandler, "WDT0_Handler", 2)
+Database.clearSymbolValue("core", wdtNVICHandlerLock)
+Database.setSymbolValue("core", wdtNVICHandlerLock, False, 2)
 
 def NVICControl(NVIC, event):
-	global NVICVector
-	global NVICHandler
-	Database.clearSymbolValue("core", NVICVector)
-	Database.clearSymbolValue("core", NVICHandler)
+	global wdtNVICVector
+	global wdtNVICHandler
+	Database.clearSymbolValue("core", wdtNVICVector)
+	Database.clearSymbolValue("core", wdtNVICHandler)
 	if (event["value"] == True):
-		Database.setSymbolValue("core", NVICVector, True, 2)
-		Database.setSymbolValue("core", NVICHandler, "WDT0_InterruptHandler", 2)
+		Database.setSymbolValue("core", wdtNVICVector, True, 2)
+		Database.setSymbolValue("core", wdtNVICHandler, "WDT0_InterruptHandler", 2)
 	else :
-		Database.setSymbolValue("core", NVICVector, False, 2)
-		Database.setSymbolValue("core", NVICHandler, "WDT0_Handler", 2)
+		Database.setSymbolValue("core", wdtNVICVector, False, 2)
+		Database.setSymbolValue("core", wdtNVICHandler, "WDT0_Handler", 2)
 
 # NVIC Dynamic settings
 wdtNVICControl = coreComponent.createBooleanSymbol("NVIC_WDT_ENABLE", None)
@@ -125,6 +128,7 @@ wdtHeaderFile.setDestPath("peripheral/wdt/")
 wdtHeaderFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
 wdtHeaderFile.setType("HEADER")
 wdtHeaderFile.setMarkup(True)
+wdtHeaderFile.setEnabled(False)
 
 wdtSourceFile = coreComponent.createFileSymbol("wdtSourceFile", None)
 wdtSourceFile.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.c.ftl")
@@ -133,6 +137,7 @@ wdtSourceFile.setDestPath("peripheral/wdt/")
 wdtSourceFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
 wdtSourceFile.setType("SOURCE")
 wdtSourceFile.setMarkup(True)
+wdtSourceFile.setEnabled(False)
 
 wdtSystemInitFile = coreComponent.createFileSymbol("wdtSystemInitFile", None)
 wdtSystemInitFile.setType("STRING")
@@ -145,3 +150,4 @@ wdtSystemDefFile.setType("STRING")
 wdtSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 wdtSystemDefFile.setSourcePath("../peripheral/wdt_6080/templates/system/system_definitions.h.ftl")
 wdtSystemDefFile.setMarkup(True)
+wdtSystemDefFile.setEnabled(False)
