@@ -69,8 +69,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 typedef enum
 {
-    ADDRL_24_BIT = QSPI_IFR_ADDRL__24_BIT,
-    ADDRL_32_BIT = QSPI_IFR_ADDRL__32_BIT
+    ADDRL_24_BIT = QSPI_IFR_ADDRL_24_BIT,
+    ADDRL_32_BIT = QSPI_IFR_ADDRL_32_BIT
 } QSPI_ADDRESS_LENGTH;
 
 typedef enum
@@ -121,6 +121,7 @@ typedef struct {
     bool option_en;
     QSPI_OPTION_LENGTH option_len;
     /* For Read memory */
+    bool continuous_read_en;
     uint8_t dummy_cycles;
 } qspi_memory_xfer_t;
 
