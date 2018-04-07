@@ -55,7 +55,7 @@ void QSPI${INDEX?string}_Initialize(void)
     QSPI_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} );
 
     // Set serial clock register
-    QSPI_REGS->QSPI_SCR = (QSPI_SCR_SCBR(${QSPI_SCBR})) <#if QSPI_CPOL=="HIGH"> | QSPI_SCR_CPOL_Msk </#if> <#if QSPI_CPHA=="FALLING"> | QSPI_SCR_CPHA_Msk </#if>;
+    QSPI_REGS->QSPI_SCR = (QSPI_SCR_SCBR(${QSPI_SCBR})) <#if QSPI_CPOL=="HIGH"> | QSPI_SCR_CPOL_Msk </#if> <#if QSPI_CPHA=="TRAILING"> | QSPI_SCR_CPHA_Msk </#if>;
 
     // Enable the qspi Module
     QSPI_REGS->QSPI_CR = QSPI_CR_QSPIEN_Msk;
@@ -100,6 +100,11 @@ static bool qspi${INDEX?string}_setup_transfer( qspi_memory_xfer_t *qspi_memory_
     if (qspi_memory_xfer->option_en) {
         mask |= qspi_memory_xfer->option_len;
         mask |= QSPI_IFR_OPTEN_Msk;
+    }
+
+    if (qspi_memory_xfer->continuous_read_en)
+    {
+        mask |= QSPI_IFR_CRM_Msk;
     }
 
     mask |= QSPI_IFR_NBDUM(qspi_memory_xfer->dummy_cycles);

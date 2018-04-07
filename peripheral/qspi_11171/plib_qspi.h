@@ -191,6 +191,7 @@ typedef struct {
     QSPI_ADDRESS_LENGTH addr_len;
     bool option_en;
     QSPI_OPTION_LENGTH option_len;
+    bool continuous_read_en;
     /* For Read memory */
     uint8_t dummy_cycles;
 } qspi_memory_xfer_t;
@@ -507,6 +508,7 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
 
         #define WRITE_ENABLE_CODE     0x06
         #define WRITE_PAGE_CODE       0x02
+        #define WRITE_IN_POGRESS      (1 << 0)
 
         static qspi_command_xfer_t qspi_command_xfer;
         static qspi_memory_xfer_t qspi_memory_xfer;
@@ -540,6 +542,9 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
         {
             // Handle Error
         }
+        
+        // Query the status register and wait until WIP bit is cleared.
+        while(status_register_read() & WRITE_IN_POGRESS);
 
     </code>
 */
