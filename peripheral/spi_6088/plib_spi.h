@@ -56,11 +56,11 @@ typedef enum
 {
     /* Input data is valid on clock trailing edge and
     output data is ready on leading edge */
-    DATA_VALID_ON_CLOCK_TRAILING_EDGE,
+    SPI_CLOCK_PHASE_DATA_VALID_ON_TRAILING_EDGE,
     
     /* Input data is valid on clock leading edge and
     output data is ready on trailing edge */
-    DATA_VALID_ON_CLOCK_LEADING_EDGE
+    SPI_CLOCK_PHASE_DATA_VALID_ON_LEADING_EDGE
     
 }SPI_CLOCK_PHASE;
 
@@ -245,7 +245,7 @@ void SPIx_Initialize (void);
     <code> 
         SPI_TRANSFER_SETUP setup;
         setup.clockFrequency = 1000000;
-        setup.clockPhase = DATA_VALID_ON_CLOCK_TRAILING_EDGE;
+        setup.clockPhase = SPI_CLOCK_PHASE_DATA_VALID_ON_TRAILING_EDGE;
         setup.clockPolarity = SPI_CLOCK_POLARITY_IDLE_LOW;
         setup.dataBits = SPI_DATA_BITS_8;
         
@@ -401,7 +401,7 @@ bool SPIx_WriteRead(
         option is selected in GUI, the generated code for that
         particular SPI PLIB instance will be Non-blocking in nature. In this
         particular mode, application will give the data transfer
-        responsiblity to the PLIB and come back and start doing other
+        responsibility to the PLIB and come back and start doing other
         activities, SPI Data transaction will happen in the corresponding ISR.
         in this mode, the transmit data locations provided by user 
         must remain valid until the data transfer is complete.

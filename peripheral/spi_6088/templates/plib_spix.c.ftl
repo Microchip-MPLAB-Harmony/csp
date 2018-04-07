@@ -180,15 +180,31 @@ bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void*
     
     /* Verify the request */
     if((((txSize > 0) && (NULL != pTransmitData)) || ((rxSize > 0) && (NULL != pReceiveData))) && (false == spi${SPI_INDEX?string}Obj.transferIsBusy))
-    {       
+    {   
         isRequestAccepted = true;
         spi${SPI_INDEX?string}Obj.txBuffer = pTransmitData;
         spi${SPI_INDEX?string}Obj.rxBuffer = pReceiveData;
         spi${SPI_INDEX?string}Obj.rxCount = 0;
         spi${SPI_INDEX?string}Obj.txCount = 0;
         spi${SPI_INDEX?string}Obj.dummySize = 0;
-        spi${SPI_INDEX?string}Obj.txSize = txSize;
-        spi${SPI_INDEX?string}Obj.rxSize = rxSize;
+        if (NULL != pTransmitData)
+        {
+            spi${SPI_INDEX?string}Obj.txSize = txSize;
+        }
+        else
+        {
+            spi${SPI_INDEX?string}Obj.txSize = 0;
+        }
+        
+        if (NULL != pReceiveData)
+        {
+            spi${SPI_INDEX?string}Obj.rxSize = rxSize;
+        }
+        else
+        {
+            spi${SPI_INDEX?string}Obj.rxSize = 0;
+        }
+        
         spi${SPI_INDEX?string}Obj.transferIsBusy = true;        
         spi${SPI_INDEX?string}Obj.status = SPI_ERROR_NONE;
         
@@ -252,7 +268,7 @@ bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void*
 bool SPI${SPI_INDEX?string}_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
-    if (0 == setup->clockFrequency)
+    if ((NULL == setup) || (0 == setup->clockFrequency))
 	{
 		return false;
 	}
