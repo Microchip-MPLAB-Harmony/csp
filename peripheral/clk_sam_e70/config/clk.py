@@ -134,7 +134,7 @@ def mainClock(clkComponent, clkSymMenu, pmcRegModule, updateExtXtalEnable):
     # create symbol for MOSCRCF Bitfield of CKGR_MOR Register
     clkSymRCFreq = clkComponent.createComboSymbol("PMC_CKGR_MOR_MOSCRCF", clkSymRCEnable, pmcValGrp_CKGR_MOR_MOSCRCF.getValueNames())
     clkSymRCFreq.setLabel(pmcBitField_CKGR_MOR_MOSCRCF.getDescription())
-    clkSymRCFreq.setDefaultValue("_12_MHz")
+    clkSymRCFreq.setDefaultValue("12_MHz")
 
     # get MOSCXTBY Bitfield of CKGR_MOR Register
     pmcBitField_CKGR_MOR_MOSCXTBY = pmcReg_CKGR_MOR.getBitfield("MOSCXTBY")
