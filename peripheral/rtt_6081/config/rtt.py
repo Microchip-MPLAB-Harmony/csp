@@ -48,8 +48,13 @@ def instantiateComponent(rttComponent):
 	rttPrescaleValue.setDefaultValue(32768)
 	rttPrescaleValue.setDependencies(rttPrescaleHide, ["rttRTC1HZ"])
 	
+	rttPrescaleValueWarning = rttComponent.createCommentSymbol("rttRTPRESWarning", rttMenu)
+	rttPrescaleValueWarning.setVisible(False)
+	rttPrescaleValueWarning.setLabel("******* RTT Prescale value of 1 or 2 is invalid")
+	rttPrescaleValueWarning.setDependencies(rttPrescaleWarning, ["rttRTPRES"])
+	
 	rttFreq = rttComponent.createStringSymbol("rttFREQ", rttMenu)
-	rttFreq.setLabel("RTT period in seconds")
+	rttFreq.setLabel("RTT Counter Clock Resolution(seconds)")
 	rttFreq.setDependencies(rttFreq_cal, ["rttRTC1HZ", "rttRTPRES"])
 	rttFreq.setDefaultValue(str(1))
 	rttFreq.setReadOnly(True)
@@ -120,7 +125,13 @@ def	rttFreq_cal(rttFreq, event):
 			rttData = str(float(65536) / 32768)
 			rttFreq.clearValue("rttFREQ")
 			rttFreq.setValue(str(rttData),2)
-		else:
+		elif rttPres > 2:
 			rttData = str(float(rttPres) / 32768)
 			rttFreq.clearValue("rttFREQ")
 			rttFreq.setValue(str(rttData),2)
+			
+def rttPrescaleWarning(comment, prescale):
+	if prescale["value"] == 1 or prescale["value"] == 2:
+		comment.setVisible(True)
+	else :
+		comment.setVisible(False)
