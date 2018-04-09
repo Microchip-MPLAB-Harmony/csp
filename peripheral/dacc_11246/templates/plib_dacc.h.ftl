@@ -42,6 +42,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #ifndef PLIB_DACC${INDEX?string}_H
 #define PLIB_DACC${INDEX?string}_H
 
+#include "device.h"
 #include "plib_dacc.h"
 
 // DOM-IGNORE-BEGIN
