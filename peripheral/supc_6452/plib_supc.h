@@ -114,14 +114,16 @@ void SUPCx_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-	void SUPCx_EnterSleepMode( void );
+	void SUPCx_SleepModeEnter( void );
 
   Summary:
 	Puts the device in Sleep mode 
    
   Description:
-    This functions is used to put the device in sleep mode to optimize power consumption. 
-    In this mode, only the core clock is stopped and peripheral clock remains enabled.	
+    This functions is used to put the device in sleep mode to optimize power 
+    consumption. 
+    In this mode, only the core clock is stopped and peripheral clock remains 
+    enabled.	
     
 	Processor wake-up is triggered by an interrupt.
 	
@@ -137,7 +139,7 @@ void SUPCx_Initialize (void);
   Example:
   	<code>
      
-    SUPC0_EnterSleepMode();
+    SUPC0_SleepModeEnter();
 	
     </code>
 
@@ -146,36 +148,40 @@ void SUPCx_Initialize (void);
 
 */
 
-void SUPCx_EnterSleepMode( void );
-
+void SUPCx_SleepModeEnter (void);
 
 // *****************************************************************************
 /* Function:
-	void SUPCx_EnterWaitMode(WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source);
+	void SUPCx_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, 
+                              WAITMODE_WKUP_SOURCE source);
 
   Summary:
 	Puts the device in Wait mode 
    
   Description:
-    The purpose of Wait mode is to achieve very low power consumption while maintaining the whole device in a
-    powered state for a startup time of less than 10 μs.
+    The purpose of Wait mode is to achieve very low power consumption while 
+    maintaining the whole device in a powered state for a startup time of less 
+    than 10 μs.
     
-	In Wait mode, the clocks of the core, peripherals and memories are stopped. However, the core, peripherals and
-    memories power supplies are still powered. The Flah
-
-	When entering Wait mode, the embedded Flash can be placed in one of the low-power modes (Deep-power-down
-	or Standby mode). 
+	In Wait mode, the clocks of the core, peripherals and memories are stopped. 
+    However, the core, peripherals and memories power supplies are still 
+    powered.
+    
+	When entering Wait mode, the embedded Flash can be placed in one of the 
+    low-power modes (Deep-power-down or Standby mode). 
 	
-	Exit from Backup mode occurs as a result of one of the following enabled wake-up events:
+	Exit from Backup mode occurs as a result of one of the following enabled 
+    wake-up events:
 	 WKUP0–13 pins 
 	 RTC alarm
 	 RTT alarm
 	 USB
 	 GMAC	
 	
-	A fast startup is enabled upon the detection of a programmed level on one of the 14 wake-up inputs (WKUP) or
-	upon an active alarm from the RTC, RTT and USB Controller. The polarity of the 14 wake-up inputs is
-	programmable by writing the PMC Fast Startup Polarity register (PMC_FSPR)
+	A fast startup is enabled upon the detection of a programmed level on one of
+    the 14 wake-up inputs (WKUP) or upon an active alarm from the RTC, RTT and 
+    USB Controller. The polarity of the 14 wake-up inputs is programmable by 
+    writing the PMC Fast Startup Polarity register (PMC_FSPR).
 	
   Precondition:
     The peripherals (RTT, RTC etc) must be configured to generate wake-up event.
@@ -189,7 +195,7 @@ void SUPCx_EnterSleepMode( void );
   Example:
   	<code>
      
-    SUPC0_EnterWaitMode(PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN, WAITMODE_WKUP_RTC);
+    SUPC0_WaitModeEnter (PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN, WAITMODE_WKUP_RTC);
 	
     </code>
 
@@ -198,31 +204,35 @@ void SUPCx_EnterSleepMode( void );
 
 */
 
-void SUPCx_EnterWaitMode(WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source);
+void SUPCx_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source);
 
 // *****************************************************************************
 /* Function:
-	void SUPCx_EnterBackupMode(void);
+	void SUPCx_BackupModeEnter (void);
 
   Summary:
 	Puts the device in Backup mode 
    
   Description:
-	The purpose of Backup mode is to achieve the lowest power consumption possible in a system which is
-	performing periodic wake-ups to perform tasks but not requiring fast startup time..
+	The purpose of Backup mode is to achieve the lowest power consumption 
+    possible in a system which is performing periodic wake-ups to perform tasks 
+    but not requiring fast startup time.
     
-	The Supply Controller, zero-power power-on reset, RTT, RTC, backup SRAM, backup registers and 32 kHz
-	oscillator (RC or crystal oscillator selected by software in the Supply Controller) are running. The regulator and the
-	core supply are off.
+	The Supply Controller, zero-power power-on reset, RTT, RTC, backup SRAM, 
+    backup registers and 32 kHz	oscillator (RC or crystal oscillator selected by
+    software in the Supply Controller) are running. The regulator and the core 
+    supply are off.
 
-	Exit from Backup mode occurs as a result of one of the following enabled wake-up events and it causes device reset:
+	Exit from Backup mode occurs as a result of one of the following enabled 
+    wake-up events and it causes device reset:
 	 WKUP0–13 pins (level transition, configurable debouncing)
 	 Supply Monitor alarm
 	 RTC alarm
 	 RTT alarm
 
   Precondition:
-    The peripherals (Supply Monitor, RTT, RTC etc) must be configured to generate wake-up event.
+    The peripherals (Supply Monitor, RTT, RTC etc) must be configured to 
+    generate wake-up event.
 
   Parameters:
     None
@@ -233,7 +243,7 @@ void SUPCx_EnterWaitMode(WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE so
   Example:
   	<code>
      
-    SUPC0_EnterBackupMode();
+    SUPC0_BackupModeEnter ();
 	
     </code>
 
@@ -242,7 +252,77 @@ void SUPCx_EnterWaitMode(WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE so
 
 */
 
-void SUPCx_EnterBackupMode(void);
+void SUPCx_BackupModeEnter (void);
+
+// *****************************************************************************
+/* Function:
+	uint32_t SUPCx_GPBRRead (GPBR_REGS_INDEX reg)
+
+  Summary:
+	This API helps to read the General Purpose Backup Register(GPBR)
+   
+  Description:
+    This functions is used to read the data available in GPBR register when the 
+    device wakeup from Low power modes.
+    
+  Precondition:
+    None
+
+  Parameters:
+    reg - helps to know which GPBR register
+
+  Returns:
+   32 bit data available in specified GPBR register
+
+  Example:
+  	<code>
+    
+    uint32_t i;
+    i = SUPC0_GPBRRead (GPBR_REGS_2);
+	
+    </code>
+
+  Remarks:
+    None.
+
+*/
+
+uint32_t SUPCx_GPBRRead (GPBR_REGS_INDEX reg);
+
+// *****************************************************************************
+/* Function:
+	void SUPCx_GPBRWrite (GPBR_REGS_INDEX reg, uint32_t data)
+
+  Summary:
+	This API helps to read the General Purpose Backup Register(GPBR)
+   
+  Description:
+    This functions is used to read the data available in GPBR register when the 
+    device wakeup from Low power modes.
+    
+  Precondition:
+    None
+
+  Parameters:
+    reg - helps to know which GPBR register
+    data - 32bit data to be stored into GPBR register
+
+  Returns:
+   None.
+
+  Example:
+  	<code>
+    
+    SUPC0_GPBRWrite(GPBR_REGS_2, 0x12345678);
+	
+    </code>
+
+  Remarks:
+    None.
+
+*/
+
+void SUPCx_GPBRWrite (GPBR_REGS_INDEX reg, uint32_t data);
 
 // *****************************************************************************
 /* Function:
@@ -289,8 +369,6 @@ void SUPCx_EnterBackupMode(void);
 */
 
 void SUPCx_CallbackRegister (SUPC_CALLBACK callback, uintptr_t context);
-
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

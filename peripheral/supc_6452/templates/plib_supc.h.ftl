@@ -62,13 +62,28 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 // *****************************************************************************
 // *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+
+typedef enum {
+    <#list 0..(SYS_GPBR_REGISTER-1) as i>
+    GPBR_REGS_${i},
+    </#list>
+} GPBR_REGS_INDEX;
+
+// *****************************************************************************
+// *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-void SUPC${INDEX?string}_Initialize (void );
-void SUPC${INDEX?string}_EnterSleepMode( void );
-void SUPC${INDEX?string}_EnterWaitMode(WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source);
-void SUPC${INDEX?string}_EnterBackupMode(void);
+
+void SUPC${INDEX?string}_Initialize (void);
+void SUPC${INDEX?string}_SleepModeEnter (void);
+void SUPC${INDEX?string}_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source);
+void SUPC${INDEX?string}_BackupModeEnter (void);
+uint32_t SUPC${INDEX?string}_GPBRRead (GPBR_REGS_INDEX reg);
+void SUPC${INDEX?string}_GPBRWrite(GPBR_REGS_INDEX reg, uint32_t data);
 
 extern void	CLK_Initialize(void);
 

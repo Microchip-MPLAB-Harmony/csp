@@ -176,6 +176,13 @@ def instantiateComponent(supcComponent):
     supcSym_WKUP_Inputs.setDefaultValue(14)
 
     #------------------------- ATDF Read -------------------------------------
+    GPBR = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"GPBR\"]/register-group@[name=\"GPBR\"]/register")
+    GPBRRegNum = GPBR.getAttribute("count")
+
+    gpbrSym_SYSGPBR = supcComponent.createIntegerSymbol("SYS_GPBR_REGISTER", None)
+    gpbrSym_SYSGPBR.setVisible(False)
+    gpbrSym_SYSGPBR.setDefaultValue(int(GPBRRegNum))
+    
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
     availablePins = []        # array to save available pins
     signal = [False, False, False, False, False, False, False, False, False, False, False, False, False, False] #array to save available signals
