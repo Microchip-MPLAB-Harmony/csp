@@ -56,11 +56,11 @@ typedef enum
 {
     /* Input data is valid on clock trailing edge and
     output data is ready on leading edge */
-    SPI_CLOCK_PHASE_DATA_VALID_ON_TRAILING_EDGE,
+    SPI_CLOCK_PHASE_TRAILING_EDGE,
     
     /* Input data is valid on clock leading edge and
     output data is ready on trailing edge */
-    SPI_CLOCK_PHASE_DATA_VALID_ON_LEADING_EDGE
+    SPI_CLOCK_PHASE_LEADING_EDGE
     
 }SPI_CLOCK_PHASE;
 
@@ -237,7 +237,7 @@ void SPIx_Initialize (void);
              list of elements to be setup for a client.
   
   Returns:
-    true:   if setup was succesfull, API returns true.
+    true:   if setup was successful, API returns true.
     false:  if spiSourceClock and spi clock frequencies are such that resultant
             SCBR value is out of the possible range, then API returns false.
     
@@ -245,12 +245,12 @@ void SPIx_Initialize (void);
     <code> 
         SPI_TRANSFER_SETUP setup;
         setup.clockFrequency = 1000000;
-        setup.clockPhase = SPI_CLOCK_PHASE_DATA_VALID_ON_TRAILING_EDGE;
+        setup.clockPhase = SPI_CLOCK_PHASE_TRAILING_EDGE;
         setup.clockPolarity = SPI_CLOCK_POLARITY_IDLE_LOW;
         setup.dataBits = SPI_DATA_BITS_8;
         
         // Assuming 150 MHz as peripheral Master clock frequency
-        if (false == SPI1_TransferSetup (&setup, 150000000))
+        if (SPI1_TransferSetup (&setup, 150000000) == false)
         {
             // this means setup could not be done, debug the reason.
         }
@@ -296,7 +296,7 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
         option is selected in GUI, the generated code for that
         particular SPI PLIB instance will be Non-blocking in nature. In this
         particular mode, application will give the data transfer
-        responsiblity to the PLIB and come back and start doing other
+        responsibility to the PLIB and come back and start doing other
         activities, SPI Data transaction will happen in the corresponding ISR.
         in this mode, the transmit and receive data locations provided by user 
         must remain valid until the data transfer is complete.
@@ -357,7 +357,7 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
     void APP_SPITransferHandler(void* context)
     {
-        if( SPI_ERROR_NONE == SPI1_ErrorGet())
+        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
             Transfer was completed without error, do something else now.
         }
@@ -449,7 +449,7 @@ bool SPIx_WriteRead(
 
     void APP_SPITransferHandler(void* context)
     {
-        if( SPI_ERROR_NONE == SPI1_ErrorGet())
+        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
             Transfer was completed without error, do something else now.
         }
@@ -489,7 +489,7 @@ bool SPIx_Write(void* pTransmitData, size_t txSize);
         option is selected in GUI, the generated code for that
         particular SPI PLIB instance will be Non-blocking in nature. In this
         particular mode, application will give the data transfer
-        responsiblity to the PLIB and come back and start doing other
+        responsibility to the PLIB and come back and start doing other
         activities, SPI Data transaction will happen in the corresponding ISR.
         in this mode, the receive data locations provided by user 
         must remain valid until the data transfer is complete.
@@ -539,7 +539,7 @@ bool SPIx_Write(void* pTransmitData, size_t txSize);
 
     void APP_SPITransferHandler(void* context)
     {
-        if( SPI_ERROR_NONE == SPI1_ErrorGet())
+        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
             Transfer was completed without error, do something else now.
         }
@@ -561,7 +561,7 @@ bool SPIx_Read(void* pReceiveData, size_t rxSize);
     Returns transfer status of SPI x
     
   Description:
-    This function returns transfer status of last succesfull Write, Read or
+    This function returns transfer status of last successful Write, Read or
     WriteRead request on SPI x module in interrupt mode.
   
   Precondition:
@@ -572,12 +572,12 @@ bool SPIx_Read(void* pReceiveData, size_t rxSize);
   
   Returns:
     Returns the current status of transfer happening on SPI x.
-        true:  Transfer is completed
-        false: Transfer is still in progress
+        true:  Transfer is still in progress
+        false: Transfer is completed
     
   Example:
     <code>
-        if (false == SPI1_IsBusy())
+        if (SPI1_IsBusy() == false)
         {
             //Data Transfer is complete, do something else.
         }
@@ -612,7 +612,7 @@ bool SPIx_IsBusy (void):
 
   Example:
     <code>
-    if (SPI_ERROR_OVERRUN == SPI1_ErrorGet())
+    if (SPI1_ErrorGet() == SPI_ERROR_OVERRUN)
     {
         //Handle overrun error here
     }
@@ -653,7 +653,7 @@ SPI_ERROR SPIx_ErrorGet( void );
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
     void APP_SPITransferHandler(void* context)
     {
-        if( SPI_ERROR_NONE == SPI1_ErrorGet())
+        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
             Transfer was completed without error, do something else now.
         }
@@ -727,7 +727,7 @@ typedef  void (*SPI_CALLBACK) (void* context);
 
     void APP_SPITransferHandler(void* context)
     {
-        if( SPI_ERROR_NONE == SPI1_ErrorGet())
+        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
             Transfer was completed without error, do something else now.
         }

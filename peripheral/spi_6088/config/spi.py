@@ -4,24 +4,37 @@ def ClockInterruptStatusWarning(symbol, event):
        symbol.setVisible(True)
    else:
        symbol.setVisible(False)
-    
+       
+def ClockModeInfo(symbol, event):
+    CPHA = Database.getSymbolValue("spi" + str(spiInstance), "SPI_CSR_NCPHA")
+    CPOL = Database.getSymbolValue("spi" + str(spiInstance), "SPI_CSR_CPOL")
+    if (CPOL == 0) and (CPHA == 0):
+        symbol.setLabel("SPI Mode 0 is Selected")
+    elif (CPOL == 0) and (CPHA == 1):
+        symbol.setLabel("SPI Mode 1 is Selected")
+    elif (CPOL == 1) and (CPHA == 0):
+        symbol.setLabel("SPI Mode 2 is Selected")
+    else:
+        symbol.setLabel("SPI Mode 3 is Selected")
+   
+   
 def setuspiSym_CSRterruptHandler(spiInterrupt, event): 
-    global NVICVector
-    global NVICHandler
-    global NVICHandlerLock
+    global spiSymNVICVector
+    global spiSymNVICHandler
+    global spiSymNVICHandlerLock
     global spiSymIntEnComment  
         
     if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 1)
-        Database.setSymbolValue("core", NVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
-        Database.setSymbolValue("core", NVICHandlerLock, True, 1)
+        Database.setSymbolValue("core", spiSymNVICVector, True, 1)
+        Database.setSymbolValue("core", spiSymNVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
+        Database.setSymbolValue("core", spiSymNVICHandlerLock, True, 1)
     else :
-        Database.setSymbolValue("core", NVICVector, False, 1)
-        Database.setSymbolValue("core", NVICHandler, "SPI" + str(spiInstance) + "_Handler", 1)
-        Database.setSymbolValue("core", NVICHandlerLock, False, 1)
+        Database.setSymbolValue("core", spiSymNVICVector, False, 1)
+        Database.setSymbolValue("core", spiSymNVICHandler, "SPI" + str(spiInstance) + "_Handler", 1)
+        Database.setSymbolValue("core", spiSymNVICHandlerLock, False, 1)
     
     # control warning message
-    if (spiInterrupt.getValue() == True and Database.getSymbolValue("core", NVICVector) == False):
+    if (spiInterrupt.getValue() == True and Database.getSymbolValue("core", spiSymNVICVector) == False):
         spiSymIntEnComment.setVisible(True)
     else:
         spiSymIntEnComment.setVisible(False)
@@ -57,32 +70,26 @@ def calculateCSRIndex(spiSymCSRIndex, event):
     spiSymCSRIndex.setValue(int(event["symbol"].getKey(event["value"])[-1]), 1)
     
         
-spiRegModule = Register.getRegisterModule("SPI")
-spiRegGroup = spiRegModule.getRegisterGroup("SPI")
+spiBitField_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_MR"]/bitfield@[name="MSTR"]')
+spiValGrp_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_MR__MSTR"]')
 
-spiReg_MR = spiRegGroup.getRegister("SPI_MR")
-spiBitField_MR_MSTR = spiReg_MR.getBitfield("MSTR")
-spiValGrp_MR_MSTR = spiRegModule.getValueGroup(spiBitField_MR_MSTR.getValueGroupName())
+spiBitField_MR_PCS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_MR"]/bitfield@[name="PCS"]')
+spiValGrp_MR_PCS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_MR__PCS"]')
 
-spiBitField_MR_PCS = spiReg_MR.getBitfield("PCS")
-spiValGrp_MR_PCS = spiRegModule.getValueGroup(spiBitField_MR_PCS.getValueGroupName())
+spiBitField_CSR_BITS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_CSR"]/bitfield@[name="BITS"]')
+spiValGrp_CSR_BITS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_CSR__BITS"]')
 
+spiBitField_CSR_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_CSR"]/bitfield@[name="CPOL"]')
+spiValGrp_CSR_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_CSR__CPOL"]')
 
-spiReg_CSR = spiRegGroup.getRegister("SPI_CSR")
-spiBitField_CSR_BITS = spiReg_CSR.getBitfield("BITS")
-spiValGrp_CSR_BITS = spiRegModule.getValueGroup(spiBitField_CSR_BITS.getValueGroupName())
-
-spiBitField_CSR_CPOL = spiReg_CSR.getBitfield("CPOL")
-spiValGrp_CSR_CPOL = spiRegModule.getValueGroup(spiBitField_CSR_CPOL.getValueGroupName())
-
-spiBitField_CSR_NCPHA = spiReg_CSR.getBitfield("NCPHA")
-spiValGrp_CSR_NCPHA = spiRegModule.getValueGroup(spiBitField_CSR_NCPHA.getValueGroupName())
+spiBitField_CSR_NCPHA = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_CSR"]/bitfield@[name="NCPHA"]')
+spiValGrp_CSR_NCPHA = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_CSR__NCPHA"]')
 
 def instantiateComponent(spiComponent):
     global spiInstance
-    global NVICVector
-    global NVICHandler
-    global NVICHandlerLock
+    global spiSymNVICVector
+    global spiSymNVICHandler
+    global spiSymNVICHandlerLock
     global InternalNVICVectorChange
     
     InternalNVICVectorChange = False
@@ -91,9 +98,9 @@ def instantiateComponent(spiComponent):
     
     peripId = Interrupt.getInterruptIndex("SPI" + str(spiInstance))
     #IDs used in NVIC Manager
-    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+    spiSymNVICVector = "NVIC_" + str(peripId) + "_ENABLE"
+    spiSymNVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
+    spiSymNVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
     
     # Enable clock for SPI
     Database.setSymbolValue("core", "PMC_ID_SPI" + str(spiInstance), True, 1)
@@ -107,34 +114,38 @@ def instantiateComponent(spiComponent):
     #By Default interrupt mode is enabled and corresponding information is passed to NVIC manager
     spiInterrupt.setDefaultValue(True)
     spiInterrupt.setDependencies(setuspiSym_CSRterruptHandler, ["SPI_INTERRUPT_MODE"])
-    Database.setSymbolValue("core", NVICVector, True, 1)
-    Database.setSymbolValue("core", NVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
-    Database.setSymbolValue("core", NVICHandlerLock, True, 1)   
+    Database.setSymbolValue("core", spiSymNVICVector, True, 1)
+    Database.setSymbolValue("core", spiSymNVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
+    Database.setSymbolValue("core", spiSymNVICHandlerLock, True, 1)   
     
     spiSym_MR_MSTR = spiComponent.createKeyValueSetSymbol("SPI_MR_MSTR", None)
-    spiSym_MR_MSTR.setLabel(spiBitField_MR_MSTR.getDescription())
+    spiSym_MR_MSTR.setLabel(spiBitField_MR_MSTR.getAttribute("caption"))
     spiSym_MR_MSTR.setOutputMode("Key")
     spiSym_MR_MSTR.setDisplayMode("Description")
     spiSym_MR_MSTR.setDefaultValue(0)
     spiSym_MR_MSTR.setReadOnly(True)
 
-    count = spiValGrp_MR_MSTR.getValueCount()
+    count = 2
     for id in range(0,count):
-        valueName = spiValGrp_MR_MSTR.getValueNames()[id]
-        spiSym_MR_MSTR.addKey(valueName, spiValGrp_MR_MSTR.getValue(valueName).getValue(), spiValGrp_MR_MSTR.getValue(valueName).getDescription())
+        valueName = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("name")
+        value = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("value")
+        description = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("caption")
+        spiSym_MR_MSTR.addKey(valueName, value, description)
     
-    DefaultPCS = 2 
+    DefaultPCS = 0 
     spiSym_MR_PCS = spiComponent.createKeyValueSetSymbol("SPI_MR_PCS", None)
-    spiSym_MR_PCS.setLabel(spiBitField_MR_PCS.getDescription())
+    spiSym_MR_PCS.setLabel(spiBitField_MR_PCS.getAttribute("caption"))
     spiSym_MR_PCS.setOutputMode("Key")
     spiSym_MR_PCS.setDisplayMode("Key")
     spiSym_MR_PCS.setDefaultValue(DefaultPCS)
     spiSym_MR_PCS.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
 
-    count = spiValGrp_MR_PCS.getValueCount()
+    count = 4
     for id in range(0,count):
-        valueName = spiValGrp_MR_PCS.getValueNames()[id]
-        spiSym_MR_PCS.addKey(valueName, spiValGrp_MR_PCS.getValue(valueName).getValue(), spiValGrp_MR_PCS.getValue(valueName).getDescription())       
+        valueName = spiValGrp_MR_PCS.getChildren()[id].getAttribute("name")
+        value = spiValGrp_MR_PCS.getChildren()[id].getAttribute("value")
+        description = spiValGrp_MR_PCS.getChildren()[id].getAttribute("caption")
+        spiSym_MR_PCS.addKey(valueName, value, description)      
     
     defaultIndex = int(spiSym_MR_PCS.getKey(DefaultPCS)[-1])    
     # internal symbol, used to pass CSR register index to SPI FTL
@@ -165,48 +176,60 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE", "core.MASTERCLK_FREQ"])      
     
     spiSym_CSR_BITS = spiComponent.createKeyValueSetSymbol("SPI_CSR_BITS", None)
-    spiSym_CSR_BITS.setLabel(spiBitField_CSR_BITS.getDescription())
+    spiSym_CSR_BITS.setLabel(spiBitField_CSR_BITS.getAttribute("caption"))
     spiSym_CSR_BITS.setOutputMode("Key")
     spiSym_CSR_BITS.setDisplayMode("Description")
-    spiSym_CSR_BITS.setDefaultValue(8)
+    spiSym_CSR_BITS.setDefaultValue(0)
     spiSym_CSR_BITS.setVisible(True)
     
-    count = spiValGrp_CSR_BITS.getValueCount()
+    count = 9
     for id in range(0,count):
-        valueName = spiValGrp_CSR_BITS.getValueNames()[id]
-        spiSym_CSR_BITS.addKey(valueName, spiValGrp_CSR_BITS.getValue(valueName).getValue(), spiValGrp_CSR_BITS.getValue(valueName).getDescription())
+        valueName = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("name")
+        value = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("value")
+        description = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("caption")
+        spiSym_CSR_BITS.addKey(valueName, value, description)
+        
         
     spiSym_CSR_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CSR_CPOL", None)
-    spiSym_CSR_CPOL.setLabel(spiBitField_CSR_CPOL.getDescription())
+    spiSym_CSR_CPOL.setLabel(spiBitField_CSR_CPOL.getAttribute("caption"))
     spiSym_CSR_CPOL.setOutputMode("Key")
     spiSym_CSR_CPOL.setDisplayMode("Description")
-    spiSym_CSR_CPOL.setDefaultValue(1)
+    spiSym_CSR_CPOL.setDefaultValue(0)
     spiSym_CSR_CPOL.setVisible(True)
     
-    count = spiValGrp_CSR_CPOL.getValueCount()
+    count = 2
     for id in range(0,count):
-        valueName = spiValGrp_CSR_CPOL.getValueNames()[id]
-        spiSym_CSR_CPOL.addKey(valueName, spiValGrp_CSR_CPOL.getValue(valueName).getValue(), spiValGrp_CSR_CPOL.getValue(valueName).getDescription())
+        valueName = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("name")
+        value = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("value")
+        description = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("caption")
+        spiSym_CSR_CPOL.addKey(valueName, value, description)
     
     spiSym_CSR_NCPHA = spiComponent.createKeyValueSetSymbol("SPI_CSR_NCPHA", None)
-    spiSym_CSR_NCPHA.setLabel(spiBitField_CSR_NCPHA.getDescription())
+    spiSym_CSR_NCPHA.setLabel(spiBitField_CSR_NCPHA.getAttribute("caption"))
     spiSym_CSR_NCPHA.setOutputMode("Key")
     spiSym_CSR_NCPHA.setDisplayMode("Description")
-    spiSym_CSR_NCPHA.setDefaultValue(1)
+    spiSym_CSR_NCPHA.setDefaultValue(0)
     spiSym_CSR_NCPHA.setVisible(True)
     
-    count = spiValGrp_CSR_NCPHA.getValueCount()
+    count = 2
     for id in range(0,count):
-        valueName = spiValGrp_CSR_NCPHA.getValueNames()[id]
-        spiSym_CSR_NCPHA.addKey(valueName, spiValGrp_CSR_NCPHA.getValue(valueName).getValue(), spiValGrp_CSR_NCPHA.getValue(valueName).getDescription())
+        valueName = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("name")
+        value = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("value")
+        description = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("caption")
+        spiSym_CSR_NCPHA.addKey(valueName, value, description)
      
-     
+    spiSymClockModeComment = spiComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", None)
+    spiSymClockModeComment.setVisible(True)
+    spiSymClockModeComment.setLabel("SPI Mode 0 is Selected")
+    spiSymClockModeComment.setDependencies(ClockModeInfo, ["SPI_CSR_CPOL","SPI_CSR_NCPHA"])
+
+    
     # Dependency Status for interrupt
     global spiSymIntEnComment
     spiSymIntEnComment = spiComponent.createCommentSymbol("SPI" + str(spiInstance) + "_NVIC_ENABLE_COMMENT", None)
     spiSymIntEnComment.setVisible(False)
     spiSymIntEnComment.setLabel("Warning!!! SPI" + str(spiInstance) + " Interrupt is Disabled in Interrupt Manager")
-    spiSymIntEnComment.setDependencies(ClockInterruptStatusWarning, ["core." + NVICVector])
+    spiSymIntEnComment.setDependencies(ClockInterruptStatusWarning, ["core." + spiSymNVICVector])
     
     # Dependency Status for clock
     spiSymClkEnComment = spiComponent.createCommentSymbol("SPI" + str(spiInstance) + "_CLK_ENABLE_COMMENT", None)
