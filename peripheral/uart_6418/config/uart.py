@@ -99,8 +99,8 @@ def instantiateComponent(uartComponent):
 
     uartClkSrc = uartComponent.createKeyValueSetSymbol("UART_CLK_SRC", None)
     uartClkSrc.setLabel("Select Clock Source")
-    uartClkSrc.addKey("MCK", "0", "MCK")
-    uartClkSrc.addKey("PCK4", "1", "PCK4")
+    uartClkSrc.addKey("PERIPH_CLK", "0", "MCK")
+    uartClkSrc.addKey("PMC_PCK", "1", "PCK4")
     uartClkSrc.setDisplayMode("Description")
     uartClkSrc.setOutputMode("Key")
     uartClkSrc.setDefaultValue(0)

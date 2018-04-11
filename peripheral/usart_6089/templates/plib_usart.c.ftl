@@ -178,7 +178,7 @@ void USART${INDEX?string}_Initialize( void )
     USART${INDEX?string}_REGS->US_CR = (US_CR_TXEN_Msk | US_CR_RXEN_Msk);
 
     /* Configure USART${INDEX?string} mode */
-    USART${INDEX?string}_REGS->US_MR = ((${USART_MR_MODE9?then(1,0)} << US_MR_MODE9_Pos) | US_MR_CHRL_${USART_MR_CHRL} | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
+    USART${INDEX?string}_REGS->US_MR = ((US_MR_USCLKS_${USART_CLK_SRC}) | (${USART_MR_MODE9?then(1,0)} << US_MR_MODE9_Pos) | US_MR_CHRL_${USART_MR_CHRL} | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
 
     /* Configure USART${INDEX?string} Baud Rate */
     USART${INDEX?string}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
