@@ -77,7 +77,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 <#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT PIO_OD PIO_PU PIO_PD PIO_PER PIO_ABCD1
                        PIO_ABCD2 PIO_INT_TYPE PIO_INT_EDGE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INT_FE_LL PIO_INTERRUPT>
-    <#lt>   /************************ PORT ${PIO_PORT} Initialization ************************/
+    <#lt>   /************************ PIO ${PIO_PORT} Initialization ************************/
     <#if (PIO_ABCD1 != "0x00000000") | (PIO_ABCD2 != "0x00000000")>
         <#lt>   /* PORT${PIO_PORT} Peripheral Function Selection */
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[0]= ${PIO_ABCD1};
@@ -107,6 +107,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>   /* PORT${PIO_PORT} Output Direction Enable */
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = ${PIO_DIR};
     </#if>
+         <#lt>   /* PORT${PIO_PORT} Output Write Enable */	
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
     <#if PIO_INTERRUPT == true>
         <#if PIO_INT_TYPE != "0x00000000">
             <#lt>   /* PORT${PIO_PORT} Additional interrupt mode Enable */
@@ -139,8 +141,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>   /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
         <#lt>      by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
     </#if>
-        <#lt>   /* PORT${PIO_PORT} Output Write Enable */	
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
 </#macro>
 
 <#macro PIO_INT_CALLBACK PIO_PORT PORT_NUM_INT_PINS PIO_INTERRUPT>
@@ -329,7 +329,7 @@ void PIO_Initialize ( void )
     uint32_t PIO_PortRead ( PIO_PORT port )
 
   Summary:
-    Read all the I/O lines of the selected port port.
+    Read all the I/O lines of the selected port.
   
   Description:
     This function reads the live data values on all the I/O lines of the
@@ -793,7 +793,7 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
 <#macro PIO_ISR_HANDLER PIO_CHANNEL>
 // *****************************************************************************
 /* Function:
-    void PORT${PIO_CHANNEL}_InterruptHandler (void)
+    void PIO${PIO_CHANNEL}_InterruptHandler (void)
 
   Summary:
     Interrupt handler for PORT${PIO_CHANNEL}.
@@ -805,7 +805,7 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
   Remarks:
     User should not call this function.
 */
-void PORT${PIO_CHANNEL}_InterruptHandler(void)
+void PIO${PIO_CHANNEL}_InterruptHandler(void)
 {
     /* Local PIO Interrupt Handler */
     _PIO_Interrupt_Handler(PIO_PORT_${PIO_CHANNEL});
