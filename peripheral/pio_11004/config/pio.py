@@ -18,22 +18,17 @@ def ClockInterruptStatusWarning(symbol, event):
 def NVICControl(pioNVIC, event):
     i = []
     # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
-    # Split the id name by "_" and put all the splitted names in the list "i"
+    # Split the id name by "_" and put all the split names in the list "i"
     i = event["id"].split("_")
     k = pioSymChannel.index(i[1])
-    
-    global pioSymNVICVector    
-    global pioSymNVICHandler
-    global pioSymNVICHandlerLock
-    global pioSymIntEnComment
 
     if (event["value"] == True):
         Database.setSymbolValue("core", pioSymNVICVector[k], True, 1)
-        Database.setSymbolValue("core", pioSymNVICHandler[k], "PORT" + i[1] + "_InterruptHandler", 1)
+        Database.setSymbolValue("core", pioSymNVICHandler[k], "PIO" + i[1] + "_InterruptHandler", 1)
         Database.setSymbolValue("core", pioSymNVICHandlerLock[k], True, 1)
     else :
         Database.setSymbolValue("core", pioSymNVICVector[k], False, 1)
-        Database.setSymbolValue("core", pioSymNVICHandler[k], "PORT" + i[1] + "_Handler", 1)
+        Database.setSymbolValue("core", pioSymNVICHandler[k], "PIO" + i[1] + "_Handler", 1)
         Database.setSymbolValue("core", pioSymNVICHandlerLock[k], False, 1)
 
     # show or hide the warning message depending on Interrupt enable/disable status from PIN Manager.
@@ -46,7 +41,7 @@ def NVICControl(pioNVIC, event):
 def setupInterrupt(portInterruptLocal, event):
     i = []
     # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
-    # Split the id name by "_" and put all the splitted names in the list "i"
+    # Split the id name by "_" and put all the split names in the list "i"
     i = event["id"].split("_")
 
     # 2nd element of the list is suppose to be the pin number which we want, get the channel name of that pin in J
@@ -78,7 +73,7 @@ def setupPort(usePortLocal, event):
     usePort[k].setValue(True, 1)
     portInterrupt[k].setVisible(True)
     #Enable Peripheral clock for respective PORT Channel in Clock Manager
-    Database.setSymbolValue("core", "PMC_ID_PORT" + event["value"], True, 1)
+    Database.setSymbolValue("core", "PMC_ID_PIO" + event["value"], True, 1)
 
 
 ###################################################################################################
@@ -216,8 +211,8 @@ for pinNumber in range(1, packagePinCount + 1):
 ################################# PORT Configuration related code #################################
 ###################################################################################################
 
-portConfiguration = coreComponent.createMenuSymbol("PORT_CONFIGURATION", pioEnable)
-portConfiguration.setLabel("Port Registers Configuration")
+portConfiguration = coreComponent.createMenuSymbol("PIO_CONFIGURATION", pioEnable)
+portConfiguration.setLabel("PIO Registers Configuration")
 
 global pioSymChannel
 pioSymChannel = ["A", "B", "C", "D", "E"]
@@ -261,17 +256,17 @@ pioSymIntEnComment = []
 for portNumber in range(0, len(pioSymChannel)):
 
     port.append(portNumber)
-    port[portNumber]= coreComponent.createMenuSymbol("PORT_CONFIGURATION" + str(portNumber), portConfiguration)
-    port[portNumber].setLabel("PORT " + pioSymChannel[portNumber] + " Configuration")
+    port[portNumber]= coreComponent.createMenuSymbol("PIO_CONFIGURATION" + str(portNumber), portConfiguration)
+    port[portNumber].setLabel("PIO " + pioSymChannel[portNumber] + " Configuration")
 
     usePort.append(portNumber)
     usePort[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_USED", port[portNumber])
-    usePort[portNumber].setLabel("Use PORT " + pioSymChannel[portNumber])
+    usePort[portNumber].setLabel("Use PIO " + pioSymChannel[portNumber])
     usePort[portNumber].setReadOnly(True)
 
     portInterrupt.append(portNumber)
     portInterrupt[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED", usePort[portNumber])
-    portInterrupt[portNumber].setLabel("Use Interrupt for PORT " + pioSymChannel[portNumber])
+    portInterrupt[portNumber].setLabel("Use Interrupt for PIO " + pioSymChannel[portNumber])
     portInterrupt[portNumber].setDefaultValue(False)
     portInterrupt[portNumber].setVisible(False)
     portInterrupt[portNumber].setReadOnly(True)
@@ -375,7 +370,7 @@ for portNumber in range(0, len(pioSymChannel)):
 
     #symbols and variables for interrupt handling
     pioSymPeripheralId.append(portNumber)
-    pioSymPeripheralId[portNumber] = Interrupt.getInterruptIndex("PORT" + str(pioSymChannel[portNumber]))
+    pioSymPeripheralId[portNumber] = Interrupt.getInterruptIndex("PIO" + str(pioSymChannel[portNumber]))
     pioSymNVICVector.append(portNumber)
     pioSymNVICVector[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_ENABLE"
     pioSymNVICHandler.append(portNumber)
@@ -387,15 +382,15 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSymIntEnComment.append(portNumber)
     pioSymIntEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_NVIC_ENABLE_COMMENT", pioMenu)
     pioSymIntEnComment[portNumber].setVisible(False)
-    pioSymIntEnComment[portNumber].setLabel("Warning!!! PORT" + str(pioSymChannel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
+    pioSymIntEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
     pioSymIntEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core." + pioSymNVICVector[portNumber]])
 
     # Dependency Status for clock
     pioSymClkEnComment.append(portNumber)
     pioSymClkEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_CLK_ENABLE_COMMENT", pioMenu)
     pioSymClkEnComment[portNumber].setVisible(False)
-    pioSymClkEnComment[portNumber].setLabel("Warning!!! PORT" + str(pioSymChannel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
-    pioSymClkEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core.PMC_ID_PORT" + str(pioSymChannel[portNumber])])
+    pioSymClkEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
+    pioSymClkEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core.PMC_ID_PIO" + str(pioSymChannel[portNumber])])
 
 
 # NVIC Dynamic settings
@@ -404,12 +399,12 @@ pioNVICControl.setDependencies(NVICControl, portInterruptList)
 pioNVICControl.setVisible(False)
 
 # Call "setupPort" function to update status of port Channel and its clock whenever there is any change in any of the pin status
-# index for "usePort[]" is used as 0 because it is irrelevent here. either of the values 0,1,2,3.. can be used here.
+# index for "usePort[]" is used as 0 because it is irrelevant here. either of the values 0,1,2,3.. can be used here.
 usePort[0].setDependencies(setupPort, pinChannelList)
 
 
 # Call "setupInterrupt" function to update status of port Channel interrupt whenever there is any change in any of the pin interrupt enable/disable status
-# index for "portInterrupt[]" is used as 0 because it is irrelevent here. either of the values 0,1,2,3.. can be used here.
+# index for "portInterrupt[]" is used as 0 because it is irrelevant here. either of the values 0,1,2,3.. can be used here.
 portInterrupt[0].setDependencies(setupInterrupt, pinInterruptList)
 
 pioSym_AFEC0_CHER = coreComponent.createStringSymbol("PIO_AFEC0_CHER_VALUE", portConfiguration)

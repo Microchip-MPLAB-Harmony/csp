@@ -1204,8 +1204,8 @@ uint32_t PIO_PortRead(PIO_PORT port);
 
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
-    value         - 32bit value which has to be written/driven on all the I/O
-                    lines of the selected port.
+    value      - 32bit value which has to be written/driven on all the I/O
+                 lines of the selected port.
   Returns:
     None.
 
@@ -1276,10 +1276,10 @@ uint32_t PIO_PortReadLatch ( PIO_PORT port );
 
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
-    mask          - A 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected port will be set.
-                    1's - Will set corresponding IO pins to high (to 1).
-                    0's - Will remain unchanged.
+    mask       - A 32 bit value in which positions of 0s and 1s decide
+                 which IO pins of the selected port will be set.
+                 1's - Will set corresponding IO pins to high (to 1).
+                 0's - Will remain unchanged.
   Returns:
     None.
 
@@ -1313,10 +1313,10 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask);
 
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
-    mask          - A 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected port will be cleared.
-                    1's - Will clear corresponding IO pins to low (to 0).
-                    0's - Will remain unchanged.
+    mask       - A 32 bit value in which positions of 0s and 1s decide
+                 which IO pins of the selected port will be cleared.
+                 1's - Will clear corresponding IO pins to low (to 0).
+                 0's - Will remain unchanged.
   Returns:
     None.
 
@@ -1350,10 +1350,10 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask);
 
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
-    mask          - A 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected port will be toggled.
-                    1's - Will toggle (invert) corresponding IO pins.
-                    0's - Will remain unchanged.
+    mask       - A 32 bit value in which positions of 0s and 1s decide
+                 which IO pins of the selected port will be toggled.
+                 1's - Will toggle (invert) corresponding IO pins.
+                 0's - Will remain unchanged.
   Returns:
     None.
 
@@ -1423,11 +1423,11 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask);
 
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
-    mask          - A 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected port will be setup as outputs.
-                    1's - Will set corresponding IO pins as output(s).
-                    0's - Will cause the direction of the corresponding IO pins
-                          to remain unchanged.
+    mask       - A 32 bit value in which positions of 0s and 1s decide
+                 which IO pins of the selected port will be setup as outputs.
+                 1's - Will set corresponding IO pins as output(s).
+                 0's - Will cause the direction of the corresponding IO pins
+                       to remain unchanged.
   Returns:
     None.
 
@@ -1500,7 +1500,7 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask);
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
     mask       - Is a 32 bit value in which positions of 0s and 1s decide
-                    which IO pins of the selected port will have interrupt
+                 which IO pins of the selected port will have interrupt
                  disabled.  The bit positions of mask value which are set as 1,
                  IO interrupt of corresponding IO pin of the selected port
                  will be disabled.  The bit positions of mask value which are
