@@ -80,6 +80,10 @@ bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address )
     {
     *((uint32_t *)( IFLASH_ADDR + ( page_number * IFLASH_PAGE_SIZE ) + i )) =    *(( data++ ));
     }
+	
+	__DSB();
+	__ISB();
+	
     /* Issue the FLASH write operation*/
     EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
