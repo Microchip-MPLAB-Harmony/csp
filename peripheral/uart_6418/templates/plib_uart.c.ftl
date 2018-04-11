@@ -178,7 +178,7 @@ void UART${INDEX?string}_Initialize( void )
     UART${INDEX?string}_REGS->UART_CR = (UART_CR_TXEN_Msk | UART_CR_RXEN_Msk);
 
     /* Configure UART${INDEX?string} mode */
-    UART${INDEX?string}_REGS->UART_MR = ((UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
+    UART${INDEX?string}_REGS->UART_MR = ((UART_MR_BRSRCCK_${UART_CLK_SRC}) | (UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
 
     /* Configure UART${INDEX?string} Baud Rate */
     UART${INDEX?string}_REGS->UART_BRGR = UART_BRGR_CD(${BRG_VALUE});
