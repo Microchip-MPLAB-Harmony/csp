@@ -27,16 +27,15 @@
 #define __XC32_SKIP_STARTUP_GPNVM_WAIT
 #endif
 
- /*
-  *  This startup code relies on features that are specific to the MPLAB XC32
-     toolchain. Do not use it with other toolchains.
-  */
+/*
+ *  This startup code relies on features that are specific to the MPLAB XC32
+ *  toolchain. Do not use it with other toolchains.
+ */
 #ifndef __XC32
 #warning This startup code is intended for use with the MPLAB XC32 Compiler only.
 #endif
 
 /* Initialize segments */
-extern uint32_t _sfixed;
 extern uint32_t __svectors;
 extern uint32_t _dinit_size;
 extern uint32_t _dinit_addr;
@@ -45,7 +44,7 @@ int main(void);
 extern void __attribute__((long_call)) __libc_init_array(void);
 
 /* Declaration of Reset handler (may be custom) */
-void Reset_Handler (void) __attribute__((optimize("-O1"), long_call));
+void __attribute__((weak, optimize("-O1"), long_call)) Reset_Handler(void);
 
 /* Device Vector information is available in interrupt.c file */
 
@@ -54,50 +53,62 @@ void Reset_Handler (void) __attribute__((optimize("-O1"), long_call));
 </#if>
 <#include "startup_xc32_${DeviceFamily}.c.ftl">
 
-/* Optional user-provided functions */
-// extern void __attribute__((weak,long_call)) _on_reset(void); // Harmony: present in this file
+/* Optional application-provided functions */
+extern void __attribute__((weak,long_call)) _on_reset(void);
 extern void __attribute__((weak,long_call)) _on_bootstrap(void);
 
-/**
- * This is the code that gets called at beginning of processor reset handler provided by XC32 startup code.
- * - Initializes the MPU regions
- */
-static void _on_reset(void)
-{
-}
+/* Reserved for use by the MPLAB XC32 Compiler */
+extern void __attribute__((weak,long_call)) __xc32_on_reset(void);
+extern void __attribute__((weak,long_call)) __xc32_on_bootstrap(void);
+
 
 /**
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
  */
-void Reset_Handler(void)
+void __attribute__((weak, optimize("-O1"), section(".text.Reset_Handler"), long_call)) Reset_Handler(void)
 {
     uint32_t *pSrc;
 
-    /* Call the optional user-provided _on_reset() function. */
-    _on_reset();
+    /* Call the optional application-provided _on_reset() function. */
+    if (_on_reset)
+    {
+        _on_reset();
+    }
+
+    /* Reserved for use by MPLAB XC32. */
+    if (__xc32_on_reset)
+      __xc32_on_reset();
+
+#if (__ARM_FP==14) || (__ARM_FP==4)
+    /* Enable the FPU iff the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
+    fpu_enable();
+#endif
+
+#if !defined(__XC32_SKIP_CACHE_INIT)
+    /* Enable Caches */
+# if (__ICACHE_PRESENT==1U)
+    ICache_Enable();
+#endif
+# if (__DCACHE_PRESENT==1U)
+    DCache_Enable();
+#endif
+#endif
 
     /* TCM config and init */
-#if ((__ITCM_PRESENT==1) && (__DTCM_PRESENT==1))
+#if (__ITCM_PRESENT==1)
 #  ifdef __XC32_ENABLE_TCM
     TCM_ConfigureSize();
     TCM_Enable();
 #  else
-/*  Define the __XC32_SKIP_STARTUP_GPNVM preprocessor macro when you do not
- *  want this code to modify the GPNVM bits at runtime.
- *  Define the __XC32_SKIP_STARTUP_GPNVM_WAIT preprocessor macro when you do
- *  not want the code to poll the FRDY bit before continuing.
- */
-#    if !defined(__XC32_SKIP_STARTUP_GPNVM)
-    TCM_ConfigureNoSize();
-#    endif /* !defined(__XC32_SKIP_STARTUP_GPNVM) */
     TCM_Disable();
 #  endif /* __XC32_ENABLE_TCM */
-#endif /* ((__ITCM_PRESENT==1) && (__DTCM_PRESENT==1)) */
-
+#endif /* (__ITCM_PRESENT==1) */
     /* Initialize data after TCM is enabled */
-    __pic32c_data_initialization();
 
+    /* Data initialization from the XC32 .dinit template */
+    __pic32c_data_initialization();
+    /* Move the stack to Data Tightly Coupled Memory (DTCM) */
 #if defined(__XC32_STACK_IN_TCM)
     __pic32c_TCM_StackInit();
 #endif
@@ -110,22 +121,6 @@ void Reset_Handler(void)
 #endif
 </#if>
 
-#if (__ARM_FP==14)
-    /* Enable the FPU iff the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
-    fpu_enable();
-#endif
-
-#if !defined(__XC32_SKIP_CACHE_INIT)
-    /* Enable Caches */
-#  if (__ICACHE_PRESENT==1U)
-    SCB_EnableICache();
-#  endif
-#  if (__DCACHE_PRESENT==1U)
-    SCB_EnableDCache();
-#  endif
-#endif
-
-#if !defined(__XC32_SKIP_STARTUP_VTOR_INIT)
 #  ifdef SCB_VTOR_TBLOFF_Msk
     /*  Set the vector-table base address. This may be in flash or TCM.
      *  The __svectors symbol is created by the XC32 linker.
@@ -133,7 +128,6 @@ void Reset_Handler(void)
     pSrc = (uint32_t *) & __svectors;
     SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 #  endif /* SCB_VTOR_TBLOFF_Msk */
-#endif /* __XC32_SKIP_STARTUP_VTOR_INIT */
 
     /* Initialize the C library */
     __libc_init_array();
@@ -144,10 +138,16 @@ void Reset_Handler(void)
         _on_bootstrap();
     }
 
-    /* Branch to main function */
+    /* Reserved for use by MPLAB XC32. */
+    if (__xc32_on_bootstrap)
+    {
+        __xc32_on_bootstrap();
+    }
+
+    /* Branch to application's main function */
     main();
 
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+#if (defined(__DEBUG) || defined(__DEBUG_D)) && defined(__THUMB2__)
     __builtin_software_breakpoint();
 #endif
     /* Infinite loop */
