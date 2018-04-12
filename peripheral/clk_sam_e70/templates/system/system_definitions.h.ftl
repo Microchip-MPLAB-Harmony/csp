@@ -1,1 +1,1 @@
-#include "peripheral/clk/clk.h"
+#include "peripheral/clk/plib_clk.h"

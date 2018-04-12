@@ -1,22 +1,4 @@
-/*******************************************************************************
-  Clock System Service Interface Definition
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    clk.h
-
-  Summary:
-    Clock interface header.
-
-  Description:
-    This file contains the interface definition for the Clock System
-    Service.  It provides a way to interact with the Clock subsystem to
-    manage the timing requests supported by the system.
-*******************************************************************************/
-
-//DOM-IGNORE-BEGIN
+<#--
 /*******************************************************************************
 Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
 
@@ -38,29 +20,23 @@ INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
 CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
-//DOM-IGNORE-END
+ *******************************************************************************/
+ -->
 
-#ifndef CLK_H
-#define CLK_H
+#ifndef PLIB_CLK_H
+#define PLIB_CLK_H
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
+#include <stddef.h>
 
-// DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     extern "C" {
 
 #endif
-// DOM-IGNORE-END
-
+ 
 // *****************************************************************************
 // *****************************************************************************
-// Section: SYS CLK Module System Interface Routines
+// Section: CLK Module System Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
@@ -96,14 +72,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 void CLK_Initialize ( void );
 
-//DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }
 #endif
-//DOM-IGNORE-END
 
-#endif //CLK_H
+#endif //PLIB_CLK_H
 
+<#--
 /*******************************************************************************
  End of File
 */
+-->
