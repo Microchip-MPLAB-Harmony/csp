@@ -24,7 +24,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  -->
 
 #include "device.h"
-#include "clk.h"
+#include "plib_clk.h"
 
 <#macro CONFIGURE_GCLK INDEX PCLKEN GCLKEN GCLKCSS GCLKDIV>
 	<#if PCLKEN || GCLKEN>
