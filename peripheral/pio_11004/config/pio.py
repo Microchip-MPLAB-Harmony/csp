@@ -46,34 +46,41 @@ def setupInterrupt(portInterruptLocal, event):
 
     # 2nd element of the list is suppose to be the pin number which we want, get the channel name of that pin in J
     j = pinChannel[int(i[1])-1].getValue()
-    # find the index of the string "j" in the list "pioSymChannel" and save it in k.
-    k = pioSymChannel.index(j)
-    if event["value"] != "":
-        portInterrupt[k].setValue(True, 1)
-    else:
-        # if interrupt has been disabled for a particular pin, then see if is it disabled for all the pins of
-        # corresponding channel; if so, then uncheck corresponding port interrupt in GUI.
-        boolValue = False
-        for pinNumber in range(1, packagePinCount+1):
-            if j == pinChannel[pinNumber-1].getValue():
-                if pinInterrupt[pinNumber-1].getValue() != "":
-                    boolValue = True
-                    break
-        if boolValue == False:
-            portInterrupt[k].setValue(False, 1)
+
+    if j!= "None":
+    # This means its a pin which has GPIO feature 
+    
+        # find the index of the string "j" in the list "pioSymChannel" and save it in k.
+        k = pioSymChannel.index(j)
+        if event["value"] != "":
+            portInterrupt[k].setValue(True, 1)
+        else:
+            # if interrupt has been disabled for a particular pin, then see if is it disabled for all the pins of
+            # corresponding channel; if so, then uncheck corresponding port interrupt in GUI.
+            boolValue = False
+            for pinNumber in range(1, packagePinCount+1):
+                if j == pinChannel[pinNumber-1].getValue():
+                    if pinInterrupt[pinNumber-1].getValue() != "":
+                        boolValue = True
+                        break
+            if boolValue == False:
+                portInterrupt[k].setValue(False, 1)
 
 # Function to enable PORT Channel and corresponding clock when any of the pins is using the particular Channel.
 # Once the PORT Channel is enabled, option of corresponding Channel interrupt also starts showing up.
 def setupPort(usePortLocal, event):
     global usePort
+    
+    if event["value"]!= "None":
+    # This means its a pin which has GPIO feature
+    
+        # find the index of the string coming from event["value"] in the list "pioSymChannel" and save it in k.
+        k = pioSymChannel.index(event["value"])
 
-    # find the index of the string coming from event["value"] in the list "pioSymChannel" and save it in k.
-    k = pioSymChannel.index(event["value"])
-
-    usePort[k].setValue(True, 1)
-    portInterrupt[k].setVisible(True)
-    #Enable Peripheral clock for respective PORT Channel in Clock Manager
-    Database.setSymbolValue("core", "PMC_ID_PIO" + event["value"], True, 1)
+        usePort[k].setValue(True, 1)
+        portInterrupt[k].setVisible(True)
+        #Enable Peripheral clock for respective PORT Channel in Clock Manager
+        Database.setSymbolValue("core", "PMC_ID_PIO" + event["value"], True, 1)
 
 
 ###################################################################################################
