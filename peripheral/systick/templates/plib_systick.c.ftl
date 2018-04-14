@@ -103,7 +103,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void )
 }
 
 <#if USE_SYSTICK_INTERRUPT == false>
-	<#lt>bool SYSTICK_TimerExpired(void)
+	<#lt>bool SYSTICK_TimerPeriodHasExpired(void)
 	<#lt>{
 	<#lt>	return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) > 0;
 	<#lt>}

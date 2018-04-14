@@ -82,7 +82,7 @@ uint32_t SYSTICK_TimerPeriodGet ( void );
 uint32_t SYSTICK_TimerCounterGet ( void );
 uint32_t SYSTICK_TimerFrequencyGet ( void );
 <#if USE_SYSTICK_INTERRUPT == false>
-	<#lt>bool SYSTICK_TimerExpired(void);
+	<#lt>bool SYSTICK_TimerPeriodHasExpired(void);
 </#if>
 <#if USE_SYSTICK_INTERRUPT == true>
 	<#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );

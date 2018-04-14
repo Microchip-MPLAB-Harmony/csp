@@ -325,7 +325,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
 
 // *****************************************************************************
 /* Function:
-    uint32_t SYSTICK_TimerExpired( void )
+    uint32_t SYSTICK_TimerPeriodHasExpired( void )
 
    Summary:
     Returns the current status of the systick 
@@ -348,7 +348,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
 		SYSTICK_Initialize();
 		SYSTICK_TimerStart();
 		
-		if(SYSTICK_TimerExpired)
+		if(SYSTICK_TimerPeriodHasExpired)
 		{
 			//application code
 		}
@@ -356,7 +356,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
     </code>
 */
 
-bool	 SYSTICK_TimerExpired(void);
+bool	 SYSTICK_TimerPeriodHasExpired(void);
 
 
 // *****************************************************************************
