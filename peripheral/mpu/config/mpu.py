@@ -16,8 +16,7 @@ global mpuSettings
 mpuSettings = {"ITCM"           : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00000000",   "4MB"   ],
                 "FLASH"         : ["MPU_ATTR_NORMAL_WT",        "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00400000",   "4MB"   ],
                 "DTCM"          : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "4MB"   ],
-                "SRAM_CACHED"   : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20400000",   "8MB"   ],
-                "SRAM_UNCACHED" : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x2045F000",   "4KB"   ],
+                "SRAM"   		: ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20400000",   "8MB"   ],
                 "PERIPHERALS"   : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
                 "EBI_SMC"       : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x60000000",   "256MB" ],
                 "EBI_SDRAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x70000000",   "256MB" ],
@@ -25,7 +24,7 @@ mpuSettings = {"ITCM"           : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_REA
                 "USBHS_RAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xA0100000",   "1MB"   ],
                 "SYSTEM"        : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ]}
 
-mpuSetUpLogicList = ['ITCM', 'FLASH', 'DTCM', 'SRAM_CACHED', 'SRAM_UNCACHED', 'PERIPHERALS', 'EBI_SMC', 'EBI_SDRAM', 'QSPI', 'USBHS_RAM', 'SYSTEM']
+mpuSetUpLogicList = ['ITCM', 'FLASH', 'DTCM', 'SRAM', 'PERIPHERALS', 'EBI_SMC', 'EBI_SDRAM', 'QSPI', 'USBHS_RAM', 'SYSTEM']
 
 def mpuSetUpLogic(mpuSym, event):
     global mpuSettings
