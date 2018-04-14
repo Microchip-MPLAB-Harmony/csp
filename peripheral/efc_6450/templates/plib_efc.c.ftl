@@ -96,7 +96,7 @@ bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address )
     return true;
 }
 
-bool EFC${INDEX?string}_WriteQuadWord( uint32_t *data, uint32_t address )
+bool EFC${INDEX?string}_QuadWordWrite( uint32_t *data, uint32_t address )
 {
     volatile uint16_t page_number;
 
@@ -153,7 +153,7 @@ bool EFC${INDEX?string}_IsBusy(void)
     return (bool)(!(status & EEFC_FSR_FRDY_Msk));
 }
 
-EFC_ERR EFC${INDEX?string}_ErrorGet( void )
+EFC_ERROR EFC${INDEX?string}_ErrorGet( void )
 {
     status |= EFC_REGS->EEFC_FSR;
     return status;

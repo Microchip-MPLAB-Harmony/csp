@@ -75,7 +75,7 @@ typedef enum
     EFC_FLERR_ERROR = 0x8,
     /*Flash Encountered an ECC error*/
     EFC_ECC_ERROR = 0xF0000,
-} EFC_ERR;
+} EFC_ERROR;
 
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>typedef struct
@@ -112,9 +112,9 @@ bool EFC${INDEX?string}_SectorErase( uint32_t address );
 
 bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address );
 
-bool EFC${INDEX?string}_WriteQuadWord( uint32_t *data, uint32_t address );
+bool EFC${INDEX?string}_QuadWordWrite( uint32_t *data, uint32_t address );
 
-EFC_ERR EFC${INDEX?string}_ErrorGet( void );
+EFC_ERROR EFC${INDEX?string}_ErrorGet( void );
 
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define EFC${INDEX?string}_TransferStatusGet   EFC${INDEX?string}_ErrorGet
