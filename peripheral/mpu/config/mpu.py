@@ -70,7 +70,10 @@ def storeLength(symbol, event):
 ################################################################################
 #### Component ####
 ################################################################################
-coreUseMPU = coreComponent.createBooleanSymbol("CoreUseMPU", devCfgMenu)
+mpuMenu = coreComponent.createMenuSymbol("MPU_MENU", None)
+mpuMenu.setLabel("MPU")
+
+coreUseMPU = coreComponent.createBooleanSymbol("CoreUseMPU", mpuMenu)
 coreUseMPU.setLabel("Enable MPU?")
 
 

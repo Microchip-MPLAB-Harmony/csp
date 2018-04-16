@@ -7,12 +7,9 @@ def instantiateComponent(coreComponent):
     devCfgMenu.setLabel(Variables.get("__PROCESSOR") + " Device Configuration")
     devCfgMenu.setDescription("Hardware Configuration Bits")
 
-    prjMenu = coreComponent.createMenuSymbol("CorePrjMenu", devMenu)
-    prjMenu.setLabel("Project Configuration")
-    prjMenu.setDescription("Project Specific Configuration")
-
-    genAppFiles = coreComponent.createBooleanSymbol("CoreGenAppFiles", prjMenu)
+    genAppFiles = coreComponent.createBooleanSymbol("CoreGenAppFiles", devMenu)
     genAppFiles.setLabel("Generate Harmony Application Files?")
+    genAppFiles.setVisible(False)
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
