@@ -82,10 +82,10 @@ void SUPC${INDEX?string}_Initialize (void)
 	
 	SUPC_REGS->SUPC_WUMR = (SUPC_WUMR_LPDBC(${SUPC_WUMR_LPDBC}) ${SUPC_WUMR_LPDBCEN0?then('| SUPC_WUMR_LPDBCEN0_ENABLE', '')} ${SUPC_WUMR_LPDBCEN1?then('| SUPC_WUMR_LPDBCEN1_ENABLE', '')} ${SUPC_WUMR_LPDBCCLR?then('| SUPC_WUMR_LPDBCCLR_ENABLE', '')} \
 							| SUPC_WUMR_WKUPDBC(${SUPC_WUMR_WKUPDBC}) ${SUPC_WUMR_RTCEN?then('| SUPC_WUMR_RTCEN_ENABLE ', '')} ${SUPC_WUMR_RTTEN?then('| SUPC_WUMR_RTTEN_ENABLE', '')} ${SUPC_WUMR_SMEN?then('| SUPC_WUMR_SMEN_ENABLE', '')});	
-	
-	<#if .vars[SUPC_WUIR_WKUPEN] == true>
+    
+	<#if SUPC_WUIR != "">	
     SUPC_REGS->SUPC_WUIR = ${SUPC_WUIR};
-    </#if>
+	</#if>
 }
 
 void SUPC0_SleepModeEnter (void)
