@@ -22,8 +22,11 @@ def systickUse(systickEnable, osal):
 		systickSystemDefFile.setEnabled(False)
 		systickSystemInitFile.setEnabled(False)
 	
-systickEnable = coreComponent.createBooleanSymbol("systickEnable", devCfgMenu)
-systickEnable.setLabel("Use SysTick?")
+sysTickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU", None)
+sysTickMenu.setLabel("SysTick")
+
+systickEnable = coreComponent.createBooleanSymbol("systickEnable", sysTickMenu)
+systickEnable.setLabel("Enable SysTick")
 systickEnable.setDependencies(systickUse, ["OSAL.OSAL_RTOS"])
 
 
