@@ -343,8 +343,28 @@ void TC${INDEX}_CH${CH_NUM}_CaptureInitialize (void)
 	</#if>
 	
 	<#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
+	<#compress>
+		<#assign CAPTURE_INTERRUPT = "">
+		<#if .vars[TC_CAPTURE_IER_LDRAS] == true >
+			<#assign CAPTURE_INTERRUPT = "TC_IER_LDRAS_Msk">
+		</#if>
+		<#if .vars[TC_CAPTURE_IER_LDRBS] == true >
+			<#if CAPTURE_INTERRUPT != "">
+				<#assign CAPTURE_INTERRUPT = CAPTURE_INTERRUPT + " | TC_IER_LDRBS_Msk">
+			<#else>
+				<#assign CAPTURE_INTERRUPT = "TC_IER_LDRBS_Msk">
+			</#if>
+		</#if>
+		<#if .vars[TC_CAPTURE_IER_COVFS] == true >
+			<#if CAPTURE_INTERRUPT != "">
+				<#assign CAPTURE_INTERRUPT = CAPTURE_INTERRUPT + " | TC_IER_COVFS_Msk">
+			<#else>
+				<#assign CAPTURE_INTERRUPT = "TC_IER_COVFS_Msk">
+			</#if>
+		</#if>
+	</#compress>
 	/* enable interrupt */
-	TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = <#if .vars[TC_CAPTURE_IER_LDRAS]>TC_IER_LDRAS_Msk </#if><#if .vars[TC_CAPTURE_IER_LDRBS]>| TC_IER_LDRBS_Msk </#if><#if .vars[TC_CAPTURE_IER_COVFS]>| TC_IER_COVFS_Msk </#if>;
+	TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = ${CAPTURE_INTERRUPT};
 	</#if>
 }
 
