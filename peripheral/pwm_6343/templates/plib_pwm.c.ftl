@@ -282,7 +282,7 @@ void PWM${INDEX}_ChannelPeriodSet (PWM_CHANNEL_NUM channel, uint16_t period)
 /* Read PWM period */
 uint16_t PWM${INDEX}_ChannelPeriodGet (PWM_CHANNEL_NUM channel)
 {
-	return (uint16_t)PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_CPRDUPD;
+	return (uint16_t)PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_CPRD;
 }
 
 /* Configure PWM duty cycle */
