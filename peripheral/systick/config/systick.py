@@ -10,7 +10,7 @@ global  systickSystemInitFile
 Log.writeInfoMessage("Loading SYSTICK for " + Variables.get("__PROCESSOR"))
 
 systickMax = 0x00ffffff
-systickDefault = 0x0000927c
+systickDefault = 0x000249F0
 
 def systickUse(systickEnable, osal):
 	if osal["value"] == 0:
@@ -66,8 +66,8 @@ systickClock = coreComponent.createKeyValueSetSymbol("SYSTICK_CLOCK", systickMen
 systickClock.setLabel("SysTick Clock")
 systickClock.setOutputMode("Value")
 systickClock.setDisplayMode("Description")
-systickClock.addKey("HCLK/8", str(0) , "SysTick External clock" )
-systickClock.addKey("HCLK", str(1) , "Processor clock" )
+systickClock.addKey("HCLK/2", str(0) , "SysTick External clock (HCLK/2)" )
+systickClock.addKey("HCLK", str(1) , "Processor clock (HCLK)" )
 systickClock.setDefaultValue(0)
 
 def systickCal(systickPeriod, data):
@@ -75,16 +75,21 @@ def systickCal(systickPeriod, data):
     period = Database.getSymbolValue("core", "SYSTICK_PERIOD")
     clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
     freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+    delay=0
+    
     if clock == 0:
-        delay = (float(1) / int(freq_ext)) * (int(period) * 1000)
+        if (int(freq_ext) != 0):
+            delay = (float(1) / int(freq_ext)) * (int(period) * 1000)
     else:
-        delay = (float(1) / int(freq_proc)) * (int(period) * 1000)
-    systickPeriod.setLabel("*********SysTick will create a periodic tick of " + str(delay) +" milli seccond*************")
+        if (int(freq_proc) !=0):
+            delay = (float(1) / int(freq_proc)) * (int(period) * 1000)
+            
+    systickPeriod.setLabel("*********SysTick will generate periodic tick every " + str(delay) +" millisecond*************")
     
 
 
 systickPeriodComment = coreComponent.createCommentSymbol("SYSTICK_PERIOD_COMMENT", systickMenu)
-systickPeriodComment.setLabel("*********Systick will create a periodic tick of 1 milli seccond*************")
+systickPeriodComment.setLabel("*********Systick will generate periodic tick every 1 millisecond*************")
 systickPeriodComment.setDependencies(systickCal, ["core.SYSTICK", "SYSTICK_PERIOD", "core.PROCESSORCLK_FREQ", "SYSTICK_CLOCK"])
 
 ############################################################################
