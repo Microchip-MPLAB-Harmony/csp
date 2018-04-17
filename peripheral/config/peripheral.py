@@ -26,6 +26,8 @@ for periphName in periphNames:
 							periphName.upper() + "/", ".." + periphScript)
 
 			periphComponent.addCapability(periphName + "_" + str(periphInstance), periphName)
+			periphComponent.setDisplayType("Peripheral Library")
+
 
 			if (periphName == "EFC"):
 				periphComponent.addCapability(periphName + "_" + str(periphInstance) + "_memroy_dev", "memory_dev")
