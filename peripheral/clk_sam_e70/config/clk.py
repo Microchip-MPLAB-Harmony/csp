@@ -509,7 +509,7 @@ def calculatedClockFrequencies(clkComponent, clkSymMenu, updateFWSValue, join, E
 
     systemTickFreq = clkComponent.createStringSymbol("SYSTICK", calculatedFrequencies)
     systemTickFreq.setLabel("System Tick Frequency (HZ)")
-    systemTickFreq.setDefaultValue("37500000")
+    systemTickFreq.setDefaultValue("150000000")
     systemTickFreq.setReadOnly(True)
 
     processorClkFreq = clkComponent.createStringSymbol("PROCESSORCLK_FREQ", calculatedFrequencies)
