@@ -191,13 +191,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
   Summary:
     Initialize the PIO library.
-  
-  Description:
-    This function initializes the PIO library and all ports & pins configured
-    in the MCC Pin Manager.
 
   Remarks:
-    None.
+    See plib_pio.h for more details.
 */
 void PIO_Initialize ( void )
 {
@@ -358,21 +354,12 @@ uint32_t PIO_PortRead(PIO_PORT port)
   Summary:
     Write the value on all the I/O lines of the selected port.
   
-  Description:
-    This function writes the data values driven on all the output lines of the
-    selected port.  Bit values in each position indicate corresponding pin
-    levels.
-    1 = Pin is driven high.
-    0 = Pin is driven low.
-
   Remarks:
-    If the port has less than 32-bits, unimplemented pins will be ignored.
-    Implemented pins are Right aligned in the 32-bit value.
+    See plib_pio.h for more details.
 */
-void PIO_PortWrite(PIO_PORT port, uint32_t value)
+void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value) 
 {
-    /* Write the desired value */
-    ((pio_registers_t*)port)->PIO_ODSR = value;
+    ((pio_registers_t*)port)->PIO_ODSR = (((pio_registers_t*)port)->PIO_ODSR & (~mask)) | (mask & value);
 }
 
 // *****************************************************************************
@@ -381,18 +368,9 @@ void PIO_PortWrite(PIO_PORT port, uint32_t value)
   
   Summary:
     Read the latched value on all the I/O lines of the selected port.
-  
-  Description:
-    This function reads the latched data values on all the I/O lines of the
-    selected port.  Bit values returned in each position indicate corresponding
-    pin levels.
-    1 = Pin is high.
-    0 = Pin is low.
 
   Remarks:
-    If the port has less than 32-bits, unimplemented pins will read as
-    low (0).
-    Implemented pins are Right aligned in the 32-bit return value.
+    See plib_pio.h for more details.
 */
 uint32_t PIO_PortReadLatch(PIO_PORT port)
 {
@@ -406,12 +384,8 @@ uint32_t PIO_PortReadLatch(PIO_PORT port)
   Summary:
     Set the selected IO pins of a port.
   
-  Description:
-    This function sets (to '1') the selected IO pins of a port.
-
   Remarks:
-    If the port has less than 32-bits, unimplemented pins will be ignored.
-    Implemented pins are Right aligned in the 32-bit value.
+    See plib_pio.h for more details.
 */
 void PIO_PortSet(PIO_PORT port, uint32_t mask)
 {
@@ -425,12 +399,8 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask)
   Summary:
     Clear the selected IO pins of a port.
   
-  Description:
-    This function clears (to '0') the selected IO pins of a port.
-
   Remarks:
-    If the port has less than 32-bits, unimplemented pins will be ignored.
-    Implemented pins are Right aligned in the 32-bit value.
+    See plib_pio.h for more details.
 */
 void PIO_PortClear(PIO_PORT port, uint32_t mask)
 {
@@ -444,12 +414,8 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask)
   Summary:
     Toggles the selected IO pins of a port.
   
-  Description:
-    This function toggles (or invert) the selected IO pins of a port.
-
   Remarks:
-    If the port has less than 32-bits, unimplemented pins will be ignored.
-    Implemented pins are Right aligned in the 32-bit value.
+    See plib_pio.h for more details.
 */
 void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 {
@@ -463,12 +429,9 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask)
   
   Summary:
     Enables selected IO pins of a port as input.
-  
-  Description:
-    This function enables selected IO pins of a port as input.
 
   Remarks:
-	None.
+    See plib_pio.h for more details.
 */
 void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 {
@@ -482,11 +445,8 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
   Summary:
     Enables selected IO pins of a port as output(s).
   
-  Description:
-    This function enables selected IO pins of the given port as output(s).
-
   Remarks:
-	None.
+    See plib_pio.h for more details.
 */
 void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 {
@@ -500,11 +460,8 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
   Summary:
     Enables IO interrupt on selected IO pins of a port.
 
-  Description:
-    This function enables IO interrupt on selected IO pins of selected port.
-
   Remarks:
-	None.
+    See plib_pio.h for more details.
 */
 void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
 {   
@@ -518,11 +475,8 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
   Summary:
     Disables IO interrupt on selected IO pins of a port.
 
-  Description:
-    This function disables IO interrupt on selected IO pins of selected port.
-
   Remarks:
-	None.
+    See plib_pio.h for more details.
 */
 void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 {
@@ -551,15 +505,8 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
   Summary:
     Allows application to register callback for every pin.
 
-  Description:
-    This function allows application to register an event handling function
-    for the PLIB to call back when I/O interrupt occurs on the selected pin.
-
-    At any point if application wants to stop the callback, it can call this
-    function with "eventHandler" value as NULL.
-
   Remarks:
-    None.
+    See plib_pio.h for more details.
 */
 void PIO_PinInterruptCallbackRegister(
     PIO_PIN pin, 

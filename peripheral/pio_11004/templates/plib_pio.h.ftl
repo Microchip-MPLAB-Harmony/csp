@@ -795,7 +795,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-#define PIO_PinWrite(pin,value)   PIO_PortWrite(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), (uint32_t)(value) << (pin & 0x1f))
+#define PIO_PinWrite(pin,value)   PIO_PortWrite(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f))
 
 // *****************************************************************************
 /* Function:
@@ -1187,13 +1187,13 @@ uint32_t PIO_PortRead(PIO_PORT port);
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortWrite(PIO_PORT port, uint32_t value);
+    void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value);
 
   Summary:
     Write the value on all the I/O lines of the selected port.
 
   Description:
-    This function writes the data values driven on all the output lines of the
+    This function writes the data values driven on selected output lines of the
     selected port.  Bit values in each position indicate corresponding pin
     levels.
     1 = Pin is driven high.
@@ -1204,15 +1204,20 @@ uint32_t PIO_PortRead(PIO_PORT port);
 
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
-    value      - 32bit value which has to be written/driven on all the I/O
-                 lines of the selected port.
+    mask       - A 32 bit value in which positions of 0s and 1s decide
+                 which IO pins of the selected port will be written.
+                 1's - Will write to corresponding IO pins.
+                 0's - Will remain unchanged.
+    value      - Value which has to be written/driven on the I/O
+                 lines of the selected port for which mask bits are '1'.
+                 Values for the corresponding mask bit '0' will be ignored.
   Returns:
     None.
 
   Example:
     <code>
-
-    PIO_PortWrite(PIO_PORT_C, 0x7563D45F);
+    // Write binary value 0011 to the pins PC3, PC2, PC1 and PC0 respectively.
+    PIO_PortWrite(PIO_PORT_C, 0x0F, 0xF563D453);
 
     </code>
 
@@ -1221,7 +1226,7 @@ uint32_t PIO_PortRead(PIO_PORT port);
 
     Implemented pins are Right aligned in the 32-bit value.
 */
-void PIO_PortWrite(PIO_PORT port, uint32_t value);
+void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value);
 
 // *****************************************************************************
 /* Function:
