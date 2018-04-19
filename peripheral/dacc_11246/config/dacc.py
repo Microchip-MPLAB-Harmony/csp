@@ -168,16 +168,19 @@ def instantiateComponent(daccComponent):
         dacChannelTriggerSelect.append(channelID)
         dacChannelTriggerSelect[channelID] = daccComponent.createKeyValueSetSymbol("DACC_TRIGR_TRGSEL"+str(channelID), dacChannelMenu[channelID])
         dacChannelTriggerSelect[channelID].setLabel("Select Trigger Source")
+        dacChannelTriggerSelect[channelID].addKey("TRGSEL0", "0", "DAC External Trigger Input (DATRG)")
+        dacChannelTriggerSelect[channelID].addKey("TRGSEL1", "1", "TC0 Channel 0 Output (TIOA0)")
+        dacChannelTriggerSelect[channelID].addKey("TRGSEL2", "2", "TC0 Channel 1 Output (TIOA1)")
+        dacChannelTriggerSelect[channelID].addKey("TRGSEL3", "3", "TC0 Channel 2 Output (TIOA2)")
+        dacChannelTriggerSelect[channelID].addKey("TRGSEL4", "4", "PWM0 Event Line 0")
+        dacChannelTriggerSelect[channelID].addKey("TRGSEL5", "5", "PWM0 Event Line 1")
+        dacChannelTriggerSelect[channelID].addKey("TRGSEL6", "6", "PWM1 Event Line 0")
+        dacChannelTriggerSelect[channelID].addKey("TRGSEL7", "7", "PWM1 Event Line 1")
         dacChannelTriggerSelect[channelID].setDefaultValue(0)
         dacChannelTriggerSelect[channelID].setOutputMode("Key")
         dacChannelTriggerSelect[channelID].setDisplayMode("Description")
         dacChannelTriggerSelect[channelID].setVisible(False)
         dacChannelTriggerSelect[channelID].setDependencies(triggerSelectVisibility, ["CONVERSION_MODE_CH"+str(channelID)])
-
-        count = daccValGrp_TRIGR_TRGSEL0.getValueCount()
-        for id in range(0,count):
-            valueName = daccValGrp_TRIGR_TRGSEL0.getValueNames()[id]
-            dacChannelTriggerSelect[channelID].addKey(valueName, daccValGrp_TRIGR_TRGSEL0.getValue(valueName).getValue(), daccValGrp_TRIGR_TRGSEL0.getValue(valueName).getDescription())
 
         dacChannelOSR.append(channelID)
         dacChannelOSR[channelID] = daccComponent.createKeyValueSetSymbol("DACC_TRIGR_OSR"+str(channelID), dacChannelMenu[channelID])
