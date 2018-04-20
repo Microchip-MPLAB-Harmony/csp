@@ -207,7 +207,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_CR_TWR = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TWR", sdramcSymMenu_TIMING_MENU)
     sdramcSym_CR_TWR.setLabel("Write Recovery Delay (TWR)")
     sdramcSym_CR_TWR.setMin(0)
-    sdramcSym_CR_TWR.setMax(16)
+    sdramcSym_CR_TWR.setMax(15)
     sdramcSym_CR_TWR.setDefaultValue(SDARMC_CR_TWR_DEFAULT_VALUE)
 
     sdramcSym_CFR1_TMRD = sdramcComponent.createIntegerSymbol("SDRAMC_CFR1_TMRD", sdramcSymMenu_TIMING_MENU)

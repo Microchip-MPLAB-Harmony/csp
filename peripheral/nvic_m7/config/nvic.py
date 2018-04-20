@@ -97,7 +97,7 @@ def coreVectorsPriority(nvicSym, event):
         if (event["value"] == str(coreVectors[vectorIndex])):
             if (event["value"] == "PendSV" or event["value"] == "SysTick"):
                 nvicSym.clearValue()
-                nvicSym.setValue("7", 2)
+                nvicSym.setValue("0", 2)
                 nvicSym.setVisible(False)
                 nvicSym.setReadOnly(True)
             else :
