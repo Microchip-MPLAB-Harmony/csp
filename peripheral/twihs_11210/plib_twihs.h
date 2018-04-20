@@ -162,14 +162,7 @@ typedef enum
    Remarks:
     None.
 */
-typedef void (*TWIHS_CALLBACK) 
-( 
-    /* Transfer event */
-    TWIHS_TRANSFER_STATUS  status,   
-  
-    /* Transfer context */
-    uintptr_t contextHandle 
-);
+typedef void (*TWIHS_CALLBACK) (uintptr_t contextHandle);
 
 // *****************************************************************************
 // *****************************************************************************

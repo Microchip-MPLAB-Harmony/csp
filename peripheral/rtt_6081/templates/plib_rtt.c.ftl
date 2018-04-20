@@ -147,7 +147,7 @@ uint32_t RTT${INDEX?string}_FrequencyGet(void)
 	<#lt>	{
 	<#lt>		if(status & RTT_SR_RTTINC_Msk)
 	<#lt>		{
-	<#lt>			rtt.callback(rtt.context, RTT_PERIODIC);
+	<#lt>			rtt.callback(RTT_PERIODIC, rtt.context, );
 	<#lt>		}
 	<#lt>		RTT_REGS->RTT_MR|= (RTT_MR_RTTINCIEN_Msk);
 	<#lt>	}
@@ -155,7 +155,7 @@ uint32_t RTT${INDEX?string}_FrequencyGet(void)
 	<#lt>	{
 	<#lt>		if(status & RTT_SR_ALMS_Msk)
 	<#lt>		{
-	<#lt>			rtt.callback(rtt.context, RTT_ALARM);
+	<#lt>			rtt.callback(RTT_ALARM, rtt.context);
 	<#lt>		}
 	<#lt>		RTT_REGS->RTT_MR|= (RTT_MR_ALMIEN_Msk);
 	<#lt>	}	

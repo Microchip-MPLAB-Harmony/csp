@@ -544,7 +544,7 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 /* Function:
     void PIO_PinInterruptCallbackRegister(
         PIO_PIN pin, 
-        const PIO_EVENT_HANDLER_PIN callback,
+        const PIO_PIN_CALLBACK callback,
         void* context
     );
 
@@ -563,7 +563,7 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PinInterruptCallbackRegister(
     PIO_PIN pin, 
-    const PIO_EVENT_HANDLER_PIN callback,
+    const PIO_PIN_CALLBACK callback,
     void* context
 )
 {

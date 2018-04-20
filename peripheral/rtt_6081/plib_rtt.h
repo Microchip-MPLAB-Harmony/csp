@@ -96,7 +96,7 @@ typedef enum
  Returns:
 	None.
 */
-typedef void (*RTT_CALLBACK)(uintptr_t context, RTT_INTERRUPT_TYPE type);
+typedef void (*RTT_CALLBACK)(RTT_INTERRUPT_TYPE type, uintptr_t context);
 
 typedef struct
 {
