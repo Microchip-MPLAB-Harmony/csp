@@ -38,7 +38,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 
 #ifndef PLIB_SYSTICK_H    // Guards against multiple inclusion
-#define PLIB_SYSTICK_H 
+#define PLIB_SYSTICK_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -69,8 +69,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#if USE_SYSTICK_INTERRUPT == true>
 	<#lt>typedef struct
 	<#lt>{
-	<#lt>	SYSTICK_CALLBACK          callback; 
-	<#lt>	uintptr_t               context;
+	<#lt>	SYSTICK_CALLBACK          callback;
+	<#lt>	uintptr_t                 context;
+	<#lt>	volatile uint32_t         tickCounter;
+	<#lt>	uint32_t         		  tickResolution;		// 1 = 0.1us
 	<#lt>} SYSTICK_OBJECT ;
 </#if>
 /***************************** SYSTICK API *******************************/
@@ -85,10 +87,11 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
 	<#lt>bool SYSTICK_TimerPeriodHasExpired(void);
 </#if>
 <#if USE_SYSTICK_INTERRUPT == true>
+	<#lt>void SYSTICK_DelayMs ( uint32_t ms );
 	<#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
-</#if>	
+</#if>
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif
 
-#endif 
+#endif

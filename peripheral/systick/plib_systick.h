@@ -11,8 +11,8 @@
     SysTick peripheral library interface.
 
   Description
-    This file defines the interface to the SysTick peripheral library.  This 
-    library provides access to and control of the associated peripheral 
+    This file defines the interface to the SysTick peripheral library.  This
+    library provides access to and control of the associated peripheral
     instance.
 *******************************************************************************/
 
@@ -72,31 +72,31 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     callback function.
 
    Description:
-    This data type defines the function signature for the SysTick 
-    callback function. SysTick will call back the client's 
+    This data type defines the function signature for the SysTick
+    callback function. SysTick will call back the client's
     function with this signature.
 
    Precondition:
-    SYSTICK_Initialize and SYSTICK_TimerCallbackSet must have been called to set the 
+    SYSTICK_Initialize and SYSTICK_TimerCallbackSet must have been called to set the
     function to be called.
 
    Parameters:
-    
+
     context  - Allows the caller to provide a context value (usually a pointer
     to the callers context for multi-instance clients).
-  
+
    Returns:
     None.
 
    Example:
     <code>
 		ticks = 0;
-		
+
 		void MyCallback ( uintptr_t context )
 		{
 			ticks++;
 		}
-		
+
 		SYSTICK_TimerCallbackSet(MyCallback, (uintptr_t) NULL);
     </code>
 
@@ -119,7 +119,7 @@ SYSTICK_OBJECT systick;
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of 
+/* The following functions make up the methods (set of possible operations) of
    this interface.
 */
 
@@ -131,15 +131,15 @@ SYSTICK_OBJECT systick;
      Initializes SysTick.
 
    Description:
-     This function initializes the System Timer as configured by the user 
-	 from within the MCC.  
+     This function initializes the System Timer as configured by the user
+	 from within the MCC.
 
    Precondition:
      None.
 
    Parameters:
     None.
-  
+
    Returns:
     None.
 
@@ -158,14 +158,14 @@ void     SYSTICK_TimerInitialize ( void );
      Starts System Timer.
 
    Description:
-     This function resets and starts the System Timer  
+     This function resets and starts the System Timer
 
    Precondition:
      SYSTICK_Initialize should have been called to set up SysTick.
 
    Parameters:
     None.
-  
+
    Returns:
     None.
 
@@ -185,14 +185,14 @@ void     SYSTICK_TimerStart ( void );
      Stops System Timer.
 
    Description:
-     This function stops the System Timer  
+     This function stops the System Timer
 
    Precondition:
      None.
 
    Parameters:
     None.
-  
+
    Returns:
     None.
 
@@ -220,7 +220,7 @@ void     SYSTICK_TimerStop ( void );
 
    Parameters:
     None.
-  
+
    Returns:
     None.
 
@@ -248,16 +248,16 @@ void  SYSTICK_TimerPeriodSet ( uint32_t period );
 
    Parameters:
     None.
-  
+
    Returns:
     32-bit period value.
 
    Example:
     <code>
 		uint32_t period;
-		
+
 		period = SYSTICK_TimerPeriodGet();
-		
+
     </code>
 */
 
@@ -278,16 +278,16 @@ uint32_t SYSTICK_TimerPeriodGet ( void );
 
    Parameters:
     None.
-  
+
    Returns:
     None.
 
    Example:
     <code>
 		uint32_t value;
-		
+
 		value = SYSTICK_TimerCounterGet();
-		
+
     </code>
 */
 
@@ -308,16 +308,16 @@ uint32_t SYSTICK_TimerCounterGet ( void );
 
    Parameters:
     None.
-  
+
    Returns:
     Systick Frequency value
 
    Example:
     <code>
 		uint32_t frequency;
-		
+
 		frequency = SYSTICK_TimerFrequencyGet();
-		
+
     </code>
 */
 uint32_t SYSTICK_TimerFrequencyGet ( void );
@@ -328,7 +328,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
     uint32_t SYSTICK_TimerPeriodHasExpired( void )
 
    Summary:
-    Returns the current status of the systick 
+    Returns the current status of the systick
 
    Description:
      This function is used to identify if the Systick underflow has happened.
@@ -339,7 +339,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
 
    Parameters:
     None.
-  
+
    Returns:
     Systick status
 
@@ -347,12 +347,12 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
     <code>
 		SYSTICK_Initialize();
 		SYSTICK_TimerStart();
-		
+
 		if(SYSTICK_TimerPeriodHasExpired)
 		{
 			//application code
 		}
-		
+
     </code>
 */
 
@@ -361,31 +361,63 @@ bool	 SYSTICK_TimerPeriodHasExpired(void);
 
 // *****************************************************************************
 /* Function:
+	void SYSTICK_DelayMs ( uint32_t ms )
+
+   Summary:
+    Blocking function to generate delay in milliseconds
+
+   Description:
+     This function generates accurate delay in units of milliseconds using SysTick timer in interrupt mode
+
+   Precondition:
+     SYSTICK_Initialize should have been called to set up SysTick in interrupt mode
+
+   Parameters:
+     The delay in units of milliseconds
+
+   Returns:
+     None
+
+   Example:
+    <code>
+		SYSTICK_Initialize();
+		SYSTICK_TimerStart();
+
+		// Generates 100ms blocking delay
+		SYSTICK_DelayMs(100)
+
+    </code>
+*/
+
+void SYSTICK_DelayMs ( uint32_t ms )
+
+// *****************************************************************************
+/* Function:
     void  SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
 
    Summary:
-    Sets the pointer to the function (and it's context) to be called when the 
+    Sets the pointer to the function (and it's context) to be called when the
     given systick reaches 0.
 
    Description:
-    This function sets the pointer to a client function to be called "back" 
-    when systick reaches 0. It also passes a context value 
+    This function sets the pointer to a client function to be called "back"
+    when systick reaches 0. It also passes a context value
     (usually a pointer to a context structure) that is passed into the
     function when it is called.
-    
-    This function is available only in interrupt or non-blocking mode of 
+
+    This function is available only in interrupt or non-blocking mode of
     operation.
 
    Precondition:
     SYSTICK_Initialize must have been called for the associated USART instance.
 
    Parameters:
-    callback - A pointer to a function with a calling signature defined 
+    callback - A pointer to a function with a calling signature defined
 	by the SYSTICK_CALLBACK data type.
 
-    context - A value (usually a pointer) passed (unused) into the function 
+    context - A value (usually a pointer) passed (unused) into the function
 	identified by the callback parameter.
-  
+
    Returns:
     None.
 
@@ -410,4 +442,4 @@ void     SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context
 #endif
 // DOM-IGNORE-END
 
-#endif 
+#endif
