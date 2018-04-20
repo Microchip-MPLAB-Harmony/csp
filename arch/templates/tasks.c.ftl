@@ -55,7 +55,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#if>
 #include "definitions.h"
 
-
+<#if Harmony.SELECT_RTOS != "BareMetal">
+// *****************************************************************************
+// *****************************************************************************
+// Section: RTOS Driver "Tasks" Routine
+// *****************************************************************************
+// *****************************************************************************
+${LIST_SYSTEM_RTOS_TASKS_C_DEFINITIONS}
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: System "Tasks" Routine
@@ -83,6 +90,11 @@ void SYS_Tasks ( void )
 
     /* Maintain the application's state machine. */
     APP_Tasks();
+<#if Harmony.SELECT_RTOS != "BareMetal">
+
+    /* Start RTOS Scheduler. */
+    ${LIST_SYSTEM_RTOS_TASKS_C_CALL_SCHEDULAR}
+</#if>
 }
 
 
