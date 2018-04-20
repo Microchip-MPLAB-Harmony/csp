@@ -5,32 +5,45 @@ global  systickHeaderFile
 global  systickSourceFile
 global  systickSystemDefFile
 global  systickSystemInitFile
-   
+
 
 Log.writeInfoMessage("Loading SYSTICK for " + Variables.get("__PROCESSOR"))
 
-systickMax = 0x00ffffff
-systickDefault = 0x000249F0
+
+################################################################################
+#### Business Logic ####
+################################################################################
 
 def systickUse(systickEnable, osal):
-	if osal["value"] == 0:
-		systickEnable.setVisible(True)
-	else:
-		systickEnable.setVisible(False)
-		systickHeaderFile.setEnabled(False)
-		systickSourceFile.setEnabled(False)
-		systickSystemDefFile.setEnabled(False)
-		systickSystemInitFile.setEnabled(False)
-	
-sysTickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU", None)
-sysTickMenu.setLabel("SysTick")
+    if osal["value"] == 0:
+        systickEnable.setVisible(True)
+    else:
+        systickEnable.setVisible(False)
+        systickHeaderFile.setEnabled(False)
+        systickSourceFile.setEnabled(False)
+        systickSystemDefFile.setEnabled(False)
+        systickSystemInitFile.setEnabled(False)
 
-systickEnable = coreComponent.createBooleanSymbol("systickEnable", sysTickMenu)
-systickEnable.setLabel("Enable SysTick")
-systickEnable.setDependencies(systickUse, ["OSAL.OSAL_RTOS"])
+def systickCal(systickPeriod, data):
+    freq_ext = Database.getSymbolValue("core", "SYSTICK")
+    period = Database.getSymbolValue("core", "SYSTICK_PERIOD")
+    clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
+    freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+    delayMs=0
+    delayUs=0
 
+    if clock == 0:
+        if (int(freq_ext) != 0):
+            delayMs = (float(1) / int(freq_ext)) * (int(period) * 1000)
+            delay = (float(1) / int(freq_ext)) * (int(period) * 10000000)
+    else:
+        if (int(freq_proc) !=0):
+            delayMs = (float(1) / int(freq_proc)) * (int(period) * 1000)
+            delay = (float(1) / int(freq_ext)) * (int(period) * 10000000)
 
-	
+    Database.setSymbolValue("core", "SYSTICK_RESOLUTION",int(delay),2)
+    systickPeriod.setLabel("*********SysTick will generate periodic tick every " + str(delayMs) +" millisecond*************")
+
 def showMenu(menu, show):
     menu.setVisible(show["value"])
 
@@ -47,7 +60,17 @@ def sysTickEnableCfgMenu(CfgMenu, event):
         systickSourceFile.setEnabled(False)
         systickSystemDefFile.setEnabled(False)
         systickSystemInitFile.setEnabled(False)
-        
+
+################################################################################
+#### PLIB Menu
+################################################################################
+sysTickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU", None)
+sysTickMenu.setLabel("SysTick")
+
+systickEnable = coreComponent.createBooleanSymbol("systickEnable", sysTickMenu)
+systickEnable.setLabel("Enable SysTick")
+systickEnable.setDependencies(systickUse, ["OSAL.OSAL_RTOS"])
+
 systickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU_0", systickEnable)
 systickMenu.setLabel("SysTick Configuration")
 systickMenu.setDependencies(showMenu, ["systickEnable"])
@@ -57,10 +80,16 @@ systickMenu.setDependencies(sysTickEnableCfgMenu, ["systickEnable"])
 systickInterrupt = coreComponent.createBooleanSymbol("USE_SYSTICK_INTERRUPT", systickMenu)
 systickInterrupt.setLabel("Enable Interrupt")
 
-systickPeriod = coreComponent.createHexSymbol("SYSTICK_PERIOD", systickMenu)
+systickPeriod = coreComponent.createIntegerSymbol("SYSTICK_PERIOD", systickMenu)
 systickPeriod.setLabel("SysTick Period")
-systickPeriod.setMax(systickMax)
-systickPeriod.setDefaultValue(systickDefault)
+systickPeriod.setMax(16777215) # 2^24 -1
+systickPeriod.setMin(2)
+
+# Resolution represented in terms of 0.1us. Value of 10000 means 1000us or 1ms
+systickResolution = coreComponent.createIntegerSymbol("SYSTICK_RESOLUTION", systickMenu)
+systickResolution.setLabel("SysTick Resolution")
+systickResolution.setVisible(False)
+systickResolution.setDefaultValue(10000)
 
 systickClock = coreComponent.createKeyValueSetSymbol("SYSTICK_CLOCK", systickMenu)
 systickClock.setLabel("SysTick Clock")
@@ -70,27 +99,15 @@ systickClock.addKey("HCLK/2", str(0) , "SysTick External clock (HCLK/2)" )
 systickClock.addKey("HCLK", str(1) , "Processor clock (HCLK)" )
 systickClock.setDefaultValue(0)
 
-def systickCal(systickPeriod, data):
-    freq_ext = Database.getSymbolValue("core", "SYSTICK")
-    period = Database.getSymbolValue("core", "SYSTICK_PERIOD")
-    clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
-    freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
-    delay=0
-    
-    if clock == 0:
-        if (int(freq_ext) != 0):
-            delay = (float(1) / int(freq_ext)) * (int(period) * 1000)
-    else:
-        if (int(freq_proc) !=0):
-            delay = (float(1) / int(freq_proc)) * (int(period) * 1000)
-            
-    systickPeriod.setLabel("*********SysTick will generate periodic tick every " + str(delay) +" millisecond*************")
-    
-
-
 systickPeriodComment = coreComponent.createCommentSymbol("SYSTICK_PERIOD_COMMENT", systickMenu)
 systickPeriodComment.setLabel("*********Systick will generate periodic tick every 1 millisecond*************")
 systickPeriodComment.setDependencies(systickCal, ["core.SYSTICK", "SYSTICK_PERIOD", "core.PROCESSORCLK_FREQ", "SYSTICK_CLOCK"])
+
+# Default value is set here to trigger business logic for the first time
+# Compute the period value for 1ms tick interrupt
+freq_ext = Database.getSymbolValue("core", "SYSTICK")
+period = int(freq_ext) /1000;
+systickPeriod.setDefaultValue(int(period))
 
 ############################################################################
 #### Code Generation ####

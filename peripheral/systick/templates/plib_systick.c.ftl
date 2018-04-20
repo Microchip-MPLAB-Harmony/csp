@@ -45,15 +45,11 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 	<#lt>SYSTICK_OBJECT systick;
 </#if>
 
-void SYSTICK_TimerInitialize ( void ) 
+void SYSTICK_TimerInitialize ( void )
 {
 	SysTick->CTRL = 0;
 	SysTick->VAL = 0;
-	<#if SYSTICK_PERIOD == "1" >
-		<#lt>SysTick->LOAD = (0x${SYSTICK_PERIOD});
-	<#else>
-		<#lt>SysTick->LOAD = (0x${SYSTICK_PERIOD} - 1);
-	</#if>
+	SysTick->LOAD = ${SYSTICK_PERIOD-1};
 	<#if USE_SYSTICK_INTERRUPT == true && SYSTICK_CLOCK == "0">
 		<#lt>	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk;
 	</#if>
@@ -62,6 +58,12 @@ void SYSTICK_TimerInitialize ( void )
 	</#if>
 	<#if USE_SYSTICK_INTERRUPT == false && SYSTICK_CLOCK == "1">
 		<#lt>	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk;
+	</#if>
+	<#if USE_SYSTICK_INTERRUPT == true >
+
+		<#lt>	systick.tickCounter=0;
+		<#lt>	systick.tickResolution=${SYSTICK_RESOLUTION};
+		<#lt>	systick.callback=NULL;
 	</#if>
 }
 
@@ -77,14 +79,7 @@ void SYSTICK_TimerStop ( void )
 
 void SYSTICK_TimerPeriodSet ( uint32_t period )
 {
-	if(period == 1)
-	{
-		SysTick->LOAD = period;
-	}
-	else
-	{
-		SysTick->LOAD = period - 1;
-	}
+	SysTick->LOAD = period - 1;
 }
 
 uint32_t SYSTICK_TimerPeriodGet ( void )
@@ -99,7 +94,7 @@ uint32_t SYSTICK_TimerCounterGet ( void )
 
 uint32_t SYSTICK_TimerFrequencyGet ( void )
 {
-	return (SYSTICK_FREQ);	
+	return (SYSTICK_FREQ);
 }
 
 <#if USE_SYSTICK_INTERRUPT == false>
@@ -110,6 +105,19 @@ uint32_t SYSTICK_TimerFrequencyGet ( void )
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
+	<#lt>void SYSTICK_DelayMs ( uint32_t ms )
+	<#lt>{
+	<#lt>	uint32_t tickEnd;
+	<#lt>	if( (SysTick->CTRL & (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk)) == (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk))
+	<#lt>	{
+	<#lt>		systick.tickCounter=0;
+	<#lt>		tickEnd = (10000*ms)/systick.tickResolution;
+	<#lt>		while(systick.tickCounter < tickEnd);
+	<#lt>	}
+	<#lt>}
+
+
+
 	<#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	systick.callback = callback;
@@ -118,6 +126,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void )
 
 	<#lt>void SysTick_Handler()
 	<#lt>{
+	<#lt>	systick.tickCounter++;
 	<#lt>	if(systick.callback != NULL)
 	<#lt>	{
 	<#lt>		systick.callback(systick.context);
