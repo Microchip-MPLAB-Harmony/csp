@@ -58,7 +58,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 <#if rtcEnableInterrupt == true>
-	<#lt>typedef void (*RTC_ALARM_CALLBACK)(uintptr_t context, uint32_t int_cause);
+	<#lt>typedef void (*RTC_CALLBACK)(uintptr_t context, uint32_t int_cause);
 </#if>
 
 <#if rtcEnableInterrupt == true>
@@ -85,7 +85,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	
 	<#lt>typedef struct
 	<#lt>{
-	<#lt>	RTC_ALARM_CALLBACK          callback; 
+	<#lt>	RTC_CALLBACK          callback; 
 	<#lt>	uintptr_t               context;
 	<#lt>} RTC_OBJECT ;
 </#if>
@@ -95,7 +95,7 @@ bool RTC${INDEX?string}_TimeSet( struct tm *Time );
 void RTC${INDEX?string}_TimeGet( struct tm *Time );
 <#if rtcEnableInterrupt == true>
 	<#lt>bool RTC${INDEX?string}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
-	<#lt>void RTC${INDEX?string}_CallbackRegister( RTC_ALARM_CALLBACK callback, uintptr_t context );
+	<#lt>void RTC${INDEX?string}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
 	<#lt>void RTC${INDEX?string}_InterruptDisable(RTC_INT_MASK interrupt);
 	<#lt>void RTC${INDEX?string}_InterruptEnable(RTC_INT_MASK interrupt);
 </#if>

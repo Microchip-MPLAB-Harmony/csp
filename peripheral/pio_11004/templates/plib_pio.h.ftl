@@ -719,7 +719,7 @@ typedef enum
     context. It is recommended of the application to not perform process
     intensive or blocking operations with in this function.
 */
-typedef  void (*PIO_EVENT_HANDLER_PIN) ( PIO_PIN pin, void* context);
+typedef  void (*PIO_PIN_CALLBACK) ( PIO_PIN pin, void* context);
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -1093,7 +1093,7 @@ void PIO_Initialize(void);
 /* Function:
     void PIO_PinInterruptCallbackRegister(
         PIO_PIN pin,
-        const PIO_EVENT_HANDLER_PIN callBack,
+        const PIO_PIN_CALLBACK callBack,
         void* context
     );
 
@@ -1133,7 +1133,7 @@ void PIO_Initialize(void);
 */
 void PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
-    const   PIO_EVENT_HANDLER_PIN callBack,
+    const   PIO_PIN_CALLBACK callBack,
     void* context
 );
 </#if>
@@ -1582,7 +1582,7 @@ typedef struct {
     PIO_PIN                 pin;
 
     /* Callback for event on target pin*/
-    PIO_EVENT_HANDLER_PIN   callback;
+    PIO_PIN_CALLBACK   callback;
 
     /* Callback Context */
     void*                   context;

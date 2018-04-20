@@ -75,7 +75,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 	<#lt>	trng.data = TRNG_REGS->TRNG_ODATA;
 	<#lt>	if(trng.callback != NULL)
     <#lt>   {
-    <#lt>   	trng.callback(trng.context,trng.data);
+    <#lt>   	trng.callback(trng.data, trng.context);
     <#lt>   }
 	<#lt>}
 </#if>	

@@ -91,7 +91,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	None.
 */
 
-typedef void (*TRNG_CALLBACK)( uintptr_t context, uint32_t random );
+typedef void (*TRNG_CALLBACK)( uint32_t random, uintptr_t context);
 
 // *****************************************************************************
 // *****************************************************************************

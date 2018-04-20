@@ -145,7 +145,7 @@ void RTC${INDEX?string}_TimeGet( struct tm *Time )
 	<#lt>	RTC_REGS->RTC_IER&= ~(interrupt);
 	<#lt>}
 
-	<#lt>void RTC${INDEX?string}_CallbackRegister( RTC_ALARM_CALLBACK callback, uintptr_t context )
+	<#lt>void RTC${INDEX?string}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	rtc.callback = callback;
 	<#lt>	rtc.context = context;

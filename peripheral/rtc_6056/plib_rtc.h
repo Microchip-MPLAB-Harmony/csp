@@ -141,7 +141,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  Returns:
 	None.
 */
-typedef void (*RTC_ALARM_CALLBACK)(uintptr_t context);
+typedef void (*RTC_CALLBACK)(uintptr_t context);
  
 // *****************************************************************************
 // *****************************************************************************
@@ -386,7 +386,7 @@ void RTCx_InterruptEnable(RTC_INT_MASK interrupt);
 	To disable the callback function, pass a NULL for the callback parameter.
 	See the RTC_CALLBACK type definition for additional information.
 */
-void RTCx_CallbackRegister( RTC_ALARM_CALLBACK callback, uintptr_t context );
+void RTCx_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
  
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

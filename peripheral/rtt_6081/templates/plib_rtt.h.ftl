@@ -56,7 +56,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	RTT_ALARM	 = 0x10000	// One time Alarm
 	<#lt>}RTT_INTERRUPT_TYPE;
 	
-	<#lt>typedef void (*RTT_CALLBACK)(uintptr_t context, RTT_INTERRUPT_TYPE type);
+	<#lt>typedef void (*RTT_CALLBACK)(RTT_INTERRUPT_TYPE type, uintptr_t context);
 
 	<#lt>typedef struct
 	<#lt>{
