@@ -1,0 +1,1 @@
+	SSC${SSC_INDEX?string}_Initialize();
