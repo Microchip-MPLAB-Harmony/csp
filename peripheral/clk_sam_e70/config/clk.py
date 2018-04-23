@@ -114,6 +114,32 @@ def __disable_main_xtal(main_xtal_enable, event):
         main_xtal_enable.clearValue("PMC_CKGR_MOR_MOSCXTEN")
         main_xtal_enable.setValue(False, 1)
 
+def __update_pcer0_value(pmc_pcer0, perip_clk):
+    """
+    Calculates PCER0 register value after enabling/disabling
+    the peripheral clock with peripheral identifiers less than 32.
+
+    pmc_pcer0: PMC PCER0 register hex symbol handle
+    perip_clk: peripheral clock event dictionary
+    """
+    global DICT_PCER0
+
+    pcer0 = pmc_pcer0.getValue()
+    pmc_pcer0.setValue(pcer0 | (1 << DICT_PCER0[perip_clk["id"]]), 1)
+
+def __update_pcer1_value(pmc_pcer1, perip_clk):
+    """
+    Calculates PCER1 register value after enabling/disabling
+    the peripheral clock with peripheral identifiers greater than 31.
+
+    pmc_pcer1: PMC PCER1 register hex symbol handle
+    perip_clk: peripheral clock event dictionary
+    """
+    global DICT_PCER1
+
+    pcer1 = pmc_pcer1.getValue()
+    pmc_pcer1.setValue(pcer1 | (1 << (DICT_PCER1[perip_clk["id"]] % 32)), 1)
+
 def __slow_clock_menu(clk_comp, clk_menu, supc_reg_module, update_slow_xtal_freq_ro_prop):
     """
     Slow Clock Menu Implementation.
@@ -502,7 +528,7 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module, gclk_div_visibility
         sym_pmc_pcr_gclkcss.setVisible(False)
         sym_pmc_pcr_gclkcss.setDependencies(gclk_src_visibility, ["PMC_PCR_GCLK" + str(i) + "EN"])
 
-def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree):
+def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_pcer0_value, update_pcer1_value):
     """
     Peripheral Clock Menu Implementation.
 
@@ -513,6 +539,15 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree):
     update_pcer0_value: Callback to calculate PCER0 Register Value.
     update_pcer1_value: Callback to calculate PCER1 Register Value.
     """
+    global DICT_PCER0
+    global DICT_PCER1
+
+    DICT_PCER0 = {}
+    DICT_PCER1 = {}
+
+    list_pcer0_depend = []
+    list_pcer1_depend = []
+
     # create symbol for peripheral clock
     clk_menu = clk_comp.createMenuSymbol("CLK_PERIPHERAL", clk_menu)
     clk_menu.setLabel("Peripheral Clock Enable Configuration")
@@ -535,15 +570,26 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree):
                     sym_perip_clk.setDefaultValue(False)
                     sym_perip_clk.setReadOnly(True)
 
+                    clock_id = int(param.attrib["value"])
+
+                    if clock_id < 32:
+                        list_pcer0_depend.append(symbol_id)
+                        DICT_PCER0.update({symbol_id: clock_id})
+                    else:
+                        list_pcer1_depend.append(symbol_id)
+                        DICT_PCER1.update({symbol_id: clock_id})
+
     # create symbol for PMC_PCERx register values
     sym_pmc_pcer0 = clk_comp.createHexSymbol("PMC_PCER0", clk_menu)
     sym_pmc_pcer0.setVisible(False)
     sym_pmc_pcer0.setDefaultValue(00000000)
+    sym_pmc_pcer0.setDependencies(update_pcer0_value, list_pcer0_depend)
 
     # create symbol for PMC_PCERx register values
     sym_pmc_pcer1 = clk_comp.createHexSymbol("PMC_PCER1", clk_menu)
     sym_pmc_pcer1.setVisible(False)
     sym_pmc_pcer1.setDefaultValue(00000000)
+    sym_pmc_pcer1.setDependencies(update_pcer1_value, list_pcer1_depend)
 
 #Programmable Clock generator configuration options
 def __programmable_clock_menu(clk_comp, clk_menu, pmc_reg_module):
@@ -760,7 +806,7 @@ if __name__ == "__main__":
     __generic_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, __update_generic_clk_div_visibility, __update_generic_clk_src_visibility)
 
     # creates peripheral clock menu
-    __peripheral_clock_menu(coreComponent, SYM_CLK_MENU, join, ElementTree)
+    __peripheral_clock_menu(coreComponent, SYM_CLK_MENU, join, ElementTree, __update_pcer0_value, __update_pcer1_value)
 
     # creates programmable clock menu
     __programmable_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS)
