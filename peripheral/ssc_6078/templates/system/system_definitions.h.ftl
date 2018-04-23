@@ -1,0 +1,1 @@
+#include "peripheral/ssc/plib_ssc${SSC_INDEX?string}.h"
