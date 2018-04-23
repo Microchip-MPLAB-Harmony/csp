@@ -116,7 +116,7 @@ static void CLK_MainClockInitialize(void)
     while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
 	
 	/* Configure the RC Oscillator frequency */
-    PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCF_${PMC_CKGR_MOR_MOSCRCF};
+    PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCF${PMC_CKGR_MOR_MOSCRCF};
 
     /* Wait until the RC oscillator clock is ready */
     while( (PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
@@ -324,8 +324,8 @@ Initialize Peripheral clock
 static void CLK_PeripheralClockInitialize(void)
 {
     /* Enable clock for the selected peripherals */
-   	PMC_REGS->PMC_PCER0=${PMC_PCER0};
-    PMC_REGS->PMC_PCER1=${PMC_PCER1};
+   	PMC_REGS->PMC_PCER0=0x${PMC_PCER0};
+    PMC_REGS->PMC_PCER1=0x${PMC_PCER1};
 }
 
 /*********************************************************************************
