@@ -1,695 +1,801 @@
+""" SAME70 Clock Configuration File. """
 
 from os.path import join
 from xml.etree import ElementTree
 
-global fwsMaxFreqList
+global LIST_FWS_MAX_FREQ
+global DICT_PCER0
+global DICT_PCER1
 
-def updateFWSValue(clkSymFlashWaitStates, event):
+def __update_fws_value(flash_wait_states, event):
+    """
+    Updates Flash Wait States with change in Master Clock Frequency
 
-    minFreq = maxFreq = 0
-    for fws in range(0, len(fwsMaxFreqList), 1):
+    flash_wait_states: flash wait states string symbol handle
+    event: callback event dictionary
+    """
+    global LIST_FWS_MAX_FREQ
 
-        mckFreq = int(event["value"])
-        maxFreq = int(fwsMaxFreqList[fws])
+    min_freq = max_freq = 0
+    for fws in range(0, len(LIST_FWS_MAX_FREQ), 1):
 
-        if mckFreq <= maxFreq and mckFreq > minFreq:
-            clkSymFlashWaitStates.setValue(str(fws), 1)
+        mck_freq = int(event["value"])
+        max_freq = int(LIST_FWS_MAX_FREQ[fws])
+
+        if mck_freq <= max_freq and mck_freq > min_freq:
+            flash_wait_states.setValue(str(fws), 1)
             return
 
-        minFreq = maxFreq
+        min_freq = max_freq
 
-#PLLA Configuration
-def setDividerVisibleProperty(pllaDivider, event):
-    if (event["value"] == True):
-        pllaDivider.setVisible(True)
-    else :
-        pllaDivider.setVisible(False)
+def __update_plla_divider_visibility(plla_divider, event):
+    """
+    Updates PLLA Divider Symbol visibility after enabling/disabling the PLLA
 
-def setMultiplierVisibleProperty(pllaMultiplier, event):
-    if (event["value"] == True):
-        pllaMultiplier.setVisible(True)
-    else :
-        pllaMultiplier.setVisible(False)
-
-#USB Clock Configuration
-def setUSBDividerVisibleProperty(upllDivider, event):
-    if (event["value"] == True):
-        upllDivider.setVisible(True)
-    else :
-        upllDivider.setVisible(False)
-
-#Peripheral clock generator configuration options
-def setGenericClkSrcVisible(genericClk0Src, event):
-    if(event["value"] == True):
-        genericClk0Src.setVisible(True)
-    else :
-        genericClk0Src.setVisible(False)
-
-def setGenericClkDivVisible(genericClkDivider, event):
-    if(event["value"] == True):
-        genericClkDivider.setVisible(True)
-    else :
-        genericClkDivider.setVisible(False)
-
-#set/reset the readOnly property of Slow Clock Frequency
-def resetReadOnlySlowClkFreq(clkSymExtClkInputFreq, event):
-
+    plla_divider: plla divider integer symbol handle
+    event: callback event dictionary
+    """
     if event["value"] is True:
-        clkSymExtClkInputFreq.setReadOnly(True)
+        plla_divider.setVisible(True)
     else:
-        clkSymExtClkInputFreq.setReadOnly(False)
+        plla_divider.setVisible(False)
 
-def updateExtXtalEnable(clkSymCrystalOscEnable, event):
+def __update_plla_multiplier_visibility(plla_multiplier, event):
+    """
+    Updates PLLA Multiplier Symbol visibility after enabling/disabling the PLLA.
+
+    plla_multiplier: plla multiplier integer symbol handle
+    event: callback event dictionary
+    """
     if event["value"] is True:
-        clkSymCrystalOscEnable.clearValue("PMC_CKGR_MOR_MOSCXTEN")
-        clkSymCrystalOscEnable.setValue(False, 1)
+        plla_multiplier.setVisible(True)
+    else:
+        plla_multiplier.setVisible(False)
 
-# slow RC/Crystal Oscillator
-def slowClock(clkComponent, clkSymMenu, supcRegModule, resetReadOnlySlowClkFreq):
+def __update_upll_divider_visibility(upll_divider, event):
+    """
+    Updates UPLL Divider Symbol visibility after enabling/disabling the UPLL.
 
+    upll_divider: upll divider integer symbol handle
+    event: callback event dictionary
+    """
+    if event["value"] is True:
+        upll_divider.setVisible(True)
+    else:
+        upll_divider.setVisible(False)
+
+def __update_generic_clk_src_visibility(generic_clk_src, event):
+    """
+    Updates Generic Clock Source Symbol visibility after enabling/disabling
+    the Generic Clock.
+
+    generic_clk_src: Generic Clock Combo symbol handle.
+    event: callback event dictionary.
+    """
+    if event["value"] is True:
+        generic_clk_src.setVisible(True)
+    else:
+        generic_clk_src.setVisible(False)
+
+def __update_generic_clk_div_visibility(generic_clk_divider, event):
+    """
+    Updates Generic Clock divider visibility after enabling/disabling
+    the Generic Clock.
+
+    generic_clk_divider: Generic Clock divider integer symbol handle.
+    event: callback event dictionary.
+    """
+    if event["value"] is True:
+        generic_clk_divider.setVisible(True)
+    else:
+        generic_clk_divider.setVisible(False)
+
+def __update_slow_xtal_freq_ro_prop(slow_xtal_input_freq, event):
+    """
+    Updates the Slow Clock Frequency read only property after enabling/disabling
+    oscillator bypass.
+
+    slow_xtal_input_freq: Slow Clock XTAL input frequency integer symbol handle.
+    event: callback event dictionary.
+    """
+    if event["value"] is True:
+        slow_xtal_input_freq.setReadOnly(True)
+    else:
+        slow_xtal_input_freq.setReadOnly(False)
+
+def __disable_main_xtal(main_xtal_enable, event):
+    """
+    Disables Main XTAL after enabling XTAL Bypass.
+
+    main_xtal_enable: Main XTAL enable boolean symbol handle.
+    event: callback event dictionary
+    """
+    if event["value"] is True:
+        main_xtal_enable.clearValue("PMC_CKGR_MOR_MOSCXTEN")
+        main_xtal_enable.setValue(False, 1)
+
+def __slow_clock_menu(clk_comp, clk_menu, supc_reg_module, update_slow_xtal_freq_ro_prop):
+    """
+    Slow Clock Menu Implementation.
+
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    supc_reg_module: SUPC Register Module
+    update_slow_xtal_freq_ro_prop: Callback function to update Slow XTAL frequency
+                                   read only property
+    """
     # creates Slow Clock Configuration Menu
-    clkSymMenu = clkComponent.createMenuSymbol("CLK_SLOW", clkSymMenu)
-    clkSymMenu.setLabel("Slow Clock Configuration")
+    clk_menu = clk_comp.createMenuSymbol("CLK_SLOW", clk_menu)
+    clk_menu.setLabel("Slow Clock Configuration")
 
     # get SUPC register group
-    supcRegGroup = supcRegModule.getRegisterGroup("SUPC")
+    supc_reg_group = supc_reg_module.getRegisterGroup("SUPC")
 
     # get SUPC_CR Register
-    supcReg_SUPC_CR = supcRegGroup.getRegister("SUPC_CR")
+    reg_supc_cr = supc_reg_group.getRegister("SUPC_CR")
 
     # get XTALSEL Bitfield of SUPC_CR Register
-    supcBitField_SUPC_CR_XTALSEL = supcReg_SUPC_CR.getBitfield("XTALSEL")
-    supcValGrp_SUPC_CR_XTALSEL = supcRegModule.getValueGroup(supcBitField_SUPC_CR_XTALSEL.getValueGroupName())
+    bitfield_supc_cr_xtalsel = reg_supc_cr.getBitfield("XTALSEL")
 
     # Create Combo symbol for XTALSEL Bitfield of SUPC_CR Register
-    clkSym_SUPC_CR_XTALSEL = clkComponent.createBooleanSymbol("SUPC_CR_XTALSEL", clkSymMenu)
-    clkSym_SUPC_CR_XTALSEL.setLabel(supcBitField_SUPC_CR_XTALSEL.getDescription())
-    clkSym_SUPC_CR_XTALSEL.setDefaultValue(False)
+    sym_supc_cr_xtalsel = clk_comp.createBooleanSymbol("SUPC_CR_XTALSEL", clk_menu)
+    sym_supc_cr_xtalsel.setLabel(bitfield_supc_cr_xtalsel.getDescription())
+    sym_supc_cr_xtalsel.setDefaultValue(False)
 
     # get SUPC_MR Register
-    supcReg_SUPC_MR = supcRegGroup.getRegister("SUPC_MR")
+    reg_supc_mr = supc_reg_group.getRegister("SUPC_MR")
 
     # get OSCBYPASS Bitfield of SUPC_MR Register
-    supcBitField_SUPC_MR_OSCBYPASS = supcReg_SUPC_MR.getBitfield("OSCBYPASS")
+    bitfield_supc_mr_oscbypass = reg_supc_mr.getBitfield("OSCBYPASS")
 
     # Create Boolean symbol for OSCBYPASS Bitfield of SUPC_MR Register
-    clkSym_SUPC_MR_OSCBYPASS = clkComponent.createBooleanSymbol("SUPC_MR_OSCBYPASS", clkSym_SUPC_CR_XTALSEL)
-    clkSym_SUPC_MR_OSCBYPASS.setLabel(supcBitField_SUPC_MR_OSCBYPASS.getDescription())
-    clkSym_SUPC_MR_OSCBYPASS.setDefaultValue(False)
+    sym_supc_mr_oscbypass = clk_comp.createBooleanSymbol("SUPC_MR_OSCBYPASS", sym_supc_cr_xtalsel)
+    sym_supc_mr_oscbypass.setLabel(bitfield_supc_mr_oscbypass.getDescription())
+    sym_supc_mr_oscbypass.setDefaultValue(False)
 
     # set slow clock input frequency
-    clkSymExtClkInputFreq = clkComponent.createIntegerSymbol("CLK_SLOW_XTAL", clkSym_SUPC_CR_XTALSEL)
-    clkSymExtClkInputFreq.setLabel("External Slow Clock Input Frequency (Hz)")
-    clkSymExtClkInputFreq.setDefaultValue(32768)
-    clkSymExtClkInputFreq.setReadOnly(True)
-    clkSymExtClkInputFreq.setDependencies(resetReadOnlySlowClkFreq, ["SUPC_MR_OSCBYPASS"])
+    sym_slow_xtal_freq = clk_comp.createIntegerSymbol("CLK_SLOW_XTAL", sym_supc_cr_xtalsel)
+    sym_slow_xtal_freq.setLabel("External Slow Clock Input Frequency (Hz)")
+    sym_slow_xtal_freq.setDefaultValue(32768)
+    sym_slow_xtal_freq.setReadOnly(True)
+    sym_slow_xtal_freq.setDependencies(update_slow_xtal_freq_ro_prop, ["SUPC_MR_OSCBYPASS"])
 
 # Main RC/Crystal Oscillator
-def mainClock(clkComponent, clkSymMenu, pmcRegModule, updateExtXtalEnable):
+def __main_clock_menu(clk_comp, clk_menu, pmc_reg_module, disable_main_xtal):
+    """
+    Main Clock Menu Implementation.
 
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    pmc_reg_module: PMC Register Module
+    disable_main_xtal: Callback function to disable main xtal
+    """
     # create Main Clock Configuration Menu
-    clkSymMenu = clkComponent.createMenuSymbol("CLK_MAIN", clkSymMenu)
-    clkSymMenu.setLabel("Main Clock Configuration")
+    clk_menu = clk_comp.createMenuSymbol("CLK_MAIN", clk_menu)
+    clk_menu.setLabel("Main Clock Configuration")
 
     # get PMC register group
-    pmcRegGroup = pmcRegModule.getRegisterGroup("PMC")
+    pmc_reg_group = pmc_reg_module.getRegisterGroup("PMC")
 
     # get CKGR_MOR Register
-    pmcReg_CKGR_MOR = pmcRegGroup.getRegister("CKGR_MOR")
+    reg_ckgr_mor = pmc_reg_group.getRegister("CKGR_MOR")
 
     # get MOSCRCEN Bitfield of CKGR_MOR Register
-    pmcBitField_CKGR_MOR_MOSCRCEN = pmcReg_CKGR_MOR.getBitfield("MOSCRCEN")
+    bitfield_ckgr_mor_moscrcen = reg_ckgr_mor.getBitfield("MOSCRCEN")
 
     # create symbol for MOSCRCEN Bitfield of CKGR_MOR Register
-    clkSymRCEnable = clkComponent.createBooleanSymbol("PMC_CKGR_MOR_MOSCRCEN", clkSymMenu)
-    clkSymRCEnable.setLabel(pmcBitField_CKGR_MOR_MOSCRCEN.getDescription())
-    clkSymRCEnable.setDefaultValue(True)
+    sym_rc_enable = clk_comp.createBooleanSymbol("PMC_CKGR_MOR_MOSCRCEN", clk_menu)
+    sym_rc_enable.setLabel(bitfield_ckgr_mor_moscrcen.getDescription())
+    sym_rc_enable.setDefaultValue(True)
 
     # get MOSCRCF Bitfield of CKGR_MOR Register
-    pmcBitField_CKGR_MOR_MOSCRCF = pmcReg_CKGR_MOR.getBitfield("MOSCRCF")
+    bitfield_ckgr_mor_moscrcf = reg_ckgr_mor.getBitfield("MOSCRCF")
 
     # get value group for MOSCRCF Bitfield of CKGR_MOR Register
-    pmcValGrp_CKGR_MOR_MOSCRCF = pmcRegModule.getValueGroup(pmcBitField_CKGR_MOR_MOSCRCF.getValueGroupName())
+    valgrp_ckgr_mor_moscrcf = pmc_reg_module.getValueGroup(bitfield_ckgr_mor_moscrcf.getValueGroupName())
 
     # create symbol for MOSCRCF Bitfield of CKGR_MOR Register
-    clkSymRCFreq = clkComponent.createComboSymbol("PMC_CKGR_MOR_MOSCRCF", clkSymRCEnable, pmcValGrp_CKGR_MOR_MOSCRCF.getValueNames())
-    clkSymRCFreq.setLabel(pmcBitField_CKGR_MOR_MOSCRCF.getDescription())
-    clkSymRCFreq.setDefaultValue("12_MHz")
+    sym_rc_freq = clk_comp.createComboSymbol("PMC_CKGR_MOR_MOSCRCF", sym_rc_enable, valgrp_ckgr_mor_moscrcf.getValueNames())
+    sym_rc_freq.setLabel(bitfield_ckgr_mor_moscrcf.getDescription())
+    sym_rc_freq.setDefaultValue("_12_MHz")
 
     # get MOSCXTBY Bitfield of CKGR_MOR Register
-    pmcBitField_CKGR_MOR_MOSCXTBY = pmcReg_CKGR_MOR.getBitfield("MOSCXTBY")
+    bitfield_ckgr_mor_moscxtby = reg_ckgr_mor.getBitfield("MOSCXTBY")
 
     # create symbol for MOSCXTBY Bitfield of CKGR_MOR Register
-    clkSymOscBypass = clkComponent.createBooleanSymbol("PMC_CKGR_MOR_MOSCXTBY", clkSymMenu)
-    clkSymOscBypass.setLabel(pmcBitField_CKGR_MOR_MOSCXTBY.getDescription())
+    sym_osc_bypass = clk_comp.createBooleanSymbol("PMC_CKGR_MOR_MOSCXTBY", clk_menu)
+    sym_osc_bypass.setLabel(bitfield_ckgr_mor_moscxtby.getDescription())
 
     # get MOSCXTEN Bitfield of CKGR_MOR Register
-    pmcBitField_CKGR_MOR_MOSCXTEN = pmcReg_CKGR_MOR.getBitfield("MOSCXTEN")
+    bitfield_ckgr_mor_moscxten = reg_ckgr_mor.getBitfield("MOSCXTEN")
 
     # create Boolean Symbol for MOSCXTEN Bitfield of CKGR_MOR Register
-    clkSymCrystalOscEnable = clkComponent.createBooleanSymbol("PMC_CKGR_MOR_MOSCXTEN", clkSymMenu)
-    clkSymCrystalOscEnable.setLabel(pmcBitField_CKGR_MOR_MOSCXTEN.getDescription())
-    clkSymCrystalOscEnable.setDefaultValue(False)
-    clkSymCrystalOscEnable.setDependencies(updateExtXtalEnable, ["PMC_CKGR_MOR_MOSCXTBY"])
+    sym_crystal_osc_enable = clk_comp.createBooleanSymbol("PMC_CKGR_MOR_MOSCXTEN", clk_menu)
+    sym_crystal_osc_enable.setLabel(bitfield_ckgr_mor_moscxten.getDescription())
+    sym_crystal_osc_enable.setDefaultValue(False)
+    sym_crystal_osc_enable.setDependencies(disable_main_xtal, ["PMC_CKGR_MOR_MOSCXTBY"])
 
     # create integer symbol for external main clock frequency
-    clkSymExtClkInputFreq = clkComponent.createIntegerSymbol("CLK_MAIN_XTAL", clkSymCrystalOscEnable)
-    clkSymExtClkInputFreq.setLabel("External Main Clock Input Frequency (Hz)")
-    clkSymExtClkInputFreq.setDefaultValue(12000000)
-    clkSymExtClkInputFreq.setMin(3000000)
-    clkSymExtClkInputFreq.setMax(20000000)
+    sym_main_xtal_freq = clk_comp.createIntegerSymbol("CLK_MAIN_XTAL", sym_crystal_osc_enable)
+    sym_main_xtal_freq.setLabel("External Main Clock Input Frequency (Hz)")
+    sym_main_xtal_freq.setDefaultValue(12000000)
+    sym_main_xtal_freq.setMin(3000000)
+    sym_main_xtal_freq.setMax(20000000)
 
     # get MOSCXTST Bitfield of CKGR_MOR Register
-    pmcBitField_CKGR_MOR_MOSCXTST = pmcReg_CKGR_MOR.getBitfield("MOSCXTST")
+    bitfield_ckgr_mor_moscxtst = reg_ckgr_mor.getBitfield("MOSCXTST")
 
     # get symbol for MOSCXTST Bitfield of CKGR_MOR Register
-    clkSymCrystalOscStartupTime = clkComponent.createIntegerSymbol("PMC_CKGR_MOR_MOSCXTST", clkSymCrystalOscEnable)
-    clkSymCrystalOscStartupTime.setLabel(pmcBitField_CKGR_MOR_MOSCXTST.getDescription())
-    clkSymCrystalOscStartupTime.setDefaultValue(255)
-    clkSymCrystalOscStartupTime.setMin(0)
-    clkSymCrystalOscStartupTime.setMax(255)
+    sym_xtal_startup_time = clk_comp.createIntegerSymbol("PMC_CKGR_MOR_MOSCXTST", sym_crystal_osc_enable)
+    sym_xtal_startup_time.setLabel(bitfield_ckgr_mor_moscxtst.getDescription())
+    sym_xtal_startup_time.setDefaultValue(255)
+    sym_xtal_startup_time.setMin(0)
+    sym_xtal_startup_time.setMax(255)
 
     # get MOSCSEL Bitfield of CKGR_MOR Register
-    pmcBitField_CKGR_MOR_MOSCSEL = pmcReg_CKGR_MOR.getBitfield("MOSCSEL")
+    bitfield_ckgr_mor_moscsel = reg_ckgr_mor.getBitfield("MOSCSEL")
 
     # create symbol for main clock source
-    clkSymClkSource = clkComponent.createBooleanSymbol("PMC_CKGR_MOR_MOSCSEL", clkSymMenu)
-    clkSymClkSource.setLabel(pmcBitField_CKGR_MOR_MOSCSEL.getDescription())
-    clkSymClkSource.setDefaultValue(False)
+    sym_main_clk_src = clk_comp.createBooleanSymbol("PMC_CKGR_MOR_MOSCSEL", clk_menu)
+    sym_main_clk_src.setLabel(bitfield_ckgr_mor_moscsel.getDescription())
+    sym_main_clk_src.setDefaultValue(False)
 
-def pllA(clkComponent, clkSymMenu, pmcRegModule, setDividerVisibleProperty, setMultiplierVisibleProperty):
+# PLLA
+def __plla_menu(clk_comp, clk_menu, pmc_reg_module, plla_div_visibility, plla_mul_visibility):
+    """
+    PLLA Clock Menu Implementation.
 
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    pmc_reg_module: PMC Register Module
+    plla_div_visibility: Callback to enable/disable PLLA Divider visibility
+    plla_mul_visibility: Callback to enable/disable PLLA Multiplier visibility
+    """
     # create PLLA Configuration Menu
-    clkSymMenu = clkComponent.createMenuSymbol("CLK_PLLA", clkSymMenu)
-    clkSymMenu.setLabel("Clock PLL Configuration")
+    clk_menu = clk_comp.createMenuSymbol("CLK_PLLA", clk_menu)
+    clk_menu.setLabel("Clock PLL Configuration")
 
     # get PMC register group
-    pmcRegGroup = pmcRegModule.getRegisterGroup("PMC")
+    pmc_reg_group = pmc_reg_module.getRegisterGroup("PMC")
 
     # get CKGR_PLLAR register
-    pmcReg_CKGR_PLLAR = pmcRegGroup.getRegister("CKGR_PLLAR")
+    reg_ckgr_pllar = pmc_reg_group.getRegister("CKGR_PLLAR")
 
     # create symbol to enable/disable PLLA
-    clkSymPLLAEnable = clkComponent.createBooleanSymbol("CLK_PLLA_ENABLE", clkSymMenu)
-    clkSymPLLAEnable.setLabel("Enable PLLA Clock")
-    clkSymPLLAEnable.setDefaultValue(True)
+    sym_plla_enable = clk_comp.createBooleanSymbol("CLK_PLLA_ENABLE", clk_menu)
+    sym_plla_enable.setLabel("Enable PLLA Clock")
+    sym_plla_enable.setDefaultValue(True)
 
     # get DIVA Bitfield of CKGR_PLLAR Register
-    pmcReg_CKGR_PLLAR_DIVA = pmcReg_CKGR_PLLAR.getBitfield("DIVA")
+    reg_ckgr_pllar_diva = reg_ckgr_pllar.getBitfield("DIVA")
 
-    # create symbol for DIVA Bitfield of CKGR_PLLAR Register
-    clkSymDivider = clkComponent.createIntegerSymbol("PMC_CKGR_PLLAR_DIVA", clkSymPLLAEnable)
-    clkSymDivider.setLabel(pmcReg_CKGR_PLLAR_DIVA.getDescription())
-    clkSymDivider.setMin(0)
-    clkSymDivider.setMax(255)
-    clkSymDivider.setDefaultValue(1)
-    clkSymDivider.setDependencies(setDividerVisibleProperty, ["CLK_PLLA_ENABLE"])
+    # creates symbol for DIVA Bitfield of CKGR_PLLAR Register
+    sym_divider = clk_comp.createIntegerSymbol("PMC_CKGR_PLLAR_DIVA", sym_plla_enable)
+    sym_divider.setLabel(reg_ckgr_pllar_diva.getDescription())
+    sym_divider.setMin(0)
+    sym_divider.setMax(255)
+    sym_divider.setDefaultValue(1)
+    sym_divider.setDependencies(plla_div_visibility, ["CLK_PLLA_ENABLE"])
 
     # get MULA Bitfield of CKGR_PLLAR register
-    pmcReg_CKGR_PLLAR_MULA = pmcReg_CKGR_PLLAR.getBitfield("MULA")
+    reg_ckgr_pllar_mula = reg_ckgr_pllar.getBitfield("MULA")
 
     # create symbol for MULA Bitfield of CKGR_PLLAR Register
-    clkSymMultiplier = clkComponent.createIntegerSymbol("PMC_CKGR_PLLAR_MULA", clkSymPLLAEnable)
-    clkSymMultiplier.setLabel(pmcReg_CKGR_PLLAR_MULA.getDescription())
-    clkSymMultiplier.setMin(0)
-    clkSymMultiplier.setMax(63)
-    clkSymMultiplier.setDefaultValue(25)
-    clkSymMultiplier.setDependencies(setMultiplierVisibleProperty, ["CLK_PLLA_ENABLE"])
+    sym_multiplier = clk_comp.createIntegerSymbol("PMC_CKGR_PLLAR_MULA", sym_plla_enable)
+    sym_multiplier.setLabel(reg_ckgr_pllar_mula.getDescription())
+    sym_multiplier.setMin(0)
+    sym_multiplier.setMax(63)
+    sym_multiplier.setDefaultValue(25)
+    sym_multiplier.setDependencies(plla_mul_visibility, ["CLK_PLLA_ENABLE"])
 
-def masterClock(clkComponent, clkSymMenu, pmcRegModule):
+def __master_clock_menu(clk_comp, clk_menu, pmc_reg_module):
+    """
+    Master Clock Menu Implementation.
 
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    pmc_reg_module: PMC Register Module
+    """
     # create symbol for Master Clock Menu.
-    clkSymMenu = clkComponent.createMenuSymbol("CLK_MASTER", clkSymMenu)
-    clkSymMenu.setLabel("Processor and Master Clock Configuration")
+    clk_menu = clk_comp.createMenuSymbol("CLK_MASTER", clk_menu)
+    clk_menu.setLabel("Processor and Master Clock Configuration")
 
     # get PMC Register Group
-    pmcRegGroup = pmcRegModule.getRegisterGroup("PMC")
+    pmc_reg_group = pmc_reg_module.getRegisterGroup("PMC")
 
     # get PMC_MCKR register
-    pmcReg_PMC_MCKR = pmcRegGroup.getRegister("PMC_MCKR")
+    reg_pmc_mckr = pmc_reg_group.getRegister("PMC_MCKR")
 
     # get CSS Bitfield of PMC_MCKR register
-    pmcBitField_PMC_MCKR_CSS = pmcReg_PMC_MCKR.getBitfield("CSS")
+    bitfield_pmc_mckr_css = reg_pmc_mckr.getBitfield("CSS")
 
     # get Value Group for CSS Bitfield of PMC_MCKR register
-    pmcValGrp_PMC_MCKR_CSS = pmcRegModule.getValueGroup(pmcBitField_PMC_MCKR_CSS.getValueGroupName())
+    valgrp_pmc_mckr_css = pmc_reg_module.getValueGroup(bitfield_pmc_mckr_css.getValueGroupName())
 
     # create symbol for CSS Bitfield of PMC_MCKR register
-    clkSym_PMC_MCKR_CSS = clkComponent.createComboSymbol("PMC_MCKR_CSS", clkSymMenu, pmcValGrp_PMC_MCKR_CSS.getValueNames())
-    clkSym_PMC_MCKR_CSS.setLabel(pmcBitField_PMC_MCKR_CSS.getDescription())
-    clkSym_PMC_MCKR_CSS.setDefaultValue("PLLA_CLK")
+    sym_pmc_mckr_css = clk_comp.createComboSymbol("PMC_MCKR_CSS", clk_menu, valgrp_pmc_mckr_css.getValueNames())
+    sym_pmc_mckr_css.setLabel(bitfield_pmc_mckr_css.getDescription())
+    sym_pmc_mckr_css.setDefaultValue("PLLA_CLK")
 
     # get PRES Bitfield of PMC_MCKR register
-    pmcBitField_PMC_MCKR_PRES = pmcReg_PMC_MCKR.getBitfield("PRES")
+    bitfield_pmc_mckr_pres = reg_pmc_mckr.getBitfield("PRES")
 
     # get Value Group for PRES Bitfield of PMC_MCKR register
-    pmcValGrp_PMC_MCKR_PRES = pmcRegModule.getValueGroup(pmcBitField_PMC_MCKR_PRES.getValueGroupName())
+    valgrp_pmc_mckr_pres = pmc_reg_module.getValueGroup(bitfield_pmc_mckr_pres.getValueGroupName())
 
     # create symbol for PRES Bitfield of PMC_MCKR register
-    clkSym_PMC_MCKR_PRES = clkComponent.createComboSymbol("PMC_MCKR_PRES", clkSymMenu, pmcValGrp_PMC_MCKR_PRES.getValueNames())
-    clkSym_PMC_MCKR_PRES.setLabel(pmcBitField_PMC_MCKR_PRES.getDescription())
-    clkSym_PMC_MCKR_PRES.setDefaultValue("CLK_1")
+    sym_pmc_mckr_pres = clk_comp.createComboSymbol("PMC_MCKR_PRES", clk_menu, valgrp_pmc_mckr_pres.getValueNames())
+    sym_pmc_mckr_pres.setLabel(bitfield_pmc_mckr_pres.getDescription())
+    sym_pmc_mckr_pres.setDefaultValue("CLK_1")
 
     # get MDIV Bitfield of PMC_MCKR register
-    pmcBitField_PMC_MCKR_MDIV = pmcReg_PMC_MCKR.getBitfield("MDIV")
+    bitfield_pmc_mckr_mdiv = reg_pmc_mckr.getBitfield("MDIV")
 
     # get Value Group for MDIV Bitfield of PMC_MCKR register
-    pmcValGrp_PMC_MCKR_MDIV = pmcRegModule.getValueGroup(pmcBitField_PMC_MCKR_MDIV.getValueGroupName())
+    valgrp_pmc_mckr_mdiv = pmc_reg_module.getValueGroup(bitfield_pmc_mckr_mdiv.getValueGroupName())
 
     # create symbol for MDIV Bitfield of PMC_MCKR register
-    clkSym_PMC_MCKR_MDIV = clkComponent.createComboSymbol("PMC_MCKR_MDIV", clkSymMenu, pmcValGrp_PMC_MCKR_MDIV.getValueNames())
-    clkSym_PMC_MCKR_MDIV.setLabel(pmcBitField_PMC_MCKR_MDIV.getDescription())
-    clkSym_PMC_MCKR_MDIV.setDefaultValue("PCK_DIV2")
+    sym_pmc_mckr_mdiv = clk_comp.createComboSymbol("PMC_MCKR_MDIV", clk_menu, valgrp_pmc_mckr_mdiv.getValueNames())
+    sym_pmc_mckr_mdiv.setLabel(bitfield_pmc_mckr_mdiv.getDescription())
+    sym_pmc_mckr_mdiv.setDefaultValue("PCK_DIV2")
 
-def usbClock(clkComponent, clkSymMenu, pmcRegModule, utmiRegModule, setUSBDividerVisibleProperty):
+def __usb_clock_menu(clk_comp, clk_menu, pmc_reg_module, utmi_reg_module, update_upll_divider_visibility):
+    """
+    USB Clock Menu Implementation.
 
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    pmc_reg_module: PMC Register Module
+    utmi_reg_module: UTMI Register Module
+    update_upll_divider_visibility: Callback to enable/disable UPLL Divider visibility
+    """
     # create symbol for USB Clock Menu
-    clkSymMenu = clkComponent.createMenuSymbol("CLK_USB", clkSymMenu)
-    clkSymMenu.setLabel("USB Clock Configuration")
+    clk_menu = clk_comp.createMenuSymbol("CLK_USB", clk_menu)
+    clk_menu.setLabel("USB Clock Configuration")
 
     # get PMC register group
-    pmcRegGroup = pmcRegModule.getRegisterGroup("PMC")
+    pmc_reg_group = pmc_reg_module.getRegisterGroup("PMC")
 
     # get CKGR_UCKR register
-    pmcReg_CKGR_UCKR = pmcRegGroup.getRegister("CKGR_UCKR")
+    reg_ckgr_uckr = pmc_reg_group.getRegister("CKGR_UCKR")
 
     # get UPLLEN Bitfield of CKGR_UCKR register
-    pmcBitField_CKGR_UCKR_UPLLEN = pmcReg_CKGR_UCKR.getBitfield("UPLLEN")
+    bitfield_ckgr_uckr_upllen = reg_ckgr_uckr.getBitfield("UPLLEN")
 
     # create symbol for UPLLEN Bitfield of CKGR_UCKR register
-    clkSym_CKGR_UCKR_UPLLEN = clkComponent.createBooleanSymbol("PMC_CKGR_UCKR_UPLLEN", clkSymMenu)
-    clkSym_CKGR_UCKR_UPLLEN.setLabel(pmcBitField_CKGR_UCKR_UPLLEN.getDescription())
+    sym_ckgr_uckr_upllen = clk_comp.createBooleanSymbol("PMC_CKGR_UCKR_UPLLEN", clk_menu)
+    sym_ckgr_uckr_upllen.setLabel(bitfield_ckgr_uckr_upllen.getDescription())
 
     # get UTMI register group
-    utmiRegGroup = utmiRegModule.getRegisterGroup("UTMI")
+    utmi_reg_group = utmi_reg_module.getRegisterGroup("UTMI")
 
     # get UTMI_CKTRIM register
-    utmiReg_UTMI_CKTRIM = utmiRegGroup.getRegister("UTMI_CKTRIM")
+    reg_utmi_cktrim = utmi_reg_group.getRegister("UTMI_CKTRIM")
 
     # get FREQ bitfield of UTMI_CKTRIM register
-    utmiBitField_UTMI_CKTRIM_FREQ = utmiReg_UTMI_CKTRIM.getBitfield("FREQ")
+    bitfield_utmi_cktrim_freq = reg_utmi_cktrim.getBitfield("FREQ")
 
     # get value group for FREQ bitfield of UTMI_CKTRIM register
-    utmiValGrp_UTMI_CKTRIM_FREQ = utmiRegModule.getValueGroup(utmiBitField_UTMI_CKTRIM_FREQ.getValueGroupName())
+    valgrp_utmi_cktrim_freq = utmi_reg_module.getValueGroup(bitfield_utmi_cktrim_freq.getValueGroupName())
 
     # create symbol for FREQ bitfield of UTMI_CKTRIM register
-    clkSym_UTMI_CKTRIM_FREQ = clkComponent.createComboSymbol("UTMI_CKTRIM_FREQ", clkSym_CKGR_UCKR_UPLLEN, utmiValGrp_UTMI_CKTRIM_FREQ.getValueNames())
-    clkSym_UTMI_CKTRIM_FREQ.setDefaultValue("XTAL12")
-    clkSym_UTMI_CKTRIM_FREQ.setVisible(False)
+    sym_utmi_cktrim_freq = clk_comp.createComboSymbol("UTMI_CKTRIM_FREQ", sym_ckgr_uckr_upllen, valgrp_utmi_cktrim_freq.getValueNames())
+    sym_utmi_cktrim_freq.setDefaultValue("XTAL12")
+    sym_utmi_cktrim_freq.setVisible(False)
 
     # get PMC_MCKR register
-    pmcReg_PMC_MCKR = pmcRegGroup.getRegister("PMC_MCKR")
+    reg_pmc_mckr = pmc_reg_group.getRegister("PMC_MCKR")
 
     # get UPLLDIV2 Bitfield of PMC_MCKR register
-    pmcBitField_PMC_MCKR_UPLLDIV2 = pmcReg_PMC_MCKR.getBitfield("UPLLDIV2")
+    bitfield_pmc_mckr_uplldiv2 = reg_pmc_mckr.getBitfield("UPLLDIV2")
 
     # create symbol for UPLLDIV2 Bitfield of PMC_MCKR register
-    clkSym_PMC_MCKR_UPLLDIV2 = clkComponent.createBooleanSymbol("PMC_MCKR_UPLLDIV2", clkSym_CKGR_UCKR_UPLLEN)
-    clkSym_PMC_MCKR_UPLLDIV2.setLabel(pmcBitField_PMC_MCKR_UPLLDIV2.getDescription())
-    clkSym_PMC_MCKR_UPLLDIV2.setDefaultValue(False)
-    clkSym_PMC_MCKR_UPLLDIV2.setVisible(False)
-    clkSym_PMC_MCKR_UPLLDIV2.setDependencies(setUSBDividerVisibleProperty, ["PMC_CKGR_UCKR_UPLLEN"])
+    sym_pmc_mckr_uplldiv2 = clk_comp.createBooleanSymbol("PMC_MCKR_UPLLDIV2", sym_ckgr_uckr_upllen)
+    sym_pmc_mckr_uplldiv2.setLabel(bitfield_pmc_mckr_uplldiv2.getDescription())
+    sym_pmc_mckr_uplldiv2.setDefaultValue(False)
+    sym_pmc_mckr_uplldiv2.setVisible(False)
+    sym_pmc_mckr_uplldiv2.setDependencies(update_upll_divider_visibility, ["PMC_CKGR_UCKR_UPLLEN"])
 
     # get PMC_SCER register
-    pmcReg_PMC_SCER = pmcRegGroup.getRegister("PMC_SCER")
+    reg_pmc_scer = pmc_reg_group.getRegister("PMC_SCER")
 
     # get USBCLK bitfield of PMC_SCER register
-    pmcBitField_PMC_SCER_USBCLK = pmcReg_PMC_SCER.getBitfield("USBCLK")
+    bitfield_pmc_scer_usbclk = reg_pmc_scer.getBitfield("USBCLK")
 
     # get symbol for USBCLK bitfield of PMC_SCER register
-    clkPMC_SCER_USBCLK = clkComponent.createBooleanSymbol("PMC_SCER_USBCLK", clkSymMenu)
-    clkPMC_SCER_USBCLK.setLabel(pmcBitField_PMC_SCER_USBCLK.getDescription())
+    sym_pmc_scer_usbclk = clk_comp.createBooleanSymbol("PMC_SCER_USBCLK", clk_menu)
+    sym_pmc_scer_usbclk.setLabel(bitfield_pmc_scer_usbclk.getDescription())
 
     # get PMC_USB register
-    pmcReg_PMC_USB = pmcRegGroup.getRegister("PMC_USB")
+    reg_pmc_usb = pmc_reg_group.getRegister("PMC_USB")
 
     # get USBS bitfield of PMC_USB register
-    pmcBitField_PMC_USB_USBS = pmcReg_PMC_USB.getBitfield("USBS")
-
-    # get value group for USBS bitfield of PMC_USB register
-    pmcValGrp_PMC_USB_USBS = pmcRegModule.getValueGroup(pmcBitField_PMC_USB_USBS.getValueGroupName())
+    bitfield_pmc_usb_usbs = reg_pmc_usb.getBitfield("USBS")
 
     # create symbol for USBS bitfield of PMC_USB register
-    clkSym_PMC_USB_USBS = clkComponent.createComboSymbol("PMC_USB_USBS", clkPMC_SCER_USBCLK,["PLLA_CLK", "UPLL_CLK"])
-    clkSym_PMC_USB_USBS.setLabel(pmcBitField_PMC_USB_USBS.getDescription())
-    clkSym_PMC_USB_USBS.setDefaultValue("UPLL_CLK")
+    sym_pmc_usb_usbs = clk_comp.createComboSymbol("PMC_USB_USBS", sym_pmc_scer_usbclk, ["PLLA_CLK", "UPLL_CLK"])
+    sym_pmc_usb_usbs.setLabel(bitfield_pmc_usb_usbs.getDescription())
+    sym_pmc_usb_usbs.setDefaultValue("UPLL_CLK")
 
     # get USBDIV bitfield of PMC_USB register
-    pmcBitField_PMC_USB_USBDIV = pmcReg_PMC_USB.getBitfield("USBDIV")
+    bitfield_pmc_usb_usbdiv = reg_pmc_usb.getBitfield("USBDIV")
 
     # create symbol for USBDIV bitfield of PMC_USB register
-    clkUSBDivider = clkComponent.createIntegerSymbol("PMC_USB_USBDIV", clkPMC_SCER_USBCLK)
-    clkUSBDivider.setLabel(pmcBitField_PMC_USB_USBDIV.getDescription())
-    clkUSBDivider.setMin(1)
-    clkUSBDivider.setMax(16)
-    clkUSBDivider.setDefaultValue(10)
-    clkUSBDivider.setReadOnly(True)
+    sym_usb_divider = clk_comp.createIntegerSymbol("PMC_USB_USBDIV", sym_pmc_scer_usbclk)
+    sym_usb_divider.setLabel(bitfield_pmc_usb_usbdiv.getDescription())
+    sym_usb_divider.setMin(1)
+    sym_usb_divider.setMax(16)
+    sym_usb_divider.setDefaultValue(10)
+    sym_usb_divider.setReadOnly(True)
 
-def genericClk(clkComponent, clkSymMenu, pmcRegModule, setGenericClkDivVisible, setGenericClkSrcVisible):
+def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module, gclk_div_visibility, gclk_src_visibility):
+    """
+    Generic Clock Menu Implementation.
 
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    pmc_reg_module: PMC Register Module
+    gclk_div_visibility: Callback to enable/disable Generic Clock Divider Visibility
+    gclk_src_visibility: Callback to enable/disable Generic Clock Source Visibility
+    """
     # create symbol for generic clock
-    clkSymMenu = clkComponent.createMenuSymbol("CLK_GENERIC", clkSymMenu)
-    clkSymMenu.setLabel("Peripheral/Generic Clock Generator Configuration for I2S0/1")
+    clk_menu = clk_comp.createMenuSymbol("CLK_GENERIC", clk_menu)
+    clk_menu.setLabel("Peripheral/Generic Clock Generator Configuration for I2S0/1")
 
     # get PMC register group
-    pmcRegGroup = pmcRegModule.getRegisterGroup("PMC")
+    pmc_reg_group = pmc_reg_module.getRegisterGroup("PMC")
 
     # get PMC_PCR register
-    pmcReg_PMC_PCR = pmcRegGroup.getRegister("PMC_PCR")
+    reg_pmc_pcr = pmc_reg_group.getRegister("PMC_PCR")
 
     for i in range(0, 2, 1):
 
         # create menu for Peripheral/Generic Clock for I2S0/1
-        clkSymI2SMenu = clkComponent.createMenuSymbol("CLK_I2S" + str(i), clkSymMenu)
-        clkSymI2SMenu.setLabel("Peripheral/Generic Clock for I2S" + str(i))
+        sym_gclkx_menu = clk_comp.createMenuSymbol("CLK_I2S" + str(i), clk_menu)
+        sym_gclkx_menu.setLabel("Peripheral/Generic Clock for I2S" + str(i))
 
         # create menu for Peripheral Clock for I2S0/1
-        clkSymI2SPeripheralMenu = clkComponent.createMenuSymbol("CLK_I2S" + str(i) + "PERIPHERAL", clkSymI2SMenu)
-        clkSymI2SPeripheralMenu.setLabel( "I2S" + str(i) +" Peripheral Clock")
+        sym_i2s_pclk_menu = clk_comp.createMenuSymbol("CLK_I2S" + str(i) + "PERIPHERAL", sym_gclkx_menu)
+        sym_i2s_pclk_menu.setLabel("I2S" + str(i) +" Peripheral Clock")
 
         # get EN bitfield of PMC_PCR Register
-        pmcBitField_PMC_PCR = pmcReg_PMC_PCR.getBitfield("EN")
+        bitfield_pmc_pcr = reg_pmc_pcr.getBitfield("EN")
 
         # create symbol for EN bitfield of PMC_PCR Register
-        clkSym_PMC_PCR_EN = clkComponent.createBooleanSymbol("PMC_PCR_EN" + str(i), clkSymI2SPeripheralMenu)
-        clkSym_PMC_PCR_EN.setLabel(pmcBitField_PMC_PCR.getDescription())
-        clkSym_PMC_PCR_EN.setDefaultValue(False)
+        sym_pmc_pcr_en = clk_comp.createBooleanSymbol("PMC_PCR_EN" + str(i), sym_i2s_pclk_menu)
+        sym_pmc_pcr_en.setLabel(bitfield_pmc_pcr.getDescription())
+        sym_pmc_pcr_en.setDefaultValue(False)
 
         # create menu for Generic clock for I2S0/1
-        clkSymGenericMenu = clkComponent.createMenuSymbol("CLK_I2S" + str(i) + "GENERIC", clkSymI2SMenu)
-        clkSymGenericMenu.setLabel("I2S" + str(i) + "Generic Clock")
+        sym_gen_clk_menu = clk_comp.createMenuSymbol("CLK_I2S" + str(i) + "GENERIC", sym_gclkx_menu)
+        sym_gen_clk_menu.setLabel("I2S" + str(i) + "Generic Clock")
 
         # get GCLKEN bitfield of PMC_PCR register
-        pmcBitField_PMC_PCR_GCLKEN = pmcReg_PMC_PCR.getBitfield("GCLKEN")
+        bitfield_pmc_pcr_gclken = reg_pmc_pcr.getBitfield("GCLKEN")
 
         # create symbol for GCLKEN bitfield of PMC_PCR register
-        clkSym_PMC_PCR_GCLKEN = clkComponent.createBooleanSymbol("PMC_PCR_GCLK" + str(i) + "EN", clkSymGenericMenu)
-        clkSym_PMC_PCR_GCLKEN.setLabel(pmcBitField_PMC_PCR_GCLKEN.getDescription())
+        sym_pmc_pcr_gclken = clk_comp.createBooleanSymbol("PMC_PCR_GCLK" + str(i) + "EN", sym_gen_clk_menu)
+        sym_pmc_pcr_gclken.setLabel(bitfield_pmc_pcr_gclken.getDescription())
 
         # get GCLKDIV bitfield of PMC_PCR register
-        pmcBitField_PMC_PCR_GCLKDIV = pmcReg_PMC_PCR.getBitfield("GCLKDIV")
+        bitfield_pmc_pcr_gclkdiv = reg_pmc_pcr.getBitfield("GCLKDIV")
 
         # create symbol for GCLKDIV bitfield of PMC_PCR register
-        clkSym_PMC_PCR_GCLKDIV = clkComponent.createIntegerSymbol("PMC_PCR_GCLK" + str(i) + "DIV", clkSymGenericMenu)
-        clkSym_PMC_PCR_GCLKDIV.setLabel(pmcBitField_PMC_PCR_GCLKDIV.getDescription())
-        clkSym_PMC_PCR_GCLKDIV.setMin(1)
-        clkSym_PMC_PCR_GCLKDIV.setMax(256)
-        clkSym_PMC_PCR_GCLKDIV.setDefaultValue(1)
-        clkSym_PMC_PCR_GCLKDIV.setVisible(False)
-        clkSym_PMC_PCR_GCLKDIV.setDependencies(setGenericClkDivVisible, ["PMC_PCR_GCLK" + str(i) + "EN"])
+        sym_pmc_pcr_gclkdiv = clk_comp.createIntegerSymbol("PMC_PCR_GCLK" + str(i) + "DIV", sym_gen_clk_menu)
+        sym_pmc_pcr_gclkdiv.setLabel(bitfield_pmc_pcr_gclkdiv.getDescription())
+        sym_pmc_pcr_gclkdiv.setMin(1)
+        sym_pmc_pcr_gclkdiv.setMax(256)
+        sym_pmc_pcr_gclkdiv.setDefaultValue(1)
+        sym_pmc_pcr_gclkdiv.setVisible(False)
+        sym_pmc_pcr_gclkdiv.setDependencies(gclk_div_visibility, ["PMC_PCR_GCLK" + str(i) + "EN"])
 
         # get GCLKCSS bitfield of PMC_PCR register
-        pmcBitField_PMC_PCR_GCLKCSS = pmcReg_PMC_PCR.getBitfield("GCLKCSS")
+        bitfield_pmc_pcr_gclkcss = reg_pmc_pcr.getBitfield("GCLKCSS")
 
         # get Value Group for GCLKCSS bitfield of PMC_PCR register
-        pmcValGrp_PMC_PCR_GCLKCSS = pmcRegModule.getValueGroup(pmcBitField_PMC_PCR_GCLKCSS.getValueGroupName())
+        valgrp_pmc_pcr_gclkcss = pmc_reg_module.getValueGroup(bitfield_pmc_pcr_gclkcss.getValueGroupName())
 
         # create symbol for GCLKCSS bitfield of PMC_PCR register
-        clkSym_PMC_PCR_GCLKCSS = clkComponent.createComboSymbol("PMC_PCR_GCLK" + str(i) + "CSS", clkSymGenericMenu, pmcValGrp_PMC_PCR_GCLKCSS.getValueNames())
-        clkSym_PMC_PCR_GCLKCSS.setLabel(pmcBitField_PMC_PCR_GCLKCSS.getDescription())
-        clkSym_PMC_PCR_GCLKCSS.setDefaultValue("SLOW_CLK")
-        clkSym_PMC_PCR_GCLKCSS.setVisible(False)
-        clkSym_PMC_PCR_GCLKCSS.setDependencies(setGenericClkSrcVisible, ["PMC_PCR_GCLK" + str(i) + "EN"])
+        sym_pmc_pcr_gclkcss = clk_comp.createComboSymbol("PMC_PCR_GCLK" + str(i) + "CSS", sym_gen_clk_menu, valgrp_pmc_pcr_gclkcss.getValueNames())
+        sym_pmc_pcr_gclkcss.setLabel(bitfield_pmc_pcr_gclkcss.getDescription())
+        sym_pmc_pcr_gclkcss.setDefaultValue("SLOW_CLK")
+        sym_pmc_pcr_gclkcss.setVisible(False)
+        sym_pmc_pcr_gclkcss.setDependencies(gclk_src_visibility, ["PMC_PCR_GCLK" + str(i) + "EN"])
 
-def peripheralClk(clkComponent, clkSymMenu, join, ElementTree):
+def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree):
+    """
+    Peripheral Clock Menu Implementation.
 
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    join_path: function used to create os independent paths
+    element_tree: XML parser library
+    update_pcer0_value: Callback to calculate PCER0 Register Value.
+    update_pcer1_value: Callback to calculate PCER1 Register Value.
+    """
     # create symbol for peripheral clock
-    clkSymMenu = clkComponent.createMenuSymbol("CLK_PERIPHERAL", clkSymMenu)
-    clkSymMenu.setLabel("Peripheral Clock Enable Configuration")
+    clk_menu = clk_comp.createMenuSymbol("CLK_PERIPHERAL", clk_menu)
+    clk_menu.setLabel("Peripheral Clock Enable Configuration")
 
-    atdfFilePath = join(Variables.get("__DFP_PACK_DIR") ,"atdf", Variables.get("__PROCESSOR") + ".atdf")
+    atdf_file_path = join_path(Variables.get("__DFP_PACK_DIR"), "atdf", Variables.get("__PROCESSOR") + ".atdf")
 
-    try:
-        atdfFile = open(atdfFilePath, "r")
-    except:
-        print("clk.py peripheral clock: Error!!! while opening atdf file")
-
-    atdfContent = ElementTree.fromstring(atdfFile.read())
+    atdf_file = open(atdf_file_path, "r")
+    atdf_content = element_tree.fromstring(atdf_file.read())
 
     # parse atdf xml file to get instance name
     # for the peripheral which has clock id
-    for peripheral in atdfContent.iter("module"):
+    for peripheral in atdf_content.iter("module"):
         for instance in peripheral.iter("instance"):
             for param in instance.iter("param"):
                 if "CLOCK_ID" in param.attrib["name"]:
-                    symbolId = "PMC_ID_" + instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1]
-                    clkSymPeripheral = clkComponent.createBooleanSymbol(symbolId, clkSymMenu)
-                    clkSymPeripheral.setLabel(instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1])
-                    clkSymPeripheral.setDefaultValue(False)
-                    clkSymPeripheral.setReadOnly(True)
+
+                    symbol_id = "PMC_ID_" + instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1]
+                    sym_perip_clk = clk_comp.createBooleanSymbol(symbol_id, clk_menu)
+                    sym_perip_clk.setLabel(instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1])
+                    sym_perip_clk.setDefaultValue(False)
+                    sym_perip_clk.setReadOnly(True)
 
     # create symbol for PMC_PCERx register values
-    clkSym_PMC_PCER0 = clkComponent.createStringSymbol("PMC_PCER0", clkSymMenu)
-    clkSym_PMC_PCER0.setVisible(False)
-    clkSym_PMC_PCER0.setDefaultValue("0x00000000")
+    sym_pmc_pcer0 = clk_comp.createHexSymbol("PMC_PCER0", clk_menu)
+    sym_pmc_pcer0.setVisible(False)
+    sym_pmc_pcer0.setDefaultValue(00000000)
 
     # create symbol for PMC_PCERx register values
-    clkSym_PMC_PCER1 = clkComponent.createStringSymbol("PMC_PCER1", clkSymMenu)
-    clkSym_PMC_PCER1.setVisible(False)
-    clkSym_PMC_PCER1.setDefaultValue("0x00000000")
+    sym_pmc_pcer1 = clk_comp.createHexSymbol("PMC_PCER1", clk_menu)
+    sym_pmc_pcer1.setVisible(False)
+    sym_pmc_pcer1.setDefaultValue(00000000)
 
 #Programmable Clock generator configuration options
-def programmableClock(clkComponent, clkSymMenu, pmcRegModule):
+def __programmable_clock_menu(clk_comp, clk_menu, pmc_reg_module):
+    """
+    Programmable Clock Menu Implementation.
 
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    pmc_reg_module: PMC Register Module
+    """
     # create symbol for Programmable clock menu
-    clkSymMenu = clkComponent.createMenuSymbol("CLK_PROGRAMMABLE", clkSymMenu)
-    clkSymMenu.setLabel("Programmable Clock Generator Configuration")
+    clk_menu = clk_comp.createMenuSymbol("CLK_PROGRAMMABLE", clk_menu)
+    clk_menu.setLabel("Programmable Clock Generator Configuration")
 
     # get PMC register group
-    pmcRegGroup = pmcRegModule.getRegisterGroup("PMC")
+    pmc_reg_group = pmc_reg_module.getRegisterGroup("PMC")
 
     # get PMC_SCER register
-    pmcReg_PMC_SCER = pmcRegGroup.getRegister("PMC_SCER")
+    reg_pmc_scer = pmc_reg_group.getRegister("PMC_SCER")
 
     # get PMC_PCK# register
-    pmcReg_PMC_PCK = pmcRegGroup.getRegister("PMC_PCK")
+    reg_pmc_pck = pmc_reg_group.getRegister("PMC_PCK")
 
     # menu for 8 programmable clock
     for i in range(0, 8, 1):
 
         # create symbol for programmable clock #
-        clkSymProgrammableMenu = clkComponent.createMenuSymbol("CLK_PROGRAMMABLE_" + str(i), clkSymMenu)
-        clkSymProgrammableMenu.setLabel("Programmable Clock " + str(i) + " Generator Configuration")
+        sym_prog_clk_menu = clk_comp.createMenuSymbol("CLK_PROGRAMMABLE_" + str(i), clk_menu)
+        sym_prog_clk_menu.setLabel("Programmable Clock " + str(i) + " Generator Configuration")
 
         # get PCK# bitfield of PMC_SCER Register
-        pmcBitField_PMC_SCER_PCK = pmcReg_PMC_SCER.getBitfield("PCK" + str(i))
+        bitfield_pmc_scer_pck = reg_pmc_scer.getBitfield("PCK" + str(i))
 
         # create symbol for PCK# bitfield of PMC_SCER Register
-        clkSym_PMC_SCER_PCK = clkComponent.createBooleanSymbol("PMC_SCER_PCK" + str(i), clkSymProgrammableMenu)
-        clkSym_PMC_SCER_PCK.setLabel(pmcBitField_PMC_SCER_PCK.getDescription())
+        sym_pmc_scer_pck = clk_comp.createBooleanSymbol("PMC_SCER_PCK" + str(i), sym_prog_clk_menu)
+        sym_pmc_scer_pck.setLabel(bitfield_pmc_scer_pck.getDescription())
 
         # get CSS bitfield of PMC_PCK# register
-        pmcBitField_PMC_PCK_CSS = pmcReg_PMC_PCK.getBitfield("CSS")
+        bitfield_pmc_pck_css = reg_pmc_pck.getBitfield("CSS")
 
         # get Value Group for CSS bitfield of PMC_PCK# register
-        pmcValGrp_PMC_PCK_CSS = pmcRegModule.getValueGroup(pmcBitField_PMC_PCK_CSS.getValueGroupName())
+        valgrp_pmc_pck_css = pmc_reg_module.getValueGroup(bitfield_pmc_pck_css.getValueGroupName())
 
         # create symbol for CSS bitfield of PMC_PCK# register
-        clkSym_PMC_PCK_CSS = clkComponent.createComboSymbol("PMC_PCK" + str(i) + "_CSS", clkSym_PMC_SCER_PCK, pmcValGrp_PMC_PCK_CSS.getValueNames())
-        clkSym_PMC_PCK_CSS.setLabel(pmcBitField_PMC_PCK_CSS.getDescription())
-        clkSym_PMC_PCK_CSS.setDefaultValue("SLOW_CLK")
+        sym_pmc_pck_css = clk_comp.createComboSymbol("PMC_PCK" + str(i) + "_CSS", sym_pmc_scer_pck, valgrp_pmc_pck_css.getValueNames())
+        sym_pmc_pck_css.setLabel(bitfield_pmc_pck_css.getDescription())
+        sym_pmc_pck_css.setDefaultValue("SLOW_CLK")
 
         # get PRES bitfield of PMC_PCK# register
-        pmcBitField_PMC_PCK_PRES = pmcReg_PMC_PCK.getBitfield("PRES")
+        bitfield_pmc_pck_pres = reg_pmc_pck.getBitfield("PRES")
 
         # create symbol for PRES bitfield of PMC_PCK# register
-        clkSym_PMC_PCK_PRES = clkComponent.createIntegerSymbol("PMC_PCK" + str(i) +"_PRES", clkSym_PMC_SCER_PCK)
-        clkSym_PMC_PCK_PRES.setLabel(pmcBitField_PMC_PCK_PRES.getDescription())
-        clkSym_PMC_PCK_PRES.setMin(1)
-        clkSym_PMC_PCK_PRES.setMax(256)
-        clkSym_PMC_PCK_PRES.setDefaultValue(1)
+        sym_pmc_pck_pres = clk_comp.createIntegerSymbol("PMC_PCK" + str(i) +"_PRES", sym_pmc_scer_pck)
+        sym_pmc_pck_pres.setLabel(bitfield_pmc_pck_pres.getDescription())
+        sym_pmc_pck_pres.setMin(1)
+        sym_pmc_pck_pres.setMax(256)
+        sym_pmc_pck_pres.setDefaultValue(1)
 
-def calculatedClockFrequencies(clkComponent, clkSymMenu, updateFWSValue, join, ElementTree):
+def __calculated_clock_frequencies(clk_comp, clk_menu, update_fws_value, join_path, element_tree):
+    """
+    Calculated Clock frequencies Menu Implementation.
 
-    global fwsMaxFreqList
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    update_fws_value: Callback calculating the Flash Wait States.
+    join_path: function used to create os independent paths
+    element_tree: XML parser library
+    """
+    global LIST_FWS_MAX_FREQ
 
     #Calculated Clock Frequencies
-    calculatedFrequencies = clkComponent.createMenuSymbol("calculatedFrequencies", clkSymMenu)
-    calculatedFrequencies.setLabel("Calculated Clock Frequencies")
+    sym_calc_freq_menu = clk_comp.createMenuSymbol("CALC_CLOCK_FREQ_MENU", clk_menu)
+    sym_calc_freq_menu.setLabel("Calculated Clock Frequencies")
 
-    systemTickFreq = clkComponent.createStringSymbol("SYSTICK", calculatedFrequencies)
-    systemTickFreq.setLabel("System Tick Frequency (HZ)")
-    systemTickFreq.setDefaultValue("150000000")
-    systemTickFreq.setReadOnly(True)
+    sym_sys_tick_freq = clk_comp.createStringSymbol("SYSTICK", sym_calc_freq_menu)
+    sym_sys_tick_freq.setLabel("System Tick Frequency (HZ)")
+    sym_sys_tick_freq.setDefaultValue("150000000")
+    sym_sys_tick_freq.setReadOnly(True)
 
-    processorClkFreq = clkComponent.createStringSymbol("PROCESSORCLK_FREQ", calculatedFrequencies)
-    processorClkFreq.setLabel("Processor Clock Frequency (HZ)")
-    processorClkFreq.setDefaultValue("300000000")
-    processorClkFreq.setReadOnly(True)
+    sym_proc_clk_freq = clk_comp.createStringSymbol("PROCESSORCLK_FREQ", sym_calc_freq_menu)
+    sym_proc_clk_freq.setLabel("Processor Clock Frequency (HZ)")
+    sym_proc_clk_freq.setDefaultValue("300000000")
+    sym_proc_clk_freq.setReadOnly(True)
 
-    masterClkFreq = clkComponent.createStringSymbol("MASTERCLK_FREQ", calculatedFrequencies)
-    masterClkFreq.setLabel("Master Clock Frequency (HZ)")
-    masterClkFreq.setDefaultValue("150000000")
-    masterClkFreq.setReadOnly(True)
+    sym_master_clk_freq = clk_comp.createStringSymbol("MASTERCLK_FREQ", sym_calc_freq_menu)
+    sym_master_clk_freq.setLabel("Master Clock Frequency (HZ)")
+    sym_master_clk_freq.setDefaultValue("150000000")
+    sym_master_clk_freq.setReadOnly(True)
 
-    i2s0Freq = clkComponent.createStringSymbol("I2S0_FREQ", calculatedFrequencies)
-    i2s0Freq.setLabel("I2S0 Frequency (HZ)")
-    i2s0Freq.setDefaultValue("75000000")
-    i2s0Freq.setReadOnly(True)
+    sym_i2s0_freq = clk_comp.createStringSymbol("I2S0_FREQ", sym_calc_freq_menu)
+    sym_i2s0_freq.setLabel("I2S0 Frequency (HZ)")
+    sym_i2s0_freq.setDefaultValue("75000000")
+    sym_i2s0_freq.setReadOnly(True)
 
-    i2s1Freq = clkComponent.createStringSymbol("I2S1_FREQ", calculatedFrequencies)
-    i2s1Freq.setLabel("I2S1 Frequency (HZ)")
-    i2s1Freq.setDefaultValue("100000000")
-    i2s1Freq.setReadOnly(True)
+    sym_i2s1_freq = clk_comp.createStringSymbol("I2S1_FREQ", sym_calc_freq_menu)
+    sym_i2s1_freq.setLabel("I2S1 Frequency (HZ)")
+    sym_i2s1_freq.setDefaultValue("100000000")
+    sym_i2s1_freq.setReadOnly(True)
 
-    pck0Freq = clkComponent.createStringSymbol("PCK0_FREQ", calculatedFrequencies)
-    pck0Freq.setLabel("Programmable clock #0 Frequency (HZ)")
-    pck0Freq.setDefaultValue("12000000")
-    pck0Freq.setReadOnly(True)
+    sym_pck0_freq = clk_comp.createStringSymbol("PCK0_FREQ", sym_calc_freq_menu)
+    sym_pck0_freq.setLabel("Programmable clock #0 Frequency (HZ)")
+    sym_pck0_freq.setDefaultValue("12000000")
+    sym_pck0_freq.setReadOnly(True)
 
-    pck1Freq = clkComponent.createStringSymbol("PCK1_FREQ", calculatedFrequencies)
-    pck1Freq.setLabel("Programmable clock #1 Frequency (HZ)")
-    pck1Freq.setDefaultValue("6000000")
-    pck1Freq.setReadOnly(True)
+    sym_pck1_freq = clk_comp.createStringSymbol("PCK1_FREQ", sym_calc_freq_menu)
+    sym_pck1_freq.setLabel("Programmable clock #1 Frequency (HZ)")
+    sym_pck1_freq.setDefaultValue("6000000")
+    sym_pck1_freq.setReadOnly(True)
 
-    pck2Freq = clkComponent.createStringSymbol("PCK2_FREQ", calculatedFrequencies)
-    pck2Freq.setLabel("Programmable clock #2 Frequency (HZ)")
-    pck2Freq.setDefaultValue("4000000")
-    pck2Freq.setReadOnly(True)
+    sym_pck2_freq = clk_comp.createStringSymbol("PCK2_FREQ", sym_calc_freq_menu)
+    sym_pck2_freq.setLabel("Programmable clock #2 Frequency (HZ)")
+    sym_pck2_freq.setDefaultValue("4000000")
+    sym_pck2_freq.setReadOnly(True)
 
-    pck3Freq = clkComponent.createStringSymbol("PCK3_FREQ", calculatedFrequencies)
-    pck3Freq.setLabel("Programmable clock #3 Frequency (HZ)")
-    pck3Freq.setDefaultValue("3000000")
-    pck3Freq.setReadOnly(True)
+    sym_pck3_freq = clk_comp.createStringSymbol("PCK3_FREQ", sym_calc_freq_menu)
+    sym_pck3_freq.setLabel("Programmable clock #3 Frequency (HZ)")
+    sym_pck3_freq.setDefaultValue("3000000")
+    sym_pck3_freq.setReadOnly(True)
 
-    pck4Freq = clkComponent.createStringSymbol("PCK4_FREQ", calculatedFrequencies)
-    pck4Freq.setLabel("Programmable clock #4 Frequency (HZ)")
-    pck4Freq.setDefaultValue("2400000")
-    pck4Freq.setReadOnly(True)
+    sym_pck4_freq = clk_comp.createStringSymbol("PCK4_FREQ", sym_calc_freq_menu)
+    sym_pck4_freq.setLabel("Programmable clock #4 Frequency (HZ)")
+    sym_pck4_freq.setDefaultValue("2400000")
+    sym_pck4_freq.setReadOnly(True)
 
-    pck5Freq = clkComponent.createStringSymbol("PCK5_FREQ", calculatedFrequencies)
-    pck5Freq.setLabel("Programmable clock #5 Frequency (HZ)")
-    pck5Freq.setDefaultValue("2000000")
-    pck5Freq.setReadOnly(True)
+    sym_pck5_freq = clk_comp.createStringSymbol("PCK5_FREQ", sym_calc_freq_menu)
+    sym_pck5_freq.setLabel("Programmable clock #5 Frequency (HZ)")
+    sym_pck5_freq.setDefaultValue("2000000")
+    sym_pck5_freq.setReadOnly(True)
 
-    pck6Freq = clkComponent.createStringSymbol("PCK6_FREQ", calculatedFrequencies)
-    pck6Freq.setLabel("Programmable clock #6 Frequency (HZ)")
-    pck6Freq.setDefaultValue("1714285")
-    pck6Freq.setReadOnly(True)
+    sym_pck6_freq = clk_comp.createStringSymbol("PCK6_FREQ", sym_calc_freq_menu)
+    sym_pck6_freq.setLabel("Programmable clock #6 Frequency (HZ)")
+    sym_pck6_freq.setDefaultValue("1714285")
+    sym_pck6_freq.setReadOnly(True)
 
-    pck7Freq = clkComponent.createStringSymbol("PCK7_FREQ", calculatedFrequencies)
-    pck7Freq.setLabel("Programmable clock #7 Frequency (HZ)")
-    pck7Freq.setDefaultValue("1500000")
-    pck7Freq.setReadOnly(True)
+    sym_pck7_freq = clk_comp.createStringSymbol("PCK7_FREQ", sym_calc_freq_menu)
+    sym_pck7_freq.setLabel("Programmable clock #7 Frequency (HZ)")
+    sym_pck7_freq.setDefaultValue("1500000")
+    sym_pck7_freq.setReadOnly(True)
 
-    usbFsFreq = clkComponent.createStringSymbol("USBFS_FREQ", calculatedFrequencies)
-    usbFsFreq.setLabel("USB Clock Frequency (HZ)")
-    usbFsFreq.setDefaultValue("48000000")
-    usbFsFreq.setReadOnly(True)
+    sym_usb_fs_freq = clk_comp.createStringSymbol("USBFS_FREQ", sym_calc_freq_menu)
+    sym_usb_fs_freq.setLabel("USB Clock Frequency (HZ)")
+    sym_usb_fs_freq.setDefaultValue("48000000")
+    sym_usb_fs_freq.setReadOnly(True)
 
-    usbHsFreq = clkComponent.createStringSymbol("USBHS_FREQ", calculatedFrequencies)
-    usbHsFreq.setLabel("USB High Speed Clock Frequency (HZ)")
-    usbHsFreq.setDefaultValue("480000000")
-    usbHsFreq.setReadOnly(True)
+    sym_usb_hs_freq = clk_comp.createStringSymbol("USBHS_FREQ", sym_calc_freq_menu)
+    sym_usb_hs_freq.setLabel("USB High Speed Clock Frequency (HZ)")
+    sym_usb_hs_freq.setDefaultValue("480000000")
+    sym_usb_hs_freq.setReadOnly(True)
 
-    clkSymFlashWaitStates = clkComponent.createStringSymbol("EEFC_FMR_FWS", calculatedFrequencies)
-    clkSymFlashWaitStates.setDependencies(updateFWSValue, ["MASTERCLK_FREQ"])
-    clkSymFlashWaitStates.setVisible(False)
+    sym_flash_wait_states = clk_comp.createStringSymbol("EEFC_FMR_FWS", sym_calc_freq_menu)
+    sym_flash_wait_states.setDependencies(update_fws_value, ["MASTERCLK_FREQ"])
+    sym_flash_wait_states.setVisible(False)
 
-    atdfFilePath = join(Variables.get("__DFP_PACK_DIR") ,"atdf", Variables.get("__PROCESSOR") + ".atdf")
+    atdf_file_path = join_path(Variables.get("__DFP_PACK_DIR"), "atdf", Variables.get("__PROCESSOR") + ".atdf")
 
-    fwsMaxFreqList = []
+    LIST_FWS_MAX_FREQ = []
 
-    try:
-        atdfFile = open(atdfFilePath, "r")
-    except:
-        print("clk.py peripheral clock: Error!!! while opening atdf file")
-
-    atdfContent = ElementTree.fromstring(atdfFile.read())
+    atdf_file = open(atdf_file_path, "r")
+    atdf_content = element_tree.fromstring(atdf_file.read())
 
     # parse atdf xml file to get Electrical Characteristics
     # for Flash wait states
-    for propertyGroup in atdfContent.iter("property-group"):
-        if "ELECTRICAL_CHARACTERISTICS" in propertyGroup.attrib["name"]:
-            for property in propertyGroup.iter("property"):
-                if "CHIP_FREQ_FWS_" in property.attrib["name"] and "CHIP_FREQ_FWS_NUMBER" != property.attrib["name"]:
-                    fwsMaxFreqList.append(property.attrib["value"])
+    for property_group in atdf_content.iter("property-group"):
+        if "ELECTRICAL_CHARACTERISTICS" in property_group.attrib["name"]:
+            for property_tag in property_group.iter("property"):
+                if "CHIP_FREQ_FWS_" in property_tag.attrib["name"] and property_tag.attrib["name"] != "CHIP_FREQ_FWS_NUMBER":
+                    LIST_FWS_MAX_FREQ.append(property_tag.attrib["value"])
 
-    minFreq = maxFreq = 0
-    for fws in range(0, len(fwsMaxFreqList), 1):
+    min_freq = max_freq = 0
+    for fws in range(0, len(LIST_FWS_MAX_FREQ), 1):
 
-        mckFreq = int(masterClkFreq.getValue())
-        maxFreq = int(fwsMaxFreqList[fws])
+        mck_freq = int(sym_master_clk_freq.getValue())
+        max_freq = int(LIST_FWS_MAX_FREQ[fws])
 
-        if mckFreq <= maxFreq and mckFreq > minFreq:
-            clkSymFlashWaitStates.setValue(str(fws), 1)
+        if mck_freq <= max_freq and mck_freq > min_freq:
+            sym_flash_wait_states.setValue(str(fws), 1)
             return
 
-        minFreq = maxFreq
+        min_freq = max_freq
 
-# Clock Manager Configuration Menu
-#print("Loading Clock Manager for " + Variables.get("__PROCESSOR"))
+if __name__ == "__main__":
+    # Clock Manager Configuration Menu
+    SYM_CLK_MENU = coreComponent.createMenuSymbol("CLK_SAM_E70", None)
+    SYM_CLK_MENU.setLabel("Clock (PMC)")
+    SYM_CLK_MENU.setDescription("Configuration for Clock System Service")
 
-clkSymMenu = coreComponent.createMenuSymbol("CLK_SAM_E70", None)
-clkSymMenu.setLabel("Clock (PMC)")
-clkSymMenu.setDescription("Configuration for Clock System Service")
+    CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
+    CLK_MANAGER_SELECT.setVisible(False)
+    CLK_MANAGER_SELECT.setDefaultValue("SAME70:SAME70ClockModel")
 
-clkSymManagerSelect = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", clkSymMenu)
-clkSymManagerSelect.setVisible(False)
-clkSymManagerSelect.setDefaultValue("SAME70:SAME70ClockModel")
+    CLK_MENU_COMMENT = coreComponent.createCommentSymbol("clkSettingsComment", SYM_CLK_MENU)
+    CLK_MENU_COMMENT.setLabel("**** All settings listed here can be configured using the Clock Configurator ****")
 
-clkSymMenuComment = coreComponent.createCommentSymbol("clkSettingsComment", clkSymMenu)
-clkSymMenuComment.setLabel("**** All settings listed here can be configured using the Clock Configurator ****")
+    PMC_REGISTERS = Register.getRegisterModule("PMC")
+    SUPC_REGISTERS = Register.getRegisterModule("SUPC")
+    UTMI_REGISTERS = Register.getRegisterModule("UTMI")
 
-pmcRegModule  = Register.getRegisterModule("PMC")
-supcRegModule = Register.getRegisterModule("SUPC")
-utmiRegModule = Register.getRegisterModule("UTMI")
+    # Creates slow clock menu
+    __slow_clock_menu(coreComponent, SYM_CLK_MENU, SUPC_REGISTERS, __update_slow_xtal_freq_ro_prop)
 
-# Create slow clock menu
-slowClock(coreComponent, clkSymMenu, supcRegModule, resetReadOnlySlowClkFreq)
+    # creates main clock menu
+    __main_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, __disable_main_xtal)
 
-# create main clock menu
-mainClock(coreComponent, clkSymMenu, pmcRegModule, updateExtXtalEnable)
+    # creates plla menu
+    __plla_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, __update_plla_divider_visibility, __update_plla_multiplier_visibility)
 
-# create plla menu
-pllA(coreComponent, clkSymMenu, pmcRegModule, setDividerVisibleProperty, setMultiplierVisibleProperty)
+    # creates master clock
+    __master_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS)
 
-# master clock
-masterClock(coreComponent, clkSymMenu, pmcRegModule)
+    # creates usb clock
+    __usb_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, UTMI_REGISTERS, __update_upll_divider_visibility)
 
-# usb clock
-usbClock(coreComponent, clkSymMenu, pmcRegModule, utmiRegModule, setUSBDividerVisibleProperty)
+    # creates generic clock menu
+    __generic_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, __update_generic_clk_div_visibility, __update_generic_clk_src_visibility)
 
-# generic clock
-genericClk(coreComponent, clkSymMenu, pmcRegModule, setGenericClkDivVisible, setGenericClkSrcVisible)
+    # creates peripheral clock menu
+    __peripheral_clock_menu(coreComponent, SYM_CLK_MENU, join, ElementTree)
 
-# peripheral clock
-peripheralClk(coreComponent, clkSymMenu, join, ElementTree)
+    # creates programmable clock menu
+    __programmable_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS)
 
-# programmable clock
-programmableClock(coreComponent, clkSymMenu, pmcRegModule)
+    # creates calculated frequencies menu
+    __calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, __update_fws_value, join, ElementTree)
 
-# calculated Frequencies
-calculatedClockFrequencies(coreComponent, clkSymMenu, updateFWSValue, join, ElementTree)
+    #File handling
+    CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
 
-#File handling
-configName = Variables.get("__CONFIGURATION_NAME")
+    CLK_INTERFACE_HDR = coreComponent.createFileSymbol("CLK_H", None)
+    CLK_INTERFACE_HDR.setSourcePath("../peripheral/clk_sam_e70/templates/plib_clk.h.ftl")
+    CLK_INTERFACE_HDR.setOutputName("plib_clk.h")
+    CLK_INTERFACE_HDR.setDestPath("/peripheral/clk/")
+    CLK_INTERFACE_HDR.setProjectPath("config/" + CONFIG_NAME + "/peripheral/clk/")
+    CLK_INTERFACE_HDR.setType("HEADER")
+    CLK_INTERFACE_HDR.setMarkup(True)
 
-clkHeaderFile = coreComponent.createFileSymbol("CLK_H", None)
-clkHeaderFile.setSourcePath("../peripheral/clk_sam_e70/templates/plib_clk.h.ftl")
-clkHeaderFile.setOutputName("plib_clk.h")
-clkHeaderFile.setDestPath("/peripheral/clk/")
-clkHeaderFile.setProjectPath("config/" + configName + "/peripheral/clk/")
-clkHeaderFile.setType("HEADER")
-clkHeaderFile.setMarkup(True)
+    CLK_SRC_FILE = coreComponent.createFileSymbol("CLK_C", None)
+    CLK_SRC_FILE.setSourcePath("../peripheral/clk_sam_e70/templates/plib_clk.c.ftl")
+    CLK_SRC_FILE.setOutputName("plib_clk.c")
+    CLK_SRC_FILE.setDestPath("/peripheral/clk/")
+    CLK_SRC_FILE.setProjectPath("config/" + CONFIG_NAME + "/peripheral/clk/")
+    CLK_SRC_FILE.setType("SOURCE")
+    CLK_SRC_FILE.setMarkup(True)
 
-clkSourceFile = coreComponent.createFileSymbol("CLK_C", None)
-clkSourceFile.setSourcePath("../peripheral/clk_sam_e70/templates/plib_clk.c.ftl")
-clkSourceFile.setOutputName("plib_clk.c")
-clkSourceFile.setDestPath("/peripheral/clk/")
-clkSourceFile.setProjectPath("config/" + configName + "/peripheral/clk/")
-clkSourceFile.setType("SOURCE")
-clkSourceFile.setMarkup(True)
+    #Add clock related code to common files
+    CLK_SYS_DEF_LIST_ENTRY = coreComponent.createFileSymbol("CLK_SYSTEM_DEFINITIONS_H", None)
+    CLK_SYS_DEF_LIST_ENTRY.setType("STRING")
+    CLK_SYS_DEF_LIST_ENTRY.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    CLK_SYS_DEF_LIST_ENTRY.setSourcePath("../peripheral/clk_sam_e70/templates/system/system_definitions.h.ftl")
+    CLK_SYS_DEF_LIST_ENTRY.setMarkup(True)
 
-#Add clock related code to common files
-clkHeaderFileListEntry = coreComponent.createFileSymbol("CLK_SYSTEM_DEFINITIONS_H", None)
-clkHeaderFileListEntry.setType("STRING")
-clkHeaderFileListEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-clkHeaderFileListEntry.setSourcePath("../peripheral/clk_sam_e70/templates/system/system_definitions.h.ftl")
-clkHeaderFileListEntry.setMarkup(True)
-
-clkSystemInitFile = coreComponent.createFileSymbol("CLK_SYSTEM_INITIALIZE_C", None)
-clkSystemInitFile.setType("STRING")
-clkSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-clkSystemInitFile.setSourcePath("../peripheral/clk_sam_e70/templates/system/system_initialize.c.ftl")
-clkSystemInitFile.setMarkup(True)
+    CLK_SYS_INIT_LIST_ENTRY = coreComponent.createFileSymbol("CLK_SYSTEM_INITIALIZE_C", None)
+    CLK_SYS_INIT_LIST_ENTRY.setType("STRING")
+    CLK_SYS_INIT_LIST_ENTRY.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+    CLK_SYS_INIT_LIST_ENTRY.setSourcePath("../peripheral/clk_sam_e70/templates/system/system_initialize.c.ftl")
+    CLK_SYS_INIT_LIST_ENTRY.setMarkup(True)
