@@ -50,7 +50,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     <#assign PIO_C_NUM_INT_PINS = 0>
     <#assign PIO_D_NUM_INT_PINS = 0>
     <#assign PIO_E_NUM_INT_PINS = 0>
-    <#list 1..350 as i>
+    <#list 1..PIO_PIN_TOTAL as i>
         <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
         <#assign portChannel = "PIN_" + i + "_PIO_CHANNEL">
         <#if .vars[intConfig]?has_content>

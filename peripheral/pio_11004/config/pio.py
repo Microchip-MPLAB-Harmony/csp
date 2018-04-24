@@ -131,6 +131,10 @@ pinInterruptList = []
 global packagePinCount
 packagePinCount = Pin.getPackagePinCount(pioPackage.getValue())
 
+pinTotalPins = coreComponent.createIntegerSymbol("PIO_PIN_TOTAL" , pinConfiguration)
+pinTotalPins.setVisible(False)
+pinTotalPins.setDefaultValue(packagePinCount)
+
 # Note that all the lists below starts from 0th index and goes till "packagePinCount-1"
 # But actual pin numbers on the device starts from 1 (not from 0) and goes till "packagePinCount"
 # that is why "pinNumber-1" is used to index the lists wherever applicable.
@@ -471,3 +475,14 @@ pioSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 pioSystemDefFile.setSourcePath("../peripheral/pio_11004/templates/system/system_definitions.h.ftl")
 pioSystemDefFile.setMarkup(True)
 
+bspIncludeFile = coreComponent.createFileSymbol("PIO_BSP_H", None)
+bspIncludeFile.setType("STRING")
+bspIncludeFile.setOutputName("core.LIST_BSP_MACRO_INCLUDES")
+bspIncludeFile.setSourcePath("../peripheral/pio_11004/templates/plib_pio_bsp.h.ftl")
+bspIncludeFile.setMarkup(True)
+
+bspIncludeFile = coreComponent.createFileSymbol("PIO_BSP_C", None)
+bspIncludeFile.setType("STRING")
+bspIncludeFile.setOutputName("core.LIST_BSP_INITIALIZATION")
+bspIncludeFile.setSourcePath("../peripheral/pio_11004/templates/plib_pio_bsp.c.ftl")
+bspIncludeFile.setMarkup(True)
