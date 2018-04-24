@@ -218,7 +218,7 @@ this interface.
     configured by the user.
 
  Precondition:
-    None.
+    Memory Protection Unit(MPU) has to be enabled and configured for QSPI memory.
 
  Parameters:
     None.
@@ -487,7 +487,7 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
  Precondition:
     QSPI_Initialize must have been called for the associated QSPI instance.
 
-    Write enable command has to be sent before write memory request and
+    Write enable command has to be sent before write memory request.
 
  Parameters:
     *qspi_memory_xfer - pointer to QSPI memory transfer structure holding the instruction
