@@ -36,6 +36,9 @@ def instantiateComponent(coreComponent):
     appSourceFile.setEnabled(False)
     appSourceFile.setDependencies(genAppSourceFile, ["CoreGenAppFiles"])
 
+    bspHeaderInclude = coreComponent.createListSymbol("LIST_BSP_MACRO_INCLUDES", None)
+    bspHeaderInclude = coreComponent.createListSymbol("LIST_BSP_INITIALIZATION", None)
+	
     # generate app.h file
     appHeaderFile = coreComponent.createFileSymbol("APP_H", None)
     appHeaderFile.setSourcePath("templates/app.h.ftl")
