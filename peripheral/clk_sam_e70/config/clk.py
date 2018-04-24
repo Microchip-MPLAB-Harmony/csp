@@ -125,7 +125,11 @@ def __update_pcer0_value(pmc_pcer0, perip_clk):
     global DICT_PCER0
 
     pcer0 = pmc_pcer0.getValue()
-    pmc_pcer0.setValue(pcer0 | (1 << DICT_PCER0[perip_clk["id"]]), 1)
+
+    if perip_clk["value"] is True:
+        pmc_pcer0.setValue(pcer0 | (1 << DICT_PCER0[perip_clk["id"]]), 1)
+    else:
+        pmc_pcer0.setValue(pcer0 & ~(1 << DICT_PCER0[perip_clk["id"]]), 1)
 
 def __update_pcer1_value(pmc_pcer1, perip_clk):
     """
@@ -138,7 +142,11 @@ def __update_pcer1_value(pmc_pcer1, perip_clk):
     global DICT_PCER1
 
     pcer1 = pmc_pcer1.getValue()
-    pmc_pcer1.setValue(pcer1 | (1 << (DICT_PCER1[perip_clk["id"]] % 32)), 1)
+
+    if perip_clk["value"] is True:
+        pmc_pcer1.setValue(pcer1 | (1 << (DICT_PCER1[perip_clk["id"]] % 32)), 1)
+    else:
+        pmc_pcer1.setValue(pcer1 & ~(1 << (DICT_PCER1[perip_clk["id"]] % 32)), 1)
 
 def __slow_clock_menu(clk_comp, clk_menu, supc_reg_module, update_slow_xtal_freq_ro_prop):
     """
