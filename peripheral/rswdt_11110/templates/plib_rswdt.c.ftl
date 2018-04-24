@@ -66,7 +66,7 @@ void RSWDT${rswdtIndex?string}_Clear(void)
 </#if>
 
 <#if rswdtinterruptMode == true>
-	<#lt>void RSWDT${rswdtIndex?string}_TIMEOUT_Handler( void )
+	<#lt>void RSWDT${rswdtIndex?string}_InterruptHandler( void )
 	<#lt>{
 	<#lt>   RSWDT_REGS->RSWDT_SR;	
 	<#lt>	if(rswdt.callback != NULL)
