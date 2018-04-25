@@ -285,12 +285,6 @@ uint16_t PWM${INDEX}_ChannelPeriodGet (PWM_CHANNEL_NUM channel)
 	return (uint16_t)PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_CPRD;
 }
 
-/* Configure PWM duty cycle */
-void PWM${INDEX}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
-{
-	PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_CDTYUPD= duty;
-}
-
 /* Configure dead time */
 void PWM${INDEX}_ChannelDeadTimeSet (PWM_CHANNEL_NUM channel, uint16_t deadtime_high, uint16_t deadtime_low)
 {

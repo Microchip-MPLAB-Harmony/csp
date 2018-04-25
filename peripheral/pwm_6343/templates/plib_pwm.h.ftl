@@ -91,6 +91,11 @@ extern "C" {
 	</#if>
 </#list>
 
+__inline__ void PWM${INDEX}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
+{
+  PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_CDTYUPD= duty;
+}
+
 void PWM${INDEX}_Initialize (void);
 
 void PWM${INDEX}_ChannelsStart (PWM_CHANNEL_MASK channelMask);
@@ -100,8 +105,6 @@ void PWM${INDEX}_ChannelsStop (PWM_CHANNEL_MASK channelMask);
 void PWM${INDEX}_ChannelPeriodSet (PWM_CHANNEL_NUM channel, uint16_t period);
 
 uint16_t PWM${INDEX}_ChannelPeriodGet (PWM_CHANNEL_NUM channel);
-
-void PWM${INDEX}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty);
 
 void PWM${INDEX}_ChannelDeadTimeSet (PWM_CHANNEL_NUM channel, uint16_t deadtime_high, uint16_t deadtime_low);
 
