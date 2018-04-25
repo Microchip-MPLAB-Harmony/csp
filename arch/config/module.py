@@ -15,8 +15,9 @@ def loadModule():
 	cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis.py")
 
 	#initiate stdio
-	stdioComponent = Module.CreateComponent("debug_console", "Debug Console", "/Utilities/", "../peripheral/debug_console/config/debug_console.py")
-	stdioComponent.addDependency("DEBUG_CONSOLE","debug_console")
+	stdioComponent = Module.CreateComponent("stdio", "STDIO", "/Tools/", "../arch/stdio/config/stdio.py")
+	stdioComponent.addDependency("UART","UART")
+	stdioComponent.addDependency("USART","USART")
 	
 	# load device specific peripherals
 	d = dict(locals(), **globals())
