@@ -28,7 +28,9 @@ for periphName in periphNames:
             periphComponent.setDisplayType("Peripheral Library")
 
             if (periphName == "EFC"):
-                periphComponent.addCapability(periphName + "_" + str(periphInstance) + "_memroy_dev", "MEMORY")
+                periphComponent.addCapability(periphName + "_" + str(periphInstance), "MEMORY")
+            elif (periphName == "TWIHS"):
+                periphComponent.addCapability(periphName + "_" + str(periphInstance), "I2C")
             else:
                 periphComponent.addCapability(periphName + "_" + str(periphInstance), periphName)
 
