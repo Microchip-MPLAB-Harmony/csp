@@ -395,7 +395,13 @@ void SPI${SPI_INDEX?string}_InterruptHandler(void)
             
             /* Flush out any pending SPI IRQ with NVIC */
             NVIC_ClearPendingIRQ(SPI0_IRQn);                        
-                                           
+            
+            /* If it was only transmit, then ignore receiver overflow error, if any */
+            if(spi${SPI_INDEX?string}Obj.rxSize == 0)
+            {
+                spi${SPI_INDEX?string}Obj.status = SPI_ERROR_NONE;
+            }
+            
             if(spi${SPI_INDEX?string}Obj.callback != NULL)
             {
                 spi${SPI_INDEX?string}Obj.callback(spi${SPI_INDEX?string}Obj.context);

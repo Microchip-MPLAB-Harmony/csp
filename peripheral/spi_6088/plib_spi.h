@@ -600,6 +600,8 @@ bool SPIx_IsBusy (void):
     This function returns the errors associated with the given SPI peripheral 
     instance. After completing any transfer in interrupt mode, this API should
     be called and verified if any error occurred in the transfer or not.
+    The error returned by this API will not be cleared by PLIB until SPI
+    WriteRead or Write or Read API is called next time.
 
    Precondition:
     None.
