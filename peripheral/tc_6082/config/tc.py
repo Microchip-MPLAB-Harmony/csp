@@ -515,7 +515,8 @@ def tcClockSymbols(tcComponent, channelID, menu):
 	tcSym_CH_CLOCK_FREQ[channelID].setLabel("Clock Frequency (Hz)")
 	tcSym_CH_CLOCK_FREQ[channelID].setVisible(False)
 	tcSym_CH_CLOCK_FREQ[channelID].setDefaultValue(150000000)
-	tcSym_CH_CLOCK_FREQ[channelID].setDependencies(tcClockFreq, ["TC"+str(channelID)+"_CMR_TCCLKS"])
+	tcSym_CH_CLOCK_FREQ[channelID].setDependencies(tcClockFreq, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
+		"core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ"])
 	
 	#clock resolution display
 	tcSym_CH_Resolution[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_Resolution", menu)
