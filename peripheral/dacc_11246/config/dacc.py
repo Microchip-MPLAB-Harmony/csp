@@ -36,7 +36,7 @@ def calcDacFrequency(symbol,event):
 
 def triggerSelectVisibility(symbol, event):
     symObj=event["symbol"]
-	
+    
     if (symObj.getSelectedKey() == "TRIGGER_MODE"):
         symbol.setVisible(True)
     else:
@@ -168,14 +168,12 @@ def instantiateComponent(daccComponent):
         dacChannelTriggerSelect.append(channelID)
         dacChannelTriggerSelect[channelID] = daccComponent.createKeyValueSetSymbol("DACC_TRIGR_TRGSEL"+str(channelID), dacChannelMenu[channelID])
         dacChannelTriggerSelect[channelID].setLabel("Select Trigger Source")
-        dacChannelTriggerSelect[channelID].addKey("TRGSEL0", "0", "DAC External Trigger Input (DATRG)")
-        dacChannelTriggerSelect[channelID].addKey("TRGSEL1", "1", "TC0 Channel 0 Output (TIOA0)")
-        dacChannelTriggerSelect[channelID].addKey("TRGSEL2", "2", "TC0 Channel 1 Output (TIOA1)")
-        dacChannelTriggerSelect[channelID].addKey("TRGSEL3", "3", "TC0 Channel 2 Output (TIOA2)")
-        dacChannelTriggerSelect[channelID].addKey("TRGSEL4", "4", "PWM0 Event Line 0")
-        dacChannelTriggerSelect[channelID].addKey("TRGSEL5", "5", "PWM0 Event Line 1")
-        dacChannelTriggerSelect[channelID].addKey("TRGSEL6", "6", "PWM1 Event Line 0")
-        dacChannelTriggerSelect[channelID].addKey("TRGSEL7", "7", "PWM1 Event Line 1")
+        trigger_values = []
+        dacc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DACC\"]/instance@[name=\"DACC\"]/parameters")
+        trigger_values = dacc.getChildren()    
+        for param in range (0 , len(trigger_values)):
+            if "TRGSEL" in trigger_values[param].getAttribute("name"):
+                dacChannelTriggerSelect[channelID].addKey(trigger_values[param].getAttribute("name"), trigger_values[param].getAttribute("value"), trigger_values[param].getAttribute("caption"))
         dacChannelTriggerSelect[channelID].setDefaultValue(0)
         dacChannelTriggerSelect[channelID].setOutputMode("Key")
         dacChannelTriggerSelect[channelID].setDisplayMode("Description")
