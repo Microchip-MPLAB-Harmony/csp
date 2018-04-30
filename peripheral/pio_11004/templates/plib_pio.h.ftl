@@ -834,7 +834,7 @@ void PIO_Initialize(void);
   Remarks:
        To read the latched value on this pin, PIO_PinReadLatch API should be used.
 */
-#define PIO_PinRead(pin)   ((bool)PIO_PortRead(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F))
+#define PIO_PinRead(pin)   ((bool)((PIO_PortRead(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F)) & 0x1))
 
 // *****************************************************************************
 /* Function:
@@ -868,7 +868,7 @@ void PIO_Initialize(void);
   Remarks:
     To read actual pin value, PIO_PinRead API should be used.
 */
-#define PIO_PinReadLatch(pin)    ((bool)PIO_PortReadLatch(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F))
+#define PIO_PinReadLatch(pin)    ((bool)((PIO_PortReadLatch(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F)) & 0x1))
 
 // *****************************************************************************
 /* Function:
