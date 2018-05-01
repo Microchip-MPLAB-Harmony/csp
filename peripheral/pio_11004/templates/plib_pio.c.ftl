@@ -120,15 +120,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         </#if>
         <#if PIO_INT_LEVEL != "0x00000000">
             <#lt>   /* PORT${PIO_PORT} Level type interrupt Enable */
-            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_LSR = ~${PIO_INT_LEVEL};
-        </#if>
-        <#if PIO_INT_EDGE != "0x00000000">
-            <#lt>   /* PORT${PIO_PORT} Edge type interrupt Enable */
-            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ESR = ${PIO_INT_EDGE};
-        </#if>
-        <#if PIO_INT_FE_LL != "0x00000000">
-            <#lt>   /* PORT${PIO_PORT} Falling Edge or Low Level Interrupt Enable */
-            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_FELLSR = ~${PIO_INT_FE_LL};
+            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_LSR = ${PIO_INT_LEVEL};
         </#if>
         <#if PIO_INT_RE_HL != "0x00000000">
             <#lt>   /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
