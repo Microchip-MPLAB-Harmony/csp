@@ -798,7 +798,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-#define PIO_PinWrite(pin,value)   PIO_PortWrite(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f))
+static inline void PIO_PinWrite(PIO_PIN pin, bool value);
 
 // *****************************************************************************
 /* Function:
@@ -834,7 +834,7 @@ void PIO_Initialize(void);
   Remarks:
        To read the latched value on this pin, PIO_PinReadLatch API should be used.
 */
-#define PIO_PinRead(pin)   ((bool)((PIO_PortRead(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F)) & 0x1))
+static inline bool  PIO_PinRead(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -868,7 +868,7 @@ void PIO_Initialize(void);
   Remarks:
     To read actual pin value, PIO_PinRead API should be used.
 */
-#define PIO_PinReadLatch(pin)    ((bool)((PIO_PortReadLatch(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F)) & 0x1))
+static inline bool PIO_PinReadLatch( PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -899,7 +899,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-#define PIO_PinToggle(pin)      PIO_PortToggle(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
+static inline void PIO_PinToggle(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -930,7 +930,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-#define PIO_PinSet(pin)     PIO_PortSet(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
+static inline void PIO_PinSet(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -961,7 +961,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-#define PIO_PinClear(pin)     PIO_PortClear(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
+static inline void PIO_PinClear(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -992,7 +992,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-#define PIO_PinInputEnable(pin)     PIO_PortInputEnable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
+static inline void PIO_PinInputEnable(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -1023,7 +1023,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-#define PIO_PinOutputEnable(pin)     PIO_PortOutputEnable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
+static inline void PIO_PinOutputEnable(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -1054,7 +1054,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-#define PIO_PinInterruptEnable(pin)     PIO_PortInterruptEnable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
+static inline void PIO_PinInterruptEnable(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -1085,7 +1085,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-#define PIO_PinInterruptDisable(pin)     PIO_PortInterruptDisable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F))
+static inline void PIO_PinInterruptDisable(PIO_PIN pin);
 
 <#if PIO_A_INTERRUPT_USED == true ||
      PIO_B_INTERRUPT_USED == true ||
@@ -1642,6 +1642,7 @@ void _PIO_Interrupt_Handler ( PIO_PORT port );
 void PORT${PIO_CHANNEL}_InterruptHandler (void);
 </#macro>
 
+#include "plib_pio_mapping.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
