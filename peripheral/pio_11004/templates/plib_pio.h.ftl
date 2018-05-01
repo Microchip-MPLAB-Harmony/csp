@@ -99,32 +99,29 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
       ===================== -->
 
 <@mhc_process_gpio/>
-
+</#compress>
 <#if (GPIO_Name_List?size > 0)>
     <#list GPIO_Name_List as gpioName>
         <#list GPIO_PortChannel_List as gpioChannel>
             <#list GPIO_PortPin_List as gpioPinPos>
                 <#if  gpioName?counter ==  gpioChannel?counter>
                     <#if  gpioName?counter ==  gpioPinPos?counter>
-                        /*** Macros for ${gpioName} pin ***/
-                        #define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_SODR = (1<<${gpioPinPos}))
-                        #define ${gpioName}_Clear()             (PIO${gpioChannel}_REGS->PIO_CODR = (1<<${gpioPinPos}))
-                        #define ${gpioName}_Toggle()            (PIO${gpioChannel}_REGS->PIO_ODSR ^= (1<<${gpioPinPos}))
-                        #define ${gpioName}_Get()               ((PIO${gpioChannel}_REGS->PIO_PDSR >> ${gpioPinPos}) & 0x1)
-                        #define ${gpioName}_OutputEnable()      (PIO${gpioChannel}_REGS->PIO_OER = (1<<${gpioPinPos}))
-                        #define ${gpioName}_InputEnable()       (PIO${gpioChannel}_REGS->PIO_ODR = (1<<${gpioPinPos}))
-                        #define ${gpioName}_InterruptEnable()   (PIO${gpioChannel}_REGS->PIO_IER = (1<<${gpioPinPos}))
-                        #define ${gpioName}_InterruptDisable()  (PIO${gpioChannel}_REGS->PIO_IDR = (1<<${gpioPinPos}))
+                    
+                        <#lt>/*** Macros for ${gpioName} pin ***/
+                        <#lt>#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_SODR = (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_Clear()             (PIO${gpioChannel}_REGS->PIO_CODR = (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_Toggle()            (PIO${gpioChannel}_REGS->PIO_ODSR ^= (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_Get()               ((PIO${gpioChannel}_REGS->PIO_PDSR >> ${gpioPinPos}) & 0x1)
+                        <#lt>#define ${gpioName}_OutputEnable()      (PIO${gpioChannel}_REGS->PIO_OER = (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_InputEnable()       (PIO${gpioChannel}_REGS->PIO_ODR = (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_InterruptEnable()   (PIO${gpioChannel}_REGS->PIO_IER = (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_InterruptDisable()  (PIO${gpioChannel}_REGS->PIO_IDR = (1<<${gpioPinPos}))
                     </#if>
                 </#if>
             </#list>
         </#list>
     </#list>
 </#if>
-</#compress>
-
-
-
 
 // *****************************************************************************
 /* PIO Port
@@ -722,7 +719,7 @@ typedef enum
     context. It is recommended of the application to not perform process
     intensive or blocking operations with in this function.
 */
-typedef  void (*PIO_PIN_CALLBACK) ( PIO_PIN pin, void* context);
+typedef  void (*PIO_PIN_CALLBACK) ( PIO_PIN pin, uintptr_t context);
 </#if>
 // *****************************************************************************
 // *****************************************************************************
@@ -1097,7 +1094,7 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin);
     void PIO_PinInterruptCallbackRegister(
         PIO_PIN pin,
         const PIO_PIN_CALLBACK callBack,
-        void* context
+        uintptr_t context
     );
 
   Summary:
@@ -1137,7 +1134,7 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin);
 void PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
     const   PIO_PIN_CALLBACK callBack,
-    void* context
+    uintptr_t context
 );
 </#if>
 // *****************************************************************************
@@ -1590,10 +1587,10 @@ typedef struct {
     PIO_PIN                 pin;
 
     /* Callback for event on target pin*/
-    PIO_PIN_CALLBACK   callback;
+    PIO_PIN_CALLBACK        callback;
 
     /* Callback Context */
-    void*                   context;
+    uintptr_t               context;
 
 } PIO_PIN_CALLBACK_OBJ;
 
