@@ -491,7 +491,7 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
     void PIO_PinInterruptCallbackRegister(
         PIO_PIN pin, 
         const PIO_PIN_CALLBACK callback,
-        void* context
+        uintptr_t context
     );
 
   Summary:
@@ -503,7 +503,7 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 void PIO_PinInterruptCallbackRegister(
     PIO_PIN pin, 
     const PIO_PIN_CALLBACK callback,
-    void* context
+    uintptr_t context
 )
 {
     uint8_t portIndex;
