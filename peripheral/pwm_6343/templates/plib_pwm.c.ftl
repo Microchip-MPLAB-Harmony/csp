@@ -212,7 +212,9 @@ void PWM${INDEX}_Initialize (void)
 		<#lt>	/* PWM duty cycle */
 		<#lt>	PWM${INDEX}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_CDTY= ${.vars[PWM_CDTY]}U;
 		<#if .vars[PWM_CMR_DTE] == true>
-		
+			<#if .vars[PWM_CH_SYNC_ENABLE] == true>
+				<#lt>	PWM${INDEX}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_CMR = PWM_CMR_DTE_Msk;
+			</#if>
 			<#lt>	/* Dead time */
 			<#lt>	PWM${INDEX}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_DT= (${.vars[PWM_DT_DTL]}U << PWM_DT_DTL_Pos) | (${.vars[PWM_DT_DTH]}U);
 		</#if> <#-- PWM_CMR_DTE -->
