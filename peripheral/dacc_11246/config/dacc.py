@@ -4,9 +4,9 @@ from math import ceil
 #### Register Information ####
 ################################################################################
 daccRegModule = Register.getRegisterModule("DACC")
-daccValGrp_TRIGR_TRGSEL0 = daccRegModule.getValueGroup("DACC_TRIGR__TRGSEL0")
 daccValGrp_TRIGR_OSR0 = daccRegModule.getValueGroup("DACC_TRIGR__OSR0")
 
+daccValGrp_TRIGR_TRGSEL = []
 dacChannelMenu = []
 dacChannelBiasCurrent = []
 dacChannelConversionMode = []
@@ -168,18 +168,19 @@ def instantiateComponent(daccComponent):
         dacChannelTriggerSelect.append(channelID)
         dacChannelTriggerSelect[channelID] = daccComponent.createKeyValueSetSymbol("DACC_TRIGR_TRGSEL"+str(channelID), dacChannelMenu[channelID])
         dacChannelTriggerSelect[channelID].setLabel("Select Trigger Source")
-        trigger_values = []
-        dacc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DACC\"]/instance@[name=\"DACC\"]/parameters")
-        trigger_values = dacc.getChildren()    
-        for param in range (0 , len(trigger_values)):
-            if "TRGSEL" in trigger_values[param].getAttribute("name"):
-                dacChannelTriggerSelect[channelID].addKey(trigger_values[param].getAttribute("name"), trigger_values[param].getAttribute("value"), trigger_values[param].getAttribute("caption"))
         dacChannelTriggerSelect[channelID].setDefaultValue(0)
         dacChannelTriggerSelect[channelID].setOutputMode("Key")
         dacChannelTriggerSelect[channelID].setDisplayMode("Description")
         dacChannelTriggerSelect[channelID].setVisible(False)
         dacChannelTriggerSelect[channelID].setDependencies(triggerSelectVisibility, ["CONVERSION_MODE_CH"+str(channelID)])
 
+        daccValGrp_TRIGR_TRGSEL.append(channelID)
+        daccValGrp_TRIGR_TRGSEL[channelID] = daccRegModule.getValueGroup("DACC_TRIGR__TRGSEL" + str(channelID))
+        count = daccValGrp_TRIGR_TRGSEL[channelID].getValueCount()
+        for id in range(0,count):
+            valueName = daccValGrp_TRIGR_TRGSEL[channelID].getValueNames()[id]
+            dacChannelTriggerSelect[channelID].addKey(valueName, daccValGrp_TRIGR_TRGSEL[channelID].getValue(valueName).getValue(), daccValGrp_TRIGR_TRGSEL[channelID].getValue(valueName).getDescription())
+            
         dacChannelOSR.append(channelID)
         dacChannelOSR[channelID] = daccComponent.createKeyValueSetSymbol("DACC_TRIGR_OSR"+str(channelID), dacChannelMenu[channelID])
         dacChannelOSR[channelID].setLabel("Select Oversampling Ratio for Interpolation Filter")
