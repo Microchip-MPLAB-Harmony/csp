@@ -70,7 +70,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
     <#assign GPIO_Name_List = []>
     <#assign GPIO_PortPin_List = []>
     <#assign GPIO_PortChannel_List = []>
-    
+
     <#list 1..PIO_PIN_TOTAL as i>
         <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
         <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
@@ -82,11 +82,11 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
                 <#if .vars[funcname]?has_content>
                     <#if .vars[pinport]?has_content>
                         <#if .vars[pinchannel]?has_content>
-                        
+
                             <#assign GPIO_Name_List = GPIO_Name_List + [.vars[funcname]]>
                             <#assign GPIO_PortPin_List = GPIO_PortPin_List + [.vars[pinport]]>
                             <#assign GPIO_PortChannel_List = GPIO_PortChannel_List + [.vars[pinchannel]]>
-                            
+
                         </#if>
                     </#if>
                 </#if>
@@ -106,7 +106,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
             <#list GPIO_PortPin_List as gpioPinPos>
                 <#if  gpioName?counter ==  gpioChannel?counter>
                     <#if  gpioName?counter ==  gpioPinPos?counter>
-                    
+
                         <#lt>/*** Macros for ${gpioName} pin ***/
                         <#lt>#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_SODR = (1<<${gpioPinPos}))
                         <#lt>#define ${gpioName}_Clear()             (PIO${gpioChannel}_REGS->PIO_CODR = (1<<${gpioPinPos}))
@@ -116,6 +116,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
                         <#lt>#define ${gpioName}_InputEnable()       (PIO${gpioChannel}_REGS->PIO_ODR = (1<<${gpioPinPos}))
                         <#lt>#define ${gpioName}_InterruptEnable()   (PIO${gpioChannel}_REGS->PIO_IER = (1<<${gpioPinPos}))
                         <#lt>#define ${gpioName}_InterruptDisable()  (PIO${gpioChannel}_REGS->PIO_IDR = (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_PIN                  PIO_PIN_P${gpioChannel}${gpioPinPos}
                     </#if>
                 </#if>
             </#list>
@@ -657,11 +658,11 @@ typedef enum
 
     /* PE31 pin */
     PIO_PIN_PE31,
-    
+
     /* This element should not be used in any of the PIO APIs.
        It will be used by other modules or application to denote that none of the PIO Pin is used */
     PIO_PIN_NONE = -1
-    
+
 } PIO_PIN;
 
 <#if PIO_A_INTERRUPT_USED == true ||
