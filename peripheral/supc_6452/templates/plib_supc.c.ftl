@@ -53,9 +53,9 @@ static void WaitEntryClockSetup (bool xtal_disable);
 <#if .vars[SUPC_WUIR_WKUPEN] == true>
 
 	<#if SUPC_WUIR != "">
-		<#assign SUPC_WUIR = SUPC_WUIR + " | \n\t\t" + "SUPC_WUIR_WKUPT" + i +"_Msk | SUPC_WUIR_WKUPT" + i + "_${.vars[SUPC_WUIR_WKUPT]}">
+        <#assign SUPC_WUIR = SUPC_WUIR + " | \n\t\t" + "SUPC_WUIR_WKUPEN" + i +"_ENABLE | SUPC_WUIR_WKUPT" + i + "_${.vars[SUPC_WUIR_WKUPT]}">
 	<#else>
-		<#assign SUPC_WUIR = "SUPC_WUIR_WKUPT" + i +"_Msk | SUPC_WUIR_WKUPT" + i + "_${.vars[SUPC_WUIR_WKUPT]}">
+        <#assign SUPC_WUIR = "SUPC_WUIR_WKUPEN" + i +"_ENABLE | SUPC_WUIR_WKUPT" + i + "_${.vars[SUPC_WUIR_WKUPT]}">
 	</#if>
 
 </#if>
