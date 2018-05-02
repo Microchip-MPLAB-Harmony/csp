@@ -184,7 +184,7 @@ void XDMAC_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const vo
 }
 <#if XDMAC_LL_ENABLE == true>
 
-void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t descriptor, XDMAC_DESCRIPTOR_CONTROL* descriptorControl)
+void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl)
 {
     volatile uint32_t status = 0;
 
@@ -193,10 +193,10 @@ void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t descriptor
     (void)status;
 
     /* First descriptor control set */
-    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDC= (descriptorControl->mbr_ubc >> XDMAC_UBLEN_BIT_WIDTH);
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDC= (uint32_t)(firstDescriptorControl->descriptorControl);
 
     /* First descriptor address set */
-    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDA= ( (descriptor & XDMAC_CNDA_NDA_Msk) | XDMAC_CNDA_NDAIF_Msk ) ;
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDA= ( (firstDescriptorAddress & XDMAC_CNDA_NDA_Msk) | XDMAC_CNDA_NDAIF_Msk ) ;
 
     /* Enable end of linked list interrupt source */
     XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIE= XDMAC_CIE_LIE_Msk ;

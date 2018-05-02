@@ -104,40 +104,45 @@ typedef enum
 typedef uint32_t XDMAC_CHANNEL_CONFIG;
 <#if XDMAC_LL_ENABLE == true>
 
-/* XDMAC Lilnked List Datatypes */
-typedef union {
-
+/* XDMAC Linked List Data Types */
+typedef union
+{
     struct
     {
-        /* Size of block for the current descriptor.
-           This variable is not needed for the descriptor control
-           parameter of XDMAC_ChannelLinkedListTransfer because block length
-           for first descriptor is configured by the first descriptor itself. */
-        uint32_t blockDataLength:24;
-
-        /* Next descriptor fetch enable.
+        /* Descriptor fetch enable.
            Zero in this field indicates the end of linked list. */
-        uint32_t nextDescriptorFetchEnable:1;
+        uint8_t fetchEnable:1;
 
-        /* Enable/Disable source parameters update when the descriptor
+        /* Enable/Disable source address update when the descriptor
            is retrieved*/
-        uint32_t nextDescriptorSrcUpdate:1;
+        uint8_t sourceUpdate:1;
 
-        /* Enable/Disable destination parameters update when the descriptor
+        /* Enable/Disable destination address update when the descriptor
            is retrieved*/
-        uint32_t nextDescriptorDestUpdate:1;
+        uint8_t destinationUpdate:1;
 
-        /* Next descriptor view type.
+        /* Descriptor view type.
            Views can be changed when switching descriptors. */
-        uint32_t nextDescriptorView:2;
+        uint8_t view:2;
 
         /* Reserved */
-        uint32_t :3;
-    } mbr_ubc_type;
+        uint8_t :3;
+    };
 
-    uint32_t mbr_ubc;
+    uint8_t descriptorControl;
 
-} XDMAC_DESCRIPTOR_CONTROL;
+}XDMAC_DESCRIPTOR_CONTROL;
+
+
+typedef struct {
+
+    /* Size of block for the current descriptor. */
+    uint32_t blockDataLength:24;
+
+    /* Next Descriptor Control Setting */
+    XDMAC_DESCRIPTOR_CONTROL nextDescriptorControl;
+
+} XDMAC_MICRO_BLOCK_CONTROL;
 
 
 /* View 0 */
@@ -147,7 +152,7 @@ typedef struct {
     uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_MICRO_BLOCK_CONTROL mbr_ubc;
 
     /* Destination Address Member. */
     uint32_t mbr_da;
@@ -161,7 +166,7 @@ typedef struct {
     uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_MICRO_BLOCK_CONTROL mbr_ubc;
 
     /* Source Address Member. */
     uint32_t mbr_sa;
@@ -178,7 +183,7 @@ typedef struct {
     uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_MICRO_BLOCK_CONTROL mbr_ubc;
 
     /* Source Address Member. */
     uint32_t mbr_sa;
@@ -198,7 +203,7 @@ typedef struct {
     uint32_t mbr_nda;
 
     /* Micro-block Control Member. */
-    XDMAC_DESCRIPTOR_CONTROL mbr_ubc;
+    XDMAC_MICRO_BLOCK_CONTROL mbr_ubc;
 
     /* Source Address Member. */
     uint32_t mbr_sa;
@@ -237,7 +242,7 @@ void XDMAC_ChannelCallbackRegister( XDMAC_CHANNEL channel, const XDMAC_CHANNEL_C
 void XDMAC_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize );
 <#if XDMAC_LL_ENABLE == true>
 
-void XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t descriptor, XDMAC_DESCRIPTOR_CONTROL* descriptorControl );
+void XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl );
 </#if>
 
 bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel);
