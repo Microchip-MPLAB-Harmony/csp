@@ -63,18 +63,18 @@ void static UART${INDEX?string}_ISR_RX_Handler( void )
         /* Check if the buffer is done */
         if(uart${INDEX?string}Obj.rxProcessedSize >= uart${INDEX?string}Obj.rxSize)
         {
+            if(uart${INDEX?string}Obj.rxCallback != NULL)
+            {
+                uart${INDEX?string}Obj.rxCallback(uart${INDEX?string}Obj.rxContext);
+            }
+        }
+
             uart${INDEX?string}Obj.rxBusyStatus = false;
             uart${INDEX?string}Obj.rxSize = 0;
             uart${INDEX?string}Obj.rxProcessedSize = 0;
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
             UART${INDEX?string}_REGS->UART_IDR = (UART_IDR_RXRDY_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
-
-            if(uart${INDEX?string}Obj.rxCallback != NULL)
-            {
-                uart${INDEX?string}Obj.rxCallback(uart${INDEX?string}Obj.rxContext);
-            }
-        }
     }
     else
     {
@@ -132,6 +132,13 @@ void UART${INDEX?string}_InterruptHandler( void )
         {
             uart${INDEX?string}Obj.rxCallback(uart${INDEX?string}Obj.rxContext);
         }
+
+        uart${INDEX?string}Obj.rxBusyStatus = false;
+        uart${INDEX?string}Obj.rxSize = 0;
+        uart${INDEX?string}Obj.rxProcessedSize = 0;
+
+        /* Disable Read, Overrun, Parity and Framing error interrupts */
+        UART${INDEX?string}_REGS->UART_IDR = (UART_IDR_RXRDY_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
     }
 
     /* Receiver status */
