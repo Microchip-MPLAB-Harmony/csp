@@ -134,7 +134,7 @@ def instantiateComponent(supcComponent):
     
     supcSym_MR_BKUPRETON = supcComponent.createBooleanSymbol("SUPC_MR_BKUPRETON", supcBKUPMenu)
     supcSym_MR_BKUPRETON.setLabel("Retain Backup SRAM in Backup mode")
-    supcSym_MR_BKUPRETON.setDefaultValue(False) 
+    supcSym_MR_BKUPRETON.setDefaultValue(True) 
 
     supcSym_WUMR_RTCEN = supcComponent.createBooleanSymbol("SUPC_WUMR_RTCEN", supcBKUPMenu)
     supcSym_WUMR_RTCEN.setLabel("Enable RTC Alarm Wakeup")
