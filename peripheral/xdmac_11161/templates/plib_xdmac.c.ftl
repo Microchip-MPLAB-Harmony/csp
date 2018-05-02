@@ -220,6 +220,14 @@ bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel)
     return status;
 }
 
+void XDMAC_ChannelDisable (XDMAC_CHANNEL channel)
+{
+    /* Disable the channel */
+    XDMAC_REGS->XDMAC_GD = (XDMAC_GD_DI0_Msk << channel);
+
+    return;
+}
+
 XDMAC_CHANNEL_CONFIG XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel)
 {
     return (XDMAC_CHANNEL_CONFIG)XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC;
