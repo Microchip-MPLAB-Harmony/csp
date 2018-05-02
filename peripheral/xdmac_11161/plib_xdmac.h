@@ -648,6 +648,39 @@ bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel);
 
 //******************************************************************************
 /* Function:
+    void XDMAC_ChannelDisable (XDMAC_CHANNEL channel)
+
+  Summary:
+    Disables the specified channel.
+
+  Description:
+    This function disables the specified channel and resets it.
+    Ongoing transfer will be aborted.
+
+  Precondition:
+    XDMAC should have been initialized by calling XDMAC_Initialize.
+    And transfer should have been initiated.
+
+  Parameters:
+    channel - A specific XDMAC channel
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    XDMAC_ChannelDisable(XDMAC_CHANNEL_1);
+    </code>
+
+  Remarks:
+    None.
+*/
+
+void XDMAC_ChannelDisable (XDMAC_CHANNEL channel);
+
+
+//******************************************************************************
+/* Function:
     XDMAC_CHANNEL_SETTINGS XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel)
 
   Summary:

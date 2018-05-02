@@ -242,6 +242,8 @@ void XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t descriptor
 
 bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel);
 
+void XDMAC_ChannelDisable (XDMAC_CHANNEL channel);
+
 XDMAC_CHANNEL_CONFIG XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel);
 
 bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setting);
