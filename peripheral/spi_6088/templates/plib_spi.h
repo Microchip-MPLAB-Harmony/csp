@@ -100,7 +100,7 @@ typedef enum
 
 }SPI_ERROR;
 
-typedef  void (*SPI_CALLBACK) (void* context);
+typedef  void (*SPI_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -119,7 +119,7 @@ typedef struct
     size_t                  txCount;
     bool                    transferIsBusy;
     SPI_CALLBACK       		callback; 
-    void*                   context;
+    uintptr_t               context;
     uint32_t                status;
     
 } SPI_OBJECT ;

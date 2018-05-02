@@ -355,7 +355,7 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
     reqAccepted = SPI1_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
 
-    void APP_SPITransferHandler(void* context)
+    void APP_SPITransferHandler(uintptr_t context)
     {
         if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
@@ -447,7 +447,7 @@ bool SPIx_WriteRead(
 
     reqAccepted = SPI1_Write(&txBuffer, txSize);
 
-    void APP_SPITransferHandler(void* context)
+    void APP_SPITransferHandler(uintptr_t context)
     {
         if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
@@ -537,7 +537,7 @@ bool SPIx_Write(void* pTransmitData, size_t txSize);
 
     reqAccepted = SPI1_Read(&rxBuffer, rxSize);
 
-    void APP_SPITransferHandler(void* context)
+    void APP_SPITransferHandler(uintptr_t context)
     {
         if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
@@ -653,7 +653,7 @@ SPI_ERROR SPIx_ErrorGet( void );
   Example:
     <code>
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
-    void APP_SPITransferHandler(void* context)
+    void APP_SPITransferHandler(uintptr_t context)
     {
         if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
@@ -675,14 +675,14 @@ SPI_ERROR SPIx_ErrorGet( void );
     recommended of the application to not perform process intensive or blocking
     operations with in this function.
 */
-typedef  void (*SPI_CALLBACK) (void* context);
+typedef  void (*SPI_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
 /* Function:
     void SPIx_CallbackRegister
     (
         const SPI_CALLBACK* callback,
-        void* context
+        uintptr_t context
     );
 
   Summary:
@@ -727,7 +727,7 @@ typedef  void (*SPI_CALLBACK) (void* context);
 
     reqAccepted = SPI1_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
 
-    void APP_SPITransferHandler(void* context)
+    void APP_SPITransferHandler(uintptr_t context)
     {
         if(SPI1_ErrorGet() == SPI_ERROR_NONE)
         {
@@ -740,4 +740,4 @@ typedef  void (*SPI_CALLBACK) (void* context);
     If the client does not want to be notified when the queued operation
     has completed, it does not need to register a callback.
 */
-void SPIx_CallbackRegister(const SPI_CALLBACK* callback, void* context);
+void SPIx_CallbackRegister(const SPI_CALLBACK* callback, uintptr_t context);
