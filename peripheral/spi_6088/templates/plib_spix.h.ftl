@@ -69,7 +69,7 @@ bool SPI${SPI_INDEX?string}_IsBusy(void);
 
 SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
 
-void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_CALLBACK callback, void* context);
+void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
 
 void SPI${SPI_INDEX?string}_InterruptHandler(void);
 </#if>

@@ -309,7 +309,7 @@ SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void )
     return (SPI_ERROR)(spi${SPI_INDEX?string}Obj.status & (SPI_SR_OVRES_Msk));
 }
 
-void SPI${SPI_INDEX?string}_CallbackRegister (SPI_CALLBACK callback, void* context)
+void SPI${SPI_INDEX?string}_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
 {
     spi${SPI_INDEX?string}Obj.callback = callback;
     spi${SPI_INDEX?string}Obj.context = context;
