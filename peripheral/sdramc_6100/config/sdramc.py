@@ -281,7 +281,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_LPR_TIMEOUT.addKey("LP_LAST_XFER_128", "2", "128 clock cycles after the end of the last transfer")
 
     sdramcSym_LPR_PASR = sdramcComponent.createIntegerSymbol("SDRAMC_LPR_PASR", sdramcSymMenu_LOW_POW_MENU)
-    sdramcSym_LPR_PASR.setLabel("Partial Array Self-Refresh (PACR)")
+    sdramcSym_LPR_PASR.setLabel("Partial Array Self-Refresh (PASR)")
     sdramcSym_LPR_PASR.setMin(0)
     sdramcSym_LPR_PASR.setMax(7)
     sdramcSym_LPR_PASR.setDefaultValue(0)
