@@ -9,6 +9,10 @@ def onDependentComponentAdded(ownerComponent, id, dependencyComponent):
 def instantiateComponent(debugComponent):
 	global debugID
 	
+	stdioEnable = debugComponent.createBooleanSymbol("STDIO_ENABLE", None)
+	stdioEnable.setVisible(False)
+	stdioEnable.setDefaultValue(True)
+	
 	debugID = debugComponent.createStringSymbol("DEBUG_PERIPHERAL", None)
 	debugID.setVisible(False)
 
