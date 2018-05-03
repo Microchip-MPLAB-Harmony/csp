@@ -48,7 +48,7 @@ int _mon_getc(int canblock)
 {
 	<#if DEBUG_PERIPHERAL?has_content>
 	<#lt>	volatile int c = 0; 
-	<#lt>	while(${DEBUG_PERIPHERAL?upper_case}_Read((void*)&c, 1));
+	<#lt>	while(${DEBUG_PERIPHERAL?upper_case}_Read((void*)&c, 1) != true);
 	<#lt>	return c;
 	<#else>
 		return 0;
