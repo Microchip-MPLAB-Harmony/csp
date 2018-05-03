@@ -94,12 +94,54 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
         </#if>
     </#list>
 </#macro>
+
+
+<#macro mhc_process_pin>
+    <#assign PORTA_Pin_List = []>
+    <#assign PORTB_Pin_List = []>
+    <#assign PORTC_Pin_List = []>
+    <#assign PORTD_Pin_List = []>
+    <#assign PORTE_Pin_List = []>
+
+    <#list 1..PIO_PIN_TOTAL as i>
+        <#assign pinport = "PIN_" + i + "_PIO_PIN">
+        <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
+
+        <#if .vars[pinport]?has_content>
+            <#if .vars[pinchannel]?has_content>
+                <#if .vars[pinchannel] == "A">
+                    <#assign PORTA_Pin_List = PORTA_Pin_List + [.vars[pinport]]>
+                </#if>
+
+                <#if .vars[pinchannel] == "B">
+                    <#assign PORTB_Pin_List = PORTB_Pin_List + [.vars[pinport]]>
+                </#if>
+
+                <#if .vars[pinchannel] == "C">
+                    <#assign PORTC_Pin_List = PORTC_Pin_List + [.vars[pinport]]>
+                </#if>
+
+                <#if .vars[pinchannel] == "D">
+                    <#assign PORTD_Pin_List = PORTD_Pin_List + [.vars[pinport]]>
+                </#if>
+
+                <#if .vars[pinchannel] == "E">
+                    <#assign PORTE_Pin_List = PORTE_Pin_List + [.vars[pinport]]>
+                </#if>
+
+            </#if>
+        </#if>
+    </#list>
+</#macro>
+
 <#--  =====================
       MACRO execution
       ===================== -->
 
 <@mhc_process_gpio/>
+<@mhc_process_pin/>
 </#compress>
+
 <#if (GPIO_Name_List?size > 0)>
     <#list GPIO_Name_List as gpioName>
         <#list GPIO_PortChannel_List as gpioChannel>
@@ -123,6 +165,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
         </#list>
     </#list>
 </#if>
+
 
 // *****************************************************************************
 /* PIO Port
@@ -179,486 +222,27 @@ typedef enum
 
 typedef enum
 {
-    /* PA0 pin */
-    PIO_PIN_PA0,
-
-    /* PA1 pin */
-    PIO_PIN_PA1,
-
-    /* PA2 pin */
-    PIO_PIN_PA2,
-
-    /* PA3 pin */
-    PIO_PIN_PA3,
-
-    /* PA4 pin */
-    PIO_PIN_PA4,
-
-    /* PA5 pin */
-    PIO_PIN_PA5,
-
-    /* PA6 pin */
-    PIO_PIN_PA6,
-
-    /* PA7 pin */
-    PIO_PIN_PA7,
-
-    /* PA8 pin */
-    PIO_PIN_PA8,
-
-    /* PA9 pin */
-    PIO_PIN_PA9,
-
-    /* PA10 pin */
-    PIO_PIN_PA10,
-
-    /* PA11 pin */
-    PIO_PIN_PA11,
-
-    /* PA12 pin */
-    PIO_PIN_PA12,
-
-    /* PA13 pin */
-    PIO_PIN_PA13,
-
-    /* PA14 pin */
-    PIO_PIN_PA14,
-
-    /* PA15 pin */
-    PIO_PIN_PA15,
-
-    /* PA16 pin */
-    PIO_PIN_PA16,
-
-    /* PA17 pin */
-    PIO_PIN_PA17,
-
-    /* PA18 pin */
-    PIO_PIN_PA18,
-
-    /* PA19 pin */
-    PIO_PIN_PA19,
-
-    /* PA20 pin */
-    PIO_PIN_PA20,
-
-    /* PA21 pin */
-    PIO_PIN_PA21,
-
-    /* PA22 pin */
-    PIO_PIN_PA22,
-
-    /* PA23 pin */
-    PIO_PIN_PA23,
-
-    /* PA24 pin */
-    PIO_PIN_PA24,
-
-    /* PA25 pin */
-    PIO_PIN_PA25,
-
-    /* PA26 pin */
-    PIO_PIN_PA26,
-
-    /* PA27 pin */
-    PIO_PIN_PA27,
-
-    /* PA28 pin */
-    PIO_PIN_PA28,
-
-    /* PA29 pin */
-    PIO_PIN_PA29,
-
-    /* PA30 pin */
-    PIO_PIN_PA30,
-
-    /* PA31 pin */
-    PIO_PIN_PA31,
-
-    /* PB0 pin */
-    PIO_PIN_PB0,
-
-    /* PB1 pin */
-    PIO_PIN_PB1,
-
-    /* PB2 pin */
-    PIO_PIN_PB2,
-
-    /* PB3 pin */
-    PIO_PIN_PB3,
-
-    /* PB4 pin */
-    PIO_PIN_PB4,
-
-    /* PB5 pin */
-    PIO_PIN_PB5,
-
-    /* PB6 pin */
-    PIO_PIN_PB6,
-
-    /* PB7 pin */
-    PIO_PIN_PB7,
-
-    /* PB8 pin */
-    PIO_PIN_PB8,
-
-    /* PB9 pin */
-    PIO_PIN_PB9,
-
-    /* PB10 pin */
-    PIO_PIN_PB10,
-
-    /* PB11 pin */
-    PIO_PIN_PB11,
-
-    /* PB12 pin */
-    PIO_PIN_PB12,
-
-    /* PB13 pin */
-    PIO_PIN_PB13,
-
-    /* PB14 pin */
-    PIO_PIN_PB14,
-
-    /* PB15 pin */
-    PIO_PIN_PB15,
-
-    /* PB16 pin */
-    PIO_PIN_PB16,
-
-    /* PB17 pin */
-    PIO_PIN_PB17,
-
-    /* PB18 pin */
-    PIO_PIN_PB18,
-
-    /* PB19 pin */
-    PIO_PIN_PB19,
-
-    /* PB20 pin */
-    PIO_PIN_PB20,
-
-    /* PB21 pin */
-    PIO_PIN_PB21,
-
-    /* PB22 pin */
-    PIO_PIN_PB22,
-
-    /* PB23 pin */
-    PIO_PIN_PB23,
-
-    /* PB24 pin */
-    PIO_PIN_PB24,
-
-    /* PB25 pin */
-    PIO_PIN_PB25,
-
-    /* PB26 pin */
-    PIO_PIN_PB26,
-
-    /* PB27 pin */
-    PIO_PIN_PB27,
-
-    /* PB28 pin */
-    PIO_PIN_PB28,
-
-    /* PB29 pin */
-    PIO_PIN_PB29,
-
-    /* PB30 pin */
-    PIO_PIN_PB30,
-
-    /* PB31 pin */
-    PIO_PIN_PB31,
-
-    /* PC0 pin */
-    PIO_PIN_PC0,
-
-    /* PC1 pin */
-    PIO_PIN_PC1,
-
-    /* PC2 pin */
-    PIO_PIN_PC2,
-
-    /* PC3 pin */
-    PIO_PIN_PC3,
-
-    /* PC4 pin */
-    PIO_PIN_PC4,
-
-    /* PC5 pin */
-    PIO_PIN_PC5,
-
-    /* PC6 pin */
-    PIO_PIN_PC6,
-
-    /* PC7 pin */
-    PIO_PIN_PC7,
-
-    /* PC8 pin */
-    PIO_PIN_PC8,
-
-    /* PC9 pin */
-    PIO_PIN_PC9,
-
-    /* PC10 pin */
-    PIO_PIN_PC10,
-
-    /* PC11 pin */
-    PIO_PIN_PC11,
-
-    /* PC12 pin */
-    PIO_PIN_PC12,
-
-    /* PC13 pin */
-    PIO_PIN_PC13,
-
-    /* PC14 pin */
-    PIO_PIN_PC14,
-
-    /* PC15 pin */
-    PIO_PIN_PC15,
-
-    /* PC16 pin */
-    PIO_PIN_PC16,
-
-    /* PC17 pin */
-    PIO_PIN_PC17,
-
-    /* PC18 pin */
-    PIO_PIN_PC18,
-
-    /* PC19 pin */
-    PIO_PIN_PC19,
-
-    /* PC20 pin */
-    PIO_PIN_PC20,
-
-    /* PC21 pin */
-    PIO_PIN_PC21,
-
-    /* PC22 pin */
-    PIO_PIN_PC22,
-
-    /* PC23 pin */
-    PIO_PIN_PC23,
-
-    /* PC24 pin */
-    PIO_PIN_PC24,
-
-    /* PC25 pin */
-    PIO_PIN_PC25,
-
-    /* PC26 pin */
-    PIO_PIN_PC26,
-
-    /* PC27 pin */
-    PIO_PIN_PC27,
-
-    /* PC28 pin */
-    PIO_PIN_PC28,
-
-    /* PC29 pin */
-    PIO_PIN_PC29,
-
-    /* PC30 pin */
-    PIO_PIN_PC30,
-
-    /* PC31 pin */
-    PIO_PIN_PC31,
-
-    /* PD0 pin */
-    PIO_PIN_PD0,
-
-    /* PD1 pin */
-    PIO_PIN_PD1,
-
-    /* PD2 pin */
-    PIO_PIN_PD2,
-
-    /* PD3 pin */
-    PIO_PIN_PD3,
-
-    /* PD4 pin */
-    PIO_PIN_PD4,
-
-    /* PD5 pin */
-    PIO_PIN_PD5,
-
-    /* PD6 pin */
-    PIO_PIN_PD6,
-
-    /* PD7 pin */
-    PIO_PIN_PD7,
-
-    /* PD8 pin */
-    PIO_PIN_PD8,
-
-    /* PD9 pin */
-    PIO_PIN_PD9,
-
-    /* PD10 pin */
-    PIO_PIN_PD10,
-
-    /* PD11 pin */
-    PIO_PIN_PD11,
-
-    /* PD12 pin */
-    PIO_PIN_PD12,
-
-    /* PD13 pin */
-    PIO_PIN_PD13,
-
-    /* PD14 pin */
-    PIO_PIN_PD14,
-
-    /* PD15 pin */
-    PIO_PIN_PD15,
-
-    /* PD16 pin */
-    PIO_PIN_PD16,
-
-    /* PD17 pin */
-    PIO_PIN_PD17,
-
-    /* PD18 pin */
-    PIO_PIN_PD18,
-
-    /* PD19 pin */
-    PIO_PIN_PD19,
-
-    /* PD20 pin */
-    PIO_PIN_PD20,
-
-    /* PD21 pin */
-    PIO_PIN_PD21,
-
-    /* PD22 pin */
-    PIO_PIN_PD22,
-
-    /* PD23 pin */
-    PIO_PIN_PD23,
-
-    /* PD24 pin */
-    PIO_PIN_PD24,
-
-    /* PD25 pin */
-    PIO_PIN_PD25,
-
-    /* PD26 pin */
-    PIO_PIN_PD26,
-
-    /* PD27 pin */
-    PIO_PIN_PD27,
-
-    /* PD28 pin */
-    PIO_PIN_PD28,
-
-    /* PD29 pin */
-    PIO_PIN_PD29,
-
-    /* PD30 pin */
-    PIO_PIN_PD30,
-
-    /* PD31 pin */
-    PIO_PIN_PD31,
-
-    /* PE0 pin */
-    PIO_PIN_PE0,
-
-    /* PE1 pin */
-    PIO_PIN_PE1,
-
-    /* PE2 pin */
-    PIO_PIN_PE2,
-
-    /* PE3 pin */
-    PIO_PIN_PE3,
-
-    /* PE4 pin */
-    PIO_PIN_PE4,
-
-    /* PE5 pin */
-    PIO_PIN_PE5,
-
-    /* PE6 pin */
-    PIO_PIN_PE6,
-
-    /* PE7 pin */
-    PIO_PIN_PE7,
-
-    /* PE8 pin */
-    PIO_PIN_PE8,
-
-    /* PE9 pin */
-    PIO_PIN_PE9,
-
-    /* PE10 pin */
-    PIO_PIN_PE10,
-
-    /* PE11 pin */
-    PIO_PIN_PE11,
-
-    /* PE12 pin */
-    PIO_PIN_PE12,
-
-    /* PE13 pin */
-    PIO_PIN_PE13,
-
-    /* PE14 pin */
-    PIO_PIN_PE14,
-
-    /* PE15 pin */
-    PIO_PIN_PE15,
-
-    /* PE16 pin */
-    PIO_PIN_PE16,
-
-    /* PE17 pin */
-    PIO_PIN_PE17,
-
-    /* PE18 pin */
-    PIO_PIN_PE18,
-
-    /* PE19 pin */
-    PIO_PIN_PE19,
-
-    /* PE20 pin */
-    PIO_PIN_PE20,
-
-    /* PE21 pin */
-    PIO_PIN_PE21,
-
-    /* PE22 pin */
-    PIO_PIN_PE22,
-
-    /* PE23 pin */
-    PIO_PIN_PE23,
-
-    /* PE24 pin */
-    PIO_PIN_PE24,
-
-    /* PE25 pin */
-    PIO_PIN_PE25,
-
-    /* PE26 pin */
-    PIO_PIN_PE26,
-
-    /* PE27 pin */
-    PIO_PIN_PE27,
-
-    /* PE28 pin */
-    PIO_PIN_PE28,
-
-    /* PE29 pin */
-    PIO_PIN_PE29,
-
-    /* PE30 pin */
-    PIO_PIN_PE30,
-
-    /* PE31 pin */
-    PIO_PIN_PE31,
-
+    <#assign PORTA_Pin_List =  PORTA_Pin_List?sort>
+    <#list PORTA_Pin_List as pin>
+    PIO_PIN_PA${pin} = ${pin},
+    </#list>
+    <#assign PORTB_Pin_List =  PORTB_Pin_List?sort>
+    <#list PORTB_Pin_List as pin>
+    PIO_PIN_PB${pin} = ${pin+32},
+    </#list>
+    <#assign PORTC_Pin_List =  PORTC_Pin_List?sort>
+    <#list PORTC_Pin_List as pin>
+    PIO_PIN_PC${pin} = ${pin+64},
+    </#list>
+    <#assign PORTD_Pin_List =  PORTD_Pin_List?sort>
+    <#list PORTD_Pin_List as pin>
+    PIO_PIN_PD${pin} = ${pin+96},
+    </#list>
+    <#assign PORTE_Pin_List =  PORTE_Pin_List?sort>
+    <#list PORTE_Pin_List as pin>
+    PIO_PIN_PE${pin} = ${pin+128},
+    </#list>
+    
     /* This element should not be used in any of the PIO APIs.
        It will be used by other modules or application to denote that none of the PIO Pin is used */
     PIO_PIN_NONE = -1
