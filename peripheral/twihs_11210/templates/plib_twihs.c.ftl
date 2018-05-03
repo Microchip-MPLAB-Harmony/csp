@@ -790,11 +790,6 @@ void TWIHS${INDEX?string}_InterruptHandler(void)
 	/* Check for error during transmission */
     if( TWIHS_STATE_ERROR == twihs${INDEX?string}Obj.state )
     {	
-		if ( twihs${INDEX?string}Obj.callback != NULL )
-		{
-		    twihs${INDEX?string}Obj.callback( twihs${INDEX?string}Obj.context );
-		}
-		
 		// Reset the PLib objects and Interrupts
 		twihs${INDEX?string}Obj.numTRBs = 0;
 		currentTRB = 0;
@@ -802,6 +797,11 @@ void TWIHS${INDEX?string}_InterruptHandler(void)
         TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk | 
                                  TWIHS_IDR_TXRDY_Msk  |
                                  TWIHS_IDR_RXRDY_Msk;
+        
+        if ( twihs${INDEX?string}Obj.callback != NULL )
+		{
+		    twihs${INDEX?string}Obj.callback( twihs${INDEX?string}Obj.context );
+		}
 	}
 	
 	// check for completion of transfer
@@ -812,11 +812,6 @@ void TWIHS${INDEX?string}_InterruptHandler(void)
 		{
 		    twihs${INDEX?string}Obj.error = TWIHS_ERROR_NONE;
 			
-			if ( twihs${INDEX?string}Obj.callback != NULL )
-		    {
-		        twihs${INDEX?string}Obj.callback( twihs${INDEX?string}Obj.context );
-		    }
-			
 			// Reset the PLib objects and Interrupts
 			twihs${INDEX?string}Obj.numTRBs = 0;
             currentTRB = 0;
@@ -824,6 +819,11 @@ void TWIHS${INDEX?string}_InterruptHandler(void)
             TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk | 
                                      TWIHS_IDR_TXRDY_Msk  |
                                      TWIHS_IDR_RXRDY_Msk;
+            
+            if ( twihs${INDEX?string}Obj.callback != NULL )
+		    {
+		        twihs${INDEX?string}Obj.callback( twihs${INDEX?string}Obj.context );
+		    }
 
 			return;
 		}
