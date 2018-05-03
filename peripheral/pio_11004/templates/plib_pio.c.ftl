@@ -95,14 +95,25 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>   /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = ${PIO_OD};
     </#if>
+    
+    <#lt>   /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
     <#if PIO_PU != "0x00000000">
-        <#lt>   /* PORT${PIO_PORT} Pull Up Enable */
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ${PIO_PU};
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = ${PIO_PU};
+    <#else>
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
     </#if>
+    
+    <#lt>   /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
     <#if PIO_PD != "0x00000000">
-        <#lt>   /* PORT${PIO_PORT} Pull Down Enable */
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ${PIO_PD};
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = ${PIO_PD};
+    <#else>
+        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
     </#if>
+    
     <#if PIO_DIR != "0x00000000">
         <#lt>   /* PORT${PIO_PORT} Output Direction Enable */
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = ${PIO_DIR};
