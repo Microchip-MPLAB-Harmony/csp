@@ -245,7 +245,7 @@ static void CLK_MasterClockInitialize(void)
 			
 		
 	/* Program PMC_MCKR.PRES and wait for PMC_SR.MCKRDY to be set 	*/
-	PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${PMC_MCKR_PRES}
+	PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${PMC_MCKR_PRES};
     while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
 	
 
