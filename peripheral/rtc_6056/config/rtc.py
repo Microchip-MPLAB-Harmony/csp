@@ -57,7 +57,7 @@ def instantiateComponent(rtcComponent):
 	NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
 	Database.clearSymbolValue("core", NVICVector)
-	Database.setSymbolValue("core", NVICVector, False, 2)
+	Database.setSymbolValue("core", NVICVector, True, 2)
 	Database.clearSymbolValue("core", NVICHandler)
 	Database.setSymbolValue("core", NVICHandler, "RTC" + str(instance) + "_InterruptHandler", 2)
 	Database.clearSymbolValue("core", NVICHandlerLock)
