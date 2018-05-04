@@ -146,8 +146,10 @@ uint32_t TC${INDEX}_QuadraturePositionGet (void)
 TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
 {
 	TC_QUADRATURE_STATUS quadrature_status;
+	NVIC_DisableIRQ(TC${INDEX}_CH0_IRQn);
 	quadrature_status = (TC${INDEX}_quadratureStatus | TC${INDEX}_REGS->TC_QISR) & TC_QUADRATURE_STATUS_MSK;
 	TC${INDEX}_quadratureStatus = 0U;
+	NVIC_EnableIRQ(TC${INDEX}_CH0_IRQn);
 	return quadrature_status;
 }
 
@@ -280,8 +282,10 @@ uint16_t TC${INDEX}_CH${CH_NUM}_TimerCounterGet (void)
 bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 {
 	bool timer_status;
+	NVIC_DisableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
 	timer_status = (TC${INDEX}_CH${CH_NUM}_TimerStatus | (TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR& TC_SR_CPCS_Msk)) >> TC_SR_CPCS_Pos;
 	TC${INDEX}_CH${CH_NUM}_TimerStatus = 0U;
+	NVIC_EnableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
 	return timer_status;
 }
 
@@ -395,8 +399,10 @@ uint16_t TC${INDEX}_CH${CH_NUM}_CaptureBGet (void)
 TC_CAPTURE_STATUS TC${INDEX}_CH${CH_NUM}_CaptureStatusGet(void)
 {
 	TC_CAPTURE_STATUS capture_status;
+	NVIC_DisableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
 	capture_status = (TC${INDEX}_CH${CH_NUM}_CaptureStatus | TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_CAPTURE_STATUS_MSK;
 	TC${INDEX}_CH${CH_NUM}_CaptureStatus = 0U;
+	NVIC_EnableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
 	return capture_status;
 }
 
@@ -512,8 +518,10 @@ void TC${INDEX}_CH${CH_NUM}_CompareBSet (uint16_t value)
 TC_COMPARE_STATUS TC${INDEX}_CH${CH_NUM}_CompareStatusGet(void)
 {
 	TC_COMPARE_STATUS compare_status;
+	NVIC_DisableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
 	compare_status = (TC${INDEX}_CH${CH_NUM}_CompareStatus | TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_COMPARE_STATUS_MSK;
 	TC${INDEX}_CH${CH_NUM}_CompareStatus = 0U;
+	NVIC_EnableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
 	return compare_status;
 }
 
