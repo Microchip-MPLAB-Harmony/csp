@@ -49,11 +49,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stddef.h>
 #include <stdbool.h>
 <#if STDIO_USED == true >
-	<#lt>#include <stdio.h>
+    <#lt>#include <stdio.h>
 </#if>
 <#compress>
 ${LIST_SYSTEM_DEFINITIONS_H_INCLUDES}
 </#compress>
+
 <#if CoreGenAppFiles == true >
 #include "app.h"
 </#if>
