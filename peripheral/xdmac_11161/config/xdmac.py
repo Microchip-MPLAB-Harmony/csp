@@ -275,35 +275,27 @@ def xdmacChannelAllocLogic(Sym, event):
         if event["value"] == True:
             # Reserve the first available free channel
             if dmaChannelEnable == False:
-                Database.clearSymbolValue("core", "XDMAC_CH"+str(i)+"_ENABLE")
                 Database.setSymbolValue("core", "XDMAC_CH"+str(i)+"_ENABLE", True, 2)
-                Database.clearSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID")
                 Database.setSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID", perID, 2)
-                Database.clearSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID_LOCK")
                 Database.setSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID_LOCK", True, 2)
-                Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
                 Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, i, 2)
                 channelAllocated = True
-                i = 0
                 break
 
         # Client requested to deallocate channel
         else:
             # Reset the previously allocated channel
             if perID == dmaChannelPerID and dmaChannelEnable == True:
-                Database.clearSymbolValue("core", "XDMAC_CH"+str(i)+"_ENABLE")
                 Database.setSymbolValue("core", "XDMAC_CH"+str(i)+"_ENABLE", False, 2)
-                Database.clearSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID")
                 Database.setSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID", "Software Trigger", 2)
-                Database.clearSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID_LOCK")
                 Database.setSymbolValue("core", "XDMAC_CC"+str(i)+"_PERID_LOCK", False, 2)
-                Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
                 Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
+                channelAllocated = True
+                break
 
     if event["value"] == True and channelAllocated == False:
-        # Couldn't find any free DMA channel, hence set warning.
-        Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
         Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
+        Log.writeWarningMessage("Warning!!! Couldn't Allocate any DMA Channel. Check DMA manager.")
 
 ################################################################################
 #### Component ####
@@ -344,6 +336,7 @@ for channelID in range(0, xdmacChCount.getValue()):
     xdmacChannelEnable = coreComponent.createBooleanSymbol("XDMAC_CH"+str(channelID)+"_ENABLE", xdmacMenu)
     xdmacChannelEnable.setLabel("Use XDMAC Channel "+ str(channelID))
     xdmacChannelEnable.setDefaultValue(False)
+    xdmacChannelEnable.setUseSingleDynamicValue(True)
     xdmacChannelIds.append("XDMAC_CH"+str(channelID)+"_ENABLE")
 
     xdmacChannelMenu = coreComponent.createMenuSymbol("XDMAC_CH"+str(channelID)+"CONFIG", xdmacChannelEnable)
@@ -353,12 +346,14 @@ for channelID in range(0, xdmacChCount.getValue()):
     xdmacSym_CC_PERID = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_PERID", xdmacChannelMenu, peridList)
     xdmacSym_CC_PERID.setLabel("DMA Request")
     xdmacSym_CC_PERID.setDefaultValue("Software Trigger")
+    xdmacSym_CC_PERID.setUseSingleDynamicValue(True)
 
     # DMA manager will use LOCK symbol to lock the "XDMAC_CC"+ str(channelID)+"_PERID" symbol
     xdmacSym_CC_PERID_LOCK = coreComponent.createBooleanSymbol("XDMAC_CC"+ str(channelID)+"_PERID_LOCK", xdmacChannelMenu)
     xdmacSym_CC_PERID_LOCK.setLabel("Lock DMA Request")
     xdmacSym_CC_PERID_LOCK.setVisible(False)
     xdmacSym_CC_PERID_LOCK.setDefaultValue(False)
+    xdmacSym_CC_PERID_LOCK.setUseSingleDynamicValue(True)
 
     xdmacPeripheralRegister = coreComponent.createStringSymbol("XDMAC_CH"+ str(channelID)+"_PER_REGISTER", xdmacChannelMenu)
     xdmacPeripheralRegister.setLabel("Peripheral Register associated with the DMA Channel")
@@ -478,12 +473,14 @@ for per in peridList:
     xdmacChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(per), xdmacChannelMenu)
     xdmacChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(per))
     xdmacChannelNeeded.setDefaultValue(False)
+    xdmacChannelNeeded.setUseSingleDynamicValue(True)
     xdmacChannelNeeded.setVisible(False)
     peridValueListSymbols.append("DMA_CH_NEEDED_FOR_" + str(per))
 
     xdmacChannel = coreComponent.createIntegerSymbol("DMA_CH_FOR_" + str(per), xdmacChannelMenu)
     xdmacChannel.setLabel("Local DMA_CH_FOR_" + str(per))
     xdmacChannel.setDefaultValue(-1)
+    xdmacChannel.setUseSingleDynamicValue(True)
     xdmacChannel.setVisible(False)
 
 xdmacPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", xdmacChannelMenu)
