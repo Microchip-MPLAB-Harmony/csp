@@ -1,0 +1,1 @@
+    EIC${EIC_INDEX}_Initialize();
