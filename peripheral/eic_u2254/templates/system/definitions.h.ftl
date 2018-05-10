@@ -1,0 +1,1 @@
+#include "peripheral/eic/plib_eic${EIC_INDEX}.h"
