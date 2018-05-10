@@ -1,0 +1,1 @@
+#include "peripheral/pac/plib_pac${PAC_INDEX}.h"
