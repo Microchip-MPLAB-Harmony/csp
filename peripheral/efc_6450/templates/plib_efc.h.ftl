@@ -60,7 +60,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     <#lt>#define EFC${INDEX?string}_ROWSIZE                 0x2000
     <#lt>#define EFC${INDEX?string}_PAGESIZE                0x200
     <#lt>#define EFC${INDEX?string}_LOCKSIZE                0x4000
-    <#lt>#define EFC${INDEX?string}_MEDIA_SIZE              ${EFC_MEMORY_MEDIA_SIZE}
+    <#lt>#define EFC${INDEX?string}_START_ADDRESS           0x${START_ADDRESS}
+    <#lt>#define EFC${INDEX?string}_MEDIA_SIZE              ${MEMORY_MEDIA_SIZE}
+    <#lt>#define EFC${INDEX?string}_ERASE_BUFFER_SIZE       ${ERASE_BUFFER_SIZE}
 </#if>
 
 
@@ -76,26 +78,6 @@ typedef enum
     /*Flash Encountered an ECC error*/
     EFC_ECC_ERROR = 0xF0000,
 } EFC_ERROR;
-
-<#if DRV_MEMORY_CONNECTED == true>
-    <#lt>typedef struct
-    <#lt>{
-    <#lt>    uint32_t read_blockSize;
-    <#lt>    uint32_t read_numBlocks;
-    <#lt>    uint32_t numReadRegions;
-
-    <#lt>    uint32_t write_blockSize;
-    <#lt>    uint32_t write_numBlocks;
-    <#lt>    uint32_t numWriteRegions;
-
-    <#lt>    uint32_t erase_blockSize;
-    <#lt>    uint32_t erase_numBlocks;
-    <#lt>    uint32_t numEraseRegions;
-
-    <#lt>    uint32_t blockStartAddress;
-    <#lt>} EFC_GEOMETRY;
-</#if>
-
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>typedef void (*EFC_CALLBACK)(uintptr_t context);
@@ -116,10 +98,6 @@ bool EFC${INDEX?string}_QuadWordWrite( uint32_t *data, uint32_t address );
 
 EFC_ERROR EFC${INDEX?string}_ErrorGet( void );
 
-<#if DRV_MEMORY_CONNECTED == true>
-    <#lt>#define EFC${INDEX?string}_TransferStatusGet   EFC${INDEX?string}_ErrorGet
-</#if>
-
 bool EFC${INDEX?string}_IsBusy(void);
 
 void EFC${INDEX?string}_RegionLock(uint32_t address);
@@ -128,10 +106,6 @@ void EFC${INDEX?string}_RegionUnlock(uint32_t address);
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>void EFC${INDEX?string}_CallbackRegister( EFC_CALLBACK callback, uintptr_t context );
-</#if>
-
-<#if DRV_MEMORY_CONNECTED == true>
-    <#lt>bool EFC${INDEX?string}_GeometryGet(EFC_GEOMETRY *geometry);
 </#if>
 
 // DOM-IGNORE-BEGIN
