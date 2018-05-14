@@ -64,7 +64,7 @@ bool EFC${INDEX?string}_SectorErase( uint32_t address )
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>    EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
+        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 
     return true;
@@ -80,17 +80,17 @@ bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address )
     {
     *((uint32_t *)( IFLASH_ADDR + ( page_number * IFLASH_PAGE_SIZE ) + i )) =    *(( data++ ));
     }
-	
-	__DSB();
-	__ISB();
-	
+
+    __DSB();
+    __ISB();
+
     /* Issue the FLASH write operation*/
     EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>        EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
+        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 
     return true;
@@ -113,7 +113,7 @@ bool EFC${INDEX?string}_QuadWordWrite( uint32_t *data, uint32_t address )
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>        EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
+        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 
     return true;
@@ -129,7 +129,7 @@ void EFC${INDEX?string}_RegionLock(uint32_t address)
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>        EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
+        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 }
 
@@ -143,7 +143,7 @@ void EFC${INDEX?string}_RegionUnlock(uint32_t address)
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>        EFC_REGS->EEFC_FMR|= EEFC_FMR_FRDY_Msk;
+        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 }
 
@@ -176,29 +176,5 @@ EFC_ERROR EFC${INDEX?string}_ErrorGet( void )
     <#lt>        {
         <#lt>            efc.callback(efc.context);
     <#lt>        }
-    <#lt>}
-</#if>
-
-<#if DRV_MEMORY_CONNECTED == true>
-    <#lt>bool EFC${INDEX?string}_GeometryGet(EFC_GEOMETRY *geometry)
-    <#lt>{
-    <#lt>    /* Read block size and number of blocks */
-    <#lt>    geometry->read_blockSize = 1;
-    <#lt>    geometry->read_numBlocks = (EFC${INDEX?string}_MEDIA_SIZE * EFC${INDEX?string}_MEDIA_SIZE);
-
-    <#lt>    /* Write block size and number of blocks */
-    <#lt>    geometry->write_blockSize = EFC${INDEX?string}_PAGESIZE;
-    <#lt>    geometry->write_numBlocks = (EFC${INDEX?string}_MEDIA_SIZE * EFC${INDEX?string}_MEDIA_SIZE) / EFC${INDEX?string}_PAGESIZE;
-
-    <#lt>    /* Erase block size and number of blocks */
-    <#lt>    geometry->erase_blockSize = EFC0_ROWSIZE;
-    <#lt>    geometry->erase_numBlocks = (EFC${INDEX?string}_MEDIA_SIZE * EFC${INDEX?string}_MEDIA_SIZE) / EFC${INDEX?string}_ROWSIZE;
-
-    <#lt>    geometry->numReadRegions = 1;
-    <#lt>    geometry->numWriteRegions = 1;
-    <#lt>    geometry->numEraseRegions = 1;
-
-    <#lt>    geometry->blockStartAddress = 0x${START_ADDRESS};
-    <#lt>    return true;
     <#lt>}
 </#if>
