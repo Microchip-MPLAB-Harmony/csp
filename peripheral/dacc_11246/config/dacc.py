@@ -45,7 +45,7 @@ def triggerSelectVisibility(symbol, event):
 def OSRVisibility(symbol, event):
     symObj=event["symbol"]
     if (symObj.getSelectedKey() == "TRIGGER_MODE"):
-        symbol.setVisible(True)
+        symbol.setVisible(False)
     else:
         symbol.setVisible(False)
         
