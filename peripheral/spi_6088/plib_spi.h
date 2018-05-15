@@ -230,15 +230,14 @@ void SPIx_Initialize (void);
     SPI x must first be initialized using SPIx_Initialize().
   
   Parameters :
-    spiSourceClock  Source Clock frequency in Hz on which SPI module is running.
-                    If 0 is passed, then clock frequency set in MHC clock manager
-                    will be taken by default.
-    *setup   pointer to the data structure of type SPI_TRANSFER_SETUP which has the
+    spiSourceClock - Source Clock frequency in Hz on which SPI module is running.
+
+    *setup - pointer to the data structure of type SPI_TRANSFER_SETUP which has the
              list of elements to be setup for a client.
   
   Returns:
-    true:   if setup was successful, API returns true.
-    false:  if spiSourceClock and spi clock frequencies are such that resultant
+    true  - if setup was successful, API returns true.
+    false - if spiSourceClock and spi clock frequencies are such that resultant
             SCBR value is out of the possible range, then API returns false.
     
   Example:
@@ -277,9 +276,10 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
     Write and Read data on SPI x peripheral 
 
   Description:
-    This function should be used to write "txSize" number of bytes and read "rxSize" number of bytes on
-    SPI x module. Data pointed by pTransmitData is transmitted and received
-    data is saved in the location pointed by pReceiveData.
+    This function should be used to write "txSize" number of bytes and read
+    "rxSize" number of bytes on SPI x module. Data pointed by pTransmitData
+    is transmitted and received data is saved in the location pointed by
+    pReceiveData.
     
     The function will work differently as per the configuration done in
     MCC as described below:
@@ -318,16 +318,18 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
                     NULL, that means only data receiving is expected. For 9
                     to 15bit mode, data should be right aligned in the 16 bit
                     memory location.
-    txSize          Number of bytes to be transmitted. For 9 to 15bit mode, size
-                    should be given as if it is 16bit mode.
+    txSize          Number of bytes to be transmitted. Always, size should be
+                    given in terms of bytes. For example, if 5 16-bit data
+                    are to be transmitted, the transmit size should be 10 bytes.
     *pReceiveData   Pointer to the location where received data has to be stored.
                     It is user's responsibility to ensure pointed location has
                     sufficient memory to store the read data.
                     if it is NULL, that means only data transmission is expected.
                     For 9 to 15bit mode, received data will be right aligned in
                     the 16 bit memory location.
-    rxSize          Number of bytes to be received. For 9 to 15bit mode, size
-                    should be given as if it is 16bit mode.
+    rxSize          Number of bytes to be received. Always, size should be
+                    given in terms of bytes. For example, if 5 16-bit data
+                    are to be received, the receive size should be 10 bytes.
                     if "n" number of bytes has to be received AFTER transmitting
                     "m" number of bytes, then "rxSize" should be set as "m+n".
 
@@ -423,8 +425,9 @@ bool SPIx_WriteRead(
                     NULL, that means only data receiving is expected. For 9
                     to 15bit mode, data should be right aligned in the 16 bit
                     memory location.
-    txSize          Number of bytes to be transmitted. For 9 to 15bit mode, size
-                    should be given as if it is 16bit mode.
+    txSize          Number of bytes to be transmitted. Always, size should be
+                    given in terms of bytes. For example, if 5 16-bit data
+                    are to be transmitted, the transmit size should be 10 bytes.
 
   Returns:
     In Blocking mode, API returns True once the transfer is complete. It returns
@@ -513,8 +516,9 @@ bool SPIx_Write(void* pTransmitData, size_t txSize);
                     if it is NULL, that means only data transmission is expected.
                     For 9 to 15bit mode, received data will be right aligned in
                     the 16 bit memory location.
-    rxSize          Number of bytes to be received. For 9 to 15bit mode, size
-                    should be given as if it is 16bit mode.
+    rxSize          Number of bytes to be received. Always, size should be
+                    given in terms of bytes. For example, if 5 16-bit data
+                    are to be received, the receive size should be 10 bytes.
 
   Returns:
     In Blocking mode, API returns True once the transfer is complete. It returns
