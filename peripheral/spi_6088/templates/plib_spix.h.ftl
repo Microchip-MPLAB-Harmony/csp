@@ -58,9 +58,15 @@ void SPI${SPI_INDEX?string}_Initialize ( void );
 
 bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
 
-#define SPI${SPI_INDEX?string}_Write(pTransmitData, txSize)    ((bool)(SPI${SPI_INDEX?string}_WriteRead(pTransmitData, txSize, NULL, 0)))
+static inline bool SPI${SPI_INDEX?string}_Write(void* pTransmitData, size_t txSize)
+{
+    return(SPI${SPI_INDEX?string}_WriteRead(pTransmitData, txSize, NULL, 0));
+}
 
-#define SPI${SPI_INDEX?string}_Read(pReceiveData, rxSize)      ((bool)(SPI${SPI_INDEX?string}_WriteRead(NULL, 0, pReceiveData, rxSize)))
+static inline bool SPI${SPI_INDEX?string}_Read(void* pReceiveData, size_t rxSize)
+{
+    return(SPI${SPI_INDEX?string}_WriteRead(NULL, 0, pReceiveData, rxSize));
+}
 
 bool SPI${SPI_INDEX?string}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
