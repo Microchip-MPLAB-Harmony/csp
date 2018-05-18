@@ -8,7 +8,7 @@
     plib_rtc.h
 
   Summary:
-    Interface definition of the Watch Dog Timer Plib (RTC).
+    Interface definition of the Real Time Counter Plib (RTC).
 
   Description:
     This file defines the interface for the RTC Plib.
