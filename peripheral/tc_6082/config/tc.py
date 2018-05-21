@@ -112,9 +112,9 @@ def tcNVICControl(symbol, event):
 			Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH0_Handler", 2)
 			
 		if (tcSym_CH_BMR_POSEN.getValue() == "POSITION" and channelID == 2):
+			NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
+			NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
 			if (tcSym_CH_Enable[channelID].getValue() == True):
-				NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
-				NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
 				Database.clearSymbolValue("core", NVICVector)
 				Database.clearSymbolValue("core", NVICHandler)
 				if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
@@ -132,7 +132,7 @@ def tcNVICControl(symbol, event):
 					Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
 			else:
 				Database.setSymbolValue("core", NVICVector, False, 2)
-				Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)		
+				Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
 	else:
 		Database.clearSymbolValue("core", NVICVector)
 		Database.clearSymbolValue("core", NVICHandler)
