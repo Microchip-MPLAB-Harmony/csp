@@ -36,15 +36,13 @@
 #endif
 
 /* Initialize segments */
-extern uint32_t __svectors;
-extern uint32_t _dinit_size;
-extern uint32_t _dinit_addr;
+extern uint32_t _sfixed;
 
 int main(void);
 extern void __attribute__((long_call)) __libc_init_array(void);
 
 /* Declaration of Reset handler (may be custom) */
-void __attribute__((weak, optimize("-O1"), long_call)) Reset_Handler(void);
+void __attribute__((optimize("-O1"), long_call)) Reset_Handler(void);
 
 /* Device Vector information is available in interrupt.c file */
 
@@ -66,7 +64,7 @@ extern void __attribute__((weak,long_call)) __xc32_on_bootstrap(void);
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
  */
-void __attribute__((weak, optimize("-O1"), section(".text.Reset_Handler"), long_call)) Reset_Handler(void)
+void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call)) Reset_Handler(void)
 {
     uint32_t *pSrc;
 
@@ -78,54 +76,50 @@ void __attribute__((weak, optimize("-O1"), section(".text.Reset_Handler"), long_
 
     /* Reserved for use by MPLAB XC32. */
     if (__xc32_on_reset)
-      __xc32_on_reset();
+        __xc32_on_reset();
 
 #if (__ARM_FP==14) || (__ARM_FP==4)
-    /* Enable the FPU iff the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
-    fpu_enable();
+    /* Enable the FPU if the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
+    FPU_Enable();
 #endif
 
-#if !defined(__XC32_SKIP_CACHE_INIT)
-    /* Enable Caches */
-# if (__ICACHE_PRESENT==1U)
+
+<#if (INSTRUCTION_CACHE_ENABLE)>
+    /* Enable Instruction Cache */
     ICache_Enable();
-#endif
-# if (__DCACHE_PRESENT==1U)
+</#if>
+
+<#if (DATA_CACHE_ENABLE)>
+    /* Enable Data Cache    */
     DCache_Enable();
-#endif
-#endif
+</#if>
 
-    /* TCM config and init */
-#if (__ITCM_PRESENT==1)
-#  ifdef __XC32_ENABLE_TCM
-    TCM_ConfigureSize();
+    TCM_Configure(${DEVICE_TCM_SIZE});
+
+<#if (TCM_ENABLE)>
+    /* Enable TCM   */
     TCM_Enable();
-#  else
+<#else>
+    /* Disable TCM  */
     TCM_Disable();
-#  endif /* __XC32_ENABLE_TCM */
-#endif /* (__ITCM_PRESENT==1) */
-    /* Initialize data after TCM is enabled */
+</#if>
 
-    /* Data initialization from the XC32 .dinit template */
+    /* Initialize data after TCM is enabled.
+     * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
+<#if (STACK_IN_TCM)>
     /* Move the stack to Data Tightly Coupled Memory (DTCM) */
-#if defined(__XC32_STACK_IN_TCM)
     __pic32c_TCM_StackInit();
-#endif
+</#if>
 
 <#if CoreUseMPU>
-	MPU_Initialize();
-#if (defined __CM7_REV) || (defined __CM4_REV)
-    /* Enable Usage, Bus and Memory fault vectors */
-    SCB->SHCSR |= SCB_SHCSR_USGFAULTENA_Msk | SCB_SHCSR_BUSFAULTENA_Msk | SCB_SHCSR_MEMFAULTENA_Msk;
-#endif
+    /* Initialize MPU */
+    MPU_Initialize();
 </#if>
 
 #  ifdef SCB_VTOR_TBLOFF_Msk
-    /*  Set the vector-table base address. This may be in flash or TCM.
-     *  The __svectors symbol is created by the XC32 linker.
-     */
-    pSrc = (uint32_t *) & __svectors;
+    /*  Set the vector-table base address in FLASH */
+    pSrc = (uint32_t *) & _sfixed;
     SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 #  endif /* SCB_VTOR_TBLOFF_Msk */
 
@@ -147,7 +141,7 @@ void __attribute__((weak, optimize("-O1"), section(".text.Reset_Handler"), long_
     /* Branch to application's main function */
     main();
 
-#if (defined(__DEBUG) || defined(__DEBUG_D)) && defined(__THUMB2__)
+#if (defined(__DEBUG) || defined(__DEBUG_D)) && defined(__XC32)
     __builtin_software_breakpoint();
 #endif
     /* Infinite loop */
