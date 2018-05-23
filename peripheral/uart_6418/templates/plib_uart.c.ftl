@@ -321,8 +321,9 @@ bool UART${INDEX?string}_Read( void *buffer, const size_t size )
 
     if(NULL != lBuffer)
     {
-        /* Clear errors before submitting the request */
-        UART${INDEX?string}_ErrorClear();
+        /* Clear errors before submitting the request.
+         * ErrorGet clears errors internally. */
+        UART${INDEX?string}_ErrorGet();
 
 <#if INTERRUPT_MODE == false>
         while( size > processedSize )
