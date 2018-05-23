@@ -75,11 +75,21 @@ void TC${INDEX}_QuadratureInitialize (void)
 {
 	uint32_t status; 
 	
-	/* clock selection and waveform selection */
-	TC${INDEX}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING | 
-		TC_CMR_ABETRG_Msk | TC_CMR_ETRGEDG_RISING;
+	<#if TC_INDEX_PULSE == true>
+		<#lt>	/* clock selection and waveform selection */
+		<#lt>	TC${INDEX}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING | 
+			TC_CMR_ABETRG_Msk | TC_CMR_ETRGEDG_RISING;
 		
-	TC${INDEX}_REGS->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING;
+		<#lt>	TC${INDEX}_REGS->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING;
+	
+	<#else>
+		<#lt>	/* clock selection and waveform selection */
+		<#lt>	TC${INDEX}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING | TC_CMR_CPCTRG_Msk;
+		<#lt>	TC${INDEX}_REGS->TC_CHANNEL[0].TC_RC = ${TC_QEI_NUM_PULSES}U;
+		<#if TC_QEI_IER_CPCS == true>
+			<#lt>	TC${INDEX}_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPCS_Msk;
+		</#if>
+	</#if>
 	
 	<#if TC_BMR_POSEN == "SPEED">
 	/* Channel 2 configurations */
@@ -117,16 +127,20 @@ void TC${INDEX}_QuadratureInitialize (void)
 void TC${INDEX}_QuadratureStart (void)
 {
 	TC${INDEX}_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
-	TC${INDEX}_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+	<#if TC_INDEX_PULSE == true>
+		<#lt>	TC${INDEX}_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+	</#if>
 	<#if TC_BMR_POSEN == "SPEED">
-	<#lt>	TC${INDEX}_REGS->TC_CHANNEL[2].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+		<#lt>	TC${INDEX}_REGS->TC_CHANNEL[2].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
 	</#if>
 }
 
 void TC${INDEX}_QuadratureStop (void)
 {
 	TC${INDEX}_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKDIS_Msk);
-	TC${INDEX}_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKDIS_Msk);
+	<#if TC_INDEX_PULSE == true>
+		<#lt>	TC${INDEX}_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKDIS_Msk);
+	</#if>
 	<#if TC_BMR_POSEN == "SPEED">
 	<#lt>	TC${INDEX}_REGS->TC_CHANNEL[2].TC_CCR = (TC_CCR_CLKDIS_Msk);
 	</#if>
@@ -134,7 +148,11 @@ void TC${INDEX}_QuadratureStop (void)
 
 uint32_t TC${INDEX}_QuadraturePositionGet (void)
 {
-	return (TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV| (TC${INDEX}_REGS->TC_CHANNEL[1].TC_CV<< 16U) );
+	<#if TC_INDEX_PULSE == true>
+		<#lt>	return (TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV | (TC${INDEX}_REGS->TC_CHANNEL[1].TC_CV << 16U) );
+	<#else>
+		<#lt>	return (TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV);
+	</#if>
 }
 <#if TC_BMR_POSEN == "SPEED">
 	<#lt>uint32_t TC${INDEX}_QuadratureSpeedGet (void)
@@ -283,7 +301,7 @@ bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 {
 	bool timer_status;
 	NVIC_DisableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
-	timer_status = (TC${INDEX}_CH${CH_NUM}_TimerStatus | (TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR& TC_SR_CPCS_Msk)) >> TC_SR_CPCS_Pos;
+	timer_status = (TC${INDEX}_CH${CH_NUM}_TimerStatus | (TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_SR_CPCS_Msk)) >> TC_SR_CPCS_Pos;
 	TC${INDEX}_CH${CH_NUM}_TimerStatus = 0U;
 	NVIC_EnableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
 	return timer_status;

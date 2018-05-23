@@ -72,7 +72,13 @@ def tcClockControl(symbol, event):
 		Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL0")
 		Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL0" , True, 2)
 		Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1")
-		Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1" , True, 2)
+		if(tcSym_CH_QEI_INDEX_PULSE.getValue() == True):
+			Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1" , True, 2)
+		else:
+			if(tcSym_CH_Enable[1].getValue() == True):
+				Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1" , True, 2)
+			else:
+				Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1" , False, 2)
 		if(tcSym_CH_BMR_POSEN.getValue() == "SPEED"):
 			Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2")
 			Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2" , True, 2)
@@ -82,14 +88,14 @@ def tcClockControl(symbol, event):
 				Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2" , True, 2)	
 			else:
 				Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2")
-				Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2" , False, 2)					
+				Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2" , False, 2)
 	else:
 		if(tcSym_CH_Enable[channelID].getValue() == True):
 			Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID))
 			Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID) , True, 2)
 		else:
 			Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID))
-			Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID) , False, 2)			
+			Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID) , False, 2)
 
 #Enable/Disable interrupt
 def tcNVICControl(symbol, event):
@@ -104,7 +110,7 @@ def tcNVICControl(symbol, event):
 		NVICHandler = "NVIC_" + str(QEI_periphId) + "_HANDLER"
 		Database.clearSymbolValue("core", NVICVector)
 		Database.clearSymbolValue("core", NVICHandler)
-		if(tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True):
+		if(tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True or tcSym_CH_QEI_IER_CPCS.getValue() == True):
 			Database.setSymbolValue("core", NVICVector, True, 2)
 			Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH0_InterruptHandler", 2)
 		else:
@@ -112,6 +118,29 @@ def tcNVICControl(symbol, event):
 			Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH0_Handler", 2)
 			
 		if (tcSym_CH_BMR_POSEN.getValue() == "POSITION" and channelID == 2):
+			NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
+			NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
+			if (tcSym_CH_Enable[channelID].getValue() == True):
+				Database.clearSymbolValue("core", NVICVector)
+				Database.clearSymbolValue("core", NVICHandler)
+				if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
+					Database.setSymbolValue("core", NVICVector, True, 2)
+					Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+				elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
+					(tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
+					Database.setSymbolValue("core", NVICVector, True, 2)
+					Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+				elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
+					Database.setSymbolValue("core", NVICVector, True, 2)
+					Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+				else:
+					Database.setSymbolValue("core", NVICVector, False, 2)
+					Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+			else:
+				Database.setSymbolValue("core", NVICVector, False, 2)
+				Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+				
+		if(tcSym_CH_QEI_INDEX_PULSE.getValue() == False and channelID == 1):
 			NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
 			NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
 			if (tcSym_CH_Enable[channelID].getValue() == True):
@@ -189,23 +218,27 @@ def tcQEIDependencyClockStatus(symbol, event):
 	clock1 = bool(Database.getSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1"))
 	clock2 = bool(Database.getSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2"))
 	if(tcSym_CH_EnableQEI.getValue() == True):
-		if(tcSym_CH_BMR_POSEN.getValue() == "POSITION"):
-			if (clock0 == False or clock1 == False):
-				symbol.setVisible(True)
-			else:
-				symbol.setVisible(False)
+		if (clock0 == False):
+			symbol.setVisible(True)
 		else:
-			if (clock0 == False or clock1 == False or clock2 == False):
-				symbol.setVisible(True)
-			else:
-				symbol.setVisible(False)	
+			symbol.setVisible(False)
+			
+		if(tcSym_CH_QEI_INDEX_PULSE.getValue() == True and clock1 == False):
+			symbol.setVisible(True)
+		else:
+			symbol.setVisible(False)
+	
+		if(tcSym_CH_BMR_POSEN.getValue() == "SPEED" and clock2 == False):
+			symbol.setVisible(True)
+		else:
+			symbol.setVisible(False)
 
 def tcQEIDependencyIntStatus(symbol, event):
 	global QEI_periphId
 	NVICVector = "NVIC_" + str(QEI_periphId) + "_ENABLE"
 	nvic = bool(Database.getSymbolValue("core", NVICVector))
 	if(tcSym_CH_EnableQEI.getValue() == True):
-		if (nvic == False and (tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True)):
+		if (nvic == False and (tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True or tcSym_CH_QEI_IER_CPCS == True)):
 			symbol.setVisible(True)
 		else:
 			symbol.setVisible(False)
@@ -432,7 +465,11 @@ def tcChannelMenuVisible(tcchannelMenu, event):
 	global tcSym_CH_EnableQEI
 	if(tcSym_CH_EnableQEI.getValue() == True):
 		tcChannelMenu[0].setVisible(False)
-		tcChannelMenu[1].setVisible(False)
+		if (tcSym_CH_QEI_INDEX_PULSE.getValue() == True):
+			tcChannelMenu[1].setVisible(False)
+		else:
+			tcChannelMenu[1].setVisible(True)
+			
 		if (tcSym_CH_BMR_POSEN.getValue() == "SPEED"):
 			tcChannelMenu[2].setVisible(False)
 		else:
@@ -442,12 +479,18 @@ def tcChannelMenuVisible(tcchannelMenu, event):
 		tcChannelMenu[1].setVisible(True)
 		tcChannelMenu[2].setVisible(True)
 		
-def tcQuadratureSpeedVisible(tcSpeedMenu, event):
+def tcQuadratureModeVisible(tcSpeedMenu, event):
 	if(event["value"] == "SPEED"):
 		tcSpeedMenu.setVisible(True)
 	else:
 		tcSpeedMenu.setVisible(False)
-		
+
+def tcQuadraturePositionVisible(symbol, event):
+	if (tcSym_CH_BMR_POSEN.getValue() == "POSITION" and tcSym_CH_QEI_INDEX_PULSE.getValue() == False):
+		tcPositionMenu.setVisible(True)
+	else:
+		tcPositionMenu.setVisible(False)
+
 def tcQuadratureTimeBaseCalculate(tcSym_CH_QEI_CH2PERIOD_COMMENT, event):
 	global tcSym_CH_CMR_TCCLKS
 	global tcSym_CH_QEI_CH2PERIOD
@@ -460,11 +503,23 @@ def tcQuadratureTimeBaseCalculate(tcSym_CH_QEI_CH2PERIOD_COMMENT, event):
 
 	tcSym_CH_QEI_CH2PERIOD_COMMENT.setLabel("****Time Base is " + str(time_us) + " uS****")
 	
-def tcQuadratureCommentChange(tcQuadratureComment, event):
-	if(event["value"] == "POSITION"):
-		tcQuadratureComment.setLabel("**** Quadrature mode uses two channels. Channel 0 to capture number of edges and Channel 1 to capture number of revolutions ****")
+def tcQuadratureIndexPulse(symbol, event):
+	if(event["value"] == True):
+		symbol.setVisible(True)
 	else:
-		tcQuadratureComment.setLabel("**** Quadrature mode uses three channels. Channel 0 and Channel 2 to capture speed and Channel 1 to capture number of revolutions ****")
+		symbol.setVisible(False)
+
+def tcQuadratureCommentChange(tcQuadratureComment, event):
+	if (tcSym_CH_BMR_POSEN.getValue() == "POSITION"):
+		if (tcSym_CH_QEI_INDEX_PULSE.getValue() == True):
+			tcQuadratureComment.setLabel("**** Quadrature mode uses two channels. Channel 0 to capture number of edges and Channel 1 to capture number of revolutions ****")
+		else:
+			tcQuadratureComment.setLabel("**** Quadrature mode uses one channel. Channel 0 to capture number of edges ****")
+	else:
+		if (tcSym_CH_QEI_INDEX_PULSE.getValue() == True):
+			tcQuadratureComment.setLabel("**** Quadrature mode uses three channels. Channel 0 and Channel 2 to capture speed and Channel 1 to capture number of revolutions ****")
+		else:
+			tcQuadratureComment.setLabel("**** Quadrature mode uses two channels. Channel 0 and Channel 2 to capture speed ****")
 
 def tcClockSymbols(tcComponent, channelID, menu):		
 	#clock selection
@@ -586,7 +641,7 @@ def instantiateComponent(tcComponent):
 	tcSym_QEI_ClkEnComment.setVisible(False)
 	tcSym_QEI_ClkEnComment.setLabel("Warning!!! TC" +str(num) + " Channel Peripheral Clock is Disabled in Clock Manager")
 	tcSym_QEI_ClkEnComment.setDependencies(tcQEIDependencyClockStatus, ["core.PMC_ID_TC" + str(num) + "_CHANNEL0", \
-		"core.PMC_ID_TC" + str(num) + "_CHANNEL1", "core.PMC_ID_TC" + str(num) + "_CHANNEL2", "TC_ENABLE_QEI", "TC_BMR_POSEN"])
+		"core.PMC_ID_TC" + str(num) + "_CHANNEL1", "core.PMC_ID_TC" + str(num) + "_CHANNEL2", "TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
 	
 	global QEI_periphId 
 	QEI_periphId = None
@@ -603,7 +658,7 @@ def instantiateComponent(tcComponent):
 	tcSym_QEI_IntEnComment = tcComponent.createCommentSymbol("TC_NVIC_ENABLE_COMMENT", tcSym_CH_EnableQEI)
 	tcSym_QEI_IntEnComment.setVisible(False)
 	tcSym_QEI_IntEnComment.setLabel("Warning!!! TC" +str(num)+"_CH0 Interrupt is Disabled in Interrupt Manager")
-	tcSym_QEI_IntEnComment.setDependencies(tcQEIDependencyIntStatus, ["core." + NVICVector, "TC_ENABLE_QEI", "TC_QIER_IDX", "TC_QIER_QERR"])
+	tcSym_QEI_IntEnComment.setDependencies(tcQEIDependencyIntStatus, ["core." + NVICVector, "TC_ENABLE_QEI", "TC_QIER_IDX", "TC_QIER_QERR", "TC_QEI_IER_CPCS"])
 
 	#quadrature menu
 	tcQuadratureMenu = tcComponent.createMenuSymbol("TC_QUADRATURE", tcSym_CH_EnableQEI)
@@ -613,7 +668,7 @@ def instantiateComponent(tcComponent):
 	
 	tcQuadratureComment = tcComponent.createCommentSymbol("TC_QUADRATURE_COMMENT", tcQuadratureMenu)
 	tcQuadratureComment.setLabel("**** Quadrature mode uses two channels. Channel 0 to capture number of edges and Channel 1 to capture number of revolutions ****")
-	tcQuadratureComment.setDependencies(tcQuadratureCommentChange, ["TC_BMR_POSEN"])
+	tcQuadratureComment.setDependencies(tcQuadratureCommentChange, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
 	
 	# Swap PhA and PhB
 	tcSym_CH_QEI_BMR_SWAP = tcComponent.createBooleanSymbol("TC_BMR_SWAP", tcQuadratureMenu)
@@ -627,17 +682,43 @@ def instantiateComponent(tcComponent):
 	tcSym_CH_BMR_MAXFILT.setMin(0)
 	tcSym_CH_BMR_MAXFILT.setMax(63)
 	
+	# Index pulse
+	global tcSym_CH_QEI_INDEX_PULSE
+	tcSym_CH_QEI_INDEX_PULSE = tcComponent.createBooleanSymbol("TC_INDEX_PULSE", tcQuadratureMenu)
+	tcSym_CH_QEI_INDEX_PULSE.setLabel("Is Index Pulse Available?")
+	tcSym_CH_QEI_INDEX_PULSE.setDefaultValue(True)
+	
 	#Mode
 	global tcSym_CH_BMR_POSEN
 	tcSym_CH_BMR_POSEN = tcComponent.createComboSymbol("TC_BMR_POSEN", tcQuadratureMenu, ["POSITION", "SPEED"])
 	tcSym_CH_BMR_POSEN.setLabel("Select Mode")
 	tcSym_CH_BMR_POSEN.setDefaultValue("POSITION")
 	
+	#position menu
+	global tcPositionMenu
+	tcPositionMenu = tcComponent.createMenuSymbol("TC_QUADRATURE_POSITION", tcSym_CH_BMR_POSEN)
+	tcPositionMenu.setLabel("Position Measurement")
+	tcPositionMenu.setVisible(False)
+	tcPositionMenu.setDependencies(tcQuadraturePositionVisible, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
+	
+	#Num pulses
+	tcSym_CH_QEI_NUM_PULSES = tcComponent.createIntegerSymbol("TC_QEI_NUM_PULSES", tcPositionMenu)
+	tcSym_CH_QEI_NUM_PULSES.setLabel("Number of Quadrature Pulses per Revolution")
+	tcSym_CH_QEI_NUM_PULSES.setDefaultValue(1024)
+	tcSym_CH_QEI_NUM_PULSES.setMin(0)
+	tcSym_CH_QEI_NUM_PULSES.setMax(65535)
+	
+	#Position reset interrupt
+	global tcSym_CH_QEI_IER_CPCS
+	tcSym_CH_QEI_IER_CPCS = tcComponent.createBooleanSymbol("TC_QEI_IER_CPCS", tcPositionMenu)
+	tcSym_CH_QEI_IER_CPCS.setLabel("Enable Period Interrupt")
+	tcSym_CH_QEI_IER_CPCS.setDefaultValue(False)
+	
 	#speed menu
 	tcSpeedMenu = tcComponent.createMenuSymbol("TC_QUADRATURE_SPEED", tcSym_CH_BMR_POSEN)
 	tcSpeedMenu.setLabel("Speed Measurement")
 	tcSpeedMenu.setVisible(False)
-	tcSpeedMenu.setDependencies(tcQuadratureSpeedVisible, ["TC_BMR_POSEN"])	
+	tcSpeedMenu.setDependencies(tcQuadratureModeVisible, ["TC_BMR_POSEN"])
 
 	# clock selection for channel 2. For quadrature mode, channel ID 3 is used to distinguish between channel numbers and quadrature mode
 	tcClockSymbols(tcComponent, 3, tcSpeedMenu)
@@ -659,6 +740,7 @@ def instantiateComponent(tcComponent):
 	tcSym_CH_QIER_IDX = tcComponent.createBooleanSymbol("TC_QIER_IDX", tcQuadratureMenu)
 	tcSym_CH_QIER_IDX.setLabel("Enable Index Interrupt")
 	tcSym_CH_QIER_IDX.setDefaultValue(False)
+	tcSym_CH_QIER_IDX.setDependencies(tcQuadratureIndexPulse, ["TC_INDEX_PULSE"])
 	
 	# enable quadrature error interrupt
 	global tcSym_CH_QIER_QERR
@@ -672,7 +754,7 @@ def instantiateComponent(tcComponent):
 		tcChannelMenu.append(channelID)
 		tcChannelMenu[channelID] = tcComponent.createMenuSymbol("Channel "+str(channelID), None)
 		tcChannelMenu[channelID].setLabel("Channel "+str(channelID))
-		tcChannelMenu[channelID].setDependencies(tcChannelMenuVisible, ["TC_ENABLE_QEI", "TC_BMR_POSEN"])
+		tcChannelMenu[channelID].setDependencies(tcChannelMenuVisible, ["TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
 		
 		#channel enable
 		tcSym_CH_Enable.append(channelID)
@@ -686,7 +768,7 @@ def instantiateComponent(tcComponent):
 		# Clock dynamic settings
 		tcSym_CH_ClockControl.append(channelID)
 		tcSym_CH_ClockControl[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_CLOCK_ENABLE", None)
-		tcSym_CH_ClockControl[channelID].setDependencies(tcClockControl, ["TC"+str(channelID)+"_ENABLE", "TC_ENABLE_QEI", "TC_BMR_POSEN"])
+		tcSym_CH_ClockControl[channelID].setDependencies(tcClockControl, ["TC"+str(channelID)+"_ENABLE", "TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
 		tcSym_CH_ClockControl[channelID].setVisible(False)		
 		
 		# NVIC Dynamic settings
@@ -694,7 +776,7 @@ def instantiateComponent(tcComponent):
 		tcSym_CH_NVICControl[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_NVIC_ENABLE", None)
 		tcSym_CH_NVICControl[channelID].setDependencies(tcNVICControl, ["TC"+str(channelID)+"_ENABLE", "TC_ENABLE_QEI", "TC"+str(channelID)+"_OPERATING_MODE", \
 			"TC"+str(channelID)+"_CAPTURE_IER_LDRAS", "TC"+str(channelID)+"_CAPTURE_IER_LDRBS", "TC"+str(channelID)+"_CAPTURE_IER_COVFS", \
-			"TC"+str(channelID)+"_COMPARE_IER_CPCS", "TC"+str(channelID)+"_IER_CPCS", "TC_QIER_IDX", "TC_QIER_QERR"])
+			"TC"+str(channelID)+"_COMPARE_IER_CPCS", "TC"+str(channelID)+"_IER_CPCS", "TC_QIER_IDX", "TC_QIER_QERR", "TC_INDEX_PULSE", "TC_QEI_IER_CPCS"])
 		tcSym_CH_NVICControl[channelID].setVisible(False)
 		
 		# Dependency Status
