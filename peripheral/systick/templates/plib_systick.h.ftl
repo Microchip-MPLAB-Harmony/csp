@@ -63,6 +63,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
+	<#lt>#define SYSTICK_INTERRUPT_PERIOD_IN_US  ((1/(SYSTICK_FREQ)) * (0x${SYSTICK_PERIOD}) * (1000000))
+	
 	<#lt>typedef void (*SYSTICK_CALLBACK)(uintptr_t context);
 </#if>
 
@@ -72,7 +74,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>	SYSTICK_CALLBACK          callback;
 	<#lt>	uintptr_t                 context;
 	<#lt>	volatile uint32_t         tickCounter;
-	<#lt>	uint32_t         		  tickResolution;		// 1 = 0.1us
 	<#lt>} SYSTICK_OBJECT ;
 </#if>
 /***************************** SYSTICK API *******************************/

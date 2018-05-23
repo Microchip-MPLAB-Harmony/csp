@@ -49,7 +49,7 @@ void SYSTICK_TimerInitialize ( void )
 {
 	SysTick->CTRL = 0;
 	SysTick->VAL = 0;
-	SysTick->LOAD = ${SYSTICK_PERIOD-1};
+	SysTick->LOAD = 0x${SYSTICK_PERIOD} - 1;
 	<#if USE_SYSTICK_INTERRUPT == true && SYSTICK_CLOCK == "0">
 		<#lt>	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk;
 	</#if>
@@ -61,9 +61,8 @@ void SYSTICK_TimerInitialize ( void )
 	</#if>
 	<#if USE_SYSTICK_INTERRUPT == true >
 
-		<#lt>	systick.tickCounter=0;
-		<#lt>	systick.tickResolution=${SYSTICK_RESOLUTION};
-		<#lt>	systick.callback=NULL;
+		<#lt>	systick.tickCounter = 0;
+		<#lt>	systick.callback = NULL;
 	</#if>
 }
 
@@ -105,19 +104,21 @@ uint32_t SYSTICK_TimerFrequencyGet ( void )
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
-	<#lt>void SYSTICK_DelayMs ( uint32_t ms )
+	<#lt>void SYSTICK_DelayMs ( uint32_t delay)
 	<#lt>{
-	<#lt>	uint32_t tickEnd;
+	<#lt>	uint32_t tickStart, delayTicks;
+
 	<#lt>	if( (SysTick->CTRL & (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk)) == (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk))
 	<#lt>	{
-	<#lt>		systick.tickCounter=0;
-	<#lt>		tickEnd = (10000*ms)/systick.tickResolution;
-	<#lt>		while(systick.tickCounter < tickEnd);
+	<#lt>		tickStart=systick.tickCounter;
+	<#lt>		delayTicks=(1000*delay)/SYSTICK_INTERRUPT_PERIOD_IN_US;  // Number of tick interrupts for a given delay (in ms)
+
+	<#lt>		while((systick.tickCounter-tickStart)<delayTicks)
+	<#lt>		{
+	<#lt>		}
 	<#lt>	}
 	<#lt>}
-
-
-
+	
 	<#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	systick.callback = callback;
