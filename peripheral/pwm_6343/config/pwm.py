@@ -197,22 +197,6 @@ def pwmChannelConfVisible(symbol, event):
 			symbol.setVisible(True)
 	else:
 		symbol.setVisible(False)
-		
-def pwmDeadTimeMaxValue(symbol, event):
-	id = []
-	#split as per "_" to get the channel number
-	id = symbol.getID().split("_")
-	channelID = int(id[2])
-	
-	if(pwmSym_PWM_CDTY[channelID].getValue() < 4095):
-		symbol.setMax(pwmSym_PWM_CDTY[channelID].getValue())
-	else:
-		symbol.setMax(4095)
-		
-	if (pwmSym_PWM_CMR_DTE[channelID].getValue() == True):
-		symbol.setVisible(True)
-	else:
-		symbol.setVisible(False)	
 
 def pwmDutyMaxValue(symbol, event):
 	id = []
@@ -580,8 +564,6 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_DT_DTL[channelID].setDefaultValue(100)
 		pwmSym_PWM_DT_DTL[channelID].setMin(0)
 		pwmSym_PWM_DT_DTL[channelID].setMax(4095)
-		pwmSym_PWM_DT_DTL[channelID].setDependencies(pwmDeadTimeMaxValue, ["PWM_CH_"+str(channelID)+"_CDTY", "PWM_CH_"+str(channelID)+"_CMR_DTE"])
-		#must be between 0 and CDTY
 		
 		#duty for high side output
 		pwmSym_PWM_DT_DTH.append(channelID)
@@ -590,7 +572,6 @@ def instantiateComponent(pwmComponent):
 		pwmSym_PWM_DT_DTH[channelID].setDefaultValue(100)
 		pwmSym_PWM_DT_DTH[channelID].setMin(0)
 		pwmSym_PWM_DT_DTH[channelID].setMax(4095)		
-		pwmSym_PWM_DT_DTH[channelID].setDependencies(pwmDeadTimeMaxValue, ["PWM_CH_"+str(channelID)+"_CDTY", "PWM_CH_"+str(channelID)+"_CMR_DTE"])		
 		
 		#fault enable
 		pwmSym_PWM_Fault_Enable.append(channelID)
