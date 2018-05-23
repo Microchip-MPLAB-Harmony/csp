@@ -370,8 +370,9 @@ bool USART${INDEX?string}_Read( void *buffer, const size_t size )
 
     if(NULL != lBuffer)
     {
-        /* Clear errors before submitting the request */
-        USART${INDEX?string}_ErrorClear();
+        /* Clear errors before submitting the request.
+         * ErrorGet clears errors internally. */
+        USART${INDEX?string}_ErrorGet();
 
 <#if INTERRUPT_MODE == false>
         while( size > processedSize )
