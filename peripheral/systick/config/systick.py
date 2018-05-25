@@ -76,20 +76,20 @@ systickClock.addKey("HCLK", str(1) , "Processor clock (HCLK)" )
 systickClock.setDefaultValue(1)
 
 def systickCal(systickPeriod, data):
-    freq_ext = Database.getSymbolValue("core", "SYSTICK")
-    period = Database.getSymbolValue("core", "SYSTICK_PERIOD")
-    clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
-    freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
-    delay=0
-    
-    if clock == 0:
-        if (int(freq_ext) != 0):
-            delay = (float(1) / int(freq_ext)) * (int(period) * 1000)
-    else:
-        if (int(freq_proc) !=0):
-            delay = (float(1) / int(freq_proc)) * (int(period) * 1000)
-    
-	Database.setSymbolValue("core", "SYSTICK_PERIOD_US", (int(delay) * 1000), 2)
+	freq_ext = Database.getSymbolValue("core", "SYSTICK")
+	period = Database.getSymbolValue("core", "SYSTICK_PERIOD")
+	clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
+	freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+	delay=0
+
+	if clock == 0:
+		if (int(freq_ext) != 0):
+			delay = (float(1) / int(freq_ext)) * (int(period) * 1000)
+	else:
+		if (int(freq_proc) !=0):
+			delay = (float(1) / int(freq_proc)) * (int(period) * 1000)
+
+	Database.setSymbolValue("core", "SYSTICK_PERIOD_US", (int(round(delay, 3)* float(1000))), 2)
 	systickPeriod.setLabel("*********SysTick will generate periodic tick every " + str(delay) +" millisecond*************")
     
 
