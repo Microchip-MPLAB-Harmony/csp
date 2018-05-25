@@ -63,6 +63,10 @@ systickPeriod.setLabel("SysTick Period")
 systickPeriod.setMax(systickMax)
 systickPeriod.setDefaultValue(systickDefault)
 
+systickPeriodUS = coreComponent.createIntegerSymbol("SYSTICK_PERIOD_US", systickMenu)
+systickPeriodUS.setVisible(False)
+
+
 systickClock = coreComponent.createKeyValueSetSymbol("SYSTICK_CLOCK", systickMenu)
 systickClock.setLabel("SysTick Clock")
 systickClock.setOutputMode("Value")
@@ -84,8 +88,9 @@ def systickCal(systickPeriod, data):
     else:
         if (int(freq_proc) !=0):
             delay = (float(1) / int(freq_proc)) * (int(period) * 1000)
-            
-    systickPeriod.setLabel("*********SysTick will generate periodic tick every " + str(delay) +" millisecond*************")
+    
+	Database.setSymbolValue("core", "SYSTICK_PERIOD_US", (int(delay) * 1000), 2)
+	systickPeriod.setLabel("*********SysTick will generate periodic tick every " + str(delay) +" millisecond*************")
     
 
 
