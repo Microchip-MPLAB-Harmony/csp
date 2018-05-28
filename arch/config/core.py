@@ -1,7 +1,7 @@
 def instantiateComponent(coreComponent):
 
 	devMenu = coreComponent.createMenuSymbol("CoreDevMenu", None)
-	devMenu.setLabel("Device & Project Configuration")
+	devMenu.setLabel("Device Configuration")
 
 	devCfgMenu = coreComponent.createMenuSymbol("CoreCfgMenu", devMenu)
 	devCfgMenu.setLabel(Variables.get("__PROCESSOR") + " Device Configuration")

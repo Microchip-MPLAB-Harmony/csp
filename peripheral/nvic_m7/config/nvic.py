@@ -117,7 +117,7 @@ def checkVectorAvailability(nvicSym, event):
 ################################################################################
 #### Component ####
 ################################################################################
-nvicMenu = coreComponent.createMenuSymbol("NVIC_MENU", None)
+nvicMenu = coreComponent.createMenuSymbol("NVIC_MENU", cortexMenu)
 nvicMenu.setLabel("Interrupts (NVIC)")
 nvicMenu.setDescription("Configuration for NVIC Initialization")
 
