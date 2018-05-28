@@ -70,7 +70,7 @@ def storeLength(symbol, event):
 ################################################################################
 #### Component ####
 ################################################################################
-mpuMenu = coreComponent.createMenuSymbol("MPU_MENU", None)
+mpuMenu = coreComponent.createMenuSymbol("MPU_MENU", cortexMenu)
 mpuMenu.setLabel("MPU")
 
 coreUseMPU = coreComponent.createBooleanSymbol("CoreUseMPU", mpuMenu)
@@ -106,7 +106,7 @@ for i in range(0,16):
 
     coreMPURegMenu = coreComponent.createMenuSymbol("MPU_MENU_" + str(i), coreMPURegEnable)
     coreMPURegMenu.setLabel("MPU Region " + str(i) + " Settings")
-    coreMPURegMenu.setDescription("Configuration for MPU Region"+ str(channelID))
+    coreMPURegMenu.setDescription("Configuration for MPU Region"+ str(i))
 
     coreMPURegNameOptions = coreComponent.createComboSymbol(("MPU_Region_Name" + str(i) +"_Options"), coreMPURegMenu, mpuSettings.keys())
     coreMPURegNameOptions.setLabel("Region Name Options")

@@ -22,7 +22,7 @@ def systickUse(systickEnable, osal):
 		systickSystemDefFile.setEnabled(False)
 		systickSystemInitFile.setEnabled(False)
 	
-sysTickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU", None)
+sysTickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU", cortexMenu)
 sysTickMenu.setLabel("SysTick")
 
 systickEnable = coreComponent.createBooleanSymbol("systickEnable", sysTickMenu)
