@@ -37,8 +37,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef EEFC_H    // Guards against multiple inclusion
-#define EEFC_H
+#ifndef EFC_H    // Guards against multiple inclusion
+#define EFC_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -50,7 +50,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include <xc.h>
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -82,15 +82,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */ 
 typedef enum
 {
-	/*In-valid command*/
-	EEFC_CMD_ERROR = 0x2,
-	/*Flash region is locked*/
-	EEFC_LOCK_ERROR = 0x4,
-	/*Flash Error*/
-	EEFC_FLERR_ERROR = 0x8,
-	/*Flash Encountered an ECC error*/
-	EEFC_ECC_ERROR = 0xF0000,
-} EEFC_ERR;
+    EFC_ERROR_NONE = 0x1,
+    /*In-valid command*/
+    EFC_CMD_ERROR = 0x2,
+    /*Flash region is locked*/
+    EFC_LOCK_ERROR = 0x4,
+    /*Flash Error*/
+    EFC_FLERR_ERROR = 0x8,
+    /*Flash Encountered an ECC error*/
+    EFC_ECC_ERROR = 0xF0000,
+} EFC_ERROR;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -114,7 +115,7 @@ typedef enum
  Returns:
 	None.
 */
-typedef void (*EEFC_CALLBACK)(uintptr_t context);
+typedef void (*EFC_CALLBACK)(uintptr_t context);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -126,7 +127,7 @@ this interface.
 */
 // *****************************************************************************
 /* Function:
-	void EEFC_WriteQuadWord( uint32_t address, uint32_t* data )
+	void EFCx_QuadWordWrite( uint32_t address, uint32_t* data )
 	
  Summary:
 	Writes a 128-bit data to a given address in FLASH memory.
@@ -147,18 +148,15 @@ this interface.
 	
  Example:
 	<code>
-		EEFC0_WriteQuadWord( 0x500000, &buffer);
-		do 
-		{
-			status = EEFC0_StatusGet();
-		} while (status != EEFC_SUCCESS);
+		while(EFC0_IsBusy());
+		EFC0_QuadWordWrite( 0x500000, &buffer);
 	</code>
 */
-void EEFCx_WriteQuadWord( uint32_t address, uint32_t* data );
+void EFCx_QuadWordWrite( uint32_t address, uint32_t* data );
 
 // *****************************************************************************
 /* Function:
-	void EEFCx_WritePage( uint32_t address, uint32_t* data )
+	void EFCx_PageWrite( uint32_t address, uint32_t* data )
 	
  Summary:
 	Writes data of size equivalent to page size to a given FLASH address.
@@ -179,18 +177,15 @@ void EEFCx_WriteQuadWord( uint32_t address, uint32_t* data );
 	
  Example:
 	<code>
-		EEFC0_WritePage( 0x500000, &buffer);
-		do 
-		{
-			status = EEFC0_StatusGet();
-		} while (status != EEFC_SUCCESS);
+		while(EFC0_IsBusy());
+		EFC0_PageWrite( 0x500000, &buffer);
 	</code>
 */
-void EEFCx_WritePage( uint32_t address, uint32_t* data );
+void EFCx_PageWrite( uint32_t address, uint32_t* data );
 
 // *****************************************************************************
 /* Function:
-	void EEFCx_EraseRow( uint32_t address)
+	void EFCx_SectorErase( uint32_t address)
 	
  Summary:
 	Erases a Row in the FLASH.
@@ -209,24 +204,21 @@ void EEFCx_WritePage( uint32_t address, uint32_t* data );
 	
  Example:
 	<code>
-		EEFC0_EraseRow( 0x500000 );
-		do 
-		{
-			status = EEFC0_StatusGet();
-		} while (status != EEFC_SUCCESS);		
+		while(EFC0_IsBusy());
+		EFC0_SectorErase( 0x500000 );		
 	</code>
 */
-void EEFCx_EraseRow( uint32_t address );
+void EFCx_SectorErase( uint32_t address );
 
 // *****************************************************************************
 /* Function:
-	uint32_t EEFCx_ErrorGet( void )
+	EFC_ERROR EFCx_ErrorGet( void )
 	
  Summary:
-	Returns the error encountered by EEFC controller.
+	Returns the error encountered by EFCx controller.
 	
  Description:
-	This function is used to check error encountered by EEFC controller.
+	This function is used to check error encountered by EFCx controller.
 	
  Precondition:
 	None.
@@ -235,29 +227,26 @@ void EEFCx_EraseRow( uint32_t address );
 	None
 	
  Returns:
-	uint32_t :- EEFC controller error type
+	uint32_t :- EFCx controller error type
 	
  Example:
 	<code>
-		uint32_t error;
-		if (EEFC0_StatusGet() == EEFC_ERROR)
-		{
-			error = EEFC0_ErrorGet();
-		}
+		uint32_t error = EFCx_ErrorGet();
+		
 	</code>
 */
 
-uint32_t EEFCx_ErrorGet( void );
+uint32_t EFCx_ErrorGet( void );
 
 // *****************************************************************************
 /* Function:
-	bool EEFC_IsBusy(void)
+	bool EFCx_IsBusy(void)
 	
  Summary:
-	Returns the current status of EEFC controller.
+	Returns the current status of EFCx controller.
 	
  Description:
-	This function is used to check is EEFC is busy or not
+	This function is used to check is EFCx is busy or not
 	
  Precondition:
 	None.
@@ -265,19 +254,20 @@ uint32_t EEFCx_ErrorGet( void );
  Parameters:
 	None
  Returns:
-	bool :- EEFC status 
+	bool :- EFCx status 
 	
  Example:
 	<code>
-		bool status = EEFC0_IsBusy(void);
+		while(EFC0_IsBusy());
+		EFC0_SectorErase( 0x500000 );	
 	</code>
 */
 
-bool EEFCx_IsBusy(void);
+bool EFCx_IsBusy(void);
 
 // *****************************************************************************
 /* Function:
-	void EEFCx_RegionLock(uint32_t address);
+	void EFCx_RegionLock(uint32_t address);
 	
  Summary:
 	Locks a Flash region.
@@ -287,7 +277,7 @@ bool EEFCx_IsBusy(void);
 	It takes in address as a parameter and locks the region associated with it. 
 	
  Precondition:
-	Validate if EEFC controller is ready to accept new request by calling EEFC_IsBusy()
+	Validate if EFCx controller is ready to accept new request by calling EFCx_IsBusy()
 	
  Parameters:
 	address:- Address of the page to be locked 
@@ -297,19 +287,16 @@ bool EEFCx_IsBusy(void);
 	
  Example:
 	<code>
-		EEFC0_RegionLock(0x00500000);
-		do 
-		{
-			status = EEFC0_StatusGet();
-		} while (status != EEFC_SUCCESS);		
+		while(EFC0_IsBusy());
+		EFCx0_RegionLock(0x00500000);	
 	</code>
 */
 
-void EEFCx_RegionLock(uint32_t address);
+void EFCx_RegionLock(uint32_t address);
 
 // *****************************************************************************
 /* Function:
-	void EEFCx_RegionUnlock(uint32_t address);
+	void EFCx_RegionUnlock(uint32_t address);
 	
  Summary:
 	Unlocks a Flash region.
@@ -319,7 +306,7 @@ void EEFCx_RegionLock(uint32_t address);
 	It takes in address as a parameter and unlocks the region associated with it. 
 	
  Precondition:
-	Validate if EEFC controller is ready to accept new request by calling EEFC_IsBusy()
+	Validate if EFCx controller is ready to accept new request by calling EFCx_IsBusy()
 	
  Parameters:
 	address:- Address of the page to be unlocked 
@@ -329,20 +316,16 @@ void EEFCx_RegionLock(uint32_t address);
 	
  Example:
 	<code>
-		EEFC0_RegionUnlock(0x00500000);
-		do 
-		{
-			status = EEFC0_StatusGet();
-		} while (status != EEFC_SUCCESS);
-		}
+		while(EFC0_IsBusy());
+		EFCx0_RegionUnlock(0x00500000);
 	</code>
 */
 
-void EEFCx_RegionUnlock(uint32_t address);
+void EFCx_RegionUnlock(uint32_t address);
 
 // *****************************************************************************
 /* Function:
-	void EEFCx_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context )
+	void EFCx_CallbackRegister( EFCx_CALLBACK callback, uintptr_t context )
 	
  Summary:
 	Sets the pointer to the function (and it's context) to be called when the
@@ -350,7 +333,7 @@ void EEFCx_RegionUnlock(uint32_t address);
 	
  Description:
 	This function sets the pointer to a client function to be called "back"
-	when the EEFC is ready to receive new command. It also passes a context value that is passed into the
+	when the EFCx is ready to receive new command. It also passes a context value that is passed into the
 	function when it is called.
 	This function is available only in interrupt mode of operation.
 	
@@ -359,7 +342,7 @@ void EEFCx_RegionUnlock(uint32_t address);
 	
  Parameters:
 	callback - A pointer to a function with a calling signature defined
-				by the EEFC_CALLBACK data type.
+				by the EFCx_CALLBACK data type.
 	context - A value (usually a pointer) passed (unused) into the function
 				identified by the callback parameter.
 				
@@ -368,17 +351,17 @@ void EEFCx_RegionUnlock(uint32_t address);
 	
  Example:
 	<code>
-		EEFCx_CallbackRegister(MyCallback, &myData);
+		EFCx_CallbackRegister(MyCallback, &myData);
 	</code>
 	
  Remarks:
 	The context value may be set to NULL if it is not required. Note that the
 	value of NULL will still be passed to the callback function.
 	To disable the callback function, pass a NULL for the callback parameter.
-	See the EEFC_CALLBACK type definition for additional information.
+	See the EFCx_CALLBACK type definition for additional information.
 */
 
-void EEFCx_CallbackRegister( EEFC_CALLBACK callback, uintptr_t context );
+void EFCx_CallbackRegister( EFCx_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

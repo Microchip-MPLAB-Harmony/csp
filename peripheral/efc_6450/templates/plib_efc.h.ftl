@@ -56,10 +56,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+#define EFC${INDEX?string}_SECTORSIZE              0x2000
+#define EFC${INDEX?string}_PAGESIZE                0x200
+#define EFC${INDEX?string}_LOCKSIZE                0x4000
 <#if DRV_MEMORY_CONNECTED == true>
-    <#lt>#define EFC${INDEX?string}_ROWSIZE                 0x2000
-    <#lt>#define EFC${INDEX?string}_PAGESIZE                0x200
-    <#lt>#define EFC${INDEX?string}_LOCKSIZE                0x4000
     <#lt>#define EFC${INDEX?string}_START_ADDRESS           0x${START_ADDRESS}
     <#lt>#define EFC${INDEX?string}_MEDIA_SIZE              ${MEMORY_MEDIA_SIZE}
     <#lt>#define EFC${INDEX?string}_ERASE_BUFFER_SIZE       ${ERASE_BUFFER_SIZE}
