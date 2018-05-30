@@ -5,13 +5,13 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_pio_mapping.h
+    plib_pio_pin.h
 
   Summary:
-    PIO PLIB mapping header file
+    PIO PLIB Pin header file
 
   Description:
-    This library maps the implementations of several Pin based functions
+    This library has the inline implementations of several Pin based functions
     provided by Parallel Input/Output controller (PIO) PLIB.
 
 *******************************************************************************/
@@ -39,8 +39,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_PIO_MAPPING_H
-#define PLIB_PIO_MAPPING_H
+#ifndef PLIB_PIO_PIN_H
+#define PLIB_PIO_PIN_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -54,7 +54,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
   Summary:
     Writes the selected pin.
-    
+
   Remarks:
     See plib_pio.h for more details.
 */
@@ -163,7 +163,7 @@ static inline void PIO_PinInputEnable(PIO_PIN pin)
   Remarks:
     See plib_pio.h for more details.
 */
-static inline void PIO_PinOutputEnable(PIO_PIN pin) 
+static inline void PIO_PinOutputEnable(PIO_PIN pin)
 {
     PIO_PortOutputEnable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
 }
@@ -198,4 +198,4 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
     PIO_PortInterruptDisable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
 }
 
-#endif // PLIB_PIO_MAPPING_H
+#endif // PLIB_PIO_PIN_H

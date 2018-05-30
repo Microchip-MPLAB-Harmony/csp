@@ -242,7 +242,7 @@ typedef enum
     <#list PORTE_Pin_List as pin>
     PIO_PIN_PE${pin} = ${pin+128},
     </#list>
-    
+
     /* This element should not be used in any of the PIO APIs.
        It will be used by other modules or application to denote that none of the PIO Pin is used */
     PIO_PIN_NONE = -1
@@ -775,7 +775,7 @@ uint32_t PIO_PortRead(PIO_PORT port);
     void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value);
 
   Summary:
-    Write the value on all the I/O lines of the selected port.
+    Write the value on the masked I/O lines of the selected port.
 
   Description:
     This function writes the data values driven on selected output lines of the
@@ -1224,7 +1224,7 @@ void _PIO_Interrupt_Handler ( PIO_PORT port );
 void PORT${PIO_CHANNEL}_InterruptHandler (void);
 </#macro>
 
-#include "plib_pio_mapping.h"
+#include "plib_pio_pin.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

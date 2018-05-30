@@ -72,7 +72,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
                 </#if>
             </#if>
         </#if>
-    </#list>    
+    </#list>
 </#if>
 
 <#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT PIO_OD PIO_PU PIO_PD PIO_PER PIO_ABCD1
@@ -95,7 +95,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>   /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = ${PIO_OD};
     </#if>
-    
+
     <#lt>   /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
     <#if PIO_PU != "0x00000000">
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
@@ -104,7 +104,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     <#else>
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
     </#if>
-    
+
     <#lt>   /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
     <#if PIO_PD != "0x00000000">
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
@@ -113,19 +113,19 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     <#else>
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
     </#if>
-    
+
     <#if PIO_DIR != "0x00000000">
         <#lt>   /* PORT${PIO_PORT} Output Direction Enable */
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = ${PIO_DIR};
     </#if>
-         <#lt>   /* PORT${PIO_PORT} Output Write Enable */	
+         <#lt>   /* PORT${PIO_PORT} Output Write Enable */
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
     <#if PIO_INTERRUPT == true>
         <#if PIO_INT_TYPE != "0x00000000">
             <#lt>   /* PORT${PIO_PORT} Additional interrupt mode Enable */
             <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_AIMER = ${PIO_INT_TYPE};
         <#else>
-        
+
             <#lt>   /* If PIO Interrupt is selected for both edge, it doesn't need any register
             <#lt>      configuration */
         </#if>
@@ -137,9 +137,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
             <#lt>   /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
             <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = ${PIO_INT_RE_HL};
         </#if>
-        <#lt>   /* PORT${PIO_PORT} Interrupt Status Clear */	
+        <#lt>   /* PORT${PIO_PORT} Interrupt Status Clear */
         <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ISR;
-        
+
         <#lt>   /* PORT${PIO_PORT} system level interrupt will be enabled by NVIC Manager */
         <#lt>   /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
         <#lt>      by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
@@ -153,36 +153,36 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
         <#lt>/* port ${PIO_PORT} maximum number of callbacks */
         <#lt>uint8_t port${PIO_PORT}MaxNumCb = ${PORT_NUM_INT_PINS};
-        
+
         <#lt>/* port ${PIO_PORT} callback objects */
         <#lt>PIO_PIN_CALLBACK_OBJ port${PIO_PORT}PinCbObj[${PORT_NUM_INT_PINS}];
     </#if>
 </#macro>
 
 
-<@PIO_INT_CALLBACK 
-    PIO_PORT = "A" 
+<@PIO_INT_CALLBACK
+    PIO_PORT = "A"
     PORT_NUM_INT_PINS = "${PIO_A_NUM_INT_PINS}"
     PIO_INTERRUPT = PIO_A_INTERRUPT_USED
 />
-<@PIO_INT_CALLBACK 
-    PIO_PORT = "B" 
+<@PIO_INT_CALLBACK
+    PIO_PORT = "B"
     PORT_NUM_INT_PINS = "${PIO_B_NUM_INT_PINS}"
     PIO_INTERRUPT = PIO_B_INTERRUPT_USED
 />
-<@PIO_INT_CALLBACK 
-    PIO_PORT = "C" 
-    PORT_NUM_INT_PINS = "${PIO_C_NUM_INT_PINS}" 
+<@PIO_INT_CALLBACK
+    PIO_PORT = "C"
+    PORT_NUM_INT_PINS = "${PIO_C_NUM_INT_PINS}"
     PIO_INTERRUPT = PIO_C_INTERRUPT_USED
 />
-<@PIO_INT_CALLBACK 
-    PIO_PORT = "D" 
-    PORT_NUM_INT_PINS = "${PIO_D_NUM_INT_PINS}" 
+<@PIO_INT_CALLBACK
+    PIO_PORT = "D"
+    PORT_NUM_INT_PINS = "${PIO_D_NUM_INT_PINS}"
     PIO_INTERRUPT = PIO_D_INTERRUPT_USED
 />
-<@PIO_INT_CALLBACK 
-    PIO_PORT = "E" 
-    PORT_NUM_INT_PINS = "${PIO_E_NUM_INT_PINS}" 
+<@PIO_INT_CALLBACK
+    PIO_PORT = "E"
+    PORT_NUM_INT_PINS = "${PIO_E_NUM_INT_PINS}"
     PIO_INTERRUPT = PIO_E_INTERRUPT_USED
 />
 </#compress>
@@ -312,7 +312,7 @@ void PIO_Initialize ( void )
     <#if PIO_AFEC1_CHER_VALUE != "0x00000000">
         <#lt>   AFEC1_REGS->AFEC_CHER = ${PIO_AFEC1_CHER_VALUE};
     </#if>
-    <#if PIO_DACC_CHER_VALUE != "0x00000000">    
+    <#if PIO_DACC_CHER_VALUE != "0x00000000">
         <#lt>   DACC_REGS->DACC_CHER = ${PIO_DACC_CHER_VALUE};
     </#if>
 }
@@ -329,14 +329,14 @@ void PIO_Initialize ( void )
 
   Summary:
     Read all the I/O lines of the selected port.
-  
+
   Description:
     This function reads the live data values on all the I/O lines of the
     selected port.  Bit values returned in each position indicate corresponding
     pin levels.
     1 = Pin is high.
     0 = Pin is low.
- 
+
     This function reads the value regardless of pin configuration, whether it is
     set as as an input, driven by the PIO Controller, or driven by a peripheral.
 
@@ -352,15 +352,15 @@ uint32_t PIO_PortRead(PIO_PORT port)
 
 // *****************************************************************************
 /* Function:
-    void PIO_PortWrite ( PIO_PORT port, uint32_t value );
-  
+    void PIO_PortWrite (PIO_PORT port, uint32_t mask, uint32_t value);
+
   Summary:
-    Write the value on all the I/O lines of the selected port.
-  
+    Write the value on the masked I/O lines of the selected port.
+
   Remarks:
     See plib_pio.h for more details.
 */
-void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value) 
+void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 {
     ((pio_registers_t*)port)->PIO_ODSR = (((pio_registers_t*)port)->PIO_ODSR & (~mask)) | (mask & value);
 }
@@ -368,7 +368,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 // *****************************************************************************
 /* Function:
     uint32_t PIO_PortReadLatch ( PIO_PORT port )
-  
+
   Summary:
     Read the latched value on all the I/O lines of the selected port.
 
@@ -383,10 +383,10 @@ uint32_t PIO_PortReadLatch(PIO_PORT port)
 // *****************************************************************************
 /* Function:
     void PIO_PortSet ( PIO_PORT port, uint32_t mask )
-  
+
   Summary:
     Set the selected IO pins of a port.
-  
+
   Remarks:
     See plib_pio.h for more details.
 */
@@ -398,10 +398,10 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask)
 // *****************************************************************************
 /* Function:
     void PIO_PortClear ( PIO_PORT port, uint32_t mask )
-  
+
   Summary:
     Clear the selected IO pins of a port.
-  
+
   Remarks:
     See plib_pio.h for more details.
 */
@@ -413,10 +413,10 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask)
 // *****************************************************************************
 /* Function:
     void PIO_PortToggle ( PIO_PORT port, uint32_t mask )
-  
+
   Summary:
     Toggles the selected IO pins of a port.
-  
+
   Remarks:
     See plib_pio.h for more details.
 */
@@ -429,7 +429,7 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 // *****************************************************************************
 /* Function:
     void PIO_PortInputEnable ( PIO_PORT port, uint32_t mask )
-  
+
   Summary:
     Enables selected IO pins of a port as input.
 
@@ -444,10 +444,10 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 // *****************************************************************************
 /* Function:
     void PIO_PortOutputEnable ( PIO_PORT port, uint32_t mask )
-  
+
   Summary:
     Enables selected IO pins of a port as output(s).
-  
+
   Remarks:
     See plib_pio.h for more details.
 */
@@ -467,7 +467,7 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
     See plib_pio.h for more details.
 */
 void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
-{   
+{
     ((pio_registers_t*)port)->PIO_IER = mask;
 }
 
@@ -500,7 +500,7 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 // *****************************************************************************
 /* Function:
     void PIO_PinInterruptCallbackRegister(
-        PIO_PIN pin, 
+        PIO_PIN pin,
         const PIO_PIN_CALLBACK callback,
         uintptr_t context
     );
@@ -512,14 +512,14 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
     See plib_pio.h for more details.
 */
 void PIO_PinInterruptCallbackRegister(
-    PIO_PIN pin, 
+    PIO_PIN pin,
     const PIO_PIN_CALLBACK callback,
     uintptr_t context
 )
 {
     uint8_t portIndex;
     portIndex = pin >> 5;
-  
+
     switch( portIndex )
     {
     <#if PIO_A_INTERRUPT_USED == true>
@@ -751,7 +751,7 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
   Description:
     This function defines the Interrupt service routine for PORT${PIO_CHANNEL}.
     This is the function which by default gets into Interrupt Vector Table.
-    
+
   Remarks:
     User should not call this function.
 */

@@ -48,8 +48,8 @@ def setupInterrupt(portInterruptLocal, event):
     j = pinChannel[int(i[1])-1].getValue()
 
     if j!= "None":
-    # This means its a pin which has GPIO feature 
-    
+    # This means its a pin which has GPIO feature
+
         # find the index of the string "j" in the list "pioSymChannel" and save it in k.
         k = pioSymChannel.index(j)
         if event["value"] != "":
@@ -70,10 +70,10 @@ def setupInterrupt(portInterruptLocal, event):
 # Once the PORT Channel is enabled, option of corresponding Channel interrupt also starts showing up.
 def setupPort(usePortLocal, event):
     global usePort
-    
+
     if event["value"]!= "None":
     # This means its a pin which has GPIO feature
-    
+
         # find the index of the string coming from event["value"] in the list "pioSymChannel" and save it in k.
         k = pioSymChannel.index(event["value"])
 
@@ -454,13 +454,13 @@ pioHeaderFile.setProjectPath("config/" + configName +"/peripheral/pio/")
 pioHeaderFile.setType("HEADER")
 pioHeaderFile.setMarkup(True)
 
-pioMappingHeaderFile = coreComponent.createFileSymbol("PIO_MAPPING_HEADER", None)
-pioMappingHeaderFile.setSourcePath("../peripheral/pio_11004/plib_pio_mapping.h")
-pioMappingHeaderFile.setOutputName("plib_pio_mapping.h")
-pioMappingHeaderFile.setDestPath("/peripheral/pio/")
-pioMappingHeaderFile.setProjectPath("config/" + configName +"/peripheral/pio/")
-pioMappingHeaderFile.setType("HEADER")
-pioMappingHeaderFile.setMarkup(False)
+pioPinHeaderFile = coreComponent.createFileSymbol("PIO_PIN_HEADER", None)
+pioPinHeaderFile.setSourcePath("../peripheral/pio_11004/plib_pio_pin.h")
+pioPinHeaderFile.setOutputName("plib_pio_pin.h")
+pioPinHeaderFile.setDestPath("/peripheral/pio/")
+pioPinHeaderFile.setProjectPath("config/" + configName +"/peripheral/pio/")
+pioPinHeaderFile.setType("HEADER")
+pioPinHeaderFile.setMarkup(False)
 
 pioSource1File = coreComponent.createFileSymbol("PIO_SOURCE", None)
 pioSource1File.setSourcePath("../peripheral/pio_11004/templates/plib_pio.c.ftl")
