@@ -1,3 +1,5 @@
+<#assign APP_TASK_NAME_STR = "${APP_NAME}">
+<#assign APP_TASK_NAME = APP_TASK_NAME_STR?eval>
 /*******************************************************************************
   MPLAB Harmony Application Header File
 
@@ -5,7 +7,7 @@
     Microchip Technology Inc.
 
   File Name:
-    app.h
+    ${APP_TASK_NAME?lower_case}.h
 
   Summary:
     This header file provides prototypes and definitions for the application.
@@ -13,13 +15,13 @@
   Description:
     This header file provides function prototypes and data type definitions for
     the application.  Some of these are required by the system (such as the
-    "APP_Initialize" and "APP_Tasks" prototypes) and some of them are only used
-    internally by the application (such as the "APP_STATES" definition).  Both
+    "${APP_TASK_NAME?upper_case}_Initialize" and "${APP_TASK_NAME?upper_case}_Tasks" prototypes) and some of them are only used
+    internally by the application (such as the "${APP_TASK_NAME?upper_case}_STATES" definition).  Both
     are defined here for convenience.
 *******************************************************************************/
 
-#ifndef APP_H
-#define APP_H
+#ifndef _${APP_TASK_NAME?upper_case}_H
+#define _${APP_TASK_NAME?upper_case}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -32,7 +34,6 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "configuration.h"
-${LIST_SYSTEM_DEFINITIONS_H_INCLUDES}
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -62,13 +63,11 @@ extern "C" {
 typedef enum
 {
     /* Application's state machine's initial state. */
-
+    ${APP_TASK_NAME?upper_case}_STATE_INIT=0,
+    ${APP_TASK_NAME?upper_case}_STATE_SERVICE_TASKS,
     /* TODO: Define states used by the application state machine. */
-    APP_STATE_INIT,
 
-    APP_STATE_SERVICE_TASKS
-
-} APP_STATES;
+} ${APP_TASK_NAME?upper_case}_STATES;
 
 
 // *****************************************************************************
@@ -87,11 +86,11 @@ typedef enum
 typedef struct
 {
     /* The application's current state */
+    ${APP_TASK_NAME?upper_case}_STATES state;
 
     /* TODO: Define any additional data used by the application. */
-     APP_STATES  state;
 
-} APP_DATA;
+} ${APP_TASK_NAME?upper_case}_DATA;
 
 
 // *****************************************************************************
@@ -110,7 +109,7 @@ typedef struct
 
 /*******************************************************************************
   Function:
-    void APP_Initialize ( void )
+    void ${APP_TASK_NAME?upper_case}_Initialize ( void )
 
   Summary:
      MPLAB Harmony application initialization routine.
@@ -132,19 +131,19 @@ typedef struct
 
   Example:
     <code>
-    APP_Initialize();
+    ${APP_TASK_NAME?upper_case}_Initialize();
     </code>
 
   Remarks:
     This routine must be called from the SYS_Initialize function.
 */
 
-void APP_Initialize ( void );
+void ${APP_TASK_NAME?upper_case}_Initialize ( void );
 
 
 /*******************************************************************************
   Function:
-    void APP_Tasks ( void )
+    void ${APP_TASK_NAME?upper_case}_Tasks ( void )
 
   Summary:
     MPLAB Harmony Demo application tasks function
@@ -165,17 +164,18 @@ void APP_Initialize ( void );
 
   Example:
     <code>
-    APP_Tasks();
+    ${APP_TASK_NAME?upper_case}_Tasks();
     </code>
 
   Remarks:
     This routine must be called from SYS_Tasks() routine.
  */
 
-void APP_Tasks( void );
+void ${APP_TASK_NAME?upper_case}_Tasks( void );
 
 
-#endif /* APP_H */
+
+#endif /* _${APP_TASK_NAME?upper_case}_H */
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

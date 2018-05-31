@@ -1,3 +1,5 @@
+<#assign APP_TASK_NAME_STR = "${APP_NAME}">
+<#assign APP_TASK_NAME = APP_TASK_NAME_STR?eval>
 /*******************************************************************************
   MPLAB Harmony Application Source File
 
@@ -5,7 +7,7 @@
     Microchip Technology Inc.
 
   File Name:
-    app.c
+    ${APP_TASK_NAME?lower_case}.c
 
   Summary:
     This file contains the source code for the MPLAB Harmony application.
@@ -27,7 +29,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "app.h"
+#include "${APP_TASK_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -45,12 +47,12 @@
     This structure holds the application's data.
 
   Remarks:
-    This structure should be initialized by the APP_Initialize function.
+    This structure should be initialized by the ${APP_TASK_NAME?upper_case}_Initialize function.
 
     Application strings and buffers are be defined outside this structure.
 */
 
-APP_DATA appData;
+${APP_TASK_NAME?upper_case}_DATA ${APP_TASK_NAME?lower_case}Data;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -80,16 +82,17 @@ APP_DATA appData;
 
 /*******************************************************************************
   Function:
-    void APP_Initialize ( void )
+    void ${APP_TASK_NAME?upper_case}_Initialize ( void )
 
   Remarks:
-    See prototype in app.h.
+    See prototype in ${APP_TASK_NAME?lower_case}.h.
  */
 
-void APP_Initialize ( void )
+void ${APP_TASK_NAME?upper_case}_Initialize ( void )
 {
     /* Place the App state machine in its initial state. */
-    appData.state = APP_STATE_INIT;
+    ${APP_TASK_NAME?lower_case}Data.state = ${APP_TASK_NAME?upper_case}_STATE_INIT;
+
 
 
     /* TODO: Initialize your application's state machine and other
@@ -100,20 +103,20 @@ void APP_Initialize ( void )
 
 /******************************************************************************
   Function:
-    void APP_Tasks ( void )
+    void ${APP_TASK_NAME?upper_case}_Tasks ( void )
 
   Remarks:
-    See prototype in app.h.
+    See prototype in ${APP_TASK_NAME?lower_case}.h.
  */
 
-void APP_Tasks ( void )
+void ${APP_TASK_NAME?upper_case}_Tasks ( void )
 {
 
     /* Check the application's current state. */
-    switch ( appData.state )
+    switch ( ${APP_TASK_NAME?lower_case}Data.state )
     {
         /* Application's initial state. */
-        case APP_STATE_INIT:
+        case ${APP_TASK_NAME?upper_case}_STATE_INIT:
         {
             bool appInitialized = true;
 
@@ -121,12 +124,12 @@ void APP_Tasks ( void )
             if (appInitialized)
             {
 
-                appData.state = APP_STATE_SERVICE_TASKS;
+                ${APP_TASK_NAME?lower_case}Data.state = ${APP_TASK_NAME?upper_case}_STATE_SERVICE_TASKS;
             }
             break;
         }
 
-        case APP_STATE_SERVICE_TASKS:
+        case ${APP_TASK_NAME?upper_case}_STATE_SERVICE_TASKS:
         {
 
             break;
@@ -143,7 +146,6 @@ void APP_Tasks ( void )
         }
     }
 }
-
 
 
 /*******************************************************************************

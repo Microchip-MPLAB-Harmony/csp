@@ -58,11 +58,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#if Harmony.SELECT_RTOS != "BareMetal">
 // *****************************************************************************
 // *****************************************************************************
-// Section: RTOS Driver "Tasks" Routine
+// Section: RTOS "Tasks" Routine
 // *****************************************************************************
 // *****************************************************************************
 ${LIST_SYSTEM_RTOS_TASKS_C_DEFINITIONS}
 </#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System "Tasks" Routine
@@ -89,9 +90,12 @@ void SYS_Tasks ( void )
     ${LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS}
 
     /* Maintain the application's state machine. */
-    APP_Tasks();
+<#if Harmony.SELECT_RTOS == "BareMetal">
+    ${LIST_SYSTEM_TASKS_C_GEN_APP}
+<#else>
+    ${LIST_SYSTEM_RTOS_TASKS_C_GEN_APP}
+</#if>
 <#if Harmony.SELECT_RTOS != "BareMetal">
-
     /* Start RTOS Scheduler. */
     ${LIST_SYSTEM_RTOS_TASKS_C_CALL_SCHEDULAR}
 </#if>
