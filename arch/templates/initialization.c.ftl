@@ -118,7 +118,7 @@ void SYS_Initialize ( void* data )
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE}
 
     <#lt><#if CoreGenAppFiles == true >
-            <#lt>    APP_Initialize();
+            <#lt>${LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA}
     <#lt></#if>
 }
 

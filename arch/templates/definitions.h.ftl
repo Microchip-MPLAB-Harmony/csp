@@ -56,7 +56,7 @@ ${LIST_SYSTEM_DEFINITIONS_H_INCLUDES}
 </#compress>
 
 <#if CoreGenAppFiles == true >
-#include "app.h"
+${LIST_SYSTEM_APP_DEFINITIONS_H_INCLUDES}
 </#if>
 
 // DOM-IGNORE-BEGIN
