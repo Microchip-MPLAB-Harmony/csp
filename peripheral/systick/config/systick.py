@@ -65,7 +65,7 @@ systickPeriod.setDefaultValue(systickDefault)
 
 systickPeriodUS = coreComponent.createIntegerSymbol("SYSTICK_PERIOD_US", systickMenu)
 systickPeriodUS.setVisible(False)
-systickPeriodUS.setDefault(1000)
+systickPeriodUS.setDefaultValue(1000)
 
 systickClock = coreComponent.createKeyValueSetSymbol("SYSTICK_CLOCK", systickMenu)
 systickClock.setLabel("SysTick Clock")
