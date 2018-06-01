@@ -36,7 +36,7 @@
 #endif
 
 /* Initialize segments */
-extern uint32_t _sfixed;
+extern uint32_t __svectors;
 
 int main(void);
 extern void __attribute__((long_call)) __libc_init_array(void);
@@ -119,7 +119,7 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
 
 #  ifdef SCB_VTOR_TBLOFF_Msk
     /*  Set the vector-table base address in FLASH */
-    pSrc = (uint32_t *) & _sfixed;
+    pSrc = (uint32_t *) & __svectors;
     SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 #  endif /* SCB_VTOR_TBLOFF_Msk */
 
