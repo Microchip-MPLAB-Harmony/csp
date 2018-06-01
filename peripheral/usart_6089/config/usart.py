@@ -39,9 +39,14 @@ def NVICControl(usartNVIC, event):
 
 def dependencyStatus(symbol, event):
     if (event["value"] == False):
-        symbol.setVisible(True)
+        status = True
     else :
-        symbol.setVisible(False)
+        status = False
+
+    if (event["id"] == NVICVector) and (Database.getSymbolValue("usart" + str(usartInstance), "INTERRUPT_MODE") == False):
+        status = False
+
+    symbol.setVisible(status)
 
 # Calculates BRG value and Oversampling
 def baudRateCalc(clk, baud):
