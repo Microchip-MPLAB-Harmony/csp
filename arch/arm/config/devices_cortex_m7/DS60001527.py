@@ -87,14 +87,13 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M7 Configuration")
 cortexMenu.setDescription("Configuration for Cortex M7")
 
-# load device specific pin manager information
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
-coreComponent.addPlugin("../peripheral/pio_11004/plugin/SAME70pinmanager.jar")
-
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_e70/config/clk.py")
 coreComponent.addPlugin("../peripheral/clk_sam_e70/plugin/clockmanager.jar")
 
+# load device specific pin manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
+coreComponent.addPlugin("../peripheral/pio_11004/plugin/SAME70pinmanager.jar")
 # Cortex-M7 IP Configuration
 tcmMenu = coreComponent.createMenuSymbol("TCM_MENU", cortexMenu)
 tcmMenu.setLabel("TCM")
