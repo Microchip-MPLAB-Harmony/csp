@@ -526,14 +526,18 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module, gclk_div_visibility
         # get GCLKCSS bitfield of PMC_PCR register
         bitfield_pmc_pcr_gclkcss = reg_pmc_pcr.getBitfield("GCLKCSS")
 
-        # get Value Group for GCLKCSS bitfield of PMC_PCR register
-        valgrp_pmc_pcr_gclkcss = pmc_reg_module.getValueGroup(bitfield_pmc_pcr_gclkcss.getValueGroupName())
-
         # create symbol for GCLKCSS bitfield of PMC_PCR register
-        sym_pmc_pcr_gclkcss = clk_comp.createComboSymbol("PMC_PCR_GCLK" + str(i) + "CSS", sym_gen_clk_menu, valgrp_pmc_pcr_gclkcss.getValueNames())
+        sym_pmc_pcr_gclkcss = clk_comp.createKeyValueSetSymbol("PMC_PCR_GCLK" + str(i) + "CSS", sym_gen_clk_menu)
         sym_pmc_pcr_gclkcss.setLabel(bitfield_pmc_pcr_gclkcss.getDescription())
-        sym_pmc_pcr_gclkcss.setDefaultValue("SLOW_CLK")
         sym_pmc_pcr_gclkcss.setVisible(False)
+        sym_pmc_pcr_gclkcss.addKey("SLOW_CLK", "SLOW_CLK", "Slow Clock")
+        sym_pmc_pcr_gclkcss.addKey("MAIN_CLK", "MAIN_CLK", "Main Clock")
+        sym_pmc_pcr_gclkcss.addKey("PLLA_CLK", "PLLA_CLK", "PLLA Clock")
+        sym_pmc_pcr_gclkcss.addKey("UPLL_CLK", "UPLL_CLK", "UPLL Clock")
+        sym_pmc_pcr_gclkcss.addKey("MCK", "MCK_CLK", "Master Clock")
+        sym_pmc_pcr_gclkcss.setOutputMode("Value")
+        sym_pmc_pcr_gclkcss.setDisplayMode("Key")
+        sym_pmc_pcr_gclkcss.setSelectedKey("SLOW_CLK",1)
         sym_pmc_pcr_gclkcss.setDependencies(gclk_src_visibility, ["PMC_PCR_GCLK" + str(i) + "EN"])
 
 def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_pcer0_value, update_pcer1_value):
