@@ -17,7 +17,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -46,7 +46,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include "plib_spi.h"
 
 /* Provide C++ Compatibility */
-#ifdef __cplusplus  
+#ifdef __cplusplus
 
     extern "C" {
 
@@ -70,7 +70,7 @@ static inline bool SPI${SPI_INDEX?string}_Read(void* pReceiveData, size_t rxSize
 
 bool SPI${SPI_INDEX?string}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
-<#if SPI_INTERRUPT_MODE == true>     
+<#if SPI_INTERRUPT_MODE == true>
 bool SPI${SPI_INDEX?string}_IsBusy(void);
 
 SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
@@ -84,7 +84,7 @@ void SPI${SPI_INDEX?string}_InterruptHandler(void);
 #ifdef __cplusplus
 
     }
-    
+
 #endif
 
 #endif // PLIB_SPI${SPI_INDEX?string}_H
