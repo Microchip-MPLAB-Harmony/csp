@@ -1,8 +1,16 @@
-# Dependency Function to show or hide the warning message depending on Clock/Interrupt enable/disable status
-def ClockInterruptStatusWarning(symbol, event):
-   if event["value"] == False:
+# Dependency Function to show or hide the warning message depending on Clock enable/disable status
+def ClockStatusWarning(symbol, event):
+    if event["value"] == False:
        symbol.setVisible(True)
-   else:
+    else:
+       symbol.setVisible(False)
+
+# Dependency Function to show or hide the warning message depending on Interrupt enable/disable status
+def InterruptStatusWarning(symbol, event):
+    global spiInterrupt
+    if event["value"] == False and spiInterrupt.getValue() == True:
+       symbol.setVisible(True)
+    else:
        symbol.setVisible(False)
 
 def ClockModeInfo(symbol, event):
@@ -24,23 +32,18 @@ def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
     global spiSymNVICHandlerLock
     global spiSymIntEnComment
     global spiSym_MR_PCS
+    global spiDriverControlled
+    global spiInterruptDriverModeComment
 
-    print("arpan1")
-    if(event["id"] == "SPI_DRIVER_CONTROLLED"):
-        print("arpan2")
-        if (event["value"] == True):
-            spiInterrupt.setValue(True, 1)
-            spiInterrupt.setReadOnly(True)
-            spiSym_MR_PCS.setSelectedKey("GPIO",1)
-        else:
-            spiInterrupt.setReadOnly(False)
-    else:
-        print("arpan3")
+    if(event["id"] == "SPI_INTERRUPT_MODE"):
+        Database.clearSymbolValue("core", spiSymNVICVector)
+        Database.clearSymbolValue("core", spiSymNVICHandler)
+        Database.clearSymbolValue("core", spiSymNVICHandlerLock)
         if (event["value"] == True):
             Database.setSymbolValue("core", spiSymNVICVector, True, 1)
             Database.setSymbolValue("core", spiSymNVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
             Database.setSymbolValue("core", spiSymNVICHandlerLock, True, 1)
-        else :
+        else:
             Database.setSymbolValue("core", spiSymNVICVector, False, 1)
             Database.setSymbolValue("core", spiSymNVICHandler, "SPI" + str(spiInstance) + "_Handler", 1)
             Database.setSymbolValue("core", spiSymNVICHandlerLock, False, 1)
@@ -50,6 +53,18 @@ def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
         spiSymIntEnComment.setVisible(True)
     else:
         spiSymIntEnComment.setVisible(False)
+
+    #control driver dependency
+    if(spiInterrupt.getValue() == False and spiDriverControlled.getValue() == True):
+        spiInterruptDriverModeComment.setVisible(True)
+        spiSym_MR_PCS.setSelectedKey("GPIO",1)
+    elif(spiInterrupt.getValue() == True and spiDriverControlled.getValue() == True):
+        spiInterruptDriverModeComment.setVisible(False)
+        spiInterrupt.setReadOnly(True)
+        spiSym_MR_PCS.setSelectedKey("GPIO",1)
+    else:
+        spiInterruptDriverModeComment.setVisible(False)
+        spiInterrupt.setReadOnly(False)
 
 def getMasterClockFreq():
     clkSymMasterClockFreq = Database.getSymbolValue("core","MASTERCLK_FREQ")
@@ -121,10 +136,12 @@ def instantiateComponent(spiComponent):
     spiIndex.setVisible(False)
     spiIndex.setDefaultValue(int(spiInstance))
 
+    global spiDriverControlled
     spiDriverControlled = spiComponent.createBooleanSymbol("SPI_DRIVER_CONTROLLED", None)
     spiDriverControlled.setVisible(False)
     spiDriverControlled.setDefaultValue(False)
 
+    global spiInterrupt
     spiInterrupt = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", None)
     spiInterrupt.setLabel("Interrupt Mode")
     spiInterrupt.setDefaultValue(True)
@@ -251,13 +268,19 @@ def instantiateComponent(spiComponent):
     spiSymIntEnComment = spiComponent.createCommentSymbol("SPI" + str(spiInstance) + "_NVIC_ENABLE_COMMENT", None)
     spiSymIntEnComment.setVisible(False)
     spiSymIntEnComment.setLabel("Warning!!! SPI" + str(spiInstance) + " Interrupt is Disabled in Interrupt Manager")
-    spiSymIntEnComment.setDependencies(ClockInterruptStatusWarning, ["core." + spiSymNVICVector])
+    spiSymIntEnComment.setDependencies(InterruptStatusWarning, ["core." + spiSymNVICVector])
 
     # Dependency Status for clock
     spiSymClkEnComment = spiComponent.createCommentSymbol("SPI" + str(spiInstance) + "_CLK_ENABLE_COMMENT", None)
     spiSymClkEnComment.setVisible(False)
     spiSymClkEnComment.setLabel("Warning!!! SPI" + str(spiInstance) + " Peripheral Clock is Disabled in Clock Manager")
-    spiSymClkEnComment.setDependencies(ClockInterruptStatusWarning, ["core.PMC_ID_SPI" + str(spiInstance)])
+    spiSymClkEnComment.setDependencies(ClockStatusWarning, ["core.PMC_ID_SPI" + str(spiInstance)])
+
+    # Warning message when PLIB is configured in non-interrupt mode but used with driver.
+    global spiInterruptDriverModeComment
+    spiInterruptDriverModeComment = spiComponent.createCommentSymbol("SPI_INT_DRIVER_COMMENT", None)
+    spiInterruptDriverModeComment.setVisible(False)
+    spiInterruptDriverModeComment.setLabel("Warning!!! SPI PLIB to be used with driver, must be configured in interrupt mode")
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
