@@ -31,6 +31,8 @@ for periphName in periphNames:
                 periphComponent.addCapability(periphName + "_" + str(periphInstance), "MEMORY")
             elif (periphName == "TWIHS"):
                 periphComponent.addCapability(periphName + "_" + str(periphInstance), "I2C")
+            elif (periphName == "USART"):
+                periphComponent.addCapability(periphName + "_" + str(periphInstance), "UART")
             else:
                 periphComponent.addCapability(periphName + "_" + str(periphInstance), periphName)
 
