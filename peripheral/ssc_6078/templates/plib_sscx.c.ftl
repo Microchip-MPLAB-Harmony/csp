@@ -46,21 +46,19 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: SSC${SSC_INDEX?string} Implementation
 // *****************************************************************************
 // *****************************************************************************
-<#if SSC_INTERRUPT_MODE == true>
-/* Global object to save SSC Exchange related data */
-SSC_OBJECT ssc${SSC_INDEX?string}Obj;
-</#if>
+
+// Since there is only one SSC module, the registers are accessed using SSC_REGS
+// instead of SSCn->REGS, where n is the instance number
 
 void SSC${SSC_INDEX?string}_Initialize ( void )
 {
     /* Disable and Reset the SSC*/
-    SSC${SSC_INDEX?string}_REGS->SSC_CR = SSC_TXDIS_Msk | SSC_RXDIS_Msk;
+    SSC_REGS->SSC_CR = SSC_CR_TXDIS_Msk | SSC_CR_RXDIS_Msk;
 
-    SSC${SSC_INDEX?string}_REGS->SSC_CR = SSC_SWRST;
+    SSC_REGS->SSC_CR = SSC_CR_SWRST_Msk;
              
     /* Receiver Configurations */
-${SSC_RCMR_CKS}
-    SSC${SSC_INDEX?string}_REGS->SSC_RCMR =  SSC_RCMR_CKS(${SSC_RCMR_CKS}) |
+    SSC_REGS->SSC_RCMR =  SSC_RCMR_CKS(${SSC_RCMR_CKS}) |
                            SSC_RCMR_CKO(${SSC_RCMR_CKO}) |
                            SSC_RCMR_CKI(${SSC_RCMR_CKI}) |
                            SSC_RCMR_CKG(${SSC_RCMR_CKG}) |
@@ -69,18 +67,18 @@ ${SSC_RCMR_CKS}
                            SSC_RCMR_STTDLY(${SSC_RCMR_STTDLY}) |
                            SSC_RCMR_PERIOD(${SSC_RCMR_PERIOD}) ;
 
-    SSC${SSC_INDEX?string}_REGS->SSC_RFMR =  SSC_RFMR_DATLEN(${SSC_RFMR_DATLEN}) |
+    SSC_REGS->SSC_RFMR =  SSC_RFMR_DATLEN(${SSC_RFMR_DATLEN}) |
                            SSC_RFMR_LOOP(${SSC_RFMR_LOOP}) |
                            SSC_RFMR_MSBF(${SSC_RFMR_MSBF}) |
                            SSC_RFMR_DATNB(${SSC_RFMR_DATNB}) |
                            SSC_RFMR_FSLEN(${SSC_RFMR_FSLEN}) |
                            SSC_RFMR_FSOS(${SSC_RFMR_FSOS}) |
-                           SSC_RFMR_FSEDGE(${SSC_RFMR_FSEDGE}) ;
-                           SSC_RFMR_FSLEN_EXT(X{SSC_RFMR_FSLEN_EXT}) ;
+                           SSC_RFMR_FSEDGE(${SSC_RFMR_FSEDGE}) |
+                           SSC_RFMR_FSLEN_EXT(${SSC_RFMR_FSLEN_EXT}) ;
     
     /* Transmitter Configurations */
 
-    SSC${SSC_INDEX?string}_REGS->SSC_TCMR =  SSC_TCMR_CKS(${SSC_TCMR_CKS}) |
+    SSC_REGS->SSC_TCMR =  SSC_TCMR_CKS(${SSC_TCMR_CKS}) |
                            SSC_TCMR_CKO(${SSC_TCMR_CKO}) |
                            SSC_TCMR_CKI(${SSC_TCMR_CKI}) |
                            SSC_TCMR_CKG(${SSC_TCMR_CKG}) |
@@ -88,30 +86,20 @@ ${SSC_RCMR_CKS}
                            SSC_TCMR_STTDLY(${SSC_TCMR_STTDLY}) |
                            SSC_TCMR_PERIOD(${SSC_TCMR_PERIOD}) ;
 
-    SSC${SSC_INDEX?string}_REGS->SSC_TFMR = SSC_TFMR_DATLEN(${SSC_TFMR_DATLEN}) |
+    SSC_REGS->SSC_TFMR = SSC_TFMR_DATLEN(${SSC_TFMR_DATLEN}) |
                            SSC_TFMR_DATDEF(${SSC_TFMR_DATDEF}) |
                            SSC_TFMR_MSBF(${SSC_TFMR_MSBF}) |
                            SSC_TFMR_DATNB(${SSC_TFMR_DATNB}) |
                            SSC_TFMR_FSLEN(${SSC_TFMR_FSLEN}) |
                            SSC_TFMR_FSOS(${SSC_TFMR_FSOS}) |
                            SSC_TFMR_FSDEN(${SSC_TFMR_FSDEN}) |
-                           SSC_TFMR_FSEDGE(${SSC_TFMR_FSEDGE}) ;
-                           SSC_TFMR_FSLEN_EXT(X{SSC_TFMR_FSLEN_EXT}) ;
-
-    
-    /* Common Clock Divider configuration - Find the MCK value and 
-     * then update the SSC_CMR register correctly */
-    clockFrequency = SYS_CLK_FrequencyGet(SYS_CLK_MASTER);
-    
-    /* CMR DIV value = peripheral clock frequency / X 
-     * Where X = ( 2 * Bitclock ) 
-     * 2 because => SSC peripheral clock divided by 2 times DIV 
-     * Bitclock = (No. of channels * datasize * baudrate) */
-    
-    cmr_div_value = (uint16_t) (clockFrequency / (2 * ( 2 * ((i2sInit->txDataLen) + 1) * (i2sInit->baudRate))));
-    ssc->SSC_CMR.w = (cmr_div_value << SSC_CMR_DIV_Pos);         
+                           SSC_TFMR_FSEDGE(${SSC_TFMR_FSEDGE}) |
+                           SSC_TFMR_FSLEN_EXT(${SSC_TFMR_FSLEN_EXT}) ;        
 }
 
+void SSC${SSC_INDEX?string}_BaudSet(const uint32_t baud)
+{
+}
 
 /*******************************************************************************
  End of File
