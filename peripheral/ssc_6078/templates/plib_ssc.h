@@ -56,36 +56,6 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 /****************************** SSC${SSC_INDEX?string} Interface *********************************/
 
-#if 0
-typedef enum
-{
-    SSC_CLOCK_PHASE_TRAILING_EDGE = 0 << SSC_CSR_NCPHA_Pos,
-    SSC_CLOCK_PHASE_LEADING_EDGE = 1 << SSC_CSR_NCPHA_Pos
-    
-}SSC_CLOCK_PHASE;
-
-typedef enum
-{
-    SSC_CLOCK_POLARITY_IDLE_LOW = 0 << SSC_CSR_CPOL_Pos,
-    SSC_CLOCK_POLARITY_IDLE_HIGH = 1 << SSC_CSR_CPOL_Pos
-    
-}SSC_CLOCK_POLARITY;
-
-typedef enum
-{
-    SSC_DATA_BITS_8 = SSC_CSR_BITS_8_BIT_Val,
-    SSC_DATA_BITS_9 = SSC_CSR_BITS_9_BIT_Val,
-    SSC_DATA_BITS_10 = SSC_CSR_BITS_10_BIT_Val,
-    SSC_DATA_BITS_11 = SSC_CSR_BITS_11_BIT_Val,
-    SSC_DATA_BITS_12 = SSC_CSR_BITS_12_BIT_Val,
-    SSC_DATA_BITS_13 = SSC_CSR_BITS_13_BIT_Val,
-    SSC_DATA_BITS_14 = SSC_CSR_BITS_14_BIT_Val,
-    SSC_DATA_BITS_15 = SSC_CSR_BITS_15_BIT_Val,
-    SSC_DATA_BITS_16 = SSC_CSR_BITS_16_BIT_Val
-
-}SSC_DATA_BITS;
-#endif
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Local: **** Do Not Use ****

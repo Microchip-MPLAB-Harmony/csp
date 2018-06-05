@@ -1,5 +1,3 @@
-custom = False
-
 def customUpdate(sscAudioProtocol, event):
     global sscRecClkModeCKS
     global sscRecClkModeCKO
@@ -103,7 +101,6 @@ def instantiateComponent(sscComponent):
     global sscTmtFrameModeFSOS
     global sscTmtFrameModeFSDEN
     global sscTmtFrameModeFSEDGE
-
     global custom
     global sscInstance
     
@@ -354,12 +351,12 @@ def instantiateComponent(sscComponent):
 
 # SSC Transmit Frame Mode Register
     sscTmtFrameModeDATLEN = sscComponent.createIntegerSymbol("SSC_TFMR_DATLEN", None)
-    sscTmtFrameModeDATLEN.setLabel("Transmit Data Length(n+1 is actual size)")
+    sscTmtFrameModeDATLEN.setLabel("Transmitter Data Length(n+1 is actual size)")
     sscTmtFrameModeDATLEN.setDefaultValue(15)
     sscTmtFrameModeDATLEN.setVisible(custom)
 
     sscTmtFrameModeDATDEF = sscComponent.createKeyValueSetSymbol("SSC_TFMR_DATDEF", None)
-    sscTmtFrameModeDATDEF.setLabel("Transmit Data Default")
+    sscTmtFrameModeDATDEF.setLabel("Transmitter Data Default")
     sscTmtFrameModeDATDEF.addKey("LOW", "0", "Low")
     sscTmtFrameModeDATDEF.addKey("HIGH", "1", "High")
     sscTmtFrameModeDATDEF.setDisplayMode("Description")
@@ -368,7 +365,7 @@ def instantiateComponent(sscComponent):
     sscTmtFrameModeDATDEF.setVisible(custom)
 
     sscTmtFrameModeMSBF = sscComponent.createKeyValueSetSymbol("SSC_TFMR_MSBF", None)
-    sscTmtFrameModeMSBF.setLabel("Transmit MSB First")
+    sscTmtFrameModeMSBF.setLabel("Transmitter MSB First")
     sscTmtFrameModeMSBF.addKey("LSB", "0", "LSB output first")
     sscTmtFrameModeMSBF.addKey("MSB", "1", "MSB output first")
     sscTmtFrameModeMSBF.setDisplayMode("Description")
@@ -377,17 +374,17 @@ def instantiateComponent(sscComponent):
     sscTmtFrameModeMSBF.setVisible(custom)
 
     sscTmtFrameModeDATNB = sscComponent.createIntegerSymbol("SSC_TFMR_DATNB", None)
-    sscTmtFrameModeDATNB.setLabel("Transmit Data Number Per Frame")
+    sscTmtFrameModeDATNB.setLabel("Transmitter Data Number Per Frame")
     sscTmtFrameModeDATNB.setDefaultValue(0)
     sscTmtFrameModeDATNB.setVisible(custom)
 
     sscTmtFrameModeFSLEN = sscComponent.createIntegerSymbol("SSC_TFMR_FSLEN", None)
-    sscTmtFrameModeFSLEN.setLabel("Transmit Frame Sync Length")
+    sscTmtFrameModeFSLEN.setLabel("Transmitter Frame Sync Length")
     sscTmtFrameModeFSLEN.setDefaultValue(0)
     sscTmtFrameModeFSLEN.setVisible(custom)
 
     sscTmtFrameModeFSOS = sscComponent.createKeyValueSetSymbol("SSC_TFMR_FSOS", None)
-    sscTmtFrameModeFSOS.setLabel("Transmit Frame Sync Output")
+    sscTmtFrameModeFSOS.setLabel("Transmitter Frame Sync Output")
     sscTmtFrameModeFSOS.addKey("NONE", "0", "None, TF is input")
     sscTmtFrameModeFSOS.addKey("NEGATIVE", "1", "Negative pulse")
     sscTmtFrameModeFSOS.addKey("POSITIVE", "2", "Positive pulse")
@@ -400,7 +397,7 @@ def instantiateComponent(sscComponent):
     sscTmtFrameModeFSOS.setVisible(custom)
 
     sscTmtFrameModeFSDEN = sscComponent.createKeyValueSetSymbol("SSC_TFMR_FSDEN", None)
-    sscTmtFrameModeFSDEN.setLabel("Transmit Frame Sync Data Enable")
+    sscTmtFrameModeFSDEN.setLabel("Transmitter Frame Sync Data Enable")
     sscTmtFrameModeFSDEN.addKey("POSITIVE", "0", "TD driven with default value")
     sscTmtFrameModeFSDEN.addKey("NEGATIVE", "1", "TSHR value shifted out")
     sscTmtFrameModeFSDEN.setDisplayMode("Description")
@@ -409,13 +406,18 @@ def instantiateComponent(sscComponent):
     sscTmtFrameModeFSDEN.setVisible(custom)    
 
     sscTmtFrameModeFSEDGE = sscComponent.createKeyValueSetSymbol("SSC_TFMR_FSEDGE", None)
-    sscTmtFrameModeFSEDGE.setLabel("Transmit Frame Sync Edge Detection")
+    sscTmtFrameModeFSEDGE.setLabel("Transmitter Frame Sync Edge Detection")
     sscTmtFrameModeFSEDGE.addKey("POSITIVE", "0", "Positive edge")
     sscTmtFrameModeFSEDGE.addKey("NEGATIVE", "1", "Negative edge")
     sscTmtFrameModeFSEDGE.setDisplayMode("Description")
     sscTmtFrameModeFSEDGE.setOutputMode("Value")
     sscTmtFrameModeFSEDGE.setDefaultValue(0)
-    sscTmtFrameModeFSEDGE.setVisible(custom)           
+    sscTmtFrameModeFSEDGE.setVisible(custom)
+
+    sscTmtFrameModeFSLEN_EXT = sscComponent.createIntegerSymbol("SSC_TFMR_FSLEN_EXT", None)
+    sscTmtFrameModeFSLEN_EXT.setLabel("Transmitter FSLEN Field Extension")
+    sscTmtFrameModeFSLEN_EXT.setDefaultValue(0)
+    sscTmtFrameModeFSLEN_EXT.setVisible(custom)
     
     configName = Variables.get("__CONFIGURATION_NAME")
     
