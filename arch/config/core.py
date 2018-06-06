@@ -56,7 +56,10 @@ def instantiateComponent(coreComponent):
         appSourceFile.append(count)
         appSourceFile[count] = coreComponent.createFileSymbol("APP" + str(count) + "_C", None)
         appSourceFile[count].setSourcePath("templates/app.c.ftl")
-        appSourceFile[count].setOutputName("app" + str(count) + ".c")
+        if (count == 0):
+            appSourceFile[count].setOutputName("app.c")
+        else:
+            appSourceFile[count].setOutputName("app" + str(count) + ".c")
         appSourceFile[count].setMarkup(True)
         appSourceFile[count].setOverwrite(False)
         appSourceFile[count].setDestPath("../../")
@@ -73,7 +76,10 @@ def instantiateComponent(coreComponent):
         appHeaderFile.append(count)
         appHeaderFile[count] = coreComponent.createFileSymbol("APP" + str(count) + "_H", None)
         appHeaderFile[count].setSourcePath("templates/app.h.ftl")
-        appHeaderFile[count].setOutputName("app" + str(count) + ".h")
+        if (count == 0):
+            appHeaderFile[count].setOutputName("app.h")
+        else:
+            appHeaderFile[count].setOutputName("app" + str(count) + ".h")
         appHeaderFile[count].setMarkup(True)
         appHeaderFile[count].setOverwrite(False)
         appHeaderFile[count].setDestPath("../../")
