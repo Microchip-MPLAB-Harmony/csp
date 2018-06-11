@@ -23,6 +23,7 @@ global usartInstance
 global peripId
 global NVICVector
 global NVICHandler
+global NVICHandlerLock
 
 ################################################################################
 #### Business Logic ####
@@ -30,12 +31,15 @@ global NVICHandler
 def NVICControl(usartNVIC, event):
     Database.clearSymbolValue("core", NVICVector)
     Database.clearSymbolValue("core", NVICHandler)
+    Database.clearSymbolValue("core", NVICHandlerLock)
     if (event["value"] == True):
         Database.setSymbolValue("core", NVICVector, True, 2)
         Database.setSymbolValue("core", NVICHandler, "USART" + str(usartInstance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", NVICVector, False, 2)
         Database.setSymbolValue("core", NVICHandler, "USART" + str(usartInstance) + "_Handler", 2)
+        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
     if (event["value"] == False):
@@ -112,6 +116,7 @@ def dataWidthLogic(symbol, event):
 def instantiateComponent(usartComponent):
     global NVICVector
     global NVICHandler
+    global NVICHandlerLock
     global usartInstance
     global peripId
 

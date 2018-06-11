@@ -16,19 +16,26 @@ global uartInstance
 global peripId
 global NVICVector
 global NVICHandler
+global NVICHandlerLock
 
 ################################################################################
 #### Business Logic ####
 ################################################################################
 def NVICControl(uartNVIC, event):
+    global NVICVector
+    global NVICHandler
+    global NVICHandlerLock
     Database.clearSymbolValue("core", NVICVector)
     Database.clearSymbolValue("core", NVICHandler)
+    Database.clearSymbolValue("core", NVICHandlerLock)
     if (event["value"] == True):
         Database.setSymbolValue("core", NVICVector, True, 2)
         Database.setSymbolValue("core", NVICHandler, "UART" + str(uartInstance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", NVICVector, False, 2)
         Database.setSymbolValue("core", NVICHandler, "UART" + str(uartInstance) + "_Handler", 2)
+        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
     if (event["value"] == False):
@@ -88,6 +95,7 @@ def clockSourceFreq(symbol, event):
 def instantiateComponent(uartComponent):
     global NVICVector
     global NVICHandler
+    global NVICHandlerLock
     global uartInstance
     global peripId
 
