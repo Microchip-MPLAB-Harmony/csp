@@ -105,12 +105,15 @@ def NVICControl(NVIC, event):
 	global wdtNVICHandler
 	Database.clearSymbolValue("core", wdtNVICVector)
 	Database.clearSymbolValue("core", wdtNVICHandler)
+	Database.clearSymbolValue("core", wdtNVICHandlerLock)
 	if (event["value"] == True):
 		Database.setSymbolValue("core", wdtNVICVector, True, 2)
 		Database.setSymbolValue("core", wdtNVICHandler, "WDT0_InterruptHandler", 2)
+		Database.setSymbolValue("core", wdtNVICHandlerLock, True, 2)		
 	else :
 		Database.setSymbolValue("core", wdtNVICVector, False, 2)
 		Database.setSymbolValue("core", wdtNVICHandler, "WDT0_Handler", 2)
+		Database.setSymbolValue("core", wdtNVICHandlerLock, False, 2)
 
 # NVIC Dynamic settings
 wdtNVICControl = coreComponent.createBooleanSymbol("NVIC_WDT_ENABLE", None)
