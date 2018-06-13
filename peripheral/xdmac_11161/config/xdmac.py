@@ -51,7 +51,7 @@ for module in range (0 , len(modules)):
                     if "name" in parameters[parameter].getAttributeList():
                         name = str(parameters[parameter].getAttribute("name"))
                         if "DMAC_ID" in name:
-                            name = name.strip('DMAC_ID_')
+                            name = name.replace('DMAC_ID_', '')
                             module = str(instances[instance].getAttribute("name"))
                             if "HSMCI" == module:
                                 if "HSMCI" not in peridList:
