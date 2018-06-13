@@ -2,6 +2,7 @@ Log.writeInfoMessage("Loading RSWDT for " + Variables.get("__PROCESSOR"))
 
 global rswdtNVICVector
 global rswdtNVICHandler
+global rswdtNVICHandlerLock
 
 rswdtMenu = coreComponent.createMenuSymbol("RSWDT_MENU_0", None)
 rswdtMenu.setLabel("RSWDT")
@@ -77,19 +78,22 @@ Database.setSymbolValue("core", rswdtNVICVector, False, 2)
 Database.clearSymbolValue("core", rswdtNVICHandler)
 Database.setSymbolValue("core", rswdtNVICHandler, "RSWDT0_Handler", 2)
 Database.clearSymbolValue("core", rswdtNVICHandlerLock)
-Database.setSymbolValue("core", rswdtNVICHandlerLock, True, 2)
+Database.setSymbolValue("core", rswdtNVICHandlerLock, False, 2)
 
 def NVICControl(NVIC, event):
 	global rswdtNVICVector
 	global rswdtNVICHandler
 	Database.clearSymbolValue("core", rswdtNVICVector)
 	Database.clearSymbolValue("core", rswdtNVICHandler)
+	Database.clearSymbolValue("core", rswdtNVICHandlerLock)
 	if (event["value"] == True):
 		Database.setSymbolValue("core", rswdtNVICVector, True, 2)
 		Database.setSymbolValue("core", rswdtNVICHandler, "RSWDT0_InterruptHandler", 2)
+		Database.setSymbolValue("core", rswdtNVICHandlerLock, True, 2)
 	else :
 		Database.setSymbolValue("core", rswdtNVICVector, False, 2)
 		Database.setSymbolValue("core", rswdtNVICHandler, "RSWDT0_Handler", 2)
+		Database.setSymbolValue("core", rswdtNVICHandlerLock, False, 2)
 		
 # NVIC Dynamic settings
 rswdtNVICControl = coreComponent.createBooleanSymbol("NVIC_RSWDT_ENABLE", None)
