@@ -3,44 +3,55 @@ global instance
 global peripId
 global NVICVector
 global NVICHandler
+global NVICHandlerLock
 
-def NVICControl(rttNVIC, event):
+def NVICControl(rtcNVIC, event):
 	global NVICVector
 	global NVICHandler
 	Database.clearSymbolValue("core", NVICVector)
 	Database.clearSymbolValue("core", NVICHandler)
+	Database.clearSymbolValue("core", NVICHandlerLock)
 	if (event["value"] == True):
 		Database.setSymbolValue("core", NVICVector, True, 2)
 		Database.setSymbolValue("core", NVICHandler, "RTC" + str(instance) + "_InterruptHandler", 2)
+		Database.setSymbolValue("core", NVICHandlerLock, True, 2)
 	else :
 		Database.setSymbolValue("core", NVICVector, False, 2)
-		Database.setSymbolValue("core", NVICHandler, "RTC_Handler", 2)
+		Database.setSymbolValue("core", NVICHandler, "RTC0_Handler", 2)
+		Database.setSymbolValue("core", NVICHandlerLock, False, 2)
 		
 def instantiateComponent(rtcComponent):
 	global instance
 	global peripId
 	global NVICVector
 	global NVICHandler
+	global NVICHandlerLock
+	out0_names = []
+	out1_names = []
+	thigh_names = []
+	tperiod_names = []
+	timevsel_names = []
+	calevsel_names = []
 	
 	instance = rtcComponent.getID()[-1:]
-	
-	rtcRegModule = Register.getRegisterModule("RTC")
-	rtcRegGroup = rtcRegModule.getRegisterGroup("RTC")
 
-	rtcReg_MR = rtcRegGroup.getRegister("RTC_MR")
-	rtcReg_CR = rtcRegGroup.getRegister("RTC_CR");
-	rtcBitField_MR_OUT0 = rtcReg_MR.getBitfield("OUT0")
-	rtcBitField_MR_OUT1 = rtcReg_MR.getBitfield("OUT1")
-	rtcBitField_MR_THIGH = rtcReg_MR.getBitfield("THIGH")
-	rtcBitField_MR_TPERIOD = rtcReg_MR.getBitfield("TPERIOD")
-	rtcBitField_CR_TIMEVSEL = rtcReg_CR.getBitfield("TIMEVSEL")
-	rtcBitField_CR_CALEVSEL = rtcReg_CR.getBitfield("CALEVSEL")
-	rtcValGrp_MR_OUT0 = rtcRegModule.getValueGroup(rtcBitField_MR_OUT0.getValueGroupName())
-	rtcValGrp_MR_OUT1 = rtcRegModule.getValueGroup(rtcBitField_MR_OUT1.getValueGroupName())
-	rtcValGrp_MR_THIGH = rtcRegModule.getValueGroup(rtcBitField_MR_THIGH.getValueGroupName())
-	rtcValGrp_MR_TPERIOD = rtcRegModule.getValueGroup(rtcBitField_MR_TPERIOD.getValueGroupName())
-	rtcValGrp_CR_TIMEVSEL = rtcRegModule.getValueGroup(rtcBitField_CR_TIMEVSEL.getValueGroupName())
-	rtcValGrp_CR_CALEVSEL = rtcRegModule.getValueGroup(rtcBitField_CR_CALEVSEL.getValueGroupName())
+	rtcBitField_MR_OUT0 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_MR"]/bitfield@[name="OUT0"]')
+	rtcValGrp_MR_OUT0 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__OUT0"]')
+
+	rtcBitField_MR_OUT1 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_MR"]/bitfield@[name="OUT1"]')
+	rtcValGrp_MR_OUT1 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__OUT1"]')
+
+	rtcBitField_MR_THIGH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_MR"]/bitfield@[name="THIGH"]')
+	rtcValGrp_MR_THIGH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__THIGH"]')
+
+	rtcBitField_MR_TPERIOD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_MR"]/bitfield@[name="TPERIOD"]')
+	rtcValGrp_MR_TPERIOD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__TPERIOD"]')
+
+	rtcBitField_CR_TIMEVSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_CR"]/bitfield@[name="TIMEVSEL"]')
+	rtcValGrp_CR_TIMEVSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_CR__TIMEVSEL"]')
+	
+	rtcBitField_CR_CALEVSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_CR"]/bitfield@[name="CALEVSEL"]')
+	rtcValGrp_CR_CALEVSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_CR__CALEVSEL"]')
 	
 	#Create the top menu
 	rtcMenu = rtcComponent.createMenuSymbol("RTC_MENU_0", None)
@@ -73,32 +84,50 @@ def instantiateComponent(rtcComponent):
 	rtcIndex.setVisible(False)
 	rtcIndex.setDefaultValue(int(instance))
 	
-	rtcSym_MR_OUT0 = rtcComponent.createComboSymbol("RTC_MR_OUT0", rtcMenu, rtcValGrp_MR_OUT0.getValueNames())
-	rtcSym_MR_OUT0.setLabel(rtcBitField_MR_OUT0.getDescription())
+	for id in range(0,len(rtcValGrp_MR_OUT0.getChildren())):
+		out0_names.append(rtcValGrp_MR_OUT0.getChildren()[id].getAttribute("name"))
+		
+	rtcSym_MR_OUT0 = rtcComponent.createComboSymbol("RTC_MR_OUT0", rtcMenu, out0_names)
+	rtcSym_MR_OUT0.setLabel(rtcBitField_MR_OUT0.getAttribute("caption"))
 	rtcSym_MR_OUT0.setDefaultValue("NO_WAVE")
 	
-	rtcSym_MR_OUT1 = rtcComponent.createComboSymbol("RTC_MR_OUT1", rtcMenu, rtcValGrp_MR_OUT1.getValueNames())
-	rtcSym_MR_OUT1.setLabel("RTCOUT1 Output Source Selection")
+	for id in range(0,len(rtcValGrp_MR_OUT1.getChildren())):
+		out1_names.append(rtcValGrp_MR_OUT1.getChildren()[id].getAttribute("name"))
+		
+	rtcSym_MR_OUT1 = rtcComponent.createComboSymbol("RTC_MR_OUT1", rtcMenu, out1_names)
+	rtcSym_MR_OUT1.setLabel(rtcBitField_MR_OUT1.getAttribute("caption"))
 	rtcSym_MR_OUT1.setDefaultValue("NO_WAVE")
 	
-	rtcSym_MR_THIGH = rtcComponent.createComboSymbol("RTC_MR_THIGH", rtcMenu, rtcValGrp_MR_THIGH.getValueNames())
-	rtcSym_MR_THIGH.setLabel("High Duration of the Output Pulse")
+	for id in range(0,len(rtcValGrp_MR_THIGH.getChildren())):
+		thigh_names.append(rtcValGrp_MR_THIGH.getChildren()[id].getAttribute("name"))
+		
+	rtcSym_MR_THIGH = rtcComponent.createComboSymbol("RTC_MR_THIGH", rtcMenu, thigh_names)
+	rtcSym_MR_THIGH.setLabel(rtcBitField_MR_THIGH.getAttribute("caption"))
 	rtcSym_MR_THIGH.setDefaultValue("H_31MS")
 	rtcSym_MR_THIGH.setVisible(False)
 	rtcSym_MR_THIGH.setDependencies(rtcTHIGH, ["RTC_MR_OUT0", "RTC_MR_OUT1"])
 	
-	rtcSym_MR_TPERIOD = rtcComponent.createComboSymbol("RTC_MR_TPERIOD", rtcMenu, rtcValGrp_MR_TPERIOD.getValueNames())
-	rtcSym_MR_TPERIOD.setLabel("Period of the Output Pulse")
+	for id in range(0,len(rtcValGrp_MR_TPERIOD.getChildren())):
+		tperiod_names.append(rtcValGrp_MR_TPERIOD.getChildren()[id].getAttribute("name"))
+		
+	rtcSym_MR_TPERIOD = rtcComponent.createComboSymbol("RTC_MR_TPERIOD", rtcMenu, tperiod_names)
+	rtcSym_MR_TPERIOD.setLabel(rtcBitField_MR_TPERIOD.getAttribute("caption"))
 	rtcSym_MR_TPERIOD.setDefaultValue("P_1S")
 	rtcSym_MR_TPERIOD.setVisible(False)
 	rtcSym_MR_TPERIOD.setDependencies(rtcTPERIOD, ["RTC_MR_OUT0", "RTC_MR_OUT1"])
-	
-	rtcSym_CR_TIMEVSEL= rtcComponent.createComboSymbol("RTC_CR_TIMEVSEL", rtcMenu, rtcValGrp_CR_TIMEVSEL.getValueNames())
-	rtcSym_CR_TIMEVSEL.setLabel("Time Event Selection")
+
+	for id in range(0,len(rtcValGrp_CR_TIMEVSEL.getChildren())):
+		timevsel_names.append(rtcValGrp_CR_TIMEVSEL.getChildren()[id].getAttribute("name"))
+		
+	rtcSym_CR_TIMEVSEL= rtcComponent.createComboSymbol("RTC_CR_TIMEVSEL", rtcMenu, timevsel_names)
+	rtcSym_CR_TIMEVSEL.setLabel(rtcBitField_CR_TIMEVSEL.getAttribute("caption"))
 	rtcSym_CR_TIMEVSEL.setDefaultValue("MINUTE")
-	
-	rtcSym_CR_CALEVSEL = rtcComponent.createComboSymbol("RTC_CR_CALEVSEL", rtcMenu, rtcValGrp_CR_CALEVSEL.getValueNames())
-	rtcSym_CR_CALEVSEL.setLabel("Calendar Event Selection")
+
+	for id in range(0,len(rtcValGrp_CR_CALEVSEL.getChildren())):
+		calevsel_names.append(rtcValGrp_CR_CALEVSEL.getChildren()[id].getAttribute("name"))	
+		
+	rtcSym_CR_CALEVSEL = rtcComponent.createComboSymbol("RTC_CR_CALEVSEL", rtcMenu, calevsel_names)
+	rtcSym_CR_CALEVSEL.setLabel(rtcBitField_CR_CALEVSEL.getAttribute("caption"))
 	rtcSym_CR_CALEVSEL.setDefaultValue("WEEK")
 	
 	configName = Variables.get("__CONFIGURATION_NAME")
@@ -152,3 +181,14 @@ def rtcTPERIOD(rtcSym_MR_TPERIOD, event):
 		rtcSym_MR_TPERIOD.setVisible(False)
 	else:
 		rtcSym_MR_TPERIOD.setVisible(True)
+		
+def destroyComponent(efcComponent):
+	
+	global instance
+	global NVICVector
+	global NVICHandler
+	global NVICHandlerLock
+	
+	Database.setSymbolValue("core", NVICVector, False, 2)
+	Database.setSymbolValue("core", NVICHandler, "RTC0_Handler", 2)
+	Database.setSymbolValue("core", NVICHandlerLock, False, 2)
