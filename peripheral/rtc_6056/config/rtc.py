@@ -182,7 +182,7 @@ def rtcTPERIOD(rtcSym_MR_TPERIOD, event):
 	else:
 		rtcSym_MR_TPERIOD.setVisible(True)
 		
-def destroyComponent(efcComponent):
+def destroyComponent(rtcComponent):
 	
 	global instance
 	global NVICVector

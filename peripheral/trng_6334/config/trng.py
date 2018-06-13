@@ -3,25 +3,30 @@ global peripId
 global NVICVector
 global NVICHandler
 global instance 
+global NVICHandlerLock
 
 def NVICControl(NVIC, event):
 	global NVICVector
 	global NVICHandler
+	global NVICHandlerLock
 	Database.clearSymbolValue("core", NVICVector)
 	Database.clearSymbolValue("core", NVICHandler)
+	Database.clearSymbolValue("core", NVICHandlerLock)
 	if (event["value"] == True):
 		Database.setSymbolValue("core", NVICVector, True, 2)
 		Database.setSymbolValue("core", NVICHandler, "TRNG" + str(instance) + "_InterruptHandler", 2)
+		Database.setSymbolValue("core", NVICHandlerLock, True, 2)
 	else :
 		Database.setSymbolValue("core", NVICVector, False, 2)
 		Database.setSymbolValue("core", NVICHandler, "TRNG_Handler", 2)
+		Database.setSymbolValue("core", NVICHandlerLock, False, 2)		
 		
 def instantiateComponent(trngComponent):
 	global NVICVector
 	global NVICHandler
 	global peripId
 	global instance
-	
+	global NVICHandlerLock
 	peripId = Interrupt.getInterruptIndex("TRNG")
 	NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
 	NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
@@ -103,3 +108,14 @@ def showWarning(trngWarning, event):
 
 def showMenu(trngMenu, event):
 	trngMenu.setVisible(not event["value"])
+
+def destroyComponent(trngComponent):
+
+	global instance
+	global NVICVector
+	global NVICHandler
+	global NVICHandlerLock
+
+	Database.setSymbolValue("core", NVICVector, False, 2)
+	Database.setSymbolValue("core", NVICHandler, "TRNG0_Handler", 2)
+	Database.setSymbolValue("core", NVICHandlerLock, False, 2)
