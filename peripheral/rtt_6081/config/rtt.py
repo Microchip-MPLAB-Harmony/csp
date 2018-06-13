@@ -145,7 +145,7 @@ def rttPrescaleWarning(comment, prescale):
 	else :
 		comment.setVisible(False)
 		
-def destroyComponent(efcComponent):
+def destroyComponent(rttComponent):
 	
 	global NVICVector
 	global NVICHandler
