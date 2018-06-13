@@ -2,18 +2,26 @@ global instance
 global peripId
 global NVICVector
 global NVICHandler
+global NVICHandlerLock
 
 def NVICControl(rttNVIC, event):
+
 	global NVICVector
 	global NVICHandler
+	global NVICHandlerLock
+	
 	Database.clearSymbolValue("core", NVICVector)
 	Database.clearSymbolValue("core", NVICHandler)
+	Database.clearSymbolValue("core", NVICHandlerLock)
+	
 	if (event["value"] == True):
 		Database.setSymbolValue("core", NVICVector, True, 2)
 		Database.setSymbolValue("core", NVICHandler, "RTT" + str(instance) + "_InterruptHandler", 2)
+		Database.setSymbolValue("core", NVICHandlerLock, True, 2)
 	else :
 		Database.setSymbolValue("core", NVICVector, False, 2)
 		Database.setSymbolValue("core", NVICHandler, "RTT" + str(instance) + "_Handler", 2)
+		Database.setSymbolValue("core", NVICHandlerLock, False, 2)
 
 def instantiateComponent(rttComponent):
 	
@@ -21,6 +29,7 @@ def instantiateComponent(rttComponent):
 	global peripId
 	global NVICVector
 	global NVICHandler
+	global NVICHandlerLock
 	instance = rttComponent.getID()[-1:]
 
 	rttMenu = rttComponent.createMenuSymbol("RTT_MENU_0", None)
@@ -69,7 +78,7 @@ def instantiateComponent(rttComponent):
 	Database.clearSymbolValue("core", NVICHandler)
 	Database.setSymbolValue("core", NVICHandler, "RTT" + str(instance) + "_InterruptHandler", 2)
 	Database.clearSymbolValue("core", NVICHandlerLock)
-	Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+	Database.setSymbolValue("core", NVICHandlerLock, False, 2)
 
 	# NVIC Dynamic settings
 	rttNVICControl = rttComponent.createBooleanSymbol("NVIC_RTT_ENABLE", None)
@@ -135,3 +144,13 @@ def rttPrescaleWarning(comment, prescale):
 		comment.setVisible(True)
 	else :
 		comment.setVisible(False)
+		
+def destroyComponent(efcComponent):
+	
+	global NVICVector
+	global NVICHandler
+	global NVICHandlerLock
+	
+	Database.setSymbolValue("core", NVICVector, False, 2)
+	Database.setSymbolValue("core", NVICHandler, "RTT0_Handler", 2)
+	Database.setSymbolValue("core", NVICHandlerLock, False, 2)
