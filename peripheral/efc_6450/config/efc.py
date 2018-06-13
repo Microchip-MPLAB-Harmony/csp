@@ -4,6 +4,7 @@ global instance
 global peripId
 global NVICVector
 global NVICHandler
+global NVICHandlerLock
 
 def efcSetMemoryDependency(symbol, event):
     if (event["value"] == True):
@@ -12,119 +13,137 @@ def efcSetMemoryDependency(symbol, event):
         symbol.setVisible(False)
 
 def NVICControl(NVIC, event):
-    global NVICVector
-    global NVICHandler
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
-    else :
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_Handler", 2)
+	global NVICVector
+	global NVICHandler
+	global NVICHandlerLock
+	Database.clearSymbolValue("core", NVICVector)
+	Database.clearSymbolValue("core", NVICHandler)
+	Database.clearSymbolValue("core", NVICHandlerLock)
+	if (event["value"] == True):
+		Database.setSymbolValue("core", NVICVector, True, 2)
+		Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
+		Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+	else :
+		Database.setSymbolValue("core", NVICVector, False, 2)
+		Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_Handler", 2)
+		Database.setSymbolValue("core", NVICHandlerLock, False, 2)
         
 def instantiateComponent(efcComponent):
 
-    global instance
-    global peripId
-    global NVICVector
-    global NVICHandler
-    instance = efcComponent.getID()[-1:]
+	global instance
+	global peripId
+	global NVICVector
+	global NVICHandler
+	global NVICHandlerLock
+	
+	instance = efcComponent.getID()[-1:]
 
-    Log.writeInfoMessage("Running EEFC")
-    #Create the top menu
-    efcMenu = efcComponent.createMenuSymbol(None, None)
-    efcMenu.setLabel("Hardware Settings ")
-    #Create a Checkbox to enable disable interrupts
-    efcInterrupt = efcComponent.createBooleanSymbol("INTERRUPT_ENABLE", efcMenu)
-    efcInterrupt.setLabel("Enable Interrupts")
-    efcInterrupt.setDefaultValue(True)
+	Log.writeInfoMessage("Running EEFC")
+	#Create the top menu
+	efcMenu = efcComponent.createMenuSymbol(None, None)
+	efcMenu.setLabel("Hardware Settings ")
+	#Create a Checkbox to enable disable interrupts
+	efcInterrupt = efcComponent.createBooleanSymbol("INTERRUPT_ENABLE", efcMenu)
+	efcInterrupt.setLabel("Enable Interrupts")
+	efcInterrupt.setDefaultValue(True)
 
-    efcInterruptSource = efcComponent.createStringSymbol("INTERRUPT_SOURCE", efcMenu)
-    efcInterruptSource.setLabel("EFC Interrupt Source")
-    efcInterruptSource.setVisible(True)
-    efcInterruptSource.setReadOnly(True)
-    efcInterruptSource.setDefaultValue("EFC_IRQn")
-    efcInterruptSource.setDependencies(efcSetMemoryDependency, ["INTERRUPT_ENABLE"])
+	efcInterruptSource = efcComponent.createStringSymbol("INTERRUPT_SOURCE", efcMenu)
+	efcInterruptSource.setLabel("EFC Interrupt Source")
+	efcInterruptSource.setVisible(True)
+	efcInterruptSource.setReadOnly(True)
+	efcInterruptSource.setDefaultValue("EFC_IRQn")
+	efcInterruptSource.setDependencies(efcSetMemoryDependency, ["INTERRUPT_ENABLE"])
 
-    efcMemoryDriver = efcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", efcMenu)
-    efcMemoryDriver.setLabel("Memory Driver Connected")
-    efcMemoryDriver.setVisible(False)
-    efcMemoryDriver.setDefaultValue(False)
+	efcMemoryDriver = efcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", efcMenu)
+	efcMemoryDriver.setLabel("Memory Driver Connected")
+	efcMemoryDriver.setVisible(False)
+	efcMemoryDriver.setDefaultValue(False)
 
-    efcMemoryStartAddr = efcComponent.createHexSymbol("START_ADDRESS", efcMenu)
-    efcMemoryStartAddr.setLabel("NVM Offset for File System")
-    efcMemoryStartAddr.setVisible(False)
-    efcMemoryStartAddr.setDefaultValue(0x500000)
-    efcMemoryStartAddr.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
+	efcMemoryStartAddr = efcComponent.createHexSymbol("START_ADDRESS", efcMenu)
+	efcMemoryStartAddr.setLabel("NVM Offset for File System")
+	efcMemoryStartAddr.setVisible(False)
+	efcMemoryStartAddr.setDefaultValue(0x500000)
+	efcMemoryStartAddr.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
-    efcMemoryEraseEnable = efcComponent.createBooleanSymbol("ERASE_ENABLE", None)
-    efcMemoryEraseEnable.setLabel("NVM Erase Enable")
-    efcMemoryEraseEnable.setVisible(False)
-    efcMemoryEraseEnable.setDefaultValue(True)
-    efcMemoryEraseEnable.setReadOnly(True)
+	efcMemoryEraseEnable = efcComponent.createBooleanSymbol("ERASE_ENABLE", None)
+	efcMemoryEraseEnable.setLabel("NVM Erase Enable")
+	efcMemoryEraseEnable.setVisible(False)
+	efcMemoryEraseEnable.setDefaultValue(True)
+	efcMemoryEraseEnable.setReadOnly(True)
 
-    efcMemoryEraseBufferSize = efcComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", efcMenu)
-    efcMemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
-    efcMemoryEraseBufferSize.setVisible(False)
-    efcMemoryEraseBufferSize.setDefaultValue(8192)
-    efcMemoryEraseBufferSize.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
+	efcMemoryEraseBufferSize = efcComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", efcMenu)
+	efcMemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
+	efcMemoryEraseBufferSize.setVisible(False)
+	efcMemoryEraseBufferSize.setDefaultValue(8192)
+	efcMemoryEraseBufferSize.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
 
-    efcMemoryEraseComment = efcComponent.createCommentSymbol("ERASE_COMMENT", efcMenu)
-    efcMemoryEraseComment.setVisible(False)
-    efcMemoryEraseComment.setLabel("*** Should be equal to Sector Erase Size ***")
-    efcMemoryEraseComment.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
+	efcMemoryEraseComment = efcComponent.createCommentSymbol("ERASE_COMMENT", efcMenu)
+	efcMemoryEraseComment.setVisible(False)
+	efcMemoryEraseComment.setLabel("*** Should be equal to Sector Erase Size ***")
+	efcMemoryEraseComment.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
 
-    efcMemoryMediaSize = efcComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", efcMenu)
-    efcMemoryMediaSize.setLabel("NVM Memory Media Size")
-    efcMemoryMediaSize.setVisible(False)
-    efcMemoryMediaSize.setDefaultValue(1024)
-    efcMemoryMediaSize.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
+	efcMemoryMediaSize = efcComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", efcMenu)
+	efcMemoryMediaSize.setLabel("NVM Memory Media Size")
+	efcMemoryMediaSize.setVisible(False)
+	efcMemoryMediaSize.setDefaultValue(1024)
+	efcMemoryMediaSize.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
-    #instance index
-    efcIndex = efcComponent.createIntegerSymbol("INDEX", efcMenu)
-    efcIndex.setVisible(False)
-    efcIndex.setDefaultValue(int(instance))
+	#instance index
+	efcIndex = efcComponent.createIntegerSymbol("INDEX", efcMenu)
+	efcIndex.setVisible(False)
+	efcIndex.setDefaultValue(int(instance))
 
-    peripId = Interrupt.getInterruptIndex("EFC")
-    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+	peripId = Interrupt.getInterruptIndex("EFC")
+	NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
+	NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
+	NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
-    Database.clearSymbolValue("core", NVICVector)
-    Database.setSymbolValue("core", NVICVector, False, 2)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
-    Database.clearSymbolValue("core", NVICHandlerLock)
-    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+	Database.clearSymbolValue("core", NVICVector)
+	Database.setSymbolValue("core", NVICVector, True, 2)
+	Database.clearSymbolValue("core", NVICHandler)
+	Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
+	Database.clearSymbolValue("core", NVICHandlerLock)
+	Database.setSymbolValue("core", NVICHandlerLock, True, 2)
 
-    # NVIC Dynamic settings
-    efcNVICControl = efcComponent.createBooleanSymbol("NVIC_EFC_ENABLE", None)
-    efcNVICControl.setDependencies(NVICControl, ["INTERRUPT_ENABLE"])
-    efcNVICControl.setVisible(False)
-    
-    configName = Variables.get("__CONFIGURATION_NAME")
-    #Generate Output Header
-    efcHeaderFile = efcComponent.createFileSymbol("EFC_FILE_0", None)
-    efcHeaderFile.setSourcePath("../peripheral/efc_6450/templates/plib_efc.h.ftl")
-    efcHeaderFile.setMarkup(True)
-    efcHeaderFile.setOutputName("plib_efc" + str(instance) + ".h")
-    efcHeaderFile.setOverwrite(True)
-    efcHeaderFile.setDestPath("peripheral/efc/")
-    efcHeaderFile.setProjectPath("config/" + configName + "/peripheral/efc/")
-    efcHeaderFile.setType("HEADER")
-    #Generate Output source
-    efcSourceFile = efcComponent.createFileSymbol("EFC_FILE_1", None)
-    efcSourceFile.setSourcePath("../peripheral/efc_6450/templates/plib_efc.c.ftl")
-    efcSourceFile.setMarkup(True)
-    efcSourceFile.setOutputName("plib_efc" + str(instance) + ".c")
-    efcSourceFile.setOverwrite(True)
-    efcSourceFile.setDestPath("peripheral/efc/")
-    efcSourceFile.setProjectPath("config/" + configName + "/peripheral/efc/")
-    efcSourceFile.setType("SOURCE")
+	# NVIC Dynamic settings
+	efcNVICControl = efcComponent.createBooleanSymbol("NVIC_EFC_ENABLE", None)
+	efcNVICControl.setDependencies(NVICControl, ["INTERRUPT_ENABLE"])
+	efcNVICControl.setVisible(False)
 
-    efcSystemDefFile = efcComponent.createFileSymbol("EFC_FILE_2", None)
-    efcSystemDefFile.setType("STRING")
-    efcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    efcSystemDefFile.setSourcePath("../peripheral/efc_6450/templates/system/system_definitions.h.ftl")
-    efcSystemDefFile.setMarkup(True)
+	configName = Variables.get("__CONFIGURATION_NAME")
+	#Generate Output Header
+	efcHeaderFile = efcComponent.createFileSymbol("EFC_FILE_0", None)
+	efcHeaderFile.setSourcePath("../peripheral/efc_6450/templates/plib_efc.h.ftl")
+	efcHeaderFile.setMarkup(True)
+	efcHeaderFile.setOutputName("plib_efc" + str(instance) + ".h")
+	efcHeaderFile.setOverwrite(True)
+	efcHeaderFile.setDestPath("peripheral/efc/")
+	efcHeaderFile.setProjectPath("config/" + configName + "/peripheral/efc/")
+	efcHeaderFile.setType("HEADER")
+	#Generate Output source
+	efcSourceFile = efcComponent.createFileSymbol("EFC_FILE_1", None)
+	efcSourceFile.setSourcePath("../peripheral/efc_6450/templates/plib_efc.c.ftl")
+	efcSourceFile.setMarkup(True)
+	efcSourceFile.setOutputName("plib_efc" + str(instance) + ".c")
+	efcSourceFile.setOverwrite(True)
+	efcSourceFile.setDestPath("peripheral/efc/")
+	efcSourceFile.setProjectPath("config/" + configName + "/peripheral/efc/")
+	efcSourceFile.setType("SOURCE")
+
+	efcSystemDefFile = efcComponent.createFileSymbol("EFC_FILE_2", None)
+	efcSystemDefFile.setType("STRING")
+	efcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	efcSystemDefFile.setSourcePath("../peripheral/efc_6450/templates/system/system_definitions.h.ftl")
+	efcSystemDefFile.setMarkup(True)
+
+def destroyComponent(efcComponent):
+	
+	global instance
+	global NVICVector
+	global NVICHandler
+	global NVICHandlerLock
+	
+	Database.setSymbolValue("core", NVICVector, False, 2)
+	Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_Handler", 2)
+	Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+
