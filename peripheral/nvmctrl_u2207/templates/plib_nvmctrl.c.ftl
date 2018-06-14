@@ -225,7 +225,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_CacheInvalidate(void)
 <#if NVMCTRL_RWW_EEPROM == true>
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage
+    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite
                                         ( uint32_t address, uint32_t* data )
 
   Summary:
@@ -235,7 +235,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_CacheInvalidate(void)
     This function will write one page of data to the RWWEEPROM address specified
     by the address parameter. The size of the input buffer should be one NVM
     page.  The address should be aligned on a page boundary. Unlike the
-    NVMCTRL${NVMCTRL_INDEX?string}_WritePage function, calling this function
+    NVMCTRL${NVMCTRL_INDEX?string}_PageWrite function, calling this function
     will not cause the CPU execution to stall. If the interrupt operation was
     enabled and if a callback was registered, then the callback function will be
     called. The NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function can be used to
@@ -262,7 +262,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_CacheInvalidate(void)
     Refer plib_nvmctrl${NVMCTRL_INDEX?string}.h file for more information.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage (const uint32_t address,  uint32_t *data)
+void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite (const uint32_t address,  uint32_t *data)
 {
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
@@ -295,7 +295,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage (const uint32_t address,
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow( uint32_t address)
+    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address)
 
   Summary:
     Erases a Row in the RWWEEPROM.
@@ -303,7 +303,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage (const uint32_t address,
   Description:
     This function will erase one row in RWWEEPROM. The address of the row to be
     erased is specified by the address parameter. This address can be any
-    address in the row.  Unlike the NVMCTRL${NVMCTRL_INDEX?string}_EraseRow()
+    address in the row.  Unlike the NVMCTRL${NVMCTRL_INDEX?string}_RowErase()
     function, calling this function will not cause the CPU execution to stall.
     If the interrupt operation was enabled and if a callback was registered,
     then the callback function will be called.
@@ -330,7 +330,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage (const uint32_t address,
     Refer plib_nvmctrl${NVMCTRL_INDEX?string}.h file for more information.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow( uint32_t address )
+void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address )
 {
     /* Clear error flags */
     NVMCTRL_REGS->STATUS = 0x1C;
@@ -357,7 +357,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow( uint32_t address )
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_WritePage
+    bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite
                                         ( uint32_t address, uint32_t* data )
 
   Summary:
@@ -383,7 +383,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow( uint32_t address )
     Refer plib_nvmctrl${NVMCTRL_INDEX?string}.h file for more information.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_WritePage(const uint32_t address, uint32_t *data)
+bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite(const uint32_t address, uint32_t *data)
 {
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
@@ -412,11 +412,13 @@ void NVMCTRL${NVMCTRL_INDEX?string}_WritePage(const uint32_t address, uint32_t *
         /* Force-wait for the buffer clear to complete */
     }
 </#if>
+
+    return true;
 }
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_EraseRow( uint32_t address)
+    bool NVMCTRL${NVMCTRL_INDEX?string}_RowErase( uint32_t address)
 
   Summary:
     Erases a Row in the NVM
@@ -441,7 +443,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_WritePage(const uint32_t address, uint32_t *
     Refer plib_nvmctrl${NVMCTRL_INDEX?string}.h file for more information.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_EraseRow( uint32_t address )
+bool NVMCTRL${NVMCTRL_INDEX?string}_RowErase( uint32_t address )
 {
     /* Clear error flags */
     NVMCTRL_REGS->STATUS = 0x1C;
@@ -463,6 +465,8 @@ void NVMCTRL${NVMCTRL_INDEX?string}_EraseRow( uint32_t address )
         /* Force-wait for the buffer clear to complete */
     }
 </#if>
+
+    return true;
 }
 
 // *****************************************************************************
