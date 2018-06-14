@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_NVMCTRL_H
-#define PLIB_NVMCTRL_H
+#ifndef PLIB_NVMCTRLx_H
+#define PLIB_NVMCTRLx_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -50,7 +50,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#include "pic32cm2532jh21100.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -67,6 +66,38 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Constants
 // *****************************************************************************
 // *****************************************************************************
+
+// *****************************************************************************
+/* NVMCTRL Start Address Constant
+
+  Summary:
+    Defines the start address of NVMCTRL.
+
+  Description:
+    This constant defines the start address of Flash. It is recommended for the
+    target application to use this constant in place hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRL0_START_ADDRESS           (0x00000000U)
+
+// *****************************************************************************
+/* NVMCTRL Flash Size Constant
+
+  Summary:
+    Defines the size (in bytes) of Flash.
+
+  Description:
+    This constant defines the size (in bytes) of flash. It is recommended
+    for the target application to use this constant in place hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRL0_FLASH_SIZE              (0x40000U)
 
 // *****************************************************************************
 /* NVMCTRL Page Size Constant
@@ -182,7 +213,7 @@ typedef enum
     NVMCTRL0_CallbackRegister(APP_NVMTCTRLCallback, &myAppData);
 
     // Perform some operation.
-    NVMCTRL0_EraseRow(SOME_ROW_ALIGNED_ADDRESS);
+    NVMCTRL0_RowErase(SOME_ROW_ALIGNED_ADDRESS);
 
     // Now wait for the operation to complete.
     while(!myAppData.operationComplete);
@@ -241,7 +272,7 @@ void NVMCTRL0_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL0_WritePage( uint32_t address, uint32_t* data )
+    bool NVMCTRL0_PageWrite( uint32_t address, uint32_t* data )
 
   Summary:
     Writes one page of data to given NVM address.
@@ -274,22 +305,22 @@ void NVMCTRL0_Initialize(void);
     the page size.
 
   Returns:
-    None.
+    Always return true.
 
   Example:
     <code>
 
-    // This code snippet shows how the NVMCTRL0_WritePage function is called and
+    // This code snippet shows how the NVMCTRL0_PageWrite function is called and
     // how the NVMCTRL0_IsBusy function is used to poll for completion.
 
     NVMCTRL0_Initialize();
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL0_EraseRow(0x00030000);
+    NVMCTRL0_RowErase(0x00030000);
     while(NVMCTRL0_IsBusy());
 
     // Now write the page.
-    NVMCTRL0_WritePage(0x00030000, &buffer);
+    NVMCTRL0_PageWrite(0x00030000, &buffer);
     while(NVMCTRL0_IsBusy());
 
     if(NVMCTRL0_ErrorGet() == NVMCTRL_ERROR_NONE)
@@ -304,11 +335,11 @@ void NVMCTRL0_Initialize(void);
     operation.
 */
 
-void NVMCTRL0_WritePage( uint32_t address, uint32_t* data );
+bool NVMCTRL0_PageWrite( uint32_t address, uint32_t* data );
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL0_EraseRow( uint32_t address)
+    bool NVMCTRL0_RowErase( uint32_t address)
 
   Summary:
     Erases a Row in the NVM
@@ -337,18 +368,18 @@ void NVMCTRL0_WritePage( uint32_t address, uint32_t* data );
     address - Any address in the row to be erased.
 
   Returns:
-    None.
+    Always return true.
 
   Example:
     <code>
 
-    // This code snippet shows how the NVMCTRL0_EraseRow function is called to
+    // This code snippet shows how the NVMCTRL0_RowErase function is called to
     // erase the row at locatioin 0x30000.
 
     NVMCTRL0_Initialize();
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL0_EraseRow(0x00030000);
+    NVMCTRL0_RowErase(0x00030000);
     while(NVMCTRL0_IsBusy());
 
     if(NVMCTRL0_ErrorGet() == NVMCTRL_ERROR_NONE)
@@ -363,7 +394,7 @@ void NVMCTRL0_WritePage( uint32_t address, uint32_t* data );
     operation.
 */
 
-void NVMCTRL0_EraseRow( uint32_t address );
+bool NVMCTRL0_RowErase( uint32_t address );
 
 // *****************************************************************************
 /* Function:
@@ -441,11 +472,11 @@ NVMCTRL_ERROR NVMCTRL0_ErrorGet( void );
     <code>
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL0_EraseRow(0x00030000);
+    NVMCTRL0_RowErase(0x00030000);
     while(NVMCTRL0_IsBusy());
 
     // Now write the page.
-    NVMCTRL0_WritePage(0x00030000, &buffer);
+    NVMCTRL0_PageWrite(0x00030000, &buffer);
     while(NVMCTRL0_IsBusy());
 
     </code>
@@ -551,7 +582,7 @@ void NVMCTRL0_RegionUnlock (uint32_t address);
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL0_RWWEEPROM_WritePage( uint32_t address, uint32_t* data )
+    void NVMCTRL0_RWWEEPROM_PageWrite( uint32_t address, uint32_t* data )
 
   Summary:
     Writes one page of data to given RWWEEPROM address.
@@ -560,7 +591,7 @@ void NVMCTRL0_RegionUnlock (uint32_t address);
     This function will write one page of data to the RWWEEPROM address specified
     by the address parameter. The size of the input buffer should be one NVM
     page.  The address should be aligned on a page boundary. Unlike the
-    NVMCTRL0_WritePage function, calling this function will not cause the CPU
+    NVMCTRL0_PageWrite function, calling this function will not cause the CPU
     execution to stall. If the interrupt operation was enabled and if a callback
     was registered, then the callback function will be called. The
     NVMCTRL0_IsBusy() function can be used to poll for completion of the
@@ -599,7 +630,7 @@ void NVMCTRL0_RegionUnlock (uint32_t address);
   Example:
     <code>
 
-    // This code snippet shows how the NVMCTRL0_RWWEEPROM_WritePage function is
+    // This code snippet shows how the NVMCTRL0_RWWEEPROM_PageWrite function is
     // called and how the NVMCTRL0_IsBusy function is used to poll for
     // completion. This assumes the library was generated for interrupt (and
     // hence non-blocking) operation.
@@ -607,11 +638,11 @@ void NVMCTRL0_RegionUnlock (uint32_t address);
     NVMCTRL0_Initialize();
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL0_RWWEEPROM_EraseRow(SOME_RWWEEPROM_ROW);
+    NVMCTRL0_RWWEEPROM_RowErase(SOME_RWWEEPROM_ROW);
     while(NVMCTRL0_IsBusy());
 
     // Now write the page.
-    NVMCTRL0_RWWEEPROM_WritePage(SOME_RWWEEPROM_PAGE, &buffer);
+    NVMCTRL0_RWWEEPROM_PageWrite(SOME_RWWEEPROM_PAGE, &buffer);
     while(NVMCTRL0_IsBusy());
 
     if(NVMCTRL0_ErrorGet() == NVMCTRL_ERROR_NONE)
@@ -625,11 +656,11 @@ void NVMCTRL0_RegionUnlock (uint32_t address);
     operation.
 */
 
-void NVMCTRL0_RWWEEPROM_WritePage( uint32_t address, uint32_t* data );
+void NVMCTRL0_RWWEEPROM_PageWrite( uint32_t address, uint32_t* data );
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL0_RWWEEPROM_EraseRow( uint32_t address)
+    void NVMCTRL0_RWWEEPROM_RowErase( uint32_t address)
 
   Summary:
     Erases a Row in the RWWEEPROM.
@@ -637,7 +668,7 @@ void NVMCTRL0_RWWEEPROM_WritePage( uint32_t address, uint32_t* data );
   Description:
     This function will erase one row in RWWEEPROM. The address of the row to be
     erased is specified by the address parameter. This address can be any
-    address in the row.  Unlike the NVMCTRL0_EraseRow() function, calling this
+    address in the row.  Unlike the NVMCTRL0_RowErase() function, calling this
     function will not cause the CPU execution to stall. If the interrupt
     operation was enabled and if a callback was registered, then the callback
     function will be called.  The NVMCTRL0_IsBusy() function can be used to poll
@@ -673,13 +704,13 @@ void NVMCTRL0_RWWEEPROM_WritePage( uint32_t address, uint32_t* data );
   Example:
     <code>
 
-    // This code snippet shows how the NVMCTRL0_RWWEEPROM_EraseRow function is
+    // This code snippet shows how the NVMCTRL0_RWWEEPROM_RowErase function is
     // called to erase the row at locatioin SOME_RWWEEPROM_ROW.
 
     NVMCTRL0_Initialize();
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL0_RWWEEPROM_EraseRow(SOME_RWWEEPROM_ROW);
+    NVMCTRL0_RWWEEPROM_RowErase(SOME_RWWEEPROM_ROW);
     while(NVMCTRL0_IsBusy());
 
     if(NVMCTRL0_ErrorGet() == NVMCTRL_ERROR_NONE)
@@ -694,7 +725,7 @@ void NVMCTRL0_RWWEEPROM_WritePage( uint32_t address, uint32_t* data );
     operation. Erasing the row erases all pages in the row.
 */
 
-void NVMCTRL0_RWWEEPROM_EraseRow ( uint32_t address );
+void NVMCTRL0_RWWEEPROM_RowErase ( uint32_t address );
 
 // *****************************************************************************
 /* Function:
@@ -749,7 +780,7 @@ void NVMCTRL0_RWWEEPROM_EraseRow ( uint32_t address );
     NVMCTRL0_CallbackRegister(APP_NVMTCTRLCallback, &myAppData);
 
     // Perform some operation.
-    NVMCTRL0_EraseRow(SOME_ROW_ALIGNED_ADDRESS);
+    NVMCTRL0_RowErase(SOME_ROW_ALIGNED_ADDRESS);
 
     // Now wait for the operation to complete.
     while(!myAppData.operationComplete);
@@ -804,5 +835,5 @@ void NVMCTRL0_CacheInvalidate ( void );
 }
 #endif
 // DOM-IGNORE-END
-#endif //PLIB_NVMCTRL_H
+#endif //PLIB_NVMCTRLx_H
 

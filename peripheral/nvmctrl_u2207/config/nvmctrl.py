@@ -8,7 +8,7 @@ def instantiateComponent(nvmctrlComponent):
     Log.writeInfoMessage("Running NVMCTRL" + str(nvmctrlInstanceIndex))
 
     #main menu
-    nvmctrlSym_Menu = nvmctrlComponent.createMenuSymbol(None, None)
+    nvmctrlSym_Menu = nvmctrlComponent.createMenuSymbol("NVMCTRL_MENU", None)
     nvmctrlSym_Menu.setLabel("Hardware Settings ")
 
     #EEPPROM API Generation Option
@@ -91,7 +91,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]")
     nvmctrlModuleID = nvmctrlModuleNode.getAttribute("id")
 
-    nvmctrlSym_HeaderFile = nvmctrlComponent.createFileSymbol(None, None)
+    nvmctrlSym_HeaderFile = nvmctrlComponent.createFileSymbol("NVMCTRL_HEADER", None)
     nvmctrlSym_HeaderFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/plib_nvmctrl.h.ftl")
     nvmctrlSym_HeaderFile.setOutputName("plib_nvmctrl"+str(nvmctrlInstanceIndex)+".h")
     nvmctrlSym_HeaderFile.setDestPath("peripheral/nvmctrl/")
@@ -99,7 +99,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_HeaderFile.setType("HEADER")
     nvmctrlSym_HeaderFile.setMarkup(True)
 
-    nvmctrlSym_SourceFile = nvmctrlComponent.createFileSymbol(None, None)
+    nvmctrlSym_SourceFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SOURCE", None)
     nvmctrlSym_SourceFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/plib_nvmctrl.c.ftl")
     nvmctrlSym_SourceFile.setOutputName("plib_nvmctrl"+str(nvmctrlInstanceIndex)+".c")
     nvmctrlSym_SourceFile.setDestPath("peripheral/nvmctrl/")
@@ -107,20 +107,14 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_SourceFile.setType("SOURCE")
     nvmctrlSym_SourceFile.setMarkup(True)
 
-    nvmctrlSym_SystemInitFile = nvmctrlComponent.createFileSymbol(None, None)
-    nvmctrlSym_SystemInitFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/system/system_initialize.h.ftl")
-    nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+    nvmctrlSym_SystemInitFile = nvmctrlComponent.createFileSymbol("SERCOM_SYS_INIT", None)
+    nvmctrlSym_SystemInitFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/system/initialization.c.ftl")
+    nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     nvmctrlSym_SystemInitFile.setType("STRING")
     nvmctrlSym_SystemInitFile.setMarkup(True)
 
-    nvmctrlSystemIntFile = nvmctrlComponent.createFileSymbol(None, None)
-    nvmctrlSystemIntFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/system/system_interrupt.c.ftl")
-    nvmctrlSystemIntFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_C_VECTORS")
-    nvmctrlSystemIntFile.setType("STRING")
-    nvmctrlSystemIntFile.setMarkup(True)
-
-    nvmctrlSystemDefFile = nvmctrlComponent.createFileSymbol(None, None)
-    nvmctrlSystemDefFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/system/system_definitions.h.ftl")
+    nvmctrlSystemDefFile = nvmctrlComponent.createFileSymbol("SERCOM_SYS_DEF", None)
+    nvmctrlSystemDefFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/system/definitions.h.ftl")
     nvmctrlSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     nvmctrlSystemDefFile.setType("STRING")
     nvmctrlSystemDefFile.setMarkup(True)

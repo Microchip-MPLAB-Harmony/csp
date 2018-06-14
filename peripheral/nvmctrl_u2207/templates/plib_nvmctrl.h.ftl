@@ -50,7 +50,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#include "${__PROCESSOR?lower_case}.h"
+#include "device.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -67,6 +67,38 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Constants
 // *****************************************************************************
 // *****************************************************************************
+
+// *****************************************************************************
+/* NVMCTRL${NVMCTRL_INDEX?string} Start Address Constant
+
+  Summary:
+    Defines the start address of NVMCTRL${NVMCTRL_INDEX?string}.
+
+  Description:
+    This constant defines the start address of Flash. It is recommended for the
+    target application to use this constant in place hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRL${NVMCTRL_INDEX?string}_START_ADDRESS           (0x00000000U)
+
+// *****************************************************************************
+/* NVMCTRL${NVMCTRL_INDEX?string} Flash Size Constant
+
+  Summary:
+    Defines the size (in bytes) of Flash.
+
+  Description:
+    This constant defines the size (in bytes) of flash. It is recommended
+    for the target application to use this constant in place hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_SIZE              (0x40000U)
 
 // *****************************************************************************
 /* NVMCTRL${NVMCTRL_INDEX?string} Page Size Constant
@@ -116,7 +148,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     This enumeration defines the NVMCTRL Error type.
 
   Remarks:
-    The NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet function returns a value of this type.
+    The NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet function returns a value of this
+    type.
 */
 
 typedef enum
@@ -183,7 +216,7 @@ typedef enum
     NVMCTRL${NVMCTRL_INDEX?string}_CallbackRegister(APP_NVMTCTRLCallback, &myAppData);
 
     // Perform some operation.
-    NVMCTRL${NVMCTRL_INDEX?string}_EraseRow(SOME_ROW_ALIGNED_ADDRESS);
+    NVMCTRL${NVMCTRL_INDEX?string}_RowErase(SOME_ROW_ALIGNED_ADDRESS);
 
     // Now wait for the operation to complete.
     while(!myAppData.operationComplete);
@@ -243,7 +276,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_WritePage( uint32_t address, uint32_t* data )
+    bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite( uint32_t address, uint32_t* data )
 
   Summary:
     Writes one page of data to given NVM address.
@@ -255,12 +288,12 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void);
     cause the CPU execution to stall, hence blocking execution of any other
     thread. Execution resumes when the Write operation has completed. If the
     interrupt operation was enabled and if a callback was registered, then the
-    callback function will be called. The NVMCTRL${NVMCTRL_INDEX?string}_IsBusy()
+    callback function will be called.The NVMCTRL${NVMCTRL_INDEX?string}_IsBusy()
     function can be used to poll for completion of the operation. The
     application should ensure that there are no other operations in progress
     before calling this function.
 
-    Once the operation is complete, the NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet()
+    Once the operation is complete,the NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet()
     function can be called to check operation success.
 
   Precondition:
@@ -277,23 +310,23 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void);
     the page size.
 
   Returns:
-    None.
+    Always return true.
 
   Example:
     <code>
 
-    // This code snippet shows how the NVMCTRL${NVMCTRL_INDEX?string}_WritePage
-    // function is called and how the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy function is
-    // used to poll for completion.
+    // This code snippet shows how the NVMCTRL${NVMCTRL_INDEX?string}_PageWrite
+    // function is called and how the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy
+    // function is used to poll for completion.
 
     NVMCTRL${NVMCTRL_INDEX?string}_Initialize();
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL${NVMCTRL_INDEX?string}_EraseRow(0x00030000);
+    NVMCTRL${NVMCTRL_INDEX?string}_RowErase(0x00030000);
     while(NVMCTRL${NVMCTRL_INDEX?string}_IsBusy());
 
     // Now write the page.
-    NVMCTRL${NVMCTRL_INDEX?string}_WritePage(0x00030000, &buffer);
+    NVMCTRL${NVMCTRL_INDEX?string}_PageWrite(0x00030000, &buffer);
     while(NVMCTRL${NVMCTRL_INDEX?string}_IsBusy());
 
     if(NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet() == NVMCTRL_ERROR_NONE)
@@ -308,11 +341,11 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void);
     operation.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_WritePage( uint32_t address, uint32_t* data );
+bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite( uint32_t address, uint32_t* data );
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_EraseRow( uint32_t address)
+    bool NVMCTRL${NVMCTRL_INDEX?string}_RowErase( uint32_t address)
 
   Summary:
     Erases a Row in the NVM
@@ -324,35 +357,35 @@ void NVMCTRL${NVMCTRL_INDEX?string}_WritePage( uint32_t address, uint32_t* data 
     blocking execution of any other thread. Execution resumes when the Erase
     operation has completed. If the interrupt operation was enabled and if a
     callback was registered, then the callback function will be called.  The
-    NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function can be used to poll for completion
-    of the operation. The application should ensure that there are no other
-    operations in progress before calling this function.
+    NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function can be used to poll for
+    completion of the operation. The application should ensure that there are no
+    other operations in progress before calling this function.
 
-    Once the operation is complete, the NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet()
+    Once the operation is complete,the NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet()
     function can be called to check operation success. Erasing a row will erase
     all the contents of all the pages in the row.
 
   Precondition:
-    The NVMCTRL${NVMCTRL_INDEX?string}_Initialize() function should have been called
-    once. Also validate if NVM controller is ready to accept new request by
-    calling NVMCTRL${NVMCTRL_INDEX?string}_IsBusy().
+    The NVMCTRL${NVMCTRL_INDEX?string}_Initialize() function should have been
+    called once. Also validate if NVM controller is ready to accept new request
+    by calling NVMCTRL${NVMCTRL_INDEX?string}_IsBusy().
 
   Parameters:
     address - Any address in the row to be erased.
 
   Returns:
-    None.
+    Always return true.
 
   Example:
     <code>
 
-    // This code snippet shows how the NVMCTRL${NVMCTRL_INDEX?string}_EraseRow function
-    // is called to erase the row at locatioin 0x30000.
+    // This code snippet shows how the NVMCTRL${NVMCTRL_INDEX?string}_RowErase
+    // function is called to erase the row at locatioin 0x30000.
 
     NVMCTRL${NVMCTRL_INDEX?string}_Initialize();
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL${NVMCTRL_INDEX?string}_EraseRow(0x00030000);
+    NVMCTRL${NVMCTRL_INDEX?string}_RowErase(0x00030000);
     while(NVMCTRL${NVMCTRL_INDEX?string}_IsBusy());
 
     if(NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet() == NVMCTRL_ERROR_NONE)
@@ -366,7 +399,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_WritePage( uint32_t address, uint32_t* data 
     Calling this function will clear any existing module error conditions.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_EraseRow( uint32_t address );
+bool NVMCTRL${NVMCTRL_INDEX?string}_RowErase( uint32_t address );
 
 // *****************************************************************************
 /* Function:
@@ -445,11 +478,11 @@ NVMCTRL_ERROR NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet( void );
     <code>
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL${NVMCTRL_INDEX?string}_EraseRow(0x00030000);
+    NVMCTRL${NVMCTRL_INDEX?string}_RowErase(0x00030000);
     while(NVMCTRL${NVMCTRL_INDEX?string}_IsBusy());
 
     // Now write the page.
-    NVMCTRL${NVMCTRL_INDEX?string}_WritePage(0x00030000, &buffer);
+    NVMCTRL${NVMCTRL_INDEX?string}_PageWrite(0x00030000, &buffer);
     while(NVMCTRL${NVMCTRL_INDEX?string}_IsBusy());
 
     </code>
@@ -474,9 +507,9 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_IsBusy( void );
     This function locks the region that contains the address specified in
     address parameter. Locking a region prevents write and erase operations on
     all pages in the region. A region is unlocked by either calling the
-    NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock() function or by device reset. The NVM
-    is divided into 16 equal sized regions. The size of each region is device
-    dependant. Refer to the device specific datasheet for more details.
+    NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock() function or by device reset.
+    The NVM is divided into 16 equal sized regions. The size of each region is
+    device dependant. Refer to the device specific datasheet for more details.
 
     This API is generated if the Region Lock/Unlock API option (in MHC) is
     selected.
@@ -519,9 +552,9 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionLock (uint32_t address);
 
   Description:
     This function unlocks a region that was locked using the
-    NVMCTRL${NVMCTRL_INDEX?string}_RegionLock() function. The address parameter can be
-    any address within the region. Unlocking a region unlocks all pages in the
-    region and makes these pages accessible to write and erase operations.
+    NVMCTRL${NVMCTRL_INDEX?string}_RegionLock() function. The address parameter
+    can be any address within the region. Unlocking a region unlocks all pages
+    in the region and makes these pages accessible to write and erase operations.
 
     This API is generated if the Region Lock/Unlock API option (in MHC) is
     selected.
@@ -559,7 +592,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
 <#if NVMCTRL_RWW_EEPROM == true>
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage( uint32_t address,
+    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address,
                                                     uint32_t* data )
 
   Summary:
@@ -569,33 +602,35 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
     This function will write one page of data to the RWWEEPROM address specified
     by the address parameter. The size of the input buffer should be one NVM
     page.  The address should be aligned on a page boundary. Unlike the
-    NVMCTRL${NVMCTRL_INDEX?string}_WritePage function, calling this function will not
-    cause the CPU execution to stall. If the interrupt operation was enabled and
-    if a callback was registered, then the callback function will be called. The
-    NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function can be used to poll for completion
-    of the operation. The application should ensure that there are no other
-    operations in progress before calling this function. This can be checked by
-    calling the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function.
+    NVMCTRL${NVMCTRL_INDEX?string}_PageWrite function, calling this function
+    will not cause the CPU execution to stall. If the interrupt operation was
+    enabled and if a callback was registered, then the callback function will be
+    called. The NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function can be used to 
+    poll for completion of the operation. The application should ensure that
+    there are no other operations in progress before calling this function. This
+    can be checked by calling the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy()
+    function.
 
     This function is blocking if the library was generated (in MHC) with the
     interrupt option disabled. If blocking, the function will exit only after
     write operation has completed. This function is not blocking if the library
     was generated with the interrupt option enabled. In this mode, the function
     initiates the operation and then exits. The application can either register
-    a callback function or call the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function
-    periodically to check for completion of the operation.
+    a callback function or call the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy()
+    function periodically to check for completion of the operation.
 
-    Once the operation is complete, the NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet()
+    Once the operation is complete,the NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet()
     function can be called to check operation success.
 
     This API is generated if the RWWEEPROM API option (in MHC) is selected.
 
   Precondition:
-    The NVMCTRL${NVMCTRL_INDEX?string}_Initialize() function should have been called
-    once. Also validate if NVM controller is ready to accept new request by
-    calling NVMCTRL${NVMCTRL_INDEX?string}_IsBusy(). The row containing the page should
-    be erased before any page in that row can be written. The size of the
-    RWWEEPROM memory should have been configured in the NVM User Configuration.
+    The NVMCTRL${NVMCTRL_INDEX?string}_Initialize() function should have been
+    called once. Also validate if NVM controller is ready to accept new request
+    by calling NVMCTRL${NVMCTRL_INDEX?string}_IsBusy(). The row containing the
+    page should be erased before any page in that row can be written. The size
+    of the RWWEEPROM memory should have been configured in the NVM User
+    Configuration.
 
   Parameters:
     address - RWW EEPROM address to be modified.
@@ -608,19 +643,20 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
   Example:
     <code>
 
-    // This code snippet shows how the NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage function is
-    // called and how the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy function is used to
-    // poll for completion. This assumes the library was generated for interrupt
-    // (and hence non-blocking) operation.
+    // This code snippet shows how the 
+    // NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite function is
+    // called and how the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy function is used
+    // to poll for completion. This assumes the library was generated for
+    // interrupt (and hence non-blocking) operation.
 
     NVMCTRL${NVMCTRL_INDEX?string}_Initialize();
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow(SOME_RWWEEPROM_ROW);
+    NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase(SOME_RWWEEPROM_ROW);
     while(NVMCTRL${NVMCTRL_INDEX?string}_IsBusy());
 
     // Now write the page.
-    NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage(SOME_RWWEEPROM_PAGE, &buffer);
+    NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite(SOME_RWWEEPROM_PAGE, &buffer);
     while(NVMCTRL${NVMCTRL_INDEX?string}_IsBusy());
 
     if(NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet() == NVMCTRL_ERROR_NONE)
@@ -635,11 +671,11 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
     operation.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage( uint32_t address, uint32_t* data );
+void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address, uint32_t* data );
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow( uint32_t address)
+    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address)
 
   Summary:
     Erases a Row in the RWWEEPROM.
@@ -647,33 +683,33 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage( uint32_t address, uint3
   Description:
     This function will erase one row in RWWEEPROM. The address of the row to be
     erased is specified by the address parameter. This address can be any
-    address in the row.  Unlike the NVMCTRL${NVMCTRL_INDEX?string}_EraseRow() function,
-    calling this function will not cause the CPU execution to stall. If the
-    interrupt operation was enabled and if a callback was registered, then the
-    callback function will be called.  The NVMCTRL${NVMCTRL_INDEX?string}_IsBusy()
-    function can be used to poll for completion of the operation. The
-    application should ensure that there are no other operations in progress
-    before calling this function.
+    address in the row.  Unlike the NVMCTRL${NVMCTRL_INDEX?string}_RowErase()
+    function, calling this function will not cause the CPU execution to stall.
+    If the interrupt operation was enabled and if a callback was registered,
+    then the callback function will be called.
+    The NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function can be used to poll for
+    completion of the operation. The application should ensure that there are no
+    other operations in progress before calling this function.
 
     This function is blocking if the library was generated (in MHC) with the
     interrupt option disabled. If blocking, the function will exit only after
     write operation has completed. This function is not blocking if the library
     was generated with the interrupt option enabled. In this mode, the function
     initiates the operation and then exits. The application can either register
-    a callback function or call the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function
-    periodically to check for completion of the operation.
+    a callback function or call the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy()
+    function periodically to check for completion of the operation.
 
-    Once the operation is complete, the NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet()
+    Once the operation is complete,the NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet()
     function can be called to check operation success. Erasing a row will erase
     all the contents of all the pages in the row.
 
     This API is generated if the RWWEEPROM API option (in MHC) is selected.
 
   Precondition:
-    The NVMCTRL${NVMCTRL_INDEX?string}_Initialize() function should have been called
-    once. Also validate if NVM controller is ready to accept new request by
-    calling NVMCTRL${NVMCTRL_INDEX?string}_IsBusy(). The size of the RWWEEPROM memory
-    should have been configured in the NVM User Configuration.
+    The NVMCTRL${NVMCTRL_INDEX?string}_Initialize() function should have been
+    called once. Also validate if NVM controller is ready to accept new request
+    by calling NVMCTRL${NVMCTRL_INDEX?string}_IsBusy(). The size of the
+    RWWEEPROM memory should have been configured in the NVM User Configuration.
 
   Parameters:
     address - Any address in the row to be erased.
@@ -684,13 +720,13 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage( uint32_t address, uint3
   Example:
     <code>
 
-    // This code snippet shows how NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow
+    // This code snippet shows how NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase
     // function is called to erase the row at locatioin SOME_RWWEEPROM_ROW.
 
     NVMCTRL${NVMCTRL_INDEX?string}_Initialize();
 
     // Erase the row. This will erase all the pages in the row.
-    NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow(SOME_RWWEEPROM_ROW);
+    NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase(SOME_RWWEEPROM_ROW);
     while(NVMCTRL${NVMCTRL_INDEX?string}_IsBusy());
 
     if(NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet() == NVMCTRL_ERROR_NONE)
@@ -705,7 +741,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_WritePage( uint32_t address, uint3
     operation. Erasing the row erases all pages in the row.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow ( uint32_t address );
+void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase ( uint32_t address );
 </#if>
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
@@ -763,7 +799,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_EraseRow ( uint32_t address );
     NVMCTRL${NVMCTRL_INDEX?string}_CallbackRegister(APP_NVMTCTRLCallback, &myAppData);
 
     // Perform some operation.
-    NVMCTRL${NVMCTRL_INDEX?string}_EraseRow(SOME_ROW_ALIGNED_ADDRESS);
+    NVMCTRL${NVMCTRL_INDEX?string}_RowErase(SOME_ROW_ALIGNED_ADDRESS);
 
     // Now wait for the operation to complete.
     while(!myAppData.operationComplete);
