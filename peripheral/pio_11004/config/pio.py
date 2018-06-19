@@ -70,7 +70,7 @@ def setupInterrupt(portInterruptLocal, event):
 # Once the PORT Channel is enabled, option of corresponding Channel interrupt also starts showing up.
 def setupPort(usePortLocal, event):
     global usePort
-
+    
     if event["value"]!= "None":
     # This means its a pin which has GPIO feature
 
