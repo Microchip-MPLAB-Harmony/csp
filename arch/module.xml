@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Module name="Core" id="ba6d8738-aec0-45f0-bad4-307aae573c25" version="1.0.0">
+<Module name="Core" id="BA6D8738-AEC0-45F0-BAD4-307AAE573C25" version="1.0.0">
 	<ConfigRoot path="config/module.py"/>
 	<AutoLoad>
 		<ID>dfp</ID>
