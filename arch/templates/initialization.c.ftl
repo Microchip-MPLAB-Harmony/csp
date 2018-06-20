@@ -76,13 +76,6 @@ SYSTEM_OBJECTS sysObj;
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Module Initialization Data
-// *****************************************************************************
-// *****************************************************************************
-${LIST_SYSTEM_INIT_C_MODULE_INITIALIZATION_DATA}
-
-// *****************************************************************************
-// *****************************************************************************
 // Section: Library/Stack Initialization Data
 // *****************************************************************************
 // *****************************************************************************
@@ -107,12 +100,8 @@ ${LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION}
 
 void SYS_Initialize ( void* data )
 {
-
-    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DATA}
-    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_MPU}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS}
-    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS}
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES}
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE}

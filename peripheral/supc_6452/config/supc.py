@@ -318,7 +318,7 @@ def instantiateComponent(supcComponent):
     
     supcSystemInitFile = supcComponent.createFileSymbol("SUPC_INIT", None)
     supcSystemInitFile.setType("STRING")
-    supcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+    supcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     supcSystemInitFile.setSourcePath("../peripheral/supc_6452/templates/system/system_initialize.c.ftl")
     supcSystemInitFile.setMarkup(True)
     

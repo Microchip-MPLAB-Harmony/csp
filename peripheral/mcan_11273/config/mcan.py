@@ -524,7 +524,7 @@ def instantiateComponent(mcanComponent):
     #CAN Initialize
     canSystemInitFile = mcanComponent.createFileSymbol("initFile", None)
     canSystemInitFile.setType("STRING")
-    canSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DEPENDENT_DRIVERS")
+    canSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     canSystemInitFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/system/system_initialize.c.ftl")
     canSystemInitFile.setMarkup(True)
 
