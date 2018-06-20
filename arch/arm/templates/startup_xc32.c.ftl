@@ -83,17 +83,6 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     FPU_Enable();
 #endif
 
-
-<#if (INSTRUCTION_CACHE_ENABLE)>
-    /* Enable Instruction Cache */
-    ICache_Enable();
-</#if>
-
-<#if (DATA_CACHE_ENABLE)>
-    /* Enable Data Cache    */
-    DCache_Enable();
-</#if>
-
     TCM_Configure(${DEVICE_TCM_SIZE});
 
 <#if (TCM_ENABLE)>
@@ -112,11 +101,6 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     __pic32c_TCM_StackInit();
 </#if>
 
-<#if CoreUseMPU>
-    /* Initialize MPU */
-    MPU_Initialize();
-</#if>
-
 #  ifdef SCB_VTOR_TBLOFF_Msk
     /*  Set the vector-table base address in FLASH */
     pSrc = (uint32_t *) & __svectors;
@@ -125,6 +109,21 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
 
     /* Initialize the C library */
     __libc_init_array();
+
+<#if CoreUseMPU>
+    /* Initialize MPU */
+    MPU_Initialize();
+</#if>
+
+<#if (INSTRUCTION_CACHE_ENABLE)>
+    /* Enable Instruction Cache */
+    ICache_Enable();
+</#if>
+
+<#if (DATA_CACHE_ENABLE)>
+    /* Enable Data Cache    */
+    DCache_Enable();
+</#if>
 
     /* Call the optional application-provided _on_bootstrap() function. */
     if (_on_bootstrap)
