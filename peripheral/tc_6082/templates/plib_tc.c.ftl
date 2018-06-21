@@ -305,7 +305,7 @@ bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 {
     bool timer_status;
     NVIC_DisableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
-    timer_status = (TC${INDEX}_CH${CH_NUM}_TimerStatus | (TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_SR_CPCS_Msk)) >> TC_SR_CPCS_Pos;
+    timer_status = ((TC${INDEX}_CH${CH_NUM}_TimerStatus | TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_SR_CPCS_Msk) >> TC_SR_CPCS_Pos;
     TC${INDEX}_CH${CH_NUM}_TimerStatus = 0U;
     NVIC_EnableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
     return timer_status;
