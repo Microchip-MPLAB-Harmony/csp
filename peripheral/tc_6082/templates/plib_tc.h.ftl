@@ -87,15 +87,19 @@ extern "C" {
 <#assign start = 0> 
 <#-- start index of the for loop. In quadrature position mode channel 0 and channel 1 are used. And in quadrature speed mode, all 3 channels are used -->
 <#if TC_ENABLE_QEI == true>
-	<#compress>
-	<#if TC_BMR_POSEN == "POSITION">
-		<#assign start = 2>
-	<#else>
-		<#assign start = 3>
-	</#if>
-	</#compress>
+    <#compress>
+    <#if TC_BMR_POSEN == "POSITION">
+        <#if TC_INDEX_PULSE == true>
+            <#assign start = 2>
+        <#else>
+            <#assign start = 1>
+        </#if>
+    <#else>
+        <#assign start = 3>
+    </#if>
+    </#compress>
 <#if TC_BMR_POSEN == "SPEED">
-#define TC${INDEX}_CH2_FrequencyGet() 	(uint32_t)(${TC3_CLOCK_FREQ}UL)
+#define TC${INDEX}_CH2_FrequencyGet()     (uint32_t)(${TC3_CLOCK_FREQ}UL)
 
 </#if>
 void TC${INDEX}_QuadratureInitialize (void);
@@ -113,17 +117,17 @@ uint32_t TC${INDEX}_QuadratureSpeedGet (void);
 TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
 
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true>
-	<#lt>/* Register callback for quadrature interrupt */
-	<#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
+    <#lt>/* Register callback for quadrature interrupt */
+    <#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
 
-	<#lt>void TC${INDEX}_CH0_InterruptHandler(void);	
-	
+    <#lt>void TC${INDEX}_CH0_InterruptHandler(void);    
+    
 </#if>
 </#if>
 <#list start..(TC_MAX_CHANNELS-1) as i>
-	<#if i == TC_MAX_CHANNELS>
-		<#break>
-	</#if> <#-- break the loop if quadrature mode is enabled -->
+    <#if i == TC_MAX_CHANNELS>
+        <#break>
+    </#if> <#-- break the loop if quadrature mode is enabled -->
 <#assign TC_CH_ENABLE = "TC" + i + "_ENABLE">
 <#assign TC_CH_OPERATINGMODE = "TC" + i +"_OPERATING_MODE">
 <#assign CH_NUM = i >
