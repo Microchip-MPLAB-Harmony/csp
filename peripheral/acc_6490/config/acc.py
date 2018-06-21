@@ -13,6 +13,7 @@ accValGrp_ACR_ISEL = accRegModule.getValueGroup("ACC_ACR__ISEL")
 ################################################################################
 global NVICVector
 global NVICHandler
+global NVICHandlerLock
 global instance
 global peripId
 
@@ -22,19 +23,23 @@ global peripId
 def NVICControl(symbol, event):
     Database.clearSymbolValue("core", NVICVector)
     Database.clearSymbolValue("core", NVICHandler)
+    Database.clearSymbolValue("core", NVICHandlerLock)
+
     if (event["value"] == True):
         Database.setSymbolValue("core", NVICVector, True, 2)
         Database.setSymbolValue("core", NVICHandler, "ACC" + str(instance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "ACC" + str(instance) + "_Handler", 2)   
-        
+        Database.setSymbolValue("core", NVICHandler, "ACC" + str(instance) + "_Handler", 2)
+        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+
 def accFaultSourceSelect(symbol,event):
     if (event["value"] == True):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-        
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -43,7 +48,8 @@ def instantiateComponent(accComponent):
     global peripId
     global NVICVector
     global NVICHandler
-    
+    global NVICHandlerLock
+
     instance = accComponent.getID()[-1:]
     print("Running ACC" + str(instance))
 
@@ -51,7 +57,7 @@ def instantiateComponent(accComponent):
     accIndex.setVisible(False)
     accIndex.setDefaultValue(int(instance))
 
-                                                  
+
     accSym_MR_SELPLUS = accComponent.createKeyValueSetSymbol("ACC_MR_SELPLUS", None)
     accSym_MR_SELPLUS.setLabel("Select Positive Input")
     accSym_MR_SELPLUS.setDefaultValue(0)
@@ -62,7 +68,7 @@ def instantiateComponent(accComponent):
     count = accValGrp_MR_SELPLUS.getValueCount()
     for id in range(0, count):
         valueName = accValGrp_MR_SELPLUS.getValueNames()[id]
-        accSym_MR_SELPLUS.addKey(valueName, accValGrp_MR_SELPLUS.getValue(valueName).getValue(), accValGrp_MR_SELPLUS.getValue(valueName).getDescription())  
+        accSym_MR_SELPLUS.addKey(valueName, accValGrp_MR_SELPLUS.getValue(valueName).getValue(), accValGrp_MR_SELPLUS.getValue(valueName).getDescription())
 
     accSym_MR_SELMINUS = accComponent.createKeyValueSetSymbol("ACC_MR_SELMINUS", None)
     accSym_MR_SELMINUS.setLabel("Select Negative Input")
@@ -75,13 +81,13 @@ def instantiateComponent(accComponent):
     for id in range(0, count):
         valueName = accValGrp_MR_SELMINUS.getValueNames()[id]
         accSym_MR_SELMINUS.addKey(valueName, accValGrp_MR_SELMINUS.getValue(valueName).getValue(), accValGrp_MR_SELMINUS.getValue(valueName).getDescription())
-                                                  
+
 
     accSym_MR_INV = accComponent.createBooleanSymbol("ACC_ACR_INV", None)
     accSym_MR_INV.setLabel("Invert Comparator Output")
     accSym_MR_INV.setDefaultValue(False)
 
-    
+
     accSym_MR_EDGETYP = accComponent.createKeyValueSetSymbol("ACC_MR_EDGETYPE", None)
     accSym_MR_EDGETYP.setLabel("Select Comparison Edge")
     accSym_MR_EDGETYP.setDefaultValue(0)
@@ -97,7 +103,7 @@ def instantiateComponent(accComponent):
     count = accValGrp_MR_EDGETYP.getValueCount()
     for id in range(0, count):
         valueName = accValGrp_MR_EDGETYP.getValueNames()[id]
-        accSym_MR_EDGETYP.addKey(valueName, accValGrp_MR_EDGETYP.getValue(valueName).getValue(), accValGrp_MR_EDGETYP.getValue(valueName).getDescription()) 
+        accSym_MR_EDGETYP.addKey(valueName, accValGrp_MR_EDGETYP.getValue(valueName).getValue(), accValGrp_MR_EDGETYP.getValue(valueName).getDescription())
 
     accSym_ACR_ISEL = accComponent.createKeyValueSetSymbol("ACC_ACR_ISEL", None)
     accSym_ACR_ISEL.setLabel("Select Current")
@@ -120,11 +126,11 @@ def instantiateComponent(accComponent):
     accSym_ACR_HYST.setOutputMode("Value")
     accSym_ACR_HYST.setDisplayMode("Description")
     accSym_ACR_HYST.setDefaultValue(0)
-    
+
 
     accSym_MR_FE = accComponent.createBooleanSymbol("ACC_ACR_FE", None)
     accSym_MR_FE.setLabel("Enable Fault Output")
-    accSym_MR_FE.setDefaultValue(False) 
+    accSym_MR_FE.setDefaultValue(False)
 
     accSym_MR_SELFS = accComponent.createKeyValueSetSymbol("ACC_MR_SELFS", accSym_MR_FE)
     accSym_MR_SELFS.setLabel("Select Source for Fault Output")
@@ -133,28 +139,28 @@ def instantiateComponent(accComponent):
     accSym_MR_SELFS.setOutputMode("Key")
     accSym_MR_SELFS.setVisible(False)
     accSym_MR_SELFS.setDisplayMode("Description")
-    accSym_MR_SELFS.setDefaultValue(0) 
+    accSym_MR_SELFS.setDefaultValue(0)
     accSym_MR_SELFS.setDependencies(accFaultSourceSelect, ["ACC_ACR_FE"])
 
     ############################################################################
     #### Dependency ####
     ############################################################################
-	
-	# Enable Peripheral Clock in Clock manager
+
+    # Enable Peripheral Clock in Clock manager
     Database.clearSymbolValue("core", "PMC_ID_ACC")
     Database.setSymbolValue("core", "PMC_ID_ACC", True, 2)
 
-	# Setup Peripheral Interrupt in Interrupt manager
+    # Setup Peripheral Interrupt in Interrupt manager
     peripId = Interrupt.getInterruptIndex("ACC")
     NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
     NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
     NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
-      
+
     # NVIC Dynamic settings
     accNVICControl = accComponent.createBooleanSymbol("NVIC_ACC_ENABLE", None)
     accNVICControl.setDependencies(NVICControl, ["INTERRUPT_MODE"])
     accNVICControl.setVisible(False)
-    
+
 ############################################################################
 #### Code Generation ####
 ############################################################################
@@ -167,7 +173,7 @@ def instantiateComponent(accComponent):
     accHeaderFile.setProjectPath("config/" + configName + "/peripheral/acc/")
     accHeaderFile.setType("HEADER")
     accHeaderFile.setOverwrite(True)
-    
+
     accHeader1File = accComponent.createFileSymbol("ACC_HEADER1", None)
     accHeader1File.setMarkup(True)
     accHeader1File.setSourcePath("../peripheral/acc_6490/templates/plib_acc.h.ftl")
@@ -197,4 +203,4 @@ def instantiateComponent(accComponent):
     accSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     accSystemDefFile.setSourcePath("../peripheral/acc_6490/templates/system/system_definitions.h.ftl")
     accSystemDefFile.setMarkup(True)
-    
+
