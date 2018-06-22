@@ -44,6 +44,10 @@ def setTcmSize(symbol, event):
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
+# load device specific configurations (fuses), temporary, to be removed once XC32 updated
+devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)
+devCfgComment.setLabel("Note: Set Device Configuration Bits via Programming Tool")
+
 # Device Configuration
 deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
 deviceSecurity.setLabel("Security")
