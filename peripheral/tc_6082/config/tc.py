@@ -104,87 +104,112 @@ def tcNVICControl(symbol, event):
     global channel_periphId
     NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
     NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
+    NVICHandlerLock = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER_LOCK"
 
     if(tcSym_CH_EnableQEI.getValue() == True):
         NVICVector = "NVIC_" + str(QEI_periphId) + "_ENABLE"
         NVICHandler = "NVIC_" + str(QEI_periphId) + "_HANDLER"
+        NVICHandlerLock = "NVIC_" + str(QEI_periphId) + "_HANDLER_LOCK"
         Database.clearSymbolValue("core", NVICVector)
         Database.clearSymbolValue("core", NVICHandler)
+        Database.clearSymbolValue("core", NVICHandlerLock)
         if(tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True or tcSym_CH_QEI_IER_CPCS.getValue() == True):
             Database.setSymbolValue("core", NVICVector, True, 2)
             Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH0_InterruptHandler", 2)
+            Database.setSymbolValue("core", NVICHandlerLock, True, 2)
         else:
             Database.setSymbolValue("core", NVICVector, False, 2)
             Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH0_Handler", 2)
+            Database.setSymbolValue("core", NVICHandlerLock, False, 2)
 
         if (tcSym_CH_BMR_POSEN.getValue() == "POSITION" and channelID == 2):
             NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
             NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
+            NVICHandlerLock = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER_LOCK"
             if (tcSym_CH_Enable[channelID].getValue() == True):
                 Database.clearSymbolValue("core", NVICVector)
                 Database.clearSymbolValue("core", NVICHandler)
+                Database.clearSymbolValue("core", NVICHandlerLock)
                 if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue("core", NVICVector, True, 2)
                     Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
                     (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True
                      or tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
                     Database.setSymbolValue("core", NVICVector, True, 2)
                     Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue("core", NVICVector, True, 2)
                     Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
                 else:
                     Database.setSymbolValue("core", NVICVector, False, 2)
                     Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                    Database.setSymbolValue("core", NVICHandlerLock, False, 2)
             else:
                 Database.setSymbolValue("core", NVICVector, False, 2)
                 Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                Database.setSymbolValue("core", NVICHandlerLock, False, 2)
 
         if(tcSym_CH_QEI_INDEX_PULSE.getValue() == False and channelID == 1):
             NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
             NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
+            NVICHandlerLock = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER_LOCK"
             if (tcSym_CH_Enable[channelID].getValue() == True):
                 Database.clearSymbolValue("core", NVICVector)
                 Database.clearSymbolValue("core", NVICHandler)
+                Database.clearSymbolValue("core", NVICHandlerLock)
                 if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue("core", NVICVector, True, 2)
                     Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
                     (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True or
                      tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
                     Database.setSymbolValue("core", NVICVector, True, 2)
                     Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue("core", NVICVector, True, 2)
                     Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
                 else:
                     Database.setSymbolValue("core", NVICVector, False, 2)
                     Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                    Database.setSymbolValue("core", NVICHandlerLock, False, 2)
             else:
                 Database.setSymbolValue("core", NVICVector, False, 2)
                 Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                Database.setSymbolValue("core", NVICHandlerLock, False, 2)
     else:
         Database.clearSymbolValue("core", NVICVector)
         Database.clearSymbolValue("core", NVICHandler)
+        Database.clearSymbolValue("core", NVICHandlerLock)
         if(tcSym_CH_Enable[channelID].getValue() == True):
             if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
                 Database.setSymbolValue("core", NVICVector, True, 2)
                 Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                Database.setSymbolValue("core", NVICHandlerLock, True, 2)
             elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
                 (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True or
                  tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
                 Database.setSymbolValue("core", NVICVector, True, 2)
                 Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                Database.setSymbolValue("core", NVICHandlerLock, True, 2)
             elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
                 Database.setSymbolValue("core", NVICVector, True, 2)
                 Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                Database.setSymbolValue("core", NVICHandlerLock, True, 2)
             else:
                 Database.setSymbolValue("core", NVICVector, False, 2)
                 Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                Database.setSymbolValue("core", NVICHandlerLock, False, 2)
         else:
             Database.setSymbolValue("core", NVICVector, False, 2)
             Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+            Database.setSymbolValue("core", NVICHandlerLock, False, 2)
 
 def tcdependencyClockStatus(symbol, event):
     id = symbol.getID()
