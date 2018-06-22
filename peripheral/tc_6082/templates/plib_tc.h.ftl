@@ -11,8 +11,8 @@
     TC peripheral library interface.
 
   Description
-    This file defines the interface to the TC peripheral library.  This 
-    library provides access to and control of the associated peripheral 
+    This file defines the interface to the TC peripheral library.  This
+    library provides access to and control of the associated peripheral
     instance.
 
 ******************************************************************************/
@@ -70,7 +70,7 @@ extern "C" {
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this 
+/*  The following data type definitions are used by the functions in this
     interface and should be considered part it.
 */
 
@@ -79,12 +79,12 @@ extern "C" {
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of 
+/* The following functions make up the methods (set of possible operations) of
    this interface.
 */
 
 // *****************************************************************************
-<#assign start = 0> 
+<#assign start = 0>
 <#-- start index of the for loop. In quadrature position mode channel 0 and channel 1 are used. And in quadrature speed mode, all 3 channels are used -->
 <#if TC_ENABLE_QEI == true>
     <#compress>
@@ -116,12 +116,12 @@ uint32_t TC${INDEX}_QuadratureSpeedGet (void);
 
 TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
 
-<#if TC_QIER_IDX == true || TC_QIER_QERR == true>
+<#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
     <#lt>/* Register callback for quadrature interrupt */
     <#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
 
-    <#lt>void TC${INDEX}_CH0_InterruptHandler(void);    
-    
+    <#lt>void TC${INDEX}_CH0_InterruptHandler(void);
+
 </#if>
 </#if>
 <#list start..(TC_MAX_CHANNELS-1) as i>
