@@ -3,6 +3,11 @@ import os.path
 periphNames = map(str, Register.getRegisterModuleNames())
 periphNames.sort()
 
+# SMC Chip Select Register Group
+smcRegModule    = Register.getRegisterModule("SMC")
+smcRegGroup     = smcRegModule.getRegisterGroup("SMC_CS_NUMBER")
+smcChipSelCount = smcRegGroup.getRegisterCount()
+
 for periphName in periphNames:
     periphModule =  Register.getRegisterModule(periphName)
     periphInstanceCount = Peripheral.getModuleInstanceCount(periphName)
@@ -34,9 +39,12 @@ for periphName in periphNames:
             elif (periphName == "USART"):
                 periphComponent.addCapability(periphName + "_" + str(periphInstance), "UART")
             elif (periphName == "SSC"):
-				periphComponent.addCapability("I2S_" + str(periphInstance), "I2S")
+                periphComponent.addCapability("I2S_" + str(periphInstance), "I2S")
             elif (periphName == "I2SC"):
-				periphComponent.addCapability("I2S_" + str(periphInstance), "I2S")
+                periphComponent.addCapability("I2S_" + str(periphInstance), "I2S")
+            elif (periphName == "SMC"):
+                for smcChipSel in range(0, smcChipSelCount):
+                    periphComponent.addCapability("smc_cs"  + str(smcChipSel), "SMC_CS", "SMC_CS"  + str(smcChipSel), False)
             else:
                 periphComponent.addCapability(periphName + "_" + str(periphInstance), periphName)
 
