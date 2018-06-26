@@ -1,5 +1,5 @@
 /*******************************************************************************
-  NVMCTRL${NVMCTRL_INDEX?string} PLIB.
+  Non-Volatile Memory Controller(NVMCTRL${NVMCTRL_INDEX?string}) PLIB.
 
   Company:
     Microchip Technology Inc.
@@ -592,8 +592,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
 <#if NVMCTRL_RWW_EEPROM == true>
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address,
-                                                    uint32_t* data )
+    bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address,uint32_t* data )
 
   Summary:
     Writes one page of data to given RWWEEPROM address.
@@ -638,7 +637,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
     data - pointer to data buffer.
 
   Returns:
-    None.
+    Always return true.
 
   Example:
     <code>
@@ -667,15 +666,18 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
     </code>
 
   Remarks:
+    RWWEEPROM API generation option will appear in the MHC if the device
+    supports it.
+
     This function will clear any existing module errors before initiating the
     operation.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address, uint32_t* data );
+bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address, uint32_t* data );
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address)
+    bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address)
 
   Summary:
     Erases a Row in the RWWEEPROM.
@@ -715,7 +717,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address, uint3
     address - Any address in the row to be erased.
 
   Returns:
-    None.
+    Always return true.
 
   Example:
     <code>
@@ -737,18 +739,20 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address, uint3
     </code>
 
   Remarks:
+    RWWEEPROM API generation option will appear in the MHC if the device
+    supports it.
+
     This function will clear any existing module errors before initiating the
     operation. Erasing the row erases all pages in the row.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase ( uint32_t address );
+bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase ( uint32_t address );
 </#if>
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_CallbackRegister( NVMCTRL_CALLBACK callback,
-                                                   uintptr_t context )
+    void NVMCTRL${NVMCTRL_INDEX?string}_CallbackRegister( NVMCTRL_CALLBACK callback,uintptr_t context )
 
   Summary:
     Sets the pointer to the function (and it's context) to be called when the

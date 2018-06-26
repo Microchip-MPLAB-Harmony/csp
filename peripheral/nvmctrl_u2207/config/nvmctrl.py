@@ -12,8 +12,18 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_Menu.setLabel("Hardware Settings ")
 
     #EEPPROM API Generation Option
+    nvmctrlMemSegNode = ATDF.getNode("/avr-tools-device-file/devices/device@[family=\"PIC32CM\"]/address-spaces/address-space/memory-segment@[name=\"RWW\"]")
+
     nvmctrlSym_RWWEE = nvmctrlComponent.createBooleanSymbol("NVMCTRL_RWW_EEPROM", nvmctrlSym_Menu)
-    nvmctrlSym_RWWEE.setLabel("Generate RWWEEPROM API?")
+    nvmctrlSym_RWWEE.setVisible(False)
+
+    if nvmctrlMemSegNode != None:
+        nvmctrlMemSegName = str(nvmctrlMemSegNode.getAttribute("name"))
+
+        nvmctrlSym_RWWEE.setLabel("Generate RWWEEPROM API?")
+        nvmctrlSym_RWWEE.setVisible(True)
+    else:
+            nvmctrlSym_RWWEE.setDefaultValue(False)
 
     #Region Lock/Unlock API Generation Option
     nvmctrlSym_Region = nvmctrlComponent.createBooleanSymbol("NVMCTRL_REGION_LOCK_UNLOCK", nvmctrlSym_Menu)
@@ -107,13 +117,13 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_SourceFile.setType("SOURCE")
     nvmctrlSym_SourceFile.setMarkup(True)
 
-    nvmctrlSym_SystemInitFile = nvmctrlComponent.createFileSymbol("SERCOM_SYS_INIT", None)
+    nvmctrlSym_SystemInitFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_INIT", None)
     nvmctrlSym_SystemInitFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/system/initialization.c.ftl")
     nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     nvmctrlSym_SystemInitFile.setType("STRING")
     nvmctrlSym_SystemInitFile.setMarkup(True)
 
-    nvmctrlSystemDefFile = nvmctrlComponent.createFileSymbol("SERCOM_SYS_DEF", None)
+    nvmctrlSystemDefFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_DEF", None)
     nvmctrlSystemDefFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/system/definitions.h.ftl")
     nvmctrlSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     nvmctrlSystemDefFile.setType("STRING")
