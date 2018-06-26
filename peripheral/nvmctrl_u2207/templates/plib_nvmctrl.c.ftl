@@ -1,5 +1,5 @@
 /*******************************************************************************
-  NVMCTRL${NVMCTRL_INDEX?string} PLIB.
+  Non-Volatile Memory Controller(NVMCTRL${NVMCTRL_INDEX?string}) PLIB.
 
   Company:
     Microchip Technology Inc.
@@ -112,9 +112,7 @@ uintptr_t nvmctrl${NVMCTRL_INDEX?string}context;
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_CallbackRegister
-                                        ( NVMCTRL_CALLBACK callback,
-                                          uintptr_t context )
+    void NVMCTRL${NVMCTRL_INDEX?string}_CallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context )
 
   Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -225,8 +223,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_CacheInvalidate(void)
 <#if NVMCTRL_RWW_EEPROM == true>
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite
-                                        ( uint32_t address, uint32_t* data )
+    bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address, uint32_t* data )
 
   Summary:
     Writes one page of data to given RWWEEPROM address.
@@ -262,7 +259,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_CacheInvalidate(void)
     Refer plib_nvmctrl${NVMCTRL_INDEX?string}.h file for more information.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite (const uint32_t address,  uint32_t *data)
+bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite (const uint32_t address,  uint32_t *data)
 {
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
@@ -291,11 +288,14 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite (const uint32_t address,
         /* Force-wait for the buffer clear to complete */
     }
 </#if>
+
+     return true;
+
 }
 
 // *****************************************************************************
 /* Function:
-    void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address)
+    bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address)
 
   Summary:
     Erases a Row in the RWWEEPROM.
@@ -330,7 +330,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite (const uint32_t address,
     Refer plib_nvmctrl${NVMCTRL_INDEX?string}.h file for more information.
 */
 
-void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address )
+bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address )
 {
     /* Clear error flags */
     NVMCTRL_REGS->STATUS = 0x1C;
@@ -352,13 +352,15 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address )
         /* Force-wait for the buffer clear to complete */
     }
 </#if>
+
+     return true;
+
 }
 </#if>
 
 // *****************************************************************************
 /* Function:
-    bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite
-                                        ( uint32_t address, uint32_t* data )
+    bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite( uint32_t address, uint32_t* data )
 
   Summary:
     Writes one page of data to given NVM address.
