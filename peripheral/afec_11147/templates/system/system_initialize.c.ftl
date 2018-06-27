@@ -1,1 +1,1 @@
-	AFEC${INDEX?string}_Initialize();
+    AFEC${INDEX?string}_Initialize();

@@ -11,8 +11,8 @@
     AFEC${INDEX} peripheral library interface.
 
   Description
-    This file defines the interface to the AFEC peripheral library.  This 
-    library provides access to and control of the associated peripheral 
+    This file defines the interface to the AFEC peripheral library.  This
+    library provides access to and control of the associated peripheral
     instance.
 
 *******************************************************************************/
@@ -70,108 +70,108 @@ extern "C" {
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this 
+/*  The following data type definitions are used by the functions in this
     interface and should be considered part it.
 */
 <#assign AFEC_INTERRUPT = false>
 <#compress>
 <#list 0..(AFEC_NUM_CHANNELS - 1) as i>
-	<#assign AFEC_CH_ENABLE = "AFEC_"+i+"_CHER">
-	<#assign AFEC_CH_NEG_INP = "AFEC_"+i+"_NEG_INP">
-	<#assign AFEC_CH_NAME = "AFEC_"+i+"_NAME">
+    <#assign AFEC_CH_ENABLE = "AFEC_"+i+"_CHER">
+    <#assign AFEC_CH_NEG_INP = "AFEC_"+i+"_NEG_INP">
+    <#assign AFEC_CH_NAME = "AFEC_"+i+"_NAME">
 <#if i % 2 !=0 >
-	<#assign AFEC_CH_DIFF_PAIR = "AFEC_"+(i-1)+"_NEG_INP">
+    <#assign AFEC_CH_DIFF_PAIR = "AFEC_"+(i-1)+"_NEG_INP">
 </#if>
-	<#assign CH_NUM = i>
-	<#assign AFEC_CH_IER_EOC = "AFEC_"+i+"_IER_EOC">
+    <#assign CH_NUM = i>
+    <#assign AFEC_CH_IER_EOC = "AFEC_"+i+"_IER_EOC">
 <#if (.vars[AFEC_CH_ENABLE] == true) && (.vars[AFEC_CH_IER_EOC] == true)>
-	<#assign AFEC_INTERRUPT = true>
+    <#assign AFEC_INTERRUPT = true>
 </#if>
 
 <#-- Find the max and min digital value based on the result resolution and single-ended/differential ended mode -->
 <#if .vars[AFEC_CH_ENABLE] == true>
-	<#if (i % 2 != 0) && (.vars[AFEC_CH_DIFF_PAIR] != "GND")>
-	<#else>
+    <#if (i % 2 != 0) && (.vars[AFEC_CH_DIFF_PAIR] != "GND")>
+    <#else>
 
-		<#if .vars[AFEC_CH_NEG_INP] != "GND">
-			<#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_UNSIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_SIGN_DF_UNSG")) >
-				<#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				<#else>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				</#if>
-			</#if>
-			<#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_SIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_UNSG_DF_SIGN")) >
-				<#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (2047)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-2048)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-4096)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
-				<#else>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
-				</#if>
-			</#if>
-		<#else>
-			<#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_UNSIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_UNSG_DF_SIGN")) >
-				<#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				<#else>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
-				</#if>
-			</#if>
-			<#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_SIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_SIGN_DF_UNSG")) >
-				<#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (2047)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-2048)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-4096)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
-				<#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
-				<#else>
-					#define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767)
-					#define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
-				</#if>
-			</#if>
-		</#if>
+        <#if .vars[AFEC_CH_NEG_INP] != "GND">
+            <#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_UNSIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_SIGN_DF_UNSG")) >
+                <#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#else>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                </#if>
+            </#if>
+            <#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_SIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_UNSG_DF_SIGN")) >
+                <#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (2047)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-2048)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-4096)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
+                <#else>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
+                </#if>
+            </#if>
+        <#else>
+            <#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_UNSIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_UNSG_DF_SIGN")) >
+                <#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#else>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                </#if>
+            </#if>
+            <#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_SIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_SIGN_DF_UNSG")) >
+                <#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (2047)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-2048)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-4096)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
+                <#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
+                <#else>
+                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767)
+                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
+                </#if>
+            </#if>
+        </#if>
 
 #define ${.vars[AFEC_CH_NAME]} (${CH_NUM}U)
 /***********************************************************************/
-	</#if>
+    </#if>
 </#if> <#-- CH ENABLE -->
 </#list>
 </#compress>
@@ -182,7 +182,7 @@ extern "C" {
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of 
+/* The following functions make up the methods (set of possible operations) of
    this interface.
 */
 
@@ -209,7 +209,7 @@ void AFEC${INDEX}_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL_GAIN gai
 void AFEC${INDEX}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset);
 
 <#if AFEC_INTERRUPT == true>
-	<#lt>void AFEC${INDEX}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context);
+    <#lt>void AFEC${INDEX}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context);
 </#if>
 // *****************************************************************************
 
