@@ -126,20 +126,9 @@ void SDRAMC${INDEX?string}_Initialize( void )
     SDRAMC_REGS->SDRAMC_MR = SDRAMC_MR_MODE_LOAD_MODEREG;
     SDRAMC_REGS->SDRAMC_MR;
     __DMB();
-    *((uint16_t *)(pSdramBaseAddress + ${SDRAMC_MRS_VALUE})) = 0;
+    *((uint16_t *)(pSdramBaseAddress + 0x${SDRAMC_MRS_VALUE})) = 0;
 
     /* Step 9:
-     * Issue Extended Mode Register Set(EMRS) for mobile SDRAM to
-     * program the parameters of the SDRAM(TCSR, PASR, DS). Read back the Mode
-     * Register and add a memory barrier assembly instruction just after the
-     * read. Perform a write access to the SDRAM. The address must be chosen
-     * such that BA[1] or BA[0] are set to one. */
-    SDRAMC_REGS->SDRAMC_MR = SDRAMC_MR_MODE_EXT_LOAD_MODEREG;
-    SDRAMC_REGS->SDRAMC_MR;
-    __DMB();
-    *((uint16_t *)(pSdramBaseAddress + ${SDRAMC_EMRS_VALUE})) = 0;
-
-    /* Step 10:
      * Transition the SDRAM to NORMAL mode. Read back the Mode
      * Register and add a memory barrier assembly instruction just after the
      * read. Perform a write access to any SDRAM address. */
@@ -148,7 +137,7 @@ void SDRAMC${INDEX?string}_Initialize( void )
     __DMB();
     *pSdramBaseAddress = 0x0;
 
-    /* Step 11:
+    /* Step 10:
      * Configure the Refresh Timer Register. */
     SDRAMC_REGS->SDRAMC_TR = ${SDRAMC_TR_COUNT};
 

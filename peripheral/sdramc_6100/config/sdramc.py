@@ -6,9 +6,6 @@ global sdramcSym_CR__NR
 global sdramcSym_BURST_TYPE
 global sdramcSym_BURST_LENGTH
 global sdramcSym_CR_CAS
-global sdramcSym_LPR_PASR
-global sdramcSym_LPR_TCSR
-global sdramcSym_LPR_DS
 
 ################################################################################
 #### Register Information ####
@@ -44,15 +41,7 @@ SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE = 32
 #### Business Logic ####
 ################################################################################
 
-# Function to Enable/Disable SDRAM Low-Power Configurations
-def lowPowerVisibility(symbol, event) :
-    symObj=event["symbol"]
-
-    if(symObj.getSelectedKey()== "LPSDRAM"):
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
+# Function to calculate refresh count
 def calcRefreshCount(time, rowlines, clk):
     rowlines = rowlines[-2:]
     rowlines = int(rowlines)
@@ -84,16 +73,6 @@ def calcMRS(symbol, event) :
         mrs=(16 * cas) + length
     symbol.setValue(mrs,1)
 
-# EMRS<2:0> -> PASR
-# EMRS<4:3> -> TCSR
-# EMRS<6:5> -> DS
-def calcEMRS(symbol, event) :
-    pasr=sdramcSym_LPR_PASR.getValue()
-    tcsr=sdramcSym_LPR_TCSR.getValue()
-    ds=sdramcSym_LPR_DS.getValue()
-    emrs = pasr + (8*tcsr)+(ds*32)
-    symbol.setValue(emrs,1)
-
 ################################################################################
 #### Component ####
 ################################################################################
@@ -103,9 +82,6 @@ def instantiateComponent(sdramcComponent):
     global sdramcSym_BURST_TYPE
     global sdramcSym_BURST_LENGTH
     global sdramcSym_CR_CAS
-    global sdramcSym_LPR_PASR
-    global sdramcSym_LPR_TCSR
-    global sdramcSym_LPR_DS
 
     instance = sdramcComponent.getID()[-1:]
 
@@ -129,10 +105,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_MDR__MD.setOutputMode("Key")
     sdramcSym_MDR__MD.setDisplayMode("Description")
     sdramcSym_MDR__MD.setLabel("SDRAM Type")
-    count = ValGrp_MDR__MD.getValueCount()
-    for id in range(0,count):
-        valueName = ValGrp_MDR__MD.getValueNames()[id]
-        sdramcSym_MDR__MD.addKey(valueName, ValGrp_MDR__MD.getValue(valueName).getValue(), ValGrp_MDR__MD.getValue(valueName).getDescription())
+    sdramcSym_MDR__MD.addKey("SDRAM", "0", "SDRAM")
     sdramcSym_MDR__MD.setSelectedKey("SDRAM",2)
 
     sdramcSym_CR__NR = sdramcComponent.createKeyValueSetSymbol("SDRAMC_CR__NR", sdramcSymMenu_features)
@@ -228,6 +201,12 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_SDRAMC_TR_COUNT.setDefaultValue(count)
     sdramcSym_SDRAMC_TR_COUNT.setVisible(False)
 
+    sdramcSym_CR_TXSR = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TXSR", sdramcSymMenu_TIMING_MENU)
+    sdramcSym_CR_TXSR.setLabel("Exit Self Refresh to Active Time (TXSR)")
+    sdramcSym_CR_TXSR.setMin(0)
+    sdramcSym_CR_TXSR.setMax(15)
+    sdramcSym_CR_TXSR.setDefaultValue(SDARMC_CR_TXSR_DEFAULT_VALUE)
+
     # SDRAMC Mode Configuration
     sdramcSymMenu_MR_MENU = sdramcComponent.createMenuSymbol("SDRAMC_MR_MENU", None)
     sdramcSymMenu_MR_MENU.setLabel("SDRAMC Mode Register Configurations")
@@ -245,58 +224,6 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_MRS = sdramcComponent.createHexSymbol("SDRAMC_MRS_VALUE", sdramcSymMenu_MR_MENU)
     sdramcSym_MRS.setDependencies(calcMRS, ["SDRAMC_BURST_TYPE", "SDRAMC_BURST_LENGTH", "SDRAMC_CR_CAS"])
     sdramcSym_MRS.setVisible(False)
-
-    sdramcSym_EMRS = sdramcComponent.createHexSymbol("SDRAMC_EMRS_VALUE", sdramcSymMenu_MR_MENU)
-    sdramcSym_EMRS.setDependencies(calcEMRS, ["SDRAMC_LPR_PASR", "SDRAMC_LPR_TCSR", "SDRAMC_LPR_DS"])
-    sdramcSym_EMRS.setVisible(False)
-
-    # Low-power configuration options.
-    sdramcSymMenu_LOW_POW_MENU = sdramcComponent.createMenuSymbol("SDRAMC_LOW_POW_MENU", None)
-    sdramcSymMenu_LOW_POW_MENU.setLabel("SDRAMC Low-Power Configurations")
-    sdramcSymMenu_LOW_POW_MENU.setVisible(False)
-    sdramcSymMenu_LOW_POW_MENU.setDependencies(lowPowerVisibility, ["SDRAMC_MDR_MD"])
-
-    sdramcSym_CR_TXSR = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TXSR", sdramcSymMenu_LOW_POW_MENU)
-    sdramcSym_CR_TXSR.setLabel("Exit Self Refresh to Active Time (TXSR)")
-    sdramcSym_CR_TXSR.setMin(0)
-    sdramcSym_CR_TXSR.setMax(15)
-    sdramcSym_CR_TXSR.setDefaultValue(SDARMC_CR_TXSR_DEFAULT_VALUE)
-
-    sdramcSym_LPR_LPCB = sdramcComponent.createKeyValueSetSymbol("SDRAMC_LPR_LPCB", sdramcSymMenu_LOW_POW_MENU)
-    sdramcSym_LPR_LPCB.setOutputMode("Key")
-    sdramcSym_LPR_LPCB.setDisplayMode("Description")
-    sdramcSym_LPR_LPCB.setLabel("Low Power Configuration")
-    sdramcSym_LPR_LPCB.addKey("DISABLED", "0", "Low Power mode is disabled")
-    sdramcSym_LPR_LPCB.addKey("SELF_REFRESH", "1", "Self Refresh")
-    sdramcSym_LPR_LPCB.addKey("POWER_DOWN", "2", "Power down")
-    sdramcSym_LPR_LPCB.addKey("DEEP_POWER_DOWN", "3", "Deep Power-Down")
-    sdramcSym_LPR_LPCB.setSelectedKey("DISABLED",2)
-
-    sdramcSym_LPR_TIMEOUT = sdramcComponent.createKeyValueSetSymbol("SDRAMC_LPR_TIMEOUT", sdramcSymMenu_LOW_POW_MENU)
-    sdramcSym_LPR_TIMEOUT.setOutputMode("Key")
-    sdramcSym_LPR_TIMEOUT.setDisplayMode("Description")
-    sdramcSym_LPR_TIMEOUT.setLabel("Select Low Power Entry")
-    sdramcSym_LPR_TIMEOUT.addKey("LP_LAST_XFER", "0", "After the end of the last transfer")
-    sdramcSym_LPR_TIMEOUT.addKey("LP_LAST_XFER_64", "1", "64 clock cycles after the end of the last transfer")
-    sdramcSym_LPR_TIMEOUT.addKey("LP_LAST_XFER_128", "2", "128 clock cycles after the end of the last transfer")
-
-    sdramcSym_LPR_PASR = sdramcComponent.createIntegerSymbol("SDRAMC_LPR_PASR", sdramcSymMenu_LOW_POW_MENU)
-    sdramcSym_LPR_PASR.setLabel("Partial Array Self-Refresh (PASR)")
-    sdramcSym_LPR_PASR.setMin(0)
-    sdramcSym_LPR_PASR.setMax(7)
-    sdramcSym_LPR_PASR.setDefaultValue(0)
-
-    sdramcSym_LPR_TCSR = sdramcComponent.createIntegerSymbol("SDRAMC_LPR_TCSR", sdramcSymMenu_LOW_POW_MENU)
-    sdramcSym_LPR_TCSR.setLabel("Temperature Compensated Self-Refresh (TCSR)")
-    sdramcSym_LPR_TCSR.setMin(0)
-    sdramcSym_LPR_TCSR.setMax(3)
-    sdramcSym_LPR_TCSR.setDefaultValue(0)
-
-    sdramcSym_LPR_DS = sdramcComponent.createIntegerSymbol("SDRAMC_LPR_DS", sdramcSymMenu_LOW_POW_MENU)
-    sdramcSym_LPR_DS.setLabel("Drive Strength (DS)")
-    sdramcSym_LPR_DS.setMin(0)
-    sdramcSym_LPR_DS.setMax(3)
-    sdramcSym_LPR_DS.setDefaultValue(0)
 
     ############################################################################
     #### Dependency ####
