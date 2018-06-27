@@ -11,8 +11,8 @@
     PWM${INDEX} peripheral library interface.
 
   Description
-    This file defines the interface to the PWM peripheral library.  This 
-    library provides access to and control of the associated peripheral 
+    This file defines the interface to the PWM peripheral library.  This
+    library provides access to and control of the associated peripheral
     instance.
 
 ******************************************************************************/
@@ -70,7 +70,7 @@ extern "C" {
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this 
+/*  The following data type definitions are used by the functions in this
     interface and should be considered part it.
 */
 
@@ -79,16 +79,16 @@ extern "C" {
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of 
+/* The following functions make up the methods (set of possible operations) of
    this interface.
 */
 <#assign PWM_INTERRUPT = false>
 <#list 0..3 as i>
-	<#assign PWM_IER1_CHID = "PWM_CH_"+i+"_IER1_CHID">
-	<#assign PWM_CH_ENABLE = "PWM_CH_"+ i +"_ENABLE">
-	<#if .vars[PWM_CH_ENABLE] == true && .vars[PWM_IER1_CHID] == true>
-		<#assign PWM_INTERRUPT = true>
-	</#if>
+    <#assign PWM_IER1_CHID = "PWM_CH_"+i+"_IER1_CHID">
+    <#assign PWM_CH_ENABLE = "PWM_CH_"+ i +"_ENABLE">
+    <#if .vars[PWM_CH_ENABLE] == true && .vars[PWM_IER1_CHID] == true>
+        <#assign PWM_INTERRUPT = true>
+    </#if>
 </#list>
 
 __inline__ void PWM${INDEX}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
