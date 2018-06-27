@@ -221,6 +221,7 @@ void PWM${INDEX}_Initialize (void)
         <#if .vars[PWM_IER1_CHID] == true>
         <#lt>    /* Enable counter event */
         <#lt>    PWM${INDEX}_REGS->PWM_IER1 = (0x1U << ${CH_NUM}U);
+        <#lt>    PWM${INDEX}_CallbackObj.callback_fn = NULL;
         </#if>
     </#if> <#-- PWM_CH_ENABLE -->
 </#list>
@@ -315,8 +316,10 @@ void PWM${INDEX}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMask)
 bool PWM${INDEX}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
 {
     bool status;
-    status = PWM${INDEX}_status | ((PWM${INDEX}_REGS->PWM_ISR1>> channel) & 0x1U);
+    NVIC_DisableIRQ(PWM${INDEX}_IRQn);
+    status = ((PWM${INDEX}_status | PWM${INDEX}_REGS->PWM_ISR1) >> channel) & 0x1U;
     PWM${INDEX}_status = 0x0U;
+    NVIC_EnableIRQ(PWM${INDEX}_IRQn);
     return status;
 }
 
