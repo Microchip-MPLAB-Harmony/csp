@@ -301,6 +301,11 @@ def tcGetClockResolution(clockSource, channelID):
         resolution_nS = str(1000000000.0/pck6_clock_Hz)
     if (clockSource == "PCK7"):
         resolution_nS = str(1000000000.0/pck7_clock_Hz)
+    if (clockSource == "PCK"):
+        if (tcSym_CH_PCK_CLKSRC.getValue() == "PCK6"):
+            resolution_nS = str(1000000000.0/pck6_clock_Hz)
+        else:
+            resolution_nS = str(1000000000.0/pck7_clock_Hz)
     if (clockSource == "MCK/8"):
         resolution_nS = str(8000000000.0/master_clock_Hz)
     if (clockSource == "MCK/32"):
@@ -333,6 +338,11 @@ def tcClockFreq(tcSym_CH_ClockFreqLocal, event):
         clock_Hz = (pck6_clock_Hz)
     if (clock == "PCK7"):
         clock_Hz = (pck7_clock_Hz)
+    if (clock == "PCK"):
+        if (tcSym_CH_PCK_CLKSRC.getValue() == "PCK6"):
+            clock_Hz = (pck6_clock_Hz)
+        else:
+            clock_Hz = (pck7_clock_Hz)
     if (clock == "MCK/8"):
         clock_Hz = (master_clock_Hz/8)
     if (clock == "MCK/32"):
@@ -372,17 +382,18 @@ def tcPCK7Set(tcSym_CH_PCK7Local, event):
     source = tcSym_CH_CMR_TCCLKS[channelID].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[channelID].getSelectedValue()))
     Database.clearSymbolValue("core", "PMC_SCER_PCK7")
     Database.clearSymbolValue("core", "PMC_SCER_PCK6")
-    if (source == "PCK7"):
-        tcSym_CH_PCK7[channelID].clearValue()
-        tcSym_CH_PCK7[channelID].setValue(True, 1)
-        Database.setSymbolValue("core", "PMC_SCER_PCK7", True, 2)
-    elif (source == "PCK6"):
-        tcSym_CH_PCK7[channelID].clearValue()
-        tcSym_CH_PCK7[channelID].setValue(False, 1)
-        Database.setSymbolValue("core", "PMC_SCER_PCK6", True, 2)
-    else:
-        tcSym_CH_PCK7[channelID].clearValue()
-        tcSym_CH_PCK7[channelID].setValue(False, 1)
+    if (source == "PCK"):
+        if (tcSym_CH_PCK_CLKSRC.getValue() == "PCK7"):
+            tcSym_CH_PCK7[channelID].clearValue()
+            tcSym_CH_PCK7[channelID].setValue(True, 1)
+            Database.setSymbolValue("core", "PMC_SCER_PCK7", True, 2)
+        elif (tcSym_CH_PCK_CLKSRC.getValue() == "PCK6"):
+            tcSym_CH_PCK7[channelID].clearValue()
+            tcSym_CH_PCK7[channelID].setValue(False, 1)
+            Database.setSymbolValue("core", "PMC_SCER_PCK6", True, 2)
+        else:
+            tcSym_CH_PCK7[channelID].clearValue()
+            tcSym_CH_PCK7[channelID].setValue(False, 1)
 
 def tcTimerVisible(tcTimerMenuLocal, event):
     id = tcTimerMenuLocal.getID()
@@ -549,6 +560,15 @@ def tcQuadratureCommentChange(tcQuadratureComment, event):
         else:
             tcQuadratureComment.setLabel("**** Quadrature mode uses two channels. Channel 0 and Channel 2 to capture speed ****")
 
+def tcPCKVisible(symbol, event):
+    clock0 = tcSym_CH_CMR_TCCLKS[0].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[0].getSelectedValue()))
+    clock1 = tcSym_CH_CMR_TCCLKS[1].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[1].getSelectedValue()))
+    clock2 = tcSym_CH_CMR_TCCLKS[2].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[2].getSelectedValue()))
+    if (clock0 == "PCK" or clock1 == "PCK" or clock2 == "PCK"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 def tcClockSymbols(tcComponent, channelID, menu):
     #clock selection
     #Added keys here as this symbol combines two bit-fields CMR_TCCLKS and EMR_NODIVCLK
@@ -557,7 +577,10 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_CMR_TCCLKS[channelID] = tcComponent.createKeyValueSetSymbol("TC"+str(channelID)+"_CMR_TCCLKS", menu)
     tcSym_CH_CMR_TCCLKS[channelID].setLabel("Select Clock Source")
     tcSym_CH_CMR_TCCLKS[channelID].addKey("", str(i), "MCK")
-    tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK6")
+    if(int(num) == 0):
+        tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK")
+    else:
+        tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK6")
     tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK2", str(i + 2), "MCK/8")
     tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK3", str(i + 3), "MCK/32")
     tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK4", str(i + 4), "MCK/128")
@@ -572,8 +595,6 @@ def tcClockSymbols(tcComponent, channelID, menu):
     if(extClock[2] == True):
         tcSym_CH_CMR_TCCLKS[channelID].addKey("XC2", str(i + 1), "XC2")
         i = i + 1
-    if(int(num) == 0):
-        tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK7")
     tcSym_CH_CMR_TCCLKS[channelID].setDefaultValue(0)
     tcSym_CH_CMR_TCCLKS[channelID].setOutputMode("Key")
     tcSym_CH_CMR_TCCLKS[channelID].setDisplayMode("Description")
@@ -583,7 +604,7 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_PCK7[channelID].setLabel("PCK7")
     tcSym_CH_PCK7[channelID].setVisible(False)
     tcSym_CH_PCK7[channelID].setDefaultValue(False)
-    tcSym_CH_PCK7[channelID].setDependencies(tcPCK7Set, ["TC"+str(channelID)+"_CMR_TCCLKS"])
+    tcSym_CH_PCK7[channelID].setDependencies(tcPCK7Set, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC_PCK_CLKSRC"])
 
     #external clock frequency
     global tcSym_CH_EXT_CLOCK
@@ -605,7 +626,7 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_Resolution[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_Resolution", menu)
     tcSym_CH_Resolution[channelID].setLabel("****Timer resolution is " + str(6.66) + " nS****")
     tcSym_CH_Resolution[channelID].setDependencies(tcClockResCalc, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-        "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ"])
+        "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
 
 
 ###################################################################################################
@@ -761,7 +782,7 @@ def instantiateComponent(tcComponent):
     tcSym_CH_QEI_CH2PERIOD_COMMENT = tcComponent.createCommentSymbol("TC_QEI_PERIOD_COMMENT", tcSpeedMenu)
     tcSym_CH_QEI_CH2PERIOD_COMMENT.setLabel("**** Time Base is 100 uS  ****")
     tcSym_CH_QEI_CH2PERIOD_COMMENT.setDependencies(tcQuadratureTimeBaseCalculate, ["TC_QEI_PERIOD", "TC3_CMR_TCCLKS", \
-        "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ"])
+        "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
 
     # enable index interrupt
     global tcSym_CH_QIER_IDX
@@ -775,6 +796,14 @@ def instantiateComponent(tcComponent):
     tcSym_CH_QIER_QERR = tcComponent.createBooleanSymbol("TC_QIER_QERR", tcQuadratureMenu)
     tcSym_CH_QIER_QERR.setLabel("Enable Quadrature Error Interrupt")
     tcSym_CH_QIER_QERR.setDefaultValue(False)
+
+    #combo box to select PCK source only visible for TC0
+    global tcSym_CH_PCK_CLKSRC
+    tcSym_CH_PCK_CLKSRC = tcComponent.createComboSymbol("TC_PCK_CLKSRC", None, ["PCK6", "PCK7"])
+    tcSym_CH_PCK_CLKSRC.setLabel("Select PCK Clock Source")
+    tcSym_CH_PCK_CLKSRC.setDefaultValue("PCK6")
+    tcSym_CH_PCK_CLKSRC.setVisible(False)
+    tcSym_CH_PCK_CLKSRC.setDependencies(tcPCKVisible, ["TC0_CMR_TCCLKS", "TC1_CMR_TCCLKS", "TC2_CMR_TCCLKS"])
 
     #*************************CHANNEL CONFIGURATIONS ******************************
     for channelID in range(0, len(channel)):
@@ -871,7 +900,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_TimerPeriod[channelID].setLabel("****Timer period is  66.6 uS****")
         tcSym_CH_TimerPeriod[channelID].setDependencies(tcPeriodCalc, \
             ["TC"+str(channelID)+"_TIMER_PERIOD_COUNT", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ"])
+            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
 
         #one-shot timer
         tcSym_CH_CMR_CPCSTOP.append(channelID)
@@ -1019,7 +1048,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_ComparePeriod[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_COMPARE_PERIOD", tcCompareMenu[channelID])
         tcSym_CH_ComparePeriod[channelID].setLabel("****Timer Period is 66.6 uS****")
         tcSym_CH_ComparePeriod[channelID].setDependencies(tcPeriodCalc, ["TC"+str(channelID)+"_COMPARE_PERIOD_COUNT", "TC"+str(channelID)+"_CMR_TCCLKS", \
-            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ"])
+            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
 
         #External Event Menu
         tcEventMenu.append(channelID)
@@ -1142,7 +1171,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_CMR_BCPC.append(channelID)
         tcSym_CH_CMR_BCPC[channelID] = tcComponent.createComboSymbol("TC"+str(channelID)+"_CMR_BCPC", tcCompareBMenu[channelID], comboOptions)
         tcSym_CH_CMR_BCPC[channelID].setLabel("Action on Compare Match C")
-        tcSym_CH_CMR_BCPC[channelID].setDefaultValue(comboOptions[2])    
+        tcSym_CH_CMR_BCPC[channelID].setDefaultValue(comboOptions[2])
 
         #Action on external event
         childrenNodes = []
@@ -1191,7 +1220,7 @@ def instantiateComponent(tcComponent):
     tcSource1File.setDestPath("/peripheral/tc/")
     tcSource1File.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcSource1File.setType("SOURCE")
-    tcSource1File.setOverwrite(True)    
+    tcSource1File.setOverwrite(True)
     tcSource1File.setMarkup(True)
 
     tcGlobalHeaderFile = tcComponent.createFileSymbol("TC_GLOBALHEADER", None)
