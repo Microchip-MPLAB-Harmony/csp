@@ -606,6 +606,7 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_FPV_FPVL[channelID].addKey("HIGH_IMPEDANCE", "2", "High-Impedance")
         pwmSym_PWM_FPV_FPVL[channelID].setDisplayMode("Description")
         pwmSym_PWM_FPV_FPVL[channelID].setOutputMode("Value")
+        pwmSym_PWM_FPV_FPVL[channelID].setDefaultValue(1)
         pwmSym_PWM_FPV_FPVL[channelID].setVisible(False)
         pwmSym_PWM_FPV_FPVL[channelID].setDependencies(pwmChannelConfVisible, ["PWM_CH_"+str(channelID)+"_FAULT_ENABLE"])
 
@@ -661,6 +662,7 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_FMR_FMOD[faultID].addKey("CLEAR_AT_PERIPHERAL_AND_REGISTER", "1", "Fault is active until cleared at peripheral level AND cleared in PWM_FCR register")
         pwmSym_PWM_FMR_FMOD[faultID].setDisplayMode("Description")
         pwmSym_PWM_FMR_FMOD[faultID].setOutputMode("Value")
+        pwmSym_PWM_FMR_FMOD[faultID].setDefaultValue(1)
 
     #-----------------------------------------------------------------------------------------------------------
 
