@@ -244,7 +244,7 @@ def instantiateComponent(afecComponent):
     #------------------------- ATDF Read -------------------------------------
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
     availablePins = []      # array to save available pins
-    channel = [False, False, False, False, False, False, False, False, False, False, False, False] #array to save available channels
+    channel = ["False", "False", "False", "False", "False", "False", "False", "False", "False", "False", "False", "False"] #array to save available channels
     afecChannelsValues = [] #array used for combo symbol
     afecChannelsValues.append("NONE")
 
@@ -262,8 +262,11 @@ def instantiateComponent(afecComponent):
         if (("AD" in group) and ("index" in afec_signals[pad].getAttributeList())):
             padSignal = afec_signals[pad].getAttribute("pad")
             if padSignal in availablePins:
-                channel[int(afec_signals[pad].getAttribute("index"))] = True
+                channel[int(afec_signals[pad].getAttribute("index"))] = "True"
                 afecChannelsValues.append("CH"+afec_signals[pad].getAttribute("index"))
+
+    afecSym_AvailableChannels = afecComponent.createComboSymbol("AFEC_AVAILABLE_CHANNELS", None, channel)
+    afecSym_AvailableChannels.setVisible(False)
 
     # Clock dynamic settings
     afecSym_ClockControl = afecComponent.createBooleanSymbol("AFEC_CLOCK_ENABLE", None)
@@ -415,7 +418,7 @@ def instantiateComponent(afecComponent):
         afecCHMenu[channelID] = afecComponent.createMenuSymbol("CH"+str(channelID), afecCHConfMenu)
         afecCHMenu[channelID].setLabel("Channel "+str(channelID))
         #Show channels as per available pins in package
-        if (channel[channelID] == False):
+        if (channel[channelID] == "False"):
             afecCHMenu[channelID].setVisible(False)
 
         #Channel enable
@@ -460,7 +463,7 @@ def instantiateComponent(afecComponent):
             afecSym_CH_NegativeInput[channelID].setReadOnly(True)
         else:
             afecSym_CH_NegativeInput[channelID] = afecComponent.createComboSymbol("AFEC_"+str(channelID)+"_NEG_INP", afecSym_CH_CHER[channelID], afec_EvenChNegInput)
-            if (channel[channelID + 1] == False):
+            if (channel[channelID + 1] == "False"):
                 afecSym_CH_NegativeInput[channelID].setReadOnly(True)
         afecSym_CH_NegativeInput[channelID].setLabel("Negative Input")
         afecSym_CH_NegativeInput[channelID].setDefaultValue("GND")
