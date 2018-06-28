@@ -58,7 +58,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#assign AFEC_INTERRUPT = false>
 <#assign AFEC_RES = "">
 <#assign AFEC_STM = "">
-
+<#assign AFEC_IBCTL = "">
+<#if AFEC_CLK <= 500000>
+    <#assign AFEC_IBCTL = "0x1U">
+<#elseif (AFEC_CLK > 500000 && AFEC_CLK <= 1000000)>
+    <#assign AFEC_IBCTL = "0x2U">
+<#else>
+    <#assign AFEC_IBCTL = "0x3U">
+</#if>
 <#list 0..(AFEC_NUM_CHANNELS - 1) as i>
 <#assign AFEC_CH_CHER = "AFEC_"+i+"_CHER">
 <#assign AFEC_CH_POS_INP = "AFEC_"+i+"_POS_INP">
@@ -223,7 +230,7 @@ void AFEC${INDEX}_Initialize()
     AFEC${INDEX}_REGS->AFEC_CR = AFEC_CR_SWRST_Msk;
 
     /* Prescaler and different time settings as per CLOCK section  */
-    AFEC${INDEX}_REGS->AFEC_MR = AFEC_MR_PRESCAL(${AFEC_MR_PRESCAL}U) | AFEC_MR_TRACKTIM(15U) |
+    AFEC${INDEX}_REGS->AFEC_MR = AFEC_MR_PRESCAL(${AFEC_MR_PRESCAL}U) | AFEC_MR_TRACKTIM(15U) | AFEC_MR_STARTUP_SUT64 |
         AFEC_MR_TRANSFER(2U) | AFEC_MR_ONE_Msk ${(AFEC_CONV_MODE == "0")?then('| AFEC_MR_FREERUN_Msk', '')} <#rt>
         <#lt> ${(AFEC_CONV_MODE == "2")?then('| (AFEC_MR_TRGEN_Msk) | (AFEC_MR_${AFEC_MR_TRGSEL_VALUE})', '')};
 
@@ -232,7 +239,7 @@ void AFEC${INDEX}_Initialize()
          | AFEC_EMR_SIGNMODE_${AFEC_EMR_SIGNMODE_VALUE} | AFEC_EMR_TAG_Msk;
 
     /* Enable gain amplifiers */
-    AFEC${INDEX}_REGS->AFEC_ACR = AFEC_ACR_PGA0EN_Msk | AFEC_ACR_PGA1EN_Msk;
+    AFEC${INDEX}_REGS->AFEC_ACR = AFEC_ACR_PGA0EN_Msk | AFEC_ACR_PGA1EN_Msk | AFEC_ACR_IBCTL(${AFEC_IBCTL});
 
 <#if AFEC_CGR_GAIN?has_content>
     /* Gain */
@@ -281,6 +288,7 @@ void AFEC${INDEX}_Initialize()
 <#if AFEC_IER_EOC?has_content>
     /* Enable interrupt */
     AFEC${INDEX}_REGS->AFEC_IER = ${AFEC_IER_EOC};
+    AFEC${INDEX}_CallbackObj.callback_fn = NULL;
 </#if>
 
 <#if AFEC_CHER_CH?has_content>
