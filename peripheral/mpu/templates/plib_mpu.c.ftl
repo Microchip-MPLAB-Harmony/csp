@@ -75,11 +75,8 @@ void MPU_Initialize(void)
     </#if>
 </#list>
 
-    /* Enable additional fault types. */
-    SCB->SHCSR |= (SCB_SHCSR_MEMFAULTENA_Msk | SCB_SHCSR_BUSFAULTENA_Msk |  SCB_SHCSR_USGFAULTENA_Msk);
-
-    /* Trap divide by zero and unaligned access. */
-    SCB->CCR   |= SCB_CCR_DIV_0_TRP_Msk | SCB_CCR_UNALIGN_TRP_Msk;
+    /* Enable Memory Management Fault */
+    SCB->SHCSR |= (SCB_SHCSR_MEMFAULTENA_Msk);
 
     /* Enable MPU */
     MPU->CTRL = MPU_CTRL_ENABLE_Msk ${CoreMPU_HFNMIENA?then('| MPU_CTRL_HFNMIENA_Msk', '')} ${CoreMPU_PRIVDEFENA?then('| MPU_CTRL_PRIVDEFENA_Msk', '')};
