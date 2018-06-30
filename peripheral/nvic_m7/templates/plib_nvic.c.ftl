@@ -46,6 +46,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: NVIC Implementation
 // *****************************************************************************
 // *****************************************************************************
+<#assign NVIC_USAGE_FAULT_ENABLE = "NVIC_-10_ENABLE">
+<#assign NVIC_BUS_FAULT_ENABLE = "NVIC_-11_ENABLE">
 
 void NVIC_Initialize( void )
 {
@@ -75,6 +77,19 @@ void NVIC_Initialize( void )
             </#if>
         </#if>
 </#list>
+
+<#if (.vars[NVIC_USAGE_FAULT_ENABLE]==true)>
+    /* Enable Usage fault */
+    SCB->SHCSR |= (SCB_SHCSR_USGFAULTENA_Msk);
+    /* Trap divide by zero */
+    SCB->CCR   |= SCB_CCR_DIV_0_TRP_Msk;
+</#if>
+
+<#if (.vars[NVIC_BUS_FAULT_ENABLE]==true)>
+    /* Enable Bus fault */
+    SCB->SHCSR |= (SCB_SHCSR_BUSFAULTENA_Msk);
+</#if>
+
 
     return;
 }
