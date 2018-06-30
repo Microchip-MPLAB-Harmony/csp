@@ -7,6 +7,8 @@ global  mpuHeaderFile2
 global  mpuSourceFile
 global  mpuSystemInitFile
 global  mpuSystemDefFile
+global  mpuNVICVector
+global  mpuNVICHandlerLock
 
 ################################################################################
 #### Business Logic ####
@@ -16,7 +18,7 @@ global mpuSettings
 mpuSettings = {"ITCM"           : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00000000",   "4MB"   ],
                 "FLASH"         : ["MPU_ATTR_NORMAL_WT",        "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00400000",   "4MB"   ],
                 "DTCM"          : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "4MB"   ],
-                "SRAM"   		: ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20400000",   "8MB"   ],
+                "SRAM"          : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20400000",   "8MB"   ],
                 "PERIPHERALS"   : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
                 "EBI_SMC"       : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x60000000",   "256MB" ],
                 "EBI_SDRAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x70000000",   "256MB" ],
@@ -66,6 +68,16 @@ def storeLength(symbol, event):
     key=symObj.getSelectedKey()
     symbol.setValue(key,2)
 
+def mpuNVICControl(symbol, event):
+    Database.clearSymbolValue("core", mpuNVICVector)
+    Database.clearSymbolValue("core", mpuNVICHandlerLock)
+
+    if (event["value"] == True):
+        Database.setSymbolValue("core", mpuNVICVector, True, 2)
+        Database.setSymbolValue("core", mpuNVICHandlerLock, True, 2)
+    else:
+        Database.setSymbolValue("core", mpuNVICVector, False, 2)
+        Database.setSymbolValue("core", mpuNVICHandlerLock, False, 2)
 
 ################################################################################
 #### Component ####
@@ -198,6 +210,15 @@ for i in range(0,16):
     if i<len(mpuSettings):
         coreMPURegName.setDefaultValue(mpuSetUpLogicList[i])
 
+# Setup Peripheral Interrupt in Interrupt manager
+mpuPeripId = Interrupt.getInterruptIndex("MemoryManagement")
+mpuNVICVector = "NVIC_" + str(mpuPeripId) + "_ENABLE"
+mpuNVICHandlerLock = "NVIC_" + str(mpuPeripId) + "_HANDLER_LOCK"
+
+# NVIC Dynamic settings
+MPU_NVICControl = coreComponent.createBooleanSymbol("NVIC_MPU_ENABLE", coreUseMPU)
+MPU_NVICControl.setDependencies(mpuNVICControl, ["CoreUseMPU"])
+MPU_NVICControl.setVisible(False)
 
 ############################################################################
 #### Code Generation ####

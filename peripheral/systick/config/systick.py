@@ -5,7 +5,8 @@ global  systickHeaderFile
 global  systickSourceFile
 global  systickSystemDefFile
 global  systickSystemInitFile
-   
+global  systickNVICVector
+global  systickNVICHandlerLock
 
 Log.writeInfoMessage("Loading SYSTICK for " + Variables.get("__PROCESSOR"))
 
@@ -13,15 +14,15 @@ systickMax = 0x00ffffff
 
 
 def systickUse(systickEnable, osal):
-	if osal["value"] == 0:
-		systickEnable.setVisible(True)
-	else:
-		systickEnable.setVisible(False)
-		systickHeaderFile.setEnabled(False)
-		systickSourceFile.setEnabled(False)
-		systickSystemDefFile.setEnabled(False)
-		systickSystemInitFile.setEnabled(False)
-	
+    if osal["value"] == 0:
+        systickEnable.setVisible(True)
+    else:
+        systickEnable.setVisible(False)
+        systickHeaderFile.setEnabled(False)
+        systickSourceFile.setEnabled(False)
+        systickSystemDefFile.setEnabled(False)
+        systickSystemInitFile.setEnabled(False)
+
 sysTickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU", cortexMenu)
 sysTickMenu.setLabel("SysTick")
 
@@ -30,7 +31,7 @@ systickEnable.setLabel("Enable SysTick")
 systickEnable.setDependencies(systickUse, ["OSAL.OSAL_RTOS"])
 
 
-	
+
 def showMenu(menu, show):
     menu.setVisible(show["value"])
 
@@ -47,7 +48,18 @@ def sysTickEnableCfgMenu(CfgMenu, event):
         systickSourceFile.setEnabled(False)
         systickSystemDefFile.setEnabled(False)
         systickSystemInitFile.setEnabled(False)
-        
+
+def sysTickNVICControl(symbol, event):
+    Database.clearSymbolValue("core", systickNVICVector)
+    Database.clearSymbolValue("core", systickNVICHandlerLock)
+
+    if (event["value"] == True):
+        Database.setSymbolValue("core", systickNVICVector, True, 2)
+        Database.setSymbolValue("core", systickNVICHandlerLock, True, 2)
+    else:
+        Database.setSymbolValue("core", systickNVICVector, False, 2)
+        Database.setSymbolValue("core", systickNVICHandlerLock, False, 2)
+
 systickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU_0", systickEnable)
 systickMenu.setLabel("SysTick Configuration")
 systickMenu.setDependencies(showMenu, ["systickEnable"])
@@ -76,27 +88,35 @@ systickClock.addKey("HCLK", str(1) , "Processor clock (HCLK)" )
 systickClock.setDefaultValue(1)
 
 def systickCal(systickPeriod, data):
-	freq_ext = Database.getSymbolValue("core", "SYSTICK")
-	period = Database.getSymbolValue("core", "SYSTICK_PERIOD")
-	clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
-	freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
-	delay=0
+    freq_ext = Database.getSymbolValue("core", "SYSTICK")
+    period = Database.getSymbolValue("core", "SYSTICK_PERIOD")
+    clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
+    freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+    delay=0
 
-	if clock == 0:
-		if (int(freq_ext) != 0):
-			delay = (float(1) / int(freq_ext)) * (int(period) * 1000)
-	else:
-		if (int(freq_proc) !=0):
-			delay = (float(1) / int(freq_proc)) * (int(period) * 1000)
+    if clock == 0:
+        if (int(freq_ext) != 0):
+            delay = (float(1) / int(freq_ext)) * (int(period) * 1000)
+    else:
+        if (int(freq_proc) !=0):
+            delay = (float(1) / int(freq_proc)) * (int(period) * 1000)
 
-	Database.setSymbolValue("core", "SYSTICK_PERIOD_US", (int(round(delay, 3)* float(1000))), 2)
-	systickPeriod.setLabel("*********SysTick will generate periodic tick every " + str(delay) +" millisecond*************")
-    
-
+    Database.setSymbolValue("core", "SYSTICK_PERIOD_US", (int(round(delay, 3)* float(1000))), 2)
+    systickPeriod.setLabel("*********SysTick will generate periodic tick every " + str(delay) +" millisecond*************")
 
 systickPeriodComment = coreComponent.createCommentSymbol("SYSTICK_PERIOD_COMMENT", systickMenu)
 systickPeriodComment.setLabel("*********Systick will generate periodic tick every 1 millisecond*************")
 systickPeriodComment.setDependencies(systickCal, ["core.SYSTICK", "SYSTICK_PERIOD", "core.PROCESSORCLK_FREQ", "SYSTICK_CLOCK"])
+
+# Setup Peripheral Interrupt in Interrupt manager
+systickPeripId = Interrupt.getInterruptIndex("SysTick")
+systickNVICVector = "NVIC_" + str(systickPeripId) + "_ENABLE"
+systickNVICHandlerLock = "NVIC_" + str(systickPeripId) + "_HANDLER_LOCK"
+
+# NVIC Dynamic settings
+SYSTICK_NVICControl = coreComponent.createBooleanSymbol("NVIC_SYSTICK_ENABLE", systickMenu)
+SYSTICK_NVICControl.setDependencies(sysTickNVICControl, ["USE_SYSTICK_INTERRUPT"])
+SYSTICK_NVICControl.setVisible(False)
 
 ############################################################################
 #### Code Generation ####
