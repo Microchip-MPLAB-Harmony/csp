@@ -151,9 +151,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>/* port ${PIO_PORT} current number of callbacks */
         <#lt>uint8_t port${PIO_PORT}CurNumCb = 0;
 
-        <#lt>/* port ${PIO_PORT} maximum number of callbacks */
-        <#lt>uint8_t port${PIO_PORT}MaxNumCb = ${PORT_NUM_INT_PINS};
-
         <#lt>/* port ${PIO_PORT} callback objects */
         <#lt>PIO_PIN_CALLBACK_OBJ port${PIO_PORT}PinCbObj[${PORT_NUM_INT_PINS}];
     </#if>
@@ -315,6 +312,19 @@ void PIO_Initialize ( void )
     <#if PIO_DACC_CHER_VALUE != "0x00000000">
         <#lt>   DACC_REGS->DACC_CHER = ${PIO_DACC_CHER_VALUE};
     </#if>
+
+    /* Initialize Interrupt Pin data structures */
+    <#list 1..PIO_PIN_TOTAL as i>
+        <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
+        <#assign portChannel = "PIN_" + i + "_PIO_CHANNEL">
+        <#assign portPosition = "PIN_" + i + "_PIO_PIN">
+        <#if .vars[intConfig]?has_content>
+            <#if (.vars[intConfig] != "Disabled")>
+                <#lt>   port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb++].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
+            </#if>
+        </#if>
+    </#list>
+
 }
 
 // *****************************************************************************
@@ -517,6 +527,7 @@ void PIO_PinInterruptCallbackRegister(
     uintptr_t context
 )
 {
+    uint8_t i;
     uint8_t portIndex;
     portIndex = pin >> 5;
 
@@ -525,12 +536,14 @@ void PIO_PinInterruptCallbackRegister(
     <#if PIO_A_INTERRUPT_USED == true>
         case 0:
         {
-            if( portACurNumCb < portAMaxNumCb )
+            for(i=0; i<portACurNumCb; i++)
             {
-                portAPinCbObj[ portACurNumCb ].pin   = pin;
-                portAPinCbObj[ portACurNumCb ].callback = callback;
-                portAPinCbObj[ portACurNumCb ].context  = context;
-                portACurNumCb++;
+                if (portAPinCbObj[i].pin == pin)
+                {
+                    portAPinCbObj[i].callback = callback;
+                    portAPinCbObj[i].context  = context;
+                    break;
+                }
             }
             break;
         }
@@ -538,12 +551,14 @@ void PIO_PinInterruptCallbackRegister(
     <#if PIO_B_INTERRUPT_USED == true>
         case 1:
         {
-            if( portBCurNumCb < portBMaxNumCb )
+            for(i=0; i<portBCurNumCb; i++)
             {
-                portBPinCbObj[ portBCurNumCb ].pin   = pin;
-                portBPinCbObj[ portBCurNumCb ].callback = callback;
-                portBPinCbObj[ portBCurNumCb ].context  = context;
-                portBCurNumCb++;
+                if (portBPinCbObj[i].pin == pin)
+                {
+                    portBPinCbObj[i].callback = callback;
+                    portBPinCbObj[i].context  = context;
+                    break;
+                }
             }
             break;
         }
@@ -551,12 +566,14 @@ void PIO_PinInterruptCallbackRegister(
     <#if PIO_C_INTERRUPT_USED == true>
         case 2:
         {
-            if( portCCurNumCb < portCMaxNumCb )
+            for(i=0; i<portCCurNumCb; i++)
             {
-                portCPinCbObj[ portCCurNumCb ].pin   = pin;
-                portCPinCbObj[ portCCurNumCb ].callback = callback;
-                portCPinCbObj[ portCCurNumCb ].context  = context;
-                portCCurNumCb++;
+                if (portCPinCbObj[i].pin == pin)
+                {
+                    portCPinCbObj[i].callback = callback;
+                    portCPinCbObj[i].context  = context;
+                    break;
+                }
             }
             break;
         }
@@ -564,12 +581,14 @@ void PIO_PinInterruptCallbackRegister(
     <#if PIO_D_INTERRUPT_USED == true>
         case 3:
         {
-            if( portDCurNumCb < portDMaxNumCb )
+            for(i=0; i<portDCurNumCb; i++)
             {
-                portDPinCbObj[ portDCurNumCb ].pin   = pin;
-                portDPinCbObj[ portDCurNumCb ].callback = callback;
-                portDPinCbObj[ portDCurNumCb ].context  = context;
-                portDCurNumCb++;
+                if (portDPinCbObj[i].pin == pin)
+                {
+                    portDPinCbObj[i].callback = callback;
+                    portDPinCbObj[i].context  = context;
+                    break;
+                }
             }
             break;
         }
@@ -577,12 +596,14 @@ void PIO_PinInterruptCallbackRegister(
     <#if PIO_E_INTERRUPT_USED == true>
         case 4:
         {
-            if( portECurNumCb < portEMaxNumCb )
+            for(i=0; i<portECurNumCb; i++)
             {
-                portEPinCbObj[ portECurNumCb ].pin   = pin;
-                portEPinCbObj[ portECurNumCb ].callback = callback;
-                portEPinCbObj[ portECurNumCb ].context  = context;
-                portECurNumCb++;
+                if (portEPinCbObj[i].pin == pin)
+                {
+                    portEPinCbObj[i].callback = callback;
+                    portEPinCbObj[i].context  = context;
+                    break;
+                }
             }
             break;
         }
