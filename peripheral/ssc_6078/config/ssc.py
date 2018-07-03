@@ -113,24 +113,29 @@ def instantiateComponent(sscComponent):
     sscIndex.setDefaultValue(int(sscInstance))
 
     sscDMA = sscComponent.createBooleanSymbol("SSC_DMA_MODE", None)
+    sscDMA.setVisible(True)
     sscDMA.setLabel("DMA Mode")
     sscDMA.setDefaultValue(True)
     sscDMA.setReadOnly(True)
 
     sscInterrupt = sscComponent.createBooleanSymbol("SSC_INTERRUPT_MODE", None)
+    sscInterrupt.setVisible(True)
     sscInterrupt.setLabel("Interrupt Mode")
     sscInterrupt.setDefaultValue(True)
     sscInterrupt.setReadOnly(True)
 
-    sscClkMode = sscComponent.createKeyValueSetSymbol("SSC_USAGE_MODE", None)
-    sscClkMode.setLabel("Usage Mode")
-    sscClkMode.addKey("MASTER", "0", "Master")
-    sscClkMode.addKey("SLAVE", "1", "Slave")
-    sscClkMode.setDisplayMode("Description")
-    sscClkMode.setOutputMode("Key")
-    sscClkMode.setDefaultValue(1)
+    sscUsageMode = sscComponent.createKeyValueSetSymbol("SSC_USAGE_MODE", None)
+    sscUsageMode.setVisible(True)
+    sscUsageMode.setLabel("Usage Mode")
+    sscUsageMode.addKey("MASTER", "0", "Master")
+    sscUsageMode.addKey("SLAVE", "1", "Slave")
+    sscUsageMode.setDisplayMode("Description")
+    sscUsageMode.setOutputMode("Key")
+    sscUsageMode.setDefaultValue(1)
+    sscInterrupt.setReadOnly(True)  # for now, only slave
 
     sscAudioProtocol = sscComponent.createKeyValueSetSymbol("SSC_AUDIO_PROTOCOL", None)
+    sscAudioProtocol.setVisible(True)
     sscAudioProtocol.setLabel("Audio Protocol Mode")
     sscAudioProtocol.addKey("CUSTOM", "0", "Custom")
     sscAudioProtocol.addKey("AUDIO_I2S", "1", "I2S")
@@ -141,10 +146,12 @@ def instantiateComponent(sscComponent):
     sscAudioProtocol.setDependencies(customUpdate, ["SSC_AUDIO_PROTOCOL"])
 
     sscBaud = sscComponent.createIntegerSymbol("SSC_BAUD_RATE", None)
+    sscBaud.setVisible(False)	# depends on master true/slave false
     sscBaud.setLabel("Baud Rate")
-    sscBaud.setDefaultValue(44100)
+    sscBaud.setDefaultValue(48000)
 
     sscDataWidth = sscComponent.createIntegerSymbol("SSC_DATA_LENGTH", None)
+    sscDataWidth.setVisible(True)
     sscDataWidth.setLabel("Data Length")
     sscDataWidth.setDefaultValue(16)      
 
