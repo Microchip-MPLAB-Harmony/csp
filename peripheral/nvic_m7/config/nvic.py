@@ -14,6 +14,7 @@ global nvicPriorityLevels
 nvicPriorityLevels = 0
 global nvicPriorityGroup
 nvicPriorityGroup = []
+global vector
 
 atdfFilePath = join(Variables.get("__DFP_PACK_DIR") ,"atdf", Variables.get("__PROCESSOR") + ".atdf")
 try:
@@ -31,17 +32,35 @@ atdfContent = 0
 nvicPriorityGroup = list(range(nvicPriorityLevels))
 nvicPriorityGroup = [str(item) for item in nvicPriorityGroup]
 
-global coreVectors
-coreVectors = ["Reset", "NonMaskableInt", "HardFault", "MemoryManagement", "BusFault", "UsageFault", "SVCall", "DebugMonitor", "PendSV", "SysTick"]
+global vectorSettings
+                   #Entry          : [
+                                    #Enable value,
+                                             #Enable Lock,
+                                                      #Enable Generate,
+                                                                #Initial Priority value,
+                                                                         #Priority Lock,
+                                                                                  #Priority Generate,
+                                                                                            #Handler Lock]
+vectorSettings = {"Reset"         : [True,   True,    False,    "-3",    True,    False,    True],
+                "NonMaskableInt"  : [True,   True,    False,    "-2",    True,    False,    True],
+                "HardFault"       : [True,   True,    False,    "-1",    True,    False,    True],
+                "MemoryManagement": [True,   True,    False,    "0",     False,   True,     True],
+                "BusFault"        : [True,   False,   False,    "0",     False,   True,     True],
+                "UsageFault"      : [True,   False,   False,    "0",     False,   True,     True],
+                "SVCall"          : [False,  True,    False,    "0",     False,   True,     True],
+                "DebugMonitor"    : [True,   True,    False,    "0",     False,   True,     True],
+                "PendSV"          : [False,  True,    False,    "0",     False,   True,     True],
+                "SysTick"         : [False,  True,    False,    "0",     False,   True,     True],
+                "Peripheral"      : [False,  False,   True,     "7",     False,   True,     False]}
 
-global coreVectorsEnable
-
-nvicVectorCore = []
-nvicVectorCoreFixed = []
-nvicVectorEnable = []
 nvicVectorNumber = []
 nvicVectorName = []
+nvicVectorEnable = []
+nvicVectorEnableLock = []
+nvicVectorEnableGenerate = []
 nvicVectorPriority = []
+nvicVectorPriorityLock = []
+nvicVectorPriorityGenerate = []
 nvicVectorHandler = []
 nvicVectorHandlerLock = []
 
@@ -70,49 +89,36 @@ def getInterruptDescription(index):
                 else:
                     return interrupts[interrupt].getAttribute("caption")
 
-def coreVectorsEnable(nvicSym, event):
-    global coreVectors
-    for vector in coreVectors:
-        if (event["value"] == str(vector)): 
-            if (event["value"] != "SVCall" or event["value"] != "PendSV" or event["value"] != "SysTick"):
-                nvicSym.setReadOnly(True)
-                nvicSym.clearValue()
-                nvicSym.setValue(True, 2)
+def configureVectorSettings(nvicSym, event):
+    global vectorSettings
+    global vector
+    settingsIndex = 0
 
-def coreVectorsFixed(nvicSym, event):
-    global coreVectors
-    for vectorIndex in range(0,3):
-        if (event["value"] == str(coreVectors[vectorIndex])):
-            nvicSym.clearValue()
-            nvicSym.setValue(True, 2)
+    symId = nvicSym.getID()
+    symId = ''.join([i for i in symId if not i.isdigit()])
+    # Following operation is needed for negative vectors
+    symId = symId.replace("-", "")
 
-def coreVectorsPriority(nvicSym, event):
-    global coreVectors
+    nvicSym.clearValue()
 
-    for vectorIndex in range(0,3):
-        if (event["value"] == str(coreVectors[vectorIndex])):
+    if symId == "NVIC__ENABLE":
+        settingsIndex = 0
+        if (event["value"] == "None"):
             nvicSym.setVisible(False)
+    elif symId == "NVIC__ENABLE_LOCK":
+        settingsIndex = 1
+    elif symId == "NVIC__ENABLE_GENERATE":
+        settingsIndex = 2
+    elif symId == "NVIC__PRIORITY":
+        settingsIndex = 3
+    elif symId == "NVIC__PRIORITY_LOCK":
+        settingsIndex = 4
+    elif symId == "NVIC__PRIORITY_GENERATE":
+        settingsIndex = 5
+    elif symId == "NVIC__HANDLER_LOCK":
+        settingsIndex = 6
 
-    for vectorIndex in range(3,10):
-        if (event["value"] == str(coreVectors[vectorIndex])):
-            if (event["value"] == "PendSV" or event["value"] == "SysTick"):
-                nvicSym.clearValue()
-                nvicSym.setValue("0", 2)
-                nvicSym.setVisible(False)
-                nvicSym.setReadOnly(True)
-            else :
-                nvicSym.clearValue()
-                nvicSym.setValue("0", 2)
-
-def checkVectorAvailability(nvicSym, event):
-    global coreVectorsEnable
-
-    if (event["value"] == "None"):
-        nvicSym.setVisible(False)
-    else :
-        nvicSym.setVisible(True)
-
-    coreVectorsEnable(nvicSym, event)
+    nvicSym.setValue(vectorSettings[vector][settingsIndex], 2)
 
 ################################################################################
 #### Component ####
@@ -144,42 +150,63 @@ for nvicNumber in range(lowestID, highestID+1):
     nvicVectorName[index]= coreComponent.createStringSymbol("NVIC_" + str(nvicNumber) + "_VECTOR", nvicMenu)
     nvicVectorName[index].setLabel("Vector Name")
     nvicVectorName[index].setVisible(False)
+    vector = str(getInterruptName(nvicNumber))
     # Default value is set later to trigger business logic for the first time
-
-    nvicVectorCoreFixed.append(index)
-    nvicVectorCoreFixed[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_CORE_FIXED", nvicMenu)
-    nvicVectorCoreFixed[index].setDependencies(coreVectorsFixed, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
-    nvicVectorCoreFixed[index].setDefaultValue(False)
-    nvicVectorCoreFixed[index].setVisible(False)
-
-    nvicVectorCore.append(index)
-    nvicVectorCore[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_CORE", nvicMenu)
-    nvicVectorCore[index].setDependencies(coreVectorsEnable, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
-    nvicVectorCore[index].setDefaultValue(False)
-    nvicVectorCore[index].setVisible(False)
 
     nvicVectorEnable.append(index)
     nvicVectorEnable[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_ENABLE", nvicMenu)
     nvicVectorEnable[index].setLabel("Enable " + str(getInterruptDescription(nvicNumber)) + " Interrupt")
-    nvicVectorEnable[index].setDependencies(checkVectorAvailability, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
+    nvicVectorEnable[index].setDependencies(configureVectorSettings, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
     nvicVectorEnable[index].setDefaultValue(False)
+
+    nvicVectorEnableLock.append(index)
+    nvicVectorEnableLock[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_ENABLE_LOCK", nvicVectorEnable[index])
+    nvicVectorEnableLock[index].setLabel("Enable Lock")
+    nvicVectorEnableLock[index].setDependencies(configureVectorSettings, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
+    nvicVectorEnableLock[index].setDefaultValue(False)
+    nvicVectorEnableLock[index].setVisible(False)
+
+    nvicVectorEnableGenerate.append(index)
+    nvicVectorEnableGenerate[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_ENABLE_GENERATE", nvicVectorEnable[index])
+    nvicVectorEnableGenerate[index].setLabel("Enable Generate")
+    nvicVectorEnableGenerate[index].setDependencies(configureVectorSettings, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
+    nvicVectorEnableGenerate[index].setDefaultValue(False)
+    nvicVectorEnableGenerate[index].setVisible(False)
 
     nvicVectorPriority.append(index)
     nvicVectorPriority[index] = coreComponent.createComboSymbol("NVIC_" + str(nvicNumber) + "_PRIORITY", nvicVectorEnable[index], nvicPriorityGroup)
     nvicVectorPriority[index].setLabel("Priority")
-    nvicVectorPriority[index].setDependencies(coreVectorsPriority, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
-    nvicVectorPriority[index].setDefaultValue("7")
+    nvicVectorPriority[index].setDependencies(configureVectorSettings, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
+    nvicVectorPriority[index].setDefaultValue("0")
+
+    nvicVectorPriorityLock.append(index)
+    nvicVectorPriorityLock[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_PRIORITY_LOCK", nvicVectorEnable[index])
+    nvicVectorPriorityLock[index].setLabel("Priority Lock")
+    nvicVectorPriorityLock[index].setDependencies(configureVectorSettings, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
+    nvicVectorPriorityLock[index].setDefaultValue(False)
+    nvicVectorPriorityLock[index].setVisible(False)
+
+    nvicVectorPriorityGenerate.append(index)
+    nvicVectorPriorityGenerate[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_PRIORITY_GENERATE", nvicVectorEnable[index])
+    nvicVectorPriorityGenerate[index].setLabel("Priority Generate")
+    nvicVectorPriorityGenerate[index].setDependencies(configureVectorSettings, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
+    nvicVectorPriorityGenerate[index].setDefaultValue(False)
+    nvicVectorPriorityGenerate[index].setVisible(False)
 
     nvicVectorHandler.append(index)
     nvicVectorHandler[index] = coreComponent.createStringSymbol("NVIC_" + str(nvicNumber) + "_HANDLER", nvicVectorEnable[index])
     nvicVectorHandler[index].setLabel("Handler")
-    nvicVectorHandler[index].setDefaultValue(str(getInterruptName(nvicNumber)) + "_Handler")
+    nvicVectorHandler[index].setDefaultValue(vector + "_Handler")
 
     nvicVectorHandlerLock.append(index)
     nvicVectorHandlerLock[index] = coreComponent.createBooleanSymbol("NVIC_" + str(nvicNumber) + "_HANDLER_LOCK", nvicVectorEnable[index])
     nvicVectorHandlerLock[index].setLabel("Handler Lock")
-    nvicVectorHandlerLock[index].setVisible(False)
+    nvicVectorHandlerLock[index].setDependencies(configureVectorSettings, ["NVIC_" + str(nvicNumber) + "_VECTOR"])
     nvicVectorHandlerLock[index].setDefaultValue(False)
+    nvicVectorHandlerLock[index].setVisible(False)
+
+    if vector not in vectorSettings:
+        vector = "Peripheral"
 
     nvicVectorName[index].setDefaultValue(str(getInterruptName(nvicNumber)))
 
