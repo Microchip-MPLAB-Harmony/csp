@@ -53,6 +53,7 @@ typedef struct
     uint8_t                inUse;
     XDMAC_CHANNEL_CALLBACK callback;
     uintptr_t              context;
+    uint8_t                busyStatus;
 
 } XDMAC_CH_OBJECT ;
 
@@ -87,6 +88,7 @@ void XDMAC_InterruptHandler( void )
                 {
                     xdmacChObj->callback(XDMAC_TRANSFER_ERROR, xdmacChObj->context);
                 }
+                xdmacChObj->busyStatus = false;
             }
             else if (chanIntStatus & XDMAC_CIS_BIS_Msk)
             {
@@ -95,6 +97,7 @@ void XDMAC_InterruptHandler( void )
                 {
                     xdmacChObj->callback(XDMAC_TRANSFER_COMPLETE, xdmacChObj->context);
                 }
+                xdmacChObj->busyStatus = false;
             }
         }
 
@@ -114,6 +117,7 @@ void XDMAC_Initialize( void )
         xdmacChObj->inUse = 0;
         xdmacChObj->callback = NULL;
         xdmacChObj->context = 0;
+        xdmacChObj->busyStatus = false;
 
         /* Point to next channel object */
         xdmacChObj += 1;
@@ -168,6 +172,8 @@ void XDMAC_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const vo
     status = XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS;
     (void)status;
 
+    xdmacChannelObj[channel].busyStatus = true;
+
     /*Set source address */
     XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CSA= (uint32_t)srcAddr;
 
@@ -192,6 +198,8 @@ void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t firstDescr
     status = XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS;
     (void)status;
 
+    xdmacChannelObj[channel].busyStatus = true;
+
     /* First descriptor control set */
     XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDC= (uint32_t)(firstDescriptorControl->descriptorControl);
 
@@ -210,14 +218,7 @@ void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t firstDescr
 
 bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel)
 {
-    bool status = false;
-
-    if( (XDMAC_CC_WRIP_Msk == (XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC& XDMAC_CC_WRIP_Msk)) || (XDMAC_CC_RDIP_Msk == (XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CC& XDMAC_CC_RDIP_Msk)) )
-    {
-        status = true;
-    }
-
-    return status;
+    return (bool)xdmacChannelObj[channel].busyStatus;
 }
 
 void XDMAC_ChannelDisable (XDMAC_CHANNEL channel)
