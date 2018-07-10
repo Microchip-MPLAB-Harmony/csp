@@ -313,14 +313,16 @@ void PIO_Initialize ( void )
         <#lt>   DACC_REGS->DACC_CHER = ${PIO_DACC_CHER_VALUE};
     </#if>
 
-    /* Initialize Interrupt Pin data structures */
+   /* Initialize Interrupt Pin data structures */
     <#list 1..PIO_PIN_TOTAL as i>
         <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
         <#assign portChannel = "PIN_" + i + "_PIO_CHANNEL">
         <#assign portPosition = "PIN_" + i + "_PIO_PIN">
         <#if .vars[intConfig]?has_content>
             <#if (.vars[intConfig] != "Disabled")>
-                <#lt>   port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb++].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
+                <#lt>   port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
+                <#lt>   port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb].callback = NULL;
+                <#lt>   port${.vars[portChannel]}CurNumCb++;
             </#if>
         </#if>
     </#list>
