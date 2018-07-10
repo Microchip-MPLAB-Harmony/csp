@@ -137,9 +137,18 @@ nvicVectorMax.setLabel("Vector Min Value")
 nvicVectorMax.setDefaultValue(lowestID)
 nvicVectorMax.setVisible(False)
 
-for nvicNumber in range(lowestID, highestID+1):
-    index = nvicNumber - lowestID
+node = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
+interrupts = node.getChildren()
 
+global interrupt_index
+interrupt_index = {}
+
+for i in range(0,len(interrupts)):
+    global interrupt_index
+    interrupt_index[int(i)] = interrupts[i].getAttribute("index")
+
+for index in interrupt_index:
+    nvicNumber = int(interrupt_index.get(index))
     nvicVectorNumber.append(index)
     nvicVectorNumber[index]= coreComponent.createIntegerSymbol("NVIC_" + str(nvicNumber), nvicMenu)
     nvicVectorNumber[index].setLabel("Vector Number")
