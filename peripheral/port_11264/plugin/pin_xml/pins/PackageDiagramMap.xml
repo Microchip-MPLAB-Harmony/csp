@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<pinfile>
+	<packages>
+		<package diagram="LQFP176" id="1" name="LQFP176" />
+		<package diagram="TFBGA176" id="2" name="TFBGA176" />
+	</packages>
+</pinfile>
