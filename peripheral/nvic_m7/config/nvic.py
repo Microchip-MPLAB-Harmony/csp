@@ -1,6 +1,4 @@
 from os.path import join
-from xml.etree import ElementTree
-
 Log.writeInfoMessage("Loading Interrupt Manager for " + Variables.get("__PROCESSOR"))
 
 ################################################################################
@@ -16,18 +14,9 @@ global nvicPriorityGroup
 nvicPriorityGroup = []
 global vector
 
-atdfFilePath = join(Variables.get("__DFP_PACK_DIR") ,"atdf", Variables.get("__PROCESSOR") + ".atdf")
-try:
-    atdfFile = open(atdfFilePath, "r")
-except:
-    Log.writeInfoMessage("nvic.py peripheral NVIC: Error!!! while opening atdf file")
-atdfContent = ElementTree.fromstring(atdfFile.read())
-for parameters in atdfContent.iter("parameters"):
-    for param in atdfContent.iter("param"):
-        name = param.attrib['name']
-        if "__NVIC_PRIO_BITS" in name:
-            nvicPriorityLevels = (2 ** int(param.attrib['value']))
-atdfContent = 0
+node = ATDF.getNode("/avr-tools-device-file/devices/device/parameters/param@[name=\"__NVIC_PRIO_BITS\"]")
+priority_bits = node.getAttribute("value")
+nvicPriorityLevels = (2 ** int(priority_bits))
 
 nvicPriorityGroup = list(range(nvicPriorityLevels))
 nvicPriorityGroup = [str(item) for item in nvicPriorityGroup]
