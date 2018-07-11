@@ -44,54 +44,31 @@ def smcByteAccessSelModeVisible(symbol, event):
     else :
         smcSym_MODE_BAT[smcChipSelNum].setVisible(False)
 
-# Get SMC Register
-smcRegModule = Register.getRegisterModule("SMC")
+# Get SMC ID
+smcRegModule    = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SMC\"]")
+smcRegModuleID  = smcRegModule.getAttribute("id")
 
 #------------------------------------------------------------------------------
-#               SMC Register | Bitfield | Mask | Value Group
+#          ATDF Read to get SMC Register | Bitfield | Mask | Value Group
 #------------------------------------------------------------------------------
-
-# SMC Chip Select Register Group
-smcRegGroup = smcRegModule.getRegisterGroup("SMC_CS_NUMBER")
-
 # SMC_SETUP Register Bitfield Names and Mask
-smcReg_SETUP = smcRegGroup.getRegister("SMC_SETUP")
-smcRegBitField_SETUP_NWE_SETUP          = smcReg_SETUP.getBitfield("NWE_SETUP")
-smcRegBitField_SETUP_NWE_SETUP_MASK     = smcConvertMaskToInt("0x0000003F")
-smcRegBitField_SETUP_NCS_WR_SETUP       = smcReg_SETUP.getBitfield("NCS_WR_SETUP")
-smcRegBitField_SETUP_NCS_WR_SETUP_MASK  = smcConvertMaskToInt("0x00003F00")
-smcRegBitField_SETUP_NRD_SETUP          = smcReg_SETUP.getBitfield("NRD_SETUP")
-smcRegBitField_SETUP_NRD_SETUP_MASK     = smcConvertMaskToInt("0x003F0000")
-smcRegBitField_SETUP_NCS_RD_SETUP       = smcReg_SETUP.getBitfield("NCS_RD_SETUP")
-smcRegBitField_SETUP_NCS_RD_SETUP_MASK  = smcConvertMaskToInt("0x3F000000")
+smcRegBitField_SETUP_NWE_SETUP      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_SETUP"]/bitfield@[name="NWE_SETUP"]')
+smcRegBitField_SETUP_NCS_WR_SETUP   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_SETUP"]/bitfield@[name="NCS_WR_SETUP"]')
+smcRegBitField_SETUP_NRD_SETUP      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_SETUP"]/bitfield@[name="NRD_SETUP"]')
+smcRegBitField_SETUP_NCS_RD_SETUP   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_SETUP"]/bitfield@[name="NCS_RD_SETUP"]')
 
 # SMC_PULSE Register Bitfield Names and Mask
-smcReg_PULSE = smcRegGroup.getRegister("SMC_PULSE")
-smcRegBitField_PULSE_NWE_PULSE          = smcReg_PULSE.getBitfield("NWE_PULSE")
-smcRegBitField_PULSE_NWE_PULSE_MASK     = smcConvertMaskToInt("0x0000003F")
-smcRegBitField_PULSE_NCS_WR_PULSE       = smcReg_PULSE.getBitfield("NCS_WR_PULSE")
-smcRegBitField_PULSE_NCS_WR_PULSE_MASK  = smcConvertMaskToInt("0x00003F00")
-smcRegBitField_PULSE_NRD_PULSE          = smcReg_PULSE.getBitfield("NRD_PULSE")
-smcRegBitField_PULSE_NRD_PULSE_MASK     = smcConvertMaskToInt("0x003F0000")
-smcRegBitField_PULSE_NCS_RD_PULSE       = smcReg_PULSE.getBitfield("NCS_RD_PULSE")
-smcRegBitField_PULSE_NCS_RD_PULSE_MASK  = smcConvertMaskToInt("0x3F000000")
+smcRegBitField_PULSE_NWE_PULSE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_PULSE"]/bitfield@[name="NWE_PULSE"]')
+smcRegBitField_PULSE_NCS_WR_PULSE   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_PULSE"]/bitfield@[name="NCS_WR_PULSE"]')
+smcRegBitField_PULSE_NRD_PULSE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_PULSE"]/bitfield@[name="NRD_PULSE"]')
+smcRegBitField_PULSE_NCS_RD_PULSE   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_PULSE"]/bitfield@[name="NCS_RD_PULSE"]')
 
 # SMC_CYCLE Register Bitfield Names and Mask
-smcReg_CYCLE = smcRegGroup.getRegister("SMC_CYCLE")
-smcRegBitField_CYCLE_NWE_CYCLE      = smcReg_CYCLE.getBitfield("NWE_CYCLE")
-smcRegBitField_CYCLE_NWE_CYCLE_MASK = smcConvertMaskToInt("0x000001FF")
-smcRegBitField_CYCLE_NRD_CYCLE      = smcReg_CYCLE.getBitfield("NRD_CYCLE")
-smcRegBitField_CYCLE_NRD_CYCLE_MASK = smcConvertMaskToInt("0x01FF0000")
+smcRegBitField_CYCLE_NWE_CYCLE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_CYCLE"]/bitfield@[name="NWE_CYCLE"]')
+smcRegBitField_CYCLE_NRD_CYCLE      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_CYCLE"]/bitfield@[name="NRD_CYCLE"]')
 
 # SMC_Mode Register Bitfield Names and Mask
-smcReg_MODE = smcRegGroup.getRegister("SMC_MODE")
-smcRegBitField_MODE_EXNW_MODE       = smcReg_MODE.getBitfield("EXNW_MODE")
-smcRegBitField_MODE_BAT             = smcReg_MODE.getBitfield("BAT")
-smcRegBitField_MODE_DBW             = smcReg_MODE.getBitfield("DBW")
-smcRegBitField_MODE_PS              = smcReg_MODE.getBitfield("PS")
-smcRegBitField_MODE_TDF_CYCLES      = smcReg_MODE.getBitfield("TDF_CYCLES")
-smcRegBitField_MODE_TDF_CYCLES_MASK = smcConvertMaskToInt("0x000F0000")
-
+smcRegBitField_MODE_TDF_CYCLES      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]/register@[name="SMC_MODE"]/bitfield@[name="TDF_CYCLES"]')
 
 #------------------------------------------------------------------------------
 #                     Global SMC Array sysmbol declaration
@@ -99,7 +76,6 @@ smcRegBitField_MODE_TDF_CYCLES_MASK = smcConvertMaskToInt("0x000F0000")
 smcSym_MODE_BAT = []
 smcSym_MODE_PS = []
 smcSym_MODE_TDF_CYCLES = []
-
 
 #------------------------------------------------------------------------------
 #                               Global Variables
@@ -137,7 +113,9 @@ def instantiateComponent(smcComponent):
     print("************************** Running SMC"+ str(num) +" ****************************")
     print"--------------------------------------------------------------------"
 
-    smcChipSelCount = smcRegGroup.getRegisterCount()
+    smcRegModule    = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SMC\"]/register-group@[name=\"SMC\"]/register-group@[name=\"SMC_CS_NUMBER\"]")
+    smcChipSelCount = int (smcRegModule.getAttribute("count"))
+
     print("Total available SMC Chip Select Count is : " + str(smcChipSelCount))
 
     smcMenu = smcComponent.createMenuSymbol("SMC_MENU", None)
@@ -184,73 +162,72 @@ def instantiateComponent(smcComponent):
 
         # SMC Read Setup Timings
         smcSym_SETUP_NRD_CS = smcComponent.createIntegerSymbol("SMC_NRD_SETUP_CS" + str(smcChipSelNum), smcSym_READ_TIMING_CS)
-        smcSym_SETUP_NRD_CS.setLabel(smcRegBitField_SETUP_NRD_SETUP.getDescription())
+        smcSym_SETUP_NRD_CS.setLabel(smcRegBitField_SETUP_NRD_SETUP.getAttribute("caption"))
         smcSym_SETUP_NRD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
-        smcSym_SETUP_NRD_CS.setMax(smcRegBitField_SETUP_NRD_SETUP_MASK)
+        smcSym_SETUP_NRD_CS.setMax(smcConvertMaskToInt(smcRegBitField_SETUP_NRD_SETUP.getAttribute("mask")))
         smcSym_SETUP_NRD_CS.setDefaultValue(SMC_SETUP_DEFAULT_VALUE)
 
         smcSym_SETUP_NCS_RD_CS = smcComponent.createIntegerSymbol("SMC_NCS_RD_SETUP_CS" + str(smcChipSelNum), smcSym_READ_TIMING_CS)
-        smcSym_SETUP_NCS_RD_CS.setLabel(smcRegBitField_SETUP_NCS_RD_SETUP.getDescription())
+        smcSym_SETUP_NCS_RD_CS.setLabel(smcRegBitField_SETUP_NCS_RD_SETUP.getAttribute("caption"))
         smcSym_SETUP_NCS_RD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
-        smcSym_SETUP_NCS_RD_CS.setMax(smcRegBitField_SETUP_NCS_RD_SETUP_MASK)
+        smcSym_SETUP_NCS_RD_CS.setMax(smcConvertMaskToInt(smcRegBitField_SETUP_NCS_RD_SETUP.getAttribute("mask")))
         smcSym_SETUP_NCS_RD_CS.setDefaultValue(SMC_SETUP_DEFAULT_VALUE)
 
         # SMC Read Pulse Timings
         smcSym_PULSE_NRD_CS = smcComponent.createIntegerSymbol("SMC_NRD_PULSE_CS" + str(smcChipSelNum), smcSym_READ_TIMING_CS)
-        smcSym_PULSE_NRD_CS.setLabel(smcRegBitField_PULSE_NRD_PULSE.getDescription())
+        smcSym_PULSE_NRD_CS.setLabel(smcRegBitField_PULSE_NRD_PULSE.getAttribute("caption"))
         smcSym_PULSE_NRD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
-        smcSym_PULSE_NRD_CS.setMax(smcRegBitField_PULSE_NRD_PULSE_MASK)
+        smcSym_PULSE_NRD_CS.setMax(smcConvertMaskToInt(smcRegBitField_PULSE_NRD_PULSE.getAttribute("mask")))
         smcSym_PULSE_NRD_CS.setDefaultValue(SMC_PULSE_DEFAULT_VALUE)
 
         smcSym_PULSE_NCS_RD_CS = smcComponent.createIntegerSymbol("SMC_NCS_RD_PULSE_CS" + str(smcChipSelNum),smcSym_READ_TIMING_CS)
-        smcSym_PULSE_NCS_RD_CS.setLabel(smcRegBitField_PULSE_NCS_RD_PULSE.getDescription())
+        smcSym_PULSE_NCS_RD_CS.setLabel(smcRegBitField_PULSE_NCS_RD_PULSE.getAttribute("caption"))
         smcSym_PULSE_NCS_RD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
-        smcSym_PULSE_NCS_RD_CS.setMax(smcRegBitField_PULSE_NCS_RD_PULSE_MASK)
+        smcSym_PULSE_NCS_RD_CS.setMax(smcConvertMaskToInt(smcRegBitField_PULSE_NCS_RD_PULSE.getAttribute("mask")))
         smcSym_PULSE_NCS_RD_CS.setDefaultValue(SMC_PULSE_DEFAULT_VALUE)
 
         # SMC Read Cycle Timings
         smcSym_SMC_CYCLE_TIMING_NRD_CS = smcComponent.createIntegerSymbol("SMC_NRD_CYCLE_CS" + str(smcChipSelNum), smcSym_READ_TIMING_CS)
-        smcSym_SMC_CYCLE_TIMING_NRD_CS.setLabel(smcRegBitField_CYCLE_NRD_CYCLE.getDescription())
+        smcSym_SMC_CYCLE_TIMING_NRD_CS.setLabel(smcRegBitField_CYCLE_NRD_CYCLE.getAttribute("caption"))
         smcSym_SMC_CYCLE_TIMING_NRD_CS.setMin(SMC_CYCLE_DEFAULT_VALUE)
-        smcSym_SMC_CYCLE_TIMING_NRD_CS.setMax(smcRegBitField_CYCLE_NRD_CYCLE_MASK)
+        smcSym_SMC_CYCLE_TIMING_NRD_CS.setMax(smcConvertMaskToInt(smcRegBitField_CYCLE_NRD_CYCLE.getAttribute("mask")))
         smcSym_SMC_CYCLE_TIMING_NRD_CS.setDefaultValue(SMC_CYCLE_DEFAULT_VALUE)
 
         # SMC Write Setup, Pulse and Cycle Timings
         smcSym_WRITE_TIMING_CS = smcComponent.createMenuSymbol("SMC_PULSE_TIMING_CS" + str(smcChipSelNum), smcSym_CS)
         smcSym_WRITE_TIMING_CS.setLabel("Write Cycle Timings")
 
-
         # SMC Write Setup Timings
         smcSym_SETUP_NWE_CS = smcComponent.createIntegerSymbol("SMC_NWE_SETUP_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
-        smcSym_SETUP_NWE_CS.setLabel(smcRegBitField_SETUP_NWE_SETUP.getDescription())
+        smcSym_SETUP_NWE_CS.setLabel(smcRegBitField_SETUP_NWE_SETUP.getAttribute("caption"))
         smcSym_SETUP_NWE_CS.setMin(SMC_DEFAULT_MIN_VALUE)
-        smcSym_SETUP_NWE_CS.setMax(smcRegBitField_SETUP_NWE_SETUP_MASK)
+        smcSym_SETUP_NWE_CS.setMax(smcConvertMaskToInt(smcRegBitField_SETUP_NWE_SETUP.getAttribute("mask")))
         smcSym_SETUP_NWE_CS.setDefaultValue(SMC_SETUP_DEFAULT_VALUE)
 
         smcSym_SETUP_NCS_WR_CS = smcComponent.createIntegerSymbol("SMC_NCS_WR_SETUP_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
-        smcSym_SETUP_NCS_WR_CS.setLabel(smcRegBitField_SETUP_NCS_WR_SETUP.getDescription())
+        smcSym_SETUP_NCS_WR_CS.setLabel(smcRegBitField_SETUP_NCS_WR_SETUP.getAttribute("caption"))
         smcSym_SETUP_NCS_WR_CS.setMin(SMC_DEFAULT_MIN_VALUE)
-        smcSym_SETUP_NCS_WR_CS.setMax(smcRegBitField_SETUP_NCS_WR_SETUP_MASK)
+        smcSym_SETUP_NCS_WR_CS.setMax(smcConvertMaskToInt(smcRegBitField_SETUP_NCS_WR_SETUP.getAttribute("mask")))
         smcSym_SETUP_NCS_WR_CS.setDefaultValue(SMC_SETUP_DEFAULT_VALUE)
 
         # SMC Write Pulse Timings
         smcSym_PULSE_NWE_CS = smcComponent.createIntegerSymbol("SMC_NWE_PULSE_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
-        smcSym_PULSE_NWE_CS.setLabel(smcRegBitField_PULSE_NWE_PULSE.getDescription())
+        smcSym_PULSE_NWE_CS.setLabel(smcRegBitField_PULSE_NWE_PULSE.getAttribute("caption"))
         smcSym_PULSE_NWE_CS.setMin(SMC_DEFAULT_MIN_VALUE)
-        smcSym_PULSE_NWE_CS.setMax(smcRegBitField_PULSE_NWE_PULSE_MASK)
+        smcSym_PULSE_NWE_CS.setMax(smcConvertMaskToInt(smcRegBitField_PULSE_NWE_PULSE.getAttribute("mask")))
         smcSym_PULSE_NWE_CS.setDefaultValue(SMC_PULSE_DEFAULT_VALUE)
 
         smcSym_PULSE_NCS_WR_CS = smcComponent.createIntegerSymbol("SMC_NCS_WR_PULSE_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
-        smcSym_PULSE_NCS_WR_CS.setLabel(smcRegBitField_PULSE_NCS_WR_PULSE.getDescription())
+        smcSym_PULSE_NCS_WR_CS.setLabel(smcRegBitField_PULSE_NCS_WR_PULSE.getAttribute("caption"))
         smcSym_PULSE_NCS_WR_CS.setMin(SMC_DEFAULT_MIN_VALUE)
-        smcSym_PULSE_NCS_WR_CS.setMax(smcRegBitField_PULSE_NCS_WR_PULSE_MASK)
+        smcSym_PULSE_NCS_WR_CS.setMax(smcConvertMaskToInt(smcRegBitField_PULSE_NCS_WR_PULSE.getAttribute("mask")))
         smcSym_PULSE_NCS_WR_CS.setDefaultValue(SMC_PULSE_DEFAULT_VALUE)
 
         # SMC Write Cycle Timings
         smcSym_CYCLE_TIMING_NWE_CS = smcComponent.createIntegerSymbol("SMC_NWE_CYCLE_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
-        smcSym_CYCLE_TIMING_NWE_CS.setLabel(smcRegBitField_CYCLE_NWE_CYCLE.getDescription())
+        smcSym_CYCLE_TIMING_NWE_CS.setLabel(smcRegBitField_CYCLE_NWE_CYCLE.getAttribute("caption"))
         smcSym_CYCLE_TIMING_NWE_CS.setMin(SMC_CYCLE_DEFAULT_VALUE)
-        smcSym_CYCLE_TIMING_NWE_CS.setMax(smcRegBitField_CYCLE_NWE_CYCLE_MASK)
+        smcSym_CYCLE_TIMING_NWE_CS.setMax(smcConvertMaskToInt(smcRegBitField_CYCLE_NWE_CYCLE.getAttribute("mask")))
         smcSym_CYCLE_TIMING_NWE_CS.setDefaultValue(SMC_CYCLE_DEFAULT_VALUE)
 
         # SMC Mode Settings
@@ -302,7 +279,7 @@ def instantiateComponent(smcComponent):
         smcSym_MODE_TDF_CYCLES[smcChipSelNum].setLabel("Data Float Time (no of cycles)")
         smcSym_MODE_TDF_CYCLES[smcChipSelNum].setVisible(False)
         smcSym_MODE_TDF_CYCLES[smcChipSelNum].setMin(SMC_DEFAULT_MIN_VALUE)
-        smcSym_MODE_TDF_CYCLES[smcChipSelNum].setMax(smcRegBitField_MODE_TDF_CYCLES_MASK)
+        smcSym_MODE_TDF_CYCLES[smcChipSelNum].setMax(smcConvertMaskToInt(smcRegBitField_MODE_TDF_CYCLES.getAttribute("mask")))
         smcSym_MODE_TDF_CYCLES[smcChipSelNum].setDefaultValue(SMC_MODE_TDF_CYCLES_DEFAULT_VALUE)
         smcSym_MODE_TDF_CYCLES[smcChipSelNum].setDependencies(smcTdfCyclesModeVisible, ["SMC_TDF_OPTIMIZATION_CS" + str(smcChipSelNum)])
 
@@ -341,7 +318,7 @@ def instantiateComponent(smcComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     smcHeader1File = smcComponent.createFileSymbol("PLIB_SMC_H", None)
-    smcHeader1File.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/plib_smc.h.ftl")
+    smcHeader1File.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/plib_smc.h.ftl")
     smcHeader1File.setOutputName("plib_smc" + str(num) + ".h")
     smcHeader1File.setDestPath("/peripheral/smc/")
     smcHeader1File.setProjectPath("config/" + configName + "/peripheral/smc/")
@@ -349,7 +326,7 @@ def instantiateComponent(smcComponent):
     smcHeader1File.setMarkup(True)
 
     smcSource1File = smcComponent.createFileSymbol("PLIB_SMC_C", None)
-    smcSource1File.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/plib_smc.c.ftl")
+    smcSource1File.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/plib_smc.c.ftl")
     smcSource1File.setOutputName("plib_smc" + str(num) + ".c")
     smcSource1File.setDestPath("/peripheral/smc/")
     smcSource1File.setProjectPath("config/" + configName + "/peripheral/smc/")
@@ -360,11 +337,11 @@ def instantiateComponent(smcComponent):
     smcHeader1FileEntry = smcComponent.createFileSymbol("PLIB_SMC_DEFINITIONS_H", None)
     smcHeader1FileEntry.setType("STRING")
     smcHeader1FileEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    smcHeader1FileEntry.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/system/system_definitions.h.ftl")
+    smcHeader1FileEntry.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/system/system_definitions.h.ftl")
     smcHeader1FileEntry.setMarkup(True)
 
     smcSystemInitFile = smcComponent.createFileSymbol("PLIB_SMC_INITIALIZE_H", None)
     smcSystemInitFile.setType("STRING")
     smcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    smcSystemInitFile.setSourcePath("../peripheral/smc_" + smcRegModule.getID() + "/templates/system/system_initialize.c.ftl")
+    smcSystemInitFile.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/system/system_initialize.c.ftl")
     smcSystemInitFile.setMarkup(True)
