@@ -10,8 +10,6 @@ global  systickNVICHandlerLock
 
 Log.writeInfoMessage("Loading SYSTICK for " + Variables.get("__PROCESSOR"))
 
-systickMax = 0x00ffffff
-
 
 def systickUse(systickEnable, osal):
     if osal["value"] == 0:
@@ -69,44 +67,57 @@ systickMenu.setDependencies(sysTickEnableCfgMenu, ["systickEnable"])
 systickInterrupt = coreComponent.createBooleanSymbol("USE_SYSTICK_INTERRUPT", systickMenu)
 systickInterrupt.setLabel("Enable Interrupt")
 
-systickDefault = int(Database.getSymbolValue("core", "PROCESSORCLK_FREQ")) / 1000
-systickPeriod = coreComponent.createHexSymbol("SYSTICK_PERIOD", systickMenu)
-systickPeriod.setLabel("SysTick Period")
-systickPeriod.setMax(systickMax)
-systickPeriod.setDefaultValue(systickDefault)
-
-systickPeriodUS = coreComponent.createIntegerSymbol("SYSTICK_PERIOD_US", systickMenu)
-systickPeriodUS.setVisible(False)
-systickPeriodUS.setDefaultValue(1000)
-
 systickClock = coreComponent.createKeyValueSetSymbol("SYSTICK_CLOCK", systickMenu)
 systickClock.setLabel("SysTick Clock")
 systickClock.setOutputMode("Value")
 systickClock.setDisplayMode("Description")
 systickClock.addKey("HCLK/2", str(0) , "SysTick External clock (HCLK/2)" )
 systickClock.addKey("HCLK", str(1) , "Processor clock (HCLK)" )
-systickClock.setDefaultValue(1)
 
-def systickCal(systickPeriod, data):
-    freq_ext = Database.getSymbolValue("core", "SYSTICK")
-    period = Database.getSymbolValue("core", "SYSTICK_PERIOD")
-    clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
-    freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
-    delay=0
 
-    if clock == 0:
-        if (int(freq_ext) != 0):
-            delay = (float(1) / int(freq_ext)) * (int(period) * 1000)
-    else:
-        if (int(freq_proc) !=0):
-            delay = (float(1) / int(freq_proc)) * (int(period) * 1000)
+def sysTickMax(systick, event):	
+	freq_ext = Database.getSymbolValue("core", "SYSTICK")
+	clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
+	freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+	if clock == 0:
+		if (int(freq_ext) != 0):
+			max = ((float(1) / int(freq_ext)) * 16777215 * 1000000)
+	else:
+		if (int(freq_proc) !=0):
+			max = ((float(1) / int(freq_proc)) * 16777215 * 1000000)
+	systick.setMax(int(max))
+	
 
-    Database.setSymbolValue("core", "SYSTICK_PERIOD_US", (int(round(delay, 3)* float(1000))), 2)
-    systickPeriod.setLabel("*********SysTick will generate periodic tick every " + str(delay) +" millisecond*************")
 
-systickPeriodComment = coreComponent.createCommentSymbol("SYSTICK_PERIOD_COMMENT", systickMenu)
-systickPeriodComment.setLabel("*********Systick will generate periodic tick every 1 millisecond*************")
-systickPeriodComment.setDependencies(systickCal, ["core.SYSTICK", "SYSTICK_PERIOD", "core.PROCESSORCLK_FREQ", "SYSTICK_CLOCK"])
+def systickCal(symbol, event):	
+	freq_ext = Database.getSymbolValue("core", "SYSTICK")
+	clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
+	period = Database.getSymbolValue("core", "SYSTICK_PERIOD_US")
+	freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+	if clock == 0:
+		if (int(freq_ext) != 0):
+			value = int((float(freq_ext) / 1000000) * period)
+	else:
+		if (int(freq_proc) !=0):
+			value = int((float(freq_proc) / 1000000) * period)
+	symbol.setValue(str(hex(value)),2)
+	
+systickPeriodUS = coreComponent.createIntegerSymbol("SYSTICK_PERIOD_US", systickMenu)
+systickPeriodUS.setLabel("Systick Period(Micro sec)")
+systickPeriodUS.setVisible(True)
+systickPeriodUS.setDefaultValue(1000)
+systickPeriodUS.setMin(0)
+systickPeriodUS.setDependencies(sysTickMax, ["core.PROCESSORCLK_FREQ", "SYSTICK_CLOCK"])
+systickClock.setValue(1, 2)
+
+systickDefault = int(Database.getSymbolValue("core", "PROCESSORCLK_FREQ")) / 1000
+systickPeriod = coreComponent.createStringSymbol("SYSTICK_PERIOD", systickMenu)
+systickPeriod.setLabel("SysTick Period")
+systickPeriod.setVisible(False)
+systickPeriod.setDefaultValue(str(hex(systickDefault)))
+systickPeriod.setDependencies(systickCal, ["SYSTICK_PERIOD_US", "SYSTICK_CLOCK"])
+
+
 
 # Setup Peripheral Interrupt in Interrupt manager
 systickPeripId = Interrupt.getInterruptIndex("SysTick")

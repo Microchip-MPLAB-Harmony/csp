@@ -49,7 +49,7 @@ void SYSTICK_TimerInitialize ( void )
 {
 	SysTick->CTRL = 0;
 	SysTick->VAL = 0;
-	SysTick->LOAD = 0x${SYSTICK_PERIOD} - 1;
+	SysTick->LOAD = ${SYSTICK_PERIOD} - 1;
 	<#if USE_SYSTICK_INTERRUPT == true && SYSTICK_CLOCK == "0">
 		<#lt>	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk;
 	</#if>
