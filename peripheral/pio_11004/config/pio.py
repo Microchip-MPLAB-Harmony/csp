@@ -1,5 +1,20 @@
 print("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 
+global latchValuesHigh
+latchValuesHigh = { "A" : 0x0,
+                    "B" : 0x0,
+                    "C" : 0x0,
+                    "D" : 0x0,
+                    "E" : 0x0
+}
+global latchValuesLow
+latchValuesLow = {  "A" : 0x0,
+                    "B" : 0x0,
+                    "C" : 0x0,
+                    "D" : 0x0,
+                    "E" : 0x0
+}
+
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
@@ -70,7 +85,7 @@ def setupInterrupt(portInterruptLocal, event):
 # Once the PORT Channel is enabled, option of corresponding Channel interrupt also starts showing up.
 def setupPort(usePortLocal, event):
     global usePort
-    
+
     if event["value"]!= "None":
     # This means its a pin which has GPIO feature
 
@@ -81,6 +96,25 @@ def setupPort(usePortLocal, event):
         portInterrupt[k].setVisible(True)
         #Enable Peripheral clock for respective PORT Channel in Clock Manager
         Database.setSymbolValue("core", "PMC_ID_PIO" + event["value"], True, 1)
+
+def portLatch(pin, event):
+    #some work around is done in this function because java is updating "PIN_x_LAT" symbol while initializing.
+    global latchValuesHigh
+    global latchValuesLow
+    pin_num = int(str(pin.getID()).split("_")[1])
+    if Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DIR") == "Out":
+        port = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_CHANNEL")
+        if port != "None":
+            bit_pos = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_PIN")
+            if Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_LAT") == "High":
+                latchValuesHigh[port] |= 1 << bit_pos
+                latchValuesLow[port] &= ~(1 << bit_pos)
+            elif Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_LAT") == "" :
+                latchValuesLow[port] |= 1 << bit_pos
+                latchValuesHigh[port] &= ~(1 << bit_pos)
+
+            Database.setSymbolValue("core", "PIO" + str(port) + "_SODR_VALUE", str(hex(latchValuesHigh[port])), 2)
+            Database.setSymbolValue("core", "PIO" + str(port) + "_CODR_VALUE", str(hex(latchValuesLow[port])), 2)
 
 
 ###################################################################################################
@@ -185,6 +219,8 @@ for pinNumber in range(1, packagePinCount + 1):
     pinLatch[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pin[pinNumber-1])
     pinLatch[pinNumber-1].setLabel("Initial Latch Value")
     pinLatch[pinNumber-1].setReadOnly(True)
+    pinLatch[pinNumber-1].setDefaultValue("")
+    pinLatch[pinNumber-1].setDependencies(portLatch, ["PIN_" + str(pinNumber) + "_LAT", "PIN_" + str(pinNumber) + "_DIR" ])
 
     pinOpenDrain.append(pinNumber)
     pinOpenDrain[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OD", pin[pinNumber-1])
@@ -251,6 +287,7 @@ pioSym_PIO_PUER = []
 pioSym_PIO_PPDEN = []
 pioSym_PIO_MDER = []
 pioSym_PIO_SODR = []
+pioSym_PIO_CODR = []
 
 pioSymPeripheralId = []
 global pioSymNVICVector
@@ -315,6 +352,12 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSym_PIO_SODR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SODR")
     pioSym_PIO_SODR[portNumber].setDefaultValue("0x00000000")
     pioSym_PIO_SODR[portNumber].setReadOnly(True)
+
+    pioSym_PIO_CODR.append(portNumber)
+    pioSym_PIO_CODR[portNumber] = coreComponent.createStringSymbol("PIO" + str(pioSymChannel[portNumber]) + "_CODR_VALUE", port[portNumber])
+    pioSym_PIO_CODR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_CODR")
+    pioSym_PIO_CODR[portNumber].setDefaultValue("0x00000000")
+    pioSym_PIO_CODR[portNumber].setReadOnly(True)
 
    # IER register is not needed to be configured in PIO_Initialize
    #pioSym_PIO_IER.append(portNumber)
@@ -402,7 +445,6 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSymClkEnComment[portNumber].setVisible(False)
     pioSymClkEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
     pioSymClkEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core.PMC_ID_PIO" + str(pioSymChannel[portNumber])])
-
 
 # NVIC Dynamic settings
 pioNVICControl = coreComponent.createBooleanSymbol("NVIC_PIO_ENABLE", None)
