@@ -75,74 +75,82 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     </#list>
 </#if>
 
-<#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT PIO_OD PIO_PU PIO_PD PIO_PER PIO_ABCD1
+<#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_LAT_LOW PIO_OD PIO_PU PIO_PD PIO_PER PIO_ABCD1
                        PIO_ABCD2 PIO_INT_TYPE PIO_INT_EDGE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INT_FE_LL PIO_INTERRUPT>
-    <#lt>   /************************ PIO ${PIO_PORT} Initialization ************************/
-    <#if (PIO_ABCD1 != "0x00000000") | (PIO_ABCD2 != "0x00000000")>
-        <#lt>   /* PORT${PIO_PORT} Peripheral Function Selection */
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[0]= ${PIO_ABCD1};
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[1]= ${PIO_ABCD2};
+    <#lt>    /************************ PIO ${PIO_PORT} Initialization ************************/
+    <#if (PIO_ABCD1 != "0x00000000") || (PIO_ABCD2 != "0x00000000")>
+        <#lt>    /* PORT${PIO_PORT} Peripheral Function Selection */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[0]= ${PIO_ABCD1};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[1]= ${PIO_ABCD2};
     </#if>
     <#if PIO_PER != "0xFFFFFFFF">
-        <#lt>   /* PORT${PIO_PORT} PIO Disable and Peripheral Enable*/
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = ~${PIO_PER};
+        <#lt>    /* PORT${PIO_PORT} PIO Disable and Peripheral Enable*/
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = ~${PIO_PER};
     </#if>
-    <#if PIO_LAT != "0x00000000">
-        <#lt>   /* PORT${PIO_PORT} Initial state High */
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SODR = ${PIO_LAT};
-    </#if>
+
     <#if PIO_OD != "0x00000000">
-        <#lt>   /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = ${PIO_OD};
+        <#lt>    /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = ${PIO_OD};
     </#if>
 
-    <#lt>   /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
+    <#lt>    /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
     <#if PIO_PU != "0x00000000">
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ${PIO_PU};
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = ${PIO_PU};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ${PIO_PU};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = ${PIO_PU};
     <#else>
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
     </#if>
 
-    <#lt>   /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
+    <#lt>    /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
     <#if PIO_PD != "0x00000000">
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ${PIO_PD};
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = ${PIO_PD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ${PIO_PD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = ${PIO_PD};
     <#else>
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
     </#if>
+
+    <#lt>    /* PORT${PIO_PORT} Output Write Enable */
+    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
 
     <#if PIO_DIR != "0x00000000">
-        <#lt>   /* PORT${PIO_PORT} Output Direction Enable */
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = ${PIO_DIR};
+        <#if PIO_LAT_HIGH != "0x00000000">
+            <#lt>    /* PORT${PIO_PORT} Initial state High */
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SODR = ${PIO_LAT_HIGH};
+        </#if>
+        <#if (PIO_LAT_LOW != "0x00000000") && (PIO_LAT_LOW != "0x0")>
+            <#lt>    /* PORT${PIO_PORT} Initial state Low */
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_CODR = ${PIO_LAT_LOW};
+        </#if>
+
+        <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = ${PIO_DIR};
     </#if>
-         <#lt>   /* PORT${PIO_PORT} Output Write Enable */
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
+
     <#if PIO_INTERRUPT == true>
         <#if PIO_INT_TYPE != "0x00000000">
-            <#lt>   /* PORT${PIO_PORT} Additional interrupt mode Enable */
-            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_AIMER = ${PIO_INT_TYPE};
+            <#lt>    /* PORT${PIO_PORT} Additional interrupt mode Enable */
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_AIMER = ${PIO_INT_TYPE};
         <#else>
 
-            <#lt>   /* If PIO Interrupt is selected for both edge, it doesn't need any register
-            <#lt>      configuration */
+            <#lt>    /* If PIO Interrupt is selected for both edge, it doesn't need any register
+            <#lt>       configuration */
         </#if>
         <#if PIO_INT_LEVEL != "0x00000000">
-            <#lt>   /* PORT${PIO_PORT} Level type interrupt Enable */
-            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_LSR = ${PIO_INT_LEVEL};
+            <#lt>    /* PORT${PIO_PORT} Level type interrupt Enable */
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_LSR = ${PIO_INT_LEVEL};
         </#if>
         <#if PIO_INT_RE_HL != "0x00000000">
-            <#lt>   /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
-            <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = ${PIO_INT_RE_HL};
+            <#lt>    /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = ${PIO_INT_RE_HL};
         </#if>
-        <#lt>   /* PORT${PIO_PORT} Interrupt Status Clear */
-        <#lt>   ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ISR;
+        <#lt>    /* PORT${PIO_PORT} Interrupt Status Clear */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ISR;
 
-        <#lt>   /* PORT${PIO_PORT} system level interrupt will be enabled by NVIC Manager */
-        <#lt>   /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
-        <#lt>      by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
+        <#lt>    /* PORT${PIO_PORT} system level interrupt will be enabled by NVIC Manager */
+        <#lt>    /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
+        <#lt>       by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
     </#if>
 </#macro>
 
@@ -198,14 +206,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void PIO_Initialize ( void )
 {
     <#if PIO_CCFG_SYSIO_VALUE != "0x00000000">
-        <#lt>   /* Selected System IO pins are configured as GPIO */
-        <#lt>   MATRIX_REGS->CCFG_SYSIO|= ${PIO_CCFG_SYSIO_VALUE};
+        <#lt>    /* Selected System IO pins are configured as GPIO */
+        <#lt>    MATRIX_REGS->CCFG_SYSIO|= ${PIO_CCFG_SYSIO_VALUE};
     </#if>
     <#if PIO_A_USED == true>
         <@PIO_INITIALIZE
             PIO_PORT = "A"
             PIO_DIR = "${PIOA_OER_VALUE}"
-            PIO_LAT = "${PIOA_SODR_VALUE}"
+            PIO_LAT_HIGH = "${PIOA_SODR_VALUE}"
+            PIO_LAT_LOW = "${PIOA_CODR_VALUE}"
             PIO_OD = "${PIOA_MDER_VALUE}"
             PIO_PU = "${PIOA_PUER_VALUE}"
             PIO_PD = "${PIOA_PPDEN_VALUE}"
@@ -225,7 +234,8 @@ void PIO_Initialize ( void )
         <@PIO_INITIALIZE
             PIO_PORT = "B"
             PIO_DIR = "${PIOB_OER_VALUE}"
-            PIO_LAT = "${PIOB_SODR_VALUE}"
+            PIO_LAT_HIGH = "${PIOB_SODR_VALUE}"
+            PIO_LAT_LOW = "${PIOB_CODR_VALUE}"
             PIO_OD = "${PIOB_MDER_VALUE}"
             PIO_PU = "${PIOB_PUER_VALUE}"
             PIO_PD = "${PIOB_PPDEN_VALUE}"
@@ -245,7 +255,8 @@ void PIO_Initialize ( void )
         <@PIO_INITIALIZE
             PIO_PORT = "C"
             PIO_DIR = "${PIOC_OER_VALUE}"
-            PIO_LAT = "${PIOC_SODR_VALUE}"
+            PIO_LAT_HIGH = "${PIOC_SODR_VALUE}"
+            PIO_LAT_LOW = "${PIOC_CODR_VALUE}"
             PIO_OD = "${PIOC_MDER_VALUE}"
             PIO_PU = "${PIOC_PUER_VALUE}"
             PIO_PD = "${PIOC_PPDEN_VALUE}"
@@ -265,7 +276,8 @@ void PIO_Initialize ( void )
         <@PIO_INITIALIZE
             PIO_PORT = "D"
             PIO_DIR = "${PIOD_OER_VALUE}"
-            PIO_LAT = "${PIOD_SODR_VALUE}"
+            PIO_LAT_HIGH = "${PIOD_SODR_VALUE}"
+            PIO_LAT_LOW = "${PIOD_CODR_VALUE}"
             PIO_OD = "${PIOD_MDER_VALUE}"
             PIO_PU = "${PIOD_PUER_VALUE}"
             PIO_PD = "${PIOD_PPDEN_VALUE}"
@@ -285,7 +297,8 @@ void PIO_Initialize ( void )
         <@PIO_INITIALIZE
             PIO_PORT = "E"
             PIO_DIR = "${PIOE_OER_VALUE}"
-            PIO_LAT = "${PIOE_SODR_VALUE}"
+            PIO_LAT_HIGH = "${PIOE_SODR_VALUE}"
+            PIO_LAT_LOW = "${PIOE_CODR_VALUE}"
             PIO_OD = "${PIOE_MDER_VALUE}"
             PIO_PU = "${PIOE_PUER_VALUE}"
             PIO_PD = "${PIOE_PPDEN_VALUE}"
@@ -300,32 +313,34 @@ void PIO_Initialize ( void )
             PIO_INTERRUPT = PIO_E_INTERRUPT_USED
         />
     </#if>
-    <#if (PIO_AFEC0_CHER_VALUE != "0x00000000") | (PIO_AFEC1_CHER_VALUE != "0x00000000") | (PIO_DACC_CHER_VALUE != "0x00000000")>
-        <#lt>   /* Analog pins Initialization */
+    <#if (PIO_AFEC0_CHER_VALUE != "0x00000000") || (PIO_AFEC1_CHER_VALUE != "0x00000000") || (PIO_DACC_CHER_VALUE != "0x00000000")>
+        <#lt>    /* Analog pins Initialization */
     </#if>
     <#if PIO_AFEC0_CHER_VALUE != "0x00000000">
-        <#lt>   AFEC0_REGS->AFEC_CHER = ${PIO_AFEC0_CHER_VALUE};
+        <#lt>    AFEC0_REGS->AFEC_CHER = ${PIO_AFEC0_CHER_VALUE};
     </#if>
     <#if PIO_AFEC1_CHER_VALUE != "0x00000000">
-        <#lt>   AFEC1_REGS->AFEC_CHER = ${PIO_AFEC1_CHER_VALUE};
+        <#lt>    AFEC1_REGS->AFEC_CHER = ${PIO_AFEC1_CHER_VALUE};
     </#if>
     <#if PIO_DACC_CHER_VALUE != "0x00000000">
-        <#lt>   DACC_REGS->DACC_CHER = ${PIO_DACC_CHER_VALUE};
+        <#lt>    DACC_REGS->DACC_CHER = ${PIO_DACC_CHER_VALUE};
     </#if>
 
-   /* Initialize Interrupt Pin data structures */
-    <#list 1..PIO_PIN_TOTAL as i>
-        <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
-        <#assign portChannel = "PIN_" + i + "_PIO_CHANNEL">
-        <#assign portPosition = "PIN_" + i + "_PIO_PIN">
-        <#if .vars[intConfig]?has_content>
-            <#if (.vars[intConfig] != "Disabled")>
-                <#lt>   port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
-                <#lt>   port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb].callback = NULL;
-                <#lt>   port${.vars[portChannel]}CurNumCb++;
+    <#if (PIO_A_INTERRUPT_USED == true) || (PIO_B_INTERRUPT_USED == true) || (PIO_C_INTERRUPT_USED == true) || (PIO_D_INTERRUPT_USED == true) || (PIO_E_INTERRUPT_USED == true) >
+    /* Initialize Interrupt Pin data structures */
+        <#list 1..PIO_PIN_TOTAL as i>
+            <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
+            <#assign portChannel = "PIN_" + i + "_PIO_CHANNEL">
+            <#assign portPosition = "PIN_" + i + "_PIO_PIN">
+            <#if .vars[intConfig]?has_content>
+                <#if (.vars[intConfig] != "Disabled")>
+                    <#lt>    port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
+                    <#lt>    port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb].callback = NULL;
+                    <#lt>    port${.vars[portChannel]}CurNumCb++;
+                </#if>
             </#if>
-        </#if>
-    </#list>
+        </#list>
+    </#if>
 
 }
 
