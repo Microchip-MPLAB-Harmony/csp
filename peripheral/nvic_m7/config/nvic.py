@@ -16,9 +16,9 @@ global vector
 
 node = ATDF.getNode("/avr-tools-device-file/devices/device/parameters/param@[name=\"__NVIC_PRIO_BITS\"]")
 priority_bits = node.getAttribute("value")
-nvicPriorityLevels = (2 ** int(priority_bits))
+nvicPriorityLevels = (2 ** int(priority_bits) - 1)
 
-nvicPriorityGroup = list(range(nvicPriorityLevels))
+nvicPriorityGroup = list(range(nvicPriorityLevels + 1))
 nvicPriorityGroup = [str(item) for item in nvicPriorityGroup]
 
 global vectorSettings
@@ -40,7 +40,7 @@ vectorSettings = {"Reset"         : [True,   True,    False,    "-3",    True,  
                 "DebugMonitor"    : [False,  False,   False,    "0",     False,   True,     True],
                 "PendSV"          : [True,   True,    False,    "0",     False,   True,     True],
                 "SysTick"         : [False,  True,    False,    "0",     False,   True,     True],
-                "Peripheral"      : [False,  False,   True,     "7",     False,   True,     False]}
+                "Peripheral"      : [False,  False,   True,     str(eval('nvicPriorityLevels')),     False,   True,     False]}
 
 nvicVectorNumber = []
 nvicVectorName = []
