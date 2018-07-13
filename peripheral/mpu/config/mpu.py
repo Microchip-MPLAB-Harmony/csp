@@ -7,26 +7,13 @@ global  mpuHeaderFile2
 global  mpuSourceFile
 global  mpuSystemInitFile
 global  mpuSystemDefFile
-global  mpuNVICVector
-global  mpuNVICHandlerLock
+global mpuRegions
+global mpuSettings
+global mpuSetUpLogicList
 
 ################################################################################
 #### Business Logic ####
 ################################################################################
-global mpuSettings
-# Memory Type, Data Access Permission, Instruction Access Permission, Shared Memory, Start Address, Size
-mpuSettings = {"ITCM"           : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00000000",   "4MB"   ],
-                "FLASH"         : ["MPU_ATTR_NORMAL_WT",        "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00400000",   "4MB"   ],
-                "DTCM"          : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "4MB"   ],
-                "SRAM"          : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20400000",   "8MB"   ],
-                "PERIPHERALS"   : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
-                "EBI_SMC"       : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x60000000",   "256MB" ],
-                "EBI_SDRAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x70000000",   "256MB" ],
-                "QSPI"          : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x80000000",   "256MB" ],
-                "USBHS_RAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xA0100000",   "1MB"   ],
-                "SYSTEM"        : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ]}
-
-mpuSetUpLogicList = ['ITCM', 'FLASH', 'DTCM', 'SRAM', 'PERIPHERALS', 'EBI_SMC', 'EBI_SDRAM', 'QSPI', 'USBHS_RAM', 'SYSTEM']
 
 def mpuSetUpLogic(mpuSym, event):
     global mpuSettings
@@ -68,6 +55,9 @@ def storeLength(symbol, event):
     key=symObj.getSelectedKey()
     symbol.setValue(key,2)
 
+def enableMenu(menu, event):
+	menu.setVisible(event["value"])
+	
 def mpuNVICControl(symbol, event):
     Database.clearSymbolValue("core", mpuNVICVector)
     Database.clearSymbolValue("core", mpuNVICHandlerLock)
@@ -79,15 +69,30 @@ def mpuNVICControl(symbol, event):
         Database.setSymbolValue("core", mpuNVICVector, False, 2)
         Database.setSymbolValue("core", mpuNVICHandlerLock, False, 2)
 
+def mpuSetUp(conf, event):
+	if event["value"]:
+		for i in range (0, len(mpuSetUpLogicList)):
+			Database.setSymbolValue("core", "MPU_Region_" + str(i) + "_Enable", True, 2)
+			Database.setSymbolValue("core", "MPU_Region_Name" + str(i), mpuSetUpLogicList[i], 2)			
+	else:
+		for i in range (0, len(mpuSetUpLogicList)):
+			Database.setSymbolValue("core", "MPU_Region_" + str(i) + "_Enable", False, 2)
 ################################################################################
 #### Component ####
 ################################################################################
+
+mpuRegions, mpuSettings, mpuSetUpLogicList = setMPUDefaultSettings()
+
 mpuMenu = coreComponent.createMenuSymbol("MPU_MENU", cortexMenu)
 mpuMenu.setLabel("MPU")
 
 coreUseMPU = coreComponent.createBooleanSymbol("CoreUseMPU", mpuMenu)
 coreUseMPU.setLabel("Enable MPU?")
 
+mpuConfMenu = coreComponent.createMenuSymbol("MPU_MENU_CONF", mpuMenu)
+mpuConfMenu.setLabel("MPU Configuration")
+mpuConfMenu.setDependencies(enableMenu, ["CoreUseMPU"])
+mpuConfMenu.setVisible(False)
 
 mpuFileGen = coreComponent.createBooleanSymbol("MPU_BOOL_0", coreUseMPU)
 mpuFileGen.setLabel("MPU File Generation")
@@ -95,131 +100,124 @@ mpuFileGen.setDependencies(enableFileGen, ["CoreUseMPU"])
 mpuFileGen.setVisible(False)
 
 
-coreMPUHFNMIENA  = coreComponent.createBooleanSymbol("CoreMPU_HFNMIENA", coreUseMPU)
+coreMPUHFNMIENA  = coreComponent.createBooleanSymbol("CoreMPU_HFNMIENA", mpuConfMenu)
 coreMPUHFNMIENA.setLabel("HFNMIENA")
 coreMPUHFNMIENA.setDescription("Enables MPU during HardFault, NMI, or  when FAULTMASK is set")
 coreMPUHFNMIENA.setDefaultValue(False)
 
-coreUseMPUPRIVDEFENA = coreComponent.createBooleanSymbol("CoreMPU_PRIVDEFENA", coreUseMPU)
+coreUseMPUPRIVDEFENA = coreComponent.createBooleanSymbol("CoreMPU_PRIVDEFENA", mpuConfMenu)
 coreUseMPUPRIVDEFENA.setLabel("PRIVDEFENA")
 coreUseMPUPRIVDEFENA.setDefaultValue(False)
 coreUseMPUPRIVDEFENA.setDescription("Enables privileged software access to the default memory map")
 
-for i in range(0,16):
+coreUseDefault = coreComponent.createBooleanSymbol("CoreMPU_DEFAULT", mpuConfMenu)
+coreUseDefault.setLabel("Use Recommended settings")
+coreUseDefault.setDefaultValue(False)
+coreUseDefault.setDescription("Sets up recommended settings for the different peripheral")
 
-    coreMPURegEnable = coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Enable"), coreUseMPU)
-    coreMPURegEnable.setLabel("Enable MPU Region" + str(i))
+for i in range(0,mpuRegions):
 
-    if i<len(mpuSettings):
-        coreMPURegEnable.setDefaultValue(True)
-    else:
-        coreMPURegEnable.setDefaultValue(False)
+	coreMPURegEnable = coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Enable"), mpuConfMenu)
+	coreMPURegEnable.setLabel("Enable MPU Region" + str(i))
 
+	coreMPURegMenu = coreComponent.createMenuSymbol("MPU_MENU_" + str(i), coreMPURegEnable)
+	coreMPURegMenu.setLabel("MPU Region " + str(i) + " Settings")
+	coreMPURegMenu.setDescription("Configuration for MPU Region"+ str(i))
+	coreMPURegMenu.setDependencies(enableMenu, ["MPU_Region_" + str(i) + "_Enable"])
+	coreMPURegMenu.setVisible(False)
+	
+	coreMPURegNameOptions = coreComponent.createComboSymbol(("MPU_Region_Name" + str(i) +"_Options"), coreMPURegMenu, mpuSettings.keys())
+	coreMPURegNameOptions.setLabel("Region Name Options")
+	coreMPURegNameOptions.setVisible(False)
 
-    coreMPURegMenu = coreComponent.createMenuSymbol("MPU_MENU_" + str(i), coreMPURegEnable)
-    coreMPURegMenu.setLabel("MPU Region " + str(i) + " Settings")
-    coreMPURegMenu.setDescription("Configuration for MPU Region"+ str(i))
+	
+	coreMPURegName = coreComponent.createStringSymbol(("MPU_Region_Name" + str(i)), coreMPURegMenu)
+	coreMPURegName.setLabel("Region Name")
+	# Default value is set later to trigger business logic for the first time
 
-    coreMPURegNameOptions = coreComponent.createComboSymbol(("MPU_Region_Name" + str(i) +"_Options"), coreMPURegMenu, mpuSettings.keys())
-    coreMPURegNameOptions.setLabel("Region Name Options")
-    coreMPURegNameOptions.setVisible(False)
+	coreMPURegAddress = coreComponent.createHexSymbol(("MPU_Region_" + str(i) + "_Address"), coreMPURegMenu)
+	coreMPURegAddress.setLabel("Base Address")
+	coreMPURegAddress.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
-    coreMPURegName = coreComponent.createStringSymbol(("MPU_Region_Name" + str(i)), coreMPURegMenu)
-    coreMPURegName.setLabel("Region Name")
-    # Default value is set later to trigger business logic for the first time
+	coreMPURegSize = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Size"), coreMPURegMenu)
+	coreMPURegSize.setLabel("Size")
+	coreMPURegSize.setOutputMode("Value")
+	coreMPURegSize.setDisplayMode("Description")
+	coreMPURegSize.addKey("32B", str(4) , "32 Bytes" )
+	coreMPURegSize.addKey("64B", str(5) , "64 bytes" )
+	coreMPURegSize.addKey("128B", str(6) , "128 bytes" )
+	coreMPURegSize.addKey("256B", str(7) , "256 bytes" )
+	coreMPURegSize.addKey("512B", str(8) , "512 bytes" )
+	coreMPURegSize.addKey("1KB", str(9) , "1 KB" )
+	coreMPURegSize.addKey("2KB", str(10) , "2 KB" )
+	coreMPURegSize.addKey("4KB", str(11) , "4 KB" )
+	coreMPURegSize.addKey("8KB", str(12) , "8 KB" )
+	coreMPURegSize.addKey("16KB", str(13) , "16 KB" )
+	coreMPURegSize.addKey("32KB", str(14) , "32 KB" )
+	coreMPURegSize.addKey("64KB", str(15) , "64 KB" )
+	coreMPURegSize.addKey("128KB", str(16) , "128 KB" )
+	coreMPURegSize.addKey("256KB", str(17) , "256 KB" )
+	coreMPURegSize.addKey("512KB", str(18) , "512 KB" )
+	coreMPURegSize.addKey("1MB", str(19) , "1 MB" )
+	coreMPURegSize.addKey("2MB", str(20) , "2 MB" )
+	coreMPURegSize.addKey("4MB", str(21) , "4 MB" )
+	coreMPURegSize.addKey("8MB", str(22) , "8 MB" )
+	coreMPURegSize.addKey("16MB", str(23) , "16 MB" )
+	coreMPURegSize.addKey("32MB", str(24) , "32 MB" )
+	coreMPURegSize.addKey("64MB", str(25) , "64 MB" )
+	coreMPURegSize.addKey("128MB", str(26) , "128 MB" )
+	coreMPURegSize.addKey("256MB", str(27) , "256 MB" )
+	coreMPURegSize.addKey("512MB", str(28) , "512 MB" )
+	coreMPURegSize.addKey("1GB", str(29) , "1 GB" )
+	coreMPURegSize.addKey("2GB", str(30) , "2 GB" )
+	coreMPURegSize.addKey("4GB", str(31) , "4 GB" )
+	coreMPURegSize.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
-    coreMPURegAddress = coreComponent.createHexSymbol(("MPU_Region_" + str(i) + "_Address"), coreMPURegMenu)
-    coreMPURegAddress.setLabel("Base Address")
-    coreMPURegAddress.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
-
-    coreMPURegSize = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Size"), coreMPURegMenu)
-    coreMPURegSize.setLabel("Size")
-    coreMPURegSize.setOutputMode("Value")
-    coreMPURegSize.setDisplayMode("Description")
-    coreMPURegSize.addKey("32B", str(4) , "32 Bytes" )
-    coreMPURegSize.addKey("64B", str(5) , "64 bytes" )
-    coreMPURegSize.addKey("128B", str(6) , "128 bytes" )
-    coreMPURegSize.addKey("256B", str(7) , "256 bytes" )
-    coreMPURegSize.addKey("512B", str(8) , "512 bytes" )
-    coreMPURegSize.addKey("1KB", str(9) , "1 KB" )
-    coreMPURegSize.addKey("2KB", str(10) , "2 KB" )
-    coreMPURegSize.addKey("4KB", str(11) , "4 KB" )
-    coreMPURegSize.addKey("8KB", str(12) , "8 KB" )
-    coreMPURegSize.addKey("16KB", str(13) , "16 KB" )
-    coreMPURegSize.addKey("32KB", str(14) , "32 KB" )
-    coreMPURegSize.addKey("64KB", str(15) , "64 KB" )
-    coreMPURegSize.addKey("128KB", str(16) , "128 KB" )
-    coreMPURegSize.addKey("256KB", str(17) , "256 KB" )
-    coreMPURegSize.addKey("512KB", str(18) , "512 KB" )
-    coreMPURegSize.addKey("1MB", str(19) , "1 MB" )
-    coreMPURegSize.addKey("2MB", str(20) , "2 MB" )
-    coreMPURegSize.addKey("4MB", str(21) , "4 MB" )
-    coreMPURegSize.addKey("8MB", str(22) , "8 MB" )
-    coreMPURegSize.addKey("16MB", str(23) , "16 MB" )
-    coreMPURegSize.addKey("32MB", str(24) , "32 MB" )
-    coreMPURegSize.addKey("64MB", str(25) , "64 MB" )
-    coreMPURegSize.addKey("128MB", str(26) , "128 MB" )
-    coreMPURegSize.addKey("256MB", str(27) , "256 MB" )
-    coreMPURegSize.addKey("512MB", str(28) , "512 MB" )
-    coreMPURegSize.addKey("1GB", str(29) , "1 GB" )
-    coreMPURegSize.addKey("2GB", str(30) , "2 GB" )
-    coreMPURegSize.addKey("4GB", str(31) , "4 GB" )
-    coreMPURegSize.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
-
-    coreMPURegLength = coreComponent.createStringSymbol(("MPU_Region_" + str(i)) + "_Length", coreMPURegMenu)
-    coreMPURegLength.setLabel("Region Length")
-    coreMPURegLength.setVisible(False)
-    coreMPURegLength.setDependencies(storeLength, ["MPU_Region_" + str(i) + "_Size"])
-
-
-    coreMPURegType = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Type"), coreMPURegMenu)
-    coreMPURegType.setLabel("Memory Type and Cache policy")
-    coreMPURegType.setOutputMode("Key")
-    coreMPURegType.setDisplayMode("Description")
-    coreMPURegType.addKey("MPU_ATTR_STRONGLY_ORDERED", str(0) , "Strongly-Ordered Memory" )
-    coreMPURegType.addKey("MPU_ATTR_DEVICE", str(1) , "Device Memory" )
-    coreMPURegType.addKey("MPU_ATTR_NORMAL_WT", str(2) , "Normal memory, Write-through cache" )
-    coreMPURegType.addKey("MPU_ATTR_NORMAL_WB", str(3) , "Normal memory, Write-back cache" )
-    coreMPURegType.addKey("MPU_ATTR_NORMAL_WB_WA", str(4) , "Normal memory, Write-back and write-allocate cache" )
-    coreMPURegType.addKey("MPU_ATTR_NORMAL", str(5) , "Normal memory, Non-cacheable" )
-    coreMPURegType.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
+	coreMPURegLength = coreComponent.createStringSymbol(("MPU_Region_" + str(i)) + "_Length", coreMPURegMenu)
+	coreMPURegLength.setLabel("Region Length")
+	coreMPURegLength.setVisible(False)
+	coreMPURegLength.setDependencies(storeLength, ["MPU_Region_" + str(i) + "_Size"])
 
 
-    coreMPURegAccess = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Access"), coreMPURegMenu)
-    coreMPURegAccess.setLabel("Data Access Permission")
-    coreMPURegAccess.setOutputMode("Key")
-    coreMPURegAccess.setDisplayMode("Description")
-    coreMPURegAccess.addKey("MPU_RASR_AP_NOACCESS_Val", str(0) , "User: No Access, Privileged: No Access" )
-    coreMPURegAccess.addKey("MPU_RASR_AP_NOACCESS_PRIV_READWRITE_Val", str(1) , "User: No Access, Privileged: Read/Write" )
-    coreMPURegAccess.addKey("MPU_RASR_AP_READONLY_PRIV_READWRITE_Val", str(2) , "User: Read only, Privileged: Read/Write" )
-    coreMPURegAccess.addKey("MPU_RASR_AP_READWRITE_Val", str(3) , "User: Read/Write, Privileged: Read/Write" )
-    coreMPURegAccess.addKey("MPU_RASR_AP_NOACCESS_PRIV_READONLY_Val", str(5) , "User: No Access, Privileged: Read only" )
-    coreMPURegAccess.addKey("MPU_RASR_AP_READONLY_Val", str(7) , "User: Read only, Privileged: Read only" )
-    coreMPURegAccess.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
+	coreMPURegType = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Type"), coreMPURegMenu)
+	coreMPURegType.setLabel("Memory Type and Cache policy")
+	coreMPURegType.setOutputMode("Key")
+	coreMPURegType.setDisplayMode("Description")
+	coreMPURegType.addKey("MPU_ATTR_STRONGLY_ORDERED", str(0) , "Strongly-Ordered Memory" )
+	coreMPURegType.addKey("MPU_ATTR_DEVICE", str(1) , "Device Memory" )
+	coreMPURegType.addKey("MPU_ATTR_NORMAL_WT", str(2) , "Normal memory, Write-through cache" )
+	coreMPURegType.addKey("MPU_ATTR_NORMAL_WB", str(3) , "Normal memory, Write-back cache" )
+	coreMPURegType.addKey("MPU_ATTR_NORMAL_WB_WA", str(4) , "Normal memory, Write-back and write-allocate cache" )
+	coreMPURegType.addKey("MPU_ATTR_NORMAL", str(5) , "Normal memory, Non-cacheable" )
+	coreMPURegType.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
-    coreMPURegExecute = coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Execute"), coreMPURegMenu)
-    coreMPURegExecute.setLabel("Instruction Access Permission")
-    coreMPURegExecute.setDefaultValue(False)
-    coreMPURegExecute.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
-    coreMPURegShare= coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Share" ), coreMPURegMenu)
-    coreMPURegShare.setLabel("Shareable Attribute")
-    coreMPURegShare.setDefaultValue(False)
-    coreMPURegShare.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
+	coreMPURegAccess = coreComponent.createKeyValueSetSymbol(("MPU_Region_" + str(i) + "_Access"), coreMPURegMenu)
+	coreMPURegAccess.setLabel("Data Access Permission")
+	coreMPURegAccess.setOutputMode("Key")
+	coreMPURegAccess.setDisplayMode("Description")
+	coreMPURegAccess.addKey("MPU_RASR_AP_NOACCESS_Val", str(0) , "User: No Access, Privileged: No Access" )
+	coreMPURegAccess.addKey("MPU_RASR_AP_NOACCESS_PRIV_READWRITE_Val", str(1) , "User: No Access, Privileged: Read/Write" )
+	coreMPURegAccess.addKey("MPU_RASR_AP_READONLY_PRIV_READWRITE_Val", str(2) , "User: Read only, Privileged: Read/Write" )
+	coreMPURegAccess.addKey("MPU_RASR_AP_READWRITE_Val", str(3) , "User: Read/Write, Privileged: Read/Write" )
+	coreMPURegAccess.addKey("MPU_RASR_AP_NOACCESS_PRIV_READONLY_Val", str(5) , "User: No Access, Privileged: Read only" )
+	coreMPURegAccess.addKey("MPU_RASR_AP_READONLY_Val", str(7) , "User: Read only, Privileged: Read only" )
+	coreMPURegAccess.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
-    if i<len(mpuSettings):
-        coreMPURegName.setDefaultValue(mpuSetUpLogicList[i])
+	coreMPURegExecute = coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Execute"), coreMPURegMenu)
+	coreMPURegExecute.setLabel("Instruction Access Permission")
+	coreMPURegExecute.setDefaultValue(False)
+	coreMPURegExecute.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
-# Setup Peripheral Interrupt in Interrupt manager
-mpuPeripId = Interrupt.getInterruptIndex("MemoryManagement")
-mpuNVICVector = "NVIC_" + str(mpuPeripId) + "_ENABLE"
-mpuNVICHandlerLock = "NVIC_" + str(mpuPeripId) + "_HANDLER_LOCK"
+	coreMPURegShare= coreComponent.createBooleanSymbol(("MPU_Region_" + str(i) + "_Share" ), coreMPURegMenu)
+	coreMPURegShare.setLabel("Shareable Attribute")
+	coreMPURegShare.setDefaultValue(False)
+	coreMPURegShare.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
 
-# NVIC Dynamic settings
-MPU_NVICControl = coreComponent.createBooleanSymbol("NVIC_MPU_ENABLE", coreUseMPU)
-MPU_NVICControl.setDependencies(mpuNVICControl, ["CoreUseMPU"])
-MPU_NVICControl.setVisible(False)
-
+coreUseDefaultTrigger = coreComponent.createBooleanSymbol("CoreMPU_DEFAULT_TRIGGER", mpuConfMenu)
+coreUseDefaultTrigger.setDefaultValue(False)
+coreUseDefaultTrigger.setVisible(False)
+coreUseDefaultTrigger.setDependencies(mpuSetUp, ["CoreMPU_DEFAULT"])
 ############################################################################
 #### Code Generation ####
 ############################################################################
@@ -261,4 +259,3 @@ mpuSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 mpuSystemDefFile.setSourcePath("../peripheral/mpu/templates/system/system_definitions.h.ftl")
 mpuSystemDefFile.setMarkup(True)
 mpuSystemDefFile.setEnabled(False)
-
