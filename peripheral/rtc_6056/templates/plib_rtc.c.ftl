@@ -130,19 +130,19 @@ void RTC${INDEX?string}_TimeGet( struct tm *Time )
 	<#lt>		return false;
 	<#lt>	}
 	<#lt>
-	<#lt>	RTC_REGS->RTC_IER|= RTC_IER_ALREN_Msk;
+	<#lt>	RTC_REGS->RTC_IER = RTC_IER_ALREN_Msk;
 	<#lt>
 	<#lt>	return true;
 	<#lt>}
 		
 	<#lt>void RTC${INDEX?string}_InterruptEnable(RTC_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	RTC_REGS->RTC_IER|= interrupt;
+	<#lt>	RTC_REGS->RTC_IER = interrupt;
 	<#lt>}
 
 	<#lt>void RTC${INDEX?string}_InterruptDisable(RTC_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	RTC_REGS->RTC_IER&= ~(interrupt);
+	<#lt>	RTC_REGS->RTC_IDR = interrupt;
 	<#lt>}
 
 	<#lt>void RTC${INDEX?string}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
@@ -158,8 +158,8 @@ void RTC${INDEX?string}_TimeGet( struct tm *Time )
 	<#lt>	volatile uint32_t status = RTC_REGS->RTC_SR;
 	<#lt>	RTC_REGS->RTC_SCCR|= RTC_SCCR_ALRCLR_Msk | RTC_SCCR_TIMCLR_Msk |  RTC_SCCR_CALCLR_Msk;
 	<#lt>	if(rtc.callback != NULL)
-    <#lt>        {
-    <#lt>            rtc.callback(rtc.context, status);
-    <#lt>        }
+    <#lt>   {
+    <#lt>   	rtc.callback(rtc.context, status);
+    <#lt>   }
 	<#lt>}
 </#if>	
