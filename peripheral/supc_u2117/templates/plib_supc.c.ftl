@@ -118,27 +118,27 @@ SUPC_BODVDD_CALLBACK_OBJ supc${SUPC_INDEX}CallbackObject;
 void SUPC${SUPC_INDEX}_Initialize( void )
 {
     /* Clear all flags */
-    SUPC_REGS->INTFLAG = SUPC_INTFLAG_Msk;
+    SUPC_REGS->SUPC_INTFLAG = SUPC_INTFLAG_Msk;
 
     <#if SUPC_BODVDD_ACTCFG = "Sampling Mode" || SUPC_BODVDD_STDBYCFG = "Sampling Mode">
     /* Configure Brown out detector prescaler & standby/active mode */
-    <@compress single_line=true>SUPC_REGS->BODVDD |= SUPC_BODVDD_PSEL_${SUPC_BODVDD_PSEL}
+    <@compress single_line=true>SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_PSEL_${SUPC_BODVDD_PSEL}
                                                         ${SUPC_BODVDD_RUNSTDBY?then('| SUPC_BODVDD_RUNSTDBY_Msk', '')}
                                                         ${(SUPC_BODVDD_ACTCFG?starts_with("Sampling"))?then('| SUPC_BODVDD_ACTCFG_Msk', '')}
                                                         ${(SUPC_BODVDD_STDBYCFG?starts_with("Sampling"))?then('| SUPC_BODVDD_STDBYCFG_Msk', '')};</@compress>
     <#else>
     /* Configure Brown out detector standby sleep mode */
-    SUPC_REGS->BODVDD |= SUPC_BODVDD_RESETVALUE ${SUPC_BODVDD_RUNSTDBY?then('| SUPC_BODVDD_RUNSTDBY_Msk', '')};
+    SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_RESETVALUE ${SUPC_BODVDD_RUNSTDBY?then('| SUPC_BODVDD_RUNSTDBY_Msk', '')};
     </#if>
 
     /* Configure voltage regulator standby sleep mode */
-    SUPC_REGS->VREG |= SUPC_VREG_RESETVALUE ${(SUPC_VREG_RUNSTDBY?starts_with("Normal"))?then('| SUPC_VREG_RUNSTDBY_Msk', '')};
+    SUPC_REGS->SUPC_VREG |= SUPC_VREG_RESETVALUE ${(SUPC_VREG_RUNSTDBY?starts_with("Normal"))?then('| SUPC_VREG_RUNSTDBY_Msk', '')};
 
     /* Enable BODVDD detect interrupt */
-    SUPC_REGS->INTENSET = SUPC_INTFLAG_BODVDDDET_Msk;
+    SUPC_REGS->SUPC_INTENSET = SUPC_INTFLAG_BODVDDDET_Msk;
 
     /* Configure VREF reference, level, availability */
-    <@compress single_line=true>SUPC_REGS->VREF = SUPC_VREF_SEL_${SUPC_VREF_SEL}
+    <@compress single_line=true>SUPC_REGS->SUPC_VREF = SUPC_VREF_SEL_${SUPC_VREF_SEL}
                                                      ${SUPC_VREF_VREFOE?then('| SUPC_VREF_VREFOE_Msk', '')}
                                                      ${(SUPC_VREF_RUNSTDBY?starts_with("Available"))?then('| SUPC_VREF_RUNSTDBY_Msk', '')}
                                                      ${(SUPC_VREF_ONDEMAND?starts_with("Only"))?then('| SUPC_VREF_ONDEMAND_Msk', '')};</@compress>
@@ -163,12 +163,12 @@ void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable )
     if(enable == true)
     {
         /* Enable voltage regulator */
-        SUPC_REGS->VREG |= SUPC_VREG_ENABLE_Msk;
+        SUPC_REGS->SUPC_VREG |= SUPC_VREG_ENABLE_Msk;
     }
     else
     {
         /* Disable voltage regulator */
-        SUPC_REGS->VREG &= ~SUPC_VREG_ENABLE_Msk;
+        SUPC_REGS->SUPC_VREG &= ~SUPC_VREG_ENABLE_Msk;
     }
 }
 
@@ -213,13 +213,13 @@ void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, ui
 
 void SUPC${SUPC_INDEX}_InterruptHandler( void )
 {
-    if ((SUPC_REGS->INTFLAG & SUPC_INTFLAG_BODVDDDET_Msk) == SUPC_INTFLAG_BODVDDDET_Msk)
+    if ((SUPC_REGS->SUPC_INTFLAG & SUPC_INTFLAG_BODVDDDET_Msk) == SUPC_INTFLAG_BODVDDDET_Msk)
     {
         if (supc${SUPC_INDEX}CallbackObject.callback != NULL)
         {
             supc${SUPC_INDEX}CallbackObject.callback(supc0CallbackObject.context);
         }
 
-        SUPC_REGS->INTFLAG = SUPC_INTFLAG_BODVDDDET_Msk;
+        SUPC_REGS->SUPC_INTFLAG = SUPC_INTFLAG_BODVDDDET_Msk;
     }
 }

@@ -153,7 +153,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_CallbackRegister( NVMCTRL_CALLBACK callback,
 
 void NVMCTRL${NVMCTRL_INDEX?string}_InterruptHandler(void)
 {
-    if(( NVMCTRL_REGS->INTFLAG & NVMCTRL_INTFLAG_READY_Msk ) && (NVMCTRL_REGS->INTENSET & NVMCTRL_INTENSET_READY_Msk))
+    if(( NVMCTRL_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_READY_Msk ) && (NVMCTRL_REGS->NVMCTRL_INTENSET & NVMCTRL_INTENSET_READY_Msk))
     {
         if(*nvmctrl0CallbackFunc != NULL)
         {
@@ -162,7 +162,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_InterruptHandler(void)
         }
 
         /* Clear interrupt */
-        NVMCTRL_REGS->INTENCLR = NVMCTRL_INTENCLR_READY_Msk;
+        NVMCTRL_REGS->NVMCTRL_INTENCLR = NVMCTRL_INTENCLR_READY_Msk;
     }
 }
 </#if>
@@ -185,16 +185,16 @@ void NVMCTRL${NVMCTRL_INDEX?string}_InterruptHandler(void)
 void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void)
 {
     /* Disable Manual Write */
-    <@compress single_line=true>NVMCTRL_REGS->CTRLB = NVMCTRL_CTRLB_READMODE_${NVMCTRL_CTRLB_READMODE_SELECTION}
+    <@compress single_line=true>NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_READMODE_${NVMCTRL_CTRLB_READMODE_SELECTION}
                                                          | NVMCTRL_CTRLB_SLEEPPRM_${NVMCTRL_CTRLB_POWER_REDUCTION_MODE}
                                                          ${NVMCTRL_CACHE_ENABLE?then('', '| NVMCTRL_CTRLB_CACHEDIS_Msk')};</@compress>
 
     /* Clear error flags */
-    NVMCTRL_REGS->STATUS = NVMCTRL_STATUS_RESETVALUE;
+    NVMCTRL_REGS->NVMCTRL_STATUS = NVMCTRL_STATUS_RESETVALUE;
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
     /* Clear interrupt flag */
-    NVMCTRL_REGS->INTENCLR = NVMCTRL_INTENCLR_READY_Msk;
+    NVMCTRL_REGS->NVMCTRL_INTENCLR = NVMCTRL_INTENCLR_READY_Msk;
 </#if>
 }
 
@@ -216,7 +216,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void)
 
 void NVMCTRL${NVMCTRL_INDEX?string}_CacheInvalidate(void)
 {
-    NVMCTRL_REGS->CTRLA = NVMCTRL_CTRLA_CMD_INVALL | NVMCTRL_CTRLA_CMDEX_KEY;
+    NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_INVALL | NVMCTRL_CTRLA_CMDEX_KEY;
 }
 </#if>
 
@@ -265,13 +265,13 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite (const uint32_t address,
     uint32_t * paddress = (uint32_t *)address;
 
     /* Clear error flags */
-    NVMCTRL_REGS->STATUS = 0x1C;
+    NVMCTRL_REGS->NVMCTRL_STATUS = 0x1C;
 
     /* Clear global error flag */
     status = 0;
 
     /* Erase the page buffer before buffering new data */
-    NVMCTRL_REGS->CTRLA = NVMCTRL_CTRLA_CMD_PBC_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+    NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_PBC_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 
     /* Writing 32-bit words in the given address */
     for ( i = 0; i < (NVMCTRL${NVMCTRL_INDEX?string}_PAGESIZE/4); i++)
@@ -280,10 +280,10 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite (const uint32_t address,
     }
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
-    NVMCTRL_REGS->INTENSET = NVMCTRL_INTENSET_READY_Msk;
+    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
 <#else>
     /* Check if the module is busy */
-    while((NVMCTRL_REGS->INTFLAG & NVMCTRL_INTFLAG_READY_Msk) != NVMCTRL_INTFLAG_READY_Msk)
+    while((NVMCTRL_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_READY_Msk) != NVMCTRL_INTFLAG_READY_Msk)
     {
         /* Force-wait for the buffer clear to complete */
     }
@@ -333,21 +333,21 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite (const uint32_t address,
 bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase( uint32_t address )
 {
     /* Clear error flags */
-    NVMCTRL_REGS->STATUS = 0x1C;
+    NVMCTRL_REGS->NVMCTRL_STATUS = 0x1C;
 
     /* Clear global error flag */
     status = 0;
 
      /* Set address and command */
-    NVMCTRL_REGS->ADDR = address >> 1;
+    NVMCTRL_REGS->NVMCTRL_ADDR = address >> 1;
 
-    NVMCTRL_REGS->CTRLA = NVMCTRL_CTRLA_CMD_RWWEEER | NVMCTRL_CTRLA_CMDEX_KEY;
+    NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_RWWEEER | NVMCTRL_CTRLA_CMDEX_KEY;
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
-    NVMCTRL_REGS->INTENSET = NVMCTRL_INTENSET_READY_Msk;
+    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
 <#else>
     /* Check if the module is busy */
-    while((NVMCTRL_REGS->INTFLAG & NVMCTRL_INTFLAG_READY_Msk) != NVMCTRL_INTFLAG_READY_Msk)
+    while((NVMCTRL_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_READY_Msk) != NVMCTRL_INTFLAG_READY_Msk)
     {
         /* Force-wait for the buffer clear to complete */
     }
@@ -391,13 +391,13 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite(const uint32_t address, uint32_t *
     uint32_t * paddress = (uint32_t *)address;
 
     /* Clear error flags */
-    NVMCTRL_REGS->STATUS = 0x1C;
+    NVMCTRL_REGS->NVMCTRL_STATUS = 0x1C;
 
     /* Clear global error flag */
     status = 0;
 
     /* Erase the page buffer before buffering new data */
-    NVMCTRL_REGS->CTRLA = NVMCTRL_CTRLA_CMD_PBC_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+    NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_PBC_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 
     /* writing 32-bit data into the given address */
     for (i = 0; i < (NVMCTRL${NVMCTRL_INDEX?string}_PAGESIZE/4); i++)
@@ -406,10 +406,10 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite(const uint32_t address, uint32_t *
     }
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
-    NVMCTRL_REGS->INTENSET = NVMCTRL_INTENSET_READY_Msk;
+    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
 <#else>
     /* Check if the module is busy */
-    while((NVMCTRL_REGS->INTFLAG & NVMCTRL_INTFLAG_READY_Msk) != NVMCTRL_INTFLAG_READY_Msk)
+    while((NVMCTRL_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_READY_Msk) != NVMCTRL_INTFLAG_READY_Msk)
     {
         /* Force-wait for the buffer clear to complete */
     }
@@ -448,21 +448,21 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite(const uint32_t address, uint32_t *
 bool NVMCTRL${NVMCTRL_INDEX?string}_RowErase( uint32_t address )
 {
     /* Clear error flags */
-    NVMCTRL_REGS->STATUS = 0x1C;
+    NVMCTRL_REGS->NVMCTRL_STATUS = 0x1C;
 
     /* Clear global error flag */
     status = 0;
 
     /* Set address and command */
-    NVMCTRL_REGS->ADDR = address >> 1;
+    NVMCTRL_REGS->NVMCTRL_ADDR = address >> 1;
 
-    NVMCTRL_REGS->CTRLA = NVMCTRL_CTRLA_CMD_ER_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+    NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_ER_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
-    NVMCTRL_REGS->INTENSET = NVMCTRL_INTENSET_READY_Msk;
+    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
 <#else>
     /* Check if the module is busy */
-    while((NVMCTRL_REGS->INTFLAG & NVMCTRL_INTFLAG_READY_Msk) != NVMCTRL_INTFLAG_READY_Msk)
+    while((NVMCTRL_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_READY_Msk) != NVMCTRL_INTFLAG_READY_Msk)
     {
         /* Force-wait for the buffer clear to complete */
     }
@@ -489,7 +489,7 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_RowErase( uint32_t address )
 
 NVMCTRL_ERROR NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet( void )
 {
-    return (status |= NVMCTRL_REGS->STATUS);
+    return (status |= NVMCTRL_REGS->NVMCTRL_STATUS);
 }
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
@@ -519,7 +519,7 @@ NVMCTRL_ERROR NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet( void )
 
 bool NVMCTRL${NVMCTRL_INDEX?string}_IsBusy(void)
 {
-    return (!(NVMCTRL_REGS->INTFLAG & NVMCTRL_INTFLAG_READY_Msk));
+    return (!(NVMCTRL_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_READY_Msk));
 }
 </#if>
 
@@ -549,15 +549,15 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_IsBusy(void)
 void NVMCTRL${NVMCTRL_INDEX?string}_RegionLock(uint32_t address)
 {
     /* Clear error flags */
-    NVMCTRL_REGS->STATUS = 0x1C;
+    NVMCTRL_REGS->NVMCTRL_STATUS = 0x1C;
 
     /* Clear global error flag */
     status = 0;
 
     /* Set address and command */
-    NVMCTRL_REGS->ADDR = address >> 1;
+    NVMCTRL_REGS->NVMCTRL_ADDR = address >> 1;
 
-    NVMCTRL_REGS->CTRLA = NVMCTRL_CTRLA_CMD_LR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+    NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_LR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 }
 
 // *****************************************************************************
@@ -584,14 +584,14 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionLock(uint32_t address)
 void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock(uint32_t address)
 {
     /* Clear error flags */
-    NVMCTRL_REGS->STATUS = 0x1C;
+    NVMCTRL_REGS->NVMCTRL_STATUS = 0x1C;
 
     /* Clear global error flag */
     status = 0;
 
     /* Set address and command */
-    NVMCTRL_REGS->ADDR = address >> 1;
+    NVMCTRL_REGS->NVMCTRL_ADDR = address >> 1;
 
-    NVMCTRL_REGS->CTRLA = NVMCTRL_CTRLA_CMD_UR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
+    NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_UR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 }
 </#if>

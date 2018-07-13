@@ -119,35 +119,35 @@ void FREQM${FREQM_INDEX}_Initialize (void)
 	freqm${FREQM_INDEX}Obj.refFreqValue = 4000000U;
 
 	/* FreqM Enabling on the APBA Bridge */
-   MCLK_REGS->APBAMASK |= MCLK_APBAMASK_FREQM__Msk;
+   MCLK_REGS->MCLK_APBAMASK |= MCLK_APBAMASK_FREQM__Msk;
 
    /* Enabling the GCLK for the FREQM Measure clock  */
-   GCLK_REGS->PCHCTRL[3] |= GCLK_PCHCTRL_CHEN_Msk;
+   GCLK_REGS->GCLK_PCHCTRL[3] |= GCLK_PCHCTRL_CHEN_Msk;
 
     /* Enabling the GCLK for the FREQM Reference clock  */
-   GCLK_REGS->PCHCTRL[4] |= GCLK_PCHCTRL_CHEN_Msk;
+   GCLK_REGS->GCLK_PCHCTRL[4] |= GCLK_PCHCTRL_CHEN_Msk;
 
     /* Resetting the FREQM Module */
-    FREQM_REGS->CTRLA |= FREQM_CTRLA_SWRST_Msk;
+    FREQM_REGS->FREQM_CTRLA |= FREQM_CTRLA_SWRST_Msk;
 
-    while((FREQM_REGS->SYNCBUSY & FREQM_SYNCBUSY_SWRST_Msk) == FREQM_SYNCBUSY_SWRST_Msk)
+    while((FREQM_REGS->FREQM_SYNCBUSY & FREQM_SYNCBUSY_SWRST_Msk) == FREQM_SYNCBUSY_SWRST_Msk)
 	{
 		/* Waiting for the FREQM Module to Reset */
 	}
 
     /* Selection of the No. of Reference Cycles and Division Reference */
-    FREQM_REGS->CFGA |= FREQM_CFGA_REFNUM(${REF_CLK_CYCLES}) ${REF_CLK_DIV?then('| FREQM_CFGA_DIVREF_Msk', '')};
+    FREQM_REGS->FREQM_CFGA |= FREQM_CFGA_REFNUM(${REF_CLK_CYCLES}) ${REF_CLK_DIV?then('| FREQM_CFGA_DIVREF_Msk', '')};
 
 	/* Clearing the Done Interrupt flag  */
-	FREQM_REGS->INTFLAG = FREQM_INTFLAG_DONE_Msk ;
+	FREQM_REGS->FREQM_INTFLAG = FREQM_INTFLAG_DONE_Msk ;
 
 	/* Clearing the overflow flag  */
-	FREQM_REGS->STATUS |= FREQM_STATUS_OVF_Msk;
+	FREQM_REGS->FREQM_STATUS |= FREQM_STATUS_OVF_Msk;
 
     /* Enabling FREQM */
-    FREQM_REGS->CTRLA |= FREQM_CTRLA_ENABLE_Msk;
+    FREQM_REGS->FREQM_CTRLA |= FREQM_CTRLA_ENABLE_Msk;
 
-    while((FREQM_REGS->SYNCBUSY & FREQM_SYNCBUSY_ENABLE_Msk) == FREQM_SYNCBUSY_ENABLE_Msk)
+    while((FREQM_REGS->FREQM_SYNCBUSY & FREQM_SYNCBUSY_ENABLE_Msk) == FREQM_SYNCBUSY_ENABLE_Msk)
 	{
 		/* Waiting for the FREQM to Enable */
 	}
@@ -176,20 +176,20 @@ void FREQM${FREQM_INDEX}_Initialize (void)
 
 void FREQM${FREQM_INDEX}_MeasurementStart(void)
 {
-    if((FREQM_REGS->STATUS & FREQM_STATUS_BUSY_Msk) != FREQM_STATUS_BUSY_Msk )
+    if((FREQM_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) != FREQM_STATUS_BUSY_Msk )
     {
 		/* Clearing the Done Interrupt flag  */
-		FREQM_REGS->INTFLAG = FREQM_INTFLAG_DONE_Msk ;
+		FREQM_REGS->FREQM_INTFLAG = FREQM_INTFLAG_DONE_Msk ;
 
 		/* Clearing the overflow flag  */
-		FREQM_REGS->STATUS |= FREQM_STATUS_OVF_Msk;
+		FREQM_REGS->FREQM_STATUS |= FREQM_STATUS_OVF_Msk;
 
 		/* Triggering the measurement to start */
-		FREQM_REGS->CTRLB |= FREQM_CTRLB_START_Msk;
+		FREQM_REGS->FREQM_CTRLB |= FREQM_CTRLB_START_Msk;
 
 	<#if FREQM_INTERRUPT_MODE = true >
         /* Enabling the Done Interrupt */
-        FREQM_REGS->INTENSET |= FREQM_INTENSET_DONE_Msk;
+        FREQM_REGS->FREQM_INTENSET |= FREQM_INTENSET_DONE_Msk;
 	</#if>
     }
 
@@ -227,17 +227,17 @@ uint32_t FREQM${FREQM_INDEX}_FrequencyGet()
     uint32_t measuredValue = 0;
 
 <#if FREQM_INTERRUPT_MODE = false >
-	while((FREQM_REGS->STATUS & FREQM_STATUS_BUSY_Msk) == FREQM_STATUS_BUSY_Msk)
+	while((FREQM_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) == FREQM_STATUS_BUSY_Msk)
 	{
 		/* Waiting for the measurement to complete */
 	}
 </#if>
 
     /* Read the Value Register */
-    resultCalculated = FREQM_REGS->VALUE;
+    resultCalculated = FREQM_REGS->FREQM_VALUE;
 
     /* Reading the ref number of the cycles */
-    refNum = FREQM_REGS->CFGA.REFNUM;
+    refNum = FREQM_REGS->FREQM_CFGA.REFNUM;
 
     /* Calculating the Resultant Measured Frequency Value */
     measuredValue = (resultCalculated/ refNum) * freqm${FREQM_INDEX}Obj.refFreqValue;
@@ -292,10 +292,10 @@ void FREQM${FREQM_INDEX}_CallbackRegister(FREQM_CALLBACK freqmcallback, uintptr_
 void FREQM${FREQM_INDEX}_InterruptHandler(void)
 {
     /* Check if data ready needs to be serviced */
-    if (FREQM_REGS->INTFLAG & FREQM_INTFLAG_DONE_Msk)
+    if (FREQM_REGS->FREQM_INTFLAG & FREQM_INTFLAG_DONE_Msk)
     {
         /* Disable the DONE interrupt */
-        FREQM_REGS->INTENCLR = FREQM_INTENCLR_DONE_Msk;
+        FREQM_REGS->FREQM_INTENCLR = FREQM_INTENCLR_DONE_Msk;
 
 		if( NULL != freqm${FREQM_INDEX}Obj.callback)
 		{
@@ -334,7 +334,7 @@ bool FREQM${FREQM_INDEX}_IsBusy(void)
 {
 	bool result = false;
 
-	if((FREQM_REGS->STATUS & FREQM_STATUS_BUSY_Msk) == FREQM_STATUS_BUSY_Msk)
+	if((FREQM_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) == FREQM_STATUS_BUSY_Msk)
 	{
 		result = true;
 	}
@@ -364,7 +364,7 @@ FREQM_ERROR FREQM${FREQM_INDEX}_ErrorGet(void)
 {
     FREQM_ERROR returnValue = FREQM_ERROR_NONE;
 
-	returnValue = (FREQM_ERROR) FREQM_REGS->STATUS & FREQM_STATUS_OVF_Msk;
+	returnValue = (FREQM_ERROR) FREQM_REGS->FREQM_STATUS & FREQM_STATUS_OVF_Msk;
 
     return returnValue;
 }

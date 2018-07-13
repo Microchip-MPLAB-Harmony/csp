@@ -146,7 +146,7 @@ void PAC${PAC_INDEX}_Initialize( void )
     <#if PAC_INTERRRUPT_MODE = true>
 	
     /* Enable PAC interrupt */
-    PAC_REGS->INTENSET = PAC_INTENSET_ERR_Msk;
+    PAC_REGS->PAC_INTENSET = PAC_INTENSET_ERR_Msk;
     </#if>
     
 }
@@ -170,7 +170,7 @@ bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
 {
     uint32_t    u32StatusRegVal = 0x0;
     uint32_t    u32StatusPeriID = 0x0;
-    uint32_t    *pu32StatusRegAddr = (uint32_t*) &(PAC_REGS->STATUSA);
+    uint32_t    *pu32StatusRegAddr = (uint32_t*) &(PAC_REGS->PAC_STATUSA);
     bool        bPeriStatus     = false;
     
     /* Get the Bit index for the peripheral */
@@ -209,7 +209,7 @@ void PAC${PAC_INDEX}_PeripheralProtect  (PAC_PERIPHERAL peripheral, PAC_PROTECTI
 {
      
     /* Lock the Peripheral interface */
-    PAC_REGS->WRCTRL = (PAC_WRCTRL_PERID(peripheral) | (operation << PAC_WRCTRL_KEY_Pos));
+    PAC_REGS->PAC_WRCTRL = (PAC_WRCTRL_PERID(peripheral) | (operation << PAC_WRCTRL_KEY_Pos));
     
 }
 
@@ -238,16 +238,16 @@ bool PAC${PAC_INDEX}_PeripheralErrorOccurred (void)
     bool        bPeripheralErrorStatus  = false;
     
     /* Verify if Peripheral bridge A has an error */
-    u32PeriBridgeAErrStatus = PAC_REGS->INTFLAGA;
+    u32PeriBridgeAErrStatus = PAC_REGS->PAC_INTFLAGA;
     
     /* Verify if Peripheral bridge B has an error */
-    u32PeriBridgeBErrStatus = PAC_REGS->INTFLAGB;
+    u32PeriBridgeBErrStatus = PAC_REGS->PAC_INTFLAGB;
     
     /* Verify if Peripheral bridge C has an error */
-    u32PeriBridgeCErrStatus = PAC_REGS->INTFLAGC;
+    u32PeriBridgeCErrStatus = PAC_REGS->PAC_INTFLAGC;
     
     /* Verify if Peripheral bridge D has an error */
-    u32PeriBridgeDErrStatus = PAC_REGS->INTFLAGD;
+    u32PeriBridgeDErrStatus = PAC_REGS->PAC_INTFLAGD;
     
     /* Verify if any peripheral is reporting an error */
     if ((u32PeriBridgeAErrStatus != 0x0) || (u32PeriBridgeBErrStatus != 0x0) ||
@@ -299,16 +299,16 @@ PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
     PAC_PERIPHERAL peripheral           = PAC_PERIPHERAL_ANY;
     
     /* Verify if Peripheral bridge A has an error */
-    u32PeriBridgeAErrStatus = PAC_REGS->INTFLAGA;
+    u32PeriBridgeAErrStatus = PAC_REGS->PAC_INTFLAGA;
     
     /* Verify if Peripheral bridge B has an error */
-    u32PeriBridgeBErrStatus = PAC_REGS->INTFLAGB;
+    u32PeriBridgeBErrStatus = PAC_REGS->PAC_INTFLAGB;
     
     /* Verify if Peripheral bridge C has an error */
-    u32PeriBridgeCErrStatus = PAC_REGS->INTFLAGC;
+    u32PeriBridgeCErrStatus = PAC_REGS->PAC_INTFLAGC;
     
     /* Verify if Peripheral bridge D has an error */
-    u32PeriBridgeDErrStatus = PAC_REGS->INTFLAGD;
+    u32PeriBridgeDErrStatus = PAC_REGS->PAC_INTFLAGD;
     
     /* Verify if Peripheral in Peripheral Bridge A has reported error */
     if (u32PeriBridgeAErrStatus != 0x0)
@@ -404,24 +404,24 @@ void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
 {
     uint32_t    u32PeriIdReg    = 0x0;
     uint32_t    u32StatusRegVal = 0x0;
-    uint32_t    *pu32StatusRegAddr = (uint32_t*) &(PAC_REGS->INTFLAGA);
+    uint32_t    *pu32StatusRegAddr = (uint32_t*) &(PAC_REGS->PAC_INTFLAGA);
         	
     /* Get the Bit index for the peripheral */
     u32PeriIdReg = (peripheral % 32);
         
     if (peripheral == PAC_PERIPHERAL_ANY)
     {
-        u32StatusRegVal = PAC_REGS->INTFLAGA;
-        PAC_REGS->INTFLAGA = u32StatusRegVal;
+        u32StatusRegVal = PAC_REGS->PAC_INTFLAGA;
+        PAC_REGS->PAC_INTFLAGA = u32StatusRegVal;
         
-        u32StatusRegVal = PAC_REGS->INTFLAGB;
-        PAC_REGS->INTFLAGB = u32StatusRegVal;
+        u32StatusRegVal = PAC_REGS->PAC_INTFLAGB;
+        PAC_REGS->PAC_INTFLAGB = u32StatusRegVal;
         
-        u32StatusRegVal = PAC_REGS->INTFLAGC;
-        PAC_REGS->INTFLAGC = u32StatusRegVal;
+        u32StatusRegVal = PAC_REGS->PAC_INTFLAGC;
+        PAC_REGS->PAC_INTFLAGC = u32StatusRegVal;
         
-        u32StatusRegVal = PAC_REGS->INTFLAGD;
-        PAC_REGS->INTFLAGD = u32StatusRegVal;
+        u32StatusRegVal = PAC_REGS->PAC_INTFLAGD;
+        PAC_REGS->PAC_INTFLAGD = u32StatusRegVal;
     }   
 	else
 	{
@@ -452,7 +452,7 @@ bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void)
     bool        bAHBSlaveErrorStatus = false;
     
     /* Verify if AHB Slave bus has an error */
-    u32AHBErrStatus = PAC_REGS->INTFLAGAHB;
+    u32AHBErrStatus = PAC_REGS->PAC_INTFLAGAHB;
     
     if (u32AHBErrStatus != 0x0) 
     {
@@ -498,7 +498,7 @@ PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void)
     PAC_AHB_SLAVE pacAHBSlaveBus = PAC_AHB_SLAVE_ANY;
     
     /* Read AHB Slave Bus Interrupt Flag Status register */
-    u32AHBSlaveErrStatus = PAC_REGS->INTFLAGAHB;
+    u32AHBSlaveErrStatus = PAC_REGS->PAC_INTFLAGAHB;
     
     if (u32AHBSlaveErrStatus != 0x0)
     {   
@@ -546,12 +546,12 @@ void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave)
     
 	if (ahbSlave == PAC_AHB_SLAVE_ANY)
     {
-        u32AHBSlaveErrStatus = PAC_REGS->INTFLAGAHB;
-        PAC_REGS->INTFLAGAHB = u32AHBSlaveErrStatus;
+        u32AHBSlaveErrStatus = PAC_REGS->PAC_INTFLAGAHB;
+        PAC_REGS->PAC_INTFLAGAHB = u32AHBSlaveErrStatus;
     }
 	else
 	{
-        PAC_REGS->INTFLAGAHB &= ahbSlave;
+        PAC_REGS->PAC_INTFLAGAHB &= ahbSlave;
     }
 }
 

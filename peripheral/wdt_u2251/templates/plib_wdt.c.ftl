@@ -116,20 +116,20 @@ void WDT${WDT_INDEX}_Initialize( void )
 void WDT${WDT_INDEX}_Enable( void )
 {
     /* Checking if Always On Bit is Enabled */
-    if((WDT_REGS->CTRLA & WDT_CTRLA_ALWAYSON_Msk) != WDT_CTRLA_ALWAYSON_Msk)
+    if((WDT_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != WDT_CTRLA_ALWAYSON_Msk)
     {
-            /* Enable Watchdog */
-            WDT_REGS->CTRLA |= WDT_CTRLA_ENABLE_Msk;
+        /* Enable Watchdog */
+        WDT_REGS->WDT_CTRLA |= WDT_CTRLA_ENABLE_Msk;
 
-            while((WDT_REGS->SYNCBUSY & WDT_SYNCBUSY_ENABLE_Msk) == WDT_SYNCBUSY_ENABLE_Msk)
-            {
-                /* Wait for synchronization */
-            }
+        while((WDT_REGS->WDT_SYNCBUSY & WDT_SYNCBUSY_ENABLE_Msk) == WDT_SYNCBUSY_ENABLE_Msk)
+        {
+            /* Wait for synchronization */
+        }
     }
 
 <#if WDT_EW_ENABLE = true>
     /* Enable early warning interrupt */
-    WDT_REGS->INTENSET |= WDT_INTENSET_EW_Msk;
+    WDT_REGS->WDT_INTENSET |= WDT_INTENSET_EW_Msk;
 </#if>
 }
 
@@ -150,11 +150,11 @@ void WDT${WDT_INDEX}_Enable( void )
 void WDT${WDT_INDEX}_Disable( void )
 {
     /* Disable Watchdog */
-    WDT_REGS->CTRLA = ~(WDT_CTRLA_ENABLE_Msk);
+    WDT_REGS->WDT_CTRLA &= ~(WDT_CTRLA_ENABLE_Msk);
 
 <#if WDT_EW_ENABLE = true>
     /* Disable Early Watchdog Interrupt */
-    WDT_REGS->INTENCLR = WDT_INTENCLR_EW_Msk;
+    WDT_REGS->WDT_INTENCLR = WDT_INTENCLR_EW_Msk;
 </#if>
 }
 
@@ -179,7 +179,7 @@ void WDT${WDT_INDEX}_Clear( void )
 {
     /* Clear WDT and reset the WDT timer before the
        timeout occurs */
-    WDT_REGS->CLEAR = WDT_CLEAR_CLEAR_KEY;
+    WDT_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
 }
 
 <#if WDT_EW_ENABLE = true>
@@ -233,7 +233,7 @@ void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context)
 void WDT_InterruptHandler( void )
 {
     /* Clear Early Watchdog Interrupt */
-    WDT_REGS->INTFLAG = WDT_INTFLAG_EW_Msk;
+    WDT_REGS->WDT_INTFLAG = WDT_INTFLAG_EW_Msk;
 
     if( wdt${WDT_INDEX}CallbackObj.callback != NULL )
     {

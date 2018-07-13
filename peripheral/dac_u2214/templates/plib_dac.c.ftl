@@ -89,30 +89,30 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 void DAC${DAC_INDEX}_Initialize(void)
 {
     /* Enabling the APBC Bus */
-    MCLK_REGS->APBCMASK |= MCLK_APBCMASK_DAC__Msk;
+    MCLK_REGS->MCLK_APBCMASK |= MCLK_APBCMASK_DAC__Msk;
 
     /* Enabling the Peripheral Clock */
-    GCLK_REGS->PCHCTRL[DAC_PERIPHERAL_CHANNEL_INDEX] |= GCLK_PCHCTRL_CHEN_Msk;
+    GCLK_REGS->GCLK_PCHCTRL[DAC_PERIPHERAL_CHANNEL_INDEX] |= GCLK_PCHCTRL_CHEN_Msk;
 
     /* Software Reset */
-    DAC_REGS->CTRLA |= DAC_CTRLA_SWRST_Msk;
+    DAC_REGS->DAC_CTRLA |= DAC_CTRLA_SWRST_Msk;
 
-    while((DAC_REGS->SYNCBUSY & DAC_SYNCBUSY_SWRST_Msk) == DAC_SYNCBUSY_SWRST_Msk)
+    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_SWRST_Msk) == DAC_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for Synchronization after Software Reset */
     }
 
     /* Enable DAC Output Buffer in Standby Sleep Mode */
-    DAC_REGS->CTRLA |= DAC_CTRLA_RESETVALUE ${DAC_RUNSTDBY?then(' | DAC_CTRLA_RUNSTDBY_Msk','')};
+    DAC_REGS->DAC_CTRLA |= DAC_CTRLA_RESETVALUE ${DAC_RUNSTDBY?then(' | DAC_CTRLA_RUNSTDBY_Msk','')};
 
     /* Set Reference Voltage */
-    DAC_REGS->CTRLB |= DAC_CTRLB_REFSEL(${DAC_REFERENCE_SELECTION});
+    DAC_REGS->DAC_CTRLB |= DAC_CTRLB_REFSEL(${DAC_REFERENCE_SELECTION});
 
     /* Set Voltage Pump */
-    DAC_REGS->CTRLB |= DAC_CTRLB_RESETVALUE ${DAC_VOLTAGE_PUMP_DISABLED?then(' | DAC_CTRLB_VPD_Msk','')};
+    DAC_REGS->DAC_CTRLB |= DAC_CTRLB_RESETVALUE ${DAC_VOLTAGE_PUMP_DISABLED?then(' | DAC_CTRLB_VPD_Msk','')};
 
     /* Clear all Interrupts */
-    DAC_REGS->INTFLAG |= DAC_INTFLAG_Msk;
+    DAC_REGS->DAC_INTFLAG |= DAC_INTFLAG_Msk;
 }
 
 // *****************************************************************************
@@ -138,9 +138,9 @@ void DAC${DAC_INDEX}_Initialize(void)
 void DAC${DAC_INDEX}_DataWrite(uint16_t data)
 {
     /* Write Data to DATA Register for conversion(DATA[9:0]) */
-    DAC_REGS->DATA = DAC_DATA_MSB_MASK & DAC_DATA_DATA(data);
+    DAC_REGS->DAC_DATA = DAC_DATA_MSB_MASK & DAC_DATA_DATA(data);
 
-    while((DAC_REGS->SYNCBUSY & DAC_SYNCBUSY_DATA_Msk) == DAC_SYNCBUSY_DATA_Msk)
+    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_DATA_Msk) == DAC_SYNCBUSY_DATA_Msk)
     {
         /* Wait for Synchronization after writing Data to DATA Register */
     }
@@ -168,7 +168,7 @@ bool DAC${DAC_INDEX}_IsReady(void)
     bool dacIsReady = false;
 
     /* Check DAC is Ready for Conversion */
-    if((DAC_REGS->STATUS & DAC_STATUS_READY_Msk) == DAC_STATUS_READY_Msk)
+    if((DAC_REGS->DAC_STATUS & DAC_STATUS_READY_Msk) == DAC_STATUS_READY_Msk)
     {
         dacIsReady = true;
     }
@@ -194,9 +194,9 @@ bool DAC${DAC_INDEX}_IsReady(void)
 void DAC${DAC_INDEX}_ExternalOutputEnable ( bool enable )
 {
     /* Disable DAC Module */
-    DAC_REGS->CTRLA &= ~(DAC_CTRLA_ENABLE_Msk);
+    DAC_REGS->DAC_CTRLA &= ~(DAC_CTRLA_ENABLE_Msk);
 
-    while((DAC_REGS->SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
+    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Disabling DAC */
     }
@@ -204,17 +204,17 @@ void DAC${DAC_INDEX}_ExternalOutputEnable ( bool enable )
     if(enable)
     {
         /* Enable External Output */
-        DAC_REGS->CTRLB |= DAC_CTRLB_EOEN_Msk;
+        DAC_REGS->DAC_CTRLB |= DAC_CTRLB_EOEN_Msk;
     }
     else
     {
-        DAC_REGS->CTRLB &= ~(DAC_CTRLB_EOEN_Msk);
+        DAC_REGS->DAC_CTRLB &= ~(DAC_CTRLB_EOEN_Msk);
     }
 
     /* Enable DAC */
-    DAC_REGS->CTRLA |= DAC_CTRLA_ENABLE_Msk;
+    DAC_REGS->DAC_CTRLA |= DAC_CTRLA_ENABLE_Msk;
 
-    while((DAC_REGS->SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
+    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Enabling DAC */
     }
@@ -238,9 +238,9 @@ void DAC${DAC_INDEX}_ExternalOutputEnable ( bool enable )
 void DAC${DAC_INDEX}_InternalOutputEnable ( bool enable )
 {
     /* Disable DAC Module */
-    DAC_REGS->CTRLA &= ~(DAC_CTRLA_ENABLE_Msk);
+    DAC_REGS->DAC_CTRLA &= ~(DAC_CTRLA_ENABLE_Msk);
 
-    while((DAC_REGS->SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
+    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Disabling DAC */
     }
@@ -248,17 +248,17 @@ void DAC${DAC_INDEX}_InternalOutputEnable ( bool enable )
     if(enable)
     {
         /* Enable Internal Output */
-        DAC_REGS->CTRLB |= DAC_CTRLB_IOEN_Msk;
+        DAC_REGS->DAC_CTRLB |= DAC_CTRLB_IOEN_Msk;
     }
     else
     {
-        DAC_REGS->CTRLB &= ~(DAC_CTRLB_IOEN_Msk);
+        DAC_REGS->DAC_CTRLB &= ~(DAC_CTRLB_IOEN_Msk);
     }
 
     /* Enable DAC */
-    DAC_REGS->CTRLA |= DAC_CTRLA_ENABLE_Msk;
+    DAC_REGS->DAC_CTRLA |= DAC_CTRLA_ENABLE_Msk;
 
-    while((DAC_REGS->SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
+    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Enabling DAC */
     }
