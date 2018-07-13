@@ -84,38 +84,38 @@ bool DSU${DSU_INDEX}_CRCCalculate (uint32_t startAddress, size_t length, uint32_
     if( (0 != length) && (NULL != crc) )
     {
         /* Starting Memory Location of the Address Range */
-        DSU_REGS->ADDR |= (uint32_t)(((startAddress) & 0x3FFFFFFC) << 2);
+        DSU_REGS->DSU_ADDR = (uint32_t)(((startAddress) & 0x3FFFFFFC) << 2);
 
         /*  Size of the memory block in 32-bit word needed for memory operations */
-        DSU_REGS->LENGTH = (uint32_t)length;
+        DSU_REGS->DSU_LENGTH = (uint32_t)length;
 
         /* Initial CRC Value  */
-        DSU_REGS->DATA = (uint32_t)crcSeed;
+        DSU_REGS->DSU_DATA = (uint32_t)crcSeed;
 
         /* Enabling the DSU */
-        DSU_REGS->CTRL |= DSU_CTRL_CRC_Msk;
+        DSU_REGS->DSU_CTRL |= DSU_CTRL_CRC_Msk;
 
-        while(!(DSU_REGS->STATUSA & DSU_STATUSA_DONE_Msk))
+        while(!(DSU_REGS->DSU_STATUSA & DSU_STATUSA_DONE_Msk))
         {
             /* Wait for the Done(CRC to be Completed) */
         }
 
         /* Checking for the Bus error */
-        if(DSU_REGS->STATUSA & DSU_STATUSA_BERR_Msk)
+        if(DSU_REGS->DSU_STATUSA & DSU_STATUSA_BERR_Msk)
         {
             /* Clearing the DONE and BUS Errors */
-            DSU_REGS->STATUSA |= DSU_STATUSA_BERR_Msk | DSU_STATUSA_DONE_Msk;
+            DSU_REGS->DSU_STATUSA |= DSU_STATUSA_BERR_Msk | DSU_STATUSA_DONE_Msk;
         }
         else
         {
             if(crc != NULL)
             {
                 /* Reading the resultant crc value from the DATA register */
-                *crc = (uint32_t) DSU_REGS->DATA;
+                *crc = (uint32_t) DSU_REGS->DSU_DATA;
             }
 
             /* Clearing the DONE bit in the status Register */
-            DSU_REGS->STATUSA |= DSU_STATUSA_DONE_Msk;
+            DSU_REGS->DSU_STATUSA |= DSU_STATUSA_DONE_Msk;
 
             statusValue = true;
         }

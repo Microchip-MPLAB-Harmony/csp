@@ -79,7 +79,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void PM${PM_INDEX}_Initialize( void )
 {
     /* Configure back biasing & VREG switching mode */
-    <@compress single_line=true>PM_REGS->STDBYCFG = PM_STDBYCFG_BBIASHS(${PM_STDBYCFG_BBIASHS?then('1', '0')})
+    <@compress single_line=true>PM_REGS->PM_STDBYCFG = PM_STDBYCFG_BBIASHS(${PM_STDBYCFG_BBIASHS?then('1', '0')})
                                                        | PM_STDBYCFG_VREGSMOD_${PM_STDBYCFG_VREGSMOD};</@compress>
 }
 
@@ -108,14 +108,14 @@ void PM${PM_INDEX}_SleepModeEnter( PM_SLEEP_MODE sleepMode )
         case PM_SLEEP_MODE_IDLE:
         {
             /* APB clock is OFF */
-            PM_REGS->SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE2;
+            PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE2;
 
             break;
         }
         case PM_SLEEP_MODE_STANDBY:
         {
             /* All clocks are OFF */
-            PM_REGS->SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY;
+            PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY;
 
             break;
         }

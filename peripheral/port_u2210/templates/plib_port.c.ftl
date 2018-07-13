@@ -79,10 +79,10 @@ void PORT_Initialize(void)
         <#assign PORT_DIR = "PORT_GROUP_" + n + "_DIR">
         <#assign PORT_CTRL = "PORT_GROUP_" + n + "_CTRL">
         <#if "${.vars[PORT_DIR]}" != "0x00000000">
-            <#lt>   PORT_REGS->GROUP[${PORT_GROUP_INDEX}].DIR = ${.vars[PORT_DIR]};
+            <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].DIR = ${.vars[PORT_DIR]};
         </#if>
         <#if "${.vars[PORT_CTRL]}" != "0x00000000">
-            <#lt>   PORT_REGS->GROUP[${PORT_GROUP_INDEX}].CTRL = ${.vars[PORT_CTRL]};
+            <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].CTRL = ${.vars[PORT_CTRL]};
         </#if>
         <#list 0..31 as i>
         <#assign PORT_PINCONFIG_PMUXEN = "PORT_GROUP_" + n + "_PINCFG"+ i +"_PMUXEN">
@@ -91,23 +91,23 @@ void PORT_Initialize(void)
         <#assign PORT_PINCONFIG_PULLEN = "PORT_GROUP_" + n + "_PINCFG"+ i +"_PULLEN">
         <#assign PORT_INDEX = i>
             <#if .vars[PORT_PINCONFIG_PMUXEN]!"true">
-                <#lt>   PORT_REGS->GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] = PORT_GROUP_PINCFG_PMUXEN_Msk;
+                <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] = PORT_GROUP_PINCFG_PMUXEN_Msk;
             </#if>
             <#if .vars[PORT_PINCONFIG_INEN]!"true">
-                <#lt>   PORT_REGS->GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] |= PORT_GROUP_PINCFG_INEN_Msk;
+                <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] |= PORT_GROUP_PINCFG_INEN_Msk;
             </#if>
             <#if .vars[PORT_PINCONFIG_PULLEN]!"true">
-                <#lt>   PORT_REGS->GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] |= PORT_GROUP_PINCFG_PULLEN_Msk;
+                <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] |= PORT_GROUP_PINCFG_PULLEN_Msk;
             </#if>
             <#if .vars[PORT_PINCONFIG_DRVSTR]!"true">
-                <#lt>   PORT_REGS->GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] |= PORT_GROUP_PINCFG_DRVSTR_Msk;
+                <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] |= PORT_GROUP_PINCFG_DRVSTR_Msk;
             </#if>
         </#list>
         <#list 0..15 as i>
         <#assign PORT_PINMUX = "PORT_GROUP_" + n + "_PMUX"+ i>
         <#assign PORT_INDEX = i>
         <#if "${.vars[PORT_PINMUX]}" != "0x00">
-            <#lt>   PORT_REGS->GROUP[${PORT_GROUP_INDEX}].PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
+            <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
         </#if>
         </#list>
         </#if>
@@ -137,11 +137,11 @@ void PORT_PinWrite(PORT_PIN pin, bool value)
 
     if (value == false)
     {
-        PORT_REGS->GROUP[group].OUTCLR = 1 << pin;
+        PORT_REGS->PORT_GROUP[group].OUTCLR = 1 << pin;
     }
     else
     {
-        PORT_REGS->GROUP[group].OUTSET = 1 << pin;
+        PORT_REGS->PORT_GROUP[group].OUTSET = 1 << pin;
     }
 }
 
@@ -171,7 +171,7 @@ bool PORT_PinRead(PORT_PIN pin)
     group = pin / 32;
     pin =  pin % 32;
 
-    return (bool)((PORT_REGS->GROUP[group].IN >> pin) & 0x01);
+    return (bool)((PORT_REGS->PORT_GROUP[group].IN >> pin) & 0x01);
 }
 
 // *****************************************************************************
@@ -198,7 +198,7 @@ bool PORT_PinLatchRead(PORT_PIN pin)
     group = pin / 32;
     pin =  pin % 32;
 
-    return (bool)((PORT_REGS->GROUP[group].OUT >> pin) & 0x01);
+    return (bool)((PORT_REGS->PORT_GROUP[group].OUT >> pin) & 0x01);
 }
 
 // *****************************************************************************
@@ -222,7 +222,7 @@ void PORT_PinToggle(PORT_PIN pin)
     group = pin / 32;
     pin =  pin % 32;
 
-    PORT_REGS->GROUP[group].OUTTGL = 1 << pin;
+    PORT_REGS->PORT_GROUP[group].OUTTGL = 1 << pin;
 }
 
 // *****************************************************************************
@@ -246,7 +246,7 @@ void PORT_PinSet(PORT_PIN pin)
     group = pin / 32;
     pin =  pin % 32;
 
-    PORT_REGS->GROUP[group].OUTSET = 1 << pin;
+    PORT_REGS->PORT_GROUP[group].OUTSET = 1 << pin;
 }
 
 // *****************************************************************************
@@ -270,7 +270,7 @@ void PORT_PinClear(PORT_PIN pin)
     group = pin / 32;
     pin =  pin % 32;
 
-    PORT_REGS->GROUP[group].OUTCLR = 1 << pin;
+    PORT_REGS->PORT_GROUP[group].OUTCLR = 1 << pin;
 }
 
 // *****************************************************************************
@@ -295,7 +295,7 @@ void PORT_PinInputEnable(PORT_PIN pin)
     group = pin / 32;
     pin =  pin % 32;
 
-    PORT_REGS->GROUP[group].DIRCLR = 1 << pin;
+    PORT_REGS->PORT_GROUP[group].DIRCLR = 1 << pin;
 }
 
 // *****************************************************************************
@@ -320,7 +320,7 @@ void PORT_PinOutputEnable(PORT_PIN pin)
     group = pin / 32;
     pin =  pin % 32;
 
-    PORT_REGS->GROUP[group].DIRSET = 1 << pin;
+    PORT_REGS->PORT_GROUP[group].DIRSET = 1 << pin;
 }
 
 // *****************************************************************************
@@ -343,7 +343,7 @@ void PORT_PinOutputEnable(PORT_PIN pin)
 
 uint32_t PORT_GroupRead(PORT_GROUP group)
 {
-    return (PORT_REGS->GROUP[group].IN);
+    return (PORT_REGS->PORT_GROUP[group].IN);
 }
 
 // *****************************************************************************
@@ -369,7 +369,7 @@ uint32_t PORT_GroupRead(PORT_GROUP group)
 void PORT_GroupWrite(PORT_GROUP group, uint32_t value)
 {
     /* Write the desired value */
-    PORT_REGS->GROUP[group].OUT = value;
+    PORT_REGS->PORT_GROUP[group].OUT = value;
 }
 
 // *****************************************************************************
@@ -393,7 +393,7 @@ void PORT_GroupWrite(PORT_GROUP group, uint32_t value)
 
 uint32_t PORT_GroupLatchRead(PORT_GROUP group)
 {
-    return (PORT_REGS->GROUP[group].OUT);
+    return (PORT_REGS->PORT_GROUP[group].OUT);
 }
 
 // *****************************************************************************
@@ -416,7 +416,7 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group)
 
 void PORT_GroupSet(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->GROUP[group].OUTSET = mask;
+    PORT_REGS->PORT_GROUP[group].OUTSET = mask;
 }
 
 // *****************************************************************************
@@ -439,7 +439,7 @@ void PORT_GroupSet(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupClear(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->GROUP[group].OUTCLR = mask;
+    PORT_REGS->PORT_GROUP[group].OUTCLR = mask;
 }
 
 // *****************************************************************************
@@ -461,7 +461,7 @@ void PORT_GroupClear(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupToggle(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->GROUP[group].OUTTGL = mask;
+    PORT_REGS->PORT_GROUP[group].OUTTGL = mask;
 }
 
 // *****************************************************************************
@@ -482,7 +482,7 @@ void PORT_GroupToggle(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->GROUP[group].DIRCLR = mask;
+    PORT_REGS->PORT_GROUP[group].DIRCLR = mask;
 }
 
 // *****************************************************************************
@@ -503,5 +503,5 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->GROUP[group].DIRSET = mask;
+    PORT_REGS->PORT_GROUP[group].DIRSET = mask;
 }

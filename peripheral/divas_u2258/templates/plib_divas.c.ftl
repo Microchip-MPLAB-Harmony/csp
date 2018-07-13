@@ -80,7 +80,7 @@ void DIVAS${DIVAS_INDEX}_Initialize(void)
      * If enabled,  32 bit divisions = 2-16 cycles
      * If disabled, 32 bit divisions = 16 cycles
      */
-    DIVAS_REGS->CTRLA |= DIVAS_CTRLA_RESETVALUE ${DIVAS_DLZ?then(' ', '| DIVAS_CTRLA_DLZ_Msk')};
+    DIVAS_REGS->DIVAS_CTRLA |= DIVAS_CTRLA_RESETVALUE ${DIVAS_DLZ?then(' ', '| DIVAS_CTRLA_DLZ_Msk')};
 }
 
 // *****************************************************************************
@@ -130,33 +130,33 @@ bool DIVAS${DIVAS_INDEX}_DivideSigned ( int32_t divisor, int32_t dividend, int32
         else
         {
             /* Selection of the signed division */
-            DIVAS_REGS->CTRLA |= DIVAS_CTRLA_SIGNED_Msk;
+            DIVAS_REGS->DIVAS_CTRLA |= DIVAS_CTRLA_SIGNED_Msk;
 
             /* Writing the dividend to DIVIDEND register */
-            DIVAS_REGS->DIVIDEND = dividend;
+            DIVAS_REGS->DIVAS_DIVIDEND = dividend;
 
             /* Writing the divisor to DIVISOR register */
-            DIVAS_REGS->DIVISOR = divisor;
+            DIVAS_REGS->DIVAS_DIVISOR = divisor;
 
-            while((DIVAS_REGS->STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
+            while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
             {
                 /* Wait for the division to complete */
             }
 
-            if ((DIVAS_REGS->STATUS & DIVAS_STATUS_DBZ_Msk) != DIVAS_STATUS_DBZ_Msk)
+            if ((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_DBZ_Msk) != DIVAS_STATUS_DBZ_Msk)
             {
                 statusValue = true;
 
                 if( quotient != NULL)
                 {
                     /* Reading the resultant Division value from the RESULT register */
-                    *quotient = DIVAS_REGS->RESULT;
+                    *quotient = DIVAS_REGS->DIVAS_RESULT;
                 }
 
                 if( remainder != NULL)
                 {
                     /* Reading the resultant remainder value from the REM register */
-                    *remainder = DIVAS_REGS->REM;
+                    *remainder = DIVAS_REGS->DIVAS_REM;
                 }
             }
         }
@@ -211,33 +211,33 @@ bool DIVAS${DIVAS_INDEX}_DivideUnsigned( uint32_t divisor, uint32_t dividend, ui
         else
         {
             /* Selection of the unsigned division */
-            DIVAS_REGS->CTRLA &= ~DIVAS_CTRLA_SIGNED_Msk;
+            DIVAS_REGS->DIVAS_CTRLA &= ~DIVAS_CTRLA_SIGNED_Msk;
 
            /* Writing the dividend to DIVIDEND register */
-            DIVAS_REGS->DIVIDEND = dividend;
+            DIVAS_REGS->DIVAS_DIVIDEND = dividend;
 
             /* Writing the divisor to DIVISOR register */
-            DIVAS_REGS->DIVISOR = divisor;
+            DIVAS_REGS->DIVAS_DIVISOR = divisor;
 
-            while((DIVAS_REGS->STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
+            while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
             {
                 /* Wait for the division to complete */
             }
 
-            if ((DIVAS_REGS->STATUS & DIVAS_STATUS_DBZ_Msk) != DIVAS_STATUS_DBZ_Msk)
+            if ((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_DBZ_Msk) != DIVAS_STATUS_DBZ_Msk)
             {
                 statusValue = true;
                 
                 if( quotient != NULL)
                 {
                     /* Reading the resultant Division value from the RESULT register */
-                    *quotient = DIVAS_REGS->RESULT;
+                    *quotient = DIVAS_REGS->DIVAS_RESULT;
                 }
 
                 if( remainder != NULL)
                 {
                     /* Reading the resultant remainder value from the REM register */
-                    *remainder = DIVAS_REGS->REM;
+                    *remainder = DIVAS_REGS->DIVAS_REM;
 
                 }
             }
@@ -274,20 +274,20 @@ uint32_t DIVAS${DIVAS_INDEX}_SquareRoot ( uint32_t number , uint32_t * remainder
     uint32_t squareRootResult = 0;
 
     /* Writing the number to SQRNUM register */
-    DIVAS_REGS->SQRNUM = number;
+    DIVAS_REGS->DIVAS_SQRNUM = number;
 
-    while((DIVAS_REGS->STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
+    while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
     {
         /* Wait for the square root to complete */
     }
 
     /* Reading the resultant square root value from the RESULT register */
-    squareRootResult = DIVAS_REGS->RESULT;
+    squareRootResult = DIVAS_REGS->DIVAS_RESULT;
 
     if(remainder != NULL)
     {
         /* Reading the resultant remainder value from the REM register */
-        *remainder = DIVAS_REGS->REM;
+        *remainder = DIVAS_REGS->DIVAS_REM;
     }
 
     return squareRootResult;
