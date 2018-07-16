@@ -12,7 +12,7 @@ def instantiateComponent(dsuComponent):
     dsuSym_Menu.setLabel("DSU MODULE SETTINGS ")
     dsuSym_Menu.setVisible(False)
     dsuSym_Menu.setDefaultValue(True)
-	
+
     dsuSym_Comment = dsuComponent.createCommentSymbol(None, None)
     dsuSym_Comment.setLabel("*** This component does not contain any configuration settings ***")
 
@@ -25,8 +25,8 @@ def instantiateComponent(dsuComponent):
 ################################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
-	
-	dsuModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DSU\"]")
+
+    dsuModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DSU\"]")
     dsuModuleID = dsuModuleNode.getAttribute("id")
 
     dsuSym_HeaderFile = dsuComponent.createFileSymbol("DSU_HEADER", None)
