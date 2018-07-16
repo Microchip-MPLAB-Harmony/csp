@@ -108,11 +108,8 @@ bool DSU${DSU_INDEX}_CRCCalculate (uint32_t startAddress, size_t length, uint32_
         }
         else
         {
-            if(crc != NULL)
-            {
-                /* Reading the resultant crc value from the DATA register */
-                *crc = (uint32_t) DSU_REGS->DSU_DATA;
-            }
+            /* Reading the resultant crc value from the DATA register */
+            *crc = (uint32_t) DSU_REGS->DSU_DATA;
 
             /* Clearing the DONE bit in the status Register */
             DSU_REGS->DSU_STATUSA |= DSU_STATUSA_DONE_Msk;

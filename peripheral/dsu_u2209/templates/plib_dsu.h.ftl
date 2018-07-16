@@ -73,13 +73,13 @@ extern "C" {
  Description:
     This function uses the hardware CRC computation feature of the DSU to
     calculate the CRC on a memory block. The start address and the size of the
-    memory block are specified by startAddress and the size parameters. If this
+    memory block are specified by startAddress and the length parameters. If this
     is the first block, the value of the crcSeed parameter should be 0xFFFFFFFF.
     For calculating the CRC of non-contiguous memory blocks, the CRC result from
     the CRC calculation of a previous memory block can be passed as the crcSeed
     to the CRC calculation of the next memory block.
 
-    The calcualted CRC is returned in the crc parameter.  This should be
+    The calculated CRC is returned in the crc parameter.  This should be
     inverted to match standard CRC implementations. It should be kept
     non-inverted if used as a starting point for subsequent CRC calculations.
 
@@ -113,7 +113,7 @@ extern "C" {
 
         bool crcStatus;
         uint32_t crcResult;
-        crcstatus = DSUx_CRCCalculate((uint32_t)(0x30000), 256, 0xFFFFFFFF,
+        crcStatus = DSUx_CRCCalculate((uint32_t)(0x30000), 256, 0xFFFFFFFF,
                                       &crcResult);
         if(crcStatus == true)
         {
