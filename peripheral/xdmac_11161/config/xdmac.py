@@ -1,6 +1,6 @@
 from os.path import join
 from xml.etree import ElementTree
-
+# load family specific configuration
 Log.writeInfoMessage("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 
 ################################################################################
@@ -17,16 +17,14 @@ global xdmacSystemInitFile
 global xdmacSystemIntFile
 global xdmacSystemDefFile
 global xdmacSystemConfigFile
-
+global triggerSettings
+global triggerRegister
 # Parse atdf xml file to get instance name for the peripheral which has DMA id.
 # And construct a list of PERIDs
-global peridList
-peridList = []
-peridList.insert(0, "Software Trigger")
 
-global peridValueList
-peridValueList = []
-peridValueList.insert(0, 200)
+global per_instance
+per_instance = {}
+per_instance["Software Trigger"] = 0
 
 global peridValueListSymbols
 peridValueListSymbols = []
@@ -36,6 +34,9 @@ xdmacActiveChannels = []
 
 global xdmacChannelIds
 xdmacChannelIds = []
+
+#Device specific XDMAC settings
+triggerSettings, triggerRegister = setXDMACDefaultSettings()
 
 # Create lists for peripheral triggers and the corresponding ID values
 node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
@@ -51,92 +52,20 @@ for module in range (0 , len(modules)):
                     if "name" in parameters[parameter].getAttributeList():
                         name = str(parameters[parameter].getAttribute("name"))
                         if "DMAC_ID" in name:
-                            name = name.replace('DMAC_ID_', '')
-                            module = str(instances[instance].getAttribute("name"))
-                            if "HSMCI" == module:
-                                if "HSMCI" not in peridList:
-                                    peridList.append("HSMCI")
-                                    peridValueList.append(parameters[parameter].getAttribute("value"))
-                            else:
-                                name = name.replace('TX', 'Transmit')
-                                name = name.replace('RX', 'Receive')
-                                name = name.replace('LEFT', 'Left')
-                                name = name.replace('RIGHT', 'Right')
-                                peridList.append(module + "_" + name)
-                                peridValueList.append(parameters[parameter].getAttribute("value"))
+							global per_instance
+							if int(parameters[parameter].getAttribute("value")) not in per_instance.values():
+								name = name.replace('DMAC_ID_', '')
+								module = str(instances[instance].getAttribute("name"))
+								if "HSMCI" == module:
+									if "HSMCI" not in per_instance.keys():
+										per_instance["HSMCI"] = int(parameters[parameter].getAttribute("value"))
+								else:
+									name = name.replace('TX', 'Transmit')
+									name = name.replace('RX', 'Receive')
+									name = name.replace('LEFT', 'Left')
+									name = name.replace('RIGHT', 'Right')
+									per_instance[module + "_" + name] = int(parameters[parameter].getAttribute("value"))
 
-# This is the dictionary for all trigger sources and corresponding XDMAC settings.
-# "xdmacTriggerLogic" business logic will override the XDMAC setting values
-# based on the trigger source selected.
-# Total 51 Triggers.
-global triggerSettings
-triggerSettings = {"Software Trigger"     : ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "Standard_Transmit"       : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-                "Standard_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "BYTE", "CHK_1", "SINGLE"],
-                "SSC_Transmit"            : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-                "SSC_Receive"             : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
-                "I2SC0_Transmit_Left"     : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-                "I2SC0_Receive_Left"      : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
-                "I2SC1_Transmit_Left"     : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-                "I2SC1_Receive_Left"      : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
-                "I2SC0_Transmit_Right"    : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-                "I2SC0_Receive_Right"     : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
-                "I2SC1_Transmit_Right"    : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-                "I2SC1_Receive_Right"     : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"]}
-
-global triggerRegister
-triggerRegister = {"Software Trigger"       : ["None"],
-                "HSMCI"                     : ["HSMCI_REGS->HSMCI_TDR"],
-                "SPI0_Transmit"             : ["SPI0_REGS->SPI_TDR"],
-                "SPI0_Receive"              : ["SPI0_REGS->SPI_RDR"],
-                "SPI1_Transmit"             : ["SPI1_REGS->SPI_TDR"],
-                "SPI1_Receive"              : ["SPI1_REGS->SPI_RDR"],
-                "QSPI_Transmit"             : ["QSPI_REGS->QSPI_TDR"],
-                "QSPI_Receive"              : ["QSPI_REGS->QSPI_RDR"],
-                "USART0_Transmit"           : ["USART0_REGS->US_THR"],
-                "USART0_Receive"            : ["USART0_REGS->US_RHR"],
-                "USART1_Transmit"           : ["USART1_REGS->US_THR"],
-                "USART1_Receive"            : ["USART1_REGS->US_RHR"],
-                "USART2_Transmit"           : ["USART2_REGS->US_THR"],
-                "USART2_Receive"            : ["USART2_REGS->US_RHR"],
-                "PWM0_Transmit"             : ["None"],
-                "TWIHS0_Transmit"           : ["TWIHS0_REGS->TWIHS_THR"],
-                "TWIHS0_Receive"            : ["TWIHS0_REGS->TWIHS_RHR"],
-                "TWIHS1_Transmit"           : ["TWIHS1_REGS->TWIHS_THR"],
-                "TWIHS1_Receive"            : ["TWIHS1_REGS->TWIHS_RHR"],
-                "TWIHS2_Transmit"           : ["TWIHS2_REGS->TWIHS_THR"],
-                "TWIHS2_Receive"            : ["TWIHS2_REGS->TWIHS_RHR"],
-                "UART0_Transmit"            : ["UART0_REGS->UART_THR"],
-                "UART0_Receive"             : ["UART0_REGS->UART_RHR"],
-                "UART1_Transmit"            : ["UART1_REGS->UART_THR"],
-                "UART1_Receive"             : ["UART1_REGS->UART_RHR"],
-                "UART2_Transmit"            : ["UART2_REGS->UART_THR"],
-                "UART2_Receive"             : ["UART2_REGS->UART_RHR"],
-                "UART3_Transmit"            : ["UART3_REGS->UART_THR"],
-                "UART3_Receive"             : ["UART3_REGS->UART_RHR"],
-                "UART4_Transmit"            : ["UART4_REGS->UART_THR"],
-                "UART4_Receive"             : ["UART4_REGS->UART_RHR"],
-                "DACC_Transmit"             : ["None"],
-                "SSC_Transmit"              : ["SSC_REGS->SSC_THR"],
-                "SSC_Receive"               : ["SSC_REGS->SSC_RHR"],
-                "PIOA_Receive"              : ["None"],
-                "AFEC0_Receive"             : ["None"],
-                "AFEC1_Receive"             : ["None"],
-                "AES_Transmit"              : ["None"],
-                "AES_Receive"               : ["None"],
-                "PWM1_Transmit"             : ["None"],
-                "TC0_Receive"               : ["None"],
-                "TC1_Receive"               : ["None"],
-                "TC2_Receive"               : ["None"],
-                "TC3_Receive"               : ["None"],
-                "I2SC0_Transmit_Left"       : ["I2SC0_REGS->I2SC_THR"],
-                "I2SC0_Receive_Left"        : ["I2SC0_REGS->I2SC_RHR"],
-                "I2SC1_Transmit_Left"       : ["I2SC1_REGS->I2SC_THR"],
-                "I2SC1_Receive_Left"        : ["I2SC1_REGS->I2SC_RHR"],
-                "I2SC0_Transmit_Right"      : ["I2SC0_REGS->I2SC_THR"],
-                "I2SC0_Receive_Right"       : ["I2SC0_REGS->I2SC_RHR"],
-                "I2SC1_Transmit_Right"      : ["I2SC1_REGS->I2SC_THR"],
-                "I2SC1_Receive_Right"       : ["I2SC1_REGS->I2SC_RHR"] }
 
 ################################################################################
 #### Business Logic ####
@@ -250,13 +179,9 @@ def onGlobalEnableLogic(xdmacFileGen, event):
     xdmacSystemDefFile.setEnabled(event["value"])
 
 def xdmacTriggerCalc(xdmacPERIDVal, event):
-    global peridList
-    global peridValueList
-
-    perid = event["value"]
-    peridIndex = peridList.index(perid)
-    xdmacPERIDVal.clearValue()
-    xdmacPERIDVal.setValue(int(peridValueList[peridIndex]), 2)
+	global per_instance
+	xdmacPERIDVal.clearValue()
+	xdmacPERIDVal.setValue(per_instance.get(event["value"]), 2)
 
 # This function enables DMA channel and selects respective trigger if DMA mode
 # is selected for any peripheral ID.
@@ -331,145 +256,146 @@ xdmacChannelLinkedList = coreComponent.createBooleanSymbol("XDMAC_LL_ENABLE", xd
 xdmacChannelLinkedList.setLabel("Use Linked List Mode?")
 xdmacChannelLinkedList.setDefaultValue(False)
 
+
 for channelID in range(0, xdmacChCount.getValue()):
+	global per_instance
+	xdmacChannelEnable = coreComponent.createBooleanSymbol("XDMAC_CH"+str(channelID)+"_ENABLE", xdmacMenu)
+	xdmacChannelEnable.setLabel("Use XDMAC Channel "+ str(channelID))
+	xdmacChannelEnable.setDefaultValue(False)
+	xdmacChannelEnable.setUseSingleDynamicValue(True)
+	xdmacChannelIds.append("XDMAC_CH"+str(channelID)+"_ENABLE")
 
-    xdmacChannelEnable = coreComponent.createBooleanSymbol("XDMAC_CH"+str(channelID)+"_ENABLE", xdmacMenu)
-    xdmacChannelEnable.setLabel("Use XDMAC Channel "+ str(channelID))
-    xdmacChannelEnable.setDefaultValue(False)
-    xdmacChannelEnable.setUseSingleDynamicValue(True)
-    xdmacChannelIds.append("XDMAC_CH"+str(channelID)+"_ENABLE")
+	xdmacChannelMenu = coreComponent.createMenuSymbol("XDMAC_CH"+str(channelID)+"CONFIG", xdmacChannelEnable)
+	xdmacChannelMenu.setLabel("XDMAC Channel " + str(channelID) + " Settings")
+	xdmacChannelMenu.setDescription("Configuration for DMA Channel"+ str(channelID))
 
-    xdmacChannelMenu = coreComponent.createMenuSymbol("XDMAC_CH"+str(channelID)+"CONFIG", xdmacChannelEnable)
-    xdmacChannelMenu.setLabel("XDMAC Channel " + str(channelID) + " Settings")
-    xdmacChannelMenu.setDescription("Configuration for DMA Channel"+ str(channelID))
+	xdmacSym_CC_PERID = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_PERID", xdmacChannelMenu, sorted(per_instance.keys()))
+	xdmacSym_CC_PERID.setLabel("DMA Request")
+	xdmacSym_CC_PERID.setDefaultValue("Software Trigger")
+	xdmacSym_CC_PERID.setUseSingleDynamicValue(True)
 
-    xdmacSym_CC_PERID = coreComponent.createComboSymbol("XDMAC_CC"+ str(channelID)+"_PERID", xdmacChannelMenu, peridList)
-    xdmacSym_CC_PERID.setLabel("DMA Request")
-    xdmacSym_CC_PERID.setDefaultValue("Software Trigger")
-    xdmacSym_CC_PERID.setUseSingleDynamicValue(True)
+	# DMA manager will use LOCK symbol to lock the "XDMAC_CC"+ str(channelID)+"_PERID" symbol
+	xdmacSym_CC_PERID_LOCK = coreComponent.createBooleanSymbol("XDMAC_CC"+ str(channelID)+"_PERID_LOCK", xdmacChannelMenu)
+	xdmacSym_CC_PERID_LOCK.setLabel("Lock DMA Request")
+	xdmacSym_CC_PERID_LOCK.setVisible(False)
+	xdmacSym_CC_PERID_LOCK.setDefaultValue(False)
+	xdmacSym_CC_PERID_LOCK.setUseSingleDynamicValue(True)
 
-    # DMA manager will use LOCK symbol to lock the "XDMAC_CC"+ str(channelID)+"_PERID" symbol
-    xdmacSym_CC_PERID_LOCK = coreComponent.createBooleanSymbol("XDMAC_CC"+ str(channelID)+"_PERID_LOCK", xdmacChannelMenu)
-    xdmacSym_CC_PERID_LOCK.setLabel("Lock DMA Request")
-    xdmacSym_CC_PERID_LOCK.setVisible(False)
-    xdmacSym_CC_PERID_LOCK.setDefaultValue(False)
-    xdmacSym_CC_PERID_LOCK.setUseSingleDynamicValue(True)
+	xdmacPeripheralRegister = coreComponent.createStringSymbol("XDMAC_CH"+ str(channelID)+"_PER_REGISTER", xdmacChannelMenu)
+	xdmacPeripheralRegister.setLabel("Peripheral Register associated with the DMA Channel")
+	xdmacPeripheralRegister.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacPeripheralRegister.setDefaultValue("None")
+	xdmacPeripheralRegister.setVisible(False)
+	xdmacPeripheralRegister.setReadOnly(True)
 
-    xdmacPeripheralRegister = coreComponent.createStringSymbol("XDMAC_CH"+ str(channelID)+"_PER_REGISTER", xdmacChannelMenu)
-    xdmacPeripheralRegister.setLabel("Peripheral Register associated with the DMA Channel")
-    xdmacPeripheralRegister.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
-    xdmacPeripheralRegister.setDefaultValue("None")
-    xdmacPeripheralRegister.setVisible(False)
-    xdmacPeripheralRegister.setReadOnly(True)
+	xdmacSym_CC_PERID_Val = coreComponent.createIntegerSymbol("XDMAC_CC"+ str(channelID)+"_PERID_VAL", xdmacChannelMenu)
+	xdmacSym_CC_PERID_Val.setLabel("PERID Value")
+	xdmacSym_CC_PERID_Val.setDefaultValue(200)
+	xdmacSym_CC_PERID_Val.setDependencies(xdmacTriggerCalc, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_PERID_Val.setVisible(False)
 
-    xdmacSym_CC_PERID_Val = coreComponent.createIntegerSymbol("XDMAC_CC"+ str(channelID)+"_PERID_VAL", xdmacChannelMenu)
-    xdmacSym_CC_PERID_Val.setLabel("PERID Value")
-    xdmacSym_CC_PERID_Val.setDefaultValue(200)
-    xdmacSym_CC_PERID_Val.setDependencies(xdmacTriggerCalc, ["XDMAC_CC"+ str(channelID)+"_PERID"])
-    xdmacSym_CC_PERID_Val.setVisible(False)
-
-    xdmacSym_CC_TYPE = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_TYPE", xdmacChannelMenu)
-    xdmacSym_CC_TYPE.setLabel("DMA Transfer Type")
-    xdmacSym_CC_TYPE.addKey("MEM_TRAN", "0", "Transfer From Memory To Memory")
-    xdmacSym_CC_TYPE.addKey("PER_TRAN", "1", "Transfer Between Peripheral And Memory")
-    xdmacSym_CC_TYPE.setOutputMode("Key")
-    xdmacSym_CC_TYPE.setDisplayMode("Description")
-    xdmacSym_CC_TYPE.setSelectedKey("MEM_TRAN",1)
-    xdmacSym_CC_TYPE.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_TYPE = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_TYPE", xdmacChannelMenu)
+	xdmacSym_CC_TYPE.setLabel("DMA Transfer Type")
+	xdmacSym_CC_TYPE.addKey("MEM_TRAN", "0", "Transfer From Memory To Memory")
+	xdmacSym_CC_TYPE.addKey("PER_TRAN", "1", "Transfer Between Peripheral And Memory")
+	xdmacSym_CC_TYPE.setOutputMode("Key")
+	xdmacSym_CC_TYPE.setDisplayMode("Description")
+	xdmacSym_CC_TYPE.setSelectedKey("MEM_TRAN",1)
+	xdmacSym_CC_TYPE.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
 
-    xdmacSym_CC_DSYNC = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_DSYNC", xdmacChannelMenu)
-    xdmacSym_CC_DSYNC.setLabel("DMA Transfer Direction")
-    xdmacSym_CC_DSYNC.addKey("PER2MEM", "0", "Peripheral To Memory Transfer")
-    xdmacSym_CC_DSYNC.addKey("MEM2PER", "1", "Memory To Peripheral Transfer")
-    xdmacSym_CC_DSYNC.setOutputMode("Key")
-    xdmacSym_CC_DSYNC.setDisplayMode("Description")
-    xdmacSym_CC_DSYNC.setSelectedKey("PER2MEM",1)
-    xdmacSym_CC_DSYNC.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_DSYNC = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_DSYNC", xdmacChannelMenu)
+	xdmacSym_CC_DSYNC.setLabel("DMA Transfer Direction")
+	xdmacSym_CC_DSYNC.addKey("PER2MEM", "0", "Peripheral To Memory Transfer")
+	xdmacSym_CC_DSYNC.addKey("MEM2PER", "1", "Memory To Peripheral Transfer")
+	xdmacSym_CC_DSYNC.setOutputMode("Key")
+	xdmacSym_CC_DSYNC.setDisplayMode("Description")
+	xdmacSym_CC_DSYNC.setSelectedKey("PER2MEM",1)
+	xdmacSym_CC_DSYNC.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
-    xdmacSym_CC_SWREQ = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_SWREQ", xdmacChannelMenu)
-    xdmacSym_CC_SWREQ.setLabel("DMA Request Type")
-    xdmacSym_CC_SWREQ.addKey("HWR_CONNECTED", "0", "Peripheral Generates DMA Request")
-    xdmacSym_CC_SWREQ.addKey("SWR_CONNECTED", "1", "Software Initiates DMA Request")
-    xdmacSym_CC_SWREQ.setOutputMode("Key")
-    xdmacSym_CC_SWREQ.setDisplayMode("Description")
-    xdmacSym_CC_SWREQ.setSelectedKey("SWR_CONNECTED",1)
-    xdmacSym_CC_SWREQ.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_SWREQ = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_SWREQ", xdmacChannelMenu)
+	xdmacSym_CC_SWREQ.setLabel("DMA Request Type")
+	xdmacSym_CC_SWREQ.addKey("HWR_CONNECTED", "0", "Peripheral Generates DMA Request")
+	xdmacSym_CC_SWREQ.addKey("SWR_CONNECTED", "1", "Software Initiates DMA Request")
+	xdmacSym_CC_SWREQ.setOutputMode("Key")
+	xdmacSym_CC_SWREQ.setDisplayMode("Description")
+	xdmacSym_CC_SWREQ.setSelectedKey("SWR_CONNECTED",1)
+	xdmacSym_CC_SWREQ.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
-    xdmacSym_CC_SAM = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_SAM", xdmacChannelMenu)
-    xdmacSym_CC_SAM.setLabel("Source Addressing Mode")
-    xdmacSym_CC_SAM.addKey("FIXED_AM", "0", "Fixed Address Mode")
-    xdmacSym_CC_SAM.addKey("INCREMENTED_AM", "1", "Increment Address After Every Transfer")
-    xdmacSym_CC_SAM.setOutputMode("Key")
-    xdmacSym_CC_SAM.setDisplayMode("Description")
-    xdmacSym_CC_SAM.setSelectedKey("INCREMENTED_AM",1)
-    xdmacSym_CC_SAM.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_SAM = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_SAM", xdmacChannelMenu)
+	xdmacSym_CC_SAM.setLabel("Source Addressing Mode")
+	xdmacSym_CC_SAM.addKey("FIXED_AM", "0", "Fixed Address Mode")
+	xdmacSym_CC_SAM.addKey("INCREMENTED_AM", "1", "Increment Address After Every Transfer")
+	xdmacSym_CC_SAM.setOutputMode("Key")
+	xdmacSym_CC_SAM.setDisplayMode("Description")
+	xdmacSym_CC_SAM.setSelectedKey("INCREMENTED_AM",1)
+	xdmacSym_CC_SAM.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
-    xdmacSym_CC_DAM = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_DAM", xdmacChannelMenu)
-    xdmacSym_CC_DAM.setLabel("Destination Addressing Mode")
-    xdmacSym_CC_DAM.addKey("FIXED_AM", "0", "Fixed Address Mode")
-    xdmacSym_CC_DAM.addKey("INCREMENTED_AM", "1", "Increment Address After Every Transfer")
-    xdmacSym_CC_DAM.setOutputMode("Key")
-    xdmacSym_CC_DAM.setDisplayMode("Description")
-    xdmacSym_CC_DAM.setSelectedKey("INCREMENTED_AM",1)
-    xdmacSym_CC_DAM.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_DAM = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_DAM", xdmacChannelMenu)
+	xdmacSym_CC_DAM.setLabel("Destination Addressing Mode")
+	xdmacSym_CC_DAM.addKey("FIXED_AM", "0", "Fixed Address Mode")
+	xdmacSym_CC_DAM.addKey("INCREMENTED_AM", "1", "Increment Address After Every Transfer")
+	xdmacSym_CC_DAM.setOutputMode("Key")
+	xdmacSym_CC_DAM.setDisplayMode("Description")
+	xdmacSym_CC_DAM.setSelectedKey("INCREMENTED_AM",1)
+	xdmacSym_CC_DAM.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
-    xdmacSym_CC_SIF = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_SIF", xdmacChannelMenu)
-    xdmacSym_CC_SIF.setLabel("DMA Interface Bus To Read Source Data")
-    xdmacSym_CC_SIF.addKey("AHB_IF0", "0", "DMA Interface Bus 0")
-    xdmacSym_CC_SIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
-    xdmacSym_CC_SIF.setOutputMode("Key")
-    xdmacSym_CC_SIF.setDisplayMode("Description")
-    xdmacSym_CC_SIF.setSelectedKey("AHB_IF1",1)
-    xdmacSym_CC_SIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_SIF = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_SIF", xdmacChannelMenu)
+	xdmacSym_CC_SIF.setLabel("DMA Interface Bus To Read Source Data")
+	xdmacSym_CC_SIF.addKey("AHB_IF0", "0", "DMA Interface Bus 0")
+	xdmacSym_CC_SIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
+	xdmacSym_CC_SIF.setOutputMode("Key")
+	xdmacSym_CC_SIF.setDisplayMode("Description")
+	xdmacSym_CC_SIF.setSelectedKey("AHB_IF1",1)
+	xdmacSym_CC_SIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
-    xdmacSym_CC_DIF = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_DIF", xdmacChannelMenu)
-    xdmacSym_CC_DIF.setLabel("DMA Interface Bus To Write Destination Data")
-    xdmacSym_CC_DIF.addKey("AHB_IF0", "0", "DMA Interface Bus 0")
-    xdmacSym_CC_DIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
-    xdmacSym_CC_DIF.setOutputMode("Key")
-    xdmacSym_CC_DIF.setDisplayMode("Description")
-    xdmacSym_CC_DIF.setSelectedKey("AHB_IF1",1)
-    xdmacSym_CC_DIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_DIF = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_DIF", xdmacChannelMenu)
+	xdmacSym_CC_DIF.setLabel("DMA Interface Bus To Write Destination Data")
+	xdmacSym_CC_DIF.addKey("AHB_IF0", "0", "DMA Interface Bus 0")
+	xdmacSym_CC_DIF.addKey("AHB_IF1", "1", "DMA Interface Bus 1")
+	xdmacSym_CC_DIF.setOutputMode("Key")
+	xdmacSym_CC_DIF.setDisplayMode("Description")
+	xdmacSym_CC_DIF.setSelectedKey("AHB_IF1",1)
+	xdmacSym_CC_DIF.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
-    xdmacSym_CC_DWIDTH = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_DWIDTH", xdmacChannelMenu)
-    xdmacSym_CC_DWIDTH.setLabel("Data Width")
-    xdmacSym_CC_DWIDTH.addKey("BYTE", "0", "8-Bits")
-    xdmacSym_CC_DWIDTH.addKey("HALFWORD", "1", "16-Bits")
-    xdmacSym_CC_DWIDTH.addKey("WORD", "1", "32-Bits")
-    xdmacSym_CC_DWIDTH.setOutputMode("Key")
-    xdmacSym_CC_DWIDTH.setDisplayMode("Description")
-    xdmacSym_CC_DWIDTH.setSelectedKey("BYTE",1)
-    xdmacSym_CC_DWIDTH.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_DWIDTH = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_DWIDTH", xdmacChannelMenu)
+	xdmacSym_CC_DWIDTH.setLabel("Data Width")
+	xdmacSym_CC_DWIDTH.addKey("BYTE", "0", "8-Bits")
+	xdmacSym_CC_DWIDTH.addKey("HALFWORD", "1", "16-Bits")
+	xdmacSym_CC_DWIDTH.addKey("WORD", "1", "32-Bits")
+	xdmacSym_CC_DWIDTH.setOutputMode("Key")
+	xdmacSym_CC_DWIDTH.setDisplayMode("Description")
+	xdmacSym_CC_DWIDTH.setSelectedKey("BYTE",1)
+	xdmacSym_CC_DWIDTH.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
-    xdmacSym_CC_CSIZE = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_CSIZE", xdmacChannelMenu)
-    xdmacSym_CC_CSIZE.setLabel("Data Transfers Per DMA Request")
-    xdmacSym_CC_CSIZE.addKey("CHK_1", "0", "1 Transfer Per Request")
-    xdmacSym_CC_CSIZE.addKey("CHK_2", "1", "2 Transfers Per Request")
-    xdmacSym_CC_CSIZE.addKey("CHK_4", "2", "4 Transfers Per Request")
-    xdmacSym_CC_CSIZE.addKey("CHK_8", "3", "8 Transfers Per Request")
-    xdmacSym_CC_CSIZE.addKey("CHK_16", "4", "16 Transfers Per Request")
-    xdmacSym_CC_CSIZE.setOutputMode("Key")
-    xdmacSym_CC_CSIZE.setDisplayMode("Description")
-    xdmacSym_CC_CSIZE.setSelectedKey("CHK_1",1)
-    xdmacSym_CC_CSIZE.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_CSIZE = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_CSIZE", xdmacChannelMenu)
+	xdmacSym_CC_CSIZE.setLabel("Data Transfers Per DMA Request")
+	xdmacSym_CC_CSIZE.addKey("CHK_1", "0", "1 Transfer Per Request")
+	xdmacSym_CC_CSIZE.addKey("CHK_2", "1", "2 Transfers Per Request")
+	xdmacSym_CC_CSIZE.addKey("CHK_4", "2", "4 Transfers Per Request")
+	xdmacSym_CC_CSIZE.addKey("CHK_8", "3", "8 Transfers Per Request")
+	xdmacSym_CC_CSIZE.addKey("CHK_16", "4", "16 Transfers Per Request")
+	xdmacSym_CC_CSIZE.setOutputMode("Key")
+	xdmacSym_CC_CSIZE.setDisplayMode("Description")
+	xdmacSym_CC_CSIZE.setSelectedKey("CHK_1",1)
+	xdmacSym_CC_CSIZE.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
-    xdmacSym_CC_MBSIZE = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_MBSIZE", xdmacChannelMenu)
-    xdmacSym_CC_MBSIZE.setLabel("Burst Size For Memory To Memory Transfer")
-    xdmacSym_CC_MBSIZE.addKey("SINGLE", "0", "1 Transfer Per Burst")
-    xdmacSym_CC_MBSIZE.addKey("FOUR", "1", "4 Transfers Per Burst")
-    xdmacSym_CC_MBSIZE.addKey("EIGHT", "2", "8 Transfers Per Burst")
-    xdmacSym_CC_MBSIZE.addKey("SIXTEEN", "3", "16 Transfers Per Burst")
-    xdmacSym_CC_MBSIZE.setOutputMode("Key")
-    xdmacSym_CC_MBSIZE.setDisplayMode("Description")
-    xdmacSym_CC_MBSIZE.setSelectedKey("SINGLE",1)
-    xdmacSym_CC_MBSIZE.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
+	xdmacSym_CC_MBSIZE = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_MBSIZE", xdmacChannelMenu)
+	xdmacSym_CC_MBSIZE.setLabel("Burst Size For Memory To Memory Transfer")
+	xdmacSym_CC_MBSIZE.addKey("SINGLE", "0", "1 Transfer Per Burst")
+	xdmacSym_CC_MBSIZE.addKey("FOUR", "1", "4 Transfers Per Burst")
+	xdmacSym_CC_MBSIZE.addKey("EIGHT", "2", "8 Transfers Per Burst")
+	xdmacSym_CC_MBSIZE.addKey("SIXTEEN", "3", "16 Transfers Per Burst")
+	xdmacSym_CC_MBSIZE.setOutputMode("Key")
+	xdmacSym_CC_MBSIZE.setDisplayMode("Description")
+	xdmacSym_CC_MBSIZE.setSelectedKey("SINGLE",1)
+	xdmacSym_CC_MBSIZE.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
 
 xdmacEnable.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
 xdmacHighestCh.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
 
 # Interface for Peripheral clients
-for per in peridList:
+for per in per_instance.keys():
     xdmacChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(per), xdmacChannelMenu)
     xdmacChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(per))
     xdmacChannelNeeded.setDefaultValue(False)
