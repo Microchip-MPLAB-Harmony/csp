@@ -99,7 +99,7 @@ triggerRegister = {"Software Trigger"       : ["None"],
                 "USART1_Receive"            : ["USART1_REGS->US_RHR"],
                 "USART2_Transmit"           : ["USART2_REGS->US_THR"],
                 "USART2_Receive"            : ["USART2_REGS->US_RHR"],
-                "PWM0_Transmit"             : ["USART0_REGS->US_THR"],
+                "PWM0_Transmit"             : ["None"],
                 "TWIHS0_Transmit"           : ["TWIHS0_REGS->TWIHS_THR"],
                 "TWIHS0_Receive"            : ["TWIHS0_REGS->TWIHS_RHR"],
                 "TWIHS1_Transmit"           : ["TWIHS1_REGS->TWIHS_THR"],
@@ -131,12 +131,12 @@ triggerRegister = {"Software Trigger"       : ["None"],
                 "TC3_Receive"               : ["None"],
                 "I2SC0_Transmit_Left"       : ["I2SC0_REGS->I2SC_THR"],
                 "I2SC0_Receive_Left"        : ["I2SC0_REGS->I2SC_RHR"],
-                "I2SC1_Transmit_Left"       : ["I2SC0_REGS->I2SC_THR"],
-                "I2SC1_Receive_Left"        : ["I2SC0_REGS->I2SC_RHR"],
+                "I2SC1_Transmit_Left"       : ["I2SC1_REGS->I2SC_THR"],
+                "I2SC1_Receive_Left"        : ["I2SC1_REGS->I2SC_RHR"],
                 "I2SC0_Transmit_Right"      : ["I2SC0_REGS->I2SC_THR"],
                 "I2SC0_Receive_Right"       : ["I2SC0_REGS->I2SC_RHR"],
-                "I2SC1_Transmit_Right"      : ["I2SC0_REGS->I2SC_THR"],
-                "I2SC1_Receive_Right"       : ["I2SC0_REGS->I2SC_RHR"] }
+                "I2SC1_Transmit_Right"      : ["I2SC1_REGS->I2SC_THR"],
+                "I2SC1_Receive_Right"       : ["I2SC1_REGS->I2SC_RHR"] }
 
 ################################################################################
 #### Business Logic ####
