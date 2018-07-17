@@ -81,6 +81,12 @@ coreArch.setDefaultValue("CORTEX-M7")
 coreArch.setReadOnly(True)
 coreArch.setVisible(False)
 
+coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
+coreFPU.setLabel("FPU Available")
+coreFPU.setDefaultValue(True)
+coreFPU.setReadOnly(True)
+coreFPU.setVisible(False)
+
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
 deviceFamily.setLabel("Device Family")
 deviceFamily.setDefaultValue("SAM_E70_S70_V70_V71")
