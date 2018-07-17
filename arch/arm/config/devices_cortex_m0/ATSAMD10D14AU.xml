@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<CSP id="ATSAMD10D14AU">
+    <CoreModule path="${__FRAMEWORK_ROOT}/csp/arch" />
+    <DataSheet name="SAM_D09_D10_D11" />
+</CSP>
