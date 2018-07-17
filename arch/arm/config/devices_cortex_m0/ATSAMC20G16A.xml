@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<CSP id="ATSAMC20G16A">
+    <CoreModule path="${__FRAMEWORK_ROOT}/csp/arch" />
+    <DataSheet name="SAM_C20_C21" />
+</CSP>
