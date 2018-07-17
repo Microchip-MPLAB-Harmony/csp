@@ -48,8 +48,9 @@ void __attribute__((optimize("-O1"), long_call)) Reset_Handler(void);
 
 <#if CoreArchitecture == "CORTEX-M7">
 <#include "startup_xc32_cortex_m7.c.ftl">
-</#if>
 <#include "startup_xc32_${DeviceFamily}.c.ftl">
+</#if>
+
 
 /* Optional application-provided functions */
 extern void __attribute__((weak,long_call)) _on_reset(void);
@@ -78,27 +79,33 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     if (__xc32_on_reset)
         __xc32_on_reset();
 
+<#if FPU_Available>
 #if (__ARM_FP==14) || (__ARM_FP==4)
     /* Enable the FPU if the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
     FPU_Enable();
 #endif
+</#if>
 
-    TCM_Configure(${DEVICE_TCM_SIZE});
-
-<#if (TCM_ENABLE)>
+<#if TCM_ENABLE??>
+<#if TCM_ENABLE>
+	TCM_Configure(${DEVICE_TCM_SIZE});
     /* Enable TCM   */
     TCM_Enable();
 <#else>
     /* Disable TCM  */
     TCM_Disable();
 </#if>
+</#if>
 
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
+	
+<#if STACK_IN_TCM??>	
 <#if (STACK_IN_TCM)>
     /* Move the stack to Data Tightly Coupled Memory (DTCM) */
     __pic32c_TCM_StackInit();
+</#if>
 </#if>
 
 #  ifdef SCB_VTOR_TBLOFF_Msk
@@ -110,19 +117,25 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     /* Initialize the C library */
     __libc_init_array();
 
+<#if CoreUseMPU??>
 <#if CoreUseMPU>
     /* Initialize MPU */
     MPU_Initialize();
 </#if>
+</#if>
 
+<#if (INSTRUCTION_CACHE_ENABLE)??>
 <#if (INSTRUCTION_CACHE_ENABLE)>
     /* Enable Instruction Cache */
     ICache_Enable();
 </#if>
+</#if>
 
+<#if DATA_CACHE_ENABLE??>
 <#if (DATA_CACHE_ENABLE)>
     /* Enable Data Cache    */
     DCache_Enable();
+</#if>
 </#if>
 
     /* Call the optional application-provided _on_bootstrap() function. */
@@ -139,10 +152,11 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
 
     /* Branch to application's main function */
     main();
-
+<#if CoreArchitecture != "CORTEX-M0+">
 #if (defined(__DEBUG) || defined(__DEBUG_D)) && defined(__XC32)
     __builtin_software_breakpoint();
 #endif
+</#if>
     /* Infinite loop */
     while (1) {}
 }
