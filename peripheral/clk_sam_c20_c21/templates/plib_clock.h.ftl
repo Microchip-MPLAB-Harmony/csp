@@ -87,7 +87,7 @@ extern "C" {
 typedef enum
 {
     /*  XOSC Clock Fail Indicator */
-    OSCCTRL_EVENT_CLOCK_FAIL= 0x02,
+    OSCCTRL_EVENT_CLOCK_FAIL = 0x02,
 
     /* DPLL Lock Fail Indicator */
     OSCCTRL_EVENT_DPLL_LOCK_FAIL = 0x200,
@@ -114,33 +114,11 @@ typedef enum
 
 typedef enum
 {
-    /** GCLK generator channel 0 */
-    GCLK_GENERATOR_0,
+<#list 0..8 as i>
+    /** GCLK generator channel ${i} */
+    GCLK_GENERATOR_${i} = ${i},
 
-    /** GCLK generator channel 1 */
-    GCLK_GENERATOR_1,
-
-    /** GCLK generator channel 2 */
-    GCLK_GENERATOR_2,
-
-    /** GCLK generator channel 3 */
-    GCLK_GENERATOR_3,
-
-    /** GCLK generator channel 4 */
-    GCLK_GENERATOR_4,
-
-    /** GCLK generator channel 5 */
-    GCLK_GENERATOR_5,
-
-    /** GCLK generator channel 6 */
-    GCLK_GENERATOR_6,
-
-    /** GCLK generator channel 7 */
-    GCLK_GENERATOR_7,
-
-    /** GCLK generator channel 8 */
-    GCLK_GENERATOR_8,
-
+</#list>
 } GCLK_GENERATOR;
 
 // *****************************************************************************
@@ -159,138 +137,16 @@ typedef enum
 
 typedef enum
 {
-    /* GCLK for FDPLL96M input clock source for reference */
-    GCLK_PERIPHERAL_CHANNEL_DPLL = 0,
+<#list 0..GCLK_MAX_ID as i>
+    <#assign GCLK_ID_INDEX = "GCLK_ID_" + i + "_INDEX">
+    <#assign GCLK_ID_NAME = "GCLK_ID_" + i + "_NAME">
+    <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">
+        <#if .vars[GCLK_ID_CHEN]?has_content>
+    /* GCLK Channel Index for ${.vars[GCLK_ID_NAME]} */
+    GCLK_PERIPHERAL_CHANNEL_${.vars[GCLK_ID_NAME]} = ${.vars[GCLK_ID_INDEX]},
 
-    /* GCLK for FDPLL96M 32KHZ clock for FDPLL96M internal clock timer */
-    GCLK_PERIPHERAL_CHANNEL_DPLL_32K = 1,
-
-    /* GCLK for External Interrupt Controller */
-    GCLK_PERIPHERAL_CHANNEL_EIC = 2,
-
-    /* GCLK for Frequency Meter Measure */
-    GCLK_PERIPHERAL_CHANNEL_FREQM_MSR = 3,
-
-    /* GCLK for Frequency Meter Reference */
-    GCLK_PERIPHERAL_CHANNEL_FREQM_REF = 4,
-
-    /* GCLK for Temperature Sensor */
-    GCLK_PERIPHERAL_CHANNEL_TSENS = 5,
-
-    /* GCLK for Event System Channel 0 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_0 = 6,
-
-    /* GCLK for Event System Channel 1 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_1 = 7,
-
-    /* GCLK for Event System Channel 2 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_2 = 8,
-
-    /* GCLK for Event System Channel 3 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_3 = 9,
-
-    /* GCLK for Event System Channel 4 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_4 = 10,
-
-    /* GCLK for Event System Channel 5 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_5 = 11,
-
-    /* GCLK for Event System Channel 6 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_6 = 12,
-
-    /* GCLK for Event System Channel 7 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_7 = 13,
-
-    /* GCLK for Event System Channel 8 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_8 = 14,
-
-    /* GCLK for Event System Channel 9 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_9 = 15,
-
-    /* GCLK for Event System Channel 10 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_10 = 16,
-
-    /* GCLK for Event System Channel 11 */
-    GCLK_PERIPHERAL_CHANNEL_EVSYS_CHANNEL_11 = 17,
-
-    /* GCLK for SERCOM 0,1,2,3 SLOW */
-    GCLK_PERIPHERAL_CHANNEL_SERCOM_SLOW = 18,
-
-    /* SERCOM 0 CORE */
-    GCLK_PERIPHERAL_CHANNEL_SERCOM0_CORE = 19,
-
-    /* GCLK for SERCOM 1 CORE */
-    GCLK_PERIPHERAL_CHANNEL_SERCOM1_CORE = 20,
-
-    /* GCLK for SERCOM 2 CORE */
-    GCLK_PERIPHERAL_CHANNEL_SERCOM2_CORE = 21,
-
-    /*  GCLK for SERCOM 3 CORE */
-    GCLK_PERIPHERAL_CHANNEL_SERCOM3_CORE = 22,
-
-    /* GCLK for SERCOM5 SLOW */
-    GCLK_PERIPHERAL_CHANNEL_SERCOM5_SLOW = 24,
-
-    /* GCLK for SERCOM5 CORE */
-    GCLK_PERIPHERAL_CHANNEL_SERCOM5_CORE = 25,
-
-    /* GCLK for Control Area Network (CAN 0) */
-    GCLK_PERIPHERAL_CHANNEL_CAN0 = 26,
-
-    /* GCLK for  Control Area Network (CAN 1) */
-    GCLK_PERIPHERAL_CHANNEL_CAN1 = 27,
-
-    /* GCLK for Timer Counter for Control 0 and 1 (TCC0 and TCC1) */
-    GCLK_PERIPHERAL_CHANNEL_TCC0_TCC1 = 28,
-
-    /* GCLK for Timer Counter for Control 2 (TCC2) */
-    GCLK_PERIPHERAL_CHANNEL_TCC2 = 29,
-
-    /* GCLK for TimerCounters 0 and 1 (TC0 and TC1) */
-    GCLK_PERIPHERAL_CHANNEL_TC0_TC1 = 30,
-
-    /* GCLK for TimerCounters 2 and 3 (TC2 and TC3) */
-    GCLK_PERIPHERAL_CHANNEL_TC2_TC3 = 31,
-
-    /* GCLK for TC4*/
-    GCLK_PERIPHERAL_CHANNEL_TC4 = 32,
-
-    /* GCLK for Analog to Digital Converter 0 (ADC0) */
-    GCLK_PERIPHERAL_CHANNEL_ADC0 = 33,
-
-    /* GCLK for Analog to Digital Converter 1 (ADC1) */
-    GCLK_PERIPHERAL_CHANNEL_ADC1 = 34,
-
-    /* GCLK for Sigma Delta Analog to Digital Converter (SDADC) */
-    GCLK_PERIPHERAL_CHANNEL_SDADC = 35,
-
-    /* GCLK for Digital to Analog Converter (DAC)*/
-    GCLK_PERIPHERAL_CHANNEL_DAC = 36,
-
-    /* GCLK for Peripheral Touch Controller (PTC) */
-    GCLK_PERIPHERAL_CHANNEL_PTC = 37,
-
-    /* GCLK for Configurable Custom Logic (CCL) */
-    GCLK_PERIPHERAL_CHANNEL_CCL = 38,
-
-    /* GCLK for Analog Comparator (AC) */
-    GCLK_PERIPHERAL_CHANNEL_AC = 40,
-
-    /* GCLK for SERCOM6 CORE  */
-    GCLK_PERIPHERAL_CHANNEL_SERCOM6_CORE = 41,
-
-    /* GCLK for SERCOM7 CORE */
-    GCLK_PERIPHERAL_CHANNEL_SERCOM7_CORE = 42,
-
-    /* GCLK for Timer Counter (TC5) */
-    GCLK_PERIPHERAL_CHANNEL_TC5 = 43,
-
-    /* GCLK for Timer Counter6 (TC6) */
-    GCLK_PERIPHERAL_CHANNEL_TC6 = 44,
-
-    /* GCLK for Timer Counter7 (TC7) */
-    GCLK_PERIPHERAL_CHANNEL_TC7 = 45,
-
+        </#if>
+</#list>
 } GCLK_PERIPHERAL_CHANNEL;
 
 // *****************************************************************************
@@ -1815,3 +1671,4 @@ bool MCLK_ClockIsReady ( void );
 #endif
 
 #endif /* PLIB_CLOCK_H */
+
