@@ -42,23 +42,42 @@ def instantiateComponent(cmsisComponent):
             return
         break
 		
+    #check if it is a cortex M device
     archNode = ATDF.getNode('/avr-tools-device-file/devices')
-    coreFile = "core_c" + str(archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()) + ".h"
+    if ("m" in archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()):
+        coreFile = "core_c" + str(archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()) + ".h"
 
-    # add core header files
-    headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "tz_context.h", str(eval('coreFile')), "mpu_armv7.h", "cmsis_version.h"]
+        # add core header files
+        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "tz_context.h", str(eval('coreFile')), "mpu_armv7.h", "cmsis_version.h"]
 
-    for headerFileName in headerFileNames:
-        szSymbol = "{}_H".format(headerFileName[:-2].upper())
-        headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
-        headerFile.setRelative(False)
-        headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/Core/Include/" + headerFileName)
-        headerFile.setOutputName(headerFileName)
-        headerFile.setMarkup(False)
-        headerFile.setOverwrite(True)
-        headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/")
-        headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/")
-        headerFile.setType("HEADER")
+        for headerFileName in headerFileNames:
+            szSymbol = "{}_H".format(headerFileName[:-2].upper())
+            headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
+            headerFile.setRelative(False)
+            headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/Core/Include/" + headerFileName)
+            headerFile.setOutputName(headerFileName)
+            headerFile.setMarkup(False)
+            headerFile.setOverwrite(True)
+            headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/")
+            headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/")
+            headerFile.setType("HEADER")
+
+    #assume this is a cortex A device
+    else:
+        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "cmsis_iccarm.h", "cmsis_cp15.h", "core_ca.h"]
+
+        # add core header files for cortex a devices
+        for headerFileName in headerFileNames:
+            szSymbol = "CORE_A_{}_H".format(headerFileName[:-2].upper())
+            headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
+            headerFile.setRelative(False)
+            headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/Core_A/Include/" + headerFileName)
+            headerFile.setOutputName(headerFileName)
+            headerFile.setMarkup(False)
+            headerFile.setOverwrite(True)
+            headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core_A/Include/")
+            headerFile.setProjectPath("packs/CMSIS/CMSIS/Core_A/Include/")
+            headerFile.setType("HEADER")
 
     # add dsp header files
     headerFileNames = ["arm_common_tables.h", "arm_const_structs.h", "arm_math.h"]
