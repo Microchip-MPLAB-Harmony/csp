@@ -17,9 +17,12 @@ def instantiateComponent(cmsisComponent):
             cmsisError.setVisible(True)
             return
         break
+		
+    archNode = ATDF.getNode('/avr-tools-device-file/devices')
+    coreFile = "core_c" + str(archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()) + ".h"
 
     # add core header files
-    headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "tz_context.h", "core_cm7.h", "mpu_armv7.h"]
+    headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "tz_context.h", str(eval('coreFile')), "mpu_armv7.h"]
 
     for headerFileName in headerFileNames:
         szSymbol = "{}_H".format(headerFileName[:-2].upper())
