@@ -87,7 +87,7 @@ def instantiateComponent(dacComponent):
     dacHeaderFile.setSourcePath("../peripheral/dac_"+ dacModuleID+"/templates/plib_dac.h.ftl")
     dacHeaderFile.setOutputName("plib_dac" + dacIntanceIndex + ".h")
     dacHeaderFile.setDestPath("/peripheral/dac/")
-    dacHeaderFile.setProjectPath("/peripheral/dac/")
+    dacHeaderFile.setProjectPath("config/" + configName + "/peripheral/dac/")
     dacHeaderFile.setType("HEADER")
     dacHeaderFile.setMarkup(True)
 
@@ -96,7 +96,7 @@ def instantiateComponent(dacComponent):
     dacSourceFile.setSourcePath("../peripheral/dac_"+dacModuleID+"/templates/plib_dac.c.ftl")
     dacSourceFile.setOutputName("plib_dac" + dacIntanceIndex + ".c")
     dacSourceFile.setDestPath("/peripheral/dac/")
-    dacSourceFile.setProjectPath("/peripheral/dac/")
+    dacSourceFile.setProjectPath("config/" + configName + "/peripheral/dac/")
     dacSourceFile.setType("SOURCE")
     dacSourceFile.setMarkup(True)
 

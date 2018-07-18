@@ -105,7 +105,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_HeaderFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/plib_nvmctrl.h.ftl")
     nvmctrlSym_HeaderFile.setOutputName("plib_nvmctrl"+str(nvmctrlInstanceIndex)+".h")
     nvmctrlSym_HeaderFile.setDestPath("peripheral/nvmctrl/")
-    nvmctrlSym_HeaderFile.setProjectPath("config/" + configName + "peripheral/nvmctrl/")
+    nvmctrlSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/nvmctrl/")
     nvmctrlSym_HeaderFile.setType("HEADER")
     nvmctrlSym_HeaderFile.setMarkup(True)
 
@@ -113,7 +113,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_SourceFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/plib_nvmctrl.c.ftl")
     nvmctrlSym_SourceFile.setOutputName("plib_nvmctrl"+str(nvmctrlInstanceIndex)+".c")
     nvmctrlSym_SourceFile.setDestPath("peripheral/nvmctrl/")
-    nvmctrlSym_SourceFile.setProjectPath("config/" + configName + "peripheral/nvmctrl/")
+    nvmctrlSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/nvmctrl/")
     nvmctrlSym_SourceFile.setType("SOURCE")
     nvmctrlSym_SourceFile.setMarkup(True)
 

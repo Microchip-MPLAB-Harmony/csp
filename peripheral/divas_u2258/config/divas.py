@@ -48,7 +48,7 @@ def instantiateComponent(divasComponent):
     divasSym_HeaderFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/plib_divas.h.ftl")
     divasSym_HeaderFile.setOutputName("plib_divas" + str(num) +".h")
     divasSym_HeaderFile.setDestPath("peripheral/divas")
-    divasSym_HeaderFile.setProjectPath("peripheral/divas")
+    divasSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/divas/")
     divasSym_HeaderFile.setType("HEADER")
     divasSym_HeaderFile.setMarkup(True)
 
@@ -56,7 +56,7 @@ def instantiateComponent(divasComponent):
     divasSym_SourceFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/plib_divas.c.ftl")
     divasSym_SourceFile.setOutputName("plib_divas" + str(num) + ".c")
     divasSym_SourceFile.setDestPath("peripheral/divas")
-    divasSym_SourceFile.setProjectPath("peripheral/divas")
+    divasSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/divas/")
     divasSym_SourceFile.setType("SOURCE")
     divasSym_SourceFile.setMarkup(True)
 

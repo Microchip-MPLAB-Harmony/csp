@@ -57,7 +57,7 @@ def instantiateComponent(freqmComponent):
     freqmSym_HeaderFile.setSourcePath("../peripheral/freqm_"+freqmModuleID+"/templates/plib_freqm.h.ftl")
     freqmSym_HeaderFile.setOutputName("plib_freqm"+str(freqmInstanceIndex)+".h")
     freqmSym_HeaderFile.setDestPath("peripheral/freqm")
-    freqmSym_HeaderFile.setProjectPath("config/" + configName + "peripheral/freqm")
+    freqmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/freqm")
     freqmSym_HeaderFile.setType("HEADER")
     freqmSym_HeaderFile.setMarkup(True)
 
@@ -65,7 +65,7 @@ def instantiateComponent(freqmComponent):
     freqmSym_SourceFile.setSourcePath("../peripheral/freqm_"+freqmModuleID+"/templates/plib_freqm.c.ftl")
     freqmSym_SourceFile.setOutputName("plib_freqm"+str(freqmInstanceIndex)+".c")
     freqmSym_SourceFile.setDestPath("peripheral/freqm")
-    freqmSym_SourceFile.setProjectPath("config/" + configName + "peripheral/freqm")
+    freqmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/freqm")
     freqmSym_SourceFile.setType("SOURCE")
     freqmSym_SourceFile.setMarkup(True)
 

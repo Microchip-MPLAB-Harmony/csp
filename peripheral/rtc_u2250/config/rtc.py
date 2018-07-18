@@ -458,7 +458,7 @@ def instantiateComponent(rtcComponent):
     rtcHeaderFile.setSourcePath("../peripheral/rtc_"+ rtcModuleID +"/templates/plib_rtc.h.ftl")
     rtcHeaderFile.setOutputName("plib_rtc" + rtcInstanceIndex + ".h")
     rtcHeaderFile.setDestPath("/peripheral/rtc/")
-    rtcHeaderFile.setProjectPath("/peripheral/rtc/")
+    rtcHeaderFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
     rtcHeaderFile.setType("HEADER")
     rtcHeaderFile.setMarkup(True)
 
@@ -467,7 +467,7 @@ def instantiateComponent(rtcComponent):
     rtcSourceFile.setSourcePath("../peripheral/rtc_"+ rtcModuleID +"/templates/plib_rtc_timer.c.ftl")
     rtcSourceFile.setOutputName("plib_rtc" + rtcInstanceIndex + "_timer.c")
     rtcSourceFile.setDestPath("/peripheral/rtc/")
-    rtcSourceFile.setProjectPath("/peripheral/rtc/")
+    rtcSourceFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
     rtcSourceFile.setType("SOURCE")
     rtcSourceFile.setMarkup(True)
 
@@ -476,7 +476,7 @@ def instantiateComponent(rtcComponent):
     rtcSourceFile.setSourcePath("../peripheral/rtc_"+ rtcModuleID +"/templates/plib_rtc_clock.c.ftl")
     rtcSourceFile.setOutputName("plib_rtc" + rtcInstanceIndex + "_clock.c")
     rtcSourceFile.setDestPath("/peripheral/rtc/")
-    rtcSourceFile.setProjectPath("/peripheral/rtc/")
+    rtcSourceFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
     rtcSourceFile.setType("SOURCE")
     rtcSourceFile.setMarkup(True)
     rtcSourceFile.setEnabled(False)

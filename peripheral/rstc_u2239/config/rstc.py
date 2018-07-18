@@ -29,7 +29,7 @@ def instantiateComponent(rstcComponent):
 	rstcSym_HeaderFile.setSourcePath("../peripheral/rstc_"+rstcModuleID+"/templates/plib_rstc.h.ftl")
 	rstcSym_HeaderFile.setOutputName("plib_rstc"+rstcInstanceIndex+".h")
 	rstcSym_HeaderFile.setDestPath("peripheral/rstc/")
-	rstcSym_HeaderFile.setProjectPath("config/" + configName + "peripheral/rstc/")
+	rstcSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/rstc/")
 	rstcSym_HeaderFile.setType("HEADER")
 	rstcSym_HeaderFile.setMarkup(True)
 
@@ -37,7 +37,7 @@ def instantiateComponent(rstcComponent):
 	rstcSym_SourceFile.setSourcePath("../peripheral/rstc_"+rstcModuleID+"/templates/plib_rstc.c.ftl")
 	rstcSym_SourceFile.setOutputName("plib_rstc"+rstcInstanceIndex+".c")
 	rstcSym_SourceFile.setDestPath("peripheral/rstc/")
-	rstcSym_SourceFile.setProjectPath("config/" + configName + "peripheral/rstc/")
+	rstcSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/rstc/")
 	rstcSym_SourceFile.setType("SOURCE")
 	rstcSym_SourceFile.setMarkup(True)
 

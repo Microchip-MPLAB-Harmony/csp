@@ -92,7 +92,7 @@ def instantiateComponent(pacComponent):
     pacSym_HeaderFile.setSourcePath("../peripheral/pac_u2120/templates/plib_pac.h.ftl")
     pacSym_HeaderFile.setOutputName("plib_pac" + str(pacInstanceIndex) + ".h")
     pacSym_HeaderFile.setDestPath("peripheral/pac/")
-    pacSym_HeaderFile.setProjectPath("peripheral/pac/")
+    pacSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pac/")
     pacSym_HeaderFile.setType("HEADER")
     pacSym_HeaderFile.setMarkup(True)
 
@@ -100,7 +100,7 @@ def instantiateComponent(pacComponent):
     pacSym_SourceFile.setSourcePath("../peripheral/pac_u2120/templates/plib_pac.c.ftl")
     pacSym_SourceFile.setOutputName("plib_pac" + str(pacInstanceIndex) + ".c")
     pacSym_SourceFile.setDestPath("peripheral/pac/")
-    pacSym_SourceFile.setProjectPath("peripheral/pac/")
+    pacSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pac/")
     pacSym_SourceFile.setType("SOURCE")
     pacSym_SourceFile.setMarkup(True)
 
