@@ -4,13 +4,102 @@ Log.writeInfoMessage("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
 
-# Function to enable PORT Group when any of the pins is using the particular group.
-def setupPort(usePortLocal, event):
-    global usePort
+def setupPortPINCFG(usePortLocalPINCFG, event):
 
-    x = portGroup.index(event["value"])
+    pullEnable = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PULLEN")
+    inputEnable = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_INEN")
+    peripheralFunc = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) +"_PERIPHERAL_FUNCTION")
+    bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
+    groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
 
-    usePort[x].setValue(True, 1)
+    if groupName != "None":
+
+        cfgValue = 0
+
+        if pullEnable:
+            cfgValue |= (1 << 2)
+        if pullEnable == "False":
+            cfgValue &= ~ (1 << 2)
+        if inputEnable:
+            cfgValue |= (1 << 1)
+        if inputEnable == "False":
+            cfgValue &= ~ (1 << 1)
+        if (peripheralFunc != "GPIO") == True and (peripheralFunc != "") == True and (peripheralFunc != "Alternate") == True:
+            cfgValue |= (1 << 0)
+        else :
+            cfgValue &= ~ (1 << 0)
+
+        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PINCFG" + str(bitPosition), str(hex(cfgValue)), 1)
+
+
+def setupPortDir(usePortLocalDir, event):
+
+    bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
+    groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+
+    preVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_DIR")
+
+    dirValue = 0
+
+    if preVal != None:
+        dirValue = int(preVal.split("L")[0],0)
+
+    if event["value"] == "Out":
+        dirValue |= 1 << bitPosition
+    else:
+        dirValue &= ~ (1 << bitPosition)
+    Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_DIR", str((hex(dirValue).rstrip("L"))), 1)
+
+
+def setupPortLat(usePortLocalLatch, event):
+
+    bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
+    groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+
+    preVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_OUT")
+    outValue = 0
+
+    if preVal != None:
+        outValue = int(preVal.split("L")[0],0)
+
+    if event["value"] == "High":
+        outValue |= 1 << bitPosition
+    else:
+        outValue &= ~(1 << bitPosition)
+
+    Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_OUT", str((hex(outValue).rstrip("L"))), 1)
+
+
+def setupPortPinMux(portSym_PORT_PMUX_local, event):
+    global intPrePinMuxVal
+
+    bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
+    groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+
+    peripheralFuncVal = 0
+
+    if (event["value"] != "GPIO") == True and (event["value"] != "") == True and (event["value"] != "Alternate") == True:
+
+        prePinMuxVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
+        intPrePinMuxVal = int(prePinMuxVal,0)
+
+        if ((bitPosition%2) == 0):
+            peripheralFuncVal = int(prePinMuxVal,0) | portPeripheralFunc.index(event["value"])
+        else :
+            peripheralFuncVal = int(prePinMuxVal,0) | (portPeripheralFunc.index(event["value"]) << 4)
+
+        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
+    else :
+        if ((bitPosition%2) == 0):
+            intPrePinMuxVal &= int("0xf0",0)
+        else :
+            intPrePinMuxVal &= int("0x0f",0)
+        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)), 1)
+
+        portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
+
+        if portPositionNodePin != None:
+            Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , str(portPositionNodePin.getAttribute("pad")), 1)
 
 ###################################################################################################
 ######################################### PORT Main Menu  ##########################################
@@ -49,13 +138,21 @@ pinDirection = []
 pinLatch = []
 pinPullEnable = []
 pinInputEnable = []
-pinGroupList = []
+pinDirList = []
+pinLatchList = []
+pinPinMuxList = []
+pinGroupNum = []
+portSym_PIN_PINCFG = []
 
-packagePinCount = Pin.getPackagePinCount(portPackage.getValue())
+# Create portGroupName list of uppercase letters
+global portGroupName
+portGroupName = []
+for letter in range(65,91):
+    portGroupName.append(chr(letter))
 
-for pinNumber in range(1, packagePinCount + 1):
+for pinNumber in range(1, Pin.getPackagePinCount(portPackage.getValue()) + 1):
 
-    portSignalNode = ATDF.getNode("/avr-tools-device-file/devices/device@[family=\"PIC32CM\"]/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/signals/signal@[index=\""+ str(pinNumber - 1) +"\"]")
+    portSignalNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/signals/signal@[index=\""+ str(pinNumber - 1) +"\"]")
 
     if portSignalNode != None:
 
@@ -85,52 +182,94 @@ for pinNumber in range(1, packagePinCount + 1):
     pinType.append(pinNumber)
     pinType[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_TYPE", pin[pinNumber-1])
     pinType[pinNumber-1].setLabel("Type")
-    pinName[pinNumber-1].setReadOnly(True)
+    pinType[pinNumber-1].setReadOnly(True)
 
     pinPeripheralFunction.append(pinNumber)
     pinPeripheralFunction[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber-1])
     pinPeripheralFunction[pinNumber-1].setLabel("Peripheral Selection")
-    pinName[pinNumber-1].setReadOnly(True)
+    pinPeripheralFunction[pinNumber-1].setReadOnly(True)
 
-    pinBitPosition.append(pinNumber)
-    pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PORT_PIN", pin[pinNumber-1])
-    pinBitPosition[pinNumber-1].setLabel("Bit Position")
-    pinName[pinNumber-1].setReadOnly(True)
+    portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout/pin@[position=\""+ str(pinNumber) +"\"]")
 
-    pinGroup.append(pinNumber)
-    pinGroup[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PORT_GROUP", pin[pinNumber-1])
-    pinGroup[pinNumber-1].setLabel("Group")
-    pinGroup[pinNumber-1].setDefaultValue("")
-    pinName[pinNumber-1].setReadOnly(True)
+    if portBitPositionNode != None:
+
+        pinoutPad = str(portBitPositionNode.getAttribute("pad"))
+
+        pinBitPosition.append(pinNumber)
+        pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PORT_PIN", pin[pinNumber-1])
+        pinBitPosition[pinNumber-1].setLabel("Bit Position")
+
+        pinGroup.append(pinNumber)
+        pinGroup[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PORT_GROUP", pin[pinNumber-1])
+        pinGroup[pinNumber-1].setLabel("Group")
+
+        pinGroupNum.append(pinNumber)
+        pinGroupNum[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_GROUP", pin[pinNumber-1])
+
+        pinoutPadFirstHalf, pinoutPadSecondHalf = pinoutPad[:len(pinoutPad)/2], pinoutPad[len(pinoutPad)/2:]
+        firstPart, secondPart = pinoutPadFirstHalf[:len(pinoutPadFirstHalf)/2], pinoutPadFirstHalf[len(pinoutPadFirstHalf)/2:]
+
+        if firstPart == "P":
+            pinBitPosition[pinNumber-1].setDefaultValue(int(pinoutPadSecondHalf))
+            pinBitPosition[pinNumber-1].setReadOnly(True)
+
+            pinGroup[pinNumber-1].setDefaultValue(str(secondPart))
+            pinGroup[pinNumber-1].setReadOnly(True)
+
+            portGrpNum = portGroupName.index(str(secondPart))
+            pinGroupNum[pinNumber-1].setVisible(False)
+            pinGroupNum[pinNumber-1].setDefaultValue(portGrpNum)
+
+        else:
+            pinBitPosition[pinNumber-1].setDefaultValue(-1)
+            pinBitPosition[pinNumber-1].setReadOnly(True)
+
+            pinGroup[pinNumber-1].setDefaultValue("None")
+            pinGroup[pinNumber-1].setReadOnly(True)
 
     pinMode.append(pinNumber)
     pinMode[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_MODE", pin[pinNumber-1])
     pinMode[pinNumber-1].setLabel("Mode")
-    pinName[pinNumber-1].setReadOnly(True)
+    pinMode[pinNumber-1].setReadOnly(True)
 
     pinDirection.append(pinNumber)
     pinDirection[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pin[pinNumber-1])
     pinDirection[pinNumber-1].setLabel("Direction")
-    pinName[pinNumber-1].setReadOnly(True)
+    pinDirection[pinNumber-1].setReadOnly(True)
 
     pinLatch.append(pinNumber)
     pinLatch[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_LAT", pin[pinNumber-1])
     pinLatch[pinNumber-1].setLabel("Initial Latch Value")
-    pinName[pinNumber-1].setReadOnly(True)
+    pinLatch[pinNumber-1].setReadOnly(True)
 
     pinPullEnable.append(pinNumber)
     pinPullEnable[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PULLEN", pin[pinNumber-1])
     pinPullEnable[pinNumber-1].setLabel("Pull Enable")
-    pinName[pinNumber-1].setReadOnly(True)
+    pinPullEnable[pinNumber-1].setReadOnly(True)
 
     pinInputEnable.append(pinNumber)
     pinInputEnable[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_INEN", pin[pinNumber-1])
     pinInputEnable[pinNumber-1].setLabel("Input Enable")
-    pinName[pinNumber-1].setReadOnly(True)
+    pinInputEnable[pinNumber-1].setReadOnly(True)
 
-    #list created only for dependecy
-    pinGroupList.append(pinNumber)
-    pinGroupList[pinNumber-1] = "PIN_" + str(pinNumber) +"_PORT_GROUP"
+    #creating list for direction dependency
+    pinDirList.append(pinNumber)
+    pinDirList[pinNumber-1] = "PIN_" + str(pinNumber) +"_DIR"
+
+    #creating list for direction dependency
+    pinLatchList.append(pinNumber)
+    pinLatchList[pinNumber-1] = "PIN_" + str(pinNumber) +"_LAT"
+
+    #creating list for peripheral function dependency
+    pinPinMuxList.append(pinNumber)
+    pinPinMuxList[pinNumber-1] = "PIN_" + str(pinNumber) +"_PERIPHERAL_FUNCTION"
+
+    portSym_PIN_PINCFG.append(pinNumber)
+    portSym_PIN_PINCFG[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_CFG", pin[pinNumber-1])
+    portSym_PIN_PINCFG[pinNumber-1].setReadOnly(True)
+    portSym_PIN_PINCFG[pinNumber-1].setVisible(False)
+    portSym_PIN_PINCFG[pinNumber-1].setDependencies(setupPortPINCFG, ["PIN_" + str(pinNumber) +"_INEN", "PIN_" + str(pinNumber) +"_PULLEN", "PIN_" + str(pinNumber) +"_PERIPHERAL_FUNCTION"])
+
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
@@ -140,92 +279,83 @@ portConfiguration = coreComponent.createMenuSymbol("PORT_CONFIGURATIONS", portEn
 portConfiguration.setLabel("Port Registers Configuration")
 
 portModuleGC = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/register-group@[name=\"PORT\"]/register-group@[name-in-module=\"GROUP\"]")
-portModuleGroupCount = portModuleGC.getAttribute("count")
 
 #port group count
 portSym_Count = coreComponent.createIntegerSymbol("PORT_GROUP_COUNT", portConfiguration)
 portSym_Count.setVisible(False)
-portSym_Count.setDefaultValue(int(portModuleGroupCount))
+portSym_Count.setDefaultValue(int(portModuleGC.getAttribute("count")))
 
 portSym_PinCount = coreComponent.createIntegerSymbol("PORT_PIN_COUNT", portMenu)
-portSym_PinCount.setLabel("No Of Pins")
 portSym_PinCount.setVisible(False)
-portSym_PinCount.setDefaultValue(int(packagePinCount))
+portSym_PinCount.setDefaultValue(int(Pin.getPackagePinCount(portPackage.getValue())))
+
+global portPeripheralFunc
+portPeripheralFunc = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
 global group
-group = [0 for i in range(int(portModuleGroupCount))]
+group = [0 for i in range(int(portModuleGC.getAttribute("count")))]
 
-global portGroup
-portGroup = []
+global intPrePinMuxVal
+intPrePinMuxVal = 0x00
+
+global portPin
+portPin = []
 
 global usePort
 usePort = []
 
 port = []
-portSym_PINCFG = [[]]
-portSym_PINCFG_PMUXEN = [[]]
-portSym_PINCFG_INEN = [[]]
-portSym_PINCFG_DRVSTR = [[]]
-portSym_PINCFG_PULLEN = [[]]
-portSym_PORT_PMUX = [[]]
-portSym_PORT_DIR = []
-portSym_PORT_CTRL = []
+
+portSym_GroupName = []
 
 for portNumber in range(0, len(group)):
 
     port.append(portNumber)
     port[portNumber] = coreComponent.createMenuSymbol("PORT_GROUP_" + str(portNumber) + "_CONFIGURATION", portConfiguration)
-    port[portNumber].setLabel("PORT GROUP " + str(portNumber) + " Configuration")
+    port[portNumber].setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " Configuration")
 
-    #creating list for port group
-    portGroup.append(str(portNumber))
+    #port group name
+    portSym_GroupName.append(portNumber)
+    portSym_GroupName[portNumber] = coreComponent.createStringSymbol("PORT_GROUP_NAME_" + str(portNumber), portConfiguration)
+    portSym_GroupName[portNumber].setVisible(False)
+    portSym_GroupName[portNumber].setDefaultValue(str(portGroupName[portNumber]))
 
     usePort.append(portNumber)
     usePort[portNumber] = coreComponent.createBooleanSymbol("PORT_GROUP_" + str(portNumber), port[portNumber])
-    usePort[portNumber].setLabel("Use PORT GROUP " + str(portNumber))
+    usePort[portNumber].setLabel("Use PORT GROUP " + str(portGroupName[portNumber]))
+    usePort[portNumber].setValue(True, 1)
 
-    portSym_PORT_DIR.append(portNumber)
-    portSym_PORT_DIR[portNumber] = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_DIR", port[portNumber])
-    portSym_PORT_DIR[portNumber].setLabel("Port Pin Direction")
-    portSym_PORT_DIR[portNumber].setDefaultValue("0x00000000")
+    portSym_PORT_DIR = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_DIR", port[portNumber])
+    portSym_PORT_DIR.setLabel("Port Pin Direction")
+    portSym_PORT_DIR.setDefaultValue(str(hex(0)))
+    portSym_PORT_DIR.setDependencies(setupPortDir, pinDirList)
 
-    portSym_PORT_CTRL.append(portNumber)
-    portSym_PORT_CTRL[portNumber] = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_CTRL", port[portNumber])
-    portSym_PORT_CTRL[portNumber].setLabel("Enable Input Synchronizer ?")
-    portSym_PORT_CTRL[portNumber].setDefaultValue("0x00000000")
+    portSym_PORT_LATCH = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_OUT", port[portNumber])
+    portSym_PORT_LATCH.setLabel("Port Pin Output Value")
+    portSym_PORT_LATCH.setDefaultValue(str(hex(0)))
+    portSym_PORT_LATCH.setDependencies(setupPortLat, pinLatchList)
+
+    portSym_PORT_CTRL = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_CTRL", port[portNumber])
+    portSym_PORT_CTRL.setLabel("Enable Input Synchronizer")
+    portSym_PORT_CTRL.setDefaultValue(str(hex(0)))
 
     for pinNum in range(0, 32):
-        portSym_PINCFG.append(pinNum)
-        portSym_PINCFG[portNumber] = coreComponent.createMenuSymbol("PORT_GROUP_" + str(portNumber) + "_PINCFG" + str(pinNum), port[portNumber])
-        portSym_PINCFG[portNumber].setLabel("PORT GROUP" + str(portNumber) + " PINCFG" + str(pinNum))
+        #creating list for port pin
+        portPin.append(str(pinNum))
 
-        #Enables the Peripheral Multiplexer on the pin
-        portSym_PINCFG_PMUXEN.append(pinNum)
-        portSym_PINCFG_PMUXEN[portNumber] = coreComponent.createBooleanSymbol("PORT_GROUP_" + str(portNumber) + "_PINCFG" + str(pinNum) + "_PMUXEN", portSym_PINCFG[portNumber])
-        portSym_PINCFG_PMUXEN[portNumber].setLabel("Enable Pin Peripheral Multiplexer")
+        portSym_PORT_PINCFG = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PINCFG" + str(pinNum) , port[portNumber])
+        portSym_PORT_PINCFG.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PINCFG" + str(pinNum))
+        portSym_PORT_PINCFG.setDefaultValue(str(hex(0)))
 
-        #Enables or disabled Pin Input Buffer
-        portSym_PINCFG_INEN.append(pinNum)
-        portSym_PINCFG_INEN[portNumber] = coreComponent.createBooleanSymbol("PORT_GROUP_" + str(portNumber) + "_PINCFG" + str(pinNum) + "_INEN", portSym_PINCFG[portNumber])
-        portSym_PINCFG_INEN[portNumber].setLabel("Enable Pin Input Buffer")
-
-        #Enables or disabled enhanced Pin Drive Strength
-        portSym_PINCFG_DRVSTR.append(pinNum)
-        portSym_PINCFG_DRVSTR[portNumber] = coreComponent.createBooleanSymbol("PORT_GROUP_" + str(portNumber) + "_PINCFG" + str(pinNum) + "_DRVSTR", portSym_PINCFG[portNumber])
-        portSym_PINCFG_DRVSTR[portNumber].setLabel("Enable Pin Strong Drive Strength")
-
-        #Enables or disable the internal pull up resistor
-        portSym_PINCFG_PULLEN.append(pinNum)
-        portSym_PINCFG_PULLEN[portNumber] = coreComponent.createBooleanSymbol("PORT_GROUP_" + str(portNumber) + "_PINCFG" + str(pinNum) + "_PULLEN", portSym_PINCFG[portNumber])
-        portSym_PINCFG_PULLEN[portNumber].setLabel("Enable Internal Pull Up Resistor")
+        portPad = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PAD_" + str(pinNum), port[portNumber])
+        portPad.setVisible(False)
+        portPad.setDefaultValue("0")
 
     for pinNum in range(0, 16):
-        portSym_PORT_PMUX.append(pinNum)
-        portSym_PORT_PMUX[portNumber] = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PMUX" + str(pinNum) , port[portNumber])
-        portSym_PORT_PMUX[portNumber].setLabel("PORT GROUP" + str(portNumber) + " PMUX" + str(pinNum))
-        portSym_PORT_PMUX[portNumber].setDefaultValue("0x00")
-
-usePort[0].setDependencies(setupPort, pinGroupList)
+        portSym_PORT_PMUX = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PMUX" + str(pinNum) , port[portNumber])
+        portSym_PORT_PMUX.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PMUX" + str(pinNum))
+        portSym_PORT_PMUX.setDefaultValue(str(hex(0)))
+        portSym_PORT_PMUX.setDependencies(setupPortPinMux, pinPinMuxList)
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
@@ -238,22 +368,42 @@ portModuleID = portModuleNode.getAttribute("id")
 portSym_HeaderFile = coreComponent.createFileSymbol("PORT_HEADER", None)
 portSym_HeaderFile.setSourcePath("../peripheral/port_"+portModuleID+"/templates/plib_port.h.ftl")
 portSym_HeaderFile.setOutputName("plib_port.h")
-portSym_HeaderFile.setDestPath("config/" + configName + "/peripheral/port/")
+portSym_HeaderFile.setDestPath("/peripheral/port/")
 portSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/port/")
 portSym_HeaderFile.setType("HEADER")
 portSym_HeaderFile.setMarkup(True)
 
+portPinHeaderFile = coreComponent.createFileSymbol("PORT_PIN_HEADER", None)
+portPinHeaderFile.setSourcePath("../peripheral/port_" + portModuleID + "/plib_port_pin.h")
+portPinHeaderFile.setOutputName("plib_port_pin.h")
+portPinHeaderFile.setDestPath("/peripheral/port/")
+portPinHeaderFile.setProjectPath("config/" + configName +"/peripheral/port/")
+portPinHeaderFile.setType("HEADER")
+portPinHeaderFile.setMarkup(False)
+
 portSym_SourceFile = coreComponent.createFileSymbol("PORT_SOURCE", None)
 portSym_SourceFile.setSourcePath("../peripheral/port_"+portModuleID+"/templates/plib_port.c.ftl")
 portSym_SourceFile.setOutputName("plib_port.c")
-portSym_SourceFile.setDestPath("config/" + configName + "/peripheral/port/")
+portSym_SourceFile.setDestPath("/peripheral/port/")
 portSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/port/")
 portSym_SourceFile.setType("SOURCE")
 portSym_SourceFile.setMarkup(True)
 
+bspIncludeFile = coreComponent.createFileSymbol("PORT_BSP_HEADER", None)
+bspIncludeFile.setType("STRING")
+bspIncludeFile.setOutputName("core.LIST_BSP_MACRO_INCLUDES")
+bspIncludeFile.setSourcePath("../peripheral/port_"+portModuleID+"/templates/plib_port_bsp.h.ftl")
+bspIncludeFile.setMarkup(True)
+
+bspIncludeFile = coreComponent.createFileSymbol("PORT_BSP_SOURCE", None)
+bspIncludeFile.setType("STRING")
+bspIncludeFile.setOutputName("core.LIST_BSP_INITIALIZATION")
+bspIncludeFile.setSourcePath("../peripheral/port_"+portModuleID+"/templates/plib_port_bsp.c.ftl")
+bspIncludeFile.setMarkup(True)
+
 portSym_SystemInitFile = coreComponent.createFileSymbol("PORT_SYS_INIT", None)
 portSym_SystemInitFile.setSourcePath("../peripheral/port_"+portModuleID+"/templates/system/initialization.c.ftl")
-portSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+portSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 portSym_SystemInitFile.setType("STRING")
 portSym_SystemInitFile.setMarkup(True)
 

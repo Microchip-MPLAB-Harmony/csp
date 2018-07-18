@@ -72,255 +72,40 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 void PORT_Initialize(void)
 {
 <#list 0..PORT_GROUP_COUNT as n>
-    <#assign PORT_GROUP_INDEX = n>
     <#assign PORT_GROUP = "PORT_GROUP_"+ n>
+    <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + n>
         <#if .vars[PORT_GROUP]!false>
-        <#lt>   /*************************** GROUP ${PORT_GROUP_INDEX} Initialization ****************************/
-        <#assign PORT_DIR = "PORT_GROUP_" + n + "_DIR">
-        <#assign PORT_CTRL = "PORT_GROUP_" + n + "_CTRL">
-        <#if "${.vars[PORT_DIR]}" != "0x00000000">
-            <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].DIR = ${.vars[PORT_DIR]};
-        </#if>
-        <#if "${.vars[PORT_CTRL]}" != "0x00000000">
-            <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].CTRL = ${.vars[PORT_CTRL]};
-        </#if>
-        <#list 0..31 as i>
-        <#assign PORT_PINCONFIG_PMUXEN = "PORT_GROUP_" + n + "_PINCFG"+ i +"_PMUXEN">
-        <#assign PORT_PINCONFIG_INEN = "PORT_GROUP_" + n + "_PINCFG"+ i +"_INEN">
-        <#assign PORT_PINCONFIG_DRVSTR = "PORT_GROUP_" + n + "_PINCFG"+ i +"_DRVSTR">
-        <#assign PORT_PINCONFIG_PULLEN = "PORT_GROUP_" + n + "_PINCFG"+ i +"_PULLEN">
-        <#assign PORT_INDEX = i>
-            <#if .vars[PORT_PINCONFIG_PMUXEN]!"true">
-                <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] = PORT_GROUP_PINCFG_PMUXEN_Msk;
-            </#if>
-            <#if .vars[PORT_PINCONFIG_INEN]!"true">
-                <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] |= PORT_GROUP_PINCFG_INEN_Msk;
-            </#if>
-            <#if .vars[PORT_PINCONFIG_PULLEN]!"true">
-                <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] |= PORT_GROUP_PINCFG_PULLEN_Msk;
-            </#if>
-            <#if .vars[PORT_PINCONFIG_DRVSTR]!"true">
-                <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PINCFG[${PORT_INDEX}] |= PORT_GROUP_PINCFG_DRVSTR_Msk;
-            </#if>
-        </#list>
-        <#list 0..15 as i>
-        <#assign PORT_PINMUX = "PORT_GROUP_" + n + "_PMUX"+ i>
-        <#assign PORT_INDEX = i>
-        <#if "${.vars[PORT_PINMUX]}" != "0x00">
-            <#lt>   PORT_REGS->PORT_GROUP[${PORT_GROUP_INDEX}].PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
-        </#if>
-        </#list>
+            <#lt>   /************************** GROUP ${.vars[PORT_GROUP_NAME]} Initialization *************************/
+            <#assign PORT_DIR = "PORT_GROUP_" + n + "_DIR">
+            <#assign PORT_OUT = "PORT_GROUP_" + n + "_OUT">
+            <#assign PORT_CTRL = "PORT_GROUP_" + n + "_CTRL">
+                <#if "${.vars[PORT_DIR]}" != "0x0">
+                    <#lt>   PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_DIR = ${.vars[PORT_DIR]};
+                </#if>
+                <#if "${.vars[PORT_OUT]}" != "0x0">
+                    <#lt>   PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_OUT = ${.vars[PORT_OUT]};
+                </#if>
+                <#if "${.vars[PORT_CTRL]}" != "0x0">
+                    <#lt>   PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_CTRL = ${.vars[PORT_CTRL]};
+                </#if>
+                <#list 0..31 as i>
+                    <#assign PORT_PINCONFIG = "PORT_GROUP_" + n + "_PINCFG" + i>
+                    <#assign PORT_GROUP_PINCFG_INDEX = i>
+                    <#if "${.vars[PORT_PINCONFIG]}" != "0x0">
+                        <#lt>   PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_PINCFG[${PORT_GROUP_PINCFG_INDEX}] = ${.vars[PORT_PINCONFIG]};
+                    </#if>
+                </#list>
+
+                <#list 0..15 as i>
+                    <#assign PORT_PINMUX = "PORT_GROUP_" + n + "_PMUX"+ i>
+                    <#assign PORT_INDEX = i>
+                    <#if "${.vars[PORT_PINMUX]}" != "0x0">
+                        <#lt>   PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
+                    </#if>
+                </#list>
+
         </#if>
 </#list>
-}
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinWrite(PORT_PIN pin, bool value)
-
-  Summary:
-    Writes the specified value to the selected pin.
-
-  Description:
-    This function writes/drives the "value" on the selected I/O line/pin.
-
-  Remarks:
-    Refer plib_port.h file for more information.
-*/
-
-void PORT_PinWrite(PORT_PIN pin, bool value)
-{
-    uint32_t group = 0;
-
-    group = pin / 32;
-    pin =  pin % 32;
-
-    if (value == false)
-    {
-        PORT_REGS->PORT_GROUP[group].OUTCLR = 1 << pin;
-    }
-    else
-    {
-        PORT_REGS->PORT_GROUP[group].OUTSET = 1 << pin;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    bool PORT_PinRead(PORT_PIN pin)
-
-  Summary:
-    Read the selected pin value.
-
-  Description:
-    This function reads the present state at the selected input pin.  The
-    function can also be called to read the value of an output pin if input
-    sampling on the output pin is enabled in MHC. If input synchronization on
-    the pin is disabled in MHC, the function will cause a 2 PORT Clock cycles
-    delay. Enabling the synchronization eliminates the delay but will increase
-    power consumption.
-
-  Remarks:
-    Refer plib_port.h file for more information.
-*/
-
-bool PORT_PinRead(PORT_PIN pin)
-{
-    uint32_t group = 0;
-
-    group = pin / 32;
-    pin =  pin % 32;
-
-    return (bool)((PORT_REGS->PORT_GROUP[group].IN >> pin) & 0x01);
-}
-
-// *****************************************************************************
-/* Function:
-    bool PORT_PinLatchRead(PORT_PIN pin)
-
-  Summary:
-    Read the value driven on the selected pin.
-
-  Description:
-    This function reads the data driven on the selected I/O line/pin. The
-    function does not sample the state of the hardware pin. It only returns the
-    value that is written to output register. Refer to the PORT_PinRead()
-    function if the state of the output pin needs to be read.
-
-  Remarks:
-    Refer plib_port.h file for more information.
-*/
-
-bool PORT_PinLatchRead(PORT_PIN pin)
-{
-    uint32_t group = 0;
-
-    group = pin / 32;
-    pin =  pin % 32;
-
-    return (bool)((PORT_REGS->PORT_GROUP[group].OUT >> pin) & 0x01);
-}
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinToggle(PORT_PIN pin)
-
-  Summary:
-    Toggles the selected pin.
-
-  Description:
-    This function toggles/inverts the present value on the selected I/O line/pin.
-
-  Remarks:
-    Refer plib_port.h file for more information.
-*/
-
-void PORT_PinToggle(PORT_PIN pin)
-{
-    uint32_t group = 0;
-
-    group = pin / 32;
-    pin =  pin % 32;
-
-    PORT_REGS->PORT_GROUP[group].OUTTGL = 1 << pin;
-}
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinSet(PORT_PIN pin)
-
-  Summary:
-    Sets the selected pin.
-
-  Description:
-    This function drives a logic 1 on the selected I/O line/pin.
-
-  Remarks:
-    Refer plib_port.h file for more information.
-*/
-
-void PORT_PinSet(PORT_PIN pin)
-{
-    uint32_t group= 0;
-
-    group = pin / 32;
-    pin =  pin % 32;
-
-    PORT_REGS->PORT_GROUP[group].OUTSET = 1 << pin;
-}
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinClear(PORT_PIN pin)
-
-  Summary:
-    Clears the selected pin.
-
-  Description:
-    This function drives a logic 0 on the selected I/O line/pin.
-
-  Remarks:
-    Refer plib_port.h file for more information.
-*/
-
-void PORT_PinClear(PORT_PIN pin)
-{
-    uint32_t group = 0;
-
-    group = pin / 32;
-    pin =  pin % 32;
-
-    PORT_REGS->PORT_GROUP[group].OUTCLR = 1 << pin;
-}
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinInputEnable(PORT_PIN pin)
-
-  Summary:
-    Configures the selected IO pin as input.
-
-  Description:
-    This function configures the selected IO pin as input. This function
-    override the MHC input output pin settings.
-
-  Remarks:
-    Refer plib_port.h file for more information.
-*/
-
-void PORT_PinInputEnable(PORT_PIN pin)
-{
-    uint32_t group = 0;
-
-    group = pin / 32;
-    pin =  pin % 32;
-
-    PORT_REGS->PORT_GROUP[group].DIRCLR = 1 << pin;
-}
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinOutputEnable(PORT_PIN pin)
-
-  Summary:
-    Enables selected IO pin as output.
-
-  Description:
-    This function enables selected IO pin as output. Calling this function will
-    override the MHC input output pin configuration.
-
-  Remarks:
-    Refer plib_port.h file for more information.
-*/
-
-void PORT_PinOutputEnable(PORT_PIN pin)
-{
-    uint32_t group = 0;
-
-    group = pin / 32;
-    pin =  pin % 32;
-
-    PORT_REGS->PORT_GROUP[group].DIRSET = 1 << pin;
 }
 
 // *****************************************************************************
@@ -343,19 +128,26 @@ void PORT_PinOutputEnable(PORT_PIN pin)
 
 uint32_t PORT_GroupRead(PORT_GROUP group)
 {
-    return (PORT_REGS->PORT_GROUP[group].IN);
+    return (((port_registers_t*)group)->PORT_IN);
 }
 
 // *****************************************************************************
 /* Function:
-    void PORT_GroupWrite(PORT_GROUP group, uint32_t value);
+    void PORT_GroupWrite(PORT_GROUP group, uint32_t mask, uint32_t value);
 
   Summary:
-    Write value on all the pins of the selected port group.
+    Write value on the masked pins of the selected port group.
 
   Description:
-    This function writes value to the entire port group. Port group pins which
-    are configured for output will updated with corresponding value.
+    This function writes the value contained in the value parameter to the
+    port group. Port group pins which are configured for output will be updated.
+    The mask parameter provides additional control on the bits in the group to
+    be affected. Setting a bit to 1 in the mask will cause the corresponding
+    bit in the port group to be updated. Clearing a bit in the mask will cause
+    that corresponding bit in the group to stay unaffected. For example,
+    setting a mask value 0xFFFFFFFF will cause all bits in the port group
+    to be updated. Setting a value 0x3 will only cause port group bit 0 and
+    bit 1 to be updated.
 
     For port pins which are not configured for output and have the pull feature
     enabled, this function will affect pull value (pull up or pull down). A bit
@@ -366,10 +158,10 @@ uint32_t PORT_GroupRead(PORT_GROUP group)
     Refer plib_port.h file for more information.
 */
 
-void PORT_GroupWrite(PORT_GROUP group, uint32_t value)
+void PORT_GroupWrite(PORT_GROUP group, uint32_t mask, uint32_t value)
 {
     /* Write the desired value */
-    PORT_REGS->PORT_GROUP[group].OUT = value;
+    ((port_registers_t*)group)->PORT_OUT = (((port_registers_t*)group)->PORT_OUT & (~mask)) | (mask & value);
 }
 
 // *****************************************************************************
@@ -393,7 +185,7 @@ void PORT_GroupWrite(PORT_GROUP group, uint32_t value)
 
 uint32_t PORT_GroupLatchRead(PORT_GROUP group)
 {
-    return (PORT_REGS->PORT_GROUP[group].OUT);
+    return (((port_registers_t*)group)->PORT_OUT);
 }
 
 // *****************************************************************************
@@ -416,7 +208,7 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group)
 
 void PORT_GroupSet(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->PORT_GROUP[group].OUTSET = mask;
+    ((port_registers_t*)group)->PORT_OUTSET = mask;
 }
 
 // *****************************************************************************
@@ -439,7 +231,7 @@ void PORT_GroupSet(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupClear(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->PORT_GROUP[group].OUTCLR = mask;
+    ((port_registers_t*)group)->PORT_OUTCLR = mask;
 }
 
 // *****************************************************************************
@@ -461,7 +253,7 @@ void PORT_GroupClear(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupToggle(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->PORT_GROUP[group].OUTTGL = mask;
+    ((port_registers_t*)group)->PORT_OUTTGL = mask;
 }
 
 // *****************************************************************************
@@ -482,7 +274,7 @@ void PORT_GroupToggle(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->PORT_GROUP[group].DIRCLR = mask;
+    ((port_registers_t*)group)->PORT_DIRCLR = mask;
 }
 
 // *****************************************************************************
@@ -503,5 +295,5 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask)
 {
-    PORT_REGS->PORT_GROUP[group].DIRSET = mask;
+   ((port_registers_t*)group)->PORT_DIRSET = mask;
 }

@@ -85,14 +85,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 typedef enum
 {
-    /* Group 0 */
-    PORT_GROUP_0,
+    /* Group A */
+    PORT_GROUP_A = PORTA_BASE_ADDRESS,
 
-    /* Group 1 */
-    PORT_GROUP_1,
+    /* Group B */
+    PORT_GROUP_B = PORTB_BASE_ADDRESS,
 
-    /* Group 2 */
-    PORT_GROUP_2,
+    /* Group C */
+    PORT_GROUP_C = PORTC_BASE_ADDRESS,
 
 } PORT_GROUP;
 
@@ -117,35 +117,35 @@ typedef enum
 
 typedef enum
 {
-    /* PA0 pin */
-    PORT_PIN_PA0,
+    /* PA00 pin */
+    PORT_PIN_PA00,
 
-    /* PA1 pin */
-    PORT_PIN_PA1,
+    /* PA01 pin */
+    PORT_PIN_PA01,
 
-    /* PA2 pin */
-    PORT_PIN_PA2,
+    /* PA02 pin */
+    PORT_PIN_PA02,
 
-    /* PA3 pin */
-    PORT_PIN_PA3,
+    /* PA03 pin */
+    PORT_PIN_PA03,
 
-    /* PA4 pin */
-    PORT_PIN_PA4,
+    /* PA04 pin */
+    PORT_PIN_PA04,
 
-    /* PA5 pin */
-    PORT_PIN_PA5,
+    /* PA05 pin */
+    PORT_PIN_PA05,
 
-    /* PA6 pin */
-    PORT_PIN_PA6,
+    /* PA06 pin */
+    PORT_PIN_PA06,
 
-    /* PA7 pin */
-    PORT_PIN_PA7,
+    /* PA07 pin */
+    PORT_PIN_PA07,
 
-    /* PA8 pin */
-    PORT_PIN_PA8,
+    /* PA08 pin */
+    PORT_PIN_PA08,
 
-    /* PA9 pin */
-    PORT_PIN_PA9,
+    /* PA09 pin */
+    PORT_PIN_PA09,
 
     /* PA10 pin */
     PORT_PIN_PA10,
@@ -213,35 +213,35 @@ typedef enum
     /* PA31 pin */
     PORT_PIN_PA31,
 
-    /* PB0 pin */
-    PORT_PIN_PB0,
+    /* PB00 pin */
+    PORT_PIN_PB00,
 
-    /* PB1 pin */
-    PORT_PIN_PB1,
+    /* PB01 pin */
+    PORT_PIN_PB01,
 
-    /* PB2 pin */
-    PORT_PIN_PB2,
+    /* PB02 pin */
+    PORT_PIN_PB02,
 
-    /* PB3 pin */
-    PORT_PIN_PB3,
+    /* PB03 pin */
+    PORT_PIN_PB03,
 
-    /* PB4 pin */
-    PORT_PIN_PB4,
+    /* PB04 pin */
+    PORT_PIN_PB04,
 
-    /* PB5 pin */
-    PORT_PIN_PB5,
+    /* PB05 pin */
+    PORT_PIN_PB05,
 
-    /* PB6 pin */
-    PORT_PIN_PB6,
+    /* PB06 pin */
+    PORT_PIN_PB06,
 
-    /* PB7 pin */
-    PORT_PIN_PB7,
+    /* PB07 pin */
+    PORT_PIN_PB07,
 
-    /* PB8 pin */
-    PORT_PIN_PB8,
+    /* PB08 pin */
+    PORT_PIN_PB08,
 
-    /* PB9 pin */
-    PORT_PIN_PB9,
+    /* PB09 pin */
+    PORT_PIN_PB09,
 
     /* PB10 pin */
     PORT_PIN_PB10,
@@ -304,40 +304,40 @@ typedef enum
     PORT_PIN_PB29,
 
     /* PB30 pin */
-    PORT_PIN_PB30,
+    PORT_PIN_PB030,
 
     /* PB31 pin */
-    PORT_PIN_PB31,
+    PORT_PIN_PB031,
 
-    /* PC0 pin */
-    PORT_PIN_PC0,
+    /* PC00 pin */
+    PORT_PIN_PC00,
 
-    /* PC1 pin */
-    PORT_PIN_PC1,
+    /* PC01 pin */
+    PORT_PIN_PC01,
 
-    /* PC2 pin */
-    PORT_PIN_PC2,
+    /* PC02 pin */
+    PORT_PIN_PC02,
 
-    /* PC3 pin */
-    PORT_PIN_PC3,
+    /* PC03 pin */
+    PORT_PIN_PC03,
 
-    /* PC4 pin */
-    PORT_PIN_PC4,
+    /* PC04 pin */
+    PORT_PIN_PC04,
 
-    /* PC5 pin */
-    PORT_PIN_PC5,
+    /* PC05 pin */
+    PORT_PIN_PC05,
 
-    /* PC6 pin */
-    PORT_PIN_PC6,
+    /* PC06 pin */
+    PORT_PIN_PC06,
 
-    /* PC7 pin */
-    PORT_PIN_PC7,
+    /* PC07 pin */
+    PORT_PIN_PC07,
 
-    /* PC8 pin */
-    PORT_PIN_PC8,
+    /* PC08 pin */
+    PORT_PIN_PC08,
 
-    /* PC9 pin */
-    PORT_PIN_PC9,
+    /* PC09 pin */
+    PORT_PIN_PC09,
 
     /* PC10 pin */
     PORT_PIN_PC10,
@@ -479,7 +479,7 @@ void PORT_Initialize(void);
     <code>
 
     bool value = true;
-    PORT_PinWrite(PORT_PIN_PB3, value);
+    PORT_PinWrite(PORT_PIN_PB03, value);
 
     </code>
 
@@ -502,13 +502,14 @@ void PORT_PinWrite(PORT_PIN pin, bool value);
   Description:
     This function reads the present state at the selected input pin.  The
     function can also be called to read the value of an output pin if input
-    sampling on the output pin is enabled in MHC. If input synchronization on
+    sampling on the output pin is enabled in MHC.If input synchronization on
     the pin is disabled in MHC, the function will cause a 2 PORT Clock cycles
     delay. Enabling the synchronization eliminates the delay but will increase
     power consumption.
 
   Precondition:
-    The PORT_Initialize() function should have been called.
+    The PORT_Initialize() function should have been called. Input buffer
+    (INEN bit in the Pin Configuration register) should be enabled in MHC.
 
   Parameters:
     pin - the port pin whose state needs to be read.
@@ -521,7 +522,7 @@ void PORT_PinWrite(PORT_PIN pin, bool value);
     <code>
 
     bool value;
-    value = PORT_PinRead(PORT_PIN_PB3);
+    value = PORT_PinRead(PORT_PIN_PB03);
 
     </code>
 
@@ -558,7 +559,7 @@ bool PORT_PinRead(PORT_PIN pin);
     <code>
 
     bool value;
-    value = PORT_PinLatchRead(PORT_PIN_PB3);
+    value = PORT_PinLatchRead(PORT_PIN_PB03);
 
     </code>
 
@@ -590,7 +591,7 @@ bool PORT_PinLatchRead(PORT_PIN pin);
   Example:
     <code>
 
-    PORT_PinToggle(PORT_PIN_PB3);
+    PORT_PinToggle(PORT_PIN_PB03);
 
     </code>
 
@@ -622,7 +623,7 @@ void PORT_PinToggle(PORT_PIN pin);
   Example:
     <code>
 
-    PORT_PinSet(PORT_PIN_PB3);
+    PORT_PinSet(PORT_PIN_PB03);
 
     </code>
 
@@ -654,7 +655,7 @@ void PORT_PinSet(PORT_PIN pin);
   Example:
     <code>
 
-    PORT_PinClear(PORT_PIN_PB3);
+    PORT_PinClear(PORT_PIN_PB03);
 
     </code>
 
@@ -687,7 +688,7 @@ void PORT_PinClear(PORT_PIN pin);
   Example:
     <code>
 
-    PORT_PinInputEnable(PORT_PIN_PB3);
+    PORT_PinInputEnable(PORT_PIN_PB03);
 
     </code>
 
@@ -720,7 +721,7 @@ void PORT_PinInputEnable(PORT_PIN pin);
   Example:
     <code>
 
-    PORT_PinOutputEnable(PORT_PIN_PB3);
+    PORT_PinOutputEnable(PORT_PIN_PB03);
 
     </code>
 
@@ -751,7 +752,8 @@ void PORT_PinOutputEnable(PORT_PIN pin);
     the port group pins which are implemented on the device.
 
   Precondition:
-    The PORT_Initialize() function should have been called.
+    The PORT_Initialize() function should have been called. Input buffer
+    (INEN bit in the Pin Configuration register) should be enabled in MHC.
 
   Parameters:
     group - One of the IO groups from the enum PORT_GROUP.
@@ -764,7 +766,7 @@ void PORT_PinOutputEnable(PORT_PIN pin);
     <code>
 
     uint32_t value;
-    value = PORT_Read(PORT_GROUP_2);
+    value = PORT_Read(PORT_GROUP_C);
 
     </code>
 
@@ -803,7 +805,7 @@ uint32_t PORT_GroupRead(PORT_GROUP group);
     <code>
 
     uint32_t value;
-    value = PORT_GroupLatchRead(PORT_GROUP_2);
+    value = PORT_GroupLatchRead(PORT_GROUP_C);
 
     </code>
 
@@ -815,14 +817,21 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group);
 
 // *****************************************************************************
 /* Function:
-    void PORT_GroupWrite(PORT_GROUP group, uint32_t value);
+    void PORT_GroupWrite(PORT_GROUP group, uint32_t mask, uint32_t value);
 
   Summary:
-    Write value on all the pins of the selected port group.
+    Write value on the masked pins of the selected port group.
 
   Description:
-    This function writes value to the entire port group. Port group pins which
-    are configured for output will updated with corresponding value.
+    This function writes the value contained in the value parameter to the
+    port group. Port group pins which are configured for output will be updated.
+    The mask parameter provides additional control on the bits in the group to
+    be affected. Setting a bit to 1 in the mask will cause the corresponding
+    bit in the port group to be updated. Clearing a bit in the mask will cause
+    that corresponding bit in the group to stay unaffected. For example,
+    setting a mask value 0xFFFFFFFF will cause all bits in the port group
+    to be updated. Setting a value 0x3 will only cause port group bit 0 and
+    bit 1 to be updated.
 
     For port pins which are not configured for output and have the pull feature
     enabled, this function will affect pull value (pull up or pull down). A bit
@@ -834,17 +843,25 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group);
 
   Parameters:
     group - One of the IO groups from the enum PORT_GROUP.
-    value - 32bit value which has to be written/driven on all the I/O lines of
-    the selected group. Refer to the function description for effect on pins
-    which are not configured for output.
+
+    mask  - A 32 bit value in which positions of 0s and 1s decide
+             which IO pins of the selected port group will be written.
+             1's - Will write to corresponding IO pins.
+             0's - Will remain unchanged.
+
+    value - Value which has to be written/driven on the I/O
+             lines of the selected port for which mask bits are '1'.
+             Values for the corresponding mask bit '0' will be ignored.
+             Refer to the function description for effect on pins
+             which are not configured for output.
 
   Returns:
     None.
 
   Example:
     <code>
-
-    PORT_GroupWrite(PORT_GROUP_2, 0x7563D45F);
+    // Write binary value 0011 to the pins PC3, PC2, PC1 and PC0 respectively.
+    PORT_GroupWrite(PORT_GROUP_C, 0x0F, 0xF563D453);
 
     </code>
 
@@ -852,7 +869,7 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group);
     None.
 */
 
-void PORT_GroupWrite(PORT_GROUP group, uint32_t value);
+void PORT_GroupWrite(PORT_GROUP group, uint32_t mask, uint32_t value);
 
 // *****************************************************************************
 /* Function:
@@ -884,7 +901,7 @@ void PORT_GroupWrite(PORT_GROUP group, uint32_t value);
     <code>
 
     // Set PC5 and PC7 pins to 1
-    PORT_GroupSet(PORT_GROUP_2, 0x00A0);
+    PORT_GroupSet(PORT_GROUP_C, 0x00A0);
 
     </code>
 
@@ -926,7 +943,7 @@ void PORT_GroupSet(PORT_GROUP group, uint32_t mask);
     <code>
 
     // Clear PC5 and PC7 pins to 1
-    PORT_GroupClear(PORT_GROUP_2, 0x00A0);
+    PORT_GroupClear(PORT_GROUP_C, 0x00A0);
 
     </code>
 
@@ -967,7 +984,7 @@ void PORT_GroupClear(PORT_GROUP group, uint32_t mask);
     <code>
 
     // Clear PC5 and PC7 pins to 1
-    PORT_GroupToggle(PORT_GROUP_2, 0x00A0);
+    PORT_GroupToggle(PORT_GROUP_C, 0x00A0);
 
     </code>
 
@@ -1009,7 +1026,7 @@ void PORT_GroupToggle(PORT_GROUP group, uint32_t mask);
     <code>
 
     // Make PC5 and PC7 pins as input
-    PORT_GroupInputEnable(PORT_GROUP_2, 0x00A0);
+    PORT_GroupInputEnable(PORT_GROUP_C, 0x00A0);
 
     </code>
 
@@ -1048,7 +1065,7 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask);
     <code>
 
     // Make PC5 and PC7 pins as output
-    PORT_GroupOutputEnable(PORT_GROUP_2, 0x00A0);
+    PORT_GroupOutputEnable(PORT_GROUP_C, 0x00A0);
 
     </code>
 
