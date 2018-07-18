@@ -252,7 +252,7 @@ def instantiateComponent(sercomComponent):
     #Sub Menu - Serial Communication Interfaces
     sercomSym_SubMenu = sercomComponent.createKeyValueSetSymbol("SERCOM_MODE", sercomSym_Menu)
     sercomSym_SubMenu.setLabel("SERCOM Modes")
-    sercomSym_SubMenu_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_MODES\"]")
+    sercomSym_SubMenu_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_CTRLA__MODE\"]")
     sercomSym_SubMenu_Values = []
     sercomSym_SubMenu_Values = sercomSym_SubMenu_Node.getChildren()
 
@@ -288,14 +288,14 @@ def instantiateComponent(sercomComponent):
     spiSym_CTRLA_DOPO.setLabel("SPI Data Out Pad ")
     #spiSym_CTRLA_DOPO.setVisible(False)
 
-    spiDOPONode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPI_DOPO_MUX_SETTING\"]")
+    spiDOPONode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DOPO\"]")
     spiDOPOValues = []
     spiDOPOValues = spiDOPONode.getChildren()
     spiDOPODefaultValue = 0
     for index in range(len(spiDOPOValues)):
         spiDOPOKeyName = spiDOPOValues[index].getAttribute("name")
 
-        if (spiDOPOKeyName == "SPI_DOPO_MUX_SETTING_A"):
+        if (spiDOPOKeyName == "SERCOM_PAD0"):
             spiDOPODefaultValue = index
 
         spiDOPOKeyDescription = spiDOPOValues[index].getAttribute("caption")
@@ -310,14 +310,14 @@ def instantiateComponent(sercomComponent):
     #SPI DataIn pinOut
     spiSym_CTRLA_DIPO = sercomComponent.createKeyValueSetSymbol("SPI_DIPO", sercomSym_SubMenu)
     spiSym_CTRLA_DIPO.setLabel("SPI Data In Pad Selection")
-    spiDIPONode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPI_DIPO_MUX_SETTING\"]")
+    spiDIPONode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DIPO\"]")
     spiDIPOValues = []
     spiDIPOValues = spiDIPONode.getChildren()
     spiDIPODefaultValue = 0
     for index in range(len(spiDIPOValues)):
         spiDIPOKeyName = spiDIPOValues[index].getAttribute("name")
 
-        if (spiDIPOKeyName == "SPI_DIPO_MUX_SETTING_A"):
+        if (spiDIPOKeyName == "SERCOM_PAD0"):
             spiDIPODefaultValue = index
 
         spiDIPOKeyDescription = spiDIPOValues[index].getAttribute("caption")
@@ -346,7 +346,7 @@ def instantiateComponent(sercomComponent):
     spiSym_CTRLA_DORD = sercomComponent.createKeyValueSetSymbol("SPI_DATA_ORDER", sercomSym_SubMenu)
     spiSym_CTRLA_DORD.setLabel("SPI Data Order")
 
-    spiDORDNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPI_DATA_ORDER\"]")
+    spiDORDNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DORD\"]")
     spiDORDValues = []
     spiDORDValues = spiDORDNode.getChildren()
     spiDORDDefaultValue = 0
@@ -368,7 +368,7 @@ def instantiateComponent(sercomComponent):
     #SPI Character Size
     spiSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("SPI_CHAR_SIZE", sercomSym_SubMenu)
     spiSym_CTRLB_CHSIZE.setLabel("SPI Data Character Size")
-    spiCHSIZENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPI_CHARACTER_SIZE\"]")
+    spiCHSIZENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLB__CHSIZE\"]")
     spiCHSIZEValues = []
     spiCHSIZEValues = spiCHSIZENode.getChildren()
     spiCHSIZEDefaultValue = 0
@@ -431,7 +431,7 @@ def instantiateComponent(sercomComponent):
     i2cmSym_CTRLA_SDAHOLD.setLabel("SDA Hold Time")
     i2cmSym_CTRLA_SDAHOLD.setVisible(False)
 
-    i2cmSDAHoldTimeReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA_SDAHOLD\"]")
+    i2cmSDAHoldTimeReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SDAHOLD\"]")
     i2cmSDAHoldTimeReferenceValues = []
     i2cmSDAHoldTimeReferenceValues = i2cmSDAHoldTimeReferenceNode.getChildren()
 
@@ -489,7 +489,7 @@ def instantiateComponent(sercomComponent):
     usart_Sym_CTRLA_RXPO = sercomComponent.createKeyValueSetSymbol("USART_RXPO", sercomSym_SubMenu)
     usart_Sym_CTRLA_RXPO.setLabel("Receive Pinout")
 
-    usartSym_CTRLA_RXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA_RXPO\"]")
+    usartSym_CTRLA_RXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__RXPO\"]")
     usartSym_CTRLA_RXPO_Values = []
     usartSym_CTRLA_RXPO_Values = usartSym_CTRLA_RXPO_Node.getChildren()
 
@@ -515,7 +515,7 @@ def instantiateComponent(sercomComponent):
     usart_Sym_CTRLA_TXPO = sercomComponent.createKeyValueSetSymbol("USART_TXPO", sercomSym_SubMenu)
     usart_Sym_CTRLA_TXPO.setLabel("Transmit Pinout")
 
-    usartSym_CTRLA_TXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA_TXPO\"]")
+    usartSym_CTRLA_TXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__TXPO\"]")
     usartSym_CTRLA_TXPO_Values = []
     usartSym_CTRLA_TXPO_Values = usartSym_CTRLA_TXPO_Node.getChildren()
 
@@ -541,7 +541,7 @@ def instantiateComponent(sercomComponent):
     usart_Sym_CTRLB_PMODE = sercomComponent.createKeyValueSetSymbol("USART_PMODE", sercomSym_SubMenu)
     usart_Sym_CTRLB_PMODE.setLabel("Parity Mode")
 
-    usartSym_CTRLA_PMODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB_PMODE\"]")
+    usartSym_CTRLA_PMODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__PMODE\"]")
     usartSym_CTRLA_PMODE_Values = []
     usartSym_CTRLA_PMODE_Values = usartSym_CTRLA_PMODE_Node.getChildren()
 
@@ -567,7 +567,7 @@ def instantiateComponent(sercomComponent):
     usartSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("USART_CH_SIZE", sercomSym_SubMenu)
     usartSym_CTRLB_CHSIZE.setLabel("Character Size")
 
-    usartSym_CTRLA_CHSIZE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB_CHSIZE\"]")
+    usartSym_CTRLA_CHSIZE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__CHSIZE\"]")
     usartSym_CTRLA_CHSIZE_Values = []
     usartSym_CTRLA_CHSIZE_Values = usartSym_CTRLA_CHSIZE_Node.getChildren()
 
@@ -595,7 +595,7 @@ def instantiateComponent(sercomComponent):
 
     usartSym_CTRLB_SBMODE_Default_Val = 0
 
-    usartSym_CTRLA_SBMODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB_SBMODE\"]")
+    usartSym_CTRLA_SBMODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__SBMODE\"]")
     usartSym_CTRLA_SBMODE_Values = []
     usartSym_CTRLA_SBMODE_Values = usartSym_CTRLA_SBMODE_Node.getChildren()
 

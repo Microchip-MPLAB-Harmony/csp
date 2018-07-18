@@ -40,10 +40,10 @@ def instantiateComponent(divasComponent):
 ################################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
-	
-	divasModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DIVAS\"]")
+
+    divasModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DIVAS\"]")
     divasModuleID = divasModuleNode.getAttribute("id")
-	
+
     divasSym_HeaderFile = divasComponent.createFileSymbol("DIVAS_HEADER", None)
     divasSym_HeaderFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/plib_divas.h.ftl")
     divasSym_HeaderFile.setOutputName("plib_divas" + str(num) +".h")

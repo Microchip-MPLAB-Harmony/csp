@@ -49,10 +49,10 @@ def instantiateComponent(freqmComponent):
 ################################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
-	
-	freqmModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FREQM\"]")
+
+    freqmModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FREQM\"]")
     freqmModuleID = freqmModuleNode.getAttribute("id")
-	
+
     freqmSym_HeaderFile = freqmComponent.createFileSymbol("FREQM_HEADER", None)
     freqmSym_HeaderFile.setSourcePath("../peripheral/freqm_"+freqmModuleID+"/templates/plib_freqm.h.ftl")
     freqmSym_HeaderFile.setOutputName("plib_freqm"+str(freqmInstanceIndex)+".h")
