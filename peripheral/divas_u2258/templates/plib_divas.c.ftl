@@ -75,12 +75,15 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 void DIVAS${DIVAS_INDEX}_Initialize(void)
 {
-    /* 
+    /*
      * Enable/Disable Leading Zero optimization ,
      * If enabled,  32 bit divisions = 2-16 cycles
      * If disabled, 32 bit divisions = 16 cycles
      */
-    DIVAS_REGS->DIVAS_CTRLA |= DIVAS_CTRLA_RESETVALUE ${DIVAS_DLZ?then(' ', '| DIVAS_CTRLA_DLZ_Msk')};
+
+    <#if DIVAS_DLZ == true>
+    DIVAS_REGS->DIVAS_CTRLA |= DIVAS_CTRLA_DLZ_Msk;
+    </#if>
 }
 
 // *****************************************************************************
@@ -115,7 +118,7 @@ bool DIVAS${DIVAS_INDEX}_DivideSigned ( int32_t divisor, int32_t dividend, int32
         if(dividend == 0)
         {
             statusValue = true;
-            
+
             /* Handle the trivial case. This does not require hardware */
             if(quotient != NULL)
             {
@@ -196,7 +199,7 @@ bool DIVAS${DIVAS_INDEX}_DivideUnsigned( uint32_t divisor, uint32_t dividend, ui
         if(dividend == 0)
         {
             statusValue = true;
-            
+
             /* Handle the trivial case. This does not require hardware */
             if(quotient != NULL)
             {
@@ -227,7 +230,7 @@ bool DIVAS${DIVAS_INDEX}_DivideUnsigned( uint32_t divisor, uint32_t dividend, ui
             if ((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_DBZ_Msk) != DIVAS_STATUS_DBZ_Msk)
             {
                 statusValue = true;
-                
+
                 if( quotient != NULL)
                 {
                     /* Reading the resultant Division value from the RESULT register */

@@ -163,15 +163,13 @@ void EIC${EIC_INDEX}_Initialize (void)
     }
 
     /* CTRLA Register - Clock Selection */
-    EIC_REGS->EIC_CTRLA |= ${(EIC_CLKSEL == "1")?then('EIC_CTRLA_CKSEL_Msk' , 'EIC_CTRLA_RESETVALUE')};
+    EIC_REGS->EIC_CTRLA |= ${(EIC_CLKSEL == "1")?then('EIC_CTRLA_CKSEL_Msk' , '0')};
 
     /* NMI Control register - Write */
     <#if NMI_CTRL == true>
     <@compress single_line=true>EIC_REGS->EIC_NMICTRL =  EIC_ASYNCH_ASYNCH(${NMI_ASYNCH})
                                                         | EIC_NMICTRL_NMISENSE_${NMI_SENSE}
                                                         ${NMI_FILTEN?then('| EIC_NMICTRL_NMIFILTEN_Msk', '')};</@compress>
-    <#else>
-    EIC_REGS->EIC_NMICTRL = EIC_NMICTRL_RESETVALUE;
     </#if>
 
     /* Config 0 register (EXTINT channels [7:0]) - Write */
@@ -195,7 +193,7 @@ void EIC${EIC_INDEX}_Initialize (void)
                               EIC_CONFIG_SENSE7_${EIC_CONFIG_SENSE_15} ${EIC_CONFIG_FILTEN_15?then('| EIC_CONFIG_FILTEN7_Msk', '')};
 
     /* External Interrupt Asynchronous Mode register - Write */
-    <@compress single_line=true>EIC_REGS->EIC_ASYNCH = EIC_ASYNCH_RESETVALUE
+    <@compress single_line=true>
     <#list 0..EIC_INT_COUNT as i>
         <#assign EIC_ASYNCH = "EIC_ASYNCH_" + i>
         <#assign EIC_INT_CHANNEL = "EIC_INT_CHAN_" + i>
@@ -212,7 +210,7 @@ void EIC${EIC_INDEX}_Initialize (void)
     ;</@compress>
 
     /* Debouncen register - Write */
-    <@compress single_line=true>EIC_REGS->EIC_DEBOUNCEN = EIC_DEBOUNCEN_RESETVALUE
+    <@compress single_line=true>
     <#list 0..EIC_INT_COUNT as i>
         <#assign EIC_DEBOUNCEN = "EIC_DEBOUNCEN_" + i>
         <#assign EIC_INT_CHANNEL = "EIC_INT_CHAN_" + i>
@@ -229,7 +227,7 @@ void EIC${EIC_INDEX}_Initialize (void)
     ;</@compress>
 
     /* Event Control register - Write */
-    <@compress single_line=true>EIC_REGS->EIC_EVCTRL = EIC_EVCTRL_RESETVALUE
+    <@compress single_line=true>
     <#list 0..EIC_INT_COUNT as i>
         <#assign EIC_EVCTRL_EXTINTEO = "EIC_EVCTRL_EXTINTEO_" + i>
         <#assign EIC_INT_CHANNEL = "EIC_INT_CHAN_" + i>
@@ -246,7 +244,7 @@ void EIC${EIC_INDEX}_Initialize (void)
     ;</@compress>
 
     /* Interrupt enable register - Write */
-    <@compress single_line=true>EIC_REGS->EIC_INTENSET = EIC_INTENSET_RESETVALUE
+    <@compress single_line=true>
     <#list 0..EIC_INT_COUNT as i>
         <#assign EIC_INT_CHANNEL = "EIC_INT_CHAN_" + i>
             <#if .vars[EIC_INT_CHANNEL]?has_content>
