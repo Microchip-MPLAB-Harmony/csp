@@ -237,7 +237,7 @@ uint32_t FREQM${FREQM_INDEX}_FrequencyGet()
     resultCalculated = FREQM_REGS->FREQM_VALUE;
 
     /* Reading the ref number of the cycles */
-    refNum = FREQM_REGS->FREQM_CFGA.REFNUM;
+    refNum = (FREQM_REGS->FREQM_CFGA & FREQM_CFGA_REFNUM_Msk) >> FREQM_CFGA_REFNUM_Pos;
 
     /* Calculating the Resultant Measured Frequency Value */
     measuredValue = (resultCalculated/ refNum) * freqm${FREQM_INDEX}Obj.refFreqValue;

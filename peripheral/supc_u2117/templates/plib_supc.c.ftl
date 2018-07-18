@@ -127,12 +127,14 @@ void SUPC${SUPC_INDEX}_Initialize( void )
                                                         ${(SUPC_BODVDD_ACTCFG?starts_with("Sampling"))?then('| SUPC_BODVDD_ACTCFG_Msk', '')}
                                                         ${(SUPC_BODVDD_STDBYCFG?starts_with("Sampling"))?then('| SUPC_BODVDD_STDBYCFG_Msk', '')};</@compress>
     <#else>
+        <#if SUPC_BODVDD_RUNSTDBY == true>
     /* Configure Brown out detector standby sleep mode */
-    SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_RESETVALUE ${SUPC_BODVDD_RUNSTDBY?then('| SUPC_BODVDD_RUNSTDBY_Msk', '')};
+        SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_RUNSTDBY_Msk;
+        </#if>
     </#if>
 
     /* Configure voltage regulator standby sleep mode */
-    SUPC_REGS->SUPC_VREG |= SUPC_VREG_RESETVALUE ${(SUPC_VREG_RUNSTDBY?starts_with("Normal"))?then('| SUPC_VREG_RUNSTDBY_Msk', '')};
+    SUPC_REGS->SUPC_VREG |= 0 ${(SUPC_VREG_RUNSTDBY?starts_with("Normal"))?then('| SUPC_VREG_RUNSTDBY_Msk', '')};
 
     /* Enable BODVDD detect interrupt */
     SUPC_REGS->SUPC_INTENSET = SUPC_INTFLAG_BODVDDDET_Msk;

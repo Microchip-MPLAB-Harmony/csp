@@ -190,7 +190,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void)
                                                          ${NVMCTRL_CACHE_ENABLE?then('', '| NVMCTRL_CTRLB_CACHEDIS_Msk')};</@compress>
 
     /* Clear error flags */
-    NVMCTRL_REGS->NVMCTRL_STATUS = NVMCTRL_STATUS_RESETVALUE;
+    NVMCTRL_REGS->NVMCTRL_STATUS |= 0;
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
     /* Clear interrupt flag */

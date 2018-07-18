@@ -102,14 +102,18 @@ void DAC${DAC_INDEX}_Initialize(void)
         /* Wait for Synchronization after Software Reset */
     }
 
+    <#if DAC_RUNSTDBY == true>
     /* Enable DAC Output Buffer in Standby Sleep Mode */
-    DAC_REGS->DAC_CTRLA |= DAC_CTRLA_RESETVALUE ${DAC_RUNSTDBY?then(' | DAC_CTRLA_RUNSTDBY_Msk','')};
+    DAC_REGS->DAC_CTRLA |= DAC_CTRLA_RUNSTDBY_Msk;
+    </#if>
 
     /* Set Reference Voltage */
     DAC_REGS->DAC_CTRLB |= DAC_CTRLB_REFSEL(${DAC_REFERENCE_SELECTION});
 
+    <#if DAC_VOLTAGE_PUMP_DISABLED == true>
     /* Set Voltage Pump */
-    DAC_REGS->DAC_CTRLB |= DAC_CTRLB_RESETVALUE ${DAC_VOLTAGE_PUMP_DISABLED?then(' | DAC_CTRLB_VPD_Msk','')};
+    DAC_REGS->DAC_CTRLB |= DAC_CTRLB_VPD_Msk;
+    </#if>
 
     /* Clear all Interrupts */
     DAC_REGS->DAC_INTFLAG |= DAC_INTFLAG_Msk;
@@ -129,7 +133,7 @@ void DAC${DAC_INDEX}_Initialize(void)
     these output were enabled.  The analog output voltage will depend on the
     choice of the DAC reference (configured via MHC). This function should only
     be called when the DAC${DAC_INDEX}_IsReady() returns true. Calling this function when
-    the DAC is not ready will result in the in-determinate operation. 
+    the DAC is not ready will result in the in-determinate operation.
 
   Remarks:
     Refer plib_dac${DAC_INDEX}.h for more information.
