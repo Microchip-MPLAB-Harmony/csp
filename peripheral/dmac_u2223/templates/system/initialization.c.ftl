@@ -1,0 +1,1 @@
+    DMAC${DMAC_INDEX}_Initialize();
