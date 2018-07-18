@@ -57,6 +57,12 @@ deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)" )
 deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR",1)
 
+# SysTick External Clock Source
+systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
+systickExternal.setLabel("External Clock Source for SysTick Available")
+systickExternal.setDefaultValue(True)
+systickExternal.setVisible(False)
+
 deviceBoot = coreComponent.createKeyValueSetSymbol("DEVICE_BOOT", devCfgMenu)
 deviceBoot.setLabel("Boot Mode")
 deviceBoot.setOutputMode("Key")
