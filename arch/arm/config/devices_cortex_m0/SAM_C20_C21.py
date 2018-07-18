@@ -55,8 +55,8 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py
 #coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
 
 # load NVIC
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
-#coreComponent.addPlugin("../peripheral/nvic_m7/plugin/ARM_M7_NVICmanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
+coreComponent.addPlugin("../peripheral/nvic/plugin/ARM_M7_NVICmanager.jar")
 
 #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
