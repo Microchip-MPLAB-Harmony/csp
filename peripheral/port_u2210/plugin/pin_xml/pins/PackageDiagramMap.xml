@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<pinfile>
+	<packages>
+		<package diagram="JEDEC_MS_026D_BFB_LQFP144" id="1" name="LQFP144" />
+		<package diagram="JEDEC_MS_026D_BCD_LQFP64" id="2" name="LQFP64" />
+		<package diagram="JEDEC_MO_275A_EEAD_1_TFBGA144" id="3" name="TFBGA144" />
+		<package diagram="JEDEC_MO_275A_EEAD_1_TFBGA144" id="3" name="UFBGA144" />
+		<package diagram="MX_64_QFN" id="4" name="QFN64" />
+		<package diagram="MX_64_TQFP_Round" id="4" name="TQFP64" />
+		<package diagram="JEDEC_MS_026D_BED_LQFP100" id="5" name="LQFP100" />
+		<package diagram="JEDEC_MS_026D_BED_LQFP100" id="5" name="QFN100" />
+		<package diagram="JEDEC_MS_026D_BED_LQFP100" id="5" name="TQFP100" />
+		<package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="6" name="TFBGA100" />
+		<package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="7" name="VFBGA100" />
+	</packages>
+</pinfile>
