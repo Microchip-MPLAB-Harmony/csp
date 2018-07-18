@@ -279,6 +279,7 @@ def dmacChannelAllocLogic(Sym, event):
 #### Component ####
 ################################################################################
 
+print("arpan")
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
 dmaManagerSelect.setVisible(False)
 dmaManagerSelect.setDefaultValue("SAMM0:SAMM0DMAModel")
