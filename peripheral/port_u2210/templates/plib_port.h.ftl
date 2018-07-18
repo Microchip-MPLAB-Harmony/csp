@@ -65,8 +65,75 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+<#compress> <#-- To remove unwanted new lines -->
+
+<#--  =====================
+      MACRO mhc_process_gpio
+      ===================== -->
+<#macro mhc_process_gpio>
+    <#assign GPIO_Name_List = []>
+    <#assign GPIO_PortPin_List = []>
+    <#assign GPIO_PortGroup_List = []>
+
+    <#list 1..PORT_PIN_COUNT as i>
+        <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
+        <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
+        <#assign pinport  = "PIN_" + i + "_PORT_PIN">
+        <#assign pingroup = "PIN_" + i + "_GROUP">
+
+
+        <#if .vars[functype]?has_content>
+            <#if .vars[functype] == "GPIO">
+                <#if .vars[funcname]?has_content>
+                    <#if .vars[pinport]?has_content>
+                        <#if .vars[pingroup]?has_content>
+
+                            <#assign GPIO_Name_List = GPIO_Name_List + [.vars[funcname]]>
+                            <#assign GPIO_PortPin_List = GPIO_PortPin_List + [.vars[pinport]]>
+                            <#assign GPIO_PortGroup_List = GPIO_PortGroup_List + [.vars[pingroup]]>
+
+                        </#if>
+                    </#if>
+                </#if>
+            </#if>
+        </#if>
+    </#list>
+</#macro>
+
+<#--  =====================
+      MACRO execution
+      ===================== -->
+
+<@mhc_process_gpio/>
+</#compress>
+
+<#if (GPIO_Name_List?size > 0)>
+    <#list GPIO_Name_List as gpioName>
+        <#list GPIO_PortGroup_List as gpioGroup>
+            <#list GPIO_PortPin_List as gpioPinPos>
+                <#if  gpioName?counter ==  gpioGroup?counter>
+                    <#if  gpioName?counter ==  gpioPinPos?counter>
+                        <#assign PORT_PIN_PAD = "PORT_GROUP_" + gpioGroup + "_PAD_"  + gpioPinPos>
+                        <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + gpioGroup>
+                            <#lt>/*** Macros for ${gpioName} pin ***/
+                            <#lt>#define ${gpioName}_Set()               (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_OUTSET = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Clear()             (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_OUTCLEAR = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Toggle()            (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_OUTTGL = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Get()               (((PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_IN >> ${gpioPinPos})) & 0x01)
+                            <#lt>#define ${gpioName}_OutputEnable()      (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_DIRSET = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_InputEnable()       (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_DIRCLR = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_PIN                  PORT_PIN_${.vars[PORT_PIN_PAD]}
+
+                    </#if>
+                </#if>
+            </#list>
+        </#list>
+    </#list>
+</#if>
+
+
 // *****************************************************************************
-/* PORT Channel
+/* PORT Group
 
   Summary:
     Identifies the port groups available on the device.
@@ -89,9 +156,10 @@ typedef enum
 {
 <#list 0..PORT_GROUP_COUNT - 1 as i>
     <#assign PORT_GROUP_INDEX = i>
-    /* Group ${PORT_GROUP_INDEX} */
-    PORT_GROUP_${PORT_GROUP_INDEX} = ${PORT_GROUP_INDEX},
+    <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + i>
 
+    /* Group ${.vars[PORT_GROUP_NAME]} */
+    PORT_GROUP_${.vars[PORT_GROUP_NAME]} = PORT${.vars[PORT_GROUP_NAME]}_BASE_ADDRESS,
 </#list>
 } PORT_GROUP;
 
@@ -127,7 +195,6 @@ typedef enum
             </#if>
         </#if>
 </#list>
-
     /* This element should not be used in any of the PORT APIs.
      * It will be used by other modules or application to denote that none of
      * the PORT Pin is used */
@@ -218,7 +285,7 @@ void PORT_Initialize(void);
     be enabled.
 */
 
-void PORT_PinWrite(PORT_PIN pin, bool value);
+static inline void PORT_PinWrite(PORT_PIN pin, bool value);
 
 // *****************************************************************************
 /* Function:
@@ -236,7 +303,8 @@ void PORT_PinWrite(PORT_PIN pin, bool value);
     power consumption.
 
   Precondition:
-    The PORT_Initialize() function should have been called.
+    The PORT_Initialize() function should have been called. Input buffer
+    (INEN bit in the Pin Configuration register) should be enabled in MHC.
 
   Parameters:
     pin - the port pin whose state needs to be read.
@@ -257,7 +325,7 @@ void PORT_PinWrite(PORT_PIN pin, bool value);
     None.
 */
 
-bool PORT_PinRead(PORT_PIN pin);
+static inline bool PORT_PinRead(PORT_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -294,7 +362,7 @@ bool PORT_PinRead(PORT_PIN pin);
     To read actual pin value, PIN_Read API should be used.
 */
 
-bool PORT_PinLatchRead(PORT_PIN pin);
+static inline bool PORT_PinLatchRead(PORT_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -326,7 +394,7 @@ bool PORT_PinLatchRead(PORT_PIN pin);
     None.
 */
 
-void PORT_PinToggle(PORT_PIN pin);
+static inline void PORT_PinToggle(PORT_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -358,7 +426,7 @@ void PORT_PinToggle(PORT_PIN pin);
     None.
 */
 
-void PORT_PinSet(PORT_PIN pin);
+static inline void PORT_PinSet(PORT_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -390,7 +458,7 @@ void PORT_PinSet(PORT_PIN pin);
     None.
 */
 
-void PORT_PinClear(PORT_PIN pin);
+static inline void PORT_PinClear(PORT_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -423,7 +491,7 @@ void PORT_PinClear(PORT_PIN pin);
     None.
 */
 
-void PORT_PinInputEnable(PORT_PIN pin);
+static inline void PORT_PinInputEnable(PORT_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -456,7 +524,7 @@ void PORT_PinInputEnable(PORT_PIN pin);
     None.
 */
 
-void PORT_PinOutputEnable(PORT_PIN pin);
+static inline void PORT_PinOutputEnable(PORT_PIN pin);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -479,7 +547,8 @@ void PORT_PinOutputEnable(PORT_PIN pin);
     the port group pins which are implemented on the device.
 
   Precondition:
-    The PORT_Initialize() function should have been called.
+    The PORT_Initialize() function should have been called. Input buffer
+    (INEN bit in the Pin Configuration register) should be enabled in MHC.
 
   Parameters:
     group - One of the IO groups from the enum PORT_GROUP.
@@ -492,7 +561,7 @@ void PORT_PinOutputEnable(PORT_PIN pin);
     <code>
 
     uint32_t value;
-    value = PORT_Read(PORT_GROUP_2);
+    value = PORT_Read(PORT_GROUP_C);
 
     </code>
 
@@ -531,7 +600,7 @@ uint32_t PORT_GroupRead(PORT_GROUP group);
     <code>
 
     uint32_t value;
-    value = PORT_GroupLatchRead(PORT_GROUP_2);
+    value = PORT_GroupLatchRead(PORT_GROUP_C);
 
     </code>
 
@@ -543,14 +612,21 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group);
 
 // *****************************************************************************
 /* Function:
-    void PORT_GroupWrite(PORT_GROUP group, uint32_t value);
+    void PORT_GroupWrite(PORT_GROUP group, uint32_t mask, uint32_t value);
 
   Summary:
-    Write value on all the pins of the selected port group.
+    Write value on the masked pins of the selected port group.
 
   Description:
-    This function writes value to the entire port group. Port group pins which
-    are configured for output will updated with corresponding value.
+    This function writes the value contained in the value parameter to the
+    port group. Port group pins which are configured for output will be updated.
+    The mask parameter provides additional control on the bits in the group to
+    be affected. Setting a bit to 1 in the mask will cause the corresponding
+    bit in the port group to be updated. Clearing a bit in the mask will cause
+    that corresponding bit in the group to stay unaffected. For example,
+    setting a mask value 0xFFFFFFFF will cause all bits in the port group
+    to be updated. Setting a value 0x3 will only cause port group bit 0 and
+    bit 1 to be updated.
 
     For port pins which are not configured for output and have the pull feature
     enabled, this function will affect pull value (pull up or pull down). A bit
@@ -562,17 +638,25 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group);
 
   Parameters:
     group - One of the IO groups from the enum PORT_GROUP.
-    value - 32bit value which has to be written/driven on all the I/O lines of
-    the selected group. Refer to the function description for effect on pins
-    which are not configured for output.
+
+    mask  - A 32 bit value in which positions of 0s and 1s decide
+             which IO pins of the selected port group will be written.
+             1's - Will write to corresponding IO pins.
+             0's - Will remain unchanged.
+
+    value - Value which has to be written/driven on the I/O
+             lines of the selected port for which mask bits are '1'.
+             Values for the corresponding mask bit '0' will be ignored.
+             Refer to the function description for effect on pins
+             which are not configured for output.
 
   Returns:
     None.
 
   Example:
     <code>
-
-    PORT_GroupWrite(PORT_GROUP_2, 0x7563D45F);
+    // Write binary value 0011 to the pins PC3, PC2, PC1 and PC0 respectively.
+    PORT_GroupWrite(PORT_GROUP_C, 0x0F, 0xF563D453);
 
     </code>
 
@@ -580,7 +664,7 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group);
     None.
 */
 
-void PORT_GroupWrite(PORT_GROUP group, uint32_t value);
+void PORT_GroupWrite(PORT_GROUP group, uint32_t mask, uint32_t value);
 
 // *****************************************************************************
 /* Function:
@@ -612,7 +696,7 @@ void PORT_GroupWrite(PORT_GROUP group, uint32_t value);
     <code>
 
     // Set PC5 and PC7 pins to 1
-    PORT_GroupSet(PORT_GROUP_2, 0x00A0);
+    PORT_GroupSet(PORT_GROUP_C, 0x00A0);
 
     </code>
 
@@ -654,7 +738,7 @@ void PORT_GroupSet(PORT_GROUP group, uint32_t mask);
     <code>
 
     // Clear PC5 and PC7 pins to 1
-    PORT_GroupClear(PORT_GROUP_2, 0x00A0);
+    PORT_GroupClear(PORT_GROUP_C, 0x00A0);
 
     </code>
 
@@ -695,7 +779,7 @@ void PORT_GroupClear(PORT_GROUP group, uint32_t mask);
     <code>
 
     // Clear PC5 and PC7 pins to 1
-    PORT_GroupToggle(PORT_GROUP_2, 0x00A0);
+    PORT_GroupToggle(PORT_GROUP_C, 0x00A0);
 
     </code>
 
@@ -737,7 +821,7 @@ void PORT_GroupToggle(PORT_GROUP group, uint32_t mask);
     <code>
 
     // Make PC5 and PC7 pins as input
-    PORT_GroupInputEnable(PORT_GROUP_2, 0x00A0);
+    PORT_GroupInputEnable(PORT_GROUP_C, 0x00A0);
 
     </code>
 
@@ -776,7 +860,7 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask);
     <code>
 
     // Make PC5 and PC7 pins as output
-    PORT_GroupOutputEnable(PORT_GROUP_2, 0x00A0);
+    PORT_GroupOutputEnable(PORT_GROUP_C, 0x00A0);
 
     </code>
 
@@ -785,6 +869,8 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask);
 */
 
 void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask);
+
+#include "plib_port_pin.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
