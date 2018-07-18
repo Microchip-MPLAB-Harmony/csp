@@ -1,1 +1,1 @@
-RTC${RTC_INDEX}_Initialize();
+    RTC${RTC_INDEX}_Initialize();

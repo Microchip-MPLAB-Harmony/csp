@@ -152,7 +152,7 @@ DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
 void DMAC${DMAC_INDEX}_Initialize( void )
 {
     DMAC_CH_OBJECT *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
-    DMAC_CHANNEL channel = DMAC_CHANNEL_0;
+    DMAC_CHANNEL channel = 0;
 
     /* Initialize DMAC Channel objects */
     for(channel = 0; channel < DMAC_CHANNELS_NUMBER; channel++)
