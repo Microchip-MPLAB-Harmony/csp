@@ -274,7 +274,7 @@ void CLOCK_Initialize (void)
     /* Output Enable  and Output OFF Value */
     GCLK_REGS->GCLK_GENCTRL[${i}] |=  GCLK_GENCTRL_OE_Msk ${((.vars[GCLK_OUTPUTOFFVALUE] == "HIGH"))?then('| GCLK_GENCTRL_OOV_Msk', ' ')};
 
-    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL(1 << ${i})) == GCLK_SYNCBUSY_GENCTRL(1 << ${i}))
+    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL${i}_Msk) == GCLK_SYNCBUSY_GENCTRL${i}_Msk)
     {
         /* wait for the Generator ${i} synchronization */
     }
@@ -291,7 +291,7 @@ void CLOCK_Initialize (void)
                                                                ${(.vars[GCLK_RUNSTDBY])?then('| GCLK_GENCTRL_RUNSTDBY_Msk', ' ')}
                                                                | GCLK_GENCTRL_GENEN_Msk;</@compress>
 
-    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL(1 << ${i})) == GCLK_SYNCBUSY_GENCTRL(1 << ${i}))
+    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL${i}_Msk) == GCLK_SYNCBUSY_GENCTRL${i}_Msk)
     {
         /* wait for the Generator ${i} synchronization */
     }
@@ -415,10 +415,13 @@ void OSCCTRL_Initialize(void)
 </#if>
 
 <#if CONFIG_CLOCK_OSC48M_ENABLE = true>
+
     /****************** OSC48M Initialization  *******************************/
 
-    /* Selection of the ONDEMAND and RUN StandBy */
-    OSCCTRL_REGS->OSCCTRL_OSC48MCTRL |= OSCCTRL_OSC48MCTRL_RESETVALUE ${CONFIG_CLOCK_OSC48M_RUNSTDY?then('| OSCCTRL_OSC48MCTRL_RUNSTDBY_Msk' ,'')};
+	<#if CONFIG_CLOCK_OSC48M_RUNSTDY == true>
+	/* Selection of the ONDEMAND and RUN StandBy */
+    OSCCTRL_REGS->OSCCTRL_OSC48MCTRL |= OSCCTRL_OSC48MCTRL_RUNSTDBY_Msk;
+	</#if>
 
     /* Disabling the On demand */
     OSCCTRL_REGS->OSCCTRL_OSC48MCTRL &= ~(OSCCTRL_OSC48MCTRL_ONDEMAND_Msk);
