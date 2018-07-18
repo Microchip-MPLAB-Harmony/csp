@@ -1347,7 +1347,7 @@ void MCLK_APBClockEnable ( MCLK_APB_CLOCK peripheral, bool enable )
     uint32_t mclkClockPos = peripheral%32;
 
     /* Base Address of the APB Bridge */
-    uint32_t *apbBridgeAddr = (volatile uint32_t *)0x40000814;
+    volatile uint32_t *apbBridgeAddr = (volatile uint32_t *)0x40000814;
 
     apbBridgeAddr = apbBridgeAddr + bridgeMask;
 
