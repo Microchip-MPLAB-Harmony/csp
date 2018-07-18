@@ -1227,7 +1227,7 @@ def ahbInitialValueset(symbol, event):
     for ahbclocknames in range(0,len(ahbclocks)):
         ahbClockGetValue= Database.getSymbolValue("core", "CONFIG_AHB_"+ahbclocks[ahbclocknames]+"_Value")
         ahbClockValue = ahbClockValue | ahbClockGetValue
-        
+
     ahbClockValue = 0x800 | ahbClockValue
     Log.writeInfoMessage("ahb Clock Value is"+str(ahbClockValue))
     symbol.clearValue()
@@ -1239,7 +1239,7 @@ def APBAInitialValueset(symbol, event):
     for apbAclocknames in range(0,len(apbAclocks)):
         apbAClockGetValue= Database.getSymbolValue("core", "CONFIG_APBA_"+apbAclocks[apbAclocknames]+"_Value")
         apbAClockValue = apbAClockValue | apbAClockGetValue
-        
+
     Log.writeInfoMessage("apbA Clock Value is"+str(apbAClockValue))
     symbol.clearValue()
     symbol.setValue(apbAClockValue,2)
@@ -1250,7 +1250,7 @@ def APBBInitialValueset(symbol, event):
     for apbBclocknames in range(0,len(apbBclocks)):
         apbBClockGetValue= Database.getSymbolValue("core", "CONFIG_APBB_"+apbBclocks[apbBclocknames]+"_Value")
         apbBClockValue = apbBClockValue | apbBClockGetValue
-        
+
     Log.writeInfoMessage("apbB Clock Value is"+str(apbBClockValue))
     symbol.clearValue()
     symbol.setValue(apbBClockValue,2)
@@ -1261,18 +1261,18 @@ def APBCInitialValueset(symbol, event):
     for apbCclocknames in range(0,len(apbCclocks)):
         apbCClockGetValue= Database.getSymbolValue("core", "CONFIG_APBC_"+apbCclocks[apbCclocknames]+"_Value")
         apbCClockValue = apbCClockValue | apbCClockGetValue
-        
+
     Log.writeInfoMessage("apbC Clock Value is"+str(apbCClockValue))
     symbol.clearValue()
     symbol.setValue(apbCClockValue,2)
-    
+
 #MCLK APBD Bridge Initial Value set Property
 def APBDInitialValueset(symbol, event):
     apbDClockValue = 0
     for apbDclocknames in range(0,len(apbDclocks)):
         apbDClockGetValue= Database.getSymbolValue("core", "CONFIG_APBD_"+apbDclocks[apbDclocknames]+"_Value")
         apbDClockValue = apbDClockValue | apbDClockGetValue
-        
+
     Log.writeInfoMessage("apbD Clock Value is"+str(apbDClockValue))
     symbol.clearValue()
     symbol.setValue(apbDClockValue,2)
