@@ -151,7 +151,7 @@ def instantiateComponent(supcComponent):
 	supcSym_HeaderFile.setSourcePath("../peripheral/supc_"+supcModuleID+"/templates/plib_supc.h.ftl")
 	supcSym_HeaderFile.setOutputName("plib_supc"+supcInstanceIndex+".h")
 	supcSym_HeaderFile.setDestPath("peripheral/supc/")
-	supcSym_HeaderFile.setProjectPath("config/" + configName + "peripheral/supc/")
+	supcSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/supc/")
 	supcSym_HeaderFile.setType("HEADER")
 	supcSym_HeaderFile.setMarkup(True)
 
@@ -159,7 +159,7 @@ def instantiateComponent(supcComponent):
 	supcSym_SourceFile.setSourcePath("../peripheral/supc_"+supcModuleID+"/templates/plib_supc.c.ftl")
 	supcSym_SourceFile.setOutputName("plib_supc"+supcInstanceIndex+".c")
 	supcSym_SourceFile.setDestPath("peripheral/supc/")
-	supcSym_SourceFile.setProjectPath("config/" + configName + "peripheral/supc/")
+	supcSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/supc/")
 	supcSym_SourceFile.setType("SOURCE")
 	supcSym_SourceFile.setMarkup(True)
 

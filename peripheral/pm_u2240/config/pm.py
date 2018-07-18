@@ -54,7 +54,7 @@ def instantiateComponent(pmComponent):
 	pmSym_HeaderFile.setSourcePath("../peripheral/pm_"+pmModuleID+"/templates/plib_pm.h.ftl")
 	pmSym_HeaderFile.setOutputName("plib_pm" + pmInstanceIndex + ".h")
 	pmSym_HeaderFile.setDestPath("peripheral/pm/")
-	pmSym_HeaderFile.setProjectPath("config/" + configName + "peripheral/pm/")
+	pmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pm/")
 	pmSym_HeaderFile.setType("HEADER")
 	pmSym_HeaderFile.setMarkup(True)
 
@@ -62,7 +62,7 @@ def instantiateComponent(pmComponent):
 	pmSym_SourceFile.setSourcePath("../peripheral/pm_"+pmModuleID+"/templates/plib_pm.c.ftl")
 	pmSym_SourceFile.setOutputName("plib_pm" + pmInstanceIndex + ".c")
 	pmSym_SourceFile.setDestPath("peripheral/pm/")
-	pmSym_SourceFile.setProjectPath("config/" + configName + "peripheral/pm/")
+	pmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pm/")
 	pmSym_SourceFile.setType("SOURCE")
 	pmSym_SourceFile.setMarkup(True)
 
