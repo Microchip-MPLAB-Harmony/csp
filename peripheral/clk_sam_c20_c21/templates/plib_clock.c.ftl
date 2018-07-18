@@ -234,7 +234,7 @@ void CLOCK_Initialize (void)
 
     <#if CONFIG_CLOCK_OSCULP32K_CALIB_ENABLE = true >
     /* User Selection of the Calibration Value */
-    OSC32KCTRL_REGS->OSC32KCTRL_OSCULP32K.w = OSC32KCTRL_OSCULP32K_CALIB(${OSCULP32K_CALIB_VALUE});
+    OSC32KCTRL_REGS->OSC32KCTRL_OSCULP32K = OSC32KCTRL_OSCULP32K_CALIB(${OSCULP32K_CALIB_VALUE});
     </#if>
 
     /* selection of the CPU clock Division */
@@ -249,7 +249,7 @@ void CLOCK_Initialize (void)
     MCLK_REGS->MCLK_APBAMASK |= MCLK_APBAMASK_GCLK__Msk;
 
     /* Software reset the module to ensure it is re-initialized correctly */
-   GCLK_REGS->GCLK_CTRLA = GCLK_CTRLA_SWRST_Msk;
+    GCLK_REGS->GCLK_CTRLA = GCLK_CTRLA_SWRST_Msk;
 
     while ((GCLK_REGS->GCLK_CTRLA & GCLK_CTRLA_SWRST_Msk) == GCLK_CTRLA_SWRST_Msk)
     {
@@ -272,7 +272,7 @@ void CLOCK_Initialize (void)
 
     <#if (.vars[GCLK_OUTPUTENABLE] = true)>
     /* Output Enable  and Output OFF Value */
-   GCLK_REGS->GCLK_GENCTRL[${i}] |=  GCLK_GENCTRL_OE_Msk ${((.vars[GCLK_OUTPUTOFFVALUE] == "HIGH"))?then('| GCLK_GENCTRL_OOV_Msk', ' ')};
+    GCLK_REGS->GCLK_GENCTRL[${i}] |=  GCLK_GENCTRL_OE_Msk ${((.vars[GCLK_OUTPUTOFFVALUE] == "HIGH"))?then('| GCLK_GENCTRL_OOV_Msk', ' ')};
 
     while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL(1 << ${i})) == GCLK_SYNCBUSY_GENCTRL(1 << ${i}))
     {
@@ -309,11 +309,15 @@ void CLOCK_Initialize (void)
         <#if .vars[GCLK_ID_CHEN]?has_content>
             <#if (.vars[GCLK_ID_CHEN] != false)>
     /* ${.vars[GCLK_ID_NAME]} peripheral Channel Enable */
-   GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] |= GCLK_PCHCTRL_CHEN_Msk;
+    GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] |= GCLK_PCHCTRL_CHEN_Msk;
 
     /* Selection of the Generator and write Lock for ${.vars[GCLK_ID_NAME]} */
-   GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] |= GCLK_PCHCTRL_GEN(${.vars[GCLK_ID_GENSEL]})${.vars[GCLK_ID_WRITELOCK]?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')};
+    GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] |= GCLK_PCHCTRL_GEN(${.vars[GCLK_ID_GENSEL]})${.vars[GCLK_ID_WRITELOCK]?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')};
 
+    while ((GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
+    {
+        /* Wait for synchronization */
+    }
             </#if>
         </#if>
 </#list>
@@ -412,6 +416,9 @@ void OSCCTRL_Initialize(void)
 
 <#if CONFIG_CLOCK_OSC48M_ENABLE = true>
     /****************** OSC48M Initialization  *******************************/
+
+    /* Selection of the ONDEMAND and RUN StandBy */
+    OSCCTRL_REGS->OSCCTRL_OSC48MCTRL |= OSCCTRL_OSC48MCTRL_RESETVALUE ${CONFIG_CLOCK_OSC48M_RUNSTDY?then('| OSCCTRL_OSC48MCTRL_RUNSTDBY_Msk' ,'')};
 
     /* Disabling the On demand */
     OSCCTRL_REGS->OSCCTRL_OSC48MCTRL &= ~(OSCCTRL_OSC48MCTRL_ONDEMAND_Msk);
@@ -617,7 +624,7 @@ bool OSCCTRL_XOSCSafeClockIsActive( void )
     bool safeClockActiveStatus = false;
 
     /* Checking for the XOSC Switching to provide a safe Clock */
-    if((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSCCTRL_STATUS_XOSCCKSW_Msk) == OSCCTRL_STATUS_XOSCCKSW_Msk)
+    if((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCCKSW_Msk) == OSCCTRL_STATUS_XOSCCKSW_Msk)
     {
         safeClockActiveStatus = true;
     }
@@ -1272,11 +1279,11 @@ void GCLK_GeneratorEnable(GCLK_GENERATOR gclk, bool enable)
 {
     if(enable)
     {
-        GCLK_REGS->GCLK_GENCTRL[gclk] |= 1 << GCLK_GENCTRL_GENEN_Pos;
+         GCLK_REGS->GCLK_GENCTRL[gclk] |= 1 << GCLK_GENCTRL_GENEN_Pos;
     }
     else
     {
-        GCLK_REGS->GCLK_GENCTRL[gclk] &= ~(1 << GCLK_GENCTRL_GENEN_Pos);
+         GCLK_REGS->GCLK_GENCTRL[gclk] &= ~(1 << GCLK_GENCTRL_GENEN_Pos);
     }
 }
 
@@ -1303,11 +1310,11 @@ void GCLK_PeripheralChannelEnable (GCLK_PERIPHERAL_CHANNEL peripheralChannel, bo
     if(enable)
     {
         /* Enabling the peripheral Channel */
-       GCLK_REGS->GCLK_PCHCTRL[peripheralChannel] |= 1 << GCLK_PCHCTRL_CHEN_Pos;
+        GCLK_REGS->GCLK_PCHCTRL[peripheralChannel] |= 1 << GCLK_PCHCTRL_CHEN_Pos;
     }
     else
     {
-       GCLK_REGS->GCLK_PCHCTRL[peripheralChannel] &= ~(1 << GCLK_PCHCTRL_CHEN_Pos);
+        GCLK_REGS->GCLK_PCHCTRL[peripheralChannel] &= ~(1 << GCLK_PCHCTRL_CHEN_Pos);
     }
 }
 
@@ -1340,7 +1347,7 @@ void MCLK_APBClockEnable ( MCLK_APB_CLOCK peripheral, bool enable )
     uint32_t mclkClockPos = peripheral%32;
 
     /* Base Address of the APB Bridge */
-    uint32_t *apbBridgeAddr = (uint32_t *)0x40000814;
+    uint32_t *apbBridgeAddr = (volatile uint32_t *)0x40000814;
 
     apbBridgeAddr = apbBridgeAddr + bridgeMask;
 

@@ -48,7 +48,7 @@ def setMPUDefaultSettings():
 	
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_c20_c21/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_sam_c20_c21/plugin/clockmanager.jar")
+coreComponent.addPlugin("../peripheral/clk_sam_c20_c21/plugin/clk_sam_c21.jar")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
