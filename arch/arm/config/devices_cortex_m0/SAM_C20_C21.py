@@ -52,11 +52,11 @@ coreComponent.addPlugin("../peripheral/clk_sam_c20_c21/plugin/clk_sam_c21.jar")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
-#coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
+coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
 
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/ARM_M7_NVICmanager.jar")
+coreComponent.addPlugin("../peripheral/nvic/plugin/SAMC2xNVICmanager.jar")
 
 #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
