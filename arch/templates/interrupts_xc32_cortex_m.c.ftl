@@ -16,6 +16,9 @@ void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call))Du
 /* Device vectors list dummy definition*/
 ${LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS}
 
+/* Mutiple handlers for vector */
+${LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS}
+
 __attribute__ ((section(".vectors")))
 const DeviceVectors exception_table=
 {

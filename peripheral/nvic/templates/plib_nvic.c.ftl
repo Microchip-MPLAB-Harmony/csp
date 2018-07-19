@@ -62,7 +62,7 @@ void NVIC_Initialize( void )
      * from within the "Interrupt Manager" of MCC. */
 <#list NVIC_VECTOR_MIN..NVIC_VECTOR_MAX as i>
     <#list 0..NVIC_VECTOR_MAX_MULTIPLE_HANDLERS as j>
-        <#assign NVIC_VECTOR_NAME = "NVIC_" + i + "_" + j + "_VECTOR">
+        <#assign NVIC_VECTOR_GENERIC_NAME = "NVIC_" + i + "_" + j + "_GENERIC_NAME">
         <#assign NVIC_VECTOR_ENABLE = "NVIC_" + i + "_" + j + "_ENABLE">
         <#assign NVIC_VECTOR_ENABLE_GENERATE = "NVIC_" + i + "_" + j + "_ENABLE_GENERATE">
         <#assign NVIC_VECTOR_PRIORITY = "NVIC_" + i + "_" + j + "_PRIORITY">
@@ -70,11 +70,12 @@ void NVIC_Initialize( void )
             <#if .vars[NVIC_VECTOR_ENABLE]?has_content && (.vars[NVIC_VECTOR_ENABLE] != false)>
                 <#if .vars[NVIC_VECTOR_PRIORITY_GENERATE]?has_content && (.vars[NVIC_VECTOR_PRIORITY_GENERATE] != false)>
                     <#if .vars[NVIC_VECTOR_PRIORITY]?has_content && (.vars[NVIC_VECTOR_PRIORITY]?number != 0)>
-    NVIC_SetPriority(${.vars[NVIC_VECTOR_NAME]}_IRQn, ${.vars[NVIC_VECTOR_PRIORITY]});
+    NVIC_SetPriority(${.vars[NVIC_VECTOR_GENERIC_NAME]}_IRQn, ${.vars[NVIC_VECTOR_PRIORITY]});
                     </#if>
                     <#if .vars[NVIC_VECTOR_ENABLE_GENERATE]?has_content && (.vars[NVIC_VECTOR_ENABLE_GENERATE] != false)>
-    NVIC_EnableIRQ(${.vars[NVIC_VECTOR_NAME]}_IRQn);
+    NVIC_EnableIRQ(${.vars[NVIC_VECTOR_GENERIC_NAME]}_IRQn);
                     </#if>
+                    <#break>
                 </#if>
             </#if>
     </#list>    
