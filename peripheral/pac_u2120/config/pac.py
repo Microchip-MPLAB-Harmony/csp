@@ -9,34 +9,30 @@ def instantiateComponent(pacComponent):
 
     bridgeCount = int(bridgeNode.getAttribute("value"))
 
-    #pac main menu
-    pacSym_Menu = pacComponent.createMenuSymbol("PAC_MENU", None)
-    pacSym_Menu.setLabel("PAC MODULE SETTINGS ")
-
-    pacSym_INDEX = pacComponent.createIntegerSymbol("PAC_INDEX", pacSym_Menu)
+    pacSym_INDEX = pacComponent.createIntegerSymbol("PAC_INDEX", None)
     pacSym_INDEX.setDefaultValue(int(pacInstanceIndex))
     pacSym_INDEX.setVisible(False)
 
-    pacSym_BridgeCount = pacComponent.createIntegerSymbol("PAC_BRIDGE_COUNT", pacSym_Menu)
+    pacSym_BridgeCount = pacComponent.createIntegerSymbol("PAC_BRIDGE_COUNT", None)
     pacSym_BridgeCount.setDefaultValue(bridgeCount)
     pacSym_BridgeCount.setVisible(False)
 
     #interrupt mode
-    pacSym_INTENSET = pacComponent.createBooleanSymbol("PAC_INTERRRUPT_MODE", pacSym_Menu)
-    pacSym_INTENSET.setLabel("Enable PAC Interrupt ?")
+    pacSym_INTENSET = pacComponent.createBooleanSymbol("PAC_INTERRRUPT_MODE", None)
+    pacSym_INTENSET.setLabel("Enable PAC Interrupt?")
     pacSym_INTENSET.setDefaultValue(False)
 
     #Error Event
-    pacSym_ErrEventSET = pacComponent.createBooleanSymbol("PAC_ERROR_EVENT", pacSym_Menu)
-    pacSym_ErrEventSET.setLabel("Generate Peripheral Access Error Event")
+    pacSym_ErrEventSET = pacComponent.createBooleanSymbol("PAC_ERROR_EVENT", None)
+    pacSym_ErrEventSET.setLabel("Generate Peripheral Access Error Event Output")
     pacSym_ErrEventSET.setDefaultValue(False)
-    pacSym_ErrEventSET.setVisible(False)
+    pacSym_ErrEventSET.setVisible(True)
 
     for bridge in range(0 , bridgeCount):
 
         x = chr(ord("A") + bridge)
 
-        PAC_bridgeSym = pacComponent.createStringSymbol("PAC_" + str(bridge) + "_BRIDGE" , pacSym_Menu)
+        PAC_bridgeSym = pacComponent.createStringSymbol("PAC_" + str(bridge) + "_BRIDGE" , None)
         PAC_bridgeSym.setDefaultValue(str(x))
         PAC_bridgeSym.setVisible(False)
 
@@ -44,7 +40,7 @@ def instantiateComponent(pacComponent):
         bridgeXPeripherals = []
         bridgeXPeripherals = bridgeXNode.getChildren()
 
-        pacSym_BridgePeripheralCount = pacComponent.createIntegerSymbol("PAC_BRIDGE_" + str(bridge) + "_PERI_COUNT", pacSym_Menu)
+        pacSym_BridgePeripheralCount = pacComponent.createIntegerSymbol("PAC_BRIDGE_" + str(bridge) + "_PERI_COUNT", None)
         pacSym_BridgePeripheralCount.setDefaultValue(len(bridgeXPeripherals))
         pacSym_BridgePeripheralCount.setVisible(False)
 
@@ -52,30 +48,19 @@ def instantiateComponent(pacComponent):
 
             periName = str(bridgeXPeripherals[bitfield].getAttribute("caption"))
 
-            PAC_PeripheralSym = pacComponent.createStringSymbol("PAC_BRIDGE_" + str(bridge) + "_PERI_" + str(bitfield) + "_NAME" , pacSym_Menu)
+            PAC_PeripheralSym = pacComponent.createStringSymbol("PAC_BRIDGE_" + str(bridge) + "_PERI_" + str(bitfield) + "_NAME" , None)
             PAC_PeripheralSym.setDefaultValue(periName)
             PAC_PeripheralSym.setVisible(False)
 
-            PAC_SelectionSym = pacComponent.createKeyValueSetSymbol("PAC_BRIDGE_" + str(bridge) + "_PERI_" + str(bitfield) + "_REG_PROTECT" , pacSym_Menu)
+            PAC_SelectionSym = pacComponent.createKeyValueSetSymbol("PAC_BRIDGE_" + str(bridge) + "_PERI_" + str(bitfield) + "_REG_PROTECT" , None)
             PAC_SelectionSym.setLabel(periName + " Peripheral Registers Protection")
 
-            PACNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PAC\"]/value-group@[name=\"PAC_WRCTRL__KEY\"]")
-            PACValues = []
-            PACValues = PACNode.getChildren()
+            PAC_SelectionSym.addKey("OFF",          "0" , "No action")
+            PAC_SelectionSym.addKey("CLEAR",        "1" , "Clear protection")
+            PAC_SelectionSym.addKey("SET",          "2" , "Set protection")
+            PAC_SelectionSym.addKey("SET_AND_LOCK", "3" , "Set and lock protection")
 
-            PACDefaultValue = 0
-
-            for index in range(len(PACValues)):
-                PACKeyName = PACValues[index].getAttribute("name")
-
-                if (PACKeyName == "OFF"):
-                    PACDefaultValue = index
-
-                PACKeyDescription = PACValues[index].getAttribute("caption")
-                PACKeyValue = PACValues[index].getAttribute("value")
-                PAC_SelectionSym.addKey(PACKeyName, PACKeyValue , PACKeyDescription)
-
-            PAC_SelectionSym.setDefaultValue(PACDefaultValue)
+            PAC_SelectionSym.setDefaultValue(0)
             PAC_SelectionSym.setOutputMode("Key")
             PAC_SelectionSym.setDisplayMode("Description")
 
@@ -109,7 +94,7 @@ def instantiateComponent(pacComponent):
     pacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     pacSystemDefFile.setSourcePath("../peripheral/pac_u2120/templates/system/definitions.h.ftl")
     pacSystemDefFile.setMarkup(True)
-    
+
     pacSystemInitFile = pacComponent.createFileSymbol("PAC_SYS_INIT", None)
     pacSystemInitFile.setType("STRING")
     pacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")

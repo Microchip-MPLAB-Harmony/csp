@@ -83,46 +83,46 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
   Description:
     This enumeration identifies the available AHB Slave Buses on which the PAC
-    module will detect errors. 
+    module will detect errors.
 
   Remarks:
     None.
 */
- 
+
 typedef enum
 {
     /* Interrupt flag for SLAVE FLASH */
     PAC_AHB_SLAVE_FLASH = 0x1,
-    
+
     /* Interrupt flag for SLAVE HSRAMCMOP */
     PAC_AHB_SLAVE_HSRAMCM0P = 0x2,
-    
+
     /* Interrupt flag for SLAVE HSRAMDSU */
     PAC_AHB_SLAVE_HSRAMDSU = 0x4,
-    
+
     /* Interrupt flag for SLAVE HPB1 */
     PAC_AHB_SLAVE_HPB1 = 0x8,
-    
+
     /* Interrupt flag for SLAVE HPB0 */
     PAC_AHB_SLAVE_HPB0 = 0x10,
-    
+
     /* Interrupt flag for SLAVE HPB2 */
     PAC_AHB_SLAVE_HPB2 = 0x20,
-    
+
     /* Interrupt flag for SLAVE LPRAMDMAC */
     PAC_AHB_SLAVE_LPRAMDMAC = 0x40,
-    
+
     /* Interrupt flag for SLAVE DIVAS */
-    PAC_AHB_SLAVE_DIVAS = 0x80, 
-    
+    PAC_AHB_SLAVE_DIVAS = 0x80,
+
     /* Interrupt flag for SLAVE HPB3 */
     PAC_AHB_SLAVE_HPB3 = 0x100,
-    
+
     /* Interrupt flag for all SLAVES */
-    PAC_AHB_SLAVE_ANY = 0xFFFFFFFF     
-    
+    PAC_AHB_SLAVE_ANY = 0xFFFFFFFF
+
 } PAC_AHB_SLAVE;
- 
+
 // *****************************************************************************
 /* Peripheral module Identifier enumeration
 
@@ -158,7 +158,7 @@ typedef enum
 
     /* Interrupt flag for all Peripheral bridges */
     PAC_PERIPHERAL_ANY = 0xFFFFFFFF
-  
+
 } PAC_PERIPHERAL;
 
 // *****************************************************************************
@@ -169,7 +169,7 @@ typedef enum
 
   Description:
     This enum identifies the possible PAC operation. This data type is used
-    along with the PAC${PAC_INDEX}_PeripheralProtect() function and specifies 
+    along with the PAC${PAC_INDEX}_PeripheralProtect() function and specifies
     the type of access operation that needs to be peformed
 
   Remarks:
@@ -180,16 +180,16 @@ typedef enum
 {
     /* No Action */
     PAC_PROTECTION_OFF,
-        
+
     /* Clear the peripheral write control protection */
     PAC_PROTECTION_CLEAR,
-    
+
     /* Set the peripheral write control protection */
     PAC_PROTECTION_SET,
-    
+
     /* Set and lock the peripheral write control until the next hardware reset */
     PAC_PROTECTION_SET_AND_LOCK,
- 
+
 } PAC_PROTECTION;
 
 // *****************************************************************************
@@ -201,7 +201,7 @@ typedef enum
 
   Description:
     This data type defines the function signature for the PAC peripheral
-    callback function. The PAC peripheral will call back the function with 
+    callback function. The PAC peripheral will call back the function with
     this signature when a access violation has been detected.
 
   Function:
@@ -224,12 +224,12 @@ typedef enum
             // Identify the error.
             if(PAC${PAC_INDEX}_PeripheralErrorOccurred())
             {
-                // Call the PAC${PAC_INDEX}_PeripheralErrorGet() function to 
+                // Call the PAC${PAC_INDEX}_PeripheralErrorGet() function to
                 // identify the error.
             }
             else if(PAC${PAC_INDEX}_AHBSlaveErrorOccurred())
             {
-                // Call the PAC${PAC_INDEX}_AHBSlaveErrorGet() function to 
+                // Call the PAC${PAC_INDEX}_AHBSlaveErrorGet() function to
                 // identify the error.
             }
       }
@@ -265,7 +265,7 @@ typedef void (*PAC_CALLBACK)( uintptr_t context );
     Initializes given instance of PAC peripheral.
 
   Description:
-    This function initializes given instance of PAC peripheral of the device 
+    This function initializes given instance of PAC peripheral of the device
     with the values configured in MCC GUI.
 
   Precondition:
@@ -293,7 +293,7 @@ void PAC${PAC_INDEX}_Initialize( void );
     bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
 
   Summary:
-    Gets write protect status for the given interface module
+    Gets write protect status for the given peripheral module
 
   Description:
     This function returns true if the specified peripheral is write protected.
@@ -315,13 +315,13 @@ void PAC${PAC_INDEX}_Initialize( void );
     if(!PAC${PAC_INDEX}_PeripheralIsProtected(PAC_PERIPHERAL_A_PM))
     {
         PAC${PAC_INDEX}_PeripheralProtect(PAC_PERIPHERAL_A_PM, PAC_PROTECTION_SET);
-    };
+    }
     </code>
 
   Remarks:
     None.
 */
-    
+
 bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral);
 
 // *****************************************************************************
@@ -341,7 +341,7 @@ bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral);
     be cleared (PAC_PROTECTION_SET_AND_LOCK).
 
   Precondition:
-    The PAC${PAC_INDEX}_Initialize() function should have been called once. 
+    The PAC${PAC_INDEX}_Initialize() function should have been called once.
 
   Parameters:
     peripheral - Peripheral to be operated on.
@@ -351,19 +351,19 @@ bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral);
 
   Returns:
     None.
-    
+
   Example:
     <code>
 
-    // Refer to the description of PAC${PAC_INDEX}_PeripheralIsProtected() 
+    // Refer to the description of PAC${PAC_INDEX}_PeripheralIsProtected()
     // function for example usage of the PAC${PAC_INDEX}_PeripheralProtect API.
-    
+
     </code>
 
   Remarks:
     Peripherals protection can be enabled and disabled via MHC. These protection
     settings are applied when the PAC${PAC_INDEX}_Initialize() function is called.
-*/  
+*/
 
 void PAC${PAC_INDEX}_PeripheralProtect (PAC_PERIPHERAL peripheral, PAC_PROTECTION operation);
 
@@ -376,11 +376,11 @@ void PAC${PAC_INDEX}_PeripheralProtect (PAC_PERIPHERAL peripheral, PAC_PROTECTIO
 
   Description:
     This function returns true if any peripheral access error has occurred. The
-    application can then call the PAC${PAC_INDEX}_PeripheralErrorGet() function 
+    application can then call the PAC${PAC_INDEX}_PeripheralErrorGet() function
     to identify the peripheral on which the error has occurred.
 
   Precondition:
-    The PAC${PAC_INDEX}_Initialize() function should have been called once. 
+    The PAC${PAC_INDEX}_Initialize() function should have been called once.
 
   Parameters:
     None.
@@ -389,7 +389,7 @@ void PAC${PAC_INDEX}_PeripheralProtect (PAC_PERIPHERAL peripheral, PAC_PROTECTIO
     true - atleast one peripheral is reporting a PAC error.
 
     false - no peripherals are reporting PAC errors.
-    
+
   Example:
     <code>
 
@@ -399,7 +399,7 @@ void PAC${PAC_INDEX}_PeripheralProtect (PAC_PERIPHERAL peripheral, PAC_PROTECTIO
     while(PAC${PAC_INDEX}_PeripheralErrorOccurred())
     {
         peripheral = PAC${PAC_INDEX}_PeripheralErrorGet();
-        
+
         // Assuming that some application function has processed the error, we
         // can clear the error.
 
@@ -426,19 +426,19 @@ bool PAC${PAC_INDEX}_PeripheralErrorOccurred (void);
     error. The application can call this function to identify the peripheral
     that is a reporting an access error. In case where multiple peripherals are
     reporting access errors, the application must call this function multiple
-    times. The application can use the PAC${PAC_INDEX}_PeripheralErrorOccurred() 
-    function to check if a peripheral access error is active. The application 
-    must use the PAC${PAC_INDEX}_PeripheralErrorClear() function to clear the 
-    error before calling the PAC${PAC_INDEX}_PeripheralErrorGet() function 
-    again. Not clearing the error will cause the function to continue reporting 
+    times. The application can use the PAC${PAC_INDEX}_PeripheralErrorOccurred()
+    function to check if a peripheral access error is active. The application
+    must use the PAC${PAC_INDEX}_PeripheralErrorClear() function to clear the
+    error before calling the PAC${PAC_INDEX}_PeripheralErrorGet() function
+    again. Not clearing the error will cause the function to continue reporting
     the error on the same peripheral.
 
     In a case where the peripheral is experiencing repeated access errors, it is
     possible that this function will return the same peripheral ID on each call.
     If a while loop is used to process and clear error, it is recommended that
-    the application implement a convenient break mechanism to prevent a blocking
+    the application implements a convenient break mechanism to prevent a blocking
     loop.
-   
+
   Precondition:
     PAC${PAC_INDEX}_Initialize() function should have been called once. The
     PAC${PAC_INDEX}_PeripheralErrorOccurred() have returned true.
@@ -451,7 +451,7 @@ bool PAC${PAC_INDEX}_PeripheralErrorOccurred (void);
 
   Example:
     <code>
-    // Refer to the description of the PAC${PAC_INDEX}_PeripheralErrorOccurred() 
+    // Refer to the description of the PAC${PAC_INDEX}_PeripheralErrorOccurred()
     // for example usage of this function.
     </code>
 
@@ -462,7 +462,7 @@ bool PAC${PAC_INDEX}_PeripheralErrorOccurred (void);
 PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void);
 
 // *****************************************************************************
-/* Function:     
+/* Function:
     void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
 
   Summary:
@@ -470,12 +470,12 @@ PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void);
 
   Description:
     Calling this function will cause the peripheral access error flag to be
-    cleared. This will then cause the PAC${PAC_INDEX}_PeripheralErrorGet() 
-    function to identify the next peripheral that is reporting an error. If 
+    cleared. This will then cause the PAC${PAC_INDEX}_PeripheralErrorGet()
+    function to identify the next peripheral that is reporting an error. If
     after calling this function, there are no peripheral errors active, the
-    PAC${PAC_INDEX}_PeripheralErrorOccurred() function will return false. 
-    The application must call this function to clear the error on the peripheral 
-    that was identified by the last call of the 
+    PAC${PAC_INDEX}_PeripheralErrorOccurred() function will return false.
+    The application must call this function to clear the error on the peripheral
+    that was identified by the last call of the
     PAC${PAC_INDEX}_PeripheralErrorGet() function.
 
   Precondition:
@@ -509,20 +509,20 @@ void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral);
 
   Description:
     This function returns true if any AHB Slave error has occurred. The
-    application can then call the PAC${PAC_INDEX}_AHBSlaveErrorGet() function 
+    application can then call the PAC${PAC_INDEX}_AHBSlaveErrorGet() function
     to identify the AHB Slave on which the error has occurred.
 
   Precondition:
-    The PAC${PAC_INDEX}_Initialize() function should have been called once. 
+    The PAC${PAC_INDEX}_Initialize() function should have been called once.
 
   Parameters:
     None.
 
   Returns:
-    true - atleast one AHB Slave is reporting an access error.
+    true - at least one AHB Slave is reporting an access error.
 
     false - no AHB Slave is reporting access errors.
-    
+
   Example:
     <code>
 
@@ -532,7 +532,7 @@ void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral);
     while(PAC${PAC_INDEX}_AHBSlaveErrorOccurred())
     {
         ahbSlave = PAC${PAC_INDEX}_AHBSlaveErrorGet();
-        
+
         // Assuming that some application function has processed the error, we
         // can clear the error.
 
@@ -549,7 +549,7 @@ bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void);
 
 // *****************************************************************************
 /* Function:
-    AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void);
+    PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void);
 
   Summary:
     Returns the first AHB Slave that is reporting an access error.
@@ -559,19 +559,19 @@ bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void);
     error. The application can call this function to identify the AHB Slave
     that is a reporting an access error. In case where multiple AHB Slaves are
     reporting access errors, the application must call this function multiple
-    times. The application can use the PAC${PAC_INDEX}_AHBSlaveErrorOccurred() 
-    function to check if a AHB Slave access error is active. The application 
-    must use the PAC${PAC_INDEX}_AHBSlaveErrorClear() function to clear the 
-    error before calling the PAC${PAC_INDEX}_AHBSlaveErrorGet() function again. 
-    Not clearing the error will cause the function to continue reporting the 
+    times. The application can use the PAC${PAC_INDEX}_AHBSlaveErrorOccurred()
+    function to check if a AHB Slave access error is active. The application
+    must use the PAC${PAC_INDEX}_AHBSlaveErrorClear() function to clear the
+    error before calling the PAC${PAC_INDEX}_AHBSlaveErrorGet() function again.
+    Not clearing the error will cause the function to continue reporting the
     error on the same AHB Slave.
 
     In a case where the AHB Slave is experiencing repeated access errors, it is
     possible that this function will return the same AHB Slave ID on each call.
     If a while loop is used to process and clear error, it is recommended that
-    the application in implement a convenient break mechanism to prevent a 
+    the application implements a convenient break mechanism to prevent a
     blocking loop.
-   
+
   Precondition:
     PAC${PAC_INDEX}_Initialize() function should have been called once. The
     PAC${PAC_INDEX}_AHBSlaveErrorOccurred() have returned true.
@@ -584,7 +584,7 @@ bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void);
 
   Example:
     <code>
-    // Refer to the description of the PAC${PAC_INDEX}_AHBSlaveErrorOccurred() 
+    // Refer to the description of the PAC${PAC_INDEX}_AHBSlaveErrorOccurred()
     // for example usage of this function.
     </code>
 
@@ -595,27 +595,27 @@ bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void);
 PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void);
 
 // *****************************************************************************
-/* Function:     
-    void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE AHB Slave)
+/* Function:
+    void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave)
 
   Summary:
     Clear the AHB Slave access error flag.
 
   Description:
     Calling this function will cause the AHB Slave access error flag to be
-    cleared. This will then cause the PAC${PAC_INDEX}_AHBSlaveErrorGet() 
-    function to identify the next AHB Slave that is reporting an error. If after 
+    cleared. This will then cause the PAC${PAC_INDEX}_AHBSlaveErrorGet()
+    function to identify the next AHB Slave that is reporting an error. If after
     calling this function, there are no AHB Slave errors active, the
-    PAC${PAC_INDEX}_AHBSlaveErrorOccurred() function will return false. The 
-    application must call this function to clear the error on the AHB Slave that 
-    was identified by the last call of the PAC${PAC_INDEX}_AHBSlaveErrorGet() 
+    PAC${PAC_INDEX}_AHBSlaveErrorOccurred() function will return false. The
+    application must call this function to clear the error on the AHB Slave that
+    was identified by the last call of the PAC${PAC_INDEX}_AHBSlaveErrorGet()
     function.
 
   Precondition:
     The PAC${PAC_INDEX}_Initialize() function should have been called once.
 
   Parameters:
-    AHB Slave - AHB Slave ID of AHB Slave for which the AHB Slave error needs to
+    ahbSlave - AHB Slave ID of AHB Slave for which the AHB Slave error needs to
     be cleared. Specifying PAC_AHB_SLAVE_ANY will clear all errors.
 
   Returns:
@@ -623,7 +623,7 @@ PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void);
 
   Example:
     <code>
-    // Refer to the description of the PAC${PAC_INDEX}_AHBSlaveErrorOccurred() 
+    // Refer to the description of the PAC${PAC_INDEX}_AHBSlaveErrorOccurred()
     // function for example usage.
     </code>
 
@@ -648,7 +648,7 @@ void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave);
     enabled in MHC.
 
   Precondition:
-    PAC${PAC_INDEX}_Initialize() function should have beeb called once. 
+    PAC${PAC_INDEX}_Initialize() function should have been called once.
     Interrupt option in MHC should have been enabled.
 
   Parameters:
@@ -668,7 +668,7 @@ void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave);
     </code>
 
   Remarks:
-    Context value can be set to NULL if this is not required.
+    Context value can be set to NULL if it is not required.
 */
 
 void PAC${PAC_INDEX}_CallbackRegister (PAC_CALLBACK callback, uintptr_t context);
@@ -684,7 +684,7 @@ void PAC${PAC_INDEX}_CallbackRegister (PAC_CALLBACK callback, uintptr_t context)
     This PAC Interrupt handler function handles PAC interrupts
 
   Precondition:
-    PAC${PAC_INDEX}_Initialize() function should have beeb called once. 
+    PAC${PAC_INDEX}_Initialize() function should have been called once.
     Interrupt option in MHC should have been enabled.
 
   Parameters:
@@ -699,7 +699,7 @@ void PAC${PAC_INDEX}_CallbackRegister (PAC_CALLBACK callback, uintptr_t context)
     </code>
 
   Remarks:
-    Context value can be set to NULL if this is not required.
+    None.
 */
 
 void PAC${PAC_INDEX}_InterruptHandler (void);

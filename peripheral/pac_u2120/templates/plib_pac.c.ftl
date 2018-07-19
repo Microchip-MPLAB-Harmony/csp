@@ -6,7 +6,7 @@
 
   File Name
     plib_pac${PAC_INDEX}.c
-  
+
   Summary
     Source for PAC peripheral library interface Implementation.
 
@@ -17,7 +17,7 @@
 
   Remarks:
     None.
-    
+
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -117,7 +117,7 @@ PAC_CALLBACK_OBJ pac${PAC_INDEX}CallbackObject;
     Initializes given instance of PAC peripheral.
 
   Description:
-    This function initializes given instance of PAC peripheral of the device 
+    This function initializes given instance of PAC peripheral of the device
     with the values configured in MCC GUI.
 
   Remarks:
@@ -137,18 +137,22 @@ void PAC${PAC_INDEX}_Initialize( void )
                     <#if .vars[PAC_REG_PROTECT]?has_content>
                         <#if (.vars[PAC_REG_PROTECT] != "OFF")>
     <#lt>    PAC${PAC_INDEX}_PeripheralProtect (PAC_PERIPHERAL_${.vars[PAC_BRIDGE]}_${.vars[PAC_BRIDGE_PERI_NAME]}, PAC_PROTECTION_${.vars[PAC_REG_PROTECT]});
-	
+
                         </#if>
                     </#if>
             </#list>
         </#if>
 </#list>
-    <#if PAC_INTERRRUPT_MODE = true>
-	
+
+    <#if PAC_INTERRRUPT_MODE == true>
     /* Enable PAC interrupt */
     PAC_REGS->PAC_INTENSET = PAC_INTENSET_ERR_Msk;
     </#if>
-    
+
+    <#if PAC_ERROR_EVENT == true>
+    /* Enable PAC Error Event Output */
+    PAC_REGS->PAC_EVCTRL |= PAC_EVCTRL_ERREO_Msk;
+    </#if>
 }
 
 // *****************************************************************************
@@ -161,10 +165,10 @@ void PAC${PAC_INDEX}_Initialize( void )
   Description:
     This function returns true if the specified peripheral is write protected.
     It returns false otherwise.
-   
+
   Remarks:
     Refer plib_pac${PAC_INDEX}.h for usage information.
-*/  
+*/
 
 bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
 {
@@ -172,16 +176,16 @@ bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
     uint32_t    u32StatusPeriID = 0x0;
     uint32_t    *pu32StatusRegAddr = (uint32_t*) &(PAC_REGS->PAC_STATUSA);
     bool        bPeriStatus     = false;
-    
+
     /* Get the Bit index for the peripheral */
     u32StatusPeriID = (peripheral % 32);
-    
-    /* Read the Peripheral bridge status register value */  
-    u32StatusRegVal = *(pu32StatusRegAddr + (peripheral / 32)); 
-                    
+
+    /* Read the Peripheral bridge status register value */
+    u32StatusRegVal = *(pu32StatusRegAddr + (peripheral / 32));
+
     /* Verify if the peripheral is protected or not */
-    bPeriStatus = (u32StatusRegVal & (1 << u32StatusPeriID));
-    
+    bPeriStatus = (bool)(u32StatusRegVal & (1 << u32StatusPeriID));
+
     return (bPeriStatus);
 }
 
@@ -199,18 +203,16 @@ bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
     peripheral. The function can be called to disable the protection
     (PAC_PROTECTION_CLEAR), to set write protection which can be disabled via a
     clear operation (PAC_PROTECTION_SET) and to set write protection that cannot
-    be cleared (PAC_PROTECTION_SET_AND_LOCK). 
-   
+    be cleared (PAC_PROTECTION_SET_AND_LOCK).
+
   Remarks:
     Refer plib_pac${PAC_INDEX}.h for usage information.
-*/  
+*/
 
-void PAC${PAC_INDEX}_PeripheralProtect  (PAC_PERIPHERAL peripheral, PAC_PROTECTION operation)
+void PAC${PAC_INDEX}_PeripheralProtect(PAC_PERIPHERAL peripheral, PAC_PROTECTION operation)
 {
-     
-    /* Lock the Peripheral interface */
+    /* Set Peripheral Access Control */
     PAC_REGS->PAC_WRCTRL = (PAC_WRCTRL_PERID(peripheral) | (operation << PAC_WRCTRL_KEY_Pos));
-    
 }
 
 // *****************************************************************************
@@ -222,41 +224,19 @@ void PAC${PAC_INDEX}_PeripheralProtect  (PAC_PERIPHERAL peripheral, PAC_PROTECTI
 
   Description:
     This function returns true if any peripheral access error has occurred. The
-    application can then call the PAC${PAC_INDEX}_PeripheralErrorGet() function 
+    application can then call the PAC${PAC_INDEX}_PeripheralErrorGet() function
     to identify the peripheral on which the error has occurred.
-	
+
   Remarks:
     Refer plib_pac${PAC_INDEX}.h for usage information.
 */
 
 bool PAC${PAC_INDEX}_PeripheralErrorOccurred (void)
 {
-    uint32_t    u32PeriBridgeAErrStatus = 0x0;
-    uint32_t    u32PeriBridgeBErrStatus = 0x0;
-    uint32_t    u32PeriBridgeCErrStatus = 0x0;
-    uint32_t    u32PeriBridgeDErrStatus = 0x0;
-    bool        bPeripheralErrorStatus  = false;
-    
-    /* Verify if Peripheral bridge A has an error */
-    u32PeriBridgeAErrStatus = PAC_REGS->PAC_INTFLAGA;
-    
-    /* Verify if Peripheral bridge B has an error */
-    u32PeriBridgeBErrStatus = PAC_REGS->PAC_INTFLAGB;
-    
-    /* Verify if Peripheral bridge C has an error */
-    u32PeriBridgeCErrStatus = PAC_REGS->PAC_INTFLAGC;
-    
-    /* Verify if Peripheral bridge D has an error */
-    u32PeriBridgeDErrStatus = PAC_REGS->PAC_INTFLAGD;
-    
-    /* Verify if any peripheral is reporting an error */
-    if ((u32PeriBridgeAErrStatus != 0x0) || (u32PeriBridgeBErrStatus != 0x0) ||
-        (u32PeriBridgeCErrStatus != 0x0) || (u32PeriBridgeDErrStatus != 0x0))
-    {
-        bPeripheralErrorStatus = true;  
-    }
-    
-    return (bPeripheralErrorStatus);
+    return (bool)((PAC_REGS->PAC_INTFLAGA & PAC_INTFLAGA_Msk) |
+                  (PAC_REGS->PAC_INTFLAGB & PAC_INTFLAGB_Msk) |
+                  (PAC_REGS->PAC_INTFLAGC & PAC_INTFLAGC_Msk) |
+                  (PAC_REGS->PAC_INTFLAGD & PAC_INTFLAGD_Msk));
 }
 
 // *****************************************************************************
@@ -297,34 +277,34 @@ PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
     uint32_t    u32PACErrBit            = 0x1;
     uint32_t    u32PeriCnt              = 0x0;
     PAC_PERIPHERAL peripheral           = PAC_PERIPHERAL_ANY;
-    
+
     /* Verify if Peripheral bridge A has an error */
     u32PeriBridgeAErrStatus = PAC_REGS->PAC_INTFLAGA;
-    
+
     /* Verify if Peripheral bridge B has an error */
     u32PeriBridgeBErrStatus = PAC_REGS->PAC_INTFLAGB;
-    
+
     /* Verify if Peripheral bridge C has an error */
     u32PeriBridgeCErrStatus = PAC_REGS->PAC_INTFLAGC;
-    
+
     /* Verify if Peripheral bridge D has an error */
     u32PeriBridgeDErrStatus = PAC_REGS->PAC_INTFLAGD;
-    
+
     /* Verify if Peripheral in Peripheral Bridge A has reported error */
     if (u32PeriBridgeAErrStatus != 0x0)
-    {   
+    {
         while (u32PeriCnt < PAC_PERIPHERAL_BRIDGE_A_PERI_COUNT)
         {
             if (u32PeriBridgeAErrStatus & u32PACErrBit)
             {
-                peripheral = u32PeriCnt;
+                peripheral = (PAC_PERIPHERAL)u32PeriCnt;
                 break;
             }
             else
             {
                 u32PACErrBit = u32PACErrBit << 1;
                 u32PeriCnt++;
-            }   
+            }
         }
     }
     else if (u32PeriBridgeBErrStatus != 0x0)
@@ -333,14 +313,14 @@ PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
         {
             if (u32PeriBridgeBErrStatus & u32PACErrBit)
             {
-                peripheral = u32PeriCnt + (1 * 32);
+                peripheral = (PAC_PERIPHERAL)(u32PeriCnt + (1 * 32));
                 break;
             }
             else
             {
                 u32PACErrBit = u32PACErrBit << 1;
                 u32PeriCnt++;
-            }   
+            }
         }
     }
     else if (u32PeriBridgeCErrStatus != 0x0)
@@ -349,14 +329,14 @@ PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
         {
             if (u32PeriBridgeCErrStatus & u32PACErrBit)
             {
-                peripheral = u32PeriCnt + (2 * 32);
+                peripheral = (PAC_PERIPHERAL)(u32PeriCnt + (2 * 32));
                 break;
             }
             else
             {
                 u32PACErrBit = u32PACErrBit << 1;
                 u32PeriCnt++;
-            }   
+            }
         }
     }
     else if (u32PeriBridgeDErrStatus != 0x0)
@@ -365,22 +345,22 @@ PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
         {
             if (u32PeriBridgeDErrStatus & u32PACErrBit)
             {
-                peripheral = u32PeriCnt + (3 * 32);
+                peripheral = (PAC_PERIPHERAL)(u32PeriCnt + (3 * 32));
                 break;
             }
             else
             {
                 u32PACErrBit = u32PACErrBit << 1;
                 u32PeriCnt++;
-            }   
+            }
         }
-    }   
-    
+    }
+
     return (peripheral);
 }
 
 // *****************************************************************************
-/* Function:     
+/* Function:
     void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
 
   Summary:
@@ -403,30 +383,22 @@ PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
 void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
 {
     uint32_t    u32PeriIdReg    = 0x0;
-    uint32_t    u32StatusRegVal = 0x0;
     uint32_t    *pu32StatusRegAddr = (uint32_t*) &(PAC_REGS->PAC_INTFLAGA);
-        	
+
     /* Get the Bit index for the peripheral */
     u32PeriIdReg = (peripheral % 32);
-        
+
     if (peripheral == PAC_PERIPHERAL_ANY)
     {
-        u32StatusRegVal = PAC_REGS->PAC_INTFLAGA;
-        PAC_REGS->PAC_INTFLAGA = u32StatusRegVal;
-        
-        u32StatusRegVal = PAC_REGS->PAC_INTFLAGB;
-        PAC_REGS->PAC_INTFLAGB = u32StatusRegVal;
-        
-        u32StatusRegVal = PAC_REGS->PAC_INTFLAGC;
-        PAC_REGS->PAC_INTFLAGC = u32StatusRegVal;
-        
-        u32StatusRegVal = PAC_REGS->PAC_INTFLAGD;
-        PAC_REGS->PAC_INTFLAGD = u32StatusRegVal;
-    }   
+        PAC_REGS->PAC_INTFLAGA = PAC_INTFLAGA_Msk;
+        PAC_REGS->PAC_INTFLAGB = PAC_INTFLAGB_Msk;
+        PAC_REGS->PAC_INTFLAGC = PAC_INTFLAGC_Msk;
+        PAC_REGS->PAC_INTFLAGD = PAC_INTFLAGD_Msk;
+    }
 	else
 	{
-		/* Clear the Peripheral error */  
-		*(pu32StatusRegAddr + (peripheral / 32)) &= (1 << u32PeriIdReg); 
+		/* Clear the Peripheral error */
+		*(pu32StatusRegAddr + (peripheral / 32)) = (1 << u32PeriIdReg);
 	}
 }
 
@@ -448,18 +420,7 @@ void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
 
 bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void)
 {
-    uint32_t    u32AHBErrStatus      = 0x0;
-    bool        bAHBSlaveErrorStatus = false;
-    
-    /* Verify if AHB Slave bus has an error */
-    u32AHBErrStatus = PAC_REGS->PAC_INTFLAGAHB;
-    
-    if (u32AHBErrStatus != 0x0) 
-    {
-        bAHBSlaveErrorStatus = true;    
-    }
-    
-    return (bAHBSlaveErrorStatus);
+    return (bool)(PAC_REGS->PAC_INTFLAGAHB & PAC_INTFLAGAHB_Msk);
 }
 
 // *****************************************************************************
@@ -496,12 +457,12 @@ PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void)
     uint32_t    u32AHBSlaveErrStatus = 0x0;
     uint32_t    u32AHBSlaveErrorBit  = 0x1;
     PAC_AHB_SLAVE pacAHBSlaveBus = PAC_AHB_SLAVE_ANY;
-    
+
     /* Read AHB Slave Bus Interrupt Flag Status register */
     u32AHBSlaveErrStatus = PAC_REGS->PAC_INTFLAGAHB;
-    
+
     if (u32AHBSlaveErrStatus != 0x0)
-    {   
+    {
         while (u32AHBSlaveErrorBit <= PAC_AHB_SLAVE_HPB3)
         {
             if (u32AHBSlaveErrStatus & u32AHBSlaveErrorBit)
@@ -512,15 +473,15 @@ PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void)
             else
             {
                 u32AHBSlaveErrorBit = u32AHBSlaveErrorBit << 1;
-            }   
+            }
         }
     }
-    
+
     return (pacAHBSlaveBus);
 }
 
 // *****************************************************************************
-/* Function:     
+/* Function:
     void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave)
 
   Summary:
@@ -542,17 +503,7 @@ PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void)
 
 void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave)
 {
-    uint32_t    u32AHBSlaveErrStatus = 0x0;
-    
-	if (ahbSlave == PAC_AHB_SLAVE_ANY)
-    {
-        u32AHBSlaveErrStatus = PAC_REGS->PAC_INTFLAGAHB;
-        PAC_REGS->PAC_INTFLAGAHB = u32AHBSlaveErrStatus;
-    }
-	else
-	{
-        PAC_REGS->PAC_INTFLAGAHB &= ahbSlave;
-    }
+    PAC_REGS->PAC_INTFLAGAHB = ahbSlave & PAC_INTFLAGAHB_Msk;
 }
 
 <#if PAC_INTERRRUPT_MODE = true>
@@ -580,10 +531,6 @@ void PAC${PAC_INDEX}_CallbackRegister ( PAC_CALLBACK callback, uintptr_t context
     pac${PAC_INDEX}CallbackObject.context = context;
 }
 
-</#if>
-
-<#if PAC_INTERRRUPT_MODE = true>
-
 // *****************************************************************************
 /* Function:
     void PAC${PAC_INDEX}_InterruptHandler ( void )
@@ -602,7 +549,7 @@ void PAC${PAC_INDEX}_InterruptHandler (void)
 {
     if (pac${PAC_INDEX}CallbackObject.callback != NULL)
     {
-        pac${PAC_INDEX}CallbackObject.callback (pac${PAC_INDEX}CallbackObject.context);
+        pac${PAC_INDEX}CallbackObject.callback(pac${PAC_INDEX}CallbackObject.context);
     }
 }
 
