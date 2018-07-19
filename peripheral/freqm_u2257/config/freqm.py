@@ -6,43 +6,39 @@ def instantiateComponent(freqmComponent):
     freqmInstanceIndex = freqmComponent.getID()[-1:]
     Log.writeInfoMessage("Running FREQM" + str(freqmInstanceIndex))
 
-    #FREQM Main Menu
-    freqmSym_Menu = freqmComponent.createBooleanSymbol("FREQM_MENU", None)
-    freqmSym_Menu.setLabel("FREQM MODULE SETTINGS ")
-
-    freqmSym_Comment = freqmComponent.createCommentSymbol("FREQM_COMMENT",freqmSym_Menu)
-    freqmSym_Comment.setLabel("*** The reference clock must be slower than the measurement clock ***")
-
     #FREQM Index
-    freqmSym_INDEX = freqmComponent.createIntegerSymbol("FREQM_INDEX",freqmSym_Menu)
+    freqmSym_INDEX = freqmComponent.createIntegerSymbol("FREQM_INDEX",None)
     freqmSym_INDEX.setVisible(False)
     freqmSym_INDEX.setDefaultValue(int(freqmInstanceIndex))
 
-    #FREQM Setup API
-    freqSym_SETUPMODE = freqmComponent.createBooleanSymbol("FREQM_SETUPMODE", freqmSym_Menu)
-    freqSym_SETUPMODE.setLabel("Generate FREQM Setup API ")
-    freqSym_SETUPMODE.setDescription("Selection of the API to enable in runtime or not ")
-    freqSym_SETUPMODE.setDefaultValue(False)
-
     #FREQM Interrupt Mode
-    freqSym_INTERRUPTMODE = freqmComponent.createBooleanSymbol("FREQM_INTERRUPT_MODE", freqmSym_Menu)
+    freqSym_INTERRUPTMODE = freqmComponent.createBooleanSymbol("FREQM_INTERRUPT_MODE", None)
     freqSym_INTERRUPTMODE.setLabel("Enable Interrupt?")
-    freqSym_INTERRUPTMODE.setDescription("Selection of the polled or Interrupt Mode ")
+    freqSym_INTERRUPTMODE.setDescription("Selection of polled or Interrupt Mode")
     freqSym_INTERRUPTMODE.setDefaultValue(False)
 
     #Selection of the Reference Clock Cycles
-    freqmSym_CFGA_REFNUM = freqmComponent.createIntegerSymbol("REF_CLK_CYCLES", freqmSym_Menu)
-    freqmSym_CFGA_REFNUM.setLabel("Number of the Reference Clock Cycles")
-    freqmSym_CFGA_REFNUM.setDescription("selection of the freqmInstanceIndexber of ref clock cycles required")
+    freqmSym_CFGA_REFNUM = freqmComponent.createIntegerSymbol("REF_CLK_CYCLES", None)
+    freqmSym_CFGA_REFNUM.setLabel("Number of Reference Clock Cycles")
+    freqmSym_CFGA_REFNUM.setDescription("Duration of measurement in number of ref clock cycles")
     freqmSym_CFGA_REFNUM.setMax(255)
     freqmSym_CFGA_REFNUM.setMin(1)
     freqmSym_CFGA_REFNUM.setDefaultValue(1)
 
     #Selection of the division for the Reference Clock
-    freqmSym_CFGA_DIVREF = freqmComponent.createBooleanSymbol("REF_CLK_DIV", freqmSym_Menu)
+    freqmSym_CFGA_DIVREF = freqmComponent.createBooleanSymbol("REF_CLK_DIV", None)
     freqmSym_CFGA_DIVREF.setLabel("Divide reference clock by 8")
     freqmSym_CFGA_DIVREF.setDescription("selection of either refclk1 or refclk8")
     freqmSym_CFGA_DIVREF.setDefaultValue(False)
+
+    #FREQM Setup API
+    freqSym_SETUPMODE = freqmComponent.createBooleanSymbol("FREQM_SETUPMODE", None)
+    freqSym_SETUPMODE.setLabel("Generate FREQM Setup API ")
+    freqSym_SETUPMODE.setDescription("Generation of  API to enable in runtime or not ")
+    freqSym_SETUPMODE.setDefaultValue(False)
+
+    freqmSym_Comment = freqmComponent.createCommentSymbol("FREQM_COMMENT",None)
+    freqmSym_Comment.setLabel("*** Reference clock must be slower than Measurement clock ***")
 
 ################################################################################
 ##########             CODE GENERATION             #############################
