@@ -2,12 +2,6 @@
 ##############           Callbacks               ###############################
 ################################################################################
 
-#Divas lead Zero Optimization visible property
-def setDLZVisibleProperty(symbol, event):
-    if(event["value"] == True):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
 
 ################################################################################
 ##############           DIVAS DATABASE COMPONENTS               ###############
@@ -18,22 +12,17 @@ def instantiateComponent(divasComponent):
     num = divasComponent.getID()[-1:]
     Log.writeInfoMessage("Running DIVAS" + str(num))
 
-    #divas main menu
-    divasSym_Menu = divasComponent.createBooleanSymbol("DIVAS_MENU", None)
-    divasSym_Menu.setLabel("DIVAS MODULE SETTINGS ")
-
     #divas index
-    divasSym_INDEX = divasComponent.createIntegerSymbol("DIVAS_INDEX",divasSym_Menu)
+    divasSym_INDEX = divasComponent.createIntegerSymbol("DIVAS_INDEX", None)
     divasSym_INDEX.setVisible(False)
     divasSym_INDEX.setDefaultValue(int(num))
 
     #Enable or Disable lead zero optimization
-    divasSym_DLZ= divasComponent.createBooleanSymbol("DIVAS_DLZ",divasSym_Menu)
+    divasSym_DLZ= divasComponent.createBooleanSymbol("DIVAS_DLZ", None)
     divasSym_DLZ.setLabel("Enable Leading Zero optimization to reduce division time?")
-    divasSym_DLZ.setDescription("Enable/Disable Leading Zero optimization, 32 bit divisions = 2-16 cycles (Enabled)/ 16 cycles (Disabled) ")
-    divasSym_DLZ.setVisible(False)
+    divasSym_DLZ.setDescription("32 bit divisions take 2-16 cycles when enabled; 16 cycles when disabled")
+    divasSym_DLZ.setVisible(True)
     divasSym_DLZ.setDefaultValue(1)
-    divasSym_DLZ.setDependencies(setDLZVisibleProperty, ["DIVAS_MENU"])
 
 ################################################################################
 ###################     Code Generation            #############################

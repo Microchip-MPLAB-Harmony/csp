@@ -75,14 +75,13 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 void DIVAS${DIVAS_INDEX}_Initialize(void)
 {
-    /*
-     * Enable/Disable Leading Zero optimization ,
-     * If enabled,  32 bit divisions = 2-16 cycles
-     * If disabled, 32 bit divisions = 16 cycles
-     */
-
-    <#if DIVAS_DLZ == true>
+    <#if DIVAS_DLZ == false>
+    /* Disable Leading Zero optimization,
+       32 bit divisions will take fixed 16 cycles */
     DIVAS_REGS->DIVAS_CTRLA |= DIVAS_CTRLA_DLZ_Msk;
+    <#else>
+    /* Leading Zero optimization is by default enabled,
+       32 bit divisions will take 2 to 16 cycles */
     </#if>
 }
 
