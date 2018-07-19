@@ -73,7 +73,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 /* The following data type definitions are used by the functions in this
-    interface and should be considered part it.
+    interface and should be considered part of it.
 */
 
 // *****************************************************************************
@@ -84,7 +84,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
   Description:
     This enumeration identifies all the available EIC pins. Not all pins will be
-    implemented in a device. The pins described here are for documenation
+    implemented in a device. The pins described here are for documentation
     purposes only. The MHC will generate this enumeration with the enabled EIC
     pins only. The application should not use the constant value that are
     assigned to enumeration constants as this may vary between devices.
@@ -96,17 +96,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 typedef enum
 {
 <#list 0..EIC_INT_COUNT as i>
-    <#assign EIC_INT_CHANNEL = "EIC_INT_CHAN_" + i>
+    <#assign EIC_INT_CHANNEL = "EIC_CHAN_" + i>
         <#if .vars[EIC_INT_CHANNEL]?has_content>
             <#if (.vars[EIC_INT_CHANNEL] != false)>
-    <#lt>   /* External Interrupt Controller Pin ${i} */
-    <#lt>   EIC_PIN_${i} = ${i},
+    <#lt>    /* External Interrupt Controller Pin ${i} */
+    <#lt>    EIC_PIN_${i} = ${i},
 
             </#if>
         </#if>
 </#list>
-
-    EIC_PIN_MAX = 16,
+    EIC_PIN_MAX = 16
 
 } EIC_PIN;
 
@@ -120,7 +119,7 @@ typedef enum
   Description:
     This data type defines the function signature for the EIC peripheral
     callback function. The EIC peripheral will call back the client's function
-    with this signature when a interrupt condition has been sensed on the pin.
+    with this signature when an interrupt condition has been sensed on the pin.
     The EIC library allows the application to register a callback function for
     each enabled external interrupt.
 
@@ -144,10 +143,10 @@ typedef enum
 
     void EIC_Pin0Callback (uintptr_t context)
     {
-        // This pin an interrupt condition has been sensed on Pin 0.
+        // This means an interrupt condition has been sensed on EIC Pin 0.
     }
 
-    EIC${EIC_INDEX}_CallbackRegister(EIC_PIN_0, EIC_Callback, 0);
+    EIC${EIC_INDEX}_CallbackRegister(EIC_PIN_0, EIC_Pin0Callback, 0);
     </code>
 
   Remarks:
@@ -166,7 +165,7 @@ typedef void (*EIC_CALLBACK) (uintptr_t context);
   Description:
     This data type defines the function signature of the EIC peripheral NMI
     callback function. The EIC peripheral will call back the client's function
-    with this signature when a interrupt condition has been sensed on the NMI
+    with this signature when an interrupt condition has been sensed on the NMI
     pin.
 
   Function:
@@ -189,7 +188,7 @@ typedef void (*EIC_CALLBACK) (uintptr_t context);
 
     void EIC_NMICallback (uintptr_t context)
     {
-        // This pin an interrupt condition has been sensed on the NMI Pin.
+        // This means an interrupt condition has been sensed on the NMI Pin.
     }
 
     EIC${EIC_INDEX}_NMICallbackRegister(EIC_NMICallback, 0);
@@ -250,12 +249,12 @@ void EIC${EIC_INDEX}_Initialize (void);
     Enables and disables interrupts on a pin.
 
   Description
-    This function enables and disables interrupts on an external interrupt pin.
+    This function enables or disables interrupts on an external interrupt pin.
     When enabled, the interrupt pin sense will be configured as per the
     configuration set in MHC.
 
    Precondition:
-    EIC${EIC_INDEX}_Initialize() function must have been called first for the
+    EIC${EIC_INDEX}_Initialize() function must have been called for the
     associated instance.
 
    Parameters:
@@ -388,7 +387,7 @@ void EIC${EIC_INDEX}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t co
     <code>
     if (true == EIC${EIC_INDEX}_PinDebounceStateGet(EIC_PIN_3))
     {
-        // The pin was debounced and the state of the pin is logic high.
+        // EIC pin 3 was debounced..
     }
     </code>
 
@@ -407,7 +406,7 @@ bool EIC${EIC_INDEX}_PinDebounceStateGet (EIC_PIN pin);
 
   Description
     This EIC Interrupt handler function handles interrupts on EIC_PIN_0 to
-    EIC_PIN_31.
+    EIC_PIN_15.
 
   Precondition:
     EIC${EIC_INDEX}_Initialize() must have been called first for the associated
@@ -425,7 +424,8 @@ bool EIC${EIC_INDEX}_PinDebounceStateGet (EIC_PIN pin);
     </code>
 
   Remarks:
-    Refer plib_eic${EIC_INDEX}.h for usage information.
+    User should not call this function, this function will be called
+    automatically when interrupt condition occurs.
 */
 
 void EIC${EIC_INDEX}_InterruptHandler(void);
@@ -456,7 +456,8 @@ void EIC${EIC_INDEX}_InterruptHandler(void);
     </code>
 
   Remarks:
-    Refer plib_eic${EIC_INDEX}.h for usage information.
+    User should not call this function, this function will be called
+    automatically when interrupt condition occurs.
 */
 
 void NMI${EIC_INDEX}_InterruptHandler(void);

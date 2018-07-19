@@ -2,88 +2,34 @@
 ######################################### Callbacks ###############################################
 ###################################################################################################
 
-def setNMIAsynchProperty(symbol, event):
-
+def controlIntProperties(symbol, event):
     if(event["value"] == 1):
         symbol.setVisible(True)
     else :
         symbol.setVisible(False)
 
-def setNMIFiltenProperty(symbol, event):
-
-    if(event["value"] == 1):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
-
-def setNMISenseProperty(symbol, event):
-
-    if(event["value"] == 1):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
-
-def setConfigFilterProperty(symbol, event):
-
-    if(event["value"] == 1):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
-
-def setDebouncenProperty(symbol, event):
-
-    if(event["value"] == 1):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
-
-def setEvcCtrlExtInteo1Property(symbol, event):
-
-    if(event["value"] == 1):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
-
-def setConfigSenseProperty(symbol, event):
-
-    if(event["value"] == 1):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
-
-def setAsynchProperty(symbol, event):
-
-    if(event["value"] == 1):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
-
-def setDebouncerPrescalerProperty(symbol, event):
-
-    if(event["value"] == 1):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
-
-def setDebouncerStatesXProperty(symbol, event):
-
-    if(event["value"] == 1):
-        symbol.setVisible(True)
-    else :
-        symbol.setVisible(False)
+def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
+    if(event["value"] == True):
+        symbol.setValue((symbol.getValue() | (0x1 << int(event["id"].split("_")[2]))) , 1)
+    else:
+        symbol.setValue((symbol.getValue() & (~(0x1 << int(event["id"].split("_")[2])))) , 1)
 
 ###################################################################################################
 ######################################### Component ###############################################
 ###################################################################################################
 
+
 def instantiateComponent(eicComponent):
+    eicSym_eventsList = []
+    eicSym_asynchList = []
+    eicSym_senseList = []
+    eicSym_filterList = []
+    eicSym_debounceList =[]
+    eicSym_InterruptList = []
 
     eicInstanceIndex = eicComponent.getID()[-1:]
 
-    eicMenu = eicComponent.createMenuSymbol("EIC_MENU" , None)
-    eicMenu.setLabel("Hardware Settings ")
-
-    eicIndex = eicComponent.createIntegerSymbol("EIC_INDEX" , eicMenu)
+    eicIndex = eicComponent.createIntegerSymbol("EIC_INDEX" , None)
     eicIndex.setVisible(False)
     eicIndex.setDefaultValue(int(eicInstanceIndex))
 
@@ -91,12 +37,12 @@ def instantiateComponent(eicComponent):
 
     extIntCount = int(extIntNode.getAttribute("value"))
 
-    eicSym_IntCount = eicComponent.createIntegerSymbol("EIC_INT_COUNT" , eicMenu)
+    eicSym_IntCount = eicComponent.createIntegerSymbol("EIC_INT_COUNT" , None)
     eicSym_IntCount.setDefaultValue(extIntCount)
     eicSym_IntCount.setVisible(False)
 
     # CTRLA - Clock Selection
-    CTRLA_CKSEL_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_CLKSEL" , eicMenu)
+    CTRLA_CKSEL_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_CLKSEL" , None)
     CTRLA_CKSEL_SelectionSymbol.setLabel("EIC Clock Source Selection")
 
     eicClkselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_CTRLA__CKSEL\"]")
@@ -120,9 +66,9 @@ def instantiateComponent(eicComponent):
     CTRLA_CKSEL_SelectionSymbol.setDisplayMode("Description")
 
     #Non-Maskable Interrupt Control
-    eicPLX4 = eicComponent.createBooleanSymbol("NMI_CTRL", eicMenu)
+    eicPLX4 = eicComponent.createBooleanSymbol("NMI_CTRL", None)
     eicPLX4.setLabel("Non Maskable Interrupt Control")
-    
+
     #NMIASYNCH
     NMI_ASYNCH_Selection = eicComponent.createKeyValueSetSymbol("NMI_ASYNCH" , eicPLX4)
     NMI_ASYNCH_Selection.setLabel("NMI Edge Detection Clock Synchronization")
@@ -147,13 +93,13 @@ def instantiateComponent(eicComponent):
     NMI_ASYNCH_Selection.setDefaultValue(eicNMIAsyncDefaultValue)
     NMI_ASYNCH_Selection.setOutputMode("Value")
     NMI_ASYNCH_Selection.setDisplayMode("Description")
-    NMI_ASYNCH_Selection.setDependencies(setNMIAsynchProperty, ["NMI_CTRL"])
+    NMI_ASYNCH_Selection.setDependencies(controlIntProperties, ["NMI_CTRL"])
 
     #NMIFILTEN
     NMI_FILTEN_Selection = eicComponent.createBooleanSymbol("NMI_FILTEN" , eicPLX4)
-    NMI_FILTEN_Selection.setLabel("Enabled filter on NMI Pin ?")
+    NMI_FILTEN_Selection.setLabel("Enable filter on NMI Pin?")
     NMI_FILTEN_Selection.setVisible(False)
-    NMI_FILTEN_Selection.setDependencies(setNMIFiltenProperty, ["NMI_CTRL"])
+    NMI_FILTEN_Selection.setDependencies(controlIntProperties, ["NMI_CTRL"])
 
     # NMI - SENSE
     NMI_SENSE_SelectionSymbol = eicComponent.createKeyValueSetSymbol("NMI_SENSE" , eicPLX4)
@@ -179,19 +125,26 @@ def instantiateComponent(eicComponent):
     NMI_SENSE_SelectionSymbol.setDefaultValue(eicNMISenseDefaultValue)
     NMI_SENSE_SelectionSymbol.setOutputMode("Key")
     NMI_SENSE_SelectionSymbol.setDisplayMode("Description")
-    NMI_SENSE_SelectionSymbol.setDependencies(setNMISenseProperty, ["NMI_CTRL"])
-    
+    NMI_SENSE_SelectionSymbol.setDependencies(controlIntProperties, ["NMI_CTRL"])
+
     #Interrupt 0 - EXTINT Settings
     for extIntIndex in range(0 , extIntCount):
 
-        eicPLX1 = eicComponent.createBooleanSymbol("EIC_INT_CHAN_" + str(extIntIndex) , eicMenu)
+        eicPLX1 = eicComponent.createBooleanSymbol("EIC_CHAN_" + str(extIntIndex) , None)
         eicPLX1.setLabel("Enable EXTINT " + str(extIntIndex))
 
+        # populate a list with IDs for code generation dependency
+        eicSym_InterruptList.append("EIC_CHAN_" + str(extIntIndex))
+
         #EVCTRL - External Interrupt Event Output Enable 0..7 Channel number
-        EVCCTRL_EXTINTEO_Selection = eicComponent.createBooleanSymbol("EIC_EVCTRL_EXTINTEO_" + str(extIntIndex) , eicPLX1)
-        EVCCTRL_EXTINTEO_Selection.setLabel("Enable Event Output Enable on Interrupt " + str(extIntIndex) + "?")
+        EVCCTRL_EXTINTEO_Selection = eicComponent.createBooleanSymbol("EIC_EXTINTEO_" + str(extIntIndex) , eicPLX1)
+        EVCCTRL_EXTINTEO_Selection.setLabel("Enable Event Output on Interrupt " + str(extIntIndex) + "?")
         EVCCTRL_EXTINTEO_Selection.setVisible(False)
-        
+        EVCCTRL_EXTINTEO_Selection.setDependencies(controlIntProperties, ["EIC_CHAN_" + str(extIntIndex)])
+
+        # populate a list with IDs for code generation dependency
+        eicSym_eventsList.append("EIC_EXTINTEO_" + str(extIntIndex))
+
         #ASYNCH
         ASYNCH_ASYNCH_Selection = eicComponent.createKeyValueSetSymbol("EIC_ASYNCH_" + str(extIntIndex) , eicPLX1)
         ASYNCH_ASYNCH_Selection.setLabel("External Interrupt " + str(extIntIndex) + " Edge Detection Clock Synchronization")
@@ -216,7 +169,10 @@ def instantiateComponent(eicComponent):
         ASYNCH_ASYNCH_Selection.setDefaultValue(eicAsynchDefaultValue)
         ASYNCH_ASYNCH_Selection.setOutputMode("Value")
         ASYNCH_ASYNCH_Selection.setDisplayMode("Description")
-        ASYNCH_ASYNCH_Selection.setDependencies(setAsynchProperty, ["EIC_INT_CHAN_" + str(extIntIndex)])
+        ASYNCH_ASYNCH_Selection.setDependencies(controlIntProperties, ["EIC_CHAN_" + str(extIntIndex)])
+
+        # populate a list with IDs for code generation dependency
+        eicSym_asynchList.append("EIC_ASYNCH_" + str(extIntIndex))
 
         #CONFIG - Sense Enable
         CONFIG_SENSE_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_CONFIG_SENSE_" + str(extIntIndex) , eicPLX1)
@@ -242,22 +198,65 @@ def instantiateComponent(eicComponent):
         CONFIG_SENSE_SelectionSymbol.setDefaultValue(eicConfigSenseDefaultValue)
         CONFIG_SENSE_SelectionSymbol.setOutputMode("Key")
         CONFIG_SENSE_SelectionSymbol.setDisplayMode("Description")
-        CONFIG_SENSE_SelectionSymbol.setDependencies(setConfigSenseProperty, ["EIC_INT_CHAN_" + str(extIntIndex)])
+        CONFIG_SENSE_SelectionSymbol.setDependencies(controlIntProperties, ["EIC_CHAN_" + str(extIntIndex)])
+
+        # populate a list with IDs for code generation dependency
+        eicSym_senseList.append("EIC_CONFIG_SENSE_" + str(extIntIndex))
 
         #CONFIG - Filter Enable
         CONFIG_FILTER_Selection = eicComponent.createBooleanSymbol("EIC_CONFIG_FILTEN_" + str(extIntIndex) , eicPLX1)
         CONFIG_FILTER_Selection.setLabel("Enable filter on External Interrupt Pin " + str(extIntIndex) + "?")
         CONFIG_FILTER_Selection.setVisible(False)
-        CONFIG_FILTER_Selection.setDependencies(setConfigFilterProperty, ["EIC_INT_CHAN_" + str(extIntIndex)])
+        CONFIG_FILTER_Selection.setDependencies(controlIntProperties, ["EIC_CHAN_" + str(extIntIndex)])
+
+        # populate a list with IDs for code generation dependency
+        eicSym_filterList.append("EIC_CONFIG_FILTEN_" + str(extIntIndex))
 
         #DEBOUNCEN
         DEBOUNCEN_Selection = eicComponent.createBooleanSymbol("EIC_DEBOUNCEN_" + str(extIntIndex) , eicPLX1)
-        DEBOUNCEN_Selection.setLabel("Enable debounce on External Interrupt Pin " + str(extIntIndex) + "?")
+        DEBOUNCEN_Selection.setLabel("Enable Debounce on External Interrupt Pin " + str(extIntIndex) + "?")
         DEBOUNCEN_Selection.setVisible(False)
-        DEBOUNCEN_Selection.setDependencies(setDebouncenProperty, ["EIC_INT_CHAN_" + str(extIntIndex)])
+        DEBOUNCEN_Selection.setDependencies(controlIntProperties, ["EIC_CHAN_" + str(extIntIndex)])
+
+        # populate a list with IDs for code generation dependency
+        eicSym_debounceList.append("EIC_DEBOUNCEN_" + str(extIntIndex))
+
+################################################################################
+################### Business Logic calls for generating code ###################
+################################################################################
+
+    EVCCTRL_EXTINTEO_Code = eicComponent.createHexSymbol("EIC_EVCTRL_EXTINTEO_CODE" , eicPLX1)
+    EVCCTRL_EXTINTEO_Code.setVisible(False)
+    EVCCTRL_EXTINTEO_Code.setDefaultValue(0)
+    EVCCTRL_EXTINTEO_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_eventsList)
+
+    ASYNCH_Code = eicComponent.createHexSymbol("EIC_ASYNCH_CODE" , eicPLX1)
+    ASYNCH_Code.setVisible(False)
+    ASYNCH_Code.setDefaultValue(0)
+    ASYNCH_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_asynchList)
+
+    #CONFIG_SENSE_Code = eicComponent.createHexSymbol("EIC_CONFIG_SENSE_CODE" , eicPLX1)
+    #CONFIG_SENSE_Code.setVisible(False)
+    #CONFIG_SENSE_Code.setDefaultValue(0)
+    #CONFIG_SENSE_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_senseList)
+    #
+    #CONFIG_FILTER_Code = eicComponent.createHexSymbol("EIC_CONFIG_FILTER_CODE" , eicPLX1)
+    #CONFIG_FILTER_Code.setVisible(False)
+    #CONFIG_FILTER_Code.setDefaultValue(0)
+    #CONFIG_FILTER_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_filterList)
+
+    DEBOUNCEN_Code = eicComponent.createHexSymbol("EIC_DEBOUNCEN_CODE" , eicPLX1)
+    DEBOUNCEN_Code.setVisible(False)
+    DEBOUNCEN_Code.setDefaultValue(0)
+    DEBOUNCEN_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_debounceList)
+
+    EXTINT_Code = eicComponent.createHexSymbol("EIC_INT_ENABLE_CODE" , eicPLX1)
+    EXTINT_Code.setVisible(False)
+    EXTINT_Code.setDefaultValue(0)
+    EXTINT_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_InterruptList)
 
     #DEBOUNCER - TICKON
-    PRESCALER_TICKON_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_PRESCALER_TICKON" , eicMenu)
+    PRESCALER_TICKON_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_PRESCALER_TICKON" , None)
     PRESCALER_TICKON_SelectionSymbol.setLabel("Debouncer Sampler Clock Source")
 
     eicTickOnNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__TICKON\"]")
@@ -281,7 +280,7 @@ def instantiateComponent(eicComponent):
     PRESCALER_TICKON_SelectionSymbol.setDisplayMode("Description")
 
     #DEBOUNCER - Number of States x (7:0)
-    DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_0" , eicMenu)
+    DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_0" , None)
     DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States Duration for EXTINT[7:0]")
 
     eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES0\"]")
@@ -305,7 +304,7 @@ def instantiateComponent(eicComponent):
     DEBOUNCER_NO_STATES_SelectionSymbol.setDisplayMode("Description")
 
     #BOUNCER - Prescaler x (7:0)
-    DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_0" , eicMenu)
+    DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_0" , None)
     DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[7:0]")
 
     eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER0\"]")
@@ -329,7 +328,7 @@ def instantiateComponent(eicComponent):
     DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
 
     #DEBOUNCER - Number of States x (8:15)
-    DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , eicMenu)
+    DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , None)
     DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States Duration for EXTINT[15:8]")
 
     eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES1\"]")
@@ -353,7 +352,7 @@ def instantiateComponent(eicComponent):
     DEBOUNCER_NO_STATES_SelectionSymbol.setDisplayMode("Description")
 
     #BOUNCER - Prescaler x (8:15)
-    DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_1" , eicMenu)
+    DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_1" , None)
     DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[15:8]")
 
     eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER1\"]")
