@@ -69,6 +69,7 @@ nvicVectorPriorityGenerate = []
 nvicVectorHandler = []
 nvicVectorHandlerLock = []
 nvicVectorGenericHandler = []
+nvicVectorGenericName = []
 
 global interruptsChildrenList
 
@@ -121,7 +122,7 @@ def getInterruptDescription(periName):
                     return str(interruptsChildrenList[interrupt].getAttribute("caption"))
     return periName
 
-def getGenericHandler(vecIndex):
+def getGenericVectorName(vecIndex):
 
     for interrupt in range (0, len(interruptsChildrenList)):
 
@@ -132,7 +133,7 @@ def getGenericHandler(vecIndex):
             if "header:alternate-name" in interruptsChildrenList[interrupt].getAttributeList():
                 return str(interruptsChildrenList[interrupt].getAttribute("header:alternate-name")) + "_Handler"
             else:
-                return vName + "_Handler"
+                return vName
 
 def updateNVICVectorPeriEnableValue(symbol, event):
 
@@ -220,6 +221,7 @@ for vIndex in sorted(nvicVectorDataDictionary):
     nvicVectorHandler.append([])
     nvicVectorHandlerLock.append([])
     nvicVectorGenericHandler.append([])
+    nvicVectorGenericName.append([])
 
     handlerList = nvicVectorDataDictionary.get(vIndex)
 
@@ -294,13 +296,19 @@ for vIndex in sorted(nvicVectorDataDictionary):
         nvicVectorHandlerLock[index][listIndex].setVisible(False)
         nvicVectorHandlerLock[index][listIndex].setDefaultValue(vectorSettings[vector][6])
 
+        nvicVectorGenericName[index].append(listIndex)
+        nvicVectorGenericName[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_GENERIC_NAME", nvicVectorEnable[index][listIndex])
+        nvicVectorGenericName[index][listIndex].setLabel("Generic Vector Name")
+        nvicVectorGenericName[index][listIndex].setVisible(False)
+        nvicVectorGenericName[index][listIndex].setDefaultValue(str(getGenericVectorName(vIndex)))
+
         if len(handlerList) > 1:
 
             nvicVectorGenericHandler[index].append(listIndex)
             nvicVectorGenericHandler[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_GENERIC_HANDLER", nvicVectorEnable[index][listIndex])
             nvicVectorGenericHandler[index][listIndex].setLabel("Generic Handler")
             nvicVectorGenericHandler[index][listIndex].setVisible(False)
-            nvicVectorGenericHandler[index][listIndex].setDefaultValue(str(getGenericHandler(vIndex)))
+            nvicVectorGenericHandler[index][listIndex].setDefaultValue(str(getGenericVectorName(vIndex) + "_Handler"))
 
         nvicVectorPeriEnableList = coreComponent.createBooleanSymbol("NVIC_" + vName + "_ENABLE", nvicMenu)
         nvicVectorPeriEnableList.setLabel("Vector Peripheral Enable")
@@ -333,6 +341,7 @@ nvicVectorPeriEnableSymbolListUpdate.setDependencies(updateNVICVectorParametersV
 ############################################################################
 #### Code Generation ####
 ############################################################################
+
 configName = Variables.get("__CONFIGURATION_NAME")
 
 nvicHeaderFile = coreComponent.createFileSymbol("NVIC_HEADER", None)
