@@ -291,10 +291,26 @@ def tcGetPCK7Clock_Hz():
 def tcGetClockResolution(clockSource, channelID):
     resolution_nS = 0.00
     master_clock_Hz = (tcGetMasterClock_Hz())
+    if (master_clock_Hz == 0):
+        Log.writeErrorMessage("Master clock frequency is zero")
+        master_clock_Hz = 1
     slow_clock_Hz = tcGetSlowClock_Hz()
+    if (slow_clock_Hz == 0):
+        Log.writeErrorMessage("Slow clock frequency is zero")
+        slow_clock_Hz = 1
     pck6_clock_Hz = (tcGetPCK6Clock_Hz())
+    if (pck6_clock_Hz == 0):
+        Log.writeErrorMessage("PCK6 clock frequency is zero")
+        pck6_clock_Hz = 1
     pck7_clock_Hz = tcGetPCK7Clock_Hz()
+    if (pck7_clock_Hz == 0):
+        Log.writeErrorMessage("PCK7 clock frequency is zero")
+        pck7_clock_Hz = 1
     global tcSym_CH_EXT_CLOCK
+    ext_clock_Hz = tcSym_CH_EXT_CLOCK[channelID].getValue()
+    if (ext_clock_Hz == 0):
+        Log.writeErrorMessage("External clock frequency is zero")
+        ext_clock_Hz = 1
     if (clockSource == "MCK"):
         resolution_nS = str(1000000000.0/master_clock_Hz)
     if (clockSource == "PCK6"):
@@ -315,11 +331,11 @@ def tcGetClockResolution(clockSource, channelID):
     if (clockSource == "SLCK"):
         resolution_nS = str(1000000000.0/slow_clock_Hz)
     if (clockSource == "XC0"):
-        resolution_nS = str(1000000000.0/tcSym_CH_EXT_CLOCK[channelID].getValue())
+        resolution_nS = str(1000000000.0/ext_clock_Hz)
     if (clockSource == "XC1"):
-        resolution_nS = str(1000000000.0/tcSym_CH_EXT_CLOCK[channelID].getValue())
+        resolution_nS = str(1000000000.0/ext_clock_Hz)
     if (clockSource == "XC2"):
-        resolution_nS = str(1000000000.0/tcSym_CH_EXT_CLOCK[channelID].getValue())
+        resolution_nS = str(1000000000.0/ext_clock_Hz)
     return resolution_nS
 
 def tcClockFreq(tcSym_CH_ClockFreqLocal, event):
@@ -612,6 +628,7 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_EXT_CLOCK[channelID].setLabel("External Clock Frequency (Hz)")
     tcSym_CH_EXT_CLOCK[channelID].setVisible(False)
     tcSym_CH_EXT_CLOCK[channelID].setDefaultValue(50000000)
+    tcSym_CH_EXT_CLOCK[channelID].setMin (1)
     tcSym_CH_EXT_CLOCK[channelID].setDependencies(tcExtClockVisible, ["TC"+str(channelID)+"_CMR_TCCLKS"])
 
     #Save clock frequency
