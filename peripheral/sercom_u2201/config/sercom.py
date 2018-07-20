@@ -402,6 +402,7 @@ def instantiateComponent(sercomComponent):
     #SPI BaudRate Value
     spi_BAUDRATE = sercomComponent.createIntegerSymbol("SPI_BAUDRATE", sercomSym_SubMenu)
     spi_BAUDRATE.setLabel("SPI Speed in Hz")
+    spi_BAUDRATE.setDefaultValue(1000000)
     spi_BAUDRATE.setDependencies(set_SPI_BAUDRATE_VisibleProperty, ["SERCOM_MODE"])
 
     #SPI Serial Setup API Enable

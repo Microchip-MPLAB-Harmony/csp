@@ -6,7 +6,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_sercom${SERCOM_INDEX}_i2c.c
+    plibSERCOM${SERCOM_INDEX}_i2c.c
 
   Summary:
     SERCOM I2C PLIB Implementation file
@@ -157,7 +157,7 @@ void SERCOM_I2C_Start(SERCOM_I2C_TRB *trb)
          * Set direction bit (ADDR.ADDR[0]) equal to 0.
          * Set ADDR.TENBITEN equals to 1.
          */
-        SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR = (trb->address << 1) | I2C_TRANSFER_WRITE | SERCOM_I2CM_ADDR_TENBITEN_Msk;
+        SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR.w = (trb->address << 1) | I2C_TRANSFER_WRITE | SERCOM_I2CM_ADDR_TENBITEN_Msk;
     }
     else
     {
@@ -166,14 +166,14 @@ void SERCOM_I2C_Start(SERCOM_I2C_TRB *trb)
             sercom${SERCOM_INDEX}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
 
             /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
-            SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR = (trb->address << 1) | I2C_TRANSFER_READ;
+            SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR.w = (trb->address << 1) | I2C_TRANSFER_READ;
         }
         else
         {
             sercom${SERCOM_INDEX}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
 
             /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 0*/
-            SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR = (trb->address << 1) | I2C_TRANSFER_WRITE;
+            SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR.w = (trb->address << 1) | I2C_TRANSFER_WRITE;
         }
     }
 }
@@ -197,62 +197,48 @@ void SERCOM_I2C_Start(SERCOM_I2C_TRB *trb)
     configured by the user from the MHC.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 void SERCOM${SERCOM_INDEX}_I2C_Initialize(void)
 {
-    /* Enabling the MCLK Clock for the SERCOM${SERCOM_INDEX} */
-    <#if SERCOM_INDEX <= 5>
-    MCLK_REGS->APBCMASK |= MCLK_APBCMASK_SERCOM${SERCOM_INDEX}__Msk;
-    <#else>
-    MCLK_REGS->APBDMASK |= MCLK_APBDMASK_SERCOM${SERCOM_INDEX}__Msk;
-    </#if>
-
-    /* Enable peripheral channel in the GCLK Regs */
-    GCLK_REGS->PCHCTRL[PHCTRL_INDEX] |= GCLK_PCHCTRL_CHEN_Msk;
-
-    while (!(GCLK_REGS->PCHCTRL[PHCTRL_INDEX] & GCLK_PCHCTRL_CHEN_Msk))
-    {
-        /* Wait for clock synchronization */
-    }
 
     /* Software Reset*/
-    SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLA |= SERCOM_I2CM_CTRLA_SWRST_Msk;
+    SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLA.w |= SERCOM_I2CM_CTRLA_SWRST_Msk;
 
-    while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY & SERCOM_I2CM_SYNCBUSY_SWRST_Msk) == SERCOM_I2CM_SYNCBUSY_SWRST_Msk)
+    while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY.w & SERCOM_I2CM_SYNCBUSY_SWRST_Msk) == SERCOM_I2CM_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for synchronization after software reset */
     }
 
     /* Set Operation Mode (Master), SDA Hold time*/
-    SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLA |= SERCOM_I2CM_CTRLA_MODE(I2C_MASTER_MODE) | SERCOM_I2CM_CTRLA_SDAHOLD(SDA_HOLD_TIME);
+    SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLA.w |= SERCOM_I2CM_CTRLA_MODE(I2C_MASTER_MODE) | SERCOM_I2CM_CTRLA_SDAHOLD(SDA_HOLD_TIME);
 
     /* Baud rate - Master Baud Rate*/
-    SERCOM${SERCOM_INDEX}_I2C->I2CM.BAUD |= SERCOM_I2CM_BAUD_BAUD(BAUD_REGISTER_VALUE);
+    SERCOM${SERCOM_INDEX}_I2C->I2CM.BAUD.w |= SERCOM_I2CM_BAUD_BAUD(BAUD_REGISTER_VALUE);
 
     /* Set Run in Stand By */
-    SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLA |= SERCOM_I2CM_CTRLA_RESETVALUE ${RUN_IN_STANDBY?then('| SERCOM_I2CM_CTRLA_RUNSTDBY_Msk','')};
+    SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLA.w |= SERCOM_I2CM_CTRLA_RESETVALUE ${RUN_IN_STANDBY?then('| SERCOM_I2CM_CTRLA_RUNSTDBY_Msk','')};
 
     /* Enable I2C Master */
-    SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLA |= SERCOM_I2CM_CTRLA_ENABLE_Msk;
+    SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLA.w |= SERCOM_I2CM_CTRLA_ENABLE_Msk;
 
     /* Synchronization */
-    while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY & SERCOM_I2CM_SYNCBUSY_ENABLE_Msk) == SERCOM_I2CM_SYNCBUSY_ENABLE_Msk)
+    while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY.w & SERCOM_I2CM_SYNCBUSY_ENABLE_Msk) == SERCOM_I2CM_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for synchronization after enabling I2C */
     }
 
     /* Initial Bus State: IDLE */
-    SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS |= SERCOM_I2CM_STATUS_BUSSTATE(INITIAL_BUS_STATE);
+    SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS.w |= SERCOM_I2CM_STATUS_BUSSTATE(INITIAL_BUS_STATE);
 
-    while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY & SERCOM_I2CM_SYNCBUSY_SYSOP_Msk) == SERCOM_I2CM_SYNCBUSY_SYSOP_Msk)
+    while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY.w & SERCOM_I2CM_SYNCBUSY_SYSOP_Msk) == SERCOM_I2CM_SYNCBUSY_SYSOP_Msk)
     {
         /* Wait for System Operation Synchronization */
     }
 
     /* Disable all interrupts*/
-    <@compress single_line=true>SERCOM${SERCOM_INDEX}_I2C->I2CM.INTENCLR |= SERCOM_I2CM_INTENCLR_MB_Msk | SERCOM_I2CM_INTENCLR_SB_Msk | SERCOM_I2CM_INTENCLR_ERROR_Msk;</@compress>
+    <@compress single_line=true>SERCOM${SERCOM_INDEX}_I2C->I2CM.INTENCLR.w |= SERCOM_I2CM_INTENCLR_MB_Msk | SERCOM_I2CM_INTENCLR_SB_Msk | SERCOM_I2CM_INTENCLR_ERROR_Msk;</@compress>
 
     /* Reset the PLib objects */
     sercom${SERCOM_INDEX}I2CObj.numTRBs = 0;
@@ -280,7 +266,7 @@ void SERCOM${SERCOM_INDEX}_I2C_Initialize(void)
     peripheral interrupt context.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 void SERCOM${SERCOM_INDEX}_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback, uintptr_t contextHandle)
@@ -313,7 +299,7 @@ void SERCOM${SERCOM_INDEX}_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback, ui
     Calling this function does not initiate any activity on the I2C bus.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
@@ -368,7 +354,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead(uint16_t address, uint8_t *pdata, ui
     Calling this function does not initiate any activity on the I2C bus.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
@@ -429,7 +415,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildWrite(uint16_t address, uint8_t *pdata, u
     this may require the TRBs to be re-submitted.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 bool SERCOM${SERCOM_INDEX}_I2C_TRBTransfer(void)
@@ -443,13 +429,13 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBTransfer(void)
         result = true;
 
         /* Clear all flags */
-        SERCOM${SERCOM_INDEX}_I2C->I2CM.INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
+        SERCOM${SERCOM_INDEX}_I2C->I2CM.INTFLAG.w = SERCOM_I2CM_INTFLAG_Msk;
 
         /* Reset Error Information */
         sercom${SERCOM_INDEX}I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
         /* Enable all Interrupts */
-        <@compress single_line=true>SERCOM${SERCOM_INDEX}_I2C->I2CM.INTENSET |= SERCOM_I2CM_INTENSET_MB_Msk | SERCOM_I2CM_INTENSET_SB_Msk | SERCOM_I2CM_INTENSET_ERROR_Msk;</@compress>
+        <@compress single_line=true>SERCOM${SERCOM_INDEX}_I2C->I2CM.INTENSET.w |= SERCOM_I2CM_INTENSET_MB_Msk | SERCOM_I2CM_INTENSET_SB_Msk | SERCOM_I2CM_INTENSET_ERROR_Msk;</@compress>
 
         /* Start first TRB by sending the address */
         SERCOM_I2C_Start(&sercom${SERCOM_INDEX}I2CTRBsList[sercom${SERCOM_INDEX}I2CObj.currentTRB]);
@@ -491,7 +477,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBTransfer(void)
     SERCOM${SERCOM_INDEX}_I2C_CallbackRegister) before calling the read function.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 bool SERCOM${SERCOM_INDEX}_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t length)
@@ -541,7 +527,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t le
     SERCOM${SERCOM_INDEX}_I2C_CallbackRegister) before calling the write function.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 bool SERCOM${SERCOM_INDEX}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t length)
@@ -594,7 +580,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t l
     SERCOM${SERCOM_INDEX}_I2C_CallbackRegister) before calling the write function.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 bool SERCOM${SERCOM_INDEX}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
@@ -629,7 +615,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8
     SERCOM${SERCOM_INDEX}_I2C_ErrorGet() function to find out the actuall error.
 
    Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 SERCOM_I2C_TRANSFER_STATUS SERCOM${SERCOM_INDEX}_I2C_TransferStatusGet(void)
@@ -652,7 +638,7 @@ SERCOM_I2C_TRANSFER_STATUS SERCOM${SERCOM_INDEX}_I2C_TransferStatusGet(void)
     transfer function is initiated.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_i2c.h for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_i2c.h for more information.
 */
 
 SERCOM_I2C_ERROR SERCOM${SERCOM_INDEX}_I2C_ErrorGet(void)
@@ -696,7 +682,7 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
         trb = &sercom${SERCOM_INDEX}I2CTRBsList[sercom${SERCOM_INDEX}I2CObj.currentTRB];
 
         /* Checks if the arbitration lost in multi-master scenario */
-        if((SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS & SERCOM_I2CM_STATUS_ARBLOST_Msk) == SERCOM_I2CM_STATUS_ARBLOST_Msk)
+        if((SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS.w & SERCOM_I2CM_STATUS_ARBLOST_Msk) == SERCOM_I2CM_STATUS_ARBLOST_Msk)
         {
             /*
              * Re-initiate the transfer if arbitration is lost
@@ -708,7 +694,7 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
             SERCOM_I2C_Start(&sercom${SERCOM_INDEX}I2CTRBsList[sercom${SERCOM_INDEX}I2CObj.currentTRB]);
         }
         /* Check for Bus Error during transmission */
-        else if((SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS & SERCOM_I2CM_STATUS_BUSERR_Msk) == SERCOM_I2CM_STATUS_BUSERR_Msk)
+        else if((SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS.w & SERCOM_I2CM_STATUS_BUSERR_Msk) == SERCOM_I2CM_STATUS_BUSERR_Msk)
         {
             /* Set Error status */
             sercom${SERCOM_INDEX}I2CObj.status = SERCOM_I2C_TRANSFER_STATUS_ERROR;
@@ -718,23 +704,27 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
         {
             switch(sercom${SERCOM_INDEX}I2CObj.state)
             {
+                case SERCOM_I2C_STATE_IDLE:
+                {
+                }
+
                 case SERCOM_I2C_STATE_ADDR_SEND:
                 {
                     /* Checks slave acknowledge for address */
-                    if((SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS & SERCOM_I2CM_STATUS_RXNACK_Msk) == SERCOM_I2CM_STATUS_RXNACK_Msk)
+                    if((SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS.w & SERCOM_I2CM_STATUS_RXNACK_Msk) == SERCOM_I2CM_STATUS_RXNACK_Msk)
                     {
                         sercom${SERCOM_INDEX}I2CObj.status = SERCOM_I2C_TRANSFER_STATUS_ERROR;
                         sercom${SERCOM_INDEX}I2CObj.error = SERCOM_I2C_ERROR_NAK;
                     }
                     else
                     {
-                        if(trb->read && ((SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR & SERCOM_I2CM_ADDR_TENBITEN_Msk) == SERCOM_I2CM_ADDR_TENBITEN_Msk))
+                        if(trb->read && ((SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR.w & SERCOM_I2CM_ADDR_TENBITEN_Msk) == SERCOM_I2CM_ADDR_TENBITEN_Msk))
                         {
                             /*
                             * Write ADDR[7:0] register to "11110 address[9:8] 1"
                             * ADDR.TENBITEN must be cleared
                             */
-                            SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR = (((trb->address >> RIGHT_ALIGNED) | TEN_BIT_ADDR_MASK) << 1) | I2C_TRANSFER_READ;
+                            SERCOM${SERCOM_INDEX}_I2C->I2CM.ADDR.w = (((trb->address >> RIGHT_ALIGNED) | TEN_BIT_ADDR_MASK) << 1) | I2C_TRANSFER_READ;
 
                             sercom${SERCOM_INDEX}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
                         }
@@ -746,7 +736,7 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
                 case SERCOM_I2C_STATE_TRANSFER_WRITE:
                 {
                     /* Checks slave acknowledge for data */
-                    if((SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS & SERCOM_I2CM_STATUS_RXNACK_Msk) == SERCOM_I2CM_STATUS_RXNACK_Msk)
+                    if((SERCOM${SERCOM_INDEX}_I2C->I2CM.STATUS.w & SERCOM_I2CM_STATUS_RXNACK_Msk) == SERCOM_I2CM_STATUS_RXNACK_Msk)
                     {
                         sercom${SERCOM_INDEX}I2CObj.status = SERCOM_I2C_TRANSFER_STATUS_ERROR;
                         sercom${SERCOM_INDEX}I2CObj.error = SERCOM_I2C_ERROR_NAK;
@@ -759,7 +749,7 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
                             if( sercom${SERCOM_INDEX}I2CObj.currentTRB == (sercom${SERCOM_INDEX}I2CObj.numTRBs - 1) )
                             {
                                 /* Execute acknowledge action succeeded by issuing a stop condition */
-                                SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB |= SERCOM_I2CM_CTRLB_CMD(3);
+                                SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB.w |= SERCOM_I2CM_CTRLB_CMD(3);
                             }
 
                             currentTRBTransferDone = true;
@@ -767,7 +757,7 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
                         else
                         {
                             /* Write next data byte */
-                            SERCOM${SERCOM_INDEX}_I2C->I2CM.DATA = *(trb->pbuffer++);
+                            SERCOM${SERCOM_INDEX}_I2C->I2CM.DATA.w = *(trb->pbuffer++);
 
                             trb->length--;
 
@@ -787,7 +777,7 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
                     if(trb->length == 0)
                     {
                         /* Send NACK to the slave from master */
-                        SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB |= SERCOM_I2CM_CTRLB_ACKACT_Msk;
+                        SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB.w |= SERCOM_I2CM_CTRLB_ACKACT_Msk;
 
                         if(sercom${SERCOM_INDEX}I2CObj.currentTRB == (sercom${SERCOM_INDEX}I2CObj.numTRBs - 1))
                         {
@@ -795,9 +785,9 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
                              * Execute acknowledge action succeeded by issuing
                              * a stop condition.
                              */
-                            SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB |= SERCOM_I2CM_CTRLB_CMD(3);
+                            SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB.w |= SERCOM_I2CM_CTRLB_CMD(3);
 
-                            while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY & SERCOM_I2CM_SYNCBUSY_SYSOP_Msk) == SERCOM_I2CM_SYNCBUSY_SYSOP_Msk)
+                            while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY.w & SERCOM_I2CM_SYNCBUSY_SYSOP_Msk) == SERCOM_I2CM_SYNCBUSY_SYSOP_Msk)
                             {
                                 /*
                                  * Wait for synchronization after issuing
@@ -809,15 +799,15 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
                     else
                     {
                         /* Send ACK to the slave from master */
-                        SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB &= ~SERCOM_I2CM_CTRLB_ACKACT_Msk;
+                        SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB.w &= ~SERCOM_I2CM_CTRLB_ACKACT_Msk;
 
                         /*
                          * Execute acknowledge action succeeded by a byte read
                          * operation.
                          */
-                        SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB |= SERCOM_I2CM_CTRLB_CMD(2);
+                        SERCOM${SERCOM_INDEX}_I2C->I2CM.CTRLB.w |= SERCOM_I2CM_CTRLB_CMD(2);
 
-                        while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY & SERCOM_I2CM_SYNCBUSY_SYSOP_Msk) == SERCOM_I2CM_SYNCBUSY_SYSOP_Msk)
+                        while((SERCOM${SERCOM_INDEX}_I2C->I2CM.SYNCBUSY.w & SERCOM_I2CM_SYNCBUSY_SYSOP_Msk) == SERCOM_I2CM_SYNCBUSY_SYSOP_Msk)
                         {
                             /*
                              * Wait for synchronization after issuing
@@ -827,7 +817,7 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
                     }
 
                     /* Read the received data */
-                    *(trb->pbuffer++) = SERCOM${SERCOM_INDEX}_I2C->I2CM.DATA;
+                    *(trb->pbuffer++) = SERCOM${SERCOM_INDEX}_I2C->I2CM.DATA.w;
 
                     if(trb->length == 0)
                     {
@@ -851,7 +841,7 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
             sercom${SERCOM_INDEX}I2CObj.numTRBs = 0;
             sercom${SERCOM_INDEX}I2CObj.currentTRB = 0;
             sercom${SERCOM_INDEX}I2CObj.state = SERCOM_I2C_STATE_IDLE;
-            SERCOM${SERCOM_INDEX}_I2C->I2CM.INTFLAG = SERCOM_I2CM_INTFLAG_MB_Msk | SERCOM_I2CM_INTFLAG_SB_Msk | SERCOM_I2CM_INTFLAG_ERROR_Msk;
+            SERCOM${SERCOM_INDEX}_I2C->I2CM.INTFLAG.w = SERCOM_I2CM_INTFLAG_MB_Msk | SERCOM_I2CM_INTFLAG_SB_Msk | SERCOM_I2CM_INTFLAG_ERROR_Msk;
         }
         /* Transfer Complete */
         else if(currentTRBTransferDone == true)
@@ -871,7 +861,7 @@ void SERCOM${SERCOM_INDEX}_InterruptHandler(void)
                 sercom${SERCOM_INDEX}I2CObj.currentTRB = 0;
                 sercom${SERCOM_INDEX}I2CObj.state = SERCOM_I2C_STATE_IDLE;
                 sercom${SERCOM_INDEX}I2CObj.error = SERCOM_I2C_ERROR_NONE;
-                SERCOM${SERCOM_INDEX}_I2C->I2CM.INTFLAG = SERCOM_I2CM_INTFLAG_MB_Msk | SERCOM_I2CM_INTFLAG_SB_Msk | SERCOM_I2CM_INTFLAG_ERROR_Msk;
+                SERCOM${SERCOM_INDEX}_I2C->I2CM.INTFLAG.w = SERCOM_I2CM_INTFLAG_MB_Msk | SERCOM_I2CM_INTFLAG_SB_Msk | SERCOM_I2CM_INTFLAG_ERROR_Msk;
             }
             else
             {
