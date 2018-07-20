@@ -102,6 +102,9 @@ def afecFreqCalc(symbol, event):
 
 def afecCalcConversionTime(afecSym_CONV_TIME, event):
     clock = afecGetMasterClock()
+    if (clock == 0):
+        Log.writeErrorMessage("Master clock frequency is zero")
+        clock = 1
     prescaler = afecSym_MR_PRESCAL.getValue() + 1
     result_resolution = afecSym_EMR_RES_VALUE.getSelectedKey()
     multiplier = 1
