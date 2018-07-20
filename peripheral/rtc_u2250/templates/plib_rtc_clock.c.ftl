@@ -159,13 +159,10 @@ RTC_OBJECT rtc${RTC_INDEX}Obj;
 
 void RTC${RTC_INDEX}_Initialize(void)
 {
-    /* Enable APBA BUS*/
-    MCLK_REGS->APBAMASK |= MCLK_APBAMASK_RTC__Msk;
-
     /* Software Reset */
-    RTC_REGS->MODE2.CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
+    _RTC_REGS->MODE2.CTRLA.w |= RTC_MODE2_CTRLA_SWRST_Msk;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
+    while((_RTC_REGS->MODE2.SYNCBUSY.w & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for synchronization after Software Reset */
     }
@@ -174,28 +171,28 @@ void RTC${RTC_INDEX}_Initialize(void)
      * Set Operating mode,prescaler,clocksync and
      * clock representation(12Hr/24Hr)
      */
-    <@compress single_line=true>RTC_REGS->MODE2.CTRLA |= RTC_MODE2_CTRLA_MODE(2) |
+    <@compress single_line=true>_RTC_REGS->MODE2.CTRLA.w |= RTC_MODE2_CTRLA_MODE(2) |
                                                             RTC_MODE2_CTRLA_PRESCALER(${RTC_MODE2_PRESCALER}) |
                                                             RTC_MODE2_CTRLA_CLOCKSYNC_Msk
                                                             ${RTC_MODE2_CLKREP?then('| RTC_MODE2_CTRLA_CLKREP_Msk','')};</@compress>
 
     /* Disable all Interrupts */
-    RTC_REGS->MODE2.INTENCLR |= RTC_MODE2_INTENCLR_Msk;
+    RTC_REGS->MODE2.INTENCLR.w |= RTC_MODE2_INTENCLR_Msk;
 
     /* Clear all Interrupts */
-    RTC_REGS->MODE2.INTFLAG = RTC_MODE2_INTFLAG_Msk;
+    RTC_REGS->MODE2.INTFLAG.w = RTC_MODE2_INTFLAG_Msk;
 
     /* Enable RTC */
-    RTC_REGS->MODE2.CTRLA |= RTC_MODE2_CTRLA_ENABLE_Msk;
+    RTC_REGS->MODE2.CTRLA.w |= RTC_MODE2_CTRLA_ENABLE_Msk;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
+    while((RTC_REGS->MODE2.SYNCBUSY.w & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Enabling RTC */
     }
 <#if RTC_MODE2_INTERRUPT = true && RTC_MODE2_PERIOD != "NO">
 
     /* Enable Period Interrupt */
-    RTC_REGS->MODE2.INTENSET |= RTC_MODE2_INTENSET_${RTC_MODE2_PERIOD}_Msk;
+    RTC_REGS->MODE2.INTENSET.w |= RTC_MODE2_INTENSET_${RTC_MODE2_PERIOD}_Msk;
 </#if>
 }
 <#if RTC_MODE2_FREQCORR = true >
@@ -231,9 +228,9 @@ void RTC${RTC_INDEX}_FrequencyCorrect (int8_t correction)
     }
 
     /* Set New Correction Value */
-    RTC_REGS->MODE2.FREQCORR = newCorrectionValue;
+    RTC_REGS->MODE2.FREQCORR.w = newCorrectionValue;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_FREQCORR_Msk) == RTC_MODE2_SYNCBUSY_FREQCORR_Msk)
+    while((RTC_REGS->MODE2.SYNCBUSY.w & RTC_MODE2_SYNCBUSY_FREQCORR_Msk) == RTC_MODE2_SYNCBUSY_FREQCORR_Msk)
     {
         /* Wait for synchronization after writing value to FREQCORR */
     }
@@ -263,12 +260,12 @@ bool RTC${RTC_INDEX}_PeriodicIntervalHasCompleted (void)
     bool periodIntervalComplete = false;
 
     /* Check for the Period interval has completed */
-    if( RTC_REGS->MODE2.INTFLAG & RTC_MODE2_INTFLAG_${RTC_MODE2_PERIOD}_Msk )
+    if( RTC_REGS->MODE2.INTFLAG.w & RTC_MODE2_INTFLAG_${RTC_MODE2_PERIOD}_Msk )
     {
         periodIntervalComplete = true;
 
         /* Clear Periodic Interval Interrupt */
-        RTC_REGS->MODE2.INTFLAG = RTC_MODE2_INTFLAG_${RTC_MODE2_PERIOD}_Msk;
+        RTC_REGS->MODE2.INTFLAG.w = RTC_MODE2_INTFLAG_${RTC_MODE2_PERIOD}_Msk;
     }
 
     return periodIntervalComplete;
@@ -313,9 +310,9 @@ void RTC${RTC_INDEX}_RTCCTimeSet (struct tm * initialTime )
                      (initialTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
 
     /* Set the clock value from user to CLOCK Register */
-    RTC_REGS->MODE2.CLOCK = registerValue;
+    RTC_REGS->MODE2.CLOCK.w = registerValue;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
+    while((RTC_REGS->MODE2.SYNCBUSY.w & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
     {
         /* Synchronization after writing value to CLOCK Register */
     }
@@ -342,13 +339,13 @@ void RTC${RTC_INDEX}_RTCCTimeGet ( struct tm * currentTime )
 {
     uint32_t dataClockCalendar = 0;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
+    while((RTC_REGS->MODE2.SYNCBUSY.w & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
     {
         /* Synchronization before reading value from CLOCK Register */
     }
 
     /* Get Clock/Calendar value from CLOCK register */
-    dataClockCalendar = RTC_REGS->MODE2.CLOCK;
+    dataClockCalendar = RTC_REGS->MODE2.CLOCK.w;
 
     /* Get Clock value from CLOCK register */
     currentTime->tm_hour =  (dataClockCalendar & CLOCK_HOUR_MASK) >> RTC_MODE2_CLOCK_HOUR_Pos;
@@ -383,7 +380,7 @@ void RTC${RTC_INDEX}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask)
     uint32_t registerValue = 0;
 
     /* Enable Alarm Interrupt */
-    RTC_REGS->MODE2.INTENSET |= RTC_MODE2_INTENSET_ALARM0_Msk;
+    RTC_REGS->MODE2.INTENSET.w |= RTC_MODE2_INTENSET_ALARM0_Msk;
 
     /*
      * Add 1900 to the tm_year member and the adjust for the RTC reference year
@@ -399,17 +396,17 @@ void RTC${RTC_INDEX}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask)
                      (alarmTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
 
     /* Set the value to ALARM Register */
-    RTC_REGS->MODE2.Mode2Alarm = registerValue;
+    RTC_REGS->MODE2.Mode2Alarm.w = registerValue;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_ALARM0_Msk) == RTC_MODE2_SYNCBUSY_ALARM0_Msk)
+    while((RTC_REGS->MODE2.SYNCBUSY.w & RTC_MODE2_SYNCBUSY_ALARM0_Msk) == RTC_MODE2_SYNCBUSY_ALARM0_Msk)
     {
         /* Synchronization after writing to ALARM register */
     }
 
     /* Set Alarm Mask */
-    RTC_REGS->MODE2.Mode2AlarmMask = mask;
+    RTC_REGS->MODE2.Mode2AlarmMask.w = mask;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_MASK0_Msk) == RTC_MODE2_SYNCBUSY_MASK0_Msk)
+    while((RTC_REGS->MODE2.SYNCBUSY.w & RTC_MODE2_SYNCBUSY_MASK0_Msk) == RTC_MODE2_SYNCBUSY_MASK0_Msk)
     {
         /* Synchronization after writing value to MASK Register */
     }
@@ -482,7 +479,7 @@ void RTC${RTC_INDEX}_InterruptHandler(void)
 {
 <#if RTC_MODE2_PERIOD != "NO">
     /* Check Periodic Interval has Expired */
-    if((RTC_REGS->MODE2.INTFLAG & RTC_MODE2_INTFLAG_${RTC_MODE2_PERIOD}_Msk) == RTC_MODE2_INTFLAG_${RTC_MODE2_PERIOD}_Msk)
+    if((RTC_REGS->MODE2.INTFLAG.w & RTC_MODE2_INTFLAG_${RTC_MODE2_PERIOD}_Msk) == RTC_MODE2_INTFLAG_${RTC_MODE2_PERIOD}_Msk)
     {
         if(rtc${RTC_INDEX}Obj.periodicCallback != NULL)
         {
@@ -492,9 +489,9 @@ void RTC${RTC_INDEX}_InterruptHandler(void)
 </#if>
 
     /* Check Alarm */
-    if((RTC_REGS->MODE2.INTFLAG & RTC_MODE2_INTFLAG_ALARM0_Msk) == RTC_MODE2_INTFLAG_ALARM0_Msk)
+    if((RTC_REGS->MODE2.INTFLAG.w & RTC_MODE2_INTFLAG_ALARM0_Msk) == RTC_MODE2_INTFLAG_ALARM0_Msk)
     {
-        rtc0Obj.clockEvent = RTC_REGS->MODE2.INTFLAG;
+        rtc0Obj.clockEvent = RTC_REGS->MODE2.INTFLAG.w;
 
         if(rtc${RTC_INDEX}Obj.alarmCallback != NULL)
         {
@@ -503,6 +500,6 @@ void RTC${RTC_INDEX}_InterruptHandler(void)
     }
 
     /* Clear All Interrupts */
-    RTC_REGS->MODE2.INTFLAG = RTC_MODE2_INTFLAG_Msk;
+    RTC_REGS->MODE2.INTFLAG.w = RTC_MODE2_INTFLAG_Msk;
 }
 </#if>

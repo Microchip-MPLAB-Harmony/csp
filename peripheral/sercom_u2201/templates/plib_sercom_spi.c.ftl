@@ -71,9 +71,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* Calculation of baud value */
 #define BAUD_VALUE                      ((4000000/(2*${SPI_BAUDRATE}))-1)
 
-/* SERCOM spi Instance */
-#define SERCOM_SPI_HWINST                (SERCOM${SERCOM_INDEX}_REGS)
-          
 <#if SPI_INTERRUPT_MODE = true>
 /*Global object to save SPI Exchange related data  */
 SPI_OBJECT sercomSPI${SERCOM_INDEX}Obj;
@@ -110,20 +107,10 @@ void SERCOM${SERCOM_INDEX}_SPI_Initialize (void)
     sercomSPI${SERCOM_INDEX}Obj.status = SPI_ERROR_NONE;
 </#if>
 
-    /* Enabling the MCLK Clock for the SERCOM${SERCOM_INDEX} */
-    <#if SERCOM_INDEX <= 5>
-    MCLK_REGS->APBCMASK |= MCLK_APBCMASK_SERCOM${SERCOM_INDEX}__Msk;
-    <#else>
-    MCLK_REGS->APBDMASK |= MCLK_APBDMASK_SERCOM${SERCOM_INDEX}__Msk;
-    </#if>
-
-    /* Enabling the GCLK Peripheral Channel for the SERCOM${SERCOM_INDEX} */
-    GCLK_REGS->PCHCTRL[${SERCOM_PHCTRL_INDEX}] = GCLK_PCHCTRL_CHEN_Msk;
-
     /* Reset the SPI module */
-    SERCOM_SPI_HWINST->SPI.CTRLA |= SERCOM_SPI_CTRLA_SWRST_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLA.w |= SERCOM_SPI_CTRLA_SWRST_Msk;
 
-    while((SERCOM_SPI_HWINST->SPI.SYNCBUSY & SERCOM_SPI_SYNCBUSY_SWRST_Msk) == SERCOM_SPI_SYNCBUSY_SWRST_Msk)
+    while((SERCOM${SERCOM_INDEX}_REGS->SPI.SYNCBUSY.w & SERCOM_SPI_SYNCBUSY_SWRST_Msk) == SERCOM_SPI_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for Module to Reset */
     }
@@ -131,26 +118,26 @@ void SERCOM${SERCOM_INDEX}_SPI_Initialize (void)
     /* Configure Immediate Buffer Overflow , Data Out Pin Out , Master Mode and
      * Data In and Pin Out
      */
-    <@compress single_line=true>SERCOM_SPI_HWINST->SPI.CTRLA |= SERCOM_SPI_CTRLA_MODE(SPI_MASTER_MODE_VALUE)| SERCOM_SPI_CTRLA_DOPO(${SPI_DOPO}) |
+    <@compress single_line=true>SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLA.w |= SERCOM_SPI_CTRLA_MODE(SPI_MASTER_MODE_VALUE)| SERCOM_SPI_CTRLA_DOPO(${SPI_DOPO}) |
                                                                             SERCOM_SPI_CTRLA_DIPO(${SPI_DIPO}) | SERCOM_SPI_CTRLA_IBON_Msk;</@compress>
 
     /* Selection of the Clock Phase and Polarity */
-    SERCOM_SPI_HWINST->SPI.CTRLA |= SPI_TRANSFER_MODE;
+    SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLA.w |= SPI_TRANSFER_MODE;
 
     /* Selection of the Character Size and Receiver Enable */
-    <@compress single_line=true>SERCOM_SPI_HWINST->SPI.CTRLB |= SERCOM_SPI_CTRLB_CHSIZE(${SPI_CHAR_SIZE})
+    <@compress single_line=true>SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLB.w |= SERCOM_SPI_CTRLB_CHSIZE(${SPI_CHAR_SIZE})
                                                                             ${SPI_RECIEVER_ENABLE?then('| SERCOM_SPI_CTRLB_RXEN_Msk', '')};</@compress>
 
     /* Selection of the Baud Value */
-     SERCOM_SPI_HWINST->SPI.BAUD = BAUD_VALUE;
+     SERCOM${SERCOM_INDEX}_REGS->SPI.BAUD.w = BAUD_VALUE;
 
     /* Clearing all the Interrupt Flags */
-    SERCOM_SPI_HWINST->SPI.INTFLAG = SERCOM_SPI_INTFLAG_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->SPI.INTFLAG.w = SERCOM_SPI_INTFLAG_Msk;
 
      /* Enable the SPI Module */
-    SERCOM_SPI_HWINST->SPI.CTRLA |= SERCOM_SPI_CTRLA_ENABLE_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLA.w |= SERCOM_SPI_CTRLA_ENABLE_Msk;
 
-    while((SERCOM_SPI_HWINST->SPI.SYNCBUSY & SERCOM_SPI_SYNCBUSY_ENABLE_Msk) == SERCOM_SPI_SYNCBUSY_ENABLE_Msk)
+    while((SERCOM${SERCOM_INDEX}_REGS->SPI.SYNCBUSY.w & SERCOM_SPI_SYNCBUSY_ENABLE_Msk) == SERCOM_SPI_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for SPI Module to Enable */
     }
@@ -182,7 +169,7 @@ void SERCOM${SERCOM_INDEX}_SPI_Initialize (void)
     calling this function.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_spi.h file for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_spi.h file for more information.
 */
 
 bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock)
@@ -198,9 +185,9 @@ bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t
     }
 
     /* Disable the SPI Module */
-    SERCOM_SPI_HWINST->SPI.CTRLA &= ~(SERCOM_SPI_CTRLA_ENABLE_Msk);
+    SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLA.w &= ~(SERCOM_SPI_CTRLA_ENABLE_Msk);
 
-    while((SERCOM_SPI_HWINST->SPI.SYNCBUSY & SERCOM_SPI_SYNCBUSY_ENABLE_Msk) == SERCOM_SPI_SYNCBUSY_ENABLE_Msk)
+    while((SERCOM${SERCOM_INDEX}_REGS->SPI.SYNCBUSY.w & SERCOM_SPI_SYNCBUSY_ENABLE_Msk) == SERCOM_SPI_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for SPI Module to Disable */
     }
@@ -212,25 +199,25 @@ bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t
         if ((baudValue > 0) & (baudValue <= 255))
         {
             /* Selection of the Clock Polarity */
-            SERCOM_SPI_HWINST->SPI.CTRLA |= (setup->clockPolarity) << SERCOM_SPI_CTRLA_CPOL_Pos;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLA.w |= (setup->clockPolarity) << SERCOM_SPI_CTRLA_CPOL_Pos;
 
             /* Selection of the Clock Phase */
-            SERCOM_SPI_HWINST->SPI.CTRLA |= (setup->clockPhase) << SERCOM_SPI_CTRLA_CPHA_Pos;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLA.w |= (setup->clockPhase) << SERCOM_SPI_CTRLA_CPHA_Pos;
 
             /* Selection of the Baud Value */
-            SERCOM_SPI_HWINST->SPI.BAUD = baudValue ;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.BAUD.w = baudValue ;
 
             /* Selection of the Character Size */
-            SERCOM_SPI_HWINST->SPI.CTRLB |= (setup->dataBits) << SERCOM_SPI_CTRLB_CHSIZE_Pos;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLB.w |= (setup->dataBits) << SERCOM_SPI_CTRLB_CHSIZE_Pos;
 
             statusValue = true;
         }
     }
 
     /* Enabling the SPI Module */
-    SERCOM_SPI_HWINST->SPI.CTRLA |= SERCOM_SPI_CTRLA_ENABLE_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLA.w |= SERCOM_SPI_CTRLA_ENABLE_Msk;
 
-    while((SERCOM_SPI_HWINST->SPI.SYNCBUSY & SERCOM_SPI_SYNCBUSY_ENABLE_Msk) == SERCOM_SPI_SYNCBUSY_ENABLE_Msk)
+    while((SERCOM${SERCOM_INDEX}_REGS->SPI.SYNCBUSY.w & SERCOM_SPI_SYNCBUSY_ENABLE_Msk) == SERCOM_SPI_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for SPI Module to Enable */
     }
@@ -258,7 +245,7 @@ bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t
     function with "callBack" value as NULL.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_spi.h file for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_spi.h file for more information.
 */
 
 void SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, uintptr_t context )
@@ -287,7 +274,7 @@ void SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, ui
     implement a synchronous interface to the library.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_spi.h file for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_spi.h file for more information.
 */
 
 bool SERCOM${SERCOM_INDEX}_SPI_IsBusy(void)
@@ -330,7 +317,7 @@ bool SERCOM${SERCOM_INDEX}_SPI_IsBusy(void)
     application can use the SERCOM${SERCOM_INDEX}_SPI_IsBusy() to poll for completion.
 
    Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_spi.h file for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_spi.h file for more information.
 */
 
 <#if SPI_INTERRUPT_MODE == false >
@@ -347,10 +334,10 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
         /* Verify the request */
     if (((txSize >= 0) && (NULL != pTransmitData)) || ((rxSize >= 0) && (NULL != pReceiveData)))
     {
-        dataBits = SERCOM_SPI_HWINST->SPI.CTRLB & SERCOM_SPI_CTRLB_CHSIZE_Msk;
+        dataBits = SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLB.w & SERCOM_SPI_CTRLB_CHSIZE_Msk;
 
         /* Flush out any unread data in SPI DATA Register from the previous transfer */
-        receivedData = SERCOM_SPI_HWINST->SPI.DATA;
+        receivedData = SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w;
 
         if (rxSize > txSize )
         {
@@ -370,11 +357,11 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
             {
                 if(SPI_DATA_BITS_8 == dataBits)
                 {
-                    SERCOM_SPI_HWINST->SPI.DATA = ((uint8_t*)pTransmitData)[txCount++];
+                    SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = ((uint8_t*)pTransmitData)[txCount++];
                 }
                 else
                 {
-                    SERCOM_SPI_HWINST->SPI.DATA = ((uint16_t*)pTransmitData)[txCount++] & SERCOM_SPI_DATA_Msk;
+                    SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = ((uint16_t*)pTransmitData)[txCount++] & SERCOM_SPI_DATA_Msk;
                 }
             }
 
@@ -382,11 +369,11 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
             {
                 if(SPI_DATA_BITS_8 == dataBits)
                 {
-                    SERCOM_SPI_HWINST->SPI.DATA = 0xFF;
+                    SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = 0xFF;
                 }
                 else
                 {
-                    SERCOM_SPI_HWINST->SPI.DATA = 0xFFFF & SERCOM_SPI_DATA_Msk;
+                    SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = 0xFFFF & SERCOM_SPI_DATA_Msk;
                 }
                 dummySize--;
             }
@@ -394,35 +381,35 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
             if (0 == rxSize)
             {
                 /* For transmit only request, wait for DRE to become empty */
-                while((SERCOM_SPI_HWINST->SPI.INTFLAG & SERCOM_SPI_INTFLAG_DRE_Msk) != SERCOM_SPI_INTFLAG_DRE_Msk);
+                while((SERCOM${SERCOM_INDEX}_REGS->SPI.INTFLAG.w & SERCOM_SPI_INTFLAG_DRE_Msk) != SERCOM_SPI_INTFLAG_DRE_Msk);
 
                 /* Flush out any unread data in SPI DATA Register from the previous transfer */
-                dummyData = SERCOM_SPI_HWINST->SPI.DATA;
+                dummyData = SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w;
                 (void)dummyData;
             }
 
             else
             {
                 /* Checking for the Buffer OverFlow */
-                if ((SERCOM_SPI_HWINST->SPI.STATUS & SERCOM_SPI_STATUS_BUFOVF_Msk) == SERCOM_SPI_STATUS_BUFOVF_Msk)
+                if ((SERCOM${SERCOM_INDEX}_REGS->SPI.STATUS.w & SERCOM_SPI_STATUS_BUFOVF_Msk) == SERCOM_SPI_STATUS_BUFOVF_Msk)
                 {
-                    if ((SERCOM_SPI_HWINST->SPI.INTFLAG & SERCOM_SPI_INTFLAG_RXC_Msk) == SERCOM_SPI_INTFLAG_RXC_Msk)
+                    if ((SERCOM${SERCOM_INDEX}_REGS->SPI.INTFLAG.w & SERCOM_SPI_INTFLAG_RXC_Msk) == SERCOM_SPI_INTFLAG_RXC_Msk)
                         {
-                            dummyData = SERCOM_SPI_HWINST->SPI.DATA;
+                            dummyData = SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w;
                             (void)dummyData;
 
-                            SERCOM_SPI_HWINST->SPI.STATUS = SERCOM_SPI_STATUS_BUFOVF_Msk;
+                            SERCOM${SERCOM_INDEX}_REGS->SPI.STATUS.w = SERCOM_SPI_STATUS_BUFOVF_Msk;
                         }
                 }
                 else
                 {
                     /* If data is read, wait for the Receiver Data Register to become full*/
-                    while((SERCOM_SPI_HWINST->SPI.INTFLAG & SERCOM_SPI_INTFLAG_RXC_Msk) != SERCOM_SPI_INTFLAG_RXC_Msk)
+                    while((SERCOM${SERCOM_INDEX}_REGS->SPI.INTFLAG.w & SERCOM_SPI_INTFLAG_RXC_Msk) != SERCOM_SPI_INTFLAG_RXC_Msk)
                     {
 
                     }
 
-                    receivedData = SERCOM_SPI_HWINST->SPI.DATA;
+                    receivedData = SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w;
 
                     if (rxCount < rxSize)
                     {
@@ -443,7 +430,7 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
     }
 
     /* Make sure no data is pending in the shift register */
-    while ((SERCOM_SPI_HWINST->SPI.INTFLAG & SERCOM_SPI_INTFLAG_TXC_Msk) != SERCOM_SPI_INTFLAG_TXC_Msk);
+    while ((SERCOM${SERCOM_INDEX}_REGS->SPI.INTFLAG.w & SERCOM_SPI_INTFLAG_TXC_Msk) != SERCOM_SPI_INTFLAG_TXC_Msk);
 
     return isSuccess;
 }
@@ -469,10 +456,10 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
         sercomSPI${SERCOM_INDEX}Obj.transferIsBusy = true;
         sercomSPI${SERCOM_INDEX}Obj.status = SPI_ERROR_NONE;
 
-        dataBits = SERCOM_SPI_HWINST->SPI.CTRLB & SERCOM_SPI_CTRLB_CHSIZE_Msk;
+        dataBits = SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLB.w & SERCOM_SPI_CTRLB_CHSIZE_Msk;
 
         /* Flush out any unread data in SPI read buffer */
-        dummyData = SERCOM_SPI_HWINST->SPI.DATA;
+        dummyData = SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w;
         (void)dummyData;
 
         if (rxSize > txSize )
@@ -485,12 +472,12 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
         {
             if (sercomSPI${SERCOM_INDEX}Obj.txCount < sercomSPI${SERCOM_INDEX}Obj.txSize)
             {
-                SERCOM_SPI_HWINST->SPI.DATA = *((uint8_t*)sercomSPI${SERCOM_INDEX}Obj.txBuffer);
+                SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = *((uint8_t*)sercomSPI${SERCOM_INDEX}Obj.txBuffer);
                 sercomSPI${SERCOM_INDEX}Obj.txCount++;
             }
             else if (sercomSPI${SERCOM_INDEX}Obj.dummySize > 0)
             {
-                SERCOM_SPI_HWINST->SPI.DATA = 0xFF;
+                SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = 0xFF;
                 sercomSPI${SERCOM_INDEX}Obj.dummySize--;
             }
         }
@@ -502,12 +489,12 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
 
             if (sercomSPI${SERCOM_INDEX}Obj.txCount < sercomSPI${SERCOM_INDEX}Obj.txSize)
             {
-                SERCOM_SPI_HWINST->SPI.DATA = *((uint16_t*)sercomSPI${SERCOM_INDEX}Obj.txBuffer) & SERCOM_SPI_DATA_Msk;
+                SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = *((uint16_t*)sercomSPI${SERCOM_INDEX}Obj.txBuffer) & SERCOM_SPI_DATA_Msk;
                 sercomSPI${SERCOM_INDEX}Obj.txCount++;
             }
             else if (sercomSPI${SERCOM_INDEX}Obj.dummySize > 0)
             {
-                SERCOM_SPI_HWINST->SPI.DATA = 0xFFFF & SERCOM_SPI_DATA_Msk;
+                SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = 0xFFFF & SERCOM_SPI_DATA_Msk;
                 sercomSPI${SERCOM_INDEX}Obj.dummySize--;
             }
         }
@@ -515,12 +502,12 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
         if (rxSize > 0)
         {
             /* Enable the DataRegisterEmpty and ReceiveComplete flags */
-            SERCOM_SPI_HWINST->SPI.INTENSET = SERCOM_SPI_INTFLAG_DRE_Msk | SERCOM_SPI_INTFLAG_RXC_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.INTENSET.w = SERCOM_SPI_INTFLAG_DRE_Msk | SERCOM_SPI_INTFLAG_RXC_Msk;
         }
         else
         {
             /* Enable the DataRegisterEmpty  */
-            SERCOM_SPI_HWINST->SPI.INTENSET = SERCOM_SPI_INTFLAG_DRE_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.INTENSET.w = SERCOM_SPI_INTFLAG_DRE_Msk;
         }
     }
 
@@ -541,7 +528,7 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
     Interrupts.
 
   Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_spi.h file for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_spi.h file for more information.
 */
 
 void SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void)
@@ -550,29 +537,29 @@ void SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void)
     uint32_t receivedData = 0;
     uint32_t dummyData = 0;
 
-    dataBits = (SERCOM_SPI_HWINST->SPI.CTRLB & SERCOM_SPI_CTRLB_CHSIZE_Msk) ;
+    dataBits = (SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLB.w & SERCOM_SPI_CTRLB_CHSIZE_Msk) ;
 
     /* Save the SPI transfer status in global object before it gets cleared */
-    sercomSPI${SERCOM_INDEX}Obj.status = SERCOM_SPI_HWINST->SPI.STATUS;
+    sercomSPI${SERCOM_INDEX}Obj.status = SERCOM${SERCOM_INDEX}_REGS->SPI.STATUS.w;
 
     /* Checking for the Buffer Overflow Status */
-    if ((SERCOM_SPI_HWINST->SPI.STATUS & SERCOM_SPI_STATUS_BUFOVF_Msk) == SERCOM_SPI_STATUS_BUFOVF_Msk)
+    if ((SERCOM${SERCOM_INDEX}_REGS->SPI.STATUS.w & SERCOM_SPI_STATUS_BUFOVF_Msk) == SERCOM_SPI_STATUS_BUFOVF_Msk)
     {
-        if ((SERCOM_SPI_HWINST->SPI.INTFLAG & SERCOM_SPI_INTFLAG_RXC_Msk) == SERCOM_SPI_INTFLAG_RXC_Msk)
+        if ((SERCOM${SERCOM_INDEX}_REGS->SPI.INTFLAG.w & SERCOM_SPI_INTFLAG_RXC_Msk) == SERCOM_SPI_INTFLAG_RXC_Msk)
         {
-            dummyData = SERCOM_SPI_HWINST->SPI.DATA;
+            dummyData = SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w;
             (void)dummyData;
 
             /* Clearing the Buffer OverFlow Status */
-            SERCOM_SPI_HWINST->SPI.STATUS = SERCOM_SPI_STATUS_BUFOVF_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.STATUS.w = SERCOM_SPI_STATUS_BUFOVF_Msk;
         }
     }
 
     else
     {
-        if ((SERCOM_SPI_HWINST->SPI.INTFLAG & SERCOM_SPI_INTFLAG_RXC_Msk) == SERCOM_SPI_INTFLAG_RXC_Msk)
+        if ((SERCOM${SERCOM_INDEX}_REGS->SPI.INTFLAG.w & SERCOM_SPI_INTFLAG_RXC_Msk) == SERCOM_SPI_INTFLAG_RXC_Msk)
         {
-            receivedData =  SERCOM_SPI_HWINST->SPI.DATA;
+            receivedData =  SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w;
 
             if (sercomSPI${SERCOM_INDEX}Obj.rxCount < sercomSPI${SERCOM_INDEX}Obj.rxSize)
             {
@@ -589,17 +576,17 @@ void SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void)
     }
 
     /* If there are more words to be transmitted, then transmit them here and keep track of the count */
-    if((SERCOM_SPI_HWINST->SPI.INTFLAG & SERCOM_SPI_INTFLAG_TXC_Msk) == SERCOM_SPI_INTFLAG_TXC_Msk)
+    if((SERCOM${SERCOM_INDEX}_REGS->SPI.INTFLAG.w & SERCOM_SPI_INTFLAG_TXC_Msk) == SERCOM_SPI_INTFLAG_TXC_Msk)
     {
         if(SPI_DATA_BITS_8 == dataBits)
         {
             if (sercomSPI${SERCOM_INDEX}Obj.txCount < sercomSPI${SERCOM_INDEX}Obj.txSize)
             {
-                SERCOM_SPI_HWINST->SPI.DATA = ((uint8_t*)sercomSPI${SERCOM_INDEX}Obj.txBuffer)[sercomSPI${SERCOM_INDEX}Obj.txCount++];
+                SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = ((uint8_t*)sercomSPI${SERCOM_INDEX}Obj.txBuffer)[sercomSPI${SERCOM_INDEX}Obj.txCount++];
             }
             else if (sercomSPI${SERCOM_INDEX}Obj.dummySize > 0)
             {
-                SERCOM_SPI_HWINST->SPI.DATA = 0xFF;
+                SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = 0xFF;
                 sercomSPI${SERCOM_INDEX}Obj.dummySize--;
             }
         }
@@ -607,11 +594,11 @@ void SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void)
         {
             if (sercomSPI${SERCOM_INDEX}Obj.txCount < sercomSPI${SERCOM_INDEX}Obj.txSize)
             {
-                SERCOM_SPI_HWINST->SPI.DATA = ((uint16_t*)sercomSPI${SERCOM_INDEX}Obj.txBuffer)[sercomSPI${SERCOM_INDEX}Obj.txCount++];
+                SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = ((uint16_t*)sercomSPI${SERCOM_INDEX}Obj.txBuffer)[sercomSPI${SERCOM_INDEX}Obj.txCount++];
             }
             else if (sercomSPI${SERCOM_INDEX}Obj.dummySize > 0)
             {
-                SERCOM_SPI_HWINST->SPI.DATA = 0xFFFF;
+                SERCOM${SERCOM_INDEX}_REGS->SPI.DATA.w = 0xFFFF;
                 sercomSPI${SERCOM_INDEX}Obj.dummySize--;
             }
         }
@@ -619,25 +606,25 @@ void SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void)
         if ((sercomSPI${SERCOM_INDEX}Obj.txCount == sercomSPI${SERCOM_INDEX}Obj.txSize) && (0 == sercomSPI${SERCOM_INDEX}Obj.dummySize))
         {
             /* Disable the Data Register empty interrupt  */
-            SERCOM_SPI_HWINST->SPI.INTENCLR = SERCOM_SPI_INTENCLR_DRE_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.INTENCLR.w = SERCOM_SPI_INTENCLR_DRE_Msk;
 
             /* Enabling the Transmit complete Interrupt flag to ensure that
              *  there is no more Data present in the shift register
              */
-            SERCOM_SPI_HWINST->SPI.INTENSET = SERCOM_SPI_INTENSET_TXC_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.INTENSET.w = SERCOM_SPI_INTENSET_TXC_Msk;
         }
     }
 
-    if((SERCOM_SPI_HWINST->SPI.INTFLAG & SERCOM_SPI_INTFLAG_TXC_Msk) == SERCOM_SPI_INTFLAG_TXC_Msk)
+    if((SERCOM${SERCOM_INDEX}_REGS->SPI.INTFLAG.w & SERCOM_SPI_INTFLAG_TXC_Msk) == SERCOM_SPI_INTFLAG_TXC_Msk)
     {
         if (sercomSPI${SERCOM_INDEX}Obj.rxCount == sercomSPI${SERCOM_INDEX}Obj.rxSize)
         {
             sercomSPI${SERCOM_INDEX}Obj.transferIsBusy = false;
 
             /* Disable the Data Register empty and Receive Complete Interrupt flags */
-            SERCOM_SPI_HWINST->SPI.INTENCLR &= SERCOM_SPI_INTENCLR_DRE_Msk | SERCOM_SPI_INTENCLR_RXC_Msk | SERCOM_SPI_INTENSET_TXC_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->SPI.INTENCLR.w &= SERCOM_SPI_INTENCLR_DRE_Msk | SERCOM_SPI_INTENCLR_RXC_Msk | SERCOM_SPI_INTENSET_TXC_Msk;
 
-            /* Flush out any pending _SERCOM${SERCOM_INDEX} SPI IRQ with NVIC */
+            /* Flush out any pending SERCOM${SERCOM_INDEX} SPI IRQ with NVIC */
             NVIC_ClearPendingIRQ(SERCOM${SERCOM_INDEX}_IRQn);
 
             /* If it was only transmit, then ignore receiver overflow error, if any */
@@ -666,7 +653,7 @@ void SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void)
     instance. After reading the error, if any, they will be cleared.
 
    Remarks:
-    Refer plib_sercom${SERCOM_INDEX}_spi.h file for more information.
+    Refer plibSERCOM${SERCOM_INDEX}_spi.h file for more information.
 */
 
 SPI_ERROR SERCOM${SERCOM_INDEX}_SPI_ErrorGet(void)
@@ -674,7 +661,7 @@ SPI_ERROR SERCOM${SERCOM_INDEX}_SPI_ErrorGet(void)
     SPI_ERROR statusValue = SPI_ERROR_NONE;
 
     /* Checking for the Buffer overflow Status */
-    if((SERCOM_SPI_HWINST->SPI.STATUS & SERCOM_SPI_STATUS_BUFOVF_Msk) == SERCOM_SPI_STATUS_BUFOVF_Msk)
+    if((SERCOM${SERCOM_INDEX}_REGS->SPI.STATUS.w & SERCOM_SPI_STATUS_BUFOVF_Msk) == SERCOM_SPI_STATUS_BUFOVF_Msk)
     {
         statusValue = SPI_ERROR_OVERFLOW;
     }
