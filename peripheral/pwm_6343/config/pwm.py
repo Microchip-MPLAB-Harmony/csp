@@ -144,6 +144,9 @@ def pwmCalcFreq(symbol, event):
     clock_Hz = 0.0
     frequency = None
     masterClock_Hz = pwmGetMasterClock()
+    if (masterClock_Hz == 0):
+        Log.writeErrorMessage("Master clock frequency is zero")
+        masterClock_Hz = 1
     channelClock_Hz = pwmSym_PWM_CMR_CPRE[channelID].getSelectedKey()
     if (channelClock_Hz == "MCK"):
         clock_Hz = masterClock_Hz
@@ -174,10 +177,13 @@ def pwmCalcFreq(symbol, event):
 
     alignment = pwmSym_PWM_CMR_CALG[channelID].getSelectedKey()
     period = pwmSym_PWM_CPRD[channelID].getValue()
-    if (alignment == "LEFT_ALIGNED"):
-        frequency = 1.0 / (period / float(clock_Hz))
+    if (period != 0):
+        if (alignment == "LEFT_ALIGNED"):
+            frequency = 1.0 / (period / float(clock_Hz))
+        else:
+            frequency = 1.0 / (2.0 * period / float(clock_Hz))
     else:
-        frequency = 1.0 / (2.0 * period / float(clock_Hz))
+        frequency = 0;
 
     symbol.setLabel("**** PWM Frequency is " +str(frequency) +" Hz ****")
 
