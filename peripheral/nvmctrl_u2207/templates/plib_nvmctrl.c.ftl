@@ -190,7 +190,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void)
                                                          ${NVMCTRL_CACHE_ENABLE?then('', '| NVMCTRL_CTRLB_CACHEDIS_Msk')};</@compress>
 
     /* Clear error flags */
-    NVMCTRL_REGS->NVMCTRL_STATUS |= 0;
+    NVMCTRL_REGS->NVMCTRL_STATUS = (0x00U);
 
 <#if NVMCTRL_INTERRUPT_MODE == true>
     /* Clear interrupt flag */
@@ -274,7 +274,7 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite (const uint32_t address,
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_PBC_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 
     /* Writing 32-bit words in the given address */
-    for ( i = 0; i < (NVMCTRL${NVMCTRL_INDEX?string}_PAGESIZE/4); i++)
+    for ( i = 0; i < (NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PAGESIZE/4); i++)
     {
         *paddress++ = data[i];
     }
@@ -400,7 +400,7 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite(const uint32_t address, uint32_t *
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_PBC_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 
     /* writing 32-bit data into the given address */
-    for (i = 0; i < (NVMCTRL${NVMCTRL_INDEX?string}_PAGESIZE/4); i++)
+    for (i = 0; i < (NVMCTRL${NVMCTRL_INDEX?string}_FLASH_PAGESIZE/4); i++)
     {
         *paddress++ = data[i];
     }

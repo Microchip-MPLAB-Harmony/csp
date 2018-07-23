@@ -69,10 +69,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 // *****************************************************************************
-/* NVMCTRL${NVMCTRL_INDEX?string} Start Address Constant
+/* NVMCTRL${NVMCTRL_INDEX?string} Flash Start Address Constant
 
   Summary:
-    Defines the start address of NVMCTRL${NVMCTRL_INDEX?string}.
+    Defines the start address of NVMCTRL${NVMCTRL_INDEX?string} Flash.
 
   Description:
     This constant defines the start address of Flash. It is recommended for the
@@ -82,7 +82,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_START_ADDRESS           (0x00000000U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_START_ADDRESS         (${.vars["NVMCTRL_FLASH_ADDRESS"]}U)
 
 // *****************************************************************************
 /* NVMCTRL${NVMCTRL_INDEX?string} Flash Size Constant
@@ -98,10 +98,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_SIZE              (0x40000U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_SIZE       (${NVMCTRL_FLASH_SIZE}U)
 
 // *****************************************************************************
-/* NVMCTRL${NVMCTRL_INDEX?string} Page Size Constant
+/* NVMCTRL${NVMCTRL_INDEX?string} Flash Page Size Constant
 
   Summary:
     Defines the size (in bytes) of a NVMCTRL${NVMCTRL_INDEX?string} Page.
@@ -114,10 +114,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_PAGESIZE           (0x40U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_PAGESIZE          (${NVMCTRL_PAGE_SIZE}U)
 
 // *****************************************************************************
-/* NVMCTRL${NVMCTRL_INDEX?string} Row Size Constant
+/* NVMCTRL${NVMCTRL_INDEX?string} Flash Row Size Constant
 
   Summary:
     Defines the size (in bytes) of a NVMCTRL${NVMCTRL_INDEX?string} Row.
@@ -130,7 +130,77 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_ROWSIZE            (0x100U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_ROWSIZE           (${NVMCTRL_ROW_SIZE}U)
+
+<#if NVMCTRL_RWW_EEPROM == true>
+// *****************************************************************************
+/* NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM Start Address Constant
+
+  Summary:
+    Defines the start address of NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM.
+
+  Description:
+    This constant defines the start address of RWWEEPROM. It is recommended for
+    the target application to use this constant in place hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_START_ADDRESS     (${.vars["NVMCTRL_RWWEEPROM_ADDRESS"]}U)
+
+// *****************************************************************************
+/* NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM Size Constant
+
+  Summary:
+    Defines the size (in bytes) of RWWEEPROM.
+
+  Description:
+    This constant defines the size (in bytes) of RWWEEPROM. It is recommended
+    for the target application to use this constant in place hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_SIZE   (${NVMCTRL_RWWEEPROM_SIZE}U)
+
+// *****************************************************************************
+/* NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM Page Size Constant
+
+  Summary:
+    Defines the size (in bytes) of a NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM
+    Page.
+
+  Description:
+    This constant defines the size (in bytes) of a NVM RWWEEPROM page. It is
+    recommended for the target application to use this constant in place
+    hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PAGESIZE          (${NVMCTRL_RWWEEPROM_PAGE_SIZE}U)
+
+// *****************************************************************************
+/* NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM Row Size Constant
+
+  Summary:
+    Defines the size (in bytes) of a NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM
+    Row.
+
+  Description:
+    This constant defines the size (in bytes) of a NVM RWWEEPROM Row.
+    It is recommended for the target application to use this constant in place
+    hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_ROWSIZE           (${NVMCTRL_RWWEEPROM_ROW_SIZE}U)
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -604,7 +674,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
     NVMCTRL${NVMCTRL_INDEX?string}_PageWrite function, calling this function
     will not cause the CPU execution to stall. If the interrupt operation was
     enabled and if a callback was registered, then the callback function will be
-    called. The NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function can be used to 
+    called. The NVMCTRL${NVMCTRL_INDEX?string}_IsBusy() function can be used to
     poll for completion of the operation. The application should ensure that
     there are no other operations in progress before calling this function. This
     can be checked by calling the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy()
@@ -642,7 +712,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
   Example:
     <code>
 
-    // This code snippet shows how the 
+    // This code snippet shows how the
     // NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite function is
     // called and how the NVMCTRL${NVMCTRL_INDEX?string}_IsBusy function is used
     // to poll for completion. This assumes the library was generated for
