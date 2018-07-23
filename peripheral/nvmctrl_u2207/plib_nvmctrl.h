@@ -72,10 +72,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 // *****************************************************************************
-/* NVMCTRL Start Address Constant
+/* NVMCTRLx Flash Start Address Constant
 
   Summary:
-    Defines the start address of NVMCTRL.
+    Defines the start address of NVMCTRLx Flash.
 
   Description:
     This constant defines the start address of Flash. It is recommended for the
@@ -85,10 +85,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRLx_START_ADDRESS           (0x00000000U)
+#define NVMCTRLx_FLASH_START_ADDRESS         (0x00000000U)
 
 // *****************************************************************************
-/* NVMCTRL Flash Size Constant
+/* NVMCTRLx Flash Size Constant
 
   Summary:
     Defines the size (in bytes) of Flash.
@@ -101,13 +101,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRLx_FLASH_SIZE              (0x40000U)
+#define NVMCTRLx_FLASH_SIZE       (0x40000U)
 
 // *****************************************************************************
-/* NVMCTRL Page Size Constant
+/* NVMCTRLx Flash Page Size Constant
 
   Summary:
-    Defines the size (in bytes) of a NVMCTRL Page.
+    Defines the size (in bytes) of a NVMCTRLx Page.
 
   Description:
     This constant defines the size (in bytes) of a NVM page. It is recommended
@@ -117,13 +117,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRLx_PAGESIZE           (0x40U)
+#define NVMCTRLx_FLASH_PAGESIZE          (0x40U)
 
 // *****************************************************************************
-/* NVMCTRL Row Size Constant
+/* NVMCTRLx Flash Row Size Constant
 
   Summary:
-    Defines the size (in bytes) of a NVMCTRL Row.
+    Defines the size (in bytes) of a NVMCTRLx Row.
 
   Description:
     This constant defines the size (in bytes) of a NVM Row. It is recommended
@@ -133,7 +133,75 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRLx_ROWSIZE            (0x100U)
+#define NVMCTRLx_FLASH_ROWSIZE           (0x100U)
+
+// *****************************************************************************
+/* NVMCTRLx RWWEEPROM Start Address Constant
+
+  Summary:
+    Defines the start address of NVMCTRLx RWWEEPROM.
+
+  Description:
+    This constant defines the start address of RWWEEPROM. It is recommended for
+    the target application to use this constant in place hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRLx_RWWEEPROM_START_ADDRESS     (0x400000U)
+
+// *****************************************************************************
+/* NVMCTRLx RWWEEPROM Size Constant
+
+  Summary:
+    Defines the size (in bytes) of RWWEEPROM.
+
+  Description:
+    This constant defines the size (in bytes) of RWWEEPROM. It is recommended
+    for the target application to use this constant in place hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRLx_RWWEEPROM_SIZE   (0x2000U)
+
+// *****************************************************************************
+/* NVMCTRLx RWWEEPROM Page Size Constant
+
+  Summary:
+    Defines the size (in bytes) of a NVMCTRLx RWWEEPROM
+    Page.
+
+  Description:
+    This constant defines the size (in bytes) of a NVM RWWEEPROM page. It is
+    recommended for the target application to use this constant in place
+    hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRLx_RWWEEPROM_PAGESIZE          (0x40U)
+
+// *****************************************************************************
+/* NVMCTRLx RWWEEPROM Row Size Constant
+
+  Summary:
+    Defines the size (in bytes) of a NVMCTRLx RWWEEPROM
+    Row.
+
+  Description:
+    This constant defines the size (in bytes) of a NVM RWWEEPROM Row.
+    It is recommended for the target application to use this constant in place
+    hardcoded literals.
+
+  Remarks:
+    None.
+*/
+
+#define NVMCTRLx_RWWEEPROM_ROWSIZE           (0x100U)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -142,7 +210,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 // *****************************************************************************
-/* NVMCTRL Error Type
+/* NVMCTRLx Error Type
 
   Summary:
     Defines the NVMCTRL Error Type.
