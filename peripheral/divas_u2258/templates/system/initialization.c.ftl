@@ -1,0 +1,1 @@
+	DIVAS${DIVAS_INDEX}_Initialize();
