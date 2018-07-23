@@ -55,6 +55,12 @@ def instantiateComponent(divasComponent):
     divasSystemDefFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/system/definitions.h.ftl")
     divasSystemDefFile.setMarkup(True)
 
+    divasSystemInitFile = divasComponent.createFileSymbol("DIVAS_SYS_INIT", None)
+    divasSystemInitFile.setType("STRING")
+    divasSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    divasSystemInitFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/system/initialization.c.ftl")
+    divasSystemInitFile.setMarkup(True)
+
 
 
 
