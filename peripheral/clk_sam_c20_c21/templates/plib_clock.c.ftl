@@ -308,11 +308,11 @@ void CLOCK_Initialize (void)
     <#assign GCLK_ID_WRITELOCK = "GCLK_ID_" + i + "_WRITELOCK">
         <#if .vars[GCLK_ID_CHEN]?has_content>
             <#if (.vars[GCLK_ID_CHEN] != false)>
+	/* Selection of the Generator and write Lock for ${.vars[GCLK_ID_NAME]} */
+    GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] |= GCLK_PCHCTRL_GEN(${.vars[GCLK_ID_GENSEL]})${.vars[GCLK_ID_WRITELOCK]?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')};
+	
     /* ${.vars[GCLK_ID_NAME]} peripheral Channel Enable */
     GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] |= GCLK_PCHCTRL_CHEN_Msk;
-
-    /* Selection of the Generator and write Lock for ${.vars[GCLK_ID_NAME]} */
-    GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] |= GCLK_PCHCTRL_GEN(${.vars[GCLK_ID_GENSEL]})${.vars[GCLK_ID_WRITELOCK]?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')};
 
     while ((GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
     {
@@ -364,10 +364,6 @@ void OSCCTRL_Initialize(void)
 {
 <#if CONFIG_CLOCK_XOSC_ENABLE = true>
     /****************** XOSC Initialization   ********************************/
-    uint32_t xoscFrequency = 0;
-
-    /* Selection of the XOSC Frequency Value */
-    xoscFrequency = ${CONFIG_CLOCK_XOSC_FREQUENCY};
 
     /* Selection of the startup time ,StandBy */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_XOSCCTRL |= OSCCTRL_XOSCCTRL_STARTUP(${CONFIG_CLOCK_XOSC_STARTUP})
@@ -459,12 +455,12 @@ void OSCCTRL_Initialize(void)
      * and Low Power Enable
      */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DPLLCTRLB |= OSCCTRL_DPLLCTRLB_FILTER(${CONFIG_CLOCK_DPLL_FILTER}) |
-                                                              OSCCTRL_DPLLCTRLB_LTIME(${CONFIG_CLOCK_DPLL_LOCK_TIME})|
-                                                              ${CONFIG_CLOCK_DPLL_RUNSTDY?then('OSCCTRL_DPLLCTRLA_RUNSTDBY_Msk','')}
-                                                              OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL_REF_CLOCK})
-                                                              ${CONFIG_CLOCK_DPLL_LOCK_BYPASS?then('| OSCCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}
-                                                              ${CONFIG_CLOCK_DPLL_WAKEUP_FAST?then('| OSCCTRL_DPLLCTRLB_WUF_Msk', ' ')}
-                                                              ${CONFIG_CLOCK_DPLL_LOWPOWER_ENABLE?then('| OSCCTRL_DPLLCTRLB_LPEN_Msk', ' ')};</@compress>
+                                                                   OSCCTRL_DPLLCTRLB_LTIME(${CONFIG_CLOCK_DPLL_LOCK_TIME})|
+																   OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL_REF_CLOCK}) 
+                                                                   ${CONFIG_CLOCK_DPLL_RUNSTDY?then('| OSCCTRL_DPLLCTRLA_RUNSTDBY_Msk','')}
+                                                                   ${CONFIG_CLOCK_DPLL_LOCK_BYPASS?then('| OSCCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}
+                                                                   ${CONFIG_CLOCK_DPLL_WAKEUP_FAST?then('| OSCCTRL_DPLLCTRLB_WUF_Msk', ' ')}
+                                                                   ${CONFIG_CLOCK_DPLL_LOWPOWER_ENABLE?then('| OSCCTRL_DPLLCTRLB_LPEN_Msk', ' ')};</@compress>
 
     <#if CONFIG_CLOCK_DPLL_REF_CLOCK = "DPLL_REFERENCE_CLOCK_XOSC">
     /* Selection of the Clock Divider */
