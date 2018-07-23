@@ -10,7 +10,10 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-A5 Configuration")
 cortexMenu.setDescription("Configuration for Cortex A5")
 
+#load MMU with default 1:1 mapping so we can use cache
+
 # load clock manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a5d2/config/clk.py")
 
 # load device specific pin manager information
 
