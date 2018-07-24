@@ -99,7 +99,7 @@ this interface.
 
 void SERCOM${SERCOM_INDEX}_USART_Initialize( void );
 
-<#if USART_BAUDAPI_EN = true>
+<#if USART_SERIAL_SETUP_ENABLE = true>
 // *****************************************************************************
 /* Function:
     bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency,

@@ -77,7 +77,6 @@ extern "C" {
 // *****************************************************************************
 
 // *****************************************************************************
-
 /*
   Summary:
     List of transfer direction.
@@ -162,11 +161,11 @@ typedef enum
 
 */
 
-typedef enum {
-
+typedef enum
+{
     SERCOM_I2C_STATE_IDLE,
 
-	SERCOM_I2C_STATE_ADDR_SEND,
+    SERCOM_I2C_STATE_ADDR_SEND,
 
     SERCOM_I2C_STATE_TRANSFER_WRITE,
 
@@ -213,22 +212,43 @@ typedef struct
     /* Transfer status */
     SERCOM_I2C_TRANSFER_STATUS status;
 
-	/* Transfer error */
-	SERCOM_I2C_ERROR error;
+    /* Transfer error */
+    SERCOM_I2C_ERROR error;
 
     /* Transfer Event Callback */
     SERCOM_I2C_CALLBACK callback;
 
-	/* Current TRB */
-	volatile uint32_t currentTRB;
+    /* Current TRB */
+    volatile uint32_t currentTRB;
 
-	/* Processed TRB data length */
-	uint8_t processedTRBDataLength;
+    /* Processed TRB data length */
+    uint8_t processedTRBDataLength;
 
     /* Transfer context */
     uintptr_t context;
 
 } SERCOM_I2C_OBJ;
+
+// *****************************************************************************
+/* I2C Transfer Setup Parameters
+
+  Summary:
+    Identifies the setup parameters which can be changed dynamically.
+
+  Description
+    This structure identifies the possible setup parameters for I2C
+    which can be changed dynamically if needed.
+
+  Remarks:
+    None.
+*/
+
+typedef struct
+{
+    /* I2C Clock Speed */
+    uint32_t clkSpeed;
+
+} I2C_TRANSFER_SETUP;
 
 // *****************************************************************************
 /* Transaction Request Block

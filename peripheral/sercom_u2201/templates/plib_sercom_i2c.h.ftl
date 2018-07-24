@@ -107,8 +107,58 @@ void SERCOM${SERCOM_INDEX}_I2C_Initialize(void);
 
 // *****************************************************************************
 /* Function:
+    bool SERCOM${SERCOM_INDEX}_I2C_TransferSetup( I2C_TRANSFER_SETUP * setup,
+                                                           uint32_t srcClkFreq )
+
+  Summary:
+    Configure SERCOM I2C operational parameters at run time.
+
+  Description:
+    This function allows the application to change the SERCOM I2C operational
+    parameter at run time. The application can thus override the MHC defined
+    configuration for these parameters. The parameter are specified via the
+    I2C_TRANSFER_SETUP type setup parameter. Each member of this parameter
+    should be initialized to the desired value.
+
+    The application may feel need to call this function in situation where
+    multiple I2C slaves, each with different operation paramertes, are connected
+    to one I2C master. This function can thus be used to setup the I2C Master to
+    meet the communication needs of the slave.
+
+    Calling this function will affect any ongoing communication. The application
+    must thus ensure that there is no on-going communication on the I2C before
+    calling this function.
+
+  Precondition:
+    SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the
+    associated SERCOM instance. The transfer status should not be busy.
+
+  Parameters:
+    setup - Pointer to the structure containing the transfer setup.
+    srcClkFreq - I2C Peripheral Clock Source Frequency.
+
+  Returns:
+    true - Transfer setup was updated Successfully.
+    false - Failure while updating transfer setup.
+
+  Example:
+    <code>
+        I2C_TRANSFER_SETUP setup = { 400000 };
+
+        SERCOM${SERCOM_INDEX}_I2C_TransferSetup( &setup, 0 );
+    </code>
+
+  Remarks:
+    srcClkFreq overrides any change in the peripheral clock frequency.
+    If configured to zero PLib takes the peripheral clock frequency from MHC.
+*/
+
+bool SERCOM${SERCOM_INDEX}_I2C_TransferSetup( I2C_TRANSFER_SETUP * setup, uint32_t srcClkFreq );
+
+// *****************************************************************************
+/* Function:
     bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead(uint16_t address,
-												uint8_t *pdata, uint8_t length)
+                                                uint8_t *pdata, uint8_t length)
 
   Summary:
     Allocates and builds the Read Transaction Request Block (TRB).
@@ -116,9 +166,9 @@ void SERCOM${SERCOM_INDEX}_I2C_Initialize(void);
   Description:
     This function allocates and builds a Read Transaction Request Block. The
     transaction will be executed when the SERCOM${SERCOM_INDEX}_I2C_TRBTransfer()
-	function is called. A transaction is marked complete when either all the
-	request bytes have been received or when a bus error or a NAK condition has
-	occurred. The application can build multiple Read TRBs.
+    function is called. A transaction is marked complete when either all the
+    request bytes have been received or when a bus error or a NAK condition has
+    occurred. The application can build multiple Read TRBs.
 
     The transaction will be executed in the same order in which the build
     function was called. A I2C Repeated Start condition will be placed on the
@@ -130,8 +180,8 @@ void SERCOM${SERCOM_INDEX}_I2C_Initialize(void);
 
   Precondition:
     SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the associated
-	SERCOM${SERCOM_INDEX} I2C instance. The required number of TRB should have
-	been configured in MHC.
+    SERCOM${SERCOM_INDEX} I2C instance. The required number of TRB should have
+    been configured in MHC.
 
   Parameters:
     address - 7-bit / 10-bit slave address.
@@ -153,12 +203,12 @@ void SERCOM${SERCOM_INDEX}_I2C_Initialize(void);
   Example:
     <code>
         // Refer to the description of the SERCOM${SERCOM_INDEX}_I2C_TRBTransfer
-		// function for example usage.
+        // function for example usage.
     </code>
 
   Remarks:
     Number of times SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead is called is limited
-	to number of TRB's available.
+    to number of TRB's available.
 */
 
 bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length);
@@ -166,7 +216,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead(uint16_t address, uint8_t *pdata, ui
 // *****************************************************************************
 /* Function:
     bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildWrite(uint16_t address,
-												 uint8_t *pdata, uint8_t length)
+                                                 uint8_t *pdata, uint8_t length)
 
   Summary:
     Allocates and Builds the Write Transaction Request Block.
@@ -174,9 +224,9 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead(uint16_t address, uint8_t *pdata, ui
   Description:
     This function allocates and builds a Write Transaction Request Block. The
     transaction will be executed when the SERCOM${SERCOM_INDEX}_I2C_TRBTransfer()
-	function is called. A transaction is marked complete when either all the
-	request bytes have been received or when a bus error or a NAK condition has
-	occurred. The application can build multiple Write TRBs.
+    function is called. A transaction is marked complete when either all the
+    request bytes have been received or when a bus error or a NAK condition has
+    occurred. The application can build multiple Write TRBs.
 
     The transaction will be executed in the same order in which the build
     function was called. A I2C Repeated Start condition will be placed on the
@@ -188,8 +238,8 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead(uint16_t address, uint8_t *pdata, ui
 
   Precondition:
     SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the associated
-	SERCOM${SERCOM_INDEX} I2C instance. The required number of TRB should have
-	been configured in MHC.
+    SERCOM${SERCOM_INDEX} I2C instance. The required number of TRB should have
+    been configured in MHC.
 
   Parameters:
     address - 7-bit / 10-bit slave address.
@@ -211,12 +261,12 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead(uint16_t address, uint8_t *pdata, ui
   Example:
     <code>
         // Refer to the description of the SERCOM${SERCOM_INDEX}_I2C_TRBTransfer
-		// function for example usage.
+        // function for example usage.
     </code>
 
   Remarks:
     Number of times SERCOM${SERCOM_INDEX}_I2C_TRBBuildWrite is called is limited
-	to number of TRB's available.
+    to number of TRB's available.
 */
 
 bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length);
@@ -231,9 +281,9 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildWrite(uint16_t address, uint8_t *pdata, u
   Description:
     This function submits all TRB's that were built by calling
     SERCOM${SERCOM_INDEX}_I2C_TRBBuildRead and SERCOM${SERCOM_INDEX}_I2C_TRBBuildWrite.
-	Calling the transfer function will start the transfer. A I2C Repeated Start
-	condition will be placed on the bus after the completion of each TRB. A I2C
-	Stop condition will placed on the bus after processing the the last TRB.
+    Calling the transfer function will start the transfer. A I2C Repeated Start
+    condition will be placed on the bus after the completion of each TRB. A I2C
+    Stop condition will placed on the bus after processing the the last TRB.
 
     The function is non-blocking. It will trigger bus activity and will return
     immediately. The TRBs will be processed in the SERCOM interrupt. The
@@ -242,8 +292,8 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildWrite(uint16_t address, uint8_t *pdata, u
     application must use the SERCOM1_I2C_TransferStatusGet() function to get the
     status of an on-going transfer. Alternatively it can register a callback
     function through the SERCOM${SERCOM_INDEX}_I2C_CallbackRegister() function.
-	This callback function will be called when all the TRBs have been processed
-	or when an error has occurred.
+    This callback function will be called when all the TRBs have been processed
+    or when an error has occurred.
 
     The transfer function will process TRBs in the same order in which they were
     built. When a transfer is complete successfully or unsuccessfully, all TRBs
@@ -252,9 +302,9 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBBuildWrite(uint16_t address, uint8_t *pdata, u
 
   Precondition:
     SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the associated
-	SERCOM I2C instance. The required TRBs should have been built. If a callback
-	function is to be called, this should have been registered before calling
-	starting the transfer.
+    SERCOM I2C instance. The required TRBs should have been built. If a callback
+    function is to be called, this should have been registered before calling
+    starting the transfer.
 
   Parameters:
     None.
@@ -320,7 +370,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBTransfer(void);
 // *****************************************************************************
 /* Function:
     bool SERCOM${SERCOM_INDEX}_I2C_Read(uint16_t address, uint8_t *pdata,
-										uint8_t length)
+                                                                 uint8_t length)
 
   Summary:
     Reads data from the slave.
@@ -344,32 +394,32 @@ bool SERCOM${SERCOM_INDEX}_I2C_TRBTransfer(void);
 
     The library will call the registered callback function when the transfer has
     terminated. Additionally, the SERCOM${SERCOM_INDEX}_I2C_TransferStatusGet()
-	function will return SERCOM_I2C_TRANSFER_ERROR or SERCOM_I2C_TRANSFER_SUCCESS
-	depending on the completion status of the transfer. If a callback is desired,
-	this should have been registered (by calling the
-	SERCOM${SERCOM_INDEX}_I2C_CallbackRegister) before calling the read function.
+    function will return SERCOM_I2C_TRANSFER_ERROR or SERCOM_I2C_TRANSFER_SUCCESS
+    depending on the completion status of the transfer. If a callback is desired,
+    this should have been registered (by calling the
+    SERCOM${SERCOM_INDEX}_I2C_CallbackRegister) before calling the read function.
 
   Precondition:
     SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the associated
-	SERCOM I2C instance. At least one TRB should be available.
+    SERCOM I2C instance. At least one TRB should be available.
 
   Parameters:
     address - 7-bit / 10-bit slave address.
 
     data    - pointer to destination data buffer where the received data should
-			  be stored.
+              be stored.
 
     length  - length of data buffer in number of bytes. Also the number of bytes
-			  to be read.
+              to be read.
 
   Returns:
     true  - The request was placed successfully and the bus activity was
-			initiated.
+            initiated.
 
     false - The request failed. No bus activity was initiated. This can happen
-			if the receive buffer pointer is NULL, or if the lenght parameter
-			is 0 or if there was already a transfer in progress when this
-			function was called or if a TRB was not available.
+            if the receive buffer pointer is NULL, or if the lenght parameter
+            is 0 or if there was already a transfer in progress when this
+            function was called or if a TRB was not available.
 
   Example:
     <code>
@@ -405,7 +455,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t le
 // *****************************************************************************
 /* Function:
     bool SERCOM${SERCOM_INDEX}_I2C_Write(uint16_t address, uint8_t *pdata,
-										 uint8_t length)
+                                                                 uint8_t length)
 
   Summary:
     Writes data to the slave.
@@ -429,32 +479,32 @@ bool SERCOM${SERCOM_INDEX}_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t le
 
     The library will call the registered callback function when the transfer has
     terminated. Additionally, the SERCOM${SERCOM_INDEX}_I2C_TransferStatusGet()
-	function will return SERCOM_I2C_TRANSFER_ERROR or SERCOM_I2C_TRANSFER_SUCCESS
-	depending on the completion status of the transfer. If a callback is desired,
-	this should should have been register (by calling the
-	SERCOM${SERCOM_INDEX}_I2C_CallbackRegister) before calling the write function.
+    function will return SERCOM_I2C_TRANSFER_ERROR or SERCOM_I2C_TRANSFER_SUCCESS
+    depending on the completion status of the transfer. If a callback is desired,
+    this should should have been register (by calling the
+    SERCOM${SERCOM_INDEX}_I2C_CallbackRegister) before calling the write function.
 
   Precondition:
     SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the associated
-	SERCOM I2C instance.  At least one TRB should be available.
+    SERCOM I2C instance.  At least one TRB should be available.
 
   Parameters:
     address - 7-bit / 10-bit slave address.
 
     data    - pointer to source data buffer that contains the data to be
-			  transmitted.
+              transmitted.
 
     length  - length of data buffer in number of bytes. Also the number of bytes
-			  to be written.
+              to be written.
 
   Returns:
     true  - The request was placed successfully and the bus activity was
     initiated.
 
     false - The request failed. No bus activity was initiated. This can happen
-			if the transmit buffer pointer is NULL, or if the lenght parameter
-			is 0 or if there was already a transfer in progress when this function
-			was called or if a TRB is not available.
+            if the transmit buffer pointer is NULL, or if the lenght parameter
+            is 0 or if there was already a transfer in progress when this function
+            was called or if a TRB is not available.
 
   Example:
     <code>
@@ -488,7 +538,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t l
 // *****************************************************************************
 /* Function:
     bool SERCOM${SERCOM_INDEX}_I2C_WriteRead(uint16_t address, uint8_t *wdata,
-							   uint8_t wlength, uint8_t *rdata, uint8_t rlength)
+                               uint8_t wlength, uint8_t *rdata, uint8_t rlength)
 
   Summary:
     Write and Read data from Slave.
@@ -516,14 +566,14 @@ bool SERCOM${SERCOM_INDEX}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t l
 
     The library will call the registered callback function when the transfer has
     terminated. Additionally, the SERCOM${SERCOM_INDEX}_I2C_TransferStatusGet()
-	function will return SERCOM_I2C_TRANSFER_ERROR or SERCOM_I2C_TRANSFER_SUCCESS
-	depending on the completion status of the transfer. If a callback is desired,
-	this should should have been register (by calling the
-	SERCOM${SERCOM_INDEX}_I2C_CallbackRegister) before calling the write function.
+    function will return SERCOM_I2C_TRANSFER_ERROR or SERCOM_I2C_TRANSFER_SUCCESS
+    depending on the completion status of the transfer. If a callback is desired,
+    this should should have been register (by calling the
+    SERCOM${SERCOM_INDEX}_I2C_CallbackRegister) before calling the write function.
 
   Precondition:
     SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the associated
-	SERCOM I2C instance.  A minimum of two TRB's should be available.
+    SERCOM I2C instance.  A minimum of two TRB's should be available.
 
   Parameters:
     address - 7-bit / 10-bit slave address.
@@ -573,10 +623,10 @@ bool SERCOM${SERCOM_INDEX}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t l
   Remarks:
     Calling this function is not the same as calling the SERCOM${SERCOM_INDEX}_I2C_Write()
     function and then calling the SERCOM${SERCOM_INDEX}_I2C_Read() function.
-	The SERCOM${SERCOM_INDEX}_I2C_WriteRead function will insert a Repeated Start
-	condition between the Write and the Read stages. The SERCOM${SERCOM_INDEX}_I2C_Write()
-	and the SERCOM${SERCOM_INDEX}_I2C_Read() function insert a stop condtion after
-	the write and the read has completed.
+    The SERCOM${SERCOM_INDEX}_I2C_WriteRead function will insert a Repeated Start
+    condition between the Write and the Read stages. The SERCOM${SERCOM_INDEX}_I2C_Write()
+    and the SERCOM${SERCOM_INDEX}_I2C_Read() function insert a stop condtion after
+    the write and the read has completed.
 */
 
 bool SERCOM${SERCOM_INDEX}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);
@@ -600,8 +650,8 @@ bool SERCOM${SERCOM_INDEX}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8
 
    Precondition:
     SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the associated
-	SERCOM I2C instance. Any of the transfer functions should have been called
-	atleast once before this function is called.
+    SERCOM I2C instance. Any of the transfer functions should have been called
+    atleast once before this function is called.
 
    Parameters:
     None.
@@ -613,7 +663,7 @@ bool SERCOM${SERCOM_INDEX}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8
    Example:
     <code>
         // Refer to the description of the SERCOM${SERCOM_INDEX}_I2C_WriteRead()
-		// function for example usage.
+        // function for example usage.
     </code>
 
    Remarks:
@@ -621,6 +671,52 @@ bool SERCOM${SERCOM_INDEX}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8
 */
 
 SERCOM_I2C_TRANSFER_STATUS SERCOM${SERCOM_INDEX}_I2C_TransferStatusGet(void);
+
+// *****************************************************************************
+/* Function:
+    bool SERCOM${SERCOM_INDEX}_I2C_IsBusy(void)
+
+  Summary:
+    Returns the Peripheral busy status.
+
+  Description:
+    This function ture if the SERCOM ${SERCOM_INDEX}I2C module is busy with a
+    transfer. The application can use the function to check if SERCOM
+    ${SERCOM_INDEX}I2C module is busy before calling any of the data transfer
+    functions. The library does not allow a data transfer operation if another
+    transfer operation is already in progress.
+
+  Precondition:
+    SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the
+    associated SERCOM instance.
+
+  Parameters:
+    None.
+
+  Returns:
+    true - Busy.
+    false - Not busy.
+
+  Example:
+    <code>
+        uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
+
+        // wait for the current transfer to complete
+        while(SERCOM${SERCOM_INDEX}_I2C_IsBusy( ));
+
+        // perform the next transfer
+        if(!SERCOM${SERCOM_INDEX}_I2C_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+        {
+            // error handling
+        }
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+bool SERCOM${SERCOM_INDEX}_I2C_IsBusy(void);
 
 // *****************************************************************************
 /* Function:
@@ -633,12 +729,12 @@ SERCOM_I2C_TRANSFER_STATUS SERCOM${SERCOM_INDEX}_I2C_TransferStatusGet(void);
     This function returns the latest error that occurred on the bus. The
     function can be called to identify the error cause when the
     SERCOM${SERCOM_INDEX}_I2C_TransferStatusGet() function returns a
-	SERCOM_I2C_TRANSFER_ERROR status. The errors are cleared when the next
-	transfer function is initiated.
+    SERCOM_I2C_TRANSFER_ERROR status. The errors are cleared when the next
+    transfer function is initiated.
 
   Precondition:
     SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the
-	associated SERCOM I2C instance.
+    associated SERCOM I2C instance.
 
   Parameters:
     None.
@@ -649,8 +745,8 @@ SERCOM_I2C_TRANSFER_STATUS SERCOM${SERCOM_INDEX}_I2C_TransferStatusGet(void);
 
   Example:
     <code>
-		// Refer to the description of the SERCOM${SERCOM_INDEX}_I2C_TRBTransfer()
-		// function for example usage.
+        // Refer to the description of the SERCOM${SERCOM_INDEX}_I2C_TRBTransfer()
+        // function for example usage.
     </code>
 
   Remarks:
@@ -662,7 +758,7 @@ SERCOM_I2C_ERROR SERCOM${SERCOM_INDEX}_I2C_ErrorGet(void);
 // *****************************************************************************
 /* Function:
     void SERCOM${SERCOM_INDEX}_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback,
-													uintptr_t context)
+                                                              uintptr_t context)
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -677,7 +773,7 @@ SERCOM_I2C_ERROR SERCOM${SERCOM_INDEX}_I2C_ErrorGet(void);
 
   Precondition:
     SERCOM${SERCOM_INDEX}_I2C_Initialize must have been called for the associated
-	SERCOM I2C instance.
+    SERCOM I2C instance.
 
   Parameters:
     callback      - A pointer to a function with a calling signature defined by
@@ -701,6 +797,39 @@ SERCOM_I2C_ERROR SERCOM${SERCOM_INDEX}_I2C_ErrorGet(void);
 */
 
 void SERCOM${SERCOM_INDEX}_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback, uintptr_t contextHandle);
+
+// *****************************************************************************
+/* Function:
+    void SERCOM${SERCOM_INDEX}_I2C_InterruptHandler( void )
+
+  Summary:
+    Sercom Handler, handles all sercom interrupt.
+
+  Description:
+    This function handles all the operations post interrupt for
+    all sercom I2C interrupts.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    void SERCOM${SERCOM_INDEX}_I2C_InterruptHandler( void )
+    {
+        // serve interrupts
+    }
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+void SERCOM${SERCOM_INDEX}_I2C_InterruptHandler( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
