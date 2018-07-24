@@ -114,7 +114,7 @@ this interface.
 
 void SERCOM${SERCOM_INDEX}_SPI_Initialize (void);
 
-<#if SPI_TRANSFERSETUP= true>
+<#if SPI_TRANSFER_SETUP_ENABLE = true>
 // *****************************************************************************
 /* Function:
     bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup,
@@ -378,7 +378,10 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
 
 */
 
-#define SERCOM${SERCOM_INDEX}_SPI_Write(pTransmitData, txSize)    ((bool)(SERCOM${SERCOM_INDEX}_SPI_WriteRead(pTransmitData, txSize, NULL, 0)))
+static inline bool SERCOM${SERCOM_INDEX}_SPI_Write(void* pTransmitData, size_t txSize)
+{
+    return SERCOM${SERCOM_INDEX}_SPI_WriteRead(pTransmitData, txSize, NULL, 0);
+}
 
 // *****************************************************************************
 /* Function:
@@ -459,7 +462,10 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
     None.
 */
 
-#define SERCOM${SERCOM_INDEX}_SPI_Read(pReceiveData, rxSize)      ((bool)(SERCOM${SERCOM_INDEX}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize)))
+static inline bool SERCOM${SERCOM_INDEX}_SPI_Read(void* pReceiveData, size_t rxSize)
+{
+    return SERCOM${SERCOM_INDEX}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize);
+}
 
 <#if SPI_INTERRUPT_MODE = true>
 // *****************************************************************************

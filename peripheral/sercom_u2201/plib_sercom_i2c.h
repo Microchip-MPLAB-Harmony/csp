@@ -224,6 +224,56 @@ void SERCOMx_I2C_Initialize(void);
 
 // *****************************************************************************
 /* Function:
+    bool SERCOMx_I2C_TransferSetup( I2C_TRANSFER_SETUP * setup,
+                                                           uint32_t srcClkFreq )
+
+  Summary:
+    Configure SERCOM I2C operational parameters at run time.
+
+  Description:
+    This function allows the application to change the SERCOM I2C operational
+    parameter at run time. The application can thus override the MHC defined
+    configuration for these parameters. The parameter are specified via the
+    I2C_TRANSFER_SETUP type setup parameter. Each member of this parameter
+    should be initialized to the desired value.
+
+    The application may feel need to call this function in situation where
+    multiple I2C slaves, each with different operation paramertes, are connected
+    to one I2C master. This function can thus be used to setup the I2C Master to
+    meet the communication needs of the slave.
+
+    Calling this function will affect any ongoing communication. The application
+    must thus ensure that there is no on-going communication on the I2C before
+    calling this function.
+
+  Precondition:
+    SERCOMx_I2C_Initialize must have been called for the
+    associated SERCOM instance. The transfer status should not be busy.
+
+  Parameters:
+    setup - Pointer to the structure containing the transfer setup.
+    srcClkFreq - I2C Peripheral Clock Source Frequency.
+
+  Returns:
+    true - Transfer setup was updated Successfully.
+    false - Failure while updating transfer setup.
+
+  Example:
+    <code>
+        I2C_TRANSFER_SETUP setup = { 400000 };
+
+        SERCOMx_I2C_TransferSetup( &setup, 0 );
+    </code>
+
+  Remarks:
+    srcClkFreq overrides any change in the peripheral clock frequency.
+    If configured to zero PLib takes the peripheral clock frequency from MHC.
+*/
+
+bool SERCOMx_I2C_TransferSetup( I2C_TRANSFER_SETUP * setup, uint32_t srcClkFreq );
+
+// *****************************************************************************
+/* Function:
     bool SERCOMx_I2C_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
 
   Summary:
@@ -469,19 +519,19 @@ bool SERCOMx_I2C_TRBTransfer(void);
     address - 7-bit / 10-bit slave address.
 
     data    - pointer to destination data buffer where the received data should
-			  be stored.
+              be stored.
 
     length  - length of data buffer in number of bytes. Also the number of bytes
-			  to be read.
+              to be read.
 
   Returns:
     true  - The request was placed successfully and the bus activity was
-			initiated.
+            initiated.
 
     false - The request failed. No bus activity was initiated. This can happen
-			if the receive buffer pointer is NULL, or if the lenght parameter
-			is 0 or if there was already a transfer in progress when this
-			function was called or if a TRB was not available.
+            if the receive buffer pointer is NULL, or if the lenght parameter
+            is 0 or if there was already a transfer in progress when this
+            function was called or if a TRB was not available.
 
   Example:
     <code>
@@ -553,19 +603,19 @@ bool SERCOMx_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t length);
     address - 7-bit / 10-bit slave address.
 
     data    - pointer to source data buffer that contains the data to be
-			  transmitted.
+              transmitted.
 
     length  - length of data buffer in number of bytes. Also the number of bytes
-			  to be written.
+              to be written.
 
   Returns:
     true  - The request was placed successfully and the bus activity was
-			initiated.
+            initiated.
 
     false - The request failed. No bus activity was initiated. This can happen
-			if the transmit buffer pointer is NULL, or if the lenght parameter
-			is 0 or if there was already a transfer in progress when this
-			function was called or if a TRB is not available.
+            if the transmit buffer pointer is NULL, or if the lenght parameter
+            is 0 or if there was already a transfer in progress when this
+            function was called or if a TRB is not available.
 
   Example:
     <code>
@@ -652,10 +702,10 @@ bool SERCOMx_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t length);
     initiated.
 
     false - The request failed. No bus activity was initiated. This can happen
-			if the transmit/receive buffer pointer is NULL, or if the
-			rlength/wlength parameter is 0 or if there was already a transfer
-			in progress when this function was called or if a TRB is not
-			available.
+            if the transmit/receive buffer pointer is NULL, or if the
+            rlength/wlength parameter is 0 or if there was already a transfer
+            in progress when this function was called or if a TRB is not
+            available.
 
   Example:
     <code>
@@ -685,10 +735,10 @@ bool SERCOMx_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t length);
   Remarks:
     Calling this function is not the same as calling the SERCOMx_I2C_Write()
     function and then calling the SERCOMx_I2C_Read() function.
-	The SERCOMx_I2C_WriteRead function will insert a Repeated Start condition
-	between the Write and the Read stages. The SERCOMx_I2C_Write() and the
+    The SERCOMx_I2C_WriteRead function will insert a Repeated Start condition
+    between the Write and the Read stages. The SERCOMx_I2C_Write() and the
     SERCOMx_I2C_Read() function insert a stop condtion after the write and
-	the read has completed.
+    the read has completed.
 */
 
 bool SERCOMx_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);
@@ -733,6 +783,52 @@ bool SERCOMx_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, ui
 */
 
 SERCOM_I2C_TRANSFER_STATUS SERCOMx_I2C_TransferStatusGet(void);
+
+// *****************************************************************************
+/* Function:
+    bool SERCOMx_I2C_IsBusy(void)
+
+  Summary:
+    Returns the Peripheral busy status.
+
+  Description:
+    This function ture if the SERCOMx I2C module is busy with a
+    transfer. The application can use the function to check if SERCOMx I2C
+    module is busy before calling any of the data transfer functions. The
+    library does not allow a data transfer operation if another transfer
+    operation is already in progress.
+
+  Precondition:
+    SERCOMx_I2C_Initialize must have been called for the
+    associated SERCOM instance.
+
+  Parameters:
+    None.
+
+  Returns:
+    true - Busy.
+    false - Not busy.
+
+  Example:
+    <code>
+        uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
+
+        // wait for the current transfer to complete
+        while(SERCOMx_I2C_IsBusy( ));
+
+        // perform the next transfer
+        if(!SERCOMx_I2C_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+        {
+            // error handling
+        }
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+bool SERCOMx_I2C_IsBusy(void);
 
 // *****************************************************************************
 /* Function:
