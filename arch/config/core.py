@@ -12,7 +12,7 @@ def instantiateComponent(coreComponent):
     global appHeaderName
 
     devMenu = coreComponent.createMenuSymbol("CoreDevMenu", None)
-    devMenu.setLabel("Device Configuration")
+    devMenu.setLabel("Device & Project Configuration")
 
     devCfgMenu = coreComponent.createMenuSymbol("CoreCfgMenu", devMenu)
     devCfgMenu.setLabel(Variables.get("__PROCESSOR") + " Device Configuration")
@@ -26,6 +26,32 @@ def instantiateComponent(coreComponent):
     stdioEnable.setVisible(False)
     stdioEnable.setDefaultValue(False)
     stdioEnable.setDependencies(stdioActivated, ["stdio.STDIO_ENABLE"])
+
+    projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
+    projMenu.setLabel("Project Configuration")
+
+    toolchainMenu = coreComponent.createMenuSymbol("CoreToolchainMenu", projMenu)
+    toolchainMenu.setLabel("Toolchain Selection")
+
+    xc32Sym = coreComponent.createBooleanSymbol("XC32", toolchainMenu)
+    xc32Sym.setLabel("XC32 Compiler")
+    xc32Sym.setDefaultValue(True)
+    xc32Sym.setReadOnly(True)
+
+
+    xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", projMenu)
+    xc32Menu.setLabel("XC32 (Global Options)")
+
+    xc32ldMenu = coreComponent.createMenuSymbol("CoreXC32_LD", xc32Menu)
+    xc32ldMenu.setLabel("xc32-ld")
+
+    xc32ldGeneralMenu = coreComponent.createMenuSymbol("CoreXC32_LD_General", xc32ldMenu)
+    xc32ldGeneralMenu.setLabel("General")
+
+    heapSize = coreComponent.createIntegerSymbol("HEAP_SIZE", xc32ldGeneralMenu)
+    heapSize.setLabel("Heap Size (Bytes)")
+    heapSize.setDefaultValue(0)
+    heapSize.setVisible(True)
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
@@ -198,6 +224,13 @@ def instantiateComponent(coreComponent):
     intSourceFile.setProjectPath("config/" + configName + "/")
     intSourceFile.setType("SOURCE")
 
+    # set XC32 heap size
+    xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
+    xc32HeapSizeSym.setCategory("C32-LD")
+    xc32HeapSizeSym.setKey("heap-size")
+    xc32HeapSizeSym.setValue("")
+    xc32HeapSizeSym.setDependencies(xc32HeapSize, ["HEAP_SIZE"])
+
     # set XC32 include path
     defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
     defSym.setCategory("C32")
@@ -213,6 +246,10 @@ def instantiateComponent(coreComponent):
 
     # load device specific information, clock and pin manager
     execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")
+
+def xc32HeapSize(symbol, event):
+     symbol.setValue(str(event["value"]))
+
 
 def genAppSourceFile(symbol, event):
     global appSourceFile
