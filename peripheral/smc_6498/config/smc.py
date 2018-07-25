@@ -189,7 +189,7 @@ def instantiateComponent(smcComponent):
         # SMC Read Cycle Timings
         smcSym_SMC_CYCLE_TIMING_NRD_CS = smcComponent.createIntegerSymbol("SMC_NRD_CYCLE_CS" + str(smcChipSelNum), smcSym_READ_TIMING_CS)
         smcSym_SMC_CYCLE_TIMING_NRD_CS.setLabel(smcRegBitField_CYCLE_NRD_CYCLE.getAttribute("caption"))
-        smcSym_SMC_CYCLE_TIMING_NRD_CS.setMin(SMC_CYCLE_DEFAULT_VALUE)
+        smcSym_SMC_CYCLE_TIMING_NRD_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_SMC_CYCLE_TIMING_NRD_CS.setMax(smcConvertMaskToInt(smcRegBitField_CYCLE_NRD_CYCLE.getAttribute("mask")))
         smcSym_SMC_CYCLE_TIMING_NRD_CS.setDefaultValue(SMC_CYCLE_DEFAULT_VALUE)
 
@@ -226,7 +226,7 @@ def instantiateComponent(smcComponent):
         # SMC Write Cycle Timings
         smcSym_CYCLE_TIMING_NWE_CS = smcComponent.createIntegerSymbol("SMC_NWE_CYCLE_CS" + str(smcChipSelNum), smcSym_WRITE_TIMING_CS)
         smcSym_CYCLE_TIMING_NWE_CS.setLabel(smcRegBitField_CYCLE_NWE_CYCLE.getAttribute("caption"))
-        smcSym_CYCLE_TIMING_NWE_CS.setMin(SMC_CYCLE_DEFAULT_VALUE)
+        smcSym_CYCLE_TIMING_NWE_CS.setMin(SMC_DEFAULT_MIN_VALUE)
         smcSym_CYCLE_TIMING_NWE_CS.setMax(smcConvertMaskToInt(smcRegBitField_CYCLE_NWE_CYCLE.getAttribute("mask")))
         smcSym_CYCLE_TIMING_NWE_CS.setDefaultValue(SMC_CYCLE_DEFAULT_VALUE)
 
