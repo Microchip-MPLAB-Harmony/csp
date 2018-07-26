@@ -27,8 +27,11 @@ def loadModule():
 	print("Load Module: Device Family Pack (DFP)")
 	dfpComponent = Module.CreateComponent("dfp", "Device Family Pack (DFP)", "/Packs/", "config/dfp.py")
 
-	print("Load Module: CMSIS Pack")
-	cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis.py")
+	if "SAM9" in Variables.get("__PROCESSOR"):
+	    print("Processor doesn't suport CMSIS.  Skipping...")
+        else:
+            print("Load Module: CMSIS Pack")
+            cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis.py")
 
 	print("Load Module: CSP System")
 	coreComponent = Module.CreateSharedComponent("core", "System", "/", "config/core.py")
