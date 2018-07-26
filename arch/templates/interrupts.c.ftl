@@ -63,6 +63,7 @@ ${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 // *****************************************************************************
 
 <#if __PROCESSOR?matches("ATSAMA5.*")>
+<#elseif __PROCESSOR?matches("ATSAM9X60.*")>
 <#else>
 <#include "interrupts_xc32_cortex_m.c.ftl">
 </#if>
