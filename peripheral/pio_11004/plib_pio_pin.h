@@ -80,7 +80,7 @@ static inline bool PIO_PinRead(PIO_PIN pin)
 
 // *****************************************************************************
 /* Function:
-    bool PIO_PinReadLatch ( PIO_PIN pin )
+    bool PIO_PinLatchRead ( PIO_PIN pin )
 
   Summary:
     Read the value driven on the selected pin.
@@ -88,9 +88,9 @@ static inline bool PIO_PinRead(PIO_PIN pin)
   Remarks:
     See plib_pio.h for more details.
 */
-static inline bool PIO_PinReadLatch(PIO_PIN pin)
+static inline bool PIO_PinLatchRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortReadLatch(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F)) & 0x1);
+    return (bool)((PIO_PortLatchRead(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F)) & 0x1);
 }
 
 // *****************************************************************************
