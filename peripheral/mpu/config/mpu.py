@@ -10,6 +10,8 @@ global  mpuSystemDefFile
 global mpuRegions
 global mpuSettings
 global mpuSetUpLogicList
+global  mpuNVICVector
+global  mpuNVICHandlerLock
 
 ################################################################################
 #### Business Logic ####
@@ -213,6 +215,16 @@ for i in range(0,mpuRegions):
 	coreMPURegShare.setLabel("Shareable Attribute")
 	coreMPURegShare.setDefaultValue(False)
 	coreMPURegShare.setDependencies(mpuSetUpLogic, ["MPU_Region_Name" + str(i)])
+
+	# Setup Peripheral Interrupt in Interrupt manager
+mpuPeripId = Interrupt.getInterruptIndex("MemoryManagement")
+mpuNVICVector = "NVIC_" + str(mpuPeripId) + "_ENABLE"
+mpuNVICHandlerLock = "NVIC_" + str(mpuPeripId) + "_HANDLER_LOCK"
+
+# NVIC Dynamic settings
+MPU_NVICControl = coreComponent.createBooleanSymbol("NVIC_MPU_ENABLE", coreUseMPU)
+MPU_NVICControl.setDependencies(mpuNVICControl, ["CoreUseMPU"])
+MPU_NVICControl.setVisible(False)
 
 coreUseDefaultTrigger = coreComponent.createBooleanSymbol("CoreMPU_DEFAULT_TRIGGER", mpuConfMenu)
 coreUseDefaultTrigger.setDefaultValue(False)
