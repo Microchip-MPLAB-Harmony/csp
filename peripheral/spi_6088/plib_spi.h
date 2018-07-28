@@ -57,11 +57,11 @@ typedef enum
     /* Input data is valid on clock trailing edge and
     output data is ready on leading edge */
     SPI_CLOCK_PHASE_TRAILING_EDGE,
-    
+
     /* Input data is valid on clock leading edge and
     output data is ready on trailing edge */
     SPI_CLOCK_PHASE_LEADING_EDGE
-    
+
 }SPI_CLOCK_PHASE;
 
 // *****************************************************************************
@@ -80,10 +80,10 @@ typedef enum
 {
     /* The inactive state value of clock is logic level zero */
     SPI_CLOCK_POLARITY_IDLE_LOW,
-    
+
     /* The inactive state value of clock is logic level one */
     SPI_CLOCK_POLARITY_IDLE_HIGH
-    
+
 }SPI_CLOCK_POLARITY;
 
 // *****************************************************************************
@@ -103,28 +103,28 @@ typedef enum
 {
     /* 8 bits per transfer */
     SPI_DATA_BITS_8,
-    
-    /* 9 bits per transfer */    
+
+    /* 9 bits per transfer */
     SPI_DATA_BITS_9,
-    
+
     /* 10 bits per transfer */
     SPI_DATA_BITS_10,
-    
+
     /* 11 bits per transfer */
     SPI_DATA_BITS_11,
-    
+
     /* 12 bits per transfer */
     SPI_DATA_BITS_12,
-    
+
     /* 13 bits per transfer */
     SPI_DATA_BITS_13,
-    
+
     /* 14 bits per transfer */
     SPI_DATA_BITS_14,
-    
+
     /* 15 bits per transfer */
     SPI_DATA_BITS_15,
-    
+
     /* 16 bits per transfer */
     SPI_DATA_BITS_16
 
@@ -144,20 +144,20 @@ typedef enum
     None.
 */
 typedef struct
-{   
+{
 
     /* Baud Rate or clock frequency */
     uint32_t            clockFrequency;
-    
+
     /* Clock Phase */
     SPI_CLOCK_PHASE     clockPhase;
-    
+
     /* Clock Polarity */
     SPI_CLOCK_POLARITY  clockPolarity;
-    
+
     /* Number of bits per transfer */
     SPI_DATA_BITS       dataBits;
-    
+
 }SPI_TRANSFER_SETUP;
 
 // *****************************************************************************
@@ -172,90 +172,96 @@ typedef struct
    Remarks:
     None.
 */
-typedef enum 
+typedef enum
 {
     /* No Error */
     SPI_ERROR_NONE,
-    
+
     /* Overrun Error */
     SPI_ERROR_OVERRUN
-    
+
 }SPI_ERROR;
 
 // *****************************************************************************
 /* Function:
     void SPIx_Initialize (void);
-    
+
   Summary:
     Initializes SPI x module of the device
-    
+
   Description:
     This function initializes SPI x module of the device with the values
     configured in MHC GUI. Once the peripheral is initialized, transfer
     APIs can be used to transfer the data.
-  
+
   Precondition:
     MCC GUI should be configured with the right values.
-  
+
   Parameters:
     None.
-  
+
   Returns:
     None.
-    
+
   Example:
     <code>
         SPI1_Initialize();
     </code>
-    
+
   Remarks:
     This function must be called only once and before any other SPI function is
-    called.                                            
+    called.
 */
 void SPIx_Initialize (void);
 
 // *****************************************************************************
 /* Function:
     bool SPIx_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
-    
+
   Summary:
     Setup SPI operational parameters as desired by the client.
-    
+
   Description:
     This function setup SPI x with the values needed by the client dynamically.
+    Values passed through setup structure will be the new setup for SPI
+    transmission. Even if user is not intending to modify all the setup
+    parameters, he must update his setup structure with all its parameters. If
+    user do not update all the setup structure elements, then unexpected SPI
+    behavior may occur.
+
     User need not call this function if he has configured the setup in GUI and
     there is no dynamic change needed in any of the parameters.
-  
+
   Precondition:
     SPI x must first be initialized using SPIx_Initialize().
-  
+
   Parameters :
     spiSourceClock - Source Clock frequency in Hz on which SPI module is running.
 
     *setup - pointer to the data structure of type SPI_TRANSFER_SETUP which has the
              list of elements to be setup for a client.
-  
+
   Returns:
     true  - if setup was successful, API returns true.
     false - if spiSourceClock and spi clock frequencies are such that resultant
             SCBR value is out of the possible range, then API returns false.
-    
+
   Example:
-    <code> 
+    <code>
         SPI_TRANSFER_SETUP setup;
         setup.clockFrequency = 1000000;
         setup.clockPhase = SPI_CLOCK_PHASE_TRAILING_EDGE;
         setup.clockPolarity = SPI_CLOCK_POLARITY_IDLE_LOW;
         setup.dataBits = SPI_DATA_BITS_8;
-        
+
         // Assuming 150 MHz as peripheral Master clock frequency
         if (SPI1_TransferSetup (&setup, 150000000) == false)
         {
             // this means setup could not be done, debug the reason.
         }
-        
+
     </code>
-    
+
   Remarks:
     User need not call this function if he has configured the setup in
     GUI and there is no dynamic change needed in any of the parameters.
@@ -273,22 +279,22 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 	);
 
   Summary:
-    Write and Read data on SPI x peripheral 
+    Write and Read data on SPI x peripheral
 
   Description:
     This function should be used to write "txSize" number of bytes and read
     "rxSize" number of bytes on SPI x module. Data pointed by pTransmitData
     is transmitted and received data is saved in the location pointed by
     pReceiveData.
-    
+
     The function will work differently as per the configuration done in
     MCC as described below:
-    
+
     1.  Blocking Configuration (Non-Interrupt mode): When "Interrupt Mode"
         option is unchecked in GUI, the generated code for that particular
         SPI PLIB instance will be blocking. In this particular mode, the
         WriteRead API will not return until all the requested data is transferred.
-                
+
         After transferring all the data, boolean status 'True' is returned
         indicating operation completion.
 
@@ -298,16 +304,16 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
         particular mode, application will give the data transfer
         responsibility to the PLIB and come back and start doing other
         activities, SPI Data transaction will happen in the corresponding ISR.
-        in this mode, the transmit and receive data locations provided by user 
+        in this mode, the transmit and receive data locations provided by user
         must remain valid until the data transfer is complete.
         Application can check the data transfer completion status via
         callback or polling mechanism. In case of callback, it needs to be
         registered prior to calling the WriteRead API. Data transfer status
         polling can be done using "SPIx_IsBusy" API.
-        
+
   Precondition:
     The SPIx_Initialize function must have been called.
-    
+
     Callback has to be registered using SPIx_CallbackRegister API if the
     peripheral instance has been configured in Interrupt mode and
     transfer completion status needs to be communicated back to application via
@@ -337,7 +343,7 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
     In Blocking mode, API returns True once the transfer is complete. It returns
     False if either of the size parameters are 0 and corresponding data pointer
     is NULL.
-    
+
     In interrupt mode, if previous buffer request is not completed and a new
     transfer request comes, then this API will reject the new request and will
     return "False". Also, Same as blocking mode, It returns False if either of
@@ -347,12 +353,12 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
     <code>
     uint8_t     txBuffer[4];
     uint8_t     rxBuffer[10];
-    size_t      txSize = 4; 
+    size_t      txSize = 4;
     size_t      rxSize = 10;
     bool        reqAccepted;
-    
+
     SPI1_Initialize();
-    
+
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
     reqAccepted = SPI1_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
@@ -369,7 +375,7 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
   Remarks:
     Non-blocking interrupt mode configuration implementation of this function
     will be used by Harmony driver implementation APIs.
-    
+
 */
 bool SPIx_WriteRead(
 	void* pTransmitData,
@@ -382,20 +388,20 @@ bool SPIx_WriteRead(
     bool SPIx_Write(void* pTransmitData, size_t txSize);
 
   Summary:
-    Write data on SPI x peripheral 
+    Write data on SPI x peripheral
 
   Description:
     This function should be used to write "txSize" number of bytes on
     SPI x module. Data pointed by pTransmitData is transmitted.
-    
+
     The function will work differently as per the configuration done in
     MCC as described below:
-    
+
     1.  Blocking Configuration (Non-Interrupt mode): When "Interrupt Mode"
         option is unchecked in GUI, the generated code for that particular
         SPI PLIB instance will be blocking. In this particular mode, the
         Write API will not return until all the requested data is transferred.
-                
+
         After transferring all the data, boolean status 'True' is returned
         indicating operation completion.
 
@@ -405,16 +411,16 @@ bool SPIx_WriteRead(
         particular mode, application will give the data transfer
         responsibility to the PLIB and come back and start doing other
         activities, SPI Data transaction will happen in the corresponding ISR.
-        in this mode, the transmit data locations provided by user 
+        in this mode, the transmit data locations provided by user
         must remain valid until the data transfer is complete.
         Application can check the data transfer completion status via
         callback or polling mechanism. In case of callback, it needs to be
         registered prior to calling the Write API. Data transfer status
         polling can be done using "SPIx_IsBusy" API.
-        
+
   Precondition:
     The SPIx_Initialize function must have been called.
-    
+
     Callback has to be registered using SPIx_CallbackRegister API if the
     peripheral instance has been configured in Interrupt mode and
     transfer completion status needs to be communicated back to application via
@@ -432,7 +438,7 @@ bool SPIx_WriteRead(
   Returns:
     In Blocking mode, API returns True once the transfer is complete. It returns
     False if txSize parameter is 0 and transmit data pointer is NULL.
-    
+
     In interrupt mode, if previous buffer request is not completed and a new
     transfer request comes, then this API will reject the new request and will
     return "False". Also, Same as blocking mode, It returns False if txSize
@@ -441,11 +447,11 @@ bool SPIx_WriteRead(
   Example:
     <code>
     uint8_t     txBuffer[4];
-    size_t      txSize = 4; 
+    size_t      txSize = 4;
     bool        reqAccepted;
-    
+
     SPI1_Initialize();
-    
+
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
     reqAccepted = SPI1_Write(&txBuffer, txSize);
@@ -462,29 +468,29 @@ bool SPIx_WriteRead(
   Remarks:
     Non-blocking interrupt mode configuration implementation of this function
     will be used by Harmony driver implementation APIs.
-    
+
 */
 bool SPIx_Write(void* pTransmitData, size_t txSize);
-    
+
 // *****************************************************************************
 /* Function:
     bool SPIx_Read(void* pReceiveData, size_t rxSize);
 
   Summary:
-    Read data on SPI x peripheral 
+    Read data on SPI x peripheral
 
   Description:
     This function should be used to read "rxSize" number of bytes on
     SPI x module. Received data is saved in the location pointed by pReceiveData.
-    
+
     The function will work differently as per the configuration done in
     MCC as described below:
-    
+
     1.  Blocking Configuration (Non-Interrupt mode): When "Interrupt Mode"
         option is unchecked in GUI, the generated code for that particular
         SPI PLIB instance will be blocking. In this particular mode, the
         Read API will not return until all the requested data is transferred.
-                
+
         After transferring all the data, boolean status 'True' is returned
         indicating operation completion.
 
@@ -494,16 +500,16 @@ bool SPIx_Write(void* pTransmitData, size_t txSize);
         particular mode, application will give the data transfer
         responsibility to the PLIB and come back and start doing other
         activities, SPI Data transaction will happen in the corresponding ISR.
-        in this mode, the receive data locations provided by user 
+        in this mode, the receive data locations provided by user
         must remain valid until the data transfer is complete.
         Application can check the data transfer completion status via
         callback or polling mechanism. In case of callback, it needs to be
         registered prior to calling the Read API. Data transfer status
         polling can be done using "SPIx_IsBusy" API.
-        
+
   Precondition:
     The SPIx_Initialize function must have been called.
-    
+
     Callback has to be registered using SPIx_CallbackRegister API if the
     peripheral instance has been configured in Interrupt mode and
     transfer completion status needs to be communicated back to application via
@@ -523,7 +529,7 @@ bool SPIx_Write(void* pTransmitData, size_t txSize);
   Returns:
     In Blocking mode, API returns True once the transfer is complete. It returns
     False if rxSize is 0 and receive data pointer is NULL.
-    
+
     In interrupt mode, if previous buffer request is not completed and a new
     transfer request comes, then this API will reject the new request and will
     return "False". Also, Same as blocking mode, It returns False if rxSize is
@@ -531,12 +537,12 @@ bool SPIx_Write(void* pTransmitData, size_t txSize);
 
   Example:
     <code>
-    uint8_t     rxBuffer[10]; 
+    uint8_t     rxBuffer[10];
     size_t      rxSize = 10;
     bool        reqAccepted;
-    
+
     SPI1_Initialize();
-    
+
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
     reqAccepted = SPI1_Read(&rxBuffer, rxSize);
@@ -553,32 +559,32 @@ bool SPIx_Write(void* pTransmitData, size_t txSize);
   Remarks:
     Non-blocking interrupt mode configuration implementation of this function
     will be used by Harmony driver implementation APIs.
-    
+
 */
 bool SPIx_Read(void* pReceiveData, size_t rxSize);
-    
+
 // *****************************************************************************
 /* Function:
     bool SPIx_IsBusy (void):
-    
+
   Summary:
     Returns transfer status of SPI x
-    
+
   Description:
     This function returns transfer status of last successful Write, Read or
     WriteRead request on SPI x module in interrupt mode.
-  
+
   Precondition:
     None.
-  
+
   Parameters:
     None.
-  
+
   Returns:
     Returns the current status of transfer happening on SPI x.
         true:  Transfer is still in progress
         false: Transfer is completed
-    
+
   Example:
     <code>
         if (SPI1_IsBusy() == false)
@@ -586,7 +592,7 @@ bool SPIx_Read(void* pReceiveData, size_t rxSize);
             //Data Transfer is complete, do something else.
         }
     </code>
-    
+
   Remarks:
     This API is available only for interrupt mode as blocking mode transfer
     APIs will always return only after completing the transfer.
@@ -601,7 +607,7 @@ bool SPIx_IsBusy (void):
     Gets the error of the given SPI peripheral instance.
 
    Description:
-    This function returns the errors associated with the given SPI peripheral 
+    This function returns the errors associated with the given SPI peripheral
     instance. After completing any transfer in interrupt mode, this API should
     be called and verified if any error occurred in the transfer or not.
     The error returned by this API will not be cleared by PLIB until SPI
@@ -612,7 +618,7 @@ bool SPIx_IsBusy (void):
 
    Parameters:
     None.
-  
+
    Returns:
     Errors occurred as listed by SPI_ERROR.
 
@@ -697,8 +703,8 @@ typedef  void (*SPI_CALLBACK) (uintptr_t context);
     to call back when requested data transfer operation has completed or any error
     has occurred.
 
-    The callback should be registered before the client performs transfer operation. 
-    
+    The callback should be registered before the client performs transfer operation.
+
     At any point if application wants to stop the callback, it can call this function
     with "callback" value as NULL.
 
@@ -721,12 +727,12 @@ typedef  void (*SPI_CALLBACK) (uintptr_t context);
     <code>
     uint8_t     txBuffer[4];
     uint8_t     rxBuffer[10];
-    size_t      txSize = 4; 
+    size_t      txSize = 4;
     size_t      rxSize = 10;
     bool        reqAccepted;
-    
+
     SPI1_Initialize();
-    
+
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
 
     reqAccepted = SPI1_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
