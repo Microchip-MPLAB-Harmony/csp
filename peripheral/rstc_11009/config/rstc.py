@@ -63,7 +63,7 @@ def instantiateComponent(rstcComponent):
     rstcSym_MR_UserReset.addKey("GPIO", "2", "Use as a GPIO")
     rstcSym_MR_UserReset.setOutputMode("Key")
     rstcSym_MR_UserReset.setDisplayMode("Description")
-    rstcSym_MR_UserReset.setSelectedKey("User Reset",1)
+    rstcSym_MR_UserReset.setSelectedKey("RESET",1)
 
     rstcSym_MR_ERSTL = rstcComponent.createIntegerSymbol("RSTC_MR_ERSTL", None)
     rstcSym_MR_ERSTL.setLabel("External Reset Assertion duration on WDT/SW Reset")
