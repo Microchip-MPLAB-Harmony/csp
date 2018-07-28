@@ -120,7 +120,7 @@ def instantiateComponent(supcComponent):
     supcSym_SMMR_SMSMPL.addKey("_2048SLCK", "4", "Monitor 1 SLCK per 2048 SLCK period")
     supcSym_SMMR_SMSMPL.setOutputMode("Key")
     supcSym_SMMR_SMSMPL.setDisplayMode("Description")
-    supcSym_SMMR_SMSMPL.setSelectedKey("CSM",1)
+    supcSym_SMMR_SMSMPL.setSelectedKey("_CSM",1)
 
     supcSym_SMMR_SMIEN = supcComponent.createBooleanSymbol("SUPC_SMMR_SMIEN", supcSMMenu)
     supcSym_SMMR_SMIEN.setLabel("Enable Supply Monitor Interrupt")
