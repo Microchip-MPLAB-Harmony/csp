@@ -514,7 +514,11 @@ void DMAC_ChannelDisable ( DMAC_CHANNEL channel );
     channel - The DMAC channel on which the transfer needs to scheduled.
 
     channelDesc - A pointer to a linked list of DmacDescriptor type descriptor
-    chain.
+    chain. Each of the descriptors must be placed at a 128-bit aligned
+    SRAM address. If these descriptors belong to an array of descriptors, then
+    configuring the starting addresss of the array at a 128-bit aligned address
+    will ensure that all descriptors of the array starts at 128-bit aligned
+    address, becasue the size of each descriptor is 128-bits.
 
   Returns:
     None.
@@ -642,7 +646,7 @@ bool  DMAC_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settin
     None.
 */
 
-void DMAC${DMAC_INDEX}_ISRHandler( void );
+void DMAC${DMAC_INDEX}_InterruptHandler( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

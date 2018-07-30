@@ -117,10 +117,10 @@ typedef struct
 } DMAC_CH_OBJECT ;
 
 /* Descriptor section for DMAC */
-static  dmacdescriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    SECTION_DMAC_DESCRIPTOR;
+static  dmacdescriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    SECTION_DMAC_DESCRIPTOR __attribute__((aligned(128)));
 
 /* Initial write back memory section for DMAC */
-static  dmacdescriptor_registers_t _write_back_section[DMAC_CHANNELS_NUMBER]    SECTION_DMAC_DESCRIPTOR;
+static  dmacdescriptor_registers_t _write_back_section[DMAC_CHANNELS_NUMBER]    SECTION_DMAC_DESCRIPTOR __attribute__((aligned(128)));
 
 /* DMAC User configuration */
 DMAC_CONFIG_VAL   strDMACRegUserVal[DMAC_CHANNELS_NUMBER];
@@ -325,6 +325,8 @@ void DMAC${DMAC_INDEX}_Initialize( void )
 
 void DMAC${DMAC_INDEX}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
 {
+    uint8_t beat_size = 0;
+    
     /* Get a pointer to the module hardware instance */
     dmacdescriptor_registers_t *const dmacDescReg = &descriptor_section[channel];
 
@@ -339,8 +341,11 @@ void DMAC${DMAC_INDEX}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAdd
     /* Set destination address */
     dmacDescReg->DSTADDR = (uint32_t) (destAddr + blockSize);
 
-    /* Set block size */
-    dmacDescReg->BTCNT = blockSize;
+    /*Calculate the beat size and then set the BTCNT value */
+    beat_size = (dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Msk) >> DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Pos;
+    
+    /* Set Block Transfer Count */
+    dmacDescReg->BTCNT = blockSize / (1 << beat_size);
 
     /* Set the DMA channel */
     DMAC_REGS->DMAC_CHID = channel;
@@ -591,7 +596,7 @@ bool DMAC${DMAC_INDEX}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL_CO
     None.
 */
 
-void DMAC${DMAC_INDEX}_ISRHandler( void )
+void DMAC${DMAC_INDEX}_InterruptHandler( void )
 {
     DMAC_CH_OBJECT  *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
     uint8_t channel = 0;
@@ -603,39 +608,46 @@ void DMAC${DMAC_INDEX}_ISRHandler( void )
         /* Process events only on active channels */
         if (1 == dmacChObj->inUse)
         {
+            /* Select the channel */
+            DMAC_REGS->DMAC_CHID = channel;
+
             /* Read the interrupt status for the active DMA channel */
             chanIntStatus = DMAC_REGS->DMAC_CHINTFLAG;
-
-            /* It's an error interrupt */
-            /* DMA channel interrupt handler */
-            if (chanIntStatus & DMAC_CHINTENCLR_TERR_Msk)
+            
+            /* If any of the flags are set, process it */
+            if (chanIntStatus)
             {
-                /* Clear transfer error flag */
-                DMAC_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TERR_Msk;
+                /* It's an error interrupt */
+                /* DMA channel interrupt handler */
+                if (chanIntStatus & DMAC_CHINTENCLR_TERR_Msk)
+                {
+                    /* Clear transfer error flag */
+                    DMAC_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TERR_Msk;
 
-                event = DMAC_TRANSFER_EVENT_ERROR;
-                dmacChObj->busyStatus = false;
-            }
-            else if (chanIntStatus & DMAC_CHINTENCLR_TCMPL_Msk)
-            {
-                /* Clear the transfer complete flag */
-                DMAC_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk;
+                    event = DMAC_TRANSFER_EVENT_ERROR;
+                    dmacChObj->busyStatus = false;
+                }
+                else if (chanIntStatus & DMAC_CHINTENCLR_TCMPL_Msk)
+                {
+                    /* Clear the transfer complete flag */
+                    DMAC_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk;
 
-                event = DMAC_TRANSFER_EVENT_COMPLETE;
-                dmacChObj->busyStatus = false;
-            }
-            else if (chanIntStatus & DMAC_CHINTENCLR_SUSP_Msk)
-            {
-                /* Clear the transfer suspend flag */
-                DMAC_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_SUSP_Msk;
+                    event = DMAC_TRANSFER_EVENT_COMPLETE;
+                    dmacChObj->busyStatus = false;
+                }
+                else if (chanIntStatus & DMAC_CHINTENCLR_SUSP_Msk)
+                {
+                    /* Clear the transfer suspend flag */
+                    DMAC_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_SUSP_Msk;
 
-                dmacChObj->busyStatus = false;
-            }
+                    dmacChObj->busyStatus = false;
+                }
 
-            /* Execute the callback function */
-            if (dmacChObj[channel].callback)
-            {
-                dmacChObj[channel].callback (event, (uintptr_t) NULL);
+                /* Execute the callback function */
+                if (dmacChObj[channel].callback)
+                {
+                    dmacChObj[channel].callback (event, (uintptr_t) NULL);
+                }
             }
         }
     }
