@@ -11,23 +11,12 @@ cortexMenu.setLabel("Cortex-A5 Configuration")
 cortexMenu.setDescription("Configuration for Cortex A5")
 
 #load MMU with default 1:1 mapping so we can use cache
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a5d2/config/clk.py")
 
 # load device specific pin manager information
-
-cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
-cacheMenu.setLabel("CACHE")
-cacheMenu.setDescription("CACHE Configuration")
-
-dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
-dcacheEnable.setLabel("Enable Data Cache")
-dcacheEnable.setDefaultValue(True)
-
-icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
-icacheEnable.setLabel("Enable Instruction Cache")
-icacheEnable.setDefaultValue(True)
 
 # load AIC
 
