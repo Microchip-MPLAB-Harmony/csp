@@ -22,11 +22,6 @@ def instantiateComponent(coreComponent):
     genAppFiles.setLabel("Generate Harmony Application Files?")
     genAppFiles.setVisible(False)
 
-    stdioEnable = coreComponent.createBooleanSymbol("STDIO_USED", devMenu)
-    stdioEnable.setVisible(False)
-    stdioEnable.setDefaultValue(False)
-    stdioEnable.setDependencies(stdioActivated, ["stdio.STDIO_ENABLE"])
-
     projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
     projMenu.setLabel("Project Configuration")
 
@@ -244,6 +239,15 @@ def instantiateComponent(coreComponent):
     xc32NoDeviceStartupCodeSym.setKey("no-device-startup-code")
     xc32NoDeviceStartupCodeSym.setValue("true")
 
+    debugSourceFile = coreComponent.createFileSymbol("DEBUG_CONSOLE_C", None)
+    debugSourceFile.setSourcePath("../arch/stdio/templates/xc32_monitor.c.ftl")
+    debugSourceFile.setOutputName("xc32_monitor.c")
+    debugSourceFile.setMarkup(True)
+    debugSourceFile.setOverwrite(True)
+    debugSourceFile.setDestPath("/stdio/")
+    debugSourceFile.setProjectPath("config/" + configName + "/stdio/")
+    debugSourceFile.setType("SOURCE")
+	
     # load device specific information, clock and pin manager
     execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")
 

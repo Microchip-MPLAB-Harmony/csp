@@ -38,30 +38,38 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-<#if DEBUG_PERIPHERAL?has_content>
-	<#lt><#assign length = DEBUG_PERIPHERAL?length>
-	<#lt><#assign name = DEBUG_PERIPHERAL[0..length-2]>
-	<#lt>#include "peripheral/${name}/plib_${DEBUG_PERIPHERAL?lower_case}.h"
+<#if stdio??>
+	<#if stdio.DEBUG_PERIPHERAL?has_content>
+		<#lt><#assign length = stdio.DEBUG_PERIPHERAL?length>
+		<#lt><#assign name = stdio.DEBUG_PERIPHERAL[0..length-2]>
+		<#lt>#include "peripheral/${name}/plib_${stdio.DEBUG_PERIPHERAL?lower_case}.h"
+	</#if>
 </#if>
 
 int _mon_getc(int canblock)
 {
-	<#if DEBUG_PERIPHERAL?has_content>
-	<#lt>	volatile int c = 0; 
-	<#lt>	while(${DEBUG_PERIPHERAL?upper_case}_Read((void*)&c, 1) != true);
-	<#lt>	return c;
+	<#if stdio??>
+		<#if stdio.DEBUG_PERIPHERAL?has_content>
+		<#lt>	volatile int c = 0; 
+		<#lt>	while(${stdio.DEBUG_PERIPHERAL?upper_case}_Read((void*)&c, 1) != true);
+		<#lt>	return c;
+		<#else>
+			<#lt>	return 0;
+		</#if>
 	<#else>
-		return 0;
+		<#lt>	return 0;
 	</#if>
 }
 
 void _mon_putc(char c)
 {
-	<#if DEBUG_PERIPHERAL?has_content>
-	<#lt>	uint8_t size = 0;
-	<#lt>	do
-	<#lt>	{
-	<#lt>		size = ${DEBUG_PERIPHERAL?upper_case}_Write((void*)&c, 1);
-	<#lt>	}while (size !=1);
+	<#if stdio??>
+		<#if stdio.DEBUG_PERIPHERAL?has_content>
+		<#lt>	uint8_t size = 0;
+		<#lt>	do
+		<#lt>	{
+		<#lt>		size = ${stdio.DEBUG_PERIPHERAL?upper_case}_Write((void*)&c, 1);
+		<#lt>	}while (size !=1);
+		</#if>
 	</#if>
 }
