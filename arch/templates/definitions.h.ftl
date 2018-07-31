@@ -48,7 +48,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-<#if STDIO_USED == true >
+<#if stdio?? >
     <#lt>#include <stdio.h>
 </#if>
 <#compress>
