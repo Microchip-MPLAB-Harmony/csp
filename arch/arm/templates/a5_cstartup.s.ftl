@@ -67,6 +67,7 @@ F_BIT           DEFINE 0x40
 
 ICACHE_BIT      DEFINE 0x1000
 DCACHE_BIT      DEFINE 0x04
+MMU_BIT         DEFINE 0x01
 
 AT91_REMAP_BASE DEFINE 0x00600000
 
@@ -287,21 +288,6 @@ __iar_program_start:
         msr     cpsr_c, r0
         ldr     sp, =SFE(CSTACK)
         bic     sp, sp, #0x7
-
-        ; Enable caches if configured
-        MRC p15, 0, r0, c1, c0, 0
-<#if (INSTRUCTION_CACHE_ENABLE)>
-        ORR r0, r0, #ICACHE_BIT
-<#else>
-        BIC r0, r0, #ICACHE_BIT
-</#if>
-<#if (DATA_CACHE_ENABLE)>
-        ORR r0, r0, #DCACHE_BIT
-<#else>
-        BIC r0, r0, #DCACHE_BIT
-</#if>
-        MCR p15, 0, r0, c1, c0, 0
-
 
         ; Execute relocations & zero BSS
 
