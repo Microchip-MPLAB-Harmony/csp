@@ -43,9 +43,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
-<#if CoreGenAppFiles == true >
-#include "configuration.h"
+<#if Harmony??>
+    <#if Harmony.ENABLE_APP_FILE == true >
+        <#lt>#include "configuration.h"
+    </#if>
 </#if>
 #include "definitions.h"
 
@@ -69,11 +70,12 @@ ${LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA}
 // Section: System Data
 // *****************************************************************************
 // *****************************************************************************
-<#if CoreGenAppFiles == true >
-/* Structure to hold the object handles for the modules in the system. */
-SYSTEM_OBJECTS sysObj;
+<#if Harmony??>
+    <#if Harmony.ENABLE_APP_FILE == true >
+        <#lt>/* Structure to hold the object handles for the modules in the system. */
+        <#lt>SYSTEM_OBJECTS sysObj;
+    </#if>
 </#if>
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Library/Stack Initialization Data
@@ -105,10 +107,11 @@ void SYS_Initialize ( void* data )
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS}
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES}
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE}
-
-    <#lt><#if CoreGenAppFiles == true >
-            <#lt>${LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA}
-    <#lt></#if>
+    <#if Harmony??>
+        <#lt><#if Harmony.ENABLE_APP_FILE == true >
+                <#lt>${LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA}
+        <#lt></#if>
+    </#if>
 }
 
 

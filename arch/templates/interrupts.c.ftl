@@ -54,8 +54,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 ${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
-<#if CoreGenAppFiles == true >
-#include "configuration.h"
+<#if Harmony??>
+    <#if Harmony.ENABLE_APP_FILE == true >
+        <#lt>#include "configuration.h"
+    </#if>
 </#if>
 #include "definitions.h"
 
