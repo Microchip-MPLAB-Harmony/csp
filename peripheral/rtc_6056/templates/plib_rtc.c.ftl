@@ -58,11 +58,11 @@ bool RTC${INDEX?string}_TimeSet( struct tm *Time )
 {
 	Time->tm_year += 1900;
 	uint32_t data_cal =  (decimaltobcd(Time->tm_year / 100)) | \
-			 (decimaltobcd((Time->tm_year - ((Time->tm_year/100)*100)))<< 8) | \
-			   (decimaltobcd(Time->tm_mon + 1)<<16)| \
-			 (decimaltobcd(Time->tm_mday)<<24) | \
-			 ((Time->tm_wday) << 21);
-	uint32_t data_time = (decimaltobcd(Time->tm_sec)) | (decimaltobcd(Time->tm_min) << 8) | (decimaltobcd(Time->tm_hour)<< 16);
+			 (decimaltobcd((Time->tm_year - ((Time->tm_year/100)*100)))<< RTC_CALR_YEAR_Pos) | \
+			   (decimaltobcd((Time->tm_mon + 1))<<RTC_CALR_MONTH_Pos)| \
+			 (decimaltobcd(Time->tm_mday)<<RTC_CALR_DATE_Pos) | \
+			 ((Time->tm_wday + 1) << RTC_CALR_DAY_Pos);
+	uint32_t data_time = (decimaltobcd(Time->tm_sec)) | (decimaltobcd(Time->tm_min) << RTC_TIMR_MIN_Pos) | (decimaltobcd(Time->tm_hour)<< RTC_TIMR_HOUR_Pos);
 	RTC_REGS->RTC_CR&= ~(RTC_CR_UPDCAL_Msk|RTC_CR_UPDTIM_Msk);
 	RTC_REGS->RTC_SCCR = (1<<2) ;
 	while ((RTC_REGS->RTC_SR& RTC_SR_SEC_Msk) != RTC_SR_SEC_Msk );
@@ -96,13 +96,14 @@ void RTC${INDEX?string}_TimeGet( struct tm *Time )
 		data_cal = RTC_REGS->RTC_CALR;
 	}
 	
-	Time->tm_hour = bcdtodecimal((data_time & 0x003f0000) >> 16);
-	Time->tm_sec = bcdtodecimal(data_time & 0x0000007f);
-	Time->tm_min = bcdtodecimal((data_time & 0x00007f00)>>8);
-	Time->tm_mday = bcdtodecimal((data_cal & 0x3f000000)>>24);
-	Time->tm_wday = (bcdtodecimal((data_cal & 0x00E00000)>>21)) - 1;
-	Time->tm_mon =  (bcdtodecimal((data_cal & 0x001F0000)>>16)) - 1;
-	Time->tm_year = (100 * (bcdtodecimal((data_cal & 0x0000007f))) + bcdtodecimal((data_cal & 0x0000ff00)>>8)) - 1900;	
+	Time->tm_hour = bcdtodecimal((data_time & RTC_TIMR_HOUR_Msk) >> RTC_TIMR_HOUR_Pos);
+	Time->tm_sec = bcdtodecimal(data_time & RTC_TIMR_SEC_Msk);
+	Time->tm_min = bcdtodecimal((data_time & RTC_TIMR_MIN_Msk)>>RTC_TIMR_MIN_Pos);
+	Time->tm_mday = bcdtodecimal((data_cal & RTC_CALR_DATE_Msk)>>RTC_CALR_DATE_Pos);
+	Time->tm_wday = (bcdtodecimal((data_cal & RTC_CALR_DAY_Msk)>>RTC_CALR_DAY_Pos)) - 1;
+	Time->tm_mon =  (bcdtodecimal((data_cal & RTC_CALR_MONTH_Msk)>>RTC_CALR_MONTH_Pos)) - 1;
+	Time->tm_year = (100 * (bcdtodecimal((data_cal & RTC_CALR_CENT_Msk))) \
+            + bcdtodecimal((data_cal & RTC_CALR_YEAR_Msk)>>RTC_CALR_YEAR_Pos)) - 1900;	
 }
 
 <#if rtcEnableInterrupt == true>
