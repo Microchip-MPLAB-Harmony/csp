@@ -181,6 +181,9 @@ typedef struct
 {
 ${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
 } SYSTEM_OBJECTS;
+<#else>
+/* Nullify SYS_Tasks() if only PLIBs are used. */
+#define     SYS_Tasks()
 </#if>
 
 // *****************************************************************************
