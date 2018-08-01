@@ -55,8 +55,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 ${LIST_SYSTEM_DEFINITIONS_H_INCLUDES}
 </#compress>
 
-<#if CoreGenAppFiles == true >
-${LIST_SYSTEM_APP_DEFINITIONS_H_INCLUDES}
+<#if Harmony??>
+    <#if Harmony.ENABLE_APP_FILE == true >
+        <#lt>${LIST_SYSTEM_APP_DEFINITIONS_H_INCLUDES}
+    </#if>
 </#if>
 
 // DOM-IGNORE-BEGIN
@@ -114,8 +116,8 @@ extern "C" {
 
 void SYS_Initialize( void *data );
 
-
-<#if CoreGenAppFiles == true >
+<#if Harmony??>
+    <#if Harmony.ENABLE_APP_FILE == true >
 // *****************************************************************************
 /* System Tasks Function
 
@@ -181,6 +183,12 @@ typedef struct
 {
 ${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
 } SYSTEM_OBJECTS;
+
+    <#else>
+/* Nullify SYS_Tasks() if only PLIBs are used. */
+#define     SYS_Tasks()
+
+    </#if>
 <#else>
 /* Nullify SYS_Tasks() if only PLIBs are used. */
 #define     SYS_Tasks()
@@ -194,8 +202,10 @@ ${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
 
 ${LIST_SYSTEM_DEFINITIONS_H_EXTERNS}
 
-<#if CoreGenAppFiles == true >
-extern SYSTEM_OBJECTS sysObj;
+<#if Harmony??>
+    <#if Harmony.ENABLE_APP_FILE == true >
+        <#lt>extern SYSTEM_OBJECTS sysObj;
+    </#if>
 </#if>
 
 //DOM-IGNORE-BEGIN

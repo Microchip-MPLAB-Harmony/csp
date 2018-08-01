@@ -2,13 +2,11 @@
 appFileMaxCount = 10
 appSourceFile = []
 appHeaderFile = []
-appSrcName    = []
 appHeaderName = []
 
 def instantiateComponent(coreComponent):
     global appSourceFile
     global appHeaderFile
-    global appSrcName
     global appHeaderName
 
     devMenu = coreComponent.createMenuSymbol("CoreDevMenu", None)
@@ -18,9 +16,6 @@ def instantiateComponent(coreComponent):
     devCfgMenu.setLabel(Variables.get("__PROCESSOR") + " Device Configuration")
     devCfgMenu.setDescription("Hardware Configuration Bits")
 
-    genAppFiles = coreComponent.createBooleanSymbol("CoreGenAppFiles", devMenu)
-    genAppFiles.setLabel("Generate Harmony Application Files?")
-    genAppFiles.setVisible(False)
 
     projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
     projMenu.setLabel("Project Configuration")
@@ -32,7 +27,6 @@ def instantiateComponent(coreComponent):
     xc32Sym.setLabel("XC32 Compiler")
     xc32Sym.setDefaultValue(True)
     xc32Sym.setReadOnly(True)
-
 
     xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", projMenu)
     xc32Menu.setLabel("XC32 (Global Options)")
@@ -50,7 +44,7 @@ def instantiateComponent(coreComponent):
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    #################### Application Files ####################
+    #################### Main File ####################
     # generate main.c file
     mainSourceFile = coreComponent.createFileSymbol("MAIN_C", None)
     mainSourceFile.setSourcePath("templates/main.c.ftl")
@@ -64,83 +58,7 @@ def instantiateComponent(coreComponent):
     bspHeaderInclude = coreComponent.createListSymbol("LIST_BSP_MACRO_INCLUDES", None)
     bspHeaderInclude = coreComponent.createListSymbol("LIST_BSP_INITIALIZATION", None)
 
-    for count in range(0, appFileMaxCount):
-        global appSourceFile
-        global appSrcName
-        global appHeaderFile
-        global appHeaderName
-
-        # generate app.c file
-        appSrcName.append(count)
-        appSrcName[count] = "Harmony.GEN_APP_TASK_NAME_" + str(count)
-
-        appSourceFile.append(count)
-        appSourceFile[count] = coreComponent.createFileSymbol("APP" + str(count) + "_C", None)
-        appSourceFile[count].setSourcePath("templates/app.c.ftl")
-        if (count == 0):
-            appSourceFile[count].setOutputName("app.c")
-        else:
-            appSourceFile[count].setOutputName("app" + str(count) + ".c")
-        appSourceFile[count].setMarkup(True)
-        appSourceFile[count].setOverwrite(False)
-        appSourceFile[count].setDestPath("../../")
-        appSourceFile[count].setProjectPath("")
-        appSourceFile[count].setType("SOURCE")
-        appSourceFile[count].setEnabled(False)
-        appSourceFile[count].setDependencies(genAppSourceFile, ["CoreGenAppFiles", "Harmony.GEN_APP_TASK_COUNT", "Harmony.GEN_APP_TASK_NAME_" + str(count)])
-        appSourceFile[count].addMarkupVariable("APP_NAME", appSrcName[count])
-
-        # generate app.h file
-        appHeaderName.append(count)
-        appHeaderName[count] = "Harmony.GEN_APP_TASK_NAME_" + str(count)
-
-        appHeaderFile.append(count)
-        appHeaderFile[count] = coreComponent.createFileSymbol("APP" + str(count) + "_H", None)
-        appHeaderFile[count].setSourcePath("templates/app.h.ftl")
-        if (count == 0):
-            appHeaderFile[count].setOutputName("app.h")
-        else:
-            appHeaderFile[count].setOutputName("app" + str(count) + ".h")
-        appHeaderFile[count].setMarkup(True)
-        appHeaderFile[count].setOverwrite(False)
-        appHeaderFile[count].setDestPath("../../")
-        appHeaderFile[count].setProjectPath("")
-        appHeaderFile[count].setType("HEADER")
-        appHeaderFile[count].setEnabled(False)
-        appHeaderFile[count].setDependencies(genAppHeaderFile, ["CoreGenAppFiles", "Harmony.GEN_APP_TASK_COUNT", "Harmony.GEN_APP_TASK_NAME_" + str(count)])
-        appHeaderFile[count].addMarkupVariable("APP_NAME", appHeaderName[count])
-
-    #################### Configuration Files ####################
-    # generate user.h file
-    userHeaderFile = coreComponent.createFileSymbol("USER_H", None)
-    userHeaderFile.setSourcePath("templates/user.h.ftl")
-    userHeaderFile.setOutputName("user.h")
-    userHeaderFile.setMarkup(True)
-    userHeaderFile.setOverwrite(False)
-    userHeaderFile.setDestPath("")
-    userHeaderFile.setProjectPath("config/" + configName + "/")
-    userHeaderFile.setType("HEADER")
-    userHeaderFile.setEnabled(False)
-    userHeaderFile.setDependencies(genUserHeaderFile, ["CoreGenAppFiles"])
-    appConfigIncludesList = coreComponent.createListSymbol("LIST_APP_CONFIG_H_GLOBAL_INCLUDES", None)
-
-    # generate configuration.h file
-    confHeaderFile = coreComponent.createFileSymbol("CONFIGURATION_H", None)
-    confHeaderFile.setSourcePath("templates/configuration.h.ftl")
-    confHeaderFile.setOutputName("configuration.h")
-    confHeaderFile.setMarkup(True)
-    confHeaderFile.setOverwrite(True)
-    confHeaderFile.setDestPath("")
-    confHeaderFile.setProjectPath("config/" + configName + "/")
-    confHeaderFile.setType("HEADER")
-    confHeaderFile.setEnabled(False)
-    systemConfigIncludesList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_GLOBAL_INCLUDES", None)
-    systemConfigSysList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_SYSTEM_SERVICE_CONFIGURATION", None)
-    systemConfigDrvList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_DRIVER_CONFIGURATION", None)
-    systemConfigMWList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION", None)
-    systemConfigAppList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_APPLICATION_CONFIGURATION", None)
-    confHeaderFile.setDependencies(genConfHeaderFile, ["CoreGenAppFiles"])
-
+    #################### System Files ####################
     # generate definitions.h file
     defHeaderFile = coreComponent.createFileSymbol("DEFINITIONS_H", None)
     defHeaderFile.setSourcePath("templates/definitions.h.ftl")
@@ -175,25 +93,6 @@ def instantiateComponent(coreComponent):
     systemInitDriver2List = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS", None)
     systemInitSysList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES", None)
     systemInitMWList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE", None)
-
-    # generate tasks.c file
-    taskSourceFile = coreComponent.createFileSymbol("TASKS_C", None)
-    taskSourceFile.setSourcePath("templates/tasks.c.ftl")
-    taskSourceFile.setOutputName("tasks.c")
-    taskSourceFile.setMarkup(True)
-    taskSourceFile.setOverwrite(True)
-    taskSourceFile.setDestPath("")
-    taskSourceFile.setProjectPath("config/" + configName + "/")
-    taskSourceFile.setType("SOURCE")
-    taskSourceFile.setEnabled(False)
-    taskSysList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_CALL_SYSTEM_TASKS", None)
-    taskDrvList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS", None)
-    taskLibList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS", None)
-    taskGenAppList = coreComponent.createListSymbol("LIST_SYSTEM_TASKS_C_GEN_APP", None)
-    taskGenRtosAppList = coreComponent.createListSymbol("LIST_SYSTEM_RTOS_TASKS_C_GEN_APP", None)
-    taskRtosDefList = coreComponent.createListSymbol("LIST_SYSTEM_RTOS_TASKS_C_DEFINITIONS", None)
-    taskRtosSchedList = coreComponent.createListSymbol("LIST_SYSTEM_RTOS_TASKS_C_CALL_SCHEDULAR", None)
-    taskSourceFile.setDependencies(genTaskSourceFile, ["CoreGenAppFiles"])
 
     # generate interrupts.c file
     intSourceFile = coreComponent.createFileSymbol("INTERRUPTS_C", None)
@@ -247,54 +146,9 @@ def instantiateComponent(coreComponent):
     debugSourceFile.setDestPath("/stdio/")
     debugSourceFile.setProjectPath("config/" + configName + "/stdio/")
     debugSourceFile.setType("SOURCE")
-	
+
     # load device specific information, clock and pin manager
     execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")
 
 def xc32HeapSize(symbol, event):
      symbol.setValue(str(event["value"]))
-
-
-def genAppSourceFile(symbol, event):
-    global appSourceFile
-    appName = None
-
-    appFileEnableCount = Database.getSymbolValue("Harmony", "GEN_APP_TASK_COUNT")
-    appGenFiles        = Database.getSymbolValue("core", "CoreGenAppFiles")
-
-    for count in range(0, appFileMaxCount):
-        appSourceFile[count].setEnabled(False)
-
-    if (appGenFiles == True):
-        for count in range(0, appFileEnableCount):
-            appName = Database.getSymbolValue("Harmony", "GEN_APP_TASK_NAME_" + str(count))
-            appSourceFile[count].setEnabled(True)
-            appSourceFile[count].setOutputName(appName.lower() + ".c")
-
-def genAppHeaderFile(symbol, event):
-    global appHeaderFile
-    appName = None
-
-    appFileEnableCount = Database.getSymbolValue("Harmony", "GEN_APP_TASK_COUNT")
-    appGenFiles        = Database.getSymbolValue("core", "CoreGenAppFiles")
-
-    for count in range(0, appFileMaxCount):
-        appHeaderFile[count].setEnabled(False)
-
-    if (appGenFiles == True):
-        for count in range(0, appFileEnableCount):
-            appName = Database.getSymbolValue("Harmony", "GEN_APP_TASK_NAME_" + str(count))
-            appHeaderFile[count].setEnabled(True)
-            appHeaderFile[count].setOutputName(appName.lower() + ".h")
-
-def genTaskSourceFile(taskSourceFile, event):
-    taskSourceFile.setEnabled(event["value"])
-
-def genConfHeaderFile(confHeaderFile, event):
-    confHeaderFile.setEnabled(event["value"])
-
-def genUserHeaderFile(userHeaderFile, event):
-    userHeaderFile.setEnabled(event["value"])
-
-def stdioActivated(symbol, event):
-    symbol.setValue(event["value"], 2)
