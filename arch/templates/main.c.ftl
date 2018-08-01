@@ -41,10 +41,8 @@ int main ( void )
 
     while ( true )
     {
-<#if CoreGenAppFiles == true >
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
-</#if>
     }
 
     /* Execution should not come here during normal operation */
