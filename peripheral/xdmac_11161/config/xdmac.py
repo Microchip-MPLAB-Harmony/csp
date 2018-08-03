@@ -362,7 +362,7 @@ for channelID in range(0, xdmacChCount.getValue()):
 	xdmacSym_CC_DWIDTH.setLabel("Data Width")
 	xdmacSym_CC_DWIDTH.addKey("BYTE", "0", "8-Bits")
 	xdmacSym_CC_DWIDTH.addKey("HALFWORD", "1", "16-Bits")
-	xdmacSym_CC_DWIDTH.addKey("WORD", "1", "32-Bits")
+	xdmacSym_CC_DWIDTH.addKey("WORD", "2", "32-Bits")
 	xdmacSym_CC_DWIDTH.setOutputMode("Key")
 	xdmacSym_CC_DWIDTH.setDisplayMode("Description")
 	xdmacSym_CC_DWIDTH.setSelectedKey("BYTE",1)
