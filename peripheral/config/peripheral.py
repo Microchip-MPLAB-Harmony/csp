@@ -1,5 +1,6 @@
 import os.path
 
+# Capability of different peripherals that higher level layers depends on
 peripherals = {
                 "EFC_6450"      : ["MEMORY"],
                 "FLEXCOM_11268" : ["UART", "SPI", "I2C"],
@@ -14,6 +15,9 @@ peripherals = {
                 "TWIHS_11210"   : ["I2C"],
                 "USART_6089"    : ["UART"],
                 "USART_11278"   : ["UART"],
+                "TC_U2212"      : ["TMR"],
+                "TC_U2249"      : ["TMR"],
+                "TC_6082"       : ["TMR"],
     }
 
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
