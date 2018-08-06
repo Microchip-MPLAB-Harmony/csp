@@ -76,7 +76,11 @@ if Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK"):
 systickClock.addKey("HCLK", str(1) , "Processor clock (HCLK)" )
 
 
-def sysTickMax(systick, event):	
+def sysTickMax(systick, event):
+	clock = 0
+	freq_ext = 0
+	freq_proc = 0
+	max = 0
 	if Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK"):
 		freq_ext = Database.getSymbolValue("core", "SYSTICK")
 		clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
