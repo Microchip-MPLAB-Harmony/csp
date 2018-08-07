@@ -229,10 +229,12 @@ void PWM${INDEX}_Initialize (void)
 <#if PWM_FPE_VAL?has_content>
     /*************************** Fault ************************/
     /* Enable fault input */
-    PWM${INDEX}_REGS->PWM_FPE= ${PWM_FPE_VAL};
-    PWM${INDEX}_REGS->PWM_FPV1= ${PWM_FPV1_VAL};
+    PWM${INDEX}_REGS->PWM_FPE = ${PWM_FPE_VAL};
+    <#if PWM_FPV1_VAL?has_content>
+    <#lt>    PWM${INDEX}_REGS->PWM_FPV1 = ${PWM_FPV1_VAL};
+    </#if>
     <#if PWM_FPV2_VAL?has_content>
-    <#lt>    PWM${INDEX}_REGS->PWM_FPV2= ${PWM_FPV2_VAL};
+    <#lt>    PWM${INDEX}_REGS->PWM_FPV2 = ${PWM_FPV2_VAL};
     </#if>
     /* Fault mode configuration */
     PWM${INDEX}_REGS->PWM_FMR = PWM_FMR_FPOL(0b${PWM_FAULT_7_FMR_FPOL}${PWM_FAULT_6_FMR_FPOL}${PWM_FAULT_5_FMR_FPOL}${PWM_FAULT_4_FMR_FPOL}${PWM_FAULT_3_FMR_FPOL}${PWM_FAULT_2_FMR_FPOL}${PWM_FAULT_1_FMR_FPOL}${PWM_FAULT_0_FMR_FPOL}) |
