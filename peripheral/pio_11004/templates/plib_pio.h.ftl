@@ -361,7 +361,8 @@ void PIO_Initialize(void);
     This function writes/drives the "value" on the selected I/O line/pin.
 
   Precondition:
-    None.
+    The desired pin must be configured as an output pin.
+    PIO_Initialize() must have been called.
 
   Parameters:
     pin       - One of the IO pins from the enum PIO_PIN
@@ -463,7 +464,7 @@ static inline bool PIO_PinLatchRead( PIO_PIN pin);
     This function toggles/inverts the value on the selected I/O line/pin.
 
   Precondition:
-    None.
+    PIO_Initialize() must have been called.
 
   Parameters:
     pin       - One of the IO pins from the enum PIO_PIN
@@ -786,6 +787,7 @@ uint32_t PIO_PortRead(PIO_PORT port);
 
   Precondition:
     The desired pins lines of the selected port must be setup as output(s).
+    PIO_Initialize() must have been called.
 
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
@@ -936,7 +938,7 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask);
     This function toggles (or invert) the selected IO pins of a port.
 
   Precondition:
-    None.
+    PIO_Initialize() must have been called.
 
   Parameters:
     port       - One of the IO ports from the enum PIO_PORT
