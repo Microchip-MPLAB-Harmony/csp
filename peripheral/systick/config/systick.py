@@ -12,7 +12,7 @@ Log.writeInfoMessage("Loading SYSTICK for " + Variables.get("__PROCESSOR"))
 
 
 def systickUse(systickEnable, osal):
-    if osal["value"] == 0:
+    if osal["value"] == "BareMetal":
         systickEnable.setVisible(True)
     else:
         systickEnable.setVisible(False)
@@ -26,7 +26,7 @@ sysTickMenu.setLabel("SysTick")
 
 systickEnable = coreComponent.createBooleanSymbol("systickEnable", sysTickMenu)
 systickEnable.setLabel("Enable SysTick")
-systickEnable.setDependencies(systickUse, ["OSAL.OSAL_RTOS"])
+systickEnable.setDependencies(systickUse, ["Harmony.SELECT_RTOS"])
 
 
 
