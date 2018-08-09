@@ -48,7 +48,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 
 /* Provide C++ Compatibility */
-#ifdef __cplusplus  
+#ifdef __cplusplus
 
     extern "C" {
 
@@ -60,14 +60,14 @@ typedef enum
 {
     SPI_CLOCK_PHASE_TRAILING_EDGE = 0 << SPI_CSR_NCPHA_Pos,
     SPI_CLOCK_PHASE_LEADING_EDGE = 1 << SPI_CSR_NCPHA_Pos
-    
+
 }SPI_CLOCK_PHASE;
 
 typedef enum
 {
     SPI_CLOCK_POLARITY_IDLE_LOW = 0 << SPI_CSR_CPOL_Pos,
     SPI_CLOCK_POLARITY_IDLE_HIGH = 1 << SPI_CSR_CPOL_Pos
-    
+
 }SPI_CLOCK_POLARITY;
 
 typedef enum
@@ -85,7 +85,7 @@ typedef enum
 }SPI_DATA_BITS;
 
 typedef struct
-{     
+{
     uint32_t    clockFrequency;
     SPI_CLOCK_PHASE clockPhase;
     SPI_CLOCK_POLARITY clockPolarity;
@@ -93,7 +93,7 @@ typedef struct
 
 }SPI_TRANSFER_SETUP;
 
-typedef enum 
+typedef enum
 {
     SPI_ERROR_NONE = 0,
     SPI_ERROR_OVERRUN = 1 << SPI_SR_OVRES_Pos
@@ -110,7 +110,7 @@ typedef  void (*SPI_CALLBACK) (uintptr_t context);
 
 typedef struct
 {
-    void*                   txBuffer;    
+    void*                   txBuffer;
     void*                   rxBuffer;
     size_t                  txSize;
 	size_t                  rxSize;
@@ -118,17 +118,17 @@ typedef struct
     size_t                  rxCount;
     size_t                  txCount;
     bool                    transferIsBusy;
-    SPI_CALLBACK       		callback; 
+    SPI_CALLBACK       		callback;
     uintptr_t               context;
     uint32_t                status;
-    
+
 } SPI_OBJECT ;
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
 
     }
-    
+
 #endif
 
 #endif // PLIB_SPI_H
