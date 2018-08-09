@@ -79,7 +79,5 @@ for module in range (0, len(modules)):
                     smcChipSelCount = smcRegGroup.getRegisterCount()
                     for smcChipSel in range(0, smcChipSelCount):
                         periphComponent.addCapability("smc_cs"  + str(smcChipSel), "SMC_CS", "SMC_CS"  + str(smcChipSel), False)
-                else:
-                    periphComponent.addCapability(periphName + "_" + str(periphInstanceIndex), periphName)
     else:
         print("CSP: Peripheral [" + periphName + " id=" + periphID + "] is not supported in MCC")
