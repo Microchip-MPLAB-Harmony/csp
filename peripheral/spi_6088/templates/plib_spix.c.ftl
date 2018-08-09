@@ -135,14 +135,7 @@ bool SPI${SPI_INDEX?string}_WriteRead(void* pTransmitData, size_t txSize, void* 
             }
             else if (dummySize > 0)
             {
-                if(dataBits == SPI_CSR_BITS_8_BIT)
-                {
-                    SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFF;
-                }
-                else
-                {
-                    SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFFFF;
-                }
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0x${SPI_DUMMY_DATA};
                 dummySize--;
             }
 
@@ -236,7 +229,7 @@ bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void*
             }
             else if (spi${SPI_INDEX?string}Obj.dummySize > 0)
             {
-                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFF;
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = (uint8_t)(0x${SPI_DUMMY_DATA});
                 spi${SPI_INDEX?string}Obj.dummySize--;
             }
         }
@@ -253,7 +246,7 @@ bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void*
             }
             else if (spi${SPI_INDEX?string}Obj.dummySize > 0)
             {
-                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFFFF;
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = (uint16_t)(0x${SPI_DUMMY_DATA});
                 spi${SPI_INDEX?string}Obj.dummySize--;
             }
         }
@@ -357,7 +350,7 @@ void SPI${SPI_INDEX?string}_InterruptHandler(void)
             }
             else if (spi${SPI_INDEX?string}Obj.dummySize > 0)
             {
-                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFF;
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = (uint8_t)(0x${SPI_DUMMY_DATA});
                 spi${SPI_INDEX?string}Obj.dummySize--;
             }
         }
@@ -369,7 +362,7 @@ void SPI${SPI_INDEX?string}_InterruptHandler(void)
             }
             else if (spi${SPI_INDEX?string}Obj.dummySize > 0)
             {
-                SPI${SPI_INDEX?string}_REGS->SPI_TDR = 0xFFFF;
+                SPI${SPI_INDEX?string}_REGS->SPI_TDR = (uint16_t)(0x${SPI_DUMMY_DATA});
                 spi${SPI_INDEX?string}Obj.dummySize--;
             }
         }

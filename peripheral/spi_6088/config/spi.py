@@ -71,7 +71,7 @@ def getMasterClockFreq():
     return int(clkSymMasterClockFreq)
 
 def showMasterDependencies(spiSym_MR_Dependencies, event):
-    if event["value"] == "Master":
+    if event["symbol"].getKey(event["value"]) == "MASTER":
         spiSym_MR_Dependencies.setVisible(True)
     else:
         spiSym_MR_Dependencies.setVisible(False)
@@ -96,6 +96,25 @@ def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
 def calculateCSRIndex(spiSymCSRIndex, event):
     spiSymCSRIndex.setValue(int(event["symbol"].getKeyValue(event["value"])[-1]), 1)
 
+def DummyData_ValueUpdate(spiSymDummyData, event):
+    if event["symbol"].getKey(event["value"]) == "_8_BIT":
+        spiSymDummyData.setValue(0xFF, 1)
+    elif event["symbol"].getKey(event["value"]) == "_9_BIT":
+        spiSymDummyData.setValue(0x1FF, 1)
+    elif event["symbol"].getKey(event["value"]) == "_10_BIT":
+        spiSymDummyData.setValue(0x3FF, 1)
+    elif event["symbol"].getKey(event["value"]) == "_11_BIT":
+        spiSymDummyData.setValue(0x7FF, 1)
+    elif event["symbol"].getKey(event["value"]) == "_12_BIT":
+        spiSymDummyData.setValue(0xFFF, 1)
+    elif event["symbol"].getKey(event["value"]) == "_13_BIT":
+        spiSymDummyData.setValue(0x1FFF, 1)
+    elif event["symbol"].getKey(event["value"]) == "_14_BIT":
+        spiSymDummyData.setValue(0x3FFF, 1)
+    elif event["symbol"].getKey(event["value"]) == "_15_BIT":
+        spiSymDummyData.setValue(0x7FFF, 1)
+    elif event["symbol"].getKey(event["value"]) == "_16_BIT":
+        spiSymDummyData.setValue(0xFFFF, 1)
 
 spiBitField_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_MR"]/bitfield@[name="MSTR"]')
 spiValGrp_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_MR__MSTR"]')
@@ -158,8 +177,7 @@ def instantiateComponent(spiComponent):
     spiSym_MR_MSTR.setDefaultValue(0)
     spiSym_MR_MSTR.setReadOnly(True)
 
-    count = 2
-    for id in range(0,count):
+    for id in range(0, len(spiValGrp_MR_MSTR.getChildren())):
         valueName = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("name")
         value = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("value")
         description = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("caption")
@@ -221,13 +239,18 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_BITS.setDefaultValue(0)
     spiSym_CSR_BITS.setVisible(True)
 
-    count = 9
-    for id in range(0,count):
+    for id in range(0,len(spiValGrp_CSR_BITS.getChildren())):
         valueName = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("name")
         value = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("value")
         description = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("caption")
         spiSym_CSR_BITS.addKey(valueName, value, description)
 
+    spiSymDummyData = spiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
+    spiSymDummyData.setVisible(True)
+    spiSymDummyData.setLabel("Dummy Data")
+    spiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
+    spiSymDummyData.setDefaultValue(0xFF)
+    spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_CSR_BITS"])
 
     spiSym_CSR_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CSR_CPOL", None)
     spiSym_CSR_CPOL.setLabel(spiBitField_CSR_CPOL.getAttribute("caption"))
@@ -236,8 +259,7 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_CPOL.setDefaultValue(0)
     spiSym_CSR_CPOL.setVisible(True)
 
-    count = 2
-    for id in range(0,count):
+    for id in range(0, len(spiValGrp_CSR_CPOL.getChildren())):
         valueName = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("name")
         value = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("value")
         description = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("caption")
@@ -250,8 +272,7 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_NCPHA.setDefaultValue(0)
     spiSym_CSR_NCPHA.setVisible(True)
 
-    count = 2
-    for id in range(0,count):
+    for id in range(0, len(spiValGrp_CSR_NCPHA.getChildren())):
         valueName = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("name")
         value = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("value")
         description = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("caption")
