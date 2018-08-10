@@ -4,6 +4,137 @@ appSourceFile = []
 appHeaderFile = []
 appHeaderName = []
 
+btlTypes =  ["",
+             "UART",
+             "I2C"]
+
+max_uart_btl_size = 0
+max_i2c_btl_size = 0
+
+def xc32HeapSize(symbol, event):
+     symbol.setValue(str(event["value"]))
+
+def enableFileGen(symbol, event):
+    if(event["value"] == True):
+       symbol.setEnabled(False)
+    elif(event["value"] == False):
+       symbol.setEnabled(True)
+
+def setVisible(symbol, event):
+    if (event["value"] == True):
+        symbol.setVisible(True)
+    elif (event["value"] == False):
+        symbol.setVisible(False)
+
+def enableBootloader(symbol, event):
+    component = symbol.getComponent()
+
+    btl_proj = component.getSymbolByID("BootloaderProject").getValue()
+    btl_app = component.getSymbolByID("BootloaderAppProject").getValue()
+    btl_type = component.getSymbolByID("BootloaderType").getValue()
+
+    if (btl_proj == True):
+        if (btl_app == False):
+            component.getSymbolByID("BootloaderEnable").setValue(True, 1)
+            component.getSymbolByID("BootloaderAppEnable").setValue(False, 1)
+            component.getSymbolByID("XC32_LINKER_PREPROC_MARCOS").setValue("")
+        elif (btl_app == True):
+            component.getSymbolByID("BootloaderEnable").setValue(False, 1)
+            component.getSymbolByID("BootloaderAppEnable").setValue(True, 1)
+            component.getSymbolByID("XC32_LINKER_PREPROC_MARCOS").setValue(getFlashDetails(btl_type))
+    elif(btl_proj == False):
+        component.getSymbolByID("BootloaderEnable").setValue(False, 1)
+        component.getSymbolByID("BootloaderAppEnable").setValue(False, 1)
+        component.getSymbolByID("XC32_LINKER_PREPROC_MARCOS").setValue("")
+
+
+def getFlashDetails(btl_type):
+    global max_uart_btl_size
+    global max_i2C_btl_size
+
+    flash_start         = int(flashMemory.get("START_ADDRESS")[0], 16)
+    flash_size          = int(flashMemory.get("FLASH_SIZE")[0], 16)
+    flash_erase_size    = int(flashMemory.get("ERASE_SIZE")[0], 16)
+
+    if (btl_type == ""):
+        return ""
+
+    if (btl_type == "UART"):
+        if (flash_erase_size >= max_uart_btl_size):
+            btl_size = flash_erase_size
+        else:
+            btl_size = max_uart_btl_size
+    elif (btl_type == "I2C"):
+        if (flash_erase_size >= max_i2c_btl_size):
+            btl_size = flash_erase_size
+        else:
+            btl_size = max_i2c_btl_size
+
+    rom_origin = "ROM_ORIGIN="+ str(hex(flash_start + btl_size))
+    rom_length = "ROM_LENGTH=" + str(hex(flash_size - btl_size))
+
+    return (rom_origin + ";" + rom_length)
+
+def setFlashParams(symbol, event):
+
+    flashDetails = getFlashDetails(event["value"])
+
+    symbol.setValue(flashDetails)
+
+def generateBootloaderConfiguration(coreComponent, projMenu):
+    global max_uart_btl_size
+    global max_i2C_btl_size
+
+    bootloaderProj = coreComponent.createBooleanSymbol("BootloaderProject", projMenu)
+    bootloaderProj.setLabel("Generate Bootloader Project?")
+    bootloaderProj.setDefaultValue(False)
+
+    bootloaderAppProj = coreComponent.createBooleanSymbol("BootloaderAppProject", bootloaderProj)
+    bootloaderAppProj.setLabel("Generate Bootloader Application Project")
+    bootloaderAppProj.setDefaultValue(False)
+    bootloaderAppProj.setVisible((bootloaderProj.getValue() == True))
+    bootloaderAppProj.setDependencies(setVisible, ["BootloaderProject"])
+
+    bootloaderAppEnable = coreComponent.createBooleanSymbol("BootloaderAppEnable", bootloaderProj)
+    bootloaderAppEnable.setDefaultValue(((bootloaderAppProj.getValue() == True) and (bootloaderProj.getValue() == True)))
+    bootloaderAppEnable.setVisible(False)
+
+    bootloaderEnable = coreComponent.createBooleanSymbol("BootloaderEnable", bootloaderProj)
+    bootloaderEnable.setDefaultValue(((bootloaderAppProj.getValue() == False) and (bootloaderProj.getValue() == True)))
+    bootloaderEnable.setVisible(False)
+    bootloaderEnable.setDependencies(enableBootloader, ["BootloaderAppProject", "BootloaderProject"])
+
+    bootloaderTypeUsed = coreComponent.createComboSymbol("BootloaderType", bootloaderAppProj, btlTypes)
+    bootloaderTypeUsed.setLabel("Bootloader Running on Device")
+    bootloaderTypeUsed.setDefaultValue("")
+    bootloaderTypeUsed.setVisible((bootloaderAppProj.getValue() == True))
+    bootloaderTypeUsed.setDependencies(setVisible, ["BootloaderAppProject"])
+
+    bootloaderUartSizeMax = coreComponent.createIntegerSymbol("BootloaderUartSizeMax", bootloaderProj)
+    bootloaderUartSizeMax.setDefaultValue(1536)
+    bootloaderUartSizeMax.setVisible(False)
+    bootloaderUartSizeMax.setReadOnly(True)
+
+    bootloaderI2CSizeMax = coreComponent.createIntegerSymbol("BootloaderI2CSizeMax", bootloaderProj)
+    bootloaderI2CSizeMax.setDefaultValue(2048)
+    bootloaderI2CSizeMax.setVisible(False)
+    bootloaderI2CSizeMax.setReadOnly(True)
+
+    max_uart_btl_size = bootloaderUartSizeMax.getValue()
+    max_i2C_btl_size = bootloaderI2CSizeMax.getValue()
+
+    flashDetails = getFlashDetails(bootloaderTypeUsed.getValue())
+
+    # set XC32-LD option to Modify ROM Start address and length
+    xc32PreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", None)
+    xc32PreprocessroMacroSym.setCategory("C32-LD")
+    xc32PreprocessroMacroSym.setKey("preprocessor-macros")
+    if (bootloaderAppProj.getValue() == True):
+        xc32PreprocessroMacroSym.setValue(flashDetails)
+    else:
+        xc32PreprocessroMacroSym.setValue("")
+    xc32PreprocessroMacroSym.setDependencies(setFlashParams, ["BootloaderType"])
+
 def instantiateComponent(coreComponent):
 
     global appSourceFile
@@ -19,7 +150,6 @@ def instantiateComponent(coreComponent):
     devCfgMenu = coreComponent.createMenuSymbol("CoreCfgMenu", devMenu)
     devCfgMenu.setLabel(Variables.get("__PROCESSOR") + " Device Configuration")
     devCfgMenu.setDescription("Hardware Configuration Bits")
-
 
     projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
     projMenu.setLabel("Project Configuration")
@@ -116,6 +246,7 @@ def instantiateComponent(coreComponent):
     systemAppInitDataList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA", None)
 
     systemInitCoreList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE", None)
+    systemInitBootloaderList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_BOOTLOADER_TRIGGER", None)
     systemInitPeripheralList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS", None)
     systemInitDriver2List = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS", None)
     systemInitSysList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES", None)
@@ -130,6 +261,7 @@ def instantiateComponent(coreComponent):
     intSourceFile.setDestPath("")
     intSourceFile.setProjectPath("config/" + configName + "/")
     intSourceFile.setType("SOURCE")
+    intSourceFile.setDependencies(enableFileGen, ["BootloaderEnable"])
     systemIntHeadersList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_C_INCLUDES", None)
     systemIntVectorsList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_C_VECTORS", None)
     systemIntVectorsMultipleHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS", None)
@@ -145,6 +277,7 @@ def instantiateComponent(coreComponent):
     intSourceFile.setDestPath("")
     intSourceFile.setProjectPath("config/" + configName + "/")
     intSourceFile.setType("SOURCE")
+    intSourceFile.setDependencies(enableFileGen, ["BootloaderEnable"])
 
     # set XC32 heap size
     xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
@@ -174,9 +307,9 @@ def instantiateComponent(coreComponent):
     debugSourceFile.setDestPath("/stdio/")
     debugSourceFile.setProjectPath("config/" + configName + "/stdio/")
     debugSourceFile.setType("SOURCE")
+    debugSourceFile.setDependencies(enableFileGen, ["BootloaderEnable"])
 
     # load device specific information, clock and pin manager
     execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")
 
-def xc32HeapSize(symbol, event):
-     symbol.setValue(str(event["value"]))
+    generateBootloaderConfiguration(coreComponent, projMenu)

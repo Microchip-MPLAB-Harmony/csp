@@ -27,9 +27,11 @@ extern "C" {
 /* Harmony specific
  * We implement only the syscalls we want over the stubs provided by libpic32c
  */
-extern void _exit(int status);
-
-extern void _exit(int status)
+<#if BootloaderEnable == true>
+    <#lt>extern void __attribute__((noreturn)) exit(int status)
+<#else>
+    <#lt>extern void __attribute__((noreturn)) _exit(int status)
+</#if>
 {
     /* Software breakpoint */
 #ifdef DEBUG

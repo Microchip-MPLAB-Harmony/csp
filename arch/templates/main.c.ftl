@@ -39,11 +39,15 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
+<#if BootloaderEnable == true>
+    bootloader_start();
+<#else>
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
     }
+</#if>
 
     /* Execution should not come here during normal operation */
 
