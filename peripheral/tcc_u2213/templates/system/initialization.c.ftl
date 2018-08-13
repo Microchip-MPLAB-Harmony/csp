@@ -1,0 +1,1 @@
+    TCC${TCC_INDEX}_PWMInitialize();

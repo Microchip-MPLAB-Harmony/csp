@@ -1,0 +1,1 @@
+#include "peripheral/tcc/plib_tcc${TCC_INDEX}.h"
