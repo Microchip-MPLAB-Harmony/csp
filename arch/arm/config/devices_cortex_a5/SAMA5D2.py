@@ -23,6 +23,9 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
 #load Matrix -- default all peripherals to non-secure
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/matrix_44025/config/matrix.py")
 
+#load L2CC
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/l2cc_11160/config/l2cc.py")
+
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a5d2/config/clk.py")
 
@@ -34,8 +37,6 @@ coreComponent.addPlugin("../peripheral/pio_11264/plugin/PIC32CZDApinmanager.jar"
 # load AIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/aic_11145/config/aic.py")
 #coreComponent.addPlugin("../peripheral/aic_11145/plugin/ARM_M7_AICmanager.jar")	# to be provided later
-
-# load PIT
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
