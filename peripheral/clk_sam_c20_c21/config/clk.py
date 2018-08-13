@@ -69,6 +69,15 @@ def setXOSCCFDENVisibleProperty(symbol, event):
 def setXOSCCFDPRESCVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
 
+def setXOSCFreq(symbol, event):
+
+    enable = Database.getSymbolValue("core", "CONFIG_CLOCK_XOSC_ENABLE")
+
+    if enable:
+        symbol.setValue(Database.getSymbolValue("core", "CONFIG_CLOCK_XOSC_FREQUENCY"), 1)
+    else:
+        symbol.setValue(0, 1)
+
 ####    OSC48M Configuration Callback Functions    #############################
 
 #OSC48M Internal Oscillator OnDemand Visible Property
@@ -86,6 +95,16 @@ def setOSC48MDIVVisibleProperty(symbol, event):
 #OSC48M Internal Oscillator Startup Time Visible Property
 def setOSC48MSTARTUPVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
+
+def setOSC48ClockFreq(symbol, event):
+
+    enable = Database.getSymbolValue("core", "CONFIG_CLOCK_OSC48M_ENABLE")
+
+    if enable:
+        divisorValue = int(Database.getSymbolValue("core", "CONFIG_CLOCK_OSC48M_DIV")) + 1
+        symbol.setValue(48000000/divisorValue, 1)
+    else:
+        symbol.setValue(0, 1)
 
 ####    DPLL Configuration Callback Functions    ###############################
 
@@ -115,7 +134,10 @@ def setDPLLPRESCVisibleProperty(symbol, event):
 
 #DPLL Oscillator Clock Divider Visible Property
 def setDPLLLCLKDIVIDERVisibleProperty(symbol, event):
-    symbol.setVisible(event["value"])
+    if(event["value"] == 1):
+        symbol.setVisible(True)
+    else :
+        symbol.setVisible(False)
 
 #DPLL Oscillator Lock Bypass Visible Property
 def setDPLLLBYPASSVisibleProperty(symbol, event):
@@ -141,6 +163,40 @@ def setDPLLLPENVisibleProperty(symbol, event):
 def setDPLLFILTERVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
 
+def setDPLL96MClockFreq(symbol, event):
+
+    enable = Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_ENABLE")
+
+    if enable:
+        clockSrc = Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_REF_CLOCK")
+
+        # XOSC32K Clock
+        if clockSrc == 0:
+            srcFreq = Database.getSymbolValue("core", "XOSC32K_FREQ")
+
+        # XOSC Clock
+        elif clockSrc == 1:
+
+            divisor = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_DIVIDER"))
+            srcFreq = int(Database.getSymbolValue("core", "XOSC_FREQ")) / (2 * (divisor + 1))
+
+        # GCLK_DPLL Clock
+        elif clockSrc == 2:
+            srcFreq = int(Database.getSymbolValue("core","OSCCTRL_FDPLL_CLK_FREQ"))
+
+        else:
+            return
+
+        ldr = int(Database.getSymbolValue("core","CONFIG_CLOCK_DPLL_LDR_INTEGER"))
+        ldrFrac = int(Database.getSymbolValue("core","CONFIG_CLOCK_DPLL_LDRFRAC_FRACTION"))
+        prescalar = int(Database.getSymbolValue("core","CONFIG_CLOCK_DPLL_PRESCALAR"))
+
+        dpllFreq = int(srcFreq * (ldr + 1.0 + (ldrFrac/16.0)) * (1.0 / float(2**prescalar)))
+
+        symbol.setValue(dpllFreq, 1)
+    else:
+        symbol.setValue(0, 1)
+
 ################################################################################
 #######          OSCCTRL Database Components      ##############################
 ################################################################################
@@ -155,18 +211,18 @@ oscctrlSym_Menu.setLabel("Oscillator Configuration")
 oscctrlSym_XOSC_CONFIG_ENABLE = coreComponent.createBooleanSymbol("CONFIG_CLOCK_XOSC_ENABLE", oscctrlSym_Menu)
 oscctrlSym_XOSC_CONFIG_ENABLE.setLabel("External Multipurpose Crystal Oscillator(XOSC) Enable")
 oscctrlSym_XOSC_CONFIG_ENABLE.setDescription("External Crystal Oscillator Enable Feature")
-# oscctrlSym_XOSC_CONFIG_ENABLE.setDefaultValue(False)
+oscctrlSym_XOSC_CONFIG_ENABLE.setDefaultValue(False)
 
 #XOSC Oscillator Interrupt Mode
 oscctrlSym_XOSC_INTERRUPTMODE = coreComponent.createBooleanSymbol("XOSC_INTERRUPT_MODE", oscctrlSym_XOSC_CONFIG_ENABLE)
-# oscctrlSym_XOSC_INTERRUPTMODE.setDefaultValue(False)
+oscctrlSym_XOSC_INTERRUPTMODE.setLabel("Enable Interrupt?")
 oscctrlSym_XOSC_INTERRUPTMODE.setVisible(False)
 oscctrlSym_XOSC_INTERRUPTMODE.setDependencies(setXOSCInterruptmodeProperty, ["CONFIG_CLOCK_XOSC_ENABLE"])
 
 #XOSC Automatic Gain Control Mode
 oscctrlSym_XOSC_AMPGC = coreComponent.createBooleanSymbol("XOSC_AMPGC", oscctrlSym_XOSC_CONFIG_ENABLE)
 oscctrlSym_XOSC_AMPGC.setLabel("Automatic Gain Control ")
-# oscctrlSym_XOSC_AMPGC.setDefaultValue(False)
+oscctrlSym_XOSC_AMPGC.setDefaultValue(False)
 oscctrlSym_XOSC_AMPGC.setVisible(False)
 oscctrlSym_XOSC_AMPGC.setDependencies(setXOSCAMPGCmodeProperty, ["CONFIG_CLOCK_XOSC_ENABLE"])
 
@@ -176,7 +232,8 @@ oscctrlSym_XOSC_OSCILLATORMODE.setLabel("External Oscillator Mode ")
 oscctrlSym_XOSC_OSCILLATORMODE.setVisible(False)
 oscctrlSym_XOSC_OSCILLATORMODE.addKey("EXTERNAL_CLOCK","0","xosc external clock enable")
 oscctrlSym_XOSC_OSCILLATORMODE.addKey("CRYSTAL","1","crystal oscillator enable")
-oscctrlSym_XOSC_OSCILLATORMODE.setOutputMode("Key")
+oscctrlSym_XOSC_OSCILLATORMODE.setOutputMode("Value")
+oscctrlSym_XOSC_OSCILLATORMODE.setDefaultValue(1)
 oscctrlSym_XOSC_OSCILLATORMODE.setDependencies(setXOSCOSCILLATORModeVisibleProperty, ["CONFIG_CLOCK_XOSC_ENABLE"])
 
 #XOSC Oscillator Frequency
@@ -195,14 +252,16 @@ oscctrlSym_XOSCCTRL_OSCILLATOR_GAIN.setDescription("Setting the XOSC Frequency")
 oscctrlSym_XOSCCTRL_OSCILLATOR_GAIN.setVisible(False)
 oscctrlSym_XOSCCTRL_OSCILLATOR_GAIN.setDependencies(setXOSCOscillatorGAINVisibleProperty, ["CONFIG_CLOCK_XOSC_FREQUENCY"])
 
-xoscOperationModeONDEMAND = ["Always Enable" , "Only on Peripheral Request"]
-
 #XOSC Oscillator ONDEMAND Mode
-oscctrlSym_XOSCCTRL_ONDEMAND = coreComponent.createComboSymbol("CONFIG_CLOCK_XOSC_ONDEMAND", oscctrlSym_XOSC_CONFIG_ENABLE, xoscOperationModeONDEMAND)
+oscctrlSym_XOSCCTRL_ONDEMAND = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_XOSC_ONDEMAND", oscctrlSym_XOSC_CONFIG_ENABLE)
 oscctrlSym_XOSCCTRL_ONDEMAND.setLabel("Oscillator On-Demand Control")
 oscctrlSym_XOSCCTRL_ONDEMAND.setDescription("Configures the XOSC on Demand Behavior")
-oscctrlSym_XOSCCTRL_ONDEMAND.setVisible(False)
-oscctrlSym_XOSCCTRL_ONDEMAND.setDefaultValue("Always Enable")
+oscctrlSym_XOSCCTRL_ONDEMAND.setVisible(True)
+oscctrlSym_XOSCCTRL_ONDEMAND.setOutputMode("Value")
+oscctrlSym_XOSCCTRL_ONDEMAND.setDisplayMode("Description")
+oscctrlSym_XOSCCTRL_ONDEMAND.addKey("Disable",str(0),"Always Enable")
+oscctrlSym_XOSCCTRL_ONDEMAND.addKey("Enable",str(1),"Only on Peripheral Request")
+oscctrlSym_XOSCCTRL_ONDEMAND.setDefaultValue(0)
 oscctrlSym_XOSCCTRL_ONDEMAND.setDependencies(setXOSCONDEMANDVisibleProperty, ["CONFIG_CLOCK_XOSC_ENABLE"])
 
 #XOSC Oscillator Startup Time
@@ -234,7 +293,7 @@ oscctrlSym_XOSCCTRL_RUNSTDBY = coreComponent.createBooleanSymbol("CONFIG_CLOCK_X
 oscctrlSym_XOSCCTRL_RUNSTDBY.setLabel("Run Oscillator in Standby Sleep Mode")
 oscctrlSym_XOSCCTRL_RUNSTDBY.setDescription("External oscillator RunIn StandBy mode or not")
 oscctrlSym_XOSCCTRL_RUNSTDBY.setVisible(False)
-# oscctrlSym_XOSCCTRL_RUNSTDBY.setDefaultValue(False)
+oscctrlSym_XOSCCTRL_RUNSTDBY.setDefaultValue(False)
 oscctrlSym_XOSCCTRL_RUNSTDBY.setDependencies(setXOSCRUNSTDBYVisibleProperty, ["CONFIG_CLOCK_XOSC_ENABLE"])
 
 #XOSC Oscillator Clock Failure Detector(CFD) Enable
@@ -242,7 +301,7 @@ oscctrlSym_XOSCCTRL_CFDEN = coreComponent.createBooleanSymbol("CONFIG_CLOCK_XOSC
 oscctrlSym_XOSCCTRL_CFDEN.setLabel("Enable Clock Failure Detection")
 oscctrlSym_XOSCCTRL_CFDEN.setDescription("Clock Failure Detection enable or not")
 oscctrlSym_XOSCCTRL_CFDEN.setVisible(False)
-# oscctrlSym_XOSCCTRL_CFDEN.setDefaultValue(False)
+oscctrlSym_XOSCCTRL_CFDEN.setDefaultValue(False)
 oscctrlSym_XOSCCTRL_CFDEN.setDependencies(setXOSCCFDENVisibleProperty, ["CONFIG_CLOCK_XOSC_ENABLE"])
 
 #XOSC Oscillator Clock Failure Detector(CFD) Pre-Scalar
@@ -269,6 +328,17 @@ oscctrlSym_CFDPRESC_CFDPRESC.setOutputMode("Value")
 oscctrlSym_CFDPRESC_CFDPRESC.setDisplayMode("Description")
 oscctrlSym_CFDPRESC_CFDPRESC.setDependencies(setXOSCCFDPRESCVisibleProperty, ["CONFIG_CLOCK_XOSC_CFDEN"])
 
+clkSym_XOSC_Freq = coreComponent.createIntegerSymbol("XOSC_FREQ", oscctrlSym_XOSC_CONFIG_ENABLE)
+clkSym_XOSC_Freq.setLabel("XOSC Frequency")
+clkSym_XOSC_Freq.setDefaultValue(0)
+clkSym_XOSC_Freq.setReadOnly(True)
+
+enable = oscctrlSym_XOSC_CONFIG_ENABLE.getValue()
+if enable:
+    clkSym_XOSC_Freq.setValue(oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.getValue(), 1)
+
+clkSym_XOSC_Freq.setDependencies(setXOSCFreq, ["CONFIG_CLOCK_XOSC_ENABLE", "CONFIG_CLOCK_XOSC_FREQUENCY"])
+
 ############################   OSC48M Components    ############################
 
 #OSC48M Internal Oscillator Enable
@@ -280,17 +350,21 @@ oscctrlSym_OSC48M_CONFIG_ENABLE.setDefaultValue(True)
 osc48mOperationModeONDEMAND = ["Always Enable" , "Only on Peripheral Request"]
 
 #OSC48M Internal Oscillator ONDEMAND Mode
-oscctrlSym_OSC48MCTRL_ONDEMAND = coreComponent.createComboSymbol("CONFIG_CLOCK_OSC48M_ONDEMAND", oscctrlSym_OSC48M_CONFIG_ENABLE, osc48mOperationModeONDEMAND)
+oscctrlSym_OSC48MCTRL_ONDEMAND = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_OSC48M_ONDEMAND", oscctrlSym_OSC48M_CONFIG_ENABLE)
 oscctrlSym_OSC48MCTRL_ONDEMAND.setLabel("Oscillator On-Demand Control")
+oscctrlSym_OSC48MCTRL_ONDEMAND.setOutputMode("Value")
+oscctrlSym_OSC48MCTRL_ONDEMAND.setDisplayMode("Description")
 oscctrlSym_OSC48MCTRL_ONDEMAND.setDescription("Configures the osc48m on Demand Behavior")
-oscctrlSym_OSC48MCTRL_ONDEMAND.setDefaultValue("Always Enable")
+oscctrlSym_OSC48MCTRL_ONDEMAND.addKey("Disable",str(0),"Always Enable")
+oscctrlSym_OSC48MCTRL_ONDEMAND.addKey("Enable",str(1),"Only on Peripheral Request")
+oscctrlSym_OSC48MCTRL_ONDEMAND.setDefaultValue(0)
 oscctrlSym_OSC48MCTRL_ONDEMAND.setDependencies(setOSC48MONDEMANDVisibleProperty, ["CONFIG_CLOCK_OSC48M_ENABLE"])
 
 #OSC48M Internal Oscillator  Run StandBy Control
 oscctrlSym_OSC48MCTRL_RUNSTDBY = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC48M_RUNSTDY", oscctrlSym_OSC48M_CONFIG_ENABLE)
 oscctrlSym_OSC48MCTRL_RUNSTDBY.setLabel("Run Oscillator in Standby Sleep Mode")
 oscctrlSym_OSC48MCTRL_RUNSTDBY.setDescription("osc48m run in StandBy Mode or Not")
-# oscctrlSym_OSC48MCTRL_RUNSTDBY.setDefaultValue(False)
+oscctrlSym_OSC48MCTRL_RUNSTDBY.setDefaultValue(False)
 oscctrlSym_OSC48MCTRL_RUNSTDBY.setDependencies(setOSC48MRUNSTDBYVisibleProperty, ["CONFIG_CLOCK_OSC48M_ENABLE"])
 
 #OSC48M Internal Oscillator  Division Factor
@@ -339,28 +413,46 @@ oscctrlSym_OSC48STUP_STARTUP.setOutputMode("Value")
 oscctrlSym_OSC48STUP_STARTUP.setDisplayMode("Description")
 oscctrlSym_OSC48STUP_STARTUP.setDependencies(setOSC48MSTARTUPVisibleProperty, ["CONFIG_CLOCK_OSC48M_ENABLE"])
 
+clkSym_OSC48M_Freq = coreComponent.createIntegerSymbol("OSC48M_CLOCK_FREQ", oscctrlSym_OSC48M_CONFIG_ENABLE)
+clkSym_OSC48M_Freq.setVisible(True)
+clkSym_OSC48M_Freq.setLabel("OSC 48M Clock Frequency")
+clkSym_OSC48M_Freq.setReadOnly(True)
+clkSym_OSC48M_Freq.setDefaultValue(0)
+clkSym_OSC48M_Freq.setDependencies(setOSC48ClockFreq, ["CONFIG_CLOCK_OSC48M_ENABLE", "CONFIG_CLOCK_OSC48M_DIV"])
+
+enable = oscctrlSym_OSC48M_CONFIG_ENABLE.getValue()
+
+if enable:
+    divisorValue = int(oscctrlSym_OSC48MDIV_DIV.getValue()) + 1
+    clkSym_OSC48M_Freq.setValue(48000000/divisorValue, 1)
+
 ############################   DPLL Components    ############################
 
 #Digital Phase Locked Loop(DPLL) Enable
 oscctrlSym_DPLL_CONFIG_ENABLE = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DPLL_ENABLE", oscctrlSym_Menu)
 oscctrlSym_DPLL_CONFIG_ENABLE.setLabel("Digital Phase Locked Loop(DPLL) Enable ")
 oscctrlSym_DPLL_CONFIG_ENABLE.setDescription("DPLL Configuration enabling feature")
-# oscctrlSym_DPLL_CONFIG_ENABLE.setDefaultValue(False)
+oscctrlSym_DPLL_CONFIG_ENABLE.setDefaultValue(False)
 
 #Digital Phase Locked Loop(DPLL) Interrupt Mode
 oscctrlSym_DPLL_INTERRUPTMODE = coreComponent.createBooleanSymbol("DPLL_INTERRUPT_MODE", oscctrlSym_DPLL_CONFIG_ENABLE)
-# oscctrlSym_DPLL_INTERRUPTMODE.setDefaultValue(False)
+oscctrlSym_DPLL_INTERRUPTMODE.setLabel("Enable Interrupt ?")
+oscctrlSym_DPLL_INTERRUPTMODE.setDefaultValue(False)
 oscctrlSym_DPLL_INTERRUPTMODE.setVisible(False)
 oscctrlSym_DPLL_INTERRUPTMODE.setDependencies(setDPLLInterruptmodeProperty, ["CONFIG_CLOCK_DPLL_ENABLE"])
 
 dpllOperationModeONDEMAND = ["Always Enable" , "Only on Peripheral Request"]
 
 #Digital Phase Locked Loop(DPLL) ONDEMAND Mode
-oscctrlSym_DPLLCTRLA_ONDEMAND = coreComponent.createComboSymbol("CONFIG_CLOCK_DPLL_ONDEMAND", oscctrlSym_DPLL_CONFIG_ENABLE, dpllOperationModeONDEMAND)
+oscctrlSym_DPLLCTRLA_ONDEMAND = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_DPLL_ONDEMAND", oscctrlSym_DPLL_CONFIG_ENABLE)
 oscctrlSym_DPLLCTRLA_ONDEMAND.setLabel("DPLL On-Demand Control")
 oscctrlSym_DPLLCTRLA_ONDEMAND.setDescription("Configures the DPLL on Demand Behavior")
-oscctrlSym_DPLLCTRLA_ONDEMAND.setVisible(False)
-oscctrlSym_DPLLCTRLA_ONDEMAND.setDefaultValue("Always Enable")
+oscctrlSym_DPLLCTRLA_ONDEMAND.setVisible(True)
+oscctrlSym_DPLLCTRLA_ONDEMAND.setOutputMode("Value")
+oscctrlSym_DPLLCTRLA_ONDEMAND.setDisplayMode("Description")
+oscctrlSym_DPLLCTRLA_ONDEMAND.addKey("Disable",str(0),"Always Enable")
+oscctrlSym_DPLLCTRLA_ONDEMAND.addKey("Enable",str(1),"Only on Peripheral Request")
+oscctrlSym_DPLLCTRLA_ONDEMAND.setDefaultValue(0)
 oscctrlSym_DPLLCTRLA_ONDEMAND.setDependencies(setDPLLONDEMANDVisibleProperty, ["CONFIG_CLOCK_DPLL_ENABLE"])
 
 #Digital Phase Locked Loop(DPLL) Run StandBy Control
@@ -368,7 +460,7 @@ oscctrlSym_DPLLCTRLA_RUNSTDBY = coreComponent.createBooleanSymbol("CONFIG_CLOCK_
 oscctrlSym_DPLLCTRLA_RUNSTDBY.setLabel("Run DPLL in Standby Sleep Mode")
 oscctrlSym_DPLLCTRLA_RUNSTDBY.setDescription("DPLL to run in standby mode or not")
 oscctrlSym_DPLLCTRLA_RUNSTDBY.setVisible(False)
-# oscctrlSym_DPLLCTRLA_RUNSTDBY.setDefaultValue(False)
+oscctrlSym_DPLLCTRLA_RUNSTDBY.setDefaultValue(False)
 oscctrlSym_DPLLCTRLA_RUNSTDBY.setDependencies(setDPLLRUNSTDBYVisibleProperty, ["CONFIG_CLOCK_DPLL_ENABLE"])
 
 #Digital Phase Locked Loop(DPLL) Loop Divider Ration(LDR) Integer part
@@ -416,7 +508,7 @@ oscctrlSym_DPLLCTRLB_LBYPASS = coreComponent.createBooleanSymbol("CONFIG_CLOCK_D
 oscctrlSym_DPLLCTRLB_LBYPASS.setLabel("Bypass DPLL Lock?")
 oscctrlSym_DPLLCTRLB_LBYPASS.setDescription("DPLL Lock signal is always asserted or DPLL Lock signal drives the DPLL controller internal logic.")
 oscctrlSym_DPLLCTRLB_LBYPASS.setVisible(False)
-# oscctrlSym_DPLLCTRLB_LBYPASS.setDefaultValue(False)
+oscctrlSym_DPLLCTRLB_LBYPASS.setDefaultValue(False)
 oscctrlSym_DPLLCTRLB_LBYPASS.setDependencies(setDPLLLBYPASSVisibleProperty, ["CONFIG_CLOCK_DPLL_ENABLE"])
 
 #Digital Phase Locked Loop(DPLL) Low Power Enable
@@ -424,7 +516,7 @@ oscctrlSym_DPLLCTRLB_LPEN = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DPLL
 oscctrlSym_DPLLCTRLB_LPEN.setLabel("DPLL Low Power Enable")
 oscctrlSym_DPLLCTRLB_LPEN.setDescription("Low Power Mode Enabled or not")
 oscctrlSym_DPLLCTRLB_LPEN.setVisible(False)
-# oscctrlSym_DPLLCTRLB_LPEN.setDefaultValue(False)
+oscctrlSym_DPLLCTRLB_LPEN.setDefaultValue(False)
 oscctrlSym_DPLLCTRLB_LPEN.setDependencies(setDPLLLPENVisibleProperty, ["CONFIG_CLOCK_DPLL_ENABLE"])
 
 #Digital Phase Locked Loop(DPLL) wakeUp Fast
@@ -432,7 +524,7 @@ oscctrlSym_DPLLCTRLB_WUF = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DPLL_
 oscctrlSym_DPLLCTRLB_WUF.setLabel("DPLL Fast Output Enable")
 oscctrlSym_DPLLCTRLB_WUF.setDescription("DPLL clock is Output after startup and lock time or only after the startup")
 oscctrlSym_DPLLCTRLB_WUF.setVisible(False)
-# oscctrlSym_DPLLCTRLB_WUF.setDefaultValue(False)
+oscctrlSym_DPLLCTRLB_WUF.setDefaultValue(False)
 oscctrlSym_DPLLCTRLB_WUF.setDependencies(setDPLLWUFVisibleProperty, ["CONFIG_CLOCK_DPLL_ENABLE"])
 
 #Digital Phase Locked Loop(DPLL) Lock Time
@@ -488,6 +580,7 @@ oscctrlSym_DPLLCTRLB_REFCLK = coreComponent.createKeyValueSetSymbol("CONFIG_CLOC
 oscctrlSym_DPLLCTRLB_REFCLK.setLabel("DPLL Reference Clock Source")
 oscctrlSym_DPLLCTRLB_REFCLK.setDescription("DPLL reference clock selection")
 oscctrlSym_DPLLCTRLB_REFCLK.setVisible(False)
+oscctrlSym_DPLLCTRLB_REFCLK.setOutputMode("Value")
 oscctrlSymDPLLRefClkNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OSCCTRL\"]/value-group@[name=\"OSCCTRL_DPLLCTRLB__REFCLK\"]")
 oscctrlSymDPLLRefClkNodeValues = []
 oscctrlSymDPLLRefClkNodeValues = oscctrlSymDPLLRefClkNode.getChildren()
@@ -514,6 +607,39 @@ oscctrlSym_DPLLCTRLB_DIV.setDescription("XOSC clock division factor fdiv = (fxos
 oscctrlSym_DPLLCTRLB_DIV.setDefaultValue(0)
 oscctrlSym_DPLLCTRLB_DIV.setVisible(False)
 oscctrlSym_DPLLCTRLB_DIV.setDependencies(setDPLLLCLKDIVIDERVisibleProperty, ["CONFIG_CLOCK_DPLL_REF_CLOCK"])
+
+clkSym_DPLL96M_Freq = coreComponent.createIntegerSymbol("DPLL96M_CLOCK_FREQ", oscctrlSym_DPLL_CONFIG_ENABLE)
+clkSym_DPLL96M_Freq.setVisible(True)
+clkSym_DPLL96M_Freq.setReadOnly(True)
+clkSym_DPLL96M_Freq.setDefaultValue(0)
+clkSym_DPLL96M_Freq.setLabel("DPLL 96M Clock Frequency")
+
+clkSym_DPLL96M_Freq.setDependencies(setDPLL96MClockFreq, ["CONFIG_CLOCK_DPLL_ENABLE",
+                                                          "XOSC32K_FREQ",
+                                                          "XOSC_FREQ",
+                                                          "CONFIG_CLOCK_DPLL_DIVIDER",
+                                                          "CONFIG_CLOCK_DPLL_REF_CLOCK",
+                                                          "CONFIG_CLOCK_DPLL_LDR_INTEGER",
+                                                          "CONFIG_CLOCK_DPLL_LDRFRAC_FRACTION",
+                                                          "CONFIG_CLOCK_DPLL_PRESCALAR"])
+
+enable = oscctrlSym_DPLL_CONFIG_ENABLE.getValue()
+
+if enable:
+
+    clockSrc = oscctrlSym_DPLLCTRLB_REFCLK.getValue()
+
+    # XOSC32K Clock
+    if clockSrc == 0:
+        srcFreq = 32768
+
+        ldr = int(oscctrlSym_DPLLRATIO_LDR.getValue())
+        ldrFrac = int(oscctrlSym_DPLLRATIO_LDRFRAC.getValue())
+        prescalar = int(oscctrlSym_DPLLPRESC_PRESC.getValue())
+
+        dpllFreq = int(srcFreq * (ldr + 1.0 + (ldrFrac/16.0)) * (1.0 / float(2**prescalar)))
+
+        clkSym_DPLL96M_Freq.setValue(dpllFreq, 1)
 
 ################################################################################
 ##########              Callback Functions            ##########################
@@ -589,6 +715,20 @@ def setxosc32kctrlCFDENVisibleProperty(symbol, event):
 def setxosc32kctrlCFDPRESCVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
 
+def setXOSC32KFreq(symbol, event):
+    enable = Database.getSymbolValue("core", "XOSC32K_EN32K")
+
+    if enable:
+        symbol.setValue(32768, 1)
+    else:
+        symbol.setValue(0, 1)
+		
+def setXOSC1KFreq(symbol, event):
+    if event["value"]:
+        symbol.setValue(1000, 1)
+    else:
+        symbol.setValue(0, 1)
+
 #####    OSC32K Configuration Callback Functions    ############################
 
 #OSC32K Oscillator Run Standby Visible Property
@@ -615,6 +755,18 @@ def setosc32kctrlWRTLOCKVisibleProperty(symbol, event):
 def setosc32kSTARTUPVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
 
+def setOSC32KFreq(symbol, event):
+    if event["value"]:
+        symbol.setValue(32768, 1)
+    else:
+        symbol.setValue(0, 1)
+
+def setOSC1KFreq(symbol, event):
+    if event["value"]:
+        symbol.setValue(1000, 1)
+    else:
+        symbol.setValue(0, 1)
+		
 ##########   OSCULP32K Configuration Callback Functions   ######################
 
 #OSCULP32K Oscillator Calibration Enable Visible Property
@@ -649,43 +801,60 @@ osc32kctrlSym_OSCULP32K_CALIB.setLabel("Calibration Value")
 osc32kctrlSym_OSCULP32K_CALIB.setVisible(False)
 osc32kctrlSym_OSCULP32K_CALIB.setDependencies(setosculp32kCALIBVisibleProperty, ["CONFIG_CLOCK_OSCULP32K_CALIB_ENABLE"])
 
+clkSym_OSCULP32K_Freq = coreComponent.createIntegerSymbol("OSCULP32K_FREQ", osc32kctrlSym_Menu)
+clkSym_OSCULP32K_Freq.setLabel("OSCULP32K Frequency")
+clkSym_OSCULP32K_Freq.setDefaultValue(32768)
+clkSym_OSCULP32K_Freq.setReadOnly(True)
+
+clkSym_OSCULP1K_Freq = coreComponent.createIntegerSymbol("OSCULP1K_FREQ", osc32kctrlSym_Menu)
+clkSym_OSCULP1K_Freq.setLabel("OSCULP1K Frequency")
+clkSym_OSCULP1K_Freq.setDefaultValue(1000)
+clkSym_OSCULP1K_Freq.setReadOnly(True)
+
+
 ####################    XOSC32K Components    ##################################
 
 #XOSC32K External Oscillator Enable
 osc32kctrlSym_XOSC32K_CONFIG_ENABLE = coreComponent.createBooleanSymbol("CONF_CLOCK_XOSC32K_ENABLE", osc32kctrlSym_Menu)
 osc32kctrlSym_XOSC32K_CONFIG_ENABLE.setLabel("32KHz External Crystal Oscillator(XOSC32K) Enable")
-# osc32kctrlSym_XOSC32K_CONFIG_ENABLE.setDefaultValue(False)
+osc32kctrlSym_XOSC32K_CONFIG_ENABLE.setDefaultValue(False)
 
 #XOSC32K External Oscillator Interrupt Mode
 osc32kctrlSym_XOSC32K_INTERRUPTMODE = coreComponent.createBooleanSymbol("XOSC32K_INTERRUPT_MODE", osc32kctrlSym_XOSC32K_CONFIG_ENABLE)
-# osc32kctrlSym_XOSC32K_INTERRUPTMODE.setDefaultValue(False)
-osc32kctrlSym_XOSC32K_INTERRUPTMODE.setVisible(False)
+osc32kctrlSym_XOSC32K_INTERRUPTMODE.setLabel("Enable Interrupt ?")
+osc32kctrlSym_XOSC32K_INTERRUPTMODE.setDefaultValue(False)
+osc32kctrlSym_XOSC32K_INTERRUPTMODE.setVisible(True)
 osc32kctrlSym_XOSC32K_INTERRUPTMODE.setDependencies(setXOSC32KInterruptmodeProperty, ["CONF_CLOCK_XOSC32K_ENABLE"])
 
 #XOSC32K External Oscillator Mode
 osc32kctrlSym_XOSC32K_OSCILLATOR_MODE = coreComponent.createKeyValueSetSymbol("XOSC32K_OSCILLATOR_MODE", osc32kctrlSym_XOSC32K_CONFIG_ENABLE)
 osc32kctrlSym_XOSC32K_OSCILLATOR_MODE.setLabel("32KHz External Oscillator Mode ")
-osc32kctrlSym_XOSC32K_OSCILLATOR_MODE.setVisible(False)
+osc32kctrlSym_XOSC32K_OSCILLATOR_MODE.setVisible(True)
 osc32kctrlSym_XOSC32K_OSCILLATOR_MODE.addKey("EXTERNAL_CLOCK","0","xosc32K external clock enable")
 osc32kctrlSym_XOSC32K_OSCILLATOR_MODE.addKey("CRYSTAL","1","crystal oscillator enable")
-osc32kctrlSym_XOSC32K_OSCILLATOR_MODE.setOutputMode("Key")
+osc32kctrlSym_XOSC32K_OSCILLATOR_MODE.setOutputMode("Value")
+osc32kctrlSym_XOSC32K_OSCILLATOR_MODE.setDefaultValue(1)
 osc32kctrlSym_XOSC32K_OSCILLATOR_MODE.setDependencies(setxosc32kOscillatorModeVisibleProperty, ["CONF_CLOCK_XOSC32K_ENABLE"])
 
 #XOSC32K External Oscillator Run StandBy Mode
 osc32kctrlSym_XOSC32K_RUNSTDBY = coreComponent.createBooleanSymbol("XOSC32K_RUNSTDBY", osc32kctrlSym_XOSC32K_CONFIG_ENABLE)
 osc32kctrlSym_XOSC32K_RUNSTDBY.setLabel("Run Oscillator in Standby Sleep Mode")
-osc32kctrlSym_XOSC32K_RUNSTDBY.setVisible(False)
+osc32kctrlSym_XOSC32K_RUNSTDBY.setVisible(True)
 osc32kctrlSym_XOSC32K_RUNSTDBY.setDependencies(setxosc32kctrlRUNSTDBYVisibleProperty, ["CONF_CLOCK_XOSC32K_ENABLE"])
 
 osc32kctrlModeONDEMAND = ["Always Enable" , "Only on Peripheral Request"]
 
 #XOSC32K External Oscillator ONDEMAND Mode
 
-osc32kctrlSym_XOSC32K_ONDEMAND= coreComponent.createComboSymbol("XOSC32K_ONDEMAND", osc32kctrlSym_XOSC32K_CONFIG_ENABLE, osc32kctrlModeONDEMAND)
+osc32kctrlSym_XOSC32K_ONDEMAND= coreComponent.createKeyValueSetSymbol("XOSC32K_ONDEMAND", osc32kctrlSym_XOSC32K_CONFIG_ENABLE)
 osc32kctrlSym_XOSC32K_ONDEMAND.setLabel("Oscillator On-Demand Control")
 osc32kctrlSym_XOSC32K_ONDEMAND.setDescription("Configures the DPLL on Demand Behavior")
-osc32kctrlSym_XOSC32K_ONDEMAND.setVisible(False)
-osc32kctrlSym_XOSC32K_ONDEMAND.setDefaultValue("Always Enable")
+osc32kctrlSym_XOSC32K_ONDEMAND.setVisible(True)
+osc32kctrlSym_XOSC32K_ONDEMAND.setOutputMode("Value")
+osc32kctrlSym_XOSC32K_ONDEMAND.setDisplayMode("Description")
+osc32kctrlSym_XOSC32K_ONDEMAND.addKey("Disable",str(0),"Always Enable")
+osc32kctrlSym_XOSC32K_ONDEMAND.addKey("Enable",str(1),"Only on Peripheral Request")
+osc32kctrlSym_XOSC32K_ONDEMAND.setDefaultValue(0)
 osc32kctrlSym_XOSC32K_ONDEMAND.setDependencies(setxosc32kctrlONDEMANDVisibleProperty, ["CONF_CLOCK_XOSC32K_ENABLE"])
 
 #XOSC32K External Oscillator 1KHz Output Enable Mode
@@ -693,6 +862,18 @@ osc32kctrlSym_XOSC32K_EN1K = coreComponent.createBooleanSymbol("XOSC32K_EN1K", o
 osc32kctrlSym_XOSC32K_EN1K.setLabel("Enable 1KHz Output")
 osc32kctrlSym_XOSC32K_EN1K.setVisible(False)
 osc32kctrlSym_XOSC32K_EN1K.setDependencies(setxosc32kctrlEN1KVisibleProperty, ["CONF_CLOCK_XOSC32K_ENABLE"])
+
+#XOSC32K External Oscillator 1KHz Output Frequency Mode
+clkSym_XOSC1K_Freq = coreComponent.createIntegerSymbol("XOSC1K_FREQ", osc32kctrlSym_XOSC32K_EN1K)
+clkSym_XOSC1K_Freq.setLabel("XOSC1K Frequency")
+clkSym_XOSC1K_Freq.setDefaultValue(0)
+clkSym_XOSC1K_Freq.setReadOnly(True)
+
+enable = osc32kctrlSym_XOSC32K_EN1K.getValue()
+if enable:
+    clkSym_XOSC1K_Freq.setValue(1000, 1)
+
+clkSym_XOSC1K_Freq.setDependencies(setXOSC1KFreq, ["XOSC32K_EN1K"])
 
 #XOSC32K External Oscillator 32KHz Output Enable Mode
 osc32kctrlSym_XOSC32K_EN32K = coreComponent.createBooleanSymbol("XOSC32K_EN32K", osc32kctrlSym_XOSC32K_CONFIG_ENABLE)
@@ -724,6 +905,24 @@ osc32kctrlSym_XOSC32K_STARTUP.setOutputMode("Value")
 osc32kctrlSym_XOSC32K_STARTUP.setDisplayMode("Description")
 osc32kctrlSym_XOSC32K_STARTUP.setDependencies(setxosc32kSTARTUPVisibleProperty, ["CONF_CLOCK_XOSC32K_ENABLE"])
 
+#RTC Clock Selection
+rtcClockSourceSelection = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_RTC_SRC",oscctrlSym_XOSC_CONFIG_ENABLE) # FIXME base component by Kathir 
+rtcClockSourceSelection.setLabel("RTC Clock Selection")
+rtcClockSourceSelection.setDescription("Clock Source selection for RTC")
+rtcClockSourceSelection.setVisible(False)
+rtcClockSourceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OSC32KCTRL\"]/value-group@[name=\"OSC32KCTRL_RTCCTRL__RTCSEL\"]")
+rtcClockSourceValues = []
+rtcClockSourceValues = rtcClockSourceNode.getChildren()
+for index in range(0, len(rtcClockSourceValues)):
+    rtcClockSourceKeyName = rtcClockSourceValues[index].getAttribute("name")
+    rtcClockSourceKeyDescription = rtcClockSourceValues[index].getAttribute("caption")
+    rtcClockSourceKeyValue = rtcClockSourceValues[index].getAttribute("value")
+    rtcClockSourceSelection.addKey(rtcClockSourceKeyName, rtcClockSourceKeyValue , rtcClockSourceKeyDescription)
+
+rtcClockSourceSelection.setDefaultValue(0)
+rtcClockSourceSelection.setOutputMode("Value")
+rtcClockSourceSelection.setDisplayMode("Key")
+
 #XOSC32K External Oscillator Clock Failure Detection(CFD) Enable
 osc32kctrlSym_XOSC32K_CFDCTRL_CFDEN = coreComponent.createBooleanSymbol("XOSC32K_CFDEN", osc32kctrlSym_XOSC32K_CONFIG_ENABLE)
 osc32kctrlSym_XOSC32K_CFDCTRL_CFDEN.setLabel("Enable Clock Failure Detection")
@@ -736,39 +935,54 @@ osc32kctrlSym_XOSC32K_CFDCTRL_CFDPRESC.setLabel("Clock Failure Backup Clock Freq
 osc32kctrlSym_XOSC32K_CFDCTRL_CFDPRESC.setVisible(False)
 osc32kctrlSym_XOSC32K_CFDCTRL_CFDPRESC.setDependencies(setxosc32kctrlCFDPRESCVisibleProperty, ["XOSC32K_CFDEN"])
 
+clkSym_XOSC32K_Freq = coreComponent.createIntegerSymbol("XOSC32K_FREQ", osc32kctrlSym_XOSC32K_EN32K)
+clkSym_XOSC32K_Freq.setLabel("XOSC32K Frequency")
+clkSym_XOSC32K_Freq.setDefaultValue(0)
+clkSym_XOSC32K_Freq.setReadOnly(True)
+
+enable = osc32kctrlSym_XOSC32K_EN32K.getValue()
+if enable:
+    clkSym_XOSC32K_Freq.setValue(32768, 1)
+
+clkSym_XOSC32K_Freq.setDependencies(setXOSC32KFreq, ["XOSC32K_EN32K"])
+
 #######################   OSC32K Components    #################################
 
 #OSC32K Oscillator Enable
 osc32kctrlSym_OSC32K_CONFIG_ENABLE = coreComponent.createBooleanSymbol("CONF_CLOCK_OSC32K_ENABLE", osc32kctrlSym_Menu)
 osc32kctrlSym_OSC32K_CONFIG_ENABLE.setLabel("32Khz Internal Oscillator(OSC32K) Enable")
-# osc32kctrlSym_OSC32K_CONFIG_ENABLE.setDefaultValue(False)
+osc32kctrlSym_OSC32K_CONFIG_ENABLE.setDefaultValue(False)
 
 #OSC32K Oscillator Run StandBy Mode
 osc32kctrlSym_OSC32K_RUNSTDBY = coreComponent.createBooleanSymbol("OSC32K_RUNSTDBY", osc32kctrlSym_OSC32K_CONFIG_ENABLE)
 osc32kctrlSym_OSC32K_RUNSTDBY.setLabel("Run Oscillator in Standby Sleep Mode")
-osc32kctrlSym_OSC32K_RUNSTDBY.setVisible(False)
+osc32kctrlSym_OSC32K_RUNSTDBY.setVisible(True)
 osc32kctrlSym_OSC32K_RUNSTDBY.setDependencies(setosc32kctrlRUNSTDBYVisibleProperty, ["CONF_CLOCK_OSC32K_ENABLE"])
 
 osc32kctrlModeONDEMAND = ["Always Enable" , "Only on Peripheral Request"]
 
 #OSC32K Oscillator ONDEMAND Mode
-osc32kctrlSym_OSC32K_ONDEMAND= coreComponent.createComboSymbol("OSC32K_ONDEMAND", osc32kctrlSym_OSC32K_CONFIG_ENABLE, osc32kctrlModeONDEMAND)
+osc32kctrlSym_OSC32K_ONDEMAND= coreComponent.createKeyValueSetSymbol("OSC32K_ONDEMAND", osc32kctrlSym_OSC32K_CONFIG_ENABLE)
 osc32kctrlSym_OSC32K_ONDEMAND.setLabel("Oscillator On-Demand Control")
 osc32kctrlSym_OSC32K_ONDEMAND.setDescription("Configures the DPLL on Demand Behavior")
-osc32kctrlSym_OSC32K_ONDEMAND.setVisible(False)
-osc32kctrlSym_OSC32K_ONDEMAND.setDefaultValue("Always Enable")
+osc32kctrlSym_OSC32K_ONDEMAND.setVisible(True)
+osc32kctrlSym_OSC32K_ONDEMAND.setOutputMode("Value")
+osc32kctrlSym_OSC32K_ONDEMAND.setDisplayMode("Description")
+osc32kctrlSym_OSC32K_ONDEMAND.addKey("Disable",str(0),"Always Enable")
+osc32kctrlSym_OSC32K_ONDEMAND.addKey("Enable",str(1),"Only on Peripheral Request")
+osc32kctrlSym_OSC32K_ONDEMAND.setDefaultValue(0)
 osc32kctrlSym_OSC32K_ONDEMAND.setDependencies(setosc32kctrlONDEMANDVisibleProperty, ["CONF_CLOCK_OSC32K_ENABLE"])
 
 #OSC32K Oscillator 1KHz Output Enable Mode
 osc32kctrlSym_OSC32K_EN1K = coreComponent.createBooleanSymbol("OSC32K_EN1K", osc32kctrlSym_OSC32K_CONFIG_ENABLE)
 osc32kctrlSym_OSC32K_EN1K.setLabel("Enable 1KHz Output")
-osc32kctrlSym_OSC32K_EN1K.setVisible(False)
+osc32kctrlSym_OSC32K_EN1K.setVisible(True)
 osc32kctrlSym_OSC32K_EN1K.setDependencies(setosc32kctrlEN1KVisibleProperty, ["CONF_CLOCK_OSC32K_ENABLE"])
 
 #OSC32K Oscillator 32KHz Output Enable Mode
 osc32kctrlSym_OSC32K_EN32K = coreComponent.createBooleanSymbol("OSC32K_EN32K", osc32kctrlSym_OSC32K_CONFIG_ENABLE)
 osc32kctrlSym_OSC32K_EN32K.setLabel("Enable 32KHz Output")
-osc32kctrlSym_OSC32K_EN32K.setVisible(False)
+osc32kctrlSym_OSC32K_EN32K.setVisible(True)
 osc32kctrlSym_OSC32K_EN32K.setDependencies(setosc32kctrlEN32KVisibleProperty, ["CONF_CLOCK_OSC32K_ENABLE"])
 
 #OSC32K Oscillator StartUp Time
@@ -793,6 +1007,28 @@ osc32kctrlSym_OSC32K_STARTUP.setDefaultValue(osc32kstartupDefaultValue)
 osc32kctrlSym_OSC32K_STARTUP.setOutputMode("Value")
 osc32kctrlSym_OSC32K_STARTUP.setDisplayMode("Description")
 osc32kctrlSym_OSC32K_STARTUP.setDependencies(setosc32kSTARTUPVisibleProperty, ["CONF_CLOCK_OSC32K_ENABLE"])
+
+clkSym_OSC32K_Freq = coreComponent.createIntegerSymbol("OSC32K_FREQ", osc32kctrlSym_OSC32K_EN32K)
+clkSym_OSC32K_Freq.setLabel("OSC32K Frequency")
+clkSym_OSC32K_Freq.setDefaultValue(0)
+clkSym_OSC32K_Freq.setReadOnly(True)
+
+enable = osc32kctrlSym_OSC32K_EN32K.getValue()
+if enable:
+    clkSym_OSC32K_Freq.setValue(32768, 1)
+
+clkSym_OSC32K_Freq.setDependencies(setOSC32KFreq, ["OSC32K_EN32K"])
+
+clkSym_OSC1K_Freq = coreComponent.createIntegerSymbol("OSC1K_FREQ", osc32kctrlSym_OSC32K_EN1K)
+clkSym_OSC1K_Freq.setLabel("OSC1K Frequency")
+clkSym_OSC1K_Freq.setDefaultValue(0)
+clkSym_OSC1K_Freq.setReadOnly(True)
+
+enable = osc32kctrlSym_OSC32K_EN1K.getValue()
+if enable:
+    clkSym_OSC1K_Freq.setValue(1000, 1)
+
+clkSym_OSC1K_Freq.setDependencies(setOSC1KFreq, ["OSC32K_EN1K"])
 
 ################################################################################
 ##########             GCLK Callback Functions            ######################
@@ -841,6 +1077,108 @@ def setPCHCTRLGENVisibleProperty(symbol, event):
 #GCLK Peripheral Channel Write Lock visible Property
 def setPCHCTRLWRTLOCKVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
+    
+def setGCLKIOFreq(symbol, event):
+    index = symbol.getID().split("_")[2]
+    srcFreq = Database.getSymbolValue("core","GCLK_"+index+"_FREQ")
+    symbol.setValue(srcFreq,1)
+    
+    
+#GCLK Peripheral Channel Write Lock visible Property
+def setPCHCTRLFREQVisibleProperty(symbol, event):
+    index = symbol.getID().split("_")[2]
+    perifreq = Database.getSymbolValue("core","GCLK_ID_"+index+"_GENSEL")
+    
+    if perifreq == 0:
+        srcFreq = Database.getSymbolValue("core","GCLK_0_FREQ")
+        symbol.setValue(srcFreq,1)
+        
+    elif perifreq == 1:
+        srcFreq = Database.getSymbolValue("core","GCLK_1_FREQ")
+        symbol.setValue(srcFreq,1)
+    elif perifreq == 2:
+        srcFreq = Database.getSymbolValue("core","GCLK_2_FREQ")
+        symbol.setValue(srcFreq,1)
+    elif perifreq == 3:
+        srcFreq = Database.getSymbolValue("core","GCLK_3_FREQ")
+        symbol.setValue(srcFreq,1)
+    elif perifreq == 4:
+        srcFreq = Database.getSymbolValue("core","GCLK_4_FREQ")
+        symbol.setValue(srcFreq,1)
+    elif perifreq == 5:
+        srcFreq = Database.getSymbolValue("core","GCLK_5_FREQ")
+        symbol.setValue(srcFreq,1)
+    elif perifreq == 6:
+        srcFreq = Database.getSymbolValue("core","GCLK_6_FREQ")
+        symbol.setValue(srcFreq,1)
+    elif perifreq == 7:
+        srcFreq = Database.getSymbolValue("core","GCLK_7_FREQ")     
+        symbol.setValue(srcFreq,1)        
+    elif perifreq == 8:
+        srcFreq = Database.getSymbolValue("core","GCLK_7_FREQ") 
+        symbol.setValue(srcFreq,1)
+    else:
+        symbol.setValue(0, 1)       
+        
+def setGClockFreq(symbol, event):
+    index = symbol.getID().split("_")[1]
+
+    enable = Database.getSymbolValue("core", "GCLK_INST_NUM" + index)
+
+    if enable:
+        src = Database.getSymbolValue("core", "GCLK_" + index + "_SRC")
+
+        #XOSC
+        if src == 0:
+            srcFreq = int(Database.getSymbolValue("core","XOSC_FREQ"))
+
+        # GCLKIN
+        elif src == 1:
+            #Todo
+            srcFreq = 0
+
+        # GCLKGEN1
+        elif src == 2:
+            if index != 1:
+                srcFreq = int(Database.getSymbolValue("core","GCLK_1_FREQ"))
+
+        # OSCULP32K
+        elif src == 3:
+            srcFreq = 32768
+
+        #OSC32K
+        elif src == 4:
+            srcFreq = int(Database.getSymbolValue("core", "OSC32K_FREQ"))
+
+        #XOSC32K
+        elif src == 5:
+            srcFreq = int(Database.getSymbolValue("core", "XOSC32K_FREQ"))
+
+        #OSC48M
+        elif src == 6:
+            srcFreq = int(Database.getSymbolValue("core", "OSC48M_CLOCK_FREQ"))
+
+        #DPLL96M
+        elif src == 7:
+            srcFreq = int(Database.getSymbolValue("core","DPLL96M_CLOCK_FREQ"))
+
+        divSel = int(Database.getSymbolValue("core","GCLK_" + index + "_DIVSEL"))
+        div = int(Database.getSymbolValue("core","GCLK_" + index + "_DIV"))
+
+        if divSel == 0:
+
+            if div != 0:
+                gclk_freq = int(srcFreq / float(div))
+            else:
+                gclk_freq = srcFreq
+
+        elif divSel == 1:
+            gclk_freq = int(srcFreq / float(2**div))
+
+        symbol.setValue(gclk_freq, 1)
+
+    else:
+        symbol.setValue(0, 1)
 
 ################################################################################
 #######          GCLK Database Components            ###########################
@@ -863,6 +1201,7 @@ gclkSym_GENCTRL_DIVSEL = []
 gclkSym_GENCTRL_DIV = []
 gclkSym_GENCTRL_SRC = []
 gclkSym_index = []
+gclkSym_Freq = []
 
 for gclknumber in range(0,9):
     gclkSym_num.append(gclknumber)
@@ -902,7 +1241,7 @@ for gclknumber in range(0,9):
 
         glckgensrcKeyDescription = gclkSymsourceNodeValues[index].getAttribute("caption")
         glckgensrcKeyValue = gclkSymsourceNodeValues[index].getAttribute("value")
-        if((gclknumber > 0) and (glckgensrcKeyName == "GCLKGEN1")):
+        if((gclknumber == 1) and (glckgensrcKeyName == "GCLKGEN1")):
             Log.writeInfoMessage("nothing")
         else:
             gclkSym_GENCTRL_SRC[gclknumber].addKey(glckgensrcKeyName, glckgensrcKeyValue , glckgensrcKeyDescription)
@@ -980,7 +1319,76 @@ for gclknumber in range(0,9):
     gclkSym_GENCTRL_IDC[gclknumber].setVisible(False)
     gclkSym_GENCTRL_IDC[gclknumber].setDependencies(setgenctrlIDCVisibleProperty, ["GCLK_" + str(gclknumber) + "_DIV" ])
 
+    gclkSym_Freq.append(coreComponent.createIntegerSymbol("GCLK_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber]))
+    gclkSym_Freq[gclknumber].setLabel("GCLK" + str(gclknumber) + " Clock Frequency")
+    gclkSym_Freq[gclknumber].setVisible(True)
+    gclkSym_Freq[gclknumber].setReadOnly(True)
+    gclkSym_Freq[gclknumber].setDefaultValue(0)
 
+    depList = [ "GCLK_" + str(gclknumber) + "_DIVSEL",
+                "GCLK_" + str(gclknumber) + "_DIV",
+                "GCLK_" + str(gclknumber) + "_SRC",
+                "XOSC_FREQ",
+                "OSC48M_CLOCK_FREQ",
+                "DPLL96M_CLOCK_FREQ",
+                "XOSC32K_FREQ",
+                "OSC32K_FREQ"]
+
+    if gclknumber != 1:
+        depList.append("GCLK_1_FREQ")
+
+    gclkSym_Freq[gclknumber].setDependencies(setGClockFreq, depList)
+
+    enable = gclkSym_num[gclknumber].getValue()
+
+    if enable:
+        src = gclkSym_GENCTRL_SRC[gclknumber].getValue()
+
+        #XOSC
+        if src == 0:
+            srcFreq = clkSym_XOSC_Freq.getValue()
+
+        #GCLKIN
+        elif src == 1:
+            pass
+
+        #GCLKGEN1
+        elif src == 2:
+            pass
+
+        #OSCULP32K
+        elif src == 3:
+            pass
+
+        #OSC32K
+        elif src == 4:
+            srcFreq = clkSym_OSC32K_Freq.getValue()
+
+        #XOSC32K
+        elif src == 5:
+            srcFreq = clkSym_XOSC32K_Freq.getValue()
+
+        #OSC48M
+        elif src == 6:
+            srcFreq = clkSym_OSC48M_Freq.getValue()
+
+        #DPLL96M
+        elif src == 7:
+            srcFreq = clkSym_DPLL96M_Freq.getValue()
+
+        divSel = gclkSym_GENCTRL_DIVSEL[gclknumber].getValue()
+        div = gclkSym_GENCTRL_DIV[gclknumber].getValue()
+
+        if divSel == 0:
+            if div != 0:
+                gclk_freq = int(srcFreq / div)
+            else:
+                gclk_freq = srcFreq
+
+        elif divSel == 1:
+            gclk_freq = int(srcFreq / (2**div))
+
+        gclkSym_Freq[gclknumber].setValue(gclk_freq, 1)
 
 #GCLK Peripheral Channel Menu
 gclkSym_PerChannel_sel = coreComponent.createMenuSymbol("PERI_CHAN_SEL",gclkSym_Menu)
@@ -1011,8 +1419,8 @@ for peripheral in atdfContent.iter("module"):
                 #GCLK Peripheral Channel Enable
                 clkSymPeripheral = coreComponent.createBooleanSymbol(symbolId + "_CHEN", gclkSym_PerChannel_sel)
                 clkSymPeripheral.setLabel(symbolValue + " Clock Channel Enable")
-                # clkSymPeripheral.setDefaultValue(False)
-                # clkSymPeripheral.setReadOnly(True)
+                clkSymPeripheral.setDefaultValue(False)
+                
 
                 #GCLK Peripheral Channel Name
                 gclkSym_PERCHANNEL_NAME = coreComponent.createStringSymbol(symbolId + "_NAME", clkSymPeripheral)
@@ -1049,8 +1457,14 @@ for peripheral in atdfContent.iter("module"):
                 gclkSym_PCHCTRL_GEN.setDefaultValue(gclkSymPCHCTRLGenDefaultValue)
                 gclkSym_PCHCTRL_GEN.setOutputMode("Value")
                 gclkSym_PCHCTRL_GEN.setDisplayMode("Description")
-                gclkSym_PCHCTRL_GEN.setDependencies(setPCHCTRLGENVisibleProperty, [symbolId + "_CHEN"])
+                gclkSym_PCHCTRL_GEN.setDependencies(setPCHCTRLGENVisibleProperty, [symbolId + "_CHEN",])
 
+                gclkSym_PCHCTRL_FREQ = coreComponent.createIntegerSymbol(symbolId + "_FREQ", clkMenu)
+                gclkSym_PCHCTRL_FREQ.setLabel(symbolValue + "Frequency")
+                gclkSym_PCHCTRL_FREQ.setVisible(True)
+                gclkSym_PCHCTRL_FREQ.setReadOnly(True)
+                gclkSym_PCHCTRL_FREQ.setDependencies(setPCHCTRLFREQVisibleProperty, [symbolId + "_CHEN",symbolId + "_GENSEL"])
+                
                 #GCLK Peripheral Channel Lock
                 gclkSym_PCHCTRL_WRTLOCK = coreComponent.createBooleanSymbol(symbolId + "_WRITELOCK", clkSymPeripheral)
                 gclkSym_PCHCTRL_WRTLOCK.setLabel("Write Lock")
@@ -1545,6 +1959,53 @@ mclk_APBD_Clock_Value = coreComponent.createIntegerSymbol("MCLK_APBD_INITIAL_VAL
 mclk_APBD_Clock_Value.setDefaultValue(0x00)
 mclk_APBD_Clock_Value.setVisible(False)
 mclk_APBD_Clock_Value.setDependencies(APBDInitialValueset,apbDBridgeList)
+
+################################################################################
+#######          Calculated Clock Frequencies        ###########################
+################################################################################
+
+def setMainClockFreq(symbol, event):
+
+    divider = int(Database.getSymbolValue("core","CONF_CPU_CLOCK_DIVIDER"))
+    gclk0_freq = int(Database.getSymbolValue("core","GCLK_0_FREQ"))
+
+    symbol.setValue(gclk0_freq / (divider + 1), 1)
+
+clkSym_MAIN_CLK_FREQ = coreComponent.createIntegerSymbol("MAIN_CLK_FREQ", clkMenu)
+clkSym_MAIN_CLK_FREQ.setLabel("Main Clock Frequency")
+clkSym_MAIN_CLK_FREQ.setVisible(True)
+clkSym_MAIN_CLK_FREQ.setReadOnly(True)
+clkSym_MAIN_CLK_FREQ.setDependencies(setMainClockFreq, ["GCLK_0_FREQ", "CONF_CPU_CLOCK_DIVIDER"])
+
+divider = mclkSym_CPUDIV_CPUDIV.getValue()
+gclk0_freq = int(gclkSym_Freq[0].getValue())
+clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)
+
+peripherals = ATDF.getNode("/avr-tools-device-file/devices/device@[name=\"" + Variables.get("__PROCESSOR") + "\"]/peripherals")
+module_list = peripherals.getChildren()
+
+clkSym_WDT_CLK_FREQ = coreComponent.createStringSymbol("WDT_CLK_FREQ", clkMenu)
+clkSym_WDT_CLK_FREQ.setLabel("WDT Clock Frequency")
+#clkSym_WDT_CLK_FREQ.setVisible(False)
+clkSym_WDT_CLK_FREQ.setReadOnly(True)
+clkSym_WDT_CLK_FREQ.setDefaultValue("32768")
+
+clkSym_RTC_CLK_FREQ = coreComponent.createStringSymbol("RTC_CLK_FREQ", clkMenu)
+clkSym_RTC_CLK_FREQ.setLabel("RTC Clock Frequency")
+#clkSym_RTC_CLK_FREQ.setVisible(False)
+clkSym_RTC_CLK_FREQ.setReadOnly(True)
+clkSym_RTC_CLK_FREQ.setDefaultValue("")
+
+clkSym_GCLK_IO_FREQ = []
+
+for gclk_io_index in range(0,8):
+    clkSym_GCLK_IO_FREQ.append(coreComponent.createIntegerSymbol("GCLK_IO_" + str(gclk_io_index) +"_FREQ", clkMenu))
+    clkSym_GCLK_IO_FREQ[gclk_io_index].setLabel("GCLK_IO" + str(gclk_io_index) + " Frequency")
+    clkSym_GCLK_IO_FREQ[gclk_io_index].setVisible(True)
+    clkSym_GCLK_IO_FREQ[gclk_io_index].setReadOnly(True)
+    gclkfreqvalue = Database.getSymbolValue("core","GCLK_ID_"+str(gclk_io_index) +"_FREQ")
+    clkSym_GCLK_IO_FREQ[gclk_io_index].setDefaultValue(gclkfreqvalue)
+    # clkSym_GCLK_IO_FREQ[gclk_io_index].setDependencies(setGCLKIOFreq, [])
 
 ################################################################################
 ###########             CODE GENERATION                     ####################
