@@ -43,9 +43,16 @@ def instantiateComponent(adcComponent):
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
     availablePins = []      # array to save available pins
     channel = []
+    
+    pinout = "SAMC21N"
+    val = ATDF.getNode("/avr-tools-device-file/variants")
+    children = val.getChildren()
+    for index in range(0, len(children)):
+        if packageName in children[index].getAttribute("package"):
+            pinout = children[index].getAttribute("pinout")
 
     children = []
-    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(packageName)+"\"]")
+    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(pinout)+"\"]")
     children = val.getChildren()
     for pad in range(0, len(children)):
         availablePins.append(children[pad].getAttribute("pad"))
