@@ -247,9 +247,10 @@ xdmacHighestCh = coreComponent.createIntegerSymbol("XDMAC_HIGHEST_CHANNEL", xdma
 xdmacHighestCh.setLabel("DMA (XDMAC) Highest Active Channel")
 xdmacHighestCh.setVisible(False)
 
+countNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="XDMAC"]/register-group@[name="XDMAC"]/register-group@[name="XDMAC_CHID"]')
 xdmacChCount = coreComponent.createIntegerSymbol("XDMAC_CHANNEL_COUNT", xdmacEnable)
 xdmacChCount.setLabel("DMA (XDMAC) Channels Count")
-xdmacChCount.setDefaultValue(24)
+xdmacChCount.setDefaultValue(int(countNode.getAttribute("count")))
 xdmacChCount.setVisible(False)
 
 xdmacChannelLinkedList = coreComponent.createBooleanSymbol("XDMAC_LL_ENABLE", xdmacMenu)
