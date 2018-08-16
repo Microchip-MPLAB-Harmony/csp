@@ -1,18 +1,13 @@
 def loadModule():
-	coreComponent = Module.CreateSharedComponent("core", "System", "/", "config/core.py")
 
 	print("Load Module: Device Family Pack (DFP)")
-
-	# supportedProcessors = []
-	selectedProcessor = Variables.get("__PROCESSOR")
-
-	#    if selectedProcessor.lower() in supportedProcessors:
 	dfpComponent = Module.CreateComponent("dfp", "Device Family Pack (DFP)", "/Packs/", "config/dfp.py")
-	#    else:
-	#        print("Can't Load Device Family Pack (DFP): " + selectedProcessor + " is not supported.")
 
 	print("Load Module: CMSIS Pack")
 	cmsisComponent = Module.CreateComponent("cmsis", "CMSIS Pack", "/Packs/", "config/cmsis.py")
+
+	print("Load Module: CSP System")
+	coreComponent = Module.CreateSharedComponent("core", "System", "/", "config/core.py")
 
 	#initiate stdio
 	stdioComponent = Module.CreateComponent("stdio", "STDIO", "/Tools/", "../arch/stdio/config/stdio.py")
