@@ -5,9 +5,13 @@ appHeaderFile = []
 appHeaderName = []
 
 def instantiateComponent(coreComponent):
+
     global appSourceFile
     global appHeaderFile
     global appHeaderName
+
+    autoComponentIDTable = ["dfp", "cmsis"]
+    res = Database.activateComponents(autoComponentIDTable)
 
     devMenu = coreComponent.createMenuSymbol("CoreDevMenu", None)
     devMenu.setLabel("Device & Project Configuration")
