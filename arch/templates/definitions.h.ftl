@@ -55,8 +55,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 ${LIST_SYSTEM_DEFINITIONS_H_INCLUDES}
 </#compress>
 
-<#if Harmony??>
-    <#if Harmony.ENABLE_APP_FILE == true >
+<#if HarmonyCore??>
+    <#if HarmonyCore.ENABLE_APP_FILE == true >
         <#lt>${LIST_SYSTEM_APP_DEFINITIONS_H_INCLUDES}
     </#if>
 </#if>
@@ -116,8 +116,8 @@ extern "C" {
 
 void SYS_Initialize( void *data );
 
-<#if Harmony??>
-    <#if Harmony.ENABLE_APP_FILE == true >
+<#if HarmonyCore??>
+    <#if HarmonyCore.ENABLE_APP_FILE == true >
 // *****************************************************************************
 /* System Tasks Function
 
@@ -202,8 +202,8 @@ ${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
 
 ${LIST_SYSTEM_DEFINITIONS_H_EXTERNS}
 
-<#if Harmony??>
-    <#if Harmony.ENABLE_APP_FILE == true >
+<#if HarmonyCore??>
+    <#if HarmonyCore.ENABLE_APP_FILE == true >
         <#lt>extern SYSTEM_OBJECTS sysObj;
     </#if>
 </#if>

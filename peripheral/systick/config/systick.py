@@ -26,7 +26,7 @@ sysTickMenu.setLabel("SysTick")
 
 systickEnable = coreComponent.createBooleanSymbol("systickEnable", sysTickMenu)
 systickEnable.setLabel("Enable SysTick")
-systickEnable.setDependencies(systickUse, ["Harmony.SELECT_RTOS"])
+systickEnable.setDependencies(systickUse, ["HarmonyCore.SELECT_RTOS"])
 
 
 

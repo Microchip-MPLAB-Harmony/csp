@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-<#if Harmony??>
-    <#if Harmony.ENABLE_APP_FILE == true >
+<#if HarmonyCore??>
+    <#if HarmonyCore.ENABLE_APP_FILE == true >
         <#lt>#include "configuration.h"
     </#if>
 </#if>
