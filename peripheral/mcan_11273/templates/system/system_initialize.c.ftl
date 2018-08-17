@@ -1,1 +1,1 @@
-    DRV_CAN${INDEX?string}_Initialize();
+    MCAN${INDEX?string}_Initialize();
