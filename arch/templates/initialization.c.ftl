@@ -43,8 +43,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-<#if Harmony??>
-    <#if Harmony.ENABLE_APP_FILE == true >
+<#if HarmonyCore??>
+    <#if HarmonyCore.ENABLE_APP_FILE == true >
         <#lt>#include "configuration.h"
     </#if>
 </#if>
@@ -70,8 +70,8 @@ ${LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA}
 // Section: System Data
 // *****************************************************************************
 // *****************************************************************************
-<#if Harmony??>
-    <#if Harmony.ENABLE_APP_FILE == true >
+<#if HarmonyCore??>
+    <#if HarmonyCore.ENABLE_APP_FILE == true >
         <#lt>/* Structure to hold the object handles for the modules in the system. */
         <#lt>SYSTEM_OBJECTS sysObj;
     </#if>
@@ -107,8 +107,8 @@ void SYS_Initialize ( void* data )
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS}
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES}
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE}
-    <#if Harmony??>
-        <#lt><#if Harmony.ENABLE_APP_FILE == true >
+    <#if HarmonyCore??>
+        <#lt><#if HarmonyCore.ENABLE_APP_FILE == true >
                 <#lt>${LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA}
         <#lt></#if>
     </#if>
