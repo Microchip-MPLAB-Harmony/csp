@@ -63,108 +63,80 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 <#compress> <#-- To remove unwanted new lines -->
 
-<#--  =====================
-      MACRO mhc_process_gpio
-      ===================== -->
-<#macro mhc_process_gpio>
+<#-- Create List of all the port pins for enum creation -->
+
+<#assign PORTA_Pin_List = []>
+<#assign PORTB_Pin_List = []>
+<#assign PORTC_Pin_List = []>
+<#assign PORTD_Pin_List = []>
+<#assign PORTE_Pin_List = []>
+
+<#list 1..PIO_PIN_TOTAL as i>
+    <#assign pinport = "PIN_" + i + "_PIO_PIN">
+    <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
+
+    <#if .vars[pinport]?has_content>
+        <#if .vars[pinchannel]?has_content>
+            <#if .vars[pinchannel] == "A">
+                <#assign PORTA_Pin_List = PORTA_Pin_List + [.vars[pinport]]>
+            </#if>
+
+            <#if .vars[pinchannel] == "B">
+                <#assign PORTB_Pin_List = PORTB_Pin_List + [.vars[pinport]]>
+            </#if>
+
+            <#if .vars[pinchannel] == "C">
+                <#assign PORTC_Pin_List = PORTC_Pin_List + [.vars[pinport]]>
+            </#if>
+
+            <#if .vars[pinchannel] == "D">
+                <#assign PORTD_Pin_List = PORTD_Pin_List + [.vars[pinport]]>
+            </#if>
+
+            <#if .vars[pinchannel] == "E">
+                <#assign PORTE_Pin_List = PORTE_Pin_List + [.vars[pinport]]>
+            </#if>
+
+        </#if>
+    </#if>
+</#list>
+
+</#compress>
+<#-- Generate Pin Macros for all the GPIO Pins -->
     <#assign GPIO_Name_List = []>
     <#assign GPIO_PortPin_List = []>
     <#assign GPIO_PortChannel_List = []>
-
+    <#assign GPIO_Interrupt_List = []>
     <#list 1..PIO_PIN_TOTAL as i>
         <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
         <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
         <#assign pinport = "PIN_" + i + "_PIO_PIN">
         <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
-
+        <#assign interruptType = "PIN_" + i + "_PIO_INTERRUPT">
         <#if .vars[functype]?has_content>
             <#if .vars[functype] == "GPIO">
                 <#if .vars[funcname]?has_content>
                     <#if .vars[pinport]?has_content>
                         <#if .vars[pinchannel]?has_content>
 
-                            <#assign GPIO_Name_List = GPIO_Name_List + [.vars[funcname]]>
-                            <#assign GPIO_PortPin_List = GPIO_PortPin_List + [.vars[pinport]]>
-                            <#assign GPIO_PortChannel_List = GPIO_PortChannel_List + [.vars[pinchannel]]>
-
+                            <#lt>/*** Macros for ${.vars[funcname]} pin ***/
+                            <#lt>#define ${.vars[funcname]}_Set()               (PIO${.vars[pinchannel]}_REGS->PIO_SODR = (1<<${.vars[pinport]}))
+                            <#lt>#define ${.vars[funcname]}_Clear()             (PIO${.vars[pinchannel]}_REGS->PIO_CODR = (1<<${.vars[pinport]}))
+                            <#lt>#define ${.vars[funcname]}_Toggle()            (PIO${.vars[pinchannel]}_REGS->PIO_ODSR ^= (1<<${.vars[pinport]}))
+                            <#lt>#define ${.vars[funcname]}_Get()               ((PIO${.vars[pinchannel]}_REGS->PIO_PDSR >> ${.vars[pinport]}) & 0x1)
+                            <#lt>#define ${.vars[funcname]}_OutputEnable()      (PIO${.vars[pinchannel]}_REGS->PIO_OER = (1<<${.vars[pinport]}))
+                            <#lt>#define ${.vars[funcname]}_InputEnable()       (PIO${.vars[pinchannel]}_REGS->PIO_ODR = (1<<${.vars[pinport]}))
+                            <#if .vars[interruptType]?has_content>
+                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (PIO${.vars[pinchannel]}_REGS->PIO_IER = (1<<${.vars[pinport]}))
+                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (PIO${.vars[pinchannel]}_REGS->PIO_IDR = (1<<${.vars[pinport]}))
+                            </#if>
+                            <#lt>#define ${.vars[funcname]}_PIN                  PIO_PIN_P${.vars[pinchannel]}${.vars[pinport]}
                         </#if>
                     </#if>
                 </#if>
             </#if>
         </#if>
     </#list>
-</#macro>
-
-
-<#macro mhc_process_pin>
-    <#assign PORTA_Pin_List = []>
-    <#assign PORTB_Pin_List = []>
-    <#assign PORTC_Pin_List = []>
-    <#assign PORTD_Pin_List = []>
-    <#assign PORTE_Pin_List = []>
-
-    <#list 1..PIO_PIN_TOTAL as i>
-        <#assign pinport = "PIN_" + i + "_PIO_PIN">
-        <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
-
-        <#if .vars[pinport]?has_content>
-            <#if .vars[pinchannel]?has_content>
-                <#if .vars[pinchannel] == "A">
-                    <#assign PORTA_Pin_List = PORTA_Pin_List + [.vars[pinport]]>
-                </#if>
-
-                <#if .vars[pinchannel] == "B">
-                    <#assign PORTB_Pin_List = PORTB_Pin_List + [.vars[pinport]]>
-                </#if>
-
-                <#if .vars[pinchannel] == "C">
-                    <#assign PORTC_Pin_List = PORTC_Pin_List + [.vars[pinport]]>
-                </#if>
-
-                <#if .vars[pinchannel] == "D">
-                    <#assign PORTD_Pin_List = PORTD_Pin_List + [.vars[pinport]]>
-                </#if>
-
-                <#if .vars[pinchannel] == "E">
-                    <#assign PORTE_Pin_List = PORTE_Pin_List + [.vars[pinport]]>
-                </#if>
-
-            </#if>
-        </#if>
-    </#list>
-</#macro>
-
-<#--  =====================
-      MACRO execution
-      ===================== -->
-
-<@mhc_process_gpio/>
-<@mhc_process_pin/>
-</#compress>
-
-<#if (GPIO_Name_List?size > 0)>
-    <#list GPIO_Name_List as gpioName>
-        <#list GPIO_PortChannel_List as gpioChannel>
-            <#list GPIO_PortPin_List as gpioPinPos>
-                <#if  gpioName?counter ==  gpioChannel?counter>
-                    <#if  gpioName?counter ==  gpioPinPos?counter>
-
-                        <#lt>/*** Macros for ${gpioName} pin ***/
-                        <#lt>#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_SODR = (1<<${gpioPinPos}))
-                        <#lt>#define ${gpioName}_Clear()             (PIO${gpioChannel}_REGS->PIO_CODR = (1<<${gpioPinPos}))
-                        <#lt>#define ${gpioName}_Toggle()            (PIO${gpioChannel}_REGS->PIO_ODSR ^= (1<<${gpioPinPos}))
-                        <#lt>#define ${gpioName}_Get()               ((PIO${gpioChannel}_REGS->PIO_PDSR >> ${gpioPinPos}) & 0x1)
-                        <#lt>#define ${gpioName}_OutputEnable()      (PIO${gpioChannel}_REGS->PIO_OER = (1<<${gpioPinPos}))
-                        <#lt>#define ${gpioName}_InputEnable()       (PIO${gpioChannel}_REGS->PIO_ODR = (1<<${gpioPinPos}))
-                        <#lt>#define ${gpioName}_InterruptEnable()   (PIO${gpioChannel}_REGS->PIO_IER = (1<<${gpioPinPos}))
-                        <#lt>#define ${gpioName}_InterruptDisable()  (PIO${gpioChannel}_REGS->PIO_IDR = (1<<${gpioPinPos}))
-                        <#lt>#define ${gpioName}_PIN                  PIO_PIN_P${gpioChannel}${gpioPinPos}
-                    </#if>
-                </#if>
-            </#list>
-        </#list>
-    </#list>
-</#if>
 
 
 // *****************************************************************************
@@ -608,6 +580,11 @@ static inline void PIO_PinInputEnable(PIO_PIN pin);
 */
 static inline void PIO_PinOutputEnable(PIO_PIN pin);
 
+<#if PIO_A_INTERRUPT_USED == true ||
+     PIO_B_INTERRUPT_USED == true ||
+     PIO_C_INTERRUPT_USED == true ||
+     PIO_D_INTERRUPT_USED == true ||
+     PIO_E_INTERRUPT_USED == true >
 // *****************************************************************************
 /* Function:
     void PIO_PinInterruptEnable(PIO_PIN pin)
@@ -670,11 +647,6 @@ static inline void PIO_PinInterruptEnable(PIO_PIN pin);
 */
 static inline void PIO_PinInterruptDisable(PIO_PIN pin);
 
-<#if PIO_A_INTERRUPT_USED == true ||
-     PIO_B_INTERRUPT_USED == true ||
-     PIO_C_INTERRUPT_USED == true ||
-     PIO_D_INTERRUPT_USED == true ||
-     PIO_E_INTERRUPT_USED == true >
 // *****************************************************************************
 /* Function:
     void PIO_PinInterruptCallbackRegister(
@@ -1036,6 +1008,11 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask);
 */
 void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask);
 
+<#if PIO_A_INTERRUPT_USED == true ||
+     PIO_B_INTERRUPT_USED == true ||
+     PIO_C_INTERRUPT_USED == true ||
+     PIO_D_INTERRUPT_USED == true ||
+     PIO_E_INTERRUPT_USED == true >
 // *****************************************************************************
 /* Function:
     void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
@@ -1144,11 +1121,6 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask);
     />
 </#if>
 
-<#if PIO_A_INTERRUPT_USED == true ||
-     PIO_B_INTERRUPT_USED == true ||
-     PIO_C_INTERRUPT_USED == true ||
-     PIO_D_INTERRUPT_USED == true ||
-     PIO_E_INTERRUPT_USED == true >
 // *****************************************************************************
 // *****************************************************************************
 // Section: Local Data types and Prototypes

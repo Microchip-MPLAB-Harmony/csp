@@ -483,6 +483,11 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
     ((pio_registers_t*)port)->PIO_OER = mask;
 }
 
+<#if PIO_A_INTERRUPT_USED == true ||
+     PIO_B_INTERRUPT_USED == true ||
+     PIO_C_INTERRUPT_USED == true ||
+     PIO_D_INTERRUPT_USED == true ||
+     PIO_E_INTERRUPT_USED == true >
 // *****************************************************************************
 /* Function:
     void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
@@ -513,11 +518,6 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
     ((pio_registers_t*)port)->PIO_IDR = mask;
 }
 
-<#if PIO_A_INTERRUPT_USED == true ||
-     PIO_B_INTERRUPT_USED == true ||
-     PIO_C_INTERRUPT_USED == true ||
-     PIO_D_INTERRUPT_USED == true ||
-     PIO_E_INTERRUPT_USED == true >
 // *****************************************************************************
 // *****************************************************************************
 // Section: PIO APIs which operates on one pin at a time
