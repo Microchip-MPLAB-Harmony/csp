@@ -168,6 +168,11 @@ static inline void PIO_PinOutputEnable(PIO_PIN pin)
     PIO_PortOutputEnable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
 }
 
+<#if PIO_A_INTERRUPT_USED == true ||
+     PIO_B_INTERRUPT_USED == true ||
+     PIO_C_INTERRUPT_USED == true ||
+     PIO_D_INTERRUPT_USED == true ||
+     PIO_E_INTERRUPT_USED == true >
 // *****************************************************************************
 /* Function:
     void PIO_PinInterruptEnable(PIO_PIN pin)
@@ -197,5 +202,5 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
 {
     PIO_PortInterruptDisable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
 }
-
+</#if>
 #endif // PLIB_PIO_PIN_H
