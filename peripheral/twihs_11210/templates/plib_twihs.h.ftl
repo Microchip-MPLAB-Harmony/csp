@@ -228,151 +228,7 @@ bool TWIHS${INDEX?string}_IsBusy(void);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
-	
-   Summary:
-    Allocates and Builds the Read Transaction Request Block.
-
-   Description:
-    This function allocates and builds the Read Transaction Block.
-
-   Precondition:
-    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy.
-
-   Parameters:
-    address - 7-bit / 10-bit slave address.
-	pdata   - pointer to destination data buffer
-	length  - length of data buffer in number of bytes.
-  
-   Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
-
-   Example:
-    <code>
-	    uint8_t myData [NUM_BYTES];
-	  
-	    if(!TWIHS${INDEX?string}_TRBBuildRead( SLAVE_ADDR, &myData[0], NUM_BYTES ))
-	    {
-		    // error handling
-	    }
-	  
-	    if(!TWIHS${INDEX?string}_TRBTransfer())
-	    {
-		    // error handling  
-	    }
-    
-    </code>
-
-   Remarks:
-    Number of times TWIHS${INDEX?string}_TRBBuildRead is called is limited to number of TRB's
-	available.
-*/
-
-bool TWIHS${INDEX?string}_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length);
-
-// *****************************************************************************
-/* Function:
-    bool TWIHS${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
-	
-   Summary:
-    Allocates and Builds the Read Transaction Request Block.
-	
-   Description:
-    This function allocates and builds the Read Transaction Block.
-
-   Precondition:
-    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy.
-
-   Parameters:
-    address - 7-bit / 10-bit slave address.
-	pdata   - pointer to source data buffer
-	length  - length of data buffer in number of bytes.
-  
-   Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
-	
-   Example:
-    <code>
-	    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-	  
-	    if(!TWIHS${INDEX?string}_TRBBuildWrite( SLAVE_ADDR, &myData[0], NUM_BYTES ))
-	    {
-		    // error handling
-	    }
-	  
-	    if(!TWIHS${INDEX?string}_TRBTransfer())
-	    {
-		    // error handling  
-	    }
-    
-    </code>
-
-   Remarks:
-    Number of times TWIHS${INDEX?string}_TRBBuildWrite is called is limited to number of TRB's
-	available.
-*/
-
-bool TWIHS${INDEX?string}_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length);
-
-// *****************************************************************************
-/* Function:
-    bool TWIHS${INDEX?string}_TRBTransfer(void)
-	
-   Summary:
-    Submits all TRB's build for processing. 
-
-   Description:
-    This function submits all TRB's built by calling TWIHS${INDEX?string}_TRBBuildRead and 
-	TWIHS${INDEX?string}_TRBBuildWrite. Once all TRB's are submitted for processing, transfer
-	starts. A repeated start will occur on completion of a single TRB. Master 
-	will generate Stop only after it process all TRB's.
-	
-   Precondition:
-    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy before calling TWIHS${INDEX?string}_TRBTransfer.
-
-   Parameters:
-    None.
-  
-   Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
-
-   Example:
-	<code>
-	    uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
-		uint8_t myRxData [NUM_BYTES] = {0};
-	  
-	    if(!TWIHS${INDEX?string}_TRBBuildWrite( SLAVE_ADDR, &myTxData[0], NUM_BYTES ))
-	    {
-		    // error handling
-	    }
-		
-		if(!TWIHS${INDEX?string}_TRBBuildRead( SLAVE_ADDR, &myRxData[0], NUM_BYTES ))
-	    {
-		    // error handling
-	    }
-	  
-	    if(!TWIHS${INDEX?string}_TRBTransfer())
-	    {
-		    // error handling  
-	    }
-    
-    </code>
-
-   Remarks:
-    None.
-*/
-
-bool TWIHS${INDEX?string}_TRBTransfer(void);
-
-// *****************************************************************************
-/* Function:
-    bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length)
 	
    Summary:
     Reads data from the slave.
@@ -384,8 +240,6 @@ bool TWIHS${INDEX?string}_TRBTransfer(void);
 
    Precondition:
     TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy before calling TWIHS${INDEX?string}_TRBTransfer.
-	Minimum one TRB should be available.
 
    Parameters:
     address - 7-bit / 10-bit slave address.
@@ -393,8 +247,10 @@ bool TWIHS${INDEX?string}_TRBTransfer(void);
 	length  - length of data buffer in number of bytes.
   
    Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
+    Read request status.
+    True - Read request was successful.
+    False - Read request has failed.
+
 
    Example:
     <code>
@@ -410,11 +266,11 @@ bool TWIHS${INDEX?string}_TRBTransfer(void);
     None.
 */
 
-bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length)
+    bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length)
 	
    Summary:
     Writes data onto the slave.
@@ -426,8 +282,6 @@ bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 
    Precondition:
     TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy before calling TWIHS${INDEX?string}_TRBTransfer.
-	Minimum one TRB should be available.
 
    Parameters:
     address - 7-bit / 10-bit slave address.
@@ -435,8 +289,9 @@ bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
 	length  - length of data buffer in number of bytes.
 	
    Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
+    Request status.
+    True - Request was successful.
+    False - Request has failed.
 
    Example:
     <code>
@@ -452,11 +307,11 @@ bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, uint8_t length)
     None.
 */
 
-bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
+    bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
 	
    Summary:
     Write and Read data from Slave.
@@ -470,8 +325,6 @@ bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length
 
    Precondition:
     TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy before calling TWIHS${INDEX?string}_TRBTransfer.
-	Minimum two TRB's should be available.
 
    Parameters:
     address - 7-bit / 10-bit slave address.
@@ -481,8 +334,9 @@ bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length
 	rlength - read data length in bytes.
   
    Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
+    Request status.
+    True - Request was successful.
+    False - Request has failed.
 
    Example:
     <code>
@@ -498,7 +352,7 @@ bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, uint8_t length
    Remarks:
 */
 
-bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);
+bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength);
 
 // *****************************************************************************
 /* Function:
@@ -517,7 +371,9 @@ bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wl
     None.
 	
    Returns:
-    Status of the transfer.
+    Request status.
+    True - Request was successful.
+    False - Request has failed.
 	
    Example:
     <code>

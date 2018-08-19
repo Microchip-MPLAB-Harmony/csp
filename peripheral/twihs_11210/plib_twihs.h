@@ -11,20 +11,20 @@
     TWIHS peripheral library interface.
 
   Description
-    This file defines the interface to the TWIHS peripheral library.  This 
-    library provides access to and control of the associated peripheral 
+    This file defines the interface to the TWIHS peripheral library.  This
+    library provides access to and control of the associated peripheral
     instance.
 
   Remarks:
-    This header is for documentation only.  The actual plib_twihs<x> headers 
-    will be generated as required by the MCC (where <x> is the peripheral 
+    This header is for documentation only.  The actual plib_twihs<x> headers
+    will be generated as required by the MCC (where <x> is the peripheral
     instance number).
 
-    Every interface symbol has a lower-case 'x' in it following the "TWIHS" 
+    Every interface symbol has a lower-case 'x' in it following the "TWIHS"
     abbreviation.  This 'x' will be replaced by the peripheral instance number
     in the generated headers.  These are the actual functions that should be
     used.
-    
+
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -52,7 +52,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TWIHSx_H   
+#ifndef PLIB_TWIHSx_H
 #define PLIB_TWIHSx_H
 
 // *****************************************************************************
@@ -87,7 +87,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
    Summary:
     Defines the data type for the TWIHS Transfer status
-	
+
    Description:
     This enum defines the TWIHS Transfer status. Any one event from the list will
 	be returned if the transfer status is queried or will be available in the
@@ -98,41 +98,41 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 typedef enum
-{	
+{
 	/* Peripheral is busy processing the transfer request */
     TWIHS_TRANSFER_BUSY,
-	
+
 	/* Peripheral successfully completed the transfer request */
     TWIHS_TRANSFER_SUCCESS,
-	
+
 	/* Error occured during the transfer request */
     TWIHS_TRANSFER_ERROR,
-	
+
 } TWIHS_TRANSFER_STATUS;
 
 // *****************************************************************************
 /* TWIHS Transfer Event Callback Function Pointer.
 
    Summary:
-    Defines the data type and function signature for the TWIHS peripheral 
+    Defines the data type and function signature for the TWIHS peripheral
     callback function.
-	
+
    Description:
-    This data type defines the function signature for the TWIHS peripheral 
-    callback function. The TWIHS peripheral will call back the client's 
+    This data type defines the function signature for the TWIHS peripheral
+    callback function. The TWIHS peripheral will call back the client's
     function with this signature when the TWIHS Transfer event has occurred.
 
    Precondition:
-    TWIHSx_Initialize must have been called for the given TWIHS peripheral 
-    instance and TWIHSx_CallbackRegister must have been called to set the 
+    TWIHSx_Initialize must have been called for the given TWIHS peripheral
+    instance and TWIHSx_CallbackRegister must have been called to set the
     function to be called.
-	
+
    Parameters:
     status  - Complete or error status of the TWIHS transfer.
-    
+
     context - Allows the caller to provide a context value (usually a pointer
     to the callers context for multi-instance clients).
-  
+
    Returns:
     None.
 
@@ -148,17 +148,17 @@ typedef enum
         if(TWIHS_TRANSFER_COMPLETE == status)
         {
             //Handle complete status here based on context
-        } 
+        }
         else
         {
-            //Handle error here 
+            //Handle error here
         }
     }
 
     TWIHS1_CallbackSet(MyTWIHSCallback, &myData[0]);
     TWIHS2_CallbackSet(MyTWIHSCallback, &myData[1]);
     </code>
-	
+
    Remarks:
     None.
 */
@@ -169,7 +169,7 @@ typedef void (*TWIHS_CALLBACK) (uintptr_t contextHandle);
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of 
+/* The following functions make up the methods (set of possible operations) of
    this interface.
 */
 
@@ -179,17 +179,17 @@ typedef void (*TWIHS_CALLBACK) (uintptr_t contextHandle);
 
    Summary:
     Initializes given instance of the TWIHS peripheral.
-	
+
    Description:
     This function initializes the given instance of the TWIHS peripheral as
     configured by the user from within the MCC.
 
    Precondition:
     None.
-	
+
    Parameters:
     None.
-	
+
    Returns:
     None
 
@@ -206,178 +206,31 @@ void TWIHSx_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHSx_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length)
-	
-   Summary:
-    Allocates and Builds the Read Transaction Request Block.
+    bool TWIHSx_Read(uint16_t address, uint8_t *pdata, size_t length)
 
-   Description:
-    This function allocates and builds the Read Transaction Block.
-
-   Precondition:
-    TWIHSx_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy.
-
-   Parameters:
-    address - 7-bit / 10-bit slave address.
-	pdata   - pointer to destination data buffer
-	length  - length of data buffer in number of bytes.
-  
-   Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
-
-   Example:
-    <code>
-	    uint8_t myData [NUM_BYTES];
-	  
-	    if(!TWIHSx_TRBBuildRead( SLAVE_ADDR, &myData[0], NUM_BYTES ))
-	    {
-		    // error handling
-	    }
-	  
-	    if(!TWIHSx_TRBTransfer())
-	    {
-		    // error handling  
-	    }
-    
-    </code>
-
-   Remarks:
-    Number of times TWIHSx_TRBBuildRead is called is limited to number of TRB's
-	available.
-*/
-
-bool TWIHSx_TRBBuildRead(uint16_t address, uint8_t *pdata, uint8_t length);
-
-// *****************************************************************************
-/* Function:
-    bool TWIHSx_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length)
-	
-   Summary:
-    Allocates and Builds the Read Transaction Request Block.
-	
-   Description:
-    This function allocates and builds the Read Transaction Block.
-
-   Precondition:
-    TWIHSx_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy.
-
-   Parameters:
-    address - 7-bit / 10-bit slave address.
-	pdata   - pointer to source data buffer
-	length  - length of data buffer in number of bytes.
-  
-   Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
-	
-   Example:
-    <code>
-	    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-	  
-	    if(!TWIHSx_TRBBuildWrite( SLAVE_ADDR, &myData[0], NUM_BYTES ))
-	    {
-		    // error handling
-	    }
-	  
-	    if(!TWIHSx_TRBTransfer())
-	    {
-		    // error handling  
-	    }
-    
-    </code>
-
-   Remarks:
-    Number of times TWIHSx_TRBBuildWrite is called is limited to number of TRB's
-	available.
-*/
-
-bool TWIHSx_TRBBuildWrite(uint16_t address, uint8_t *pdata, uint8_t length);
-
-// *****************************************************************************
-/* Function:
-    bool TWIHSx_TRBTransfer(void)
-	
-   Summary:
-    Submits all TRB's build for processing. 
-
-   Description:
-    This function submits all TRB's built by calling TWIHSx_TRBBuildRead and 
-	TWIHSx_TRBBuildWrite. Once all TRB's are submitted for processing, transfer
-	starts. A repeated start will occur on completion of a single TRB. Master 
-	will generate Stop only after it process all TRB's.
-	
-   Precondition:
-    TWIHSx_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy before calling TWIHSx_TRBTransfer.
-
-   Parameters:
-    None.
-  
-   Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
-
-   Example:
-	<code>
-	    uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
-		uint8_t myRxData [NUM_BYTES] = {0};
-	  
-	    if(!TWIHSx_TRBBuildWrite( SLAVE_ADDR, &myTxData[0], NUM_BYTES ))
-	    {
-		    // error handling
-	    }
-		
-		if(!TWIHSx_TRBBuildRead( SLAVE_ADDR, &myRxData[0], NUM_BYTES ))
-	    {
-		    // error handling
-	    }
-	  
-	    if(!TWIHSx_TRBTransfer())
-	    {
-		    // error handling  
-	    }
-    
-    </code>
-
-   Remarks:
-    None.
-*/
-
-bool TWIHSx_TRBTransfer(void);
-
-// *****************************************************************************
-/* Function:
-    bool TWIHSx_Read(uint16_t address, uint8_t *pdata, uint8_t length)
-	
    Summary:
     Reads data from the slave.
 
    Description:
-    This function reads the data of size in bytes equal to length into pdata buffer 
-	from the slave having given address. Master will generate Stop condition after 
+    This function reads the data of size in bytes equal to length into pdata buffer
+	from the slave having given address. Master will generate Stop condition after
 	completion of the read.
 
    Precondition:
     TWIHSx_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy before calling TWIHSx_TRBTransfer.
-	Minimum one TRB should be available.
 
    Parameters:
     address - 7-bit / 10-bit slave address.
 	pdata   - pointer to destination data buffer
 	length  - length of data buffer in number of bytes.
-  
+
    Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
+    Void
 
    Example:
     <code>
 	    uint8_t myData [NUM_BYTES];
-	  
+
 	    if(!TWIHSx_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
@@ -388,38 +241,37 @@ bool TWIHSx_TRBTransfer(void);
     None.
 */
 
-bool TWIHSx_Read(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIHSx_Read(uint16_t address, uint8_t *pdata, size_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHSx_Write(uint16_t address, uint8_t *pdata, uint8_t length)
-	
+    bool TWIHSx_Write(uint16_t address, uint8_t *pdata, size_t length)
+
    Summary:
     Writes data onto the slave.
 
    Description:
-    This function writes the data from pdata buffer of size in bytes equal to 
-	length onto the slave with given address. Master will generate Stop 
+    This function writes the data from pdata buffer of size in bytes equal to
+	length onto the slave with given address. Master will generate Stop
 	condition after completion of the write.
 
    Precondition:
     TWIHSx_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy before calling TWIHSx_TRBTransfer.
-	Minimum one TRB should be available.
 
    Parameters:
     address - 7-bit / 10-bit slave address.
 	pdata   - pointer to source data buffer
 	length  - length of data buffer in number of bytes.
-	
+
    Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
+    Request status.
+    True - Request was successful.
+    False - Request has failed.
 
    Example:
     <code>
 	    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-	  
+
 	    if(!TWIHSx_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
@@ -430,12 +282,12 @@ bool TWIHSx_Read(uint16_t address, uint8_t *pdata, uint8_t length);
     None.
 */
 
-bool TWIHSx_Write(uint16_t address, uint8_t *pdata, uint8_t length);
+bool TWIHSx_Write(uint16_t address, uint8_t *pdata, size_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHSx_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
-	
+    bool TWIHSx_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
+
    Summary:
     Write and Read data from Slave.
 
@@ -448,8 +300,6 @@ bool TWIHSx_Write(uint16_t address, uint8_t *pdata, uint8_t length);
 
    Precondition:
     TWIHSx_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy before calling TWIHSx_TRBTransfer.
-	Minimum two TRB's should be available.
 
    Parameters:
     address - 7-bit / 10-bit slave address.
@@ -457,16 +307,17 @@ bool TWIHSx_Write(uint16_t address, uint8_t *pdata, uint8_t length);
 	wlength - write data length in bytes.
 	rdata   - pointer to read data buffer.
 	rlength - read data length in bytes.
-  
+
    Returns:
-    true  - TRB submitted Successfully.
-	false - Failure while submitting TRB.
+    Request status.
+    True - Request was successful.
+    False - Request has failed.
 
    Example:
     <code>
 	    uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
 		uint8_t myRxData [NUM_BYTES] = {0};
-	  
+
 	    if(!TWIHSx_WriteRead( SLAVE_ADDR, &myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
 	    {
 		    // error handling
@@ -476,53 +327,41 @@ bool TWIHSx_Write(uint16_t address, uint8_t *pdata, uint8_t length);
    Remarks:
 */
 
-bool TWIHSx_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);
+bool TWIHSx_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength);
 
 // *****************************************************************************
 /* Function:
-    TWIHS_TRANSFER_STATUS TWIHSx_TransferStatusGet(void)
-	
-   Summary:
-    Returns the transfer status associated with the given TWIHS peripheral instance.
+    bool TWIHS${INDEX?string}_IsBusy(void)
 
-   Description:
-    This function returns the complete or error transfer status associated with 
-    the given TWIHS peripheral instance.
+   Summary:
+    Returns the Peripheral busy status.
 
    Precondition:
     TWIHSx_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     None.
-	
-   Returns:
-    Status of the transfer.
-	
-   Example:
-    <code>
-    if(TWIHS_TRANSFER_COMPLETE == TWIHS1_TransferStatusGet())
-    {
-        //TWIHS transfer is completed, go to next state.
-    }
-    </code>
 
-   Remarks:
-    None.
+   Returns:
+    true - Busy.
+    false - Not busy.
 */
 
-TWIHS_TRANSFER_STATUS TWIHSx_TransferStatusGet(void);
+bool TWIHSx_IsBusy(void)
+
+
 
 // *****************************************************************************
 /* Function:
     void TWIHSx_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
-	
+
    Summary:
-    Sets the pointer to the function (and it's context) to be called when the 
+    Sets the pointer to the function (and it's context) to be called when the
     given TWIHS's transfer events occur.
 
    Description:
-    This function sets the pointer to a client function to be called "back" 
-    when the given TWIHS's transfer events occur. It also passes a context value 
+    This function sets the pointer to a client function to be called "back"
+    when the given TWIHS's transfer events occur. It also passes a context value
     (usually a pointer to a context structure) that is passed into the
     function when it is called.
 
@@ -530,12 +369,12 @@ TWIHS_TRANSFER_STATUS TWIHSx_TransferStatusGet(void);
     TWIHSx_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
-    callback - A pointer to a function with a calling signature defined 
+    callback - A pointer to a function with a calling signature defined
 	by the TWIHS_CALLBACK data type.
 
-    context - A value (usually a pointer) passed (unused) into the function 
+    context - A value (usually a pointer) passed (unused) into the function
 	identified by the callback parameter.
-  
+
    Returns:
     None.
 
@@ -568,12 +407,12 @@ void TWIHSx_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle);
 
    Parameters:
     None.
-  
+
    Returns:
     None.
 
    Remarks:
-    The function is called as peripheral instance's interrupt handler if the 
+    The function is called as peripheral instance's interrupt handler if the
 	instance interrupt is enabled. If peripheral instance's interrupt is
 	disabled, user need to call it from the main while loop of the application.
 */

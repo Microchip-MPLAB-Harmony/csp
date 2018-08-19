@@ -27,13 +27,6 @@ def instantiateComponent(twihsComponent):
     twihsOpMode.setLabel("TWIHS Operation Mode")
     twihsOpMode.setDefaultValue("MASTER")
     
-    #Number of Transaction request blocks
-    twihsNumTRBs = twihsComponent.createIntegerSymbol("TWIHS_NUM_TRBS", twihsMenu)
-    
-    twihsNumTRBs.setLabel("Number of TRB's")
-    twihsNumTRBs.setDefaultValue(2)
-    twihsNumTRBs.setMax(255)
-
     #Clock speed
     twihsSymClockSpeed = twihsComponent.createIntegerSymbol("TWIHS_CLK_SPEED", twihsMenu)
     

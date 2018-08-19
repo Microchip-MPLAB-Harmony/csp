@@ -168,8 +168,13 @@ typedef void (*TWIHS_CALLBACK)
 
 typedef struct
 {
-    /* Number of TRBs */
-    uint32_t numTRBs;
+    uint16_t address;
+    uint8_t *writeBuffer;
+    uint8_t	*readBuffer;
+    size_t  writeSize;
+	size_t  readSize;
+    size_t  writeCount;
+	size_t  readCount;
 	
 	/* State */
 	TWIHS_STATE state;
@@ -204,35 +209,6 @@ typedef struct
     uint32_t clkSpeed;
 
 } TWIHS_TRANSFER_SETUP;
-
-// *****************************************************************************
-/* Transaction Request Block
-
-   Summary:
-    Transaction Request Block Structure.
-
-   Description:
-    This data structure defines the Transaction Request Block.
-
-   Remarks:
-    None.
-*/
-
-typedef struct 
-{
-    /* slave address */
-    uint16_t address;
-	
-	/* read/write transaction*/
-	bool read;
-	
-	/* data length */
-	uint8_t length;
-	
-	/* data buffer pointer */
-	uint8_t *pbuffer;
-
-} TWIHS_TRANSACTION_REQUEST_BLOCK;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
