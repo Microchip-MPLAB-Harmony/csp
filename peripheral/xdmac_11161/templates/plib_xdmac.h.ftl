@@ -253,6 +253,7 @@ XDMAC_CHANNEL_CONFIG XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel);
 
 bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setting);
 
+void XDMAC_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t length);
 // *****************************************************************************
 // *****************************************************************************
 // Section: Local: **** Do Not Use ****

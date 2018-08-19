@@ -244,3 +244,11 @@ bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setti
 
     return true;
 }
+
+void XDMAC_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t length)
+{
+    /* Disable the channel */
+    XDMAC_REGS->XDMAC_GD= (XDMAC_GD_DI0_Msk << channel);
+    
+    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CBC = length;
+}
