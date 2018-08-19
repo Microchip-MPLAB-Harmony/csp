@@ -24,6 +24,10 @@ def instantiateComponent(coreComponent):
     projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
     projMenu.setLabel("Project Configuration")
 
+    exceptionHandling = coreComponent.createBooleanSymbol("ADVANCED_EXCEPTION", projMenu)
+    exceptionHandling.setLabel("Use Harmony Exception Handling")
+    exceptionHandling.setDefaultValue(False)
+    
     toolchainMenu = coreComponent.createMenuSymbol("CoreToolchainMenu", projMenu)
     toolchainMenu.setLabel("Toolchain Selection")
 
