@@ -786,6 +786,41 @@ XDMAC_CHANNEL_CONFIG XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel);
 
 bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setting);
 
+//******************************************************************************
+/* Function:
+    void XDMAC_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t length);
+
+  Summary:
+    Sets the channel Block Length of a specific XDMAC Channel.
+
+  Description:
+    This function sets the channel Block Length of the XDMAC channel.
+    The length of the block is (BLEN+1) microblocks.    
+    Any ongoing transaction of the specified XDMAC channel will be aborted when
+    this function is called.
+    
+
+  Precondition:
+    XDMAC should have been initialized by calling XDMAC_Initialize.
+    
+  Parameters:
+    channel - A specific XDMAC channel
+    length - The number of microblocks of data
+
+  Returns:
+    None
+
+  Example:
+    <code>
+    XDMAC_ChannelBlockLengthSet(XDMAC_CHANNEL_0, 16);
+    </code>
+
+  Remarks:
+    None
+*/
+
+void XDMAC_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t length);
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
