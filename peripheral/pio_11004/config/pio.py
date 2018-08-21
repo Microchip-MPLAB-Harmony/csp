@@ -465,21 +465,6 @@ usePort[0].setDependencies(setupPort, pinChannelList)
 # index for "portInterrupt[]" is used as 0 because it is irrelevant here. either of the values 0,1,2,3.. can be used here.
 portInterrupt[0].setDependencies(setupInterrupt, pinInterruptList)
 
-pioSym_AFEC0_CHER = coreComponent.createStringSymbol("PIO_AFEC0_CHER_VALUE", portConfiguration)
-pioSym_AFEC0_CHER.setLabel("AFEC0_CHER")
-pioSym_AFEC0_CHER.setDefaultValue("0x00000000")
-pioSym_AFEC0_CHER.setReadOnly(True)
-
-pioSym_AFEC1_CHER = coreComponent.createStringSymbol("PIO_AFEC1_CHER_VALUE", portConfiguration)
-pioSym_AFEC1_CHER.setLabel("AFEC1_CHER")
-pioSym_AFEC1_CHER.setDefaultValue("0x00000000")
-pioSym_AFEC1_CHER.setReadOnly(True)
-
-pioSym_DACC_CHER = coreComponent.createStringSymbol("PIO_DACC_CHER_VALUE", portConfiguration)
-pioSym_DACC_CHER.setLabel("DACC_CHER")
-pioSym_DACC_CHER.setDefaultValue("0x00000000")
-pioSym_DACC_CHER.setReadOnly(True)
-
 pioMatrixSym_CCFG_SYSIO = coreComponent.createStringSymbol("PIO_CCFG_SYSIO_VALUE", portConfiguration)
 pioMatrixSym_CCFG_SYSIO.setLabel("CCFG_SYSIO")
 pioMatrixSym_CCFG_SYSIO.setDescription("System Pins as GPIO")
