@@ -111,7 +111,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void )
 	<#lt>	if( (SysTick->CTRL & (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk)) == (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk))
 	<#lt>	{
 	<#lt>		tickStart=systick.tickCounter;
-	<#lt>		delayTicks=(1000*delay)/SYSTICK_INTERRUPT_PERIOD_IN_US;  // Number of tick interrupts for a given delay (in ms)
+	<#lt>		delayTicks=(1000 * delay)/SYSTICK_INTERRUPT_PERIOD_IN_US;  // Number of tick interrupts for a given delay (in ms)
 
 	<#lt>		while((systick.tickCounter-tickStart)<delayTicks)
 	<#lt>		{
