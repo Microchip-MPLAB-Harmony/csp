@@ -313,18 +313,6 @@ void PIO_Initialize ( void )
             PIO_INTERRUPT = PIO_E_INTERRUPT_USED
         />
     </#if>
-    <#if (PIO_AFEC0_CHER_VALUE != "0x00000000") || (PIO_AFEC1_CHER_VALUE != "0x00000000") || (PIO_DACC_CHER_VALUE != "0x00000000")>
-        <#lt>    /* Analog pins Initialization */
-    </#if>
-    <#if PIO_AFEC0_CHER_VALUE != "0x00000000">
-        <#lt>    AFEC0_REGS->AFEC_CHER = ${PIO_AFEC0_CHER_VALUE};
-    </#if>
-    <#if PIO_AFEC1_CHER_VALUE != "0x00000000">
-        <#lt>    AFEC1_REGS->AFEC_CHER = ${PIO_AFEC1_CHER_VALUE};
-    </#if>
-    <#if PIO_DACC_CHER_VALUE != "0x00000000">
-        <#lt>    DACC_REGS->DACC_CHER = ${PIO_DACC_CHER_VALUE};
-    </#if>
 
     <#if (PIO_A_INTERRUPT_USED == true) || (PIO_B_INTERRUPT_USED == true) || (PIO_C_INTERRUPT_USED == true) || (PIO_D_INTERRUPT_USED == true) || (PIO_E_INTERRUPT_USED == true) >
     /* Initialize Interrupt Pin data structures */
