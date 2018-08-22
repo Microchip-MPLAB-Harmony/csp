@@ -301,16 +301,51 @@ void UARTx_Initialize( void );
 
 bool UARTx_Write( void *buffer, const size_t size );
 
+// *****************************************************************************
+/* Function:
+    void UARTx_WriteByte( int data )
+
+   Summary:
+    Submits a byte of data to the given UART peripheral to transfer.
+
+   Description:
+    This function submits a byte of data to the UART peripheral to transfer.
+    This Function is available only in non-interrupt mode.
+
+   Precondition:
+    UARTx_Initialize must have been called for the associated UART instance.
+
+   Parameters:
+    data - Data byte to be transferred.
+
+   Returns:
+    None
+
+  Example:
+    <code>
+    //Example to use in non-interrupt mode
+    char myData = 0xAA;
+
+    UART1_Write(&myData)
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+bool UARTx_WriteByte( int data );
+
 
 // *****************************************************************************
 /* Function:
     bool UARTx_Read( void *buffer, const size_t size )
 
    Summary:
-    Submits a read buffer to the given UART peripheral to process.
+    Submits request to read n-Bytes of data to the given UART peripheral.
 
    Description:
-    This function submits a read buffer to the UART peripheral to process.
+    This function submits a request to read n-Bytes of data to the UART peripheral.
     The behavior of this function call will vary based on the mode
     selected within MCC.
 
@@ -328,7 +363,7 @@ bool UARTx_Write( void *buffer, const size_t size );
 
    Parameters:
     buffer - Pointer to the user buffer.
-    size - Number of bytes to be transferred.
+    size - Number of bytes to be read.
 
    Returns:
     Read request status.
@@ -356,6 +391,42 @@ bool UARTx_Write( void *buffer, const size_t size );
 
 bool UARTx_Read( void *buffer, const size_t size );
 
+// *****************************************************************************
+/* Function:
+    int UARTx_ReadByte( void )
+
+   Summary:
+    Submits request to read a byte of data to the given UART peripheral.
+
+   Description:
+    This function submits request to read a byte of data to the given UART peripheral.
+    This Function is available only in non-interrupt mode.
+
+   Precondition:
+    UARTx_Initialize must have been called for the associated UART instance.
+
+   Parameters:
+    None
+
+   Returns:
+    Read byte.
+
+  Example:
+    <code>
+    //Example to use in non-interrupt
+    char rxData;
+
+    if(UART1_ReceiverIsReady() == true)
+    {
+        rxData = UART1_ReadByte();
+    }
+    </code>
+
+  Remarks:
+    None.
+*/
+
+int UARTx_ReadByte( void );
 
 // *****************************************************************************
 // *****************************************************************************
@@ -542,6 +613,37 @@ size_t UARTx_ReadCountGet( void );
 
 // *****************************************************************************
 /* Function:
+    void UARTx_Sync( void )
+
+   Summary:
+    This Function busy waits unitll all transmit requests are completed.
+
+   Description:
+    This function is available only in non-interrupt mode of operation.
+    It can be used to busy wait untill transmit fifo is empty.
+
+   Precondition:
+    UARTx_Initialize must have been called for the associated UART instance.
+
+   Parameters:
+    None.
+
+   Returns:
+    None
+
+  Example:
+    <code>
+        UART1_Sync();
+    </code>
+
+  Remarks:
+    None
+*/
+
+void UARTx_Sync( void );
+
+// *****************************************************************************
+/* Function:
     bool UARTx_TransmitterIsReady( void )
 
    Summary:
@@ -589,7 +691,6 @@ size_t UARTx_ReadCountGet( void );
 */
 
 bool UARTx_TransmitterIsReady( void );
-
 
 // *****************************************************************************
 /* Function:

@@ -462,6 +462,45 @@ bool USART${INDEX?string}_Write( void *buffer, const size_t size )
     return status;
 }
 
+<#if INTERRUPT_MODE == false>
+int USART${INDEX?string}_ReadByte(void)
+{
+    return(USART${INDEX?string}_REGS->US_RHR & US_RHR_RXCHR_Msk);
+}
+
+void USART${INDEX?string}_WriteByte(int data)
+{
+    while ((US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
+    USART${INDEX?string}_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
+}
+
+void inline USART${INDEX?string}_Sync(void)
+{
+    while ((US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
+}
+
+bool USART${INDEX?string}_TransmitterIsReady( void )
+{
+    if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR & US_CSR_TXEMPTY_Msk))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool USART${INDEX?string}_ReceiverIsReady( void )
+{
+    if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR & US_CSR_RXRDY_Msk))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+</#if>
+
 <#if INTERRUPT_MODE == true>
 bool USART${INDEX?string}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context )
 {
@@ -497,32 +536,6 @@ size_t USART${INDEX?string}_WriteCountGet( void )
 size_t USART${INDEX?string}_ReadCountGet( void )
 {
     return usart${INDEX?string}Obj.rxProcessedSize;
-}
-
-</#if>
-<#if INTERRUPT_MODE == false>
-bool USART${INDEX?string}_TransmitterIsReady( void )
-{
-    bool status = false;
-
-    if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
-    {
-        status = true;
-    }
-
-    return status;
-}
-
-bool USART${INDEX?string}_ReceiverIsReady( void )
-{
-    bool status = false;
-
-    if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk))
-    {
-        status = true;
-    }
-
-    return status;
 }
 
 </#if>
