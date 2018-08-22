@@ -104,10 +104,11 @@ extern "C" {
 */
 typedef enum
 {
-    TC_COMPARE_A = (1U << 2U),
-    TC_COMPARE_B = (1U << 3U),
-    TC_COMPARE_C = (1U << 4U),
-    TC_COMPARE_STATUS_MSK = 0x1C
+    TC_COMPARE_NONE = 0U,
+    TC_COMPARE_A = TC_SR_CPAS_Msk,
+    TC_COMPARE_B = TC_SR_CPBS_Msk,
+    TC_COMPARE_C = TC_SR_CPCS_Msk,
+    TC_COMPARE_STATUS_MSK = TC_SR_CPAS_Msk | TC_SR_CPBS_Msk | TC_SR_CPCS_Msk
 }TC_COMPARE_STATUS;
 
 // *****************************************************************************
@@ -125,11 +126,12 @@ typedef enum
 */
 typedef enum
 {
-    TC_CAPTURE_COUNTER_OVERFLOW = (1U << 0U),
-    TC_CAPTURE_LOAD_OVERRUN = (1U << 1U),
-    TC_CAPTURE_A_LOAD = (1U << 5U),
-    TC_CAPTURE_B_LOAD = (1U << 6U),
-    TC_CAPTURE_STATUS_MSK = 0x63
+    TC_CAPTURE_NONE = 0U,
+    TC_CAPTURE_COUNTER_OVERFLOW = TC_SR_COVFS_Msk,
+    TC_CAPTURE_LOAD_OVERRUN = TC_SR_LOVRS_Msk,
+    TC_CAPTURE_A_LOAD = TC_SR_LDRAS_Msk,
+    TC_CAPTURE_B_LOAD = TC_SR_LDRBS_Msk,
+    TC_CAPTURE_STATUS_MSK = TC_SR_COVFS_Msk | TC_SR_LOVRS_Msk | TC_SR_LDRAS_Msk | TC_SR_LDRBS_Msk
 }TC_CAPTURE_STATUS;
 
 // *****************************************************************************
@@ -147,11 +149,11 @@ typedef enum
 */
 typedef enum
 {
-    TC_QUADRATURE_INDEX = (1U << 0U),
-    TC_QUADRATURE_DIR_CHANGE= (1U << 1U),
-    TC_QUADRATURE_ERROR = (1U << 2U),
-    TC_QUADRATURE_MISSING_PULSE = (1U << 3U),
-    TC_QUADRATURE_STATUS_MSK = 0xF
+    TC_QUADRATURE_NONE = 0U,
+    TC_QUADRATURE_INDEX = TC_QISR_IDX_Msk,
+    TC_QUADRATURE_DIR_CHANGE = TC_QISR_DIRCHG_Msk,
+    TC_QUADRATURE_ERROR = TC_QISR_QERR_Msk,
+    TC_QUADRATURE_STATUS_MSK = TC_QISR_IDX_Msk | TC_QISR_DIRCHG_Msk | TC_QISR_QERR_Msk
 }TC_QUADRATURE_STATUS;
 
 // *****************************************************************************
@@ -1367,7 +1369,7 @@ uint32_t TCx_QuadratureSpeedGet ( void );
     </code>
 
   Remarks:
-    This function is applicable only for compare mode. Event status bits are cleared
+    This function is applicable only for quadrature mode. Event status bits are cleared
     after reading the status register.
 */
 
