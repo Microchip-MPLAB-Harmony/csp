@@ -451,6 +451,22 @@ size_t UART${INDEX?string}_ReadCountGet( void )
 
 </#if>
 <#if INTERRUPT_MODE == false>
+int UART${INDEX?string}_ReadByte(void)
+{
+    return(UART${INDEX?string}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+}
+
+void UART${INDEX?string}_WriteByte(int data)
+{
+    while ((UART_SR_TXEMPTY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_TXEMPTY_Msk)) == 0);
+    UART${INDEX?string}_REGS->UART_THR = (UART_THR_TXCHR(data) & UART_THR_TXCHR_Msk);
+}
+
+void inline UART${INDEX?string}_Sync(void)
+{
+    while ((UART_SR_TXEMPTY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_TXEMPTY_Msk)) == 0);
+}
+
 bool UART${INDEX?string}_TransmitterIsReady( void )
 {
     bool status = false;

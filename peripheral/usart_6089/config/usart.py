@@ -52,37 +52,31 @@ def dependencyStatus(symbol, event):
 
     symbol.setVisible(status)
 
-# Calculates BRG value and Oversampling
-def baudRateCalc(clk, baud):
-    if (clk >= (16 * baud)):
+# Calculates BRG value
+def baudRateCalc(clk, baud, overSamp):
+    if (overSamp == 0):
         brgVal = (clk / (16 * baud))
-        overSamp = 0
     else :
         brgVal = (clk / (8 * baud))
-        overSamp = 1
 
-    return [brgVal, overSamp]
+    return brgVal
 
 
 def baudRateTrigger(symbol, event):
     global usartInstance
     clk = Database.getSymbolValue("usart" + str(usartInstance), "USART_CLOCK_FREQ")
     baud = Database.getSymbolValue("usart" + str(usartInstance), "BAUD_RATE")
-    if event["id"] == "BAUD_RATE":
-        baud = event["value"]
-    if event["id"] == "USART_CLOCK_FREQ":
-        clk = int(event["value"])
+    overSamp = Database.getSymbolValue("usart" + str(usartInstance), "USART_MR_OVER")
 
-    brgVal, overSamp = baudRateCalc(clk, baud)
+    brgVal = baudRateCalc(clk, baud, overSamp)
 
     if(brgVal < 1):
         Log.writeErrorMessage("USART Clock source value is low for the desired baud rate")
 
     symbol.clearValue()
+
     if symbol.getID() == "BRG_VALUE":
         symbol.setValue(brgVal, 2)
-    if symbol.getID() == "USART_MR_OVER":
-        symbol.setValue(overSamp, 2)
 
 def clockSourceFreq(symbol, event):
     if (event["id"] == "USART_CLK_SRC"):
@@ -150,16 +144,19 @@ def instantiateComponent(usartComponent):
     usartBaud.setLabel("Baud Rate")
     usartBaud.setDefaultValue(9600)
 
-    brgVal, overSamp = baudRateCalc(usartClkValue.getValue(), usartBaud.getValue())
+    usartSym_MR_OVER = usartComponent.createKeyValueSetSymbol("USART_MR_OVER", None)
+    usartSym_MR_OVER.setLabel("OverSampling")
+    usartSym_MR_OVER.addKey("0", "0", "16 Times")
+    usartSym_MR_OVER.addKey("1", "1", "8 Times")
+    usartSym_MR_OVER.setDisplayMode("Description")
+    usartSym_MR_OVER.setOutputMode("Key")
+    usartSym_MR_OVER.setDefaultValue(0)
 
-    usartSym_MR_OVER = usartComponent.createIntegerSymbol("USART_MR_OVER", None)
-    usartSym_MR_OVER.setVisible(False)
-    usartSym_MR_OVER.setDependencies(baudRateTrigger, ["BAUD_RATE", "USART_CLOCK_FREQ"])
-    usartSym_MR_OVER.setDefaultValue(overSamp)
+    brgVal = baudRateCalc(usartClkValue.getValue(), usartBaud.getValue(), usartSym_MR_OVER.getValue())
 
     usartBRGValue = usartComponent.createIntegerSymbol("BRG_VALUE", None)
     usartBRGValue.setVisible(False)
-    usartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "USART_CLOCK_FREQ"])
+    usartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "USART_MR_OVER", "USART_CLOCK_FREQ"])
     usartBRGValue.setDefaultValue(brgVal)
 
     usartSym_MR_CHRL = usartComponent.createKeyValueSetSymbol("USART_MR_CHRL", None)

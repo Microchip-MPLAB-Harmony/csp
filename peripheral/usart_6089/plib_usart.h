@@ -331,6 +331,40 @@ void USARTx_Initialize( void );
 
 bool USARTx_Write( void *buffer, const size_t size );
 
+// *****************************************************************************
+/* Function:
+    void USARTx_WriteByte( int data )
+
+   Summary:
+    Submits a byte of data to the given USART peripheral to transfer.
+
+   Description:
+    This function submits a byte of data to the USART peripheral to transfer.
+    This Function is available only in non-interrupt mode.
+
+   Precondition:
+    USARTx_Initialize must have been called for the associated UART instance.
+
+   Parameters:
+    data - Data byte to be transferred.
+
+   Returns:
+    None
+
+  Example:
+    <code>
+    //Example to use in non-interrupt mode
+    char myData = 0xAA;
+
+    USART1_Write(&myData)
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+bool USARTx_WriteByte( void *buffer, const size_t size );
 
 // *****************************************************************************
 /* Function:
@@ -386,6 +420,42 @@ bool USARTx_Write( void *buffer, const size_t size );
 
 bool USARTx_Read( void *buffer, const size_t size );
 
+// *****************************************************************************
+/* Function:
+    int USARTx_ReadByte( void )
+
+   Summary:
+    Submits request to read a byte of data to the given USART peripheral.
+
+   Description:
+    This function submits request to read a byte of data to the given USART peripheral.
+    This Function is available only in non-interrupt mode.
+
+   Precondition:
+    USARTx_Initialize must have been called for the associated UART instance.
+
+   Parameters:
+    None
+
+   Returns:
+    Read byte.
+
+  Example:
+    <code>
+    //Example to use in non-interrupt
+    char rxData;
+
+    if(USART1_ReceiverIsReady() == true)
+    {
+        rxData = USART1_ReadByte();
+    }
+    </code>
+
+  Remarks:
+    None.
+*/
+
+int USARTx_ReadByte( void );
 
 // *****************************************************************************
 // *****************************************************************************
@@ -569,6 +639,37 @@ size_t USARTx_ReadCountGet( void );
 // Section: Peripheral (Write/Read) Status Interface
 // *****************************************************************************
 // *****************************************************************************
+
+// *****************************************************************************
+/* Function:
+    void USARTx_Sync( void )
+
+   Summary:
+    This Function busy waits unitll all transmit requests are completed.
+
+   Description:
+    This function is available only in non-interrupt mode of operation.
+    It can be used to busy wait untill transmit fifo is empty.
+
+   Precondition:
+    USARTx_Initialize must have been called for the associated UART instance.
+
+   Parameters:
+    None.
+
+   Returns:
+    None
+
+  Example:
+    <code>
+        USART1_Sync();
+    </code>
+
+  Remarks:
+    None
+*/
+
+void USARTx_Sync( void );
 
 // *****************************************************************************
 /* Function:
