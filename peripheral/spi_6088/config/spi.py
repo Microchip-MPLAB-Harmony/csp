@@ -14,8 +14,8 @@ def InterruptStatusWarning(symbol, event):
        symbol.setVisible(False)
 
 def ClockModeInfo(symbol, event):
-    CPHA = Database.getSymbolValue("spi" + str(spiInstance), "SPI_CSR_NCPHA")
-    CPOL = Database.getSymbolValue("spi" + str(spiInstance), "SPI_CSR_CPOL")
+    CPHA = Database.getSymbolValue("spi" + str(spiInstance), "SPI_CLOCK_PHASE")
+    CPOL = Database.getSymbolValue("spi" + str(spiInstance), "SPI_CLOCK_POLARITY")
     if (CPOL == 0) and (CPHA == 0):
         symbol.setLabel("                                     ***SPI Mode 0 is Selected***")
     elif (CPOL == 0) and (CPHA == 1):
@@ -219,7 +219,6 @@ def instantiateComponent(spiComponent):
     spiSymMasterClock.setDefaultValue(getMasterClockFreq())
     spiSymMasterClock.setVisible(False)
 
-
     spiSym_CSR_SCBR = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", None)
     spiSym_CSR_SCBR.setLabel("Baud Rate in Hz")
     spiSym_CSR_SCBR.setDefaultValue(defaultbaudRate)
@@ -232,7 +231,7 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_SCBR_VALUE.setVisible(False)
     spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE", "core.MASTERCLK_FREQ"])
 
-    spiSym_CSR_BITS = spiComponent.createKeyValueSetSymbol("SPI_CSR_BITS", None)
+    spiSym_CSR_BITS = spiComponent.createKeyValueSetSymbol("SPI_CHARSIZE_BITS", None)
     spiSym_CSR_BITS.setLabel(spiBitField_CSR_BITS.getAttribute("caption"))
     spiSym_CSR_BITS.setOutputMode("Key")
     spiSym_CSR_BITS.setDisplayMode("Description")
@@ -245,14 +244,21 @@ def instantiateComponent(spiComponent):
         description = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("caption")
         spiSym_CSR_BITS.addKey(valueName, value, description)
 
+        index = ''.join([i for i in valueName if i.isdigit()])
+
+        #SPI CHARSIZE BIT Mask
+        spiSym_CSR_BITS_Mask = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_" + str(index) + "_BIT_MASK", None)
+        spiSym_CSR_BITS_Mask.setDefaultValue(value)
+        spiSym_CSR_BITS_Mask.setVisible(False)
+
     spiSymDummyData = spiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
     spiSymDummyData.setVisible(True)
     spiSymDummyData.setLabel("Dummy Data")
     spiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
     spiSymDummyData.setDefaultValue(0xFF)
-    spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_CSR_BITS"])
+    spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_CHARSIZE_BITS"])
 
-    spiSym_CSR_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CSR_CPOL", None)
+    spiSym_CSR_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CLOCK_POLARITY", None)
     spiSym_CSR_CPOL.setLabel(spiBitField_CSR_CPOL.getAttribute("caption"))
     spiSym_CSR_CPOL.setOutputMode("Key")
     spiSym_CSR_CPOL.setDisplayMode("Description")
@@ -265,7 +271,17 @@ def instantiateComponent(spiComponent):
         description = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("caption")
         spiSym_CSR_CPOL.addKey(valueName, value, description)
 
-    spiSym_CSR_NCPHA = spiComponent.createKeyValueSetSymbol("SPI_CSR_NCPHA", None)
+    #SPI Clock Polarity Idle Low Mask
+    spiSym_CSR_CPOL_IL_Mask = spiComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", None)
+    spiSym_CSR_CPOL_IL_Mask.setDefaultValue("0x0")
+    spiSym_CSR_CPOL_IL_Mask.setVisible(False)
+
+    #SPI Clock Polarity Idle High Mask
+    spiSym_CSR_CPOL_IH_Mask = spiComponent.createStringSymbol("SPI_CLOCK_POLARITY_HIGH_MASK", None)
+    spiSym_CSR_CPOL_IH_Mask.setDefaultValue("0x1")
+    spiSym_CSR_CPOL_IH_Mask.setVisible(False)
+
+    spiSym_CSR_NCPHA = spiComponent.createKeyValueSetSymbol("SPI_CLOCK_PHASE", None)
     spiSym_CSR_NCPHA.setLabel(spiBitField_CSR_NCPHA.getAttribute("caption"))
     spiSym_CSR_NCPHA.setOutputMode("Key")
     spiSym_CSR_NCPHA.setDisplayMode("Description")
@@ -278,11 +294,30 @@ def instantiateComponent(spiComponent):
         description = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("caption")
         spiSym_CSR_NCPHA.addKey(valueName, value, description)
 
+    #SPI Clock Phase Leading Edge Mask
+    spiSym_CTRLA_CPHA_TE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", None)
+    spiSym_CTRLA_CPHA_TE_Mask.setDefaultValue("0x1")
+    spiSym_CTRLA_CPHA_TE_Mask.setVisible(False)
+
+    #SPI Clock Phase Trailing Edge Mask
+    spiSym_CTRLA_CPHA_LE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", None)
+    spiSym_CTRLA_CPHA_LE_Mask.setDefaultValue("0x0")
+    spiSym_CTRLA_CPHA_LE_Mask.setVisible(False)
+
+    #SPI Status OVERRUN Mask
+    spiSym_STATUS_OVERRUN_Mask = spiComponent.createStringSymbol("SPI_STATUS_OVERRUN_MASK", None)
+    spiSym_STATUS_OVERRUN_Mask.setDefaultValue("0x8")
+    spiSym_STATUS_OVERRUN_Mask.setVisible(False)
+
+    #SPI API Prefix
+    spiSym_API_Prefix = spiComponent.createStringSymbol("SPI_PLIB_API_PREFIX", None)
+    spiSym_API_Prefix.setDefaultValue("SPI" + spiInstance)
+    spiSym_API_Prefix.setVisible(False)
+
     spiSymClockModeComment = spiComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", None)
     spiSymClockModeComment.setVisible(True)
     spiSymClockModeComment.setLabel("                                     ***SPI Mode 0 is Selected***")
-    spiSymClockModeComment.setDependencies(ClockModeInfo, ["SPI_CSR_CPOL","SPI_CSR_NCPHA"])
-
+    spiSymClockModeComment.setDependencies(ClockModeInfo, ["SPI_CLOCK_POLARITY","SPI_CLOCK_PHASE"])
 
     # Dependency Status for interrupt
     global spiSymIntEnComment
