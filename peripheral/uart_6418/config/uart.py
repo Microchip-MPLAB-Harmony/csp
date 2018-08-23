@@ -140,18 +140,63 @@ def instantiateComponent(uartComponent):
     uartDataWidth.setDefaultValue("8_BIT")
     uartDataWidth.setReadOnly(True)
 
+    #UART Character Size 8 Mask
+    uartDataWidth_8_Mask = uartComponent.createStringSymbol("USART_DATA_8_BIT_MASK", None)
+    uartDataWidth_8_Mask.setDefaultValue("0x0")
+    uartDataWidth_8_Mask.setVisible(False)
+
     uartSym_MR_PAR = uartComponent.createComboSymbol("UART_MR_PAR", None, uartValGrp_MR_PAR.getValueNames())
     uartSym_MR_PAR.setLabel("Parity")
     uartSym_MR_PAR.setDefaultValue("NO")
 
-    uartDataWidth = uartComponent.createComboSymbol("UART_MR_STOP_BITS", None, ["1 BIT"])
-    uartDataWidth.setLabel("Stop")
-    uartDataWidth.setDefaultValue("1_BIT")
-    uartDataWidth.setReadOnly(True)
+    #UART EVEN Parity Mask
+    uartSym_MR_PAR_EVEN_Mask = uartComponent.createStringSymbol("USART_PARITY_EVEN_MASK", None)
+    uartSym_MR_PAR_EVEN_Mask.setDefaultValue("0x0")
+    uartSym_MR_PAR_EVEN_Mask.setVisible(False)
+
+    #UART ODD Parity Mask
+    uartSym_MR_PAR_ODD_Mask = uartComponent.createStringSymbol("USART_PARITY_ODD_MASK", None)
+    uartSym_MR_PAR_ODD_Mask.setDefaultValue("0x1")
+    uartSym_MR_PAR_ODD_Mask.setVisible(False)
+
+    #UART SPACE Parity Mask
+    uartSym_MR_PAR_SPACE_Mask = uartComponent.createStringSymbol("USART_PARITY_SPACE_MASK", None)
+    uartSym_MR_PAR_SPACE_Mask.setDefaultValue("0x2")
+    uartSym_MR_PAR_SPACE_Mask.setVisible(False)
+
+    #UART MARK Parity Mask
+    uartSym_MR_PAR_MARK_Mask = uartComponent.createStringSymbol("USART_PARITY_MARK_MASK", None)
+    uartSym_MR_PAR_MARK_Mask.setDefaultValue("0x3")
+    uartSym_MR_PAR_MARK_Mask.setVisible(False)
+
+    #UART NO Parity Mask
+    uartSym_MR_PAR_NO_Mask = uartComponent.createStringSymbol("USART_PARITY_NONE_MASK", None)
+    uartSym_MR_PAR_NO_Mask.setDefaultValue("0x4")
+    uartSym_MR_PAR_NO_Mask.setVisible(False)
+
+    #UART MULTIDROP Parity Mask
+    uartSym_MR_PAR_MULTIDROP_Mask = uartComponent.createStringSymbol("USART_PARITY_MULTIDROP_MASK", None)
+    uartSym_MR_PAR_MULTIDROP_Mask.setDefaultValue("0x6")
+    uartSym_MR_PAR_MULTIDROP_Mask.setVisible(False)
+
+    uartStopBit = uartComponent.createComboSymbol("UART_MR_STOP_BITS", None, ["1 BIT"])
+    uartStopBit.setLabel("Stop")
+    uartStopBit.setDefaultValue("1_BIT")
+    uartStopBit.setReadOnly(True)
+
+    #UART Stop 1-bit Mask
+    uartStopBit_1_Mask = uartComponent.createStringSymbol("USART_STOP_1_BIT_MASK", None)
+    uartStopBit_1_Mask.setDefaultValue("0x0")
+    uartStopBit_1_Mask.setVisible(False)
 
     uartSym_MR_FILTER = uartComponent.createBooleanSymbol("UART_MR_FILTER", None)
     uartSym_MR_FILTER.setLabel(uartBitField_MR_FILTER.getDescription())
     uartSym_MR_FILTER.setDefaultValue(False)
+
+    #UART API Prefix
+    uartSym_API_Prefix = uartComponent.createStringSymbol("USART_PLIB_API_PREFIX", None)
+    uartSym_API_Prefix.setDefaultValue("UART" + str(uartInstance))
+    uartSym_API_Prefix.setVisible(False)
 
     ############################################################################
     #### Dependency ####
