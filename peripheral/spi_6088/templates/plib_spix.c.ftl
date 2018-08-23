@@ -65,7 +65,7 @@ void SPI${SPI_INDEX?string}_Initialize ( void )
 </#if>
 
     /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
-    SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}]= SPI_CSR_CPOL_${SPI_CSR_CPOL} | SPI_CSR_NCPHA_${SPI_CSR_NCPHA} | SPI_CSR_BITS${SPI_CSR_BITS} | SPI_CSR_SCBR(${SPI_CSR_SCBR_VALUE});
+    SPI${SPI_INDEX?string}_REGS->SPI_CSR[${SPI_CSR_INDEX}] = SPI_CSR_CPOL_${SPI_CLOCK_POLARITY} | SPI_CSR_NCPHA_${SPI_CLOCK_PHASE} | SPI_CSR_BITS${SPI_CHARSIZE_BITS} | SPI_CSR_SCBR(${SPI_CSR_SCBR_VALUE});
 
 <#if SPI_INTERRUPT_MODE == true >
     /* Initialize global variables */
