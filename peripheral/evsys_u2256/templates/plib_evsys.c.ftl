@@ -61,7 +61,7 @@ void EVSYS${INDEX?string}_Initialize( void )
 	/* Event Channel ${i} Configuration */
 	EVSYS_REGS->EVSYS_CHANNEL[${i}] = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
 									${(.vars[RUNSTANDBY])?then('| EVSYS_CHANNEL_RUNSTDBY', '')} ${(.vars[ONDEMAND])?then('| EVSYS_CHANNEL_ONDEMAND', '')};
-	while(EVSYS_REGS->EVSYS_CHSTATUS && EVSYS_CHSTATUS_USRRDY${i} != EVSYS_CHSTATUS_USRRDY${i});
+	while(EVSYS_REGS->EVSYS_CHSTATUS && EVSYS_CHSTATUS_USRRDY${i}_Msk != EVSYS_CHSTATUS_USRRDY${i}_Msk);
 	
 	</#if>
 	</#if>
@@ -72,7 +72,7 @@ void EVSYS${INDEX?string}_Initialize( void )
 	<#assign CHANNEL = "EVSYS_USER_" + i >
 	<#if .vars[CHANNEL]?has_content>
 	<#if .vars[CHANNEL] != '0'>
-	EVSYS_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]})
+	EVSYS_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]});
 	</#if>
 	</#if>
 </#list>

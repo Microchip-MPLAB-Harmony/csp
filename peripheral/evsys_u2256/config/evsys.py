@@ -20,7 +20,32 @@ generator = {}
 generator_module = {}
 user_module = {}
 
-		
+def userStatus(symbol,event):
+	global channelUserMap
+	global user
+	channelNumber = int(str(symbol.getID()).split("EVSYS_CHANNEL_")[1].split("_USER_READY")[0])
+	if event["id"].startswith("EVSYS_USER_"):
+		channelAssigned = event["value"] - 1
+		channelUser = user.get(int(event["id"].split("EVSYS_USER_")[1]))
+		channelUserMap[event["id"]] = channelAssigned
+
+	userAvailable = False
+	for key in channelUserMap.keys():
+		if channelUserMap.get(key) == channelNumber:
+			if Database.getSymbolValue(event["namespace"], "USER_" + user.get(int(key.split("EVSYS_USER_")[1])) + "_READY"  ) == False:
+				userAvailable = False
+				break
+			else:
+				userAvailable = True
+	symbol.setValue(userAvailable, 2)
+	
+	
+def channelSource(symbol, event):
+	global evsysGenerator
+	channelNumber = int(str(symbol.getID()).split("EVSYS_CHANNEL_")[1].split("_GENERATOR_ACTIVE")[0])
+	symbol.setValue(Database.getSymbolValue(event["namespace"], "GENERATOR_" + str(evsysGenerator[channelNumber].getSelectedKey()) + "_ACTIVE"), 2)
+	
+	
 def channelMenu(symbol, event):
 	symbol.setVisible(event["value"])
 	
@@ -64,6 +89,12 @@ def instantiateComponent(evsysComponent):
 	
 	global user
 	global channel
+	global channelUserMap
+	channelUserMap = {}
+	
+	global evsysGenerator
+	evsysGenerator = []
+	channelUserDependency = []
 	
 	num = evsysComponent.getID()[-1:]
 	Log.writeInfoMessage("Running EVSYS" + str(num))
@@ -77,14 +108,24 @@ def instantiateComponent(evsysComponent):
 	evsysSym_INDEX.setVisible(False)
 	evsysSym_INDEX.setDefaultValue(int(num))
 	
+	generatorSymbol = []
 	generatorsNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
 	for id in range(0,len(generatorsNode.getChildren())):
 		generator[generatorsNode.getChildren()[id].getAttribute("name")] = int(generatorsNode.getChildren()[id].getAttribute("index"))	
-
+		generatorActive = evsysComponent.createBooleanSymbol("GENERATOR_" + str(generatorsNode.getChildren()[id].getAttribute("name")) + "_ACTIVE", evsysSym_Menu)
+		generatorActive.setVisible(True)
+		generatorActive.setDefaultValue(False)
+		generatorSymbol.append("GENERATOR_" + str(generatorsNode.getChildren()[id].getAttribute("name")) + "_ACTIVE")
 	
 	usersNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/users")
 	for id in range(0,len(usersNode.getChildren())):
 		user[int(usersNode.getChildren()[id].getAttribute("index"))] = usersNode.getChildren()[id].getAttribute("name")	
+		userReady = evsysComponent.createBooleanSymbol("USER_" + str(usersNode.getChildren()[id].getAttribute("name")) + "_READY", evsysSym_Menu)
+		userReady.setVisible(True)
+		userReady.setDefaultValue(False)
+		channelUserMap["EVSYS_USER_" + str(usersNode.getChildren()[id].getAttribute("index"))] = -1
+		channelUserDependency.append("EVSYS_USER_" + str(usersNode.getChildren()[id].getAttribute("index")))
+		channelUserDependency.append("USER_" + str(usersNode.getChildren()[id].getAttribute("name")) + "_READY")
 		
 	channelNode = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance/parameters')
 	for id in range(0,len(channelNode.getChildren())):
@@ -96,6 +137,7 @@ def instantiateComponent(evsysComponent):
 	evsysChannelNum.setVisible(False)
 	evsysChannelNum.setDefaultValue(int(channel))
 	
+		
 	evsysUserNum = evsysComponent.createIntegerSymbol("EVSYS_USER_NUMBER",evsysSym_Menu)
 	evsysUserNum.setVisible(False)
 	evsysUserNum.setDefaultValue(int(len(user.keys())))
@@ -109,12 +151,21 @@ def instantiateComponent(evsysComponent):
 		evsysChannelMenu.setVisible(False)
 		evsysChannelMenu.setDependencies(channelMenu, ["EVSYS_CHANNEL_" + str(id)])
 		
-		evsysGenerator = evsysComponent.createKeyValueSetSymbol("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR", evsysChannelMenu)
-		evsysGenerator.setLabel("Event Generator")
-		evsysGenerator.setOutputMode("Value")
+		evsysGenerator.append(id)
+		evsysGenerator[id] = evsysComponent.createKeyValueSetSymbol("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR", evsysChannelMenu)
+		evsysGenerator[id].setLabel("Event Generator")
+		evsysGenerator[id].setOutputMode("Value")
 		for key in generator.keys():
-			evsysGenerator.addKey(key, str(generator.get(key)), key)
-			
+			evsysGenerator[id].addKey(key, str(generator.get(key)), key)
+				
+		evsysGeneratorActive = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR_ACTIVE",evsysChannelMenu)
+		evsysGeneratorActive.setDefaultValue(False)
+		evsysGeneratorActive.setVisible(True)
+		evsysGeneratorActive.setLabel("Channel Generator source Active")
+		generatorSymbol.append("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR")
+		evsysGeneratorActive.setDependencies(channelSource, generatorSymbol)
+		del generatorSymbol[-1]
+		
 		evsysPath =  evsysComponent.createKeyValueSetSymbol("EVSYS_CHANNEL_" +  str(id) + "_PATH", evsysChannelMenu)
 		evsysPath.setLabel("Path Selection")
 		evsysPath.setOutputMode("Value")
@@ -150,7 +201,13 @@ def instantiateComponent(evsysComponent):
 		evsysOverRun.setDefaultValue(False)
 		evsysOverRun.setVisible(False)
 		evsysOverRun.setDependencies(overrunInterrupt, ["EVSYS_CHANNEL_" +  str(id) + "_PATH"])
-	
+		
+		evsysUserReady = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" +  str(id) + "_USER_READY",evsysChannelMenu)
+		evsysUserReady.setDefaultValue(False)
+		evsysUserReady.setVisible(True)
+		evsysUserReady.setLabel("Channel" + str(id) + "Users Ready")
+		evsysUserReady.setDependencies(userStatus, channelUserDependency)
+		
 	evsysInterrupt= evsysComponent.createBooleanSymbol("EVSYS_INTERRUPT_MODE",	evsysSym_Menu)
 	evsysInterrupt.setVisible(False)
 	evsysInterrupt.setDefaultValue(False)
@@ -175,7 +232,7 @@ def instantiateComponent(evsysComponent):
 		for i in range(0, channel):
 			evsysUserChannel.addKey("CHANNEL_" + str(i), str(hex(i + 1)), "Use Channel" + str(id))
 		evsysUserChannel.setOutputMode("Value")
-
+		
 	peripId = Interrupt.getInterruptIndex("EVSYS")
 	NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
 	NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
@@ -198,7 +255,7 @@ def instantiateComponent(evsysComponent):
 	evsysSym_HeaderFile.setSourcePath("../peripheral/evsys_u2256/templates/plib_evsys.h.ftl")
 	evsysSym_HeaderFile.setOutputName("plib_evsys"+str(num)+".h")
 	evsysSym_HeaderFile.setDestPath("peripheral/evsys")
-	evsysSym_HeaderFile.setProjectPath("peripheral/evsys")
+	evsysSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/evsys")
 	evsysSym_HeaderFile.setType("HEADER")
 	evsysSym_HeaderFile.setMarkup(True)
 
@@ -206,7 +263,7 @@ def instantiateComponent(evsysComponent):
 	evsysSym_SourceFile.setSourcePath("../peripheral/evsys_u2256/templates/plib_evsys.c.ftl")
 	evsysSym_SourceFile.setOutputName("plib_evsys"+str(num)+".c")
 	evsysSym_SourceFile.setDestPath("peripheral/evsys")
-	evsysSym_SourceFile.setProjectPath("peripheral/evsys")
+	evsysSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/evsys")
 	evsysSym_SourceFile.setType("SOURCE")
 	evsysSym_SourceFile.setMarkup(True)
 
