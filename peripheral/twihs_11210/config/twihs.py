@@ -28,8 +28,8 @@ def instantiateComponent(twihsComponent):
     twihsOpMode.setDefaultValue("MASTER")
     
     #Clock speed
-    twihsSymClockSpeed = twihsComponent.createIntegerSymbol("TWIHS_CLK_SPEED", twihsMenu)
-    
+    twihsSymClockSpeed = twihsComponent.createIntegerSymbol("I2C_CLOCK_SPEED", twihsMenu)
+
     twihsSymClockSpeed.setLabel("Clock Speed")
     twihsSymClockSpeed.setDefaultValue(400000)
     twihsSymClockSpeed.setMax(400000)
@@ -40,7 +40,7 @@ def instantiateComponent(twihsComponent):
     twihsSymDivider = twihsComponent.createStringSymbol("TWIHS_DIVIDER", twihsMenu)
     
     twihsSymDivider.setVisible(False)
-    twihsSymDivider.setDependencies(setClockDividerValue, ["TWIHS_CLK_SPEED", "core.MASTERCLK_FREQ"])
+    twihsSymDivider.setDependencies(setClockDividerValue, ["I2C_CLOCK_SPEED", "core.MASTERCLK_FREQ"])
     
     #CLDIV
     twihsSym_CWGR_CLDIV = twihsComponent.createIntegerSymbol("TWIHS_CWGR_CLDIV", twihsMenu)
@@ -92,7 +92,12 @@ def instantiateComponent(twihsComponent):
     twihsSymIntEnComment.setVisible(False)
     twihsSymIntEnComment.setLabel("Warning!!! TWIHS Interrupt is Disabled in Interrupt Manager")
     twihsSymIntEnComment.setDependencies(setEnCommentVisibility, ["core.NVIC_" + str(peripId) + "_ENABLE"])
-    
+
+    #TWIHS API Prefix
+    twihsSymAPIPrefix = twihsComponent.createStringSymbol("I2C_PLIB_API_PREFIX", twihsMenu)
+    twihsSymAPIPrefix.setDefaultValue("TWIHS" + str(num))
+    twihsSymAPIPrefix.setVisible(False)
+
     REG_MODULE_TWIHS = Register.getRegisterModule("TWIHS")
     
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -146,7 +151,7 @@ def getMasterClockFreq():
         
 def getTWIHSClkSpeed():
     global num
-    return Database.getSymbolValue('twihs' + str(num), "TWIHS_CLK_SPEED")
+    return Database.getSymbolValue('twihs' + str(num), "I2C_CLOCK_SPEED")
 
 def getTWIHSLowLevelTimeLimit( ):
     return 384000
