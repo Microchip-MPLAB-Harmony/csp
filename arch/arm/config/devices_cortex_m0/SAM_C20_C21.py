@@ -75,6 +75,9 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
 # load device specific adc manager information
 #coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
 
+# Activate Event System
+Database.activateComponents(["evsys0"])
+
 # generate startup_xc32.c file
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
 armSysStartSourceFile.setSourcePath("arm/templates/startup_xc32.c.ftl")
