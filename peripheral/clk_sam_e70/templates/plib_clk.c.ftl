@@ -83,7 +83,7 @@ static void CLK_SlowClockInitialize(void)
 <#if SUPC_MR_OSCBYPASS && SUPC_CR_XTALSEL>
     /* External clock signal on XIN32 pin is selected as the Slow Clock (SLCK) source.
        Bypass 32K Crystal Oscillator  */
-    SUPC_REGS->SUPC_MR |= SUPC_MR_OSCBYPASS_BYPASS;
+    SUPC_REGS->SUPC_MR |= SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS_BYPASS;
     SUPC_REGS->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL_CRYSTAL_SEL;
 
     /* Wait until the external clock signal is ready and
