@@ -127,7 +127,7 @@ void SERCOM${SERCOM_INDEX}_SPI_Initialize(void)
     SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLA.w |= SPI_TRANSFER_MODE;
 
     /* Selection of the Character Size and Receiver Enable */
-    <@compress single_line=true>SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLB.w |= SERCOM_SPI_CTRLB_CHSIZE(${SPI_CHARSIZE_BITS})
+    <@compress single_line=true>SERCOM${SERCOM_INDEX}_REGS->SPI.CTRLB.w |= ${(SPI_CHARSIZE_BITS == "_9_BIT")?then('SERCOM_SPI_CTRLB_CHSIZE(0x1)', 'SERCOM_SPI_CTRLB_CHSIZE(0x0)')}
                                                                            ${SPI_RECIEVER_ENABLE?then('| SERCOM_SPI_CTRLB_RXEN_Msk', '')}
                                                                            ${SPI_MSSEN?then('| SERCOM_SPI_CTRLB_MSSEN_Msk', '')};</@compress>
 
@@ -439,7 +439,6 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
     return isSuccess;
 }
 <#else>
-
 bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
     bool isRequestAccepted = false;
@@ -671,8 +670,5 @@ SPI_ERROR SERCOM${SERCOM_INDEX}_SPI_ErrorGet(void)
 
     return statusValue;
 }
-
 </#if>
-
-
 
