@@ -218,7 +218,7 @@ void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context)
 
 // *****************************************************************************
 /* Function:
-    void WDT_InterruptHandler( void )
+    void WDT${WDT_INDEX}_InterruptHandler( void )
 
   Summary:
     WDT Interrupt Handler.
@@ -230,7 +230,7 @@ void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context)
     None.
 */
 
-void WDT_InterruptHandler( void )
+void WDT${WDT_INDEX}_InterruptHandler( void )
 {
     /* Clear Early Watchdog Interrupt */
     WDT_REGS->WDT_INTFLAG = WDT_INTFLAG_EW_Msk;

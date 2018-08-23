@@ -1,1 +1,1 @@
-WDT${WDT_INDEX}_Initialize();
+    WDT${WDT_INDEX}_Initialize();

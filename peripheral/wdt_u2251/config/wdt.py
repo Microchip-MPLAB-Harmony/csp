@@ -1,8 +1,24 @@
-#######################################################################################################################################
-#####################################       WDT Database Components      ##########################################################
-#######################################################################################################################################
+###################################################################################################
+########################################## Callbacks  #############################################
+###################################################################################################
 
-#main menu
+def updateWDTEnarlyInterruptVisibleProperty(symbol, event):
+
+    component = symbol.getComponent()
+    component.getSymbolByID("WDT_HEADER").setEnabled(event["value"])
+    component.getSymbolByID("WDT_SOURCE").setEnabled(event["value"])
+    component.getSymbolByID("WDT_SYS_DEF").setEnabled(event["value"])
+    component.getSymbolByID("WDT_SYS_INIT").setEnabled(event["value"])
+
+    symbol.setVisible(event["value"])
+
+    Log.writeInfoMessage("updateWDTEnarlyInterruptVisibleProperty is : " + str(event["value"]))
+
+###################################################################################################
+#############################################  WDT  ###############################################
+###################################################################################################
+
+#WDT menu
 wdtMenu = coreComponent.createMenuSymbol("WDT_MENU", None)
 wdtMenu.setLabel("WDT")
 
@@ -11,9 +27,15 @@ wdt_Index = coreComponent.createIntegerSymbol("WDT_INDEX", wdtMenu)
 wdt_Index.setVisible(False)
 wdt_Index.setDefaultValue(0)
 
+#WDT Use
+wdtSym_Use = coreComponent.createBooleanSymbol("WDT_USE", wdtMenu)
+wdtSym_Use.setLabel("Use WDT ?")
+
 #Enable Early Interrupt
-wdtSym_CTRLA_EW = coreComponent.createBooleanSymbol("WDT_EW_ENABLE", wdtMenu)
+wdtSym_CTRLA_EW = coreComponent.createBooleanSymbol("WDT_EW_ENABLE", wdtSym_Use)
 wdtSym_CTRLA_EW.setLabel("Enable Watchdog Early Interrupt")
+wdtSym_CTRLA_EW.setVisible(False)
+wdtSym_CTRLA_EW.setDependencies(updateWDTEnarlyInterruptVisibleProperty, ["WDT_USE"])
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
@@ -24,31 +46,34 @@ configName = Variables.get("__CONFIGURATION_NAME")
 wdtModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"WDT\"]")
 wdtModuleID = wdtModuleNode.getAttribute("id")
 
-	
-wdtHeader1File = coreComponent.createFileSymbol("WDT_HEADER", None)
-wdtHeader1File.setSourcePath("../peripheral/wdt_"+wdtModuleID+"/templates/plib_wdt.h.ftl")
-wdtHeader1File.setOutputName("plib_wdt0.h")
-wdtHeader1File.setDestPath("/peripheral/wdt/")
-wdtHeader1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
-wdtHeader1File.setType("HEADER")
-wdtHeader1File.setMarkup(True)
+wdtHeaderFile = coreComponent.createFileSymbol("WDT_HEADER", None)
+wdtHeaderFile.setSourcePath("../peripheral/wdt_" + wdtModuleID + "/templates/plib_wdt.h.ftl")
+wdtHeaderFile.setOutputName("plib_wdt0.h")
+wdtHeaderFile.setDestPath("/peripheral/wdt/")
+wdtHeaderFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
+wdtHeaderFile.setType("HEADER")
+wdtHeaderFile.setMarkup(True)
+wdtHeaderFile.setEnabled(False)
 
-wdtSource1File = coreComponent.createFileSymbol("WDT_SOURCE", None)
-wdtSource1File.setSourcePath("../peripheral/wdt_"+wdtModuleID+"/templates/plib_wdt.c.ftl")
-wdtSource1File.setOutputName("plib_wdt0.c")
-wdtSource1File.setDestPath("/peripheral/wdt/")
-wdtSource1File.setProjectPath("config/" + configName + "/peripheral/wdt/")
-wdtSource1File.setType("SOURCE")
-wdtSource1File.setMarkup(True)
+wdtSourceFile = coreComponent.createFileSymbol("WDT_SOURCE", None)
+wdtSourceFile.setSourcePath("../peripheral/wdt_" + wdtModuleID + "/templates/plib_wdt.c.ftl")
+wdtSourceFile.setOutputName("plib_wdt0.c")
+wdtSourceFile.setDestPath("/peripheral/wdt/")
+wdtSourceFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
+wdtSourceFile.setType("SOURCE")
+wdtSourceFile.setMarkup(True)
+wdtSourceFile.setEnabled(False)
 
 wdtSystemInitFile = coreComponent.createFileSymbol("WDT_SYS_INIT", None)
 wdtSystemInitFile.setType("STRING")
 wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-wdtSystemInitFile.setSourcePath("../peripheral/wdt_"+wdtModuleID+"/templates/system/initialization.c.ftl")
+wdtSystemInitFile.setSourcePath("../peripheral/wdt_" + wdtModuleID + "/templates/system/initialization.c.ftl")
 wdtSystemInitFile.setMarkup(True)
+wdtSystemInitFile.setEnabled(False)
 
 wdtSystemDefFile = coreComponent.createFileSymbol("WDT_SYS_DEF", None)
 wdtSystemDefFile.setType("STRING")
 wdtSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-wdtSystemDefFile.setSourcePath("../peripheral/wdt_"+wdtModuleID+"/templates/system/definitions.h.ftl")
+wdtSystemDefFile.setSourcePath("../peripheral/wdt_" + wdtModuleID + "/templates/system/definitions.h.ftl")
 wdtSystemDefFile.setMarkup(True)
+wdtSystemDefFile.setEnabled(False)
