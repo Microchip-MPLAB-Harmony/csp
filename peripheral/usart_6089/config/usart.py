@@ -181,9 +181,64 @@ def instantiateComponent(usartComponent):
     usartSym_MR_MODE9.setLabel("9 Bit Data Width")
     usartSym_MR_MODE9.setDefaultValue(False)
 
+    #USART Character Size 5 Mask
+    usartSym_MR_CHRL_5_Mask = usartComponent.createStringSymbol("USART_DATA_5_BIT_MASK", None)
+    usartSym_MR_CHRL_5_Mask.setDefaultValue("0x0")
+    usartSym_MR_CHRL_5_Mask.setVisible(False)
+
+    #USART Character Size 6 Mask
+    usartSym_MR_CHRL_6_Mask = usartComponent.createStringSymbol("USART_DATA_6_BIT_MASK", None)
+    usartSym_MR_CHRL_6_Mask.setDefaultValue("0x1")
+    usartSym_MR_CHRL_6_Mask.setVisible(False)
+
+    #USART Character Size 7 Mask
+    usartSym_MR_CHRL_7_Mask = usartComponent.createStringSymbol("USART_DATA_7_BIT_MASK", None)
+    usartSym_MR_CHRL_7_Mask.setDefaultValue("0x2")
+    usartSym_MR_CHRL_7_Mask.setVisible(False)
+
+    #USART Character Size 8 Mask
+    usartSym_MR_CHRL_8_Mask = usartComponent.createStringSymbol("USART_DATA_8_BIT_MASK", None)
+    usartSym_MR_CHRL_8_Mask.setDefaultValue("0x3")
+    usartSym_MR_CHRL_8_Mask.setVisible(False)
+
+    #USART Character Size 9 Mask
+    usartSym_MR_CHRL_9_Mask = usartComponent.createStringSymbol("USART_DATA_9_BIT_MASK", None)
+    usartSym_MR_CHRL_9_Mask.setDefaultValue("0x4")
+    usartSym_MR_CHRL_9_Mask.setVisible(False)
+
     usartSym_MR_PAR = usartComponent.createComboSymbol("USART_MR_PAR", None, usartValGrp_MR_PAR.getValueNames())
     usartSym_MR_PAR.setLabel("Parity")
     usartSym_MR_PAR.setDefaultValue("NO")
+
+    #USART EVEN Parity Mask
+    usartSym_MR_PAR_EVEN_Mask = usartComponent.createStringSymbol("USART_PARITY_EVEN_MASK", None)
+    usartSym_MR_PAR_EVEN_Mask.setDefaultValue("0x0")
+    usartSym_MR_PAR_EVEN_Mask.setVisible(False)
+
+    #USART ODD Parity Mask
+    usartSym_MR_PAR_ODD_Mask = usartComponent.createStringSymbol("USART_PARITY_ODD_MASK", None)
+    usartSym_MR_PAR_ODD_Mask.setDefaultValue("0x1")
+    usartSym_MR_PAR_ODD_Mask.setVisible(False)
+
+    #USART SPACE Parity Mask
+    usartSym_MR_PAR_SPACE_Mask = usartComponent.createStringSymbol("USART_PARITY_SPACE_MASK", None)
+    usartSym_MR_PAR_SPACE_Mask.setDefaultValue("0x2")
+    usartSym_MR_PAR_SPACE_Mask.setVisible(False)
+
+    #USART MARK Parity Mask
+    usartSym_MR_PAR_MARK_Mask = usartComponent.createStringSymbol("USART_PARITY_MARK_MASK", None)
+    usartSym_MR_PAR_MARK_Mask.setDefaultValue("0x3")
+    usartSym_MR_PAR_MARK_Mask.setVisible(False)
+
+    #USART NO Parity Mask
+    usartSym_MR_PAR_NO_Mask = usartComponent.createStringSymbol("USART_PARITY_NONE_MASK", None)
+    usartSym_MR_PAR_NO_Mask.setDefaultValue("0x4")
+    usartSym_MR_PAR_NO_Mask.setVisible(False)
+
+    #USART MULTIDROP Parity Mask
+    usartSym_MR_PAR_MULTIDROP_Mask = usartComponent.createStringSymbol("USART_PARITY_MULTIDROP_MASK", None)
+    usartSym_MR_PAR_MULTIDROP_Mask.setDefaultValue("0x6")
+    usartSym_MR_PAR_MULTIDROP_Mask.setVisible(False)
 
     usartSym_MR_NBSTOP = usartComponent.createKeyValueSetSymbol("USART_MR_NBSTOP", None)
     usartSym_MR_NBSTOP.setLabel("Stop")
@@ -194,9 +249,29 @@ def instantiateComponent(usartComponent):
     usartSym_MR_NBSTOP.setOutputMode("Key")
     usartSym_MR_NBSTOP.setDefaultValue(0)
 
+    #USART Stop 1-bit Mask
+    usartSym_MR_NBSTOP_1_Mask = usartComponent.createStringSymbol("USART_STOP_1_BIT_MASK", None)
+    usartSym_MR_NBSTOP_1_Mask.setDefaultValue("0x0")
+    usartSym_MR_NBSTOP_1_Mask.setVisible(False)
+
+    #USART Stop 1_5-bit Mask
+    usartSym_MR_NBSTOP_1_5_Mask = usartComponent.createStringSymbol("USART_STOP_1_5_BIT_MASK", None)
+    usartSym_MR_NBSTOP_1_5_Mask.setDefaultValue("0x2")
+    usartSym_MR_NBSTOP_1_5_Mask.setVisible(False)
+
+    #USART Stop 2-bit Mask
+    usartSym_MR_NBSTOP_2_Mask = usartComponent.createStringSymbol("USART_STOP_2_BIT_MASK", None)
+    usartSym_MR_NBSTOP_2_Mask.setDefaultValue("0x1")
+    usartSym_MR_NBSTOP_2_Mask.setVisible(False)
+
     usartSym_MR_SYNC = usartComponent.createBooleanSymbol("USART_MR_SYNC", None)
     usartSym_MR_SYNC.setLabel(usartBitField_MR_SYNC.getDescription())
     usartSym_MR_SYNC.setDefaultValue(False)
+
+    #USART API Prefix
+    usartSym_API_Prefix = usartComponent.createStringSymbol("USART_PLIB_API_PREFIX", None)
+    usartSym_API_Prefix.setDefaultValue("USART" + str(usartInstance))
+    usartSym_API_Prefix.setVisible(False)
 
     ############################################################################
     #### Dependency ####
