@@ -71,9 +71,6 @@ for module in range (0, len(modules)):
                     for capablity in peripherals[key]:
                         capablityId = periphName + "_" + str(periphInstanceIndex) + "_" + capablity
                         periphComponent.addCapability(capablityId, capablity)
-                        print "capablity is :- & defaultCapablity is :- & id is :-", capablity, defaultCapablity, capablityId
-                        if capablity != defaultCapablity:
-                            periphComponent.setCapabilityEnabled(capablityId, False)
             else:
                 if periphName == "SMC":
                     smcRegModule    = Register.getRegisterModule("SMC")

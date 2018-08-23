@@ -83,6 +83,8 @@ def set_usart_TXEN_VisibleProperty(symbol, event):
 ############################################ USART ################################################
 ###################################################################################################
 
+global usartSym_Interrupt_Mode
+
 #Interrupt/Non-Interrupt Mode
 usartSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", sercomSym_OperationMode)
 usartSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
@@ -176,6 +178,11 @@ for index in range(len(usartSym_CTRLA_PMODE_Values)):
     usartSym_CTRLB_PMODE_Key_Value = usartSym_CTRLA_PMODE_Values[index].getAttribute("value")
     usartSym_CTRLB_PMODE.addKey(usartSym_CTRLB_PMODE_Key_Name, usartSym_CTRLB_PMODE_Key_Value, usartSym_CTRLB_PMODE_Key_Description)
 
+    #USART Parity Mask
+    usartSym_CTRLA_PMODE_Mask = sercomComponent.createStringSymbol("USART_PARITY_" + usartSym_CTRLB_PMODE_Key_Name + "_MASK", sercomSym_OperationMode)
+    usartSym_CTRLA_PMODE_Mask.setDefaultValue(usartSym_CTRLB_PMODE_Key_Value)
+    usartSym_CTRLA_PMODE_Mask.setVisible(False)
+
 usartSym_CTRLB_PMODE.setDefaultValue(usartSym_CTRLB_PMODE_Default_Val)
 usartSym_CTRLB_PMODE.setOutputMode("Key")
 usartSym_CTRLB_PMODE.setDisplayMode("Description")
@@ -194,6 +201,13 @@ for index in range(len(usartSym_CTRLA_CHSIZE_Values)):
     usartSym_CTRLB_CHSIZE_Key_Description = usartSym_CTRLA_CHSIZE_Values[index].getAttribute("caption")
     usartSym_CTRLB_CHSIZE_Key_Value = usartSym_CTRLA_CHSIZE_Values[index].getAttribute("value")
     usartSym_CTRLB_CHSIZE.addKey(usartSym_CTRLB_CHSIZE_Key_Name, usartSym_CTRLB_CHSIZE_Key_Value, usartSym_CTRLB_CHSIZE_Key_Description)
+
+    dataSize = ''.join([i for i in usartSym_CTRLB_CHSIZE_Key_Name if i.isdigit()])
+
+    #USART Character Size Mask
+    usartSym_CTRLB_CHSIZE_Mask = sercomComponent.createStringSymbol("USART_DATA_" + str(dataSize) + "_BIT_MASK", sercomSym_OperationMode)
+    usartSym_CTRLB_CHSIZE_Mask.setDefaultValue(usartSym_CTRLB_CHSIZE_Key_Value)
+    usartSym_CTRLB_CHSIZE_Mask.setVisible(False)
 
 usartSym_CTRLB_CHSIZE.setDefaultValue(0)
 usartSym_CTRLB_CHSIZE.setOutputMode("Key")
@@ -214,6 +228,13 @@ for index in range(len(usartSym_CTRLA_SBMODE_Values)):
     usartSym_CTRLB_SBMODE_Key_Value = usartSym_CTRLA_SBMODE_Values[index].getAttribute("value")
     usartSym_CTRLB_SBMODE.addKey(usartSym_CTRLB_SBMODE_Key_Name, usartSym_CTRLB_SBMODE_Key_Value, usartSym_CTRLB_SBMODE_Key_Description)
 
+    dataSize = ''.join([i for i in usartSym_CTRLB_SBMODE_Key_Name if i.isdigit()])
+
+    #USART Stop bit Mask
+    usartSym_CTRLB_SBMODE_Mask = sercomComponent.createStringSymbol("USART_STOP_" + str(dataSize) + "_BIT_MASK", sercomSym_OperationMode)
+    usartSym_CTRLB_SBMODE_Mask.setDefaultValue(usartSym_CTRLB_SBMODE_Key_Value)
+    usartSym_CTRLB_SBMODE_Mask.setVisible(False)
+
 usartSym_CTRLB_SBMODE.setDefaultValue(0)
 usartSym_CTRLB_SBMODE.setOutputMode("Key")
 usartSym_CTRLB_SBMODE.setDisplayMode("Description")
@@ -230,3 +251,8 @@ usartSym_SerialSetup_EN = sercomComponent.createBooleanSymbol("USART_SERIAL_SETU
 usartSym_SerialSetup_EN.setLabel("Generate Serial Configuration API")
 usartSym_SerialSetup_EN.setDefaultValue(True)
 usartSym_SerialSetup_EN.setDependencies(set_usart_BAUDAPI_EN_VisibleProperty, ["SERCOM_MODE"])
+
+#USART API Prefix
+usartSym_API_Prefix = sercomComponent.createStringSymbol("USART_PLIB_API_PREFIX", sercomSym_OperationMode)
+usartSym_API_Prefix.setDefaultValue("SERCOM" + sercomInstanceIndex + "_USART")
+usartSym_API_Prefix.setVisible(False)

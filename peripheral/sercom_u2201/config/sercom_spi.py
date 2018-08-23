@@ -133,6 +133,8 @@ def set_SPI_SERIALSETUP_VisibleProperty(symbol, event):
 ############################################# SPI #################################################
 ###################################################################################################
 
+global spiSym_Interrupt_Mode
+
 #SPI Interrupt Mode
 spiSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", sercomSym_OperationMode)
 spiSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
@@ -217,21 +219,22 @@ spi_BAUDRATE.setDependencies(set_SPI_BAUDRATE_VisibleProperty, ["SERCOM_MODE"])
 spiSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("SPI_CHARSIZE_BITS", sercomSym_OperationMode)
 spiSym_CTRLB_CHSIZE.setLabel("SPI Data Character Size")
 spiSym_CTRLB_CHSIZE.setVisible(False)
-
-spiCHSIZENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLB__CHSIZE\"]")
-spiCHSIZEValues = []
-spiCHSIZEValues = spiCHSIZENode.getChildren()
-
-for index in range(len(spiCHSIZEValues)):
-    spiCHSIZEKeyName = spiCHSIZEValues[index].getAttribute("name")
-    spiCHSIZEKeyDescription = spiCHSIZEValues[index].getAttribute("caption")
-    spiCHSIZEKeyValue = spiCHSIZEValues[index].getAttribute("value")
-    spiSym_CTRLB_CHSIZE.addKey(spiCHSIZEKeyName, spiCHSIZEKeyValue, spiCHSIZEKeyDescription)
-
+spiSym_CTRLB_CHSIZE.addKey("_8_BIT", "0x0", "8 bits for transfer")
+spiSym_CTRLB_CHSIZE.addKey("_9_BIT", "0x1", "9 bits for transfer")
 spiSym_CTRLB_CHSIZE.setDefaultValue(0)
-spiSym_CTRLB_CHSIZE.setOutputMode("Value")
+spiSym_CTRLB_CHSIZE.setOutputMode("Key")
 spiSym_CTRLB_CHSIZE.setDisplayMode("Description")
 spiSym_CTRLB_CHSIZE.setDependencies(set_SPI_CHSIZE_VisibleProperty, ["SERCOM_MODE"])
+
+#SPI 8-bit Character size Mask
+spiSym_CTRLB_CHSIZE_8BIT = sercomComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", sercomSym_OperationMode)
+spiSym_CTRLB_CHSIZE_8BIT.setDefaultValue("0x0")
+spiSym_CTRLB_CHSIZE_8BIT.setVisible(False)
+
+#SPI 9-bit Character size Mask
+spiSym_CTRLB_CHSIZE_9BIT = sercomComponent.createStringSymbol("SPI_CHARSIZE_BITS_9_BIT_MASK", sercomSym_OperationMode)
+spiSym_CTRLB_CHSIZE_9BIT.setDefaultValue("0x1")
+spiSym_CTRLB_CHSIZE_9BIT.setVisible(False)
 
 #SPI Clock Phase
 spiSym_CTRLA_ClockPhase = sercomComponent.createKeyValueSetSymbol("SPI_CLOCK_PHASE", sercomSym_OperationMode)
@@ -244,6 +247,16 @@ spiSym_CTRLA_ClockPhase.setOutputMode("Key")
 spiSym_CTRLA_ClockPhase.setDisplayMode("Description")
 spiSym_CTRLA_ClockPhase.setDependencies(set_SPI_CPHA_VisibleProperty, ["SERCOM_MODE"])
 
+#SPI Clock Phase Trailing Edge Mask
+spiSym_CTRLA_CPHA_LE_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", sercomSym_OperationMode)
+spiSym_CTRLA_CPHA_LE_Mask.setDefaultValue("0x0")
+spiSym_CTRLA_CPHA_LE_Mask.setVisible(False)
+
+#SPI Clock Phase Leading Edge Mask
+spiSym_CTRLA_CPHA_TE_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", sercomSym_OperationMode)
+spiSym_CTRLA_CPHA_TE_Mask.setDefaultValue("0x10000000")
+spiSym_CTRLA_CPHA_TE_Mask.setVisible(False)
+
 #SPI Clock Polarity
 spiSym_CTRLA_ClockPolarity = sercomComponent.createKeyValueSetSymbol("SPI_CLOCK_POLARITY", sercomSym_OperationMode)
 spiSym_CTRLA_ClockPolarity.setLabel("SPI Clock Polarity")
@@ -254,6 +267,21 @@ spiSym_CTRLA_ClockPolarity.setDefaultValue(0)
 spiSym_CTRLA_ClockPolarity.setOutputMode("Key")
 spiSym_CTRLA_ClockPolarity.setDisplayMode("Description")
 spiSym_CTRLA_ClockPolarity.setDependencies(set_SPI_CPOL_VisibleProperty, ["SERCOM_MODE"])
+
+#SPI Clock Polarity Idle Low Mask
+spiSym_CTRLA_CPOL_IL_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", sercomSym_OperationMode)
+spiSym_CTRLA_CPOL_IL_Mask.setDefaultValue("0x0")
+spiSym_CTRLA_CPOL_IL_Mask.setVisible(False)
+
+#SPI Clock Polarity Idle High Mask
+spiSym_CTRLA_CPOL_IH_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_POLARITY_HIGH_MASK", sercomSym_OperationMode)
+spiSym_CTRLA_CPOL_IH_Mask.setDefaultValue("0x20000000")
+spiSym_CTRLA_CPOL_IH_Mask.setVisible(False)
+
+#SPI Status BUFOVF Mask
+spiSym_STATUS_BUSOVF_Mask = sercomComponent.createStringSymbol("SPI_STATUS_OVERRUN_MASK", sercomSym_OperationMode)
+spiSym_STATUS_BUSOVF_Mask.setDefaultValue("0x4")
+spiSym_STATUS_BUSOVF_Mask.setVisible(False)
 
 #SPI Transfer Mode
 spiSym_CTRLA_TRANSFER_MODE = sercomComponent.createStringSymbol("SPI_TRANSFER_MODE", sercomSym_OperationMode)
@@ -280,6 +308,11 @@ spiSym_TRANSFERSETUP.setLabel("Generate Transfer Setup API")
 spiSym_TRANSFERSETUP.setDefaultValue(True)
 spiSym_TRANSFERSETUP.setVisible(False)
 spiSym_TRANSFERSETUP.setDependencies(set_SPI_SERIALSETUP_VisibleProperty, ["SERCOM_MODE"])
+
+#SPI API Prefix
+spiSym_API_Prefix = sercomComponent.createStringSymbol("SPI_PLIB_API_PREFIX", sercomSym_OperationMode)
+spiSym_API_Prefix.setDefaultValue("SERCOM" + sercomInstanceIndex + "_SPI")
+spiSym_API_Prefix.setVisible(False)
 
 # SPI Clock Mode
 spiSym_ClockModeComment = sercomComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", sercomSym_OperationMode)
