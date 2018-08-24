@@ -169,6 +169,11 @@ pinTotalPins = coreComponent.createIntegerSymbol("PIO_PIN_TOTAL" , pinConfigurat
 pinTotalPins.setVisible(False)
 pinTotalPins.setDefaultValue(packagePinCount)
 
+# Needed to map port system APIs to PLIB APIs
+pioSymAPI_Prefix = coreComponent.createStringSymbol("PORT_API_PREFIX", None)
+pioSymAPI_Prefix.setDefaultValue("PIO")
+pioSymAPI_Prefix.setVisible(False)
+
 # Note that all the lists below starts from 0th index and goes till "packagePinCount-1"
 # But actual pin numbers on the device starts from 1 (not from 0) and goes till "packagePinCount"
 # that is why "pinNumber-1" is used to index the lists wherever applicable.
@@ -536,3 +541,10 @@ bspIncludeFile.setType("STRING")
 bspIncludeFile.setOutputName("core.LIST_BSP_INITIALIZATION")
 bspIncludeFile.setSourcePath("../peripheral/pio_11004/templates/plib_pio_bsp.c.ftl")
 bspIncludeFile.setMarkup(True)
+
+sysPortIncludeFile = coreComponent.createFileSymbol("PIO_SYSPORT_H", None)
+sysPortIncludeFile.setType("STRING")
+sysPortIncludeFile.setOutputName("core.LIST_SYS_PORT_INCLUDES")
+sysPortIncludeFile.setSourcePath("../peripheral/pio_11004/templates/plib_pio_sysport.h.ftl")
+sysPortIncludeFile.setMarkup(True)
+
