@@ -76,6 +76,37 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     interface and should be considered part of it.
 */
 
+/* EIC Pin Count */
+#define EXTINT_COUNT                        (${EIC_INT_COUNT}U)
+
+<#if EIC_INT != "0">
+typedef struct
+{
+	/* External Interrupt Pin Callback Handler */
+    EIC_CALLBACK    callback;
+
+	/* External Interrupt Pin Client context */
+    uintptr_t       context;
+
+	/* External Interrupt Pin number */
+    EIC_PIN         eicPinNo;
+
+} EIC_CALLBACK_OBJ;
+
+</#if>
+
+<#if NMI_CTRL == true>
+typedef struct
+{
+	/* NMI Callback Handler */
+    EIC_NMI_CALLBACK callback;
+
+	/* NMI Client context */
+    uintptr_t       context;
+
+} EIC_NMI_CALLBACK_OBJ;
+</#if>
+
 // *****************************************************************************
 /* EIC Pins
 
@@ -109,6 +140,7 @@ typedef enum
 
 } EIC_PIN;
 
+<#if EIC_INT != "0">
 // *****************************************************************************
 /* EIC Interrupt Pin Callback Function Pointer Type
 
@@ -155,6 +187,9 @@ typedef enum
 
 typedef void (*EIC_CALLBACK) (uintptr_t context);
 
+</#if>
+
+<#if NMI_CTRL == true>
 // *****************************************************************************
 /* EIC NMI Interrupt Pin Callback Function Pointer Type
 
@@ -200,6 +235,8 @@ typedef void (*EIC_CALLBACK) (uintptr_t context);
 
 typedef void (*EIC_NMI_CALLBACK) (uintptr_t context);
 
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -243,13 +280,13 @@ void EIC${EIC_INDEX}_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-    void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin, bool enable)
+    void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin)
 
   Summary:
-    Enables and disables interrupts on a pin.
+    Enables interrupts on a pin.
 
   Description
-    This function enables or disables interrupts on an external interrupt pin.
+    This function enables interrupts on an external interrupt pin.
     When enabled, the interrupt pin sense will be configured as per the
     configuration set in MHC.
 
@@ -260,8 +297,37 @@ void EIC${EIC_INDEX}_Initialize (void);
    Parameters:
     pin - EIC Pin number
 
-    enable - If true, interrupt sensing on the pin will be enabled. If false,
-    interrupt sensing on the pin will be disabled.
+   Returns:
+    None
+
+   Example:
+    <code>
+    EIC${EIC_INDEX}_Initialize();
+    EIC${EIC_INDEX}_InterruptEnable(EIC_PIN_3);
+    </code>
+
+  Remarks:
+    None.
+*/
+<#if EIC_INT != "0">
+void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin);
+
+// *****************************************************************************
+/* Function:
+    void EIC${EIC_INDEX}_InterruptDisable (EIC_PIN pin)
+
+  Summary:
+    Disables interrupts on a pin.
+
+  Description
+    This function disables interrupts on an external interrupt pin.
+
+   Precondition:
+    EIC${EIC_INDEX}_Initialize() function must have been called for the
+    associated instance.
+
+   Parameters:
+    pin - EIC Pin number.
 
    Returns:
     None
@@ -269,14 +335,14 @@ void EIC${EIC_INDEX}_Initialize (void);
    Example:
     <code>
     EIC${EIC_INDEX}_Initialize();
-    EIC${EIC_INDEX}_InterruptEnable(EIC_PIN_3, true);
+    EIC${EIC_INDEX}_InterruptDisable(EIC_PIN_3);
     </code>
 
   Remarks:
     None.
 */
 
-void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin, bool enable);
+void EIC${EIC_INDEX}_InterruptDisable (EIC_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -324,6 +390,9 @@ void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin, bool enable);
 
 void EIC${EIC_INDEX}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context);
 
+</#if>
+
+<#if NMI_CTRL == true>
 // *****************************************************************************
 /* Function:
     void EIC${EIC_INDEX}_NMICallbackRegister (EIC_NMI_CALLBACK callback, uintptr_t context);
@@ -361,105 +430,5 @@ void EIC${EIC_INDEX}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintpt
 
 void EIC${EIC_INDEX}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context);
 
-// *****************************************************************************
-/* Function:
-    bool EIC${EIC_INDEX}_PinDebounceStateGet ( EIC_PIN pin )
-
-  Summary:
-    Gets the De-bounce state of the EIC Pin.
-
-  Description
-    This function gets the De-bounced state of the EIC Pin.
-
-  Precondition:
-    EIC${EIC_INDEX}_Initialize() must have been called first for the associated
-    instance. The debounce feature should have been enabled in MHC on the
-    desired pin.
-
-  Parameters:
-    pin - EIC Pin number
-
-  Returns:
-    true - If the EIC Pin De-bounce state is set.
-    false - If the EIC Pin De-bounce state is not set
-
-  Example:
-    <code>
-    if (true == EIC${EIC_INDEX}_PinDebounceStateGet(EIC_PIN_3))
-    {
-        // EIC pin 3 was debounced..
-    }
-    </code>
-
-  Remarks:
-    None.
-*/
-
-bool EIC${EIC_INDEX}_PinDebounceStateGet (EIC_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void EIC${EIC_INDEX}_InterruptHandler ( void )
-
-  Summary:
-    External Interrupt Controller (EIC) Interrupt Handler.
-
-  Description
-    This EIC Interrupt handler function handles interrupts on EIC_PIN_0 to
-    EIC_PIN_15.
-
-  Precondition:
-    EIC${EIC_INDEX}_Initialize() must have been called first for the associated
-    instance.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-        EIC${EIC_INDEX}_InterruptHandler());
-    </code>
-
-  Remarks:
-    User should not call this function, this function will be called
-    automatically when interrupt condition occurs.
-*/
-
-void EIC${EIC_INDEX}_InterruptHandler(void);
-
-// *****************************************************************************
-/* Function:
-    void NMI${EIC_INDEX}_InterruptHandler ( void )
-
-  Summary:
-    External Interrupt Controller (EIC) NMI Interrupt Handler.
-
-  Description
-    This EIC Interrupt handler function handles interrupts on NMI Pin
-
-  Precondition:
-    EIC${EIC_INDEX}_Initialize() must have been called first for the associated
-    instance.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-        NMI${EIC_INDEX}_InterruptHandler();
-    </code>
-
-  Remarks:
-    User should not call this function, this function will be called
-    automatically when interrupt condition occurs.
-*/
-
-void NMI${EIC_INDEX}_InterruptHandler(void);
-
+</#if>
 #endif /* PLIB_EIC${EIC_INDEX}_H */

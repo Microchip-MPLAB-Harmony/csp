@@ -60,86 +60,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-/* EIC Pin Count */
-#define EXTINT_COUNT                        (${EIC_INT_COUNT}U)
-
-// *****************************************************************************
-/* Callback function structure
-
-  Summary:
-    Stores callback function and associated context.
-
-  Description:
-    This may be used to save the callback function and associated context for
-    every external interrupt pin.
-
-  Remarks:
-    None.
-*/
-
-typedef struct
-{
-	/* External Interrupt Pin Callback Handler */
-    EIC_CALLBACK    callback;
-
-	/* External Interrupt Pin Client context */
-    uintptr_t       context;
-
-	/* External Interrupt Pin number */
-    EIC_PIN         eicPinNo;
-
-} EIC_CALLBACK_OBJ;
-
-// *****************************************************************************
-/* Callback function structure for NMI
-
-  Summary:
-    Stores callback function and associated context.
-
-  Description:
-    This may be used to save the callback function and associated context for
-    NMI pin.
-
-  Remarks:
-    None.
-*/
-
-typedef struct
-{
-	/* NMI Callback Handler */
-    EIC_NMI_CALLBACK callback;
-
-	/* NMI Client context */
-    uintptr_t       context;
-
-} EIC_NMI_CALLBACK_OBJ;
-
+<#if EIC_INT != "0">
 /* EIC Channel Callback object */
 EIC_CALLBACK_OBJ    eic${EIC_INDEX}CallbackObject[EXTINT_COUNT];
+</#if>
 
+<#if NMI_CTRL == true>
 /* EIC NMI Callback object */
 EIC_NMI_CALLBACK_OBJ eic${EIC_INDEX}NMICallbackObject;
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: EIC PLib Interface Implementations
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void EIC${EIC_INDEX}_Initialize (void);
-
-   Summary:
-    Initializes given instance of EIC peripheral.
-
-   Description:
-    This function initializes given instance of EIC peripheral of the device
-    with the values configured in MHC GUI.
-
-   Remarks:
-    Refer plib_eic${EIC_INDEX}.h for usage information.
-*/
+</#if>
 
 void EIC${EIC_INDEX}_Initialize (void)
 {
@@ -185,32 +115,33 @@ void EIC${EIC_INDEX}_Initialize (void)
                               EIC_CONFIG_SENSE6_${EIC_CONFIG_SENSE_14} ${EIC_CONFIG_FILTEN_14?then('| EIC_CONFIG_FILTEN6_Msk', '')} |
                               EIC_CONFIG_SENSE7_${EIC_CONFIG_SENSE_15} ${EIC_CONFIG_FILTEN_15?then('| EIC_CONFIG_FILTEN7_Msk', '')};
 
-    <#if EIC_ASYNCH_CODE != "0">
+    <#if EIC_ASYNCH != "0">
     /* External Interrupt Asynchronous Mode enable */
-    EIC_REGS->EIC_ASYNCH = 0x${EIC_ASYNCH_CODE};
+    EIC_REGS->EIC_ASYNCH = 0x${EIC_ASYNCH};
     </#if>
 
-    <#if EIC_DEBOUNCEN_CODE != "0">
+    <#if EIC_DEBOUNCEN != "0">
     /* Debouncer enable */
-    EIC_REGS->EIC_DEBOUNCEN = 0x${EIC_DEBOUNCEN_CODE};
+    EIC_REGS->EIC_DEBOUNCEN = 0x${EIC_DEBOUNCEN};
     </#if>
 
-    <#if EIC_EVCTRL_EXTINTEO_CODE != "0">
+    <#if EIC_EXTINTEO != "0">
     /* Event Control Output enable */
-    EIC_REGS->EIC_EVCTRL = 0x${EIC_EVCTRL_EXTINTEO_CODE};
+    EIC_REGS->EIC_EVCTRL = 0x${EIC_EXTINTEO};
     </#if>
 
+	<#if EIC_DEBOUNCEN != "0">
     /* Debouncer Setting */
     <@compress single_line=true>EIC_REGS->EIC_DPRESCALER = EIC_DPRESCALER_PRESCALER0(${EIC_DEBOUNCER_PRESCALER_0})
                                                         | EIC_DPRESCALER_PRESCALER1(${EIC_DEBOUNCER_PRESCALER_1})
                                                         ${(EIC_PRESCALER_TICKON == "1")?then('| EIC_DPRESCALER_TICKON_Msk' , '')}
                                                         ${(EIC_DEBOUNCER_NO_STATES_0 == "1")?then('| EIC_DPRESCALER_STATES0_Msk' , '')}
                                                         ${(EIC_DEBOUNCER_NO_STATES_1 == "1")?then('| EIC_DPRESCALER_STATES1_Msk' , '')};</@compress>
-
-    <#if EIC_EVCTRL_EXTINTEO_CODE != "0">
+	</#if>
+	
+    <#if EIC_INT != "0">
     /* External Interrupt enable*/
-    EIC_REGS->EIC_INTENSET = 0x${EIC_INT_ENABLE_CODE};
-    </#if>
+    EIC_REGS->EIC_INTENSET = 0x${EIC_INT};
 
     /* Callbacks for enabled interrupts */
     <#list 0..EIC_INT_COUNT as i>
@@ -223,7 +154,7 @@ void EIC${EIC_INDEX}_Initialize (void)
                 </#if>
             </#if>
     </#list>
-
+    </#if>
     /* Enable the EIC */
     EIC_REGS->EIC_CTRLA |= EIC_CTRLA_ENABLE_Msk;
 
@@ -232,49 +163,17 @@ void EIC${EIC_INDEX}_Initialize (void)
         /* Wait for sync */
     }
 }
+<#if EIC_INT != "0">
 
-// *****************************************************************************
-/* Function:
-    void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin, bool enable)
-
-  Summary:
-    Enables and disables interrupts on a pin.
-
-  Description
-    This function enables and disables interrupts on an external interrupt pin.
-    When enabled, the interrupt pin sense will be configured as per the
-    configuration set in MHC.
-
-  Remarks:
-    Refer plib_eic${EIC_INDEX}.h for usage information.
-*/
-
-void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin, bool enable)
+void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin)
 {
-    if (enable == true)
-    {
-        EIC_REGS->EIC_INTENSET = (1UL << pin);
-    }
-    else
-    {
-        EIC_REGS->EIC_INTENCLR = (1UL << pin);
-    }
+    EIC_REGS->EIC_INTENSET = (1UL << pin);
 }
 
-// *****************************************************************************
-/* Function:
-    void EIC${EIC_INDEX}_CallbackRegister   (EIC_PIN pin, EIC_CALLBACK callback
-                                            uintptr_t context);
-
-  Summary:
-    Registers the function to be called from interrupt.
-
-  Description
-    This function registers the callback function to be called from interrupt
-
-  Remarks:
-    Refer plib_eic${EIC_INDEX}.h for usage information.
-*/
+void EIC${EIC_INDEX}_InterruptDisable (EIC_PIN pin)
+{
+    EIC_REGS->EIC_INTENCLR = (1UL << pin);
+}
 
 void EIC${EIC_INDEX}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context)
 {
@@ -286,21 +185,8 @@ void EIC${EIC_INDEX}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintpt
     }
 }
 
-// *****************************************************************************
-/* Function:
-    void EIC${EIC_INDEX}_NMICallbackRegister    (EIC_NMI_CALLBACK callback,
-                                                uintptr_t context);
-
-  Summary:
-    Registers the function to be called from interrupt.
-
-  Description
-    This function registers the callback function to be called from interrupt
-
-  Remarks:
-    Refer plib_eic${EIC_INDEX}.h for usage information.
-*/
-
+</#if>
+<#if NMI_CTRL == true>
 void EIC${EIC_INDEX}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context)
 {
     eic${EIC_INDEX}NMICallbackObject.callback = callback;
@@ -308,39 +194,8 @@ void EIC${EIC_INDEX}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t co
     eic${EIC_INDEX}NMICallbackObject.context  = context;
 }
 
-// *****************************************************************************
-/* Function:
-    bool EIC${EIC_INDEX}_PinDebounceStateGet ( EIC_PIN pin )
-
-  Summary:
-    Gets the De-bounce state of the EIC Pin.
-
-  Description
-    This function gets the De-bounce state of the EIC Pin.
-
-  Remarks:
-    Refer plib_eic${EIC_INDEX}.h for usage information.
-*/
-
-bool EIC${EIC_INDEX}_PinDebounceStateGet (EIC_PIN pin)
-{
-    return (bool)((EIC_REGS->EIC_DEBOUNCEN) & (1UL << pin));
-}
-
-// *****************************************************************************
-/* Function:
-    void EIC${EIC_INDEX}_InterruptHandler ( void )
-
-  Summary:
-    External Interrupt Controller (EIC) Interrupt Handler.
-
-  Description
-    This EIC Interrupt handler function handles interrupts on enabled EXINT Pins.
-
-  Remarks:
-    Refer plib_eic${EIC_INDEX}.h for usage information.
-*/
-
+</#if>
+<#if EIC_INT != "0">
 void EIC${EIC_INDEX}_InterruptHandler(void)
 {
     uint8_t currentChannel = 0;
@@ -370,20 +225,8 @@ void EIC${EIC_INDEX}_InterruptHandler(void)
     }
 }
 
-// *****************************************************************************
-/* Function:
-    void NMI${EIC_INDEX}_InterruptHandler ( void )
-
-  Summary:
-    External Interrupt Controller (EIC) NMI Interrupt Handler.
-
-  Description
-    This EIC Interrupt handler function handles interrupts on NMI Pin
-
-  Remarks:
-    Refer plib_eic${EIC_INDEX}.h for usage information.
-*/
-
+</#if>
+<#if NMI_CTRL == true>
 void NMI${EIC_INDEX}_InterruptHandler(void)
 {
     /* Find the triggered, run associated callback handlers */
@@ -399,3 +242,4 @@ void NMI${EIC_INDEX}_InterruptHandler(void)
         }
     }
 }
+</#if>
