@@ -16,8 +16,9 @@ tcSym_CH_Resolution = [0, 0, 0, 0]
 tcSym_CH_OperatingMode = []
 
 tcTimerMenu = []
-tcSym_CH_TimerPeriodCount = []
 tcSym_CH_TimerPeriod = []
+tcSym_CH_TimerPeriodComment = []
+tcSym_CH_TimerPeriodCount = []
 tcSym_CH_CMR_CPCSTOP = []
 tcSym_CH_IER_CPCS = []
 
@@ -461,13 +462,12 @@ def tcPeriodCalc(tcSym_CH_ComparePeriodLocal, event):
     global tcSym_CH_TimerPeriodCount
     global tcSym_CH_ComparePeriodCount
     global tcSym_CH_OperatingMode
+    count = 1
 
     id = tcSym_CH_ComparePeriodLocal.getID()
     channelID = int(id[2])
     clock = tcSym_CH_CMR_TCCLKS[channelID].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[channelID].getSelectedValue()))
     mode = tcSym_CH_OperatingMode[channelID].getValue()
-    if (mode == "TIMER"):
-        count = tcSym_CH_TimerPeriodCount[channelID].getValue()
     if(mode == "COMPARE"):
         count = tcSym_CH_ComparePeriodCount[channelID].getValue()
 
@@ -476,8 +476,42 @@ def tcPeriodCalc(tcSym_CH_ComparePeriodLocal, event):
 
     if(mode == "COMPARE"):
         tcSym_CH_ComparePeriod[channelID].setLabel("****Waveform period is " + str(time_us) + " uS****")
+
+def tcPeriodCountCalc(symbol, event):
+    global tcSym_CH_CMR_TCCLKS
+    global tcSym_CH_ComparePeriodCount
+    global tcSym_CH_OperatingMode
+    global tcSym_CH_TimerPeriod
+    global tcSym_CH_TimerPeriodCount
+    time = 1.0
+
+    id = symbol.getID()
+    channelID = int(id[2])
+    clock = tcSym_CH_CMR_TCCLKS[channelID].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[channelID].getSelectedValue()))
+    mode = tcSym_CH_OperatingMode[channelID].getValue()
+
     if (mode == "TIMER"):
-        tcSym_CH_TimerPeriod[channelID].setLabel("****Time interval is " + str(time_us) + " uS****")
+        time = tcSym_CH_TimerPeriod[channelID].getValue()
+
+    resolution_ns = tcGetClockResolution(clock, channelID)
+    if (float(resolution_ns) == 0.0):
+        resolution_ns = 1
+    time_period = int((time * 1000000.0 / float(resolution_ns)))
+
+    if (mode == "TIMER"):
+        if (time_period > 65535):
+            tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is > 65535. Reduce timer period ****")
+        else:
+            tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is " + str(time_period) + "****")
+        tcSym_CH_TimerPeriodCount[channelID].clearValue()
+        tcSym_CH_TimerPeriodCount[channelID].setValue(int(time_period), 2)
+
+def tcPeriodMaxVal(symbol, event):
+    id = symbol.getID()
+    channelID = int(id[2])
+    clock = tcSym_CH_CMR_TCCLKS[channelID].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[channelID].getSelectedValue()))
+    resolution_ns = tcGetClockResolution(clock, channelID)
+    symbol.setMax(float(((float(resolution_ns) * 65535.0)/1000000)))
 
 def tcCompareMaxCalc(tcCompare, event):
     id = tcCompare.getID()
@@ -902,23 +936,33 @@ def instantiateComponent(tcComponent):
         tcTimerMenu[channelID].setLabel("Timer")
         tcTimerMenu[channelID].setDependencies(tcTimerVisible, ["TC"+str(channelID)+"_OPERATING_MODE"])
 
-        #timer period count
-        global tcSym_CH_TimerPeriodCount
+        global tcSym_CH_TimerPeriod
+        tcSym_CH_TimerPeriod.append(channelID)
+        tcSym_CH_TimerPeriod[channelID] = tcComponent.createFloatSymbol("TC"+str(channelID)+"_TIMER_PERIOD_MS", tcTimerMenu[channelID])
+        tcSym_CH_TimerPeriod[channelID].setLabel("Timer Period (Milli Sec)")
+        tcSym_CH_TimerPeriod[channelID].setDefaultValue(0.4)
+        tcSym_CH_TimerPeriod[channelID].setMin(0.0)
+        #tcSym_CH_TimerPeriod[channelID].setMax(0.436)
+        tcSym_CH_TimerPeriod[channelID].setDependencies(tcPeriodMaxVal, \
+        ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
+            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
+        
+        tcSym_CH_TimerPeriodComment.append(channelID)
+        tcSym_CH_TimerPeriodComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_TIMER_PERIOD_CMT", tcTimerMenu[channelID])
+        tcSym_CH_TimerPeriodComment[channelID].setLabel("**** Period Count is 60060 ****")
+        tcSym_CH_TimerPeriodComment[channelID].setVisible(False)
+        tcSym_CH_TimerPeriodComment[channelID].setDependencies(tcPeriodCountCalc, \
+        ["TC"+str(channelID)+"_TIMER_PERIOD_MS", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
+            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
+            
         tcSym_CH_TimerPeriodCount.append(channelID)
         tcSym_CH_TimerPeriodCount[channelID] = tcComponent.createIntegerSymbol("TC"+str(channelID)+"_TIMER_PERIOD_COUNT", tcTimerMenu[channelID])
-        tcSym_CH_TimerPeriodCount[channelID].setLabel("Timer Period")
-        tcSym_CH_TimerPeriodCount[channelID].setDefaultValue(10000)
-        tcSym_CH_TimerPeriodCount[channelID].setMin(0)
-        tcSym_CH_TimerPeriodCount[channelID].setMax(65535)
-
-        #timer period in uS
-        tcSym_CH_TimerPeriod.append(channelID)
-        tcSym_CH_TimerPeriod[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_TIMER_PERIOD", tcTimerMenu[channelID])
-        tcSym_CH_TimerPeriod[channelID].setLabel("****Timer period is  66.6 uS****")
-        tcSym_CH_TimerPeriod[channelID].setDependencies(tcPeriodCalc, \
-            ["TC"+str(channelID)+"_TIMER_PERIOD_COUNT", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
+        tcSym_CH_TimerPeriodCount[channelID].setVisible(False)
+        tcSym_CH_TimerPeriodCount[channelID].setDefaultValue(60060)
+        tcSym_CH_TimerPeriodCount[channelID].setDependencies(tcPeriodCountCalc, \
+        ["TC"+str(channelID)+"_TIMER_PERIOD_MS", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
             "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
-
+        
         #one-shot timer
         tcSym_CH_CMR_CPCSTOP.append(channelID)
         tcSym_CH_CMR_CPCSTOP[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_CMR_CPCSTOP", tcTimerMenu[channelID])
