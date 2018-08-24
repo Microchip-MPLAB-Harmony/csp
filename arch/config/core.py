@@ -66,6 +66,9 @@ def instantiateComponent(coreComponent):
     bspHeaderInclude = coreComponent.createListSymbol("LIST_BSP_MACRO_INCLUDES", None)
     bspHeaderInclude = coreComponent.createListSymbol("LIST_BSP_INITIALIZATION", None)
 
+    # list of SYS_PORTS
+    systemPortIncludesList = coreComponent.createListSymbol("LIST_SYS_PORT_INCLUDES", None)
+
     # list for configuration.h
     systemConfigIncludesList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_GLOBAL_INCLUDES", None)
     systemConfigSysList = coreComponent.createListSymbol("LIST_SYSTEM_CONFIG_H_SYSTEM_SERVICE_CONFIGURATION", None)
