@@ -96,11 +96,9 @@ typedef enum
     <#assign DMAC_CHCTRLA_ENABLE    = "DMAC_ENABLE_CH_"  + i>
     <#if (.vars[DMAC_CHCTRLA_ENABLE] == true)>
     /* DMAC Channel ${i} */
-    DMAC_CHANNEL_${i},
+    DMAC_CHANNEL_${i} = ${i},
     </#if>
 </#list>
-    /* DMAC Channel */
-    DMAC_CHANNELS_NUMBER
 
 } DMAC_CHANNEL;
 
@@ -459,6 +457,7 @@ bool DMAC${DMAC_INDEX}_ChannelIsBusy ( DMAC_CHANNEL channel );
 
 void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
 
+<#if DMAC_LL_ENABLE = true>
 // ******************************************************************************
 /* Function:
     void DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel,
@@ -524,6 +523,7 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
 */
 
 void DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmacdescriptor_registers_t * channelDesc );
+</#if>
 
 // ******************************************************************************
 /* Function:
@@ -612,7 +612,7 @@ bool  DMAC${DMAC_INDEX}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_
 
 // *****************************************************************************
 /* Function:
-    void inline DMAC${DMAC_INDEX}_ISRHandler( void );
+    void DMAC${DMAC_INDEX}_InterruptHandler( void );
 
   Summary:
     Handles the DMA interrupt events.
@@ -628,7 +628,7 @@ bool  DMAC${DMAC_INDEX}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_
 
   Example:
     <code>
-    DMAC${DMAC_INDEX}_ISRHandler();
+    DMAC${DMAC_INDEX}_InterruptHandler();
     </code>
 
    Remarks:
