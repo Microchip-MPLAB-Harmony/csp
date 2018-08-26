@@ -37,15 +37,93 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M0+ Configuration")
 cortexMenu.setDescription("Configuration for Cortex M0+")
 
+def setDMACDefaultSettings():
+
+    triggerSettings = {
+                        "Software Trigger"  : ["TRANSACTION", "SRC", "INCREMENTED_AM", "INCREMENTED_AM",  "X1", "BYTE"],
+                        "Standard_Transmit" : ["BEAT", "DST", "FIXED_AM", "INCREMENTED_AM", "X4", "BYTE"],
+                        "Standard_Receive"  : ["BEAT", "DST", "FIXED_AM", "INCREMENTED_AM", "X4", "BYTE"]
+                    }
+
+    triggerRegister = {
+                        "Software Trigger"  : ["None"],
+                        "ADC0_RESRDY"       : ["ADC0_REGS->ADC_RESULT"],
+                        "ADC1_RESRDY"       : ["ADC1_REGS->ADC_RESULT"],
+                        "CAN0_EBUG"         : ["CAN0_REGS->CAN_RXBC.RBSA"],
+                        "CAN1_EBUG"         : ["CAN1_REGS->CAN_RXBC.RBSA"],
+                        "DAC_EMPTY"         : ["DAC_REGS->DAC_DATABUF"],
+                        "PTC_EO"            : ["None"],
+                        "PTC_SEQ"           : ["None"],
+                        "PTC_WCOMP"         : ["None"],
+                        "SDADC_RESRDY"      : ["SDADC_REGS->SDADC_RESULT"],
+                        "SERCOM0_Receive"   : ["SERCOM0_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM0_Transmit"  : ["SERCOM0_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM1_Receive"   : ["SERCOM1_REGS->SPIM.SERCOM_DATA"],
+                        "SERCOM1_Transmit"  : ["SERCOM1_REGS->SPIM.SERCOM_DATA"],
+                        "SERCOM2_Receive"   : ["SERCOM2_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM2_Transmit"  : ["SERCOM2_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM3_Receive"   : ["SERCOM3_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM3_Transmit"  : ["SERCOM3_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM4_Receive"   : ["SERCOM4_REGS->USART.SERCOM_DATA"],
+                        "SERCOM4_Transmit"  : ["SERCOM4_REGS->USART.SERCOM_DATA"],
+                        "SERCOM5_Receive"   : ["SERCOM5_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM5_Transmit"  : ["SERCOM5_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM6_Receive"   : ["SERCOM6_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM6_Transmit"  : ["SERCOM6_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM7_Receive"   : ["SERCOM7_REGS->I2CM.SERCOM_DATA"],
+                        "SERCOM7_Transmit"  : ["SERCOM7_REGS->I2CM.SERCOM_DATA"],
+                        "TC0_OVF"           : ["TC0_REGS->COUNT16.TC_INTFLAG"],
+                        "TC0_MC0"           : ["TC0_REGS->COUNT16.TC_INTFLAG"],
+                        "TC0_MC1"           : ["TC0_REGS->COUNT16.TC_INTFLAG"],
+                        "TC1_OVF"           : ["TC1_REGS->COUNT16.TC_INTFLAG"],
+                        "TC1_MC0"           : ["TC1_REGS->COUNT16.TC_INTFLAG"],
+                        "TC1_MC1"           : ["TC1_REGS->COUNT16.TC_INTFLAG"],
+                        "TC2_OVF"           : ["TC2_REGS->COUNT16.TC_INTFLAG"],
+                        "TC2_MC0"           : ["TC2_REGS->COUNT16.TC_INTFLAG"],
+                        "TC2_MC1"           : ["TC2_REGS->COUNT16.TC_INTFLAG"],
+                        "TC3_OVF"           : ["TC3_REGS->COUNT16.TC_INTFLAG"],
+                        "TC3_MC0"           : ["TC3_REGS->COUNT16.TC_INTFLAG"],
+                        "TC3_MC1"           : ["TC3_REGS->COUNT16.TC_INTFLAG"],
+                        "TC4_OVF"           : ["TC4_REGS->COUNT16.TC_INTFLAG"],
+                        "TC4_MC0"           : ["TC4_REGS->COUNT16.TC_INTFLAG"],
+                        "TC4_MC1"           : ["TC4_REGS->COUNT16.TC_INTFLAG"],
+                        "TC5_OVF"           : ["TC5_REGS->COUNT16.TC_INTFLAG"],
+                        "TC5_MC0"           : ["TC5_REGS->COUNT16.TC_INTFLAG"],
+                        "TC5_MC1"           : ["TC5_REGS->COUNT16.TC_INTFLAG"],
+                        "TC6_OVF"           : ["TC6_REGS->COUNT16.TC_INTFLAG"],
+                        "TC6_MC0"           : ["TC6_REGS->COUNT16.TC_INTFLAG"],
+                        "TC6_MC1"           : ["TC6_REGS->COUNT16.TC_INTFLAG"],
+                        "TC7_OVF"           : ["TC7_REGS->COUNT16.TC_INTFLAG"],
+                        "TC7_MC0"           : ["TC7_REGS->COUNT16.TC_INTFLAG"],
+                        "TC7_MC1"           : ["TC7_REGS->COUNT16.TC_INTFLAG"],
+                        "TCC0_OVF"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC0_MC0"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC0_MC1"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC0_MC2"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC0_MC3"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC1_OVF"          : ["TCC1_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC1_MC0"          : ["TCC1_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC1_MC1"          : ["TCC1_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC2_OVF"          : ["TCC2_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC2_MC0"          : ["TCC2_REGS->COUNT16.TCC_INTFLAG"],
+                        "TCC2_MC1"          : ["TCC2_REGS->COUNT16.TCC_INTFLAG"],
+                        "TSENS_RESRDY"      : ["TSENS_REGS->TSENS_VALUE"]
+
+                        # All triggers are yet to be added.
+                    }
+
+    return triggerSettings, triggerRegister
+
+
 def setMPUDefaultSettings():
     mpuRegions = 8
-    mpuSettings = {"FLASH"           	: ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
-                    "RWW"         	 	: ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00400000",   "4MB"   ],
-                    "SRAM"           	: ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x20000000",   "4MB"   ],}
+    mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
+                    "RWW"               : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00400000",   "4MB"   ],
+                    "SRAM"              : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x20000000",   "4MB"   ],}
     mpuSetUpLogicList = ["FLASH", "RWW", "SRAM"]
-    
+
     return mpuRegions, mpuSettings, mpuSetUpLogicList
-	
+
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_c20_c21/config/clk.py")
 coreComponent.addPlugin("../peripheral/clk_sam_c20_c21/plugin/clk_sam_c21.jar")
