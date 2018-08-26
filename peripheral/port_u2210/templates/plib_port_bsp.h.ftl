@@ -92,13 +92,13 @@
                         <#if ledName?counter == ledPinPos?counter>
                             <#if ledName?counter == ledActiveLevel?counter>
                                 /*** LED Macros for ${ledName} ***/
-                                #define ${ledName}_Toggle()         (PORT${ledGroup}_REGS->OUTTGL = 1 << ${ledPinPos})
+                                #define ${ledName}_Toggle()         (PORT${ledGroup}_REGS->PORT_OUTTGL = 1 << ${ledPinPos})
                                 <#if ledActiveLevel == "High">
-                                    #define ${ledName}_On()         (PORT${ledGroup}_REGS->OUTSET = 1 << ${ledPinPos})
-                                    #define ${ledName}_Off()        (PORT${ledGroup}_REGS->OUTCLEAR = 1 << ${ledPinPos})
+                                    #define ${ledName}_On()         (PORT${ledGroup}_REGS->PORT_OUTSET = 1 << ${ledPinPos})
+                                    #define ${ledName}_Off()        (PORT${ledGroup}_REGS->PORT_OUTCLR = 1 << ${ledPinPos})
                                 <#else>
-                                    #define ${ledName}_On()         (PORT${ledGroup}_REGS->OUTCLEAR = 1 << ${ledPinPos})
-                                    #define ${ledName}_Off()        (PORT${ledGroup}_REGS->OUTSET = 1 << ${ledPinPos})
+                                    #define ${ledName}_On()         (PORT${ledGroup}_REGS->PORT_OUTCLR = 1 << ${ledPinPos})
+                                    #define ${ledName}_Off()        (PORT${ledGroup}_REGS->PORT_OUTSET = 1 << ${ledPinPos})
                                 </#if>
                             </#if>
                         </#if>
@@ -120,7 +120,7 @@
                         <#if switchName?counter == switchPinPos?counter>
                             <#if switchName?counter == switchActiveLevel?counter>
                                 /*** SWITCH Macros for ${switchName} ***/
-                                #define ${switchName}_Get()     ((PORT${switchGroup}_REGS->IN >> ${switchPinPos})) & 0x01)
+                                #define ${switchName}_Get()     ((PORT${switchGroup}_REGS->PORT_IN >> ${switchPinPos})) & 0x01)
                                 <#if switchActiveLevel == "High">
                                     #define ${switchName}_STATE_PRESSED  1
                                     #define ${switchName}_STATE_RELEASED 0
