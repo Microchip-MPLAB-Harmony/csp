@@ -14,46 +14,57 @@ def instantiateComponent(nvmctrlComponent):
     #Flash Address
     nvmctrlFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FLASH\"]")
     if nvmctrlFlashNode != None:
-        nvmctrlSym_FLASH_ADDRESS = nvmctrlComponent.createStringSymbol("NVMCTRL_FLASH_ADDRESS", nvmctrlSym_Menu)
+        nvmctrlSym_FLASH_ADDRESS = nvmctrlComponent.createStringSymbol("FLASH_START_ADDRESS", nvmctrlSym_Menu)
         nvmctrlSym_FLASH_ADDRESS.setVisible(False)
-        nvmctrlSym_FLASH_ADDRESS.setDefaultValue(str(hex(int(nvmctrlFlashNode.getAttribute("start"),16))))
+        nvmctrlSym_FLASH_ADDRESS.setDefaultValue(nvmctrlFlashNode.getAttribute("start"))
 
         #Flash size
-        nvmctrlSym_FLASH_SIZE = nvmctrlComponent.createStringSymbol("NVMCTRL_FLASH_SIZE", nvmctrlSym_Menu)
+        nvmctrlSym_FLASH_SIZE = nvmctrlComponent.createStringSymbol("FLASH_SIZE", nvmctrlSym_Menu)
         nvmctrlSym_FLASH_SIZE.setVisible(False)
-        nvmctrlSym_FLASH_SIZE.setDefaultValue(str(hex(int(nvmctrlFlashNode.getAttribute("size"),16))))
+        nvmctrlSym_FLASH_SIZE.setDefaultValue(nvmctrlFlashNode.getAttribute("size"))
 
         #Flash Page size
-        nvmctrlSym_RWW_PAGE_SIZE = nvmctrlComponent.createStringSymbol("NVMCTRL_PAGE_SIZE", nvmctrlSym_Menu)
-        nvmctrlSym_RWW_PAGE_SIZE.setVisible(False)
-        nvmctrlSym_RWW_PAGE_SIZE.setDefaultValue(str(hex(int(nvmctrlFlashNode.getAttribute("pagesize")))))
-
-        #Flash Row size
-        nvmctrlSym_ROW_SIZE = nvmctrlComponent.createStringSymbol("NVMCTRL_ROW_SIZE", nvmctrlSym_Menu)
-        nvmctrlSym_ROW_SIZE.setVisible(False)
-        nvmctrlSym_ROW_SIZE.setDefaultValue(str(hex(int(nvmctrlFlashNode.getAttribute("rowsize")))))
+        nvmctrlSym_FLASH_PROGRAM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_PROGRAM_SIZE", nvmctrlSym_Menu)
+        nvmctrlSym_FLASH_PROGRAM_SIZE.setVisible(False)
+        nvmctrlSym_FLASH_PROGRAM_SIZE.setDefaultValue(nvmctrlFlashNode.getAttribute("pagesize"))
 
     #RWWEEPROM Address
     nvmctrlRWWEEPROMNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"RWW\"]")
     if nvmctrlRWWEEPROMNode != None:
-        nvmctrlSym_RWWEEPROM_ADDRESS = nvmctrlComponent.createStringSymbol("NVMCTRL_RWWEEPROM_ADDRESS", nvmctrlSym_Menu)
-        nvmctrlSym_RWWEEPROM_ADDRESS.setVisible(False)
-        nvmctrlSym_RWWEEPROM_ADDRESS.setDefaultValue(str(hex(int(nvmctrlRWWEEPROMNode.getAttribute("start"),16))))
+        nvmctrlSym_RWWEEPROM_START_ADDRESS = nvmctrlComponent.createStringSymbol("FLASH_RWWEEPROM_START_ADDRESS", nvmctrlSym_Menu)
+        nvmctrlSym_RWWEEPROM_START_ADDRESS.setVisible(False)
+        nvmctrlSym_RWWEEPROM_START_ADDRESS.setDefaultValue(nvmctrlRWWEEPROMNode.getAttribute("start"))
 
         #RWWEEPROM size
-        nvmctrlSym_RWWEEPROM_SIZE = nvmctrlComponent.createStringSymbol("NVMCTRL_RWWEEPROM_SIZE", nvmctrlSym_Menu)
+        nvmctrlSym_RWWEEPROM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_RWWEEPROM_SIZE", nvmctrlSym_Menu)
         nvmctrlSym_RWWEEPROM_SIZE.setVisible(False)
-        nvmctrlSym_RWWEEPROM_SIZE.setDefaultValue(str(hex(int(nvmctrlRWWEEPROMNode.getAttribute("size"),16))))
+        nvmctrlSym_RWWEEPROM_SIZE.setDefaultValue(nvmctrlRWWEEPROMNode.getAttribute("size"))
 
         #RWWEEPROM Page size
-        nvmctrlSym_RWW_PAGE_SIZE = nvmctrlComponent.createStringSymbol("NVMCTRL_RWWEEPROM_PAGE_SIZE", nvmctrlSym_Menu)
-        nvmctrlSym_RWW_PAGE_SIZE.setVisible(False)
-        nvmctrlSym_RWW_PAGE_SIZE.setDefaultValue(str(hex(int(nvmctrlRWWEEPROMNode.getAttribute("pagesize")))))
+        nvmctrlSym_RWW_PROGRAM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_RWWEEPROM_PROGRAM_SIZE", nvmctrlSym_Menu)
+        nvmctrlSym_RWW_PROGRAM_SIZE.setVisible(False)
+        nvmctrlSym_RWW_PROGRAM_SIZE.setDefaultValue(nvmctrlRWWEEPROMNode.getAttribute("pagesize"))
+
+    nvmctrlParamNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]/instance@[name=\"NVMCTRL\"]/parameters")
+    if nvmctrlParamNode != None:
+        param_values = []
+        param_values = nvmctrlParamNode.getChildren()
+        for index in range(0, len(param_values)):
+            if "ROW_SIZE" in param_values[index].getAttribute("name"):
+                rowSize = param_values[index].getAttribute("value")
+
+            if "RWWEE_ROW_SIZE" in param_values[index].getAttribute("name"):
+                eeRowSize = param_values[index].getAttribute("value")
+
+        #Flash Row size
+        nvmctrlSym_ERASE_SIZE = nvmctrlComponent.createStringSymbol("FLASH_ERASE_SIZE", nvmctrlSym_Menu)
+        nvmctrlSym_ERASE_SIZE.setVisible(False)
+        nvmctrlSym_ERASE_SIZE.setDefaultValue(rowSize)
 
         #RWWEEPROM Row size
-        nvmctrlSym_ROW_SIZE = nvmctrlComponent.createStringSymbol("NVMCTRL_RWWEEPROM_ROW_SIZE", nvmctrlSym_Menu)
-        nvmctrlSym_ROW_SIZE.setVisible(False)
-        nvmctrlSym_ROW_SIZE.setDefaultValue(str(hex(int(nvmctrlRWWEEPROMNode.getAttribute("rowsize")))))
+        nvmctrlSym_RWW_ERASE_SIZE = nvmctrlComponent.createStringSymbol("FLASH_RWWEEPROM_ERASE_SIZE", nvmctrlSym_Menu)
+        nvmctrlSym_RWW_ERASE_SIZE.setVisible(False)
+        nvmctrlSym_RWW_ERASE_SIZE.setDefaultValue(eeRowSize)
 
 
     #EEPPROM API Generation Option
