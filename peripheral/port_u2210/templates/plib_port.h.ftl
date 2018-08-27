@@ -117,7 +117,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
                         <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + gpioGroup>
                             <#lt>/*** Macros for ${gpioName} pin ***/
                             <#lt>#define ${gpioName}_Set()               (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_OUTSET = 1 << ${gpioPinPos})
-                            <#lt>#define ${gpioName}_Clear()             (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_OUTCLEAR = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Clear()             (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_OUTCLR = 1 << ${gpioPinPos})
                             <#lt>#define ${gpioName}_Toggle()            (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_OUTTGL = 1 << ${gpioPinPos})
                             <#lt>#define ${gpioName}_Get()               (((PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_IN >> ${gpioPinPos})) & 0x01)
                             <#lt>#define ${gpioName}_OutputEnable()      (PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_DIRSET = 1 << ${gpioPinPos})
