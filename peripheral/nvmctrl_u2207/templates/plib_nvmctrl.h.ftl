@@ -82,7 +82,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_START_ADDRESS         (${.vars["NVMCTRL_FLASH_ADDRESS"]}U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_START_ADDRESS         (${.vars["FLASH_START_ADDRESS"]}U)
 
 // *****************************************************************************
 /* NVMCTRL${NVMCTRL_INDEX?string} Flash Size Constant
@@ -98,7 +98,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_SIZE       (${NVMCTRL_FLASH_SIZE}U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_SIZE       (${FLASH_SIZE}U)
 
 // *****************************************************************************
 /* NVMCTRL${NVMCTRL_INDEX?string} Flash Page Size Constant
@@ -114,7 +114,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_PAGESIZE          (${NVMCTRL_PAGE_SIZE}U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_PAGESIZE          (${FLASH_PROGRAM_SIZE}U)
 
 // *****************************************************************************
 /* NVMCTRL${NVMCTRL_INDEX?string} Flash Row Size Constant
@@ -130,7 +130,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_ROWSIZE           (${NVMCTRL_ROW_SIZE}U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_ROWSIZE           (${FLASH_ERASE_SIZE}U)
 
 <#if NVMCTRL_RWW_EEPROM == true>
 // *****************************************************************************
@@ -147,7 +147,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_START_ADDRESS     (${.vars["NVMCTRL_RWWEEPROM_ADDRESS"]}U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_START_ADDRESS     (${.vars["FLASH_RWWEEPROM_START_ADDRESS"]}U)
 
 // *****************************************************************************
 /* NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM Size Constant
@@ -163,7 +163,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_SIZE   (${NVMCTRL_RWWEEPROM_SIZE}U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_SIZE   (${FLASH_RWWEEPROM_SIZE}U)
 
 // *****************************************************************************
 /* NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM Page Size Constant
@@ -181,7 +181,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PAGESIZE          (${NVMCTRL_RWWEEPROM_PAGE_SIZE}U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PAGESIZE          (${FLASH_RWWEEPROM_PROGRAM_SIZE}U)
 
 // *****************************************************************************
 /* NVMCTRL${NVMCTRL_INDEX?string} RWWEEPROM Row Size Constant
@@ -199,7 +199,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None.
 */
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_ROWSIZE           (${NVMCTRL_RWWEEPROM_ROW_SIZE}U)
+#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_ROWSIZE           (${FLASH_RWWEEPROM_ERASE_SIZE}U)
 </#if>
 
 // *****************************************************************************
