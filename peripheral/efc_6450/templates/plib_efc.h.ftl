@@ -1,15 +1,15 @@
 /*******************************************************************************
  Interface definition of EFC PLIB.
- 
+
  Company:
     Microchip Technology Inc.
-    
+
  File Name:
     plib_EFC.h
-    
+
  Summary:
     Interface definition of EFC Plib.
-    
+
  Description:
     This file defines the interface for the EFC Plib.
     It allows user to Program, Erase and lock the on-chip FLASH memory.
@@ -56,8 +56,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#define EFC${INDEX?string}_SECTORSIZE              0x2000
-#define EFC${INDEX?string}_PAGESIZE                0x200
+#define EFC${INDEX?string}_SECTORSIZE              ${FLASH_ERASE_SIZE}
+#define EFC${INDEX?string}_PAGESIZE                ${FLASH_PROGRAM_SIZE}
 #define EFC${INDEX?string}_LOCKSIZE                0x4000
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define EFC${INDEX?string}_START_ADDRESS           0x${START_ADDRESS}
