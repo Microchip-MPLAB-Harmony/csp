@@ -44,106 +44,76 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "plib_pio.h"
 
 <#compress>
-<#if PIO_ENABLE == true>
-    <#assign PIO_A_NUM_INT_PINS = 0>
-    <#assign PIO_B_NUM_INT_PINS = 0>
-    <#assign PIO_C_NUM_INT_PINS = 0>
-    <#assign PIO_D_NUM_INT_PINS = 0>
-    <#assign PIO_E_NUM_INT_PINS = 0>
-    <#list 1..PIO_PIN_TOTAL as i>
-        <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
-        <#assign portChannel = "PIN_" + i + "_PIO_CHANNEL">
-        <#if .vars[intConfig]?has_content>
-            <#if (.vars[intConfig] != "Disabled")>
-                <#if (.vars[portChannel] == "A")>
-                    <#assign PIO_A_NUM_INT_PINS = PIO_A_NUM_INT_PINS + 1>
-                </#if>
-                <#if (.vars[portChannel] == "B")>
-                    <#assign PIO_B_NUM_INT_PINS = PIO_B_NUM_INT_PINS + 1>
-                </#if>
-                <#if (.vars[portChannel] == "C")>
-                    <#assign PIO_C_NUM_INT_PINS = PIO_C_NUM_INT_PINS + 1>
-                </#if>
-                <#if (.vars[portChannel] == "D")>
-                    <#assign PIO_D_NUM_INT_PINS = PIO_D_NUM_INT_PINS + 1>
-                </#if>
-                <#if (.vars[portChannel] == "E")>
-                    <#assign PIO_E_NUM_INT_PINS = PIO_E_NUM_INT_PINS + 1>
-                </#if>
-            </#if>
-        </#if>
-    </#list>
-</#if>
 
-<#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_LAT_LOW PIO_OD PIO_PU PIO_PD PIO_PER PIO_ABCD1
-                       PIO_ABCD2 PIO_INT_TYPE PIO_INT_EDGE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INT_FE_LL PIO_INTERRUPT>
+<#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_LAT_LOW PIO_OD PIO_PU PIO_PD PIO_PDR PIO_ABCD1
+                       PIO_ABCD2 PIO_INT_TYPE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INTERRUPT>
     <#lt>    /************************ PIO ${PIO_PORT} Initialization ************************/
-    <#if (PIO_ABCD1 != "0x00000000") || (PIO_ABCD2 != "0x00000000")>
+    <#if (PIO_ABCD1 != "0" ) || (PIO_ABCD2 != "0")>
         <#lt>    /* PORT${PIO_PORT} Peripheral Function Selection */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[0]= ${PIO_ABCD1};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[1]= ${PIO_ABCD2};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[0]= 0x${PIO_ABCD1};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ABCDSR[1]= 0x${PIO_ABCD2};
     </#if>
-    <#if PIO_PER != "0xFFFFFFFF">
+    <#if PIO_PDR != "0">
         <#lt>    /* PORT${PIO_PORT} PIO Disable and Peripheral Enable*/
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = ~${PIO_PER};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = 0x${PIO_PDR};
     </#if>
 
-    <#if PIO_OD != "0x00000000">
+    <#if PIO_OD != "0">
         <#lt>    /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = ${PIO_OD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = 0x${PIO_OD};
     </#if>
 
     <#lt>    /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
-    <#if PIO_PU != "0x00000000">
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ${PIO_PU};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = ${PIO_PU};
+    <#if PIO_PU != "0">
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PU};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = 0x${PIO_PU};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = 0x${PIO_PU};
     <#else>
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~${PIO_PU};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PU};
     </#if>
 
     <#lt>    /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
-    <#if PIO_PD != "0x00000000">
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ${PIO_PD};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = ${PIO_PD};
+    <#if PIO_PD != "0">
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = 0x${PIO_PD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = 0x${PIO_PD};
     <#else>
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~${PIO_PD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PD};
     </#if>
 
     <#lt>    /* PORT${PIO_PORT} Output Write Enable */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
 
-    <#if PIO_DIR != "0x00000000">
-        <#if PIO_LAT_HIGH != "0x00000000">
+    <#if PIO_DIR != "0">
+        <#if PIO_LAT_HIGH != "0">
             <#lt>    /* PORT${PIO_PORT} Initial state High */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SODR = ${PIO_LAT_HIGH};
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SODR = 0x${PIO_LAT_HIGH};
         </#if>
-        <#if (PIO_LAT_LOW != "0x00000000") && (PIO_LAT_LOW != "0x0")>
+        <#if PIO_LAT_LOW != "0">
             <#lt>    /* PORT${PIO_PORT} Initial state Low */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_CODR = ${PIO_LAT_LOW};
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_CODR = 0x${PIO_LAT_LOW};
         </#if>
 
         <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = ${PIO_DIR};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR};
     </#if>
 
     <#if PIO_INTERRUPT == true>
-        <#if PIO_INT_TYPE != "0x00000000">
+        <#if PIO_INT_TYPE != "0">
             <#lt>    /* PORT${PIO_PORT} Additional interrupt mode Enable */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_AIMER = ${PIO_INT_TYPE};
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_AIMER = 0x${PIO_INT_TYPE};
         <#else>
 
             <#lt>    /* If PIO Interrupt is selected for both edge, it doesn't need any register
             <#lt>       configuration */
         </#if>
-        <#if PIO_INT_LEVEL != "0x00000000">
+        <#if PIO_INT_LEVEL != "0">
             <#lt>    /* PORT${PIO_PORT} Level type interrupt Enable */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_LSR = ${PIO_INT_LEVEL};
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_LSR = 0x${PIO_INT_LEVEL};
         </#if>
-        <#if PIO_INT_RE_HL != "0x00000000">
+        <#if PIO_INT_RE_HL != "0">
             <#lt>    /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = ${PIO_INT_RE_HL};
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = 0x${PIO_INT_RE_HL};
         </#if>
         <#lt>    /* PORT${PIO_PORT} Interrupt Status Clear */
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ISR;
@@ -167,27 +137,27 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 <@PIO_INT_CALLBACK
     PIO_PORT = "A"
-    PORT_NUM_INT_PINS = "${PIO_A_NUM_INT_PINS}"
+    PORT_NUM_INT_PINS = PIO_A_NUM_OF_INT_PINS_USED
     PIO_INTERRUPT = PIO_A_INTERRUPT_USED
 />
 <@PIO_INT_CALLBACK
     PIO_PORT = "B"
-    PORT_NUM_INT_PINS = "${PIO_B_NUM_INT_PINS}"
+    PORT_NUM_INT_PINS = PIO_B_NUM_OF_INT_PINS_USED
     PIO_INTERRUPT = PIO_B_INTERRUPT_USED
 />
 <@PIO_INT_CALLBACK
     PIO_PORT = "C"
-    PORT_NUM_INT_PINS = "${PIO_C_NUM_INT_PINS}"
+    PORT_NUM_INT_PINS = PIO_C_NUM_OF_INT_PINS_USED
     PIO_INTERRUPT = PIO_C_INTERRUPT_USED
 />
 <@PIO_INT_CALLBACK
     PIO_PORT = "D"
-    PORT_NUM_INT_PINS = "${PIO_D_NUM_INT_PINS}"
+    PORT_NUM_INT_PINS = PIO_D_NUM_OF_INT_PINS_USED
     PIO_INTERRUPT = PIO_D_INTERRUPT_USED
 />
 <@PIO_INT_CALLBACK
     PIO_PORT = "E"
-    PORT_NUM_INT_PINS = "${PIO_E_NUM_INT_PINS}"
+    PORT_NUM_INT_PINS = PIO_E_NUM_OF_INT_PINS_USED
     PIO_INTERRUPT = PIO_E_INTERRUPT_USED
 />
 </#compress>
@@ -205,114 +175,98 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 void PIO_Initialize ( void )
 {
-    <#if PIO_CCFG_SYSIO_VALUE != "0x00000000">
+    <#if PIO_CCFG_SYSIO_VALUE != "20400000">
         <#lt>    /* Selected System IO pins are configured as GPIO */
-        <#lt>    MATRIX_REGS->CCFG_SYSIO|= ${PIO_CCFG_SYSIO_VALUE};
+        <#lt>    MATRIX_REGS->CCFG_SYSIO|= 0x${PIO_CCFG_SYSIO_VALUE};
     </#if>
-    <#if PIO_A_USED == true>
+
         <@PIO_INITIALIZE
             PIO_PORT = "A"
-            PIO_DIR = "${PIOA_OER_VALUE}"
-            PIO_LAT_HIGH = "${PIOA_SODR_VALUE}"
-            PIO_LAT_LOW = "${PIOA_CODR_VALUE}"
-            PIO_OD = "${PIOA_MDER_VALUE}"
-            PIO_PU = "${PIOA_PUER_VALUE}"
-            PIO_PD = "${PIOA_PPDEN_VALUE}"
-            PIO_PER = "${PIOA_PER_VALUE}"
-            PIO_ABCD1 = "${PIOA_ABCDSR1_VALUE}"
-            PIO_ABCD2 = "${PIOA_ABCDSR2_VALUE}"
-            PIO_INT_TYPE = "${PIOA_AIMER_VALUE}"
-            PIO_INT_EDGE = "${PIOA_ESR_VALUE}"
-            PIO_INT_LEVEL = "${PIOA_LSR_VALUE}"
-            PIO_INT_RE_HL = "${PIOA_REHLSR_VALUE}"
-            PIO_INT_FE_LL = "${PIOA_FELLSR_VALUE}"
+            PIO_DIR = PIOA_OER_VALUE
+            PIO_LAT_HIGH = PIOA_SODR_VALUE
+            PIO_LAT_LOW = PIOA_CODR_VALUE
+            PIO_OD = PIOA_MDER_VALUE
+            PIO_PU = PIOA_PUER_VALUE
+            PIO_PD = PIOA_PPDEN_VALUE
+            PIO_PDR = PIOA_PDR_VALUE
+            PIO_ABCD1 = PIOA_ABCDSR1_VALUE
+            PIO_ABCD2 = PIOA_ABCDSR2_VALUE
+            PIO_INT_TYPE = PIOA_AIMER_VALUE
+            PIO_INT_LEVEL = PIOA_LSR_VALUE
+            PIO_INT_RE_HL = PIOA_REHLSR_VALUE
             PIO_INTERRUPT = PIO_A_INTERRUPT_USED
         />
-    </#if>
 
-    <#if PIO_B_USED == true>
         <@PIO_INITIALIZE
             PIO_PORT = "B"
-            PIO_DIR = "${PIOB_OER_VALUE}"
-            PIO_LAT_HIGH = "${PIOB_SODR_VALUE}"
-            PIO_LAT_LOW = "${PIOB_CODR_VALUE}"
-            PIO_OD = "${PIOB_MDER_VALUE}"
-            PIO_PU = "${PIOB_PUER_VALUE}"
-            PIO_PD = "${PIOB_PPDEN_VALUE}"
-            PIO_PER = "${PIOB_PER_VALUE}"
-            PIO_ABCD1 = "${PIOB_ABCDSR1_VALUE}"
-            PIO_ABCD2 = "${PIOB_ABCDSR2_VALUE}"
-            PIO_INT_TYPE = "${PIOB_AIMER_VALUE}"
-            PIO_INT_EDGE = "${PIOB_ESR_VALUE}"
-            PIO_INT_LEVEL = "${PIOB_LSR_VALUE}"
-            PIO_INT_RE_HL = "${PIOB_REHLSR_VALUE}"
-            PIO_INT_FE_LL = "${PIOB_FELLSR_VALUE}"
+            PIO_DIR = PIOB_OER_VALUE
+            PIO_LAT_HIGH = PIOB_SODR_VALUE
+            PIO_LAT_LOW = PIOB_CODR_VALUE
+            PIO_OD = PIOB_MDER_VALUE
+            PIO_PU = PIOB_PUER_VALUE
+            PIO_PD = PIOB_PPDEN_VALUE
+            PIO_PDR = PIOB_PDR_VALUE
+            PIO_ABCD1 = PIOB_ABCDSR1_VALUE
+            PIO_ABCD2 = PIOB_ABCDSR2_VALUE
+            PIO_INT_TYPE = PIOB_AIMER_VALUE
+            PIO_INT_LEVEL = PIOB_LSR_VALUE
+            PIO_INT_RE_HL = PIOB_REHLSR_VALUE
             PIO_INTERRUPT = PIO_B_INTERRUPT_USED
         />
-    </#if>
 
-    <#if PIO_C_USED == true>
+
         <@PIO_INITIALIZE
             PIO_PORT = "C"
-            PIO_DIR = "${PIOC_OER_VALUE}"
-            PIO_LAT_HIGH = "${PIOC_SODR_VALUE}"
-            PIO_LAT_LOW = "${PIOC_CODR_VALUE}"
-            PIO_OD = "${PIOC_MDER_VALUE}"
-            PIO_PU = "${PIOC_PUER_VALUE}"
-            PIO_PD = "${PIOC_PPDEN_VALUE}"
-            PIO_PER = "${PIOC_PER_VALUE}"
-            PIO_ABCD1 = "${PIOC_ABCDSR1_VALUE}"
-            PIO_ABCD2 = "${PIOC_ABCDSR2_VALUE}"
-            PIO_INT_TYPE = "${PIOC_AIMER_VALUE}"
-            PIO_INT_EDGE = "${PIOC_ESR_VALUE}"
-            PIO_INT_LEVEL = "${PIOC_LSR_VALUE}"
-            PIO_INT_RE_HL = "${PIOC_REHLSR_VALUE}"
-            PIO_INT_FE_LL = "${PIOC_FELLSR_VALUE}"
+            PIO_DIR = PIOC_OER_VALUE
+            PIO_LAT_HIGH = PIOC_SODR_VALUE
+            PIO_LAT_LOW = PIOC_CODR_VALUE
+            PIO_OD = PIOC_MDER_VALUE
+            PIO_PU = PIOC_PUER_VALUE
+            PIO_PD = PIOC_PPDEN_VALUE
+            PIO_PDR = PIOC_PDR_VALUE
+            PIO_ABCD1 = PIOC_ABCDSR1_VALUE
+            PIO_ABCD2 = PIOC_ABCDSR2_VALUE
+            PIO_INT_TYPE = PIOC_AIMER_VALUE
+            PIO_INT_LEVEL = PIOC_LSR_VALUE
+            PIO_INT_RE_HL = PIOC_REHLSR_VALUE
             PIO_INTERRUPT = PIO_C_INTERRUPT_USED
         />
-    </#if>
 
-    <#if PIO_D_USED == true>
+
         <@PIO_INITIALIZE
             PIO_PORT = "D"
-            PIO_DIR = "${PIOD_OER_VALUE}"
-            PIO_LAT_HIGH = "${PIOD_SODR_VALUE}"
-            PIO_LAT_LOW = "${PIOD_CODR_VALUE}"
-            PIO_OD = "${PIOD_MDER_VALUE}"
-            PIO_PU = "${PIOD_PUER_VALUE}"
-            PIO_PD = "${PIOD_PPDEN_VALUE}"
-            PIO_PER = "${PIOD_PER_VALUE}"
-            PIO_ABCD1 = "${PIOD_ABCDSR1_VALUE}"
-            PIO_ABCD2 = "${PIOD_ABCDSR2_VALUE}"
-            PIO_INT_TYPE = "${PIOD_AIMER_VALUE}"
-            PIO_INT_EDGE = "${PIOD_ESR_VALUE}"
-            PIO_INT_LEVEL = "${PIOD_LSR_VALUE}"
-            PIO_INT_RE_HL = "${PIOD_REHLSR_VALUE}"
-            PIO_INT_FE_LL = "${PIOD_FELLSR_VALUE}"
+            PIO_DIR = PIOD_OER_VALUE
+            PIO_LAT_HIGH = PIOD_SODR_VALUE
+            PIO_LAT_LOW = PIOD_CODR_VALUE
+            PIO_OD = PIOD_MDER_VALUE
+            PIO_PU = PIOD_PUER_VALUE
+            PIO_PD = PIOD_PPDEN_VALUE
+            PIO_PDR = PIOD_PDR_VALUE
+            PIO_ABCD1 = PIOD_ABCDSR1_VALUE
+            PIO_ABCD2 = PIOD_ABCDSR2_VALUE
+            PIO_INT_TYPE = PIOD_AIMER_VALUE
+            PIO_INT_LEVEL = PIOD_LSR_VALUE
+            PIO_INT_RE_HL = PIOD_REHLSR_VALUE
             PIO_INTERRUPT = PIO_D_INTERRUPT_USED
         />
-    </#if>
 
-    <#if PIO_E_USED == true>
+
         <@PIO_INITIALIZE
             PIO_PORT = "E"
-            PIO_DIR = "${PIOE_OER_VALUE}"
-            PIO_LAT_HIGH = "${PIOE_SODR_VALUE}"
-            PIO_LAT_LOW = "${PIOE_CODR_VALUE}"
-            PIO_OD = "${PIOE_MDER_VALUE}"
-            PIO_PU = "${PIOE_PUER_VALUE}"
-            PIO_PD = "${PIOE_PPDEN_VALUE}"
-            PIO_PER = "${PIOE_PER_VALUE}"
-            PIO_ABCD1 = "${PIOE_ABCDSR1_VALUE}"
-            PIO_ABCD2 = "${PIOE_ABCDSR2_VALUE}"
-            PIO_INT_TYPE = "${PIOE_AIMER_VALUE}"
-            PIO_INT_EDGE = "${PIOE_ESR_VALUE}"
-            PIO_INT_LEVEL = "${PIOE_LSR_VALUE}"
-            PIO_INT_RE_HL = "${PIOE_REHLSR_VALUE}"
-            PIO_INT_FE_LL = "${PIOE_FELLSR_VALUE}"
+            PIO_DIR = PIOE_OER_VALUE
+            PIO_LAT_HIGH = PIOE_SODR_VALUE
+            PIO_LAT_LOW = PIOE_CODR_VALUE
+            PIO_OD = PIOE_MDER_VALUE
+            PIO_PU = PIOE_PUER_VALUE
+            PIO_PD = PIOE_PPDEN_VALUE
+            PIO_PDR = PIOE_PDR_VALUE
+            PIO_ABCD1 = PIOE_ABCDSR1_VALUE
+            PIO_ABCD2 = PIOE_ABCDSR2_VALUE
+            PIO_INT_TYPE = PIOE_AIMER_VALUE
+            PIO_INT_LEVEL = PIOE_LSR_VALUE
+            PIO_INT_RE_HL = PIOE_REHLSR_VALUE
             PIO_INTERRUPT = PIO_E_INTERRUPT_USED
         />
-    </#if>
 
     <#if (PIO_A_INTERRUPT_USED == true) || (PIO_B_INTERRUPT_USED == true) || (PIO_C_INTERRUPT_USED == true) || (PIO_D_INTERRUPT_USED == true) || (PIO_E_INTERRUPT_USED == true) >
     /* Initialize Interrupt Pin data structures */
