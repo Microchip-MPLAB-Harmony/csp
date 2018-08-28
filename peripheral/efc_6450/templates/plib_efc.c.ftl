@@ -54,7 +54,7 @@ bool EFC${INDEX?string}_Read( uint32_t *data, uint32_t length, uint32_t address 
 
 bool EFC${INDEX?string}_SectorErase( uint32_t address )
 {
-    volatile uint16_t page_number;
+    uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
@@ -72,7 +72,8 @@ bool EFC${INDEX?string}_SectorErase( uint32_t address )
 
 bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address )
 {
-    volatile uint16_t page_number;
+    uint16_t page_number;
+
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
 
@@ -98,7 +99,7 @@ bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address )
 
 bool EFC${INDEX?string}_QuadWordWrite( uint32_t *data, uint32_t address )
 {
-    volatile uint16_t page_number;
+    uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
@@ -121,7 +122,8 @@ bool EFC${INDEX?string}_QuadWordWrite( uint32_t *data, uint32_t address )
 
 void EFC${INDEX?string}_RegionLock(uint32_t address)
 {
-    volatile uint16_t page_number;
+    uint16_t page_number;
+
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
     EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_SLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
@@ -135,7 +137,8 @@ void EFC${INDEX?string}_RegionLock(uint32_t address)
 
 void EFC${INDEX?string}_RegionUnlock(uint32_t address)
 {
-    volatile uint16_t page_number;
+    uint16_t page_number;
+
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
     EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_CLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
