@@ -108,10 +108,25 @@ void TC${INDEX}_QuadratureStart (void);
 
 void TC${INDEX}_QuadratureStop (void);
 
-uint32_t TC${INDEX}_QuadraturePositionGet (void);
+<#if TC_INDEX_PULSE == true>
+__inline__ int16_t TC${INDEX}_QuadratureRevolutionsGet (void)
+{
+    return (TC${INDEX}_REGS->TC_CHANNEL[1].TC_CV);
+}
+</#if>
+
 <#if TC_BMR_POSEN == "SPEED">
 
-uint32_t TC${INDEX}_QuadratureSpeedGet (void);
+__inline__ uint16_t TC${INDEX}_QuadratureSpeedGet (void)
+{
+    return TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV;
+}
+
+<#else>
+__inline__ int16_t TC${INDEX}_QuadraturePositionGet (void)
+{
+    return (TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV);
+}
 </#if>
 
 TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
