@@ -152,21 +152,6 @@ void TC${INDEX}_QuadratureStop (void)
     </#if>
 }
 
-uint32_t TC${INDEX}_QuadraturePositionGet (void)
-{
-    <#if TC_INDEX_PULSE == true>
-        <#lt>    return (TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV | (TC${INDEX}_REGS->TC_CHANNEL[1].TC_CV << 16U) );
-    <#else>
-        <#lt>    return (TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV);
-    </#if>
-}
-<#if TC_BMR_POSEN == "SPEED">
-    <#lt>uint32_t TC${INDEX}_QuadratureSpeedGet (void)
-    <#lt>{
-    <#lt>    return TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV;
-    <#lt>}
-</#if>
-
 TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
 {
     TC_QUADRATURE_STATUS quadrature_status;

@@ -1265,13 +1265,13 @@ void TCx_QuadratureStart ( void );
 void TCx_QuadratureStop ( void );
 // *****************************************************************************
 /* Function:
-    uint32_t TCx_QuadraturePositionGet ( void )
+    int16_t TCx_QuadraturePositionGet ( void )
 
   Summary:
-    Reads the position of the quadrature encoder.
+    Reads the angular position from the quadrature encoder.
 
   Description:
-    This function reads the position of the quadrature encoder by reading as
+    This function reads the position from the quadrature encoder by reading as
     tracked by the channel counter.
 
   Precondition:
@@ -1282,13 +1282,11 @@ void TCx_QuadratureStop ( void );
     None.
 
   Returns:
-    Position of the encoder.  The most-significant 16-bits represent index count
-    and least-significant 16-bits represent the position in terms of the
-    quadrature signal pulses.
+    Position of the encoder. 
 
   Example:
     <code>
-    uint32_t position;
+    int16_t position;
 
     TC0_QuadratureInitialize();
     TC0_QuadratureStart();
@@ -1296,19 +1294,58 @@ void TCx_QuadratureStop ( void );
     </code>
 
   Remarks:
-    None
+    In counter-clockwise direction, position counter works in 
+    down counting mode. 
 */
 
-uint32_t TCx_QuadraturePositionGet ( void );
+int16_t TCx_QuadraturePositionGet ( void );
+
 // *****************************************************************************
 /* Function:
-    uint32_t TCx_QuadratureSpeedGet ( void )
+    int16_t TCx_QuadratureRevolutionsGet ( void )
+
+  Summary:
+    Reads the number of revolutions from the quadrature encoder.
+
+  Description:
+    This function reads the number of revolutions from the quadrature encoder by reading as
+    tracked by the channel counter.
+
+  Precondition:
+    TCx_QuadratureInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    None.
+
+  Returns:
+    Number of revolutions of the encoder.  
+
+  Example:
+    <code>
+    int16_t revolutions;
+
+    TC0_QuadratureInitialize();
+    TC0_QuadratureStart();
+    revolutions = TC0_QuadratureRevolutionsGet();
+    </code>
+
+  Remarks:
+    In counter-clockwise direction, revolution counter works in 
+    down counting mode. This function is available only if quadrature
+    encoder provides index pulse. 
+*/
+
+int16_t TCx_QuadratureRevolutionsGet ( void );
+// *****************************************************************************
+/* Function:
+    uint16_t TCx_QuadratureSpeedGet ( void )
 
   Summary:
     Reads the quadrature index change speed.
 
   Description:
-    This function reads the number of quadrature index pulses captured in timer
+    This function reads the number of quadrature pulses captured in timer
     channel for given time base.
 
   Precondition:
@@ -1319,12 +1356,12 @@ uint32_t TCx_QuadraturePositionGet ( void );
     None
 
   Returns:
-    Number of index in terms of number of pulses that can be used to determine
+    Number of quadrature pulses counted in given time base which is used to determine
     speed of motion tracked by the encoder.
 
   Example:
     <code>
-    uint32_t speed;
+    uint16_t speed;
     TC0_QuadratureInitialize();
     TC0_QuadratureStart();
     speed = TC0_QuadratureSpeedGet();
@@ -1335,7 +1372,7 @@ uint32_t TCx_QuadraturePositionGet ( void );
     time base and number of quadrature encoder pulses.
 */
 
-uint32_t TCx_QuadratureSpeedGet ( void );
+uint16_t TCx_QuadratureSpeedGet ( void );
 
 // *****************************************************************************
 /* Function:
@@ -1375,7 +1412,43 @@ uint32_t TCx_QuadratureSpeedGet ( void );
 
 TC_QUADRATURE_STATUS TCx_QuadratureStatusGet ( void );
 
+// *****************************************************************************
+/* Function:
+    void TCx_QuadratureCallbackRegister ( TC_CALLBACK callback, uintptr_t context )
 
+  Summary:
+    Registers the function to be called from interrupt.
+
+  Description
+    This function registers the callback function to be called from interrupt
+
+  Precondition:
+    TCx_QuadratureInitialize must have been called first.
+
+  Parameters:
+      callback  - Callback function pointer.
+
+      context   - Value provided back to the caller by the callback (usually a
+                  pointer to the caller's context for multi-instance clients).
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    void TC_CallbackFn(uintptr_t context);
+
+    TC0_QuadratureInitialize();
+    TC0_QuadratureCallbackRegister(TC_CallbackFn, NULL);
+    </code>
+
+  Remarks:
+    Context value can be set to NULL if not required.
+
+   To disable callback function, pass NULL for the callback parameter.
+*/
+
+void TCx_QuadratureCallbackRegister ( TC_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
