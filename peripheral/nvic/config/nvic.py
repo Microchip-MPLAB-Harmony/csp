@@ -5,11 +5,6 @@ Log.writeInfoMessage("Loading Interrupt Manager for " + Variables.get("__PROCESS
 ################################################################################
 #### Global Variables ####
 ################################################################################
-global highestID
-highestID = Interrupt.getMaxInterruptID()
-
-global lowestID
-lowestID = Interrupt.getMinInterruptID()
 
 global nvicPriorityLevels
 nvicPriorityLevels = 0
@@ -131,58 +126,42 @@ def getGenericVectorName(vecIndex):
 
         if str(vecIndex) == vIndex:
             if "header:alternate-name" in interruptsChildrenList[interrupt].getAttributeList():
-                return str(interruptsChildrenList[interrupt].getAttribute("header:alternate-name")) + "_Handler"
+                return str(interruptsChildrenList[interrupt].getAttribute("header:alternate-name"))
             else:
                 return vName
 
 def updateNVICVectorPeriEnableValue(symbol, event):
 
-    print "updateNVICVectorPeriEnableValue :- ", event["id"]
-
     symbol.clearValue()
 
-    if (event["value"] == False):
+    if event["value"] == False:
         symbol.setValue(True, 2)
     else :
         symbol.setValue(False, 2)
 
 def updateNVICVectorParametersValue(symbol, event):
 
-    periName = (event["id"].replace("NVIC_" , "")).replace("_ENABLE", "")
+    symbol.clearValue()
+    symbol.setValue(event["value"], 2)
 
-    periIndex = 0
-    listIndex = 0
+def updateNVICHandlerParametersValue(symbol, event):
 
-    for vIndex in nvicVectorDataDictionary:
-        if periName in nvicVectorDataDictionary.get(vIndex):
-            periIndex = vIndex
-            listIndex = nvicVectorDataDictionary.get(vIndex).index(periName)
-            break
+    symbol.clearValue()
+    symbol.setValue(event["value"], 2)
 
-    handlerValue = Database.getSymbolValue("core", "NVIC_" + periName + "_HANDLER")
+def updateNVICHandlerLockParametersValue(symbol, event):
 
-    NVICVector = "NVIC_" + str(periIndex) + "_" +  str(listIndex) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(periIndex) + "_" +  str(listIndex) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(periIndex) + "_" +  str(listIndex) + "_HANDLER_LOCK"
-
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.clearSymbolValue("core", NVICHandlerLock)
-
-    if(event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, handlerValue, 2)
-        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
-    else:
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, handlerValue, 2)
-        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+    symbol.clearValue()
+    symbol.setValue(event["value"], 2)
 
 ################################################################################
 #### Component ####
 ################################################################################
 
 generateNVICVectorDataDictionary()
+
+highestID = int(max(nvicVectorDataDictionary))
+lowestID = int(min(nvicVectorDataDictionary))
 
 max_key, max_value = max(nvicVectorDataDictionary.items(), key = lambda x: len(set(x[1])))
 
@@ -239,10 +218,27 @@ for vIndex in sorted(nvicVectorDataDictionary):
         else:
             priorityList = nvicPriorityGroup
 
+        nvicVectorPeriEnableList = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE", nvicMenu)
+        nvicVectorPeriEnableList.setLabel("Vector Peripheral Enable")
+        nvicVectorPeriEnableList.setVisible(False)
+        nvicVectorPeriEnableSymbolList.append(vName + "_INTERRUPT_ENABLE")
+
+        nvicVectorPeriHandlerList = coreComponent.createStringSymbol(vName + "_INTERRUPT_HANDLER", nvicMenu)
+        nvicVectorPeriHandlerList.setLabel("Vector Peripheral Handler")
+        nvicVectorPeriHandlerList.setVisible(False)
+        nvicVectorPeriHandlerList.setDefaultValue(vName + "_Handler")
+        nvicVectorPeriHandlerSymbolList.append(vName + "_INTERRUPT_HANDLER")
+
+        nvicVectorPeriHandlerLockList = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_HANDLER_LOCK", nvicMenu)
+        nvicVectorPeriHandlerLockList.setLabel("Vector Peripheral Handler Lock")
+        nvicVectorPeriHandlerLockList.setVisible(False)
+        nvicVectorPeriHandlerLockSymbolList.append(vName + "_INTERRUPT_HANDLER_LOCK")
+
         nvicVectorEnable[index].append(listIndex)
         nvicVectorEnable[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE", nvicMenu)
         nvicVectorEnable[index][listIndex].setLabel("Enable " + vDescription + " Interrupt")
         nvicVectorEnable[index][listIndex].setDefaultValue(vectorSettings[vector][0])
+        nvicVectorEnable[index][listIndex].setDependencies(updateNVICVectorParametersValue, [vName + "_INTERRUPT_ENABLE"])
 
         nvicVectorNumber[index].append(listIndex)
         nvicVectorNumber[index][listIndex] = coreComponent.createIntegerSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_NUMBER", nvicVectorEnable[index][listIndex])
@@ -289,12 +285,14 @@ for vIndex in sorted(nvicVectorDataDictionary):
         nvicVectorHandler[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_HANDLER", nvicVectorEnable[index][listIndex])
         nvicVectorHandler[index][listIndex].setLabel("Handler")
         nvicVectorHandler[index][listIndex].setDefaultValue(vName + "_Handler")
+        nvicVectorHandler[index][listIndex].setDependencies(updateNVICHandlerParametersValue, [vName + "_INTERRUPT_HANDLER"])
 
         nvicVectorHandlerLock[index].append(listIndex)
         nvicVectorHandlerLock[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_HANDLER_LOCK", nvicVectorEnable[index][listIndex])
         nvicVectorHandlerLock[index][listIndex].setLabel("Handler Lock")
         nvicVectorHandlerLock[index][listIndex].setVisible(False)
         nvicVectorHandlerLock[index][listIndex].setDefaultValue(vectorSettings[vector][6])
+        nvicVectorHandlerLock[index][listIndex].setDependencies(updateNVICHandlerParametersValue, [vName + "_INTERRUPT_HANDLER_LOCK"])
 
         nvicVectorGenericName[index].append(listIndex)
         nvicVectorGenericName[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_GENERIC_NAME", nvicVectorEnable[index][listIndex])
@@ -310,33 +308,12 @@ for vIndex in sorted(nvicVectorDataDictionary):
             nvicVectorGenericHandler[index][listIndex].setVisible(False)
             nvicVectorGenericHandler[index][listIndex].setDefaultValue(str(getGenericVectorName(vIndex) + "_Handler"))
 
-        nvicVectorPeriEnableList = coreComponent.createBooleanSymbol("NVIC_" + vName + "_ENABLE", nvicMenu)
-        nvicVectorPeriEnableList.setLabel("Vector Peripheral Enable")
-        nvicVectorPeriEnableList.setVisible(False)
-        nvicVectorPeriEnableSymbolList.append("NVIC_" + vName + "_ENABLE")
-
-        nvicVectorPeriHandlerList = coreComponent.createStringSymbol("NVIC_" + vName + "_HANDLER", nvicMenu)
-        nvicVectorPeriHandlerList.setLabel("Vector Peripheral Handler")
-        nvicVectorPeriHandlerList.setVisible(False)
-        nvicVectorPeriHandlerList.setDefaultValue(vName + "_Handler")
-        nvicVectorPeriHandlerSymbolList.append("NVIC_" + vName + "_HANDLER")
-
-        nvicVectorPeriHandlerLockList = coreComponent.createBooleanSymbol("NVIC_" + vName + "_HANDLER_LOCK", nvicMenu)
-        nvicVectorPeriHandlerLockList.setLabel("Vector Peripheral Handler Lock")
-        nvicVectorPeriHandlerLockList.setVisible(False)
-        nvicVectorPeriHandlerLockSymbolList.append("NVIC_" + vName + "_HANDLER_LOCK")
-
-        nvicVectorPeriEnableUpdate = coreComponent.createBooleanSymbol("NVIC_" + vName + "_ENABLE_UPDATE", nvicMenu)
+        nvicVectorPeriEnableUpdate = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE_UPDATE", nvicMenu)
         nvicVectorPeriEnableUpdate.setLabel("NVIC Peripheral Enable/Disable Update")
         nvicVectorPeriEnableUpdate.setVisible(False)
         nvicVectorPeriEnableUpdate.setDependencies(updateNVICVectorPeriEnableValue, ["NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE"])
 
     index += 1
-
-nvicVectorPeriEnableSymbolListUpdate = coreComponent.createBooleanSymbol("NVIC_PERI_ENABLE_UPDATE", nvicMenu)
-nvicVectorPeriEnableSymbolListUpdate.setLabel("NVIC Peripheral Enable Update")
-nvicVectorPeriEnableSymbolListUpdate.setVisible(False)
-nvicVectorPeriEnableSymbolListUpdate.setDependencies(updateNVICVectorParametersValue, nvicVectorPeriEnableSymbolList)
 
 ############################################################################
 #### Code Generation ####
