@@ -1,79 +1,100 @@
 ###################################################################################################
+########################################## Callbacks  #############################################
+###################################################################################################
+
+def updatePMClockWarringStatus(symbol, event):
+
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
 
 def instantiateComponent(pmComponent):
 
-	pmInstanceIndex = pmComponent.getID()[-1:]
+    pmInstanceIndex = pmComponent.getID()[-1:]
 
-	#index
-	pmSym_Index = pmComponent.createIntegerSymbol("PM_INDEX", None)
-	pmSym_Index.setDefaultValue(int(pmInstanceIndex))
-	pmSym_Index.setVisible(False)
+    #index
+    pmSym_Index = pmComponent.createIntegerSymbol("PM_INDEX", None)
+    pmSym_Index.setDefaultValue(int(pmInstanceIndex))
+    pmSym_Index.setVisible(False)
 
-	#standby back biasing
-	pmSym_STDBYCFG_BBIASHS = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASHS", None)
-	pmSym_STDBYCFG_BBIASHS.setLabel("Enable RAM DMA Access in Standby Sleep Mode ?")
-	pmSym_STDBYCFG_BBIASHS.setDescription("Configures DMA Access in low power modes")
+    #clock enable
+    Database.clearSymbolValue("core", "PM_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "PM_CLOCK_ENABLE", True, 2)
 
-	#standby VREGMOD configuration
-	pmSym_STDBYCFG_VREGSMOD = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_VREGSMOD", None)
-	pmSym_STDBYCFG_VREGSMOD.setLabel("VDDCORE Voltage Source Selection in Standby Sleep mode")
-	pmSym_STDBYCFG_VREGSMOD.setDescription("Configures the VDDCORE Supply source in Standby Sleep mode.")
+    #standby back biasing
+    pmSym_STDBYCFG_BBIASHS = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASHS", None)
+    pmSym_STDBYCFG_BBIASHS.setLabel("Enable RAM DMA Access in Standby Sleep Mode ?")
+    pmSym_STDBYCFG_BBIASHS.setDescription("Configures DMA Access in low power modes")
 
-	pmStandbyConfigurationNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"PM_STDBYCFG__VREGSMOD\"]")
-	pmStandbyConfigurationValues = []
-	pmStandbyConfigurationValues = pmStandbyConfigurationNode.getChildren()
+    #standby VREGMOD configuration
+    pmSym_STDBYCFG_VREGSMOD = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_VREGSMOD", None)
+    pmSym_STDBYCFG_VREGSMOD.setLabel("VDDCORE Voltage Source Selection in Standby Sleep mode")
+    pmSym_STDBYCFG_VREGSMOD.setDescription("Configures the VDDCORE Supply source in Standby Sleep mode.")
 
-	pmStandbyConfigurationDefaultValue = 0
+    pmStandbyConfigurationNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"PM_STDBYCFG__VREGSMOD\"]")
+    pmStandbyConfigurationValues = []
+    pmStandbyConfigurationValues = pmStandbyConfigurationNode.getChildren()
 
-	for index in range(len(pmStandbyConfigurationValues)):
-		pmStandbyConfigurationKeyName = pmStandbyConfigurationValues[index].getAttribute("name")
+    pmStandbyConfigurationDefaultValue = 0
 
-		if (pmStandbyConfigurationKeyName == "AUTO"):
-			pmStandbyConfigurationDefaultValue = index
+    for index in range(len(pmStandbyConfigurationValues)):
+        pmStandbyConfigurationKeyName = pmStandbyConfigurationValues[index].getAttribute("name")
 
-		pmStandbyConfigurationKeyDescription = pmStandbyConfigurationValues[index].getAttribute("caption")
-		pmStandbyConfigurationKeyValue = pmStandbyConfigurationValues[index].getAttribute("value")
-		pmSym_STDBYCFG_VREGSMOD.addKey(pmStandbyConfigurationKeyName , pmStandbyConfigurationKeyValue , pmStandbyConfigurationKeyDescription)
+        if (pmStandbyConfigurationKeyName == "AUTO"):
+            pmStandbyConfigurationDefaultValue = index
 
-	pmSym_STDBYCFG_VREGSMOD.setDefaultValue(pmStandbyConfigurationDefaultValue)
-	pmSym_STDBYCFG_VREGSMOD.setOutputMode("Key")
-	pmSym_STDBYCFG_VREGSMOD.setDisplayMode("Description")
+        pmStandbyConfigurationKeyDescription = pmStandbyConfigurationValues[index].getAttribute("caption")
+        pmStandbyConfigurationKeyValue = pmStandbyConfigurationValues[index].getAttribute("value")
+        pmSym_STDBYCFG_VREGSMOD.addKey(pmStandbyConfigurationKeyName, pmStandbyConfigurationKeyValue, pmStandbyConfigurationKeyDescription)
 
-	###################################################################################################
-	####################################### Code Generation  ##########################################
-	###################################################################################################
+    pmSym_STDBYCFG_VREGSMOD.setDefaultValue(pmStandbyConfigurationDefaultValue)
+    pmSym_STDBYCFG_VREGSMOD.setOutputMode("Key")
+    pmSym_STDBYCFG_VREGSMOD.setDisplayMode("Description")
 
-	configName = Variables.get("__CONFIGURATION_NAME")
+    # Clock Warning status
+    pmSym_ClkEnComment = pmComponent.createCommentSymbol("PM_CLOCK_ENABLE_COMMENT", None)
+    pmSym_ClkEnComment.setLabel("Warning!!! PM Peripheral Clock is Disabled in Clock Manager")
+    pmSym_ClkEnComment.setVisible(False)
+    pmSym_ClkEnComment.setDependencies(updatePMClockWarringStatus, ["core.PM_CLOCK_ENABLE"])
 
-	pmModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]")
-	pmModuleID = pmModuleNode.getAttribute("id")
+    ###################################################################################################
+    ####################################### Code Generation  ##########################################
+    ###################################################################################################
 
-	pmSym_HeaderFile = pmComponent.createFileSymbol("PM_HEADER", None)
-	pmSym_HeaderFile.setSourcePath("../peripheral/pm_"+pmModuleID+"/templates/plib_pm.h.ftl")
-	pmSym_HeaderFile.setOutputName("plib_pm" + pmInstanceIndex + ".h")
-	pmSym_HeaderFile.setDestPath("peripheral/pm/")
-	pmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pm/")
-	pmSym_HeaderFile.setType("HEADER")
-	pmSym_HeaderFile.setMarkup(True)
+    configName = Variables.get("__CONFIGURATION_NAME")
 
-	pmSym_SourceFile = pmComponent.createFileSymbol("PM_SOURCE", None)
-	pmSym_SourceFile.setSourcePath("../peripheral/pm_"+pmModuleID+"/templates/plib_pm.c.ftl")
-	pmSym_SourceFile.setOutputName("plib_pm" + pmInstanceIndex + ".c")
-	pmSym_SourceFile.setDestPath("peripheral/pm/")
-	pmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pm/")
-	pmSym_SourceFile.setType("SOURCE")
-	pmSym_SourceFile.setMarkup(True)
+    pmModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]")
+    pmModuleID = pmModuleNode.getAttribute("id")
 
-	pmSym_SystemInitFile = pmComponent.createFileSymbol("PM_SYS_INIT", None)
-	pmSym_SystemInitFile.setType("STRING")
-	pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-	pmSym_SystemInitFile.setSourcePath("../peripheral/pm_"+pmModuleID+"/templates/system/initialization.c.ftl")
-	pmSym_SystemInitFile.setMarkup(True)
+    pmSym_HeaderFile = pmComponent.createFileSymbol("PM_HEADER", None)
+    pmSym_HeaderFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/plib_pm.h.ftl")
+    pmSym_HeaderFile.setOutputName("plib_pm" + pmInstanceIndex + ".h")
+    pmSym_HeaderFile.setDestPath("/peripheral/pm/")
+    pmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pm/")
+    pmSym_HeaderFile.setType("HEADER")
+    pmSym_HeaderFile.setMarkup(True)
 
-	pmSymSystemDefFile = pmComponent.createFileSymbol("PM_SYS_DEF", None)
-	pmSymSystemDefFile.setType("STRING")
-	pmSymSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	pmSymSystemDefFile.setSourcePath("../peripheral/pm_"+pmModuleID+"/templates/system/definitions.h.ftl")
-	pmSymSystemDefFile.setMarkup(True)
+    pmSym_SourceFile = pmComponent.createFileSymbol("PM_SOURCE", None)
+    pmSym_SourceFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/plib_pm.c.ftl")
+    pmSym_SourceFile.setOutputName("plib_pm" + pmInstanceIndex + ".c")
+    pmSym_SourceFile.setDestPath("/peripheral/pm/")
+    pmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pm/")
+    pmSym_SourceFile.setType("SOURCE")
+    pmSym_SourceFile.setMarkup(True)
+
+    pmSym_SystemInitFile = pmComponent.createFileSymbol("PM_SYS_INIT", None)
+    pmSym_SystemInitFile.setType("STRING")
+    pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    pmSym_SystemInitFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/system/initialization.c.ftl")
+    pmSym_SystemInitFile.setMarkup(True)
+
+    pmSymSystemDefFile = pmComponent.createFileSymbol("PM_SYS_DEF", None)
+    pmSymSystemDefFile.setType("STRING")
+    pmSymSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    pmSymSystemDefFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/system/definitions.h.ftl")
+    pmSymSystemDefFile.setMarkup(True)

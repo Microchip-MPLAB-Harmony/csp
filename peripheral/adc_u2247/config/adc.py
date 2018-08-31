@@ -1,6 +1,39 @@
+global InterruptVector
+global InterruptHandler
+global InterruptHandlerLock
+global adcInstanceIndex
+
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+
+def updateADCInterruptStatus(symbol, event):
+
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandler)
+
+    if event["value"] == True:
+        Database.setSymbolValue("core", InterruptHandler, "ADC" + adcInstanceIndex + "_InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, "ADC" + adcInstanceIndex + "_Handler", 2)
+
+def updateADCInterruptWarringStatus(symbol, event):
+
+    if adcSym_INTENSET_RESRDY.getValue() == True:
+        symbol.setVisible(event["value"])
+
+def updateADCClockWarringStatus(symbol, event):
+
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 def adcNegativeInput(symbol, event):
     if (event["value"] == True):
         symbol.setReadOnly(False)
@@ -25,11 +58,17 @@ def adcEventInputVisibility(symbol, event):
         symbol.setVisible(False)
     else:
         symbol.setVisible(True)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
 
 def instantiateComponent(adcComponent):
+
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+    global adcInstanceIndex
 
     adcInstanceIndex = adcComponent.getID()[-1:]
     Log.writeInfoMessage("Running ADC" + str(adcInstanceIndex))
@@ -38,6 +77,10 @@ def instantiateComponent(adcComponent):
     adcSym_Index = adcComponent.createIntegerSymbol("ADC_INDEX", None)
     adcSym_Index.setDefaultValue(int(adcInstanceIndex))
     adcSym_Index.setVisible(False)
+
+    #clock enable
+    Database.clearSymbolValue("core", "ADC" + adcInstanceIndex + "_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "ADC" + adcInstanceIndex + "_CLOCK_ENABLE", True, 2)
 
     #------------------------- ATDF Read -------------------------------------
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
@@ -239,6 +282,7 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLC_LEFTADJ.setVisible(True)
 
     #interrupt mode
+    global adcSym_INTENSET_RESRDY
     adcSym_INTENSET_RESRDY = adcComponent.createBooleanSymbol("ADC_INTENSET_RESRDY", adcResultMenu)
     adcSym_INTENSET_RESRDY.setLabel("Enable Result Ready Interrupt")
 
@@ -259,6 +303,31 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLA_ONDEMAND.setLabel("On Demand Control")
     adcSym_CTRLA_ONDEMAND.setVisible(True)
 
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    InterruptVector = "ADC" + adcInstanceIndex + "_INTERRUPT_ENABLE"
+    InterruptHandler = "ADC" + adcInstanceIndex + "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = "ADC" + adcInstanceIndex + "_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = "ADC" + adcInstanceIndex + "_INTERRUPT_ENABLE_UPDATE"
+
+    # Interrupt Dynamic settings
+    adcSym_UpdateInterruptStatus = adcComponent.createBooleanSymbol("ADC_INTERRUPT_STATUS", None)
+    adcSym_UpdateInterruptStatus.setDependencies(updateADCInterruptStatus, ["ADC_INTENSET_RESRDY"])
+    adcSym_UpdateInterruptStatus.setVisible(False)
+
+    # Interrupt Warning status
+    adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_INTERRUPT_ENABLE_COMMENT", None)
+    adcSym_IntEnComment.setVisible(False)
+    adcSym_IntEnComment.setLabel("Warning!!! ADC" + adcInstanceIndex + " Interrupt is Disabled in Interrupt Manager")
+    adcSym_IntEnComment.setDependencies(updateADCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+
+    # Clock Warning status
+    adcSym_ClkEnComment = adcComponent.createCommentSymbol("ADC_CLOCK_ENABLE_COMMENT", None)
+    adcSym_ClkEnComment.setVisible(False)
+    adcSym_ClkEnComment.setLabel("Warning!!! ADC" + adcInstanceIndex + " Clock is Disabled in Clock Manager")
+    adcSym_ClkEnComment.setDependencies(updateADCClockWarringStatus, ["core." + "ADC" + adcInstanceIndex + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################

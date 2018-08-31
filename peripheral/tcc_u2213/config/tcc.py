@@ -1,3 +1,7 @@
+global InterruptVector
+global InterruptHandler
+global InterruptHandlerLock
+global tccInstanceIndex
 
 tccSym_Channel_Menu = []
 tccSym_Channel_CC = []
@@ -13,6 +17,33 @@ tccSym_PATT_PGV = []
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+
+def updateTCCInterruptStatus(symbol, event):
+
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandler)
+
+    if event["value"] == True:
+        Database.setSymbolValue("core", InterruptHandler, "TCC" + tccInstanceIndex + "_InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, "TCC" + tccInstanceIndex + "_Handler", 2)
+
+def updateTCCInterruptWarringStatus(symbol, event):
+
+    if tccSym_INTENSET_OVF.getValue() == True:
+        symbol.setVisible(event["value"])
+
+def updateTCCClockWarringStatus(symbol, event):
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 def tccDirVisible(symbol, event):
     symObj = event["symbol"]
     if (symObj.getSelectedKey() == "NPWM"):
@@ -45,13 +76,23 @@ def tccPattgenVisible(symbol, event):
 
 def instantiateComponent(tccComponent):
 
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+    global tccInstanceIndex
+    global tccSym_INTENSET_OVF
+
     tccInstanceIndex = tccComponent.getID()[-1:]
     
     #index
     tccSym_Index = tccComponent.createIntegerSymbol("TCC_INDEX", None)
     tccSym_Index.setDefaultValue(int(tccInstanceIndex))
     tccSym_Index.setVisible(False)
-    
+
+    #clock enable
+    Database.clearSymbolValue("core", "TCC" + tccInstanceIndex + "_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "TCC" + tccInstanceIndex + "_CLOCK_ENABLE", True, 2)
+
     ################################ ATDF ####################################################
     node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TCC\"]/instance@[name=\"TCC"+str(tccInstanceIndex)+"\"]/parameters")
     numOfChannels = 4
@@ -295,6 +336,32 @@ def instantiateComponent(tccComponent):
             tccSym_PATT_PGV[output].setOutputMode("Value")
             tccSym_PATT_PGV[output].setDisplayMode("Description")
             tccSym_PATT_PGV[output].setDependencies(tccPattgenVisible, ["TCC_"+str(output)+"PATT_PGE"])
+
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    InterruptVector = "TCC" + tccInstanceIndex + "_INTERRUPT_ENABLE"
+    InterruptHandler = "TCC" + tccInstanceIndex + "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = "TCC" + tccInstanceIndex + "_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = "TCC" + tccInstanceIndex + "_INTERRUPT_ENABLE_UPDATE"
+
+    # Interrupt Dynamic settings
+    tccSym_UpdateInterruptStatus = tccComponent.createBooleanSymbol("TCC_INTERRUPT_STATUS", None)
+    tccSym_UpdateInterruptStatus.setDependencies(updateTCCInterruptStatus, ["TCC_INTENSET_OVF"])
+    tccSym_UpdateInterruptStatus.setVisible(False)
+
+    # Interrupt Warning status
+    tccSym_IntEnComment = tccComponent.createCommentSymbol("TCC_INTERRUPT_ENABLE_COMMENT", None)
+    tccSym_IntEnComment.setVisible(False)
+    tccSym_IntEnComment.setLabel("Warning!!! TCC" + tccInstanceIndex + " Interrupt is Disabled in Interrupt Manager")
+    tccSym_IntEnComment.setDependencies(updateTCCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+
+    # Clock Warning status
+    tccSym_ClkEnComment = tccComponent.createCommentSymbol("TCC_CLOCK_ENABLE_COMMENT", None)
+    tccSym_ClkEnComment.setLabel("Warning!!! TCC Peripheral Clock is Disabled in Clock Manager")
+    tccSym_ClkEnComment.setVisible(False)
+    tccSym_ClkEnComment.setDependencies(updateTCCClockWarringStatus, ["core.TCC" + tccInstanceIndex + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################

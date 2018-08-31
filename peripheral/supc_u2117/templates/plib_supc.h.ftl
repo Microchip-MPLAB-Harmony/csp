@@ -241,6 +241,36 @@ void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable );
 
 void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, uintptr_t context );
 
+// *****************************************************************************
+/* Function:
+    void SUPC${SUPC_INDEX}_InterruptHandler( void );
+
+  Summary:
+    SUPC interrupt handler for BODVDD event action.
+
+  Description
+    This function will trigger BODVDD callback.
+
+  Precondition:
+    SUPC${SUPC_INDEX}_Initialize() must have been called first.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    </code>
+
+  Remarks:
+    This will be get called from device vector.So don't call this function
+    explicitly.
+*/
+
+void SUPC${SUPC_INDEX}_InterruptHandler( void );
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 

@@ -1,3 +1,8 @@
+global InterruptVector
+global InterruptHandler
+global InterruptHandlerLock
+global eicInstanceIndex
+
 ###################################################################################################
 ######################################### Callbacks ###############################################
 ###################################################################################################
@@ -5,7 +10,6 @@ global DEBOUNCEN_Code
 
 def confMenu(symbol, event):
     symbol.setVisible(event["value"])
-
 
 def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
     channel = int(event["id"].split("_")[2])
@@ -21,13 +25,40 @@ def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)) , 1)
             else:
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
-            
+
     else:
         symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
 
     #communicate to event system
     Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", event["value"], 2)
-    
+
+def updateEICInterruptStatus(symbol, event):
+
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, bool(event["value"]), 2)
+
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, bool(event["value"]), 2)
+
+    Database.clearSymbolValue("core", InterruptHandler)
+
+    if bool(event["value"]) == True:
+        Database.setSymbolValue("core", InterruptHandler, "EIC" + eicInstanceIndex + "_InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, "EIC_Handler", 2)
+
+def updateEICInterruptWarringStatus(symbol, event):
+
+    if EXTINT_Code.getValue() != 0x0:
+        symbol.setVisible(event["value"])
+
+def updateEICClockWarringStatus(symbol, event):
+
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 def debounceEnable(symbol, event):
     global DEBOUNCEN_Code
     channel = int(event["id"].split("_")[3])
@@ -40,7 +71,7 @@ def debounceEnable(symbol, event):
     else:
         symbol.setVisible(False)
         DEBOUNCEN_Code.setValue((DEBOUNCEN_Code.getValue()) & (~(0x1 << channel)), 1)
-        
+
 def debounceMenu(symbol, event):
     if int(event["value"] > 0):
         symbol.setVisible(True)
@@ -49,10 +80,10 @@ def debounceMenu(symbol, event):
 
 def filterMenu(symbol, event):
     symbol.setVisible((event["value"] > 0))
+
 ###################################################################################################
 ######################################### Component ###############################################
 ###################################################################################################
-
 
 def instantiateComponent(eicComponent):
     eicSym_eventsList = []
@@ -60,11 +91,22 @@ def instantiateComponent(eicComponent):
     eicSym_debounceList =[]
     eicSym_InterruptList = []
     eicSym_Channel = []
-    eicInstanceIndex = eicComponent.getID()[-1:]
     global DEBOUNCEN_Code
+    global EXTINT_Code
+    global eicInstanceIndex
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+
+    eicInstanceIndex = eicComponent.getID()[-1:]
+
     eicIndex = eicComponent.createIntegerSymbol("EIC_INDEX" , None)
     eicIndex.setVisible(False)
     eicIndex.setDefaultValue(int(eicInstanceIndex))
+
+    #clock enable
+    Database.clearSymbolValue("core", "EIC_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "EIC_CLOCK_ENABLE", True, 2)
 
     extIntNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EIC\"]/instance@[name=\"EIC\"]/parameters/param@[name=\"EXTINT_NUM\"]")
     extIntCount = int(extIntNode.getAttribute("value"))
@@ -96,7 +138,7 @@ def instantiateComponent(eicComponent):
     nmiConfMenu.setLabel("NMI Configuration")
     nmiConfMenu.setDependencies(confMenu, ["NMI_CTRL"])
     nmiConfMenu.setVisible(False)
-    
+
     #NMIASYNCH
     NMI_ASYNCH_Selection = eicComponent.createKeyValueSetSymbol("NMI_ASYNCH" , nmiConfMenu)
     NMI_ASYNCH_Selection.setLabel("NMI Detection Clock")
@@ -124,7 +166,7 @@ def instantiateComponent(eicComponent):
     NMI_SENSE_SelectionSymbol.setLabel("NMI Interrupt Edge Selection")
 
     eicNMISenseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_NMICTRL__NMISENSE\"]")
-	
+
     for index in range(len(eicNMISenseNode.getChildren())):
         eicNMISenseKeyName = eicNMISenseNode.getChildren()[index].getAttribute("name")
         eicNMISenseKeyDescription = eicNMISenseNode.getChildren()[index].getAttribute("caption")
@@ -140,19 +182,19 @@ def instantiateComponent(eicComponent):
 
         eicPLX1 = eicComponent.createBooleanSymbol("EIC_CHAN_" + str(extIntIndex) , None)
         eicPLX1.setLabel("Enable EIC Channel" + str(extIntIndex))
-        
+
         eicConfiguration = eicComponent.createMenuSymbol("EIC_MENU" + str(extIntIndex), eicPLX1)
         eicConfiguration.setLabel("EIC Channel" + str(extIntIndex) + " Configuration")
         eicConfiguration.setDependencies(confMenu, ["EIC_CHAN_" + str(extIntIndex)])
         eicConfiguration.setVisible(False)
-        
+
         # populate a list with IDs for code generation dependency
         eicSym_Channel.append("EIC_CHAN_" + str(extIntIndex))
-        
+
         eicINT = eicComponent.createBooleanSymbol("EIC_INT_" + str(extIntIndex) , eicConfiguration)
         eicINT.setLabel("Enable Interrupt")
         eicSym_InterruptList.append("EIC_INT_" + str(extIntIndex))
-        
+
         #EVCTRL - External Interrupt Event Output Enable 0..7 Channel number
         EVCCTRL_EXTINTEO_Selection = eicComponent.createBooleanSymbol("EIC_EXTINTEO_" + str(extIntIndex) , eicConfiguration)
         EVCCTRL_EXTINTEO_Selection.setLabel("Enable Event Output")
@@ -175,7 +217,6 @@ def instantiateComponent(eicComponent):
         ASYNCH_ASYNCH_Selection.setDefaultValue(0)
         ASYNCH_ASYNCH_Selection.setOutputMode("Value")
         ASYNCH_ASYNCH_Selection.setDisplayMode("Description")
-
 
         # populate a list with IDs for code generation dependency
         eicSym_asynchList.append("EIC_ASYNCH_" + str(extIntIndex))
@@ -201,12 +242,12 @@ def instantiateComponent(eicComponent):
         DEBOUNCEN_Selection.setLabel("Enable Debounce")
         DEBOUNCEN_Selection.setVisible(False)
         DEBOUNCEN_Selection.setDependencies(debounceEnable,["EIC_CONFIG_SENSE_" + str(extIntIndex)])
-   
+
         #CONFIG - Filter Enable
         CONFIG_FILTER_Selection = eicComponent.createBooleanSymbol("EIC_CONFIG_FILTEN_" + str(extIntIndex) , eicConfiguration)
         CONFIG_FILTER_Selection.setLabel("Enable filter")
         CONFIG_FILTER_Selection.setVisible(False)
-        CONFIG_FILTER_Selection.setDependencies(filterMenu, ["EIC_CONFIG_SENSE_" + str(extIntIndex)])	
+        CONFIG_FILTER_Selection.setDependencies(filterMenu, ["EIC_CONFIG_SENSE_" + str(extIntIndex)])
         # populate a list with IDs for code generation dependency
         eicSym_debounceList.append("EIC_DEBOUNCEN_" + str(extIntIndex))
 
@@ -218,7 +259,7 @@ def instantiateComponent(eicComponent):
     eicSym_eventsList.extend(eicSym_Channel)
     eicSym_asynchList.extend(eicSym_Channel)
     eicSym_InterruptList.extend(eicSym_Channel)
-    
+
     eicCalculation = eicComponent.createMenuSymbol("REG_MENU", None)
     eicCalculation.setVisible(False)
     eicCalculation.setLabel("Calculated register values")
@@ -230,7 +271,6 @@ def instantiateComponent(eicComponent):
     ASYNCH_Code = eicComponent.createHexSymbol("EIC_ASYNCH" , eicCalculation)
     ASYNCH_Code.setDefaultValue(0)
     ASYNCH_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_asynchList)
-
 
     DEBOUNCEN_Code = eicComponent.createHexSymbol("EIC_DEBOUNCEN" , eicCalculation)
     DEBOUNCEN_Code.setDefaultValue(0)
@@ -244,7 +284,7 @@ def instantiateComponent(eicComponent):
     eicDebounceMenu.setLabel("Debouncer ConfiGuration")
     eicDebounceMenu.setVisible(False)
     eicDebounceMenu.setDependencies(debounceMenu, ["EIC_DEBOUNCEN"])
-    
+
     #DEBOUNCER - TICKON
     PRESCALER_TICKON_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_PRESCALER_TICKON" , eicDebounceMenu)
     PRESCALER_TICKON_SelectionSymbol.setLabel("Debouncer Sampler Clock Source")
@@ -266,7 +306,7 @@ def instantiateComponent(eicComponent):
     DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States for EXTINT[7:0]")
 
     eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES0\"]")
-	
+
     for index in range(len(eicStatesxNode.getChildren())):
         eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
         eicStatesxKeyDescription = eicStatesxNode.getChildren()[index].getAttribute("caption")
@@ -323,6 +363,37 @@ def instantiateComponent(eicComponent):
     DEBOUNCER_PRESCALER_SelectionSymbol.setDefaultValue(0)
     DEBOUNCER_PRESCALER_SelectionSymbol.setOutputMode("Value")
     DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
+
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    InterruptVector = "EIC_INTERRUPT_ENABLE"
+    InterruptHandler = "EIC_INTERRUPT_HANDLER"
+    InterruptHandlerLock = "EIC_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = "EIC_INTERRUPT_ENABLE_UPDATE"
+
+    NMIHandler = "NonMaskableInt_INTERRUPT_HANDLER"
+
+    Database.clearSymbolValue("core", NMIHandler)
+    Database.setSymbolValue("core", NMIHandler, "NMI" + eicInstanceIndex + "_InterruptHandler", 2)
+
+    # Interrupt Dynamic settings
+    eicSym_UpdateInterruptStatus = eicComponent.createBooleanSymbol("EIC_INTERRUPT_STATUS", None)
+    eicSym_UpdateInterruptStatus.setDependencies(updateEICInterruptStatus, ["EIC_INT"])
+    eicSym_UpdateInterruptStatus.setVisible(False)
+
+    # Interrupt Warning status
+    eicSym_IntEnComment = eicComponent.createCommentSymbol("EIC_INTERRUPT_ENABLE_COMMENT", None)
+    eicSym_IntEnComment.setVisible(False)
+    eicSym_IntEnComment.setLabel("Warning!!! EIC Interrupt is Disabled in Interrupt Manager")
+    eicSym_IntEnComment.setDependencies(updateEICInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+
+    # Clock Warning status
+    eicSym_ClkEnComment = eicComponent.createCommentSymbol("EIC_CLOCK_ENABLE_COMMENT", None)
+    eicSym_ClkEnComment.setLabel("Warning!!! EIC Peripheral Clock is Disabled in Clock Manager")
+    eicSym_ClkEnComment.setVisible(False)
+    eicSym_ClkEnComment.setDependencies(updateEICClockWarringStatus, ["core.EIC_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################

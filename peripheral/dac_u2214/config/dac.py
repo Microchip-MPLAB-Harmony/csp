@@ -1,3 +1,14 @@
+###################################################################################################
+########################################## Callbacks  #############################################
+###################################################################################################
+
+def updateDACClockWarringStatus(symbol, event):
+
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 ################################################################################
 ########                        DAC Data Base Components               #########
 ################################################################################
@@ -15,6 +26,10 @@ def instantiateComponent(dacComponent):
     dacSym_INDEX.setLabel("DAC_INDEX")
     dacSym_INDEX.setVisible(False)
     dacSym_INDEX.setDefaultValue(int(dacIntanceIndex))
+
+    #clock enable
+    Database.clearSymbolValue("core", "DAC_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "DAC_CLOCK_ENABLE", True, 2)
 
     #Run StandBy
     dacSym_CTRLA_RUNSTDBY = dacComponent.createBooleanSymbol("DAC_RUNSTDBY", dacSym_MENU)
@@ -72,6 +87,12 @@ def instantiateComponent(dacComponent):
     dacSym_EVCTRL_STARTEI = dacComponent.createBooleanSymbol("DAC_START_CONVERSION_EVENT_INPUT", dacSym_MENU)
     dacSym_EVCTRL_STARTEI.setLabel("Trigger conversion on input event?")
     dacSym_EVCTRL_STARTEI.setVisible(False)
+
+    # Clock Warning status
+    dacSym_ClkEnComment = dacComponent.createCommentSymbol("DAC_CLOCK_ENABLE_COMMENT", dacSym_MENU)
+    dacSym_ClkEnComment.setLabel("Warning!!! DAC Peripheral Clock is Disabled in Clock Manager")
+    dacSym_ClkEnComment.setVisible(False)
+    dacSym_ClkEnComment.setDependencies(updateDACClockWarringStatus, ["core.DAC_CLOCK_ENABLE"])
 
 ################################################################################
 ########                          Code Generation                      #########

@@ -56,6 +56,18 @@ def tcChannelVisible(symbol, event):
     else:
         symbol.setVisible(False)
 
+def updateTCCaptureInterruptValue(symbol, event):
+
+    errInt = Database.getSymbolValue("tc" + tcInstanceIndex, "TC_CAPTURE_ERR_INTERRUPT_MODE")
+    ovfInt = Database.getSymbolValue("tc" + tcInstanceIndex, "TC_CAPTURE_OVF_INTERRUPT_MODE")
+    mc0Int = Database.getSymbolValue("tc" + tcInstanceIndex, "TC_CAPTURE_INTSET_MC0")
+    mc1Int = Database.getSymbolValue("tc" + tcInstanceIndex, "TC_CAPTURE_INTSET_MC1")
+
+    symbol.clearValue()
+    if errInt or ovfInt or mc0Int or mc1Int:
+        symbol.setValue(True, 2)
+    else:
+        symbol.setValue(False, 2)
 
 ###################################################################################################
 ######################################## Capture Mode #############################################
@@ -138,3 +150,9 @@ tcSym_Capture_INTENSET_ERR.setLabel("Enable Capture Error Interrupt")
 #capture overflow interrupt
 tcSym_Capture_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_CAPTURE_OVF_INTERRUPT_MODE", tcSym_CaptureMenu)
 tcSym_Capture_INTENSET_OVF.setLabel("Enable Capture Overflow Interrupt")
+
+#capture interrupt
+global tcSym_Capture_InterruptMode
+tcSym_Capture_InterruptMode = tcComponent.createBooleanSymbol("TC_CAPTURE_INTERRUPT", tcSym_CaptureMenu)
+tcSym_Capture_InterruptMode.setVisible(False)
+tcSym_Capture_InterruptMode.setDependencies(updateTCCaptureInterruptValue, ["TC_CAPTURE_ERR_INTERRUPT_MODE", "TC_CAPTURE_OVF_INTERRUPT_MODE", "TC_CAPTURE_INTSET_MC0", "TC_CAPTURE_INTSET_MC1"])

@@ -1,3 +1,14 @@
+###################################################################################################
+########################################## Callbacks  #############################################
+###################################################################################################
+
+def updateDSUClockWarringStatus(symbol, event):
+
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 ################################################################################
 #############             DSU DATABASE COMPONENTS         ######################
 ################################################################################
@@ -7,18 +18,28 @@ def instantiateComponent(dsuComponent):
     dsuInstanceIndex = dsuComponent.getID()[-1:]
     Log.writeInfoMessage("Running DSU" + str(dsuInstanceIndex))
 
+    #clock enable
+    Database.clearSymbolValue("core", "DSU_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "DSU_CLOCK_ENABLE", True, 2)
+
     #dsu main menu
     dsuSym_Menu = dsuComponent.createBooleanSymbol("DSU_MENU", None)
     dsuSym_Menu.setLabel("DSU MODULE SETTINGS ")
     dsuSym_Menu.setVisible(False)
     dsuSym_Menu.setDefaultValue(True)
 
-    dsuSym_Comment = dsuComponent.createCommentSymbol(None, None)
+    dsuSym_Comment = dsuComponent.createCommentSymbol("DSU_CONFIG_COMMENT", dsuSym_Menu)
     dsuSym_Comment.setLabel("*** This component does not contain any configuration settings ***")
 
-    dsuSym_INDEX = dsuComponent.createIntegerSymbol("DSU_INDEX",dsuSym_Menu)
+    dsuSym_INDEX = dsuComponent.createIntegerSymbol("DSU_INDEX", dsuSym_Menu)
     dsuSym_INDEX.setDefaultValue(int(dsuInstanceIndex))
     dsuSym_INDEX.setVisible(False)
+
+    # Clock Warning status
+    dsuSym_ClkEnComment = dsuComponent.createCommentSymbol("DSU_CLOCK_ENABLE_COMMENT", dsuSym_Menu)
+    dsuSym_ClkEnComment.setLabel("Warning!!! DSU Peripheral Clock is Disabled in Clock Manager")
+    dsuSym_ClkEnComment.setVisible(False)
+    dsuSym_ClkEnComment.setDependencies(updateDSUClockWarringStatus, ["core.DSU_CLOCK_ENABLE"])
 
 ################################################################################
 #############             CODE GENERATION             ##########################

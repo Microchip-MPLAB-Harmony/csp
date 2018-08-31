@@ -44,6 +44,7 @@ tcSym_TimerPeriod_Comment = tcComponent.createCommentSymbol("TC_TIMER_PERIOD_COM
 tcSym_TimerPeriod_Comment.setLabel("**** Timer Period is 1 us ****")
 
 #timer interrupt mode
+global tcSym_Timer_INTENSET
 tcSym_Timer_INTENSET = tcComponent.createBooleanSymbol("TC_TIMER_INTERRUPT_MODE", tcSym_TimerMenu)
 tcSym_Timer_INTENSET.setLabel("Enable Timer Period Interrupt")
 tcSym_Timer_INTENSET.setDefaultValue(True)

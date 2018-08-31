@@ -129,6 +129,8 @@ bool TC${TC_INDEX}_TimerPeriodHasExpired( void );
 <#if TC_TIMER_INTERRUPT_MODE = true>
 
 void TC${TC_INDEX}_TimerCallbackRegister( TC_CALLBACK callback, uintptr_t context );
+
+void TC${TC_INDEX}_TimerInterruptHandler( void );
 </#if>
 
 

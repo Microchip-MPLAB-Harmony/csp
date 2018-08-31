@@ -1,3 +1,40 @@
+global InterruptVector
+global InterruptHandler
+global InterruptHandlerLock
+global nvmctrlInstanceIndex
+global nvmctrlSym_Interrupt
+
+###################################################################################################
+########################################## Callbacks  #############################################
+###################################################################################################
+
+def updateNVMCTRLInterruptStatus(symbol, event):
+
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandler)
+
+    if event["value"] == True:
+        Database.setSymbolValue("core", InterruptHandler, "NVMCTRL" + nvmctrlInstanceIndex + "_InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, "NVMCTRL_Handler", 2)
+
+def updateNVMCTRLInterruptWarringStatus(symbol, event):
+
+    if nvmctrlSym_Interrupt.getValue() == True:
+        symbol.setVisible(event["value"])
+
+def updateNVMCTRLClockWarringStatus(symbol, event):
+
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -10,12 +47,22 @@ def nvmctlrSetMemoryDependency(symbol, event):
 
 def instantiateComponent(nvmctrlComponent):
 
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+    global nvmctrlInstanceIndex
+    global nvmctrlSym_Interrupt
+
     nvmctrlInstanceIndex = nvmctrlComponent.getID()[-1:]
     Log.writeInfoMessage("Running NVMCTRL" + str(nvmctrlInstanceIndex))
 
     #main menu
     nvmctrlSym_Menu = nvmctrlComponent.createMenuSymbol("NVMCTRL_MENU", None)
     nvmctrlSym_Menu.setLabel("Hardware Settings ")
+
+    #clock enable
+    Database.clearSymbolValue("core", "NVMCTRL_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "NVMCTRL_CLOCK_ENABLE", True, 2)
 
     #Flash Address
     nvmctrlFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FLASH\"]")
@@ -146,7 +193,7 @@ def instantiateComponent(nvmctrlComponent):
 
     #Configures the library for interrupt mode operations
     nvmctrlSym_Interrupt = nvmctrlComponent.createBooleanSymbol("NVMCTRL_INTERRUPT_MODE", nvmctrlSym_Menu)
-    nvmctrlSym_Interrupt.setLabel("Enable Interrupt?")
+    nvmctrlSym_Interrupt.setLabel("Enable Interrupt ?")
     nvmctrlSym_Interrupt.setDefaultValue(False)
 
     #Configuration when interfaced with memory driver
@@ -202,6 +249,32 @@ def instantiateComponent(nvmctrlComponent):
     efcEraseApiName.setReadOnly(True)
     efcEraseApiName.setDefaultValue(eraseApiName)
 
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    InterruptVector = "NVMCTRL_INTERRUPT_ENABLE"
+    InterruptHandler = "NVMCTRL_INTERRUPT_HANDLER"
+    InterruptHandlerLock = "NVMCTRL_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = "NVMCTRL_INTERRUPT_ENABLE_UPDATE"
+
+    # Interrupt Dynamic settings
+    nvmctrlSym_UpdateInterruptStatus = nvmctrlComponent.createBooleanSymbol("NVMCTRL_INTERRUPT_STATUS", None)
+    nvmctrlSym_UpdateInterruptStatus.setDependencies(updateNVMCTRLInterruptStatus, ["NVMCTRL_INTERRUPT_MODE"])
+    nvmctrlSym_UpdateInterruptStatus.setVisible(False)
+
+    # Interrupt Warning status
+    nvmctrlSym_IntEnComment = nvmctrlComponent.createCommentSymbol("NVMCTRL_INTERRUPT_ENABLE_COMMENT", None)
+    nvmctrlSym_IntEnComment.setVisible(False)
+    nvmctrlSym_IntEnComment.setLabel("Warning!!! NVMCTRL Interrupt is Disabled in Interrupt Manager")
+    nvmctrlSym_IntEnComment.setDependencies(updateNVMCTRLInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+
+    # Clock Warning status
+    nvmctrlSym_ClkEnComment = nvmctrlComponent.createCommentSymbol("NVMCTRL_CLOCK_ENABLE_COMMENT", None)
+    nvmctrlSym_ClkEnComment.setLabel("Warning!!! NVMCTRL Peripheral Clock is Disabled in Clock Manager")
+    nvmctrlSym_ClkEnComment.setVisible(False)
+    nvmctrlSym_ClkEnComment.setDependencies(updateNVMCTRLClockWarringStatus, ["core.NVMCTRL_CLOCK_ENABLE"])
+
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################
@@ -214,7 +287,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_HeaderFile = nvmctrlComponent.createFileSymbol("NVMCTRL_HEADER", None)
     nvmctrlSym_HeaderFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/plib_nvmctrl.h.ftl")
     nvmctrlSym_HeaderFile.setOutputName("plib_nvmctrl"+str(nvmctrlInstanceIndex)+".h")
-    nvmctrlSym_HeaderFile.setDestPath("peripheral/nvmctrl/")
+    nvmctrlSym_HeaderFile.setDestPath("/peripheral/nvmctrl/")
     nvmctrlSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/nvmctrl/")
     nvmctrlSym_HeaderFile.setType("HEADER")
     nvmctrlSym_HeaderFile.setMarkup(True)
@@ -222,7 +295,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_SourceFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SOURCE", None)
     nvmctrlSym_SourceFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/plib_nvmctrl.c.ftl")
     nvmctrlSym_SourceFile.setOutputName("plib_nvmctrl"+str(nvmctrlInstanceIndex)+".c")
-    nvmctrlSym_SourceFile.setDestPath("peripheral/nvmctrl/")
+    nvmctrlSym_SourceFile.setDestPath("/peripheral/nvmctrl/")
     nvmctrlSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/nvmctrl/")
     nvmctrlSym_SourceFile.setType("SOURCE")
     nvmctrlSym_SourceFile.setMarkup(True)
@@ -238,7 +311,3 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     nvmctrlSystemDefFile.setType("STRING")
     nvmctrlSystemDefFile.setMarkup(True)
-
-
-
-

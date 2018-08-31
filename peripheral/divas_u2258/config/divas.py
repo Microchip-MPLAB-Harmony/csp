@@ -2,6 +2,11 @@
 ##############           Callbacks               ###############################
 ################################################################################
 
+def updateDIVASClockWarringStatus(symbol, event):
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
 ################################################################################
 ##############           DIVAS DATABASE COMPONENTS               ###############
@@ -17,12 +22,22 @@ def instantiateComponent(divasComponent):
     divasSym_INDEX.setVisible(False)
     divasSym_INDEX.setDefaultValue(int(num))
 
+    #clock enable
+    Database.clearSymbolValue("core", "DIVAS_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "DIVAS_CLOCK_ENABLE", True, 2)
+
     #Enable or Disable lead zero optimization
-    divasSym_DLZ= divasComponent.createBooleanSymbol("DIVAS_DLZ", None)
+    divasSym_DLZ = divasComponent.createBooleanSymbol("DIVAS_DLZ", None)
     divasSym_DLZ.setLabel("Enable Leading Zero optimization to reduce division time?")
     divasSym_DLZ.setDescription("32 bit divisions take 2-16 cycles when enabled; 16 cycles when disabled")
     divasSym_DLZ.setVisible(True)
     divasSym_DLZ.setDefaultValue(1)
+
+    # Clock Warning status
+    divasSym_ClkEnComment = divasComponent.createCommentSymbol("DIVAS_CLOCK_ENABLE_COMMENT", None)
+    divasSym_ClkEnComment.setLabel("Warning!!! DIVAS Peripheral Clock is Disabled in Clock Manager")
+    divasSym_ClkEnComment.setVisible(False)
+    divasSym_ClkEnComment.setDependencies(updateDIVASClockWarringStatus, ["core.DIVAS_CLOCK_ENABLE"])
 
 ################################################################################
 ###################     Code Generation            #############################
