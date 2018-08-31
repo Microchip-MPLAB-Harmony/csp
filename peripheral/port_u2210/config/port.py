@@ -1,5 +1,10 @@
 Log.writeInfoMessage("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 import re
+
+global peripheralFunctionality
+
+peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH", "SWITCH_AL"]
+
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
@@ -70,7 +75,7 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
             cfgValue |= (1 << 1)
         if inputEnable == "False":
             cfgValue &= ~ (1 << 1)
-        if (peripheralFunc != "GPIO") == True and (peripheralFunc != "") == True and (peripheralFunc != "Alternate") == True:
+        if peripheralFunc not in peripheralFunctionality and peripheralFunc != "":
             cfgValue |= (1 << 0)
         else :
             cfgValue &= ~ (1 << 0)
@@ -127,7 +132,7 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
 
         peripheralFuncVal = 0
 
-        if (event["value"] != "GPIO") == True and (event["value"] != "") == True and (event["value"] != "Alternate") == True:
+        if event["value"] not in peripheralFunctionality and event["value"] != "":
 
             prePinMuxVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
             intPrePinMuxVal = int(prePinMuxVal,0)
