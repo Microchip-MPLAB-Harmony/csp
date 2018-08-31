@@ -103,6 +103,8 @@ void SDADC${SDADC_INDEX}_ComparisonWindowSet(int16_t low_threshold, int16_t high
 
 <#if SDADC_INTERRUPT_MODE == true>
 void SDADC${SDADC_INDEX}_CallbackRegister(SDADC_CALLBACK callback, uintptr_t context);
+
+void SDADC${SDADC_INDEX}_InterruptHandler( void );
 </#if>
 
 

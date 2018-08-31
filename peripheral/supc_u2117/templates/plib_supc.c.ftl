@@ -120,30 +120,32 @@ void SUPC${SUPC_INDEX}_Initialize( void )
     /* Clear all flags */
     SUPC_REGS->SUPC_INTFLAG = SUPC_INTFLAG_Msk;
 
-    <#if SUPC_BODVDD_ACTCFG = "Sampling Mode" || SUPC_BODVDD_STDBYCFG = "Sampling Mode">
+    <#if SUPC_BODVDD_ACTCFG == "1" || (SUPC_BODVDD_STDBYCFG == "1" && SUPC_BODVDD_RUNSTDBY == true)>
     /* Configure Brown out detector prescaler & standby/active mode */
     <@compress single_line=true>SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_PSEL_${SUPC_BODVDD_PSEL}
-                                                        ${SUPC_BODVDD_RUNSTDBY?then('| SUPC_BODVDD_RUNSTDBY_Msk', '')}
-                                                        ${(SUPC_BODVDD_ACTCFG?starts_with("Sampling"))?then('| SUPC_BODVDD_ACTCFG_Msk', '')}
-                                                        ${(SUPC_BODVDD_STDBYCFG?starts_with("Sampling"))?then('| SUPC_BODVDD_STDBYCFG_Msk', '')};</@compress>
+                                                          ${SUPC_BODVDD_RUNSTDBY?then('| SUPC_BODVDD_RUNSTDBY_Msk', '')}
+                                                          ${(SUPC_BODVDD_ACTCFG == "1")?then('| SUPC_BODVDD_ACTCFG_Msk', '')}
+                                                          ${((SUPC_BODVDD_STDBYCFG == "1") && (SUPC_BODVDD_RUNSTDBY == true))?then('| SUPC_BODVDD_STDBYCFG_Msk', '')};</@compress>
     <#else>
         <#if SUPC_BODVDD_RUNSTDBY == true>
     /* Configure Brown out detector standby sleep mode */
-        SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_RUNSTDBY_Msk;
+    SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_RUNSTDBY_Msk;
         </#if>
     </#if>
 
+    <#if SUPC_VREG_RUNSTDBY == "1">
     /* Configure voltage regulator standby sleep mode */
-    SUPC_REGS->SUPC_VREG |= 0 ${(SUPC_VREG_RUNSTDBY?starts_with("Normal"))?then('| SUPC_VREG_RUNSTDBY_Msk', '')};
+    SUPC_REGS->SUPC_VREG |= SUPC_VREG_RUNSTDBY_Msk;
+    </#if>
 
     /* Enable BODVDD detect interrupt */
     SUPC_REGS->SUPC_INTENSET = SUPC_INTFLAG_BODVDDDET_Msk;
 
     /* Configure VREF reference, level, availability */
     <@compress single_line=true>SUPC_REGS->SUPC_VREF = SUPC_VREF_SEL_${SUPC_VREF_SEL}
-                                                     ${SUPC_VREF_VREFOE?then('| SUPC_VREF_VREFOE_Msk', '')}
-                                                     ${(SUPC_VREF_RUNSTDBY?starts_with("Available"))?then('| SUPC_VREF_RUNSTDBY_Msk', '')}
-                                                     ${(SUPC_VREF_ONDEMAND?starts_with("Only"))?then('| SUPC_VREF_ONDEMAND_Msk', '')};</@compress>
+                                                       ${SUPC_VREF_VREFOE?then('| SUPC_VREF_VREFOE_Msk', '')}
+                                                       ${(SUPC_VREF_RUNSTDBY == "1")?then('| SUPC_VREF_RUNSTDBY_Msk', '')}
+                                                       ${(SUPC_VREF_ONDEMAND == "1")?then('| SUPC_VREF_ONDEMAND_Msk', '')};</@compress>
 }
 
 // *****************************************************************************
@@ -210,7 +212,7 @@ void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, ui
     This function will trigger BODVDD callback.
 
   Remarks:
-    None.
+    plib_supc${SUPC_INDEX}.h for usage information.
 */
 
 void SUPC${SUPC_INDEX}_InterruptHandler( void )

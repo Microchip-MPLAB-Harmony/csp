@@ -2,6 +2,12 @@ global tcInstanceMasterValue
 global isMasterSlaveModeEnable
 global tySym_Slave_Mode
 global tcSym_OperationMode
+
+global InterruptVector
+global InterruptHandler
+global InterruptHandlerLock
+global tcInstanceIndex
+
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -46,6 +52,62 @@ def tcSlaveModeSet(symbol, event):
     else:
         symbol.setVisible(False)
         symbol.setValue(False, 2)
+
+def setTCInterruptData(status, tcMode):
+
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, status, 2)
+
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, status, 2)
+
+    Database.clearSymbolValue("core", InterruptHandler)
+
+    if status == True:
+        Database.setSymbolValue("core", InterruptHandler, "TC" + tcInstanceIndex + "_" + tcMode + "InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, "TC" + tcInstanceIndex + "_Handler", 2)
+
+def updateTCInterruptStatus(symbol, event):
+
+    global tcSym_Timer_INTENSET
+    global tcSym_Compare_INTENSET_OVF
+    global tcSym_Capture_InterruptMode
+    global tcSym_OperationMode
+
+    if event["id"] == "TC_OPERATION_MODE":
+        tcInterruptStatus = False
+        tcTimerMode = (event["value"] == "Timer") and (tcSym_Timer_INTENSET.getValue() == True)
+        tcCompareMode = (event["value"] == "Compare") and (tcSym_Compare_INTENSET_OVF.getValue() == True)
+        tcCaptureMode = (event["value"] == "Capture") and (tcSym_Capture_InterruptMode.getValue() == True)
+
+        if tcTimerMode == True or tcCompareMode == True or tcCaptureMode == True:
+            tcInterruptStatus = True
+
+        setTCInterruptData(tcInterruptStatus, event["value"])
+    else:
+        setTCInterruptData(event["value"], tcSym_OperationMode.getValue())
+
+def updateTCInterruptWarringStatus(symbol, event):
+
+    global tcSym_Timer_INTENSET
+    global tcSym_Compare_INTENSET_OVF
+    global tcSym_Capture_InterruptMode
+    global tcSym_OperationMode
+
+    tcTimerMode = (tcSym_OperationMode.getValue() == "Timer") and (tcSym_Timer_INTENSET.getValue() == True)
+    tcCompareMode = (tcSym_OperationMode.getValue() == "Compare") and (tcSym_Compare_INTENSET_OVF.getValue() == True)
+    tcCaptureMode = (tcSym_OperationMode.getValue() == "Capture") and (tcSym_Capture_InterruptMode.getValue() == True)
+
+    if tcTimerMode == True or tcCompareMode == True or tcCaptureMode == True:
+        symbol.setVisible(event["value"])
+
+def updateTCClockWarringStatus(symbol, event):
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -54,8 +116,17 @@ def instantiateComponent(tcComponent):
 
     """ Function to instantiate tcComponent to Active Component """
 
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+    global tcInstanceIndex
+
     tcInstanceIndex = tcComponent.getID()[-1:]
     Log.writeInfoMessage("Running TC" + str(tcInstanceIndex))
+
+    #clock enable
+    Database.clearSymbolValue("core", "TC" + tcInstanceIndex + "_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "TC" + tcInstanceIndex + "_CLOCK_ENABLE", True, 2)
 
     #index
     tcSym_Index = tcComponent.createIntegerSymbol("TC_INDEX", None)
@@ -174,14 +245,52 @@ def instantiateComponent(tcComponent):
     tcSym_CTRLA_ONDEMAND = tcComponent.createBooleanSymbol("TC_CTRLA_ONDEMAND", tcSym_SleepConfiguration)
     tcSym_CTRLA_ONDEMAND.setLabel("Clock On Demand")
 
+    tcModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]")
+    tcModuleID = tcModuleNode.getAttribute("id")
+
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_" + tcModuleID + "/config/tc_timer.py")
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_" + tcModuleID + "/config/tc_compare.py")
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_" + tcModuleID + "/config/tc_capture.py")
+
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    InterruptVector = "TC" + tcInstanceIndex + "_INTERRUPT_ENABLE"
+    InterruptHandler = "TC" + tcInstanceIndex + "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = "TC" + tcInstanceIndex + "_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = "TC" + tcInstanceIndex + "_INTERRUPT_ENABLE_UPDATE"
+
+    # Initial settings for CLK and Interrupt
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, True, 2)
+    Database.clearSymbolValue("core", InterruptHandler)
+    Database.setSymbolValue("core", InterruptHandler, "TC" + tcInstanceIndex + "_TimerInterruptHandler", 2)
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
+
+    # Interrupt Dynamic settings
+    tcSym_UpdateInterruptStatus = tcComponent.createBooleanSymbol("TC_INTERRUPT_STATUS", None)
+    tcSym_UpdateInterruptStatus.setDependencies(updateTCInterruptStatus, ["TC_OPERATION_MODE", "TC_TIMER_INTERRUPT_MODE", "TC_COMPARE_INTENSET_OVF", "TC_CAPTURE_INTERRUPT"])
+    tcSym_UpdateInterruptStatus.setVisible(False)
+
+    # Interrupt Warning status
+    tcSym_IntEnComment = tcComponent.createCommentSymbol("TC_INTERRUPT_ENABLE_COMMENT", None)
+    tcSym_IntEnComment.setVisible(False)
+    tcSym_IntEnComment.setLabel("Warning!!! TC" + tcInstanceIndex + " Interrupt is Disabled in Interrupt Manager")
+    tcSym_IntEnComment.setDependencies(updateTCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+
+    # Clock Warning status
+    tcSym_ClkEnComment = tcComponent.createCommentSymbol("TC_CLOCK_ENABLE_COMMENT", None)
+    tcSym_ClkEnComment.setLabel("Warning!!! TC Peripheral Clock is Disabled in Clock Manager")
+    tcSym_ClkEnComment.setVisible(False)
+    tcSym_ClkEnComment.setDependencies(updateTCClockWarringStatus, ["core.TC" + tcInstanceIndex + "_CLOCK_ENABLE"])
+
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
-
-    tcModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]")
-    tcModuleID = tcModuleNode.getAttribute("id")
 
     tcSym_CommonHeaderFile = tcComponent.createFileSymbol("TC_COMMON_HEADER", None)
     tcSym_CommonHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/plib_tc.h")
@@ -250,7 +359,3 @@ def instantiateComponent(tcComponent):
     tcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     tcSym_SystemDefFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/system/definitions.h.ftl")
     tcSym_SystemDefFile.setMarkup(True)
-
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_u2249/config/tc_timer.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_u2249/config/tc_compare.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_u2249/config/tc_capture.py")

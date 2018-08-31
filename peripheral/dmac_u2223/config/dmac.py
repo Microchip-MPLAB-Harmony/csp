@@ -12,6 +12,8 @@ global dmacSourceFile
 global dmacSystemInitFile
 global dmacSystemDefFile
 
+global dmacEnable
+
 # Parse atdf xml file to get instance name for the peripheral which has DMA id.
 # And construct a list of PERIDs
 
@@ -153,11 +155,44 @@ def dmacGlobalLogic(symbol, event):
 
 def onGlobalEnableLogic(symbol, event):
 
+    #clock enable
+    Database.clearSymbolValue("core", "DMAC_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "DMAC_CLOCK_ENABLE", event["value"], 2)
+
+    InterruptVector = "DMAC_INTERRUPT_ENABLE"
+    InterruptHandler = "DMAC_INTERRUPT_HANDLER"
+    InterruptHandlerLock = "DMAC_INTERRUPT_HANDLER_LOCK"
+
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandler)
+
+    if event["value"] == True:
+        Database.setSymbolValue("core", InterruptHandler, "DMAC0_InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, "DMAC_Handler", 2)
+
     # File generation logic
     dmacHeaderFile.setEnabled(event["value"])
     dmacSourceFile.setEnabled(event["value"])
     dmacSystemInitFile.setEnabled(event["value"])
     dmacSystemDefFile.setEnabled(event["value"])
+
+def updateDMACInterruptWarringStatus(symbol, event):
+
+    if dmacEnable.getValue() == True:
+        symbol.setVisible(event["value"])
+
+def updateDMACClockWarringStatus(symbol, event):
+
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
 def dmacTriggerCalc(symbol, event):
 
@@ -403,6 +438,20 @@ dmacPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", 
 dmacPERIDChannelUpdate.setLabel("Local dmacChannelAllocLogic")
 dmacPERIDChannelUpdate.setVisible(False)
 dmacPERIDChannelUpdate.setDependencies(dmacChannelAllocLogic, peridValueListSymbols)
+
+InterruptVectorUpdate = "DMAC_INTERRUPT_ENABLE_UPDATE"
+
+# Interrupt Warning status
+dmacSym_IntEnComment = coreComponent.createCommentSymbol("DMAC_INTERRUPT_ENABLE_COMMENT", dmacMenu)
+dmacSym_IntEnComment.setVisible(False)
+dmacSym_IntEnComment.setLabel("Warning!!! DMAC Interrupt is Disabled in Interrupt Manager")
+dmacSym_IntEnComment.setDependencies(updateDMACInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+
+# Clock Warning status
+dmacSym_ClkEnComment = coreComponent.createCommentSymbol("DMAC_CLOCK_ENABLE_COMMENT", dmacMenu)
+dmacSym_ClkEnComment.setLabel("Warning!!! DMAC Peripheral Clock is Disabled in Clock Manager")
+dmacSym_ClkEnComment.setVisible(False)
+dmacSym_ClkEnComment.setDependencies(updateDMACClockWarringStatus, ["core.DMAC_CLOCK_ENABLE"])
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################

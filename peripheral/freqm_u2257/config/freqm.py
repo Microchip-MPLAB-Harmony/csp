@@ -1,7 +1,57 @@
+global InterruptVector
+global InterruptHandler
+global InterruptHandlerLock
+global freqmInstanceIndex
+
+###################################################################################################
+########################################## Callbacks  #############################################
+###################################################################################################
+
+def updateFREQMInterruptStatus(symbol, event):
+
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandler)
+
+    if event["value"] == True:
+        Database.setSymbolValue("core", InterruptHandler, "FREQM" + freqmInstanceIndex + "_InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, "FREQM_Handler", 2)
+
+def updateFREQMInterruptWarringStatus(symbol, event):
+
+    if freqmSym_INTERRUPTMODE.getValue() == True:
+        symbol.setVisible(event["value"])
+
+def updateFREQMREFClockWarringStatus(symbol, event):
+
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def updateFREQMMSRClockWarringStatus(symbol, event):
+
+    if event["value"] == False:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 ################################################################################
 ##########             FREQM DATABASE COMPONENTS           #####################
 ################################################################################
+
 def instantiateComponent(freqmComponent):
+
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+    global freqmInstanceIndex
+    global freqmSym_INTERRUPTMODE
 
     freqmInstanceIndex = freqmComponent.getID()[-1:]
     Log.writeInfoMessage("Running FREQM" + str(freqmInstanceIndex))
@@ -11,11 +61,17 @@ def instantiateComponent(freqmComponent):
     freqmSym_INDEX.setVisible(False)
     freqmSym_INDEX.setDefaultValue(int(freqmInstanceIndex))
 
+    #clock enable
+    Database.clearSymbolValue("core", "FREQM_REF_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "FREQM_REF_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", "FREQM_MSR_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "FREQM_MSR_CLOCK_ENABLE", True, 2)
+
     #FREQM Interrupt Mode
-    freqSym_INTERRUPTMODE = freqmComponent.createBooleanSymbol("FREQM_INTERRUPT_MODE", None)
-    freqSym_INTERRUPTMODE.setLabel("Enable Interrupt?")
-    freqSym_INTERRUPTMODE.setDescription("Selection of polled or Interrupt Mode")
-    freqSym_INTERRUPTMODE.setDefaultValue(False)
+    freqmSym_INTERRUPTMODE = freqmComponent.createBooleanSymbol("FREQM_INTERRUPT_MODE", None)
+    freqmSym_INTERRUPTMODE.setLabel("Enable Interrupt?")
+    freqmSym_INTERRUPTMODE.setDescription("Selection of polled or Interrupt Mode")
+    freqmSym_INTERRUPTMODE.setDefaultValue(False)
 
     #Selection of the Reference Clock Cycles
     freqmSym_CFGA_REFNUM = freqmComponent.createIntegerSymbol("REF_CLK_CYCLES", None)
@@ -40,6 +96,37 @@ def instantiateComponent(freqmComponent):
     freqmSym_Comment = freqmComponent.createCommentSymbol("FREQM_COMMENT",None)
     freqmSym_Comment.setLabel("*** Reference clock must be slower than Measurement clock ***")
 
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    InterruptVector = "FREQM_INTERRUPT_ENABLE"
+    InterruptHandler = "FREQM_INTERRUPT_HANDLER"
+    InterruptHandlerLock = "FREQM_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = "FREQM_INTERRUPT_ENABLE_UPDATE"
+
+    # Interrupt Dynamic settings
+    freqmSym_UpdateInterruptStatus = freqmComponent.createBooleanSymbol("FREQM_INTERRUPT_STATUS", None)
+    freqmSym_UpdateInterruptStatus.setDependencies(updateFREQMInterruptStatus, ["FREQM_INTERRUPT_MODE"])
+    freqmSym_UpdateInterruptStatus.setVisible(False)
+
+    # Interrupt Warning status
+    freqmSym_IntEnComment = freqmComponent.createCommentSymbol("FREQM_INTERRUPT_ENABLE_COMMENT", None)
+    freqmSym_IntEnComment.setVisible(False)
+    freqmSym_IntEnComment.setLabel("Warning!!! FREQM Interrupt is Disabled in Interrupt Manager")
+    freqmSym_IntEnComment.setDependencies(updateFREQMInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+
+    # Clock Warning status
+    freqmSym_REFClkEnComment = freqmComponent.createCommentSymbol("FREQM_REF_CLOCK_ENABLE_COMMENT", None)
+    freqmSym_REFClkEnComment.setLabel("Warning!!! FREQM Peripheral Reference Clock is Disabled in Clock Manager")
+    freqmSym_REFClkEnComment.setVisible(False)
+    freqmSym_REFClkEnComment.setDependencies(updateFREQMREFClockWarringStatus, ["core.FREQM_REF_CLOCK_ENABLE"])
+
+    freqmSym_MSRClkEnComment = freqmComponent.createCommentSymbol("FREQM_MSR_CLOCK_ENABLE_COMMENT", None)
+    freqmSym_MSRClkEnComment.setLabel("Warning!!! FREQM Peripheral Measurement Clock is Disabled in Clock Manager")
+    freqmSym_MSRClkEnComment.setVisible(False)
+    freqmSym_MSRClkEnComment.setDependencies(updateFREQMMSRClockWarringStatus, ["core.FREQM_MSR_CLOCK_ENABLE"])
+
 ################################################################################
 ##########             CODE GENERATION             #############################
 ################################################################################
@@ -52,7 +139,7 @@ def instantiateComponent(freqmComponent):
     freqmSym_HeaderFile = freqmComponent.createFileSymbol("FREQM_HEADER", None)
     freqmSym_HeaderFile.setSourcePath("../peripheral/freqm_"+freqmModuleID+"/templates/plib_freqm.h.ftl")
     freqmSym_HeaderFile.setOutputName("plib_freqm"+str(freqmInstanceIndex)+".h")
-    freqmSym_HeaderFile.setDestPath("peripheral/freqm")
+    freqmSym_HeaderFile.setDestPath("/peripheral/freqm")
     freqmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/freqm")
     freqmSym_HeaderFile.setType("HEADER")
     freqmSym_HeaderFile.setMarkup(True)
@@ -60,7 +147,7 @@ def instantiateComponent(freqmComponent):
     freqmSym_SourceFile = freqmComponent.createFileSymbol("FREQM_SOURCE", None)
     freqmSym_SourceFile.setSourcePath("../peripheral/freqm_"+freqmModuleID+"/templates/plib_freqm.c.ftl")
     freqmSym_SourceFile.setOutputName("plib_freqm"+str(freqmInstanceIndex)+".c")
-    freqmSym_SourceFile.setDestPath("peripheral/freqm")
+    freqmSym_SourceFile.setDestPath("/peripheral/freqm")
     freqmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/freqm")
     freqmSym_SourceFile.setType("SOURCE")
     freqmSym_SourceFile.setMarkup(True)

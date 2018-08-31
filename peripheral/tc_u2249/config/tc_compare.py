@@ -86,6 +86,7 @@ tcSym_Compare_CTRLBSET_LUPD.setLabel("Enable Double Buffering")
 tcSym_Compare_CTRLBSET_LUPD.setDefaultValue(True)
 
 #compare channel counter/compare interrupt
+global tcSym_Compare_INTENSET_OVF
 tcSym_Compare_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_COMPARE_INTENSET_OVF", tcSym_CompareMenu)
 tcSym_Compare_INTENSET_OVF.setLabel("Enable Period Interrupt")
 tcSym_Compare_INTENSET_OVF.setDefaultValue(False)

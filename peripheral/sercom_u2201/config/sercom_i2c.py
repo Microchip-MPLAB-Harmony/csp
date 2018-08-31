@@ -34,6 +34,14 @@ def seti2cmNumberTRBsVisibleProperty(symbol, event):
 ############################################# I2C #################################################
 ###################################################################################################
 
+global i2cSym_Interrupt_Mode
+
+#I2C Interrupt Mode
+i2cSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("I2C_INTERRUPT_MODE", sercomSym_OperationMode)
+i2cSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
+i2cSym_Interrupt_Mode.setDefaultValue(True)
+i2cSym_Interrupt_Mode.setVisible(False)
+
 # Number of Transaction request blocks
 i2cmSym_NumTRBs = sercomComponent.createIntegerSymbol("I2CM_NUM_TRBS", sercomSym_OperationMode)
 i2cmSym_NumTRBs.setLabel("Number of Transfer Request Blocks (TRBs)")

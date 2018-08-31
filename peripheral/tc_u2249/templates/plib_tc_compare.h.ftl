@@ -133,6 +133,8 @@ bool TC${TC_INDEX}_CompareStatusGet( void );
 <#if TC_COMPARE_INTENSET_OVF = true>
 
 void TC${TC_INDEX}_CompareCallbackRegister( TC_CALLBACK callback, uintptr_t context );
+
+void TC${TC_INDEX}_CompareInterruptHandler( void );
 </#if>
 
 

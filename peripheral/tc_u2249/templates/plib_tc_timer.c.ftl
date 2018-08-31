@@ -298,7 +298,7 @@ void TC${TC_INDEX}_TimerCallbackRegister( TC_CALLBACK callback, uintptr_t contex
 }
 
 /* Timer Interrupt handler */
-void TC${TC_INDEX}_InterruptHandler( void )
+void TC${TC_INDEX}_TimerInterruptHandler( void )
 {
     TC${TC_INDEX}_TimerStatus = TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
     if(TC${TC_INDEX}_CallbackObject.callback != NULL)

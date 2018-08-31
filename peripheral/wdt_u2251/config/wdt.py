@@ -1,6 +1,32 @@
+global InterruptVector
+global InterruptHandler
+global InterruptHandlerLock
+global wdtSym_Use
+global wdtSym_CTRLA_EW
+
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+
+def updateWDTInterruptStatus(symbol, event):
+
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandler)
+
+    if event["value"] == True:
+        Database.setSymbolValue("core", InterruptHandler, "WDT0_InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, "WDT_Handler", 2)
+
+def updateWDTInterruptWarringStatus(symbol, event):
+
+    if wdtSym_CTRLA_EW.getValue() == True and wdtSym_Use.getValue() == True:
+        symbol.setVisible(event["value"])
 
 def updateWDTEnarlyInterruptVisibleProperty(symbol, event):
 
@@ -11,6 +37,20 @@ def updateWDTEnarlyInterruptVisibleProperty(symbol, event):
     component.getSymbolByID("WDT_SYS_INIT").setEnabled(event["value"])
 
     symbol.setVisible(event["value"])
+
+    if wdtSym_CTRLA_EW.getValue() == True:
+        Database.clearSymbolValue("core", InterruptVector)
+        Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+
+        Database.clearSymbolValue("core", InterruptHandlerLock)
+        Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+
+        Database.clearSymbolValue("core", InterruptHandler)
+
+        if event["value"] == True:
+            Database.setSymbolValue("core", InterruptHandler, "WDT0_InterruptHandler", 2)
+        else:
+            Database.setSymbolValue("core", InterruptHandler, "WDT0_Handler", 2)
 
     Log.writeInfoMessage("updateWDTEnarlyInterruptVisibleProperty is : " + str(event["value"]))
 
@@ -36,6 +76,26 @@ wdtSym_CTRLA_EW = coreComponent.createBooleanSymbol("WDT_EW_ENABLE", wdtSym_Use)
 wdtSym_CTRLA_EW.setLabel("Enable Watchdog Early Interrupt")
 wdtSym_CTRLA_EW.setVisible(False)
 wdtSym_CTRLA_EW.setDependencies(updateWDTEnarlyInterruptVisibleProperty, ["WDT_USE"])
+
+############################################################################
+#### Dependency ####
+############################################################################
+
+InterruptVector = "WDT_INTERRUPT_ENABLE"
+InterruptHandler = "WDT_INTERRUPT_HANDLER"
+InterruptHandlerLock = "WDT_INTERRUPT_HANDLER_LOCK"
+InterruptVectorUpdate = "WDT_INTERRUPT_ENABLE_UPDATE"
+
+# Interrupt Dynamic settings
+wdtSym_UpdateInterruptStatus = coreComponent.createBooleanSymbol("WDT_INTERRUPT_STATUS", wdtSym_Use)
+wdtSym_UpdateInterruptStatus.setDependencies(updateWDTInterruptStatus, ["WDT_EW_ENABLE"])
+wdtSym_UpdateInterruptStatus.setVisible(False)
+
+# Interrupt Warning status
+wdtSym_IntEnComment = coreComponent.createCommentSymbol("WDT_INTERRUPT_ENABLE_COMMENT", wdtSym_Use)
+wdtSym_IntEnComment.setVisible(False)
+wdtSym_IntEnComment.setLabel("Warning!!! WDT Interrupt is Disabled in Interrupt Manager")
+wdtSym_IntEnComment.setDependencies(updateWDTInterruptWarringStatus, ["core." + InterruptVectorUpdate])
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################

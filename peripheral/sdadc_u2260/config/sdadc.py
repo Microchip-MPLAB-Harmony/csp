@@ -1,10 +1,36 @@
 sdadcSym_SEQCTRL_SEQ = []
 
+global InterruptVector
+global InterruptHandler
+global InterruptHandlerLock
+global sdadcInstanceIndex
+
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
-def sdadcClockWarning(symbol, event):
-    if(event["value"] == False):
+
+def updateSDADCInterruptStatus(symbol, event):
+
+    Database.clearSymbolValue("core", InterruptVector)
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandlerLock)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+
+    Database.clearSymbolValue("core", InterruptHandler)
+
+    if event["value"] == True:
+        Database.setSymbolValue("core", InterruptHandler, "SDADC" + sdadcInstanceIndex + "_InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, "SDADC_Handler", 2)
+
+def updateSDADCInterruptWarringStatus(symbol, event):
+
+    if sdadcSym_INTENSET_RESRDY.getValue() == True:
+        symbol.setVisible(event["value"])
+
+def updateSDADCClockWarringStatus(symbol, event):
+    if event["value"] == False:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -58,6 +84,12 @@ def sdadcHWEventVisible(symbol, event):
 ###########################################################################################
 
 def instantiateComponent(sdadcComponent):
+
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+    global sdadcInstanceIndex
+
     sdadcInstanceIndex = sdadcComponent.getID()[-1:]
     Log.writeInfoMessage("Running SDADC : " + str(sdadcInstanceIndex))
 
@@ -68,13 +100,8 @@ def instantiateComponent(sdadcComponent):
     sdadcSym_INDEX.setDefaultValue(int(sdadcInstanceIndex))
 
     #clock enable
+    Database.clearSymbolValue("core", "SDADC_CLOCK_ENABLE")
     Database.setSymbolValue("core", "SDADC_CLOCK_ENABLE", True, 2)
-
-    #Dynamic clock warning
-    sdadcSym_ClOCK_WARNING = sdadcComponent.createCommentSymbol("SDADC_CLOCK_WARNING", None)
-    sdadcSym_ClOCK_WARNING.setLabel("Warning!!! SDADC Peripheral Clock is Disabled in Clock Manager")
-    sdadcSym_ClOCK_WARNING.setVisible(False)
-    sdadcSym_ClOCK_WARNING.setDependencies(sdadcClockWarning, ["core.SDADC_CLOCK_ENABLE"])
 
     #Prescaler Configuration
     global sdadcSym_CTRLB_PRESCALER
@@ -178,6 +205,7 @@ def instantiateComponent(sdadcComponent):
     sdadcSym_INPUTCTRL_MUXSEL.setDependencies(sdadcMuxVisible, ["SDADC_AUTO_SEQUENCE"])
 
     #result ready interrupt
+    global sdadcSym_INTENSET_RESRDY
     sdadcSym_INTENSET_RESRDY = sdadcComponent.createBooleanSymbol("SDADC_INTENSET_RESRDY", None)
     sdadcSym_INTENSET_RESRDY.setLabel("Enable Result Ready Interrupt")
 
@@ -245,6 +273,32 @@ def instantiateComponent(sdadcComponent):
     #On Demand
     sdadcSym_CTRLA_ONDEMAND = sdadcComponent.createBooleanSymbol("SDADC_ONDEMAND", sdadcSym_Sleep_Menu)
     sdadcSym_CTRLA_ONDEMAND.setLabel("On Demand Control")
+
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    InterruptVector = "SDADC_INTERRUPT_ENABLE"
+    InterruptHandler = "SDADC_INTERRUPT_HANDLER"
+    InterruptHandlerLock = "SDADC_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = "SDADC_INTERRUPT_ENABLE_UPDATE"
+
+    # Interrupt Dynamic settings
+    sdadcSym_UpdateInterruptStatus = sdadcComponent.createBooleanSymbol("SDADC_INTERRUPT_STATUS", None)
+    sdadcSym_UpdateInterruptStatus.setDependencies(updateSDADCInterruptStatus, ["SDADC_INTENSET_RESRDY"])
+    sdadcSym_UpdateInterruptStatus.setVisible(False)
+
+    # Interrupt Warning status
+    sdadcSym_IntEnComment = sdadcComponent.createCommentSymbol("SDADC_INTERRUPT_ENABLE_COMMENT", None)
+    sdadcSym_IntEnComment.setVisible(False)
+    sdadcSym_IntEnComment.setLabel("Warning!!! SDADC Interrupt is Disabled in Interrupt Manager")
+    sdadcSym_IntEnComment.setDependencies(updateSDADCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+
+    # Clock Warning status
+    sdadcSym_ClkEnComment = sdadcComponent.createCommentSymbol("SDADC_CLOCK_ENABLE_COMMENT", None)
+    sdadcSym_ClkEnComment.setLabel("Warning!!! SDADC Peripheral Clock is Disabled in Clock Manager")
+    sdadcSym_ClkEnComment.setVisible(False)
+    sdadcSym_ClkEnComment.setDependencies(updateSDADCClockWarringStatus, ["core.SDADC_CLOCK_ENABLE"])
 
 ###########################################################################################################################################
 ########################                                         Code Generation                                   ########################
