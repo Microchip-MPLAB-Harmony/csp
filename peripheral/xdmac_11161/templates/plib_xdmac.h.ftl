@@ -61,7 +61,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 /****************************** XDMAC Data Types ******************************/
 /* Peripheral address macros for DMA */
-<#list 0..XDMAC_CHANNEL_COUNT as i>
+<#list 0..DMA_CHANNEL_COUNT as i>
 <#assign XDMAC_CH_ENABLE = "XDMAC_CH" + i + "_ENABLE">
 <#assign XDMAC_CH_PERID = "XDMAC_CC" + i + "_PERID">
 <#assign XDMAC_CH_PER_REGISTER = "XDMAC_CH" + i + "_PER_REGISTER">
@@ -76,7 +76,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 /* XDMAC Channels */
 typedef enum {
-    <#list 0..XDMAC_CHANNEL_COUNT as i>
+    <#list 0..DMA_CHANNEL_COUNT as i>
     <#assign XDMAC_CH_ENABLE = "XDMAC_CH" + i + "_ENABLE">
         <#if .vars[XDMAC_CH_ENABLE]?has_content>
             <#if (.vars[XDMAC_CH_ENABLE] != false)>
@@ -84,8 +84,6 @@ typedef enum {
             </#if>
         </#if>
     </#list>
-    XDMAC_CHANNELS_NUMBER
-
 } XDMAC_CHANNEL;
 
 
@@ -235,33 +233,25 @@ typedef void (*XDMAC_CHANNEL_CALLBACK)( XDMAC_TRANSFER_EVENT event, uintptr_t co
 
 /****************************** XDMAC API *********************************/
 
-void XDMAC_Initialize( void );
+void XDMAC${XDMAC_INDEX}_Initialize( void );
 
-void XDMAC_ChannelCallbackRegister( XDMAC_CHANNEL channel, const XDMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle );
+void XDMAC${XDMAC_INDEX}_ChannelCallbackRegister( XDMAC_CHANNEL channel, const XDMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle );
 
-void XDMAC_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize );
+void XDMAC${XDMAC_INDEX}_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize );
 <#if XDMAC_LL_ENABLE == true>
 
 void XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl );
 </#if>
 
-bool XDMAC_ChannelIsBusy (XDMAC_CHANNEL channel);
+bool XDMAC${XDMAC_INDEX}_ChannelIsBusy (XDMAC_CHANNEL channel);
 
-void XDMAC_ChannelDisable (XDMAC_CHANNEL channel);
+void XDMAC${XDMAC_INDEX}_ChannelDisable (XDMAC_CHANNEL channel);
 
-XDMAC_CHANNEL_CONFIG XDMAC_ChannelSettingsGet (XDMAC_CHANNEL channel);
+XDMAC_CHANNEL_CONFIG XDMAC${XDMAC_INDEX}_ChannelSettingsGet (XDMAC_CHANNEL channel);
 
-bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setting);
+bool XDMAC${XDMAC_INDEX}_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setting);
 
-void XDMAC_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t length);
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
-
-void XDMAC_InterruptHandler(void);
-
+void XDMAC${XDMAC_INDEX}_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t length);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

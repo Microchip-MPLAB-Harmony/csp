@@ -146,7 +146,7 @@ def xdmacGlobalLogic(xdmacGlobalSym, event):
         if xdmacGlobalSym.getID() == "XDMAC_HIGHEST_CHANNEL":
             xdmacGlobalSym.setValue(int(xdmacActiveChannels[0]) + 1, 2)
 
-    if xdmacGlobalSym.getID() == "XDMAC_ENABLE":
+    if xdmacGlobalSym.getID() == "DMA_ENABLE":
         if xdmacActiveChannels and xdmacGlobalSym.getValue() is False:
             xdmacGlobalSym.setValue(True, 2)
 
@@ -188,7 +188,7 @@ def xdmacTriggerCalc(xdmacPERIDVal, event):
 # And once the DMA mode is unselected, then the corresponding DMA channel will
 # be disabled and trigger source will be reset to "Software trigger"
 def xdmacChannelAllocLogic(Sym, event):
-    dmaChannelCount = Database.getSymbolValue("core", "XDMAC_CHANNEL_COUNT")
+    dmaChannelCount = Database.getSymbolValue("core", "DMAC_CHANNEL_COUNT")
     perID = event["id"].strip('DMA_CH_NEEDED_FOR_')
     channelAllocated = False
 
@@ -233,25 +233,36 @@ xdmacMenu = coreComponent.createMenuSymbol("XDMAC_MENU", None)
 xdmacMenu.setLabel("DMA (XDMAC)")
 xdmacMenu.setDescription("DMA (XDMAC) Configuration")
 
-xdmacEnable = coreComponent.createBooleanSymbol("XDMAC_ENABLE", xdmacMenu)
+xdmacIndex = coreComponent.createIntegerSymbol("XDMAC_INDEX", xdmacMenu)
+xdmacIndex.setVisible(False)
+xdmacIndex.setDefaultValue(0)
+
+# DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
+portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
+portSymAPI_Prefix.setDefaultValue("XDMAC")
+portSymAPI_Prefix.setVisible(False)
+
+# DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
+xdmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", xdmacMenu)
 xdmacEnable.setLabel("Use DMA Service?")
 xdmacEnable.setVisible(False)
 xdmacEnable.setDefaultValue(False)
 
+# DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
+countNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="XDMAC"]/register-group@[name="XDMAC"]/register-group@[name="XDMAC_CHID"]')
+xdmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", xdmacEnable)
+xdmacChCount.setLabel("DMA (XDMAC) Channels Count")
+xdmacChCount.setDefaultValue(int(countNode.getAttribute("count")))
+#xdmacChCount.setVisible(False)
+
 xdmacFileGen = coreComponent.createBooleanSymbol("XDMAC_FILE_GEN", xdmacEnable)
 xdmacFileGen.setLabel("DMA (XDMAC) File Generation")
-xdmacFileGen.setDependencies(onGlobalEnableLogic, ["XDMAC_ENABLE"])
+xdmacFileGen.setDependencies(onGlobalEnableLogic, ["DMA_ENABLE"])
 xdmacFileGen.setVisible(False)
 
 xdmacHighestCh = coreComponent.createIntegerSymbol("XDMAC_HIGHEST_CHANNEL", xdmacEnable)
 xdmacHighestCh.setLabel("DMA (XDMAC) Highest Active Channel")
 xdmacHighestCh.setVisible(False)
-
-countNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="XDMAC"]/register-group@[name="XDMAC"]/register-group@[name="XDMAC_CHID"]')
-xdmacChCount = coreComponent.createIntegerSymbol("XDMAC_CHANNEL_COUNT", xdmacEnable)
-xdmacChCount.setLabel("DMA (XDMAC) Channels Count")
-xdmacChCount.setDefaultValue(int(countNode.getAttribute("count")))
-xdmacChCount.setVisible(False)
 
 xdmacChannelLinkedList = coreComponent.createBooleanSymbol("XDMAC_LL_ENABLE", xdmacMenu)
 xdmacChannelLinkedList.setLabel("Use Linked List Mode?")
@@ -428,7 +439,7 @@ configName = Variables.get("__CONFIGURATION_NAME")
 xdmacHeaderFile = coreComponent.createFileSymbol("xdmacHeaderFile", None)
 xdmacHeaderFile.setMarkup(True)
 xdmacHeaderFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac.h.ftl")
-xdmacHeaderFile.setOutputName("plib_xdmac.h")
+xdmacHeaderFile.setOutputName("plib_xdmac0.h")
 xdmacHeaderFile.setDestPath("/peripheral/xdmac/")
 xdmacHeaderFile.setProjectPath("config/" + configName +"/peripheral/xdmac/")
 xdmacHeaderFile.setType("HEADER")
@@ -438,7 +449,7 @@ xdmacHeaderFile.setEnabled(False)
 xdmacSourceFile = coreComponent.createFileSymbol("xdmacSourceFile", None)
 xdmacSourceFile.setMarkup(True)
 xdmacSourceFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac.c.ftl")
-xdmacSourceFile.setOutputName("plib_xdmac.c")
+xdmacSourceFile.setOutputName("plib_xdmac0.c")
 xdmacSourceFile.setDestPath("/peripheral/xdmac/")
 xdmacSourceFile.setProjectPath("config/" + configName +"/peripheral/xdmac/")
 xdmacSourceFile.setType("SOURCE")

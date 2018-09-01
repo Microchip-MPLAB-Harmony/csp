@@ -1,1 +1,1 @@
-#include "peripheral/xdmac/plib_xdmac.h"
+#include "peripheral/xdmac/plib_xdmac${XDMAC_INDEX}.h"
