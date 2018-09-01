@@ -1,1 +1,1 @@
-    XDMAC_Initialize();
+    XDMAC${XDMAC_INDEX}_Initialize();
