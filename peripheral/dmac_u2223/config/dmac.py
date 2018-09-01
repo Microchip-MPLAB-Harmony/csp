@@ -144,7 +144,7 @@ def dmacGlobalLogic(symbol, event):
         if symbol.getID() == "DMAC_HIGHEST_CHANNEL":
             symbol.setValue(int(dmacActiveChannels[0]) + 1, 2)
 
-    if symbol.getID() == "DMAC_ENABLE":
+    if symbol.getID() == "DMA_ENABLE":
         if dmacActiveChannels and symbol.getValue() == False:
             symbol.setValue(True, 2)
 
@@ -172,7 +172,7 @@ def dmacTriggerCalc(symbol, event):
 # be disabled and trigger source will be reset to "Software trigger"
 def dmacChannelAllocLogic(symbol, event):
 
-    dmaChannelCount = Database.getSymbolValue("core", "DMAC_CHANNEL_COUNT")
+    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     perID = event["id"].strip('DMA_CH_NEEDED_FOR_')
     channelAllocated = False
 
@@ -232,23 +232,32 @@ dmacIndex = coreComponent.createIntegerSymbol("DMAC_INDEX", dmacMenu)
 dmacIndex.setVisible(False)
 dmacIndex.setDefaultValue(0)
 
-dmacEnable = coreComponent.createBooleanSymbol("DMAC_ENABLE", dmacMenu)
+# DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
+portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
+portSymAPI_Prefix.setDefaultValue("DMAC")
+portSymAPI_Prefix.setVisible(False)
+
+# DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
+dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
 dmacEnable.setLabel("Use DMA Service ?")
 dmacEnable.setVisible(False)
+dmacEnable.setDefaultValue(False)
+
+# DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
+dmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmacEnable)
+dmacChCount.setLabel("DMA (DMAC) Channels Count")
+dmacChCount.setDefaultValue(dmacChannelCount)
+dmacChCount.setVisible(False)
 
 dmacFileGen = coreComponent.createBooleanSymbol("DMAC_FILE_GEN", dmacEnable)
 dmacFileGen.setLabel("DMA (DMAC) File Generation")
 dmacFileGen.setVisible(False)
-dmacFileGen.setDependencies(onGlobalEnableLogic, ["DMAC_ENABLE"])
+dmacFileGen.setDependencies(onGlobalEnableLogic, ["DMA_ENABLE"])
 
 dmacHighestCh = coreComponent.createIntegerSymbol("DMAC_HIGHEST_CHANNEL", dmacEnable)
 dmacHighestCh.setLabel("DMA (DMAC) Highest Active Channel")
 dmacHighestCh.setVisible(False)
 
-dmacChCount = coreComponent.createIntegerSymbol("DMAC_CHANNEL_COUNT", dmacEnable)
-dmacChCount.setLabel("DMA (DMAC) Channels Count")
-dmacChCount.setDefaultValue(dmacChannelCount)
-dmacChCount.setVisible(False)
 
 dmacChannelLinkedList = coreComponent.createBooleanSymbol("DMAC_LL_ENABLE", dmacMenu)
 dmacChannelLinkedList.setLabel("Use Linked List Mode ?")
