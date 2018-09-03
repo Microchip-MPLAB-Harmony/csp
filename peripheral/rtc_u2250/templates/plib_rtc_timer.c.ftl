@@ -41,1260 +41,401 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
-
 #include "plib_rtc${RTC_INDEX}.h"
 #include "device.h"
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Macro Definitions
-// *****************************************************************************
-// *****************************************************************************
-
-<#if RTC_MODULE_SELECTION = "MODE0">
-/* Frequency of RTC Clock */
-#define RTC_CLOCK_FREQUENCY        (32678 / (2 ^ ${RTC_MODE0_PRESCALER}))
-
-/* Mode 0 Period Value */
-#define RTC_MODE0_PERIOD           (0x${RTC_MODE0_TIMER_COUNTER_PERIOD}U)
-
-/* Mode 0 Compare 0 and Overflow Interrupt Mask*/
-#define RTC_32BIT_INTERRUPT_MASK   (0x8100U)
-<#elseif RTC_MODULE_SELECTION = "MODE1">
-/* Frequency of RTC Clock */
-#define RTC_CLOCK_FREQUENCY        (32678 / (2 ^ ${RTC_MODE1_PRESCALER}))
-
-/* Mode 1 Period Value */
-#define RTC_MODE1_PERIOD           (0x${RTC_MODE1_TIMER_COUNTER_PERIOD}U)
-
-/* Timer 16-bit Compare 0 Value */
-#define RTC_MODE1_COMPARE0_VALUE   (0x${RTC_MODE1_COMPARE0_MATCH_VALUE}U)
-
-/* Timer 16-bit Compare 1 Value */
-#define RTC_MODE1_COMPARE1_VALUE   (0x${RTC_MODE1_COMPARE1_MATCH_VALUE}U)
-
-/* Mode 1 Compare 0, Compare 1 and Overflow Interrupt Mask */
-#define RTC_16BIT_INTERRUPT_MASK   (0x8300U)
-</#if>
-
-/* Correction value is Zero */
-#define CORRECTION_VALUE_ZERO      (0U)
+#include <stdlib.h>
 
 <#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
      ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >
-// *****************************************************************************
-/* RTC Callback Object
-
-  Summary:
-    RTC peripheral callback object.
-
-  Description:
-    This local data object holds the function signature for the RTC peripheral
-    callback function.
-
-  Remarks:
-    None.
-*/
-
-typedef struct
-{
-    /* Periodic Interval Callback */
-    RTC_PERIODIC_INTERVAL_CALLBACK periodicCallback;
-
-<#if RTC_MODULE_SELECTION = "MODE0" >
-    /* Timer 32Bit */
-    RTC_TIMER32_CALLBACK timer32BitCallback;
-
-    /* 32Bit Timer Event */
-    RTC_TIMER32_EVENT timer32BitEvent;
-<#else>
-    /* Timer 16Bit */
-    RTC_TIMER16_CALLBACK timer16BitCallback;
-
-    /* 16Bit Timer Event */
-    RTC_TIMER16_EVENT timer16BitEvent;
-</#if>
-
-    uintptr_t context;
-
-} RTC_OBJECT;
-
-RTC_OBJECT rtc${RTC_INDEX}Obj;
+    <#lt>RTC_OBJECT rtc${RTC_INDEX}Obj;
 
 </#if>
-// *****************************************************************************
-// *****************************************************************************
-// Section: RTC Implementation
-// *****************************************************************************
-// *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-   this interface.
-*/
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Initialize(void)
-
-  Summary:
-    Initialize given instance of the RTC peripheral.
-
-  Description:
-    This function initialize the given instance of the RTC peripheral as
-    configured by the user from the MHC.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
 
 void RTC${RTC_INDEX}_Initialize(void)
 {
-    /* Software Reset */
-    RTC_REGS->${RTC_MODULE_SELECTION}.CTRLA.w |= RTC_${RTC_MODULE_SELECTION}_CTRLA_SWRST_Msk;
+    RTC_REGS->${RTC_MODULE_SELECTION}.CTRLA = RTC_${RTC_MODULE_SELECTION}_CTRLA_SWRST_Msk;
 
-    while((RTC_REGS->${RTC_MODULE_SELECTION}.SYNCBUSY.w & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk)
+    while((RTC_REGS->${RTC_MODULE_SELECTION}.SYNCBUSY & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for Synchronization after Software Reset */
     }
 
-<#if RTC_MODULE_SELECTION = "MODE0">
-    /* Set Operating Mode, Prescaler and COUNT Read Synchronization */
-    <@compress single_line=true>RTC_REGS->MODE0.CTRLA.w |= RTC_MODE0_CTRLA_MODE(0) |
-                                                            RTC_MODE0_CTRLA_PRESCALER(${RTC_MODE0_PRESCALER}) |
-                                                            RTC_MODE0_CTRLA_COUNTSYNC_Msk;</@compress>
+    <#if RTC_MODULE_SELECTION = "MODE0">
+        <@compress single_line=true>RTC_REGS->MODE0.CTRLA = RTC_MODE0_CTRLA_MODE(0) |
+                                                                RTC_MODE0_CTRLA_PRESCALER(${RTC_MODE0_PRESCALER}) |
+                                                                RTC_MODE0_CTRLA_COUNTSYNC_Msk
+                                                                ${RTC_MODE0_MATCHCLR?then("|RTC_MODE0_CTRLA_MATCHCLR_Msk", "")};</@compress>
 
-    /* Disable all Interrupts */
-    RTC_REGS->MODE0.INTENCLR.w |= RTC_MODE0_INTENCLR_Msk;
 
-    /* 32-bit Period Value */
-    RTC_REGS->MODE0.COMP.w = RTC_MODE0_PERIOD;
-<#else>
-    /* Set Operating Mode, Prescaler and COUNT Read Synchronization */
-    <@compress single_line=true>RTC_REGS->MODE1.CTRLA.w |= RTC_MODE1_CTRLA_MODE(1) |
-                                                            RTC_MODE1_CTRLA_PRESCALER(${RTC_MODE1_PRESCALER}) |
-                                                            RTC_MODE1_CTRLA_COUNTSYNC_Msk;</@compress>
-
-    /* Disable all Interrupts */
-    RTC_REGS->MODE1.INTENCLR.w |= RTC_MODE1_INTENCLR_Msk;
-
-<#if RTC_MODE1_INTERRUPT = false>
-    <#if RTC_MODE1_GENERATE_COMPARE0_API = true>
-    /* 16-bit Timer Compare 0 Value */
-    RTC_REGS->MODE1.COMP[0].w = RTC_MODE1_COMPARE0_VALUE;
-
+        RTC_REGS->MODE0.COMP = 0x${RTC_MODE0_TIMER_COMPARE};
+        <#if RTC_MODE0_EVCTRL != "0">
+            <#lt>RTC_REGS->MODE0.EVCTRL = 0x${RTC_MODE0_EVCTRL};
+        </#if>
+    <#else>
+        <#lt>   <@compress single_line=true>RTC_REGS->MODE1.CTRLA = RTC_MODE1_CTRLA_MODE(1) |
+        <#lt>                                                        RTC_MODE1_CTRLA_PRESCALER(${RTC_MODE1_PRESCALER}) |
+        <#lt>                                                        RTC_MODE1_CTRLA_COUNTSYNC_Msk;</@compress>
+        <#lt>   RTC_REGS->MODE1.COMP[0] = 0x${RTC_MODE1_COMPARE0_MATCH_VALUE};
+        <#lt>   RTC_REGS->MODE1.COMP[1] = 0x${RTC_MODE1_COMPARE1_MATCH_VALUE};
+        <#lt>   RTC_REGS->MODE1.PER = 0x${RTC_MODE1_TIMER_COUNTER_PERIOD};
+        <#if    RTC_MODE1_EVCTRL != "0">
+            <#lt>   RTC_REGS->MODE1.EVCTRL = 0x${RTC_MODE1_EVCTRL};
+        </#if>
     </#if>
-    <#if RTC_MODE1_GENERATE_COMPARE1_API = true>
-    /* 16-bit Timer Compare 0 Value */
-    RTC_REGS->MODE1.COMP[1].w = RTC_MODE1_COMPARE1_VALUE;
-
-    </#if>
-</#if>
-    /* 16-bit Period Value */
-    RTC_REGS->MODE1.PER.w = RTC_MODE1_PERIOD;
-
-</#if>
 }
-<#if (RTC_MODE0_FREQCORR = true && RTC_MODULE_SELECTION = "MODE0") ||
-     (RTC_MODE1_FREQCORR = true && RTC_MODULE_SELECTION = "MODE1") >
 
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_FrequencyCorrect (int8_t correction)
+<#if RTC_FREQCORR >
+    <#lt>void RTC${RTC_INDEX}_FrequencyCorrect (int8_t correction)
+    <#lt>{
+    <#lt>    uint32_t newCorrectionValue = 0;
 
-  Summary:
-    Calibrate for too-slow or too-fast oscillator.
-
-  Description:
-    This function allows the application to calibrate the RTC frequency. The RTC
-    module will add or subtract cycles from the RTC prescaler to adjust the
-    frequency in steps of approximately 1ppm. The provided correction value
-    should be between -127 to 127. A positive correction value adds counts and
-    increase the period, thus reducing the frequency. A negative count will have
-    the reverse effect.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_FrequencyCorrect (int8_t correction)
-{
-    uint32_t newCorrectionValue = 0;
-
-    /* Load the new Correction Value as a positive value, sign added later */
-    newCorrectionValue = abs(correction);
-
-    /* Convert to positive value and adjust register sign bit. */
-    if (correction < CORRECTION_VALUE_ZERO)
-    {
-        newCorrectionValue |= RTC_${RTC_MODULE_SELECTION}_FREQCORR_SIGN_Msk;
-    }
-
-    /* Set Correction Value */
-    RTC_REGS->${RTC_MODULE_SELECTION}.FREQCORR.w = newCorrectionValue;
-
-    while((RTC_REGS->${RTC_MODULE_SELECTION}.SYNCBUSY.w & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk)
-    {
-        /* Wait for Synchronization after writing Value to FREQCORR */
-    }
-}
+    <#lt>    newCorrectionValue = abs(correction);
+        
+    <#lt>    /* Convert to positive value and adjust register sign bit. */
+    <#lt>    if (correction < 0)
+    <#lt>    {
+    <#lt>        newCorrectionValue |= RTC_${RTC_MODULE_SELECTION}_FREQCORR_SIGN_Msk;
+    <#lt>    }
+        
+    <#lt>    RTC_REGS->${RTC_MODULE_SELECTION}.FREQCORR = newCorrectionValue;
+    <#lt>    while((RTC_REGS->${RTC_MODULE_SELECTION}.SYNCBUSY & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after writing Value to FREQCORR */
+    <#lt>    }
+    <#lt>}
 </#if>
 <#if RTC_MODE0_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE0" ||
      RTC_MODE1_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE1" >
-<#if RTC_MODE0_PERIOD != "NO" && RTC_MODE0_PERIOD != "NO" >
 
-// *****************************************************************************
-/* Function:
-    bool RTC${RTC_INDEX}_PeriodicIntervalHasCompleted (void)
+    <#lt>bool RTC${RTC_INDEX}_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period)
+    <#lt>{
+    <#lt>   bool periodIntervalComplete = false;
+        <#if RTC_MODULE_SELECTION = "MODE0" >
+    <#lt>   if( (RTC_REGS->MODE0.INTFLAG & period) == period)
+    <#lt>   {
+    <#lt>       periodIntervalComplete = true;
 
-  Summary:
-    Check if the configured periodic interval has expired.
+    <#lt>       /* Clear Periodic Interval Interrupt */
+    <#lt>       RTC_REGS->MODE0.INTFLAG = period;
+    <#lt>   }
+        <#elseif RTC_MODULE_SELECTION = "MODE1" >
+    <#lt>   if( (RTC_REGS->MODE1.INTFLAG & period) == period)
+    <#lt>   {
+    <#lt>       periodIntervalComplete = true;
 
-  Description:
-    This function will check if the configured periodic interval expired. The
-    RTC module can be configured to generate notification at periodic intervals.
-    This function provides a polling method to check if a periodic interval is
-    complete. The interval is configured via MHC.
+    <#lt>       /* Clear Periodic Interval Interrupt */
+    <#lt>       RTC_REGS->MODE1.INTFLAG = period;
+    <#lt>   }
+        </#if>
 
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
+    <#lt>    return periodIntervalComplete;
+    <#lt>}
 
-bool RTC${RTC_INDEX}_PeriodicIntervalHasCompleted (void)
-{
-    bool periodIntervalComplete = false;
+    <#if RTC_MODULE_SELECTION = "MODE0">
 
-<#if RTC_MODULE_SELECTION = "MODE0" >
-    /* Check for the Period interval has completed */
-    if( (RTC_REGS->MODE0.INTFLAG.w & RTC_MODE0_INTFLAG_${RTC_MODE0_PERIOD}_Msk ) == RTC_MODE0_INTFLAG_${RTC_MODE0_PERIOD}_Msk)
-    {
-        periodIntervalComplete = true;
+    <#lt>bool RTC${RTC_INDEX}_Timer32CompareHasMatched(void)
+    <#lt>{
+    <#lt>   bool status = false;
 
-        /* Clear Periodic Interval Interrupt */
-        RTC_REGS->MODE0.INTFLAG.w = RTC_MODE0_INTFLAG_${RTC_MODE0_PERIOD}_Msk;
-    }
+    <#lt>   if((RTC_REGS->MODE0.INTFLAG & RTC_MODE0_INTFLAG_CMP0_Msk) == RTC_MODE0_INTFLAG_CMP0_Msk)
+    <#lt>   {
+    <#lt>       status = true;
+    <#lt>       RTC_REGS->MODE0.INTFLAG = RTC_MODE0_INTFLAG_CMP0_Msk;
+    <#lt>   }
 
-<#elseif RTC_MODULE_SELECTION = "MODE1" >
-    /* Check for the Period interval has completed */
-    if( (RTC_REGS->MODE1.INTFLAG.w & RTC_MODE1_INTFLAG_${RTC_MODE1_PERIOD}_Msk ) == RTC_MODE1_INTFLAG_${RTC_MODE1_PERIOD}_Msk)
-    {
-        periodIntervalComplete = true;
+    <#lt>   return status;
+    <#lt>}
 
-        /* Clear Periodic Interval Interrupt */
-        RTC_REGS->MODE1.INTFLAG.w = RTC_MODE1_INTFLAG_${RTC_MODE1_PERIOD}_Msk;
-    }
-</#if>
+    <#lt>bool RTC${RTC_INDEX}_Timer32CounterHasOverflowed ( void )
+    <#lt>{
+    <#lt>   bool status = false;
 
-    return periodIntervalComplete;
-}
-</#if>
-<#if RTC_MODULE_SELECTION = "MODE0">
+    <#lt>   if((RTC_REGS->MODE0.INTFLAG & RTC_MODE0_INTFLAG_OVF_Msk) == RTC_MODE0_INTFLAG_OVF_Msk)
+    <#lt>   {
+    <#lt>       status = true;
+    <#lt>       RTC_REGS->MODE0.INTFLAG = RTC_MODE0_INTFLAG_OVF_Msk;
+    <#lt>   }
 
-// *****************************************************************************
-/* Function:
-    bool RTC${RTC_INDEX}_Timer32PeriodHasExpired ( void )
+    <#lt>   return status;
+    <#lt>}
+    </#if>
 
-  Summary:
-    Check for 32-bit Timer Period Expiry.
+    <#if RTC_MODULE_SELECTION = "MODE1">
 
-  Description:
-    This function returns true if the counter value has matched the configured
-    32-bit timer period. The counter will be reset and start counting again.
+    <#lt>bool RTC${RTC_INDEX}_Timer16PeriodHasExpired ( void )
+    <#lt>{
+    <#lt>   bool status = false;
 
-    The API can be used to poll period completion when using the timer counter
-    as a timer. Calling the function will clear the internal period match flags
-    if these flags were set at the time of calling the function.
+    <#lt>   if((RTC_REGS->MODE1.INTFLAG & RTC_MODE1_INTFLAG_OVF_Msk ) == RTC_MODE1_INTFLAG_OVF_Msk)
+    <#lt>   {
+    <#lt>       status = true;
+    <#lt>       RTC_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_OVF_Msk;
+    <#lt>   }
+    <#lt>   return status;
+    <#lt>}
 
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
+    <#lt>bool RTC${RTC_INDEX}_Timer16CounterHasOverflowed ( void )
+    <#lt>{
+    <#lt>   bool status = false;
 
-bool RTC${RTC_INDEX}_Timer32PeriodHasExpired ( void )
-{
-    bool periodHasExpired = false;
+    <#lt>   if((RTC_REGS->MODE1.INTFLAG & RTC_MODE1_INTFLAG_OVF_Msk ) == RTC_MODE1_INTFLAG_OVF_Msk)
+    <#lt>   {
+    <#lt>       status = true;
+    <#lt>            
+    <#lt>       /* Clear Counter Overflow Interrupt */
+    <#lt>       RTC_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_OVF_Msk;
+    <#lt>   }
 
-    /* Check Counter Value exceeds Compare/Period Value */
-    if((RTC_REGS->MODE0.INTFLAG.w & RTC_MODE0_INTFLAG_CMP0_Msk) == RTC_MODE0_INTFLAG_CMP0_Msk)
-    {
-        periodHasExpired = true;
+    <#lt>   return status;
+    <#lt>}
 
-        /* Clear Period Interrupt */
-        RTC_REGS->MODE0.INTFLAG.w = RTC_MODE0_INTFLAG_CMP0_Msk;
-    }
+    <#lt>bool RTC${RTC_INDEX}_Timer16Compare0HasMatched(void)
+    <#lt>{
+    <#lt>   bool status = false;
 
-    return periodHasExpired;
-}
+    <#lt>   if((RTC_REGS->MODE1.INTFLAG & RTC_MODE1_INTFLAG_CMP0_Msk ) == RTC_MODE1_INTFLAG_CMP0_Msk)
+    <#lt>   {
+    <#lt>       status = true;
 
-// *****************************************************************************
-/* Function:
-    bool RTC${RTC_INDEX}_Timer32CounterHasOverflowed ( void )
+    <#lt>       /* Clear Compare 0 Match Flag */
+    <#lt>       RTC_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_CMP0_Msk;
+    <#lt>   }
 
-  Summary:
-    Check if the 32-bit counter overflow.
+    <#lt>   return status;
+    <#lt>}
 
-  Description:
-    This function will return true if the 32-bit counter has overflowed. An
-    overflow occurs when the counter values transitions from 0xFFFFFFFF to 0x0.
-    This function can be used to validate the timer count when using the timer
-    counter as a counter. Calling the function will clear the internal overflow
-    flags if these flags were set at the time of calling the function.
+    <#lt>bool RTC${RTC_INDEX}_Timer16Compare1HasMatched(void)
+    <#lt>{
+    <#lt>   bool status = false;
 
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
+    <#lt>   if((RTC_REGS->MODE1.INTFLAG & RTC_MODE1_INTFLAG_CMP1_Msk ) == RTC_MODE1_INTFLAG_CMP1_Msk)
+    <#lt>   {
+    <#lt>       status = true;
 
-bool RTC${RTC_INDEX}_Timer32CounterHasOverflowed ( void )
-{
-    bool counterHasOverflowed = false;
+    <#lt>       /* Clear Compare 1 Match Flag */
+    <#lt>       RTC_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_CMP1_Msk;
+    <#lt>   }
 
-    /* Check Counter Value exceeds maximum COUNT Value(0xFFFFFFFF) */
-    if((RTC_REGS->MODE0.INTFLAG.w & RTC_MODE0_INTFLAG_OVF_Msk) == RTC_MODE0_INTFLAG_OVF_Msk)
-    {
-        counterHasOverflowed = true;
-
-        /* Clear Counter Overflow Interrupt */
-        RTC_REGS->MODE0.INTFLAG.w = RTC_MODE0_INTFLAG_OVF_Msk;
-    }
-
-    return counterHasOverflowed;
-}
-</#if>
-<#if RTC_MODULE_SELECTION = "MODE1">
-
-// *****************************************************************************
-/* Function:
-    bool RTC${RTC_INDEX}_Timer16PeriodHasExpired ( void )
-
-  Summary:
-    Check for 16-bit Timer Period Expiry.
-
-  Description:
-    This function returns true if the counter value has matched the configured
-    16-bit timer period. The counter will be reset and start counting again.
-
-    The API can be used to poll period completion when using the timer counter
-    as a timer. Calling the function will clear the internal period match flags
-    if these flags were set at the time of calling the function.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-bool RTC${RTC_INDEX}_Timer16PeriodHasExpired ( void )
-{
-    bool periodHasExpired = false;
-
-    /* Check Counter Value exceeds Period Value */
-    if((RTC_REGS->MODE1.INTFLAG.w & RTC_MODE1_INTFLAG_OVF_Msk ) == RTC_MODE1_INTFLAG_OVF_Msk)
-    {
-        periodHasExpired = true;
-
-        /* Clear Period/Overflow Interrupts */
-        RTC_REGS->MODE1.INTFLAG.w = RTC_MODE1_INTFLAG_OVF_Msk;
-    }
-
-    return periodHasExpired;
-}
-
-// *****************************************************************************
-/* Function:
-    bool RTC${RTC_INDEX}_Timer16CounterHasOverflowed ( void )
-
-  Summary:
-    Check if the 16-bit counter overflow.
-
-  Description:
-    This function will return true if the 16-bit counter has overflowed. An
-    overflow occurs when the counter values transitions from 0xFFFF to 0x0.
-    This function can be used to validate the timer count when using the timer
-    counter as a counter. Calling the function will clear the internal overflow
-    flags if these flags were set at the time of calling the function.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-bool RTC${RTC_INDEX}_Timer16CounterHasOverflowed ( void )
-{
-    bool counterHasOverflowed = false;
-
-    /* Check Counter Value exceeds maximum value */
-    if((RTC_REGS->MODE1.INTFLAG.w & RTC_MODE1_INTFLAG_OVF_Msk ) == RTC_MODE1_INTFLAG_OVF_Msk)
-    {
-        counterHasOverflowed = true;
-
-        /* Clear Counter Overflow Interrupt */
-        RTC_REGS->MODE1.INTFLAG.w = RTC_MODE1_INTFLAG_OVF_Msk;
-    }
-
-    return counterHasOverflowed;
-}
-<#if RTC_MODE1_GENERATE_COMPARE0_API = true>
-
-// *****************************************************************************
-/* Function:
-    bool RTC${RTC_INDEX}_Timer16Compare0HasMatched(void)
-
-  Summary:
-    Returns true if the 16-bit Timer Compare 0 value has matched the counter.
-
-  Description:
-    This function returns true if the 16-bit Timer Compare 0 value has matched
-    the counter. When operating in 16-bit Timer Counter mode, the RTC
-    peripheral compares the counter value with two defined compare values
-    (Compare 0 and Compare 1). This function will return true if the counter
-    value has matched the Compare 0 value and also resets the hardware status
-    flags if when match has occurred.
-
-    The Compare 0 Value could have been configured via MHC or at run time by
-    calling the RTC${RTC_INDEX}_Timer16Compare0Set() function. The
-    RTC${RTC_INDEX}_Timer16Compare0ValueMatched() function allows the
-    application to poll for the compare value match.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-bool RTC${RTC_INDEX}_Timer16Compare0HasMatched(void)
-{
-    bool compare0ValueMatch = false;
-
-    /* Check Compare 0 Value Match */
-    if((RTC_REGS->MODE1.INTFLAG.w & RTC_MODE1_INTFLAG_CMP0_Msk ) == RTC_MODE1_INTFLAG_CMP0_Msk)
-    {
-        compare0ValueMatch = true;
-
-        /* Clear Compare 0 Match Flag */
-        RTC_REGS->MODE1.INTFLAG.w = RTC_MODE1_INTFLAG_CMP0_Msk;
-    }
-
-    return compare0ValueMatch;
-}
-</#if>
-<#if RTC_MODE1_GENERATE_COMPARE1_API = true>
-
-// *****************************************************************************
-/* Function:
-    bool RTC${RTC_INDEX}_Timer16Compare1HasMatched(void)
-
-  Summary:
-    Returns true if the 16-bit Timer Compare 1 value has matched the counter.
-
-  Description:
-    This function returns true if the 16-bit Timer Compare 1 value has matched
-    the counter. When operating in 16-bit Timer Counter mode, the RTC
-    peripheral compares the counter value with two defined compare values
-    (Compare 1 and Compare 1). This function will return true if the counter
-    value has matched the Compare 1 value and also resets the hardware status
-    flags if when match has occurred.
-
-    The Compare 1 Value could have been configured via MHC or at run time by
-    calling the RTC${RTC_INDEX}_Timer16Compare1Set() function. The
-    RTC${RTC_INDEX}_Timer16Compare1ValueMatched() function allows the
-    application to poll for the compare value match.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-bool RTC${RTC_INDEX}_Timer16Compare1HasMatched(void)
-{
-    bool compare1ValueMatch = false;
-
-    /* Check Compare 1 Value Match */
-    if((RTC_REGS->MODE1.INTFLAG.w & RTC_MODE1_INTFLAG_CMP1_Msk ) == RTC_MODE1_INTFLAG_CMP1_Msk)
-    {
-        compare1ValueMatch = true;
-
-        /* Clear Compare 1 Match Flag */
-        RTC_REGS->MODE1.INTFLAG.w = RTC_MODE1_INTFLAG_CMP1_Msk;
-    }
-
-    return compare1ValueMatch;
-}
-</#if>
-</#if>
+    <#lt>   return status;
+    <#lt>}
+    </#if>
 </#if>
 <#if RTC_MODULE_SELECTION = "MODE0">
 
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer32Start ( void )
+    <#lt>void RTC${RTC_INDEX}_Timer32Start ( void )
+    <#lt>{
+    <#lt>    RTC_REGS->MODE0.CTRLA |= RTC_MODE0_CTRLA_ENABLE_Msk;
+        
+    <#lt>    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for synchronization after Enabling RTC */
+    <#lt>    }
+    <#lt>}
 
-  Summary:
-    Starts the 32-bit timer.
 
-  Description:
-    This function starts the 32-bit timer. The timer will start counting up from
-    the value that was set using the RTC${RTC_INDEX}_Timer32CounterSet()
-    function. The timer will count at a rate configured by the input clock and
-    the input prescalar.
+    <#lt>void RTC${RTC_INDEX}_Timer32Stop ( void )
+    <#lt>{
+    <#lt>    RTC_REGS->MODE0.CTRLA &= ~(RTC_MODE0_CTRLA_ENABLE_Msk);
 
-    The timer can be configured to count up till a specific non-zero value. This
-    value is specified using the RTC${RTC_INDEX}_Timer32PeriodSet() function.
-    Setting a non-zero will cause the timer counter to operate as timer.
-    The counter will count up to the period value and then reset and start
-    counting again. This causes a period expiry event. Timer type operations are
-    preferred to implement a delay or obtain periodic notification.
+    <#lt>    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after Disabling RTC */
+    <#lt>    }
+    <#lt>}
 
-    Setting the period to 0 will result in a counter type operation. In this
-    mode, starting the timer will cause the counter to count upto 0xFFFFFFFF and
-    then overflow to 0 and continue counting. This causes an overflow event. A
-    counter can be used to count in timer inputn clock units. This is useful
-    when needed to perform temporal measurements.
+    <#lt>void RTC${RTC_INDEX}_Timer32CounterSet ( uint32_t count )
+    <#lt>{
+    <#lt>    RTC_REGS->MODE0.COUNT = count;
 
-    The counter can be stopped by calling the RTC${RTC_INDEX}_Timer32Stop
-    function. Calling the RTC${RTC_INDEX}_Timer32Start() will again start
-    the counting from the current counter value.
+    <#lt>    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after writing value to Count Register */
+    <#lt>    }
+    <#lt>}
 
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
 
-void RTC${RTC_INDEX}_Timer32Start ( void )
-{
-    /* Clear all Interrupts */
-    RTC_REGS->MODE0.INTFLAG.w = RTC_MODE0_INTFLAG_Msk;
+    <#lt>void RTC${RTC_INDEX}_Timer32CompareSet ( uint32_t compareValue )
+    <#lt>{
+    <#lt>    RTC_REGS->MODE0.COMP = compareValue;
 
-<#if RTC_MODE0_INTERRUPT = true>
-<#if RTC_MODE0_PERIOD != "NO">
-    /* Enable Period and Overflow Interrupt */
-    RTC_REGS->MODE0.INTENSET.w |= RTC_MODE0_INTENSET_${RTC_MODE0_PERIOD}_Msk | RTC_MODE0_INTENSET_OVF_Msk;
-<#else>
-    /* Enable Overflow Interrupt */
-    RTC_REGS->MODE0.INTENSET.w |= RTC_MODE0_INTENSET_OVF_Msk;
-</#if>
-</#if>
+    <#lt>    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after writing Compare Value */
+    <#lt>    }
+    <#lt>}
 
-    /* Enable RTC */
-    RTC_REGS->MODE0.CTRLA.w |= RTC_MODE0_CTRLA_ENABLE_Msk;
+    <#lt>uint32_t RTC${RTC_INDEX}_Timer32CounterGet ( void )
+    <#lt>{
+    <#lt>    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk) == RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization before reading value from Count Register */
+    <#lt>    }
+        
+    <#lt>    return(RTC_REGS->MODE0.COUNT);
+    <#lt>}
 
-    while((RTC_REGS->MODE0.SYNCBUSY.w & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for synchronization after Enabling RTC */
-    }
+    <#lt>uint32_t RTC${RTC_INDEX}_Timer32PeriodGet ( void )
+    <#lt>{
+    <#lt>    /* Get 32Bit Compare Value */
+    <#lt>    return (RTC_MODE0_COUNT_COUNT_Msk);
+    <#lt>}
 
-}
+    <#lt>uint32_t RTC${RTC_INDEX}_Timer32FrequencyGet ( void )
+    <#lt>{
+    <#lt>    /* Return Frequency of RTC Clock */
+    <#lt>    return RTC_CLOCK_FREQUENCY;
+    <#lt>}
 
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer32Stop ( void )
+    <#if RTC_MODE0_INTERRUPT = true>
+        <#lt>void RTC${RTC_INDEX}_Timer32InterruptEnable(RTC_TIMER32_INT_MASK interrupt)
+        <#lt>{
+        <#lt>    RTC_REGS->MODE1.INTENSET = interrupt;
+        <#lt>}
 
-  Summary:
-    Stops the 32-bit timer from counting.
-
-  Description:
-    This function will stop the 32-bit timer from counting. Any on-going
-    timing/counting operations will be affected. Stopping the timer does not
-    reset the counter. This must be explicitly done by calling the
-    RTC${RTC_INDEX}_Timer32CounterSet() function.
-
-    Calling this function if the timer is already stopped will result in a
-    functional no-operation. An application may need to stop the timer if it
-    does not require delay services or if the counting needs to paused.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer32Stop ( void )
-{
-    /* Disable RTC */
-    RTC_REGS->MODE0.CTRLA.w &= ~(RTC_MODE0_CTRLA_ENABLE_Msk);
-
-    while((RTC_REGS->MODE0.SYNCBUSY.w & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for Synchronization after Disabling RTC */
-    }
-
-    /* Disable all Interrupts */
-    RTC_REGS->MODE0.INTENCLR.w = RTC_MODE0_INTENCLR_Msk;
-}
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer32CounterSet ( uint32_t count )
-
-  Summary:
-    Set the 32-bit Timer Counter Value.
-
-  Description:
-    This function sets the 32-bit timer counter value. The counter will start to
-    count up from this count value. The application may typically set the
-    counter to 0 before starting a timing or counting operation. Calling this
-    function when the timer is running will overwrite the current counter value.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer32CounterSet ( uint32_t count )
-{
-    /* Set 32Bit Counter Value */
-    RTC_REGS->MODE0.COUNT.w = count;
-
-    while((RTC_REGS->MODE0.SYNCBUSY.w & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
-    {
-        /* Wait for Synchronization after writing value to Count Register */
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer32PeriodSet ( uint32_t period )
-
-  Summary:
-    Set the 32-bit timer period value.
-
-  Description:
-    This function sets the 32-bit timer period value. The counter value will be
-    compared against the period value and a period expiry event will occur when
-    the counter matches the period. If the library is configured for interrupt
-    mode and if a event handler function has been set through the
-    RTC${RTC_INDEX}_Timer32CallbackRegister() function, the event handling
-    function will be called.
-    Additionally the RTC${RTC_INDEX}_Timer32PeriodHasExpired() function will
-    return true. When the match occurs, the counter will be reset and the
-    counting will start again.
-
-    Setting the period to a non-zero value will cause the timer counter to
-    operate as a timer that counts up to a specific value and resets. Setting
-    the period to 0 will cause the timer counter to operate as counter, using
-    the full range of the 32-bit timer, that can be used to measure a time
-    duration.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer32PeriodSet ( uint32_t period )
-{
-    /* Clear Counter when there is a match */
-    RTC_REGS->MODE0.CTRLA.w |= RTC_MODE0_CTRLA_MATCHCLR_Msk;
-
-<#if RTC_MODE0_INTERRUPT = true>
-    /* Enable Compare Interrupt */
-    RTC_REGS->MODE0.INTENSET.w |= RTC_MODE0_INTENSET_CMP0_Msk;
-
-</#if>
-    /* Set 32Bit Compare Value */
-    RTC_REGS->MODE0.COMP.w = period;
-
-    while((RTC_REGS->MODE0.SYNCBUSY.w & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
-    {
-        /* Wait for Synchronization after writing Compare Value */
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    uint32_t RTC${RTC_INDEX}_Timer32CounterGet ( void )
-
-  Summary:
-    Get the current 32-bit counter value.
-
-  Description:
-    This function returns the current 32-bit count value. This function can be
-    used to retrieve the counter value at the end of a time measurement.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-uint32_t RTC${RTC_INDEX}_Timer32CounterGet ( void )
-{
-    uint32_t count = 0;
-
-    while((RTC_REGS->MODE0.SYNCBUSY.w & RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk) == RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk)
-    {
-        /* Wait for Synchronization before reading value from Count Register */
-    }
-
-    /* Get 32Bit Count Value from COUNT register */
-    count = RTC_REGS->MODE0.COUNT.w;
-
-    return count;
-}
-
-// *****************************************************************************
-/* Function:
-    uint32_t RTC${RTC_INDEX}_Timer32PeriodGet ( void )
-
-  Summary:
-    Get 32-bit timer period Value.
-
-  Description:
-    This function returns the 32-bit timer period value which used to compare
-    with the current counter value. This value will match the value that was set
-    using the RTC${RTC_INDEX}_Timer32PeriodSet() function.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-uint32_t RTC${RTC_INDEX}_Timer32PeriodGet ( void )
-{
-    /* Get 32Bit Compare Value */
-    return (RTC_REGS->MODE0.COMP.w);
-}
-
-// *****************************************************************************
-/* Function:
-    uint32_t RTC${RTC_INDEX}_Timer32FrequencyGet ( void )
-
-  Summary:
-    Returns the frequency at which the 32-bit timer counter is operating.
-
-  Description:
-    This function returns the frequency at which the 32-bit timer counter is
-    operating. The return value can be used to compute the period that needs to
-    be set in order to operate the timer counter at a desired frequency.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-uint32_t RTC${RTC_INDEX}_Timer32FrequencyGet ( void )
-{
-    /* Return Frequency of RTC Clock */
-    return RTC_CLOCK_FREQUENCY;
-}
+        <#lt>void RTC${RTC_INDEX}_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt)
+        <#lt>{
+        <#lt>    RTC_REGS->MODE1.INTENCLR = interrupt;
+        <#lt>}
+            
+    </#if>
 <#else>
 
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer16Start ( void )
+    <#lt>void RTC${RTC_INDEX}_Timer16Start ( void )
+    <#lt>{
+    <#lt>    RTC_REGS->MODE1.CTRLA |= RTC_MODE1_CTRLA_ENABLE_Msk;
 
-  Summary:
-    Starts the 16-bit timer.
+    <#lt>    while((RTC_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_ENABLE_Msk) == RTC_MODE1_SYNCBUSY_ENABLE_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after Enabling RTC */
+    <#lt>    }
+    <#lt>}
 
-  Description:
-    This function starts the 16-bit timer. The timer will start counting up from
-    the value that was set using the RTC${RTC_INDEX}_Timer16CounterSet()
-    function. The timer will count at a rate configured by the input clock and
-    the input prescalar.
+    <#lt>void RTC${RTC_INDEX}_Timer16Stop ( void )
+    <#lt>{
+    <#lt>    RTC_REGS->MODE1.CTRLA &= ~(RTC_MODE1_CTRLA_ENABLE_Msk);
 
-    The timer can be configured to count up till a specific non-zero value. This
-    value is specified using the RTC${RTC_INDEX}_Timer16PeriodSet() function.
-    Setting a non-zero will cause the timer counter to operate as timer.
-    The counter will count up to the period value and then reset and start
-    counting again. This causes a period expiry event. Timer type operations are
-    preferred to implement a delay or obtain periodic notification.
+    <#lt>    while((RTC_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_ENABLE_Msk) == RTC_MODE1_SYNCBUSY_ENABLE_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after Disabling RTC */
+    <#lt>    }
+    <#lt>}
 
-    Setting the period to 0 will result in a counter type operation. In this
-    mode, starting the timer will cause the counter to count up to 0xFFFF and
-    then overflow to 0 and continue counting. This causes an overflow event. A
-    counter can be used to count in timer input clock units. This is useful
-    when needed to perform temporal measurements.
 
-    The counter can be stopped by calling the RTC${RTC_INDEX}_Timer16Stop
-    function. Calling the RTC${RTC_INDEX}_Timer16Start() will again start the
-    counting from the current counter value.
+    <#lt>void RTC${RTC_INDEX}_Timer16CounterSet ( uint16_t count )
+    <#lt>{
+    <#lt>    RTC_REGS->MODE1.COUNT = count;
 
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
+    <#lt>    while((RTC_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COUNT_Msk) == RTC_MODE1_SYNCBUSY_COUNT_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after writing value to Count Register */
+    <#lt>    }
+    <#lt>}
 
-void RTC${RTC_INDEX}_Timer16Start ( void )
-{
-    /* Clear all Interrupts */
-    RTC_REGS->MODE1.INTFLAG.w = RTC_MODE1_INTFLAG_Msk;
 
-<#if RTC_MODE1_INTERRUPT = true>
-<#if RTC_MODE1_PERIOD != "NO">
-    /* Enable Period and Overflow Interrupt */
-    RTC_REGS->MODE1.INTENSET.w |= RTC_MODE1_INTENSET_${RTC_MODE1_PERIOD}_Msk | RTC_MODE1_INTENSET_OVF_Msk;
-<#else>
-    /* Enable Overflow Interrupt */
-    RTC_REGS->MODE1.INTENSET.w |= RTC_MODE1_INTENSET_OVF_Msk;
-</#if>
-</#if>
+    <#lt>void RTC${RTC_INDEX}_Timer16PeriodSet ( uint16_t period )
+    <#lt>{
+    <#lt>    RTC_REGS->MODE1.PER = period;
 
-    /* Enable RTC */
-    RTC_REGS->MODE1.CTRLA.w |= RTC_MODE1_CTRLA_ENABLE_Msk;
+    <#lt>    while((RTC_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_PER_Msk) == RTC_MODE1_SYNCBUSY_PER_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after writing Counter Period */
+    <#lt>    }
+    <#lt>}
 
-    while((RTC_REGS->MODE1.SYNCBUSY.w & RTC_MODE1_SYNCBUSY_ENABLE_Msk) == RTC_MODE1_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for Synchronization after Enabling RTC */
-    }
-}
+    <#lt>uint16_t RTC${RTC_INDEX}_Timer16CounterGet ( void )
+    <#lt>{
+    <#lt>    while((RTC_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COUNTSYNC_Msk) == RTC_MODE1_SYNCBUSY_COUNTSYNC_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after reading value from Count Register */
+    <#lt>    }
+    <#lt>    return (RTC_REGS->MODE1.COUNT);
+    <#lt>}
 
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer16Stop ( void )
+    <#lt>uint16_t RTC${RTC_INDEX}_Timer16PeriodGet ( void )
+    <#lt>{
+    <#lt>    return (RTC_REGS->MODE1.PER);
+    <#lt>}
 
-  Summary:
-    Stops the 16-bit timer from counting.
+    <#lt>void RTC${RTC_INDEX}_Timer16Compare0Set ( uint16_t comparisionValue )
+    <#lt>{
+    <#lt>   RTC_REGS->MODE1.COMP[0] = comparisionValue;
 
-  Description:
-    This function will stop the 16-bit timer from counting. Any on-going
-    timing/counting operations will be affected. Stopping the timer does not
-    reset the counter. This must be explicitly done by calling the
-    RTC${RTC_INDEX}_Timer16CounterSet() function.
+    <#lt>   while((RTC_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COMP0_Msk) == RTC_MODE1_SYNCBUSY_COMP0_Msk)
+    <#lt>   {
+    <#lt>       /* Wait for Synchronization after writing Compare Value */
+    <#lt>   }
+    <#lt>}
 
-    Calling this function if the timer is already stopped will result in a
-    functional no-operation. An application may need to stop the timer if it
-    does not require delay services or if the counting needs to paused.
+    <#lt>void RTC${RTC_INDEX}_Timer16Compare1Set ( uint16_t comparisionValue )
+    <#lt>{
+    <#lt>   RTC_REGS->MODE1.COMP[1] = comparisionValue;
 
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
+    <#lt>   while((RTC_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COMP1_Msk) == RTC_MODE1_SYNCBUSY_COMP1_Msk)
+    <#lt>   {
+    <#lt>       /* Wait for Synchronization after writing Compare Value */
+    <#lt>   }
+    <#lt>}
 
-void RTC${RTC_INDEX}_Timer16Stop ( void )
-{
-    /* Disable RTC */
-    RTC_REGS->MODE1.CTRLA.w &= ~(RTC_MODE1_CTRLA_ENABLE_Msk);
+    <#lt>uint32_t RTC${RTC_INDEX}_Timer16FrequencyGet ( void )
+    <#lt>{
+    <#lt>    return RTC_CLOCK_FREQUENCY;
+    <#lt>}
 
-    while((RTC_REGS->MODE1.SYNCBUSY.w & RTC_MODE1_SYNCBUSY_ENABLE_Msk) == RTC_MODE1_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for Synchronization after Disabling RTC */
-    }
+    <#if RTC_MODE1_INTERRUPT = true>
 
-    /* Disable all Interrupts */
-    RTC_REGS->MODE1.INTENCLR.w = RTC_MODE1_INTENCLR_Msk;
-}
+        <#lt>void RTC${RTC_INDEX}_Timer16InterruptEnable(RTC_TIMER16_INT_MASK interrupt)
+        <#lt>{
+        <#lt>    RTC_REGS->MODE1.INTENSET = interrupt;
+        <#lt>}
 
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer16CounterSet ( uint16_t count )
+        <#lt>void RTC${RTC_INDEX}_Timer16InterruptDisable(RTC_TIMER16_INT_MASK interrupt)
+        <#lt>{
+        <#lt>    RTC_REGS->MODE1.INTENCLR = interrupt;
+        <#lt>}
 
-  Summary:
-    Set the 16-bit Timer Counter Value.
-
-  Description:
-    This function sets the 16-bit timer counter value. The counter will start to
-    count up from this count value. The application may typically set the
-    counter to 0 before starting a timing or counting operation. Calling this
-    function when the timer is running will overwrite the current counter value.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer16CounterSet ( uint16_t count )
-{
-    /* Set 16Bit Count Value to COUNT Register */
-    RTC_REGS->MODE1.COUNT.w = count;
-
-    while((RTC_REGS->MODE1.SYNCBUSY.w & RTC_MODE1_SYNCBUSY_COUNT_Msk) == RTC_MODE1_SYNCBUSY_COUNT_Msk)
-    {
-        /* Wait for Synchronization after writing value to Count Register */
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer16PeriodSet ( uint16_t period )
-
-  Summary:
-    Set the 16-bit timer period value.
-
-  Description:
-    This function sets the 16-bit timer period value. The counter value will be
-    compared against the period value and a period expiry event will occur when
-    the counter matches the period. If the library is configured for interrupt
-    mode and if a event handler function has been set through the
-    RTC${RTC_INDEX}_Timer16CallbackRegister() function, the event handling
-    function will be called.
-    Additionally the RTC${RTC_INDEX}_Timer16PeriodHasExpired() function will
-    return true. When the match occurs, the counter will be reset and the
-    counting will start again.
-
-    Setting the period to a non-zero value will cause the timer counter to
-    operate as a timer that counts up to a specific value and resets. Setting
-    the period to 0 will cause the timer counter to operate as counter, using
-    the full range of the 16-bit timer, that can be used to measure a time
-    duration.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer16PeriodSet ( uint16_t period )
-{
-    /* Set maximum 16Bit Counter Period */
-    RTC_REGS->MODE1.PER.w = period;
-
-    while((RTC_REGS->MODE1.SYNCBUSY.w & RTC_MODE1_SYNCBUSY_PER_Msk) == RTC_MODE1_SYNCBUSY_PER_Msk)
-    {
-        /* Wait for Synchronization after writing Counter Period */
-    }
-}
-
-// *****************************************************************************
-/* Function:
-  uint16_t RTC${RTC_INDEX}_Timer16CounterGet ( void )
-
-  Summary:
-    Get the current 16-bit counter value.
-
-  Description:
-    This function returns the current 16-bit count value. This function can be
-    used to retrieve the counter value at the end of a time measurement.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-uint16_t RTC${RTC_INDEX}_Timer16CounterGet ( void )
-{
-    uint16_t count = 0;
-
-    while((RTC_REGS->MODE1.SYNCBUSY.w & RTC_MODE1_SYNCBUSY_COUNTSYNC_Msk) == RTC_MODE1_SYNCBUSY_COUNTSYNC_Msk)
-    {
-        /* Wait for Synchronization after reading value from Count Register */
-    }
-
-    /* Get 16Bit Count Value from COUNT Register */
-    count = RTC_REGS->MODE1.COUNT.w;
-
-    return count;
-}
-
-// *****************************************************************************
-/* Function:
-    uint16_t RTC${RTC_INDEX}_Timer16PeriodGet ( void )
-
-  Summary:
-    Get 16-bit timer period Value.
-
-  Description:
-    This function returns the 16-bit timer period value which used to compare
-    with the current counter value. This value will match the value that was set
-    using the RTC${RTC_INDEX}_Timer16PeriodSet() function.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-uint16_t RTC${RTC_INDEX}_Timer16PeriodGet ( void )
-{
-    /* Get 16Bit Compare Value */
-    return (RTC_REGS->MODE1.PER.w);
-}
-<#if RTC_MODE1_GENERATE_COMPARE0_API = true>
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer16Compare0Set ( uint16_t comparisionValue )
-
-  Summary:
-    Set the 16-Bit Counter Compare 0 Value.
-
-  Description:
-    This function will set the Counter Compare 0 Value. The module will compare
-    the counter against this value and will signal a match when the counter
-    equals the compare value. If the library was configured for interrupt mode,
-    the Compare 0 event is enabled and if a valid callback is registered, the
-    library will call the registered callback function with the
-    RTC_TIMER16_EVENT_COMPARE0_MATCH event.
-    The RTC${RTC_INDEX}_Timer16Compare0HasMatched() function will return true
-    when the match occurs.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer16Compare0Set ( uint16_t comparisionValue )
-{
-     /* Set 16Bit Compare Value */
-     RTC_REGS->MODE1.COMP[0].w = comparisionValue;
-
-     while((RTC_REGS->MODE1.SYNCBUSY.w & RTC_MODE1_SYNCBUSY_COMP0_Msk) == RTC_MODE1_SYNCBUSY_COMP0_Msk)
-     {
-         /* Wait for Synchronization after writing Compare Value */
-     }
-}
-</#if>
-<#if RTC_MODE1_GENERATE_COMPARE1_API = true>
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer16Compare1Set ( uint16_t comparisionValue )
-
-  Summary:
-    Set the 16-Bit Counter Compare 1 Value.
-
-  Description:
-    This function will set the Counter Compare 1 Value. The module will compare
-    the counter against this value and will signal a match when the counter
-    equals the compare value. If the library was configured for interrupt mode,
-    the Compare 1 event is enabled and if a valid callback is registered, the
-    library will call the registered callback function with the
-    RTC_TIMER16_EVENT_COMPARE0_MATCH event.
-    The RTC${RTC_INDEX}_Timer16Compare1HasMatched() function will return true
-    when the match occurs.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer16Compare1Set ( uint16_t comparisionValue )
-{
-    /* Set 16Bit Compare Value */
-    RTC_REGS->MODE1.COMP[1].w = comparisionValue;
-
-    while((RTC_REGS->MODE1.SYNCBUSY.w & RTC_MODE1_SYNCBUSY_COMP1_Msk) == RTC_MODE1_SYNCBUSY_COMP1_Msk)
-    {
-        /* Wait for Synchronization after writing Compare Value */
-    }
-}
+    </#if>
 </#if>
 
-// *****************************************************************************
-/* Function:
-    uint32_t RTC${RTC_INDEX}_Timer16FrequencyGet ( void )
+<#if ( RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" ) ||
+     ( RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ) >
+    <#if RTC_MODULE_SELECTION = "MODE0" >
+        <#lt>void RTC${RTC_INDEX}_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t context )
+        <#lt>{
+        <#lt>    rtc${RTC_INDEX}Obj.timer32BitCallback = callback;
+        <#lt>    rtc${RTC_INDEX}Obj.context            = context;
+        <#lt>}
+    <#else>
 
-  Summary:
-    Returns the frequency at which the 16-bit timer counter is operating.
+        <#lt>void RTC${RTC_INDEX}_Timer16CallbackRegister ( RTC_TIMER16_CALLBACK callback, uintptr_t context )
+        <#lt>{
+        <#lt>    rtc${RTC_INDEX}Obj.timer16BitCallback = callback;
+        <#lt>    rtc${RTC_INDEX}Obj.context            = context;
+        <#lt>}
+    </#if>
 
-  Description:
-    This function returns the frequency at which the 16-bit timer counter is
-    operating. The return value can be used to compute the period that needs to
-    be set in order to operate the timer counter at a desired frequency.
+    <#lt>void RTC${RTC_INDEX}_InterruptHandler(void)
+    <#lt>{
+    <#if RTC_MODULE_SELECTION = "MODE0">
+        <#lt>    rtc${RTC_INDEX}Obj.timer32intCause = RTC_REGS->MODE0.INTFLAG;
 
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
+        <#lt>    /* Invoke registered Callback function */
+        <#lt>    if(rtc${RTC_INDEX}Obj.timer32BitCallback != NULL)
+        <#lt>    {
+        <#lt>        rtc${RTC_INDEX}Obj.timer32BitCallback( rtc${RTC_INDEX}Obj.timer32intCause, rtc${RTC_INDEX}Obj.context );
+        <#lt>    }
+            
+        <#lt>    RTC_REGS->MODE0.INTFLAG = RTC_MODE0_INTFLAG_Msk;
+    <#else>
+        <#lt>    /* Update the event in RTC Peripheral Callback object */
+        <#lt>    rtc${RTC_INDEX}Obj.timer16intCause = RTC_REGS->MODE1.INTFLAG;
 
-uint32_t RTC${RTC_INDEX}_Timer16FrequencyGet ( void )
-{
-    /* Return Frequency of RTC Clock */
-    return RTC_CLOCK_FREQUENCY;
-}
-<#if RTC_MODE1_INTERRUPT = true>
-<#if RTC_MODE1_GENERATE_COMPARE1_API = true>
+        <#lt>    /* Invoke registered Callback function */
+        <#lt>    if(rtc${RTC_INDEX}Obj.timer16BitCallback != NULL)
+        <#lt>    {
+        <#lt>        rtc${RTC_INDEX}Obj.timer16BitCallback( rtc${RTC_INDEX}Obj.timer16intCause, rtc${RTC_INDEX}Obj.context );
+        <#lt>    }
 
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer16Compare1EventEnable (bool enable)
-
-  Summary:
-    Enables or disables Compare 1 Match Event Generation.
-
-  Description:
-    This function allows the application to control the generation of the
-    Compare 1 Match Event.  If this function is called with enable set to true,
-    the Compare 1 Match Event generation is enabled and the registered event
-    handling callback function will be called with the
-    RTC_TIMER16_EVENT_COMPARE1_MATCH when a Compare 1 Value match has occurred.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer16Compare1EventEnable (bool enable)
-{
-    if(enable)
-    {
-        /* Enable Comparator1 comparison */
-        RTC_REGS->MODE1.INTENSET.w |= RTC_MODE1_INTENSET_CMP1_Msk;
-    }
-    else
-    {
-        /* Disable Comparator1 comparison */
-        RTC_REGS->MODE1.INTENSET.w &= ~(RTC_MODE1_INTENSET_CMP1_Msk);
-    }
-}
-</#if>
-</#if>
-<#if RTC_MODE1_INTERRUPT = true>
-<#if RTC_MODE1_GENERATE_COMPARE0_API = true>
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer16Compare0EventEnable (bool enable)
-
-  Summary:
-    Enables or disables Compare 0 Match Event Generation.
-
-  Description:
-    This function allows the application to control the generation of the
-    Compare 0 Match Event.  If this function is called with enable set to true,
-    the Compare 0 Match Event generation is enabled and the registered event
-    handling callback function will be called with the
-    RTC_TIMER16_EVENT_COMPARE0_MATCH when a Compare 0 Value match has occurred.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer16Compare0EventEnable(bool enable)
-{
-    if(enable)
-    {
-        /* Enable Comparator0 comparison */
-        RTC_REGS->MODE1.INTENSET.w |= RTC_MODE1_INTENSET_CMP0_Msk;
-    }
-    else
-    {
-        /* Disable Comparator0 comparison */
-        RTC_REGS->MODE1.INTENSET.w &= ~(RTC_MODE1_INTENSET_CMP0_Msk);
-    }
-}
-</#if>
-</#if>
-</#if>
-<#if (RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0") ||
-     (RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1") >
-<#if RTC_MODE0_PERIOD != "NO" || RTC_MODE1_PERIOD != "NO" >
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_PeriodicIntervalCallbackRegister
-                  (RTC_PERIODIC_INTERVAL_CALLBACK callback, uintptr_t context);
-
-  Summary:
-    Register the callback function to be called when a configured RTC Periodic
-    Interval has completd.
-
-  Description:
-    This function registers the  callback function  that the library will call
-    when a configured RTC Periodic Interval has completed. The library will the
-    pass the application specified context into the callback function.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_PeriodicIntervalCallbackRegister(RTC_PERIODIC_INTERVAL_CALLBACK callback, uintptr_t context)
-{
-    rtc${RTC_INDEX}Obj.periodicCallback = callback;
-    rtc${RTC_INDEX}Obj.context  = context;
-}
-</#if>
-<#if RTC_MODULE_SELECTION = "MODE0" >
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer32CallbackRegister( RTC_TIMER32_CALLBACK callback,
-                                                  uintptr_t context )
-
-  Summary:
-    Register the callback function to be called when an 32-bit Timer Interrupt
-    occurs.
-
-  Description:
-    This function registers the  callback function  that the library will call
-    when an interrupt occurs. The library will return the event that has caused
-    the interrupt and the application specified context in the callback
-    function.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t context )
-{
-    rtc${RTC_INDEX}Obj.timer32BitCallback = callback;
-    rtc${RTC_INDEX}Obj.context            = context;
-}
-<#else>
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_Timer16CallbackRegister ( RTC_TIMER16_CALLBACK callback,
-                                                   uintptr_t context )
-
-  Summary:
-    Register the callback function to be called when an 16-bit Timer Interrupt
-    occurs.
-
-  Description:
-    This function registers the  callback function  that the library will call
-    when an interrupt occurs. The library will return the event that has caused
-    the interrupt and the application specified context in the callback
-    function.
-
-  Remarks:
-    Refer plib_rtc${RTC_INDEX}.h for more information.
-*/
-
-void RTC${RTC_INDEX}_Timer16CallbackRegister ( RTC_TIMER16_CALLBACK callback, uintptr_t context )
-{
-    rtc${RTC_INDEX}Obj.timer16BitCallback = callback;
-    rtc${RTC_INDEX}Obj.context            = context;
-}
-</#if>
-
-// *****************************************************************************
-/* Function:
-    void RTC${RTC_INDEX}_InterruptHandler(void)
-
-  Summary:
-    Handle RTC Interrupts
-
-  Description:
-    This function is called from the RTC handler to handle the interrupts.
-    Invoke the callback function which is already registered in corresponding
-    mode.
-
-  Remarks:
-    None.
-*/
-
-void RTC${RTC_INDEX}_InterruptHandler(void)
-{
-<#if RTC_MODULE_SELECTION = "MODE0">
-<#if RTC_MODE0_PERIOD != "NO">
-    /* Check Periodic interval has expired */
-    if((RTC_REGS->MODE0.INTFLAG.w & RTC_MODE0_INTFLAG_${RTC_MODE0_PERIOD}_Msk) == RTC_MODE0_INTFLAG_${RTC_MODE0_PERIOD}_Msk)
-    {
-        if(rtc${RTC_INDEX}Obj.periodicCallback != NULL)
-        {
-            rtc${RTC_INDEX}Obj.periodicCallback(rtc${RTC_INDEX}Obj.context);
-        }
-    }
-
-</#if>
-    /* Check Period and Overflow has expired */
-    if((RTC_REGS->MODE0.INTFLAG.w & RTC_REGS->MODE0.INTENSET.w) & RTC_32BIT_INTERRUPT_MASK)
-    {
-        /* Update the event in RTC Peripheral Callback object */
-        rtc${RTC_INDEX}Obj.timer32BitEvent = RTC_REGS->MODE0.INTFLAG.w;
-
-        /* Invoke registered Callback function */
-        if(rtc${RTC_INDEX}Obj.timer32BitCallback != NULL)
-        {
-            rtc${RTC_INDEX}Obj.timer32BitCallback( rtc${RTC_INDEX}Obj.timer32BitEvent, rtc${RTC_INDEX}Obj.context );
-        }
-    }
-
-    /* Clear all Interrupts */
-    RTC_REGS->MODE0.INTFLAG.w = RTC_MODE0_INTFLAG_Msk;
-<#else>
-<#if RTC_MODE1_PERIOD != "NO">
-
-    /* Check Periodic interval has expired */
-    if((RTC_REGS->MODE1.INTFLAG.w & RTC_MODE1_INTFLAG_${RTC_MODE1_PERIOD}_Msk) == RTC_MODE1_INTFLAG_${RTC_MODE1_PERIOD}_Msk)
-    {
-        if(rtc${RTC_INDEX}Obj.periodicCallback != NULL)
-        {
-            rtc${RTC_INDEX}Obj.periodicCallback(rtc${RTC_INDEX}Obj.context);
-        }
-    }
-
-</#if>
-    /* Check Compare 0, Compare 1 and Overflow Interrupt */
-    if((RTC_REGS->MODE1.INTFLAG.w & RTC_REGS->MODE1.INTENSET.w) & RTC_16BIT_INTERRUPT_MASK)
-    {
-        /* Update the event in RTC Peripheral Callback object */
-        rtc${RTC_INDEX}Obj.timer16BitEvent = RTC_REGS->MODE1.INTFLAG.w;
-
-        /* Invoke registered Callback function */
-        if(rtc${RTC_INDEX}Obj.timer16BitCallback != NULL)
-        {
-            rtc${RTC_INDEX}Obj.timer16BitCallback( rtc${RTC_INDEX}Obj.timer16BitEvent, rtc${RTC_INDEX}Obj.context );
-        }
-    }
-
-    /* Clear all Interrupts */
-    RTC_REGS->MODE1.INTFLAG.w = RTC_MODE1_INTFLAG_Msk;
-</#if>
-}
+        <#lt>    RTC_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_Msk;
+    </#if>
+    <#lt>}
 </#if>
