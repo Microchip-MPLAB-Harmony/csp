@@ -90,14 +90,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
    Example:
     <code>
-		ticks = 0;
+        ticks = 0;
 
-		void MyCallback ( uintptr_t context )
-		{
-			ticks++;
-		}
+        void MyCallback ( uintptr_t context )
+        {
+            ticks++;
+        }
 
-		SYSTICK_TimerCallbackSet(MyCallback, (uintptr_t) NULL);
+        SYSTICK_TimerCallbackSet(MyCallback, (uintptr_t) NULL);
     </code>
 
    Remarks:
@@ -108,8 +108,8 @@ typedef void (*SYSTICK_CALLBACK)(uintptr_t context);
 
 typedef struct
 {
-	SYSTICK_CALLBACK          callback;
-	uintptr_t               context;
+    SYSTICK_CALLBACK          callback;
+    uintptr_t               context;
 } SYSTICK_OBJECT ;
 
 SYSTICK_OBJECT systick;
@@ -132,7 +132,7 @@ SYSTICK_OBJECT systick;
 
    Description:
      This function initializes the System Timer as configured by the user
-	 from within the MCC.
+     from within the MCC.
 
    Precondition:
      None.
@@ -145,14 +145,41 @@ SYSTICK_OBJECT systick;
 
    Example:
     <code>
-		SYSTICK_Initialize();
+        SYSTICK_Initialize();
     </code>
 */
-void     SYSTICK_TimerInitialize ( void );
+void SYSTICK_TimerInitialize ( void );
 
 // *****************************************************************************
 /* Function:
-    void SYSTICK_Initialize( void )
+    void SYSTICK_TimerRestart( void )
+
+   Summary:
+     Restarts SysTick.
+
+   Description:
+     This function Restarts systick timer with preloaded configuration.
+
+   Precondition:
+     SYSTICK_Initialize should have been called to set up SysTick..
+
+   Parameters:
+    None.
+
+   Returns:
+    None.
+
+   Example:
+    <code>
+        SYSTICK_Initialize();
+        SYSTICK_TimerRestart();
+    </code>
+*/
+void SYSTICK_TimerInitialize ( void );
+
+// *****************************************************************************
+/* Function:
+    void SYSTICK_TimerStart( void )
 
    Summary:
      Starts System Timer.
@@ -171,15 +198,15 @@ void     SYSTICK_TimerInitialize ( void );
 
    Example:
     <code>
-		SYSTICK_Initialize();
-		SYSTICK_TimerStart();
+        SYSTICK_Initialize();
+        SYSTICK_TimerStart();
     </code>
 */
-void     SYSTICK_TimerStart ( void );
+void SYSTICK_TimerStart ( void );
 
 // *****************************************************************************
 /* Function:
-    void SYSTICK_Initialize( void )
+    void SYSTICK_TimerStop( void )
 
    Summary:
      Stops System Timer.
@@ -198,10 +225,10 @@ void     SYSTICK_TimerStart ( void );
 
    Example:
     <code>
-		SYSTICK_TimerStops();
+        SYSTICK_TimerStops();
     </code>
 */
-void     SYSTICK_TimerStop ( void );
+void SYSTICK_TimerStop ( void );
 
 // *****************************************************************************
 /* Function:
@@ -215,8 +242,8 @@ void     SYSTICK_TimerStop ( void );
 
    Precondition:
      Systick should be stopped prior to setting up the new Load value
-	 by calling SYSTICK_TimerStop. This will make sure that the new value
-	 is used for the next Tick
+     by calling SYSTICK_TimerStop. This will make sure that the new value
+     is used for the next Tick
 
    Parameters:
     None.
@@ -226,9 +253,9 @@ void     SYSTICK_TimerStop ( void );
 
    Example:
     <code>
-		SYSTICK_TimerStop();
-		SYSTICK_TimerPeriodSet(0x00004567);
-		SYSTICK_TimerStart();
+        SYSTICK_TimerStop();
+        SYSTICK_TimerPeriodSet(0x00004567);
+        SYSTICK_TimerStart();
     </code>
 */
 void  SYSTICK_TimerPeriodSet ( uint32_t period );
@@ -254,9 +281,9 @@ void  SYSTICK_TimerPeriodSet ( uint32_t period );
 
    Example:
     <code>
-		uint32_t period;
+        uint32_t period;
 
-		period = SYSTICK_TimerPeriodGet();
+        period = SYSTICK_TimerPeriodGet();
 
     </code>
 */
@@ -265,7 +292,7 @@ uint32_t SYSTICK_TimerPeriodGet ( void );
 
 // *****************************************************************************
 /* Function:
-    uint32_t SYSTICK_TimerPeriodGet( void )
+    uint32_t SYSTICK_TimerCounterGet( void )
 
    Summary:
     Get the SysTick current Value
@@ -284,9 +311,9 @@ uint32_t SYSTICK_TimerPeriodGet ( void );
 
    Example:
     <code>
-		uint32_t value;
+        uint32_t value;
 
-		value = SYSTICK_TimerCounterGet();
+        value = SYSTICK_TimerCounterGet();
 
     </code>
 */
@@ -314,9 +341,9 @@ uint32_t SYSTICK_TimerCounterGet ( void );
 
    Example:
     <code>
-		uint32_t frequency;
+        uint32_t frequency;
 
-		frequency = SYSTICK_TimerFrequencyGet();
+        frequency = SYSTICK_TimerFrequencyGet();
 
     </code>
 */
@@ -332,7 +359,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
 
    Description:
      This function is used to identify if the Systick underflow has happened.
-	 This API can be used in polling mode
+     This API can be used in polling mode
 
    Precondition:
      SYSTICK_Initialize should have been called to set up SysTick.
@@ -345,23 +372,23 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
 
    Example:
     <code>
-		SYSTICK_Initialize();
-		SYSTICK_TimerStart();
+        SYSTICK_Initialize();
+        SYSTICK_TimerStart();
 
-		if(SYSTICK_TimerPeriodHasExpired)
-		{
-			//application code
-		}
+        if(SYSTICK_TimerPeriodHasExpired)
+        {
+            //application code
+        }
 
     </code>
 */
 
-bool	 SYSTICK_TimerPeriodHasExpired(void);
+bool SYSTICK_TimerPeriodHasExpired(void);
 
 
 // *****************************************************************************
 /* Function:
-	void SYSTICK_DelayMs ( uint32_t ms )
+    void SYSTICK_DelayMs ( uint32_t ms )
 
    Summary:
     Blocking function to generate delay in milliseconds
@@ -380,11 +407,11 @@ bool	 SYSTICK_TimerPeriodHasExpired(void);
 
    Example:
     <code>
-		SYSTICK_Initialize();
-		SYSTICK_TimerStart();
+        SYSTICK_Initialize();
+        SYSTICK_TimerStart();
 
-		// Generates 100ms blocking delay
-		SYSTICK_DelayMs(100)
+        // Generates 100ms blocking delay
+        SYSTICK_DelayMs(100)
 
     </code>
 */
@@ -413,17 +440,17 @@ void SYSTICK_DelayMs ( uint32_t ms )
 
    Parameters:
     callback - A pointer to a function with a calling signature defined
-	by the SYSTICK_CALLBACK data type.
+    by the SYSTICK_CALLBACK data type.
 
     context - A value (usually a pointer) passed (unused) into the function
-	identified by the callback parameter.
+    identified by the callback parameter.
 
    Returns:
     None.
 
   Example:
     <code>
-		SYSTICK_TimerCallbackSet(MyCallback, &myData);
+        SYSTICK_TimerCallbackSet(MyCallback, &myData);
     </code>
 
   Remarks:
@@ -432,7 +459,7 @@ void SYSTICK_DelayMs ( uint32_t ms )
     To disable the callback function, pass a NULL for the callback parameter.
 
 */
-void     SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
+void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
 
 
 #ifdef __cplusplus  // Provide C++ Compatibility

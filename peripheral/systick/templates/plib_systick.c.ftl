@@ -66,8 +66,16 @@ void SYSTICK_TimerInitialize ( void )
 	</#if>
 }
 
+void SYSTICK_TimerRestart ( void )
+{
+	SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
+	SysTick->VAL = 0;
+	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+}
+
 void SYSTICK_TimerStart ( void )
 {
+	SysTick->VAL = 0;
 	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
 }
 

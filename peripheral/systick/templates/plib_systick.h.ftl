@@ -78,6 +78,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#if>
 /***************************** SYSTICK API *******************************/
 void SYSTICK_TimerInitialize ( void );
+void SYSTICK_TimerRestart ( void );
 void SYSTICK_TimerStart ( void );
 void SYSTICK_TimerStop ( void );
 void SYSTICK_TimerPeriodSet ( uint32_t period );
