@@ -224,7 +224,7 @@ static void CLK_UTMIPLLInitialize(void)
 }
 </#if>
 
-<#if (PMC_MCKR_CSS != "MAIN_CLK") || (PMC_MCKR_MDIV != "PCK_DIV2") || ( PMC_MCKR_PRES != "CLK_1")>
+<#if (PMC_MCKR_CSS != "MAIN_CLK") || (PMC_MCKR_MDIV != "EQ_PCK") || ( PMC_MCKR_PRES != "CLK_1")>
 /*********************************************************************************
 Initialize Master clock (MCK)
 *********************************************************************************/
@@ -356,7 +356,7 @@ void CLK_Initialize( void )
     CLK_UTMIPLLInitialize();
 </#if>
 
-<#if (PMC_MCKR_CSS != "MAIN_CLK") || (PMC_MCKR_MDIV != "PCK_DIV2") || ( PMC_MCKR_PRES != "CLK_1")>
+<#if (PMC_MCKR_CSS != "MAIN_CLK") || (PMC_MCKR_MDIV != "EQ_PCK") || ( PMC_MCKR_PRES != "CLK_1")>
     /* Initialize Master Clock */
     CLK_MasterClockInitialize();
 </#if>
