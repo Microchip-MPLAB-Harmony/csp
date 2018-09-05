@@ -72,8 +72,12 @@ cortexMenu.setDescription("Configuration for Cortex A5")
 #load MMU with default 1:1 mapping so we can use cache
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
 
+#load Matrix -- default all peripherals to non-secure
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/matrix_44025/config/matrix.py")
+
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_a5d2/config/clk.py")
+
 
 # load device specific pin manager information
 
