@@ -263,7 +263,7 @@ void UARTx_Initialize( void );
     is always non-blocking. Call to this function submits the buffer and the
     size to the peripheral library and returns immediately. User can check the
     transfer status either through callback mechanism or by calling
-    UARTx_TransferStatusGet.
+    UARTx_WriteIsBusy.
 
     If the peripheral is configured for the non-interrupt mode, this
     function call returns only after requested size is transferred.
@@ -318,7 +318,7 @@ bool UARTx_Write( void *buffer, const size_t size );
     is always non-blocking. Call to this function submits the buffer and the
     size to the peripheral library and returns immediately. User can check the
     transfer status either through callback mechanism or by calling
-    UARTx_TransferStatusGet.
+    UARTx_ReadIsBusy.
 
     If the peripheral is configured for the non-interrupt mode, this
     function call returns only after requested size is processed.
