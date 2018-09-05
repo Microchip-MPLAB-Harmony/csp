@@ -1,0 +1,1 @@
+#include "peripheral/sdadc/plib_sdadc${SDADC_INDEX}.h"
