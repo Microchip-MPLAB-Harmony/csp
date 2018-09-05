@@ -3,7 +3,6 @@ global xc32DTCMSizeSym
 global xc32ITCMSizeSym
 global tcmSize
 global tcmEnable
-global flashMemory
 
 def xc32SetTcmSize(symbol, event):
     symObj=event["symbol"]
@@ -40,12 +39,6 @@ def setTcmSize(symbol, event):
     elif (symObj.getSelectedKey()  == "128KB"):
         tcmSize.setValue("128 KB",2)
         tcmEnable.setValue(True,2)
-
-flashMemory = { "NAME"          : ["EFC"],
-                "START_ADDRESS" : ["0x00400000"],
-                "FLASH_SIZE"    : ["0x00200000"],
-                "PROGRAM_SIZE"  : ["0x200"],
-                "ERASE_SIZE"    : ["0x2000"]}
 
 def setXDMACDefaultSettings():
 	triggerSettings = {"Software Trigger"     : ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
@@ -132,13 +125,6 @@ def setMPUDefaultSettings():
     mpuSetUpLogicList = ['ITCM', 'DTCM', 'SRAM', 'EBI_SMC', 'EBI_SDRAM', 'QSPI']
     
     return mpuRegions, mpuSettings, mpuSetUpLogicList
-
-
-def startupSourceEnable(symbol, event):
-    if(event["value"] == True):
-       symbol.setEnabled(False)
-    elif(event["value"] == False):
-       symbol.setEnabled(True)
 
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
@@ -241,6 +227,7 @@ icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cac
 icacheEnable.setLabel("Enable Instruction Cache")
 icacheEnable.setDefaultValue(True)
 
+
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
 coreComponent.addPlugin("../peripheral/nvic_m7/plugin/ARM_M7_NVICmanager.jar")
@@ -265,6 +252,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 # load device specific adc manager information
 coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
 
+
 # generate startup_xc32.c file
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
 armSysStartSourceFile.setSourcePath("arm/templates/startup_xc32.c.ftl")
@@ -274,7 +262,6 @@ armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
 armSysStartSourceFile.setProjectPath("config/" + configName + "/")
 armSysStartSourceFile.setType("SOURCE")
-armSysStartSourceFile.setDependencies(startupSourceEnable, ["BootloaderEnable"])
 
 # generate libc_syscalls.c file
 armLibCSourceFile = coreComponent.createFileSymbol("LIBC_SYSCALLS_C", None)
