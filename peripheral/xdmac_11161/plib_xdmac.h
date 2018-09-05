@@ -534,13 +534,16 @@ void XDMAC_ChannelCallbackRegister (XDMAC_CHANNEL channel, const XDMAC_CHANNEL_C
     </code>
 
   Remarks:
-    The source/destination buffers should be made coherent and aligned to the
-    device cache line size to avoid the cache coherency issues.
-    For example:
-    <code>
-    uint8_t buffer[1024];
-    uint8_t __attribute__((coherent)) __attribute__((aligned(32))) buffer[1024];
-    </code>
+    When DMA transfer buffers are placed in cacheable memory, cache maintenance operation must be performed by cleaning and invalidating cache
+    for DMA buffers located in cacheable SRAM region using CMSIS APIs. The buffer start address must be aligned to cache line
+    and buffer size must be multiple of cache line.
+    Refer to device documentation to find the cache line size.
+
+    Invalidate cache lines having received buffer before using it to load the latest data in the actual memory to the cache
+    SCB_InvalidateDCache_by_Addr((uint32_t *)&readBuffer, sizeof(readBuffer));
+
+    Clean cache lines having source buffer before submitting a transfer request to XDMAC to load the latest data in the cache to the actual memory
+    SCB_CleanDCache_by_Addr((uint32_t *)&writeBuffer, sizeof(writeBuffer));
 */
 
 void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
