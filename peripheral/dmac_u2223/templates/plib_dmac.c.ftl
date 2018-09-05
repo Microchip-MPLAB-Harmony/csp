@@ -211,6 +211,9 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel )
 
     /* Disable the DMA channel */
     DMAC_REGS->DMAC_CHCTRLA &= (~DMAC_CHCTRLA_ENABLE_Pos);
+
+    dmacChannelObj[channel].busyStatus=false;
+
 }
 
 <#if DMAC_LL_ENABLE = true>
