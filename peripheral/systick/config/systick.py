@@ -85,7 +85,7 @@ def sysTickMax(systick, event):
 		clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
 	else:
 		clock = 1
-	freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+	freq_proc = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
 
 	if clock == 0:
 		if (int(freq_ext) != 0):
@@ -104,7 +104,7 @@ def systickCal(symbol, event):
 	else:
 		clock = 1
 	period = Database.getSymbolValue("core", "SYSTICK_PERIOD_MS")
-	freq_proc = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+	freq_proc = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
 	
 	if clock == 0:
 		if (int(freq_ext) != 0):
@@ -121,15 +121,15 @@ systickPeriodMS.setLabel("Systick Period(Milli sec)")
 systickPeriodMS.setVisible(True)
 systickPeriodMS.setDefaultValue(float(1.0))
 systickPeriodMS.setMin(0)
-systickPeriodMS.setDependencies(sysTickMax, ["core.PROCESSORCLK_FREQ", "SYSTICK_CLOCK", "core.SYSTICK"])
+systickPeriodMS.setDependencies(sysTickMax, ["core.CPU_CLOCK_FREQUENCY", "SYSTICK_CLOCK", "core.SYSTICK_CLOCK_FREQUENCY"])
 systickClock.setDefaultValue(int(Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK")))
 
-systickDefault = int(Database.getSymbolValue("core", "PROCESSORCLK_FREQ")) / 1000
+systickDefault = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")) / 1000
 systickPeriod = coreComponent.createStringSymbol("SYSTICK_PERIOD", systickMenu)
 systickPeriod.setLabel("SysTick Period")
 systickPeriod.setVisible(False)
 systickPeriod.setDefaultValue(str(hex(systickDefault)))
-systickPeriod.setDependencies(systickCal, ["SYSTICK_PERIOD_MS", "SYSTICK_CLOCK", "core.PROCESSORCLK_FREQ", "core.SYSTICK"])
+systickPeriod.setDependencies(systickCal, ["SYSTICK_PERIOD_MS", "SYSTICK_CLOCK", "core.CPU_CLOCK_FREQUENCY", "core.SYSTICK_CLOCK_FREQUENCY"])
 
 systickPeriodUS = coreComponent.createIntegerSymbol("SYSTICK_PERIOD_US", systickMenu)
 systickPeriodUS.setVisible(False)

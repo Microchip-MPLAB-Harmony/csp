@@ -20,7 +20,7 @@ dacChannelTriggerEnable = []
 #### Business Logic ####
 ################################################################################
 def daccGetMasterClockFrequency():
-    main_clk_freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    main_clk_freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
     return main_clk_freq
 
 def calcDacFrequency(symbol,event):
@@ -89,8 +89,8 @@ def setDacSpeed(symbol, event):
 ################################################################################
 def instantiateComponent(daccComponent):
 
-    Database.clearSymbolValue("core", "PMC_ID_DACC")
-    Database.setSymbolValue("core", "PMC_ID_DACC", True, 1)
+    Database.clearSymbolValue("core", "DACC_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "DACC_CLOCK_ENABLE", True, 1)
     instance = daccComponent.getID()[-1:]
 
     Log.writeInfoMessage("--------------------------------------------------------------------")
@@ -197,10 +197,7 @@ def instantiateComponent(daccComponent):
             
 ############################################################################
 #### Dependency ####
-############################################################################
-    # Enable Peripheral Clock in Clock manager
-    Database.clearSymbolValue("core", "PMC_ID_DACC")
-    Database.setSymbolValue("core", "PMC_ID_DACC", True, 2)         
+############################################################################       
             
             
 ############################################################################

@@ -160,8 +160,8 @@ def onGlobalEnableLogic(xdmacFileGen, event):
     NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
     # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", "PMC_ID_XDMAC")
-    Database.setSymbolValue("core", "PMC_ID_XDMAC", event["value"], 2)
+    Database.clearSymbolValue("core", "XDMAC_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "XDMAC_CLOCK_ENABLE", event["value"], 2)
     Database.clearSymbolValue("core", NVICVector)
     Database.setSymbolValue("core", NVICVector, event["value"], 2)
     Database.clearSymbolValue("core", NVICHandlerLock)

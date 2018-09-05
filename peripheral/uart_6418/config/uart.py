@@ -79,15 +79,15 @@ def clockSourceFreq(symbol, event):
     if (event["id"] == "UART_CLK_SRC"):
         symbol.clearValue()
         if (event["value"] == 0):
-            symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 2)
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
         if (event["value"] == 1):
-            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_FREQ")), 2)
-    if (event["id"] == "PCK4_FREQ") and (Database.getSymbolValue("uart" + str(uartInstance), "UART_CLK_SRC") == 1):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
+    if (event["id"] == "PCK4_CLOCK_FREQUENCY") and (Database.getSymbolValue("uart" + str(uartInstance), "UART_CLK_SRC") == 1):
         symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_FREQ")), 2)
-    if (event["id"] == "MASTERCLK_FREQ") and (Database.getSymbolValue("uart" + str(uartInstance), "UART_CLK_SRC") == 0):
+        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
+    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue("uart" + str(uartInstance), "UART_CLK_SRC") == 0):
         symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 2)
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
 
 ################################################################################
 #### Component ####
@@ -121,8 +121,8 @@ def instantiateComponent(uartComponent):
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
     uartClkValue.setLabel("Clock Source Value")
     uartClkValue.setReadOnly(True)
-    uartClkValue.setDependencies(clockSourceFreq, ["UART_CLK_SRC", "core.PCK4_FREQ", "core.MASTERCLK_FREQ"])
-    uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")))
+    uartClkValue.setDependencies(clockSourceFreq, ["UART_CLK_SRC", "core.PCK4_CLOCK_FREQUENCY", "core.MASTER_CLOCK_FREQUENCY"])
+    uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
 
     uartBaud = uartComponent.createIntegerSymbol("BAUD_RATE", None)
     uartBaud.setLabel("Baud Rate")
@@ -207,8 +207,8 @@ def instantiateComponent(uartComponent):
     NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
     # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", "PMC_ID_UART" + str(uartInstance))
-    Database.setSymbolValue("core", "PMC_ID_UART" + str(uartInstance), True, 2)
+    Database.clearSymbolValue("core", "UART"+ str(uartInstance)+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "UART"+ str(uartInstance)+"_CLOCK_ENABLE", True, 2)
     Database.clearSymbolValue("core", NVICVector)
     Database.setSymbolValue("core", NVICVector, True, 2)
     Database.clearSymbolValue("core", NVICHandler)
@@ -225,7 +225,7 @@ def instantiateComponent(uartComponent):
     uartSymClkEnComment = uartComponent.createCommentSymbol("UART_CLK_ENABLE_COMMENT", None)
     uartSymClkEnComment.setVisible(False)
     uartSymClkEnComment.setLabel("Warning!!! UART Peripheral Clock is Disabled in Clock Manager")
-    uartSymClkEnComment.setDependencies(dependencyStatus, ["core.PMC_ID_UART" + str(uartInstance)])
+    uartSymClkEnComment.setDependencies(dependencyStatus, ["core.UART"+ str(uartInstance)+"_CLOCK_ENABLE"])
 
     uartSymIntEnComment = uartComponent.createCommentSymbol("UART_NVIC_ENABLE_COMMENT", None)
     uartSymIntEnComment.setVisible(False)

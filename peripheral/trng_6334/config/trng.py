@@ -55,8 +55,8 @@ def instantiateComponent(trngComponent):
 	trngInterrupt.setDefaultValue(False)
 	
 	# Initial settings for CLK and NVIC
-	Database.clearSymbolValue("core", "PMC_ID_TRNG")
-	Database.setSymbolValue("core", "PMC_ID_TRNG", True, 2)
+	Database.clearSymbolValue("core", "TRNG_CLOCK_ENABLE")
+	Database.setSymbolValue("core", "TRNG_CLOCK_ENABLE", True, 2)
 	Database.clearSymbolValue("core", NVICVector)
 	Database.setSymbolValue("core", NVICVector, False, 2)
 	Database.clearSymbolValue("core", NVICHandler)

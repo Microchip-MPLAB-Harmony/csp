@@ -56,10 +56,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 <#if SYSTICK_CLOCK == "0">
-	<#lt>#define SYSTICK_FREQ		${SYSTICK}
+	<#lt>#define SYSTICK_FREQ		${SYSTICK_CLOCK_FREQUENCY}
 </#if>
 <#if SYSTICK_CLOCK == "1">
-	<#lt>#define SYSTICK_FREQ	${PROCESSORCLK_FREQ}
+	<#lt>#define SYSTICK_FREQ	${CPU_CLOCK_FREQUENCY}
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>

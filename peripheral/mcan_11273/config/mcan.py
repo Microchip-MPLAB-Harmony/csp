@@ -475,8 +475,8 @@ def instantiateComponent(mcanComponent):
     mcanTCP.setMax(16)
 
     # Initialize peripheral clock
-    Database.clearSymbolValue("core", "PMC_ID_MCAN" + str(num))
-    Database.setSymbolValue("core", "PMC_ID_MCAN" + str(num), True, 1)
+    Database.clearSymbolValue("core", "MCAN" + str(num)+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "MCAN" + str(num)+"_CLOCK_ENABLE", True, 1)
     
     # get peripheral id for MCAN
     peripId = Interrupt.getInterruptIndex("MCAN" + str(num))
@@ -534,6 +534,6 @@ def instantiateComponent(mcanComponent):
 
 
 def getMasterClockFreq():
-    return int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    return int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
 
 '''********************************End of the file*************************'''

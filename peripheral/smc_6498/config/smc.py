@@ -305,8 +305,8 @@ def instantiateComponent(smcComponent):
 #### Dependency ####
 ############################################################################
     # Enable Peripheral Clock in Clock manager
-    Database.clearSymbolValue("core", "PMC_ID_SMC")
-    Database.setSymbolValue("core", "PMC_ID_SMC", True, 2) 
+    Database.clearSymbolValue("core", "SMC_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "SMC_CLOCK_ENABLE", True, 2) 
 
 ############################################################################
 #### Code Generation ####
