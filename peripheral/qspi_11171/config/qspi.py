@@ -16,7 +16,7 @@ qspiBitField_SCR_CPHA = qspiReg_SCR.getBitfield("CPHA")
 qspiBitField_SCR_SCBR = qspiReg_SCR.getBitfield("SCBR")
 
 def getMasterClkFrequency():
-    return int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    return int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
 
 def getQspiClkFrequency():
     global num
@@ -59,8 +59,8 @@ def instantiateComponent(qspiComponent):
     print("Running QSPI" + str(num))
 
     #Enable Clock for QSPI instance 
-    Database.clearSymbolValue("core", "PMC_ID_QSPI")
-    Database.setSymbolValue("core", "PMC_ID_QSPI", True, 1)
+    Database.clearSymbolValue("core", "QSPI_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "QSPI_CLOCK_ENABLE", True, 1)
 
     qspiMenu = qspiComponent.createMenuSymbol("QSPI", None)
     qspiMenu.setLabel("Hardware Settings ")
@@ -115,7 +115,7 @@ def instantiateComponent(qspiComponent):
     qspiClkFreq.setVisible(False)
     qspiClkFreq.setMax(66000000)
     qspiClkFreq.setDefaultValue(default_qspi_clk_freq)
-    qspiClkFreq.setDependencies(setQspiClkFrequency, ["QSPI_SCBR", "core.MASTERCLK_FREQ"])
+    qspiClkFreq.setDependencies(setQspiClkFrequency, ["QSPI_SCBR", "core.MASTER_CLOCK_FREQUENCY"])
 
     qspiClkComment = qspiComponent.createCommentSymbol("QSPI_CLK_COMMENT", qspiMenu)
     qspiClkComment.setVisible(True)
@@ -125,7 +125,7 @@ def instantiateComponent(qspiComponent):
     qspiMasterClkComment = qspiComponent.createCommentSymbol("QSPI_MASTER_CLK_COMMENT", qspiMenu)
     qspiMasterClkComment.setVisible(False)
     qspiMasterClkComment.setLabel("WARNING!!! QSPI Peripheral Clock Is Disabled In Clock Manager")
-    qspiMasterClkComment.setDependencies(setMasterClkDependency, ["core.PMC_ID_QSPI"])
+    qspiMasterClkComment.setDependencies(setMasterClkDependency, ["core.QSPI_CLOCK_ENABLE"])
 
     qspiIndex = qspiComponent.createIntegerSymbol("INDEX", qspiMenu)
     qspiIndex.setVisible(False)

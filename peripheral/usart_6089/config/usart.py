@@ -82,20 +82,20 @@ def clockSourceFreq(symbol, event):
     if (event["id"] == "USART_CLK_SRC"):
         symbol.clearValue()
         if (event["value"] == 0):
-            symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 2)
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
         if (event["value"] == 1):
-            symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")) / 8, 2)
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")) / 8, 2)
         if (event["value"] == 2):
-            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_FREQ")), 2)
-    if (event["id"] == "PCK4_FREQ") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 2):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
+    if (event["id"] == "PCK4_CLOCK_FREQUENCY") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 2):
         symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_FREQ")), 2)
-    if (event["id"] == "MASTERCLK_FREQ") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 0):
+        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
+    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 0):
         symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")), 2)
-    if (event["id"] == "MASTERCLK_FREQ") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 1):
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 1):
         symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ") / 8), 2)
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY") / 8), 2)
 
 def dataWidthLogic(symbol, event):
     symbol.clearValue()
@@ -137,8 +137,8 @@ def instantiateComponent(usartComponent):
     usartClkValue = usartComponent.createIntegerSymbol("USART_CLOCK_FREQ", None)
     usartClkValue.setLabel("Clock Source Value")
     usartClkValue.setReadOnly(True)
-    usartClkValue.setDependencies(clockSourceFreq, ["USART_CLK_SRC", "core.PCK4_FREQ", "core.MASTERCLK_FREQ"])
-    usartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTERCLK_FREQ")))
+    usartClkValue.setDependencies(clockSourceFreq, ["USART_CLK_SRC", "core.PCK4_CLOCK_FREQUENCY", "core.MASTER_CLOCK_FREQUENCY"])
+    usartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
 
     usartBaud = usartComponent.createIntegerSymbol("BAUD_RATE", None)
     usartBaud.setLabel("Baud Rate")
@@ -279,8 +279,8 @@ def instantiateComponent(usartComponent):
     NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
     # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", "PMC_ID_USART" + str(usartInstance))
-    Database.setSymbolValue("core", "PMC_ID_USART" + str(usartInstance), True, 2)
+    Database.clearSymbolValue("core", "USART"+ str(usartInstance)+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "USART"+ str(usartInstance)+"_CLOCK_ENABLE", True, 2)
     Database.clearSymbolValue("core", NVICVector)
     Database.setSymbolValue("core", NVICVector, True, 2)
     Database.clearSymbolValue("core", NVICHandler)
@@ -297,7 +297,7 @@ def instantiateComponent(usartComponent):
     usartSymClkEnComment = usartComponent.createCommentSymbol("USART_CLK_ENABLE_COMMENT", None)
     usartSymClkEnComment.setVisible(False)
     usartSymClkEnComment.setLabel("Warning!!! USART Peripheral Clock is Disabled in Clock Manager")
-    usartSymClkEnComment.setDependencies(dependencyStatus, ["core.PMC_ID_USART" + str(usartInstance)])
+    usartSymClkEnComment.setDependencies(dependencyStatus, ["core.USART"+ str(usartInstance)+"_CLOCK_ENABLE"])
 
     usartSymIntEnComment = usartComponent.createCommentSymbol("USART_NVIC_ENABLE_COMMENT", None)
     usartSymIntEnComment.setVisible(False)

@@ -147,8 +147,8 @@ def instantiateComponent(accComponent):
     ############################################################################
 
     # Enable Peripheral Clock in Clock manager
-    Database.clearSymbolValue("core", "PMC_ID_ACC")
-    Database.setSymbolValue("core", "PMC_ID_ACC", True, 2)
+    Database.clearSymbolValue("core", "ACC_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "ACC_CLOCK_ENABLE", True, 2)
 
     # Setup Peripheral Interrupt in Interrupt manager
     peripId = Interrupt.getInterruptIndex("ACC")

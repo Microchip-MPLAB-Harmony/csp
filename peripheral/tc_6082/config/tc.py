@@ -70,33 +70,33 @@ def tcClockControl(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
     if(tcSym_CH_EnableQEI.getValue() == True):
-        Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL0")
-        Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL0", True, 2)
-        Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1")
+        Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL0_CLOCK_ENABLE")
+        Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL0_CLOCK_ENABLE", True, 2)
+        Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE")
         if(tcSym_CH_QEI_INDEX_PULSE.getValue() == True):
-            Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1", True, 2)
+            Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE", True, 2)
         else:
             if(tcSym_CH_Enable[1].getValue() == True):
-                Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1", True, 2)
+                Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE", True, 2)
             else:
-                Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1", False, 2)
+                Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE", False, 2)
         if(tcSym_CH_BMR_POSEN.getValue() == "SPEED"):
-            Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2")
-            Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2", True, 2)
+            Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE")
+            Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE", True, 2)
         else:
             if(tcSym_CH_Enable[2].getValue() == True):
-                Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2")
-                Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2", True, 2)
+                Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE")
+                Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE", True, 2)
             else:
-                Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2")
-                Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2", False, 2)
+                Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE")
+                Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE", False, 2)
     else:
         if(tcSym_CH_Enable[channelID].getValue() == True):
-            Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID))
-            Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID), True, 2)
+            Database.clearSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE")
+            Database.setSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", True, 2)
         else:
-            Database.clearSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID))
-            Database.setSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID), False, 2)
+            Database.clearSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE")
+            Database.setSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", False, 2)
 
 #Enable/Disable interrupt
 def tcNVICControl(symbol, event):
@@ -215,7 +215,7 @@ def tcNVICControl(symbol, event):
 def tcdependencyClockStatus(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
-    clock = bool(Database.getSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID)))
+    clock = bool(Database.getSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE"))
     global tcSym_CH_Enable
     if (clock == False and tcSym_CH_Enable[channelID].getValue() == True):
         tcSym_CH_ClkEnComment[channelID].setVisible(True)
@@ -244,9 +244,9 @@ def tcdependencyIntStatus(symbol, event):
 
 
 def tcQEIDependencyClockStatus(symbol, event):
-    clock0 = bool(Database.getSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL0"))
-    clock1 = bool(Database.getSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL1"))
-    clock2 = bool(Database.getSymbolValue("core", "PMC_ID_TC" + str(num) + "_CHANNEL2"))
+    clock0 = bool(Database.getSymbolValue("core", "TC" +  str(num)  + "_CHANNEL0_CLOCK_ENABLE"))
+    clock1 = bool(Database.getSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE"))
+    clock2 = bool(Database.getSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE"))
     if(tcSym_CH_EnableQEI.getValue() == True):
         if (clock0 == False):
             symbol.setVisible(True)
@@ -274,7 +274,7 @@ def tcQEIDependencyIntStatus(symbol, event):
             symbol.setVisible(False)
 
 def tcGetMasterClock_Hz():
-    main_clk_freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    main_clk_freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
     return main_clk_freq
 
 def tcGetSlowClock_Hz():
@@ -282,11 +282,11 @@ def tcGetSlowClock_Hz():
     return slow_clk_freq
 
 def tcGetPCK6Clock_Hz():
-    pck6_clk_freq = int(Database.getSymbolValue("core", "PCK6_FREQ"))
+    pck6_clk_freq = int(Database.getSymbolValue("core", "PCK6_CLOCK_FREQUENCY"))
     return pck6_clk_freq
 
 def tcGetPCK7Clock_Hz():
-    pck7_clk_freq = int(Database.getSymbolValue("core", "PCK7_FREQ"))
+    pck7_clk_freq = int(Database.getSymbolValue("core", "PCK7_CLOCK_FREQUENCY"))
     return pck7_clk_freq
 
 def tcGetClockResolution(clockSource, channelID):
@@ -671,13 +671,13 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_CLOCK_FREQ[channelID].setVisible(False)
     tcSym_CH_CLOCK_FREQ[channelID].setDefaultValue(150000000)
     tcSym_CH_CLOCK_FREQ[channelID].setDependencies(tcClockFreq, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-        "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ"])
+        "core.MASTER_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY"])
 
     #clock resolution display
     tcSym_CH_Resolution[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_Resolution", menu)
     tcSym_CH_Resolution[channelID].setLabel("****Timer resolution is " + str(6.66) + " nS****")
     tcSym_CH_Resolution[channelID].setDependencies(tcClockResCalc, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-        "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
+        "core.MASTER_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
 
 ###################################################################################################
@@ -740,8 +740,8 @@ def instantiateComponent(tcComponent):
     tcSym_QEI_ClkEnComment = tcComponent.createCommentSymbol("TC_CLK_ENABLE_COMMENT", tcSym_CH_EnableQEI)
     tcSym_QEI_ClkEnComment.setVisible(False)
     tcSym_QEI_ClkEnComment.setLabel("Warning!!! TC" +str(num) + " Channel Peripheral Clock is Disabled in Clock Manager")
-    tcSym_QEI_ClkEnComment.setDependencies(tcQEIDependencyClockStatus, ["core.PMC_ID_TC" + str(num) + "_CHANNEL0", \
-        "core.PMC_ID_TC" + str(num) + "_CHANNEL1", "core.PMC_ID_TC" + str(num) + "_CHANNEL2", "TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
+    tcSym_QEI_ClkEnComment.setDependencies(tcQEIDependencyClockStatus, ["core.TC" +  str(num)  + "_CHANNEL0_CLOCK_ENABLE", \
+        "core.TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE", "core.TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE", "TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
 
     global QEI_periphId
     QEI_periphId = None
@@ -833,7 +833,7 @@ def instantiateComponent(tcComponent):
     tcSym_CH_QEI_CH2PERIOD_COMMENT = tcComponent.createCommentSymbol("TC_QEI_PERIOD_COMMENT", tcSpeedMenu)
     tcSym_CH_QEI_CH2PERIOD_COMMENT.setLabel("**** Time Base is 100 uS  ****")
     tcSym_CH_QEI_CH2PERIOD_COMMENT.setDependencies(tcQuadratureTimeBaseCalculate, ["TC_QEI_PERIOD", "TC3_CMR_TCCLKS", \
-        "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
+        "core.MASTER_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
     # enable index interrupt
     global tcSym_CH_QIER_IDX
@@ -892,7 +892,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_ClkEnComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_CLK_ENABLE_COMMENT", tcChannelMenu[channelID])
         tcSym_CH_ClkEnComment[channelID].setVisible(False)
         tcSym_CH_ClkEnComment[channelID].setLabel("Warning!!! TC" +str(num)+"_CH"+str(channelID)+" Peripheral Clock is Disabled in Clock Manager")
-        tcSym_CH_ClkEnComment[channelID].setDependencies(tcdependencyClockStatus, ["core.PMC_ID_TC" + str(num) + "_CHANNEL"+str(channelID), "TC"+str(channelID)+"_ENABLE"])
+        tcSym_CH_ClkEnComment[channelID].setDependencies(tcdependencyClockStatus, ["core.TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", "TC"+str(channelID)+"_ENABLE"])
 
         node = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
         interrupts = node.getChildren()
@@ -945,7 +945,7 @@ def instantiateComponent(tcComponent):
         #tcSym_CH_TimerPeriod[channelID].setMax(0.436)
         tcSym_CH_TimerPeriod[channelID].setDependencies(tcPeriodMaxVal, \
         ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
+            "core.MASTER_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
         
         tcSym_CH_TimerPeriodComment.append(channelID)
         tcSym_CH_TimerPeriodComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_TIMER_PERIOD_CMT", tcTimerMenu[channelID])
@@ -953,7 +953,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_TimerPeriodComment[channelID].setVisible(False)
         tcSym_CH_TimerPeriodComment[channelID].setDependencies(tcPeriodCountCalc, \
         ["TC"+str(channelID)+"_TIMER_PERIOD_MS", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
+            "core.MASTER_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
             
         tcSym_CH_TimerPeriodCount.append(channelID)
         tcSym_CH_TimerPeriodCount[channelID] = tcComponent.createIntegerSymbol("TC"+str(channelID)+"_TIMER_PERIOD_COUNT", tcTimerMenu[channelID])
@@ -961,7 +961,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_TimerPeriodCount[channelID].setDefaultValue(60060)
         tcSym_CH_TimerPeriodCount[channelID].setDependencies(tcPeriodCountCalc, \
         ["TC"+str(channelID)+"_TIMER_PERIOD_MS", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
+            "core.MASTER_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
         
         #one-shot timer
         tcSym_CH_CMR_CPCSTOP.append(channelID)
@@ -1109,7 +1109,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_ComparePeriod[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_COMPARE_PERIOD", tcCompareMenu[channelID])
         tcSym_CH_ComparePeriod[channelID].setLabel("****Timer Period is 66.6 uS****")
         tcSym_CH_ComparePeriod[channelID].setDependencies(tcPeriodCalc, ["TC"+str(channelID)+"_COMPARE_PERIOD_COUNT", "TC"+str(channelID)+"_CMR_TCCLKS", \
-            "core.MASTERCLK_FREQ", "core.CLK_SLOW_XTAL", "core.PCK6_FREQ", "core.PCK7_FREQ", "TC_PCK_CLKSRC"])
+            "core.MASTER_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
         #External Event Menu
         tcEventMenu.append(channelID)

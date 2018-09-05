@@ -40,7 +40,7 @@ def instantiateComponent(twihsComponent):
     twihsSymDivider = twihsComponent.createStringSymbol("TWIHS_DIVIDER", twihsMenu)
     
     twihsSymDivider.setVisible(False)
-    twihsSymDivider.setDependencies(setClockDividerValue, ["I2C_CLOCK_SPEED", "core.MASTERCLK_FREQ"])
+    twihsSymDivider.setDependencies(setClockDividerValue, ["I2C_CLOCK_SPEED", "core.MASTER_CLOCK_FREQUENCY"])
     
     #CLDIV
     twihsSym_CWGR_CLDIV = twihsComponent.createIntegerSymbol("TWIHS_CWGR_CLDIV", twihsMenu)
@@ -61,8 +61,8 @@ def instantiateComponent(twihsComponent):
     twihsSym_CWGR_CKDIV.setValue(ckdiv, 1)
     
     # Initialize peripheral clock
-    Database.clearSymbolValue("core", "PMC_ID_TWIHS" + str(num))
-    Database.setSymbolValue("core", "PMC_ID_TWIHS" + str(num), True, 1)
+    Database.clearSymbolValue("core", "TWIHS"+ str(num)+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "TWIHS"+ str(num)+"_CLOCK_ENABLE", True, 1)
     
     # get peripheral id for TWIHS
     peripId = Interrupt.getInterruptIndex("TWIHS" + str(num))
@@ -78,14 +78,14 @@ def instantiateComponent(twihsComponent):
     # Master Clock Frequency
     twihsSymMasterClkFreq = twihsComponent.createStringSymbol("TWIHS_CLK_SRC_FREQ", twihsMenu)
     twihsSymMasterClkFreq.setVisible(False)
-    twihsSymMasterClkFreq.setDefaultValue(Database.getSymbolValue("core","MASTERCLK_FREQ"))
-    twihsSymMasterClkFreq.setDependencies(setClockSourceFreq, ["core.MASTERCLK_FREQ"])
+    twihsSymMasterClkFreq.setDefaultValue(Database.getSymbolValue("core","MASTER_CLOCK_FREQUENCY"))
+    twihsSymMasterClkFreq.setDependencies(setClockSourceFreq, ["core.MASTER_CLOCK_FREQUENCY"])
     
     # Warning for change in Clock Enable Symbol
     twihsSymClkEnComment = twihsComponent.createCommentSymbol("TWIHS_CLK_EN_COMMENT", twihsMenu)
     twihsSymClkEnComment.setVisible(False)
     twihsSymClkEnComment.setLabel("Warning!!! TWIHS Peripheral Clock is Disabled in Clock Manager")
-    twihsSymClkEnComment.setDependencies(setEnCommentVisibility, ["core.PMC_ID_TWIHS" + str(num)])
+    twihsSymClkEnComment.setDependencies(setEnCommentVisibility, ["core.TWIHS"+ str(num)+"_CLOCK_ENABLE"])
     
     # Warning for change in Interrupt Enable Symbol
     twihsSymIntEnComment = twihsComponent.createCommentSymbol("TWIHS_INT_EN_COMMENT", twihsMenu)
@@ -147,7 +147,7 @@ def instantiateComponent(twihsComponent):
     twihsSystemDefFile.setMarkup(True)
     
 def getMasterClockFreq():
-    return int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    return int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
         
 def getTWIHSClkSpeed():
     global num
@@ -213,7 +213,7 @@ def setEnCommentVisibility( twihsSymComment, event ):
         twihsSymComment.setVisible(False)
         
 def setClockSourceFreq( twihsSymClockFreq, event ):
-    masterClockFreq = Database.getSymbolValue("core", "MASTERCLK_FREQ")
+    masterClockFreq = Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")
     twihsSymClockFreq.setValue(masterClockFreq, 1)
 
 '''********************************End of the file*************************'''

@@ -67,7 +67,7 @@ def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
         spiInterrupt.setReadOnly(False)
 
 def getMasterClockFreq():
-    clkSymMasterClockFreq = Database.getSymbolValue("core","MASTERCLK_FREQ")
+    clkSymMasterClockFreq = Database.getSymbolValue("core","MASTER_CLOCK_FREQUENCY")
     return int(clkSymMasterClockFreq)
 
 def showMasterDependencies(spiSym_MR_Dependencies, event):
@@ -78,13 +78,13 @@ def showMasterDependencies(spiSym_MR_Dependencies, event):
 
 def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
 
-    if event["id"] == "MASTERCLK_FREQ":
+    if event["id"] == "MASTER_CLOCK_FREQUENCY":
         clk = int(event["value"])
         baud = Database.getSymbolValue("spi" + str(spiInstance), "SPI_BAUD_RATE")
     else:
         #This means there is change in baud rate provided by user in GUI
         baud = event["value"]
-        clk = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+        clk = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
 
     SCBR = clk/baud
     if SCBR == 0:
@@ -149,7 +149,7 @@ def instantiateComponent(spiComponent):
     spiSymNVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
 
     # Enable clock for SPI
-    Database.setSymbolValue("core", "PMC_ID_SPI" + str(spiInstance), True, 1)
+    Database.setSymbolValue("core", "SPI" +  str(spiInstance) + "_CLOCK_ENABLE", True, 1)
 
     spiIndex = spiComponent.createIntegerSymbol("SPI_INDEX", None)
     spiIndex.setVisible(False)
@@ -212,7 +212,7 @@ def instantiateComponent(spiComponent):
     spiSymCSRIndex.setDependencies(calculateCSRIndex, ["SPI_MR_PCS"])
 
     defaultbaudRate = 1000000
-    defaultSCBR = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))/defaultbaudRate
+    defaultSCBR = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/defaultbaudRate
 
     # Used to pass master clock frequency to SPI FTL
     spiSymMasterClock = spiComponent.createIntegerSymbol("SPI_MASTER_CLOCK", None)
@@ -229,7 +229,7 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_SCBR_VALUE = spiComponent.createIntegerSymbol("SPI_CSR_SCBR_VALUE", None)
     spiSym_CSR_SCBR_VALUE.setDefaultValue(defaultSCBR)
     spiSym_CSR_SCBR_VALUE.setVisible(False)
-    spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE", "core.MASTERCLK_FREQ"])
+    spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE", "core.MASTER_CLOCK_FREQUENCY"])
 
     spiSym_CSR_BITS = spiComponent.createKeyValueSetSymbol("SPI_CHARSIZE_BITS", None)
     spiSym_CSR_BITS.setLabel(spiBitField_CSR_BITS.getAttribute("caption"))
@@ -330,7 +330,7 @@ def instantiateComponent(spiComponent):
     spiSymClkEnComment = spiComponent.createCommentSymbol("SPI" + str(spiInstance) + "_CLK_ENABLE_COMMENT", None)
     spiSymClkEnComment.setVisible(False)
     spiSymClkEnComment.setLabel("Warning!!! SPI" + str(spiInstance) + " Peripheral Clock is Disabled in Clock Manager")
-    spiSymClkEnComment.setDependencies(ClockStatusWarning, ["core.PMC_ID_SPI" + str(spiInstance)])
+    spiSymClkEnComment.setDependencies(ClockStatusWarning, ["core.SPI" +  str(spiInstance) + "_CLOCK_ENABLE"])
 
     # Warning message when PLIB is configured in non-interrupt mode but used with driver.
     global spiInterruptDriverModeComment

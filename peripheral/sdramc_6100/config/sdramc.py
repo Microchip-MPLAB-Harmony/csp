@@ -53,7 +53,7 @@ def calcRefreshCount(time, rowlines, clk):
 def calcRefreshCount_CB(symbol, event) :
     global instance
     global sdramcSym_CR__NR
-    clk = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    clk = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
     time = Database.getSymbolValue("sdramc" + str(instance), "SDRAMC_REFRESH_TIME_IN_MS")
     rowlines = sdramcSym_CR__NR.getSelectedKey()
     count=calcRefreshCount(time, rowlines, clk)
@@ -89,7 +89,7 @@ def instantiateComponent(sdramcComponent):
     sdramcIndex.setVisible(False)
     sdramcIndex.setDefaultValue(int(instance))
 
-    cpuclk = Database.getSymbolValue("core", "PROCESSORCLK_FREQ")
+    cpuclk = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
     cpuclk = int(cpuclk)
 
     sdramcSymClkFreq = sdramcComponent.createIntegerSymbol("SDRAMC_CPU_CLK_FREQ", None)
@@ -193,11 +193,11 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_REFRESH_TIME_IN_MS.setLabel("Refresh time in ms")
     sdramcSym_REFRESH_TIME_IN_MS.setDefaultValue(SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE)
 
-    clk = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    clk = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
     count=calcRefreshCount(SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE, "ROW11", clk)
 
     sdramcSym_SDRAMC_TR_COUNT = sdramcComponent.createIntegerSymbol("SDRAMC_TR_COUNT", sdramcSymMenu_TIMING_MENU)
-    sdramcSym_SDRAMC_TR_COUNT.setDependencies(calcRefreshCount_CB, ["SDRAMC_REFRESH_TIME_IN_MS","core.MASTERCLK_FREQ"])
+    sdramcSym_SDRAMC_TR_COUNT.setDependencies(calcRefreshCount_CB, ["SDRAMC_REFRESH_TIME_IN_MS","core.MASTER_CLOCK_FREQUENCY"])
     sdramcSym_SDRAMC_TR_COUNT.setDefaultValue(count)
     sdramcSym_SDRAMC_TR_COUNT.setVisible(False)
 
@@ -230,8 +230,8 @@ def instantiateComponent(sdramcComponent):
     ############################################################################
 
     # Enable Peripheral Clock in Clock manager
-    Database.clearSymbolValue("core", "PMC_ID_SDRAMC")
-    Database.setSymbolValue("core", "PMC_ID_SDRAMC", True, 2)
+    Database.clearSymbolValue("core", "SDRAMC_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "SDRAMC_CLOCK_ENABLE", True, 2)
 
 ############################################################################
 #### Code Generation ####

@@ -576,7 +576,7 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
             for param in instance.iter("param"):
                 if "CLOCK_ID" in param.attrib["name"]:
 
-                    symbol_id = "PMC_ID_" + instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1]
+                    symbol_id = instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1] +"_CLOCK_ENABLE"
                     sym_perip_clk = clk_comp.createBooleanSymbol(symbol_id, clk_menu)
                     sym_perip_clk.setLabel(instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1])
                     sym_perip_clk.setDefaultValue(False)
@@ -676,83 +676,83 @@ def __calculated_clock_frequencies(clk_comp, clk_menu, update_fws_value, join_pa
     sym_calc_freq_menu = clk_comp.createMenuSymbol("CALC_CLOCK_FREQ_MENU", clk_menu)
     sym_calc_freq_menu.setLabel("Calculated Clock Frequencies")
 
-    sym_sys_tick_freq = clk_comp.createStringSymbol("SYSTICK", sym_calc_freq_menu)
+    sym_sys_tick_freq = clk_comp.createStringSymbol("SYSTICK_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_sys_tick_freq.setLabel("System Tick Frequency (HZ)")
     sym_sys_tick_freq.setDefaultValue("150000000")
     sym_sys_tick_freq.setReadOnly(True)
 
-    sym_proc_clk_freq = clk_comp.createStringSymbol("PROCESSORCLK_FREQ", sym_calc_freq_menu)
+    sym_proc_clk_freq = clk_comp.createStringSymbol("CPU_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_proc_clk_freq.setLabel("Processor Clock Frequency (HZ)")
     sym_proc_clk_freq.setDefaultValue("300000000")
     sym_proc_clk_freq.setReadOnly(True)
 
-    sym_master_clk_freq = clk_comp.createStringSymbol("MASTERCLK_FREQ", sym_calc_freq_menu)
+    sym_master_clk_freq = clk_comp.createStringSymbol("MASTER_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_master_clk_freq.setLabel("Master Clock Frequency (HZ)")
     sym_master_clk_freq.setDefaultValue("150000000")
     sym_master_clk_freq.setReadOnly(True)
 
-    sym_i2s0_freq = clk_comp.createStringSymbol("I2S0_FREQ", sym_calc_freq_menu)
+    sym_i2s0_freq = clk_comp.createStringSymbol("I2S0_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_i2s0_freq.setLabel("I2S0 Frequency (HZ)")
     sym_i2s0_freq.setDefaultValue("75000000")
     sym_i2s0_freq.setReadOnly(True)
 
-    sym_i2s1_freq = clk_comp.createStringSymbol("I2S1_FREQ", sym_calc_freq_menu)
+    sym_i2s1_freq = clk_comp.createStringSymbol("I2S1_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_i2s1_freq.setLabel("I2S1 Frequency (HZ)")
     sym_i2s1_freq.setDefaultValue("100000000")
     sym_i2s1_freq.setReadOnly(True)
 
-    sym_pck0_freq = clk_comp.createStringSymbol("PCK0_FREQ", sym_calc_freq_menu)
+    sym_pck0_freq = clk_comp.createStringSymbol("PCK0_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck0_freq.setLabel("Programmable clock #0 Frequency (HZ)")
     sym_pck0_freq.setDefaultValue("12000000")
     sym_pck0_freq.setReadOnly(True)
 
-    sym_pck1_freq = clk_comp.createStringSymbol("PCK1_FREQ", sym_calc_freq_menu)
+    sym_pck1_freq = clk_comp.createStringSymbol("PCK1_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck1_freq.setLabel("Programmable clock #1 Frequency (HZ)")
     sym_pck1_freq.setDefaultValue("6000000")
     sym_pck1_freq.setReadOnly(True)
 
-    sym_pck2_freq = clk_comp.createStringSymbol("PCK2_FREQ", sym_calc_freq_menu)
+    sym_pck2_freq = clk_comp.createStringSymbol("PCK2_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck2_freq.setLabel("Programmable clock #2 Frequency (HZ)")
     sym_pck2_freq.setDefaultValue("4000000")
     sym_pck2_freq.setReadOnly(True)
 
-    sym_pck3_freq = clk_comp.createStringSymbol("PCK3_FREQ", sym_calc_freq_menu)
+    sym_pck3_freq = clk_comp.createStringSymbol("PCK3_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck3_freq.setLabel("Programmable clock #3 Frequency (HZ)")
     sym_pck3_freq.setDefaultValue("3000000")
     sym_pck3_freq.setReadOnly(True)
 
-    sym_pck4_freq = clk_comp.createStringSymbol("PCK4_FREQ", sym_calc_freq_menu)
+    sym_pck4_freq = clk_comp.createStringSymbol("PCK4_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck4_freq.setLabel("Programmable clock #4 Frequency (HZ)")
     sym_pck4_freq.setDefaultValue("2400000")
     sym_pck4_freq.setReadOnly(True)
 
-    sym_pck5_freq = clk_comp.createStringSymbol("PCK5_FREQ", sym_calc_freq_menu)
+    sym_pck5_freq = clk_comp.createStringSymbol("PCK5_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck5_freq.setLabel("Programmable clock #5 Frequency (HZ)")
     sym_pck5_freq.setDefaultValue("2000000")
     sym_pck5_freq.setReadOnly(True)
 
-    sym_pck6_freq = clk_comp.createStringSymbol("PCK6_FREQ", sym_calc_freq_menu)
+    sym_pck6_freq = clk_comp.createStringSymbol("PCK6_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck6_freq.setLabel("Programmable clock #6 Frequency (HZ)")
     sym_pck6_freq.setDefaultValue("1714285")
     sym_pck6_freq.setReadOnly(True)
 
-    sym_pck7_freq = clk_comp.createStringSymbol("PCK7_FREQ", sym_calc_freq_menu)
+    sym_pck7_freq = clk_comp.createStringSymbol("PCK7_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck7_freq.setLabel("Programmable clock #7 Frequency (HZ)")
     sym_pck7_freq.setDefaultValue("1500000")
     sym_pck7_freq.setReadOnly(True)
 
-    sym_usb_fs_freq = clk_comp.createStringSymbol("USBFS_FREQ", sym_calc_freq_menu)
+    sym_usb_fs_freq = clk_comp.createStringSymbol("USBFS_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_usb_fs_freq.setLabel("USB Clock Frequency (HZ)")
     sym_usb_fs_freq.setDefaultValue("48000000")
     sym_usb_fs_freq.setReadOnly(True)
 
-    sym_usb_hs_freq = clk_comp.createStringSymbol("USBHS_FREQ", sym_calc_freq_menu)
+    sym_usb_hs_freq = clk_comp.createStringSymbol("USBHS_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_usb_hs_freq.setLabel("USB High Speed Clock Frequency (HZ)")
     sym_usb_hs_freq.setDefaultValue("480000000")
     sym_usb_hs_freq.setReadOnly(True)
 
     sym_flash_wait_states = clk_comp.createStringSymbol("EEFC_FMR_FWS", sym_calc_freq_menu)
-    sym_flash_wait_states.setDependencies(update_fws_value, ["MASTERCLK_FREQ"])
+    sym_flash_wait_states.setDependencies(update_fws_value, ["MASTER_CLOCK_FREQUENCY"])
     sym_flash_wait_states.setVisible(False)
 
     atdf_file_path = join_path(Variables.get("__DFP_PACK_DIR"), "atdf", Variables.get("__PROCESSOR") + ".atdf")

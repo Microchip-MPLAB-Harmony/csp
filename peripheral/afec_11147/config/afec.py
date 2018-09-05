@@ -22,14 +22,14 @@ afecSym_CH_IER_EOC = []
 
 def afecClockControl(symbol, event):
     clockSet = False
-    Database.clearSymbolValue("core", "PMC_ID_AFEC" + str(num))
+    Database.clearSymbolValue("core", "AFEC" + str(num)+"_CLOCK_ENABLE")
     for channelID in range(0, 12):
         if (afecSym_CH_CHER[channelID].getValue() == True):
             clockSet = True
     if(clockSet == True):
-        Database.setSymbolValue("core", "PMC_ID_AFEC" + str(num), True, 2)
+        Database.setSymbolValue("core", "AFEC" + str(num)+"_CLOCK_ENABLE", True, 2)
     else:
-        Database.setSymbolValue("core", "PMC_ID_AFEC" + str(num), False, 2)
+        Database.setSymbolValue("core", "AFEC" + str(num)+"_CLOCK_ENABLE", False, 2)
 
 def afecNVICControl(symbol, event):
     nvicSet = False
@@ -54,7 +54,7 @@ def afecNVICControl(symbol, event):
 
 def dependencyClockStatus(symbol, event):
     clockSet = False
-    clock = bool(Database.getSymbolValue("core", "PMC_ID_AFEC" + str(num)))
+    clock = bool(Database.getSymbolValue("core", "AFEC" + str(num)+"_CLOCK_ENABLE"))
     for channelID in range(0, 12):
         if (afecSym_CH_CHER[channelID].getValue() == True):
             clockSet = True
@@ -77,7 +77,7 @@ def dependencyIntStatus(symbol, event):
         symbol.setVisible(False)
 
 def afecGetMasterClock():
-    main_clk_freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+    main_clk_freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
     return main_clk_freq
 
 def afecPrescalWarning(symbol, event):
@@ -272,7 +272,7 @@ def instantiateComponent(afecComponent):
     afecSym_AvailableChannels.setVisible(False)
 
     # Clock dynamic settings
-    afecSym_ClockControl = afecComponent.createBooleanSymbol("AFEC_CLOCK_ENABLE", None)
+    afecSym_ClockControl = afecComponent.createBooleanSymbol("AFEC" + str(num)+"_CLOCK_ENABLE", None)
     afecSym_ClockControl.setDependencies(afecClockControl, ["AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
     "AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
     afecSym_ClockControl.setVisible(False)
@@ -287,7 +287,7 @@ def instantiateComponent(afecComponent):
     afecSym_ClkEnComment = afecComponent.createCommentSymbol("AFEC_CLK_ENABLE_COMMENT", None)
     afecSym_ClkEnComment.setVisible(False)
     afecSym_ClkEnComment.setLabel("Warning!!! AFEC" +str(num)+" Peripheral Clock is Disabled in Clock Manager")
-    afecSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core.PMC_ID_AFEC" + str(num), "AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
+    afecSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core.AFEC" + str(num)+ "_CLOCK_ENABLE", "AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
     "AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
 
     periphId = Interrupt.getInterruptIndex("AFEC" + str(num))
@@ -322,12 +322,12 @@ def instantiateComponent(afecComponent):
     afecSym_Clock.setDefaultValue(18750000)
     afecSym_Clock.setVisible(True)
     afecSym_Clock.setReadOnly(True)
-    afecSym_Clock.setDependencies(afecFreqCalc, ["AFEC_MR_PRESCAL", "core.MASTERCLK_FREQ"])
+    afecSym_Clock.setDependencies(afecFreqCalc, ["AFEC_MR_PRESCAL", "core.MASTER_CLOCK_FREQUENCY"])
 
     afecSym_PRESCAL_WARNING = afecComponent.createCommentSymbol("AFEC_PRESCAL_WARNING", afecMenu)
     afecSym_PRESCAL_WARNING.setLabel("**** AFEC Frequency = 18750000 Hz. ****")
     afecSym_PRESCAL_WARNING.setVisible(False)
-    afecSym_PRESCAL_WARNING.setDependencies(afecPrescalWarning, ["AFEC_MR_PRESCAL", "core.MASTERCLK_FREQ"])
+    afecSym_PRESCAL_WARNING.setDependencies(afecPrescalWarning, ["AFEC_MR_PRESCAL", "core.MASTER_CLOCK_FREQUENCY"])
 
     #Result resolution
     #Added keys here as combining two bit-fields EMR_STM and EMR_RES
@@ -350,7 +350,7 @@ def instantiateComponent(afecComponent):
     #Conversion time
     afecSym_CONV_TIME = afecComponent.createCommentSymbol("AFEC_CONV_TIME", afecMenu)
     afecSym_CONV_TIME.setLabel("**** Conversion Time is 1.0733 us ****")
-    afecSym_CONV_TIME.setDependencies(afecCalcConversionTime, ["AFEC_MR_PRESCAL", "AFEC_EMR_RES_VALUE", "core.MASTERCLK_FREQ"])
+    afecSym_CONV_TIME.setDependencies(afecCalcConversionTime, ["AFEC_MR_PRESCAL", "AFEC_EMR_RES_VALUE", "core.MASTER_CLOCK_FREQUENCY"])
 
     #Result sign
     afecSym_EMR_SIGNMODE_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_SIGNMODE_VALUE", afecMenu)

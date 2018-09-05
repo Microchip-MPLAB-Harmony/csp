@@ -95,7 +95,7 @@ def setupPort(usePortLocal, event):
         usePort[k].setValue(True, 1)
         portInterrupt[k].setVisible(True)
         #Enable Peripheral clock for respective PORT Channel in Clock Manager
-        Database.setSymbolValue("core", "PMC_ID_PIO" + event["value"], True, 1)
+        Database.setSymbolValue("core", "PIO" + event["value"] + "_CLOCK_ENABLE", True, 1)
 
 def portLatch(pin, event):
     #some work around is done in this function because java is updating "PIN_x_LAT" symbol while initializing.
@@ -449,7 +449,7 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSymClkEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_CLK_ENABLE_COMMENT", pioMenu)
     pioSymClkEnComment[portNumber].setVisible(False)
     pioSymClkEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
-    pioSymClkEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core.PMC_ID_PIO" + str(pioSymChannel[portNumber])])
+    pioSymClkEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core.PIO_CLOCK_ENABLE" + str(pioSymChannel[portNumber])])
 
 # NVIC Dynamic settings
 pioNVICControl = coreComponent.createBooleanSymbol("NVIC_PIO_ENABLE", None)
