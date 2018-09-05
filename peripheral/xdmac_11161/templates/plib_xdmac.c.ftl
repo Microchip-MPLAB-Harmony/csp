@@ -225,7 +225,7 @@ void XDMAC${XDMAC_INDEX}_ChannelDisable (XDMAC_CHANNEL channel)
 {
     /* Disable the channel */
     XDMAC_REGS->XDMAC_GD = (XDMAC_GD_DI0_Msk << channel);
-
+    xdmacChannelObj[channel].busyStatus = false;
     return;
 }
 
