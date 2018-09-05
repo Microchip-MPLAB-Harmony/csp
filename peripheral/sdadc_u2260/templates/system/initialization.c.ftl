@@ -1,0 +1,1 @@
+    SDADC${SDADC_INDEX}_Initialize();
