@@ -123,6 +123,12 @@ def setMPUDefaultSettings():
     mpuSetUpLogicList = ["FLASH", "RWW", "SRAM"]
 
     return mpuRegions, mpuSettings, mpuSetUpLogicList
+    
+# SysTick External Clock Source
+systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
+systickExternal.setLabel("External Clock Source for SysTick Available")
+systickExternal.setDefaultValue(False)
+systickExternal.setVisible(False)
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_c20_c21/config/clk.py")
@@ -141,7 +147,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
 coreComponent.addPlugin("../peripheral/mpu/plugin/MPUmanager.jar")
 
 #load systick
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2223/config/dmac.py")
