@@ -43,7 +43,13 @@ def packageChange(pin, pinout):
             Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_PIN", int(re.findall('\d+', pin_map.get(pin_position[pinNumber - 1]))[0]), 2)
             Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_GROUP", pin_map.get(pin_position[pinNumber - 1])[1], 2)
         prev_package = cur_package
-
+        
+def sort_alphanumeric(l):
+    import re
+    convert = lambda text: int(text) if text.isdigit() else text.lower() 
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    return sorted(l, key = alphanum_key)	
+    
 def setupPortPINCFG(usePortLocalPINCFG, event):
 
     pullEnable = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PULLEN")
@@ -197,6 +203,7 @@ pinConfiguration = coreComponent.createMenuSymbol("PORT_PIN_CONFIGURATION", port
 pinConfiguration.setLabel("Pin Configuration")
 pinConfiguration.setDescription("Configuraiton for PORT Pins")
 
+global sort_alphanumeric
 global prev_package
 global cur_package
 prev_package = ""
