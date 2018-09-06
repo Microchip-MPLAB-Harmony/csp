@@ -157,7 +157,7 @@ def instantiateComponent(coreComponent):
     defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
     defSym.setCategory("C32")
     defSym.setKey("extra-include-directories")
-    defSym.setValue("../src;../src/config/"+configName+";../src/packs/"+Variables.get("__PROCESSOR")+"_DFP;../src/packs/CMSIS")
+    defSym.setValue("../src;../src/config/"+configName+";../src/packs/"+Variables.get("__PROCESSOR")+"_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/")
     defSym.setAppend(True, ";")
 
     # set XC32 option to not use the device startup code
