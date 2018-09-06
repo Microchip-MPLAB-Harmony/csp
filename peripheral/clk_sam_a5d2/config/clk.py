@@ -2,7 +2,6 @@
 from os.path import join
 from xml.etree import ElementTree
 
-global LIST_FWS_MAX_FREQ
 global DICT_PCER0
 global DICT_PCER1
 
@@ -13,28 +12,6 @@ def update_clk_component_visability(clk_comp, event):
         clk_comp.setVisible(True)
     else:
         clk_comp.setVisible(False)
-
-def __update_fws_value(flash_wait_states, event):
-    """
-    Updates Flash Wait States with change in Master Clock Frequency
-
-    flash_wait_states: flash wait states string symbol handle
-    event: callback event dictionary
-    """
-    global LIST_FWS_MAX_FREQ
-
-    min_freq = max_freq = 0
-    for fws in range(0, len(LIST_FWS_MAX_FREQ), 1):
-
-        mck_freq = int(event["value"])
-        max_freq = int(LIST_FWS_MAX_FREQ[fws])
-
-        if mck_freq <= max_freq and mck_freq > min_freq:
-            flash_wait_states.setValue(str(fws), 1)
-            return
-
-        min_freq = max_freq
-
 
 def __update_pcer0_value(pmc_pcer0, perip_clk):
     """
@@ -514,17 +491,13 @@ def __isc_clock_menu(clk_comp, clk_menu, pmc_reg_module):
     sym_iscclk.setLabel(bitfield_pmc_scer_iscck.getDescription())
     sym_iscclk.setDefaultValue(False)
 
-def __calculated_clock_frequencies(clk_comp, clk_menu, update_fws_value, join_path, element_tree):
+def __calculated_clock_frequencies(clk_comp, clk_menu):
     """
     Calculated Clock frequencies Menu Implementation.
 
     clk_comp: Clock Component handle
     clk_menu: Clock Menu Symbol handle
-    update_fws_value: Callback calculating the Flash Wait States.
-    join_path: function used to create os independent paths
-    element_tree: XML parser library
     """
-    global LIST_FWS_MAX_FREQ
 
     #Calculated Clock Frequencies
     sym_calc_freq_menu = clk_comp.createMenuSymbol("CALC_CLOCK_FREQ_MENU", clk_menu)
@@ -539,6 +512,16 @@ def __calculated_clock_frequencies(clk_comp, clk_menu, update_fws_value, join_pa
     sym_master_clk_freq.setLabel("Master Clock Frequency (HZ)")
     sym_master_clk_freq.setDefaultValue("166000000")
     sym_master_clk_freq.setReadOnly(True)
+
+    periph_clk = clk_comp.createStringSymbol("PCLOCK_HS_CLOCK_FREQUENCY", sym_calc_freq_menu)
+    periph_clk.setLabel("HS Peripheral Clock Frequency (HZ)")
+    periph_clk.setDefaultValue(sym_master_clk_freq.getDefaultValue())
+    periph_clk.setReadOnly(True)
+
+    periph_clk_ls = clk_comp.createStringSymbol("PCLOCK_LS_CLOCK_FREQUENCY", sym_calc_freq_menu)
+    periph_clk_ls.setLabel("LS Peripheral Clock Frequency (HZ)")
+    periph_clk_ls.setDefaultValue(str(int(sym_master_clk_freq.getDefaultValue())/2))
+    periph_clk_ls.setReadOnly(True)
 
     sym_pck0_freq = clk_comp.createStringSymbol("PCK0_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck0_freq.setLabel("Programmable clock #0 Frequency (HZ)")
@@ -564,6 +547,12 @@ def __calculated_clock_frequencies(clk_comp, clk_menu, update_fws_value, join_pa
     sym_usb_hs_freq.setLabel("USB High Speed Clock Frequency (HZ)")
     sym_usb_hs_freq.setDefaultValue("480000000")
     sym_usb_hs_freq.setReadOnly(True)
+
+    for periph in ["FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "CLASSD"]:
+        gen_clk = clk_comp.createStringSymbol(periph+"_GEN_CLOCK_FREQUENCY", sym_calc_freq_menu)
+        gen_clk.setLabel(periph + " Generic Clock Frequency (HZ)")
+        gen_clk.setDefaultValue("32768")
+        gen_clk.setReadOnly(True)
 
 
 if __name__ == "__main__":
@@ -608,7 +597,7 @@ if __name__ == "__main__":
     __usb_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, SFR_REGISTERS)
 
     # creates calculated frequencies menu
-    __calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, __update_fws_value, join, ElementTree)
+    __calculated_clock_frequencies(coreComponent, SYM_CLK_MENU)
 
     #MPDDRC is enabled by bootloader so make sure we don't disable it
     Database.setSymbolValue("core", "PMC_ID_MPDDRC", True, 1)
