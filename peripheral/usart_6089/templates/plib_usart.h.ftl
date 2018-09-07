@@ -71,7 +71,7 @@ bool USART${INDEX?string}_Write( void *buffer, const size_t size );
 
 bool USART${INDEX?string}_Read( void *buffer, const size_t size );
 
-<#if INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
 int USART${INDEX?string}_ReadByte(void);
 
 void USART${INDEX?string}_WriteByte(int data);
@@ -83,7 +83,7 @@ bool USART${INDEX?string}_TransmitterIsReady( void );
 bool USART${INDEX?string}_ReceiverIsReady( void );
 
 </#if>
-<#if INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
 bool USART${INDEX?string}_WriteIsBusy( void );
 
 bool USART${INDEX?string}_ReadIsBusy( void );

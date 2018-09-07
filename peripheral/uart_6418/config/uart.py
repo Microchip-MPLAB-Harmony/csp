@@ -43,7 +43,7 @@ def dependencyStatus(symbol, event):
     else :
         status = False
 
-    if (event["id"] == NVICVector) and (Database.getSymbolValue("uart" + str(uartInstance), "INTERRUPT_MODE") == False):
+    if (event["id"] == NVICVector) and (Database.getSymbolValue("uart" + str(uartInstance), "USART_INTERRUPT_MODE") == False):
         status = False
 
     symbol.setVisible(status)
@@ -106,7 +106,7 @@ def instantiateComponent(uartComponent):
     uartIndex.setVisible(False)
     uartIndex.setDefaultValue(int(uartInstance))
 
-    uartInterrupt = uartComponent.createBooleanSymbol("INTERRUPT_MODE", None)
+    uartInterrupt = uartComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     uartInterrupt.setLabel("Interrupt Mode")
     uartInterrupt.setDefaultValue(True)
 
@@ -218,7 +218,7 @@ def instantiateComponent(uartComponent):
 
     # NVIC Dynamic settings
     uartNVICControl = uartComponent.createBooleanSymbol("NVIC_UART_ENABLE", None)
-    uartNVICControl.setDependencies(NVICControl, ["INTERRUPT_MODE"])
+    uartNVICControl.setDependencies(NVICControl, ["USART_INTERRUPT_MODE"])
     uartNVICControl.setVisible(False)
 
     # Dependency Status
