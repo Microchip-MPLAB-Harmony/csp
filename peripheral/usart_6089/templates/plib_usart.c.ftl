@@ -63,10 +63,6 @@ void static USART${INDEX?string}_ISR_RX_Handler( void )
         /* Check if the buffer is done */
         if(usart${INDEX?string}Obj.rxProcessedSize >= usart${INDEX?string}Obj.rxSize)
         {
-            if(usart${INDEX?string}Obj.rxCallback != NULL)
-            {
-                usart${INDEX?string}Obj.rxCallback(usart${INDEX?string}Obj.rxContext);
-            }
 
             usart${INDEX?string}Obj.rxBusyStatus = false;
             usart${INDEX?string}Obj.rxSize = 0;
@@ -74,6 +70,11 @@ void static USART${INDEX?string}_ISR_RX_Handler( void )
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
             USART${INDEX?string}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
+
+            if(usart${INDEX?string}Obj.rxCallback != NULL)
+            {
+                usart${INDEX?string}Obj.rxCallback(usart${INDEX?string}Obj.rxContext);
+            }
         }
     }
     else
