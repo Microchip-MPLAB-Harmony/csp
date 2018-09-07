@@ -47,7 +47,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: UART${INDEX?string} Implementation
 // *****************************************************************************
 // *****************************************************************************
-<#if INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
 
 UART_OBJECT uart${INDEX?string}Obj;
 
@@ -189,7 +189,7 @@ void UART${INDEX?string}_Initialize( void )
 
     /* Configure UART${INDEX?string} Baud Rate */
     UART${INDEX?string}_REGS->UART_BRGR = UART_BRGR_CD(${BRG_VALUE});
-<#if INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
 
     /* Initialize instance object */
     uart${INDEX?string}Obj.rxBuffer = NULL;
@@ -243,7 +243,7 @@ bool UART${INDEX?string}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkF
     uint32_t brgVal = 0;
     uint32_t parityVal = 0;
 
-<#if INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
     if((uart${INDEX?string}Obj.rxBusyStatus == true) || (uart${INDEX?string}Obj.txBusyStatus == true))
     {
         /* Transaction is in progress, so return without updating settings */
@@ -312,7 +312,7 @@ bool UART${INDEX?string}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkF
 bool UART${INDEX?string}_Read( void *buffer, const size_t size )
 {
     bool status = false;
-<#if INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
 </#if>
@@ -325,7 +325,7 @@ bool UART${INDEX?string}_Read( void *buffer, const size_t size )
          * ErrorGet clears errors internally. */
         UART${INDEX?string}_ErrorGet();
 
-<#if INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
         while( size > processedSize )
         {
             /* Error status */
@@ -369,14 +369,14 @@ bool UART${INDEX?string}_Read( void *buffer, const size_t size )
 bool UART${INDEX?string}_Write( void *buffer, const size_t size )
 {
     bool status = false;
-<#if INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
     size_t processedSize = 0;
 </#if>
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
     {
-<#if INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
         while( size > processedSize )
         {
             if(UART_SR_TXEMPTY_Msk == (UART${INDEX?string}_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
@@ -412,7 +412,7 @@ bool UART${INDEX?string}_Write( void *buffer, const size_t size )
     return status;
 }
 
-<#if INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
 bool UART${INDEX?string}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     uart${INDEX?string}Obj.txCallback = callback;
@@ -450,7 +450,7 @@ size_t UART${INDEX?string}_ReadCountGet( void )
 }
 
 </#if>
-<#if INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
 int UART${INDEX?string}_ReadByte(void)
 {
     return(UART${INDEX?string}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
