@@ -101,12 +101,12 @@ def setXDMACDefaultSettings():
 					"TC3_Receive"               : ["None"],
 					"I2SC0_Transmit_Left"       : ["I2SC0_REGS->I2SC_THR"],
 					"I2SC0_Receive_Left"        : ["I2SC0_REGS->I2SC_RHR"],
-					"I2SC1_Transmit_Left"       : ["I2SC0_REGS->I2SC_THR"],
-					"I2SC1_Receive_Left"        : ["I2SC0_REGS->I2SC_RHR"],
+					"I2SC1_Transmit_Left"       : ["I2SC1_REGS->I2SC_THR"],
+					"I2SC1_Receive_Left"        : ["I2SC1_REGS->I2SC_RHR"],
 					"I2SC0_Transmit_Right"      : ["I2SC0_REGS->I2SC_THR"],
 					"I2SC0_Receive_Right"       : ["I2SC0_REGS->I2SC_RHR"],
-					"I2SC1_Transmit_Right"      : ["I2SC0_REGS->I2SC_THR"],
-					"I2SC1_Receive_Right"       : ["I2SC0_REGS->I2SC_RHR"] }
+					"I2SC1_Transmit_Right"      : ["I2SC1_REGS->I2SC_THR"],
+					"I2SC1_Receive_Right"       : ["I2SC1_REGS->I2SC_RHR"] }
     
 	return triggerSettings, triggerRegister
 

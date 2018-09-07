@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_xdmac.c
+    plib_xdmac${XDMAC_INDEX}.c
 
   Summary:
     XDMAC PLIB Implementation File
