@@ -1,3 +1,7 @@
+global interruptVector
+global interruptHandler
+global interruptHandlerLock
+
 num = 0
 
 mcanElementSizes = ["8 bytes", "12 bytes", "16 bytes", "20 bytes", "24 bytes", "32 bytes", "48 bytes", "64 bytes"]
@@ -114,8 +118,50 @@ def adjustExtFilters(filterList, event):
             filter.setVisible(False)
             filter.setEnabled(False)
 
+def interruptControl(symbol, event):
+    if event["value"] == True:
+        Database.clearSymbolValue("core", interruptVector)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+
+        Database.clearSymbolValue("core", interruptHandler)
+        Database.setSymbolValue("core", interruptHandler, "MCAN" + str(num) + "_INT0_InterruptHandler", 2)
+
+        Database.clearSymbolValue("core", interruptHandlerLock)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+    else:
+        global mcanIntSymbolIds
+        intStatus = False
+
+        for symbolId in mcanIntSymbolIds:
+            intStatus = intStatus or Database.getSymbolValue("mcan" + str(num), symbolId)
+
+        if intStatus == False:
+            Database.clearSymbolValue("core", interruptVector)
+            Database.setSymbolValue("core", interruptVector, False, 2)
+
+            Database.clearSymbolValue("core", interruptHandler)
+            Database.setSymbolValue("core", interruptHandler, "MCAN" + str(num) + "_INT0_Handler", 2)
+
+            Database.clearSymbolValue("core", interruptHandlerLock)
+            Database.setSymbolValue("core", interruptHandlerLock, False, 2)
+
+# Dependency Function to show or hide the warning message depending on Interrupt enable/disable status
+def InterruptStatusWarning(symbol, event):
+    global mcanIntSymbolIds
+    intStatus = False
+
+    for symbolId in mcanIntSymbolIds:
+        intStatus = intStatus or Database.getSymbolValue("mcan" + str(num), symbolId)
+
+    if intStatus == True:
+        symbol.setVisible(event["value"])
+
 def instantiateComponent(mcanComponent):
     global num
+    global interruptVector
+    global interruptHandler
+    global interruptHandlerLock
+    global interruptVectorUpdate
     
     num = mcanComponent.getID()[-1:]
     print("Running MCAN" + str(num))
@@ -479,16 +525,27 @@ def instantiateComponent(mcanComponent):
     Database.setSymbolValue("core", "MCAN" + str(num)+"_CLOCK_ENABLE", True, 1)
     
     # get peripheral id for MCAN
-    peripId = Interrupt.getInterruptIndex("MCAN" + str(num))
+    interruptVector = "MCAN" + str(num) + "_INT0" + "_INTERRUPT_ENABLE"
+    interruptHandler = "MCAN" + str(num) + "_INT0" + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = "MCAN" + str(num) + "_INT0" + "_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = "MCAN" + str(num) + "_INT0" + "_INTERRUPT_ENABLE_UPDATE"
+
+    global mcanIntSymbolIds
+    mcanIntSymbolIds = ["INT_RXF0_NEW_ENTRY", "INT_RXF0_WATERMARK", "INT_RXF1_NEW_ENTRY", \
+                        "INT_RXF1_WATERMARK", "INT_TX_COMPLETED", "INT_TX_FIFO_EMPTY", \
+                        "INT_TX_FIFO_WATERMARK", "INT_TIMEOUT"]
     
-    # Initialize peripheral Interrupt
-    Database.clearSymbolValue("core", "NVIC_" + str(peripId) + "_ENABLE")
-    Database.setSymbolValue("core", "NVIC_" + str(peripId) + "_ENABLE", True, 1)
-    
-    # Set Interrupt Handler Name
-    Database.clearSymbolValue("core", "NVIC_" + str(peripId) + "_HANDLER")
-    Database.setSymbolValue("core", "NVIC_" + str(peripId) + "_HANDLER", "MCAN" + str(num) + "_InterruptHandler", 1)
-    
+    # NVIC Dynamic settings
+    mcaninterruptControl = mcanComponent.createBooleanSymbol("MCAN_NVIC_ENABLE", None)
+    mcaninterruptControl.setVisible(False)
+    mcaninterruptControl.setDependencies(interruptControl, mcanIntSymbolIds)
+
+    # Dependency Status for interrupt
+    mcanIntEnComment = mcanComponent.createCommentSymbol("MCAN_NVIC_ENABLE_COMMENT", None)
+    mcanIntEnComment.setVisible(False)
+    mcanIntEnComment.setLabel("Warning!!! MCAN" + str(num) + " Interrupt is Disabled in Interrupt Manager")
+    mcanIntEnComment.setDependencies(InterruptStatusWarning, ["core." + interruptVectorUpdate])
+
     REG_MODULE_MCAN = Register.getRegisterModule("MCAN")
     configName = Variables.get("__CONFIGURATION_NAME")
     

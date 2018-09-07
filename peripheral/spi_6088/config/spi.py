@@ -8,10 +8,8 @@ def ClockStatusWarning(symbol, event):
 # Dependency Function to show or hide the warning message depending on Interrupt enable/disable status
 def InterruptStatusWarning(symbol, event):
     global spiInterrupt
-    if event["value"] == False and spiInterrupt.getValue() == True:
-       symbol.setVisible(True)
-    else:
-       symbol.setVisible(False)
+    if spiInterrupt.getValue() == True:
+       symbol.setVisible(event["value"])
 
 def ClockModeInfo(symbol, event):
     CPHA = Database.getSymbolValue("spi" + str(spiInstance), "SPI_CLOCK_PHASE")
@@ -27,29 +25,30 @@ def ClockModeInfo(symbol, event):
 
 
 def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
-    global spiSymNVICVector
-    global spiSymNVICHandler
-    global spiSymNVICHandlerLock
+    global spiSyminterruptVector
+    global spiSyminterruptHandler
+    global spiSyminterruptHandlerLock
+    global spiSyminterruptVectorUpdate
     global spiSymIntEnComment
     global spiSym_MR_PCS
     global spiDriverControlled
     global spiInterruptDriverModeComment
 
     if(event["id"] == "SPI_INTERRUPT_MODE"):
-        Database.clearSymbolValue("core", spiSymNVICVector)
-        Database.clearSymbolValue("core", spiSymNVICHandler)
-        Database.clearSymbolValue("core", spiSymNVICHandlerLock)
+        Database.clearSymbolValue("core", spiSyminterruptVector)
+        Database.clearSymbolValue("core", spiSyminterruptHandler)
+        Database.clearSymbolValue("core", spiSyminterruptHandlerLock)
         if (event["value"] == True):
-            Database.setSymbolValue("core", spiSymNVICVector, True, 1)
-            Database.setSymbolValue("core", spiSymNVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
-            Database.setSymbolValue("core", spiSymNVICHandlerLock, True, 1)
+            Database.setSymbolValue("core", spiSyminterruptVector, True, 1)
+            Database.setSymbolValue("core", spiSyminterruptHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
+            Database.setSymbolValue("core", spiSyminterruptHandlerLock, True, 1)
         else:
-            Database.setSymbolValue("core", spiSymNVICVector, False, 1)
-            Database.setSymbolValue("core", spiSymNVICHandler, "SPI" + str(spiInstance) + "_Handler", 1)
-            Database.setSymbolValue("core", spiSymNVICHandlerLock, False, 1)
+            Database.setSymbolValue("core", spiSyminterruptVector, False, 1)
+            Database.setSymbolValue("core", spiSyminterruptHandler, "SPI" + str(spiInstance) + "_Handler", 1)
+            Database.setSymbolValue("core", spiSyminterruptHandlerLock, False, 1)
 
     # control warning message
-    if (spiInterrupt.getValue() == True and Database.getSymbolValue("core", spiSymNVICVector) == False):
+    if (spiInterrupt.getValue() == True and Database.getSymbolValue("core", spiSyminterruptVectorUpdate) == True):
         spiSymIntEnComment.setVisible(True)
     else:
         spiSymIntEnComment.setVisible(False)
@@ -133,20 +132,21 @@ spiValGrp_CSR_NCPHA = ATDF.getNode('/avr-tools-device-file/modules/module@[name=
 
 def instantiateComponent(spiComponent):
     global spiInstance
-    global spiSymNVICVector
-    global spiSymNVICHandler
-    global spiSymNVICHandlerLock
-    global InternalNVICVectorChange
+    global spiSyminterruptVector
+    global spiSyminterruptHandler
+    global spiSyminterruptHandlerLock
+    global spiSyminterruptVectorUpdate
+    global InternalinterruptVectorChange
 
-    InternalNVICVectorChange = False
+    InternalinterruptVectorChange = False
 
     spiInstance = spiComponent.getID()[-1:]
 
-    peripId = Interrupt.getInterruptIndex("SPI" + str(spiInstance))
     #IDs used in NVIC Manager
-    spiSymNVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    spiSymNVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-    spiSymNVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+    spiSyminterruptVector = "SPI" + str(spiInstance) + "_INTERRUPT_ENABLE"
+    spiSyminterruptHandler = "SPI" + str(spiInstance) + "_INTERRUPT_HANDLER"
+    spiSyminterruptHandlerLock = "SPI" + str(spiInstance) + "_INTERRUPT_HANDLER_LOCK"
+    spiSyminterruptVectorUpdate = "SPI" + str(spiInstance) + "_INTERRUPT_ENABLE_UPDATE"
 
     # Enable clock for SPI
     Database.setSymbolValue("core", "SPI" +  str(spiInstance) + "_CLOCK_ENABLE", True, 1)
@@ -165,9 +165,9 @@ def instantiateComponent(spiComponent):
     spiInterrupt.setLabel("Interrupt Mode")
     spiInterrupt.setDefaultValue(True)
     #By Default interrupt mode is enabled and corresponding information is passed to NVIC manager
-    Database.setSymbolValue("core", spiSymNVICVector, True, 1)
-    Database.setSymbolValue("core", spiSymNVICHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
-    Database.setSymbolValue("core", spiSymNVICHandlerLock, True, 1)
+    Database.setSymbolValue("core", spiSyminterruptVector, True, 1)
+    Database.setSymbolValue("core", spiSyminterruptHandler, "SPI" + str(spiInstance) + "_InterruptHandler", 1)
+    Database.setSymbolValue("core", spiSyminterruptHandlerLock, True, 1)
     spiInterrupt.setDependencies(setupSpiIntSymbolAndIntHandler, ["SPI_INTERRUPT_MODE", "SPI_DRIVER_CONTROLLED"])
 
     spiSym_MR_MSTR = spiComponent.createKeyValueSetSymbol("SPI_MR_MSTR", None)
@@ -324,7 +324,7 @@ def instantiateComponent(spiComponent):
     spiSymIntEnComment = spiComponent.createCommentSymbol("SPI" + str(spiInstance) + "_NVIC_ENABLE_COMMENT", None)
     spiSymIntEnComment.setVisible(False)
     spiSymIntEnComment.setLabel("Warning!!! SPI" + str(spiInstance) + " Interrupt is Disabled in Interrupt Manager")
-    spiSymIntEnComment.setDependencies(InterruptStatusWarning, ["core." + spiSymNVICVector])
+    spiSymIntEnComment.setDependencies(InterruptStatusWarning, ["core." + spiSyminterruptVectorUpdate])
 
     # Dependency Status for clock
     spiSymClkEnComment = spiComponent.createCommentSymbol("SPI" + str(spiInstance) + "_CLK_ENABLE_COMMENT", None)

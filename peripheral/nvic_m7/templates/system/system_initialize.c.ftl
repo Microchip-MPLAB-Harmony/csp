@@ -1,1 +1,0 @@
-    NVIC_Initialize();

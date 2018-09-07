@@ -5,8 +5,8 @@ global  systickHeaderFile
 global  systickSourceFile
 global  systickSystemDefFile
 global  systickSystemInitFile
-global  systickNVICVector
-global  systickNVICHandlerLock
+global  systickinterruptVector
+global  systickinterruptHandlerLock
 
 Log.writeInfoMessage("Loading SYSTICK for " + Variables.get("__PROCESSOR"))
 
@@ -47,16 +47,16 @@ def sysTickEnableCfgMenu(CfgMenu, event):
         systickSystemDefFile.setEnabled(False)
         systickSystemInitFile.setEnabled(False)
 
-def sysTickNVICControl(symbol, event):
-    Database.clearSymbolValue("core", systickNVICVector)
-    Database.clearSymbolValue("core", systickNVICHandlerLock)
+def sysTickinterruptControl(symbol, event):
+    Database.clearSymbolValue("core", systickinterruptVector)
+    Database.clearSymbolValue("core", systickinterruptHandlerLock)
 
     if (event["value"] == True):
-        Database.setSymbolValue("core", systickNVICVector, True, 2)
-        Database.setSymbolValue("core", systickNVICHandlerLock, True, 2)
+        Database.setSymbolValue("core", systickinterruptVector, True, 2)
+        Database.setSymbolValue("core", systickinterruptHandlerLock, True, 2)
     else:
-        Database.setSymbolValue("core", systickNVICVector, False, 2)
-        Database.setSymbolValue("core", systickNVICHandlerLock, False, 2)
+        Database.setSymbolValue("core", systickinterruptVector, False, 2)
+        Database.setSymbolValue("core", systickinterruptHandlerLock, False, 2)
 
 systickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU_0", systickEnable)
 systickMenu.setLabel("SysTick Configuration")
@@ -138,14 +138,13 @@ systickPeriodUS.setMin(0)
 
 
 # Setup Peripheral Interrupt in Interrupt manager
-systickPeripId = Interrupt.getInterruptIndex("SysTick")
-systickNVICVector = "NVIC_" + str(systickPeripId) + "_ENABLE"
-systickNVICHandlerLock = "NVIC_" + str(systickPeripId) + "_HANDLER_LOCK"
+systickinterruptVector = "SysTick_INTERRUPT_ENABLE"
+systickinterruptHandlerLock = "SysTick_INTERRUPT_HANDLER_LOCK"
 
 # NVIC Dynamic settings
-SYSTICK_NVICControl = coreComponent.createBooleanSymbol("NVIC_SYSTICK_ENABLE", systickMenu)
-SYSTICK_NVICControl.setDependencies(sysTickNVICControl, ["USE_SYSTICK_INTERRUPT"])
-SYSTICK_NVICControl.setVisible(False)
+SYSTICK_interruptControl = coreComponent.createBooleanSymbol("NVIC_SYSTICK_ENABLE", systickMenu)
+SYSTICK_interruptControl.setDependencies(sysTickinterruptControl, ["USE_SYSTICK_INTERRUPT"])
+SYSTICK_interruptControl.setVisible(False)
 
 ############################################################################
 #### Code Generation ####

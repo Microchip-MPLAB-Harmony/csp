@@ -20,37 +20,41 @@ usartValGrp_MR_SYNC = usartRegModule.getValueGroup(usartBitField_MR_NBSTOP.getVa
 #### Global Variables ####
 ################################################################################
 global usartInstance
-global peripId
-global NVICVector
-global NVICHandler
-global NVICHandlerLock
+global interruptVector
+global interruptHandler
+global interruptHandlerLock
 
 ################################################################################
 #### Business Logic ####
 ################################################################################
-def NVICControl(usartNVIC, event):
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.clearSymbolValue("core", NVICHandlerLock)
+def interruptControl(usartNVIC, event):
+    Database.clearSymbolValue("core", interruptVector)
+    Database.clearSymbolValue("core", interruptHandler)
+    Database.clearSymbolValue("core", interruptHandlerLock)
     if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "USART" + str(usartInstance) + "_InterruptHandler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.setSymbolValue("core", interruptHandler, "USART" + str(usartInstance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else :
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "USART" + str(usartInstance) + "_Handler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+        Database.setSymbolValue("core", interruptVector, False, 2)
+        Database.setSymbolValue("core", interruptHandler, "USART" + str(usartInstance) + "_Handler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
+<<<<<<< HEAD
     if (event["value"] == False):
         status = True
     else :
         status = False
 
-    if (event["id"] == NVICVector) and (Database.getSymbolValue("usart" + str(usartInstance), "USART_INTERRUPT_MODE") == False):
+    if (event["id"] == interruptVector) and (Database.getSymbolValue("usart" + str(usartInstance), "USART_INTERRUPT_MODE") == False):
         status = False
 
     symbol.setVisible(status)
+=======
+    if (Database.getSymbolValue("usart" + str(usartInstance), "INTERRUPT_MODE") == True):
+        symbol.setVisible(event["value"])
+>>>>>>> [NVIC] Update to make it generic for SAMC2x/SAME70 devices
 
 # Calculates BRG value
 def baudRateCalc(clk, baud, overSamp):
@@ -108,11 +112,10 @@ def dataWidthLogic(symbol, event):
 #### Component ####
 ################################################################################
 def instantiateComponent(usartComponent):
-    global NVICVector
-    global NVICHandler
-    global NVICHandlerLock
+    global interruptVector
+    global interruptHandler
+    global interruptHandlerLock
     global usartInstance
-    global peripId
 
     usartInstance = usartComponent.getID()[-1:]
     Log.writeInfoMessage("Running USART" + str(usartInstance))
@@ -273,25 +276,26 @@ def instantiateComponent(usartComponent):
     ############################################################################
     #### Dependency ####
     ############################################################################
-    peripId = Interrupt.getInterruptIndex("USART" + str(usartInstance))
-    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+
+    interruptVector = "USART" + str(usartInstance) + "_INTERRUPT_ENABLE"
+    interruptHandler = "USART" + str(usartInstance) + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = "USART" + str(usartInstance) + "_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = "USART" + str(usartInstance) + "_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and NVIC
     Database.clearSymbolValue("core", "USART"+ str(usartInstance)+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", "USART"+ str(usartInstance)+"_CLOCK_ENABLE", True, 2)
-    Database.clearSymbolValue("core", NVICVector)
-    Database.setSymbolValue("core", NVICVector, True, 2)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.setSymbolValue("core", NVICHandler, "USART" + str(usartInstance) + "_InterruptHandler", 2)
-    Database.clearSymbolValue("core", NVICHandlerLock)
-    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+    Database.clearSymbolValue("core", interruptVector)
+    Database.setSymbolValue("core", interruptVector, True, 2)
+    Database.clearSymbolValue("core", interruptHandler)
+    Database.setSymbolValue("core", interruptHandler, "USART" + str(usartInstance) + "_InterruptHandler", 2)
+    Database.clearSymbolValue("core", interruptHandlerLock)
+    Database.setSymbolValue("core", interruptHandlerLock, True, 2)
 
     # NVIC Dynamic settings
-    usartNVICControl = usartComponent.createBooleanSymbol("NVIC_USART_ENABLE", None)
-    usartNVICControl.setDependencies(NVICControl, ["USART_INTERRUPT_MODE"])
-    usartNVICControl.setVisible(False)
+    usartinterruptControl = usartComponent.createBooleanSymbol("NVIC_USART_ENABLE", None)
+    usartinterruptControl.setDependencies(interruptControl, ["USART_INTERRUPT_MODE"])
+    usartinterruptControl.setVisible(False)
 
     # Dependency Status
     usartSymClkEnComment = usartComponent.createCommentSymbol("USART_CLK_ENABLE_COMMENT", None)
@@ -302,7 +306,7 @@ def instantiateComponent(usartComponent):
     usartSymIntEnComment = usartComponent.createCommentSymbol("USART_NVIC_ENABLE_COMMENT", None)
     usartSymIntEnComment.setVisible(False)
     usartSymIntEnComment.setLabel("Warning!!! USART Interrupt is Disabled in Interrupt Manager")
-    usartSymIntEnComment.setDependencies(dependencyStatus, ["core." + NVICVector])
+    usartSymIntEnComment.setDependencies(dependencyStatus, ["core." + interruptVectorUpdate])
 
     ############################################################################
     #### Code Generation ####

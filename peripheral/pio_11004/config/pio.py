@@ -30,7 +30,7 @@ def ClockInterruptStatusWarning(symbol, event):
 # Dependency Function to pass interrupt related info to NVIC Manager.
 # This function will be entered only by internal change happening to PORT channel interrupt, never by manual
 # change because channel interrupt is not user configurable directly.
-def NVICControl(pioNVIC, event):
+def interruptControl(pioNVIC, event):
     i = []
     # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
     # Split the id name by "_" and put all the split names in the list "i"
@@ -38,16 +38,16 @@ def NVICControl(pioNVIC, event):
     k = pioSymChannel.index(i[1])
 
     if (event["value"] == True):
-        Database.setSymbolValue("core", pioSymNVICVector[k], True, 1)
-        Database.setSymbolValue("core", pioSymNVICHandler[k], "PIO" + i[1] + "_InterruptHandler", 1)
-        Database.setSymbolValue("core", pioSymNVICHandlerLock[k], True, 1)
+        Database.setSymbolValue("core", pioSyminterruptVector[k], True, 1)
+        Database.setSymbolValue("core", pioSyminterruptHandler[k], "PIO" + i[1] + "_InterruptHandler", 1)
+        Database.setSymbolValue("core", pioSyminterruptHandlerLock[k], True, 1)
     else :
-        Database.setSymbolValue("core", pioSymNVICVector[k], False, 1)
-        Database.setSymbolValue("core", pioSymNVICHandler[k], "PIO" + i[1] + "_Handler", 1)
-        Database.setSymbolValue("core", pioSymNVICHandlerLock[k], False, 1)
+        Database.setSymbolValue("core", pioSyminterruptVector[k], False, 1)
+        Database.setSymbolValue("core", pioSyminterruptHandler[k], "PIO" + i[1] + "_Handler", 1)
+        Database.setSymbolValue("core", pioSyminterruptHandlerLock[k], False, 1)
 
     # show or hide the warning message depending on Interrupt enable/disable status from PIN Manager.
-    if (portInterrupt[k].getValue() == True and Database.getSymbolValue("core", pioSymNVICVector[k]) == False):
+    if (portInterrupt[k].getValue() == True and Database.getSymbolValue("core", pioSyminterruptVector[k]) == False):
         pioSymIntEnComment[k].setVisible(True)
     else:
         pioSymIntEnComment[k].setVisible(False)
@@ -295,12 +295,12 @@ pioSym_PIO_SODR = []
 pioSym_PIO_CODR = []
 
 pioSymPeripheralId = []
-global pioSymNVICVector
-pioSymNVICVector = []
-global pioSymNVICHandler
-pioSymNVICHandler = []
-global pioSymNVICHandlerLock
-pioSymNVICHandlerLock = []
+global pioSyminterruptVector
+pioSyminterruptVector = []
+global pioSyminterruptHandler
+pioSyminterruptHandler = []
+global pioSyminterruptHandlerLock
+pioSyminterruptHandlerLock = []
 pioSymClkEnComment = []
 global pioSymIntEnComment
 pioSymIntEnComment = []
@@ -430,19 +430,19 @@ for portNumber in range(0, len(pioSymChannel)):
     #symbols and variables for interrupt handling
     pioSymPeripheralId.append(portNumber)
     pioSymPeripheralId[portNumber] = Interrupt.getInterruptIndex("PIO" + str(pioSymChannel[portNumber]))
-    pioSymNVICVector.append(portNumber)
-    pioSymNVICVector[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_ENABLE"
-    pioSymNVICHandler.append(portNumber)
-    pioSymNVICHandler[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER"
-    pioSymNVICHandlerLock.append(portNumber)
-    pioSymNVICHandlerLock[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER_LOCK"
+    pioSyminterruptVector.append(portNumber)
+    pioSyminterruptVector[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_ENABLE"
+    pioSyminterruptHandler.append(portNumber)
+    pioSyminterruptHandler[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER"
+    pioSyminterruptHandlerLock.append(portNumber)
+    pioSyminterruptHandlerLock[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER_LOCK"
 
     # Dependency Status for interrupt
     pioSymIntEnComment.append(portNumber)
     pioSymIntEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_NVIC_ENABLE_COMMENT", pioMenu)
     pioSymIntEnComment[portNumber].setVisible(False)
     pioSymIntEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
-    pioSymIntEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core." + pioSymNVICVector[portNumber]])
+    pioSymIntEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core." + pioSyminterruptVector[portNumber]])
 
     # Dependency Status for clock
     pioSymClkEnComment.append(portNumber)
@@ -452,9 +452,9 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSymClkEnComment[portNumber].setDependencies(ClockInterruptStatusWarning, ["core.PIO_CLOCK_ENABLE" + str(pioSymChannel[portNumber])])
 
 # NVIC Dynamic settings
-pioNVICControl = coreComponent.createBooleanSymbol("NVIC_PIO_ENABLE", None)
-pioNVICControl.setDependencies(NVICControl, portInterruptList)
-pioNVICControl.setVisible(False)
+piointerruptControl = coreComponent.createBooleanSymbol("NVIC_PIO_ENABLE", None)
+piointerruptControl.setDependencies(interruptControl, portInterruptList)
+piointerruptControl.setVisible(False)
 
 # Call "setupPort" function to update status of port Channel and its clock whenever there is any change in any of the pin status
 # index for "usePort[]" is used as 0 because it is irrelevant here. either of the values 0,1,2,3.. can be used here.

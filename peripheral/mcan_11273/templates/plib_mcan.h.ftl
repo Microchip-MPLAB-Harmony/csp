@@ -64,12 +64,28 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVOCES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+
+<#assign USE_INTERRUPTS =
+    (INT_RXF0_NEW_ENTRY!false) ||
+    (INT_RXF0_WATERMARK!false) ||
+    (INT_RXF1_NEW_ENTRY!false) ||
+    (INT_RXF1_WATERMARK!false) ||
+    (INT_TX_COMPLETED!false)   ||
+    (INT_TX_FIFO_EMPTY!false)  ||
+    (INT_TX_FIFO_WATERMARK!false) ||
+    (INT_TIMEOUT!false)
+>
+
 void MCAN${INDEX?string}_Initialize (void);
 void MCAN${INDEX?string}_Deinitialize (void);
 void MCAN${INDEX?string}_Open (void);
 void MCAN${INDEX?string}_Close (void);
 bool MCAN${INDEX?string}_ChannelMessageTransmit (MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message);
 bool MCAN${INDEX?string}_ChannelMessageReceive (MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message);
+
+<#if USE_INTERRUPTS == true>
+void MCAN${INDEX?string}_INT0_InterruptHandler( void );
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

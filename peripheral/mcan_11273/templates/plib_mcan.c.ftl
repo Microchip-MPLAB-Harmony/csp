@@ -499,7 +499,7 @@ bool MCAN${INDEX?string}_ChannelMessageReceive(MCAN_CHANNEL channelNum, int addr
 
 <#if USE_INTERRUPTS == true>
 /* One Interrupt handler for each MCAN(MCAN) module - default to INT0 */
-void MCAN${INDEX?string}_INT0_Handler( void )
+void MCAN${INDEX?string}_INT0_InterruptHandler( void )
 {
     uint32_t ir = MCAN${INDEX?string}->MCAN_IR;
     <#if INT_TX_COMPLETED!false>

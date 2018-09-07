@@ -3,11 +3,10 @@ from math import ceil
 ################################################################################
 #### Global Variables ####
 ################################################################################
-global NVICVector
-global NVICHandler
-global NVICHandlerLock
+global interruptVector
+global interruptHandler
+global interruptHandlerLock
 global instance
-global peripId
 
 #------------------------------------------------------------------------------
 #                     Global SUPC Array symbol declaration
@@ -20,19 +19,19 @@ supcSym_WUIR_WKUPT = []
 ################################################################################
 #-------------------------------------------------------------------------------
 
-def NVICControl(symbol, event):
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.clearSymbolValue("core", NVICHandlerLock)
+def interruptControl(symbol, event):
+    Database.clearSymbolValue("core", interruptVector)
+    Database.clearSymbolValue("core", interruptHandler)
+    Database.clearSymbolValue("core", interruptHandlerLock)
 
     if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "SUPC" + str(instance) +  "_InterruptHandler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.setSymbolValue("core", interruptHandler, "SUPC" + str(instance) +  "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "SUPC" + str(instance) +  "_Handler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+        Database.setSymbolValue("core", interruptVector, False, 2)
+        Database.setSymbolValue("core", interruptHandler, "SUPC_Handler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def disableWKUP0(symbol,event):
     if (event["value"] == True):
@@ -71,11 +70,10 @@ def disableBKUPRST(symbol,event):
 ################################################################################
 def instantiateComponent(supcComponent):
 
-    global NVICVector
-    global NVICHandler
-    global NVICHandlerLock
+    global interruptVector
+    global interruptHandler
+    global interruptHandlerLock
     global instance
-    global peripId
 
     instance = supcComponent.getID()[-1:]
     print("Running SUPC" + str(instance))
@@ -278,15 +276,15 @@ def instantiateComponent(supcComponent):
     ############################################################################
 
     # Setup Peripheral Interrupt in Interrupt manager
-    peripId = Interrupt.getInterruptIndex("SUPC")
-    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+    interruptVector = "SUPC_INTERRUPT_ENABLE"
+    interruptHandler = "SUPC_INTERRUPT_HANDLER"
+    interruptHandlerLock = "SUPC_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = "SUPC_INTERRUPT_ENABLE_UPDATE"
 
     # NVIC Dynamic settings
-    supcNVICControl = supcComponent.createBooleanSymbol("NVIC_SUPC_ENABLE", None)
-    supcNVICControl.setDependencies(NVICControl, ["SUPC_SMMR_SMIEN"])
-    supcNVICControl.setVisible(False)
+    supcinterruptControl = supcComponent.createBooleanSymbol("NVIC_SUPC_ENABLE", None)
+    supcinterruptControl.setDependencies(interruptControl, ["SUPC_SMMR_SMIEN"])
+    supcinterruptControl.setVisible(False)
 
 ############################################################################
 #### Code Generation ####

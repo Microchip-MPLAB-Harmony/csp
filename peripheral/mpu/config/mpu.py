@@ -10,8 +10,8 @@ global  mpuSystemDefFile
 global mpuRegions
 global mpuSettings
 global mpuSetUpLogicList
-global  mpuNVICVector
-global  mpuNVICHandlerLock
+global  mpuinterruptVector
+global  mpuinterruptHandlerLock
 
 ################################################################################
 #### Business Logic ####
@@ -60,16 +60,16 @@ def storeLength(symbol, event):
 def enableMenu(menu, event):
 	menu.setVisible(event["value"])
 	
-def mpuNVICControl(symbol, event):
-    Database.clearSymbolValue("core", mpuNVICVector)
-    Database.clearSymbolValue("core", mpuNVICHandlerLock)
+def mpuinterruptControl(symbol, event):
+    Database.clearSymbolValue("core", mpuinterruptVector)
+    Database.clearSymbolValue("core", mpuinterruptHandlerLock)
 
     if (event["value"] == True):
-        Database.setSymbolValue("core", mpuNVICVector, True, 2)
-        Database.setSymbolValue("core", mpuNVICHandlerLock, True, 2)
+        Database.setSymbolValue("core", mpuinterruptVector, True, 2)
+        Database.setSymbolValue("core", mpuinterruptHandlerLock, True, 2)
     else:
-        Database.setSymbolValue("core", mpuNVICVector, False, 2)
-        Database.setSymbolValue("core", mpuNVICHandlerLock, False, 2)
+        Database.setSymbolValue("core", mpuinterruptVector, False, 2)
+        Database.setSymbolValue("core", mpuinterruptHandlerLock, False, 2)
 
 def mpuSetUp(conf, event):
 	if event["value"]:
@@ -221,13 +221,13 @@ for i in range(0,mpuRegions):
 
 	# Setup Peripheral Interrupt in Interrupt manager
 mpuPeripId = Interrupt.getInterruptIndex("MemoryManagement")
-mpuNVICVector = "NVIC_" + str(mpuPeripId) + "_ENABLE"
-mpuNVICHandlerLock = "NVIC_" + str(mpuPeripId) + "_HANDLER_LOCK"
+mpuinterruptVector = "NVIC_" + str(mpuPeripId) + "_ENABLE"
+mpuinterruptHandlerLock = "NVIC_" + str(mpuPeripId) + "_HANDLER_LOCK"
 
 # NVIC Dynamic settings
-MPU_NVICControl = coreComponent.createBooleanSymbol("NVIC_MPU_ENABLE", coreUseMPU)
-MPU_NVICControl.setDependencies(mpuNVICControl, ["CoreUseMPU"])
-MPU_NVICControl.setVisible(False)
+MPU_interruptControl = coreComponent.createBooleanSymbol("NVIC_MPU_ENABLE", coreUseMPU)
+MPU_interruptControl.setDependencies(mpuinterruptControl, ["CoreUseMPU"])
+MPU_interruptControl.setVisible(False)
 
 coreUseDefaultTrigger = coreComponent.createBooleanSymbol("CoreMPU_DEFAULT_TRIGGER", mpuConfMenu)
 coreUseDefaultTrigger.setDefaultValue(False)
