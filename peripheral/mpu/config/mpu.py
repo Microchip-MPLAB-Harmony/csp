@@ -101,6 +101,9 @@ mpuFileGen.setLabel("MPU File Generation")
 mpuFileGen.setDependencies(enableFileGen, ["CoreUseMPU"])
 mpuFileGen.setVisible(False)
 
+mpuNumRegions= coreComponent.createIntegerSymbol("MPU_NUMBER_REGIONS", mpuConfMenu)
+mpuNumRegions.setVisible(False)
+mpuNumRegions.setDefaultValue(mpuRegions)
 
 coreMPUHFNMIENA  = coreComponent.createBooleanSymbol("CoreMPU_HFNMIENA", mpuConfMenu)
 coreMPUHFNMIENA.setLabel("HFNMIENA")
@@ -109,7 +112,7 @@ coreMPUHFNMIENA.setDefaultValue(False)
 
 coreUseMPUPRIVDEFENA = coreComponent.createBooleanSymbol("CoreMPU_PRIVDEFENA", mpuConfMenu)
 coreUseMPUPRIVDEFENA.setLabel("PRIVDEFENA")
-coreUseMPUPRIVDEFENA.setDefaultValue(False)
+coreUseMPUPRIVDEFENA.setDefaultValue(True)
 coreUseMPUPRIVDEFENA.setDescription("Enables privileged software access to the default memory map")
 
 coreUseDefault = coreComponent.createBooleanSymbol("CoreMPU_DEFAULT", mpuConfMenu)
