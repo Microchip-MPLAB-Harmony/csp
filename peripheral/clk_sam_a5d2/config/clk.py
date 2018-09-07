@@ -2,6 +2,11 @@
 from os.path import join
 from xml.etree import ElementTree
 
+global generic_list
+#MCAN0 and 1 are missing because their missing instance ID's from the ATDF
+#UART, SPI, and TWI peripherals claim to be able to use GCLK but aren't in table 33-1
+generic_list = {"FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "CLASSD"};
+
 global DICT_PCER0
 global DICT_PCER1
 
@@ -273,7 +278,7 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module):
 
     #TODO MCAN0 and 1 are missing instance id's in the ATDF!
     #for periph in ["FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "MCAN0", "MCAN1", "CLASSD"]:
-    for periph in ["FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "CLASSD"]:
+    for periph in generic_list:
         module = periph
         if module[-1:].isdigit():
             module = module[:-1]
@@ -333,6 +338,8 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
     update_pcer0_value: Callback to calculate PCER0 Register Value.
     update_pcer1_value: Callback to calculate PCER1 Register Value.
     """
+
+    hs_periphs = ["XDMAC0", "XDMAC1", "AESB", "MPDDRC", "SDMMC0", "SDMMC1", "LCDC", "ISC", "QSPI0", "QSPI1"]
     global DICT_PCER0
     global DICT_PCER1
 
@@ -359,9 +366,9 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
             for param in instance.iter("param"):
                 if "CLOCK_ID" in param.attrib["name"]:
 
-                    symbol_id = "PMC_ID_" + instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1]
-                    sym_perip_clk = clk_comp.createBooleanSymbol(symbol_id, clk_menu)
-                    sym_perip_clk.setLabel(instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1])
+                    symbol_id = instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1]
+                    sym_perip_clk = clk_comp.createBooleanSymbol(symbol_id + "_CLOCK_ENABLE", clk_menu)
+                    sym_perip_clk.setLabel(symbol_id)
                     sym_perip_clk.setDefaultValue(False)
                     sym_perip_clk.setReadOnly(True)
 
@@ -373,6 +380,15 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
                     else:
                         list_pcer1_depend.append(symbol_id)
                         DICT_PCER1.update({symbol_id: clock_id})
+
+                    sym_perip_clk_freq = clk_comp.createIntegerSymbol(symbol_id + "_CLOCK_FREQUENCY", clk_menu)
+                    sym_perip_clk_freq.setVisible(True)
+                    sym_perip_clk_freq.setReadOnly(True)
+                    if instance.attrib["name"] in hs_periphs:
+                        freq = 166000000
+                    else:
+                        freq = 83000000
+                    sym_perip_clk_freq.setDefaultValue(freq)
 
     # create symbol for PMC_PCERx register values
     sym_pmc_pcer0 = clk_comp.createHexSymbol("PMC_PCER0", clk_menu)
@@ -491,6 +507,7 @@ def __isc_clock_menu(clk_comp, clk_menu, pmc_reg_module):
     sym_iscclk.setLabel(bitfield_pmc_scer_iscck.getDescription())
     sym_iscclk.setDefaultValue(False)
 
+    #currently these values are hard coded here and updated by the java gui
 def __calculated_clock_frequencies(clk_comp, clk_menu):
     """
     Calculated Clock frequencies Menu Implementation.
@@ -548,10 +565,11 @@ def __calculated_clock_frequencies(clk_comp, clk_menu):
     sym_usb_hs_freq.setDefaultValue("480000000")
     sym_usb_hs_freq.setReadOnly(True)
 
-    for periph in ["FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "CLASSD"]:
-        gen_clk = clk_comp.createStringSymbol(periph+"_GEN_CLOCK_FREQUENCY", sym_calc_freq_menu)
+    for periph in generic_list:
+        gen_clk = clk_comp.createStringSymbol(periph+"_PROGRAMMABLE_CLOCK_FREQUENCY", sym_calc_freq_menu)
         gen_clk.setLabel(periph + " Generic Clock Frequency (HZ)")
-        gen_clk.setDefaultValue("32768")
+        #gen_clk.setDefaultValue("32768")
+        gen_clk.setDefaultValue("166000000")
         gen_clk.setReadOnly(True)
 
 
