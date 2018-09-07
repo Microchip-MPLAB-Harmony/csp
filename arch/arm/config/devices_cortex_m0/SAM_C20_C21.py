@@ -140,7 +140,7 @@ coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/SAMC2xNVICmanager.jar")
+coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
 
 # #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")

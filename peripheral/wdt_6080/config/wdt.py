@@ -8,16 +8,16 @@ wdtEnable.setLabel("Enable Watchdog Timer?")
 wdtEnable.setDefaultValue(False)
 
 def wdtEnableCfgMenu(wdtCfgMenu, event):
-	wdtCfgMenu.setVisible(event["value"])
+    wdtCfgMenu.setVisible(event["value"])
 
-	component = wdtCfgMenu.getComponent()
-	component.getSymbolByID("wdtHeaderFile").setEnabled(event["value"])
-	component.getSymbolByID("wdtSourceFile").setEnabled(event["value"])
-	component.getSymbolByID("wdtSystemDefFile").setEnabled(event["value"])
+    component = wdtCfgMenu.getComponent()
+    component.getSymbolByID("wdtHeaderFile").setEnabled(event["value"])
+    component.getSymbolByID("wdtSourceFile").setEnabled(event["value"])
+    component.getSymbolByID("wdtSystemDefFile").setEnabled(event["value"])
 
-	if event["value"] == False:
-		Database.clearSymbolValue("core", "rswdtENABLE")
-		Database.setSymbolValue("core", "rswdtENABLE", False, 1)
+    if event["value"] == False:
+        Database.clearSymbolValue("core", "rswdtENABLE")
+        Database.setSymbolValue("core", "rswdtENABLE", False, 1)
 
 wdtCfgMenu = coreComponent.createMenuSymbol("WDT_SUBMENU", wdtMenu)
 wdtCfgMenu.setLabel("WDT Configuration")
@@ -29,11 +29,11 @@ wdtReset.setLabel("Enable Reset")
 wdtReset.setDefaultValue(True)
 
 def wdtResetEnable(wdtInterrupt, event):
-	if event["value"] == True:
-		wdtInterrupt.setVisible(False)
-		wdtInterrupt.setValue(False, 2)
-	else:
-		wdtInterrupt.setVisible(True)
+    if event["value"] == True:
+        wdtInterrupt.setVisible(False)
+        wdtInterrupt.setValue(False, 2)
+    else:
+        wdtInterrupt.setVisible(True)
 
 wdtInterrupt = coreComponent.createBooleanSymbol("wdtinterruptMode", wdtCfgMenu)
 wdtInterrupt.setLabel("Enable Interrupts")
@@ -46,9 +46,9 @@ wdtCounterValue.setLabel("Counter value")
 wdtCounterValue.setMax(0xfff)
 wdtCounterValue.setDefaultValue(0xfff)
 
-def	wdtcounter_cal(wdtCounterValueTime, event):
-	data = event["value"] * 3.90625
-	wdtCounterValueTime.setValue(int(round(data)),2)
+def wdtcounter_cal(wdtCounterValueTime, event):
+    data = event["value"] * 3.90625
+    wdtCounterValueTime.setValue(int(round(data)),2)
 
 wdtCounterValueTime = coreComponent.createIntegerSymbol("wdtWDVTIME", wdtCfgMenu)
 wdtCounterValueTime.setLabel("WDT Counter value in ms")
@@ -65,9 +65,9 @@ wdtDeltaValue.setLabel("Delta value")
 wdtDeltaValue.setMax(0xfff)
 wdtDeltaValue.setDefaultValue(0xfff)
 
-def	wdtdelta_cal(wdtDeltaValueTime, event):
-	data = event["value"] * 3.90625
-	wdtDeltaValueTime.setValue(int(round(data)),2)
+def wdtdelta_cal(wdtDeltaValueTime, event):
+    data = event["value"] * 3.90625
+    wdtDeltaValueTime.setValue(int(round(data)),2)
 
 wdtDeltaValueTime = coreComponent.createIntegerSymbol("wdtWDDTIME", wdtCfgMenu)
 wdtDeltaValueTime.setLabel("WDT Delta value in ms")
@@ -83,42 +83,40 @@ wdtIdleHalt = coreComponent.createBooleanSymbol("wdtidleHalt", wdtCfgMenu)
 wdtIdleHalt.setLabel("Enable Idle halt")
 wdtIdleHalt.setDefaultValue(False)
 
-global peripId
-global wdtNVICVector
-global wdtNVICHandler
-global wdtNVICHandlerLock
+global wdtinterruptVector
+global wdtinterruptHandler
+global wdtinterruptHandlerLock
 
-peripId = Interrupt.getInterruptIndex("WDT")
-wdtNVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-wdtNVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-wdtNVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+wdtinterruptVector = "WDT_INTERRUPT_ENABLE"
+wdtinterruptHandler = "WDT_INTERRUPT_HANDLER"
+wdtinterruptHandlerLock = "WDT_INTERRUPT_HANDLER_LOCK"
 
-Database.clearSymbolValue("core", wdtNVICVector)
-Database.setSymbolValue("core", wdtNVICVector, False, 2)
-Database.clearSymbolValue("core", wdtNVICHandler)
-Database.setSymbolValue("core", wdtNVICHandler, "WDT0_Handler", 2)
-Database.clearSymbolValue("core", wdtNVICHandlerLock)
-Database.setSymbolValue("core", wdtNVICHandlerLock, False, 2)
+Database.clearSymbolValue("core", wdtinterruptVector)
+Database.setSymbolValue("core", wdtinterruptVector, False, 2)
+Database.clearSymbolValue("core", wdtinterruptHandler)
+Database.setSymbolValue("core", wdtinterruptHandler, "WDT_Handler", 2)
+Database.clearSymbolValue("core", wdtinterruptHandlerLock)
+Database.setSymbolValue("core", wdtinterruptHandlerLock, False, 2)
 
-def NVICControl(NVIC, event):
-	global wdtNVICVector
-	global wdtNVICHandler
-	Database.clearSymbolValue("core", wdtNVICVector)
-	Database.clearSymbolValue("core", wdtNVICHandler)
-	Database.clearSymbolValue("core", wdtNVICHandlerLock)
-	if (event["value"] == True):
-		Database.setSymbolValue("core", wdtNVICVector, True, 2)
-		Database.setSymbolValue("core", wdtNVICHandler, "WDT0_InterruptHandler", 2)
-		Database.setSymbolValue("core", wdtNVICHandlerLock, True, 2)		
-	else :
-		Database.setSymbolValue("core", wdtNVICVector, False, 2)
-		Database.setSymbolValue("core", wdtNVICHandler, "WDT0_Handler", 2)
-		Database.setSymbolValue("core", wdtNVICHandlerLock, False, 2)
+def interruptControl(NVIC, event):
+    global wdtinterruptVector
+    global wdtinterruptHandler
+    Database.clearSymbolValue("core", wdtinterruptVector)
+    Database.clearSymbolValue("core", wdtinterruptHandler)
+    Database.clearSymbolValue("core", wdtinterruptHandlerLock)
+    if (event["value"] == True):
+        Database.setSymbolValue("core", wdtinterruptVector, True, 2)
+        Database.setSymbolValue("core", wdtinterruptHandler, "WDT0_InterruptHandler", 2)
+        Database.setSymbolValue("core", wdtinterruptHandlerLock, True, 2)
+    else :
+        Database.setSymbolValue("core", wdtinterruptVector, False, 2)
+        Database.setSymbolValue("core", wdtinterruptHandler, "WDT_Handler", 2)
+        Database.setSymbolValue("core", wdtinterruptHandlerLock, False, 2)
 
 # NVIC Dynamic settings
-wdtNVICControl = coreComponent.createBooleanSymbol("NVIC_WDT_ENABLE", None)
-wdtNVICControl.setDependencies(NVICControl, ["wdtinterruptMode"])
-wdtNVICControl.setVisible(False)
+wdtinterruptControl = coreComponent.createBooleanSymbol("NVIC_WDT_ENABLE", None)
+wdtinterruptControl.setDependencies(interruptControl, ["wdtinterruptMode"])
+wdtinterruptControl.setVisible(False)
 
 
 

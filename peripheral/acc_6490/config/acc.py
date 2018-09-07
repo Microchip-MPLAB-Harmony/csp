@@ -11,28 +11,27 @@ accValGrp_ACR_ISEL = accRegModule.getValueGroup("ACC_ACR__ISEL")
 ################################################################################
 #### Global Variables ####
 ################################################################################
-global NVICVector
-global NVICHandler
-global NVICHandlerLock
+global interruptVector
+global interruptHandler
+global interruptHandlerLock
 global instance
-global peripId
 
 ################################################################################
 #### Business Logic ####
 ################################################################################
-def NVICControl(symbol, event):
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.clearSymbolValue("core", NVICHandlerLock)
+def interruptControl(symbol, event):
+    Database.clearSymbolValue("core", interruptVector)
+    Database.clearSymbolValue("core", interruptHandler)
+    Database.clearSymbolValue("core", interruptHandlerLock)
 
     if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "ACC" + str(instance) + "_InterruptHandler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.setSymbolValue("core", interruptHandler, "ACC" + str(instance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else :
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "ACC" + str(instance) + "_Handler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+        Database.setSymbolValue("core", interruptVector, False, 2)
+        Database.setSymbolValue("core", interruptHandler, "ACC_Handler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def accFaultSourceSelect(symbol,event):
     if (event["value"] == True):
@@ -45,10 +44,9 @@ def accFaultSourceSelect(symbol,event):
 ################################################################################
 def instantiateComponent(accComponent):
     global instance
-    global peripId
-    global NVICVector
-    global NVICHandler
-    global NVICHandlerLock
+    global interruptVector
+    global interruptHandler
+    global interruptHandlerLock
 
     instance = accComponent.getID()[-1:]
     print("Running ACC" + str(instance))
@@ -150,16 +148,15 @@ def instantiateComponent(accComponent):
     Database.clearSymbolValue("core", "ACC_CLOCK_ENABLE")
     Database.setSymbolValue("core", "ACC_CLOCK_ENABLE", True, 2)
 
-    # Setup Peripheral Interrupt in Interrupt manager
-    peripId = Interrupt.getInterruptIndex("ACC")
-    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+    interruptVector = "ACC_INTERRUPT_ENABLE"
+    interruptHandler = "ACC_INTERRUPT_HANDLER"
+    interruptHandlerLock = "ACC_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = "ACC_INTERRUPT_ENABLE_UPDATE"
 
     # NVIC Dynamic settings
-    accNVICControl = accComponent.createBooleanSymbol("NVIC_ACC_ENABLE", None)
-    accNVICControl.setDependencies(NVICControl, ["INTERRUPT_MODE"])
-    accNVICControl.setVisible(False)
+    accinterruptControl = accComponent.createBooleanSymbol("NVIC_ACC_ENABLE", None)
+    accinterruptControl.setDependencies(interruptControl, ["INTERRUPT_MODE"])
+    accinterruptControl.setVisible(False)
 
 ############################################################################
 #### Code Generation ####

@@ -1,10 +1,9 @@
 #Function for initiating the UI
 
 global instance
-global peripId
-global NVICVector
-global NVICHandler
-global NVICHandlerLock
+global interruptVector
+global interruptHandler
+global interruptHandlerLock
 
 def efcSetMemoryDependency(symbol, event):
     if (event["value"] == True):
@@ -12,29 +11,28 @@ def efcSetMemoryDependency(symbol, event):
     else:
         symbol.setVisible(False)
 
-def NVICControl(NVIC, event):
-    global NVICVector
-    global NVICHandler
-    global NVICHandlerLock
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.clearSymbolValue("core", NVICHandlerLock)
+def interruptControl(NVIC, event):
+    global interruptVector
+    global interruptHandler
+    global interruptHandlerLock
+    Database.clearSymbolValue("core", interruptVector)
+    Database.clearSymbolValue("core", interruptHandler)
+    Database.clearSymbolValue("core", interruptHandlerLock)
     if (event["value"] == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.setSymbolValue("core", interruptHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else :
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_Handler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+        Database.setSymbolValue("core", interruptVector, False, 2)
+        Database.setSymbolValue("core", interruptHandler, "EFC_Handler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def instantiateComponent(efcComponent):
 
     global instance
-    global peripId
-    global NVICVector
-    global NVICHandler
-    global NVICHandlerLock
+    global interruptVector
+    global interruptHandler
+    global interruptHandlerLock
 
     instance = efcComponent.getID()[-1:]
 
@@ -116,6 +114,11 @@ def instantiateComponent(efcComponent):
     efcIndex.setVisible(False)
     efcIndex.setDefaultValue(int(instance))
 
+    interruptVector = "EFC_INTERRUPT_ENABLE"
+    interruptHandler = "EFC_INTERRUPT_HANDLER"
+    interruptHandlerLock = "EFC_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = "EFC_INTERRUPT_ENABLE_UPDATE"
+
     writeApiName = "EFC" + str(instance) + "_PageWrite"
     eraseApiName = "EFC" + str(instance) + "_SectorErase"
 
@@ -129,22 +132,17 @@ def instantiateComponent(efcComponent):
     efcEraseApiName.setReadOnly(True)
     efcEraseApiName.setDefaultValue(eraseApiName)
 
-    peripId = Interrupt.getInterruptIndex("EFC")
-    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
-
-    Database.clearSymbolValue("core", NVICVector)
-    Database.setSymbolValue("core", NVICVector, True, 2)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
-    Database.clearSymbolValue("core", NVICHandlerLock)
-    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+    Database.clearSymbolValue("core", interruptVector)
+    Database.setSymbolValue("core", interruptVector, True, 2)
+    Database.clearSymbolValue("core", interruptHandler)
+    Database.setSymbolValue("core", interruptHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
+    Database.clearSymbolValue("core", interruptHandlerLock)
+    Database.setSymbolValue("core", interruptHandlerLock, True, 2)
 
     # NVIC Dynamic settings
-    efcNVICControl = efcComponent.createBooleanSymbol("NVIC_EFC_ENABLE", None)
-    efcNVICControl.setDependencies(NVICControl, ["INTERRUPT_ENABLE"])
-    efcNVICControl.setVisible(False)
+    efcinterruptControl = efcComponent.createBooleanSymbol("NVIC_EFC_ENABLE", None)
+    efcinterruptControl.setDependencies(interruptControl, ["INTERRUPT_ENABLE"])
+    efcinterruptControl.setVisible(False)
 
     configName = Variables.get("__CONFIGURATION_NAME")
     #Generate Output Header
@@ -175,11 +173,10 @@ def instantiateComponent(efcComponent):
 def destroyComponent(efcComponent):
 
     global instance
-    global NVICVector
-    global NVICHandler
-    global NVICHandlerLock
+    global interruptVector
+    global interruptHandler
+    global interruptHandlerLock
 
-    Database.setSymbolValue("core", NVICVector, False, 2)
-    Database.setSymbolValue("core", NVICHandler, "EFC" + str(instance) + "_Handler", 2)
-    Database.setSymbolValue("core", NVICHandlerLock, False, 2)
-
+    Database.setSymbolValue("core", interruptVector, False, 2)
+    Database.setSymbolValue("core", interruptHandler, "EFC" + str(instance) + "_Handler", 2)
+    Database.setSymbolValue("core", interruptHandlerLock, False, 2)

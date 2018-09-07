@@ -64,17 +64,18 @@ def instantiateComponent(twihsComponent):
     Database.clearSymbolValue("core", "TWIHS"+ str(num)+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", "TWIHS"+ str(num)+"_CLOCK_ENABLE", True, 1)
     
-    # get peripheral id for TWIHS
-    peripId = Interrupt.getInterruptIndex("TWIHS" + str(num))
-    
     # Initialize peripheral Interrupt
-    Database.clearSymbolValue("core", "NVIC_" + str(peripId) + "_ENABLE")
-    Database.setSymbolValue("core", "NVIC_" + str(peripId) + "_ENABLE", True, 1)
+    Database.clearSymbolValue("core", "TWIHS" + str(num) + "INTERRUPT_ENABLE")
+    Database.setSymbolValue("core", "TWIHS" + str(num) + "_INTERRUPT_ENABLE", True, 1)
     
     # Set Interrupt Handler Name
-    Database.clearSymbolValue("core", "NVIC_" + str(peripId) + "_HANDLER")
-    Database.setSymbolValue("core", "NVIC_" + str(peripId) + "_HANDLER", "TWIHS" + str(num) + "_InterruptHandler", 1)
-    
+    Database.clearSymbolValue("core", "TWIHS" + str(num) + "_INTERRUPT_HANDLER")
+    Database.setSymbolValue("core", "TWIHS" + str(num) + "_INTERRUPT_HANDLER", "TWIHS" + str(num) + "_InterruptHandler", 1)
+
+    # Set Interrupt Handler Lock
+    Database.clearSymbolValue("core", "TWIHS" + str(num) + "_INTERRUPT_HANDLER_LOCK")
+    Database.setSymbolValue("core", "TWIHS" + str(num) + "_INTERRUPT_HANDLER_LOCK", True, 1)
+
     # Master Clock Frequency
     twihsSymMasterClkFreq = twihsComponent.createStringSymbol("TWIHS_CLK_SRC_FREQ", twihsMenu)
     twihsSymMasterClkFreq.setVisible(False)
@@ -91,7 +92,7 @@ def instantiateComponent(twihsComponent):
     twihsSymIntEnComment = twihsComponent.createCommentSymbol("TWIHS_INT_EN_COMMENT", twihsMenu)
     twihsSymIntEnComment.setVisible(False)
     twihsSymIntEnComment.setLabel("Warning!!! TWIHS Interrupt is Disabled in Interrupt Manager")
-    twihsSymIntEnComment.setDependencies(setEnCommentVisibility, ["core.NVIC_" + str(peripId) + "_ENABLE"])
+    twihsSymIntEnComment.setDependencies(setEnCommentVisibility, ["core.TWIHS" + str(num) + "_INTERRUPT_ENABLE_UPDATE"])
 
     #TWIHS API Prefix
     twihsSymAPIPrefix = twihsComponent.createStringSymbol("I2C_PLIB_API_PREFIX", twihsMenu)
@@ -161,13 +162,13 @@ def getTWIHSClockDividerMaxValue( ):
 
 def getTWIHSClockDividerMinValue( ):
     return 7
-        
+
 def getTWIHSClockDividerValue( twihsClkSpeed ):
 
     cldiv = 0 
     chdiv = 0
     ckdiv = 0
-    
+
     masterClockFreq = getMasterClockFreq( )
 
     if twihsClkSpeed > getTWIHSLowLevelTimeLimit():
@@ -191,27 +192,24 @@ def getTWIHSClockDividerValue( twihsClkSpeed ):
         chdiv = cldiv
 
     return cldiv, chdiv, ckdiv
-                        
+
 def setClockDividerValue( twihsSymDivider, event):
-    
+
     global num
     cldiv, chdiv, ckdiv = getTWIHSClockDividerValue( getTWIHSClkSpeed( ) )
-    
+
     # set CLDIV Value
     Database.setSymbolValue("twihs" + str(num), "TWIHS_CWGR_CLDIV", cldiv, 1)
 
     # set CHDIV Value
     Database.setSymbolValue("twihs" + str(num), "TWIHS_CWGR_CHDIV", chdiv, 1)
-    
+
     # set CKDIV Value
     Database.setSymbolValue("twihs" + str(num), "TWIHS_CWGR_CKDIV", ckdiv, 1)
-    
+
 def setEnCommentVisibility( twihsSymComment, event ):
-    if event["value"] is False:
-        twihsSymComment.setVisible(True)
-    else:
-        twihsSymComment.setVisible(False)
-        
+    twihsSymComment.setVisible(event["value"])
+
 def setClockSourceFreq( twihsSymClockFreq, event ):
     masterClockFreq = Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")
     twihsSymClockFreq.setValue(masterClockFreq, 1)

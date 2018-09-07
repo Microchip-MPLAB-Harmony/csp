@@ -79,32 +79,23 @@ def generateNVICVectorDataDictionary():
     for interrupt in range (0, len(interruptsChildrenList)):
 
         vIndex = int(interruptsChildrenList[interrupt].getAttribute("index"))
-        vName = str(interruptsChildrenList[interrupt].getAttribute("name"))
         vModuleInstance = str(interruptsChildrenList[interrupt].getAttribute("module-instance"))
+
+        if "header:alternate-name" in interruptsChildrenList[interrupt].getAttributeList():
+            vName = str(interruptsChildrenList[interrupt].getAttribute("header:alternate-name"))
+        else:
+            vName = str(interruptsChildrenList[interrupt].getAttribute("name"))
 
         if " " in vModuleInstance:
             nvicVectorDataDictionary[vIndex] = list(vModuleInstance.split(" "))
         else:
             nvicVectorDataDictionary[vIndex] = [vName]
 
-def getInterruptName(periName, listLength):
+def getInterruptDescription(vIndex, periName):
 
     for interrupt in range (0, len(interruptsChildrenList)):
 
-        vName = str(interruptsChildrenList[interrupt].getAttribute("name"))
-
-        if periName == vName:
-            if "header:alternate-name" in interruptsChildrenList[interrupt].getAttributeList() and listLength == 1:
-                vName = str(interruptsChildrenList[interrupt].getAttribute("header:alternate-name"))
-            return vName
-
-    return periName
-
-def getInterruptDescription(periName):
-
-    for interrupt in range (0, len(interruptsChildrenList)):
-
-        if periName == str(interruptsChildrenList[interrupt].getAttribute("name")):
+        if vIndex == int(interruptsChildrenList[interrupt].getAttribute("index")):
             if "header:alternate-caption" in interruptsChildrenList[interrupt].getAttributeList():
                 if str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption")) == "None":
                     return periName
@@ -206,8 +197,8 @@ for vIndex in sorted(nvicVectorDataDictionary):
 
     for listIndex in range(0, len(handlerList)):
 
-        vName = str(getInterruptName(handlerList[listIndex], len(handlerList)))
-        vDescription = str(getInterruptDescription(handlerList[listIndex]))
+        vName = handlerList[listIndex]
+        vDescription = str(getInterruptDescription(vIndex, vName))
         vector = vName
 
         if vector not in vectorSettings:

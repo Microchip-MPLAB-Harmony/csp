@@ -227,10 +227,8 @@ icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cac
 icacheEnable.setLabel("Enable Instruction Cache")
 icacheEnable.setDefaultValue(True)
 
-
-# load NVIC
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic_m7/plugin/ARM_M7_NVICmanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
+coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
 
 #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")

@@ -3,11 +3,10 @@ from math import ceil
 ################################################################################
 #### Global Variables ####
 ################################################################################
-global NVICVector
-global NVICHandler
-global NVICHandlerLock
+global interruptVector
+global interruptHandler
+global interruptHandlerLock
 global instance
-global peripId
 
 
 ################################################################################
@@ -22,32 +21,31 @@ def calcExtResetAssertTime(symbol,event):
     timeMs=float(timeUsInt)/1000
     symbol.setLabel("External Reset Assertion Time is: " + str(timeMs) + " ms ( "+str(numSlck)+" SLCK Cycles )")
 
-def NVICControl(symbol, event):
+def interruptControl(symbol, event):
     symObj=event["symbol"]
 
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.clearSymbolValue("core", NVICHandlerLock)
+    Database.clearSymbolValue("core", interruptVector)
+    Database.clearSymbolValue("core", interruptHandler)
+    Database.clearSymbolValue("core", interruptHandlerLock)
 
     if (symObj.getSelectedKey() == "INTERRUPT"):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "RSTC" + str(instance) +  "_InterruptHandler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.setSymbolValue("core", interruptHandler, "RSTC" + str(instance) +  "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "RSTC" + str(instance) +  "_Handler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+        Database.setSymbolValue("core", interruptVector, False, 2)
+        Database.setSymbolValue("core", interruptHandler, "RSTC_Handler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 ################################################################################
 #### Component ####
 ################################################################################
 def instantiateComponent(rstcComponent):
 
-    global NVICVector
-    global NVICHandler
-    global NVICHandlerLock
+    global interruptVector
+    global interruptHandler
+    global interruptHandlerLock
     global instance
-    global peripId
 
     instance = rstcComponent.getID()[-1:]
     print("Running RSTC" + str(instance))
@@ -84,16 +82,15 @@ def instantiateComponent(rstcComponent):
     #### Dependency ####
     ############################################################################
 
-    # Setup Peripheral Interrupt in Interrupt manager
-    peripId = Interrupt.getInterruptIndex("RSTC")
-    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
+    interruptVector = "RSTC_INTERRUPT_ENABLE"
+    interruptHandler = "RSTC_INTERRUPT_HANDLER"
+    interruptHandlerLock = "RSTC_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = "RSTC_INTERRUPT_ENABLE_UPDATE"
 
     # NVIC Dynamic settings
-    rstcNVICControl = rstcComponent.createBooleanSymbol("NVIC_RSTC_ENABLE", None)
-    rstcNVICControl.setDependencies(NVICControl, ["RSTC_MR_URSTEN"])
-    rstcNVICControl.setVisible(False)
+    rstcinterruptControl = rstcComponent.createBooleanSymbol("NVIC_RSTC_ENABLE", None)
+    rstcinterruptControl.setDependencies(interruptControl, ["RSTC_MR_URSTEN"])
+    rstcinterruptControl.setVisible(False)
 
 ############################################################################
 #### Code Generation ####

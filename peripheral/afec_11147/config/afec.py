@@ -31,26 +31,25 @@ def afecClockControl(symbol, event):
     else:
         Database.setSymbolValue("core", "AFEC" + str(num)+"_CLOCK_ENABLE", False, 2)
 
-def afecNVICControl(symbol, event):
+def afecinterruptControl(symbol, event):
     nvicSet = False
-    peripId = Interrupt.getInterruptIndex("AFEC" + str(num))
-    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
-    Database.clearSymbolValue("core", NVICVector)
-    Database.clearSymbolValue("core", NVICHandler)
-    Database.clearSymbolValue("core", NVICHandlerLock)
+    interruptVector = "AFEC" + str(num) + "_INTERRUPT_ENABLE"
+    interruptHandler = "AFEC" + str(num) + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = "AFEC" + str(num) + "_INTERRUPT_HANDLER_LOCK"
+    Database.clearSymbolValue("core", interruptVector)
+    Database.clearSymbolValue("core", interruptHandler)
+    Database.clearSymbolValue("core", interruptHandlerLock)
     for channelID in range(0, 12):
         if (afecSym_CH_IER_EOC[channelID].getValue() == True):
             nvicSet = True
     if(nvicSet == True):
-        Database.setSymbolValue("core", NVICVector, True, 2)
-        Database.setSymbolValue("core", NVICHandler, "AFEC"+str(num)+"_InterruptHandler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.setSymbolValue("core", interruptHandler, "AFEC"+str(num)+"_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
-        Database.setSymbolValue("core", NVICVector, False, 2)
-        Database.setSymbolValue("core", NVICHandler, "AFEC"+str(num)+"_Handler", 2)
-        Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+        Database.setSymbolValue("core", interruptVector, False, 2)
+        Database.setSymbolValue("core", interruptHandler, "AFEC"+str(num)+"_Handler", 2)
+        Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyClockStatus(symbol, event):
     clockSet = False
@@ -65,13 +64,12 @@ def dependencyClockStatus(symbol, event):
 
 def dependencyIntStatus(symbol, event):
     nvicSet = False
-    peripId = Interrupt.getInterruptIndex("AFEC" + str(num))
-    NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-    nvic = bool(Database.getSymbolValue("core", NVICVector))
+    interruptVectorUpdate = "AFEC" + str(num) + "_INTERRUPT_ENABLE_UPDATE"
+    nvic = bool(Database.getSymbolValue("core", interruptVectorUpdate))
     for channelID in range(0, 12):
         if (afecSym_CH_IER_EOC[channelID].getValue() == True):
             nvicSet = True
-    if(nvicSet == True and nvic == False):
+    if(nvicSet == True and nvic == True):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -278,10 +276,10 @@ def instantiateComponent(afecComponent):
     afecSym_ClockControl.setVisible(False)
 
     # NVIC Dynamic settings
-    afecSym_NVICControl = afecComponent.createBooleanSymbol("AFEC_NVIC_ENABLE", None)
-    afecSym_NVICControl.setDependencies(afecNVICControl, ["AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
+    afecSym_interruptControl = afecComponent.createBooleanSymbol("AFEC_NVIC_ENABLE", None)
+    afecSym_interruptControl.setDependencies(afecinterruptControl, ["AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
     "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
-    afecSym_NVICControl.setVisible(False)
+    afecSym_interruptControl.setVisible(False)
 
     # Dependency Status
     afecSym_ClkEnComment = afecComponent.createCommentSymbol("AFEC_CLK_ENABLE_COMMENT", None)
@@ -290,13 +288,12 @@ def instantiateComponent(afecComponent):
     afecSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core.AFEC" + str(num)+ "_CLOCK_ENABLE", "AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
     "AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
 
-    periphId = Interrupt.getInterruptIndex("AFEC" + str(num))
-    NVICVector = "NVIC_" + str(periphId) + "_ENABLE"
+    interruptVectorUpdate = "AFEC" + str(num) + "_INTERRUPT_ENABLE_UPDATE"
 
     afecSym_IntEnComment = afecComponent.createCommentSymbol("AFEC_NVIC_ENABLE_COMMENT", None)
     afecSym_IntEnComment.setVisible(False)
     afecSym_IntEnComment.setLabel("Warning!!! AFEC" +str(num)+" Interrupt is Disabled in Interrupt Manager")
-    afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + NVICVector, "AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
+    afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptVectorUpdate, "AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
     "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
 
     afecMenu = afecComponent.createMenuSymbol("AFEC_MENU", None)

@@ -3,7 +3,6 @@
 ###################################################################################################
 global num
 global extClock
-global QEI_periphId
 channel_periphId = [0, 0, 0]
 
 tcChannelMenu = []
@@ -56,7 +55,7 @@ tcSym_CH_COMPARE_IER_CPCS = []
 tcSym_CH_COMPARE_CMR_CPCSTOP = []
 
 tcSym_CH_ClockControl = []
-tcSym_CH_NVICControl = []
+tcSym_CH_interruptControl = []
 tcSym_CH_IntEnComment = []
 tcSym_CH_ClkEnComment = []
 
@@ -99,118 +98,119 @@ def tcClockControl(symbol, event):
             Database.setSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", False, 2)
 
 #Enable/Disable interrupt
-def tcNVICControl(symbol, event):
+def tcinterruptControl(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
     global channel_periphId
-    NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
-    NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
-    NVICHandlerLock = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER_LOCK"
+
+    interruptVector = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
+    interruptHandler = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
 
     if(tcSym_CH_EnableQEI.getValue() == True):
-        NVICVector = "NVIC_" + str(QEI_periphId) + "_ENABLE"
-        NVICHandler = "NVIC_" + str(QEI_periphId) + "_HANDLER"
-        NVICHandlerLock = "NVIC_" + str(QEI_periphId) + "_HANDLER_LOCK"
-        Database.clearSymbolValue("core", NVICVector)
-        Database.clearSymbolValue("core", NVICHandler)
-        Database.clearSymbolValue("core", NVICHandlerLock)
+        interruptVector = "TC" + str(num) + "_CH0_INTERRUPT_ENABLE"
+        interruptHandler = "TC" + str(num) + "_CH0_INTERRUPT_HANDLER"
+        interruptHandlerLock = "TC" + str(num) + "_CH0_INTERRUPT_HANDLER_LOCK"
+        Database.clearSymbolValue("core", interruptVector)
+        Database.clearSymbolValue("core", interruptHandler)
+        Database.clearSymbolValue("core", interruptHandlerLock)
         if(tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True or tcSym_CH_QEI_IER_CPCS.getValue() == True):
-            Database.setSymbolValue("core", NVICVector, True, 2)
-            Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH0_InterruptHandler", 2)
-            Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+            Database.setSymbolValue("core", interruptVector, True, 2)
+            Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH0_InterruptHandler", 2)
+            Database.setSymbolValue("core", interruptHandlerLock, True, 2)
         else:
-            Database.setSymbolValue("core", NVICVector, False, 2)
-            Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH0_Handler", 2)
-            Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+            Database.setSymbolValue("core", interruptVector, False, 2)
+            Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH0_Handler", 2)
+            Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
         if (tcSym_CH_BMR_POSEN.getValue() == "POSITION" and channelID == 2):
-            NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
-            NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
-            NVICHandlerLock = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER_LOCK"
+            interruptVector = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
+            interruptHandler = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
+            interruptHandlerLock = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
             if (tcSym_CH_Enable[channelID].getValue() == True):
-                Database.clearSymbolValue("core", NVICVector)
-                Database.clearSymbolValue("core", NVICHandler)
-                Database.clearSymbolValue("core", NVICHandlerLock)
+                Database.clearSymbolValue("core", interruptVector)
+                Database.clearSymbolValue("core", interruptHandler)
+                Database.clearSymbolValue("core", interruptHandlerLock)
                 if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
-                    Database.setSymbolValue("core", NVICVector, True, 2)
-                    Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
-                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+                    Database.setSymbolValue("core", interruptVector, True, 2)
+                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
                     (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True
                      or tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
-                    Database.setSymbolValue("core", NVICVector, True, 2)
-                    Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
-                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+                    Database.setSymbolValue("core", interruptVector, True, 2)
+                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
-                    Database.setSymbolValue("core", NVICVector, True, 2)
-                    Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
-                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+                    Database.setSymbolValue("core", interruptVector, True, 2)
+                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 else:
-                    Database.setSymbolValue("core", NVICVector, False, 2)
-                    Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
-                    Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+                    Database.setSymbolValue("core", interruptVector, False, 2)
+                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                    Database.setSymbolValue("core", interruptHandlerLock, False, 2)
             else:
-                Database.setSymbolValue("core", NVICVector, False, 2)
-                Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
-                Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+                Database.setSymbolValue("core", interruptVector, False, 2)
+                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
         if(tcSym_CH_QEI_INDEX_PULSE.getValue() == False and channelID == 1):
-            NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
-            NVICHandler = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER"
-            NVICHandlerLock = "NVIC_" + str(channel_periphId[channelID]) + "_HANDLER_LOCK"
+            interruptVector = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
+            interruptHandler = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
+            interruptHandlerLock = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
             if (tcSym_CH_Enable[channelID].getValue() == True):
-                Database.clearSymbolValue("core", NVICVector)
-                Database.clearSymbolValue("core", NVICHandler)
-                Database.clearSymbolValue("core", NVICHandlerLock)
+                Database.clearSymbolValue("core", interruptVector)
+                Database.clearSymbolValue("core", interruptHandler)
+                Database.clearSymbolValue("core", interruptHandlerLock)
                 if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
-                    Database.setSymbolValue("core", NVICVector, True, 2)
-                    Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
-                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+                    Database.setSymbolValue("core", interruptVector, True, 2)
+                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
                     (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True or
                      tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
-                    Database.setSymbolValue("core", NVICVector, True, 2)
-                    Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
-                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+                    Database.setSymbolValue("core", interruptVector, True, 2)
+                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
-                    Database.setSymbolValue("core", NVICVector, True, 2)
-                    Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
-                    Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+                    Database.setSymbolValue("core", interruptVector, True, 2)
+                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 else:
-                    Database.setSymbolValue("core", NVICVector, False, 2)
-                    Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
-                    Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+                    Database.setSymbolValue("core", interruptVector, False, 2)
+                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                    Database.setSymbolValue("core", interruptHandlerLock, False, 2)
             else:
-                Database.setSymbolValue("core", NVICVector, False, 2)
-                Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
-                Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+                Database.setSymbolValue("core", interruptVector, False, 2)
+                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                Database.setSymbolValue("core", interruptHandlerLock, False, 2)
     else:
-        Database.clearSymbolValue("core", NVICVector)
-        Database.clearSymbolValue("core", NVICHandler)
-        Database.clearSymbolValue("core", NVICHandlerLock)
+        Database.clearSymbolValue("core", interruptVector)
+        Database.clearSymbolValue("core", interruptHandler)
+        Database.clearSymbolValue("core", interruptHandlerLock)
         if(tcSym_CH_Enable[channelID].getValue() == True):
             if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
-                Database.setSymbolValue("core", NVICVector, True, 2)
-                Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
-                Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+                Database.setSymbolValue("core", interruptVector, True, 2)
+                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                Database.setSymbolValue("core", interruptHandlerLock, True, 2)
             elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
                 (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True or
                  tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
-                Database.setSymbolValue("core", NVICVector, True, 2)
-                Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
-                Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+                Database.setSymbolValue("core", interruptVector, True, 2)
+                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                Database.setSymbolValue("core", interruptHandlerLock, True, 2)
             elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
-                Database.setSymbolValue("core", NVICVector, True, 2)
-                Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
-                Database.setSymbolValue("core", NVICHandlerLock, True, 2)
+                Database.setSymbolValue("core", interruptVector, True, 2)
+                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                Database.setSymbolValue("core", interruptHandlerLock, True, 2)
             else:
-                Database.setSymbolValue("core", NVICVector, False, 2)
-                Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
-                Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+                Database.setSymbolValue("core", interruptVector, False, 2)
+                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                Database.setSymbolValue("core", interruptHandlerLock, False, 2)
         else:
-            Database.setSymbolValue("core", NVICVector, False, 2)
-            Database.setSymbolValue("core", NVICHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
-            Database.setSymbolValue("core", NVICHandlerLock, False, 2)
+            Database.setSymbolValue("core", interruptVector, False, 2)
+            Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+            Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def tcdependencyClockStatus(symbol, event):
     id = symbol.getID()
@@ -226,16 +226,16 @@ def tcdependencyIntStatus(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
     global tcSym_CH_Enable
-    NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
-    nvic = bool(Database.getSymbolValue("core", NVICVector))
+    interruptVectorUpdate = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE_UPDATE"
+    nvic = bool(Database.getSymbolValue("core", interruptVectorUpdate))
     if(tcSym_CH_Enable[channelID].getValue() == True):
-        if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True and nvic == False):
+        if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True and nvic == True):
             tcSym_CH_IntEnComment[channelID].setVisible(True)
-        elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and nvic == False and
+        elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and nvic == True and
              (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True or
               tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
             tcSym_CH_IntEnComment[channelID].setVisible(True)
-        elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True and nvic == False):
+        elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True and nvic == True):
             tcSym_CH_IntEnComment[channelID].setVisible(True)
         else:
             tcSym_CH_IntEnComment[channelID].setVisible(False)
@@ -264,11 +264,10 @@ def tcQEIDependencyClockStatus(symbol, event):
             symbol.setVisible(False)
 
 def tcQEIDependencyIntStatus(symbol, event):
-    global QEI_periphId
-    NVICVector = "NVIC_" + str(QEI_periphId) + "_ENABLE"
-    nvic = bool(Database.getSymbolValue("core", NVICVector))
+    interruptVectorUpdate = "TC" + str(num) + "_CH0_INTERRUPT_ENABLE_UPDATE"
+    nvic = bool(Database.getSymbolValue("core", interruptVectorUpdate))
     if(tcSym_CH_EnableQEI.getValue() == True):
-        if (nvic == False and (tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True or tcSym_CH_QEI_IER_CPCS == True)):
+        if (nvic == True and (tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True or tcSym_CH_QEI_IER_CPCS == True)):
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
@@ -743,22 +742,11 @@ def instantiateComponent(tcComponent):
     tcSym_QEI_ClkEnComment.setDependencies(tcQEIDependencyClockStatus, ["core.TC" +  str(num)  + "_CHANNEL0_CLOCK_ENABLE", \
         "core.TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE", "core.TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE", "TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
 
-    global QEI_periphId
-    QEI_periphId = None
-
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
-    interrupts = node.getChildren()
-    for interrupt in range(0, len(interrupts)):
-        if "header:alternate-name" in interrupts[interrupt].getAttributeList():
-            alternate_name = interrupts[interrupt].getAttribute("header:alternate-name")
-            if (("TC" + str(num)+ "_CH0") == alternate_name):
-                QEI_periphId = interrupts[interrupt].getAttribute("index")
-
-    NVICVector = "NVIC_" + str(QEI_periphId) + "_ENABLE"
+    interruptVectorUpdate = "TC" + str(num) + "_CH0_INTERRUPT_ENABLE_UPDATE"
     tcSym_QEI_IntEnComment = tcComponent.createCommentSymbol("TC_NVIC_ENABLE_COMMENT", tcSym_CH_EnableQEI)
     tcSym_QEI_IntEnComment.setVisible(False)
     tcSym_QEI_IntEnComment.setLabel("Warning!!! TC" +str(num)+"_CH0 Interrupt is Disabled in Interrupt Manager")
-    tcSym_QEI_IntEnComment.setDependencies(tcQEIDependencyIntStatus, ["core." + NVICVector, "TC_ENABLE_QEI", "TC_QIER_IDX", "TC_QIER_QERR", "TC_QEI_IER_CPCS"])
+    tcSym_QEI_IntEnComment.setDependencies(tcQEIDependencyIntStatus, ["core." + interruptVectorUpdate, "TC_ENABLE_QEI", "TC_QIER_IDX", "TC_QIER_QERR", "TC_QEI_IER_CPCS"])
 
     #quadrature menu
     tcQuadratureMenu = tcComponent.createMenuSymbol("TC_QUADRATURE", tcSym_CH_EnableQEI)
@@ -880,12 +868,12 @@ def instantiateComponent(tcComponent):
         tcSym_CH_ClockControl[channelID].setVisible(False)
 
         # NVIC Dynamic settings
-        tcSym_CH_NVICControl.append(channelID)
-        tcSym_CH_NVICControl[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_NVIC_ENABLE", None)
-        tcSym_CH_NVICControl[channelID].setDependencies(tcNVICControl, ["TC"+str(channelID)+"_ENABLE", "TC_ENABLE_QEI", "TC"+str(channelID)+"_OPERATING_MODE", \
+        tcSym_CH_interruptControl.append(channelID)
+        tcSym_CH_interruptControl[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_NVIC_ENABLE", None)
+        tcSym_CH_interruptControl[channelID].setDependencies(tcinterruptControl, ["TC"+str(channelID)+"_ENABLE", "TC_ENABLE_QEI", "TC"+str(channelID)+"_OPERATING_MODE", \
             "TC"+str(channelID)+"_CAPTURE_IER_LDRAS", "TC"+str(channelID)+"_CAPTURE_IER_LDRBS", "TC"+str(channelID)+"_CAPTURE_IER_COVFS", \
             "TC"+str(channelID)+"_COMPARE_IER_CPCS", "TC"+str(channelID)+"_IER_CPCS", "TC_QIER_IDX", "TC_QIER_QERR", "TC_INDEX_PULSE", "TC_QEI_IER_CPCS"])
-        tcSym_CH_NVICControl[channelID].setVisible(False)
+        tcSym_CH_interruptControl[channelID].setVisible(False)
 
         # Dependency Status
         tcSym_CH_ClkEnComment.append(channelID)
@@ -902,13 +890,12 @@ def instantiateComponent(tcComponent):
                 if (("TC" + str(num)+ "_CH" + str(channelID)) == alternate_name):
                     channel_periphId[channelID] = interrupts[interrupt].getAttribute("index")
 
-        NVICVector = "NVIC_" + str(channel_periphId[channelID]) + "_ENABLE"
-
+        interruptVectorUpdate = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE_UPDATE"
         tcSym_CH_IntEnComment.append(channelID)
         tcSym_CH_IntEnComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_NVIC_ENABLE_COMMENT", tcChannelMenu[channelID])
         tcSym_CH_IntEnComment[channelID].setVisible(False)
         tcSym_CH_IntEnComment[channelID].setLabel("Warning!!! TC" +str(num)+"_CH"+str(channelID)+" Interrupt is Disabled in Interrupt Manager")
-        tcSym_CH_IntEnComment[channelID].setDependencies(tcdependencyIntStatus, ["core." + NVICVector, "TC"+str(channelID)+"_ENABLE", "TC"+str(channelID)+"_OPERATING_MODE", \
+        tcSym_CH_IntEnComment[channelID].setDependencies(tcdependencyIntStatus, ["core." + interruptVectorUpdate, "TC"+str(channelID)+"_ENABLE", "TC"+str(channelID)+"_OPERATING_MODE", \
             "TC"+str(channelID)+"_CAPTURE_IER_LDRAS", "TC"+str(channelID)+"_CAPTURE_IER_LDRBS", "TC"+str(channelID)+"_CAPTURE_IER_COVFS", \
             "TC"+str(channelID)+"_COMPARE_IER_CPCS", "TC"+str(channelID)+"_IER_CPCS"])
 
