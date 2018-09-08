@@ -142,53 +142,60 @@ void DMAC${DMAC_INDEX}_Initialize( void )
     This function schedules a DMA transfer on the specified DMA channel.
 ********************************************************************************/
 
-void DMAC${DMAC_INDEX}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
+bool DMAC${DMAC_INDEX}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
 {
     uint8_t beat_size = 0;
+    bool returnStatus = false;
 
-    /* Get a pointer to the module hardware instance */
-    dmacdescriptor_registers_t *const dmacDescReg = &descriptor_section[channel];
-
-    dmacChannelObj[channel].busyStatus = true;
-
-   /*Set source address */
-    if ( dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_SRCINC_Msk)
+    if (dmacChannelObj[channel].busyStatus == false)
     {
-        dmacDescReg->SRCADDR = (uint32_t) (srcAddr + blockSize);
-    } 
-    else
-    {
-        dmacDescReg->SRCADDR = (uint32_t) (srcAddr);       
+        /* Get a pointer to the module hardware instance */
+        dmacdescriptor_registers_t *const dmacDescReg = &descriptor_section[channel];
+
+        dmacChannelObj[channel].busyStatus = true;
+
+       /*Set source address */
+        if ( dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_SRCINC_Msk)
+        {
+            dmacDescReg->SRCADDR = (uint32_t) (srcAddr + blockSize);
+        }
+        else
+        {
+            dmacDescReg->SRCADDR = (uint32_t) (srcAddr);
+        }
+
+        /* Set destination address */
+        if ( dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_DSTINC_Msk)
+        {
+            dmacDescReg->DSTADDR = (uint32_t) (destAddr + blockSize);
+        }
+        else
+        {
+            dmacDescReg->DSTADDR = (uint32_t) (destAddr);
+        }
+
+        /*Calculate the beat size and then set the BTCNT value */
+        beat_size = (dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Msk) >> DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Pos;
+
+        /* Set Block Transfer Count */
+        dmacDescReg->BTCNT = blockSize / (1 << beat_size);
+
+        /* Set the DMA channel */
+        DMAC_REGS->DMAC_CHID = channel;
+
+        /* Enable the channel */
+        DMAC_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
+
+        /* Verify if Trigger source is Software Trigger */
+        if ( ((DMAC_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_TRIGSRC_Msk) >> DMAC_CHCTRLB_TRIGSRC_Pos) == 0x00)
+        {
+            /* Trigger the DMA transfer */
+            DMAC_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
+        }
+        returnStatus = true;
     }
 
-    /* Set destination address */
-    if ( dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_DSTINC_Msk)
-    {
-        dmacDescReg->DSTADDR = (uint32_t) (destAddr + blockSize);
-    }
-    else
-    {
-        dmacDescReg->DSTADDR = (uint32_t) (destAddr);       
-    }
-
-    /*Calculate the beat size and then set the BTCNT value */
-    beat_size = (dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Msk) >> DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Pos;
-
-    /* Set Block Transfer Count */
-    dmacDescReg->BTCNT = blockSize / (1 << beat_size);
-
-    /* Set the DMA channel */
-    DMAC_REGS->DMAC_CHID = channel;
-
-    /* Enable the channel */
-    DMAC_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
-
-    /* Verify if Trigger source is Software Trigger */
-    if ( ((DMAC_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_TRIGSRC_Msk) >> DMAC_CHCTRLB_TRIGSRC_Pos) == 0x00)
-    {
-        /* Trigger the DMA transfer */
-        DMAC_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
-    }
+    return returnStatus;
 }
 
 /*******************************************************************************
@@ -221,24 +228,32 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel )
     This function submit a list of DMA transfers.
 ********************************************************************************/
 
-void DMAC${DMAC_INDEX}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmacdescriptor_registers_t* channelDesc)
+bool DMAC${DMAC_INDEX}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmacdescriptor_registers_t* channelDesc)
 {
-    /* Set the DMA channel */
-    DMAC_REGS->DMAC_CHID = channel;
+    bool returnStatus = false;
 
-    dmacChannelObj[channel].busyStatus = true;
-
-    memcpy(&descriptor_section[channel], channelDesc, sizeof(dmacdescriptor_registers_t));
-
-    /* Enable the channel */
-    DMAC_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
-
-    /* Verify if Trigger source is Software Trigger */
-    if (strDMACRegUserVal[channel].dmacTrigSrc == 0x00)
+    if (dmacChannelObj[channel].busyStatus == false)
     {
-        /* Trigger the DMA transfer */
-        DMAC_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
+        /* Set the DMA channel */
+        DMAC_REGS->DMAC_CHID = channel;
+
+        dmacChannelObj[channel].busyStatus = true;
+
+        memcpy(&descriptor_section[channel], channelDesc, sizeof(dmacdescriptor_registers_t));
+
+        /* Enable the channel */
+        DMAC_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
+
+        /* Verify if Trigger source is Software Trigger */
+        if (((DMAC_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_TRIGSRC_Msk) >> DMAC_CHCTRLB_TRIGSRC_Pos) == 0x00)
+        {
+            /* Trigger the DMA transfer */
+            DMAC_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
+        }
+        returnStatus = true;
     }
+
+    return returnStatus;
 }
 </#if>
 
