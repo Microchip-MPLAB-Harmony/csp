@@ -11,7 +11,7 @@ def loadModule():
 
 	#initiate stdio
 	stdioComponent = Module.CreateComponent("stdio", "STDIO", "/Tools/", "../arch/stdio/config/stdio.py")
-	stdioComponent.addDependency("UART","UART")
+	stdioComponent.addDependency("UART","UART",False,True)
 	
 	# load device specific peripherals
 	d = dict(locals(), **globals())
