@@ -188,7 +188,7 @@ def xdmacTriggerCalc(xdmacPERIDVal, event):
 # And once the DMA mode is unselected, then the corresponding DMA channel will
 # be disabled and trigger source will be reset to "Software trigger"
 def xdmacChannelAllocLogic(Sym, event):
-    dmaChannelCount = Database.getSymbolValue("core", "DMAC_CHANNEL_COUNT")
+    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     perID = event["id"].strip('DMA_CH_NEEDED_FOR_')
     channelAllocated = False
 
