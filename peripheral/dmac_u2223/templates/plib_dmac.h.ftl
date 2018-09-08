@@ -292,7 +292,7 @@ void DMAC${DMAC_INDEX}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC
 
 //******************************************************************************
 /* Function:
-    void DMAC${DMAC_INDEX}_ChannelTransfer
+    bool DMAC${DMAC_INDEX}_ChannelTransfer
     (
         DMAC_CHANNEL channel,
         const void *srcAddr,
@@ -336,17 +336,13 @@ void DMAC${DMAC_INDEX}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC
     DMAC_TRANSFER_COMPLETE event if the transfer was processed successfully and
     a DMAC_TRANSFER_ERROR event if the transfer was not processed successfully.
 
-    When the transfer is in progress, the DMAC${DMAC_INDEX}_ChannelIsBusy
-    function will return true. The channel transfer function should not be
-    called while a transfer is already in progress. The contents of the source
-    and the destination memory location should not be modified while the
-    transfer is in progress.
+    When already a transfer is in progress, this API will return false indicating
+    that transfer request is not accepted.
 
   Precondition:
     DMAC should have been initialized by calling the DMAC${DMAC_INDEX}_Initialize.
     The required channel transfer parameters such as beat size, source and
-    destination address increment should have been configured in MHC. The
-    channel should be available for transfer.
+    destination address increment should have been configured in MHC.
 
   Parameters:
     channel - The DMAC channel that should be used for the transfer.
@@ -358,7 +354,8 @@ void DMAC${DMAC_INDEX}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC
     blockSize - Size of the transfer block in bytes.
 
   Returns:
-    None.
+    True - If transfer request is accepted.
+    False - If previous transfer is in progress and the request is rejected.
 
   Example:
     <code>
@@ -373,14 +370,21 @@ void DMAC${DMAC_INDEX}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC
     DMAC${DMAC_INDEX}_ChannelCallbackRegister(APP_DMACTransferEventHandler,
         (uintptr_t)&myAppObj);
 
-    DMAC${DMAC_INDEX}_ChannelTransfer(DMAC_CHANNEL_1, srcAddr, destAddr, size);
+    if(DMAC${DMAC_INDEX}_ChannelTransfer(DMAC_CHANNEL_1, srcAddr, destAddr, size) == true)
+    {
+        // do something else
+    }
+    else
+    {
+        // try again?
+    }
     </code>
 
   Remarks:
     None.
 */
 
-void DMAC${DMAC_INDEX}_ChannelTransfer (DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
+bool DMAC${DMAC_INDEX}_ChannelTransfer (DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
 
 // *****************************************************************************
 /* Function:
@@ -459,7 +463,7 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
 <#if DMAC_LL_ENABLE = true>
 // ******************************************************************************
 /* Function:
-    void DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel,
+    bool DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel,
                                      dmacdescriptor_registers_t * channelDesc );
 
   Summary:
@@ -475,7 +479,7 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
     descriptor.
 
     It is possible to link the last descriptor in the list to the first
-    descriptor. This results in an un-distrupted transfer sequence. Such type of
+    descriptor. This results in an undisrupted transfer sequence. Such type of
     circular linked descriptor list are useful in audio applications. The DMAC
     module will generate a callback for each transfer in the descriptor list.
     The application must keep track of transfer being completed and should only
@@ -493,6 +497,9 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
     field to any other value will interfere with the operation of the DMAC
     peripheral library.
 
+    When already a transfer is in progress, this API will return false indicating
+    that transfer request is not accepted.
+
   Precondition:
     DMAC should have been initialized by calling DMAC${DMAC_INDEX}_Initialize.
     The Transfer Linked Option in MHC should have been enabled.
@@ -503,25 +510,33 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
     channelDesc - A pointer to a linked list of DmacDescriptor type descriptor
     chain. Each of the descriptors must be placed at a 128-bit aligned
     SRAM address. If these descriptors belong to an array of descriptors, then
-    configuring the starting addresss of the array at a 128-bit aligned address
+    configuring the starting address of the array at a 128-bit aligned address
     will ensure that all descriptors of the array starts at 128-bit aligned
-    address, becasue the size of each descriptor is 128-bits.
+    address, because the size of each descriptor is 128-bits.
 
   Returns:
-    None.
+    True - If transfer request is accepted.
+    False - If previous transfer is in progress and the request is rejected.
 
   Example:
     <code>
     // Process a transfer list called transferList. Refer to the DMAC PLIB demo
     // application example for more details on usage.
-    DMAC${DMAC_INDEX}_ChannelLinkedListTransfer(DMAC_CHANNEL_0, transferList);
+    if (DMAC${DMAC_INDEX}_ChannelLinkedListTransfer(DMAC_CHANNEL_0, transferList) == true)
+    {
+        // do something else
+    }
+    else
+    {
+        // try again?
+    }
     </code>
 
   Remarks:
     None.
 */
 
-void DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmacdescriptor_registers_t * channelDesc );
+bool DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmacdescriptor_registers_t * channelDesc );
 </#if>
 
 // ******************************************************************************
