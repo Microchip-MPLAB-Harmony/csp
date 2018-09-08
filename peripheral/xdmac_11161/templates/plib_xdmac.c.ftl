@@ -164,55 +164,67 @@ void XDMAC${XDMAC_INDEX}_ChannelCallbackRegister( XDMAC_CHANNEL channel, const X
     return;
 }
 
-void XDMAC${XDMAC_INDEX}_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
+bool XDMAC${XDMAC_INDEX}_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
 {
     volatile uint32_t status = 0;
+    bool returnStatus = false;
 
-    /* Clear channel level status before adding transfer parameters */
-    status = XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS;
-    (void)status;
+    if (xdmacChannelObj[channel].busyStatus == false)
+    {
+        /* Clear channel level status before adding transfer parameters */
+        status = XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS;
+        (void)status;
 
-    xdmacChannelObj[channel].busyStatus = true;
+        xdmacChannelObj[channel].busyStatus = true;
 
-    /*Set source address */
-    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CSA= (uint32_t)srcAddr;
+        /*Set source address */
+        XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CSA= (uint32_t)srcAddr;
 
-    /* Set destination address */
-    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CDA= (uint32_t)destAddr;
+        /* Set destination address */
+        XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CDA= (uint32_t)destAddr;
 
-    /* Set block size */
-    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CUBC= XDMAC_CUBC_UBLEN(blockSize);
+        /* Set block size */
+        XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CUBC= XDMAC_CUBC_UBLEN(blockSize);
 
-    /* Enable the channel */
-    XDMAC_REGS->XDMAC_GE= (XDMAC_GE_EN0_Msk << channel);
+        /* Enable the channel */
+        XDMAC_REGS->XDMAC_GE= (XDMAC_GE_EN0_Msk << channel);
 
-    return;
+        returnStatus = true;
+    }
+
+    return returnStatus;
 }
 <#if XDMAC_LL_ENABLE == true>
 
-void XDMAC${XDMAC_INDEX}_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl)
+bool XDMAC${XDMAC_INDEX}_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl)
 {
     volatile uint32_t status = 0;
+    bool returnStatus = false;
 
-    /* Clear channel level status before adding transfer parameters */
-    status = XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS;
-    (void)status;
+    if (xdmacChannelObj[channel].busyStatus == false)
+    {
+        /* Clear channel level status before adding transfer parameters */
+        status = XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIS;
+        (void)status;
 
-    xdmacChannelObj[channel].busyStatus = true;
+        xdmacChannelObj[channel].busyStatus = true;
 
-    /* First descriptor control set */
-    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDC= (uint32_t)(firstDescriptorControl->descriptorControl);
+        /* First descriptor control set */
+        XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDC= (uint32_t)(firstDescriptorControl->descriptorControl);
 
-    /* First descriptor address set */
-    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDA= ( (firstDescriptorAddress & XDMAC_CNDA_NDA_Msk) | XDMAC_CNDA_NDAIF_Msk ) ;
+        /* First descriptor address set */
+        XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CNDA= ( (firstDescriptorAddress & XDMAC_CNDA_NDA_Msk) | XDMAC_CNDA_NDAIF_Msk ) ;
 
-    /* Enable end of linked list interrupt source */
-    XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIE= XDMAC_CIE_LIE_Msk ;
+        /* Enable end of linked list interrupt source */
+        XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CIE= XDMAC_CIE_LIE_Msk ;
 
-    /* Enable the channel */
-    XDMAC_REGS->XDMAC_GE= (XDMAC_GE_EN0_Msk << channel);
+        /* Enable the channel */
+        XDMAC_REGS->XDMAC_GE= (XDMAC_GE_EN0_Msk << channel);
 
-    return;
+        returnStatus = true;
+    }
+
+    return returnStatus;
 }
 </#if>
 
@@ -249,6 +261,6 @@ void XDMAC${XDMAC_INDEX}_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t 
 {
     /* Disable the channel */
     XDMAC_REGS->XDMAC_GD= (XDMAC_GD_DI0_Msk << channel);
-    
+
     XDMAC_REGS->XDMAC_CHID[channel].XDMAC_CBC = length;
 }

@@ -237,10 +237,10 @@ void XDMAC${XDMAC_INDEX}_Initialize( void );
 
 void XDMAC${XDMAC_INDEX}_ChannelCallbackRegister( XDMAC_CHANNEL channel, const XDMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle );
 
-void XDMAC${XDMAC_INDEX}_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize );
+bool XDMAC${XDMAC_INDEX}_ChannelTransfer( XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize );
 <#if XDMAC_LL_ENABLE == true>
 
-void XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl );
+bool XDMAC_ChannelLinkedListTransfer( XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl );
 </#if>
 
 bool XDMAC${XDMAC_INDEX}_ChannelIsBusy (XDMAC_CHANNEL channel);

@@ -481,7 +481,7 @@ void XDMAC_ChannelCallbackRegister (XDMAC_CHANNEL channel, const XDMAC_CHANNEL_C
 
 //******************************************************************************
 /* Function:
-    void XDMAC_ChannelTransfer
+    bool XDMAC_ChannelTransfer
     (
         XDMAC_CHANNEL channel,
         const void *srcAddr,
@@ -495,7 +495,8 @@ void XDMAC_ChannelCallbackRegister (XDMAC_CHANNEL channel, const XDMAC_CHANNEL_C
 
   Description:
     This function adds a single block data transfer characteristics for a
-    specific XDMAC channel. It also enables the channel to start data transfer.
+    specific XDMAC channel id it is not busy already. It also enables the
+    channel to start data transfer.
 
     If the requesting client registered an event callback with the PLIB,
     the PLIB will issue a XDMAC_TRANSFER_COMPLETE event if the transfer was
@@ -515,7 +516,8 @@ void XDMAC_ChannelCallbackRegister (XDMAC_CHANNEL channel, const XDMAC_CHANNEL_C
     blockSize - Size of the transfer block
 
   Returns:
-    None.
+    True - If transfer request is accepted.
+    False - If previous transfer is in progress and the request is rejected.
 
   Example:
     <code>
@@ -530,28 +532,39 @@ void XDMAC_ChannelCallbackRegister (XDMAC_CHANNEL channel, const XDMAC_CHANNEL_C
     XDMAC_ChannelCallbackRegister(APP_XDMACTransferEventHandler,
         (uintptr_t)&myAppObj);
 
-    XDMAC_ChannelTransfer(XDMAC_CHANNEL_1, srcAddr, destAddr, size);
+    if (XDMAC_ChannelTransfer(XDMAC_CHANNEL_1, srcAddr, destAddr, size) == true)
+    {
+        // do something else
+    }
+    else
+    {
+        // try again?
+    }
     </code>
 
   Remarks:
-    When DMA transfer buffers are placed in cacheable memory, cache maintenance operation must be performed by cleaning and invalidating cache
-    for DMA buffers located in cacheable SRAM region using CMSIS APIs. The buffer start address must be aligned to cache line
-    and buffer size must be multiple of cache line.
-    Refer to device documentation to find the cache line size.
+    When DMA transfer buffers are placed in cacheable memory, cache maintenance
+    operation must be performed by cleaning and invalidating cache for DMA
+    buffers located in cacheable SRAM region using CMSIS APIs. The buffer
+    start address must be aligned to cache line and buffer size must be
+    multiple of cache line. Refer to device documentation to find the cache
+    line size.
 
-    Invalidate cache lines having received buffer before using it to load the latest data in the actual memory to the cache
+    Invalidate cache lines having received buffer before using it to load
+    the latest data in the actual memory to the cache
     SCB_InvalidateDCache_by_Addr((uint32_t *)&readBuffer, sizeof(readBuffer));
 
-    Clean cache lines having source buffer before submitting a transfer request to XDMAC to load the latest data in the cache to the actual memory
+    Clean cache lines having source buffer before submitting a transfer request
+    to XDMAC to load the latest data in the cache to the actual memory
     SCB_CleanDCache_by_Addr((uint32_t *)&writeBuffer, sizeof(writeBuffer));
 */
 
-void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
+bool XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
 
 
 //******************************************************************************
 /* Function:
-    void XDMAC_ChannelLinkedListTransfer
+    bool XDMAC_ChannelLinkedListTransfer
     (
         XDMAC_CHANNEL channel,
         uint32_t descriptor,
@@ -564,8 +577,8 @@ void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const vo
 
   Description:
     This function sets up multi-block data transfer for a XDMAC channel by
-    linked list operation mode. That is each block of data to be transferred
-    is configured as descriptors of a linked list.
+    linked list operation mode if channel is not busy already. That is each
+    block of data to be transferred is configured as descriptors of a linked list.
     Each descriptor can be defined in any available descriptor view formats and
     the views are available as XDMAC_DESCRIPTOR_VIEW_x.
 
@@ -591,7 +604,8 @@ void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const vo
     XDMAC_DESCRIPTOR_CONTROL and must be cache line aligned.
 
   Returns:
-    None.
+    True - If transfer request is accepted.
+    False - If previous transfer is in progress and the request is rejected.
 
   Example:
     <code>
@@ -610,8 +624,14 @@ void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const vo
         NULL);
 
     // Add linked list to the XDMAC PLIB, channel will be enabled by default.
-    XDMAC_ChannelLinkedListTransfer(XDMAC_CHANNEL_1, (uint32_t)&linkedList1[0],
-        &descptr_crtl);
+    if(XDMAC_ChannelLinkedListTransfer(XDMAC_CHANNEL_1, (uint32_t)&linkedList1[0], &descptr_crtl) == true)
+    {
+        // do something else
+    }
+    else
+    {
+        // try again?
+    }
     </code>
 
   Remarks:
@@ -620,7 +640,7 @@ void XDMAC_ChannelTransfer (XDMAC_CHANNEL channel, const void *srcAddr, const vo
     requirement and may not be needed in some of the devices.
 */
 
-void XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl);
+bool XDMAC_ChannelLinkedListTransfer (XDMAC_CHANNEL channel, uint32_t firstDescriptorAddress, XDMAC_DESCRIPTOR_CONTROL* firstDescriptorControl);
 
 
 //******************************************************************************
@@ -796,14 +816,14 @@ bool XDMAC_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANNEL_CONFIG setti
 
   Description:
     This function sets the channel Block Length of the XDMAC channel.
-    The length of the block is (BLEN+1) microblocks.    
+    The length of the block is (BLEN+1) microblocks.
     Any ongoing transaction of the specified XDMAC channel will be aborted when
     this function is called.
-    
+
 
   Precondition:
     XDMAC should have been initialized by calling XDMAC_Initialize.
-    
+
   Parameters:
     channel - A specific XDMAC channel
     length - The number of microblocks of data
