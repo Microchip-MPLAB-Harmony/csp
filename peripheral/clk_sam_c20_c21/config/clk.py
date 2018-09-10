@@ -356,13 +356,14 @@ oscctrlSym_DPLLRATIO_LDR = coreComponent.createIntegerSymbol("CONFIG_CLOCK_DPLL_
 oscctrlSym_DPLLRATIO_LDR.setLabel("DPLL Loop Divider Ratio Integer Part")
 oscctrlSym_DPLLRATIO_LDR.setDescription("Loop divider ratio integer value")
 oscctrlSym_DPLLRATIO_LDR.setDefaultValue(0)
-
+oscctrlSym_DPLLRATIO_LDR.setMin(0)
 
 #Digital Phase Locked Loop(DPLL) Loop Divider Ration(LDR) Fraction part
 oscctrlSym_DPLLRATIO_LDRFRAC = coreComponent.createIntegerSymbol("CONFIG_CLOCK_DPLL_LDRFRAC_FRACTION", dpll96_Menu)
 oscctrlSym_DPLLRATIO_LDRFRAC.setLabel("DPLL Loop Divider Ratio Fractional Part")
 oscctrlSym_DPLLRATIO_LDRFRAC.setDescription("loop divider ratio fraction value")
 oscctrlSym_DPLLRATIO_LDRFRAC.setDefaultValue(0)
+oscctrlSym_DPLLRATIO_LDRFRAC.setMin(0)
 
 #Digital Phase Locked Loop(DPLL) Pre-Scalar
 oscctrlSym_DPLLPRESC_PRESC = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_DPLL_PRESCALAR", dpll96_Menu)
@@ -1306,7 +1307,23 @@ def setMainClockFreq(symbol, event):
     symbol.setValue(gclk0_freq / (divider + 1), 1)
 
 def setFreq(symbol, event):
-    symbol.setValue(event["value"], 2)
+    print "triggered"
+    src = int(Database.getSymbolValue("core","CONFIG_CLOCK_RTC_SRC"))
+    freq = 0
+    if src == 0:
+        freq = int(Database.getSymbolValue("core","OSCULP1K_FREQ"))
+    elif src == 1:
+        freq = int(Database.getSymbolValue("core","OSCULP32K_FREQ"))
+    elif src == 2:
+        freq = int(Database.getSymbolValue("core","OSC1K_FREQ"))
+    elif src == 3:
+        freq = int(Database.getSymbolValue("core","OSC32K_FREQ"))
+    elif src == 4:
+        freq = int(Database.getSymbolValue("core","XOSC1K_FREQ"))
+    else:
+        freq = int(Database.getSymbolValue("core","XOSC32K_FREQ"))
+    
+    symbol.setValue(freq, 2)
     
 def setGCLKIOFreq(symbol, event):
     index = int(symbol.getID().split("GCLK_IO_")[1].split("_FREQ")[0])
@@ -1338,7 +1355,7 @@ clkSym_RTC_CLK_FREQ = coreComponent.createIntegerSymbol("RTC_CLOCK_FREQUENCY", c
 clkSym_RTC_CLK_FREQ.setLabel("RTC Clock Frequency")
 clkSym_RTC_CLK_FREQ.setReadOnly(True)
 clkSym_RTC_CLK_FREQ.setDefaultValue(1000)
-clkSym_RTC_CLK_FREQ.setDependencies(setFreq,["OSCULP32K_FREQ, OSCULP1K_FREQ, OSC32K_FREQ, OSC1K_FREQ, XOSC32K_FREQ, XOSC1K_FREQ"])
+clkSym_RTC_CLK_FREQ.setDependencies(setFreq,["CONFIG_CLOCK_RTC_SRC", "OSCULP32K_FREQ", "OSCULP1K_FREQ", "OSC32K_FREQ", "OSC1K_FREQ", "XOSC32K_FREQ", "XOSC1K_FREQ"])
 clkSym_GCLK_IO_FREQ = []
 
 for gclk_io_index in range(0,8):
