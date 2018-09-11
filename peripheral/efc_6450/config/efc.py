@@ -73,7 +73,6 @@ def instantiateComponent(efcComponent):
 
     efcInterruptSource = efcComponent.createStringSymbol("INTERRUPT_SOURCE", efcMenu)
     efcInterruptSource.setLabel("EFC Interrupt Source")
-    efcInterruptSource.setVisible(True)
     efcInterruptSource.setReadOnly(True)
     efcInterruptSource.setDefaultValue("EFC_IRQn")
     efcInterruptSource.setDependencies(efcSetMemoryDependency, ["INTERRUPT_ENABLE"])
@@ -116,6 +115,19 @@ def instantiateComponent(efcComponent):
     efcIndex = efcComponent.createIntegerSymbol("INDEX", efcMenu)
     efcIndex.setVisible(False)
     efcIndex.setDefaultValue(int(instance))
+
+    writeApiName = "EFC" + str(instance) + "_PageWrite"
+    eraseApiName = "EFC" + str(instance) + "_SectorErase"
+
+    efcWriteApiName = efcComponent.createStringSymbol("WRITE_API_NAME", efcMenu)
+    efcWriteApiName.setVisible(False)
+    efcWriteApiName.setReadOnly(True)
+    efcWriteApiName.setDefaultValue(writeApiName)
+
+    efcEraseApiName = efcComponent.createStringSymbol("ERASE_API_NAME", efcMenu)
+    efcEraseApiName.setVisible(False)
+    efcEraseApiName.setReadOnly(True)
+    efcEraseApiName.setDefaultValue(eraseApiName)
 
     peripId = Interrupt.getInterruptIndex("EFC")
     NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
