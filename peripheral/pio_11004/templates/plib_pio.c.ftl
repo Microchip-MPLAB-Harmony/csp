@@ -43,8 +43,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "plib_pio.h"
 
-<#compress>
-
 <#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_LAT_LOW PIO_OD PIO_PU PIO_PD PIO_PDR PIO_ABCD1
                        PIO_ABCD2 PIO_INT_TYPE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INTERRUPT>
     <#lt>    /************************ PIO ${PIO_PORT} Initialization ************************/
@@ -57,12 +55,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>    /* PORT${PIO_PORT} PIO Disable and Peripheral Enable*/
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = 0x${PIO_PDR};
     </#if>
-
     <#if PIO_OD != "0">
         <#lt>    /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = 0x${PIO_OD};
     </#if>
-
     <#lt>    /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
     <#if PIO_PU != "0">
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PU};
@@ -71,7 +67,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     <#else>
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PU};
     </#if>
-
     <#lt>    /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
     <#if PIO_PD != "0">
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PD};
@@ -80,10 +75,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     <#else>
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PD};
     </#if>
-
     <#lt>    /* PORT${PIO_PORT} Output Write Enable */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
-
     <#if PIO_DIR != "0">
         <#if PIO_LAT_HIGH != "0">
             <#lt>    /* PORT${PIO_PORT} Initial state High */
@@ -93,17 +86,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
             <#lt>    /* PORT${PIO_PORT} Initial state Low */
             <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_CODR = 0x${PIO_LAT_LOW};
         </#if>
-
         <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR};
     </#if>
-
     <#if PIO_INTERRUPT == true>
         <#if PIO_INT_TYPE != "0">
             <#lt>    /* PORT${PIO_PORT} Additional interrupt mode Enable */
             <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_AIMER = 0x${PIO_INT_TYPE};
         <#else>
-
             <#lt>    /* If PIO Interrupt is selected for both edge, it doesn't need any register
             <#lt>       configuration */
         </#if>
@@ -117,51 +107,29 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         </#if>
         <#lt>    /* PORT${PIO_PORT} Interrupt Status Clear */
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ISR;
-
         <#lt>    /* PORT${PIO_PORT} system level interrupt will be enabled by NVIC Manager */
         <#lt>    /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
         <#lt>       by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
     </#if>
 </#macro>
+<#if PIO_A_INTERRUPT_USED == true ||
+     PIO_B_INTERRUPT_USED == true ||
+     PIO_C_INTERRUPT_USED == true ||
+     PIO_D_INTERRUPT_USED == true ||
+     PIO_E_INTERRUPT_USED == true >
 
-<#macro PIO_INT_CALLBACK PIO_PORT PORT_NUM_INT_PINS PIO_INTERRUPT>
-    <#if PIO_INTERRUPT == true>
-        <#lt>/* port ${PIO_PORT} current number of callbacks */
-        <#lt>uint8_t port${PIO_PORT}CurNumCb = 0;
+    <#assign numOfIntInA = PIO_A_NUM_OF_INT_PINS_USED>
+    <#assign numOfIntInAB = PIO_A_NUM_OF_INT_PINS_USED + PIO_B_NUM_OF_INT_PINS_USED>
+    <#assign numOfIntInABC = PIO_A_NUM_OF_INT_PINS_USED + PIO_B_NUM_OF_INT_PINS_USED + PIO_C_NUM_OF_INT_PINS_USED>
+    <#assign numOfIntInABCD = PIO_A_NUM_OF_INT_PINS_USED + PIO_B_NUM_OF_INT_PINS_USED + PIO_C_NUM_OF_INT_PINS_USED + PIO_D_NUM_OF_INT_PINS_USED>
+    <#assign numOfIntInABCDE = PIO_A_NUM_OF_INT_PINS_USED + PIO_B_NUM_OF_INT_PINS_USED + PIO_C_NUM_OF_INT_PINS_USED + PIO_D_NUM_OF_INT_PINS_USED + PIO_E_NUM_OF_INT_PINS_USED>
 
-        <#lt>/* port ${PIO_PORT} callback objects */
-        <#lt>PIO_PIN_CALLBACK_OBJ port${PIO_PORT}PinCbObj[${PORT_NUM_INT_PINS}];
-    </#if>
-</#macro>
+    <#lt>/* Array to store callback objects of each configured interrupt */
+    <#lt>PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_OF_INT_PINS_USED} + ${PIO_B_NUM_OF_INT_PINS_USED} + ${PIO_C_NUM_OF_INT_PINS_USED} + ${PIO_D_NUM_OF_INT_PINS_USED} + ${PIO_E_NUM_OF_INT_PINS_USED}];
 
-
-<@PIO_INT_CALLBACK
-    PIO_PORT = "A"
-    PORT_NUM_INT_PINS = PIO_A_NUM_OF_INT_PINS_USED
-    PIO_INTERRUPT = PIO_A_INTERRUPT_USED
-/>
-<@PIO_INT_CALLBACK
-    PIO_PORT = "B"
-    PORT_NUM_INT_PINS = PIO_B_NUM_OF_INT_PINS_USED
-    PIO_INTERRUPT = PIO_B_INTERRUPT_USED
-/>
-<@PIO_INT_CALLBACK
-    PIO_PORT = "C"
-    PORT_NUM_INT_PINS = PIO_C_NUM_OF_INT_PINS_USED
-    PIO_INTERRUPT = PIO_C_INTERRUPT_USED
-/>
-<@PIO_INT_CALLBACK
-    PIO_PORT = "D"
-    PORT_NUM_INT_PINS = PIO_D_NUM_OF_INT_PINS_USED
-    PIO_INTERRUPT = PIO_D_INTERRUPT_USED
-/>
-<@PIO_INT_CALLBACK
-    PIO_PORT = "E"
-    PORT_NUM_INT_PINS = PIO_E_NUM_OF_INT_PINS_USED
-    PIO_INTERRUPT = PIO_E_INTERRUPT_USED
-/>
-</#compress>
-
+    <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
+    <#lt>uint8_t portNumCb[5+1] = {0, ${numOfIntInA}, ${numOfIntInAB}, ${numOfIntInABC}, ${numOfIntInABCD}, ${numOfIntInABCDE}};
+</#if>
 
 /******************************************************************************
   Function:
@@ -269,19 +237,42 @@ void PIO_Initialize ( void )
         />
 
     <#if (PIO_A_INTERRUPT_USED == true) || (PIO_B_INTERRUPT_USED == true) || (PIO_C_INTERRUPT_USED == true) || (PIO_D_INTERRUPT_USED == true) || (PIO_E_INTERRUPT_USED == true) >
+    uint32_t i;
     /* Initialize Interrupt Pin data structures */
+        <#assign portCurNumCb_A = 0>
+        <#assign portCurNumCb_B = 0>
+        <#assign portCurNumCb_C = 0>
+        <#assign portCurNumCb_D = 0>
+        <#assign portCurNumCb_E = 0>
         <#list 1..PIO_PIN_TOTAL as i>
             <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
             <#assign portChannel = "PIN_" + i + "_PIO_CHANNEL">
             <#assign portPosition = "PIN_" + i + "_PIO_PIN">
             <#if .vars[intConfig]?has_content>
                 <#if (.vars[intConfig] != "Disabled")>
-                    <#lt>    port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
-                    <#lt>    port${.vars[portChannel]}PinCbObj[port${.vars[portChannel]}CurNumCb].callback = NULL;
-                    <#lt>    port${.vars[portChannel]}CurNumCb++;
+                    <#if (.vars[portChannel] == "A")>
+                        <#lt>    portPinCbObj[${portCurNumCb_A}].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
+                        <#lt>    <#assign portCurNumCb_A = portCurNumCb_A + 1>
+                    <#elseif (.vars[portChannel] == "B")>
+                        <#lt>    portPinCbObj[${numOfIntInA} + ${portCurNumCb_B}].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
+                        <#lt>    <#assign portCurNumCb_B = portCurNumCb_B + 1>
+                    <#elseif (.vars[portChannel] == "C")>
+                        <#lt>    portPinCbObj[${numOfIntInAB} + ${portCurNumCb_C}].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
+                        <#lt>    <#assign portCurNumCb_C = portCurNumCb_C + 1>
+                    <#elseif (.vars[portChannel] == "D")>
+                        <#lt>    portPinCbObj[${numOfIntInABC} + ${portCurNumCb_D}].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
+                        <#lt>    <#assign portCurNumCb_D = portCurNumCb_D + 1>
+                    <#elseif (.vars[portChannel] == "E")>
+                        <#lt>    portPinCbObj[${numOfIntInABCD} + ${portCurNumCb_E}].pin = PIO_PIN_P${.vars[portChannel]}${.vars[portPosition]};
+                        <#lt>    <#assign portCurNumCb_E = portCurNumCb_E + 1>
+                    </#if>
                 </#if>
             </#if>
         </#list>
+        <#lt>    for(i=0; i<${numOfIntInABCDE}; i++)
+        <#lt>    {
+        <#lt>        portPinCbObj[i].callback = NULL;
+        <#lt>    }
     </#if>
 
 }
@@ -488,87 +479,15 @@ void PIO_PinInterruptCallbackRegister(
 {
     uint8_t i;
     uint8_t portIndex;
+
     portIndex = pin >> 5;
 
-    switch( portIndex )
+    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
     {
-    <#if PIO_A_INTERRUPT_USED == true>
-        case 0:
+        if (portPinCbObj[i].pin == pin)
         {
-            for(i=0; i<portACurNumCb; i++)
-            {
-                if (portAPinCbObj[i].pin == pin)
-                {
-                    portAPinCbObj[i].callback = callback;
-                    portAPinCbObj[i].context  = context;
-                    break;
-                }
-            }
-            break;
-        }
-    </#if>
-    <#if PIO_B_INTERRUPT_USED == true>
-        case 1:
-        {
-            for(i=0; i<portBCurNumCb; i++)
-            {
-                if (portBPinCbObj[i].pin == pin)
-                {
-                    portBPinCbObj[i].callback = callback;
-                    portBPinCbObj[i].context  = context;
-                    break;
-                }
-            }
-            break;
-        }
-    </#if>
-    <#if PIO_C_INTERRUPT_USED == true>
-        case 2:
-        {
-            for(i=0; i<portCCurNumCb; i++)
-            {
-                if (portCPinCbObj[i].pin == pin)
-                {
-                    portCPinCbObj[i].callback = callback;
-                    portCPinCbObj[i].context  = context;
-                    break;
-                }
-            }
-            break;
-        }
-    </#if>
-    <#if PIO_D_INTERRUPT_USED == true>
-        case 3:
-        {
-            for(i=0; i<portDCurNumCb; i++)
-            {
-                if (portDPinCbObj[i].pin == pin)
-                {
-                    portDPinCbObj[i].callback = callback;
-                    portDPinCbObj[i].context  = context;
-                    break;
-                }
-            }
-            break;
-        }
-    </#if>
-    <#if PIO_E_INTERRUPT_USED == true>
-        case 4:
-        {
-            for(i=0; i<portECurNumCb; i++)
-            {
-                if (portEPinCbObj[i].pin == pin)
-                {
-                    portEPinCbObj[i].callback = callback;
-                    portEPinCbObj[i].context  = context;
-                    break;
-                }
-            }
-            break;
-        }
-    </#if>
-        default:
-        {
+            portPinCbObj[i].callback = callback;
+            portPinCbObj[i].context  = context;
             break;
         }
     }
@@ -634,89 +553,23 @@ void PIO_PinInterruptCallbackRegister(
 void _PIO_Interrupt_Handler ( PIO_PORT port )
 {
     uint32_t status;
-    uint32_t i;
+    uint32_t i, portIndex;
 
     status  = ((pio_registers_t*)port)->PIO_ISR;
     status &= ((pio_registers_t*)port)->PIO_IMR;
 
-    /* Check pending events */
-    switch( port )
+    /* get the index of the port channel: PIO_PORT_A--> 0, PIO_PORT_B--> 1 ... */
+    portIndex = (port - PIOA_BASE_ADDRESS) >> 9;
+
+    /* Check pending events and call callback if registered */
+    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
     {
-    <#if PIO_A_INTERRUPT_USED == true>
-        case PIO_PORT_A:
+        if((status & (1 << (portPinCbObj[i].pin & 0x1F))) && (portPinCbObj[i].callback != NULL))
         {
-            for( i = 0; i < portACurNumCb; i++ )
-            {
-                if( ( status & ( 1 << (portAPinCbObj[i].pin & 0x1F) ) ) &&
-                    portAPinCbObj[i].callback != NULL )
-                {
-                    portAPinCbObj[i].callback ( portAPinCbObj[i].pin, portAPinCbObj[i].context );
-                }
-            }
-            break;
-        }
-    </#if>
-    <#if PIO_B_INTERRUPT_USED == true>
-        case PIO_PORT_B:
-        {
-            for( i = 0; i < portBCurNumCb; i++ )
-            {
-                if( ( status & ( 1 << (portBPinCbObj[i].pin & 0x1F) ) ) &&
-                    portBPinCbObj[i].callback != NULL )
-                {
-                    portBPinCbObj[i].callback ( portBPinCbObj[i].pin, portBPinCbObj[i].context );
-                }
-            }
-            break;
-        }
-    </#if>
-    <#if PIO_C_INTERRUPT_USED == true>
-        case PIO_PORT_C:
-        {
-            for( i = 0; i < portCCurNumCb; i++ )
-            {
-                if( ( status & ( 1 << (portCPinCbObj[i].pin & 0x1F) ) ) &&
-                    portCPinCbObj[i].callback != NULL )
-                {
-                    portCPinCbObj[i].callback ( portCPinCbObj[i].pin, portCPinCbObj[i].context );
-                }
-            }
-            break;
-        }
-    </#if>
-    <#if PIO_D_INTERRUPT_USED == true>
-        case PIO_PORT_D:
-        {
-            for( i = 0; i < portDCurNumCb; i++ )
-            {
-                if( ( status & ( 1 << (portDPinCbObj[i].pin & 0x1F) ) ) &&
-                    portDPinCbObj[i].callback != NULL )
-                {
-                    portDPinCbObj[i].callback ( portDPinCbObj[i].pin, portDPinCbObj[i].context );
-                }
-            }
-            break;
-        }
-    </#if>
-    <#if PIO_E_INTERRUPT_USED == true>
-        case PIO_PORT_E:
-        {
-            for( i = 0; i < portECurNumCb; i++ )
-            {
-                if( ( status & ( 1 << (portEPinCbObj[i].pin & 0x1F) ) ) &&
-                    portEPinCbObj[i].callback != NULL )
-                {
-                    portEPinCbObj[i].callback ( portEPinCbObj[i].pin, portEPinCbObj[i].context );
-                }
-            }
-            break;
-        }
-    </#if>
-        default:
-        {
-            break;
+            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
         }
     }
+
 }
 </#if>
 
