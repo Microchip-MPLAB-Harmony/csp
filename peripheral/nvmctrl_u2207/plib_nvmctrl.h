@@ -344,6 +344,36 @@ void NVMCTRLx_Initialize(void);
 
 // *****************************************************************************
 /* Function:
+    bool NVMCTRL${NVMCTRL_INDEX?string}_Read( uint32_t *data, uint32_t length, uint32_t address )
+
+ Summary:
+    Reads length number of bytes from a given address in FLASH memory.
+
+ Description:
+    Reads length number of bytes from a given address in FLASH memory
+    into the user buffer.
+
+ Precondition:
+    None
+
+ Parameters:
+    data    :- pointer to user data buffer
+    length  :- Number of bytes to read
+    address :- FLASH address to be read from
+
+ Returns:
+    None.
+
+ Example:
+    <code>
+        uint8_t buffer[256];
+        NVMCTRL0_Read( &buffer, 256, 0x20000);
+    </code>
+*/
+bool NVMCTRLx_Read( uint32_t *data, uint32_t length, uint32_t address );
+
+// *****************************************************************************
+/* Function:
     bool NVMCTRLx_PageWrite( uint32_t address, uint32_t* data )
 
   Summary:
