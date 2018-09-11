@@ -317,10 +317,15 @@ def instantiateComponent(coreComponent):
     xc32HeapSizeSym.setDependencies(xc32HeapSize, ["HEAP_SIZE"])
 
     # set XC32 include path
+    corePath = ""
+    if "SAMA5" in Variables.get("__PROCESSOR"):
+        corePath = "../src/packs/CMSIS/CMSIS/Core_A/Include"
+    else:
+        corePath = "../src/packs/CMSIS/CMSIS/Core/Include"
     defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
     defSym.setCategory("C32")
     defSym.setKey("extra-include-directories")
-    defSym.setValue("../src;../src/config/"+configName+";../src/packs/"+Variables.get("__PROCESSOR")+"_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/"+arch)
+    defSym.setValue("../src;../src/config/"+configName+";../src/packs/"+Variables.get("__PROCESSOR")+"_DFP;"+corePath+";../src/packs/CMSIS/;../src/"+arch)
     defSym.setAppend(True, ";")
 
     # set XC32 option to not use the device startup code
