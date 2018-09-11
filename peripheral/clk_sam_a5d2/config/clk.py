@@ -375,14 +375,14 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
                     clock_id = int(param.attrib["value"])
 
                     if clock_id < 32:
-                        list_pcer0_depend.append(symbol_id)
-                        DICT_PCER0.update({symbol_id: clock_id})
+                        list_pcer0_depend.append(symbol_id + "_CLOCK_ENABLE")
+                        DICT_PCER0.update({""+symbol_id+"_CLOCK_ENABLE": clock_id})
                     else:
-                        list_pcer1_depend.append(symbol_id)
-                        DICT_PCER1.update({symbol_id: clock_id})
+                        list_pcer1_depend.append(symbol_id + "_CLOCK_ENABLE")
+                        DICT_PCER1.update({""+symbol_id+"_CLOCK_ENABLE": clock_id})
 
                     sym_perip_clk_freq = clk_comp.createIntegerSymbol(symbol_id + "_CLOCK_FREQUENCY", clk_menu)
-                    sym_perip_clk_freq.setVisible(True)
+                    sym_perip_clk_freq.setVisible(False)
                     sym_perip_clk_freq.setReadOnly(True)
                     if instance.attrib["name"] in hs_periphs:
                         freq = 166000000
@@ -618,7 +618,7 @@ if __name__ == "__main__":
     __calculated_clock_frequencies(coreComponent, SYM_CLK_MENU)
 
     #MPDDRC is enabled by bootloader so make sure we don't disable it
-    Database.setSymbolValue("core", "PMC_ID_MPDDRC", True, 1)
+    Database.setSymbolValue("core", "MPDDRC_CLOCK_ENABLE", True, 1)
 
     #File handling
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
