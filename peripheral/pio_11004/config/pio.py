@@ -61,7 +61,7 @@ def pinLatchCal(pin, event):
     pin_num = int((pin.getID()).split("_")[1])
     portChannel = pinChannel[pin_num-1].getValue()
 
-    if portChannel != "None":
+    if portChannel != "":
         channelIndex = pioSymChannel.index(portChannel)
         bit_pos = pinBitPosition[pin_num-1].getValue()
         SODR_Value = pioSym_PIO_SODR[channelIndex].getValue()
@@ -93,7 +93,7 @@ def pinDirCal(pin, event):
     pin_num = int((pin.getID()).split("_")[1])
     portChannel = pinChannel[pin_num-1].getValue()
 
-    if portChannel != "None":
+    if portChannel != "":
         channelIndex = pioSymChannel.index(portChannel)
         bit_pos = pinBitPosition[pin_num-1].getValue()
         OER_Value = pioSym_PIO_OER[channelIndex].getValue()
@@ -126,7 +126,7 @@ def pinFunctionCal(pType, pFunction):
     pin_num = int((pType.getID()).split("_")[1])
     portChannel = pinChannel[pin_num-1].getValue()
 
-    if portChannel != "None":
+    if portChannel != "":
         channelIndex = pioSymChannel.index(portChannel)
         bit_pos = pinBitPosition[pin_num-1].getValue()
 
@@ -178,7 +178,7 @@ def pinInterruptCal(pin, event):
     pin_num = int((pin.getID()).split("_")[1])
     portChannel = pinChannel[pin_num-1].getValue()
 
-    if portChannel != "None":
+    if portChannel != "":
         channelIndex = pioSymChannel.index(portChannel)
 
         # increment/decrement the count of number of interrupt for particular channel.
@@ -233,7 +233,7 @@ def pinOpenDrainCal(pin, event):
     pin_num = int((pin.getID()).split("_")[1])
     portChannel = pinChannel[pin_num-1].getValue()
 
-    if portChannel != "None":
+    if portChannel != "":
         channelIndex = pioSymChannel.index(portChannel)
         bit_pos = pinBitPosition[pin_num-1].getValue()
         MDER_Value = pioSym_PIO_MDER[channelIndex].getValue()
@@ -253,7 +253,7 @@ def pinPullUpCal(pin, event):
     pin_num = int((pin.getID()).split("_")[1])
     portChannel = pinChannel[pin_num-1].getValue()
 
-    if portChannel != "None":
+    if portChannel != "":
         channelIndex = pioSymChannel.index(portChannel)
         bit_pos = pinBitPosition[pin_num-1].getValue()
         PUER_Value = pioSym_PIO_PUER[channelIndex].getValue()
@@ -273,7 +273,7 @@ def pinPullDownCal(pin, event):
     pin_num = int((pin.getID()).split("_")[1])
     portChannel = pinChannel[pin_num-1].getValue()
 
-    if portChannel != "None":
+    if portChannel != "":
         channelIndex = pioSymChannel.index(portChannel)
         bit_pos = pinBitPosition[pin_num-1].getValue()
         PPDEN_Value = pioSym_PIO_PPDEN[channelIndex].getValue()
@@ -285,6 +285,34 @@ def pinPullDownCal(pin, event):
             PPDEN_Value &= ~(1 << bit_pos)
 
         pioSym_PIO_PPDEN[channelIndex].setValue(PPDEN_Value, 2)
+
+def pinFilterCal(pin, event):
+    global pioSym_PIO_IFER
+    global pioSym_PIO_IFSCER
+    global pinChannel
+    global pinBitPosition
+    pin_num = int((pin.getID()).split("_")[1])
+    portChannel = pinChannel[pin_num-1].getValue()
+
+    if portChannel != "":
+        channelIndex = pioSymChannel.index(portChannel)
+
+        bit_pos = pinBitPosition[pin_num-1].getValue()
+        IFER_Value = pioSym_PIO_IFER[channelIndex].getValue()
+        IFSCER_Value = pioSym_PIO_IFSCER[channelIndex].getValue()
+
+        if (event["value"] == "Debounce Filter"):
+            IFSCER_Value |= 1 << bit_pos
+            IFER_Value |= 1 << bit_pos
+        elif (event["value"] == "Glitch Filter"):
+            IFER_Value |= 1 << bit_pos
+            IFSCER_Value &= ~(1 << bit_pos)
+        else:
+            IFSCER_Value &= ~(1 << bit_pos)
+            IFER_Value &= ~(1 << bit_pos)
+
+        pioSym_PIO_IFER[channelIndex].setValue(IFER_Value, 2)
+        pioSym_PIO_IFSCER[channelIndex].setValue(IFSCER_Value, 2)
 
 def packageChange(pinoutSymbol, pinout):
     import re
@@ -371,6 +399,7 @@ pinPullUp = []
 pinPullDown = []
 global pinInterrupt
 pinInterrupt = []
+pinGlitchFilter = []
 pinFunctionTypelList = []
 pinInterruptList = []
 
@@ -485,6 +514,12 @@ for pinNumber in range(1, packagePinCount + 1):
     pinInterrupt[pinNumber-1].setReadOnly(True)
     pinInterrupt[pinNumber-1].setDependencies(pinInterruptCal, ["PIN_" + str(pinNumber) + "_PIO_INTERRUPT"])
 
+    pinGlitchFilter.append(pinNumber)
+    pinGlitchFilter[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_FILTER", pin[pinNumber-1])
+    pinGlitchFilter[pinNumber-1].setLabel("PIO Filter")
+    pinGlitchFilter[pinNumber-1].setReadOnly(True)
+    pinGlitchFilter[pinNumber-1].setDependencies(pinFilterCal, ["PIN_" + str(pinNumber) + "_PIO_FILTER"])
+
     #list created only for dependency
     pinFunctionTypelList.append(pinNumber)
     pinFunctionTypelList[pinNumber-1] = "PIN_" + str(pinNumber) +"_FUNCTION_TYPE"
@@ -535,6 +570,11 @@ pioSym_PIO_SODR = []
 global pioSym_PIO_CODR
 pioSym_PIO_CODR = []
 global pioMatrixSym_CCFG_SYSIO
+global pioSym_PIO_IFSCER
+pioSym_PIO_IFSCER = []
+global pioSym_PIO_IFER
+pioSym_PIO_IFER = []
+pioSym_PIO_SCDR = []
 
 pioSymPeripheralId = []
 global pioSymNVICVector
@@ -557,6 +597,13 @@ for portNumber in range(0, len(pioSymChannel)):
     port[portNumber]= coreComponent.createMenuSymbol("PIO_CONFIGURATION" + str(portNumber), portConfiguration)
     port[portNumber].setLabel("PIO " + pioSymChannel[portNumber] + " Configuration")
 
+    pioSym_PIO_SCDR.append(portNumber)
+    pioSym_PIO_SCDR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_SCDR_VALUE", port[portNumber])
+    pioSym_PIO_SCDR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SCDR")
+    pioSym_PIO_SCDR[portNumber].setDefaultValue(0x00000000)
+    pioSym_PIO_SCDR[portNumber].setMin(0x0)
+    pioSym_PIO_SCDR[portNumber].setMax(0x00003FFF)
+
     portInterrupt.append(portNumber)
     portInterrupt[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED", port[portNumber])
     portInterrupt[portNumber].setLabel("Use Interrupt for PIO " + pioSymChannel[portNumber])
@@ -568,7 +615,7 @@ for portNumber in range(0, len(pioSymChannel)):
     NumOfPortInterrupt[portNumber]= coreComponent.createIntegerSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_NUM_OF_INT_PINS_USED", port[portNumber])
     NumOfPortInterrupt[portNumber].setLabel("Number of PIO " + pioSymChannel[portNumber] + " Interrupts")
     NumOfPortInterrupt[portNumber].setDefaultValue(0)
-    NumOfPortInterrupt[portNumber].setVisible(True)
+    NumOfPortInterrupt[portNumber].setVisible(False)
     NumOfPortInterrupt[portNumber].setReadOnly(True)
 
     #list created only for dependency
@@ -647,6 +694,18 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSym_PIO_MDER[portNumber].setDefaultValue(0x00000000)
     pioSym_PIO_MDER[portNumber].setReadOnly(True)
 
+    pioSym_PIO_IFER.append(portNumber)
+    pioSym_PIO_IFER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_IFER_VALUE", port[portNumber])
+    pioSym_PIO_IFER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_IFER")
+    pioSym_PIO_IFER[portNumber].setDefaultValue(0x00000000)
+    pioSym_PIO_IFER[portNumber].setReadOnly(True)
+
+    pioSym_PIO_IFSCER.append(portNumber)
+    pioSym_PIO_IFSCER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_IFSCER_VALUE", port[portNumber])
+    pioSym_PIO_IFSCER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_IFSCER")
+    pioSym_PIO_IFSCER[portNumber].setDefaultValue(0x00000000)
+    pioSym_PIO_IFSCER[portNumber].setReadOnly(True)
+
     #symbols and variables for interrupt handling
     pioSymPeripheralId.append(portNumber)
     pioSymPeripheralId[portNumber] = Interrupt.getInterruptIndex("PIO" + str(pioSymChannel[portNumber]))
@@ -679,7 +738,7 @@ pioNVICControl.setVisible(False)
 pioMatrixSym_CCFG_SYSIO = coreComponent.createHexSymbol("PIO_CCFG_SYSIO_VALUE", portConfiguration)
 pioMatrixSym_CCFG_SYSIO.setLabel("CCFG_SYSIO")
 pioMatrixSym_CCFG_SYSIO.setDescription("System Pins as GPIO")
-pioMatrixSym_CCFG_SYSIO.setDefaultValue(0x20400000)
+pioMatrixSym_CCFG_SYSIO.setDefaultValue(0x00000000)
 pioMatrixSym_CCFG_SYSIO.setReadOnly(True)
 
 

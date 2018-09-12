@@ -44,7 +44,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "plib_pio.h"
 
 <#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_LAT_LOW PIO_OD PIO_PU PIO_PD PIO_PDR PIO_ABCD1
-                       PIO_ABCD2 PIO_INT_TYPE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INTERRUPT>
+                       PIO_ABCD2 PIO_INT_TYPE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INTERRUPT PIO_IFER PIO_IFSCER PIO_SCDR>
     <#lt>    /************************ PIO ${PIO_PORT} Initialization ************************/
     <#if (PIO_ABCD1 != "0" ) || (PIO_ABCD2 != "0")>
         <#lt>    /* PORT${PIO_PORT} Peripheral Function Selection */
@@ -111,6 +111,18 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>    /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
         <#lt>       by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
     </#if>
+    <#if PIO_IFER != "0">
+        <#lt>    /* PORT${PIO_PORT} Glitch/Debounce Filter Enable */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_IFER = 0x${PIO_IFER};
+    </#if>
+    <#if PIO_IFSCER != "0">
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_IFSCER = 0x${PIO_IFSCER};
+        <#if PIO_SCDR != "0">
+            <#lt>    /* PORT${PIO_PORT} Slow Clock Divider */
+            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SCDR = 0x${PIO_SCDR};
+        </#if>
+    </#if>
+
 </#macro>
 <#if PIO_A_INTERRUPT_USED == true ||
      PIO_B_INTERRUPT_USED == true ||
@@ -143,9 +155,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 void PIO_Initialize ( void )
 {
-    <#if PIO_CCFG_SYSIO_VALUE != "20400000">
+    <#if PIO_CCFG_SYSIO_VALUE != "0">
         <#lt>    /* Selected System IO pins are configured as GPIO */
-        <#lt>    MATRIX_REGS->CCFG_SYSIO|= 0x${PIO_CCFG_SYSIO_VALUE};
+        <#lt>    MATRIX_REGS->CCFG_SYSIO |= 0x${PIO_CCFG_SYSIO_VALUE};
     </#if>
 
         <@PIO_INITIALIZE
@@ -163,6 +175,9 @@ void PIO_Initialize ( void )
             PIO_INT_LEVEL = PIOA_LSR_VALUE
             PIO_INT_RE_HL = PIOA_REHLSR_VALUE
             PIO_INTERRUPT = PIO_A_INTERRUPT_USED
+            PIO_IFER = PIOA_IFER_VALUE
+            PIO_IFSCER = PIOA_IFSCER_VALUE
+            PIO_SCDR = PIOA_SCDR_VALUE
         />
 
         <@PIO_INITIALIZE
@@ -180,6 +195,9 @@ void PIO_Initialize ( void )
             PIO_INT_LEVEL = PIOB_LSR_VALUE
             PIO_INT_RE_HL = PIOB_REHLSR_VALUE
             PIO_INTERRUPT = PIO_B_INTERRUPT_USED
+            PIO_IFER = PIOB_IFER_VALUE
+            PIO_IFSCER = PIOB_IFSCER_VALUE
+            PIO_SCDR = PIOB_SCDR_VALUE
         />
 
 
@@ -198,6 +216,9 @@ void PIO_Initialize ( void )
             PIO_INT_LEVEL = PIOC_LSR_VALUE
             PIO_INT_RE_HL = PIOC_REHLSR_VALUE
             PIO_INTERRUPT = PIO_C_INTERRUPT_USED
+            PIO_IFER = PIOC_IFER_VALUE
+            PIO_IFSCER = PIOC_IFSCER_VALUE
+            PIO_SCDR = PIOC_SCDR_VALUE
         />
 
 
@@ -216,7 +237,10 @@ void PIO_Initialize ( void )
             PIO_INT_LEVEL = PIOD_LSR_VALUE
             PIO_INT_RE_HL = PIOD_REHLSR_VALUE
             PIO_INTERRUPT = PIO_D_INTERRUPT_USED
-        />
+            PIO_IFER = PIOD_IFER_VALUE
+            PIO_IFSCER = PIOD_IFSCER_VALUE
+            PIO_SCDR = PIOD_SCDR_VALUE
+            />
 
 
         <@PIO_INITIALIZE
@@ -234,6 +258,9 @@ void PIO_Initialize ( void )
             PIO_INT_LEVEL = PIOE_LSR_VALUE
             PIO_INT_RE_HL = PIOE_REHLSR_VALUE
             PIO_INTERRUPT = PIO_E_INTERRUPT_USED
+            PIO_IFER = PIOE_IFER_VALUE
+            PIO_IFSCER = PIOE_IFSCER_VALUE
+            PIO_SCDR = PIOE_SCDR_VALUE
         />
 
     <#if (PIO_A_INTERRUPT_USED == true) || (PIO_B_INTERRUPT_USED == true) || (PIO_C_INTERRUPT_USED == true) || (PIO_D_INTERRUPT_USED == true) || (PIO_E_INTERRUPT_USED == true) >
