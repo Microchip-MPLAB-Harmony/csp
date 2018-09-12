@@ -83,21 +83,23 @@ void XDMAC_InterruptHandler( void )
 
             if (chanIntStatus & ( XDMAC_CIS_RBEIS_Msk | XDMAC_CIS_WBEIS_Msk | XDMAC_CIS_ROIS_Msk))
             {
+                xdmacChObj->busyStatus = false;
+
                 /* It's an error interrupt */
                 if (NULL != xdmacChObj->callback)
                 {
                     xdmacChObj->callback(XDMAC_TRANSFER_ERROR, xdmacChObj->context);
                 }
-                xdmacChObj->busyStatus = false;
             }
             else if (chanIntStatus & XDMAC_CIS_BIS_Msk)
             {
+                xdmacChObj->busyStatus = false;
+
                 /* It's a block transfer complete interrupt */
                 if (NULL != xdmacChObj->callback)
                 {
                     xdmacChObj->callback(XDMAC_TRANSFER_COMPLETE, xdmacChObj->context);
                 }
-                xdmacChObj->busyStatus = false;
             }
         }
 
