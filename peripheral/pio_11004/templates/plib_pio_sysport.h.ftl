@@ -106,23 +106,23 @@ typedef enum
 {
     <#assign PORTA_Pin_List =  PORTA_Pin_List?sort>
     <#list PORTA_Pin_List as pin>
-    SYS_PORT_PA${pin} = ${pin},
+    SYS_PORT_PIN_PA${pin} = ${pin},
     </#list>
     <#assign PORTB_Pin_List =  PORTB_Pin_List?sort>
     <#list PORTB_Pin_List as pin>
-    SYS_PORT_PB${pin} = ${pin+32},
+    SYS_PORT_PIN_PB${pin} = ${pin+32},
     </#list>
     <#assign PORTC_Pin_List =  PORTC_Pin_List?sort>
     <#list PORTC_Pin_List as pin>
-    SYS_PORT_PC${pin} = ${pin+64},
+    SYS_PORT_PIN_PC${pin} = ${pin+64},
     </#list>
     <#assign PORTD_Pin_List =  PORTD_Pin_List?sort>
     <#list PORTD_Pin_List as pin>
-    SYS_PORT_PD${pin} = ${pin+96},
+    SYS_PORT_PIN_PD${pin} = ${pin+96},
     </#list>
     <#assign PORTE_Pin_List =  PORTE_Pin_List?sort>
     <#list PORTE_Pin_List as pin>
-    SYS_PORT_PE${pin} = ${pin+128},
+    SYS_PORT_PIN_PE${pin} = ${pin+128},
     </#list>
     /* This element should not be used in any of the PORTS APIs.
        It will be used by other modules or application to denote that none of the PORT Pin is used */
