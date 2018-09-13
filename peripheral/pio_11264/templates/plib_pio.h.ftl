@@ -82,7 +82,6 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
                 <#if .vars[funcname]?has_content>
                     <#if .vars[pinport]?has_content>
                         <#if .vars[pinchannel]?has_content>
-                            try
                             <#assign GPIO_Name_List = GPIO_Name_List + [.vars[funcname]]>
                             <#assign GPIO_PortPin_List = GPIO_PortPin_List + [.vars[pinport]]>
                             <#assign GPIO_PortChannel_List = GPIO_PortChannel_List + [.vars[pinchannel]]>
@@ -200,8 +199,10 @@ typedef enum
     /* Port D Pins */
     PIO_PORT_D = PIOD_BASE_ADDRESS,
 
+<#if PIO_PORT_E_ENBALE>
     /* Port E Pins */
     PIO_PORT_E = PIOE_BASE_ADDRESS
+</#if>
 
 } PIO_PORT;
 

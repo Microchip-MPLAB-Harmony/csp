@@ -104,7 +104,7 @@ pinPeripheralFunction = []
 pinBitPosition = []
 
 pincfgrValue = []
-drvSTRVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PORT"]/value-group@[name="PORT_CFGR0__DRVSTR"]')
+drvSTRVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/value-group@[name="PIO_CFGR0__DRVSTR"]')
 
 
 ###########################################Local Variables################################################################
@@ -252,10 +252,13 @@ def portInterrupt(pin, interrupt):
 ######################################### PIO Main Menu  ##########################################
 ###################################################################################################
 
-
 pioMenu = coreComponent.createMenuSymbol("PIO_MENU", None)
 pioMenu.setLabel("Ports (PIO)")
 pioMenu.setDescription("Configuration for PIO PLIB")
+
+pioPortEEnable = coreComponent.createBooleanSymbol("PIO_PORT_E_ENBALE", pioMenu)
+pioPortEEnable.setVisible(False)
+pioPortEEnable.setDefaultValue(Peripheral.instanceExists("PIO", "PIOE"))
 
 pioEnable = coreComponent.createBooleanSymbol("PIO_ENABLE", pioMenu)
 pioEnable.setLabel("Use PIO PLIB?")
@@ -273,7 +276,7 @@ uniquePinout = len(set(package.values()))
 ## get the pin count
 packagePinCount = int(re.findall(r'\d+', package.keys()[0])[0])
 
-pioPackage = coreComponent.createComboSymbol("COMPONENT_PACKAGE", pioEnable, package.keys())
+pioPackage = coreComponent.createComboSymbol("COMPONENT_PACKAGE", pioEnable, package.values())
 pioPackage.setLabel("Pin Package")
 pioPackage.setReadOnly(True)
 ###################################################################################################
@@ -462,22 +465,8 @@ for func in per_func:
 	portperMSKR.setDefaultValue(str(hex(count)))
 	count += 1
 	
-###################################################################################################
-################################# PORT Configuration related code #################################
-###################################################################################################
-
 portConfiguration = coreComponent.createMenuSymbol("PIO_CONFIGURATION", pioEnable)
 portConfiguration.setLabel("PIO Registers Configuration")
-pioSym_AFEC0_CHER = coreComponent.createStringSymbol("ADC_CHER_VALUE", portConfiguration)
-pioSym_AFEC0_CHER.setLabel("AFEC0_CHER")
-pioSym_AFEC0_CHER.setDefaultValue("0x00000000")
-pioSym_AFEC0_CHER.setReadOnly(True)
-
-pioSym_DACC_CHER = coreComponent.createStringSymbol("DACC_CHER_VALUE", portConfiguration)
-pioSym_DACC_CHER.setLabel("DACC_CHER")
-pioSym_DACC_CHER.setDefaultValue("0x00000000")
-pioSym_DACC_CHER.setReadOnly(True)
-
 for port in pioSymChannel:
 	pioSCLKDIV = coreComponent.createIntegerSymbol("PORT_" + str(port) + "_SCLK_DIV", portConfiguration)
 	pioSCLKDIV.setLabel("PORT" + str(port) + " Slow Clock Divider")
@@ -490,7 +479,7 @@ for port in pioSymChannel:
 configName = Variables.get("__CONFIGURATION_NAME")
 
 pioHeaderFile = coreComponent.createFileSymbol("PIO_HEADER", None)
-pioHeaderFile.setSourcePath("../peripheral/port_11264/templates/plib_pio.h.ftl")
+pioHeaderFile.setSourcePath("../peripheral/pio_11264/templates/plib_pio.h.ftl")
 pioHeaderFile.setOutputName("plib_pio.h")
 pioHeaderFile.setDestPath("/peripheral/pio/")
 pioHeaderFile.setProjectPath("config/" + configName +"/peripheral/pio/")
@@ -498,7 +487,7 @@ pioHeaderFile.setType("HEADER")
 pioHeaderFile.setMarkup(True)
 
 pioMappingHeaderFile = coreComponent.createFileSymbol("PIO_MAPPING_HEADER", None)
-pioMappingHeaderFile.setSourcePath("../peripheral/port_11264/plib_pio_pin.h")
+pioMappingHeaderFile.setSourcePath("../peripheral/pio_11264/plib_pio_pin.h")
 pioMappingHeaderFile.setOutputName("plib_pio_pin.h")
 pioMappingHeaderFile.setDestPath("/peripheral/pio/")
 pioMappingHeaderFile.setProjectPath("config/" + configName +"/peripheral/pio/")
@@ -506,7 +495,7 @@ pioMappingHeaderFile.setType("HEADER")
 pioMappingHeaderFile.setMarkup(False)
 
 pioSource1File = coreComponent.createFileSymbol("PIO_SOURCE", None)
-pioSource1File.setSourcePath("../peripheral/port_11264/templates/plib_pio.c.ftl")
+pioSource1File.setSourcePath("../peripheral/pio_11264/templates/plib_pio.c.ftl")
 pioSource1File.setOutputName("plib_pio.c")
 pioSource1File.setDestPath("/peripheral/pio/")
 pioSource1File.setProjectPath("config/" + configName +"/peripheral/pio/")
@@ -517,13 +506,13 @@ pioSource1File.setMarkup(True)
 pioSystemInitFile = coreComponent.createFileSymbol("PIO_INIT", None)
 pioSystemInitFile.setType("STRING")
 pioSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-pioSystemInitFile.setSourcePath("../peripheral/port_11264/templates/system/system_initialize.c.ftl")
+pioSystemInitFile.setSourcePath("../peripheral/pio_11264/templates/system/system_initialize.c.ftl")
 pioSystemInitFile.setMarkup(True)
 
 pioSystemDefFile = coreComponent.createFileSymbol("PIO_DEF", None)
 pioSystemDefFile.setType("STRING")
 pioSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-pioSystemDefFile.setSourcePath("../peripheral/port_11264/templates/system/system_definitions.h.ftl")
+pioSystemDefFile.setSourcePath("../peripheral/pio_11264/templates/system/system_definitions.h.ftl")
 pioSystemDefFile.setMarkup(True)
 
 # bspIncludeFile = coreComponent.createFileSymbol("PIO_BSP_H", None)

@@ -106,8 +106,8 @@ void PIO_Initialize ( void )
 	<#assign PORT_CFGR = "FUNC_" + func + "_CFGR_Value">  
 	<#if .vars[PORT_MSKR] != '0x0'>
 	<#lt> /* Port ${port} Peripheral function ${func} configuration */
-	<#lt>	PIO${port}->PIO_MSKR = ${.vars[PORT_MSKR]}
-	<#lt>	PIO${port}->PIO_CFGR = ${.vars[PORT_CFGR]}
+	<#lt>	PIO${port}_REGS->PIO_MSKR = ${.vars[PORT_MSKR]};
+	<#lt>	PIO${port}_REGS->PIO_CFGR = ${.vars[PORT_CFGR]};
 	
 	</#if>   
 	</#list>
@@ -116,34 +116,24 @@ void PIO_Initialize ( void )
 	<#assign PORT_CFGR = "PORT_" + port + "_CFGR_Value" + pin > 
 	<#if .vars[PORT_CFGR] != '0x0'>
 	<#lt> /* Port ${port} Pin ${pin} configuration */
-	<#lt>	PIO${port}->PIO_MSKR = ${.vars[PORT_MSKR]}
-	<#lt>	PIO${port}->PIO_CFGR |= ${.vars[PORT_CFGR]}
+	<#lt>	PIO${port}_REGS->PIO_MSKR = ${.vars[PORT_MSKR]};
+	<#lt>	PIO${port}_REGS->PIO_CFGR |= ${.vars[PORT_CFGR]};
 	
 	</#if>   
 	</#list>
 	<#assign PORT_LATCH = "PORT_" + port + "_LATCH" >
 	<#if .vars[PORT_LATCH] != '0x0'>
 	<#lt> /* Port ${port} Latch configuration */
-	<#lt>	PIO${port}->PIO_SODR = ${.vars[PORT_LATCH]}
+	<#lt>	PIO${port}_REGS->PIO_SODR = ${.vars[PORT_LATCH]};
 	
 	</#if>
 	<#assign PORT_SLCK = "PORT_" + port + "_SCLK_DIV" >
 	<#if .vars[PORT_SLCK] != 0>
 	<#lt> /* Port ${port} Slow clock Divider configuration */
-	<#lt>	PIO${port}->PIO_SCDR = ${.vars[PORT_SLCK]}
+	<#lt>	PIO${port}_REGS->PIO_SCDR = ${.vars[PORT_SLCK]};
 	
 	</#if>	
 </#list>
-    <#if ADC_CHER_VALUE != "0x00000000">
-		<#lt> /* ADC Channel configuration */
-        <#lt>   ADC_REGS->ADC_CHER = ${ADC_CHER_VALUE};
-		
-    </#if>
-    <#if DACC_CHER_VALUE != "0x00000000">
-		<#lt> /* DAC Channel configuration */
-        <#lt>   DACC_REGS->DACC_CHER = ${DACC_CHER_VALUE};
-		
-    </#if>
 }
 
 // *****************************************************************************
