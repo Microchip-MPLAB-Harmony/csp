@@ -181,7 +181,8 @@ uint32_t PIO_PortRead(PIO_PORT port)
 */
 void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 {
-    ((pio_registers_t*)port)->PIO_ODSR = (((pio_registers_t*)port)->PIO_ODSR & (~mask)) | (mask & value);
+    ((pio_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_registers_t*)port)->PIO_ODSR = value;
 }
 
 // *****************************************************************************
@@ -242,7 +243,8 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask)
 void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 {
     /* Write into Clr and Set registers */
-    ((pio_registers_t*)port)->PIO_ODSR^= mask;
+    ((pio_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_registers_t*)port)->PIO_ODSR ^= mask;
 }
 
 // *****************************************************************************

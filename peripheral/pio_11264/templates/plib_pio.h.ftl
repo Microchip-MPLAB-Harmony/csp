@@ -149,14 +149,21 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
                     <#if  gpioName?counter ==  gpioPinPos?counter>
 
                         <#lt>/*** Macros for ${gpioName} pin ***/
-                        <#lt>#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_SODR = (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_MSKR = (1<<${gpioPinPos}))
                         <#lt>#define ${gpioName}_Clear()             (PIO${gpioChannel}_REGS->PIO_CODR = (1<<${gpioPinPos}))
-                        <#lt>#define ${gpioName}_Toggle()            (PIO${gpioChannel}_REGS->PIO_ODSR ^= (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_Toggle()            do {\
+                        <#lt>                                            PIO${gpioChannel}_REGS->PIO_MSKR = (1<<${gpioPinPos}); \
+                        <#lt>                                            PIO${gpioChannel}_REGS->PIO_ODSR ^= (1<<${gpioPinPos});\
+                        <#lt>                                        } while (0)
                         <#lt>#define ${gpioName}_Get()               ((PIO${gpioChannel}_REGS->PIO_PDSR >> ${gpioPinPos}) & 0x1)
-                        <#lt>#define ${gpioName}_OutputEnable()      PIO${gpioChannel}_REGS->PIO_MSKR = (1<<${gpioPinPos}); \
-						<#lt>										PIO${gpioChannel}_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos)
-                        <#lt>#define ${gpioName}_InputEnable()       PIO${gpioChannel}_REGS->PIO_MSKR = (1<<${gpioPinPos}); \
-						<#lt>										PIO${gpioChannel}_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos)
+                        <#lt>#define ${gpioName}_OutputEnable()      do {\
+                        <#lt>                                            PIO${gpioChannel}_REGS->PIO_MSKR = (1<<${gpioPinPos}); \
+						<#lt>										     PIO${gpioChannel}_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos);\
+						<#lt>                                        }while(0)
+                        <#lt>#define ${gpioName}_InputEnable()       do { \
+                        <#lt>                                            PIO${gpioChannel}_REGS->PIO_MSKR = (1<<${gpioPinPos}); \
+						<#lt>										     PIO${gpioChannel}_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);\
+                        <#lt>                                        } while (0)
                         <#lt>#define ${gpioName}_InterruptEnable()   (PIO${gpioChannel}_REGS->PIO_IER = (1<<${gpioPinPos}))
                         <#lt>#define ${gpioName}_InterruptDisable()  (PIO${gpioChannel}_REGS->PIO_IDR = (1<<${gpioPinPos}))
                         <#lt>#define ${gpioName}_PIN                  PIO_PIN_P${gpioChannel}${gpioPinPos}
