@@ -158,21 +158,21 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 typedef enum
 {
-    /* Port A Pins */
+    <#if PORTA_Pin_List?has_content>
     PIO_PORT_A = PIOA_BASE_ADDRESS,
-
-    /* Port B Pins */
+    </#if>
+    <#if PORTB_Pin_List?has_content>
     PIO_PORT_B = PIOB_BASE_ADDRESS,
-
-    /* Port C Pins */
+    </#if>
+    <#if PORTC_Pin_List?has_content>
     PIO_PORT_C = PIOC_BASE_ADDRESS,
-
-    /* Port D Pins */
+    </#if>
+    <#if PORTD_Pin_List?has_content>
     PIO_PORT_D = PIOD_BASE_ADDRESS,
-
-    /* Port E Pins */
+    </#if>
+    <#if PORTE_Pin_List?has_content>
     PIO_PORT_E = PIOE_BASE_ADDRESS
-
+    </#if>
 } PIO_PORT;
 
 // *****************************************************************************
