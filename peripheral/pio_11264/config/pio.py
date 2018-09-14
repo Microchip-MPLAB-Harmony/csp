@@ -265,6 +265,8 @@ pioEnable.setLabel("Use PIO PLIB?")
 pioEnable.setDefaultValue(True)
 pioEnable.setReadOnly(True)
 
+Database.setSymbolValue("core", "PIOA_CLOCK_ENABLE", True, 1)
+
 # Build package pinout map
 packageNode = ATDF.getNode("/avr-tools-device-file/variants")
 for id in range(0,len(packageNode.getChildren())):
