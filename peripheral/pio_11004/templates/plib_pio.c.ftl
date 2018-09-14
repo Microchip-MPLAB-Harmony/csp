@@ -43,7 +43,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "plib_pio.h"
 
-<#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_LAT_LOW PIO_OD PIO_PU PIO_PD PIO_PDR PIO_ABCD1
+<#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_OD PIO_PUER PIO_PUDR PIO_PDEN PIO_PDDR PIO_PDR PIO_ABCD1
                        PIO_ABCD2 PIO_INT_TYPE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INTERRUPT PIO_IFER PIO_IFSCER PIO_SCDR>
     <#lt>    /************************ PIO ${PIO_PORT} Initialization ************************/
     <#if (PIO_ABCD1 != "0" ) || (PIO_ABCD2 != "0")>
@@ -60,34 +60,25 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = 0x${PIO_OD};
     </#if>
     <#lt>    /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
-    <#if PIO_PU != "0">
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PU};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = 0x${PIO_PU};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = 0x${PIO_PU};
-    <#else>
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PU};
+    <#if PIO_PUER != "0">
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = 0x${PIO_PUER};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = 0x${PIO_PDDR};
+    </#if>  
+   
+    <#if PIO_PDEN != "0">
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = 0x${PIO_PDEN};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = 0x${PIO_PUDR};
     </#if>
-    <#lt>    /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
-    <#if PIO_PD != "0">
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PD};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = 0x${PIO_PD};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = 0x${PIO_PD};
-    <#else>
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PD};
-    </#if>
+    
     <#lt>    /* PORT${PIO_PORT} Output Write Enable */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
     <#if PIO_DIR != "0">
+        <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR};
         <#if PIO_LAT_HIGH != "0">
             <#lt>    /* PORT${PIO_PORT} Initial state High */
             <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SODR = 0x${PIO_LAT_HIGH};
         </#if>
-        <#if PIO_LAT_LOW != "0">
-            <#lt>    /* PORT${PIO_PORT} Initial state Low */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_CODR = 0x${PIO_LAT_LOW};
-        </#if>
-        <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR};
     </#if>
     <#if PIO_INTERRUPT == true>
         <#if PIO_INT_TYPE != "0">
@@ -105,11 +96,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
             <#lt>    /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
             <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = 0x${PIO_INT_RE_HL};
         </#if>
-        <#lt>    /* PORT${PIO_PORT} Interrupt Status Clear */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ISR;
-        <#lt>    /* PORT${PIO_PORT} system level interrupt will be enabled by NVIC Manager */
-        <#lt>    /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
-        <#lt>       by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
     </#if>
     <#if PIO_IFER != "0">
         <#lt>    /* PORT${PIO_PORT} Glitch/Debounce Filter Enable */
@@ -164,10 +150,11 @@ void PIO_Initialize ( void )
             PIO_PORT = "A"
             PIO_DIR = PIOA_OER_VALUE
             PIO_LAT_HIGH = PIOA_SODR_VALUE
-            PIO_LAT_LOW = PIOA_CODR_VALUE
             PIO_OD = PIOA_MDER_VALUE
-            PIO_PU = PIOA_PUER_VALUE
-            PIO_PD = PIOA_PPDEN_VALUE
+            PIO_PUER = PIOA_PUER_VALUE
+            PIO_PUDR = PIOA_PUDR_VALUE
+            PIO_PDEN = PIOA_PPDEN_VALUE
+            PIO_PDDR = PIOA_PPDDR_VALUE
             PIO_PDR = PIOA_PDR_VALUE
             PIO_ABCD1 = PIOA_ABCDSR1_VALUE
             PIO_ABCD2 = PIOA_ABCDSR2_VALUE
@@ -184,10 +171,11 @@ void PIO_Initialize ( void )
             PIO_PORT = "B"
             PIO_DIR = PIOB_OER_VALUE
             PIO_LAT_HIGH = PIOB_SODR_VALUE
-            PIO_LAT_LOW = PIOB_CODR_VALUE
             PIO_OD = PIOB_MDER_VALUE
-            PIO_PU = PIOB_PUER_VALUE
-            PIO_PD = PIOB_PPDEN_VALUE
+            PIO_PUER = PIOB_PUER_VALUE
+            PIO_PUDR = PIOB_PUDR_VALUE
+            PIO_PDEN = PIOB_PPDEN_VALUE
+            PIO_PDDR = PIOB_PPDDR_VALUE
             PIO_PDR = PIOB_PDR_VALUE
             PIO_ABCD1 = PIOB_ABCDSR1_VALUE
             PIO_ABCD2 = PIOB_ABCDSR2_VALUE
@@ -205,10 +193,11 @@ void PIO_Initialize ( void )
             PIO_PORT = "C"
             PIO_DIR = PIOC_OER_VALUE
             PIO_LAT_HIGH = PIOC_SODR_VALUE
-            PIO_LAT_LOW = PIOC_CODR_VALUE
             PIO_OD = PIOC_MDER_VALUE
-            PIO_PU = PIOC_PUER_VALUE
-            PIO_PD = PIOC_PPDEN_VALUE
+            PIO_PUER = PIOC_PUER_VALUE
+            PIO_PUDR = PIOC_PUDR_VALUE
+            PIO_PDEN = PIOC_PPDEN_VALUE
+            PIO_PDDR = PIOC_PPDDR_VALUE
             PIO_PDR = PIOC_PDR_VALUE
             PIO_ABCD1 = PIOC_ABCDSR1_VALUE
             PIO_ABCD2 = PIOC_ABCDSR2_VALUE
@@ -226,10 +215,11 @@ void PIO_Initialize ( void )
             PIO_PORT = "D"
             PIO_DIR = PIOD_OER_VALUE
             PIO_LAT_HIGH = PIOD_SODR_VALUE
-            PIO_LAT_LOW = PIOD_CODR_VALUE
             PIO_OD = PIOD_MDER_VALUE
-            PIO_PU = PIOD_PUER_VALUE
-            PIO_PD = PIOD_PPDEN_VALUE
+            PIO_PUER = PIOD_PUER_VALUE
+            PIO_PUDR = PIOD_PUDR_VALUE
+            PIO_PDEN = PIOD_PPDEN_VALUE
+            PIO_PDDR = PIOD_PPDDR_VALUE
             PIO_PDR = PIOD_PDR_VALUE
             PIO_ABCD1 = PIOD_ABCDSR1_VALUE
             PIO_ABCD2 = PIOD_ABCDSR2_VALUE
@@ -247,10 +237,11 @@ void PIO_Initialize ( void )
             PIO_PORT = "E"
             PIO_DIR = PIOE_OER_VALUE
             PIO_LAT_HIGH = PIOE_SODR_VALUE
-            PIO_LAT_LOW = PIOE_CODR_VALUE
             PIO_OD = PIOE_MDER_VALUE
-            PIO_PU = PIOE_PUER_VALUE
-            PIO_PD = PIOE_PPDEN_VALUE
+            PIO_PUER = PIOE_PUER_VALUE
+            PIO_PUDR = PIOE_PUDR_VALUE
+            PIO_PDEN = PIOE_PPDEN_VALUE
+            PIO_PDDR = PIOE_PPDDR_VALUE
             PIO_PDR = PIOE_PDR_VALUE
             PIO_ABCD1 = PIOE_ABCDSR1_VALUE
             PIO_ABCD2 = PIOE_ABCDSR2_VALUE

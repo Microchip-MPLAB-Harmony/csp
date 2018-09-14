@@ -54,7 +54,6 @@ def NVICControl(pioNVIC, event):
 
 def pinLatchCal(pin, event):
     global pioSym_PIO_SODR
-    global pioSym_PIO_CODR
     global pinDirection
     global pinChannel
     global pinBitPosition
@@ -65,27 +64,20 @@ def pinLatchCal(pin, event):
         channelIndex = pioSymChannel.index(portChannel)
         bit_pos = pinBitPosition[pin_num-1].getValue()
         SODR_Value = pioSym_PIO_SODR[channelIndex].getValue()
-        CODR_Value = pioSym_PIO_CODR[channelIndex].getValue()
 
         if pinDirection[pin_num-1].getValue() == "Out":
             if event["value"] == "High":
                 SODR_Value |= 1 << bit_pos
-                CODR_Value &= ~(1 << bit_pos)
             else:
-            #if event["value"] == "":
-                CODR_Value |= 1 << bit_pos
                 SODR_Value &= ~(1 << bit_pos)
         else:
-            CODR_Value &= ~(1 << bit_pos)
             SODR_Value &= ~(1 << bit_pos)
 
         pioSym_PIO_SODR[channelIndex].setValue(SODR_Value, 2)
-        pioSym_PIO_CODR[channelIndex].setValue(CODR_Value, 2)
 
 def pinDirCal(pin, event):
     global pioSym_PIO_OER
     global pioSym_PIO_SODR
-    global pioSym_PIO_CODR
     global pinChannel
     global pinBitPosition
     global pinLatch
@@ -98,22 +90,18 @@ def pinDirCal(pin, event):
         bit_pos = pinBitPosition[pin_num-1].getValue()
         OER_Value = pioSym_PIO_OER[channelIndex].getValue()
         SODR_Value = pioSym_PIO_SODR[channelIndex].getValue()
-        CODR_Value = pioSym_PIO_CODR[channelIndex].getValue()
 
         if event["value"] == "Out":
             OER_Value |= 1 << bit_pos
-            CODR_Value |= 1 << bit_pos
             SODR_Value &= ~(1 << bit_pos)
         else:
         # if (event["value"] == ""):
             OER_Value &= ~(1 << bit_pos)
-            CODR_Value &= ~(1 << bit_pos)
             SODR_Value &= ~(1 << bit_pos)
 
 
         pioSym_PIO_OER[channelIndex].setValue(OER_Value, 2)
         pioSym_PIO_SODR[channelIndex].setValue(SODR_Value, 2)
-        pioSym_PIO_CODR[channelIndex].setValue(CODR_Value, 2)
 
 def pinFunctionCal(pType, pFunction):
     global pioSym_PIO_PDR
@@ -248,6 +236,7 @@ def pinOpenDrainCal(pin, event):
 
 def pinPullUpCal(pin, event):
     global pioSym_PIO_PUER
+    global pioSym_PIO_PPDDR
     global pinChannel
     global pinBitPosition
     pin_num = int((pin.getID()).split("_")[1])
@@ -265,9 +254,11 @@ def pinPullUpCal(pin, event):
             PUER_Value &= ~(1 << bit_pos)
 
         pioSym_PIO_PUER[channelIndex].setValue(PUER_Value, 2)
+        pioSym_PIO_PPDDR[channelIndex].setValue((PUER_Value), 2)
 
 def pinPullDownCal(pin, event):
     global pioSym_PIO_PPDEN
+    global pioSym_PIO_PUDR
     global pinChannel
     global pinBitPosition
     pin_num = int((pin.getID()).split("_")[1])
@@ -281,10 +272,10 @@ def pinPullDownCal(pin, event):
         if event["value"] == "True":
             PPDEN_Value |= 1 << bit_pos
         else:
-        #if (event["value"] == ""):
             PPDEN_Value &= ~(1 << bit_pos)
-
+                
         pioSym_PIO_PPDEN[channelIndex].setValue(PPDEN_Value, 2)
+        pioSym_PIO_PUDR[channelIndex].setValue((PPDEN_Value), 2)
 
 def pinFilterCal(pin, event):
     global pioSym_PIO_IFER
@@ -563,12 +554,14 @@ global pioSym_PIO_PUER
 pioSym_PIO_PUER = []
 global pioSym_PIO_PPDEN
 pioSym_PIO_PPDEN = []
+global pioSym_PIO_PUDR
+pioSym_PIO_PUDR = []
+global pioSym_PIO_PPDDR
+pioSym_PIO_PPDDR = []
 global pioSym_PIO_MDER
 pioSym_PIO_MDER = []
 global pioSym_PIO_SODR
 pioSym_PIO_SODR = []
-global pioSym_PIO_CODR
-pioSym_PIO_CODR = []
 global pioMatrixSym_CCFG_SYSIO
 global pioSym_PIO_IFSCER
 pioSym_PIO_IFSCER = []
@@ -652,12 +645,6 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSym_PIO_SODR[portNumber].setDefaultValue(0x00000000)
     pioSym_PIO_SODR[portNumber].setReadOnly(True)
 
-    pioSym_PIO_CODR.append(portNumber)
-    pioSym_PIO_CODR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_CODR_VALUE", port[portNumber])
-    pioSym_PIO_CODR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_CODR")
-    pioSym_PIO_CODR[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_CODR[portNumber].setReadOnly(True)
-
     pioSym_PIO_AIMER.append(portNumber)
     pioSym_PIO_AIMER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_AIMER_VALUE", port[portNumber])
     pioSym_PIO_AIMER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_AIMER")
@@ -682,11 +669,23 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSym_PIO_PUER[portNumber].setDefaultValue(0x00000000)
     pioSym_PIO_PUER[portNumber].setReadOnly(True)
 
+    pioSym_PIO_PUDR.append(portNumber)
+    pioSym_PIO_PUDR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PUDR_VALUE", port[portNumber])
+    pioSym_PIO_PUDR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PUDR")
+    pioSym_PIO_PUDR[portNumber].setDefaultValue(0x00000000)
+    pioSym_PIO_PUDR[portNumber].setReadOnly(True)
+
     pioSym_PIO_PPDEN.append(portNumber)
     pioSym_PIO_PPDEN[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN_VALUE", port[portNumber])
     pioSym_PIO_PPDEN[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN")
     pioSym_PIO_PPDEN[portNumber].setDefaultValue(0x00000000)
     pioSym_PIO_PPDEN[portNumber].setReadOnly(True)
+    
+    pioSym_PIO_PPDDR.append(portNumber)
+    pioSym_PIO_PPDDR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PPDDR_VALUE", port[portNumber])
+    pioSym_PIO_PPDDR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PPDDR")
+    pioSym_PIO_PPDDR[portNumber].setDefaultValue(0x00000000)
+    pioSym_PIO_PPDDR[portNumber].setReadOnly(True)
 
     pioSym_PIO_MDER.append(portNumber)
     pioSym_PIO_MDER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_MDER_VALUE", port[portNumber])
