@@ -149,7 +149,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
                     <#if  gpioName?counter ==  gpioPinPos?counter>
 
                         <#lt>/*** Macros for ${gpioName} pin ***/
-                        <#lt>#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_MSKR = (1<<${gpioPinPos}))
+                        <#lt>#define ${gpioName}_Set()               (PIO${gpioChannel}_REGS->PIO_SODR = (1<<${gpioPinPos}))
                         <#lt>#define ${gpioName}_Clear()             (PIO${gpioChannel}_REGS->PIO_CODR = (1<<${gpioPinPos}))
                         <#lt>#define ${gpioName}_Toggle()            do {\
                         <#lt>                                            PIO${gpioChannel}_REGS->PIO_MSKR = (1<<${gpioPinPos}); \
