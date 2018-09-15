@@ -36,9 +36,9 @@ def updateRTCInterruptStatus(symbol, event):
         setRTCInterruptData(event["value"])
 
 def updateRTCInterruptWarringStatus(symbol, event):
-    rtcMode0 = (rtcSymSubMenu.getValue() == 0) and (rtcSymMode0_INTENSET.getValue() == True)
-    rtcMode1 = (rtcSymSubMenu.getValue() == 1) and (rtcSymMode1_INTENSET.getValue() == True)
-    rtcMode2 = (rtcSymSubMenu.getValue() == 2) and (rtcSymMode2_INTENSET.getValue() == True)
+    rtcMode0 = (rtcModeSelection_Sym.getValue() == 0) and (rtcSymMode0_INTENSET.getValue() == True)
+    rtcMode1 = (rtcModeSelection_Sym.getValue() == 1) and (rtcSymMode1_INTENSET.getValue() == True)
+    rtcMode2 = (rtcModeSelection_Sym.getValue() == 2) and (rtcSymMode2_INTENSET.getValue() == True)
 
     if rtcMode0 == True or rtcMode1 == True or rtcMode2 == True:
         symbol.setVisible(event["value"])
@@ -56,7 +56,7 @@ global rtcMode1EvctrlMap
 global rtcMode2EvctrlMap
 
 def Mode0Visible(symbol, event):
-    if(event["value"] == 0):
+    if event["value"] == 0:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -67,7 +67,7 @@ def rtcMode0Evctrl(symbol, event):
     print mask
     if event["value"]:
         value = symbol.getValue() | int(mask, 16)
-    else :
+    else:
         value = symbol.getValue() & ~(int(mask, 16))
 
     symbol.setValue(value, 1)
@@ -75,7 +75,7 @@ def rtcMode0Evctrl(symbol, event):
 #################################### MODE1 #####################################
 
 def Mode1Visible(symbol, event):
-    if(event["value"] == 1):
+    if event["value"] == 1:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -86,7 +86,7 @@ def rtcMode1Evctrl(symbol, event):
     print mask
     if event["value"]:
         value = symbol.getValue() | int(mask, 16)
-    else :
+    else:
         value = symbol.getValue() & ~(int(mask, 16))
 
     symbol.setValue(value, 1)
@@ -94,7 +94,7 @@ def rtcMode1Evctrl(symbol, event):
 #################################### MODE2 #####################################
 
 def Mode2Visible(symbol, event):
-    if(event["value"] == 2):
+    if event["value"] == 2:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -105,7 +105,7 @@ def rtcMode2Evctrl(symbol, event):
     print mask
     if event["value"]:
         value = symbol.getValue() | int(mask, 16)
-    else :
+    else:
         value = symbol.getValue() & ~(int(mask, 16))
 
     symbol.setValue(value, 1)
@@ -115,12 +115,71 @@ def rtcMode2Evctrl(symbol, event):
 #Update Code Generation Property
 def updateCodeGenerationProperty(symbol, event):
     component = symbol.getComponent()
-    if(event["value"] == 2):
+    if event["value"] == 2:
         component.getSymbolByID("RTC_CLOCK_SOURCE").setEnabled(True)
         component.getSymbolByID("RTC_TIMER_SOURCE").setEnabled(False)
     else:
         component.getSymbolByID("RTC_CLOCK_SOURCE").setEnabled(False)
         component.getSymbolByID("RTC_TIMER_SOURCE").setEnabled(True)
+
+def onCapabilityConnected(connectionInfo):
+    global rtcModeSelection_Sym
+
+    remoteComponent = connectionInfo["remoteComponent"]
+    if (remoteComponent.getID() == "sys_time"):
+        rtcModeSelection_Sym.setSelectedKey("MODE0",1)
+
+def sysTime_modeSelection(symbol,event):
+    global timerStartApiName_Sym
+    global timeStopApiName_Sym
+    global compareSetApiName_Sym
+    global periodSetApiName_Sym
+    global counterApiName_Sym
+    global frequencyGetApiName_Sym
+    global callbackApiName_Sym
+    global irqEnumName_Sym
+    global timerWidth_Sym
+    global timerPeriodMax_Sym
+    global rtcInstanceIndex
+
+    symObj = event["symbol"]
+    rtcMode = symObj.getSelectedKey()
+
+    irqEnumName = "RTC_IRQn"
+
+    if rtcMode == "MODE0":
+        #32-bit counter
+        periodSetApiName = ""
+        periodSetApiName_Sym.setValue(periodSetApiName,2)
+        timerWidth_Sym.setValue(32,2)
+        timerPeriodMax_Sym.setValue("0xFFFFFFFF",2)
+        timerStartApiName = "RTC" + str(rtcInstanceIndex) + "_Timer32Start"
+        timeStopApiName = "RTC" + str(rtcInstanceIndex) + "_Timer32Stop"
+        compareSetApiName = "RTC" + str(rtcInstanceIndex) + "_Timer32CompareSet"
+        counterGetApiName = "RTC" + str(rtcInstanceIndex) + "_Timer32CounterGet"
+        frequencyGetApiName = "RTC" + str(rtcInstanceIndex) + "_Timer32FrequencyGet"
+        callbackApiName = "RTC" + str(rtcInstanceIndex) + "_Timer32CallbackRegister"
+    elif rtcMode == "MODE1":
+        #16-bit counter
+        periodSetApiName = "RTC" + str(rtcInstanceIndex) + "_Timer16PeriodSet"
+        periodSetApiName_Sym.setValue(periodSetApiName,2)
+        timerWidth_Sym.setValue(16,2)
+        timerPeriodMax_Sym.setValue("0xFFFF",2)
+        timerStartApiName = "RTC" + str(rtcInstanceIndex) + "_Timer16Start"
+        timeStopApiName = "RTC" + str(rtcInstanceIndex) + "_Timer16Stop"
+        compareSetApiName = "RTC" + str(rtcInstanceIndex) + "_Timer16Compare0Set"
+        counterGetApiName = "RTC" + str(rtcInstanceIndex) + "_Timer16CounterGet"
+        frequencyGetApiName = "RTC" + str(rtcInstanceIndex) + "_Timer16FrequencyGet"
+        callbackApiName = "RTC" + str(rtcInstanceIndex) + "_Timer16CallbackRegister"
+
+    if rtcMode != "MODE2":
+        timerStartApiName_Sym.setValue(timerStartApiName,2)
+        timeStopApiName_Sym.setValue(timeStopApiName,2)
+        compareSetApiName_Sym.setValue(compareSetApiName,2)
+        counterApiName_Sym.setValue(counterGetApiName,2)
+        frequencyGetApiName_Sym.setValue(frequencyGetApiName,2)
+        callbackApiName_Sym.setValue(callbackApiName,2)
+        irqEnumName_Sym.setValue(irqEnumName,2)
 
 ################################################################################
 ########                   RTC DATABASE COMPONENTS                      ########
@@ -132,10 +191,22 @@ def instantiateComponent(rtcComponent):
     global InterruptHandler
     global InterruptHandlerLock
     global rtcInstanceIndex
+    global timerStartApiName_Sym
+    global timeStopApiName_Sym
+    global compareSetApiName_Sym
+    global periodSetApiName_Sym
+    global counterApiName_Sym
+    global frequencyGetApiName_Sym
+    global callbackApiName_Sym
+    global irqEnumName_Sym
+    global timerWidth_Sym
+    global timerPeriodMax_Sym
+    global rtcInstanceIndex
+    global rtcModeSelection_Sym
     global rtcMode0EvctrlMap
     global rtcMode1EvctrlMap
     global rtcMode2EvctrlMap
-    global rtcSymSubMenu
+    global rtcModeSelection_Sym
     global rtcSymMode0_INTENSET
     global rtcSymMode1_INTENSET
     global rtcSymMode2_INTENSET
@@ -162,18 +233,56 @@ def instantiateComponent(rtcComponent):
     Database.setSymbolValue("core", "RTC_CLOCK_ENABLE", True, 2)
 
     #Frequency Correction
+    sysTimeTrigger_Sym = rtcComponent.createBooleanSymbol("SYS_TIME", None)
+    sysTimeTrigger_Sym.setVisible(False)
+    sysTimeTrigger_Sym.setDependencies(sysTime_modeSelection, ["RTC_MODULE_SELECTION"])
+
+#------------------------------------------------------------
+# Common Symbols needed for SYS_TIME usage
+#------------------------------------------------------------
+    timerWidth_Sym = rtcComponent.createIntegerSymbol("TIMER_WIDTH", None)
+    timerWidth_Sym.setVisible(False)
+
+    timerPeriodMax_Sym = rtcComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
+    timerPeriodMax_Sym.setVisible(False)
+
+    timerStartApiName_Sym = rtcComponent.createStringSymbol("TIMER_START_API_NAME", None)
+    timerStartApiName_Sym.setVisible(False)
+
+    timeStopApiName_Sym = rtcComponent.createStringSymbol("TIMER_STOP_API_NAME", None)
+    timeStopApiName_Sym.setVisible(False)
+
+    compareSetApiName_Sym = rtcComponent.createStringSymbol("COMPARE_SET_API_NAME", None)
+    compareSetApiName_Sym.setVisible(False)
+
+    periodSetApiName_Sym = rtcComponent.createStringSymbol("PERIOD_SET_API_NAME", None)
+    periodSetApiName_Sym.setVisible(False)
+
+    counterApiName_Sym = rtcComponent.createStringSymbol("COUNTER_GET_API_NAME", None)
+    counterApiName_Sym.setVisible(False)
+
+    frequencyGetApiName_Sym = rtcComponent.createStringSymbol("FREQUENCY_GET_API_NAME", None)
+    frequencyGetApiName_Sym.setVisible(False)
+
+    callbackApiName_Sym = rtcComponent.createStringSymbol("CALLBACK_API_NAME", None)
+    callbackApiName_Sym.setVisible(False)
+
+    irqEnumName_Sym = rtcComponent.createStringSymbol("IRQ_ENUM_NAME", None)
+    irqEnumName_Sym.setVisible(False)
+#------------------------------------------------------------
+    #Frequency Correction
     rtcSymMode0_FREQCORR = rtcComponent.createBooleanSymbol("RTC_FREQCORR",rtcSym_Menu)
     rtcSymMode0_FREQCORR.setLabel("Generate Frequency Correction API")
 
     #Sub Menu - RTC Modes: RTC_MODE0, RTC_MODE1, RTC_MODE2
-    rtcSymSubMenu = rtcComponent.createKeyValueSetSymbol("RTC_MODULE_SELECTION", rtcSym_Menu)
-    rtcSymSubMenu.setLabel("RTC Operation Mode")
+    rtcModeSelection_Sym = rtcComponent.createKeyValueSetSymbol("RTC_MODULE_SELECTION", rtcSym_Menu)
+    rtcModeSelection_Sym.setLabel("RTC Operation Mode")
     for index in range(0, len(rtcValues)):
         if rtcValues[index].getAttribute("qualifier") != None:
-            rtcSymSubMenu.addKey(rtcValues[index].getAttribute("name"),rtcValues[index].getAttribute("value"),rtcValues[index].getAttribute("caption"))
-    rtcSymSubMenu.setDefaultValue(0)
-    rtcSymSubMenu.setOutputMode("Key")
-    rtcSymSubMenu.setDisplayMode("Description")
+            rtcModeSelection_Sym.addKey(rtcValues[index].getAttribute("name"),rtcValues[index].getAttribute("value"),rtcValues[index].getAttribute("caption"))
+    rtcModeSelection_Sym.setDefaultValue(0)
+    rtcModeSelection_Sym.setOutputMode("Key")
+    rtcModeSelection_Sym.setDisplayMode("Description")
 
     #RTC Instance Index
     rtcSym_INDEX = rtcComponent.createIntegerSymbol("RTC_INDEX", rtcSym_Menu)
@@ -184,13 +293,14 @@ def instantiateComponent(rtcComponent):
 
 #################################### MODE0 #####################################
 
-    rtcSymMode0Menu = rtcComponent.createMenuSymbol("RTC_MODE0_MENU", rtcSymSubMenu)
+    rtcSymMode0Menu = rtcComponent.createMenuSymbol("RTC_MODE0_MENU", rtcModeSelection_Sym)
     rtcSymMode0Menu.setLabel("RTC MODE 0 Configuration")
     rtcSymMode0Menu.setDependencies(Mode0Visible,["RTC_MODULE_SELECTION"])
 
     #Interrupt Enable Set
     rtcSymMode0_INTENSET = rtcComponent.createBooleanSymbol("RTC_MODE0_INTERRUPT", rtcSymMode0Menu)
     rtcSymMode0_INTENSET.setLabel("Enable Interrupts?")
+    rtcSymMode0_INTENSET.setDefaultValue(True)
 
     #Prescaler
     rtcSymMode0_CTRLA_PRESCALER = rtcComponent.createKeyValueSetSymbol("RTC_MODE0_PRESCALER", rtcSymMode0Menu)
@@ -245,8 +355,7 @@ def instantiateComponent(rtcComponent):
     rtcSymMode0_PERIN.setDependencies(rtcMode0Evctrl, rtcMode0EvctrlDep)
 
 #################################### MODE1 #####################################
-
-    rtcSymMode1Menu = rtcComponent.createMenuSymbol("RTC_MODE1_MENU", rtcSymSubMenu)
+    rtcSymMode1Menu = rtcComponent.createMenuSymbol("RTC_MODE1_MENU", rtcModeSelection_Sym)
     rtcSymMode1Menu.setLabel("RTC MODE 1 Configuration")
     rtcSymMode1Menu.setVisible(False)
     rtcSymMode1Menu.setDependencies(Mode1Visible,["RTC_MODULE_SELECTION"])
@@ -254,6 +363,7 @@ def instantiateComponent(rtcComponent):
     #Configure the RTC Interrupts
     rtcSymMode1_INTENSET = rtcComponent.createBooleanSymbol("RTC_MODE1_INTERRUPT", rtcSymMode1Menu)
     rtcSymMode1_INTENSET.setLabel("Enable Interrupts?")
+    rtcSymMode1_INTENSET.setDefaultValue(True)
 
     #Prescaler
     rtcSymMode1_CTRLA_PRESCALER = rtcComponent.createKeyValueSetSymbol("RTC_MODE1_PRESCALER", rtcSymMode1Menu)
@@ -318,8 +428,7 @@ def instantiateComponent(rtcComponent):
     rtcSymMode1_PERIN.setDependencies(rtcMode1Evctrl, rtcMode1EvctrlDep)
 
 #################################### MODE2 #####################################
-
-    rtcSymMode2Menu = rtcComponent.createMenuSymbol("RTC_MODE2_MENU", rtcSymSubMenu)
+    rtcSymMode2Menu = rtcComponent.createMenuSymbol("RTC_MODE2_MENU", rtcModeSelection_Sym)
     rtcSymMode2Menu.setLabel("RTC MODE 2 Configuration")
     rtcSymMode2Menu.setVisible(False)
     rtcSymMode2Menu.setDependencies(Mode2Visible,["RTC_MODULE_SELECTION"])
