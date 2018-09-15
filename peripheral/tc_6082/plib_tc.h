@@ -91,6 +91,27 @@ extern "C" {
     interface and should be considered part it.
 */
 
+/* Interrupt source mask for Timer mode
+
+   Summary:
+    Identifies channel interrupt source mask
+
+   Description:
+    This enumeration identifies TC timer mode interrupt source mask.
+
+   Remarks:
+    None.
+*/
+typedef enum
+{
+    TC_TIMER_NONE = 0U,
+    TC_TIMER_COMPARE_MATCH = TC_SR_CPAS_Msk,
+    TC_TIMER_PERIOD_MATCH = TC_SR_CPCS_Msk,
+    TC_TIMER_STATUS_MSK = TC_SR_CPAS_Msk | TC_SR_CPCS_Msk
+}TC_TIMER_STATUS;
+
+
+
 /* Interrupt source mask for compare mode
 
    Summary:
@@ -158,7 +179,50 @@ typedef enum
 
 // *****************************************************************************
 
-/* Callback Function Pointer
+/* Callback Function Pointer for Timer mode
+
+   Summary:
+    Defines the function pointer data type and function signature for the tc
+    channel callback function.
+
+   Description:
+    This data type defines the function pointer and function signature for the
+    TC channel callback function. The library will call back the client's
+    function with this signature from the interrupt routine.
+
+   Function:
+    typedef void (*TC_TIMER_CALLBACK) (TC_TIMER_STATUS status, uintptr_t context);
+
+   Precondition:
+    TCx_CHy_Initialize must have been called for the given TC channel
+    instance and TCx_CHy_TimerCallbackRegister must have been called to register the
+    function to be called.
+
+   Parameters:
+    status - Event status in the timer mode
+    context  - Allows the caller to provide a context value (usually a pointer
+               to the callers context for multi-instance clients).
+
+   Returns:
+    None.
+
+   Example:
+
+    <code>
+    void TC_CallbackFn (TC_TIMER_STATUS status, uintptr_t context );
+
+    TC0_CH1_TimerCallbackRegister(TC_CallbackFn, NULL);
+    </code>
+
+    Remarks:
+     None.
+*/
+
+typedef void (*TC_TIMER_CALLBACK) (TC_TIMER_STATUS status, uintptr_t context);
+
+// *****************************************************************************
+
+/* Callback Function Pointer for Compare mode
 
    Summary:
     Defines the function pointer data type and function signature for the tc
@@ -170,14 +234,15 @@ typedef enum
     function with this signature from the interrupt routine.
 
    Function:
-    void (*TC_CALLBACK) ( uintptr_t context )
+    typedef void (*TC_COMPARE_CALLBACK) (TC_COMPARE_STATUS status, uintptr_t context);
 
    Precondition:
-    TCx_Initialize must have been called for the given TC channel
-    instance and TCx_CallbackRegister must have been called to register the
+    TCx_CHy_Initialize must have been called for the given TC channel
+    instance and TCx_CHy_CompareCallbackRegister must have been called to register the
     function to be called.
 
    Parameters:
+    status - Event status in compare mode
     context  - Allows the caller to provide a context value (usually a pointer
                to the callers context for multi-instance clients).
 
@@ -187,20 +252,103 @@ typedef enum
    Example:
 
     <code>
-    void TC_CallbackFn ( uintptr_t context );
+    void TC_CallbackFn (TC_COMPARE_STATUS status, uintptr_t context );
 
-    TC0_CH1_TimerCallbackRegister(TC_CallbackFn, NULL);
+    TC0_CH1_CompareCallbackRegister(TC_CallbackFn, NULL);
     </code>
 
     Remarks:
-            Interrupt is different in each mode of TC peripheral.
-            e.g. In timer mode and compare mode, period interrupt will be
-            enabled and registered function will be called back. In Capture
-            mode, registered function will be called from load event interrupt
-            routine.
+     None.
 */
 
-typedef void (*TC_CALLBACK) ( uintptr_t context);
+typedef void (*TC_COMPARE_CALLBACK) (TC_COMPARE_STATUS status, uintptr_t context);
+
+// *****************************************************************************
+
+/* Callback Function Pointer for Capture mode
+
+   Summary:
+    Defines the function pointer data type and function signature for the tc
+    channel callback function.
+
+   Description:
+    This data type defines the function pointer and function signature for the
+    tc channel callback function.  The library will call back the client's
+    function with this signature from the interrupt routine.
+
+   Function:
+    typedef void (*TC_CAPTURE_CALLBACK) (TC_CAPTURE_STATUS status, uintptr_t context);
+
+   Precondition:
+    TCx_CHy_Initialize must have been called for the given TC channel
+    instance and TCx_CHy_CaptureCallbackRegister must have been called to register the
+    function to be called.
+
+   Parameters:
+    status - Event status in capture mode
+    context  - Allows the caller to provide a context value (usually a pointer
+               to the callers context for multi-instance clients).
+
+   Returns:
+    None.
+
+   Example:
+
+    <code>
+    void TC_CallbackFn (TC_CAPTURE_STATUS status, uintptr_t context );
+
+    TC0_CH1_CaptureCallbackRegister(TC_CallbackFn, NULL);
+    </code>
+
+    Remarks:
+     None.
+*/
+
+typedef void (*TC_CAPTURE_CALLBACK) (TC_CAPTURE_STATUS status, uintptr_t context);
+
+// *****************************************************************************
+
+/* Callback Function Pointer for Quadrature mode
+
+   Summary:
+    Defines the function pointer data type and function signature for the tc
+    channel callback function.
+
+   Description:
+    This data type defines the function pointer and function signature for the
+    tc channel callback function.  The library will call back the client's
+    function with this signature from the interrupt routine.
+
+   Function:
+    typedef void (*TC_QUADRATURE_CALLBACK) (TC_QUADRATURE_STATUS status, uintptr_t context);
+
+   Precondition:
+    TCx_Initialize must have been called for the given TC channel
+    instance and TCx_QuadratureCallbackRegister must have been called to register the
+    function to be called.
+
+   Parameters:
+    status - Event status in quadrature mode
+    context  - Allows the caller to provide a context value (usually a pointer
+               to the callers context for multi-instance clients).
+
+   Returns:
+    None.
+
+   Example:
+
+    <code>
+    void TC_CallbackFn (TC_QUADRATURE_STATUS status, uintptr_t context );
+
+    TC0_QuadratureCallbackRegister(TC_CallbackFn, NULL);
+    </code>
+
+    Remarks:
+     None.
+*/
+typedef void (*TC_QUADRATURE_CALLBACK) (TC_QUADRATURE_STATUS status, uintptr_t context);
+
+
 // *****************************************************************************
 
 /* Callback structure
@@ -216,9 +364,27 @@ typedef void (*TC_CALLBACK) ( uintptr_t context);
 */
 typedef struct
 {
-    TC_CALLBACK callback_fn;
+    TC_TIMER_CALLBACK callback_fn;
     uintptr_t context;
-}TC_CALLBACK_OBJECT;
+}TC_TIMER_CALLBACK_OBJECT;
+
+typedef struct
+{
+    TC_COMPARE_CALLBACK callback_fn;
+    uintptr_t context;
+}TC_COMPARE_CALLBACK_OBJECT;
+
+typedef struct
+{
+    TC_CAPTURE_CALLBACK callback_fn;
+    uintptr_t context;
+}TC_CAPTURE_CALLBACK_OBJECT;
+
+typedef struct
+{
+    TC_QUADRATURE_CALLBACK callback_fn;
+    uintptr_t context;
+}TC_QUADRATURE_CALLBACK_OBJECT;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -508,7 +674,7 @@ bool TCx_CHy_TimerPeriodHasExpired(void);
 
 // *****************************************************************************
 /* Function:
-    void TCx_CHy_TimerCallbackRegister ( TC_CALLBACK callback, uintptr_t context );
+    void TCx_CHy_TimerCallbackRegister ( TC_TIMER_CALLBACK callback, uintptr_t context );
 
   Summary:
     Registers the function to be called from interrupt
@@ -530,7 +696,7 @@ bool TCx_CHy_TimerPeriodHasExpired(void);
 
   Example:
     <code>
-    void TC_CallbackFn ( uintptr_t context );
+    void TC_CallbackFn (TC_TIMER_STATUS status, uintptr_t context );
 
     TC0_CH1_TimerInitialize();
     TC0_CH1_TimerCallbackRegistert(TC_CallbackFn, NULL);
@@ -541,7 +707,7 @@ bool TCx_CHy_TimerPeriodHasExpired(void);
     To disable callback function, pass NULL for the callback parameter.
 */
 
-void TCx_CHy_TimerCallbackRegister ( TC_CALLBACK callback, uintptr_t context );
+void TCx_CHy_TimerCallbackRegister ( TC_TIMER_CALLBACK callback, uintptr_t context );
 
 
 // *****************************************************************************
@@ -652,7 +818,7 @@ void TCx_CHy_CaptureStop ( void );
 
 // *****************************************************************************
 /* Function:
-    void TCx_CHy_CaptureCallbackRegister ( TC_CALLBACK callback, uintptr_t context )
+    void TCx_CHy_CaptureCallbackRegister ( TC_CAPTURE_CALLBACK callback, uintptr_t context )
 
 
   Summary:
@@ -676,7 +842,7 @@ void TCx_CHy_CaptureStop ( void );
 
   Example:
     <code>
-    void TC_CallbackFn(uintptr_t context);
+    void TC_CallbackFn(TC_CAPTURE_STATUS status, uintptr_t context);
 
     TC0_CH1_CaptureInitialize();
     TC0_CH1_CaptureCallbackRegister(TC_CallbackFn, NULL);
@@ -688,7 +854,7 @@ void TCx_CHy_CaptureStop ( void );
     To disable callback function, pass NULL for the callback parameter.
 */
 
-void TCx_CHy_CaptureCallbackRegister ( TC_CALLBACK callback, uintptr_t context );
+void TCx_CHy_CaptureCallbackRegister ( TC_CAPTURE_CALLBACK callback, uintptr_t context );
 
 
 // *****************************************************************************
@@ -1022,7 +1188,7 @@ uint32_t TCx_CHy_CompareFrequencyGet ( void );
 
 // *****************************************************************************
 /* Function:
-    void TCx_CHy_CompareCallbackRegister ( TC_CALLBACK callback, uintptr_t context )
+    void TCx_CHy_CompareCallbackRegister ( TC_COMPARE_CALLBACK callback, uintptr_t context )
 
   Summary:
     Registers the function to be called from interrupt.
@@ -1044,7 +1210,7 @@ uint32_t TCx_CHy_CompareFrequencyGet ( void );
 
   Example:
     <code>
-    void TC_CallbackFn(uintptr_t context);
+    void TC_CallbackFn(TC_COMPARE_STATUS status, uintptr_t context);
 
     TC0_CH1_CompareInitialize();
     TC0_CH1_CompareCallbackRegister(TC_CallbackFn, NULL);
@@ -1056,7 +1222,7 @@ uint32_t TCx_CHy_CompareFrequencyGet ( void );
    To disable callback function, pass NULL for the callback parameter.
 */
 
-void TCx_CHy_CompareCallbackRegister ( TC_CALLBACK callback, uintptr_t context );
+void TCx_CHy_CompareCallbackRegister ( TC_COMPARE_CALLBACK callback, uintptr_t context );
 
 
 // *****************************************************************************
@@ -1414,7 +1580,7 @@ TC_QUADRATURE_STATUS TCx_QuadratureStatusGet ( void );
 
 // *****************************************************************************
 /* Function:
-    void TCx_QuadratureCallbackRegister ( TC_CALLBACK callback, uintptr_t context )
+    void TCx_QuadratureCallbackRegister ( TC_QUADRATURE_CALLBACK callback, uintptr_t context )
 
   Summary:
     Registers the function to be called from interrupt.
@@ -1436,7 +1602,7 @@ TC_QUADRATURE_STATUS TCx_QuadratureStatusGet ( void );
 
   Example:
     <code>
-    void TC_CallbackFn(uintptr_t context);
+    void TC_CallbackFn(TC_QUADRATURE_STATUS status, uintptr_t context);
 
     TC0_QuadratureInitialize();
     TC0_QuadratureCallbackRegister(TC_CallbackFn, NULL);
@@ -1448,7 +1614,7 @@ TC_QUADRATURE_STATUS TCx_QuadratureStatusGet ( void );
    To disable callback function, pass NULL for the callback parameter.
 */
 
-void TCx_QuadratureCallbackRegister ( TC_CALLBACK callback, uintptr_t context );
+void TCx_QuadratureCallbackRegister ( TC_QUADRATURE_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

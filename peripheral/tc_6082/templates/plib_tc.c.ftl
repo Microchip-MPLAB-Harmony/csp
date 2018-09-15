@@ -68,11 +68,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     </#if>
     </#compress>
 
-static uint32_t TC${INDEX}_quadratureStatus = 0U; /* saves interrupt status */
 
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
 /* Callback object for channel 0 */
-TC_CALLBACK_OBJECT TC${INDEX}_CallbackObj;
+TC_QUADRATURE_CALLBACK_OBJECT TC${INDEX}_CallbackObj;
 </#if>
 /* Initialize channel in timer mode */
 void TC${INDEX}_QuadratureInitialize (void)
@@ -152,19 +151,9 @@ void TC${INDEX}_QuadratureStop (void)
     </#if>
 }
 
-TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
-{
-    TC_QUADRATURE_STATUS quadrature_status;
-    NVIC_DisableIRQ(TC${INDEX}_CH0_IRQn);
-    quadrature_status = (TC${INDEX}_quadratureStatus | TC${INDEX}_REGS->TC_QISR) & TC_QUADRATURE_STATUS_MSK;
-    TC${INDEX}_quadratureStatus = 0U;
-    NVIC_EnableIRQ(TC${INDEX}_CH0_IRQn);
-    return quadrature_status;
-}
-
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
     <#lt>/* Register callback for quadrature interrupt */
-    <#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_CALLBACK callback, uintptr_t context)
+    <#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_QUADRATURE_CALLBACK callback, uintptr_t context)
     <#lt>{
     <#lt>    TC${INDEX}_CallbackObj.callback_fn = callback;
     <#lt>    TC${INDEX}_CallbackObj.context = context;
@@ -172,13 +161,19 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
 
     <#lt>void TC${INDEX}_CH0_InterruptHandler(void)
     <#lt>{
-    <#lt>    TC${INDEX}_quadratureStatus = TC${INDEX}_REGS->TC_QISR;
+    <#lt>    TC_QUADRATURE_STATUS quadrature_status = TC${INDEX}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK;
     <#lt>    /* Call registered callback function */
     <#lt>    if (TC${INDEX}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        TC${INDEX}_CallbackObj.callback_fn(TC${INDEX}_CallbackObj.context);
+    <#lt>        TC${INDEX}_CallbackObj.callback_fn(quadrature_status, TC${INDEX}_CallbackObj.context);
     <#lt>    }
     <#lt>}
+
+<#else>
+TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
+{
+    return ((TC${INDEX}_REGS->TC_QISR) & TC_QUADRATURE_STATUS_MSK);
+}
 </#if>
 </#if> <#-- QUADRATURE -->
 
@@ -194,6 +189,8 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
 <#assign TC_CMR_CPCSTOP = "TC"+ i +"_CMR_CPCSTOP">
 <#assign TC_TIMER_PERIOD_COUNT = "TC"+ i +"_TIMER_PERIOD_COUNT">
 <#assign TC_TIMER_IER_CPCS = "TC"+i+"_IER_CPCS">
+<#assign TC_TIMER_IER_CPAS = "TC"+i+"_IER_CPAS">
+<#assign TC_CH_CLOCK_FREQ = "TC"+i+"_CLOCK_FREQ">
 
 <#assign TC_CMR_LDRA = "TC"+i+"_CMR_LDRA">
 <#assign TC_CMR_LDRB = "TC"+i+"_CMR_LDRB">
@@ -224,11 +221,9 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
 <#if .vars[TC_CH_ENABLE] == true>
 <#if .vars[TC_CH_OPERATINGMODE] == "TIMER">
 
-static uint32_t TC${INDEX}_CH${CH_NUM}_TimerStatus;  /* saves interrupt status */
-
-<#if .vars[TC_TIMER_IER_CPCS] == true>
+<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Callback object for channel ${CH_NUM} */
-TC_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
+TC_TIMER_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in timer mode */
@@ -253,9 +248,23 @@ void TC${INDEX}_CH${CH_NUM}_TimerInitialize (void)
     /* write period */
     TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = ${.vars[TC_TIMER_PERIOD_COUNT]}U;
 
+    <#compress>
+    <#assign TIMER_INTERRUPT = "">
+    <#if .vars[TC_TIMER_IER_CPAS] == true >
+        <#assign TIMER_INTERRUPT = "TC_IER_CPAS_Msk">
+    </#if>
     <#if .vars[TC_TIMER_IER_CPCS] == true>
+        <#if TIMER_INTERRUPT != "">
+            <#assign TIMER_INTERRUPT = TIMER_INTERRUPT + " | TC_IER_CPCS_Msk">
+        <#else>
+            <#assign TIMER_INTERRUPT = "TC_IER_CPCS_Msk">
+        </#if>
+    </#if>
+    </#compress>
+
+    <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
     /* enable interrupt */
-    <#lt>    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = TC_IER_CPCS_Msk;
+    <#lt>    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = ${TIMER_INTERRUPT};
     <#lt>    TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = NULL;
     </#if>
 }
@@ -272,10 +281,21 @@ void TC${INDEX}_CH${CH_NUM}_TimerStop (void)
     TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
+uint32_t TC${INDEX}_CH${CH_NUM}_TimerFrequencyGet()
+{
+    return (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL);
+}
+
 /* Configure timer period */
 void TC${INDEX}_CH${CH_NUM}_TimerPeriodSet (uint16_t period)
 {
     TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = period;
+}
+
+/* Configure timer compare */
+void TC${INDEX}_CH${CH_NUM}_TimerCompareSet (uint16_t compare)
+{
+    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = compare;
 }
 
 /* Read timer period */
@@ -290,20 +310,9 @@ uint16_t TC${INDEX}_CH${CH_NUM}_TimerCounterGet (void)
     return TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CV;
 }
 
-/* Check if timer period status is set */
-bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void)
-{
-    bool timer_status;
-    NVIC_DisableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
-    timer_status = ((TC${INDEX}_CH${CH_NUM}_TimerStatus | TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_SR_CPCS_Msk) >> TC_SR_CPCS_Pos;
-    TC${INDEX}_CH${CH_NUM}_TimerStatus = 0U;
-    NVIC_EnableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
-    return timer_status;
-}
-
-<#if .vars[TC_TIMER_IER_CPCS] == true>
+<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Register callback for period interrupt */
-void TC${INDEX}_CH${CH_NUM}_TimerCallbackRegister(TC_CALLBACK callback, uintptr_t context)
+void TC${INDEX}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context)
 {
     TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = callback;
     TC${INDEX}_CH${CH_NUM}_CallbackObj.context = context;
@@ -311,21 +320,27 @@ void TC${INDEX}_CH${CH_NUM}_TimerCallbackRegister(TC_CALLBACK callback, uintptr_
 
 void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC${INDEX}_CH${CH_NUM}_TimerStatus = TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR;
+    TC_TIMER_STATUS timer_status = TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK;
     /* Call registered callback function */
     if (TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
-        TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn(TC${INDEX}_CH${CH_NUM}_CallbackObj.context);
+        TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, TC${INDEX}_CH${CH_NUM}_CallbackObj.context);
     }
+}
+
+<#else>
+/* Check if timer period status is set */
+bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void)
+{
+    return (((TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_SR_CPCS_Msk) >> TC_SR_CPCS_Pos);
 }
 </#if>
 </#if> <#-- TIMER -->
 
 <#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
-static uint32_t TC${INDEX}_CH${CH_NUM}_CaptureStatus;    /* saves interrupt status */
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 /* Callback object for channel ${CH_NUM} */
-TC_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
+TC_CAPTURE_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in capture mode */
@@ -394,6 +409,11 @@ void TC${INDEX}_CH${CH_NUM}_CaptureStop (void)
     TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
+uint32_t TC${INDEX}_CH${CH_NUM}_CaptureFrequencyGet()
+{
+    return (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL);
+}
+
 /* Read last captured value of Capture A */
 uint16_t TC${INDEX}_CH${CH_NUM}_CaptureAGet (void)
 {
@@ -406,19 +426,9 @@ uint16_t TC${INDEX}_CH${CH_NUM}_CaptureBGet (void)
     return TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB;
 }
 
-TC_CAPTURE_STATUS TC${INDEX}_CH${CH_NUM}_CaptureStatusGet(void)
-{
-    TC_CAPTURE_STATUS capture_status;
-    NVIC_DisableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
-    capture_status = (TC${INDEX}_CH${CH_NUM}_CaptureStatus | TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_CAPTURE_STATUS_MSK;
-    TC${INDEX}_CH${CH_NUM}_CaptureStatus = 0U;
-    NVIC_EnableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
-    return capture_status;
-}
-
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 /* Register callback function */
-void TC${INDEX}_CH${CH_NUM}_CaptureCallbackRegister(TC_CALLBACK callback, uintptr_t context)
+void TC${INDEX}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context)
 {
     TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = callback;
     TC${INDEX}_CH${CH_NUM}_CallbackObj.context = context;
@@ -426,21 +436,25 @@ void TC${INDEX}_CH${CH_NUM}_CaptureCallbackRegister(TC_CALLBACK callback, uintpt
 
 void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC${INDEX}_CH${CH_NUM}_CaptureStatus = TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR;
+    TC_CAPTURE_STATUS capture_status = TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK;
     /* Call registered callback function */
     if (TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
-        TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn(TC${INDEX}_CH${CH_NUM}_CallbackObj.context);
+        TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, TC${INDEX}_CH${CH_NUM}_CallbackObj.context);
     }
+}
+<#else>
+TC_CAPTURE_STATUS TC${INDEX}_CH${CH_NUM}_CaptureStatusGet(void)
+{
+    return ((TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_CAPTURE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- CAPTURE -->
 
 <#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
-static uint32_t TC${INDEX}_CH${CH_NUM}_CompareStatus;   /* saves interrupt status */
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 /* Callback object for channel ${CH_NUM} */
-TC_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
+TC_COMPARE_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in compare mode */
@@ -498,6 +512,11 @@ void TC${INDEX}_CH${CH_NUM}_CompareStop (void)
     TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
+uint32_t TC${INDEX}_CH${CH_NUM}_CompareFrequencyGet()
+{
+    return (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL);
+}
+
 /* Configure the period value */
 void TC${INDEX}_CH${CH_NUM}_ComparePeriodSet (uint16_t period)
 {
@@ -522,19 +541,9 @@ void TC${INDEX}_CH${CH_NUM}_CompareBSet (uint16_t value)
     TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB = value;
 }
 
-TC_COMPARE_STATUS TC${INDEX}_CH${CH_NUM}_CompareStatusGet(void)
-{
-    TC_COMPARE_STATUS compare_status;
-    NVIC_DisableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
-    compare_status = (TC${INDEX}_CH${CH_NUM}_CompareStatus | TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_COMPARE_STATUS_MSK;
-    TC${INDEX}_CH${CH_NUM}_CompareStatus = 0U;
-    NVIC_EnableIRQ(TC${INDEX}_CH${CH_NUM}_IRQn);
-    return compare_status;
-}
-
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 /* Register callback function */
-void TC${INDEX}_CH${CH_NUM}_CompareCallbackRegister(TC_CALLBACK callback, uintptr_t context)
+void TC${INDEX}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t context)
 {
     TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = callback;
     TC${INDEX}_CH${CH_NUM}_CallbackObj.context = context;
@@ -543,12 +552,17 @@ void TC${INDEX}_CH${CH_NUM}_CompareCallbackRegister(TC_CALLBACK callback, uintpt
 /* Interrupt Handler */
 void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC${INDEX}_CH${CH_NUM}_CompareStatus = TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR;
+    TC_COMPARE_STATUS compare_status = TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK;
     /* Call registered callback function */
     if (TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
-        TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn(TC${INDEX}_CH${CH_NUM}_CallbackObj.context);
+        TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, TC${INDEX}_CH${CH_NUM}_CallbackObj.context);
     }
+}
+<#else>
+TC_COMPARE_STATUS TC${INDEX}_CH${CH_NUM}_CompareStatusGet(void)
+{
+    return ((TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_COMPARE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- COMPARE -->
