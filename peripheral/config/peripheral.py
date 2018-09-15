@@ -9,7 +9,7 @@ peripherals = {
                 "NVMCTRL_U2207" : ["MEMORY"],
                 "NVMCTRL_U2802" : ["MEMORY"],
                 "SERCOM_U2201"  : ["UART", "SPI", "I2C"],
-                "SPI_6088"     : ["SPI"],
+                "SPI_6088"      : ["SPI"],
                 "SSC_6078"      : ["I2S"],
                 "TWI_6212"      : ["I2C"],
                 "TWI_11280"     : ["I2C"],
@@ -22,7 +22,9 @@ peripherals = {
                 "TC_6082"       : ["TMR"],
                 "QSPI_U2008"    : ["QSPI"],
                 "QSPI_11171"    : ["QSPI"],
-    }
+                "RTT_6081"      : ["TMR"],
+                "RTC_U2250"     : ["TMR"],
+}
 
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
 modules = periphNode.getChildren()

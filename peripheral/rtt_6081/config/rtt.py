@@ -35,10 +35,59 @@ def instantiateComponent(rttComponent):
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
+
     instance = rttComponent.getID()[-1:]
 
     rttMenu = rttComponent.createMenuSymbol("RTT_MENU_0", None)
     rttMenu.setLabel("Hardware Settings ")
+
+#------------------------------------------------------------
+# Common Symbols needed for SYS_TIME usage
+#------------------------------------------------------------
+    timerStartApiName = "RTT" + str(instance) + "_Enable"
+    timeStopApiName = "RTT" + str(instance) + "_Disable"
+    compareSetApiName = "RTT" + str(instance) + "_AlarmValueSet"
+    counterGetApiName = "RTT" + str(instance) + "_TimerValueGet"
+    frequencyGetApiName = "RTT" + str(instance) + "_FrequencyGet"
+    callbackApiName = "RTT" + str(instance) + "_CallbackRegister"
+    irqEnumName = "RTT_IRQn"
+
+    timerWidth_Sym = rttComponent.createIntegerSymbol("TIMER_WIDTH", rttMenu)
+    timerWidth_Sym.setVisible(False)
+    timerWidth_Sym.setDefaultValue(32)
+
+    timerPeriodMax_Sym = rttComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
+    timerPeriodMax_Sym.setVisible(False)
+    timerPeriodMax_Sym.setDefaultValue("0xFFFFFFFF")
+
+    timerStartApiName_Sym = rttComponent.createStringSymbol("TIMER_START_API_NAME", rttMenu)
+    timerStartApiName_Sym.setVisible(False)
+    timerStartApiName_Sym.setDefaultValue(timerStartApiName)
+
+    timeStopApiName_Sym = rttComponent.createStringSymbol("TIMER_STOP_API_NAME", rttMenu)
+    timeStopApiName_Sym.setVisible(False)
+    timeStopApiName_Sym.setDefaultValue(timeStopApiName)
+
+    compareSetApiName_Sym = rttComponent.createStringSymbol("COMPARE_SET_API_NAME", rttMenu)
+    compareSetApiName_Sym.setVisible(False)
+    compareSetApiName_Sym.setDefaultValue(compareSetApiName)
+
+    counterApiName_Sym = rttComponent.createStringSymbol("COUNTER_GET_API_NAME", rttMenu)
+    counterApiName_Sym.setVisible(False)
+    counterApiName_Sym.setDefaultValue(counterGetApiName)
+
+    frequencyGetApiName_Sym = rttComponent.createStringSymbol("FREQUENCY_GET_API_NAME", rttMenu)
+    frequencyGetApiName_Sym.setVisible(False)
+    frequencyGetApiName_Sym.setDefaultValue(frequencyGetApiName)
+
+    callbackApiName_Sym = rttComponent.createStringSymbol("CALLBACK_API_NAME", rttMenu)
+    callbackApiName_Sym.setVisible(False)
+    callbackApiName_Sym.setDefaultValue(callbackApiName)
+
+    irqEnumName_Sym = rttComponent.createStringSymbol("IRQ_ENUM_NAME", rttMenu)
+    irqEnumName_Sym.setVisible(False)
+    irqEnumName_Sym.setDefaultValue(irqEnumName)
+#------------------------------------------------------------
 
     global rttPeriodicInterrupt
     rttPeriodicInterrupt = rttComponent.createBooleanSymbol("rttINCIEN", rttMenu)
@@ -48,7 +97,7 @@ def instantiateComponent(rttComponent):
     global rttAlarm
     rttAlarm = rttComponent.createBooleanSymbol("rttALMIEN", rttMenu)
     rttAlarm.setLabel("Enable Alarm Interrupt")
-    rttAlarm.setDefaultValue(False)
+    rttAlarm.setDefaultValue(True)
 
     rttIndex = rttComponent.createIntegerSymbol("INDEX", rttMenu)
     rttIndex.setVisible(False)
@@ -61,26 +110,19 @@ def instantiateComponent(rttComponent):
     rttPrescaleValue = rttComponent.createIntegerSymbol("rttRTPRES", rttMenu)
     rttPrescaleValue.setLabel("Prescalar Value ")
     rttPrescaleValue.setMax(65536)
-    rttPrescaleValue.setDefaultValue(32768)
+    rttPrescaleValue.setDefaultValue(3)
     rttPrescaleValue.setDependencies(rttPrescaleHide, ["rttRTC1HZ"])
 
-    rttPrescaleValueWarning = rttComponent.createCommentSymbol("rttRTPRESWarning", rttMenu)
-    rttPrescaleValueWarning.setVisible(False)
-    rttPrescaleValueWarning.setLabel("******* RTT Prescale value of 1 or 2 is invalid")
-    rttPrescaleValueWarning.setDependencies(rttPrescaleWarning, ["rttRTPRES"])
-
-    rttFreq = rttComponent.createStringSymbol("rttFREQ", rttMenu)
-    rttFreq.setLabel("RTT Counter Clock Resolution(seconds)")
-    rttFreq.setDependencies(rttFreq_cal, ["rttRTC1HZ", "rttRTPRES"])
-    rttFreq.setDefaultValue(str(1))
-    rttFreq.setReadOnly(True)
+    rttResolutionComment = rttComponent.createCommentSymbol("rttResolution", rttMenu)
+    rttResolutionComment.setLabel("RTT Counter Clock Resolution: 0.092 ms")
+    rttResolutionComment.setDependencies(rttResolutionUpdate, ["rttRTC1HZ", "rttRTPRES"])
 
     interruptVector = "RTT_INTERRUPT_ENABLE"
     interruptHandler = "RTT_INTERRUPT_HANDLER"
     interruptHandlerLock = "RTT_INTERRUPT_HANDLER_LOCK"
 
-    # NVIC Dynamic settings
-    rttinterruptControl = rttComponent.createBooleanSymbol("NVIC_RTT_ENABLE", None)
+    # Interrupt Dynamic settings
+    rttinterruptControl = rttComponent.createBooleanSymbol("INTERRUPT_RTT_ENABLE", None)
     rttinterruptControl.setDependencies(interruptControl, ["rttALMIEN", "rttINCIEN"])
     rttinterruptControl.setVisible(False)
 
@@ -120,26 +162,24 @@ def rttPrescaleHide(rttPrescaleValue, event):
     else:
         rttPrescaleValue.setVisible(True)
 
-def rttFreq_cal(rttFreq, event):
-    data = rttFreq.getComponent()
-    rttData = str(float(65536) / 32768)
-    rtt1K = data.getSymbolValue("rttRTC1HZ")
-    if rtt1K == True:
-        rttFreq.clearValue("rttFREQ")
-        rttFreq.setValue(str(1),2)
-    else:
-        rttPres = data.getSymbolValue("rttRTPRES")
-        if rttPres == 0:
-            rttData = str(float(65536) / 32768)
-            rttFreq.clearValue("rttFREQ")
-            rttFreq.setValue(str(rttData),2)
-        elif rttPres > 2:
-            rttData = str(float(rttPres) / 32768)
-            rttFreq.clearValue("rttFREQ")
-            rttFreq.setValue(str(rttData),2)
 
-def rttPrescaleWarning(comment, prescale):
-    if prescale["value"] == 1 or prescale["value"] == 2:
-        comment.setVisible(True)
+def rttResolutionUpdate(comment, event):
+    data = comment.getComponent()
+    rtt1Hz = data.getSymbolValue("rttRTC1HZ")
+    rttPres = data.getSymbolValue("rttRTPRES")
+
+    timeResolutionMs = str(0)
+
+    if rtt1Hz == True:
+        timeResolutionMs=str(1000)
+    else:
+        if rttPres == 0:
+            timeResolutionMs = "%10.3f"% ((float(65536) / 32768)*1000)
+
+        elif rttPres > 2:
+            timeResolutionMs =  "%10.3f"% ((float(rttPres) / 32768)*1000)
+
+    if rttPres == 1 or rttPres == 2:
+        comment.setLabel("******* RTT Prescale value of 1 or 2 is invalid")
     else :
-        comment.setVisible(False)
+        comment.setLabel("RTT Counter Clock Resolution: "+ timeResolutionMs + " ms")
