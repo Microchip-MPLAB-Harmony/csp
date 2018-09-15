@@ -129,14 +129,13 @@ __inline__ int16_t TC${INDEX}_QuadraturePositionGet (void)
 }
 </#if>
 
-TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
-
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
     <#lt>/* Register callback for quadrature interrupt */
-    <#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
+    <#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_QUADRATURE_CALLBACK callback, uintptr_t context);
 
     <#lt>void TC${INDEX}_CH0_InterruptHandler(void);
-
+<#else>
+TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
 </#if>
 </#if>
 <#list start..(TC_MAX_CHANNELS-1) as i>
@@ -148,6 +147,7 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
 <#assign CH_NUM = i >
 <#assign TC_CH_CLOCK_FREQ = "TC"+i+"_CLOCK_FREQ">
 <#assign TC_TIMER_IER_CPCS = "TC"+i+"_IER_CPCS">
+<#assign TC_TIMER_IER_CPAS = "TC"+i+"_IER_CPAS">
 <#assign TC_COMPARE_IER_CPCS = "TC"+i+"_COMPARE_IER_CPCS">
 <#assign TC_CAPTURE_IER_LDRAS = "TC"+i+"_CAPTURE_IER_LDRAS">
 <#assign TC_CAPTURE_IER_LDRBS = "TC"+i+"_CAPTURE_IER_LDRBS">
@@ -157,8 +157,6 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
 
 <#if .vars[TC_CH_OPERATINGMODE] == "TIMER">
 
-#define TC${INDEX}_CH${CH_NUM}_TimerFrequencyGet() (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL)
-
 void TC${INDEX}_CH${CH_NUM}_TimerInitialize (void);
 
 void TC${INDEX}_CH${CH_NUM}_TimerStart (void);
@@ -167,22 +165,24 @@ void TC${INDEX}_CH${CH_NUM}_TimerStop (void);
 
 void TC${INDEX}_CH${CH_NUM}_TimerPeriodSet (uint16_t period);
 
+void TC${INDEX}_CH${CH_NUM}_TimerCompareSet (uint16_t compare);
+
+uint32_t TC${INDEX}_CH${CH_NUM}_TimerFrequencyGet (void);
+
 uint16_t TC${INDEX}_CH${CH_NUM}_TimerPeriodGet (void);
 
 uint16_t TC${INDEX}_CH${CH_NUM}_TimerCounterGet (void);
 
-bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void);
-
-<#if .vars[TC_TIMER_IER_CPCS] == true>
-void TC${INDEX}_CH${CH_NUM}_TimerCallbackRegister(TC_CALLBACK callback, uintptr_t context);
+<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
+void TC${INDEX}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context);
 
 void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void);
+<#else>
+bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void);
 </#if>
 </#if>
 
 <#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
-
-#define TC${INDEX}_CH${CH_NUM}_CaptureFrequencyGet() (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL)
 
 void TC${INDEX}_CH${CH_NUM}_CaptureInitialize (void);
 
@@ -190,29 +190,31 @@ void TC${INDEX}_CH${CH_NUM}_CaptureStart (void);
 
 void TC${INDEX}_CH${CH_NUM}_CaptureStop (void);
 
+uint32_t TC${INDEX}_CH${CH_NUM}_CaptureFrequencyGet (void);
+
 uint16_t TC${INDEX}_CH${CH_NUM}_CaptureAGet (void);
 
 uint16_t TC${INDEX}_CH${CH_NUM}_CaptureBGet (void);
 
-TC_CAPTURE_STATUS TC${INDEX}_CH${CH_NUM}_CaptureStatusGet(void);
-
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
-void TC${INDEX}_CH${CH_NUM}_CaptureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
+void TC${INDEX}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context);
 
 void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void);
+<#else>
+TC_CAPTURE_STATUS TC${INDEX}_CH${CH_NUM}_CaptureStatusGet(void);
 </#if>
 
 </#if>
 
 <#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
 
-#define TC${INDEX}_CH${CH_NUM}_CompareFrequencyGet() (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL)
-
 void TC${INDEX}_CH${CH_NUM}_CompareInitialize (void);
 
 void TC${INDEX}_CH${CH_NUM}_CompareStart (void);
 
 void TC${INDEX}_CH${CH_NUM}_CompareStop (void);
+
+uint32_t TC${INDEX}_CH${CH_NUM}_CompareFrequencyGet (void);
 
 void TC${INDEX}_CH${CH_NUM}_ComparePeriodSet (uint16_t period);
 
@@ -222,12 +224,12 @@ void TC${INDEX}_CH${CH_NUM}_CompareASet (uint16_t value);
 
 void TC${INDEX}_CH${CH_NUM}_CompareBSet (uint16_t value);
 
-TC_COMPARE_STATUS TC${INDEX}_CH${CH_NUM}_CompareStatusGet(void);
-
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
-void TC${INDEX}_CH${CH_NUM}_CompareCallbackRegister(TC_CALLBACK callback, uintptr_t context);
+void TC${INDEX}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t context);
 
 void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void);
+<#else>
+TC_COMPARE_STATUS TC${INDEX}_CH${CH_NUM}_CompareStatusGet(void);
 </#if>
 
 </#if>
