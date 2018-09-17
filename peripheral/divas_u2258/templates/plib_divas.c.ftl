@@ -40,13 +40,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include "plib_${DIVAS_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
@@ -57,86 +50,37 @@
 // *****************************************************************************
 // *****************************************************************************
 
-// *****************************************************************************
-/* Function:
-    void ${DIVAS_INSTANCE_NAME}_Initialize(void);
-
-  Summary:
-    Initializes ${DIVAS_INSTANCE_NAME} module of the device.
-
-  Description:
-    This function initializes ${DIVAS_INSTANCE_NAME} module of the device with the
-    values configured in MCC GUI. Once the peripheral is initialized, signed,
-    unsigned division and square root functions can be used.
-
-  Remarks:
-    Refer plib_${DIVAS_INSTANCE_NAME?lower_case}.h file for more information.
-*/
-
 void ${DIVAS_INSTANCE_NAME}_Initialize(void)
 {
     <#if DIVAS_DLZ == false>
-    /* Disable Leading Zero optimization,
-       32 bit divisions will take fixed 16 cycles */
+    /* Disable Leading Zero optimization*/
     DIVAS_REGS->DIVAS_CTRLA |= DIVAS_CTRLA_DLZ_Msk;
     <#else>
-    /* Leading Zero optimization is by default enabled,
-       32 bit divisions will take 2 to 16 cycles */
+    /* Leading Zero optimization is by default enabled*/
     </#if>
 }
 
-// *****************************************************************************
-/* Function:
-    bool ${DIVAS_INSTANCE_NAME}_DivideSigned ( int32_t divisor, int32_t dividend,
-                                int32_t * quotient, int32_t * remainder );
-
- Summary:
-    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to performs a
-    unsigned 32-bit division.
-
-  Description:
-    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to perform unsigned
-    32-bit division.
-
-    The function takes a unsigned divisor and dividend and returns the quotient
-    and remainder. If the library is configured (in MHC) with the Leading Zero
-    optimization option enabled, a division operation takes 2-16 cycles. If the
-    option is disabled, the option always takes 16 cycles. The latter option is
-    recommended if deterministic operation is desired.
-
-  Remarks:
-    Refer plib_${DIVAS_INSTANCE_NAME?lower_case}.h for more information.
-*/
 
 bool ${DIVAS_INSTANCE_NAME}_DivideSigned ( int32_t divisor, int32_t dividend, int32_t * quotient, int32_t * remainder )
 {
     bool statusValue = false;
+    uint32_t quo = 0;
+    uint32_t rem = 0;
 
     if(divisor != 0)
     {
         if(dividend == 0)
         {
             statusValue = true;
-
-            /* Handle the trivial case. This does not require hardware */
-            if(quotient != NULL)
-            {
-                *quotient = 0;
-            }
-
-            if(remainder != NULL)
-            {
-                *remainder = 0;
-            }
         }
         else
         {
             /* Selection of the signed division */
             DIVAS_REGS->DIVAS_CTRLA |= DIVAS_CTRLA_SIGNED_Msk;
-
-            /* Writing the dividend to DIVIDEND register */
+            
+             /* Writing the dividend to DIVIDEND register */
             DIVAS_REGS->DIVAS_DIVIDEND = dividend;
-
+            
             /* Writing the divisor to DIVISOR register */
             DIVAS_REGS->DIVAS_DIVISOR = divisor;
 
@@ -145,137 +89,72 @@ bool ${DIVAS_INSTANCE_NAME}_DivideSigned ( int32_t divisor, int32_t dividend, in
                 /* Wait for the division to complete */
             }
 
-            if ((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_DBZ_Msk) != DIVAS_STATUS_DBZ_Msk)
-            {
-                statusValue = true;
 
-                if( quotient != NULL)
-                {
-                    /* Reading the resultant Division value from the RESULT register */
-                    *quotient = DIVAS_REGS->DIVAS_RESULT;
-                }
-
-                if( remainder != NULL)
-                {
-                    /* Reading the resultant remainder value from the REM register */
-                    *remainder = DIVAS_REGS->DIVAS_REM;
-                }
-            }
+            statusValue = true;
+            quo = DIVAS_REGS->DIVAS_RESULT;
+            rem = DIVAS_REGS->DIVAS_REM;
+        }
+        if(quotient != NULL)
+        {
+            *quotient = quo;
+        }
+        if(remainder != NULL)
+        {
+            *remainder = rem;
         }
     }
-
     return statusValue;
 }
 
-// *****************************************************************************
-/* Function:
-    bool ${DIVAS_INSTANCE_NAME}_DivideUnsigned ( uint32_t divisor,
-                uint32_t dividend, uint32_t * quotient, uint32_t * remainder );
 
- Summary:
-    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to performs a
-    unsigned 32-bit division.
-
-  Description:
-    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to perform unsigned
-    32-bit division.
-
-    The function takes a unsigned divisor and dividend and returns the quotient
-    and remainder. If the library is configured (in MHC) with the Leading Zero
-    optimization option enabled, a division operation takes 2-16 cycles. If the
-    option is disabled, the option always takes 16 cycles. The latter option is
-    recommended if deterministic operation is desired.
-
-  Remarks:
-    Refer plib_${DIVAS_INSTANCE_NAME?lower_case}.h for more information.
-*/
 
 bool ${DIVAS_INSTANCE_NAME}_DivideUnsigned( uint32_t divisor, uint32_t dividend, uint32_t * quotient, uint32_t * remainder )
 {
     bool statusValue = false;
+    uint32_t quo = 0;
+    uint32_t rem = 0;
+    
     if(divisor != 0)
     {
         if(dividend == 0)
         {
             statusValue = true;
-
-            /* Handle the trivial case. This does not require hardware */
-            if(quotient != NULL)
-            {
-                *quotient = 0;
-            }
-
-            if(remainder != NULL)
-            {
-                *remainder = 0;
-            }
         }
         else
         {
             /* Selection of the unsigned division */
             DIVAS_REGS->DIVAS_CTRLA &= ~DIVAS_CTRLA_SIGNED_Msk;
-
-           /* Writing the dividend to DIVIDEND register */
+            
+            /* Writing the dividend to DIVIDEND register */
             DIVAS_REGS->DIVAS_DIVIDEND = dividend;
-
+            
             /* Writing the divisor to DIVISOR register */
             DIVAS_REGS->DIVAS_DIVISOR = divisor;
+            
+            statusValue = true;
+            quo = DIVAS_REGS->DIVAS_RESULT;
+            rem = DIVAS_REGS->DIVAS_REM;
+        }
 
-            while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
-            {
-                /* Wait for the division to complete */
-            }
+        if( quotient != NULL)
+        {
+            *quotient = quo;
+        }
 
-            if ((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_DBZ_Msk) != DIVAS_STATUS_DBZ_Msk)
-            {
-                statusValue = true;
+        if( remainder != NULL)
+        {
+            *remainder = rem;
 
-                if( quotient != NULL)
-                {
-                    /* Reading the resultant Division value from the RESULT register */
-                    *quotient = DIVAS_REGS->DIVAS_RESULT;
-                }
-
-                if( remainder != NULL)
-                {
-                    /* Reading the resultant remainder value from the REM register */
-                    *remainder = DIVAS_REGS->DIVAS_REM;
-
-                }
-            }
         }
     }
-
     return statusValue;
 }
 
-
-// *****************************************************************************
-/* Function:
-    uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot ( uint32_t number ,
-                                              uint32_t * remainder);
-
-  Summary:
-    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to perform a
-    square root operation.
-
-  Description:
-    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to perform a square
-    root operation.
-
-    The function will return the square root of the number contained in number.
-    The remainder output parameter will contain a remainder if the square root
-    was not perfect.
-
-  Remarks:
-    Refer plib_${DIVAS_INSTANCE_NAME?lower_case}.h for more information.
-*/
 
 uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot ( uint32_t number , uint32_t * remainder)
 {
     uint32_t squareRootResult = 0;
 
-    /* Writing the number to SQRNUM register */
     DIVAS_REGS->DIVAS_SQRNUM = number;
 
     while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
@@ -283,12 +162,10 @@ uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot ( uint32_t number , uint32_t * remain
         /* Wait for the square root to complete */
     }
 
-    /* Reading the resultant square root value from the RESULT register */
     squareRootResult = DIVAS_REGS->DIVAS_RESULT;
 
     if(remainder != NULL)
     {
-        /* Reading the resultant remainder value from the REM register */
         *remainder = DIVAS_REGS->DIVAS_REM;
     }
 
