@@ -43,7 +43,35 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "plib_pio.h"
 
-<#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_OD PIO_PUER PIO_PUDR PIO_PDEN PIO_PDDR PIO_PDR PIO_ABCD1
+<#compress> <#-- To remove unwanted new lines -->
+
+<#-- Find out which all port exists in the device -->
+<#assign PORTA_EXISTS = false>
+<#assign PORTB_EXISTS = false>
+<#assign PORTC_EXISTS = false>
+<#assign PORTD_EXISTS = false>
+<#assign PORTE_EXISTS = false>
+
+<#list 1..PIO_PIN_TOTAL as i>
+    <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
+
+    <#if .vars[pinchannel]?has_content>
+        <#if .vars[pinchannel] == "A">
+            <#assign PORTA_EXISTS = true>
+        <#elseif .vars[pinchannel] == "B">
+            <#assign PORTB_EXISTS = true>
+        <#elseif .vars[pinchannel] == "C">
+            <#assign PORTC_EXISTS = true>
+        <#elseif .vars[pinchannel] == "D">
+            <#assign PORTD_EXISTS = true>
+        <#elseif .vars[pinchannel] == "E">
+            <#assign PORTE_EXISTS = true>
+        </#if>
+    </#if>
+</#list>
+
+</#compress>
+<#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_OD PIO_PUEN PIO_PDEN PIO_PDR PIO_ABCD1
                        PIO_ABCD2 PIO_INT_TYPE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INTERRUPT PIO_IFER PIO_IFSCER PIO_SCDR>
     <#lt>    /************************ PIO ${PIO_PORT} Initialization ************************/
     <#if (PIO_ABCD1 != "0" ) || (PIO_ABCD2 != "0")>
@@ -60,16 +88,19 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = 0x${PIO_OD};
     </#if>
     <#lt>    /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
-    <#if PIO_PUER != "0">
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = 0x${PIO_PUER};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = 0x${PIO_PDDR};
-    </#if>  
-   
-    <#if PIO_PDEN != "0">
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = 0x${PIO_PDEN};
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = 0x${PIO_PUDR};
+    <#if PIO_PUEN != "0">
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = ~0x${PIO_PUEN};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUER = 0x${PIO_PUEN};
+    <#else>
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PUDR = 0xFFFFFFFF;
     </#if>
-    
+    <#lt>    /* PORT${PIO_PORT} Pull Down Enable/Disable as per MHC selection */
+    <#if PIO_PDEN != "0">
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = ~0x${PIO_PDEN};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDER = 0x${PIO_PDEN};
+    <#else>
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PPDDR = 0xFFFFFFFF;
+    </#if>
     <#lt>    /* PORT${PIO_PORT} Output Write Enable */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
     <#if PIO_DIR != "0">
@@ -108,13 +139,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
             <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SCDR = 0x${PIO_SCDR};
         </#if>
     </#if>
-
 </#macro>
 <#if PIO_A_INTERRUPT_USED == true ||
      PIO_B_INTERRUPT_USED == true ||
      PIO_C_INTERRUPT_USED == true ||
      PIO_D_INTERRUPT_USED == true ||
      PIO_E_INTERRUPT_USED == true >
+
+#define PIO_MAX_NUM_OF_CHANNELS     5
 
     <#assign numOfIntInA = PIO_A_NUM_OF_INT_PINS_USED>
     <#assign numOfIntInAB = PIO_A_NUM_OF_INT_PINS_USED + PIO_B_NUM_OF_INT_PINS_USED>
@@ -126,7 +158,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     <#lt>PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_OF_INT_PINS_USED} + ${PIO_B_NUM_OF_INT_PINS_USED} + ${PIO_C_NUM_OF_INT_PINS_USED} + ${PIO_D_NUM_OF_INT_PINS_USED} + ${PIO_E_NUM_OF_INT_PINS_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
-    <#lt>uint8_t portNumCb[5+1] = {0, ${numOfIntInA}, ${numOfIntInAB}, ${numOfIntInABC}, ${numOfIntInABCD}, ${numOfIntInABCDE}};
+    <#lt>uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0, ${numOfIntInA}, ${numOfIntInAB}, ${numOfIntInABC}, ${numOfIntInABCD}, ${numOfIntInABCDE}};
 </#if>
 
 /******************************************************************************
@@ -146,15 +178,14 @@ void PIO_Initialize ( void )
         <#lt>    MATRIX_REGS->CCFG_SYSIO |= 0x${PIO_CCFG_SYSIO_VALUE};
     </#if>
 
+    <#if PORTA_EXISTS == true>
         <@PIO_INITIALIZE
             PIO_PORT = "A"
             PIO_DIR = PIOA_OER_VALUE
             PIO_LAT_HIGH = PIOA_SODR_VALUE
             PIO_OD = PIOA_MDER_VALUE
-            PIO_PUER = PIOA_PUER_VALUE
-            PIO_PUDR = PIOA_PUDR_VALUE
+            PIO_PUEN = PIOA_PUER_VALUE
             PIO_PDEN = PIOA_PPDEN_VALUE
-            PIO_PDDR = PIOA_PPDDR_VALUE
             PIO_PDR = PIOA_PDR_VALUE
             PIO_ABCD1 = PIOA_ABCDSR1_VALUE
             PIO_ABCD2 = PIOA_ABCDSR2_VALUE
@@ -166,16 +197,15 @@ void PIO_Initialize ( void )
             PIO_IFSCER = PIOA_IFSCER_VALUE
             PIO_SCDR = PIOA_SCDR_VALUE
         />
-
+    </#if>
+    <#if PORTB_EXISTS == true>
         <@PIO_INITIALIZE
             PIO_PORT = "B"
             PIO_DIR = PIOB_OER_VALUE
             PIO_LAT_HIGH = PIOB_SODR_VALUE
             PIO_OD = PIOB_MDER_VALUE
-            PIO_PUER = PIOB_PUER_VALUE
-            PIO_PUDR = PIOB_PUDR_VALUE
+            PIO_PUEN = PIOB_PUER_VALUE
             PIO_PDEN = PIOB_PPDEN_VALUE
-            PIO_PDDR = PIOB_PPDDR_VALUE
             PIO_PDR = PIOB_PDR_VALUE
             PIO_ABCD1 = PIOB_ABCDSR1_VALUE
             PIO_ABCD2 = PIOB_ABCDSR2_VALUE
@@ -187,17 +217,15 @@ void PIO_Initialize ( void )
             PIO_IFSCER = PIOB_IFSCER_VALUE
             PIO_SCDR = PIOB_SCDR_VALUE
         />
-
-
+    </#if>
+    <#if PORTC_EXISTS == true>
         <@PIO_INITIALIZE
             PIO_PORT = "C"
             PIO_DIR = PIOC_OER_VALUE
             PIO_LAT_HIGH = PIOC_SODR_VALUE
             PIO_OD = PIOC_MDER_VALUE
-            PIO_PUER = PIOC_PUER_VALUE
-            PIO_PUDR = PIOC_PUDR_VALUE
+            PIO_PUEN = PIOC_PUER_VALUE
             PIO_PDEN = PIOC_PPDEN_VALUE
-            PIO_PDDR = PIOC_PPDDR_VALUE
             PIO_PDR = PIOC_PDR_VALUE
             PIO_ABCD1 = PIOC_ABCDSR1_VALUE
             PIO_ABCD2 = PIOC_ABCDSR2_VALUE
@@ -209,17 +237,15 @@ void PIO_Initialize ( void )
             PIO_IFSCER = PIOC_IFSCER_VALUE
             PIO_SCDR = PIOC_SCDR_VALUE
         />
-
-
+    </#if>
+    <#if PORTD_EXISTS == true>
         <@PIO_INITIALIZE
             PIO_PORT = "D"
             PIO_DIR = PIOD_OER_VALUE
             PIO_LAT_HIGH = PIOD_SODR_VALUE
             PIO_OD = PIOD_MDER_VALUE
-            PIO_PUER = PIOD_PUER_VALUE
-            PIO_PUDR = PIOD_PUDR_VALUE
+            PIO_PUEN = PIOD_PUER_VALUE
             PIO_PDEN = PIOD_PPDEN_VALUE
-            PIO_PDDR = PIOD_PPDDR_VALUE
             PIO_PDR = PIOD_PDR_VALUE
             PIO_ABCD1 = PIOD_ABCDSR1_VALUE
             PIO_ABCD2 = PIOD_ABCDSR2_VALUE
@@ -231,17 +257,15 @@ void PIO_Initialize ( void )
             PIO_IFSCER = PIOD_IFSCER_VALUE
             PIO_SCDR = PIOD_SCDR_VALUE
             />
-
-
+    </#if>
+    <#if PORTE_EXISTS == true>
         <@PIO_INITIALIZE
             PIO_PORT = "E"
             PIO_DIR = PIOE_OER_VALUE
             PIO_LAT_HIGH = PIOE_SODR_VALUE
             PIO_OD = PIOE_MDER_VALUE
-            PIO_PUER = PIOE_PUER_VALUE
-            PIO_PUDR = PIOE_PUDR_VALUE
+            PIO_PUEN = PIOE_PUER_VALUE
             PIO_PDEN = PIOE_PPDEN_VALUE
-            PIO_PDDR = PIOE_PPDDR_VALUE
             PIO_PDR = PIOE_PDR_VALUE
             PIO_ABCD1 = PIOE_ABCDSR1_VALUE
             PIO_ABCD2 = PIOE_ABCDSR2_VALUE
@@ -253,6 +277,7 @@ void PIO_Initialize ( void )
             PIO_IFSCER = PIOE_IFSCER_VALUE
             PIO_SCDR = PIOE_SCDR_VALUE
         />
+    </#if>
 
     <#if (PIO_A_INTERRUPT_USED == true) || (PIO_B_INTERRUPT_USED == true) || (PIO_C_INTERRUPT_USED == true) || (PIO_D_INTERRUPT_USED == true) || (PIO_E_INTERRUPT_USED == true) >
     uint32_t i;
