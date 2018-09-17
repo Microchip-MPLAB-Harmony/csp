@@ -21,7 +21,7 @@ global sort_alphanumeric
 def InterruptStatusWarning(symbol, event):
     global portInterrupt
     channelIndex = pioSymChannel.index((symbol.getID()).split("_")[1])
-    if portInterrupt[channelIndex].getValue() == True and Database.getSymbolValue("core", pioSymNVICVector[channelIndex]) == False:
+    if portInterrupt[channelIndex].getValue() == True and Database.getSymbolValue("core", pioSymInterruptVector[channelIndex]) == False:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -33,10 +33,10 @@ def ClockStatusWarning(symbol, event):
     else:
         symbol.setVisible(False)
 
-# Dependency Function to pass interrupt related info to NVIC Manager.
+# Dependency Function to pass interrupt related info to Interrupt Manager.
 # This function will be entered only by internal change happening to PORT channel interrupt, never by manual
 # change because channel interrupt is not user configurable directly.
-def NVICControl(pioNVIC, event):
+def pioInterruptControl(pioInterrupt, event):
     i = []
     # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
     # Split the id name by "_" and put all the split names in the list "i"
@@ -44,13 +44,13 @@ def NVICControl(pioNVIC, event):
     k = pioSymChannel.index(i[1])
 
     if (event["value"] == True):
-        Database.setSymbolValue("core", pioSymNVICVector[k], True, 1)
-        Database.setSymbolValue("core", pioSymNVICHandler[k], "PIO" + i[1] + "_InterruptHandler", 1)
-        Database.setSymbolValue("core", pioSymNVICHandlerLock[k], True, 1)
+        Database.setSymbolValue("core", pioSymInterruptVector[k], True, 1)
+        Database.setSymbolValue("core", pioSymInterruptHandler[k], "PIO" + i[1] + "_InterruptHandler", 1)
+        Database.setSymbolValue("core", pioSymInterruptHandlerLock[k], True, 1)
     else :
-        Database.setSymbolValue("core", pioSymNVICVector[k], False, 1)
-        Database.setSymbolValue("core", pioSymNVICHandler[k], "PIO" + i[1] + "_Handler", 1)
-        Database.setSymbolValue("core", pioSymNVICHandlerLock[k], False, 1)
+        Database.setSymbolValue("core", pioSymInterruptVector[k], False, 1)
+        Database.setSymbolValue("core", pioSymInterruptHandler[k], "PIO" + i[1] + "_Handler", 1)
+        Database.setSymbolValue("core", pioSymInterruptHandlerLock[k], False, 1)
 
 def pinLatchCal(pin, event):
     global pioSym_PIO_SODR
@@ -65,11 +65,8 @@ def pinLatchCal(pin, event):
         bit_pos = pinBitPosition[pin_num-1].getValue()
         SODR_Value = pioSym_PIO_SODR[channelIndex].getValue()
 
-        if pinDirection[pin_num-1].getValue() == "Out":
-            if event["value"] == "High":
-                SODR_Value |= 1 << bit_pos
-            else:
-                SODR_Value &= ~(1 << bit_pos)
+        if event["value"] == "High":
+            SODR_Value |= 1 << bit_pos
         else:
             SODR_Value &= ~(1 << bit_pos)
 
@@ -77,7 +74,6 @@ def pinLatchCal(pin, event):
 
 def pinDirCal(pin, event):
     global pioSym_PIO_OER
-    global pioSym_PIO_SODR
     global pinChannel
     global pinBitPosition
     global pinLatch
@@ -89,19 +85,14 @@ def pinDirCal(pin, event):
         channelIndex = pioSymChannel.index(portChannel)
         bit_pos = pinBitPosition[pin_num-1].getValue()
         OER_Value = pioSym_PIO_OER[channelIndex].getValue()
-        SODR_Value = pioSym_PIO_SODR[channelIndex].getValue()
 
         if event["value"] == "Out":
             OER_Value |= 1 << bit_pos
-            SODR_Value &= ~(1 << bit_pos)
         else:
-        # if (event["value"] == ""):
             OER_Value &= ~(1 << bit_pos)
-            SODR_Value &= ~(1 << bit_pos)
-
 
         pioSym_PIO_OER[channelIndex].setValue(OER_Value, 2)
-        pioSym_PIO_SODR[channelIndex].setValue(SODR_Value, 2)
+
 
 def pinFunctionCal(pType, pFunction):
     global pioSym_PIO_PDR
@@ -128,18 +119,17 @@ def pinFunctionCal(pType, pFunction):
             if (pFunction["value"] == "A"):
                 ABCDSR1_Value &= ~(1 << bit_pos)
                 ABCDSR2_Value &= ~(1 << bit_pos)
-            if (pFunction["value"] == "B"):
+            elif (pFunction["value"] == "B"):
                 ABCDSR1_Value |= (1 << bit_pos)
                 ABCDSR2_Value &= ~(1 << bit_pos)
-            if (pFunction["value"] == "C"):
+            elif (pFunction["value"] == "C"):
                 ABCDSR1_Value &= ~(1 << bit_pos)
                 ABCDSR2_Value |= (1 << bit_pos)
-            if (pFunction["value"] == "D"):
+            else:
                 ABCDSR1_Value |= (1 << bit_pos)
                 ABCDSR2_Value |= (1 << bit_pos)
 
         else:
-        # if (pFunction["value"] == "GPIO") or (pFunction["value"] == "Alternate") or (pFunction["value"] == ""):
             ABCDSR1_Value &= ~(1 << bit_pos)
             ABCDSR2_Value &= ~(1 << bit_pos)
             PDR_Value &= ~(1 << bit_pos)
@@ -200,12 +190,10 @@ def pinInterruptCal(pin, event):
                 LSR_Value |= (1 << bit_pos)
                 REHLSR_Value &= ~(1 << bit_pos)
             else:
-            #if (event["value"] == "High Level"):
                 LSR_Value |= (1 << bit_pos)
                 REHLSR_Value |= (1 << bit_pos)
 
         else:
-        #if (event["value"] == "") or (event["value"] == "Both Edge") :
             AIMER_Value &= ~(1 << bit_pos)
             LSR_Value &= ~(1 << bit_pos)
             REHLSR_Value &= ~(1 << bit_pos)
@@ -229,14 +217,12 @@ def pinOpenDrainCal(pin, event):
         if event["value"] == "True":
             MDER_Value |= 1 << bit_pos
         else:
-        #if (event["value"] == "") :
             MDER_Value &= ~(1 << bit_pos)
 
         pioSym_PIO_MDER[channelIndex].setValue(MDER_Value, 2)
 
 def pinPullUpCal(pin, event):
     global pioSym_PIO_PUER
-    global pioSym_PIO_PPDDR
     global pinChannel
     global pinBitPosition
     pin_num = int((pin.getID()).split("_")[1])
@@ -250,15 +236,12 @@ def pinPullUpCal(pin, event):
         if event["value"] == "True":
             PUER_Value |= 1 << bit_pos
         else:
-        #if (event["value"] == "") :
             PUER_Value &= ~(1 << bit_pos)
 
         pioSym_PIO_PUER[channelIndex].setValue(PUER_Value, 2)
-        pioSym_PIO_PPDDR[channelIndex].setValue((PUER_Value), 2)
 
 def pinPullDownCal(pin, event):
     global pioSym_PIO_PPDEN
-    global pioSym_PIO_PUDR
     global pinChannel
     global pinBitPosition
     pin_num = int((pin.getID()).split("_")[1])
@@ -273,9 +256,8 @@ def pinPullDownCal(pin, event):
             PPDEN_Value |= 1 << bit_pos
         else:
             PPDEN_Value &= ~(1 << bit_pos)
-                
+
         pioSym_PIO_PPDEN[channelIndex].setValue(PPDEN_Value, 2)
-        pioSym_PIO_PUDR[channelIndex].setValue((PPDEN_Value), 2)
 
 def pinFilterCal(pin, event):
     global pioSym_PIO_IFER
@@ -554,10 +536,6 @@ global pioSym_PIO_PUER
 pioSym_PIO_PUER = []
 global pioSym_PIO_PPDEN
 pioSym_PIO_PPDEN = []
-global pioSym_PIO_PUDR
-pioSym_PIO_PUDR = []
-global pioSym_PIO_PPDDR
-pioSym_PIO_PPDDR = []
 global pioSym_PIO_MDER
 pioSym_PIO_MDER = []
 global pioSym_PIO_SODR
@@ -570,12 +548,12 @@ pioSym_PIO_IFER = []
 pioSym_PIO_SCDR = []
 
 pioSymPeripheralId = []
-global pioSymNVICVector
-pioSymNVICVector = []
-global pioSymNVICHandler
-pioSymNVICHandler = []
-global pioSymNVICHandlerLock
-pioSymNVICHandlerLock = []
+global pioSymInterruptVector
+pioSymInterruptVector = []
+global pioSymInterruptHandler
+pioSymInterruptHandler = []
+global pioSymInterruptHandlerLock
+pioSymInterruptHandlerLock = []
 pioSymClkEnComment = []
 global pioSymIntEnComment
 pioSymIntEnComment = []
@@ -669,23 +647,11 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSym_PIO_PUER[portNumber].setDefaultValue(0x00000000)
     pioSym_PIO_PUER[portNumber].setReadOnly(True)
 
-    pioSym_PIO_PUDR.append(portNumber)
-    pioSym_PIO_PUDR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PUDR_VALUE", port[portNumber])
-    pioSym_PIO_PUDR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PUDR")
-    pioSym_PIO_PUDR[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_PUDR[portNumber].setReadOnly(True)
-
     pioSym_PIO_PPDEN.append(portNumber)
     pioSym_PIO_PPDEN[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN_VALUE", port[portNumber])
     pioSym_PIO_PPDEN[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN")
     pioSym_PIO_PPDEN[portNumber].setDefaultValue(0x00000000)
     pioSym_PIO_PPDEN[portNumber].setReadOnly(True)
-    
-    pioSym_PIO_PPDDR.append(portNumber)
-    pioSym_PIO_PPDDR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PPDDR_VALUE", port[portNumber])
-    pioSym_PIO_PPDDR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PPDDR")
-    pioSym_PIO_PPDDR[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_PPDDR[portNumber].setReadOnly(True)
 
     pioSym_PIO_MDER.append(portNumber)
     pioSym_PIO_MDER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_MDER_VALUE", port[portNumber])
@@ -708,19 +674,19 @@ for portNumber in range(0, len(pioSymChannel)):
     #symbols and variables for interrupt handling
     pioSymPeripheralId.append(portNumber)
     pioSymPeripheralId[portNumber] = Interrupt.getInterruptIndex("PIO" + str(pioSymChannel[portNumber]))
-    pioSymNVICVector.append(portNumber)
-    pioSymNVICVector[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_ENABLE"
-    pioSymNVICHandler.append(portNumber)
-    pioSymNVICHandler[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER"
-    pioSymNVICHandlerLock.append(portNumber)
-    pioSymNVICHandlerLock[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER_LOCK"
+    pioSymInterruptVector.append(portNumber)
+    pioSymInterruptVector[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_ENABLE"
+    pioSymInterruptHandler.append(portNumber)
+    pioSymInterruptHandler[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER"
+    pioSymInterruptHandlerLock.append(portNumber)
+    pioSymInterruptHandlerLock[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER_LOCK"
 
     # Dependency Status for interrupt
     pioSymIntEnComment.append(portNumber)
     pioSymIntEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_NVIC_ENABLE_COMMENT", pioMenu)
     pioSymIntEnComment[portNumber].setVisible(False)
     pioSymIntEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
-    pioSymIntEnComment[portNumber].setDependencies(InterruptStatusWarning, ["core." + pioSymNVICVector[portNumber], "PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED"])
+    pioSymIntEnComment[portNumber].setDependencies(InterruptStatusWarning, ["core." + pioSymInterruptVector[portNumber], "PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED"])
 
     # Dependency Status for clock
     pioSymClkEnComment.append(portNumber)
@@ -729,10 +695,10 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSymClkEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
     pioSymClkEnComment[portNumber].setDependencies(ClockStatusWarning, ["core.PIO" + str(pioSymChannel[portNumber]) + "_CLOCK_ENABLE"])
 
-# NVIC Dynamic settings
-pioNVICControl = coreComponent.createBooleanSymbol("NVIC_PIO_ENABLE", None)
-pioNVICControl.setDependencies(NVICControl, portInterruptList)
-pioNVICControl.setVisible(False)
+# Interrupt Dynamic settings
+pioSymInterruptControl = coreComponent.createBooleanSymbol("NVIC_PIO_ENABLE", None)
+pioSymInterruptControl.setDependencies(pioInterruptControl, portInterruptList)
+pioSymInterruptControl.setVisible(False)
 
 pioMatrixSym_CCFG_SYSIO = coreComponent.createHexSymbol("PIO_CCFG_SYSIO_VALUE", portConfiguration)
 pioMatrixSym_CCFG_SYSIO.setLabel("CCFG_SYSIO")

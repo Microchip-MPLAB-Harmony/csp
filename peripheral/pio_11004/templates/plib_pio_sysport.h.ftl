@@ -17,21 +17,17 @@
         <#if .vars[pinchannel]?has_content>
             <#if .vars[pinchannel] == "A">
                 <#assign PORTA_Pin_List = PORTA_Pin_List + [.vars[pinport]]>
-            </#if>
 
-            <#if .vars[pinchannel] == "B">
+            <#elseif .vars[pinchannel] == "B">
                 <#assign PORTB_Pin_List = PORTB_Pin_List + [.vars[pinport]]>
-            </#if>
 
-            <#if .vars[pinchannel] == "C">
+            <#elseif .vars[pinchannel] == "C">
                 <#assign PORTC_Pin_List = PORTC_Pin_List + [.vars[pinport]]>
-            </#if>
 
-            <#if .vars[pinchannel] == "D">
+            <#elseif .vars[pinchannel] == "D">
                 <#assign PORTD_Pin_List = PORTD_Pin_List + [.vars[pinport]]>
-            </#if>
 
-            <#if .vars[pinchannel] == "E">
+            <#elseif .vars[pinchannel] == "E">
                 <#assign PORTE_Pin_List = PORTE_Pin_List + [.vars[pinport]]>
             </#if>
 
