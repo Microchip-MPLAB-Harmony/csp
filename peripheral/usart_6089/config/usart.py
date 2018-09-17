@@ -41,20 +41,8 @@ def interruptControl(usartNVIC, event):
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
-<<<<<<< HEAD
-    if (event["value"] == False):
-        status = True
-    else :
-        status = False
-
-    if (event["id"] == interruptVector) and (Database.getSymbolValue("usart" + str(usartInstance), "USART_INTERRUPT_MODE") == False):
-        status = False
-
-    symbol.setVisible(status)
-=======
     if (Database.getSymbolValue("usart" + str(usartInstance), "INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
->>>>>>> [NVIC] Update to make it generic for SAMC2x/SAME70 devices
 
 # Calculates BRG value
 def baudRateCalc(clk, baud, overSamp):
