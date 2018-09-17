@@ -1,5 +1,5 @@
 def calcPIV(period_ms):
-    clk_freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+    clk_freq = int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
     clk_freq = clk_freq / 16;
 
     return int(period_ms * clk_freq / 1000)
@@ -39,7 +39,7 @@ def instantiateComponent(pitComponent):
     piv_sym.setLabel("Period")
     piv_sym.setDefaultValue(piv)
     piv_sym.setReadOnly(True)
-    piv_sym.setDependencies(updatePIV,["PERIOD_MS", "core.MASTER_CLOCK_FREQUENCY"])
+    piv_sym.setDependencies(updatePIV,["PERIOD_MS", "core.PCLOCK_LS_CLOCK_FREQUENCY"])
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
