@@ -125,7 +125,7 @@ void RTC${RTC_INDEX}_Initialize(void)
     <#lt>{
     <#lt>    bool periodIntervalComplete = false;
 
-    <#lt>    if( RTC_REGS->MODE2.INTFLAG & period == period )
+    <#lt>    if( (RTC_REGS->MODE2.INTFLAG & period) == period )
     <#lt>    {
     <#lt>        periodIntervalComplete = true;
 
