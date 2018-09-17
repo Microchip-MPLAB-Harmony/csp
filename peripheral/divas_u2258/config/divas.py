@@ -49,7 +49,7 @@ def instantiateComponent(divasComponent):
 
     #Enable or Disable lead zero optimization
     divasSym_DLZ = divasComponent.createBooleanSymbol("DIVAS_DLZ", None)
-    divasSym_DLZ.setLabel("Enable Leading Zero optimization to reduce division time?")
+    divasSym_DLZ.setLabel("Enable Leading Zero optimization?")
     divasSym_DLZ.setDescription("32 bit divisions take 2-16 cycles when enabled; 16 cycles when disabled")
     divasSym_DLZ.setVisible(True)
     divasSym_DLZ.setDefaultValue(1)
