@@ -117,6 +117,30 @@ void DAC${DAC_INDEX}_Initialize(void)
 
     /* Clear all Interrupts */
     DAC_REGS->DAC_INTFLAG |= DAC_INTFLAG_Msk;
+
+    <#if DAC_DITHERING_MODE == true>
+    /* Enable DAC Dithering operation */
+    DAC_REGS->DAC_CTRLB |= DAC_CTRLB_DITHER_Msk;
+    </#if>
+
+    <#if DAC_OUTPUT_MODE == "ANALOG_COMPARATOR">
+    /* Enable Internal Output */
+    DAC_REGS->DAC_CTRLB |= DAC_CTRLB_IOEN_Msk;
+    <#elseif DAC_OUTPUT_MODE == "INTERNAL_AND_EXTERNAL_OUTPUT">
+    /* Enable Internal and External output */
+    DAC_REGS->DAC_CTRLB |= (DAC_CTRLB_IOEN_Msk | DAC_CTRLB_EOEN_Msk);
+    <#elseif DAC_OUTPUT_MODE == "EXTERNAL_OUTPUT">
+    /* Enable External Output */
+    DAC_REGS->DAC_CTRLB |= DAC_CTRLB_EOEN_Msk;
+    </#if>
+
+    /* Enable DAC */
+    DAC_REGS->DAC_CTRLA |= DAC_CTRLA_ENABLE_Msk;
+
+    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
+    {
+        /* Wait for Synchronization after Enabling DAC */
+    }
 }
 
 // *****************************************************************************
@@ -178,92 +202,4 @@ bool DAC${DAC_INDEX}_IsReady(void)
     }
 
     return dacIsReady;
-}
-
-// *****************************************************************************
-/* Function:
-    void DAC${DAC_INDEX}_ExternalOutputEnable ( bool enable )
-
-  Summary:
-    Enable/Disable the external DAC output.
-
-  Description:
-    This function allows the application to enables and disable the external DAC
-    output.
-
-  Remarks:
-    Refer plib_dac${DAC_INDEX}.h for more information.
-*/
-
-void DAC${DAC_INDEX}_ExternalOutputEnable ( bool enable )
-{
-    /* Disable DAC Module */
-    DAC_REGS->DAC_CTRLA &= ~(DAC_CTRLA_ENABLE_Msk);
-
-    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for Synchronization after Disabling DAC */
-    }
-
-    if(enable)
-    {
-        /* Enable External Output */
-        DAC_REGS->DAC_CTRLB |= DAC_CTRLB_EOEN_Msk;
-    }
-    else
-    {
-        DAC_REGS->DAC_CTRLB &= ~(DAC_CTRLB_EOEN_Msk);
-    }
-
-    /* Enable DAC */
-    DAC_REGS->DAC_CTRLA |= DAC_CTRLA_ENABLE_Msk;
-
-    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for Synchronization after Enabling DAC */
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void DAC${DAC_INDEX}_InternalOutputEnable ( bool enable )
-
-  Summary:
-    Enable/Disable the internal DAC output.
-
-  Description:
-    This function allows the application to enable and disable the internal DAC
-    output to the Analog Comparator, ADC and the SDADC peripherals.
-
-  Remarks:
-    Refer plib_dac${DAC_INDEX}.h for more information.
-*/
-
-void DAC${DAC_INDEX}_InternalOutputEnable ( bool enable )
-{
-    /* Disable DAC Module */
-    DAC_REGS->DAC_CTRLA &= ~(DAC_CTRLA_ENABLE_Msk);
-
-    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for Synchronization after Disabling DAC */
-    }
-
-    if(enable)
-    {
-        /* Enable Internal Output */
-        DAC_REGS->DAC_CTRLB |= DAC_CTRLB_IOEN_Msk;
-    }
-    else
-    {
-        DAC_REGS->DAC_CTRLB &= ~(DAC_CTRLB_IOEN_Msk);
-    }
-
-    /* Enable DAC */
-    DAC_REGS->DAC_CTRLA |= DAC_CTRLA_ENABLE_Msk;
-
-    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for Synchronization after Enabling DAC */
-    }
 }
