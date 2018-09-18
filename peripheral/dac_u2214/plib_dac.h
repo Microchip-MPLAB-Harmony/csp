@@ -121,9 +121,8 @@ void DACx_Initialize(void);
     the DAC is not ready will result in the in-determinate operation. 
 
   Precondition:
-    DACx_Initialize and DACx_InternalOutputEnable or DACx_ExternalOutputEnable
-    must have been called for the associated DAC instance. The DACx_IsReady()
-    function should have returned true.
+    DACx_Initialize must have been called for the associated DAC instance. 
+    The DACx_IsReady() function should have returned true.
 
   Parameters:
     data - Digital value to be converted. 
@@ -134,7 +133,6 @@ void DACx_Initialize(void);
   Example:
     <code>
         DACx_Initialize();
-        DACx_ExternalOutputEnable(true);
         if(DACx_IsReady() == true)
         {
             DACx_DataWrite(data);
@@ -161,8 +159,7 @@ void DACx_DataWrite(uint16_t data);
     function returns false will result in in-determinate operation.
 
   Precondition:
-    DACx_Initialize and DACx_InternalOutputEnable or DACx_ExternalOutputEnable
-    must have been called for the associated DAC instance.
+    DACx_Initialize must have been called for the associated DAC instance.
 
   Parameters:
     None.
@@ -174,7 +171,6 @@ void DACx_DataWrite(uint16_t data);
   Example:
     <code>
         DACx_Initialize();
-        DACx_ExternalOutputEnable(true);
         if (DACx_IsReady())
         {
             DACx_DataWrite(0xFF);
@@ -191,72 +187,6 @@ void DACx_DataWrite(uint16_t data);
 */
 
 bool DACx_IsReady(void);
-
-// *****************************************************************************
-/* Function:
-    void DACx_ExternalOutputEnable ( bool enable )
-
-  Summary:
-    Enable/Disable the external DAC output.
-
-  Description:
-    This function allows the application to enables and disable the external DAC
-    output.
-
-  Precondition:
-    DACx_Initialize must have been called for the associated DAC instance.
-
-  Parameters:
-    true  - Enable external DAC output.
-    false - Disable external DAC output.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-        DACx_Initialize();
-        DACx_ExternalOutputEnable(True);
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void DACx_ExternalOutputEnable ( bool enable );
-
-// *****************************************************************************
-/* Function:
-    void DACx_InternalOutputEnable ( bool enable )
-
-  Summary:
-    Enable/Disable the internal DAC output.
-
-  Description:
-    This function allows the application to enable and disable the internal DAC
-    output to the Analog Comparator, ADC and the SDADC peripherals.
-
-  Precondition:
-    DACx_Initialize must have been called for the associated DAC instance.
-
-  Parameters:
-    true  - Enable internal DAC output.
-    false - Disable internal DAC output.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-        DACx_Initialize();
-        DACx_InternalOutputEnable(True);
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void DACx_InternalOutputEnable ( bool enable );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

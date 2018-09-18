@@ -115,13 +115,13 @@ void DAC${DAC_INDEX}_Initialize(void);
     conversion. The internal and/or external DAC outputs will be updated if
     these output were enabled.  The analog output voltage will depend on the
     choice of the DAC reference (configured via MHC). This function should only
-    be called when the DAC${DAC_INDEX}_IsReady() returns true. Calling this function when
-    the DAC is not ready will result in the in-determinate operation. 
+    be called when the DAC${DAC_INDEX}_IsReady() returns true. Calling this 
+    function when the DAC is not ready will result in the in-determinate 
+    operation. 
 
   Precondition:
-    DAC${DAC_INDEX}_Initialize and DAC${DAC_INDEX}_InternalOutputEnable or DAC${DAC_INDEX}_ExternalOutputEnable
-    must have been called for the associated DAC instance. The DAC${DAC_INDEX}_IsReady()
-    function should have returned true.
+    DAC${DAC_INDEX}_Initialize must have been called for the associated DAC 
+    instance. The DAC${DAC_INDEX}_IsReady() function should have returned true.
 
   Parameters:
     data - Digital value to be converted. 
@@ -132,7 +132,6 @@ void DAC${DAC_INDEX}_Initialize(void);
   Example:
     <code>
         DAC${DAC_INDEX}_Initialize();
-        DAC${DAC_INDEX}_ExternalOutputEnable(true);
         if(DAC${DAC_INDEX}_IsReady() == true)
         {
             DAC${DAC_INDEX}_DataWrite(data);
@@ -154,13 +153,14 @@ void DAC${DAC_INDEX}_DataWrite(uint16_t data);
 
   Description:
     This function checks for the readiness of the DAC to receive the next sample
-    value. The application should call the DAC${DAC_INDEX}_DataWrite() function only when
-    this function returns true. Calling the DAC${DAC_INDEX}_DataWrite() function when this
-    function returns false will result in in-determinate operation.
+    value. The application should call the DAC${DAC_INDEX}_DataWrite() function 
+    only when this function returns true. Calling DAC${DAC_INDEX}_DataWrite() 
+    function when this function returns false will result in in-determinate 
+    operation.
 
   Precondition:
-    DAC${DAC_INDEX}_Initialize and DAC${DAC_INDEX}_InternalOutputEnable or DAC${DAC_INDEX}_ExternalOutputEnable
-    must have been called for the associated DAC instance.
+    DAC${DAC_INDEX}_Initialize must have been called for the associated DAC 
+    instance.
 
   Parameters:
     None.
@@ -172,7 +172,6 @@ void DAC${DAC_INDEX}_DataWrite(uint16_t data);
   Example:
     <code>
         DAC${DAC_INDEX}_Initialize();
-        DAC${DAC_INDEX}_ExternalOutputEnable(true);
         if (DAC${DAC_INDEX}_IsReady())
         {
             DAC${DAC_INDEX}_DataWrite(0xFF);
@@ -189,72 +188,6 @@ void DAC${DAC_INDEX}_DataWrite(uint16_t data);
 */
 
 bool DAC${DAC_INDEX}_IsReady(void);
-
-// *****************************************************************************
-/* Function:
-    void DAC${DAC_INDEX}_ExternalOutputEnable ( bool enable )
-
-  Summary:
-    Enable/Disable the external DAC output.
-
-  Description:
-    This function allows the application to enables and disable the external DAC
-    output.
-
-  Precondition:
-    DAC${DAC_INDEX}_Initialize must have been called for the associated DAC instance.
-
-  Parameters:
-    true  - Enable external DAC output.
-    false - Disable external DAC output.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-        DAC${DAC_INDEX}_Initialize();
-        DAC${DAC_INDEX}_ExternalOutputEnable(True);
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void DAC${DAC_INDEX}_ExternalOutputEnable ( bool enable );
-
-// *****************************************************************************
-/* Function:
-    void DAC${DAC_INDEX}_InternalOutputEnable ( bool enable )
-
-  Summary:
-    Enable/Disable the internal DAC output.
-
-  Description:
-    This function allows the application to enable and disable the internal DAC
-    output to the Analog Comparator, ADC and the SDADC peripherals.
-
-  Precondition:
-    DAC${DAC_INDEX}_Initialize must have been called for the associated DAC instance.
-
-  Parameters:
-    true  - Enable internal DAC output.
-    false - Disable internal DAC output.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-        DAC${DAC_INDEX}_Initialize();
-        DAC${DAC_INDEX}_InternalOutputEnable(True);
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void DAC${DAC_INDEX}_InternalOutputEnable ( bool enable );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
