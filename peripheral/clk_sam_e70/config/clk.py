@@ -7,6 +7,45 @@ global LIST_FWS_MAX_FREQ
 global DICT_PCER0
 global DICT_PCER1
 
+sym_uart_clock_freq = []
+sym_tc_ch0_clock_freq = []
+sym_tc_ch1_clock_freq = []
+sym_tc_ch2_clock_freq = []
+sym_tc_ch3_clock_freq = []
+
+def tcClockFreqCalc(symbol, event):
+    tcInstance = symbol.getID()[2]
+    id = event["id"]
+    clk_src = event["value"]
+    if (id == "TC_PCK_CLKSRC"):
+        if (clk_src == "PCK6"):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCK6_CLOCK_FREQUENCY")), 2)
+        elif (clk_src == "PCK7"):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCK7_CLOCK_FREQUENCY")), 2)
+    else:
+        if (clk_src == 0):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+        elif (clk_src == 1):
+            if (Database.getSymbolValue("tc"+str(tcInstance), "TC_PCK_CLKSRC") == "PCK6"):
+                symbol.setValue(int(Database.getSymbolValue("core", "PCK6_CLOCK_FREQUENCY")), 2)
+            else:
+                symbol.setValue(int(Database.getSymbolValue("core", "PCK7_CLOCK_FREQUENCY")), 2)
+        elif (clk_src == 2):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8, 2)
+        elif (clk_src == 3):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/32, 2)
+        elif (clk_src == 4):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/128, 2)
+        elif (clk_src == 5):
+            symbol.setValue(int(Database.getSymbolValue("core", "CLK_SLOW_XTAL")), 2)
+
+def uartClockFreqCalc(symbol, event):
+    clk_src = event["value"]
+    if (clk_src == 0):
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+    else:
+        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
+
 def __update_fws_value(flash_wait_states, event):
     """
     Updates Flash Wait States with change in Master Clock Frequency
@@ -825,6 +864,48 @@ if __name__ == "__main__":
 
     # creates calculated frequencies menu
     __calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, __update_fws_value, join, ElementTree)
+
+    # calculated peripheral frequencies
+    #UART
+    num_uart_instances = []
+    uart = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"UART\"]")
+    num_uart_instances = uart.getChildren()
+    for uartInstance in range(0, len(num_uart_instances)):
+        sym_uart_clock_freq.append(uartInstance)
+        sym_uart_clock_freq[uartInstance] = coreComponent.createIntegerSymbol("UART"+str(uartInstance)+"_CLOCK_FREQUENCY", None)
+        sym_uart_clock_freq[uartInstance].setVisible(False)
+        sym_uart_clock_freq[uartInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+        sym_uart_clock_freq[uartInstance].setDependencies(uartClockFreqCalc, ["uart"+str(uartInstance)+".UART_CLK_SRC"])
+
+    #TC
+    num_tc_instances = []
+    tc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]")
+    num_tc_instances = tc.getChildren()
+    for tcInstance in range(0, len(num_tc_instances)):
+        sym_tc_ch0_clock_freq.append(tcInstance)
+        sym_tc_ch0_clock_freq[tcInstance] = coreComponent.createIntegerSymbol("TC"+str(tcInstance)+"_CH0_CLOCK_FREQUENCY", None)
+        sym_tc_ch0_clock_freq[tcInstance].setVisible(False)
+        sym_tc_ch0_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+        sym_tc_ch0_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC0_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC"])
+
+        sym_tc_ch1_clock_freq.append(tcInstance)
+        sym_tc_ch1_clock_freq[tcInstance] = coreComponent.createIntegerSymbol("TC"+str(tcInstance)+"_CH1_CLOCK_FREQUENCY", None)
+        sym_tc_ch1_clock_freq[tcInstance].setVisible(False)
+        sym_tc_ch1_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+        sym_tc_ch1_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC1_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC"])
+
+        sym_tc_ch2_clock_freq.append(tcInstance)
+        sym_tc_ch2_clock_freq[tcInstance] = coreComponent.createIntegerSymbol("TC"+str(tcInstance)+"_CH2_CLOCK_FREQUENCY", None)
+        sym_tc_ch2_clock_freq[tcInstance].setVisible(False)
+        sym_tc_ch2_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+        sym_tc_ch2_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC2_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC"])
+
+        #CH3 is used for quadrature speed mode
+        sym_tc_ch3_clock_freq.append(tcInstance)
+        sym_tc_ch3_clock_freq[tcInstance] = coreComponent.createIntegerSymbol("TC"+str(tcInstance)+"_CH3_CLOCK_FREQUENCY", None)
+        sym_tc_ch3_clock_freq[tcInstance].setVisible(False)
+        sym_tc_ch3_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+        sym_tc_ch3_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC3_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC"])
 
     #File handling
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
