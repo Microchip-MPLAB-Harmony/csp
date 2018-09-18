@@ -21,7 +21,7 @@ global sort_alphanumeric
 def InterruptStatusWarning(symbol, event):
     global portInterrupt
     channelIndex = pioSymChannel.index((symbol.getID()).split("_")[1])
-    if portInterrupt[channelIndex].getValue() == True and Database.getSymbolValue("core", pioSymInterruptVector[channelIndex]) == False:
+    if portInterrupt[channelIndex].getValue() == True and Database.getSymbolValue("core", pioSymInterruptVectorUpdate[channelIndex]) == True:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -512,6 +512,7 @@ portConfiguration = coreComponent.createMenuSymbol("PIO_CONFIGURATION", pioEnabl
 portConfiguration.setLabel("PIO Registers Configuration")
 
 port = []
+
 portInterruptList = []
 
 global portInterrupt
@@ -547,13 +548,14 @@ global pioSym_PIO_IFER
 pioSym_PIO_IFER = []
 pioSym_PIO_SCDR = []
 
-pioSymPeripheralId = []
 global pioSymInterruptVector
 pioSymInterruptVector = []
 global pioSymInterruptHandler
 pioSymInterruptHandler = []
 global pioSymInterruptHandlerLock
 pioSymInterruptHandlerLock = []
+global pioSymInterruptVectorUpdate
+pioSymInterruptVectorUpdate = []
 pioSymClkEnComment = []
 global pioSymIntEnComment
 pioSymIntEnComment = []
@@ -672,21 +674,21 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSym_PIO_IFSCER[portNumber].setReadOnly(True)
 
     #symbols and variables for interrupt handling
-    pioSymPeripheralId.append(portNumber)
-    pioSymPeripheralId[portNumber] = Interrupt.getInterruptIndex("PIO" + str(pioSymChannel[portNumber]))
     pioSymInterruptVector.append(portNumber)
-    pioSymInterruptVector[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_ENABLE"
+    pioSymInterruptVector[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_ENABLE"
     pioSymInterruptHandler.append(portNumber)
-    pioSymInterruptHandler[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER"
+    pioSymInterruptHandler[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER"
     pioSymInterruptHandlerLock.append(portNumber)
-    pioSymInterruptHandlerLock[portNumber] = "NVIC_" + str(pioSymPeripheralId[portNumber]) + "_HANDLER_LOCK"
+    pioSymInterruptHandlerLock[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER_LOCK"
+    pioSymInterruptVectorUpdate.append(portNumber)
+    pioSymInterruptVectorUpdate[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_ENABLE_UPDATE"
 
     # Dependency Status for interrupt
     pioSymIntEnComment.append(portNumber)
     pioSymIntEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_NVIC_ENABLE_COMMENT", pioMenu)
     pioSymIntEnComment[portNumber].setVisible(False)
     pioSymIntEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
-    pioSymIntEnComment[portNumber].setDependencies(InterruptStatusWarning, ["core." + pioSymInterruptVector[portNumber], "PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED"])
+    pioSymIntEnComment[portNumber].setDependencies(InterruptStatusWarning, ["core." + pioSymInterruptVectorUpdate[portNumber], "PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED"])
 
     # Dependency Status for clock
     pioSymClkEnComment.append(portNumber)
