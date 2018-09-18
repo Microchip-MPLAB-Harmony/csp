@@ -53,34 +53,17 @@ def baudRateCalc(clk, baud):
 
 def baudRateTrigger(symbol, event):
     global uartInstance
-    clk = Database.getSymbolValue("uart" + str(uartInstance), "UART_CLOCK_FREQ")
+    clk = Database.getSymbolValue("core", "UART"+str(uartInstance)+"_CLOCK_FREQUENCY")
     baud = Database.getSymbolValue("uart" + str(uartInstance), "BAUD_RATE")
-    if event["id"] == "BAUD_RATE":
-        baud = event["value"]
-    if event["id"] == "UART_CLOCK_FREQ":
-        clk = int(event["value"])
-
     brgVal = baudRateCalc(clk, baud)
-
     if(brgVal < 1):
         Log.writeErrorMessage("UART Clock source value is low for the desired baud rate")
-
     symbol.clearValue()
     symbol.setValue(brgVal, 2)
 
 def clockSourceFreq(symbol, event):
-    if (event["id"] == "UART_CLK_SRC"):
-        symbol.clearValue()
-        if (event["value"] == 0):
-            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
-        if (event["value"] == 1):
-            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
-    if (event["id"] == "PCK4_CLOCK_FREQUENCY") and (Database.getSymbolValue("uart" + str(uartInstance), "UART_CLK_SRC") == 1):
-        symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
-    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue("uart" + str(uartInstance), "UART_CLK_SRC") == 0):
-        symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+    symbol.clearValue()
+    symbol.setValue(int(Database.getSymbolValue("core", "UART"+str(uartInstance)+"_CLOCK_FREQUENCY")), 2)
 
 ################################################################################
 #### Component ####
@@ -104,8 +87,11 @@ def instantiateComponent(uartComponent):
 
     uartClkSrc = uartComponent.createKeyValueSetSymbol("UART_CLK_SRC", None)
     uartClkSrc.setLabel("Select Clock Source")
-    uartClkSrc.addKey("PERIPH_CLK", "0", "MCK")
-    uartClkSrc.addKey("PMC_PCK", "1", "PCK4")
+    childrenNodes = []
+    uart = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"UART\"]/value-group@[name=\"UART_MR__BRSRCCK\"]")
+    childrenNodes = uart.getChildren()
+    for param in range(0, len(childrenNodes)):
+        uartClkSrc.addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
     uartClkSrc.setDisplayMode("Description")
     uartClkSrc.setOutputMode("Key")
     uartClkSrc.setDefaultValue(0)
@@ -113,7 +99,7 @@ def instantiateComponent(uartComponent):
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
     uartClkValue.setLabel("Clock Source Value")
     uartClkValue.setReadOnly(True)
-    uartClkValue.setDependencies(clockSourceFreq, ["UART_CLK_SRC", "core.PCK4_CLOCK_FREQUENCY", "core.MASTER_CLOCK_FREQUENCY"])
+    uartClkValue.setDependencies(clockSourceFreq, ["UART_CLK_SRC", "core.UART"+str(uartInstance)+"_CLOCK_FREQUENCY"])
     uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
 
     uartBaud = uartComponent.createIntegerSymbol("BAUD_RATE", None)
@@ -124,7 +110,7 @@ def instantiateComponent(uartComponent):
 
     uartBRGValue = uartComponent.createIntegerSymbol("BRG_VALUE", None)
     uartBRGValue.setVisible(False)
-    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "UART_CLOCK_FREQ"])
+    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core.UART"+str(uartInstance)+"_CLOCK_FREQUENCY"])
     uartBRGValue.setDefaultValue(brgVal)
 
     uartDataWidth = uartComponent.createComboSymbol("UART_MR_DATA_WIDTH", None, ["8 BIT"])
