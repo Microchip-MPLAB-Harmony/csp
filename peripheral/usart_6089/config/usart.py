@@ -41,7 +41,7 @@ def interruptControl(usartNVIC, event):
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
-    if (Database.getSymbolValue("usart" + str(usartInstance), "INTERRUPT_MODE") == True):
+    if (Database.getSymbolValue("usart" + str(usartInstance), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
 # Calculates BRG value

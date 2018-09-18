@@ -37,7 +37,7 @@ def interruptControl(uartNVIC, event):
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
-    if (Database.getSymbolValue("uart" + str(uartInstance), "INTERRUPT_MODE") == True):
+    if (Database.getSymbolValue("uart" + str(uartInstance), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
 
