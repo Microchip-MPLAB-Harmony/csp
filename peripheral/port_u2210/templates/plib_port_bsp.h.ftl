@@ -120,7 +120,7 @@
                         <#if switchName?counter == switchPinPos?counter>
                             <#if switchName?counter == switchActiveLevel?counter>
                                 /*** SWITCH Macros for ${switchName} ***/
-                                #define ${switchName}_Get()     ((PORT${switchGroup}_REGS->PORT_IN >> ${switchPinPos})) & 0x01)
+                                #define ${switchName}_Get()     ((PORT${switchGroup}_REGS->PORT_IN >> ${switchPinPos}) & 0x01)
                                 <#if switchActiveLevel == "High">
                                     #define ${switchName}_STATE_PRESSED  1
                                     #define ${switchName}_STATE_RELEASED 0
