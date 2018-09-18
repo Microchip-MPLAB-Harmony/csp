@@ -63,7 +63,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // *****************************************************************************
 /* Function:
-    RSTC_CAUSE RSTC${RSTC_INDEX}_CauseGet( void );
+    RSTC_RESET_CAUSE RSTC${RSTC_INDEX}_ResetCauseGet (void);
 
   Summary:
     Reports the cause of the last reset.
@@ -75,7 +75,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     plib_rstc${RSTC_INDEX}.h for usage information.
 */
 
-RSTC_CAUSE RSTC${RSTC_INDEX}_CauseGet( void )
+RSTC_RESET_CAUSE RSTC${RSTC_INDEX}_ResetCauseGet( void )
 {
-    return ( RSTC_CAUSE ) RSTC_REGS->RSTC_RCAUSE;
+    return ( RSTC_RESET_CAUSE ) RSTC_REGS->RSTC_RCAUSE;
 }

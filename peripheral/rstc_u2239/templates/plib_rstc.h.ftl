@@ -91,28 +91,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 typedef enum
 {
-    /* No Reset */
-    RSTC_CAUSE_NONE = 0x0,
 
-    /* Power On Reset */
-    RSTC_CAUSE_POWER_ON_RESET = 0x01,
+<#list 0..(RSTC_RCAUSE_LENGTH - 1) as i>
+    <#assign resetReason = "RSTC_RCAUSE" + i>
+    RSTC_RESET_CAUSE_${.vars[resetReason]}_RESET = RSTC_RCAUSE_${.vars[resetReason]}_Msk,
 
-    /* Brown Out CORE Detector Reset */
-    RTSC_CAUSE_BODCORE_RESET = 0x02,
-
-    /* Brown Out VDD Detector Reset */
-    RSTC_CAUSE_BODVDD_RESET = 0x04,
-
-    /* External Reset */
-    RSTC_CAUSE_EXTERNAL_RESET = 0x10,
-
-    /* Watchdog Reset */
-    RSTC_CAUSE_WDT_RESET = 0x20,
-
-    /* System Reset Request */
-    RSTC_CAUSE_SYSTEM_RESET_REQUEST = 0x40,
-
-} RSTC_CAUSE;
+</#list>
+} RSTC_RESET_CAUSE;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -125,15 +110,15 @@ typedef enum
 
 // *****************************************************************************
 /* Function:
-    RSTC_CAUSE RSTC${RSTC_INDEX}_CauseGet( void );
+    RSTC_RESET_CAUSE RSTC${RSTC_INDEX}_ResetCauseGet( void );
 
   Summary:
     Reports the cause of the last reset.
 
   Description:
     This function returns the cause of the last reset. The reset could be due to
-    multiple reasons. The applicatioin should compare the returned value against
-    different values in the RSTC_CAUSE enumeration to identify the possible
+    multiple reasons. The application should compare the returned value against
+    different values in the RSTC_RESET_CAUSE enumeration to identify the possible
     causes.
 
   Precondition:
@@ -143,14 +128,15 @@ typedef enum
     None.
 
   Returns:
-    RSTC_CAUSE - Identifies type of reset.
+    RSTC_RESET_CAUSE - Identifies type of reset.
 
   Example:
    <code>
 
-     RSTC_CAUSE resetCause = RSTC_CAUSE_WDT_RESET | RSTC_CAUSE_BODVDD_RESET;
+     RSTC_RESET_CAUSE resetCause = RSTC_RESET_CAUSE_WDT_RESET | 
+                                   RSTC_RESET_CAUSE_BODVDD_RESET;
 
-     if (resetCause == RSTC${RSTC_INDEX}_CauseGet())
+     if (resetCause == RSTC${RSTC_INDEX}_ResetCauseGet())
      {
          //Application related tasks
      }
@@ -160,7 +146,7 @@ typedef enum
     None.
 */
 
-RSTC_CAUSE RSTC${RSTC_INDEX}_CauseGet( void );
+RSTC_RESET_CAUSE RSTC${RSTC_INDEX}_ResetCauseGet (void);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

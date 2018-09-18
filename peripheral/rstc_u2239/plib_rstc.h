@@ -15,14 +15,8 @@
     library provides access to and control of the associated Reset Controller.
 
   Remarks:
-    This header is for documentation only.  The actual plib_rstc<x> headers
-    will be generated as required by the MCC (where <x> is the peripheral
-    instance number).
-
-    Every interface symbol has a lower-case 'x' in it following the "RSTC"
-    abbreviation.  This 'x' will be replaced by the peripheral instance number
-    in the generated headers.  These are the actual functions that should be
-    used.
+    This header is for documentation only.  The actual plib_rstc headers will be
+    generated as required by the MCC.
 
 *******************************************************************************/
 
@@ -50,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_RSTCx_H      // Guards against multiple inclusion
-#define PLIB_RSTCx_H
+#ifndef PLIB_RSTC_H      // Guards against multiple inclusion
+#define PLIB_RSTC_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -97,28 +91,25 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 typedef enum
 {
-    /* No Reset */
-    RSTC_CAUSE_NONE = 0x0,
-
     /* Power On Reset */
-    RSTC_CAUSE_POWER_ON_RESET = 0x01
+    RSTC_RESET_CAUSE_POR_RESET = RSTC_RCAUSE_POR_Msk,
 
     /* Brown Out CORE Detector Reset */
-    RTSC_CAUSE_BODCORE_RESET = 0x02,
+    RSTC_RESET_CAUSE_BODCORE_RESET = RSTC_RCAUSE_BODCORE_Msk,
 
     /* Brown Out VDD Detector Reset */
-    RSTC_CAUSE_BODVDD_RESET = 0x04,
+    RSTC_RESET_CAUSE_BODVDD_RESET = RSTC_RCAUSE_BODVDD_Msk,
 
     /* External Reset */
-    RSTC_CAUSE_EXTERNAL_RESET = 0x10,
+    RSTC_RESET_CAUSE_EXT_RESET = RSTC_RCAUSE_EXT_Msk,
 
     /* Watchdog Reset */
-    RSTC_CAUSE_WDT_RESET = 0x20,
+    RSTC_RESET_CAUSE_WDT_RESET = RSTC_RCAUSE_WDT_Msk,
 
     /* System Reset Request */
-    RSTC_CAUSE_SYSTEM_RESET_REQUEST = 0x40,
+    RSTC_RESET_CAUSE_SYST_RESET = RSTC_RCAUSE_SYST_Msk,
 
-} RSTC_CAUSE;
+} RSTC_RESET_CAUSE;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -131,16 +122,16 @@ typedef enum
 
 // *****************************************************************************
 /* Function:
-    RSTC_CAUSE RSTCx_CauseGet( void );
+    RSTC_RESET_CAUSE RSTC_ResetCauseGet (void);
 
   Summary:
     Reports the cause of the last reset.
 
   Description:
     This function returns the cause of the last reset. The reset could be due to
-    multiple reasons. The applicatioin should compare the returned value against
-    different values in the RSTC_CAUSE enumeration to identify the possible
-    causes.
+    multiple reasons. The application should compare the returned value against
+    different values in the RSTC_RESET_CAUSE enumeration to identify the 
+    possible causes.
 
   Precondition:
     None.
@@ -149,21 +140,22 @@ typedef enum
     None.
 
   Returns:
-    RSTC_CAUSE - Identifies type of reset.
+    RSTC_RESET_CAUSE - Identifies type of reset.
 
   Example:
     <code>
-      if ((RSTC_CAUSE_WDT_RESET|RSTC_CAUSE_BODVDD_RESET) == RSTCx_CauseGet ())
-      {
+       if ((RSTC_RESET_CAUSE_WDT_RESET|RSTC_RESET_CAUSE_BODVDD_RESET) == 
+            RSTC_ResetCauseGet ())
+       {
           //Application related tasks
-      }
+       }
     </code>
 
   Remarks:
     None.
 */
 
-RSTC_CAUSE RSTCx_CauseGet( void );
+RSTC_RESET_CAUSE RSTC_ResetCauseGet (void);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -172,4 +164,4 @@ RSTC_CAUSE RSTCx_CauseGet( void );
 
 #endif
 
-#endif /* PLIB_RSTCx_H */
+#endif /* PLIB_RSTC_H */
