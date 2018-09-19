@@ -96,7 +96,7 @@ typedef enum
 
 } NVMCTRL_ERROR;
 
-<#if NVMCTRL_INTERRUPT_MODE == true>
+<#if INTERRUPT_ENABLE == true>
     <#lt>typedef void (*NVMCTRL_CALLBACK)(uintptr_t context);
 </#if>
 
@@ -125,7 +125,7 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_IsBusy( void );
     <#lt>bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase ( uint32_t address );
 </#if>
 
-<#if NVMCTRL_INTERRUPT_MODE == true>
+<#if INTERRUPT_ENABLE == true>
     <#lt>void NVMCTRL${NVMCTRL_INDEX?string}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
 
     <#lt>void NVMCTRL${NVMCTRL_INDEX?string}_InterruptHandler(void);

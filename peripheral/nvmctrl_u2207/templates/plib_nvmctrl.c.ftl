@@ -58,7 +58,7 @@ static uint32_t status = 0;
 // *****************************************************************************
 // *****************************************************************************
 
-<#if NVMCTRL_INTERRUPT_MODE == true>
+<#if INTERRUPT_ENABLE == true>
 
     <#lt>NVMCTRL_CALLBACK nvmctrl${NVMCTRL_INDEX?string}CallbackFunc;
 
@@ -97,7 +97,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void)
     /* Clear error flags */
     NVMCTRL_REGS->NVMCTRL_STATUS = (0x00U);
 
-<#if NVMCTRL_INTERRUPT_MODE == true>
+<#if INTERRUPT_ENABLE == true>
     /* Clear interrupt flag */
     NVMCTRL_REGS->NVMCTRL_INTENCLR = NVMCTRL_INTENCLR_READY_Msk;
 </#if>
@@ -137,7 +137,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void)
     <#lt>        *paddress++ = data[i];
     <#lt>    }
 
-    <#lt><#if NVMCTRL_INTERRUPT_MODE == true>
+    <#lt><#if INTERRUPT_ENABLE == true>
     <#lt>    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
     <#lt><#else>
     <#lt>    /* Check if the module is busy */
@@ -164,7 +164,7 @@ void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void)
 
     <#lt>    NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_RWWEEER | NVMCTRL_CTRLA_CMDEX_KEY;
 
-    <#lt><#if NVMCTRL_INTERRUPT_MODE == true>
+    <#lt><#if INTERRUPT_ENABLE == true>
     <#lt>    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
     <#lt><#else>
     <#lt>    /* Check if the module is busy */
@@ -205,7 +205,7 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite( uint32_t *data, const uint32_t ad
         *paddress++ = data[i];
     }
 
-<#if NVMCTRL_INTERRUPT_MODE == true>
+<#if INTERRUPT_ENABLE == true>
     NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
 <#else>
     /* Check if the module is busy */
@@ -231,7 +231,7 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_RowErase( uint32_t address )
 
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_ER_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 
-<#if NVMCTRL_INTERRUPT_MODE == true>
+<#if INTERRUPT_ENABLE == true>
     NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
 <#else>
     /* Check if the module is busy */
