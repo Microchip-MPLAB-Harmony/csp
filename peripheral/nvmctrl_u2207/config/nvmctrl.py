@@ -192,8 +192,8 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_CTRLB_CACHEDIS.setDefaultValue(True)
 
     #Configures the library for interrupt mode operations
-    nvmctrlSym_Interrupt = nvmctrlComponent.createBooleanSymbol("NVMCTRL_INTERRUPT_MODE", nvmctrlSym_Menu)
-    nvmctrlSym_Interrupt.setLabel("Enable Interrupt ?")
+    nvmctrlSym_Interrupt = nvmctrlComponent.createBooleanSymbol("INTERRUPT_ENABLE", nvmctrlSym_Menu)
+    nvmctrlSym_Interrupt.setLabel("Enable Interrupt?")
     nvmctrlSym_Interrupt.setDefaultValue(False)
 
     #Configuration when interfaced with memory driver
