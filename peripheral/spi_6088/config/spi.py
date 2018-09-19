@@ -1,3 +1,16 @@
+global dummyDataDict
+dummyDataDict = {
+                    "_8_BIT"     :   0xFF,
+                    "_9_BIT"     :   0x1FF,
+                    "_10_BIT"    :   0x3FF,
+                    "_11_BIT"    :   0x7FF,
+                    "_12_BIT"    :   0xFFF,
+                    "_13_BIT"    :   0x1FFF,
+                    "_14_BIT"    :   0x3FFF,
+                    "_15_BIT"    :   0x7FFF,
+                    "_16_BIT"    :   0xFFFF,
+                }
+
 # Dependency Function to show or hide the warning message depending on Clock enable/disable status
 def ClockStatusWarning(symbol, event):
     if event["value"] == False:
@@ -96,24 +109,8 @@ def calculateCSRIndex(spiSymCSRIndex, event):
     spiSymCSRIndex.setValue(int(event["symbol"].getKeyValue(event["value"])[-1]), 1)
 
 def DummyData_ValueUpdate(spiSymDummyData, event):
-    if event["symbol"].getKey(event["value"]) == "_8_BIT":
-        spiSymDummyData.setValue(0xFF, 1)
-    elif event["symbol"].getKey(event["value"]) == "_9_BIT":
-        spiSymDummyData.setValue(0x1FF, 1)
-    elif event["symbol"].getKey(event["value"]) == "_10_BIT":
-        spiSymDummyData.setValue(0x3FF, 1)
-    elif event["symbol"].getKey(event["value"]) == "_11_BIT":
-        spiSymDummyData.setValue(0x7FF, 1)
-    elif event["symbol"].getKey(event["value"]) == "_12_BIT":
-        spiSymDummyData.setValue(0xFFF, 1)
-    elif event["symbol"].getKey(event["value"]) == "_13_BIT":
-        spiSymDummyData.setValue(0x1FFF, 1)
-    elif event["symbol"].getKey(event["value"]) == "_14_BIT":
-        spiSymDummyData.setValue(0x3FFF, 1)
-    elif event["symbol"].getKey(event["value"]) == "_15_BIT":
-        spiSymDummyData.setValue(0x7FFF, 1)
-    elif event["symbol"].getKey(event["value"]) == "_16_BIT":
-        spiSymDummyData.setValue(0xFFFF, 1)
+    spiSymDummyData.setValue(dummyDataDict[event["symbol"].getKey(event["value"])], 1)
+    spiSymDummyData.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
 
 spiBitField_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_MR"]/bitfield@[name="MSTR"]')
 spiValGrp_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_MR__MSTR"]')
@@ -223,6 +220,7 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_SCBR.setLabel("Baud Rate in Hz")
     spiSym_CSR_SCBR.setDefaultValue(defaultbaudRate)
     spiSym_CSR_SCBR.setVisible(True)
+    spiSym_CSR_SCBR.setMin(1)
     spiSym_CSR_SCBR.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
 
     #local variable for code generation
@@ -294,6 +292,7 @@ def instantiateComponent(spiComponent):
     spiSymDummyData.setLabel("Dummy Data")
     spiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
     spiSymDummyData.setDefaultValue(0xFF)
+    spiSymDummyData.setMin(0x0)
     spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_CHARSIZE_BITS"])
 
     spiSym_CSR_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CLOCK_POLARITY", None)
