@@ -234,9 +234,15 @@ xdmacMenu = coreComponent.createMenuSymbol("XDMAC_MENU", None)
 xdmacMenu.setLabel("DMA (XDMAC)")
 xdmacMenu.setDescription("DMA (XDMAC) Configuration")
 
-xdmacIndex = coreComponent.createIntegerSymbol("XDMAC_INDEX", xdmacMenu)
+xdmacIndex = coreComponent.createStringSymbol("XDMAC_INDEX", xdmacMenu)
 xdmacIndex.setVisible(False)
-xdmacIndex.setDefaultValue(0)
+instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"XDMAC\"]").getChildren()
+if len(instances) == 1:
+    xdmacIndex.setDefaultValue("")
+else:
+#TODO: Add support for second instance
+    xdmacIndex.setDefaultValue("0")
+
 
 # DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
 portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
@@ -440,7 +446,7 @@ configName = Variables.get("__CONFIGURATION_NAME")
 xdmacHeaderFile = coreComponent.createFileSymbol("xdmacHeaderFile", None)
 xdmacHeaderFile.setMarkup(True)
 xdmacHeaderFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac.h.ftl")
-xdmacHeaderFile.setOutputName("plib_xdmac0.h")
+xdmacHeaderFile.setOutputName("plib_xdmac"+xdmacIndex.getValue()+".h")
 xdmacHeaderFile.setDestPath("/peripheral/xdmac/")
 xdmacHeaderFile.setProjectPath("config/" + configName +"/peripheral/xdmac/")
 xdmacHeaderFile.setType("HEADER")
@@ -450,7 +456,7 @@ xdmacHeaderFile.setEnabled(False)
 xdmacSourceFile = coreComponent.createFileSymbol("xdmacSourceFile", None)
 xdmacSourceFile.setMarkup(True)
 xdmacSourceFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac.c.ftl")
-xdmacSourceFile.setOutputName("plib_xdmac0.c")
+xdmacSourceFile.setOutputName("plib_xdmac"+xdmacIndex.getValue()+".c")
 xdmacSourceFile.setDestPath("/peripheral/xdmac/")
 xdmacSourceFile.setProjectPath("config/" + configName +"/peripheral/xdmac/")
 xdmacSourceFile.setType("SOURCE")
