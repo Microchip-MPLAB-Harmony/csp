@@ -163,7 +163,7 @@ def tcinterruptControl(symbol, event):
                 Database.clearSymbolValue("core", interruptVector)
                 Database.clearSymbolValue("core", interruptHandler)
                 Database.clearSymbolValue("core", interruptHandlerLock)
-                if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and (tcSym_CH_IER_CPCS[channelID].getValue() == True or tcSym_CH_IER_CPAS[channelID].getValue() == True)):
+                if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue("core", interruptVector, True, 2)
                     Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
                     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
@@ -190,7 +190,7 @@ def tcinterruptControl(symbol, event):
         Database.clearSymbolValue("core", interruptHandler)
         Database.clearSymbolValue("core", interruptHandlerLock)
         if(tcSym_CH_Enable[channelID].getValue() == True):
-            if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
+            if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and (tcSym_CH_IER_CPCS[channelID].getValue() == True or tcSym_CH_IER_CPAS[channelID].getValue() == True)):
                 Database.setSymbolValue("core", interruptVector, True, 2)
                 Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
                 Database.setSymbolValue("core", interruptHandlerLock, True, 2)
