@@ -690,6 +690,10 @@ def onCapabilityConnected(connectionInfo):
 def onCapabilityDisconnected(connectionInfo):
     global sysTimeChannel_Sym
 
+    tcSym_CH_TimerPeriod[0].setVisible(True)
+    tcSym_CH_TimerPeriod[1].setVisible(True)
+    tcSym_CH_TimerPeriod[2].setVisible(True)
+
     remoteComponent = connectionInfo["remoteComponent"]
     if (remoteComponent.getID() == "sys_time"):
         sysTimeChannel_Sym.setVisible(False)
