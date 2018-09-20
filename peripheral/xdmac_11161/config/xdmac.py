@@ -239,10 +239,17 @@ xdmacIndex.setVisible(False)
 instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"XDMAC\"]").getChildren()
 if len(instances) == 1:
     xdmacIndex.setDefaultValue("")
+    numOfInstance=""
 else:
 #TODO: Add support for second instance
     xdmacIndex.setDefaultValue("0")
+    numOfInstance="0"
 
+
+# DMA_INSTANCE_NAME: Needed to map DMA system service APIs to PLIB APIs
+portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
+portSymAPI_Prefix.setDefaultValue("XDMAC"+numOfInstance)
+portSymAPI_Prefix.setVisible(False)
 
 # DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
 portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
