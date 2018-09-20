@@ -1087,7 +1087,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_TimerPeriodCount[channelID].setDefaultValue(60060)
         tcSym_CH_TimerPeriodCount[channelID].setDependencies(tcPeriodCountCalc, \
         ["TC"+str(channelID)+"_TIMER_PERIOD_MS", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core.MASTER_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+            "core.MASTER_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "TC_PCK_CLKSRC","TC"+str(channelID)+"_ENABLE"])
 
         #one-shot timer
         tcSym_CH_CMR_CPCSTOP.append(channelID)
