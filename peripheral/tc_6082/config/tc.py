@@ -721,12 +721,18 @@ def sysTime_ChannelSelection(symbol,event):
     if(channelID==0):
         tcSym_CH_TimerPeriod[1].setVisible(True)
         tcSym_CH_TimerPeriod[2].setVisible(True)
+        tcSym_CH_Enable[1].setValue(False,2)
+        tcSym_CH_Enable[2].setValue(False,2)
     elif(channelID==1):
         tcSym_CH_TimerPeriod[0].setVisible(True)
         tcSym_CH_TimerPeriod[2].setVisible(True)
+        tcSym_CH_Enable[0].setValue(False,2)
+        tcSym_CH_Enable[2].setValue(False,2)
     elif(channelID==2):
         tcSym_CH_TimerPeriod[0].setVisible(True)
         tcSym_CH_TimerPeriod[1].setVisible(True)
+        tcSym_CH_Enable[0].setValue(False,2)
+        tcSym_CH_Enable[1].setValue(False,2)
 
     timerStartApiName = "TC" + str(num) + str(tc_channel) + "_TimerStart"
     timeStopApiName = "TC" + str(num) + str(tc_channel) + "_TimerStop "
