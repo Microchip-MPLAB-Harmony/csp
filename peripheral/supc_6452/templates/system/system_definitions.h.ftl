@@ -1,1 +1,1 @@
-#include "peripheral/supc/plib_supc${INDEX?string}.h"
+#include "peripheral/supc/plib_${SUPC_INSTANCE_NAME?lower_case}.h"

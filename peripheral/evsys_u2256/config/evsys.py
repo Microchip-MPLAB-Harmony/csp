@@ -6,14 +6,12 @@ global generator
 global path
 global channel
 
-global instance
-global peripId
+global evsysInstanceName
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
 
 channel = 0
-instance = 0
 path = {}
 user = {}
 generator = {}
@@ -87,8 +85,7 @@ def updateEVSYSInterruptWarringStatus(symbol, event):
         symbol.setVisible(event["value"])
 
 def instantiateComponent(evsysComponent):
-    global instance
-    global peripId
+    global evsysInstanceName
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
@@ -103,17 +100,14 @@ def instantiateComponent(evsysComponent):
     evsysGenerator = []
     channelUserDependency = []
 
-    num = evsysComponent.getID()[-1:]
-    Log.writeInfoMessage("Running EVSYS" + str(num))
+    evsysInstanceName = evsysComponent.createStringSymbol("EVSYS_INSTANCE_NAME", None);
+    evsysInstanceName.setVisible(False)
+    evsysInstanceName.setDefaultValue(evsysComponent.getID().upper())
+    Log.writeInfoMessage("Running " + evsysInstanceName.getValue())
 
     #FREQM Main Menu
     evsysSym_Menu = evsysComponent.createMenuSymbol("EVSYS_MENU", None)
     evsysSym_Menu.setLabel("EVSYS MODULE SETTINGS ")
-
-    #EVSYS Index
-    evsysSym_INDEX = evsysComponent.createIntegerSymbol("INDEX",evsysSym_Menu)
-    evsysSym_INDEX.setVisible(False)
-    evsysSym_INDEX.setDefaultValue(int(num))
 
     generatorSymbol = []
     generatorsNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
@@ -134,7 +128,7 @@ def instantiateComponent(evsysComponent):
         channelUserDependency.append("EVSYS_USER_" + str(usersNode.getChildren()[id].getAttribute("index")))
         channelUserDependency.append("USER_" + str(usersNode.getChildren()[id].getAttribute("name")) + "_READY")
 
-    channelNode = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance/parameters')
+    channelNode = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="EVSYS"]/instance@[name="'+evsysInstanceName.getValue()+'"]/parameters')
     for id in range(0,len(channelNode.getChildren())):
         if channelNode.getChildren()[id].getAttribute("name") == "CHANNELS":
             channel = int(channelNode.getChildren()[id].getAttribute("value"))
@@ -243,10 +237,10 @@ def instantiateComponent(evsysComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = "EVSYS_INTERRUPT_ENABLE"
-    InterruptHandler = "EVSYS_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "EVSYS_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = "EVSYS_INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = evsysInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    InterruptHandler = evsysInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    InterruptHandlerLock = evsysInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = evsysInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
 
     # Interrupt Warning status
     evsysSym_IntEnComment = evsysComponent.createCommentSymbol("EVSYS_INTERRUPT_ENABLE_COMMENT", None)
@@ -262,7 +256,7 @@ def instantiateComponent(evsysComponent):
 
     evsysSym_HeaderFile = evsysComponent.createFileSymbol("EVSYS_HEADER", None)
     evsysSym_HeaderFile.setSourcePath("../peripheral/evsys_u2256/templates/plib_evsys.h.ftl")
-    evsysSym_HeaderFile.setOutputName("plib_evsys"+str(num)+".h")
+    evsysSym_HeaderFile.setOutputName("plib_"+evsysInstanceName.getValue().lower()+".h")
     evsysSym_HeaderFile.setDestPath("peripheral/evsys")
     evsysSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/evsys")
     evsysSym_HeaderFile.setType("HEADER")
@@ -270,7 +264,7 @@ def instantiateComponent(evsysComponent):
 
     evsysSym_SourceFile = evsysComponent.createFileSymbol("EVSYS_SOURCE", None)
     evsysSym_SourceFile.setSourcePath("../peripheral/evsys_u2256/templates/plib_evsys.c.ftl")
-    evsysSym_SourceFile.setOutputName("plib_evsys"+str(num)+".c")
+    evsysSym_SourceFile.setOutputName("plib_"+evsysInstanceName.getValue().lower()+".c")
     evsysSym_SourceFile.setDestPath("peripheral/evsys")
     evsysSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/evsys")
     evsysSym_SourceFile.setType("SOURCE")

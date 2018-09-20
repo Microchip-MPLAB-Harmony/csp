@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    plib_tc${INDEX}.c
+    plib_${TC_INSTANCE_NAME?lower_case}.c
 
   Summary
     TC peripheral library source file.
@@ -51,7 +51,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*  This section lists the other files that are included in this file.
 */
 #include "device.h"
-#include "plib_tc${INDEX}.h"
+#include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 <#assign start = 0>
 <#-- start index of the for loop. In quadrature position mode channel 0 and channel 1 are used. And in quadrature speed mode, all 3 channels are used -->
@@ -71,26 +71,26 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
 /* Callback object for channel 0 */
-TC_QUADRATURE_CALLBACK_OBJECT TC${INDEX}_CallbackObj;
+TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
 </#if>
 /* Initialize channel in timer mode */
-void TC${INDEX}_QuadratureInitialize (void)
+void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
 {
     uint32_t status;
 
     <#if TC_INDEX_PULSE == true>
         <#lt>    /* clock selection and waveform selection */
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING |
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING |
             TC_CMR_ABETRG_Msk | TC_CMR_ETRGEDG_RISING;
 
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING;
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING;
 
     <#else>
         <#lt>    /* clock selection and waveform selection */
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING | TC_CMR_CPCTRG_Msk;
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[0].TC_RC = ${TC_QEI_NUM_PULSES}U;
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_LDRA_RISING | TC_CMR_CPCTRG_Msk;
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_RC = ${TC_QEI_NUM_PULSES}U;
         <#if TC_QEI_IER_CPCS == true>
-            <#lt>    TC${INDEX}_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPCS_Msk;
+            <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPCS_Msk;
         </#if>
     </#if>
 
@@ -105,76 +105,76 @@ void TC${INDEX}_QuadratureInitialize (void)
 
         <#if TC3_CMR_TCCLKS == "">
         <#lt>    /* Use peripheral clock */
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[2].TC_EMR = TC_EMR_NODIVCLK_Msk;
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk;
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_EMR = TC_EMR_NODIVCLK_Msk;
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk;
         <#else>
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_TCCLKS_${TC3_CMR_TCCLKS} | TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk;
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_TCCLKS_${TC3_CMR_TCCLKS} | TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk;
         </#if>
-    <#lt>    TC${INDEX}_REGS->TC_CHANNEL[2].TC_RC = ${TC_QEI_PERIOD}U;
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_RC = ${TC_QEI_PERIOD}U;
     </#if>
 
     /*Enable quadrature mode */
-    TC${INDEX}_REGS->TC_BMR = TC_BMR_QDEN_Msk ${TC_BMR_SWAP?then('| (TC_BMR_SWAP_Msk)', '')} | TC_BMR_MAXFILT(${TC_BMR_MAXFILT}U) | TC_BMR_EDGPHA_Msk
+    ${TC_INSTANCE_NAME}_REGS->TC_BMR = TC_BMR_QDEN_Msk ${TC_BMR_SWAP?then('| (TC_BMR_SWAP_Msk)', '')} | TC_BMR_MAXFILT(${TC_BMR_MAXFILT}U) | TC_BMR_EDGPHA_Msk
         | ${(TC_BMR_POSEN == "POSITION")?then('(TC_BMR_POSEN_Msk)', 'TC_BMR_SPEEDEN_Msk')};
 
     <#if TC_QIER_IDX == true || TC_QIER_QERR == true>
 
-    <#lt>    TC${INDEX}_REGS->TC_QIER = ${TC_QIER_IDX?then('(TC_QIER_IDX_Msk)', '')} <#if TC_QIER_IDX == true && TC_QIER_QERR == true> | </#if><#rt>
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_QIER = ${TC_QIER_IDX?then('(TC_QIER_IDX_Msk)', '')} <#if TC_QIER_IDX == true && TC_QIER_QERR == true> | </#if><#rt>
                                         <#lt>${TC_QIER_QERR?then('(TC_QIER_QERR_Msk)', '')};
     </#if>
     <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
-    <#lt>    TC${INDEX}_CallbackObj.callback_fn = NULL;
+    <#lt>    ${TC_INSTANCE_NAME}_CallbackObj.callback_fn = NULL;
     </#if>
-    status = TC${INDEX}_REGS->TC_QISR;  /* Clear interrupt status */
+    status = ${TC_INSTANCE_NAME}_REGS->TC_QISR;  /* Clear interrupt status */
 
     /* Ignore warning */
     (void)status;
 }
 
-void TC${INDEX}_QuadratureStart (void)
+void ${TC_INSTANCE_NAME}_QuadratureStart (void)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
     <#if TC_INDEX_PULSE == true>
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
     </#if>
     <#if TC_BMR_POSEN == "SPEED">
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[2].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
     </#if>
 }
 
-void TC${INDEX}_QuadratureStop (void)
+void ${TC_INSTANCE_NAME}_QuadratureStop (void)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKDIS_Msk);
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKDIS_Msk);
     <#if TC_INDEX_PULSE == true>
-        <#lt>    TC${INDEX}_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKDIS_Msk);
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKDIS_Msk);
     </#if>
     <#if TC_BMR_POSEN == "SPEED">
-    <#lt>    TC${INDEX}_REGS->TC_CHANNEL[2].TC_CCR = (TC_CCR_CLKDIS_Msk);
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_CCR = (TC_CCR_CLKDIS_Msk);
     </#if>
 }
 
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
     <#lt>/* Register callback for quadrature interrupt */
-    <#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_QUADRATURE_CALLBACK callback, uintptr_t context)
+    <#lt>void ${TC_INSTANCE_NAME}_QuadratureCallbackRegister(TC_QUADRATURE_CALLBACK callback, uintptr_t context)
     <#lt>{
-    <#lt>    TC${INDEX}_CallbackObj.callback_fn = callback;
-    <#lt>    TC${INDEX}_CallbackObj.context = context;
+    <#lt>    ${TC_INSTANCE_NAME}_CallbackObj.callback_fn = callback;
+    <#lt>    ${TC_INSTANCE_NAME}_CallbackObj.context = context;
     <#lt>}
 
-    <#lt>void TC${INDEX}_CH0_InterruptHandler(void)
+    <#lt>void ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void)
     <#lt>{
-    <#lt>    TC_QUADRATURE_STATUS quadrature_status = TC${INDEX}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK;
+    <#lt>    TC_QUADRATURE_STATUS quadrature_status = ${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK;
     <#lt>    /* Call registered callback function */
-    <#lt>    if (TC${INDEX}_CallbackObj.callback_fn != NULL)
+    <#lt>    if (${TC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        TC${INDEX}_CallbackObj.callback_fn(quadrature_status, TC${INDEX}_CallbackObj.context);
+    <#lt>        ${TC_INSTANCE_NAME}_CallbackObj.callback_fn(quadrature_status, ${TC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
     <#lt>}
 
 <#else>
-TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
+TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 {
-    return ((TC${INDEX}_REGS->TC_QISR) & TC_QUADRATURE_STATUS_MSK);
+    return ((${TC_INSTANCE_NAME}_REGS->TC_QISR) & TC_QUADRATURE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- QUADRATURE -->
@@ -225,11 +225,11 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void)
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Callback object for channel ${CH_NUM} */
-TC_TIMER_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
+TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in timer mode */
-void TC${INDEX}_CH${CH_NUM}_TimerInitialize (void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerInitialize (void)
 {
     <#if TC_MCU_SERIES == "SAME70" || TC_MCU_SERIES == "SAMS70" || TC_MCU_SERIES == "SAMV70" || TC_MCU_SERIES == "SAMV71">
         <#if .vars[TC_PCK7] == true>
@@ -240,17 +240,17 @@ void TC${INDEX}_CH${CH_NUM}_TimerInitialize (void)
     </#if>
     <#if .vars[TC_CMR_TCCLKS] == "">
     /* Use peripheral clock */
-    <#lt>    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
     <#lt>    /* clock selection and waveform selection */
-    <#lt>    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('| (TC_CMR_CPCDIS_Msk)', '')};
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('| (TC_CMR_CPCDIS_Msk)', '')};
     <#else>
     /* clock selection and waveform selection */
-    <#lt>    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_WAVSEL_UP_RC | \
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_WAVSEL_UP_RC | \
                                                         TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('|(TC_CMR_CPCDIS_Msk)', '')};
     </#if>
 
     /* write period */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = ${.vars[TC_TIMER_PERIOD_COUNT]}U;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = ${.vars[TC_TIMER_PERIOD_COUNT]}U;
 
     <#compress>
     <#assign TIMER_INTERRUPT = "">
@@ -268,75 +268,75 @@ void TC${INDEX}_CH${CH_NUM}_TimerInitialize (void)
 
     <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
     /* enable interrupt */
-    <#lt>    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = ${TIMER_INTERRUPT};
-    <#lt>    TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = NULL;
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = ${TIMER_INTERRUPT};
+    <#lt>    ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn = NULL;
     </#if>
 }
 
 /* Start the timer */
-void TC${INDEX}_CH${CH_NUM}_TimerStart (void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerStart (void)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
 }
 
 /* Stop the timer */
-void TC${INDEX}_CH${CH_NUM}_TimerStop (void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerStop (void)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
-uint32_t TC${INDEX}_CH${CH_NUM}_TimerFrequencyGet()
+uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerFrequencyGet()
 {
     return (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL);
 }
 
 /* Configure timer period */
-void TC${INDEX}_CH${CH_NUM}_TimerPeriodSet (uint16_t period)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodSet (uint16_t period)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = period;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = period;
 }
 
 /* Configure timer compare */
-void TC${INDEX}_CH${CH_NUM}_TimerCompareSet (uint16_t compare)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCompareSet (uint16_t compare)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = compare;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = compare;
 }
 
 /* Read timer period */
-uint16_t TC${INDEX}_CH${CH_NUM}_TimerPeriodGet (void)
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodGet (void)
 {
-    return TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
+    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
 }
 
 /* Read timer counter value */
-uint16_t TC${INDEX}_CH${CH_NUM}_TimerCounterGet (void)
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void)
 {
-    return TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CV;
+    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CV;
 }
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Register callback for period interrupt */
-void TC${INDEX}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context)
 {
-    TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = callback;
-    TC${INDEX}_CH${CH_NUM}_CallbackObj.context = context;
+    ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn = callback;
+    ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context = context;
 }
 
-void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC_TIMER_STATUS timer_status = TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK;
+    TC_TIMER_STATUS timer_status = ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK;
     /* Call registered callback function */
-    if (TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if (${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
-        TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, TC${INDEX}_CH${CH_NUM}_CallbackObj.context);
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
 }
 
 <#else>
 /* Check if timer period status is set */
-bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void)
+bool ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 {
-    return (((TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_SR_CPCS_Msk) >> TC_SR_CPCS_Pos);
+    return (((${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_SR_CPCS_Msk) >> TC_SR_CPCS_Pos);
 }
 </#if>
 </#if> <#-- TIMER -->
@@ -344,11 +344,11 @@ bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 <#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 /* Callback object for channel ${CH_NUM} */
-TC_CAPTURE_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
+TC_CAPTURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in capture mode */
-void TC${INDEX}_CH${CH_NUM}_CaptureInitialize (void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureInitialize (void)
 {
     <#if TC_MCU_SERIES == "SAME70" || TC_MCU_SERIES == "SAMS70" || TC_MCU_SERIES == "SAMV70" || TC_MCU_SERIES == "SAMV71">
         <#if .vars[TC_PCK7] == true>
@@ -359,21 +359,21 @@ void TC${INDEX}_CH${CH_NUM}_CaptureInitialize (void)
     </#if>
     <#if .vars[TC_CMR_TCCLKS] == "">
     /* Use peripheral clock */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
         /* clock selection and capture configurations */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_LDRA_${.vars[TC_CMR_LDRA]} | TC_CMR_LDRB_${.vars[TC_CMR_LDRB]}<#rt>
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_LDRA_${.vars[TC_CMR_LDRA]} | TC_CMR_LDRB_${.vars[TC_CMR_LDRB]}<#rt>
         <#lt>${.vars[TC_CAPTURE_CMR_LDBSTOP]?then('| (TC_CMR_LDBSTOP_Msk)', '')};
 
     <#else>
     /* clock selection and capture configurations */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_LDRA_${.vars[TC_CMR_LDRA]} \
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_LDRA_${.vars[TC_CMR_LDRA]} \
         | TC_CMR_LDRB_${.vars[TC_CMR_LDRB]} <#rt>
         <#lt>${.vars[TC_CAPTURE_CMR_LDBSTOP]?then('| (TC_CMR_LDBSTOP_Msk)', '')};
     </#if>
 
     <#if .vars[TC_CAPTURE_EXT_RESET] == true>
     /* external reset event configurations */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR |= <#if .vars[TC_CMR_ABETRG] == "TIOA"> TC_CMR_ABETRG_Msk | </#if> TC_CMR_ETRGEDG_${.vars[TC_CMR_ETRGEDG]};
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR |= <#if .vars[TC_CMR_ABETRG] == "TIOA"> TC_CMR_ABETRG_Msk | </#if> TC_CMR_ETRGEDG_${.vars[TC_CMR_ETRGEDG]};
     </#if>
 
     <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
@@ -398,61 +398,61 @@ void TC${INDEX}_CH${CH_NUM}_CaptureInitialize (void)
         </#if>
     </#compress>
     /* enable interrupt */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = ${CAPTURE_INTERRUPT};
-    TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = NULL;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = ${CAPTURE_INTERRUPT};
+    ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn = NULL;
     </#if>
 }
 
 /* Start the capture mode */
-void TC${INDEX}_CH${CH_NUM}_CaptureStart (void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStart (void)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
 }
 
 /* Stop the capture mode */
-void TC${INDEX}_CH${CH_NUM}_CaptureStop (void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStop (void)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
-uint32_t TC${INDEX}_CH${CH_NUM}_CaptureFrequencyGet()
+uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureFrequencyGet()
 {
     return (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL);
 }
 
 /* Read last captured value of Capture A */
-uint16_t TC${INDEX}_CH${CH_NUM}_CaptureAGet (void)
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureAGet (void)
 {
-    return TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA;
+    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA;
 }
 
 /* Read last captured value of Capture B */
-uint16_t TC${INDEX}_CH${CH_NUM}_CaptureBGet (void)
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureBGet (void)
 {
-    return TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB;
+    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB;
 }
 
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 /* Register callback function */
-void TC${INDEX}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context)
 {
-    TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = callback;
-    TC${INDEX}_CH${CH_NUM}_CallbackObj.context = context;
+    ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn = callback;
+    ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context = context;
 }
 
-void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC_CAPTURE_STATUS capture_status = TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK;
+    TC_CAPTURE_STATUS capture_status = ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK;
     /* Call registered callback function */
-    if (TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if (${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
-        TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, TC${INDEX}_CH${CH_NUM}_CallbackObj.context);
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
 }
 <#else>
-TC_CAPTURE_STATUS TC${INDEX}_CH${CH_NUM}_CaptureStatusGet(void)
+TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void)
 {
-    return ((TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_CAPTURE_STATUS_MSK);
+    return ((${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_CAPTURE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- CAPTURE -->
@@ -460,11 +460,11 @@ TC_CAPTURE_STATUS TC${INDEX}_CH${CH_NUM}_CaptureStatusGet(void)
 <#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 /* Callback object for channel ${CH_NUM} */
-TC_COMPARE_CALLBACK_OBJECT TC${INDEX}_CH${CH_NUM}_CallbackObj;
+TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
 
 /* Initialize channel in compare mode */
-void TC${INDEX}_CH${CH_NUM}_CompareInitialize (void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareInitialize (void)
 {
     <#if TC_MCU_SERIES == "SAME70" || TC_MCU_SERIES == "SAMS70" || TC_MCU_SERIES == "SAMV70" || TC_MCU_SERIES == "SAMV71">
         <#if .vars[TC_PCK7] == true>
@@ -475,15 +475,15 @@ void TC${INDEX}_CH${CH_NUM}_CompareInitialize (void)
     </#if>
     <#if .vars[TC_CMR_TCCLKS] == "">
     /* Use peripheral clock */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
     /* clock selection and waveform selection */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVSEL_${.vars[TC_CMR_WAVSEL]} | TC_CMR_WAVE_Msk | \
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVSEL_${.vars[TC_CMR_WAVSEL]} | TC_CMR_WAVE_Msk | \
                 TC_CMR_ACPA_${.vars[TC_CMR_ACPA]} | TC_CMR_ACPC_${.vars[TC_CMR_ACPC]} | TC_CMR_AEEVT_${.vars[TC_CMR_AEEVT]} | \
                 TC_CMR_BCPB_${.vars[TC_CMR_BCPB]} | TC_CMR_BCPC_${.vars[TC_CMR_BCPC]} | TC_CMR_BEEVT_${.vars[TC_CMR_BEEVT]} <#rt>
                 <#lt>${.vars[TC_COMPARE_CMR_CPCSTOP]?then('| (TC_CMR_CPCSTOP_Msk)', '')};
     <#else>
     /* clock selection and waveform selection */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_WAVSEL_${.vars[TC_CMR_WAVSEL]} | TC_CMR_WAVE_Msk | \
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_WAVSEL_${.vars[TC_CMR_WAVSEL]} | TC_CMR_WAVE_Msk | \
                 TC_CMR_ACPA_${.vars[TC_CMR_ACPA]} | TC_CMR_ACPC_${.vars[TC_CMR_ACPC]} | TC_CMR_AEEVT_${.vars[TC_CMR_AEEVT]} | \
                 TC_CMR_BCPB_${.vars[TC_CMR_BCPB]} | TC_CMR_BCPC_${.vars[TC_CMR_BCPC]} | TC_CMR_BEEVT_${.vars[TC_CMR_BEEVT]} <#rt>
                 <#lt>${.vars[TC_COMPARE_CMR_CPCSTOP]?then('| (TC_CMR_CPCSTOP_Msk)', '')};
@@ -491,86 +491,86 @@ void TC${INDEX}_CH${CH_NUM}_CompareInitialize (void)
 
 
     /* external reset event configurations */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR |= TC_CMR_ENETRG_Msk | TC_CMR_EEVT_${.vars[TC_CMR_EEVT]} | \
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR |= TC_CMR_ENETRG_Msk | TC_CMR_EEVT_${.vars[TC_CMR_EEVT]} | \
                 TC_CMR_EEVTEDG_${.vars[TC_CMP_CMR_ETRGEDG]};
 
     /* write period */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = ${.vars[TC_COMPARE_PERIOD_COUNT]}U;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = ${.vars[TC_COMPARE_PERIOD_COUNT]}U;
 
     /* write compare values */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = ${.vars[TC_COMPARE_A]}U;
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB = ${.vars[TC_COMPARE_B]}U;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = ${.vars[TC_COMPARE_A]}U;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB = ${.vars[TC_COMPARE_B]}U;
 
     <#if .vars[TC_COMPARE_IER_CPCS] == true>
     /* enable interrupt */
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = TC_IER_CPCS_Msk;
-    TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = NULL;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_IER = TC_IER_CPCS_Msk;
+    ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn = NULL;
     </#if>
 }
 
 /* Start the compare mode */
-void TC${INDEX}_CH${CH_NUM}_CompareStart (void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStart (void)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
 }
 
 /* Stop the compare mode */
-void TC${INDEX}_CH${CH_NUM}_CompareStop (void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStop (void)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
-uint32_t TC${INDEX}_CH${CH_NUM}_CompareFrequencyGet()
+uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareFrequencyGet()
 {
     return (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL);
 }
 
 /* Configure the period value */
-void TC${INDEX}_CH${CH_NUM}_ComparePeriodSet (uint16_t period)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodSet (uint16_t period)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = period;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = period;
 }
 
 /* Read the period value */
-uint16_t TC${INDEX}_CH${CH_NUM}_ComparePeriodGet (void)
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodGet (void)
 {
-    return TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
+    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
 }
 
 /* Set the compare A value */
-void TC${INDEX}_CH${CH_NUM}_CompareASet (uint16_t value)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareASet (uint16_t value)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = value;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = value;
 }
 
 /* Set the compare B value */
-void TC${INDEX}_CH${CH_NUM}_CompareBSet (uint16_t value)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareBSet (uint16_t value)
 {
-    TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB = value;
+    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB = value;
 }
 
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 /* Register callback function */
-void TC${INDEX}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t context)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t context)
 {
-    TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn = callback;
-    TC${INDEX}_CH${CH_NUM}_CallbackObj.context = context;
+    ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn = callback;
+    ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context = context;
 }
 
 /* Interrupt Handler */
-void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC_COMPARE_STATUS compare_status = TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK;
+    TC_COMPARE_STATUS compare_status = ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK;
     /* Call registered callback function */
-    if (TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if (${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
-        TC${INDEX}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, TC${INDEX}_CH${CH_NUM}_CallbackObj.context);
+        ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
 }
 <#else>
-TC_COMPARE_STATUS TC${INDEX}_CH${CH_NUM}_CompareStatusGet(void)
+TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void)
 {
-    return ((TC${INDEX}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_COMPARE_STATUS_MSK);
+    return ((${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_COMPARE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- COMPARE -->

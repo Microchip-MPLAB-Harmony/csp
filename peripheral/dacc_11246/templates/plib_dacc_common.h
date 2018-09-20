@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_DACC_H    // Guards against multiple inclusion
-#define PLIB_DACC_H
+#ifndef PLIB_DACC_COMMON_H    // Guards against multiple inclusion
+#define PLIB_DACC_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -91,10 +91,10 @@ typedef enum
 {
     /* Channel 0 */
     DACC_CHANNEL_0, 
-            
+
     /* Channel 1 */
     DACC_CHANNEL_1         
-        
+
 } DACC_CHANNEL_NUM;
 
 
@@ -106,7 +106,7 @@ typedef enum
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_DACC_H
+#endif //PLIB_DACC_COMMON_H
 
 /**
  End of File

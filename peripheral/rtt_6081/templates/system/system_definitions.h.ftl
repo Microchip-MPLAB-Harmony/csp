@@ -1,1 +1,1 @@
-#include "peripheral/rtt/plib_rtt${INDEX?string}.h"
+#include "peripheral/rtt/plib_${RTT_INSTANCE_NAME?lower_case}.h"

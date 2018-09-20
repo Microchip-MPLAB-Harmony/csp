@@ -1,1 +1,1 @@
-#include "peripheral/rstc/plib_rstc${INDEX?string}.h"
+#include "peripheral/rstc/plib_${RSTC_INSTANCE_NAME?lower_case}.h"

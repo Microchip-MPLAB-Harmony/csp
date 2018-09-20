@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    acc.h
+    plib_acc_common.h
 
   Summary
     Data Type definition of the ACC Peripheral Interface Plib.
@@ -39,8 +39,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_ACC_H    // Guards against multiple inclusion
-#define PLIB_ACC_H
+#ifndef PLIB_ACC_COMMON_H    // Guards against multiple inclusion
+#define PLIB_ACC_COMMON_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -105,4 +105,4 @@ typedef struct
 
 #endif
 // DOM-IGNORE-END
-#endif // PLIB_ACC_H
+#endif // PLIB_ACC_COMMON_H

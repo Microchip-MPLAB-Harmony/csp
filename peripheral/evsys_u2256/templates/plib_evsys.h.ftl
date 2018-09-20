@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_evsys.h
+    plib_${EVSYS_INSTANCE_NAME?lower_case}.h
 
   Summary:
     Interface definition of the Event System Plib (EVSYS).
@@ -38,8 +38,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef EVSYS${INDEX?string}_H    // Guards against multiple inclusion
-#define EVSYS${INDEX?string}_H
+#ifndef ${EVSYS_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define ${EVSYS_INSTANCE_NAME}_H
 
 #include <stdint.h>
 #include <stddef.h>
@@ -95,11 +95,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 	<#lt>} EVSYS_OBJECT ;
 </#if>
 /***************************** EVSYS API *******************************/
-void EVSYS${INDEX?string}_Initialize( void );
+void ${EVSYS_INSTANCE_NAME}_Initialize( void );
 <#if EVSYS_INTERRUPT_MODE == true>
-	<#lt>void EVSYS${INDEX?string}_CallbackRegister( EVSYS_CALLBACK callback, uintptr_t context );
-	<#lt>void EVSYS${INDEX?string}_InterruptDisable(EVSYS_INT_MASK interrupt);
-	<#lt>void EVSYS${INDEX?string}_InterruptEnable(EVSYS_INT_MASK interrupt);
+	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister( EVSYS_CALLBACK callback, uintptr_t context );
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_INT_MASK interrupt);
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_INT_MASK interrupt);
 </#if>
 	
 #ifdef __cplusplus // Provide C++ Compatibility

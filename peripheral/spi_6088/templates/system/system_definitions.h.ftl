@@ -1,1 +1,1 @@
-#include "peripheral/spi/plib_spi${SPI_INDEX?string}.h"
+#include "peripheral/spi/plib_${SPI_INSTANCE_NAME?lower_case}.h"

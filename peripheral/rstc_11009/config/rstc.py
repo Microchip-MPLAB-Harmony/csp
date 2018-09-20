@@ -6,7 +6,7 @@ from math import ceil
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
-global instance
+global rstcInstanceName
 
 
 ################################################################################
@@ -30,7 +30,7 @@ def interruptControl(symbol, event):
 
     if (symObj.getSelectedKey() == "INTERRUPT"):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "RSTC" + str(instance) +  "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, rstcInstanceName.getValue()+ "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
         Database.setSymbolValue("core", interruptVector, False, 2)
@@ -45,14 +45,12 @@ def instantiateComponent(rstcComponent):
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
-    global instance
+    global rstcInstanceName
 
-    instance = rstcComponent.getID()[-1:]
-    print("Running RSTC" + str(instance))
-
-    rstcIndex = rstcComponent.createIntegerSymbol("INDEX", None)
-    rstcIndex.setVisible(False)
-    rstcIndex.setDefaultValue(int(instance))
+    rstcInstanceName = rstcComponent.createStringSymbol("RSTC_INSTANCE_NAME", None)
+    rstcInstanceName.setVisible(False)
+    rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
+    print("Running " + rstcInstanceName.getValue())
 
     rstcSym_MR_UserReset = rstcComponent.createKeyValueSetSymbol("RSTC_MR_URSTEN", None)
     rstcSym_MR_UserReset.setLabel("External Reset (NRST) Pin Usage")
@@ -82,10 +80,10 @@ def instantiateComponent(rstcComponent):
     #### Dependency ####
     ############################################################################
 
-    interruptVector = "RSTC_INTERRUPT_ENABLE"
-    interruptHandler = "RSTC_INTERRUPT_HANDLER"
-    interruptHandlerLock = "RSTC_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = "RSTC_INTERRUPT_ENABLE_UPDATE"
+    interruptVector = rstcInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    interruptHandler = rstcInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    interruptHandlerLock = rstcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = rstcInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
 
     # NVIC Dynamic settings
     rstcinterruptControl = rstcComponent.createBooleanSymbol("NVIC_RSTC_ENABLE", None)
@@ -98,9 +96,9 @@ def instantiateComponent(rstcComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     rstcHeader1File = rstcComponent.createFileSymbol("RSTC_HEADER1", None)
-    rstcHeader1File.setSourcePath("../peripheral/rstc_11009/templates/plib_rstc.h")
-    rstcHeader1File.setOutputName("plib_rstc.h")
-    rstcHeader1File.setDestPath("peripheral/rstc/")
+    rstcHeader1File.setSourcePath("../peripheral/rstc_11009/templates/plib_rstc_common.h")
+    rstcHeader1File.setOutputName("plib_rstc_common.h")
+    rstcHeader1File.setDestPath("/peripheral/rstc/")
     rstcHeader1File.setProjectPath("config/" + configName + "/peripheral/rstc/")
     rstcHeader1File.setType("HEADER")
     rstcHeader1File.setOverwrite(True)
@@ -108,8 +106,8 @@ def instantiateComponent(rstcComponent):
     rstcHeader2File = rstcComponent.createFileSymbol("RSTC_HEADER2", None)
     rstcHeader2File.setMarkup(True)
     rstcHeader2File.setSourcePath("../peripheral/rstc_11009/templates/plib_rstc.h.ftl")
-    rstcHeader2File.setOutputName("plib_rstc" + str(instance) + ".h")
-    rstcHeader2File.setDestPath("peripheral/rstc/")
+    rstcHeader2File.setOutputName("plib_"+rstcInstanceName.getValue().lower()+".h")
+    rstcHeader2File.setDestPath("/peripheral/rstc/")
     rstcHeader2File.setProjectPath("config/" + configName + "/peripheral/rstc/")
     rstcHeader2File.setType("HEADER")
     rstcHeader2File.setOverwrite(True)
@@ -117,8 +115,8 @@ def instantiateComponent(rstcComponent):
     rstcSource1File = rstcComponent.createFileSymbol("RSTC_SOURCE1", None)
     rstcSource1File.setMarkup(True)
     rstcSource1File.setSourcePath("../peripheral/rstc_11009/templates/plib_rstc.c.ftl")
-    rstcSource1File.setOutputName("plib_rstc" + str(instance) + ".c")
-    rstcSource1File.setDestPath("peripheral/rstc/")
+    rstcSource1File.setOutputName("plib_"+rstcInstanceName.getValue().lower()+".c")
+    rstcSource1File.setDestPath("/peripheral/rstc/")
     rstcSource1File.setProjectPath("config/" + configName + "/peripheral/rstc/")
     rstcSource1File.setType("SOURCE")
     rstcSource1File.setOverwrite(True)

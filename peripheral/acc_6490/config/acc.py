@@ -14,7 +14,7 @@ accValGrp_ACR_ISEL = accRegModule.getValueGroup("ACC_ACR__ISEL")
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
-global instance
+global accInstanceName
 
 ################################################################################
 #### Business Logic ####
@@ -26,7 +26,7 @@ def interruptControl(symbol, event):
 
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "ACC" + str(instance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, accInstanceName.getValue() + "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", interruptVector, False, 2)
@@ -43,18 +43,15 @@ def accFaultSourceSelect(symbol,event):
 #### Component ####
 ################################################################################
 def instantiateComponent(accComponent):
-    global instance
+    global accInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
 
-    instance = accComponent.getID()[-1:]
-    print("Running ACC" + str(instance))
-
-    accIndex = accComponent.createIntegerSymbol("INDEX", None)
-    accIndex.setVisible(False)
-    accIndex.setDefaultValue(int(instance))
-
+    accInstanceName = accComponent.createStringSymbol("ACC_INSTANCE_NAME", None)
+    accInstanceName.setVisible(False)
+    accInstanceName.setDefaultValue(accComponent.getID().upper())
+    print("Running " + accInstanceName.getValue())
 
     accSym_MR_SELPLUS = accComponent.createKeyValueSetSymbol("ACC_MR_SELPLUS", None)
     accSym_MR_SELPLUS.setLabel("Select Positive Input")
@@ -145,13 +142,13 @@ def instantiateComponent(accComponent):
     ############################################################################
 
     # Enable Peripheral Clock in Clock manager
-    Database.clearSymbolValue("core", "ACC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "ACC_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", accInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", accInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
-    interruptVector = "ACC_INTERRUPT_ENABLE"
-    interruptHandler = "ACC_INTERRUPT_HANDLER"
-    interruptHandlerLock = "ACC_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = "ACC_INTERRUPT_ENABLE_UPDATE"
+    interruptVector = accInstanceName.getValue()+"INTERRUPT_ENABLE"
+    interruptHandler = accInstanceName.getValue()+"INTERRUPT_HANDLER"
+    interruptHandlerLock = accInstanceName.getValue()+"INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = accInstanceName.getValue()+"INTERRUPT_ENABLE_UPDATE"
 
     # NVIC Dynamic settings
     accinterruptControl = accComponent.createBooleanSymbol("NVIC_ACC_ENABLE", None)
@@ -163,9 +160,10 @@ def instantiateComponent(accComponent):
 ############################################################################
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    accHeaderFile = accComponent.createFileSymbol("ACC_HEADER", None)
-    accHeaderFile.setSourcePath("../peripheral/acc_6490/templates/plib_acc.h")
-    accHeaderFile.setOutputName("plib_acc.h")
+    accHeaderFile = accComponent.createFileSymbol("ACC_COMMON_HEADER", None)
+    accHeaderFile.setMarkup(True)
+    accHeaderFile.setSourcePath("../peripheral/acc_6490/templates/plib_acc_common.h")
+    accHeaderFile.setOutputName("plib_acc_common.h")
     accHeaderFile.setDestPath("peripheral/acc/")
     accHeaderFile.setProjectPath("config/" + configName + "/peripheral/acc/")
     accHeaderFile.setType("HEADER")
@@ -174,7 +172,7 @@ def instantiateComponent(accComponent):
     accHeader1File = accComponent.createFileSymbol("ACC_HEADER1", None)
     accHeader1File.setMarkup(True)
     accHeader1File.setSourcePath("../peripheral/acc_6490/templates/plib_acc.h.ftl")
-    accHeader1File.setOutputName("plib_acc" + str(instance) + ".h")
+    accHeader1File.setOutputName("plib_"+ accInstanceName.getValue().lower()+ ".h")
     accHeader1File.setDestPath("peripheral/acc/")
     accHeader1File.setProjectPath("config/" + configName + "/peripheral/acc/")
     accHeader1File.setType("HEADER")
@@ -183,7 +181,7 @@ def instantiateComponent(accComponent):
     accSource1File = accComponent.createFileSymbol("ACC_SOURCE1", None)
     accSource1File.setMarkup(True)
     accSource1File.setSourcePath("../peripheral/acc_6490/templates/plib_acc.c.ftl")
-    accSource1File.setOutputName("plib_acc" + str(instance) + ".c")
+    accSource1File.setOutputName("plib_"+accInstanceName.getValue().lower() + ".c")
     accSource1File.setDestPath("peripheral/acc/")
     accSource1File.setProjectPath("config/" + configName + "/peripheral/acc/")
     accSource1File.setType("SOURCE")

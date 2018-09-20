@@ -1,7 +1,7 @@
 #Function for initiating the UI
 global interruptVector
 global interruptHandler
-global instance 
+global trngInstanceName
 global interruptHandlerLock
 
 def interruptControl(NVIC, event):
@@ -13,7 +13,7 @@ def interruptControl(NVIC, event):
     Database.clearSymbolValue("core", interruptHandlerLock)
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "TRNG" + str(instance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, trngInstanceName.getValue() + "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", interruptVector, False, 2)
@@ -23,15 +23,19 @@ def interruptControl(NVIC, event):
 def instantiateComponent(trngComponent):
     global interruptVector
     global interruptHandler
-    global instance
+    global trngInstanceName
     global interruptHandlerLock
-    interruptVector = "TRNG_INTERRUPT_ENABLE"
-    interruptHandler = "TRNG_INTERRUPT_HANDLER"
-    interruptHandlerLock = "TRNG_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = "TRNG_INTERRUPT_ENABLE_UPDATE"
 
-    instance = trngComponent.getID()[-1:]
-    Log.writeInfoMessage("Running TRNG" + str(instance))
+    trngInstanceName = trngComponent.createStringSymbol("TRNG_INSTANCE_NAME", None)
+    trngInstanceName.setVisible(False)
+    trngInstanceName.setDefaultValue(trngComponent.getID().upper())
+    Log.writeInfoMessage("Running " + trngInstanceName.getValue())
+
+    interruptVector = trngInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    interruptHandler = trngInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    interruptHandlerLock = trngInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = trngInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
+
 
     trngReserved = trngComponent.createBooleanSymbol("TRNG_Reserved", None)
     trngReserved.setLabel("TRNG Reserved")
@@ -53,17 +57,13 @@ def instantiateComponent(trngComponent):
     trngInterrupt.setDefaultValue(False)
 
     # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", "TRNG_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "TRNG_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", trngInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", trngInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     # NVIC Dynamic settings
     trnginterruptControl = trngComponent.createBooleanSymbol("NVIC_TRNG_ENABLE", None)
     trnginterruptControl.setDependencies(interruptControl, ["trngEnableInterrupt"])
     trnginterruptControl.setVisible(False)
-
-    trngIndex = trngComponent.createIntegerSymbol("INDEX", trngMenu)
-    trngIndex.setVisible(False)
-    trngIndex.setDefaultValue(int(instance))
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
@@ -71,7 +71,7 @@ def instantiateComponent(trngComponent):
     trngHeaderFile = trngComponent.createFileSymbol("TRNG_FILE_0", None)
     trngHeaderFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.h.ftl")
     trngHeaderFile.setMarkup(True)
-    trngHeaderFile.setOutputName("plib_trng" + str(instance) + ".h")
+    trngHeaderFile.setOutputName("plib_"+trngInstanceName.getValue().lower()+".h")
     trngHeaderFile.setMarkup(True)
     trngHeaderFile.setOverwrite(True)
     trngHeaderFile.setDestPath("peripheral/trng/")
@@ -82,7 +82,7 @@ def instantiateComponent(trngComponent):
     trngSourceFile = trngComponent.createFileSymbol("TRNG_FILE_1", None)
     trngSourceFile.setSourcePath("../peripheral/trng_6334/templates/plib_trng.c.ftl")
     trngSourceFile.setMarkup(True)
-    trngSourceFile.setOutputName("plib_trng" + str(instance) + ".c")
+    trngSourceFile.setOutputName("plib_"+trngInstanceName.getValue().lower()+".c")
     trngSourceFile.setMarkup(True)
     trngSourceFile.setOverwrite(True)
     trngSourceFile.setDestPath("peripheral/trng/")

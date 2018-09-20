@@ -1,1 +1,1 @@
-#include "peripheral/usart/plib_usart${INDEX?string}.h"
+#include "peripheral/usart/plib_${USART_INSTANCE_NAME?lower_case}.h"

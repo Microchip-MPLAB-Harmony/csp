@@ -6,7 +6,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_dacc${INDEX?string}.h
+    plib_${DACC_INSTANCE_NAME?lower_case}.h
 
   Summary:
     DACC PLIB Header File
@@ -39,11 +39,11 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_DACC${INDEX?string}_H
-#define PLIB_DACC${INDEX?string}_H
+#ifndef PLIB_${DACC_INSTANCE_NAME}_H
+#define PLIB_${DACC_INSTANCE_NAME}_H
 
 #include "device.h"
-#include "plib_dacc.h"
+#include "plib_dacc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -61,11 +61,11 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 
 /****************************** DACC API *********************************/
-void DACC${INDEX?string}_Initialize (void);
+void ${DACC_INSTANCE_NAME}_Initialize (void);
 
-bool DACC${INDEX?string}_IsReady (DACC_CHANNEL_NUM channel);
+bool ${DACC_INSTANCE_NAME}_IsReady (DACC_CHANNEL_NUM channel);
 
-void DACC${INDEX?string}_DataWrite (DACC_CHANNEL_NUM channel, uint32_t data);
+void ${DACC_INSTANCE_NAME}_DataWrite (DACC_CHANNEL_NUM channel, uint32_t data);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -74,4 +74,4 @@ void DACC${INDEX?string}_DataWrite (DACC_CHANNEL_NUM channel, uint32_t data);
 
 #endif
 // DOM-IGNORE-END
-#endif // PLIB_DACC${INDEX?string}_H
+#endif // PLIB_${DACC_INSTANCE_NAME}_H

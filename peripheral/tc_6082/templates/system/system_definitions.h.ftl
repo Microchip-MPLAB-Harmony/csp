@@ -1,1 +1,1 @@
-#include "peripheral/tc/plib_tc${INDEX}.h"
+#include "peripheral/tc/plib_${TC_INSTANCE_NAME}.h"

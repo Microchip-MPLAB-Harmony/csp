@@ -1,8 +1,14 @@
-Log.writeInfoMessage("Loading RSWDT for " + Variables.get("__PROCESSOR"))
-
+global rswdtInstanceName
 global rswdtinterruptVector
 global rswdtinterruptHandler
 global rswdtinterruptHandlerLock
+
+rswdtInstanceName = coreComponent.createStringSymbol("RSWDT_INSTANCE_NAME", None)
+rswdtInstanceName.setVisible(False)
+instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"RSWDT\"]").getChildren()
+rswdtInstanceName.setDefaultValue(instances[0].getAttribute("name"))
+
+Log.writeInfoMessage("Loading " + rswdtInstanceName.getValue() + "for " + Variables.get("__PROCESSOR"))
 
 rswdtMenu = coreComponent.createMenuSymbol("RSWDT_MENU_0", None)
 rswdtMenu.setLabel("RSWDT")
@@ -68,9 +74,9 @@ rswdtIdleHalt = coreComponent.createBooleanSymbol("rswdtidleHalt", rswdtCfgMenu)
 rswdtIdleHalt.setLabel("Enable Idle halt")
 rswdtIdleHalt.setDefaultValue(False)
 
-rswdtinterruptVector = "RSWDT_INTERRUPT_ENABLE"
-rswdtinterruptHandler = "RSWDT_INTERRUPT_HANDLER"
-rswdtinterruptHandlerLock = "RSWDT_INTERRUPT_HANDLER_LOCK"
+rswdtinterruptVector = rswdtInstanceName.getValue()+"_INTERRUPT_ENABLE"
+rswdtinterruptHandler = rswdtInstanceName.getValue()+"_INTERRUPT_HANDLER"
+rswdtinterruptHandlerLock = rswdtInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
 
 Database.clearSymbolValue("core", rswdtinterruptVector)
 Database.setSymbolValue("core", rswdtinterruptVector, False, 2)
@@ -87,7 +93,7 @@ def interruptControl(NVIC, event):
     Database.clearSymbolValue("core", rswdtinterruptHandlerLock)
     if (event["value"] == True):
         Database.setSymbolValue("core", rswdtinterruptVector, True, 2)
-        Database.setSymbolValue("core", rswdtinterruptHandler, "RSWDT0_InterruptHandler", 2)
+        Database.setSymbolValue("core", rswdtinterruptHandler, rswdtInstanceName.getValue()+"_InterruptHandler", 2)
         Database.setSymbolValue("core", rswdtinterruptHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", rswdtinterruptVector, False, 2)
@@ -103,7 +109,7 @@ configName = Variables.get("__CONFIGURATION_NAME")
 
 rswdtHeaderFile = coreComponent.createFileSymbol("rswdtHeaderFile", None)
 rswdtHeaderFile.setSourcePath("../peripheral/rswdt_11110/templates/plib_rswdt.h.ftl")
-rswdtHeaderFile.setOutputName("plib_rswdt0.h")
+rswdtHeaderFile.setOutputName("plib_"+rswdtInstanceName.getValue().lower()+".h")
 rswdtHeaderFile.setDestPath("peripheral/rswdt/")
 rswdtHeaderFile.setProjectPath("config/" + configName + "/peripheral/rswdt/")
 rswdtHeaderFile.setType("HEADER")
@@ -112,7 +118,7 @@ rswdtHeaderFile.setEnabled(False)
 
 rswdtSourceFile = coreComponent.createFileSymbol("rswdtSourceFile", None)
 rswdtSourceFile.setSourcePath("../peripheral/rswdt_11110/templates/plib_rswdt.c.ftl")
-rswdtSourceFile.setOutputName("plib_rswdt0.c")
+rswdtSourceFile.setOutputName("plib_"+rswdtInstanceName.getValue().lower()+".c")
 rswdtSourceFile.setDestPath("peripheral/rswdt/")
 rswdtSourceFile.setProjectPath("config/" + configName + "/peripheral/rswdt/")
 rswdtSourceFile.setType("SOURCE")

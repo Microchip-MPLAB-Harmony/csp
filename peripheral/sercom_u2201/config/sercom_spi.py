@@ -311,7 +311,7 @@ spiSym_TRANSFERSETUP.setDependencies(set_SPI_SERIALSETUP_VisibleProperty, ["SERC
 
 #SPI API Prefix
 spiSym_API_Prefix = sercomComponent.createStringSymbol("SPI_PLIB_API_PREFIX", sercomSym_OperationMode)
-spiSym_API_Prefix.setDefaultValue("SERCOM" + sercomInstanceIndex + "_SPI")
+spiSym_API_Prefix.setDefaultValue(sercomInstanceName.getValue() + "_SPI")
 spiSym_API_Prefix.setVisible(False)
 
 # SPI Clock Mode

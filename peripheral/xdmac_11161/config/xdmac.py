@@ -18,6 +18,9 @@ global xdmacSystemIntFile
 global xdmacSystemDefFile
 global xdmacSystemConfigFile
 global triggerSettings
+
+global xdmacInstanceName
+
 # Parse atdf xml file to get instance name for the peripheral which has DMA id.
 # And construct a list of PERIDs
 
@@ -151,13 +154,13 @@ def xdmacGlobalLogic(xdmacGlobalSym, event):
 
 def onGlobalEnableLogic(xdmacFileGen, event):
 
-    interruptVector = "XDMAC_INTERRUPT_ENABLE"
-    interruptHandler = "XDMAC_INTERRUPT_HANDLER"
-    interruptHandlerLock = "XDMAC_INTERRUPT_HANDLER_LOCK"
+    interruptVector = xdmacInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    interruptHandler = xdmacInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    interruptHandlerLock = xdmacInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
 
     # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", "XDMAC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "XDMAC_CLOCK_ENABLE", event["value"], 2)
+    Database.clearSymbolValue("core", xdmacInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", xdmacInstanceName.getValue()+"_CLOCK_ENABLE", event["value"], 2)
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, event["value"], 2)
     Database.clearSymbolValue("core", interruptHandlerLock)
@@ -165,9 +168,9 @@ def onGlobalEnableLogic(xdmacFileGen, event):
     Database.clearSymbolValue("core", interruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", interruptHandler, "XDMAC_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, xdmacInstanceName.getValue()+"_InterruptHandler", 2)
     else :
-        Database.setSymbolValue("core", interruptHandler, "XDMAC_Handler", 2)
+        Database.setSymbolValue("core", interruptHandler, xdmacInstanceName.getValue()+"_Handler", 2)
 
     # File generation logic
     xdmacHeaderFile.setEnabled(event["value"])
@@ -230,25 +233,16 @@ xdmacMenu = coreComponent.createMenuSymbol("XDMAC_MENU", None)
 xdmacMenu.setLabel("DMA (XDMAC)")
 xdmacMenu.setDescription("DMA (XDMAC) Configuration")
 
-xdmacIndex = coreComponent.createStringSymbol("XDMAC_INDEX", xdmacMenu)
-xdmacIndex.setVisible(False)
-instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"XDMAC\"]").getChildren()
-if len(instances) == 1:
-    xdmacIndex.setDefaultValue("")
-else:
-#TODO: Add support for second instance
-    xdmacIndex.setDefaultValue("0")
-
+# DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
+xdmacSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
+xdmacSymAPI_Prefix.setDefaultValue("XDMAC")
+xdmacSymAPI_Prefix.setVisible(False)
 
 # DMA_INSTANCE_NAME: Needed to map DMA system service APIs to PLIB APIs
-portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
-portSymAPI_Prefix.setDefaultValue("XDMAC"+xdmacIndex.getValue())
-portSymAPI_Prefix.setVisible(False)
-
-# DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
-portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
-portSymAPI_Prefix.setDefaultValue("XDMAC")
-portSymAPI_Prefix.setVisible(False)
+xdmacInstanceName = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
+instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"XDMAC\"]").getChildren()
+xdmacInstanceName.setDefaultValue(instances[0].getAttribute("name"))
+xdmacInstanceName.setVisible(False)
 
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 xdmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", xdmacMenu)
@@ -315,7 +309,6 @@ for channelID in range(0, xdmacChCount.getValue()):
     xdmacSym_CC_TYPE.setDisplayMode("Description")
     xdmacSym_CC_TYPE.setSelectedKey("MEM_TRAN",1)
     xdmacSym_CC_TYPE.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
-
 
     xdmacSym_CC_DSYNC = coreComponent.createKeyValueSetSymbol("XDMAC_CC"+ str(channelID)+"_DSYNC", xdmacChannelMenu)
     xdmacSym_CC_DSYNC.setLabel("DMA Transfer Direction")
@@ -477,6 +470,7 @@ xdmacPERIDChannelUpdate.setLabel("Local xdmacChannelAllocLogic")
 xdmacPERIDChannelUpdate.setDefaultValue(False)
 xdmacPERIDChannelUpdate.setVisible(False)
 xdmacPERIDChannelUpdate.setDependencies(xdmacChannelAllocLogic, peridValueListSymbols)
+
 ################################################################################
 #### Dependency ####
 ################################################################################
@@ -487,10 +481,18 @@ xdmacPERIDChannelUpdate.setDependencies(xdmacChannelAllocLogic, peridValueListSy
 ################################################################################
 configName = Variables.get("__CONFIGURATION_NAME")
 
+xdmacCommonHeaderFile = coreComponent.createFileSymbol("xdmacCommonHeaderFile", None)
+xdmacCommonHeaderFile.setMarkup(False)
+xdmacCommonHeaderFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac_common.h")
+xdmacCommonHeaderFile.setOutputName("plib_xdmac_common.h")
+xdmacCommonHeaderFile.setDestPath("/peripheral/xdmac/")
+xdmacCommonHeaderFile.setProjectPath("config/" + configName +"/peripheral/xdmac/")
+xdmacCommonHeaderFile.setType("HEADER")
+
 xdmacHeaderFile = coreComponent.createFileSymbol("xdmacHeaderFile", None)
 xdmacHeaderFile.setMarkup(True)
 xdmacHeaderFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac.h.ftl")
-xdmacHeaderFile.setOutputName("plib_xdmac"+xdmacIndex.getValue()+".h")
+xdmacHeaderFile.setOutputName("plib_"+xdmacInstanceName.getValue().lower()+".h")
 xdmacHeaderFile.setDestPath("/peripheral/xdmac/")
 xdmacHeaderFile.setProjectPath("config/" + configName +"/peripheral/xdmac/")
 xdmacHeaderFile.setType("HEADER")
@@ -500,7 +502,7 @@ xdmacHeaderFile.setEnabled(False)
 xdmacSourceFile = coreComponent.createFileSymbol("xdmacSourceFile", None)
 xdmacSourceFile.setMarkup(True)
 xdmacSourceFile.setSourcePath("../peripheral/xdmac_11161/templates/plib_xdmac.c.ftl")
-xdmacSourceFile.setOutputName("plib_xdmac"+xdmacIndex.getValue()+".c")
+xdmacSourceFile.setOutputName("plib_"+xdmacInstanceName.getValue().lower()+".c")
 xdmacSourceFile.setDestPath("/peripheral/xdmac/")
 xdmacSourceFile.setProjectPath("config/" + configName +"/peripheral/xdmac/")
 xdmacSourceFile.setType("SOURCE")

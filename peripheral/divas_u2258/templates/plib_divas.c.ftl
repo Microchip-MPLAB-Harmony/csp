@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_divas${DIVAS_INDEX}.c
+    plib_${DIVAS_INSTANCE_NAME?lower_case}.c
 
   Summary:
     DIVAS PLIB Implementation File
@@ -48,32 +48,32 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_divas${DIVAS_INDEX}.h"
+#include "plib_${DIVAS_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: DIVAS${DIVAS_INDEX} Implementation
+// Section: ${DIVAS_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
 /* Function:
-    void DIVAS${DIVAS_INDEX}_Initialize(void);
+    void ${DIVAS_INSTANCE_NAME}_Initialize(void);
 
   Summary:
-    Initializes DIVAS ${DIVAS_INDEX} module of the device.
+    Initializes ${DIVAS_INSTANCE_NAME} module of the device.
 
   Description:
-    This function initializes DIVAS${DIVAS_INDEX} module of the device with the
+    This function initializes ${DIVAS_INSTANCE_NAME} module of the device with the
     values configured in MCC GUI. Once the peripheral is initialized, signed,
     unsigned division and square root functions can be used.
 
   Remarks:
-    Refer plib_divas${DIVAS_INDEX}.h file for more information.
+    Refer plib_${DIVAS_INSTANCE_NAME?lower_case}.h file for more information.
 */
 
-void DIVAS${DIVAS_INDEX}_Initialize(void)
+void ${DIVAS_INSTANCE_NAME}_Initialize(void)
 {
     <#if DIVAS_DLZ == false>
     /* Disable Leading Zero optimization,
@@ -87,15 +87,15 @@ void DIVAS${DIVAS_INDEX}_Initialize(void)
 
 // *****************************************************************************
 /* Function:
-    bool DIVAS${DIVAS_INDEX}_DivideSigned ( int32_t divisor, int32_t dividend,
+    bool ${DIVAS_INSTANCE_NAME}_DivideSigned ( int32_t divisor, int32_t dividend,
                                 int32_t * quotient, int32_t * remainder );
 
  Summary:
-    This function uses the DIVAS${DIVAS_INDEX} peripheral to performs a
+    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to performs a
     unsigned 32-bit division.
 
   Description:
-    This function uses the DIVAS${DIVAS_INDEX} peripheral to perform unsigned
+    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to perform unsigned
     32-bit division.
 
     The function takes a unsigned divisor and dividend and returns the quotient
@@ -105,10 +105,10 @@ void DIVAS${DIVAS_INDEX}_Initialize(void)
     recommended if deterministic operation is desired.
 
   Remarks:
-    Refer plib_divas${DIVAS_INDEX}.h for more information.
+    Refer plib_${DIVAS_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-bool DIVAS${DIVAS_INDEX}_DivideSigned ( int32_t divisor, int32_t dividend, int32_t * quotient, int32_t * remainder )
+bool ${DIVAS_INSTANCE_NAME}_DivideSigned ( int32_t divisor, int32_t dividend, int32_t * quotient, int32_t * remainder )
 {
     bool statusValue = false;
 
@@ -169,15 +169,15 @@ bool DIVAS${DIVAS_INDEX}_DivideSigned ( int32_t divisor, int32_t dividend, int32
 
 // *****************************************************************************
 /* Function:
-    bool DIVAS${DIVAS_INDEX}_DivideUnsigned ( uint32_t divisor,
+    bool ${DIVAS_INSTANCE_NAME}_DivideUnsigned ( uint32_t divisor,
                 uint32_t dividend, uint32_t * quotient, uint32_t * remainder );
 
  Summary:
-    This function uses the DIVAS${DIVAS_INDEX} peripheral to performs a
+    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to performs a
     unsigned 32-bit division.
 
   Description:
-    This function uses the DIVAS${DIVAS_INDEX} peripheral to perform unsigned
+    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to perform unsigned
     32-bit division.
 
     The function takes a unsigned divisor and dividend and returns the quotient
@@ -187,10 +187,10 @@ bool DIVAS${DIVAS_INDEX}_DivideSigned ( int32_t divisor, int32_t dividend, int32
     recommended if deterministic operation is desired.
 
   Remarks:
-    Refer plib_divas${DIVAS_INDEX}.h for more information.
+    Refer plib_${DIVAS_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-bool DIVAS${DIVAS_INDEX}_DivideUnsigned( uint32_t divisor, uint32_t dividend, uint32_t * quotient, uint32_t * remainder )
+bool ${DIVAS_INSTANCE_NAME}_DivideUnsigned( uint32_t divisor, uint32_t dividend, uint32_t * quotient, uint32_t * remainder )
 {
     bool statusValue = false;
     if(divisor != 0)
@@ -252,15 +252,15 @@ bool DIVAS${DIVAS_INDEX}_DivideUnsigned( uint32_t divisor, uint32_t dividend, ui
 
 // *****************************************************************************
 /* Function:
-    uint32_t DIVAS${DIVAS_INDEX}_SquareRoot ( uint32_t number ,
+    uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot ( uint32_t number ,
                                               uint32_t * remainder);
 
   Summary:
-    This function uses the DIVAS${DIVAS_INDEX} peripheral to perform a
+    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to perform a
     square root operation.
 
   Description:
-    This function uses the DIVAS${DIVAS_INDEX} peripheral to perform a square
+    This function uses the ${DIVAS_INSTANCE_NAME} peripheral to perform a square
     root operation.
 
     The function will return the square root of the number contained in number.
@@ -268,10 +268,10 @@ bool DIVAS${DIVAS_INDEX}_DivideUnsigned( uint32_t divisor, uint32_t dividend, ui
     was not perfect.
 
   Remarks:
-    Refer plib_divas${DIVAS_INDEX}.h for more information.
+    Refer plib_${DIVAS_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-uint32_t DIVAS${DIVAS_INDEX}_SquareRoot ( uint32_t number , uint32_t * remainder)
+uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot ( uint32_t number , uint32_t * remainder)
 {
     uint32_t squareRootResult = 0;
 

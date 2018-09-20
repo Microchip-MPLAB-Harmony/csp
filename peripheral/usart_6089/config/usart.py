@@ -19,7 +19,7 @@ usartValGrp_MR_SYNC = usartRegModule.getValueGroup(usartBitField_MR_NBSTOP.getVa
 ################################################################################
 #### Global Variables ####
 ################################################################################
-global usartInstance
+global usartInstanceName
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
@@ -33,15 +33,15 @@ def interruptControl(usartNVIC, event):
     Database.clearSymbolValue("core", interruptHandlerLock)
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "USART" + str(usartInstance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, usartInstanceName.getValue() + "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", interruptVector, False, 2)
-        Database.setSymbolValue("core", interruptHandler, "USART" + str(usartInstance) + "_Handler", 2)
+        Database.setSymbolValue("core", interruptHandler, usartInstanceName.getValue() + "_Handler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
-    if (Database.getSymbolValue("usart" + str(usartInstance), "USART_INTERRUPT_MODE") == True):
+    if (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
 # Calculates BRG value
@@ -55,10 +55,10 @@ def baudRateCalc(clk, baud, overSamp):
 
 
 def baudRateTrigger(symbol, event):
-    global usartInstance
-    clk = Database.getSymbolValue("usart" + str(usartInstance), "USART_CLOCK_FREQ")
-    baud = Database.getSymbolValue("usart" + str(usartInstance), "BAUD_RATE")
-    overSamp = Database.getSymbolValue("usart" + str(usartInstance), "USART_MR_OVER")
+    global usartInstanceName
+    clk = Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLOCK_FREQ")
+    baud = Database.getSymbolValue(usartInstanceName.getValue().lower(), "BAUD_RATE")
+    overSamp = Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_MR_OVER")
 
     brgVal = baudRateCalc(clk, baud, overSamp)
 
@@ -79,13 +79,13 @@ def clockSourceFreq(symbol, event):
             symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")) / 8, 2)
         if (event["value"] == 2):
             symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
-    if (event["id"] == "PCK4_CLOCK_FREQUENCY") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 2):
+    if (event["id"] == "PCK4_CLOCK_FREQUENCY") and (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLK_SRC") == 2):
         symbol.clearValue()
         symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
-    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 0):
+    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLK_SRC") == 0):
         symbol.clearValue()
         symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
-    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue("usart" + str(usartInstance), "USART_CLK_SRC") == 1):
+    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLK_SRC") == 1):
         symbol.clearValue()
         symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY") / 8), 2)
 
@@ -103,14 +103,12 @@ def instantiateComponent(usartComponent):
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
-    global usartInstance
+    global usartInstanceName
 
-    usartInstance = usartComponent.getID()[-1:]
-    Log.writeInfoMessage("Running USART" + str(usartInstance))
-
-    usartIndex = usartComponent.createIntegerSymbol("INDEX", None)
-    usartIndex.setVisible(False)
-    usartIndex.setDefaultValue(int(usartInstance))
+    usartInstanceName = usartComponent.createStringSymbol("USART_INSTANCE_NAME", None)
+    usartInstanceName.setVisible(False)
+    usartInstanceName.setDefaultValue(usartComponent.getID().upper())
+    Log.writeInfoMessage("Running " + usartInstanceName.getValue())
 
     usartInterrupt = usartComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     usartInterrupt.setLabel("Interrupt Mode")
@@ -171,12 +169,12 @@ def instantiateComponent(usartComponent):
 
     #USART Transmit data register
     transmitRegister = usartComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
-    transmitRegister.setDefaultValue("&(USART"+str(usartInstance)+"_REGS->US_THR)")
+    transmitRegister.setDefaultValue("&("+usartInstanceName.getValue()+"_REGS->US_THR)")
     transmitRegister.setVisible(False)
 
     #USART Receive data register
     receiveRegister = usartComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
-    receiveRegister.setDefaultValue("&(USART"+str(usartInstance)+"_REGS->US_RHR)")
+    receiveRegister.setDefaultValue("&("+usartInstanceName.getValue()+"_REGS->US_RHR)")
     receiveRegister.setVisible(False)
 
     #USART Character Size 5 Mask
@@ -268,25 +266,25 @@ def instantiateComponent(usartComponent):
 
     #USART API Prefix
     usartSym_API_Prefix = usartComponent.createStringSymbol("USART_PLIB_API_PREFIX", None)
-    usartSym_API_Prefix.setDefaultValue("USART" + str(usartInstance))
+    usartSym_API_Prefix.setDefaultValue(usartInstanceName.getValue())
     usartSym_API_Prefix.setVisible(False)
 
     ############################################################################
     #### Dependency ####
     ############################################################################
 
-    interruptVector = "USART" + str(usartInstance) + "_INTERRUPT_ENABLE"
-    interruptHandler = "USART" + str(usartInstance) + "_INTERRUPT_HANDLER"
-    interruptHandlerLock = "USART" + str(usartInstance) + "_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = "USART" + str(usartInstance) + "_INTERRUPT_ENABLE_UPDATE"
+    interruptVector = usartInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    interruptHandler = usartInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = usartInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = usartInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", "USART"+ str(usartInstance)+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "USART"+ str(usartInstance)+"_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", usartInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", usartInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
     Database.clearSymbolValue("core", interruptHandler)
-    Database.setSymbolValue("core", interruptHandler, "USART" + str(usartInstance) + "_InterruptHandler", 2)
+    Database.setSymbolValue("core", interruptHandler, usartInstanceName.getValue() + "_InterruptHandler", 2)
     Database.clearSymbolValue("core", interruptHandlerLock)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
 
@@ -299,7 +297,7 @@ def instantiateComponent(usartComponent):
     usartSymClkEnComment = usartComponent.createCommentSymbol("USART_CLK_ENABLE_COMMENT", None)
     usartSymClkEnComment.setVisible(False)
     usartSymClkEnComment.setLabel("Warning!!! USART Peripheral Clock is Disabled in Clock Manager")
-    usartSymClkEnComment.setDependencies(dependencyStatus, ["core.USART"+ str(usartInstance)+"_CLOCK_ENABLE"])
+    usartSymClkEnComment.setDependencies(dependencyStatus, ["core."+usartInstanceName.getValue()+"_CLOCK_ENABLE"])
 
     usartSymIntEnComment = usartComponent.createCommentSymbol("USART_NVIC_ENABLE_COMMENT", None)
     usartSymIntEnComment.setVisible(False)
@@ -312,8 +310,8 @@ def instantiateComponent(usartComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     usartHeaderFile = usartComponent.createFileSymbol("USART_HEADER", None)
-    usartHeaderFile.setSourcePath("../peripheral/usart_6089/templates/plib_usart.h")
-    usartHeaderFile.setOutputName("plib_usart.h")
+    usartHeaderFile.setSourcePath("../peripheral/usart_6089/templates/plib_usart_common.h")
+    usartHeaderFile.setOutputName("plib_usart_common.h")
     usartHeaderFile.setDestPath("peripheral/usart/")
     usartHeaderFile.setProjectPath("config/" + configName + "/peripheral/usart/")
     usartHeaderFile.setType("HEADER")
@@ -321,7 +319,7 @@ def instantiateComponent(usartComponent):
 
     usartHeader1File = usartComponent.createFileSymbol("USART_HEADER1", None)
     usartHeader1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.h.ftl")
-    usartHeader1File.setOutputName("plib_usart" + str(usartInstance) + ".h")
+    usartHeader1File.setOutputName("plib_"+usartInstanceName.getValue().lower()+".h")
     usartHeader1File.setDestPath("peripheral/usart/")
     usartHeader1File.setProjectPath("config/" + configName + "/peripheral/usart/")
     usartHeader1File.setType("HEADER")
@@ -330,7 +328,7 @@ def instantiateComponent(usartComponent):
 
     usartSource1File = usartComponent.createFileSymbol("USART_SOURCE1", None)
     usartSource1File.setSourcePath("../peripheral/usart_6089/templates/plib_usart.c.ftl")
-    usartSource1File.setOutputName("plib_usart" + str(usartInstance) + ".c")
+    usartSource1File.setOutputName("plib_"+usartInstanceName.getValue().lower()+".c")
     usartSource1File.setDestPath("peripheral/usart/")
     usartSource1File.setProjectPath("config/" + configName + "/peripheral/usart/")
     usartSource1File.setType("SOURCE")

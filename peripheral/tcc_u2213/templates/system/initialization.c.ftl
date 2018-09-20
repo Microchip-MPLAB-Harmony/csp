@@ -1,1 +1,1 @@
-    TCC${TCC_INDEX}_PWMInitialize();
+    ${TCC_INSTANCE_NAME}_PWMInitialize();

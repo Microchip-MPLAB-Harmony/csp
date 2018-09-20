@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    plib_tc${INDEX}.h
+    plib_${TC_INSTANCE_NAME?lower_case}.h
 
   Summary
     TC peripheral library interface.
@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TC${INDEX}_H    // Guards against multiple inclusion
-#define PLIB_TC${INDEX}_H
+#ifndef PLIB_${TC_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define PLIB_${TC_INSTANCE_NAME}_H
 
 
 // *****************************************************************************
@@ -54,7 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*  This section lists the other files that are included in this file.
 */
 
-#include "plib_tc.h"
+#include "plib_tc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -99,43 +99,43 @@ extern "C" {
     </#if>
     </#compress>
 <#if TC_BMR_POSEN == "SPEED">
-#define TC${INDEX}_CH2_FrequencyGet()     (uint32_t)(${TC3_CLOCK_FREQ}UL)
+#define ${TC_INSTANCE_NAME}_CH2_FrequencyGet()     (uint32_t)(${TC3_CLOCK_FREQ}UL)
 
 </#if>
-void TC${INDEX}_QuadratureInitialize (void);
+void ${TC_INSTANCE_NAME}_QuadratureInitialize (void);
 
-void TC${INDEX}_QuadratureStart (void);
+void ${TC_INSTANCE_NAME}_QuadratureStart (void);
 
-void TC${INDEX}_QuadratureStop (void);
+void ${TC_INSTANCE_NAME}_QuadratureStop (void);
 
 <#if TC_INDEX_PULSE == true>
-__inline__ int16_t TC${INDEX}_QuadratureRevolutionsGet (void)
+__inline__ int16_t ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (void)
 {
-    return (TC${INDEX}_REGS->TC_CHANNEL[1].TC_CV);
+    return (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CV);
 }
 </#if>
 
 <#if TC_BMR_POSEN == "SPEED">
 
-__inline__ uint16_t TC${INDEX}_QuadratureSpeedGet (void)
+__inline__ uint16_t ${TC_INSTANCE_NAME}_QuadratureSpeedGet (void)
 {
-    return TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV;
+    return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV;
 }
 
 <#else>
-__inline__ int16_t TC${INDEX}_QuadraturePositionGet (void)
+__inline__ int16_t ${TC_INSTANCE_NAME}_QuadraturePositionGet (void)
 {
-    return (TC${INDEX}_REGS->TC_CHANNEL[0].TC_CV);
+    return (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV);
 }
 </#if>
 
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
     <#lt>/* Register callback for quadrature interrupt */
-    <#lt>void TC${INDEX}_QuadratureCallbackRegister(TC_QUADRATURE_CALLBACK callback, uintptr_t context);
+    <#lt>void ${TC_INSTANCE_NAME}_QuadratureCallbackRegister(TC_QUADRATURE_CALLBACK callback, uintptr_t context);
 
-    <#lt>void TC${INDEX}_CH0_InterruptHandler(void);
+    <#lt>void ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void);
 <#else>
-TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
+TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void);
 </#if>
 </#if>
 <#list start..(TC_MAX_CHANNELS-1) as i>
@@ -157,79 +157,79 @@ TC_QUADRATURE_STATUS TC${INDEX}_QuadratureStatusGet(void);
 
 <#if .vars[TC_CH_OPERATINGMODE] == "TIMER">
 
-void TC${INDEX}_CH${CH_NUM}_TimerInitialize (void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerInitialize (void);
 
-void TC${INDEX}_CH${CH_NUM}_TimerStart (void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerStart (void);
 
-void TC${INDEX}_CH${CH_NUM}_TimerStop (void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerStop (void);
 
-void TC${INDEX}_CH${CH_NUM}_TimerPeriodSet (uint16_t period);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodSet (uint16_t period);
 
-void TC${INDEX}_CH${CH_NUM}_TimerCompareSet (uint16_t compare);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCompareSet (uint16_t compare);
 
-uint32_t TC${INDEX}_CH${CH_NUM}_TimerFrequencyGet (void);
+uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerFrequencyGet (void);
 
-uint16_t TC${INDEX}_CH${CH_NUM}_TimerPeriodGet (void);
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodGet (void);
 
-uint16_t TC${INDEX}_CH${CH_NUM}_TimerCounterGet (void);
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void);
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
-void TC${INDEX}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context);
 
-void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void);
 <#else>
-bool TC${INDEX}_CH${CH_NUM}_TimerPeriodHasExpired(void);
+bool ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodHasExpired(void);
 </#if>
 </#if>
 
 <#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
 
-void TC${INDEX}_CH${CH_NUM}_CaptureInitialize (void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureInitialize (void);
 
-void TC${INDEX}_CH${CH_NUM}_CaptureStart (void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStart (void);
 
-void TC${INDEX}_CH${CH_NUM}_CaptureStop (void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStop (void);
 
-uint32_t TC${INDEX}_CH${CH_NUM}_CaptureFrequencyGet (void);
+uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureFrequencyGet (void);
 
-uint16_t TC${INDEX}_CH${CH_NUM}_CaptureAGet (void);
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureAGet (void);
 
-uint16_t TC${INDEX}_CH${CH_NUM}_CaptureBGet (void);
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureBGet (void);
 
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
-void TC${INDEX}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context);
 
-void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void);
 <#else>
-TC_CAPTURE_STATUS TC${INDEX}_CH${CH_NUM}_CaptureStatusGet(void);
+TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void);
 </#if>
 
 </#if>
 
 <#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
 
-void TC${INDEX}_CH${CH_NUM}_CompareInitialize (void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareInitialize (void);
 
-void TC${INDEX}_CH${CH_NUM}_CompareStart (void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStart (void);
 
-void TC${INDEX}_CH${CH_NUM}_CompareStop (void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStop (void);
 
-uint32_t TC${INDEX}_CH${CH_NUM}_CompareFrequencyGet (void);
+uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareFrequencyGet (void);
 
-void TC${INDEX}_CH${CH_NUM}_ComparePeriodSet (uint16_t period);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodSet (uint16_t period);
 
-uint16_t TC${INDEX}_CH${CH_NUM}_ComparePeriodGet (void);
+uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodGet (void);
 
-void TC${INDEX}_CH${CH_NUM}_CompareASet (uint16_t value);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareASet (uint16_t value);
 
-void TC${INDEX}_CH${CH_NUM}_CompareBSet (uint16_t value);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareBSet (uint16_t value);
 
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
-void TC${INDEX}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t context);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t context);
 
-void TC${INDEX}_CH${CH_NUM}_InterruptHandler(void);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void);
 <#else>
-TC_COMPARE_STATUS TC${INDEX}_CH${CH_NUM}_CompareStatusGet(void);
+TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void);
 </#if>
 
 </#if>
@@ -237,7 +237,7 @@ TC_COMPARE_STATUS TC${INDEX}_CH${CH_NUM}_CompareStatusGet(void);
 </#if>
 </#list>
 
-#endif //PLIB_TC${INDEX}_H
+#endif //PLIB_${TC_INSTANCE_NAME}_H
 
 /**
  End of File

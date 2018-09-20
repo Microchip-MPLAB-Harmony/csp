@@ -1,5 +1,5 @@
 #Function for initiating the UI
-global instance
+global rtcInstanceName
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
@@ -12,7 +12,7 @@ def interruptControl(rtcNVIC, event):
     Database.clearSymbolValue("core", interruptHandlerLock)
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "RTC" + str(instance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, rtcInstanceName.getValue() + "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", interruptVector, False, 2)
@@ -20,7 +20,7 @@ def interruptControl(rtcNVIC, event):
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def instantiateComponent(rtcComponent):
-    global instance
+    global rtcInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
@@ -31,7 +31,9 @@ def instantiateComponent(rtcComponent):
     timevsel_names = []
     calevsel_names = []
 
-    instance = rtcComponent.getID()[-1:]
+    rtcInstanceName = rtcComponent.createStringSymbol("RTC_INSTANCE_NAME", None)
+    rtcInstanceName.setVisible(False)
+    rtcInstanceName.setDefaultValue(rtcComponent.getID().upper())
 
     rtcBitField_MR_OUT0 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_MR"]/bitfield@[name="OUT0"]')
     rtcValGrp_MR_OUT0 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__OUT0"]')
@@ -59,14 +61,14 @@ def instantiateComponent(rtcComponent):
     rtcInterrupt.setLabel("Enable Interrupt")
     rtcInterrupt.setDefaultValue(True)
 
-    interruptVector = "RTC_INTERRUPT_ENABLE"
-    interruptHandler = "RTC_INTERRUPT_HANDLER"
-    interruptHandlerLock = "RTC_INTERRUPT_HANDLER_LOCK"
+    interruptVector = rtcInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    interruptHandler = rtcInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    interruptHandlerLock = rtcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
 
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
     Database.clearSymbolValue("core", interruptHandler)
-    Database.setSymbolValue("core", interruptHandler, "RTC" + str(instance) + "_InterruptHandler", 2)
+    Database.setSymbolValue("core", interruptHandler, rtcInstanceName.getValue() + "_InterruptHandler", 2)
     Database.clearSymbolValue("core", interruptHandlerLock)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
 
@@ -74,11 +76,6 @@ def instantiateComponent(rtcComponent):
     rtcinterruptControl = rtcComponent.createBooleanSymbol("NVIC_RTC_ENABLE", None)
     rtcinterruptControl.setDependencies(interruptControl, ["rtcEnableInterrupt"])
     rtcinterruptControl.setVisible(False)
-
-    #instance index
-    rtcIndex = rtcComponent.createIntegerSymbol("INDEX", rtcMenu)
-    rtcIndex.setVisible(False)
-    rtcIndex.setDefaultValue(int(instance))
 
     for id in range(0,len(rtcValGrp_MR_OUT0.getChildren())):
         out0_names.append(rtcValGrp_MR_OUT0.getChildren()[id].getAttribute("name"))
@@ -128,11 +125,20 @@ def instantiateComponent(rtcComponent):
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
+    rtcCommonHeaderFile = rtcComponent.createFileSymbol("RTC_FILE", None)
+    rtcCommonHeaderFile.setSourcePath("../peripheral/rtc_6056/templates/plib_rtc_common.h")
+    rtcCommonHeaderFile.setMarkup(False)
+    rtcCommonHeaderFile.setOutputName("plib_rtc_common.h")
+    rtcCommonHeaderFile.setOverwrite(True)
+    rtcCommonHeaderFile.setDestPath("peripheral/rtc/")
+    rtcCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
+    rtcCommonHeaderFile.setType("HEADER")
+
     #Generate Output Header
     rtcHeaderFile = rtcComponent.createFileSymbol("RTC_FILE_0", None)
     rtcHeaderFile.setSourcePath("../peripheral/rtc_6056/templates/plib_rtc.h.ftl")
     rtcHeaderFile.setMarkup(True)
-    rtcHeaderFile.setOutputName("plib_rtc" + str(instance) + ".h")
+    rtcHeaderFile.setOutputName("plib_"+rtcInstanceName.getValue().lower()+".h")
     rtcHeaderFile.setOverwrite(True)
     rtcHeaderFile.setDestPath("peripheral/rtc/")
     rtcHeaderFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
@@ -141,7 +147,7 @@ def instantiateComponent(rtcComponent):
     rtcSourceFile = rtcComponent.createFileSymbol("RTC_FILE_1", None)
     rtcSourceFile.setSourcePath("../peripheral/rtc_6056/templates/plib_rtc.c.ftl")
     rtcSourceFile.setMarkup(True)
-    rtcSourceFile.setOutputName("plib_rtc" + str(instance) + ".c")
+    rtcSourceFile.setOutputName("plib_"+rtcInstanceName.getValue().lower()+".c")
     rtcSourceFile.setOverwrite(True)
     rtcSourceFile.setDestPath("peripheral/rtc/")
     rtcSourceFile.setProjectPath("config/" + configName + "/peripheral/rtc/")

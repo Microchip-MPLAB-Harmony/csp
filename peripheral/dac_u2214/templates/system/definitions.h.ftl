@@ -1,1 +1,1 @@
-#include "peripheral/dac/plib_dac${DAC_INDEX}.h"
+#include "peripheral/dac/plib_${DAC_INSTANCE_NAME?lower_case}.h"

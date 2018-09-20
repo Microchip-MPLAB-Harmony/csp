@@ -1,1 +1,1 @@
-#include "peripheral/ssc/plib_ssc${SSC_INDEX?string}.h"
+#include "peripheral/ssc/plib_${SSC_INSTANCE_NAME?lower_case}.h"

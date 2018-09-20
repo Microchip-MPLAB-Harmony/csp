@@ -1,1 +1,1 @@
-    SMC${INDEX?string}_Initialize();
+    ${SMC_INSTANCE_NAME}_Initialize();

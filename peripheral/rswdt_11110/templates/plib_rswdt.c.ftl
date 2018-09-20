@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_rswdt.c
+    plib_${RSWDT_INSTANCE_NAME?lower_case}.c
 
   Summary:
     RSWDT Source File
@@ -39,26 +39,26 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 #include "device.h"
-#include "plib_rswdt${rswdtIndex?string}.h"
+#include "plib_${RSWDT_INSTANCE_NAME?lower_case}.h"
 
 <#if rswdtinterruptMode == true>
 	<#lt>RSWDT_OBJECT rswdt;
 </#if>
 
-void RSWDT${rswdtIndex?string}_Initialize( void )
+void ${RSWDT_INSTANCE_NAME}_Initialize( void )
 {
-	RSWDT_REGS->RSWDT_MR = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}) \
+	${RSWDT_INSTANCE_NAME}_REGS->RSWDT_MR = RSWDT_MR_ALLONES_Msk | RSWDT_MR_WDV(${rswdtWDV}) \
 							${rswdtdebugHalt?then(' | RSWDT_MR_WDDBGHLT_Msk','')}${rswdtidleHalt?then(' | RSWDT_MR_WDIDLEHLT_Msk','')}${rswdtEnableReset?then(' | RSWDT_MR_WDRSTEN_Msk','')}${rswdtinterruptMode?then(' | RSWDT_MR_WDFIEN_Msk','')};
 							
 }
 
-void RSWDT${rswdtIndex?string}_Clear(void)
+void ${RSWDT_INSTANCE_NAME}_Clear(void)
 {
-	RSWDT_REGS->RSWDT_CR = (RSWDT_CR_KEY_PASSWD|RSWDT_CR_WDRSTT_Msk);
+	${RSWDT_INSTANCE_NAME}_REGS->RSWDT_CR = (RSWDT_CR_KEY_PASSWD|RSWDT_CR_WDRSTT_Msk);
 }
 
 <#if rswdtinterruptMode == true>
-	<#lt>void RSWDT${rswdtIndex?string}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context )
+	<#lt>void ${RSWDT_INSTANCE_NAME}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	rswdt.callback = callback;
 	<#lt>	rswdt.context = context;
@@ -66,9 +66,9 @@ void RSWDT${rswdtIndex?string}_Clear(void)
 </#if>
 
 <#if rswdtinterruptMode == true>
-	<#lt>void RSWDT${rswdtIndex?string}_InterruptHandler( void )
+	<#lt>void ${RSWDT_INSTANCE_NAME}_InterruptHandler( void )
 	<#lt>{
-	<#lt>   RSWDT_REGS->RSWDT_SR;	
+	<#lt>   ${RSWDT_INSTANCE_NAME}_REGS->RSWDT_SR;	
 	<#lt>	if(rswdt.callback != NULL)
     <#lt>        {
     <#lt>            rswdt.callback(rswdt.context);

@@ -14,17 +14,14 @@ def updateDIVASClockWarringStatus(symbol, event):
 
 def instantiateComponent(divasComponent):
 
-    num = divasComponent.getID()[-1:]
-    Log.writeInfoMessage("Running DIVAS" + str(num))
-
-    #divas index
-    divasSym_INDEX = divasComponent.createIntegerSymbol("DIVAS_INDEX", None)
-    divasSym_INDEX.setVisible(False)
-    divasSym_INDEX.setDefaultValue(int(num))
+    divasInstanceName = divasComponent.createStringSymbol("DIVAS_INSTANCE_NAME", None)
+    divasInstanceName.setVisible(False)
+    divasInstanceName.setDefaultValue(divasComponent.getID().upper())
+    Log.writeInfoMessage("Running " + divasInstanceName.getValue())
 
     #clock enable
-    Database.clearSymbolValue("core", "DIVAS_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "DIVAS_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", divasInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", divasInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     #Enable or Disable lead zero optimization
     divasSym_DLZ = divasComponent.createBooleanSymbol("DIVAS_DLZ", None)
@@ -37,7 +34,7 @@ def instantiateComponent(divasComponent):
     divasSym_ClkEnComment = divasComponent.createCommentSymbol("DIVAS_CLOCK_ENABLE_COMMENT", None)
     divasSym_ClkEnComment.setLabel("Warning!!! DIVAS Peripheral Clock is Disabled in Clock Manager")
     divasSym_ClkEnComment.setVisible(False)
-    divasSym_ClkEnComment.setDependencies(updateDIVASClockWarringStatus, ["core.DIVAS_CLOCK_ENABLE"])
+    divasSym_ClkEnComment.setDependencies(updateDIVASClockWarringStatus, ["core."+divasInstanceName.getValue()+"_CLOCK_ENABLE"])
 
 ################################################################################
 ###################     Code Generation            #############################
@@ -50,7 +47,7 @@ def instantiateComponent(divasComponent):
 
     divasSym_HeaderFile = divasComponent.createFileSymbol("DIVAS_HEADER", None)
     divasSym_HeaderFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/plib_divas.h.ftl")
-    divasSym_HeaderFile.setOutputName("plib_divas" + str(num) +".h")
+    divasSym_HeaderFile.setOutputName("plib_"+divasInstanceName.getValue().lower()+".h")
     divasSym_HeaderFile.setDestPath("peripheral/divas")
     divasSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/divas/")
     divasSym_HeaderFile.setType("HEADER")
@@ -58,7 +55,7 @@ def instantiateComponent(divasComponent):
 
     divasSym_SourceFile = divasComponent.createFileSymbol("DIVAS_SOURCE", None)
     divasSym_SourceFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/plib_divas.c.ftl")
-    divasSym_SourceFile.setOutputName("plib_divas" + str(num) + ".c")
+    divasSym_SourceFile.setOutputName("plib_"+divasInstanceName.getValue().lower()+".c")
     divasSym_SourceFile.setDestPath("peripheral/divas")
     divasSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/divas/")
     divasSym_SourceFile.setType("SOURCE")

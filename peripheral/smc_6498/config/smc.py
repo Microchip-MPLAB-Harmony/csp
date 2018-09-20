@@ -108,9 +108,12 @@ SMC_MODE_TDF_CYCLES_DEFAULT_VALUE   = 0
 #------------------------------------------------------------------------------
 def instantiateComponent(smcComponent):
 
-    num = smcComponent.getID()[-1:]
-
-    print("******************** Running SMC"+ str(num) +" ********************")
+    smcInstanceName = smcComponent.createStringSymbol("SMC_INSTANCE_NAME", None)
+    smcInstanceName.setVisible(False)
+    smcInstanceName.setDefaultValue(smcComponent.getID().upper())
+    print"--------------------------------------------------------------------"
+    print("************************** Running " + smcInstanceName.getValue() + " ****************************")
+    print"--------------------------------------------------------------------"
 
     smcRegModule    = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SMC\"]/register-group@[name=\"SMC\"]/register-group@[name=\"SMC_CS_NUMBER\"]")
     smcChipSelCount = int (smcRegModule.getAttribute("count"))
@@ -304,21 +307,17 @@ def instantiateComponent(smcComponent):
 #### Dependency ####
 ############################################################################
     # Enable Peripheral Clock in Clock manager
-    Database.clearSymbolValue("core", "SMC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "SMC_CLOCK_ENABLE", True, 2) 
+    Database.clearSymbolValue("core", smcInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", smcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2) 
 
 ############################################################################
 #### Code Generation ####
 ############################################################################
-    smcIndex = smcComponent.createIntegerSymbol("INDEX", smcMenu)
-    smcIndex.setVisible(False)
-    smcIndex.setDefaultValue(int(num))
-
     configName = Variables.get("__CONFIGURATION_NAME")
 
     smcHeader1File = smcComponent.createFileSymbol("PLIB_SMC_H", None)
     smcHeader1File.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/plib_smc.h.ftl")
-    smcHeader1File.setOutputName("plib_smc" + str(num) + ".h")
+    smcHeader1File.setOutputName("plib_"+smcInstanceName.getValue().lower()+".h")
     smcHeader1File.setDestPath("/peripheral/smc/")
     smcHeader1File.setProjectPath("config/" + configName + "/peripheral/smc/")
     smcHeader1File.setType("HEADER")
@@ -326,7 +325,7 @@ def instantiateComponent(smcComponent):
 
     smcSource1File = smcComponent.createFileSymbol("PLIB_SMC_C", None)
     smcSource1File.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/plib_smc.c.ftl")
-    smcSource1File.setOutputName("plib_smc" + str(num) + ".c")
+    smcSource1File.setOutputName("plib_"+smcInstanceName.getValue().lower()+".c")
     smcSource1File.setDestPath("/peripheral/smc/")
     smcSource1File.setProjectPath("config/" + configName + "/peripheral/smc/")
     smcSource1File.setType("SOURCE")

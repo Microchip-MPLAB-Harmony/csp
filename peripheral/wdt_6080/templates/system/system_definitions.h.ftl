@@ -1,1 +1,1 @@
-#include "peripheral/wdt/plib_wdt${wdtIndex?string}.h"
+#include "peripheral/wdt/plib_${WDT_INSTANCE_NAME?lower_case}.h"

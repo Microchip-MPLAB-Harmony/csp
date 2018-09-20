@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_mcan${INDEX?string}.h
+    plib_${MCAN_INSTANCE_NAME?lower_case}.h
 
   Summary:
     MCAN PLIB interface declarations.
@@ -44,14 +44,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVOCES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 //DOM-IGNORE-END
 
-#ifndef PLIB_MCAN${INDEX?string}_H
-#define PLIB_MCAN${INDEX?string}_H
+#ifndef PLIB_${MCAN_INSTANCE_NAME}_H
+#define PLIB_${MCAN_INSTANCE_NAME}_H
 
 #include <stdbool.h>
 #include <string.h>
 
 #include "device.h"
-#include "plib_mcan_local.h"
+#include "plib_mcan_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -76,15 +76,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVOCES, OR ANY CLAIMS BY THIRD PARTIES
     (INT_TIMEOUT!false)
 >
 
-void MCAN${INDEX?string}_Initialize (void);
-void MCAN${INDEX?string}_Deinitialize (void);
-void MCAN${INDEX?string}_Open (void);
-void MCAN${INDEX?string}_Close (void);
-bool MCAN${INDEX?string}_ChannelMessageTransmit (MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message);
-bool MCAN${INDEX?string}_ChannelMessageReceive (MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message);
+void ${MCAN_INSTANCE_NAME}_Initialize (void);
+void ${MCAN_INSTANCE_NAME}_Deinitialize (void);
+void ${MCAN_INSTANCE_NAME}_Open (void);
+void ${MCAN_INSTANCE_NAME}_Close (void);
+bool ${MCAN_INSTANCE_NAME}_ChannelMessageTransmit (MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message);
+bool ${MCAN_INSTANCE_NAME}_ChannelMessageReceive (MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message);
 
 <#if USE_INTERRUPTS == true>
-void MCAN${INDEX?string}_INT0_InterruptHandler( void );
+void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler( void );
 </#if>
 
 // DOM-IGNORE-BEGIN
@@ -93,7 +93,7 @@ void MCAN${INDEX?string}_INT0_InterruptHandler( void );
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_MCAN${INDEX?string}_H
+#endif // PLIB_${MCAN_INSTANCE_NAME}_H
 
 /*******************************************************************************
  End of File

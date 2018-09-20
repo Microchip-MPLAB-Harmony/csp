@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_supc${INDEX?string}.c
+    plib_${SUPC_INSTANCE_NAME?lower_case}.c
 
   Summary:
     SUPC Source File
@@ -38,7 +38,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#include "plib_supc${INDEX?string}.h"
+#include "plib_${SUPC_INSTANCE_NAME?lower_case}.h"
 
 static void WaitEntryClockSetup (bool xtal_disable);
 
@@ -70,25 +70,25 @@ static void WaitEntryClockSetup (bool xtal_disable);
 // *****************************************************************************
 // *****************************************************************************
 
-void SUPC${INDEX?string}_Initialize (void)
+void ${SUPC_INSTANCE_NAME}_Initialize (void)
 {
 	<#if SM_ENABLE>
-	SUPC_REGS->SUPC_SMMR = (SUPC_SMMR_SMSMPL${SUPC_SMMR_SMSMPL} | SUPC_SMMR_SMTH(${SUPC_SMMR_SMTH}) ${SUPC_SMMR_SMIEN?then('| SUPC_SMMR_SMIEN_Msk', '')} ${SUPC_SMMR_SMRSTEN?then('| SUPC_SMMR_SMRSTEN_ENABLE', '')}); 
+	${SUPC_INSTANCE_NAME}_REGS->SUPC_SMMR = (SUPC_SMMR_SMSMPL${SUPC_SMMR_SMSMPL} | SUPC_SMMR_SMTH(${SUPC_SMMR_SMTH}) ${SUPC_SMMR_SMIEN?then('| SUPC_SMMR_SMIEN_Msk', '')} ${SUPC_SMMR_SMRSTEN?then('| SUPC_SMMR_SMRSTEN_ENABLE', '')}); 
 	<#else>
-	SUPC_REGS->SUPC_SMMR = SUPC_SMMR_SMSMPL_SMD;
+	${SUPC_INSTANCE_NAME}_REGS->SUPC_SMMR = SUPC_SMMR_SMSMPL_SMD;
     </#if>
 	
-	SUPC_REGS->SUPC_MR = (SUPC_MR_KEY_PASSWD | SUPC_MR_ONREG_ONREG_USED ${SUPC_MR_BODRSTEN?then('| SUPC_MR_BODRSTEN_ENABLE', '')} ${SUPC_MR_BODDIS?then('', '| SUPC_MR_BODDIS_DISABLE')} ${SUPC_MR_BKUPRETON?then('| SUPC_MR_BKUPRETON_Msk', '')});  
+	${SUPC_INSTANCE_NAME}_REGS->SUPC_MR = (SUPC_MR_KEY_PASSWD | SUPC_MR_ONREG_ONREG_USED ${SUPC_MR_BODRSTEN?then('| SUPC_MR_BODRSTEN_ENABLE', '')} ${SUPC_MR_BODDIS?then('', '| SUPC_MR_BODDIS_DISABLE')} ${SUPC_MR_BKUPRETON?then('| SUPC_MR_BKUPRETON_Msk', '')});  
 	
-	SUPC_REGS->SUPC_WUMR = (SUPC_WUMR_LPDBC(${SUPC_WUMR_LPDBC}) ${SUPC_WUMR_LPDBCEN0?then('| SUPC_WUMR_LPDBCEN0_ENABLE', '')} ${SUPC_WUMR_LPDBCEN1?then('| SUPC_WUMR_LPDBCEN1_ENABLE', '')} ${SUPC_WUMR_LPDBCCLR?then('| SUPC_WUMR_LPDBCCLR_ENABLE', '')} \
+	${SUPC_INSTANCE_NAME}_REGS->SUPC_WUMR = (SUPC_WUMR_LPDBC(${SUPC_WUMR_LPDBC}) ${SUPC_WUMR_LPDBCEN0?then('| SUPC_WUMR_LPDBCEN0_ENABLE', '')} ${SUPC_WUMR_LPDBCEN1?then('| SUPC_WUMR_LPDBCEN1_ENABLE', '')} ${SUPC_WUMR_LPDBCCLR?then('| SUPC_WUMR_LPDBCCLR_ENABLE', '')} \
 							| SUPC_WUMR_WKUPDBC(${SUPC_WUMR_WKUPDBC}) ${SUPC_WUMR_RTCEN?then('| SUPC_WUMR_RTCEN_ENABLE ', '')} ${SUPC_WUMR_RTTEN?then('| SUPC_WUMR_RTTEN_ENABLE', '')} ${SUPC_WUMR_SMEN?then('| SUPC_WUMR_SMEN_ENABLE', '')});	
     
 	<#if SUPC_WUIR != "">	
-    SUPC_REGS->SUPC_WUIR = ${SUPC_WUIR};
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_WUIR = ${SUPC_WUIR};
 	</#if>
 }
 
-void SUPC0_SleepModeEnter (void)
+void ${SUPC_INSTANCE_NAME}_SleepModeEnter (void)
 {
     SCB->SCR &= (uint32_t)~SCB_SCR_SLEEPDEEP_Msk;
 
@@ -101,7 +101,7 @@ void SUPC0_SleepModeEnter (void)
     __WFI();
 }
 
-void SUPC0_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source)
+void ${SUPC_INSTANCE_NAME}_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source)
 {
     uint32_t i;
  
@@ -154,12 +154,12 @@ void SUPC0_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE s
     __enable_irq();	
 }
 
-void SUPC0_BackupModeEnter (void)
+void ${SUPC_INSTANCE_NAME}_BackupModeEnter (void)
 {
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
 	/* Switch off voltage regulator	*/
-    SUPC_REGS->SUPC_CR |= (SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_Msk); 
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_CR |= (SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_Msk); 
 
 	/* Enable CPU Interrupt	*/
 	__DMB();
@@ -173,13 +173,13 @@ void SUPC0_BackupModeEnter (void)
 <#if SUPC_SMMR_SMIEN>
 SUPC_OBJECT supcObj;
 
-void SUPC${INDEX?string}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t context)
+void ${SUPC_INSTANCE_NAME}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t context)
 {
     supcObj.callback = callback;
     supcObj.context = context;
 }
 
-void SUPC${INDEX?string}_InterruptHandler (void)
+void ${SUPC_INSTANCE_NAME}_InterruptHandler (void)
 {
    	// Callback user function
 	if(supcObj.callback != NULL)
@@ -189,12 +189,12 @@ void SUPC${INDEX?string}_InterruptHandler (void)
 }
 </#if>
 
-uint32_t SUPC${INDEX?string}_GPBRRead (GPBR_REGS_INDEX reg)
+uint32_t ${SUPC_INSTANCE_NAME}_GPBRRead (GPBR_REGS_INDEX reg)
 {
     return GPBR_REGS->SYS_GPBR[reg];
 }
 
-void SUPC${INDEX?string}_GPBRWrite (GPBR_REGS_INDEX reg, uint32_t data)
+void ${SUPC_INSTANCE_NAME}_GPBRWrite (GPBR_REGS_INDEX reg, uint32_t data)
 {
     GPBR_REGS->SYS_GPBR[reg] = data;
 }

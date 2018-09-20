@@ -1,14 +1,14 @@
 /*******************************************************************************
-  SDADC${SDADC_INDEX} PLIB
+  ${SDADC_INSTANCE_NAME} PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_sdadc${SDADC_INDEX}.c
+    plib_${SDADC_INSTANCE_NAME?lower_case}.c
 
   Summary
-    SDADC${SDADC_INDEX} PLIB Implementation File.
+    ${SDADC_INSTANCE_NAME} PLIB Implementation File.
 
   Description
     This file defines the interface to the SDADC peripheral library. This
@@ -53,7 +53,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 #include "device.h"
-#include "plib_sdadc${SDADC_INDEX}.h"
+#include "plib_${SDADC_INSTANCE_NAME?lower_case}.h"
 <#compress>
 <#assign SDADC_SEQCTRL_VAL = "">
 <#assign SDADC_INTERRUPT_MODE = false>
@@ -117,134 +117,134 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 <#if SDADC_INTERRUPT_MODE == true>
-SDADC_CALLBACK_OBJECT SDADC${SDADC_INDEX}_CallbackObj;
+SDADC_CALLBACK_OBJECT ${SDADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 // *****************************************************************************
 // *****************************************************************************
-// Section: SDADC${SDADC_INDEX} Implementation
+// Section: ${SDADC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
 /* Initialize SDADC module as per MHC configurations */
-void SDADC${SDADC_INDEX}_Initialize( void )
+void ${SDADC_INSTANCE_NAME}_Initialize( void )
 {
     /* Software Reset */
-    SDADC_REGS->SDADC_CTRLA = SDADC_CTRLA_SWRST_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA = SDADC_CTRLA_SWRST_Msk;
 
-    while((SDADC_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_SWRST_Msk) == SDADC_SYNCBUSY_SWRST_Msk)
+    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_SWRST_Msk) == SDADC_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for synchronization */
     }
 
     /* Set prescaler, over sampling ratio and skip count */
-    SDADC_REGS->SDADC_CTRLB = SDADC_CTRLB_PRESCALER_${SDADC_CTRLB_PRESCALER} | SDADC_CTRLB_OSR_${SDADC_CTRLB_OSR} | SDADC_CTRLB_SKPCNT(2U);
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLB = SDADC_CTRLB_PRESCALER_${SDADC_CTRLB_PRESCALER} | SDADC_CTRLB_OSR_${SDADC_CTRLB_OSR} | SDADC_CTRLB_SKPCNT(2U);
 
     /* Configure reference voltage */
-    SDADC_REGS->SDADC_REFCTRL = SDADC_REFCTRL_REFSEL_${SDADC_REFCTRL_REFSEL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_REFCTRL = SDADC_REFCTRL_REFSEL_${SDADC_REFCTRL_REFSEL};
 
     <#if SDADC_TRIGGER == "0">
-    SDADC_REGS->SDADC_CTRLC = SDADC_CTRLC_FREERUN_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLC = SDADC_CTRLC_FREERUN_Msk;
     </#if>
     <#if SDADC_TRIGGER == "2">
-    SDADC_REGS->SDADC_EVCTRL = SDADC_EVCTRL_STARTEI_Msk ${SDADC_EVENT_INVERT?then(' | SDADC_EVCTRL_STARTINV_Msk','')};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_EVCTRL = SDADC_EVCTRL_STARTEI_Msk ${SDADC_EVENT_INVERT?then(' | SDADC_EVCTRL_STARTINV_Msk','')};
     </#if>
     <#if SDADC_SEQCTRL_VAL?has_content>
-    SDADC_REGS->SDADC_SEQCTRL = ${SDADC_SEQCTRL_VAL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SEQCTRL = ${SDADC_SEQCTRL_VAL};
     </#if>
     <#if SDADC_AUTO_SEQUENCE == false>
     /* Configure positive and negative input pins */
-    SDADC_REGS->SDADC_INPUTCTRL = SDADC_INPUTCTRL_MUXSEL_${SDADC_INPUTCTRL_MUXSEL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INPUTCTRL = SDADC_INPUTCTRL_MUXSEL_${SDADC_INPUTCTRL_MUXSEL};
     </#if>
     <#if SDADC_WINCTRL_WINMODE != "0">
     /* Window monitor configurations */
-    SDADC_REGS->SDADC_WINCTRL = SDADC_WINCTRL_WINMODE(${SDADC_WINCTRL_WINMODE});
-    SDADC_REGS->SDADC_WINLT = (int16_t)(${SDADC_WINLT}) << 8;
-    SDADC_REGS->SDADC_WINUT = (int16_t)(${SDADC_WINUT}) << 8;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINCTRL = SDADC_WINCTRL_WINMODE(${SDADC_WINCTRL_WINMODE});
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINLT = (int16_t)(${SDADC_WINLT}) << 8;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINUT = (int16_t)(${SDADC_WINUT}) << 8;
     </#if>
 
     /* Clear all interrupts */
-    SDADC_REGS->SDADC_INTFLAG = SDADC_INTFLAG_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_Msk;
 
 <#if SDADC_INTENSET_VAL?has_content>
     /* Enable interrupt */
-    SDADC_REGS->SDADC_INTENSET = ${SDADC_INTENSET_VAL};
-    SDADC${SDADC_INDEX}_CallbackObj.callback = NULL;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTENSET = ${SDADC_INTENSET_VAL};
+    ${SDADC_INSTANCE_NAME}_CallbackObj.callback = NULL;
 </#if>
 
 <#if SDADC_EVCTRL_VAL?has_content>
-    SDADC_REGS->SDADC_EVCTRL |= ${SDADC_EVCTRL_VAL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_EVCTRL |= ${SDADC_EVCTRL_VAL};
 </#if>
 
 <#if SDADC_CTRLA_VAL?has_content>
    /* Configure Run in standby, On demand property */
-    SDADC_REGS->SDADC_CTRLA |= ${SDADC_CTRLA_VAL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA |= ${SDADC_CTRLA_VAL};
 </#if>
 
     /* Enable SDADC */
-    SDADC_REGS->SDADC_CTRLA |= SDADC_CTRLA_ENABLE_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA |= SDADC_CTRLA_ENABLE_Msk;
 
-    while((SDADC_REGS->SDADC_SYNCBUSY))
+    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY))
     {
         /* Wait for synchronization */
     }
 }
 
 
-void SDADC${SDADC_INDEX}_ConversionStart( void )
+void ${SDADC_INSTANCE_NAME}_ConversionStart( void )
 {
     /* Start conversion */
-    SDADC_REGS->SDADC_SWTRIG = SDADC_SWTRIG_START_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_SWTRIG = SDADC_SWTRIG_START_Msk;
 
-    while((SDADC_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_SWTRIG_Msk) == SDADC_SYNCBUSY_SWTRIG_Msk)
+    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_SWTRIG_Msk) == SDADC_SYNCBUSY_SWTRIG_Msk)
     {
         /* Synchronization between SWTRIG start with the clock domain */
     }
 }
 
-bool SDADC${SDADC_INDEX}_ConversionResultIsReady( void )
+bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady( void )
 {
-    return (SDADC_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk);
+    return (${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk);
 }
 
-int16_t SDADC${SDADC_INDEX}_ConversionResultGet( void )
+int16_t ${SDADC_INSTANCE_NAME}_ConversionResultGet( void )
 {
     /* right-shift by 8-bits to get signed 16-bit result */
-    return ((int16_t)(SDADC_REGS->SDADC_RESULT >> 8));
+    return ((int16_t)(${SDADC_INSTANCE_NAME}_REGS->SDADC_RESULT >> 8));
 }
 
-bool SDADC${SDADC_INDEX}_ConversionSequenceIsFinished(void)
+bool ${SDADC_INSTANCE_NAME}_ConversionSequenceIsFinished(void)
 {
     bool seq_status = false;
-    if ((SDADC_REGS->SDADC_SEQSTATUS & SDADC_SEQSTATUS_SEQBUSY_Msk) != SDADC_SEQSTATUS_SEQBUSY_Msk)
+    if ((${SDADC_INSTANCE_NAME}_REGS->SDADC_SEQSTATUS & SDADC_SEQSTATUS_SEQBUSY_Msk) != SDADC_SEQSTATUS_SEQBUSY_Msk)
     {
         seq_status = true;
     }
     return seq_status;
 }
 
-void SDADC${SDADC_INDEX}_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold)
+void ${SDADC_INSTANCE_NAME}_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold)
 {
     /* Update threshold values as 24-bit signed value */
-    SDADC_REGS->SDADC_WINLT = low_threshold << 8;
-    SDADC_REGS->SDADC_WINUT = high_threshold << 8;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINLT = low_threshold << 8;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINUT = high_threshold << 8;
 }
 
 <#if SDADC_INTERRUPT_MODE == true>
-void SDADC${SDADC_INDEX}_CallbackRegister( SDADC_CALLBACK callback, uintptr_t context )
+void ${SDADC_INSTANCE_NAME}_CallbackRegister( SDADC_CALLBACK callback, uintptr_t context )
 {
-    SDADC${SDADC_INDEX}_CallbackObj.callback = callback;
+    ${SDADC_INSTANCE_NAME}_CallbackObj.callback = callback;
 
-    SDADC${SDADC_INDEX}_CallbackObj.context = context;
+    ${SDADC_INSTANCE_NAME}_CallbackObj.context = context;
 }
 
 
-void SDADC${SDADC_INDEX}_InterruptHandler( void )
+void ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
 {
-    if (SDADC${SDADC_INDEX}_CallbackObj.callback != NULL)
+    if (${SDADC_INSTANCE_NAME}_CallbackObj.callback != NULL)
     {
-        SDADC${SDADC_INDEX}_CallbackObj.callback(SDADC${SDADC_INDEX}_CallbackObj.context);
+        ${SDADC_INSTANCE_NAME}_CallbackObj.callback(${SDADC_INSTANCE_NAME}_CallbackObj.context);
     }
     /* Clear interrupt flags */
-    SDADC_REGS->SDADC_INTFLAG = SDADC_INTFLAG_Msk;
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_Msk;
 }
 </#if>

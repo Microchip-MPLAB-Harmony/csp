@@ -1,1 +1,1 @@
-    AFEC${INDEX?string}_Initialize();
+    ${AFEC_INSTANCE_NAME}_Initialize();

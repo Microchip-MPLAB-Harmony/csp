@@ -3,7 +3,7 @@ sdadcSym_SEQCTRL_SEQ = []
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
-global sdadcInstanceIndex
+global sdadcInstanceName
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -20,9 +20,9 @@ def updateSDADCInterruptStatus(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, "SDADC" + sdadcInstanceIndex + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, sdadcInstanceName.getValue() + "_InterruptHandler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, "SDADC_Handler", 2)
+        Database.setSymbolValue("core", InterruptHandler, +sdadcInstanceName.getValue() + "_Handler", 2)
 
 def updateSDADCInterruptWarringStatus(symbol, event):
 
@@ -37,16 +37,16 @@ def updateSDADCClockWarringStatus(symbol, event):
 
 def sdadcEvesysConfigure(symbol, event):
     if(event["id"] == "SDADC_EVCTRL_RESRDYEO"):
-        Database.setSymbolValue("evsys0", "GENERATOR_SDADC_RESRDY_ACTIVE", event["value"], 2)
+        Database.setSymbolValue("evsys0", "GENERATOR_"+sdadcInstanceName.getValue()+"_RESRDY_ACTIVE", event["value"], 2)
 
     if(event["id"] == "SDADC_EVCTRL_WINMONEO"):
-        Database.setSymbolValue("evsys0", "GENERATOR_SDADC_WINMON_ACTIVE", event["value"], 2)
+        Database.setSymbolValue("evsys0", "GENERATOR_"+sdadcInstanceName.getValue()+"_WINMON_ACTIVE", event["value"], 2)
 
     if(event["id"] == "SDADC_TRIGGER"):
         if (event["value"] == 2):
-            Database.setSymbolValue("evsys0", "USER_SDADC_START_READY", True, 2)
+            Database.setSymbolValue("evsys0", "USER_"+sdadcInstanceName.getValue()+"_START_READY", True, 2)
         else:
-            Database.setSymbolValue("evsys0", "USER_SDADC_START_READY", False, 2)
+            Database.setSymbolValue("evsys0", "USER_"+sdadcInstanceName.getValue()+"_START_READY", False, 2)
 
 def sdadcCalcConvTime(symbol, event):
     clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
@@ -88,20 +88,16 @@ def instantiateComponent(sdadcComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
-    global sdadcInstanceIndex
+    global sdadcInstanceName
 
-    sdadcInstanceIndex = sdadcComponent.getID()[-1:]
-    Log.writeInfoMessage("Running SDADC : " + str(sdadcInstanceIndex))
-
-    #sdadc instance index
-    sdadcSym_INDEX = sdadcComponent.createIntegerSymbol("SDADC_INDEX", None)
-    sdadcSym_INDEX.setLabel("SDADC_INDEX")
-    sdadcSym_INDEX.setVisible(False)
-    sdadcSym_INDEX.setDefaultValue(int(sdadcInstanceIndex))
+    sdadcInstanceName = sdadcComponent.createStringSymbol("SDADC_INSTANCE_NAME", None)
+    sdadcInstanceName.setVisible(False)
+    sdadcInstanceName.setDefaultValue(sdadcComponent.getID().upper())
+    Log.writeInfoMessage("Running " + sdadcInstanceName.getValue())
 
     #clock enable
-    Database.clearSymbolValue("core", "SDADC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "SDADC_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", sdadcInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", sdadcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     #Prescaler Configuration
     global sdadcSym_CTRLB_PRESCALER
@@ -278,10 +274,10 @@ def instantiateComponent(sdadcComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = "SDADC_INTERRUPT_ENABLE"
-    InterruptHandler = "SDADC_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "SDADC_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = "SDADC_INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = sdadcInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    InterruptHandler = sdadcInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    InterruptHandlerLock = sdadcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = sdadcInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
 
     # Interrupt Dynamic settings
     sdadcSym_UpdateInterruptStatus = sdadcComponent.createBooleanSymbol("SDADC_INTERRUPT_STATUS", None)
@@ -298,7 +294,7 @@ def instantiateComponent(sdadcComponent):
     sdadcSym_ClkEnComment = sdadcComponent.createCommentSymbol("SDADC_CLOCK_ENABLE_COMMENT", None)
     sdadcSym_ClkEnComment.setLabel("Warning!!! SDADC Peripheral Clock is Disabled in Clock Manager")
     sdadcSym_ClkEnComment.setVisible(False)
-    sdadcSym_ClkEnComment.setDependencies(updateSDADCClockWarringStatus, ["core.SDADC_CLOCK_ENABLE"])
+    sdadcSym_ClkEnComment.setDependencies(updateSDADCClockWarringStatus, ["core."+sdadcInstanceName.getValue()+"_CLOCK_ENABLE"])
 
 ###########################################################################################################################################
 ########################                                         Code Generation                                   ########################
@@ -311,8 +307,8 @@ def instantiateComponent(sdadcComponent):
 
     # Global Header File
     sdadcGlobalHeaderFile = sdadcComponent.createFileSymbol("SDADC_GLOBAL_HEADER", None)
-    sdadcGlobalHeaderFile.setSourcePath("../peripheral/sdadc_"+ sdadcModuleID+"/plib_sdadc.h")
-    sdadcGlobalHeaderFile.setOutputName("plib_sdadc.h")
+    sdadcGlobalHeaderFile.setSourcePath("../peripheral/sdadc_"+ sdadcModuleID+"/templates/plib_sdadc_common.h")
+    sdadcGlobalHeaderFile.setOutputName("plib_sdadc_common.h")
     sdadcGlobalHeaderFile.setDestPath("/peripheral/sdadc/")
     sdadcGlobalHeaderFile.setProjectPath("config/" + configName + "/peripheral/sdadc/")
     sdadcGlobalHeaderFile.setType("HEADER")
@@ -321,7 +317,7 @@ def instantiateComponent(sdadcComponent):
     # Instance Header File
     sdadcHeaderFile = sdadcComponent.createFileSymbol("SDADC_HEADER", None)
     sdadcHeaderFile.setSourcePath("../peripheral/sdadc_"+ sdadcModuleID+"/templates/plib_sdadc.h.ftl")
-    sdadcHeaderFile.setOutputName("plib_sdadc" + str(sdadcInstanceIndex) + ".h")
+    sdadcHeaderFile.setOutputName("plib_"+sdadcInstanceName.getValue().lower()+".h")
     sdadcHeaderFile.setDestPath("/peripheral/sdadc/")
     sdadcHeaderFile.setProjectPath("config/" + configName + "/peripheral/sdadc/")
     sdadcHeaderFile.setType("HEADER")
@@ -330,7 +326,7 @@ def instantiateComponent(sdadcComponent):
     # Source File
     sdadcSourceFile = sdadcComponent.createFileSymbol("SDADC_SOURCE", None)
     sdadcSourceFile.setSourcePath("../peripheral/sdadc_"+sdadcModuleID+"/templates/plib_sdadc.c.ftl")
-    sdadcSourceFile.setOutputName("plib_sdadc" + str(sdadcInstanceIndex) + ".c")
+    sdadcSourceFile.setOutputName("plib_"+sdadcInstanceName.getValue().lower()+".c")
     sdadcSourceFile.setDestPath("/peripheral/sdadc/")
     sdadcSourceFile.setProjectPath("config/" + configName + "/peripheral/sdadc/")
     sdadcSourceFile.setType("SOURCE")

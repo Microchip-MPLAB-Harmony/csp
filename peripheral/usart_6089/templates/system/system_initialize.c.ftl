@@ -1,1 +1,1 @@
-	USART${INDEX?string}_Initialize();
+	${USART_INSTANCE_NAME}_Initialize();

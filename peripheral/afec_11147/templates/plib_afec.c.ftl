@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_afec${INDEX}.c
+    plib_${AFEC_INSTANCE_NAME?lower_case}.c
 
   Summary
-    AFEC${INDEX} peripheral library source.
+    ${AFEC_INSTANCE_NAME} peripheral library source.
 
   Description
     This file implements the AFEC peripheral library.
@@ -39,7 +39,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 #include "device.h"
-#include "plib_afec${INDEX}.h"
+#include "plib_${AFEC_INSTANCE_NAME?lower_case}.h"
 
 #define AFEC_SEQ1_CHANNEL_NUM (8U)
 
@@ -215,45 +215,45 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#-- *********************************************************************************************** -->
 // *****************************************************************************
 // *****************************************************************************
-// Section: AFEC${INDEX} Implementation
+// Section: ${AFEC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>AFEC_CALLBACK_OBJECT AFEC${INDEX}_CallbackObj;
+    <#lt>AFEC_CALLBACK_OBJECT ${AFEC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize AFEC peripheral */
-void AFEC${INDEX}_Initialize()
+void ${AFEC_INSTANCE_NAME}_Initialize()
 {
     /* Software reset */
-    AFEC${INDEX}_REGS->AFEC_CR = AFEC_CR_SWRST_Msk;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CR = AFEC_CR_SWRST_Msk;
 
     /* Prescaler and different time settings as per CLOCK section  */
-    AFEC${INDEX}_REGS->AFEC_MR = AFEC_MR_PRESCAL(${AFEC_MR_PRESCAL}U) | AFEC_MR_TRACKTIM(15U) | AFEC_MR_STARTUP_SUT64 |
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_MR = AFEC_MR_PRESCAL(${AFEC_MR_PRESCAL}U) | AFEC_MR_TRACKTIM(15U) | AFEC_MR_STARTUP_SUT64 |
         AFEC_MR_TRANSFER(2U) | AFEC_MR_ONE_Msk ${(AFEC_CONV_MODE == "0")?then('| AFEC_MR_FREERUN_Msk', '')} <#rt>
         <#lt> ${(AFEC_CONV_MODE == "2")?then('| (AFEC_MR_TRGEN_Msk) | (AFEC_MR_${AFEC_MR_TRGSEL_VALUE})', '')};
 
     /* resolution and sign mode of result */
-    AFEC${INDEX}_REGS->AFEC_EMR = ${AFEC_RES} ${AFEC_STM}
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_EMR = ${AFEC_RES} ${AFEC_STM}
          | AFEC_EMR_SIGNMODE_${AFEC_EMR_SIGNMODE_VALUE} | AFEC_EMR_TAG_Msk;
 
     /* Enable gain amplifiers */
-    AFEC${INDEX}_REGS->AFEC_ACR = AFEC_ACR_PGA0EN_Msk | AFEC_ACR_PGA1EN_Msk | AFEC_ACR_IBCTL(${AFEC_IBCTL});
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_ACR = AFEC_ACR_PGA0EN_Msk | AFEC_ACR_PGA1EN_Msk | AFEC_ACR_IBCTL(${AFEC_IBCTL});
 
 <#if AFEC_CGR_GAIN?has_content>
     /* Gain */
-    AFEC${INDEX}_REGS->AFEC_CGR = ${AFEC_CGR_GAIN};
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CGR = ${AFEC_CGR_GAIN};
 
 </#if>
 <#if AFEC_DIFFR_DIFF?has_content>
     /* Differential mode */
-    AFEC${INDEX}_REGS->AFEC_DIFFR = ${AFEC_DIFFR_DIFF};
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_DIFFR = ${AFEC_DIFFR_DIFF};
 
 </#if>
 <#if AFEC_SHMR_DUAL?has_content>
     /* Dual sample and hold mode */
-    AFEC${INDEX}_REGS->AFEC_SHMR = ${AFEC_SHMR_DUAL};
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_SHMR = ${AFEC_SHMR_DUAL};
 
 </#if>
 <#list 0..(AFEC_NUM_CHANNELS - 1) as i>
@@ -268,130 +268,130 @@ void AFEC${INDEX}_Initialize()
         <#if (i % 2 != 0) && (.vars[AFEC_CH_DIFF_PAIR] != "GND")>
         <#else>
         <#lt>    /* Offset */
-        <#lt>    AFEC${INDEX}_REGS->AFEC_CSELR = AFEC_CH${i};
-        <#lt>    AFEC${INDEX}_REGS->AFEC_COCR = ${.vars[AFEC_CH_OFFSET]}U;
+        <#lt>    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CSELR = AFEC_CH${i};
+        <#lt>    ${AFEC_INSTANCE_NAME}_REGS->AFEC_COCR = ${.vars[AFEC_CH_OFFSET]}U;
         </#if>
     </#if>
 </#list>
 
 <#if AFEC_MR_USEQ == true>
     /* User defined channel conversion sequence */
-    AFEC${INDEX}_REGS->AFEC_MR |= AFEC_MR_USEQ_Msk;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_MR |= AFEC_MR_USEQ_Msk;
     <#if AFEC_SEQ1R_USCH?has_content>
-    <#lt>   AFEC${INDEX}_REGS->AFEC_SEQ1R = ${AFEC_SEQ1R_USCH};
+    <#lt>   ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ1R = ${AFEC_SEQ1R_USCH};
     </#if>
     <#if AFEC_SEQ2R_USCH?has_content>
-    <#lt>   AFEC${INDEX}_REGS->AFEC_SEQ2R = ${AFEC_SEQ2R_USCH};
+    <#lt>   ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ2R = ${AFEC_SEQ2R_USCH};
     </#if>
 </#if>
 
 <#if AFEC_IER_EOC?has_content>
     /* Enable interrupt */
-    AFEC${INDEX}_REGS->AFEC_IER = ${AFEC_IER_EOC};
-    AFEC${INDEX}_CallbackObj.callback_fn = NULL;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_IER = ${AFEC_IER_EOC};
+    ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn = NULL;
 </#if>
 
 <#if AFEC_CHER_CH?has_content>
     /* Enable channel */
-    AFEC${INDEX}_REGS->AFEC_CHER = ${AFEC_CHER_CH};
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CHER = ${AFEC_CHER_CH};
 </#if>
 }
 
 /* Enable AFEC channels */
-void AFEC${INDEX}_ChannelsEnable (AFEC_CHANNEL_MASK channelsMask)
+void ${AFEC_INSTANCE_NAME}_ChannelsEnable (AFEC_CHANNEL_MASK channelsMask)
 {
-    AFEC${INDEX}_REGS->AFEC_CHER |= channelsMask;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CHER |= channelsMask;
 }
 
 /* Disable AFEC channels */
-void AFEC${INDEX}_ChannelsDisable (AFEC_CHANNEL_MASK channelsMask)
+void ${AFEC_INSTANCE_NAME}_ChannelsDisable (AFEC_CHANNEL_MASK channelsMask)
 {
-    AFEC${INDEX}_REGS->AFEC_CHDR |= channelsMask;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CHDR |= channelsMask;
 }
 
 /* Enable channel end of conversion interrupt */
-void AFEC${INDEX}_ChannelsInterruptEnable (AFEC_INTERRUPT_MASK channelsInterruptMask)
+void ${AFEC_INSTANCE_NAME}_ChannelsInterruptEnable (AFEC_INTERRUPT_MASK channelsInterruptMask)
 {
-    AFEC${INDEX}_REGS->AFEC_IER |= channelsInterruptMask;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_IER |= channelsInterruptMask;
 }
 
 /* Disable channel end of conversion interrupt */
-void AFEC${INDEX}_ChannelsInterruptDisable (AFEC_INTERRUPT_MASK channelsInterruptMask)
+void ${AFEC_INSTANCE_NAME}_ChannelsInterruptDisable (AFEC_INTERRUPT_MASK channelsInterruptMask)
 {
-    AFEC${INDEX}_REGS->AFEC_IDR |= channelsInterruptMask;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_IDR |= channelsInterruptMask;
 }
 
 /* Start the conversion with software trigger */
-void AFEC${INDEX}_ConversionStart(void)
+void ${AFEC_INSTANCE_NAME}_ConversionStart(void)
 {
-    AFEC${INDEX}_REGS->AFEC_CR = 0x1U << AFEC_CR_START_Pos;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CR = 0x1U << AFEC_CR_START_Pos;
 }
 
 /*Check if conversion result is available */
-bool AFEC${INDEX}_ChannelResultIsReady(AFEC_CHANNEL_NUM channel)
+bool ${AFEC_INSTANCE_NAME}_ChannelResultIsReady(AFEC_CHANNEL_NUM channel)
 {
-    return (AFEC${INDEX}_REGS->AFEC_ISR>> channel) & 0x1U;
+    return (${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR>> channel) & 0x1U;
 }
 
 /* Read the conversion result */
-uint16_t AFEC${INDEX}_ChannelResultGet(AFEC_CHANNEL_NUM channel)
+uint16_t ${AFEC_INSTANCE_NAME}_ChannelResultGet(AFEC_CHANNEL_NUM channel)
 {
-    AFEC${INDEX}_REGS->AFEC_CSELR = channel;
-    return (AFEC${INDEX}_REGS->AFEC_CDR);
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CSELR = channel;
+    return (${AFEC_INSTANCE_NAME}_REGS->AFEC_CDR);
 }
 
 /* Configure the user defined conversion sequence */
-void AFEC${INDEX}_ConversionSequenceSet(AFEC_CHANNEL_NUM *channelList, uint8_t numChannel)
+void ${AFEC_INSTANCE_NAME}_ConversionSequenceSet(AFEC_CHANNEL_NUM *channelList, uint8_t numChannel)
 {
     uint8_t channelIndex;
-    AFEC${INDEX}_REGS->AFEC_SEQ1R = 0U;
-    AFEC${INDEX}_REGS->AFEC_SEQ2R = 0U;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ1R = 0U;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ2R = 0U;
 
     for (channelIndex = 0U; channelIndex < AFEC_SEQ1_CHANNEL_NUM; channelIndex++)
     {
         if (channelIndex >= numChannel)
             break;
-        AFEC${INDEX}_REGS->AFEC_SEQ1R |= channelList[channelIndex] << (channelIndex * 4U);
+        ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ1R |= channelList[channelIndex] << (channelIndex * 4U);
     }
     if (numChannel > AFEC_SEQ1_CHANNEL_NUM)
     {
         for (channelIndex = 0U; channelIndex < (numChannel - AFEC_SEQ1_CHANNEL_NUM); channelIndex++)
         {
-            AFEC${INDEX}_REGS->AFEC_SEQ2R |= channelList[channelIndex + AFEC_SEQ1_CHANNEL_NUM] << (channelIndex * 4U);
+            ${AFEC_INSTANCE_NAME}_REGS->AFEC_SEQ2R |= channelList[channelIndex + AFEC_SEQ1_CHANNEL_NUM] << (channelIndex * 4U);
         }
     }
 }
 
 /* Set the channel gain */
-void AFEC${INDEX}_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL_GAIN gain)
+void ${AFEC_INSTANCE_NAME}_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL_GAIN gain)
 {
-    AFEC${INDEX}_REGS->AFEC_CGR &= ~(0x03U << (2U * channel));
-    AFEC${INDEX}_REGS->AFEC_CGR |= (gain << ( 2U * channel));
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CGR &= ~(0x03U << (2U * channel));
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CGR |= (gain << ( 2U * channel));
 }
 
 /* Set the channel offset */
-void AFEC${INDEX}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset)
+void ${AFEC_INSTANCE_NAME}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset)
 {
-    AFEC${INDEX}_REGS->AFEC_CSELR = channel;
-    AFEC${INDEX}_REGS->AFEC_COCR = offset;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_CSELR = channel;
+    ${AFEC_INSTANCE_NAME}_REGS->AFEC_COCR = offset;
 }
 
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Register the callback function */
-    <#lt>void AFEC${INDEX}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context)
+    <#lt>void ${AFEC_INSTANCE_NAME}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context)
     <#lt>{
-    <#lt>    AFEC${INDEX}_CallbackObj.callback_fn = callback;
-    <#lt>    AFEC${INDEX}_CallbackObj.context = context;
+    <#lt>    ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn = callback;
+    <#lt>    ${AFEC_INSTANCE_NAME}_CallbackObj.context = context;
     <#lt>}
 </#if>
 
 <#if AFEC_INTERRUPT == true>
     <#lt>/* Interrupt Handler */
-    <#lt>void AFEC${INDEX}_InterruptHandler(void)
+    <#lt>void ${AFEC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    if (AFEC${INDEX}_CallbackObj.callback_fn != NULL)
+    <#lt>    if (${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        AFEC${INDEX}_CallbackObj.callback_fn(AFEC${INDEX}_CallbackObj.context);
+    <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(${AFEC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
     <#lt>}
 </#if>

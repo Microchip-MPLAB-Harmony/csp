@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    plib_pac${PAC_INDEX}.c
+    plib_${PAC_INSTANCE_NAME?lower_case}.c
 
   Summary
     Source for PAC peripheral library interface Implementation.
@@ -52,7 +52,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_pac${PAC_INDEX}.h"
+#include "plib_${PAC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -99,7 +99,7 @@ typedef struct
 } PAC_CALLBACK_OBJ;
 
 /* PAC Callback object */
-PAC_CALLBACK_OBJ pac${PAC_INDEX}CallbackObject;
+PAC_CALLBACK_OBJ ${PAC_INSTANCE_NAME?lower_case}CallbackObject;
 
 </#if>
 
@@ -111,7 +111,7 @@ PAC_CALLBACK_OBJ pac${PAC_INDEX}CallbackObject;
 
 // *****************************************************************************
 /* Function:
-    void PAC${PAC_INDEX}_Initialize (void);
+    void ${PAC_INSTANCE_NAME}_Initialize (void);
 
   Summary:
     Initializes given instance of PAC peripheral.
@@ -124,7 +124,7 @@ PAC_CALLBACK_OBJ pac${PAC_INDEX}CallbackObject;
     Refer plib_pac0.h for usage information.
 */
 
-void PAC${PAC_INDEX}_Initialize( void )
+void ${PAC_INSTANCE_NAME}_Initialize( void )
 {
 <#list PAC_BRIDGE_COUNT..0 as i>
     <#assign PAC_BRIDGE = "PAC_" + i + "_BRIDGE">
@@ -136,7 +136,7 @@ void PAC${PAC_INDEX}_Initialize( void )
                 <#assign PAC_BRIDGE_PERI_NAME = "PAC_BRIDGE_" + i + "_PERI_" + j + "_NAME">
                     <#if .vars[PAC_REG_PROTECT]?has_content>
                         <#if (.vars[PAC_REG_PROTECT] != "OFF")>
-    <#lt>    PAC${PAC_INDEX}_PeripheralProtect (PAC_PERIPHERAL_${.vars[PAC_BRIDGE]}_${.vars[PAC_BRIDGE_PERI_NAME]}, PAC_PROTECTION_${.vars[PAC_REG_PROTECT]});
+    <#lt>    ${PAC_INSTANCE_NAME}_PeripheralProtect (PAC_PERIPHERAL_${.vars[PAC_BRIDGE]}_${.vars[PAC_BRIDGE_PERI_NAME]}, PAC_PROTECTION_${.vars[PAC_REG_PROTECT]});
 
                         </#if>
                     </#if>
@@ -146,18 +146,18 @@ void PAC${PAC_INDEX}_Initialize( void )
 
     <#if PAC_INTERRRUPT_MODE == true>
     /* Enable PAC interrupt */
-    PAC_REGS->PAC_INTENSET = PAC_INTENSET_ERR_Msk;
+    ${PAC_INSTANCE_NAME}_REGS->PAC_INTENSET = PAC_INTENSET_ERR_Msk;
     </#if>
 
     <#if PAC_ERROR_EVENT == true>
     /* Enable PAC Error Event Output */
-    PAC_REGS->PAC_EVCTRL |= PAC_EVCTRL_ERREO_Msk;
+    ${PAC_INSTANCE_NAME}_REGS->PAC_EVCTRL |= PAC_EVCTRL_ERREO_Msk;
     </#if>
 }
 
 // *****************************************************************************
 /* Function:
-    bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
+    bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
 
   Summary:
     Gets write protect status for the given interface module
@@ -167,14 +167,14 @@ void PAC${PAC_INDEX}_Initialize( void )
     It returns false otherwise.
 
   Remarks:
-    Refer plib_pac${PAC_INDEX}.h for usage information.
+    Refer plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
+bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
 {
     uint32_t    u32StatusRegVal = 0x0;
     uint32_t    u32StatusPeriID = 0x0;
-    uint32_t    *pu32StatusRegAddr = (uint32_t*) &(PAC_REGS->PAC_STATUSA);
+    uint32_t    *pu32StatusRegAddr = (uint32_t*) &(${PAC_INSTANCE_NAME}_REGS->PAC_STATUSA);
     bool        bPeriStatus     = false;
 
     /* Get the Bit index for the peripheral */
@@ -191,7 +191,7 @@ bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
 
 // *****************************************************************************
 /* Function:
-    void PAC${PAC_INDEX}_PeripheralProtect (PAC_PERIPHERAL peripheral,
+    void ${PAC_INSTANCE_NAME}_PeripheralProtect (PAC_PERIPHERAL peripheral,
                                   PAC_PROTECTION operation)
 
   Summary:
@@ -206,42 +206,42 @@ bool PAC${PAC_INDEX}_PeripheralIsProtected (PAC_PERIPHERAL peripheral)
     be cleared (PAC_PROTECTION_SET_AND_LOCK).
 
   Remarks:
-    Refer plib_pac${PAC_INDEX}.h for usage information.
+    Refer plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void PAC${PAC_INDEX}_PeripheralProtect(PAC_PERIPHERAL peripheral, PAC_PROTECTION operation)
+void ${PAC_INSTANCE_NAME}_PeripheralProtect(PAC_PERIPHERAL peripheral, PAC_PROTECTION operation)
 {
     /* Set Peripheral Access Control */
-    PAC_REGS->PAC_WRCTRL = (PAC_WRCTRL_PERID(peripheral) | (operation << PAC_WRCTRL_KEY_Pos));
+    ${PAC_INSTANCE_NAME}_REGS->PAC_WRCTRL = (PAC_WRCTRL_PERID(peripheral) | (operation << PAC_WRCTRL_KEY_Pos));
 }
 
 // *****************************************************************************
 /* Function:
-    bool PAC${PAC_INDEX}_PeripheralErrorOccurred (void)
+    bool ${PAC_INSTANCE_NAME}_PeripheralErrorOccurred (void)
 
   Summary:
     Returns true if any Peripheral Access Error has occurred.
 
   Description:
     This function returns true if any peripheral access error has occurred. The
-    application can then call the PAC${PAC_INDEX}_PeripheralErrorGet() function
+    application can then call the ${PAC_INSTANCE_NAME}_PeripheralErrorGet() function
     to identify the peripheral on which the error has occurred.
 
   Remarks:
-    Refer plib_pac${PAC_INDEX}.h for usage information.
+    Refer plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-bool PAC${PAC_INDEX}_PeripheralErrorOccurred (void)
+bool ${PAC_INSTANCE_NAME}_PeripheralErrorOccurred (void)
 {
-    return (bool)((PAC_REGS->PAC_INTFLAGA & PAC_INTFLAGA_Msk) |
-                  (PAC_REGS->PAC_INTFLAGB & PAC_INTFLAGB_Msk) |
-                  (PAC_REGS->PAC_INTFLAGC & PAC_INTFLAGC_Msk) |
-                  (PAC_REGS->PAC_INTFLAGD & PAC_INTFLAGD_Msk));
+    return (bool)((${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGA & PAC_INTFLAGA_Msk) |
+                  (${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGB & PAC_INTFLAGB_Msk) |
+                  (${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGC & PAC_INTFLAGC_Msk) |
+                  (${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGD & PAC_INTFLAGD_Msk));
 }
 
 // *****************************************************************************
 /* Function:
-    PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
+    PAC_PERIPHERAL ${PAC_INSTANCE_NAME}_PeripheralErrorGet (void)
 
   Summary:
     Returns the first peripheral that is reporting an access error.
@@ -251,10 +251,10 @@ bool PAC${PAC_INDEX}_PeripheralErrorOccurred (void)
     error. The application can call this function to identify the peripheral
     that is a reporting an access error. In case where multiple peripherals are
     reporting access errors, the application must call this function multiple
-    times. The application can use the PAC${PAC_INDEX}_PeripheralErrorOccurred()
+    times. The application can use the ${PAC_INSTANCE_NAME}_PeripheralErrorOccurred()
     function to check if a peripheral access error is active. The application
-    must use the PAC${PAC_INDEX}_PeripheralErrorClear() function to clear the
-    error before calling the PAC${PAC_INDEX}_PeripheralErrorGet() function
+    must use the ${PAC_INSTANCE_NAME}_PeripheralErrorClear() function to clear the
+    error before calling the ${PAC_INSTANCE_NAME}_PeripheralErrorGet() function
     again. Not clearing the error will cause the function to continue reporting
     the error on the same peripheral.
 
@@ -265,10 +265,10 @@ bool PAC${PAC_INDEX}_PeripheralErrorOccurred (void)
     loop.
 
   Remarks:
-    Refer plib_pac${PAC_INDEX}.h for usage information.
+    Refer plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
+PAC_PERIPHERAL ${PAC_INSTANCE_NAME}_PeripheralErrorGet (void)
 {
     uint32_t    u32PeriBridgeAErrStatus = 0x0;
     uint32_t    u32PeriBridgeBErrStatus = 0x0;
@@ -279,16 +279,16 @@ PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
     PAC_PERIPHERAL peripheral           = PAC_PERIPHERAL_ANY;
 
     /* Verify if Peripheral bridge A has an error */
-    u32PeriBridgeAErrStatus = PAC_REGS->PAC_INTFLAGA;
+    u32PeriBridgeAErrStatus = ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGA;
 
     /* Verify if Peripheral bridge B has an error */
-    u32PeriBridgeBErrStatus = PAC_REGS->PAC_INTFLAGB;
+    u32PeriBridgeBErrStatus = ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGB;
 
     /* Verify if Peripheral bridge C has an error */
-    u32PeriBridgeCErrStatus = PAC_REGS->PAC_INTFLAGC;
+    u32PeriBridgeCErrStatus = ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGC;
 
     /* Verify if Peripheral bridge D has an error */
-    u32PeriBridgeDErrStatus = PAC_REGS->PAC_INTFLAGD;
+    u32PeriBridgeDErrStatus = ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGD;
 
     /* Verify if Peripheral in Peripheral Bridge A has reported error */
     if (u32PeriBridgeAErrStatus != 0x0)
@@ -361,39 +361,39 @@ PAC_PERIPHERAL PAC${PAC_INDEX}_PeripheralErrorGet (void)
 
 // *****************************************************************************
 /* Function:
-    void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
+    void ${PAC_INSTANCE_NAME}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
 
   Summary:
     Clear the peripheral access error flag.
 
   Description:
     Calling this function will cause the peripheral access error flag to be
-    cleared. This will then cause the PAC${PAC_INDEX}_PeripheralErrorGet()
+    cleared. This will then cause the ${PAC_INSTANCE_NAME}_PeripheralErrorGet()
     function to identify the next peripheral that is reporting an error. If
     after calling this function, there are no peripheral errors active, the
-    PAC${PAC_INDEX}_PeripheralErrorOccurred() function will return false.
+    ${PAC_INSTANCE_NAME}_PeripheralErrorOccurred() function will return false.
     The application must call this function to clear the error on the peripheral
     that was identified by the last call of the
-    PAC${PAC_INDEX}_PeripheralErrorGet() function.
+    ${PAC_INSTANCE_NAME}_PeripheralErrorGet() function.
 
   Remarks:
-    Refer plib_pac${PAC_INDEX}.h for usage information.
+    Refer plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
+void ${PAC_INSTANCE_NAME}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
 {
     uint32_t    u32PeriIdReg    = 0x0;
-    uint32_t    *pu32StatusRegAddr = (uint32_t*) &(PAC_REGS->PAC_INTFLAGA);
+    uint32_t    *pu32StatusRegAddr = (uint32_t*) &(${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGA);
 
     /* Get the Bit index for the peripheral */
     u32PeriIdReg = (peripheral % 32);
 
     if (peripheral == PAC_PERIPHERAL_ANY)
     {
-        PAC_REGS->PAC_INTFLAGA = PAC_INTFLAGA_Msk;
-        PAC_REGS->PAC_INTFLAGB = PAC_INTFLAGB_Msk;
-        PAC_REGS->PAC_INTFLAGC = PAC_INTFLAGC_Msk;
-        PAC_REGS->PAC_INTFLAGD = PAC_INTFLAGD_Msk;
+        ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGA = PAC_INTFLAGA_Msk;
+        ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGB = PAC_INTFLAGB_Msk;
+        ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGC = PAC_INTFLAGC_Msk;
+        ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGD = PAC_INTFLAGD_Msk;
     }
 	else
 	{
@@ -404,28 +404,28 @@ void PAC${PAC_INDEX}_PeripheralErrorClear (PAC_PERIPHERAL peripheral)
 
 // *****************************************************************************
 /* Function:
-    bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void)
+    bool ${PAC_INSTANCE_NAME}_AHBSlaveErrorOccurred (void)
 
   Summary:
     Returns true if an error has occurred on any of the AHB slaves.
 
   Description:
     This function returns true if any AHB Slave error has occurred. The
-    application can then call the PAC${PAC_INDEX}_AHBSlaveErrorGet() function
+    application can then call the ${PAC_INSTANCE_NAME}_AHBSlaveErrorGet() function
     to identify the AHB Slave on which the error has occurred.
 
   Remarks:
-    Refer plib_pac${PAC_INDEX}.h for usage information.
+    Refer plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void)
+bool ${PAC_INSTANCE_NAME}_AHBSlaveErrorOccurred (void)
 {
-    return (bool)(PAC_REGS->PAC_INTFLAGAHB & PAC_INTFLAGAHB_Msk);
+    return (bool)(${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGAHB & PAC_INTFLAGAHB_Msk);
 }
 
 // *****************************************************************************
 /* Function:
-    PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (PAC_AHB_SLAVE ahbSlave)
+    PAC_AHB_SLAVE ${PAC_INSTANCE_NAME}_AHBSlaveErrorGet (PAC_AHB_SLAVE ahbSlave)
 
   Summary:
     Returns the first AHB Slave that is reporting an access error.
@@ -435,10 +435,10 @@ bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void)
     error. The application can call this function to identify the AHB Slave
     that is a reporting an access error. In case where multiple AHB Slaves are
     reporting access errors, the application must call this function multiple
-    times. The application can use the PAC${PAC_INDEX}_AHBSlaveErrorOccurred()
+    times. The application can use the ${PAC_INSTANCE_NAME}_AHBSlaveErrorOccurred()
     function to check if a AHB Slave access error is active. The application
-    must use the PAC${PAC_INDEX}_AHBSlaveErrorClear() function to clear the
-    error before calling the PAC${PAC_INDEX}_AHBSlaveErrorGet() function again.
+    must use the ${PAC_INSTANCE_NAME}_AHBSlaveErrorClear() function to clear the
+    error before calling the ${PAC_INSTANCE_NAME}_AHBSlaveErrorGet() function again.
     Not clearing the error will cause the function to continue reporting the
     error on the same AHB Slave.
 
@@ -449,17 +449,17 @@ bool PAC${PAC_INDEX}_AHBSlaveErrorOccurred (void)
     blocking loop.
 
   Remarks:
-    Refer plib_pac${PAC_INDEX}.h for usage information.
+    Refer plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void)
+PAC_AHB_SLAVE ${PAC_INSTANCE_NAME}_AHBSlaveErrorGet (void)
 {
     uint32_t    u32AHBSlaveErrStatus = 0x0;
     uint32_t    u32AHBSlaveErrorBit  = 0x1;
     PAC_AHB_SLAVE pacAHBSlaveBus = PAC_AHB_SLAVE_ANY;
 
     /* Read AHB Slave Bus Interrupt Flag Status register */
-    u32AHBSlaveErrStatus = PAC_REGS->PAC_INTFLAGAHB;
+    u32AHBSlaveErrStatus = ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGAHB;
 
     if (u32AHBSlaveErrStatus != 0x0)
     {
@@ -482,35 +482,35 @@ PAC_AHB_SLAVE PAC${PAC_INDEX}_AHBSlaveErrorGet (void)
 
 // *****************************************************************************
 /* Function:
-    void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave)
+    void ${PAC_INSTANCE_NAME}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave)
 
   Summary:
     Clear the AHB Slave access error flag.
 
   Description:
     Calling this function will cause the AHB Slave access error flag to be
-    cleared. This will then cause the PAC${PAC_INDEX}_AHBSlaveErrorGet()
+    cleared. This will then cause the ${PAC_INSTANCE_NAME}_AHBSlaveErrorGet()
     function to identify the next AHB Slave that is reporting an error. If after
     calling this function, there are no AHB Slave errors active, the
-    PAC${PAC_INDEX}_AHBSlaveErrorOccurred() function will return false. The
+    ${PAC_INSTANCE_NAME}_AHBSlaveErrorOccurred() function will return false. The
     application must call this function to clear the error on the AHB Slave that
-    was identified by the last call of the PAC${PAC_INDEX}_AHBSlaveErrorGet()
+    was identified by the last call of the ${PAC_INSTANCE_NAME}_AHBSlaveErrorGet()
     function.
 
   Remarks:
-    Refer plib_pac${PAC_INDEX}.h for usage information.
+    Refer plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave)
+void ${PAC_INSTANCE_NAME}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave)
 {
-    PAC_REGS->PAC_INTFLAGAHB = ahbSlave & PAC_INTFLAGAHB_Msk;
+    ${PAC_INSTANCE_NAME}_REGS->PAC_INTFLAGAHB = ahbSlave & PAC_INTFLAGAHB_Msk;
 }
 
 <#if PAC_INTERRRUPT_MODE = true>
 
 // *****************************************************************************
 /* Function:
-    void PAC${PAC_INDEX}_CallbackRegister (PAC_CALLBACK callback, uintptr_t context)
+    void ${PAC_INSTANCE_NAME}_CallbackRegister (PAC_CALLBACK callback, uintptr_t context)
 
   Summary:
     Registers the function to be called when a PAC error has occurred.
@@ -521,19 +521,19 @@ void PAC${PAC_INDEX}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave)
     enabled in MHC.
 
   Remarks:
-    plib_pac${PAC_INDEX}.h for usage information.
+    plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void PAC${PAC_INDEX}_CallbackRegister ( PAC_CALLBACK callback, uintptr_t context )
+void ${PAC_INSTANCE_NAME}_CallbackRegister ( PAC_CALLBACK callback, uintptr_t context )
 {
-    pac${PAC_INDEX}CallbackObject.callback = callback;
+    ${PAC_INSTANCE_NAME?lower_case}CallbackObject.callback = callback;
 
-    pac${PAC_INDEX}CallbackObject.context = context;
+    ${PAC_INSTANCE_NAME?lower_case}CallbackObject.context = context;
 }
 
 // *****************************************************************************
 /* Function:
-    void PAC${PAC_INDEX}_InterruptHandler ( void )
+    void ${PAC_INSTANCE_NAME}_InterruptHandler ( void )
 
   Summary:
     PAC Interrupt Handler.
@@ -542,14 +542,14 @@ void PAC${PAC_INDEX}_CallbackRegister ( PAC_CALLBACK callback, uintptr_t context
     This PAC Interrupt handler function handles PAC interrupts
 
   Remarks:
-    Refer plib_pac${PAC_INDEX}.h for usage information.
+    Refer plib_${PAC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void PAC${PAC_INDEX}_InterruptHandler (void)
+void ${PAC_INSTANCE_NAME}_InterruptHandler (void)
 {
-    if (pac${PAC_INDEX}CallbackObject.callback != NULL)
+    if (${PAC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
     {
-        pac${PAC_INDEX}CallbackObject.callback(pac${PAC_INDEX}CallbackObject.context);
+        ${PAC_INSTANCE_NAME?lower_case}CallbackObject.callback(${PAC_INSTANCE_NAME?lower_case}CallbackObject.context);
     }
 }
 

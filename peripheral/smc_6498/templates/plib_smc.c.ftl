@@ -4,7 +4,7 @@
     Memory System Service SMC Initialization File
 
   File Name:
-    plib_smc${INDEX}.c
+    plib_${SMC_INSTANCE_NAME?lower_case}.c
 
   Summary:
     Static Memory Controller (SMC).
@@ -39,7 +39,7 @@ CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
-#include "plib_smc${INDEX}.h"
+#include "plib_${SMC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
 <#compress>
@@ -60,7 +60,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#compress>
 
 /* Function:
-    void SMC${INDEX}_Initialize( void )
+    void ${SMC_INSTANCE_NAME}_Initialize( void )
 
   Summary:
     Initializes hardware and data for the given instance of the SMC module.
@@ -72,7 +72,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
   None.
  */
 
-void SMC${INDEX?string}_Initialize( void )
+void ${SMC_INSTANCE_NAME}_Initialize( void )
 {
 <#list 0..(SMC_CHIP_SELECT_COUNT - 1) as i>
     <#assign SMC_CHIP_SELECT = "SMC_CHIP_SELECT" + i>
@@ -102,16 +102,16 @@ void SMC${INDEX?string}_Initialize( void )
 
     /* Chip Select CS${i} Timings */
     /* Setup SMC SETUP register */
-    SMC_REGS->SMC_CS_NUMBER[${i}].SMC_SETUP= SMC_SETUP_NWE_SETUP(${.vars[SMC_NWE_SETUP_CS]}) | SMC_SETUP_NCS_WR_SETUP(${.vars[SMC_NCS_WR_SETUP_CS]}) | SMC_SETUP_NRD_SETUP(${.vars[SMC_NRD_SETUP_CS]}) | SMC_SETUP_NCS_RD_SETUP(${.vars[SMC_NCS_RD_SETUP_CS]});
+    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[${i}].SMC_SETUP= SMC_SETUP_NWE_SETUP(${.vars[SMC_NWE_SETUP_CS]}) | SMC_SETUP_NCS_WR_SETUP(${.vars[SMC_NCS_WR_SETUP_CS]}) | SMC_SETUP_NRD_SETUP(${.vars[SMC_NRD_SETUP_CS]}) | SMC_SETUP_NCS_RD_SETUP(${.vars[SMC_NCS_RD_SETUP_CS]});
 
     /* Setup SMC CYCLE register */
-    SMC_REGS->SMC_CS_NUMBER[${i}].SMC_CYCLE= SMC_CYCLE_NWE_CYCLE(${.vars[SMC_NWE_CYCLE_CS]}) | SMC_CYCLE_NRD_CYCLE(${.vars[SMC_NRD_CYCLE_CS]});
+    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[${i}].SMC_CYCLE= SMC_CYCLE_NWE_CYCLE(${.vars[SMC_NWE_CYCLE_CS]}) | SMC_CYCLE_NRD_CYCLE(${.vars[SMC_NRD_CYCLE_CS]});
 
     /* Setup SMC_PULSE register */
-    SMC_REGS->SMC_CS_NUMBER[${i}].SMC_PULSE= SMC_PULSE_NWE_PULSE(${.vars[SMC_NWE_PULSE_CS]}) | SMC_PULSE_NCS_WR_PULSE(${.vars[SMC_NCS_WR_PULSE_CS]}) | SMC_PULSE_NRD_PULSE(${.vars[SMC_NRD_PULSE_CS]}) | SMC_PULSE_NCS_RD_PULSE(${.vars[SMC_NCS_RD_PULSE_CS]});
+    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[${i}].SMC_PULSE= SMC_PULSE_NWE_PULSE(${.vars[SMC_NWE_PULSE_CS]}) | SMC_PULSE_NCS_WR_PULSE(${.vars[SMC_NCS_WR_PULSE_CS]}) | SMC_PULSE_NRD_PULSE(${.vars[SMC_NRD_PULSE_CS]}) | SMC_PULSE_NCS_RD_PULSE(${.vars[SMC_NCS_RD_PULSE_CS]});
 
     /* Setup SMC MODE register */
-    SMC_REGS->SMC_CS_NUMBER[${i}].SMC_MODE= ${.vars[SMC_NWAIT_MODE_CS]} <#if (.vars[SMC_PMEN_CS] == true)>| SMC_MODE_PMEN_Msk | ${.vars[SMC_PS_CS]}</#if> <#if (.vars[SMC_TDF_MODE_CS] == true)>| SMC_MODE_TDF_MODE_Msk | SMC_MODE_TDF_CYCLES(${.vars[SMC_TDF_CYCLES_CS]})</#if>  \
+    ${SMC_INSTANCE_NAME}_REGS->SMC_CS_NUMBER[${i}].SMC_MODE= ${.vars[SMC_NWAIT_MODE_CS]} <#if (.vars[SMC_PMEN_CS] == true)>| SMC_MODE_PMEN_Msk | ${.vars[SMC_PS_CS]}</#if> <#if (.vars[SMC_TDF_MODE_CS] == true)>| SMC_MODE_TDF_MODE_Msk | SMC_MODE_TDF_CYCLES(${.vars[SMC_TDF_CYCLES_CS]})</#if>  \
                                           <#if (.vars[SMC_WRITE_MODE_CS] == true)>| SMC_MODE_WRITE_MODE_Msk</#if> <#if (.vars[SMC_READ_MODE_CS] == true)>| SMC_MODE_READ_MODE_Msk</#if>  | ${.vars[SMC_DATA_BUS_CS]} | ${.vars[SMC_BAT_CS]};
     </#if>
     </#if>
@@ -119,16 +119,16 @@ void SMC${INDEX?string}_Initialize( void )
 
     <#if SMC_OCMS != "">
     /* Configure scrambling key and enable scrambling */
-    SMC_REGS->SMC_KEY1 = 0x${SMC_KEY1};
-    SMC_REGS->SMC_KEY2 = 0x${SMC_KEY2};
-    SMC_REGS->SMC_OCMS = ${SMC_OCMS} | SMC_OCMS_SMSE_Msk;
+    ${SMC_INSTANCE_NAME}_REGS->SMC_KEY1 = 0x${SMC_KEY1};
+    ${SMC_INSTANCE_NAME}_REGS->SMC_KEY2 = 0x${SMC_KEY2};
+    ${SMC_INSTANCE_NAME}_REGS->SMC_OCMS = ${SMC_OCMS} | SMC_OCMS_SMSE_Msk;
     </#if>
 
 <#if SMC_WRITE_PROTECTION>
     /* Enable Write Protection */
-    SMC_REGS->SMC_WPMR = (SMC_WPMR_WPKEY_PASSWD | SMC_WPMR_WPEN_Msk);
+    ${SMC_INSTANCE_NAME}_REGS->SMC_WPMR = (SMC_WPMR_WPKEY_PASSWD | SMC_WPMR_WPEN_Msk);
 </#if>
-} /* SMC${INDEX?string}_Initialize */
+} /* ${SMC_INSTANCE_NAME}_Initialize */
 
 /*******************************************************************************
  End of File

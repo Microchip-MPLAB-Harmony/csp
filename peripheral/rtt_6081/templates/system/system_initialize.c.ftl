@@ -1,1 +1,1 @@
-	RTT${INDEX?string}_Initialize();
+	${RTT_INSTANCE_NAME}_Initialize();

@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Digital-to-Analog Converter (DAC${DAC_INDEX}) PLIB
+  Digital-to-Analog Converter (${DAC_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_dac${DAC_INDEX}.c
+    plib_${DAC_INSTANCE_NAME?lower_case}.c
 
   Summary:
-    DAC${DAC_INDEX} PLIB Implementation file
+    ${DAC_INSTANCE_NAME} PLIB Implementation file
 
   Description:
     This file defines the interface to the DAC peripheral library. This
@@ -49,7 +49,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_dac${DAC_INDEX}.h"
+#include "plib_${DAC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
 // *****************************************************************************
@@ -73,7 +73,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 // *****************************************************************************
 /* Function:
-    void DAC${DAC_INDEX}_Initialize(void)
+    void ${DAC_INSTANCE_NAME}_Initialize(void)
 
   Summary:
     Initializes given instance of the DAC peripheral.
@@ -83,10 +83,10 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
     configured by the user within the MHC.
 
   Remarks:
-    Refer plib_dac${DAC_INDEX}.h for more information.
+    Refer plib_${DAC_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-void DAC${DAC_INDEX}_Initialize(void)
+void ${DAC_INSTANCE_NAME}_Initialize(void)
 {
     /* Enabling the APBC Bus */
     MCLK_REGS->MCLK_APBCMASK |= MCLK_APBCMASK_DAC__Msk;
@@ -145,7 +145,7 @@ void DAC${DAC_INDEX}_Initialize(void)
 
 // *****************************************************************************
 /* Function:
-    void DAC${DAC_INDEX}_DataWrite(uint16_t data)
+    void ${DAC_INSTANCE_NAME}_DataWrite(uint16_t data)
 
   Summary:
     This function will write the specified value to the DAC and start the
@@ -156,14 +156,14 @@ void DAC${DAC_INDEX}_Initialize(void)
     conversion. The internal and/or external DAC outputs will be updated if
     these output were enabled.  The analog output voltage will depend on the
     choice of the DAC reference (configured via MHC). This function should only
-    be called when the DAC${DAC_INDEX}_IsReady() returns true. Calling this function when
+    be called when the ${DAC_INSTANCE_NAME}_IsReady() returns true. Calling this function when
     the DAC is not ready will result in the in-determinate operation.
 
   Remarks:
-    Refer plib_dac${DAC_INDEX}.h for more information.
+    Refer plib_${DAC_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-void DAC${DAC_INDEX}_DataWrite(uint16_t data)
+void ${DAC_INSTANCE_NAME}_DataWrite(uint16_t data)
 {
     /* Write Data to DATA Register for conversion(DATA[9:0]) */
     DAC_REGS->DAC_DATA = DAC_DATA_MSB_MASK & DAC_DATA_DATA(data);
@@ -176,22 +176,22 @@ void DAC${DAC_INDEX}_DataWrite(uint16_t data)
 
 // *****************************************************************************
 /* Function:
-    bool DAC${DAC_INDEX}_IsReady(void);
+    bool ${DAC_INSTANCE_NAME}_IsReady(void);
 
   Summary:
     Checks whether DAC is ready for receiving next sample value.
 
   Description:
     This function checks for the readiness of the DAC to receive the next sample
-    value. The application should call the DAC${DAC_INDEX}_DataWrite() function only when
-    this function returns true. Calling the DAC${DAC_INDEX}_DataWrite() function when this
+    value. The application should call the ${DAC_INSTANCE_NAME}_DataWrite() function only when
+    this function returns true. Calling the ${DAC_INSTANCE_NAME}_DataWrite() function when this
     function returns false will result in in-determinate operation.
 
   Remarks:
-    Refer plib_dac${DAC_INDEX}.h for more information.
+    Refer plib_${DAC_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-bool DAC${DAC_INDEX}_IsReady(void)
+bool ${DAC_INSTANCE_NAME}_IsReady(void)
 {
     bool dacIsReady = false;
 

@@ -12,7 +12,7 @@ uartBitField_MR_FILTER = uartReg_MR.getBitfield("FILTER")
 ################################################################################
 #### Global Variables ####
 ################################################################################
-global uartInstance
+global uartInstanceName
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
@@ -29,17 +29,16 @@ def interruptControl(uartNVIC, event):
     Database.clearSymbolValue("core", interruptHandlerLock)
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "UART" + str(uartInstance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, uartInstanceName.getValue() + "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", interruptVector, False, 2)
-        Database.setSymbolValue("core", interruptHandler, "UART" + str(uartInstance) + "_Handler", 2)
+        Database.setSymbolValue("core", interruptHandler, uartInstanceName.getValue() + "_Handler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
-    if (Database.getSymbolValue("uart" + str(uartInstance), "USART_INTERRUPT_MODE") == True):
+    if (Database.getSymbolValue(uartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
-
 
 # Calculates BRG value
 def baudRateCalc(clk, baud):
@@ -50,12 +49,12 @@ def baudRateCalc(clk, baud):
 
     return brgVal
 
-
 def baudRateTrigger(symbol, event):
-    global uartInstance
-    clk = Database.getSymbolValue("core", "UART"+str(uartInstance)+"_CLOCK_FREQUENCY")
-    baud = Database.getSymbolValue("uart" + str(uartInstance), "BAUD_RATE")
+    clk = Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    baud = Database.getSymbolValue(uartInstanceName.getValue().lower(), "BAUD_RATE")
+
     brgVal = baudRateCalc(clk, baud)
+
     if(brgVal < 1):
         Log.writeErrorMessage("UART Clock source value is low for the desired baud rate")
     symbol.clearValue()
@@ -63,7 +62,7 @@ def baudRateTrigger(symbol, event):
 
 def clockSourceFreq(symbol, event):
     symbol.clearValue()
-    symbol.setValue(int(Database.getSymbolValue("core", "UART"+str(uartInstance)+"_CLOCK_FREQUENCY")), 2)
+    symbol.setValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
 ################################################################################
 #### Component ####
@@ -72,14 +71,11 @@ def instantiateComponent(uartComponent):
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
-    global uartInstance
+    global uartInstanceName
 
-    uartInstance = uartComponent.getID()[-1:]
-    Log.writeInfoMessage("Running UART" + str(uartInstance))
-
-    uartIndex = uartComponent.createIntegerSymbol("INDEX", None)
-    uartIndex.setVisible(False)
-    uartIndex.setDefaultValue(int(uartInstance))
+    uartInstanceName = uartComponent.createStringSymbol("UART_INSTANCE_NAME", None)
+    uartInstanceName.setVisible(False)
+    uartInstanceName.setDefaultValue(uartComponent.getID().upper())
 
     uartInterrupt = uartComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     uartInterrupt.setLabel("Interrupt Mode")
@@ -99,7 +95,7 @@ def instantiateComponent(uartComponent):
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
     uartClkValue.setLabel("Clock Source Value")
     uartClkValue.setReadOnly(True)
-    uartClkValue.setDependencies(clockSourceFreq, ["UART_CLK_SRC", "core.UART"+str(uartInstance)+"_CLOCK_FREQUENCY"])
+    uartClkValue.setDependencies(clockSourceFreq, ["UART_CLK_SRC", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
     uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
 
     uartBaud = uartComponent.createIntegerSymbol("BAUD_RATE", None)
@@ -110,7 +106,7 @@ def instantiateComponent(uartComponent):
 
     uartBRGValue = uartComponent.createIntegerSymbol("BRG_VALUE", None)
     uartBRGValue.setVisible(False)
-    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core.UART"+str(uartInstance)+"_CLOCK_FREQUENCY"])
+    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
     uartBRGValue.setDefaultValue(brgVal)
 
     uartDataWidth = uartComponent.createComboSymbol("UART_MR_DATA_WIDTH", None, ["8 BIT"])
@@ -129,12 +125,12 @@ def instantiateComponent(uartComponent):
 
     #UART Transmit data register
     transmitRegister = uartComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
-    transmitRegister.setDefaultValue("&(UART"+str(uartInstance)+"_REGS->UART_THR)")
+    transmitRegister.setDefaultValue("&("+uartInstanceName.getValue()+"_REGS->UART_THR)")
     transmitRegister.setVisible(False)
 
     #UART Receive data register
     receiveRegister = uartComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
-    receiveRegister.setDefaultValue("&(UART"+str(uartInstance)+"_REGS->UART_RHR)")
+    receiveRegister.setDefaultValue("&("+uartInstanceName.getValue()+"_REGS->UART_RHR)")
     receiveRegister.setVisible(False)
 
     #UART EVEN Parity Mask
@@ -178,25 +174,25 @@ def instantiateComponent(uartComponent):
 
     #UART API Prefix
     uartSym_API_Prefix = uartComponent.createStringSymbol("USART_PLIB_API_PREFIX", None)
-    uartSym_API_Prefix.setDefaultValue("UART" + str(uartInstance))
+    uartSym_API_Prefix.setDefaultValue(uartInstanceName.getValue())
     uartSym_API_Prefix.setVisible(False)
 
     ############################################################################
     #### Dependency ####
     ############################################################################
 
-    interruptVector = "UART" + str(uartInstance) + "_INTERRUPT_ENABLE"
-    interruptHandler = "UART" + str(uartInstance) + "_INTERRUPT_HANDLER"
-    interruptHandlerLock = "UART" + str(uartInstance) + "_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = "UART" + str(uartInstance) + "_INTERRUPT_ENABLE_UPDATE"
+    interruptVector = uartInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    interruptHandler = uartInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = uartInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = uartInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", "UART"+ str(uartInstance)+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "UART"+ str(uartInstance)+"_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", uartInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", uartInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
     Database.clearSymbolValue("core", interruptHandler)
-    Database.setSymbolValue("core", interruptHandler, "UART" + str(uartInstance) + "_InterruptHandler", 2)
+    Database.setSymbolValue("core", interruptHandler, uartInstanceName.getValue() + "_InterruptHandler", 2)
     Database.clearSymbolValue("core", interruptHandlerLock)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
 
@@ -209,7 +205,7 @@ def instantiateComponent(uartComponent):
     uartSymClkEnComment = uartComponent.createCommentSymbol("UART_CLK_ENABLE_COMMENT", None)
     uartSymClkEnComment.setVisible(False)
     uartSymClkEnComment.setLabel("Warning!!! UART Peripheral Clock is Disabled in Clock Manager")
-    uartSymClkEnComment.setDependencies(dependencyStatus, ["core.UART"+ str(uartInstance)+"_CLOCK_ENABLE"])
+    uartSymClkEnComment.setDependencies(dependencyStatus, ["core."+uartInstanceName.getValue()+"_CLOCK_ENABLE"])
 
     uartSymIntEnComment = uartComponent.createCommentSymbol("UART_NVIC_ENABLE_COMMENT", None)
     uartSymIntEnComment.setVisible(False)
@@ -222,17 +218,17 @@ def instantiateComponent(uartComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     uartHeaderFile = uartComponent.createFileSymbol("UART_HEADER", None)
-    uartHeaderFile.setSourcePath("../peripheral/uart_6418/templates/plib_uart.h")
-    uartHeaderFile.setOutputName("plib_uart.h")
-    uartHeaderFile.setDestPath("peripheral/uart/")
+    uartHeaderFile.setSourcePath("../peripheral/uart_6418/templates/plib_uart_common.h")
+    uartHeaderFile.setOutputName("plib_uart_common.h")
+    uartHeaderFile.setDestPath("/peripheral/uart/")
     uartHeaderFile.setProjectPath("config/" + configName + "/peripheral/uart/")
     uartHeaderFile.setType("HEADER")
     uartHeaderFile.setOverwrite(True)
 
     uartHeader1File = uartComponent.createFileSymbol("UART_HEADER1", None)
     uartHeader1File.setSourcePath("../peripheral/uart_6418/templates/plib_uart.h.ftl")
-    uartHeader1File.setOutputName("plib_uart" + str(uartInstance) + ".h")
-    uartHeader1File.setDestPath("peripheral/uart/")
+    uartHeader1File.setOutputName("plib_"+uartInstanceName.getValue().lower()+ ".h")
+    uartHeader1File.setDestPath("/peripheral/uart/")
     uartHeader1File.setProjectPath("config/" + configName + "/peripheral/uart/")
     uartHeader1File.setType("HEADER")
     uartHeader1File.setOverwrite(True)
@@ -240,8 +236,8 @@ def instantiateComponent(uartComponent):
 
     uartSource1File = uartComponent.createFileSymbol("UART_SOURCE1", None)
     uartSource1File.setSourcePath("../peripheral/uart_6418/templates/plib_uart.c.ftl")
-    uartSource1File.setOutputName("plib_uart" + str(uartInstance) + ".c")
-    uartSource1File.setDestPath("peripheral/uart/")
+    uartSource1File.setOutputName("plib_"+uartInstanceName.getValue().lower()+ ".c")
+    uartSource1File.setDestPath("/peripheral/uart/")
     uartSource1File.setProjectPath("config/" + configName + "/peripheral/uart/")
     uartSource1File.setType("SOURCE")
     uartSource1File.setOverwrite(True)

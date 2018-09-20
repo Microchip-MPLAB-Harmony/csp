@@ -1,1 +1,1 @@
-    EIC${EIC_INDEX}_Initialize();
+    ${EIC_INSTANCE_NAME}_Initialize();

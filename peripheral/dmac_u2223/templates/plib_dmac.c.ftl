@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_dmac${DMAC_INDEX}.c
+    plib_${DMA_INSTANCE_NAME?lower_case}.c
 
   Summary
-    Source for DMAC${DMAC_INDEX} peripheral library interface Implementation.
+    Source for ${DMA_INSTANCE_NAME} peripheral library interface Implementation.
 
   Description
     This file defines the interface to the DMAC peripheral library. This
@@ -43,7 +43,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#include "plib_dmac${DMAC_INDEX}.h"
+#include "plib_${DMA_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -81,7 +81,7 @@ DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
 This function initializes the DMAC controller of the device.
 ********************************************************************************/
 
-void DMAC${DMAC_INDEX}_Initialize( void )
+void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
     DMAC_CH_OBJECT *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
     DMAC_CHANNEL channel = 0;
@@ -99,11 +99,11 @@ void DMAC${DMAC_INDEX}_Initialize( void )
     }
 
     /* Update the Base address and Write Back address register */
-    DMAC${DMAC_INDEX}_REGS->DMAC_BASEADDR = (uint32_t) descriptor_section;
-    DMAC${DMAC_INDEX}_REGS->DMAC_WRBADDR  = (uint32_t)_write_back_section;
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_BASEADDR = (uint32_t) descriptor_section;
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_WRBADDR  = (uint32_t)_write_back_section;
 
     /* Update the Priority Control register */
-    DMAC${DMAC_INDEX}_REGS->DMAC_PRICTRL0 = DMAC_PRICTRL0_LVLPRI0(${DMAC_LVLXPRIO_0}) | DMAC_PRICTRL0_LVLPRI1(${DMAC_LVLXPRIO_1}) | DMAC_PRICTRL0_LVLPRI2(${DMAC_LVLXPRIO_2}) | DMAC_PRICTRL0_LVLPRI3(${DMAC_LVLXPRIO_3});
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_PRICTRL0 = DMAC_PRICTRL0_LVLPRI0(${DMAC_LVLXPRIO_0}) | DMAC_PRICTRL0_LVLPRI1(${DMAC_LVLXPRIO_1}) | DMAC_PRICTRL0_LVLPRI2(${DMAC_LVLXPRIO_2}) | DMAC_PRICTRL0_LVLPRI3(${DMAC_LVLXPRIO_3});
     <#list 0..DMAC_HIGHEST_CHANNEL - 1 as i>
         <#assign DMAC_CHCTRLA_ENABLE    = "DMAC_ENABLE_CH_"           + i>
         <#assign DMAC_CHCTRLA_RUNSTDBY  = "DMAC_CHCTRLA_RUNSTDBY_CH_" + i>
@@ -116,11 +116,11 @@ void DMAC${DMAC_INDEX}_Initialize( void )
 
         <#if (.vars[DMAC_CHCTRLA_ENABLE] == true)>
         <#lt>   /***************** Configure DMA channel ${i} ********************/
-        <#lt>   DMAC${DMAC_INDEX}_REGS->DMAC_CHID = ${i};
+        <#lt>   ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = ${i};
         <#lt>   <@compress single_line=true> <#if (.vars[DMAC_CHCTRLA_RUNSTDBY]) == true>
-                <#lt>   DMAC${DMAC_INDEX}_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_RUNSTDBY_Msk;
+                <#lt>   ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_RUNSTDBY_Msk;
         <#lt>   </#if></@compress>
-        <#lt>   <@compress single_line=true>DMAC${DMAC_INDEX}_REGS->DMAC_CHCTRLB = DMAC_CHCTRLB_TRIGACT(${.vars[DMAC_CHCTRLB_TRIGACT]})
+        <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB = DMAC_CHCTRLB_TRIGACT(${.vars[DMAC_CHCTRLB_TRIGACT]})
         <#lt>                                                       | DMAC_CHCTRLB_TRIGSRC(${.vars[DMAC_TRIGSRC_PERID_VAL]})
         <#lt>                                                       | DMAC_CHCTRLB_LVL(${.vars[DMAC_CHCTRLB_LVL]});
         <#lt>   </@compress>
@@ -131,18 +131,18 @@ void DMAC${DMAC_INDEX}_Initialize( void )
         <#lt>                                                                       ${(.vars[DMAC_BTCTRL_DSTINC] == "INCREMENTED_AM")?then('| DMAC_DESCRIPTOR_BTCTRL_DSTINC_Msk','')};
         <#lt>   </@compress>
         <#lt>   dmacChannelObj[${i}].inUse = 1;
-        <#lt>   DMAC${DMAC_INDEX}_REGS->DMAC_CHINTENSET = (DMAC_CHINTENSET_TERR_Msk | DMAC_CHINTENSET_TCMPL_Msk);
+        <#lt>   ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTENSET = (DMAC_CHINTENSET_TERR_Msk | DMAC_CHINTENSET_TCMPL_Msk);
         </#if>
     </#list>
     /* Enable the DMAC module & Priority Level x Enable */
-    DMAC${DMAC_INDEX}_REGS->DMAC_CTRL = DMAC_CTRL_DMAENABLE_Msk | DMAC_CTRL_LVLEN0_Msk | DMAC_CTRL_LVLEN1_Msk | DMAC_CTRL_LVLEN2_Msk | DMAC_CTRL_LVLEN3_Msk;
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CTRL = DMAC_CTRL_DMAENABLE_Msk | DMAC_CTRL_LVLEN0_Msk | DMAC_CTRL_LVLEN1_Msk | DMAC_CTRL_LVLEN2_Msk | DMAC_CTRL_LVLEN3_Msk;
 }
 
 /*******************************************************************************
     This function schedules a DMA transfer on the specified DMA channel.
 ********************************************************************************/
 
-bool DMAC${DMAC_INDEX}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
+bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize )
 {
     uint8_t beat_size = 0;
     bool returnStatus = false;
@@ -181,16 +181,16 @@ bool DMAC${DMAC_INDEX}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAdd
         dmacDescReg->BTCNT = blockSize / (1 << beat_size);
 
         /* Set the DMA channel */
-        DMAC${DMAC_INDEX}_REGS->DMAC_CHID = channel;
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channel;
 
         /* Enable the channel */
-        DMAC${DMAC_INDEX}_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
 
         /* Verify if Trigger source is Software Trigger */
-        if ( ((DMAC${DMAC_INDEX}_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_TRIGSRC_Msk) >> DMAC_CHCTRLB_TRIGSRC_Pos) == 0x00)
+        if ( ((${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_TRIGSRC_Msk) >> DMAC_CHCTRLB_TRIGSRC_Pos) == 0x00)
         {
             /* Trigger the DMA transfer */
-            DMAC${DMAC_INDEX}_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
+            ${DMA_INSTANCE_NAME}_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
         }
         returnStatus = true;
     }
@@ -202,7 +202,7 @@ bool DMAC${DMAC_INDEX}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAdd
     This function returns the status of the channel.
 ********************************************************************************/
 
-bool DMAC${DMAC_INDEX}_ChannelIsBusy ( DMAC_CHANNEL channel )
+bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel )
 {
     return (bool)dmacChannelObj[channel].busyStatus;
 }
@@ -211,13 +211,13 @@ bool DMAC${DMAC_INDEX}_ChannelIsBusy ( DMAC_CHANNEL channel )
     This function disables the specified DMAC channel.
 ********************************************************************************/
 
-void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel )
+void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel )
 {
     /* Set the DMA Channel ID */
-    DMAC${DMAC_INDEX}_REGS->DMAC_CHID = channel;
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channel;
 
     /* Disable the DMA channel */
-    DMAC${DMAC_INDEX}_REGS->DMAC_CHCTRLA &= (~DMAC_CHCTRLA_ENABLE_Pos);
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA &= (~DMAC_CHCTRLA_ENABLE_Pos);
 
     dmacChannelObj[channel].busyStatus=false;
 
@@ -228,27 +228,27 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel )
     This function submit a list of DMA transfers.
 ********************************************************************************/
 
-bool DMAC${DMAC_INDEX}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmacdescriptor_registers_t* channelDesc)
+bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmacdescriptor_registers_t* channelDesc)
 {
     bool returnStatus = false;
 
     if (dmacChannelObj[channel].busyStatus == false)
     {
         /* Set the DMA channel */
-        DMAC${DMAC_INDEX}_REGS->DMAC_CHID = channel;
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channel;
 
         dmacChannelObj[channel].busyStatus = true;
 
         memcpy(&descriptor_section[channel], channelDesc, sizeof(dmacdescriptor_registers_t));
 
         /* Enable the channel */
-        DMAC${DMAC_INDEX}_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
 
         /* Verify if Trigger source is Software Trigger */
-        if (((DMAC${DMAC_INDEX}_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_TRIGSRC_Msk) >> DMAC_CHCTRLB_TRIGSRC_Pos) == 0x00)
+        if (((${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_TRIGSRC_Msk) >> DMAC_CHCTRLB_TRIGSRC_Pos) == 0x00)
         {
             /* Trigger the DMA transfer */
-            DMAC${DMAC_INDEX}_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
+            ${DMA_INSTANCE_NAME}_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
         }
         returnStatus = true;
     }
@@ -261,7 +261,7 @@ bool DMAC${DMAC_INDEX}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmacdesc
     This function function allows a DMAC PLIB client to set an event handler.
 ********************************************************************************/
 
-void DMAC${DMAC_INDEX}_ChannelCallbackRegister( DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK callback, const uintptr_t context )
+void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister( DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK callback, const uintptr_t context )
 {
     dmacChannelObj[channel].callback = callback;
     dmacChannelObj[channel].context  = context;
@@ -271,7 +271,7 @@ void DMAC${DMAC_INDEX}_ChannelCallbackRegister( DMAC_CHANNEL channel, const DMAC
     This function returns the current channel settings for the specified DMAC Channel
 ********************************************************************************/
 
-DMAC_CHANNEL_CONFIG DMAC${DMAC_INDEX}_ChannelSettingsGet (DMAC_CHANNEL channel)
+DMAC_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMAC_CHANNEL channel)
 {
     /* Get a pointer to the module hardware instance */
     dmacdescriptor_registers_t *const dmacDescReg = &descriptor_section[0];
@@ -283,17 +283,17 @@ DMAC_CHANNEL_CONFIG DMAC${DMAC_INDEX}_ChannelSettingsGet (DMAC_CHANNEL channel)
     This function changes the current settings of the specified DMAC channel.
 ********************************************************************************/
 
-bool DMAC${DMAC_INDEX}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG setting)
+bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG setting)
 {
     /* Get a pointer to the module hardware instance */
     dmacdescriptor_registers_t *const dmacDescReg = &descriptor_section[0];
 
     /* Disable the channel */
     /* Set the DMA Channel ID */
-    DMAC${DMAC_INDEX}_REGS->DMAC_CHID = channel;
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channel;
 
     /* Disable the DMA channel */
-    DMAC${DMAC_INDEX}_REGS->DMAC_CHCTRLA &= (~DMAC_CHCTRLA_ENABLE_Pos);
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA &= (~DMAC_CHCTRLA_ENABLE_Pos);
 
     /* Set the new settings */
     dmacDescReg[channel].BTCTRL = setting;
@@ -305,7 +305,7 @@ bool DMAC${DMAC_INDEX}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL_CO
     This function handles the DMA interrupt events.
 */
 
-void DMAC${DMAC_INDEX}_InterruptHandler( void )
+void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 {
     DMAC_CH_OBJECT  *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
     uint8_t channel = 0;
@@ -313,19 +313,19 @@ void DMAC${DMAC_INDEX}_InterruptHandler( void )
     DMAC_TRANSFER_EVENT event   = DMAC_TRANSFER_EVENT_ERROR;
 
     /* Get active channel number */
-    channel =  DMAC${DMAC_INDEX}_REGS->DMAC_INTPEND & DMAC_INTPEND_ID_Msk;
+    channel =  ${DMA_INSTANCE_NAME}_REGS->DMAC_INTPEND & DMAC_INTPEND_ID_Msk;
 
     /* Update the DMAC channel ID */
-    DMAC${DMAC_INDEX}_REGS->DMAC_CHID = DMAC_CHID_ID(channel);
+    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = DMAC_CHID_ID(channel);
 
     /* Get the DMAC channel interrupt status */
-    chanIntFlagStatus = DMAC${DMAC_INDEX}_REGS->DMAC_CHINTFLAG;
+    chanIntFlagStatus = ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG;
 
     /* Verify if DMAC Channel Transfer complete flag is set */
     if (chanIntFlagStatus & DMAC_CHINTENCLR_TCMPL_Msk)
     {
         /* Clear the transfer complete flag */
-        DMAC${DMAC_INDEX}_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk;
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk;
 
         event = DMAC_TRANSFER_EVENT_COMPLETE;
         dmacChObj->busyStatus = false;
@@ -335,7 +335,7 @@ void DMAC${DMAC_INDEX}_InterruptHandler( void )
     if (chanIntFlagStatus & DMAC_CHINTENCLR_TERR_Msk)
     {
         /* Clear transfer error flag */
-        DMAC${DMAC_INDEX}_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TERR_Msk;
+        ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTFLAG = DMAC_CHINTENCLR_TERR_Msk;
 
         event = DMAC_TRANSFER_EVENT_ERROR;
         dmacChObj->busyStatus = false;

@@ -1,4 +1,10 @@
-Log.writeInfoMessage("Loading WDT for " + Variables.get("__PROCESSOR"))
+global wdtInstanceName
+
+wdtInstanceName = coreComponent.createStringSymbol("WDT_INSTANCE_NAME", None)
+wdtInstanceName.setVisible(False)
+instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"WDT\"]").getChildren()
+wdtInstanceName.setDefaultValue(instances[0].getAttribute("name"))
+Log.writeInfoMessage("Loading " + wdtInstanceName.getValue() + "for " + Variables.get("__PROCESSOR"))
 
 wdtMenu = coreComponent.createMenuSymbol("WDT_MENU_0", None)
 wdtMenu.setLabel("WDT")
@@ -56,10 +62,6 @@ wdtCounterValueTime.setDependencies(wdtcounter_cal, ["wdtWDV"])
 wdtCounterValueTime.setReadOnly(True)
 wdtCounterValueTime.setDefaultValue(15996)
 
-wdtIndex = coreComponent.createIntegerSymbol("wdtIndex", wdtCfgMenu)
-wdtIndex.setVisible(False)
-wdtIndex.setDefaultValue(0)
-
 wdtDeltaValue = coreComponent.createIntegerSymbol("wdtWDD", wdtCfgMenu)
 wdtDeltaValue.setLabel("Delta value")
 wdtDeltaValue.setMax(0xfff)
@@ -87,9 +89,9 @@ global wdtinterruptVector
 global wdtinterruptHandler
 global wdtinterruptHandlerLock
 
-wdtinterruptVector = "WDT_INTERRUPT_ENABLE"
-wdtinterruptHandler = "WDT_INTERRUPT_HANDLER"
-wdtinterruptHandlerLock = "WDT_INTERRUPT_HANDLER_LOCK"
+wdtinterruptVector = wdtInstanceName.getValue()+"_INTERRUPT_ENABLE"
+wdtinterruptHandler = wdtInstanceName.getValue()+"_INTERRUPT_HANDLER"
+wdtinterruptHandlerLock = wdtInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
 
 Database.clearSymbolValue("core", wdtinterruptVector)
 Database.setSymbolValue("core", wdtinterruptVector, False, 2)
@@ -106,7 +108,7 @@ def interruptControl(NVIC, event):
     Database.clearSymbolValue("core", wdtinterruptHandlerLock)
     if (event["value"] == True):
         Database.setSymbolValue("core", wdtinterruptVector, True, 2)
-        Database.setSymbolValue("core", wdtinterruptHandler, "WDT0_InterruptHandler", 2)
+        Database.setSymbolValue("core", wdtinterruptHandler, wdtInstanceName.getValue()+"_InterruptHandler", 2)
         Database.setSymbolValue("core", wdtinterruptHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", wdtinterruptVector, False, 2)
@@ -124,7 +126,7 @@ configName = Variables.get("__CONFIGURATION_NAME")
 
 wdtHeaderFile = coreComponent.createFileSymbol("wdtHeaderFile", None)
 wdtHeaderFile.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.h.ftl")
-wdtHeaderFile.setOutputName("plib_wdt0.h")
+wdtHeaderFile.setOutputName("plib_"+wdtInstanceName.getValue().lower()+".h")
 wdtHeaderFile.setDestPath("peripheral/wdt/")
 wdtHeaderFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
 wdtHeaderFile.setType("HEADER")
@@ -133,7 +135,7 @@ wdtHeaderFile.setEnabled(False)
 
 wdtSourceFile = coreComponent.createFileSymbol("wdtSourceFile", None)
 wdtSourceFile.setSourcePath("../peripheral/wdt_6080/templates/plib_wdt.c.ftl")
-wdtSourceFile.setOutputName("plib_wdt0.c")
+wdtSourceFile.setOutputName("plib_"+wdtInstanceName.getValue().lower()+".c")
 wdtSourceFile.setDestPath("peripheral/wdt/")
 wdtSourceFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
 wdtSourceFile.setType("SOURCE")

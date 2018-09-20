@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Timer/Counter(TC${TC_INDEX}) PLIB
+  Timer/Counter(${TC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_tc${TC_INDEX}.h
+    plib_${TC_INSTANCE_NAME?lower_case}.h
 
   Summary
-    TC${TC_INDEX} PLIB Header File.
+    ${TC_INSTANCE_NAME} PLIB Header File.
 
   Description
     This file defines the interface to the TC peripheral library. This
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TC${TC_INDEX}_H       // Guards against multiple inclusion
-#define PLIB_TC${TC_INDEX}_H
+#ifndef PLIB_${TC_INSTANCE_NAME}_H       // Guards against multiple inclusion
+#define PLIB_${TC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -55,7 +55,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_tc.h"
+#include "plib_tc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C Compatibility
@@ -74,7 +74,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     interface and should be considered part it.
 */
 
-#define TC${TC_INDEX}_CaptureFrequencyGet()  (uint32_t)(${TC_FREQUENCY}UL)
+#define ${TC_INSTANCE_NAME}_CaptureFrequencyGet()  (uint32_t)(${TC_FREQUENCY}UL)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -113,36 +113,36 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#if>
 </#compress>
 
-void TC${TC_INDEX}_CaptureInitialize ( void );
+void ${TC_INSTANCE_NAME}_CaptureInitialize ( void );
 
-void TC${TC_INDEX}_CaptureStart ( void );
+void ${TC_INSTANCE_NAME}_CaptureStart ( void );
 
-void TC${TC_INDEX}_CaptureStop ( void );
+void ${TC_INSTANCE_NAME}_CaptureStop ( void );
 
 <#if TC_CTRLA_MODE = "COUNT8">
-uint8_t TC${TC_INDEX}_Capture8bitChannel0Get( void );
+uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel0Get( void );
 
-uint8_t TC${TC_INDEX}_Capture8bitChannel1Get( void );
+uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel1Get( void );
 
 <#elseif TC_CTRLA_MODE = "COUNT16">
 
-uint16_t TC${TC_INDEX}_Capture16bitChannel0Get( void );
+uint16_t ${TC_INSTANCE_NAME}_Capture16bitChannel0Get( void );
 
-uint16_t TC${TC_INDEX}_Capture16bitChannel1Get( void );
+uint16_t ${TC_INSTANCE_NAME}_Capture16bitChannel1Get( void );
 
 <#elseif TC_CTRLA_MODE = "COUNT32">
 
-uint32_t TC${TC_INDEX}_Capture32bitChannel0Get( void );
+uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel0Get( void );
 
-uint32_t TC${TC_INDEX}_Capture32bitChannel1Get( void );
+uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel1Get( void );
 </#if>
 
-TC_CAPTURE_STATUS TC${TC_INDEX}_CaptureStatusGet( void );
+TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet( void );
 
 <#if TC_INTSET_VAL != "">
-void TC${TC_INDEX}_CaptureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
+void ${TC_INSTANCE_NAME}_CaptureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
 
-void TC${TC_INDEX}_CaptureInterruptHandler( void );
+void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void );
 </#if>
 
 
@@ -154,4 +154,4 @@ void TC${TC_INDEX}_CaptureInterruptHandler( void );
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_TC${TC_INDEX}_H */
+#endif /* PLIB_${TC_INSTANCE_NAME}_H */

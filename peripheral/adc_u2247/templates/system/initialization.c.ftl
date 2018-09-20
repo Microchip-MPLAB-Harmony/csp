@@ -1,1 +1,1 @@
-    ADC${ADC_INDEX}_Initialize();
+    ${ADC_INSTANCE_NAME}_Initialize();

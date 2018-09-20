@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_supc${INDEX?string}.h
+    plib_${SUPC_INSTANCE_NAME?lower_case}.h
 
   Summary:
     Interface definition of the SUPC PLIB Header File
@@ -40,8 +40,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_SUPC${INDEX?string}_H // Guards against multiple inclusion
-#define PLIB_SUPC${INDEX?string}_H
+#ifndef PLIB_${SUPC_INSTANCE_NAME}_H // Guards against multiple inclusion
+#define PLIB_${SUPC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -52,7 +52,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 /* This section lists the other files that are included in this file.
 */
 #include "device.h"
-#include "plib_supc.h"
+#include "plib_supc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -78,17 +78,17 @@ typedef enum {
 // *****************************************************************************
 // *****************************************************************************
 
-void SUPC${INDEX?string}_Initialize (void);
-void SUPC${INDEX?string}_SleepModeEnter (void);
-void SUPC${INDEX?string}_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source);
-void SUPC${INDEX?string}_BackupModeEnter (void);
-uint32_t SUPC${INDEX?string}_GPBRRead (GPBR_REGS_INDEX reg);
-void SUPC${INDEX?string}_GPBRWrite(GPBR_REGS_INDEX reg, uint32_t data);
+void ${SUPC_INSTANCE_NAME}_Initialize (void);
+void ${SUPC_INSTANCE_NAME}_SleepModeEnter (void);
+void ${SUPC_INSTANCE_NAME}_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source);
+void ${SUPC_INSTANCE_NAME}_BackupModeEnter (void);
+uint32_t ${SUPC_INSTANCE_NAME}_GPBRRead (GPBR_REGS_INDEX reg);
+void ${SUPC_INSTANCE_NAME}_GPBRWrite(GPBR_REGS_INDEX reg, uint32_t data);
 
 extern void	CLK_Initialize(void);
 
 <#if SUPC_SMMR_SMIEN>
-void SUPC${INDEX?string}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t context);
+void ${SUPC_INSTANCE_NAME}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t context);
 </#if>
 
 // DOM-IGNORE-BEGIN
@@ -97,4 +97,4 @@ void SUPC${INDEX?string}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t con
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_SUPC${INDEX?string}_H
+#endif // PLIB_${SUPC_INSTANCE_NAME}_H

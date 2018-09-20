@@ -1,18 +1,18 @@
 /*******************************************************************************
-Interface definition of QSPI PLIB.
+Interface definition of ${QSPI_INSTANCE_NAME} PLIB.
 
  Company:
     Microchip Technology Inc.
 
  File Name:
-    plib_qspi.h
+    plib_${QSPI_INSTANCE_NAME?lower_case}.h
 
  Summary:
-    Interface definition of the Quad Serial Peripheral Interface Plib (QSPI).
+    Interface definition of the Quad Serial Peripheral Interface Plib (${QSPI_INSTANCE_NAME}).
 
  Description:
-    This file defines the interface for the QSPI Plib.
-    It allows user to setup QSPI and transfer data to and from slave devices
+    This file defines the interface for the ${QSPI_INSTANCE_NAME} Plib.
+    It allows user to setup ${QSPI_INSTANCE_NAME} and transfer data to and from slave devices
     attached.
 *******************************************************************************/
 
@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_QSPI${INDEX?string}_H // Guards against multiple inclusion
-#define PLIB_QSPI${INDEX?string}_H
+#ifndef PLIB_${QSPI_INSTANCE_NAME}_H // Guards against multiple inclusion
+#define PLIB_${QSPI_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -54,7 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 #include "device.h"
-#include "plib_qspi.h"
+#include "plib_qspi_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -74,17 +74,17 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-void QSPI${INDEX?string}_Initialize( void );
+void ${QSPI_INSTANCE_NAME}_Initialize( void );
 
-bool QSPI${INDEX?string}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address );
+bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address );
 
-bool QSPI${INDEX?string}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length );
+bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length );
 
-bool QSPI${INDEX?string}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length );
+bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length );
 
-bool QSPI${INDEX?string}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address );
+bool ${QSPI_INSTANCE_NAME}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address );
 
-bool QSPI${INDEX?string}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address );
+bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -92,4 +92,4 @@ bool QSPI${INDEX?string}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_QSPI${INDEX?string}_H */
+#endif /* PLIB_${QSPI_INSTANCE_NAME}_H */

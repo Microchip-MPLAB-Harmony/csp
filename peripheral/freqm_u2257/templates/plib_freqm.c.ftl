@@ -1,14 +1,14 @@
 /*******************************************************************************
-  FREQUENCY METER(FREQM${FREQM_INDEX}) PLIB
+  FREQUENCY METER(${FREQM_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_freqm${FREQM_INDEX}.c
+    plib_${FREQM_INSTANCE_NAME?lower_case}.c
 
   Summary:
-    FREQM${FREQM_INDEX} PLIB Implementation File.
+    ${FREQM_INSTANCE_NAME} PLIB Implementation File.
 
   Description:
     This file defines the interface to the FREQM peripheral library. This
@@ -49,7 +49,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#include "plib_freqm${FREQM_INDEX}.h"
+#include "plib_${FREQM_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
 // *****************************************************************************
@@ -82,7 +82,7 @@ typedef struct
 }FREQM_OBJECT;
 
 /* Reference Object created for the FREQM */
-FREQM_OBJECT freqm${FREQM_INDEX}Obj;
+FREQM_OBJECT ${FREQM_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -94,29 +94,29 @@ FREQM_OBJECT freqm${FREQM_INDEX}Obj;
 
 // *****************************************************************************
 /* Function:
-    void FREQM${FREQM_INDEX}_Initialize (void);
+    void ${FREQM_INSTANCE_NAME}_Initialize (void);
 
   Summary:
-    Initializes FREQM${FREQM_INDEX} module.
+    Initializes ${FREQM_INSTANCE_NAME} module.
 
   Description:
-    This function initializes FREQM${FREQM_INDEX} module with the values
+    This function initializes ${FREQM_INSTANCE_NAME} module with the values
    configured in MHC GUI. Once the peripheral is initialized, measurement APIs
    can be called to perform frequency measurement.
 
   Remarks:
-    Refer plib_freqm${FREQM_INDEX}.h for more information.
+    Refer plib_${FREQM_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-void FREQM${FREQM_INDEX}_Initialize (void)
+void ${FREQM_INSTANCE_NAME}_Initialize (void)
 {
 <#if FREQM_INTERRUPT_MODE == true >
     /* Instantiate the FREQM Object */
-    freqm${FREQM_INDEX}Obj.callback = NULL;
+    ${FREQM_INSTANCE_NAME?lower_case}Obj.callback = NULL;
 
-    freqm${FREQM_INDEX}Obj.context = (uintptr_t)NULL;
+    ${FREQM_INSTANCE_NAME?lower_case}Obj.context = (uintptr_t)NULL;
 </#if>
-    freqm${FREQM_INDEX}Obj.refFreqValue = 4000000U;
+    ${FREQM_INSTANCE_NAME?lower_case}Obj.refFreqValue = 4000000U;
 
     /* FreqM Enabling on the APBA Bridge */
     MCLK_REGS->MCLK_APBAMASK |= MCLK_APBAMASK_FREQM__Msk;
@@ -128,20 +128,20 @@ void FREQM${FREQM_INDEX}_Initialize (void)
     GCLK_REGS->GCLK_PCHCTRL[4] |= GCLK_PCHCTRL_CHEN_Msk;
 
     /* Resetting the FREQM Module */
-    FREQM_REGS->FREQM_CTRLA |= FREQM_CTRLA_SWRST_Msk;
+    ${FREQM_INSTANCE_NAME}_REGS->FREQM_CTRLA |= FREQM_CTRLA_SWRST_Msk;
 
-    while((FREQM_REGS->FREQM_SYNCBUSY & FREQM_SYNCBUSY_SWRST_Msk) == FREQM_SYNCBUSY_SWRST_Msk)
+    while((${FREQM_INSTANCE_NAME}_REGS->FREQM_SYNCBUSY & FREQM_SYNCBUSY_SWRST_Msk) == FREQM_SYNCBUSY_SWRST_Msk)
     {
         /* Waiting for the FREQM Module to Reset */
     }
 
     /* Selection of the No. of Reference Cycles and Division Reference */
-    FREQM_REGS->FREQM_CFGA |= FREQM_CFGA_REFNUM(${REF_CLK_CYCLES}) ${REF_CLK_DIV?then('| FREQM_CFGA_DIVREF_Msk', '')};
+    ${FREQM_INSTANCE_NAME}_REGS->FREQM_CFGA |= FREQM_CFGA_REFNUM(${REF_CLK_CYCLES}) ${REF_CLK_DIV?then('| FREQM_CFGA_DIVREF_Msk', '')};
 
     /* Enabling FREQM */
-    FREQM_REGS->FREQM_CTRLA |= FREQM_CTRLA_ENABLE_Msk;
+    ${FREQM_INSTANCE_NAME}_REGS->FREQM_CTRLA |= FREQM_CTRLA_ENABLE_Msk;
 
-    while((FREQM_REGS->FREQM_SYNCBUSY & FREQM_SYNCBUSY_ENABLE_Msk) == FREQM_SYNCBUSY_ENABLE_Msk)
+    while((${FREQM_INSTANCE_NAME}_REGS->FREQM_SYNCBUSY & FREQM_SYNCBUSY_ENABLE_Msk) == FREQM_SYNCBUSY_ENABLE_Msk)
     {
         /* Waiting for the FREQM to Enable */
     }
@@ -149,7 +149,7 @@ void FREQM${FREQM_INDEX}_Initialize (void)
 
 // *****************************************************************************
 /* Function:
-    void FREQM${FREQM_INDEX}_MeasurementStart();
+    void ${FREQM_INSTANCE_NAME}_MeasurementStart();
 
   Summary:
     This function starts the frequency measurement.
@@ -157,33 +157,33 @@ void FREQM${FREQM_INDEX}_Initialize (void)
   Description:
     This function starts the frequency measurement. This function is always
     non-blocking. Calling this function when a frequency measurement is already
-    in progress will result in a functional no operation. The FREQM${FREQM_INDEX}_IsBusy()
+    in progress will result in a functional no operation. The ${FREQM_INSTANCE_NAME}_IsBusy()
     function will return true when a frequency measurement is in progress. The
-    completion of the measurement operation is indicated by the FREQM${FREQM_INDEX}_IsBusy()
+    completion of the measurement operation is indicated by the ${FREQM_INSTANCE_NAME}_IsBusy()
     function returning false or a registered callback function being called.
 
     Starting a measurement will reset all module errors.
 
   Remarks:
-    Refer plib_freqm${FREQM_INDEX}.h for more information.
+    Refer plib_${FREQM_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-void FREQM${FREQM_INDEX}_MeasurementStart(void)
+void ${FREQM_INSTANCE_NAME}_MeasurementStart(void)
 {
-    if((FREQM_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) != FREQM_STATUS_BUSY_Msk )
+    if((${FREQM_INSTANCE_NAME}_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) != FREQM_STATUS_BUSY_Msk )
     {
         /* Clearing the Done Interrupt flag  */
-        FREQM_REGS->FREQM_INTFLAG = FREQM_INTFLAG_DONE_Msk ;
+        ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTFLAG = FREQM_INTFLAG_DONE_Msk ;
 
         /* Clearing the overflow flag  */
-        FREQM_REGS->FREQM_STATUS |= FREQM_STATUS_OVF_Msk;
+        ${FREQM_INSTANCE_NAME}_REGS->FREQM_STATUS |= FREQM_STATUS_OVF_Msk;
 
         /* Triggering the measurement to start */
-        FREQM_REGS->FREQM_CTRLB |= FREQM_CTRLB_START_Msk;
+        ${FREQM_INSTANCE_NAME}_REGS->FREQM_CTRLB |= FREQM_CTRLB_START_Msk;
 
     <#if FREQM_INTERRUPT_MODE == true >
         /* Enabling the Done Interrupt */
-        FREQM_REGS->FREQM_INTENSET = FREQM_INTENSET_DONE_Msk;
+        ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTENSET = FREQM_INTENSET_DONE_Msk;
     </#if>
     }
 
@@ -191,7 +191,7 @@ void FREQM${FREQM_INDEX}_MeasurementStart(void)
 
 // *****************************************************************************
 /* Function:
-    uint32_t FREQM${FREQM_INDEX}_FrequencyGet()
+    uint32_t ${FREQM_INSTANCE_NAME}_FrequencyGet()
 
   Summary:
     Returns the measured frequency in Hz.
@@ -201,20 +201,20 @@ void FREQM${FREQM_INDEX}_MeasurementStart(void)
     a frequency measurement is complete and no errors have occurred. This
     function is non-blocking when the library is generated for interrupt
     operation. In interrupt mode, the function should be called only after a
-    callback function was called or after the FREQM${FREQM_INDEX}_IsBusy()
+    callback function was called or after the ${FREQM_INSTANCE_NAME}_IsBusy()
     function returns false indicating that an on-going frequency measurement
     operation has completed.
 
     The function will block when the library is generated for non-interrupt
     operation.  The function will block till the frequency measurement operation
     has completed. In this case, the return value of the function is only valid
-    if the FREQM${FREQM_INDEX}_ErrorGet() function returns FREQM_ERROR_NONE.
+    if the ${FREQM_INSTANCE_NAME}_ErrorGet() function returns FREQM_ERROR_NONE.
 
   Remarks:
-    Refer plib_freqm${FREQM_INDEX}.h for more information.
+    Refer plib_${FREQM_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-uint32_t FREQM${FREQM_INDEX}_FrequencyGet()
+uint32_t ${FREQM_INSTANCE_NAME}_FrequencyGet()
 {
     /* Initializing the local variables */
     uint32_t refNum = 0;
@@ -222,20 +222,20 @@ uint32_t FREQM${FREQM_INDEX}_FrequencyGet()
     uint32_t measuredValue = 0;
 
 <#if FREQM_INTERRUPT_MODE = false >
-    while((FREQM_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) == FREQM_STATUS_BUSY_Msk)
+    while((${FREQM_INSTANCE_NAME}_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) == FREQM_STATUS_BUSY_Msk)
     {
         /* Waiting for the measurement to complete */
     }
 </#if>
 
     /* Read the Value Register */
-    resultCalculated = FREQM_REGS->FREQM_VALUE;
+    resultCalculated = ${FREQM_INSTANCE_NAME}_REGS->FREQM_VALUE;
 
     /* Reading the ref number of the cycles */
-    refNum = (FREQM_REGS->FREQM_CFGA & FREQM_CFGA_REFNUM_Msk) >> FREQM_CFGA_REFNUM_Pos;
+    refNum = (${FREQM_INSTANCE_NAME}_REGS->FREQM_CFGA & FREQM_CFGA_REFNUM_Msk) >> FREQM_CFGA_REFNUM_Pos;
 
     /* Calculating the Resultant Measured Frequency Value */
-    measuredValue = (resultCalculated/ refNum) * freqm${FREQM_INDEX}Obj.refFreqValue;
+    measuredValue = (resultCalculated/ refNum) * ${FREQM_INSTANCE_NAME?lower_case}Obj.refFreqValue;
 
     return measuredValue;
 }
@@ -260,18 +260,18 @@ uint32_t FREQM${FREQM_INDEX}_FrequencyGet()
     with callback function as NULL will disable the callback feature.
 
   Remarks:
-    Refer plib_freqm${FREQM_INDEX}.h for more information.
+    Refer plib_${FREQM_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-void FREQM${FREQM_INDEX}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintptr_t context)
+void ${FREQM_INSTANCE_NAME}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintptr_t context)
 {
-    freqm${FREQM_INDEX}Obj.callback = freqmCallback;
-    freqm${FREQM_INDEX}Obj.context = context;
+    ${FREQM_INSTANCE_NAME?lower_case}Obj.callback = freqmCallback;
+    ${FREQM_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
 // *****************************************************************************
 /* Function:
-    void FREQM${FREQM_INDEX}_InterruptHandler(void);
+    void ${FREQM_INSTANCE_NAME}_InterruptHandler(void);
 
   Summary:
     Frequency Measurement interrupt handler.
@@ -284,25 +284,25 @@ void FREQM${FREQM_INDEX}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintptr_
     None.
 */
 
-void FREQM${FREQM_INDEX}_InterruptHandler(void)
+void ${FREQM_INSTANCE_NAME}_InterruptHandler(void)
 {
     /* Check if data ready needs to be serviced */
-    if (FREQM_REGS->FREQM_INTFLAG & FREQM_INTFLAG_DONE_Msk)
+    if (${FREQM_INSTANCE_NAME}_REGS->FREQM_INTFLAG & FREQM_INTFLAG_DONE_Msk)
     {
         /* Disable the DONE interrupt */
-        FREQM_REGS->FREQM_INTENCLR = FREQM_INTENCLR_DONE_Msk;
+        ${FREQM_INSTANCE_NAME}_REGS->FREQM_INTENCLR = FREQM_INTENCLR_DONE_Msk;
 
-        if(freqm${FREQM_INDEX}Obj.callback != NULL)
+        if(${FREQM_INSTANCE_NAME?lower_case}Obj.callback != NULL)
         {
             /* Calling the callback function, if registered */
-            freqm${FREQM_INDEX}Obj.callback(freqm${FREQM_INDEX}Obj.context);
+            ${FREQM_INSTANCE_NAME?lower_case}Obj.callback(${FREQM_INSTANCE_NAME?lower_case}Obj.context);
         }
     }
 }
 </#if>
 // *****************************************************************************
 /* Function:
-    bool FREQM${FREQM_INDEX}_IsBusy (void)
+    bool ${FREQM_INSTANCE_NAME}_IsBusy (void)
 
   Summary:
     Returns the measurement status of an on-going frequency measurement
@@ -311,7 +311,7 @@ void FREQM${FREQM_INDEX}_InterruptHandler(void)
   Description:
     This function returns the measurement status of an on-going frequency
     measurement operation. The function returns true when the
-    FREQM${FREQM_INDEX}_MeasurementStart() function has been called to start a
+    ${FREQM_INSTANCE_NAME}_MeasurementStart() function has been called to start a
     measurement and measurement has not completed. It returns false, when the
     measurement operation has completed. The function should be called after
     measurement operation was initiated, to poll the completion of the
@@ -322,14 +322,14 @@ void FREQM${FREQM_INDEX}_InterruptHandler(void)
     operation completion instead of waiting for callback to be called.
 
   Remarks:
-    Refer plib_freqm${FREQM_INDEX}.h for more information.
+    Refer plib_${FREQM_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-bool FREQM${FREQM_INDEX}_IsBusy(void)
+bool ${FREQM_INSTANCE_NAME}_IsBusy(void)
 {
    bool result = false;
 
-    if((FREQM_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) == FREQM_STATUS_BUSY_Msk)
+    if((${FREQM_INSTANCE_NAME}_REGS->FREQM_STATUS & FREQM_STATUS_BUSY_Msk) == FREQM_STATUS_BUSY_Msk)
     {
         result = true;
     }
@@ -339,7 +339,7 @@ bool FREQM${FREQM_INDEX}_IsBusy(void)
 
 // *****************************************************************************
 /* Function:
-    FREQM_ERROR FREQM${FREQM_INDEX}_ErrorGet( void )
+    FREQM_ERROR ${FREQM_INSTANCE_NAME}_ErrorGet( void )
 
   Summary:
     Returns error that may have occurred during the frequency measurement
@@ -351,14 +351,14 @@ bool FREQM${FREQM_INDEX}_IsBusy(void)
     operation.
 
   Remarks:
-    Refer plib_freqm${FREQM_INDEX}.h for more information.
+    Refer plib_${FREQM_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-FREQM_ERROR FREQM${FREQM_INDEX}_ErrorGet(void)
+FREQM_ERROR ${FREQM_INSTANCE_NAME}_ErrorGet(void)
 {
     FREQM_ERROR returnValue = FREQM_ERROR_NONE;
 
-    returnValue = (FREQM_ERROR) FREQM_REGS->FREQM_STATUS & FREQM_STATUS_OVF_Msk;
+    returnValue = (FREQM_ERROR) ${FREQM_INSTANCE_NAME}_REGS->FREQM_STATUS & FREQM_STATUS_OVF_Msk;
 
     return returnValue;
 }
@@ -366,7 +366,7 @@ FREQM_ERROR FREQM${FREQM_INDEX}_ErrorGet(void)
 <#if FREQM_SETUPMODE == true>
 // *****************************************************************************
 /* Function:
-    void FREQM${FREQM_INDEX}_Setup(uint32_t referenceFrequency)
+    void ${FREQM_INSTANCE_NAME}_Setup(uint32_t referenceFrequency)
 
   Summary:
     Allows the application to respecify the FREQM module reference clock
@@ -379,11 +379,11 @@ FREQM_ERROR FREQM${FREQM_INDEX}_ErrorGet(void)
     call this function otherwise.
 
   Remarks:
-    Refer plib_freqm${FREQM_INDEX}.h for more information.
+    Refer plib_${FREQM_INSTANCE_NAME?lower_case}.h for more information.
 */
 
-void FREQM${FREQM_INDEX}_Setup(uint32_t referenceFrequency)
+void ${FREQM_INSTANCE_NAME}_Setup(uint32_t referenceFrequency)
 {
-    freqm${FREQM_INDEX}Obj.refFreqValue = referenceFrequency;
+    ${FREQM_INSTANCE_NAME?lower_case}Obj.refFreqValue = referenceFrequency;
 }
 </#if>

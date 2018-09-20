@@ -5,7 +5,7 @@ global i2cCapabilityId
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
-global sercomInstanceIndex
+global sercomInstanceName
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -113,9 +113,9 @@ def setSERCOMInterruptData(status, sercomMode):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if status == True:
-        Database.setSymbolValue("core", InterruptHandler, "SERCOM" + sercomInstanceIndex + "_" + sercomMode + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, sercomInstanceName.getValue() + "_" + sercomMode + "_InterruptHandler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, "SERCOM" + sercomInstanceIndex + "_Handler", 2)
+        Database.setSymbolValue("core", InterruptHandler, sercomInstanceName.getValue() + "_Handler", 2)
 
 def updateSERCOMInterruptStatus(symbol, event):
 
@@ -179,9 +179,9 @@ def updateSERCOMDMATransferRegister(symbol, event):
     symbol.clearValue()
 
     if event["value"] == 0x1:
-        symbol.setValue("&(SERCOM" + str(sercomInstanceIndex) + "_REGS->USART.DATA)", 2)
+        symbol.setValue("&(" + sercomInstanceName.getValue() + "_REGS->USART.DATA)", 2)
     elif event["value"] == 0x3:
-        symbol.setValue("&(SERCOM" + str(sercomInstanceIndex) + "_REGS->SPI.DATA)", 2)
+        symbol.setValue("&(" + sercomInstanceName.getValue() + "_REGS->SPI.DATA)", 2)
     else:
         symbol.setValue("", 2)
 
@@ -197,20 +197,22 @@ def instantiateComponent(sercomComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
-    global sercomInstanceIndex
+    global sercomInstanceName
     global sercomSym_OperationMode
 
-    sercomInstanceIndex = sercomComponent.getID()[-1:]
+    sercomInstanceName = sercomComponent.createStringSymbol("SERCOM_INSTANCE_NAME", None)
+    sercomInstanceName.setVisible(False)
+    sercomInstanceName.setDefaultValue(sercomComponent.getID().upper())
 
-    Log.writeInfoMessage("Running SERCOM" + str(sercomInstanceIndex))
+    Log.writeInfoMessage("Running " + sercomInstanceName.getValue())
 
-    uartCapabilityId = "SERCOM_" + sercomInstanceIndex + "_UART"
-    spiCapabilityId = "SERCOM_" + sercomInstanceIndex + "_SPI"
-    i2cCapabilityId = "SERCOM_" + sercomInstanceIndex + "_I2C"
+    uartCapabilityId = sercomInstanceName.getValue() + "_UART"
+    spiCapabilityId = sercomInstanceName.getValue() + "_SPI"
+    i2cCapabilityId = sercomInstanceName.getValue() + "_I2C"
 
     #clock enable
-    Database.clearSymbolValue("core", "SERCOM" + sercomInstanceIndex + "_CORE_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "SERCOM" + sercomInstanceIndex + "_CORE_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_ENABLE")
+    Database.setSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_ENABLE", True, 2)
 
     #sercom mode Menu - Serial Communication Interfaces
     sercomSym_OperationMode = sercomComponent.createKeyValueSetSymbol("SERCOM_MODE", None)
@@ -236,21 +238,16 @@ def instantiateComponent(sercomComponent):
     sercomSym_OperationMode.setOutputMode("Key")
     sercomSym_OperationMode.setDisplayMode("Key")
 
-    #SERCOM Instance Index
-    sercomSym_INDEX = sercomComponent.createIntegerSymbol("SERCOM_INDEX", None)
-    sercomSym_INDEX.setDefaultValue(int(sercomInstanceIndex))
-    sercomSym_INDEX.setVisible(False)
-    sercomSym_INDEX.setDependencies(setSERCOMCodeGenerationProperty, ["SERCOM_MODE"])
 
     #SERCOM Transmit data register
     sercomSym_TxRegister = sercomComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", sercomSym_OperationMode)
-    sercomSym_TxRegister.setDefaultValue("&(SERCOM" + str(sercomInstanceIndex) + "_REGS->USART.DATA)")
+    sercomSym_TxRegister.setDefaultValue("&(" + sercomInstanceName.getValue() + "_REGS->USART.DATA)")
     sercomSym_TxRegister.setVisible(False)
     sercomSym_TxRegister.setDependencies(updateSERCOMDMATransferRegister, ["SERCOM_MODE"])
 
     #SERCOM Receive data register
     sercomSym_RxRegister = sercomComponent.createStringSymbol("RECEIVE_DATA_REGISTER", sercomSym_OperationMode)
-    sercomSym_RxRegister.setDefaultValue("&(SERCOM" + str(sercomInstanceIndex) + "_REGS->USART.DATA)")
+    sercomSym_RxRegister.setDefaultValue("&(" + sercomInstanceName.getValue() + "_REGS->USART.DATA)")
     sercomSym_RxRegister.setVisible(False)
     sercomSym_RxRegister.setDependencies(updateSERCOMDMATransferRegister, ["SERCOM_MODE"])
 
@@ -269,16 +266,16 @@ def instantiateComponent(sercomComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = "SERCOM" + sercomInstanceIndex + "_INTERRUPT_ENABLE"
-    InterruptHandler = "SERCOM" + sercomInstanceIndex + "_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "SERCOM" + sercomInstanceIndex + "_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = "SERCOM" + sercomInstanceIndex + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = sercomInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    InterruptHandler = sercomInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = sercomInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = sercomInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and Interrupt
     Database.clearSymbolValue("core", InterruptVector)
     Database.setSymbolValue("core", InterruptVector, True, 2)
     Database.clearSymbolValue("core", InterruptHandler)
-    Database.setSymbolValue("core", InterruptHandler, "SERCOM" + sercomInstanceIndex + "_USART_InterruptHandler", 2)
+    Database.setSymbolValue("core", InterruptHandler, sercomInstanceName.getValue() + "_USART_InterruptHandler", 2)
     Database.clearSymbolValue("core", InterruptHandlerLock)
     Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
 
@@ -290,14 +287,14 @@ def instantiateComponent(sercomComponent):
     # Interrupt Warning status
     sercomSym_IntEnComment = sercomComponent.createCommentSymbol("SERCOM_INTERRUPT_ENABLE_COMMENT", None)
     sercomSym_IntEnComment.setVisible(False)
-    sercomSym_IntEnComment.setLabel("Warning!!! SERCOM" + sercomInstanceIndex + " Interrupt is Disabled in Interrupt Manager")
+    sercomSym_IntEnComment.setLabel("Warning!!! " + sercomInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptWarringStatus, ["core." + InterruptVectorUpdate])
 
     # Clock Warning status
     sercomSym_ClkEnComment = sercomComponent.createCommentSymbol("SERCOM_CLOCK_ENABLE_COMMENT", None)
     sercomSym_ClkEnComment.setLabel("Warning!!! SERCOM Peripheral Clock is Disabled in Clock Manager")
     sercomSym_ClkEnComment.setVisible(False)
-    sercomSym_ClkEnComment.setDependencies(updateSERCOMClockWarringStatus, ["core.SERCOM" + sercomInstanceIndex + "_CORE_CLOCK_ENABLE"])
+    sercomSym_ClkEnComment.setDependencies(updateSERCOMClockWarringStatus, ["core." + sercomInstanceName.getValue() + "_CORE_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
@@ -307,15 +304,15 @@ def instantiateComponent(sercomComponent):
 
     usartHeaderFile = sercomComponent.createFileSymbol("SERCOM_USART_HEADER", None)
     usartHeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_usart.h.ftl")
-    usartHeaderFile.setOutputName("plib_sercom" + sercomInstanceIndex + "_usart" + ".h")
+    usartHeaderFile.setOutputName("plib_"+sercomInstanceName.getValue().lower()+"_usart"+".h")
     usartHeaderFile.setDestPath("/peripheral/sercom/usart/")
     usartHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart/")
     usartHeaderFile.setType("HEADER")
     usartHeaderFile.setMarkup(True)
 
     usartCommonHeaderFile = sercomComponent.createFileSymbol("SERCOM_USART_COMMON_HEADER", None)
-    usartCommonHeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_usart.h")
-    usartCommonHeaderFile.setOutputName("plib_sercom_usart.h")
+    usartCommonHeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_usart_common.h")
+    usartCommonHeaderFile.setOutputName("plib_sercom_usart_common.h")
     usartCommonHeaderFile.setDestPath("/peripheral/sercom/usart/")
     usartCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart")
     usartCommonHeaderFile.setType("HEADER")
@@ -323,7 +320,7 @@ def instantiateComponent(sercomComponent):
 
     usartSourceFile = sercomComponent.createFileSymbol("SERCOM_USART_SOURCE", None)
     usartSourceFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_usart.c.ftl")
-    usartSourceFile.setOutputName("plib_sercom" + sercomInstanceIndex + "_usart" + ".c")
+    usartSourceFile.setOutputName("plib_"+sercomInstanceName.getValue().lower()+"_usart"+".c")
     usartSourceFile.setDestPath("/peripheral/sercom/usart/")
     usartSourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart/")
     usartSourceFile.setType("SOURCE")
@@ -331,7 +328,7 @@ def instantiateComponent(sercomComponent):
 
     spiSym_HeaderFile = sercomComponent.createFileSymbol("SERCOM_SPIM_HEADER", None)
     spiSym_HeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_spi.h.ftl")
-    spiSym_HeaderFile.setOutputName("plib_sercom" + sercomInstanceIndex + "_spi.h")
+    spiSym_HeaderFile.setOutputName("plib_"+sercomInstanceName.getValue().lower()+"_spi.h")
     spiSym_HeaderFile.setDestPath("/peripheral/sercom/spim")
     spiSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/spi/")
     spiSym_HeaderFile.setType("HEADER")
@@ -339,8 +336,8 @@ def instantiateComponent(sercomComponent):
     spiSym_HeaderFile.setEnabled(False)
 
     spiSym_Header1File = sercomComponent.createFileSymbol("SERCOM_SPIM_COMMON_HEADER", None)
-    spiSym_Header1File.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_spi.h")
-    spiSym_Header1File.setOutputName("plib_sercom_spi.h")
+    spiSym_Header1File.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_spi_common.h")
+    spiSym_Header1File.setOutputName("plib_sercom_spi_common.h")
     spiSym_Header1File.setDestPath("/peripheral/sercom/spim")
     spiSym_Header1File.setProjectPath("config/" + configName + "/peripheral/sercom/spi/")
     spiSym_Header1File.setType("HEADER")
@@ -349,7 +346,7 @@ def instantiateComponent(sercomComponent):
 
     spiSym_SourceFile = sercomComponent.createFileSymbol("SERCOM_SPIM_SOURCE", None)
     spiSym_SourceFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_spi.c.ftl")
-    spiSym_SourceFile.setOutputName("plib_sercom" + sercomInstanceIndex + "_spi.c")
+    spiSym_SourceFile.setOutputName("plib_"+sercomInstanceName.getValue().lower()+"_spi.c")
     spiSym_SourceFile.setDestPath("/peripheral/sercom/spim")
     spiSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/spi/")
     spiSym_SourceFile.setType("SOURCE")
@@ -367,7 +364,7 @@ def instantiateComponent(sercomComponent):
 
     i2cmHeaderFile = sercomComponent.createFileSymbol("SERCOM_I2CM_HEADER", None)
     i2cmHeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_i2c.h.ftl")
-    i2cmHeaderFile.setOutputName("plib_sercom" + sercomInstanceIndex + "_i2c.h")
+    i2cmHeaderFile.setOutputName("plib_"+sercomInstanceName.getValue().lower()+"_i2c.h")
     i2cmHeaderFile.setDestPath("/peripheral/sercom/i2cm")
     i2cmHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/i2cm/")
     i2cmHeaderFile.setType("HEADER")
@@ -376,7 +373,7 @@ def instantiateComponent(sercomComponent):
 
     i2cmSourceFile = sercomComponent.createFileSymbol("SERCOM_I2CM_SOURCE", None)
     i2cmSourceFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_i2c.c.ftl")
-    i2cmSourceFile.setOutputName("plib_sercom" + sercomInstanceIndex + "_i2c.c")
+    i2cmSourceFile.setOutputName("plib_"+sercomInstanceName.getValue().lower()+"_i2c.c")
     i2cmSourceFile.setDestPath("/peripheral/sercom/i2cm")
     i2cmSourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/i2cm/")
     i2cmSourceFile.setType("SOURCE")

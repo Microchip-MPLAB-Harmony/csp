@@ -14,18 +14,15 @@ def updateDACClockWarringStatus(symbol, event):
 ################################################################################
 
 def instantiateComponent(dacComponent):
-    dacIntanceIndex = dacComponent.getID()[-1:]
-    Log.writeInfoMessage("Running DAC : " + dacIntanceIndex)
 
-    #DAC Instance Index
-    dacSym_INDEX = dacComponent.createIntegerSymbol("DAC_INDEX", None)
-    dacSym_INDEX.setLabel("DAC_INDEX")
-    dacSym_INDEX.setVisible(False)
-    dacSym_INDEX.setDefaultValue(int(dacIntanceIndex))
+    dacInstanceName = dacComponent.createStringSymbol("DAC_INSTANCE_NAME", None)
+    dacInstanceName.setVisible(False)
+    dacInstanceName.setDefaultValue(dacComponent.getID().upper())
+    Log.writeInfoMessage("Running " + dacInstanceName.getValue())
 
     #clock enable
-    Database.clearSymbolValue("core", "DAC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "DAC_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", dacInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", dacInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
     #Run StandBy
     dacSym_CTRLA_RUNSTDBY = dacComponent.createBooleanSymbol("DAC_RUNSTDBY", None)
     dacSym_CTRLA_RUNSTDBY.setLabel("Disable output in Standby Sleep mode?")
@@ -96,7 +93,7 @@ def instantiateComponent(dacComponent):
     dacSym_ClkEnComment = dacComponent.createCommentSymbol("DAC_CLOCK_ENABLE_COMMENT", None)
     dacSym_ClkEnComment.setLabel("Warning!!! DAC Peripheral Clock is Disabled in Clock Manager")
     dacSym_ClkEnComment.setVisible(False)
-    dacSym_ClkEnComment.setDependencies(updateDACClockWarringStatus, ["core.DAC_CLOCK_ENABLE"])
+    dacSym_ClkEnComment.setDependencies(updateDACClockWarringStatus, ["core."+dacInstanceName.getValue()+"_CLOCK_ENABLE"])
 
 ################################################################################
 ########                          Code Generation                      #########
@@ -110,7 +107,7 @@ def instantiateComponent(dacComponent):
     # Instance Header File
     dacHeaderFile = dacComponent.createFileSymbol("DAC_INSTANCE_HEADER", None)
     dacHeaderFile.setSourcePath("../peripheral/dac_"+ dacModuleID+"/templates/plib_dac.h.ftl")
-    dacHeaderFile.setOutputName("plib_dac" + dacIntanceIndex + ".h")
+    dacHeaderFile.setOutputName("plib_"+dacInstanceName.getValue().lower()+".h")
     dacHeaderFile.setDestPath("/peripheral/dac/")
     dacHeaderFile.setProjectPath("config/" + configName + "/peripheral/dac/")
     dacHeaderFile.setType("HEADER")
@@ -119,7 +116,7 @@ def instantiateComponent(dacComponent):
     # Source File
     dacSourceFile = dacComponent.createFileSymbol("DAC_SOURCE", None)
     dacSourceFile.setSourcePath("../peripheral/dac_"+dacModuleID+"/templates/plib_dac.c.ftl")
-    dacSourceFile.setOutputName("plib_dac" + dacIntanceIndex + ".c")
+    dacSourceFile.setOutputName("plib_" + dacInstanceName.getValue().lower() + ".c")
     dacSourceFile.setDestPath("/peripheral/dac/")
     dacSourceFile.setProjectPath("config/" + configName + "/peripheral/dac/")
     dacSourceFile.setType("SOURCE")

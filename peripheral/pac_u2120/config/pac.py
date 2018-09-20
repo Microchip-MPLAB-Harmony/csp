@@ -1,7 +1,7 @@
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
-global pacInstanceIndex
+global pacInstanceName
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -18,7 +18,7 @@ def updatePACInterruptStatus(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, "PAC" + pacInstanceIndex + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, pacInstanceName.getValue()+ "_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, "PAC_Handler", 2)
 
@@ -43,22 +43,20 @@ def instantiateComponent(pacComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
-    global pacInstanceIndex
+    global pacInstanceName
     global pacSym_INTENSET
 
-    pacInstanceIndex = pacComponent.getID()[-1:]
+    pacInstanceName = pacComponent.createStringSymbol("PAC_INSTANCE_NAME", None)
+    pacInstanceName.setVisible(False)
+    pacInstanceName.setDefaultValue(pacComponent.getID().upper())
 
-    bridgeNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PAC\"]/instance@[name=\"PAC\"]/parameters/param@[name=\"HPB_NUM\"]")
+    bridgeNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PAC\"]/instance@[name=\""+pacInstanceName.getValue()+"\"]/parameters/param@[name=\"HPB_NUM\"]")
 
     bridgeCount = int(bridgeNode.getAttribute("value"))
 
     #clock enable
-    Database.clearSymbolValue("core", "PAC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "PAC_CLOCK_ENABLE", True, 2)
-
-    pacSym_INDEX = pacComponent.createIntegerSymbol("PAC_INDEX", None)
-    pacSym_INDEX.setDefaultValue(int(pacInstanceIndex))
-    pacSym_INDEX.setVisible(False)
+    Database.clearSymbolValue("core", pacInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", pacInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     pacSym_BridgeCount = pacComponent.createIntegerSymbol("PAC_BRIDGE_COUNT", None)
     pacSym_BridgeCount.setDefaultValue(bridgeCount)
@@ -115,10 +113,10 @@ def instantiateComponent(pacComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = "PAC_INTERRUPT_ENABLE"
-    InterruptHandler = "PAC_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "PAC_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = "PAC_INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = pacInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    InterruptHandler = pacInstanceName.getValue()+ "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = pacInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = pacInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
 
     # Interrupt Dynamic settings
     pacSym_UpdateInterruptStatus = pacComponent.createBooleanSymbol("PAC_INTERRUPT_STATUS", None)
@@ -135,7 +133,7 @@ def instantiateComponent(pacComponent):
     pacSym_ClkEnComment = pacComponent.createCommentSymbol("PAC_CLOCK_ENABLE_COMMENT", None)
     pacSym_ClkEnComment.setLabel("Warning!!! PAC Peripheral Clock is Disabled in Clock Manager")
     pacSym_ClkEnComment.setVisible(False)
-    pacSym_ClkEnComment.setDependencies(updatePACClockWarringStatus, ["core.PAC_CLOCK_ENABLE"])
+    pacSym_ClkEnComment.setDependencies(updatePACClockWarringStatus, ["core."+pacInstanceName.getValue()+"_CLOCK_ENABLE"])
 
 ################################################################################
 #############             CODE GENERATION             ##########################
@@ -148,7 +146,7 @@ def instantiateComponent(pacComponent):
 
     pacSym_HeaderFile = pacComponent.createFileSymbol("PAC_HEADER", None)
     pacSym_HeaderFile.setSourcePath("../peripheral/pac_u2120/templates/plib_pac.h.ftl")
-    pacSym_HeaderFile.setOutputName("plib_pac" + str(pacInstanceIndex) + ".h")
+    pacSym_HeaderFile.setOutputName("plib_"+pacInstanceName.getValue()+".h")
     pacSym_HeaderFile.setDestPath("/peripheral/pac/")
     pacSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pac/")
     pacSym_HeaderFile.setType("HEADER")
@@ -156,7 +154,7 @@ def instantiateComponent(pacComponent):
 
     pacSym_SourceFile = pacComponent.createFileSymbol("PAC_SOURCE", None)
     pacSym_SourceFile.setSourcePath("../peripheral/pac_u2120/templates/plib_pac.c.ftl")
-    pacSym_SourceFile.setOutputName("plib_pac" + str(pacInstanceIndex) + ".c")
+    pacSym_SourceFile.setOutputName("plib_"+pacInstanceName.getValue()+".c")
     pacSym_SourceFile.setDestPath("/peripheral/pac/")
     pacSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pac/")
     pacSym_SourceFile.setType("SOURCE")

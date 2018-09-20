@@ -1,1 +1,1 @@
-    WDT${WDT_INDEX}_Initialize();
+    ${WDT_INSTANCE_NAME}_Initialize();

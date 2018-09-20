@@ -6,7 +6,7 @@ from math import ceil
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
-global instance
+global supcInstanceName
 
 #------------------------------------------------------------------------------
 #                     Global SUPC Array symbol declaration
@@ -26,7 +26,7 @@ def interruptControl(symbol, event):
 
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "SUPC" + str(instance) +  "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, supcInstanceName.getValue() +  "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
         Database.setSymbolValue("core", interruptVector, False, 2)
@@ -73,14 +73,12 @@ def instantiateComponent(supcComponent):
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
-    global instance
+    global supcInstanceName
 
-    instance = supcComponent.getID()[-1:]
-    print("Running SUPC" + str(instance))
-
-    supcIndex = supcComponent.createIntegerSymbol("INDEX", None)
-    supcIndex.setVisible(False)
-    supcIndex.setDefaultValue(int(instance))
+    supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
+    supcInstanceName.setVisible(False)
+    supcInstanceName.setDefaultValue(supcComponent.getID().upper())
+    print("Running " + supcInstanceName.getValue())
 
     # SM configuration
     supcSMMenu= supcComponent.createBooleanSymbol("SM_ENABLE", None)
@@ -195,7 +193,7 @@ def instantiateComponent(supcComponent):
         availablePins.append(children[pad].getAttribute("pad"))
 
     wakeup_signals = []
-    supc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SUPC\"]/instance/signals")
+    supc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SUPC\"]/instance@[name=\""+supcInstanceName.getValue()+"\"]/signals")
     wakeup_signals = supc.getChildren()
     for pad in range (0 , len(wakeup_signals)):
         if "index" in wakeup_signals[pad].getAttributeList():
@@ -276,10 +274,10 @@ def instantiateComponent(supcComponent):
     ############################################################################
 
     # Setup Peripheral Interrupt in Interrupt manager
-    interruptVector = "SUPC_INTERRUPT_ENABLE"
-    interruptHandler = "SUPC_INTERRUPT_HANDLER"
-    interruptHandlerLock = "SUPC_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = "SUPC_INTERRUPT_ENABLE_UPDATE"
+    interruptVector = supcInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    interruptHandler = supcInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    interruptHandlerLock = supcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = supcInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
 
     # NVIC Dynamic settings
     supcinterruptControl = supcComponent.createBooleanSymbol("NVIC_SUPC_ENABLE", None)
@@ -292,9 +290,9 @@ def instantiateComponent(supcComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     supcHeader1File = supcComponent.createFileSymbol("SUPC_HEADER1", None)
-    supcHeader1File.setSourcePath("../peripheral/supc_6452/templates/plib_supc.h")
-    supcHeader1File.setOutputName("plib_supc.h")
-    supcHeader1File.setDestPath("peripheral/supc/")
+    supcHeader1File.setSourcePath("../peripheral/supc_6452/templates/plib_supc_common.h")
+    supcHeader1File.setOutputName("plib_supc_common.h")
+    supcHeader1File.setDestPath("/peripheral/supc/")
     supcHeader1File.setProjectPath("config/" + configName + "/peripheral/supc/")
     supcHeader1File.setType("HEADER")
     supcHeader1File.setOverwrite(True)
@@ -302,8 +300,8 @@ def instantiateComponent(supcComponent):
     supcHeader2File = supcComponent.createFileSymbol("SUPC_HEADER2", None)
     supcHeader2File.setMarkup(True)
     supcHeader2File.setSourcePath("../peripheral/supc_6452/templates/plib_supc.h.ftl")
-    supcHeader2File.setOutputName("plib_supc" + str(instance) + ".h")
-    supcHeader2File.setDestPath("peripheral/supc/")
+    supcHeader2File.setOutputName("plib_"+supcInstanceName.getValue().lower()+".h")
+    supcHeader2File.setDestPath("/peripheral/supc/")
     supcHeader2File.setProjectPath("config/" + configName + "/peripheral/supc/")
     supcHeader2File.setType("HEADER")
     supcHeader2File.setOverwrite(True)
@@ -311,8 +309,8 @@ def instantiateComponent(supcComponent):
     supcSource1File = supcComponent.createFileSymbol("SUPC_SOURCE1", None)
     supcSource1File.setMarkup(True)
     supcSource1File.setSourcePath("../peripheral/supc_6452/templates/plib_supc.c.ftl")
-    supcSource1File.setOutputName("plib_supc" + str(instance) + ".c")
-    supcSource1File.setDestPath("peripheral/supc/")
+    supcSource1File.setOutputName("plib_"+supcInstanceName.getValue().lower()+".c")
+    supcSource1File.setDestPath("/peripheral/supc/")
     supcSource1File.setProjectPath("config/" + configName + "/peripheral/supc/")
     supcSource1File.setType("SOURCE")
     supcSource1File.setOverwrite(True)

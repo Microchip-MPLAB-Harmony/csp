@@ -58,10 +58,10 @@ def tcChannelVisible(symbol, event):
 
 def updateTCCaptureInterruptValue(symbol, event):
 
-    errInt = Database.getSymbolValue("tc" + tcInstanceIndex, "TC_CAPTURE_ERR_INTERRUPT_MODE")
-    ovfInt = Database.getSymbolValue("tc" + tcInstanceIndex, "TC_CAPTURE_OVF_INTERRUPT_MODE")
-    mc0Int = Database.getSymbolValue("tc" + tcInstanceIndex, "TC_CAPTURE_INTSET_MC0")
-    mc1Int = Database.getSymbolValue("tc" + tcInstanceIndex, "TC_CAPTURE_INTSET_MC1")
+    errInt = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_CAPTURE_ERR_INTERRUPT_MODE")
+    ovfInt = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_CAPTURE_OVF_INTERRUPT_MODE")
+    mc0Int = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_CAPTURE_INTSET_MC0")
+    mc1Int = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_CAPTURE_INTSET_MC1")
 
     symbol.clearValue()
     if errInt or ovfInt or mc0Int or mc1Int:

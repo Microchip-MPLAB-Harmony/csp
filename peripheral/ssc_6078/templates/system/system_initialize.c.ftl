@@ -1,1 +1,1 @@
-	SSC${SSC_INDEX?string}_Initialize();
+	${SSC_INSTANCE_NAME}_Initialize();

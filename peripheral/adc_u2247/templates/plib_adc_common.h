@@ -1,0 +1,180 @@
+/*******************************************************************************
+  Analog-to-Digital Converter(ADC) Peripheral Library Interface Header File
+
+  Company
+    Microchip Technology Inc.
+
+  File Name
+    plib_adc_common.h
+
+  Summary
+    ADC Peripheral Library Interface Header File.
+
+  Description
+    This file defines the common types for the ADC peripheral library. This
+    library provides access to and control of the associated peripheral
+    instance.
+
+*******************************************************************************/
+
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright (c) 2017 released Microchip Technology Inc. All rights reserved.
+Microchip licenses to you the right to use, modify, copy and distribute
+Software only when embedded on a Microchip microcontroller or digital signal
+controller that is integrated into your product or third party product
+(pursuant to the sublicense terms in the accompanying license agreement).
+
+You should refer to the license agreement accompanying this Software for
+additional information regarding your rights and obligations.
+
+SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
+MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
+CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
+OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
+INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
+CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
+SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
+(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+*******************************************************************************/
+// DOM-IGNORE-END
+
+#ifndef PLIB_ADC_COMMON_H    // Guards against multiple inclusion
+#define PLIB_ADC_COMMON_H
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+/* This section lists the other files that are included in this file.
+*/
+
+#include <stdbool.h>
+#include <stddef.h>
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus // Provide C Compatibility
+
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+/* The following data type definitions are used by the functions in this
+    interface and should be considered part it.
+*/
+
+typedef enum
+{
+    /* ADC pin AIN0 */
+    ADC_POSINPUT_AIN0 = ADC_INPUTCTRL_MUXPOS_AIN0,
+
+    /* ADC pin AIN1 */
+    ADC_POSINPUT_AIN1 = ADC_INPUTCTRL_MUXPOS_AIN1,
+
+    /* ADC pin AIN2 */
+    ADC_POSINPUT_AIN2 = ADC_INPUTCTRL_MUXPOS_AIN2,
+
+    /* ADC pin AIN3 */
+    ADC_POSINPUT_AIN3 = ADC_INPUTCTRL_MUXPOS_AIN3,
+
+    /* ADC pin AIN4 */
+    ADC_POSINPUT_AIN4 = ADC_INPUTCTRL_MUXPOS_AIN4,
+
+    /* ADC pin AIN5 */
+    ADC_POSINPUT_AIN5 = ADC_INPUTCTRL_MUXPOS_AIN5,
+
+    /* ADC pin AIN6 */
+    ADC_POSINPUT_AIN6 = ADC_INPUTCTRL_MUXPOS_AIN6,
+
+    /* ADC pin AIN7 */
+    ADC_POSINPUT_AIN7 = ADC_INPUTCTRL_MUXPOS_AIN7,
+
+    /* ADC pin AIN8 */
+    ADC_POSINPUT_AIN8 = ADC_INPUTCTRL_MUXPOS_AIN8,
+
+    /* ADC pin AIN9 */
+    ADC_POSINPUT_AIN9 = ADC_INPUTCTRL_MUXPOS_AIN9,
+
+    /* ADC pin AIN10 */
+    ADC_POSINPUT_AIN10 = ADC_INPUTCTRL_MUXPOS_AIN10,
+
+    /* ADC pin AIN11 */
+    ADC_POSINPUT_AIN11 = ADC_INPUTCTRL_MUXPOS_AIN11,
+
+    /* ADC pin TEMP */
+    ADC_POSINPUT_TEMP = ADC_INPUTCTRL_MUXPOS_TEMP,
+
+    /* ADC pin BANDGAP */
+    ADC_POSINPUT_BANDGAP = ADC_INPUTCTRL_MUXPOS_BANDGAP,
+
+    /* ADC pin SCALEDCOREVCC */
+    ADC_POSINPUT_SCALEDCOREVCC = ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC,
+
+    /* ADC pin SCALEDIOVCC */
+    ADC_POSINPUT_SCALEDIOVCC = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC,
+
+    /* ADC pin DAC */
+    ADC_POSINPUT_DAC = ADC_INPUTCTRL_MUXPOS_DAC,
+
+} ADC_POSINPUT;
+
+// *****************************************************************************
+
+typedef enum
+{
+    /* ADC pin AIN0 */
+    ADC_NEGINPUT_AIN0 = ADC_INPUTCTRL_MUXNEG_AIN0,
+
+    /* ADC pin AIN1 */
+    ADC_NEGINPUT_AIN1 = ADC_INPUTCTRL_MUXNEG_AIN1,
+
+    /* ADC pin AIN2 */
+    ADC_NEGINPUT_AIN2 = ADC_INPUTCTRL_MUXNEG_AIN2,
+
+    /* ADC pin AIN3 */
+    ADC_NEGINPUT_AIN3 = ADC_INPUTCTRL_MUXNEG_AIN3,
+
+    /* ADC pin AIN4 */
+    ADC_NEGINPUT_AIN4 = ADC_INPUTCTRL_MUXNEG_AIN4,
+
+    /* ADC pin AIN5 */
+    ADC_NEGINPUT_AIN5 = ADC_INPUTCTRL_MUXNEG_AIN5,
+
+    /* ADC pin GND */
+    ADC_NEGINPUT_GND = ADC_INPUTCTRL_MUXNEG(0x18u),
+
+} ADC_NEGINPUT;
+// *****************************************************************************
+
+
+typedef void (*ADC_CALLBACK)(uintptr_t context);
+
+
+typedef struct
+{
+    ADC_CALLBACK callback;
+
+    uintptr_t context;
+
+} ADC_CALLBACK_OBJ;
+
+
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+
+#endif
+// DOM-IGNORE-END
+
+#endif /* PLIB_ADC_COMMON_H*/

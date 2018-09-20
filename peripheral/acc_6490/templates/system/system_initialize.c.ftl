@@ -1,1 +1,1 @@
-	ACC${INDEX?string}_Initialize();
+	${ACC_INSTANCE_NAME}_Initialize();

@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_afec${INDEX}.h
+    plib_${AFEC_INSTANCE_NAME?lower_case}.h
 
   Summary
-    AFEC${INDEX} peripheral library interface.
+    ${AFEC_INSTANCE_NAME} peripheral library interface.
 
   Description
     This file defines the interface to the AFEC peripheral library.  This
@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_AFEC${INDEX}_H    // Guards against multiple inclusion
-#define PLIB_AFEC${INDEX}_H
+#ifndef PLIB_${AFEC_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define PLIB_${AFEC_INSTANCE_NAME}_H
 
 
 // *****************************************************************************
@@ -54,7 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*  This section lists the other files that are included in this file.
 */
 
-#include "plib_afec.h"
+#include "plib_afec_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -96,75 +96,75 @@ extern "C" {
         <#if .vars[AFEC_CH_NEG_INP] != "GND">
             <#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_UNSIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_SIGN_DF_UNSG")) >
                 <#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (4095U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (8191U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 <#else>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 </#if>
             </#if>
             <#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_SIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_UNSG_DF_SIGN")) >
                 <#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (2047)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-2048)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (2047)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-2048)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-4096)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (4095)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-4096)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (8191)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (16383)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
                 <#else>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (32767)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
                 </#if>
             </#if>
         <#else>
             <#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_UNSIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_UNSG_DF_SIGN")) >
                 <#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (4095U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (8191U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 <#else>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 </#if>
             </#if>
             <#if ((AFEC_EMR_SIGNMODE_VALUE == "ALL_SIGNED") || (AFEC_EMR_SIGNMODE_VALUE == "SE_SIGN_DF_UNSG")) >
                 <#if (AFEC_EMR_RES_VALUE == "NO_AVERAGE")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (2047)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-2048)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (2047)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-2048)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR4")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (4095)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-4096)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (4095)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-4096)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR16")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (8191)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (8191)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
                 <#elseif (AFEC_EMR_RES_VALUE == "OSR64")>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (16383)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (16383)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
                 <#else>
-                    #define AFEC${INDEX}_CH${CH_NUM}_MAX_OUTPUT  (32767)
-                    #define AFEC${INDEX}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (32767)
+                    #define ${AFEC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
                 </#if>
             </#if>
         </#if>
@@ -186,30 +186,30 @@ extern "C" {
    this interface.
 */
 
-void AFEC${INDEX}_Initialize (void);
+void ${AFEC_INSTANCE_NAME}_Initialize (void);
 
-void AFEC${INDEX}_ChannelsEnable (AFEC_CHANNEL_MASK channelsMask);
+void ${AFEC_INSTANCE_NAME}_ChannelsEnable (AFEC_CHANNEL_MASK channelsMask);
 
-void AFEC${INDEX}_ChannelsDisable (AFEC_CHANNEL_MASK channelsMask);
+void ${AFEC_INSTANCE_NAME}_ChannelsDisable (AFEC_CHANNEL_MASK channelsMask);
 
-void AFEC${INDEX}_ChannelsInterruptEnable (AFEC_INTERRUPT_MASK channelsInterruptMask);
+void ${AFEC_INSTANCE_NAME}_ChannelsInterruptEnable (AFEC_INTERRUPT_MASK channelsInterruptMask);
 
-void AFEC${INDEX}_ChannelsInterruptDisable (AFEC_INTERRUPT_MASK channelsInterruptMask);
+void ${AFEC_INSTANCE_NAME}_ChannelsInterruptDisable (AFEC_INTERRUPT_MASK channelsInterruptMask);
 
-void AFEC${INDEX}_ConversionStart(void);
+void ${AFEC_INSTANCE_NAME}_ConversionStart(void);
 
-bool AFEC${INDEX}_ChannelResultIsReady(AFEC_CHANNEL_NUM channel);
+bool ${AFEC_INSTANCE_NAME}_ChannelResultIsReady(AFEC_CHANNEL_NUM channel);
 
-uint16_t AFEC${INDEX}_ChannelResultGet(AFEC_CHANNEL_NUM channel);
+uint16_t ${AFEC_INSTANCE_NAME}_ChannelResultGet(AFEC_CHANNEL_NUM channel);
 
-void AFEC${INDEX}_ConversionSequenceSet(AFEC_CHANNEL_NUM *channelList, uint8_t numChannel);
+void ${AFEC_INSTANCE_NAME}_ConversionSequenceSet(AFEC_CHANNEL_NUM *channelList, uint8_t numChannel);
 
-void AFEC${INDEX}_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL_GAIN gain);
+void ${AFEC_INSTANCE_NAME}_ChannelGainSet(AFEC_CHANNEL_NUM channel, AFEC_CHANNEL_GAIN gain);
 
-void AFEC${INDEX}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset);
+void ${AFEC_INSTANCE_NAME}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset);
 
 <#if AFEC_INTERRUPT == true>
-    <#lt>void AFEC${INDEX}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context);
+    <#lt>void ${AFEC_INSTANCE_NAME}_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context);
 </#if>
 // *****************************************************************************
 
@@ -221,7 +221,7 @@ void AFEC${INDEX}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t offset);
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_AFEC${INDEX}_H
+#endif //PLIB_${AFEC_INSTANCE_NAME}_H
 
 /**
  End of File

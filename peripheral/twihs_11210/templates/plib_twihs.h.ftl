@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    twihs.h
+    plib_${TWIHS_INSTANCE_NAME?lower_case}.h
 
   Summary
     TWIHS peripheral library interface.
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TWIHS${INDEX?string}_H   
-#define PLIB_TWIHS${INDEX?string}_H
+#ifndef PLIB_${TWIHS_INSTANCE_NAME}_H   
+#define PLIB_${TWIHS_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -83,7 +83,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // *****************************************************************************
 /* Function:
-    void TWIHS${INDEX?string}_Initialize(void)
+    void ${TWIHS_INSTANCE_NAME}_Initialize(void)
 
    Summary:
     Initializes given instance of the TWIHS peripheral.
@@ -110,11 +110,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     Stops the TWIHS if it was already running and reinitializes it.
 */
 
-void TWIHS${INDEX?string}_Initialize(void);
+void ${TWIHS_INSTANCE_NAME}_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
+    void ${TWIHS_INSTANCE_NAME}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
 	
    Summary:
     Sets the pointer to the function (and it's context) to be called when the 
@@ -127,7 +127,7 @@ void TWIHS${INDEX?string}_Initialize(void);
     function when it is called.
 
    Precondition:
-    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+    ${TWIHS_INSTANCE_NAME}_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     callback - A pointer to a function with a calling signature defined 
@@ -141,7 +141,7 @@ void TWIHS${INDEX?string}_Initialize(void);
 
    Example:
     <code>
-    TWIHS${INDEX?string}_CallbackRegister(MyTWIHSCallback, &myData);
+    ${TWIHS_INSTANCE_NAME}_CallbackRegister(MyTWIHSCallback, &myData);
     </code>
 
    Remarks:
@@ -150,17 +150,17 @@ void TWIHS${INDEX?string}_Initialize(void);
     See the TWIHS_CALLBACK type definition for additional information.
 */
 
-void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle);
+void ${TWIHS_INSTANCE_NAME}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle);
 
 // *****************************************************************************
 /* Function:
-    void TWIHS${INDEX?string}_TransferSetup(TWIHS_TRANSFER_SETUP * setup, uint32_t srcClkFreq)
+    void ${TWIHS_INSTANCE_NAME}_TransferSetup(TWIHS_TRANSFER_SETUP * setup, uint32_t srcClkFreq)
 
    Summary:
     Dynamic setup of TWIHS Peripheral.
 
    Precondition:
-    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+    ${TWIHS_INSTANCE_NAME}_Initialize must have been called for the associated TWIHS instance.
 	The transfer status should not be busy.
 	
    Parameters:
@@ -183,11 +183,11 @@ void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t co
     If configured to zero PLib takes the peripheral clock frequency from MHC.
 */
 
-bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP *setup, uint32_t srcClkFreq );
+bool ${TWIHS_INSTANCE_NAME}_TransferSetup( TWIHS_TRANSFER_SETUP *setup, uint32_t srcClkFreq );
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_IsBusy(void)
+    bool ${TWIHS_INSTANCE_NAME}_IsBusy(void)
 	
    Summary:
     Returns the Peripheral busy status.
@@ -210,10 +210,10 @@ bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP *setup, uint32_t s
         uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
 	  
         // wait for the current transfer to complete
-	    while(TWIHS${INDEX?string}_IsBusy( ));
+	    while(${TWIHS_INSTANCE_NAME}_IsBusy( ));
 	    
         // perform the next transfer
-	    if(!TWIHS${INDEX?string}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!${TWIHS_INSTANCE_NAME}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -224,11 +224,11 @@ bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP *setup, uint32_t s
     None.
 */
 
-bool TWIHS${INDEX?string}_IsBusy(void);
+bool ${TWIHS_INSTANCE_NAME}_IsBusy(void);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length)
+    bool ${TWIHS_INSTANCE_NAME}_Read(uint16_t address, uint8_t *pdata, size_t length)
 	
    Summary:
     Reads data from the slave.
@@ -239,7 +239,7 @@ bool TWIHS${INDEX?string}_IsBusy(void);
 	completion of the read.
 
    Precondition:
-    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+    ${TWIHS_INSTANCE_NAME}_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     address - 7-bit / 10-bit slave address.
@@ -256,7 +256,7 @@ bool TWIHS${INDEX?string}_IsBusy(void);
     <code>
 	    uint8_t myData [NUM_BYTES];
 	  
-	    if(!TWIHS${INDEX?string}_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!${TWIHS_INSTANCE_NAME}_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -266,11 +266,11 @@ bool TWIHS${INDEX?string}_IsBusy(void);
     None.
 */
 
-bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length);
+bool ${TWIHS_INSTANCE_NAME}_Read(uint16_t address, uint8_t *pdata, size_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length)
+    bool ${TWIHS_INSTANCE_NAME}_Write(uint16_t address, uint8_t *pdata, size_t length)
 	
    Summary:
     Writes data onto the slave.
@@ -281,7 +281,7 @@ bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length);
 	condition after completion of the write.
 
    Precondition:
-    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+    ${TWIHS_INSTANCE_NAME}_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     address - 7-bit / 10-bit slave address.
@@ -297,7 +297,7 @@ bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length);
     <code>
 	    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
 	  
-	    if(!TWIHS${INDEX?string}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!${TWIHS_INSTANCE_NAME}_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -307,11 +307,11 @@ bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length);
     None.
 */
 
-bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length);
+bool ${TWIHS_INSTANCE_NAME}_Write(uint16_t address, uint8_t *pdata, size_t length);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
+    bool ${TWIHS_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
 	
    Summary:
     Write and Read data from Slave.
@@ -324,7 +324,7 @@ bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length)
 	condition after reading the data.
 
    Precondition:
-    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+    ${TWIHS_INSTANCE_NAME}_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     address - 7-bit / 10-bit slave address.
@@ -343,7 +343,7 @@ bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length)
 	    uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
 		uint8_t myRxData [NUM_BYTES] = {0};
 	  
-	    if(!TWIHS${INDEX?string}_WriteRead( SLAVE_ADDR, &myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
+	    if(!${TWIHS_INSTANCE_NAME}_WriteRead( SLAVE_ADDR, &myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -352,11 +352,11 @@ bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length)
    Remarks:
 */
 
-bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength);
+bool ${TWIHS_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength);
 
 // *****************************************************************************
 /* Function:
-    TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void)
+    TWIHS_ERROR ${TWIHS_INSTANCE_NAME}_ErrorGet(void)
 	
    Summary:
     Returns the error during transfer.
@@ -365,7 +365,7 @@ bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wle
     This function returns the error during transfer.
 
    Precondition:
-    TWIHS${INDEX?string}_Initialize must have been called for the associated TWIHS instance.
+    ${TWIHS_INSTANCE_NAME}_Initialize must have been called for the associated TWIHS instance.
 
    Parameters:
     None.
@@ -377,7 +377,7 @@ bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wle
 	
    Example:
     <code>
-    if(TWIHS_ERROR_NONE == TWIHS${INDEX?string}_ErrorGet())
+    if(TWIHS_ERROR_NONE == ${TWIHS_INSTANCE_NAME}_ErrorGet())
     {
         //TWIHS transfer is completed, go to next state.
     }
@@ -387,18 +387,18 @@ bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wle
     None.
 */
 
-TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void);
+TWIHS_ERROR ${TWIHS_INSTANCE_NAME}_ErrorGet(void);
 
 // *****************************************************************************
 /* Function:
-    void TWIHS${INDEX?string}_InterruptHandler(void)
+    void ${TWIHS_INSTANCE_NAME}_InterruptHandler(void)
 
    Summary:
-    TWIHS${INDEX?string} Peripheral Interrupt Handler.
+    ${TWIHS_INSTANCE_NAME} Peripheral Interrupt Handler.
 
    Description:
-    This function is TWIHS${INDEX?string} Peripheral Interrupt Handler and will
-    called on every TWIHS${INDEX?string} interrupt.
+    This function is ${TWIHS_INSTANCE_NAME} Peripheral Interrupt Handler and will
+    called on every ${TWIHS_INSTANCE_NAME} interrupt.
 
    Precondition:
     None.
@@ -415,7 +415,7 @@ TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void);
 	enabled user need to call it from the main while loop of the application.
 */
 
-void TWIHS${INDEX?string}_InterruptHandler(void);
+void ${TWIHS_INSTANCE_NAME}_InterruptHandler(void);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -425,7 +425,7 @@ void TWIHS${INDEX?string}_InterruptHandler(void);
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_TWIHS${INDEX?string}_H
+#endif //PLIB_${TWIHS_INSTANCE_NAME}_H
 
 /*******************************************************************************
  End of File

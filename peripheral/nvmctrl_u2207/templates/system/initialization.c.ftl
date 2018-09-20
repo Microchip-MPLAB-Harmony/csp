@@ -1,1 +1,1 @@
-    NVMCTRL${NVMCTRL_INDEX}_Initialize( );
+    ${NVMCTRL_INSTANCE_NAME}_Initialize( );

@@ -1,11 +1,10 @@
-/*******************************************************************************
-  External Interrupt Controller (EIC) PLIB
+/******************************************************************************* External Interrupt Controller (EIC) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_eic${EIC_INDEX}.h
+    plib_${EIC_INSTANCE_NAME?lower_case}.h
 
   Summary
     EIC PLIB Header File.
@@ -44,8 +43,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // DOM-IGNORE-END
 
 /* Guards against multiple inclusion */
-#ifndef PLIB_EIC${EIC_INDEX}_H
-#define PLIB_EIC${EIC_INDEX}_H
+#ifndef PLIB_${EIC_INSTANCE_NAME}_H
+#define PLIB_${EIC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -159,8 +158,8 @@ typedef enum
     void (*EIC_CALLBACK)(uintptr_t context )
 
   Precondition:
-    EIC${EIC_INDEX}_Initialize must have been called for the given EIC
-    peripheral instance and EIC${EIC_INDEX}_CallbackRegister must have been
+    ${EIC_INSTANCE_NAME}_Initialize must have been called for the given EIC
+    peripheral instance and ${EIC_INSTANCE_NAME}_CallbackRegister must have been
     called to set the function to be called.
 
   Parameters:
@@ -178,7 +177,7 @@ typedef enum
         // This means an interrupt condition has been sensed on EIC Pin 0.
     }
 
-    EIC${EIC_INDEX}_CallbackRegister(EIC_PIN_0, EIC_Pin0Callback, 0);
+    ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN_0, EIC_Pin0Callback, 0);
     </code>
 
   Remarks:
@@ -207,8 +206,8 @@ typedef void (*EIC_CALLBACK) (uintptr_t context);
     void (*EIC_NMI_CALLBACK)(uintptr_t context )
 
   Precondition:
-    EIC${EIC_INDEX}_Initialize must have been called for the given EIC
-    peripheral instance and EIC${EIC_INDEX}_NMICallbackRegister must have been
+    ${EIC_INSTANCE_NAME}_Initialize must have been called for the given EIC
+    peripheral instance and ${EIC_INSTANCE_NAME}_NMICallbackRegister must have been
     called to set the function to be called.
 
   Parameters:
@@ -226,7 +225,7 @@ typedef void (*EIC_CALLBACK) (uintptr_t context);
         // This means an interrupt condition has been sensed on the NMI Pin.
     }
 
-    EIC${EIC_INDEX}_NMICallbackRegister(EIC_NMICallback, 0);
+    ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMICallback, 0);
     </code>
 
   Remarks:
@@ -248,7 +247,7 @@ typedef void (*EIC_NMI_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
 /* Function:
-    void EIC${EIC_INDEX}_Initialize (void);
+    void ${EIC_INSTANCE_NAME}_Initialize (void);
 
   Summary:
     Initializes given instance of EIC peripheral.
@@ -268,7 +267,7 @@ typedef void (*EIC_NMI_CALLBACK) (uintptr_t context);
 
   Example:
     <code>
-    EIC${EIC_INDEX}_Initialize();
+    ${EIC_INSTANCE_NAME}_Initialize();
     </code>
 
   Remarks:
@@ -276,11 +275,11 @@ typedef void (*EIC_NMI_CALLBACK) (uintptr_t context);
     before any other EIC function is called.
 */
 
-void EIC${EIC_INDEX}_Initialize (void);
+void ${EIC_INSTANCE_NAME}_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-    void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin)
+    void ${EIC_INSTANCE_NAME}_InterruptEnable (EIC_PIN pin)
 
   Summary:
     Enables interrupts on a pin.
@@ -291,7 +290,7 @@ void EIC${EIC_INDEX}_Initialize (void);
     configuration set in MHC.
 
    Precondition:
-    EIC${EIC_INDEX}_Initialize() function must have been called for the
+    ${EIC_INSTANCE_NAME}_Initialize() function must have been called for the
     associated instance.
 
    Parameters:
@@ -302,19 +301,19 @@ void EIC${EIC_INDEX}_Initialize (void);
 
    Example:
     <code>
-    EIC${EIC_INDEX}_Initialize();
-    EIC${EIC_INDEX}_InterruptEnable(EIC_PIN_3);
+    ${EIC_INSTANCE_NAME}_Initialize();
+    ${EIC_INSTANCE_NAME}_InterruptEnable(EIC_PIN_3);
     </code>
 
   Remarks:
     None.
 */
 <#if EIC_INT != "0">
-void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin);
+void ${EIC_INSTANCE_NAME}_InterruptEnable (EIC_PIN pin);
 
 // *****************************************************************************
 /* Function:
-    void EIC${EIC_INDEX}_InterruptDisable (EIC_PIN pin)
+    void ${EIC_INSTANCE_NAME}_InterruptDisable (EIC_PIN pin)
 
   Summary:
     Disables interrupts on a pin.
@@ -323,7 +322,7 @@ void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin);
     This function disables interrupts on an external interrupt pin.
 
    Precondition:
-    EIC${EIC_INDEX}_Initialize() function must have been called for the
+    ${EIC_INSTANCE_NAME}_Initialize() function must have been called for the
     associated instance.
 
    Parameters:
@@ -334,19 +333,19 @@ void EIC${EIC_INDEX}_InterruptEnable (EIC_PIN pin);
 
    Example:
     <code>
-    EIC${EIC_INDEX}_Initialize();
-    EIC${EIC_INDEX}_InterruptDisable(EIC_PIN_3);
+    ${EIC_INSTANCE_NAME}_Initialize();
+    ${EIC_INSTANCE_NAME}_InterruptDisable(EIC_PIN_3);
     </code>
 
   Remarks:
     None.
 */
 
-void EIC${EIC_INDEX}_InterruptDisable (EIC_PIN pin);
+void ${EIC_INSTANCE_NAME}_InterruptDisable (EIC_PIN pin);
 
 // *****************************************************************************
 /* Function:
-    void EIC${EIC_INDEX}_CallbackRegister (EIC_PIN pin, EIC_CALLBACK callback
+    void ${EIC_INSTANCE_NAME}_CallbackRegister (EIC_PIN pin, EIC_CALLBACK callback
                                             uintptr_t context);
 
   Summary:
@@ -363,7 +362,7 @@ void EIC${EIC_INDEX}_InterruptDisable (EIC_PIN pin);
     condition when the callback function exits.
 
   Precondition:
-    EIC${EIC_INDEX}_Initialize() must have been called first for the associated
+    ${EIC_INSTANCE_NAME}_Initialize() must have been called first for the associated
     instance.
 
   Parameters:
@@ -388,14 +387,14 @@ void EIC${EIC_INDEX}_InterruptDisable (EIC_PIN pin);
     Context value can be set to NULL, if not required.
 */
 
-void EIC${EIC_INDEX}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context);
+void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context);
 
 </#if>
 
 <#if NMI_CTRL == true>
 // *****************************************************************************
 /* Function:
-    void EIC${EIC_INDEX}_NMICallbackRegister (EIC_NMI_CALLBACK callback, uintptr_t context);
+    void ${EIC_INSTANCE_NAME}_NMICallbackRegister (EIC_NMI_CALLBACK callback, uintptr_t context);
 
   Summary:
     Registers the function to be called when an interrupt condition has been
@@ -406,7 +405,7 @@ void EIC${EIC_INDEX}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintpt
     condition has been sensed on the NMI pin.
 
   Precondition:
-    EIC${EIC_INDEX}_Initialize() must have been called first for the associated
+    ${EIC_INSTANCE_NAME}_Initialize() must have been called first for the associated
     instance.
 
   Parameters:
@@ -428,7 +427,7 @@ void EIC${EIC_INDEX}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintpt
     None.
 */
 
-void EIC${EIC_INDEX}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context);
+void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context);
 
 </#if>
-#endif /* PLIB_EIC${EIC_INDEX}_H */
+#endif /* PLIB_${EIC_INSTANCE_NAME}_H */

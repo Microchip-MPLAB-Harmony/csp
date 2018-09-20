@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_ssc${SSC_INDEX?string}.c
+    plib_${SSC_INSTANCE_NAME?lower_case}.c
 
   Summary:
-    SSC${SSC_INDEX?string} Source File
+    ${SSC_INSTANCE_NAME} Source File
 
   Description:
     This file has implementation of all the interfaces provided for particular
@@ -39,26 +39,26 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#include "plib_ssc${SSC_INDEX?string}.h"
+#include "plib_${SSC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: SSC${SSC_INDEX?string} Implementation
+// Section: ${SSC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
-// Since there is only one SSC module, the registers are accessed using SSC_REGS
+// Since there is only one SSC module, the registers are accessed using ${SSC_INSTANCE_NAME}_REGS
 // instead of SSCn->REGS, where n is the instance number
 
-void SSC${SSC_INDEX?string}_Initialize ( void )
+void ${SSC_INSTANCE_NAME}_Initialize ( void )
 {
     /* Disable and Reset the SSC*/
-    SSC_REGS->SSC_CR = SSC_CR_TXDIS_Msk | SSC_CR_RXDIS_Msk;
+    ${SSC_INSTANCE_NAME}_REGS->SSC_CR = SSC_CR_TXDIS_Msk | SSC_CR_RXDIS_Msk;
 
-    SSC_REGS->SSC_CR = SSC_CR_SWRST_Msk;
+    ${SSC_INSTANCE_NAME}_REGS->SSC_CR = SSC_CR_SWRST_Msk;
              
     /* Receiver Configurations */
-    SSC_REGS->SSC_RCMR =  SSC_RCMR_CKS(${SSC_RCMR_CKS}) |
+    ${SSC_INSTANCE_NAME}_REGS->SSC_RCMR =  SSC_RCMR_CKS(${SSC_RCMR_CKS}) |
                            SSC_RCMR_CKO(${SSC_RCMR_CKO}) |
                            SSC_RCMR_CKI(${SSC_RCMR_CKI}) |
                            SSC_RCMR_CKG(${SSC_RCMR_CKG}) |
@@ -67,7 +67,7 @@ void SSC${SSC_INDEX?string}_Initialize ( void )
                            SSC_RCMR_STTDLY(${SSC_RCMR_STTDLY}) |
                            SSC_RCMR_PERIOD(${SSC_RCMR_PERIOD}) ;
 
-    SSC_REGS->SSC_RFMR =  SSC_RFMR_DATLEN(${SSC_RFMR_DATLEN}) |
+    ${SSC_INSTANCE_NAME}_REGS->SSC_RFMR =  SSC_RFMR_DATLEN(${SSC_RFMR_DATLEN}) |
                            SSC_RFMR_LOOP(${SSC_RFMR_LOOP}) |
                            SSC_RFMR_MSBF(${SSC_RFMR_MSBF}) |
                            SSC_RFMR_DATNB(${SSC_RFMR_DATNB}) |
@@ -78,7 +78,7 @@ void SSC${SSC_INDEX?string}_Initialize ( void )
     
     /* Transmitter Configurations */
 
-    SSC_REGS->SSC_TCMR =  SSC_TCMR_CKS(${SSC_TCMR_CKS}) |
+    ${SSC_INSTANCE_NAME}_REGS->SSC_TCMR =  SSC_TCMR_CKS(${SSC_TCMR_CKS}) |
                            SSC_TCMR_CKO(${SSC_TCMR_CKO}) |
                            SSC_TCMR_CKI(${SSC_TCMR_CKI}) |
                            SSC_TCMR_CKG(${SSC_TCMR_CKG}) |
@@ -86,7 +86,7 @@ void SSC${SSC_INDEX?string}_Initialize ( void )
                            SSC_TCMR_STTDLY(${SSC_TCMR_STTDLY}) |
                            SSC_TCMR_PERIOD(${SSC_TCMR_PERIOD}) ;
 
-    SSC_REGS->SSC_TFMR = SSC_TFMR_DATLEN(${SSC_TFMR_DATLEN}) |
+    ${SSC_INSTANCE_NAME}_REGS->SSC_TFMR = SSC_TFMR_DATLEN(${SSC_TFMR_DATLEN}) |
                            SSC_TFMR_DATDEF(${SSC_TFMR_DATDEF}) |
                            SSC_TFMR_MSBF(${SSC_TFMR_MSBF}) |
                            SSC_TFMR_DATNB(${SSC_TFMR_DATNB}) |
@@ -96,12 +96,12 @@ void SSC${SSC_INDEX?string}_Initialize ( void )
                            SSC_TFMR_FSEDGE(${SSC_TFMR_FSEDGE}) |
                            SSC_TFMR_FSLEN_EXT(${SSC_TFMR_FSLEN_EXT}) ;
 
-    SSC_REGS->SSC_CMR = 0x0;       // not used when SSC is in slave mode
+    ${SSC_INSTANCE_NAME}_REGS->SSC_CMR = 0x0;       // not used when SSC is in slave mode
 
-    SSC_REGS->SSC_CR = SSC_CR_TXEN_Msk | SSC_CR_RXEN_Msk;        
+    ${SSC_INSTANCE_NAME}_REGS->SSC_CR = SSC_CR_TXEN_Msk | SSC_CR_RXEN_Msk;        
 }
 
-void SSC${SSC_INDEX?string}_BaudSet(const uint32_t baud)
+void ${SSC_INSTANCE_NAME}_BaudSet(const uint32_t baud)
 {
     // not used when SSC is in slave mode
 }

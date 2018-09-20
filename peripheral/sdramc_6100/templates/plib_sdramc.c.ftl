@@ -3,7 +3,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_sdramc${INDEX}.c
+    plib_${SDRAMC_INSTANCE_NAME?lower_case}.c
 
   Summary:
     SDRAMC PLIB Source file
@@ -35,7 +35,7 @@ CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
-#include "plib_sdramc${INDEX}.h"
+#include "plib_${SDRAMC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
 // *****************************************************************************
@@ -55,7 +55,7 @@ void SW_DelayUs(uint32_t delay)
         __NOP();
 }
 
-void SDRAMC${INDEX?string}_Initialize( void )
+void ${SDRAMC_INSTANCE_NAME}_Initialize( void )
 {
     uint8_t i;
     uint16_t *pSdramBaseAddress = (uint16_t *)SDRAM_CS_ADDR;
@@ -65,24 +65,24 @@ void SDRAMC${INDEX?string}_Initialize( void )
 
     /* Step 1:
      * Configure SDRAM features and timing parameters */
-    SDRAMC_REGS->SDRAMC_CR = SDRAMC_CR_NC_${SDRAMC_CR__NC} | SDRAMC_CR_NR_${SDRAMC_CR__NR} | SDRAMC_CR_NB_${SDRAMC_CR__NB} | SDRAMC_CR_DBW_Msk \
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_CR = SDRAMC_CR_NC_${SDRAMC_CR__NC} | SDRAMC_CR_NR_${SDRAMC_CR__NR} | SDRAMC_CR_NB_${SDRAMC_CR__NB} | SDRAMC_CR_DBW_Msk \
                                 | SDRAMC_CR_TRAS(${SDRAMC_CR_TRAS}) |  SDRAMC_CR_TRP(${SDRAMC_CR_TRP}) |  SDRAMC_CR_TRC_TRFC(${SDRAMC_CR_TRC_TRFC}) \
                                 | SDRAMC_CR_TRCD(${SDRAMC_CR_TRCD}) | SDRAMC_CR_CAS(${SDRAMC_CR_CAS}) | SDRAMC_CR_TWR(${SDRAMC_CR_TWR}) | SDRAMC_CR_TXSR(${SDRAMC_CR_TXSR});
 
-    SDRAMC_REGS->SDRAMC_CFR1= SDRAMC_CFR1_TMRD(${SDRAMC_CFR1_TMRD}) | SDRAMC_CFR1_UNAL_Msk;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_CFR1= SDRAMC_CFR1_TMRD(${SDRAMC_CFR1_TMRD}) | SDRAMC_CFR1_UNAL_Msk;
 
     /* Step 2:
      * For mobile SDRAM, temperature-compensated self refresh (TCSR), drive strength (DS) and partial array
      * self refresh (PASR) must be set in the Low Power Register. */
     <#if SDRAMC_MDR_MD == "LPSDRAM">
-    SDRAMC_REGS->SDRAMC_LPR=SDRAMC_LPR_LPCB_${SDRAMC_LPR_LPCB} | SDRAMC_LPR_TIMEOUT_${SDRAMC_LPR_TIMEOUT} | SDRAMC_LPR_PASR(${SDRAMC_LPR_PASR}) | SDRAMC_LPR_TCSR(${SDRAMC_LPR_TCSR}) | SDRAMC_LPR_DS(${SDRAMC_LPR_DS});
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_LPR=SDRAMC_LPR_LPCB_${SDRAMC_LPR_LPCB} | SDRAMC_LPR_TIMEOUT_${SDRAMC_LPR_TIMEOUT} | SDRAMC_LPR_PASR(${SDRAMC_LPR_PASR}) | SDRAMC_LPR_TCSR(${SDRAMC_LPR_TCSR}) | SDRAMC_LPR_DS(${SDRAMC_LPR_DS});
     <#else>
-    SDRAMC_REGS->SDRAMC_LPR=0;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_LPR=0;
     </#if>
 
     /* Step 3:
      * Select the SDRAM memory device type. */
-     SDRAMC_REGS->SDRAMC_MDR = SDRAMC_MDR_MD_${SDRAMC_MDR_MD};
+     ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MDR = SDRAMC_MDR_MD_${SDRAMC_MDR_MD};
 
 
     /* Step 4:
@@ -94,8 +94,8 @@ void SDRAMC${INDEX?string}_Initialize( void )
      * Read back the Mode Register and add a memory barrier assembly instruction just after the read.
      * Write to any SDRAM address to acknowledge this command. Now the clock which drives SDRAM device is enabled */
 
-    SDRAMC_REGS->SDRAMC_MR = SDRAMC_MR_MODE_NOP;
-    SDRAMC_REGS->SDRAMC_MR;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR = SDRAMC_MR_MODE_NOP;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR;
     __DMB();
     *pSdramBaseAddress = 0x0;
 
@@ -104,8 +104,8 @@ void SDRAMC${INDEX?string}_Initialize( void )
      * Read back the Mode Register and add a memory barrier assembly instruction just after the read.
      * Write to any SDRAM address to acknowledge this command. */
 
-    SDRAMC_REGS->SDRAMC_MR = SDRAMC_MR_MODE_ALLBANKS_PRECHARGE;
-    SDRAMC_REGS->SDRAMC_MR;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR = SDRAMC_MR_MODE_ALLBANKS_PRECHARGE;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR;
     __DMB();
     *pSdramBaseAddress = 0x0;
 
@@ -113,8 +113,8 @@ void SDRAMC${INDEX?string}_Initialize( void )
      * Issue 8 Auto Refresh(CBR) cycles by writing to the Mode Register.
      * Read back the Mode Register and add a memory barrier assembly instruction just after the read.
      * Perform a write access to any SDRAM address 8 times. */
-    SDRAMC_REGS->SDRAMC_MR = SDRAMC_MR_MODE_AUTO_REFRESH;
-    SDRAMC_REGS->SDRAMC_MR;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR = SDRAMC_MR_MODE_AUTO_REFRESH;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR;
     __DMB();
     for (i = 0; i < 8; i++)
     {
@@ -123,8 +123,8 @@ void SDRAMC${INDEX?string}_Initialize( void )
 
     /* Step 8:
      * Issue Mode Register Set(MRS) to program the parameters of the SDRAM device, in particular CAS latency and burst length */
-    SDRAMC_REGS->SDRAMC_MR = SDRAMC_MR_MODE_LOAD_MODEREG;
-    SDRAMC_REGS->SDRAMC_MR;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR = SDRAMC_MR_MODE_LOAD_MODEREG;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR;
     __DMB();
     *((uint16_t *)(pSdramBaseAddress + 0x${SDRAMC_MRS_VALUE})) = 0;
 
@@ -132,16 +132,16 @@ void SDRAMC${INDEX?string}_Initialize( void )
      * Transition the SDRAM to NORMAL mode. Read back the Mode
      * Register and add a memory barrier assembly instruction just after the
      * read. Perform a write access to any SDRAM address. */
-    SDRAMC_REGS->SDRAMC_MR = SDRAMC_MR_MODE_NORMAL;
-    SDRAMC_REGS->SDRAMC_MR;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR = SDRAMC_MR_MODE_NORMAL;
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_MR;
     __DMB();
     *pSdramBaseAddress = 0x0;
 
     /* Step 10:
      * Configure the Refresh Timer Register. */
-    SDRAMC_REGS->SDRAMC_TR = ${SDRAMC_TR_COUNT};
+    ${SDRAMC_INSTANCE_NAME}_REGS->SDRAMC_TR = ${SDRAMC_TR_COUNT};
 
-} /* SDRAMC${INDEX?string}_Initialize */
+} /* ${SDRAMC_INSTANCE_NAME}_Initialize */
 /*******************************************************************************
  End of File
 */

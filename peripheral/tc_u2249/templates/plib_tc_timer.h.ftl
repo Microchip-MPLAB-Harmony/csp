@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Timer/Counter(TC${TC_INDEX}) PLIB
+  Timer/Counter(${TC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_tc${TC_INDEX}.h
+    plib_${TC_INSTANCE_NAME?lower_case}.h
 
   Summary
-    TC${TC_INDEX} PLIB Header File.
+    ${TC_INSTANCE_NAME} PLIB Header File.
 
   Description
     This file defines the interface to the TC peripheral library. This
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TC${TC_INDEX}_H      // Guards against multiple inclusion
-#define PLIB_TC${TC_INDEX}_H
+#ifndef PLIB_${TC_INSTANCE_NAME}_H      // Guards against multiple inclusion
+#define PLIB_${TC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -55,7 +55,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_tc.h"
+#include "plib_tc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C Compatibility
@@ -74,7 +74,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     interface and should be considered part it.
 */
 
-#define TC${TC_INDEX}_TimerFrequencyGet()  (uint32_t)(${TC_FREQUENCY}UL)
+#define ${TC_INSTANCE_NAME}_TimerFrequencyGet()  (uint32_t)(${TC_FREQUENCY}UL)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -87,50 +87,50 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // *****************************************************************************
 
-void TC${TC_INDEX}_TimerInitialize( void );
+void ${TC_INSTANCE_NAME}_TimerInitialize( void );
 
-void TC${TC_INDEX}_TimerStart( void );
+void ${TC_INSTANCE_NAME}_TimerStart( void );
 
-void TC${TC_INDEX}_TimerStop( void );
+void ${TC_INSTANCE_NAME}_TimerStop( void );
 
 <#if TC_CTRLA_MODE = "COUNT8">
 
-void TC${TC_INDEX}_Timer8bitPeriodSet( uint8_t period );
+void ${TC_INSTANCE_NAME}_Timer8bitPeriodSet( uint8_t period );
 
-uint8_t TC${TC_INDEX}_Timer8bitPeriodGet( void );
+uint8_t ${TC_INSTANCE_NAME}_Timer8bitPeriodGet( void );
 
-uint8_t TC${TC_INDEX}_Timer8bitCounterGet( void );
+uint8_t ${TC_INSTANCE_NAME}_Timer8bitCounterGet( void );
 
-void TC${TC_INDEX}_Timer8bitCounterSet( uint8_t count );
+void ${TC_INSTANCE_NAME}_Timer8bitCounterSet( uint8_t count );
 
 <#elseif TC_CTRLA_MODE = "COUNT16">
 
-void TC${TC_INDEX}_Timer16bitPeriodSet( uint16_t period );
+void ${TC_INSTANCE_NAME}_Timer16bitPeriodSet( uint16_t period );
 
-uint16_t TC${TC_INDEX}_Timer16bitPeriodGet( void );
+uint16_t ${TC_INSTANCE_NAME}_Timer16bitPeriodGet( void );
 
-uint16_t TC${TC_INDEX}_Timer16bitCounterGet( void );
+uint16_t ${TC_INSTANCE_NAME}_Timer16bitCounterGet( void );
 
-void TC${TC_INDEX}_Timer16bitCounterSet( uint16_t count );
+void ${TC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t count );
 
 <#elseif TC_CTRLA_MODE = "COUNT32">
 
-void TC${TC_INDEX}_Timer32bitPeriodSet( uint32_t period );
+void ${TC_INSTANCE_NAME}_Timer32bitPeriodSet( uint32_t period );
 
-uint32_t TC${TC_INDEX}_Timer32bitPeriodGet( void );
+uint32_t ${TC_INSTANCE_NAME}_Timer32bitPeriodGet( void );
 
-uint32_t TC${TC_INDEX}_Timer32bitCounterGet( void );
+uint32_t ${TC_INSTANCE_NAME}_Timer32bitCounterGet( void );
 
-void TC${TC_INDEX}_Timer32bitCounterSet( uint32_t count );
+void ${TC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t count );
 </#if>
 
-bool TC${TC_INDEX}_TimerPeriodHasExpired( void );
+bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void );
 
 <#if TC_TIMER_INTERRUPT_MODE = true>
 
-void TC${TC_INDEX}_TimerCallbackRegister( TC_CALLBACK callback, uintptr_t context );
+void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_CALLBACK callback, uintptr_t context );
 
-void TC${TC_INDEX}_TimerInterruptHandler( void );
+void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void );
 </#if>
 
 
@@ -144,4 +144,4 @@ void TC${TC_INDEX}_TimerInterruptHandler( void );
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_TC${TC_INDEX}_H */
+#endif /* PLIB_${TC_INSTANCE_NAME}_H */

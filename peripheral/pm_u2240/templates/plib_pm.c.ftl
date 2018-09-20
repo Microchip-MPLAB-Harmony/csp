@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Power Manager(PM${PM_INDEX}) PLIB
+  Power Manager(${PM_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_pm${PM_INDEX}.c
+    plib_${PM_INSTANCE_NAME?lower_case}.c
 
   Summary
-    PM${PM_INDEX} PLIB Implementation File.
+    ${PM_INSTANCE_NAME} PLIB Implementation File.
 
   Description
     This file defines the interface to the PM peripheral library. This
@@ -53,17 +53,17 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 #include "device.h"
-#include "plib_pm${PM_INDEX}.h"
+#include "plib_${PM_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: PM${PM_INDEX} Implementation
+// Section: ${PM_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
 /* Function:
-    void PM${PM_INDEX}_Initialize( void );
+    void ${PM_INSTANCE_NAME}_Initialize( void );
 
   Summary:
     Initializes given instance of PM peripheral.
@@ -73,19 +73,19 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     values configured in MHC GUI.
 
   Remarks:
-    plib_pm${PM_INDEX}.h for usage information.
+    plib_${PM_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void PM${PM_INDEX}_Initialize( void )
+void ${PM_INSTANCE_NAME}_Initialize( void )
 {
     /* Configure back biasing & VREG switching mode */
-    <@compress single_line=true>PM_REGS->PM_STDBYCFG = PM_STDBYCFG_BBIASHS(${PM_STDBYCFG_BBIASHS?then('1', '0')})
+    <@compress single_line=true>${PM_INSTANCE_NAME}_REGS->PM_STDBYCFG = PM_STDBYCFG_BBIASHS(${PM_STDBYCFG_BBIASHS?then('1', '0')})
                                                        | PM_STDBYCFG_VREGSMOD_${PM_STDBYCFG_VREGSMOD};</@compress>
 }
 
 // *****************************************************************************
 /* Function:
-    void PM${PM_INDEX}_SleepModeEnter( PM_SLEEP_MODE sleepMode );
+    void ${PM_INSTANCE_NAME}_SleepModeEnter( PM_SLEEP_MODE sleepMode );
 
   Summary:
     Puts the device into the specified sleep mode.
@@ -98,24 +98,24 @@ void PM${PM_INDEX}_Initialize( void )
     mode.
 
   Remarks:
-    plib_pm${PM_INDEX}.h for usage information.
+    plib_${PM_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void PM${PM_INDEX}_SleepModeEnter( PM_SLEEP_MODE sleepMode )
+void ${PM_INSTANCE_NAME}_SleepModeEnter( PM_SLEEP_MODE sleepMode )
 {
     switch (sleepMode)
     {
         case PM_SLEEP_MODE_IDLE:
         {
             /* APB clock is OFF */
-            PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE2;
+            ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE2;
 
             break;
         }
         case PM_SLEEP_MODE_STANDBY:
         {
             /* All clocks are OFF */
-            PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY;
+            ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY;
 
             break;
         }

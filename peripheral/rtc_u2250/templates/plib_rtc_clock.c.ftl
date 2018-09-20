@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Real Time Counter (RTC${RTC_INDEX}) PLIB
+  Real Time Counter (${RTC_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_rtc${RTC_INDEX}_clock.c
+    plib_?${RTC_INSTANCE_NAME?lower_case}_clock.c
 
   Summary:
-    RTC${RTC_INDEX} PLIB Implementation file
+    ${RTC_INSTANCE_NAME} PLIB Implementation file
 
   Description:
     This file defines the interface to the RTC peripheral library. This
@@ -49,7 +49,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_rtc${RTC_INDEX}.h"
+#include "plib_${RTC_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 #include <stdlib.h>
 
@@ -69,36 +69,36 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #define ADJUST_TM_STRUCT_MONTH(mon) (mon - 1)
 
 <#if RTC_MODE2_INTERRUPT = true >
-    <#lt>RTC_OBJECT rtc${RTC_INDEX}Obj;
+    <#lt>RTC_OBJECT ${RTC_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
-void RTC${RTC_INDEX}_Initialize(void)
+void ${RTC_INSTANCE_NAME}_Initialize(void)
 {
-    RTC_REGS->MODE2.CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
+    ${RTC_INSTANCE_NAME}_REGS->MODE2.CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
+    while((${RTC_INSTANCE_NAME}_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for synchronization after Software Reset */
     }
 
-    <@compress single_line=true>RTC_REGS->MODE2.CTRLA = RTC_MODE2_CTRLA_MODE(2) |
+    <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.CTRLA = RTC_MODE2_CTRLA_MODE(2) |
                                                             RTC_MODE2_CTRLA_PRESCALER(${RTC_MODE2_PRESCALER}) |
                                                             RTC_MODE2_CTRLA_CLOCKSYNC_Msk |
                                                             RTC_MODE2_CTRLA_ENABLE_Msk;</@compress>
 
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
+    while((${RTC_INSTANCE_NAME}_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Enabling RTC */
     }
     
     <#if RTC_MODE2_EVCTRL != "0">
-        <#lt>RTC_REGS->MODE2.EVCTRL = 0x${RTC_MODE2_EVCTRL};
+        <#lt>${RTC_INSTANCE_NAME}_REGS->MODE2.EVCTRL = 0x${RTC_MODE2_EVCTRL};
     </#if>
 }
 <#if RTC_FREQCORR = true >
 
-    <#lt>void RTC${RTC_INDEX}_FrequencyCorrect (int8_t correction)
+    <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction)
     <#lt>{
     <#lt>    uint32_t newCorrectionValue = 0;
     <#lt>
@@ -110,9 +110,9 @@ void RTC${RTC_INDEX}_Initialize(void)
     <#lt>        newCorrectionValue |= RTC_MODE2_FREQCORR_SIGN_Msk;
     <#lt>    }
 
-    <#lt>    RTC_REGS->MODE2.FREQCORR = newCorrectionValue;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.FREQCORR = newCorrectionValue;
 
-    <#lt>    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_FREQCORR_Msk) == RTC_MODE2_SYNCBUSY_FREQCORR_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_FREQCORR_Msk) == RTC_MODE2_SYNCBUSY_FREQCORR_Msk)
     <#lt>    {
     <#lt>        /* Wait for synchronization after writing value to FREQCORR */
     <#lt>    }
@@ -121,52 +121,52 @@ void RTC${RTC_INDEX}_Initialize(void)
 
 <#if RTC_MODE2_INTERRUPT = false>
 
-    <#lt>bool RTC${RTC_INDEX}_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period)
+    <#lt>bool ${RTC_INSTANCE_NAME}_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period)
     <#lt>{
     <#lt>    bool periodIntervalComplete = false;
 
-    <#lt>    if( (RTC_REGS->MODE2.INTFLAG & period) == period )
+    <#lt>    if( (${RTC_INSTANCE_NAME}_REGS->MODE2.INTFLAG & period) == period )
     <#lt>    {
     <#lt>        periodIntervalComplete = true;
 
     <#lt>        /* Clear Periodic Interval Interrupt */
-    <#lt>        RTC_REGS->MODE2.INTFLAG = period;
+    <#lt>        ${RTC_INSTANCE_NAME}_REGS->MODE2.INTFLAG = period;
     <#lt>    }
 
     <#lt>    return periodIntervalComplete;
     <#lt>}
 </#if>
 
-void RTC${RTC_INDEX}_RTCCTimeSet (struct tm * initialTime )
+void ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
 {
     /*
      * Add 1900 to the tm_year member and the adjust for the RTC reference year
      * Set YEAR(according to Reference Year), MONTH and DAY
      *set Hour Minute and Second
      */
-    RTC_REGS->MODE2.CLOCK = ((TM_STRUCT_REFERENCE_YEAR + initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
+    ${RTC_INSTANCE_NAME}_REGS->MODE2.CLOCK = ((TM_STRUCT_REFERENCE_YEAR + initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
                     ((ADJUST_MONTH(initialTime->tm_mon)) << RTC_MODE2_CLOCK_MONTH_Pos) |
                     (initialTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
                     (initialTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
                     (initialTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
                     (initialTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
+    while((${RTC_INSTANCE_NAME}_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
     {
         /* Synchronization after writing value to CLOCK Register */
     }
 }
 
-void RTC${RTC_INDEX}_RTCCTimeGet ( struct tm * currentTime )
+void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 {
     uint32_t dataClockCalendar = 0;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
+    while((${RTC_INSTANCE_NAME}_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
     {
         /* Synchronization before reading value from CLOCK Register */
     }
 
-    dataClockCalendar = RTC_REGS->MODE2.CLOCK;
+    dataClockCalendar = ${RTC_INSTANCE_NAME}_REGS->MODE2.CLOCK;
 
     currentTime->tm_hour =  (dataClockCalendar & RTC_MODE2_CLOCK_HOUR_Msk) >> RTC_MODE2_CLOCK_HOUR_Pos;
     currentTime->tm_min  =  (dataClockCalendar & RTC_MODE2_CLOCK_MINUTE_Msk) >> RTC_MODE2_CLOCK_MINUTE_Pos;
@@ -178,52 +178,52 @@ void RTC${RTC_INDEX}_RTCCTimeGet ( struct tm * currentTime )
 }
 <#if RTC_MODE2_INTERRUPT = true>
 
-    <#lt>void RTC${RTC_INDEX}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask)
+    <#lt>void ${RTC_INSTANCE_NAME}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask)
     <#lt>{
     <#lt>    /*
     <#lt>     * Add 1900 to the tm_year member and the adjust for the RTC reference year
     <#lt>     * Set YEAR(according to Reference Year), MONTH and DAY
     <#lt>     * Set Hour, Minute and second
     <#lt>     */
-    <#lt>    RTC_REGS->MODE2.Mode2Alarm = ((TM_STRUCT_REFERENCE_YEAR + alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.Mode2Alarm = ((TM_STRUCT_REFERENCE_YEAR + alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
     <#lt>                    (ADJUST_MONTH(alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
     <#lt>                    (alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
     <#lt>                    (alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
     <#lt>                     (alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
     <#lt>                     (alarmTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
 
-    <#lt>    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_ALARM0_Msk) == RTC_MODE2_SYNCBUSY_ALARM0_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_ALARM0_Msk) == RTC_MODE2_SYNCBUSY_ALARM0_Msk)
     <#lt>    {
     <#lt>        /* Synchronization after writing to ALARM register */
     <#lt>    }
 
-    <#lt>    RTC_REGS->MODE2.Mode2AlarmMask = mask;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.Mode2AlarmMask = mask;
 
-    <#lt>    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_MASK0_Msk) == RTC_MODE2_SYNCBUSY_MASK0_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_MASK0_Msk) == RTC_MODE2_SYNCBUSY_MASK0_Msk)
     <#lt>    {
     <#lt>        /* Synchronization after writing value to MASK Register */
     <#lt>    }
         
-    <#lt>    RTC_REGS->MODE2.INTENSET = RTC_MODE2_INTENSET_ALARM0_Msk;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.INTENSET = RTC_MODE2_INTENSET_ALARM0_Msk;
     <#lt>}
 
-    <#lt>void RTC${RTC_INDEX}_RTCCCallbackRegister ( RTC_CALLBACK callback, uintptr_t context)
+    <#lt>void ${RTC_INSTANCE_NAME}_RTCCCallbackRegister ( RTC_CALLBACK callback, uintptr_t context)
     <#lt>{
-    <#lt>    rtc${RTC_INDEX}Obj.alarmCallback = callback;
-    <#lt>    rtc${RTC_INDEX}Obj.context       = context;
+    <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback = callback;
+    <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.context       = context;
     <#lt>}
 
 
-    <#lt>void RTC${RTC_INDEX}_InterruptHandler(void)
+    <#lt>void ${RTC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    rtc0Obj.intCause = RTC_REGS->MODE2.INTFLAG;
+    <#lt>    rtc0Obj.intCause = ${RTC_INSTANCE_NAME}_REGS->MODE2.INTFLAG;
 
-    <#lt>    if(rtc${RTC_INDEX}Obj.alarmCallback != NULL)
+    <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback != NULL)
     <#lt>    {
-    <#lt>        rtc${RTC_INDEX}Obj.alarmCallback(rtc0Obj.intCause, rtc${RTC_INDEX}Obj.context);
+    <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(rtc0Obj.intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context);
     <#lt>    }
 
     <#lt>    /* Clear All Interrupts */
-    <#lt>    RTC_REGS->MODE2.INTFLAG = RTC_MODE2_INTFLAG_Msk;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.INTFLAG = RTC_MODE2_INTFLAG_Msk;
     <#lt>}
 </#if>

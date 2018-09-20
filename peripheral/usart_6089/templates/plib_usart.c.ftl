@@ -1,14 +1,14 @@
 /*******************************************************************************
-  USART${INDEX?string} PLIB
+  ${USART_INSTANCE_NAME} PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_usart${INDEX?string}.c
+    plib_${USART_INSTANCE_NAME?lower_case}.c
 
   Summary:
-    USART${INDEX?string} PLIB Implementation File
+    ${USART_INSTANCE_NAME} PLIB Implementation File
 
   Description:
     None
@@ -39,41 +39,41 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 #include "device.h"
-#include "plib_usart${INDEX?string}.h"
+#include "plib_${USART_INSTANCE_NAME?lower_case}.h"
 
 <#--Implementation-->
 // *****************************************************************************
 // *****************************************************************************
-// Section: USART${INDEX?string} Implementation
+// Section: ${USART_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 <#if USART_INTERRUPT_MODE == true>
 
-USART_OBJECT usart${INDEX?string}Obj;
+USART_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
 
-void static USART${INDEX?string}_ISR_RX_Handler( void )
+void static ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
-    if(usart${INDEX?string}Obj.rxBusyStatus == true)
+    if(${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
-        while((US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk)) && (usart${INDEX?string}Obj.rxSize > usart${INDEX?string}Obj.rxProcessedSize) )
+        while((US_CSR_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_RXRDY_Msk)) && (${USART_INSTANCE_NAME?lower_case}Obj.rxSize > ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize) )
         {
-            usart${INDEX?string}Obj.rxBuffer[usart${INDEX?string}Obj.rxProcessedSize++] = (USART${INDEX?string}_REGS->US_RHR& US_RHR_RXCHR_Msk);
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (${USART_INSTANCE_NAME}_REGS->US_RHR& US_RHR_RXCHR_Msk);
         }
 
         /* Check if the buffer is done */
-        if(usart${INDEX?string}Obj.rxProcessedSize >= usart${INDEX?string}Obj.rxSize)
+        if(${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${USART_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
 
-            usart${INDEX?string}Obj.rxBusyStatus = false;
-            usart${INDEX?string}Obj.rxSize = 0;
-            usart${INDEX?string}Obj.rxProcessedSize = 0;
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
-            USART${INDEX?string}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
+            ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
 
-            if(usart${INDEX?string}Obj.rxCallback != NULL)
+            if(${USART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL)
             {
-                usart${INDEX?string}Obj.rxCallback(usart${INDEX?string}Obj.rxContext);
+                ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(${USART_INSTANCE_NAME?lower_case}Obj.rxContext);
             }
         }
     }
@@ -86,26 +86,26 @@ void static USART${INDEX?string}_ISR_RX_Handler( void )
     return;
 }
 
-void static USART${INDEX?string}_ISR_TX_Handler( void )
+void static ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
-    if(usart${INDEX?string}Obj.txBusyStatus == true)
+    if(${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
-        while((US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) && (usart${INDEX?string}Obj.txSize > usart${INDEX?string}Obj.txProcessedSize) )
+        while((US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) && (${USART_INSTANCE_NAME?lower_case}Obj.txSize > ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
         {
-            USART${INDEX?string}_REGS->US_THR|= usart${INDEX?string}Obj.txBuffer[usart${INDEX?string}Obj.txProcessedSize++];
+            ${USART_INSTANCE_NAME}_REGS->US_THR|= ${USART_INSTANCE_NAME?lower_case}Obj.txBuffer[${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
         }
 
         /* Check if the buffer is done */
-        if(usart${INDEX?string}Obj.txProcessedSize >= usart${INDEX?string}Obj.txSize)
+        if(${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${USART_INSTANCE_NAME?lower_case}Obj.txSize)
         {
-            usart${INDEX?string}Obj.txBusyStatus = false;
-            usart${INDEX?string}Obj.txSize = 0;
-            usart${INDEX?string}Obj.txProcessedSize = 0;
-            USART${INDEX?string}_REGS->US_IDR = US_IDR_TXEMPTY_Msk;
+            ${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
+            ${USART_INSTANCE_NAME?lower_case}Obj.txSize = 0;
+            ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = 0;
+            ${USART_INSTANCE_NAME}_REGS->US_IDR = US_IDR_TXEMPTY_Msk;
 
-            if(usart${INDEX?string}Obj.txCallback != NULL)
+            if(${USART_INSTANCE_NAME?lower_case}Obj.txCallback != NULL)
             {
-                usart${INDEX?string}Obj.txCallback(usart${INDEX?string}Obj.txContext);
+                ${USART_INSTANCE_NAME?lower_case}Obj.txCallback(${USART_INSTANCE_NAME?lower_case}Obj.txContext);
             }
         }
     }
@@ -118,10 +118,10 @@ void static USART${INDEX?string}_ISR_TX_Handler( void )
     return;
 }
 
-void USART${INDEX?string}_InterruptHandler( void )
+void ${USART_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
-    uint32_t errorStatus = (USART${INDEX?string}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
+    uint32_t errorStatus = (${USART_INSTANCE_NAME}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
 
     if(errorStatus != 0)
     {
@@ -129,29 +129,29 @@ void USART${INDEX?string}_InterruptHandler( void )
 
         /* USART errors are normally associated with the receiver, hence calling
          * receiver context */
-        if( usart${INDEX?string}Obj.rxCallback != NULL )
+        if( ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
         {
-            usart${INDEX?string}Obj.rxCallback(usart${INDEX?string}Obj.rxContext);
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(${USART_INSTANCE_NAME?lower_case}Obj.rxContext);
         }
 
-        usart${INDEX?string}Obj.rxBusyStatus = false;
-        usart${INDEX?string}Obj.rxSize = 0;
-        usart${INDEX?string}Obj.rxProcessedSize = 0;
+        ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+        ${USART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
+        ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
 
         /* Disable Read, Overrun, Parity and Framing error interrupts */
-        USART${INDEX?string}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
+        ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
     }
 
     /* Receiver status */
-    if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk))
+    if(US_CSR_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_RXRDY_Msk))
     {
-        USART${INDEX?string}_ISR_RX_Handler();
+        ${USART_INSTANCE_NAME}_ISR_RX_Handler();
     }
 
     /* Transmitter status */
-    if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+    if(US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
     {
-        USART${INDEX?string}_ISR_TX_Handler();
+        ${USART_INSTANCE_NAME}_ISR_TX_Handler();
     }
 
     return;
@@ -159,16 +159,16 @@ void USART${INDEX?string}_InterruptHandler( void )
 
 </#if>
 
-void static USART${INDEX?string}_ErrorClear( void )
+void static ${USART_INSTANCE_NAME}_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
 
-    USART${INDEX?string}_REGS->US_CR|= US_CR_RSTSTA_Msk;
+    ${USART_INSTANCE_NAME}_REGS->US_CR|= US_CR_RSTSTA_Msk;
 
     /* Flush existing error bytes from the RX FIFO */
-    while( US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_RXRDY_Msk) )
+    while( US_CSR_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_RXRDY_Msk) )
     {
-        dummyData = (USART${INDEX?string}_REGS->US_RHR& US_RHR_RXCHR_Msk);
+        dummyData = (${USART_INSTANCE_NAME}_REGS->US_RHR& US_RHR_RXCHR_Msk);
     }
 
     /* Ignore the warning */
@@ -177,41 +177,41 @@ void static USART${INDEX?string}_ErrorClear( void )
     return;
 }
 
-void USART${INDEX?string}_Initialize( void )
+void ${USART_INSTANCE_NAME}_Initialize( void )
 {
-    /* Reset USART${INDEX?string} */
-    USART${INDEX?string}_REGS->US_CR = (US_CR_RSTRX_Msk | US_CR_RSTTX_Msk | US_CR_RSTSTA_Msk);
+    /* Reset ${USART_INSTANCE_NAME} */
+    ${USART_INSTANCE_NAME}_REGS->US_CR = (US_CR_RSTRX_Msk | US_CR_RSTTX_Msk | US_CR_RSTSTA_Msk);
 
-    /* Enable USART${INDEX?string} */
-    USART${INDEX?string}_REGS->US_CR = (US_CR_TXEN_Msk | US_CR_RXEN_Msk);
+    /* Enable ${USART_INSTANCE_NAME} */
+    ${USART_INSTANCE_NAME}_REGS->US_CR = (US_CR_TXEN_Msk | US_CR_RXEN_Msk);
 
-    /* Configure USART${INDEX?string} mode */
-    USART${INDEX?string}_REGS->US_MR = ((US_MR_USCLKS_${USART_CLK_SRC}) | (${USART_MR_MODE9?then(1,0)} << US_MR_MODE9_Pos) | US_MR_CHRL_${USART_MR_CHRL} | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
+    /* Configure ${USART_INSTANCE_NAME} mode */
+    ${USART_INSTANCE_NAME}_REGS->US_MR = ((US_MR_USCLKS_${USART_CLK_SRC}) | (${USART_MR_MODE9?then(1,0)} << US_MR_MODE9_Pos) | US_MR_CHRL_${USART_MR_CHRL} | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
 
-    /* Configure USART${INDEX?string} Baud Rate */
-    USART${INDEX?string}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
+    /* Configure ${USART_INSTANCE_NAME} Baud Rate */
+    ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
 <#if USART_INTERRUPT_MODE == true>
 
     /* Initialize instance object */
-    usart${INDEX?string}Obj.rxBuffer = NULL;
-    usart${INDEX?string}Obj.rxSize = 0;
-    usart${INDEX?string}Obj.rxProcessedSize = 0;
-    usart${INDEX?string}Obj.rxBusyStatus = false;
-    usart${INDEX?string}Obj.rxCallback = NULL;
-    usart${INDEX?string}Obj.txBuffer = NULL;
-    usart${INDEX?string}Obj.txSize = 0;
-    usart${INDEX?string}Obj.txProcessedSize = 0;
-    usart${INDEX?string}Obj.txBusyStatus = false;
-    usart${INDEX?string}Obj.txCallback = NULL;
+    ${USART_INSTANCE_NAME?lower_case}Obj.rxBuffer = NULL;
+    ${USART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
+    ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
+    ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+    ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback = NULL;
+    ${USART_INSTANCE_NAME?lower_case}Obj.txBuffer = NULL;
+    ${USART_INSTANCE_NAME?lower_case}Obj.txSize = 0;
+    ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = 0;
+    ${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
+    ${USART_INSTANCE_NAME?lower_case}Obj.txCallback = NULL;
 </#if>
 
     return;
 }
 
-USART_ERROR USART${INDEX?string}_ErrorGet( void )
+USART_ERROR ${USART_INSTANCE_NAME}_ErrorGet( void )
 {
     USART_ERROR errors = USART_ERROR_NONE;
-    uint32_t status = USART${INDEX?string}_REGS->US_CSR;
+    uint32_t status = ${USART_INSTANCE_NAME}_REGS->US_CSR;
 
     /* Collect all errors */
     if(status & US_CSR_OVRE_Msk)
@@ -229,14 +229,14 @@ USART_ERROR USART${INDEX?string}_ErrorGet( void )
 
     if(errors != USART_ERROR_NONE)
     {
-        USART${INDEX?string}_ErrorClear();
+        ${USART_INSTANCE_NAME}_ErrorClear();
     }
 
     /* All errors are cleared, but send the previous error state */
     return errors;
 }
 
-bool USART${INDEX?string}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
+bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 {
     bool status = true;
     uint32_t clk = srcClkFreq;
@@ -249,7 +249,7 @@ bool USART${INDEX?string}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcCl
     uint32_t stopBitsVal = 0;
 
 <#if USART_INTERRUPT_MODE == true>
-    if((usart${INDEX?string}Obj.rxBusyStatus == true) || (usart${INDEX?string}Obj.txBusyStatus == true))
+    if((${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) || (${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true))
     {
         /* Transaction is in progress, so return without updating settings */
         return false;
@@ -258,7 +258,7 @@ bool USART${INDEX?string}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcCl
 </#if>
     if(clk == 0)
     {
-        clk = USART${INDEX?string}_FrequencyGet();
+        clk = ${USART_INSTANCE_NAME}_FrequencyGet();
     }
 
     /* Calculate BRG value */
@@ -350,17 +350,17 @@ bool USART${INDEX?string}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcCl
 
     if(status != false)
     {
-        /* Configure USART${INDEX?string} mode */
-        USART${INDEX?string}_REGS->US_MR = (mode9Val | charLengthVal | parityVal | stopBitsVal | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | overSampVal);
+        /* Configure ${USART_INSTANCE_NAME} mode */
+        ${USART_INSTANCE_NAME}_REGS->US_MR = (mode9Val | charLengthVal | parityVal | stopBitsVal | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | overSampVal);
 
-        /* Configure USART${INDEX?string} Baud Rate */
-        USART${INDEX?string}_REGS->US_BRGR = US_BRGR_CD(brgVal);
+        /* Configure ${USART_INSTANCE_NAME} Baud Rate */
+        ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(brgVal);
     }
 
     return status;
 }
 
-bool USART${INDEX?string}_Read( void *buffer, const size_t size )
+bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
 {
     bool status = false;
 <#if USART_INTERRUPT_MODE == false>
@@ -373,22 +373,22 @@ bool USART${INDEX?string}_Read( void *buffer, const size_t size )
     {
         /* Clear errors before submitting the request.
          * ErrorGet clears errors internally. */
-        USART${INDEX?string}_ErrorGet();
+        ${USART_INSTANCE_NAME}_ErrorGet();
 
 <#if USART_INTERRUPT_MODE == false>
         while( size > processedSize )
         {
             /* Error status */
-            errorStatus = (USART${INDEX?string}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
+            errorStatus = (${USART_INSTANCE_NAME}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
 
             if(errorStatus != 0)
             {
                 break;
             }
 
-            if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR & US_CSR_RXRDY_Msk))
+            if(US_CSR_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_RXRDY_Msk))
             {
-                *lBuffer++ = (USART${INDEX?string}_REGS->US_RHR& US_RHR_RXCHR_Msk);
+                *lBuffer++ = (${USART_INSTANCE_NAME}_REGS->US_RHR& US_RHR_RXCHR_Msk);
                 processedSize++;
             }
         }
@@ -400,16 +400,16 @@ bool USART${INDEX?string}_Read( void *buffer, const size_t size )
 
 <#else>
         /* Check if receive request is in progress */
-        if(usart${INDEX?string}Obj.rxBusyStatus == false)
+        if(${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == false)
         {
-            usart${INDEX?string}Obj.rxBuffer = lBuffer;
-            usart${INDEX?string}Obj.rxSize = size;
-            usart${INDEX?string}Obj.rxProcessedSize = 0;
-            usart${INDEX?string}Obj.rxBusyStatus = true;
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxBuffer = lBuffer;
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxSize = size;
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = true;
             status = true;
 
             /* Enable Read, Overrun, Parity and Framing error interrupts */
-            USART${INDEX?string}_REGS->US_IER = (US_IER_RXRDY_Msk | US_IER_FRAME_Msk | US_IER_PARE_Msk | US_IER_OVRE_Msk);
+            ${USART_INSTANCE_NAME}_REGS->US_IER = (US_IER_RXRDY_Msk | US_IER_FRAME_Msk | US_IER_PARE_Msk | US_IER_OVRE_Msk);
         }
 </#if>
     }
@@ -417,7 +417,7 @@ bool USART${INDEX?string}_Read( void *buffer, const size_t size )
     return status;
 }
 
-bool USART${INDEX?string}_Write( void *buffer, const size_t size )
+bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
 {
     bool status = false;
 <#if USART_INTERRUPT_MODE == false>
@@ -430,9 +430,9 @@ bool USART${INDEX?string}_Write( void *buffer, const size_t size )
 <#if USART_INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
             {
-                USART${INDEX?string}_REGS->US_THR = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
+                ${USART_INSTANCE_NAME}_REGS->US_THR = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
                 processedSize++;
             }
         }
@@ -440,22 +440,22 @@ bool USART${INDEX?string}_Write( void *buffer, const size_t size )
         status = true;
 <#else>
         /* Check if transmit request is in progress */
-        if(usart${INDEX?string}Obj.txBusyStatus == false)
+        if(${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == false)
         {
-            usart${INDEX?string}Obj.txBuffer = lBuffer;
-            usart${INDEX?string}Obj.txSize = size;
-            usart${INDEX?string}Obj.txProcessedSize = 0;
-            usart${INDEX?string}Obj.txBusyStatus = true;
+            ${USART_INSTANCE_NAME?lower_case}Obj.txBuffer = lBuffer;
+            ${USART_INSTANCE_NAME?lower_case}Obj.txSize = size;
+            ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = 0;
+            ${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = true;
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
             {
-                USART${INDEX?string}_REGS->US_THR = (US_THR_TXCHR(*lBuffer) & US_THR_TXCHR_Msk);
-                usart${INDEX?string}Obj.txProcessedSize++;
+                ${USART_INSTANCE_NAME}_REGS->US_THR = (US_THR_TXCHR(*lBuffer) & US_THR_TXCHR_Msk);
+                ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
             }
 
-            USART${INDEX?string}_REGS->US_IER = US_IER_TXEMPTY_Msk;
+            ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_TXEMPTY_Msk;
         }
 </#if>
     }
@@ -464,25 +464,25 @@ bool USART${INDEX?string}_Write( void *buffer, const size_t size )
 }
 
 <#if USART_INTERRUPT_MODE == false>
-int USART${INDEX?string}_ReadByte(void)
+int ${USART_INSTANCE_NAME}_ReadByte(void)
 {
-    return(USART${INDEX?string}_REGS->US_RHR & US_RHR_RXCHR_Msk);
+    return(${USART_INSTANCE_NAME}_REGS->US_RHR & US_RHR_RXCHR_Msk);
 }
 
-void USART${INDEX?string}_WriteByte(int data)
+void ${USART_INSTANCE_NAME}_WriteByte(int data)
 {
-    while ((US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
-    USART${INDEX?string}_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
+    while ((US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
+    ${USART_INSTANCE_NAME}_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
 
-void inline USART${INDEX?string}_Sync(void)
+void inline ${USART_INSTANCE_NAME}_Sync(void)
 {
-    while ((US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
+    while ((US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
 }
 
-bool USART${INDEX?string}_TransmitterIsReady( void )
+bool ${USART_INSTANCE_NAME}_TransmitterIsReady( void )
 {
-    if(US_CSR_TXEMPTY_Msk == (USART${INDEX?string}_REGS->US_CSR & US_CSR_TXEMPTY_Msk))
+    if(US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_TXEMPTY_Msk))
     {
         return true;
     }
@@ -490,9 +490,9 @@ bool USART${INDEX?string}_TransmitterIsReady( void )
     return false;
 }
 
-bool USART${INDEX?string}_ReceiverIsReady( void )
+bool ${USART_INSTANCE_NAME}_ReceiverIsReady( void )
 {
-    if(US_CSR_RXRDY_Msk == (USART${INDEX?string}_REGS->US_CSR & US_CSR_RXRDY_Msk))
+    if(US_CSR_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_RXRDY_Msk))
     {
         return true;
     }
@@ -503,40 +503,40 @@ bool USART${INDEX?string}_ReceiverIsReady( void )
 </#if>
 
 <#if USART_INTERRUPT_MODE == true>
-bool USART${INDEX?string}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context )
+bool ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context )
 {
-    usart${INDEX?string}Obj.txCallback = callback;
-    usart${INDEX?string}Obj.txContext = context;
+    ${USART_INSTANCE_NAME?lower_case}Obj.txCallback = callback;
+    ${USART_INSTANCE_NAME?lower_case}Obj.txContext = context;
 
     return true;
 }
 
-bool USART${INDEX?string}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context )
+bool ${USART_INSTANCE_NAME}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context )
 {
-    usart${INDEX?string}Obj.rxCallback = callback;
-    usart${INDEX?string}Obj.rxContext = context;
+    ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback = callback;
+    ${USART_INSTANCE_NAME?lower_case}Obj.rxContext = context;
 
     return true;
 }
 
-bool USART${INDEX?string}_WriteIsBusy( void )
+bool ${USART_INSTANCE_NAME}_WriteIsBusy( void )
 {
-    return usart${INDEX?string}Obj.txBusyStatus;
+    return ${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus;
 }
 
-bool USART${INDEX?string}_ReadIsBusy( void )
+bool ${USART_INSTANCE_NAME}_ReadIsBusy( void )
 {
-    return usart${INDEX?string}Obj.rxBusyStatus;
+    return ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus;
 }
 
-size_t USART${INDEX?string}_WriteCountGet( void )
+size_t ${USART_INSTANCE_NAME}_WriteCountGet( void )
 {
-    return usart${INDEX?string}Obj.txProcessedSize;
+    return ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize;
 }
 
-size_t USART${INDEX?string}_ReadCountGet( void )
+size_t ${USART_INSTANCE_NAME}_ReadCountGet( void )
 {
-    return usart${INDEX?string}Obj.rxProcessedSize;
+    return ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize;
 }
 
 </#if>

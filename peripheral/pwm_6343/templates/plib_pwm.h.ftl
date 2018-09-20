@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_pwm${INDEX}.h
+    plib_${PWM_INSTANCE_NAME?lower_case}.h
 
   Summary
-    PWM${INDEX} peripheral library interface.
+    ${PWM_INSTANCE_NAME} peripheral library interface.
 
   Description
     This file defines the interface to the PWM peripheral library.  This
@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_PWM${INDEX}_H    // Guards against multiple inclusion
-#define PLIB_PWM${INDEX}_H
+#ifndef PLIB_${PWM_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define PLIB_${PWM_INSTANCE_NAME}_H
 
 
 // *****************************************************************************
@@ -54,7 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*  This section lists the other files that are included in this file.
 */
 
-#include "plib_pwm.h"
+#include "plib_pwm_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -91,40 +91,40 @@ extern "C" {
     </#if>
 </#list>
 
-__inline__ void PWM${INDEX}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
+__inline__ void ${PWM_INSTANCE_NAME}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
 {
-  PWM${INDEX}_REGS->PWM_CH_NUM[channel].PWM_CDTYUPD= duty;
+  ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[channel].PWM_CDTYUPD= duty;
 }
 
-void PWM${INDEX}_Initialize (void);
+void ${PWM_INSTANCE_NAME}_Initialize (void);
 
-void PWM${INDEX}_ChannelsStart (PWM_CHANNEL_MASK channelMask);
+void ${PWM_INSTANCE_NAME}_ChannelsStart (PWM_CHANNEL_MASK channelMask);
 
-void PWM${INDEX}_ChannelsStop (PWM_CHANNEL_MASK channelMask);
+void ${PWM_INSTANCE_NAME}_ChannelsStop (PWM_CHANNEL_MASK channelMask);
 
-void PWM${INDEX}_ChannelPeriodSet (PWM_CHANNEL_NUM channel, uint16_t period);
+void ${PWM_INSTANCE_NAME}_ChannelPeriodSet (PWM_CHANNEL_NUM channel, uint16_t period);
 
-uint16_t PWM${INDEX}_ChannelPeriodGet (PWM_CHANNEL_NUM channel);
+uint16_t ${PWM_INSTANCE_NAME}_ChannelPeriodGet (PWM_CHANNEL_NUM channel);
 
-void PWM${INDEX}_ChannelDeadTimeSet (PWM_CHANNEL_NUM channel, uint16_t deadtime_high, uint16_t deadtime_low);
+void ${PWM_INSTANCE_NAME}_ChannelDeadTimeSet (PWM_CHANNEL_NUM channel, uint16_t deadtime_high, uint16_t deadtime_low);
 
-void PWM${INDEX}_CompareValueSet (PWM_COMPARE cmp_unit, uint16_t cmp_value);
+void ${PWM_INSTANCE_NAME}_CompareValueSet (PWM_COMPARE cmp_unit, uint16_t cmp_value);
 
-void PWM${INDEX}_ChannelCounterEventEnable (PWM_CHANNEL_MASK channelMask);
+void ${PWM_INSTANCE_NAME}_ChannelCounterEventEnable (PWM_CHANNEL_MASK channelMask);
 
-void PWM${INDEX}_ChannelCounterEventDisable (PWM_CHANNEL_MASK  channelMask);
+void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK  channelMask);
 
-bool PWM${INDEX}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel);
+bool ${PWM_INSTANCE_NAME}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel);
 
-void PWM${INDEX}_SyncUpdateEnable (void);
+void ${PWM_INSTANCE_NAME}_SyncUpdateEnable (void);
 
-void PWM${INDEX}_FaultStatusClear(PWM_FAULT_ID fault_id);
+void ${PWM_INSTANCE_NAME}_FaultStatusClear(PWM_FAULT_ID fault_id);
 
 <#if PWM_INTERRUPT == true>
-void PWM${INDEX}_CallbackRegister(PWM_CALLBACK callback, uintptr_t context);
+void ${PWM_INSTANCE_NAME}_CallbackRegister(PWM_CALLBACK callback, uintptr_t context);
 </#if>
 
-#endif //PLIB_PWM${INDEX}_H
+#endif //PLIB_${PWM_INSTANCE_NAME}_H
 
 /**
  End of File

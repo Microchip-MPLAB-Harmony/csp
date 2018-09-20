@@ -1,1 +1,1 @@
-    SDADC${SDADC_INDEX}_Initialize();
+    ${SDADC_INSTANCE_NAME}_Initialize();

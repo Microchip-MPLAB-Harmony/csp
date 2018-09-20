@@ -1,1 +1,1 @@
-    MCAN${INDEX?string}_Initialize();
+    ${MCAN_INSTANCE_NAME}_Initialize();

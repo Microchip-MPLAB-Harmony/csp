@@ -1,1 +1,1 @@
-    PAC${PAC_INDEX}_Initialize( );
+    ${PAC_INSTANCE_NAME}_Initialize( );

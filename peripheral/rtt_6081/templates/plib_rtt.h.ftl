@@ -1,5 +1,5 @@
 /*******************************************************************************
- Interface definition of EEFC PLIB.
+ Interface definition of RTT PLIB.
  
  Company:
 	Microchip Technology Inc.
@@ -8,10 +8,10 @@
 	plib_rtt.h
 	
  Summary:
-	Interface definition of rtt Plib.
+	Interface definition of RTT Plib.
 	
  Description:
-	This file defines the interface for the rtt Plib.
+	This file defines the interface for the RTT Plib.
 	It allows user to start, stop and configure the on-chip real time timer.
 *******************************************************************************/
 
@@ -37,11 +37,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef RTT${INDEX?string}_H    // Guards against multiple inclusion
-#define RTT${INDEX?string}_H
+#ifndef ${RTT_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define ${RTT_INSTANCE_NAME}_H
 
 #include <stdint.h>
 #include <stddef.h>
+#include "plib_rtt_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -49,36 +50,20 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #endif
 // DOM-IGNORE-END
 
-<#if rttINCIEN == true || rttALMIEN == true>
-	<#lt>typedef enum
-	<#lt>{
-	<#lt>	RTT_PERIODIC = 0x20000, //Periodic interrupt
-	<#lt>	RTT_ALARM	 = 0x10000	// One time Alarm
-	<#lt>}RTT_INTERRUPT_TYPE;
-	
-	<#lt>typedef void (*RTT_CALLBACK)(RTT_INTERRUPT_TYPE type, uintptr_t context);
+void ${RTT_INSTANCE_NAME}_Initialize(void);
+void ${RTT_INSTANCE_NAME}_Enable(void);
+void ${RTT_INSTANCE_NAME}_Disable(void);
+void ${RTT_INSTANCE_NAME}_PrescalarUpdate(uint16_t prescale);
 
-	<#lt>typedef struct
-	<#lt>{
-	<#lt>	RTT_CALLBACK          callback;
-	<#lt>	uintptr_t             context;
-	<#lt>} RTT_OBJECT ;
+<#if rttINCIEN == true || rttALMIEN == true>
+	<#lt>void ${RTT_INSTANCE_NAME}_AlarmValueSet(uint32_t alarm);
+	<#lt>void ${RTT_INSTANCE_NAME}_EnableInterrupt (RTT_INTERRUPT_TYPE type);
+	<#lt>void ${RTT_INSTANCE_NAME}_DisableInterrupt(RTT_INTERRUPT_TYPE type);
 </#if>
-
-void RTT${INDEX?string}_Initialize(void);
-void RTT${INDEX?string}_Enable(void);
-void RTT${INDEX?string}_Disable(void);
-void RTT${INDEX?string}_PrescalarUpdate(uint16_t prescale);
-
+uint32_t ${RTT_INSTANCE_NAME}_TimerValueGet(void);
+uint32_t ${RTT_INSTANCE_NAME}_FrequencyGet(void); 
 <#if rttINCIEN == true || rttALMIEN == true>
-	<#lt>void RTT${INDEX?string}_AlarmValueSet(uint32_t alarm);
-	<#lt>void RTT${INDEX?string}_EnableInterrupt (RTT_INTERRUPT_TYPE type);
-	<#lt>void RTT${INDEX?string}_DisableInterrupt(RTT_INTERRUPT_TYPE type);
-</#if>
-uint32_t RTT${INDEX?string}_TimerValueGet(void);
-uint32_t RTT${INDEX?string}_FrequencyGet(void); 
-<#if rttINCIEN == true || rttALMIEN == true>
-	<#lt>void RTT${INDEX?string}_CallbackRegister( RTT_CALLBACK callback, uintptr_t context );
+	<#lt>void ${RTT_INSTANCE_NAME}_CallbackRegister( RTT_CALLBACK callback, uintptr_t context );
 </#if>
 
 // DOM-IGNORE-BEGIN

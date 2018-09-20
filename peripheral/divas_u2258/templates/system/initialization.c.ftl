@@ -1,1 +1,1 @@
-	DIVAS${DIVAS_INDEX}_Initialize();
+	${DIVAS_INSTANCE_NAME}_Initialize();

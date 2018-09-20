@@ -1,1 +1,1 @@
-#include "peripheral/sdramc/plib_sdramc${INDEX?string}.h"
+#include "peripheral/sdramc/plib_${SDRAMC_INSTANCE_NAME?lower_case}.h"

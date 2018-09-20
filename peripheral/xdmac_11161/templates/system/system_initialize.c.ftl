@@ -1,1 +1,1 @@
-    XDMAC${XDMAC_INDEX}_Initialize();
+    ${DMA_INSTANCE_NAME}_Initialize();

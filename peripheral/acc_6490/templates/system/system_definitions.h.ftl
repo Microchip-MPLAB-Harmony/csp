@@ -1,1 +1,1 @@
-#include "peripheral/acc/plib_acc${INDEX?string}.h"
+#include "peripheral/acc/plib_${ACC_INSTANCE_NAME?lower_case}.h"

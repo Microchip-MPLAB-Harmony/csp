@@ -1,1 +1,1 @@
-#include "peripheral/tcc/plib_tcc${TCC_INDEX}.h"
+#include "peripheral/tcc/plib_${TCC_INSTANCE_NAME}.h"

@@ -1,7 +1,7 @@
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
-global tccInstanceIndex
+global tccInstanceName
 
 tccSym_Channel_Menu = []
 tccSym_Channel_CC = []
@@ -29,9 +29,9 @@ def updateTCCInterruptStatus(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, "TCC" + tccInstanceIndex + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, tccInstanceName.getValue() + "_InterruptHandler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, "TCC" + tccInstanceIndex + "_Handler", 2)
+        Database.setSymbolValue("core", InterruptHandler, tccInstanceName.getValue() + "_Handler", 2)
 
 def updateTCCInterruptWarringStatus(symbol, event):
 
@@ -79,22 +79,21 @@ def instantiateComponent(tccComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
-    global tccInstanceIndex
+    global tccInstanceName
     global tccSym_INTENSET_OVF
 
-    tccInstanceIndex = tccComponent.getID()[-1:]
+    tccInstanceName = tccComponent.createStringSymbol("TCC_INSTANCE_NAME", None)
+    tccInstanceName.setVisible(False)
+    tccInstanceName.setDefaultValue(tccComponent.getID().upper())
     
-    #index
-    tccSym_Index = tccComponent.createIntegerSymbol("TCC_INDEX", None)
-    tccSym_Index.setDefaultValue(int(tccInstanceIndex))
-    tccSym_Index.setVisible(False)
-
     #clock enable
-    Database.clearSymbolValue("core", "TCC" + tccInstanceIndex + "_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "TCC" + tccInstanceIndex + "_CLOCK_ENABLE", True, 2)
+
+    Database.clearSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_ENABLE")
+
+    Database.setSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
     ################################ ATDF ####################################################
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TCC\"]/instance@[name=\"TCC"+str(tccInstanceIndex)+"\"]/parameters")
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TCC\"]/instance@[name=\""+tccInstanceName.getValue()+"\"]/parameters")
     numOfChannels = 4
     deadTimeImplemented = 1
     swapImplemented = 1
@@ -341,10 +340,10 @@ def instantiateComponent(tccComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = "TCC" + tccInstanceIndex + "_INTERRUPT_ENABLE"
-    InterruptHandler = "TCC" + tccInstanceIndex + "_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "TCC" + tccInstanceIndex + "_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = "TCC" + tccInstanceIndex + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = tccInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    InterruptHandler = tccInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = tccInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = tccInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Interrupt Dynamic settings
     tccSym_UpdateInterruptStatus = tccComponent.createBooleanSymbol("TCC_INTERRUPT_STATUS", None)
@@ -354,14 +353,14 @@ def instantiateComponent(tccComponent):
     # Interrupt Warning status
     tccSym_IntEnComment = tccComponent.createCommentSymbol("TCC_INTERRUPT_ENABLE_COMMENT", None)
     tccSym_IntEnComment.setVisible(False)
-    tccSym_IntEnComment.setLabel("Warning!!! TCC" + tccInstanceIndex + " Interrupt is Disabled in Interrupt Manager")
+    tccSym_IntEnComment.setLabel("Warning!!! " + tccInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     tccSym_IntEnComment.setDependencies(updateTCCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
 
     # Clock Warning status
     tccSym_ClkEnComment = tccComponent.createCommentSymbol("TCC_CLOCK_ENABLE_COMMENT", None)
     tccSym_ClkEnComment.setLabel("Warning!!! TCC Peripheral Clock is Disabled in Clock Manager")
     tccSym_ClkEnComment.setVisible(False)
-    tccSym_ClkEnComment.setDependencies(updateTCCClockWarringStatus, ["core.TCC" + tccInstanceIndex + "_CLOCK_ENABLE"])
+    tccSym_ClkEnComment.setDependencies(updateTCCClockWarringStatus, ["core." + tccInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
@@ -374,7 +373,7 @@ def instantiateComponent(tccComponent):
 
     tccSym_PWMHeaderFile = tccComponent.createFileSymbol("TCC_HEADER", None)
     tccSym_PWMHeaderFile.setSourcePath("../peripheral/tcc_" + tccModuleID + "/templates/plib_tcc.h.ftl")
-    tccSym_PWMHeaderFile.setOutputName("plib_tcc" + tccInstanceIndex + ".h")
+    tccSym_PWMHeaderFile.setOutputName("plib_"+tccInstanceName.getValue().lower()+".h")
     tccSym_PWMHeaderFile.setDestPath("/peripheral/tcc/")
     tccSym_PWMHeaderFile.setProjectPath("config/" + configName + "/peripheral/tcc/")
     tccSym_PWMHeaderFile.setType("HEADER")
@@ -382,15 +381,15 @@ def instantiateComponent(tccComponent):
 
     tccSym_PWMSourceFile = tccComponent.createFileSymbol("TCC_SOURCE", None)
     tccSym_PWMSourceFile.setSourcePath("../peripheral/tcc_" + tccModuleID + "/templates/plib_tcc.c.ftl")
-    tccSym_PWMSourceFile.setOutputName("plib_tcc" + tccInstanceIndex + ".c")
+    tccSym_PWMSourceFile.setOutputName("plib_"+tccInstanceName.getValue().lower()+".c")
     tccSym_PWMSourceFile.setDestPath("/peripheral/tcc/")
     tccSym_PWMSourceFile.setProjectPath("config/" + configName + "/peripheral/tcc/")
     tccSym_PWMSourceFile.setType("SOURCE")
     tccSym_PWMSourceFile.setMarkup(True)
     
     tccSym_PWMGlobalHeaderFile = tccComponent.createFileSymbol("TCC_GLOBAL_HEADER", None)
-    tccSym_PWMGlobalHeaderFile.setSourcePath("../peripheral/tcc_"+str(tccModuleID)+"/plib_tcc.h")
-    tccSym_PWMGlobalHeaderFile.setOutputName("plib_tcc" + ".h")
+    tccSym_PWMGlobalHeaderFile.setSourcePath("../peripheral/tcc_"+str(tccModuleID)+"/templates/plib_tcc_common.h")
+    tccSym_PWMGlobalHeaderFile.setOutputName("plib_tcc_common.h")
     tccSym_PWMGlobalHeaderFile.setDestPath("/peripheral/tcc/")
     tccSym_PWMGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/tcc/")
     tccSym_PWMGlobalHeaderFile.setType("HEADER")

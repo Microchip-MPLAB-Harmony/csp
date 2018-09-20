@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    twihs.c
+    plib_${TWIHS_INSTANCE_NAME?lower_case}.c
 
   Summary
     TWIHS peripheral library interface.
@@ -48,7 +48,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "device.h"
-#include "plib_twihs${INDEX?string}.h"
+#include "plib_${TWIHS_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -69,18 +69,18 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-static TWIHS_OBJ twihs${INDEX?string}Obj;
-static twihs_registers_t *TWIHS${INDEX?string}_Module = TWIHS${INDEX?string}_REGS;
+static TWIHS_OBJ ${TWIHS_INSTANCE_NAME?lower_case}Obj;
+static twihs_registers_t *${TWIHS_INSTANCE_NAME}_Module = ${TWIHS_INSTANCE_NAME}_REGS;
 
 // *****************************************************************************
 // *****************************************************************************
-// TWIHS${INDEX?string} PLib Interface Routines
+// ${TWIHS_INSTANCE_NAME} PLib Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
 /* Function:
-    void TWIHS${INDEX?string}_Initialize(void)
+    void ${TWIHS_INSTANCE_NAME}_Initialize(void)
 
    Summary:
     Initializes given instance of the TWIHS peripheral.
@@ -95,34 +95,34 @@ static twihs_registers_t *TWIHS${INDEX?string}_Module = TWIHS${INDEX?string}_REG
     None
 */
 
-void TWIHS${INDEX?string}_Initialize(void)
+void ${TWIHS_INSTANCE_NAME}_Initialize(void)
 {
     // Reset the i2c Module
-    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_SWRST_Msk;
+    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_SWRST_Msk;
 
     // Disable the I2C Master/Slave Mode
-    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_MSDIS_Msk |
+    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_MSDIS_Msk |
                                           TWIHS_CR_SVDIS_Msk;
 
     // Set Baud rate
-    TWIHS${INDEX?string}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS${INDEX?string}_Module->TWIHS_CWGR) |
+    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CWGR) |
                                             ( TWIHS_CWGR_CLDIV(${TWIHS_CWGR_CLDIV}) |
                                               TWIHS_CWGR_CHDIV(${TWIHS_CWGR_CHDIV}) |
                                               TWIHS_CWGR_CKDIV(${TWIHS_CWGR_CKDIV}) );
 
     // Starts the transfer by clearing the transmit hold register
-    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_THRCLR_Msk;
+    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_THRCLR_Msk;
 
     // Enables interrupt on nack and arbitration lost
-    TWIHS${INDEX?string}_Module->TWIHS_IER = TWIHS_IER_NACK_Msk |
+    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IER = TWIHS_IER_NACK_Msk |
                                            TWIHS_IER_ARBLST_Msk;
 
     // Enable Master Mode
-    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_MSEN_Msk;
+    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_MSEN_Msk;
 
     // Initialize the twihs PLib Object
-    twihs${INDEX?string}Obj.error   = TWIHS_ERROR_NONE;
-    twihs${INDEX?string}Obj.state   = TWIHS_STATE_IDLE;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.error   = TWIHS_ERROR_NONE;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.state   = TWIHS_STATE_IDLE;
 }
 
 
@@ -130,97 +130,97 @@ void TWIHS${INDEX?string}_Initialize(void)
 Local Functions
 ******************************************************************************/
 
-static void TWIHS${INDEX?string}_InitiateRead(void)
+static void ${TWIHS_INSTANCE_NAME}_InitiateRead(void)
 {
 
-    twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_READ;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_TRANSFER_READ;
 
-    TWIHS${INDEX?string}_Module->TWIHS_MMR |= TWIHS_MMR_MREAD_Msk;
+    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_MMR |= TWIHS_MMR_MREAD_Msk;
 
     /* When a single data byte read is performed,
     the START and STOP bits must be set at the same time */
-    if(twihs${INDEX?string}Obj.readSize == 1)
+    if(${TWIHS_INSTANCE_NAME?lower_case}Obj.readSize == 1)
     {
-        TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_START_Msk | TWIHS_CR_STOP_Msk;
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_START_Msk | TWIHS_CR_STOP_Msk;
     }
     else
     {
-        TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_START_Msk;
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_START_Msk;
     }
 
     __enable_irq();
-    TWIHS${INDEX?string}_Module->TWIHS_IER = TWIHS_IER_RXRDY_Msk | TWIHS_IER_TXCOMP_Msk;
+    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IER = TWIHS_IER_RXRDY_Msk | TWIHS_IER_TXCOMP_Msk;
 }
 
 
 
 
-static void TWIHS${INDEX?string}_InitiateTransfer(uint16_t address, bool type)
+static void ${TWIHS_INSTANCE_NAME}_InitiateTransfer(uint16_t address, bool type)
 {
     // 10-bit Slave Address
     if( address > 0x007F )
     {
-        TWIHS${INDEX?string}_Module->TWIHS_MMR = TWIHS_MMR_DADR((address & 0x00007F00) >> 8) |
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_MMR = TWIHS_MMR_DADR((address & 0x00007F00) >> 8) |
                                                TWIHS_MMR_IADRSZ(1);
 
         // Set internal address
-        TWIHS${INDEX?string}_Module->TWIHS_IADR = TWIHS_IADR_IADR(address & 0x000000FF );
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IADR = TWIHS_IADR_IADR(address & 0x000000FF );
     }
     // 7-bit Slave Address
     else
     {
-        TWIHS${INDEX?string}_Module->TWIHS_MMR = TWIHS_MMR_DADR(address) | TWIHS_MMR_IADRSZ(0);
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_MMR = TWIHS_MMR_DADR(address) | TWIHS_MMR_IADRSZ(0);
     }
 
-    twihs${INDEX?string}Obj.writeCount= 0;
-    twihs${INDEX?string}Obj.readCount= 0;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeCount= 0;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.readCount= 0;
 
     // Write transfer
     if(type == false)
     {
         // Single Byte Write
-        if( twihs${INDEX?string}Obj.writeSize == 1 )
+        if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize == 1 )
         {
             // Single Byte write only
-            if(  twihs${INDEX?string}Obj.readSize ==0  )
+            if(  ${TWIHS_INSTANCE_NAME?lower_case}Obj.readSize ==0  )
             {
                 // Load last byte in transmit register, issue stop condition
                 // Generate TXCOMP interrupt after STOP condition has been sent
-                twihs${INDEX?string}Obj.state = TWIHS_STATE_WAIT_FOR_TXCOMP;
+                ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_WAIT_FOR_TXCOMP;
 
-                TWIHS${INDEX?string}_Module->TWIHS_THR = TWIHS_THR_TXDATA(twihs${INDEX?string}Obj.writeBuffer[twihs${INDEX?string}Obj.writeCount++]);
-                TWIHS${INDEX?string}_Module->TWIHS_CR =  TWIHS_CR_STOP_Msk;
-                TWIHS${INDEX?string}_Module->TWIHS_IER = TWIHS_IER_TXCOMP_Msk;
+                ${TWIHS_INSTANCE_NAME}_Module->TWIHS_THR = TWIHS_THR_TXDATA(${TWIHS_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWIHS_INSTANCE_NAME?lower_case}Obj.writeCount++]);
+                ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR =  TWIHS_CR_STOP_Msk;
+                ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IER = TWIHS_IER_TXCOMP_Msk;
             }
             // Single Byte write and than read transfer
             else
             {
                 // START bit must be set before the byte is shifted out. Hence disabled interrupt
                 __disable_irq();
-                TWIHS${INDEX?string}_Module->TWIHS_THR = TWIHS_THR_TXDATA(twihs${INDEX?string}Obj.writeBuffer[twihs${INDEX?string}Obj.writeCount++]);
+                ${TWIHS_INSTANCE_NAME}_Module->TWIHS_THR = TWIHS_THR_TXDATA(${TWIHS_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWIHS_INSTANCE_NAME?lower_case}Obj.writeCount++]);
                 type=true;
             }
         }
         // Multi-Byte Write
         else
         {
-            twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_WRITE;
+            ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_TRANSFER_WRITE;
 
-            TWIHS${INDEX?string}_Module->TWIHS_THR = TWIHS_THR_TXDATA(twihs${INDEX?string}Obj.writeBuffer[twihs${INDEX?string}Obj.writeCount++]);
-            TWIHS${INDEX?string}_Module->TWIHS_IER = TWIHS_IDR_TXRDY_Msk | TWIHS_IER_TXCOMP_Msk;
+            ${TWIHS_INSTANCE_NAME}_Module->TWIHS_THR = TWIHS_THR_TXDATA(${TWIHS_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWIHS_INSTANCE_NAME?lower_case}Obj.writeCount++]);
+            ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IER = TWIHS_IDR_TXRDY_Msk | TWIHS_IER_TXCOMP_Msk;
         }
     }
     // Read transfer
     if(type)
     {
-        TWIHS${INDEX?string}_InitiateRead();
+        ${TWIHS_INSTANCE_NAME}_InitiateRead();
     }
 }
 
 
 // *****************************************************************************
 /* Function:
-    void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
+    void ${TWIHS_INSTANCE_NAME}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -240,20 +240,20 @@ static void TWIHS${INDEX?string}_InitiateTransfer(uint16_t address, bool type)
     None.
 */
 
-void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
+void ${TWIHS_INSTANCE_NAME}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
 {
     if (callback == NULL)
     {
         return;
     }
 
-    twihs${INDEX?string}Obj.callback = callback;
-    twihs${INDEX?string}Obj.context = contextHandle;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback = callback;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.context = contextHandle;
 }
 
 // *****************************************************************************
 /* Function:
-    void TWIHS${INDEX?string}_TransferSetup(TWIHS_TRANSFER_SETUP setup, uint32_t srcClkFreq)
+    void ${TWIHS_INSTANCE_NAME}_TransferSetup(TWIHS_TRANSFER_SETUP setup, uint32_t srcClkFreq)
 
    Summary:
     Dynamic setup of TWIHS Peripheral.
@@ -268,7 +268,7 @@ void TWIHS${INDEX?string}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t co
     None
 */
 
-bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP * setup, uint32_t srcClkFreq )
+bool ${TWIHS_INSTANCE_NAME}_TransferSetup( TWIHS_TRANSFER_SETUP * setup, uint32_t srcClkFreq )
 {
     uint32_t clockSrcFreq;
     uint32_t twihsClkSpeed;
@@ -278,7 +278,7 @@ bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP * setup, uint32_t 
     uint32_t c_lh_div = 0;
 
     // Check for ongoing transfer
-    if( twihs${INDEX?string}Obj.state != TWIHS_STATE_IDLE )
+    if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state != TWIHS_STATE_IDLE )
     {
         return false;
     }
@@ -336,7 +336,7 @@ bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP * setup, uint32_t 
         }
 
         /* set clock waveform generator register */
-        TWIHS${INDEX?string}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS${INDEX?string}_Module->TWIHS_CWGR) |
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CWGR) |
                                   ( TWIHS_CWGR_CLDIV(cldiv) |
                                     TWIHS_CWGR_CHDIV(chdiv) |
                                     TWIHS_CWGR_CKDIV(ckdiv) );
@@ -358,7 +358,7 @@ bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP * setup, uint32_t 
         }
 
         /* set clock waveform generator register */
-        TWIHS${INDEX?string}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS${INDEX?string}_Module->TWIHS_CWGR) |
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CWGR) |
                                   ( TWIHS_CWGR_CLDIV(c_lh_div) |
                                     TWIHS_CWGR_CHDIV(c_lh_div) |
                                     TWIHS_CWGR_CKDIV(ckdiv) )  ;
@@ -370,7 +370,7 @@ bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP * setup, uint32_t 
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_IsBusy(void)
+    bool ${TWIHS_INSTANCE_NAME}_IsBusy(void)
 
    Summary:
     Returns the Peripheral busy status.
@@ -386,9 +386,9 @@ bool TWIHS${INDEX?string}_TransferSetup( TWIHS_TRANSFER_SETUP * setup, uint32_t 
     false - Not busy.
 */
 
-bool TWIHS${INDEX?string}_IsBusy(void)
+bool ${TWIHS_INSTANCE_NAME}_IsBusy(void)
 {
-    if( twihs${INDEX?string}Obj.state == TWIHS_STATE_IDLE )
+    if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state == TWIHS_STATE_IDLE )
     {
         return false;
     }
@@ -400,7 +400,7 @@ bool TWIHS${INDEX?string}_IsBusy(void)
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length)
+    bool ${TWIHS_INSTANCE_NAME}_Read(uint16_t address, uint8_t *pdata, size_t length)
 
    Summary:
     Reads data from the slave.
@@ -419,29 +419,29 @@ bool TWIHS${INDEX?string}_IsBusy(void)
     False - Request has failed.
 */
 
-bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length)
+bool ${TWIHS_INSTANCE_NAME}_Read(uint16_t address, uint8_t *pdata, size_t length)
 {
     // Check for ongoing transfer
-    if( twihs${INDEX?string}Obj.state != TWIHS_STATE_IDLE )
+    if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state != TWIHS_STATE_IDLE )
     {
         return false;
     }
 
-    twihs${INDEX?string}Obj.address=address;
-    twihs${INDEX?string}Obj.readBuffer=pdata;
-    twihs${INDEX?string}Obj.readSize=length;
-    twihs${INDEX?string}Obj.writeBuffer=NULL;
-    twihs${INDEX?string}Obj.writeSize=0;
-    twihs${INDEX?string}Obj.error = TWIHS_ERROR_NONE;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.address=address;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.readBuffer=pdata;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.readSize=length;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeBuffer=NULL;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize=0;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NONE;
 
-    TWIHS${INDEX?string}_InitiateTransfer(address, true);
+    ${TWIHS_INSTANCE_NAME}_InitiateTransfer(address, true);
 
     return true;
 }
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length)
+    bool ${TWIHS_INSTANCE_NAME}_Write(uint16_t address, uint8_t *pdata, size_t length)
 
    Summary:
     Writes data onto the slave.
@@ -460,29 +460,29 @@ bool TWIHS${INDEX?string}_Read(uint16_t address, uint8_t *pdata, size_t length)
     False - Request has failed.
 */
 
-bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length)
+bool ${TWIHS_INSTANCE_NAME}_Write(uint16_t address, uint8_t *pdata, size_t length)
 {
     // Check for ongoing transfer
-    if( twihs${INDEX?string}Obj.state != TWIHS_STATE_IDLE )
+    if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state != TWIHS_STATE_IDLE )
     {
         return false;
     }
 
-    twihs${INDEX?string}Obj.address=address;
-    twihs${INDEX?string}Obj.readBuffer=NULL;
-    twihs${INDEX?string}Obj.readSize=0;
-    twihs${INDEX?string}Obj.writeBuffer=pdata;
-    twihs${INDEX?string}Obj.writeSize=length;
-    twihs${INDEX?string}Obj.error = TWIHS_ERROR_NONE;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.address=address;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.readBuffer=NULL;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.readSize=0;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeBuffer=pdata;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize=length;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NONE;
 
-    TWIHS${INDEX?string}_InitiateTransfer(address, false);
+    ${TWIHS_INSTANCE_NAME}_InitiateTransfer(address, false);
 
     return true;
 }
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
+    bool ${TWIHS_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
 
    Summary:
     Write and Read data from Slave.
@@ -503,30 +503,30 @@ bool TWIHS${INDEX?string}_Write(uint16_t address, uint8_t *pdata, size_t length)
     False - Request has failed.
 */
 
-bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
+bool ${TWIHS_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
 {
 
     // Check for ongoing transfer
-    if( twihs${INDEX?string}Obj.state != TWIHS_STATE_IDLE )
+    if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state != TWIHS_STATE_IDLE )
     {
         return false;
     }
 
-    twihs${INDEX?string}Obj.address=address;
-    twihs${INDEX?string}Obj.readBuffer=rdata;
-    twihs${INDEX?string}Obj.readSize=rlength;
-    twihs${INDEX?string}Obj.writeBuffer=wdata;
-    twihs${INDEX?string}Obj.writeSize=wlength;
-    twihs${INDEX?string}Obj.error = TWIHS_ERROR_NONE;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.address=address;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.readBuffer=rdata;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.readSize=rlength;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeBuffer=wdata;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize=wlength;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NONE;
 
-    TWIHS${INDEX?string}_InitiateTransfer(address, false);
+    ${TWIHS_INSTANCE_NAME}_InitiateTransfer(address, false);
 
     return true;
 }
 
 // *****************************************************************************
 /* Function:
-    TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void)
+    TWIHS_ERROR ${TWIHS_INSTANCE_NAME}_ErrorGet(void)
 
    Summary:
     Returns the error during transfer.
@@ -541,26 +541,26 @@ bool TWIHS${INDEX?string}_WriteRead(uint16_t address, uint8_t *wdata, size_t wle
     Error during transfer.
 */
 
-TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void)
+TWIHS_ERROR ${TWIHS_INSTANCE_NAME}_ErrorGet(void)
 {
     TWIHS_ERROR error;
 
-    error = twihs${INDEX?string}Obj.error;
-    twihs${INDEX?string}Obj.error = TWIHS_ERROR_NONE;
+    error = ${TWIHS_INSTANCE_NAME?lower_case}Obj.error;
+    ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NONE;
 
     return error;
 }
 
 // *****************************************************************************
 /* Function:
-    void TWIHS${INDEX?string}_InterruptHandler(void)
+    void ${TWIHS_INSTANCE_NAME}_InterruptHandler(void)
 
    Summary:
-    TWIHS${INDEX?string} Peripheral Interrupt Handler.
+    ${TWIHS_INSTANCE_NAME} Peripheral Interrupt Handler.
 
    Description:
-    This function is TWIHS${INDEX?string} Peripheral Interrupt Handler and will
-    called on every TWIHS${INDEX?string} interrupt.
+    This function is ${TWIHS_INSTANCE_NAME} Peripheral Interrupt Handler and will
+    called on every ${TWIHS_INSTANCE_NAME} interrupt.
 
    Precondition:
     None.
@@ -577,18 +577,18 @@ TWIHS_ERROR TWIHS${INDEX?string}_ErrorGet(void)
     enabled user need to call it from the main while loop of the application.
 */
 
-void TWIHS${INDEX?string}_InterruptHandler(void)
+void ${TWIHS_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t status;
 
     // Read the peripheral status
-    status = TWIHS${INDEX?string}_Module->TWIHS_SR;
+    status = ${TWIHS_INSTANCE_NAME}_Module->TWIHS_SR;
 
     /* checks if Slave has Nacked */
     if( status & TWIHS_SR_NACK_Msk )
     {
-        twihs${INDEX?string}Obj.state = TWIHS_STATE_ERROR;
-        twihs${INDEX?string}Obj.error = TWIHS_ERROR_NACK;
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_ERROR;
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NACK;
     }
 
     /* checks if the arbitration is lost in multi-master scenario */
@@ -597,22 +597,22 @@ void TWIHS${INDEX?string}_InterruptHandler(void)
         /* Re-initiate the transfer if arbitration is lost in
          * between of the transfer
          */
-        twihs${INDEX?string}Obj.state = TWIHS_STATE_ADDR_SEND;
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_ADDR_SEND;
     }
 
-    switch( twihs${INDEX?string}Obj.state )
+    switch( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state )
     {
         case TWIHS_STATE_ADDR_SEND:
         {
-            if (twihs${INDEX?string}Obj.writeSize != 0 )
+            if (${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize != 0 )
             {
                 // Initiate Write transfer
-                TWIHS${INDEX?string}_InitiateTransfer(twihs${INDEX?string}Obj.address, false);
+                ${TWIHS_INSTANCE_NAME}_InitiateTransfer(${TWIHS_INSTANCE_NAME?lower_case}Obj.address, false);
             }
             else
             {
                 // Initiate Read transfer
-                TWIHS${INDEX?string}_InitiateTransfer(twihs${INDEX?string}Obj.address, true);
+                ${TWIHS_INSTANCE_NAME}_InitiateTransfer(${TWIHS_INSTANCE_NAME?lower_case}Obj.address, true);
             }
         }
         break;
@@ -623,42 +623,42 @@ void TWIHS${INDEX?string}_InterruptHandler(void)
             if( status & TWIHS_SR_TXRDY_Msk )
             {
                 // Write Last Byte and then initiate read transfer
-                if( ( twihs${INDEX?string}Obj.writeCount == (twihs${INDEX?string}Obj.writeSize -1) ) && ( twihs${INDEX?string}Obj.readSize != 0 ))
+                if( ( ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeCount == (${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize -1) ) && ( ${TWIHS_INSTANCE_NAME?lower_case}Obj.readSize != 0 ))
                 {
                     // START bit must be set before the last byte is shifted out to generate repeat start. Hence disabled interrupt
                     __disable_irq();
-                    TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXRDY_Msk;
-                    TWIHS${INDEX?string}_Module->TWIHS_THR = TWIHS_THR_TXDATA(twihs${INDEX?string}Obj.writeBuffer[twihs${INDEX?string}Obj.writeCount++]);
-                    TWIHS${INDEX?string}_InitiateRead();
+                    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IDR = TWIHS_IDR_TXRDY_Msk;
+                    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_THR = TWIHS_THR_TXDATA(${TWIHS_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWIHS_INSTANCE_NAME?lower_case}Obj.writeCount++]);
+                    ${TWIHS_INSTANCE_NAME}_InitiateRead();
                 }
                 // Write Last byte and then issue STOP condition
-                else if ( twihs${INDEX?string}Obj.writeCount == (twihs${INDEX?string}Obj.writeSize -1))
+                else if ( ${TWIHS_INSTANCE_NAME?lower_case}Obj.writeCount == (${TWIHS_INSTANCE_NAME?lower_case}Obj.writeSize -1))
                 {
                     // Load last byte in transmit register, issue stop condition
                     // Generate TXCOMP interrupt after STOP condition has been sent
-                    TWIHS${INDEX?string}_Module->TWIHS_THR = TWIHS_THR_TXDATA(twihs${INDEX?string}Obj.writeBuffer[twihs${INDEX?string}Obj.writeCount++]);
-                    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_STOP_Msk;
-                    TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXRDY_Msk;
+                    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_THR = TWIHS_THR_TXDATA(${TWIHS_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWIHS_INSTANCE_NAME?lower_case}Obj.writeCount++]);
+                    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_STOP_Msk;
+                    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IDR = TWIHS_IDR_TXRDY_Msk;
 
                     /* Check TXCOMP to confirm if STOP condition has been sent, otherwise wait for TXCOMP interrupt */
-                    status = TWIHS${INDEX?string}_Module->TWIHS_SR;
+                    status = ${TWIHS_INSTANCE_NAME}_Module->TWIHS_SR;
                     if( status & TWIHS_SR_TXCOMP_Msk )
                     {
-                        twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_DONE;
+                        ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_TRANSFER_DONE;
                     }
                     else
                     {
-                        twihs${INDEX?string}Obj.state = TWIHS_STATE_WAIT_FOR_TXCOMP;
+                        ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_WAIT_FOR_TXCOMP;
                     }
                 }
                 // Write next byte
                 else
                 {
-                    TWIHS${INDEX?string}_Module->TWIHS_THR = TWIHS_THR_TXDATA(twihs${INDEX?string}Obj.writeBuffer[twihs${INDEX?string}Obj.writeCount++]);
+                    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_THR = TWIHS_THR_TXDATA(${TWIHS_INSTANCE_NAME?lower_case}Obj.writeBuffer[${TWIHS_INSTANCE_NAME?lower_case}Obj.writeCount++]);
                 }
 
                 // Dummy read to ensure that TXRDY bit is cleared
-                status = TWIHS${INDEX?string}_Module->TWIHS_SR;
+                status = ${TWIHS_INSTANCE_NAME}_Module->TWIHS_SR;
             }
 
             break;
@@ -670,29 +670,29 @@ void TWIHS${INDEX?string}_InterruptHandler(void)
             if( status & TWIHS_SR_RXRDY_Msk )
             {
                 // Set the STOP (or START) bit before reading the TWIHS_RHR on the next-to-last access
-                if(  twihs${INDEX?string}Obj.readCount == (twihs${INDEX?string}Obj.readSize - 2) )
+                if(  ${TWIHS_INSTANCE_NAME?lower_case}Obj.readCount == (${TWIHS_INSTANCE_NAME?lower_case}Obj.readSize - 2) )
                 {
-                    TWIHS${INDEX?string}_Module->TWIHS_CR = TWIHS_CR_STOP_Msk;
+                    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_STOP_Msk;
                 }
 
                 /* read the received data */
-                twihs${INDEX?string}Obj.readBuffer[twihs${INDEX?string}Obj.readCount++] = (uint8_t)(TWIHS${INDEX?string}_Module->TWIHS_RHR & TWIHS_RHR_RXDATA_Msk);
+                ${TWIHS_INSTANCE_NAME?lower_case}Obj.readBuffer[${TWIHS_INSTANCE_NAME?lower_case}Obj.readCount++] = (uint8_t)(${TWIHS_INSTANCE_NAME}_Module->TWIHS_RHR & TWIHS_RHR_RXDATA_Msk);
 
                 /* checks if transmission has reached at the end */
-                if( twihs${INDEX?string}Obj.readCount == twihs${INDEX?string}Obj.readSize )
+                if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.readCount == ${TWIHS_INSTANCE_NAME?lower_case}Obj.readSize )
                 {
                     /* Disable the RXRDY interrupt*/
-                    TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_RXRDY_Msk;
+                    ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IDR = TWIHS_IDR_RXRDY_Msk;
 
                     /* Check TXCOMP to confirm if STOP condition has been sent, otherwise wait for TXCOMP interrupt */
-                    status = TWIHS${INDEX?string}_Module->TWIHS_SR;
+                    status = ${TWIHS_INSTANCE_NAME}_Module->TWIHS_SR;
                     if( status & TWIHS_SR_TXCOMP_Msk )
                     {
-                        twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_DONE;
+                        ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_TRANSFER_DONE;
                     }
                     else
                     {
-                        twihs${INDEX?string}Obj.state = TWIHS_STATE_WAIT_FOR_TXCOMP;
+                        ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_WAIT_FOR_TXCOMP;
                     }
                 }
             }
@@ -703,7 +703,7 @@ void TWIHS${INDEX?string}_InterruptHandler(void)
         {
             if( status & TWIHS_SR_TXCOMP_Msk )
             {
-                twihs${INDEX?string}Obj.state = TWIHS_STATE_TRANSFER_DONE;
+                ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_TRANSFER_DONE;
             }
             break;
         }
@@ -715,34 +715,34 @@ void TWIHS${INDEX?string}_InterruptHandler(void)
     }
 
     /* Check for error during transmission */
-    if( twihs${INDEX?string}Obj.state == TWIHS_STATE_ERROR )
+    if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state == TWIHS_STATE_ERROR )
     {
-        twihs${INDEX?string}Obj.state = TWIHS_STATE_IDLE;
-        TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk |
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_IDLE;
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk |
                                  TWIHS_IDR_TXRDY_Msk  |
                                  TWIHS_IDR_RXRDY_Msk;
 
-        if ( twihs${INDEX?string}Obj.callback != NULL )
+        if ( ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL )
         {
-            twihs${INDEX?string}Obj.callback( twihs${INDEX?string}Obj.context );
+            ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback( ${TWIHS_INSTANCE_NAME?lower_case}Obj.context );
         }
     }
 
     // check for completion of transfer
-    if( twihs${INDEX?string}Obj.state == TWIHS_STATE_TRANSFER_DONE )
+    if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state == TWIHS_STATE_TRANSFER_DONE )
     {
 
-        twihs${INDEX?string}Obj.error = TWIHS_ERROR_NONE;
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.error = TWIHS_ERROR_NONE;
 
         // Reset the PLib objects and Interrupts
-        twihs${INDEX?string}Obj.state = TWIHS_STATE_IDLE;
-        TWIHS${INDEX?string}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk |
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_IDLE;
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk |
                                  TWIHS_IDR_TXRDY_Msk  |
                                  TWIHS_IDR_RXRDY_Msk;
 
-        if ( twihs${INDEX?string}Obj.callback != NULL )
+        if ( ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL )
         {
-            twihs${INDEX?string}Obj.callback( twihs${INDEX?string}Obj.context );
+            ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback( ${TWIHS_INSTANCE_NAME?lower_case}Obj.context );
         }
     }
 

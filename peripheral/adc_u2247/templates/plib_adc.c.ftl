@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Analog-to-Digital Converter(ADC${ADC_INDEX}) PLIB
+  Analog-to-Digital Converter(${ADC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_adc${ADC_INDEX}.c
+    plib_${ADC_INSTANCE_NAME?lower_case}.c
 
   Summary
-    ADC${ADC_INDEX} PLIB Implementation File.
+    ${ADC_INSTANCE_NAME} PLIB Implementation File.
 
   Description
     This file defines the interface to the ADC peripheral library. This
@@ -52,7 +52,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_adc${ADC_INDEX}.h"
+#include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
 <#compress>
 <#assign ADC_CTRLC_VAL = "">
 <#assign ADC_EVCTRL_VAL = "">
@@ -104,136 +104,136 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 <#if ADC_INTENSET_RESRDY = true>
-ADC_CALLBACK_OBJ ADC${ADC_INDEX}_CallbackObject;
+ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: ADC${ADC_INDEX} Implementation
+// Section: ${ADC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
 /* Initialize ADC module */
-void ADC${ADC_INDEX}_Initialize( void )
+void ${ADC_INSTANCE_NAME}_Initialize( void )
 {
     /* Reset ADC */
-    ADC${ADC_INDEX}_REGS->ADC_CTRLA = ADC_CTRLA_SWRST_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_SWRST_Msk;
 
-    while((ADC${ADC_INDEX}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_SWRST_Msk) == ADC_SYNCBUSY_SWRST_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_SWRST_Msk) == ADC_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for Synchronization */
     }
 
 <#if ADC_CTRLA_SLAVEEN == true>
-    ADC${ADC_INDEX}_REGS->ADC_CTRLA |= ADC_CTRLA_SLAVEEN_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_SLAVEEN_Msk;
 <#else>
     /* prescaler */
-    ADC${ADC_INDEX}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER};
 </#if>
     /* Sampling length */
-    ADC${ADC_INDEX}_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(${ADC_SAMPCTRL_SAMPLEN}U);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(${ADC_SAMPCTRL_SAMPLEN}U);
 
     /* reference */
-    ADC${ADC_INDEX}_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_${ADC_REFCTRL_REFSEL};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_${ADC_REFCTRL_REFSEL};
 
     /* positive and negative input pins */
-    ADC${ADC_INDEX}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG};
 
-    while((ADC${ADC_INDEX}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
     {
         /* Wait for Synchronization */
     }
 
     /* Resolution & Operation Mode */
-    <@compress single_line=true>ADC${ADC_INDEX}_REGS->ADC_CTRLC = ADC_CTRLC_RESSEL_${ADC_CTRLC_RESSEL}
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC = ADC_CTRLC_RESSEL_${ADC_CTRLC_RESSEL}
                                      <#if ADC_CTRLC_VAL?has_content>| ${ADC_CTRLC_VAL}</#if>;</@compress>
 
-    while((ADC${ADC_INDEX}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_CTRLC_Msk) == ADC_SYNCBUSY_CTRLC_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_CTRLC_Msk) == ADC_SYNCBUSY_CTRLC_Msk)
     {
         /* Wait for Synchronization */
     }
 
 <#if ADC_CTRLC_RESSEL == "16BIT">
     /* Result averaging */
-    ADC${ADC_INDEX}_REGS->ADC_AVGCTRL = ADC_AVGCTRL_SAMPLENUM_${ADC_AVGCTRL_SAMPLENUM} | ADC_AVGCTRL_ADJRES(${ADC_AVGCTRL_ADJRES});
+    ${ADC_INSTANCE_NAME}_REGS->ADC_AVGCTRL = ADC_AVGCTRL_SAMPLENUM_${ADC_AVGCTRL_SAMPLENUM} | ADC_AVGCTRL_ADJRES(${ADC_AVGCTRL_ADJRES});
 </#if>
 
     /* Clear all interrupt flags */
-    ADC${ADC_INDEX}_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
 
 <#if ADC_INTENSET_RESRDY = true>
     /* Enable RESRDY interrupt */
-    ADC${ADC_INDEX}_REGS->ADC_INTENSET = ADC_INTENSET_RESRDY_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = ADC_INTENSET_RESRDY_Msk;
 </#if>
 
 <#if ADC_EVCTRL_VAL?has_content>
     /* events  */
-    ADC${ADC_INDEX}_REGS->ADC_EVCTRL = ${ADC_EVCTRL_VAL};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EVCTRL = ${ADC_EVCTRL_VAL};
 </#if>
 
     /* Enable ADC & Configure run in standby and on demand */
-    <@compress single_line=true>ADC${ADC_INDEX}_REGS->ADC_CTRLA = ADC_CTRLA_ENABLE_Msk
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_ENABLE_Msk
                                       ${ADC_CTRLA_RUNSTDBY?then('| ADC_CTRLA_RUNSTDBY_Msk', '')}
                                       ${ADC_CTRLA_ONDEMAND?then('| ADC_CTRLA_ONDEMAND_Msk', '')};</@compress>
 
-    while((ADC${ADC_INDEX}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_ENABLE_Msk) == ADC_SYNCBUSY_ENABLE_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_ENABLE_Msk) == ADC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization */
     }
 }
 
 /* Configure channel input */
-void ADC${ADC_INDEX}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
+void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
     /* Configure pin scan mode and positive and negative input pins */
-    ADC${ADC_INDEX}_REGS->ADC_INPUTCTRL = positiveInput | negativeInput;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = positiveInput | negativeInput;
 
-    while((ADC${ADC_INDEX}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
     {
         /* Wait for Synchronization */
     }
 }
 
 /* Start the ADC conversion by SW */
-void ADC${ADC_INDEX}_ConversionStart( void )
+void ${ADC_INSTANCE_NAME}_ConversionStart( void )
 {
     /* Start conversion */
-    ADC${ADC_INDEX}_REGS->ADC_SWTRIG |= ADC_SWTRIG_START_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_SWTRIG |= ADC_SWTRIG_START_Msk;
 
-    while((ADC${ADC_INDEX}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_SWTRIG_Msk) == ADC_SYNCBUSY_SWTRIG_Msk)
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_SWTRIG_Msk) == ADC_SYNCBUSY_SWTRIG_Msk)
     {
         /* Wait for Synchronization */
     }
 }
 
 /* Check whether result is ready */
-bool ADC${ADC_INDEX}_ConversionStatusGet( void )
+bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
-    return (bool)((ADC${ADC_INDEX}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+    return (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
 }
 
 /* Read the conversion result */
-uint16_t ADC${ADC_INDEX}_ConversionResultGet( void )
+uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void )
 {
-    return (uint16_t)ADC${ADC_INDEX}_REGS->ADC_RESULT;
+    return (uint16_t)${ADC_INSTANCE_NAME}_REGS->ADC_RESULT;
 }
 
 <#if ADC_INTENSET_RESRDY = true>
 /* Register callback function */
-void ADC${ADC_INDEX}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
+void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
 {
-    ADC${ADC_INDEX}_CallbackObject.callback = callback;
+    ${ADC_INSTANCE_NAME}_CallbackObject.callback = callback;
 
-    ADC${ADC_INDEX}_CallbackObject.context = context;
+    ${ADC_INSTANCE_NAME}_CallbackObject.context = context;
 }
 
 
-void ADC${ADC_INDEX}_InterruptHandler( void )
+void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 {
-    if (ADC${ADC_INDEX}_CallbackObject.callback != NULL)
+    if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ADC${ADC_INDEX}_CallbackObject.callback(ADC${ADC_INDEX}_CallbackObject.context);
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(${ADC_INSTANCE_NAME}_CallbackObject.context);
     }
 }
 </#if>

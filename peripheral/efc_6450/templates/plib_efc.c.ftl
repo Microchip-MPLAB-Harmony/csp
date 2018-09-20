@@ -1,17 +1,17 @@
 /*******************************************************************************
-Interface definition of EFC PLIB.
+Interface definition of ${EFC_INSTANCE_NAME} PLIB.
 
 Company:
 Microchip Technology Inc.
 
 File Name:
-plib_EFC.h
+plib_${EFC_INSTANCE_NAME?lower_case}.h
 
 Summary:
-Interface definition of EFC Plib.
+Interface definition of ${EFC_INSTANCE_NAME} Plib.
 
 Description:
-This file defines the interface for the EFC Plib.
+This file defines the interface for the ${EFC_INSTANCE_NAME} Plib.
 It allows user to Program, Erase and lock the on-chip FLASH memory.
 *******************************************************************************/
 
@@ -38,7 +38,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <string.h>
 #include "device.h"
-#include "plib_efc${INDEX?string}.h"
+#include "plib_${EFC_INSTANCE_NAME?lower_case}.h"
 
 static uint32_t status = 0;
 
@@ -46,31 +46,31 @@ static uint32_t status = 0;
     <#lt>EFC_OBJECT efc;
 </#if>
 
-bool EFC${INDEX?string}_Read( uint32_t *data, uint32_t length, uint32_t address )
+bool ${EFC_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);
     return true;
 }
 
-bool EFC${INDEX?string}_SectorErase( uint32_t address )
+bool ${EFC_INSTANCE_NAME}_SectorErase( uint32_t address )
 {
     uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
     /* Issue the FLASH erase operation*/
-    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_EPA|EEFC_FCR_FARG(page_number|0x2)|EEFC_FCR_FKEY_PASSWD);
+    ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_EPA|EEFC_FCR_FARG(page_number|0x2)|EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
+        <#lt>    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 
     return true;
 }
 
-bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address )
+bool ${EFC_INSTANCE_NAME}_PageWrite( uint32_t *data, uint32_t address )
 {
     uint16_t page_number;
 
@@ -86,18 +86,18 @@ bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address )
     __ISB();
 
     /* Issue the FLASH write operation*/
-    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
+    ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
+        <#lt>    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 
     return true;
 }
 
-bool EFC${INDEX?string}_QuadWordWrite( uint32_t *data, uint32_t address )
+bool ${EFC_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
 {
     uint16_t page_number;
 
@@ -109,61 +109,61 @@ bool EFC${INDEX?string}_QuadWordWrite( uint32_t *data, uint32_t address )
     *((uint32_t *)(( address ) + i )) =    *((uint32_t *)( data++ ));
     }
     /* Issue the FLASH write operation*/
-    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
+    ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_WP | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
+        <#lt>    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 
     return true;
 }
 
-void EFC${INDEX?string}_RegionLock(uint32_t address)
+void ${EFC_INSTANCE_NAME}_RegionLock(uint32_t address)
 {
     uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
-    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_SLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
+    ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_SLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
+        <#lt>    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 }
 
-void EFC${INDEX?string}_RegionUnlock(uint32_t address)
+void ${EFC_INSTANCE_NAME}_RegionUnlock(uint32_t address)
 {
     uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
-    EFC_REGS->EEFC_FCR = (EEFC_FCR_FCMD_CLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
+    ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_CLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
     <#if INTERRUPT_ENABLE == true>
-        <#lt>    EFC_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
+        <#lt>    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR |= EEFC_FMR_FRDY_Msk;
     </#if>
 }
 
-bool EFC${INDEX?string}_IsBusy(void)
+bool ${EFC_INSTANCE_NAME}_IsBusy(void)
 {
-    status |= EFC_REGS->EEFC_FSR;
+    status |= ${EFC_INSTANCE_NAME}_REGS->EEFC_FSR;
     return (bool)(!(status & EEFC_FSR_FRDY_Msk));
 }
 
-EFC_ERROR EFC${INDEX?string}_ErrorGet( void )
+EFC_ERROR ${EFC_INSTANCE_NAME}_ErrorGet( void )
 {
-    status |= EFC_REGS->EEFC_FSR;
+    status |= ${EFC_INSTANCE_NAME}_REGS->EEFC_FSR;
     return status;
 }
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>void EFC${INDEX?string}_CallbackRegister( EFC_CALLBACK callback, uintptr_t context )
+    <#lt>void ${EFC_INSTANCE_NAME}_CallbackRegister( EFC_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    efc.callback = callback;
     <#lt>    efc.context = context;
@@ -171,10 +171,10 @@ EFC_ERROR EFC${INDEX?string}_ErrorGet( void )
 </#if>
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>void EFC${INDEX?string}_InterruptHandler( void )
+    <#lt>void ${EFC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
-    <#lt>    uint32_t ul_fmr = EFC_REGS->EEFC_FMR;
-    <#lt>    EFC_REGS->EEFC_FMR = ( ul_fmr & (~EEFC_FMR_FRDY_Msk));
+    <#lt>    uint32_t ul_fmr = ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR;
+    <#lt>    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR = ( ul_fmr & (~EEFC_FMR_FRDY_Msk));
     <#lt>    if(efc.callback != NULL)
     <#lt>        {
         <#lt>            efc.callback(efc.context);

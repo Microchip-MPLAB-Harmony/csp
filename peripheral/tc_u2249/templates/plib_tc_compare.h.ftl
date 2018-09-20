@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Timer/Counter(TC${TC_INDEX}) PLIB
+  Timer/Counter(${TC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_tc${TC_INDEX}.h
+    plib_${TC_INSTANCE_NAME?lower_case}.h
 
   Summary
-    TC${TC_INDEX} PLIB Header File.
+    ${TC_INSTANCE_NAME} PLIB Header File.
 
   Description
     This file defines the interface to the TC peripheral library. This
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TC${TC_INDEX}_H       // Guards against multiple inclusion
-#define PLIB_TC${TC_INDEX}_H
+#ifndef PLIB_${TC_INSTANCE_NAME}_H       // Guards against multiple inclusion
+#define PLIB_${TC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -55,7 +55,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_tc.h"
+#include "plib_tc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C Compatibility
@@ -74,7 +74,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     interface and should be considered part it.
 */
 
-#define TC${TC_INDEX}_CompareFrequencyGet()  (uint32_t)(${TC_FREQUENCY}UL)
+#define ${TC_INSTANCE_NAME}_CompareFrequencyGet()  (uint32_t)(${TC_FREQUENCY}UL)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -86,55 +86,55 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 
-void TC${TC_INDEX}_CompareInitialize( void );
+void ${TC_INSTANCE_NAME}_CompareInitialize( void );
 
-void TC${TC_INDEX}_CompareStart( void );
+void ${TC_INSTANCE_NAME}_CompareStart( void );
 
-void TC${TC_INDEX}_CompareStop( void );
+void ${TC_INSTANCE_NAME}_CompareStop( void );
 
 <#if TC_CTRLA_MODE = "COUNT8">
 
-void TC${TC_INDEX}_Compare8bitPeriodSet( uint8_t period );
+void ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period );
 
-uint8_t TC${TC_INDEX}_Compare8bitPeriodGet( void );
+uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void );
 
-uint8_t TC${TC_INDEX}_Compare8bitCounterGet( void );
+uint8_t ${TC_INSTANCE_NAME}_Compare8bitCounterGet( void );
 
-void TC${TC_INDEX}_Compare8bitCounterSet( uint8_t count );
+void ${TC_INSTANCE_NAME}_Compare8bitCounterSet( uint8_t count );
 
-void TC${TC_INDEX}_Compare8bitSet( uint8_t compareValue );
+void ${TC_INSTANCE_NAME}_Compare8bitSet( uint8_t compareValue );
 <#elseif TC_CTRLA_MODE = "COUNT16">
 
-void TC${TC_INDEX}_Compare16bitPeriodSet( uint16_t period );
+void ${TC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period );
 
-uint16_t TC${TC_INDEX}_Compare16bitPeriodGet( void );
+uint16_t ${TC_INSTANCE_NAME}_Compare16bitPeriodGet( void );
 
-uint16_t TC${TC_INDEX}_Compare16bitCounterGet( void );
+uint16_t ${TC_INSTANCE_NAME}_Compare16bitCounterGet( void );
 
-void TC${TC_INDEX}_Compare16bitCounterSet( uint16_t count );
+void ${TC_INSTANCE_NAME}_Compare16bitCounterSet( uint16_t count );
 
-void TC${TC_INDEX}_Compare16bitSet( uint16_t compareValue );
+void ${TC_INSTANCE_NAME}_Compare16bitSet( uint16_t compareValue );
 
 <#elseif TC_CTRLA_MODE = "COUNT32">
 
-void TC${TC_INDEX}_Compare32bitPeriodSet( uint32_t period );
+void ${TC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period );
 
-uint32_t TC${TC_INDEX}_Compare32bitPeriodGet( void );
+uint32_t ${TC_INSTANCE_NAME}_Compare32bitPeriodGet( void );
 
-uint32_t TC${TC_INDEX}_Compare32bitCounterGet( void );
+uint32_t ${TC_INSTANCE_NAME}_Compare32bitCounterGet( void );
 
-void TC${TC_INDEX}_Compare32bitCounterSet( uint32_t count );
+void ${TC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t count );
 
-void TC${TC_INDEX}_Compare32bitSet( uint32_t compareValue );
+void ${TC_INSTANCE_NAME}_Compare32bitSet( uint32_t compareValue );
 </#if>
 
-bool TC${TC_INDEX}_CompareStatusGet( void );
+bool ${TC_INSTANCE_NAME}_CompareStatusGet( void );
 
 <#if TC_COMPARE_INTENSET_OVF = true>
 
-void TC${TC_INDEX}_CompareCallbackRegister( TC_CALLBACK callback, uintptr_t context );
+void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_CALLBACK callback, uintptr_t context );
 
-void TC${TC_INDEX}_CompareInterruptHandler( void );
+void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void );
 </#if>
 
 
@@ -146,4 +146,4 @@ void TC${TC_INDEX}_CompareInterruptHandler( void );
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_TC${TC_INDEX}_H */
+#endif /* PLIB_${TC_INSTANCE_NAME}_H */

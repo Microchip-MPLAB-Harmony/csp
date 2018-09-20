@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Divide Square Root Accelerator (DIVAS${DIVAS_INDEX}) PLIB
+  Divide Square Root Accelerator (${DIVAS_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_divas${DIVAS_INDEX}.h
+    plib_${DIVAS_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    DIVAS${DIVAS_INDEX} PLIB Header File
+    ${DIVAS_INSTANCE_NAME} PLIB Header File
 
   Description:
     This file defines the interface to the DIVAS peripheral library. This
@@ -41,8 +41,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
-#ifndef PLIB_DIVAS${DIVAS_INDEX}_H
-#define PLIB_DIVAS${DIVAS_INDEX}_H
+#ifndef PLIB_${DIVAS_INSTANCE_NAME}_H
+#define PLIB_${DIVAS_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -73,13 +73,13 @@ this interface.
 
 // *****************************************************************************
 /* Function:
-    void DIVAS${DIVAS_INDEX}_Initialize(void);
+    void ${DIVAS_INSTANCE_NAME}_Initialize(void);
 
   Summary:
-    Initializes DIVAS ${DIVAS_INDEX} module of the device.
+    Initializes ${DIVAS_INSTANCE_NAME} module of the device.
 
   Description:
-    This function initializes DIVAS${DIVAS_INDEX} module of the device with the
+    This function initializes ${DIVAS_INSTANCE_NAME} module of the device with the
     values configured in MCC GUI. Once the peripheral is initialized, signed,
     unsigned division and square root functions can be used.
 
@@ -94,7 +94,7 @@ this interface.
 
   Example:
     <code>
-        DIVAS${DIVAS_INDEX}_Initialize();
+        ${DIVAS_INSTANCE_NAME}_Initialize();
     </code>
 
   Remarks:
@@ -102,11 +102,11 @@ this interface.
     This function should only be called once during system initialization.
 */
 
-void DIVAS${DIVAS_INDEX}_Initialize(void);
+void ${DIVAS_INSTANCE_NAME}_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    bool DIVAS${DIVAS_INDEX}_DivideSigned ( int32_t divisor, int32_t dividend,
+    bool ${DIVAS_INSTANCE_NAME}_DivideSigned ( int32_t divisor, int32_t dividend,
                                     int32_t * quotient, int32_t * remainder );
 
 Summary:
@@ -123,7 +123,7 @@ Summary:
 
   Precondition:
     The peripheral should have been initialized by calling the
-    DIVAS${DIVAS_INDEX}_Initialize() function once. The AHB clock to the DIVAS
+    ${DIVAS_INSTANCE_NAME}_Initialize() function once. The AHB clock to the DIVAS
     Peripheral should have been enabled.
 
   Parameters:
@@ -153,7 +153,7 @@ Summary:
         divisor = -2000;
         dividend = 10000;
 
-        if (true == DIVAS${DIVAS_INDEX}_DivideSigned(divisor, dividend,
+        if (true == ${DIVAS_INSTANCE_NAME}_DivideSigned(divisor, dividend,
                                                     &quotient, &remainder ))
         {
             // quotient and remainder will have valid values.
@@ -164,11 +164,11 @@ Summary:
     None.
 */
 
-bool DIVAS${DIVAS_INDEX}_DivideSigned( int32_t divisor, int32_t dividend, int32_t * quotient, int32_t * remainder );
+bool ${DIVAS_INSTANCE_NAME}_DivideSigned( int32_t divisor, int32_t dividend, int32_t * quotient, int32_t * remainder );
 
 // *****************************************************************************
 /* Function:
-    bool DIVAS${DIVAS_INDEX}_DivideUnsigned ( uint32_t divisor,
+    bool ${DIVAS_INSTANCE_NAME}_DivideUnsigned ( uint32_t divisor,
                 uint32_t dividend, uint32_t * quotient, uint32_t * remainder );
 
  Summary:
@@ -185,7 +185,7 @@ bool DIVAS${DIVAS_INDEX}_DivideSigned( int32_t divisor, int32_t dividend, int32_
 
   Precondition:
     The peripheral should have been initialized by calling the
-    DIVAS${DIVAS_INDEX}_Initialize() function once. The AHB clock to the DIVAS
+    ${DIVAS_INSTANCE_NAME}_Initialize() function once. The AHB clock to the DIVAS
     peripheral should have been enabled.
 
   Parameters:
@@ -215,7 +215,7 @@ bool DIVAS${DIVAS_INDEX}_DivideSigned( int32_t divisor, int32_t dividend, int32_
         divisor = 2000;
         dividend = 10000;
 
-        if (true == DIVAS${DIVAS_INDEX}_DivideUnsigned(divisor, dividend,
+        if (true == ${DIVAS_INSTANCE_NAME}_DivideUnsigned(divisor, dividend,
                                                     &quotient, &remainder ))
         {
             // quotient and remainder will have valid values.
@@ -226,11 +226,11 @@ bool DIVAS${DIVAS_INDEX}_DivideSigned( int32_t divisor, int32_t dividend, int32_
     None.
 */
 
-bool DIVAS${DIVAS_INDEX}_DivideUnsigned( uint32_t divisor, uint32_t dividend, uint32_t * quotient, uint32_t * remainder );
+bool ${DIVAS_INSTANCE_NAME}_DivideUnsigned( uint32_t divisor, uint32_t dividend, uint32_t * quotient, uint32_t * remainder );
 
 // *****************************************************************************
 /* Function:
-    uint32_t DIVAS${DIVAS_INDEX}_SquareRoot ( uint32_t number ,
+    uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot ( uint32_t number ,
                                             uint32_t * remainder);
 
   Summary:
@@ -264,7 +264,7 @@ bool DIVAS${DIVAS_INDEX}_DivideUnsigned( uint32_t divisor, uint32_t dividend, ui
         uint32_t squareRoot;
 
         number = 144;
-        squareRoot = DIVAS${DIVAS_INDEX}_SquareRoot (number, &remainder);
+        squareRoot = ${DIVAS_INSTANCE_NAME}_SquareRoot (number, &remainder);
 
     </code>
 
@@ -272,10 +272,10 @@ bool DIVAS${DIVAS_INDEX}_DivideUnsigned( uint32_t divisor, uint32_t dividend, ui
     None.
 */
 
-uint32_t DIVAS${DIVAS_INDEX}_SquareRoot ( uint32_t number , uint32_t * remainder);
+uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot ( uint32_t number , uint32_t * remainder);
 
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif
 
-#endif /* PLIB_DIVAS${DIVAS_INDEX}_H */
+#endif /* PLIB_${DIVAS_INSTANCE_NAME}_H */

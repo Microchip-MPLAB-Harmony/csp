@@ -1,1 +1,1 @@
-	RSTC${INDEX?string}_Initialize();
+	${RSTC_INSTANCE_NAME}_Initialize();

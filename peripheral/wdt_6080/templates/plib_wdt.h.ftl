@@ -38,8 +38,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef WDT${wdtIndex?string}_H    // Guards against multiple inclusion
-#define WDT${wdtIndex?string}_H
+#ifndef ${WDT_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define ${WDT_INSTANCE_NAME}_H
 
 #include <stdint.h>
 #include <stddef.h>
@@ -68,10 +68,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#if>
 
 /***************************** WDT API *******************************/
-void WDT${wdtIndex?string}_Initialize( void );
-void WDT${wdtIndex?string}_Clear( void );
+void ${WDT_INSTANCE_NAME}_Initialize( void );
+void ${WDT_INSTANCE_NAME}_Clear( void );
 <#if wdtinterruptMode == true>
-	<#lt>void WDT${wdtIndex?string}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
+	<#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
 </#if>	
 	
 #ifdef __cplusplus // Provide C++ Compatibility
