@@ -244,12 +244,50 @@ def instantiateComponent(spiComponent):
         description = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("caption")
         spiSym_CSR_BITS.addKey(valueName, value, description)
 
-        index = ''.join([i for i in valueName if i.isdigit()])
+    #SPI 8-bit Character size Mask
+    spiSym_CSR_BITS_8BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", None)
+    spiSym_CSR_BITS_8BIT.setDefaultValue("0x0")
+    spiSym_CSR_BITS_8BIT.setVisible(False)
 
-        #SPI CHARSIZE BIT Mask
-        spiSym_CSR_BITS_Mask = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_" + str(index) + "_BIT_MASK", None)
-        spiSym_CSR_BITS_Mask.setDefaultValue(value)
-        spiSym_CSR_BITS_Mask.setVisible(False)
+    #SPI 9-bit Character size Mask
+    spiSym_CSR_BITS_9BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_9_BIT_MASK", None)
+    spiSym_CSR_BITS_9BIT.setDefaultValue("0x10")
+    spiSym_CSR_BITS_9BIT.setVisible(False)
+
+    #SPI 10-bit Character size Mask
+    spiSym_CSR_BITS_10BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_10_BIT_MASK", None)
+    spiSym_CSR_BITS_10BIT.setDefaultValue("0x20")
+    spiSym_CSR_BITS_10BIT.setVisible(False)
+
+    #SPI 11-bit Character size Mask
+    spiSym_CSR_BITS_11BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_11_BIT_MASK", None)
+    spiSym_CSR_BITS_11BIT.setDefaultValue("0x30")
+    spiSym_CSR_BITS_11BIT.setVisible(False)
+
+    #SPI 12-bit Character size Mask
+    spiSym_CSR_BITS_12BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_12_BIT_MASK", None)
+    spiSym_CSR_BITS_12BIT.setDefaultValue("0x40")
+    spiSym_CSR_BITS_12BIT.setVisible(False)
+
+    #SPI 13-bit Character size Mask
+    spiSym_CSR_BITS_13BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_13_BIT_MASK", None)
+    spiSym_CSR_BITS_13BIT.setDefaultValue("0x50")
+    spiSym_CSR_BITS_13BIT.setVisible(False)
+
+    #SPI 14-bit Character size Mask
+    spiSym_CSR_BITS_14BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_14_BIT_MASK", None)
+    spiSym_CSR_BITS_14BIT.setDefaultValue("0x60")
+    spiSym_CSR_BITS_14BIT.setVisible(False)
+
+    #SPI 15-bit Character size Mask
+    spiSym_CSR_BITS_15BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_15_BIT_MASK", None)
+    spiSym_CSR_BITS_15BIT.setDefaultValue("0x70")
+    spiSym_CSR_BITS_15BIT.setVisible(False)
+
+    #SPI 16-bit Character size Mask
+    spiSym_CSR_BITS_16BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_16_BIT_MASK", None)
+    spiSym_CSR_BITS_16BIT.setDefaultValue("0x80")
+    spiSym_CSR_BITS_16BIT.setVisible(False)
 
     spiSymDummyData = spiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
     spiSymDummyData.setVisible(True)
@@ -295,19 +333,19 @@ def instantiateComponent(spiComponent):
         spiSym_CSR_NCPHA.addKey(valueName, value, description)
 
     #SPI Clock Phase Leading Edge Mask
-    spiSym_CTRLA_CPHA_TE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", None)
-    spiSym_CTRLA_CPHA_TE_Mask.setDefaultValue("0x1")
-    spiSym_CTRLA_CPHA_TE_Mask.setVisible(False)
+    spiSym_CSR_NCPHA_TE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", None)
+    spiSym_CSR_NCPHA_TE_Mask.setDefaultValue("0x0")
+    spiSym_CSR_NCPHA_TE_Mask.setVisible(False)
 
     #SPI Clock Phase Trailing Edge Mask
-    spiSym_CTRLA_CPHA_LE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", None)
-    spiSym_CTRLA_CPHA_LE_Mask.setDefaultValue("0x0")
-    spiSym_CTRLA_CPHA_LE_Mask.setVisible(False)
+    spiSym_CSR_NCPHA_LE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", None)
+    spiSym_CSR_NCPHA_LE_Mask.setDefaultValue("0x2")
+    spiSym_CSR_NCPHA_LE_Mask.setVisible(False)
 
     #SPI Status OVERRUN Mask
-    spiSym_STATUS_OVERRUN_Mask = spiComponent.createStringSymbol("SPI_STATUS_OVERRUN_MASK", None)
-    spiSym_STATUS_OVERRUN_Mask.setDefaultValue("0x8")
-    spiSym_STATUS_OVERRUN_Mask.setVisible(False)
+    spiSym_SR_OVERES_Mask = spiComponent.createStringSymbol("SPI_STATUS_OVERRUN_MASK", None)
+    spiSym_SR_OVERES_Mask.setDefaultValue("0x8")
+    spiSym_SR_OVERES_Mask.setVisible(False)
 
     #SPI API Prefix
     spiSym_API_Prefix = spiComponent.createStringSymbol("SPI_PLIB_API_PREFIX", None)

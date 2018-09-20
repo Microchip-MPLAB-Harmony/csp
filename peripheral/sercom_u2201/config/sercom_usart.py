@@ -178,15 +178,20 @@ for index in range(len(usartSym_CTRLA_PMODE_Values)):
     usartSym_CTRLB_PMODE_Key_Value = usartSym_CTRLA_PMODE_Values[index].getAttribute("value")
     usartSym_CTRLB_PMODE.addKey(usartSym_CTRLB_PMODE_Key_Name, usartSym_CTRLB_PMODE_Key_Value, usartSym_CTRLB_PMODE_Key_Description)
 
-    #USART Parity Mask
-    usartSym_CTRLA_PMODE_Mask = sercomComponent.createStringSymbol("USART_PARITY_" + usartSym_CTRLB_PMODE_Key_Name + "_MASK", sercomSym_OperationMode)
-    usartSym_CTRLA_PMODE_Mask.setDefaultValue(usartSym_CTRLB_PMODE_Key_Value)
-    usartSym_CTRLA_PMODE_Mask.setVisible(False)
-
 usartSym_CTRLB_PMODE.setDefaultValue(usartSym_CTRLB_PMODE_Default_Val)
 usartSym_CTRLB_PMODE.setOutputMode("Key")
 usartSym_CTRLB_PMODE.setDisplayMode("Description")
 usartSym_CTRLB_PMODE.setDependencies(set_usart_PMODE_VisibleProperty, ["SERCOM_MODE"])
+
+#USART EVEN Parity Mask
+usartSym_CTRLA_PMODE_EVEN_Mask = sercomComponent.createStringSymbol("USART_PARITY_EVEN_MASK", sercomSym_OperationMode)
+usartSym_CTRLA_PMODE_EVEN_Mask.setDefaultValue("0x0")
+usartSym_CTRLA_PMODE_EVEN_Mask.setVisible(False)
+
+#USART ODD Parity Mask
+usartSym_CTRLA_PMODE_ODD_Mask = sercomComponent.createStringSymbol("USART_PARITY_ODD_MASK", sercomSym_OperationMode)
+usartSym_CTRLA_PMODE_ODD_Mask.setDefaultValue("0x80000")
+usartSym_CTRLA_PMODE_ODD_Mask.setVisible(False)
 
 #Character Size
 usartSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("USART_CHARSIZE_BITS", sercomSym_OperationMode)
@@ -202,17 +207,35 @@ for index in range(len(usartSym_CTRLA_CHSIZE_Values)):
     usartSym_CTRLB_CHSIZE_Key_Value = usartSym_CTRLA_CHSIZE_Values[index].getAttribute("value")
     usartSym_CTRLB_CHSIZE.addKey(usartSym_CTRLB_CHSIZE_Key_Name, usartSym_CTRLB_CHSIZE_Key_Value, usartSym_CTRLB_CHSIZE_Key_Description)
 
-    dataSize = ''.join([i for i in usartSym_CTRLB_CHSIZE_Key_Name if i.isdigit()])
-
-    #USART Character Size Mask
-    usartSym_CTRLB_CHSIZE_Mask = sercomComponent.createStringSymbol("USART_DATA_" + str(dataSize) + "_BIT_MASK", sercomSym_OperationMode)
-    usartSym_CTRLB_CHSIZE_Mask.setDefaultValue(usartSym_CTRLB_CHSIZE_Key_Value)
-    usartSym_CTRLB_CHSIZE_Mask.setVisible(False)
-
 usartSym_CTRLB_CHSIZE.setDefaultValue(0)
 usartSym_CTRLB_CHSIZE.setOutputMode("Key")
 usartSym_CTRLB_CHSIZE.setDisplayMode("Description")
 usartSym_CTRLB_CHSIZE.setDependencies(set_usart_CHSIZE_VisibleProperty, ["SERCOM_MODE"])
+
+#USART Character Size 5 Mask
+usartSym_CTRLB_CHSIZE_5_Mask = sercomComponent.createStringSymbol("USART_DATA_5_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_5_Mask.setDefaultValue("0x5")
+usartSym_CTRLB_CHSIZE_5_Mask.setVisible(False)
+
+#USART Character Size 6 Mask
+usartSym_CTRLB_CHSIZE_6_Mask = sercomComponent.createStringSymbol("USART_DATA_6_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_6_Mask.setDefaultValue("0x6")
+usartSym_CTRLB_CHSIZE_6_Mask.setVisible(False)
+
+#USART Character Size 7 Mask
+usartSym_CTRLB_CHSIZE_7_Mask = sercomComponent.createStringSymbol("USART_DATA_7_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_7_Mask.setDefaultValue("0x7")
+usartSym_CTRLB_CHSIZE_7_Mask.setVisible(False)
+
+#USART Character Size 8 Mask
+usartSym_CTRLB_CHSIZE_8_Mask = sercomComponent.createStringSymbol("USART_DATA_8_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_8_Mask.setDefaultValue("0x0")
+usartSym_CTRLB_CHSIZE_8_Mask.setVisible(False)
+
+#USART Character Size 9 Mask
+usartSym_CTRLB_CHSIZE_9_Mask = sercomComponent.createStringSymbol("USART_DATA_9_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_9_Mask.setDefaultValue("0x1")
+usartSym_CTRLB_CHSIZE_9_Mask.setVisible(False)
 
 #Stop Bit
 usartSym_CTRLB_SBMODE = sercomComponent.createKeyValueSetSymbol("USART_STOP_BIT", sercomSym_OperationMode)
@@ -228,17 +251,20 @@ for index in range(len(usartSym_CTRLA_SBMODE_Values)):
     usartSym_CTRLB_SBMODE_Key_Value = usartSym_CTRLA_SBMODE_Values[index].getAttribute("value")
     usartSym_CTRLB_SBMODE.addKey(usartSym_CTRLB_SBMODE_Key_Name, usartSym_CTRLB_SBMODE_Key_Value, usartSym_CTRLB_SBMODE_Key_Description)
 
-    dataSize = ''.join([i for i in usartSym_CTRLB_SBMODE_Key_Name if i.isdigit()])
-
-    #USART Stop bit Mask
-    usartSym_CTRLB_SBMODE_Mask = sercomComponent.createStringSymbol("USART_STOP_" + str(dataSize) + "_BIT_MASK", sercomSym_OperationMode)
-    usartSym_CTRLB_SBMODE_Mask.setDefaultValue(usartSym_CTRLB_SBMODE_Key_Value)
-    usartSym_CTRLB_SBMODE_Mask.setVisible(False)
-
 usartSym_CTRLB_SBMODE.setDefaultValue(0)
 usartSym_CTRLB_SBMODE.setOutputMode("Key")
 usartSym_CTRLB_SBMODE.setDisplayMode("Description")
 usartSym_CTRLB_SBMODE.setDependencies(set_usart_SBMODE_VisibleProperty, ["SERCOM_MODE"])
+
+#USART Stop 1-bit Mask
+usartSym_CTRLB_SBMODE_1_Mask = sercomComponent.createStringSymbol("USART_STOP_1_BIT_MASK", None)
+usartSym_CTRLB_SBMODE_1_Mask.setDefaultValue("0x0")
+usartSym_CTRLB_SBMODE_1_Mask.setVisible(False)
+
+#USART Stop 2-bit Mask
+usartSym_CTRLB_SBMODE_2_Mask = sercomComponent.createStringSymbol("USART_STOP_2_BIT_MASK", None)
+usartSym_CTRLB_SBMODE_2_Mask.setDefaultValue("0x40")
+usartSym_CTRLB_SBMODE_2_Mask.setVisible(False)
 
 #Baud Rate
 usartSym_BAUD_RATE = sercomComponent.createIntegerSymbol("USART_BAUD_RATE", sercomSym_OperationMode)

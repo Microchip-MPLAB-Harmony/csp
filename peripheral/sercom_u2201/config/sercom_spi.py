@@ -278,10 +278,10 @@ spiSym_CTRLA_CPOL_IH_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_POLARI
 spiSym_CTRLA_CPOL_IH_Mask.setDefaultValue("0x20000000")
 spiSym_CTRLA_CPOL_IH_Mask.setVisible(False)
 
-#SPI Status BUFOVF Mask
-spiSym_STATUS_BUSOVF_Mask = sercomComponent.createStringSymbol("SPI_STATUS_OVERRUN_MASK", sercomSym_OperationMode)
-spiSym_STATUS_BUSOVF_Mask.setDefaultValue("0x4")
-spiSym_STATUS_BUSOVF_Mask.setVisible(False)
+#SPI Status OVERRUN Mask
+spiSym_STATUS_BUFOVF_Mask = sercomComponent.createStringSymbol("SPI_STATUS_OVERRUN_MASK", sercomSym_OperationMode)
+spiSym_STATUS_BUFOVF_Mask.setDefaultValue("0x4")
+spiSym_STATUS_BUFOVF_Mask.setVisible(False)
 
 #SPI Transfer Mode
 spiSym_CTRLA_TRANSFER_MODE = sercomComponent.createStringSymbol("SPI_TRANSFER_MODE", sercomSym_OperationMode)

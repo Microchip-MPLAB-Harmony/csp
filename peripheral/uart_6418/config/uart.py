@@ -134,28 +134,23 @@ def instantiateComponent(uartComponent):
 
     #UART ODD Parity Mask
     uartSym_MR_PAR_ODD_Mask = uartComponent.createStringSymbol("USART_PARITY_ODD_MASK", None)
-    uartSym_MR_PAR_ODD_Mask.setDefaultValue("0x1")
+    uartSym_MR_PAR_ODD_Mask.setDefaultValue("0x200")
     uartSym_MR_PAR_ODD_Mask.setVisible(False)
 
     #UART SPACE Parity Mask
     uartSym_MR_PAR_SPACE_Mask = uartComponent.createStringSymbol("USART_PARITY_SPACE_MASK", None)
-    uartSym_MR_PAR_SPACE_Mask.setDefaultValue("0x2")
+    uartSym_MR_PAR_SPACE_Mask.setDefaultValue("0x400")
     uartSym_MR_PAR_SPACE_Mask.setVisible(False)
 
     #UART MARK Parity Mask
     uartSym_MR_PAR_MARK_Mask = uartComponent.createStringSymbol("USART_PARITY_MARK_MASK", None)
-    uartSym_MR_PAR_MARK_Mask.setDefaultValue("0x3")
+    uartSym_MR_PAR_MARK_Mask.setDefaultValue("0x600")
     uartSym_MR_PAR_MARK_Mask.setVisible(False)
 
     #UART NO Parity Mask
     uartSym_MR_PAR_NO_Mask = uartComponent.createStringSymbol("USART_PARITY_NONE_MASK", None)
-    uartSym_MR_PAR_NO_Mask.setDefaultValue("0x4")
+    uartSym_MR_PAR_NO_Mask.setDefaultValue("0x800")
     uartSym_MR_PAR_NO_Mask.setVisible(False)
-
-    #UART MULTIDROP Parity Mask
-    uartSym_MR_PAR_MULTIDROP_Mask = uartComponent.createStringSymbol("USART_PARITY_MULTIDROP_MASK", None)
-    uartSym_MR_PAR_MULTIDROP_Mask.setDefaultValue("0x6")
-    uartSym_MR_PAR_MULTIDROP_Mask.setVisible(False)
 
     uartStopBit = uartComponent.createComboSymbol("UART_MR_STOP_BITS", None, ["1 BIT"])
     uartStopBit.setLabel("Stop")
