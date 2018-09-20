@@ -2,7 +2,7 @@
 ########################### Global variables   #################################
 ###################################################################################################
 
-global num
+global afecInstanceName
 
 afecSym_SEQ1R_USCH = []
 afecCHMenu = []
@@ -22,20 +22,20 @@ afecSym_CH_IER_EOC = []
 
 def afecClockControl(symbol, event):
     clockSet = False
-    Database.clearSymbolValue("core", "AFEC" + str(num)+"_CLOCK_ENABLE")
+    Database.clearSymbolValue("core", afecInstanceName.getValue()+"_CLOCK_ENABLE")
     for channelID in range(0, 12):
         if (afecSym_CH_CHER[channelID].getValue() == True):
             clockSet = True
     if(clockSet == True):
-        Database.setSymbolValue("core", "AFEC" + str(num)+"_CLOCK_ENABLE", True, 2)
+        Database.setSymbolValue("core", afecInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
     else:
-        Database.setSymbolValue("core", "AFEC" + str(num)+"_CLOCK_ENABLE", False, 2)
+        Database.setSymbolValue("core", afecInstanceName.getValue()+"_CLOCK_ENABLE", False, 2)
 
 def afecinterruptControl(symbol, event):
     nvicSet = False
-    interruptVector = "AFEC" + str(num) + "_INTERRUPT_ENABLE"
-    interruptHandler = "AFEC" + str(num) + "_INTERRUPT_HANDLER"
-    interruptHandlerLock = "AFEC" + str(num) + "_INTERRUPT_HANDLER_LOCK"
+    interruptVector = afecInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    interruptHandler = afecInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    interruptHandlerLock = afecInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
     Database.clearSymbolValue("core", interruptVector)
     Database.clearSymbolValue("core", interruptHandler)
     Database.clearSymbolValue("core", interruptHandlerLock)
@@ -44,16 +44,16 @@ def afecinterruptControl(symbol, event):
             nvicSet = True
     if(nvicSet == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "AFEC"+str(num)+"_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, afecInstanceName.getValue()+"_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
         Database.setSymbolValue("core", interruptVector, False, 2)
-        Database.setSymbolValue("core", interruptHandler, "AFEC"+str(num)+"_Handler", 2)
+        Database.setSymbolValue("core", interruptHandler, afecInstanceName.getValue()+"_Handler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyClockStatus(symbol, event):
     clockSet = False
-    clock = bool(Database.getSymbolValue("core", "AFEC" + str(num)+"_CLOCK_ENABLE"))
+    clock = bool(Database.getSymbolValue("core", afecInstanceName.getValue()+"_CLOCK_ENABLE"))
     for channelID in range(0, 12):
         if (afecSym_CH_CHER[channelID].getValue() == True):
             clockSet = True
@@ -64,7 +64,7 @@ def dependencyClockStatus(symbol, event):
 
 def dependencyIntStatus(symbol, event):
     nvicSet = False
-    interruptVectorUpdate = "AFEC" + str(num) + "_INTERRUPT_ENABLE_UPDATE"
+    interruptVectorUpdate = afecInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
     nvic = bool(Database.getSymbolValue("core", interruptVectorUpdate))
     for channelID in range(0, 12):
         if (afecSym_CH_IER_EOC[channelID].getValue() == True):
@@ -238,9 +238,13 @@ def afecTriggerVisible(symbol, event):
 ########################### Component   #################################
 ###################################################################################################
 def instantiateComponent(afecComponent):
-    global num
-    num = afecComponent.getID()[-1:]
-    Log.writeInfoMessage("Running AFEC" + str(num))
+    global afecInstanceName
+    afecInstanceName = afecComponent.createStringSymbol("AFEC_INSTANCE_NAME", None)
+    afecInstanceName.setVisible(False)
+    afecInstanceName.setDefaultValue(afecComponent.getID().upper())
+
+    Log.writeInfoMessage("Running " + afecInstanceName.getValue())
+
 
     #------------------------- ATDF Read -------------------------------------
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
@@ -256,7 +260,7 @@ def instantiateComponent(afecComponent):
         availablePins.append(children[pad].getAttribute("pad"))
 
     afec_signals = []
-    afec = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]/instance@[name=\"AFEC"+str(num)+"\"]/signals")
+    afec = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]/instance@[name=\""+afecInstanceName.getValue()+"\"]/signals")
     afec_signals = afec.getChildren()
     for pad in range(0, len(afec_signals)):
         group = afec_signals[pad].getAttribute("group")
@@ -270,7 +274,7 @@ def instantiateComponent(afecComponent):
     afecSym_AvailableChannels.setVisible(False)
 
     # Clock dynamic settings
-    afecSym_ClockControl = afecComponent.createBooleanSymbol("AFEC" + str(num)+"_CLOCK_ENABLE", None)
+    afecSym_ClockControl = afecComponent.createBooleanSymbol(afecInstanceName.getValue()+"_CLOCK_ENABLE", None)
     afecSym_ClockControl.setDependencies(afecClockControl, ["AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
     "AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
     afecSym_ClockControl.setVisible(False)
@@ -284,15 +288,15 @@ def instantiateComponent(afecComponent):
     # Dependency Status
     afecSym_ClkEnComment = afecComponent.createCommentSymbol("AFEC_CLK_ENABLE_COMMENT", None)
     afecSym_ClkEnComment.setVisible(False)
-    afecSym_ClkEnComment.setLabel("Warning!!! AFEC" +str(num)+" Peripheral Clock is Disabled in Clock Manager")
-    afecSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core.AFEC" + str(num)+ "_CLOCK_ENABLE", "AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
+    afecSym_ClkEnComment.setLabel("Warning!!! "+afecInstanceName.getValue()+" Peripheral Clock is Disabled in Clock Manager")
+    afecSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core."+afecInstanceName.getValue()+"_CLOCK_ENABLE", "AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
     "AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
 
-    interruptVectorUpdate = "AFEC" + str(num) + "_INTERRUPT_ENABLE_UPDATE"
+    interruptVectorUpdate = afecInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     afecSym_IntEnComment = afecComponent.createCommentSymbol("AFEC_NVIC_ENABLE_COMMENT", None)
     afecSym_IntEnComment.setVisible(False)
-    afecSym_IntEnComment.setLabel("Warning!!! AFEC" +str(num)+" Interrupt is Disabled in Interrupt Manager")
+    afecSym_IntEnComment.setLabel("Warning!!! "+afecInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
     afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptVectorUpdate, "AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
     "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
 
@@ -377,7 +381,7 @@ def instantiateComponent(afecComponent):
     afecSym_MR_TRGSEL_VALUE.setOutputMode("Key")
     afecSym_MR_TRGSEL_VALUE.setDisplayMode("Description")
     trigger_values = []
-    afec = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]/instance@[name=\"AFEC"+str(num)+"\"]/parameters")
+    afec = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]/instance@[name=\""+afecInstanceName.getValue()+"\"]/parameters")
     trigger_values = afec.getChildren()
     for param in range(0, len(trigger_values)):
         if "TRGSEL" in trigger_values[param].getAttribute("name"):
@@ -514,9 +518,6 @@ def instantiateComponent(afecComponent):
         afecSym_CH_IER_EOC[channelID].setDependencies(afecCHInterruptVisible, ["AFEC_"+str(channelID)+"_CHER"])
 
     #--------------------------------------------------------------------------------------
-    afecIndex = afecComponent.createIntegerSymbol("INDEX", afecMenu)
-    afecIndex.setVisible(False)
-    afecIndex.setDefaultValue(int(num))
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
@@ -528,22 +529,22 @@ def instantiateComponent(afecComponent):
 
     afecHeaderFile = afecComponent.createFileSymbol("AFEC_HEADER", None)
     afecHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/plib_afec.h.ftl")
-    afecHeaderFile.setOutputName("plib_afec" + str(num) + ".h")
+    afecHeaderFile.setOutputName("plib_"+afecInstanceName.getValue().lower() + ".h")
     afecHeaderFile.setDestPath("peripheral/afec/")
     afecHeaderFile.setProjectPath("config/" + configName +"/peripheral/afec/")
     afecHeaderFile.setType("HEADER")
     afecHeaderFile.setMarkup(True)
 
     afecGlobalHeaderFile = afecComponent.createFileSymbol("AFEC_GLOBALHEADER", None)
-    afecGlobalHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID) + "/plib_afec.h")
-    afecGlobalHeaderFile.setOutputName("plib_afec.h")
+    afecGlobalHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID) + "/templates/plib_afec_common.h")
+    afecGlobalHeaderFile.setOutputName("plib_afec_common.h")
     afecGlobalHeaderFile.setDestPath("peripheral/afec/")
     afecGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/afec/")
     afecGlobalHeaderFile.setType("HEADER")
 
     afecSource1File = afecComponent.createFileSymbol("AFEC_SOURCE", None)
     afecSource1File.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/plib_afec.c.ftl")
-    afecSource1File.setOutputName("plib_afec" + str(num) + ".c")
+    afecSource1File.setOutputName("plib_"+afecInstanceName.getValue().lower()+".c")
     afecSource1File.setDestPath("peripheral/afec/")
     afecSource1File.setProjectPath("config/" + configName +"/peripheral/afec/")
     afecSource1File.setType("SOURCE")

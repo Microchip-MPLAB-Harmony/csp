@@ -50,9 +50,6 @@ for module in range (0, len(modules)):
 
             periphInstanceName = str(instances[instance].getAttribute("name"))
 
-            if len(instances) == 1:
-                periphInstanceName = periphInstanceName + "0"
-
             print("CSP: create component: Peripheral " + periphInstanceName + " (ID = " + periphID + ")")
 
             periphComponent = Module.CreateComponent(periphInstanceName.lower(), periphInstanceName.upper(), "/Peripherals/" +
@@ -60,19 +57,12 @@ for module in range (0, len(modules)):
 
             periphComponent.setDisplayType("Peripheral Library")
 
-            periphInstanceIndex = ''.join([i for i in periphInstanceName if i.isdigit()])
-
             key = periphName + "_" + periphID
 
             if key in peripherals:
-                defaultCapablity = peripherals[key][0]
-
-                if len(peripherals[key]) == 1:
-                    periphComponent.addCapability(periphName + "_" + str(periphInstanceIndex), defaultCapablity)
-                else:
-                    for capablity in peripherals[key]:
-                        capablityId = periphName + "_" + str(periphInstanceIndex) + "_" + capablity
-                        periphComponent.addCapability(capablityId, capablity)
+                for capablity in peripherals[key]:
+                    capablityId = periphInstanceName + "_" + capablity
+                    periphComponent.addCapability(capablityId, capablity)
             else:
                 if periphName == "SMC":
                     smcRegModule    = Register.getRegisterModule("SMC")

@@ -3,7 +3,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_sdramc${INDEX}.h
+    plib_${SDRAMC_INSTANCE_NAME?lower_case}.h
 
   Summary:
     SDRAMC PLIB Header File
@@ -33,8 +33,8 @@ CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
-#ifndef _PLIB_SDRAMC${INDEX?string}_H
-#define _PLIB_SDRAMC${INDEX?string}_H
+#ifndef _PLIB_${SDRAMC_INSTANCE_NAME}_H
+#define _PLIB_${SDRAMC_INSTANCE_NAME}_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -55,7 +55,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-void SDRAMC${INDEX?string}_Initialize( void );
+void ${SDRAMC_INSTANCE_NAME}_Initialize( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -65,7 +65,7 @@ void SDRAMC${INDEX?string}_Initialize( void );
 #endif
 // DOM-IGNORE-END
 
-#endif // _PLIB_SDRAMC${INDEX?string}_H
+#endif // _PLIB_${SDRAMC_INSTANCE_NAME}_H
 /*******************************************************************************
  End of File
 */

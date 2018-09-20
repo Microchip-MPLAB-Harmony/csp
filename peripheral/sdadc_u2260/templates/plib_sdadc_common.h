@@ -1,23 +1,24 @@
 /*******************************************************************************
-  SSC PLIB
+  SDADC PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_ssc.h
+    plib_sdadc_common.h
 
   Summary:
-    SSC PLIB Common Header File
+    SDADC PLIB Header file
 
   Description:
-    This file has prototype of all the interfaces which are common for all the
-    SSC peripherals.
+    This file defines the interface to the SDADC peripheral library. This
+    library provides access to and control of the associated peripheral
+    instance.
 
 *******************************************************************************/
-
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -38,39 +39,47 @@ CONSEQUENTIAL DAMAGES, LOST  PROFITS  OR  LOST  DATA,  COST  OF  PROCUREMENT  OF
 SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef PLIB_SSC_H
-#define PLIB_SSC_H
+#ifndef PLIB_SDADC_COMMON_H
+#define PLIB_SDADC_COMMON_H
 
-#include <stdint.h>
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+/* This section lists the other files that are included in this file.
+*/
+
 #include <stddef.h>
 #include <stdbool.h>
 
-
-/* Provide C++ Compatibility */
-#ifdef __cplusplus  
-
-    extern "C" {
-
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus // Provide C++ Compatibility
+extern "C" {
 #endif
-
-/****************************** SSC${SSC_INDEX?string} Interface *********************************/
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Local: **** Do Not Use ****
+// Section: Global data
 // *****************************************************************************
 // *****************************************************************************
 
-/* Provide C++ Compatibility */
-#ifdef __cplusplus
+typedef void (*SDADC_CALLBACK)( uintptr_t context);
 
-    }
-    
+typedef struct
+{
+    SDADC_CALLBACK callback;
+    uintptr_t context;
+}SDADC_CALLBACK_OBJECT;
+
+
+// DOM-IGNORE-BEGIN
+    #ifdef __cplusplus  // Provide C++ Compatibility
+}
 #endif
+// DOM-IGNORE-END
 
-#endif // PLIB_SSC_H
-
-/*******************************************************************************
- End of File
-*/
+#endif /* PLIB_SDADC_COMMON_H */

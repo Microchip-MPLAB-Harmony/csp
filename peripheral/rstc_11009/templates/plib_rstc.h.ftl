@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_rstc${INDEX?string}.h
+    plib_${RSTC_INSTANCE_NAME?lower_case}.h
 
   Summary:
     Interface definition of the RSTC PLIB Header File
@@ -40,8 +40,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_RSTC${INDEX?string}_H // Guards against multiple inclusion
-#define PLIB_RSTC${INDEX?string}_H
+#ifndef PLIB_${RSTC_INSTANCE_NAME}_H // Guards against multiple inclusion
+#define PLIB_${RSTC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -53,7 +53,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 */
 
 #include "device.h"
-#include "plib_rstc.h"
+#include "plib_rstc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -66,17 +66,17 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-void RSTC${INDEX?string}_Initialize (void);
+void ${RSTC_INSTANCE_NAME}_Initialize (void);
 
-void RSTC${INDEX?string}_Reset (RSTC_RESET_TYPE type);
+void ${RSTC_INSTANCE_NAME}_Reset (RSTC_RESET_TYPE type);
 
-RSTC_RESET_CAUSE RSTC${INDEX?string}_ResetCauseGet (void);
+RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void);
 
 <#if RSTC_MR_URSTEN == "GPIO">
-bool RSTC${INDEX?string}_NRSTPinRead (void);
+bool ${RSTC_INSTANCE_NAME}_NRSTPinRead (void);
 </#if>
 <#if RSTC_MR_URSTEN == "INTERRUPT">
-void RSTC${INDEX?string}_CallbackRegister (RSTC_CALLBACK callback, uintptr_t context);
+void ${RSTC_INSTANCE_NAME}_CallbackRegister (RSTC_CALLBACK callback, uintptr_t context);
 </#if>
 
 // DOM-IGNORE-BEGIN
@@ -85,4 +85,4 @@ void RSTC${INDEX?string}_CallbackRegister (RSTC_CALLBACK callback, uintptr_t con
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_RSTC${INDEX?string}_H
+#endif // PLIB_${RSTC_INSTANCE_NAME}_H

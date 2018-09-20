@@ -1,7 +1,7 @@
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
-global adcInstanceIndex
+global adcInstanceName
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -18,9 +18,10 @@ def updateADCInterruptStatus(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, "ADC" + adcInstanceIndex + "_InterruptHandler", 2)
+
+        Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_InterruptHandler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, "ADC" + adcInstanceIndex + "_Handler", 2)
+        Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_Handler", 2)
 
 def updateADCInterruptWarringStatus(symbol, event):
 
@@ -68,19 +69,16 @@ def instantiateComponent(adcComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
-    global adcInstanceIndex
+    global adcInstanceName
 
-    adcInstanceIndex = adcComponent.getID()[-1:]
-    Log.writeInfoMessage("Running ADC" + str(adcInstanceIndex))
-
-    #index
-    adcSym_Index = adcComponent.createIntegerSymbol("ADC_INDEX", None)
-    adcSym_Index.setDefaultValue(int(adcInstanceIndex))
-    adcSym_Index.setVisible(False)
+    adcInstanceName = adcComponent.createStringSymbol("ADC_INSTANCE_NAME", None)
+    adcInstanceName.setVisible(False)
+    adcInstanceName.setDefaultValue(adcComponent.getID().upper())
+    Log.writeInfoMessage("Running " + adcInstanceName.getValue())
 
     #clock enable
-    Database.clearSymbolValue("core", "ADC" + adcInstanceIndex + "_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "ADC" + adcInstanceIndex + "_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE")
+    Database.setSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
     #------------------------- ATDF Read -------------------------------------
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
@@ -101,7 +99,7 @@ def instantiateComponent(adcComponent):
         availablePins.append(children[pad].getAttribute("pad"))
 
     adc_signals = []
-    adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\"ADC"+str(adcInstanceIndex)+"\"]/signals")
+    adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/signals")
     adc_signals = adc.getChildren()
     for pad in range(0, len(adc_signals)):
         group = adc_signals[pad].getAttribute("group")
@@ -116,7 +114,7 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLA_SLAVEEN.setLabel("Enable Slave")
     adcSym_CTRLA_SLAVEEN.setDefaultValue(False)
     mode = "0"
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\"ADC"+str(adcInstanceIndex)+"\"]/parameters")
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/parameters")
     param_values = []
     param_values = node.getChildren()
     for index in range(0, len(param_values)):
@@ -307,10 +305,10 @@ def instantiateComponent(adcComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = "ADC" + adcInstanceIndex + "_INTERRUPT_ENABLE"
-    InterruptHandler = "ADC" + adcInstanceIndex + "_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "ADC" + adcInstanceIndex + "_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = "ADC" + adcInstanceIndex + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = adcInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    InterruptHandler = adcInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = adcInstanceName.getValue()+ "_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = adcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Interrupt Dynamic settings
     adcSym_UpdateInterruptStatus = adcComponent.createBooleanSymbol("ADC_INTERRUPT_STATUS", None)
@@ -320,14 +318,14 @@ def instantiateComponent(adcComponent):
     # Interrupt Warning status
     adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_INTERRUPT_ENABLE_COMMENT", None)
     adcSym_IntEnComment.setVisible(False)
-    adcSym_IntEnComment.setLabel("Warning!!! ADC" + adcInstanceIndex + " Interrupt is Disabled in Interrupt Manager")
+    adcSym_IntEnComment.setLabel("Warning!!! "+adcInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
     adcSym_IntEnComment.setDependencies(updateADCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
 
     # Clock Warning status
     adcSym_ClkEnComment = adcComponent.createCommentSymbol("ADC_CLOCK_ENABLE_COMMENT", None)
     adcSym_ClkEnComment.setVisible(False)
-    adcSym_ClkEnComment.setLabel("Warning!!! ADC" + adcInstanceIndex + " Clock is Disabled in Clock Manager")
-    adcSym_ClkEnComment.setDependencies(updateADCClockWarringStatus, ["core." + "ADC" + adcInstanceIndex + "_CLOCK_ENABLE"])
+    adcSym_ClkEnComment.setLabel("Warning!!! " +adcInstanceName.getValue()+" Clock is Disabled in Clock Manager")
+    adcSym_ClkEnComment.setDependencies(updateADCClockWarringStatus, ["core." + adcInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
@@ -339,8 +337,8 @@ def instantiateComponent(adcComponent):
     adcModuleID = adcModuleNode.getAttribute("id")
 
     adcSym_CommonHeaderFile = adcComponent.createFileSymbol("ADC_COMMON_HEADER", None)
-    adcSym_CommonHeaderFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/plib_adc.h")
-    adcSym_CommonHeaderFile.setOutputName("plib_adc.h")
+    adcSym_CommonHeaderFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/plib_adc_common.h")
+    adcSym_CommonHeaderFile.setOutputName("plib_adc_common.h")
     adcSym_CommonHeaderFile.setDestPath("/peripheral/adc/")
     adcSym_CommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcSym_CommonHeaderFile.setType("HEADER")
@@ -348,7 +346,7 @@ def instantiateComponent(adcComponent):
 
     adcSym_HeaderFile = adcComponent.createFileSymbol("ADC_HEADER", None)
     adcSym_HeaderFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/plib_adc.h.ftl")
-    adcSym_HeaderFile.setOutputName("plib_adc"+adcInstanceIndex+".h")
+    adcSym_HeaderFile.setOutputName("plib_"+adcInstanceName.getValue().lower()+".h")
     adcSym_HeaderFile.setDestPath("/peripheral/adc/")
     adcSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcSym_HeaderFile.setType("HEADER")
@@ -356,7 +354,7 @@ def instantiateComponent(adcComponent):
 
     adcSym_SourceFile = adcComponent.createFileSymbol("ADC_SOURCE", None)
     adcSym_SourceFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/plib_adc.c.ftl")
-    adcSym_SourceFile.setOutputName("plib_adc"+adcInstanceIndex+".c")
+    adcSym_SourceFile.setOutputName("plib_"+adcInstanceName.getValue().lower()+".c")
     adcSym_SourceFile.setDestPath("/peripheral/adc/")
     adcSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcSym_SourceFile.setType("SOURCE")

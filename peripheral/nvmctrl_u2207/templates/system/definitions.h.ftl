@@ -1,1 +1,1 @@
-#include "peripheral/nvmctrl/plib_nvmctrl${NVMCTRL_INDEX}.h"
+#include "peripheral/nvmctrl/plib_${NVMCTRL_INSTANCE_NAME?lower_case}.h"

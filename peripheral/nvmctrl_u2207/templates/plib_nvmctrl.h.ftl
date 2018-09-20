@@ -1,17 +1,17 @@
 /*******************************************************************************
-  Non-Volatile Memory Controller(NVMCTRL${NVMCTRL_INDEX?string}) PLIB.
+  Non-Volatile Memory Controller(${NVMCTRL_INSTANCE_NAME}) PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_nvmctrl${NVMCTRL_INDEX?string}.h
+    plib_${NVMCTRL_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    Interface definition of NVMCTRL${NVMCTRL_INDEX?string} Plib.
+    Interface definition of ${NVMCTRL_INSTANCE_NAME} Plib.
 
   Description:
-    This file defines the interface for the NVMCTRL${NVMCTRL_INDEX?string} Plib.
+    This file defines the interface for the ${NVMCTRL_INSTANCE_NAME} Plib.
     It allows user to Program, Erase and lock the on-chip Non Volatile Flash
     Memory.
 *******************************************************************************/
@@ -41,8 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_NVMCTRL${NVMCTRL_INDEX?string}_H
-#define PLIB_NVMCTRL${NVMCTRL_INDEX?string}_H
+#ifndef PLIB_${NVMCTRL_INSTANCE_NAME}_H
+#define PLIB_${NVMCTRL_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -62,22 +62,22 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // DOM-IGNORE-END
 
-#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_START_ADDRESS   (${.vars["FLASH_START_ADDRESS"]}U)
-#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_SIZE            (${FLASH_SIZE}U)
-#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_PAGESIZE        (${FLASH_PROGRAM_SIZE}U)
-#define NVMCTRL${NVMCTRL_INDEX?string}_FLASH_ROWSIZE         (${FLASH_ERASE_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_FLASH_START_ADDRESS   (${.vars["FLASH_START_ADDRESS"]}U)
+#define ${NVMCTRL_INSTANCE_NAME}_FLASH_SIZE            (${FLASH_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE        (${FLASH_PROGRAM_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_FLASH_ROWSIZE         (${FLASH_ERASE_SIZE}U)
 
 <#if NVMCTRL_RWW_EEPROM == true>
-    <#lt>#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_START_ADDRESS     (${.vars["FLASH_RWWEEPROM_START_ADDRESS"]}U)
-    <#lt>#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_SIZE              (${FLASH_RWWEEPROM_SIZE}U)
-    <#lt>#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PAGESIZE          (${FLASH_RWWEEPROM_PROGRAM_SIZE}U)
-    <#lt>#define NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_ROWSIZE           (${FLASH_RWWEEPROM_ERASE_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_START_ADDRESS     (${.vars["FLASH_RWWEEPROM_START_ADDRESS"]}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_SIZE              (${FLASH_RWWEEPROM_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PAGESIZE          (${FLASH_RWWEEPROM_PROGRAM_SIZE}U)
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_ROWSIZE           (${FLASH_RWWEEPROM_ERASE_SIZE}U)
 </#if>
 
 <#if DRV_MEMORY_CONNECTED == true>
-    <#lt>#define NVMCTRL${NVMCTRL_INDEX?string}_START_ADDRESS       0x${START_ADDRESS}
-    <#lt>#define NVMCTRL${NVMCTRL_INDEX?string}_MEDIA_SIZE          ${MEMORY_MEDIA_SIZE}
-    <#lt>#define NVMCTRL${NVMCTRL_INDEX?string}_ERASE_BUFFER_SIZE   ${ERASE_BUFFER_SIZE}
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS       0x${START_ADDRESS}
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_MEDIA_SIZE          ${MEMORY_MEDIA_SIZE}
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_ERASE_BUFFER_SIZE   ${ERASE_BUFFER_SIZE}
 </#if>
 
 typedef enum
@@ -100,39 +100,39 @@ typedef enum
     <#lt>typedef void (*NVMCTRL_CALLBACK)(uintptr_t context);
 </#if>
 
-void NVMCTRL${NVMCTRL_INDEX?string}_Initialize(void);
+void ${NVMCTRL_INSTANCE_NAME}_Initialize(void);
 
-bool NVMCTRL${NVMCTRL_INDEX?string}_Read( uint32_t *data, uint32_t length, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address );
 
-bool NVMCTRL${NVMCTRL_INDEX?string}_PageWrite( uint32_t* data, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t* data, uint32_t address );
 
-bool NVMCTRL${NVMCTRL_INDEX?string}_RowErase( uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address );
 
-NVMCTRL_ERROR NVMCTRL${NVMCTRL_INDEX?string}_ErrorGet( void );
+NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void );
 
-bool NVMCTRL${NVMCTRL_INDEX?string}_IsBusy( void );
+bool ${NVMCTRL_INSTANCE_NAME}_IsBusy( void );
 
 <#if NVMCTRL_REGION_LOCK_UNLOCK == true>
-    <#lt>void NVMCTRL${NVMCTRL_INDEX?string}_RegionLock (uint32_t address);
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_RegionLock (uint32_t address);
 
-    <#lt>void NVMCTRL${NVMCTRL_INDEX?string}_RegionUnlock (uint32_t address);
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
 </#if>
 
 <#if NVMCTRL_RWW_EEPROM == true>
-    <#lt>bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address );
-    <#lt>bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_PageWrite( uint32_t address, uint32_t* data );
+    <#lt>bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address );
+    <#lt>bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PageWrite( uint32_t address, uint32_t* data );
 
-    <#lt>bool NVMCTRL${NVMCTRL_INDEX?string}_RWWEEPROM_RowErase ( uint32_t address );
+    <#lt>bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_RowErase ( uint32_t address );
 </#if>
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>void NVMCTRL${NVMCTRL_INDEX?string}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
 
-    <#lt>void NVMCTRL${NVMCTRL_INDEX?string}_InterruptHandler(void);
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_InterruptHandler(void);
 </#if>
 
 <#if NVMCTRL_CACHE_ENABLE == true>
-    <#lt>void NVMCTRL${NVMCTRL_INDEX?string}_CacheInvalidate ( void );
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_CacheInvalidate ( void );
 </#if>
 
 // DOM-IGNORE-BEGIN
@@ -140,4 +140,4 @@ bool NVMCTRL${NVMCTRL_INDEX?string}_IsBusy( void );
 }
 #endif
 // DOM-IGNORE-END
-#endif // PLIB_NVMCTRL${NVMCTRL_INDEX?string}_H
+#endif // PLIB_${NVMCTRL_INSTANCE_NAME}_H

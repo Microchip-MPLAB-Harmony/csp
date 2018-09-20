@@ -1,14 +1,14 @@
 /*******************************************************************************
-  SERIAL COMMUNICATION SERIAL PERIPHERAL INTERFACE (SERCOM${SERCOM_INDEX}_SPI ) PLIB
+  SERIAL COMMUNICATION SERIAL PERIPHERAL INTERFACE (${SERCOM_INSTANCE_NAME}_SPI ) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_sercom${SERCOM_INDEX}_spi.h
+    plib_${SERCOM_INSTANCE_NAME?lower_case}_spi.h
 
   Summary
-   SERCOM${SERCOM_INDEX}_SPI PLIB Header File.
+   ${SERCOM_INSTANCE_NAME}_SPI PLIB Header File.
 
   Description
     This file defines the interface to the SERCOM SPI peripheral library.
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_SERCOM${SERCOM_INDEX}_SPI_H // Guards against multiple inclusion
-#define PLIB_SERCOM${SERCOM_INDEX}_SPI_H
+#ifndef PLIB_${SERCOM_INSTANCE_NAME}_SPI_H // Guards against multiple inclusion
+#define PLIB_${SERCOM_INSTANCE_NAME}_SPI_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -58,7 +58,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "plib_sercom_spi.h"
+#include "plib_sercom_spi_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -81,13 +81,13 @@ this interface.
 
 // *****************************************************************************
 /* Function:
-    void SERCOM${SERCOM_INDEX}_SPI_Initialize (void);
+    void ${SERCOM_INSTANCE_NAME}_SPI_Initialize (void);
 
   Summary:
-    Initializes instance ${SERCOM_INDEX} of the SERCOM module operating in SPI mode.
+    Initializes instance ${SERCOM_INSTANCE_NAME} operating in SPI mode.
 
   Description:
-    This function initializes instance ${SERCOM_INDEX} of SERCOM module operating in SPI mode.
+    This function initializes instance ${SERCOM_INSTANCE_NAME} operating in SPI mode.
     This function should be called before any other library function. The SERCOM
     module will be configured as per the MHC settings.
 
@@ -105,19 +105,19 @@ this interface.
 
   Example:
     <code>
-        SERCOM${SERCOM_INDEX}_SPI_Initialize();
+        ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
     </code>
 
   Remarks:
     This function must be called once before any other SPI function is called.
 */
 
-void SERCOM${SERCOM_INDEX}_SPI_Initialize (void);
+void ${SERCOM_INSTANCE_NAME}_SPI_Initialize (void);
 
 <#if SPI_TRANSFER_SETUP_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup,
+    bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup,
                                                 uint32_t spiSourceClock);
 
  Summary:
@@ -140,14 +140,14 @@ void SERCOM${SERCOM_INDEX}_SPI_Initialize (void);
     calling this function.
 
   Precondition:
-    SERCOM ${SERCOM_INDEX} SPI must first be initialized using SERCOM${SERCOM_INDEX}_SPI_Initialize().
+    SERCOM ${SERCOM_INSTANCE_NAME} SPI must first be initialized using ${SERCOM_INSTANCE_NAME}_SPI_Initialize().
 
   Parameters :
     setup - pointer to the data structure of type SPI_TRANSFER_SETUP containing
     the operation parameters. Each operation parameter must be specified even if
     the parameter does not need to change.
 
-    spiSourceClock - Current value of GCLK frequency feeding the SERCOM${SERCOM_INDEX} core.
+    spiSourceClock - Current value of GCLK frequency feeding the ${SERCOM_INSTANCE_NAME} core.
 
   Returns:
     true - setup was successful.
@@ -164,7 +164,7 @@ void SERCOM${SERCOM_INDEX}_SPI_Initialize (void);
         setup.dataBits = SPI_DATA_BITS_8;
 
         // Assuming 20 MHz as peripheral Master clock frequency
-        if (SERCOM${SERCOM_INDEX}_SPI_TransferSetup (&setup, 20000000) == false)
+        if (${SERCOM_INSTANCE_NAME}_SPI_TransferSetup (&setup, 20000000) == false)
         {
             // this means setup could not be done, debug the reason.
         }
@@ -176,20 +176,20 @@ void SERCOM${SERCOM_INDEX}_SPI_Initialize (void);
     parameter need to be different than the ones configured in MHC.
 */
 
-bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
+bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 </#if>
 
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize
+    bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize
                                         void* pReceiveData, size_t rxSize);
 
   Summary:
-    Write and Read data on SERCOM ${SERCOM_INDEX} SPI peripheral.
+    Write and Read data on SERCOM ${SERCOM_INSTANCE_NAME} SPI peripheral.
 
   Description:
     This function transmits "txSize" number of bytes and receives "rxSize"
-    number of bytes on SERCOM ${SERCOM_INDEX} SPI module. Data pointed by pTransmitData is
+    number of bytes on SERCOM ${SERCOM_INSTANCE_NAME} SPI module. Data pointed by pTransmitData is
     transmitted and received data is saved in the location pointed by
     pReceiveData. The function will transfer the maximum of "txSize" or "rxSize"
     data units towards completion.
@@ -208,14 +208,14 @@ bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t
     transfer is complete.  Only one transfer is allowed at any time. The
     Application can use a callback function or a polling function to check for
     completion of the transfer. If a callback is required, this should be
-    registered prior to calling the SERCOM${SERCOM_INDEX}_SPI_WriteRead() function. The
-    application can use the SERCOM${SERCOM_INDEX}_SPI_IsBusy() to poll for completion.
+    registered prior to calling the ${SERCOM_INSTANCE_NAME}_SPI_WriteRead() function. The
+    application can use the ${SERCOM_INSTANCE_NAME}_SPI_IsBusy() to poll for completion.
 
   Precondition:
-    The SERCOM${SERCOM_INDEX}_SPI_Initialize function must have been called.  If the
+    The ${SERCOM_INSTANCE_NAME}_SPI_Initialize function must have been called.  If the
     peripheral instance has been configured for Interrupt mode and transfer
     completion status needs to be communicated back to application via callback,
-    a callback should have been registered using SERCOM${SERCOM_INDEX}_SPI_CallbackRegister()
+    a callback should have been registered using ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister()
     function.
 
   Parameters:
@@ -255,7 +255,7 @@ bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t
     <code>
 
     // The following code snippet shows an example using the
-    // SERCOM${SERCOM_INDEX}_SPI_WriteRead() function in interrupt mode operation using the
+    // ${SERCOM_INSTANCE_NAME}_SPI_WriteRead() function in interrupt mode operation using the
     // callback function.
 
     uint8_t     txBuffer[4];
@@ -266,15 +266,15 @@ bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SERCOM${SERCOM_INDEX}_SPI_ErrorGet() == SPI_ERROR_NONE)
+        if(${SERCOM_INSTANCE_NAME}_SPI_ErrorGet() == SPI_ERROR_NONE)
         {
             //Transfer was completed without error, do something else now.
         }
     }
 
-    SERCOM${SERCOM_INDEX}_SPI_Initialize();
-    SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
-    reqAccepted = SERCOM${SERCOM_INDEX}_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
+    ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
+    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
+    reqAccepted = ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
 
     // The following code snippet shows non-interrupt or blocking mode
     // operation.
@@ -285,10 +285,10 @@ bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t
     size_t rxSize = 10;
     bool reqAccepted;
 
-    SERCOM${SERCOM_INDEX}_SPI_Initialize();
+    ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
 
     // This function call will block.
-    SERCOM${SERCOM_INDEX}_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
+    ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
 
     </code>
 
@@ -296,17 +296,17 @@ bool SERCOM${SERCOM_INDEX}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t
     None.
 */
 
-bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
+bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
 
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_SPI_Write(void* pTransmitData, size_t txSize);
+    bool ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pTransmitData, size_t txSize);
 
   Summary:
-    Writes data to SERCOM ${SERCOM_INDEX} SPI peripheral.
+    Writes data to SERCOM ${SERCOM_INSTANCE_NAME} SPI peripheral.
 
   Description:
-    This function writes "txSize" number of bytes on SERCOM ${SERCOM_INDEX} SPI module. Data
+    This function writes "txSize" number of bytes on SERCOM ${SERCOM_INSTANCE_NAME} SPI module. Data
     pointed by pTransmitData is transmitted.
 
     When "Interrupt Mode" option is unchecked in MHC, this function will be
@@ -323,13 +323,13 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
     complete.  Only one transfer is allowed at any time. The application can use
     a callback function or a polling function to check for completion of the
     transfer. If a callback is required, this should be registered prior to
-    calling the SERCOM${SERCOM_INDEX}_SPI_WriteRead() function. The application can use the
-    SERCOM${SERCOM_INDEX}_SPI_IsBusy() to poll for completion.
+    calling the ${SERCOM_INSTANCE_NAME}_SPI_WriteRead() function. The application can use the
+    ${SERCOM_INSTANCE_NAME}_SPI_IsBusy() to poll for completion.
 
   Precondition:
-    The SERCOM${SERCOM_INDEX}_SPI_Initialize function must have been called.
+    The ${SERCOM_INSTANCE_NAME}_SPI_Initialize function must have been called.
 
-    Callback has to be registered using SERCOM${SERCOM_INDEX}_SPI_CallbackRegister API if the
+    Callback has to be registered using ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister API if the
     peripheral instance has been configured in Interrupt mode and
     transfer completion status needs to be communicated back to application via
     callback.
@@ -339,7 +339,7 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
     transmitted.  For 9 bit mode, data should be right aligned in the 16 bit
     memory location. In "Interrupt Mode", this buffer should not be modified
     after calling the function and before the callback function has been called
-    or the SERCOM${SERCOM_INDEX}_SPI_IsBusy() function returns false.
+    or the ${SERCOM_INSTANCE_NAME}_SPI_IsBusy() function returns false.
 
     txSize - Number of bytes to be transmitted. For 9 bit mode, 2 bytes make up
     a count of 1.
@@ -361,15 +361,15 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SERCOM${SERCOM_INDEX}_SPI_ErrorGet() == SPI_ERROR_NONE)
+        if(${SERCOM_INSTANCE_NAME}_SPI_ErrorGet() == SPI_ERROR_NONE)
         {
             Transfer was completed without error, do something else now.
         }
     }
 
-    SERCOM${SERCOM_INDEX}_SPI_Initialize();
-    SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
-    reqAccepted = SERCOM${SERCOM_INDEX}_SPI_Write(&txBuffer, txSize);
+    ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
+    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
+    reqAccepted = ${SERCOM_INSTANCE_NAME}_SPI_Write(&txBuffer, txSize);
 
     </code>
 
@@ -378,20 +378,20 @@ bool SERCOM${SERCOM_INDEX}_SPI_WriteRead (void* pTransmitData, size_t txSize, vo
 
 */
 
-static inline bool SERCOM${SERCOM_INDEX}_SPI_Write(void* pTransmitData, size_t txSize)
+static inline bool ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pTransmitData, size_t txSize)
 {
-    return SERCOM${SERCOM_INDEX}_SPI_WriteRead(pTransmitData, txSize, NULL, 0);
+    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0);
 }
 
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_SPI_Read(void* pReceiveData, size_t rxSize);
+    bool ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize);
 
   Summary:
-    Reads data on the SERCOM ${SERCOM_INDEX} SPI peripheral.
+    Reads data on the SERCOM ${SERCOM_INSTANCE_NAME} SPI peripheral.
 
   Description:
-    This function reads "rxSize" number of bytes on SERCOM ${SERCOM_INDEX} SPI module. The
+    This function reads "rxSize" number of bytes on SERCOM ${SERCOM_INSTANCE_NAME} SPI module. The
     received data is stored in the buffer pointed by pReceiveData.
 
     When "Interrupt Mode" option is unchecked in MHC, this function will be
@@ -408,13 +408,13 @@ static inline bool SERCOM${SERCOM_INDEX}_SPI_Write(void* pTransmitData, size_t t
     complete.  Only one transfer is allowed at any time. The application can use
     a callback function or a polling function to check for completion of the
     transfer. If a callback is required, this should be registered prior to
-    calling the SERCOM${SERCOM_INDEX}_SPI_WriteRead() function. The application can use the
-    SERCOM${SERCOM_INDEX}_SPI_IsBusy() to poll for completion.
+    calling the ${SERCOM_INSTANCE_NAME}_SPI_WriteRead() function. The application can use the
+    ${SERCOM_INSTANCE_NAME}_SPI_IsBusy() to poll for completion.
 
   Precondition:
-    The SERCOM${SERCOM_INDEX}_SPI_Initialize function must have been called.
+    The ${SERCOM_INSTANCE_NAME}_SPI_Initialize function must have been called.
 
-    Callback has to be registered using SERCOM${SERCOM_INDEX}_SPI_CallbackRegister API if the
+    Callback has to be registered using ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister API if the
     peripheral instance has been configured in Interrupt mode and
     transfer completion status needs to be communicated back to application via
     callback.
@@ -424,7 +424,7 @@ static inline bool SERCOM${SERCOM_INDEX}_SPI_Write(void* pTransmitData, size_t t
     For 9 bit mode, data should be right aligned in the 16 bit memory location.
     In "Interrupt Mode", this buffer should not be modified after calling the
     function and before the callback function has been called or the
-    SERCOM${SERCOM_INDEX}_SPI_IsBusy() function returns false.
+    ${SERCOM_INSTANCE_NAME}_SPI_IsBusy() function returns false.
 
     rxSize - Number of bytes to be received. For 9 bit mode, 2 bytes make up a
     count of 1.
@@ -446,15 +446,15 @@ static inline bool SERCOM${SERCOM_INDEX}_SPI_Write(void* pTransmitData, size_t t
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SERCOM${SERCOM_INDEX}_SPI_ErrorGet() == SPI_ERROR_NONE)
+        if(${SERCOM_INSTANCE_NAME}_SPI_ErrorGet() == SPI_ERROR_NONE)
         {
             Transfer was completed without error, do something else now.
         }
     }
 
-    SERCOM${SERCOM_INDEX}_SPI_Initialize();
-    SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
-    reqAccepted = SERCOM${SERCOM_INDEX}_SPI_Read(&rxBuffer, rxSize);
+    ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
+    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
+    reqAccepted = ${SERCOM_INSTANCE_NAME}_SPI_Read(&rxBuffer, rxSize);
 
     </code>
 
@@ -462,15 +462,15 @@ static inline bool SERCOM${SERCOM_INDEX}_SPI_Write(void* pTransmitData, size_t t
     None.
 */
 
-static inline bool SERCOM${SERCOM_INDEX}_SPI_Read(void* pReceiveData, size_t rxSize)
+static inline bool ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize)
 {
-    return SERCOM${SERCOM_INDEX}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize);
+    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize);
 }
 
 <#if SPI_INTERRUPT_MODE = true>
 // *****************************************************************************
 /* Function:
-    void SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(const SERCOM_SPI_CALLBACK* callBack,
+    void ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(const SERCOM_SPI_CALLBACK* callBack,
                                                     uintptr_t context);
 
   Summary:
@@ -486,7 +486,7 @@ static inline bool SERCOM${SERCOM_INDEX}_SPI_Read(void* pReceiveData, size_t rxS
     function with "callBack" value as NULL.
 
   Precondition:
-    The SERCOM${SERCOM_INDEX}_SPI_Initialize function must have been called.
+    The ${SERCOM_INSTANCE_NAME}_SPI_Initialize function must have been called.
 
   Parameters:
     callBack - Pointer to the event handler function implemented by the
@@ -508,16 +508,16 @@ static inline bool SERCOM${SERCOM_INDEX}_SPI_Read(void* pReceiveData, size_t rxS
     size_t size = 10;
     size_t reqAccepted;
 
-    SERCOM${SERCOM_INDEX}_SPI_Initialize();
+    ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
 
-    SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(&APP_SPICallBack, NULL);
+    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPICallBack, NULL);
 
-    reqAccepted = SERCOM${SERCOM_INDEX}_SPI_WriteRead(
+    reqAccepted = ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(
                   &txBuffer, &rxBuffer, size);
 
     void APP_SPICallBack(uintptr_t contextHandle)
         {
-            if( SPI_ERROR_NONE == SERCOM${SERCOM_INDEX}_SPI_ErrorGet())
+            if( SPI_ERROR_NONE == ${SERCOM_INSTANCE_NAME}_SPI_ErrorGet())
             {
                 //Exchange was completed without error, do something else.
             }
@@ -529,18 +529,18 @@ static inline bool SERCOM${SERCOM_INDEX}_SPI_Read(void* pReceiveData, size_t rxS
     has completed, it does not need to register a callback.
 */
 
-void SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, uintptr_t context);
+void ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, uintptr_t context);
 
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_SPI_IsBusy (void);
+    bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy (void);
 
   Summary:
-    Returns transfer status of SERCOM ${SERCOM_INDEX}SPI.
+    Returns transfer status of SERCOM ${SERCOM_INSTANCE_NAME}SPI.
 
   Description:
-    This function ture if the SERCOM ${SERCOM_INDEX}SPI module is busy with a transfer. The
-    application can use the function to check if SERCOM ${SERCOM_INDEX}SPI module is busy
+    This function ture if the SERCOM ${SERCOM_INSTANCE_NAME}SPI module is busy with a transfer. The
+    application can use the function to check if SERCOM ${SERCOM_INSTANCE_NAME}SPI module is busy
     before calling any of the data transfer functions. The library does not
     allow a data transfer operation if another transfer operation is already in
     progress.
@@ -550,7 +550,7 @@ void SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, ui
     implement a synchronous interface to the library.
 
   Precondition:
-    The SERCOM${SERCOM_INDEX}_SPI_Initialize() should have been called once. The module should
+    The ${SERCOM_INSTANCE_NAME}_SPI_Initialize() should have been called once. The module should
     have been configured for interrupt mode operation in MHC.
 
   Parameters:
@@ -563,15 +563,15 @@ void SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, ui
   Example:
     <code>
         // The following code example demonstrates the use of the
-        // SERCOM${SERCOM_INDEX}_SPI_IsBusy() function. This example shows a blocking while
+        // ${SERCOM_INSTANCE_NAME}_SPI_IsBusy() function. This example shows a blocking while
         // loop. The function can also be called periodically.
 
         uint8_t dataBuffer[20];
 
-        SERCOM${SERCOM_INDEX}_SPI_Initialize();
-        SERCOM${SERCOM_INDEX}_SPI_Write(databuffer, 20);
+        ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
+        ${SERCOM_INSTANCE_NAME}_SPI_Write(databuffer, 20);
 
-        while (SERCOM${SERCOM_INDEX}_SPI_IsBusy() == true)
+        while (${SERCOM_INSTANCE_NAME}_SPI_IsBusy() == true)
         {
             // Wait here till the transfer is done.
         }
@@ -581,11 +581,11 @@ void SERCOM${SERCOM_INDEX}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, ui
     None.
 */
 
-bool SERCOM${SERCOM_INDEX}_SPI_IsBusy (void);
+bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy (void);
 
 // *****************************************************************************
 /* Function:
-    void SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void);
+    void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void);
 
   Summary:
     Handler that handles the SPI interrupts
@@ -595,11 +595,11 @@ bool SERCOM${SERCOM_INDEX}_SPI_IsBusy (void);
     Interrupts.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_SPI module should be initialized with the required
+    ${SERCOM_INSTANCE_NAME}_SPI module should be initialized with the required
     configuration parameters from the MCC GUI in the
-    SERCOM${SERCOM_INDEX}_SPI_Initialize() function.
+    ${SERCOM_INSTANCE_NAME}_SPI_Initialize() function.
 
-    SERCOM${SERCOM_INDEX}_SPI_WriteRead should also be called before using this
+    ${SERCOM_INSTANCE_NAME}_SPI_WriteRead should also be called before using this
     function.
 
   Parameters:
@@ -610,36 +610,36 @@ bool SERCOM${SERCOM_INDEX}_SPI_IsBusy (void);
 
   Example:
     <code>
-    void SERCOM${SERCOM_INDEX}_Handler(void)
+    void ${SERCOM_INSTANCE_NAME}_Handler(void)
     {
-        SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void);
+        ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void);
     }
     </code>
 
   Remarks:
-    This function must be called After the SERCOM${SERCOM_INDEX}_SPI_Initialize();
+    This function must be called After the ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
 */
 
-void SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void);
+void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void);
 
 </#if>
 
 // *****************************************************************************
 /* Function:
-    SPI_ERROR SERCOM${SERCOM_INDEX}_SPI_ErrorGet( void )
+    SPI_ERROR ${SERCOM_INSTANCE_NAME}_SPI_ErrorGet( void )
 
   Summary:
-    Gets the error for the given SERCOM ${SERCOM_INDEX} SPI peripheral instance.
+    Gets the error for the given SERCOM ${SERCOM_INSTANCE_NAME} SPI peripheral instance.
 
    Description:
-    This function returns the errors associated with the given SERCOM ${SERCOM_INDEX} SPI
+    This function returns the errors associated with the given SERCOM ${SERCOM_INSTANCE_NAME} SPI
     peripheral instance. An error may occur after a transfer has completed. This
     API can be called to verify if any error has occurred while the transfer was
     in progress. The error returned by this API will be cleared when the
     WriteRead or Write or Read function is called.
 
    Precondition:
-    The SERCOM${SERCOM_INDEX}_SPI_Initialize() function should have been called once. The
+    The ${SERCOM_INSTANCE_NAME}_SPI_Initialize() function should have been called once. The
     function is only available in Interrupt operation mode.
 
    Parameters:
@@ -661,10 +661,10 @@ void SERCOM${SERCOM_INDEX}_SPI_InterruptHandler(void);
     not have any error.
 */
 
-SPI_ERROR SERCOM${SERCOM_INDEX}_SPI_ErrorGet(void);
+SPI_ERROR ${SERCOM_INSTANCE_NAME}_SPI_ErrorGet(void);
 
 #ifdef __cplusplus // Provide C++ Compatibility
 }
 #endif
 
-#endif /* PLIB_SERCOM${SERCOM_INDEX}_SPI_H */
+#endif /* PLIB_${SERCOM_INSTANCE_NAME}_SPI_H */

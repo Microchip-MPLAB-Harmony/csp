@@ -1,14 +1,14 @@
 /*******************************************************************************
-  UART${INDEX?string} PLIB
+  ${UART_INSTANCE_NAME} PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_uart${INDEX?string}.h
+    plib_${UART_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    UART${INDEX?string} PLIB Header File
+    ${UART_INSTANCE_NAME} PLIB Header File
 
   Description:
     None
@@ -38,10 +38,10 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_UART${INDEX?string}_H
-#define PLIB_UART${INDEX?string}_H
+#ifndef PLIB_${UART_INSTANCE_NAME}_H
+#define PLIB_${UART_INSTANCE_NAME}_H
 
-#include "plib_uart.h"
+#include "plib_uart_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -57,44 +57,44 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
-#define UART${INDEX?string}_FrequencyGet()    (uint32_t)(${UART_CLOCK_FREQ}UL)
+#define ${UART_INSTANCE_NAME}_FrequencyGet()    (uint32_t)(${UART_CLOCK_FREQ}UL)
 
-/****************************** UART${INDEX?string} API *********************************/
+/****************************** ${UART_INSTANCE_NAME} API *********************************/
 
-void UART${INDEX?string}_Initialize( void );
+void ${UART_INSTANCE_NAME}_Initialize( void );
 
-UART_ERROR UART${INDEX?string}_ErrorGet( void );
+UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void );
 
-bool UART${INDEX?string}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
+bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
-bool UART${INDEX?string}_Write( void *buffer, const size_t size );
+bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size );
 
-bool UART${INDEX?string}_Read( void *buffer, const size_t size );
+bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size );
 
 <#if USART_INTERRUPT_MODE == false>
-int UART${INDEX?string}_ReadByte( void );
+int ${UART_INSTANCE_NAME}_ReadByte( void );
 
-void UART${INDEX?string}_WriteByte( int data );
+void ${UART_INSTANCE_NAME}_WriteByte( int data );
 
-void UART${INDEX?string}_Sync(void);
+void ${UART_INSTANCE_NAME}_Sync(void);
 
-bool UART${INDEX?string}_TransmitterIsReady( void );
+bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void );
 
-bool UART${INDEX?string}_ReceiverIsReady( void );
+bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void );
 
 </#if>
 <#if USART_INTERRUPT_MODE == true>
-bool UART${INDEX?string}_WriteIsBusy( void );
+bool ${UART_INSTANCE_NAME}_WriteIsBusy( void );
 
-bool UART${INDEX?string}_ReadIsBusy( void );
+bool ${UART_INSTANCE_NAME}_ReadIsBusy( void );
 
-size_t UART${INDEX?string}_WriteCountGet( void );
+size_t ${UART_INSTANCE_NAME}_WriteCountGet( void );
 
-size_t UART${INDEX?string}_ReadCountGet( void );
+size_t ${UART_INSTANCE_NAME}_ReadCountGet( void );
 
-bool UART${INDEX?string}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+bool ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context );
 
-bool UART${INDEX?string}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+bool ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
 
 // *****************************************************************************
 // *****************************************************************************
@@ -102,7 +102,7 @@ bool UART${INDEX?string}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t
 // *****************************************************************************
 // *****************************************************************************
 
-void UART${INDEX?string}_InterruptHandler( void );
+void ${UART_INSTANCE_NAME}_InterruptHandler( void );
 
 </#if>
 
@@ -113,4 +113,4 @@ void UART${INDEX?string}_InterruptHandler( void );
 
 #endif
 // DOM-IGNORE-END
-#endif // PLIB_UART${INDEX?string}_H
+#endif // PLIB_${UART_INSTANCE_NAME}_H

@@ -1,1 +1,1 @@
-#include "peripheral/twihs/plib_twihs${INDEX?string}.h"
+#include "peripheral/twihs/plib_${TWIHS_INSTANCE_NAME?lower_case}.h"

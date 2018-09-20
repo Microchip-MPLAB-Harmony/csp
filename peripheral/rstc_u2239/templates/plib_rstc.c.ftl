@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Reset Controller(RSTC${RSTC_INDEX}) PLIB
+  Reset Controller(${RSTC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_rstc${RSTC_INDEX}.c
+    plib_${RSTC_INSTANCE_NAME?lower_case}.c
 
   Summary
-    RSTC${RSTC_INDEX} PLIB Implementation File.
+    ${RSTC_INSTANCE_NAME} PLIB Implementation File.
 
   Description
     This file defines the interface to the RSTC peripheral library.
@@ -53,17 +53,17 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 #include "device.h"
-#include "plib_rstc${RSTC_INDEX}.h"
+#include "plib_${RSTC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: RSTC${RSTC_INDEX} Implementation
+// Section: ${RSTC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
 /* Function:
-    RSTC_RESET_CAUSE RSTC${RSTC_INDEX}_ResetCauseGet (void);
+    RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void);
 
   Summary:
     Reports the cause of the last reset.
@@ -72,10 +72,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     This function is used to know the cause of the last reset.
 
   Remarks:
-    plib_rstc${RSTC_INDEX}.h for usage information.
+    plib_${RSTC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-RSTC_RESET_CAUSE RSTC${RSTC_INDEX}_ResetCauseGet( void )
+RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet( void )
 {
-    return ( RSTC_RESET_CAUSE ) RSTC_REGS->RSTC_RCAUSE;
+    return ( RSTC_RESET_CAUSE ) ${RSTC_INSTANCE_NAME}_REGS->RSTC_RCAUSE;
 }

@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_SERCOM_SPI_H  // Guards against multiple inclusion
-#define PLIB_SERCOM_SPI_H
+#ifndef PLIB_SERCOM_SPI_COMMON_H  // Guards against multiple inclusion
+#define PLIB_SERCOM_SPI_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -93,12 +93,12 @@ typedef enum
     /* Input data is valid on clock trailing edge and output data is ready on
        leading edge */
     SPI_CLOCK_PHASE_TRAILING_EDGE,
-    
+
     /* Input data is valid on clock leading edge and output data is ready on
        trailing edge */
     SPI_CLOCK_PHASE_LEADING_EDGE
 
-}SPI_CLOCK_PHASE;
+} SPI_CLOCK_PHASE;
 
 // *****************************************************************************
 /* SPI Clock Polarity
@@ -121,7 +121,7 @@ typedef enum
     /* The inactive state value of clock is logic level one */
     SPI_CLOCK_POLARITY_IDLE_HIGH
 
-}SPI_CLOCK_POLARITY;
+} SPI_CLOCK_POLARITY;
 
 // *****************************************************************************
 /* SPI Data Bits
@@ -145,7 +145,7 @@ typedef enum
     /* 9 bits per transfer */
     SPI_DATA_BITS_9
 
-}SPI_DATA_BITS;
+} SPI_DATA_BITS;
 
 // *****************************************************************************
 
@@ -169,7 +169,7 @@ typedef enum
     /* SPI overflow error */
     SPI_ERROR_OVERFLOW = 4,
 
-}SPI_ERROR;
+} SPI_ERROR;
 
 // *****************************************************************************
 
@@ -201,7 +201,7 @@ typedef struct
     /* Number of bits per transfer */
     SPI_DATA_BITS       dataBits;
 
-}SPI_TRANSFER_SETUP;
+} SPI_TRANSFER_SETUP;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -304,10 +304,10 @@ typedef struct
     bool                     transferIsBusy;
 
     /* SPI Event handler  */
-    SERCOM_SPI_CALLBACK             callback;
+    SERCOM_SPI_CALLBACK      callback;
 
     /* Context  */
-    uintptr_t                    context;
+    uintptr_t                context;
 
     uint32_t                 status;
 
@@ -317,4 +317,4 @@ typedef struct
 }
 #endif
 
-#endif /* PLIB_SERCOM_SPI_H */
+#endif //PLIB_SERCOM_SPI_COMMON_H

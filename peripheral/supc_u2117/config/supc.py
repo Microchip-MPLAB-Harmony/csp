@@ -37,16 +37,13 @@ def instantiateComponent(supcComponent):
     global supcSym_BODVDD_STDBYCFG
     global supcSym_BODVDD_ACTCFG
 
-    supcInstanceIndex = supcComponent.getID()[-1:]
-
-    #index
-    supcSym_Index = supcComponent.createIntegerSymbol("SUPC_INDEX", None)
-    supcSym_Index.setDefaultValue(int(supcInstanceIndex))
-    supcSym_Index.setVisible(False)
+    supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
+    supcInstanceName.setVisible(False)
+    supcInstanceName.setDefaultValue(supcComponent.getID().upper())
 
     #clock enable
-    Database.clearSymbolValue("core", "SUPC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "SUPC_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", supcInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", supcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     #interrupt mode
     supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRRUPT_MODE", None)
@@ -160,16 +157,16 @@ def instantiateComponent(supcComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = "SUPC_INTERRUPT_ENABLE"
-    InterruptHandler = "SUPC_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "SUPC_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = "SUPC_INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = supcInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    InterruptHandler = supcInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    InterruptHandlerLock = supcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = supcInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and Interrupt
     Database.clearSymbolValue("core", InterruptVector)
     Database.setSymbolValue("core", InterruptVector, True, 2)
     Database.clearSymbolValue("core", InterruptHandler)
-    Database.setSymbolValue("core", InterruptHandler, "SUPC" + supcInstanceIndex + "_InterruptHandler", 2)
+    Database.setSymbolValue("core", InterruptHandler, supcInstanceName.getValue() + "_InterruptHandler", 2)
     Database.clearSymbolValue("core", InterruptHandlerLock)
     Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
 
@@ -183,7 +180,7 @@ def instantiateComponent(supcComponent):
     supcSym_ClkEnComment = supcComponent.createCommentSymbol("SUPC_CLOCK_ENABLE_COMMENT", None)
     supcSym_ClkEnComment.setLabel("Warning!!! SUPC Peripheral Clock is Disabled in Clock Manager")
     supcSym_ClkEnComment.setVisible(False)
-    supcSym_ClkEnComment.setDependencies(updateSUPCClockWarringStatus, ["core.SUPC_CLOCK_ENABLE"])
+    supcSym_ClkEnComment.setDependencies(updateSUPCClockWarringStatus, ["core."+supcInstanceName.getValue()+"_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
@@ -196,7 +193,7 @@ def instantiateComponent(supcComponent):
 
     supcSym_HeaderFile = supcComponent.createFileSymbol("SUPC_HEADER", None)
     supcSym_HeaderFile.setSourcePath("../peripheral/supc_"+supcModuleID+"/templates/plib_supc.h.ftl")
-    supcSym_HeaderFile.setOutputName("plib_supc"+supcInstanceIndex+".h")
+    supcSym_HeaderFile.setOutputName("plib_"+supcInstanceName.getValue().lower()+".h")
     supcSym_HeaderFile.setDestPath("/peripheral/supc/")
     supcSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/supc/")
     supcSym_HeaderFile.setType("HEADER")
@@ -204,7 +201,7 @@ def instantiateComponent(supcComponent):
 
     supcSym_SourceFile = supcComponent.createFileSymbol("SUPC_SOURCE", None)
     supcSym_SourceFile.setSourcePath("../peripheral/supc_"+supcModuleID+"/templates/plib_supc.c.ftl")
-    supcSym_SourceFile.setOutputName("plib_supc"+supcInstanceIndex+".c")
+    supcSym_SourceFile.setOutputName("plib_"+supcInstanceName.getValue().lower()+".c")
     supcSym_SourceFile.setDestPath("/peripheral/supc/")
     supcSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/supc/")
     supcSym_SourceFile.setType("SOURCE")

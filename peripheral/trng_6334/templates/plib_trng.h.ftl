@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_trng.h
+    plib_${TRNG_INSTANCE_NAME?lower_case}.h
 
   Summary:
     Interface definition of the Watch Dog Timer Plib (TRNG).
@@ -39,8 +39,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 
 <#macro GenerateCode>
-#ifndef TRNG${INDEX?string}_H    // Guards against multiple inclusion
-#define TRNG${INDEX?string}_H
+#ifndef ${TRNG_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define ${TRNG_INSTANCE_NAME}_H
 
 #include <stdint.h>
 #include <stddef.h>
@@ -71,13 +71,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 /***************************** TRNG API *******************************/
 <#if trngEnableInterrupt == true>
-	<#lt>void TRNG${INDEX?string}_RandomNumberGenerate( void );
+	<#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void );
 </#if>
 <#if trngEnableInterrupt == false>
-	<#lt>uint32_t TRNG${INDEX?string}_ReadData( void );
+	<#lt>uint32_t ${TRNG_INSTANCE_NAME}_ReadData( void );
 </#if>
 <#if trngEnableInterrupt == true>
-	<#lt>void TRNG${INDEX?string}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
+	<#lt>void ${TRNG_INSTANCE_NAME}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context );
 </#if>	
 
 #ifdef __cplusplus // Provide C++ Compatibility

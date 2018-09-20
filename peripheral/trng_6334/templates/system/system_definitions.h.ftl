@@ -1,1 +1,1 @@
-#include "peripheral/trng/plib_trng${INDEX?string}.h"
+#include "peripheral/trng/plib_${TRNG_INSTANCE_NAME?lower_case}.h"

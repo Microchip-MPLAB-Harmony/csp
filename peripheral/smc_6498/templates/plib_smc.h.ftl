@@ -4,7 +4,7 @@
     Memory System Service SMC Initialization File
 
   File Name:
-    plib_smc${INDEX?string}.h
+    plib_${SMC_INSTANCE_NAME?lower_case}.h
 
   Summary:
     Static Memory Controller (SMC) peripheral library interface.
@@ -50,8 +50,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_SMC${INDEX?string}_H
-#define _PLIB_SMC${INDEX?string}_H
+#ifndef _PLIB_${SMC_INSTANCE_NAME}_H
+#define _PLIB_${SMC_INSTANCE_NAME}_H
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -72,9 +72,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-void SMC${INDEX?string}_Initialize( void );
+void ${SMC_INSTANCE_NAME}_Initialize( void );
 
-#endif // _PLIB_SMC${INDEX?string}_H
+#endif // _PLIB_${SMC_INSTANCE_NAME}_H
 
 /*******************************************************************************
  End of File

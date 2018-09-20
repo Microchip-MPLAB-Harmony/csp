@@ -1,1 +1,1 @@
-    EVSYS${INDEX}_Initialize();
+    ${EVSYS_INSTANCE_NAME}_Initialize();

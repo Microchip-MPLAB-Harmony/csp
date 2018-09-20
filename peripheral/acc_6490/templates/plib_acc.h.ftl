@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_acc${INDEX?string}.h
+    plib_${ACC_INSTANCE_NAME?lower_case}.h
 
   Summary:
     ACC PLIB Header File
@@ -38,14 +38,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef _PLIB_ACC${INDEX?string}_H
-#define _PLIB_ACC${INDEX?string}_H
+#ifndef _PLIB_${ACC_INSTANCE_NAME}_H
+#define _PLIB_${ACC_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
-#include "plib_acc.h"
+#include "plib_acc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -53,18 +53,19 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #endif
 // DOM-IGNORE-END
 
+
 // *****************************************************************************
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
 
-/*************************** ACC${INDEX?string} API ***************************/
-void ACC${INDEX?string}_Initialize (void);
+/*************************** ${ACC_INSTANCE_NAME} API ***************************/
+void ${ACC_INSTANCE_NAME}_Initialize (void);
 
-bool ACC${INDEX?string}_StatusGet (ACC_STATUS_SOURCE status);
+bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status);
 
 <#if INTERRUPT_MODE == true>
-void ACC${INDEX?string}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context);
+void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context);
 </#if>
 
 // DOM-IGNORE-BEGIN
@@ -73,4 +74,4 @@ void ACC${INDEX?string}_CallbackRegister (ACC_CALLBACK callback, uintptr_t conte
 #endif
 
 // DOM-IGNORE-END
-#endif // _PLIB_ACC${INDEX?string}_H
+#endif // _PLIB_${ACC_INSTANCE_NAME}_H

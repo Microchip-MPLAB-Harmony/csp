@@ -88,5 +88,5 @@ i2cmSym_BAUD.setDependencies(seti2cmSpeedVisibleProperty, ["SERCOM_MODE"])
 
 #I2C API Prefix
 i2cSym_API_Prefix = sercomComponent.createStringSymbol("I2C_PLIB_API_PREFIX", sercomSym_OperationMode)
-i2cSym_API_Prefix.setDefaultValue("SERCOM" + sercomInstanceIndex + "_I2C")
+i2cSym_API_Prefix.setDefaultValue(sercomInstanceName.getValue() + "_I2C")
 i2cSym_API_Prefix.setVisible(False)

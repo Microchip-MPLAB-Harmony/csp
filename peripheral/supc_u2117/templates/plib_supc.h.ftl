@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Supply Controller(SUPC${SUPC_INDEX}) PLIB
+  Supply Controller(${SUPC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_supc${SUPC_INDEX}.h
+    plib_${SUPC_INSTANCE_NAME?lower_case}.h
 
   Summary
-    SUPC${SUPC_INDEX} Header File.
+    ${SUPC_INSTANCE_NAME} Header File.
 
   Description
     This file defines the interface to the SUPC peripheral library. This
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_SUPC${SUPC_INDEX}_H    // Guards against multiple inclusion
-#define PLIB_SUPC${SUPC_INDEX}_H
+#ifndef PLIB_${SUPC_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define PLIB_${SUPC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -93,8 +93,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     void (*SUPC_BODVDD_CALLBACK)( uintptr_t context )
 
   Precondition:
-    SUPC${SUPC_INDEX}_Initialize() must have been called for the given supc
-    peripheral instance and SUPC${SUPC_INDEX}_BODVDDCallbackRegister() must have
+    ${SUPC_INSTANCE_NAME}_Initialize() must have been called for the given supc
+    peripheral instance and ${SUPC_INSTANCE_NAME}_BODVDDCallbackRegister() must have
     been called to set the function to be called.
 
   Parameters:
@@ -111,7 +111,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
            // do something
       }
 
-      SUPC${SUPC_INDEX}_BODVDDCallbackRegister(APP_BrownOutEventHandler, 0);
+      ${SUPC_INSTANCE_NAME}_BODVDDCallbackRegister(APP_BrownOutEventHandler, 0);
     </code>
 
   Remarks:
@@ -131,7 +131,7 @@ typedef void (*SUPC_BODVDD_CALLBACK)( uintptr_t context );
 
 // *****************************************************************************
 /* Function:
-    void SUPC${SUPC_INDEX}_Initialize( void );
+    void ${SUPC_INSTANCE_NAME}_Initialize( void );
 
   Summary:
     Initializes given instance of SUPC peripheral.
@@ -151,7 +151,7 @@ typedef void (*SUPC_BODVDD_CALLBACK)( uintptr_t context );
 
   Example:
     <code>
-      SUPC${SUPC_INDEX}_Initialize();
+      ${SUPC_INSTANCE_NAME}_Initialize();
     </code>
 
   Remarks:
@@ -159,11 +159,11 @@ typedef void (*SUPC_BODVDD_CALLBACK)( uintptr_t context );
     before any other SUPC function is called.
 */
 
-void SUPC${SUPC_INDEX}_Initialize( void );
+void ${SUPC_INSTANCE_NAME}_Initialize( void );
 
 // *****************************************************************************
 /* Function:
-    void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable );
+    void ${SUPC_INSTANCE_NAME}_VoltageRegulatorEnable( bool enable );
 
   Summary:
     Enable/Disable voltage regulator.
@@ -172,7 +172,7 @@ void SUPC${SUPC_INDEX}_Initialize( void );
     This function will enable or disable the main voltage regulator.
 
   Precondition:
-    SUPC${SUPC_INDEX}_Initialize() must have been called first for the
+    ${SUPC_INSTANCE_NAME}_Initialize() must have been called first for the
     associated instance.
 
   Parameters:
@@ -185,8 +185,8 @@ void SUPC${SUPC_INDEX}_Initialize( void );
   Example:
     <code>
       bool enable = true;
-      SUPC${SUPC_INDEX}_Initialize();
-      SUPC${SUPC_INDEX}_VoltageRegulatorEnable(enable);
+      ${SUPC_INSTANCE_NAME}_Initialize();
+      ${SUPC_INSTANCE_NAME}_VoltageRegulatorEnable(enable);
     </code>
 
   Remarks:
@@ -194,11 +194,11 @@ void SUPC${SUPC_INDEX}_Initialize( void );
     before any other SUPC function is called.
 */
 
-void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable );
+void ${SUPC_INSTANCE_NAME}_VoltageRegulatorEnable( bool enable );
 
 // *****************************************************************************
 /* Function:
-    void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback,
+    void ${SUPC_INSTANCE_NAME}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback,
                                                     uintptr_t context );
 
   Summary:
@@ -211,7 +211,7 @@ void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable );
     interrupt and not reset the system.
 
   Precondition:
-    SUPC${SUPC_INDEX}_Initialize() must have been called first for the
+    ${SUPC_INSTANCE_NAME}_Initialize() must have been called first for the
     associated instance.
 
   Parameters:
@@ -230,8 +230,8 @@ void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable );
           // do something
       }
 
-      SUPC${SUPC_INDEX}_Initialize();
-      SUPC${SUPC_INDEX}_BODVDDCallbackRegister(SUPC_Callback_Fn, NULL);
+      ${SUPC_INSTANCE_NAME}_Initialize();
+      ${SUPC_INSTANCE_NAME}_BODVDDCallbackRegister(SUPC_Callback_Fn, NULL);
     </code>
 
   Remarks:
@@ -239,11 +239,11 @@ void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable );
     function, pass NULL for the callback parameter
 */
 
-void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, uintptr_t context );
+void ${SUPC_INSTANCE_NAME}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, uintptr_t context );
 
 // *****************************************************************************
 /* Function:
-    void SUPC${SUPC_INDEX}_InterruptHandler( void );
+    void ${SUPC_INSTANCE_NAME}_InterruptHandler( void );
 
   Summary:
     SUPC interrupt handler for BODVDD event action.
@@ -252,7 +252,7 @@ void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, ui
     This function will trigger BODVDD callback.
 
   Precondition:
-    SUPC${SUPC_INDEX}_Initialize() must have been called first.
+    ${SUPC_INSTANCE_NAME}_Initialize() must have been called first.
 
   Parameters:
     None.
@@ -269,7 +269,7 @@ void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, ui
     explicitly.
 */
 
-void SUPC${SUPC_INDEX}_InterruptHandler( void );
+void ${SUPC_INSTANCE_NAME}_InterruptHandler( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -279,4 +279,4 @@ void SUPC${SUPC_INDEX}_InterruptHandler( void );
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_SUPC${SUPC_INDEX}_H */
+#endif /* PLIB_${SUPC_INSTANCE_NAME}_H */

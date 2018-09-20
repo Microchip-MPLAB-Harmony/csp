@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_rstc${INDEX?string}.c
+    plib_${RSTC_INSTANCE_NAME?lower_case}.c
 
   Summary:
     RSTC Source File
@@ -38,7 +38,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#include "plib_rstc${INDEX?string}.h"
+#include "plib_${RSTC_INSTANCE_NAME?lower_case}.h"
 
 <#--Implementation-->
 // *****************************************************************************
@@ -47,49 +47,49 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-void RSTC${INDEX?string}_Initialize (void)
+void ${RSTC_INSTANCE_NAME}_Initialize (void)
 {
     <#if RSTC_MR_URSTEN == "RESET">
-    RSTC_REGS->RSTC_MR = (RSTC_MR_URSTEN_Msk | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}) | RSTC_MR_KEY_PASSWD);
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_MR = (RSTC_MR_URSTEN_Msk | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}) | RSTC_MR_KEY_PASSWD);
     <#else>
-    RSTC_REGS->RSTC_MR = (RSTC_MR_URSTIEN_Msk | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}) | RSTC_MR_KEY_PASSWD);
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_MR = (RSTC_MR_URSTIEN_Msk | RSTC_MR_ERSTL(${RSTC_MR_ERSTL}) | RSTC_MR_KEY_PASSWD);
     </#if>
 }
 
-void RSTC${INDEX?string}_Reset (RSTC_RESET_TYPE type)
+void ${RSTC_INSTANCE_NAME}_Reset (RSTC_RESET_TYPE type)
 {
 	/* Issue reset command 				*/
-    RSTC_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type; 
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type; 
 	
     /*Wait for processing reset command */
-    while (RSTC_REGS->RSTC_SR& (uint32_t) RSTC_SR_SRCMP_Msk);  
+    while (${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& (uint32_t) RSTC_SR_SRCMP_Msk);  
 }
 
-RSTC_RESET_CAUSE RSTC${INDEX?string}_ResetCauseGet (void)
+RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void)
 {
-    return (RSTC_RESET_CAUSE) (RSTC_REGS->RSTC_SR& RSTC_SR_RSTTYP_Msk);
+    return (RSTC_RESET_CAUSE) (${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& RSTC_SR_RSTTYP_Msk);
 }
 
 <#if RSTC_MR_URSTEN == "GPIO">
-bool RSTC${INDEX?string}_NRSTPinRead (void)
+bool ${RSTC_INSTANCE_NAME}_NRSTPinRead (void)
 {
-    return  (bool) (RSTC_REGS->RSTC_SR& RSTC_SR_NRSTL_Msk);
+    return  (bool) (${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& RSTC_SR_NRSTL_Msk);
 }
 </#if>
 
 <#if RSTC_MR_URSTEN == "INTERRUPT">
 RSTC_OBJECT rstcObj;
 
-void RSTC${INDEX?string}_CallbackRegister (RSTC_CALLBACK callback, uintptr_t context)
+void ${RSTC_INSTANCE_NAME}_CallbackRegister (RSTC_CALLBACK callback, uintptr_t context)
 {
     rstcObj.callback = callback;
     rstcObj.context = context;
 }
 
-void RSTC${INDEX?string}_InterruptHandler( void )
+void ${RSTC_INSTANCE_NAME}_InterruptHandler( void )
 {
 	// Clear the interrupt flag
-	RSTC_REGS->RSTC_SR;
+	${RSTC_INSTANCE_NAME}_REGS->RSTC_SR;
 
 	// Callback user function
 	if(rstcObj.callback != NULL)

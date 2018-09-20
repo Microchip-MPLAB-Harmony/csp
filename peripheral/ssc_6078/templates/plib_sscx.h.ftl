@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_ssc${SSC_INDEX?string}.h
+    plib_${SSC_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    SSC${SSC_INDEX?string} PLIB Header File
+    ${SSC_INSTANCE_NAME} PLIB Header File
 
   Description:
     This file has prototype of all the interfaces provided for particular
@@ -39,11 +39,11 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_SSC${SSC_INDEX?string}_H
-#define PLIB_SSC${SSC_INDEX?string}_H
+#ifndef PLIB_${SSC_INSTANCE_NAME}_H
+#define PLIB_${SSC_INSTANCE_NAME}_H
 
 #include "device.h"
-#include "plib_ssc.h"
+#include "plib_ssc_common.h"
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus  
@@ -52,11 +52,11 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 #endif
 
-/****************************** SSC${SSC_INDEX?string} Interface *********************************/
+/****************************** ${SSC_INSTANCE_NAME} Interface *********************************/
 
-void SSC${SSC_INDEX?string}_Initialize ( void );
+void ${SSC_INSTANCE_NAME}_Initialize ( void );
 
-void SSC${SSC_INDEX?string}_BaudSet(const uint32_t baud);
+void ${SSC_INSTANCE_NAME}_BaudSet(const uint32_t baud);
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
@@ -65,7 +65,7 @@ void SSC${SSC_INDEX?string}_BaudSet(const uint32_t baud);
     
 #endif
 
-#endif // PLIB_SSC${SSC_INDEX?string}_H
+#endif // PLIB_${SSC_INSTANCE_NAME}_H
 
 /*******************************************************************************
  End of File

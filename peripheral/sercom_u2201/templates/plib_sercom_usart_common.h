@@ -39,8 +39,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // DOM-IGNORE-END
 
-#ifndef PLIB_SERCOM_USART_H // Guards against multiple inclusion
-#define PLIB_SERCOM_USART_H
+#ifndef PLIB_SERCOM_USART_COMMON_H // Guards against multiple inclusion
+#define PLIB_SERCOM_USART_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -192,4 +192,4 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_SERCOM_USART_H
+#endif //PLIB_SERCOM_USART_COMMON_H

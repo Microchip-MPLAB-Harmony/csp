@@ -1,4 +1,4 @@
-global instance
+global rttInstanceName
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
@@ -14,7 +14,7 @@ def interruptControl(rttNVIC, event):
         Database.setSymbolValue("core", interruptVector, True, 2)
 
         Database.clearSymbolValue("core", interruptHandler)
-        Database.setSymbolValue("core", interruptHandler, "RTT" + str(instance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, rttInstanceName.getValue() + "_InterruptHandler", 2)
 
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
@@ -31,12 +31,14 @@ def interruptControl(rttNVIC, event):
 
 def instantiateComponent(rttComponent):
 
-    global instance
+    global rttInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
 
-    instance = rttComponent.getID()[-1:]
+    rttInstanceName = rttComponent.createStringSymbol("RTT_INSTANCE_NAME", None)
+    rttInstanceName.setVisible(False)
+    rttInstanceName.setDefaultValue(rttComponent.getID().upper())
 
     rttMenu = rttComponent.createMenuSymbol("RTT_MENU_0", None)
     rttMenu.setLabel("Hardware Settings ")
@@ -44,12 +46,12 @@ def instantiateComponent(rttComponent):
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
-    timerStartApiName = "RTT" + str(instance) + "_Enable"
-    timeStopApiName = "RTT" + str(instance) + "_Disable"
-    compareSetApiName = "RTT" + str(instance) + "_AlarmValueSet"
-    counterGetApiName = "RTT" + str(instance) + "_TimerValueGet"
-    frequencyGetApiName = "RTT" + str(instance) + "_FrequencyGet"
-    callbackApiName = "RTT" + str(instance) + "_CallbackRegister"
+    timerStartApiName = rttInstanceName.getValue() + "_Enable"
+    timeStopApiName = rttInstanceName.getValue() + "_Disable"
+    compareSetApiName = rttInstanceName.getValue() + "_AlarmValueSet"
+    counterGetApiName = rttInstanceName.getValue() + "_TimerValueGet"
+    frequencyGetApiName = rttInstanceName.getValue() + "_FrequencyGet"
+    callbackApiName = rttInstanceName.getValue() + "_CallbackRegister"
     irqEnumName = "RTT_IRQn"
 
     timerWidth_Sym = rttComponent.createIntegerSymbol("TIMER_WIDTH", rttMenu)
@@ -99,10 +101,6 @@ def instantiateComponent(rttComponent):
     rttAlarm.setLabel("Enable Alarm Interrupt")
     rttAlarm.setDefaultValue(True)
 
-    rttIndex = rttComponent.createIntegerSymbol("INDEX", rttMenu)
-    rttIndex.setVisible(False)
-    rttIndex.setDefaultValue(int(instance))
-
     rttClkSrc = rttComponent.createBooleanSymbol("rttRTC1HZ", rttMenu)
     rttClkSrc.setLabel("Use RTC 1Hz as clock Source")
     rttClkSrc.setDefaultValue(False)
@@ -117,9 +115,9 @@ def instantiateComponent(rttComponent):
     rttResolutionComment.setLabel("RTT Counter Clock Resolution: 0.092 ms")
     rttResolutionComment.setDependencies(rttResolutionUpdate, ["rttRTC1HZ", "rttRTPRES"])
 
-    interruptVector = "RTT_INTERRUPT_ENABLE"
-    interruptHandler = "RTT_INTERRUPT_HANDLER"
-    interruptHandlerLock = "RTT_INTERRUPT_HANDLER_LOCK"
+    interruptVector = rttInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    interruptHandler = rttInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = rttInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
 
     # Interrupt Dynamic settings
     rttinterruptControl = rttComponent.createBooleanSymbol("INTERRUPT_RTT_ENABLE", None)
@@ -128,10 +126,18 @@ def instantiateComponent(rttComponent):
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
+    rttCommonHeader1File = rttComponent.createFileSymbol("RTT_FILE", None)
+    rttCommonHeader1File.setSourcePath("../peripheral/rtt_6081/templates/plib_rtt_common.h")
+    rttCommonHeader1File.setMarkup(False)
+    rttCommonHeader1File.setOutputName("plib_rtt_common.h")
+    rttCommonHeader1File.setDestPath("/peripheral/rtt/")
+    rttCommonHeader1File.setProjectPath("config/" + configName + "/peripheral/rtt/")
+    rttCommonHeader1File.setType("HEADER")
+
     rttHeader1File = rttComponent.createFileSymbol("RTT_FILE_0", None)
     rttHeader1File.setSourcePath("../peripheral/rtt_6081/templates/plib_rtt.h.ftl")
     rttHeader1File.setMarkup(True)
-    rttHeader1File.setOutputName("plib_rtt" + str(instance) + ".h")
+    rttHeader1File.setOutputName("plib_" + rttInstanceName.getValue().lower() + ".h")
     rttHeader1File.setDestPath("/peripheral/rtt/")
     rttHeader1File.setProjectPath("config/" + configName + "/peripheral/rtt/")
     rttHeader1File.setType("HEADER")
@@ -139,7 +145,7 @@ def instantiateComponent(rttComponent):
     rttSource1File = rttComponent.createFileSymbol("RTT_FILE_1", None)
     rttSource1File.setSourcePath("../peripheral/rtt_6081/templates/plib_rtt.c.ftl")
     rttSource1File.setMarkup(True)
-    rttSource1File.setOutputName("plib_rtt" + str(instance) + ".c")
+    rttSource1File.setOutputName("plib_" + rttInstanceName.getValue().lower() + ".c")
     rttSource1File.setDestPath("/peripheral/rtt/")
     rttSource1File.setProjectPath("config/" + configName + "/peripheral/rtt/")
     rttSource1File.setType("SOURCE")

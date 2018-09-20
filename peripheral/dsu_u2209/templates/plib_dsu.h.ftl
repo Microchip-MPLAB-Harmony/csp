@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_dsu${DSU_INDEX}.h
+    plib_${DSU_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    DSU${DSU_INDEX} PLIB Header File
+    ${DSU_INSTANCE_NAME} PLIB Header File
 
   Description:
     This file defines the interface to the DSU peripheral library.
@@ -41,8 +41,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
-#ifndef PLIB_DSU${DSU_INDEX}_H
-#define PLIB_DSU${DSU_INDEX}_H
+#ifndef PLIB_${DSU_INSTANCE_NAME}_H
+#define PLIB_${DSU_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // Section: Included Files
@@ -64,7 +64,7 @@ extern "C" {
 
 // *****************************************************************************
 /* Function:
-    bool DSU${DSU_INDEX}_CRCCalculate (uint32_t startAddress, size_t length,
+    bool ${DSU_INSTANCE_NAME}_CRCCalculate (uint32_t startAddress, size_t length,
                                  uint32_t crcSeed, uint32_t * crc);
 
   Summary:
@@ -139,7 +139,7 @@ extern "C" {
     None.
 */
 
-bool DSU${DSU_INDEX}_CRCCalculate (uint32_t startAddress, size_t length, uint32_t crcSeed, uint32_t * crc);
+bool ${DSU_INSTANCE_NAME}_CRCCalculate (uint32_t startAddress, size_t length, uint32_t crcSeed, uint32_t * crc);
 
 </#if>
 

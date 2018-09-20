@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_rtc.h
+    plib_${RTC_INSTANCE_NAME?lower_case}.h
 
   Summary:
     Interface definition of the Real Time Counter Plib (RTC).
@@ -38,13 +38,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef RTC${INDEX?string}_H    // Guards against multiple inclusion
-#define RTC${INDEX?string}_H
+#ifndef ${RTC_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define ${RTC_INSTANCE_NAME}_H
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <time.h>
+#include "plib_rtc_common.h"
 
 #ifdef __cplusplus // Provide C++ Compatibility
  extern "C" {
@@ -57,47 +58,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-<#if rtcEnableInterrupt == true>
-	<#lt>typedef void (*RTC_CALLBACK)(uintptr_t context, uint32_t int_cause);
-</#if>
-
-<#if rtcEnableInterrupt == true>
-	<#lt>typedef enum 
-	<#lt>{
-	<#lt>	RTC_ALARM_MASK_OFF = 0x00,         // NO Alarm
-	<#lt>	RTC_ALARM_MASK_SS = 0x01 ,          // Every minute, seconds alarm enable
-	<#lt>	RTC_ALARM_MASK_MI = 0x02,          // Minute alarm enable
-	<#lt>	RTC_ALARM_MASK_HH = 0x04,          // Hour alarm enable
-	<#lt>	RTC_ALARM_MASK_DD = 0x08,          // Date alarm enable
-	<#lt>	RTC_ALARM_MASK_MO = 0x10,          // Month alarm enable
-	<#lt>	RTC_ALARM_MASK_MISS = 0x03,        // Every hour
-	<#lt>	RTC_ALARM_MASK_HHMISS = 0x07,      // Every day
-	<#lt>	RTC_ALARM_MASK_DDHHMISS = 0x0f,    // Every month
-	<#lt>	RTC_ALARM_MASK_MODDHHMISS = 0x1f  // Every year
-	<#lt>} RTC_ALARM_MASK;	
-
-	<#lt>typedef enum 
-	<#lt>{
-	<#lt>	RTC_INT_ALARM = 0x02,          // Alarm Event
-	<#lt>	RTC_INT_TIME = 0x08 ,          // Time Event
-	<#lt>	RTC_INT_CALENDAR = 0x10,          // Calendar enable
-	<#lt>} RTC_INT_MASK;	
-	
-	<#lt>typedef struct
-	<#lt>{
-	<#lt>	RTC_CALLBACK          callback; 
-	<#lt>	uintptr_t               context;
-	<#lt>} RTC_OBJECT ;
-</#if>
 /***************************** RTC API *******************************/
-void RTC${INDEX?string}_Initialize( void );
-bool RTC${INDEX?string}_TimeSet( struct tm *Time );
-void RTC${INDEX?string}_TimeGet( struct tm *Time );
+void ${RTC_INSTANCE_NAME}_Initialize( void );
+bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm *Time );
+void ${RTC_INSTANCE_NAME}_TimeGet( struct tm *Time );
 <#if rtcEnableInterrupt == true>
-	<#lt>bool RTC${INDEX?string}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
-	<#lt>void RTC${INDEX?string}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
-	<#lt>void RTC${INDEX?string}_InterruptDisable(RTC_INT_MASK interrupt);
-	<#lt>void RTC${INDEX?string}_InterruptEnable(RTC_INT_MASK interrupt);
+	<#lt>bool ${RTC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK mask );
+	<#lt>void ${RTC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
+	<#lt>void ${RTC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt);
+	<#lt>void ${RTC_INSTANCE_NAME}_InterruptEnable(RTC_INT_MASK interrupt);
 </#if>
 	
 #ifdef __cplusplus // Provide C++ Compatibility

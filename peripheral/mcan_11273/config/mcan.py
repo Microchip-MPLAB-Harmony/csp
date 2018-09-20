@@ -2,8 +2,6 @@ global interruptVector
 global interruptHandler
 global interruptHandlerLock
 
-num = 0
-
 mcanElementSizes = ["8 bytes", "12 bytes", "16 bytes", "20 bytes", "24 bytes", "32 bytes", "48 bytes", "64 bytes"]
 opModeValues = ["NORMAL", "CONFIGURATION", "FD", "RESTRICTED", "MONITOR", "EXT LOOPBACK", "INT LOOPBACK"]
 
@@ -57,18 +55,18 @@ def adornFilterConfig(config):
     config.setDefaultValue(1)
 
 def mcanCreateStdFilter(component, menu, filterNumber):
-    stdFilter = component.createMenuSymbol("MCAN" + str(num) + "_STD_FILTER"+ str(filterNumber), menu)
+    stdFilter = component.createMenuSymbol(mcanInstanceName.getValue() + "_STD_FILTER"+ str(filterNumber), menu)
     stdFilter.setLabel("Standard Filter " + str(filterNumber))
-    stdFilterType = component.createKeyValueSetSymbol("MCAN" + str(num) + "_STD_FILTER" + str(filterNumber) + "_TYPE", stdFilter)
+    stdFilterType = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE", stdFilter)
     adornFilterType(stdFilterType)
-    sfid1 = component.createIntegerSymbol("MCAN" + str(num) + "_STD_FILTER" + str(filterNumber) + "_SFID1", stdFilter)
+    sfid1 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1", stdFilter)
     sfid1.setMin(0)
     sfid1.setMax(2047)
-    sfid2 = component.createIntegerSymbol("MCAN" + str(num) + "_STD_FILTER" + str(filterNumber) + "_SFID2", stdFilter)
+    sfid2 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2", stdFilter)
     sfid2.setMin(0)
     sfid2.setMax(2047)
 
-    config = component.createKeyValueSetSymbol("MCAN" + str(num) + "_STD_FILTER" + str(filterNumber) + "_CONFIG", stdFilter)
+    config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG", stdFilter)
     adornFilterConfig(config)
 
     stdFilter.setVisible(False)
@@ -76,18 +74,18 @@ def mcanCreateStdFilter(component, menu, filterNumber):
     return stdFilter
 
 def mcanCreateExtFilter(component, menu, filterNumber):
-    extFilter = component.createMenuSymbol("MCAN" + str(num) + "_EXT_FILTER" + str(filterNumber), menu)
+    extFilter = component.createMenuSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber), menu)
     extFilter.setLabel("Extended Filter " + str(filterNumber))
-    extFilterType = component.createKeyValueSetSymbol("MCAN" + str(num) + "_EXT_FILTER" + str(filterNumber) + "_TYPE", extFilter)
+    extFilterType = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE", extFilter)
     adornFilterType(extFilterType)
-    efid1 = component.createIntegerSymbol("MCAN" + str(num) + "_EXT_FILTER" + str(filterNumber) + "_EFID1", extFilter)
+    efid1 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1", extFilter)
     efid1.setMin(0)
     efid1.setMax(2047)
-    efid2 = component.createIntegerSymbol("MCAN" + str(num) + "_EXT_FILTER" + str(filterNumber) + "_EFID2", extFilter)
+    efid2 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2", extFilter)
     efid2.setMin(0)
     efid2.setMax(2047)
 
-    config = component.createKeyValueSetSymbol("MCAN" + str(num) + "_EXT_FILTER" + str(filterNumber) + "_CONFIG", extFilter)
+    config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG", extFilter)
     adornFilterConfig(config)
 
     extFilter.setVisible(False)
@@ -124,7 +122,7 @@ def interruptControl(symbol, event):
         Database.setSymbolValue("core", interruptVector, True, 2)
 
         Database.clearSymbolValue("core", interruptHandler)
-        Database.setSymbolValue("core", interruptHandler, "MCAN" + str(num) + "_INT0_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, mcanInstanceName.getValue() + "_INT0_InterruptHandler", 2)
 
         Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
@@ -133,14 +131,14 @@ def interruptControl(symbol, event):
         intStatus = False
 
         for symbolId in mcanIntSymbolIds:
-            intStatus = intStatus or Database.getSymbolValue("mcan" + str(num), symbolId)
+            intStatus = intStatus or Database.getSymbolValue(mcanInstanceName.getValue().lower(), symbolId)
 
         if intStatus == False:
             Database.clearSymbolValue("core", interruptVector)
             Database.setSymbolValue("core", interruptVector, False, 2)
 
             Database.clearSymbolValue("core", interruptHandler)
-            Database.setSymbolValue("core", interruptHandler, "MCAN" + str(num) + "_INT0_Handler", 2)
+            Database.setSymbolValue("core", interruptHandler, mcanInstanceName.getValue() + "_INT0_Handler", 2)
 
             Database.clearSymbolValue("core", interruptHandlerLock)
             Database.setSymbolValue("core", interruptHandlerLock, False, 2)
@@ -151,20 +149,22 @@ def InterruptStatusWarning(symbol, event):
     intStatus = False
 
     for symbolId in mcanIntSymbolIds:
-        intStatus = intStatus or Database.getSymbolValue("mcan" + str(num), symbolId)
+        intStatus = intStatus or Database.getSymbolValue(mcanInstanceName.getValue().lower(), symbolId)
 
     if intStatus == True:
         symbol.setVisible(event["value"])
 
 def instantiateComponent(mcanComponent):
-    global num
+    global mcanInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
     global interruptVectorUpdate
     
-    num = mcanComponent.getID()[-1:]
-    print("Running MCAN" + str(num))
+    mcanInstanceName = mcanComponent.createStringSymbol("MCAN_INSTANCE_NAME", None)
+    mcanInstanceName.setVisible(False)
+    mcanInstanceName.setDefaultValue(mcanComponent.getID().upper())
+    print("Running " + mcanInstanceName.getValue())
 
     #main menu
     mcanMenu = mcanComponent.createMenuSymbol("topMenu", None)
@@ -174,29 +174,24 @@ def instantiateComponent(mcanComponent):
     Database.setSymbolValue("core", "PMC_SCER_PCK5", True, 2)
     Database.setSymbolValue("core", "PMC_PCK5_PRES", 1, 2)
 
-    #instance index
-    mcanIndex = mcanComponent.createIntegerSymbol("INDEX", mcanMenu)
-    mcanIndex.setVisible(False)
-    mcanIndex.setDefaultValue(int(num))
-
     def hideMenu(menu, event):
         menu.setVisible(event["value"])
         menu.setEnabled(event["value"])
 
     #either the watermark % changed or the number of elements
     def RXF0WatermarkUpdate(watermark, event):
-        watermark_percentage = Database.getSymbolValue("mcan" + str(num), "RXF0_WP")
-        number_of_elements   = Database.getSymbolValue("mcan" + str(num), "RXF0_ELEMENTS")
+        watermark_percentage = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "RXF0_WP")
+        number_of_elements   = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "RXF0_ELEMENTS")
         watermark.setValue(watermark_percentage * number_of_elements / 100, 0)
 
     def RXF1WatermarkUpdate(watermark, event):
-        watermark_percentage = Database.getSymbolValue("mcan" + str(num), "RXF1_WP")
-        number_of_elements   = Database.getSymbolValue("mcan" + str(num), "RXF1_ELEMENTS")
+        watermark_percentage = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "RXF1_WP")
+        number_of_elements   = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "RXF1_ELEMENTS")
         watermark.setValue(watermark_percentage * number_of_elements / 100, 0)
 
     def TXWatermarkUpdate(watermark, event):
-        watermark_percentage = Database.getSymbolValue("mcan" + str(num), "TX_FIFO_WP")
-        number_of_elements   = Database.getSymbolValue("mcan" + str(num), "TX_FIFO_ELEMENTS")
+        watermark_percentage = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "TX_FIFO_WP")
+        number_of_elements   = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "TX_FIFO_ELEMENTS")
         watermark.setValue(watermark_percentage * number_of_elements / 100, 0)
 
     # MCAN operation mode - default to FD
@@ -521,14 +516,14 @@ def instantiateComponent(mcanComponent):
     mcanTCP.setMax(16)
 
     # Initialize peripheral clock
-    Database.clearSymbolValue("core", "MCAN" + str(num)+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "MCAN" + str(num)+"_CLOCK_ENABLE", True, 1)
+    Database.clearSymbolValue("core", mcanInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", mcanInstanceName.getValue()+"_CLOCK_ENABLE", True, 1)
     
     # get peripheral id for MCAN
-    interruptVector = "MCAN" + str(num) + "_INT0" + "_INTERRUPT_ENABLE"
-    interruptHandler = "MCAN" + str(num) + "_INT0" + "_INTERRUPT_HANDLER"
-    interruptHandlerLock = "MCAN" + str(num) + "_INT0" + "_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = "MCAN" + str(num) + "_INT0" + "_INTERRUPT_ENABLE_UPDATE"
+    interruptVector = mcanInstanceName.getValue() + "_INT0" + "_INTERRUPT_ENABLE"
+    interruptHandler = mcanInstanceName.getValue() + "_INT0" + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = mcanInstanceName.getValue() + "_INT0" + "_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = mcanInstanceName.getValue() + "_INT0" + "_INTERRUPT_ENABLE_UPDATE"
 
     global mcanIntSymbolIds
     mcanIntSymbolIds = ["INT_RXF0_NEW_ENTRY", "INT_RXF0_WATERMARK", "INT_RXF1_NEW_ENTRY", \
@@ -543,7 +538,7 @@ def instantiateComponent(mcanComponent):
     # Dependency Status for interrupt
     mcanIntEnComment = mcanComponent.createCommentSymbol("MCAN_NVIC_ENABLE_COMMENT", None)
     mcanIntEnComment.setVisible(False)
-    mcanIntEnComment.setLabel("Warning!!! MCAN" + str(num) + " Interrupt is Disabled in Interrupt Manager")
+    mcanIntEnComment.setLabel("Warning!!! " + mcanInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     mcanIntEnComment.setDependencies(InterruptStatusWarning, ["core." + interruptVectorUpdate])
 
     REG_MODULE_MCAN = Register.getRegisterModule("MCAN")
@@ -551,8 +546,8 @@ def instantiateComponent(mcanComponent):
     
     #Master Header
     mcanMasterHeaderFile = mcanComponent.createFileSymbol("headerFile", None)
-    mcanMasterHeaderFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/plib_mcan_local.h")
-    mcanMasterHeaderFile.setOutputName("plib_mcan_local.h")
+    mcanMasterHeaderFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/plib_mcan_common.h")
+    mcanMasterHeaderFile.setOutputName("plib_mcan_common.h")
     mcanMasterHeaderFile.setDestPath("/peripheral/mcan/")
     mcanMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/mcan/")
     mcanMasterHeaderFile.setType("HEADER")
@@ -560,7 +555,7 @@ def instantiateComponent(mcanComponent):
     #Instance Source File
     mcanMainSourceFile = mcanComponent.createFileSymbol("sourceFile", None)
     mcanMainSourceFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/plib_mcan.c.ftl")
-    mcanMainSourceFile.setOutputName("plib_mcan" + str(num) + ".c")
+    mcanMainSourceFile.setOutputName("plib_"+mcanInstanceName.getValue().lower()+".c")
     mcanMainSourceFile.setDestPath("/peripheral/mcan/")
     mcanMainSourceFile.setProjectPath("config/" + configName + "/peripheral/mcan/")
     mcanMainSourceFile.setType("SOURCE")
@@ -569,7 +564,7 @@ def instantiateComponent(mcanComponent):
     #Instance Header File
     mcanInstHeaderFile = mcanComponent.createFileSymbol("instHeaderFile", None)
     mcanInstHeaderFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/plib_mcan.h.ftl")
-    mcanInstHeaderFile.setOutputName("plib_mcan" + str(num) + ".h")
+    mcanInstHeaderFile.setOutputName("plib_"+mcanInstanceName.getValue().lower()+".h")
     mcanInstHeaderFile.setDestPath("/peripheral/mcan/")
     mcanInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/mcan/")
     mcanInstHeaderFile.setType("HEADER")

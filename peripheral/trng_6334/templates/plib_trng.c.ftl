@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_trng.c
+    plib_${TRNG_INSTANCE_NAME?lower_case}.c
 
   Summary:
     TRNG Source File
@@ -40,18 +40,18 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 <#macro GenerateCode>
 #include "device.h"
-#include "plib_trng${INDEX?string}.h"
+#include "plib_${TRNG_INSTANCE_NAME?lower_case}.h"
 
 <#if trngEnableInterrupt == true>
 	<#lt>TRNG_OBJECT trng;
 	
-	<#lt>void TRNG${INDEX?string}_RandomNumberGenerate( void )
+	<#lt>void ${TRNG_INSTANCE_NAME}_RandomNumberGenerate( void )
 	<#lt>{
-	<#lt>	TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
-	<#lt>	TRNG_REGS->TRNG_IER = TRNG_IER_DATRDY_Msk;
+	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
+	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_IER = TRNG_IER_DATRDY_Msk;
 	<#lt>}
 
-	<#lt>void TRNG${INDEX?string}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
+	<#lt>void ${TRNG_INSTANCE_NAME}_CallbackRegister( TRNG_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	trng.callback = callback;
 	<#lt>	trng.context = context;
@@ -59,20 +59,20 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 </#if>
 
 <#if trngEnableInterrupt == false>
-	<#lt>uint32_t TRNG${INDEX?string}_ReadData( void )
+	<#lt>uint32_t ${TRNG_INSTANCE_NAME}_ReadData( void )
 	<#lt>{
-	<#lt>	TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
-	<#lt>	while(((TRNG_REGS->TRNG_ISR) & (TRNG_ISR_DATRDY_Msk)) != TRNG_ISR_DATRDY_Msk);			
-	<#lt>	TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD;
-	<#lt>	return (TRNG_REGS->TRNG_ODATA);
+	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
+	<#lt>	while(((${TRNG_INSTANCE_NAME}_REGS->TRNG_ISR) & (TRNG_ISR_DATRDY_Msk)) != TRNG_ISR_DATRDY_Msk);			
+	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD;
+	<#lt>	return (${TRNG_INSTANCE_NAME}_REGS->TRNG_ODATA);
 	<#lt>}
 </#if>
 
 <#if trngEnableInterrupt == true>
-	<#lt>void TRNG${INDEX?string}_InterruptHandler( void )
+	<#lt>void ${TRNG_INSTANCE_NAME}_InterruptHandler( void )
 	<#lt>{
-	<#lt>	TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD;
-	<#lt>	trng.data = TRNG_REGS->TRNG_ODATA;
+	<#lt>	${TRNG_INSTANCE_NAME}_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD;
+	<#lt>	trng.data = ${TRNG_INSTANCE_NAME}_REGS->TRNG_ODATA;
 	<#lt>	if(trng.callback != NULL)
     <#lt>   {
     <#lt>   	trng.callback(trng.data, trng.context);

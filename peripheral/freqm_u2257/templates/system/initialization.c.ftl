@@ -1,1 +1,1 @@
-    FREQM${FREQM_INDEX}_Initialize();
+    ${FREQM_INSTANCE_NAME}_Initialize();

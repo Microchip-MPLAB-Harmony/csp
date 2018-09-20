@@ -7,6 +7,7 @@ Log.writeInfoMessage("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 #### Global Variables ####
 ################################################################################
 
+global dmacInstanceName
 global dmacHeaderFile
 global dmacSourceFile
 global dmacSystemInitFile
@@ -138,14 +139,15 @@ def dmacGlobalLogic(symbol, event):
             symbol.setValue(False, 2)
 
 def onGlobalEnableLogic(symbol, event):
+    global dmacInstanceName
 
     #clock enable
-    Database.clearSymbolValue("core", "DMAC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "DMAC_CLOCK_ENABLE", event["value"], 2)
+    Database.clearSymbolValue("core", dmacInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", dmacInstanceName.getValue()+"_CLOCK_ENABLE", event["value"], 2)
 
-    InterruptVector = "DMAC_INTERRUPT_ENABLE"
-    InterruptHandler = "DMAC_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "DMAC_INTERRUPT_HANDLER_LOCK"
+    InterruptVector = dmacInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    InterruptHandler = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    InterruptHandlerLock = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
 
     Database.clearSymbolValue("core", InterruptVector)
     Database.setSymbolValue("core", InterruptVector, event["value"], 2)
@@ -156,7 +158,7 @@ def onGlobalEnableLogic(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, "DMAC0_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, dmacInstanceName.getValue()+"_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, "DMAC_Handler", 2)
 
@@ -226,7 +228,19 @@ def dmacChannelAllocLogic(symbol, event):
 #### Component ####
 ################################################################################
 
-dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\"DMAC\"]/parameters/param@[name=\"CH_NUM\"]")
+# DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
+dmacSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
+dmacSymAPI_Prefix.setDefaultValue("DMAC")
+dmacSymAPI_Prefix.setVisible(False)
+
+instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]").getChildren()
+
+# DMA_INSTANCE_NAME: Needed to map DMA system service APIs to PLIB APIs
+dmacInstanceName = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
+dmacInstanceName.setDefaultValue(instances[0].getAttribute("name"))
+dmacInstanceName.setVisible(False)
+
+dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\""+dmacInstanceName.getValue()+"\"]/parameters/param@[name=\"CH_NUM\"]")
 dmacChannelCount = int(dmacChannelNode.getAttribute("value"))
 
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
@@ -236,25 +250,6 @@ dmaManagerSelect.setDefaultValue("SAMM0:SAMM0DMAModel")
 dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
 dmacMenu.setDescription("DMA (DMAC) Configuration")
-
-dmacIndex = coreComponent.createStringSymbol("DMAC_INDEX", dmacMenu)
-dmacIndex.setVisible(False)
-instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]").getChildren()
-if len(instances) == 1:
-    dmacIndex.setDefaultValue("")
-else:
-#TODO: Add support for second instance
-    dmacIndex.setDefaultValue("0")
-
-# DMA_INSTANCE_NAME: Needed to map DMA system service APIs to PLIB APIs
-portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
-portSymAPI_Prefix.setDefaultValue("DMAC"+dmacIndex.getValue())
-portSymAPI_Prefix.setVisible(False)
-
-# DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
-portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
-portSymAPI_Prefix.setDefaultValue("DMAC")
-portSymAPI_Prefix.setVisible(False)
 
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
@@ -276,7 +271,6 @@ dmacFileGen.setDependencies(onGlobalEnableLogic, ["DMA_ENABLE"])
 dmacHighestCh = coreComponent.createIntegerSymbol("DMAC_HIGHEST_CHANNEL", dmacEnable)
 dmacHighestCh.setLabel("DMA (DMAC) Highest Active Channel")
 dmacHighestCh.setVisible(False)
-
 
 dmacChannelLinkedList = coreComponent.createBooleanSymbol("DMAC_LL_ENABLE", dmacMenu)
 dmacChannelLinkedList.setLabel("Use Linked List Mode ?")
@@ -466,7 +460,7 @@ dmacSym_IntEnComment.setDependencies(updateDMACInterruptWarringStatus, ["core." 
 dmacSym_ClkEnComment = coreComponent.createCommentSymbol("DMAC_CLOCK_ENABLE_COMMENT", dmacMenu)
 dmacSym_ClkEnComment.setLabel("Warning!!! DMAC Peripheral Clock is Disabled in Clock Manager")
 dmacSym_ClkEnComment.setVisible(False)
-dmacSym_ClkEnComment.setDependencies(updateDMACClockWarringStatus, ["core.DMAC_CLOCK_ENABLE"])
+dmacSym_ClkEnComment.setDependencies(updateDMACClockWarringStatus, ["core."+dmacInstanceName.getValue()+"_CLOCK_ENABLE"])
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
@@ -477,7 +471,7 @@ configName = Variables.get("__CONFIGURATION_NAME")
 # Instance Header File
 dmacHeaderFile = coreComponent.createFileSymbol("DMAC_HEADER", None)
 dmacHeaderFile.setSourcePath("../peripheral/dmac_u2223/templates/plib_dmac.h.ftl")
-dmacHeaderFile.setOutputName("plib_dmac"+dmacIndex.getValue()+".h")
+dmacHeaderFile.setOutputName("plib_"+dmacInstanceName.getValue().lower()+".h")
 dmacHeaderFile.setDestPath("/peripheral/dmac/")
 dmacHeaderFile.setProjectPath("config/" + configName + "/peripheral/dmac/")
 dmacHeaderFile.setType("HEADER")
@@ -487,7 +481,7 @@ dmacHeaderFile.setEnabled(False)
 # Source File
 dmacSourceFile = coreComponent.createFileSymbol("DMAC_SOURCE", None)
 dmacSourceFile.setSourcePath("../peripheral/dmac_u2223/templates/plib_dmac.c.ftl")
-dmacSourceFile.setOutputName("plib_dmac"+dmacIndex.getValue()+".c")
+dmacSourceFile.setOutputName("plib_"+dmacInstanceName.getValue().lower()+".c")
 dmacSourceFile.setDestPath("/peripheral/dmac/")
 dmacSourceFile.setProjectPath("config/" + configName + "/peripheral/dmac/")
 dmacSourceFile.setType("SOURCE")

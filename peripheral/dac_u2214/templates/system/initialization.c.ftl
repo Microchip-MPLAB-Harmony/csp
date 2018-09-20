@@ -1,1 +1,1 @@
-DAC${DAC_INDEX}_Initialize();
+    ${DAC_INSTANCE_NAME}_Initialize();

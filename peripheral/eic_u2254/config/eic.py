@@ -1,7 +1,7 @@
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
-global eicInstanceIndex
+global eicInstanceName
 
 ###################################################################################################
 ######################################### Callbacks ###############################################
@@ -43,7 +43,7 @@ def updateEICInterruptStatus(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if bool(event["value"]) == True:
-        Database.setSymbolValue("core", InterruptHandler, "EIC" + eicInstanceIndex + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, eicInstanceName.getValue()+"_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, "EIC_Handler", 2)
 
@@ -93,22 +93,20 @@ def instantiateComponent(eicComponent):
     eicSym_Channel = []
     global DEBOUNCEN_Code
     global EXTINT_Code
-    global eicInstanceIndex
+    global eicInstanceName
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
 
-    eicInstanceIndex = eicComponent.getID()[-1:]
-
-    eicIndex = eicComponent.createIntegerSymbol("EIC_INDEX" , None)
-    eicIndex.setVisible(False)
-    eicIndex.setDefaultValue(int(eicInstanceIndex))
+    eicInstanceName = eicComponent.createStringSymbol("EIC_INSTANCE_NAME", None)
+    eicInstanceName.setVisible(False)
+    eicInstanceName.setDefaultValue(eicComponent.getID().upper())
 
     #clock enable
-    Database.clearSymbolValue("core", "EIC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "EIC_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", eicInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", eicInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
-    extIntNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EIC\"]/instance@[name=\"EIC\"]/parameters/param@[name=\"EXTINT_NUM\"]")
+    extIntNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EIC\"]/instance@[name=\""+eicInstanceName.getValue()+"\"]/parameters/param@[name=\"EXTINT_NUM\"]")
     extIntCount = int(extIntNode.getAttribute("value"))
     eicSym_IntCount = eicComponent.createIntegerSymbol("EIC_INT_COUNT" , None)
     eicSym_IntCount.setDefaultValue(extIntCount)
@@ -368,15 +366,15 @@ def instantiateComponent(eicComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = "EIC_INTERRUPT_ENABLE"
-    InterruptHandler = "EIC_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "EIC_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = "EIC_INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = eicInstanceName.getValue()+"INTERRUPT_ENABLE"
+    InterruptHandler = eicInstanceName.getValue()+"INTERRUPT_HANDLER"
+    InterruptHandlerLock = eicInstanceName.getValue()+"INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = eicInstanceName.getValue()+"INTERRUPT_ENABLE_UPDATE"
 
     NMIHandler = "NonMaskableInt_INTERRUPT_HANDLER"
 
     Database.clearSymbolValue("core", NMIHandler)
-    Database.setSymbolValue("core", NMIHandler, "NMI" + eicInstanceIndex + "_InterruptHandler", 2)
+    Database.setSymbolValue("core", NMIHandler, "NMI_" + eicInstanceName.getValue() + "_InterruptHandler", 2)
 
     # Interrupt Dynamic settings
     eicSym_UpdateInterruptStatus = eicComponent.createBooleanSymbol("EIC_INTERRUPT_STATUS", None)
@@ -393,7 +391,7 @@ def instantiateComponent(eicComponent):
     eicSym_ClkEnComment = eicComponent.createCommentSymbol("EIC_CLOCK_ENABLE_COMMENT", None)
     eicSym_ClkEnComment.setLabel("Warning!!! EIC Peripheral Clock is Disabled in Clock Manager")
     eicSym_ClkEnComment.setVisible(False)
-    eicSym_ClkEnComment.setDependencies(updateEICClockWarringStatus, ["core.EIC_CLOCK_ENABLE"])
+    eicSym_ClkEnComment.setDependencies(updateEICClockWarringStatus, ["core."+eicInstanceName.getValue()+"_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
@@ -403,7 +401,7 @@ def instantiateComponent(eicComponent):
 
     eicHeader1File = eicComponent.createFileSymbol("EIC_HEADER", None)
     eicHeader1File.setSourcePath("../peripheral/eic_u2254/templates/plib_eic.h.ftl")
-    eicHeader1File.setOutputName("plib_eic" + str(eicInstanceIndex) + ".h")
+    eicHeader1File.setOutputName("plib_"+eicInstanceName.getValue().lower()+".h")
     eicHeader1File.setDestPath("/peripheral/eic/")
     eicHeader1File.setProjectPath("config/" + configName + "/peripheral/eic/")
     eicHeader1File.setType("HEADER")
@@ -411,7 +409,7 @@ def instantiateComponent(eicComponent):
 
     eicSource1File = eicComponent.createFileSymbol("EIC_SOURCE", None)
     eicSource1File.setSourcePath("../peripheral/eic_u2254/templates/plib_eic.c.ftl")
-    eicSource1File.setOutputName("plib_eic" + str(eicInstanceIndex) + ".c")
+    eicSource1File.setOutputName("plib_"+eicInstanceName.getValue().lower()+".c")
     eicSource1File.setDestPath("/peripheral/eic/")
     eicSource1File.setProjectPath("config/" + configName + "/peripheral/eic/")
     eicSource1File.setType("SOURCE")

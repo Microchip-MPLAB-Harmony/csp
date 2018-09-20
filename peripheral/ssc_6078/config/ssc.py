@@ -102,16 +102,15 @@ def instantiateComponent(sscComponent):
     global sscTmtFrameModeFSDEN
     global sscTmtFrameModeFSEDGE
     global custom
-    global sscInstance
+    global sscInstanceName
     
     custom = False
-    sscInstance = sscComponent.getID()[-1:]
-    Log.writeInfoMessage("Running SSC" + str(sscInstance))
 
-    sscIndex = sscComponent.createIntegerSymbol("SSC_INDEX", None)
-    sscIndex.setVisible(False)
-    sscIndex.setDefaultValue(int(sscInstance))
-
+    sscInstanceName = sscComponent.createStringSymbol("SSC_INSTANCE_NAME", None)
+    sscInstanceName.setVisible(False)
+    sscInstanceName.setDefaultValue(sscComponent.getID().upper())
+    Log.writeInfoMessage("Running " + sscInstanceName.getValue())
+           
     sscDMA = sscComponent.createBooleanSymbol("SSC_DMA_MODE", None)
     sscDMA.setVisible(True)
     sscDMA.setLabel("DMA Mode")
@@ -439,9 +438,9 @@ def instantiateComponent(sscComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
     
     sscHeaderFile = sscComponent.createFileSymbol("SSC_COMMON_HEADER", None)
-    sscHeaderFile.setSourcePath("../peripheral/ssc_6078/templates/plib_ssc.h")
-    sscHeaderFile.setOutputName("plib_ssc.h")
-    sscHeaderFile.setDestPath("peripheral/ssc/")
+    sscHeaderFile.setSourcePath("../peripheral/ssc_6078/templates/plib_ssc_common.h")
+    sscHeaderFile.setOutputName("plib_ssc_common.h")
+    sscHeaderFile.setDestPath("/peripheral/ssc/")
     sscHeaderFile.setProjectPath("config/" + configName + "/peripheral/ssc/")
     sscHeaderFile.setType("HEADER")
     sscHeaderFile.setMarkup(False)
@@ -449,7 +448,7 @@ def instantiateComponent(sscComponent):
     
     sscHeader1File = sscComponent.createFileSymbol("SSC_HEADER", None)
     sscHeader1File.setSourcePath("../peripheral/ssc_6078/templates/plib_sscx.h.ftl")
-    sscHeader1File.setOutputName("plib_ssc" + str(sscInstance) + ".h")
+    sscHeader1File.setOutputName("plib_"+sscInstanceName.getValue().lower()+".h")
     sscHeader1File.setDestPath("/peripheral/ssc/")
     sscHeader1File.setProjectPath("config/" + configName +"/peripheral/ssc/")
     sscHeader1File.setType("HEADER")
@@ -457,7 +456,7 @@ def instantiateComponent(sscComponent):
     
     sscSource1File = sscComponent.createFileSymbol("SSC_SOURCE", None)
     sscSource1File.setSourcePath("../peripheral/ssc_6078/templates/plib_sscx.c.ftl")
-    sscSource1File.setOutputName("plib_ssc" + str(sscInstance) + ".c")
+    sscSource1File.setOutputName("plib_"+sscInstanceName.getValue().lower()+".c")
     sscSource1File.setDestPath("/peripheral/ssc/")
     sscSource1File.setProjectPath("config/" + configName +"/peripheral/ssc/")
     sscSource1File.setType("SOURCE")

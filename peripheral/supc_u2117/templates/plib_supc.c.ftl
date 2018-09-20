@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Supply Controller(SUPC${SUPC_INDEX}) PLIB
+  Supply Controller(${SUPC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_supc${SUPC_INDEX}.c
+    plib_${SUPC_INSTANCE_NAME?lower_case}.c
 
   Summary
-    SUPC${SUPC_INDEX} PLIB Implementation File.
+    ${SUPC_INSTANCE_NAME} PLIB Implementation File.
 
   Description
     This file defines the interface to the SUPC peripheral library. This
@@ -53,7 +53,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 #include "device.h"
-#include "plib_supc${SUPC_INDEX}.h"
+#include "plib_${SUPC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -92,17 +92,17 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 
-SUPC_BODVDD_CALLBACK_OBJ supc${SUPC_INDEX}CallbackObject;
+SUPC_BODVDD_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: SUPC${SUPC_INDEX} Implementation
+// Section: ${SUPC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
 /* Function:
-    void SUPC${SUPC_INDEX}_Initialize( void );
+    void ${SUPC_INSTANCE_NAME}_Initialize( void );
 
   Summary:
     Initializes given instance of SUPC peripheral.
@@ -112,37 +112,37 @@ SUPC_BODVDD_CALLBACK_OBJ supc${SUPC_INDEX}CallbackObject;
     with the values configured in MHC GUI.
 
   Remarks:
-    plib_supc${SUPC_INDEX}.h for usage information.
+    plib_${SUPC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void SUPC${SUPC_INDEX}_Initialize( void )
+void ${SUPC_INSTANCE_NAME}_Initialize( void )
 {
     /* Clear all flags */
-    SUPC_REGS->SUPC_INTFLAG = SUPC_INTFLAG_Msk;
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_Msk;
 
     <#if SUPC_BODVDD_ACTCFG == "1" || (SUPC_BODVDD_STDBYCFG == "1" && SUPC_BODVDD_RUNSTDBY == true)>
     /* Configure Brown out detector prescaler & standby/active mode */
-    <@compress single_line=true>SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_PSEL_${SUPC_BODVDD_PSEL}
+    <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_BODVDD |= SUPC_BODVDD_PSEL_${SUPC_BODVDD_PSEL}
                                                           ${SUPC_BODVDD_RUNSTDBY?then('| SUPC_BODVDD_RUNSTDBY_Msk', '')}
                                                           ${(SUPC_BODVDD_ACTCFG == "1")?then('| SUPC_BODVDD_ACTCFG_Msk', '')}
                                                           ${((SUPC_BODVDD_STDBYCFG == "1") && (SUPC_BODVDD_RUNSTDBY == true))?then('| SUPC_BODVDD_STDBYCFG_Msk', '')};</@compress>
     <#else>
         <#if SUPC_BODVDD_RUNSTDBY == true>
     /* Configure Brown out detector standby sleep mode */
-    SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_RUNSTDBY_Msk;
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BODVDD |= SUPC_BODVDD_RUNSTDBY_Msk;
         </#if>
     </#if>
 
     <#if SUPC_VREG_RUNSTDBY == "1">
     /* Configure voltage regulator standby sleep mode */
-    SUPC_REGS->SUPC_VREG |= SUPC_VREG_RUNSTDBY_Msk;
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG |= SUPC_VREG_RUNSTDBY_Msk;
     </#if>
 
     /* Enable BODVDD detect interrupt */
-    SUPC_REGS->SUPC_INTENSET = SUPC_INTFLAG_BODVDDDET_Msk;
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTENSET = SUPC_INTFLAG_BODVDDDET_Msk;
 
     /* Configure VREF reference, level, availability */
-    <@compress single_line=true>SUPC_REGS->SUPC_VREF = SUPC_VREF_SEL_${SUPC_VREF_SEL}
+    <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_VREF = SUPC_VREF_SEL_${SUPC_VREF_SEL}
                                                        ${SUPC_VREF_VREFOE?then('| SUPC_VREF_VREFOE_Msk', '')}
                                                        ${(SUPC_VREF_RUNSTDBY == "1")?then('| SUPC_VREF_RUNSTDBY_Msk', '')}
                                                        ${(SUPC_VREF_ONDEMAND == "1")?then('| SUPC_VREF_ONDEMAND_Msk', '')};</@compress>
@@ -150,7 +150,7 @@ void SUPC${SUPC_INDEX}_Initialize( void )
 
 // *****************************************************************************
 /* Function:
-    void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable );
+    void ${SUPC_INSTANCE_NAME}_VoltageRegulatorEnable( bool enable );
 
   Summary:
     Enable/Disable voltage regulator.
@@ -159,26 +159,26 @@ void SUPC${SUPC_INDEX}_Initialize( void )
     This function will enable or disable the main voltage regulator.
 
   Remarks:
-    plib_supc${SUPC_INDEX}.h for usage information.
+    plib_${SUPC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable )
+void ${SUPC_INSTANCE_NAME}_VoltageRegulatorEnable( bool enable )
 {
     if(enable == true)
     {
         /* Enable voltage regulator */
-        SUPC_REGS->SUPC_VREG |= SUPC_VREG_ENABLE_Msk;
+        ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG |= SUPC_VREG_ENABLE_Msk;
     }
     else
     {
         /* Disable voltage regulator */
-        SUPC_REGS->SUPC_VREG &= ~SUPC_VREG_ENABLE_Msk;
+        ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG &= ~SUPC_VREG_ENABLE_Msk;
     }
 }
 
 // *****************************************************************************
 /* Function:
-    void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback,
+    void ${SUPC_INSTANCE_NAME}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback,
                                                     uintptr_t context );
 
   Summary:
@@ -191,19 +191,19 @@ void SUPC${SUPC_INDEX}_VoltageRegulatorEnable( bool enable )
     interrupt and not reset the system.
 
   Remarks:
-    plib_supc${SUPC_INDEX}.h for usage information.
+    plib_${SUPC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, uintptr_t context )
+void ${SUPC_INSTANCE_NAME}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, uintptr_t context )
 {
-    supc${SUPC_INDEX}CallbackObject.callback = callback;
+    ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback = callback;
 
-    supc${SUPC_INDEX}CallbackObject.context = context;
+    ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context = context;
 }
 
 // *****************************************************************************
 /* Function:
-    void SUPC${SUPC_INDEX}_InterruptHandler( void );
+    void ${SUPC_INSTANCE_NAME}_InterruptHandler( void );
 
   Summary:
     SUPC interrupt handler for BODVDD event action.
@@ -212,18 +212,18 @@ void SUPC${SUPC_INDEX}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, ui
     This function will trigger BODVDD callback.
 
   Remarks:
-    plib_supc${SUPC_INDEX}.h for usage information.
+    plib_${SUPC_INSTANCE_NAME?lower_case}.h for usage information.
 */
 
-void SUPC${SUPC_INDEX}_InterruptHandler( void )
+void ${SUPC_INSTANCE_NAME}_InterruptHandler( void )
 {
-    if ((SUPC_REGS->SUPC_INTFLAG & SUPC_INTFLAG_BODVDDDET_Msk) == SUPC_INTFLAG_BODVDDDET_Msk)
+    if ((${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG & SUPC_INTFLAG_BODVDDDET_Msk) == SUPC_INTFLAG_BODVDDDET_Msk)
     {
-        if (supc${SUPC_INDEX}CallbackObject.callback != NULL)
+        if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
         {
-            supc${SUPC_INDEX}CallbackObject.callback(supc0CallbackObject.context);
+            ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context);
         }
 
-        SUPC_REGS->SUPC_INTFLAG = SUPC_INTFLAG_BODVDDDET_Msk;
+        ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_BODVDDDET_Msk;
     }
 }

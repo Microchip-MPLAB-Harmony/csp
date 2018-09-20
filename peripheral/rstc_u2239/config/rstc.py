@@ -5,26 +5,15 @@
 def instantiateComponent(rstcComponent):
 
     rstcSym_RCAUSE = []
-    rstcInstanceIndex = rstcComponent.getID()[-1:]
+
+    rstcInstanceName = rstcComponent.createStringSymbol("RSTC_INSTANCE_NAME", None)
+    rstcInstanceName.setVisible(False)
+    rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
 
     rstcSym_Enable = rstcComponent.createBooleanSymbol("RSTC_ENABLE", None)
     rstcSym_Enable.setLabel("Use Reset Controller ?")
     rstcSym_Enable.setDefaultValue(True)
     rstcSym_Enable.setReadOnly(True)
-
-    #index
-    rstcSym_Index = rstcComponent.createIntegerSymbol("RSTC_INDEX", None)
-    rstcSym_Index.setDefaultValue(int(rstcInstanceIndex))
-    rstcSym_Index.setVisible(False)
-
-    ###################################################################################################
-    ####################################### Code Generation  ##########################################
-    ###################################################################################################
-
-    configName = Variables.get("__CONFIGURATION_NAME")
-
-    rstcModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]")
-    rstcModuleID = rstcModuleNode.getAttribute("id")
 
     rstcResetCause = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/register-group@[name="RSTC"]/register@[name="RCAUSE"]')
 
@@ -41,9 +30,18 @@ def instantiateComponent(rstcComponent):
         rstcSym_RCAUSE[id].setDisplayMode("Description")
         rstcSym_RCAUSE[id].setVisible(False)
 
+    ###################################################################################################
+    ####################################### Code Generation  ##########################################
+    ###################################################################################################
+
+    configName = Variables.get("__CONFIGURATION_NAME")
+
+    rstcModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]")
+    rstcModuleID = rstcModuleNode.getAttribute("id")
+
     rstcSym_HeaderFile = rstcComponent.createFileSymbol("RSTC_HEADER", None)
     rstcSym_HeaderFile.setSourcePath("../peripheral/rstc_"+rstcModuleID+"/templates/plib_rstc.h.ftl")
-    rstcSym_HeaderFile.setOutputName("plib_rstc"+rstcInstanceIndex+".h")
+    rstcSym_HeaderFile.setOutputName("plib_"+rstcInstanceName.getValue().lower()+".h")
     rstcSym_HeaderFile.setDestPath("peripheral/rstc/")
     rstcSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/rstc/")
     rstcSym_HeaderFile.setType("HEADER")
@@ -51,7 +49,7 @@ def instantiateComponent(rstcComponent):
 
     rstcSym_SourceFile = rstcComponent.createFileSymbol("RSTC_SOURCE", None)
     rstcSym_SourceFile.setSourcePath("../peripheral/rstc_"+rstcModuleID+"/templates/plib_rstc.c.ftl")
-    rstcSym_SourceFile.setOutputName("plib_rstc"+rstcInstanceIndex+".c")
+    rstcSym_SourceFile.setOutputName("plib_"+rstcInstanceName.getValue().lower()+".c")
     rstcSym_SourceFile.setDestPath("peripheral/rstc/")
     rstcSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/rstc/")
     rstcSym_SourceFile.setType("SOURCE")

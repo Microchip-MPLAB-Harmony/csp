@@ -19,12 +19,12 @@ def getMasterClkFrequency():
     return int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
 
 def getQspiClkFrequency():
-    global num
-    return Database.getSymbolValue("qspi" + str(num), "QSPI_CLK_FREQ")
+    global qspiInstanceName
+    return Database.getSymbolValue(qspiInstanceName.getValue().lower(), "QSPI_CLK_FREQ")
 
 def getQspiScbrValue():
-    global num
-    return Database.getSymbolValue("qspi" + str(num), "QSPI_SCBR")
+    global qspiInstanceName
+    return Database.getSymbolValue(qspiInstanceName.getValue().lower(), "QSPI_SCBR")
 
 def setQspiClkFrequency(symbol, event):
     master_clk_freq = getMasterClkFrequency()
@@ -53,14 +53,16 @@ def setMasterClkDependency(qspiMasterClkComment, masterClkSymbol):
 
 def instantiateComponent(qspiComponent):
 
-    global num
+    global qspiInstanceName
 
-    num = qspiComponent.getID()[-1:]
-    print("Running QSPI" + str(num))
+    qspiInstanceName = qspiComponent.createStringSymbol("QSPI_INSTANCE_NAME", None)
+    qspiInstanceName.setVisible(False)
+    qspiInstanceName.setDefaultValue(qspiComponent.getID().upper())
+    print("Running " + qspiInstanceName.getValue())
 
     #Enable Clock for QSPI instance 
-    Database.clearSymbolValue("core", "QSPI_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "QSPI_CLOCK_ENABLE", True, 1)
+    Database.clearSymbolValue("core", qspiInstanceName.getValue() + "_CLOCK_ENABLE")
+    Database.setSymbolValue("core", qspiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     qspiMenu = qspiComponent.createMenuSymbol("QSPI", None)
     qspiMenu.setLabel("Hardware Settings ")
@@ -125,24 +127,20 @@ def instantiateComponent(qspiComponent):
     qspiMasterClkComment = qspiComponent.createCommentSymbol("QSPI_MASTER_CLK_COMMENT", qspiMenu)
     qspiMasterClkComment.setVisible(False)
     qspiMasterClkComment.setLabel("WARNING!!! QSPI Peripheral Clock Is Disabled In Clock Manager")
-    qspiMasterClkComment.setDependencies(setMasterClkDependency, ["core.QSPI_CLOCK_ENABLE"])
-
-    qspiIndex = qspiComponent.createIntegerSymbol("INDEX", qspiMenu)
-    qspiIndex.setVisible(False)
-    qspiIndex.setDefaultValue(int(num))
+    qspiMasterClkComment.setDependencies(setMasterClkDependency, ["core." + qspiInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
     qspiHeader1File = qspiComponent.createFileSymbol("QSPI_HEADER1", None)
-    qspiHeader1File.setSourcePath("../peripheral/qspi_" + qspiRegModule.getID() + "/templates/plib_qspi.h")
-    qspiHeader1File.setOutputName("plib_qspi.h")
+    qspiHeader1File.setSourcePath("../peripheral/qspi_" + qspiRegModule.getID() + "/templates/plib_qspi_common.h")
+    qspiHeader1File.setOutputName("plib_qspi_common.h")
     qspiHeader1File.setDestPath("/peripheral/qspi/")
     qspiHeader1File.setProjectPath("config/" + configName + "/peripheral/qspi/")
     qspiHeader1File.setType("HEADER")
 
     qspiHeader2File = qspiComponent.createFileSymbol("QSPI_HEADER2", None)
     qspiHeader2File.setSourcePath("../peripheral/qspi_" + qspiRegModule.getID() + "/templates/plib_qspi.h.ftl")
-    qspiHeader2File.setOutputName("plib_qspi" + str(num) + ".h")
+    qspiHeader2File.setOutputName("plib_" + qspiInstanceName.getValue().lower() + ".h")
     qspiHeader2File.setDestPath("/peripheral/qspi/")
     qspiHeader2File.setProjectPath("config/" + configName + "/peripheral/qspi/")
     qspiHeader2File.setType("HEADER")
@@ -151,7 +149,7 @@ def instantiateComponent(qspiComponent):
 
     qspiSource1File = qspiComponent.createFileSymbol("QSPI_SOURCE1", None)
     qspiSource1File.setSourcePath("../peripheral/qspi_" + qspiRegModule.getID() + "/templates/plib_qspi.c.ftl")
-    qspiSource1File.setOutputName("plib_qspi" + str(num) + ".c")
+    qspiSource1File.setOutputName("plib_" + qspiInstanceName.getValue().lower() + ".c")
     qspiSource1File.setDestPath("/peripheral/qspi/")
     qspiSource1File.setProjectPath("config/" + configName + "/peripheral/qspi/")
     qspiSource1File.setType("SOURCE")

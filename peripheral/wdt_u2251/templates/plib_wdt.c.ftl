@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_wdt${WDT_INDEX}.c
+    plib_${WDT_INSTANCE_NAME?lower_case}.c
 
   Summary:
-    Interface definition of WDT${WDT_INDEX} PLIB.
+    Interface definition of ${WDT_INSTANCE_NAME} PLIB.
 
   Description:
     This file defines the interface for the WDT Plib.
@@ -45,7 +45,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_wdt${WDT_INDEX}.h"
+#include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -75,12 +75,12 @@ typedef struct
 
 } WDT_CALLBACK_OBJECT ;
 
-WDT_CALLBACK_OBJECT wdt${WDT_INDEX}CallbackObj;
+WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 </#if>
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_Initialize( void )
+    void ${WDT_INSTANCE_NAME}_Initialize( void )
 
   Summary:
     Initializes given instance of the WDT peripheral.
@@ -90,17 +90,17 @@ WDT_CALLBACK_OBJECT wdt${WDT_INDEX}CallbackObj;
     configured by the user from within the MCC.
 
   Remarks:
-    Refer plib_wdt${WDT_INDEX}.h file for more information.
+    Refer plib_${WDT_INSTANCE_NAME?lower_case}.h file for more information.
 */
 
-void WDT${WDT_INDEX}_Initialize( void )
+void ${WDT_INSTANCE_NAME}_Initialize( void )
 {
     /* Empty Implementation */
 }
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_Enable( void )
+    void ${WDT_INSTANCE_NAME}_Enable( void )
 
   Summary:
     Enables the WDT peripheral.
@@ -110,10 +110,10 @@ void WDT${WDT_INDEX}_Initialize( void )
     the WDT to start counting up to the configured timeout value.
 
   Remarks:
-    Refer plib_wdt${WDT_INDEX}.h file for more information.
+    Refer plib_${WDT_INSTANCE_NAME?lower_case}.h file for more information.
 */
 
-void WDT${WDT_INDEX}_Enable( void )
+void ${WDT_INSTANCE_NAME}_Enable( void )
 {
     /* Checking if Always On Bit is Enabled */
     if((WDT_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != WDT_CTRLA_ALWAYSON_Msk)
@@ -135,7 +135,7 @@ void WDT${WDT_INDEX}_Enable( void )
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_Disable( void )
+    void ${WDT_INSTANCE_NAME}_Disable( void )
 
   Summary:
     Disables the WDT peripheral.
@@ -144,10 +144,10 @@ void WDT${WDT_INDEX}_Enable( void )
     This function is used to stop the WDT counter and disable WDT peripheral.
 
   Remarks:
-    Refer plib_wdt${WDT_INDEX}.h file for more information.
+    Refer plib_${WDT_INSTANCE_NAME?lower_case}.h file for more information.
 */
 
-void WDT${WDT_INDEX}_Disable( void )
+void ${WDT_INSTANCE_NAME}_Disable( void )
 {
     /* Disable Watchdog */
     WDT_REGS->WDT_CTRLA &= ~(WDT_CTRLA_ENABLE_Msk);
@@ -160,7 +160,7 @@ void WDT${WDT_INDEX}_Disable( void )
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_Clear( void )
+    void ${WDT_INSTANCE_NAME}_Clear( void )
 
   Summary:
     Restarts the WDT counter.
@@ -172,10 +172,10 @@ void WDT${WDT_INDEX}_Disable( void )
     system to reset.
 
   Remarks:
-    Refer plib_wdt${WDT_INDEX}.h file for more information.
+    Refer plib_${WDT_INSTANCE_NAME?lower_case}.h file for more information.
 */
 
-void WDT${WDT_INDEX}_Clear( void )
+void ${WDT_INSTANCE_NAME}_Clear( void )
 {
     /* Clear WDT and reset the WDT timer before the
        timeout occurs */
@@ -185,7 +185,7 @@ void WDT${WDT_INDEX}_Clear( void )
 <#if WDT_EW_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback,
+    void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback,
                                            uintptr_t context )
 
   Summary:
@@ -206,19 +206,19 @@ void WDT${WDT_INDEX}_Clear( void )
     be in-active.
 
 Remarks:
-    Refer plib_wdt${WDT_INDEX}.h file for more information.
+    Refer plib_${WDT_INSTANCE_NAME?lower_case}.h file for more information.
 */
 
-void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context)
+void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context)
 {
-    wdt${WDT_INDEX}CallbackObj.callback = callback;
+    ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback = callback;
 
-    wdt${WDT_INDEX}CallbackObj.context = context;
+    ${WDT_INSTANCE_NAME?lower_case}CallbackObj.context = context;
 }
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_InterruptHandler( void )
+    void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
 
   Summary:
     WDT Interrupt Handler.
@@ -230,14 +230,14 @@ void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context)
     None.
 */
 
-void WDT${WDT_INDEX}_InterruptHandler( void )
+void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Clear Early Watchdog Interrupt */
     WDT_REGS->WDT_INTFLAG = WDT_INTFLAG_EW_Msk;
 
-    if( wdt${WDT_INDEX}CallbackObj.callback != NULL )
+    if( ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback != NULL )
     {
-        wdt${WDT_INDEX}CallbackObj.callback(wdt${WDT_INDEX}CallbackObj.context);
+        ${WDT_INSTANCE_NAME?lower_case}CallbackObj.callback(${WDT_INSTANCE_NAME?lower_case}CallbackObj.context);
     }
 }
 </#if>

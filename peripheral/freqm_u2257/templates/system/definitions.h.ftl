@@ -1,1 +1,1 @@
-#include "peripheral/freqm/plib_freqm${FREQM_INDEX}.h"
+#include "peripheral/freqm/plib_${FREQM_INSTANCE_NAME?lower_case}.h"

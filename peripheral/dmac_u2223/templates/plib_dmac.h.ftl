@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_dmac${DMAC_INDEX}.h
+    plib_${DMA_INSTANCE_NAME?lower_case}.h
 
   Summary:
     DMAC peripheral library interface.
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_DMAC${DMAC_INDEX}_H    // Guards against multiple inclusion
-#define PLIB_DMAC${DMAC_INDEX}_H
+#ifndef PLIB_${DMA_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define PLIB_${DMA_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -187,7 +187,7 @@ typedef void (*DMAC_CHANNEL_CALLBACK) (DMAC_TRANSFER_EVENT event, uintptr_t cont
 
 // *****************************************************************************
 /* Function:
-    void DMAC${DMAC_INDEX}_Initialize( void )
+    void ${DMA_INSTANCE_NAME}_Initialize( void )
 
   Summary:
     Initializes the DMAC controller of the device.
@@ -208,18 +208,18 @@ typedef void (*DMAC_CHANNEL_CALLBACK) (DMAC_TRANSFER_EVENT event, uintptr_t cont
 
   Example:
     <code>
-    DMAC${DMAC_INDEX}_Initialize();
+    ${DMA_INSTANCE_NAME}_Initialize();
     </code>
 
   Remarks:
     Stops the DMAC controller if it was already running and reinitializes it.
 */
 
-void DMAC${DMAC_INDEX}_Initialize( void );
+void ${DMA_INSTANCE_NAME}_Initialize( void );
 
 // *****************************************************************************
 /* Function:
-    void DMAC${DMAC_INDEX}_ChannelCallbackRegister
+    void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister
     (
         DMAC_CHANNEL channel,
         const DMAC_CHANNEL_CALLBACK eventHandler,
@@ -245,7 +245,7 @@ void DMAC${DMAC_INDEX}_Initialize( void );
     that should be associated with this DMAC channel.
 
   Precondition:
-    DMAC should have been initialized by calling DMAC${DMAC_INDEX}_Initialize.
+    DMAC should have been initialized by calling ${DMA_INSTANCE_NAME}_Initialize.
 
   Parameters:
     channel - A specific DMAC channel from which the events are expected.
@@ -281,18 +281,18 @@ void DMAC${DMAC_INDEX}_Initialize( void );
     }
 
     // User registers an event handler with DMAC channel. This is done once.
-    DMAC${DMAC_INDEX}_ChannelCallbackRegister(channel, APP_DMACTransferEventHandler, (uintptr_t)&myAppObj);
+    ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(channel, APP_DMACTransferEventHandler, (uintptr_t)&myAppObj);
     </code>
 
   Remarks:
     None.
 */
 
-void DMAC${DMAC_INDEX}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle);
+void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle);
 
 //******************************************************************************
 /* Function:
-    bool DMAC${DMAC_INDEX}_ChannelTransfer
+    bool ${DMA_INSTANCE_NAME}_ChannelTransfer
     (
         DMAC_CHANNEL channel,
         const void *srcAddr,
@@ -340,7 +340,7 @@ void DMAC${DMAC_INDEX}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC
     that transfer request is not accepted.
 
   Precondition:
-    DMAC should have been initialized by calling the DMAC${DMAC_INDEX}_Initialize.
+    DMAC should have been initialized by calling the ${DMA_INSTANCE_NAME}_Initialize.
     The required channel transfer parameters such as beat size, source and
     destination address increment should have been configured in MHC.
 
@@ -367,10 +367,10 @@ void DMAC${DMAC_INDEX}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC
     size_t size = 10;
 
     // User registers an event handler with PLIB. This is done once.
-    DMAC${DMAC_INDEX}_ChannelCallbackRegister(APP_DMACTransferEventHandler,
+    ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(APP_DMACTransferEventHandler,
         (uintptr_t)&myAppObj);
 
-    if(DMAC${DMAC_INDEX}_ChannelTransfer(DMAC_CHANNEL_1, srcAddr, destAddr, size) == true)
+    if(${DMA_INSTANCE_NAME}_ChannelTransfer(DMAC_CHANNEL_1, srcAddr, destAddr, size) == true)
     {
         // do something else
     }
@@ -384,11 +384,11 @@ void DMAC${DMAC_INDEX}_ChannelCallbackRegister (DMAC_CHANNEL channel, const DMAC
     None.
 */
 
-bool DMAC${DMAC_INDEX}_ChannelTransfer (DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
+bool ${DMA_INSTANCE_NAME}_ChannelTransfer (DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
 
 // *****************************************************************************
 /* Function:
-    bool DMAC${DMAC_INDEX}_ChannelIsBusy ( DMAC_CHANNEL channel );
+    bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel );
 
   Summary:
     The function returns the busy status of the channel.
@@ -396,13 +396,13 @@ bool DMAC${DMAC_INDEX}_ChannelTransfer (DMAC_CHANNEL channel, const void *srcAdd
   Description:
     The function returns true if the specified channel is busy with a transfer.
     This function can be used to poll for the completion of transfer that was
-    started by calling the DMAC${DMAC_INDEX}_ChannelTransfer() function. This
+    started by calling the ${DMA_INSTANCE_NAME}_ChannelTransfer() function. This
     function can be used as a polling alternative to the setting a callback
     function and receiving an asynchronous notification for transfer
     notification.
 
   Precondition:
-    DMAC should have been initialized by calling DMAC${DMAC_INDEX}_Initialize.
+    DMAC should have been initialized by calling ${DMA_INSTANCE_NAME}_Initialize.
 
   Parameters:
     channel - The DMAC channel whose status needs to be checked.
@@ -415,18 +415,18 @@ bool DMAC${DMAC_INDEX}_ChannelTransfer (DMAC_CHANNEL channel, const void *srcAdd
   Example:
     <code>
     // Wait while the channel is busy.
-    while(DMAC${DMAC_INDEX}_ChannelIsBusy (DMAC_CHANNEL_0));
+    while(${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL_0));
     </code>
 
   Remarks:
     None.
 */
 
-bool DMAC${DMAC_INDEX}_ChannelIsBusy ( DMAC_CHANNEL channel );
+bool ${DMA_INSTANCE_NAME}_ChannelIsBusy ( DMAC_CHANNEL channel );
 
 // ******************************************************************************
 /* Function:
-    void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
+    void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel );
 
   Summary:
     The function disables the specified DMAC channel.
@@ -434,13 +434,13 @@ bool DMAC${DMAC_INDEX}_ChannelIsBusy ( DMAC_CHANNEL channel );
   Description:
     The function disables the specified DMAC channel. Once disabled, the channel
     will ignore triggers and will not transfer data till the next time a
-    DMAC${DMAC_INDEX}_ChannelTransfer function is called.  If there is a
+    ${DMA_INSTANCE_NAME}_ChannelTransfer function is called.  If there is a
     transfer already in progress, this will aborted. If there were multiple
     linked transfers assigned on the channel, the on-going transfer will be
     aborted and the other descriptors will be discarded.
 
   Precondition:
-    DMAC should have been initialized by calling DMAC${DMAC_INDEX}_Initialize.
+    DMAC should have been initialized by calling ${DMA_INSTANCE_NAME}_Initialize.
 
   Parameters:
     channel - The DMAC channel whose status needs to be checked.
@@ -451,19 +451,19 @@ bool DMAC${DMAC_INDEX}_ChannelIsBusy ( DMAC_CHANNEL channel );
   Example:
     <code>
     // Disable the channel.
-    DMAC${DMAC_INDEX}_ChannelDisable (DMAC_CHANNEL_0);
+    ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL_0);
     </code>
 
   Remarks:
     None.
 */
 
-void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
+void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel );
 
 <#if DMAC_LL_ENABLE = true>
 // ******************************************************************************
 /* Function:
-    bool DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel,
+    bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel,
                                      dmacdescriptor_registers_t * channelDesc );
 
   Summary:
@@ -501,7 +501,7 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
     that transfer request is not accepted.
 
   Precondition:
-    DMAC should have been initialized by calling DMAC${DMAC_INDEX}_Initialize.
+    DMAC should have been initialized by calling ${DMA_INSTANCE_NAME}_Initialize.
     The Transfer Linked Option in MHC should have been enabled.
 
   Parameters:
@@ -522,7 +522,7 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
     <code>
     // Process a transfer list called transferList. Refer to the DMAC PLIB demo
     // application example for more details on usage.
-    if (DMAC${DMAC_INDEX}_ChannelLinkedListTransfer(DMAC_CHANNEL_0, transferList) == true)
+    if (${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer(DMAC_CHANNEL_0, transferList) == true)
     {
         // do something else
     }
@@ -536,12 +536,12 @@ void DMAC${DMAC_INDEX}_ChannelDisable ( DMAC_CHANNEL channel );
     None.
 */
 
-bool DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmacdescriptor_registers_t * channelDesc );
+bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmacdescriptor_registers_t * channelDesc );
 </#if>
 
 // ******************************************************************************
 /* Function:
-    DMAC_CHANNEL_CONFIG  DMAC${DMAC_INDEX}_ChannelSettingsGet ( DMAC_CHANNEL channel );
+    DMAC_CHANNEL_CONFIG  ${DMA_INSTANCE_NAME}_ChannelSettingsGet ( DMAC_CHANNEL channel );
 
   Summary:
     Returns the current channel settings for the specified DMAC Channel
@@ -549,11 +549,11 @@ bool DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmacdes
   Description:
     This function returns the current channel setting for the specified DMAC
     channel. The application can use this function along with the
-    DMAC${DMAC_INDEX}_ChannelSettingsSet function to analyze and if required
+    ${DMA_INSTANCE_NAME}_ChannelSettingsSet function to analyze and if required
     change the transfer parameters of the DMAC channel at run time.
 
   Precondition:
-    DMAC should have been initialized by calling DMAC${DMAC_INDEX}_Initialize.
+    DMAC should have been initialized by calling ${DMA_INSTANCE_NAME}_Initialize.
 
   Parameters:
     channel - The DMAC channel whose channel settings need to be obtained.
@@ -565,20 +565,20 @@ bool DMAC${DMAC_INDEX}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmacdes
     <code>
     // Change the beat size of DMAC Channel 0
     DMAC_CHANNEL_CONFIG settings = 0;
-    settings = DMAC${DMAC_INDEX}_ChannelSettingsGet(DMAC_CHANNEL_0);
+    settings = ${DMA_INSTANCE_NAME}_ChannelSettingsGet(DMAC_CHANNEL_0);
     settings = (settings & ~DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Msk) | DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_HWORD;
-    DMAC${DMAC_INDEX}_ChannelSettingsSet(DMAC_CHANNEL_0, settings);
+    ${DMA_INSTANCE_NAME}_ChannelSettingsSet(DMAC_CHANNEL_0, settings);
     </code>
 
   Remarks:
     None.
 */
 
-DMAC_CHANNEL_CONFIG  DMAC${DMAC_INDEX}_ChannelSettingsGet ( DMAC_CHANNEL channel );
+DMAC_CHANNEL_CONFIG  ${DMA_INSTANCE_NAME}_ChannelSettingsGet ( DMAC_CHANNEL channel );
 
 // ******************************************************************************
 /* Function:
-    bool  DMAC${DMAC_INDEX}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settings );
+    bool  ${DMA_INSTANCE_NAME}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settings );
 
   Summary:
     Changes the current transfer settings of the specified DMAC channel.
@@ -586,18 +586,18 @@ DMAC_CHANNEL_CONFIG  DMAC${DMAC_INDEX}_ChannelSettingsGet ( DMAC_CHANNEL channel
   Description:
     This function changes the current transfer settings of the specified DMAC
     channel.  The application can use this function along with the
-    DMAC${DMAC_INDEX}_ChannelSettingsGet function to analyze and if required
+    ${DMA_INSTANCE_NAME}_ChannelSettingsGet function to analyze and if required
     change the transfer parameters of the DMAC channel at run time.
 
     Calling this function while a transfer is in progress could result in
     unpredictable module operation. The application can use the
-    DMAC${DMAC_INDEX}_ChannelTransfer() function to check if the channel is not
+    ${DMA_INSTANCE_NAME}_ChannelTransfer() function to check if the channel is not
     busy and then change the channel settings. The new channel settings will be
     applicable on the next transfer that is schedule using the
-    DMAC${DMAC_INDEX}_ChannelTransfer() function.
+    ${DMA_INSTANCE_NAME}_ChannelTransfer() function.
 
   Precondition:
-    DMAC should have been initialized by calling DMAC${DMAC_INDEX}_Initialize.
+    DMAC should have been initialized by calling ${DMA_INSTANCE_NAME}_Initialize.
 
   Parameters:
     channel - The DMAC channel whose channel settings need to be obtained.
@@ -613,20 +613,20 @@ DMAC_CHANNEL_CONFIG  DMAC${DMAC_INDEX}_ChannelSettingsGet ( DMAC_CHANNEL channel
     <code>
     // Change the beat size of DMAC Channel 0
     DMAC_CHANNEL_CONFIG settings = 0;
-    settings = DMAC${DMAC_INDEX}_ChannelSettingsGet(DMAC_CHANNEL_0);
+    settings = ${DMA_INSTANCE_NAME}_ChannelSettingsGet(DMAC_CHANNEL_0);
     settings = (settings & ~DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Msk) | DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_HWORD;
-    DMAC${DMAC_INDEX}_ChannelSettingsSet(DMAC_CHANNEL_0, settings);
+    ${DMA_INSTANCE_NAME}_ChannelSettingsSet(DMAC_CHANNEL_0, settings);
     </code>
 
   Remarks:
     None.
 */
 
-bool  DMAC${DMAC_INDEX}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settings );
+bool  ${DMA_INSTANCE_NAME}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settings );
 
 // *****************************************************************************
 /* Function:
-    void DMAC${DMAC_INDEX}_InterruptHandler( void );
+    void ${DMA_INSTANCE_NAME}_InterruptHandler( void );
 
   Summary:
     Handles the DMA interrupt events.
@@ -635,21 +635,21 @@ bool  DMAC${DMAC_INDEX}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_
     This function handles the DMA interrupt events.
 
   Precondition:
-    DMAC should have been initialized by calling DMAC${DMAC_INDEX}_Initialize.
+    DMAC should have been initialized by calling ${DMA_INSTANCE_NAME}_Initialize.
 
   Parameters:
     None.
 
   Example:
     <code>
-    DMAC${DMAC_INDEX}_InterruptHandler();
+    ${DMA_INSTANCE_NAME}_InterruptHandler();
     </code>
 
    Remarks:
     None.
 */
 
-void DMAC${DMAC_INDEX}_InterruptHandler( void );
+void ${DMA_INSTANCE_NAME}_InterruptHandler( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -659,4 +659,4 @@ void DMAC${DMAC_INDEX}_InterruptHandler( void );
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_DMAC${DMAC_INDEX}_H
+#endif //PLIB_${DMA_INSTANCE_NAME}_H

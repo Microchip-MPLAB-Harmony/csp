@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_mcan${INDEX?string}.c
+    plib_${MCAN_INSTANCE_NAME?lower_case}.c
 
   Summary:
     MCAN source file.
@@ -48,7 +48,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "device.h"
-#include "plib_mcan${INDEX?string}.h"
+#include "plib_${MCAN_INSTANCE_NAME?lower_case}.h"
 
 <#assign USE_INTERRUPTS = 
     (INT_RXF0_NEW_ENTRY!false) ||
@@ -62,58 +62,58 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 >
 
 /* define the constants for this MCAN instance */
-#define MCAN${INDEX?string} MCAN${INDEX?string}_REGS
+#define ${MCAN_INSTANCE_NAME} ${MCAN_INSTANCE_NAME}_REGS
 
     <#switch MCAN_OPMODE>
     <#default>
     <#case "NORMAL">
     /* MCAN operation is set to normal mode */
-#define CONF_MCAN${INDEX?string}_CCCR (MCAN_CCCR_ASM_NORMAL<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
-#define CONF_MCAN${INDEX?string}_TEST 0x00
+#define CONF_${MCAN_INSTANCE_NAME}_CCCR (MCAN_CCCR_ASM_NORMAL<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
+#define CONF_${MCAN_INSTANCE_NAME}_TEST 0x00
     <#break>
     <#case "CONFIGURATION">
     /* MCAN operation is set to configuration mode */
-#define CONF_MCAN${INDEX?string}_CCCR MCAN_CCCR_INIT_ENABLED
-#define CONF_MCAN${INDEX?string}_TEST 0x00
+#define CONF_${MCAN_INSTANCE_NAME}_CCCR MCAN_CCCR_INIT_ENABLED
+#define CONF_${MCAN_INSTANCE_NAME}_TEST 0x00
     <#break>
     <#case "FD">
     /* MCAN operation is set to FD mode */
-#define CONF_MCAN${INDEX?string}_CCCR (MCAN_CCCR_FDOE_ENABLED<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
-#define CONF_MCAN${INDEX?string}_TEST 0x00
+#define CONF_${MCAN_INSTANCE_NAME}_CCCR (MCAN_CCCR_FDOE_ENABLED<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
+#define CONF_${MCAN_INSTANCE_NAME}_TEST 0x00
     <#break>
     <#case "RESTRICTED">
     /* MCAN operation is set to restricted mode */
-#define CONF_MCAN${INDEX?string}_CCCR MCAN_CCCR_ASM_RESTRICTED
-#define CONF_MCAN${INDEX?string}_TEST 0x00
+#define CONF_${MCAN_INSTANCE_NAME}_CCCR MCAN_CCCR_ASM_RESTRICTED
+#define CONF_${MCAN_INSTANCE_NAME}_TEST 0x00
     <#break>
     <#case "MONITOR">
     /* MCAN operation is set to monitor mode */
-#define CONF_MCAN${INDEX?string}_CCCR (MCAN_CCCR_MON_ENABLED<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
-#define CONF_MCAN${INDEX?string}_TEST 0x00
+#define CONF_${MCAN_INSTANCE_NAME}_CCCR (MCAN_CCCR_MON_ENABLED<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
+#define CONF_${MCAN_INSTANCE_NAME}_TEST 0x00
     <#break>
     <#case "EXT LOOPBACK">
     /* MCAN operation is set to external loopback mode */
-#define CONF_MCAN${INDEX?string}_CCCR (MCAN_CCCR_TEST_ENABLED<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
-#define CONF_MCAN${INDEX?string}_TEST MCAN_TEST_LBCK_ENABLED
+#define CONF_${MCAN_INSTANCE_NAME}_CCCR (MCAN_CCCR_TEST_ENABLED<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
+#define CONF_${MCAN_INSTANCE_NAME}_TEST MCAN_TEST_LBCK_ENABLED
     <#break>
     <#case "INT LOOPBACK">
     /* MCAN operation is set to internal loopback mode */
-#define CONF_MCAN${INDEX?string}_CCCR (MCAN_CCCR_TEST_ENABLED | MCAN_CCCR_MON_ENABLED<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
-#define CONF_MCAN${INDEX?string}_TEST MCAN_TEST_LBCK_ENABLED
+#define CONF_${MCAN_INSTANCE_NAME}_CCCR (MCAN_CCCR_TEST_ENABLED | MCAN_CCCR_MON_ENABLED<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>)
+#define CONF_${MCAN_INSTANCE_NAME}_TEST MCAN_TEST_LBCK_ENABLED
     <#break>
     </#switch>
 
-#define CONF_MCAN${INDEX?string}_GFC (${FILTERS_STD_NOMATCH} | ${FILTERS_EXT_NOMATCH}<#if FILTERS_STD_REJECT> | MCAN_GFC_RRFS_REJECT</#if><#if FILTERS_EXT_REJECT> | MCAN_GFC_RRFE_REJECT</#if>)
+#define CONF_${MCAN_INSTANCE_NAME}_GFC (${FILTERS_STD_NOMATCH} | ${FILTERS_EXT_NOMATCH}<#if FILTERS_STD_REJECT> | MCAN_GFC_RRFS_REJECT</#if><#if FILTERS_EXT_REJECT> | MCAN_GFC_RRFE_REJECT</#if>)
 
 <#if MCAN_OPMODE =="FD">
 /* configure the FD constants */
-#define CONF_MCAN${INDEX?string}_FBTP (${FBTP_FSJW} | (${FBTP_FTSEG1} << 8) | (${FBTP_FTSEG2} << 4) | (${FBTP_FBRP} << 16))
+#define CONF_${MCAN_INSTANCE_NAME}_FBTP (${FBTP_FSJW} | (${FBTP_FTSEG1} << 8) | (${FBTP_FTSEG2} << 4) | (${FBTP_FBRP} << 16))
 </#if>
 /* configure the 'Normal' constants */
-#define CONF_MCAN${INDEX?string}_BTP  (${BTP_SJW} | (${BTP_TSEG1} << 8) | (${BTP_TSEG2} << 4) | (${BTP_BRP} << 16))
+#define CONF_${MCAN_INSTANCE_NAME}_BTP  (${BTP_SJW} | (${BTP_TSEG1} << 8) | (${BTP_TSEG2} << 4) | (${BTP_BRP} << 16))
 <#if USE_INTERRUPTS == true>
 
-#define CONF_MCAN${INDEX?string}_IE 0x00 \
+#define CONF_${MCAN_INSTANCE_NAME}_IE 0x00 \
 <#if INT_TX_COMPLETED!false>
     | MCAN_IE_TCE_Msk\
 </#if>
@@ -141,14 +141,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* end of IE config */
 </#if>
 
-#define CONF_MCAN${INDEX?string}_TSCC (${TIMESTAMP_MODE} | MCAN_TSCC_TCP(${TIMESTAMP_PRESCALER}))
+#define CONF_${MCAN_INSTANCE_NAME}_TSCC (${TIMESTAMP_MODE} | MCAN_TSCC_TCP(${TIMESTAMP_PRESCALER}))
 <#if MCAN_TIMEOUT>
-#define CONF_MCAN${INDEX?string}_TOCC (${TIMEOUT_SELECT} | MCAN_TOCC_ETOC_TOS_CONTROLLED)
-#define CONF_MCAN${INDEX?string}_TOCV MCAN_TOCV_TOC(${TIMEOUT_COUNT})
+#define CONF_${MCAN_INSTANCE_NAME}_TOCC (${TIMEOUT_SELECT} | MCAN_TOCC_ETOC_TOS_CONTROLLED)
+#define CONF_${MCAN_INSTANCE_NAME}_TOCV MCAN_TOCV_TOC(${TIMEOUT_COUNT})
 
 </#if>
 /* Configuration for the bytes in each element of RX FIFOs */
-#define CONF_MCAN${INDEX?string}_RXESC (0<#if RXF0_USE> | MCAN_RXESC_F0DS(${RXF0_BYTES_CFG!0})</#if><#if RXF1_USE> | MCAN_RXESC_F1DS(${RXF1_BYTES_CFG!0})</#if>)
+#define CONF_${MCAN_INSTANCE_NAME}_RXESC (0<#if RXF0_USE> | MCAN_RXESC_F0DS(${RXF0_BYTES_CFG!0})</#if><#if RXF1_USE> | MCAN_RXESC_F1DS(${RXF1_BYTES_CFG!0})</#if>)
 <#if RXF0_USE>
 <#assign RXF0_BYTES_CFG = RXF0_BYTES_CFG!0>
 <#if RXF0_BYTES_CFG?number < 5>
@@ -156,8 +156,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#else>
   <#assign RXF0_ELEMENT_BYTES = 40 + 16 * (RXF0_BYTES_CFG?number - 5)>
 </#if>
-#define CONF_MCAN${INDEX?string}_RXF0C (MCAN_RXF0C_F0S(${RXF0_ELEMENTS}) | MCAN_RXF0C_F0WM(${RXF0_WATERMARK})<#if RXF0_OVERWRITE> | MCAN_RXF0C_F0OM_Msk</#if>)
-static uint8_t mcan${INDEX?string}_rx0_fifo[${RXF0_ELEMENTS} * ${RXF0_ELEMENT_BYTES}]__attribute__((aligned (4)));
+#define CONF_${MCAN_INSTANCE_NAME}_RXF0C (MCAN_RXF0C_F0S(${RXF0_ELEMENTS}) | MCAN_RXF0C_F0WM(${RXF0_WATERMARK})<#if RXF0_OVERWRITE> | MCAN_RXF0C_F0OM_Msk</#if>)
+static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx0_fifo[${RXF0_ELEMENTS} * ${RXF0_ELEMENT_BYTES}]__attribute__((aligned (4)));
 
 </#if>
 <#if RXF1_USE>
@@ -168,8 +168,8 @@ static uint8_t mcan${INDEX?string}_rx0_fifo[${RXF0_ELEMENTS} * ${RXF0_ELEMENT_BY
   <#assign RXF1_ELEMENT_BYTES = 40 + 16 * (RXF1_BYTES_CFG?number - 5)>
 </#if>
 
-#define CONF_MCAN${INDEX?string}_RXF1C (MCAN_RXF1C_F1S(${RXF1_ELEMENTS}) | MCAN_RXF1C_F1WM(${RXF1_WATERMARK})<#if RXF1_OVERWRITE> | MCAN_RXF1C_F1OM_Msk</#if>)
-static uint8_t mcan${INDEX?string}_rx1_fifo[${RXF1_ELEMENTS} * ${RXF1_ELEMENT_BYTES}]__attribute__((aligned (4)));
+#define CONF_${MCAN_INSTANCE_NAME}_RXF1C (MCAN_RXF1C_F1S(${RXF1_ELEMENTS}) | MCAN_RXF1C_F1WM(${RXF1_WATERMARK})<#if RXF1_OVERWRITE> | MCAN_RXF1C_F1OM_Msk</#if>)
+static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx1_fifo[${RXF1_ELEMENTS} * ${RXF1_ELEMENT_BYTES}]__attribute__((aligned (4)));
 
 </#if>
 <#if TX_USE>
@@ -180,27 +180,27 @@ static uint8_t mcan${INDEX?string}_rx1_fifo[${RXF1_ELEMENTS} * ${RXF1_ELEMENT_BY
   <#assign TX_ELEMENT_BYTES = 40 + 16 * (TX_FIFO_BYTES_CFG?number - 5)>
 </#if>
 
-#define CONF_MCAN${INDEX?string}_TXESC (MCAN_TXESC_TBDS(${TX_FIFO_BYTES_CFG}))
-#define CONF_MCAN${INDEX?string}_TXBC  MCAN_TXBC_TFQS(${TX_FIFO_ELEMENTS})
-#define CONF_MCAN${INDEX?string}_TXEFC (MCAN_TXEFC_EFWM(${TX_FIFO_WATERMARK}) | MCAN_TXEFC_EFS(${TX_FIFO_ELEMENTS}))
+#define CONF_${MCAN_INSTANCE_NAME}_TXESC (MCAN_TXESC_TBDS(${TX_FIFO_BYTES_CFG}))
+#define CONF_${MCAN_INSTANCE_NAME}_TXBC  MCAN_TXBC_TFQS(${TX_FIFO_ELEMENTS})
+#define CONF_${MCAN_INSTANCE_NAME}_TXEFC (MCAN_TXEFC_EFWM(${TX_FIFO_WATERMARK}) | MCAN_TXEFC_EFS(${TX_FIFO_ELEMENTS}))
 
-static uint8_t mcan${INDEX?string}_tx_fifo[${TX_FIFO_ELEMENTS} * ${TX_ELEMENT_BYTES!0}]__attribute__((aligned (4)));
-static struct _mcan_tx_event_entry mcan${INDEX?string}_tx_event_fifo[${TX_FIFO_ELEMENTS}]__attribute__((aligned (4)));
+static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_tx_fifo[${TX_FIFO_ELEMENTS} * ${TX_ELEMENT_BYTES!0}]__attribute__((aligned (4)));
+static struct _mcan_tx_event_entry ${MCAN_INSTANCE_NAME?lower_case}_tx_event_fifo[${TX_FIFO_ELEMENTS}]__attribute__((aligned (4)));
 
 </#if>
 <#if FILTERS_STD?number gt 0>
-#define CONF_MCAN${INDEX?string}_SIDFC_LSS (${FILTERS_STD})
-#define CONF_MCAN${INDEX?string}_SIDF  (MCAN_SIDFC_LSS(CONF_MCAN${INDEX?string}_SIDFC_LSS))
+#define CONF_${MCAN_INSTANCE_NAME}_SIDFC_LSS (${FILTERS_STD})
+#define CONF_${MCAN_INSTANCE_NAME}_SIDF  (MCAN_SIDFC_LSS(CONF_${MCAN_INSTANCE_NAME}_SIDFC_LSS))
 <#assign numInstance=FILTERS_STD?number>
 __attribute__((aligned (4)))static struct _mcan_standard_message_filter_element
-        mcan${INDEX?string}_std_filter[] =
+        ${MCAN_INSTANCE_NAME?lower_case}_std_filter[] =
 {
     <#list 1..(numInstance) as idx>
     {
-        .S0.val = MCAN_SMF_SFT(${.vars["MCAN${INDEX?string}_STD_FILTER${idx}_TYPE"]}) |
-                  MCAN_SMF_SFID1(${.vars["MCAN${INDEX?string}_STD_FILTER${idx}_SFID1"]}) |
-                  MCAN_SMF_SFID2(${.vars["MCAN${INDEX?string}_STD_FILTER${idx}_SFID2"]}) |
-                  MCAN_SMF_SFEC(${.vars["MCAN${INDEX?string}_STD_FILTER${idx}_CONFIG"]}),
+        .S0.val = MCAN_SMF_SFT(${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_TYPE"]}) |
+                  MCAN_SMF_SFID1(${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID1"]}) |
+                  MCAN_SMF_SFID2(${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID2"]}) |
+                  MCAN_SMF_SFEC(${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_CONFIG"]}),
     },
      </#list>
 };
@@ -208,18 +208,18 @@ __attribute__((aligned (4)))static struct _mcan_standard_message_filter_element
 
 </#if>
 <#if FILTERS_EXT?number gt 0>
-#define CONF_MCAN${INDEX?string}_XIDFC_LSE (${FILTERS_EXT})
-#define CONF_MCAN${INDEX?string}_XIDFC (MCAN_XIDFC_LSE(CONF_MCAN${INDEX?string}_XIDFC_LSE))
-#define CONF_MCAN${INDEX?string}_XIDAM 0x1FFFFFFF
+#define CONF_${MCAN_INSTANCE_NAME}_XIDFC_LSE (${FILTERS_EXT})
+#define CONF_${MCAN_INSTANCE_NAME}_XIDFC (MCAN_XIDFC_LSE(CONF_${MCAN_INSTANCE_NAME}_XIDFC_LSE))
+#define CONF_${MCAN_INSTANCE_NAME}_XIDAM 0x1FFFFFFF
 
 <#assign numInstance=FILTERS_EXT?number>
 __attribute__((aligned (4)))static struct _mcan_extended_message_filter_element
-    mcan${INDEX?string}_ext_filter[] =
+    ${MCAN_INSTANCE_NAME?lower_case}_ext_filter[] =
 {
     <#list 1..(numInstance) as idx>
     {
-        .F0.val = MCAN_EFID1(${.vars["MCAN${INDEX?string}_EXT_FILTER${idx}_EFID1"]}) | MCAN_EFEC(${.vars["MCAN${INDEX?string}_EXT_FILTER${idx}_CONFIG"]}),
-        .F1.val = MCAN_EFID2(${.vars["MCAN${INDEX?string}_EXT_FILTER${idx}_EFID2"]}) | MCAN_EFT(${.vars["MCAN${INDEX?string}_EXT_FILTER${idx}_TYPE"]}),
+        .F0.val = MCAN_EFID1(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID1"]}) | MCAN_EFEC(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_CONFIG"]}),
+        .F1.val = MCAN_EFID2(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID2"]}) | MCAN_EFT(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_TYPE"]}),
     },
      </#list>
 };
@@ -229,17 +229,17 @@ __attribute__((aligned (4)))static struct _mcan_extended_message_filter_element
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Instance ${INDEX?string} static driver functions
+// Section: Instance static driver functions
 // *****************************************************************************
 // *****************************************************************************
-void MCAN${INDEX?string}_Initialize(void)
+void ${MCAN_INSTANCE_NAME}_Initialize(void)
 {
     /* set INIT and CCE to get access to configuration registers */
-    MCAN${INDEX?string}->MCAN_CCCR = MCAN_CCCR_INIT_Msk;
-    while ((MCAN${INDEX?string}->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk)  ;
+    ${MCAN_INSTANCE_NAME}->MCAN_CCCR = MCAN_CCCR_INIT_Msk;
+    while ((${MCAN_INSTANCE_NAME}->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk)  ;
 
     /* unlock the configuration registers */
-    MCAN${INDEX?string}->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
+    ${MCAN_INSTANCE_NAME}->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
 
     /*
     The following registers are cleared when MCAN_CCCR.CCE = 1
@@ -255,116 +255,116 @@ void MCAN${INDEX?string}_Initialize(void)
 <#if MCAN_OPMODE =="FD">
 
     /* Fast Data Bit Timing and Prescaler Register */
-    MCAN${INDEX?string}->MCAN_DBTP = CONF_MCAN${INDEX?string}_FBTP;
+    ${MCAN_INSTANCE_NAME}->MCAN_DBTP = CONF_${MCAN_INSTANCE_NAME}_FBTP;
 </#if>
 
     /* Nominal Bit timing and Prescaler Register */
-    MCAN${INDEX?string}->MCAN_NBTP  = CONF_MCAN${INDEX?string}_BTP;
+    ${MCAN_INSTANCE_NAME}->MCAN_NBTP  = CONF_${MCAN_INSTANCE_NAME}_BTP;
 
     /* Timestamp Counter Configuration Register */
-    MCAN${INDEX?string}->MCAN_TSCC = CONF_MCAN${INDEX?string}_TSCC;
+    ${MCAN_INSTANCE_NAME}->MCAN_TSCC = CONF_${MCAN_INSTANCE_NAME}_TSCC;
 <#if MCAN_TIMEOUT>
 
     /* Timeout Counter Configuration Register */
-    MCAN${INDEX?string}->MCAN_TOCC = CONF_MCAN${INDEX?string}_TOCC;
+    ${MCAN_INSTANCE_NAME}->MCAN_TOCC = CONF_${MCAN_INSTANCE_NAME}_TOCC;
 
     /* Timeout Counter Value Register */
-    MCAN${INDEX?string}->MCAN_TOCV = CONF_MCAN${INDEX?string}_TOCV;
+    ${MCAN_INSTANCE_NAME}->MCAN_TOCV = CONF_${MCAN_INSTANCE_NAME}_TOCV;
 </#if>
 <#if RXF0_USE>
 
     /* Receive FIFO 0 Configuration Register */
-    MCAN${INDEX?string}->MCAN_RXF0C = CONF_MCAN${INDEX?string}_RXF0C |
-            (((uint32_t)mcan${INDEX?string}_rx0_fifo) & 0xFFFF);
+    ${MCAN_INSTANCE_NAME}->MCAN_RXF0C = CONF_${MCAN_INSTANCE_NAME}_RXF0C |
+            (((uint32_t)${MCAN_INSTANCE_NAME?lower_case}_rx0_fifo) & 0xFFFF);
 </#if>
 <#if RXF1_USE>
 
     /* Receive FIFO 1 Configuration Register */
-    MCAN${INDEX?string}->MCAN_RXF1C = CONF_MCAN${INDEX?string}_RXF1C |
-            (((uint32_t)mcan${INDEX?string}_rx1_fifo) & 0xFFFF);
+    ${MCAN_INSTANCE_NAME}->MCAN_RXF1C = CONF_${MCAN_INSTANCE_NAME}_RXF1C |
+            (((uint32_t)${MCAN_INSTANCE_NAME?lower_case}_rx1_fifo) & 0xFFFF);
 </#if>
 <#if RXF0_USE || RXF1_USE>
 
     /* Receive Buffer / FIFO Element Size Configuration Register */
-    MCAN${INDEX?string}->MCAN_RXESC = CONF_MCAN${INDEX?string}_RXESC;
+    ${MCAN_INSTANCE_NAME}->MCAN_RXESC = CONF_${MCAN_INSTANCE_NAME}_RXESC;
 </#if>
 <#if TX_USE>
 
     /* Transmit Buffer Configuration Register */
-    MCAN${INDEX?string}->MCAN_TXBC = CONF_MCAN${INDEX?string}_TXBC |
-            (((uint32_t)mcan${INDEX?string}_tx_fifo) & 0xFFFF);
+    ${MCAN_INSTANCE_NAME}->MCAN_TXBC = CONF_${MCAN_INSTANCE_NAME}_TXBC |
+            (((uint32_t)${MCAN_INSTANCE_NAME?lower_case}_tx_fifo) & 0xFFFF);
 
     /* Transmit Buffer/FIFO Element Size Configuration Register */
-    MCAN${INDEX?string}->MCAN_TXESC = CONF_MCAN${INDEX?string}_TXESC;
+    ${MCAN_INSTANCE_NAME}->MCAN_TXESC = CONF_${MCAN_INSTANCE_NAME}_TXESC;
 
     /* Transmit Event FIFO Configuration Register */
-    MCAN${INDEX?string}->MCAN_TXEFC = CONF_MCAN${INDEX?string}_TXEFC |
-            (((uint32_t)mcan${INDEX?string}_tx_event_fifo) & 0xFFFF);
+    ${MCAN_INSTANCE_NAME}->MCAN_TXEFC = CONF_${MCAN_INSTANCE_NAME}_TXEFC |
+            (((uint32_t)${MCAN_INSTANCE_NAME?lower_case}_tx_event_fifo) & 0xFFFF);
 </#if>
 
     /* Global Filter Configuration Register */
-    MCAN${INDEX?string}->MCAN_GFC = CONF_MCAN${INDEX?string}_GFC;
+    ${MCAN_INSTANCE_NAME}->MCAN_GFC = CONF_${MCAN_INSTANCE_NAME}_GFC;
 <#if FILTERS_STD?number gt 0>
 
     /* Standard ID Filter Configuration Register */
-    MCAN${INDEX?string}->MCAN_SIDFC = CONF_MCAN${INDEX?string}_SIDF |
-            (((uint32_t)mcan${INDEX?string}_std_filter) & 0xFFFF);
+    ${MCAN_INSTANCE_NAME}->MCAN_SIDFC = CONF_${MCAN_INSTANCE_NAME}_SIDF |
+            (((uint32_t)${MCAN_INSTANCE_NAME?lower_case}_std_filter) & 0xFFFF);
 </#if>
 <#if FILTERS_EXT?number gt 0>
 
     /* Extended ID Filter Configuration Register */
-    MCAN${INDEX?string}->MCAN_XIDFC = CONF_MCAN${INDEX?string}_XIDFC |
-            (((uint32_t)mcan${INDEX?string}_ext_filter) & 0xFFFF);
+    ${MCAN_INSTANCE_NAME}->MCAN_XIDFC = CONF_${MCAN_INSTANCE_NAME}_XIDFC |
+            (((uint32_t)${MCAN_INSTANCE_NAME?lower_case}_ext_filter) & 0xFFFF);
 
     /* Extended ID AND Mask Register */
-    MCAN${INDEX?string}->MCAN_XIDAM = CONF_MCAN${INDEX?string}_XIDAM;
+    ${MCAN_INSTANCE_NAME}->MCAN_XIDAM = CONF_${MCAN_INSTANCE_NAME}_XIDAM;
 </#if>
 
     /* Set the mode and config state */
-    MCAN${INDEX?string}->MCAN_TEST = CONF_MCAN${INDEX?string}_TEST;
-    MCAN${INDEX?string}->MCAN_CCCR = CONF_MCAN${INDEX?string}_CCCR;
+    ${MCAN_INSTANCE_NAME}->MCAN_TEST = CONF_${MCAN_INSTANCE_NAME}_TEST;
+    ${MCAN_INSTANCE_NAME}->MCAN_CCCR = CONF_${MCAN_INSTANCE_NAME}_CCCR;
 <#if MCAN_OPMODE != "CONFIGURATION">
-    while ((MCAN${INDEX?string}->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)  ;
+    while ((${MCAN_INSTANCE_NAME}->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)  ;
 </#if>
 <#if USE_INTERRUPTS == true>
 
     /* Enable the configured interrupts */
-    MCAN${INDEX?string}->MCAN_IE = CONF_MCAN${INDEX?string}_IE;
+    ${MCAN_INSTANCE_NAME}->MCAN_IE = CONF_${MCAN_INSTANCE_NAME}_IE;
 </#if>
 }
 
 
 
-void MCAN${INDEX?string}_Deinitialize(void)
+void ${MCAN_INSTANCE_NAME}_Deinitialize(void)
 {
-    MCAN${INDEX?string}->MCAN_CCCR = MCAN_CCCR_INIT_Msk;
+    ${MCAN_INSTANCE_NAME}->MCAN_CCCR = MCAN_CCCR_INIT_Msk;
 }
 
 
 
-void MCAN${INDEX?string}_Open(void)
+void ${MCAN_INSTANCE_NAME}_Open(void)
 {
 <#if MCAN_OPMODE != "CONFIGURATION">
-    MCAN${INDEX?string}->MCAN_CCCR = CONF_MCAN${INDEX?string}_CCCR;
-    while ((MCAN${INDEX?string}->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)  ;
+    ${MCAN_INSTANCE_NAME}->MCAN_CCCR = CONF_${MCAN_INSTANCE_NAME}_CCCR;
+    while ((${MCAN_INSTANCE_NAME}->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)  ;
 </#if>
 }
 
 
 
-void MCAN${INDEX?string}_Close(void)
+void ${MCAN_INSTANCE_NAME}_Close(void)
 {
     /* Switch the CAN module OFF */
 <#if MCAN_OPMODE != "CONFIGURATION">
-    MCAN${INDEX?string}->MCAN_CCCR = MCAN_CCCR_INIT_Msk;
-    while ((MCAN${INDEX?string}->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk)  ;
+    ${MCAN_INSTANCE_NAME}->MCAN_CCCR = MCAN_CCCR_INIT_Msk;
+    while ((${MCAN_INSTANCE_NAME}->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk)  ;
 </#if>
 }
 
 
 
 /* returns false on fail, true on success */
-bool MCAN${INDEX?string}_ChannelMessageTransmit(MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message)
+bool ${MCAN_INSTANCE_NAME}_ChannelMessageTransmit(MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message)
 {
     (void)channelNum;
 <#if !TX_USE>
@@ -373,11 +373,11 @@ bool MCAN${INDEX?string}_ChannelMessageTransmit(MCAN_CHANNEL channelNum, int add
     (void)message;
 <#else>
 
-    uint32_t tfqpi = MCAN_TXFQS_TFQPI(MCAN${INDEX?string}->MCAN_TXFQS);
+    uint32_t tfqpi = MCAN_TXFQS_TFQPI(${MCAN_INSTANCE_NAME}->MCAN_TXFQS);
     struct _mcan_tx_fifo_entry *fifo =
-        (struct _mcan_tx_fifo_entry*) (mcan${INDEX?string}_tx_fifo + tfqpi * ${TX_ELEMENT_BYTES!0});
+        (struct _mcan_tx_fifo_entry*) (${MCAN_INSTANCE_NAME?lower_case}_tx_fifo + tfqpi * ${TX_ELEMENT_BYTES!0});
 
-    if (MCAN${INDEX?string}->MCAN_TXFQS & MCAN_TXFQS_TFQF_Msk)
+    if (${MCAN_INSTANCE_NAME}->MCAN_TXFQS & MCAN_TXFQS_TFQF_Msk)
     {
         /* The FIFO is full */
         return 0;
@@ -441,7 +441,7 @@ bool MCAN${INDEX?string}_ChannelMessageTransmit(MCAN_CHANNEL channelNum, int add
     memcpy(fifo->data, message, DLC);
 
     /* request the transmit */
-    MCAN${INDEX?string}->MCAN_TXBAR = 1U << tfqpi;
+    ${MCAN_INSTANCE_NAME}->MCAN_TXBAR = 1U << tfqpi;
 </#if>
 
     return 1;
@@ -450,7 +450,7 @@ bool MCAN${INDEX?string}_ChannelMessageTransmit(MCAN_CHANNEL channelNum, int add
 
 
 /* Channel is which FIFO to use. Only 2 max available */
-bool MCAN${INDEX?string}_ChannelMessageReceive(MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message)
+bool ${MCAN_INSTANCE_NAME}_ChannelMessageReceive(MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message)
 {
 <#if RXF0_USE || RXF1_USE>
     uint32_t rxgi;
@@ -463,28 +463,28 @@ bool MCAN${INDEX?string}_ChannelMessageReceive(MCAN_CHANNEL channelNum, int addr
 <#if RXF0_USE>
         case 0:
             /* check and return 0 if nothing to be read */
-            if ((MCAN${INDEX?string}->MCAN_RXF0S & MCAN_RXF0S_F0FL_Msk) == 0) return 0;
+            if ((${MCAN_INSTANCE_NAME}->MCAN_RXF0S & MCAN_RXF0S_F0FL_Msk) == 0) return 0;
 
             /* read FIFO 0 */
-            rxgi = (MCAN${INDEX?string}->MCAN_RXF0S & MCAN_RXF0S_F0GI_Msk) >> MCAN_RXF0S_F0GI_Pos;
-            fifo = (struct _mcan_rx_fifo_entry*) (mcan${INDEX?string}_rx0_fifo + rxgi * ${RXF0_ELEMENT_BYTES!16});
+            rxgi = (${MCAN_INSTANCE_NAME}->MCAN_RXF0S & MCAN_RXF0S_F0GI_Msk) >> MCAN_RXF0S_F0GI_Pos;
+            fifo = (struct _mcan_rx_fifo_entry*) (${MCAN_INSTANCE_NAME?lower_case}_rx0_fifo + rxgi * ${RXF0_ELEMENT_BYTES!16});
 
             /* ack the fifo position */
-            MCAN${INDEX?string}->MCAN_RXF0A = MCAN_RXF0A_F0AI(rxgi);
+            ${MCAN_INSTANCE_NAME}->MCAN_RXF0A = MCAN_RXF0A_F0AI(rxgi);
             break;
 </#if>
 
 <#if RXF1_USE>
         case 1:
             /* check and return 0 if nothing to be read */
-            if ((MCAN${INDEX?string}->MCAN_RXF1S & MCAN_RXF1S_F1FL_Msk) == 0) return 0;
+            if ((${MCAN_INSTANCE_NAME}->MCAN_RXF1S & MCAN_RXF1S_F1FL_Msk) == 0) return 0;
 
             /* Read FIFO 1 */
-            rxgi = (MCAN${INDEX?string}->MCAN_RXF1S & MCAN_RXF1S_F1GI_Msk) >> MCAN_RXF1S_F1GI_Pos;
-            fifo = (struct _mcan_rx_fifo_entry*) (mcan${INDEX?string}_rx1_fifo + rxgi * ${RXF1_ELEMENT_BYTES!16});
+            rxgi = (${MCAN_INSTANCE_NAME}->MCAN_RXF1S & MCAN_RXF1S_F1GI_Msk) >> MCAN_RXF1S_F1GI_Pos;
+            fifo = (struct _mcan_rx_fifo_entry*) (${MCAN_INSTANCE_NAME?lower_case}_rx1_fifo + rxgi * ${RXF1_ELEMENT_BYTES!16});
 
             /* ack the fifo position */
-            MCAN${INDEX?string}->MCAN_RXF1A = MCAN_RXF1A_F1AI(rxgi);
+            ${MCAN_INSTANCE_NAME}->MCAN_RXF1A = MCAN_RXF1A_F1AI(rxgi);
             break;
 </#if>
     }
@@ -499,9 +499,9 @@ bool MCAN${INDEX?string}_ChannelMessageReceive(MCAN_CHANNEL channelNum, int addr
 
 <#if USE_INTERRUPTS == true>
 /* One Interrupt handler for each MCAN(MCAN) module - default to INT0 */
-void MCAN${INDEX?string}_INT0_InterruptHandler( void )
+void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler( void )
 {
-    uint32_t ir = MCAN${INDEX?string}->MCAN_IR;
+    uint32_t ir = ${MCAN_INSTANCE_NAME}->MCAN_IR;
     <#if INT_TX_COMPLETED!false>
 
     /* TX Completed */
@@ -560,7 +560,7 @@ void MCAN${INDEX?string}_INT0_InterruptHandler( void )
     </#if>
 
     /* Clear all of the interrupts */
-    MCAN${INDEX?string}->MCAN_IR = ir;
+    ${MCAN_INSTANCE_NAME}->MCAN_IR = ir;
 }
 </#if>	
 

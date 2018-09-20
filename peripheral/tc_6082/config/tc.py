@@ -1,7 +1,7 @@
 ###################################################################################################
 ########################### Global Variables   #################################
 ###################################################################################################
-global num
+global tcInstanceName
 global extClock
 channel_periphId = [0, 0, 0]
 
@@ -70,33 +70,33 @@ def tcClockControl(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
     if(tcSym_CH_EnableQEI.getValue() == True):
-        Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL0_CLOCK_ENABLE")
-        Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL0_CLOCK_ENABLE", True, 2)
-        Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE")
+        Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL0_CLOCK_ENABLE")
+        Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL0_CLOCK_ENABLE", True, 2)
+        Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL1_CLOCK_ENABLE")
         if(tcSym_CH_QEI_INDEX_PULSE.getValue() == True):
-            Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE", True, 2)
+            Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL1_CLOCK_ENABLE", True, 2)
         else:
             if(tcSym_CH_Enable[1].getValue() == True):
-                Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE", True, 2)
+                Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL1_CLOCK_ENABLE", True, 2)
             else:
-                Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE", False, 2)
+                Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL1_CLOCK_ENABLE", False, 2)
         if(tcSym_CH_BMR_POSEN.getValue() == "SPEED"):
-            Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE")
-            Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE", True, 2)
+            Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE")
+            Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE", True, 2)
         else:
             if(tcSym_CH_Enable[2].getValue() == True):
-                Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE")
-                Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE", True, 2)
+                Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE")
+                Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE", True, 2)
             else:
-                Database.clearSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE")
-                Database.setSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE", False, 2)
+                Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE")
+                Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE", False, 2)
     else:
         if(tcSym_CH_Enable[channelID].getValue() == True):
-            Database.clearSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE")
-            Database.setSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", True, 2)
+            Database.clearSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE")
+            Database.setSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", True, 2)
         else:
-            Database.clearSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE")
-            Database.setSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", False, 2)
+            Database.clearSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE")
+            Database.setSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", False, 2)
 
 #Enable/Disable interrupt
 def tcinterruptControl(symbol, event):
@@ -104,86 +104,86 @@ def tcinterruptControl(symbol, event):
     channelID = int(id[2])
     global channel_periphId
 
-    interruptVector = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
-    interruptHandler = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
-    interruptHandlerLock = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
+    interruptVector = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
+    interruptHandler = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
 
     if(tcSym_CH_EnableQEI.getValue() == True):
-        interruptVector = "TC" + str(num) + "_CH0_INTERRUPT_ENABLE"
-        interruptHandler = "TC" + str(num) + "_CH0_INTERRUPT_HANDLER"
-        interruptHandlerLock = "TC" + str(num) + "_CH0_INTERRUPT_HANDLER_LOCK"
+        interruptVector = tcInstanceName.getValue() + "_CH0_INTERRUPT_ENABLE"
+        interruptHandler = tcInstanceName.getValue() + "_CH0_INTERRUPT_HANDLER"
+        interruptHandlerLock = tcInstanceName.getValue() + "_CH0_INTERRUPT_HANDLER_LOCK"
         Database.clearSymbolValue("core", interruptVector)
         Database.clearSymbolValue("core", interruptHandler)
         Database.clearSymbolValue("core", interruptHandlerLock)
         if(tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True or tcSym_CH_QEI_IER_CPCS.getValue() == True):
             Database.setSymbolValue("core", interruptVector, True, 2)
-            Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH0_InterruptHandler", 2)
+            Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH0_InterruptHandler", 2)
             Database.setSymbolValue("core", interruptHandlerLock, True, 2)
         else:
             Database.setSymbolValue("core", interruptVector, False, 2)
-            Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH0_Handler", 2)
+            Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH0_Handler", 2)
             Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
         if (tcSym_CH_BMR_POSEN.getValue() == "POSITION" and channelID == 2):
-            interruptVector = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
-            interruptHandler = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
-            interruptHandlerLock = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
+            interruptVector = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
+            interruptHandler = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
+            interruptHandlerLock = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
             if (tcSym_CH_Enable[channelID].getValue() == True):
                 Database.clearSymbolValue("core", interruptVector)
                 Database.clearSymbolValue("core", interruptHandler)
                 Database.clearSymbolValue("core", interruptHandlerLock)
                 if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue("core", interruptVector, True, 2)
-                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
                     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
                     (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True
                      or tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
                     Database.setSymbolValue("core", interruptVector, True, 2)
-                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
                     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue("core", interruptVector, True, 2)
-                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
                     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 else:
                     Database.setSymbolValue("core", interruptVector, False, 2)
-                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                    Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_Handler", 2)
                     Database.setSymbolValue("core", interruptHandlerLock, False, 2)
             else:
                 Database.setSymbolValue("core", interruptVector, False, 2)
-                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_Handler", 2)
                 Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
         if(tcSym_CH_QEI_INDEX_PULSE.getValue() == False and channelID == 1):
-            interruptVector = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
-            interruptHandler = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
-            interruptHandlerLock = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
+            interruptVector = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
+            interruptHandler = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
+            interruptHandlerLock = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
             if (tcSym_CH_Enable[channelID].getValue() == True):
                 Database.clearSymbolValue("core", interruptVector)
                 Database.clearSymbolValue("core", interruptHandler)
                 Database.clearSymbolValue("core", interruptHandlerLock)
                 if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue("core", interruptVector, True, 2)
-                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
                     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
                     (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True or
                      tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
                     Database.setSymbolValue("core", interruptVector, True, 2)
-                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
                     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue("core", interruptVector, True, 2)
-                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                    Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
                     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
                 else:
                     Database.setSymbolValue("core", interruptVector, False, 2)
-                    Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                    Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_Handler", 2)
                     Database.setSymbolValue("core", interruptHandlerLock, False, 2)
             else:
                 Database.setSymbolValue("core", interruptVector, False, 2)
-                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_Handler", 2)
                 Database.setSymbolValue("core", interruptHandlerLock, False, 2)
     else:
         Database.clearSymbolValue("core", interruptVector)
@@ -192,31 +192,31 @@ def tcinterruptControl(symbol, event):
         if(tcSym_CH_Enable[channelID].getValue() == True):
             if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and (tcSym_CH_IER_CPCS[channelID].getValue() == True or tcSym_CH_IER_CPAS[channelID].getValue() == True)):
                 Database.setSymbolValue("core", interruptVector, True, 2)
-                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
                 Database.setSymbolValue("core", interruptHandlerLock, True, 2)
             elif(tcSym_CH_OperatingMode[channelID].getValue() == "CAPTURE" and \
                 (tcSym_CH_CAPTURE_IER_LDRAS[channelID].getValue() == True or tcSym_CH_CAPTURE_IER_LDRBS[channelID].getValue() == True or
                  tcSym_CH_CAPTURE_IER_COVFS[channelID].getValue() == True)):
                 Database.setSymbolValue("core", interruptVector, True, 2)
-                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
                 Database.setSymbolValue("core", interruptHandlerLock, True, 2)
             elif(tcSym_CH_OperatingMode[channelID].getValue() == "COMPARE" and tcSym_CH_COMPARE_IER_CPCS[channelID].getValue() == True):
                 Database.setSymbolValue("core", interruptVector, True, 2)
-                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_InterruptHandler", 2)
+                Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
                 Database.setSymbolValue("core", interruptHandlerLock, True, 2)
             else:
                 Database.setSymbolValue("core", interruptVector, False, 2)
-                Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+                Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_Handler", 2)
                 Database.setSymbolValue("core", interruptHandlerLock, False, 2)
         else:
             Database.setSymbolValue("core", interruptVector, False, 2)
-            Database.setSymbolValue("core", interruptHandler, "TC" + str(num) + "_CH"+str(channelID)+"_Handler", 2)
+            Database.setSymbolValue("core", interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_Handler", 2)
             Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def tcdependencyClockStatus(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
-    clock = bool(Database.getSymbolValue("core", "TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE"))
+    clock = bool(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE"))
     global tcSym_CH_Enable
     if (clock == False and tcSym_CH_Enable[channelID].getValue() == True):
         tcSym_CH_ClkEnComment[channelID].setVisible(True)
@@ -227,7 +227,7 @@ def tcdependencyIntStatus(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
     global tcSym_CH_Enable
-    interruptVectorUpdate = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE_UPDATE"
+    interruptVectorUpdate = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_ENABLE_UPDATE"
     nvic = bool(Database.getSymbolValue("core", interruptVectorUpdate))
     if(tcSym_CH_Enable[channelID].getValue() == True):
         if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True and nvic == True):
@@ -245,9 +245,9 @@ def tcdependencyIntStatus(symbol, event):
 
 
 def tcQEIDependencyClockStatus(symbol, event):
-    clock0 = bool(Database.getSymbolValue("core", "TC" +  str(num)  + "_CHANNEL0_CLOCK_ENABLE"))
-    clock1 = bool(Database.getSymbolValue("core", "TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE"))
-    clock2 = bool(Database.getSymbolValue("core", "TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE"))
+    clock0 = bool(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL0_CLOCK_ENABLE"))
+    clock1 = bool(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL1_CLOCK_ENABLE"))
+    clock2 = bool(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL2_CLOCK_ENABLE"))
     if(tcSym_CH_EnableQEI.getValue() == True):
         if (clock0 == False):
             symbol.setVisible(True)
@@ -265,7 +265,7 @@ def tcQEIDependencyClockStatus(symbol, event):
             symbol.setVisible(False)
 
 def tcQEIDependencyIntStatus(symbol, event):
-    interruptVectorUpdate = "TC" + str(num) + "_CH0_INTERRUPT_ENABLE_UPDATE"
+    interruptVectorUpdate = tcInstanceName.getValue() + "_CH0_INTERRUPT_ENABLE_UPDATE"
     nvic = bool(Database.getSymbolValue("core", interruptVectorUpdate))
     if(tcSym_CH_EnableQEI.getValue() == True):
         if (nvic == True and (tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True or tcSym_CH_QEI_IER_CPCS == True)):
@@ -542,10 +542,12 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_CMR_TCCLKS[channelID] = tcComponent.createKeyValueSetSymbol("TC"+str(channelID)+"_CMR_TCCLKS", menu)
     tcSym_CH_CMR_TCCLKS[channelID].setLabel("Select Clock Source")
     tcSym_CH_CMR_TCCLKS[channelID].addKey("", str(i), "MCK")
+
     childrenNodes = []
     tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__TCCLKS\"]")
     childrenNodes = tc.getChildren()
-    if(int(num) == 0):
+
+    if (int(tcInstanceName.getValue().split("TC")[1]) == 0):
         tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK")
     else:
         tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK6")
@@ -592,13 +594,13 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_CLOCK_FREQ[channelID].setVisible(False)
     tcSym_CH_CLOCK_FREQ[channelID].setDefaultValue(150000000)
     tcSym_CH_CLOCK_FREQ[channelID].setDependencies(tcClockFreq, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-        "core.TC"+str(num)+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+        "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
     #clock resolution display
     tcSym_CH_Resolution[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_Resolution", menu)
     tcSym_CH_Resolution[channelID].setLabel("****Timer resolution is " + str(6.66) + " nS****")
     tcSym_CH_Resolution[channelID].setDependencies(tcClockResCalc, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-        "core.TC"+str(num)+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+        "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
 def onCapabilityConnected(connectionInfo):
     global sysTimeChannel_Sym
@@ -629,7 +631,7 @@ def sysTime_ChannelSelection(symbol,event):
     global frequencyGetApiName_Sym
     global callbackApiName_Sym
     global irqEnumName_Sym
-    global num
+    global tcInstanceName
 
 
     symObj=event["symbol"]
@@ -659,14 +661,14 @@ def sysTime_ChannelSelection(symbol,event):
         tcSym_CH_Enable[0].setValue(False,2)
         tcSym_CH_Enable[1].setValue(False,2)
 
-    timerStartApiName = "TC" + str(num) + str(tc_channel) + "_TimerStart"
-    timeStopApiName = "TC" + str(num) + str(tc_channel) + "_TimerStop "
-    compareSetApiName = "TC" + str(num) + str(tc_channel) + "_TimerCompareSet"
-    counterGetApiName = "TC" + str(num) + str(tc_channel) + "_TimerCounterGet"
-    frequencyGetApiName = "TC" + str(num) + str(tc_channel) + "_TimerFrequencyGet"
-    callbackApiName = "TC" + str(num) + str(tc_channel) + "_TimerCallbackRegister"
-    irqEnumName = "TC" + str(num) + str(tc_channel) + "_IRQn"
-    periodSetApiName = "TC" + str(num) + str(tc_channel) + "_TimerPeriodSet"
+    timerStartApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStart"
+    timeStopApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStop "
+    compareSetApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerCompareSet"
+    counterGetApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerCounterGet"
+    frequencyGetApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerFrequencyGet"
+    callbackApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerCallbackRegister"
+    irqEnumName = tcInstanceName.getValue() + str(tc_channel) + "_IRQn"
+    periodSetApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerPeriodSet"
 
     timerStartApiName_Sym.setValue(timerStartApiName,2)
     timeStopApiName_Sym.setValue(timeStopApiName,2)
@@ -691,9 +693,12 @@ def instantiateComponent(tcComponent):
     global callbackApiName_Sym
     global irqEnumName_Sym
     global sysTimeChannel_Sym
-    global num
-    num = tcComponent.getID()[-1:]
-    Log.writeInfoMessage("Running TC" + str(num))
+    global tcInstanceName
+
+    tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
+    tcInstanceName.setVisible(False)
+    tcInstanceName.setDefaultValue(tcComponent.getID().upper())
+    print("Running " + tcInstanceName.getValue())
 
     tcSym_MAX_CHANNELS = tcComponent.createIntegerSymbol("TC_MAX_CHANNELS", None)
     tcSym_MAX_CHANNELS.setDefaultValue(3)
@@ -721,7 +726,7 @@ def instantiateComponent(tcComponent):
 
     #Find available channels and available external clock pins
     tc_signals = []
-    tc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\"TC"+str(num)+"\"]/signals")
+    tc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/signals")
     tc_signals = tc.getChildren()
     for pad in range(0, len(tc_signals)):
         if "TIOA" in tc_signals[pad].getAttribute("group"):
@@ -804,14 +809,14 @@ def instantiateComponent(tcComponent):
     # Dependency Status
     tcSym_QEI_ClkEnComment = tcComponent.createCommentSymbol("TC_CLK_ENABLE_COMMENT", tcSym_CH_EnableQEI)
     tcSym_QEI_ClkEnComment.setVisible(False)
-    tcSym_QEI_ClkEnComment.setLabel("Warning!!! TC" +str(num) + " Channel Peripheral Clock is Disabled in Clock Manager")
-    tcSym_QEI_ClkEnComment.setDependencies(tcQEIDependencyClockStatus, ["core.TC" +  str(num)  + "_CHANNEL0_CLOCK_ENABLE", \
-        "core.TC" +  str(num)  + "_CHANNEL1_CLOCK_ENABLE", "core.TC" +  str(num)  + "_CHANNEL2_CLOCK_ENABLE", "TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
+    tcSym_QEI_ClkEnComment.setLabel("Warning!!! " + tcInstanceName.getValue() + " Channel Peripheral Clock is Disabled in Clock Manager")
+    tcSym_QEI_ClkEnComment.setDependencies(tcQEIDependencyClockStatus, ["core." +  tcInstanceName.getValue()  + "_CHANNEL0_CLOCK_ENABLE", \
+        "core." + tcInstanceName.getValue() + "_CHANNEL1_CLOCK_ENABLE", "core." + tcInstanceName.getValue() + "_CHANNEL2_CLOCK_ENABLE", "TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
 
-    interruptVectorUpdate = "TC" + str(num) + "_CH0_INTERRUPT_ENABLE_UPDATE"
+    interruptVectorUpdate = tcInstanceName.getValue() + "_CH0_INTERRUPT_ENABLE_UPDATE"
     tcSym_QEI_IntEnComment = tcComponent.createCommentSymbol("TC_NVIC_ENABLE_COMMENT", tcSym_CH_EnableQEI)
     tcSym_QEI_IntEnComment.setVisible(False)
-    tcSym_QEI_IntEnComment.setLabel("Warning!!! TC" +str(num)+"_CH0 Interrupt is Disabled in Interrupt Manager")
+    tcSym_QEI_IntEnComment.setLabel("Warning!!! " +tcInstanceName.getValue()+"_CH0 Interrupt is Disabled in Interrupt Manager")
     tcSym_QEI_IntEnComment.setDependencies(tcQEIDependencyIntStatus, ["core." + interruptVectorUpdate, "TC_ENABLE_QEI", "TC_QIER_IDX", "TC_QIER_QERR", "TC_QEI_IER_CPCS"])
 
     #quadrature menu
@@ -887,7 +892,7 @@ def instantiateComponent(tcComponent):
     tcSym_CH_QEI_CH2PERIOD_COMMENT = tcComponent.createCommentSymbol("TC_QEI_PERIOD_COMMENT", tcSpeedMenu)
     tcSym_CH_QEI_CH2PERIOD_COMMENT.setLabel("**** Time Base is 100 uS  ****")
     tcSym_CH_QEI_CH2PERIOD_COMMENT.setDependencies(tcQuadratureTimeBaseCalculate, ["TC_QEI_PERIOD", "TC3_CMR_TCCLKS", \
-        "core.TC"+str(num)+"_CH3_CLOCK_FREQUENCY"])
+        "core."+tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY"])
 
     # enable index interrupt
     global tcSym_CH_QIER_IDX
@@ -945,22 +950,22 @@ def instantiateComponent(tcComponent):
         tcSym_CH_ClkEnComment.append(channelID)
         tcSym_CH_ClkEnComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_CLK_ENABLE_COMMENT", tcChannelMenu[channelID])
         tcSym_CH_ClkEnComment[channelID].setVisible(False)
-        tcSym_CH_ClkEnComment[channelID].setLabel("Warning!!! TC" +str(num)+"_CH"+str(channelID)+" Peripheral Clock is Disabled in Clock Manager")
-        tcSym_CH_ClkEnComment[channelID].setDependencies(tcdependencyClockStatus, ["core.TC" + str(num) + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", "TC"+str(channelID)+"_ENABLE"])
+        tcSym_CH_ClkEnComment[channelID].setLabel("Warning!!! " +tcInstanceName.getValue()+"_CH"+str(channelID)+" Peripheral Clock is Disabled in Clock Manager")
+        tcSym_CH_ClkEnComment[channelID].setDependencies(tcdependencyClockStatus, ["core." + tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", "TC"+str(channelID)+"_ENABLE"])
 
         node = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
         interrupts = node.getChildren()
         for interrupt in range(0, len(interrupts)):
             if "header:alternate-name" in interrupts[interrupt].getAttributeList():
                 alternate_name = interrupts[interrupt].getAttribute("header:alternate-name")
-                if (("TC" + str(num)+ "_CH" + str(channelID)) == alternate_name):
+                if ((tcInstanceName.getValue() + "_CH" + str(channelID)) == alternate_name):
                     channel_periphId[channelID] = interrupts[interrupt].getAttribute("index")
 
-        interruptVectorUpdate = "TC" + str(num) + "_CH" + str(channelID) + "_INTERRUPT_ENABLE_UPDATE"
+        interruptVectorUpdate = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_ENABLE_UPDATE"
         tcSym_CH_IntEnComment.append(channelID)
         tcSym_CH_IntEnComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_NVIC_ENABLE_COMMENT", tcChannelMenu[channelID])
         tcSym_CH_IntEnComment[channelID].setVisible(False)
-        tcSym_CH_IntEnComment[channelID].setLabel("Warning!!! TC" +str(num)+"_CH"+str(channelID)+" Interrupt is Disabled in Interrupt Manager")
+        tcSym_CH_IntEnComment[channelID].setLabel("Warning!!! " +tcInstanceName.getValue()+"_CH"+str(channelID)+" Interrupt is Disabled in Interrupt Manager")
         tcSym_CH_IntEnComment[channelID].setDependencies(tcdependencyIntStatus, ["core." + interruptVectorUpdate, "TC"+str(channelID)+"_ENABLE", "TC"+str(channelID)+"_OPERATING_MODE", \
             "TC"+str(channelID)+"_CAPTURE_IER_LDRAS", "TC"+str(channelID)+"_CAPTURE_IER_LDRBS", "TC"+str(channelID)+"_CAPTURE_IER_COVFS", \
             "TC"+str(channelID)+"_COMPARE_IER_CPCS", "TC"+str(channelID)+"_IER_CPCS"])
@@ -998,7 +1003,7 @@ def instantiateComponent(tcComponent):
         #tcSym_CH_TimerPeriod[channelID].setMax(0.436)
         tcSym_CH_TimerPeriod[channelID].setDependencies(tcPeriodMaxVal, \
         ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core.TC"+str(num)+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
         tcSym_CH_TimerPeriodComment.append(channelID)
         tcSym_CH_TimerPeriodComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_TIMER_PERIOD_CMT", tcTimerMenu[channelID])
@@ -1006,7 +1011,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_TimerPeriodComment[channelID].setVisible(False)
         tcSym_CH_TimerPeriodComment[channelID].setDependencies(tcPeriodCountCalc, \
         ["TC"+str(channelID)+"_TIMER_PERIOD_MS", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core.TC"+str(num)+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
         tcSym_CH_TimerPeriodCount.append(channelID)
         tcSym_CH_TimerPeriodCount[channelID] = tcComponent.createIntegerSymbol("TC"+str(channelID)+"_TIMER_PERIOD_COUNT", tcTimerMenu[channelID])
@@ -1014,7 +1019,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_TimerPeriodCount[channelID].setDefaultValue(60000)
         tcSym_CH_TimerPeriodCount[channelID].setDependencies(tcPeriodCountCalc, \
         ["TC"+str(channelID)+"_TIMER_PERIOD_MS", "TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
-            "core.TC"+str(num)+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC", "TC"+str(channelID)+"_ENABLE"])
+            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC", "TC"+str(channelID)+"_ENABLE"])
 
         #one-shot timer
         tcSym_CH_CMR_CPCSTOP.append(channelID)
@@ -1168,7 +1173,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_ComparePeriod[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_COMPARE_PERIOD", tcCompareMenu[channelID])
         tcSym_CH_ComparePeriod[channelID].setLabel("****Timer Period is 66.6 uS****")
         tcSym_CH_ComparePeriod[channelID].setDependencies(tcPeriodCalc, ["TC"+str(channelID)+"_COMPARE_PERIOD_COUNT", "TC"+str(channelID)+"_CMR_TCCLKS", \
-            "core.TC"+str(num)+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
         #External Event Menu
         tcEventMenu.append(channelID)
@@ -1313,10 +1318,6 @@ def instantiateComponent(tcComponent):
         tcSym_CH_COMPARE_IER_CPCS[channelID].setLabel("Enable Period Interrupt")
         tcSym_CH_COMPARE_IER_CPCS[channelID].setDefaultValue(True)
 
-    tcIndex = tcComponent.createIntegerSymbol("INDEX", tcChannelMenu[channelID])
-    tcIndex.setVisible(False)
-    tcIndex.setDefaultValue(int(num))
-
     configName = Variables.get("__CONFIGURATION_NAME")
 
 ###################################################################################################
@@ -1327,7 +1328,7 @@ def instantiateComponent(tcComponent):
 
     tcHeaderFile = tcComponent.createFileSymbol("TC_HEADER", None)
     tcHeaderFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/plib_tc.h.ftl")
-    tcHeaderFile.setOutputName("plib_tc" + str(num) + ".h")
+    tcHeaderFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".h")
     tcHeaderFile.setDestPath("/peripheral/tc/")
     tcHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcHeaderFile.setType("HEADER")
@@ -1336,7 +1337,7 @@ def instantiateComponent(tcComponent):
 
     tcSource1File = tcComponent.createFileSymbol("TC_SOURCE", None)
     tcSource1File.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/plib_tc.c.ftl")
-    tcSource1File.setOutputName("plib_tc" + str(num) + ".c")
+    tcSource1File.setOutputName("plib_"+tcInstanceName.getValue().lower()+".c")
     tcSource1File.setDestPath("/peripheral/tc/")
     tcSource1File.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcSource1File.setType("SOURCE")
@@ -1344,8 +1345,8 @@ def instantiateComponent(tcComponent):
     tcSource1File.setMarkup(True)
 
     tcGlobalHeaderFile = tcComponent.createFileSymbol("TC_GLOBALHEADER", None)
-    tcGlobalHeaderFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/plib_tc.h")
-    tcGlobalHeaderFile.setOutputName("plib_tc" + ".h")
+    tcGlobalHeaderFile.setSourcePath("../peripheral/tc_"+str(tcID)+"/templates/plib_tc_common.h")
+    tcGlobalHeaderFile.setOutputName("plib_tc_common.h")
     tcGlobalHeaderFile.setDestPath("/peripheral/tc/")
     tcGlobalHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcGlobalHeaderFile.setType("HEADER")

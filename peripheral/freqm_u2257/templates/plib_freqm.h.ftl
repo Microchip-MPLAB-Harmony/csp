@@ -1,14 +1,14 @@
 /*******************************************************************************
-  FREQUENCY METER(FREQM${FREQM_INDEX}) PLIB
+  FREQUENCY METER(${FREQM_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_freqm${FREQM_INDEX}.h
+    plib_${FREQM_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    FREQM${FREQM_INDEX} PLIB Header File.
+    ${FREQM_INSTANCE_NAME} PLIB Header File.
 
   Description:
     This file defines the interface to the FREQM peripheral library. This
@@ -43,8 +43,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_FREQM${FREQM_INDEX}_H    // Guards against multiple inclusion
-#define PLIB_FREQM${FREQM_INDEX}_H
+#ifndef PLIB_${FREQM_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define PLIB_${FREQM_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -109,7 +109,7 @@ typedef enum
     handling callback function. Application must register a pointer to an event
     handling function whose function signature (parameter and return value
     types) match the types specified by this function pointer in order to
-    receive event calls back from the FREQM${FREQM_INDEX} PLIB.
+    receive event calls back from the ${FREQM_INSTANCE_NAME} PLIB.
 
     The parameters and return values are described here and a partial example
     implementation is provided.
@@ -129,19 +129,19 @@ typedef enum
 
     void FREQMCallBack(uintptr_t contextHandle)
     {
-        if(FREQM${FREQM_INDEX}_ErrorGet() == FREQM_ERROR_NONE)
+        if(${FREQM_INSTANCE_NAME}_ErrorGet() == FREQM_ERROR_NONE)
         {
             // Frequency measurement was completed without any errors. We can
-            // call the FREQM${FREQM_INDEX}_FrequencyGet() function to obtain
+            // call the ${FREQM_INSTANCE_NAME}_FrequencyGet() function to obtain
             // the measured value.
 
-            measuredFrequency = FREQM${FREQM_INDEX}_FrequencyGet();
+            measuredFrequency = ${FREQM_INSTANCE_NAME}_FrequencyGet();
         }
     }
 
-    FREQM${FREQM_INDEX}_Initialize();
-    FREQM${FREQM_INDEX}_CallbackRegister(&FREQMCallBack, NULL);
-    FREQM${FREQM_INDEX}_MeasurementStart();
+    ${FREQM_INSTANCE_NAME}_Initialize();
+    ${FREQM_INSTANCE_NAME}_CallbackRegister(&FREQMCallBack, NULL);
+    ${FREQM_INSTANCE_NAME}_MeasurementStart();
 
     </code>
 
@@ -173,13 +173,13 @@ this interface.
 
 // *****************************************************************************
 /* Function:
-    void FREQM${FREQM_INDEX}_Initialize (void);
+    void ${FREQM_INSTANCE_NAME}_Initialize (void);
 
   Summary:
-    Initializes FREQM${FREQM_INDEX} module.
+    Initializes ${FREQM_INSTANCE_NAME} module.
 
   Description:
-    This function initializes FREQM${FREQM_INDEX} module with the values
+    This function initializes ${FREQM_INSTANCE_NAME} module with the values
 	configured in MHC GUI. Once the peripheral is initialized, measurement APIs
 	can be called to perform frequency measurement.
 
@@ -194,18 +194,18 @@ this interface.
 
   Example:
     <code>
-        FREQM${FREQM_INDEX}_Initialize();
+        ${FREQM_INSTANCE_NAME}_Initialize();
     </code>
 
   Remarks:
     This function must be called before any other FREQM function is called.
 */
 
-void FREQM${FREQM_INDEX}_Initialize (void);
+void ${FREQM_INSTANCE_NAME}_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-    void FREQM${FREQM_INDEX}_MeasurementStart();
+    void ${FREQM_INSTANCE_NAME}_MeasurementStart();
 
   Summary:
     This function starts the frequency measurement.
@@ -213,16 +213,16 @@ void FREQM${FREQM_INDEX}_Initialize (void);
   Description:
     This function starts the frequency measurement. This function is always
     non-blocking. Calling this function when a frequency measurement is already
-    in progress will result in a functional no operation. The FREQM${FREQM_INDEX}_IsBusy()
+    in progress will result in a functional no operation. The ${FREQM_INSTANCE_NAME}_IsBusy()
     function will return true when a frequency measurement is in progress. The
-    completion of the measurement operation is indicated by the FREQM${FREQM_INDEX}_IsBusy()
+    completion of the measurement operation is indicated by the ${FREQM_INSTANCE_NAME}_IsBusy()
     function returning false or a registered callback function being called.
 
     Starting a measurement will reset all module errors and other status flags.
 
   Precondition:
-    FREQM${FREQM_INDEX} module should be initialized with the required configuration
-    parameters from the MHC GUI in the FREQM${FREQM_INDEX}_Initialize() function
+    ${FREQM_INSTANCE_NAME} module should be initialized with the required configuration
+    parameters from the MHC GUI in the ${FREQM_INSTANCE_NAME}_Initialize() function
 
   Parameters:
     None.
@@ -232,14 +232,14 @@ void FREQM${FREQM_INDEX}_Initialize (void);
 
   Example:
     <code>
-        FREQM${FREQM_INDEX}_MeasurementStart();
+        ${FREQM_INSTANCE_NAME}_MeasurementStart();
     </code>
 
   Remarks:
     None.
 */
 
-void FREQM${FREQM_INDEX}_MeasurementStart(void);
+void ${FREQM_INSTANCE_NAME}_MeasurementStart(void);
 
 <#if FREQM_INTERRUPT_MODE = true>
 // *****************************************************************************
@@ -261,7 +261,7 @@ void FREQM${FREQM_INDEX}_MeasurementStart(void);
     with callback function as NULL will disable the callback feature.
 
   Precondition:
-    The FREQM${FREQM_INDEX}_Initialize function must have been called. Interrupt
+    The ${FREQM_INSTANCE_NAME}_Initialize function must have been called. Interrupt
     option in MHC should have been enabled.
 
   Parameters:
@@ -283,19 +283,19 @@ void FREQM${FREQM_INDEX}_MeasurementStart(void);
 
     void FREQMCallbackFunction(uintptr_t contextHandle)
     {
-        if (FREQM${FREQM_INDEX}_ErrorGet() == FREQM_ERROR_OVERFLOW)
+        if (${FREQM_INSTANCE_NAME}_ErrorGet() == FREQM_ERROR_OVERFLOW)
         {
             // indication of the overflow condition
         }
         else
         {
-            measuredFrequency = FREQM${FREQM_INDEX}_FrequencyGet();
+            measuredFrequency = ${FREQM_INSTANCE_NAME}_FrequencyGet();
         }
     }
 
-    FREQM${FREQM_INDEX}_Initialize();
-    FREQM${FREQM_INDEX}_CallbackRegister(FREQMCallbackFunction, NULL);
-    FREQM${FREQM_INDEX}_MeasurementStart();
+    ${FREQM_INSTANCE_NAME}_Initialize();
+    ${FREQM_INSTANCE_NAME}_CallbackRegister(FREQMCallbackFunction, NULL);
+    ${FREQM_INSTANCE_NAME}_MeasurementStart();
 
     </code>
 
@@ -305,11 +305,11 @@ void FREQM${FREQM_INDEX}_MeasurementStart(void);
     FREQMx_IsBusy function to implement a polling based logic.
 */
 
-void FREQM${FREQM_INDEX}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintptr_t context);
+void ${FREQM_INSTANCE_NAME}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintptr_t context);
 
 // *****************************************************************************
 /* Function:
-    bool FREQM${FREQM_INDEX}_IsBusy (void)
+    bool ${FREQM_INSTANCE_NAME}_IsBusy (void)
 
   Summary:
     Returns the measurement status of an on-going frequency measurement
@@ -318,7 +318,7 @@ void FREQM${FREQM_INDEX}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintptr_
   Description:
     This function returns the measurement status of an on-going frequency
     measurement operation. The function returns true when the
-    FREQM${FREQM_INDEX}_MeasurementStart() function has been called to start a
+    ${FREQM_INSTANCE_NAME}_MeasurementStart() function has been called to start a
     measurement and measurement has not completed. It returns false, when the
     measurement operation has completed. The function should be called after
     measurement operation was initiated, to poll the completion of the
@@ -329,7 +329,7 @@ void FREQM${FREQM_INDEX}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintptr_
     operation completion instead of waiting for callback to be called.
 
   Precondition:
-    The FREQM${FREQM_INDEX}_Initialize function and FREQM_MeasurementStart
+    The ${FREQM_INSTANCE_NAME}_Initialize function and FREQM_MeasurementStart
     must have been called. The interrupt option in MHC should have been enabled.
 
   Parameters:
@@ -342,10 +342,10 @@ void FREQM${FREQM_INDEX}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintptr_
   Example:
     <code>
 
-    FREQM${FREQM_INDEX}_MeasurementStart();
+    ${FREQM_INSTANCE_NAME}_MeasurementStart();
 
     // Wait till the measurement is complete.
-    while(FREQM${FREQM_INDEX}_IsBusy());
+    while(${FREQM_INSTANCE_NAME}_IsBusy());
 
     </code>
 
@@ -353,12 +353,12 @@ void FREQM${FREQM_INDEX}_CallbackRegister(FREQM_CALLBACK freqmCallback, uintptr_
     None.
 */
 
-bool FREQM${FREQM_INDEX}_IsBusy(void);
+bool ${FREQM_INSTANCE_NAME}_IsBusy(void);
 </#if>
 
 // *****************************************************************************
 /* Function:
-    uint32_t FREQM${FREQM_INDEX}_FrequencyGet()
+    uint32_t ${FREQM_INSTANCE_NAME}_FrequencyGet()
 
   Summary:
     Returns the measured frequency in Hz.
@@ -368,17 +368,17 @@ bool FREQM${FREQM_INDEX}_IsBusy(void);
     a frequency measurement is complete and no errors have occurred. This
     function is non-blocking when the library is generated for interrupt
     operation. In interrupt mode, the function should be called only after a
-    callback function was called or after the FREQM${FREQM_INDEX}_IsBusy()
+    callback function was called or after the ${FREQM_INSTANCE_NAME}_IsBusy()
     function returns false indicating that an on-going frequency measurement
     operation has completed.
 
     The function will block when the library is generated for non-interrupt
     operation.  The function will block till the frequency measurement operation
     has completed. In this case, the return value of the function is only valid
-    if the FREQM${FREQM_INDEX}_ErrorGet() function returns FREQM_ERROR_NONE.
+    if the ${FREQM_INSTANCE_NAME}_ErrorGet() function returns FREQM_ERROR_NONE.
 
   Precondition:
-    FREQM${FREQM_INDEX}_Initialize() and FREQM_MeasurementStart functions should
+    ${FREQM_INSTANCE_NAME}_Initialize() and FREQM_MeasurementStart functions should
     be called.
 
   Parameters:
@@ -386,24 +386,24 @@ bool FREQM${FREQM_INDEX}_IsBusy(void);
 
   Returns:
     uint32_t - frequency value of the measured clock. The value is only valid if
-    the FREQM${FREQM_INDEX}_ErrorGet() function returns FREQM_ERROR_NONE.
+    the ${FREQM_INSTANCE_NAME}_ErrorGet() function returns FREQM_ERROR_NONE.
 
   Example:
     <code>
 
-    // Refer to the code example of FREQM${FREQM_INDEX}_CallbackRegister() function for
+    // Refer to the code example of ${FREQM_INSTANCE_NAME}_CallbackRegister() function for
     // guidance on interrupt based operation.
 
     // The following code snippet shows an example of non-interrupt based
     // operation.
 
-    FREQM${FREQM_INDEX}_Initialize();
-    FREQM${FREQM_INDEX}_MeasurementStart()
+    ${FREQM_INSTANCE_NAME}_Initialize();
+    ${FREQM_INSTANCE_NAME}_MeasurementStart()
 
     // The following function call will block.
-    measuredFrequency = FREQM${FREQM_INDEX}_FrequencyGet();
+    measuredFrequency = ${FREQM_INSTANCE_NAME}_FrequencyGet();
 
-    if(FREQM${FREQM_INDEX}_ErrorGet() == FREQM_ERROR_NONE)
+    if(${FREQM_INSTANCE_NAME}_ErrorGet() == FREQM_ERROR_NONE)
     {
         // This means there are no errors and the value contained in
         // measuredFrequency is valid.
@@ -414,11 +414,11 @@ bool FREQM${FREQM_INDEX}_IsBusy(void);
     None.
 */
 
-uint32_t FREQM${FREQM_INDEX}_FrequencyGet();
+uint32_t ${FREQM_INSTANCE_NAME}_FrequencyGet();
 
 // *****************************************************************************
 /* Function:
-    FREQM_ERROR FREQM${FREQM_INDEX}_ErrorGet( void )
+    FREQM_ERROR ${FREQM_INSTANCE_NAME}_ErrorGet( void )
 
   Summary:
     Returns error that may have occurred during the frequency measurement
@@ -427,42 +427,42 @@ uint32_t FREQM${FREQM_INDEX}_FrequencyGet();
   Description:
     This function returns the error that may have occurred during the frequency
     measurement process. The function returns the error for the last completed
-    operation. The value returned by the FREQM${FREQM_INDEX}_FrequencyGet()
+    operation. The value returned by the ${FREQM_INSTANCE_NAME}_FrequencyGet()
     function is valid only if this function returns FREQM_ERROR_NONE.
 
   Precondition:
-    FREQM${FREQM_INDEX}_Initialize and FREQM${FREQM_INDEX}_MeasurementStart
+    ${FREQM_INSTANCE_NAME}_Initialize and ${FREQM_INSTANCE_NAME}_MeasurementStart
     functions must have been called.
 
   Parameters:
     None.
 
   Returns:
-    Errors occurred as listed by FREQM${FREQM_INDEX}_ERROR.
+    Errors occurred as listed by ${FREQM_INSTANCE_NAME}_ERROR.
 
   Example:
     <code>
-    if (FREQM${FREQM_INDEX}_ErrorGet() == FREQM_ERROR_OVERFLOW)
+    if (${FREQM_INSTANCE_NAME}_ErrorGet() == FREQM_ERROR_OVERFLOW)
     {
         //Handle overflow error here
     }
     else
     {
-        measuredFrequency = FREQM${FREQM_INDEX}_FrequencyGet();
+        measuredFrequency = ${FREQM_INSTANCE_NAME}_FrequencyGet();
     }
     </code>
 
   Remarks:
-    Module errors are reset when the FREQM${FREQM_INDEX}_MeasurementStart()
+    Module errors are reset when the ${FREQM_INSTANCE_NAME}_MeasurementStart()
     function is called.
 */
 
-FREQM_ERROR FREQM${FREQM_INDEX}_ErrorGet( void );
+FREQM_ERROR ${FREQM_INSTANCE_NAME}_ErrorGet( void );
 
 <#if FREQM_SETUPMODE = true >
 // *****************************************************************************
 /* Function:
-    void FREQM${FREQM_INDEX}_Setup(uint32_t referenceFrequency)
+    void ${FREQM_INSTANCE_NAME}_Setup(uint32_t referenceFrequency)
 
   Summary:
     Allows the application to respecify the FREQM module reference clock
@@ -487,19 +487,19 @@ FREQM_ERROR FREQM${FREQM_INDEX}_ErrorGet( void );
     <code>
 
     // Change the module reference clock frequency to 64KHz.
-    FREQM${FREQM_INDEX}_Setup(64000);
+    ${FREQM_INSTANCE_NAME}_Setup(64000);
 
     </code>
   Remarks:
     None.
 */
 
-void FREQM${FREQM_INDEX}_Setup(uint32_t referenceFrequency);
+void ${FREQM_INSTANCE_NAME}_Setup(uint32_t referenceFrequency);
 </#if>
 <#if FREQM_INTERRUPT_MODE = true>
 // *****************************************************************************
 /* Function:
-    void FREQM${FREQM_INDEX}_InterruptHandler(void);
+    void ${FREQM_INSTANCE_NAME}_InterruptHandler(void);
 
   Summary:
     Frequency Measurement interrupt handler.
@@ -509,7 +509,7 @@ void FREQM${FREQM_INDEX}_Setup(uint32_t referenceFrequency);
     Measurement interrupts when the Measurement Done interrupt occurs.
 
   Precondition:
-    FREQM${FREQM_INDEX}_Initialize and FREQM${FREQM_INDEX}_MeasurementStart() 
+    ${FREQM_INSTANCE_NAME}_Initialize and ${FREQM_INSTANCE_NAME}_MeasurementStart() 
 	functions should be called .
 
   Parameters:
@@ -522,18 +522,18 @@ void FREQM${FREQM_INDEX}_Setup(uint32_t referenceFrequency);
     <code>
     void FREQM_Handler(void)
     {
-        FREQM${FREQM_INDEX}_InterruptHandler(void)
+        ${FREQM_INSTANCE_NAME}_InterruptHandler(void)
     }
     </code>
   Remarks:
     None.
 */
 
-void FREQM${FREQM_INDEX}_InterruptHandler(void);
+void ${FREQM_INSTANCE_NAME}_InterruptHandler(void);
 </#if>
 
  #ifdef __cplusplus // Provide C++ Compatibility
  }
  #endif
 
-#endif /* PLIB_FREQM${FREQM_INDEX}_H */
+#endif /* PLIB_${FREQM_INSTANCE_NAME}_H */

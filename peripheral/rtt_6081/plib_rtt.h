@@ -1,5 +1,5 @@
 /*******************************************************************************
- Interface definition of EEFC PLIB.
+ Interface definition of RTT PLIB.
  
  Company:
 	Microchip Technology Inc.
@@ -52,7 +52,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -136,7 +135,7 @@ typedef struct
 	None.
  Example:
 	<code>
-		RTT0_Initialize();
+		RTT_Initialize();
 	</code>
 
  
@@ -164,8 +163,8 @@ void RTTx_Initialize(void);
 	None.
  Example:
 	<code>
-		RTT0_Initialize();
-		RTT0_Enable();
+		RTT_Initialize();
+		RTT_Enable();
 	</code>
 
  
@@ -200,13 +199,13 @@ void RTTx_Enable(void);
 		}
 		int main(void)
 		{
-			RTT0_Initialize();
+			RTT_Initialize();
 			
 			//Enable callback for the periodic interrupt
-			RTT0_CallbackRegister(My_callback, RTT_PERIODIC, NULL);
+			RTT_CallbackRegister(My_callback, RTT_PERIODIC, NULL);
 			
 			//start RTT
-			RTT0_Enable();
+			RTT_Enable();
 		}
 	</code>
 
@@ -235,7 +234,7 @@ void RTTx_Disable(void);
 	None.
  Example:
 	<code>
-		RTT0_PrescalarUpdate(10);
+		RTT_PrescalarUpdate(10);
 	</code>
 
  
@@ -263,7 +262,7 @@ void RTTx_PrescalarUpdate(uint16_t prescale);
 	None.
  Example:
 	<code>
-		RTT0_AlarmValueSet(100);
+		RTT_AlarmValueSet(100);
 	</code>
 
  
@@ -292,7 +291,7 @@ void RTTx_AlarmValueSet(uint32_t alarm);
  Example:
 	<code>
 		//Enable Alarm interrupt for RTT
-		RTT0_EnableInterrupt(RTT_ALARM);
+		RTT_EnableInterrupt(RTT_ALARM);
 	</code>
  
 */
@@ -320,7 +319,7 @@ void RTTx_EnableInterrupt (RTT_INTERRUPT_TYPE type);
  Example:
 	<code>
 		//disable Alarm interrupt for RTT
-		RTT0_DisableInterrupt(RTT_ALARM);
+		RTT_DisableInterrupt(RTT_ALARM);
 	</code>
  
  */
@@ -352,8 +351,8 @@ void RTTx_DisableInterrupt(RTT_INTERRUPT_TYPE type);
 		uint32_t count = 0;
 		uint64_t time_elapsed;
 		
-		frequency = RTT0_FrequencyGet();
-		count = RTT0_TimerValueGet();
+		frequency = RTT_FrequencyGet();
+		count = RTT_TimerValueGet();
 		
 		time_elapsed = count/frequency;
 	</code>
@@ -383,7 +382,7 @@ uint32_t RTTx_TimerValueGet(void);
  Example:
 	<code>
 		uint32_t frequency = 0;
-		frequency = RTT0_FrequencyGet();
+		frequency = RTT_FrequencyGet();
 	</code>
  
 */
@@ -420,17 +419,17 @@ uint32_t RTTx_FrequencyGet(void);
 		void My_callback(uintptr_t context)
 		{
 			//Interrupt recieved stop RTT
-			RTT0_Disable();
+			RTT_Disable();
 		}
 		int main(void)
 		{
-			RTT0_Initialize();
+			RTT_Initialize();
 					
 			//Enable callback for the periodic interrupt
-			RTT0_CallbackRegister(My_callback, RTT_PERIODIC, NULL);
+			RTT_CallbackRegister(My_callback, RTT_PERIODIC, NULL);
 					
 			//start RTT
-			RTT0_Enable();
+			RTT_Enable();
 		}
 	</code>
 	

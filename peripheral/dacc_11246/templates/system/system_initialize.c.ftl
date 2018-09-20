@@ -1,1 +1,1 @@
-	DACC${INDEX?string}_Initialize();
+	${DACC_INSTANCE_NAME}_Initialize();

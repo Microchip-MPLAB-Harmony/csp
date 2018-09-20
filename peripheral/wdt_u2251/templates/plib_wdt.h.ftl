@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_wdt${WDT_INDEX}.h
+    plib_${WDT_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    Interface definition of WDT${WDT_INDEX} PLIB.
+    Interface definition of ${WDT_INSTANCE_NAME} PLIB.
 
   Description:
     This file defines the interface for the WDT Plib.
@@ -37,8 +37,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_WDT${WDT_INDEX}_H
-#define PLIB_WDT${WDT_INDEX}_H
+#ifndef PLIB_${WDT_INSTANCE_NAME}_H
+#define PLIB_${WDT_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -99,7 +99,7 @@ this interface.
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_Initialize( void )
+    void ${WDT_INSTANCE_NAME}_Initialize( void )
 
   Summary:
     Initializes given instance of the WDT peripheral.
@@ -119,7 +119,7 @@ this interface.
 
   Example:
     <code>
-    WDT${WDT_INDEX}_Initialize();
+    ${WDT_INSTANCE_NAME}_Initialize();
     </code>
 
   Remarks:
@@ -127,11 +127,11 @@ this interface.
     settings are specified though compiler provided fuse settings.
 */
 
-void WDT${WDT_INDEX}_Initialize( void );
+void ${WDT_INSTANCE_NAME}_Initialize( void );
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_Enable( void )
+    void ${WDT_INSTANCE_NAME}_Enable( void )
 
   Summary:
     Enables the WDT peripheral.
@@ -151,18 +151,18 @@ void WDT${WDT_INDEX}_Initialize( void );
 
   Example:
     <code>
-    WDT${WDT_INDEX}_Enable();
+    ${WDT_INSTANCE_NAME}_Enable();
     </code>
 
   Remarks:
     None.
 */
 
-void WDT${WDT_INDEX}_Enable( void );
+void ${WDT_INSTANCE_NAME}_Enable( void );
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_Disable( void )
+    void ${WDT_INSTANCE_NAME}_Disable( void )
 
   Summary:
     Disables the WDT peripheral.
@@ -171,7 +171,7 @@ void WDT${WDT_INDEX}_Enable( void );
     This function is used to stop the WDT counter and disable WDT peripheral.
 
   Precondition:
-    WDT must be enabled using WDT${WDT_INDEX}_Enable().
+    WDT must be enabled using ${WDT_INSTANCE_NAME}_Enable().
 
   Parameters:
     None
@@ -181,7 +181,7 @@ void WDT${WDT_INDEX}_Enable( void );
 
   Example:
     <code>
-    WDT${WDT_INDEX}_Disable();
+    ${WDT_INSTANCE_NAME}_Disable();
     </code>
 
   Remarks:
@@ -189,11 +189,11 @@ void WDT${WDT_INDEX}_Enable( void );
     This API will not have any effect if ALWAYSON bit in watchdog is enabled.
 */
 
-void WDT${WDT_INDEX}_Disable( void );
+void ${WDT_INSTANCE_NAME}_Disable( void );
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_Clear( void )
+    void ${WDT_INSTANCE_NAME}_Clear( void )
 
   Summary:
     Restarts the WDT counter.
@@ -217,13 +217,13 @@ void WDT${WDT_INDEX}_Disable( void );
     <code>
     //Application
 
-    WDT${WDT_INDEX}_Initialize();
+    ${WDT_INSTANCE_NAME}_Initialize();
 
-    WDT${WDT_INDEX}_Enable();
+    ${WDT_INSTANCE_NAME}_Enable();
 
     // Application Code executes here.
     // Clear the WDT periodically.
-    WDT${WDT_INDEX}_Clear();
+    ${WDT_INSTANCE_NAME}_Clear();
 
     </code>
 
@@ -231,12 +231,12 @@ void WDT${WDT_INDEX}_Disable( void );
     None.
 */
 
-void WDT${WDT_INDEX}_Clear( void );
+void ${WDT_INSTANCE_NAME}_Clear( void );
 
 <#if WDT_EW_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback,
+    void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback,
                                            uintptr_t context )
 
   Summary:
@@ -262,7 +262,7 @@ void WDT${WDT_INDEX}_Clear( void );
 
   Parameters:
     callback - A pointer to a function with a calling signature defined by the
-    WDT${WDT_INDEX}_CALLBACK data type.
+    ${WDT_INSTANCE_NAME}_CALLBACK data type.
 
     context -  A value (usually a pointer) passed (unused) into the function
     identified by the callback parameter.
@@ -272,7 +272,7 @@ void WDT${WDT_INDEX}_Clear( void );
 
   Example:
     <code>
-    WDT${WDT_INDEX}_CallbackRegister(MyCallback, &myData);
+    ${WDT_INSTANCE_NAME}_CallbackRegister(MyCallback, &myData);
     </code>
 
   Remarks:
@@ -282,11 +282,11 @@ void WDT${WDT_INDEX}_Clear( void );
     WDT_CALLBACK type definition for additional information.
 */
 
-void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
+void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
 
 // *****************************************************************************
 /* Function:
-    void WDT${WDT_INDEX}_InterruptHandler( void )
+    void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
 
   Summary:
     WDT Interrupt Handler.
@@ -307,7 +307,7 @@ void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context 
     <code>
     //Application
 
-    void WDT${WDT_INDEX}_InterruptHandler( void )
+    void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
     {
         // serve interrupts
     }
@@ -317,7 +317,7 @@ void WDT${WDT_INDEX}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context 
     None.
 */
 
-void WDT${WDT_INDEX}_InterruptHandler( void );
+void ${WDT_INSTANCE_NAME}_InterruptHandler( void );
 </#if>
 
-#endif /* PLIB_WDT${WDT_INDEX}_H */
+#endif /* PLIB_${WDT_INSTANCE_NAME}_H */

@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Power Manager(PM${PM_INDEX}) PLIB
+  Power Manager(${PM_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_pm${PM_INDEX}.h
+    plib_${PM_INSTANCE_NAME?lower_case}.h
 
   Summary
-    PM${PM_INDEX} PLIB Header File.
+    ${PM_INSTANCE_NAME} PLIB Header File.
 
   Description
     This file defines the interface to the PM peripheral library. This
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_PM${PM_INDEX}_H    // Guards against multiple inclusion
-#define PLIB_PM${PM_INDEX}_H
+#ifndef PLIB_${PM_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define PLIB_${PM_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -109,7 +109,7 @@ typedef enum
 
 // *****************************************************************************
 /* Function:
-    void PM${PM_INDEX}_Initialize( void );
+    void ${PM_INSTANCE_NAME}_Initialize( void );
 
   Summary:
     Initializes given instance of PM peripheral.
@@ -129,7 +129,7 @@ typedef enum
 
   Example:
     <code>
-      PM${PM_INDEX}_Initialize();
+      ${PM_INSTANCE_NAME}_Initialize();
     </code>
 
   Remarks:
@@ -137,11 +137,11 @@ typedef enum
     before any other PM function is called.
 */
 
-void PM${PM_INDEX}_Initialize( void );
+void ${PM_INSTANCE_NAME}_Initialize( void );
 
 // *****************************************************************************
 /* Function:
-    void PM${PM_INDEX}_SleepModeEnter( PM_SLEEP_MODE sleepMode );
+    void ${PM_INSTANCE_NAME}_SleepModeEnter( PM_SLEEP_MODE sleepMode );
 
   Summary:
     Puts the device into the specified sleep mode.
@@ -154,7 +154,7 @@ void PM${PM_INDEX}_Initialize( void );
     mode.
 
   Precondition:
-    PM${PM_INDEX}_Initialize() must have been called first for the associated
+    ${PM_INSTANCE_NAME}_Initialize() must have been called first for the associated
     instance.
 
   Parameters:
@@ -167,15 +167,15 @@ void PM${PM_INDEX}_Initialize( void );
     <code>
       PM_SLEEP_MODE sleepMode = PM_SLEEP_MODE_IDLE;
 
-      PM${PM_INDEX}_Initialize();
-      PM${PM_INDEX}_StandbyModeEnter(sleepMode);
+      ${PM_INSTANCE_NAME}_Initialize();
+      ${PM_INSTANCE_NAME}_StandbyModeEnter(sleepMode);
     </code>
 
   Remarks:
     None.
 */
 
-void PM${PM_INDEX}_SleepModeEnter( PM_SLEEP_MODE sleepMode );
+void ${PM_INSTANCE_NAME}_SleepModeEnter( PM_SLEEP_MODE sleepMode );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -185,4 +185,4 @@ void PM${PM_INDEX}_SleepModeEnter( PM_SLEEP_MODE sleepMode );
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_PM${PM_INDEX}_H */
+#endif /* PLIB_${PM_INSTANCE_NAME}_H */

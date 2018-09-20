@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Digital-to-Analog Converter (DAC${DAC_INDEX}) PLIB
+  Digital-to-Analog Converter (${DAC_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_dac${DAC_INDEX}.h
+    plib_${DAC_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    DAC${DAC_INDEX} PLIB Header file
+    ${DAC_INSTANCE_NAME} PLIB Header file
 
   Description:
     This file defines the interface to the DAC peripheral library. This
@@ -41,8 +41,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_DAC${DAC_INDEX}_H
-#define PLIB_DAC${DAC_INDEX}_H
+#ifndef PLIB_${DAC_INSTANCE_NAME}_H
+#define PLIB_${DAC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -73,7 +73,7 @@ extern "C" {
 
 // *****************************************************************************
 /* Function:
-    void DAC${DAC_INDEX}_Initialize(void)
+    void ${DAC_INSTANCE_NAME}_Initialize(void)
 
   Summary:
     Initializes given instance of the DAC peripheral.
@@ -93,18 +93,18 @@ extern "C" {
 
   Example:
     <code>
-        DAC${DAC_INDEX}_Initialize();
+        ${DAC_INSTANCE_NAME}_Initialize();
     </code>
 
   Remarks:
     Stops the DAC if it was already running and reinitializes it.
 */
 
-void DAC${DAC_INDEX}_Initialize(void);
+void ${DAC_INSTANCE_NAME}_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    void DAC${DAC_INDEX}_DataWrite(uint16_t data)
+    void ${DAC_INSTANCE_NAME}_DataWrite(uint16_t data)
 
   Summary:
     This function will write the specified value to the DAC and start the
@@ -115,13 +115,13 @@ void DAC${DAC_INDEX}_Initialize(void);
     conversion. The internal and/or external DAC outputs will be updated if
     these output were enabled.  The analog output voltage will depend on the
     choice of the DAC reference (configured via MHC). This function should only
-    be called when the DAC${DAC_INDEX}_IsReady() returns true. Calling this 
+    be called when the ${DAC_INSTANCE_NAME}_IsReady() returns true. Calling this 
     function when the DAC is not ready will result in the in-determinate 
     operation. 
 
   Precondition:
-    DAC${DAC_INDEX}_Initialize must have been called for the associated DAC 
-    instance. The DAC${DAC_INDEX}_IsReady() function should have returned true.
+    ${DAC_INSTANCE_NAME}_Initialize must have been called for the associated DAC 
+    instance. The ${DAC_INSTANCE_NAME}_IsReady() function should have returned true.
 
   Parameters:
     data - Digital value to be converted. 
@@ -131,10 +131,10 @@ void DAC${DAC_INDEX}_Initialize(void);
 
   Example:
     <code>
-        DAC${DAC_INDEX}_Initialize();
-        if(DAC${DAC_INDEX}_IsReady() == true)
+        ${DAC_INSTANCE_NAME}_Initialize();
+        if(${DAC_INSTANCE_NAME}_IsReady() == true)
         {
-            DAC${DAC_INDEX}_DataWrite(data);
+            ${DAC_INSTANCE_NAME}_DataWrite(data);
         }
     </code>
 
@@ -142,24 +142,24 @@ void DAC${DAC_INDEX}_Initialize(void);
     None.
 */
 
-void DAC${DAC_INDEX}_DataWrite(uint16_t data);
+void ${DAC_INSTANCE_NAME}_DataWrite(uint16_t data);
 
 // *****************************************************************************
 /* Function:
-    bool DAC${DAC_INDEX}_IsReady(void);
+    bool ${DAC_INSTANCE_NAME}_IsReady(void);
 
   Summary:
     Checks whether DAC is ready for receiving next sample value.
 
   Description:
     This function checks for the readiness of the DAC to receive the next sample
-    value. The application should call the DAC${DAC_INDEX}_DataWrite() function 
-    only when this function returns true. Calling DAC${DAC_INDEX}_DataWrite() 
+    value. The application should call the ${DAC_INSTANCE_NAME}_DataWrite() function 
+    only when this function returns true. Calling ${DAC_INSTANCE_NAME}_DataWrite() 
     function when this function returns false will result in in-determinate 
     operation.
 
   Precondition:
-    DAC${DAC_INDEX}_Initialize must have been called for the associated DAC 
+    ${DAC_INSTANCE_NAME}_Initialize must have been called for the associated DAC 
     instance.
 
   Parameters:
@@ -171,10 +171,10 @@ void DAC${DAC_INDEX}_DataWrite(uint16_t data);
 
   Example:
     <code>
-        DAC${DAC_INDEX}_Initialize();
-        if (DAC${DAC_INDEX}_IsReady())
+        ${DAC_INSTANCE_NAME}_Initialize();
+        if (${DAC_INSTANCE_NAME}_IsReady())
         {
-            DAC${DAC_INDEX}_DataWrite(0xFF);
+            ${DAC_INSTANCE_NAME}_DataWrite(0xFF);
         }
         else
         {
@@ -187,7 +187,7 @@ void DAC${DAC_INDEX}_DataWrite(uint16_t data);
     None.
 */
 
-bool DAC${DAC_INDEX}_IsReady(void);
+bool ${DAC_INSTANCE_NAME}_IsReady(void);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -195,4 +195,4 @@ bool DAC${DAC_INDEX}_IsReady(void);
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_DAC${DAC_INDEX}_H */
+#endif /* PLIB_${DAC_INSTANCE_NAME}_H */

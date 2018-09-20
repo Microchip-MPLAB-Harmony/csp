@@ -1,1 +1,1 @@
-#include "peripheral/sdadc/plib_sdadc${SDADC_INDEX}.h"
+#include "peripheral/sdadc/plib_${SDADC_INSTANCE_NAME?lower_case}.h"

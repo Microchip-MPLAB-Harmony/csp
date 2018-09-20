@@ -1,1 +1,1 @@
-#include "peripheral/dmac/plib_dmac${DMAC_INDEX}.h"
+#include "peripheral/dmac/plib_${DMA_INSTANCE_NAME?lower_case}.h"

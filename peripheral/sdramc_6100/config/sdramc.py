@@ -1,7 +1,7 @@
 ################################################################################
 #### Global Variables ####
 ################################################################################
-global instance
+global sdramcInstanceName
 global sdramcSym_CR__NR
 global sdramcSym_BURST_TYPE
 global sdramcSym_BURST_LENGTH
@@ -50,11 +50,11 @@ def calcRefreshCount(time, rowlines, clk):
     return count
 
 # Function to set label based on the Refresh time in ms as selected in Combo Symbol SDRAMC_CR_NR
-def calcRefreshCount_CB(symbol, event) :
-    global instance
+def calcRefreshCount_CB(symbol, event):
+    global sdramcInstanceName
     global sdramcSym_CR__NR
     clk = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
-    time = Database.getSymbolValue("sdramc" + str(instance), "SDRAMC_REFRESH_TIME_IN_MS")
+    time = Database.getSymbolValue(sdramcInstanceName.getValue().lower(), "SDRAMC_REFRESH_TIME_IN_MS")
     rowlines = sdramcSym_CR__NR.getSelectedKey()
     count=calcRefreshCount(time, rowlines, clk)
     symbol.clearValue()
@@ -77,17 +77,15 @@ def calcMRS(symbol, event) :
 #### Component ####
 ################################################################################
 def instantiateComponent(sdramcComponent):
-    global instance
+    global sdramcInstanceName
     global sdramcSym_CR__NR
     global sdramcSym_BURST_TYPE
     global sdramcSym_BURST_LENGTH
     global sdramcSym_CR_CAS
 
-    instance = sdramcComponent.getID()[-1:]
-
-    sdramcIndex = sdramcComponent.createIntegerSymbol("INDEX", None)
-    sdramcIndex.setVisible(False)
-    sdramcIndex.setDefaultValue(int(instance))
+    sdramcInstanceName = sdramcComponent.createStringSymbol("SDRAMC_INSTANCE_NAME", None)
+    sdramcInstanceName.setVisible(False)
+    sdramcInstanceName.setDefaultValue(sdramcComponent.getID().upper())
 
     cpuclk = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
     cpuclk = int(cpuclk)
@@ -230,8 +228,8 @@ def instantiateComponent(sdramcComponent):
     ############################################################################
 
     # Enable Peripheral Clock in Clock manager
-    Database.clearSymbolValue("core", "SDRAMC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "SDRAMC_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", sdramcInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", sdramcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
 ############################################################################
 #### Code Generation ####
@@ -241,7 +239,7 @@ def instantiateComponent(sdramcComponent):
 
     sdramcHeader1File = sdramcComponent.createFileSymbol("SDRAMC_H", None)
     sdramcHeader1File.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/plib_sdramc.h.ftl")
-    sdramcHeader1File.setOutputName("plib_sdramc" + str(instance) + ".h")
+    sdramcHeader1File.setOutputName("plib_"+sdramcInstanceName.getValue().lower()+".h")
     sdramcHeader1File.setDestPath("/peripheral/sdramc/")
     sdramcHeader1File.setProjectPath("config/" + configName + "/peripheral/sdramc/")
     sdramcHeader1File.setType("HEADER")
@@ -249,7 +247,7 @@ def instantiateComponent(sdramcComponent):
 
     sdramcSource1File = sdramcComponent.createFileSymbol("SDRAMC_C", None)
     sdramcSource1File.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/plib_sdramc.c.ftl")
-    sdramcSource1File.setOutputName("plib_sdramc" + str(instance) + ".c")
+    sdramcSource1File.setOutputName("plib_"+sdramcInstanceName.getValue().lower()+".c")
     sdramcSource1File.setDestPath("/peripheral/sdramc/")
     sdramcSource1File.setProjectPath("config/" + configName + "/peripheral/sdramc/")
     sdramcSource1File.setType("SOURCE")

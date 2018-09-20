@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_dsu${DSU_INDEX}.c
+    plib_${DSU_INSTANCE_NAME?lower_case}.c
 
   Summary:
-    DSU${DSU_INDEX} PLIB Implementation File
+    ${DSU_INSTANCE_NAME} PLIB Implementation File
 
   Description:
     This file contains the implementation of the DSU Peripheral Library. This is
@@ -45,12 +45,12 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 /* This section lists the other files that are included in this file.*/
 
-#include "plib_dsu${DSU_INDEX}.h"
+#include "plib_${DSU_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: DSU${DSU_INDEX} CRC Implementation
+// Section: ${DSU_INSTANCE_NAME} CRC Implementation
 // *****************************************************************************
 // *****************************************************************************
 
@@ -74,45 +74,45 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
     to the CRC calculation of the next memory block.
 
   Remarks:
-    Refer plib_dsu${DSU_INDEX}.h file for more information.
+    Refer plib_${DSU_INSTANCE_NAME?lower_case}.h file for more information.
 */
 
-bool DSU${DSU_INDEX}_CRCCalculate (uint32_t startAddress, size_t length, uint32_t crcSeed, uint32_t * crc)
+bool ${DSU_INSTANCE_NAME}_CRCCalculate (uint32_t startAddress, size_t length, uint32_t crcSeed, uint32_t * crc)
 {
     bool statusValue = false;
 
     if( (0 != length) && (NULL != crc) )
     {
         /* Starting Memory Location of the Address Range */
-        DSU_REGS->DSU_ADDR = (uint32_t)(((startAddress) & 0x3FFFFFFC) << 2);
+        ${DSU_INSTANCE_NAME}_REGS->DSU_ADDR = (uint32_t)(((startAddress) & 0x3FFFFFFC) << 2);
 
         /*  Size of the memory block in 32-bit word needed for memory operations */
-        DSU_REGS->DSU_LENGTH = (uint32_t)length;
+        ${DSU_INSTANCE_NAME}_REGS->DSU_LENGTH = (uint32_t)length;
 
         /* Initial CRC Value  */
-        DSU_REGS->DSU_DATA = (uint32_t)crcSeed;
+        ${DSU_INSTANCE_NAME}_REGS->DSU_DATA = (uint32_t)crcSeed;
 
         /* Enabling the DSU */
-        DSU_REGS->DSU_CTRL |= DSU_CTRL_CRC_Msk;
+        ${DSU_INSTANCE_NAME}_REGS->DSU_CTRL |= DSU_CTRL_CRC_Msk;
 
-        while(!(DSU_REGS->DSU_STATUSA & DSU_STATUSA_DONE_Msk))
+        while(!(${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA & DSU_STATUSA_DONE_Msk))
         {
             /* Wait for the Done(CRC to be Completed) */
         }
 
         /* Checking for the Bus error */
-        if(DSU_REGS->DSU_STATUSA & DSU_STATUSA_BERR_Msk)
+        if(${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA & DSU_STATUSA_BERR_Msk)
         {
             /* Clearing the DONE and BUS Errors */
-            DSU_REGS->DSU_STATUSA |= DSU_STATUSA_BERR_Msk | DSU_STATUSA_DONE_Msk;
+            ${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA |= DSU_STATUSA_BERR_Msk | DSU_STATUSA_DONE_Msk;
         }
         else
         {
             /* Reading the resultant crc value from the DATA register */
-            *crc = (uint32_t) DSU_REGS->DSU_DATA;
+            *crc = (uint32_t) ${DSU_INSTANCE_NAME}_REGS->DSU_DATA;
 
             /* Clearing the DONE bit in the status Register */
-            DSU_REGS->DSU_STATUSA |= DSU_STATUSA_DONE_Msk;
+            ${DSU_INSTANCE_NAME}_REGS->DSU_STATUSA |= DSU_STATUSA_DONE_Msk;
 
             statusValue = true;
         }

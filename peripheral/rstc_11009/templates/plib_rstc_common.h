@@ -40,8 +40,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_RSTC_H // Guards against multiple inclusion
-#define PLIB_RSTC_H
+#ifndef PLIB_RSTC_COMMON_H // Guards against multiple inclusion
+#define PLIB_RSTC_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -84,7 +84,7 @@ typedef enum
 {
     /* First power reset */
     RSTC_GENERAL_RESET = RSTC_SR_RSTTYP_GENERAL_RST, 
-    
+
     /* Reset after Return from Backup mode */
     RSTC_BACKUP_RESET = RSTC_SR_RSTTYP_BACKUP_RST,
 
@@ -95,8 +95,8 @@ typedef enum
     RSTC_SOFTWARE_RESET = RSTC_SR_RSTTYP_SOFT_RST,
 
     /* Reset occurs when NRST pin is detected low */
-    RSTC_USER_RESET = RSTC_SR_RSTTYP_USER_RST,    
-	      
+    RSTC_USER_RESET = RSTC_SR_RSTTYP_USER_RST,
+
 } RSTC_RESET_CAUSE;
 
 /* Reset type
@@ -115,13 +115,13 @@ typedef enum
 {
     /* Processor reset */
     RSTC_RESET_PROC = RSTC_CR_PROCRST_Msk,
-    
+
     /* External reset */
     RSTC_RESET_EXT = RSTC_CR_EXTRST_Msk,
-    
+
     /* Processor and External reset */
-    RSTC_RESET_EXT_PROC= (RSTC_CR_PROCRST_Msk | RSTC_CR_EXTRST_Msk) 
-    
+    RSTC_RESET_EXT_PROC = (RSTC_CR_PROCRST_Msk | RSTC_CR_EXTRST_Msk) 
+
 } RSTC_RESET_TYPE;
 
 typedef void (*RSTC_CALLBACK) (uintptr_t context);
@@ -146,4 +146,4 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_RSTC_H
+#endif // PLIB_RSTC_COMMON_H

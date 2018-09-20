@@ -40,8 +40,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_SUPC_H // Guards against multiple inclusion
-#define PLIB_SUPC_H
+#ifndef PLIB_SUPC_COMMON_H // Guards against multiple inclusion
+#define PLIB_SUPC_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -116,4 +116,4 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_SUPC_H
+#endif // PLIB_SUPC_COMMON_H

@@ -1,1 +1,1 @@
-    PM${PM_INDEX}_Initialize();
+    ${PM_INSTANCE_NAME}_Initialize();

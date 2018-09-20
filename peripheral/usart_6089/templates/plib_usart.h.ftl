@@ -1,14 +1,14 @@
 /*******************************************************************************
-  USART${INDEX?string} PLIB
+  ${USART_INSTANCE_NAME} PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_usart${INDEX?string}.h
+    plib_${USART_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    USART${INDEX?string} PLIB Header File
+    ${USART_INSTANCE_NAME} PLIB Header File
 
   Description:
     None
@@ -38,10 +38,10 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_USART${INDEX?string}_H
-#define PLIB_USART${INDEX?string}_H
+#ifndef PLIB_${USART_INSTANCE_NAME}_H
+#define PLIB_${USART_INSTANCE_NAME}_H
 
-#include "plib_usart.h"
+#include "plib_usart_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -57,44 +57,44 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
-#define USART${INDEX?string}_FrequencyGet()    (uint32_t)(${USART_CLOCK_FREQ}UL)
+#define ${USART_INSTANCE_NAME}_FrequencyGet()    (uint32_t)(${USART_CLOCK_FREQ}UL)
 
-/****************************** USART${INDEX?string} API *********************************/
+/****************************** ${USART_INSTANCE_NAME} API *********************************/
 
-void USART${INDEX?string}_Initialize( void );
+void ${USART_INSTANCE_NAME}_Initialize( void );
 
-USART_ERROR USART${INDEX?string}_ErrorGet( void );
+USART_ERROR ${USART_INSTANCE_NAME}_ErrorGet( void );
 
-bool USART${INDEX?string}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
+bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
-bool USART${INDEX?string}_Write( void *buffer, const size_t size );
+bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size );
 
-bool USART${INDEX?string}_Read( void *buffer, const size_t size );
+bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size );
 
 <#if USART_INTERRUPT_MODE == false>
-int USART${INDEX?string}_ReadByte(void);
+int ${USART_INSTANCE_NAME}_ReadByte(void);
 
-void USART${INDEX?string}_WriteByte(int data);
+void ${USART_INSTANCE_NAME}_WriteByte(int data);
 
-void USART${INDEX?string}_Sync(void);
+void ${USART_INSTANCE_NAME}_Sync(void);
 
-bool USART${INDEX?string}_TransmitterIsReady( void );
+bool ${USART_INSTANCE_NAME}_TransmitterIsReady( void );
 
-bool USART${INDEX?string}_ReceiverIsReady( void );
+bool ${USART_INSTANCE_NAME}_ReceiverIsReady( void );
 
 </#if>
 <#if USART_INTERRUPT_MODE == true>
-bool USART${INDEX?string}_WriteIsBusy( void );
+bool ${USART_INSTANCE_NAME}_WriteIsBusy( void );
 
-bool USART${INDEX?string}_ReadIsBusy( void );
+bool ${USART_INSTANCE_NAME}_ReadIsBusy( void );
 
-size_t USART${INDEX?string}_WriteCountGet( void );
+size_t ${USART_INSTANCE_NAME}_WriteCountGet( void );
 
-size_t USART${INDEX?string}_ReadCountGet( void );
+size_t ${USART_INSTANCE_NAME}_ReadCountGet( void );
 
-bool USART${INDEX?string}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context );
+bool ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context );
 
-bool USART${INDEX?string}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context );
+bool ${USART_INSTANCE_NAME}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context );
 
 // *****************************************************************************
 // *****************************************************************************
@@ -102,7 +102,7 @@ bool USART${INDEX?string}_ReadCallbackRegister( USART_CALLBACK callback, uintptr
 // *****************************************************************************
 // *****************************************************************************
 
-void USART${INDEX?string}_InterruptHandler( void );
+void ${USART_INSTANCE_NAME}_InterruptHandler( void );
 
 </#if>
 
@@ -113,4 +113,4 @@ void USART${INDEX?string}_InterruptHandler( void );
 
 #endif
 // DOM-IGNORE-END
-#endif // PLIB_USART${INDEX?string}_H
+#endif // PLIB_${USART_INSTANCE_NAME}_H

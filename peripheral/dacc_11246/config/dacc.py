@@ -89,17 +89,17 @@ def setDacSpeed(symbol, event):
 ################################################################################
 def instantiateComponent(daccComponent):
 
-    Database.clearSymbolValue("core", "DACC_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "DACC_CLOCK_ENABLE", True, 1)
-    instance = daccComponent.getID()[-1:]
+    daccInstanceName = daccComponent.createStringSymbol("DACC_INSTANCE_NAME", None)
+    daccInstanceName.setVisible(False)
+    daccInstanceName.setDefaultValue(daccComponent.getID().upper())
+
+    Database.clearSymbolValue("core", daccInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", daccInstanceName.getValue()+"_CLOCK_ENABLE", True, 1)
+
 
     Log.writeInfoMessage("--------------------------------------------------------------------")
-    Log.writeInfoMessage("************************** Running DACC"+ str(instance) +" *********")
+    Log.writeInfoMessage("************************** Running "+ daccInstanceName.getValue()+" *********")
     Log.writeInfoMessage("--------------------------------------------------------------------")
-    
-    daccIndex = daccComponent.createIntegerSymbol("INDEX", None)
-    daccIndex.setVisible(False)
-    daccIndex.setDefaultValue(int(instance))
     
     daccSym_MR_PRESCALER = daccComponent.createIntegerSymbol("DACC_MR_PRESCALER", None)
     daccSym_MR_PRESCALER.setLabel("Prescaler Value")
@@ -205,8 +205,8 @@ def instantiateComponent(daccComponent):
 ############################################################################
     configName = Variables.get("__CONFIGURATION_NAME")
     daccHeaderFile = daccComponent.createFileSymbol("DACC_HEADER", None)
-    daccHeaderFile.setSourcePath("../peripheral/dacc_11246/templates/plib_dacc.h")
-    daccHeaderFile.setOutputName("plib_dacc.h")
+    daccHeaderFile.setSourcePath("../peripheral/dacc_11246/templates/plib_dacc_common.h")
+    daccHeaderFile.setOutputName("plib_dacc_common.h")
     daccHeaderFile.setDestPath("peripheral/dacc/")
     daccHeaderFile.setProjectPath("config/" + configName + "/peripheral/dacc/")
     daccHeaderFile.setType("HEADER")
@@ -214,7 +214,7 @@ def instantiateComponent(daccComponent):
     
     daccHeader1File = daccComponent.createFileSymbol("DACC_HEADER1", None)
     daccHeader1File.setSourcePath("../peripheral/dacc_11246/templates/plib_dacc.h.ftl")
-    daccHeader1File.setOutputName("plib_dacc" + str(instance) + ".h")
+    daccHeader1File.setOutputName("plib_"+daccInstanceName.getValue().lower() + ".h")
     daccHeader1File.setMarkup(True)
     daccHeader1File.setDestPath("peripheral/dacc/")
     daccHeader1File.setProjectPath("config/" + configName + "/peripheral/dacc/")
@@ -223,7 +223,7 @@ def instantiateComponent(daccComponent):
 
     daccSource1File = daccComponent.createFileSymbol("DACC_SOURCE", None)
     daccSource1File.setSourcePath("../peripheral/dacc_11246/templates/plib_dacc.c.ftl")
-    daccSource1File.setOutputName("plib_dacc" + str(instance) + ".c")
+    daccSource1File.setOutputName("plib_"+daccInstanceName.getValue().lower() + ".c")
     daccSource1File.setMarkup(True)
     daccSource1File.setDestPath("peripheral/dacc/")
     daccSource1File.setProjectPath("config/" + configName + "/peripheral/dacc/")

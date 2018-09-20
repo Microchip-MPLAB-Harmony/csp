@@ -1,1 +1,1 @@
-	SUPC${INDEX?string}_Initialize();
+	${SUPC_INSTANCE_NAME}_Initialize();

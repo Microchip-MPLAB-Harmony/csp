@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Analog-to-Digital Converter(ADC${ADC_INDEX}) PLIB
+  Analog-to-Digital Converter(${ADC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_adc${ADC_INDEX}.h
+    plib_${ADC_INSTANCE_NAME?lower_case}.h
 
   Summary
-    ADC${ADC_INDEX} PLIB Header File.
+    ${ADC_INSTANCE_NAME} PLIB Header File.
 
   Description
     This file defines the interface to the ADC peripheral library. This
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_ADC${ADC_INDEX}_H      // Guards against multiple inclusion
-#define PLIB_ADC${ADC_INDEX}_H
+#ifndef PLIB_${ADC_INSTANCE_NAME}_H      // Guards against multiple inclusion
+#define PLIB_${ADC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -56,7 +56,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 #include "device.h"
-#include "plib_adc.h"
+#include "plib_adc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C Compatibility
@@ -76,17 +76,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 // *****************************************************************************
-/* ADC positive MUX input selection enum.
 
-  Summary:
-    Identifies ADC positive input pin to select.
-
-  Description:
-    Enum for the possible positive MUX input selections for the ADC.
-
-  Remarks:
-    None.
-*/
 
 // *****************************************************************************
 // *****************************************************************************
@@ -97,19 +87,19 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     this interface.
 */
 
-void ADC${ADC_INDEX}_Initialize( void );
+void ${ADC_INSTANCE_NAME}_Initialize( void );
 
-void ADC${ADC_INDEX}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput );
+void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput );
 
-void ADC${ADC_INDEX}_ConversionStart( void );
+void ${ADC_INSTANCE_NAME}_ConversionStart( void );
 
-uint16_t ADC${ADC_INDEX}_ConversionResultGet( void );
+uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void );
 
-bool ADC${ADC_INDEX}_ConversionStatusGet( void );
+bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void );
 
 <#if ADC_INTENSET_RESRDY = true>
 
-void ADC${ADC_INDEX}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
+void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
 </#if>
 
 
@@ -121,4 +111,4 @@ void ADC${ADC_INDEX}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context 
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_ADC${ADC_INDEX}_H */
+#endif /* PLIB_${ADC_INSTANCE_NAME}_H */

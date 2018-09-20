@@ -1,1 +1,1 @@
-	SPI${SPI_INDEX?string}_Initialize();
+	${SPI_INSTANCE_NAME}_Initialize();

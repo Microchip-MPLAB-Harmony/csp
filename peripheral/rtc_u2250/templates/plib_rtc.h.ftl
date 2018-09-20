@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Real Time Counter (RTC${RTC_INDEX}) PLIB
+  Real Time Counter (${RTC_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_rtc${RTC_INDEX}.h
+    plib_?${RTC_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    RTC${RTC_INDEX} PLIB Header file
+    ${RTC_INSTANCE_NAME} PLIB Header file
 
   Description:
     This file defines the interface to the RTC peripheral library. This
@@ -41,8 +41,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_RTC${RTC_INDEX}_H
-#define PLIB_RTC${RTC_INDEX}_H
+#ifndef PLIB_${RTC_INSTANCE_NAME}_H
+#define PLIB_${RTC_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -174,55 +174,55 @@ typedef struct
 } RTC_OBJECT;
 </#if>
 
-void RTC${RTC_INDEX}_Initialize(void);
+void ${RTC_INSTANCE_NAME}_Initialize(void);
 <#if RTC_FREQCORR>
-    <#lt>void RTC${RTC_INDEX}_FrequencyCorrect (int8_t correction);
+    <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction);
 </#if>
 <#if RTC_MODE0_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE0" ||
      RTC_MODE1_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE1" >
-    <#lt>bool RTC${RTC_INDEX}_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period);
+    <#lt>bool ${RTC_INSTANCE_NAME}_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period);
 </#if>
 <#if RTC_MODULE_SELECTION = "MODE0">
     <#if RTC_MODE0_INTERRUPT = false>
-        <#lt>bool RTC${RTC_INDEX}_Timer32CounterHasOverflowed ( void );
-        <#lt>bool RTC${RTC_INDEX}_Timer32CompareHasMatched(void);
+        <#lt>bool ${RTC_INSTANCE_NAME}_Timer32CounterHasOverflowed ( void );
+        <#lt>bool ${RTC_INSTANCE_NAME}_Timer32CompareHasMatched(void);
     </#if>
-    <#lt>void RTC${RTC_INDEX}_Timer32Start ( void );
-    <#lt>void RTC${RTC_INDEX}_Timer32Stop ( void );
-    <#lt>void RTC${RTC_INDEX}_Timer32CounterSet ( uint32_t count );
-    <#lt>uint32_t RTC${RTC_INDEX}_Timer32CounterGet ( void );
-    <#lt>uint32_t RTC${RTC_INDEX}_Timer32FrequencyGet ( void );
-    <#lt>void RTC${RTC_INDEX}_Timer32CompareSet ( uint32_t compareValue );
-    <#lt>uint32_t RTC${RTC_INDEX}_Timer32PeriodGet ( void );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer32Start ( void );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer32Stop ( void );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer32CounterSet ( uint32_t count );
+    <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32CounterGet ( void );
+    <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32FrequencyGet ( void );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer32CompareSet ( uint32_t compareValue );
+    <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32PeriodGet ( void );
     <#if RTC_MODE0_INTERRUPT = true>
-        <#lt>void RTC${RTC_INDEX}_Timer32InterruptEnable(RTC_TIMER32_INT_MASK interrupt);
-        <#lt>void RTC${RTC_INDEX}_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt);
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptEnable(RTC_TIMER32_INT_MASK interrupt);
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt);
     </#if>
 <#elseif RTC_MODULE_SELECTION = "MODE1">
     <#if RTC_MODE1_INTERRUPT = false>
-        <#lt>bool RTC${RTC_INDEX}_Timer16PeriodHasExpired ( void );
-        <#lt>bool RTC${RTC_INDEX}_Timer16CounterHasOverflowed ( void );
-        <#lt>bool RTC${RTC_INDEX}_Timer16Compare0HasMatched(void);
-        <#lt>bool RTC${RTC_INDEX}_Timer16Compare1HasMatched(void);
+        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16PeriodHasExpired ( void );
+        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16CounterHasOverflowed ( void );
+        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16Compare0HasMatched(void);
+        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16Compare1HasMatched(void);
     </#if>
-    <#lt>void RTC${RTC_INDEX}_Timer16Start ( void );
-    <#lt>void RTC${RTC_INDEX}_Timer16Stop ( void );
-    <#lt>void RTC${RTC_INDEX}_Timer16CounterSet ( uint16_t count );
-    <#lt>void RTC${RTC_INDEX}_Timer16PeriodSet ( uint16_t period );
-    <#lt>uint16_t RTC${RTC_INDEX}_Timer16PeriodGet ( void );
-    <#lt>uint16_t RTC${RTC_INDEX}_Timer16CounterGet ( void );
-    <#lt>uint32_t RTC${RTC_INDEX}_Timer16FrequencyGet ( void );
-    <#lt>void RTC${RTC_INDEX}_Timer16Compare0Set ( uint16_t comparisionValue );
-    <#lt>void RTC${RTC_INDEX}_Timer16Compare1Set ( uint16_t comparisionValue );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer16Start ( void );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer16Stop ( void );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer16CounterSet ( uint16_t count );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer16PeriodSet ( uint16_t period );
+    <#lt>uint16_t ${RTC_INSTANCE_NAME}_Timer16PeriodGet ( void );
+    <#lt>uint16_t ${RTC_INSTANCE_NAME}_Timer16CounterGet ( void );
+    <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer16FrequencyGet ( void );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer16Compare0Set ( uint16_t comparisionValue );
+    <#lt>void ${RTC_INSTANCE_NAME}_Timer16Compare1Set ( uint16_t comparisionValue );
     <#if RTC_MODE1_INTERRUPT = true>
-        <#lt>void RTC${RTC_INDEX}_Timer16InterruptEnable(RTC_TIMER16_INT_MASK interrupt);
-        <#lt>void RTC${RTC_INDEX}_Timer16InterruptDisable(RTC_TIMER16_INT_MASK interrupt);
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptEnable(RTC_TIMER16_INT_MASK interrupt);
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptDisable(RTC_TIMER16_INT_MASK interrupt);
     </#if>
 <#else>
-    <#lt>void RTC${RTC_INDEX}_RTCCTimeSet (struct tm * initialTime );
-    <#lt>void RTC${RTC_INDEX}_RTCCTimeGet ( struct tm * currentTime );
+    <#lt>void ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime );
+    <#lt>void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime );
     <#if RTC_MODE2_INTERRUPT = true>
-        <#lt>void RTC${RTC_INDEX}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask);
+        <#lt>void ${RTC_INSTANCE_NAME}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask);
     </#if>
 </#if>
 
@@ -230,11 +230,11 @@ void RTC${RTC_INDEX}_Initialize(void);
      (RTC_MODULE_SELECTION = "MODE1" && RTC_MODE1_INTERRUPT = true) ||
      (RTC_MODULE_SELECTION = "MODE2" && RTC_MODE2_INTERRUPT = true) >
     <#if RTC_MODULE_SELECTION = "MODE2">
-        <#lt>void RTC${RTC_INDEX}_RTCCCallbackRegister ( RTC_CALLBACK callback, uintptr_t context);
+        <#lt>void ${RTC_INSTANCE_NAME}_RTCCCallbackRegister ( RTC_CALLBACK callback, uintptr_t context);
     <#elseif RTC_MODULE_SELECTION = "MODE0">
-        <#lt>void RTC${RTC_INDEX}_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t context );
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t context );
     <#else>
-        <#lt>void RTC${RTC_INDEX}_Timer16CallbackRegister ( RTC_TIMER16_CALLBACK callback, uintptr_t context );
+        <#lt>void ${RTC_INSTANCE_NAME}_Timer16CallbackRegister ( RTC_TIMER16_CALLBACK callback, uintptr_t context );
     </#if>
 </#if>
 
@@ -244,4 +244,4 @@ void RTC${RTC_INDEX}_Initialize(void);
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_RTC${RTC_INDEX}_H */
+#endif /* PLIB_${RTC_INSTANCE_NAME}_H */

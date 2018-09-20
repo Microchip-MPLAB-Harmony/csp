@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_rswdt.h
+    plib_${RSWDT_INSTANCE_NAME?lower_case}.h
 
   Summary:
     Interface definition of the Watch Dog Timer Plib (RSWDT).
@@ -38,8 +38,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef RSWDT${rswdtIndex?string}_H    // Guards against multiple inclusion
-#define RSWDT${rswdtIndex?string}_H
+#ifndef ${RSWDT_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define ${RSWDT_INSTANCE_NAME}_H
 
 #include <stdint.h>
 #include <stddef.h>
@@ -68,10 +68,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#if>
 
 /***************************** RSWDT API *******************************/
-void RSWDT${rswdtIndex?string}_Initialize( void );
-void RSWDT${rswdtIndex?string}_Clear( void );
+void ${RSWDT_INSTANCE_NAME}_Initialize( void );
+void ${RSWDT_INSTANCE_NAME}_Clear( void );
 <#if rswdtinterruptMode == true>
-	<#lt>void RSWDT${rswdtIndex?string}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context );
+	<#lt>void ${RSWDT_INSTANCE_NAME}_CallbackRegister( RSWDT_CALLBACK callback, uintptr_t context );
 </#if>	
 
 #ifdef __cplusplus // Provide C++ Compatibility

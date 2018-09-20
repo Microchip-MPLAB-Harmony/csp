@@ -1,1 +1,1 @@
-	TWIHS${INDEX?string}_Initialize();
+	${TWIHS_INSTANCE_NAME}_Initialize();

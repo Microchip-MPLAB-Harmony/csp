@@ -1,17 +1,17 @@
 /*******************************************************************************
- Interface definition of EFC PLIB.
+ Interface definition of ${EFC_INSTANCE_NAME} PLIB.
 
  Company:
     Microchip Technology Inc.
 
  File Name:
-    plib_EFC.h
+    plib_${EFC_INSTANCE_NAME?lower_case}.h
 
  Summary:
-    Interface definition of EFC Plib.
+    Interface definition of ${EFC_INSTANCE_NAME} Plib.
 
  Description:
-    This file defines the interface for the EFC Plib.
+    This file defines the interface for the ${EFC_INSTANCE_NAME} Plib.
     It allows user to Program, Erase and lock the on-chip FLASH memory.
 *******************************************************************************/
 
@@ -37,8 +37,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef EFC${INDEX?string}_H    // Guards against multiple inclusion
-#define EFC${INDEX?string}_H
+#ifndef ${EFC_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define ${EFC_INSTANCE_NAME}_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -56,13 +56,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#define EFC${INDEX?string}_SECTORSIZE              ${FLASH_ERASE_SIZE}
-#define EFC${INDEX?string}_PAGESIZE                ${FLASH_PROGRAM_SIZE}
-#define EFC${INDEX?string}_LOCKSIZE                0x4000
+#define ${EFC_INSTANCE_NAME}_SECTORSIZE              ${FLASH_ERASE_SIZE}
+#define ${EFC_INSTANCE_NAME}_PAGESIZE                ${FLASH_PROGRAM_SIZE}
+#define ${EFC_INSTANCE_NAME}_LOCKSIZE                0x4000
 <#if DRV_MEMORY_CONNECTED == true>
-    <#lt>#define EFC${INDEX?string}_START_ADDRESS           0x${START_ADDRESS}
-    <#lt>#define EFC${INDEX?string}_MEDIA_SIZE              ${MEMORY_MEDIA_SIZE}
-    <#lt>#define EFC${INDEX?string}_ERASE_BUFFER_SIZE       ${ERASE_BUFFER_SIZE}
+    <#lt>#define ${EFC_INSTANCE_NAME}_START_ADDRESS           0x${START_ADDRESS}
+    <#lt>#define ${EFC_INSTANCE_NAME}_MEDIA_SIZE              ${MEMORY_MEDIA_SIZE}
+    <#lt>#define ${EFC_INSTANCE_NAME}_ERASE_BUFFER_SIZE       ${ERASE_BUFFER_SIZE}
 </#if>
 
 
@@ -88,24 +88,24 @@ typedef enum
     <#lt>} EFC_OBJECT ;
 </#if>
 
-bool EFC${INDEX?string}_Read( uint32_t *data, uint32_t length, uint32_t address );
+bool ${EFC_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address );
 
-bool EFC${INDEX?string}_SectorErase( uint32_t address );
+bool ${EFC_INSTANCE_NAME}_SectorErase( uint32_t address );
 
-bool EFC${INDEX?string}_PageWrite( uint32_t *data, uint32_t address );
+bool ${EFC_INSTANCE_NAME}_PageWrite( uint32_t *data, uint32_t address );
 
-bool EFC${INDEX?string}_QuadWordWrite( uint32_t *data, uint32_t address );
+bool ${EFC_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address );
 
-EFC_ERROR EFC${INDEX?string}_ErrorGet( void );
+EFC_ERROR ${EFC_INSTANCE_NAME}_ErrorGet( void );
 
-bool EFC${INDEX?string}_IsBusy(void);
+bool ${EFC_INSTANCE_NAME}_IsBusy(void);
 
-void EFC${INDEX?string}_RegionLock(uint32_t address);
+void ${EFC_INSTANCE_NAME}_RegionLock(uint32_t address);
 
-void EFC${INDEX?string}_RegionUnlock(uint32_t address);
+void ${EFC_INSTANCE_NAME}_RegionUnlock(uint32_t address);
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>void EFC${INDEX?string}_CallbackRegister( EFC_CALLBACK callback, uintptr_t context );
+    <#lt>void ${EFC_INSTANCE_NAME}_CallbackRegister( EFC_CALLBACK callback, uintptr_t context );
 </#if>
 
 // DOM-IGNORE-BEGIN

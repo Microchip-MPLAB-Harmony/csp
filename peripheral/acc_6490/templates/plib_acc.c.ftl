@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_acc${INDEX?string}.c
+    plib_${ACC_INSTANCE_NAME?lower_case}.c
 
   Summary:
     ACC Source File
@@ -37,7 +37,7 @@ CONSEQUENTIAL DAMAGES, LOST  PROFITS  OR  LOST  DATA,  COST  OF  PROCUREMENT  OF
 SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
-#include "plib_acc${INDEX?string}.h"
+#include "plib_${ACC_INSTANCE_NAME?lower_case}.h"
 
 <#--Implementation-->
 // *****************************************************************************
@@ -46,53 +46,53 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-void ACC${INDEX?string}_Initialize (void)
+void ${ACC_INSTANCE_NAME}_Initialize (void)
 {
     /*Reset ACC registers*/
-	ACC_REGS->ACC_CR = ACC_CR_SWRST_Msk;
+	${ACC_INSTANCE_NAME}_REGS->ACC_CR = ACC_CR_SWRST_Msk;
     
     /*Set Comparator Positive and Negative Input, Output Invert status to 
       Enable/Disable, Fault Generation to Enable/Disable, Set Fault source and 
       Output Edge type*/
-	ACC_REGS->ACC_MR = ACC_MR_SELMINUS(${ACC_MR_SELMINUS})| ACC_MR_SELPLUS(${ACC_MR_SELPLUS}) | ACC_MR_EDGETYP(${ACC_MR_EDGETYPE}) \
+	${ACC_INSTANCE_NAME}_REGS->ACC_MR = ACC_MR_SELMINUS(${ACC_MR_SELMINUS})| ACC_MR_SELPLUS(${ACC_MR_SELPLUS}) | ACC_MR_EDGETYP(${ACC_MR_EDGETYPE}) \
 							${ACC_ACR_INV?then('| ACC_MR_INV_Msk', '')} ${ACC_ACR_FE?then('| ACC_MR_FE_Msk', '')} | ACC_MR_SELFS_${ACC_MR_SELFS} | ACC_MR_ACEN_Msk;
 
     /*Set Current level and Hysteresis level*/    
-    ACC_REGS->ACC_ACR = ACC_ACR_ISEL_${ACC_ACR_ISEL} | ACC_ACR_HYST(${ACC_ACR_HYST});       
+    ${ACC_INSTANCE_NAME}_REGS->ACC_ACR = ACC_ACR_ISEL_${ACC_ACR_ISEL} | ACC_ACR_HYST(${ACC_ACR_HYST});       
 
     <#if INTERRUPT_MODE == true>
 	/* Enable Interrupt 	*/
-    ACC_REGS->ACC_IER = ACC_IER_CE_Msk;
+    ${ACC_INSTANCE_NAME}_REGS->ACC_IER = ACC_IER_CE_Msk;
     </#if>
 	
     /*Wait till output mask period gets over*/
-    while (ACC_REGS->ACC_ISR& (uint32_t) ACC_ISR_MASK_Msk);  
+    while (${ACC_INSTANCE_NAME}_REGS->ACC_ISR& (uint32_t) ACC_ISR_MASK_Msk);  
 }
 
-bool ACC${INDEX?string}_StatusGet (ACC_STATUS_SOURCE status)
+bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status)
 {
-    return (bool)(ACC_REGS->ACC_ISR& status); 
+    return (bool)(${ACC_INSTANCE_NAME}_REGS->ACC_ISR& status); 
 }
 
 <#if INTERRUPT_MODE == true>
 
-ACC_OBJECT acc${INDEX?string}Obj;
+ACC_OBJECT ${ACC_INSTANCE_NAME?lower_case}Obj;
 
-void ACC${INDEX?string}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context)
+void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context)
 {
-    acc${INDEX?string}Obj.callback = callback;
-    acc${INDEX?string}Obj.context = context;
+    ${ACC_INSTANCE_NAME?lower_case}Obj.callback = callback;
+    ${ACC_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-void ACC${INDEX?string}_InterruptHandler( void )
+void ${ACC_INSTANCE_NAME}_InterruptHandler( void )
 {
 	// Clear the interrupt
-    ACC_REGS->ACC_ISR; 
+    ${ACC_INSTANCE_NAME}_REGS->ACC_ISR; 
 
 	// Callback user function 
-	if(acc${INDEX?string}Obj.callback != NULL)
+	if(${ACC_INSTANCE_NAME?lower_case}Obj.callback != NULL)
 	{
-        acc${INDEX?string}Obj.callback(acc${INDEX?string}Obj.context);		
+        ${ACC_INSTANCE_NAME?lower_case}Obj.callback(${ACC_INSTANCE_NAME?lower_case}Obj.context);		
 	}
 }
 </#if>

@@ -6,7 +6,7 @@ global tcSym_OperationMode
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
-global tcInstanceIndex
+global tcInstanceName
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -64,9 +64,9 @@ def setTCInterruptData(status, tcMode):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if status == True:
-        Database.setSymbolValue("core", InterruptHandler, "TC" + tcInstanceIndex + "_" + tcMode + "InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, tcInstanceName.getValue() + "_" + tcMode + "InterruptHandler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, "TC" + tcInstanceIndex + "_Handler", 2)
+        Database.setSymbolValue("core", InterruptHandler, instnaceName.getValue() + "_Handler", 2)
 
 def updateTCInterruptStatus(symbol, event):
 
@@ -119,28 +119,26 @@ def instantiateComponent(tcComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
-    global tcInstanceIndex
+    global tcInstanceName
 
-    tcInstanceIndex = tcComponent.getID()[-1:]
-    Log.writeInfoMessage("Running TC" + str(tcInstanceIndex))
+    tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
+    tcInstanceName.setVisible(False)
+    tcInstanceName.setDefaultValue(tcComponent.getID().upper())
+    tcInstanceName.setDependencies(updateCodeGenerationProperty, ["TC_OPERATION_MODE", "TC_SLAVE_MODE"])
+    Log.writeInfoMessage("Running " + tcInstanceName.getValue())
 
     #clock enable
-    Database.clearSymbolValue("core", "TC" + tcInstanceIndex + "_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "TC" + tcInstanceIndex + "_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
-    #index
-    tcSym_Index = tcComponent.createIntegerSymbol("TC_INDEX", None)
-    tcSym_Index.setDefaultValue(int(tcInstanceIndex))
-    tcSym_Index.setVisible(False)
-    tcSym_Index.setDependencies(updateCodeGenerationProperty, ["TC_OPERATION_MODE", "TC_SLAVE_MODE"])
-
-    tcInstanceMasterNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\"TC" + tcInstanceIndex + "\"]/parameters/param@[name=\"MASTER_SLAVE_MODE\"]")
+    tcInstanceMasterNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters/param@[name=\"MASTER_SLAVE_MODE\"]")
     tcInstanceMasterValue = int(tcInstanceMasterNode.getAttribute("value"))
     isMasterSlaveModeEnable = False
     
     if (tcInstanceMasterValue == 2):
         activeComponentList = Database.getActiveComponentIDs()
-        masterComponentID = "tc" + str(int(tcInstanceIndex) - 1)
+        temp = int(tcInstanceName.getValue().split("TC")[1])
+        masterComponentID = "tc" + str(temp - 1)
         masterComponentSymbolId = masterComponentID + ".TC_CTRLA_MODE"
 
         if masterComponentID in activeComponentList:
@@ -256,16 +254,16 @@ def instantiateComponent(tcComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = "TC" + tcInstanceIndex + "_INTERRUPT_ENABLE"
-    InterruptHandler = "TC" + tcInstanceIndex + "_INTERRUPT_HANDLER"
-    InterruptHandlerLock = "TC" + tcInstanceIndex + "_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = "TC" + tcInstanceIndex + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = tcInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    InterruptHandler = tcInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = tcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = tcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and Interrupt
     Database.clearSymbolValue("core", InterruptVector)
     Database.setSymbolValue("core", InterruptVector, True, 2)
     Database.clearSymbolValue("core", InterruptHandler)
-    Database.setSymbolValue("core", InterruptHandler, "TC" + tcInstanceIndex + "_TimerInterruptHandler", 2)
+    Database.setSymbolValue("core", InterruptHandler, tcInstanceName.getValue() + "_TimerInterruptHandler", 2)
     Database.clearSymbolValue("core", InterruptHandlerLock)
     Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
 
@@ -277,14 +275,14 @@ def instantiateComponent(tcComponent):
     # Interrupt Warning status
     tcSym_IntEnComment = tcComponent.createCommentSymbol("TC_INTERRUPT_ENABLE_COMMENT", None)
     tcSym_IntEnComment.setVisible(False)
-    tcSym_IntEnComment.setLabel("Warning!!! TC" + tcInstanceIndex + " Interrupt is Disabled in Interrupt Manager")
+    tcSym_IntEnComment.setLabel("Warning!!! "+tcInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
     tcSym_IntEnComment.setDependencies(updateTCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
 
     # Clock Warning status
     tcSym_ClkEnComment = tcComponent.createCommentSymbol("TC_CLOCK_ENABLE_COMMENT", None)
     tcSym_ClkEnComment.setLabel("Warning!!! TC Peripheral Clock is Disabled in Clock Manager")
     tcSym_ClkEnComment.setVisible(False)
-    tcSym_ClkEnComment.setDependencies(updateTCClockWarringStatus, ["core.TC" + tcInstanceIndex + "_CLOCK_ENABLE"])
+    tcSym_ClkEnComment.setDependencies(updateTCClockWarringStatus, ["core."+tcInstanceName.getValue()+"_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
@@ -293,16 +291,16 @@ def instantiateComponent(tcComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     tcSym_CommonHeaderFile = tcComponent.createFileSymbol("TC_COMMON_HEADER", None)
-    tcSym_CommonHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/plib_tc.h")
-    tcSym_CommonHeaderFile.setOutputName("plib_tc.h")
+    tcSym_CommonHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_common.h")
+    tcSym_CommonHeaderFile.setOutputName("plib_tc_common.h")
     tcSym_CommonHeaderFile.setDestPath("/peripheral/tc/")
     tcSym_CommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcSym_CommonHeaderFile.setType("HEADER")
-    tcSym_CommonHeaderFile.setMarkup(True)
+    tcSym_CommonHeaderFile.setMarkup(False)
 
     tcSym_TimerHeaderFile = tcComponent.createFileSymbol("TC_TIMER_HEADER", None)
     tcSym_TimerHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_timer.h.ftl")
-    tcSym_TimerHeaderFile.setOutputName("plib_tc" + tcInstanceIndex + ".h")
+    tcSym_TimerHeaderFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".h")
     tcSym_TimerHeaderFile.setDestPath("/peripheral/tc/")
     tcSym_TimerHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcSym_TimerHeaderFile.setType("HEADER")
@@ -310,7 +308,7 @@ def instantiateComponent(tcComponent):
 
     tcSym_TimerSourceFile = tcComponent.createFileSymbol("TC_TIMER_SOURCE", None)
     tcSym_TimerSourceFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_timer.c.ftl")
-    tcSym_TimerSourceFile.setOutputName("plib_tc" + tcInstanceIndex + ".c")
+    tcSym_TimerSourceFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".c")
     tcSym_TimerSourceFile.setDestPath("/peripheral/tc/")
     tcSym_TimerSourceFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcSym_TimerSourceFile.setType("SOURCE")
@@ -318,7 +316,7 @@ def instantiateComponent(tcComponent):
 
     tcSym_CompareHeaderFile = tcComponent.createFileSymbol("TC_COMPARE_HEADER", None)
     tcSym_CompareHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_compare.h.ftl")
-    tcSym_CompareHeaderFile.setOutputName("plib_tc" + tcInstanceIndex + ".h")
+    tcSym_CompareHeaderFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".h")
     tcSym_CompareHeaderFile.setDestPath("/peripheral/tc/")
     tcSym_CompareHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcSym_CompareHeaderFile.setType("HEADER")
@@ -326,7 +324,7 @@ def instantiateComponent(tcComponent):
 
     tcSym_CompareSourceFile = tcComponent.createFileSymbol("TC_COMPARE_SOURCE", None)
     tcSym_CompareSourceFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_compare.c.ftl")
-    tcSym_CompareSourceFile.setOutputName("plib_tc" + tcInstanceIndex + ".c")
+    tcSym_CompareSourceFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".c")
     tcSym_CompareSourceFile.setDestPath("/peripheral/tc/")
     tcSym_CompareSourceFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcSym_CompareSourceFile.setType("SOURCE")
@@ -334,7 +332,7 @@ def instantiateComponent(tcComponent):
 
     tcSym_CaptureHeaderFile = tcComponent.createFileSymbol("TC_CAPTURE_HEADER", None)
     tcSym_CaptureHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_capture.h.ftl")
-    tcSym_CaptureHeaderFile.setOutputName("plib_tc" + tcInstanceIndex + ".h")
+    tcSym_CaptureHeaderFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".h")
     tcSym_CaptureHeaderFile.setDestPath("/peripheral/tc/")
     tcSym_CaptureHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcSym_CaptureHeaderFile.setType("HEADER")
@@ -342,7 +340,7 @@ def instantiateComponent(tcComponent):
 
     tcSym_CaptureSourceFile = tcComponent.createFileSymbol("TC_CAPTURE_SOURCE", None)
     tcSym_CaptureSourceFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_capture.c.ftl")
-    tcSym_CaptureSourceFile.setOutputName("plib_tc" + tcInstanceIndex + ".c")
+    tcSym_CaptureSourceFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".c")
     tcSym_CaptureSourceFile.setDestPath("/peripheral/tc/")
     tcSym_CaptureSourceFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcSym_CaptureSourceFile.setType("SOURCE")

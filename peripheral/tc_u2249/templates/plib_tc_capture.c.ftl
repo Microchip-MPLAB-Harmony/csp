@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Timer/Counter(TC${TC_INDEX}) PLIB
+  Timer/Counter(${TC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_TC${TC_INDEX}.c
+    plib_${TC_INSTANCE_NAME}.c
 
   Summary
-    TC${TC_INDEX} PLIB Implementation File.
+    ${TC_INSTANCE_NAME} PLIB Implementation File.
 
   Description
     This file defines the interface to the TC peripheral library. This
@@ -53,7 +53,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 #include "device.h"
-#include "plib_tc${TC_INDEX}.h"
+#include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -155,70 +155,70 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 </#compress>
 
-volatile static uint32_t TC${TC_INDEX}_CaptureStatus;  /* saves interrupt status */
+volatile static uint32_t ${TC_INSTANCE_NAME}_CaptureStatus;  /* saves interrupt status */
 
 <#if TC_INTSET_VAL != "">
-TC_CALLBACK_OBJ TC${TC_INDEX}_CallbackObject;
+TC_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: TC${TC_INDEX} Implementation
+// Section: ${TC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
-void TC${TC_INDEX}_CaptureInitialize( void )
+void ${TC_INSTANCE_NAME}_CaptureInitialize( void )
 {
     /* Reset TC */
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_SWRST_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_SWRST_Msk;
 
-    while((TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_SWRST_Msk) == TC_SYNCBUSY_SWRST_Msk)
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_SWRST_Msk) == TC_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for Write Synchronization */
     }
 
     /* Configure counter mode, prescaler, standby & on demand mode */
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE} | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER} | TC_CTRLA_PRESCSYNC_PRESC
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE} | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER} | TC_CTRLA_PRESCSYNC_PRESC
                                   <#if TC_CTRLA_VAL?has_content>| ${TC_CTRLA_VAL}</#if> <#rt>
                                   <#lt>${TC_CTRLA_RUNSTDBY?then('| TC_CTRLA_RUNSTDBY_Msk', '')} <#rt>
                                   <#lt>${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};
 
 <#if TC_DRVCTRL_VAL?has_content>
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = ${TC_DRVCTRL_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = ${TC_DRVCTRL_VAL};
 </#if>
     
 <#if TC_EVCTRL_VAL?has_content>
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
 </#if>
 
     /* Clear all interrupt flags */
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 
 <#if TC_INTSET_VAL != "">
     /* Enable Interrupt */
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = ${TC_INTSET_VAL};
-    TC${TC_INDEX}_CallbackObject.callback = NULL;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = ${TC_INTSET_VAL};
+    ${TC_INSTANCE_NAME}_CallbackObject.callback = NULL;
 </#if>
 }
 
 
-void TC${TC_INDEX}_CaptureStart( void )
+void ${TC_INSTANCE_NAME}_CaptureStart( void )
 {
     /* Enable TC */
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CTRLA |= TC_CTRLA_ENABLE_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA |= TC_CTRLA_ENABLE_Msk;
 
-    while((TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk) == TC_SYNCBUSY_ENABLE_Msk)
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk) == TC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Write Synchronization */
     }
 }
 
-void TC${TC_INDEX}_CaptureStop( void )
+void ${TC_INSTANCE_NAME}_CaptureStop( void )
 {
     /* Disable TC */
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CTRLA &= ~TC_CTRLA_ENABLE_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA &= ~TC_CTRLA_ENABLE_Msk;
 
-    while((TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk) == TC_SYNCBUSY_ENABLE_Msk)
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_ENABLE_Msk) == TC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Write Synchronization */
     }
@@ -226,70 +226,70 @@ void TC${TC_INDEX}_CaptureStop( void )
 
 <#if TC_CTRLA_MODE = "COUNT8">
 
-uint8_t TC${TC_INDEX}_Capture8bitChannel0Get( void )
+uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel0Get( void )
 {
-    return (uint8_t)TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
+    return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
 
-uint8_t TC${TC_INDEX}_Capture8bitChannel1Get( void )
+uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel1Get( void )
 {
-    return (uint8_t)TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CC[1];
+    return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1];
 }
 
 <#elseif TC_CTRLA_MODE = "COUNT16">
 
-uint16_t TC${TC_INDEX}_Capture16bitChannel0Get( void )
+uint16_t ${TC_INSTANCE_NAME}_Capture16bitChannel0Get( void )
 {
-    return (uint16_t)TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
+    return (uint16_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
 
-uint16_t TC${TC_INDEX}_Capture16bitChannel1Get( void )
+uint16_t ${TC_INSTANCE_NAME}_Capture16bitChannel1Get( void )
 {
-    return (uint16_t)TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CC[1];
+    return (uint16_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1];
 }
 <#elseif TC_CTRLA_MODE = "COUNT32">
 
-uint32_t TC${TC_INDEX}_Capture32bitChannel0Get( void )
+uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel0Get( void )
 {
-    return TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
+    return ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
 
-uint32_t TC${TC_INDEX}_Capture32bitChannel1Get( void )
+uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel1Get( void )
 {
-    return TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_CC[1];
+    return ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1];
 }
 </#if>
 
 
 
 <#if TC_INTSET_VAL != "">
-void TC${TC_INDEX}_CaptureCallbackRegister( TC_CALLBACK callback, uintptr_t context )
+void ${TC_INSTANCE_NAME}_CaptureCallbackRegister( TC_CALLBACK callback, uintptr_t context )
 {
-    TC${TC_INDEX}_CallbackObject.callback = callback;
-    TC${TC_INDEX}_CallbackObject.context = context;
+    ${TC_INSTANCE_NAME}_CallbackObject.callback = callback;
+    ${TC_INSTANCE_NAME}_CallbackObject.context = context;
 }
 
-void TC${TC_INDEX}_InterruptHandler( void )
+void ${TC_INSTANCE_NAME}_InterruptHandler( void )
 {
-    TC${TC_INDEX}_CaptureStatus = TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+    ${TC_INSTANCE_NAME}_CaptureStatus = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
 
-    if(TC${TC_INDEX}_CallbackObject.callback != NULL)
+    if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        TC${TC_INDEX}_CallbackObject.callback(TC${TC_INDEX}_CallbackObject.context);
+        ${TC_INSTANCE_NAME}_CallbackObject.callback(${TC_INSTANCE_NAME}_CallbackObject.context);
     }
     
     /* Clear all interrupts */
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 }
 </#if>
 
-TC_CAPTURE_STATUS TC${TC_INDEX}_CaptureStatusGet(void)
+TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet(void)
 {
     TC_CAPTURE_STATUS capture_status;
-    capture_status = (TC${TC_INDEX}_CaptureStatus | TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_CAPTURE_STATUS_MSK;
+    capture_status = (${TC_INSTANCE_NAME}_CaptureStatus | ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_CAPTURE_STATUS_MSK;
     /* Clear interrupts and flag */
-    TC${TC_INDEX}_CaptureStatus = 0U;
-    TC${TC_INDEX}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+    ${TC_INSTANCE_NAME}_CaptureStatus = 0U;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
     return capture_status;
 }
 

@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_spi${SPI_INDEX?string}.h
+    plib_${SPI_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    SPI${SPI_INDEX?string} PLIB Header File
+    ${SPI_INSTANCE_NAME} PLIB Header File
 
   Description:
     This file has prototype of all the interfaces provided for particular
@@ -39,11 +39,11 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_SPI${SPI_INDEX?string}_H
-#define PLIB_SPI${SPI_INDEX?string}_H
+#ifndef PLIB_${SPI_INSTANCE_NAME}_H
+#define PLIB_${SPI_INSTANCE_NAME}_H
 
 #include "device.h"
-#include "plib_spi.h"
+#include "plib_spi_common.h"
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
@@ -52,32 +52,32 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 #endif
 
-/****************************** SPI${SPI_INDEX?string} Interface *********************************/
+/****************************** ${SPI_INSTANCE_NAME} Interface *********************************/
 
-void SPI${SPI_INDEX?string}_Initialize ( void );
+void ${SPI_INSTANCE_NAME}_Initialize ( void );
 
-bool SPI${SPI_INDEX?string}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
+bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
 
-static inline bool SPI${SPI_INDEX?string}_Write(void* pTransmitData, size_t txSize)
+static inline bool ${SPI_INSTANCE_NAME}_Write(void* pTransmitData, size_t txSize)
 {
-    return(SPI${SPI_INDEX?string}_WriteRead(pTransmitData, txSize, NULL, 0));
+    return(${SPI_INSTANCE_NAME}_WriteRead(pTransmitData, txSize, NULL, 0));
 }
 
-static inline bool SPI${SPI_INDEX?string}_Read(void* pReceiveData, size_t rxSize)
+static inline bool ${SPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize)
 {
-    return(SPI${SPI_INDEX?string}_WriteRead(NULL, 0, pReceiveData, rxSize));
+    return(${SPI_INSTANCE_NAME}_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
-bool SPI${SPI_INDEX?string}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
+bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
 <#if SPI_INTERRUPT_MODE == true>
-bool SPI${SPI_INDEX?string}_IsBusy(void);
+bool ${SPI_INSTANCE_NAME}_IsBusy(void);
 
-SPI_ERROR SPI${SPI_INDEX?string}_ErrorGet ( void );
+SPI_ERROR ${SPI_INSTANCE_NAME}_ErrorGet ( void );
 
-void SPI${SPI_INDEX?string}_CallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
+void ${SPI_INSTANCE_NAME}_CallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
 
-void SPI${SPI_INDEX?string}_InterruptHandler(void);
+void ${SPI_INSTANCE_NAME}_InterruptHandler(void);
 </#if>
 
 /* Provide C++ Compatibility */
@@ -87,7 +87,7 @@ void SPI${SPI_INDEX?string}_InterruptHandler(void);
 
 #endif
 
-#endif // PLIB_SPI${SPI_INDEX?string}_H
+#endif // PLIB_${SPI_INSTANCE_NAME}_H
 
 /*******************************************************************************
  End of File

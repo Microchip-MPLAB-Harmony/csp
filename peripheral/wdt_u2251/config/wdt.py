@@ -1,3 +1,4 @@
+global wdtInstanceName
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
@@ -19,7 +20,7 @@ def updateWDTInterruptStatus(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, "WDT0_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, wdtInstanceName.getValue() + "_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, "WDT_Handler", 2)
 
@@ -58,6 +59,12 @@ def updateWDTEnarlyInterruptVisibleProperty(symbol, event):
 #############################################  WDT  ###############################################
 ###################################################################################################
 
+instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"WDT\"]").getChildren()
+
+wdtInstanceName = coreComponent.createStringSymbol("WDT_INSTANCE_NAME", None)
+wdtInstanceName.setVisible(False)
+wdtInstanceName.setDefaultValue(instances[0].getAttribute("name"))
+
 #WDT menu
 wdtMenu = coreComponent.createMenuSymbol("WDT_MENU", None)
 wdtMenu.setLabel("WDT")
@@ -81,10 +88,10 @@ wdtSym_CTRLA_EW.setDependencies(updateWDTEnarlyInterruptVisibleProperty, ["WDT_U
 #### Dependency ####
 ############################################################################
 
-InterruptVector = "WDT_INTERRUPT_ENABLE"
-InterruptHandler = "WDT_INTERRUPT_HANDLER"
-InterruptHandlerLock = "WDT_INTERRUPT_HANDLER_LOCK"
-InterruptVectorUpdate = "WDT_INTERRUPT_ENABLE_UPDATE"
+InterruptVector = wdtInstanceName.getValue() + "_INTERRUPT_ENABLE"
+InterruptHandler = wdtInstanceName.getValue() + "_INTERRUPT_HANDLER"
+InterruptHandlerLock = wdtInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+InterruptVectorUpdate = wdtInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
 # Interrupt Dynamic settings
 wdtSym_UpdateInterruptStatus = coreComponent.createBooleanSymbol("WDT_INTERRUPT_STATUS", wdtSym_Use)
@@ -108,7 +115,7 @@ wdtModuleID = wdtModuleNode.getAttribute("id")
 
 wdtHeaderFile = coreComponent.createFileSymbol("WDT_HEADER", None)
 wdtHeaderFile.setSourcePath("../peripheral/wdt_" + wdtModuleID + "/templates/plib_wdt.h.ftl")
-wdtHeaderFile.setOutputName("plib_wdt0.h")
+wdtHeaderFile.setOutputName("plib_" + wdtInstanceName.getValue().lower() + ".h")
 wdtHeaderFile.setDestPath("/peripheral/wdt/")
 wdtHeaderFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
 wdtHeaderFile.setType("HEADER")
@@ -117,7 +124,7 @@ wdtHeaderFile.setEnabled(False)
 
 wdtSourceFile = coreComponent.createFileSymbol("WDT_SOURCE", None)
 wdtSourceFile.setSourcePath("../peripheral/wdt_" + wdtModuleID + "/templates/plib_wdt.c.ftl")
-wdtSourceFile.setOutputName("plib_wdt0.c")
+wdtSourceFile.setOutputName("plib_" + wdtInstanceName.getValue().lower() + ".c")
 wdtSourceFile.setDestPath("/peripheral/wdt/")
 wdtSourceFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
 wdtSourceFile.setType("SOURCE")

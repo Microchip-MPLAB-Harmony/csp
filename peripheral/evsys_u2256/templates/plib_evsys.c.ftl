@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_evsys.c
+    plib_${EVSYS_INSTANCE_NAME?lower_case}.c
 
   Summary:
     EVSYS Source File
@@ -39,13 +39,13 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 #include "device.h"
-#include "plib_evsys${INDEX?string}.h"
+#include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
 
 <#if EVSYS_INTERRUPT_MODE == true>
 	<#lt>EVSYS_OBJECT evsys;
 </#if>
 
-void EVSYS${INDEX?string}_Initialize( void )
+void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 {
 <#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
 <#assign TOTAL_USER = EVSYS_USER_NUMBER?number >
@@ -59,9 +59,9 @@ void EVSYS${INDEX?string}_Initialize( void )
 	<#if .vars[CHANNEL_ENABLE]?has_content>
 	<#if (.vars[CHANNEL_ENABLE] != false)>
 	/* Event Channel ${i} Configuration */
-	EVSYS_REGS->EVSYS_CHANNEL[${i}] = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
+	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL[${i}] = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
 									${(.vars[RUNSTANDBY])?then('| EVSYS_CHANNEL_RUNSTDBY', '')} ${(.vars[ONDEMAND])?then('| EVSYS_CHANNEL_ONDEMAND', '')};
-	while(EVSYS_REGS->EVSYS_CHSTATUS && EVSYS_CHSTATUS_USRRDY${i}_Msk != EVSYS_CHSTATUS_USRRDY${i}_Msk);
+	while(${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHSTATUS && EVSYS_CHSTATUS_USRRDY${i}_Msk != EVSYS_CHSTATUS_USRRDY${i}_Msk);
 	
 	</#if>
 	</#if>
@@ -72,30 +72,30 @@ void EVSYS${INDEX?string}_Initialize( void )
 	<#assign CHANNEL = "EVSYS_USER_" + i >
 	<#if .vars[CHANNEL]?has_content>
 	<#if .vars[CHANNEL] != '0'>
-	EVSYS_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]});
+	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]});
 	</#if>
 	</#if>
 </#list>
 <#if EVSYS_INTERRUPT_MODE>
 
 	/*Interupt setting for Event System*/
-	EVSYS_REGS->EVSYS_INTESET = ${EVSYS_INTERRUPT_VALUE};
+	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTESET = ${EVSYS_INTERRUPT_VALUE};
 </#if>
 }
 
 <#if EVSYS_INTERRUPT_MODE == true>
 		
-	<#lt>void EVSYS${INDEX?string}_InterruptEnable(EVSYS_INT_MASK interrupt)
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	EVSYS_REGS->EVSYS_INTENSET = interrupt;
+	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = interrupt;
 	<#lt>}
 
-	<#lt>void EVSYS${INDEX?string}_InterruptDisable(EVSYS_INT_MASK interrupt)
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	EVSYS_REGS->EVSYS_INTENCLR = interrupt;
+	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENCLR = interrupt;
 	<#lt>}
 
-	<#lt>void EVSYS${INDEX?string}_CallbackRegister( EVSYS_CALLBACK callback, uintptr_t context )
+	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister( EVSYS_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	evsys.callback = callback;
 	<#lt>	evsys.context = context;
@@ -103,10 +103,10 @@ void EVSYS${INDEX?string}_Initialize( void )
 </#if>
 
 <#if EVSYS_INTERRUPT_MODE == true>
-	<#lt>void EVSYS${INDEX?string}_InterruptHandler( void )
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptHandler( void )
 	<#lt>{
-	<#lt>	volatile uint32_t status = EVSYS_REGS->EVSYS_INTFLAG;
-	<#lt>	EVSYS_REGS->EVSYS_INTFLAG = EVSYS_INTFLAG_Msk;
+	<#lt>	volatile uint32_t status = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG;
+	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG = EVSYS_INTFLAG_Msk;
 	<#lt>	if(evsys.callback != NULL)
     <#lt>   {
     <#lt>   	evsys.callback(evsys.context, status);

@@ -1,1 +1,1 @@
-#include "peripheral/pm/plib_pm${PM_INDEX}.h"
+#include "peripheral/pm/plib_${PM_INSTANCE_NAME?lower_case}.h"

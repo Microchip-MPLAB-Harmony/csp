@@ -1,1 +1,1 @@
-#include "peripheral/rswdt/plib_rswdt${rswdtIndex?string}.h"
+#include "peripheral/rswdt/plib_${RSWDT_INSTANCE_NAME?lower_case}.h"

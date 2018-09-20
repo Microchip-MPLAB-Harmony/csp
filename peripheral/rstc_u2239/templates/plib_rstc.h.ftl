@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Reset Controller(RSTC${RSTC_INDEX}) PLIB
+  Reset Controller(${RSTC_INSTANCE_NAME}) PLIB
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_rstc${RSTC_INDEX}.h
+    plib_${RSTC_INSTANCE_NAME?lower_case}.h
 
   Summary
-    RSTC${RSTC_INDEX} PLIB Header File.
+    ${RSTC_INSTANCE_NAME} PLIB Header File.
 
   Description
     This file defines the interface to the RSTC peripheral library.
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_RSTC${RSTC_INDEX}_H      // Guards against multiple inclusion
-#define PLIB_RSTC${RSTC_INDEX}_H
+#ifndef PLIB_${RSTC_INSTANCE_NAME}_H      // Guards against multiple inclusion
+#define PLIB_${RSTC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -110,7 +110,7 @@ typedef enum
 
 // *****************************************************************************
 /* Function:
-    RSTC_RESET_CAUSE RSTC${RSTC_INDEX}_ResetCauseGet( void );
+    RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet( void );
 
   Summary:
     Reports the cause of the last reset.
@@ -133,20 +133,20 @@ typedef enum
   Example:
    <code>
 
-     RSTC_RESET_CAUSE resetCause = RSTC_RESET_CAUSE_WDT_RESET | 
-                                   RSTC_RESET_CAUSE_BODVDD_RESET;
+    RSTC_RESET_CAUSE resetCause = RSTC_RESET_CAUSE_WDT_RESET | 
+                                  RSTC_RESET_CAUSE_BODVDD_RESET;
 
-     if (resetCause == RSTC${RSTC_INDEX}_ResetCauseGet())
-     {
-         //Application related tasks
-     }
+    if (resetCause == ${RSTC_INSTANCE_NAME}_ResetCauseGet())
+    {
+        //Application related tasks
+    }
     </code>
 
   Remarks:
     None.
 */
 
-RSTC_RESET_CAUSE RSTC${RSTC_INDEX}_ResetCauseGet (void);
+RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -155,4 +155,4 @@ RSTC_RESET_CAUSE RSTC${RSTC_INDEX}_ResetCauseGet (void);
 
 #endif
 
-#endif /* PLIB_RSTC${RSTC_INDEX}_H */
+#endif /* PLIB_${RSTC_INSTANCE_NAME}_H */

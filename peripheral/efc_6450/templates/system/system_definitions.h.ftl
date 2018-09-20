@@ -1,1 +1,1 @@
-#include "peripheral/efc/plib_efc${INDEX?string}.h"
+#include "peripheral/efc/plib_${EFC_INSTANCE_NAME?lower_case}.h"

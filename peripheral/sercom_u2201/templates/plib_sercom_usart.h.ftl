@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    plib_sercom${SERCOM_INDEX}_usart.h
+    plib_${SERCOM_INSTANCE_NAME?lower_case}_usart.h
 
   Summary
     USART peripheral library interface.
@@ -39,8 +39,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_SERCOM${SERCOM_INDEX}_USART_H // Guards against multiple inclusion
-#define PLIB_SERCOM${SERCOM_INDEX}_USART_H
+#ifndef PLIB_${SERCOM_INSTANCE_NAME}_USART_H // Guards against multiple inclusion
+#define PLIB_${SERCOM_INSTANCE_NAME}_USART_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -50,7 +50,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_sercom_usart.h"
+#include "plib_sercom_usart_common.h"
 #include "device.h"
 
 // DOM-IGNORE-BEGIN
@@ -70,7 +70,7 @@ this interface.
 
 // *****************************************************************************
 /* Function:
-    void SERCOM${SERCOM_INDEX}_USART_Initialize( void )
+    void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
 
   Summary:
     Initializes given instance of the USART peripheral.
@@ -90,19 +90,19 @@ this interface.
 
   Example:
     <code>
-    SERCOM${SERCOM_INDEX}_USART_Initialize();
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize();
     </code>
 
   Remarks:
     Stops the USART if it was already running and reinitializes it.
 */
 
-void SERCOM${SERCOM_INDEX}_USART_Initialize( void );
+void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void );
 
 <#if USART_SERIAL_SETUP_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency,
+    bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( uint32_t clkFrequency,
                                             USART_SERIAL_SETUP * serialSetup )
 
   Summary:
@@ -122,7 +122,7 @@ void SERCOM${SERCOM_INDEX}_USART_Initialize( void );
     to this function.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -140,14 +140,14 @@ void SERCOM${SERCOM_INDEX}_USART_Initialize( void );
     None.
 */
 
-bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency,
+bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( uint32_t clkFrequency,
                                     USART_SERIAL_SETUP * serialSetup );
 </#if>
 
 <#if USART_TX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_USART_Write( void *buffer, const size_t size )
+    bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 
   Summary:
     Submits a write buffer to the given USART peripheral to transfer.
@@ -161,11 +161,11 @@ bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency,
     call is always non-blocking. A call to this function submits the buffer and
     the size to the peripheral library and returns immediately. The transfer
     completion status can either be checked through the callback mechanism or by
-    calling the SERCOM${SERCOM_INDEX}_USART_WriteIsBusy() function. The success
+    calling the ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy() function. The success
     of the operation can be obtained by calling the
-    SERCOM${SERCOM_INDEX}_USART_ErrorGet() function.
+    ${SERCOM_INSTANCE_NAME}_USART_ErrorGet() function.
 
-    If the SERCOM${SERCOM_INDEX}_USART_ErrorGet() function returns no error,
+    If the ${SERCOM_INSTANCE_NAME}_USART_ErrorGet() function returns no error,
     then this means that the requested number of bytes have been processed. If
     the function returns some error, the SERCOMx_USART_WriteCountGet() function
     can be called to know the number of bytes that were transmitted till the
@@ -175,7 +175,7 @@ bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency,
     call returns only after the requested size of bytes are transmitted.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -196,7 +196,7 @@ bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency,
     // Example of use in non-interrupt mode. The function call is blocking.
 
     char myData[COUNT] = {"hello"}; //COUNT is user message size
-    if(false != SERCOM${SERCOM_INDEX}_USART_Write(&myData, COUNT))
+    if(false != ${SERCOM_INSTANCE_NAME}_USART_Write(&myData, COUNT))
     {
         //The transfer is completed
     }
@@ -217,31 +217,31 @@ bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency,
         status = true;
     }
 
-    SERCOM${SERCOM_INDEX}_USART_WriteCallbackRegister(MyUsartWriteCallback,
+    ${SERCOM_INSTANCE_NAME}_USART_WriteCallbackRegister(MyUsartWriteCallback,
                                                         &writeComplete);
-    SERCOM${SERCOM_INDEX}_USART_Write(&myData, COUNT);
+    ${SERCOM_INSTANCE_NAME}_USART_Write(&myData, COUNT);
 
     // Write complete is updated in the callback function.
     while(writeComplete == false);
 
     // The write has completed. Check if there were any errors.
-    if(SERCOM${SERCOM_INDEX}_USART_ErrorGet() != USART_ERROR_NONE)
+    if(${SERCOM_INSTANCE_NAME}_USART_ErrorGet() != USART_ERROR_NONE)
     {
-        transmittedBytes = SERCOM${SERCOM_INDEX}_USART_WriteCountGet();
+        transmittedBytes = ${SERCOM_INSTANCE_NAME}_USART_WriteCountGet();
         // Handle the error.
     }
 
     // Example of use in interrupt mode with the
-    // SERCOM${SERCOM_INDEX}_USART_WriteIsBusy() function.
+    // ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy() function.
 
     char myData[COUNT] = {"hello"}; //COUNT is user message size
-    SERCOM${SERCOM_INDEX}_USART_Write(&myData, COUNT);
+    ${SERCOM_INSTANCE_NAME}_USART_Write(&myData, COUNT);
 
     // Wait till the write is complete.
-    while(SERCOM${SERCOM_INDEX}_USART_WriteIsBusy() == true);
+    while(${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy() == true);
 
     // The write has completed. Check if there were any errors.
-    if(SERCOM${SERCOM_INDEX}_USART_ErrorGet() != USART_ERROR_NONE)
+    if(${SERCOM_INSTANCE_NAME}_USART_ErrorGet() != USART_ERROR_NONE)
     {
         // Handle the error.
     }
@@ -253,12 +253,12 @@ bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency,
     function can affect the operation of other polled components in the
     application.
 */
-bool SERCOM${SERCOM_INDEX}_USART_Write( void *buffer, const size_t size );
+bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size );
 </#if>
 <#if USART_RX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size )
+    bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 
   Summary:
     Submits a read buffer to the given USART peripheral to process.
@@ -271,21 +271,21 @@ bool SERCOM${SERCOM_INDEX}_USART_Write( void *buffer, const size_t size );
     call is always non-blocking. A call to this function submits the buffer and
     the size to the peripheral library and returns immediately. The transfer
     completion status can either be checked through the callback mechanism or by
-    calling the SERCOM${SERCOM_INDEX}_USART_ReadIsBusy() function. The success
+    calling the ${SERCOM_INSTANCE_NAME}_USART_ReadIsBusy() function. The success
     of the operation can be obtained by calling the
-    SERCOM${SERCOM_INDEX}_USART_ErrorGet() function.
+    ${SERCOM_INSTANCE_NAME}_USART_ErrorGet() function.
 
-    If the SERCOM${SERCOM_INDEX}_USART_ErrorGet() function returns no error,
+    If the ${SERCOM_INSTANCE_NAME}_USART_ErrorGet() function returns no error,
     then this means that the requested number of bytes have been processed. If
     the function returns some error, the
-    SERCOM${SERCOM_INDEX}_USART_ReadCountGet() function can be called to know
+    ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet() function can be called to know
     the number of bytes that were received till the error occurred.
 
     If the peripheral is configured for the non-interrupt mode, this function
     call returns only after the requested size of bytes are received.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -305,13 +305,13 @@ bool SERCOM${SERCOM_INDEX}_USART_Write( void *buffer, const size_t size );
     char myData[COUNT] = {"hello"}; //COUNT is user message size
     USART_ERROR error = USART_ERROR_NONE;
 
-    if(false != SERCOM${SERCOM_INDEX}_USART_Read(&myData, COUNT))
+    if(false != ${SERCOM_INSTANCE_NAME}_USART_Read(&myData, COUNT))
     {
         //The transfer is completed
     }
     else
     {
-        error = SERCOM${SERCOM_INDEX}_USART_ErrorGet();
+        error = ${SERCOM_INSTANCE_NAME}_USART_ErrorGet();
     }
 
     // Example of use in interrupt mode. The function call in not blocking.
@@ -326,31 +326,31 @@ bool SERCOM${SERCOM_INDEX}_USART_Write( void *buffer, const size_t size );
         status = true;
     }
 
-    SERCOM${SERCOM_INDEX}_USART_ReadCallbackRegister(MyUsartReadCallback,
+    ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister(MyUsartReadCallback,
                                                         &readComplete);
-    SERCOM${SERCOM_INDEX}_USART_Read(&myData, COUNT);
+    ${SERCOM_INSTANCE_NAME}_USART_Read(&myData, COUNT);
 
     // Read complete is updated in the callback function.
     while(readComplete == false);
 
     // The read has completed. Check if there were any errors.
-    if(SERCOM${SERCOM_INDEX}_USART_ErrorGet() != USART_ERROR_NONE)
+    if(${SERCOM_INSTANCE_NAME}_USART_ErrorGet() != USART_ERROR_NONE)
     {
-        receivedBytes = SERCOM${SERCOM_INDEX}_USART_ReadCountGet();
+        receivedBytes = ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet();
         // Handle the error.
     }
 
     // Example of use in interrupt mode with the
-    // SERCOM${SERCOM_INDEX}_USART_ReadIsBusy() function.
+    // ${SERCOM_INSTANCE_NAME}_USART_ReadIsBusy() function.
 
     char myData[COUNT] = {"hello"}; //COUNT is user message size
-    SERCOM${SERCOM_INDEX}_USART_Read(&myData, COUNT);
+    ${SERCOM_INSTANCE_NAME}_USART_Read(&myData, COUNT);
 
     // Wait till the read is complete.
-    while(SERCOM${SERCOM_INDEX}_USART_ReadIsBusy() == true);
+    while(${SERCOM_INSTANCE_NAME}_USART_ReadIsBusy() == true);
 
     // The read has completed. Check if there were any errors.
-    if(SERCOM${SERCOM_INDEX}_USART_ErrorGet() != USART_ERROR_NONE)
+    if(${SERCOM_INSTANCE_NAME}_USART_ErrorGet() != USART_ERROR_NONE)
     {
         // Handle the error.
     }
@@ -362,7 +362,7 @@ bool SERCOM${SERCOM_INDEX}_USART_Write( void *buffer, const size_t size );
     function can affect the operation of other polled components in the
     application.
 */
-bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size );
+bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size );
 </#if>
 
 // *****************************************************************************
@@ -375,7 +375,7 @@ bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size );
 <#if USART_TX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_USART_WriteIsBusy( void )
+    bool ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy( void )
 
   Summary:
     Returns the write request status associated with the given USART peripheral
@@ -384,7 +384,7 @@ bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size );
   Description:
     This function returns the write request status associated with the given
     USART peripheral instance. It can be used to check the completion status of
-    the SERCOM${SERCOM_INDEX}_USART_Write() function when the library is
+    the ${SERCOM_INSTANCE_NAME}_USART_Write() function when the library is
     configured for interrupt (non-blocking) mode. In that, the function can be
     used as an alternative to using a callback function to check for completion.
 
@@ -392,7 +392,7 @@ bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size );
     operation.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -406,13 +406,13 @@ bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size );
   Example:
     <code>
 
-    if(true == SERCOM${SERCOM_INDEX}_USART_WriteIsBusy())
+    if(true == ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy())
     {
         //USART is currently processing the previous write request.
         //Wait to submit new request.
     }
 
-    // Refer to SERCOM${SERCOM_INDEX}_USART_Write() function code example for
+    // Refer to ${SERCOM_INSTANCE_NAME}_USART_Write() function code example for
     additional usage
     // tips.
 
@@ -422,12 +422,12 @@ bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size );
     None.
 */
 
-bool SERCOM${SERCOM_INDEX}_USART_WriteIsBusy ( void );
+bool ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy ( void );
 </#if>
 <#if USART_RX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_USART_ReadIsBusy( void )
+    bool ${SERCOM_INSTANCE_NAME}_USART_ReadIsBusy( void )
 
   Summary:
     Returns the read request status associated with the given USART peripheral
@@ -436,7 +436,7 @@ bool SERCOM${SERCOM_INDEX}_USART_WriteIsBusy ( void );
   Description:
     This function returns the read request status associated with the given
     USART peripheral instance. It can be used to check the completion status of
-    the SERCOM${SERCOM_INDEX}_USART_Read() function when the library is
+    the ${SERCOM_INSTANCE_NAME}_USART_Read() function when the library is
     configured for interrupt (non-blocking) mode. In that, the function can be
     used as an alternative to using a callback function to check for completion.
 
@@ -444,7 +444,7 @@ bool SERCOM${SERCOM_INDEX}_USART_WriteIsBusy ( void );
     operation.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -457,13 +457,13 @@ bool SERCOM${SERCOM_INDEX}_USART_WriteIsBusy ( void );
 
   Example:
     <code>
-    if(true == SERCOM${SERCOM_INDEX}_USART_ReadIsBusy())
+    if(true == ${SERCOM_INSTANCE_NAME}_USART_ReadIsBusy())
     {
         //USART is currently processing the previous read request.
         //Wait to submit new request.
     }
 
-    // Refer to SERCOM${SERCOM_INDEX}_USART_Read() function code example for
+    // Refer to ${SERCOM_INSTANCE_NAME}_USART_Read() function code example for
     additional usage
     // tips.
 
@@ -473,7 +473,7 @@ bool SERCOM${SERCOM_INDEX}_USART_WriteIsBusy ( void );
     None.
 */
 
-bool SERCOM${SERCOM_INDEX}_USART_ReadIsBusy ( void );
+bool ${SERCOM_INSTANCE_NAME}_USART_ReadIsBusy ( void );
 </#if>
 </#if>
 
@@ -481,7 +481,7 @@ bool SERCOM${SERCOM_INDEX}_USART_ReadIsBusy ( void );
 <#if USART_TX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    size_t SERCOM${SERCOM_INDEX}_USART_WriteCountGet( void )
+    size_t ${SERCOM_INSTANCE_NAME}_USART_WriteCountGet( void )
 
   Summary:
     Gets the count of number of bytes processed for a given USART write
@@ -491,15 +491,15 @@ bool SERCOM${SERCOM_INDEX}_USART_ReadIsBusy ( void );
     This function gets the count of processed byte for an og-going or completed
     USART write operation. When the library is configured for non-interrupt
     blocking mode, it returns the number of bytes that were processed when the
-    SERCOM${SERCOM_INDEX}_USART_Write() function completed. In interrupt
+    ${SERCOM_INSTANCE_NAME}_USART_Write() function completed. In interrupt
     non-blocking mode, this function will return the number of bytes that have
     currently been processed.
 
-    The function can be used to check if the SERCOM${SERCOM_INDEX}_USART_Write()
+    The function can be used to check if the ${SERCOM_INSTANCE_NAME}_USART_Write()
     was able to transmit the requested number of bytes successfully.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -509,13 +509,13 @@ bool SERCOM${SERCOM_INDEX}_USART_ReadIsBusy ( void );
     Returns count of bytes currently completed/processed from the current
     Transmit buffer for interrupt non-blocking mode. In non-interrupt blocking
     mode, this function return the number of bytes that were processed when the
-    SERCOM${SERCOM_INDEX}_USART_Write function completed.
+    ${SERCOM_INSTANCE_NAME}_USART_Write function completed.
 
   Example:
     <code>
     size_t count; //COUNT_EXPECTED is the expected Transmit count value
 
-    count = SERCOM${SERCOM_INDEX}_USART_WriteCountGet();
+    count = ${SERCOM_INSTANCE_NAME}_USART_WriteCountGet();
 
     if(COUNT_EXPECTED > count)
     {
@@ -525,16 +525,16 @@ bool SERCOM${SERCOM_INDEX}_USART_ReadIsBusy ( void );
 
   Remarks:
     This write count gets reset every time the
-    SERCOM${SERCOM_INDEX}_USART_Write() function is called.
+    ${SERCOM_INSTANCE_NAME}_USART_Write() function is called.
 */
 
-size_t SERCOM${SERCOM_INDEX}_USART_WriteCountGet( void );
+size_t ${SERCOM_INSTANCE_NAME}_USART_WriteCountGet( void );
 </#if>
 
 <#if USART_RX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    size_t SERCOM${SERCOM_INDEX}_USART_ReadCountGet( void )
+    size_t ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet( void )
 
   Summary:
     Gets the count of number of bytes processed for a given USART read
@@ -544,19 +544,19 @@ size_t SERCOM${SERCOM_INDEX}_USART_WriteCountGet( void );
     This function gets the count of processed byte for an og-going or completed
     USART Read operation. When the library is configured for non-interrupt
     blocking mode, it returns the number of bytes that were processed when the
-    SERCOM${SERCOM_INDEX}_USART_Read() function completed. In interrupt
+    ${SERCOM_INSTANCE_NAME}_USART_Read() function completed. In interrupt
     non-blocking mode, this function will return the number of bytes that have
     currently been processed.
 
-    The function can be used to check if the SERCOM${SERCOM_INDEX}_USART_Read()
+    The function can be used to check if the ${SERCOM_INSTANCE_NAME}_USART_Read()
     was able to transmit the requested number of bytes successfully. In case of
     non-interrupt blocking mode, if the value returned by this function does not
-    match the byte count specified in the SERCOM${SERCOM_INDEX}_USART_Read()
+    match the byte count specified in the ${SERCOM_INSTANCE_NAME}_USART_Read()
     function, then would indicate that an error has occurred during the
     reception.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -573,9 +573,9 @@ size_t SERCOM${SERCOM_INDEX}_USART_WriteCountGet( void );
     size_t count;
     char buffer[COUNT_EXPECTED];
 
-    SERCOM${SERCOM_INDEX}_USART_Read(buffer, COUNT_EXPECTED);
+    ${SERCOM_INSTANCE_NAME}_USART_Read(buffer, COUNT_EXPECTED);
 
-    count = SERCOM${SERCOM_INDEX}_USART_ReadCountGet();
+    count = ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet();
 
     if(COUNT_EXPECTED > count)
     {
@@ -587,9 +587,9 @@ size_t SERCOM${SERCOM_INDEX}_USART_WriteCountGet( void );
     size_t count;
     char buffer[COUNT_EXPECTED];
 
-    SERCOM${SERCOM_INDEX}_USART_Read(buffer, COUNT_EXPECTED);
+    ${SERCOM_INSTANCE_NAME}_USART_Read(buffer, COUNT_EXPECTED);
 
-    count = SERCOM${SERCOM_INDEX}_USART_ReadCountGet();
+    count = ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet();
 
     if(COUNT_EXPECTED > count)
     {
@@ -602,7 +602,7 @@ size_t SERCOM${SERCOM_INDEX}_USART_WriteCountGet( void );
     This function resets the read count every time a new transfer is submitted.
 */
 
-size_t SERCOM${SERCOM_INDEX}_USART_ReadCountGet( void );
+size_t ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet( void );
  </#if>
  </#if>
 
@@ -610,7 +610,7 @@ size_t SERCOM${SERCOM_INDEX}_USART_ReadCountGet( void );
 <#if USART_TX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_USART_TransmitterIsReady( void )
+    bool ${SERCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void )
 
   Summary:
     Returns the hardware status of the USART Transmitter.
@@ -624,11 +624,11 @@ size_t SERCOM${SERCOM_INDEX}_USART_ReadCountGet( void );
     be used to achieve non-blocking behavior of write request in the
     non-interrupt mode. If non-blocking behavior is desired, this function
     should be called to check if the transmitter is ready and then the
-    SERCOM${SERCOM_INDEX}_USART_Write() function should be called with a buffer
+    ${SERCOM_INSTANCE_NAME}_USART_Write() function should be called with a buffer
     size of 1.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -641,10 +641,10 @@ size_t SERCOM${SERCOM_INDEX}_USART_ReadCountGet( void );
 
   Example:
     <code>
-    if(true == SERCOM${SERCOM_INDEX}_USART_TransmitterIsReady())
+    if(true == ${SERCOM_INSTANCE_NAME}_USART_TransmitterIsReady())
     {
         // Empty space is available in Transmitter FIFO, hence can write a byte
-        SERCOM${SERCOM_INDEX}_USART_Write(&txData, 1);
+        ${SERCOM_INSTANCE_NAME}_USART_Write(&txData, 1);
     }
     else
     {
@@ -659,12 +659,12 @@ size_t SERCOM${SERCOM_INDEX}_USART_ReadCountGet( void );
     or blocking mode of the library.
 */
 
-bool SERCOM${SERCOM_INDEX}_USART_TransmitterIsReady ( void );
+bool ${SERCOM_INSTANCE_NAME}_USART_TransmitterIsReady ( void );
 </#if>
 <#if USART_RX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    bool SERCOM${SERCOM_INDEX}_USART_ReceiverIsReady( void )
+    bool ${SERCOM_INSTANCE_NAME}_USART_ReceiverIsReady( void )
 
   Summary:
     Returns the hardware status of the USART Receiver.
@@ -676,13 +676,13 @@ bool SERCOM${SERCOM_INDEX}_USART_TransmitterIsReady ( void );
 
     This function is available only in non-interrupt mode of operation. It can
     be used to achieve non-blocking behavior of
-    SERCOM${SERCOM_INDEX}_USART_Read() function even if the library is
+    ${SERCOM_INSTANCE_NAME}_USART_Read() function even if the library is
     configured for blocking behavior. If this function returns true, calling the
     SERCOMx_USART_Read() function with a byte count of 1 will result in
     non-blocking behavior.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -695,10 +695,10 @@ bool SERCOM${SERCOM_INDEX}_USART_TransmitterIsReady ( void );
 
   Example:
     <code>
-    if(true == SERCOM${SERCOM_INDEX}_USART_ReceiverIsReady())
+    if(true == ${SERCOM_INSTANCE_NAME}_USART_ReceiverIsReady())
     {
         // At least one data is available in Receive FIFO, hence can read a byte
-        SERCOM${SERCOM_INDEX}_USART_Read(&rxData, 1);
+        ${SERCOM_INSTANCE_NAME}_USART_Read(&rxData, 1);
     }
     else
     {
@@ -713,12 +713,12 @@ bool SERCOM${SERCOM_INDEX}_USART_TransmitterIsReady ( void );
     or blocking mode of the library.
 */
 
-bool SERCOM${SERCOM_INDEX}_USART_ReceiverIsReady ( void );
+bool ${SERCOM_INSTANCE_NAME}_USART_ReceiverIsReady ( void );
  </#if>
  </#if>
 // *****************************************************************************
 /* Function:
-    USART_ERROR SERCOM${SERCOM_INDEX}_USART_ErrorGet( void )
+    USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 
   Summary:
     Gets the error of the given USART peripheral instance.
@@ -727,12 +727,12 @@ bool SERCOM${SERCOM_INDEX}_USART_ReceiverIsReady ( void );
     This function returns the errors associated with the given USART peripheral
     instance. Multiple error conditions may be active. The function return value
     should be matched against each member of the USART_ERROR enumeration to
-    handle all error cases. Calling the SERCOM${SERCOM_INDEX}_USART_Read or
+    handle all error cases. Calling the ${SERCOM_INSTANCE_NAME}_USART_Read or
     SERCOMx_USART_Write functions will clear the errors. Hence error handling
     must be perfomed before these functions are called again.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
@@ -743,14 +743,14 @@ bool SERCOM${SERCOM_INDEX}_USART_ReceiverIsReady ( void );
 
   Example:
     <code>
-    if(USART_ERROR_NONE != SERCOM${SERCOM_INDEX}_USART_ErrorGet())
+    if(USART_ERROR_NONE != ${SERCOM_INSTANCE_NAME}_USART_ErrorGet())
     {
-        if (USART_ERROR_OVERRUN & SERCOM${SERCOM_INDEX}_USART_ErrorGet())
+        if (USART_ERROR_OVERRUN & ${SERCOM_INSTANCE_NAME}_USART_ErrorGet())
         {
             // Handle overrun error.
         }
 
-        if(USART_ERROR_PARITY & SERCOM${SERCOM_INDEX}_USART_ErrorGet())
+        if(USART_ERROR_PARITY & ${SERCOM_INSTANCE_NAME}_USART_ErrorGet())
         {
             // Handle parity error.
         }
@@ -762,7 +762,7 @@ bool SERCOM${SERCOM_INDEX}_USART_ReceiverIsReady ( void );
     recommended to use this function in receive context only.
 */
 
-USART_ERROR SERCOM${SERCOM_INDEX}_USART_ErrorGet( void );
+USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void );
 
 <#if USART_INTERRUPT_MODE = true>
 // *****************************************************************************
@@ -774,7 +774,7 @@ USART_ERROR SERCOM${SERCOM_INDEX}_USART_ErrorGet( void );
 <#if USART_TX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    void SERCOM${SERCOM_INDEX}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK
+    void ${SERCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK
                                                             callback,
                                                             uintptr_t context )
 
@@ -792,12 +792,12 @@ USART_ERROR SERCOM${SERCOM_INDEX}_USART_ErrorGet( void );
     operation.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
     callback - Pointer to the function to be called when the
-    SERCOM${SERCOM_INDEX}_USART_Write() function has completed. Setting this to
+    ${SERCOM_INSTANCE_NAME}_USART_Write() function has completed. Setting this to
     NULL will disable the callback feature.
 
     context  - A value (usually a pointer) passed (unused) into the function
@@ -815,7 +815,7 @@ USART_ERROR SERCOM${SERCOM_INDEX}_USART_ErrorGet( void );
     {
         MY_DATA *myData = (MY_DATA *)context;
 
-        if(USART_ERROR_NONE != SERCOM${SERCOM_INDEX}_USART_ErrorGet())
+        if(USART_ERROR_NONE != ${SERCOM_INSTANCE_NAME}_USART_ErrorGet())
         {
             //Handle error case
         }
@@ -825,7 +825,7 @@ USART_ERROR SERCOM${SERCOM_INDEX}_USART_ErrorGet( void );
         }
     }
 
-    SERCOM${SERCOM_INDEX}_USART_WriteCallbackRegister(MyUsartCallback,
+    ${SERCOM_INSTANCE_NAME}_USART_WriteCallbackRegister(MyUsartCallback,
                                                             &myData[0]);
     </code>
 
@@ -835,12 +835,12 @@ USART_ERROR SERCOM${SERCOM_INDEX}_USART_ErrorGet( void );
     SERCOM_USART_CALLBACK type definition for additional information.
 */
 
-void SERCOM${SERCOM_INDEX}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context );
+void ${SERCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context );
 </#if>
 <#if USART_RX_ENABLE = true>
 // *****************************************************************************
 /* Function:
-    void SERCOM${SERCOM_INDEX}x_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK
+    void ${SERCOM_INSTANCE_NAME}x_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK
                                                             callback,
                                                             uintptr_t context )
 
@@ -858,12 +858,12 @@ void SERCOM${SERCOM_INDEX}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK ca
     operation.
 
   Precondition:
-    SERCOM${SERCOM_INDEX}_USART_Initialize must have been called for the
+    ${SERCOM_INSTANCE_NAME}_USART_Initialize must have been called for the
     associated USART instance.
 
   Parameters:
     callback - Pointer to the function that will be called when
-    SERCOM${SERCOM_INDEX}_USART_Read() function has completed. Setting this to
+    ${SERCOM_INSTANCE_NAME}_USART_Read() function has completed. Setting this to
     NULl will disable the callback feature.
 
     context - A value (usually a pointer) passed (unused) into the function
@@ -881,7 +881,7 @@ void SERCOM${SERCOM_INDEX}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK ca
     {
         MY_DATA *myData = (MY_DATA *)context;
 
-        if(USART_ERROR_NONE != SERCOM${SERCOM_INDEX}_USART_ErrorGet())
+        if(USART_ERROR_NONE != ${SERCOM_INSTANCE_NAME}_USART_ErrorGet())
         {
             //Handle error case
         }
@@ -891,7 +891,7 @@ void SERCOM${SERCOM_INDEX}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK ca
         }
     }
 
-    SERCOM${SERCOM_INDEX}_USART_ReadCallbackRegister(MyUsartCallback, &myData[0]);
+    ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister(MyUsartCallback, &myData[0]);
     </code>
 
   Remarks:
@@ -904,12 +904,12 @@ void SERCOM${SERCOM_INDEX}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK ca
     error occurs.
 */
 
-void SERCOM${SERCOM_INDEX}_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context );
+void ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context );
 </#if>
 
 // *****************************************************************************
 /* Function:
-    void SERCOM${SERCOM_INDEX}_USART_InterruptHandler( void )
+    void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
 
   Summary:
     Sercom Handler, handles all sercom interrupt.
@@ -927,7 +927,7 @@ void SERCOM${SERCOM_INDEX}_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK cal
   Example:
     <code>
 
-    void SERCOM${SERCOM_INDEX}_USART_InterruptHandler( void )
+    void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
     {
         // serve interrupts
     }
@@ -938,7 +938,7 @@ void SERCOM${SERCOM_INDEX}_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK cal
     None.
 */
 
-void SERCOM${SERCOM_INDEX}_USART_InterruptHandler( void );
+void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void );
 </#if>
 
 // DOM-IGNORE-BEGIN
@@ -947,4 +947,4 @@ void SERCOM${SERCOM_INDEX}_USART_InterruptHandler( void );
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_SERCOM${SERCOM_INDEX}_USART_H
+#endif //PLIB_${SERCOM_INSTANCE_NAME}_USART_H

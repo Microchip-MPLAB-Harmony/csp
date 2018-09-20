@@ -1,6 +1,6 @@
 #Function for initiating the UI
 
-global instance
+global efcInstanceName
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
@@ -12,6 +12,7 @@ def efcSetMemoryDependency(symbol, event):
         symbol.setVisible(False)
 
 def interruptControl(NVIC, event):
+    global efcInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
@@ -20,21 +21,23 @@ def interruptControl(NVIC, event):
     Database.clearSymbolValue("core", interruptHandlerLock)
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, efcInstanceName.getValue() + "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else :
         Database.setSymbolValue("core", interruptVector, False, 2)
-        Database.setSymbolValue("core", interruptHandler, "EFC_Handler", 2)
+        Database.setSymbolValue("core", interruptHandler, efcInstanceName.getValue() + "_Handler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def instantiateComponent(efcComponent):
 
-    global instance
+    global efcInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
 
-    instance = efcComponent.getID()[-1:]
+    efcInstanceName = efcComponent.createStringSymbol("EFC_INSTANCE_NAME", None)
+    efcInstanceName.setVisible(False)
+    efcInstanceName.setDefaultValue(efcComponent.getID().upper())
 
     Log.writeInfoMessage("Running EEFC")
 
@@ -68,12 +71,6 @@ def instantiateComponent(efcComponent):
     efcInterrupt = efcComponent.createBooleanSymbol("INTERRUPT_ENABLE", efcMenu)
     efcInterrupt.setLabel("Enable Interrupts")
     efcInterrupt.setDefaultValue(True)
-
-    efcInterruptSource = efcComponent.createStringSymbol("INTERRUPT_SOURCE", efcMenu)
-    efcInterruptSource.setLabel("EFC Interrupt Source")
-    efcInterruptSource.setReadOnly(True)
-    efcInterruptSource.setDefaultValue("EFC_IRQn")
-    efcInterruptSource.setDependencies(efcSetMemoryDependency, ["INTERRUPT_ENABLE"])
 
     efcMemoryDriver = efcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", efcMenu)
     efcMemoryDriver.setLabel("Memory Driver Connected")
@@ -109,18 +106,13 @@ def instantiateComponent(efcComponent):
     efcMemoryMediaSize.setDefaultValue(1024)
     efcMemoryMediaSize.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
-    #instance index
-    efcIndex = efcComponent.createIntegerSymbol("INDEX", efcMenu)
-    efcIndex.setVisible(False)
-    efcIndex.setDefaultValue(int(instance))
+    interruptVector = efcInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    interruptHandler = efcInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = efcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = efcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
-    interruptVector = "EFC_INTERRUPT_ENABLE"
-    interruptHandler = "EFC_INTERRUPT_HANDLER"
-    interruptHandlerLock = "EFC_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = "EFC_INTERRUPT_ENABLE_UPDATE"
-
-    writeApiName = "EFC" + str(instance) + "_PageWrite"
-    eraseApiName = "EFC" + str(instance) + "_SectorErase"
+    writeApiName = efcInstanceName.getValue() + "_PageWrite"
+    eraseApiName = efcInstanceName.getValue() + "_SectorErase"
 
     efcWriteApiName = efcComponent.createStringSymbol("WRITE_API_NAME", efcMenu)
     efcWriteApiName.setVisible(False)
@@ -135,7 +127,7 @@ def instantiateComponent(efcComponent):
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
     Database.clearSymbolValue("core", interruptHandler)
-    Database.setSymbolValue("core", interruptHandler, "EFC" + str(instance) + "_InterruptHandler", 2)
+    Database.setSymbolValue("core", interruptHandler, efcInstanceName.getValue() + "_InterruptHandler", 2)
     Database.clearSymbolValue("core", interruptHandlerLock)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
 
@@ -149,7 +141,7 @@ def instantiateComponent(efcComponent):
     efcHeaderFile = efcComponent.createFileSymbol("EFC_FILE_0", None)
     efcHeaderFile.setSourcePath("../peripheral/efc_6450/templates/plib_efc.h.ftl")
     efcHeaderFile.setMarkup(True)
-    efcHeaderFile.setOutputName("plib_efc" + str(instance) + ".h")
+    efcHeaderFile.setOutputName("plib_" + efcInstanceName.getValue().lower() + ".h")
     efcHeaderFile.setOverwrite(True)
     efcHeaderFile.setDestPath("peripheral/efc/")
     efcHeaderFile.setProjectPath("config/" + configName + "/peripheral/efc/")
@@ -158,7 +150,7 @@ def instantiateComponent(efcComponent):
     efcSourceFile = efcComponent.createFileSymbol("EFC_FILE_1", None)
     efcSourceFile.setSourcePath("../peripheral/efc_6450/templates/plib_efc.c.ftl")
     efcSourceFile.setMarkup(True)
-    efcSourceFile.setOutputName("plib_efc" + str(instance) + ".c")
+    efcSourceFile.setOutputName("plib_" + efcInstanceName.getValue().lower() + ".c")
     efcSourceFile.setOverwrite(True)
     efcSourceFile.setDestPath("peripheral/efc/")
     efcSourceFile.setProjectPath("config/" + configName + "/peripheral/efc/")
@@ -172,11 +164,11 @@ def instantiateComponent(efcComponent):
 
 def destroyComponent(efcComponent):
 
-    global instance
+    global efcInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
 
     Database.setSymbolValue("core", interruptVector, False, 2)
-    Database.setSymbolValue("core", interruptHandler, "EFC" + str(instance) + "_Handler", 2)
+    Database.setSymbolValue("core", interruptHandler, efcInstanceName.getValue() + "_Handler", 2)
     Database.setSymbolValue("core", interruptHandlerLock, False, 2)

@@ -1,24 +1,25 @@
 /*******************************************************************************
-Interface definition of QSPI PLIB.
+  Timer/Counter(TC) Peripheral Library Interface Header File
 
- Company:
+  Company
     Microchip Technology Inc.
 
- File Name:
-    plib_qspi.h
+  File Name
+    plib_tc_common.h
 
- Summary:
-    Interface definition of the Quad Serial Peripheral Interface Plib (QSPI).
+  Summary
+    TC peripheral library interface.
 
- Description:
-    This file defines the interface for the QSPI Plib.
-    It allows user to setup QSPI and transfer data to and from slave devices
-    attached.
+  Description
+    This file defines the interface to the TC peripheral library. This
+    library provides access to and control of the associated peripheral
+    instance.
+
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc. All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -27,7 +28,6 @@ controller that is integrated into your product or third party product
 
 You should refer to the license agreement accompanying this Software for
 additional information regarding your rights and obligations.
-
 SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
 EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
 MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -41,23 +41,25 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_QSPI_H // Guards against multiple inclusion
-#define PLIB_QSPI_H
+#ifndef PLIB_TC_COMMON_H    // Guards against multiple inclusion
+#define PLIB_TC_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
-/* This section lists the other files that are included in this file.
+/*  This section lists the other files that are included in this file.
 */
 
 #include <stdbool.h>
+#include <stddef.h>
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
+#ifdef __cplusplus  // Provide C++ Compatibility
+
     extern "C" {
+
 #endif
 // DOM-IGNORE-END
 
@@ -66,70 +68,53 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
+/*  The following data type definitions are used by the functions in this
+    interface and should be considered part it.
+*/
+
+// *****************************************************************************
 
 typedef enum
 {
-    ADDRL_24_BIT = QSPI_IFR_ADDRL_24_BIT,
-    ADDRL_32_BIT = QSPI_IFR_ADDRL_32_BIT
-} QSPI_ADDRESS_LENGTH;
+    /* Capture status overflow */
+    TC_CAPTURE_STATUS_OVERFLOW = 0x1,
 
-typedef enum
+    /* Capture status error */
+    TC_CAPTURE_STATUS_ERROR = 0x2,
+
+    /* Capture status ready for channel 0 */
+    TC_CAPTURE_STAUTS_CAPTURE0_READY = 0x10,
+
+    /* Capture status ready for channel 1 */
+    TC_CAPTURE_STATUS_CAPTURE1_READY = 0x20,
+    
+    TC_CAPTURE_STATUS_MSK = TC_CAPTURE_STATUS_OVERFLOW | TC_CAPTURE_STATUS_ERROR | TC_CAPTURE_STAUTS_CAPTURE0_READY | TC_CAPTURE_STATUS_CAPTURE1_READY
+
+} TC_CAPTURE_STATUS;
+
+
+
+// *****************************************************************************
+
+
+typedef void (*TC_CALLBACK)( uintptr_t context );
+
+// *****************************************************************************
+typedef struct
 {
-    SINGLE_BIT_SPI = QSPI_IFR_WIDTH_SINGLE_BIT_SPI,
-    DUAL_OUTPUT = QSPI_IFR_WIDTH_DUAL_OUTPUT,
-    QUAD_OUTPUT = QSPI_IFR_WIDTH_QUAD_OUTPUT,
-    DUAL_IO = QSPI_IFR_WIDTH_DUAL_IO,
-    QUAD_IO = QSPI_IFR_WIDTH_QUAD_IO,
-    DUAL_CMD = QSPI_IFR_WIDTH_DUAL_CMD,
-    QUAD_CMD = QSPI_IFR_WIDTH_QUAD_CMD	
-} QSPI_LANE_WIDTH;
+    TC_CALLBACK callback;
 
-typedef enum
-{
-    OPTL_1_BIT = QSPI_IFR_OPTL_OPTION_1BIT,
-    OPTL_2_BIT = QSPI_IFR_OPTL_OPTION_2BIT,
-    OPTL_4_BIT = QSPI_IFR_OPTL_OPTION_4BIT,
-    OPTL_8_BIT = QSPI_IFR_OPTL_OPTION_8BIT
-} QSPI_OPTION_LENGTH;
+    uintptr_t context;
 
-typedef struct {
-    /* QSPI instruction code */
-    uint8_t instruction;
-    /* QSPI instruction Frame register informations */
-    QSPI_LANE_WIDTH width;
-    bool addr_en;
-    QSPI_ADDRESS_LENGTH addr_len;
-} qspi_command_xfer_t;
-
-typedef struct {
-    /* QSPI instruction code */
-    uint8_t instruction;
-    /* QSPI instruction Frame register informations */
-    QSPI_LANE_WIDTH width;
-    /* For Read Register */
-    uint8_t dummy_cycles;
-} qspi_register_xfer_t;
-
-typedef struct {
-    /* QSPI instruction code */
-    uint8_t instruction;
-    /* QSPI option code */
-    uint8_t option;
-    /* QSPI instruction Frame register informations */
-    QSPI_LANE_WIDTH width;
-    QSPI_ADDRESS_LENGTH addr_len;
-    bool option_en;
-    QSPI_OPTION_LENGTH option_len;
-    /* For Read memory */
-    bool continuous_read_en;
-    uint8_t dummy_cycles;
-} qspi_memory_xfer_t;
+} TC_CALLBACK_OBJ;
 
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
-}
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_QSPI_H */
+#endif /* PLIB_TC_COMMON_H */

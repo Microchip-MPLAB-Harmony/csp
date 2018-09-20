@@ -1,14 +1,14 @@
 /*******************************************************************************
-  SDADC${SDADC_INDEX} PLIB
+  ${SDADC_INSTANCE_NAME} PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_sdadc${SDADC_INDEX}.h
+    plib_${SDADC_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    SDADC${SDADC_INDEX} PLIB Header file
+    ${SDADC_INSTANCE_NAME} PLIB Header file
 
   Description:
     This file defines the interface to the SDADC peripheral library. This
@@ -41,8 +41,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_SDADC${SDADC_INDEX}_H
-#define PLIB_SDADC${SDADC_INDEX}_H
+#ifndef PLIB_${SDADC_INSTANCE_NAME}_H
+#define PLIB_${SDADC_INSTANCE_NAME}_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -52,7 +52,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_sdadc.h"
+#include "plib_sdadc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -89,22 +89,22 @@ extern "C" {
 
 // *****************************************************************************
 
-void SDADC${SDADC_INDEX}_Initialize( void );
+void ${SDADC_INSTANCE_NAME}_Initialize( void );
 
-void SDADC${SDADC_INDEX}_ConversionStart( void );
+void ${SDADC_INSTANCE_NAME}_ConversionStart( void );
 
-bool SDADC${SDADC_INDEX}_ConversionResultIsReady (void );
+bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady (void );
 
-int16_t SDADC${SDADC_INDEX}_ConversionResultGet( void );
+int16_t ${SDADC_INSTANCE_NAME}_ConversionResultGet( void );
 
-bool SDADC${SDADC_INDEX}_ConversionSequenceIsFinished(void);
+bool ${SDADC_INSTANCE_NAME}_ConversionSequenceIsFinished(void);
 
-void SDADC${SDADC_INDEX}_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold);
+void ${SDADC_INSTANCE_NAME}_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold);
 
 <#if SDADC_INTERRUPT_MODE == true>
-void SDADC${SDADC_INDEX}_CallbackRegister(SDADC_CALLBACK callback, uintptr_t context);
+void ${SDADC_INSTANCE_NAME}_CallbackRegister(SDADC_CALLBACK callback, uintptr_t context);
 
-void SDADC${SDADC_INDEX}_InterruptHandler( void );
+void ${SDADC_INSTANCE_NAME}_InterruptHandler( void );
 </#if>
 
 
@@ -114,4 +114,4 @@ void SDADC${SDADC_INDEX}_InterruptHandler( void );
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_SDADC${SDADC_INDEX}_H */
+#endif /* PLIB_${SDADC_INSTANCE_NAME}_H */

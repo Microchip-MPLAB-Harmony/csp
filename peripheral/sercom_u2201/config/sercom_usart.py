@@ -280,5 +280,5 @@ usartSym_SerialSetup_EN.setDependencies(set_usart_BAUDAPI_EN_VisibleProperty, ["
 
 #USART API Prefix
 usartSym_API_Prefix = sercomComponent.createStringSymbol("USART_PLIB_API_PREFIX", sercomSym_OperationMode)
-usartSym_API_Prefix.setDefaultValue("SERCOM" + sercomInstanceIndex + "_USART")
+usartSym_API_Prefix.setDefaultValue(sercomInstanceName.getValue() + "_USART")
 usartSym_API_Prefix.setVisible(False)

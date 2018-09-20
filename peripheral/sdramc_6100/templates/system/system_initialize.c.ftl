@@ -1,1 +1,1 @@
-    SDRAMC${INDEX?string}_Initialize();
+    ${SDRAMC_INSTANCE_NAME}_Initialize();

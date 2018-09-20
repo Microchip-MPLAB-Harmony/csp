@@ -15,16 +15,13 @@ def updatePMClockWarringStatus(symbol, event):
 
 def instantiateComponent(pmComponent):
 
-    pmInstanceIndex = pmComponent.getID()[-1:]
-
-    #index
-    pmSym_Index = pmComponent.createIntegerSymbol("PM_INDEX", None)
-    pmSym_Index.setDefaultValue(int(pmInstanceIndex))
-    pmSym_Index.setVisible(False)
+    pmInstanceName = pmComponent.createStringSymbol("PM_INSTANCE_NAME", None)
+    pmInstanceName.setVisible(False)
+    pmInstanceName.setDefaultValue(pmComponent.getID().upper())
 
     #clock enable
-    Database.clearSymbolValue("core", "PM_CLOCK_ENABLE")
-    Database.setSymbolValue("core", "PM_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", pmInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.setSymbolValue("core", pmInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     #standby back biasing
     pmSym_STDBYCFG_BBIASHS = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASHS", None)
@@ -60,7 +57,7 @@ def instantiateComponent(pmComponent):
     pmSym_ClkEnComment = pmComponent.createCommentSymbol("PM_CLOCK_ENABLE_COMMENT", None)
     pmSym_ClkEnComment.setLabel("Warning!!! PM Peripheral Clock is Disabled in Clock Manager")
     pmSym_ClkEnComment.setVisible(False)
-    pmSym_ClkEnComment.setDependencies(updatePMClockWarringStatus, ["core.PM_CLOCK_ENABLE"])
+    pmSym_ClkEnComment.setDependencies(updatePMClockWarringStatus, ["core."+pmInstanceName.getValue()+"_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
@@ -73,7 +70,7 @@ def instantiateComponent(pmComponent):
 
     pmSym_HeaderFile = pmComponent.createFileSymbol("PM_HEADER", None)
     pmSym_HeaderFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/plib_pm.h.ftl")
-    pmSym_HeaderFile.setOutputName("plib_pm" + pmInstanceIndex + ".h")
+    pmSym_HeaderFile.setOutputName("plib_"+pmInstanceName.getValue()+".h")
     pmSym_HeaderFile.setDestPath("/peripheral/pm/")
     pmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pm/")
     pmSym_HeaderFile.setType("HEADER")
@@ -81,7 +78,7 @@ def instantiateComponent(pmComponent):
 
     pmSym_SourceFile = pmComponent.createFileSymbol("PM_SOURCE", None)
     pmSym_SourceFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/plib_pm.c.ftl")
-    pmSym_SourceFile.setOutputName("plib_pm" + pmInstanceIndex + ".c")
+    pmSym_SourceFile.setOutputName("plib_"+pmInstanceName.getValue()+".c")
     pmSym_SourceFile.setDestPath("/peripheral/pm/")
     pmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pm/")
     pmSym_SourceFile.setType("SOURCE")

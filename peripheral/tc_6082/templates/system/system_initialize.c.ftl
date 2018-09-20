@@ -1,6 +1,6 @@
 <#assign start = 0>
 <#if TC_ENABLE_QEI == true>
-    TC${INDEX}_QuadratureInitialize();
+    ${TC_INSTANCE_NAME}_QuadratureInitialize();
 	<#if TC_BMR_POSEN == "POSITION">
 		<#assign start = 2>
 	<#else>
@@ -17,13 +17,13 @@ ${""?left_pad(4)}<#compress>
 <#assign TC_NUM = i >
 <#if .vars[TC_CH_ENABLE] == true>
 	<#if .vars[TC_CH_OPERATINGMODE] == "TIMER">
-	<#lt>TC${INDEX}_CH${TC_NUM}_TimerInitialize();
+	<#lt>${TC_INSTANCE_NAME}_CH${TC_NUM}_TimerInitialize();
 	</#if> <#-- TIMER -->
 	<#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
-	<#lt>TC${INDEX}_CH${TC_NUM}_CaptureInitialize();
+	<#lt>${TC_INSTANCE_NAME}_CH${TC_NUM}_CaptureInitialize();
 	</#if> <#-- CAPTURE -->
 	<#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
-	<#lt>TC${INDEX}_CH${TC_NUM}_CompareInitialize();
+	<#lt>${TC_INSTANCE_NAME}_CH${TC_NUM}_CompareInitialize();
 	</#if> <#-- COMPARE -->
 </#if> <#-- CH_ENABLE --> 
 </#compress>
