@@ -1,0 +1,1 @@
+#include "peripheral/i2sc/plib_i2sc${I2SC_INDEX?string}.h"
