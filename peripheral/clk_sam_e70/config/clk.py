@@ -750,42 +750,42 @@ def __calculated_clock_frequencies(clk_comp, clk_menu, update_fws_value, join_pa
 
     sym_pck0_freq = clk_comp.createStringSymbol("PCK0_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck0_freq.setLabel("Programmable clock #0 Frequency (HZ)")
-    sym_pck0_freq.setDefaultValue("12000000")
+    sym_pck0_freq.setDefaultValue("32000")
     sym_pck0_freq.setReadOnly(True)
 
     sym_pck1_freq = clk_comp.createStringSymbol("PCK1_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck1_freq.setLabel("Programmable clock #1 Frequency (HZ)")
-    sym_pck1_freq.setDefaultValue("6000000")
+    sym_pck1_freq.setDefaultValue("32000")
     sym_pck1_freq.setReadOnly(True)
 
     sym_pck2_freq = clk_comp.createStringSymbol("PCK2_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck2_freq.setLabel("Programmable clock #2 Frequency (HZ)")
-    sym_pck2_freq.setDefaultValue("4000000")
+    sym_pck2_freq.setDefaultValue("32000")
     sym_pck2_freq.setReadOnly(True)
 
     sym_pck3_freq = clk_comp.createStringSymbol("PCK3_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck3_freq.setLabel("Programmable clock #3 Frequency (HZ)")
-    sym_pck3_freq.setDefaultValue("3000000")
+    sym_pck3_freq.setDefaultValue("32000")
     sym_pck3_freq.setReadOnly(True)
 
     sym_pck4_freq = clk_comp.createStringSymbol("PCK4_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck4_freq.setLabel("Programmable clock #4 Frequency (HZ)")
-    sym_pck4_freq.setDefaultValue("2400000")
+    sym_pck4_freq.setDefaultValue("32000")
     sym_pck4_freq.setReadOnly(True)
 
     sym_pck5_freq = clk_comp.createStringSymbol("PCK5_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck5_freq.setLabel("Programmable clock #5 Frequency (HZ)")
-    sym_pck5_freq.setDefaultValue("2000000")
+    sym_pck5_freq.setDefaultValue("32000")
     sym_pck5_freq.setReadOnly(True)
 
     sym_pck6_freq = clk_comp.createStringSymbol("PCK6_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck6_freq.setLabel("Programmable clock #6 Frequency (HZ)")
-    sym_pck6_freq.setDefaultValue("1714285")
+    sym_pck6_freq.setDefaultValue("32000")
     sym_pck6_freq.setReadOnly(True)
 
     sym_pck7_freq = clk_comp.createStringSymbol("PCK7_CLOCK_FREQUENCY", sym_calc_freq_menu)
     sym_pck7_freq.setLabel("Programmable clock #7 Frequency (HZ)")
-    sym_pck7_freq.setDefaultValue("1500000")
+    sym_pck7_freq.setDefaultValue("32000")
     sym_pck7_freq.setReadOnly(True)
 
     sym_usb_fs_freq = clk_comp.createStringSymbol("USBFS_CLOCK_FREQUENCY", sym_calc_freq_menu)
