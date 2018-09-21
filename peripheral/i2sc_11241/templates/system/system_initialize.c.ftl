@@ -1,0 +1,1 @@
+	I2SC${I2SC_INDEX?string}_Initialize();
