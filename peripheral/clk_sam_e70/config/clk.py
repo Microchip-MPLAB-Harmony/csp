@@ -17,19 +17,25 @@ def tcClockFreqCalc(symbol, event):
     tcInstance = symbol.getID()[2]
     id = event["id"]
     clk_src = event["value"]
+    Database.setSymbolValue("core", "PMC_SCER_PCK6", False, 2)
+    Database.setSymbolValue("core", "PMC_SCER_PCK7", False, 2)
     if (id == "TC_PCK_CLKSRC"):
         if (clk_src == "PCK6"):
             symbol.setValue(int(Database.getSymbolValue("core", "PCK6_CLOCK_FREQUENCY")), 2)
+            Database.setSymbolValue("core", "PMC_SCER_PCK6", True, 2)
         elif (clk_src == "PCK7"):
             symbol.setValue(int(Database.getSymbolValue("core", "PCK7_CLOCK_FREQUENCY")), 2)
+            Database.setSymbolValue("core", "PMC_SCER_PCK7", True, 2)
     else:
         if (clk_src == 0):
             symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
         elif (clk_src == 1):
             if (Database.getSymbolValue("tc"+str(tcInstance), "TC_PCK_CLKSRC") == "PCK6"):
                 symbol.setValue(int(Database.getSymbolValue("core", "PCK6_CLOCK_FREQUENCY")), 2)
+                Database.setSymbolValue("core", "PMC_SCER_PCK6", True, 2)
             else:
                 symbol.setValue(int(Database.getSymbolValue("core", "PCK7_CLOCK_FREQUENCY")), 2)
+                Database.setSymbolValue("core", "PMC_SCER_PCK7", True, 2)
         elif (clk_src == 2):
             symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8, 2)
         elif (clk_src == 3):
@@ -43,8 +49,10 @@ def uartClockFreqCalc(symbol, event):
     clk_src = event["value"]
     if (clk_src == 0):
         symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+        Database.setSymbolValue("core", "PMC_SCER_PCK4", False, 2)
     else:
         symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
+        Database.setSymbolValue("core", "PMC_SCER_PCK4", True, 2)
 
 def __update_fws_value(flash_wait_states, event):
     """
