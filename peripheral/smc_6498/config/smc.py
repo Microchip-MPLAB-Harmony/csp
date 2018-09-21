@@ -109,9 +109,8 @@ SMC_MODE_TDF_CYCLES_DEFAULT_VALUE   = 0
 def instantiateComponent(smcComponent):
 
     num = smcComponent.getID()[-1:]
-    print"--------------------------------------------------------------------"
-    print("************************** Running SMC"+ str(num) +" ****************************")
-    print"--------------------------------------------------------------------"
+
+    print("******************** Running SMC"+ str(num) +" ********************")
 
     smcRegModule    = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SMC\"]/register-group@[name=\"SMC\"]/register-group@[name=\"SMC_CS_NUMBER\"]")
     smcChipSelCount = int (smcRegModule.getAttribute("count"))
