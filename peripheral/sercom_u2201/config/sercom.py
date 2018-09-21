@@ -29,6 +29,7 @@ def onCapabilityConnected(event):
             usartSym_Interrupt_Mode.clearValue()
             usartSym_Interrupt_Mode.setValue(True, 2)
         usartSym_Interrupt_Mode.setReadOnly(True)
+        setSERCOMInterruptData(True, "USART")
     elif capability == spiCapabilityId:
         sercomComponent.setCapabilityEnabled(uartCapabilityId, False)
         sercomComponent.setCapabilityEnabled(spiCapabilityId, True)
@@ -38,11 +39,13 @@ def onCapabilityConnected(event):
             spiSym_Interrupt_Mode.clearValue()
             spiSym_Interrupt_Mode.setValue(True, 2)
         spiSym_Interrupt_Mode.setReadOnly(True)
+        setSERCOMInterruptData(True, "SPI")
     elif capability == i2cCapabilityId:
         sercomComponent.setCapabilityEnabled(uartCapabilityId, False)
         sercomComponent.setCapabilityEnabled(spiCapabilityId, False)
         sercomComponent.setCapabilityEnabled(i2cCapabilityId, True)
         sercomSym_OperationMode.setSelectedKey("I2CM", 2)
+        setSERCOMInterruptData(True, "I2C")
 
     sercomSym_OperationMode.setReadOnly(True)
 
@@ -91,7 +94,7 @@ def setSERCOMCodeGenerationProperty(symbol, event):
         component.setCapabilityEnabled(uartCapabilityId, False)
         component.setCapabilityEnabled(spiCapabilityId, True)
         component.setCapabilityEnabled(i2cCapabilityId, False)
-    elif event["value"] == 0x05:
+    elif event["value"] == 0x5:
         component.getSymbolByID("SERCOM_I2CM_SOURCE").setEnabled(True)
         component.getSymbolByID("SERCOM_I2CM_HEADER").setEnabled(True)
         component.getSymbolByID("SERCOM_I2CM_MASTER_HEADER").setEnabled(True)
