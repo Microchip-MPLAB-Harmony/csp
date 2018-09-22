@@ -93,7 +93,7 @@ def instantiateComponent(dacComponent):
     dacSym_EVCTRL_STARTEI.setLabel("Trigger conversion on input event?")
     dacSym_EVCTRL_STARTEI.setVisible(False)
     # Clock Warning status
-    dacSym_ClkEnComment = dacComponent.createCommentSymbol("DAC_CLOCK_ENABLE_COMMENT", dacSym_MENU)
+    dacSym_ClkEnComment = dacComponent.createCommentSymbol("DAC_CLOCK_ENABLE_COMMENT", None)
     dacSym_ClkEnComment.setLabel("Warning!!! DAC Peripheral Clock is Disabled in Clock Manager")
     dacSym_ClkEnComment.setVisible(False)
     dacSym_ClkEnComment.setDependencies(updateDACClockWarringStatus, ["core.DAC_CLOCK_ENABLE"])
