@@ -18,7 +18,6 @@ global xdmacSystemIntFile
 global xdmacSystemDefFile
 global xdmacSystemConfigFile
 global triggerSettings
-global triggerRegister
 # Parse atdf xml file to get instance name for the peripheral which has DMA id.
 # And construct a list of PERIDs
 
@@ -36,7 +35,7 @@ global xdmacChannelIds
 xdmacChannelIds = []
 
 #Device specific XDMAC settings
-triggerSettings, triggerRegister = setXDMACDefaultSettings()
+triggerSettings = setXDMACDefaultSettings()
 
 # Create lists for peripheral triggers and the corresponding ID values
 node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
@@ -78,7 +77,6 @@ def dependencyStatus(symbol, event):
 
 def xdmacTriggerLogic(xdmacSym, event):
     global triggerSettings
-    global triggerRegister
     SymID = xdmacSym.getID()
 
     if event["value"] in triggerSettings:
@@ -112,8 +110,6 @@ def xdmacTriggerLogic(xdmacSym, event):
         xdmacSym.setSelectedKey(str(triggerSettings[trigger][8]), 2)
     if "MBSIZE" in str(SymID):
         xdmacSym.setSelectedKey(str(triggerSettings[trigger][9]), 2)
-    if "PER_REGISTER" in str(SymID):
-        xdmacSym.setValue(str(triggerRegister[event["value"]][0]), 2)
 
 # The following business logic creates a list of enabled DMA channels and sorts
 # them in the descending order. The left most channel number will be the highest
@@ -304,13 +300,6 @@ for channelID in range(0, xdmacChCount.getValue()):
     xdmacSym_CC_PERID_LOCK.setVisible(False)
     xdmacSym_CC_PERID_LOCK.setDefaultValue(False)
     xdmacSym_CC_PERID_LOCK.setUseSingleDynamicValue(True)
-
-    xdmacPeripheralRegister = coreComponent.createStringSymbol("XDMAC_CH"+ str(channelID)+"_PER_REGISTER", xdmacChannelMenu)
-    xdmacPeripheralRegister.setLabel("Peripheral Register associated with the DMA Channel")
-    xdmacPeripheralRegister.setDependencies(xdmacTriggerLogic, ["XDMAC_CC"+ str(channelID)+"_PERID"])
-    xdmacPeripheralRegister.setDefaultValue("None")
-    xdmacPeripheralRegister.setVisible(False)
-    xdmacPeripheralRegister.setReadOnly(True)
 
     xdmacSym_CC_PERID_Val = coreComponent.createIntegerSymbol("XDMAC_CC"+ str(channelID)+"_PERID_VAL", xdmacChannelMenu)
     xdmacSym_CC_PERID_Val.setLabel("PERID Value")

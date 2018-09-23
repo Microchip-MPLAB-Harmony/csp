@@ -107,7 +107,7 @@ def instantiateComponent(sscComponent):
     custom = False
     sscInstance = sscComponent.getID()[-1:]
     Log.writeInfoMessage("Running SSC" + str(sscInstance))
-           
+
     sscIndex = sscComponent.createIntegerSymbol("SSC_INDEX", None)
     sscIndex.setVisible(False)
     sscIndex.setDefaultValue(int(sscInstance))
@@ -146,7 +146,7 @@ def instantiateComponent(sscComponent):
     sscAudioProtocol.setDependencies(customUpdate, ["SSC_AUDIO_PROTOCOL"])
 
     sscBaud = sscComponent.createIntegerSymbol("SSC_BAUD_RATE", None)
-    sscBaud.setVisible(False)	# depends on master true/slave false
+    sscBaud.setVisible(False)   # depends on master true/slave false
     sscBaud.setLabel("Baud Rate")
     sscBaud.setDefaultValue(48000)
 
@@ -163,7 +163,7 @@ def instantiateComponent(sscComponent):
     sscRecClkModeCKS.addKey("RK", "2", "RK pin")
     sscRecClkModeCKS.setDisplayMode("Description")
     sscRecClkModeCKS.setOutputMode("Value")
-    sscRecClkModeCKS.setDefaultValue(2)	# depends on master 0/slave 2
+    sscRecClkModeCKS.setDefaultValue(2) # depends on master 0/slave 2
     sscRecClkModeCKS.setVisible(custom)
 
     sscRecClkModeCKO = sscComponent.createKeyValueSetSymbol("SSC_RCMR_CKO", None)
@@ -173,7 +173,7 @@ def instantiateComponent(sscComponent):
     sscRecClkModeCKO.addKey("TRANSFER", "2", "Receive clock during transfer")
     sscRecClkModeCKO.setDisplayMode("Description")
     sscRecClkModeCKO.setOutputMode("Value")
-    sscRecClkModeCKO.setDefaultValue(0)	# depends on master 1/slave 0
+    sscRecClkModeCKO.setDefaultValue(0) # depends on master 1/slave 0
     sscRecClkModeCKO.setVisible(custom)
 
     sscRecClkModeCKI = sscComponent.createKeyValueSetSymbol("SSC_RCMR_CKI", None)
@@ -208,7 +208,7 @@ def instantiateComponent(sscComponent):
     sscRecClkModeSTART.addKey("CMP_0", "8", "Compare 0")
     sscRecClkModeSTART.setDisplayMode("Description")
     sscRecClkModeSTART.setOutputMode("Value")
-    sscRecClkModeSTART.setDefaultValue(7)	# depends on master 0/slave 7
+    sscRecClkModeSTART.setDefaultValue(7)   # depends on master 0/slave 7
     sscRecClkModeSTART.setVisible(custom)
 
     sscRecClkModeSTOP= sscComponent.createKeyValueSetSymbol("SSC_RCMR_STOP", None)
@@ -222,7 +222,7 @@ def instantiateComponent(sscComponent):
 
     sscRecClkModeSTTDLY = sscComponent.createIntegerSymbol("SSC_RCMR_STTDLY", None)
     sscRecClkModeSTTDLY.setLabel("Receiver Start Delay")
-    sscRecClkModeSTTDLY.setDefaultValue(1)	# depends on master 0/slave 1
+    sscRecClkModeSTTDLY.setDefaultValue(1)  # depends on master 0/slave 1
     sscRecClkModeSTTDLY.setVisible(custom)
 
     sscRecClkModePERIOD = sscComponent.createIntegerSymbol("SSC_RCMR_PERIOD", None)
@@ -251,7 +251,7 @@ def instantiateComponent(sscComponent):
     sscRecFrameModeMSBF.addKey("MSB", "1", "MSB sampled first")
     sscRecFrameModeMSBF.setDisplayMode("Description")
     sscRecFrameModeMSBF.setOutputMode("Value")
-    sscRecFrameModeMSBF.setDefaultValue(1)	# depends on master 0/slave 1
+    sscRecFrameModeMSBF.setDefaultValue(1)  # depends on master 0/slave 1
     sscRecFrameModeMSBF.setVisible(custom)
 
     sscRecFrameModeDATNB = sscComponent.createIntegerSymbol("SSC_RFMR_DATNB", None)
@@ -274,7 +274,7 @@ def instantiateComponent(sscComponent):
     sscRecFrameModeFSOS.addKey("TOGGLING", "5", "Toggling start of each transfer")
     sscRecFrameModeFSOS.setDisplayMode("Description")
     sscRecFrameModeFSOS.setOutputMode("Value")
-    sscRecFrameModeFSOS.setDefaultValue(0)	# depends on master 5/slave 0
+    sscRecFrameModeFSOS.setDefaultValue(0)  # depends on master 5/slave 0
     sscRecFrameModeFSOS.setVisible(custom)
 
     sscRecFrameModeFSEDGE = sscComponent.createKeyValueSetSymbol("SSC_RFMR_FSEDGE", None)
@@ -299,7 +299,7 @@ def instantiateComponent(sscComponent):
     sscTmtClkModeCKS.addKey("TK", "2", "TK pin")
     sscTmtClkModeCKS.setDisplayMode("Description")
     sscTmtClkModeCKS.setOutputMode("Value")
-    sscTmtClkModeCKS.setDefaultValue(2)	# depends on master 0/slave 2
+    sscTmtClkModeCKS.setDefaultValue(2) # depends on master 0/slave 2
     sscTmtClkModeCKS.setVisible(custom)
 
     sscTmtClkModeCKO = sscComponent.createKeyValueSetSymbol("SSC_TCMR_CKO", None)
@@ -309,7 +309,7 @@ def instantiateComponent(sscComponent):
     sscTmtClkModeCKO.addKey("TRANSFER", "2", "Transmit clock during transfer")
     sscTmtClkModeCKO.setDisplayMode("Description")
     sscTmtClkModeCKO.setOutputMode("Value")
-    sscTmtClkModeCKO.setDefaultValue(0)	# depends on master 1 /slave 0
+    sscTmtClkModeCKO.setDefaultValue(0) # depends on master 1 /slave 0
     sscTmtClkModeCKO.setVisible(custom)
 
     sscTmtClkModeCKI = sscComponent.createKeyValueSetSymbol("SSC_TCMR_CKI", None)
@@ -343,12 +343,12 @@ def instantiateComponent(sscComponent):
     sscTmtClkModeSTART.addKey("TF_EDGE", "7", "Any edge on TF signal")
     sscTmtClkModeSTART.setDisplayMode("Description")
     sscTmtClkModeSTART.setOutputMode("Value")
-    sscTmtClkModeSTART.setDefaultValue(7)	# depends on master 0 /slave 7
+    sscTmtClkModeSTART.setDefaultValue(7)   # depends on master 0 /slave 7
     sscTmtClkModeSTART.setVisible(custom)
 
     sscTmtClkModeSTTDLY = sscComponent.createIntegerSymbol("SSC_TCMR_STTDLY", None)
     sscTmtClkModeSTTDLY.setLabel("Transmitter Start Delay")
-    sscTmtClkModeSTTDLY.setDefaultValue(1)	# depends on master 0/slave 1
+    sscTmtClkModeSTTDLY.setDefaultValue(1)  # depends on master 0/slave 1
     sscTmtClkModeSTTDLY.setVisible(custom)
 
     sscTmtClkModePERIOD = sscComponent.createIntegerSymbol("SSC_TCMR_PERIOD", None)
@@ -400,7 +400,7 @@ def instantiateComponent(sscComponent):
     sscTmtFrameModeFSOS.addKey("TOGGLING", "5", "Toggling start of each transfer")
     sscTmtFrameModeFSOS.setDisplayMode("Description")
     sscTmtFrameModeFSOS.setOutputMode("Value")
-    sscTmtFrameModeFSOS.setDefaultValue(0)	# depends on master 5/slave 0
+    sscTmtFrameModeFSOS.setDefaultValue(0)  # depends on master 5/slave 0
     sscTmtFrameModeFSOS.setVisible(custom)
 
     sscTmtFrameModeFSDEN = sscComponent.createKeyValueSetSymbol("SSC_TFMR_FSDEN", None)
@@ -425,7 +425,17 @@ def instantiateComponent(sscComponent):
     sscTmtFrameModeFSLEN_EXT.setLabel("Transmitter FSLEN Field Extension")
     sscTmtFrameModeFSLEN_EXT.setDefaultValue(0)
     sscTmtFrameModeFSLEN_EXT.setVisible(custom)
-    
+
+    #SSC Transmit data register
+    sscTxRegister = sscComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
+    sscTxRegister.setDefaultValue("&(SSC_REGS->SSC_THR)")
+    sscTxRegister.setVisible(False)
+
+    #SSC Receive data register
+    sscRxRegister = sscComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
+    sscRxRegister.setDefaultValue("&(SSC_REGS->SSC_RHR)")
+    sscRxRegister.setVisible(False)
+
     configName = Variables.get("__CONFIGURATION_NAME")
     
     sscHeaderFile = sscComponent.createFileSymbol("SSC_COMMON_HEADER", None)

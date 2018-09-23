@@ -51,7 +51,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#define DMAC_CHANNELS_NUMBER        ${DMAC_CHAN_ENABLE_CNT}
+#define DMAC_CHANNELS_NUMBER        ${DMAC_HIGHEST_CHANNEL}
 
 /* DMAC channels object configuration structure */
 typedef struct
@@ -104,7 +104,7 @@ void DMAC${DMAC_INDEX}_Initialize( void )
 
     /* Update the Priority Control register */
     DMAC${DMAC_INDEX}_REGS->DMAC_PRICTRL0 = DMAC_PRICTRL0_LVLPRI0(${DMAC_LVLXPRIO_0}) | DMAC_PRICTRL0_LVLPRI1(${DMAC_LVLXPRIO_1}) | DMAC_PRICTRL0_LVLPRI2(${DMAC_LVLXPRIO_2}) | DMAC_PRICTRL0_LVLPRI3(${DMAC_LVLXPRIO_3});
-    <#list 0..DMAC_CHAN_ENABLE_CNT - 1 as i>
+    <#list 0..DMAC_HIGHEST_CHANNEL - 1 as i>
         <#assign DMAC_CHCTRLA_ENABLE    = "DMAC_ENABLE_CH_"           + i>
         <#assign DMAC_CHCTRLA_RUNSTDBY  = "DMAC_CHCTRLA_RUNSTDBY_CH_" + i>
         <#assign DMAC_CHCTRLB_TRIGACT   = "DMAC_CHCTRLB_TRIGACT_CH_"  + i>
