@@ -239,16 +239,14 @@ xdmacIndex.setVisible(False)
 instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"XDMAC\"]").getChildren()
 if len(instances) == 1:
     xdmacIndex.setDefaultValue("")
-    numOfInstance=""
 else:
 #TODO: Add support for second instance
     xdmacIndex.setDefaultValue("0")
-    numOfInstance="0"
 
 
 # DMA_INSTANCE_NAME: Needed to map DMA system service APIs to PLIB APIs
 portSymAPI_Prefix = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
-portSymAPI_Prefix.setDefaultValue("XDMAC"+numOfInstance)
+portSymAPI_Prefix.setDefaultValue("XDMAC"+xdmacIndex.getValue())
 portSymAPI_Prefix.setVisible(False)
 
 # DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
@@ -419,6 +417,56 @@ for channelID in range(0, xdmacChCount.getValue()):
 
 xdmacEnable.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
 xdmacHighestCh.setDependencies(xdmacGlobalLogic, xdmacChannelIds)
+
+#DMA - Source AM Mask
+xdmacSym_CC_SAM_MASK = coreComponent.createStringSymbol("DMA_SRC_AM_MASK", xdmacChannelMenu)
+xdmacSym_CC_SAM_MASK.setDefaultValue("0x30000")
+xdmacSym_CC_SAM_MASK.setVisible(False)
+
+#DMA - Source FIXED_AM Value
+xdmacSym_CC_SAM_FIXED = coreComponent.createStringSymbol("DMA_SRC_FIXED_AM_VALUE", xdmacChannelMenu)
+xdmacSym_CC_SAM_FIXED.setDefaultValue("0x0")
+xdmacSym_CC_SAM_FIXED.setVisible(False)
+
+#DMA - Source INCREMENTED_AM Value
+xdmacSym_CC_SAM_INCREMENTED = coreComponent.createStringSymbol("DMA_SRC_INCREMENTED_AM_VALUE", xdmacChannelMenu)
+xdmacSym_CC_SAM_INCREMENTED.setDefaultValue("0x10000")
+xdmacSym_CC_SAM_INCREMENTED.setVisible(False)
+
+#DMA - Destination AM Mask
+xdmacSym_CC_DAM_MASK = coreComponent.createStringSymbol("DMA_DST_AM_MASK", xdmacChannelMenu)
+xdmacSym_CC_DAM_MASK.setDefaultValue("0xC0000")
+xdmacSym_CC_DAM_MASK.setVisible(False)
+
+#DMA - Destination FIXED_AM Value
+xdmacSym_CC_DAM_FIXED = coreComponent.createStringSymbol("DMA_DST_FIXED_AM_VALUE", xdmacChannelMenu)
+xdmacSym_CC_DAM_FIXED.setDefaultValue("0x0")
+xdmacSym_CC_DAM_FIXED.setVisible(False)
+
+#DMA - Destination INCREMENTED_AM Value
+xdmacSym_CC_DAM_INCREMENTED = coreComponent.createStringSymbol("DMA_DST_INCREMENTED_AM_VALUE", xdmacChannelMenu)
+xdmacSym_CC_DAM_INCREMENTED.setDefaultValue("0x40000")
+xdmacSym_CC_DAM_INCREMENTED.setVisible(False)
+
+#DMA - Data Width Mask
+xdmacSym_CC_DWIDTH_MASK = coreComponent.createStringSymbol("DMA_DATA_WIDTH_MASK", xdmacChannelMenu)
+xdmacSym_CC_DWIDTH_MASK.setDefaultValue("0x1800")
+xdmacSym_CC_DWIDTH_MASK.setVisible(False)
+
+#DMA - Data Width BYTE Value
+xdmacSym_CC_DWIDTH_BYTE = coreComponent.createStringSymbol("DMA_DATA_WIDTH_BYTE_VALUE", xdmacChannelMenu)
+xdmacSym_CC_DWIDTH_BYTE.setDefaultValue("0x0")
+xdmacSym_CC_DWIDTH_BYTE.setVisible(False)
+
+#DMA - Data Width HALFWORD Value
+xdmacSym_CC_DWIDTH_HALFWORD = coreComponent.createStringSymbol("DMA_DATA_WIDTH_HALFWORD_VALUE", xdmacChannelMenu)
+xdmacSym_CC_DWIDTH_HALFWORD.setDefaultValue("0x800")
+xdmacSym_CC_DWIDTH_HALFWORD.setVisible(False)
+
+#DMA - Data Width WORD Value
+xdmacSym_CC_DWIDTH_WORD = coreComponent.createStringSymbol("DMA_DATA_WIDTH_WORD_VALUE", xdmacChannelMenu)
+xdmacSym_CC_DWIDTH_WORD.setDefaultValue("0x1000")
+xdmacSym_CC_DWIDTH_WORD.setVisible(False)
 
 # Interface for Peripheral clients
 for per in per_instance.keys():
