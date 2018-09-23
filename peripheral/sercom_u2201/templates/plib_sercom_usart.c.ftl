@@ -167,7 +167,7 @@ void static SERCOM${SERCOM_INDEX}_USART_ISR_ERR_Handler( void )
     USART_ERROR errorStatus = USART_ERROR_NONE;
     uint8_t  u8dummyData = 0;
 
-    errorStatus = (SERCOM${SERCOM_INDEX}_REGS->USART.STATUS.w &
+    errorStatus = (SERCOM${SERCOM_INDEX}_REGS->USART.STATUS &
                   (SERCOM_USART_STATUS_PERR_Msk |
                   SERCOM_USART_STATUS_FERR_Msk |
                   SERCOM_USART_STATUS_BUFOVF_Msk));
@@ -175,15 +175,15 @@ void static SERCOM${SERCOM_INDEX}_USART_ISR_ERR_Handler( void )
     if(errorStatus != USART_ERROR_NONE)
     {
         /* Clear all error flags */
-        SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w = SERCOM_USART_INTFLAG_ERROR_Msk;
+        SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG = SERCOM_USART_INTFLAG_ERROR_Msk;
 
         /* Clear error statuses */
-        SERCOM${SERCOM_INDEX}_REGS->USART.STATUS.w = SERCOM_USART_STATUS_Msk;
+        SERCOM${SERCOM_INDEX}_REGS->USART.STATUS = SERCOM_USART_STATUS_Msk;
 
         /* Flush existing error bytes from the RX FIFO */
-        while((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
+        while((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
         {
-            u8dummyData = SERCOM${SERCOM_INDEX}_REGS->USART.DATA.w;
+            u8dummyData = SERCOM${SERCOM_INDEX}_REGS->USART.DATA;
         }
 
         /* Ignore the warning */
@@ -222,7 +222,7 @@ void static SERCOM${SERCOM_INDEX}_USART_ISR_RX_Handler( void )
             {
                 sercom${SERCOM_INDEX}usartObj.rxBusyStatus = false;
                 sercom${SERCOM_INDEX}usartObj.rxSize = 0;
-                SERCOM${SERCOM_INDEX}_REGS->USART.INTENCLR.w = SERCOM_USART_INTENCLR_RXC_Msk;
+                SERCOM${SERCOM_INDEX}_REGS->USART.INTENCLR = SERCOM_USART_INTENCLR_RXC_Msk;
 
                 if(sercom${SERCOM_INDEX}usartObj.rxCallback != NULL)
                 {
@@ -231,9 +231,9 @@ void static SERCOM${SERCOM_INDEX}_USART_ISR_RX_Handler( void )
             }
             else
             {
-                SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w = SERCOM_USART_INTFLAG_RXC_Msk;
+                SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG = SERCOM_USART_INTFLAG_RXC_Msk;
 
-                sercom${SERCOM_INDEX}usartObj.rxBuffer[sercom${SERCOM_INDEX}usartObj.rxProcessedSize++] = SERCOM${SERCOM_INDEX}_REGS->USART.DATA.w;
+                sercom${SERCOM_INDEX}usartObj.rxBuffer[sercom${SERCOM_INDEX}usartObj.rxProcessedSize++] = SERCOM${SERCOM_INDEX}_REGS->USART.DATA;
             }
         }
     }
@@ -266,7 +266,7 @@ void static SERCOM${SERCOM_INDEX}_USART_ISR_TX_Handler( void )
             {
                 sercom${SERCOM_INDEX}usartObj.txBusyStatus = false;
                 sercom${SERCOM_INDEX}usartObj.txSize = 0;
-                SERCOM${SERCOM_INDEX}_REGS->USART.INTENCLR.w = SERCOM_USART_INTENCLR_DRE_Msk;
+                SERCOM${SERCOM_INDEX}_REGS->USART.INTENCLR = SERCOM_USART_INTENCLR_DRE_Msk;
 
                 if(sercom${SERCOM_INDEX}usartObj.txCallback != NULL)
                 {
@@ -275,9 +275,9 @@ void static SERCOM${SERCOM_INDEX}_USART_ISR_TX_Handler( void )
             }
             else
             {
-                SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w = SERCOM_USART_INTFLAG_DRE_Msk;
+                SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG = SERCOM_USART_INTFLAG_DRE_Msk;
 
-                SERCOM${SERCOM_INDEX}_REGS->USART.DATA.w = sercom${SERCOM_INDEX}usartObj.txBuffer[sercom${SERCOM_INDEX}usartObj.txProcessedSize++];
+                SERCOM${SERCOM_INDEX}_REGS->USART.DATA = sercom${SERCOM_INDEX}usartObj.txBuffer[sercom${SERCOM_INDEX}usartObj.txProcessedSize++];
             }
         }
     }
@@ -312,15 +312,15 @@ this interface.
 void SERCOM${SERCOM_INDEX}_USART_Initialize( void )
 {
     /* Disable the USART before configurations */
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w &= ~SERCOM_USART_CTRLA_ENABLE_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA &= ~SERCOM_USART_CTRLA_ENABLE_Msk;
 
-    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY.w & SERCOM_USART_SYNCBUSY_ENABLE_Msk) == SERCOM_USART_SYNCBUSY_ENABLE_Msk)
+    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY & SERCOM_USART_SYNCBUSY_ENABLE_Msk) == SERCOM_USART_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for sync */
     }
 
     /* Configures USART Clock Mode */
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_MODE(${(SERCOM_MODE == "USART_EXT")?then('SERCOM_USART_EXT_CLK' , 'SERCOM_USART_INT_CLK')});
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_MODE(${(SERCOM_MODE == "USART_EXT")?then('SERCOM_USART_EXT_CLK' , 'SERCOM_USART_INT_CLK')});
 
     /*
      * Configures TXPO and RXPO
@@ -329,7 +329,7 @@ void SERCOM${SERCOM_INDEX}_USART_Initialize( void )
      * Configures sampling rate
      * Configures IBON
      */
-    <@compress single_line=true>SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_RXPO(${USART_RXPO}_RXPO) |
+    <@compress single_line=true>SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_RXPO(${USART_RXPO}_RXPO) |
                                                                              SERCOM_USART_CTRLA_TXPO(${USART_TXPO}_TXPO) |
                                                                              SERCOM_USART_CTRLA_DORD_Msk |
                                                                              SERCOM_USART_CTRLA_SAMPR(1) |
@@ -338,38 +338,38 @@ void SERCOM${SERCOM_INDEX}_USART_Initialize( void )
 
 <#if USART_PARITY_MODE = "ODD">
     /* Configure Parity */
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_FORM(1);
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLB.w |= SERCOM_USART_CTRLB_PMODE_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_FORM(1);
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLB |= SERCOM_USART_CTRLB_PMODE_Msk;
 </#if>
 <#if USART_PARITY_MODE = "EVEN">
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_FORM(1);
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_FORM(1);
 </#if>
 <#if USART_PARITY_MODE = "NONE">
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_FORM(0);
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_FORM(0);
 </#if>
 
 <#if USART_STOP_BIT = "2BITS">
     /* Configure Stop bits */
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLB.w |= SERCOM_USART_CTRLB_SBMODE_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLB |= SERCOM_USART_CTRLB_SBMODE_Msk;
 </#if>
 
     /* Configure Baud Rate */
-    SERCOM${SERCOM_INDEX}_REGS->USART.BAUD.w = SERCOM_USART_BAUD_BAUD_FRAC_MODE(BAUD_VAL) | SERCOM_USART_BAUD_FP(FP_VAL);
+    SERCOM${SERCOM_INDEX}_REGS->USART.BAUD = SERCOM_USART_BAUD_BAUD_FRAC_MODE(BAUD_VAL) | SERCOM_USART_BAUD_FP(FP_VAL);
 
     /* Enable transmitter and receive enable RXEN TXEN */
-    <@compress single_line=true>SERCOM${SERCOM_INDEX}_REGS->USART.CTRLB.w |= SERCOM_USART_CTRLB_CHSIZE(SERCOM_USART_CTRLB_CHSIZE_${USART_CHARSIZE_BITS})
+    <@compress single_line=true>SERCOM${SERCOM_INDEX}_REGS->USART.CTRLB |= SERCOM_USART_CTRLB_CHSIZE(SERCOM_USART_CTRLB_CHSIZE_${USART_CHARSIZE_BITS})
                                                                              ${USART_RX_ENABLE?then('| SERCOM_USART_CTRLB_RXEN_Msk', '')}
                                                                              ${USART_TX_ENABLE?then('| SERCOM_USART_CTRLB_TXEN_Msk', '')};</@compress>
 
-    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY.w & SERCOM_USART_SYNCBUSY_CTRLB_Msk) == SERCOM_USART_SYNCBUSY_CTRLB_Msk)
+    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY & SERCOM_USART_SYNCBUSY_CTRLB_Msk) == SERCOM_USART_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for sync */
     }
 
     /* Enable the UART after the configurations */
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_ENABLE_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_ENABLE_Msk;
 
-    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY.w & SERCOM_USART_SYNCBUSY_ENABLE_Msk) == SERCOM_USART_SYNCBUSY_ENABLE_Msk)
+    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY & SERCOM_USART_SYNCBUSY_ENABLE_Msk) == SERCOM_USART_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for sync */
     }
@@ -430,9 +430,9 @@ bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency, USART_SERIA
     u32fpVal = ((clkFrequency / serialSetup->baud - 16 * u32baudVal) / 2);
 
     /* Disable the UART before configurations */
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w &= ~SERCOM_USART_CTRLA_ENABLE_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA &= ~SERCOM_USART_CTRLA_ENABLE_Msk;
 
-    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY.w & SERCOM_USART_SYNCBUSY_ENABLE_Msk) == SERCOM_USART_SYNCBUSY_ENABLE_Msk)
+    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY & SERCOM_USART_SYNCBUSY_ENABLE_Msk) == SERCOM_USART_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for sync */
     }
@@ -440,7 +440,7 @@ bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency, USART_SERIA
     if((serialSetup != NULL) && (serialSetup->baud < SERCOM_BAUD_RATE_MAX_RANGE))
     {
         /* Configure Baud Rate */
-        SERCOM${SERCOM_INDEX}_REGS->USART.BAUD.w = SERCOM_USART_BAUD_BAUD_FRAC_MODE(u32baudVal) | SERCOM_USART_BAUD_FP(u32fpVal);
+        SERCOM${SERCOM_INDEX}_REGS->USART.BAUD = SERCOM_USART_BAUD_BAUD_FRAC_MODE(u32baudVal) | SERCOM_USART_BAUD_FP(u32fpVal);
 
         /* Configure Character Size */
         u32confVal |= SERCOM_USART_CTRLB_CHSIZE(serialSetup->charSize);
@@ -458,26 +458,26 @@ bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency, USART_SERIA
         /* Configure Parity Options */
         if((serialSetup->parityEnable == true) && (serialSetup->parity == SERCOM_USART_CTRLB_PMODE_ODD))
         {
-            SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_FORM(1);
+            SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_FORM(1);
 
             u32confVal |= SERCOM_USART_CTRLB_PMODE_ODD;
         }
         else if((serialSetup->parityEnable == true) && (serialSetup->parity == SERCOM_USART_CTRLB_PMODE_EVEN))
         {
-            SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_FORM(1);
+            SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_FORM(1);
 
             u32confVal |= SERCOM_USART_CTRLB_PMODE_EVEN;
         }
         else
         {
             /* If No Parity Selected */
-            SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_FORM(0);
+            SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_FORM(0);
         }
 
         /* Writing the configurations to register */
-        SERCOM${SERCOM_INDEX}_REGS->USART.CTRLB.w |= u32confVal;
+        SERCOM${SERCOM_INDEX}_REGS->USART.CTRLB |= u32confVal;
 
-        while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY.w & SERCOM_USART_SYNCBUSY_CTRLB_Msk) == SERCOM_USART_SYNCBUSY_CTRLB_Msk)
+        while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY & SERCOM_USART_SYNCBUSY_CTRLB_Msk) == SERCOM_USART_SYNCBUSY_CTRLB_Msk)
         {
             /* Wait for sync */
         }
@@ -486,9 +486,9 @@ bool SERCOM${SERCOM_INDEX}_USART_SerialSetup( uint32_t clkFrequency, USART_SERIA
     }
 
     /* Enable the UART after the configurations */
-    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA.w |= SERCOM_USART_CTRLA_ENABLE_Msk;
+    SERCOM${SERCOM_INDEX}_REGS->USART.CTRLA |= SERCOM_USART_CTRLA_ENABLE_Msk;
 
-    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY.w & SERCOM_USART_SYNCBUSY_ENABLE_Msk) == SERCOM_USART_SYNCBUSY_ENABLE_Msk)
+    while((SERCOM${SERCOM_INDEX}_REGS->USART.SYNCBUSY & SERCOM_USART_SYNCBUSY_ENABLE_Msk) == SERCOM_USART_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for sync */
     }
@@ -538,13 +538,13 @@ bool SERCOM${SERCOM_INDEX}_USART_Write( void *buffer, const size_t size )
         /* Blocks while buffer is being transferred */
         while (u32Length--)
         {
-            while ((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_DRE_Msk) != SERCOM_USART_INTFLAG_DRE_Msk)
+            while ((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_DRE_Msk) != SERCOM_USART_INTFLAG_DRE_Msk)
             {
                 /* Check if USART is ready for new data */
             }
 
             /* Write data to USART module */
-            SERCOM${SERCOM_INDEX}_REGS->USART.DATA.w = pu8Data[u32TxPos++];
+            SERCOM${SERCOM_INDEX}_REGS->USART.DATA = pu8Data[u32TxPos++];
         }
 
         bReturnVal = true;
@@ -563,14 +563,14 @@ bool SERCOM${SERCOM_INDEX}_USART_Write( void *buffer, const size_t size )
             else
             {
                 /* Initiate the transfer by sending first byte */
-                if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_DRE_Msk) == SERCOM_USART_INTFLAG_DRE_Msk)
+                if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_DRE_Msk) == SERCOM_USART_INTFLAG_DRE_Msk)
                 {
-                    SERCOM${SERCOM_INDEX}_REGS->USART.DATA.w = sercom${SERCOM_INDEX}usartObj.txBuffer[sercom${SERCOM_INDEX}usartObj.txProcessedSize++];
+                    SERCOM${SERCOM_INDEX}_REGS->USART.DATA = sercom${SERCOM_INDEX}usartObj.txBuffer[sercom${SERCOM_INDEX}usartObj.txProcessedSize++];
                 }
 
                 bReturnVal = true;
 
-                SERCOM${SERCOM_INDEX}_REGS->USART.INTENSET.w = SERCOM_USART_INTFLAG_DRE_Msk ;
+                SERCOM${SERCOM_INDEX}_REGS->USART.INTENSET = SERCOM_USART_INTFLAG_DRE_Msk ;
             }
         }
 </#if>
@@ -623,15 +623,15 @@ bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size )
         if(SERCOM${SERCOM_INDEX}_USART_ErrorGet() != USART_ERROR_NONE)
         {
             /* Clear all error flags */
-            SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w = SERCOM_USART_INTFLAG_ERROR_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG = SERCOM_USART_INTFLAG_ERROR_Msk;
 
             /* Clear error statuses */
-            SERCOM${SERCOM_INDEX}_REGS->USART.STATUS.w = SERCOM_USART_STATUS_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->USART.STATUS = SERCOM_USART_STATUS_Msk;
 
             /* Flush existing error bytes from the RX FIFO */
-            while((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
+            while((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
             {
-                u8dummyData = SERCOM${SERCOM_INDEX}_REGS->USART.DATA.w;
+                u8dummyData = SERCOM${SERCOM_INDEX}_REGS->USART.DATA;
             }
 
             /* Ignore the warning */
@@ -640,13 +640,13 @@ bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size )
 
         while(u32Length--)
         {
-            while((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_RXC_Msk) != SERCOM_USART_INTFLAG_RXC_Msk)
+            while((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_RXC_Msk) != SERCOM_USART_INTFLAG_RXC_Msk)
             {
                 /* Check if USART has new data */
             }
 
             /* Read data from USART module */
-            *pu8Data++ = SERCOM${SERCOM_INDEX}_REGS->USART.DATA.w;
+            *pu8Data++ = SERCOM${SERCOM_INDEX}_REGS->USART.DATA;
             u32RxPos++;
 
             if(SERCOM${SERCOM_INDEX}_USART_ErrorGet() != USART_ERROR_NONE)
@@ -665,15 +665,15 @@ bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size )
             if(SERCOM${SERCOM_INDEX}_USART_ErrorGet() != USART_ERROR_NONE)
             {
                 /* Clear all error flags */
-                SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w = SERCOM_USART_INTFLAG_ERROR_Msk;
+                SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG = SERCOM_USART_INTFLAG_ERROR_Msk;
 
                 /* Clear error statuses */
-                SERCOM${SERCOM_INDEX}_REGS->USART.STATUS.w = SERCOM_USART_STATUS_Msk;
+                SERCOM${SERCOM_INDEX}_REGS->USART.STATUS = SERCOM_USART_STATUS_Msk;
 
                 /* Flush existing error bytes from the RX FIFO */
-                while((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
+                while((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
                 {
-                    u8dummyData = SERCOM${SERCOM_INDEX}_REGS->USART.DATA.w;
+                    u8dummyData = SERCOM${SERCOM_INDEX}_REGS->USART.DATA;
                 }
 
                 /* Ignore the warning */
@@ -687,10 +687,10 @@ bool SERCOM${SERCOM_INDEX}_USART_Read( void *buffer, const size_t size )
             bReturnVal = true;
 
             /* Enable error interrupts */
-            SERCOM${SERCOM_INDEX}_REGS->USART.INTENSET.w |= SERCOM_USART_INTENSET_ERROR_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->USART.INTENSET |= SERCOM_USART_INTENSET_ERROR_Msk;
 
             /* Enable Receive Complete interrupt */
-            SERCOM${SERCOM_INDEX}_REGS->USART.INTENSET.w = SERCOM_USART_INTENSET_RXC_Msk;
+            SERCOM${SERCOM_INDEX}_REGS->USART.INTENSET = SERCOM_USART_INTENSET_RXC_Msk;
         }
 </#if>
     }
@@ -835,7 +835,7 @@ bool SERCOM${SERCOM_INDEX}_USART_TransmitterIsReady ( void )
 {
     bool bstatus = false;
 
-    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_DRE_Msk) == SERCOM_USART_INTFLAG_DRE_Msk)
+    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_DRE_Msk) == SERCOM_USART_INTFLAG_DRE_Msk)
     {
         bstatus = true;
     }
@@ -870,7 +870,7 @@ bool SERCOM${SERCOM_INDEX}_USART_ReceiverIsReady ( void )
 {
     bool bstatus = false;
 
-    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
+    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
     {
         bstatus = true;
     }
@@ -899,7 +899,7 @@ USART_ERROR SERCOM${SERCOM_INDEX}_USART_ErrorGet( void )
 {
     uint32_t u32status = 0;
 
-    u32status = SERCOM${SERCOM_INDEX}_REGS->USART.STATUS.w & SERCOM_USART_STATUS_Msk;
+    u32status = SERCOM${SERCOM_INDEX}_REGS->USART.STATUS & SERCOM_USART_STATUS_Msk;
 
     return (USART_ERROR) u32status;
 }
@@ -992,19 +992,19 @@ void SERCOM${SERCOM_INDEX}_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK cal
 void SERCOM${SERCOM_INDEX}_USART_InterruptHandler( void )
 {
     /* Checks for data register empty flag */
-    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_DRE_Msk) == SERCOM_USART_INTFLAG_DRE_Msk)
+    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_DRE_Msk) == SERCOM_USART_INTFLAG_DRE_Msk)
     {
         SERCOM${SERCOM_INDEX}_USART_ISR_TX_Handler();
     }
 
     /* Checks for receive complete empty flag */
-    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
+    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_RXC_Msk) == SERCOM_USART_INTFLAG_RXC_Msk)
     {
         SERCOM${SERCOM_INDEX}_USART_ISR_RX_Handler();
     }
 
     /* Checks for error flag */
-    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG.w & SERCOM_USART_INTFLAG_ERROR_Msk) == SERCOM_USART_INTFLAG_ERROR_Msk)
+    if((SERCOM${SERCOM_INDEX}_REGS->USART.INTFLAG & SERCOM_USART_INTFLAG_ERROR_Msk) == SERCOM_USART_INTFLAG_ERROR_Msk)
     {
         SERCOM${SERCOM_INDEX}_USART_ISR_ERR_Handler();
     }
