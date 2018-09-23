@@ -169,6 +169,16 @@ def instantiateComponent(usartComponent):
     usartSym_MR_MODE9.setLabel("9 Bit Data Width")
     usartSym_MR_MODE9.setDefaultValue(False)
 
+    #USART Transmit data register
+    transmitRegister = usartComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
+    transmitRegister.setDefaultValue("&(USART"+str(usartInstance)+"_REGS->US_THR)")
+    transmitRegister.setVisible(False)
+
+    #USART Receive data register
+    receiveRegister = usartComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
+    receiveRegister.setDefaultValue("&(USART"+str(usartInstance)+"_REGS->US_RHR)")
+    receiveRegister.setVisible(False)
+
     #USART Character Size 5 Mask
     usartSym_MR_CHRL_5_Mask = usartComponent.createStringSymbol("USART_DATA_5_BIT_MASK", None)
     usartSym_MR_CHRL_5_Mask.setDefaultValue("0x0")

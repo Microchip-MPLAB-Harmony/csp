@@ -45,74 +45,7 @@ def setDMACDefaultSettings():
                         "Standard_Receive"  : ["BEAT", "DST", "FIXED_AM", "INCREMENTED_AM", "X4", "BYTE"]
                     }
 
-    triggerRegister = {
-                        "Software Trigger"  : ["None"],
-                        "ADC0_RESRDY"       : ["ADC0_REGS->ADC_RESULT"],
-                        "ADC1_RESRDY"       : ["ADC1_REGS->ADC_RESULT"],
-                        "CAN0_EBUG"         : ["CAN0_REGS->CAN_RXBC.RBSA"],
-                        "CAN1_EBUG"         : ["CAN1_REGS->CAN_RXBC.RBSA"],
-                        "DAC_EMPTY"         : ["DAC_REGS->DAC_DATABUF"],
-                        "PTC_EO"            : ["None"],
-                        "PTC_SEQ"           : ["None"],
-                        "PTC_WCOMP"         : ["None"],
-                        "SDADC_RESRDY"      : ["SDADC_REGS->SDADC_RESULT"],
-                        "SERCOM0_Receive"   : ["SERCOM0_REGS->I2CM.DATA.w"],
-                        "SERCOM0_Transmit"  : ["SERCOM0_REGS->I2CM.DATA.w"],
-                        "SERCOM1_Receive"   : ["SERCOM1_REGS->SPI.DATA.w"],
-                        "SERCOM1_Transmit"  : ["SERCOM1_REGS->SPI.DATA.w"],
-                        "SERCOM2_Receive"   : ["SERCOM2_REGS->I2CM.DATA.w"],
-                        "SERCOM2_Transmit"  : ["SERCOM2_REGS->I2CM.DATA.w"],
-                        "SERCOM3_Receive"   : ["SERCOM3_REGS->I2CM.DATA.w"],
-                        "SERCOM3_Transmit"  : ["SERCOM3_REGS->I2CM.DATA.w"],
-                        "SERCOM4_Receive"   : ["SERCOM4_REGS->USART.DATA.w"],
-                        "SERCOM4_Transmit"  : ["SERCOM4_REGS->USART.DATA.w"],
-                        "SERCOM5_Receive"   : ["SERCOM5_REGS->I2CM.DATA.w"],
-                        "SERCOM5_Transmit"  : ["SERCOM5_REGS->I2CM.DATA.w"],
-                        "SERCOM6_Receive"   : ["SERCOM6_REGS->I2CM.DATA.w"],
-                        "SERCOM6_Transmit"  : ["SERCOM6_REGS->I2CM.DATA.w"],
-                        "SERCOM7_Receive"   : ["SERCOM7_REGS->I2CM.DATA.w"],
-                        "SERCOM7_Transmit"  : ["SERCOM7_REGS->I2CM.DATA.w"],
-                        "TC0_OVF"           : ["TC0_REGS->COUNT16.TC_INTFLAG"],
-                        "TC0_MC0"           : ["TC0_REGS->COUNT16.TC_INTFLAG"],
-                        "TC0_MC1"           : ["TC0_REGS->COUNT16.TC_INTFLAG"],
-                        "TC1_OVF"           : ["TC1_REGS->COUNT16.TC_INTFLAG"],
-                        "TC1_MC0"           : ["TC1_REGS->COUNT16.TC_INTFLAG"],
-                        "TC1_MC1"           : ["TC1_REGS->COUNT16.TC_INTFLAG"],
-                        "TC2_OVF"           : ["TC2_REGS->COUNT16.TC_INTFLAG"],
-                        "TC2_MC0"           : ["TC2_REGS->COUNT16.TC_INTFLAG"],
-                        "TC2_MC1"           : ["TC2_REGS->COUNT16.TC_INTFLAG"],
-                        "TC3_OVF"           : ["TC3_REGS->COUNT16.TC_INTFLAG"],
-                        "TC3_MC0"           : ["TC3_REGS->COUNT16.TC_INTFLAG"],
-                        "TC3_MC1"           : ["TC3_REGS->COUNT16.TC_INTFLAG"],
-                        "TC4_OVF"           : ["TC4_REGS->COUNT16.TC_INTFLAG"],
-                        "TC4_MC0"           : ["TC4_REGS->COUNT16.TC_INTFLAG"],
-                        "TC4_MC1"           : ["TC4_REGS->COUNT16.TC_INTFLAG"],
-                        "TC5_OVF"           : ["TC5_REGS->COUNT16.TC_INTFLAG"],
-                        "TC5_MC0"           : ["TC5_REGS->COUNT16.TC_INTFLAG"],
-                        "TC5_MC1"           : ["TC5_REGS->COUNT16.TC_INTFLAG"],
-                        "TC6_OVF"           : ["TC6_REGS->COUNT16.TC_INTFLAG"],
-                        "TC6_MC0"           : ["TC6_REGS->COUNT16.TC_INTFLAG"],
-                        "TC6_MC1"           : ["TC6_REGS->COUNT16.TC_INTFLAG"],
-                        "TC7_OVF"           : ["TC7_REGS->COUNT16.TC_INTFLAG"],
-                        "TC7_MC0"           : ["TC7_REGS->COUNT16.TC_INTFLAG"],
-                        "TC7_MC1"           : ["TC7_REGS->COUNT16.TC_INTFLAG"],
-                        "TCC0_OVF"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC0_MC0"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC0_MC1"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC0_MC2"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC0_MC3"          : ["TCC0_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC1_OVF"          : ["TCC1_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC1_MC0"          : ["TCC1_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC1_MC1"          : ["TCC1_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC2_OVF"          : ["TCC2_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC2_MC0"          : ["TCC2_REGS->COUNT16.TCC_INTFLAG"],
-                        "TCC2_MC1"          : ["TCC2_REGS->COUNT16.TCC_INTFLAG"],
-                        "TSENS_RESRDY"      : ["TSENS_REGS->TSENS_VALUE"]
-
-                        # All triggers are yet to be added.
-                    }
-
-    return triggerSettings, triggerRegister
+    return triggerSettings
 
 
 def setMPUDefaultSettings():
@@ -123,7 +56,7 @@ def setMPUDefaultSettings():
     mpuSetUpLogicList = ["FLASH", "RWW", "SRAM"]
 
     return mpuRegions, mpuSettings, mpuSetUpLogicList
-    
+
 # SysTick External Clock Source
 systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
 systickExternal.setLabel("External Clock Source for SysTick Available")

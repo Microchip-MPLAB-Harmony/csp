@@ -242,6 +242,16 @@ def instantiateComponent(spiComponent):
         description = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("caption")
         spiSym_CSR_BITS.addKey(valueName, value, description)
 
+    #SPI Transmit data register
+    transmitRegister = spiComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
+    transmitRegister.setDefaultValue("&(SPI"+str(spiInstance)+"_REGS->SPI_TDR)")
+    transmitRegister.setVisible(False)
+
+    #SPI Receive data register
+    receiveRegister = spiComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
+    receiveRegister.setDefaultValue("&(SPI"+str(spiInstance)+"_REGS->SPI_RDR)")
+    receiveRegister.setVisible(False)
+
     #SPI 8-bit Character size Mask
     spiSym_CSR_BITS_8BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", None)
     spiSym_CSR_BITS_8BIT.setDefaultValue("0x0")

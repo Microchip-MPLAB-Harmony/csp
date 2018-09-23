@@ -174,6 +174,17 @@ def updateSERCOMClockWarringStatus(symbol, event):
     else:
         symbol.setVisible(False)
 
+def updateSERCOMDMATransferRegister(symbol, event):
+
+    symbol.clearValue()
+
+    if event["value"] == 0x1:
+        symbol.setValue("&(SERCOM" + str(sercomInstanceIndex) + "_REGS->USART.DATA)", 2)
+    elif event["value"] == 0x3:
+        symbol.setValue("&(SERCOM" + str(sercomInstanceIndex) + "_REGS->SPI.DATA)", 2)
+    else:
+        symbol.setValue("", 2)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -230,6 +241,18 @@ def instantiateComponent(sercomComponent):
     sercomSym_INDEX.setDefaultValue(int(sercomInstanceIndex))
     sercomSym_INDEX.setVisible(False)
     sercomSym_INDEX.setDependencies(setSERCOMCodeGenerationProperty, ["SERCOM_MODE"])
+
+    #SERCOM Transmit data register
+    sercomSym_TxRegister = sercomComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", sercomSym_OperationMode)
+    sercomSym_TxRegister.setDefaultValue("&(SERCOM" + str(sercomInstanceIndex) + "_REGS->USART.DATA)")
+    sercomSym_TxRegister.setVisible(False)
+    sercomSym_TxRegister.setDependencies(updateSERCOMDMATransferRegister, ["SERCOM_MODE"])
+
+    #SERCOM Receive data register
+    sercomSym_RxRegister = sercomComponent.createStringSymbol("RECEIVE_DATA_REGISTER", sercomSym_OperationMode)
+    sercomSym_RxRegister.setDefaultValue("&(SERCOM" + str(sercomInstanceIndex) + "_REGS->USART.DATA)")
+    sercomSym_RxRegister.setVisible(False)
+    sercomSym_RxRegister.setDependencies(updateSERCOMDMATransferRegister, ["SERCOM_MODE"])
 
     ###################################################################################################
     ########################################## SERCOM MODE ############################################

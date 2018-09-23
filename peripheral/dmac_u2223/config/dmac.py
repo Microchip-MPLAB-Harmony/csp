@@ -59,29 +59,15 @@ for module in range (0, len(modules)):
 # based on the trigger source selected.
 
 global triggerSettings
-global triggerRegister
 
-triggerSettings, triggerRegister = setDMACDefaultSettings()
+triggerSettings = setDMACDefaultSettings()
 
 ################################################################################
 #### Business Logic ####
 ################################################################################
-
-def setDMACChannelEnableProperty(symbol, event):
-
-    channelId = int(symbol.getID().strip("DMAC_ENABLE_CH_"))
-
-    channelCount = int(event["value"])
-
-    if channelId < channelCount:
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
 def dmacTriggerLogic(symbol, event):
 
     global triggerSettings
-    global triggerRegister
 
     symbolID = symbol.getID()
 
@@ -111,8 +97,6 @@ def dmacTriggerLogic(symbol, event):
         symbol.setSelectedKey(str(triggerSettings[trigger][4]), 2)
     elif "BEATSIZE" in symbolID:
         symbol.setSelectedKey(str(triggerSettings[trigger][5]), 2)
-    elif "PER_REGISTER" in symbolID:
-        symbol.setValue(str(triggerRegister[event["value"]][0]), 2)
 
 # The following business logic creates a list of enabled DMA channels and sorts
 # them in the descending order. The left most channel number will be the highest
@@ -297,13 +281,6 @@ dmacHighestCh.setVisible(False)
 dmacChannelLinkedList = coreComponent.createBooleanSymbol("DMAC_LL_ENABLE", dmacMenu)
 dmacChannelLinkedList.setLabel("Use Linked List Mode ?")
 
-#DMA Channel Enable Count
-DMAC_CHAN_ENAB_CNT_SelectionSym = coreComponent.createIntegerSymbol("DMAC_CHAN_ENABLE_CNT", dmacMenu)
-DMAC_CHAN_ENAB_CNT_SelectionSym.setLabel("Number of DMA channels to enable")
-DMAC_CHAN_ENAB_CNT_SelectionSym.setDefaultValue(1)
-DMAC_CHAN_ENAB_CNT_SelectionSym.setMin(1)
-DMAC_CHAN_ENAB_CNT_SelectionSym.setMax(dmacChannelCount)
-
 #Priority Control 0 Register
 for dmacCount in range(0, 4):
 
@@ -323,12 +300,7 @@ for channelID in range(0, dmacChCount.getValue()):
 
     dmacChannelEnable = coreComponent.createBooleanSymbol("DMAC_ENABLE_CH_" + str(channelID), dmacMenu)
     dmacChannelEnable.setLabel("Use DMAC Channel " + str(channelID))
-
-    if channelID != 0:
-        dmacChannelEnable.setVisible(False)
-
     dmacChannelIds.append("DMAC_ENABLE_CH_" + str(channelID))
-    dmacChannelEnable.setDependencies(setDMACChannelEnableProperty, ["DMAC_CHAN_ENABLE_CNT"])
 
     #Channel Run in Standby
     CH_CHCTRLA_RUNSTDBY_Ctrl = coreComponent.createBooleanSymbol("DMAC_CHCTRLA_RUNSTDBY_CH_" + str(channelID), dmacChannelEnable)
@@ -344,13 +316,6 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacSym_PERID_Val.setDefaultValue(0)
     dmacSym_PERID_Val.setDependencies(dmacTriggerCalc, ["DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID)])
     dmacSym_PERID_Val.setVisible(False)
-
-    dmacPeripheralRegister = coreComponent.createStringSymbol("DMAC_CH" + str(channelID) + "_PER_REGISTER", dmacChannelEnable)
-    dmacPeripheralRegister.setLabel("Source Address")
-    dmacPeripheralRegister.setDefaultValue("None")
-    dmacPeripheralRegister.setReadOnly(True)
-    dmacPeripheralRegister.setVisible(False)
-    dmacPeripheralRegister.setDependencies(dmacTriggerLogic, ["DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID)])
 
     # CHCTRLB - Trigger Action
     dmacSym_CHCTRLB_TRIGACT = coreComponent.createKeyValueSetSymbol("DMAC_CHCTRLB_TRIGACT_CH_" + str(channelID), dmacChannelEnable)

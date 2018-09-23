@@ -168,6 +168,16 @@ def instantiateComponent(i2scComponent):
     i2scModeIMCKMODE.setOutputMode("Value")
     i2scModeIMCKMODE.setDefaultValue(1)
 
+    #I2SC Transmit data register
+    i2scTxRegister = i2scComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
+    i2scTxRegister.setDefaultValue("&(I2SC" + str(i2scInstance) + "_REGS->I2SC_THR)")
+    i2scTxRegister.setVisible(False)
+
+    #I2SC Receive data register
+    i2scRxRegister = i2scComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
+    i2scRxRegister.setDefaultValue("&(I2SC" + str(i2scInstance) + "_REGS->I2SC_RHR)")
+    i2scRxRegister.setVisible(False)
+
     ######################################################################
    
     configName = Variables.get("__CONFIGURATION_NAME")

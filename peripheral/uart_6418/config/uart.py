@@ -127,6 +127,16 @@ def instantiateComponent(uartComponent):
     uartSym_MR_PAR.setLabel("Parity")
     uartSym_MR_PAR.setDefaultValue("NO")
 
+    #UART Transmit data register
+    transmitRegister = uartComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
+    transmitRegister.setDefaultValue("&(UART"+str(uartInstance)+"_REGS->UART_THR)")
+    transmitRegister.setVisible(False)
+
+    #UART Receive data register
+    receiveRegister = uartComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
+    receiveRegister.setDefaultValue("&(UART"+str(uartInstance)+"_REGS->UART_RHR)")
+    receiveRegister.setVisible(False)
+
     #UART EVEN Parity Mask
     uartSym_MR_PAR_EVEN_Mask = uartComponent.createStringSymbol("USART_PARITY_EVEN_MASK", None)
     uartSym_MR_PAR_EVEN_Mask.setDefaultValue("0x0")

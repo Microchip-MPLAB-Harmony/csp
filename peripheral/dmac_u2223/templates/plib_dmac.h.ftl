@@ -72,19 +72,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/* Peripheral address macros for DMA */
-<#list 0..DMA_CHANNEL_COUNT as i>
-<#assign DMAC_CH_ENABLE = "DMAC_ENABLE_CH_" + i>
-<#assign DMAC_TRIGSRC = "DMAC_CHCTRLB_TRIGSRC_CH_" + i>
-<#assign DMAC_CH_PER_REGISTER = "DMAC_CH" + i + "_PER_REGISTER">
-    <#if .vars[DMAC_CH_ENABLE]?has_content>
-        <#if (.vars[DMAC_CH_ENABLE] != false)>
-            <#if (.vars[DMAC_CH_PER_REGISTER]?has_content) && (.vars[DMAC_CH_PER_REGISTER] != "None")>
-#define ${.vars[DMAC_TRIGSRC]?upper_case}_ADDRESS  (&${.vars[DMAC_CH_PER_REGISTER]})
-            </#if>
-        </#if>
-    </#if>
-</#list>
 
 // *****************************************************************************
 /* DMAC Channels
@@ -105,7 +92,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 typedef enum
 {
-<#list 0..DMAC_CHAN_ENABLE_CNT - 1 as i>
+<#list 0..DMAC_HIGHEST_CHANNEL - 1 as i>
     <#assign DMAC_CHCTRLA_ENABLE    = "DMAC_ENABLE_CH_"  + i>
     <#if (.vars[DMAC_CHCTRLA_ENABLE] == true)>
     /* DMAC Channel ${i} */

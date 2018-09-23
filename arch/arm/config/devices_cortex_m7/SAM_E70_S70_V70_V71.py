@@ -41,81 +41,27 @@ def setTcmSize(symbol, event):
         tcmEnable.setValue(True,2)
 
 def setXDMACDefaultSettings():
-	triggerSettings = {"Software Trigger"     : ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-					"Standard_Transmit"       : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
-					"Standard_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "BYTE", "CHK_1", "SINGLE"],
-					"SSC_Transmit"            : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-					"SSC_Receive"             : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
-					"I2SC0_Transmit_Left"     : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-					"I2SC0_Receive_Left"      : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
-					"I2SC1_Transmit_Left"     : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-					"I2SC1_Receive_Left"      : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
-					"I2SC0_Transmit_Right"    : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-					"I2SC0_Receive_Right"     : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
-					"I2SC1_Transmit_Right"    : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
-					"I2SC1_Receive_Right"     : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"]}
-
-	triggerRegister = {"Software Trigger"       : ["None"],
-					"HSMCI"                     : ["HSMCI_REGS->HSMCI_TDR"],
-					"SPI0_Transmit"             : ["SPI0_REGS->SPI_TDR"],
-					"SPI0_Receive"              : ["SPI0_REGS->SPI_RDR"],
-					"SPI1_Transmit"             : ["SPI1_REGS->SPI_TDR"],
-					"SPI1_Receive"              : ["SPI1_REGS->SPI_RDR"],
-					"QSPI_Transmit"             : ["QSPI_REGS->QSPI_TDR"],
-					"QSPI_Receive"              : ["QSPI_REGS->QSPI_RDR"],
-					"USART0_Transmit"           : ["USART0_REGS->US_THR"],
-					"USART0_Receive"            : ["USART0_REGS->US_RHR"],
-					"USART1_Transmit"           : ["USART1_REGS->US_THR"],
-					"USART1_Receive"            : ["USART1_REGS->US_RHR"],
-					"USART2_Transmit"           : ["USART2_REGS->US_THR"],
-					"USART2_Receive"            : ["USART2_REGS->US_RHR"],
-					"PWM0_Transmit"             : ["None"],
-					"TWIHS0_Transmit"           : ["TWIHS0_REGS->TWIHS_THR"],
-					"TWIHS0_Receive"            : ["TWIHS0_REGS->TWIHS_RHR"],
-					"TWIHS1_Transmit"           : ["TWIHS1_REGS->TWIHS_THR"],
-					"TWIHS1_Receive"            : ["TWIHS1_REGS->TWIHS_RHR"],
-					"TWIHS2_Transmit"           : ["TWIHS2_REGS->TWIHS_THR"],
-					"TWIHS2_Receive"            : ["TWIHS2_REGS->TWIHS_RHR"],
-					"UART0_Transmit"            : ["UART0_REGS->UART_THR"],
-					"UART0_Receive"             : ["UART0_REGS->UART_RHR"],
-					"UART1_Transmit"            : ["UART1_REGS->UART_THR"],
-					"UART1_Receive"             : ["UART1_REGS->UART_RHR"],
-					"UART2_Transmit"            : ["UART2_REGS->UART_THR"],
-					"UART2_Receive"             : ["UART2_REGS->UART_RHR"],
-					"UART3_Transmit"            : ["UART3_REGS->UART_THR"],
-					"UART3_Receive"             : ["UART3_REGS->UART_RHR"],
-					"UART4_Transmit"            : ["UART4_REGS->UART_THR"],
-					"UART4_Receive"             : ["UART4_REGS->UART_RHR"],
-					"DACC_Transmit"             : ["None"],
-					"SSC_Transmit"              : ["SSC_REGS->SSC_THR"],
-					"SSC_Receive"               : ["SSC_REGS->SSC_RHR"],
-					"PIOA_Receive"              : ["None"],
-					"AFEC0_Receive"             : ["None"],
-					"AFEC1_Receive"             : ["None"],
-					"AES_Transmit"              : ["None"],
-					"AES_Receive"               : ["None"],
-					"PWM1_Transmit"             : ["None"],
-					"TC0_Receive"               : ["None"],
-					"TC1_Receive"               : ["None"],
-					"TC2_Receive"               : ["None"],
-					"TC3_Receive"               : ["None"],
-					"I2SC0_Transmit_Left"       : ["I2SC0_REGS->I2SC_THR"],
-					"I2SC0_Receive_Left"        : ["I2SC0_REGS->I2SC_RHR"],
-					"I2SC1_Transmit_Left"       : ["I2SC1_REGS->I2SC_THR"],
-					"I2SC1_Receive_Left"        : ["I2SC1_REGS->I2SC_RHR"],
-					"I2SC0_Transmit_Right"      : ["I2SC0_REGS->I2SC_THR"],
-					"I2SC0_Receive_Right"       : ["I2SC0_REGS->I2SC_RHR"],
-					"I2SC1_Transmit_Right"      : ["I2SC1_REGS->I2SC_THR"],
-					"I2SC1_Receive_Right"       : ["I2SC1_REGS->I2SC_RHR"] }
-    
-	return triggerSettings, triggerRegister
+    triggerSettings = {"Software Trigger"     : ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
+                    "Standard_Transmit"       : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"],
+                    "Standard_Receive"        : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "BYTE", "CHK_1", "SINGLE"],
+                    "SSC_Transmit"            : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
+                    "SSC_Receive"             : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
+                    "I2SC0_Transmit_Left"     : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
+                    "I2SC0_Receive_Left"      : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
+                    "I2SC1_Transmit_Left"     : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
+                    "I2SC1_Receive_Left"      : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
+                    "I2SC0_Transmit_Right"    : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
+                    "I2SC0_Receive_Right"     : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"],
+                    "I2SC1_Transmit_Right"    : ["PER_TRAN", "MEM2PER", "HWR_CONNECTED", "INCREMENTED_AM", "FIXED_AM", "AHB_IF0", "AHB_IF1", "HALFWORD", "CHK_1", "SINGLE"],
+                    "I2SC1_Receive_Right"     : ["PER_TRAN", "PER2MEM", "HWR_CONNECTED", "FIXED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF0", "HALFWORD", "CHK_1", "SINGLE"]}
+    return triggerSettings
 
 def setMPUDefaultSettings():
     mpuRegions = 16
     mpuSettings = {"ITCM"           : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00000000",   "4MB"   ],
                     "FLASH"         : ["MPU_ATTR_NORMAL_WT",        "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x00400000",   "4MB"   ],
                     "DTCM"          : ["MPU_ATTR_NORMAL",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "4MB"   ],
-                    "SRAM"                         : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20400000",   "8MB"   ],
+                    "SRAM"          : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20400000",   "8MB"   ],
                     "PERIPHERALS"   : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
                     "EBI_SMC"       : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x60000000",   "256MB" ],
                     "EBI_SDRAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x70000000",   "256MB" ],
@@ -123,7 +69,7 @@ def setMPUDefaultSettings():
                     "USBHS_RAM"     : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xA0100000",   "1MB"   ],
                     "SYSTEM"        : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ]}
     mpuSetUpLogicList = ['ITCM', 'DTCM', 'SRAM', 'EBI_SMC', 'EBI_SDRAM', 'QSPI']
-    
+
     return mpuRegions, mpuSettings, mpuSetUpLogicList
 
 # load family specific configurations
