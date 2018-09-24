@@ -10,6 +10,10 @@ def updatePIV(symbol, event):
     symbol.setValue(piv, 1)
 
 def instantiateComponent(pitComponent):
+    instanceName = pitComponent.createStringSymbol("PERIPH_INSTANCE_NAME", None)
+    instanceName.setVisible(False)
+    instanceName.setDefaultValue(pitComponent.getID().upper())
+
     enable = pitComponent.createBooleanSymbol("ENABLE_COUNTER", None)
     enable.setLabel("Enable Counter")
     enable.setDefaultValue(True)
@@ -45,7 +49,7 @@ def instantiateComponent(pitComponent):
 
     File = pitComponent.createFileSymbol("PIT_HEADER", None)
     File.setSourcePath("../peripheral/pit_6079/templates/plib_pit.h.ftl")
-    File.setOutputName("plib_pit.h")
+    File.setOutputName("plib_"+instanceName.getValue().lower()+".h")
     File.setDestPath("peripheral/pit/")
     File.setProjectPath("config/"+configName+"/peripheral/pit/")
     File.setType("HEADER")
@@ -53,7 +57,7 @@ def instantiateComponent(pitComponent):
 
     File = pitComponent.createFileSymbol("PIT_SRC", None)
     File.setSourcePath("../peripheral/pit_6079/templates/plib_pit.c.ftl")
-    File.setOutputName("plib_pit.c")
+    File.setOutputName("plib_"+instanceName.getValue().lower()+".c")
     File.setDestPath("peripheral/pit/")
     File.setProjectPath("config/"+configName+"/peripheral/pit/")
     File.setType("SOURCE")
