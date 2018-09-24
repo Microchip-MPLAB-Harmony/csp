@@ -1294,7 +1294,11 @@ mclkSym_CPUDIV_CPUDIV.setDefaultValue(mclkcpudivDefaultValue)
 mclkSym_CPUDIV_CPUDIV.setOutputMode("Value")
 mclkSym_CPUDIV_CPUDIV.setDisplayMode("Description")
 
-
+# Flash Read Wait State (RWS). Values given in  'NVM Characteristics'
+nvm_rws = coreComponent.createStringSymbol("NVM_RWS", mclkSym_Menu)
+nvm_rws.setReadOnly(True)
+nvm_rws.setDefaultValue("NVMCTRL_CTRLB_RWS_SINGLE_Val")
+nvm_rws.setVisible(False)
 
 ################################################################################
 #######          Calculated Clock Frequencies        ###########################
@@ -1305,6 +1309,12 @@ def setMainClockFreq(symbol, event):
     gclk0_freq = int(Database.getSymbolValue("core","GCLK_0_FREQ"))
 
     symbol.setValue(gclk0_freq / (divider + 1), 1)
+    if (gclk0_freq > 19000000 and gclk0_freq < 38000000):
+        Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_HALF_Val", 2)
+    elif (gclk0_freq >= 38000000):
+        Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_DUAL_Val", 2)
+    else:
+        Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_SINGLE_Val", 2)
 
 def setFreq(symbol, event):
     print "triggered"
