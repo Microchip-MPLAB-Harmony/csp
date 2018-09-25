@@ -20,7 +20,6 @@ global dmacEnable
 
 global per_instance
 per_instance = {}
-per_instance["Software Trigger"] = 0
 
 global peridValueListSymbols
 peridValueListSymbols = []
@@ -54,6 +53,9 @@ for module in range (0, len(modules)):
                                 name = name.replace('LEFT', 'Left')
                                 name = name.replace('RIGHT', 'Right')
                                 per_instance[module + "_" + name] = int(parameters[parameter].getAttribute("value"))
+
+# Needs placed after above parsing as value of DMAC_ID for peripherals may be 0
+per_instance["Software Trigger"] = 0
 
 # This is the dictionary for all trigger sources and corresponding DMAC settings.
 # "dmacTriggerLogic" business logic will override the DMAC setting values
@@ -194,7 +196,7 @@ def dmacTriggerCalc(symbol, event):
 def dmacChannelAllocLogic(symbol, event):
 
     dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
-    perID = event["id"].strip('DMA_CH_NEEDED_FOR_')
+    perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
     channelAllocated = False
 
     for i in range(0, dmaChannelCount):
