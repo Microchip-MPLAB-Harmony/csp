@@ -26,7 +26,6 @@ global xdmacInstanceName
 
 global per_instance
 per_instance = {}
-per_instance["Software Trigger"] = 0
 
 global peridValueListSymbols
 peridValueListSymbols = []
@@ -68,6 +67,8 @@ for module in range (0 , len(modules)):
                                     name = name.replace('RIGHT', 'Right')
                                     per_instance[module + "_" + name] = int(parameters[parameter].getAttribute("value"))
 
+# Needs placed after above parsing as value of DMAC_ID for peripherals may be 0
+per_instance["Software Trigger"] = 0
 
 ################################################################################
 #### Business Logic ####
@@ -189,7 +190,7 @@ def xdmacTriggerCalc(xdmacPERIDVal, event):
 # be disabled and trigger source will be reset to "Software trigger"
 def xdmacChannelAllocLogic(Sym, event):
     dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
-    perID = event["id"].strip('DMA_CH_NEEDED_FOR_')
+    perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
     channelAllocated = False
 
     for i in range(0, dmaChannelCount):
