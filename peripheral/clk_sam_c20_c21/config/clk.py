@@ -1065,7 +1065,8 @@ for peripheral in atdfContent.iter("module"):
                 indexSymbolMap[symbolId].append(symbolValue)
                 
                 if maxGCLKId < int(indexID):
-                    maxGCLKId = indexID
+                    maxGCLKId = int(indexID)
+
 
 channelMap = {}
 for key in indexSymbolMap.keys():
