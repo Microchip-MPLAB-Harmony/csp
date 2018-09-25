@@ -319,6 +319,8 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
     uint32_t receivedData;
     dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
 
+    static bool isLastByteTransferInProgress = false;
+
     /* save the status in global object before it gets cleared */
     ${SPI_INSTANCE_NAME?lower_case}Obj.status = ${SPI_INSTANCE_NAME}_REGS->SPI_SR;
 
@@ -342,6 +344,12 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
     /* If there are more words to be transmitted, then transmit them here and keep track of the count */
     if((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk) == SPI_SR_TDRE_Msk)
     {
+
+        /* Disable the TDRE interrupt. This will be enabled back if more than
+         * one byte is pending to be transmitted */
+
+        ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk;
+
         if(dataBits == SPI_CSR_BITS_8_BIT)
         {
             if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
@@ -368,16 +376,31 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
         }
         if ((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize == 0))
         {
-            /* Disable the TDRE interrupt and enable TXEMPTY interrupt to ensure
-             * no data is present in the shift register before CS is de-selected
+            /* At higher baud rates, the data in the shift register can be
+             * shifted out and TXEMPTY flag can get set resulting in a
+             * callback been given to the application with the SPI interrupt
+             * pending with the application. This will then result in the
+             * interrupt handler being called again with nothing to transmit.
+             * To avoid the above mentioned issue, a software flag is set, but
+             * the TXEMPTY interrupt is not enabled until the very end.
+             * At higher baud rates, if the software flag is set and the
+             * TXEMPTY status bit is set, then it means that the transfer is
+             * complete and a callback can be given to the application. Since
+             * the TXEMPTY interrupt is not enabled there is no need to
+             * explicitly clear the pending interrupt from the NVIC.
              */
-            ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk;
-            ${SPI_INSTANCE_NAME}_REGS->SPI_IER = SPI_IER_TXEMPTY_Msk;
+
+            isLastByteTransferInProgress = true;
+        }
+        else
+        {
+            /* Enable TDRE interrupt back as more than one bytes are pending to be transmitted */
+            ${SPI_INSTANCE_NAME}_REGS->SPI_IER = SPI_IDR_TDRE_Msk;
         }
     }
 
     /* See if Exchange is complete */
-    if (((${SPI_INSTANCE_NAME}_REGS->SPI_IMR & SPI_IMR_TXEMPTY_Msk) == SPI_IMR_TXEMPTY_Msk) && ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == SPI_SR_TXEMPTY_Msk))
+    if ((isLastByteTransferInProgress == true) && ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == SPI_SR_TXEMPTY_Msk))
     {
         if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
@@ -386,8 +409,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
             /* Disable TDRE, RDRF and TXEMPTY interrupts */
             ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk | SPI_IDR_RDRF_Msk | SPI_IDR_TXEMPTY_Msk;
 
-            /* Flush out any pending SPI IRQ with NVIC */
-            NVIC_ClearPendingIRQ(SPI0_IRQn);
+            isLastByteTransferInProgress = false;
 
             /* If it was only transmit, then ignore receiver overflow error, if any */
             if(${SPI_INSTANCE_NAME?lower_case}Obj.rxSize == 0)
@@ -401,6 +423,15 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
             }
         }
     }
+    if (isLastByteTransferInProgress == true)
+    {
+        /* For the last byte transfer, the TDRE interrupt is already disabled.
+         * Enable TXEMPTY interrupt to ensure no data is present in the shift
+         * register before application callback is called.
+         */
+        ${SPI_INSTANCE_NAME}_REGS->SPI_IER = SPI_IER_TXEMPTY_Msk;
+    }
+
 }
 </#if>
 
