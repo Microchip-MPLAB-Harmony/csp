@@ -8,6 +8,7 @@ global DICT_PCER0
 global DICT_PCER1
 
 sym_uart_clock_freq = []
+sym_usart_clock_freq = []
 sym_tc_ch0_clock_freq = []
 sym_tc_ch1_clock_freq = []
 sym_tc_ch2_clock_freq = []
@@ -49,6 +50,18 @@ def uartClockFreqCalc(symbol, event):
     clk_src = event["value"]
     if (clk_src == 0):
         symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+        Database.setSymbolValue("core", "PMC_SCER_PCK4", False, 2)
+    else:
+        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
+        Database.setSymbolValue("core", "PMC_SCER_PCK4", True, 2)
+
+def usartClockFreqCalc(symbol, event):
+    clk_src = event["value"]
+    if (clk_src == 0):
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+        Database.setSymbolValue("core", "PMC_SCER_PCK4", False, 2)
+    elif (clk_src == 1):
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8, 2)
         Database.setSymbolValue("core", "PMC_SCER_PCK4", False, 2)
     else:
         symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
@@ -884,6 +897,17 @@ if __name__ == "__main__":
         sym_uart_clock_freq[uartInstance].setVisible(False)
         sym_uart_clock_freq[uartInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_uart_clock_freq[uartInstance].setDependencies(uartClockFreqCalc, ["uart"+str(uartInstance)+".UART_CLK_SRC"])
+
+    #USART
+    num_usart_instances = []
+    usart = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"USART\"]")
+    num_usart_instances = usart.getChildren()
+    for usartInstance in range(0, len(num_usart_instances)):
+        sym_usart_clock_freq.append(usartInstance)
+        sym_usart_clock_freq[usartInstance] = coreComponent.createIntegerSymbol("USART"+str(usartInstance)+"_CLOCK_FREQUENCY", None)
+        sym_usart_clock_freq[usartInstance].setVisible(False)
+        sym_usart_clock_freq[usartInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+        sym_usart_clock_freq[usartInstance].setDependencies(usartClockFreqCalc, ["usart"+str(usartInstance)+".USART_CLK_SRC"])
 
     #TC
     num_tc_instances = []
