@@ -98,7 +98,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 typedef enum
 {
-
     USART_ERROR_NONE,
 
     USART_ERROR_OVERRUN,
@@ -108,21 +107,6 @@ typedef enum
     USART_ERROR_FRAMING
 
 } USART_ERROR;
-
-
-// *****************************************************************************
-/* USART Serial Setup
-
-   Summary:
-    Defines the data type for the USART serial setup.
-
-   Description:
-    This can be used to define a serial setup which may then be used to change
-    the serial setup of the USART dynamically.
-
-   Remarks:
-    None.
-*/
 
 typedef enum
 {
@@ -164,6 +148,19 @@ typedef enum
 
 } USART_STOP_BIT;
 
+// *****************************************************************************
+/* USART Serial Setup
+
+   Summary:
+    Defines the data type for the USART serial setup.
+
+   Description:
+    This can be used to define a serial setup which may then be used to change
+    the serial setup of the USART dynamically.
+
+   Remarks:
+    None.
+*/
 typedef struct
 {
     uint32_t baudRate;

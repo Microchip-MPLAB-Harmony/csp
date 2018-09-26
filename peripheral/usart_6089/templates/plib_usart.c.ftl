@@ -186,7 +186,7 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
     ${USART_INSTANCE_NAME}_REGS->US_CR = (US_CR_TXEN_Msk | US_CR_RXEN_Msk);
 
     /* Configure ${USART_INSTANCE_NAME} mode */
-    ${USART_INSTANCE_NAME}_REGS->US_MR = ((US_MR_USCLKS_${USART_CLK_SRC}) | (${USART_MR_MODE9?then(1,0)} << US_MR_MODE9_Pos) | US_MR_CHRL_${USART_MR_CHRL} | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
+    ${USART_INSTANCE_NAME}_REGS->US_MR = ((US_MR_USCLKS_${USART_CLK_SRC}) | (${USART_MR_MODE9?then(1,0)} << US_MR_MODE9_Pos) | US_MR_CHRL_${USART_MR_CHRL} | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
 
     /* Configure ${USART_INSTANCE_NAME} Baud Rate */
     ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
@@ -213,19 +213,7 @@ USART_ERROR ${USART_INSTANCE_NAME}_ErrorGet( void )
     USART_ERROR errors = USART_ERROR_NONE;
     uint32_t status = ${USART_INSTANCE_NAME}_REGS->US_CSR;
 
-    /* Collect all errors */
-    if(status & US_CSR_OVRE_Msk)
-    {
-        errors = USART_ERROR_OVERRUN;
-    }
-    if(status & US_CSR_PARE_Msk)
-    {
-        errors |= USART_ERROR_PARITY;
-    }
-    if(status & US_CSR_FRAME_Msk)
-    {
-        errors |= USART_ERROR_FRAMING;
-    }
+    errors = status & (US_CSR_OVRE_Msk | US_CSR_PARE_Msk | US_CSR_FRAME_Msk);
 
     if(errors != USART_ERROR_NONE)
     {
@@ -238,15 +226,11 @@ USART_ERROR ${USART_INSTANCE_NAME}_ErrorGet( void )
 
 bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 {
-    bool status = true;
-    uint32_t clk = srcClkFreq;
     uint32_t baud = setup->baudRate;
     uint32_t brgVal = 0;
     uint32_t overSampVal = 0;
-    uint32_t mode9Val = 0;
-    uint32_t charLengthVal = 0;
-    uint32_t parityVal = 0;
-    uint32_t stopBitsVal = 0;
+    uint32_t usartMode;
+    bool status = false;
 
 <#if USART_INTERRUPT_MODE == true>
     if((${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) || (${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true))
@@ -256,105 +240,33 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
     }
 
 </#if>
-    if(clk == 0)
+    if (setup != NULL)
     {
-        clk = ${USART_INSTANCE_NAME}_FrequencyGet();
-    }
+        baud = setup->baudRate;
+        if(srcClkFreq == 0)
+        {
+            srcClkFreq = ${USART_INSTANCE_NAME}_FrequencyGet();
+        }
 
-    /* Calculate BRG value */
-    if (clk >= (16 * baud))
-    {
-        brgVal = (clk / (16 * baud));
-    }
-    else
-    {
-        brgVal = (clk / (8 * baud));
-        overSampVal = (1 << US_MR_OVER_Pos) & US_MR_OVER_Msk;
-    }
+        /* Calculate BRG value */
+        if (srcClkFreq >= (16 * baud))
+        {
+            brgVal = (srcClkFreq / (16 * baud));
+        }
+        else
+        {
+            brgVal = (srcClkFreq / (8 * baud));
+            overSampVal = US_MR_OVER(1);
+        }
 
-    /* Get Data width values */
-    switch(setup->dataWidth)
-    {
-        case USART_DATA_5_BIT:
-        case USART_DATA_6_BIT:
-        case USART_DATA_7_BIT:
-        case USART_DATA_8_BIT:
-        {
-            charLengthVal = US_MR_CHRL(setup->dataWidth);
-            break;
-        }
-        case USART_DATA_9_BIT:
-        {
-            mode9Val = (1 << US_MR_MODE9_Pos) & US_MR_MODE9_Msk;
-            break;
-        }
-        default:
-        {
-            status = false;
-            break;
-        }
-    }
-
-    /* Get Parity values */
-    switch(setup->parity)
-    {
-        case USART_PARITY_ODD:
-        case USART_PARITY_MARK:
-        {
-            parityVal = US_MR_PAR(setup->parity);
-            break;
-        }
-        case USART_PARITY_NONE:
-        {
-            parityVal = US_MR_PAR_NO;
-            break;
-        }
-        case USART_PARITY_EVEN:
-        {
-            parityVal = US_MR_PAR_EVEN;
-            break;
-        }
-        case USART_PARITY_SPACE:
-        {
-            parityVal = US_MR_PAR_SPACE;
-            break;
-        }
-        case USART_PARITY_MULTIDROP:
-        {
-            parityVal = US_MR_PAR_MULTIDROP;
-            break;
-        }
-        default:
-        {
-            status = false;
-            break;
-        }
-    }
-
-    /* Get Stop bit values */
-    switch(setup->stopBits)
-    {
-        case USART_STOP_1_BIT:
-        case USART_STOP_1_5_BIT:
-        case USART_STOP_2_BIT:
-        {
-            stopBitsVal = US_MR_NBSTOP(setup->stopBits);
-            break;
-        }
-        default:
-        {
-            status = false;
-            break;
-        }
-    }
-
-    if(status != false)
-    {
         /* Configure ${USART_INSTANCE_NAME} mode */
-        ${USART_INSTANCE_NAME}_REGS->US_MR = (mode9Val | charLengthVal | parityVal | stopBitsVal | (${USART_MR_SYNC?then(1,0)} << US_MR_SYNC_Pos) | overSampVal);
+        usartMode = ${USART_INSTANCE_NAME}_REGS->US_MR;
+        usartMode &= ~(US_MR_CHRL_Msk | US_MR_MODE9_Msk | US_MR_PAR_Msk | US_MR_NBSTOP_Msk | US_MR_OVER_Msk);
+        ${USART_INSTANCE_NAME}_REGS->US_MR = usartMode | (setup->dataWidth | setup->parity | setup->stopBits | overSampVal);
 
         /* Configure ${USART_INSTANCE_NAME} Baud Rate */
         ${USART_INSTANCE_NAME}_REGS->US_BRGR = US_BRGR_CD(brgVal);
+        status = true;
     }
 
     return status;
