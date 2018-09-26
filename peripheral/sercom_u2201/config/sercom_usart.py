@@ -282,3 +282,18 @@ usartSym_SerialSetup_EN.setDependencies(set_usart_BAUDAPI_EN_VisibleProperty, ["
 usartSym_API_Prefix = sercomComponent.createStringSymbol("USART_PLIB_API_PREFIX", sercomSym_OperationMode)
 usartSym_API_Prefix.setDefaultValue(sercomInstanceName.getValue() + "_USART")
 usartSym_API_Prefix.setVisible(False)
+
+#USART Overrun error Mask
+sercomSym_STATUS_BUFOVF_Mask = sercomComponent.createStringSymbol("USART_OVERRUN_ERROR_VALUE", None)
+sercomSym_STATUS_BUFOVF_Mask.setDefaultValue("0x4")
+sercomSym_STATUS_BUFOVF_Mask.setVisible(False)
+
+#USART parity error Mask
+sercomSym_STATUS_PERR_Mask = sercomComponent.createStringSymbol("USART_PARITY_ERROR_VALUE", None)
+sercomSym_STATUS_PERR_Mask.setDefaultValue("0x0")
+sercomSym_STATUS_PERR_Mask.setVisible(False)
+
+#USART framing error Mask
+sercomSym_STATUS_FERR_Mask = sercomComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", None)
+sercomSym_STATUS_FERR_Mask.setDefaultValue("0x2")
+sercomSym_STATUS_FERR_Mask.setVisible(False)

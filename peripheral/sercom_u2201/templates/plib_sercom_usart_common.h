@@ -88,13 +88,13 @@ typedef enum
     USART_ERROR_NONE,
 
     /* Error status when parity error has occurred */
-    USART_ERROR_PARITY,
+    USART_ERROR_PARITY = SERCOM_USART_STATUS_PERR_Msk,
 
     /* Error status when framing error has occurred */
-    USART_ERROR_FRAMING,
+    USART_ERROR_FRAMING = SERCOM_USART_STATUS_FERR_Msk,
 
     /* Error status when overrun error has occurred */
-    USART_ERROR_OVERRUN = 4
+    USART_ERROR_OVERRUN = SERCOM_USART_STATUS_BUFOVF_Msk
 
 } USART_ERROR;
 
