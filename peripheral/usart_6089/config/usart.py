@@ -1,20 +1,8 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
-usartRegModule = Register.getRegisterModule("USART")
-usartRegGroup = usartRegModule.getRegisterGroup("USART")
 
-usartReg_MR = usartRegGroup.getRegister("US_MR")
-usartBitField_MR_PAR = usartReg_MR.getBitfield("PAR")
-usartValGrp_MR_PAR = usartRegModule.getValueGroup(usartBitField_MR_PAR.getValueGroupName())
-usartBitField_MR_MODE9 = usartReg_MR.getBitfield("MODE9")
-usartValGrp_MR_MODE9 = usartRegModule.getValueGroup(usartBitField_MR_MODE9.getValueGroupName())
-usartBitField_MR_NBSTOP = usartReg_MR.getBitfield("NBSTOP")
-usartValGrp_MR_NBSTOP = usartRegModule.getValueGroup(usartBitField_MR_NBSTOP.getValueGroupName())
-usartBitField_MR_CHRL = usartReg_MR.getBitfield("CHRL")
-usartValGrp_MR_CHRL = usartRegModule.getValueGroup(usartBitField_MR_CHRL.getValueGroupName())
-usartBitField_MR_SYNC = usartReg_MR.getBitfield("SYNC")
-usartValGrp_MR_SYNC = usartRegModule.getValueGroup(usartBitField_MR_NBSTOP.getValueGroupName())
+usartValGrp_MR_PAR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="USART"]/value-group@[name="US_MR__PAR"]')
 
 ################################################################################
 #### Global Variables ####
@@ -156,7 +144,7 @@ def instantiateComponent(usartComponent):
     usartSym_MR_CHRL.addKey("8_BIT", "3", "8 BIT")
     # There is no 9 bit available under MR_CHRL, but added here just for menu.
     # usartSym_MR_MODE9 will use this value
-    usartSym_MR_CHRL.addKey("8_BIT", "4", "9 BIT")
+    usartSym_MR_CHRL.addKey("9_BIT", "4", "9 BIT")
     usartSym_MR_CHRL.setDisplayMode("Description")
     usartSym_MR_CHRL.setOutputMode("Key")
     usartSym_MR_CHRL.setDefaultValue(3)
@@ -202,7 +190,12 @@ def instantiateComponent(usartComponent):
     usartSym_MR_CHRL_9_Mask.setDefaultValue("0x20000")
     usartSym_MR_CHRL_9_Mask.setVisible(False)
 
-    usartSym_MR_PAR = usartComponent.createComboSymbol("USART_MR_PAR", None, usartValGrp_MR_PAR.getValueNames())
+    parityList = []
+    for id in range(0, len(usartValGrp_MR_PAR.getChildren())):
+        parityList.append(id+1)
+        parityList[id] = usartValGrp_MR_PAR.getChildren()[id].getAttribute("name")
+
+    usartSym_MR_PAR = usartComponent.createComboSymbol("USART_MR_PAR", None, parityList)
     usartSym_MR_PAR.setLabel("Parity")
     usartSym_MR_PAR.setDefaultValue("NO")
 
@@ -252,22 +245,33 @@ def instantiateComponent(usartComponent):
 
     #USART Stop 1_5-bit Mask
     usartSym_MR_NBSTOP_1_5_Mask = usartComponent.createStringSymbol("USART_STOP_1_5_BIT_MASK", None)
-    usartSym_MR_NBSTOP_1_5_Mask.setDefaultValue("0x400000")
+    usartSym_MR_NBSTOP_1_5_Mask.setDefaultValue("0x1000")
     usartSym_MR_NBSTOP_1_5_Mask.setVisible(False)
 
     #USART Stop 2-bit Mask
     usartSym_MR_NBSTOP_2_Mask = usartComponent.createStringSymbol("USART_STOP_2_BIT_MASK", None)
-    usartSym_MR_NBSTOP_2_Mask.setDefaultValue("0x800000")
+    usartSym_MR_NBSTOP_2_Mask.setDefaultValue("0x2000")
     usartSym_MR_NBSTOP_2_Mask.setVisible(False)
-
-    usartSym_MR_SYNC = usartComponent.createBooleanSymbol("USART_MR_SYNC", None)
-    usartSym_MR_SYNC.setLabel(usartBitField_MR_SYNC.getDescription())
-    usartSym_MR_SYNC.setDefaultValue(False)
 
     #USART API Prefix
     usartSym_API_Prefix = usartComponent.createStringSymbol("USART_PLIB_API_PREFIX", None)
     usartSym_API_Prefix.setDefaultValue(usartInstanceName.getValue())
     usartSym_API_Prefix.setVisible(False)
+
+    #USART Overrun error Mask
+    usartSym_CSR_OVRE_Mask = usartComponent.createStringSymbol("USART_OVERRUN_ERROR_VALUE", None)
+    usartSym_CSR_OVRE_Mask.setDefaultValue("0x20")
+    usartSym_CSR_OVRE_Mask.setVisible(False)
+
+    #USART parity error Mask
+    usartSym_CSR_PARE_Mask = usartComponent.createStringSymbol("USART_PARITY_ERROR_VALUE", None)
+    usartSym_CSR_PARE_Mask.setDefaultValue("0x80")
+    usartSym_CSR_PARE_Mask.setVisible(False)
+
+    #USART framing error Mask
+    usartSym_CSR_FRAME_Mask = usartComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", None)
+    usartSym_CSR_FRAME_Mask.setDefaultValue("0x40")
+    usartSym_CSR_FRAME_Mask.setVisible(False)
 
     ############################################################################
     #### Dependency ####
