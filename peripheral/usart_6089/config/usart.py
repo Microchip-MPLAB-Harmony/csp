@@ -59,23 +59,8 @@ def baudRateTrigger(symbol, event):
         symbol.setValue(brgVal, 2)
 
 def clockSourceFreq(symbol, event):
-    if (event["id"] == "USART_CLK_SRC"):
-        symbol.clearValue()
-        if (event["value"] == 0):
-            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
-        if (event["value"] == 1):
-            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")) / 8, 2)
-        if (event["value"] == 2):
-            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
-    if (event["id"] == "PCK4_CLOCK_FREQUENCY") and (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLK_SRC") == 2):
-        symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
-    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLK_SRC") == 0):
-        symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
-    if (event["id"] == "MASTER_CLOCK_FREQUENCY") and (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLK_SRC") == 1):
-        symbol.clearValue()
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY") / 8), 2)
+    symbol.clearValue()
+    symbol.setValue(int(Database.getSymbolValue("core", usartInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
 def dataWidthLogic(symbol, event):
     symbol.clearValue()
@@ -104,9 +89,11 @@ def instantiateComponent(usartComponent):
 
     usartClkSrc = usartComponent.createKeyValueSetSymbol("USART_CLK_SRC", None)
     usartClkSrc.setLabel("Select Clock Source")
-    usartClkSrc.addKey("MCK", "0", "MCK")
-    usartClkSrc.addKey("DIV", "1", "MCK/8")
-    usartClkSrc.addKey("PCK", "2", "PCK4")
+    childrenNodes = []
+    usart = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/value-group@[name=\"US_MR__USCLKS\"]")
+    childrenNodes = usart.getChildren()
+    for param in range(0, len(childrenNodes) - 1):
+        usartClkSrc.addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
     usartClkSrc.setDisplayMode("Description")
     usartClkSrc.setOutputMode("Key")
     usartClkSrc.setDefaultValue(0)
@@ -114,7 +101,7 @@ def instantiateComponent(usartComponent):
     usartClkValue = usartComponent.createIntegerSymbol("USART_CLOCK_FREQ", None)
     usartClkValue.setLabel("Clock Source Value")
     usartClkValue.setReadOnly(True)
-    usartClkValue.setDependencies(clockSourceFreq, ["USART_CLK_SRC", "core.PCK4_CLOCK_FREQUENCY", "core.MASTER_CLOCK_FREQUENCY"])
+    usartClkValue.setDependencies(clockSourceFreq, ["USART_CLK_SRC", "core." + usartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
     usartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
 
     usartBaud = usartComponent.createIntegerSymbol("BAUD_RATE", None)
