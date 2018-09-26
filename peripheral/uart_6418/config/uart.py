@@ -1,13 +1,11 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
-uartRegModule = Register.getRegisterModule("UART")
-uartRegGroup = uartRegModule.getRegisterGroup("UART")
 
-uartReg_MR = uartRegGroup.getRegister("UART_MR")
-uartBitField_MR_PAR = uartReg_MR.getBitfield("PAR")
-uartValGrp_MR_PAR = uartRegModule.getValueGroup(uartBitField_MR_PAR.getValueGroupName())
-uartBitField_MR_FILTER = uartReg_MR.getBitfield("FILTER")
+uartValGrp_MR_PAR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="UART_MR__PAR"]')
+
+uartBitField_MR_FILTER = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="UART_MR"]/bitfield@[name="FILTER"]')
+uartCaption_MR_FILTER = uartBitField_MR_FILTER.getAttribute("caption")
 
 ################################################################################
 #### Global Variables ####
@@ -119,7 +117,13 @@ def instantiateComponent(uartComponent):
     uartDataWidth_8_Mask.setDefaultValue("0x0")
     uartDataWidth_8_Mask.setVisible(False)
 
-    uartSym_MR_PAR = uartComponent.createComboSymbol("UART_MR_PAR", None, uartValGrp_MR_PAR.getValueNames())
+    parityList = []
+    for id in range(0, len(uartValGrp_MR_PAR.getChildren())):
+        parityList.append(id+1)
+        parityList[id] = uartValGrp_MR_PAR.getChildren()[id].getAttribute("name")
+
+
+    uartSym_MR_PAR = uartComponent.createComboSymbol("UART_MR_PAR", None, parityList)
     uartSym_MR_PAR.setLabel("Parity")
     uartSym_MR_PAR.setDefaultValue("NO")
 
@@ -169,8 +173,23 @@ def instantiateComponent(uartComponent):
     uartStopBit_1_Mask.setVisible(False)
 
     uartSym_MR_FILTER = uartComponent.createBooleanSymbol("UART_MR_FILTER", None)
-    uartSym_MR_FILTER.setLabel(uartBitField_MR_FILTER.getDescription())
+    uartSym_MR_FILTER.setLabel(uartCaption_MR_FILTER)
     uartSym_MR_FILTER.setDefaultValue(False)
+
+    #USART Overrun error Mask
+    uartSym_SR_OVRE_Mask = uartComponent.createStringSymbol("USART_OVERRUN_ERROR_VALUE", None)
+    uartSym_SR_OVRE_Mask.setDefaultValue("0x20")
+    uartSym_SR_OVRE_Mask.setVisible(False)
+
+    #USART parity error Mask
+    uartSym_SR_PARE_Mask = uartComponent.createStringSymbol("USART_PARITY_ERROR_VALUE", None)
+    uartSym_SR_PARE_Mask.setDefaultValue("0x80")
+    uartSym_SR_PARE_Mask.setVisible(False)
+
+    #USART framing error Mask
+    uartSym_SR_FRAME_Mask = uartComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", None)
+    uartSym_SR_FRAME_Mask.setDefaultValue("0x40")
+    uartSym_SR_FRAME_Mask.setVisible(False)
 
     #UART API Prefix
     uartSym_API_Prefix = uartComponent.createStringSymbol("USART_PLIB_API_PREFIX", None)
