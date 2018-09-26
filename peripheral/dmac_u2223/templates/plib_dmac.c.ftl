@@ -307,13 +307,15 @@ bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL
 
 void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
 {
-    DMAC_CH_OBJECT  *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
+    DMAC_CH_OBJECT  *dmacChObj = NULL;
     uint8_t channel = 0;
     volatile uint32_t chanIntFlagStatus = 0;
     DMAC_TRANSFER_EVENT event   = DMAC_TRANSFER_EVENT_ERROR;
 
     /* Get active channel number */
     channel =  ${DMA_INSTANCE_NAME}_REGS->DMAC_INTPEND & DMAC_INTPEND_ID_Msk;
+
+	dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel]
 
     /* Update the DMAC channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = DMAC_CHID_ID(channel);

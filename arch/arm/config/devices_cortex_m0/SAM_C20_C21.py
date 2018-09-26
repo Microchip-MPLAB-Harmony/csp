@@ -41,8 +41,8 @@ def setDMACDefaultSettings():
 
     triggerSettings = {
                         "Software Trigger"  : ["TRANSACTION", "SRC", "INCREMENTED_AM", "INCREMENTED_AM",  "X1", "BYTE"],
-                        "Standard_Transmit" : ["BEAT", "DST", "FIXED_AM", "INCREMENTED_AM", "X4", "BYTE"],
-                        "Standard_Receive"  : ["BEAT", "DST", "FIXED_AM", "INCREMENTED_AM", "X4", "BYTE"]
+                        "Standard_Transmit" : ["BEAT", "SRC", "INCREMENTED_AM", "FIXED_AM", "X1", "BYTE"],
+                        "Standard_Receive"  : ["BEAT", "DST", "FIXED_AM", "INCREMENTED_AM", "X1", "BYTE"]
                     }
 
     return triggerSettings
