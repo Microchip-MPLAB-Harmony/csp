@@ -29,7 +29,6 @@ def onCapabilityConnected(event):
             usartSym_Interrupt_Mode.clearValue()
             usartSym_Interrupt_Mode.setValue(True, 2)
         usartSym_Interrupt_Mode.setReadOnly(True)
-        setSERCOMInterruptData(True, "USART")
     elif capability == spiCapabilityId:
         sercomComponent.setCapabilityEnabled(uartCapabilityId, False)
         sercomComponent.setCapabilityEnabled(spiCapabilityId, True)
@@ -39,13 +38,11 @@ def onCapabilityConnected(event):
             spiSym_Interrupt_Mode.clearValue()
             spiSym_Interrupt_Mode.setValue(True, 2)
         spiSym_Interrupt_Mode.setReadOnly(True)
-        setSERCOMInterruptData(True, "SPI")
     elif capability == i2cCapabilityId:
         sercomComponent.setCapabilityEnabled(uartCapabilityId, False)
         sercomComponent.setCapabilityEnabled(spiCapabilityId, False)
         sercomComponent.setCapabilityEnabled(i2cCapabilityId, True)
         sercomSym_OperationMode.setSelectedKey("I2CM", 2)
-        setSERCOMInterruptData(True, "I2C")
 
     sercomSym_OperationMode.setReadOnly(True)
 
@@ -84,23 +81,14 @@ def setSERCOMCodeGenerationProperty(symbol, event):
         component.getSymbolByID("SERCOM_USART_HEADER").setEnabled(True)
         component.getSymbolByID("SERCOM_USART_SOURCE").setEnabled(True)
         component.getSymbolByID("SERCOM_USART_COMMON_HEADER").setEnabled(True)
-        component.setCapabilityEnabled(uartCapabilityId, True)
-        component.setCapabilityEnabled(spiCapabilityId, False)
-        component.setCapabilityEnabled(i2cCapabilityId, False)
     elif event["value"] == 0x3:
         component.getSymbolByID("SERCOM_SPIM_SOURCE").setEnabled(True)
         component.getSymbolByID("SERCOM_SPIM_HEADER").setEnabled(True)
         component.getSymbolByID("SERCOM_SPIM_COMMON_HEADER").setEnabled(True)
-        component.setCapabilityEnabled(uartCapabilityId, False)
-        component.setCapabilityEnabled(spiCapabilityId, True)
-        component.setCapabilityEnabled(i2cCapabilityId, False)
     elif event["value"] == 0x5:
         component.getSymbolByID("SERCOM_I2CM_SOURCE").setEnabled(True)
         component.getSymbolByID("SERCOM_I2CM_HEADER").setEnabled(True)
         component.getSymbolByID("SERCOM_I2CM_MASTER_HEADER").setEnabled(True)
-        component.setCapabilityEnabled(uartCapabilityId, False)
-        component.setCapabilityEnabled(spiCapabilityId, False)
-        component.setCapabilityEnabled(i2cCapabilityId, True)
 
 def setSERCOMInterruptData(status, sercomMode):
 
@@ -238,6 +226,10 @@ def instantiateComponent(sercomComponent):
     sercomSym_OperationMode.setOutputMode("Key")
     sercomSym_OperationMode.setDisplayMode("Key")
 
+    #SERCOM code generation dependecy based on selected mode
+    sercomSym_CodeGeneration = sercomComponent.createBooleanSymbol("SERCOM_CODE_GENERATION", sercomSym_OperationMode)
+    sercomSym_CodeGeneration.setVisible(False)
+    sercomSym_CodeGeneration.setDependencies(setSERCOMCodeGenerationProperty, ["SERCOM_MODE"])
 
     #SERCOM Transmit data register
     sercomSym_TxRegister = sercomComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", sercomSym_OperationMode)
@@ -271,13 +263,8 @@ def instantiateComponent(sercomComponent):
     InterruptHandlerLock = sercomInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     InterruptVectorUpdate = sercomInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
-    # Initial settings for CLK and Interrupt
-    Database.clearSymbolValue("core", InterruptVector)
-    Database.setSymbolValue("core", InterruptVector, True, 2)
-    Database.clearSymbolValue("core", InterruptHandler)
-    Database.setSymbolValue("core", InterruptHandler, sercomInstanceName.getValue() + "_USART_InterruptHandler", 2)
-    Database.clearSymbolValue("core", InterruptHandlerLock)
-    Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
+    # Initial settings for Interrupt
+    setSERCOMInterruptData(True, "USART")
 
     # Interrupt Dynamic settings
     sercomSym_UpdateInterruptStatus = sercomComponent.createBooleanSymbol("SERCOM_INTERRUPT_STATUS", None)
