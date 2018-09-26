@@ -53,7 +53,7 @@ def sort_alphanumeric(l):
     import re
     convert = lambda text: int(text) if text.isdigit() else text.lower() 
     alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
-    return sorted(l, key = alphanum_key)	
+    return sorted(l, key = alphanum_key)
     
 def setupPortPINCFG(usePortLocalPINCFG, event):
 
@@ -126,37 +126,54 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
     global prevID
     global prevVal
 
-    if event["id"] != prevID and event["value"] != prevVal:
-        bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
-        groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+    bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
+    groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
 
-        peripheralFuncVal = 0
+    peripheralFuncVal = 0
 
-        if event["value"] not in peripheralFunctionality and event["value"] != "":
+    if event["value"] not in peripheralFunctionality and event["value"] != "":
 
-            prePinMuxVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
-            intPrePinMuxVal = int(prePinMuxVal,0)
+        prePinMuxVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
+        intPrePinMuxVal = int(prePinMuxVal,0)
 
-            if ((bitPosition%2) == 0):
-                peripheralFuncVal = int(prePinMuxVal,0) | portPeripheralFunc.index(event["value"])
-            else :
-                peripheralFuncVal = int(prePinMuxVal,0) | (portPeripheralFunc.index(event["value"]) << 4)
-
-            Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
+        if ((bitPosition%2) == 0):
+            peripheralFuncVal = portPeripheralFunc.index(event["value"]) | ( int(prePinMuxVal,0) & int("0xf0",0) )
         else :
-            if ((bitPosition%2) == 0):
-                intPrePinMuxVal &= int("0xf0",0)
-            else :
-                intPrePinMuxVal &= int("0x0f",0)
+            peripheralFuncVal = (portPeripheralFunc.index(event["value"]) << 4) | ( int(prePinMuxVal,0) & int("0x0f",0) )
+
+        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
+    else :
+        pinMuxVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
+        intPinMuxVal = int(pinMuxVal,0)
+
+        if ((bitPosition%2) == 0):
+            intPrePinMuxVal &= int("0xf0",0)
+        else :
+            intPrePinMuxVal &= int("0x0f",0)
+
+        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)), 1)
+
+        if event["id"] != prevID:
+            if intPinMuxVal == 0:
+                    intPinMuxVal = int("0x00",0)
+            else:
+                if ((bitPosition%2) == 0):
+                    intPinMuxVal &= int("0xf0",0)
+                else :
+                    intPinMuxVal &= int("0x0f",0)
+
+        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPinMuxVal)), 1)
+
+        if event["id"] == prevID and event["value"] != prevVal:
             Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)), 1)
 
-            portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
+        portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
 
-            if portPositionNodePin != None:
-                Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , str(portPositionNodePin.getAttribute("pad")), 1)
+        if portPositionNodePin != None:
+            Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , str(portPositionNodePin.getAttribute("pad")), 1)
 
-    preVal = event["value"]
     prevID = event["id"]
+    prevVal = event["value"]
 
 ###################################################################################################
 ######################################### PORT Main Menu  ##########################################
@@ -227,6 +244,7 @@ global prevID
 global prevVal
 prevID = ""
 prevVal = ""
+prevID = ""
 pinGroup = []
 pinMode = []
 pinDirection = []
