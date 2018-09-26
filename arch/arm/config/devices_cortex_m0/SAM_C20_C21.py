@@ -93,7 +93,12 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
 #coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
 
 # Activate Event System
-Database.activateComponents(["evsys0"])
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EVSYS\"]")
+modules = periphNode.getChildren()
+components = []
+for evsys_instance in range (0, len(modules)):
+    components.append(str(modules[evsys_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
 
 # generate startup_xc32.c file
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
