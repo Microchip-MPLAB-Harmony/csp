@@ -1,6 +1,6 @@
 def instantiateComponent(cmsisComponent):
 
-    cmsisSupportedVersion = "5.2.0"
+    cmsisSupportedVersion = "5.4.0"
 
     cmsisInformation = cmsisComponent.createCommentSymbol("cmsisInformation", None)
     cmsisError = cmsisComponent.createCommentSymbol("cmsisError", None)
