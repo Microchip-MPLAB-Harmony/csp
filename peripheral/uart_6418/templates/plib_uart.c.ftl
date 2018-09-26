@@ -212,19 +212,7 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
     UART_ERROR errors = UART_ERROR_NONE;
     uint32_t status = ${UART_INSTANCE_NAME}_REGS->UART_SR;
 
-    /* Collect all errors */
-    if(status & UART_SR_OVRE_Msk)
-    {
-        errors = UART_ERROR_OVERRUN;
-    }
-    if(status & UART_SR_PARE_Msk)
-    {
-        errors |= UART_ERROR_PARITY;
-    }
-    if(status & UART_SR_FRAME_Msk)
-    {
-        errors |= UART_ERROR_FRAMING;
-    }
+    errors = status & (UART_SR_OVRE_Msk | UART_SR_PARE_Msk | UART_SR_FRAME_Msk);
 
     if(errors != UART_ERROR_NONE)
     {
@@ -237,11 +225,10 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
 
 bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 {
-    bool status = true;
-    uint32_t clk = srcClkFreq;
+    bool status = false;
     uint32_t baud = setup->baudRate;
     uint32_t brgVal = 0;
-    uint32_t parityVal = 0;
+    uint32_t uartMode;
 
 <#if USART_INTERRUPT_MODE == true>
     if((${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) || (${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true))
@@ -249,61 +236,26 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
         /* Transaction is in progress, so return without updating settings */
         return false;
     }
-
 </#if>
-    if(clk == 0)
+    if (setup != NULL)
     {
-        clk = ${UART_INSTANCE_NAME}_FrequencyGet();
-    }
+        if(srcClkFreq == 0)
+        {
+            srcClkFreq = ${UART_INSTANCE_NAME}_FrequencyGet();
+        }
 
-    /* Calculate BRG value */
-    if (clk >= (16 * baud))
-    {
-        brgVal = (clk / (16 * baud));
-    }
-    else
-    {
-        brgVal = (clk / (8 * baud));
-    }
+        /* Calculate BRG value */
+        brgVal = srcClkFreq / (16 * baud);
 
-    /* Get Parity values */
-    switch(setup->parity)
-    {
-        case UART_PARITY_ODD:
-        case UART_PARITY_MARK:
-        {
-            parityVal = UART_MR_PAR(setup->parity);
-            break;
-        }
-        case UART_PARITY_NONE:
-        {
-            parityVal = UART_MR_PAR_NO;
-            break;
-        }
-        case UART_PARITY_EVEN:
-        {
-            parityVal = UART_MR_PAR_EVEN;
-            break;
-        }
-        case UART_PARITY_SPACE:
-        {
-            parityVal = UART_MR_PAR_SPACE;
-            break;
-        }
-        default:
-        {
-            status = false;
-            break;
-        }
-    }
-
-    if(status != false)
-    {
         /* Configure ${UART_INSTANCE_NAME} mode */
-        ${UART_INSTANCE_NAME}_REGS->UART_MR = (parityVal | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
+        uartMode = ${UART_INSTANCE_NAME}_REGS->UART_MR;
+        uartMode &= ~UART_MR_PAR_Msk;
+        ${UART_INSTANCE_NAME}_REGS->UART_MR = uartMode | setup->parity ;
 
         /* Configure ${UART_INSTANCE_NAME} Baud Rate */
         ${UART_INSTANCE_NAME}_REGS->UART_BRGR = UART_BRGR_CD(brgVal);
+
+        status = true;
     }
 
     return status;
