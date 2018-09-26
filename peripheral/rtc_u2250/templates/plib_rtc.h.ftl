@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_?${RTC_INSTANCE_NAME?lower_case}.h
+    plib_${RTC_INSTANCE_NAME?lower_case}.h
 
   Summary:
     ${RTC_INSTANCE_NAME} PLIB Header file
@@ -58,11 +58,19 @@ extern "C" {
 // DOM-IGNORE-END
 
 <#if RTC_MODULE_SELECTION = "MODE0">
-/* Frequency of RTC Clock */
-#define RTC_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY} / (2 ^ ${RTC_MODE0_PRESCALER}))
+    <#lt>/* Frequency of Counter Clock for RTC */
+    <#if RTC_MODE0_PRESCALER = "0x0">
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY         0
+    <#else>
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY} / (1 << (${RTC_MODE0_PRESCALER} - 1)))
+    </#if>
 <#elseif RTC_MODULE_SELECTION = "MODE1">
-/* Frequency of RTC Clock */
-#define RTC_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY} / (2 ^ ${RTC_MODE1_PRESCALER}))
+    <#lt>/* Frequency of Counter Clock for RTC */
+    <#if RTC_MODE1_PRESCALER = "0x0">
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY         0
+    <#else>
+        <#lt>#define RTC_COUNTER_CLOCK_FREQUENCY        (${core.RTC_CLOCK_FREQUENCY} / (1 << (${RTC_MODE1_PRESCALER} - 1)))
+    </#if>
 </#if>
 
 <#if RTC_MODE2_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE2" ||

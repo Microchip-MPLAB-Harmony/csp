@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_?${RTC_INSTANCE_NAME?lower_case}_timer.c
+    plib_${RTC_INSTANCE_NAME?lower_case}_timer.c
 
   Summary:
     ${RTC_INSTANCE_NAME} PLIB Implementation file
@@ -283,18 +283,18 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32FrequencyGet ( void )
     <#lt>{
     <#lt>    /* Return Frequency of RTC Clock */
-    <#lt>    return RTC_CLOCK_FREQUENCY;
+    <#lt>    return RTC_COUNTER_CLOCK_FREQUENCY;
     <#lt>}
 
     <#if RTC_MODE0_INTERRUPT = true>
         <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptEnable(RTC_TIMER32_INT_MASK interrupt)
         <#lt>{
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.INTENSET = interrupt;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.INTENSET = interrupt;
         <#lt>}
 
         <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt)
         <#lt>{
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.INTENCLR = interrupt;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.INTENCLR = interrupt;
         <#lt>}
             
     </#if>
@@ -378,7 +378,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer16FrequencyGet ( void )
     <#lt>{
-    <#lt>    return RTC_CLOCK_FREQUENCY;
+    <#lt>    return RTC_COUNTER_CLOCK_FREQUENCY;
     <#lt>}
 
     <#if RTC_MODE1_INTERRUPT = true>

@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_?${RTC_INSTANCE_NAME?lower_case}_clock.c
+    plib_${RTC_INSTANCE_NAME?lower_case}_clock.c
 
   Summary:
     ${RTC_INSTANCE_NAME} PLIB Implementation file
