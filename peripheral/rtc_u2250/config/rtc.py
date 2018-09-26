@@ -296,6 +296,7 @@ def instantiateComponent(rtcComponent):
     rtcSymMode0_INTENSET = rtcComponent.createBooleanSymbol("RTC_MODE0_INTERRUPT", rtcSymMode0Menu)
     rtcSymMode0_INTENSET.setLabel("Enable Interrupts?")
     rtcSymMode0_INTENSET.setDefaultValue(True)
+    setRTCInterruptData(True)
 
     #Prescaler
     rtcSymMode0_CTRLA_PRESCALER = rtcComponent.createKeyValueSetSymbol("RTC_MODE0_PRESCALER", rtcSymMode0Menu)
