@@ -145,6 +145,7 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void);
 <#assign TC_CH_ENABLE = "TC" + i + "_ENABLE">
 <#assign TC_CH_OPERATINGMODE = "TC" + i +"_OPERATING_MODE">
 <#assign CH_NUM = i >
+<#assign TC_TIMER_SYS_TIME_CONNECTED = "TC"+i+"_SYS_TIME_CONNECTED">
 <#assign TC_CH_CLOCK_FREQ = "TC"+i+"_CLOCK_FREQ">
 <#assign TC_TIMER_IER_CPCS = "TC"+i+"_IER_CPCS">
 <#assign TC_TIMER_IER_CPAS = "TC"+i+"_IER_CPAS">
@@ -165,7 +166,9 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerStop (void);
 
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodSet (uint16_t period);
 
+<#if .vars[TC_TIMER_SYS_TIME_CONNECTED] == true>
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCompareSet (uint16_t compare);
+</#if>
 
 uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerFrequencyGet (void);
 

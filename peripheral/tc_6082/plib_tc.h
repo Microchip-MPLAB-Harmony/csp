@@ -368,18 +368,51 @@ typedef struct
     uintptr_t context;
 }TC_TIMER_CALLBACK_OBJECT;
 
+/* Callback structure
+
+   Summary:
+    Callback structure
+
+   Description:
+    This stores the callback function pointer and context
+
+   Remarks:
+    None.
+*/
 typedef struct
 {
     TC_COMPARE_CALLBACK callback_fn;
     uintptr_t context;
 }TC_COMPARE_CALLBACK_OBJECT;
 
+/* Callback structure
+
+   Summary:
+    Callback structure
+
+   Description:
+    This stores the callback function pointer and context
+
+   Remarks:
+    None.
+*/
 typedef struct
 {
     TC_CAPTURE_CALLBACK callback_fn;
     uintptr_t context;
 }TC_CAPTURE_CALLBACK_OBJECT;
 
+/* Callback structure
+
+   Summary:
+    Callback structure
+
+   Description:
+    This stores the callback function pointer and context
+
+   Remarks:
+    None.
+*/
 typedef struct
 {
     TC_QUADRATURE_CALLBACK callback_fn;
@@ -495,6 +528,39 @@ void TCx_CHy_TimerStart ( void );
 
 void TCx_CHy_TimerStop ( void );
 
+// *****************************************************************************
+/* Function:
+    void TCx_CHy_TimerCompareSet ( uint16_t compare );
+
+  Summary:
+    Sets the compare value of a given timer channel.
+
+  Description:
+    This function writes the compare value.  When timer counter matches compare
+    value, interrupt can be generated.
+
+  Precondition:
+    TCx_CHy_TimerInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    compare - compare value of the timer
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    TC0_CH1_TimerInitialize();
+    TC0_CH1_TimerCompareSet(0x500ul);
+    </code>
+
+  Remarks:
+    This function is available only when TC timer mode is used by SYS_TIME module.
+    SYS_TIME uses compare match interrupt to generate dynamic delay.
+*/
+
+void TCx_CHy_TimerCompareSet ( uint16_t compare );
 
 // *****************************************************************************
 /* Function:
@@ -512,7 +578,7 @@ void TCx_CHy_TimerStop ( void );
     channel.
 
   Parameters:
-    None.
+    Period - Period value of timer which decides the timer delay
 
   Returns:
     None.
@@ -667,7 +733,7 @@ uint32_t TCx_CHy_TimerFrequencyGet ( void );
     </code>
 
   Remarks:
-    None
+    This function is available only in polling mode
 */
 bool TCx_CHy_TimerPeriodHasExpired(void);
 

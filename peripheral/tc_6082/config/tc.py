@@ -15,6 +15,7 @@ tcSym_CH_Resolution = [0, 0, 0, 0]
 tcSym_CH_OperatingMode = []
 
 tcTimerMenu = []
+tcSym_SYS_TIME_CONNECTED = []
 tcSym_CH_TimerPeriod = []
 tcSym_CH_TimerPeriodComment = []
 tcSym_CH_TimerPeriodCount = []
@@ -274,7 +275,7 @@ def tcQEIDependencyIntStatus(symbol, event):
             symbol.setVisible(False)
 
 def tcGetClockResolution(clockSource, channelID):
-    resolution_nS = str(1000000000.0/Database.getSymbolValue("core", "TC"+str(num)+"_CH"+str(channelID)+"_CLOCK_FREQUENCY"))
+    resolution_nS = str(1000000000.0/Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY"))
     global tcSym_CH_EXT_CLOCK
     ext_clock_Hz = tcSym_CH_EXT_CLOCK[channelID].getValue()
     if (ext_clock_Hz == 0):
@@ -287,7 +288,7 @@ def tcGetClockResolution(clockSource, channelID):
 def tcClockFreq(tcSym_CH_ClockFreqLocal, event):
     id = tcSym_CH_ClockFreqLocal.getID()
     channelID = int(id[2])
-    clock_Hz = int(Database.getSymbolValue("core", "TC"+str(num)+"_CH"+str(channelID)+"_CLOCK_FREQUENCY"))
+    clock_Hz = int(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY"))
     global tcSym_CH_EXT_CLOCK
     clock = (int(tcSym_CH_CMR_TCCLKS[channelID].getSelectedValue()))
     if (clock > 5):
@@ -299,7 +300,7 @@ def tcClockResCalc(tcSym_CH_ResolutionLocal, event):
     id = tcSym_CH_ResolutionLocal.getID()
     channelID = int(id[2])
     resolution = None
-    clock = Database.getSymbolValue("tc" + str(num), "TC"+str(channelID)+"_CMR_TCCLKS")
+    clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
     resolution = tcGetClockResolution(clock, channelID)
     tcSym_CH_Resolution[channelID].setLabel("****Clock resolution is " + str(resolution) + " nS****")
 
@@ -381,7 +382,7 @@ def tcPeriodCalc(tcSym_CH_ComparePeriodLocal, event):
 
     id = tcSym_CH_ComparePeriodLocal.getID()
     channelID = int(id[2])
-    clock = Database.getSymbolValue("tc" + str(num), "TC"+str(channelID)+"_CMR_TCCLKS")
+    clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
     mode = tcSym_CH_OperatingMode[channelID].getValue()
     if(mode == "COMPARE"):
         count = tcSym_CH_ComparePeriodCount[channelID].getValue()
@@ -402,7 +403,7 @@ def tcPeriodCountCalc(symbol, event):
 
     id = symbol.getID()
     channelID = int(id[2])
-    clock = Database.getSymbolValue("tc" + str(num), "TC"+str(channelID)+"_CMR_TCCLKS")
+    clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
     mode = tcSym_CH_OperatingMode[channelID].getValue()
 
     if (mode == "TIMER"):
@@ -424,7 +425,7 @@ def tcPeriodCountCalc(symbol, event):
 def tcPeriodMaxVal(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
-    clock = Database.getSymbolValue("tc" + str(num), "TC"+str(channelID)+"_CMR_TCCLKS")
+    clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
     resolution_ns = tcGetClockResolution(clock, channelID)
     symbol.setMax(float(((float(resolution_ns) * 65535.0)/1000000)))
 
@@ -499,7 +500,7 @@ def tcQuadratureTimeBaseCalculate(tcSym_CH_QEI_CH2PERIOD_COMMENT, event):
     global tcSym_CH_CMR_TCCLKS
     global tcSym_CH_QEI_CH2PERIOD
     channelID = 3
-    clock = Database.getSymbolValue("tc" + str(num), "TC"+str(channelID)+"_CMR_TCCLKS")
+    clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
     count = tcSym_CH_QEI_CH2PERIOD.getValue()
 
     resolution_ns = tcGetClockResolution(clock, 3)
@@ -616,6 +617,9 @@ def onCapabilityDisconnected(connectionInfo):
     tcSym_CH_TimerPeriod[0].setVisible(True)
     tcSym_CH_TimerPeriod[1].setVisible(True)
     tcSym_CH_TimerPeriod[2].setVisible(True)
+    tcSym_CH_IER_CPAS[0].setVisible(False)
+    tcSym_CH_IER_CPAS[1].setVisible(False)
+    tcSym_CH_IER_CPAS[2].setVisible(False)
 
     remoteComponent = connectionInfo["remoteComponent"]
     if (remoteComponent.getID() == "sys_time"):
@@ -640,26 +644,40 @@ def sysTime_ChannelSelection(symbol,event):
     channelID = int(tc_channel[3])
 
     tcSym_CH_Enable[channelID].setValue(True,2)
+    tcSym_CH_IER_CPAS[channelID].setVisible(True)
     tcSym_CH_IER_CPAS[channelID].setValue(True,2)
     tcSym_CH_IER_CPCS[channelID].setValue(False,2)
+    tcSym_SYS_TIME_CONNECTED[channelID].setValue(True, 2)
 
     tcSym_CH_TimerPeriod[channelID].setVisible(False)
 
     if(channelID==0):
         tcSym_CH_TimerPeriod[1].setVisible(True)
         tcSym_CH_TimerPeriod[2].setVisible(True)
+        tcSym_CH_IER_CPAS[1].setVisible(False)
+        tcSym_CH_IER_CPAS[2].setVisible(False)
         tcSym_CH_Enable[1].setValue(False,2)
         tcSym_CH_Enable[2].setValue(False,2)
+        tcSym_SYS_TIME_CONNECTED[1].setValue(False, 2)
+        tcSym_SYS_TIME_CONNECTED[2].setValue(False, 2)
     elif(channelID==1):
         tcSym_CH_TimerPeriod[0].setVisible(True)
         tcSym_CH_TimerPeriod[2].setVisible(True)
+        tcSym_CH_IER_CPAS[0].setVisible(False)
+        tcSym_CH_IER_CPAS[2].setVisible(False)
         tcSym_CH_Enable[0].setValue(False,2)
         tcSym_CH_Enable[2].setValue(False,2)
+        tcSym_SYS_TIME_CONNECTED[0].setValue(False, 2)
+        tcSym_SYS_TIME_CONNECTED[2].setValue(False, 2)
     elif(channelID==2):
         tcSym_CH_TimerPeriod[0].setVisible(True)
         tcSym_CH_TimerPeriod[1].setVisible(True)
+        tcSym_CH_IER_CPAS[1].setVisible(False)
+        tcSym_CH_IER_CPAS[0].setVisible(False)
         tcSym_CH_Enable[0].setValue(False,2)
         tcSym_CH_Enable[1].setValue(False,2)
+        tcSym_SYS_TIME_CONNECTED[1].setValue(False, 2)
+        tcSym_SYS_TIME_CONNECTED[0].setValue(False, 2)
 
     timerStartApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStart"
     timeStopApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStop "
@@ -929,6 +947,10 @@ def instantiateComponent(tcComponent):
         tcSym_CH_Enable[channelID].setLabel("Enable")
         tcSym_CH_Enable[channelID].setDefaultValue(False)
 
+        tcSym_SYS_TIME_CONNECTED.append(channelID)
+        tcSym_SYS_TIME_CONNECTED[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_SYS_TIME_CONNECTED", None)
+        tcSym_SYS_TIME_CONNECTED[channelID].setDefaultValue(False)
+        tcSym_SYS_TIME_CONNECTED[channelID].setVisible(False)
         ############################################################################
         #### Dependency ####
         ############################################################################
@@ -1038,6 +1060,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_IER_CPAS[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_IER_CPAS", tcTimerMenu[channelID])
         tcSym_CH_IER_CPAS[channelID].setLabel("Enable Compare Interrupt")
         tcSym_CH_IER_CPAS[channelID].setDefaultValue(False)
+        tcSym_CH_IER_CPAS[channelID].setVisible(False)
 
         #****************************CAPTURE*****************************
         #capture menu

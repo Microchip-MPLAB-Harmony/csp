@@ -186,6 +186,7 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 <#assign TC_CH_ENABLE = "TC" + i + "_ENABLE">
 <#assign TC_CH_OPERATINGMODE = "TC" + i +"_OPERATING_MODE">
 <#assign CH_NUM = i >
+<#assign TC_TIMER_SYS_TIME_CONNECTED = "TC"+i+"_SYS_TIME_CONNECTED">
 <#assign TC_CMR_TCCLKS = "TC"+ i +"_CMR_TCCLKS">
 <#assign TC_PCK7 = "TC"+i+"_PCK7">
 <#assign TC_CMR_CPCSTOP = "TC"+ i +"_CMR_CPCSTOP">
@@ -296,11 +297,13 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodSet (uint16_t period)
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = period;
 }
 
+<#if .vars[TC_TIMER_SYS_TIME_CONNECTED] == true>
 /* Configure timer compare */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCompareSet (uint16_t compare)
 {
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = compare;
 }
+</#if>
 
 /* Read timer period */
 uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodGet (void)
