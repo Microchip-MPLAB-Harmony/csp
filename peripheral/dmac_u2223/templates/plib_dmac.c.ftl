@@ -315,7 +315,7 @@ void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
     /* Get active channel number */
     channel =  ${DMA_INSTANCE_NAME}_REGS->DMAC_INTPEND & DMAC_INTPEND_ID_Msk;
 
-	dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel]
+	dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
 
     /* Update the DMAC channel ID */
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = DMAC_CHID_ID(channel);
