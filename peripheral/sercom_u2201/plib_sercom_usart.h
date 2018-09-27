@@ -72,11 +72,11 @@ extern "C" {
 /* USART Errors
 
   Summary:
-    Defines the possible USART peripheral errors.
+    Defines the data type for the USART peripheral errors.
 
   Description:
-    This enumeration defines the possible USART peripheral errors. The
-    SERCOMx_USART_ErrorGet() function returns a value of this type.
+    This may be used to check the type of error occurred with the USART
+    peripheral during error status.
 
   Remarks:
     None.
@@ -88,15 +88,101 @@ typedef enum
     USART_ERROR_NONE,
 
     /* Error status when parity error has occurred */
-    USART_ERROR_PARITY,
+    USART_ERROR_PARITY = SERCOM_USART_STATUS_PERR_Msk,
 
     /* Error status when framing error has occurred */
-    USART_ERROR_FRAMING,
+    USART_ERROR_FRAMING = SERCOM_USART_STATUS_FERR_Msk,
 
     /* Error status when overrun error has occurred */
-    USART_ERROR_OVERRUN = 4
+    USART_ERROR_OVERRUN = SERCOM_USART_STATUS_BUFOVF_Msk
 
 } USART_ERROR;
+
+// *****************************************************************************
+/* USART DATA
+
+  Summary:
+    Defines the data type for the USART peripheral data.
+
+  Description:
+    This may be used to check the type of data with the USART
+    peripheral during serial setup.
+
+  Remarks:
+    None.
+*/
+
+typedef enum
+{
+    USART_DATA_5_BIT = SERCOM_USART_CTRLB_CHSIZE(0x5),
+
+    USART_DATA_6_BIT = SERCOM_USART_CTRLB_CHSIZE(0x6),
+
+    USART_DATA_7_BIT = SERCOM_USART_CTRLB_CHSIZE(0x7),
+
+    USART_DATA_8_BIT = SERCOM_USART_CTRLB_CHSIZE(0x0),
+
+    USART_DATA_9_BIT = SERCOM_USART_CTRLB_CHSIZE(0x1),
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_DATA_INVALID = 0xFFFFFFFF
+
+} USART_DATA;
+
+// *****************************************************************************
+/* USART PARITY
+
+  Summary:
+    Defines the data type for the USART peripheral parity.
+
+  Description:
+    This may be used to check the type of parity with the USART
+    peripheral during serial setup.
+
+  Remarks:
+    None.
+*/
+
+typedef enum
+{
+    USART_PARITY_EVEN = 0,
+
+    USART_PARITY_ODD = SERCOM_USART_CTRLB_PMODE_Msk,
+
+    /* This enum is defined to set frame format only
+     * This value won't be written to register
+     */
+    USART_PARITY_NONE = 0x2,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_PARITY_INVALID = 0xFFFFFFFF
+
+} USART_PARITY;
+
+// *****************************************************************************
+/* USART STOP
+
+  Summary:
+    Defines the data type for the USART peripheral stop bits.
+
+  Description:
+    This may be used to check the type of stop bits with the USART
+    peripheral during serial setup.
+
+  Remarks:
+    None.
+*/
+
+typedef enum
+{
+    USART_STOP_1_BIT = 0,
+
+    USART_STOP_2_BIT = SERCOM_USART_CTRLB_SBMODE_Msk,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_STOP_INVALID = 0xFFFFFFFF
+
+} USART_STOP;
 
 // *****************************************************************************
 /* USART Serial Configuration
@@ -105,8 +191,7 @@ typedef enum
     Defines the data type for the USART serial configurations.
 
   Description:
-    This structure defines the data type of data to be passed to the
-    SERCOMx_USART_SerialSetup() function.
+    This may be used to set the serial configurations for USART.
 
   Remarks:
     None.
@@ -114,20 +199,13 @@ typedef enum
 
 typedef struct
 {
-    /* Baud rate value */
-    uint32_t baud;
+    uint32_t baudRate;
 
-    /* Value can be 5, 6, 7, 8, 9 */
-    uint8_t charSize;
+    USART_DATA dataWidth;
 
-    /* Separating out the parity enable as a serial parameter */
-    bool parityEnable;
+    USART_PARITY parity;
 
-    /* 0 -even parity 1 - odd parity. Only valid if parity is enabled */
-    uint8_t parity;
-
-    /* One or two stop bits */
-    uint8_t stopBits;
+    USART_STOP stopBits;
 
 } USART_SERIAL_SETUP;
 
@@ -228,8 +306,8 @@ void SERCOMx_USART_Initialize( void );
 
 // *****************************************************************************
 /* Function:
-    bool SERCOMx_USART_SerialSetup (uint32_t clkFrequency,
-                                            USART_SERIAL_SETUP * serialSetup)
+    bool SERCOMx_USART_SerialSetup(USART_SERIAL_SETUP * serialSetup,
+                                                         uint32_t clkFrequency)
 
   Summary:
     Sets up serial configurations for USART peripheral.
@@ -267,7 +345,7 @@ void SERCOMx_USART_Initialize( void );
     None.
 */
 
-bool SERCOMx_USART_SerialSetup (uint32_t clkFrequency, USART_SERIAL_SETUP * serialSetup);
+bool SERCOMx_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency );
 
 // *****************************************************************************
 /* Function:
@@ -731,7 +809,7 @@ size_t SERCOMx_USART_ReadCountGet( void );
     or blocking mode of the library.
 */
 
-bool SERCOMx_USART_TransmitterIsReady ( void );
+bool SERCOMx_USART_TransmitterIsReady( void );
 
 // *****************************************************************************
 /* Function:
@@ -783,7 +861,7 @@ bool SERCOMx_USART_TransmitterIsReady ( void );
     or blocking mode of the library.
 */
 
-bool SERCOMx_USART_ReceiverIsReady ( void );
+bool SERCOMx_USART_ReceiverIsReady( void );
 
 // *****************************************************************************
 /* Function:
@@ -965,6 +1043,113 @@ void SERCOMx_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK callback , uintp
 
 void SERCOMx_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback , uintptr_t context );
 
+// *****************************************************************************
+/* Function:
+    int SERCOMx_USART_ReadByte( void )
+
+  Summary:
+    Submits request to read a byte of data to the given USART peripheral.
+
+  Description:
+    This function submits request to read a byte of data to the given USART
+    peripheral. This Function is available only in non-interrupt mode.
+
+  Precondition:
+    SERCOMx_USART_Initialize must have been called for the associated USART
+    instance.
+
+  Parameters:
+    None
+
+  Returns:
+    Read byte.
+
+  Example:
+    <code>
+    //Example to use in non-interrupt
+    char rxData;
+
+    if(SERCOMx_USART_ReceiverIsReady() == true)
+    {
+        rxData = SERCOMx_USART_ReadByte();
+    }
+    </code>
+
+  Remarks:
+    None.
+*/
+
+int SERCOMx_USART_ReadByte( void );
+
+// *****************************************************************************
+/* Function:
+    void SERCOMx_USART_WriteByte( int data )
+
+  Summary:
+    Submits a byte of data to the given USART peripheral to transfer.
+
+  Description:
+    This function submits a byte of data to the USART peripheral to transfer.
+    This Function is available only in non-interrupt mode.
+
+  Precondition:
+    SERCOMx_USART_Initialize must have been called for the associated USART
+    instance.
+
+  Parameters:
+    data - Data byte to be transferred.
+
+  Returns:
+    None
+
+  Example:
+    <code>
+    //Example to use in non-interrupt mode
+    char myData = 0xAA;
+
+    SERCOMx_USART_WriteByte(&myData)
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+void SERCOMx_USART_WriteByte( int data );
+
+// *****************************************************************************
+/* Function:
+    uint32_t SERCOMx_USART_FrequencyGet( void )
+
+  Summary:
+    Provides the given SERCOM peripheral frequency.
+
+  Description:
+    This function provides the frequency at which the given SERCOM operates.
+
+  Precondition:
+    SERCOMx_USART_Initialize must have been called for the associated USART
+    instance.
+
+  Parameters:
+    None.
+
+  Returns:
+    The frequency (in Hz) at which the timer's counter increments.
+
+  Example:
+    <code>
+    uint32_t frequency = 0;
+
+    SERCOMx_USART_Initialize();
+    frequency = SERCOMx_USART_FrequencyGet();
+    </code>
+
+  Remarks:
+    None.
+*/
+
+uint32_t SERCOMx_USART_FrequencyGet( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
