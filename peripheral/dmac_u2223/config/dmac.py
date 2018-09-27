@@ -209,6 +209,7 @@ def dmacChannelAllocLogic(symbol, event):
             if dmaChannelEnable == False:
                 Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(i), True, 2)
                 Database.setSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i), perID, 2)
+                Database.setSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i) + "_PERID_LOCK", True, 2)
                 Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, i, 2)
                 channelAllocated = True
                 break
@@ -219,6 +220,7 @@ def dmacChannelAllocLogic(symbol, event):
             if perID == dmaChannelPerID and dmaChannelEnable == True:
                 Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(i), False, 2)
                 Database.setSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i), "Software Trigger", 2)
+                Database.setSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i) + "_PERID_LOCK", False, 2)
                 Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
 
     if event["value"] == True and channelAllocated == False:
@@ -312,6 +314,12 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacSym_PERID_Val.setDefaultValue(0)
     dmacSym_PERID_Val.setDependencies(dmacTriggerCalc, ["DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID)])
     dmacSym_PERID_Val.setVisible(False)
+
+    # DMA manager will use LOCK symbol to lock the "DMAC_CHCTRLB_TRIGSRC_CH_ + str(channelID)" symbol
+    dmacSym_CHCTRLB_TRIGSRC_LOCK = coreComponent.createBooleanSymbol("DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID) + "_PERID_LOCK", dmacChannelEnable)
+    dmacSym_CHCTRLB_TRIGSRC_LOCK.setLabel("Lock DMA Request")
+    dmacSym_CHCTRLB_TRIGSRC_LOCK.setVisible(False)
+    dmacSym_CHCTRLB_TRIGSRC_LOCK.setUseSingleDynamicValue(True)
 
     # CHCTRLB - Trigger Action
     dmacSym_CHCTRLB_TRIGACT = coreComponent.createKeyValueSetSymbol("DMAC_CHCTRLB_TRIGACT_CH_" + str(channelID), dmacChannelEnable)
