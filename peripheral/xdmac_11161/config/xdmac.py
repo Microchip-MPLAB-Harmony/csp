@@ -12,6 +12,7 @@ Log.writeInfoMessage("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 #### Global Variables ####
 ################################################################################
 global xdmacHeaderFile
+global xdmacCommonHeaderFile
 global xdmacSourceFile
 global xdmacSystemInitFile
 global xdmacSystemIntFile
@@ -175,6 +176,7 @@ def onGlobalEnableLogic(xdmacFileGen, event):
 
     # File generation logic
     xdmacHeaderFile.setEnabled(event["value"])
+    xdmacCommonHeaderFile.setEnabled(event["value"])
     xdmacSourceFile.setEnabled(event["value"])
     xdmacSystemInitFile.setEnabled(event["value"])
     xdmacSystemDefFile.setEnabled(event["value"])
@@ -489,6 +491,8 @@ xdmacCommonHeaderFile.setOutputName("plib_xdmac_common.h")
 xdmacCommonHeaderFile.setDestPath("/peripheral/xdmac/")
 xdmacCommonHeaderFile.setProjectPath("config/" + configName +"/peripheral/xdmac/")
 xdmacCommonHeaderFile.setType("HEADER")
+xdmacCommonHeaderFile.setOverwrite(True)
+xdmacCommonHeaderFile.setEnabled(False)
 
 xdmacHeaderFile = coreComponent.createFileSymbol("xdmacHeaderFile", None)
 xdmacHeaderFile.setMarkup(True)
