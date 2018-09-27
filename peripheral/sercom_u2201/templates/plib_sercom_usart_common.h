@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    plib_sercom_usart.h
+    plib_sercom_usart_common.h
 
   Summary
     Data Type definition of the USART Peripheral Interface Plib.
@@ -55,6 +55,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -102,28 +103,90 @@ typedef enum
 } USART_ERROR;
 
 // *****************************************************************************
-/* Callback Function Pointer
+/* USART DATA
 
   Summary:
-    Defines the data type and function signature for the USART peripheral
-    callback function.
+    Defines the data type for the USART peripheral data.
 
   Description:
-    This data type defines the function signature for the USART peripheral
-    callback function. The USART peripheral will call back the client's
-    function with this signature when the USART buffer event has occurred.
+    This may be used to check the type of data with the USART
+    peripheral during serial setup.
 
   Remarks:
     None.
 */
 
-typedef void (*SERCOM_USART_CALLBACK)( uintptr_t context );
+typedef enum
+{
+    USART_DATA_5_BIT = SERCOM_USART_CTRLB_CHSIZE(0x5),
+
+    USART_DATA_6_BIT = SERCOM_USART_CTRLB_CHSIZE(0x6),
+
+    USART_DATA_7_BIT = SERCOM_USART_CTRLB_CHSIZE(0x7),
+
+    USART_DATA_8_BIT = SERCOM_USART_CTRLB_CHSIZE(0x0),
+
+    USART_DATA_9_BIT = SERCOM_USART_CTRLB_CHSIZE(0x1),
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_DATA_INVALID = 0xFFFFFFFF
+
+} USART_DATA;
 
 // *****************************************************************************
+/* USART PARITY
+
+  Summary:
+    Defines the data type for the USART peripheral parity.
+
+  Description:
+    This may be used to check the type of parity with the USART
+    peripheral during serial setup.
+
+  Remarks:
+    None.
+*/
+
+typedef enum
+{
+    USART_PARITY_EVEN = 0,
+
+    USART_PARITY_ODD = SERCOM_USART_CTRLB_PMODE_Msk,
+
+    /* This enum is defined to set frame format only
+     * This value won't be written to register
+     */
+    USART_PARITY_NONE = 0x2,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_PARITY_INVALID = 0xFFFFFFFF
+
+} USART_PARITY;
+
 // *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
+/* USART STOP
+
+  Summary:
+    Defines the data type for the USART peripheral stop bits.
+
+  Description:
+    This may be used to check the type of stop bits with the USART
+    peripheral during serial setup.
+
+  Remarks:
+    None.
+*/
+
+typedef enum
+{
+    USART_STOP_1_BIT = 0,
+
+    USART_STOP_2_BIT = SERCOM_USART_CTRLB_SBMODE_Msk,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_STOP_INVALID = 0xFFFFFFFF
+
+} USART_STOP;
 
 // *****************************************************************************
 /* USART Serial Configuration
@@ -140,22 +203,33 @@ typedef void (*SERCOM_USART_CALLBACK)( uintptr_t context );
 
 typedef struct
 {
-    /*  Baud rate value */
-    uint32_t baud;
+    uint32_t baudRate;
 
-    /* Value can be 5, 6, 7, 8, 9 */
-    uint8_t  charSize;
+    USART_PARITY parity;
 
-    /* Separating out the parity enable as a serial parameter */
-    bool     parityEnable;
+    USART_DATA dataWidth;
 
-    /* 0 -even parity 1 - odd parity. Only valid if parity enable is true */
-    uint8_t  parity;
-
-    /* One or two stop bits */
-    uint8_t  stopBits;      // 1 or 2
+    USART_STOP stopBits;
 
 } USART_SERIAL_SETUP;
+
+// *****************************************************************************
+/* Callback Function Pointer
+
+  Summary:
+    Defines the data type and function signature for the USART peripheral
+    callback function.
+
+  Description:
+    This data type defines the function signature for the USART peripheral
+    callback function. The USART peripheral will call back the client's
+    function with this signature when the USART buffer event has occurred.
+
+  Remarks:
+    None.
+*/
+
+typedef void (*SERCOM_USART_CALLBACK)( uintptr_t context );
 
 // *****************************************************************************
 /* SERCOM USART Object
@@ -187,11 +261,13 @@ typedef struct
     volatile uintptr_t                   rxContext;
     volatile bool                        rxBusyStatus;
 
-} SERCOM_USART_OBJECT ;
+} SERCOM_USART_OBJECT;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     }
+
 #endif
 // DOM-IGNORE-END
 
