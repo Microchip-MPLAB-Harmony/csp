@@ -52,9 +52,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#assign PORTD_EXISTS = false>
 <#assign PORTE_EXISTS = false>
 
+<#assign PIO_A_NUM_INT_PINS = 0>
+<#assign PIO_B_NUM_INT_PINS = 0>
+<#assign PIO_C_NUM_INT_PINS = 0>
+<#assign PIO_D_NUM_INT_PINS = 0>
+<#assign PIO_E_NUM_INT_PINS = 0>
+
 <#list 1..PIO_PIN_TOTAL as i>
     <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
-
+    <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
     <#if .vars[pinchannel]?has_content>
         <#if .vars[pinchannel] == "A">
             <#assign PORTA_EXISTS = true>
@@ -66,6 +72,25 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
             <#assign PORTD_EXISTS = true>
         <#elseif .vars[pinchannel] == "E">
             <#assign PORTE_EXISTS = true>
+        </#if>
+    </#if>
+    <#if .vars[intConfig]?has_content>
+        <#if (.vars[intConfig] != "Disabled")>
+            <#if (.vars[pinchannel] == "A")>
+                <#assign PIO_A_NUM_INT_PINS = PIO_A_NUM_INT_PINS + 1>
+            </#if>
+            <#if (.vars[pinchannel] == "B")>
+                <#assign PIO_B_NUM_INT_PINS = PIO_B_NUM_INT_PINS + 1>
+            </#if>
+            <#if (.vars[pinchannel] == "C")>
+                <#assign PIO_C_NUM_INT_PINS = PIO_C_NUM_INT_PINS + 1>
+            </#if>
+            <#if (.vars[pinchannel] == "D")>
+                <#assign PIO_D_NUM_INT_PINS = PIO_D_NUM_INT_PINS + 1>
+            </#if>
+            <#if (.vars[pinchannel] == "E")>
+                <#assign PIO_E_NUM_INT_PINS = PIO_E_NUM_INT_PINS + 1>
+            </#if>
         </#if>
     </#if>
 </#list>
@@ -127,6 +152,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
             <#lt>    /* PORT${PIO_PORT} Rising Edge or High Level Interrupt Enable */
             <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_REHLSR = 0x${PIO_INT_RE_HL};
         </#if>
+        <#lt>    /* PORT${PIO_PORT} Interrupt Status Clear */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ISR;
+        <#lt>    /* PORT${PIO_PORT} system level interrupt will be enabled by NVIC Manager */
+        <#lt>    /* PORT${PIO_PORT} module level Interrupt for every pin has to be enabled by user
+        <#lt>       by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
     </#if>
     <#if PIO_IFER != "0">
         <#lt>    /* PORT${PIO_PORT} Glitch/Debounce Filter Enable */
@@ -139,23 +169,22 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
             <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SCDR = 0x${PIO_SCDR};
         </#if>
     </#if>
+
 </#macro>
 <#if PIO_A_INTERRUPT_USED == true ||
      PIO_B_INTERRUPT_USED == true ||
      PIO_C_INTERRUPT_USED == true ||
      PIO_D_INTERRUPT_USED == true ||
      PIO_E_INTERRUPT_USED == true >
-
 #define PIO_MAX_NUM_OF_CHANNELS     5
+    <#assign numOfIntInA = PIO_A_NUM_INT_PINS>
+    <#assign numOfIntInAB = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS>
+    <#assign numOfIntInABC = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS + PIO_C_NUM_INT_PINS>
+    <#assign numOfIntInABCD = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS + PIO_C_NUM_INT_PINS + PIO_D_NUM_INT_PINS>
+    <#assign numOfIntInABCDE = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS + PIO_C_NUM_INT_PINS + PIO_D_NUM_INT_PINS + PIO_E_NUM_INT_PINS>
 
-    <#assign numOfIntInA = PIO_A_NUM_OF_INT_PINS_USED>
-    <#assign numOfIntInAB = PIO_A_NUM_OF_INT_PINS_USED + PIO_B_NUM_OF_INT_PINS_USED>
-    <#assign numOfIntInABC = PIO_A_NUM_OF_INT_PINS_USED + PIO_B_NUM_OF_INT_PINS_USED + PIO_C_NUM_OF_INT_PINS_USED>
-    <#assign numOfIntInABCD = PIO_A_NUM_OF_INT_PINS_USED + PIO_B_NUM_OF_INT_PINS_USED + PIO_C_NUM_OF_INT_PINS_USED + PIO_D_NUM_OF_INT_PINS_USED>
-    <#assign numOfIntInABCDE = PIO_A_NUM_OF_INT_PINS_USED + PIO_B_NUM_OF_INT_PINS_USED + PIO_C_NUM_OF_INT_PINS_USED + PIO_D_NUM_OF_INT_PINS_USED + PIO_E_NUM_OF_INT_PINS_USED>
-
-    <#lt>/* Array to store callback objects of each configured interrupt */
-    <#lt>PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_OF_INT_PINS_USED} + ${PIO_B_NUM_OF_INT_PINS_USED} + ${PIO_C_NUM_OF_INT_PINS_USED} + ${PIO_D_NUM_OF_INT_PINS_USED} + ${PIO_E_NUM_OF_INT_PINS_USED}];
+   <#lt>/* Array to store callback objects of each configured interrupt */
+    <#lt>PIO_PIN_CALLBACK_OBJ portPinCbObj[${PIO_A_NUM_INT_PINS} + ${PIO_B_NUM_INT_PINS} + ${PIO_C_NUM_INT_PINS} + ${PIO_D_NUM_INT_PINS} + ${PIO_E_NUM_INT_PINS}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <#lt>uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0, ${numOfIntInA}, ${numOfIntInAB}, ${numOfIntInABC}, ${numOfIntInABCD}, ${numOfIntInABCDE}};
@@ -278,7 +307,6 @@ void PIO_Initialize ( void )
             PIO_SCDR = PIOE_SCDR_VALUE
         />
     </#if>
-
     <#if (PIO_A_INTERRUPT_USED == true) || (PIO_B_INTERRUPT_USED == true) || (PIO_C_INTERRUPT_USED == true) || (PIO_D_INTERRUPT_USED == true) || (PIO_E_INTERRUPT_USED == true) >
     uint32_t i;
     /* Initialize Interrupt Pin data structures */
@@ -317,7 +345,6 @@ void PIO_Initialize ( void )
         <#lt>        portPinCbObj[i].callback = NULL;
         <#lt>    }
     </#if>
-
 }
 
 // *****************************************************************************
