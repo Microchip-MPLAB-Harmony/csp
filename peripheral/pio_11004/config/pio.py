@@ -159,18 +159,17 @@ def pinInterruptCal(pin, event):
     if portChannel != "":
         channelIndex = pioSymChannel.index(portChannel)
 
-        # increment/decrement the count of number of interrupt for particular channel.
-        if event["value"] != "":
-            NumOfPortInterrupt[channelIndex].setValue(NumOfPortInterrupt[channelIndex].getValue() + 1, 1)
-        else:
-            NumOfPortInterrupt[channelIndex].setValue(NumOfPortInterrupt[channelIndex].getValue() - 1, 1)
-
-        # if number of interrupts for a particular channel is more than 0, set the flag; otherwise clear it.
-        if NumOfPortInterrupt[channelIndex].getValue() > 0:
-            portInterrupt[channelIndex].setValue(True, 1)
-        else:
-            portInterrupt[channelIndex].setValue(False, 1)
-
+        boolValue = True
+        if event["value"] == "":
+            # if interrupt has been disabled for a particular pin, then see if is it disabled for all the pins of
+            # corresponding channel; if so, then uncheck corresponding port interrupt in GUI.
+            boolValue = False
+            for pinNumber in range(1, packagePinCount+1):
+                if portChannel == pinChannel[pinNumber-1].getValue():
+                    if pinInterrupt[pinNumber-1].getValue() != "":
+                        boolValue = True
+                        break
+        portInterrupt[channelIndex].setValue(boolValue, 1)
 
         bit_pos = pinBitPosition[pin_num-1].getValue()
         AIMER_Value = pioSym_PIO_AIMER[channelIndex].getValue()
@@ -517,8 +516,6 @@ portInterruptList = []
 
 global portInterrupt
 portInterrupt = []
-global NumOfPortInterrupt
-NumOfPortInterrupt = []
 global pioSym_PIO_PDR
 pioSym_PIO_PDR = []
 global pioSym_PIO_ABCDSR1
@@ -583,13 +580,6 @@ for portNumber in range(0, len(pioSymChannel)):
     portInterrupt[portNumber].setDefaultValue(False)
     portInterrupt[portNumber].setVisible(True)
     portInterrupt[portNumber].setReadOnly(True)
-
-    NumOfPortInterrupt.append(portNumber)
-    NumOfPortInterrupt[portNumber]= coreComponent.createIntegerSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_NUM_OF_INT_PINS_USED", port[portNumber])
-    NumOfPortInterrupt[portNumber].setLabel("Number of PIO " + pioSymChannel[portNumber] + " Interrupts")
-    NumOfPortInterrupt[portNumber].setDefaultValue(0)
-    NumOfPortInterrupt[portNumber].setVisible(False)
-    NumOfPortInterrupt[portNumber].setReadOnly(True)
 
     #list created only for dependency
     portInterruptList.append(portNumber)
