@@ -3,7 +3,7 @@
 
   Company:
     Microchip Technology Inc.
-  
+
   File Name:
     main.c
 
@@ -12,7 +12,7 @@
 
   Description:
     This file contains the "main" function for a project.  The
-    "main" function calls the "SYS_Initialize" function to initialize the state 
+    "main" function calls the "SYS_Initialize" function to initialize the state
     machines of all modules in the system
  *******************************************************************************/
 
@@ -20,7 +20,7 @@
 /*******************************************************************************
 Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
 
-//Microchip licenses to you the right to use, modify, copy and distribute
+Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
 controller that is integrated into your product or third party product
 (pursuant to the sublicense terms in the accompanying license agreement).
@@ -66,7 +66,7 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-               
+
     /* SPI Write Read */
     SPI0_WriteRead(&txData, sizeof(txData), &rxData, sizeof(rxData));
 
@@ -77,15 +77,15 @@ int main ( void )
             LED1_Clear();
     }
     else
-    {       
+    {
 			/* Fail: Received data is not same as transmitted data */
             LED1_Set();
     }
 
     while ( true )
-    {    
+    {
     }
-    
+
     /* Execution should not come here during normal operation */
 
     return ( EXIT_FAILURE );
