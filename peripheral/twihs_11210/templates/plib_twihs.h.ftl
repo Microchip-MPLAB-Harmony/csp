@@ -154,39 +154,6 @@ void ${TWIHS_INSTANCE_NAME}_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t 
 
 // *****************************************************************************
 /* Function:
-    void ${TWIHS_INSTANCE_NAME}_TransferSetup(TWIHS_TRANSFER_SETUP * setup, uint32_t srcClkFreq)
-
-   Summary:
-    Dynamic setup of TWIHS Peripheral.
-
-   Precondition:
-    ${TWIHS_INSTANCE_NAME}_Initialize must have been called for the associated TWIHS instance.
-	The transfer status should not be busy.
-	
-   Parameters:
-    setup - Pointer to the structure containing the transfer setup.
-    srcClkFreq - TWIHS Peripheral Clock Source Frequency.
-	
-   Returns:
-    true - Transfer setup was updated Successfully.
-    false - Failure while updating transfer setup.
-    
-   Example:
-    <code>
-    TWIHS_TRANSFER_SETUP setup = { 400000 };
-    
-    TWIHS1_TransferSetup( &setup, 0 );
-    </code>
-
-   Remarks:
-    srcClkFreq overrides any change in the peripheral clock frequency. 
-    If configured to zero PLib takes the peripheral clock frequency from MHC.
-*/
-
-bool ${TWIHS_INSTANCE_NAME}_TransferSetup( TWIHS_TRANSFER_SETUP *setup, uint32_t srcClkFreq );
-
-// *****************************************************************************
-/* Function:
     bool ${TWIHS_INSTANCE_NAME}_IsBusy(void)
 	
    Summary:
