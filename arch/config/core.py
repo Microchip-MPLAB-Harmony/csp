@@ -150,7 +150,7 @@ def instantiateComponent(coreComponent):
     xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
     xc32HeapSizeSym.setCategory("C32-LD")
     xc32HeapSizeSym.setKey("heap-size")
-    xc32HeapSizeSym.setValue("")
+    xc32HeapSizeSym.setValue(str(heapSize.getValue()))
     xc32HeapSizeSym.setDependencies(xc32HeapSize, ["HEAP_SIZE"])
 
     # set XC32 include path
