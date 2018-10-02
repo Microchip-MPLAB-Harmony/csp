@@ -77,89 +77,106 @@ def instantiateComponent(accComponent):
     accInstanceName.setDefaultValue(accComponent.getID().upper())
     print("Running " + accInstanceName.getValue())
 
-    accSym_MR_SELPLUS = accComponent.createKeyValueSetSymbol("ACC_MR_SELPLUS", None)
-    accSym_MR_SELPLUS.setLabel("Select Positive Input")
-    accSym_MR_SELPLUS.setDefaultValue(0)
-    accSym_MR_SELPLUS.setOutputMode("Value")
-    accSym_MR_SELPLUS.setDisplayMode("Key")
-    accSym_MR_SELPLUS.setVisible(True)
+    parameters = [];
+    parametersNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ACC\"]/instance@[name=\""+accInstanceName.getValue()+"\"]/parameters")
+    for parameter in parametersNode.getChildren():
+        if "HAS_" in parameter.getAttribute("name"):
+            parameters.append(parameter.getAttribute("name"))
+            paramSym = accComponent.createBooleanSymbol(parameter.getAttribute("name"), None)
+            paramSym.setVisible(False)
+            paramSym.setDefaultValue(True)
 
-    count = accValGrp_MR_SELPLUS.getValueCount()
-    for id in range(0, count):
-        valueName = accValGrp_MR_SELPLUS.getValueNames()[id]
-        accSym_MR_SELPLUS.addKey(valueName, accValGrp_MR_SELPLUS.getValue(valueName).getValue(), accValGrp_MR_SELPLUS.getValue(valueName).getDescription())
+    if "HAS_PLUS_COMPARATOR_SELECTION" in parameters:
+        accSym_MR_SELPLUS = accComponent.createKeyValueSetSymbol("ACC_MR_SELPLUS", None)
+        accSym_MR_SELPLUS.setLabel("Select Positive Input")
+        accSym_MR_SELPLUS.setDefaultValue(0)
+        accSym_MR_SELPLUS.setOutputMode("Value")
+        accSym_MR_SELPLUS.setDisplayMode("Key")
+        accSym_MR_SELPLUS.setVisible(True)
 
-    accSym_MR_SELMINUS = accComponent.createKeyValueSetSymbol("ACC_MR_SELMINUS", None)
-    accSym_MR_SELMINUS.setLabel("Select Negative Input")
-    accSym_MR_SELMINUS.setDefaultValue(0)
-    accSym_MR_SELMINUS.setOutputMode("Value")
-    accSym_MR_SELMINUS.setDisplayMode("Key")
-    accSym_MR_SELMINUS.setVisible(True)
+        count = accValGrp_MR_SELPLUS.getValueCount()
+        for id in range(0, count):
+            valueName = accValGrp_MR_SELPLUS.getValueNames()[id]
+            accSym_MR_SELPLUS.addKey(valueName, accValGrp_MR_SELPLUS.getValue(valueName).getValue(), accValGrp_MR_SELPLUS.getValue(valueName).getDescription())
 
-    count = accValGrp_MR_SELMINUS.getValueCount()
-    for id in range(0, count):
-        valueName = accValGrp_MR_SELMINUS.getValueNames()[id]
-        accSym_MR_SELMINUS.addKey(valueName, accValGrp_MR_SELMINUS.getValue(valueName).getValue(), accValGrp_MR_SELMINUS.getValue(valueName).getDescription())
+    if "HAS_MINUS_COMPARATOR_SELECTION" in parameters:
+        accSym_MR_SELMINUS = accComponent.createKeyValueSetSymbol("ACC_MR_SELMINUS", None)
+        accSym_MR_SELMINUS.setLabel("Select Negative Input")
+        accSym_MR_SELMINUS.setDefaultValue(0)
+        accSym_MR_SELMINUS.setOutputMode("Value")
+        accSym_MR_SELMINUS.setDisplayMode("Key")
+        accSym_MR_SELMINUS.setVisible(True)
 
-
-    accSym_MR_INV = accComponent.createBooleanSymbol("ACC_ACR_INV", None)
-    accSym_MR_INV.setLabel("Invert Comparator Output")
-    accSym_MR_INV.setDefaultValue(False)
-
-
-    accSym_MR_EDGETYP = accComponent.createKeyValueSetSymbol("ACC_MR_EDGETYPE", None)
-    accSym_MR_EDGETYP.setLabel("Select Comparison Edge")
-    accSym_MR_EDGETYP.setDefaultValue(0)
-    accSym_MR_EDGETYP.setOutputMode("Value")
-    accSym_MR_EDGETYP.setDisplayMode("Description")
-    accSym_MR_EDGETYP.setVisible(True)
+        count = accValGrp_MR_SELMINUS.getValueCount()
+        for id in range(0, count):
+            valueName = accValGrp_MR_SELMINUS.getValueNames()[id]
+            accSym_MR_SELMINUS.addKey(valueName, accValGrp_MR_SELMINUS.getValue(valueName).getValue(), accValGrp_MR_SELMINUS.getValue(valueName).getDescription())
 
 
-    accInterrupt = accComponent.createBooleanSymbol("INTERRUPT_MODE", None)
-    accInterrupt.setLabel("Enable Comparison Edge Interrupt")
-    accInterrupt.setDefaultValue(False)
-
-    count = accValGrp_MR_EDGETYP.getValueCount()
-    for id in range(0, count):
-        valueName = accValGrp_MR_EDGETYP.getValueNames()[id]
-        accSym_MR_EDGETYP.addKey(valueName, accValGrp_MR_EDGETYP.getValue(valueName).getValue(), accValGrp_MR_EDGETYP.getValue(valueName).getDescription())
-
-    accSym_ACR_ISEL = accComponent.createKeyValueSetSymbol("ACC_ACR_ISEL", None)
-    accSym_ACR_ISEL.setLabel("Select Current")
-    accSym_ACR_ISEL.setDefaultValue(0)
-    accSym_ACR_ISEL.setOutputMode("Key")
-    accSym_ACR_ISEL.setDisplayMode("Description")
-    accSym_ACR_ISEL.setVisible(True)
-
-    count = accValGrp_ACR_ISEL.getValueCount()
-    for id in range(0, count):
-        valueName = accValGrp_ACR_ISEL.getValueNames()[id]
-        accSym_ACR_ISEL.addKey(valueName, accValGrp_ACR_ISEL.getValue(valueName).getValue(),
-                                                  accValGrp_ACR_ISEL.getValue(valueName).getDescription())
-
-    accSym_ACR_HYST = accComponent.createKeyValueSetSymbol("ACC_ACR_HYST", None)
-    accSym_ACR_HYST.setLabel("Select Hysteresis")
-    accSym_ACR_HYST.addKey("NO_HYSTERESIS", "0", "No Hysteresis")
-    accSym_ACR_HYST.addKey("MEDIUM_HYSTERESIS", "1", "Medium Hysteresis")
-    accSym_ACR_HYST.addKey("HIGH_HYSTERESIS", "3", "High Hysteresis")
-    accSym_ACR_HYST.setOutputMode("Value")
-    accSym_ACR_HYST.setDisplayMode("Description")
-    accSym_ACR_HYST.setDefaultValue(0)
+    if "HAS_INVERTED_COMPARATOR" in parameters:
+        accSym_MR_INV = accComponent.createBooleanSymbol("ACC_ACR_INV", None)
+        accSym_MR_INV.setLabel("Invert Comparator Output")
+        accSym_MR_INV.setDefaultValue(False)
 
 
-    accSym_MR_FE = accComponent.createBooleanSymbol("ACC_ACR_FE", None)
-    accSym_MR_FE.setLabel("Enable Fault Output")
-    accSym_MR_FE.setDefaultValue(False)
+    if "HAS_EDGETYPE_SELECTION" in parameters:
+        accSym_MR_EDGETYP = accComponent.createKeyValueSetSymbol("ACC_MR_EDGETYPE", None)
+        accSym_MR_EDGETYP.setLabel("Select Comparison Edge")
+        accSym_MR_EDGETYP.setDefaultValue(0)
+        accSym_MR_EDGETYP.setOutputMode("Value")
+        accSym_MR_EDGETYP.setDisplayMode("Description")
+        accSym_MR_EDGETYP.setVisible(True)
 
-    accSym_MR_SELFS = accComponent.createKeyValueSetSymbol("ACC_MR_SELFS", accSym_MR_FE)
-    accSym_MR_SELFS.setLabel("Select Source for Fault Output")
-    accSym_MR_SELFS.addKey("CE", "0", "Comparison Edge")
-    accSym_MR_SELFS.addKey("OUTPUT", "1", "Comparator Output")
-    accSym_MR_SELFS.setOutputMode("Key")
-    accSym_MR_SELFS.setVisible(False)
-    accSym_MR_SELFS.setDisplayMode("Description")
-    accSym_MR_SELFS.setDefaultValue(0)
-    accSym_MR_SELFS.setDependencies(accFaultSourceSelect, ["ACC_ACR_FE"])
+
+    if "HAS_INTERRUPTS" in parameters:
+        accInterrupt = accComponent.createBooleanSymbol("INTERRUPT_MODE", None)
+        accInterrupt.setLabel("Enable Comparison Edge Interrupt")
+        accInterrupt.setDefaultValue(False)
+
+        count = accValGrp_MR_EDGETYP.getValueCount()
+        for id in range(0, count):
+            valueName = accValGrp_MR_EDGETYP.getValueNames()[id]
+            accSym_MR_EDGETYP.addKey(valueName, accValGrp_MR_EDGETYP.getValue(valueName).getValue(), accValGrp_MR_EDGETYP.getValue(valueName).getDescription())
+
+    if "HAS_CURRENT_SELECTION" in parameters:
+        accSym_ACR_ISEL = accComponent.createKeyValueSetSymbol("ACC_ACR_ISEL", None)
+        accSym_ACR_ISEL.setLabel("Select Current")
+        accSym_ACR_ISEL.setDefaultValue(0)
+        accSym_ACR_ISEL.setOutputMode("Key")
+        accSym_ACR_ISEL.setDisplayMode("Description")
+        accSym_ACR_ISEL.setVisible(True)
+
+        count = accValGrp_ACR_ISEL.getValueCount()
+        for id in range(0, count):
+            valueName = accValGrp_ACR_ISEL.getValueNames()[id]
+            accSym_ACR_ISEL.addKey(valueName, accValGrp_ACR_ISEL.getValue(valueName).getValue(),
+                                                      accValGrp_ACR_ISEL.getValue(valueName).getDescription())
+
+    if "HAS_HYSTERESIS" in parameters:
+        accSym_ACR_HYST = accComponent.createKeyValueSetSymbol("ACC_ACR_HYST", None)
+        accSym_ACR_HYST.setLabel("Select Hysteresis")
+        accSym_ACR_HYST.addKey("NO_HYSTERESIS", "0", "No Hysteresis")
+        accSym_ACR_HYST.addKey("MEDIUM_HYSTERESIS", "1", "Medium Hysteresis")
+        accSym_ACR_HYST.addKey("HIGH_HYSTERESIS", "3", "High Hysteresis")
+        accSym_ACR_HYST.setOutputMode("Value")
+        accSym_ACR_HYST.setDisplayMode("Description")
+        accSym_ACR_HYST.setDefaultValue(0)
+
+
+    if "HAS_FAULT_ENABLE" in parameters:
+        accSym_MR_FE = accComponent.createBooleanSymbol("ACC_ACR_FE", None)
+        accSym_MR_FE.setLabel("Enable Fault Output")
+        accSym_MR_FE.setDefaultValue(False)
+
+        accSym_MR_SELFS = accComponent.createKeyValueSetSymbol("ACC_MR_SELFS", accSym_MR_FE)
+        accSym_MR_SELFS.setLabel("Select Source for Fault Output")
+        accSym_MR_SELFS.addKey("CE", "0", "Comparison Edge")
+        accSym_MR_SELFS.addKey("OUTPUT", "1", "Comparator Output")
+        accSym_MR_SELFS.setOutputMode("Key")
+        accSym_MR_SELFS.setVisible(False)
+        accSym_MR_SELFS.setDisplayMode("Description")
+        accSym_MR_SELFS.setDefaultValue(0)
+        accSym_MR_SELFS.setDependencies(accFaultSourceSelect, ["ACC_ACR_FE"])
 
     ############################################################################
     #### Dependency ####
@@ -169,15 +186,16 @@ def instantiateComponent(accComponent):
     Database.clearSymbolValue("core", accInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", accInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
-    interruptVector = accInstanceName.getValue()+"_INTERRUPT_ENABLE"
-    interruptHandler = accInstanceName.getValue()+"_INTERRUPT_HANDLER"
-    interruptHandlerLock = accInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = accInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
+    if "HAS_INTERRUPTS" in parameters:
+        interruptVector = accInstanceName.getValue()+"INTERRUPT_ENABLE"
+        interruptHandler = accInstanceName.getValue()+"INTERRUPT_HANDLER"
+        interruptHandlerLock = accInstanceName.getValue()+"INTERRUPT_HANDLER_LOCK"
+        interruptVectorUpdate = accInstanceName.getValue()+"INTERRUPT_ENABLE_UPDATE"
 
-    # NVIC Dynamic settings
-    accinterruptControl = accComponent.createBooleanSymbol("NVIC_ACC_ENABLE", None)
-    accinterruptControl.setDependencies(interruptControl, ["INTERRUPT_MODE"])
-    accinterruptControl.setVisible(False)
+        # NVIC Dynamic settings
+        accinterruptControl = accComponent.createBooleanSymbol("NVIC_ACC_ENABLE", None)
+        accinterruptControl.setDependencies(interruptControl, ["INTERRUPT_MODE"])
+        accinterruptControl.setVisible(False)
 
 ############################################################################
 #### Code Generation ####
@@ -192,6 +210,7 @@ def instantiateComponent(accComponent):
     accHeaderFile.setProjectPath("config/" + configName + "/peripheral/acc/")
     accHeaderFile.setType("HEADER")
     accHeaderFile.setOverwrite(True)
+    accHeaderFile.setEnabled(accComponent.component.getLocalSymbolInterface().getSymbolByID("HAS_INTERRUPTS")!=None)
 
     accHeader1File = accComponent.createFileSymbol("ACC_HEADER1", None)
     accHeader1File.setMarkup(True)
