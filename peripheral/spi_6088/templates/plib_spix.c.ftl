@@ -381,20 +381,18 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
              * callback been given to the application with the SPI interrupt
              * pending with the application. This will then result in the
              * interrupt handler being called again with nothing to transmit.
-             * To avoid the above mentioned issue, a software flag is set, but
+             * To avoid this, a software flag is set, but
              * the TXEMPTY interrupt is not enabled until the very end.
-             * At higher baud rates, if the software flag is set and the
-             * TXEMPTY status bit is set, then it means that the transfer is
-             * complete and a callback can be given to the application. Since
-             * the TXEMPTY interrupt is not enabled there is no need to
-             * explicitly clear the pending interrupt from the NVIC.
              */
 
             isLastByteTransferInProgress = true;
         }
-        else
+        else if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
-            /* Enable TDRE interrupt back as more than one bytes are pending to be transmitted */
+            /* Enable TDRE interrupt as all the requested bytes are received
+             * and can now make use of the internal transmit shift register.
+             */
+            ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_RDRF_Msk;
             ${SPI_INSTANCE_NAME}_REGS->SPI_IER = SPI_IDR_TDRE_Msk;
         }
     }
