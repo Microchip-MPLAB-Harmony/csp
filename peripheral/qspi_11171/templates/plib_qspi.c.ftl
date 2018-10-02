@@ -151,7 +151,7 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
 
 bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length )
 {
-    uint32_t *qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
+    uint32_t *qspi_buffer = (uint32_t *)${QSPI_INSTANCE_NAME}MEM_ADDR;
     uint32_t mask = 0;
 
     /* Configure Instruction */
@@ -187,7 +187,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
 
 bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length )
 {
-    uint32_t *qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
+    uint32_t *qspi_buffer = (uint32_t *)${QSPI_INSTANCE_NAME}MEM_ADDR;
     uint32_t mask = 0;
 
     /* Configure Instruction */
@@ -221,7 +221,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
 
 bool ${QSPI_INSTANCE_NAME}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
 {
-    uint32_t *qspi_mem = (uint32_t *)(QSPIMEM_ADDR | address);
+    uint32_t *qspi_mem = (uint32_t *)(${QSPI_INSTANCE_NAME}MEM_ADDR | address);
     uint32_t length_32bit, length_8bit;
 
     if (false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY_Val, address))
@@ -256,7 +256,7 @@ bool ${QSPI_INSTANCE_NAME}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uin
 
 bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
 {
-    uint32_t *qspi_mem = (uint32_t *)(QSPIMEM_ADDR | address);
+    uint32_t *qspi_mem = (uint32_t *)(${QSPI_INSTANCE_NAME}MEM_ADDR | address);
     uint32_t length_32bit, length_8bit;
 
     if (false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY_Val, address))
