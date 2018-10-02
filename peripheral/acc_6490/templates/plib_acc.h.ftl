@@ -45,7 +45,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
+<#if HAS_INTERRUPTS??>
 #include "plib_acc_common.h"
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -62,10 +64,12 @@
 /*************************** ${ACC_INSTANCE_NAME} API ***************************/
 void ${ACC_INSTANCE_NAME}_Initialize (void);
 
+<#if HAS_INTERRUPTS??>
 bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status);
 
 <#if INTERRUPT_MODE == true>
 void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t context);
+</#if>
 </#if>
 
 // DOM-IGNORE-BEGIN

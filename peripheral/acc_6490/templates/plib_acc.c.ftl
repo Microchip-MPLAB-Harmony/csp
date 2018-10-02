@@ -48,30 +48,52 @@
 
 void ${ACC_INSTANCE_NAME}_Initialize (void)
 {
+    uint32_t regValue = 0;
     /*Reset ACC registers*/
-	${ACC_INSTANCE_NAME}_REGS->ACC_CR = ACC_CR_SWRST_Msk;
-    
-    /*Set Comparator Positive and Negative Input, Output Invert status to 
-      Enable/Disable, Fault Generation to Enable/Disable, Set Fault source and 
+    ${ACC_INSTANCE_NAME}_REGS->ACC_CR = ACC_CR_SWRST_Msk;
+
+    /*Set Comparator Positive and Negative Input, Output Invert status to
+      Enable/Disable, Fault Generation to Enable/Disable, Set Fault source and
       Output Edge type*/
-	${ACC_INSTANCE_NAME}_REGS->ACC_MR = ACC_MR_SELMINUS(${ACC_MR_SELMINUS})| ACC_MR_SELPLUS(${ACC_MR_SELPLUS}) | ACC_MR_EDGETYP(${ACC_MR_EDGETYPE}) \
-							${ACC_ACR_INV?then('| ACC_MR_INV_Msk', '')} ${ACC_ACR_FE?then('| ACC_MR_FE_Msk', '')} | ACC_MR_SELFS_${ACC_MR_SELFS} | ACC_MR_ACEN_Msk;
+    <#if HAS_MINUS_COMPARATOR_SELECTION_??>
+    regValue |= ACC_MR_SELMINUS(${ACC_MR_SELMINUS});
+    </#if>
+    <#if HAS_PLUS_COMPARATOR_SELECTION??>
+    regValue |= ACC_MR_SELPLUS(${ACC_MR_SELPLUS});
+    </#if>
+    <#if HAS_EDGETYPE??>
+    regValue |= ACC_MR_EDGETYP(${ACC_MR_EDGETYP});
+    </#if>
+    <#if HAS_INVERTED_COMPARATOR??>
+    regValue |= ${ACC_ACR_INV?then('ACC_MR_INV_Msk', '0')};
+    </#if>
+    <#if HAS_FAULT_ENABLE??>
+    regValue |= ${ACC_ACR_FE?then('ACC_MR_FE_Msk', '0')};
+    regValue |= ACC_MR_SELFS_${ACC_MR_SELFS};
+    </#if>
+    regValue |= ACC_MR_ACEN_Msk;
+    ${ACC_INSTANCE_NAME}_REGS->ACC_MR = regValue;
 
-    /*Set Current level and Hysteresis level*/    
-    ${ACC_INSTANCE_NAME}_REGS->ACC_ACR = ACC_ACR_ISEL_${ACC_ACR_ISEL} | ACC_ACR_HYST(${ACC_ACR_HYST});       
+    <#if HAS_CURRENT_SELECTION?? && HAS_HYSTERESIS??>
+    /*Set Current level and Hysteresis level*/
+    ${ACC_INSTANCE_NAME}_REGS->ACC_ACR = ACC_ACR_ISEL_${ACC_ACR_ISEL} | ACC_ACR_HYST(${ACC_ACR_HYST});
+    </#if>
 
+    <#if HAS_INTERRUPTS??>
     <#if INTERRUPT_MODE == true>
-	/* Enable Interrupt 	*/
+    /* Enable Interrupt     */
     ${ACC_INSTANCE_NAME}_REGS->ACC_IER = ACC_IER_CE_Msk;
     </#if>
-	
+
     /*Wait till output mask period gets over*/
-    while (${ACC_INSTANCE_NAME}_REGS->ACC_ISR& (uint32_t) ACC_ISR_MASK_Msk);  
+    while (${ACC_INSTANCE_NAME}_REGS->ACC_ISR& (uint32_t) ACC_ISR_MASK_Msk);
+    </#if>
 }
 
+<#if HAS_INTERRUPTS??>
 bool ${ACC_INSTANCE_NAME}_StatusGet (ACC_STATUS_SOURCE status)
 {
-    return (bool)(${ACC_INSTANCE_NAME}_REGS->ACC_ISR& status); 
+    return (bool)(${ACC_INSTANCE_NAME}_REGS->ACC_ISR& status);
 }
 
 <#if INTERRUPT_MODE == true>
@@ -86,14 +108,15 @@ void ${ACC_INSTANCE_NAME}_CallbackRegister (ACC_CALLBACK callback, uintptr_t con
 
 void ${ACC_INSTANCE_NAME}_InterruptHandler( void )
 {
-	// Clear the interrupt
-    ${ACC_INSTANCE_NAME}_REGS->ACC_ISR; 
+    // Clear the interrupt
+    ${ACC_INSTANCE_NAME}_REGS->ACC_ISR;
 
-	// Callback user function 
-	if(${ACC_INSTANCE_NAME?lower_case}Obj.callback != NULL)
-	{
-        ${ACC_INSTANCE_NAME?lower_case}Obj.callback(${ACC_INSTANCE_NAME?lower_case}Obj.context);		
-	}
+    // Callback user function
+    if(${ACC_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+    {
+        ${ACC_INSTANCE_NAME?lower_case}Obj.callback(${ACC_INSTANCE_NAME?lower_case}Obj.context);
+    }
 }
+</#if>
 </#if>
 
