@@ -27,10 +27,10 @@ def instantiateComponent(pitComponent):
     interrupt.setDefaultValue(True)
     interrupt.setDependencies(lambda symbol, event: symbol.setVisible(event["value"]), ["USE_INTERRUPT"])
 
-    Database.clearSymbolValue("core", "PIT_INTERRUPT_ENABLE")
-    Database.setSymbolValue("core", "PIT_INTERRUPT_ENABLE", True, 2)
-    Database.clearSymbolValue("core", "PIT_INTERRUPT_HANDLER")
-    Database.setSymbolValue("core", "PIT_INTERRUPT_HANDLER", "PIT_InterruptHandler", 2)
+    Database.clearSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE")
+    Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE", True, 2)
+    Database.clearSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER")
+    Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER", instanceName.getValue()+"_InterruptHandler", 2)
 
     period = pitComponent.createFloatSymbol("PERIOD_MS", None)
     period.setLabel("Period (ms)")
