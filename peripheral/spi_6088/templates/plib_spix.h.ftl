@@ -73,8 +73,6 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spi
 <#if SPI_INTERRUPT_MODE == true>
 bool ${SPI_INSTANCE_NAME}_IsBusy(void);
 
-SPI_ERROR ${SPI_INSTANCE_NAME}_ErrorGet ( void );
-
 void ${SPI_INSTANCE_NAME}_CallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
 
 void ${SPI_INSTANCE_NAME}_InterruptHandler(void);

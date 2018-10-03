@@ -102,13 +102,6 @@ typedef struct
 
 }SPI_TRANSFER_SETUP;
 
-typedef enum
-{
-    SPI_ERROR_NONE = 0,
-    SPI_ERROR_OVERRUN = 1 << SPI_SR_OVRES_Pos
-
-}SPI_ERROR;
-
 typedef  void (*SPI_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
@@ -129,7 +122,6 @@ typedef struct
     bool                    transferIsBusy;
     SPI_CALLBACK       		callback;
     uintptr_t               context;
-    uint32_t                status;
 
 } SPI_OBJECT ;
 

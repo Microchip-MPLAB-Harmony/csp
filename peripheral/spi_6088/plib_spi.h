@@ -161,28 +161,6 @@ typedef struct
 }SPI_TRANSFER_SETUP;
 
 // *****************************************************************************
-/* SPI Errors
-
-   Summary:
-    Identifies SPI Errors.
-
-   Description:
-    This enumeration identifies the possible SPI Errors.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    /* No Error */
-    SPI_ERROR_NONE,
-
-    /* Overrun Error */
-    SPI_ERROR_OVERRUN
-
-}SPI_ERROR;
-
-// *****************************************************************************
 /* Function:
     void SPIx_Initialize (void);
 
@@ -365,10 +343,9 @@ bool SPIx_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
-        {
-            Transfer was completed without error, do something else now.
-        }
+
+        //Transfer was completed without error, do something else now.
+
     }
     </code>
 
@@ -458,10 +435,9 @@ bool SPIx_WriteRead(
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
-        {
-            Transfer was completed without error, do something else now.
-        }
+
+        //Transfer was completed without error, do something else now.
+
     }
     </code>
 
@@ -549,10 +525,9 @@ bool SPIx_Write(void* pTransmitData, size_t txSize);
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
-        {
-            Transfer was completed without error, do something else now.
-        }
+
+        //Transfer was completed without error, do something else now.
+
     }
     </code>
 
@@ -600,44 +575,6 @@ bool SPIx_Read(void* pReceiveData, size_t rxSize);
 bool SPIx_IsBusy (void):
 
 // *****************************************************************************
-/* Function:
-    SPI_ERROR SPIx_ErrorGet( void )
-
-   Summary:
-    Gets the error of the given SPI peripheral instance.
-
-   Description:
-    This function returns the errors associated with the given SPI peripheral
-    instance. After completing any transfer in interrupt mode, this API should
-    be called and verified if any error occurred in the transfer or not.
-    The error returned by this API will not be cleared by PLIB until SPI
-    WriteRead or Write or Read API is called next time.
-
-   Precondition:
-    None.
-
-   Parameters:
-    None.
-
-   Returns:
-    Errors occurred as listed by SPI_ERROR.
-
-  Example:
-    <code>
-    if (SPI1_ErrorGet() == SPI_ERROR_OVERRUN)
-    {
-        //Handle overrun error here
-    }
-    </code>
-
-  Remarks:
-    This API is available only for interrupt mode as blocking mode will
-    not have any error.
-*/
-
-SPI_ERROR SPIx_ErrorGet( void );
-
-// *****************************************************************************
 /* SPI Callback Function Pointer
 
    Summary:
@@ -665,10 +602,7 @@ SPI_ERROR SPIx_ErrorGet( void );
     SPI1_CallbackRegister(&APP_SPITransferHandler, NULL);
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
-        {
-            Transfer was completed without error, do something else now.
-        }
+        //Transfer was completed without error, do something else now.
     }
     </code>
 
@@ -700,8 +634,7 @@ typedef  void (*SPI_CALLBACK) (uintptr_t context);
 
   Description:
     This function allows application to register a callback function for the PLIB
-    to call back when requested data transfer operation has completed or any error
-    has occurred.
+    to call back when requested data transfer operation has completed.
 
     The callback should be registered before the client performs transfer operation.
 
@@ -739,10 +672,7 @@ typedef  void (*SPI_CALLBACK) (uintptr_t context);
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SPI1_ErrorGet() == SPI_ERROR_NONE)
-        {
-            Transfer was completed without error, do something else now.
-        }
+        //Transfer was completed without error, do something else now.
     }
     </code>
 

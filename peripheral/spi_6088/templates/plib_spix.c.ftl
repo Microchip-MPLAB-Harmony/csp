@@ -71,7 +71,6 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     /* Initialize global variables */
     ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
     ${SPI_INSTANCE_NAME?lower_case}Obj.callback = NULL;
-    ${SPI_INSTANCE_NAME?lower_case}Obj.status = SPI_ERROR_NONE;
 </#if>
 
     /* Enable ${SPI_INSTANCE_NAME} */
@@ -208,7 +207,6 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         }
 
         ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
-        ${SPI_INSTANCE_NAME?lower_case}Obj.status = SPI_ERROR_NONE;
 
         /* Flush out any unread data in SPI read buffer */
         dummyData = (${SPI_INSTANCE_NAME}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
@@ -297,11 +295,6 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t sp
 }
 
 <#if SPI_INTERRUPT_MODE == true >
-SPI_ERROR ${SPI_INSTANCE_NAME}_ErrorGet ( void )
-{
-    return (SPI_ERROR)(${SPI_INSTANCE_NAME?lower_case}Obj.status & (SPI_SR_OVRES_Msk));
-}
-
 void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
 {
     ${SPI_INSTANCE_NAME?lower_case}Obj.callback = callback;
@@ -317,12 +310,9 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t dataBits ;
     uint32_t receivedData;
-    dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
-
     static bool isLastByteTransferInProgress = false;
 
-    /* save the status in global object before it gets cleared */
-    ${SPI_INSTANCE_NAME?lower_case}Obj.status = ${SPI_INSTANCE_NAME}_REGS->SPI_SR;
+    dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
 
     if ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_RDRF_Msk ) == SPI_SR_RDRF_Msk)
     {
@@ -408,12 +398,6 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
             ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk | SPI_IDR_RDRF_Msk | SPI_IDR_TXEMPTY_Msk;
 
             isLastByteTransferInProgress = false;
-
-            /* If it was only transmit, then ignore receiver overflow error, if any */
-            if(${SPI_INSTANCE_NAME?lower_case}Obj.rxSize == 0)
-            {
-                ${SPI_INSTANCE_NAME?lower_case}Obj.status = SPI_ERROR_NONE;
-            }
 
             if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
             {
