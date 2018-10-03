@@ -38,8 +38,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_USART_H
-#define PLIB_USART_H
+#ifndef PLIB_USART_COMMON_H
+#define PLIB_USART_COMMON_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -74,7 +74,10 @@ typedef enum
     USART_DATA_6_BIT = US_MR_CHRL_6_BIT,
     USART_DATA_7_BIT = US_MR_CHRL_7_BIT,
     USART_DATA_8_BIT = US_MR_CHRL_8_BIT,
-    USART_DATA_9_BIT = US_MR_MODE9_Msk
+    USART_DATA_9_BIT = US_MR_MODE9_Msk,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_DATA_INVALID = 0xFFFFFFFF
 
 } USART_DATA;
 
@@ -85,7 +88,10 @@ typedef enum
     USART_PARITY_EVEN = US_MR_PAR_EVEN,
     USART_PARITY_MARK = US_MR_PAR_MARK,
     USART_PARITY_SPACE = US_MR_PAR_SPACE,
-    USART_PARITY_MULTIDROP = US_MR_PAR_MULTIDROP
+    USART_PARITY_MULTIDROP = US_MR_PAR_MULTIDROP,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_PARITY_INVALID = 0xFFFFFFFF
 
 } USART_PARITY;
 
@@ -93,15 +99,18 @@ typedef enum
 {
     USART_STOP_1_BIT = US_MR_NBSTOP_1_BIT,
     USART_STOP_1_5_BIT = US_MR_NBSTOP_1_5_BIT,
-    USART_STOP_2_BIT = US_MR_NBSTOP_2_BIT
+    USART_STOP_2_BIT = US_MR_NBSTOP_2_BIT,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_STOP_INVALID = 0xFFFFFFFF
 
 } USART_STOP;
 
 typedef struct
 {
     uint32_t baudRate;
-    USART_DATA dataWidth;
     USART_PARITY parity;
+    USART_DATA dataWidth;
     USART_STOP stopBits;
 
 } USART_SERIAL_SETUP;
@@ -140,4 +149,4 @@ typedef struct
 
 #endif
 // DOM-IGNORE-END
-#endif // PLIB_USART_H
+#endif // PLIB_USART_COMMON_H
