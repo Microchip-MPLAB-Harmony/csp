@@ -112,8 +112,6 @@ typedef struct
     uintptr_t               context;
 } SYSTICK_OBJECT ;
 
-SYSTICK_OBJECT systick;
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
