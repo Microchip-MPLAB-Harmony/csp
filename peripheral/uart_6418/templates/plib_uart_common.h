@@ -38,8 +38,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_UART_H
-#define PLIB_UART_H
+#ifndef PLIB_UART_COMMON_H
+#define PLIB_UART_COMMON_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -78,7 +78,10 @@ typedef enum
 
     UART_PARITY_MARK = UART_MR_PAR_MARK,
 
-    UART_PARITY_SPACE = UART_MR_PAR_SPACE
+    UART_PARITY_SPACE = UART_MR_PAR_SPACE,
+
+    /* Force the compiler to reserve 32-bit space for each enum */
+    UART_PARITY_INVALID = 0xFFFFFFFF
 
 } UART_PARITY;
 
@@ -124,4 +127,4 @@ typedef struct
 
 #endif
 // DOM-IGNORE-END
-#endif // PLIB_UART_H
+#endif // PLIB_UART_COMMON_H
