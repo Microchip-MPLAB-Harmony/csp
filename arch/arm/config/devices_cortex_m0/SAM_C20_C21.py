@@ -87,13 +87,13 @@ systickExternal.setLabel("External Clock Source for SysTick Available")
 systickExternal.setDefaultValue(False)
 systickExternal.setVisible(False)
 
-# load clock manager information
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_c20_c21/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_sam_c20_c21/plugin/clk_sam_c20_c21.jar")
-
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
 coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
+
+# load clock manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_c20_c21/config/clk.py")
+coreComponent.addPlugin("../peripheral/clk_sam_c20_c21/plugin/clk_sam_c20_c21.jar")
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")

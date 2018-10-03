@@ -154,9 +154,12 @@ static void OSC32KCTRL_Initialize(void)
 </#if>
 <#if CONF_CLOCK_OSC32K_ENABLE =true>
     /****************** OSC32K Initialization  ******************************/
-
+   
+   uint32_t calibValue = (((*(uint32_t*)0x806020) >> 12 ) & 0x7f);
+    
     /* Configure 32K RC oscillator */
-    <@compress single_line=true>OSC32KCTRL_REGS->OSC32KCTRL_OSC32K = OSC32KCTRL_OSC32K_STARTUP(${OSC32K_STARTUP}) | OSC32KCTRL_OSC32K_ENABLE_Msk
+    <@compress single_line=true>OSC32KCTRL_REGS->OSC32KCTRL_OSC32K = OSC32KCTRL_OSC32K_CALIB(calibValue) 
+                                                              | OSC32KCTRL_OSC32K_STARTUP(${OSC32K_STARTUP}) | OSC32KCTRL_OSC32K_ENABLE_Msk
                                                               ${OSC32K_RUNSTDBY?then('| OSC32KCTRL_OSC32K_RUNSTDBY_Msk',' ')}
                                                               ${OSC32K_EN1K?then('| OSC32KCTRL_OSC32K_EN1K_Msk',' ')}
                                                               ${OSC32K_EN32K?then('| OSC32KCTRL_OSC32K_EN32K_Msk',' ')}
@@ -174,7 +177,7 @@ static void OSC32KCTRL_Initialize(void)
 }
 
 <#if CONFIG_CLOCK_DPLL_ENABLE == true >
-static void DPLL_Initialize(void)
+static void FDPLL_Initialize(void)
 {
 	<#if CONFIG_CLOCK_DPLL_REF_CLOCK == "2">
 	GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_0_INDEX}] = GCLK_PCHCTRL_GEN(${GCLK_ID_0_GENSEL})${GCLK_ID_0_WRITELOCK?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
@@ -236,6 +239,7 @@ static void DPLL_Initialize(void)
                 <#assign GCLK_IMPROVE_DUTYCYCLE = "GCLK_" + i + "_IMPROVE_DUTYCYCLE">
                 <#assign GCLK_RUNSTDBY = "GCLK_" + i + "_RUNSTDBY">
                 <#assign GCLK_SRC = "GCLK_" + i + "_SRC">
+                <#assign NUM_PADS  = GCLK_NUM_PADS>
                 <#assign GCLK_OUTPUTENABLE = "GCLK_" + i + "_OUTPUTENABLE">
                 <#assign GCLK_OUTPUTOFFVALUE = "GCLK_" + i + "_OUTPUTOFFVALUE">
                 <#assign GCLK_DIVISONVALUE = "GCLK_" + i + "_DIV">
@@ -248,8 +252,10 @@ static void GCLK${i}_Initialize(void)
                                                                ${(.vars[GCLK_DIVISONSELECTION] == "DIV2")?then('| GCLK_GENCTRL_DIVSEL_Msk' , ' ')}
                                                                ${(.vars[GCLK_IMPROVE_DUTYCYCLE])?then('| GCLK_GENCTRL_IDC_Msk', ' ')}
                                                                ${(.vars[GCLK_RUNSTDBY])?then('| GCLK_GENCTRL_RUNSTDBY_Msk', ' ')}
+                                                               <#if i < GCLK_NUM_PADS >
 															   ${(.vars[GCLK_OUTPUTENABLE])?then('| GCLK_GENCTRL_OE_Msk', ' ')}
 															   ${((.vars[GCLK_OUTPUTOFFVALUE] == "HIGH"))?then('| GCLK_GENCTRL_OOV_Msk', ' ')}
+                                                               </#if>
                                                                | GCLK_GENCTRL_GENEN_Msk;</@compress>
 
     while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL${i}_Msk) == GCLK_SYNCBUSY_GENCTRL${i}_Msk)
@@ -274,6 +280,7 @@ void CLOCK_Initialize (void)
 	
 ${CLK_INIT_LIST}
 
+<#if CONF_CPU_CLOCK_DIVIDER != '0x01'>
     /* selection of the CPU clock Division */
     MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_CPUDIV(${CONF_CPU_CLOCK_DIVIDER});
 
@@ -281,6 +288,7 @@ ${CLK_INIT_LIST}
     {
         /* Wait for the Main Clock to be Ready */
     }
+</#if>    
 	
 <#list 1..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">
