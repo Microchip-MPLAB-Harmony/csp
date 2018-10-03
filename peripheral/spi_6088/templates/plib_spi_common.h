@@ -39,8 +39,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_SPI_H
-#define PLIB_SPI_H
+#ifndef PLIB_SPI_COMMON_H
+#define PLIB_SPI_COMMON_H
 
 #include <stdint.h>
 #include <stddef.h>
@@ -59,28 +59,37 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 typedef enum
 {
     SPI_CLOCK_PHASE_TRAILING_EDGE = 0 << SPI_CSR_NCPHA_Pos,
-    SPI_CLOCK_PHASE_LEADING_EDGE = 1 << SPI_CSR_NCPHA_Pos
+    SPI_CLOCK_PHASE_LEADING_EDGE = 1 << SPI_CSR_NCPHA_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
 
 }SPI_CLOCK_PHASE;
 
 typedef enum
 {
     SPI_CLOCK_POLARITY_IDLE_LOW = 0 << SPI_CSR_CPOL_Pos,
-    SPI_CLOCK_POLARITY_IDLE_HIGH = 1 << SPI_CSR_CPOL_Pos
+    SPI_CLOCK_POLARITY_IDLE_HIGH = 1 << SPI_CSR_CPOL_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
 
 }SPI_CLOCK_POLARITY;
 
 typedef enum
 {
-    SPI_DATA_BITS_8 = SPI_CSR_BITS_8_BIT_Val,
-    SPI_DATA_BITS_9 = SPI_CSR_BITS_9_BIT_Val,
-    SPI_DATA_BITS_10 = SPI_CSR_BITS_10_BIT_Val,
-    SPI_DATA_BITS_11 = SPI_CSR_BITS_11_BIT_Val,
-    SPI_DATA_BITS_12 = SPI_CSR_BITS_12_BIT_Val,
-    SPI_DATA_BITS_13 = SPI_CSR_BITS_13_BIT_Val,
-    SPI_DATA_BITS_14 = SPI_CSR_BITS_14_BIT_Val,
-    SPI_DATA_BITS_15 = SPI_CSR_BITS_15_BIT_Val,
-    SPI_DATA_BITS_16 = SPI_CSR_BITS_16_BIT_Val
+    SPI_DATA_BITS_8 = SPI_CSR_BITS_8_BIT_Val << SPI_CSR_BITS_Pos,
+    SPI_DATA_BITS_9 = SPI_CSR_BITS_9_BIT_Val << SPI_CSR_BITS_Pos,
+    SPI_DATA_BITS_10 = SPI_CSR_BITS_10_BIT_Val << SPI_CSR_BITS_Pos,
+    SPI_DATA_BITS_11 = SPI_CSR_BITS_11_BIT_Val << SPI_CSR_BITS_Pos,
+    SPI_DATA_BITS_12 = SPI_CSR_BITS_12_BIT_Val << SPI_CSR_BITS_Pos,
+    SPI_DATA_BITS_13 = SPI_CSR_BITS_13_BIT_Val << SPI_CSR_BITS_Pos,
+    SPI_DATA_BITS_14 = SPI_CSR_BITS_14_BIT_Val << SPI_CSR_BITS_Pos,
+    SPI_DATA_BITS_15 = SPI_CSR_BITS_15_BIT_Val << SPI_CSR_BITS_Pos,
+    SPI_DATA_BITS_16 = SPI_CSR_BITS_16_BIT_Val << SPI_CSR_BITS_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_DATA_BITS_INVALID = 0xFFFFFFFF
 
 }SPI_DATA_BITS;
 
@@ -131,7 +140,7 @@ typedef struct
 
 #endif
 
-#endif // PLIB_SPI_H
+#endif // PLIB_SPI_COMMON_H
 
 /*******************************************************************************
  End of File
