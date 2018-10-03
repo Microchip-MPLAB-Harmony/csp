@@ -291,7 +291,7 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t sp
         scbr = 255;
     }
 
-    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}]= setup->clockPolarity | setup->clockPhase | SPI_CSR_BITS(setup->dataBits) | SPI_CSR_SCBR(scbr);
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}]= setup->clockPolarity | setup->clockPhase | setup->dataBits | SPI_CSR_SCBR(scbr);
 
     return true;
 }
