@@ -105,17 +105,14 @@ def instantiateComponent(uartComponent):
 
     uartClkSrc = uartComponent.createKeyValueSetSymbol("UART_CLK_SRC", None)
     uartClkSrc.setLabel("Select Clock Source")
-    childrenNodes = []
-    uart = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"UART\"]/value-group@[name=\"UART_MR__BRSRCCK\"]")
-    childrenNodes = uart.getChildren()
-    for param in range(0, len(childrenNodes)):
-        uartClkSrc.addKey(childrenNodes[param].getAttribute("name"), childrenNodes[param].getAttribute("value"), childrenNodes[param].getAttribute("caption"))
+    uartClkSrc.addKey("PERIPH_CLK", "0", "MCK")
+    uartClkSrc.addKey("PMC_PCK", "1", "PCK4")
     uartClkSrc.setDisplayMode("Description")
     uartClkSrc.setOutputMode("Key")
     uartClkSrc.setDefaultValue(0)
 
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
-    uartClkValue.setLabel("Clock Source Value")
+    uartClkValue.setLabel("Clock Frequency")
     uartClkValue.setReadOnly(True)
     uartClkValue.setDependencies(clockSourceFreq, ["UART_CLK_SRC", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
     uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")))
