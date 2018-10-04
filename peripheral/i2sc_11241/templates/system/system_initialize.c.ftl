@@ -1,1 +1,1 @@
-	I2SC${I2SC_INDEX?string}_Initialize();
+    ${I2SC_INSTANCE_NAME}_Initialize();

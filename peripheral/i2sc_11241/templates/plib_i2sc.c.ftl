@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_i2sc${I2SC_INDEX?string}.c
+    plib_${I2SC_INSTANCE_NAME?lower_case}.c
 
   Summary:
-    I2SC${I2SC_INDEX?string} Source File
+    ${I2SC_INSTANCE_NAME} Source File
 
   Description:
     This file has the implementation of all the interfaces provided for one
@@ -39,21 +39,21 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "plib_i2sc${I2SC_INDEX?string}.h"
+#include "plib_${I2SC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: I2SC${I2SC_INDEX?string} Implementation
+// Section: ${I2SC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
-void I2SC${I2SC_INDEX?string}_Initialize ( void )
+void ${I2SC_INSTANCE_NAME}_Initialize ( void )
 {
     // Disable and reset the I2SC
-    I2SC${I2SC_INDEX?string}_REGS->I2SC_CR = I2SC_CR_TXDIS_Msk | I2SC_CR_RXDIS_Msk | I2SC_CR_CKDIS_Msk;
-    I2SC${I2SC_INDEX?string}_REGS->I2SC_CR = I2SC_CR_SWRST_Msk;
+    ${I2SC_INSTANCE_NAME}_REGS->I2SC_CR = I2SC_CR_TXDIS_Msk | I2SC_CR_RXDIS_Msk | I2SC_CR_CKDIS_Msk;
+    ${I2SC_INSTANCE_NAME}_REGS->I2SC_CR = I2SC_CR_SWRST_Msk;
        
-    I2SC${I2SC_INDEX?string}_REGS->I2SC_MR = I2SC_MR_MODE(${I2SC_MR_MODE}) |		// Master/Slave Mode		
+    ${I2SC_INSTANCE_NAME}_REGS->I2SC_MR = I2SC_MR_MODE(${I2SC_MR_MODE}) |		// Master/Slave Mode		
                             I2SC_MR_DATALENGTH(${I2SC_MR_DATALENGTH}) |	// Data Word Length
                             I2SC_MR_RXMONO(${I2SC_MR_RXMONO}) |		// Receiver Mono/Stereo
                             I2SC_MR_RXDMA(${I2SC_MR_RXDMA}) |		// # of DMA Channels for Receiver
@@ -67,9 +67,16 @@ void I2SC${I2SC_INDEX?string}_Initialize ( void )
                             I2SC_MR_IWS(${I2SC_MR_IWS});		// Slot Width
     
     // Enable the I2SC
-    I2SC${I2SC_INDEX?string}_REGS->I2SC_CR = I2SC_CR_TXEN_Msk | I2SC_CR_RXEN_Msk | I2SC_CR_CKEN_Msk;
+    ${I2SC_INSTANCE_NAME}_REGS->I2SC_CR = I2SC_CR_TXEN_Msk | I2SC_CR_RXEN_Msk | I2SC_CR_CKEN_Msk;
     
-    while(!(I2SC${I2SC_INDEX?string}_REGS->I2SC_SR & I2SC_SR_TXEN_Msk));
+    while(!(${I2SC_INSTANCE_NAME}_REGS->I2SC_SR & I2SC_SR_TXEN_Msk));
+}
+
+uint32_t ${I2SC_INSTANCE_NAME}_LRCLK_Get(void)
+{
+    // for I2S format, will sync on low to high transition
+    volatile uint32_t ret = ${I2SC_LRCLK_PIN_DEFINE};
+    return ret;    
 }
 
 /*******************************************************************************
