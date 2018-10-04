@@ -1022,7 +1022,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_TimerPeriod[channelID].setLabel("Timer Period (Milli Sec)")
         tcSym_CH_TimerPeriod[channelID].setDefaultValue(0.4)
         tcSym_CH_TimerPeriod[channelID].setMin(0.0)
-        #tcSym_CH_TimerPeriod[channelID].setMax(0.436)
+        tcSym_CH_TimerPeriod[channelID].setMax(0.4369)
         tcSym_CH_TimerPeriod[channelID].setDependencies(tcPeriodMaxVal, \
         ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
             "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
