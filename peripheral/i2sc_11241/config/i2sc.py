@@ -38,20 +38,20 @@ def customUpdate(i2scModeMODE, event):
     i2scModeIMCKMODE.setVisible(customVisible)
 
 def instantiateComponent(i2scComponent):
-    global i2scInstance
     global i2scModeIMCKDIV
     global i2scModeIMCKFS
     global i2scModeIMCKMODE
-    global I2SCx
     global customVisible   
 
     customVisible = True 
 
-    i2scInstance = i2scComponent.getID()[-1:]   # e.g "1"
-    I2SCx = "I2SC" + i2scInstance
-    print("Running " + I2SCx)
+    i2scInstanceName = i2scComponent.createStringSymbol("I2SC_INSTANCE_NAME", None)
+    i2scInstanceName.setVisible(False)
+    i2scInstanceName.setDefaultValue(i2scComponent.getID().upper())
+    Log.writeInfoMessage("Running " + i2scInstanceName.getValue())
     
     i2scIndex = i2scComponent.createIntegerSymbol("I2SC_INDEX", None)
+    i2scInstance = i2scInstanceName.getValue()[-1:]        # instance #, 0 or 1
     i2scIndex.setVisible(False)
     i2scIndex.setDefaultValue(int(i2scInstance))
 
@@ -201,6 +201,19 @@ def instantiateComponent(i2scComponent):
     i2scRxRegister = i2scComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
     i2scRxRegister.setDefaultValue("&(I2SC" + str(i2scInstance) + "_REGS->I2SC_RHR)")
     i2scRxRegister.setVisible(False)
+
+    i2scLRCPin = i2scComponent.createStringSymbol("I2SC_LRCLK_PIN_DEFINE", None)     # used for I2SCx_LRCLK_Get() macro
+    i2scLRCPin.setVisible(False)
+    i2scSignalsNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"I2SC\"]/instance@[name=\"I2SC"+str(i2scInstance)+"\"]/signals")
+    i2scSignals =  i2scSignalsNode.getChildren()
+    i2scLRCPinDefine = "Undefined"
+    for pad in range(0, len(i2scSignals)):
+        if "WS" in i2scSignals[pad].getAttribute("group"):
+            i2scPadSignal =  i2scSignals[pad].getAttribute("pad")
+            i2scLRCPinPort = i2scPadSignal[1:2]  # e.g. E from PE0
+            i2scLRCPinPad = i2scPadSignal[2:]    # e.g. 0 from PE0
+            i2scLRCPinDefine = "((PIO" + i2scLRCPinPort + "_REGS->PIO_PDSR >> " + i2scLRCPinPad + ") & 0x1)"
+    i2scLRCPin.setDefaultValue(i2scLRCPinDefine)
 
     ######################################################################
    

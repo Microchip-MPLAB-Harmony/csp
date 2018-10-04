@@ -70,3 +70,34 @@
     called.                                            
 */
 void I2SCx_Initialize (void);
+
+// *****************************************************************************
+/* Function:
+    uint32_t I2SCx_LRCLK_Get(void);
+    
+  Summary:
+    Get the level of the I2S LRCLK (left/right clock) signal
+    
+  Description:
+    This function returns the state of the I2S LRCLK (left/right clock) signal.
+    In the case where this signal is generated from a codec or other external
+    source, this allows the caller to synchronize itself to the LRCLK signal.
+  
+  Precondition:
+    None.
+  
+  Parameters:
+    None.
+  
+  Returns:
+    State of the LRCLK pin for the I2SCx module -- 1 if high, 0 if low
+    
+  Example:
+    <code>
+        I2SC1_LRCLK_Get();
+    </code>
+    
+  Remarks:
+    None.                                            
+*/
+uint32_t I2SCx_LRCLK_Get(void);

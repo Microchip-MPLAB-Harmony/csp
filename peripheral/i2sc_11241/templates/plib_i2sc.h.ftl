@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_i2sc${I2SC_INDEX?string}.h
+    plib_${I2SC_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    I2SC${I2SC_INDEX?string} PLIB Header File
+    ${I2SC_INSTANCE_NAME} PLIB Header File
 
   Description:
     This file has the prototypes of all the interfaces provided for one
@@ -39,8 +39,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef PLIB_I2SC${I2SC_INDEX?string}_H
-#define PLIB_I2SC${I2SC_INDEX?string}_H
+#ifndef PLIB_${I2SC_INSTANCE_NAME}_H
+#define PLIB_${I2SC_INSTANCE_NAME}_H
 
 #include "device.h"
 
@@ -51,9 +51,11 @@
 
 #endif
 
-/****************************** I2SC${I2SC_INDEX?string} Interface *********************************/
+/****************************** ${I2SC_INSTANCE_NAME} Interface *********************************/
 
-void I2SC${I2SC_INDEX?string}_Initialize ( void );
+void ${I2SC_INSTANCE_NAME}_Initialize ( void );
+
+uint32_t ${I2SC_INSTANCE_NAME}_LRCLK_Get(void);
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
@@ -62,7 +64,7 @@ void I2SC${I2SC_INDEX?string}_Initialize ( void );
     
 #endif
 
-#endif // PLIB_I2SC${I2SC_INDEX?string}_H
+#endif // PLIB_${I2SC_INSTANCE_NAME}_H
 
 /*******************************************************************************
  End of File
