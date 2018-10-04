@@ -102,7 +102,7 @@ def pwmAlignmentVisible(symbol, event):
         symbol.setVisible(False)
 
 def pwmGetMasterClock():
-    main_clk_freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+    main_clk_freq = int(Database.getSymbolValue("core", pwmInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     return main_clk_freq
 
 def pwmGetInternalClk(channelClock, divider):
@@ -546,7 +546,7 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_FreqComment.append(channelID)
         pwmSym_PWM_FreqComment[channelID] = pwmComponent.createCommentSymbol("PWM_CH_"+str(channelID)+"_FREQ_COMMENT", pwmSym_CH_Enable[channelID])
         pwmSym_PWM_FreqComment[channelID].setLabel("**** PWM Frequency is 10000 Hz ****")
-        pwmSym_PWM_FreqComment[channelID].setDependencies(pwmCalcFreq, ["core.MASTER_CLOCK_FREQUENCY", "PWM_CH_"+str(channelID)+"_CMR_CPRE",\
+        pwmSym_PWM_FreqComment[channelID].setDependencies(pwmCalcFreq, ["core." + pwmInstanceName.getValue() + "_CLOCK_FREQUENCY", "PWM_CH_"+str(channelID)+"_CMR_CPRE",\
         "PWM_CLK_PREA", "PWM_CLK_PREB", "PWM_CLK_DIVA", "PWM_CLK_DIVB", "PWM_CH_"+str(channelID)+"_CPRD", "PWM_CH_"+str(channelID)+"_CMR_CALG", "PWM_CH_"+str(channelID)+"_ENABLE", "PWM_CH_"+str(channelID)+"_SYNCENABLE"])
         pwmSym_PWM_FreqComment[channelID].setVisible(False)
 

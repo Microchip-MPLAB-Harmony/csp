@@ -20,16 +20,15 @@ dacChannelTriggerEnable = []
 #### Business Logic ####
 ################################################################################
 def daccGetMasterClockFrequency():
-    main_clk_freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+    main_clk_freq = int(Database.getSymbolValue("core", daccInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     return main_clk_freq
 
 def calcDacFrequency(symbol,event):
-    dacFreq=daccGetMasterClockFrequency()/((event["value"]+2)*1000000)
-    dacFreq=int(ceil(dacFreq))
+    dacFreq=daccGetMasterClockFrequency()/((event["value"]+2)*1000000.0)
 
     Log.writeInfoMessage("************************** DAC Frequency = "+ str(dacFreq) +" MHz*********************")
 
-    if(dacFreq<=12):
+    if(dacFreq <= 12):
         symbol.setLabel("**** DAC Frequency = "+str(dacFreq) + " MHz ****")
     else:
         symbol.setLabel("**** DAC Frequency = "+str(dacFreq) + " MHz is greater than 12MHz, Increase the prescaler value ****")
@@ -88,7 +87,7 @@ def setDacSpeed(symbol, event):
 #### Component ####
 ################################################################################
 def instantiateComponent(daccComponent):
-
+    global daccInstanceName
     daccInstanceName = daccComponent.createStringSymbol("DACC_INSTANCE_NAME", None)
     daccInstanceName.setVisible(False)
     daccInstanceName.setDefaultValue(daccComponent.getID().upper())
@@ -107,13 +106,12 @@ def instantiateComponent(daccComponent):
     daccSym_MR_PRESCALER.setMax(15)
     daccSym_MR_PRESCALER.setDefaultValue(15)
 
-    dacFreq=daccGetMasterClockFrequency()/(daccSym_MR_PRESCALER.getValue()*1000000)
-    dacFreq=int(ceil(dacFreq))
+    dacFreq = daccGetMasterClockFrequency()/((daccSym_MR_PRESCALER.getValue()+2)*1000000.0)
 
     daccPrescalerWarning = daccComponent.createCommentSymbol("PRESCALER_COMMENT", None)
     daccPrescalerWarning.setLabel("**** DAC Frequency = "+str(dacFreq) + " MHz for the selected prescaler value ****")
     daccPrescalerWarning.setVisible(True)
-    daccPrescalerWarning.setDependencies(calcDacFrequency, ["DACC_MR_PRESCALER"])
+    daccPrescalerWarning.setDependencies(calcDacFrequency, ["DACC_MR_PRESCALER", "core." + daccInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
 
     daccSym_MR_DIFF = daccComponent.createKeyValueSetSymbol("DACC_MR_DIFF", None)

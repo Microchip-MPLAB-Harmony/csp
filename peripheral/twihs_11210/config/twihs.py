@@ -36,7 +36,7 @@ def instantiateComponent(twihsComponent):
     twihsSymDivider = twihsComponent.createStringSymbol("TWIHS_DIVIDER", twihsMenu)
     
     twihsSymDivider.setVisible(False)
-    twihsSymDivider.setDependencies(setClockDividerValue, ["I2C_CLOCK_SPEED", "core.MASTER_CLOCK_FREQUENCY"])
+    twihsSymDivider.setDependencies(setClockDividerValue, ["I2C_CLOCK_SPEED", "core." + twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"])
     
     #CLDIV
     twihsSym_CWGR_CLDIV = twihsComponent.createIntegerSymbol("TWIHS_CWGR_CLDIV", twihsMenu)
@@ -75,8 +75,8 @@ def instantiateComponent(twihsComponent):
     # Master Clock Frequency
     twihsSymMasterClkFreq = twihsComponent.createStringSymbol("TWIHS_CLK_SRC_FREQ", twihsMenu)
     twihsSymMasterClkFreq.setVisible(False)
-    twihsSymMasterClkFreq.setDefaultValue(Database.getSymbolValue("core","MASTER_CLOCK_FREQUENCY"))
-    twihsSymMasterClkFreq.setDependencies(setClockSourceFreq, ["core.MASTER_CLOCK_FREQUENCY"])
+    twihsSymMasterClkFreq.setDefaultValue(str(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    twihsSymMasterClkFreq.setDependencies(setClockSourceFreq, ["core."+ twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"])
     
     # Warning for change in Clock Enable Symbol
     twihsSymClkEnComment = twihsComponent.createCommentSymbol("TWIHS_CLK_EN_COMMENT", twihsMenu)
@@ -144,7 +144,7 @@ def instantiateComponent(twihsComponent):
     twihsSystemDefFile.setMarkup(True)
     
 def getMasterClockFreq():
-    return int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+    return int(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"))
         
 def getTWIHSClkSpeed():
     global num
@@ -207,7 +207,7 @@ def setEnCommentVisibility( twihsSymComment, event ):
     twihsSymComment.setVisible(event["value"])
 
 def setClockSourceFreq( twihsSymClockFreq, event ):
-    masterClockFreq = Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")
+    masterClockFreq = str(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     twihsSymClockFreq.setValue(masterClockFreq, 1)
 
 '''********************************End of the file*************************'''

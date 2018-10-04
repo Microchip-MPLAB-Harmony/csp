@@ -102,7 +102,7 @@ def instantiateComponent(usartComponent):
     usartClkValue.setLabel("Clock Source Value")
     usartClkValue.setReadOnly(True)
     usartClkValue.setDependencies(clockSourceFreq, ["USART_CLK_SRC", "core." + usartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
-    usartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
+    usartClkValue.setDefaultValue(int(Database.getSymbolValue("core", usartInstanceName.getValue() + "_CLOCK_FREQUENCY")))
 
     usartBaud = usartComponent.createIntegerSymbol("BAUD_RATE", None)
     usartBaud.setLabel("Baud Rate")

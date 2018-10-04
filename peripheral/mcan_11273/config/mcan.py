@@ -586,6 +586,6 @@ def instantiateComponent(mcanComponent):
 
 
 def getMasterClockFreq():
-    return int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+    return int(Database.getSymbolValue("core", mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"))
 
 '''********************************End of the file*************************'''
