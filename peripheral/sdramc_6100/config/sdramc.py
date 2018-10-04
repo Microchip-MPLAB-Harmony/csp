@@ -53,7 +53,7 @@ def calcRefreshCount(time, rowlines, clk):
 def calcRefreshCount_CB(symbol, event):
     global sdramcInstanceName
     global sdramcSym_CR__NR
-    clk = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+    clk = int(Database.getSymbolValue("core", sdramcInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     time = Database.getSymbolValue(sdramcInstanceName.getValue().lower(), "SDRAMC_REFRESH_TIME_IN_MS")
     rowlines = sdramcSym_CR__NR.getSelectedKey()
     count=calcRefreshCount(time, rowlines, clk)
@@ -191,11 +191,11 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_REFRESH_TIME_IN_MS.setLabel("Refresh time in ms")
     sdramcSym_REFRESH_TIME_IN_MS.setDefaultValue(SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE)
 
-    clk = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+    clk = int(Database.getSymbolValue("core", sdramcInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     count=calcRefreshCount(SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE, "ROW11", clk)
 
     sdramcSym_SDRAMC_TR_COUNT = sdramcComponent.createIntegerSymbol("SDRAMC_TR_COUNT", sdramcSymMenu_TIMING_MENU)
-    sdramcSym_SDRAMC_TR_COUNT.setDependencies(calcRefreshCount_CB, ["SDRAMC_REFRESH_TIME_IN_MS","core.MASTER_CLOCK_FREQUENCY"])
+    sdramcSym_SDRAMC_TR_COUNT.setDependencies(calcRefreshCount_CB, ["SDRAMC_REFRESH_TIME_IN_MS","core." + sdramcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
     sdramcSym_SDRAMC_TR_COUNT.setDefaultValue(count)
     sdramcSym_SDRAMC_TR_COUNT.setVisible(False)
 

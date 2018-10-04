@@ -75,7 +75,7 @@ def dependencyIntStatus(symbol, event):
         symbol.setVisible(False)
 
 def afecGetMasterClock():
-    main_clk_freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+    main_clk_freq = int(Database.getSymbolValue("core", afecInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     return main_clk_freq
 
 def afecPrescalWarning(symbol, event):
@@ -323,12 +323,12 @@ def instantiateComponent(afecComponent):
     afecSym_Clock.setDefaultValue(18750000)
     afecSym_Clock.setVisible(True)
     afecSym_Clock.setReadOnly(True)
-    afecSym_Clock.setDependencies(afecFreqCalc, ["AFEC_MR_PRESCAL", "core.MASTER_CLOCK_FREQUENCY"])
+    afecSym_Clock.setDependencies(afecFreqCalc, ["AFEC_MR_PRESCAL", "core." + afecInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     afecSym_PRESCAL_WARNING = afecComponent.createCommentSymbol("AFEC_PRESCAL_WARNING", afecMenu)
     afecSym_PRESCAL_WARNING.setLabel("**** AFEC Frequency = 18750000 Hz. ****")
     afecSym_PRESCAL_WARNING.setVisible(False)
-    afecSym_PRESCAL_WARNING.setDependencies(afecPrescalWarning, ["AFEC_MR_PRESCAL", "core.MASTER_CLOCK_FREQUENCY"])
+    afecSym_PRESCAL_WARNING.setDependencies(afecPrescalWarning, ["AFEC_MR_PRESCAL", "core." + afecInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     #Result resolution
     #Added keys here as combining two bit-fields EMR_STM and EMR_RES
@@ -351,7 +351,7 @@ def instantiateComponent(afecComponent):
     #Conversion time
     afecSym_CONV_TIME = afecComponent.createCommentSymbol("AFEC_CONV_TIME", afecMenu)
     afecSym_CONV_TIME.setLabel("**** Conversion Time is 1.0733 us ****")
-    afecSym_CONV_TIME.setDependencies(afecCalcConversionTime, ["AFEC_MR_PRESCAL", "AFEC_EMR_RES_VALUE", "core.MASTER_CLOCK_FREQUENCY"])
+    afecSym_CONV_TIME.setDependencies(afecCalcConversionTime, ["AFEC_MR_PRESCAL", "AFEC_EMR_RES_VALUE", "core." + afecInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     #Result sign
     afecSym_EMR_SIGNMODE_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_EMR_SIGNMODE_VALUE", afecMenu)

@@ -16,7 +16,7 @@ qspiBitField_SCR_CPHA = qspiReg_SCR.getBitfield("CPHA")
 qspiBitField_SCR_SCBR = qspiReg_SCR.getBitfield("SCBR")
 
 def getMasterClkFrequency():
-    return int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+    return int(Database.getSymbolValue("core", qspiInstanceName.getValue() + "_CLOCK_FREQUENCY"))
 
 def getQspiClkFrequency():
     global qspiInstanceName
@@ -117,7 +117,7 @@ def instantiateComponent(qspiComponent):
     qspiClkFreq.setVisible(False)
     qspiClkFreq.setMax(66000000)
     qspiClkFreq.setDefaultValue(default_qspi_clk_freq)
-    qspiClkFreq.setDependencies(setQspiClkFrequency, ["QSPI_SCBR", "core.MASTER_CLOCK_FREQUENCY"])
+    qspiClkFreq.setDependencies(setQspiClkFrequency, ["QSPI_SCBR", "core." + qspiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     qspiClkComment = qspiComponent.createCommentSymbol("QSPI_CLK_COMMENT", qspiMenu)
     qspiClkComment.setVisible(True)
