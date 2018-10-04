@@ -568,31 +568,25 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_CMR_TCCLKS[channelID].setLabel("Select Clock Source")
     tcSym_CH_CMR_TCCLKS[channelID].addKey("", str(i), "MCK")
 
-    childrenNodes = []
-    tc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CMR0__TCCLKS\"]")
-    childrenNodes = tc.getChildren()
-
     if (int(tcInstanceName.getValue().split("TC")[1]) == 0):
         tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK")
     else:
         tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK6")
     i = i + 1
-    for param in range(1, len(childrenNodes)):
-        if (childrenNodes[param].getAttribute("name") == "XC0"):
-            if (extClock[0] == True):
-                tcSym_CH_CMR_TCCLKS[channelID].addKey(childrenNodes[param].getAttribute("name"), str(i + param), \
-                    childrenNodes[param].getAttribute("caption"))
-        elif (childrenNodes[param].getAttribute("name") == "XC1"):
-            if (extClock[1] == True):
-                tcSym_CH_CMR_TCCLKS[channelID].addKey(childrenNodes[param].getAttribute("name"), str(i + param), \
-                    childrenNodes[param].getAttribute("caption"))
-        elif (childrenNodes[param].getAttribute("name") == "XC2"):
-            if (extClock[2] == True):
-                tcSym_CH_CMR_TCCLKS[channelID].addKey(childrenNodes[param].getAttribute("name"), str(i + param), \
-                    childrenNodes[param].getAttribute("caption"))
-        else:
-            tcSym_CH_CMR_TCCLKS[channelID].addKey(childrenNodes[param].getAttribute("name"), str(i + param), \
-                childrenNodes[param].getAttribute("caption"))
+    tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK2", str(i + 2), "MCK/8")
+    tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK3", str(i + 3), "MCK/32")
+    tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK4", str(i + 4), "MCK/128")
+    tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK5", str(i + 5), "SLCK")
+    i = i + 5
+    if(extClock[0] == True):
+        tcSym_CH_CMR_TCCLKS[channelID].addKey("XC0", str(i + 1), "XC0")
+        i = i + 1
+    if(extClock[1] == True):
+        tcSym_CH_CMR_TCCLKS[channelID].addKey("XC1", str(i + 1), "XC1")
+        i = i + 1
+    if(extClock[2] == True):
+        tcSym_CH_CMR_TCCLKS[channelID].addKey("XC2", str(i + 1), "XC2")
+        i = i + 1
     tcSym_CH_CMR_TCCLKS[channelID].setDefaultValue(0)
     tcSym_CH_CMR_TCCLKS[channelID].setOutputMode("Key")
     tcSym_CH_CMR_TCCLKS[channelID].setDisplayMode("Description")
