@@ -42,13 +42,13 @@
 
 // *****************************************************************************
 /* Function:
-    void SSCx_Initialize (void);
+    void SSC_Initialize (void);
     
   Summary:
-    Initializes SSCx module of the device
+    Initializes SSC module of the device
     
   Description:
-    This function initializes SSCx module of the device with the values
+    This function initializes SSC module of the device with the values
     configured in MHC GUI. Once the peripheral is initialized, transfer
     APIs can be used to transfer the data.
   
@@ -63,18 +63,18 @@
     
   Example:
     <code>
-        SSC0_Initialize();
+        SSC_Initialize();
     </code>
     
   Remarks:
     This function must be called only once and before any other SSC function is
     called.                                            
 */
-void SSCx_Initialize (void);
+void SSC_Initialize (void);
    
 // *****************************************************************************
 /* Function:
-    void SSCx_BaudSet (const uint32_t baud);
+    void SSC_BaudSet (const uint32_t baud);
     
   Summary:
     Changes the baud rate (samples/second) of the interface.
@@ -93,10 +93,42 @@ void SSCx_Initialize (void);
     
   Example:
     <code>
-        SSCx_BaudSet(44100);
+        SSC_BaudSet(44100);
     </code>
     
   Remarks:
     None.
 */
 void SSCx_BaudSet (const uint32_t baud);
+
+// *****************************************************************************
+/* Function:
+    uint32_t SSC_LRCLK_Get(void);
+    
+  Summary:
+    Get the level of the I2S LRCLK (left/right clock) signal
+    
+  Description:
+    This function returns the state of the I2S LRCLK (left/right clock) signal.
+    In the case where this signal is generated from a codec or other external
+    source, this allows the caller to synchronize itself to the LRCLK signal.
+  
+  Precondition:
+    None.
+  
+  Parameters:
+    None.
+  
+  Returns:
+    State of the LRCLK pin for the SSC module -- 1 if high, 0 if low if the
+    audio format is I2S, and 0 if high, 1 if low if the format is Left Jusutifed
+    
+  Example:
+    <code>
+        SSC_LRCLK_Get();
+    </code>
+    
+  Remarks:
+    None.                                            
+*/
+uint32_t SSC_LRCLK_Get(void);

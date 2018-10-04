@@ -459,19 +459,25 @@ def instantiateComponent(sscComponent):
     sscRxRegister.setDefaultValue("&(SSC_REGS->SSC_RHR)")
     sscRxRegister.setVisible(False)
 
+    sscLRCPin = sscComponent.createStringSymbol("SSC_LRCLK_PIN_DEFINE", None)     # used for SSC_LRCLK_GET() 
+    sscLRCPin.setVisible(False)
+    sscSignalsNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SSC\"]/instance@[name=\"SSC\"]/signals")
+    sscSignals =  sscSignalsNode.getChildren()
+    sscLRCPinDefine = "Undefined"
+    for pad in range(0, len(sscSignals)):
+        if "TF" in sscSignals[pad].getAttribute("group"):
+            sscPadSignal =  sscSignals[pad].getAttribute("pad")
+            sscLRCPinPort = sscPadSignal[1:2]  # e.g. B from PB0
+            sscLRCPinPad = sscPadSignal[2:]    # e.g. 0 from PB0
+            sscLRCPinDefine = "((PIO" + sscLRCPinPort + "_REGS->PIO_PDSR >> " + sscLRCPinPad + ") & 0x1)"
+    sscLRCPin.setDefaultValue(sscLRCPinDefine)
+
+    ######################################################################
+
     configName = Variables.get("__CONFIGURATION_NAME")
-    
-    sscHeaderFile = sscComponent.createFileSymbol("SSC_COMMON_HEADER", None)
-    sscHeaderFile.setSourcePath("../peripheral/ssc_6078/templates/plib_ssc_common.h")
-    sscHeaderFile.setOutputName("plib_ssc_common.h")
-    sscHeaderFile.setDestPath("/peripheral/ssc/")
-    sscHeaderFile.setProjectPath("config/" + configName + "/peripheral/ssc/")
-    sscHeaderFile.setType("HEADER")
-    sscHeaderFile.setMarkup(False)
-    sscHeaderFile.setOverwrite(True)
-    
+       
     sscHeader1File = sscComponent.createFileSymbol("SSC_HEADER", None)
-    sscHeader1File.setSourcePath("../peripheral/ssc_6078/templates/plib_sscx.h.ftl")
+    sscHeader1File.setSourcePath("../peripheral/ssc_6078/templates/plib_ssc.h.ftl")
     sscHeader1File.setOutputName("plib_"+sscInstanceName.getValue().lower()+".h")
     sscHeader1File.setDestPath("/peripheral/ssc/")
     sscHeader1File.setProjectPath("config/" + configName +"/peripheral/ssc/")
@@ -479,7 +485,7 @@ def instantiateComponent(sscComponent):
     sscHeader1File.setMarkup(True)
     
     sscSource1File = sscComponent.createFileSymbol("SSC_SOURCE", None)
-    sscSource1File.setSourcePath("../peripheral/ssc_6078/templates/plib_sscx.c.ftl")
+    sscSource1File.setSourcePath("../peripheral/ssc_6078/templates/plib_ssc.c.ftl")
     sscSource1File.setOutputName("plib_"+sscInstanceName.getValue().lower()+".c")
     sscSource1File.setDestPath("/peripheral/ssc/")
     sscSource1File.setProjectPath("config/" + configName +"/peripheral/ssc/")
