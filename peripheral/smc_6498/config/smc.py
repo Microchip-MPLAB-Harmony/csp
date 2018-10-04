@@ -1,3 +1,4 @@
+# coding: utf-8
 """*****************************************************************************
 * © 2018 Microchip Technology Inc. and its subsidiaries.
 *
