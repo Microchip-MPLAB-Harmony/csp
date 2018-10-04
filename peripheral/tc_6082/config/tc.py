@@ -928,6 +928,12 @@ def instantiateComponent(tcComponent):
     tcSpeedMenu.setVisible(False)
     tcSpeedMenu.setDependencies(tcQuadratureModeVisible, ["TC_BMR_POSEN"])
 
+    #channel enable for speed channel 2. Dummy symbol
+    tcSym_CH3_Enable = tcComponent.createBooleanSymbol("TC3_ENABLE", None)
+    tcSym_CH3_Enable.setLabel("Enable")
+    tcSym_CH3_Enable.setVisible(False)
+    tcSym_CH3_Enable.setDefaultValue(True)
+
     # clock selection for channel 2. For quadrature mode, channel ID 3 is used to distinguish between channel numbers and quadrature mode
     tcClockSymbols(tcComponent, 3, tcSpeedMenu)
 
