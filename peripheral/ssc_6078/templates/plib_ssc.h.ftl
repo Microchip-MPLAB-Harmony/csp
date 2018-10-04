@@ -5,14 +5,14 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_ssc.h
+    plib_${SSC_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    SSC PLIB Common Header File
+    ${SSC_INSTANCE_NAME} PLIB Header File
 
   Description:
-    This file has prototype of all the interfaces which are common for all the
-    SSC peripherals.
+    This file has prototype of all the interfaces provided for particular
+    SSC peripheral.
 
 *******************************************************************************/
 
@@ -39,13 +39,10 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef PLIB_SSC_COMMON_H
-#define PLIB_SSC_COMMON_H
+#ifndef PLIB_${SSC_INSTANCE_NAME}_H
+#define PLIB_${SSC_INSTANCE_NAME}_H
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-
+#include "device.h"
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus  
@@ -54,13 +51,13 @@
 
 #endif
 
-/****************************** SSC${SSC_INDEX?string} Interface *********************************/
+/****************************** ${SSC_INSTANCE_NAME} Interface *********************************/
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
+void ${SSC_INSTANCE_NAME}_Initialize ( void );
+
+void ${SSC_INSTANCE_NAME}_BaudSet(const uint32_t baud);
+
+uint32_t ${SSC_INSTANCE_NAME}_LRCLK_Get(void);
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
@@ -69,7 +66,7 @@
     
 #endif
 
-#endif // PLIB_SSC_COMMON_H
+#endif // PLIB_${SSC_INSTANCE_NAME}_H
 
 /*******************************************************************************
  End of File
