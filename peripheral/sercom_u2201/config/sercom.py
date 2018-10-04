@@ -11,6 +11,23 @@ global sercomInstanceName
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+def geti2cBaud(gclk, clkSpeed, trise, mode):
+
+    baudlow = int(round(((gclk/clkSpeed)*(1 - float("{0:.15f}".format(float(trise*clkSpeed)/1000000000)))) - 10))
+
+    if baudlow > (0xFF * 2) or (baudlow <= 1):
+        Log.writeErrorMessage("value is not suitable for the desired baud rate")
+        return None
+    else:
+        if mode == 0:
+            baud = ((baudlow / 2) + (((baudlow / 2) + 1) << 8)) if(baudlow & 0x1) \
+            else (baudlow / 2)
+        else:
+            baud = ((baudlow / 3) + ((((2 *baudlow) / 3) + 1) << 8)) if(baudlow & 0x1) \
+            else (baudlow / 3)
+
+    return baud
+
 def onCapabilityConnected(event):
 
     global sercomSym_OperationMode

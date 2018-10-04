@@ -95,32 +95,6 @@ enum
 };
 
 // *****************************************************************************
-/* SERCOM I2C Transfer Status
-
-   Summary:
-    SERCOM I2C Transfer Status data type.
-
-   Description:
-    This data type defines the SERCOM I2C Transfer Status.
-
-   Remarks:
-    None.
-*/
-
-typedef enum
-{
-    /* Peripheral is busy, processing the transfer request */
-    SERCOM_I2C_TRANSFER_STATUS_BUSY,
-
-    /* Peripheral successfully completed the transfer request */
-    SERCOM_I2C_TRANSFER_STATUS_SUCCESS,
-
-    /* Error occurred during the transfer request */
-    SERCOM_I2C_TRANSFER_STATUS_ERROR,
-
-} SERCOM_I2C_TRANSFER_STATUS;
-
-// *****************************************************************************
 /* SERCOM I2C Error.
 
   Summary:
@@ -161,15 +135,26 @@ typedef enum
 
 */
 
-typedef enum
-{
+typedef enum {
+
+    /* SERCOM PLib Task Error State */
+    SERCOM_I2C_STATE_ERROR = -1,
+
+    /* SERCOM PLib Task Idle State */
     SERCOM_I2C_STATE_IDLE,
 
+    /* SERCOM PLib Task Address Send State */
     SERCOM_I2C_STATE_ADDR_SEND,
 
+    SERCOM_I2C_REINITIATE_TRANSFER,
+    /* SERCOM PLib Task Read Transfer State */
+    SERCOM_I2C_STATE_TRANSFER_READ,
+
+    /* SERCOM PLib Task Write Transfer State */
     SERCOM_I2C_STATE_TRANSFER_WRITE,
 
-    SERCOM_I2C_STATE_TRANSFER_READ
+    /* SERCOM PLib Task Transfer Done State */
+    SERCOM_I2C_STATE_TRANSFER_DONE,
 
 } SERCOM_I2C_STATE;
 
@@ -186,7 +171,12 @@ typedef enum
     None.
 */
 
-typedef void (*SERCOM_I2C_CALLBACK) (uintptr_t contextHandle);
+typedef void (*SERCOM_I2C_CALLBACK)
+(
+    /*Transfer context*/
+    uintptr_t contextHandle
+
+);
 
 // *****************************************************************************
 /* SERCOM I2C PLib Instance Object
@@ -203,81 +193,34 @@ typedef void (*SERCOM_I2C_CALLBACK) (uintptr_t contextHandle);
 
 typedef struct
 {
-    /* Number of TRBs */
-    uint32_t numTRBs;
+
+    uint16_t address;
+
+    uint8_t *writeBuffer;
+
+    uint8_t    *readBuffer;
+
+    size_t  writeSize;
+
+    size_t  readSize;
+
+    size_t  writeCount;
+
+    size_t  readCount;
 
     /* State */
     SERCOM_I2C_STATE state;
 
     /* Transfer status */
-    SERCOM_I2C_TRANSFER_STATUS status;
-
-    /* Transfer error */
     SERCOM_I2C_ERROR error;
 
     /* Transfer Event Callback */
     SERCOM_I2C_CALLBACK callback;
 
-    /* Current TRB */
-    volatile uint32_t currentTRB;
-
-    /* Processed TRB data length */
-    uint8_t processedTRBDataLength;
-
     /* Transfer context */
     uintptr_t context;
 
 } SERCOM_I2C_OBJ;
-
-// *****************************************************************************
-/* I2C Transfer Setup Parameters
-
-  Summary:
-    Identifies the setup parameters which can be changed dynamically.
-
-  Description
-    This structure identifies the possible setup parameters for I2C
-    which can be changed dynamically if needed.
-
-  Remarks:
-    None.
-*/
-
-typedef struct
-{
-    /* I2C Clock Speed */
-    uint32_t clkSpeed;
-
-} I2C_TRANSFER_SETUP;
-
-// *****************************************************************************
-/* Transaction Request Block
-
-   Summary:
-    Transaction Request Block Structure.
-
-   Description:
-    This data structure defines the Transaction Request Block.
-
-   Remarks:
-    None.
-*/
-
-typedef struct
-{
-    /* slave address */
-    uint16_t address;
-
-    /* read/write transaction*/
-    bool read;
-
-    /* data length */
-    uint8_t length;
-
-    /* data buffer pointer */
-    uint8_t *pbuffer;
-
-} SERCOM_I2C_TRB;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
