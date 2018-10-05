@@ -62,7 +62,7 @@ for module in range (0, len(modules)):
                     "/config/" + periphName.lower() + ".py"
 
     # Don't load system services. They will be loaded by family specific script
-    if any(x in periphName for x in ["PORT", "PIO", "NVIC", "XDMAC", "DMAC", "OSCILLATOR", "PMC", "WDT", "PAC", "MATRIX"]):
+    if any(x in periphName for x in ["PORT", "PIO", "AIC", "NVIC", "XDMAC", "DMAC", "OSCILLATOR", "PMC", "WDT", "PAC", "MATRIX"]):
         print("CSP: System Peripheral [" + periphName + " id=" + periphID + "]")
         continue
 
