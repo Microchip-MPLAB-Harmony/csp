@@ -274,6 +274,7 @@ def instantiateComponent(coreComponent):
     systemIntVectorsList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_C_VECTORS", None)
     systemIntVectorsMultipleHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS", None)
     systemIntVectorsWeakHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS", None)
+    systemIntVectorsSharedHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_SHARED_HANDLERS", None)
     systemIntVectorsHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_HANDLERS", None)
 
     debugSourceFile = coreComponent.createFileSymbol("DEBUG_CONSOLE_C", None)

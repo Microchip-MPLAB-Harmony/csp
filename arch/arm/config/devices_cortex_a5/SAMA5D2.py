@@ -84,6 +84,8 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11264/plugin/PIC32CZDApinmanager.jar")
 
 # load AIC
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/aic_11145/config/aic.py")
+#coreComponent.addPlugin("../peripheral/aic_11145/plugin/ARM_M7_AICmanager.jar")	# to be provided later
 
 # load PIT
 
