@@ -228,10 +228,12 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_MemoryDriver.setVisible(False)
     nvmctrlSym_MemoryDriver.setDefaultValue(False)
 
-    nvmctrlSym_MemoryStartAddr = nvmctrlComponent.createHexSymbol("START_ADDRESS", nvmctrlSym_Menu)
+    nvmOffset = str(hex(int(nvmctrlSym_FLASH_ADDRESS.getValue(),16) + (int(nvmctrlSym_FLASH_SIZE.getValue(),16) / 2)))
+
+    nvmctrlSym_MemoryStartAddr = nvmctrlComponent.createStringSymbol("START_ADDRESS", nvmctrlSym_Menu)
     nvmctrlSym_MemoryStartAddr.setLabel("NVM Offset for File System")
     nvmctrlSym_MemoryStartAddr.setVisible(False)
-    nvmctrlSym_MemoryStartAddr.setDefaultValue(0x20000)
+    nvmctrlSym_MemoryStartAddr.setDefaultValue(nvmOffset[2:])
     nvmctrlSym_MemoryStartAddr.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     nvmctrlSym_MemoryEraseEnable = nvmctrlComponent.createBooleanSymbol("ERASE_ENABLE", None)
@@ -243,7 +245,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_MemoryEraseBufferSize = nvmctrlComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", nvmctrlSym_Menu)
     nvmctrlSym_MemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
     nvmctrlSym_MemoryEraseBufferSize.setVisible(False)
-    nvmctrlSym_MemoryEraseBufferSize.setDefaultValue(256)
+    nvmctrlSym_MemoryEraseBufferSize.setDefaultValue(int(nvmctrlSym_ERASE_SIZE.getValue()))
     nvmctrlSym_MemoryEraseBufferSize.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
 
     nvmctrlSym_MemoryEraseComment = nvmctrlComponent.createCommentSymbol("ERASE_COMMENT", nvmctrlSym_Menu)
