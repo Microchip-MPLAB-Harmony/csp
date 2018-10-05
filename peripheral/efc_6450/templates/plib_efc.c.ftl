@@ -38,6 +38,7 @@ It allows user to Program, Erase and lock the on-chip FLASH memory.
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
 #include <string.h>
 #include "device.h"
