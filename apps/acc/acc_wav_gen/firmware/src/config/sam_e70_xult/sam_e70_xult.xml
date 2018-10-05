@@ -5005,8 +5005,7 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0" minimap="false"/>
-    <ComponentGraph dnOrder="1">
+    <ComponentGraph dnOrder="0">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="acc" x="10" y="62"/>
         <ElementPosition dnOrder="1" id="cmsis" x="108" y="20"/>
@@ -5016,5 +5015,6 @@
         <ElementPosition dnOrder="5" id="tc0" x="277" y="63"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1" minimap="false"/>
   </UserData>
 </Configuration>
