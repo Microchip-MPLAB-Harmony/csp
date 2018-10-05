@@ -16,30 +16,30 @@
 *******************************************************************************/
 
 /*******************************************************************************
-Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED AS IS  WITHOUT  WARRANTY  OF  ANY  KIND,
-EITHER EXPRESS  OR  IMPLIED,  INCLUDING  WITHOUT  LIMITATION,  ANY  WARRANTY  OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A  PARTICULAR  PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR  ITS  LICENSORS  BE  LIABLE  OR  OBLIGATED  UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION,  BREACH  OF  WARRANTY,  OR
-OTHER LEGAL  EQUITABLE  THEORY  ANY  DIRECT  OR  INDIRECT  DAMAGES  OR  EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY  INCIDENTAL,  SPECIAL,  INDIRECT,  PUNITIVE  OR
-CONSEQUENTIAL DAMAGES, LOST  PROFITS  OR  LOST  DATA,  COST  OF  PROCUREMENT  OF
-SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef PLIB_USART_H
-#define PLIB_USART_H
+#ifndef PLIB_USART_COMMON_H
+#define PLIB_USART_COMMON_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -74,7 +74,10 @@ typedef enum
     USART_DATA_6_BIT = US_MR_CHRL_6_BIT,
     USART_DATA_7_BIT = US_MR_CHRL_7_BIT,
     USART_DATA_8_BIT = US_MR_CHRL_8_BIT,
-    USART_DATA_9_BIT = US_MR_MODE9_Msk
+    USART_DATA_9_BIT = US_MR_MODE9_Msk,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_DATA_INVALID = 0xFFFFFFFF
 
 } USART_DATA;
 
@@ -85,7 +88,10 @@ typedef enum
     USART_PARITY_EVEN = US_MR_PAR_EVEN,
     USART_PARITY_MARK = US_MR_PAR_MARK,
     USART_PARITY_SPACE = US_MR_PAR_SPACE,
-    USART_PARITY_MULTIDROP = US_MR_PAR_MULTIDROP
+    USART_PARITY_MULTIDROP = US_MR_PAR_MULTIDROP,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_PARITY_INVALID = 0xFFFFFFFF
 
 } USART_PARITY;
 
@@ -93,15 +99,18 @@ typedef enum
 {
     USART_STOP_1_BIT = US_MR_NBSTOP_1_BIT,
     USART_STOP_1_5_BIT = US_MR_NBSTOP_1_5_BIT,
-    USART_STOP_2_BIT = US_MR_NBSTOP_2_BIT
+    USART_STOP_2_BIT = US_MR_NBSTOP_2_BIT,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    USART_STOP_INVALID = 0xFFFFFFFF
 
 } USART_STOP;
 
 typedef struct
 {
     uint32_t baudRate;
-    USART_DATA dataWidth;
     USART_PARITY parity;
+    USART_DATA dataWidth;
     USART_STOP stopBits;
 
 } USART_SERIAL_SETUP;
@@ -140,4 +149,4 @@ typedef struct
 
 #endif
 // DOM-IGNORE-END
-#endif // PLIB_USART_H
+#endif // PLIB_USART_COMMON_H
