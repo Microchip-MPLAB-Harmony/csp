@@ -101,10 +101,12 @@ def instantiateComponent(efcComponent):
     efcMemoryDriver.setVisible(False)
     efcMemoryDriver.setDefaultValue(False)
 
-    efcMemoryStartAddr = efcComponent.createHexSymbol("START_ADDRESS", efcMenu)
+    nvmOffset = str(hex(int(efcFlashStartAddress.getValue(),16) + (int(efcFlashSize.getValue(),16) / 2)))
+
+    efcMemoryStartAddr = efcComponent.createStringSymbol("START_ADDRESS", efcMenu)
     efcMemoryStartAddr.setLabel("NVM Offset for File System")
     efcMemoryStartAddr.setVisible(False)
-    efcMemoryStartAddr.setDefaultValue(0x500000)
+    efcMemoryStartAddr.setDefaultValue(nvmOffset[2:])
     efcMemoryStartAddr.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     efcMemoryEraseEnable = efcComponent.createBooleanSymbol("ERASE_ENABLE", None)
@@ -116,7 +118,7 @@ def instantiateComponent(efcComponent):
     efcMemoryEraseBufferSize = efcComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", efcMenu)
     efcMemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
     efcMemoryEraseBufferSize.setVisible(False)
-    efcMemoryEraseBufferSize.setDefaultValue(8192)
+    efcMemoryEraseBufferSize.setDefaultValue(int(efcFlashEraseSize.getValue()))
     efcMemoryEraseBufferSize.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
 
     efcMemoryEraseComment = efcComponent.createCommentSymbol("ERASE_COMMENT", efcMenu)
