@@ -1,26 +1,21 @@
 /*******************************************************************************
  System Interrupts File
 
+  Company:
+    Microchip Technology Inc.
+
   File Name:
     interrupt.c
 
   Summary:
-    Raw ISR definitions.
+    Interrupt vectors mapping
 
   Description:
-    This file contains a definitions of the raw ISRs required to support the
-    interrupt sub-system.
-
-  Summary:
-    This file contains source code for the interrupt vector functions in the
-    system.
-
-  Description:
-    This file contains source code for the interrupt vector functions in the
-    system.
-
-
-  Remarks:
+    This file maps all the interrupt vectors to their corresponding
+    implementations. If a particular module interrupt is used, then its ISR
+    definition can be found in corresponding PLIB source file. If a module
+    interrupt is not used, then its ISR implementation is mapped to dummy
+    handler.
  *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
