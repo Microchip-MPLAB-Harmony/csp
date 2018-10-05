@@ -41,6 +41,9 @@
 #include "device.h"
 #include "plib_nvic.h"
 
+<#assign NVIC_USAGE_FAULT_ENABLE = "NVIC_-10_0_ENABLE">
+<#assign NVIC_BUS_FAULT_ENABLE = "NVIC_-11_0_ENABLE">
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: NVIC Implementation
@@ -70,16 +73,28 @@ void NVIC_Initialize( void )
             <#if .vars[NVIC_VECTOR_ENABLE]?has_content && (.vars[NVIC_VECTOR_ENABLE] != false)>
                 <#if .vars[NVIC_VECTOR_PRIORITY_GENERATE]?has_content && (.vars[NVIC_VECTOR_PRIORITY_GENERATE] != false)>
                     <#if .vars[NVIC_VECTOR_PRIORITY]?has_content && (.vars[NVIC_VECTOR_PRIORITY]?number != 0)>
-    NVIC_SetPriority(${.vars[NVIC_VECTOR_NAME]}_IRQn, ${.vars[NVIC_VECTOR_PRIORITY]});
+                        <#lt>    NVIC_SetPriority(${.vars[NVIC_VECTOR_NAME]}_IRQn, ${.vars[NVIC_VECTOR_PRIORITY]});
                     </#if>
                     <#if .vars[NVIC_VECTOR_ENABLE_GENERATE]?has_content && (.vars[NVIC_VECTOR_ENABLE_GENERATE] != false)>
-    NVIC_EnableIRQ(${.vars[NVIC_VECTOR_NAME]}_IRQn);
+                        <#lt>    NVIC_EnableIRQ(${.vars[NVIC_VECTOR_NAME]}_IRQn);
                     </#if>
                     <#break>
                 </#if>
             </#if>
-    </#list>    
+    </#list>
 </#list>
+
+<#if (.vars[NVIC_USAGE_FAULT_ENABLE]==true)>
+    /* Enable Usage fault */
+    SCB->SHCSR |= (SCB_SHCSR_USGFAULTENA_Msk);
+    /* Trap divide by zero */
+    SCB->CCR   |= SCB_CCR_DIV_0_TRP_Msk;
+</#if>
+
+<#if (.vars[NVIC_BUS_FAULT_ENABLE]==true)>
+    /* Enable Bus fault */
+    SCB->SHCSR |= (SCB_SHCSR_BUSFAULTENA_Msk);
+</#if>
 
     return;
 }
