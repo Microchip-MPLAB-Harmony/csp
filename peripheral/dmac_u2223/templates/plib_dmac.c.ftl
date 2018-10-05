@@ -345,8 +345,8 @@ void ${DMA_INSTANCE_NAME}_InterruptHandler( void )
     }
 
     /* Execute the callback function */
-    if (dmacChObj[channel].callback != NULL)
+    if (dmacChObj->callback != NULL)
     {
-        dmacChObj[channel].callback (event, dmacChObj[channel].context);
+        dmacChObj->callback (event, dmacChObj->context);
     }
 }
