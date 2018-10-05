@@ -3,5 +3,7 @@
 	<packages>
 		<package diagram="LQFP176" id="1" name="LQFP176" />
 		<package diagram="TFBGA176" id="2" name="TFBGA176" />
+		<package diagram="LFBGA289" id="3" name="LFBGA289" />
+		<package diagram="TFBGA196" id="4" name="TFBGA196" />
 	</packages>
 </pinfile>
