@@ -4785,8 +4785,7 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0" minimap="false"/>
-    <ComponentGraph dnOrder="1">
+    <ComponentGraph dnOrder="0">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="120" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="20" y="20"/>
@@ -4794,5 +4793,6 @@
         <ElementPosition dnOrder="3" id="rstc" x="19" y="69"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1" minimap="false"/>
   </UserData>
 </Configuration>
