@@ -18,26 +18,26 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
 
@@ -249,123 +249,6 @@ void TWIHS0_CallbackRegister(TWIHS_CALLBACK callback, uintptr_t contextHandle)
 
     twihs0Obj.callback = callback;
     twihs0Obj.context = contextHandle;
-}
-
-// *****************************************************************************
-/* Function:
-    void TWIHS0_TransferSetup(TWIHS_TRANSFER_SETUP setup, uint32_t srcClkFreq)
-
-   Summary:
-    Dynamic setup of TWIHS Peripheral.
-
-   Precondition:
-    None.
-
-   Parameters:
-    None.
-
-   Returns:
-    None
-*/
-
-bool TWIHS0_TransferSetup( TWIHS_TRANSFER_SETUP * setup, uint32_t srcClkFreq )
-{
-    uint32_t clockSrcFreq;
-    uint32_t twihsClkSpeed;
-    uint32_t ckdiv = 0;
-    uint32_t cldiv = 0;
-    uint32_t chdiv = 0;
-    uint32_t c_lh_div = 0;
-
-    // Check for ongoing transfer
-    if( twihs0Obj.state != TWIHS_STATE_IDLE )
-    {
-        return false;
-    }
-
-    if( srcClkFreq )
-    {
-        clockSrcFreq = srcClkFreq;
-    }
-    else
-    {
-        clockSrcFreq = 150000000;
-    }
-
-    twihsClkSpeed = setup->clkSpeed;
-
-    /* Set Clock */
-    if( TWIHS_MASTER_MAX_BAUDRATE < twihsClkSpeed  )
-    {
-        return (false);
-    }
-
-    /* Low level time not less than 1.3us of I2C Fast Mode. */
-    if ( twihsClkSpeed > TWIHS_LOW_LEVEL_TIME_LIMIT )
-    {
-        /* Low level of time fixed for 1.3us. */
-        cldiv = clockSrcFreq / ( TWIHS_LOW_LEVEL_TIME_LIMIT *
-                                    TWIHS_CLK_DIVIDER ) -
-                                    TWIHS_CLK_CALC_ARGU;
-
-        chdiv = clockSrcFreq / (( twihsClkSpeed +
-                            ( twihsClkSpeed - TWIHS_LOW_LEVEL_TIME_LIMIT)) *
-                              TWIHS_CLK_DIVIDER ) -
-                              TWIHS_CLK_CALC_ARGU;
-
-        /* cldiv must fit in 8 bits, ckdiv must fit in 3 bits */
-        while (( cldiv > TWIHS_CLK_DIV_MAX ) &&
-               ( ckdiv < TWIHS_CLK_DIV_MIN ))
-        {
-            /* Increase clock divider */
-            ckdiv++;
-
-            /* Divide cldiv value */
-            cldiv /= TWIHS_CLK_DIVIDER;
-        }
-
-        /* chdiv must fit in 8 bits, ckdiv must fit in 3 bits */
-        while (( chdiv > TWIHS_CLK_DIV_MAX ) &&
-               ( ckdiv < TWIHS_CLK_DIV_MIN ))
-        {
-            /* Increase clock divider */
-            ckdiv++;
-
-            /* Divide cldiv value */
-            chdiv /= TWIHS_CLK_DIVIDER;
-        }
-
-        /* set clock waveform generator register */
-        TWIHS0_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS0_Module->TWIHS_CWGR) |
-                                  ( TWIHS_CWGR_CLDIV(cldiv) |
-                                    TWIHS_CWGR_CHDIV(chdiv) |
-                                    TWIHS_CWGR_CKDIV(ckdiv) );
-    }
-    else
-    {
-        c_lh_div = clockSrcFreq / ( twihsClkSpeed * TWIHS_CLK_DIVIDER ) -
-                   TWIHS_CLK_CALC_ARGU;
-
-        /* cldiv must fit in 8 bits, ckdiv must fit in 3 bits */
-        while (( c_lh_div > TWIHS_CLK_DIV_MAX ) &&
-               ( ckdiv < TWIHS_CLK_DIV_MIN ))
-        {
-            /* Increase clock divider */
-            ckdiv++;
-
-            /* Divide cldiv value */
-            c_lh_div /= TWIHS_CLK_DIVIDER;
-        }
-
-        /* set clock waveform generator register */
-        TWIHS0_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS0_Module->TWIHS_CWGR) |
-                                  ( TWIHS_CWGR_CLDIV(c_lh_div) |
-                                    TWIHS_CWGR_CHDIV(c_lh_div) |
-                                    TWIHS_CWGR_CKDIV(ckdiv) )  ;
-    }
-
-    return (true);
-
 }
 
 // *****************************************************************************
