@@ -17,6 +17,7 @@
     This file must not be included in any MPLAB Project.
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -39,6 +40,10 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
+
+#ifndef PLIB_SPIx_H    // Guards against multiple inclusion
+#define PLIB_SPIx_H
 
 // *****************************************************************************
 /* SPI Clock Phase
@@ -681,3 +686,11 @@ typedef  void (*SPI_CALLBACK) (uintptr_t context);
     has completed, it does not need to register a callback.
 */
 void SPIx_CallbackRegister(const SPI_CALLBACK* callback, uintptr_t context);
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus // Provide C++ Compatibility
+}
+#endif
+// DOM-IGNORE-END
+
+#endif /* PLIB_SPIx_H */
