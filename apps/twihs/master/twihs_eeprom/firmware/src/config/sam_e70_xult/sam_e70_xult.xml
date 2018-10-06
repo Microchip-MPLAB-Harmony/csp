@@ -2272,7 +2272,7 @@
         </String>
         <String dnOrder="357" id="PIN_73_FUNCTION_NAME">
           <Values dnOrder="0">
-            <User dnOrder="0" value="LED1"/>
+            <User dnOrder="0" value="LED"/>
           </Values>
         </String>
         <String dnOrder="358" id="PIN_73_FUNCTION_TYPE">
@@ -4831,7 +4831,7 @@
         <ElementPosition dnOrder="0" id="cmsis" x="120" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="dfp" x="260" y="20"/>
-        <ElementPosition dnOrder="3" id="twihs0" x="480" y="20"/>
+        <ElementPosition dnOrder="3" id="twihs0" x="70" y="88"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>
