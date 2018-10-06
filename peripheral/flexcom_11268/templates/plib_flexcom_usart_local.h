@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    plib_flexcom_usart.h
+    plib_flexcom_usart_local.h
 
   Summary
     Data Type definition of the USART Peripheral Interface Plib.
@@ -37,8 +37,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_FLEXCOM_USART_H // Guards against multiple inclusion
-#define PLIB_FLEXCOM_USART_H
+#ifndef PLIB_FLEXCOM_USART_LOCAL_H // Guards against multiple inclusion
+#define PLIB_FLEXCOM_USART_LOCAL_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -157,4 +157,4 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_FLEXCOM_USART_H
+#endif //PLIB_FLEXCOM_USART_LOCAL_H

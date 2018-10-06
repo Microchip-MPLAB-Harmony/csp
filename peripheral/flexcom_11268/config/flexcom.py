@@ -6,7 +6,8 @@ def flexcomInterruptEnableDisableCallback( uartInterruptEnableDisable, event ):
     Database.clearSymbolValue( interruptNamespace, interruptSymbolEnable)
     Database.clearSymbolValue( interruptNamespace, interruptSymbolHandler)
 
-    if (event["value"] == True):
+    flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
+    if (flexcom_mode != "NO_COM") and (Database.getSymbolValue(deviceNamespace, flexcom_mode + "_INTERRUPT_MODE") == True):
         Database.setSymbolValue( interruptNamespace, interruptSymbolEnable, True, 2)
         Database.setSymbolValue( interruptNamespace, interruptSymbolHandler, flexcomInstanceName.getValue() + deviceHandlerLastName, 2)
         Database.setSymbolValue( interruptNamespace, interruptSymbolHandlerLock, True, 2)
@@ -22,9 +23,10 @@ def dependencyStatus(symbol, event):
         status = False
 
     if (event["id"] == interruptSymbolEnable):
-        if ((Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == "USART" and Database.getSymbolValue(deviceNamespace, "USART_INTERRUPT_MODE") == False)
-        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == "SPI" and Database.getSymbolValue(deviceNamespace, "SPI_INTERRUPT_MODE") == False)
-        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == "TWI" and Database.getSymbolValue(deviceNamespace, "TWI_INTERRUPT_MODE") == False)):
+        if ((Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x0)
+        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1 and Database.getSymbolValue(deviceNamespace, "USART_INTERRUPT_MODE") == False)
+        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x2 and Database.getSymbolValue(deviceNamespace, "SPI_INTERRUPT_MODE") == False)
+        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x3 and Database.getSymbolValue(deviceNamespace, "TWI_INTERRUPT_MODE") == False)):
             status = False
 
     symbol.setVisible(status)
@@ -77,7 +79,7 @@ def setFLEXCOMCodeGenerationProperty(symbol, event):
         if (flexcom_mode == "TWI"):
             commonHeaderFile = "_master"
         else:
-            commonHeaderFile = ""
+            commonHeaderFile = "_local"
         flexcomCommonHeaderFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h")
         flexcomCommonHeaderFile.setOutputName("plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h")
         flexcomCommonHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + "/")
@@ -184,17 +186,10 @@ def instantiateComponent(flexcomComponent):
     # Initial settings for CLK
     Database.clearSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_ENABLE")
     Database.setSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
-    # Initial settings for Interrupt 
-    Database.clearSymbolValue(interruptNamespace, interruptSymbolEnable)
-    Database.setSymbolValue(interruptNamespace, interruptSymbolEnable, True, 2)
-    Database.clearSymbolValue(interruptNamespace, interruptSymbolHandler)
-    Database.setSymbolValue(interruptNamespace, interruptSymbolHandler, flexcomInstanceName.getValue() + deviceHandlerLastName, 2)
-    Database.clearSymbolValue(interruptNamespace, interruptSymbolHandlerLock)
-    Database.setSymbolValue(interruptNamespace, interruptSymbolHandlerLock, True, 2)
 
     # Interrupt Dynamic Settings
     flexcomSym_InterruptControl = flexcomComponent.createBooleanSymbol("FLEXCOM_INTERRUPT_ENABLE", None)
-    flexcomSym_InterruptControl.setDependencies(flexcomInterruptEnableDisableCallback, ["USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE", "TWI_INTERRUPT_MODE"])
+    flexcomSym_InterruptControl.setDependencies(flexcomInterruptEnableDisableCallback, ["USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE", "TWI_INTERRUPT_MODE", "FLEXCOM_MODE"])
     flexcomSym_InterruptControl.setVisible(False)
 
     # Dependency Status
