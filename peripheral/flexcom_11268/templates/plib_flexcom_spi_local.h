@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_flexcom_spi.h
+    plib_flexcom_spi_local.h
 
   Summary:
    FLEXCOM SPI PLIB Common Header File.
@@ -43,8 +43,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_FLEXCOM_SPI_H  // Guards against multiple inclusion
-#define PLIB_FLEXCOM_SPI_H
+#ifndef PLIB_FLEXCOM_SPI_LOCAL_H  // Guards against multiple inclusion
+#define PLIB_FLEXCOM_SPI_LOCAL_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -142,7 +142,7 @@ typedef struct
 }
 #endif
 
-#endif /* PLIB_FLEXCOM_SPI_H */
+#endif /* PLIB_FLEXCOM_SPI_LOCAL_H */
 
 /*******************************************************************************
  End of File
