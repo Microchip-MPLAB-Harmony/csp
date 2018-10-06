@@ -131,7 +131,8 @@ def instantiateComponent(rttComponent):
 
     rttPrescaleValue = rttComponent.createIntegerSymbol("rttRTPRES", rttMenu)
     rttPrescaleValue.setLabel("Prescalar Value ")
-    rttPrescaleValue.setMax(65536)
+    rttPrescaleValue.setMax(65535)
+    rttPrescaleValue.setMin(0)
     rttPrescaleValue.setDefaultValue(3)
     rttPrescaleValue.setDependencies(rttPrescaleHide, ["rttRTC1HZ"])
 
