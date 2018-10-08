@@ -82,6 +82,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
     {
         /* Wait for sync */
     }
+
     <#if EIC_CLKSEL == "1">
     /* EIC is clocked by ultra low power clock */
     ${EIC_INSTANCE_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_CKSEL_Msk;
@@ -139,7 +140,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
                                                         ${(EIC_DEBOUNCER_NO_STATES_0 == "1")?then('| EIC_DPRESCALER_STATES0_Msk' , '')}
                                                         ${(EIC_DEBOUNCER_NO_STATES_1 == "1")?then('| EIC_DPRESCALER_STATES1_Msk' , '')};</@compress>
 	</#if>
-	
+
     <#if EIC_INT != "0">
     /* External Interrupt enable*/
     ${EIC_INSTANCE_NAME}_REGS->EIC_INTENSET = 0x${EIC_INT};
@@ -228,7 +229,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 
 </#if>
 <#if NMI_CTRL == true>
-void NMI_${EIC_INSTANCE_NAME}_InterruptHandler(void)
+void NMI_InterruptHandler(void)
 {
     /* Find the triggered, run associated callback handlers */
     if ((${EIC_INSTANCE_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)

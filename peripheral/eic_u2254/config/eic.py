@@ -33,6 +33,16 @@ global eicInstanceName
 global DEBOUNCEN_Code
 
 def confMenu(symbol, event):
+
+    if event["id"] == "NMI_CTRL":
+
+        Database.clearSymbolValue("core", NMIInterruptHandler)
+
+        if event["value"] == True:
+            Database.setSymbolValue("core", NMIInterruptHandler, "NMI_InterruptHandler", 2)
+        else:
+            Database.setSymbolValue("core", NMIInterruptHandler, "NonMaskableInt_Handler", 2)
+
     symbol.setVisible(event["value"])
 
 def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
@@ -67,7 +77,7 @@ def updateEICInterruptStatus(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if bool(event["value"]) == True:
-        Database.setSymbolValue("core", InterruptHandler, eicInstanceName.getValue()+"_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, eicInstanceName.getValue() + "_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, "EIC_Handler", 2)
 
@@ -121,6 +131,7 @@ def instantiateComponent(eicComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
+    global NMIInterruptHandler
 
     eicInstanceName = eicComponent.createStringSymbol("EIC_INSTANCE_NAME", None)
     eicInstanceName.setVisible(False)
@@ -390,15 +401,12 @@ def instantiateComponent(eicComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = eicInstanceName.getValue()+"INTERRUPT_ENABLE"
-    InterruptHandler = eicInstanceName.getValue()+"INTERRUPT_HANDLER"
-    InterruptHandlerLock = eicInstanceName.getValue()+"INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = eicInstanceName.getValue()+"INTERRUPT_ENABLE_UPDATE"
+    InterruptVector = eicInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    InterruptHandler = eicInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = eicInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+    InterruptVectorUpdate = eicInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
-    NMIHandler = "NonMaskableInt_INTERRUPT_HANDLER"
-
-    Database.clearSymbolValue("core", NMIHandler)
-    Database.setSymbolValue("core", NMIHandler, "NMI_" + eicInstanceName.getValue() + "_InterruptHandler", 2)
+    NMIInterruptHandler = "NonMaskableInt_INTERRUPT_HANDLER"
 
     # Interrupt Dynamic settings
     eicSym_UpdateInterruptStatus = eicComponent.createBooleanSymbol("EIC_INTERRUPT_STATUS", None)
