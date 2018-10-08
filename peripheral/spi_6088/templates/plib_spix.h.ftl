@@ -75,7 +75,6 @@ bool ${SPI_INSTANCE_NAME}_IsBusy(void);
 
 void ${SPI_INSTANCE_NAME}_CallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
 
-void ${SPI_INSTANCE_NAME}_InterruptHandler(void);
 </#if>
 
 /* Provide C++ Compatibility */

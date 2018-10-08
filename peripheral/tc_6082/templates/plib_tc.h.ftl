@@ -133,8 +133,6 @@ __inline__ int16_t ${TC_INSTANCE_NAME}_QuadraturePositionGet (void)
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
     <#lt>/* Register callback for quadrature interrupt */
     <#lt>void ${TC_INSTANCE_NAME}_QuadratureCallbackRegister(TC_QUADRATURE_CALLBACK callback, uintptr_t context);
-
-    <#lt>void ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void);
 <#else>
 TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void);
 </#if>
@@ -179,8 +177,6 @@ uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void);
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context);
-
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void);
 <#else>
 bool ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodHasExpired(void);
 </#if>
@@ -203,7 +199,6 @@ uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureBGet (void);
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context);
 
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void);
 <#else>
 TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void);
 </#if>
@@ -231,7 +226,6 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareBSet (uint16_t value);
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t context);
 
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void);
 <#else>
 TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void);
 </#if>

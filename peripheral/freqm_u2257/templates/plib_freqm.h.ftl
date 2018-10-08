@@ -495,42 +495,7 @@ FREQM_ERROR ${FREQM_INSTANCE_NAME}_ErrorGet( void );
 */
 
 void ${FREQM_INSTANCE_NAME}_Setup(uint32_t referenceFrequency);
-</#if>
-<#if FREQM_INTERRUPT_MODE = true>
-// *****************************************************************************
-/* Function:
-    void ${FREQM_INSTANCE_NAME}_InterruptHandler(void);
 
-  Summary:
-    Frequency Measurement interrupt handler.
-
-  Description:
-    This Function is called from the FREQM handler to handle the Frequency
-    Measurement interrupts when the Measurement Done interrupt occurs.
-
-  Precondition:
-    ${FREQM_INSTANCE_NAME}_Initialize and ${FREQM_INSTANCE_NAME}_MeasurementStart() 
-	functions should be called .
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    void FREQM_Handler(void)
-    {
-        ${FREQM_INSTANCE_NAME}_InterruptHandler(void)
-    }
-    </code>
-  Remarks:
-    None.
-*/
-
-void ${FREQM_INSTANCE_NAME}_InterruptHandler(void);
-</#if>
 
  #ifdef __cplusplus // Provide C++ Compatibility
  }

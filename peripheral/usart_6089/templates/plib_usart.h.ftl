@@ -96,14 +96,6 @@ bool ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_CALLBACK callback, uint
 
 bool ${USART_INSTANCE_NAME}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context );
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
-
-void ${USART_INSTANCE_NAME}_InterruptHandler( void );
-
 </#if>
 
 // DOM-IGNORE-BEGIN

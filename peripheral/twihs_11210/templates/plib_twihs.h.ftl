@@ -356,34 +356,6 @@ bool ${TWIHS_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t *wdata, size_t w
 
 TWIHS_ERROR ${TWIHS_INSTANCE_NAME}_ErrorGet(void);
 
-// *****************************************************************************
-/* Function:
-    void ${TWIHS_INSTANCE_NAME}_InterruptHandler(void)
-
-   Summary:
-    ${TWIHS_INSTANCE_NAME} Peripheral Interrupt Handler.
-
-   Description:
-    This function is ${TWIHS_INSTANCE_NAME} Peripheral Interrupt Handler and will
-    called on every ${TWIHS_INSTANCE_NAME} interrupt.
-
-   Precondition:
-    None.
-
-   Parameters:
-    None.
-  
-   Returns:
-    None.
-
-   Remarks:
-    The function is called as peripheral instance's interrupt handler if the 
-	instance interrupt is enabled. If peripheral instance's interrupt is not
-	enabled user need to call it from the main while loop of the application.
-*/
-
-void ${TWIHS_INSTANCE_NAME}_InterruptHandler(void);
-
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 

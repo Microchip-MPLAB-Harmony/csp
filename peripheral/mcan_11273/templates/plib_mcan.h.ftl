@@ -83,9 +83,6 @@ void ${MCAN_INSTANCE_NAME}_Close (void);
 bool ${MCAN_INSTANCE_NAME}_ChannelMessageTransmit (MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message);
 bool ${MCAN_INSTANCE_NAME}_ChannelMessageReceive (MCAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message);
 
-<#if USE_INTERRUPTS == true>
-void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler( void );
-</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
