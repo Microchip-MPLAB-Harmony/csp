@@ -16,28 +16,30 @@
     machines of all modules in the system
  *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED AS IS  WITHOUT  WARRANTY  OF  ANY  KIND,
-EITHER EXPRESS  OR  IMPLIED,  INCLUDING  WITHOUT  LIMITATION,  ANY  WARRANTY  OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A  PARTICULAR  PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR  ITS  LICENSORS  BE  LIABLE  OR  OBLIGATED  UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION,  BREACH  OF  WARRANTY,  OR
-OTHER LEGAL  EQUITABLE  THEORY  ANY  DIRECT  OR  INDIRECT  DAMAGES  OR  EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY  INCIDENTAL,  SPECIAL,  INDIRECT,  PUNITIVE  OR
-CONSEQUENTIAL DAMAGES, LOST  PROFITS  OR  LOST  DATA,  COST  OF  PROCUREMENT  OF
-SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -52,8 +54,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include "definitions.h"                // SYS function prototypes
 
 /*****************************************************
- AFEC CH0 - PB1 - Connect to DACC output PB13
- AFEC CH5 - PC13 - connect to Vcc
+ AFEC CH0 - PB01 - Connect to DACC output PB13
+ AFEC CH5 - PC30 - connect to Vcc
  AFEC_CH6 - PC31 - Connect to GND
  *****************************************************/
 
@@ -65,6 +67,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 #define AFEC_VREF               (3.3f)
 
+#define AFEC_MAX_COUNT          (4095U)     
+
 /* Save the result of 3 ADC channels */
 static uint16_t __attribute__ ((aligned (32))) adc_count[320U];
 
@@ -73,7 +77,7 @@ volatile bool transfer_done = false;
 
 uint8_t sine_index = 0U;
 
-/** 100 points of sinewave samples. DAC output to be connected to AFEC channel 6 */
+/** 100 points of sinewave samples. DAC output to be connected to AFEC channel 0 */
 uint16_t sine_wave[NUM_CONVERSIONS_PER_CHANNEL] = {
     0x800,  0x840,  0x880,  0x8C0,  0x8FF,  0x93C,  0x979,  0x9B4,  0x9ED,  0xA25, 
     0xA5A,  0xA8D,  0xABD,  0xAEA,  0xB15,  0xB3C,  0xB61,  0xB81,  0xB9F,  0xBB8, 
@@ -159,7 +163,9 @@ int main ( void )
     TC1_CH0_CompareCallbackRegister(TC1_CH0_CompareHandler, (uintptr_t)NULL);
     TC1_CH0_CompareStart();
     
-    printf("*******************************************************************************\r\n");
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                    AFEC with DMA Striding Demo                 ");
+    printf("\n\r---------------------------------------------------------\n\r");
     printf("CH0 Count  CH0 Voltage  CH5 Count  CH5 Voltage  CH6 Count  CH6 Voltage \n\r");
     
     while ( true )
@@ -175,9 +181,9 @@ int main ( void )
             for (i = 0U; i < NUM_CONVERSIONS_PER_CHANNEL; i++)
             {
                 /* Calculate voltage */ 
-                adc_ch0_voltage = (float)adc_count[i] * AFEC_VREF/4095U;
-                adc_ch5_voltage = (float)adc_count[i+NUM_CONVERSIONS_PER_CHANNEL] * AFEC_VREF/4095U;
-                adc_ch6_voltage = (float)adc_count[i+(2*NUM_CONVERSIONS_PER_CHANNEL)] * AFEC_VREF/4095U;
+                adc_ch0_voltage = (float)adc_count[i] * AFEC_VREF/AFEC_MAX_COUNT;
+                adc_ch5_voltage = (float)adc_count[i+NUM_CONVERSIONS_PER_CHANNEL] * AFEC_VREF/AFEC_MAX_COUNT;
+                adc_ch6_voltage = (float)adc_count[i+(2*NUM_CONVERSIONS_PER_CHANNEL)] * AFEC_VREF/AFEC_MAX_COUNT;
                 /* send data to console */
                 printf("0x%03x      %0.2f V       0x%03x      %0.2f V       0x%03x      %0.2f V \n\r", \
                     adc_count[i], adc_ch0_voltage, adc_count[i+NUM_CONVERSIONS_PER_CHANNEL], adc_ch5_voltage, adc_count[i+(2*NUM_CONVERSIONS_PER_CHANNEL)], adc_ch6_voltage);
