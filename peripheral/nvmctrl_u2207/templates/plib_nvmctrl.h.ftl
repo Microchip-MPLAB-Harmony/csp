@@ -127,8 +127,6 @@ bool ${NVMCTRL_INSTANCE_NAME}_IsBusy( void );
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
-
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_InterruptHandler(void);
 </#if>
 
 <#if NVMCTRL_CACHE_ENABLE == true>

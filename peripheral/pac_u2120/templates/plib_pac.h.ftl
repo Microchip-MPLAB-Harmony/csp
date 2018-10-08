@@ -674,37 +674,6 @@ void ${PAC_INSTANCE_NAME}_AHBSlaveErrorClear (PAC_AHB_SLAVE ahbSlave);
 
 void ${PAC_INSTANCE_NAME}_CallbackRegister (PAC_CALLBACK callback, uintptr_t context);
 
-// *****************************************************************************
-/* Function:
-    void ${PAC_INSTANCE_NAME}_InterruptHandler ( void )
-
-  Summary:
-    PAC Interrupt Handler.
-
-  Description
-    This PAC Interrupt handler function handles PAC interrupts
-
-  Precondition:
-    ${PAC_INSTANCE_NAME}_Initialize() function should have been called once.
-    Interrupt option in MHC should have been enabled.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-        ${PAC_INSTANCE_NAME}_InterruptHandler ();
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void ${PAC_INSTANCE_NAME}_InterruptHandler (void);
-
 </#if>
 
 // DOM-IGNORE-BEGIN

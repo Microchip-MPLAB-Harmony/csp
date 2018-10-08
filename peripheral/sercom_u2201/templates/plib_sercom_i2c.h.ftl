@@ -471,38 +471,6 @@ SERCOM_I2C_ERROR ${SERCOM_INSTANCE_NAME}_I2C_ErrorGet(void);
 
 void ${SERCOM_INSTANCE_NAME}_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback, uintptr_t contextHandle);
 
-// *****************************************************************************
-/* Function:
-    void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler( void )
-
-  Summary:
-    Sercom Handler, handles all sercom interrupt.
-
-  Description:
-    This function handles all the operations post interrupt for
-    all sercom I2C interrupts.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler( void )
-    {
-        // serve interrupts
-    }
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

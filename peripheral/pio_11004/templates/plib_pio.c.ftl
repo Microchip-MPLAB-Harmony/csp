@@ -562,40 +562,6 @@ void PIO_PinInterruptCallbackRegister(
         }
     }
 }
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interrupt Service Routine (ISR) Implementation(s)
-// *****************************************************************************
-// *****************************************************************************
-</#if>
-
-<#if PIO_A_INTERRUPT_USED == true>
-    <@PIO_ISR_HANDLER
-        PIO_CHANNEL="A"
-    />
-</#if>
-<#if PIO_B_INTERRUPT_USED == true>
-    <@PIO_ISR_HANDLER
-        PIO_CHANNEL="B"
-    />
-</#if>
-<#if PIO_C_INTERRUPT_USED == true>
-    <@PIO_ISR_HANDLER
-        PIO_CHANNEL="C"
-    />
-</#if>
-<#if PIO_D_INTERRUPT_USED == true>
-    <@PIO_ISR_HANDLER
-        PIO_CHANNEL="D"
-    />
-</#if>
-<#if PIO_E_INTERRUPT_USED == true>
-    <@PIO_ISR_HANDLER
-        PIO_CHANNEL="E"
-    />
-</#if>
-
 <#if PIO_A_INTERRUPT_USED == true ||
      PIO_B_INTERRUPT_USED == true ||
      PIO_C_INTERRUPT_USED == true ||
@@ -642,6 +608,40 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
 
 }
 </#if>
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interrupt Service Routine (ISR) Implementation(s)
+// *****************************************************************************
+// *****************************************************************************
+</#if>
+
+<#if PIO_A_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="A"
+    />
+</#if>
+<#if PIO_B_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="B"
+    />
+</#if>
+<#if PIO_C_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="C"
+    />
+</#if>
+<#if PIO_D_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="D"
+    />
+</#if>
+<#if PIO_E_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="E"
+    />
+</#if>
+
+
 
 <#macro PIO_ISR_HANDLER PIO_CHANNEL>
 // *****************************************************************************

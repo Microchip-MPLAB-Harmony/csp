@@ -287,40 +287,6 @@ void ${WDT_INSTANCE_NAME}_Clear( void );
 
 void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
 
-// *****************************************************************************
-/* Function:
-    void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
-
-  Summary:
-    WDT Interrupt Handler.
-
-  Description:
-    This function handles all the interrupts evoked in the WDT module.
-
-  Precondition:
-    WDT must be enabled.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    //Application
-
-    void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
-    {
-        // serve interrupts
-    }
-
-    </code>
-  Remarks:
-    None.
-*/
-
-void ${WDT_INSTANCE_NAME}_InterruptHandler( void );
 </#if>
 
 #endif /* PLIB_${WDT_INSTANCE_NAME}_H */

@@ -584,44 +584,6 @@ void ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, 
 
 bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy (void);
 
-// *****************************************************************************
-/* Function:
-    void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void);
-
-  Summary:
-    Handler that handles the SPI interrupts
-
-  Description:
-    This Function is called from the handler to handle the exchange based on the
-    Interrupts.
-
-  Precondition:
-    ${SERCOM_INSTANCE_NAME}_SPI module should be initialized with the required
-    configuration parameters from the MCC GUI in the
-    ${SERCOM_INSTANCE_NAME}_SPI_Initialize() function.
-
-    ${SERCOM_INSTANCE_NAME}_SPI_WriteRead should also be called before using this
-    function.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    void ${SERCOM_INSTANCE_NAME}_Handler(void)
-    {
-        ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void);
-    }
-    </code>
-
-  Remarks:
-    This function must be called After the ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
-*/
-
-void ${SERCOM_INSTANCE_NAME}_SPI_InterruptHandler(void);
 
 </#if>
 

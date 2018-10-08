@@ -96,14 +96,6 @@ bool ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintpt
 
 bool ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
-
-void ${UART_INSTANCE_NAME}_InterruptHandler( void );
-
 </#if>
 
 // DOM-IGNORE-BEGIN

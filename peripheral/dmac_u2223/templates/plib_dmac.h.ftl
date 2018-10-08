@@ -624,32 +624,7 @@ DMAC_CHANNEL_CONFIG  ${DMA_INSTANCE_NAME}_ChannelSettingsGet ( DMAC_CHANNEL chan
 
 bool  ${DMA_INSTANCE_NAME}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settings );
 
-// *****************************************************************************
-/* Function:
-    void ${DMA_INSTANCE_NAME}_InterruptHandler( void );
 
-  Summary:
-    Handles the DMA interrupt events.
-
-  Description:
-    This function handles the DMA interrupt events.
-
-  Precondition:
-    DMAC should have been initialized by calling ${DMA_INSTANCE_NAME}_Initialize.
-
-  Parameters:
-    None.
-
-  Example:
-    <code>
-    ${DMA_INSTANCE_NAME}_InterruptHandler();
-    </code>
-
-   Remarks:
-    None.
-*/
-
-void ${DMA_INSTANCE_NAME}_InterruptHandler( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

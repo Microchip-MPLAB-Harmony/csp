@@ -104,7 +104,6 @@ void ${SDADC_INSTANCE_NAME}_ComparisonWindowSet(int16_t low_threshold, int16_t h
 <#if SDADC_INTERRUPT_MODE == true>
 void ${SDADC_INSTANCE_NAME}_CallbackRegister(SDADC_CALLBACK callback, uintptr_t context);
 
-void ${SDADC_INSTANCE_NAME}_InterruptHandler( void );
 </#if>
 
 

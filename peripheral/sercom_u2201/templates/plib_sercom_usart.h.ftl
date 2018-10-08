@@ -910,38 +910,6 @@ void ${SERCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK 
 void ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context );
 </#if>
 
-// *****************************************************************************
-/* Function:
-    void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
-
-  Summary:
-    Sercom Handler, handles all sercom interrupt.
-
-  Description:
-    This function handles all the operations post interrupt for
-    all sercom USART interrupts.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
-    {
-        // serve interrupts
-    }
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void );
 </#if>
 
 // DOM-IGNORE-BEGIN
