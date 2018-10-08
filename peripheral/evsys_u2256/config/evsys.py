@@ -69,6 +69,14 @@ def channelSource(symbol, event):
 def channelMenu(symbol, event):
     symbol.setVisible(event["value"])
 
+def channelClockEnable(symbol, event):
+    chID = event["id"].split('EVSYS_CHANNEL_')[1]
+    if event["value"] == True:
+        Database.setSymbolValue("core", evsysInstanceName.getValue() + "_" + chID + "_CLOCK_ENABLE", True, 1)
+    else:
+        Database.setSymbolValue("core", evsysInstanceName.getValue() + "_" + chID + "_CLOCK_ENABLE", False, 1)
+        
+
 def overrunInterrupt(interrupt, event):
     interrupt.setVisible(event["value"] != 2)
 
@@ -129,7 +137,7 @@ def instantiateComponent(evsysComponent):
     evsysInstanceName.setDefaultValue(evsysComponent.getID().upper())
     Log.writeInfoMessage("Running " + evsysInstanceName.getValue())
 
-    #FREQM Main Menu
+    #EVSYS Main Menu
     evsysSym_Menu = evsysComponent.createMenuSymbol("EVSYS_MENU", None)
     evsysSym_Menu.setLabel("EVSYS MODULE SETTINGS ")
 
@@ -169,6 +177,12 @@ def instantiateComponent(evsysComponent):
         evsysChannel = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" + str(id), evsysSym_Menu)
         evsysChannel.setLabel("Enable Channel" + str(id))
         evsysChannel.setDefaultValue(False)
+
+        # Dummy symbol to control clock enable
+        evsysClockEnable = evsysComponent.createBooleanSymbol("EVSYS_CLOCK_ENABLE_" + str(id), evsysSym_Menu)
+        evsysClockEnable.setDefaultValue(False)
+        evsysClockEnable.setVisible(False)
+        evsysClockEnable.setDependencies(channelClockEnable, ["EVSYS_CHANNEL_" + str(id)])
 
         evsysChannelMenu = evsysComponent.createMenuSymbol("EVSYS_MENU_" + str(id), evsysChannel)
         evsysChannelMenu.setLabel("EVSYS Channel Configuration")
