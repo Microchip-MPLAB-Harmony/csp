@@ -98,7 +98,7 @@ uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void );
 
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void );
 
-<#if ADC_INTENSET_RESRDY = true>
+<#if ADC_INTENSET_RESRDY = true || ADC_INTENSET_WINMON = true>
 
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
 </#if>
