@@ -18,40 +18,38 @@
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED AS IS WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 //DOM-IGNORE-END
 
 #include "plib_pio.h"
 
-
 #define PIO_MAX_NUM_OF_CHANNELS     5
 
-
 /* Array to store callback objects of each configured interrupt */
-PIO_PIN_CALLBACK_OBJ portPinCbObj[2 + 0 + 0 + 0 + 0];
+PIO_PIN_CALLBACK_OBJ portPinCbObj[1 + 0 + 0 + 0 + 0];
 
 /* Array to store number of interrupts in each PORT Channel + previous interrupt count */
-uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0, 2, 2, 2, 2, 2};
+uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0, 1, 1, 1, 1, 1};
 
 /******************************************************************************
   Function:
@@ -80,8 +78,15 @@ void PIO_Initialize ( void )
     ((pio_registers_t*)PIO_PORT_A)->PIO_OWER = PIO_OWER_Msk;
     /* PORTA Additional interrupt mode Enable */
     ((pio_registers_t*)PIO_PORT_A)->PIO_AIMER = 0x800;
-    /* PORTA Rising Edge or High Level Interrupt Enable */
-    ((pio_registers_t*)PIO_PORT_A)->PIO_REHLSR = 0x800;
+    /* PORTA Interrupt Status Clear */
+    ((pio_registers_t*)PIO_PORT_A)->PIO_ISR;
+    /* PORTA system level interrupt will be enabled by NVIC Manager */
+    /* PORTA module level Interrupt for every pin has to be enabled by user
+       by calling PIO_PinInterruptEnable() API dynamically as and when needed*/
+    /* PORTA Glitch/Debounce Filter Enable */
+    ((pio_registers_t*)PIO_PORT_A)->PIO_IFER = 0x800;
+    ((pio_registers_t*)PIO_PORT_A)->PIO_IFSCER = 0x800;
+
     /************************ PIO B Initialization ************************/
     /* PORTB Peripheral Function Selection */
     ((pio_registers_t*)PIO_PORT_B)->PIO_ABCDSR[0]= 0x10;
@@ -94,6 +99,7 @@ void PIO_Initialize ( void )
     ((pio_registers_t*)PIO_PORT_B)->PIO_PPDDR = 0xFFFFFFFF;
     /* PORTB Output Write Enable */
     ((pio_registers_t*)PIO_PORT_B)->PIO_OWER = PIO_OWER_Msk;
+
     /************************ PIO C Initialization ************************/
     /* PORTC Pull Up Enable/Disable as per MHC selection */
     ((pio_registers_t*)PIO_PORT_C)->PIO_PUDR = 0xFFFFFFFF;
@@ -101,6 +107,7 @@ void PIO_Initialize ( void )
     ((pio_registers_t*)PIO_PORT_C)->PIO_PPDDR = 0xFFFFFFFF;
     /* PORTC Output Write Enable */
     ((pio_registers_t*)PIO_PORT_C)->PIO_OWER = PIO_OWER_Msk;
+
     /************************ PIO D Initialization ************************/
     /* PORTD Pull Up Enable/Disable as per MHC selection */
     ((pio_registers_t*)PIO_PORT_D)->PIO_PUDR = 0xFFFFFFFF;
@@ -108,6 +115,7 @@ void PIO_Initialize ( void )
     ((pio_registers_t*)PIO_PORT_D)->PIO_PPDDR = 0xFFFFFFFF;
     /* PORTD Output Write Enable */
     ((pio_registers_t*)PIO_PORT_D)->PIO_OWER = PIO_OWER_Msk;
+
     /************************ PIO E Initialization ************************/
     /* PORTE Pull Up Enable/Disable as per MHC selection */
     ((pio_registers_t*)PIO_PORT_E)->PIO_PUDR = 0xFFFFFFFF;
@@ -120,11 +128,10 @@ void PIO_Initialize ( void )
     /* Initialize Interrupt Pin data structures */
     portPinCbObj[0].pin = PIO_PIN_PA11;
     
-    for(i=0; i<2; i++)
+    for(i=0; i<1; i++)
     {
         portPinCbObj[i].callback = NULL;
     }
-
 }
 
 // *****************************************************************************
