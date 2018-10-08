@@ -79,34 +79,6 @@
 /* EIC Pin Count */
 #define EXTINT_COUNT                        (${EIC_INT_COUNT}U)
 
-<#if EIC_INT != "0">
-typedef struct
-{
-	/* External Interrupt Pin Callback Handler */
-    EIC_CALLBACK    callback;
-
-	/* External Interrupt Pin Client context */
-    uintptr_t       context;
-
-	/* External Interrupt Pin number */
-    EIC_PIN         eicPinNo;
-
-} EIC_CALLBACK_OBJ;
-
-</#if>
-
-<#if NMI_CTRL == true>
-typedef struct
-{
-	/* NMI Callback Handler */
-    EIC_NMI_CALLBACK callback;
-
-	/* NMI Client context */
-    uintptr_t       context;
-
-} EIC_NMI_CALLBACK_OBJ;
-</#if>
-
 // *****************************************************************************
 /* EIC Pins
 
@@ -187,6 +159,18 @@ typedef enum
 
 typedef void (*EIC_CALLBACK) (uintptr_t context);
 
+typedef struct
+{
+    /* External Interrupt Pin Callback Handler */
+    EIC_CALLBACK    callback;
+
+    /* External Interrupt Pin Client context */
+    uintptr_t       context;
+
+    /* External Interrupt Pin number */
+    EIC_PIN         eicPinNo;
+
+} EIC_CALLBACK_OBJ;
 </#if>
 
 <#if NMI_CTRL == true>
@@ -235,6 +219,15 @@ typedef void (*EIC_CALLBACK) (uintptr_t context);
 
 typedef void (*EIC_NMI_CALLBACK) (uintptr_t context);
 
+typedef struct
+{
+    /* NMI Callback Handler */
+    EIC_NMI_CALLBACK callback;
+
+    /* NMI Client context */
+    uintptr_t       context;
+
+} EIC_NMI_CALLBACK_OBJ;
 </#if>
 
 // *****************************************************************************
