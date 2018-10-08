@@ -11,32 +11,32 @@
           <Name dnOrder="1">exceptions.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">756E2E5E6C30D51461B84EC5D172A2B7</GeneratedChecksum>
-          <UserChecksum dnOrder="5">756E2E5E6C30D51461B84EC5D172A2B7</UserChecksum>
+          <GeneratedChecksum dnOrder="4">53DA2CD3943A9A8AE007894AF023C074</GeneratedChecksum>
+          <UserChecksum dnOrder="5">53DA2CD3943A9A8AE007894AF023C074</UserChecksum>
         </File>
         <File dnOrder="1">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">90E57BCD8E5312946E2E9D458724F0DF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">90E57BCD8E5312946E2E9D458724F0DF</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8EC5472906F508BE180388010AD362AD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8EC5472906F508BE180388010AD362AD</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">interrupts.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8C50A6888495D1817EC83418458EDD6B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8C50A6888495D1817EC83418458EDD6B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">5023C0B5770F0218DF65A5E12BD325EC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5023C0B5770F0218DF65A5E12BD325EC</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">libc_syscalls.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">85196A513E7B085ABF6DE633A485B8D8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">85196A513E7B085ABF6DE633A485B8D8</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0D061464696B9E5D276A90A352736879</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0D061464696B9E5D276A90A352736879</UserChecksum>
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
@@ -59,48 +59,48 @@
           <Name dnOrder="1">plib_dacc.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/dacc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/dacc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FBDBD3D199B0195A6BD68690506CC3DA</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FBDBD3D199B0195A6BD68690506CC3DA</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D24503A7522D5A3EAAB5EB858740864E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D24503A7522D5A3EAAB5EB858740864E</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_nvic.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/nvic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/nvic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">36D178BEB534EB77561345B7DE34CE55</GeneratedChecksum>
-          <UserChecksum dnOrder="5">36D178BEB534EB77561345B7DE34CE55</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E7782DB4A55CA03833641095AB584D95</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E7782DB4A55CA03833641095AB584D95</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_pio.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FDFADB4CF3D45CD7DF66BA06DFE30725</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FDFADB4CF3D45CD7DF66BA06DFE30725</UserChecksum>
+          <GeneratedChecksum dnOrder="4">89683B2C92EC2DA803C3632C238AA5C8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">89683B2C92EC2DA803C3632C238AA5C8</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_tc0.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">94A69391F69D08112389F95FA77EA593</GeneratedChecksum>
-          <UserChecksum dnOrder="5">94A69391F69D08112389F95FA77EA593</UserChecksum>
+          <GeneratedChecksum dnOrder="4">19B4C1A346BF3EE4CD468841F82649F1</GeneratedChecksum>
+          <UserChecksum dnOrder="5">19B4C1A346BF3EE4CD468841F82649F1</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">startup.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B034CBBACCEA107118CA6A8B73F11BD5</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B034CBBACCEA107118CA6A8B73F11BD5</UserChecksum>
+          <GeneratedChecksum dnOrder="4">DEDE30EBAA0AAAF51F6EF4278D8D6DD5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">DEDE30EBAA0AAAF51F6EF4278D8D6DD5</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">xc32_monitor.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/stdio/</LogicalPath>
           <PhysicalPath dnOrder="3">/stdio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">99B989871692FAC0CD47E417A902946B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">99B989871692FAC0CD47E417A902946B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0CDCE9B6891797FCD2AEA243F841353F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0CDCE9B6891797FCD2AEA243F841353F</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">HEADER</Type>
@@ -155,8 +155,8 @@
           <Name dnOrder="1">atsame70q21b.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAME70Q21B_DFP/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAME70Q21B_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">70407B4A420D4C628E6536AC5A43B311</GeneratedChecksum>
-          <UserChecksum dnOrder="5">70407B4A420D4C628E6536AC5A43B311</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E10A6B3CFD37EC207EC63842459B3D66</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E10A6B3CFD37EC207EC63842459B3D66</UserChecksum>
         </File>
         <File dnOrder="19">
           <Type dnOrder="0">HEADER</Type>
@@ -211,16 +211,16 @@
           <Name dnOrder="1">definitions.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E16B51C5DE5806419E0253C029732F7D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E16B51C5DE5806419E0253C029732F7D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E0E5204143A234F412B8C3DCDC0FBE1A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E0E5204143A234F412B8C3DCDC0FBE1A</UserChecksum>
         </File>
         <File dnOrder="26">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">device.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAME70Q21B_DFP/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAME70Q21B_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F29D824EE25751398EB7618ABAC0DB82</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F29D824EE25751398EB7618ABAC0DB82</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E62823F307EFDA8C2A6D7BA8E37693E2</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E62823F307EFDA8C2A6D7BA8E37693E2</UserChecksum>
         </File>
         <File dnOrder="27">
           <Type dnOrder="0">HEADER</Type>
@@ -323,56 +323,56 @@
           <Name dnOrder="1">plib_dacc.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/dacc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/dacc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D2CA08503F796F62E3718DDBC73BF1AB</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D2CA08503F796F62E3718DDBC73BF1AB</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F579237DA20C2E515A5AC366B38489E7</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F579237DA20C2E515A5AC366B38489E7</UserChecksum>
         </File>
         <File dnOrder="40">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_dacc_common.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/dacc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/dacc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AB8465287E158E8BAD578967BAA67B25</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AB8465287E158E8BAD578967BAA67B25</UserChecksum>
+          <GeneratedChecksum dnOrder="4">CD8125A18052720A72472D0F1DD6EC2B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">CD8125A18052720A72472D0F1DD6EC2B</UserChecksum>
         </File>
         <File dnOrder="41">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_nvic.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/nvic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/nvic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1DC101D0F8475C502BC5193893F0A64C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1DC101D0F8475C502BC5193893F0A64C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E95AB23B866AA0CE6F0ABF637E9E2C83</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E95AB23B866AA0CE6F0ABF637E9E2C83</UserChecksum>
         </File>
         <File dnOrder="42">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_pio.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">31BAC6CCC54CF11DBA2CAC29D6FA7F0E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">31BAC6CCC54CF11DBA2CAC29D6FA7F0E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F8731B4D1F7D004CA42EE253F9B2BA24</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F8731B4D1F7D004CA42EE253F9B2BA24</UserChecksum>
         </File>
         <File dnOrder="43">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_pio_pin.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">97AB3F758DA59C5C10041ACD3D6E0676</GeneratedChecksum>
-          <UserChecksum dnOrder="5">97AB3F758DA59C5C10041ACD3D6E0676</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C47254678DF78B141CAC6F7EB926CDF1</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C47254678DF78B141CAC6F7EB926CDF1</UserChecksum>
         </File>
         <File dnOrder="44">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_tc0.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6EE8584D0DAD81BF13018DA9E81552E8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6EE8584D0DAD81BF13018DA9E81552E8</UserChecksum>
+          <GeneratedChecksum dnOrder="4">44F17139CC22EC1EEC37BEBED3316BC9</GeneratedChecksum>
+          <UserChecksum dnOrder="5">44F17139CC22EC1EEC37BEBED3316BC9</UserChecksum>
         </File>
         <File dnOrder="45">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_tc_common.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">72FCD905F937387974D3D41E4325083F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">72FCD905F937387974D3D41E4325083F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FC1C7F65154AD667D1FA3B68F031A9BE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FC1C7F65154AD667D1FA3B68F031A9BE</UserChecksum>
         </File>
         <File dnOrder="46">
           <Type dnOrder="0">HEADER</Type>
@@ -561,7 +561,7 @@
       </Files>
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/sam_e70_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/"/>
-        <Setting category="C32-LD" dnOrder="1" key="heap-size" value=""/>
+        <Setting category="C32-LD" dnOrder="1" key="heap-size" value="0"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
         <Setting category="C32Global" dnOrder="3" key="mdtcm" value=""/>
         <Setting category="C32Global" dnOrder="4" key="mitcm" value=""/>
