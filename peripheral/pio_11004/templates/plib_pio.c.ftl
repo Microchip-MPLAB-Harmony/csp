@@ -618,7 +618,7 @@ void PIO_PinInterruptCallbackRegister(
     This function defines the Interrupt handler for a selected port.
 
   Remarks:
-	It is an internal function used by the library, user need not call it.
+	It is an internal function used by the library, user should not call it.
 */
 void _PIO_Interrupt_Handler ( PIO_PORT port )
 {
