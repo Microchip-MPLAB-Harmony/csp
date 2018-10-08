@@ -193,19 +193,73 @@ def instantiateComponent(adcComponent):
     adcSym_CONV_TRIGGER.setDefaultValue("SW Trigger")
     adcSym_CONV_TRIGGER.setLabel("Select Conversion Trigger")
 
-    #input event
-    adcSym_HW_INP_EVENT = adcComponent.createCommentSymbol("ADC_HW_INP_EVENT", adcSym_CONV_TRIGGER)
-    adcSym_HW_INP_EVENT.setLabel("**** Flush Input Event is Enabled ****")
+    #Enable Flush input event
+    adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_HW_FLUSH_INP_EVENT", adcSym_CONV_TRIGGER)
+    adcSym_HW_INP_EVENT.setLabel("Enable Flush Input Event")
+    adcSym_HW_INP_EVENT.setDefaultValue(False)
     adcSym_HW_INP_EVENT.setVisible(False)
     adcSym_HW_INP_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
 
-    #Invert Sync input event
+    #Invert Flush input event
     adcSym_EVCTRL_FLUSHINV = adcComponent.createBooleanSymbol("ADC_EVCTRL_FLUSHINV", adcSym_CONV_TRIGGER)
     adcSym_EVCTRL_FLUSHINV.setLabel("Invert Flush Event")
     adcSym_EVCTRL_FLUSHINV.setDefaultValue(False)
     adcSym_EVCTRL_FLUSHINV.setVisible(False)
     adcSym_EVCTRL_FLUSHINV.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
 
+    #Enable Start Conversion input event
+    adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_HW_START_CONV_INP_EVENT", adcSym_CONV_TRIGGER)
+    adcSym_HW_INP_EVENT.setLabel("Enable Start Conversion Input Event")
+    adcSym_HW_INP_EVENT.setDefaultValue(False)
+    adcSym_HW_INP_EVENT.setVisible(False)
+    adcSym_HW_INP_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
+
+    #Invert Start Conversion input event
+    adcSym_EVCTRL_FLUSHINV = adcComponent.createBooleanSymbol("ADC_EVCTRL_STARTINV", adcSym_CONV_TRIGGER)
+    adcSym_EVCTRL_FLUSHINV.setLabel("Invert Start Conversion Event")
+    adcSym_EVCTRL_FLUSHINV.setDefaultValue(False)
+    adcSym_EVCTRL_FLUSHINV.setVisible(False)
+    adcSym_EVCTRL_FLUSHINV.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
+    
+    adcWindowMenu = adcComponent.createMenuSymbol("ADC_WINDOW_CONFIG_MENU", None)
+    adcWindowMenu.setLabel("Window Mode Configuration")
+    
+    global adcSym_INTENSET_WINMON
+    adcSym_INTENSET_WINMON = adcComponent.createBooleanSymbol("ADC_INTENSET_WINMON", adcWindowMenu)
+    adcSym_INTENSET_WINMON.setLabel("Enable Window Monitor Interrupt")
+    adcSym_INTENSET_WINMON.setDefaultValue(False)
+    
+    #Configure mode for Window operation
+    adcSym_CTRLC_WINMODE = adcComponent.createKeyValueSetSymbol("ADC_CTRLC_WINMODE", adcWindowMenu)
+    adcSym_CTRLC_WINMODE.setLabel("Select Window Monitor Mode")
+    adcSym_CTRLC_WINMODE.setDefaultValue(0)
+    adcSym_CTRLC_WINMODE.setOutputMode("Value")
+    adcSym_CTRLC_WINMODE.setDisplayMode("Description")
+    adcWindowConfigNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_CTRLC__WINMODE\"]")
+    adcWindowConfigValues = []
+    adcWindowConfigValues = adcWindowConfigNode.getChildren()
+    for index in range (0 , len(adcWindowConfigValues)):
+        adcSym_CTRLC_WINMODE.addKey(adcWindowConfigValues[index].getAttribute("name"), adcWindowConfigValues[index].getAttribute("value"),
+        adcWindowConfigValues[index].getAttribute("caption"))
+        
+    #Window upper threshold
+    adcSym_WINUT = adcComponent.createIntegerSymbol("ADC_WINUT", adcWindowMenu)
+    adcSym_WINUT.setLabel("Upper Threshold for ADC window operation")
+    adcSym_WINUT.setMin(-2048)
+    adcSym_WINUT.setMax(4096)
+    adcSym_WINUT.setDefaultValue(0)
+    
+    #Window lower threshold
+    adcSym_WINLT = adcComponent.createIntegerSymbol("ADC_WINLT", adcWindowMenu)
+    adcSym_WINLT.setLabel("Lower Threshold for ADC window operation")
+    adcSym_WINLT.setMin(-2048)
+    adcSym_WINLT.setMax(4096)
+    adcSym_WINLT.setDefaultValue(0)
+    
+    #Enable Window Monitor Event Out
+    adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_WINDOW_OUTPUT_EVENT", adcWindowMenu)
+    adcSym_HW_INP_EVENT.setLabel("Enable Window Monitor Event Out")
+    
     adcChannelMenu = adcComponent.createMenuSymbol("ADC_CHANNEL_MENU", None)
     adcChannelMenu.setLabel("Channel Configuration")
 
@@ -336,7 +390,7 @@ def instantiateComponent(adcComponent):
 
     # Interrupt Dynamic settings
     adcSym_UpdateInterruptStatus = adcComponent.createBooleanSymbol("ADC_INTERRUPT_STATUS", None)
-    adcSym_UpdateInterruptStatus.setDependencies(updateADCInterruptStatus, ["ADC_INTENSET_RESRDY"])
+    adcSym_UpdateInterruptStatus.setDependencies(updateADCInterruptStatus, ["ADC_INTENSET_RESRDY", "ADC_INTENSET_WINMON"])
     adcSym_UpdateInterruptStatus.setVisible(False)
 
     # Interrupt Warning status

@@ -57,6 +57,7 @@
 <#compress>
 <#assign ADC_CTRLC_VAL = "">
 <#assign ADC_EVCTRL_VAL = "">
+<#assign ADC_INTENSET_VAL = "">
 <#if ADC_CTRLC_DIFFMODE == true>
     <#assign ADC_CTRLC_VAL = "ADC_CTRLC_DIFFMODE_Msk">
 </#if>
@@ -82,11 +83,27 @@
         <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_RESRDYEO_Msk">
     </#if>
 </#if>
+<#if ADC_WINDOW_OUTPUT_EVENT == true>
+    <#if ADC_EVCTRL_VAL != "">
+        <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_WINMON_Msk">
+    <#else>
+        <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_WINMON_Msk">
+    </#if>
+</#if>
 <#if ADC_CONV_TRIGGER == "HW Event Trigger" && ADC_CTRLA_SLAVEEN == false>
+    <#if ADC_HW_FLUSH_INP_EVENT == true>
     <#if ADC_EVCTRL_VAL != "">
         <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_FLUSHEI_Msk">
     <#else>
         <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_FLUSHEI_Msk">
+    </#if>
+</#if>
+    <#if ADC_HW_START_CONV_INP_EVENT == true>
+        <#if ADC_EVCTRL_VAL != "">
+                <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_STARTEI_Msk">
+        <#else>
+                <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_STARTEI_Msk">
+        </#if>
     </#if>
 </#if>
 <#if ADC_CONV_TRIGGER == "HW Event Trigger" && ADC_CTRLA_SLAVEEN == false && ADC_EVCTRL_FLUSHINV == true>
@@ -94,6 +111,21 @@
         <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_FLUSHINV_Msk">
     <#else>
         <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_FLUSHINV_Msk">
+    </#if>
+</#if>
+
+<#if ADC_INTENSET_RESRDY == true>
+    <#if ADC_INTENSET_VAL != "">
+        <#assign ADC_INTENSET_VAL = ADC_INTENSET_VAL + " | ADC_INTENSET_RESRDY_Msk">
+    <#else>
+        <#assign ADC_INTENSET_VAL = "ADC_INTENSET_RESRDY_Msk">
+    </#if>
+</#if>
+<#if ADC_INTENSET_WINMON == true>
+    <#if ADC_INTENSET_VAL != "">
+        <#assign ADC_INTENSET_VAL = ADC_INTENSET_VAL + " | ADC_INTENSET_WINMON_Msk">
+    <#else>
+        <#assign ADC_INTENSET_VAL = "ADC_INTENSET_WINMON_Msk">
     </#if>
 </#if>
 </#compress>
@@ -104,7 +136,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if ADC_INTENSET_RESRDY = true>
+<#if ADC_INTENSET_RESRDY = true || ADC_INTENSET_WINMON = true>
 ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
@@ -147,7 +179,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     }
 
     /* Resolution & Operation Mode */
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC = ADC_CTRLC_RESSEL_${ADC_CTRLC_RESSEL}
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC = ADC_CTRLC_RESSEL_${ADC_CTRLC_RESSEL} | ADC_CTRLC_WINMODE(${ADC_CTRLC_WINMODE})
                                      <#if ADC_CTRLC_VAL?has_content>| ${ADC_CTRLC_VAL}</#if>;</@compress>
 
     while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_CTRLC_Msk) == ADC_SYNCBUSY_CTRLC_Msk)
@@ -160,16 +192,23 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_AVGCTRL = ADC_AVGCTRL_SAMPLENUM_${ADC_AVGCTRL_SAMPLENUM} | ADC_AVGCTRL_ADJRES(${ADC_AVGCTRL_ADJRES});
 </#if>
 
-    /* Clear all interrupt flags */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
-
-<#if ADC_INTENSET_RESRDY = true>
-    /* Enable RESRDY interrupt */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = ADC_INTENSET_RESRDY_Msk;
+<#if ADC_WINUT?has_content>
+    /* Upper threshold for window mode  */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = ${ADC_WINUT};
 </#if>
 
+<#if ADC_WINLT?has_content>
+    /* Lower threshold for window mode  */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = ${ADC_WINLT};
+</#if>
+    /* Clear all interrupt flags */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
+<#if ADC_INTENSET_VAL?has_content >
+    /* Enable interrupts */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = ${ADC_INTENSET_VAL};
+</#if>
 <#if ADC_EVCTRL_VAL?has_content>
-    /* events  */
+    /* Events configuration  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_EVCTRL = ${ADC_EVCTRL_VAL};
 </#if>
 
@@ -220,7 +259,7 @@ uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void )
     return (uint16_t)${ADC_INSTANCE_NAME}_REGS->ADC_RESULT;
 }
 
-<#if ADC_INTENSET_RESRDY = true>
+<#if ADC_INTENSET_RESRDY = true || ADC_INTENSET_WINMON = true>
 /* Register callback function */
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
 {
