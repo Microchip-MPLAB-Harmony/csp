@@ -3159,24 +3159,24 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <Integer dnOrder="498" id="PIO_B_NUM_OF_INT_PINS_USED">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="-1"/>
-            </Dynamic>
-          </Values>
-        </Integer>
-        <Hex dnOrder="499" id="PIO_CCFG_SYSIO_VALUE">
+        <Hex dnOrder="498" id="PIO_CCFG_SYSIO_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="500" id="PMC_PCER0">
+        <Hex dnOrder="499" id="PMC_PCER0">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="203776"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="500" id="PMC_PCER1">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
