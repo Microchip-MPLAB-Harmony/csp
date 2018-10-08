@@ -15,7 +15,6 @@
             </logicalFolder>
             <logicalFolder name="f2" displayName="pio" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/pio/plib_pio.h</itemPath>
-              <itemPath>../src/config/sam_e70_xult/peripheral/pio/plib_pio_pin.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="systick" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/systick/plib_systick.h</itemPath>
