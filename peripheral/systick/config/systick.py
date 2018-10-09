@@ -85,12 +85,12 @@ def sysTickMax(systick, event):
     max = 0
 
     if Database.getSymbolValue("core", "SYSTICK_EXTERNAL_CLOCK"):
-        freq_ext = Database.getSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY")
+        freq_ext = int(Database.getSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY"))
         clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
     else:
         clock = 1
 
-    freq_proc = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    freq_proc = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
 
     systickCVRNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="CVR"]/bitfield@[name="CURRENT"]')
     currentValueMask = str(systickCVRNode.getAttribute("mask"))
@@ -112,12 +112,12 @@ def systickCal(symbol, event):
 
     if Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK"):
         clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
-        freq_ext = Database.getSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY")
+        freq_ext = int(Database.getSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY"))
     else:
         clock = 1
 
-    period = Database.getSymbolValue("core", "SYSTICK_PERIOD_MS")
-    freq_proc = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    period = int(Database.getSymbolValue("core", "SYSTICK_PERIOD_MS"))
+    freq_proc = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
 
     if clock == 0:
         if freq_ext != 0 and freq_ext != None:
@@ -158,16 +158,20 @@ systickClock.setLabel("SysTick Clock")
 systickClock.setOutputMode("Value")
 systickClock.setDisplayMode("Description")
 if Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK"):
-    systickClock.addKey("HCLK/2", str(0) , "SysTick External clock (HCLK/2)" )
-systickClock.addKey("HCLK", str(1) , "Processor clock (HCLK)" )
+    systickClock.addKey("HCLK/2", str(0) , "SysTick External clock" )
+systickClock.addKey("HCLK", str(1) , "Processor clock" )
 systickClock.setDefaultValue(int(Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK")))
 
+systickNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="CVR"]/bitfield@[name="CURRENT"]')
+maxCount = str(systickNode.getAttribute("mask"))
+max = ((float(1) / int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))) * int(maxCount, 0) * 1000)
+    
 systickPeriodMS = coreComponent.createFloatSymbol("SYSTICK_PERIOD_MS", systickConfigMenu)
 systickPeriodMS.setLabel("Systick Period(Milliseconds)")
 systickPeriodMS.setVisible(True)
 systickPeriodMS.setDefaultValue(float(1.0))
 systickPeriodMS.setMin(0)
-systickPeriodMS.setMax(float(55.92405))
+systickPeriodMS.setMax(float(max))
 systickPeriodMS.setDependencies(sysTickMax, ["core.CPU_CLOCK_FREQUENCY", "SYSTICK_CLOCK", "core.SYSTICK_CLOCK_FREQUENCY"])
 
 
