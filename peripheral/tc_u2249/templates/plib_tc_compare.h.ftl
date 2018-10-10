@@ -75,8 +75,6 @@
     interface and should be considered part it.
 */
 
-#define ${TC_INSTANCE_NAME}_CompareFrequencyGet()  (uint32_t)(${TC_FREQUENCY}UL)
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -92,6 +90,8 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void );
 void ${TC_INSTANCE_NAME}_CompareStart( void );
 
 void ${TC_INSTANCE_NAME}_CompareStop( void );
+
+uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet();
 
 <#if TC_CTRLA_MODE = "COUNT8">
 
@@ -129,13 +129,13 @@ void ${TC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t count );
 void ${TC_INSTANCE_NAME}_Compare32bitSet( uint32_t compareValue );
 </#if>
 
-bool ${TC_INSTANCE_NAME}_CompareStatusGet( void );
-
 <#if TC_COMPARE_INTENSET_OVF = true>
 
-void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_CALLBACK callback, uintptr_t context );
+void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, uintptr_t context );
 
-void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void );
+<#else>
+
+bool ${TC_INSTANCE_NAME}_CompareStatusGet( void );
 </#if>
 
 

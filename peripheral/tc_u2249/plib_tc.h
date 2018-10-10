@@ -25,6 +25,12 @@
     in the generated headers.  These are the actual functions that should be
     used.
 
+    This interface supports the following different modes of the TC peripheral.
+        * Timer Mode (8-bit or 16-bit or 32-bit)
+        * Capture Mode (8-bit or 16-bit or 32-bit)
+        * Compare Mode (8-bit or 16-bit or 32-bit)
+    Only one of these modes (and only the associated interface functions) will
+    be active (and thus will be generated at a time.)
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -98,76 +104,254 @@
 
 typedef enum
 {
+    TC_CAPTURE_STATUS_NONE = 0,
+    
     /* Capture status overflow */
-    TC_CAPTURE_STATUS_OVERFLOW = 0x1,
+    TC_CAPTURE_STATUS_OVERFLOW = TC_INTFLAG_OVF_Msk,
 
     /* Capture status error */
-    TC_CAPTURE_STATUS_ERROR = 0x2,
+    TC_CAPTURE_STATUS_ERROR = TC_INTFLAG_ERR_Msk,
 
     /* Capture status ready for channel 0 */
-    TC_CAPTURE_STAUTS_CAPTURE0_READY = 0x10,
+    TC_CAPTURE_STAUTS_CAPTURE0_READY = TC_INTFLAG_MC0_Msk,
 
     /* Capture status ready for channel 1 */
-    TC_CAPTURE_STATUS_CAPTURE1_READY = 0x20,
+    TC_CAPTURE_STATUS_CAPTURE1_READY = TC_INTFLAG_MC1_Msk,
     
     TC_CAPTURE_STATUS_MSK = TC_CAPTURE_STATUS_OVERFLOW | TC_CAPTURE_STATUS_ERROR | TC_CAPTURE_STAUTS_CAPTURE0_READY | TC_CAPTURE_STATUS_CAPTURE1_READY
 
 } TC_CAPTURE_STATUS;
 
-
-
 // *****************************************************************************
-/* Callback Function Pointer
+/* Interrupt source mask for compare mode
 
   Summary:
-    Defines the function pointer data type and function signature for the tc
-    callback function.
+    Identifies channel interrupt source mask.
 
   Description:
-    This data type defines the function pointer and function signature for the
-    tc callback function. The library will call back the client's
-    function with this signature from the interrupt routine.
-
-  Function:
-    void (*TC_CALLBACK)( uintptr_t context )
-
-  Precondition:
-    TCx_Initialize must have been called for the given TC channel
-    instance and TCx_CallbackRegister must have been called to register the
-    function to be called.
-
-  Parameters:
-    context  - Allows the caller to provide a context value (usually a pointer
-    to the callers context for multi-instance clients).
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    void TC_Callback_Fn ( uintptr_t context );
-
-    TCx_TimerCallbackRegister(TC_Callback_Fn, NULL);
-    </code>
+    This enumeration identifies TC compare mode interrupt source mask.
 
   Remarks:
-    Interrupt is different in each mode of TC peripheral.
-    e.g. In timer mode and compare mode, period interrupt will be enabled and
-    registered function will be called back.
-    In Capture mode, registered function will be called from load event
-    interrupt routine.
+    None.
 */
-
-typedef void (*TC_CALLBACK)( uintptr_t context );
+typedef enum
+{
+    TC_COMPARE_STATUS_NONE = 0,
+    /*  overflow */
+    TC_COMPARE_STATUS_OVERFLOW = TC_INTFLAG_OVF_Msk,
+    /* match compare 0 */
+    TC_COMPARE_STATUS_MATCH0 = TC_INTFLAG_MC0_Msk,
+    /* match compare 1 */
+    TC_COMPARE_STATUS_MATCH1 = TC_INTFLAG_MC1_Msk,
+    TC_COmPARE_STATUS_MSK = TC_COMPARE_STATUS_OVERFLOW | TC_COMPARE_STATUS_MATCH0 | TC_COMPARE_STATUS_MATCH1
+    
+}TC_COMPARE_STATUS;
 
 // *****************************************************************************
+/* Interrupt source mask for timer mode
+
+  Summary:
+    Identifies channel interrupt source mask.
+
+  Description:
+    This enumeration identifies TC timer mode interrupt source mask.
+
+  Remarks:
+    None.
+*/
+typedef enum
+{
+    TC_TIMER_STATUS_NONE = 0,
+    
+    /*  overflow */
+    TC_TIMER_STATUS_OVERFLOW = TC_INTFLAG_OVF_Msk,
+
+    /* match compare 1 */
+    TC_TIMER_STATUS_MATCH1 = TC_INTFLAG_MC1_Msk,
+    
+    TC_TIMER_STATUS_MSK = TC_TIMER_STATUS_OVERFLOW | TC_TIMER_STATUS_MATCH1
+
+} TC_TIMER_STATUS;
+
+
+// *****************************************************************************
+/* Callback Function Pointer for Timer mode
+
+   Summary:
+    Defines the function pointer data type and function signature for the tc
+    channel callback function.
+
+   Description:
+    This data type defines the function pointer and function signature for the
+    TC channel callback function. The library will call back the client's
+    function with this signature from the interrupt routine.
+
+   Function:
+    typedef void (*TC_TIMER_CALLBACK) (TC_TIMER_STATUS status, uintptr_t context);
+
+   Precondition:
+    TCx_CHy_Initialize must have been called for the given TC channel
+    instance and TCx_CHy_TimerCallbackRegister must have been called to register the
+    function to be called.
+
+   Parameters:
+    status - Event status in the timer mode
+    context  - Allows the caller to provide a context value (usually a pointer
+               to the callers context for multi-instance clients).
+
+   Returns:
+    None.
+
+   Example:
+
+    <code>
+    void TC_CallbackFn (TC_TIMER_STATUS status, uintptr_t context );
+
+    TC0_CH1_TimerCallbackRegister(TC_CallbackFn, NULL);
+    </code>
+
+    Remarks:
+     None.
+*/
+typedef void (*TC_TIMER_CALLBACK) (TC_TIMER_STATUS status, uintptr_t context);
+
+// *****************************************************************************
+
+/* Callback Function Pointer for Compare mode
+
+   Summary:
+    Defines the function pointer data type and function signature for the tc
+    channel callback function.
+
+   Description:
+    This data type defines the function pointer and function signature for the
+    tc channel callback function.  The library will call back the client's
+    function with this signature from the interrupt routine.
+
+   Function:
+    typedef void (*TC_COMPARE_CALLBACK) (TC_COMPARE_STATUS status, uintptr_t context);
+
+   Precondition:
+    TCx_CHy_Initialize must have been called for the given TC channel
+    instance and TCx_CHy_CompareCallbackRegister must have been called to register the
+    function to be called.
+
+   Parameters:
+    status - Event status in compare mode
+    context  - Allows the caller to provide a context value (usually a pointer
+               to the callers context for multi-instance clients).
+
+   Returns:
+    None.
+
+   Example:
+
+    <code>
+    void TC_CallbackFn (TC_COMPARE_STATUS status, uintptr_t context );
+
+    TC0_CH1_CompareCallbackRegister(TC_CallbackFn, NULL);
+    </code>
+
+    Remarks:
+     None.
+*/
+
+typedef void (*TC_COMPARE_CALLBACK) (TC_COMPARE_STATUS status, uintptr_t context);
+
+// *****************************************************************************
+
+/* Callback Function Pointer for Capture mode
+
+   Summary:
+    Defines the function pointer data type and function signature for the tc
+    channel callback function.
+
+   Description:
+    This data type defines the function pointer and function signature for the
+    tc channel callback function.  The library will call back the client's
+    function with this signature from the interrupt routine.
+
+   Function:
+    typedef void (*TC_CAPTURE_CALLBACK) (TC_CAPTURE_STATUS status, uintptr_t context);
+
+   Precondition:
+    TCx_CHy_Initialize must have been called for the given TC channel
+    instance and TCx_CHy_CaptureCallbackRegister must have been called to register the
+    function to be called.
+
+   Parameters:
+    status - Event status in capture mode
+    context  - Allows the caller to provide a context value (usually a pointer
+               to the callers context for multi-instance clients).
+
+   Returns:
+    None.
+
+   Example:
+
+    <code>
+    void TC_CallbackFn (TC_CAPTURE_STATUS status, uintptr_t context );
+
+    TC0_CH1_CaptureCallbackRegister(TC_CallbackFn, NULL);
+    </code>
+
+    Remarks:
+     None.
+*/
+
+typedef void (*TC_CAPTURE_CALLBACK) (TC_CAPTURE_STATUS status, uintptr_t context);
+
+// *****************************************************************************
+/* Callback structure
+
+   Summary:
+    Callback structure
+
+   Description:
+    This stores the callback function pointer and context
+
+   Remarks:
+    None.
+*/
 typedef struct
 {
-    TC_CALLBACK callback;
-
+    TC_TIMER_CALLBACK callback;
     uintptr_t context;
+}TC_TIMER_CALLBACK_OBJ;
+// *****************************************************************************
+/* Callback structure
 
-} TC_CALLBACK_OBJ;
+   Summary:
+    Callback structure
+
+   Description:
+    This stores the callback function pointer and context
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    TC_COMPARE_CALLBACK callback;
+    uintptr_t context;
+}TC_COMPARE_CALLBACK_OBJ;
+// *****************************************************************************
+/* Callback structure
+
+   Summary:
+    Callback structure
+
+   Description:
+    This stores the callback function pointer and context
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    TC_CAPTURE_CALLBACK callback;
+    uintptr_t context;
+}TC_CAPTURE_CALLBACK_OBJ;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -413,6 +597,40 @@ void TCx_Timer8bitCounterSet( uint8_t count );
 
 // *****************************************************************************
 /* Function:
+    void TCx_Timer8bitCompareSet ( uint8_t compare );
+
+  Summary:
+    Sets the compare value of a given timer channel.
+
+  Description:
+    This function writes the compare value.  When timer counter matches compare
+    value, interrupt can be generated.
+
+  Precondition:
+    TCx_TimerInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    compare - compare value of the timer
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    TC0_TimerInitialize();
+    TC0_Timer8bitCompareSet(0xFul);
+    </code>
+
+  Remarks:
+    This function is available only when TC timer mode is used by SYS_TIME module.
+    SYS_TIME uses compare match interrupt to generate dynamic delay.
+*/
+
+void TCx_Timer8bitCompareSet ( uint8_t compare );
+
+// *****************************************************************************
+/* Function:
     void TCx_Timer16bitPeriodSet( uint16_t period );
 
   Summary:
@@ -548,6 +766,39 @@ void TCx_Timer16bitCounterSet( uint16_t count );
 
 // *****************************************************************************
 /* Function:
+    void TCx_Timer16bitCompareSet ( uint16_t compare );
+
+  Summary:
+    Sets the compare value of a given timer channel.
+
+  Description:
+    This function writes the compare value.  When timer counter matches compare
+    value, interrupt can be generated.
+
+  Precondition:
+    TCx_TimerInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    compare - compare value of the timer
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    TC0_TimerInitialize();
+    TC0_Timer16bitCompareSet(0xFul);
+    </code>
+
+  Remarks:
+    This function is available only when TC timer mode is used by SYS_TIME module.
+    SYS_TIME uses compare match interrupt to generate dynamic delay.
+*/
+
+void TCx_Timer16bitCompareSet ( uint16_t compare );
+// *****************************************************************************
+/* Function:
     void TCx_Timer32bitPeriodSet( uint32_t period );
 
   Summary:
@@ -681,6 +932,39 @@ uint32_t TCx_Timer32bitCounterGet( void );
 
 void TCx_Timer32bitCounterSet( uint32_t count );
 
+// *****************************************************************************
+/* Function:
+    void TCx_Timer32bitCompareSet ( uint32_t compare );
+
+  Summary:
+    Sets the compare value of a given timer channel.
+
+  Description:
+    This function writes the compare value.  When timer counter matches compare
+    value, interrupt can be generated.
+
+  Precondition:
+    TCx_TimerInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    compare - compare value of the timer
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    TC0_TimerInitialize();
+    TC0_Timer32bitCompareSet(0xFul);
+    </code>
+
+  Remarks:
+    This function is available only when TC timer mode is used by SYS_TIME module.
+    SYS_TIME uses compare match interrupt to generate dynamic delay.
+*/
+
+void TCx_Timer32bitCompareSet ( uint32_t compare );
 // *****************************************************************************
 /* Function:
     bool TCx_TimerPeriodHasExpired( void );

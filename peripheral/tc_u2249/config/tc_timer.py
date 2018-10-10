@@ -55,7 +55,8 @@ tcSym_TimerMenu.setDependencies(updateTimerMenuVisibleProperty, ["TC_OPERATION_M
 tcSym_Timer_CTRLBSET_ONESHOT = tcComponent.createBooleanSymbol("TC_TIMER_CTRLBSET_ONESHOT", tcSym_TimerMenu)
 tcSym_Timer_CTRLBSET_ONESHOT.setLabel("Enable One-Shot Mode")
 
-#timer 8-bit period
+#timer period
+global tcSym_TimerPeriod
 tcSym_TimerPeriod = tcComponent.createLongSymbol("TC_TIMER_PERIOD", tcSym_TimerMenu)
 tcSym_TimerPeriod.setLabel("Timer Period")
 tcSym_TimerPeriod.setDefaultValue(48)
@@ -64,11 +65,18 @@ tcSym_TimerPeriod.setMax(65535)
 tcSym_TimerPeriod.setDependencies(updateTimerPeriodMaxValue, ["TC_CTRLA_MODE"])
 
 #period time in us
+global tcSym_TimerPeriod_Comment
 tcSym_TimerPeriod_Comment = tcComponent.createCommentSymbol("TC_TIMER_PERIOD_COMMENT", tcSym_TimerMenu)
 tcSym_TimerPeriod_Comment.setLabel("**** Timer Period is 1 us ****")
 
 #timer interrupt mode
-global tcSym_Timer_INTENSET
-tcSym_Timer_INTENSET = tcComponent.createBooleanSymbol("TC_TIMER_INTERRUPT_MODE", tcSym_TimerMenu)
-tcSym_Timer_INTENSET.setLabel("Enable Timer Period Interrupt")
-tcSym_Timer_INTENSET.setDefaultValue(True)
+global tcSym_Timer_INTENSET_OVF
+tcSym_Timer_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_TIMER_INTENSET_OVF", tcSym_TimerMenu)
+tcSym_Timer_INTENSET_OVF.setLabel("Enable Timer Period Interrupt")
+tcSym_Timer_INTENSET_OVF.setDefaultValue(True)
+
+global tcSym_Timer_INTENSET_MC1
+tcSym_Timer_INTENSET_MC1 = tcComponent.createBooleanSymbol("TC_TIMER_INTENSET_MC1", tcSym_TimerMenu)
+tcSym_Timer_INTENSET_MC1.setLabel("Enable Timer Compare Interrupt")
+tcSym_Timer_INTENSET_MC1.setVisible(False)
+tcSym_Timer_INTENSET_MC1.setDefaultValue(False)

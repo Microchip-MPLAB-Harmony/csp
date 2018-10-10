@@ -56,15 +56,30 @@
 #include "device.h"
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
+<#assign TC_INTENSET_VAL = "">
+<#if TC_TIMER_INTENSET_OVF == true>
+    <#if TC_INTENSET_VAL != "">
+        <#assign TC_INTENSET_VAL = TC_INTENSET_VAL + " | TC_INTENSET_OVF_Msk">
+    <#else>
+        <#assign TC_INTENSET_VAL = "TC_INTENSET_OVF_Msk">
+    </#if>
+</#if>
+<#if TC_TIMER_INTENSET_MC1 == true>
+    <#if TC_INTENSET_VAL != "">
+        <#assign TC_INTENSET_VAL = TC_INTENSET_VAL + " | TC_INTENSET_MC1_Msk">
+    <#else>
+        <#assign TC_INTENSET_VAL = "TC_INTENSET_MC1_Msk">
+    </#if>
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
-volatile static uint32_t ${TC_INSTANCE_NAME}_TimerStatus; 
 
-<#if TC_TIMER_INTERRUPT_MODE == true>
-TC_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+<#if TC_TIMER_INTENSET_OVF = true || TC_TIMER_INTENSET_MC1 == true>
+TC_TIMER_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -93,7 +108,7 @@ void ${TC_INSTANCE_NAME}_TimerInitialize( void )
                                 ${TC_CTRLA_ONDEMAND?then('| TC_CTRLA_ONDEMAND_Msk', '')};</@compress>
 
     /* Configure in Match Frequency Mode */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_WAVE = TC_WAVE_WAVEGEN_MFRQ;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_WAVE = TC_WAVE_WAVEGEN_MPWM;
 
 <#if TC_TIMER_CTRLBSET_ONESHOT == true>
     /* Configure timer one shot mode */
@@ -105,11 +120,13 @@ void ${TC_INSTANCE_NAME}_TimerInitialize( void )
     /* Clear all interrupt flags */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 
-    <#if TC_TIMER_INTERRUPT_MODE = true>
+<#if TC_TIMER_INTENSET_OVF = true || TC_TIMER_INTENSET_MC1 == true>
     ${TC_INSTANCE_NAME}_CallbackObject.callback = NULL;
-    /* Enable period interrupt*/
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = TC_INTENSET_OVF_Msk;
+    /* Enable interrupt*/
+    <#if TC_INTENSET_VAL?has_content>
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = ${TC_INTENSET_VAL};
     </#if>
+</#if>
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
     {
@@ -145,6 +162,11 @@ void ${TC_INSTANCE_NAME}_TimerStop( void )
     }
 }
 
+uint32_t ${TC_INSTANCE_NAME}_TimerFrequencyGet()
+{
+    return (uint32_t)(${TC_FREQUENCY}UL);
+}
+
 <#if TC_CTRLA_MODE = "COUNT8">
 /* Get the current timer counter value */
 uint8_t ${TC_INSTANCE_NAME}_Timer8bitCounterGet( void )
@@ -175,7 +197,7 @@ void ${TC_INSTANCE_NAME}_Timer8bitCounterSet( uint8_t count )
 /* Configure timer period */
 void ${TC_INSTANCE_NAME}_Timer8bitPeriodSet( uint8_t period )
 {
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = period;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
@@ -187,6 +209,17 @@ uint8_t ${TC_INSTANCE_NAME}_Timer8bitPeriodGet( void )
 {
     return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
+
+<#if TC_SYS_TIME_CONNECTED == true>
+void ${TC_INSTANCE_NAME}_Timer8bitCompareSet( uint8_t compare )
+{
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = compare;
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+</#if>
 
 <#elseif TC_CTRLA_MODE = "COUNT16">
 /* Get the current timer counter value */
@@ -218,7 +251,7 @@ void ${TC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t count )
 /* Configure timer period */
 void ${TC_INSTANCE_NAME}_Timer16bitPeriodSet( uint16_t period )
 {
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = period;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
@@ -230,6 +263,17 @@ uint16_t ${TC_INSTANCE_NAME}_Timer16bitPeriodGet( void )
 {
     return (uint16_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
+
+<#if TC_SYS_TIME_CONNECTED == true>
+void ${TC_INSTANCE_NAME}_Timer16bitCompareSet( uint16_t compare )
+{
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = compare;
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+</#if>
 
 <#elseif TC_CTRLA_MODE = "COUNT32">
 /* Get the current timer counter value */
@@ -262,7 +306,7 @@ void ${TC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t count )
 /* Configure timer period */
 void ${TC_INSTANCE_NAME}_Timer32bitPeriodSet( uint32_t period )
 {
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = period;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_COUNT_Msk) == TC_SYNCBUSY_COUNT_Msk)
     {
         /* Wait for Write Synchronization */
@@ -274,24 +318,23 @@ uint32_t ${TC_INSTANCE_NAME}_Timer32bitPeriodGet( void )
 {
     return ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
+
+<#if TC_SYS_TIME_CONNECTED == true>
+void ${TC_INSTANCE_NAME}_Timer32bitCompareSet( uint32_t compare )
+{
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = compare;
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
 </#if>
 
-/* Polling method to check if timer period interrupt flag is set */
-bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void )
-{
-    bool timer_status;
-    //NVIC_DisableIRQ(${TC_INSTANCE_NAME}_IRQn);
-    timer_status = ((${TC_INSTANCE_NAME}_TimerStatus | ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
-    ${TC_INSTANCE_NAME}_TimerStatus = 0U;
-    /* Clear timer overflow interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
-    //NVIC_EnableIRQ(${TC_INSTANCE_NAME}_IRQn);
-    return timer_status;
-}
+</#if>
 
-<#if TC_TIMER_INTERRUPT_MODE = true>
+<#if TC_TIMER_INTENSET_OVF = true || TC_TIMER_INTENSET_MC1 == true>
 /* Register callback function */
-void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_CALLBACK callback, uintptr_t context )
+void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uintptr_t context )
 {
     ${TC_INSTANCE_NAME}_CallbackObject.callback = callback;
 
@@ -301,13 +344,24 @@ void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_CALLBACK callback, uintptr_t 
 /* Timer Interrupt handler */
 void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
 {
-    ${TC_INSTANCE_NAME}_TimerStatus = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+    TC_TIMER_STATUS status;
+    status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+    /* Clear interrupt flags */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
     if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(${TC_INSTANCE_NAME}_CallbackObject.context);
+        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
     }
-    /* Clear timer overflow interrupt */
+}
+
+<#else>
+/* Polling method to check if timer period interrupt flag is set */
+bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void )
+{
+    bool timer_status;
+    timer_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+    return timer_status;
 }
 </#if>
 

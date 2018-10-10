@@ -75,8 +75,6 @@
     interface and should be considered part it.
 */
 
-#define ${TC_INSTANCE_NAME}_TimerFrequencyGet()  (uint32_t)(${TC_FREQUENCY}UL)
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -94,6 +92,8 @@ void ${TC_INSTANCE_NAME}_TimerStart( void );
 
 void ${TC_INSTANCE_NAME}_TimerStop( void );
 
+uint32_t ${TC_INSTANCE_NAME}_TimerFrequencyGet();
+
 <#if TC_CTRLA_MODE = "COUNT8">
 
 void ${TC_INSTANCE_NAME}_Timer8bitPeriodSet( uint8_t period );
@@ -103,6 +103,10 @@ uint8_t ${TC_INSTANCE_NAME}_Timer8bitPeriodGet( void );
 uint8_t ${TC_INSTANCE_NAME}_Timer8bitCounterGet( void );
 
 void ${TC_INSTANCE_NAME}_Timer8bitCounterSet( uint8_t count );
+
+<#if TC_SYS_TIME_CONNECTED == true>
+void ${TC_INSTANCE_NAME}_Timer8bitCompareSet( uint8_t compare );
+</#if>
 
 <#elseif TC_CTRLA_MODE = "COUNT16">
 
@@ -114,6 +118,10 @@ uint16_t ${TC_INSTANCE_NAME}_Timer16bitCounterGet( void );
 
 void ${TC_INSTANCE_NAME}_Timer16bitCounterSet( uint16_t count );
 
+<#if TC_SYS_TIME_CONNECTED == true>
+void ${TC_INSTANCE_NAME}_Timer16bitCompareSet( uint16_t compare );
+</#if>
+
 <#elseif TC_CTRLA_MODE = "COUNT32">
 
 void ${TC_INSTANCE_NAME}_Timer32bitPeriodSet( uint32_t period );
@@ -123,15 +131,18 @@ uint32_t ${TC_INSTANCE_NAME}_Timer32bitPeriodGet( void );
 uint32_t ${TC_INSTANCE_NAME}_Timer32bitCounterGet( void );
 
 void ${TC_INSTANCE_NAME}_Timer32bitCounterSet( uint32_t count );
+
+<#if TC_SYS_TIME_CONNECTED == true>
+void ${TC_INSTANCE_NAME}_Timer32bitCompareSet( uint32_t compare );
+</#if>
 </#if>
 
+<#if TC_TIMER_INTENSET_OVF = true || TC_TIMER_INTENSET_MC1 == true>
+
+void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uintptr_t context );
+
+<#else>
 bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void );
-
-<#if TC_TIMER_INTERRUPT_MODE = true>
-
-void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_CALLBACK callback, uintptr_t context );
-
-void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void );
 </#if>
 
 

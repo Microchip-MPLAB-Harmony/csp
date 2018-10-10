@@ -75,8 +75,6 @@
     interface and should be considered part it.
 */
 
-#define ${TC_INSTANCE_NAME}_CaptureFrequencyGet()  (uint32_t)(${TC_FREQUENCY}UL)
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -120,6 +118,8 @@ void ${TC_INSTANCE_NAME}_CaptureStart ( void );
 
 void ${TC_INSTANCE_NAME}_CaptureStop ( void );
 
+uint32_t ${TC_INSTANCE_NAME}_CaptureFrequencyGet();
+
 <#if TC_CTRLA_MODE = "COUNT8">
 uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel0Get( void );
 
@@ -138,12 +138,11 @@ uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel0Get( void );
 uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel1Get( void );
 </#if>
 
-TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet( void );
-
 <#if TC_INTSET_VAL != "">
-void ${TC_INSTANCE_NAME}_CaptureCallbackRegister(TC_CALLBACK callback, uintptr_t context);
+void ${TC_INSTANCE_NAME}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context);
 
-void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void );
+<#else>
+TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet( void );
 </#if>
 
 
