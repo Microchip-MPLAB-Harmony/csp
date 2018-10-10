@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${PERIPH_INSTANCE_NAME?lower_case}.c
+    plib_${PIT_INSTANCE_NAME?lower_case}.c
 
   Summary:
     Periodic Interval Timer (PIT) PLIB.
@@ -44,7 +44,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
-#include "plib_${PERIPH_INSTANCE_NAME?lower_case}.h"
+#include "plib_${PIT_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
 
@@ -53,7 +53,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: File Scope Data Types
 // *****************************************************************************
 // *****************************************************************************
-<#if USE_INTERRUPT == true>
+<#if ENABLE_INTERRUPT == true>
 typedef struct
 {
 	PIT_CALLBACK        callback;
@@ -66,104 +66,94 @@ typedef struct
 // Section: File Scope or Global Constants
 // *****************************************************************************
 // *****************************************************************************
-static PIT_OBJECT ${PERIPH_INSTANCE_NAME?lower_case};
+static PIT_OBJECT ${PIT_INSTANCE_NAME?lower_case};
 </#if>
 
 
-void ${PERIPH_INSTANCE_NAME}_TimerInitialize(void)
+void ${PIT_INSTANCE_NAME}_TimerInitialize(void)
 {
-    <#if USE_INTERRUPT == true && ENABLE_INTERRUPT == true>
+    <#if ENABLE_INTERRUPT == true>
         <#assign INTENABLE=1>
     <#else>
         <#assign INTENABLE=0>
     </#if>
-    ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR = PIT_MR_PIV(${PERIOD_TICKS}-1) | PIT_MR_PITEN(${ENABLE_COUNTER?string('1', '0')}) | PIT_MR_PITIEN(${INTENABLE});
+    ${PIT_INSTANCE_NAME}_REGS->PIT_MR = PIT_MR_PIV(${PERIOD_TICKS}-1) | PIT_MR_PITEN(${ENABLE_COUNTER?string('1', '0')}) | PIT_MR_PITIEN(${INTENABLE});
 }
 
-void ${PERIPH_INSTANCE_NAME}_TimerRestart(void)
+void ${PIT_INSTANCE_NAME}_TimerRestart(void)
 {
-    ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PITEN_Msk;
-    while ((${PERIPH_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0);
-    ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PITEN_Msk;
+    ${PIT_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PITEN_Msk;
+    while ((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0);
+    ${PIT_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PITEN_Msk;
 }
 
-void ${PERIPH_INSTANCE_NAME}_TimerStart(void)
+void ${PIT_INSTANCE_NAME}_TimerStart(void)
 {
-    ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PITEN_Msk;
+    ${PIT_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PITEN_Msk;
 }
 
-void ${PERIPH_INSTANCE_NAME}_TimerStop(void)
+void ${PIT_INSTANCE_NAME}_TimerStop(void)
 {
-    ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PITEN_Msk;
-    while ((${PERIPH_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0);
+    ${PIT_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PITEN_Msk;
+    while ((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0);
 }
 
-void ${PERIPH_INSTANCE_NAME}_TimerPeriodSet(uint32_t period)
+void ${PIT_INSTANCE_NAME}_TimerPeriodSet(uint32_t period)
 {
-    ${PERIPH_INSTANCE_NAME}_TimerStop();
-    ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PIV_Msk;
-    ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PIV(period);
-    ${PERIPH_INSTANCE_NAME}_TimerStart();
+    ${PIT_INSTANCE_NAME}_TimerStop();
+    ${PIT_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PIV_Msk;
+    ${PIT_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PIV(period);
+    ${PIT_INSTANCE_NAME}_TimerStart();
 
 }
 
-uint32_t ${PERIPH_INSTANCE_NAME}_TimerPeriodGet(void)
+uint32_t ${PIT_INSTANCE_NAME}_TimerPeriodGet(void)
 {
-    return ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR & PIT_MR_PIV_Msk;
+    return ${PIT_INSTANCE_NAME}_REGS->PIT_MR & PIT_MR_PIV_Msk;
 }
 
-uint32_t ${PERIPH_INSTANCE_NAME}_TimerCounterGet(void)
+uint32_t ${PIT_INSTANCE_NAME}_TimerCounterGet(void)
 {
-    return (${PERIPH_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) >> PIT_PIIR_CPIV_Pos;
+    return (${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) >> PIT_PIIR_CPIV_Pos;
 }
 
-uint32_t ${PERIPH_INSTANCE_NAME}_TimerFrequencyGet(void)
+uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void)
 {
     return ${core.MASTER_CLOCK_FREQUENCY} / 16;
 }
 
-<#if USE_INTERRUPT == false>
-bool ${PERIPH_INSTANCE_NAME}_TimerPeriodHasExpired(void)
+<#if ENABLE_INTERRUPT == false>
+bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void)
 {
-    return !!(${PERIPH_INSTANCE_NAME}_REGS->PIT_SR & PIT_SR_PITS_Msk);
+    return !!(${PIT_INSTANCE_NAME}_REGS->PIT_SR & PIT_SR_PITS_Msk);
 }
 </#if>
-<#if USE_INTERRUPT == true>
-void ${PERIPH_INSTANCE_NAME}_DisableInterrupt()
-{
-    ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PITIEN_Msk;
-}
-
-void ${PERIPH_INSTANCE_NAME}_EnableInterrupt()
-{
-    ${PERIPH_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PITIEN_Msk;
-}
-
-void ${PERIPH_INSTANCE_NAME}_DelayMS(uint32_t delay)
+<#if ENABLE_INTERRUPT == true>
+void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t delay)
 {
 	uint32_t tickStart, delayTicks;
 
-	if((${PERIPH_INSTANCE_NAME}_REGS->PIT_MR & (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk)) == (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk))
+	if((${PIT_INSTANCE_NAME}_REGS->PIT_MR & (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk)) == (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk))
 	{
-		tickStart=${PERIPH_INSTANCE_NAME?lower_case}.tickCounter;
+		tickStart=${PIT_INSTANCE_NAME?lower_case}.tickCounter;
 		delayTicks=delay/${PERIOD_MS};
 
-		while((${PERIPH_INSTANCE_NAME?lower_case}.tickCounter-tickStart)<delayTicks);
+		while((${PIT_INSTANCE_NAME?lower_case}.tickCounter-tickStart)<delayTicks);
 	}
 }
 
-void ${PERIPH_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context)
+void ${PIT_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context)
 {
-    ${PERIPH_INSTANCE_NAME?lower_case}.callback = callback;
-    ${PERIPH_INSTANCE_NAME?lower_case}.context = context;
+    ${PIT_INSTANCE_NAME?lower_case}.callback = callback;
+    ${PIT_INSTANCE_NAME?lower_case}.context = context;
 }
 
-void ${PERIPH_INSTANCE_NAME}_InterruptHandler(void)
+void ${PIT_INSTANCE_NAME}_InterruptHandler(void)
 {
-    uint32_t reg = ${PERIPH_INSTANCE_NAME}_REGS->PIT_PIVR;
-    ${PERIPH_INSTANCE_NAME?lower_case}.tickCounter++;
-    if(${PERIPH_INSTANCE_NAME?lower_case}.callback)
-        ${PERIPH_INSTANCE_NAME?lower_case}.callback(${PERIPH_INSTANCE_NAME?lower_case}.context);
+    uint32_t reg = ${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
+    ${PIT_INSTANCE_NAME?lower_case}.tickCounter++;
+    if(${PIT_INSTANCE_NAME?lower_case}.callback)
+        ${PIT_INSTANCE_NAME?lower_case}.callback(${PIT_INSTANCE_NAME?lower_case}.context);
 }
 </#if>
 /*******************************************************************************

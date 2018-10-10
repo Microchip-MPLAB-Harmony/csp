@@ -1,17 +1,17 @@
 /*******************************************************************************
-  Periodic Interval Timer (${PERIPH_INSTANCE_NAME}) 
+  Periodic Interval Timer (${PIT_INSTANCE_NAME}) 
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_${PERIPH_INSTANCE_NAME?lower_case}.h
+    plib_${PIT_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    Periodic Interval Timer (${PERIPH_INSTANCE_NAME}) PLIB.
+    Periodic Interval Timer (${PIT_INSTANCE_NAME}) PLIB.
 
   Description:
-    This file declares the interface for the Periodic Interval Timer (${PERIPH_INSTANCE_NAME}).
+    This file declares the interface for the Periodic Interval Timer (${PIT_INSTANCE_NAME}).
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -39,8 +39,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef _PLIB_${PERIPH_INSTANCE_NAME}_H
-#define _PLIB_${PERIPH_INSTANCE_NAME}_H
+#ifndef _PLIB_${PIT_INSTANCE_NAME}_H
+#define _PLIB_${PIT_INSTANCE_NAME}_H
 
 
 // *****************************************************************************
@@ -62,19 +62,19 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Data Types
 // *****************************************************************************
 
-<#if USE_INTERRUPT == true>
+<#if ENABLE_INTERRUPT == true>
 // *****************************************************************************
-/* ${PERIPH_INSTANCE_NAME} Interrupt Callback Function definition.
+/* ${PIT_INSTANCE_NAME} Interrupt Callback Function definition.
 
   Summary:
-    ${PERIPH_INSTANCE_NAME} Interrupt Callback Function definition.
+    ${PIT_INSTANCE_NAME} Interrupt Callback Function definition.
 
   Description:
-    Defines the function signature for the ${PERIPH_INSTANCE_NAME} interrupt callback.
+    Defines the function signature for the ${PIT_INSTANCE_NAME} interrupt callback.
 
 */
 
-typedef void (*${PERIPH_INSTANCE_NAME}_CALLBACK)(uintptr_t context);
+typedef void (*${PIT_INSTANCE_NAME}_CALLBACK)(uintptr_t context);
 </#if>
 
 // *****************************************************************************
@@ -85,10 +85,10 @@ typedef void (*${PERIPH_INSTANCE_NAME}_CALLBACK)(uintptr_t context);
 
 // *****************************************************************************
 /* Function:
-   void ${PERIPH_INSTANCE_NAME}_TimerInitialize(void);
+   void ${PIT_INSTANCE_NAME}_TimerInitialize(void);
 
   Summary:
-    Initialize ${PERIPH_INSTANCE_NAME} registers per user config.
+    Initialize ${PIT_INSTANCE_NAME} registers per user config.
 
   Description:
     Initalize the period and, if configured, enable the counter and interrupt.
@@ -102,17 +102,17 @@ typedef void (*${PERIPH_INSTANCE_NAME}_CALLBACK)(uintptr_t context);
   Returns:
     None.
 */
-void ${PERIPH_INSTANCE_NAME}_TimerInitialize(void);
+void ${PIT_INSTANCE_NAME}_TimerInitialize(void);
 
 // *****************************************************************************
 /* Function:
-    void ${PERIPH_INSTANCE_NAME}_TimerRestart(void);
+    void ${PIT_INSTANCE_NAME}_TimerRestart(void);
 
   Summary:
-   Restart the ${PERIPH_INSTANCE_NAME} counter.
+   Restart the ${PIT_INSTANCE_NAME} counter.
 
   Description:
-    Signal the ${PERIPH_INSTANCE_NAME} counter to stop, wait for it to stop, then restart the counter.
+    Signal the ${PIT_INSTANCE_NAME} counter to stop, wait for it to stop, then restart the counter.
 
   Precondition:
     None.
@@ -123,17 +123,17 @@ void ${PERIPH_INSTANCE_NAME}_TimerInitialize(void);
   Returns:
     None.
 */
-void ${PERIPH_INSTANCE_NAME}_TimerRestart(void);
+void ${PIT_INSTANCE_NAME}_TimerRestart(void);
 
 // *****************************************************************************
 /* Function:
-    void ${PERIPH_INSTANCE_NAME}_TimerStart(void);
+    void ${PIT_INSTANCE_NAME}_TimerStart(void);
 
   Summary:
-   Start the ${PERIPH_INSTANCE_NAME} counter.
+   Start the ${PIT_INSTANCE_NAME} counter.
 
   Description:
-    Start the ${PERIPH_INSTANCE_NAME} counter.  If interrupts are enabled an interrupt will occur
+    Start the ${PIT_INSTANCE_NAME} counter.  If interrupts are enabled an interrupt will occur
     every time the PIV value is reached.
 
   Precondition:
@@ -145,17 +145,17 @@ void ${PERIPH_INSTANCE_NAME}_TimerRestart(void);
   Returns:
     None.
 */
-void ${PERIPH_INSTANCE_NAME}_TimerStart(void);
+void ${PIT_INSTANCE_NAME}_TimerStart(void);
 
 // *****************************************************************************
 /* Function:
-    void ${PERIPH_INSTANCE_NAME}_TimerStop(void);
+    void ${PIT_INSTANCE_NAME}_TimerStop(void);
 
   Summary:
-   Stop the ${PERIPH_INSTANCE_NAME} counter.
+   Stop the ${PIT_INSTANCE_NAME} counter.
 
   Description:
-    Stop the ${PERIPH_INSTANCE_NAME} counter.
+    Stop the ${PIT_INSTANCE_NAME} counter.
 
   Precondition:
     None.
@@ -166,11 +166,11 @@ void ${PERIPH_INSTANCE_NAME}_TimerStart(void);
   Returns:
     None.
 */
-void ${PERIPH_INSTANCE_NAME}_TimerStop(void);
+void ${PIT_INSTANCE_NAME}_TimerStop(void);
 
 // *****************************************************************************
 /* Function:
-   void ${PERIPH_INSTANCE_NAME}_TimerPeriodSet(uint32_t period);
+   void ${PIT_INSTANCE_NAME}_TimerPeriodSet(uint32_t period);
 
   Summary:
    Set the timer period value.
@@ -182,22 +182,22 @@ void ${PERIPH_INSTANCE_NAME}_TimerStop(void);
     None.
 
   Parameters:
-   period       - The period (PIV) value of the ${PERIPH_INSTANCE_NAME}. 
+   period       - The period (PIV) value of the ${PIT_INSTANCE_NAME}. 
   
   Returns:
     None.
 */
-void ${PERIPH_INSTANCE_NAME}_TimerPeriodSet(uint32_t period);
+void ${PIT_INSTANCE_NAME}_TimerPeriodSet(uint32_t period);
 
 // *****************************************************************************
 /* Function:
-    uint32_t ${PERIPH_INSTANCE_NAME}_TimerPeriodGet(void);
+    uint32_t ${PIT_INSTANCE_NAME}_TimerPeriodGet(void);
 
   Summary:
    Get the timer period value.
 
   Description:
-    Return the current PIV value of the ${PERIPH_INSTANCE_NAME}.
+    Return the current PIV value of the ${PIT_INSTANCE_NAME}.
 
   Precondition:
     None.
@@ -208,17 +208,17 @@ void ${PERIPH_INSTANCE_NAME}_TimerPeriodSet(uint32_t period);
   Returns:
     None.
 */
-uint32_t ${PERIPH_INSTANCE_NAME}_TimerPeriodGet(void);
+uint32_t ${PIT_INSTANCE_NAME}_TimerPeriodGet(void);
 
 // *****************************************************************************
 /* Function:
-    uint32_t ${PERIPH_INSTANCE_NAME}_TimerCounterGet(void);
+    uint32_t ${PIT_INSTANCE_NAME}_TimerCounterGet(void);
 
   Summary:
    Get the timer counter value.
 
   Description:
-    Return the current counter (CPIV) value of the ${PERIPH_INSTANCE_NAME}.
+    Return the current counter (CPIV) value of the ${PIT_INSTANCE_NAME}.
 
   Precondition:
     None.
@@ -229,17 +229,17 @@ uint32_t ${PERIPH_INSTANCE_NAME}_TimerPeriodGet(void);
   Returns:
     None.
 */
-uint32_t ${PERIPH_INSTANCE_NAME}_TimerCounterGet(void);
+uint32_t ${PIT_INSTANCE_NAME}_TimerCounterGet(void);
 
 // *****************************************************************************
 /* Function:
-    uint32_t ${PERIPH_INSTANCE_NAME}_TimerFrequencyGet(void);
+    uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void);
 
   Summary:
     Get the timer clock frequency.
 
   Description:
-    Return the clock frequency of the ${PERIPH_INSTANCE_NAME}.
+    Return the clock frequency of the ${PIT_INSTANCE_NAME}.
 
   Precondition:
     None.
@@ -250,18 +250,18 @@ uint32_t ${PERIPH_INSTANCE_NAME}_TimerCounterGet(void);
   Returns:
     None.
 */
-uint32_t ${PERIPH_INSTANCE_NAME}_TimerFrequencyGet(void);
+uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void);
 
-<#if USE_INTERRUPT == false>
+<#if ENABLE_INTERRUPT == false>
 // *****************************************************************************
 /* Function:
-    bool ${PERIPH_INSTANCE_NAME}_TimerPeriodHasExpired(void);
+    bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void);
 
   Summary:
     Return whether or not the Timer Period has expired.
 
   Description:
-    Check the ${PERIPH_INSTANCE_NAME} Status register to determine if period has expired.
+    Check the ${PIT_INSTANCE_NAME} Status register to determine if period has expired.
 
   Precondition:
     None.
@@ -273,63 +273,21 @@ uint32_t ${PERIPH_INSTANCE_NAME}_TimerFrequencyGet(void);
     True    - Indicates period has expired
     False   - Indicates period has not expired
 */
-bool ${PERIPH_INSTANCE_NAME}_TimerPeriodHasExpired(void);
-<#elseif USE_INTERRUPT == true>
+bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void);
+<#elseif ENABLE_INTERRUPT == true>
 // *****************************************************************************
 /* Function:
-    void ${PERIPH_INSTANCE_NAME}_DisableInterrupt();
-
-  Summary:
-    Disables the ${PERIPH_INSTANCE_NAME} interrupt.
-
-  Description:
-    Disables the generation of the ${PERIPH_INSTANCE_NAME} interrupt.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-  
-  Returns:
-    None.
-*/
-void ${PERIPH_INSTANCE_NAME}_DisableInterrupt();
-
-// *****************************************************************************
-/* Function:
-    void ${PERIPH_INSTANCE_NAME}_EnableInterrupt();
-
-  Summary:
-    Enables the ${PERIPH_INSTANCE_NAME} interrupt.
-
-  Description:
-    Enables the generation of the ${PERIPH_INSTANCE_NAME} interrupt.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-  
-  Returns:
-    None.
-*/
-void ${PERIPH_INSTANCE_NAME}_EnableInterrupt();
-
-// *****************************************************************************
-/* Function:
-    void ${PERIPH_INSTANCE_NAME}_DelayMs(uint32_t ms);
+    void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t ms);
 
   Summary:
     Delays processing for x milliseconds.
 
   Description:
-    Delays execution by using  the ${PERIPH_INSTANCE_NAME} timer to determine when given number of
+    Delays execution by using  the ${PIT_INSTANCE_NAME} timer to determine when given number of
     milliseconds has expired.  
 
   Precondition:
-    ${PERIPH_INSTANCE_NAME} is configured and enabled.  The ${PERIPH_INSTANCE_NAME} interrupt is also enabled.
+    ${PIT_INSTANCE_NAME} is configured and enabled.  The ${PIT_INSTANCE_NAME} interrupt is also enabled.
 
   Parameters:
     ms      - number of milliseconds to delay
@@ -337,14 +295,14 @@ void ${PERIPH_INSTANCE_NAME}_EnableInterrupt();
   Returns:
     None.
 */
-void ${PERIPH_INSTANCE_NAME}_DelayMs(uint32_t ms);
+void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t ms);
 
 // *****************************************************************************
 /* Function:
-    void ${PERIPH_INSTANCE_NAME}_TimerCallbackSet(${PERIPH_INSTANCE_NAME}_CALLBACK callback, uintptr_t context);
+    void ${PIT_INSTANCE_NAME}_TimerCallbackSet(${PIT_INSTANCE_NAME}_CALLBACK callback, uintptr_t context);
 
   Summary:
-    Register callback for ${PERIPH_INSTANCE_NAME} interrupt.
+    Register callback for ${PIT_INSTANCE_NAME} interrupt.
 
   Description:
     When the timer interrupt occurs the given callback will called with the
@@ -360,17 +318,17 @@ void ${PERIPH_INSTANCE_NAME}_DelayMs(uint32_t ms);
   Returns:
     None.
 */
-void ${PERIPH_INSTANCE_NAME}_TimerCallbackSet(${PERIPH_INSTANCE_NAME}_CALLBACK callback, uintptr_t context);
+void ${PIT_INSTANCE_NAME}_TimerCallbackSet(${PIT_INSTANCE_NAME}_CALLBACK callback, uintptr_t context);
 
 // *****************************************************************************
 /* Function:
-    void ${PERIPH_INSTANCE_NAME}_InterruptHandler(void);
+    void ${PIT_INSTANCE_NAME}_InterruptHandler(void);
 
   Summary:
-    ${PERIPH_INSTANCE_NAME} Interrupt Handler.
+    ${PIT_INSTANCE_NAME} Interrupt Handler.
 
   Description:
-    Internal ${PERIPH_INSTANCE_NAME} interrupt handler called by interrupt controller.
+    Internal ${PIT_INSTANCE_NAME} interrupt handler called by interrupt controller.
 
   Precondition:
     None.
@@ -381,7 +339,7 @@ void ${PERIPH_INSTANCE_NAME}_TimerCallbackSet(${PERIPH_INSTANCE_NAME}_CALLBACK c
   Returns:
     None.
 */
-void ${PERIPH_INSTANCE_NAME}_InterruptHandler(void);
+void ${PIT_INSTANCE_NAME}_InterruptHandler(void);
 </#if>
 
 #ifdef __cplusplus  // Provide C++ Compatibility
