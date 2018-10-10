@@ -1,1 +1,1 @@
-	${PERIPH_INSTANCE_NAME}_TimerInitialize();
+	${PIT_INSTANCE_NAME}_TimerInitialize();

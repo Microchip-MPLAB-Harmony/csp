@@ -1,3 +1,13 @@
+def updateInterrupt(symbol, event):
+    instanceName = symbol.getComponent().getSymbolByID("PIT_INSTANCE_NAME")
+    if event['value'] == True:
+        Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE", True, 2)
+        Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER", instanceName.getValue()+"_InterruptHandler", 2)
+    else:
+        Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE", False, 2)
+        Database.clearSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER")
+        
+
 def calcPIV(period_ms):
     clk_freq = int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
     clk_freq = clk_freq / 16;
@@ -10,7 +20,7 @@ def updatePIV(symbol, event):
     symbol.setValue(piv, 1)
 
 def instantiateComponent(pitComponent):
-    instanceName = pitComponent.createStringSymbol("PERIPH_INSTANCE_NAME", None)
+    instanceName = pitComponent.createStringSymbol("PIT_INSTANCE_NAME", None)
     instanceName.setVisible(False)
     instanceName.setDefaultValue(pitComponent.getID().upper())
 
@@ -18,19 +28,14 @@ def instantiateComponent(pitComponent):
     enable.setLabel("Enable Counter")
     enable.setDefaultValue(True)
 
-    useInterrupt = pitComponent.createBooleanSymbol("USE_INTERRUPT", None)
-    useInterrupt.setLabel("Interrupt Mode")
-    useInterrupt.setDefaultValue(True)
-
-    interrupt = pitComponent.createBooleanSymbol("ENABLE_INTERRUPT", useInterrupt)
+    interrupt = pitComponent.createBooleanSymbol("ENABLE_INTERRUPT", None)
     interrupt.setLabel("Enable Interrupt")
     interrupt.setDefaultValue(True)
-    interrupt.setDependencies(lambda symbol, event: symbol.setVisible(event["value"]), ["USE_INTERRUPT"])
+    interrupt.setDependencies(updateInterrupt, ["ENABLE_INTERRUPT"])
 
-    Database.clearSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE")
-    Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE", True, 2)
-    Database.clearSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER")
-    Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER", instanceName.getValue()+"_InterruptHandler", 2)
+    if interrupt.getValue() == True:
+        Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE", True, 2)
+        Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER", instanceName.getValue()+"_InterruptHandler", 2)
 
     period = pitComponent.createFloatSymbol("PERIOD_MS", None)
     period.setLabel("Period (ms)")

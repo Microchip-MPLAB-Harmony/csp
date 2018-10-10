@@ -1,1 +1,1 @@
-#include "peripheral/pit/plib_${PERIPH_INSTANCE_NAME?lower_case}.h"
+#include "peripheral/pit/plib_${PIT_INSTANCE_NAME?lower_case}.h"
