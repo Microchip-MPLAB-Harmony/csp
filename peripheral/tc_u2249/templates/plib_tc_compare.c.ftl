@@ -80,10 +80,9 @@
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
-volatile static uint32_t ${TC_INSTANCE_NAME}_CompareStatus;
 
 <#if TC_COMPARE_INTENSET_OVF = true>
-TC_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -164,6 +163,11 @@ void ${TC_INSTANCE_NAME}_CompareStop( void )
     {
         /* Wait for Write Synchronization */
     }
+}
+
+uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet()
+{
+    return (uint32_t)(${TC_FREQUENCY}UL);
 }
 
 <#if TC_CTRLA_MODE = "COUNT8">
@@ -348,22 +352,11 @@ void ${TC_INSTANCE_NAME}_Compare32bitSet( uint32_t compareValue )
 </#if>
 </#if>
 
-/* Check ifperiod interrupt flag is set */
-bool ${TC_INSTANCE_NAME}_CompareStatusGet( void )
-{
-    bool compare_status;
-    //NVIC_DisableIRQ(${TC_INSTANCE_NAME}_IRQn);
-    compare_status = ((${TC_INSTANCE_NAME}_CompareStatus | ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
-    ${TC_INSTANCE_NAME}_CompareStatus = 0U;
-    /* Clear timer overflow interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
-    //NVIC_EnableIRQ(${TC_INSTANCE_NAME}_IRQn);
-    return compare_status;
-}
+
 
 <#if TC_COMPARE_INTENSET_OVF = true>
 /* Register callback function */
-void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_CALLBACK callback, uintptr_t context )
+void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, uintptr_t context )
 {
     ${TC_INSTANCE_NAME}_CallbackObject.callback = callback;
 
@@ -373,13 +366,25 @@ void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_CALLBACK callback, uintptr_
 /* Compare match interrupt handler */
 void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 {
-    if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
-    {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(${TC_INSTANCE_NAME}_CallbackObject.context);
-    }
+    TC_COMPARE_STATUS status;
+    status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
     /* clear period interrupt */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+    if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+    {
+        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+    }
+}
 
+<#else>
+/* Check ifperiod interrupt flag is set */
+bool ${TC_INSTANCE_NAME}_CompareStatusGet( void )
+{
+    bool compare_status;
+    compare_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
+    /* Clear timer overflow interrupt */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+    return compare_status;
 }
 </#if>
 

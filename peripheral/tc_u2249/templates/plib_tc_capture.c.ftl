@@ -156,10 +156,8 @@
 
 </#compress>
 
-volatile static uint32_t ${TC_INSTANCE_NAME}_CaptureStatus;  /* saves interrupt status */
-
 <#if TC_INTSET_VAL != "">
-TC_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
+TC_CAPTURE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 // *****************************************************************************
@@ -225,6 +223,11 @@ void ${TC_INSTANCE_NAME}_CaptureStop( void )
     }
 }
 
+uint32_t ${TC_INSTANCE_NAME}_CaptureFrequencyGet()
+{
+    return (uint32_t)(${TC_FREQUENCY}UL);
+}
+
 <#if TC_CTRLA_MODE = "COUNT8">
 
 uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel0Get( void )
@@ -261,36 +264,33 @@ uint32_t ${TC_INSTANCE_NAME}_Capture32bitChannel1Get( void )
 }
 </#if>
 
-
-
 <#if TC_INTSET_VAL != "">
-void ${TC_INSTANCE_NAME}_CaptureCallbackRegister( TC_CALLBACK callback, uintptr_t context )
+void ${TC_INSTANCE_NAME}_CaptureCallbackRegister( TC_CAPTURE_CALLBACK callback, uintptr_t context )
 {
     ${TC_INSTANCE_NAME}_CallbackObject.callback = callback;
     ${TC_INSTANCE_NAME}_CallbackObject.context = context;
 }
 
-void ${TC_INSTANCE_NAME}_InterruptHandler( void )
+void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 {
-    ${TC_INSTANCE_NAME}_CaptureStatus = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+    TC_CAPTURE_STATUS status;
+    status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+    /* Clear all interrupts */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 
     if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(${TC_INSTANCE_NAME}_CallbackObject.context);
+        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
     }
-    
-    /* Clear all interrupts */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 }
-</#if>
+
+<#else>
 
 TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet(void)
 {
     TC_CAPTURE_STATUS capture_status;
-    capture_status = (${TC_INSTANCE_NAME}_CaptureStatus | ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_CAPTURE_STATUS_MSK;
-    /* Clear interrupts and flag */
-    ${TC_INSTANCE_NAME}_CaptureStatus = 0U;
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+    capture_status = (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_CAPTURE_STATUS_MSK;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_CAPTURE_STATUS_MSK;
     return capture_status;
 }
-
+</#if>

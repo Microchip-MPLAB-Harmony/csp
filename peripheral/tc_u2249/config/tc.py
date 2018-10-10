@@ -21,6 +21,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+import math
 
 global tcInstanceMasterValue
 global isMasterSlaveModeEnable
@@ -31,6 +32,12 @@ global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
 global tcInstanceName
+
+global compareSetApiName_Sym
+global periodSetApiName_Sym
+global counterApiName_Sym
+global timerWidth_Sym
+global timerPeriodMax_Sym
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -94,14 +101,15 @@ def setTCInterruptData(status, tcMode):
 
 def updateTCInterruptStatus(symbol, event):
 
-    global tcSym_Timer_INTENSET
+    global tcSym_Timer_INTENSET_OVF
+    global tcSym_Timer_INTENSET_MC1
     global tcSym_Compare_INTENSET_OVF
     global tcSym_Capture_InterruptMode
     global tcSym_OperationMode
 
     if event["id"] == "TC_OPERATION_MODE":
         tcInterruptStatus = False
-        tcTimerMode = (event["value"] == "Timer") and (tcSym_Timer_INTENSET.getValue() == True)
+        tcTimerMode = (event["value"] == "Timer") and (tcSym_Timer_INTENSET_OVF.getValue() == True or tcSym_Timer_INTENSET_MC1.getValue() == True)
         tcCompareMode = (event["value"] == "Compare") and (tcSym_Compare_INTENSET_OVF.getValue() == True)
         tcCaptureMode = (event["value"] == "Capture") and (tcSym_Capture_InterruptMode.getValue() == True)
 
@@ -114,12 +122,13 @@ def updateTCInterruptStatus(symbol, event):
 
 def updateTCInterruptWarringStatus(symbol, event):
 
-    global tcSym_Timer_INTENSET
+    global tcSym_Timer_INTENSET_OVF
+    global tcSym_Timer_INTENSET_MC1
     global tcSym_Compare_INTENSET_OVF
     global tcSym_Capture_InterruptMode
     global tcSym_OperationMode
 
-    tcTimerMode = (tcSym_OperationMode.getValue() == "Timer") and (tcSym_Timer_INTENSET.getValue() == True)
+    tcTimerMode = (tcSym_OperationMode.getValue() == "Timer") and (tcSym_Timer_INTENSET_OVF.getValue() == True or tcSym_Timer_INTENSET_MC1.getValue() == True)
     tcCompareMode = (tcSym_OperationMode.getValue() == "Compare") and (tcSym_Compare_INTENSET_OVF.getValue() == True)
     tcCaptureMode = (tcSym_OperationMode.getValue() == "Capture") and (tcSym_Capture_InterruptMode.getValue() == True)
 
@@ -131,6 +140,47 @@ def updateTCClockWarringStatus(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
+
+def onCapabilityConnected(connectionInfo):
+    remoteComponent = connectionInfo["remoteComponent"]
+    if (remoteComponent.getID() == "sys_time"):
+        tcSym_Timer_INTENSET_MC1.setVisible(True)
+        tcSym_Timer_INTENSET_MC1.setValue(True,2)
+        tcSym_Timer_INTENSET_OVF.setValue(False,2)
+        tcSym_SYS_TIME_CONNECTED.setValue(True, 2)
+        tcSym_TimerPeriod.setVisible(False)
+        tcSym_TimerPeriod_Comment.setVisible(False)
+
+def onCapabilityDisconnected(connectionInfo):
+    remoteComponent = connectionInfo["remoteComponent"]
+    if (remoteComponent.getID() == "sys_time"):
+        tcSym_Timer_INTENSET_MC1.setVisible(False)
+        tcSym_Timer_INTENSET_MC1.setValue(False,2)
+        tcSym_Timer_INTENSET_OVF.setValue(True,2)
+        tcSym_SYS_TIME_CONNECTED.setValue(False, 2)
+        tcSym_TimerPeriod.setVisible(True)
+        tcSym_TimerPeriod_Comment.setVisible(True)
+
+def sysTime_APIUpdate(symbol,event):
+    global compareSetApiName_Sym
+    global periodSetApiName_Sym
+    global counterApiName_Sym
+    global timerWidth_Sym
+    global timerPeriodMax_Sym
+    global tcInstanceName
+    
+    symobj = event["symbol"]
+    key = symobj.getSelectedKey()
+
+    compareSetApiName = tcInstanceName.getValue() + "_Timer" + str(key[5:]) + "bitCompareSet"
+    counterGetApiName = tcInstanceName.getValue() + "_Timer" + str(key[5:]) + "bitCounterGet"
+    periodSetApiName = tcInstanceName.getValue() + "_Timer" + str(key[5:]) + "bitPeriodSet"
+
+    compareSetApiName_Sym.setValue(compareSetApiName,2)
+    counterApiName_Sym.setValue(counterGetApiName,2)
+    periodSetApiName_Sym.setValue(periodSetApiName,2)
+    timerWidth_Sym.setValue(int(key[5:]), 2)
+    timerPeriodMax_Sym.setValue(str(int(math.pow(2, int(key[5:])))), 2)
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -144,6 +194,12 @@ def instantiateComponent(tcComponent):
     global InterruptHandler
     global InterruptHandlerLock
     global tcInstanceName
+    global compareSetApiName_Sym
+    global periodSetApiName_Sym
+    global counterApiName_Sym
+    global timerWidth_Sym
+    global timerPeriodMax_Sym
+    global tcSym_SYS_TIME_CONNECTED
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
@@ -174,7 +230,7 @@ def instantiateComponent(tcComponent):
     global tySym_Slave_Mode
     tySym_Slave_Mode = tcComponent.createBooleanSymbol("TC_SLAVE_MODE", None)
     tySym_Slave_Mode.setDefaultValue(isMasterSlaveModeEnable)
-    tySym_Slave_Mode.setVisible(True)
+    tySym_Slave_Mode.setVisible(False)
     if (tcInstanceMasterValue == 2):
         tySym_Slave_Mode.setDependencies(tcSlaveModeSet, [masterComponentSymbolId])
 
@@ -199,6 +255,58 @@ def instantiateComponent(tcComponent):
     tcSym_CTRLA_MODE.setDisplayMode("Description")
     if (tcInstanceMasterValue == 2):
         tcSym_CTRLA_MODE.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
+
+#------------------------------------------------------------
+# Common Symbols needed for SYS_TIME usage
+#------------------------------------------------------------
+    sysTimeTrigger_Sym = tcComponent.createBooleanSymbol("SYS_TIME", None)
+    sysTimeTrigger_Sym.setVisible(False)
+    sysTimeTrigger_Sym.setDependencies(sysTime_APIUpdate, ["TC_CTRLA_MODE"])
+
+    tcSym_SYS_TIME_CONNECTED = tcComponent.createBooleanSymbol("TC_SYS_TIME_CONNECTED", None)
+    tcSym_SYS_TIME_CONNECTED.setDefaultValue(False)
+    tcSym_SYS_TIME_CONNECTED.setVisible(False)
+
+    timerWidth_Sym = tcComponent.createIntegerSymbol("TIMER_WIDTH", None)
+    timerWidth_Sym.setVisible(False)
+    timerWidth_Sym.setDefaultValue(16)
+
+    timerPeriodMax_Sym = tcComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
+    timerPeriodMax_Sym.setVisible(False)
+    timerPeriodMax_Sym.setDefaultValue("0xFFFF")
+
+    timerStartApiName_Sym = tcComponent.createStringSymbol("TIMER_START_API_NAME", None)
+    timerStartApiName_Sym.setVisible(False)
+    timerStartApiName_Sym.setDefaultValue(tcInstanceName.getValue() + "_TimerStart")
+
+    timeStopApiName_Sym = tcComponent.createStringSymbol("TIMER_STOP_API_NAME", None)
+    timeStopApiName_Sym.setVisible(False)
+    timeStopApiName_Sym.setDefaultValue(tcInstanceName.getValue() + "_TimerStop")
+
+    compareSetApiName_Sym = tcComponent.createStringSymbol("COMPARE_SET_API_NAME", None)
+    compareSetApiName_Sym.setDefaultValue(tcInstanceName.getValue() + "_Timer16bitCompareSet")
+    compareSetApiName_Sym.setVisible(False)
+
+    periodSetApiName_Sym = tcComponent.createStringSymbol("PERIOD_SET_API_NAME", None)
+    periodSetApiName_Sym.setDefaultValue(tcInstanceName.getValue() + "_Timer16bitPeriodSet")
+    periodSetApiName_Sym.setVisible(False)
+
+    counterApiName_Sym = tcComponent.createStringSymbol("COUNTER_GET_API_NAME", None)
+    counterApiName_Sym.setDefaultValue(tcInstanceName.getValue() + "_Timer16bitCounterGet")
+    counterApiName_Sym.setVisible(False)
+
+    frequencyGetApiName_Sym = tcComponent.createStringSymbol("FREQUENCY_GET_API_NAME", None)
+    frequencyGetApiName_Sym.setVisible(False)
+    frequencyGetApiName_Sym.setDefaultValue(tcInstanceName.getValue() + "_TimerFrequencyGet")
+
+    callbackApiName_Sym = tcComponent.createStringSymbol("CALLBACK_API_NAME", None)
+    callbackApiName_Sym.setVisible(False)
+    callbackApiName_Sym.setDefaultValue(tcInstanceName.getValue() + "_TimerCallbackRegister")
+
+    irqEnumName_Sym = tcComponent.createStringSymbol("IRQ_ENUM_NAME", None)
+    irqEnumName_Sym.setVisible(False)
+    irqEnumName_Sym.setDefaultValue(tcInstanceName.getValue() + "_IRQn")
+#------------------------------------------------------------
 
     #prescaler
     tcSym_CTRLA_PRESCALER = tcComponent.createKeyValueSetSymbol("TC_CTRLA_PRESCALER", None)
