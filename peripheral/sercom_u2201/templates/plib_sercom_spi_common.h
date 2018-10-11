@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    plib_sercom_spi.h
+    plib_sercom_spi_commmon.h
 
   Summary
    SERCOM_SPI PLIB Local Header File.
@@ -59,7 +59,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-
+#include <device.h>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 
@@ -91,13 +91,16 @@ extern "C" {
 
 typedef enum
 {
-    /* Input data is valid on clock trailing edge and output data is ready on
-       leading edge */
-    SPI_CLOCK_PHASE_TRAILING_EDGE,
-
-    /* Input data is valid on clock leading edge and output data is ready on
+     /* Input data is sampled on clock leading edge and changed on
        trailing edge */
-    SPI_CLOCK_PHASE_LEADING_EDGE
+    SPI_CLOCK_PHASE_LEADING_EDGE  =  0 << SERCOM_SPI_CTRLA_CPHA_Pos,
+
+    /* Input data is sampled on clock trailing edge and changed on
+       leading edge */
+    SPI_CLOCK_PHASE_TRAILING_EDGE   =  1 << SERCOM_SPI_CTRLA_CPHA_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
 
 } SPI_CLOCK_PHASE;
 
@@ -117,10 +120,13 @@ typedef enum
 typedef enum
 {
     /* The inactive state value of clock is logic level zero */
-    SPI_CLOCK_POLARITY_IDLE_LOW ,
+    SPI_CLOCK_POLARITY_IDLE_LOW   =  0 << SERCOM_SPI_CTRLA_CPOL_Pos,
 
     /* The inactive state value of clock is logic level one */
-    SPI_CLOCK_POLARITY_IDLE_HIGH
+    SPI_CLOCK_POLARITY_IDLE_HIGH  =  1 << SERCOM_SPI_CTRLA_CPOL_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
 
 } SPI_CLOCK_POLARITY;
 
@@ -140,37 +146,16 @@ typedef enum
 
 typedef enum
 {
-    /* 8 bits per transfer */
-    SPI_DATA_BITS_8 ,
+     /* 8 bits per transfer */
+    SPI_DATA_BITS_8  =  SERCOM_SPI_CTRLB_CHSIZE(0x0),
 
     /* 9 bits per transfer */
-    SPI_DATA_BITS_9
+    SPI_DATA_BITS_9  =  SERCOM_SPI_CTRLB_CHSIZE(0x1),
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_DATA_BITS_INVALID = 0xFFFFFFFF
 
 } SPI_DATA_BITS;
-
-// *****************************************************************************
-
-/* SPI Errors
-
-  Summary:
-    Identifies SPI Errors.
-
-  Description:
-    This enumeration identifies the possible SPI Errors.
-
-  Remarks:
-    None.
-*/
-
-typedef enum
-{
-    /* SPI with out Error */
-    SPI_ERROR_NONE= 0,
-
-    /* SPI overflow error */
-    SPI_ERROR_OVERFLOW = 4,
-
-} SPI_ERROR;
 
 // *****************************************************************************
 
@@ -191,7 +176,7 @@ typedef enum
 typedef struct
 {
     /* Baud Rate or clock frequency */
-    uint32_t            baudRate;
+    uint32_t            clockFrequency;
 
     /* Clock Phase */
     SPI_CLOCK_PHASE     clockPhase;

@@ -35,6 +35,18 @@ global sercomInstanceName
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+#BAUD Rate Calculation for SPI
+def getspiBaud(gclk,clkspeed):
+
+    baud =  int(round(float("{0:.15f}".format(float(gclk/(2*clkspeed))))-1))
+
+    if (baud <= 0):
+      baud = 1
+    elif baud > 255:
+      baud = 255
+
+    return baud
+
 def geti2cBaud(gclk, clkSpeed, trise, mode):
 
     baudlow = int(round(((gclk/clkSpeed)*(1 - float("{0:.15f}".format(float(trise*clkSpeed)/1000000000)))) - 10))
