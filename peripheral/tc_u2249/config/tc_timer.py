@@ -34,13 +34,30 @@ def updateTimerMenuVisibleProperty(symbol, event):
     else:
         symbol.setVisible(False)
 
-def updateTimerPeriodMaxValue(symbol, event):
-    if event["value"] == 0x1:
-        symbol.setMax(255)
-    elif event["value"] == 0x0:
-        symbol.setMax(65535)
-    elif event["value"] == 0x2:
-        symbol.setMax(4294967295)
+def tcTimeMaxValue(symbol, event):
+    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    prescaler = int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
+    resolution = (prescaler * 1000000000.0) / clock_freq
+    mode = tcSym_CTRLA_MODE.getValue()
+    max = 0.0
+    if (mode == 0):
+        max = (65535.0 * resolution / 1000000)
+    elif (mode == 1):
+        max = (255.0 * resolution / 1000000)
+    elif (mode == 2):
+        max = (4294967296.0 * resolution / 1000000)
+    symbol.setMax(max)
+
+def tcPeriodCalc(symbol, event):
+    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    prescaler = int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
+    resolution = (prescaler * 1000.0) / clock_freq
+    time = tcSym_Timer_TIME_MS.getValue()
+    period = time / resolution
+    symbol.setValue(long(period), 2)
+
+def tcTimerEvsys(symbol, event):
+    Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
 
 ###################################################################################################
 ######################################### Timer Mode ##############################################
@@ -55,19 +72,28 @@ tcSym_TimerMenu.setDependencies(updateTimerMenuVisibleProperty, ["TC_OPERATION_M
 tcSym_Timer_CTRLBSET_ONESHOT = tcComponent.createBooleanSymbol("TC_TIMER_CTRLBSET_ONESHOT", tcSym_TimerMenu)
 tcSym_Timer_CTRLBSET_ONESHOT.setLabel("Enable One-Shot Mode")
 
+#time in float
+global tcSym_Timer_TIME_MS
+resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+max = (65535.0 * resolution / 1000000)
+tcSym_Timer_TIME_MS = tcComponent.createFloatSymbol("TC_TIMER_TIME_MS", tcSym_TimerMenu)
+tcSym_Timer_TIME_MS.setLabel("Timer Period (Milli Sec)")
+tcSym_Timer_TIME_MS.setDefaultValue(1)
+tcSym_Timer_TIME_MS.setMin(0.0)
+tcSym_Timer_TIME_MS.setMax(max)
+tcSym_Timer_TIME_MS.setDependencies(tcTimeMaxValue, ["TC_CTRLA_MODE", "core.CPU_CLOCK_FREQUENCY", \
+    "TC_CTRLA_PRESCALER"])
+
 #timer period
-global tcSym_TimerPeriod
+period = tcSym_Timer_TIME_MS.getValue() * 1000000 / resolution
 tcSym_TimerPeriod = tcComponent.createLongSymbol("TC_TIMER_PERIOD", tcSym_TimerMenu)
 tcSym_TimerPeriod.setLabel("Timer Period")
-tcSym_TimerPeriod.setDefaultValue(48)
+tcSym_TimerPeriod.setVisible(True)
+tcSym_TimerPeriod.setDefaultValue(long(period))
 tcSym_TimerPeriod.setMin(0)
-tcSym_TimerPeriod.setMax(65535)
-tcSym_TimerPeriod.setDependencies(updateTimerPeriodMaxValue, ["TC_CTRLA_MODE"])
-
-#period time in us
-global tcSym_TimerPeriod_Comment
-tcSym_TimerPeriod_Comment = tcComponent.createCommentSymbol("TC_TIMER_PERIOD_COMMENT", tcSym_TimerMenu)
-tcSym_TimerPeriod_Comment.setLabel("**** Timer Period is 1 us ****")
+tcSym_TimerPeriod.setMax(4294967296)
+tcSym_TimerPeriod.setDependencies(tcPeriodCalc, ["TC_CTRLA_MODE", "core.CPU_CLOCK_FREQUENCY", \
+    "TC_CTRLA_PRESCALER", "TC_TIMER_TIME_MS"])
 
 #timer interrupt mode
 global tcSym_Timer_INTENSET_OVF
@@ -75,8 +101,16 @@ tcSym_Timer_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_TIMER_INTENSET_OV
 tcSym_Timer_INTENSET_OVF.setLabel("Enable Timer Period Interrupt")
 tcSym_Timer_INTENSET_OVF.setDefaultValue(True)
 
+tcSym_Timer_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_OVFEO", tcSym_TimerMenu)
+tcSym_Timer_EVCTRL_OVFEO.setLabel("Enable Timer Period Overflow Event")
+tcSym_Timer_EVCTRL_OVFEO.setDefaultValue(False)
+
 global tcSym_Timer_INTENSET_MC1
 tcSym_Timer_INTENSET_MC1 = tcComponent.createBooleanSymbol("TC_TIMER_INTENSET_MC1", tcSym_TimerMenu)
 tcSym_Timer_INTENSET_MC1.setLabel("Enable Timer Compare Interrupt")
 tcSym_Timer_INTENSET_MC1.setVisible(False)
 tcSym_Timer_INTENSET_MC1.setDefaultValue(False)
+
+tcSym_Timer_EVSYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_TIMER_EVSYS_CONFIGURE", tcSym_TimerMenu)
+tcSym_Timer_EVSYS_CONFIGURE.setVisible(False)
+tcSym_Timer_EVSYS_CONFIGURE.setDependencies(tcTimerEvsys, ["TC_TIMER_EVCTRL_OVFEO"])

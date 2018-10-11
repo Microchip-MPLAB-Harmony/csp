@@ -22,7 +22,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 import math
-
+global masterComponentSymbolId
 global tcInstanceMasterValue
 global isMasterSlaveModeEnable
 global tySym_Slave_Mode
@@ -63,7 +63,22 @@ def updateCodeGenerationProperty(symbol, event):
         elif tcSym_OperationMode.getValue() == "Capture":
             component.getSymbolByID("TC_CAPTURE_HEADER").setEnabled(True)
             component.getSymbolByID("TC_CAPTURE_SOURCE").setEnabled(True)
-        
+
+def tcResolutionCalc(symbol, event):
+    if (event["id"] == "TC_CTRLA_MODE"):
+        if event["value"] == 2:
+            symbol.setVisible(False)
+        else:
+            symbol.setVisible(True)
+    else:
+        clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+        prescaler = int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
+        resolution = (prescaler * 1000000000.0) / clock_freq
+        symbol.setLabel("****Timer resolution is " + str(resolution) + " nS****")
+
+def tcFreqCalc(symbol, event):
+    symbol.setValue(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY") / int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]), 2)
+
 def tcSlaveModeVisible(symbol, event):
     if event["value"] == 2:
         symbol.setVisible(False)
@@ -97,7 +112,7 @@ def setTCInterruptData(status, tcMode):
     if status == True:
         Database.setSymbolValue("core", InterruptHandler, tcInstanceName.getValue() + "_" + tcMode + "InterruptHandler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, instnaceName.getValue() + "_Handler", 2)
+        Database.setSymbolValue("core", InterruptHandler, tcInstanceName.getValue() + "_Handler", 2)
 
 def updateTCInterruptStatus(symbol, event):
 
@@ -200,6 +215,7 @@ def instantiateComponent(tcComponent):
     global timerWidth_Sym
     global timerPeriodMax_Sym
     global tcSym_SYS_TIME_CONNECTED
+    global masterComponentSymbolId
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
@@ -214,7 +230,7 @@ def instantiateComponent(tcComponent):
     tcInstanceMasterNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters/param@[name=\"MASTER_SLAVE_MODE\"]")
     tcInstanceMasterValue = int(tcInstanceMasterNode.getAttribute("value"))
     isMasterSlaveModeEnable = False
-    
+    masterComponentSymbolId = ""
     if (tcInstanceMasterValue == 2):
         activeComponentList = Database.getActiveComponentIDs()
         temp = int(tcInstanceName.getValue().split("TC")[1])
@@ -223,18 +239,19 @@ def instantiateComponent(tcComponent):
 
         if masterComponentID in activeComponentList:
             value = Database.getSymbolValue(masterComponentID, "TC_CTRLA_MODE")
-            print("counter mode " + str(value))
             if value == 2:
                 isMasterSlaveModeEnable = True
 
     global tySym_Slave_Mode
     tySym_Slave_Mode = tcComponent.createBooleanSymbol("TC_SLAVE_MODE", None)
+    tySym_Slave_Mode.setLabel("Slave Mode")
     tySym_Slave_Mode.setDefaultValue(isMasterSlaveModeEnable)
     tySym_Slave_Mode.setVisible(False)
     if (tcInstanceMasterValue == 2):
         tySym_Slave_Mode.setDependencies(tcSlaveModeSet, [masterComponentSymbolId])
 
     #counter mode
+    global tcSym_CTRLA_MODE
     tcSym_CTRLA_MODE = tcComponent.createKeyValueSetSymbol("TC_CTRLA_MODE", None)
     tcSym_CTRLA_MODE.setLabel("Counter Mode")
     tcModeNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CTRLA__MODE\"]")
@@ -309,6 +326,7 @@ def instantiateComponent(tcComponent):
 #------------------------------------------------------------
 
     #prescaler
+    global tcSym_CTRLA_PRESCALER
     tcSym_CTRLA_PRESCALER = tcComponent.createKeyValueSetSymbol("TC_CTRLA_PRESCALER", None)
     tcSym_CTRLA_PRESCALER.setLabel("Select Prescaler")
     tcPrescalerSelectionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]/value-group@[name=\"TC_CTRLA__PRESCALER\"]")
@@ -330,17 +348,17 @@ def instantiateComponent(tcComponent):
 
     #clock resolution display
     tcSym_Resolution = tcComponent.createCommentSymbol("TC_Resolution", None)
-    tcSym_Resolution.setLabel("****Timer resolution is " + str(20.83) + " nS****")
-    if (tcInstanceMasterValue == 2):
-        tcSym_Resolution.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
+    resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    tcSym_Resolution.setLabel("****Timer resolution is " + str(resolution) + " nS****")
+    tcSym_Resolution.setDependencies(tcResolutionCalc, [masterComponentSymbolId, "core.CPU_CLOCK_FREQUENCY", \
+        "TC_CTRLA_PRESCALER"])
 
     #TC clock frequency
     tcSym_Frequency = tcComponent.createIntegerSymbol("TC_FREQUENCY", None)
     tcSym_Frequency.setLabel("Clock Frequency")
     tcSym_Frequency.setVisible(False)
-    tcSym_Frequency.setDefaultValue(48000000)
-    if (tcInstanceMasterValue == 2):
-        tcSym_Frequency.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
+    tcSym_Frequency.setDefaultValue(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+    tcSym_Frequency.setDependencies(tcFreqCalc, ["core.CPU_CLOCK_FREQUENCY", "TC_CTRLA_PRESCALER"])
 
     #tc operation mode
     tcOperationModeList = ["Timer", "Compare", "Capture"]
