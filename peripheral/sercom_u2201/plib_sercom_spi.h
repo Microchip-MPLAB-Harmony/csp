@@ -97,14 +97,17 @@
 
 typedef enum
 {
-    /* Input data is valid on clock trailing edge and output data is ready on
+    /* Input data is sampled on clock trailing edge and changed on
        leading edge */
-    SPI_CLOCK_PHASE_TRAILING_EDGE,
-    
-    /* Input data is valid on clock leading edge and output data is ready on
+    SPI_CLOCK_PHASE_TRAILING_EDGE   =  1 << SERCOM_SPI_CTRLA_CPHA_Pos,
+
+     /* Input data is sampled on clock leading edge and changed on
        trailing edge */
-    SPI_CLOCK_PHASE_LEADING_EDGE
-    
+    SPI_CLOCK_PHASE_LEADING_EDGE  =  0 << SERCOM_SPI_CTRLA_CPHA_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
+
 } SPI_CLOCK_PHASE;
 
 // *****************************************************************************
@@ -123,13 +126,15 @@ typedef enum
 typedef enum
 {
     /* The inactive state value of clock is logic level zero */
-    SPI_CLOCK_POLARITY_IDLE_LOW,
-    
-    /* The inactive state value of clock is logic level one */
-    SPI_CLOCK_POLARITY_IDLE_HIGH
-    
-} SPI_CLOCK_POLARITY;
+    SPI_CLOCK_POLARITY_IDLE_LOW   =  0 << SERCOM_SPI_CTRLA_CPOL_Pos,
 
+    /* The inactive state value of clock is logic level one */
+    SPI_CLOCK_POLARITY_IDLE_HIGH  =  1 << SERCOM_SPI_CTRLA_CPOL_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
+
+} SPI_CLOCK_POLARITY;
 // *****************************************************************************
 /* SPI Data Bits
 
@@ -142,15 +147,17 @@ typedef enum
    Remarks:
     For 9 modes, data should be right aligned in the 16 bit memory location.
 */
-
 typedef enum
 {
-    /* 8 bits per transfer */
-    SPI_DATA_BITS_8,
-    
-    /* 9 bits per transfer */    
-    SPI_DATA_BITS_9,
-    
+     /* 8 bits per transfer */
+    SPI_DATA_BITS_8  =  SERCOM_SPI_CTRLB_CHSIZE(0x0),
+
+    /* 9 bits per transfer */
+    SPI_DATA_BITS_9  =  SERCOM_SPI_CTRLB_CHSIZE(0x1),
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    SPI_DATA_BITS_INVALID = 0xFFFFFFFF
+
 } SPI_DATA_BITS;
 
 // *****************************************************************************
@@ -183,29 +190,6 @@ typedef struct
     SPI_DATA_BITS dataBits;
     
 } SPI_TRANSFER_SETUP;
-
-// *****************************************************************************
-/* SPI Errors
-
-   Summary:
-    Identifies the possible SPI Errors.
-
-   Description:
-    This enumeration identifies the possible SPI Errors.
-
-   Remarks:
-    None.
-*/
-
-typedef enum 
-{
-    /* No Error */
-    SPI_ERROR_NONE,
-    
-    /* SPI Receive Overrun Error */
-    SPI_ERROR_OVERRUN
-    
-} SPI_ERROR;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -648,45 +632,6 @@ bool SERCOMx_SPI_Read(void* pReceiveData, size_t rxSize);
 */
 
 bool SERCOMx_SPI_IsBusy (void):
-
-// *****************************************************************************
-/* Function:
-    SPI_ERROR SERCOMx_SPI_ErrorGet( void )
-
-   Summary:
-    Gets the error for the given SERCOM x SPI peripheral instance.
-
-   Description:
-    This function returns the errors associated with the given SERCOM x SPI
-    peripheral instance. An error may occur after a transfer has completed. This
-    API can be called to verify if any error has occurred while the transfer was
-    in progress. The error returned by this API will be cleared when the
-    WriteRead or Write or Read function is called.
-
-   Precondition:
-    The SERCOMx_SPI_Initialize() function should have been called once. The
-    function is only available in Interrupt operation mode.
-
-   Parameters:
-    None.
-  
-   Returns:
-    Errors occurred as listed by SPI_ERROR.
-
-  Example:
-    <code>
-    if (SERCOM1_SPI_ErrorGet() == SPI_ERROR_OVERRUN)
-    {
-        //Handle overrun error here
-    }
-    </code>
-
-  Remarks:
-    This API is available only for interrupt mode as non-interrupt mode will
-    not have any error.
-*/
-
-SPI_ERROR SERCOMx_SPI_ErrorGet( void );
 
 // *****************************************************************************
 /* SERCOM x SPICallback Function Pointer

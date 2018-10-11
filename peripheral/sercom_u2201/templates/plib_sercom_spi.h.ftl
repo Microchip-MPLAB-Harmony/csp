@@ -56,9 +56,6 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
 #include "plib_sercom_spi_common.h"
 
 // DOM-IGNORE-BEGIN
@@ -115,7 +112,7 @@ this interface.
 
 void ${SERCOM_INSTANCE_NAME}_SPI_Initialize (void);
 
-<#if SPI_TRANSFER_SETUP_ENABLE = true>
+
 // *****************************************************************************
 /* Function:
     bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup,
@@ -178,7 +175,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize (void);
 */
 
 bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
-</#if>
+
 
 // *****************************************************************************
 /* Function:
@@ -584,47 +581,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, 
 
 bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy (void);
 
-
 </#if>
-
-// *****************************************************************************
-/* Function:
-    SPI_ERROR ${SERCOM_INSTANCE_NAME}_SPI_ErrorGet( void )
-
-  Summary:
-    Gets the error for the given SERCOM ${SERCOM_INSTANCE_NAME} SPI peripheral instance.
-
-   Description:
-    This function returns the errors associated with the given SERCOM ${SERCOM_INSTANCE_NAME} SPI
-    peripheral instance. An error may occur after a transfer has completed. This
-    API can be called to verify if any error has occurred while the transfer was
-    in progress. The error returned by this API will be cleared when the
-    WriteRead or Write or Read function is called.
-
-   Precondition:
-    The ${SERCOM_INSTANCE_NAME}_SPI_Initialize() function should have been called once. The
-    function is only available in Interrupt operation mode.
-
-   Parameters:
-    None.
-  
-   Returns:
-    Errors occurred as listed by SPI_ERROR.
-
-  Example:
-    <code>
-    if (SERCOM1_SPI_ErrorGet() == SPI_ERROR_OVERRUN)
-    {
-        //Handle overrun error here
-    }
-    </code>
-
-  Remarks:
-    This API is available only for interrupt mode as non-interrupt mode will
-    not have any error.
-*/
-
-SPI_ERROR ${SERCOM_INSTANCE_NAME}_SPI_ErrorGet(void);
 
 #ifdef __cplusplus // Provide C++ Compatibility
 }

@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name
-    plib_sercom_spi_commmon.h
+    plib_sercom_spi.h
 
   Summary
    SERCOM_SPI PLIB Local Header File.
@@ -91,13 +91,13 @@ extern "C" {
 
 typedef enum
 {
-     /* Input data is sampled on clock leading edge and changed on
-       trailing edge */
-    SPI_CLOCK_PHASE_LEADING_EDGE  =  0 << SERCOM_SPI_CTRLA_CPHA_Pos,
-
     /* Input data is sampled on clock trailing edge and changed on
        leading edge */
     SPI_CLOCK_PHASE_TRAILING_EDGE   =  1 << SERCOM_SPI_CTRLA_CPHA_Pos,
+
+     /* Input data is sampled on clock leading edge and changed on
+       trailing edge */
+    SPI_CLOCK_PHASE_LEADING_EDGE  =  0 << SERCOM_SPI_CTRLA_CPHA_Pos,
 
     /* Force the compiler to reserve 32-bit space for each enum value */
     SPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
