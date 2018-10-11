@@ -69,6 +69,95 @@
 <#assign TC_EVCTRL_VAL = "">
 <#assign TC_INTSET_VAL = "">
 
+<#if TC_CAPTURE_CTRLA_CAPTEN0 == true>
+    <#if TC_CTRLA_VAL != "">
+        <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_CAPTEN0_Msk">
+    <#else>
+        <#assign TC_CTRLA_VAL = "TC_CTRLA_CAPTEN0_Msk">
+    </#if>
+    <#if TC_CAPTURE_CTRLA_COPEN0 == "1">  <#-- input event -->
+        <#if TC_CAPTURE_TRIGGER_ACTION0 == "PPW" || TC_CAPTURE_TRIGGER_ACTION0 == "PPW">
+            <#if TC_CTRLA_VAL != "">
+                <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_CAPTEN1_Msk">
+            <#else>
+                <#assign TC_CTRLA_VAL = "TC_CTRLA_CAPTEN1_Msk">
+            </#if>
+        <#else>
+            <#if TC_CAPTURE_CTRLA_CAPTEN1 == true>
+                <#if TC_CTRLA_VAL != "">
+                    <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_CAPTEN1_Msk">
+                <#else>
+                    <#assign TC_CTRLA_VAL = "TC_CTRLA_CAPTEN1_Msk">
+                </#if>
+            </#if>
+        </#if>
+        <#assign TC_EVCTRL_VAL = "TC_EVCTRL_EVACT_" + TC_CAPTURE_TRIGGER_ACTION0>
+        <#if TC_CAPTURE_TRIGGER_EDGE0 == "0">
+            <#if TC_EVCTRL_VAL != "">
+                <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_TCEI_Msk">
+            <#else>
+                <#assign TC_EVCTRL_VAL = "TC_EVCTRL_TCEI_Msk">
+            </#if>
+        </#if>
+        <#if TC_CAPTURE_TRIGGER_EDGE0 == "1">
+            <#if TC_EVCTRL_VAL != "">
+                <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_TCEI_Msk | TC_EVCTRL_TCINV_Msk">
+            <#else>
+                <#assign TC_EVCTRL_VAL = "TC_EVCTRL_TCEI_Msk | TC_EVCTRL_TCINV_Msk">
+            </#if>
+        </#if>
+    <#else>  <#-- io pin -->
+        <#if TC_CTRLA_VAL != "">
+            <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_COPEN0_Msk">
+        <#else>
+            <#assign TC_CTRLA_VAL = "TC_CTRLA_COPEN0_Msk">
+        </#if>
+        <#if TC_CAPTURE_TRIGGER_EDGE0 == "1">
+            <#if TC_DRVCTRL_VAL != "">
+                <#assign TC_DRVCTRL_VAL = TC_DRVCTRL_VAL + " | TC_DRVCTRL_INVEN0_Msk">
+            <#else>
+                <#assign TC_DRVCTRL_VAL = "TC_DRVCTRL_INVEN0_Msk">
+            </#if>
+        </#if>
+        
+        <#if TC_CAPTURE_CTRLA_CAPTEN1 == true>
+            <#if TC_CAPTURE_CTRLA_COPEN1 == "0">  <#-- io pin event -->
+                <#if TC_CTRLA_VAL != "">
+                    <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_CAPTEN1_Msk| TC_CTRLA_COPEN1_Msk">
+                <#else>
+                    <#assign TC_CTRLA_VAL = "TC_CTRLA_CAPTEN1_Msk | TC_CTRLA_COPEN1_Msk">
+                </#if>
+                <#if TC_CAPTURE_TRIGGER_EDGE1 == "1">
+                    <#if TC_DRVCTRL_VAL != "">
+                        <#assign TC_DRVCTRL_VAL = TC_DRVCTRL_VAL + " | TC_DRVCTRL_INVEN1_Msk">
+                    <#else>
+                        <#assign TC_DRVCTRL_VAL = "TC_DRVCTRL_INVEN1_Msk">
+                    </#if>
+                </#if>
+            </#if>
+        </#if>
+
+    </#if>
+</#if>
+
+<#if TC_CAPTURE_CTRLA_CAPTEN0 == false && TC_CAPTURE_CTRLA_CAPTEN1 == true>
+    <#if TC_CAPTURE_CTRLA_COPEN1 == "0">  <#-- io pin event -->
+        <#if TC_CTRLA_VAL != "">
+            <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_CAPTEN1_Msk | TC_CTRLA_COPEN1_Msk">
+        <#else>
+            <#assign TC_CTRLA_VAL = "TC_CTRLA_CAPTEN1_Msk | TC_CTRLA_COPEN1_Msk">
+        </#if>
+        <#if TC_CAPTURE_TRIGGER_EDGE1 == "1">
+            <#if TC_DRVCTRL_VAL != "">
+                <#assign TC_DRVCTRL_VAL = TC_DRVCTRL_VAL + " | TC_DRVCTRL_INVEN1_Msk">
+            <#else>
+                <#assign TC_DRVCTRL_VAL = "TC_DRVCTRL_INVEN1_Msk">
+            </#if>
+        </#if>
+    </#if>
+</#if>
+
+
 <#list 0..(TC_NUM_CHANNELS - 1) as i>
 <#assign TC_CAPTURE_ENABLE = "TC_CAPTURE_CTRLA_CAPTEN"+i>
 <#assign TC_CAPTURE_TRIGGER = "TC_CAPTURE_CTRLA_COPEN"+i>
@@ -77,27 +166,6 @@
 <#assign TC_CAPTURE_INTERRUPT = "TC_CAPTURE_INTSET_MC"+i>
 
 <#if .vars[TC_CAPTURE_ENABLE] == true>
-    <#if TC_CTRLA_VAL != "">
-        <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_CAPTEN"+i+"_Msk">
-    <#else>
-        <#assign TC_CTRLA_VAL = "TC_CTRLA_CAPTEN"+i+"_Msk">
-    </#if>
-    <#if .vars[TC_CAPTURE_TRIGGER] == "0">
-        <#if TC_CTRLA_VAL != "">
-            <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_COPEN"+i+"_Msk">
-        <#else>
-            <#assign TC_CTRLA_VAL = "TC_CTRLA_COPEN"+i+"_Msk">
-        </#if>
-    </#if>
-    <#if .vars[TC_CAPTURE_TRIGGER] == "0">
-        <#if .vars[TC_CAPTURE_TRIGGER_EDGE] == "1">
-            <#if TC_DRVCTRL_VAL != "">
-                <#assign TC_DRVCTRL_VAL = TC_DRVCTRL_VAL + " | TC_DRVCTRL_INVEN"+i+"_Msk">
-            <#else>
-                <#assign TC_DRVCTRL_VAL = "TC_DRVCTRL_INVEN"+i+"_Msk">
-            </#if>
-        </#if>
-    </#if>
     <#if .vars[TC_CAPTURE_EVENT_OUT] == true>
         <#if TC_EVCTRL_VAL != "">
             <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_MCEO"+i+"_Msk">
@@ -114,29 +182,6 @@
     </#if>
 </#if>   <#-- CAPTURE_ENABLE -->
 </#list>
-
-<#if TC_CAPTURE_CTRLA_COPEN0 == "1" && TC_CAPTURE_CTRLA_CAPTEN1 == false>
-    <#if TC_CTRLA_VAL != "">
-        <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_CAPTEN1_Msk">
-    <#else>
-        <#assign TC_CTRLA_VAL = "TC_CTRLA_CAPTEN1_Msk">
-    </#if>
-</#if>
-
-<#if TC_CAPTURE_CTRLA_COPEN0 == "1">
-    <#if TC_EVCTRL_VAL != "">
-        <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_TCEI_Msk">
-    <#else>
-        <#assign TC_EVCTRL_VAL = "TC_EVCTRL_TCEI_Msk">
-    </#if>
-    <#if TC_CAPTURE_TRIGGER_EDGE0 == "1">
-        <#if TC_EVCTRL_VAL != "">
-            <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " TC_EVCTRL_TCEI_Msk | TC_EVCTRL_TCINV_Msk">
-        <#else>
-            <#assign TC_EVCTRL_VAL = "TC_EVCTRL_TCEI_Msk | TC_EVCTRL_TCINV_Msk">
-        </#if>
-    </#if>
-</#if>
 
 <#if TC_CAPTURE_ERR_INTERRUPT_MODE == true>
     <#if TC_INTSET_VAL != "">

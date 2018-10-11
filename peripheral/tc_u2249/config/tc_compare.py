@@ -46,12 +46,27 @@ def updateCompareDuty(symbol, event):
 
     #hide compare value for Match frequency waveform mode
     if event["id"] == "TC_COMPARE_WAVE_WAVEGEN":
-        print (str(event["value"]))
         if event["value"] == 1:
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
 
+def tcComparePeriodCalc(symbol, event):
+    resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    time = tcSym_ComparePeriod.getValue() * resolution
+    symbol.setLabel("**** Timer Period is " + str(time) + " us ****")
+
+def tcEventVisible(symbol, event):
+    if event["value"] == 1:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tcCompareEvsys(symbol, event):
+    if(event["id"] == "TC_COMPARE_EVCTRL_OVFEO"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
+    if(event["id"] == "TC_COMPARE_EVCTRL_MCEO1"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", event["value"], 2)
 ###################################################################################################
 ####################################### Compare Mode ##############################################
 ###################################################################################################
@@ -81,6 +96,7 @@ tcSym_Compare_CTRLBSET_DIR.setOutputMode("Value")
 tcSym_Compare_CTRLBSET_DIR.setDisplayMode("Description")
 
 #compare period
+global tcSym_ComparePeriod
 tcSym_ComparePeriod = tcComponent.createLongSymbol("TC_COMPARE_PERIOD", tcSym_CompareMenu)
 tcSym_ComparePeriod.setLabel("Period Value")
 tcSym_ComparePeriod.setDefaultValue(48)
@@ -89,8 +105,12 @@ tcSym_ComparePeriod.setMax(65535)
 tcSym_ComparePeriod.setDependencies(updateCompareMaxValue, ["TC_CTRLA_MODE"])
 
 #period time in us
+resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+time = tcSym_ComparePeriod.getValue() * resolution
 tcSym_ComparePeriod_Comment = tcComponent.createCommentSymbol("TC_COMPARE_PERIOD_COMMENT", tcSym_CompareMenu)
-tcSym_ComparePeriod_Comment.setLabel("**** Timer Period is 1 us ****")
+tcSym_ComparePeriod_Comment.setLabel("**** Timer Period is " + str(time) + " us ****")
+tcSym_ComparePeriod_Comment.setDependencies(tcComparePeriodCalc, ["TC_COMPARE_PERIOD", "TC_CTRLA_PRESCALER",\
+    "core.CPU_CLOCK_FREQUENCY"])
 
 #compare value
 tcSym_CompareDuty = tcComponent.createLongSymbol("TC_COMPARE_CC1", tcSym_CompareMenu)
@@ -114,3 +134,16 @@ global tcSym_Compare_INTENSET_OVF
 tcSym_Compare_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_COMPARE_INTENSET_OVF", tcSym_CompareMenu)
 tcSym_Compare_INTENSET_OVF.setLabel("Enable Period Interrupt")
 tcSym_Compare_INTENSET_OVF.setDefaultValue(False)
+
+tcSym_Compare_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_OVFEO", tcSym_CompareMenu)
+tcSym_Compare_EVCTRL_OVFEO.setLabel("Enable Timer Period Overflow Event")
+tcSym_Compare_EVCTRL_OVFEO.setDefaultValue(False)
+
+tcSym_Compare_EVCTRL_MCEO1 = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_MCEO1", tcSym_CompareMenu)
+tcSym_Compare_EVCTRL_MCEO1.setLabel("Enable Compare Match 1 Event")
+tcSym_Compare_EVCTRL_MCEO1.setDefaultValue(False)
+tcSym_Compare_EVCTRL_MCEO1.setDependencies(tcEventVisible, ["TC_COMPARE_WAVE_WAVEGEN"])
+
+tcSym_Compare_EVESYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_COMPARE_EVSYS_CONFIGURE", tcSym_CompareMenu)
+tcSym_Compare_EVESYS_CONFIGURE.setVisible(False)
+tcSym_Compare_EVESYS_CONFIGURE.setDependencies(tcCompareEvsys, ["TC_COMPARE_EVCTRL_OVFEO", "TC_COMPARE_EVCTRL_MCEO1"])

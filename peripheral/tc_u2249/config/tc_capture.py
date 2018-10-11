@@ -93,6 +93,17 @@ def updateTCCaptureInterruptValue(symbol, event):
     else:
         symbol.setValue(False, 2)
 
+def tcCaptureEvsys(symbol, event):
+    if(event["id"] == "TC_CAPTURE_EVCTRL_MCEO0"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_0_ACTIVE", event["value"], 2)
+    if(event["id"] == "TC_CAPTURE_EVCTRL_MCEO1"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", event["value"], 2)
+    if(event["id"] == "TC_CAPTURE_CTRLA_COPEN0"):
+        if (event["value"] == 1):
+            Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", True, 2)
+        else:
+            Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", False, 2)
+    
 ###################################################################################################
 ######################################## Capture Mode #############################################
 ###################################################################################################
@@ -113,7 +124,10 @@ for channelID in range (0, NUM_CAPTURE_CHANNELS):
     tcSym_Capture_Channel.append(channelID)
     tcSym_Capture_Channel[channelID] = tcComponent.createBooleanSymbol("TC_CAPTURE_CTRLA_CAPTEN"+str(channelID), tcSym_CaptureMenu)
     tcSym_Capture_Channel[channelID].setLabel("Enable Capture Channel "+str(channelID))
-    tcSym_Capture_Channel[channelID].setDefaultValue(True)
+    if (channelID == 0):
+        tcSym_Capture_Channel[channelID].setDefaultValue(True)
+    else:
+        tcSym_Capture_Channel[channelID].setDefaultValue(False)
 
     #capture channel trigger source
     tcSym_Capture_Trigger_Source.append(channelID)
@@ -153,17 +167,17 @@ for channelID in range (0, NUM_CAPTURE_CHANNELS):
         tcSym_Capture_Trigger_Action[channelID].setDisplayMode("Description")
         tcSym_Capture_Trigger_Action[channelID].setDependencies(tcEventActionVisible, ["TC_CAPTURE_CTRLA_COPEN"+str(channelID), "TC_CAPTURE_CTRLA_CAPTEN"+str(channelID)])
 
-    #capture channel 0 counter/compare interrupt
+    #capture channel counter/compare interrupt
     tcSym_Capture_INTENSET_MC.append(channelID)
     tcSym_Capture_INTENSET_MC[channelID] = tcComponent.createBooleanSymbol("TC_CAPTURE_INTSET_MC"+str(channelID), tcSym_Capture_Channel[channelID])
-    tcSym_Capture_INTENSET_MC[channelID].setLabel("Enable Capture Interrupt")
+    tcSym_Capture_INTENSET_MC[channelID].setLabel("Enable Capture " + str(channelID) + " Interrupt")
     tcSym_Capture_INTENSET_MC[channelID].setDefaultValue(False)
     tcSym_Capture_INTENSET_MC[channelID].setDependencies(tcChannelVisible, ["TC_CAPTURE_CHANNEL_"+str(channelID)])
 
     #capture event out
     tcSym_Capture_EVCTRL_MCEO.append(channelID)
     tcSym_Capture_EVCTRL_MCEO[channelID] = tcComponent.createBooleanSymbol("TC_CAPTURE_EVCTRL_MCEO"+str(channelID), tcSym_Capture_Channel[channelID])
-    tcSym_Capture_EVCTRL_MCEO[channelID].setLabel("Enable Capture Event Out")
+    tcSym_Capture_EVCTRL_MCEO[channelID].setLabel("Enable Capture " + str(channelID) + " Event Out")
     tcSym_Capture_EVCTRL_MCEO[channelID].setDefaultValue(False)
     tcSym_Capture_EVCTRL_MCEO[channelID].setDependencies(tcChannelVisible, ["TC_CAPTURE_CHANNEL_"+str(channelID)])
 
@@ -180,3 +194,8 @@ global tcSym_Capture_InterruptMode
 tcSym_Capture_InterruptMode = tcComponent.createBooleanSymbol("TC_CAPTURE_INTERRUPT", tcSym_CaptureMenu)
 tcSym_Capture_InterruptMode.setVisible(False)
 tcSym_Capture_InterruptMode.setDependencies(updateTCCaptureInterruptValue, ["TC_CAPTURE_ERR_INTERRUPT_MODE", "TC_CAPTURE_OVF_INTERRUPT_MODE", "TC_CAPTURE_INTSET_MC0", "TC_CAPTURE_INTSET_MC1"])
+
+tcSym_Capture_EVSYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_CAPTURE_EVSYS_CONFIGURE", tcSym_CaptureMenu)
+tcSym_Capture_EVSYS_CONFIGURE.setVisible(False)
+tcSym_Capture_EVSYS_CONFIGURE.setDependencies(tcCaptureEvsys, ["TC_CAPTURE_EVCTRL_MCEO0", "TC_CAPTURE_EVCTRL_MCEO1", \
+    "TC_CAPTURE_CTRLA_COPEN0"])
