@@ -53,24 +53,8 @@
 // Section: MACROS Definitions
 // *****************************************************************************
 // *****************************************************************************
-
-/* Macro for the Master Mode value */
-#define SPI_MASTER_MODE_VALUE           (0x03)
-
-/* Macro for the Slave Mode value */
-#define SPI_SLAVE_MODE_VALUE            (0x02)
-
-/* macro for the spi frame default value */
-#define SPI_FRAME_VALUE                 (0x00)
-
-/* CPU freq Value for the baud calculation */
-#define CPU_FREQ                        (4000000UL)
-
-/* Transfer Mode(Combination of Clock polarity and Phase */
-#define SPI_TRANSFER_MODE               (${SPI_TRANSFER_MODE}U)
-
-/* Calculation of baud value */
-#define BAUD_VALUE                      ((4000000/(2*${SPI_BAUD_RATE}))-1)
+/* Sercom clk freq value for the baud calculation */
+#define ${SERCOM_INSTANCE_NAME}_Frequency      (uint32_t) (${SPI_GCLK_CLOCK}UL)
 
 <#if SPI_INTERRUPT_MODE = true>
 /*Global object to save SPI Exchange related data  */
@@ -106,49 +90,36 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
     /* Instantiate the ${SERCOM_INSTANCE_NAME} SPI object */
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.callback = NULL ;
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = false ;
-    ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.status = SPI_ERROR_NONE;
 </#if>
 
-    /* Reset the SPI module */
-    ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= SERCOM_SPI_CTRLA_SWRST_Msk;
-
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPI.SYNCBUSY & SERCOM_SPI_SYNCBUSY_SWRST_Msk) == SERCOM_SPI_SYNCBUSY_SWRST_Msk)
-    {
-        /* Wait for Module to Reset */
-    }
-
-    /* Configure Immediate Buffer Overflow , Data Out Pin Out , Master Mode and
-     * Data In and Pin Out
-     */
-
-    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= SERCOM_SPI_CTRLA_MODE(SPI_MASTER_MODE_VALUE)| SERCOM_SPI_CTRLA_DOPO(${SPI_DOPO}) |
-                                                                           SERCOM_SPI_CTRLA_DIPO(${SPI_DIPO}) | SERCOM_SPI_CTRLA_IBON_Msk
-                                                                           ${SPI_RUNSTDBY?then('| SERCOM_SPI_CTRLA_RUNSTDBY_Msk', '')};</@compress>
-
-    /* Selection of the Clock Phase and Polarity */
-    ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= SPI_TRANSFER_MODE;
-
     /* Selection of the Character Size and Receiver Enable */
-    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLB |= ${(SPI_CHARSIZE_BITS == "_9_BIT")?then('SERCOM_SPI_CTRLB_CHSIZE(0x1)', 'SERCOM_SPI_CTRLB_CHSIZE(0x0)')}
+    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLB |= SERCOM_SPI_CTRLB_CHSIZE(${SPI_CHARSIZE_BITS})
                                                                            ${SPI_RECIEVER_ENABLE?then('| SERCOM_SPI_CTRLB_RXEN_Msk', '')}
                                                                            ${SPI_MSSEN?then('| SERCOM_SPI_CTRLB_MSSEN_Msk', '')};</@compress>
 
+    /* Wait for synchronization */
+    while(${SERCOM_INSTANCE_NAME}_REGS->SPI.SYNCBUSY);
+
     /* Selection of the Baud Value */
-    ${SERCOM_INSTANCE_NAME}_REGS->SPI.BAUD = BAUD_VALUE;
+    ${SERCOM_INSTANCE_NAME}_REGS->SPI.BAUD = ${SPI_BAUD_REG_VALUE};
 
-    /* Clearing all the Interrupt Flags */
-    ${SERCOM_INSTANCE_NAME}_REGS->SPI.INTFLAG = SERCOM_SPI_INTFLAG_Msk;
+    /* Configure Data Out Pin Out , Master Mode,
+     * Data In and Pin Out,Data Order and Standby mode if configured
+     */
+    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= SERCOM_SPI_CTRLA_MODE(0x03)| SERCOM_SPI_CTRLA_DOPO(${SPI_DOPO}) |
+                                                                           SERCOM_SPI_CTRLA_DIPO(${SPI_DIPO})
+                                                                           ${(SPI_DATA_ORDER == "0x1")?then('| SERCOM_SPI_CTRLA_DORD_Msk ', '')} <#rt>
+                                                                    <#lt>  ${SPI_RUNSTDBY?then('| SERCOM_SPI_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 
-    /* Enable the SPI Module */
-    ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= SERCOM_SPI_CTRLA_ENABLE_Msk;
 
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPI.SYNCBUSY & SERCOM_SPI_SYNCBUSY_ENABLE_Msk) == SERCOM_SPI_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for SPI Module to Enable */
-    }
+    /* Selection of the Clock Phase and Polarity and Enable the SPI Module*/
+    ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= SPI_CLOCK_POLARITY_${SPI_CLOCK_POLARITY} | SPI_CLOCK_PHASE_${SPI_CLOCK_PHASE} | SERCOM_SPI_CTRLA_ENABLE_Msk;
+
+    /* Wait for synchronization */
+    while(${SERCOM_INSTANCE_NAME}_REGS->SPI.SYNCBUSY);
+
 }
 
-<#if SPI_TRANSFER_SETUP_ENABLE = true >
 // *****************************************************************************
 /* Function:
     bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup,
@@ -186,34 +157,32 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
     if(spiSourceClock == 0)
     {
         /* Fetch Master Clock Frequency directly */
-        spiSourceClock = CPU_FREQ;
+        spiSourceClock = ${SERCOM_INSTANCE_NAME}_Frequency;
     }
 
     /* Disable the SPI Module */
     ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA &= ~(SERCOM_SPI_CTRLA_ENABLE_Msk);
 
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPI.SYNCBUSY & SERCOM_SPI_SYNCBUSY_ENABLE_Msk) == SERCOM_SPI_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for SPI Module to Disable */
-    }
+     /* Wait for synchronization */
+    while(${SERCOM_INSTANCE_NAME}_REGS->SPI.SYNCBUSY);
 
     if ( setup != NULL )
     {
-        baudValue = (spiSourceClock/(2*(setup->baudRate))) - 1;
+        baudValue = (spiSourceClock/(2*(setup->clockFrequency))) - 1;
 
         if ((baudValue > 0) & (baudValue <= 255))
         {
-            /* Selection of the Clock Polarity */
-            ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= (setup->clockPolarity) << SERCOM_SPI_CTRLA_CPOL_Pos;
-
-            /* Selection of the Clock Phase */
-            ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= (setup->clockPhase) << SERCOM_SPI_CTRLA_CPHA_Pos;
+            /* Selection of the Clock Polarity and Clock Phase */
+            ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= (setup->clockPolarity) << SERCOM_SPI_CTRLA_CPOL_Pos | (setup->clockPhase) << SERCOM_SPI_CTRLA_CPHA_Pos;
 
             /* Selection of the Baud Value */
             ${SERCOM_INSTANCE_NAME}_REGS->SPI.BAUD = baudValue ;
 
             /* Selection of the Character Size */
             ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLB |= (setup->dataBits) << SERCOM_SPI_CTRLB_CHSIZE_Pos;
+
+            /* Wait for synchronization */
+            while(${SERCOM_INSTANCE_NAME}_REGS->SPI.SYNCBUSY);
 
             statusValue = true;
         }
@@ -222,14 +191,11 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
     /* Enabling the SPI Module */
     ${SERCOM_INSTANCE_NAME}_REGS->SPI.CTRLA |= SERCOM_SPI_CTRLA_ENABLE_Msk;
 
-    while((${SERCOM_INSTANCE_NAME}_REGS->SPI.SYNCBUSY & SERCOM_SPI_SYNCBUSY_ENABLE_Msk) == SERCOM_SPI_SYNCBUSY_ENABLE_Msk)
-    {
-        /* Wait for SPI Module to Enable */
-    }
+    /* Wait for synchronization */
+    while(${SERCOM_INSTANCE_NAME}_REGS->SPI.SYNCBUSY);
 
     return statusValue;
 }
-</#if>
 
 <#if SPI_INTERRUPT_MODE = true>
 // *****************************************************************************
