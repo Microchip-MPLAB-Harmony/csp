@@ -52,7 +52,7 @@
 /*  This section lists the other files that are included in this file.
 */
 #include "device.h"
-#include "plib_${PWM_INSTANCE_NAME}.h"
+#include "plib_${PWM_INSTANCE_NAME?lower_case}.h"
 
 <#compress>
 <#assign PWM_FPE_VAL = "">
