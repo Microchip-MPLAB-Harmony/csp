@@ -85,7 +85,7 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     
-    PIO_PinInterruptCallbackRegister(PIO_PIN_PA11, &switch_handler, (uintptr_t) NULL );
+    PIO_PinInterruptCallbackRegister(SWITCH_PIN, &switch_handler, (uintptr_t) NULL );
     PIO_PinInterruptEnable(SWITCH_PIN);
     
     printf("\n\r---------------------------------------------------------");
