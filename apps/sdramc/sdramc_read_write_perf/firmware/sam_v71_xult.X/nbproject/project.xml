@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>sdramc_read_write_perf_sam_e70_xult</name>
+            <name>sdramc_read_write_perf_sam_v71_xult</name>
             <creation-uuid>e54023e9-3948-44ef-bf6f-29d8b223e555</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
@@ -41,16 +41,13 @@
             <formatting>
                 <project-formatting-style>false</project-formatting-style>
             </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../src</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
-                    <name>sam_e70_xult</name>
+                    <name>sam_v71_xult</name>
                     <type>2</type>
                 </confElem>
             </confList>
