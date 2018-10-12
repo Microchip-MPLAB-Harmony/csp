@@ -15,11 +15,11 @@
 # $ makeMP_CC="/opt/microchip/mplabc30/v3.30c/bin/pic30-gcc" ...  
 #
 SHELL=cmd.exe
-PATH_TO_IDE_BIN=C:/Program Files (x86)/Microchip/MPLABX/v5.10.rc2/mplab_platform/platform/../mplab_ide/modules/../../bin/
+PATH_TO_IDE_BIN=C:/Program Files (x86)/Microchip/MPLABX/v5.10.rc4/mplab_platform/platform/../mplab_ide/modules/../../bin/
 # Adding MPLAB X bin directory to path.
-PATH:=C:/Program Files (x86)/Microchip/MPLABX/v5.10.rc2/mplab_platform/platform/../mplab_ide/modules/../../bin/:$(PATH)
+PATH:=C:/Program Files (x86)/Microchip/MPLABX/v5.10.rc4/mplab_platform/platform/../mplab_ide/modules/../../bin/:$(PATH)
 # Path to java used to run MPLAB X when this makefile was created
-MP_JAVA_PATH="C:\Program Files (x86)\Microchip\MPLABX\v5.10.rc2\sys\java\jre1.8.0_181/bin/"
+MP_JAVA_PATH="C:\Program Files (x86)\Microchip\MPLABX\v5.10.rc4\sys\java\jre1.8.0_181/bin/"
 OS_CURRENT="$(shell uname -s)"
 MP_CC="C:\Program Files (x86)\Microchip\xc32\v2.15-TC5\bin\xc32-gcc.exe"
 MP_CPPC="C:\Program Files (x86)\Microchip\xc32\v2.15-TC5\bin\xc32-g++.exe"
@@ -27,7 +27,7 @@ MP_CPPC="C:\Program Files (x86)\Microchip\xc32\v2.15-TC5\bin\xc32-g++.exe"
 MP_AS="C:\Program Files (x86)\Microchip\xc32\v2.15-TC5\bin\xc32-as.exe"
 MP_LD="C:\Program Files (x86)\Microchip\xc32\v2.15-TC5\bin\xc32-ld.exe"
 MP_AR="C:\Program Files (x86)\Microchip\xc32\v2.15-TC5\bin\xc32-ar.exe"
-DEP_GEN=${MP_JAVA_PATH}java -jar "C:/Program Files (x86)/Microchip/MPLABX/v5.10.rc2/mplab_platform/platform/../mplab_ide/modules/../../bin/extractobjectdependencies.jar"
+DEP_GEN=${MP_JAVA_PATH}java -jar "C:/Program Files (x86)/Microchip/MPLABX/v5.10.rc4/mplab_platform/platform/../mplab_ide/modules/../../bin/extractobjectdependencies.jar"
 MP_CC_DIR="C:\Program Files (x86)\Microchip\xc32\v2.15-TC5\bin"
 MP_CPPC_DIR="C:\Program Files (x86)\Microchip\xc32\v2.15-TC5\bin"
 # MP_BC_DIR is not defined

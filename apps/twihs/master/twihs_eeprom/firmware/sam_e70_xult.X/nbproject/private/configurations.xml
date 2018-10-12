@@ -4,7 +4,7 @@
   <defaultConf>0</defaultConf>
   <confs>
     <conf name="sam_e70_xult" type="2">
-      <platformToolSN>:=ThirdParty-DLL-SEGGER:=&lt;man>SEGGER:=&lt;prod>J-Link:=&lt;sn>718789646:=&lt;drv>v:=&lt;xpt>u:=en</platformToolSN>
+      <platformToolSN>:=MPLABComm-USB-Microchip:=&lt;vid>04D8:=&lt;pid>9015:=&lt;rev>0100:=&lt;man>Microchip Technology Incorporated:=&lt;prod>MPLAB ICD 4:=&lt;sn>JIT180810918:=&lt;drv>x:=&lt;xpt>b:=end</platformToolSN>
       <languageToolchainDir>C:\Program Files (x86)\Microchip\xc32\v2.15-TC5\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
