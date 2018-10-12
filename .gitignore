@@ -5,6 +5,7 @@
 **/nbproject/private
 **/nbproject/Makefile-*
 **/nbproject/Package-*
+**/nbproject/project.properties
 **/*.X/debug
 **/*.X/dist
 **/*.X/build
