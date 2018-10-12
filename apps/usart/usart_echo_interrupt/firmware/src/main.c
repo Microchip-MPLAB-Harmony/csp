@@ -114,8 +114,8 @@ int main ( void )
             /* Echo back received buffer and Toggle LED */
             readStatus = false;
 
-            strcpy(echoBuffer, receiveBuffer);
-            strcat(echoBuffer, "\r\n");
+            memcpy(echoBuffer, receiveBuffer, sizeof (receiveBuffer));
+            memcpy(&echoBuffer[RX_BUFFER_SIZE], "\r\n", 2);            
 
             USART1_Write(&echoBuffer, sizeof(echoBuffer));
             LED_Toggle();
