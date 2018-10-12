@@ -53,9 +53,6 @@
 #include "definitions.h"                // SYS function prototypes
 #include <string.h>
 
-#define LED_ON    LED_Clear
-#define LED_OFF   LED_Set
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -17568,7 +17565,6 @@ int main ( void )
         if(result)
         {
             printf("\n\r Test Passed....!\n");
-            LED_ON();
         }
         else
         {
