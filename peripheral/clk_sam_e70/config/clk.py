@@ -93,6 +93,8 @@ def tcClockFreqCalc(symbol, event):
                 symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/128, 2)
             elif (clk_src == 5):
                 symbol.setValue(int(Database.getSymbolValue("core", "CLK_SLOW_XTAL")), 2)
+            else:
+                symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
 
 def uartClockFreqCalc(symbol, event):
     uartInstance = symbol.getID()[4]
@@ -114,6 +116,8 @@ def uartClockFreqCalc(symbol, event):
     elif (clk_src == 1):
         symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
         Database.setSymbolValue("core", "PMC_SCER_PCK4", True, 2)
+    else:
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
 
 def usartClockFreqCalc(symbol, event):
     usartInstance = symbol.getID()[5]
@@ -136,6 +140,8 @@ def usartClockFreqCalc(symbol, event):
     elif (clk_src == 2):
         symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
         Database.setSymbolValue("core", "PMC_SCER_PCK4", True, 2)
+    else:
+        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
 
 def __update_fws_value(flash_wait_states, event):
     """
