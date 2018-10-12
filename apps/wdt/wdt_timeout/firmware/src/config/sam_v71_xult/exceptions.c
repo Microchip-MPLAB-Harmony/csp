@@ -1,21 +1,20 @@
 /*******************************************************************************
-  Main Source File
+  System Exceptions File
 
-  Company:
-    Microchip Technology Inc.
-  
   File Name:
-    main.c
+    exceptions.c
 
   Summary:
-    This file contains the "main" function for a project.
+    This file contains a function which overrides the default _weak_ exception
+    handlers provided by the interrupt.c file.
 
   Description:
-    This file contains the "main" function for a project.  The
-    "main" function calls the "SYS_Initialize" function to initialize the state 
-    machines of all modules in the system
+    This file redefines the default _weak_  exception handler with a more debug
+    friendly one. If an unexpected exception occurs the code will stop in a
+    while(1) loop.
  *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -38,69 +37,86 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
+#include "definitions.h"
 
-#include <stddef.h>                     // Defines NULL
-#include <stdbool.h>                    // Defines true
-#include <stdlib.h>                     // Defines EXIT_FAILURE
-#include "definitions.h"               // SYS function prototypes
+// *****************************************************************************
+// *****************************************************************************
+// Section: Exception Handling Routine
+// *****************************************************************************
+// *****************************************************************************
 
+/* Brief default interrupt handlers for core IRQs.*/
 
-
-volatile bool switch_pressed = false;
-
-void switch_handler( PIO_PIN pin, uintptr_t context )
+void NonMaskableInt_Handler(void)
 {
-    switch_pressed = true;
-}
-// *****************************************************************************
-// *****************************************************************************
-// Section: Main Entry Point
-// *****************************************************************************
-// *****************************************************************************
-
-int main ( void )
-{
-
-    /* Initialize all modules */
-    SYS_Initialize ( NULL );
-    printf ("\n\r -------------------------------------------------------------");
-    printf ("\n\r                           WDT DEMO                           ");
-    printf ("\n\r -------------------------------------------------------------");
-    printf ("\n\r Press switch to emulate deadlock "); 
-    SYSTICK_TimerStart();
-    PIO_PinInterruptCallbackRegister(SWITCH_PIN, &switch_handler, (uintptr_t) NULL );
-    PIO_PinInterruptEnable(SWITCH_PIN);
-    switch_pressed = false;
-    while ( true )
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
     {
-        if(switch_pressed == false)
-        {
-            if(SYSTICK_TimerPeriodHasExpired())
-            {
-                LED_Toggle();
-                WDT_Clear();
-            }
-        }
-        else
-        {   
-            printf ("\n\r Emulating deadlock................ ");
-            printf ("\n\r WDT should reset device in 4 seconds ");           
-            while(1);
-        }
     }
-
-    /* Execution should not come here during normal operation */
-
-    return ( EXIT_FAILURE );
 }
 
+void HardFault_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+
+void DebugMonitor_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+
+#if (defined __CM7_REV) || (defined __CM4_REV)
+void MemoryManagement_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+
+void BusFault_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+
+void UsageFault_Handler(void)
+{
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    __builtin_software_breakpoint();
+#endif
+    while (1)
+    {
+    }
+}
+#endif // (defined __CM7_REV) || (defined __CM4_REV)
 
 /*******************************************************************************
  End of File
-*/
+ */
+
