@@ -387,11 +387,6 @@ void ${USART_INSTANCE_NAME}_WriteByte(int data)
     ${USART_INSTANCE_NAME}_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
 
-void inline ${USART_INSTANCE_NAME}_Sync(void)
-{
-    while ((US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
-}
-
 bool ${USART_INSTANCE_NAME}_TransmitterIsReady( void )
 {
     if(US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_TXEMPTY_Msk))

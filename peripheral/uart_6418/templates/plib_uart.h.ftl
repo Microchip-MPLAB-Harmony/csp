@@ -76,8 +76,6 @@ int ${UART_INSTANCE_NAME}_ReadByte( void );
 
 void ${UART_INSTANCE_NAME}_WriteByte( int data );
 
-void ${UART_INSTANCE_NAME}_Sync(void);
-
 bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void );
 
 bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void );

@@ -76,8 +76,6 @@ int ${USART_INSTANCE_NAME}_ReadByte(void);
 
 void ${USART_INSTANCE_NAME}_WriteByte(int data);
 
-void ${USART_INSTANCE_NAME}_Sync(void);
-
 bool ${USART_INSTANCE_NAME}_TransmitterIsReady( void );
 
 bool ${USART_INSTANCE_NAME}_ReceiverIsReady( void );
