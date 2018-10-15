@@ -216,11 +216,11 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 
     <#lt>void ${RTC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    rtc0Obj.intCause = ${RTC_INSTANCE_NAME}_REGS->MODE2.INTFLAG;
+    <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.intCause = ${RTC_INSTANCE_NAME}_REGS->MODE2.INTFLAG;
 
     <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback != NULL)
     <#lt>    {
-    <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(rtc0Obj.intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context);
+    <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(${RTC_INSTANCE_NAME?lower_case}Obj.intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context);
     <#lt>    }
 
     <#lt>    /* Clear All Interrupts */
