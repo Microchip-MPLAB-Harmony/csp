@@ -46,25 +46,29 @@ def confMenu(symbol, event):
     symbol.setVisible(event["value"])
 
 def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
+    global extIntCount
     channel = int(event["id"].split("_")[2])
     if Database.getSymbolValue(event["namespace"], "EIC_CHAN_" + str(channel)):
         if not str(event["id"]).startswith("EIC_CHAN_"):
             if(event["value"] == True):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)) , 1)
+                Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
             else:
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
+                Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
         else:
             parameter = symbol.getID().split("EIC_")[1]
             if(Database.getSymbolValue(event["namespace"], "EIC_" + str(parameter) + "_" + str(channel)) == True):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)) , 1)
+                Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
             else:
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
+                Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
 
     else:
         symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
-
-    #communicate to event system
-    Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", event["value"], 2)
+        Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+    
 
 def updateEICInterruptStatus(symbol, event):
 
@@ -133,6 +137,7 @@ def instantiateComponent(eicComponent):
     global InterruptHandlerLock
     global NMIInterruptHandler
 
+    global extIntCount
     eicInstanceName = eicComponent.createStringSymbol("EIC_INSTANCE_NAME", None)
     eicInstanceName.setVisible(False)
     eicInstanceName.setDefaultValue(eicComponent.getID().upper())
