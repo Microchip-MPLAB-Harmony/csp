@@ -612,37 +612,6 @@ size_t UARTx_ReadCountGet( void );
 
 // *****************************************************************************
 /* Function:
-    void UARTx_Sync( void )
-
-   Summary:
-    This Function busy waits unitll all transmit requests are completed.
-
-   Description:
-    This function is available only in non-interrupt mode of operation.
-    It can be used to busy wait untill transmit fifo is empty.
-
-   Precondition:
-    UARTx_Initialize must have been called for the associated UART instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    None
-
-  Example:
-    <code>
-        UART1_Sync();
-    </code>
-
-  Remarks:
-    None
-*/
-
-void UARTx_Sync( void );
-
-// *****************************************************************************
-/* Function:
     bool UARTx_TransmitterIsReady( void )
 
    Summary:

@@ -414,11 +414,6 @@ void ${UART_INSTANCE_NAME}_WriteByte(int data)
     ${UART_INSTANCE_NAME}_REGS->UART_THR = (UART_THR_TXCHR(data) & UART_THR_TXCHR_Msk);
 }
 
-void inline ${UART_INSTANCE_NAME}_Sync(void)
-{
-    while ((UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_TXEMPTY_Msk)) == 0);
-}
-
 bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void )
 {
     bool status = false;
