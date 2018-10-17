@@ -136,7 +136,7 @@ INT_Initialize( void )
         <#assign AIC_HANDLER =  AIC_FIRST_NAME + "_INTERRUPT_HANDLER">
         <#if .vars[AIC_VECTOR]?? && .vars[AIC_ENABLE]?? && .vars[AIC_ENABLE]>
     ////// ${.vars[AIC_VECTOR]} as configured by MCC
-            <#if (.vars[AIC_MAP_TYPE]?string == "NonSecure") || (.vars[AIC_MAP_TYPE]?string == "Redirected")>
+            <#lt><#if (.vars[AIC_MAP_TYPE]?string == "NonSecure") || (.vars[AIC_MAP_TYPE]?string == "RedirectedToNonSecure")>
     aicPtr = (aic_registers_t *) AIC_REGS;
             <#else>
     aicPtr = (aic_registers_t *) SAIC_REGS;

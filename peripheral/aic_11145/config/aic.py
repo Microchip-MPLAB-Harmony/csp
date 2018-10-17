@@ -280,13 +280,13 @@ for interrupt in interruptsChildren:
     interruptName = getInterruptName( interrupt )
     aicNumber = str( interrupt.getAttribute( "index" ) )
 
-    if aicNumber in neverSecureList:
-        mapTypeDefault = "NeverSecure"          # on secure to nonSecure redirection will have no effect on these
-    elif aicNumber in alwaysSecureList:
-        mapTypeDefault = "AlwaysSecure"         # on secure to nonSecure redirection will disable and hide these
-    elif aicNumber in programmedSecureList:
-        mapTypeDefault = "Secure"               # on secure to nonSecure redirection will change these to 'Redirected' and change the priority to the highest
-    else:                                       # programmed nonSecure -- on secure to nonSecure redirection will have no effect on these
+    if aicNumber in neverSecureList:            # secure to nonSecure redirection will have no effect
+        mapTypeDefault = "NeverSecure"
+    elif aicNumber in alwaysSecureList:         # secure to nonSecure redirection will disable and hide these
+        mapTypeDefault = "AlwaysSecure"
+    elif aicNumber in programmedSecureList:     # secure to nonSecure redirection will change mapType to 'RedirectedToNonSecure' and set highest priority
+        mapTypeDefault = "Secure"
+    else: # programmed nonSecure                # secure to nonSecure redirection will have no effect
         mapTypeDefault = "NonSecure"
     # only for use by the aic ftl code
     aicInterruptFirstName = coreComponent.createStringSymbol( "AIC_FIRST_NAME_KEY" + aicNumber, None )
@@ -355,14 +355,14 @@ Database.clearSymbolValue( "core", "NUM_SHARED_VECTORS" )
 aicNumSharedVectors = coreComponent.createIntegerSymbol( "NUM_SHARED_VECTORS", aicMenu )
 aicNumSharedVectors.setValue( numSharedVectors, 1 )
 aicNumSharedVectors.setVisible( False )
-###
-aicRedirection.setValue( True, 0 )  # stimulate a aicMapTypeRedirectionCallback() by setting the aicRedirection value
-aicRedirection.setReadOnly( True )
 ### Symbol for code generation decisions
 aicCodeGeneration = coreComponent.createComboSymbol( "AIC_CODE_GENERATION", aicMenu, [ "NONE", "AIC", "SAIC", "AICandSAIC" ] )
 aicCodeGeneration.setDefaultValue( "NONE" )
 aicCodeGeneration.setDependencies( aicCodeGenerationCallback, aicCodeGenerationDependencies )
 aicCodeGeneration.setVisible( False )
+###
+aicRedirection.setValue( True, 0 )  # stimulate a aicMapTypeRedirectionCallback() by setting the aicRedirection value
+aicRedirection.setReadOnly( True )
 
 ############################################################################
 #### Code Generation
