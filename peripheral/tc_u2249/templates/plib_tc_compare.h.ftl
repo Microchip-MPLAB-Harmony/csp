@@ -135,7 +135,7 @@ void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, 
 
 <#else>
 
-bool ${TC_INSTANCE_NAME}_CompareStatusGet( void );
+TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void );
 </#if>
 
 

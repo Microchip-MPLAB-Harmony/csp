@@ -57,6 +57,7 @@
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 <#assign TC_CTRLBSET_VAL = "">
+<#assign TC_DRVCTRL_VAL = "">
 <#if TC_COMPARE_CTRLBSET_DIR == "1">
     <#assign TC_CTRLBSET_VAL = "TC_CTRLBSET_DIR_Msk">
 </#if>
@@ -74,7 +75,20 @@
         <#assign TC_CTRLBSET_VAL = "TC_CTRLBSET_LUPD_Msk">
     </#if>
 </#if>
-
+<#if TC_COMPARE_DRVCTRL_INVEN0 == true>
+    <#if TC_DRVCTRL_VAL != "">
+        <#assign TC_DRVCTRL_VAL = TC_DRVCTRL_VAL + " | TC_DRVCTRL_INVEN0_Msk">
+    <#else>
+        <#assign TC_DRVCTRL_VAL = "TC_DRVCTRL_INVEN0_Msk">
+    </#if>
+</#if>
+<#if TC_COMPARE_DRVCTRL_INVEN1 == true>
+    <#if TC_DRVCTRL_VAL != "">
+        <#assign TC_DRVCTRL_VAL = TC_DRVCTRL_VAL + " | TC_DRVCTRL_INVEN1_Msk">
+    <#else>
+        <#assign TC_DRVCTRL_VAL = "TC_DRVCTRL_INVEN1_Msk">
+    </#if>
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data
@@ -114,9 +128,13 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
 
     <#if TC_CTRLBSET_VAL?has_content>
     /* Configure timer one shot mode & direction */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = TC_CTRLBSET_VAL;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = ${TC_CTRLBSET_VAL};
     </#if>
-
+    
+    <#if TC_DRVCTRL_VAL?has_content>
+    /* Configure timer one shot mode & direction */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = ${TC_DRVCTRL_VAL};
+    </#if>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = ${TC_COMPARE_PERIOD}U;
     <#if TC_COMPARE_WAVE_WAVEGEN == "MPWM"> 
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = ${TC_COMPARE_CC1}U;
@@ -377,13 +395,13 @@ void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 }
 
 <#else>
-/* Check ifperiod interrupt flag is set */
-bool ${TC_INSTANCE_NAME}_CompareStatusGet( void )
+/* Check if period interrupt flag is set */
+TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void )
 {
-    bool compare_status;
-    compare_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
+    TC_COMPARE_STATUS compare_status;
+    compare_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
     /* Clear timer overflow interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_COMPARE_STATUS_MSK;
     return compare_status;
 }
 </#if>

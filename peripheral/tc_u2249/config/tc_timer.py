@@ -88,7 +88,7 @@ tcSym_Timer_TIME_MS.setDependencies(tcTimeMaxValue, ["TC_CTRLA_MODE", "core.CPU_
 period = tcSym_Timer_TIME_MS.getValue() * 1000000 / resolution
 tcSym_TimerPeriod = tcComponent.createLongSymbol("TC_TIMER_PERIOD", tcSym_TimerMenu)
 tcSym_TimerPeriod.setLabel("Timer Period")
-tcSym_TimerPeriod.setVisible(True)
+tcSym_TimerPeriod.setVisible(False)
 tcSym_TimerPeriod.setDefaultValue(long(period))
 tcSym_TimerPeriod.setMin(0)
 tcSym_TimerPeriod.setMax(4294967296)
