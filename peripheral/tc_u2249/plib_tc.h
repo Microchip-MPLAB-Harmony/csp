@@ -143,7 +143,7 @@ typedef enum
     TC_COMPARE_STATUS_MATCH0 = TC_INTFLAG_MC0_Msk,
     /* match compare 1 */
     TC_COMPARE_STATUS_MATCH1 = TC_INTFLAG_MC1_Msk,
-    TC_COmPARE_STATUS_MSK = TC_COMPARE_STATUS_OVERFLOW | TC_COMPARE_STATUS_MATCH0 | TC_COMPARE_STATUS_MATCH1
+    TC_COMPARE_STATUS_MSK = TC_COMPARE_STATUS_OVERFLOW | TC_COMPARE_STATUS_MATCH0 | TC_COMPARE_STATUS_MATCH1
     
 }TC_COMPARE_STATUS;
 
@@ -2140,6 +2140,39 @@ uint32_t TCx_CompareFrequencyGet( void );
 */
 
 void TCx_CompareCallbackRegister( TC_CALLBACK callback, uintptr_t context );
+
+// *****************************************************************************
+/* Function:
+    TC_COMPARE_STATUS TCx_CompareStatusGet( void );
+
+  Summary:
+    Reads status of compare operation.
+
+  Description:
+    This function reads the compare status.
+
+  Precondition:
+    TCx_CompareInitialize() function must have been called first.
+
+  Parameters:
+    None.
+
+  Returns:
+    compareStatus - status of compare operation.
+
+  Example:
+    <code>
+      TC_COMPARE_STATUS compareStatus;
+      TCx_CompareInitialize();
+      TCx_CompareStart();
+      compareStatus = TCx_CompareStatusGet();
+    </code>
+
+  Remarks:
+    None.
+*/
+
+TC_COMPARE_STATUS TCx_CompareStatusGet( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

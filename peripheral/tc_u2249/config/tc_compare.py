@@ -129,21 +129,33 @@ tcSym_Compare_CTRLBSET_LUPD = tcComponent.createBooleanSymbol("TC_COMPARE_CTRLBS
 tcSym_Compare_CTRLBSET_LUPD.setLabel("Enable Double Buffering")
 tcSym_Compare_CTRLBSET_LUPD.setDefaultValue(True)
 
+tcSym_Compare_DRVCTRL_INVEN0 = tcComponent.createBooleanSymbol("TC_COMPARE_DRVCTRL_INVEN0", tcSym_CompareMenu)
+tcSym_Compare_DRVCTRL_INVEN0.setLabel("Invert Output WO[0]")
+tcSym_Compare_DRVCTRL_INVEN0.setDefaultValue(False)
+
+tcSym_Compare_DRVCTRL_INVEN1 = tcComponent.createBooleanSymbol("TC_COMPARE_DRVCTRL_INVEN1", tcSym_CompareMenu)
+tcSym_Compare_DRVCTRL_INVEN1.setLabel("Invert Output WO[1]")
+tcSym_Compare_DRVCTRL_INVEN1.setDefaultValue(False)
+tcSym_Compare_DRVCTRL_INVEN1.setDependencies(tcEventVisible, ["TC_COMPARE_WAVE_WAVEGEN"])
+
 #compare channel counter/compare interrupt
 global tcSym_Compare_INTENSET_OVF
 tcSym_Compare_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_COMPARE_INTENSET_OVF", tcSym_CompareMenu)
 tcSym_Compare_INTENSET_OVF.setLabel("Enable Period Interrupt")
 tcSym_Compare_INTENSET_OVF.setDefaultValue(False)
 
-tcSym_Compare_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_OVFEO", tcSym_CompareMenu)
+tcSym_Compare_Events_Menu = tcComponent.createMenuSymbol("TC_COMPARE_EVENT_MENU", tcSym_CompareMenu)
+tcSym_Compare_Events_Menu.setLabel("Events")
+
+tcSym_Compare_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_OVFEO", tcSym_Compare_Events_Menu)
 tcSym_Compare_EVCTRL_OVFEO.setLabel("Enable Timer Period Overflow Event")
 tcSym_Compare_EVCTRL_OVFEO.setDefaultValue(False)
 
-tcSym_Compare_EVCTRL_MCEO1 = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_MCEO1", tcSym_CompareMenu)
+tcSym_Compare_EVCTRL_MCEO1 = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_MCEO1", tcSym_Compare_Events_Menu)
 tcSym_Compare_EVCTRL_MCEO1.setLabel("Enable Compare Match 1 Event")
 tcSym_Compare_EVCTRL_MCEO1.setDefaultValue(False)
 tcSym_Compare_EVCTRL_MCEO1.setDependencies(tcEventVisible, ["TC_COMPARE_WAVE_WAVEGEN"])
 
-tcSym_Compare_EVESYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_COMPARE_EVSYS_CONFIGURE", tcSym_CompareMenu)
+tcSym_Compare_EVESYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_COMPARE_EVSYS_CONFIGURE", tcSym_Compare_Events_Menu)
 tcSym_Compare_EVESYS_CONFIGURE.setVisible(False)
 tcSym_Compare_EVESYS_CONFIGURE.setDependencies(tcCompareEvsys, ["TC_COMPARE_EVCTRL_OVFEO", "TC_COMPARE_EVCTRL_MCEO1"])
