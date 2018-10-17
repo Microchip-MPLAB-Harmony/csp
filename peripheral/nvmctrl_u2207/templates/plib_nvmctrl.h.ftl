@@ -62,22 +62,20 @@
 
 // DOM-IGNORE-END
 
-#define ${NVMCTRL_INSTANCE_NAME}_FLASH_START_ADDRESS   (${.vars["FLASH_START_ADDRESS"]}U)
-#define ${NVMCTRL_INSTANCE_NAME}_FLASH_SIZE            (${FLASH_SIZE}U)
-#define ${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE        (${FLASH_PROGRAM_SIZE}U)
-#define ${NVMCTRL_INSTANCE_NAME}_FLASH_ROWSIZE         (${FLASH_ERASE_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_FLASH_START_ADDRESS        (${.vars["FLASH_START_ADDRESS"]}U)
+#define ${NVMCTRL_INSTANCE_NAME}_FLASH_SIZE                 (${FLASH_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE             (${FLASH_PROGRAM_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_FLASH_ROWSIZE              (${FLASH_ERASE_SIZE}U)
 
-<#if NVMCTRL_RWW_EEPROM == true>
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_START_ADDRESS     (${.vars["FLASH_RWWEEPROM_START_ADDRESS"]}U)
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_SIZE              (${FLASH_RWWEEPROM_SIZE}U)
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PAGESIZE          (${FLASH_RWWEEPROM_PROGRAM_SIZE}U)
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_ROWSIZE           (${FLASH_RWWEEPROM_ERASE_SIZE}U)
-</#if>
+#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_START_ADDRESS    (${.vars["FLASH_RWWEEPROM_START_ADDRESS"]}U)
+#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_SIZE             (${FLASH_RWWEEPROM_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PAGESIZE         (${FLASH_RWWEEPROM_PROGRAM_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_ROWSIZE          (${FLASH_RWWEEPROM_ERASE_SIZE}U)
 
 <#if DRV_MEMORY_CONNECTED == true>
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS       0x${START_ADDRESS}
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_MEDIA_SIZE          ${MEMORY_MEDIA_SIZE}
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_ERASE_BUFFER_SIZE   ${ERASE_BUFFER_SIZE}
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
 </#if>
 
 typedef enum
@@ -108,22 +106,19 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t* data, uint32_t address );
 
 bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address );
 
+bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address );
+
+bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PageWrite( uint32_t* data, uint32_t address );
+
+bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_RowErase ( uint32_t address );
+
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void );
 
 bool ${NVMCTRL_INSTANCE_NAME}_IsBusy( void );
 
-<#if NVMCTRL_REGION_LOCK_UNLOCK == true>
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_RegionLock (uint32_t address);
+void ${NVMCTRL_INSTANCE_NAME}_RegionLock (uint32_t address);
 
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
-</#if>
-
-<#if NVMCTRL_RWW_EEPROM == true>
-    <#lt>bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address );
-    <#lt>bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PageWrite( uint32_t address, uint32_t* data );
-
-    <#lt>bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_RowErase ( uint32_t address );
-</#if>
+void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister ( NVMCTRL_CALLBACK callback, uintptr_t context );
