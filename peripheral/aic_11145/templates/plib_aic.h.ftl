@@ -50,6 +50,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #include <stdbool.h>
 #include <device.h>
 
+typedef void (*IrqHandler)(void);
+
 void INT_Initialize( void );
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
