@@ -66,7 +66,7 @@ i2cmSym_mode = sercomComponent.createKeyValueSetSymbol("I2CM_MODE", sercomSym_Op
 i2cmSym_mode.setLabel(i2cValGrp_I2CM_CTRLA__SPEED.getAttribute("caption"))
 i2cmSym_mode.setOutputMode("Value")
 i2cmSym_mode.setDisplayMode("Key")
-i2cmSym_mode.setReadOnly(False)
+i2cmSym_mode.setVisible(False)
 i2cmSym_mode.setDefaultValue(0)
 
 for id in range(0, (len(i2cValGrp_I2CM_CTRLA__SPEED.getChildren())-1)):
@@ -74,7 +74,7 @@ for id in range(0, (len(i2cValGrp_I2CM_CTRLA__SPEED.getChildren())-1)):
         value = i2cValGrp_I2CM_CTRLA__SPEED.getChildren()[id].getAttribute("value")
         description = i2cValGrp_I2CM_CTRLA__SPEED.getChildren()[id].getAttribute("caption")
         i2cmSym_mode.addKey(valueName, value, description)
-        i2cmSym_mode.setDependencies(sercomi2cComponentVisibleProperty, ["SERCOM_MODE"])
+i2cmSym_mode.setDependencies(sercomi2cComponentVisibleProperty, ["SERCOM_MODE"])
 
 # RunIn Standby
 i2cmSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("I2C_RUNSTDBY", sercomSym_OperationMode)

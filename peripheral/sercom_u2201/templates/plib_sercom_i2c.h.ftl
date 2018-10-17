@@ -149,10 +149,8 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void);
     true  - The request was placed successfully and the bus activity was
             initiated.
 
-    false - The request failed. No bus activity was initiated. This can happen
-            if the receive buffer pointer is NULL, or if the lenght parameter
-            is 0 or if there was already a transfer in progress when this
-            function was called or if a TRB was not available.
+    false - The request fails,if there was already a transfer in progress when this
+            function was called.
 
   Example:
     <code>
@@ -193,7 +191,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t 
     This function writes data to a slave on the bus. The function will attempt
     to write length number of bytes from pdata buffer to a slave whose address
     is specified by address. The I2C Master will generate a Start condition,
-    write the data and then generate a Stop Conditioni. If the Master lost
+    write the data and then generate a Stop Condition. If the Master lost
     arbitration, then the library will attempt to regain the control of the bus.
     If the slave NAKs the request or a bus error was encountered on the bus, the
     transfer is terminated. The application can call the
@@ -226,10 +224,8 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t 
     true  - The request was placed successfully and the bus activity was
     initiated.
 
-    false - The request failed. No bus activity was initiated. This can happen
-            if the transmit buffer pointer is NULL, or if the lenght parameter
-            is 0 or if there was already a transfer in progress when this function
-            was called or if a TRB is not available.
+    false - The request fails,if there was already a transfer in progress when this function
+            was called. .
 
   Example:
     <code>
@@ -276,8 +272,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t
     If the Master lost arbitration, then the library will attempt to regain the
     control of the bus.  If the slave NAKs the request or a bus error was
     encountered on the bus, the transfer is terminated. The application can call
-    the ${SERCOM_INSTANCE_NAME}_I2C_TransferStatusGet() function and the ${SERCOM_INSTANCE_NAME}_I2C_ErrorGet()
-    function to know that cause of the error.
+    ${SERCOM_INSTANCE_NAME}_I2C_ErrorGet()function to know that cause of the error.
 
     The function is non-blocking. It initiates bus activity and returns
     immediately. The transfer is then completed in the peripheral interrupt. A
@@ -307,10 +302,8 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t
     true  - The request was placed successfully and the bus activity was
     initiated.
 
-    false - The request failed. No bus activity was initiated. This can happen
-    if the transmit/receive buffer pointer is NULL, or if the rlength/wlength
-    parameter is 0 or if there was already a transfer in progress when this
-    function was called or if a TRB is not available.
+    false - The request fails, if there was already a transfer in progress when this
+    function was called.
 
   Example:
     <code>
@@ -400,10 +393,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_IsBusy(void);
 
   Description:
     This function returns the latest error that occurred on the bus. The
-    function can be called to identify the error cause when the
-    ${SERCOM_INSTANCE_NAME}_I2C_TransferStatusGet() function returns a
-    SERCOM_I2C_TRANSFER_ERROR status. The errors are cleared when the next
-    transfer function is initiated.
+    function can be called to identify the error cause.
 
   Precondition:
     ${SERCOM_INSTANCE_NAME}_I2C_Initialize must have been called for the
@@ -415,12 +405,6 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_IsBusy(void);
   Returns:
     Returns a SERCOM_I2C_ERROR type of status identifying the error that has
     occurred.
-
-  Example:
-    <code>
-        // Refer to the description of the ${SERCOM_INSTANCE_NAME}_I2C_TRBTransfer()
-        // function for example usage.
-    </code>
 
   Remarks:
     None.
