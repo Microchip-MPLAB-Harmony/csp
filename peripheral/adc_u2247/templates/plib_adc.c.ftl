@@ -56,9 +56,10 @@
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
 <#compress>
 <#assign ADC_CTRLC_VAL = "">
+<#assign ADC_SEQCTRL_VAL = "">
 <#assign ADC_EVCTRL_VAL = "">
 <#assign ADC_INTENSET_VAL = "">
-<#if ADC_CTRLC_DIFFMODE == true>
+<#if ADC_INPUTCTRL_MUXNEG != "GND">
     <#assign ADC_CTRLC_VAL = "ADC_CTRLC_DIFFMODE_Msk">
 </#if>
 <#if ADC_CTRLC_LEFTADJ == true>
@@ -76,41 +77,60 @@
     </#if>
 </#if>
 
-<#if ADC_EVCTRL_RSERDYEO == true>
+<#if ADC_CONV_TRIGGER != "Free Run" && ADC_SEQ_ENABLE == true>
+    <#list 0..ADC_NUM_CHANNELS-1 as i>
+        <#assign ADC_SEQCTRL = "ADC_SEQCTRL_SEQ" + i>
+        <#if .vars[ADC_SEQCTRL] == true>
+            <#if ADC_SEQCTRL_VAL != "">
+                <#assign ADC_SEQCTRL_VAL = ADC_SEQCTRL_VAL + "\n\t\t | " + "ADC_SEQCTRL_SEQEN(1U << " + i +")">
+            <#else>
+                <#assign ADC_SEQCTRL_VAL = "ADC_SEQCTRL_SEQEN(1U << " + i +")">
+            </#if>
+        </#if>
+    </#list>
+</#if>
+
+<#if ADC_EVCTRL_RESRDYEO == true>
     <#if ADC_EVCTRL_VAL != "">
         <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_RESRDYEO_Msk">
     <#else>
         <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_RESRDYEO_Msk">
     </#if>
 </#if>
-<#if ADC_WINDOW_OUTPUT_EVENT == true>
+<#if ADC_CTRLC_WINMODE != "0" && ADC_WINDOW_OUTPUT_EVENT == true>
     <#if ADC_EVCTRL_VAL != "">
         <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_WINMON_Msk">
     <#else>
         <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_WINMON_Msk">
     </#if>
 </#if>
+
 <#if ADC_CONV_TRIGGER == "HW Event Trigger" && ADC_CTRLA_SLAVEEN == false>
-    <#if ADC_HW_FLUSH_INP_EVENT == true>
-    <#if ADC_EVCTRL_VAL != "">
-        <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_FLUSHEI_Msk">
-    <#else>
-        <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_FLUSHEI_Msk">
-    </#if>
-</#if>
-    <#if ADC_HW_START_CONV_INP_EVENT == true>
+    <#if ADC_EVCTRL_FLUSH == "1">
         <#if ADC_EVCTRL_VAL != "">
-                <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_STARTEI_Msk">
+            <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_FLUSHEI_Msk">
         <#else>
-                <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_STARTEI_Msk">
+            <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_FLUSHEI_Msk">
+        </#if>
+    <#elseif ADC_EVCTRL_FLUSH == "2">
+        <#if ADC_EVCTRL_VAL != "">
+            <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_FLUSHEI_Msk | ADC_EVCTRL_FLUSHINV_Msk">
+        <#else>
+            <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_FLUSHEI_Msk | ADC_EVCTRL_FLUSHINV_Msk">
         </#if>
     </#if>
-</#if>
-<#if ADC_CONV_TRIGGER == "HW Event Trigger" && ADC_CTRLA_SLAVEEN == false && ADC_EVCTRL_FLUSHINV == true>
-    <#if ADC_EVCTRL_VAL != "">
-        <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_FLUSHINV_Msk">
-    <#else>
-        <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_FLUSHINV_Msk">
+    <#if ADC_EVCTRL_START == "1">
+        <#if ADC_EVCTRL_VAL != "">
+            <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_STARTEI_Msk">
+        <#else>
+            <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_STARTEI_Msk">
+        </#if>
+    <#elseif ADC_EVCTRL_FLUSH == "2">
+        <#if ADC_EVCTRL_VAL != "">
+            <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_STARTEI_Msk | ADC_EVCTRL_STARTINV_Msk">
+        <#else>
+            <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_STARTEI_Msk | ADC_EVCTRL_STARTINV_Msk">
+        </#if>
     </#if>
 </#if>
 
@@ -121,7 +141,7 @@
         <#assign ADC_INTENSET_VAL = "ADC_INTENSET_RESRDY_Msk">
     </#if>
 </#if>
-<#if ADC_INTENSET_WINMON == true>
+<#if ADC_CTRLC_WINMODE != "0" && ADC_INTENSET_WINMON == true>
     <#if ADC_INTENSET_VAL != "">
         <#assign ADC_INTENSET_VAL = ADC_INTENSET_VAL + " | ADC_INTENSET_WINMON_Msk">
     <#else>
@@ -135,7 +155,6 @@
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
-
 <#if ADC_INTENSET_RESRDY = true || ADC_INTENSET_WINMON = true>
 ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
@@ -159,7 +178,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     }
 
 <#if ADC_CTRLA_SLAVEEN == true>
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_SLAVEEN_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_SLAVEEN_Msk;
 <#else>
     /* prescaler */
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER};
@@ -169,35 +188,26 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 
     /* reference */
     ${ADC_INSTANCE_NAME}_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_${ADC_REFCTRL_REFSEL};
-
+    
+<#if ADC_SEQCTRL_VAL?has_content>
+    ${ADC_INSTANCE_NAME}_REGS->ADC_SEQCTRL = ${ADC_SEQCTRL_VAL};
+<#else>
     /* positive and negative input pins */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG};
-
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
-    {
-        /* Wait for Synchronization */
-    }
+</#if>
 
     /* Resolution & Operation Mode */
     <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC = ADC_CTRLC_RESSEL_${ADC_CTRLC_RESSEL} | ADC_CTRLC_WINMODE(${ADC_CTRLC_WINMODE})
                                      <#if ADC_CTRLC_VAL?has_content>| ${ADC_CTRLC_VAL}</#if>;</@compress>
-
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_CTRLC_Msk) == ADC_SYNCBUSY_CTRLC_Msk)
-    {
-        /* Wait for Synchronization */
-    }
 
 <#if ADC_CTRLC_RESSEL == "16BIT">
     /* Result averaging */
     ${ADC_INSTANCE_NAME}_REGS->ADC_AVGCTRL = ADC_AVGCTRL_SAMPLENUM_${ADC_AVGCTRL_SAMPLENUM} | ADC_AVGCTRL_ADJRES(${ADC_AVGCTRL_ADJRES});
 </#if>
 
-<#if ADC_WINUT?has_content>
+<#if ADC_CTRLC_WINMODE != "0">
     /* Upper threshold for window mode  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = ${ADC_WINUT};
-</#if>
-
-<#if ADC_WINLT?has_content>
     /* Lower threshold for window mode  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = ${ADC_WINLT};
 </#if>
@@ -217,7 +227,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
                                       ${ADC_CTRLA_RUNSTDBY?then('| ADC_CTRLA_RUNSTDBY_Msk', '')}
                                       ${ADC_CTRLA_ONDEMAND?then('| ADC_CTRLA_ONDEMAND_Msk', '')};</@compress>
 
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_ENABLE_Msk) == ADC_SYNCBUSY_ENABLE_Msk)
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
     {
         /* Wait for Synchronization */
     }
@@ -245,6 +255,24 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void )
     {
         /* Wait for Synchronization */
     }
+}
+
+/* Check whether auto sequence conversion is done */
+bool ${ADC_INSTANCE_NAME}_ConversionSequenceIsFinished(void)
+{
+    bool seq_status = false;
+    if ((${ADC_INSTANCE_NAME}_REGS->ADC_SEQSTATUS & ADC_SEQSTATUS_SEQBUSY_Msk) != ADC_SEQSTATUS_SEQBUSY_Msk)
+    {
+        seq_status = true;
+    }
+    return seq_status;
+}
+
+/* Configure window comparison threshold values */
+void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = low_threshold;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = high_threshold;
 }
 
 /* Check whether result is ready */

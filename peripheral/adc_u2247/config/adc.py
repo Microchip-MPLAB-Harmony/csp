@@ -26,6 +26,7 @@ global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
 global adcInstanceName
+adcSym_SEQCTRL_SEQ = []
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -83,13 +84,47 @@ def adcEventInputVisibility(symbol, event):
         symbol.setVisible(False)
     else:
         symbol.setVisible(True)
+        
+def adcOptionVisible(symbol, event):
+    if(event["value"] != "Free Run"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
+def adcWindowVisible(symbol, event):
+    if (event["value"] > 0):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def adcPosInpVisible(symbol, event):
+    if (adcSym_CONV_TRIGGER.getValue() != "Free Run"):
+        if (adcSym_SEQ_ENABLE.getValue() == True):
+            symbol.setVisible(False)
+        else:
+            symbol.setVisible(True)
+    else:
+        symbol.setVisible(True)
+
+def adcSUPCVisible(symbol, event):
+    if (event["id"] == "ADC_INPUTCTRL_MUXPOS"):
+        symObj = event["symbol"]
+        if (symObj.getSelectedKey() == "BANDGAP"):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    
+    if (event["id"] == "ADC_REFCTRL_REFSEL"):
+        symObj = event["symbol"]
+        if (symObj.getSelectedKey() == "INTREF"):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
 
 def instantiateComponent(adcComponent):
-
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
@@ -150,9 +185,10 @@ def instantiateComponent(adcComponent):
             adcSym_CTRLA_SLAVEEN.setVisible(False)
 
     #prescaler configuration
+    global adcSym_CTRLB_PRESCALER
     adcSym_CTRLB_PRESCALER = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_PRESCALER", None)
     adcSym_CTRLB_PRESCALER.setLabel("Select Prescaler")
-    adcSym_CTRLB_PRESCALER.setDefaultValue(0)
+    adcSym_CTRLB_PRESCALER.setDefaultValue(2)
     adcSym_CTRLB_PRESCALER.setOutputMode("Key")
     adcSym_CTRLB_PRESCALER.setDisplayMode("Description")
     adcPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_CTRLB__PRESCALER\"]")
@@ -163,6 +199,7 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLB_PRESCALER.setDependencies(adcSlaveModeVisibility, ["ADC_CTRLA_SLAVEEN"])
 
     #sampling time
+    global adcSym_SAMPCTRL_SAMPLEN
     adcSym_SAMPCTRL_SAMPLEN = adcComponent.createIntegerSymbol("ADC_SAMPCTRL_SAMPLEN", None)
     adcSym_SAMPCTRL_SAMPLEN.setLabel("Select Sample Length (cycles)")
     adcSym_SAMPCTRL_SAMPLEN.setMin(0)
@@ -171,95 +208,79 @@ def instantiateComponent(adcComponent):
 
     #Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
-    adcSym_SAMPCTRL_SAMPLEN_TIME.setLabel("**** Sampling Time is 0.04166 us ****")
-    #adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER"])
+    adcSym_SAMPCTRL_SAMPLEN_TIME.setLabel("**** Conversion Time is 0.04166 us ****")
+    adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, \
+        ["core.CPU_CLOCK_FREQUENCY", "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL"])
 
     #reference selection
     adcSym_REFCTRL_REFSEL = adcComponent.createKeyValueSetSymbol("ADC_REFCTRL_REFSEL", None)
     adcSym_REFCTRL_REFSEL.setLabel("Select Reference")
-    adcSym_REFCTRL_REFSEL.setDefaultValue(0)
+    default = 0
     adcSym_REFCTRL_REFSEL.setOutputMode("Key")
     adcSym_REFCTRL_REFSEL.setDisplayMode("Description")
     adcReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_REFCTRL__REFSEL\"]")
     adcReferenceValues = []
     adcReferenceValues = adcReferenceNode.getChildren()
     for index in range(0, len(adcReferenceValues)):
+        if adcReferenceValues[index].getAttribute("caption") == "VDDANA":
+            default = index
         adcSym_REFCTRL_REFSEL.addKey(adcReferenceValues[index].getAttribute("name"), adcReferenceValues[index].getAttribute("value"),
         adcReferenceValues[index].getAttribute("caption"))
+    adcSym_REFCTRL_REFSEL.setDefaultValue(default)
 
     #trigger
     global adcSym_CONV_TRIGGER
-    adcSym_CONV_TRIGGER = adcComponent.createComboSymbol("ADC_CONV_TRIGGER", None, ["SW Trigger", "HW Event Trigger", "Free Run"])
-    adcSym_CONV_TRIGGER.setDefaultValue("SW Trigger")
+    adcSym_CONV_TRIGGER = adcComponent.createComboSymbol("ADC_CONV_TRIGGER", None, ["Free Run", "SW Trigger", "HW Event Trigger"])
+    adcSym_CONV_TRIGGER.setDefaultValue("Free Run")
     adcSym_CONV_TRIGGER.setLabel("Select Conversion Trigger")
+    
+    adcSym_FLUSH_EVENT = adcComponent.createKeyValueSetSymbol("ADC_EVCTRL_FLUSH", adcSym_CONV_TRIGGER)
+    adcSym_FLUSH_EVENT.setLabel("Flush Event Input")
+    adcSym_FLUSH_EVENT.setVisible(False)
+    adcSym_FLUSH_EVENT.setOutputMode("Value")
+    adcSym_FLUSH_EVENT.setDisplayMode("Description")
+    adcSym_FLUSH_EVENT.addKey("DISABLED", "0", "Disabled")
+    adcSym_FLUSH_EVENT.addKey("ENABLED_RISING_EDGE", "1", "Enabled on Rising Edge")
+    adcSym_FLUSH_EVENT.addKey("ENABLED_FALLING_EDGE", "1", "Enabled on Falling Edge")
+    adcSym_FLUSH_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
 
-    #Enable Flush input event
-    adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_HW_FLUSH_INP_EVENT", adcSym_CONV_TRIGGER)
-    adcSym_HW_INP_EVENT.setLabel("Enable Flush Input Event")
-    adcSym_HW_INP_EVENT.setDefaultValue(False)
-    adcSym_HW_INP_EVENT.setVisible(False)
-    adcSym_HW_INP_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
+    adcSym_START_EVENT = adcComponent.createKeyValueSetSymbol("ADC_EVCTRL_START", adcSym_CONV_TRIGGER)
+    adcSym_START_EVENT.setLabel("Start Event Input")
+    adcSym_START_EVENT.setVisible(False)
+    adcSym_START_EVENT.setOutputMode("Value")
+    adcSym_START_EVENT.setDisplayMode("Description")
+    adcSym_START_EVENT.addKey("DISABLED", "0", "Disabled")
+    adcSym_START_EVENT.addKey("ENABLED_RISING_EDGE", "1", "Enabled on Rising Edge")
+    adcSym_START_EVENT.addKey("ENABLED_FALLING_EDGE", "1", "Enabled on Falling Edge")
+    adcSym_START_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
 
-    #Invert Flush input event
-    adcSym_EVCTRL_FLUSHINV = adcComponent.createBooleanSymbol("ADC_EVCTRL_FLUSHINV", adcSym_CONV_TRIGGER)
-    adcSym_EVCTRL_FLUSHINV.setLabel("Invert Flush Event")
-    adcSym_EVCTRL_FLUSHINV.setDefaultValue(False)
-    adcSym_EVCTRL_FLUSHINV.setVisible(False)
-    adcSym_EVCTRL_FLUSHINV.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
+    #Auto sequence menu
+    adcSequenceMenu = adcComponent.createMenuSymbol("ADC_SEQUENCE_MENU", None)
+    adcSequenceMenu.setLabel("Automatic Sequence Configuration")
+    adcSequenceMenu.setVisible(False)
+    adcSequenceMenu.setDependencies(adcOptionVisible, ["ADC_CONV_TRIGGER"])
 
-    #Enable Start Conversion input event
-    adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_HW_START_CONV_INP_EVENT", adcSym_CONV_TRIGGER)
-    adcSym_HW_INP_EVENT.setLabel("Enable Start Conversion Input Event")
-    adcSym_HW_INP_EVENT.setDefaultValue(False)
-    adcSym_HW_INP_EVENT.setVisible(False)
-    adcSym_HW_INP_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
+    global adcSym_SEQ_ENABLE
+    adcSym_SEQ_ENABLE = adcComponent.createBooleanSymbol("ADC_SEQ_ENABLE", adcSequenceMenu)
+    adcSym_SEQ_ENABLE.setLabel("Enable Automatic Sequencing")
+    
+    adcPositiveInputNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__MUXPOS\"]")
+    adcPositiveInputValues = []
+    adcPositiveInputValues = adcPositiveInputNode.getChildren()
+    for index in range(0, len(adcPositiveInputValues)):
+        adcSym_SEQCTRL_SEQ.append(index)
+        adcSym_SEQCTRL_SEQ[index] = adcComponent.createBooleanSymbol("ADC_SEQCTRL_SEQ"+str(index), adcSym_SEQ_ENABLE)
+        adcSym_SEQCTRL_SEQ[index].setLabel("Enable "+ str(adcPositiveInputValues[index].getAttribute("caption")))
+        if "AIN" in adcPositiveInputValues[index].getAttribute("name"):
+            if adcPositiveInputValues[index].getAttribute("name") in channel:
+                adcSym_SEQCTRL_SEQ[index].setVisible(True)
+            else:
+                adcSym_SEQCTRL_SEQ[index].setVisible(False)
 
-    #Invert Start Conversion input event
-    adcSym_EVCTRL_FLUSHINV = adcComponent.createBooleanSymbol("ADC_EVCTRL_STARTINV", adcSym_CONV_TRIGGER)
-    adcSym_EVCTRL_FLUSHINV.setLabel("Invert Start Conversion Event")
-    adcSym_EVCTRL_FLUSHINV.setDefaultValue(False)
-    adcSym_EVCTRL_FLUSHINV.setVisible(False)
-    adcSym_EVCTRL_FLUSHINV.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
-    
-    adcWindowMenu = adcComponent.createMenuSymbol("ADC_WINDOW_CONFIG_MENU", None)
-    adcWindowMenu.setLabel("Window Mode Configuration")
-    
-    global adcSym_INTENSET_WINMON
-    adcSym_INTENSET_WINMON = adcComponent.createBooleanSymbol("ADC_INTENSET_WINMON", adcWindowMenu)
-    adcSym_INTENSET_WINMON.setLabel("Enable Window Monitor Interrupt")
-    adcSym_INTENSET_WINMON.setDefaultValue(False)
-    
-    #Configure mode for Window operation
-    adcSym_CTRLC_WINMODE = adcComponent.createKeyValueSetSymbol("ADC_CTRLC_WINMODE", adcWindowMenu)
-    adcSym_CTRLC_WINMODE.setLabel("Select Window Monitor Mode")
-    adcSym_CTRLC_WINMODE.setDefaultValue(0)
-    adcSym_CTRLC_WINMODE.setOutputMode("Value")
-    adcSym_CTRLC_WINMODE.setDisplayMode("Description")
-    adcWindowConfigNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_CTRLC__WINMODE\"]")
-    adcWindowConfigValues = []
-    adcWindowConfigValues = adcWindowConfigNode.getChildren()
-    for index in range (0 , len(adcWindowConfigValues)):
-        adcSym_CTRLC_WINMODE.addKey(adcWindowConfigValues[index].getAttribute("name"), adcWindowConfigValues[index].getAttribute("value"),
-        adcWindowConfigValues[index].getAttribute("caption"))
-        
-    #Window upper threshold
-    adcSym_WINUT = adcComponent.createIntegerSymbol("ADC_WINUT", adcWindowMenu)
-    adcSym_WINUT.setLabel("Upper Threshold for ADC window operation")
-    adcSym_WINUT.setMin(-2048)
-    adcSym_WINUT.setMax(4096)
-    adcSym_WINUT.setDefaultValue(0)
-    
-    #Window lower threshold
-    adcSym_WINLT = adcComponent.createIntegerSymbol("ADC_WINLT", adcWindowMenu)
-    adcSym_WINLT.setLabel("Lower Threshold for ADC window operation")
-    adcSym_WINLT.setMin(-2048)
-    adcSym_WINLT.setMax(4096)
-    adcSym_WINLT.setDefaultValue(0)
-    
-    #Enable Window Monitor Event Out
-    adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_WINDOW_OUTPUT_EVENT", adcWindowMenu)
-    adcSym_HW_INP_EVENT.setLabel("Enable Window Monitor Event Out")
-    
+    adcSym_NUM_CHANNELS = adcComponent.createIntegerSymbol("ADC_NUM_CHANNELS", None)
+    adcSym_NUM_CHANNELS.setVisible(False)
+    adcSym_NUM_CHANNELS.setDefaultValue(len(adcPositiveInputValues))
+
     adcChannelMenu = adcComponent.createMenuSymbol("ADC_CHANNEL_MENU", None)
     adcChannelMenu.setLabel("Channel Configuration")
 
@@ -269,9 +290,6 @@ def instantiateComponent(adcComponent):
     adcSym_INPUTCTRL_MUXPOS.setDefaultValue(0)
     adcSym_INPUTCTRL_MUXPOS.setOutputMode("Key")
     adcSym_INPUTCTRL_MUXPOS.setDisplayMode("Description")
-    adcPositiveInputNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__MUXPOS\"]")
-    adcPositiveInputValues = []
-    adcPositiveInputValues = adcPositiveInputNode.getChildren()
     for index in range(0, len(adcPositiveInputValues)):
         if "AIN" in adcPositiveInputValues[index].getAttribute("name"):
             if adcPositiveInputValues[index].getAttribute("name") in channel:
@@ -280,18 +298,13 @@ def instantiateComponent(adcComponent):
         else:
             adcSym_INPUTCTRL_MUXPOS.addKey(adcPositiveInputValues[index].getAttribute("name"), adcPositiveInputValues[index].getAttribute("value"),
             adcPositiveInputValues[index].getAttribute("caption"))
-
-    #differential mode
-    adcSym_CTRLC_DIFFMODE = adcComponent.createBooleanSymbol("ADC_CTRLC_DIFFMODE", adcChannelMenu)
-    adcSym_CTRLC_DIFFMODE.setLabel("Differential Mode")
-    adcSym_CTRLC_DIFFMODE.setDefaultValue(False)
+    adcSym_INPUTCTRL_MUXPOS.setDependencies(adcPosInpVisible, ["ADC_CONV_TRIGGER", "ADC_SEQ_ENABLE"])
 
     #negative input
     adcSym_INPUTCTRL_MUXNEG = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXNEG", adcChannelMenu)
     adcSym_INPUTCTRL_MUXNEG.setLabel("Select Negative Input")
     adcSym_INPUTCTRL_MUXNEG.setOutputMode("Key")
     adcSym_INPUTCTRL_MUXNEG.setDisplayMode("Description")
-    adcSym_INPUTCTRL_MUXNEG.setReadOnly(True)
     defaultIndex = 0
     gndIndex = 0
     adcNagativeInputNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__MUXNEG\"]")
@@ -310,12 +323,12 @@ def instantiateComponent(adcComponent):
             adcNagativeInputValues[index].getAttribute("caption"))
             gndIndex += 1
     adcSym_INPUTCTRL_MUXNEG.setDefaultValue(defaultIndex)
-    adcSym_INPUTCTRL_MUXNEG.setDependencies(adcNegativeInput, ["ADC_CTRLC_DIFFMODE"])
 
     adcResultMenu = adcComponent.createMenuSymbol("ADC_RESULT_MENU", None)
     adcResultMenu.setLabel("Result Configuration")
 
     #resolution configuration
+    global adcSym_CTRLC_RESSEL
     adcSym_CTRLC_RESSEL = adcComponent.createKeyValueSetSymbol("ADC_CTRLC_RESSEL", adcResultMenu)
     adcSym_CTRLC_RESSEL.setLabel("Select Result Resolution")
     adcSym_CTRLC_RESSEL.setDefaultValue(0)
@@ -363,8 +376,51 @@ def instantiateComponent(adcComponent):
     adcSym_INTENSET_RESRDY.setLabel("Enable Result Ready Interrupt")
 
     #event out mode
-    adcSym_EVCTRL_RSERDYEO = adcComponent.createBooleanSymbol("ADC_EVCTRL_RSERDYEO", adcResultMenu)
+    adcSym_EVCTRL_RSERDYEO = adcComponent.createBooleanSymbol("ADC_EVCTRL_RESRDYEO", adcResultMenu)
     adcSym_EVCTRL_RSERDYEO.setLabel("Enable Result Ready Event Out")
+    
+    adcWindowMenu = adcComponent.createMenuSymbol("ADC_WINDOW_CONFIG_MENU", None)
+    adcWindowMenu.setLabel("Window Mode Configuration")
+    
+    #Configure mode for Window operation
+    adcSym_CTRLC_WINMODE = adcComponent.createKeyValueSetSymbol("ADC_CTRLC_WINMODE", adcWindowMenu)
+    adcSym_CTRLC_WINMODE.setLabel("Select Window Monitor Mode")
+    adcSym_CTRLC_WINMODE.setDefaultValue(0)
+    adcSym_CTRLC_WINMODE.setOutputMode("Value")
+    adcSym_CTRLC_WINMODE.setDisplayMode("Description")
+    adcWindowConfigNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_CTRLC__WINMODE\"]")
+    adcWindowConfigValues = []
+    adcWindowConfigValues = adcWindowConfigNode.getChildren()
+    for index in range (0 , len(adcWindowConfigValues)):
+        adcSym_CTRLC_WINMODE.addKey(adcWindowConfigValues[index].getAttribute("name"), adcWindowConfigValues[index].getAttribute("value"),
+        adcWindowConfigValues[index].getAttribute("caption"))
+        
+    #Window upper threshold
+    adcSym_WINUT = adcComponent.createIntegerSymbol("ADC_WINUT", adcWindowMenu)
+    adcSym_WINUT.setLabel("Window Upper Threshold")
+    adcSym_WINUT.setMin(-32768)
+    adcSym_WINUT.setMax(32767)
+    adcSym_WINUT.setDefaultValue(1024)
+    adcSym_WINUT.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
+    
+    #Window lower threshold
+    adcSym_WINLT = adcComponent.createIntegerSymbol("ADC_WINLT", adcWindowMenu)
+    adcSym_WINLT.setLabel("Window Lower Threshold")
+    adcSym_WINLT.setMin(-32768)
+    adcSym_WINLT.setMax(32767)
+    adcSym_WINLT.setDefaultValue(512)
+    adcSym_WINLT.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
+
+    global adcSym_INTENSET_WINMON
+    adcSym_INTENSET_WINMON = adcComponent.createBooleanSymbol("ADC_INTENSET_WINMON", adcWindowMenu)
+    adcSym_INTENSET_WINMON.setLabel("Enable Window Monitor Interrupt")
+    adcSym_INTENSET_WINMON.setDefaultValue(False)
+    adcSym_INTENSET_WINMON.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
+
+    #Enable Window Monitor Event Out
+    adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_WINDOW_OUTPUT_EVENT", adcWindowMenu)
+    adcSym_HW_INP_EVENT.setLabel("Enable Window Monitor Event Out")
+    adcSym_HW_INP_EVENT.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
 
     adcSleepMenu = adcComponent.createMenuSymbol("ADC_SLEEP_MENU", None)
     adcSleepMenu.setLabel("Sleep Mode Configuration")
@@ -379,10 +435,13 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLA_ONDEMAND.setLabel("On Demand Control")
     adcSym_CTRLA_ONDEMAND.setVisible(True)
 
+    adcSym_SUPC_COMMENT = adcComponent.createCommentSymbol("ADC_SUPC_COMMENT", None)
+    adcSym_SUPC_COMMENT.setLabel("*********** Enable Vref output in SUPC ***********")
+    adcSym_SUPC_COMMENT.setVisible(False)
+    adcSym_SUPC_COMMENT.setDependencies(adcSUPCVisible, ["ADC_REFCTRL_REFSEL", "ADC_INPUTCTRL_MUXPOS"])
     ############################################################################
     #### Dependency ####
     ############################################################################
-
     InterruptVector = adcInstanceName.getValue() + "_INTERRUPT_ENABLE"
     InterruptHandler = adcInstanceName.getValue() + "_INTERRUPT_HANDLER"
     InterruptHandlerLock = adcInstanceName.getValue()+ "_INTERRUPT_HANDLER_LOCK"
@@ -420,7 +479,7 @@ def instantiateComponent(adcComponent):
     adcSym_CommonHeaderFile.setDestPath("/peripheral/adc/")
     adcSym_CommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcSym_CommonHeaderFile.setType("HEADER")
-    adcSym_CommonHeaderFile.setMarkup(True)
+    adcSym_CommonHeaderFile.setMarkup(False)
 
     adcSym_HeaderFile = adcComponent.createFileSymbol("ADC_HEADER", None)
     adcSym_HeaderFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/plib_adc.h.ftl")
