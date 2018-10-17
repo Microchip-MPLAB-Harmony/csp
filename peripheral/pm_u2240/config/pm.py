@@ -28,10 +28,7 @@
 
 def updatePMClockWarringStatus(symbol, event):
 
-    if event["value"] == False:
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
+    symbol.setVisible(not event["value"])
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -43,16 +40,15 @@ def instantiateComponent(pmComponent):
     pmInstanceName.setVisible(False)
     pmInstanceName.setDefaultValue(pmComponent.getID().upper())
 
-    #clock enable
-    Database.clearSymbolValue("core", pmInstanceName.getValue()+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", pmInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+    #Clock enable
+    Database.setSymbolValue("core", pmInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
-    #standby back biasing
+    #PM standby back biasing
     pmSym_STDBYCFG_BBIASHS = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASHS", None)
     pmSym_STDBYCFG_BBIASHS.setLabel("Enable RAM DMA Access in Standby Sleep Mode ?")
     pmSym_STDBYCFG_BBIASHS.setDescription("Configures DMA Access in low power modes")
 
-    #standby VREGMOD configuration
+    #PM standby VREGMOD configuration
     pmSym_STDBYCFG_VREGSMOD = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_VREGSMOD", None)
     pmSym_STDBYCFG_VREGSMOD.setLabel("VDDCORE Voltage Source Selection in Standby Sleep mode")
     pmSym_STDBYCFG_VREGSMOD.setDescription("Configures the VDDCORE Supply source in Standby Sleep mode.")
@@ -61,19 +57,13 @@ def instantiateComponent(pmComponent):
     pmStandbyConfigurationValues = []
     pmStandbyConfigurationValues = pmStandbyConfigurationNode.getChildren()
 
-    pmStandbyConfigurationDefaultValue = 0
-
     for index in range(len(pmStandbyConfigurationValues)):
         pmStandbyConfigurationKeyName = pmStandbyConfigurationValues[index].getAttribute("name")
-
-        if (pmStandbyConfigurationKeyName == "AUTO"):
-            pmStandbyConfigurationDefaultValue = index
-
         pmStandbyConfigurationKeyDescription = pmStandbyConfigurationValues[index].getAttribute("caption")
         pmStandbyConfigurationKeyValue = pmStandbyConfigurationValues[index].getAttribute("value")
         pmSym_STDBYCFG_VREGSMOD.addKey(pmStandbyConfigurationKeyName, pmStandbyConfigurationKeyValue, pmStandbyConfigurationKeyDescription)
 
-    pmSym_STDBYCFG_VREGSMOD.setDefaultValue(pmStandbyConfigurationDefaultValue)
+    pmSym_STDBYCFG_VREGSMOD.setDefaultValue(0)
     pmSym_STDBYCFG_VREGSMOD.setOutputMode("Key")
     pmSym_STDBYCFG_VREGSMOD.setDisplayMode("Description")
 
@@ -81,7 +71,7 @@ def instantiateComponent(pmComponent):
     pmSym_ClkEnComment = pmComponent.createCommentSymbol("PM_CLOCK_ENABLE_COMMENT", None)
     pmSym_ClkEnComment.setLabel("Warning!!! PM Peripheral Clock is Disabled in Clock Manager")
     pmSym_ClkEnComment.setVisible(False)
-    pmSym_ClkEnComment.setDependencies(updatePMClockWarringStatus, ["core."+pmInstanceName.getValue()+"_CLOCK_ENABLE"])
+    pmSym_ClkEnComment.setDependencies(updatePMClockWarringStatus, ["core." + pmInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
@@ -94,7 +84,7 @@ def instantiateComponent(pmComponent):
 
     pmSym_HeaderFile = pmComponent.createFileSymbol("PM_HEADER", None)
     pmSym_HeaderFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/plib_pm.h.ftl")
-    pmSym_HeaderFile.setOutputName("plib_"+pmInstanceName.getValue()+".h")
+    pmSym_HeaderFile.setOutputName("plib_" + pmInstanceName.getValue().lower() + ".h")
     pmSym_HeaderFile.setDestPath("/peripheral/pm/")
     pmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pm/")
     pmSym_HeaderFile.setType("HEADER")
@@ -102,7 +92,7 @@ def instantiateComponent(pmComponent):
 
     pmSym_SourceFile = pmComponent.createFileSymbol("PM_SOURCE", None)
     pmSym_SourceFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/plib_pm.c.ftl")
-    pmSym_SourceFile.setOutputName("plib_"+pmInstanceName.getValue()+".c")
+    pmSym_SourceFile.setOutputName("plib_" + pmInstanceName.getValue().lower() + ".c")
     pmSym_SourceFile.setDestPath("/peripheral/pm/")
     pmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pm/")
     pmSym_SourceFile.setType("SOURCE")
