@@ -438,10 +438,77 @@ bool ADCx_ConversionStatusGet( void );
 
   Remarks:
     This function can be called from interrupt or by polling the status when
-    result is available. Result resolution and alignment depends on the GUI configuration.
+    result is available. User should decode the result based on result sign mode (differential mode) 
+    and result resolution (8, 10, 12 or 16 bit) configuration.
 */
 
 uint16_t ADCx_ConversionResultGet( void );
+
+// *****************************************************************************
+/* Function:
+    bool ADCx_ConversionSequenceIsFinished( void );
+
+  Summary:
+    Returns the status of automatic sequence conversion.
+
+  Description:
+    This function checks the status of the conversion sequence. 
+
+  Precondition:
+    ADCx_Initialize() function must have been called first for the
+    associated instance.And conversion must have been started.
+
+  Parameters:
+    None.
+
+  Returns:
+    true - all the enabled channels in the sequence have finished conversion
+    false - sequence conversion is ongoing
+
+  Example:
+    <code>
+        bool seq_status;
+        ADCx_Initialize();
+        ADCx_ConversionStart();
+        seq_status = ADCx_ConversionSequenceIsFinished();
+    </code>
+
+  Remarks:
+    This function is valid only if auto sequence feature is enabled. 
+*/
+bool ADCx_ConversionSequenceIsFinished( void );
+
+// *****************************************************************************
+/* Function:
+    void ADCx_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold);
+
+  Summary:
+    Returns the status of automatic sequence conversion.
+
+  Description:
+    This function configures the window threshold values. 
+
+  Precondition:
+    ADCx_Initialize() function must have been called first for the
+    associated instance.
+
+  Parameters:
+    low_threshold - 16-bit signed value for lower threshold
+    high_threshold - 16-bit signed value for upper threshold
+
+  Returns:
+    None
+
+  Example:
+    <code>
+        ADCx_Initialize();
+        ADCx_ComparisonWindowSet(0x100, 0x200);
+    </code>
+
+  Remarks:
+    None
+*/
+void ADCx_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold);
 
 // *****************************************************************************
 /* Function:
