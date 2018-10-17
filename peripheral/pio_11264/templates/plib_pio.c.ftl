@@ -470,8 +470,8 @@ void PIO${PIO_CHANNEL}_InterruptHandler(void)
     uint32_t status;
     uint8_t i;
 
-    status  = PIOA->PIO_ISR;
-    status &= PIOA->PIO_IMR;
+    status  = PIO${PIO_CHANNEL}_REGS->PIO_ISR;
+    status &= PIO${PIO_CHANNEL}_REGS->PIO_IMR;
 	
 	for( i = 0; i < port${PIO_CHANNEL}CurNumCb; i++ )
 	{
