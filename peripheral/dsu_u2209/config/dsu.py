@@ -22,17 +22,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-###################################################################################################
-########################################## Callbacks  #############################################
-###################################################################################################
-
-def updateDSUClockWarringStatus(symbol, event):
-
-    if event["value"] == False:
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
 ################################################################################
 #############             DSU DATABASE COMPONENTS         ######################
 ################################################################################
@@ -43,25 +32,6 @@ def instantiateComponent(dsuComponent):
     dsuInstanceName.setVisible(False)
     dsuInstanceName.setDefaultValue(dsuComponent.getID().upper())
     Log.writeInfoMessage("Running " + dsuInstanceName.getValue())
-
-    #clock enable
-    Database.clearSymbolValue("core", dsuInstanceName.getValue()+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", dsuInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
-
-    #dsu main menu
-    dsuSym_Menu = dsuComponent.createBooleanSymbol("DSU_MENU", None)
-    dsuSym_Menu.setLabel("DSU MODULE SETTINGS ")
-    dsuSym_Menu.setVisible(False)
-    dsuSym_Menu.setDefaultValue(True)
-
-    dsuSym_Comment = dsuComponent.createCommentSymbol("DSU_CONFIG_COMMENT", dsuSym_Menu)
-    dsuSym_Comment.setLabel("*** This component does not contain any configuration settings ***")
-
-    # Clock Warning status
-    dsuSym_ClkEnComment = dsuComponent.createCommentSymbol("DSU_CLOCK_ENABLE_COMMENT", dsuSym_Menu)
-    dsuSym_ClkEnComment.setLabel("Warning!!! DSU Peripheral Clock is Disabled in Clock Manager")
-    dsuSym_ClkEnComment.setVisible(False)
-    dsuSym_ClkEnComment.setDependencies(updateDSUClockWarringStatus, ["core."+dsuInstanceName.getValue()+"_CLOCK_ENABLE"])
 
 ################################################################################
 #############             CODE GENERATION             ##########################
