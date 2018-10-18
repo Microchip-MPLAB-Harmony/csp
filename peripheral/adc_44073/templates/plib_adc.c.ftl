@@ -60,7 +60,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#assign ADC_CH_SEQR1_USCH = "ADC_SEQR1_USCH"+(i+1)>
 <#assign ADC_CH_DIFF_PAIR = "">
 
-<#if (.vars[ADC_CH_CHER] == true) && (.vars[ADC_CH_IER_EOC] == true)>
+<#if (.vars[ADC_CH_CHER] == true) && ((.vars[ADC_CH_IER_EOC] == true) || (ADC_IER_COMPE == true))>
     <#assign ADC_INTERRUPT = true>
 </#if>
 

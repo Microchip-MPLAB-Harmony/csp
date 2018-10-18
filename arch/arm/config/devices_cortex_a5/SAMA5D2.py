@@ -45,6 +45,9 @@ coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
+# load ADC manager information
+coreComponent.addPlugin("../peripheral/adc_44073/plugin/ARM_44073_ADCManager.jar")
+
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
 armSysStartSourceFile.setSourcePath("arm/templates/a5_cstartup.s.ftl")
 armSysStartSourceFile.setOutputName("cstartup.s")
