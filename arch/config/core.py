@@ -22,25 +22,60 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-# Maximum Application Tasks that can be created
-appFileMaxCount = 10
-appSourceFile = []
-appHeaderFile = []
-appHeaderName = []
-
 def genExceptionAsmSourceFile(symbol, event):
-    if (event["value"] == True):
+    coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
+    coreSysExceptionFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
+    coreSysAdvancedExceptionFileEnabled = Database.getSymbolValue("core", "ADVANCED_EXCEPTION")
+
+    if ((coreSysExceptionFileEnabled == True) and
+        (coreSysAdvancedExceptionFileEnabled == True) and
+        (coreSysFileEnabled == True)):
         symbol.setEnabled(True)
     else:
         symbol.setEnabled(False)
 
+def setFileVisibility (symbol, event):
+    symbol.setVisible(event["value"])
+
+def setSysFileVisibility (symbol, event):
+    symbol.setVisible(event["value"])
+    symbol.setValue(event["value"], 1)
+
+def genMainSourceFile(symbol, event):
+    mainName    = Database.getSymbolValue("core", "CoreMainFileName")
+    genMainSrc  = Database.getSymbolValue("core", "CoreMainFile")
+
+    if (genMainSrc == True):
+        symbol.setOutputName(mainName.lower() + ".c")
+        symbol.setEnabled(True)
+    else:
+        symbol.setEnabled(False)
+
+def genSysSourceFile(symbol, event):
+    coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
+    coreSysSourceFileEnabled = False
+
+    if(event["id"] == "CoreSysDefFile"):
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysDefFile")
+    elif(event["id"] == "CoreSysInitFile"):
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysInitFile")
+    elif(event["id"] == "CoreSysIntFile"):
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysIntFile")
+    elif(event["id"] == "CoreSysExceptionFile"):
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
+    elif(event["id"] == "CoreSysStartupFile"):
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysStartupFile")
+    elif(event["id"] == "CoreSysCallsFile"):
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysCallsFile")
+    elif(event["id"] == "CoreSysDebugConsoleFile"):
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysDebugConsoleFile")
+
+    if ((coreSysFileEnabled == True) and (coreSysSourceFileEnabled == True)):
+        symbol.setEnabled(True)
+    else:
+        symbol.setEnabled(False)
 
 def instantiateComponent(coreComponent):
-
-    global appSourceFile
-    global appHeaderFile
-    global appHeaderName
-
     autoComponentIDTable = ["dfp", "cmsis"]
     res = Database.activateComponents(autoComponentIDTable)
 
@@ -51,13 +86,62 @@ def instantiateComponent(coreComponent):
     devCfgMenu.setLabel(Variables.get("__PROCESSOR") + " Device Configuration")
     devCfgMenu.setDescription("Hardware Configuration Bits")
 
-
     projMenu = coreComponent.createMenuSymbol("CoreProjMenu", devMenu)
     projMenu.setLabel("Project Configuration")
 
-    exceptionHandling = coreComponent.createBooleanSymbol("ADVANCED_EXCEPTION", projMenu)
-    exceptionHandling.setLabel("Use Harmony Exception Handling")
+    genMainFile = coreComponent.createBooleanSymbol("CoreMainFile", projMenu)
+    genMainFile.setLabel("Generate Main Source File")
+    genMainFile.setDefaultValue(True)
+
+    genMainFileName = coreComponent.createStringSymbol("CoreMainFileName", genMainFile)
+    genMainFileName.setLabel("Main File Name")
+    genMainFileName.setDescription("Main File Name")
+    genMainFileName.setDefaultValue("main")
+    genMainFileName.setDependencies(setFileVisibility, ["CoreMainFile"])
+
+    genSysFiles = coreComponent.createBooleanSymbol("CoreSysFiles", projMenu)
+    genSysFiles.setDefaultValue(True)
+    genSysFiles.setLabel("Generate System Source Files")
+
+    genSysDefFile = coreComponent.createBooleanSymbol("CoreSysDefFile", genSysFiles)
+    genSysDefFile.setLabel("Generate System Definition Header File")
+    genSysDefFile.setDefaultValue(True)
+    genSysDefFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    genSysInitFile = coreComponent.createBooleanSymbol("CoreSysInitFile", genSysFiles)
+    genSysInitFile.setLabel("Generate System Initialization Source File")
+    genSysInitFile.setDefaultValue(True)
+    genSysInitFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    genSysIntFile = coreComponent.createBooleanSymbol("CoreSysIntFile", genSysFiles)
+    genSysIntFile.setLabel("Generate System Interrupts Source File")
+    genSysIntFile.setDefaultValue(True)
+    genSysIntFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    genSysCallsFile = coreComponent.createBooleanSymbol("CoreSysCallsFile", genSysFiles)
+    genSysCallsFile.setLabel("Generate LIBC syscalls Source File")
+    genSysCallsFile.setDefaultValue(True)
+    genSysCallsFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    genSysStartupFile = coreComponent.createBooleanSymbol("CoreSysStartupFile", genSysFiles)
+    genSysStartupFile.setLabel("Generate System Startup Source File")
+    genSysStartupFile.setDefaultValue(True)
+    genSysStartupFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    genSysDebugConsoleFile = coreComponent.createBooleanSymbol("CoreSysDebugConsoleFile", genSysFiles)
+    genSysDebugConsoleFile.setLabel("Generate Debug Console Source File")
+    genSysDebugConsoleFile.setDefaultValue(True)
+    genSysDebugConsoleFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    genSysExceptionFile = coreComponent.createBooleanSymbol("CoreSysExceptionFile", genSysFiles)
+    genSysExceptionFile.setLabel("Generate System Exception Source File")
+    genSysExceptionFile.setDefaultValue(True)
+    genSysExceptionFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
+
+    exceptionHandling = coreComponent.createBooleanSymbol("ADVANCED_EXCEPTION", genSysExceptionFile)
+    exceptionHandling.setLabel("Use Harmony Advanced Exception Handling")
     exceptionHandling.setDefaultValue(False)
+    exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
 
     toolchainMenu = coreComponent.createMenuSymbol("CoreToolchainMenu", projMenu)
     toolchainMenu.setLabel("Toolchain Selection")
@@ -93,6 +177,7 @@ def instantiateComponent(coreComponent):
     mainSourceFile.setDestPath("../../")
     mainSourceFile.setProjectPath("")
     mainSourceFile.setType("SOURCE")
+    mainSourceFile.setDependencies(genMainSourceFile, ["CoreMainFile", "CoreMainFileName"])
 
     bspHeaderInclude = coreComponent.createListSymbol("LIST_BSP_MACRO_INCLUDES", None)
     bspHeaderInclude = coreComponent.createListSymbol("LIST_BSP_INITIALIZATION", None)
@@ -126,6 +211,7 @@ def instantiateComponent(coreComponent):
     defHeaderFile.setDestPath("")
     defHeaderFile.setProjectPath("config/" + configName + "/")
     defHeaderFile.setType("HEADER")
+    defHeaderFile.setDependencies(genSysSourceFile, ["CoreSysDefFile", "CoreSysFiles"])
     systemDefinitionsHeadersList = coreComponent.createListSymbol("LIST_SYSTEM_DEFINITIONS_H_INCLUDES", None)
     systemDefinitionsObjList = coreComponent.createListSymbol("LIST_SYSTEM_DEFINITIONS_H_OBJECTS", None)
     systemDefinitionsExternsList = coreComponent.createListSymbol("LIST_SYSTEM_DEFINITIONS_H_EXTERNS", None)
@@ -140,6 +226,7 @@ def instantiateComponent(coreComponent):
     initSourceFile.setDestPath("")
     initSourceFile.setProjectPath("config/" + configName + "/")
     initSourceFile.setType("SOURCE")
+    initSourceFile.setDependencies(genSysSourceFile, ["CoreSysInitFile", "CoreSysFiles"])
     systemInitFuseList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION", None)
     systemInitDrvList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA", None)
     systemInitLibList = coreComponent.createListSymbol("LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA", None)
@@ -162,21 +249,33 @@ def instantiateComponent(coreComponent):
     intSourceFile.setDestPath("")
     intSourceFile.setProjectPath("config/" + configName + "/")
     intSourceFile.setType("SOURCE")
+    intSourceFile.setDependencies(genSysSourceFile, ["CoreSysIntFile", "CoreSysFiles"])
     systemIntHeadersList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_C_INCLUDES", None)
     systemIntVectorsList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_C_VECTORS", None)
     systemIntVectorsMultipleHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS", None)
     systemIntVectorsWeakHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS", None)
     systemIntVectorsHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_HANDLERS", None)
 
+    debugSourceFile = coreComponent.createFileSymbol("DEBUG_CONSOLE_C", None)
+    debugSourceFile.setSourcePath("../arch/stdio/templates/xc32_monitor.c.ftl")
+    debugSourceFile.setOutputName("xc32_monitor.c")
+    debugSourceFile.setMarkup(True)
+    debugSourceFile.setOverwrite(True)
+    debugSourceFile.setDestPath("/stdio/")
+    debugSourceFile.setProjectPath("config/" + configName + "/stdio/")
+    debugSourceFile.setType("SOURCE")
+    debugSourceFile.setDependencies(genSysSourceFile, ["CoreSysDebugConsoleFile", "CoreSysFiles"])
+
     # generate exceptions.c file
-    exceptionSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
-    exceptionSourceFile.setSourcePath("templates/exceptions.c.ftl")
-    exceptionSourceFile.setOutputName("exceptions.c")
-    exceptionSourceFile.setMarkup(True)
-    exceptionSourceFile.setOverwrite(True)
-    exceptionSourceFile.setDestPath("")
-    exceptionSourceFile.setProjectPath("config/" + configName + "/")
-    exceptionSourceFile.setType("SOURCE")
+    exceptSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
+    exceptSourceFile.setSourcePath("templates/exceptions.c.ftl")
+    exceptSourceFile.setOutputName("exceptions.c")
+    exceptSourceFile.setMarkup(True)
+    exceptSourceFile.setOverwrite(True)
+    exceptSourceFile.setDestPath("")
+    exceptSourceFile.setProjectPath("config/" + configName + "/")
+    exceptSourceFile.setType("SOURCE")
+    exceptSourceFile.setDependencies(genSysSourceFile, ["CoreSysExceptionFile", "CoreSysFiles"])
 
     # generate exceptionsHandler.s file
     exceptionAsmSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_ASM", None)
@@ -188,8 +287,7 @@ def instantiateComponent(coreComponent):
     exceptionAsmSourceFile.setProjectPath("config/" + configName + "/")
     exceptionAsmSourceFile.setType("SOURCE")
     exceptionAsmSourceFile.setEnabled(False)
-    exceptionAsmSourceFile.setDependencies(genExceptionAsmSourceFile, ["ADVANCED_EXCEPTION"])
-
+    exceptionAsmSourceFile.setDependencies(genExceptionAsmSourceFile, ["CoreSysFiles", "CoreSysExceptionFile", "ADVANCED_EXCEPTION"])
 
     # set XC32 heap size
     xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
@@ -210,15 +308,6 @@ def instantiateComponent(coreComponent):
     xc32NoDeviceStartupCodeSym.setCategory("C32-LD")
     xc32NoDeviceStartupCodeSym.setKey("no-device-startup-code")
     xc32NoDeviceStartupCodeSym.setValue("true")
-
-    debugSourceFile = coreComponent.createFileSymbol("DEBUG_CONSOLE_C", None)
-    debugSourceFile.setSourcePath("../arch/stdio/templates/xc32_monitor.c.ftl")
-    debugSourceFile.setOutputName("xc32_monitor.c")
-    debugSourceFile.setMarkup(True)
-    debugSourceFile.setOverwrite(True)
-    debugSourceFile.setDestPath("/stdio/")
-    debugSourceFile.setProjectPath("config/" + configName + "/stdio/")
-    debugSourceFile.setType("SOURCE")
 
     # load device specific information, clock and pin manager
     execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")
