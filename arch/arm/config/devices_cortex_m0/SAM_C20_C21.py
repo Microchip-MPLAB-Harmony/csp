@@ -133,6 +133,7 @@ armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
 armSysStartSourceFile.setProjectPath("config/" + configName + "/")
 armSysStartSourceFile.setType("SOURCE")
+armSysStartSourceFile.setDependencies(genSysSourceFile, ["CoreSysStartupFile", "CoreSysFiles"])
 
 # generate libc_syscalls.c file
 armLibCSourceFile = coreComponent.createFileSymbol("LIBC_SYSCALLS_C", None)
@@ -143,5 +144,5 @@ armLibCSourceFile.setOverwrite(True)
 armLibCSourceFile.setDestPath("")
 armLibCSourceFile.setProjectPath("config/" + configName + "/")
 armLibCSourceFile.setType("SOURCE")
-
+armLibCSourceFile.setDependencies(genSysSourceFile, ["CoreSysCallsFile", "CoreSysFiles"])
 
