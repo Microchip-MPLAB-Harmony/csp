@@ -84,7 +84,7 @@ extern "C" {
 </#if>
     <#assign CH_NUM = i>
     <#assign ADC_CH_IER_EOC = "ADC_"+i+"_IER_EOC">
-<#if (.vars[ADC_CH_ENABLE] == true) && (.vars[ADC_CH_IER_EOC] == true)>
+<#if (.vars[ADC_CH_ENABLE] == true) && ((.vars[ADC_CH_IER_EOC] == true) || (ADC_IER_COMPE == true))>
     <#assign ADC_INTERRUPT = true>
 </#if>
 
