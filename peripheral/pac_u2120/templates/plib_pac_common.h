@@ -1,22 +1,20 @@
 /*******************************************************************************
-  Peripheral Access Controller(PAC) PLIB
+  Peripheral Access Controller(PAC) Peripheral Library Interface Header File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_${PAC_INSTANCE_NAME?lower_case}.h
+    plib_pac_common.h
 
   Summary
-    PAC PLIB Header File.
+    PAC Peripheral Library Interface Header File.
 
   Description
-    This file defines the interface to the PAC peripheral library. This
+    This file defines the common types for the PAC peripheral library. This
     library provides access to and control of the associated peripheral
     instance.
 
-  Remarks:
-    None.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -44,9 +42,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-/* Guards against multiple inclusion */
-#ifndef PLIB_${PAC_INSTANCE_NAME}_H
-#define PLIB_${PAC_INSTANCE_NAME}_H
+#ifndef PLIB_PAC_COMMON_H    // Guards against multiple inclusion
+#define PLIB_PAC_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -56,11 +53,11 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "device.h"
-#include "plib_pac_common.h"
+#include <stdbool.h>
+#include <stddef.h>
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
+#ifdef __cplusplus // Provide C Compatibility
 
     extern "C" {
 
@@ -77,14 +74,15 @@
 */
 
 // *****************************************************************************
-/* Peripheral module Identifier enumeration
+/* Peripheral Access Control Keys enumeration
 
   Summary:
-    List of available Peripheral module on which errors will be detected.
+    List of available Peripheral Access Control Operations.
 
   Description:
-    This enumeration identifies all the Peripheral modules used on which access
-    errors will be detected.
+    This enum identifies the possible PAC operation. This data type is used
+    along with the PACx_PeripheralProtect() function and specifies
+    the type of access operation that needs to be peformed
 
   Remarks:
     None.
@@ -92,49 +90,103 @@
 
 typedef enum
 {
-<#list 0..PAC_BRIDGE_COUNT as i>
-    <#assign PAC_BRIDGE = "PAC_" + i + "_BRIDGE">
-    <#assign PAC_BRIDGE_PERI_COUNT = "PAC_BRIDGE_" + i + "_PERI_COUNT">
-        <#if .vars[PAC_BRIDGE_PERI_COUNT]?has_content>
-            <#assign PAC_PERI_COUNT = .vars[PAC_BRIDGE_PERI_COUNT]>
-            <#list 0..PAC_PERI_COUNT as j>
-                <#assign PAC_BRIDGE_PERI_NAME = "PAC_BRIDGE_" + i + "_PERI_" + j + "_NAME">
-                    <#if .vars[PAC_BRIDGE_PERI_NAME]?has_content>
-    <#lt>    /* Interrupt flag for Peripheral bridge ${.vars[PAC_BRIDGE]} - ${.vars[PAC_BRIDGE_PERI_NAME]} */
-    <#lt>    PAC_PERIPHERAL_${.vars[PAC_BRIDGE]}_${.vars[PAC_BRIDGE_PERI_NAME]} = ${((i * 32 ) + j)},
+    /* No Action */
+    PAC_PROTECTION_OFF,
 
-                    </#if>
-            </#list>
-        </#if>
-</#list>
-    /* Interrupt flag for all Peripheral bridges */
-    PAC_PERIPHERAL_ANY = 0xFFFFFFFF
+    /* Clear the peripheral write control protection */
+    PAC_PROTECTION_CLEAR,
 
-} PAC_PERIPHERAL;
+    /* Set the peripheral write control protection */
+    PAC_PROTECTION_SET,
+
+    /* Set and lock the peripheral write control until the next hardware reset */
+    PAC_PROTECTION_SET_AND_LOCK,
+
+} PAC_PROTECTION;
 
 // *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-    this interface.
+/* Callback function Pointer
+
+  Summary:
+    Defines the data type and function signature for the PAC peripheral
+    callback function.
+
+  Description:
+    This data type defines the function signature for the PAC peripheral
+    callback function. The PAC peripheral will call back the function with
+    this signature when a access violation has been detected.
+
+  Function:
+    void (*PAC_CALLBACK)( uintptr_t context )
+
+  Precondition:
+    None.
+
+  Parameters:
+    context - Allows the caller to provide a context value (usually a pointer
+    to the callers context for multi-instance clients).
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+      void APP_PACErrorCallback( uintptr_t context )
+      {
+            // Identify the error.
+            if(PACx_PeripheralErrorOccurred())
+            {
+                // Call the PACx_PeripheralErrorGet() function to
+                // identify the error.
+            }
+            else if(PACx_AHBSlaveErrorOccurred())
+            {
+                // Call the PACx_AHBSlaveErrorGet() function to
+                // identify the error.
+            }
+      }
+
+      PACx_CallbackRegister(APP_PACErrorCallback, NULL);
+
+    </code>
+
+  Remarks:
+    The callback feature is only available when the library was generated with
+    interrupt option (in MHC) enabled. The function will execute within an
+    interrupt context. Avoid calling computationally intensive or blocking
+    functions from within the callback function.
 */
 
-void ${PAC_INSTANCE_NAME}_Initialize( void );
+typedef void (*PAC_CALLBACK)( uintptr_t context );
 
-void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation );
+// *****************************************************************************
+/* PAC Callback Object
 
-<#if PAC_INTERRRUPT_MODE = true>
-void ${PAC_INSTANCE_NAME}_CallbackRegister( PAC_CALLBACK callback, uintptr_t context );
-</#if>
+  Summary:
+    PAC Peripheral Callback object.
+
+  Description:
+    This local data object holds the function signature for the PAC peripheral
+    callback function.
+
+  Remarks:
+    None.
+*/
+
+typedef struct
+{
+    PAC_CALLBACK callback;
+
+    uintptr_t context;
+
+} PAC_CALLBACK_OBJ;
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
+#ifdef __cplusplus  // Provide C++ Compatibility
 
     }
 
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_${PAC_INSTANCE_NAME}_H */
+#endif /* PLIB_PAC_COMMON_H */
