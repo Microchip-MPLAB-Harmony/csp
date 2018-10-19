@@ -75,8 +75,10 @@ void MPU_Initialize(void)
     </#if>
 </#list>
 
+<#if CoreArchitecture != "CORTEX-M0+">
     /* Enable Memory Management Fault */
     SCB->SHCSR |= (SCB_SHCSR_MEMFAULTENA_Msk);
+</#if>
 
     /* Enable MPU */
     MPU->CTRL = MPU_CTRL_ENABLE_Msk ${CoreMPU_HFNMIENA?then('| MPU_CTRL_HFNMIENA_Msk', '')} ${CoreMPU_PRIVDEFENA?then('| MPU_CTRL_PRIVDEFENA_Msk', '')};
