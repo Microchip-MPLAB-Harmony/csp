@@ -64,412 +64,361 @@
 
 void NonMaskableInt_Handler(void)
 {
-<#if CoreArchitecture != "CORTEX-M0+">
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     __builtin_software_breakpoint();
 #endif
-</#if>
     while (1)
     {
     }
 }
+
 <#if ADVANCED_EXCEPTION>
-void HardFault_Handler(void)
-{
-    asm("TST    LR, #4");
-    asm("ITE    EQ");
-    asm("MRSEQ  R0, MSP");
-    asm("MRSNE  R0, PSP");
-    asm("MOV    R1, LR");
-    asm("B      HardFault_Handler_C");
-}
+<#lt>void HardFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+<#lt>{
+<#lt>   uint32_t stacked_r0;
+<#lt>   uint32_t stacked_r1;
+<#lt>   uint32_t stacked_r2;
+<#lt>   uint32_t stacked_r3;
+<#lt>   uint32_t stacked_r12;
+<#lt>   uint32_t stacked_lr;
+<#lt>   uint32_t stacked_pc;
+<#lt>   uint32_t stacked_psr;
+    <#if CoreArchitecture != "CORTEX-M0+">
+    <#lt>   uint32_t cfsr;
+    <#lt>   uint32_t bus_fault_address;
+    <#lt>   uint32_t memmanage_fault_address;
 
-void HardFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
-{
-    uint32_t stacked_r0;
-    uint32_t stacked_r1;
-    uint32_t stacked_r2;
-    uint32_t stacked_r3;
-    uint32_t stacked_r12;
-    uint32_t stacked_lr;
-    uint32_t stacked_pc;
-    uint32_t stacked_psr;
-    uint32_t cfsr;
-    uint32_t bus_fault_address;
-    uint32_t memmanage_fault_address;
+    <#lt>   bus_fault_address       = SCB->BFAR;  // BusFault Address Register
+    <#lt>   memmanage_fault_address = SCB->MMFAR; // MemManage Fault Address Register
+    <#lt>   cfsr                    = SCB->CFSR;  // Configurable Fault Status Register
+    </#if>
 
-    bus_fault_address       = SCB->BFAR;  // BusFault Address Register
-    memmanage_fault_address = SCB->MMFAR; // MemManage Fault Address Register
-    cfsr                    = SCB->CFSR;  // Configurable Fault Status Register
+<#lt>   stacked_r0  = hardfault_args[0];
+<#lt>   stacked_r1  = hardfault_args[1];
+<#lt>   stacked_r2  = hardfault_args[2];
+<#lt>   stacked_r3  = hardfault_args[3];
+<#lt>   stacked_r12 = hardfault_args[4];
+<#lt>   stacked_lr  = hardfault_args[5];  // Link Register
+<#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
+<#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-    stacked_r0  = hardfault_args[0];
-    stacked_r1  = hardfault_args[1];
-    stacked_r2  = hardfault_args[2];
-    stacked_r3  = hardfault_args[3];
-    stacked_r12 = hardfault_args[4];
-    stacked_lr  = hardfault_args[5];  // Link Register
-    stacked_pc  = hardfault_args[6];  // Program Counter
-    stacked_psr = hardfault_args[7];  // Program Status Register
+<#lt>   printf("\r\n");
+<#lt>   printf("[HardFault]\r\n");
+<#lt>   printf("- Stack frame:\r\n");
+<#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
+<#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
+<#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
+<#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
+<#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
+<#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
+<#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
+<#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-    printf("\r\n");
-    printf("[HardFault]\r\n");
-    printf("- Stack frame:\r\n");
-    printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    printf(" PSR = 0x%08lX\r\n", stacked_psr);
-    printf("- FSR/FAR:\r\n");
-    printf(" CFSR = 0x%08lX\r\n", cfsr);
-    printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
-    if (cfsr & 0x0080) printf(" MMFAR = 0x%08lX\r\n", memmanage_fault_address);
-    if (cfsr & 0x8000) printf(" BFAR = 0x%08lX\r\n", bus_fault_address);
-    printf("- Misc\r\n");
-    printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#if CoreArchitecture != "CORTEX-M0+">
+    <#lt>   printf("- FSR/FAR:\r\n");
+    <#lt>   printf(" CFSR = 0x%08lX\r\n", cfsr);
+    <#lt>   printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
+    <#lt>   if (cfsr & 0x0080) printf(" MMFAR = 0x%08lX\r\n", memmanage_fault_address);
+    <#lt>   if (cfsr & 0x8000) printf(" BFAR = 0x%08lX\r\n", bus_fault_address);
+    </#if>
 
-  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-  #endif
-    while (1)
-    {
-        // Do Nothing
-    }
-}
+<#lt>   printf("- Misc\r\n");
+<#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
 
-void DebugMonitor_Handler(void)
-{
-    asm("TST    LR, #4");
-    asm("ITE    EQ");
-    asm("MRSEQ  R0, MSP");
-    asm("MRSNE  R0, PSP");
-    asm("MOV    R1, LR");
-    asm("B      DebugMonitor_Handler_C");
-}
+    <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    <#lt>   __builtin_software_breakpoint();
+    <#lt>  #endif
 
-void DebugMonitor_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
-{
-    uint32_t stacked_r0;
-    uint32_t stacked_r1;
-    uint32_t stacked_r2;
-    uint32_t stacked_r3;
-    uint32_t stacked_r12;
-    uint32_t stacked_lr;
-    uint32_t stacked_pc;
-    uint32_t stacked_psr;
-    uint32_t cfsr;
+<#lt>   while (1)
+<#lt>   {
+<#lt>       // Do Nothing
+<#lt>   }
+<#lt>}
 
-    cfsr = SCB->CFSR;  // Configurable Fault Status Register
+    <#if CoreArchitecture != "CORTEX-M0+">
+    <#lt>void DebugMonitor_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+    <#lt>{
+    <#lt>   uint32_t stacked_r0;
+    <#lt>   uint32_t stacked_r1;
+    <#lt>   uint32_t stacked_r2;
+    <#lt>   uint32_t stacked_r3;
+    <#lt>   uint32_t stacked_r12;
+    <#lt>   uint32_t stacked_lr;
+    <#lt>   uint32_t stacked_pc;
+    <#lt>   uint32_t stacked_psr;
+    <#lt>   uint32_t cfsr;
 
-    stacked_r0  = hardfault_args[0];
-    stacked_r1  = hardfault_args[1];
-    stacked_r2  = hardfault_args[2];
-    stacked_r3  = hardfault_args[3];
-    stacked_r12 = hardfault_args[4];
-    stacked_lr  = hardfault_args[5];  // Link Register
-    stacked_pc  = hardfault_args[6];  // Program Counter
-    stacked_psr = hardfault_args[7];  // Program Status Register
+    <#lt>   cfsr = SCB->CFSR;  // Configurable Fault Status Register
 
-    printf("\r\n");
-    printf("[DebugFault]\r\n");
-    printf("- Stack frame:\r\n");
-    printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    printf(" PSR = 0x%08lX\r\n", stacked_psr);
-    printf("- FSR/FAR:\r\n");
-    printf(" CFSR = 0x%08lX\r\n", cfsr);
-    printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
-    printf("- Misc\r\n");
-    printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#lt>   stacked_r0  = hardfault_args[0];
+    <#lt>   stacked_r1  = hardfault_args[1];
+    <#lt>   stacked_r2  = hardfault_args[2];
+    <#lt>   stacked_r3  = hardfault_args[3];
+    <#lt>   stacked_r12 = hardfault_args[4];
+    <#lt>   stacked_lr  = hardfault_args[5];  // Link Register
+    <#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
+    <#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-  #endif
-    while (1)
-    {
-        // Do Nothing
-    }
-}
+    <#lt>   printf("\r\n");
+    <#lt>   printf("[DebugFault]\r\n");
+    <#lt>   printf("- Stack frame:\r\n");
+    <#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
+    <#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
+    <#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
+    <#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
+    <#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
+    <#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
+    <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
+    <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
+    <#lt>   printf("- FSR/FAR:\r\n");
+    <#lt>   printf(" CFSR = 0x%08lX\r\n", cfsr);
+    <#lt>   printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
 
-#if (defined __CM7_REV) || (defined __CM4_REV)
+    <#lt>   printf("- Misc\r\n");
+    <#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
 
-void MemoryManagement_Handler(void)
-{
-    asm("TST    LR, #4");
-    asm("ITE    EQ");
-    asm("MRSEQ  R0, MSP");
-    asm("MRSNE  R0, PSP");
-    asm("MOV    R1, LR");
-    asm("B      MemoryManagement_Handler_C");
-}
+    <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    <#lt>   __builtin_software_breakpoint();
+    <#lt>  #endif
+    <#lt>   while (1)
+    <#lt>   {
+    <#lt>       // Do Nothing
+    <#lt>   }
+    <#lt>}
 
-void MemoryManagement_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
-{
-    uint32_t stacked_r0;
-    uint32_t stacked_r1;
-    uint32_t stacked_r2;
-    uint32_t stacked_r3;
-    uint32_t stacked_r12;
-    uint32_t stacked_lr;
-    uint32_t stacked_pc;
-    uint32_t stacked_psr;
-    uint32_t cfsr;
-    uint8_t  mmfsr;
-    uint32_t memmanage_fault_address;
+    <#lt>void MemoryManagement_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+    <#lt>{
+    <#lt>   uint32_t stacked_r0;
+    <#lt>   uint32_t stacked_r1;
+    <#lt>   uint32_t stacked_r2;
+    <#lt>   uint32_t stacked_r3;
+    <#lt>   uint32_t stacked_r12;
+    <#lt>   uint32_t stacked_lr;
+    <#lt>   uint32_t stacked_pc;
+    <#lt>   uint32_t stacked_psr;
+    <#lt>   uint32_t cfsr;
+    <#lt>   uint8_t  mmfsr;
+    <#lt>   uint32_t memmanage_fault_address;
 
-    memmanage_fault_address = SCB->MMFAR; // MemManage Fault Address Register
-    cfsr                    = SCB->CFSR;  // Configurable Fault Status Register
+    <#lt>   memmanage_fault_address = SCB->MMFAR;   // MemManage Fault Address Register
+    <#lt>   cfsr                    = SCB->CFSR;    // Configurable Fault Status Register
+    <#lt>   mmfsr = cfsr & 0xFF;                    // MemManage Fault Status
 
-    mmfsr = cfsr & 0xFF;  // MemManage Fault Status
+    <#lt>   stacked_r0  = hardfault_args[0];
+    <#lt>   stacked_r1  = hardfault_args[1];
+    <#lt>   stacked_r2  = hardfault_args[2];
+    <#lt>   stacked_r3  = hardfault_args[3];
+    <#lt>   stacked_r12 = hardfault_args[4];
+    <#lt>   stacked_lr  = hardfault_args[5];  // Link Register
+    <#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
+    <#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-    stacked_r0  = hardfault_args[0];
-    stacked_r1  = hardfault_args[1];
-    stacked_r2  = hardfault_args[2];
-    stacked_r3  = hardfault_args[3];
-    stacked_r12 = hardfault_args[4];
-    stacked_lr  = hardfault_args[5];  // Link Register
-    stacked_pc  = hardfault_args[6];  // Program Counter
-    stacked_psr = hardfault_args[7];  // Program Status Register
+    <#lt>   printf("\r\n");
+    <#lt>   printf("[MemoryManagement]\r\n");
+    <#lt>   printf("- Stack frame:\r\n");
+    <#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
+    <#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
+    <#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
+    <#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
+    <#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
+    <#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
+    <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
+    <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-    printf("\r\n");
-    printf("[MemoryManagement]\r\n");
-    printf("- Stack frame:\r\n");
-    printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    printf(" PSR = 0x%08lX\r\n", stacked_psr);
-    printf("- FSR/FAR:\r\n");
-    printf(" CFSR  = 0x%08lX\r\n", cfsr);
-    printf(" MMFSR = 0x%02X\r\n", mmfsr);
-    printf(" HFSR  = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    printf(" DFSR  = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    printf(" AFSR  = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
-    if (cfsr & 0x0080) printf(" MMFAR = 0x%08lX\r\n", memmanage_fault_address);
-    printf("- Misc\r\n");
-    printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#lt>   printf("- FSR/FAR:\r\n");
+    <#lt>   printf(" CFSR  = 0x%08lX\r\n", cfsr);
+    <#lt>   printf(" MMFSR = 0x%02X\r\n", mmfsr);
+    <#lt>   printf(" HFSR  = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   printf(" DFSR  = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   printf(" AFSR  = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
+    <#lt>   if (cfsr & 0x0080) printf(" MMFAR = 0x%08lX\r\n", memmanage_fault_address);
 
-  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-  #endif
-    while (1)
-    {
-        // Do Nothing
-    }
-}
+    <#lt>   printf("- Misc\r\n");
+    <#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
 
-void BusFault_Handler(void)
-{
-    asm("TST    LR, #4");
-    asm("ITE    EQ");
-    asm("MRSEQ  R0, MSP");
-    asm("MRSNE  R0, PSP");
-    asm("MOV    R1, LR");
-    asm("B      BusFault_Handler_C");
-}
+    <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    <#lt>   __builtin_software_breakpoint();
+    <#lt>  #endif
+    <#lt>   while (1)
+    <#lt>   {
+    <#lt>       // Do Nothing
+    <#lt>   }
+    <#lt>}
 
-void BusFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
-{
-    uint32_t stacked_r0;
-    uint32_t stacked_r1;
-    uint32_t stacked_r2;
-    uint32_t stacked_r3;
-    uint32_t stacked_r12;
-    uint32_t stacked_lr;
-    uint32_t stacked_pc;
-    uint32_t stacked_psr;
-    uint32_t cfsr;
-    uint8_t  bfsr;
-    uint32_t bus_fault_address;
+    <#lt>void BusFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+    <#lt>{
+    <#lt>   uint32_t stacked_r0;
+    <#lt>   uint32_t stacked_r1;
+    <#lt>   uint32_t stacked_r2;
+    <#lt>   uint32_t stacked_r3;
+    <#lt>   uint32_t stacked_r12;
+    <#lt>   uint32_t stacked_lr;
+    <#lt>   uint32_t stacked_pc;
+    <#lt>   uint32_t stacked_psr;
+    <#lt>   uint32_t cfsr;
+    <#lt>   uint8_t  bfsr;
+    <#lt>   uint32_t bus_fault_address;
 
-    bus_fault_address = SCB->BFAR;  // BusFault Address Register
-    cfsr              = SCB->CFSR;  // Configurable Fault Status Register
+    <#lt>   bus_fault_address = SCB->BFAR;  // BusFault Address Register
+    <#lt>   cfsr              = SCB->CFSR;  // Configurable Fault Status Register
+    <#lt>   bfsr = ( cfsr & 0x0000FF00 ) >>8;  // Bus Fault Status
 
-    bfsr = ( cfsr & 0x0000FF00 ) >>8;  // Bus Fault Status
+    <#lt>   stacked_r0  = hardfault_args[0];
+    <#lt>   stacked_r1  = hardfault_args[1];
+    <#lt>   stacked_r2  = hardfault_args[2];
+    <#lt>   stacked_r3  = hardfault_args[3];
+    <#lt>   stacked_r12 = hardfault_args[4];
+    <#lt>   stacked_lr  = hardfault_args[5];  // Link Register
+    <#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
+    <#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-    stacked_r0  = hardfault_args[0];
-    stacked_r1  = hardfault_args[1];
-    stacked_r2  = hardfault_args[2];
-    stacked_r3  = hardfault_args[3];
-    stacked_r12 = hardfault_args[4];
-    stacked_lr  = hardfault_args[5];  // Link Register
-    stacked_pc  = hardfault_args[6];  // Program Counter
-    stacked_psr = hardfault_args[7];  // Program Status Register
+    <#lt>   printf("\r\n");
+    <#lt>   printf("[BusFault]\r\n");
+    <#lt>   printf("- Stack frame:\r\n");
+    <#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
+    <#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
+    <#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
+    <#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
+    <#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
+    <#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
+    <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
+    <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-    printf("\r\n");
-    printf("[BusFault]\r\n");
-    printf("- Stack frame:\r\n");
-    printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    printf(" PSR = 0x%08lX\r\n", stacked_psr);
-    printf("- FSR/FAR:\r\n");
-    printf(" CFSR  = 0x%08lX\r\n", cfsr);
-    printf(" BFSR  = 0x%02X\r\n",  bfsr);
-    printf(" HFSR  = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    printf(" DFSR  = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    printf(" AFSR  = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
-    if (bfsr & 0x04) printf(" ABFSR = 0x%08lX\r\n", SCB->ABFSR);
-    if (bfsr & 0x80) printf(" BFAR = 0x%08lX\r\n", bus_fault_address);
-    printf("- Misc\r\n");
-    printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#lt>   printf("- FSR/FAR:\r\n");
+    <#lt>   printf(" CFSR  = 0x%08lX\r\n", cfsr);
+    <#lt>   printf(" BFSR  = 0x%02X\r\n",  bfsr);
+    <#lt>   printf(" HFSR  = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   printf(" DFSR  = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   printf(" AFSR  = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
+    <#lt>   if (bfsr & 0x04) printf(" ABFSR = 0x%08lX\r\n", SCB->ABFSR);
+    <#lt>   if (bfsr & 0x80) printf(" BFAR = 0x%08lX\r\n", bus_fault_address);
 
-  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-  #endif
-    while (1)
-    {
-        // Do Nothing
-    }
-}
+    <#lt>   printf("- Misc\r\n");
+    <#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
 
-void UsageFault_Handler(void)
-{
-    asm("TST    LR, #4");
-    asm("ITE    EQ");
-    asm("MRSEQ  R0, MSP");
-    asm("MRSNE  R0, PSP");
-    asm("MOV    R1, LR");
-    asm("B      UsageFault_Handler_C");
-}
+    <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    <#lt>   __builtin_software_breakpoint();
+    <#lt>  #endif
+    <#lt>   while (1)
+    <#lt>   {
+    <#lt>       // Do Nothing
+    <#lt>   }
+    <#lt>}
 
-void UsageFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
-{
-    uint32_t stacked_r0;
-    uint32_t stacked_r1;
-    uint32_t stacked_r2;
-    uint32_t stacked_r3;
-    uint32_t stacked_r12;
-    uint32_t stacked_lr;
-    uint32_t stacked_pc;
-    uint32_t stacked_psr;
-    uint32_t cfsr;
-    uint16_t ufsr;
+    <#lt>void UsageFault_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
+    <#lt>{
+    <#lt>   uint32_t stacked_r0;
+    <#lt>   uint32_t stacked_r1;
+    <#lt>   uint32_t stacked_r2;
+    <#lt>   uint32_t stacked_r3;
+    <#lt>   uint32_t stacked_r12;
+    <#lt>   uint32_t stacked_lr;
+    <#lt>   uint32_t stacked_pc;
+    <#lt>   uint32_t stacked_psr;
+    <#lt>   uint32_t cfsr;
+    <#lt>   uint16_t ufsr;
 
-    cfsr = SCB->CFSR;  // Configurable Fault Status Register
-    ufsr = cfsr >> 16; // Usage Fault Status
+    <#lt>   cfsr = SCB->CFSR;  // Configurable Fault Status Register
+    <#lt>   ufsr = cfsr >> 16; // Usage Fault Status
 
-    stacked_r0  = hardfault_args[0];
-    stacked_r1  = hardfault_args[1];
-    stacked_r2  = hardfault_args[2];
-    stacked_r3  = hardfault_args[3];
-    stacked_r12 = hardfault_args[4];
-    stacked_lr  = hardfault_args[5];  // Link Register
-    stacked_pc  = hardfault_args[6];  // Program Counter
-    stacked_psr = hardfault_args[7];  // Program Status Register
+    <#lt>   stacked_r0  = hardfault_args[0];
+    <#lt>   stacked_r1  = hardfault_args[1];
+    <#lt>   stacked_r2  = hardfault_args[2];
+    <#lt>   stacked_r3  = hardfault_args[3];
+    <#lt>   stacked_r12 = hardfault_args[4];
+    <#lt>   stacked_lr  = hardfault_args[5];  // Link Register
+    <#lt>   stacked_pc  = hardfault_args[6];  // Program Counter
+    <#lt>   stacked_psr = hardfault_args[7];  // Program Status Register
 
-    printf("\r\n");
-    printf("[UsageFault]\r\n");
-    printf("- Stack frame:\r\n");
-    printf(" R0  = 0x%08lX\r\n", stacked_r0);
-    printf(" R1  = 0x%08lX\r\n", stacked_r1);
-    printf(" R2  = 0x%08lX\r\n", stacked_r2);
-    printf(" R3  = 0x%08lX\r\n", stacked_r3);
-    printf(" R12 = 0x%08lX\r\n", stacked_r12);
-    printf(" LR  = 0x%08lX\r\n", stacked_lr);
-    printf(" PC  = 0x%08lX\r\n", stacked_pc);
-    printf(" PSR = 0x%08lX\r\n", stacked_psr);
-    printf("- FSR/FAR:\r\n");
-    printf(" CFSR = 0x%08lX\r\n", cfsr);
-    printf(" UFSR = 0x%04X\r\n",  ufsr);
-    printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
-    printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
-    printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
-    printf("- Misc\r\n");
-    printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+    <#lt>   printf("\r\n");
+    <#lt>   printf("[UsageFault]\r\n");
+    <#lt>   printf("- Stack frame:\r\n");
+    <#lt>   printf(" R0  = 0x%08lX\r\n", stacked_r0);
+    <#lt>   printf(" R1  = 0x%08lX\r\n", stacked_r1);
+    <#lt>   printf(" R2  = 0x%08lX\r\n", stacked_r2);
+    <#lt>   printf(" R3  = 0x%08lX\r\n", stacked_r3);
+    <#lt>   printf(" R12 = 0x%08lX\r\n", stacked_r12);
+    <#lt>   printf(" LR  = 0x%08lX\r\n", stacked_lr);
+    <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
+    <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-  #endif
-    while (1)
-    {
-        // Do Nothing
-    }
-}
+    <#lt>   printf("- FSR/FAR:\r\n");
+    <#lt>   printf(" CFSR = 0x%08lX\r\n", cfsr);
+    <#lt>   printf(" UFSR = 0x%04X\r\n",  ufsr);
+    <#lt>   printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
+    <#lt>   printf(" DFSR = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
+    <#lt>   printf(" AFSR = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
+
+    <#lt>   printf("- Misc\r\n");
+    <#lt>   printf(" LR/EXC_RETURN = 0x%X, Bit 2: %d\r\n", lr_value, (lr_value & 0x4)>>2 );
+
+    <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    <#lt>   __builtin_software_breakpoint();
+    <#lt>  #endif
+    <#lt>   while (1)
+    <#lt>   {
+    <#lt>       // Do Nothing
+    <#lt>   }
+    <#lt>}
+    </#if>
 <#else>
+<#lt>void HardFault_Handler(void)
+<#lt>{
+<#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+<#lt>   __builtin_software_breakpoint();
+<#lt>#endif
+<#lt>   while (1)
+<#lt>   {
+<#lt>   }
+<#lt>}
 
-void HardFault_Handler(void)
-{
-<#if CoreArchitecture != "CORTEX-M0+">
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-#endif
-</#if>
-    while (1)
-    {
-    }
-}
+    <#if CoreArchitecture != "CORTEX-M0+">
+    <#lt>void DebugMonitor_Handler(void)
+    <#lt>{
+    <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    <#lt>   __builtin_software_breakpoint();
+    <#lt>#endif
+    <#lt>   while (1)
+    <#lt>   {
+    <#lt>   }
+    <#lt>}
 
-void DebugMonitor_Handler(void)
-{
-<#if CoreArchitecture != "CORTEX-M0+">
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-#endif
-</#if>
-    while (1)
-    {
-    }
-}
+    <#lt>void MemoryManagement_Handler(void)
+    <#lt>{
+    <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    <#lt>   __builtin_software_breakpoint();
+    <#lt>#endif
+    <#lt>   while (1)
+    <#lt>   {
+    <#lt>   }
+    <#lt>}
 
-#if (defined __CM7_REV) || (defined __CM4_REV)
-void MemoryManagement_Handler(void)
-{
-<#if CoreArchitecture != "CORTEX-M0+">
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-#endif
-</#if>
-    while (1)
-    {
-    }
-}
+    <#lt>void BusFault_Handler(void)
+    <#lt>{
+    <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    <#lt>   __builtin_software_breakpoint();
+    <#lt>#endif
+    <#lt>   while (1)
+    <#lt>   {
+    <#lt>   }
+    <#lt>}
 
-void BusFault_Handler(void)
-{
-<#if CoreArchitecture != "CORTEX-M0+">
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-#endif
+    <#lt>void UsageFault_Handler(void)
+    <#lt>{
+    <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+    <#lt>   __builtin_software_breakpoint();
+    <#lt>#endif
+    <#lt>   while (1)
+    <#lt>   {
+    <#lt>   }
+    <#lt>}
+    </#if>
 </#if>
-    while (1)
-    {
-    }
-}
-
-void UsageFault_Handler(void)
-{
-<#if CoreArchitecture != "CORTEX-M0+">
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-#endif
-</#if>
-    while (1)
-    {
-    }
-}
-</#if>
-#endif // (defined __CM7_REV) || (defined __CM4_REV)
-
 /*******************************************************************************
  End of File
  */
