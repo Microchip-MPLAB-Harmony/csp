@@ -44,130 +44,147 @@
 #include "plib_${DIVAS_INSTANCE_NAME?lower_case}.h"
 #include "device.h"
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: ${DIVAS_INSTANCE_NAME} Implementation
-// *****************************************************************************
-// *****************************************************************************
 
 void ${DIVAS_INSTANCE_NAME}_Initialize(void)
 {
     <#if DIVAS_DLZ == false>
     /* Disable Leading Zero optimization*/
-    DIVAS_REGS->DIVAS_CTRLA |= DIVAS_CTRLA_DLZ_Msk;
+    DIVAS_REGS->DIVAS_CTRLA = DIVAS_CTRLA_DLZ_Msk;
     <#else>
     /* Leading Zero optimization is by default enabled*/
     </#if>
 }
 
+#define _DIVAS_CRITICAL_ENTER()                        \
+    do {                                               \
+        volatile uint32_t globalInterruptState;        \
+        globalInterruptState = __get_PRIMASK();        \
+        __disable_irq()
+#define _DIVAS_CRITICAL_LEAVE()                        \
+        __set_PRIMASK(globalInterruptState);           \
+    }                                                  \
+    while (0)
 
-bool ${DIVAS_INSTANCE_NAME}_DivideSigned ( int32_t divisor, int32_t dividend, int32_t * quotient, int32_t * remainder )
+/* Return 32 bit result, the result only. */
+#define _divas_result32() (DIVAS_REGS->DIVAS_RESULT)
+
+/* Return 64 bit result, the result and remainder. */
+#define _divas_result64() (*((uint64_t *)(&DIVAS_REGS->DIVAS_RESULT)))
+
+static inline void _divas_div(const uint8_t sign, const uint32_t dividend, const uint32_t divisor)
 {
-    bool statusValue = false;
-    uint32_t quo = 0;
-    uint32_t rem = 0;
-
-    if(divisor != 0)
-    {
-        if(dividend == 0)
-        {
-            statusValue = true;
-        }
-        else
-        {
-            /* Selection of the signed division */
-            DIVAS_REGS->DIVAS_CTRLA |= DIVAS_CTRLA_SIGNED_Msk;
-            
-             /* Writing the dividend to DIVIDEND register */
-            DIVAS_REGS->DIVAS_DIVIDEND = dividend;
-            
-            /* Writing the divisor to DIVISOR register */
-            DIVAS_REGS->DIVAS_DIVISOR = divisor;
-
-            while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
-            {
-                /* Wait for the division to complete */
-            }
-
-
-            statusValue = true;
-            quo = DIVAS_REGS->DIVAS_RESULT;
-            rem = DIVAS_REGS->DIVAS_REM;
-        }
-        if(quotient != NULL)
-        {
-            *quotient = quo;
-        }
-        if(remainder != NULL)
-        {
-            *remainder = rem;
-        }
-    }
-    return statusValue;
-}
-
-
-
-bool ${DIVAS_INSTANCE_NAME}_DivideUnsigned( uint32_t divisor, uint32_t dividend, uint32_t * quotient, uint32_t * remainder )
-{
-    bool statusValue = false;
-    uint32_t quo = 0;
-    uint32_t rem = 0;
-    
-    if(divisor != 0)
-    {
-        if(dividend == 0)
-        {
-            statusValue = true;
-        }
-        else
-        {
-            /* Selection of the unsigned division */
-            DIVAS_REGS->DIVAS_CTRLA &= ~DIVAS_CTRLA_SIGNED_Msk;
-            
-            /* Writing the dividend to DIVIDEND register */
-            DIVAS_REGS->DIVAS_DIVIDEND = dividend;
-            
-            /* Writing the divisor to DIVISOR register */
-            DIVAS_REGS->DIVAS_DIVISOR = divisor;
-            
-            statusValue = true;
-            quo = DIVAS_REGS->DIVAS_RESULT;
-            rem = DIVAS_REGS->DIVAS_REM;
-        }
-
-        if( quotient != NULL)
-        {
-            *quotient = quo;
-        }
-
-        if( remainder != NULL)
-        {
-            *remainder = rem;
-
-        }
-    }
-    return statusValue;
-}
-
-
-uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot ( uint32_t number , uint32_t * remainder)
-{
-    uint32_t squareRootResult = 0;
-
-    DIVAS_REGS->DIVAS_SQRNUM = number;
-
+    DIVAS_REGS->DIVAS_CTRLA = (DIVAS_REGS->DIVAS_CTRLA & ~DIVAS_CTRLA_SIGNED_Msk) | sign ;
+    DIVAS_REGS->DIVAS_DIVIDEND = dividend;
+    DIVAS_REGS->DIVAS_DIVISOR  = divisor;
     while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
     {
         /* Wait for the square root to complete */
     }
+}
 
-    squareRootResult = DIVAS_REGS->DIVAS_RESULT;
+<#if DIVAS_DIV_OVERLOAD == false>
+/* 32-bit Signed division, return quotient */
+int32_t ${DIVAS_INSTANCE_NAME}_DivSigned(int32_t numerator, int32_t denominator)
+{
+    int32_t res;
+    _DIVAS_CRITICAL_ENTER();
+    _divas_div(1, numerator, denominator);
+    res = _divas_result32();
+    _DIVAS_CRITICAL_LEAVE();
+    return res;
+}
 
-    if(remainder != NULL)
+/* 32-bit Unsigned division, return quotient */
+uint32_t ${DIVAS_INSTANCE_NAME}_DivUnsigned(uint32_t numerator, uint32_t denominator)
+{
+    uint32_t res;
+    _DIVAS_CRITICAL_ENTER();
+    _divas_div(0, numerator, denominator);
+    res = _divas_result32();
+    _DIVAS_CRITICAL_LEAVE();
+    return res;
+}
+
+/* 32-bit Signed division, return quotient and remainder as 64-bit number */
+uint64_t ${DIVAS_INSTANCE_NAME}_DivmodSigned(int32_t numerator, int32_t denominator)
+{
+    uint64_t res;
+    _DIVAS_CRITICAL_ENTER();
+    _divas_div(1, numerator, denominator);
+    res = _divas_result64();
+    _DIVAS_CRITICAL_LEAVE();
+    return res;
+}
+
+/* 32-bit Unsigned division, return quotient and remainder as 64-bit result */
+uint64_t ${DIVAS_INSTANCE_NAME}_DivmodUnsigned(uint32_t numerator, uint32_t denominator)
+{
+    uint64_t res;
+    _DIVAS_CRITICAL_ENTER();
+    _divas_div(0, numerator, denominator);
+    res = _divas_result64();
+    _DIVAS_CRITICAL_LEAVE();
+    return res;
+}
+<#else>
+/* Do signed division, return result */
+int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
+{
+    int32_t res;
+    _DIVAS_CRITICAL_ENTER();
+    _divas_div(1, numerator, denominator);
+    res = _divas_result32();
+    _DIVAS_CRITICAL_LEAVE();
+    return res;
+}
+
+/* Do unsigned division, return result */
+uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
+{
+    uint32_t res;
+    _DIVAS_CRITICAL_ENTER();
+    _divas_div(0, numerator, denominator);
+    res = _divas_result32();
+    _DIVAS_CRITICAL_LEAVE();
+    return res;
+}
+
+/* Do signed division, return result and remainder */
+uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator)
+{
+    uint64_t res;
+    _DIVAS_CRITICAL_ENTER();
+    _divas_div(1, numerator, denominator);
+    res = _divas_result64();
+    _DIVAS_CRITICAL_LEAVE();
+    return res;
+}
+
+/* Do unsigned division, return result and remainder */
+uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
+{
+    uint64_t res;
+    _DIVAS_CRITICAL_ENTER();
+    _divas_div(0, numerator, denominator);
+    res = _divas_result64();
+    _DIVAS_CRITICAL_LEAVE();
+    return res;
+}
+</#if>
+
+uint32_t ${DIVAS_INSTANCE_NAME}_SquareRoot(uint32_t number)
+{
+    uint32_t res = 0;
+
+    _DIVAS_CRITICAL_ENTER();
+    DIVAS_REGS->DIVAS_SQRNUM = number;
+    while((DIVAS_REGS->DIVAS_STATUS & DIVAS_STATUS_BUSY_Msk) == DIVAS_STATUS_BUSY_Msk)
     {
-        *remainder = DIVAS_REGS->DIVAS_REM;
+        /* Wait for the square root to complete */
     }
+    res = DIVAS_REGS->DIVAS_RESULT;
+    _DIVAS_CRITICAL_LEAVE();
 
-    return squareRootResult;
+
+    return res;
 }
