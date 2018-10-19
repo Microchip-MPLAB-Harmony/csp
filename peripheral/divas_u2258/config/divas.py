@@ -23,16 +23,6 @@
 *****************************************************************************"""
 
 ################################################################################
-##############           Callbacks               ###############################
-################################################################################
-
-def updateDIVASClockWarringStatus(symbol, event):
-    if event["value"] == False:
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
-################################################################################
 ##############           DIVAS DATABASE COMPONENTS               ###############
 ################################################################################
 
@@ -43,22 +33,18 @@ def instantiateComponent(divasComponent):
     divasInstanceName.setDefaultValue(divasComponent.getID().upper())
     Log.writeInfoMessage("Running " + divasInstanceName.getValue())
 
-    #clock enable
-    Database.clearSymbolValue("core", divasInstanceName.getValue()+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", divasInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
-
     #Enable or Disable lead zero optimization
     divasSym_DLZ = divasComponent.createBooleanSymbol("DIVAS_DLZ", None)
     divasSym_DLZ.setLabel("Enable Leading Zero optimization?")
     divasSym_DLZ.setDescription("32 bit divisions take 2-16 cycles when enabled; 16 cycles when disabled")
     divasSym_DLZ.setVisible(True)
-    divasSym_DLZ.setDefaultValue(1)
+    divasSym_DLZ.setDefaultValue(True)
 
-    # Clock Warning status
-    divasSym_ClkEnComment = divasComponent.createCommentSymbol("DIVAS_CLOCK_ENABLE_COMMENT", None)
-    divasSym_ClkEnComment.setLabel("Warning!!! DIVAS Peripheral Clock is Disabled in Clock Manager")
-    divasSym_ClkEnComment.setVisible(False)
-    divasSym_ClkEnComment.setDependencies(updateDIVASClockWarringStatus, ["core."+divasInstanceName.getValue()+"_CLOCK_ENABLE"])
+    #Overload Divider operation
+    divasSym_DLZ = divasComponent.createBooleanSymbol("DIVAS_DIV_OVERLOAD", None)
+    divasSym_DLZ.setLabel("Overload  Divide Operator?")
+    divasSym_DLZ.setVisible(True)
+    divasSym_DLZ.setDefaultValue(False)
 
 ################################################################################
 ###################     Code Generation            #############################

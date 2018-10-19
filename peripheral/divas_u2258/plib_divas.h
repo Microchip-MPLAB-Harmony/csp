@@ -86,12 +86,10 @@ this interface.
     void DIVASx_Initialize(void);
 
   Summary:
-    Initializes DIVAS x module of the device.
+    Initializes DIVAS peripheral.
 
   Description:
-    This function initializes DIVAS x module of the device with the values
-    configured in MCC GUI. Once the peripheral is initialized, signed, unsigned
-    divsion and square root functions can be used.
+    This function initializes DIVAS peripheral with the values configured in MCC GUI.
 
   Precondition:
     MCC GUI should be configured with the right values.
@@ -116,8 +114,8 @@ void DIVASx_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    bool DIVASx_DivideSigned ( int32_t divisor, int32_t dividend,
-                                int32_t * quotient, int32_t * remainder );
+  int32_t ${DIVAS_INSTANCE_NAME}_DivSigned(int32_t numerator, int32_t denominator);
+
 
   Summary:
     This function uses the DIVAS peripheral to performs a signed 32-bit
@@ -126,140 +124,186 @@ void DIVASx_Initialize(void);
   Description:
     This function uses the DIVAS peripheral to perform a signed 32-bit division.
     The function takes a signed divisor and dividend and returns the quotient
-    and remainder. If the library is configured (in MHC) with the Leading Zero
-    optimization option enabled, a division operation takes 2-16 cycles. If the
-    option is disabled, the option always takes 16 cycles. The latter option is
-    recommended if deterministic operation is desired.
 
   Precondition:
     The peripheral should have been initialized by calling the
-    DIVASx_Initialize() function once. The AHB clock to the DIVAS Peripheral
-    should have been enabled.
+    DIVASx_Initialize() function once.
 
   Parameters:
-    divisor - This should contain the signed divisor.
-
-    dividend - This should contain the signed dividend.
-
-    quotient - This is a pointer to a output paramter which will contain the
-    quotient of the division operation. This value is valid if the division
-    operation was successful. This can be NULL if the quotient is note required.
-
-    remainder - This is a pointer to a output paramter which will contain the
-    remainder of the division operation. This value is valid if the division
-    operation was successful. This can be NULL if the remained is not required.
+    numerator - This should contain the signed dividend.
+    denominator - This should contain the signed divisor.
 
   Returns:
-    true - if the division operation was successful.
-    false - if a divide-by-zero error has occurred.
+    Returns quotient
 
   Example:
     <code>
-        int32_t divisor;
         int32_t dividend;
+        int32_t divisor;
         int32_t quotient;
-        int32_t remainder;
 
-        divisor = -2000;
         dividend = 10000;
+        divisor = -2000;
 
-        if (true == DIVASx_DivideSigned(divisor, dividend, &quotient, &remainder ))
-        {
-            // quotient and remainder will have valid values.
-        }
+        quotient == DIVASx_DivSigned(numerator, denominator)
+
     </code>
 
   Remarks:
     None.
 */
 
-bool DIVASx_DivideSigned( int32_t divisor, int32_t dividend, int32_t * quotient, int32_t * remainder );
+int32_t DIVASx_DivSigned( int32_t numerator, int32_t denominator);
 
 // *****************************************************************************
 /* Function:
-    bool DIVASx_DivideUnsigned ( uint32_t divisor, uint32_t dividend,
-                            uint32_t * quotient, uint32_t * remainder );
+  int32_t ${DIVAS_INSTANCE_NAME}_DivSigned(int32_t numerator, int32_t denominator);
+
 
   Summary:
-    This function uses the DIVAS peripheral to performs a unsigned 32-bit
+    This function uses the DIVAS peripheral to performs a signed 32-bit
     division.
 
   Description:
-    This function uses the DIVAS peripheral to perform unsigned 32-bit division.
-    The function takes a unsigned divisor and dividend and returns the quotient
-    and remainder. If the library is configured (in MHC) with the Leading Zero
-    optimization option enabled, a division operation takes 2-16 cycles. If the
-    option is disabled, the option always takes 16 cycles. The latter option is
-    recommended if deterministic operation is desired.
+    This function uses the DIVAS peripheral to perform a signed 32-bit division.
+    The function takes a signed divisor and dividend and returns the quotient
 
   Precondition:
     The peripheral should have been initialized by calling the
-    DIVASx_Initialize() function once. The AHB clock to the DIVAS peripheral
-    should have been enabled.
+    DIVASx_Initialize() function once.
 
   Parameters:
-    divisor - This should contain the unsigned divisor.
-
-    dividend - This should contain the unsigned dividend.
-
-    quotient - This is a pointer to a output paramter which will contain the
-    quotient of the division operation. This value is valid if the division
-    operation was successful. This can be NULL if the quotient is not required.
-
-    remainder - This is a pointer to a output paramter which will contain the
-    remainder of the division operation. This value is valid if the division
-    operation was successful. This can be NULL if the remainder is not required.
+    numerator - This should contain the signed dividend.
+    denominator - This should contain the signed divisor.
 
   Returns:
-    true - if the division operation was successful.
-    false - if a divide-by-zero error has occurred.
+    Returns quotient
 
   Example:
     <code>
-        uint32_t divisor;
         uint32_t dividend;
+        uint32_t divisor;
         uint32_t quotient;
-        uint32_t remainder;
 
-        divisor = 2000;
         dividend = 10000;
+        divisor = 2000;
 
-        if (true == DIVASx_DivideUnsigned(divisor, dividend, &quotient, &remainder ))
-        {
-            // quotient and remainder will have valid values.
-        }
+        quotient == DIVASx_DivUnsigned(dividend, divisor)
+
     </code>
 
   Remarks:
     None.
 */
 
-bool DIVASx_DivideUnsigned( uint32_t divisor, uint32_t dividend, uint32_t * quotient, uint32_t * remainder );
+uint32_t DIVASx_DivUnsigned( uint32_t numerator, uint32_t denominator);
+
 
 // *****************************************************************************
 /* Function:
-    uint32_t DIVASx_SquareRoot ( uint32_t number , uint32_t * remainder);
+  uint64_t ${DIVAS_INSTANCE_NAME}_DivmodSigned(int32_t numerator, int32_t denominator);
+
+
+  Summary:
+    This function uses the DIVAS peripheral to performs a signed 32-bit
+    division.
+
+  Description:
+    This function uses the DIVAS peripheral to perform a signed 32-bit division.
+    The function takes a signed divisor and dividend and returns the quotient
+
+  Precondition:
+    The peripheral should have been initialized by calling the
+    DIVASx_Initialize() function once.
+
+  Parameters:
+    numerator - This should contain the signed dividend.
+    denominator - This should contain the signed divisor.
+
+  Returns:
+    Returns quotient and remainder as 64-bit number
+
+  Example:
+    <code>
+        int32_t dividend;
+        int32_t divisor;
+        uint64_t divmod;
+
+        dividend = 10000;
+        divisor = -2000;
+
+        divmod == DIVASx_DivmodSigned(dividend, divisor)
+
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+uint64_t DIVASx_DivmodSigned( int32_t numerator, int32_t denominator);
+
+// *****************************************************************************
+/* Function:
+  uint64_t ${DIVAS_INSTANCE_NAME}_DivSigned(int32_t numerator, int32_t denominator);
+
+
+  Summary:
+    This function uses the DIVAS peripheral to performs a signed 32-bit
+    division.
+
+  Description:
+    This function uses the DIVAS peripheral to perform a signed 32-bit division.
+    The function takes a signed divisor and dividend and returns the quotient
+
+  Precondition:
+    The peripheral should have been initialized by calling the
+    DIVASx_Initialize() function once.
+
+  Parameters:
+    numerator - This should contain the signed dividend.
+    denominator - This should contain the signed divisor.
+
+  Returns:
+    Returns quotient and remainder as 64-bit number
+
+  Example:
+    <code>
+        uint32_t dividend;
+        uint32_t divisor;
+        uint64_t divmod;
+
+        dividend = 10000;
+        divisor = 2000;
+
+        divmod == DIVASx__DivmodUnsigned(dividend, divisor)
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+uint64_t DIVASx_DivmodUnsigned( uint32_t numerator, uint32_t denominator);
+
+
+// *****************************************************************************
+/* Function:
+    uint64_t DIVASx_SquareRoot ( uint32_t number , uint32_t * remainder);
 
   Summary:
     This function uses the DIVAS peripheral to perform a square root operation.
 
   Description:
     This function uses the DIVAS peripheral to perform a square root operation.
-    The function will return the square root of the number contained in number.
-    The remainder output parameter will contain a remainder if the square root
-    was not perfect.
+    The function will return the square root of the 32-bit unsigned input number.
 
   Precondition:
     The peripheral should have been initialized by calling the
-    DIVASx_Initialize() function once. The AHB clock to the DIVAS peripheral
-    should have been enabled.
+    DIVASx_Initialize() function once.
 
   Parameters:
     number - unsigned number whose square root needs to be obtained.
-
-    remainder - pointer to an output parameter which will contain the remainder
-    of the square root operation (in case of a imperfect square root operation).
-    This can be NULL if the remainder is not required.
 
   Returns:
     The function returns the square root of the value contained in the number
@@ -268,11 +312,11 @@ bool DIVASx_DivideUnsigned( uint32_t divisor, uint32_t dividend, uint32_t * quot
   Example:
     <code>
         uint32_t number;
-        uint32_t remainder;
         uint32_t squareRoot;
 
         number = 144;
-        squareRoot = DIVASx_SquareRoot (number, &remainder);
+
+        squareRoot = DIVASx_SquareRoot (number);
 
     </code>
 
