@@ -28,6 +28,13 @@ appSourceFile = []
 appHeaderFile = []
 appHeaderName = []
 
+def genExceptionAsmSourceFile(symbol, event):
+    if (event["value"] == True):
+        symbol.setEnabled(True)
+    else:
+        symbol.setEnabled(False)
+
+
 def instantiateComponent(coreComponent):
 
     global appSourceFile
@@ -51,7 +58,7 @@ def instantiateComponent(coreComponent):
     exceptionHandling = coreComponent.createBooleanSymbol("ADVANCED_EXCEPTION", projMenu)
     exceptionHandling.setLabel("Use Harmony Exception Handling")
     exceptionHandling.setDefaultValue(False)
-    
+
     toolchainMenu = coreComponent.createMenuSymbol("CoreToolchainMenu", projMenu)
     toolchainMenu.setLabel("Toolchain Selection")
 
@@ -162,14 +169,27 @@ def instantiateComponent(coreComponent):
     systemIntVectorsHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_HANDLERS", None)
 
     # generate exceptions.c file
-    intSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
-    intSourceFile.setSourcePath("templates/exceptions.c.ftl")
-    intSourceFile.setOutputName("exceptions.c")
-    intSourceFile.setMarkup(True)
-    intSourceFile.setOverwrite(True)
-    intSourceFile.setDestPath("")
-    intSourceFile.setProjectPath("config/" + configName + "/")
-    intSourceFile.setType("SOURCE")
+    exceptionSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
+    exceptionSourceFile.setSourcePath("templates/exceptions.c.ftl")
+    exceptionSourceFile.setOutputName("exceptions.c")
+    exceptionSourceFile.setMarkup(True)
+    exceptionSourceFile.setOverwrite(True)
+    exceptionSourceFile.setDestPath("")
+    exceptionSourceFile.setProjectPath("config/" + configName + "/")
+    exceptionSourceFile.setType("SOURCE")
+
+    # generate exceptionsHandler.s file
+    exceptionAsmSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_ASM", None)
+    exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
+    exceptionAsmSourceFile.setOutputName("exceptionsHandler.s")
+    exceptionAsmSourceFile.setMarkup(True)
+    exceptionAsmSourceFile.setOverwrite(True)
+    exceptionAsmSourceFile.setDestPath("")
+    exceptionAsmSourceFile.setProjectPath("config/" + configName + "/")
+    exceptionAsmSourceFile.setType("SOURCE")
+    exceptionAsmSourceFile.setEnabled(False)
+    exceptionAsmSourceFile.setDependencies(genExceptionAsmSourceFile, ["ADVANCED_EXCEPTION"])
+
 
     # set XC32 heap size
     xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
