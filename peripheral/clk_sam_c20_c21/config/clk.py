@@ -1404,20 +1404,20 @@ def apbValue(symbol,event):
             
 
 
-    for key in pmDic.keys():
-        if pmDic.get(key) == perInstance:
+    for key in mclkDic.keys():
+        if mclkDic.get(key) == perInstance:
             if key.startswith("APB"):
                 bridge = key.split("_")[0]
 
                 bitmask = int(key.split("_")[1])
-                apbVal = int(Database.getSymbolValue("core", "PM_" + bridge + "_INITIAL_VALUE"),16)
+                apbVal = int(Database.getSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE"),16)
                 if enable == True:
                     apbVal =  apbVal | bitmask
-                    Database.setSymbolValue("core", "PM_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
+                    Database.setSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
                     break
                 else:
                     apbVal =  apbVal & ~(bitmask)
-                    Database.setSymbolValue("core", "PM_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
+                    Database.setSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
                     break
 
 
