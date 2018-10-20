@@ -26,10 +26,10 @@
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
-
 # I2CM Components Visible Property
-def sercomi2cComponentVisibleProperty(symbol, event):
-    if event["value"] == 0x5:
+def updateI2CMasterConfigurationVisibleProperty(symbol, event):
+
+    if event["symbol"].getSelectedKey() == "I2CM":
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -37,19 +37,21 @@ def sercomi2cComponentVisibleProperty(symbol, event):
 # baud rate calc
 def baudRateCalc(symbol,event):
 
-    gclk_Freq = Database.getSymbolValue("core",sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY")
-    clk_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower() ,"I2C_CLOCK_SPEED")
-    i2cm_Trise = Database.getSymbolValue(sercomInstanceName.getValue().lower(),"I2CM_TRISE")
-    clk_Genr_Mode = Database.getSymbolValue(sercomInstanceName.getValue().lower(),"I2CM_MODE")
+    component = symbol.getComponent()
+    if component.getSymbolByID("SERCOM_MODE").getSelectedKey() == "I2CM":
+        gclk_Freq = Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY")
+        clk_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_CLOCK_SPEED")
+        i2cm_Trise = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_TRISE")
+        clk_Genr_Mode = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_MODE")
 
-    clk_Speed = (int(clk_Speed) * 1000)
-    baudReg = geti2cBaud(gclk_Freq,clk_Speed,i2cm_Trise,int(clk_Genr_Mode))
+        clk_Speed = (int(clk_Speed) * 1000)
+        baudReg = geti2cBaud(gclk_Freq,clk_Speed,i2cm_Trise, int(clk_Genr_Mode))
 
-    if baudReg != None:
-        symbol.setValue(baudReg,2)
+        if baudReg != None:
+            symbol.setValue(baudReg, 2)
 
 ###################################################################################################
-############################################# I2C #################################################
+######################################## I2C MASTER ###############################################
 ###################################################################################################
 
 global i2cSym_Interrupt_Mode
@@ -70,17 +72,18 @@ i2cmSym_mode.setVisible(False)
 i2cmSym_mode.setDefaultValue(0)
 
 for id in range(0, (len(i2cValGrp_I2CM_CTRLA__SPEED.getChildren())-1)):
-        valueName = i2cValGrp_I2CM_CTRLA__SPEED.getChildren()[id].getAttribute("name")
-        value = i2cValGrp_I2CM_CTRLA__SPEED.getChildren()[id].getAttribute("value")
-        description = i2cValGrp_I2CM_CTRLA__SPEED.getChildren()[id].getAttribute("caption")
-        i2cmSym_mode.addKey(valueName, value, description)
-i2cmSym_mode.setDependencies(sercomi2cComponentVisibleProperty, ["SERCOM_MODE"])
+    valueName = i2cValGrp_I2CM_CTRLA__SPEED.getChildren()[id].getAttribute("name")
+    value = i2cValGrp_I2CM_CTRLA__SPEED.getChildren()[id].getAttribute("value")
+    description = i2cValGrp_I2CM_CTRLA__SPEED.getChildren()[id].getAttribute("caption")
+    i2cmSym_mode.addKey(valueName, value, description)
+
+i2cmSym_mode.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # RunIn Standby
 i2cmSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("I2C_RUNSTDBY", sercomSym_OperationMode)
 i2cmSym_CTRLA_RUNSTDBY.setLabel("Enable operation in Standby mode")
 i2cmSym_CTRLA_RUNSTDBY.setVisible(False)
-i2cmSym_CTRLA_RUNSTDBY.setDependencies(sercomi2cComponentVisibleProperty, ["SERCOM_MODE"])
+i2cmSym_CTRLA_RUNSTDBY.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # SDA Hold Time
 i2cmSym_CTRLA_SDAHOLD = sercomComponent.createKeyValueSetSymbol("I2C_SDAHOLD_TIME", sercomSym_OperationMode)
@@ -100,7 +103,7 @@ for index in range(len(i2cmSDAHoldTimeReferenceValues)):
 i2cmSym_CTRLA_SDAHOLD.setDefaultValue(1)
 i2cmSym_CTRLA_SDAHOLD.setOutputMode("Value")
 i2cmSym_CTRLA_SDAHOLD.setDisplayMode("Description")
-i2cmSym_CTRLA_SDAHOLD.setDependencies(sercomi2cComponentVisibleProperty,["SERCOM_MODE"])
+i2cmSym_CTRLA_SDAHOLD.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # Operating speed
 i2cmSym_BAUD = sercomComponent.createIntegerSymbol("I2C_CLOCK_SPEED", sercomSym_OperationMode)
@@ -109,13 +112,12 @@ i2cmSym_BAUD.setMin(1)
 i2cmSym_BAUD.setMax(1000)
 i2cmSym_BAUD.setDefaultValue(100)
 i2cmSym_BAUD.setVisible(False)
-i2cmSym_BAUD.setDependencies(sercomi2cComponentVisibleProperty, ["SERCOM_MODE"])
+i2cmSym_BAUD.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #I2C API Prefix
 i2cSym_API_Prefix = sercomComponent.createStringSymbol("I2C_PLIB_API_PREFIX", sercomSym_OperationMode)
 i2cSym_API_Prefix.setDefaultValue(sercomInstanceName.getValue() + "_I2C")
 i2cSym_API_Prefix.setVisible(False)
-
 
 # I2C BAUD register value
 i2cmSym_TRISEVALUE = sercomComponent.createIntegerSymbol("I2CM_TRISE", sercomSym_OperationMode)
@@ -124,9 +126,9 @@ i2cmSym_TRISEVALUE.setMin(1)
 i2cmSym_TRISEVALUE.setMax(1000)
 i2cmSym_TRISEVALUE.setDefaultValue(100)
 i2cmSym_TRISEVALUE.setVisible(False)
-i2cmSym_TRISEVALUE.setDependencies(sercomi2cComponentVisibleProperty, ["SERCOM_MODE"])
+i2cmSym_TRISEVALUE.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-baudRegValue = geti2cBaud(Database.getSymbolValue("core",sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"),i2cmSym_BAUD.getValue()*1000,i2cmSym_TRISEVALUE.getValue(),i2cmSym_mode.getValue())
+baudRegValue = geti2cBaud(Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"), i2cmSym_BAUD.getValue() * 1000, i2cmSym_TRISEVALUE.getValue(), i2cmSym_mode.getValue())
 
 # I2C BAUD register value
 i2cmSym_BAUDREGVALUE = sercomComponent.createIntegerSymbol("I2CM_BAUD", sercomSym_OperationMode)
@@ -134,4 +136,4 @@ i2cmSym_BAUDREGVALUE.setLabel("I2C BAUD")
 i2cmSym_BAUDREGVALUE.setDefaultValue(baudRegValue)
 i2cmSym_BAUDREGVALUE.setVisible(False)
 i2cmSym_BAUDREGVALUE.setReadOnly(True)
-i2cmSym_BAUDREGVALUE.setDependencies(baudRateCalc, ["I2CM_MODE","I2C_CLOCK_SPEED","core." +sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY","I2CM_TRISE"])
+i2cmSym_BAUDREGVALUE.setDependencies(baudRateCalc, ["I2CM_MODE", "I2C_CLOCK_SPEED", "core." + sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY", "I2CM_TRISE"])
