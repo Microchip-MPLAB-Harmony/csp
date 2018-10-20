@@ -25,30 +25,34 @@
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+
 #updating SPI GCLK clock
-def updatespiclock(symbol,event):
-    symbol.setValue(Database.getSymbolValue("core",sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"),2)
+def updatespiclock(symbol, event):
+
+    symbol.setValue(Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"), 2)
 
 # SPI Components Visible Property
-def setspiComponentVisibleProperty(symbol, event):
-    if event["value"] == 0x3:
+def updateSPIMasterConfigurationVisibleProperty(symbol, event):
+
+    if event["symbol"].getSelectedKey() == "SPIM":
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 #SPI BAUD Calculation
 def spibaudcalc(symbol, event):
-     sercom_gclk = Database.getSymbolValue("core",sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY")
-     spi_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower() ,"SPI_BAUD_RATE")
 
-     baudReg = getspiBaud(sercom_gclk,spi_Speed)
-     symbol.setValue(baudReg,2)
+    sercom_gclk = Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY")
+    spi_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_BAUD_RATE")
+
+    baudReg = getspiBaud(sercom_gclk, spi_Speed)
+    symbol.setValue(baudReg, 2)
 
 #SPI Transfer Mode Comment
 def setSPIClockModeInfo(symbol, event):
 
     if event["id"] == "SERCOM_MODE":
-        if event["value"] == 0x03:
+        if event["symbol"].getSelectedKey() == "SPIM":
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
@@ -67,9 +71,8 @@ def setSPIClockModeInfo(symbol, event):
         else:
             symbol.setLabel("***SPI Transfer Mode 3 is Selected***")
 
-
 ###################################################################################################
-############################################# SPI #################################################
+######################################## SPI MASTER ###############################################
 ###################################################################################################
 
 global spiSym_Interrupt_Mode
@@ -79,13 +82,13 @@ spiSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("SPI_INTERRUPT_MODE"
 spiSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
 spiSym_Interrupt_Mode.setDefaultValue(True)
 spiSym_Interrupt_Mode.setVisible(False)
-spiSym_Interrupt_Mode.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_Interrupt_Mode.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI Standby Mode
 spiSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("SPI_RUNSTDBY", sercomSym_OperationMode)
 spiSym_CTRLA_RUNSTDBY.setLabel("Enable operation in Standby mode")
 spiSym_CTRLA_RUNSTDBY.setVisible(False)
-spiSym_CTRLA_RUNSTDBY.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_CTRLA_RUNSTDBY.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI DataOut PinOut
 spiSym_CTRLA_DOPO = sercomComponent.createKeyValueSetSymbol("SPI_DOPO", sercomSym_OperationMode)
@@ -105,7 +108,7 @@ for index in range(len(spiDOPOValues)):
 spiSym_CTRLA_DOPO.setDefaultValue(0)
 spiSym_CTRLA_DOPO.setOutputMode("Value")
 spiSym_CTRLA_DOPO.setDisplayMode("Description")
-spiSym_CTRLA_DOPO.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_CTRLA_DOPO.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI DataIn pinOut
 spiSym_CTRLA_DIPO = sercomComponent.createKeyValueSetSymbol("SPI_DIPO", sercomSym_OperationMode)
@@ -125,7 +128,7 @@ for index in range(len(spiDIPOValues)):
 spiSym_CTRLA_DIPO.setDefaultValue(0)
 spiSym_CTRLA_DIPO.setOutputMode("Value")
 spiSym_CTRLA_DIPO.setDisplayMode("Description")
-spiSym_CTRLA_DIPO.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_CTRLA_DIPO.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI Data Order
 spiSym_CTRLA_DORD = sercomComponent.createKeyValueSetSymbol("SPI_DATA_ORDER", sercomSym_OperationMode)
@@ -145,14 +148,14 @@ for index in range(len(spiDORDValues)):
 spiSym_CTRLA_DORD.setDefaultValue(0)
 spiSym_CTRLA_DORD.setOutputMode("Value")
 spiSym_CTRLA_DORD.setDisplayMode("Description")
-spiSym_CTRLA_DORD.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_CTRLA_DORD.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI BaudRate Value
 spi_BAUDRATE = sercomComponent.createIntegerSymbol("SPI_BAUD_RATE", sercomSym_OperationMode)
 spi_BAUDRATE.setLabel("SPI Speed in Hz")
 spi_BAUDRATE.setDefaultValue(1000000)
 spi_BAUDRATE.setVisible(False)
-spi_BAUDRATE.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spi_BAUDRATE.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI Character Size
 spiSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("SPI_CHARSIZE_BITS", sercomSym_OperationMode)
@@ -172,7 +175,7 @@ for index in range(len(spiCHSIZEValues)):
 spiSym_CTRLB_CHSIZE.setDefaultValue(0)
 spiSym_CTRLB_CHSIZE.setOutputMode("Value")
 spiSym_CTRLB_CHSIZE.setDisplayMode("Description")
-spiSym_CTRLB_CHSIZE.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_CTRLB_CHSIZE.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI 8-bit Character size Mask
 spiSym_CTRLB_CHSIZE_8BIT = sercomComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", sercomSym_OperationMode)
@@ -202,7 +205,7 @@ for index in range(len(spiCLKPHASEValues)):
 spiSym_CTRLA_ClockPhase.setDefaultValue(0)
 spiSym_CTRLA_ClockPhase.setOutputMode("Key")
 spiSym_CTRLA_ClockPhase.setDisplayMode("Description")
-spiSym_CTRLA_ClockPhase.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_CTRLA_ClockPhase.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI Clock Phase Trailing Edge Mask
 spiSym_CTRLA_CPHA_LE_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", sercomSym_OperationMode)
@@ -232,7 +235,7 @@ for index in range(len(spiCLKPLORITYValues)):
 spiSym_CTRLA_ClockPolarity.setDefaultValue(0)
 spiSym_CTRLA_ClockPolarity.setOutputMode("Key")
 spiSym_CTRLA_ClockPolarity.setDisplayMode("Description")
-spiSym_CTRLA_ClockPolarity.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_CTRLA_ClockPolarity.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI Clock Polarity Idle Low Mask
 spiSym_CTRLA_CPOL_IL_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", sercomSym_OperationMode)
@@ -253,14 +256,14 @@ spiSym_STATUS_BUFOVF_Mask.setVisible(False)
 spiSym_CTRLB_MSSEN = sercomComponent.createBooleanSymbol("SPI_MSSEN", sercomSym_OperationMode)
 spiSym_CTRLB_MSSEN.setLabel("Enable SPI Master Hardware Slave Select")
 spiSym_CTRLB_MSSEN.setVisible(False)
-spiSym_CTRLB_MSSEN.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_CTRLB_MSSEN.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI Receiver Enable
 spiSym_CTRLB_RXEN = sercomComponent.createBooleanSymbol("SPI_RECIEVER_ENABLE", sercomSym_OperationMode)
 spiSym_CTRLB_RXEN.setLabel("SPI Receiver Enable")
 spiSym_CTRLB_RXEN.setDefaultValue(True)
 spiSym_CTRLB_RXEN.setVisible(False)
-spiSym_CTRLB_RXEN.setDependencies(setspiComponentVisibleProperty, ["SERCOM_MODE"])
+spiSym_CTRLB_RXEN.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI API Prefix
 spiSym_API_Prefix = sercomComponent.createStringSymbol("SPI_PLIB_API_PREFIX", sercomSym_OperationMode)
@@ -273,19 +276,19 @@ spiSym_ClockModeComment.setLabel("***SPI Transfer Mode 0 is Selected***")
 spiSym_ClockModeComment.setVisible(False)
 spiSym_ClockModeComment.setDependencies(setSPIClockModeInfo, ["SERCOM_MODE", "SPI_CLOCK_PHASE", "SPI_CLOCK_POLARITY"])
 
-spidefaultvalue  = getspiBaud(Database.getSymbolValue("core",sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"),spi_BAUDRATE.getValue())
+spidefaultvalue  = getspiBaud(Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"), spi_BAUDRATE.getValue())
 
 # SPI BAUDREG Value
 spi_BAUDREG = sercomComponent.createIntegerSymbol("SPI_BAUD_REG_VALUE", sercomSym_OperationMode)
 spi_BAUDREG.setLabel("SPI Baud ")
 spi_BAUDREG.setDefaultValue(spidefaultvalue)
 spi_BAUDREG.setVisible(False)
-spi_BAUDREG.setDependencies(spibaudcalc, ["core." +sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY", "SPI_BAUD_RATE"])
+spi_BAUDREG.setDependencies(spibaudcalc, ["core." + sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY", "SPI_BAUD_RATE"])
 
 # SPI GCLK clock Value
 spi_GCLK = sercomComponent.createIntegerSymbol("SPI_GCLK_CLOCK", sercomSym_OperationMode)
 spi_GCLK.setLabel("SPI GCLK CLOCK ")
-spi_GCLK.setDefaultValue(Database.getSymbolValue("core",sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"))
+spi_GCLK.setDefaultValue(Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"))
 spi_GCLK.setVisible(False)
 spi_GCLK.setReadOnly(False)
-spi_GCLK.setDependencies(updatespiclock, ["core." +sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"])
+spi_GCLK.setDependencies(updatespiclock, ["core." + sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"])

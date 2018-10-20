@@ -29,12 +29,12 @@
 def updateUSARTConfigurationVisibleProperty(symbol, event):
 
     if symbol.getID() == "USART_BAUD_ERROR_COMMENT":
-        if usartSym_BAUD_VALUE.getValue() == 0 and event["value"] == 0x1:
+        if usartSym_BAUD_VALUE.getValue() == 0 and event["symbol"].getSelectedKey() == "USART_INT":
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
     else:
-        if event["value"] == 0x1:
+        if event["symbol"].getSelectedKey() == "USART_INT":
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
@@ -54,7 +54,6 @@ def updateUSARTBaudValueProperty(symbol, event):
     else:
         usartSym_BaudError_Comment.setVisible(False)
 
-    symbol.clearValue()
     symbol.setValue(brgVal, 2)
 
 ###################################################################################################
