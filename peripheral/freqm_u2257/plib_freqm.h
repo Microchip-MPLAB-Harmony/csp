@@ -59,6 +59,7 @@
 // *****************************************************************************
 /* This section lists the other files that are included in this file.
 */
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -176,7 +177,7 @@ this interface.
 
 // *****************************************************************************
 /* Function:
-    void FREQMx_Initialize (void);
+    void FREQMx_Initialize(void)
 
   Summary:
     Initializes FREQMx module.
@@ -204,11 +205,11 @@ this interface.
     This function must be called before any other FREQM function is called.
 */
 
-void FREQMx_Initialize (void);
+void FREQMx_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    void FREQMx_MeasurementStart();
+    bool FREQMx_MeasurementStart(void)
 
   Summary:
     This function starts the frequency measurement.
@@ -221,8 +222,6 @@ void FREQMx_Initialize (void);
     completion of the measurement operation is indicated by the FREQMx_IsBusy()
     function returing false or a registered callback function being called.
 
-    Starting a measurement will reset all module errors and other status flags. 
-
   Precondition:
     FREQMx module should be initialized with the required configuration
     parameters from the MHC GUI in the FREQM_Initialize() function
@@ -231,23 +230,24 @@ void FREQMx_Initialize (void);
     None
 
   Returns:
-    None
+    Returns false if the peripheral is busy
 
   Example:
     <code>
-        FREQMx_MeasurementStart();
+        bool status = false;
+        status = FREQMx_MeasurementStart();
     </code>
 
   Remarks:
     None.
 */
 
-void FREQMx_MeasurementStart(void);
+bool FREQMx_MeasurementStart(void);
 
 // *****************************************************************************
 /* Function:
-    void FREQMx_CallbackRegister( FREQM_CALLBACK freqmcallback,
-                                                     uintptr_t context);
+    void FREQMx_CallbackRegister(FREQM_CALLBACK freqmcallback,
+                                                            uintptr_t context)
 
   Summary:
     Allows application to register a callback function.
@@ -311,7 +311,7 @@ void FREQMx_CallbackRegister(FREQM_CALLBACK freqmcallback, uintptr_t context);
 
 // *****************************************************************************
 /* Function:
-    bool FREQMx_IsBusy (void)
+    bool FREQMx_IsBusy(void)
 
   Summary:
     Returns the measurement status of an on-going frequency measurement
@@ -323,15 +323,11 @@ void FREQMx_CallbackRegister(FREQM_CALLBACK freqmcallback, uintptr_t context);
     FREQMx_MeasurementStart() function has been called to start a measurement.
     It returns false, when the  measurement operation has completed.  The
     function should be called after measurement operation was initiated to poll
-    the completion of the measurement operation.
-
-    This function can be used as an alternative to the callback function. In
-    that, the application can call this function periodically to check for
-    operation completion instead of waiting for callback to be called.
+    the completion of the measurement operation. It also can be used as
+    alternate to callback.
 
   Precondition:
-    The FREQMx_Initialize function must have been called. The interrupt option
-    in MHC should have been enabled.
+    The FREQMx_Initialize() function must have been called.
 
   Parameters:
     None.
@@ -359,7 +355,7 @@ bool FREQMx_IsBusy(void);
 
 // *****************************************************************************
 /* Function:
-    uint32_t FREQMx_FrequencyGet()
+    uint32_t FREQMx_FrequencyGet(void)
 
   Summary:
     Returns the measured frequency in Hz.
@@ -367,18 +363,12 @@ bool FREQMx_IsBusy(void);
   Description:
     This function returns the measured frequency in Hz. It should be called when
     a frequency measurement is complete and no errors have occurred. This
-    function is non-blocking when the library is generated for interrupt
-    operation. In this mode, the function should be called only after a callback
-    function was called or after the FREQMx_IsBusy() function returns false
-    indicating that an og-going frequency measurement operation has completed. 
-    
-    The function will block when the library is generated for non-interrupt
-    operation.  The function will block till the frequency measurement operation
-    has completed. In this case, the return value of the function is only valid
-    if the FREQMx_ErrorGet() function returns FREQM_ERROR_NONE.
+    function is non-blocking. In this mode, the function should be called only
+    after a callback function was called. The return value of the function is
+    only valid if the FREQMx_ErrorGet() function returns FREQM_ERROR_NONE.
 
   Precondition:
-    FREQMx_Initialize() and FREQM_MeasurementStart functions should be called.
+    FREQMx_Initialize() and FREQM_MeasurementStart() functions should be called.
 
   Parameters:
     None.
@@ -399,11 +389,12 @@ bool FREQMx_IsBusy(void);
     FREQMx_Initialize();
     FREQM_MeasurementStart()
 
-    // The following function call will block.
-    measuredFrequency = FREQMx_FrequencyGet();
+    // Wait till the measurement is complete.
+    while(FREQMx_IsBusy());
 
     if(FREQM_ERROR_NONE == FREQMx_ErrorGet())
     {
+        measuredFrequency = FREQMx_FrequencyGet();
         // This means there are no errors and the value contained in
         // measuredFrequency is valid.
     }
@@ -413,11 +404,11 @@ bool FREQMx_IsBusy(void);
     None.
 */
 
-uint32_t FREQMx_FrequencyGet();
+uint32_t FREQMx_FrequencyGet(void);
 
 // *****************************************************************************
 /* Function:
-    FREQM_ERROR FREQMx_ErrorGet( void )
+    FREQM_ERROR FREQMx_ErrorGet(void)
 
   Summary:
     Returns error that may have occurred during the frequency measurement
@@ -430,8 +421,7 @@ uint32_t FREQMx_FrequencyGet();
     only if this function returns FREQM_ERROR_NONE.
 
   Precondition:
-    FREQMx_Initialize and FREQMx_MeasurementStart functions must have been
-    called.
+    FREQMx_Initialize() and FREQM_MeasurementStart() functions should be called.
 
   Parameters:
     None.
@@ -452,51 +442,15 @@ uint32_t FREQMx_FrequencyGet();
     </code>
 
   Remarks:
-    Module errors are reset when the FREQM_MeasurementStart() function is
-    called.
-*/
-
-FREQM_ERROR FREQMx_ErrorGet( void );
-
-// *****************************************************************************
-/* Function:
-    void FREQMx_Setup(uint32_t referenceFrequency)
-
-  Summary:
-    Allows the application to respecify the FREQM module reference clock
-    frequency.
-
-  Description:
-    This function allows the application to respecify the FREQM module reference
-    clock frequency. The application may need to call this function in a case
-    where the system clock frequency may have changed. It is not necessary to
-    call this function otherwise.
-
-  Precondition:
-    The Frequency Setup API option in MHC should have been enabled.
-
-  Parameters:
-    None.
-
-  Returns:
-    referenceFrequency - Updated reference clock Frequency.
-
-  Example:
-    <code>
-
-    // Change the module reference clock frequency to 64KHz.
-
-    FREQMx_Setup(64000);
-
-    </code>
-  Remarks:
     None.
 */
 
-void FREQMx_Setup(uint32_t referenceFrequency);
+FREQM_ERROR FREQMx_ErrorGet(void);
 
- #ifdef __cplusplus // Provide C++ Compatibility
- }
- #endif
+#ifdef __cplusplus // Provide C++ Compatibility
+
+    }
+
+#endif
 
 #endif /* PLIB_FREQMx_H */
