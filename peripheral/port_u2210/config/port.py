@@ -144,7 +144,29 @@ def setupPortLat(usePortLocalLatch, event):
 
     Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_OUT", str((hex(outValue).rstrip("L"))), 1)
 
-
+def evsysControl(symbol, event):
+    for i in range (0,4):
+        status = False
+        for j in range(0,3):
+            if(Database.getSymbolValue("core", "PORT_"+ str(j) + "_EVACT"+str(i)+"_ENABLE")) == True:
+                status = True
+                break
+        Database.setSymbolValue("evsys", "USER_PORT_EV_" + str(i) + "_READY", status, 2)
+    
+    evctrl = 0
+    
+    channelId = symbol.getID().split("_")[2]
+    
+    for i in range (0,4):
+        enable = Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_ENABLE")
+        action = int(Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_ACTION"))
+        pin = int(Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_PIN"))
+        if enable == True:
+            evctrl |=  1 << (7+(i*8)) | (action << (5+(i*8))) | (pin << (0+(i*8)))
+            
+    
+    symbol.setValue(str(hex(evctrl)),2)
+        
 def setupPortPinMux(portSym_PORT_PMUX_local, event):
     global intPrePinMuxVal
     global prevID
@@ -441,10 +463,13 @@ portPin = []
 
 global usePort
 usePort = []
-
+evsysDep = []
 port = []
-
+visibility = False
 portSym_GroupName = []
+
+portEvsysActionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/value-group@[name=\"PORT_EVCTRL__EVACT0\"]")
+portEvsysActionValues = portEvsysActionNode.getChildren()
 
 for portNumber in range(0, len(group)):
 
@@ -462,9 +487,11 @@ for portNumber in range(0, len(group)):
     usePort[portNumber] = coreComponent.createBooleanSymbol("PORT_GROUP_" + str(portNumber), port[portNumber])
     usePort[portNumber].setLabel("Use PORT GROUP " + str(portGroupName[portNumber]))
     usePort[portNumber].setValue(True, 1)
+    usePort[portNumber].setVisible(visibility)
 
     portSym_PORT_DIR = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_DIR", port[portNumber])
     portSym_PORT_DIR.setLabel("Port Pin Direction")
+    portSym_PORT_DIR.setVisible(visibility)
     portSym_PORT_DIR.setDefaultValue(str(hex(0)))
     portSym_PORT_DIR.setDependencies(setupPortDir, pinDirList)
 
@@ -472,10 +499,12 @@ for portNumber in range(0, len(group)):
     portSym_PORT_LATCH.setLabel("Port Pin Output Value")
     portSym_PORT_LATCH.setDefaultValue(str(hex(0)))
     portSym_PORT_LATCH.setDependencies(setupPortLat, pinLatchList)
-
+    portSym_PORT_LATCH.setVisible(visibility)
+    
     portSym_PORT_CTRL = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_CTRL", port[portNumber])
     portSym_PORT_CTRL.setLabel("Enable Input Synchronizer")
     portSym_PORT_CTRL.setDefaultValue(str(hex(0)))
+    portSym_PORT_CTRL.setVisible(visibility)
 
     for pinNum in range(0, 32):
         #creating list for port pin
@@ -484,7 +513,8 @@ for portNumber in range(0, len(group)):
         portSym_PORT_PINCFG = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PINCFG" + str(pinNum) , port[portNumber])
         portSym_PORT_PINCFG.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PINCFG" + str(pinNum))
         portSym_PORT_PINCFG.setDefaultValue(str(hex(0)))
-
+        portSym_PORT_PINCFG.setVisible(visibility)
+        
         portPad = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PAD_" + str(pinNum), port[portNumber])
         portPad.setVisible(False)
         portPad.setDefaultValue("0")
@@ -493,8 +523,52 @@ for portNumber in range(0, len(group)):
         portSym_PORT_PMUX = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PMUX" + str(pinNum) , port[portNumber])
         portSym_PORT_PMUX.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PMUX" + str(pinNum))
         portSym_PORT_PMUX.setDefaultValue(str(hex(0)))
+        portSym_PORT_PMUX.setVisible(visibility)
         portSym_PORT_PMUX.setDependencies(setupPortPinMux, pinPinMuxList)
+        
+    portEVSYS = coreComponent.createMenuSymbol("PORT_MENU_EVSYS" + str(portNumber), port[portNumber])
+    portEVSYS.setLabel("EVENT System Configuraiton")
+    
+    for i in range(0,4):
+        portEVSYSEnable = coreComponent.createBooleanSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE", portEVSYS)
+        portEVSYSEnable.setLabel("Enable Event" + str(i) + " Input")
+        evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE")
+        
+        portEvsysAction = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION",portEVSYSEnable)
+        portEvsysAction.setLabel("Event" + str(i) + " Action")
+        for index in range(0, len(portEvsysActionValues)):
+            portEvsysActionKeyName = portEvsysActionValues[index].getAttribute("name")
+            portEvsysActionDescription = portEvsysActionValues[index].getAttribute("caption")
+            portEvsysActionValue = portEvsysActionValues[index].getAttribute("value")
+            portEvsysAction.addKey(portEvsysActionKeyName, portEvsysActionValue , portEvsysActionDescription)
 
+        portEvsysAction.setDefaultValue(0)
+        portEvsysAction.setOutputMode("Value")
+        portEvsysAction.setDisplayMode("Description")
+        evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION")
+        
+        portEvsysPin = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_PIN",portEVSYSEnable)
+        portEvsysPin.setLabel("Event" + str(i) + " Pin")
+        for index in range(0, 32):
+            portEvsysPin.addKey("P" + str(index), str(index) , "Pin " + str(index))
+
+        portEvsysAction.setDefaultValue(0)
+        portEvsysAction.setOutputMode("Value")
+        portEvsysAction.setDisplayMode("Description")
+        evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_PIN")
+
+    portSym_PORT_EVCTRL = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_EVCTRL", port[portNumber])
+    portSym_PORT_EVCTRL.setLabel("Port Event Control")
+    portSym_PORT_EVCTRL.setVisible(visibility)
+    portSym_PORT_EVCTRL.setDefaultValue(str(hex(0)))
+    portSym_PORT_EVCTRL.setDependencies(evsysControl, evsysDep)
+
+
+
+        
+        
+    
+    
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################
