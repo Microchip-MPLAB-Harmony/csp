@@ -146,7 +146,7 @@ def instantiateComponent(evsysComponent):
     for id in range(0,len(generatorsNode.getChildren())):
         generator[generatorsNode.getChildren()[id].getAttribute("name")] = int(generatorsNode.getChildren()[id].getAttribute("index"))
         generatorActive = evsysComponent.createBooleanSymbol("GENERATOR_" + str(generatorsNode.getChildren()[id].getAttribute("name")) + "_ACTIVE", evsysSym_Menu)
-        generatorActive.setVisible(True)
+        generatorActive.setVisible(False)
         generatorActive.setDefaultValue(False)
         generatorSymbol.append("GENERATOR_" + str(generatorsNode.getChildren()[id].getAttribute("name")) + "_ACTIVE")
 
@@ -154,7 +154,7 @@ def instantiateComponent(evsysComponent):
     for id in range(0,len(usersNode.getChildren())):
         user[int(usersNode.getChildren()[id].getAttribute("index"))] = usersNode.getChildren()[id].getAttribute("name")
         userReady = evsysComponent.createBooleanSymbol("USER_" + str(usersNode.getChildren()[id].getAttribute("name")) + "_READY", evsysSym_Menu)
-        userReady.setVisible(True)
+        userReady.setVisible(False)
         userReady.setDefaultValue(False)
         channelUserMap["EVSYS_USER_" + str(usersNode.getChildren()[id].getAttribute("index"))] = -1
         channelUserDependency.append("EVSYS_USER_" + str(usersNode.getChildren()[id].getAttribute("index")))

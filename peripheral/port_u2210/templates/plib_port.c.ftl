@@ -74,6 +74,7 @@ void PORT_Initialize(void)
 <#list 0..PORT_GROUP_COUNT as n>
     <#assign PORT_GROUP = "PORT_GROUP_"+ n>
     <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + n>
+    <#assign PORT_GROUP_EVCTRL = "PORT_GROUP_" + n + "_EVCTRL">
         <#if .vars[PORT_GROUP]!false>
             <#lt>   /************************** GROUP ${.vars[PORT_GROUP_NAME]} Initialization *************************/
             <#assign PORT_DIR = "PORT_GROUP_" + n + "_DIR">
@@ -103,7 +104,10 @@ void PORT_Initialize(void)
                         <#lt>   PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
                     </#if>
                 </#list>
-
+                
+                <#if "${.vars[PORT_GROUP_EVCTRL]}" != "0x0">
+                    <#lt>   PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_EVCTRL = ${.vars[PORT_GROUP_EVCTRL]};
+                </#if>
         </#if>
 </#list>
 }
