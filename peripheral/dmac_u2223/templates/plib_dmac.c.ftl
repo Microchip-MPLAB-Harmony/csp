@@ -114,6 +114,12 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#assign DMAC_BTCTRL_DSTINC     = "DMAC_BTCTRL_DSTINC_CH_"    + i>
         <#assign DMAC_BTCTRL_BEATSIZE   = "DMAC_BTCTRL_BEATSIZE_CH_"  + i>
         <#assign DMAC_TRIGSRC_PERID_VAL = "DMAC_CHCTRLB_TRIGSRC_CH_" + i + "_PERID_VAL">
+        <#if i < DMA_EVSYS_CHANNEL_COUNT>
+            <#assign DMAC_EVSYS_OUT = "DMAC_ENABLE_EVSYS_OUT_" + i >
+            <#assign DMAC_EVSYS_IN = "DMAC_ENABLE_EVSYS_IN_" + i >
+            <#assign DMAC_EVSYS_EVOSEL = "DMAC_BTCTRL_EVSYS_EVOSEL_" + i >
+            <#assign DMAC_EVSYS_EVACT = "DMAC_CHCTRLB_EVACT_" + i >
+        </#if>
 
         <#if (.vars[DMAC_CHCTRLA_ENABLE] == true)>
         <#lt>   /***************** Configure DMA channel ${i} ********************/
@@ -123,13 +129,22 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#lt>   </#if></@compress>
         <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB = DMAC_CHCTRLB_TRIGACT(${.vars[DMAC_CHCTRLB_TRIGACT]})
         <#lt>                                                       | DMAC_CHCTRLB_TRIGSRC(${.vars[DMAC_TRIGSRC_PERID_VAL]})
-        <#lt>                                                       | DMAC_CHCTRLB_LVL(${.vars[DMAC_CHCTRLB_LVL]});
+        <#lt>                                                       | DMAC_CHCTRLB_LVL(${.vars[DMAC_CHCTRLB_LVL]})
+        <#lt>                                                       <#if i < DMA_EVSYS_CHANNEL_COUNT>
+        <#lt>                                                       ${(.vars[DMAC_EVSYS_IN])?then('| DMAC_CHCTRLB_EVACT(${.vars[DMAC_EVSYS_EVACT]}) | DMAC_CHCTRLB_EVIE_Msk','')}
+        <#lt>                                                       ${(.vars[DMAC_EVSYS_OUT])?then('| DMAC_CHCTRLB_EVOE_Msk','')}
+        <#lt>                                                       </#if>
+        <#lt>                                                       ;
         <#lt>   </@compress>
         <#lt>   <@compress single_line=true>descriptor_section[${i}].BTCTRL = DMAC_DESCRIPTOR_BTCTRL_BLOCKACT_INT
         <#lt>                                                                       | DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_${.vars[DMAC_BTCTRL_BEATSIZE]}
         <#lt>                                                                       | DMAC_DESCRIPTOR_BTCTRL_VALID_Msk
         <#lt>                                                                       ${(.vars[DMAC_BTCTRL_SRCINC] == "INCREMENTED_AM")?then('| DMAC_DESCRIPTOR_BTCTRL_SRCINC_Msk','')}
-        <#lt>                                                                       ${(.vars[DMAC_BTCTRL_DSTINC] == "INCREMENTED_AM")?then('| DMAC_DESCRIPTOR_BTCTRL_DSTINC_Msk','')};
+        <#lt>                                                                       ${(.vars[DMAC_BTCTRL_DSTINC] == "INCREMENTED_AM")?then('| DMAC_DESCRIPTOR_BTCTRL_DSTINC_Msk','')}
+        <#lt>                                                                       <#if i < DMA_EVSYS_CHANNEL_COUNT>
+        <#lt>                                                                       ${(.vars[DMAC_EVSYS_OUT])?then('| DMAC_DESCRIPTOR_BTCTRL_EVOSEL(${.vars[DMAC_EVSYS_EVOSEL]})','')}
+        <#lt>                                                                       </#if>
+        <#lt>                                                                       ;
         <#lt>   </@compress>
         <#lt>   dmacChannelObj[${i}].inUse = 1;
         <#lt>   ${DMA_INSTANCE_NAME}_REGS->DMAC_CHINTENSET = (DMAC_CHINTENSET_TERR_Msk | DMAC_CHINTENSET_TCMPL_Msk);
