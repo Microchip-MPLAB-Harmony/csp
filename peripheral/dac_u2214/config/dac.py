@@ -33,6 +33,23 @@ def updateDACClockWarringStatus(symbol, event):
     else:
         symbol.setVisible(False)
 
+def evsysControl(symbol, event):
+    evctrl = 0
+    inv = Database.getSymbolValue(event["namespace"], "DAC_INVERSION_OUTPUT")
+    out = Database.getSymbolValue(event["namespace"], "DAC_BUFFER_EMPTY_EVENT_OUTPUT")
+    inp = int(Database.getSymbolValue(event["namespace"], "DAC_START_CONVERSION_EVENT_INPUT"))
+    
+    if inp:
+        evctrl |= 1
+    if out:
+        evctrl |= 1 << 1
+    evctrl |= (inv) << 2
+    
+    Database.setSymbolValue("evsys", "GENERATOR_DAC_EMPTY_ACTIVE", inp, 2)
+    Database.setSymbolValue("evsys", "USER_DAC_START_READY", inp, 2)
+    
+    symbol.setValue(evctrl, 2)
+    
 ################################################################################
 ########                        DAC Data Base Components               #########
 ################################################################################
@@ -99,20 +116,32 @@ def instantiateComponent(dacComponent):
     dacSym_CTRLB_DITHER.setLabel("Enable 4-Bit Dithering?")
     dacSym_CTRLB_DITHER.setVisible(True)
 
-    #Enable Inversion Data Buffer Empty Event Output
-    dacSym_EVCTRL_INVEI = dacComponent.createBooleanSymbol("DAC_INVERSION_DATA_BUFFER_EMPTY_EVENT_OUTPUT", None)
-    dacSym_EVCTRL_INVEI.setLabel("Generate data buffer empty event?")
-    dacSym_EVCTRL_INVEI.setVisible(False)
+    dacMenu = dacComponent.createMenuSymbol("DAC_MENU", None)
+    dacMenu.setLabel("Dac Event Configuration")
 
     #Data Buffer Empty Event Output
-    dacSym_EVCTRL_EMPTYEO = dacComponent.createBooleanSymbol("DAC_BUFFER_EMPTY_EVENT_OUTPUT", None)
-    dacSym_EVCTRL_EMPTYEO.setLabel("Data Buffer Empty Event output")
-    dacSym_EVCTRL_EMPTYEO.setVisible(False)
+    dacSym_EVCTRL_EMPTYEO = dacComponent.createBooleanSymbol("DAC_BUFFER_EMPTY_EVENT_OUTPUT", dacMenu)
+    dacSym_EVCTRL_EMPTYEO.setLabel("Generate Event On Data Buffer Empty")
+    dacSym_EVCTRL_EMPTYEO.setVisible(True)
 
     #Start Conversion Event Input
-    dacSym_EVCTRL_STARTEI = dacComponent.createBooleanSymbol("DAC_START_CONVERSION_EVENT_INPUT", None)
-    dacSym_EVCTRL_STARTEI.setLabel("Trigger conversion on input event?")
-    dacSym_EVCTRL_STARTEI.setVisible(False)
+    dacSym_EVCTRL_STARTEI = dacComponent.createBooleanSymbol("DAC_START_CONVERSION_EVENT_INPUT", dacMenu)
+    dacSym_EVCTRL_STARTEI.setLabel("Trigger conversion on event Detection")
+    dacSym_EVCTRL_STARTEI.setVisible(True)
+    
+    dacSym_EVCTRL_INVEI = dacComponent.createKeyValueSetSymbol("DAC_INVERSION_OUTPUT", dacMenu)
+    dacSym_EVCTRL_INVEI.setLabel("Edge Detection for Input Event")
+    dacSym_EVCTRL_INVEI.addKey("Rising", "0", "Detect on Rising Edge")
+    dacSym_EVCTRL_INVEI.addKey("Falling", "1", "Detect on Falling Edge")
+    dacSym_EVCTRL_INVEI.setVisible(True)
+    dacSym_EVCTRL_INVEI.setOutputMode("Value")
+    dacSym_EVCTRL_INVEI.setDisplayMode("Key")
+    
+    dacSym_EVCTRL = dacComponent.createHexSymbol("DAC_EVCTRL", None)
+    dacSym_EVCTRL.setLabel("Trigger conversion on input event?")
+    dacSym_EVCTRL.setVisible(False)
+    dacSym_EVCTRL.setDependencies(evsysControl,["DAC_BUFFER_EMPTY_EVENT_OUTPUT", "DAC_START_CONVERSION_EVENT_INPUT", "DAC_INVERSION_OUTPUT"])
+    
     # Clock Warning status
     dacSym_ClkEnComment = dacComponent.createCommentSymbol("DAC_CLOCK_ENABLE_COMMENT", None)
     dacSym_ClkEnComment.setLabel("Warning!!! DAC Peripheral Clock is Disabled in Clock Manager")
