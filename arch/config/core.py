@@ -162,27 +162,85 @@ def instantiateComponent(coreComponent):
     toolChainSpecifics.setProjectPath(arch)
     toolChainSpecifics.setType("HEADER")
 
-    toolchainMenu = coreComponent.createMenuSymbol("CoreToolchainMenu", projMenu)
-    toolchainMenu.setLabel("Toolchain Selection")
+    toolChainMenu = coreComponent.createMenuSymbol("CoreToolChainMenu", projMenu)
+    toolChainMenu.setLabel("Tool Chain Selections")
 
-    xc32Sym = coreComponent.createBooleanSymbol("XC32", toolchainMenu)
-    xc32Sym.setLabel("XC32 Compiler")
-    xc32Sym.setDefaultValue(True)
-    xc32Sym.setReadOnly(True)
+    compilerSymbolName = "COMPILER_CHOICE"
+    compilerChoice = coreComponent.createKeyValueSetSymbol( compilerSymbolName, toolChainMenu )
+    compilerChoice.setLabel( "Compiler" )
+    compilerChoice.setOutputMode( "Key" )
+    compilerChoice.setDisplayMode( "Description" )
+    compilerChoice.setVisible( True )
+    compilerChoices =       [( "XC32_COMPILER",  "0", "XC32" ), 
+                             ( "IAR_COMPILER",   "1", "IAR" ), 
+                             ]
+    for tupleElem in compilerChoices:
+        compilerChoice.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
-    xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", projMenu)
-    xc32Menu.setLabel("XC32 (Global Options)")
+    ## xc32 Tool Config
+    xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", toolChainMenu)
+    xc32Menu.setLabel("XC32 Global Options")
 
-    xc32ldMenu = coreComponent.createMenuSymbol("CoreXC32_LD", xc32Menu)
-    xc32ldMenu.setLabel("xc32-ld")
+    xc32LdMenu = coreComponent.createMenuSymbol("CoreXC32_LD", xc32Menu)
+    xc32LdMenu.setLabel("Linker")
 
-    xc32ldGeneralMenu = coreComponent.createMenuSymbol("CoreXC32_LD_General", xc32ldMenu)
-    xc32ldGeneralMenu.setLabel("General")
+    xc32LdGeneralMenu = coreComponent.createMenuSymbol("CoreXC32_LD_General", xc32LdMenu)
+    xc32LdGeneralMenu.setLabel("General")
 
-    heapSize = coreComponent.createIntegerSymbol("HEAP_SIZE", xc32ldGeneralMenu)
-    heapSize.setLabel("Heap Size (Bytes)")
-    heapSize.setDefaultValue(0)
-    heapSize.setVisible(True)
+    xc32HeapSize = coreComponent.createIntegerSymbol("XC32_HEAP_SIZE", xc32LdGeneralMenu)
+    xc32HeapSize.setLabel("Heap Size (bytes)")
+    xc32HeapSize.setDefaultValue(0)
+    xc32HeapSize.setVisible(True)
+
+    ## iar Tool Config
+    iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
+    iarMenu.setLabel("IAR Global Options")
+
+    iarLdMenu = coreComponent.createMenuSymbol("CoreIAR_LD", iarMenu)
+    iarLdMenu.setLabel("Linker")
+
+    iarLdGeneralMenu = coreComponent.createMenuSymbol("CoreIAR_LD_General", iarLdMenu)
+    iarLdGeneralMenu.setLabel("General")
+
+    iarHeapSize = coreComponent.createIntegerSymbol("IAR_HEAP_SIZE", iarLdGeneralMenu)
+    iarHeapSize.setLabel("Heap Size (bytes)")
+    iarHeapSize.setDefaultValue(512)
+    iarHeapSize.setVisible(True)
+
+    iarUsrStackSize = coreComponent.createIntegerSymbol("IAR_USR_STACK_SIZE", iarLdGeneralMenu)
+    iarUsrStackSize.setLabel("User Stack Size (bytes)")
+    iarUsrStackSize.setDefaultValue(4096)
+    iarUsrStackSize.setVisible(True)
+
+    iarFiqStackSize = coreComponent.createIntegerSymbol("IAR_FIQ_STACK_SIZE", iarLdGeneralMenu)
+    iarFiqStackSize.setLabel("FIQ Stack Size (bytes)")
+    iarFiqStackSize.setDefaultValue(96)
+    iarFiqStackSize.setVisible(True)
+
+    iarIrqStackSize = coreComponent.createIntegerSymbol("IAR_IRQ_STACK_SIZE", iarLdGeneralMenu)
+    iarIrqStackSize.setLabel("IRQ Stack Size (bytes)")
+    iarIrqStackSize.setDefaultValue(96)
+    iarIrqStackSize.setVisible(True)
+
+    iarSvcStackSize = coreComponent.createIntegerSymbol("IAR_SVC_STACK_SIZE", iarLdGeneralMenu)
+    iarSvcStackSize.setLabel("Superviser Stack Size (bytes)")
+    iarSvcStackSize.setDefaultValue(96)
+    iarSvcStackSize.setVisible(True)
+
+    iarAbtStackSize = coreComponent.createIntegerSymbol("IAR_ABT_STACK_SIZE", iarLdGeneralMenu)
+    iarAbtStackSize.setLabel("Abort Stack Size (bytes)")
+    iarAbtStackSize.setDefaultValue(64)
+    iarAbtStackSize.setVisible(True)
+
+    iarSysStackSize = coreComponent.createIntegerSymbol("IAR_SYS_STACK_SIZE", iarLdGeneralMenu)
+    iarSysStackSize.setLabel("System Stack Size (bytes)")
+    iarSysStackSize.setDefaultValue(64)
+    iarSysStackSize.setVisible(True)
+
+    iarUndStackSize = coreComponent.createIntegerSymbol("IAR_UND_STACK_SIZE", iarLdGeneralMenu)
+    iarUndStackSize.setLabel("Undefined Stack Size (bytes)")
+    iarUndStackSize.setDefaultValue(64)
+    iarUndStackSize.setVisible(True)
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
@@ -314,19 +372,28 @@ def instantiateComponent(coreComponent):
     xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
     xc32HeapSizeSym.setCategory("C32-LD")
     xc32HeapSizeSym.setKey("heap-size")
-    xc32HeapSizeSym.setValue(str(heapSize.getValue()))
-    xc32HeapSizeSym.setDependencies(xc32HeapSize, ["HEAP_SIZE"])
+    xc32HeapSizeSym.setValue(str(xc32HeapSize.getValue()))
+    xc32HeapSizeSym.setDependencies(heapSizeCallBack, ["XC32_HEAP_SIZE"])
 
-    # set XC32 include path
+    # set IAR heap size
+    iarHeapSizeSym = coreComponent.createSettingSymbol("IAR_HEAP", None)
+    iarHeapSizeSym.setCategory("IAR-LD")
+    iarHeapSizeSym.setKey("heap-size")
+    iarHeapSizeSym.setValue(str(iarHeapSize.getValue()))
+    iarHeapSizeSym.setDependencies(heapSizeCallBack, ["IAR_HEAP_SIZE"])
+
+    # set include path and monitor file
+    processor = Variables.get("__PROCESSOR")
     corePath = ""
-    if "SAMA5" in Variables.get("__PROCESSOR"):
+    if "SAMA5" in processor:
         corePath = "../src/packs/CMSIS/CMSIS/Core_A/Include"
     else:
         corePath = "../src/packs/CMSIS/CMSIS/Core/Include"
+
     defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
     defSym.setCategory("C32")
     defSym.setKey("extra-include-directories")
-    defSym.setValue("../src;../src/config/"+configName+";../src/packs/"+Variables.get("__PROCESSOR")+"_DFP;"+corePath+";../src/packs/CMSIS/;../src/"+arch)
+    defSym.setValue("../src;../src/config/" + configName + ";../src/packs/" + processor + "_DFP;"+corePath+";../src/packs/CMSIS/;../src/"+arch)
     defSym.setAppend(True, ";")
 
     # set XC32 option to not use the device startup code
@@ -335,8 +402,30 @@ def instantiateComponent(coreComponent):
     xc32NoDeviceStartupCodeSym.setKey("no-device-startup-code")
     xc32NoDeviceStartupCodeSym.setValue("true")
 
-    # load device specific information, clock and pin manager
-    execfile(Variables.get("__ARCH_DIR") + "/" + Variables.get("__PROCESSOR") + ".py")
+    debugSourceFile.setType("SOURCE")
+    debugSourceFile.setSourcePath("../arch/stdio/templates/xc32_monitor.c.ftl")
+    debugSourceFile.setOutputName("xc32_monitor.c")
+    debugSourceFile.setDependencies( debugSourceCallBack, [ compilerSymbolName ] )
+    monitorFile ="xc32_monitor.c"
+    if "IAR_COMPILER" == compilerChoice.getValue():
+        monitorFile ="iar_monitor.c"
 
-def xc32HeapSize(symbol, event):
-     symbol.setValue(str(event["value"]))
+    debugSourceFile.setProjectPath("config/" + configName + "/stdio/")
+    debugSourceFile.setType("SOURCE")
+    # load device specific information, clock and pin manager
+    execfile(Variables.get("__ARCH_DIR") + "/" + processor + ".py")
+
+
+def heapSizeCallBack(symbol, event):
+    symbol.setValue(str(event["value"]))
+
+
+def debugSourceCallBack( debugSourceFile, event ):
+    compilerChoiceSymbol = event[ "symbol" ]
+    monitorFile ="xc32_monitor.c"
+    if "IAR_COMPILER" == compilerChoiceSymbol.getSelectedKey():
+        monitorFile ="iar_monitor.c"
+    debugSourceFile.setSourcePath("../arch/stdio/templates/" + monitorFile + ".ftl")
+    debugSourceFile.setOutputName( monitorFile )
+    print "monitorFile:" + monitorFile 
+

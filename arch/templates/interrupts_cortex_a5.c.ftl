@@ -1,35 +1,38 @@
-/* Brief default interrupt handler for unused IRQs.*/
-#if defined(__XC32)
-void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandler"),long_call))AIC_DefaultHandler( void )
-{
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-#endif
-    while( 1 ){
-    }
-}
-
-void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandlerForSpurious"),long_call))AIC_DefaultHandlerForSpurious( void )
-{
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
-#endif
-    while( 1 ){
-    }
-}
-#else
-void DefaultInterruptHandler( void )
-{
-    while( 1 ){
-    }
-}
-
-void DefaultInterruptHandlerForSpurious( void )
-{
-    while( 1 ){
-    }
-}
-#endif
-
+/* Brief default interrupt handler for unused IRQs */
+<#lt><#if "XC32_COMPILER" == COMPILER_CHOICE>
+    <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandler"),long_call))DefaultInterruptHandler( void )
+    <#lt>{
+        <#lt>#if defined(__DEBUG) || defined(__DEBUG_D)
+        <#lt>    __builtin_software_breakpoint();
+        <#lt>#endif
+    <#lt>    while( 1 ){
+    <#lt>    }
+    <#lt>}
+    <#lt>
+    <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandlerForSpurious"),long_call))DefaultInterruptHandlerForSpurious( void )
+    <#lt>{
+        <#lt>#if defined(__DEBUG) || defined(__DEBUG_D)
+        <#lt>    __builtin_software_breakpoint();
+        <#lt>#endif
+    <#lt>    while( 1 ){
+    <#lt>    }
+    <#lt>}
+    <#lt>
+<#lt><#elseif "IAR_COMPILER" == COMPILER_CHOICE>
+    <#lt>void DefaultInterruptHandler( void )
+    <#lt>{
+    <#lt>    while( 1 ){
+    <#lt>    }
+    <#lt>}
+    <#lt>
+    <#lt>void DefaultInterruptHandlerForSpurious( void )
+    <#lt>{
+    <#lt>    while( 1 ){
+    <#lt>    }
+    <#lt>}
+    <#lt>
+<#lt></#if>
+<#lt><#if AIC_CODE_GENERATION != "NONE" >
 ${LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS}
 ${LIST_SYSTEM_INTERRUPT_SHARED_HANDLERS}
+<#lt></#if>
