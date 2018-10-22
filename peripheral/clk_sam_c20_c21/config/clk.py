@@ -313,7 +313,7 @@ osc48mdivDefaultValue = 0
 for index in range(0, len(oscctrlSymosc48mDivNodeValues)):
     osc48mdivKeyName = oscctrlSymosc48mDivNodeValues[index].getAttribute("name")
 
-    if (osc48mdivKeyName == "DIV12"):
+    if (osc48mdivKeyName == "DIV1"):
         osc48mdivDefaultValue = index
 
     osc48mdivKeyDescription = oscctrlSymosc48mDivNodeValues[index].getAttribute("caption")
