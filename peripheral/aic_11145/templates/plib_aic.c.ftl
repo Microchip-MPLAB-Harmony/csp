@@ -47,10 +47,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: AIC Implementation
 // *****************************************************************************
 // *****************************************************************************
-extern IrqHandler irqHandlerTable[];
+extern IrqData  irqData[2];
+extern uint32_t irqDataEntryCount;
 <#lt><#if AIC_CODE_GENERATION != "NONE" >
-void DefaultInterruptHandler(               void );
-void DefaultInterruptHandlerForSpurious(    void );
+void DefaultInterruptHandlerForSpurious( void );
 <#lt></#if>
 
 void
@@ -60,6 +60,7 @@ INT_Initialize( void )
     const unsigned      MaxInterruptDepth = 8;
     const unsigned      MaxNumPeripherals = 0x7F;           // 127
     const uint32_t      keyGuard = 0xb6d81c4d;
+    uint32_t            ii;
     aic_registers_t *   aicPtr;
 
     __disable_irq();
@@ -73,75 +74,49 @@ INT_Initialize( void )
     SFR_REGS->SFR_AICREDIR = (keyGuard ^ SFR_REGS->SFR_SN1) & ~SFR_AICREDIR_NSAIC_Msk;
     <#lt></#if>
     <#lt><#if AIC_CODE_GENERATION == "AIC" || AIC_CODE_GENERATION == "AICandSAIC" >
-    ////// nonsecure register initializations
+    ////// nonsecure registers
     aicPtr = (aic_registers_t *) AIC_REGS;
-    for( unsigned periphId = 0; periphId < MaxNumPeripherals; ++periphId )
+    for( ii= 0; ii < MaxNumPeripherals; ++ii )
     {
-        aicPtr->AIC_SSR = AIC_SSR_INTSEL( periphId );
+        aicPtr->AIC_SSR = AIC_SSR_INTSEL( ii );
         aicPtr->AIC_IDCR = AIC_IDCR_Msk;
         __DSB();
         __ISB();
         aicPtr->AIC_ICCR = AIC_ICCR_INTCLR_Msk;
     }
-    for( unsigned ii = 0; ii < MaxInterruptDepth; ++ii )
+    for( ii = 0; ii < MaxInterruptDepth; ++ii )
     {   // pop all possible nested interrupts from internal hw stack
         aicPtr->AIC_EOICR = AIC_EOICR_ENDIT_Msk;
     }
 
-    aicPtr->AIC_SPU = (uint32_t) DefaultInterruptHandlerForSpurious;
-    for( unsigned periphId = 1; periphId < MaxNumPeripherals; ++periphId )
-    {
-        aicPtr->AIC_SVR = (uint32_t) DefaultInterruptHandler;
-    }
     <#lt></#if>
     <#lt><#if AIC_CODE_GENERATION == "SAIC" || AIC_CODE_GENERATION == "AICandSAIC" >
-    ////// secure register initializations
+    ////// secure registers
     aicPtr = (aic_registers_t *) SAIC_REGS;
-    for( unsigned periphId = 0; periphId < MaxNumPeripherals; ++periphId )
+    for( ii = 0; ii < MaxNumPeripherals; ++ii )
     {
-        aicPtr->AIC_SSR = AIC_SSR_INTSEL( periphId );
+        aicPtr->AIC_SSR = AIC_SSR_INTSEL( ii );
         aicPtr->AIC_IDCR = AIC_IDCR_Msk;
         __DSB();
         __ISB();
         aicPtr->AIC_ICCR = AIC_ICCR_INTCLR_Msk;
     }
-    for( unsigned ii = 0; ii < MaxInterruptDepth; ++ii )
+    for( ii = 0; ii < MaxInterruptDepth; ++ii )
     {   // pop all possible nested interrupts from internal hw stack
         aicPtr->AIC_EOICR = AIC_EOICR_ENDIT_Msk;
     }
 
-    aicPtr->AIC_SPU = (uint32_t) DefaultInterruptHandlerForSpurious;
-    for( unsigned periphId = 1; periphId < MaxNumPeripherals; ++periphId )
-    {
-        aicPtr->AIC_SVR = (uint32_t) DefaultInterruptHandler;
-    }
     <#lt></#if>
-
-    <#lt><#list AIC_VECTOR_MIN..AIC_VECTOR_MAX as ii>
-        <#lt><#assign AIC_FIRST_NAME_KEY =  "AIC_FIRST_NAME_KEY" + ii?string >
-        <#lt><#if .vars[AIC_FIRST_NAME_KEY]?has_content>
-            <#lt><#assign AIC_FIRST_NAME = .vars[AIC_FIRST_NAME_KEY]>
-            <#lt><#assign AIC_MAP_TYPE = AIC_FIRST_NAME + "_INTERRUPT_MAP_TYPE">
-            <#lt><#assign AIC_VECTOR =   AIC_FIRST_NAME + "_INTERRUPT_VECTOR">
-            <#lt><#assign AIC_ENABLE =   AIC_FIRST_NAME + "_INTERRUPT_ENABLE">
-            <#lt><#assign AIC_SRC_TYPE = AIC_FIRST_NAME + "_INTERRUPT_SRC_TYPE">
-            <#lt><#assign AIC_PRIORITY = AIC_FIRST_NAME + "_INTERRUPT_PRIORITY">
-            <#lt><#if .vars[AIC_VECTOR]?? && .vars[AIC_ENABLE]?? && .vars[AIC_ENABLE]>
-                <#lt>    ////// ${.vars[AIC_VECTOR]} as configured by MCC
-                <#lt><#if (.vars[AIC_MAP_TYPE]?string == "NonSecure") || (.vars[AIC_MAP_TYPE]?string == "Redirected")>
-                    <#lt>    aicPtr = (aic_registers_t *) AIC_REGS;
-                <#lt><#else>
-                    <#lt>    aicPtr = (aic_registers_t *) SAIC_REGS;
-                <#lt></#if>
-                <#lt>    aicPtr->AIC_SSR = AIC_SSR_INTSEL( ${.vars[AIC_VECTOR]} );
-                <#lt>    aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~AIC_SMR_SRCTYPE_Msk) | AIC_SMR_SRCTYPE( AIC_SMR_SRCTYPE_${.vars[AIC_SRC_TYPE]}_Val );
-                <#lt>    aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~AIC_SMR_PRIORITY_Msk) | ((uint32_t) AIC_SMR_PRIORITY_${.vars[AIC_PRIORITY]}_Val << AIC_SMR_PRIORITY_Pos);
-                <#lt>    aicPtr->AIC_SVR = (uint32_t) irqHandlerTable[ ${.vars[AIC_VECTOR]} ];
-                <#lt>    aicPtr->AIC_IECR = AIC_IECR_Msk;
-                <#lt>
-            <#lt></#if>
-        <#lt></#if>
-    <#lt></#list>
+    for( ii = 0; ii < irqDataEntryCount; ++ii )
+    {   // inspect irqData array in interrupts.c to see the configuration data 
+        aicPtr = (aic_registers_t *) irqData[ ii ].targetRegisters;
+        aicPtr->AIC_SSR = AIC_SSR_INTSEL( irqData[ ii ].peripheralId );
+        aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~AIC_SMR_SRCTYPE_Msk)  | AIC_SMR_SRCTYPE( irqData[ ii ].srcType );
+        aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~AIC_SMR_PRIORITY_Msk) | (irqData[ ii ].priority << AIC_SMR_PRIORITY_Pos);
+        aicPtr->AIC_SPU = (uint32_t) DefaultInterruptHandlerForSpurious;
+        aicPtr->AIC_SVR = (uint32_t) irqData[ ii ].handler;
+        aicPtr->AIC_IECR = AIC_IECR_Msk;
+    }
     //////
     __DSB();                                                // Data Synchronization Barrier
 <#lt></#if>

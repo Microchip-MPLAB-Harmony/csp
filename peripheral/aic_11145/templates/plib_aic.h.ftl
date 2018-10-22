@@ -45,12 +45,18 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
     extern "C" {
 #endif
 // DOM-IGNORE-END
-
 #include <stddef.h>
 #include <stdbool.h>
 #include <device.h>
 
 typedef void (*IrqHandler)(void);
+typedef struct {
+    uint32_t    peripheralId;
+    uint32_t    targetRegisters;
+    IrqHandler  handler;
+    uint32_t    srcType;
+    uint32_t    priority;
+} IrqData;
 
 void INT_Initialize( void );
 // DOM-IGNORE-BEGIN
