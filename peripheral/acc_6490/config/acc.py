@@ -169,10 +169,10 @@ def instantiateComponent(accComponent):
     Database.clearSymbolValue("core", accInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", accInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
-    interruptVector = accInstanceName.getValue()+"INTERRUPT_ENABLE"
-    interruptHandler = accInstanceName.getValue()+"INTERRUPT_HANDLER"
-    interruptHandlerLock = accInstanceName.getValue()+"INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = accInstanceName.getValue()+"INTERRUPT_ENABLE_UPDATE"
+    interruptVector = accInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    interruptHandler = accInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    interruptHandlerLock = accInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = accInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
 
     # NVIC Dynamic settings
     accinterruptControl = accComponent.createBooleanSymbol("NVIC_ACC_ENABLE", None)
