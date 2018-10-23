@@ -87,7 +87,7 @@ void ${PAC_INSTANCE_NAME}_Initialize( void )
 void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation )
 {
     /* Set Peripheral Access Control */
-    ${PAC_INSTANCE_NAME}_REGS->PAC_WRCTRL |= PAC_WRCTRL_PERID(peripheral) | PAC_WRCTRL_KEY(operation);
+    ${PAC_INSTANCE_NAME}_REGS->PAC_WRCTRL = PAC_WRCTRL_PERID(peripheral) | PAC_WRCTRL_KEY(operation);
 }
 
 <#if PAC_INTERRRUPT_MODE = true>
