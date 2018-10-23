@@ -1857,7 +1857,7 @@ void RTCx_RTCCTimeGet ( struct tm * currentTime );
 
 // *****************************************************************************
 /* Function:
-    void RTCx_RTCCTimeSet (struct tm * initialTime )
+    bool RTCx_RTCCTimeSet (struct tm * initialTime )
 
   Summary:
     Sets the Real Time Clock Calendar time and date.
@@ -1880,7 +1880,7 @@ void RTCx_RTCCTimeGet ( struct tm * currentTime );
     in the time.h header file
 
   Returns:
-    None.
+    bool.
 
   Example:
     <code>
@@ -1900,18 +1900,21 @@ void RTCx_RTCCTimeGet ( struct tm * currentTime );
         initialTime.tm_mon = 3;
         initialTime.tm_year = 80;
 
-        RTCx_RTCCTimeSet(&initialTime);
+        if(RTCx_RTCCTimeSet(&initialTime) == false)
+        {
+            //incorrect format
+        }
     </code>
 
   Remarks:
     None.
 */
 
-void RTCx_RTCCTimeSet (struct tm * initialTime );
+bool RTCx_RTCCTimeSet (struct tm * initialTime );
 
 // *****************************************************************************
 /* Function:
-    void RTCx_RTCCAlarmSet(struct tm *alarmTime, RTC_ALARM_MASK mask)
+    bool RTCx_RTCCAlarmSet(struct tm *alarmTime, RTC_ALARM_MASK mask)
 
   Summary:
     Set an alarm.
@@ -1935,7 +1938,7 @@ void RTCx_RTCCTimeSet (struct tm * initialTime );
     enumeration for more details.
 
   Returns:
-    None.
+    bool.
 
   Example:
     <code>
@@ -1961,14 +1964,17 @@ void RTCx_RTCCTimeSet (struct tm * initialTime );
 
         // The mask is specified to match all time field and ignore all date
         // fields.
-        RTCx_RTCCAlarmSet(&alarmTime, mask);
+        if(RTCx_RTCCAlarmSet(&alarmTime, mask) == false)
+        {
+            //incorrect format
+        }
     </code>
 
   Remarks:
     None.
 */
 
-void RTCx_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask);
+bool RTCx_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask);
 
 // *****************************************************************************
 /* Function:

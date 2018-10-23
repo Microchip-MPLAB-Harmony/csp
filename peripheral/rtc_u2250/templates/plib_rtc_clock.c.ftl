@@ -137,7 +137,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>}
 </#if>
 
-void ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
+bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
 {
     /*
      * Add 1900 to the tm_year member and the adjust for the RTC reference year
@@ -155,6 +155,7 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
     {
         /* Synchronization after writing value to CLOCK Register */
     }
+    return true;
 }
 
 void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
@@ -178,7 +179,7 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 }
 <#if RTC_MODE2_INTERRUPT = true>
 
-    <#lt>void ${RTC_INSTANCE_NAME}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask)
+    <#lt>bool ${RTC_INSTANCE_NAME}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask)
     <#lt>{
     <#lt>    /*
     <#lt>     * Add 1900 to the tm_year member and the adjust for the RTC reference year
@@ -205,6 +206,8 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
     <#lt>    }
         
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.INTENSET = RTC_MODE2_INTENSET_ALARM0_Msk;
+     
+    <#lt>    return true;
     <#lt>}
 
     <#lt>void ${RTC_INSTANCE_NAME}_RTCCCallbackRegister ( RTC_CALLBACK callback, uintptr_t context)

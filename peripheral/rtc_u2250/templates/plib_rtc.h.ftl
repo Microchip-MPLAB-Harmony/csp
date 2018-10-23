@@ -227,10 +227,10 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
         <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptDisable(RTC_TIMER16_INT_MASK interrupt);
     </#if>
 <#else>
-    <#lt>void ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime );
+    <#lt>bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime );
     <#lt>void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime );
     <#if RTC_MODE2_INTERRUPT = true>
-        <#lt>void ${RTC_INSTANCE_NAME}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask);
+        <#lt>bool ${RTC_INSTANCE_NAME}_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask);
     </#if>
 </#if>
 
