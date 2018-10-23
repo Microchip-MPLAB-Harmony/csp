@@ -1500,7 +1500,7 @@ mclkSym_CPUDIV_CPUDIV.setDisplayMode("Key")
 # Flash Read Wait State (RWS). Values given in  'NVM Characteristics'
 nvm_rws = coreComponent.createStringSymbol("NVM_RWS", mclkSym_Menu)
 nvm_rws.setReadOnly(True)
-nvm_rws.setDefaultValue("NVMCTRL_CTRLB_RWS_SINGLE_Val")
+nvm_rws.setDefaultValue("NVMCTRL_CTRLB_RWS_DUAL_Val")
 nvm_rws.setVisible(False)
 
 ################################################################################
