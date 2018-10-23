@@ -59,7 +59,7 @@ global vectorSettings
                                                                                   #Priority Generate,
                                                                                             #Handler Lock]
 vectorSettings = {
-                    "Reset"         : [True,   True,    False,    "-3",    True,    False,    True],
+                    "Reset"           : [True,   True,    False,    "-3",    True,    False,    True],
                     "NonMaskableInt"  : [True,   True,    False,    "-2",    True,    False,    True],
                     "HardFault"       : [True,   True,    False,    "-1",    True,    False,    True],
                     "MemoryManagement": [False,  True,    False,    "0",     False,   True,     True],
@@ -75,9 +75,6 @@ vectorSettings = {
 global nvicVectorDataDictionary
 nvicVectorDataDictionary = {}
 
-global nvicVectorPeriEnableSymbolList
-nvicVectorPeriEnableSymbolList = []
-
 nvicVectorNumber = []
 nvicVectorName = []
 nvicVectorEnable = []
@@ -90,14 +87,6 @@ nvicVectorHandler = []
 nvicVectorHandlerLock = []
 nvicVectorGenericHandler = []
 nvicVectorGenericName = []
-
-global nvicHeaderFile
-global nvicSourceFile
-global nvicSystemDefFile
-global nvicSystemInitFile
-global nvicSystemIntMultipleHandleFile
-global nvicSystemIntTableFile
-global nvicSystemIntWeakHandleFile
 
 global interruptsChildrenList
 
@@ -158,32 +147,9 @@ def updateNVICVectorPeriEnableValue(symbol, event):
 
     symbol.setValue(not event["value"], 2)
 
-    nvicEnable = False
-
-    for symbolId in nvicVectorPeriEnableSymbolList:
-        if Database.getSymbolValue("core", symbolId) == True:
-            nvicEnable = True
-            break
-
-    if nvicEnable and Database.getSymbolValue("core", "NVIC_ENABLE") == False:
-        Database.setSymbolValue("core", "NVIC_ENABLE", True, 1)
-
-    if nvicEnable == False:
-        Database.setSymbolValue("core", "NVIC_ENABLE", False, 1)
-
 def updateNVICVectorParametersValue(symbol, event):
 
     symbol.setValue(event["value"], 2)
-
-def updateNVICCodeGenerationProperty(symbol, event):
-
-    nvicHeaderFile.setEnabled(event["value"])
-    nvicSourceFile.setEnabled(event["value"])
-    nvicSystemInitFile.setEnabled(event["value"])
-    nvicSystemDefFile.setEnabled(event["value"])
-    nvicSystemIntTableFile.setEnabled(event["value"])
-    nvicSystemIntWeakHandleFile.setEnabled(event["value"])
-    nvicSystemIntMultipleHandleFile.setEnabled(event["value"])
 
 ################################################################################
 #### Component ####
@@ -200,15 +166,10 @@ nvicMenu = coreComponent.createMenuSymbol("NVIC_MENU", None)
 nvicMenu.setLabel("Interrupts (NVIC)")
 nvicMenu.setDescription("Configuration for NVIC Initialization")
 
-nvicEnable = coreComponent.createBooleanSymbol("NVIC_ENABLE", nvicMenu)
-nvicEnable.setLabel("Enable NVIC ?")
-nvicEnable.setVisible(False)
-
 nvicVectorMax = coreComponent.createIntegerSymbol("NVIC_VECTOR_MAX", nvicMenu)
 nvicVectorMax.setLabel("Vector Max Value")
 nvicVectorMax.setDefaultValue(highestID)
 nvicVectorMax.setVisible(False)
-nvicVectorMax.setDependencies(updateNVICCodeGenerationProperty, ["NVIC_ENABLE"])
 
 nvicVectorMax = coreComponent.createIntegerSymbol("NVIC_VECTOR_MIN", nvicMenu)
 nvicVectorMax.setLabel("Vector Min Value")
@@ -266,9 +227,6 @@ for vIndex in sorted(nvicVectorDataDictionary):
         nvicVectorPeriHandlerLockList = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_HANDLER_LOCK", nvicMenu)
         nvicVectorPeriHandlerLockList.setLabel("Vector Peripheral Handler Lock")
         nvicVectorPeriHandlerLockList.setVisible(False)
-
-        if vector == "Peripheral":
-            nvicVectorPeriEnableSymbolList.append("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE")
 
         nvicVectorEnable[index].append(listIndex)
         nvicVectorEnable[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE", nvicMenu)
@@ -365,7 +323,6 @@ nvicHeaderFile.setDestPath("/peripheral/nvic/")
 nvicHeaderFile.setProjectPath("config/" + configName + "/peripheral/nvic/")
 nvicHeaderFile.setMarkup(True)
 nvicHeaderFile.setOverwrite(True)
-nvicHeaderFile.setEnabled(False)
 
 nvicSourceFile = coreComponent.createFileSymbol("NVIC_SOURCE", None)
 nvicSourceFile.setType("SOURCE")
@@ -375,39 +332,33 @@ nvicSourceFile.setDestPath("/peripheral/nvic/")
 nvicSourceFile.setProjectPath("config/" + configName + "/peripheral/nvic/")
 nvicSourceFile.setMarkup(True)
 nvicSourceFile.setOverwrite(True)
-nvicSourceFile.setEnabled(False)
 
 nvicSystemInitFile = coreComponent.createFileSymbol("NVIC_INIT", None)
 nvicSystemInitFile.setType("STRING")
 nvicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 nvicSystemInitFile.setSourcePath("../peripheral/nvic/templates/system/initialization.c.ftl")
 nvicSystemInitFile.setMarkup(True)
-nvicSystemInitFile.setEnabled(False)
 
 nvicSystemDefFile = coreComponent.createFileSymbol("NVIC_DEF", None)
 nvicSystemDefFile.setType("STRING")
 nvicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 nvicSystemDefFile.setSourcePath("../peripheral/nvic/templates/system/definitions.h.ftl")
 nvicSystemDefFile.setMarkup(True)
-nvicSystemDefFile.setEnabled(False)
 
 nvicSystemIntMultipleHandleFile = coreComponent.createFileSymbol("NVIC_MULTIPLE_HANDLER", None)
 nvicSystemIntMultipleHandleFile.setType("STRING")
 nvicSystemIntMultipleHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS")
 nvicSystemIntMultipleHandleFile.setSourcePath("../peripheral/nvic/templates/system/interrupts_multiple_handlers.h.ftl")
 nvicSystemIntMultipleHandleFile.setMarkup(True)
-nvicSystemIntMultipleHandleFile.setEnabled(False)
 
 nvicSystemIntWeakHandleFile = coreComponent.createFileSymbol("NVIC_INT_HANDLER", None)
 nvicSystemIntWeakHandleFile.setType("STRING")
 nvicSystemIntWeakHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS")
 nvicSystemIntWeakHandleFile.setSourcePath("../peripheral/nvic/templates/system/interrupts_weak_handlers.h.ftl")
 nvicSystemIntWeakHandleFile.setMarkup(True)
-nvicSystemIntWeakHandleFile.setEnabled(False)
 
 nvicSystemIntTableFile = coreComponent.createFileSymbol("NVIC_INT_TABLE", None)
 nvicSystemIntTableFile.setType("STRING")
 nvicSystemIntTableFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_HANDLERS")
 nvicSystemIntTableFile.setSourcePath("../peripheral/nvic/templates/system/interrupts_vector_table.h.ftl")
 nvicSystemIntTableFile.setMarkup(True)
-nvicSystemIntTableFile.setEnabled(False)
