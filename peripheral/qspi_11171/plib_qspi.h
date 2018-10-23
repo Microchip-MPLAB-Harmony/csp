@@ -53,7 +53,7 @@ Interface definition of QSPI PLIB.
 /* This section lists the other files that are included in this file.
 */
 
-#include "PIC32CZ2038CA70144.h"
+#include "device.h"
 #include <stdbool.h>
 
 // DOM-IGNORE-BEGIN
@@ -70,13 +70,13 @@ Interface definition of QSPI PLIB.
 
 /* QSPI Address Length 
 
-   Summary:
+ Summary:
     Defines the data type to specify address length 
 
    Description:
-    This may be used to to specify the address length for QSPI transaction
+    This data type can be used to specify the address length for QSPI transaction
 
-   Remarks:
+ Remarks:
     None.
 */
 
@@ -87,13 +87,14 @@ typedef enum
 } QSPI_ADDRESS_LENGTH;
 
 /* QSPI Lane Width 
-   Summary:
+
+ Summary:
     Defines the data type to specify lane width 
 
-   Description:
-    This may be used to to specify the lane length to be used for QSPI transaction
+ Description:
+    This data type can be used to specify the lane length to be used for QSPI transaction
 
-   Remarks:
+ Remarks:
     None.
 */
 
@@ -105,17 +106,18 @@ typedef enum
     DUAL_IO = QSPI_IFR_WIDTH_DUAL_IO,
     QUAD_IO = QSPI_IFR_WIDTH_QUAD_IO,
     DUAL_CMD = QSPI_IFR_WIDTH_DUAL_CMD,
-    QUAD_CMD = QSPI_IFR_WIDTH_QUAD_CMD	
+    QUAD_CMD = QSPI_IFR_WIDTH_QUAD_CMD
 } QSPI_LANE_WIDTH;
 
 /* QSPI Option Length 
-   Summary:
+
+ Summary:
     Defines the data type to specify option length 
 
-   Description:
-    This may be used to to specify the option length for QSPI transaction
+ Description:
+    This data type can be used to specify the option length for QSPI transaction
 
-   Remarks:
+ Remarks:
     None.
 */
 
@@ -128,6 +130,7 @@ typedef enum
 } QSPI_OPTION_LENGTH;
 
 /* QSPI Command Transfer structure
+
  Summary:
     Defines the data type for the QSPI commands transfer.
 
@@ -140,15 +143,14 @@ typedef enum
 */
 
 typedef struct {
-    /* QSPI instruction code */
     uint8_t instruction;
-    /* QSPI instruction Frame register informations */
     QSPI_LANE_WIDTH width;
     bool addr_en;
     QSPI_ADDRESS_LENGTH addr_len;
 } qspi_command_xfer_t;
 
 /* QSPI Register Transfer structure
+
  Summary:
     Defines the data type for the QSPI register data transfer.
 
@@ -161,15 +163,13 @@ typedef struct {
 */
 
 typedef struct {
-    /* QSPI instruction code */
     uint8_t instruction;
-    /* QSPI instruction Frame register informations */
     QSPI_LANE_WIDTH width;
-    /* For Read Register */
     uint8_t dummy_cycles;
 } qspi_register_xfer_t;
 
 /* QSPI Memory Transfer structure
+
  Summary:
     Defines the data type for the QSPI memory transfer.
 
@@ -182,17 +182,13 @@ typedef struct {
 */
 
 typedef struct {
-    /* QSPI instruction code */
     uint8_t instruction;
-    /* QSPI option code */
     uint8_t option;
-    /* QSPI instruction Frame register informations */
     QSPI_LANE_WIDTH width;
     QSPI_ADDRESS_LENGTH addr_len;
     bool option_en;
     QSPI_OPTION_LENGTH option_len;
     bool continuous_read_en;
-    /* For Read memory */
     uint8_t dummy_cycles;
 } qspi_memory_xfer_t;
 
@@ -208,7 +204,7 @@ this interface.
 
 // *****************************************************************************
 /* Function:
-    void QSPI_Initialize( void )
+    void QSPIx_Initialize( void )
 
  Summary:
     Initializes given instance of the QSPI peripheral.
@@ -228,13 +224,15 @@ this interface.
 
  Example:
     <code>
-        QSPI_Initialize();
+
+    QSPI0_Initialize();
+
     </code>
 */
-void QSPI_Initialize( void );
+void QSPIx_Initialize( void );
 
 /* Function:
-    bool QSPI_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address )
+    bool QSPIx_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address )
 
  Summary:
     Writes command to QSPI slave device.
@@ -244,7 +242,7 @@ void QSPI_Initialize( void );
     not include any exchange of data.
 
  Precondition:
-    QSPI_Initialize must have been called for the associated QSPI instance.
+    QSPIx_Initialize must have been called for the associated QSPI instance.
 
  Parameters:
     *qspi_command_xfer - pointer to QSPI command transfer structure holding the instruction
@@ -254,36 +252,33 @@ void QSPI_Initialize( void );
     passed as 0 if no address associated with instruction.
 
  Returns:
-    True on transfer request success.
-    False on transfer request failure.
+    - True on transfer request success.
+    - False on transfer request failure.
 
  Example:
     <code>
 
-        #define WRITE_ENABLE_CODE 0x06
+    #define WRITE_ENABLE_CODE 0x06
 
-        static qspi_command_xfer_t qspi_command_xfer;
+    static qspi_command_xfer_t qspi_command_xfer;
 
-        //Initialize QSPI
-        QSPI_Initialize();
+    // Use QAUD SPI Lane
+    qspi_command_xfer.width = QUAD_CMD;
 
-        // Use QAUD SPI Lane
-        qspi_command_xfer.width = QUAD_CMD;
+    // Send Write enable command
+    qspi_command_xfer->qspi_code.instruction = WRITE_ENABLE_CODE;
 
-        // Send Write enable command
-        qspi_command_xfer->qspi_code.instruction = WRITE_ENABLE_CODE;
-
-        if (TRUE != QSPI_CommandWrite(&qspi_command_xfer, 0))
-        {
-            // Handle Error
-        }
+    if (TRUE != QSPI0_CommandWrite(&qspi_command_xfer, 0))
+    {
+        // Handle Error
+    }
 
     </code>
 */
-bool QSPI_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address );
+bool QSPIx_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address );
 
 /* Function:
-    bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length )
+    bool QSPIx_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length )
 
  Summary:
     Reads particular register of QSPI slave device.
@@ -293,7 +288,7 @@ bool QSPI_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address
     which has a command code associated to it.
 
  Precondition:
-    QSPI_Initialize must have been called for the associated QSPI instance.
+    QSPIx_Initialize must have been called for the associated QSPI instance.
 
  Parameters:
     *qspi_register_xfer - pointer to QSPI register transfer structure holding the instruction
@@ -304,38 +299,35 @@ bool QSPI_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address
     rx_data_length - Register width in bytes.
 
  Returns:
-    True on transfer request success.
-    False on transfer request failure.
+    - True on transfer request success.
+    - False on transfer request failure.
 
  Example:
     <code>
 
-        #define READ_STATUS_REG_CODE 0x05
+    #define READ_STATUS_REG_CODE 0x05
 
-        static qspi_register_xfer_t qspi_register_xfer;
-        static uint8_t reg_data;
+    static qspi_register_xfer_t qspi_register_xfer;
+    static uint8_t reg_data;
 
-        //Initialize QSPI
-        QSPI_Initialize();
+    // Use QAUD SPI Lane
+    qspi_register_xfer.width = QUAD_CMD;
+    qspi_register_xfer.dummy_cycles = 2;
 
-        // Use QAUD SPI Lane
-        qspi_register_xfer.width = QUAD_CMD;
-        qspi_register_xfer.dummy_cycles = 2;
+    // Read status register of 1 Byte width
+    qspi_register_xfer.instruction = READ_STATUS_REG_CODE;
 
-        // Read status register of 1 Byte width
-        qspi_register_xfer.instruction = READ_STATUS_REG_CODE;
-
-        if (TRUE != QSPI_RegisterRead(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
-        {
-            // Handle Error
-        }
+    if (TRUE != QSPI0_RegisterRead(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
+    {
+        // Handle Error
+    }
 
     </code>
 */
-bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length );
+bool QSPIx_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_data, uint8_t rx_data_length );
 
 /* Function:
-    bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length )
+    bool QSPIx_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length )
 
  Summary:
     Writes to particular register of QSPI slave device.
@@ -345,7 +337,7 @@ bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
     which has a command code associated to it.
 
  Precondition:
-    QSPI_Initialize must have been called for the associated QSPI instance.
+    QSPIx_Initialize must have been called for the associated QSPI instance.
 
     Write enable command has to be sent before write register request and
 
@@ -358,67 +350,34 @@ bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
     tx_data_length - Register width in bytes.
 
  Returns:
-    True on transfer request success.
-    False on transfer request failure.
+    - True on transfer request success.
+    - False on transfer request failure.
 
  Example:
     <code>
 
-        #define WRITE_ENABLE_CODE     0x06
-        #define WRITE_STATUS_REG_CODE 0x01
-        #define READ_STATUS_REG_CODE  0x05
+    #define WRITE_STATUS_REG_CODE 0x01
+    #define QUAD_ENABLE_BIT       (1 << 1)
 
-        #define QUAD_ENABLE_BIT       (1 << 1)
+    static qspi_register_xfer_t qspi_register_xfer;
+    static uint8_t reg_data = QUAD_ENABLE_BIT;
 
-        static qspi_command_xfer_t qspi_command_xfer;
-        static qspi_register_xfer_t qspi_register_xfer;
-        static uint8_t reg_data;
+    qspi_register_xfer.width = QUAD_CMD;
 
-        //Initialize QSPI
-        QSPI_Initialize();
+    // Write status register of 1 Byte width
+    qspi_register_xfer.instruction = WRITE_STATUS_REG_CODE;
 
-        // Use QAUD SPI Lane
-        qspi_register_xfer.width = QUAD_CMD;
-        qspi_register_xfer.dummy_cycles = 2;
-
-        // Read status register of 1 Byte width
-        qspi_register_xfer.instruction = READ_STATUS_REG_CODE;
-
-        if (TRUE != QSPI_RegisterRead(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
-        {
-            // Handle Error
-        }
-
-        // Send Write enable command
-        qspi_command_xfer.instruction = WRITE_ENABLE_CODE;
-
-        // Use QAUD SPI Lane
-        qspi_command_xfer.width = QUAD_CMD;
-
-        if (TRUE != QSPI_CommandWrite(&qspi_command_xfer, 0))
-        {
-            // Handle Error
-        }
-
-        // Set Slave device in QUAD mode
-        reg_data |= QUAD_ENABLE_BIT;
-
-        qspi_register_xfer.width = QUAD_CMD;
-
-        // Write status register of 1 Byte width
-        qspi_register_xfer.instruction = WRITE_STATUS_REG_CODE;
-
-        if (TRUE != QSPI_RegisterWrite(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
-        {
-            // Handle Error
-        }
+    if (TRUE != QSPI0_RegisterWrite(&qspi_register_xfer, (uint32_t *)&reg_data, 1))
+    {
+        // Handle Error
+    }
 
     </code>
 */
-bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length );
+bool QSPIx_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_data, uint8_t tx_data_length );
 
 /* Function:
-    bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
+    bool QSPIx_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
 
  Summary:
     Reads from the specified address of the serial flash device.
@@ -428,7 +387,7 @@ bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_
     of the serial flash device connected as a QSPI slave.
 
  Precondition:
-    QSPI_Initialize must have been called for the associated QSPI instance.
+    QSPIx_Initialize must have been called for the associated QSPI instance.
 
  Parameters:
     *qspi_memory_xfer - pointer to QSPI memory transfer structure holding the instruction
@@ -441,39 +400,36 @@ bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_
     address - Memory location to read from.
 
  Returns:
-    True on transfer request success.
-    False on transfer request failure.
+    - True on transfer request success.
+    - False on transfer request failure.
 
  Example:
     <code>
 
-        #define READ_MEMORY_CODE  0x0B
+    #define READ_MEMORY_CODE  0x0B
 
-        static qspi_memory_xfer_t qspi_memory_xfer;
-        static uint32_t buffer[4];
-        uint32_t address = 0x0
+    static qspi_memory_xfer_t qspi_memory_xfer;
+    static uint32_t buffer[4];
+    uint32_t address = 0x0
 
-        //Initialize QSPI
-        QSPI_Initialize();
+    // Read memory location starting from address 0x0
+    qspi_memory_xfer.instruction = READ_MEMORY_CODE;
 
-        // Read memory location starting from address 0x0
-        qspi_memory_xfer.instruction = READ_MEMORY_CODE;
+    // Use QAUD SPI Lane
+    qspi_memory_xfer.width = QUAD_CMD;
+    qspi_memory_xfer.dummy_cycles = 6;
 
-        // Use QAUD SPI Lane
-        qspi_memory_xfer.width = QUAD_CMD;
-        qspi_memory_xfer.dummy_cycles = 6;
-
-        if (TRUE != QSPI_MemoryRead(&qspi_memory_xfer, buffer, sizeof(buffer), address))
-        {
-            // Handle Error
-        }
+    if (TRUE != QSPI0_MemoryRead(&qspi_memory_xfer, buffer, sizeof(buffer), address))
+    {
+        // Handle Error
+    }
 
     </code>
 */
-bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
+bool QSPIx_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address );
 
 /* Function:
-    bool QSPI_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
+    bool QSPIx_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address )
 
  Summary:
     Writes to the specified address of the serial flash device.
@@ -481,11 +437,15 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
  Description:
     This function can be used to write maximum of one page of data to the specified address
     of the serial flash device connected as a QSPI slave.
-    If the number of bytes to written is greater than the page size then QSPI_WriteMemory API
-    needs to be called multiple times.
+
+    If the number of bytes to be written is greater than the page size then QSPIx_MemoryWrite
+    API needs to be called multiple times.
+
+    Note: Before sending next write request QSPIx_RegisterRead() can be called to read the
+    status register of the slave device to check if the previous write operation is completed.
 
  Precondition:
-    QSPI_Initialize must have been called for the associated QSPI instance.
+    QSPIx_Initialize must have been called for the associated QSPI instance.
 
     Write enable command has to be sent before write memory request.
 
@@ -500,55 +460,39 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
     address - Memory location to write to.
 
  Returns:
-    True on transfer request success.
-    False on transfer request failure.
+    - True on transfer request success.
+    - False on transfer request failure.
 
  Example:
     <code>
 
-        #define WRITE_ENABLE_CODE     0x06
-        #define WRITE_PAGE_CODE       0x02
-        #define WRITE_IN_POGRESS      (1 << 0)
+    #define WRITE_PAGE_CODE       0x02
+    #define WRITE_IN_PROGRESS      (1 << 0)
 
-        static qspi_command_xfer_t qspi_command_xfer;
-        static qspi_memory_xfer_t qspi_memory_xfer;
-        static uint8_t buffer[256];
-        uint32_t address = 0x0;
+    static qspi_memory_xfer_t qspi_memory_xfer;
+    static uint8_t buffer[256];
+    uint32_t address = 0x0;
 
-        //Initialize QSPI
-        QSPI_Initialize();
+    for (int i = 0; i < 256; i++)
+        buffer[i] = i;
 
-        // Send Write enable command
-        qspi_command_xfer.instruction = WRITE_ENABLE_CODE;
+    // Write to memory location starting from address 0x0
+    qspi_memory_xfer.instruction = WRITE_PAGE_CODE;
 
-        // Use QAUD SPI Lane
-        qspi_command_xfer.width = QUAD_CMD;
+    // Use QAUD SPI Lane
+    qspi_memory_xfer.width = QUAD_CMD;
 
-        if (TRUE != QSPI_CommandWrite(qspi_command_xfer, 0))
-        {
-            // Handle Error
-        }
-
-        for (int i = 0; i < 256; i++)
-            buffer[i] = i;
-
-        // Write to memory location starting from address 0x0
-        qspi_memory_xfer.instruction = WRITE_PAGE_CODE;
-
-        // Use QAUD SPI Lane
-        qspi_memory_xfer.width = QUAD_CMD;
-
-        if (TRUE != QSPI_MemoryWrite(&qspi_memory_xfer, buffer, sizeof(buffer), address))
-        {
-            // Handle Error
-        }
-        
-        // Query the status register and wait until WIP bit is cleared.
-        while(status_register_read() & WRITE_IN_POGRESS);
+    if (TRUE != QSPI0_MemoryWrite(&qspi_memory_xfer, buffer, sizeof(buffer), address))
+    {
+        // Handle Error
+    }
+    
+    // Query the status register and wait until WIP bit is cleared.
+    while(status_reg & WRITE_IN_PROGRESS);
 
     </code>
 */
-bool QSPI_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address );
+bool QSPIx_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, uint32_t tx_data_length, uint32_t address );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
