@@ -60,6 +60,33 @@ def updateADCClockWarringStatus(symbol, event):
     else:
         symbol.setVisible(False)
 
+def adcCalcSampleTime(symbol, event):
+    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
+    sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
+    data_width = adcSym_CTRLC_RESSEL.getSelectedKey()[:-3]
+    conv_time = float((((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000) / clock_freq))
+    symbol.setLabel("**** Conversion Time is " + str(conv_time) + " uS ****")
+
+def adcEvesysConfigure(symbol, event):
+    if(event["id"] == "ADC_EVCTRL_RESRDYEO"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+str(adcInstanceName.getValue())+"_RESRDY_ACTIVE", event["value"], 2)
+
+    if(event["id"] == "ADC_WINDOW_OUTPUT_EVENT"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+str(adcInstanceName.getValue())+"_WINMON_ACTIVE", event["value"], 2)
+
+    if (adcSym_CONV_TRIGGER.getValue() == "HW Event Trigger"):
+        if (event["id"] == "ADC_EVCTRL_FLUSH"):
+            if (event["value"] > 0):
+                Database.setSymbolValue("evsys", "USER_"+str(adcInstanceName.getValue())+"_SYNC_READY", True, 2)
+            else:
+                Database.setSymbolValue("evsys", "USER_"+str(adcInstanceName.getValue())+"_SYNC_READY", False, 2)
+        if (event["id"] == "ADC_EVCTRL_START"):
+            if (event["value"] > 0):
+                Database.setSymbolValue("evsys", "USER_"+str(adcInstanceName.getValue())+"_START_READY", True, 2)
+            else:
+                Database.setSymbolValue("evsys", "USER_"+str(adcInstanceName.getValue())+"_START_READY", False, 2)
+
 def adcNegativeInput(symbol, event):
     if (event["value"] == True):
         symbol.setReadOnly(False)
@@ -84,7 +111,7 @@ def adcEventInputVisibility(symbol, event):
         symbol.setVisible(False)
     else:
         symbol.setVisible(True)
-        
+
 def adcOptionVisible(symbol, event):
     if(event["value"] != "Free Run"):
         symbol.setVisible(True)
@@ -113,7 +140,7 @@ def adcSUPCVisible(symbol, event):
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
-    
+
     if (event["id"] == "ADC_REFCTRL_REFSEL"):
         symObj = event["symbol"]
         if (symObj.getSelectedKey() == "INTREF"):
@@ -143,7 +170,7 @@ def instantiateComponent(adcComponent):
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
     availablePins = []      # array to save available pins
     channel = []
-    
+
     pinout = "SAMC21N"
     val = ATDF.getNode("/avr-tools-device-file/variants")
     children = val.getChildren()
@@ -206,9 +233,15 @@ def instantiateComponent(adcComponent):
     adcSym_SAMPCTRL_SAMPLEN.setMax(63)
     adcSym_SAMPCTRL_SAMPLEN.setDefaultValue(0)
 
+    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
+    sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
+    data_width = 12
+    conv_time = float((((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000) / clock_freq))
+
     #Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
-    adcSym_SAMPCTRL_SAMPLEN_TIME.setLabel("**** Conversion Time is 0.04166 us ****")
+    adcSym_SAMPCTRL_SAMPLEN_TIME.setLabel("**** Conversion Time is " + str(conv_time) + " us ****")
     adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, \
         ["core.CPU_CLOCK_FREQUENCY", "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL"])
 
@@ -233,7 +266,7 @@ def instantiateComponent(adcComponent):
     adcSym_CONV_TRIGGER = adcComponent.createComboSymbol("ADC_CONV_TRIGGER", None, ["Free Run", "SW Trigger", "HW Event Trigger"])
     adcSym_CONV_TRIGGER.setDefaultValue("Free Run")
     adcSym_CONV_TRIGGER.setLabel("Select Conversion Trigger")
-    
+
     adcSym_FLUSH_EVENT = adcComponent.createKeyValueSetSymbol("ADC_EVCTRL_FLUSH", adcSym_CONV_TRIGGER)
     adcSym_FLUSH_EVENT.setLabel("Flush Event Input")
     adcSym_FLUSH_EVENT.setVisible(False)
@@ -263,7 +296,7 @@ def instantiateComponent(adcComponent):
     global adcSym_SEQ_ENABLE
     adcSym_SEQ_ENABLE = adcComponent.createBooleanSymbol("ADC_SEQ_ENABLE", adcSequenceMenu)
     adcSym_SEQ_ENABLE.setLabel("Enable Automatic Sequencing")
-    
+
     adcPositiveInputNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__MUXPOS\"]")
     adcPositiveInputValues = []
     adcPositiveInputValues = adcPositiveInputNode.getChildren()
@@ -378,10 +411,10 @@ def instantiateComponent(adcComponent):
     #event out mode
     adcSym_EVCTRL_RSERDYEO = adcComponent.createBooleanSymbol("ADC_EVCTRL_RESRDYEO", adcResultMenu)
     adcSym_EVCTRL_RSERDYEO.setLabel("Enable Result Ready Event Out")
-    
+
     adcWindowMenu = adcComponent.createMenuSymbol("ADC_WINDOW_CONFIG_MENU", None)
     adcWindowMenu.setLabel("Window Mode Configuration")
-    
+
     #Configure mode for Window operation
     adcSym_CTRLC_WINMODE = adcComponent.createKeyValueSetSymbol("ADC_CTRLC_WINMODE", adcWindowMenu)
     adcSym_CTRLC_WINMODE.setLabel("Select Window Monitor Mode")
@@ -394,32 +427,36 @@ def instantiateComponent(adcComponent):
     for index in range (0 , len(adcWindowConfigValues)):
         adcSym_CTRLC_WINMODE.addKey(adcWindowConfigValues[index].getAttribute("name"), adcWindowConfigValues[index].getAttribute("value"),
         adcWindowConfigValues[index].getAttribute("caption"))
-        
+
     #Window upper threshold
     adcSym_WINUT = adcComponent.createIntegerSymbol("ADC_WINUT", adcWindowMenu)
     adcSym_WINUT.setLabel("Window Upper Threshold")
     adcSym_WINUT.setMin(-32768)
     adcSym_WINUT.setMax(32767)
     adcSym_WINUT.setDefaultValue(1024)
+    adcSym_WINUT.setVisible(False)
     adcSym_WINUT.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
-    
+
     #Window lower threshold
     adcSym_WINLT = adcComponent.createIntegerSymbol("ADC_WINLT", adcWindowMenu)
     adcSym_WINLT.setLabel("Window Lower Threshold")
     adcSym_WINLT.setMin(-32768)
     adcSym_WINLT.setMax(32767)
     adcSym_WINLT.setDefaultValue(512)
+    adcSym_WINLT.setVisible(False)
     adcSym_WINLT.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
 
     global adcSym_INTENSET_WINMON
     adcSym_INTENSET_WINMON = adcComponent.createBooleanSymbol("ADC_INTENSET_WINMON", adcWindowMenu)
     adcSym_INTENSET_WINMON.setLabel("Enable Window Monitor Interrupt")
     adcSym_INTENSET_WINMON.setDefaultValue(False)
+    adcSym_INTENSET_WINMON.setVisible(False)
     adcSym_INTENSET_WINMON.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
 
     #Enable Window Monitor Event Out
     adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_WINDOW_OUTPUT_EVENT", adcWindowMenu)
     adcSym_HW_INP_EVENT.setLabel("Enable Window Monitor Event Out")
+    adcSym_HW_INP_EVENT.setVisible(False)
     adcSym_HW_INP_EVENT.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
 
     adcSleepMenu = adcComponent.createMenuSymbol("ADC_SLEEP_MENU", None)
@@ -434,6 +471,11 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLA_ONDEMAND = adcComponent.createBooleanSymbol("ADC_CTRLA_ONDEMAND", adcSleepMenu)
     adcSym_CTRLA_ONDEMAND.setLabel("On Demand Control")
     adcSym_CTRLA_ONDEMAND.setVisible(True)
+
+    adcSym_EVESYS_CONFIGURE = adcComponent.createIntegerSymbol("ADC_EVESYS_CONFIGURE", None)
+    adcSym_EVESYS_CONFIGURE.setVisible(False)
+    adcSym_EVESYS_CONFIGURE.setDependencies(adcEvesysConfigure, \
+        ["ADC_WINDOW_OUTPUT_EVENT", "ADC_EVCTRL_RESRDYEO", "ADC_CONV_TRIGGER", "ADC_EVCTRL_FLUSH", "ADC_EVCTRL_START"])
 
     adcSym_SUPC_COMMENT = adcComponent.createCommentSymbol("ADC_SUPC_COMMENT", None)
     adcSym_SUPC_COMMENT.setLabel("*********** Enable Vref output in SUPC ***********")
