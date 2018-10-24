@@ -99,6 +99,35 @@
     </#if>
 </#if>
 
+<#if SDADC_TRIGGER == "2">
+    <#if SDADC_EVCTRL_FLUSH == "1">
+        <#if SDADC_EVCTRL_VAL != "">
+            <#assign SDADC_EVCTRL_VAL = SDADC_EVCTRL_VAL + " | SDADC_EVCTRL_FLUSHEI_Msk">
+        <#else>
+            <#assign SDADC_EVCTRL_VAL = "SDADC_EVCTRL_FLUSHEI_Msk">
+        </#if>
+    <#elseif SDADC_EVCTRL_FLUSH == "2">
+        <#if SDADC_EVCTRL_VAL != "">
+            <#assign SDADC_EVCTRL_VAL = SDADC_EVCTRL_VAL + " | SDADC_EVCTRL_FLUSHEI_Msk | SDADC_EVCTRL_FLUSHINV_Msk">
+        <#else>
+            <#assign SDADC_EVCTRL_VAL = "SDADC_EVCTRL_FLUSHEI_Msk | SDADC_EVCTRL_FLUSHINV_Msk">
+        </#if>
+    </#if>
+    <#if SDADC_EVCTRL_START == "1">
+        <#if SDADC_EVCTRL_VAL != "">
+            <#assign SDADC_EVCTRL_VAL = SDADC_EVCTRL_VAL + " | SDADC_EVCTRL_STARTEI_Msk">
+        <#else>
+            <#assign SDADC_EVCTRL_VAL = "SDADC_EVCTRL_STARTEI_Msk">
+        </#if>
+    <#elseif SDADC_EVCTRL_START == "2">
+        <#if SDADC_EVCTRL_VAL != "">
+            <#assign SDADC_EVCTRL_VAL = SDADC_EVCTRL_VAL + " | SDADC_EVCTRL_STARTEI_Msk | SDADC_EVCTRL_STARTINV_Msk">
+        <#else>
+            <#assign SDADC_EVCTRL_VAL = "SDADC_EVCTRL_STARTEI_Msk | SDADC_EVCTRL_STARTINV_Msk">
+        </#if>
+    </#if>
+</#if>
+
 <#if SDADC_RUNSTDBY == true>
 <#assign SDADC_CTRLA_VAL = "SDADC_CTRLA_RUNSTDBY_Msk">
 </#if>
@@ -146,9 +175,6 @@ void ${SDADC_INSTANCE_NAME}_Initialize( void )
     <#if SDADC_TRIGGER == "0">
     ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLC = SDADC_CTRLC_FREERUN_Msk;
     </#if>
-    <#if SDADC_TRIGGER == "2">
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_EVCTRL = SDADC_EVCTRL_STARTEI_Msk ${SDADC_EVENT_INVERT?then(' | SDADC_EVCTRL_STARTINV_Msk','')};
-    </#if>
     <#if SDADC_SEQCTRL_VAL?has_content>
     ${SDADC_INSTANCE_NAME}_REGS->SDADC_SEQCTRL = ${SDADC_SEQCTRL_VAL};
     </#if>
@@ -173,7 +199,7 @@ void ${SDADC_INSTANCE_NAME}_Initialize( void )
 </#if>
 
 <#if SDADC_EVCTRL_VAL?has_content>
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_EVCTRL |= ${SDADC_EVCTRL_VAL};
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_EVCTRL = ${SDADC_EVCTRL_VAL};
 </#if>
 
 <#if SDADC_CTRLA_VAL?has_content>
