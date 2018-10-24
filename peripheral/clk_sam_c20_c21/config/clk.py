@@ -873,29 +873,42 @@ def setGClockFreq(symbol, event):
 
 def topsort(graph):
     from collections import deque
-    in_degree = { u : 0 for u in graph }      
-    for u in graph:                          
-        for v in graph[u]:
-            in_degree[v] += 1
+    
+    #Initialize the degree of vetexes to zero and increment dependents by 1
+    degreeList = {}
+    for vertex in graph:
+        degreeList[vertex] = 0
+
+    for vertex in graph:
+        for dependent in graph[vertex]:
+            degreeList[dependent] = degreeList[dependent] + 1
  
-    Q = deque()                 
-    for u in in_degree:
-        if in_degree[u] == 0:
-            Q.appendleft(u)
+    #initialize a dequeue pipe 
+    pipe = deque() 
+
+    #move vertexes with zero degree to the starting of pipe    
+    for vertex in degreeList:
+        if degreeList[vertex] == 0:
+            pipe.appendleft(vertex)
  
-    L = []     
-     
-    while Q:                
-        u = Q.pop()          
-        L.append(u)          
-        for v in graph[u]:
-            in_degree[v] -= 1
-            if in_degree[v] == 0:
-                Q.appendleft(v)
-    if len(L) == len(graph):
-        return L
+    outputList = []     
+
+    #move vertexes with degree 0 to output list
+    #visit the dependent and reduce the degree by one for every visited dependent
+    while pipe:                
+        vertex = pipe.pop()          
+        outputList.append(vertex)          
+        for dependent in graph[vertex]:
+            degreeList[dependent] -= 1
+            if degreeList[dependent] == 0:
+                pipe.appendleft(dependent)
+         
+    #If there are no cycles that is the max degree of all vertices is 1
+    #then the length of list should be equal to total number of vertices in graph else a cycle has been formed
+    if len(outputList) == len(graph):
+        return outputList
     else:                     
-        return []  
+        return []
         
 def codeGen(symbol, event):
     global topsort
@@ -928,7 +941,6 @@ def codeGen(symbol, event):
                 sourceDestmap[gclkSym_GENCTRL_SRC[i].getSelectedKey()].append("GCLK"+str(i))
     
     codeList = topsort(sourceDestmap)
-    print len(codeList)
     if len(codeList) != 0:
         cycleFormed.setValue(False,2)
         
@@ -937,8 +949,6 @@ def codeGen(symbol, event):
         for i in range(0, 9):
             if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)) == False:
                 codeList.remove("GCLK"+str(i))
-                
-        print codeList
         for i in range(0,len(codeList)):
             symbol.addValue("    " + codeList[i] + "_Initialize();")
     
@@ -999,11 +1009,8 @@ def setGCLKIOFreq(symbol, event):
 
 def gclkMaxset(symbol, event):
     global gclkSym_GENCTRL_DIV
-    print "triggerd"
-    print event["value"]
     generator = int(symbol.getID().split("GCLK_")[1].split("_DIV")[0])
     if event["value"] == 1:
-        print "triggerd2"
         if (generator == 1):
             symbol.setMax(16)
         else:
@@ -1045,7 +1052,6 @@ indexSymbolMap = defaultdict(list)
 
 #------------------------- ATDF Read -------------------------------------
 packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
-print packageName
 channel = []
 availablePins = []        # array to save available pins
 gclk_io_signals = [False, False, False, False, False, False, False, False, False, False] #array to save available signals
@@ -1055,12 +1061,9 @@ global cycleFormed
 val = ATDF.getNode("/avr-tools-device-file/variants")
 children = val.getChildren()
 for index in range(0, len(children)):
-    print children[index].getAttribute("package")
-    print children[index].getAttribute("pinout")
     if packageName in children[index].getAttribute("package"):
         pinout = children[index].getAttribute("pinout")
 
-print pinout
 children = []
 val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(pinout)+"\"]")
 children = val.getChildren()
