@@ -61,16 +61,23 @@ def updateSDADCClockWarringStatus(symbol, event):
 
 def sdadcEvesysConfigure(symbol, event):
     if(event["id"] == "SDADC_EVCTRL_RESRDYEO"):
-        Database.setSymbolValue("evsys0", "GENERATOR_"+sdadcInstanceName.getValue()+"_RESRDY_ACTIVE", event["value"], 2)
+        Database.setSymbolValue("evsys", "GENERATOR_"+sdadcInstanceName.getValue()+"_RESRDY_ACTIVE", event["value"], 2)
 
     if(event["id"] == "SDADC_EVCTRL_WINMONEO"):
-        Database.setSymbolValue("evsys0", "GENERATOR_"+sdadcInstanceName.getValue()+"_WINMON_ACTIVE", event["value"], 2)
+        Database.setSymbolValue("evsys", "GENERATOR_"+sdadcInstanceName.getValue()+"_WINMON_ACTIVE", event["value"], 2)
 
-    if(event["id"] == "SDADC_TRIGGER"):
-        if (event["value"] == 2):
-            Database.setSymbolValue("evsys0", "USER_"+sdadcInstanceName.getValue()+"_START_READY", True, 2)
-        else:
-            Database.setSymbolValue("evsys0", "USER_"+sdadcInstanceName.getValue()+"_START_READY", False, 2)
+    if(sdadcSym_TRIGGER.getValue() == 2):
+        if (event["id"] == "SDADC_EVCTRL_FLUSH"):
+            if (event["value"] > 0):
+                Database.setSymbolValue("evsys", "USER_"+str(sdadcInstanceName.getValue())+"_FLUSH_READY", True, 2)
+            else:
+                Database.setSymbolValue("evsys", "USER_"+str(sdadcInstanceName.getValue())+"_FLUSH_READY", False, 2)
+        if (event["id"] == "SDADC_EVCTRL_START"):
+            if (event["value"] > 0):
+                Database.setSymbolValue("evsys", "USER_"+str(sdadcInstanceName.getValue())+"_START_READY", True, 2)
+            else:
+                Database.setSymbolValue("evsys", "USER_"+str(sdadcInstanceName.getValue())+"_START_READY", False, 2)
+
 
 def sdadcCalcConvTime(symbol, event):
     clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
@@ -179,6 +186,7 @@ def instantiateComponent(sdadcComponent):
     sdadcSym_REFCTRL_REFSEL.setDisplayMode("Description")
 
     #Trigger selection
+    global sdadcSym_TRIGGER
     sdadcSym_TRIGGER = sdadcComponent.createKeyValueSetSymbol("SDADC_TRIGGER", None)
     sdadcSym_TRIGGER.setLabel("Select Conversion Trigger")
     sdadcSym_TRIGGER.addKey("FREE_RUN", "0", "Free Run")
@@ -188,10 +196,25 @@ def instantiateComponent(sdadcComponent):
     sdadcSym_TRIGGER.setOutputMode("Value")
     sdadcSym_TRIGGER.setDisplayMode("Description")
 
-    sdadcSym_HW_EVENT_INVERT = sdadcComponent.createBooleanSymbol("SDADC_EVENT_INVERT", sdadcSym_TRIGGER)
-    sdadcSym_HW_EVENT_INVERT.setLabel("Invert Input Event")
-    sdadcSym_HW_EVENT_INVERT.setVisible(False)
-    sdadcSym_HW_EVENT_INVERT.setDependencies(sdadcHWEventVisible, ["SDADC_TRIGGER"])
+    sdadcSym_FLUSH_EVENT = sdadcComponent.createKeyValueSetSymbol("SDADC_EVCTRL_FLUSH", sdadcSym_TRIGGER)
+    sdadcSym_FLUSH_EVENT.setLabel("Flush Event Input")
+    sdadcSym_FLUSH_EVENT.setVisible(False)
+    sdadcSym_FLUSH_EVENT.setOutputMode("Value")
+    sdadcSym_FLUSH_EVENT.setDisplayMode("Description")
+    sdadcSym_FLUSH_EVENT.addKey("DISABLED", "0", "Disabled")
+    sdadcSym_FLUSH_EVENT.addKey("ENABLED_RISING_EDGE", "1", "Enabled on Rising Edge")
+    sdadcSym_FLUSH_EVENT.addKey("ENABLED_FALLING_EDGE", "2", "Enabled on Falling Edge")
+    sdadcSym_FLUSH_EVENT.setDependencies(sdadcHWEventVisible, ["SDADC_TRIGGER"])
+
+    sdadcSym_START_EVENT = sdadcComponent.createKeyValueSetSymbol("SDADC_EVCTRL_START", sdadcSym_TRIGGER)
+    sdadcSym_START_EVENT.setLabel("Start Event Input")
+    sdadcSym_START_EVENT.setVisible(False)
+    sdadcSym_START_EVENT.setOutputMode("Value")
+    sdadcSym_START_EVENT.setDisplayMode("Description")
+    sdadcSym_START_EVENT.addKey("DISABLED", "0", "Disabled")
+    sdadcSym_START_EVENT.addKey("ENABLED_RISING_EDGE", "1", "Enabled on Rising Edge")
+    sdadcSym_START_EVENT.addKey("ENABLED_FALLING_EDGE", "2", "Enabled on Falling Edge")
+    sdadcSym_START_EVENT.setDependencies(sdadcHWEventVisible, ["SDADC_TRIGGER"])
 
     # Auto sequencer
     sdadcSym_AUTO_SEQUENCE = sdadcComponent.createBooleanSymbol("SDADC_AUTO_SEQUENCE", None)
@@ -280,7 +303,7 @@ def instantiateComponent(sdadcComponent):
     sdadcSym_EVESYS_CONFIGURE = sdadcComponent.createIntegerSymbol("SDADC_EVESYS_CONFIGURE", None)
     sdadcSym_EVESYS_CONFIGURE.setVisible(False)
     sdadcSym_EVESYS_CONFIGURE.setDependencies(sdadcEvesysConfigure, \
-        ["SDADC_EVCTRL_WINMONEO", "SDADC_EVCTRL_RESRDYEO", "SDADC_TRIGGER"])
+        ["SDADC_EVCTRL_WINMONEO", "SDADC_EVCTRL_RESRDYEO", "SDADC_EVCTRL_FLUSH", "SDADC_EVCTRL_START"])
 
     #Sleep configurations
     sdadcSym_Sleep_Menu = sdadcComponent.createMenuSymbol("SDADC_SLEEP", None)
