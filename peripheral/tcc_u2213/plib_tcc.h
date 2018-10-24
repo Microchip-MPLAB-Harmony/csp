@@ -267,7 +267,7 @@ void TCCx_PWMStop ( void );
 
 // *****************************************************************************
 /* Function:
-    void TCCx_PWMPeriodSet ( uint32_t period );
+    void TCCx_PWM24bitPeriodSet ( uint32_t period );
 
   Summary:
     Sets the period value of a given TCC instance.
@@ -291,18 +291,18 @@ void TCCx_PWMStop ( void );
   Example:
     <code>
     TCC0_PWMInitialize();
-    TCC0_PWMPeriodSet(0x500ul);
+    TCC0_PWM24bitPeriodSet(0x500ul);
     </code>
 
   Remarks:
-    Period value is 24-bit or 16-bit based on device and TCC instance. 
+    None 
 */
 
-void TCCx_PWMPeriodSet ( uint32_t period );
+void TCCx_PWM24bitPeriodSet ( uint32_t period );
 
 // *****************************************************************************
 /* Function:
-    uint32_t TCCx_PWMPeriodGet ( void );
+    uint32_t TCCx_PWM24bitPeriodGet ( void );
 
   Summary:
     Reads the period value of a given TCC instance.
@@ -324,18 +324,18 @@ void TCCx_PWMPeriodSet ( uint32_t period );
     <code>
     uint32_t period;
     TCC0_PWMInitialize();
-    period = TCC0_PWMPeriodSet();
+    period = TCC0_PWM24bitPeriodGet();
     </code>
 
   Remarks:
-    Period value is 24-bit or 16-bit based on device and TCC instance.
+    None
 */
 
-uint32_t TCCx_PWMPeriodGet ( void );
+uint32_t TCCx_PWM24bitPeriodGet ( void );
 
 // *****************************************************************************
 /* Function:
-    bool TCCx_PWMDutySet (TCCx_CHANNEL_NUM channel, uint32_t duty);
+    void TCCx_PWM24bitDutySet (TCCx_CHANNEL_NUM channel, uint32_t duty);
 
   Summary:
     Sets the duty value of a given TCC channel.
@@ -354,20 +354,185 @@ uint32_t TCCx_PWMPeriodGet ( void );
     duty - Compare value
 
   Returns:
-    true - if channel number is valid
-    false - if channel number is invalid
+    None
 
   Example:
     <code>
-    bool status; 
+
     TCC0_PWMInitialize();
-    status = TCC0_PWMDutySet(TCC0_CHANNEL0, 0x100U);
+    TCC0_PWM24bitDutySet(TCC0_CHANNEL0, 0x100U);
     </code>
 
   Remarks:
-    Duty value is 24-bit or 16-bit based on device and TCC instance. 
+    None 
 */
-bool TCCx_PWMDutySet(TCCx_CHANNEL_NUM channel, uint32_t duty);
+void TCCx_PWM24bitDutySet(TCCx_CHANNEL_NUM channel, uint32_t duty);
+
+// *****************************************************************************
+/* Function:
+    void TCCx_PWM24bitCounterSet(uint32_t count);
+
+  Summary:
+    Sets the counter value of a given TCC instance
+
+  Description:
+    This function updates the counter value. 
+
+  Precondition:
+    TCCx_PWMInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    count - counter value
+
+  Returns:
+    None
+
+  Example:
+    <code>
+    TCC0_PWMInitialize();
+    TCC0_PWM24bitCounterSet(0x100U);
+    </code>
+
+  Remarks:
+    This function waits till sync operation is complete.
+*/
+void TCCx_PWM24bitCounterSet(uint32_t count);
+
+// *****************************************************************************
+/* Function:
+    void TCCx_PWM16bitPeriodSet ( uint16_t period );
+
+  Summary:
+    Sets the period value of a given TCC instance.
+
+  Description:
+    This function writes the period value. Period value is shared between 
+    all the channels of TCC instance. When counter matches period
+    value interrupt can be generated. This function writes to the double buffered register. 
+    Actual update happens on period match or zero match.
+
+  Precondition:
+    TCCx_PWMInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    period - Period value. Counter increments till this value.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    TCC0_PWMInitialize();
+    TCC0_PWM16bitPeriodSet(0x500ul);
+    </code>
+
+  Remarks:
+    None 
+*/
+
+void TCCx_PWM16bitPeriodSet ( uint16_t period );
+
+// *****************************************************************************
+/* Function:
+    uint16_t TCCx_PWM16bitPeriodGet ( void );
+
+  Summary:
+    Reads the period value of a given TCC instance.
+
+  Description:
+    This function reads the period value. 
+
+  Precondition:
+    TCCx_PWMInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    None
+
+  Returns:
+    period - period value of TCC instance
+
+  Example:
+    <code>
+    uint16_t period;
+    TCC0_PWMInitialize();
+    period = TCC0_PWM16bitPeriodGet();
+    </code>
+
+  Remarks:
+    None
+*/
+
+uint16_t TCCx_PWM16bitPeriodGet ( void );
+
+// *****************************************************************************
+/* Function:
+    void TCCx_PWM16bitDutySet (TCCx_CHANNEL_NUM channel, uint16_t duty);
+
+  Summary:
+    Sets the duty value of a given TCC channel.
+
+  Description:
+    This function writes the compare value. Every channel of TCC instance has its own compare register. 
+    When counter matches compare value interrupt can be generated. This function writes to the double buffered register. 
+    Actual update happens on period match or zero match.
+
+  Precondition:
+    TCCx_PWMInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    channel - TCC channel number
+    duty - Compare value
+
+  Returns:
+    None
+
+  Example:
+    <code>
+
+    TCC0_PWMInitialize();
+    TCC0_PWM16bitDutySet(TCC0_CHANNEL0, 0x100U);
+    </code>
+
+  Remarks:
+    None 
+*/
+void TCCx_PWM16bitDutySet(TCCx_CHANNEL_NUM channel, uint16_t duty);
+
+// *****************************************************************************
+/* Function:
+    void TCCx_PWM16bitCounterSet(uint16_t count);
+
+  Summary:
+    Sets the counter value of a given TCC instance
+
+  Description:
+    This function updates the counter value. 
+
+  Precondition:
+    TCCx_PWMInitialize function must have been called first for the given
+    channel.
+
+  Parameters:
+    count - counter value
+
+  Returns:
+    None
+
+  Example:
+    <code>
+    TCC0_PWMInitialize();
+    TCC0_PWM16bitCounterSet(0x100U);
+    </code>
+
+  Remarks:
+    This function waits till sync operation is complete.
+*/
+void TCCx_PWM16bitCounterSet(uint16_t count);
+
 
 // *****************************************************************************
 /* Function:
@@ -401,37 +566,6 @@ bool TCCx_PWMDutySet(TCCx_CHANNEL_NUM channel, uint32_t duty);
     This function can be called only when TCC module is disabled.
 */
 void TCCx_PWMDeadTimeSet(uint8_t deadtime_high, uint8_t deadtime_low);
-// *****************************************************************************
-/* Function:
-    void TCCx_PWMCounterSet(uint32_t count);
-
-  Summary:
-    Sets the counter value of a given TCC instance
-
-  Description:
-    This function updates the counter value. 
-
-  Precondition:
-    TCCx_PWMInitialize function must have been called first for the given
-    channel.
-
-  Parameters:
-    count - counter value
-
-  Returns:
-    None
-
-  Example:
-    <code>
-    TCC0_PWMInitialize();
-    TCC0_PWMCounterSet(0x100U);
-    </code>
-
-  Remarks:
-    Counter value is 24-bit or 16-bit based on device and TCC instance.
-    This function waits till sync operation is complete.
-*/
-void TCCx_PWMCounterSet(uint32_t count);
 
 // *****************************************************************************
 /* Function:
