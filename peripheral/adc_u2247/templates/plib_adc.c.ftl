@@ -217,16 +217,36 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     /* Enable interrupts */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = ${ADC_INTENSET_VAL};
 </#if>
-<#if ADC_EVCTRL_VAL?has_content>
+<#if ADC_EVCTRL_VAL?has_content && ADC_CTRLA_SLAVEEN == false>
     /* Events configuration  */
     ${ADC_INSTANCE_NAME}_REGS->ADC_EVCTRL = ${ADC_EVCTRL_VAL};
 </#if>
 
-    /* Enable ADC & Configure run in standby and on demand */
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_ENABLE_Msk
-                                      ${ADC_CTRLA_RUNSTDBY?then('| ADC_CTRLA_RUNSTDBY_Msk', '')}
+<#if ADC_CTRLA_RUNSTDBY == true || ADC_CTRLA_ONDEMAND == true>
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= 
+                                      ${ADC_CTRLA_RUNSTDBY?then('ADC_CTRLA_RUNSTDBY_Msk', '')}
                                       ${ADC_CTRLA_ONDEMAND?then('| ADC_CTRLA_ONDEMAND_Msk', '')};</@compress>
+</#if>
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    {
+        /* Wait for Synchronization */
+    }
+}
 
+/* Enable ADC module */
+void ${ADC_INSTANCE_NAME}_Enable( void )
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_ENABLE_Msk;
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    {
+        /* Wait for Synchronization */
+    }
+}
+
+/* Disable ADC module */
+void ${ADC_INSTANCE_NAME}_Disable( void )
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA &= ~ADC_CTRLA_ENABLE_Msk;
     while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
     {
         /* Wait for Synchronization */

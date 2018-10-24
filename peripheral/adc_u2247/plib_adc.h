@@ -304,6 +304,72 @@ void ADCx_Initialize( void );
 
 // *****************************************************************************
 /* Function:
+    void ADCx_Enable( void );
+
+  Summary:
+    Enables given instance of ADC peripheral.
+
+  Description:
+    This function enables the given instance of ADC. 
+
+  Precondition:
+    ADCx_Initialize() function must have been called first for the
+    associated instance.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+      ADCx_Initialize();
+      ADCx_Enable();
+    </code>
+
+  Remarks:
+    If ADC instance is operating in slave mode, do not call ADCx_Enable function. 
+    Slave ADC is enabled by master ADC.
+*/
+void ADCx_Enable( void );
+
+// *****************************************************************************
+/* Function:
+    void ADCx_Disable( void );
+
+  Summary:
+    Disables given instance of ADC peripheral.
+
+  Description:
+    This function disables the given instance of ADC. 
+
+  Precondition:
+    ADCx_Initialize() function must have been called first for the
+    associated instance.
+
+  Parameters:
+    None.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+      ADCx_Initialize();
+      ADCx_Enable();
+      //perform conversion
+      ADCx_Disable();
+    </code>
+
+  Remarks:
+    If ADC instance is operating in slave mode, do not call ADCx_Disable function. 
+    Slave ADC is enabled/disabled by master ADC.
+*/
+void ADCx_Disable( void );
+
+// *****************************************************************************
+/* Function:
     void ADCx_ChannelSelect( ADC_POSINPUT positiveInput,
                              ADC_NEGINPUT negativeInput );
 
@@ -493,8 +559,8 @@ bool ADCx_ConversionSequenceIsFinished( void );
     associated instance.
 
   Parameters:
-    low_threshold - 16-bit signed value for lower threshold
-    high_threshold - 16-bit signed value for upper threshold
+    low_threshold - 16-bit value for lower threshold
+    high_threshold - 16-bit value for upper threshold
 
   Returns:
     None

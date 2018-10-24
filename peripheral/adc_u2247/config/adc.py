@@ -21,7 +21,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-
+import math
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
@@ -62,7 +62,12 @@ def updateADCClockWarringStatus(symbol, event):
 
 def adcCalcSampleTime(symbol, event):
     clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
-    prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
+    if (adcSym_CTRLA_SLAVEEN.getValue() == False):
+        prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
+    else:
+        component = int(adcInstanceName.getValue()[-1]) - 1
+        prescaler = (Database.getSymbolValue("adc" + str(component), "ADC_CTRLB_PRESCALER"))
+        prescaler = math.pow(2, prescaler+1)
     sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
     data_width = adcSym_CTRLC_RESSEL.getSelectedKey()[:-3]
     conv_time = float((((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000) / clock_freq))
@@ -238,12 +243,14 @@ def instantiateComponent(adcComponent):
     sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
     data_width = 12
     conv_time = float((((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000) / clock_freq))
+    
+    component = int(adcInstanceName.getValue()[-1]) - 1
 
     #Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
     adcSym_SAMPCTRL_SAMPLEN_TIME.setLabel("**** Conversion Time is " + str(conv_time) + " us ****")
-    adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, \
-        ["core.CPU_CLOCK_FREQUENCY", "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL"])
+    adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core.CPU_CLOCK_FREQUENCY", \
+        "adc"+str(component)+".ADC_CTRLB_PRESCALER", "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL", "ADC_CTRLA_SLAVEEN"])
 
     #reference selection
     adcSym_REFCTRL_REFSEL = adcComponent.createKeyValueSetSymbol("ADC_REFCTRL_REFSEL", None)
@@ -266,6 +273,7 @@ def instantiateComponent(adcComponent):
     adcSym_CONV_TRIGGER = adcComponent.createComboSymbol("ADC_CONV_TRIGGER", None, ["Free Run", "SW Trigger", "HW Event Trigger"])
     adcSym_CONV_TRIGGER.setDefaultValue("Free Run")
     adcSym_CONV_TRIGGER.setLabel("Select Conversion Trigger")
+    adcSym_CONV_TRIGGER.setDependencies(adcSlaveModeVisibility, ["ADC_CTRLA_SLAVEEN"])
 
     adcSym_FLUSH_EVENT = adcComponent.createKeyValueSetSymbol("ADC_EVCTRL_FLUSH", adcSym_CONV_TRIGGER)
     adcSym_FLUSH_EVENT.setLabel("Flush Event Input")
