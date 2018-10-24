@@ -266,7 +266,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32CounterGet ( void )
     <#lt>{
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk) == RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization before reading value from Count Register */
     <#lt>    }
@@ -344,7 +344,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>uint16_t ${RTC_INSTANCE_NAME}_Timer16CounterGet ( void )
     <#lt>{
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COUNTSYNC_Msk) == RTC_MODE1_SYNCBUSY_COUNTSYNC_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COUNT_Msk) == RTC_MODE1_SYNCBUSY_COUNT_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after reading value from Count Register */
     <#lt>    }
