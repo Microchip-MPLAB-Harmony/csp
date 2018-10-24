@@ -90,6 +90,10 @@
 
 void ${ADC_INSTANCE_NAME}_Initialize( void );
 
+void ${ADC_INSTANCE_NAME}_Enable( void );
+
+void ${ADC_INSTANCE_NAME}_Disable( void );
+
 void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput );
 
 void ${ADC_INSTANCE_NAME}_ConversionStart( void );
