@@ -116,25 +116,25 @@ void ${TCC_INSTANCE_NAME}_PWMCallbackRegister(TCC_CALLBACK callback, uintptr_t c
 
 
 <#if TCC_SIZE == 24>
-void ${TCC_INSTANCE_NAME}_PWMPeriodSet(uint32_t period);
+void ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet(uint32_t period);
 
-uint32_t ${TCC_INSTANCE_NAME}_PWMPeriodGet(void);
+uint32_t ${TCC_INSTANCE_NAME}_PWM24bitPeriodGet(void);
 
-void ${TCC_INSTANCE_NAME}_PWMCounterSet(uint32_t count);
+void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet(uint32_t count);
 
-static inline void ${TCC_INSTANCE_NAME}_PWMDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
+static inline void ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
 {
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CCBUF[channel] = duty;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CCBUF[channel] = duty & 0xFFFFFF;
 }
 
 <#elseif TCC_SIZE == 16>
-void ${TCC_INSTANCE_NAME}_PWMPeriodSet(uint16_t period);
+void ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet(uint16_t period);
 
-uint16_t ${TCC_INSTANCE_NAME}_PWMPeriodGet(void);
+uint16_t ${TCC_INSTANCE_NAME}_PWM16bitPeriodGet(void);
 
-void ${TCC_INSTANCE_NAME}_PWMCounterSet(uint16_t count);
+void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet(uint16_t count);
 
-static inline void ${TCC_INSTANCE_NAME}_PWMDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
+static inline void ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_CCBUF[channel] = duty;
 }

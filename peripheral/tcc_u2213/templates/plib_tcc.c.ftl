@@ -148,7 +148,11 @@
 <#assign TCC_WEXCTRL_DT_VAL = TCC_WEXCTRL_DT_VAL + "\n \t \t | TCC_WEXCTRL_DTLS(${TCC_WEXCTRL_DTLS}U) | TCC_WEXCTRL_DTHS(${TCC_WEXCTRL_DTHS}U)">
 
 <#if TCC_EVCTRL_OVFEO == true>
-    <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + " | TCC_EVCTRL_OVFEO_Msk">
+    <#if TCC_EVCTRL_VAL != "">
+        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + " | TCC_EVCTRL_OVFEO_Msk">
+    <#else>
+        <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_OVFEO_Msk">
+    </#if>
 </#if>
 </#compress>
 
@@ -172,10 +176,6 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER};
 <#if TCC_CTRLB_DIR?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET = ${TCC_CTRLB_DIR};
-    while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_CTRLB_Msk))
-    {
-        /* Wait for sync */
-    }
 </#if>
 <#if TCC_IS_OTM == 1>
     ${TCC_INSTANCE_NAME}_REGS->TCC_WEXCTRL = TCC_WEXCTRL_OTMX(${TCC_WEXCTRL_OTMX}U);
@@ -189,27 +189,15 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 <#if TCC_WAVE_VAL?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE |= ${TCC_WAVE_VAL};
 </#if>
-    while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_WAVE_Msk))
-    {
-        /* Wait for sync */
-    }
     
     /* Configure duty cycle values */
 <#list 0..(TCC_NUM_CHANNELS-1) as i>
     <#assign TCC_CC = "TCC_"+i+"_CC">
     <#assign CH_NUM = i>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CC[${i}] = ${.vars[TCC_CC]}U;
-    while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_CC${CH_NUM}_Msk))
-    {
-        /* Wait for sync */
-    }
 </#list>
 
     ${TCC_INSTANCE_NAME}_REGS->TCC_PER = ${TCC_PER_PER}U;
-    while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PER_Msk))
-    {
-        /* Wait for sync */
-    }
 
 <#if TCC_EVCTRL_EVACT != "Disabled">
     <#if TCC_EVCTRL_EVACT == "Event 0">
@@ -225,10 +213,6 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 
 <#if TCC_PATT_VAL?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_PATT = ${TCC_PATT_VAL};
-    while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PATT_Msk))
-    {
-        /* Wait for sync */
-    }
 </#if>
 
 <#if TCC_INTENSET_OVF == true>
@@ -238,6 +222,10 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 <#if TCC_EVCTRL_VAL?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL |= ${TCC_EVCTRL_VAL};
 </#if>
+    while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY)
+    {
+        /* Wait for sync */
+    }
 }
 
 
@@ -263,31 +251,37 @@ void ${TCC_INSTANCE_NAME}_PWMStop (void)
 
 /* Configure PWM period */
 <#if TCC_SIZE == 24>
-void ${TCC_INSTANCE_NAME}_PWMPeriodSet (uint32_t period)
+void ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet (uint32_t period)
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_PERBUF = period & 0xFFFFFF;
+}
 <#elseif TCC_SIZE == 16>
-void ${TCC_INSTANCE_NAME}_PWMPeriodSet (uint16_t period)
-</#if>
+void ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet (uint16_t period)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_PERBUF = period;
 }
+</#if>
 
 /* Read TCC period */
 <#if TCC_SIZE == 24>
-uint32_t ${TCC_INSTANCE_NAME}_PWMPeriodGet (void)
-<#elseif TCC_SIZE == 16>
-uint16_t ${TCC_INSTANCE_NAME}_PWMPeriodGet (void)
-</#if>
+uint32_t ${TCC_INSTANCE_NAME}_PWM24bitPeriodGet (void)
 {
     while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PER_Msk))
     {
         /* Wait for sync */
     }
-<#if TCC_SIZE == 24>
     return (${TCC_INSTANCE_NAME}_REGS->TCC_PER & 0xFFFFFF);
-<#elseif TCC_SIZE == 16>
-    return (uint16_t)${TCC_INSTANCE_NAME}_REGS->TCC_PER;
-</#if>
 }
+<#elseif TCC_SIZE == 16>
+uint16_t ${TCC_INSTANCE_NAME}_PWM16bitPeriodGet (void)
+{
+    while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PER_Msk))
+    {
+        /* Wait for sync */
+    }
+    return (uint16_t)${TCC_INSTANCE_NAME}_REGS->TCC_PER;
+}
+</#if>
 
 <#if TCC_IS_DEAD_TIME == 1>
 /* Configure dead time */
@@ -300,10 +294,16 @@ void ${TCC_INSTANCE_NAME}_PWMDeadTimeSet (uint8_t deadtime_high, uint8_t deadtim
 
 /* Set the counter*/
 <#if TCC_SIZE == 24>
-void ${TCC_INSTANCE_NAME}_PWMCounterSet (uint32_t count_value)
+void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet (uint32_t count_value)
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count_value & 0xFFFFFF;
+    while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_COUNT_Msk))
+    {
+        /* Wait for sync */
+    }
+}
 <#elseif TCC_SIZE == 16>
-void ${TCC_INSTANCE_NAME}_PWMCounterSet (uint16_t count_value)
-</#if>
+void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet (uint16_t count_value)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_COUNT = count_value;
     while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_COUNT_Msk))
@@ -311,6 +311,7 @@ void ${TCC_INSTANCE_NAME}_PWMCounterSet (uint16_t count_value)
         /* Wait for sync */
     }
 }
+</#if>
 
 /* Enable forced synchronous update */
 void ${TCC_INSTANCE_NAME}_PWMForceUpdate(void)
@@ -359,12 +360,13 @@ uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void)
     <#lt>void ${TCC_INSTANCE_NAME}_PWMInterruptHandler(void)
     <#lt>{
     <#lt>    ${TCC_INSTANCE_NAME}_status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
+    <#lt>    /* Clear interrupt flags */
+    <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
     <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
     <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(${TCC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
-    <#lt>    /* Clear interrupt flags */
-    <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
+
     <#lt>}
 </#if>
 
