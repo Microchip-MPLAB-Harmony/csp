@@ -67,8 +67,8 @@ def genSysSourceFile(symbol, event):
         coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysStartupFile")
     elif(event["id"] == "CoreSysCallsFile"):
         coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysCallsFile")
-    elif(event["id"] == "CoreSysDebugConsoleFile"):
-        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysDebugConsoleFile")
+    elif(event["id"] == "CoreSysStdioSyscallsFile"):
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysStdioSyscallsFile")
 
     if ((coreSysFileEnabled == True) and (coreSysSourceFileEnabled == True)):
         symbol.setEnabled(True)
@@ -104,42 +104,42 @@ def instantiateComponent(coreComponent):
     genSysFiles.setLabel("Generate System Source Files")
 
     genSysDefFile = coreComponent.createBooleanSymbol("CoreSysDefFile", genSysFiles)
-    genSysDefFile.setLabel("Generate System Definition Header File")
+    genSysDefFile.setLabel("Generate System Definition")
     genSysDefFile.setDefaultValue(True)
     genSysDefFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
     genSysInitFile = coreComponent.createBooleanSymbol("CoreSysInitFile", genSysFiles)
-    genSysInitFile.setLabel("Generate System Initialization Source File")
+    genSysInitFile.setLabel("Generate System Initialization")
     genSysInitFile.setDefaultValue(True)
     genSysInitFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
     genSysIntFile = coreComponent.createBooleanSymbol("CoreSysIntFile", genSysFiles)
-    genSysIntFile.setLabel("Generate System Interrupts Source File")
+    genSysIntFile.setLabel("Generate System Interrupts")
     genSysIntFile.setDefaultValue(True)
     genSysIntFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
     genSysCallsFile = coreComponent.createBooleanSymbol("CoreSysCallsFile", genSysFiles)
-    genSysCallsFile.setLabel("Generate LIBC syscalls Source File")
+    genSysCallsFile.setLabel("Generate LIBC Syscalls")
     genSysCallsFile.setDefaultValue(True)
     genSysCallsFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
     genSysStartupFile = coreComponent.createBooleanSymbol("CoreSysStartupFile", genSysFiles)
-    genSysStartupFile.setLabel("Generate System Startup Source File")
+    genSysStartupFile.setLabel("Generate System Startup")
     genSysStartupFile.setDefaultValue(True)
     genSysStartupFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
-    genSysDebugConsoleFile = coreComponent.createBooleanSymbol("CoreSysDebugConsoleFile", genSysFiles)
-    genSysDebugConsoleFile.setLabel("Generate Debug Console Source File")
+    genSysDebugConsoleFile = coreComponent.createBooleanSymbol("CoreSysStdioSyscallsFile", genSysFiles)
+    genSysDebugConsoleFile.setLabel("Generate STDIO Syscalls")
     genSysDebugConsoleFile.setDefaultValue(True)
     genSysDebugConsoleFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
     genSysExceptionFile = coreComponent.createBooleanSymbol("CoreSysExceptionFile", genSysFiles)
-    genSysExceptionFile.setLabel("Generate System Exception Source File")
+    genSysExceptionFile.setLabel("Generate System Exception")
     genSysExceptionFile.setDefaultValue(True)
     genSysExceptionFile.setDependencies(setSysFileVisibility, ["CoreSysFiles"])
 
     exceptionHandling = coreComponent.createBooleanSymbol("ADVANCED_EXCEPTION", genSysExceptionFile)
-    exceptionHandling.setLabel("Use Harmony Advanced Exception Handling")
+    exceptionHandling.setLabel("Use Advanced Exception Handling")
     exceptionHandling.setDefaultValue(False)
     exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
 
@@ -264,7 +264,7 @@ def instantiateComponent(coreComponent):
     debugSourceFile.setDestPath("/stdio/")
     debugSourceFile.setProjectPath("config/" + configName + "/stdio/")
     debugSourceFile.setType("SOURCE")
-    debugSourceFile.setDependencies(genSysSourceFile, ["CoreSysDebugConsoleFile", "CoreSysFiles"])
+    debugSourceFile.setDependencies(genSysSourceFile, ["CoreSysStdioSyscallsFile", "CoreSysFiles"])
 
     # generate exceptions.c file
     exceptSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
