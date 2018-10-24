@@ -11,19 +11,12 @@
     ACC peripheral library interface.
 
   Description
-    This file defines the interface to the ACC peripheral library.  This
-    library provides access to and control of the associated peripheral
-    instance.
-
-  Remarks:
-    This header is for documentation only.  The actual acc<x> headers will be
-    generated as required by the MCC (where <x> is the peripheral instance
-    number).
-    Every interface symbol has a lower-case 'x' in it following the "ACC"
-    abbreviation.  This 'x' will be replaced by the peripheral instance number
-    in the generated headers.  These are the actual functions that should be
-    used.
+    This library provides documentation of all the interfaces which can be used
+    to interact with an instance of a Analog Comparator Controller (ACC).
+    This file must not be included in any MPLAB Project.
+	
 *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
@@ -52,43 +45,32 @@
 #ifndef PLIB_ACCx_H    // Guards against multiple inclusion
 #define PLIB_ACCx_H
 
-#include <stddef.h>
-#include <stdbool.h>
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-    extern "C" {
-#endif
-// DOM-IGNORE-END
-
 // *****************************************************************************
 // *****************************************************************************
-// Section: Data Types
+// Section: Data types
 // *****************************************************************************
 // *****************************************************************************
-
-/*  The following data type definitions are used by the functions in this
-    interface.
-*/
 
 // *****************************************************************************
 /* ACC comparison status
+   
    Summary:
-    Identifies the ACC Comparison status
+    Identifies ACC Comparison status
 
    Description:
-    This data type identifies the ACC Comparison status
+    This enumeration identifies the ACC Comparison status either from Comparison
+	edge or synchronized comparator output.
 
    Remarks:
-    Refer to the specific device data sheet to determine availability.
+    None.
 */
 typedef enum
 {
-    /*ACC Output*/
-    ACC_STATUS_SOURCE_COMPARATOR_OUTPUT = ACC_ISR_SCO_Msk,      
+    /* ACC synchronized comparator output */
+    ACC_STATUS_SOURCE_COMPARATOR_OUTPUT,      
 
-    /*ACC Interrupt*/
-    ACC_STATUS_SOURCE_COMPARISON_EDGE = ACC_ISR_CE_Msk,
+    /* ACC comparison edge */
+    ACC_STATUS_SOURCE_COMPARISON_EDGE,
 
 } ACC_STATUS_SOURCE;
 
@@ -100,17 +82,18 @@ typedef enum
 
 // *****************************************************************************
 /* Function:
-    void ACCx_Initialize(void)
+    void ACCx_Initialize (void);
 
    Summary:
-     Initializes given instance of the ACC peripheral.
+     Initializes ACC x module of the device
 
    Description:
-     This function initializes the given instance of the ACC peripheral as
-     configured by the user from within the MCC. 
+    This function initializes ACC x module of the device with the values
+    configured in MHC GUI. Once the peripheral is initialized, Status API can be
+	used to get the comparison status.
 
    Precondition:
-     None.
+     MHC GUI should be configured with the right values.
 
    Parameters:
     None.
@@ -120,47 +103,45 @@ typedef enum
 
    Example:
     <code>
-    ACC1_Initialize();
+        ACC0_Initialize ();
     </code>
 
    Remarks:
-    This function must be called before any other ACC function is called and it
-    should be called only once.
+     This function must be called only once and before any other ACC function is
+     called.
 */
 
 void ACCx_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-    bool ACCx_StatusGet(ACC_STATUS_SOURCE status)
+    bool ACCx_StatusGet (ACC_STATUS_SOURCE status);
 
   Summary:
-    Gets the current comparison status of the ACC module.
+    Returns comparison status of the ACC x
 
   Description:
-    This routine provides the current comparison status of the ACC  module.
+    This function returns the current comparison status based on input parameter
+	either comparison edge or synchronized comparator output of ACC x module.
 
   Precondition:
-    Function ACCx_Initialize should have been called before calling this
-    function.
+    None.
 
   Parameters:
-    status - ACC_STATUS_SOURCE_COMPARATOR_OUTPUT, To know the comparator output 
-             status
-             ACC_STATUS_SOURCE_COMPARISON_EDGE, To know a selected egde occurred
-             on comparator output or not
+    status   Data structure of type ACC_STATUS_SOURCE which has the list of 
+	         elements of Comparison status.
              
   Returns:
-   Returns the comparison status.
+    Returns the comparison status based on input parameter.
 
   Example:
     <code>
-    bool status;
-    status = ACC1_StatusGet(ACC_STATUS_SOURCE_COMPARATOR_OUTPUT);
-    if (status)
-    {
-        // Application related tasks     
-    }
+        bool status;
+        status = ACC0_StatusGet(ACC_STATUS_SOURCE_COMPARATOR_OUTPUT);
+        if (status)
+        {
+            // Application related tasks     
+        }
     </code>
 
   Remarks:
@@ -171,72 +152,94 @@ bool ACCx_StatusGet (ACC_STATUS_SOURCE status);
 
 // *****************************************************************************
 /* ACC Callback Function pointer
-   typedef void (*ACC_CALLBACK) (uintptr_t context)
+    typedef void (*ACC_CALLBACK) (uintptr_t context);
 
   Summary:
     Pointer to a ACC callback function
 
   Description:
-    This data type defines the required function signature for the ACC Callback 
-    function.
-    A client must register a pointer to a callback function whose function
-    signature (parameter and return value types) match the types specified by
-    this function pointer in order to receive event callback.
-    The parameters and return values and are described here and a partial
-    example implementation is provided.
+    This data type defines the required function signature for the ACC callback
+	function. Application must register a pointer to a callback function whose
+	function signature (parameter and return value types) match the types 
+	specified by this function pointer in order to receive callback from the 
+	PLIB.
+
+    The parameters and return values are described here and a partial example
+    implementation is provided.
 
   Parameters:
-    context - Value identifying the context of the application that registered
+    context   Value identifying the context of the application that registered
               the callback function.
 
   Returns:
     None.
 
    Example:
-    Refer to the ACCx_CallbackRegister( ) function code example.
+    <code>
+        ACC0_CallbackRegister (&APP_ACC_CallbackFunction, NULL);
+        void APP_ACC_CallbackFunction (uintptr_t context)
+        {
+            //Application related tasks
+        }
+    </code>
 
   Remarks:
-    None
+    The context parameter contains the a handle to the client context,
+    provided at the time the callback function was registered using the
+    ACCx_CallbackRegister function. This context handle value is
+    passed back to the client as the "context" parameter.  It can be any value
+    (such as a pointer to the client's data) necessary to identify the client
+    context or instance  of the client that made the data transfer
+    request.
+
+    The callback function executes in the PLIB's interrupt context. It is
+    recommended of the application to not perform process intensive or blocking
+    operations with in this function.
 */
 typedef void (*ACC_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
 /* Function:
     void ACCx_CallbackRegister (ACC_CALLBACK callback, uintptr_t context);
+	
   Summary:
-    Allows a client to identify a callback function.
+     Allows application to register callback with PLIB
 
   Description:
-    This routine allows a client to identify a callback function.
+    This function allows application to register a callback function for the 
+	PLIB to call back when interrupt occurred.
+	
+    At any point if application wants to stop the callback, it can call this 
+	function with "callback" value as NULL.
 
   Precondition:
-    Function ACCx_Initialize should have been called before calling this
-    function.
+    The ACCx_Initialize function must have been called.
 
   Parameters:
-    callback - Pointer to the callback function.
-    context  - The value of parameter will be passed back to the client
-               unchanged, when the callback function is called.  It can be 
-               used to identify any client specific data object that identifies
-               the instance of the client module (for example, it may be a
-               pointer to the client module's state structure).   
+    callback - Pointer to the callback function implemented by the user.
+	
+    context  - The value of parameter will be passed back to the application
+               unchanged, when the callback function is called. It can be used
+			   to identify any application specific value that identifies the 
+			   instance of the client module (for example, it may be a pointer
+			   to the client module's state structure).
 
   Returns:
-   None.
+    None.
 
   Example:
     <code>
-    MY_APP_OBJ myAppObj;
+        MY_APP_OBJ myAppObj;
     
-    void APP_ACC_CallbackFunction (uintptr_t context)
-    {  
-        // The context was set to an application specific object.
-        // It is now retrievable easily in Callback function.
-           MY_APP_OBJ myAppObj = (MY_APP_OBJ *) context;
-        //Application related tasks
-    }
-                  
-    ACC1_CallbackRegister (APP_ACC_CallbackFunction, (uintptr_t)&myAppObj);  
+        void APP_ACC_CallbackFunction (uintptr_t context)
+        {  
+            // The context was set to an application specific object.
+            // It is now retrievable easily in Callback function.
+               MY_APP_OBJ myAppObj = (MY_APP_OBJ *) context;
+            //Application related tasks
+        }
+                      
+        ACC0_CallbackRegister (APP_ACC_CallbackFunction, (uintptr_t)&myAppObj);  
     </code>
 
   Remarks:
@@ -245,9 +248,4 @@ typedef void (*ACC_CALLBACK) (uintptr_t context);
 */
 void ACCx_CallbackRegister (ACC_CALLBACK callback, uintptr_t context);
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-    }
-#endif
-// DOM-IGNORE-END
 #endif // PLIB_ACCx_H
