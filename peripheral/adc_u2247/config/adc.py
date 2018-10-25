@@ -216,6 +216,12 @@ def instantiateComponent(adcComponent):
         else:
             adcSym_CTRLA_SLAVEEN.setVisible(False)
 
+    adcSym_MCU_FAMILY = adcComponent.createStringSymbol("ADC_MCU_FAMILY", None)
+    adcSym_MCU_FAMILY.setVisible(False)
+    node = ATDF.getNode("/avr-tools-device-file/devices")
+    family = node.getChildren()[0].getAttribute("family")
+    adcSym_MCU_FAMILY.setDefaultValue(node.getChildren()[0].getAttribute("family"))
+
     #prescaler configuration
     global adcSym_CTRLB_PRESCALER
     adcSym_CTRLB_PRESCALER = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_PRESCALER", None)
@@ -282,7 +288,7 @@ def instantiateComponent(adcComponent):
     adcSym_FLUSH_EVENT.setDisplayMode("Description")
     adcSym_FLUSH_EVENT.addKey("DISABLED", "0", "Disabled")
     adcSym_FLUSH_EVENT.addKey("ENABLED_RISING_EDGE", "1", "Enabled on Rising Edge")
-    adcSym_FLUSH_EVENT.addKey("ENABLED_FALLING_EDGE", "1", "Enabled on Falling Edge")
+    adcSym_FLUSH_EVENT.addKey("ENABLED_FALLING_EDGE", "2", "Enabled on Falling Edge")
     adcSym_FLUSH_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
 
     adcSym_START_EVENT = adcComponent.createKeyValueSetSymbol("ADC_EVCTRL_START", adcSym_CONV_TRIGGER)
@@ -292,7 +298,7 @@ def instantiateComponent(adcComponent):
     adcSym_START_EVENT.setDisplayMode("Description")
     adcSym_START_EVENT.addKey("DISABLED", "0", "Disabled")
     adcSym_START_EVENT.addKey("ENABLED_RISING_EDGE", "1", "Enabled on Rising Edge")
-    adcSym_START_EVENT.addKey("ENABLED_FALLING_EDGE", "1", "Enabled on Falling Edge")
+    adcSym_START_EVENT.addKey("ENABLED_FALLING_EDGE", "2", "Enabled on Falling Edge")
     adcSym_START_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
 
     #Auto sequence menu

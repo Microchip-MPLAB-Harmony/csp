@@ -125,7 +125,7 @@
         <#else>
             <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_STARTEI_Msk">
         </#if>
-    <#elseif ADC_EVCTRL_FLUSH == "2">
+    <#elseif ADC_EVCTRL_START == "2">
         <#if ADC_EVCTRL_VAL != "">
             <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_STARTEI_Msk | ADC_EVCTRL_STARTINV_Msk">
         <#else>
@@ -159,6 +159,24 @@
 ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
+<#if ADC_MCU_FAMILY == "SAMC">
+<#if ADC_INSTANCE_NAME = "ADC0">
+#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
+#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
+
+#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
+#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
+
+<#elseif ADC_INSTANCE_NAME = "ADC1">
+#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (6)
+#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
+
+#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (9)
+#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
+
+</#if>
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${ADC_INSTANCE_NAME} Implementation
@@ -176,6 +194,12 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     {
         /* Wait for Synchronization */
     }
+
+<#if ADC_MCU_FAMILY == "SAMC">
+    /* Write linearity calibration in BIASREFBUF and bias calibration in BIASCOMP */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_BIASREFBUF(((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_LINEARITY_Msk))) \
+        | ADC_CALIB_BIASCOMP((((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_BIASCAL_Msk) >> ${ADC_INSTANCE_NAME}_BIASCAL_POS));
+</#if>
 
 <#if ADC_CTRLA_SLAVEEN == true>
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_SLAVEEN_Msk;
