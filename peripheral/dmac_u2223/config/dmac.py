@@ -111,20 +111,12 @@ def dmacTriggerLogic(symbol, event):
 
     if "TRIGACT" in symbolID:
         symbol.setSelectedKey(str(triggerSettings[trigger][0]), 2)
-        if (triggerSettings[trigger][0] == "TRANSACTION"):
-            symbol.setReadOnly(True)
-        else:
-            symbol.setReadOnly(False)
-    elif "STEPSEL" in symbolID:
-        symbol.setSelectedKey(str(triggerSettings[trigger][1]), 2)
     elif "SRCINC" in symbolID:
-        symbol.setSelectedKey(str(triggerSettings[trigger][2]), 2)
+        symbol.setSelectedKey(str(triggerSettings[trigger][1]), 2)
     elif "DSTINC" in symbolID:
-        symbol.setSelectedKey(str(triggerSettings[trigger][3]), 2)
-    elif "STEPSIZE" in symbolID:
-        symbol.setSelectedKey(str(triggerSettings[trigger][4]), 2)
+        symbol.setSelectedKey(str(triggerSettings[trigger][2]), 2)
     elif "BEATSIZE" in symbolID:
-        symbol.setSelectedKey(str(triggerSettings[trigger][5]), 2)
+        symbol.setSelectedKey(str(triggerSettings[trigger][3]), 2)
 
 # The following business logic creates a list of enabled DMA channels and sorts
 # them in the descending order. The left most channel number will be the highest
@@ -364,10 +356,9 @@ for channelID in range(0, dmacChCount.getValue()):
     # CHCTRLB - Trigger Action
     dmacSym_CHCTRLB_TRIGACT = coreComponent.createKeyValueSetSymbol("DMAC_CHCTRLB_TRIGACT_CH_" + str(channelID), dmacChannelEnable)
     dmacSym_CHCTRLB_TRIGACT.setLabel("Trigger Action")
-    dmacSym_CHCTRLB_TRIGACT.setReadOnly(True)
     dmacSym_CHCTRLB_TRIGACT.addKey("BLOCK", "0", "One Block Transfer Per DMA Request")
     dmacSym_CHCTRLB_TRIGACT.addKey("BEAT", "2", "One Beat Transfer per DMA Request")
-    dmacSym_CHCTRLB_TRIGACT.setDefaultValue(1)
+    dmacSym_CHCTRLB_TRIGACT.setDefaultValue(0)
     dmacSym_CHCTRLB_TRIGACT.setOutputMode("Value")
     dmacSym_CHCTRLB_TRIGACT.setDisplayMode("Description")
     dmacSym_CHCTRLB_TRIGACT.setDependencies(dmacTriggerLogic, ["DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID)])
@@ -416,7 +407,7 @@ for channelID in range(0, dmacChCount.getValue()):
     for index in range(len(dmacBeatSizeValues)):
         dmacBeatSizeKeyName = dmacBeatSizeValues[index].getAttribute("name")
 
-        if (dmacBeatSizeKeyName == "BYTE"):
+        if (dmacBeatSizeKeyName == "WORD"):
             dmacBeatSizeDefaultValue = index
 
         dmacBeatSizeKeyDescription = dmacBeatSizeValues[index].getAttribute("caption")
