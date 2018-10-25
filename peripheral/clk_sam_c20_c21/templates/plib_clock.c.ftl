@@ -94,15 +94,19 @@ static void OSCCTRL_Initialize(void)
     OSCCTRL_REGS->OSCCTRL_XOSCCTRL |= OSCCTRL_XOSCCTRL_AMPGC_Msk;
     </#if>
 </#if>
-
 <#if CONFIG_CLOCK_OSC48M_ENABLE == true>
-
+    <#if CALIBRATION_ROW == "0">
+    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020) >> 19 ) & 0x3fffff);
+    <#else>
+    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020) >> 41 ) & 0x3fffff);
+    </#if>
+    OSCCTRL_REGS->OSCCTRL_CAL48M = calibValue;
 	<#if (CONFIG_CLOCK_OSC48M_RUNSTDY == true) || (CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE")>
     /* Configure 48MHz Oscillator */
 	<@compress single_line=true>OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = OSCCTRL_REGS->OSCCTRL_OSC48MCTRL
                                                              ${CONFIG_CLOCK_OSC48M_RUNSTDY?then('| OSCCTRL_OSC48MCTRL_RUNSTDBY_Msk',' ')}
 															 ${(CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE")?then('| OSCCTRL_OSC48MCTRL_ONDEMAND_Msk',' ')};</@compress>	
-	</#if>	
+	</#if>
 	
 	<#if CONFIG_CLOCK_OSC48M_STARTUP != "7">
     /* Selection of the StartUp Delay */
