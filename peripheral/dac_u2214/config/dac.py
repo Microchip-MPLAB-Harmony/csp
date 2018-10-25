@@ -85,6 +85,8 @@ def instantiateComponent(dacComponent):
             dacReferenceDefaultValue = index
 
         dacReferenceKeyDescription = dacReferenceValues[index].getAttribute("caption")
+        if (dacReferenceKeyDescription == "Internal 1.0V reference"):
+            dacReferenceKeyDescription = "Internal reference"
         dacReferenceKeyValue = dacReferenceValues[index].getAttribute("value")
         dacSym_CTRLB_REFSEL.addKey(dacReferenceKeyName , dacReferenceKeyValue , dacReferenceKeyDescription)
 
@@ -117,7 +119,7 @@ def instantiateComponent(dacComponent):
     dacSym_CTRLB_DITHER.setVisible(True)
 
     dacMenu = dacComponent.createMenuSymbol("DAC_MENU", None)
-    dacMenu.setLabel("Dac Event Configuration")
+    dacMenu.setLabel("DAC Event Configuration")
 
     #Data Buffer Empty Event Output
     dacSym_EVCTRL_EMPTYEO = dacComponent.createBooleanSymbol("DAC_BUFFER_EMPTY_EVENT_OUTPUT", dacMenu)
