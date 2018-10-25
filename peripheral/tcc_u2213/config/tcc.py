@@ -41,6 +41,25 @@ tccSym_PATT_PGV = []
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+def tccEvsys(symbol, event):
+    if(event["id"] == "TCC_EVCTRL_OVFEO"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+str(tccInstanceName.getValue())+"_OVF_ACTIVE", event["value"], 2)
+    if(event["id"] == "TCC_0_EVCTRL_MCEO"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+str(tccInstanceName.getValue())+"_MC_0_ACTIVE", event["value"], 2)
+    if(event["id"] == "TCC_1_EVCTRL_MCEO"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+str(tccInstanceName.getValue())+"_MC_1_ACTIVE", event["value"], 2)
+    if(event["id"] == "TCC_2_EVCTRL_MCEO"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+str(tccInstanceName.getValue())+"_MC_2_ACTIVE", event["value"], 2)
+    if(event["id"] == "TCC_3_EVCTRL_MCEO"):
+        Database.setSymbolValue("evsys", "GENERATOR_"+str(tccInstanceName.getValue())+"_MC_3_ACTIVE", event["value"], 2)
+    if(event["id"] == "TCC_EVCTRL_EVACT"):
+        Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_0_READY", False, 2)
+        Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_1_READY", False, 2)
+        if (event["value"] == "Event 0 Rising Edge" or event["value"] == "Event 0 Falling Edge"):
+            Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_0_READY", True, 2)
+        elif (event["value"] == "Event 1 Rising Edge" or event["value"] == "Event 1 Falling Edge"):
+            Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_1_READY", True, 2)
+ 
 
 def updateTCCInterruptStatus(symbol, event):
 
@@ -93,7 +112,28 @@ def tccPattgenVisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-        
+
+def tccPWMFreqCalc(symbol, event):
+    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
+    period = tccSym_PER_PER.getValue() + 1
+    if (tccSym_WAVE_WAVEGEN.getValue() == 0):
+        slope = 1
+    else:
+        slope = 2
+    frequency = ((clock_freq / prescaler) / period) / slope
+    symbol.setLabel("**** PWM Frequency is " +str(frequency)+ " Hz ****")
+    
+def tccDeadTimeCalc(symbol, event):
+    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
+    if (symbol.getID() == "TCC_DTLS_COMMENT"):
+        dead_time = ((clock_freq / prescaler) / tccSym_WEXCTRL_DTLS.getValue() / 1000000.0)
+        symbol.setLabel("**** Low side dead time is "+str(dead_time)+ " uS ****")
+    if (symbol.getID() == "TCC_DTHS_COMMENT"):
+        dead_time = ((clock_freq / prescaler) / tccSym_WEXCTRL_DTHS.getValue() / 1000000.0)
+        symbol.setLabel("**** High side dead time is "+str(dead_time)+ " uS ****")
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -173,6 +213,7 @@ def instantiateComponent(tccComponent):
     ###########################################################################################
     
     #prescaler configuration
+    global tccSym_CTRLA_PRESCALER
     tccSym_CTRLA_PRESCALER = tccComponent.createKeyValueSetSymbol("TCC_CTRLA_PRESCALER", None)
     tccSym_CTRLA_PRESCALER.setLabel("Select Prescaler")
     tccSym_CTRLA_PRESCALER.setDefaultValue(0)
@@ -186,6 +227,7 @@ def instantiateComponent(tccComponent):
         values[index].getAttribute("caption"))
     
     #waveform option
+    global tccSym_WAVE_WAVEGEN
     tccSym_WAVE_WAVEGEN = tccComponent.createKeyValueSetSymbol("TCC_WAVE_WAVEGEN", None)
     tccSym_WAVE_WAVEGEN.setLabel("Select PWM Type")
     tccSym_WAVE_WAVEGEN.setDefaultValue(0)
@@ -213,19 +255,28 @@ def instantiateComponent(tccComponent):
         tccSym_WEXCTRL_OTMX.addKey("OTMX_3", "3", "Channel 0 + Remaining Channel 1 Outputs")
         
     #Period Value
+    global tccSym_PER_PER
     tccSym_PER_PER = tccComponent.createIntegerSymbol("TCC_PER_PER", None)
     tccSym_PER_PER.setLabel("Period Value")
-    tccSym_PER_PER.setDefaultValue(2400)
+    tccSym_PER_PER.setDefaultValue(2399)
     tccSym_PER_PER.setMin(0)
     if (size == 16):
         tccSym_PER_PER.setMax(65535)
     else:
         tccSym_PER_PER.setMax(16777215)
         
+    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
+    period = tccSym_PER_PER.getValue() + 1
+    if (tccSym_WAVE_WAVEGEN.getValue() == 0):
+        slope = 1
+    else:
+        slope = 2
+    frequency = ((clock_freq / prescaler) / period) / slope
     #Calculated frequency
     tccSym_Frequency = tccComponent.createCommentSymbol("TCC_FREQUENCY", None)
-    tccSym_Frequency.setLabel("**** PWM Frequency is 10,000 Hz ****")
-    #tccSym_Frequency.setDependencies(tccPWMFreqCalc, ["TCC_PER_PER", "TCC_WAVE_WAVEGEN", "TCC_CTRLA_PRESCALER"])
+    tccSym_Frequency.setLabel("**** PWM Frequency is "+str(frequency)+" Hz ****")
+    tccSym_Frequency.setDependencies(tccPWMFreqCalc, ["core.CPU_CLOCK_FREQUENCY", "TCC_PER_PER", "TCC_WAVE_WAVEGEN", "TCC_CTRLA_PRESCALER"])
     
     #Period interrupt
     tccSym_INTENSET_OVF = tccComponent.createBooleanSymbol("TCC_INTENSET_OVF", None)
@@ -295,25 +346,39 @@ def instantiateComponent(tccComponent):
     tccSym_DeadTime_Menu.setDependencies(tccDeadTimeVisible, ["TCC_0_WEXCTRL_DTIEN","TCC_1_WEXCTRL_DTIEN", "TCC_2_WEXCTRL_DTIEN", "TCC_3_WEXCTRL_DTIEN"])
     
     #Low dead time
+    global tccSym_WEXCTRL_DTLS
     tccSym_WEXCTRL_DTLS = tccComponent.createIntegerSymbol("TCC_WEXCTRL_DTLS", tccSym_DeadTime_Menu)
     tccSym_WEXCTRL_DTLS.setLabel("Dead Time for Low Side Output")
     tccSym_WEXCTRL_DTLS.setDefaultValue(64)
     tccSym_WEXCTRL_DTLS.setMin(0)
     tccSym_WEXCTRL_DTLS.setMax(255)
+
+    low_deadtime = ((clock_freq / prescaler) / tccSym_WEXCTRL_DTLS.getValue() / 1000000.0)
+
+    tccSym_DTLS_COMMENT = tccComponent. createCommentSymbol("TCC_DTLS_COMMENT", tccSym_DeadTime_Menu)
+    tccSym_DTLS_COMMENT.setLabel("**** Low side dead time is "+str(low_deadtime)+ " uS ****")
+    tccSym_DTLS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTLS", "core.CPU_CLOCK_FREQUENCY", "TCC_CTRLA_PRESCALER"])
     
     #High dead time
+    global tccSym_WEXCTRL_DTHS
     tccSym_WEXCTRL_DTHS = tccComponent.createIntegerSymbol("TCC_WEXCTRL_DTHS", tccSym_DeadTime_Menu)
     tccSym_WEXCTRL_DTHS.setLabel("Dead Time for High Side Output")
     tccSym_WEXCTRL_DTHS.setDefaultValue(64)
     tccSym_WEXCTRL_DTHS.setMin(0)
     tccSym_WEXCTRL_DTHS.setMax(255)
+
+    high_deadtime = ((clock_freq / prescaler) / tccSym_WEXCTRL_DTHS.getValue() / 1000000.0)
+
+    tccSym_DTHS_COMMENT = tccComponent. createCommentSymbol("TCC_DTHS_COMMENT", tccSym_DeadTime_Menu)
+    tccSym_DTHS_COMMENT.setLabel("**** High side dead time is "+str(high_deadtime)+ " uS ****")
+    tccSym_DTHS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTHS", "core.CPU_CLOCK_FREQUENCY", "TCC_CTRLA_PRESCALER"])
     
     #Fault menu
     tccSym_Fault_Menu = tccComponent.createMenuSymbol("TCC_FAULT_MENU", None)
     tccSym_Fault_Menu.setLabel("Fault Configurations")
     
     #fault source
-    fault_source = ["Disabled", "Event 0", "Event 1"]
+    fault_source = ["Disabled", "Event 0 Rising Edge", "Event 0 Falling Edge", "Event 1 Rising Edge", "Event 1 Falling Edge"]
     tccSym_EVCTRL_EVACT = tccComponent.createComboSymbol("TCC_EVCTRL_EVACT", tccSym_Fault_Menu, fault_source)
     tccSym_EVCTRL_EVACT.setLabel("Select Fault Source")
     
@@ -385,6 +450,11 @@ def instantiateComponent(tccComponent):
     tccSym_ClkEnComment.setLabel("Warning!!! TCC Peripheral Clock is Disabled in Clock Manager")
     tccSym_ClkEnComment.setVisible(False)
     tccSym_ClkEnComment.setDependencies(updateTCCClockWarringStatus, ["core." + tccInstanceName.getValue() + "_CLOCK_ENABLE"])
+    
+    tccSym_EVSYS_CONFIGURE = tccComponent.createIntegerSymbol("TCC_TIMER_EVSYS_CONFIGURE", None)
+    tccSym_EVSYS_CONFIGURE.setVisible(False)
+    tccSym_EVSYS_CONFIGURE.setDependencies(tccEvsys, ["TCC_EVCTRL_EVACT", "TCC_EVCTRL_OVFEO", \
+        "TCC_0_EVCTRL_MCEO", "TCC_1_EVCTRL_MCEO", "TCC_2_EVCTRL_MCEO", "TCC_3_EVCTRL_MCEO"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
