@@ -83,32 +83,28 @@
 // *****************************************************************************
 
 // *****************************************************************************
-/* TWIHS Transfer Events.
+/* TWIHS Error Status
 
    Summary:
-    Defines the data type for the TWIHS Transfer status
+    TWIHS Error Status data type.
 
    Description:
-    This enum defines the TWIHS Transfer status. Any one event from the list will
-	be returned if the transfer status is queried or will be available in the
-	transfer callback.
+    This enum defines the list of TWIHS Error Status. Any one error from the list 
+    will be returned if the error status is queried.
 
    Remarks:
     None.
 */
 
 typedef enum
-{
-	/* Peripheral is busy processing the transfer request */
-    TWIHS_TRANSFER_BUSY,
-
-	/* Peripheral successfully completed the transfer request */
-    TWIHS_TRANSFER_SUCCESS,
-
-	/* Error occured during the transfer request */
-    TWIHS_TRANSFER_ERROR,
-
-} TWIHS_TRANSFER_STATUS;
+{	
+	/* No Error */
+    TWIHS_ERROR_NONE,
+	
+	/* Slave returned Nack */
+    TWIHS_ERROR_NACK,
+	
+} TWIHS_ERROR;
 
 // *****************************************************************************
 /* TWIHS Transfer Event Callback Function Pointer.
@@ -141,11 +137,11 @@ typedef enum
     // Data tracking what each of my instances is doing.
     MY_DATA myData[2];
 
-    void MyTWIHSCallback ( TWIHS_TRANSFER_STATUS status, uintptr_t context )
+    void MyTWIHSCallback ( uintptr_t context )
     {
         MY_DATA *mePtr = (MY_DATA *)context;
 
-        if(TWIHS_TRANSFER_COMPLETE == status)
+        if(TWIHS_ERROR_NONE == TWIHS1_ErrorGet())
         {
             //Handle complete status here based on context
         }
@@ -182,7 +178,7 @@ typedef void (*TWIHS_CALLBACK) (uintptr_t contextHandle);
 
    Description:
     This function initializes the given instance of the TWIHS peripheral as
-    configured by the user from within the MCC.
+    configured by the user from within the MHC.
 
    Precondition:
     None.
@@ -195,7 +191,7 @@ typedef void (*TWIHS_CALLBACK) (uintptr_t contextHandle);
 
    Example:
     <code>
-    TWIHS1_Initialize();
+    	TWIHS1_Initialize();
     </code>
 
    Remarks:
@@ -225,13 +221,15 @@ void TWIHSx_Initialize(void);
 	length  - length of data buffer in number of bytes.
 
    Returns:
-    Void
+    true - Read request was submitted successfully.
+    
+    false - Failed while submitting the read request.
 
    Example:
     <code>
 	    uint8_t myData [NUM_BYTES];
 
-	    if(!TWIHSx_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!TWIHS1_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -264,15 +262,15 @@ bool TWIHSx_Read(uint16_t address, uint8_t *pdata, size_t length);
 	length  - length of data buffer in number of bytes.
 
    Returns:
-    Request status.
-    True - Request was successful.
-    False - Request has failed.
+    true - Write request was submitted successfully.
+    
+    false - Failed while submitting the write request.
 
    Example:
     <code>
 	    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
 
-	    if(!TWIHSx_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+	    if(!TWIHS1_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
 	    {
 		    // error handling
 	    }
@@ -309,9 +307,9 @@ bool TWIHSx_Write(uint16_t address, uint8_t *pdata, size_t length);
 	rlength - read data length in bytes.
 
    Returns:
-    Request status.
-    True - Request was successful.
-    False - Request has failed.
+    true - Write read request was submitted successfully.
+    
+    false - Failed while submitting the write read request.
 
    Example:
     <code>
@@ -325,16 +323,20 @@ bool TWIHSx_Write(uint16_t address, uint8_t *pdata, size_t length);
     </code>
 
    Remarks:
+    None.
 */
 
 bool TWIHSx_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength);
 
 // *****************************************************************************
 /* Function:
-    bool TWIHS${INDEX?string}_IsBusy(void)
+    bool TWIHSx_IsBusy(void)
 
    Summary:
-    Returns the Peripheral busy status.
+    Returns the TWIHS Peripheral busy status.
+    
+   Description:
+    This function returns the TWIHS Peripheral busy status
 
    Precondition:
     TWIHSx_Initialize must have been called for the associated TWIHS instance.
@@ -344,12 +346,57 @@ bool TWIHSx_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t 
 
    Returns:
     true - Busy.
+    
     false - Not busy.
+    
+   Example:
+    <code>
+    if(!TWIHS1_IsBusy())
+    {
+        // add another transfer request
+    }
+    </code>
+    
+   Remarks:
+    None.
 */
 
-bool TWIHSx_IsBusy(void)
+bool TWIHSx_IsBusy(void);
 
+// *****************************************************************************
+/* Function:
+    TWIHS_ERROR TWIHSx_ErrorGet(void)
+	
+   Summary:
+    Returns the error during transfer.
 
+   Description:
+    This function returns the error during transfer.
+
+   Precondition:
+    TWIHSx_Initialize must have been called for the associated TWIHS instance.
+
+   Parameters:
+    None.
+	
+   Returns:
+    TWIHS_ERROR_NONE - Transfer was successful.
+    
+    TWIHS_ERROR_NACK - Slave returned NACK during the transfer.
+	
+   Example:
+    <code>
+    if(TWIHS_ERROR_NONE == TWIHS1_ErrorGet())
+    {
+        //TWIHS transfer is completed, go to next state.
+    }
+    </code>
+
+   Remarks:
+    None.
+*/
+
+TWIHS_ERROR TWIHSx_ErrorGet(void);
 
 // *****************************************************************************
 /* Function:
