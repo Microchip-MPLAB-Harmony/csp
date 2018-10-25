@@ -24,7 +24,7 @@
 
 Log.writeInfoMessage("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
 import re
-
+global sort_alphanumeric
 global peripheralFunctionality
 
 peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH", "SWITCH_AL"]
@@ -271,7 +271,7 @@ pinConfiguration = coreComponent.createMenuSymbol("PORT_PIN_CONFIGURATION", port
 pinConfiguration.setLabel("Pin Configuration")
 pinConfiguration.setDescription("Configuraiton for PORT Pins")
 
-global sort_alphanumeric
+
 global prev_package
 global cur_package
 prev_package = ""
@@ -469,7 +469,8 @@ visibility = False
 portSym_GroupName = []
 
 portEvsysActionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/value-group@[name=\"PORT_EVCTRL__EVACT0\"]")
-portEvsysActionValues = portEvsysActionNode.getChildren()
+if portEvsysActionNode != None:
+    portEvsysActionValues = portEvsysActionNode.getChildren()
 
 for portNumber in range(0, len(group)):
 
@@ -526,42 +527,43 @@ for portNumber in range(0, len(group)):
         portSym_PORT_PMUX.setVisible(visibility)
         portSym_PORT_PMUX.setDependencies(setupPortPinMux, pinPinMuxList)
         
-    portEVSYS = coreComponent.createMenuSymbol("PORT_MENU_EVSYS" + str(portNumber), port[portNumber])
-    portEVSYS.setLabel("EVENT System Configuraiton")
-    
-    for i in range(0,4):
-        portEVSYSEnable = coreComponent.createBooleanSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE", portEVSYS)
-        portEVSYSEnable.setLabel("Enable Event" + str(i) + " Input")
-        evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE")
+    if portEvsysActionNode != None:    
+        portEVSYS = coreComponent.createMenuSymbol("PORT_MENU_EVSYS" + str(portNumber), port[portNumber])
+        portEVSYS.setLabel("EVENT System Configuraiton")
         
-        portEvsysAction = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION",portEVSYSEnable)
-        portEvsysAction.setLabel("Event" + str(i) + " Action")
-        for index in range(0, len(portEvsysActionValues)):
-            portEvsysActionKeyName = portEvsysActionValues[index].getAttribute("name")
-            portEvsysActionDescription = portEvsysActionValues[index].getAttribute("caption")
-            portEvsysActionValue = portEvsysActionValues[index].getAttribute("value")
-            portEvsysAction.addKey(portEvsysActionKeyName, portEvsysActionValue , portEvsysActionDescription)
+        for i in range(0,4):
+            portEVSYSEnable = coreComponent.createBooleanSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE", portEVSYS)
+            portEVSYSEnable.setLabel("Enable Event" + str(i) + " Input")
+            evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE")
+            
+            portEvsysAction = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION",portEVSYSEnable)
+            portEvsysAction.setLabel("Event" + str(i) + " Action")
+            for index in range(0, len(portEvsysActionValues)):
+                portEvsysActionKeyName = portEvsysActionValues[index].getAttribute("name")
+                portEvsysActionDescription = portEvsysActionValues[index].getAttribute("caption")
+                portEvsysActionValue = portEvsysActionValues[index].getAttribute("value")
+                portEvsysAction.addKey(portEvsysActionKeyName, portEvsysActionValue , portEvsysActionDescription)
 
-        portEvsysAction.setDefaultValue(0)
-        portEvsysAction.setOutputMode("Value")
-        portEvsysAction.setDisplayMode("Description")
-        evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION")
-        
-        portEvsysPin = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_PIN",portEVSYSEnable)
-        portEvsysPin.setLabel("Event" + str(i) + " Pin")
-        for index in range(0, 32):
-            portEvsysPin.addKey("P" + str(index), str(index) , "Pin " + str(index))
+            portEvsysAction.setDefaultValue(0)
+            portEvsysAction.setOutputMode("Value")
+            portEvsysAction.setDisplayMode("Description")
+            evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION")
+            
+            portEvsysPin = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_PIN",portEVSYSEnable)
+            portEvsysPin.setLabel("Event" + str(i) + " Pin")
+            for index in range(0, 32):
+                portEvsysPin.addKey("P" + str(index), str(index) , "Pin " + str(index))
 
-        portEvsysAction.setDefaultValue(0)
-        portEvsysAction.setOutputMode("Value")
-        portEvsysAction.setDisplayMode("Description")
-        evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_PIN")
+            portEvsysAction.setDefaultValue(0)
+            portEvsysAction.setOutputMode("Value")
+            portEvsysAction.setDisplayMode("Description")
+            evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_PIN")
 
-    portSym_PORT_EVCTRL = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_EVCTRL", port[portNumber])
-    portSym_PORT_EVCTRL.setLabel("Port Event Control")
-    portSym_PORT_EVCTRL.setVisible(visibility)
-    portSym_PORT_EVCTRL.setDefaultValue(str(hex(0)))
-    portSym_PORT_EVCTRL.setDependencies(evsysControl, evsysDep)
+        portSym_PORT_EVCTRL = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_EVCTRL", port[portNumber])
+        portSym_PORT_EVCTRL.setLabel("Port Event Control")
+        portSym_PORT_EVCTRL.setVisible(visibility)
+        portSym_PORT_EVCTRL.setDefaultValue(str(hex(0)))
+        portSym_PORT_EVCTRL.setDependencies(evsysControl, evsysDep)
 
 
 

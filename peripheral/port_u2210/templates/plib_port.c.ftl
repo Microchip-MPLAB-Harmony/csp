@@ -104,9 +104,10 @@ void PORT_Initialize(void)
                         <#lt>   PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
                     </#if>
                 </#list>
-                
+                <#if .vars[PORT_GROUP_EVCTRL]??>
                 <#if "${.vars[PORT_GROUP_EVCTRL]}" != "0x0">
                     <#lt>   PORT${.vars[PORT_GROUP_NAME]}_REGS->PORT_EVCTRL = ${.vars[PORT_GROUP_EVCTRL]};
+                </#if>
                 </#if>
         </#if>
 </#list>
