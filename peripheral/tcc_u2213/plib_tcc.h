@@ -114,7 +114,7 @@ typedef enum
     function with this signature from the interrupt routine.
 
   Function:
-    void (*TCC_CALLBACK)( uintptr_t context )
+    void (*TCC_CALLBACK)( uint32_t status, uintptr_t context )
 
   Precondition:
     TCCx_Initialize must have been called for the given TCC channel
@@ -122,6 +122,7 @@ typedef enum
     function to be called.
 
   Parameters:
+    status - interrupt status 
     context  - Allows the caller to provide a context value (usually a pointer
     to the callers context for multi-instance clients).
 
@@ -130,7 +131,7 @@ typedef enum
 
   Example:
     <code>
-    void TCC_Callback_Fn ( uintptr_t context );
+    void TCC_Callback_Fn ( uint32_t status, uintptr_t context );
 
     TCCx_TimerCallbackRegister(TCC_Callback_Fn, NULL);
     </code>
@@ -139,7 +140,7 @@ typedef enum
     None
 */
 
-typedef void (*TCC_CALLBACK)( uintptr_t context );
+typedef void (*TCC_CALLBACK)( uint32_t status, uintptr_t context );
 // *****************************************************************************
 /* Callback structure
 
