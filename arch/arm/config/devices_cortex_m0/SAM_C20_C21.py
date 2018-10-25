@@ -237,9 +237,9 @@ cortexMenu.setDescription("Configuration for Cortex M0+")
 def setDMACDefaultSettings():
 
     triggerSettings = {
-                        "Software Trigger"  : ["TRANSACTION", "SRC", "INCREMENTED_AM", "INCREMENTED_AM",  "X1", "BYTE"],
-                        "Standard_Transmit" : ["BEAT", "SRC", "INCREMENTED_AM", "FIXED_AM", "X1", "BYTE"],
-                        "Standard_Receive"  : ["BEAT", "DST", "FIXED_AM", "INCREMENTED_AM", "X1", "BYTE"]
+                        "Software Trigger"  : ["BLOCK", "INCREMENTED_AM", "INCREMENTED_AM", "WORD"],
+                        "Standard_Transmit" : ["BEAT", "INCREMENTED_AM", "FIXED_AM", "BYTE"],
+                        "Standard_Receive"  : ["BEAT", "FIXED_AM", "INCREMENTED_AM", "BYTE"]
                     }
 
     return triggerSettings
