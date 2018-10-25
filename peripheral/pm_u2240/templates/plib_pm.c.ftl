@@ -56,27 +56,6 @@
 #include "device.h"
 #include "plib_${PM_INSTANCE_NAME?lower_case}.h"
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: ${PM_INSTANCE_NAME} Implementation
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void ${PM_INSTANCE_NAME}_Initialize( void );
-
-  Summary:
-    Initializes given instance of PM peripheral.
-
-  Description:
-    This function initializes the specified instance of PM peripheral with the
-    values configured in MHC GUI.
-
-  Remarks:
-    plib_${PM_INSTANCE_NAME?lower_case}.h for usage information.
-*/
-
 void ${PM_INSTANCE_NAME}_Initialize( void )
 {
     /* Configure back biasing & VREG switching mode */
@@ -84,43 +63,10 @@ void ${PM_INSTANCE_NAME}_Initialize( void )
                                                        | PM_STDBYCFG_VREGSMOD_${PM_STDBYCFG_VREGSMOD};</@compress>
 }
 
-// *****************************************************************************
-/* Function:
-    void ${PM_INSTANCE_NAME}_SleepModeEnter( PM_SLEEP_MODE sleepMode );
-
-  Summary:
-    Puts the device into the specified sleep mode.
-
-  Description:
-    This function places the device in the specified sleep mode. The sleepMode
-    parameter specifies the sleep mode that the device should be placed in. Once
-    in sleep mode, the CPU will not execute any instruction unless it it woken
-    up by a peripheral that is configured to operate in the specified sleep
-    mode.
-
-  Remarks:
-    plib_${PM_INSTANCE_NAME?lower_case}.h for usage information.
-*/
-
 void ${PM_INSTANCE_NAME}_SleepModeEnter( PM_SLEEP_MODE sleepMode )
 {
-    switch (sleepMode)
-    {
-        case PM_SLEEP_MODE_IDLE:
-        {
-            /* APB clock is OFF */
-            ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE2;
 
-            break;
-        }
-        case PM_SLEEP_MODE_STANDBY:
-        {
-            /* All clocks are OFF */
-            ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY;
-
-            break;
-        }
-    }
+    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = sleepMode;
 
     /* Wait for interrupt instruction execution */
     __WFI();

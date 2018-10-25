@@ -45,12 +45,12 @@ def instantiateComponent(pmComponent):
 
     #PM standby back biasing
     pmSym_STDBYCFG_BBIASHS = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASHS", None)
-    pmSym_STDBYCFG_BBIASHS.setLabel("Enable RAM DMA Access in Standby Sleep Mode ?")
-    pmSym_STDBYCFG_BBIASHS.setDescription("Configures DMA Access in low power modes")
+    pmSym_STDBYCFG_BBIASHS.setLabel("Put RAM in low power during standby mode")
+    pmSym_STDBYCFG_BBIASHS.setDescription("RAM is backbiased in standby mode to reduce power")
 
     #PM standby VREGMOD configuration
     pmSym_STDBYCFG_VREGSMOD = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_VREGSMOD", None)
-    pmSym_STDBYCFG_VREGSMOD.setLabel("VDDCORE Voltage Source Selection in Standby Sleep mode")
+    pmSym_STDBYCFG_VREGSMOD.setLabel("Voltage Regulater operation in Standby mode")
     pmSym_STDBYCFG_VREGSMOD.setDescription("Configures the VDDCORE Supply source in Standby Sleep mode.")
 
     pmStandbyConfigurationNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"PM_STDBYCFG__VREGSMOD\"]")
