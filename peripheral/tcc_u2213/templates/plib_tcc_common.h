@@ -75,7 +75,7 @@
 */
 // *****************************************************************************
 
-typedef void (*TCC_CALLBACK)( uintptr_t context );
+typedef void (*TCC_CALLBACK)( uint32_t status, uintptr_t context );
 // *****************************************************************************
 
 typedef struct

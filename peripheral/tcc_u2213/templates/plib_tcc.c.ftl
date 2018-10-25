@@ -156,8 +156,6 @@
 </#if>
 </#compress>
 
-static uint32_t ${TCC_INSTANCE_NAME}_status;  /* Saves interrupt status */
-
 <#if TCC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
     <#lt>TCC_CALLBACK_OBJECT ${TCC_INSTANCE_NAME}_CallbackObj;
@@ -335,19 +333,6 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable()
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTENCLR = TCC_INTENCLR_OVF_Msk;
 }
 
-/* Read interrupt flags */
-uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void)
-{
-    uint32_t interrupt_status;
-    NVIC_DisableIRQ(${TCC_INSTANCE_NAME}_IRQn);
-    interrupt_status = ${TCC_INSTANCE_NAME}_status | ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
-    ${TCC_INSTANCE_NAME}_status = 0U;
-    /* Clear interrupt flags */
-    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
-    NVIC_EnableIRQ(${TCC_INSTANCE_NAME}_IRQn);
-    return interrupt_status;
-}
-
 <#if TCC_INTERRUPT == true>
     <#lt> /* Register callback function */
     <#lt>void ${TCC_INSTANCE_NAME}_PWMCallbackRegister(TCC_CALLBACK callback, uintptr_t context)
@@ -359,15 +344,27 @@ uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void)
     <#lt>/* Interrupt Handler */
     <#lt>void ${TCC_INSTANCE_NAME}_PWMInterruptHandler(void)
     <#lt>{
-    <#lt>    ${TCC_INSTANCE_NAME}_status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
+    <#lt>    uint32_t status;
+    <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     <#lt>    /* Clear interrupt flags */
     <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
     <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(${TCC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
 
     <#lt>}
+
+<#else>
+/* Read interrupt flags */
+uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void)
+{
+    uint32_t interrupt_status;
+    interrupt_status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
+    /* Clear interrupt flags */
+    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
+    return interrupt_status;
+}
 </#if>
 
 /**

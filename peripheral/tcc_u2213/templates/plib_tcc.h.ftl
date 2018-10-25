@@ -85,6 +85,11 @@ typedef enum
 </#list>
 }${TCC_INSTANCE_NAME}_CHANNEL_NUM;
 
+<#assign TCC_INTERRUPT = false>
+<#if TCC_INTENSET_OVF == true>
+    <#assign TCC_INTERRUPT = true>
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -110,10 +115,11 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptEnable();
 
 void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable();
 
-uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet();
-
+<#if TCC_INTERRUPT == true>
 void ${TCC_INSTANCE_NAME}_PWMCallbackRegister(TCC_CALLBACK callback, uintptr_t context);
-
+<#else>
+uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet();
+</#if>
 
 <#if TCC_SIZE == 24>
 void ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet(uint32_t period);

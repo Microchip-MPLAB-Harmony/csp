@@ -53,7 +53,7 @@ def updateTCCInterruptStatus(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, tccInstanceName.getValue() + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, tccInstanceName.getValue() + "_PWMInterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, tccInstanceName.getValue() + "_Handler", 2)
 
