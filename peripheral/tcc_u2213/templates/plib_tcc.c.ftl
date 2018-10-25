@@ -120,7 +120,7 @@
 <#assign TCC_FAULT_POLARITY = "TCC_"+i+"_DRVCTRL_NRE_NRV">
 <#if .vars[TCC_FAULT_POLARITY] != "-1">
     <#if TCC_DRVCTRL_FAULT_VAL != "">
-        <#assign TCC_DRVCTRL_FAULT_VAL = TCC_DRVCTRL_FAULT_VAL + " | TCC_DRVCTRL_NRE"+i+"("+.vars[TCC_FAULT_POLARITY]+"U)">
+        <#assign TCC_DRVCTRL_FAULT_VAL = TCC_DRVCTRL_FAULT_VAL + "\n\t\t | TCC_DRVCTRL_NRE"+i+"("+.vars[TCC_FAULT_POLARITY]+"U)">
     <#else>
         <#assign TCC_DRVCTRL_FAULT_VAL = "TCC_DRVCTRL_NRE"+i+"("+.vars[TCC_FAULT_POLARITY]+"U)">
     </#if>
@@ -198,12 +198,20 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
     ${TCC_INSTANCE_NAME}_REGS->TCC_PER = ${TCC_PER_PER}U;
 
 <#if TCC_EVCTRL_EVACT != "Disabled">
-    <#if TCC_EVCTRL_EVACT == "Event 0">
-        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_EVACT0_FAULT;
+    /* Fault configurations */
+    <#if TCC_EVCTRL_EVACT == "Event 0 Rising Edge">
+        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_TCEI0_Msk | TCC_EVCTRL_EVACT0_FAULT;
+    <#elseif TCC_EVCTRL_EVACT == "Event 0 Falling Edge">
+        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_TCEI0_Msk | TCC_EVCTRL_TCINV0_Msk | TCC_EVCTRL_EVACT0_FAULT;
+    <#elseif TCC_EVCTRL_EVACT == "Event 1 Rising Edge">
+        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_TCEI1_Msk | TCC_EVCTRL_EVACT1_FAULT;
+    <#elseif TCC_EVCTRL_EVACT == "Event 1 Falling Edge">
+        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_TCEI1_Msk | TCC_EVCTRL_TCINV1_Msk | TCC_EVCTRL_EVACT1_FAULT;
+    </#if>
+    <#if TCC_EVCTRL_EVACT == "Event 0 Rising Edge" || TCC_EVCTRL_EVACT == "Event 0 Falling Edge">
         <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = TCC_DRVCTRL_FILTERVAL0(${TCC_DRVCTRL_FILTERVAL}U) <#rt>
                         <#lt><#if TCC_DRVCTRL_FAULT_VAL?has_content>| ${TCC_DRVCTRL_FAULT_VAL}</#if>;
-    <#elseif TCC_EVCTRL_EVACT == "Event 1">
-        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_EVACT1_FAULT;
+    <#else>
         <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = TCC_DRVCTRL_FILTERVAL1(${TCC_DRVCTRL_FILTERVAL}U) <#rt>
                         <#lt><#if TCC_DRVCTRL_FAULT_VAL?has_content>| ${TCC_DRVCTRL_FAULT_VAL}</#if>;
     </#if>
