@@ -52,22 +52,22 @@ def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
         if not str(event["id"]).startswith("EIC_CHAN_"):
             if(event["value"] == True):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)) , 1)
-                Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
+                Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
             else:
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
-                Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+                Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
         else:
             parameter = symbol.getID().split("EIC_")[1]
             if(Database.getSymbolValue(event["namespace"], "EIC_" + str(parameter) + "_" + str(channel)) == True):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)) , 1)
-                Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
+                Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
             else:
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
-                Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+                Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
 
     else:
         symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
-        Database.setSymbolValue("evsys0","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+        Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
     
 
 def updateEICInterruptStatus(symbol, event):
