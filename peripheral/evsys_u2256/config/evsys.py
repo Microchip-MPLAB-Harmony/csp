@@ -193,7 +193,7 @@ def instantiateComponent(evsysComponent):
         evsysGenerator[id] = evsysComponent.createKeyValueSetSymbol("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR", evsysChannelMenu)
         evsysGenerator[id].setLabel("Event Generator")
         evsysGenerator[id].setOutputMode("Value")
-        for key in generator.keys():
+        for key in sorted(generator.keys()):
             evsysGenerator[id].addKey(key, str(generator.get(key)), key)
 
         evsysGeneratorActive = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR_ACTIVE",evsysChannelMenu)
