@@ -25,64 +25,97 @@
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+global supcSym_BODVDD_STDBYCFG
+global supcSym_BODVDD_ACTCFG
+global supcInstanceName
+global supcSym_INTENSET
 
 def updateBODVDDOperationModeVisibleProperty(symbol, event):
-
     symbol.setVisible(event["value"])
 
-    Log.writeInfoMessage("updateBODVDDOperationModeVisibleProperty is : " + str(event["value"]))
-
 def updateBODVDDPrescalerVisibleProperty(symbol, event):
+    global supcSym_BODVDD_STDBYCFG
+    global supcSym_BODVDD_ACTCFG
 
     if supcSym_BODVDD_STDBYCFG.getValue() == 1 or supcSym_BODVDD_ACTCFG.getValue() == 1:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
-    Log.writeInfoMessage("updateBODVDDPrescalerVisibleProperty is : " + str(event["value"]))
-
 def updateSUPCInterruptWarringStatus(symbol, event):
+    global supcSym_INTENSET
 
-    symbol.setVisible(event["value"])
+def interruptControl(symbol, event):
+    global supcInstanceName
+    InterruptVector = supcInstanceName.getValue()+"_INTERRUPT_ENABLE"
+    InterruptHandler = supcInstanceName.getValue()+"_INTERRUPT_HANDLER"
+    InterruptHandlerLock = supcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
 
-def updateSUPCClockWarringStatus(symbol, event):
+    if (event["value"] == True):
+        Database.setSymbolValue("core", InterruptVector, True, 2)
+        Database.setSymbolValue("core", InterruptHandler, supcInstanceName.getValue() + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
+    else :
+        Database.setSymbolValue("core", InterruptVector, False, 2)
+        Database.setSymbolValue("core", InterruptHandler, supcInstanceName.getValue() + "_Handler", 2)
+        Database.setSymbolValue("core", InterruptHandlerLock, False, 2)
 
-    if event["value"] == False:
+    intEnableState=Database.getSymbolValue("core",supcInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE")
+    if ((supcSym_INTENSET.getValue() == True) and (intEnableState == True)):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
+
 
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
 
 def instantiateComponent(supcComponent):
-
     global supcSym_BODVDD_STDBYCFG
     global supcSym_BODVDD_ACTCFG
+    global supcInstanceName
+    global supcSym_INTENSET
 
     supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
     supcInstanceName.setVisible(False)
     supcInstanceName.setDefaultValue(supcComponent.getID().upper())
 
-    #clock enable
-    Database.clearSymbolValue("core", supcInstanceName.getValue()+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", supcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+    supcSym_VREG_Menu= supcComponent.createMenuSymbol("VREG_MENU", None)
+    supcSym_VREG_Menu.setLabel("Voltage Regulator (VREG) Configuration")
 
-    #interrupt mode
-    supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRRUPT_MODE", None)
-    supcSym_INTENSET.setLabel("Interrupt Mode")
-    supcSym_INTENSET.setDefaultValue(True)
-    supcSym_INTENSET.setReadOnly(True)
+    #VREG RUNSTDBY mode
+    supcSym_VREG_RUNSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREG_RUNSTDBY", supcSym_VREG_Menu)
+    supcSym_VREG_RUNSTDBY.setLabel("Select Standby mode operation")
+    supcSym_VREG_RUNSTDBY.setDescription("Configures VREG operation in Standby Sleep Mode")
+    supcSym_VREG_RUNSTDBY.addKey("LP_OP", "0", "Low Power Operation")
+    supcSym_VREG_RUNSTDBY.addKey("NORMAL_OP", "1", "Normal Operation")
+    supcSym_VREG_RUNSTDBY.setDefaultValue(0)
+    supcSym_VREG_RUNSTDBY.setOutputMode("Value")
+    supcSym_VREG_RUNSTDBY.setDisplayMode("Description")
+
+    supcSym_BODVDD_Menu= supcComponent.createMenuSymbol("BOD_MENU", None)
+    supcSym_BODVDD_Menu.setLabel("VDD Brown-Out Detector (BOD) Configuration")
 
     #BODVDD RUNSTDBY mode
-    supcSym_BODVDD_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_BODVDD_RUNSTDBY", None)
-    supcSym_BODVDD_RUNSTDBY.setLabel("Enable Brown Out Detector in Standby Sleep Mode ?")
+    #interrupt mode
+    supcSym_INTENSET = supcComponent.createBooleanSymbol("SUPC_INTERRRUPT_MODE", supcSym_BODVDD_Menu)
+    supcSym_INTENSET.setLabel("Enable BOD Interrupt")
+    supcSym_INTENSET.setDefaultValue(False)
+
+    # Interrupt Warning status
+    supcSym_IntEnComment = supcComponent.createCommentSymbol("SUPC_INTERRUPT_ENABLE_COMMENT", supcSym_BODVDD_Menu)
+    supcSym_IntEnComment.setVisible(False)
+    supcSym_IntEnComment.setLabel("Warning!!! SUPC Interrupt is Disabled in Interrupt Manager")
+    supcSym_IntEnComment.setDependencies(interruptControl, [supcInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE", "SUPC_INTERRRUPT_MODE"])
+
+    supcSym_BODVDD_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_BODVDD_RUNSTDBY", supcSym_BODVDD_Menu)
+    supcSym_BODVDD_RUNSTDBY.setLabel("Run in Standby mode")
     supcSym_BODVDD_RUNSTDBY.setDescription("Configures BODVDD operation in Standby Sleep Mode")
 
     #BODVDD STDBYCFG mode
-    supcSym_BODVDD_STDBYCFG = supcComponent.createKeyValueSetSymbol("SUPC_BODVDD_STDBYCFG", supcSym_BODVDD_RUNSTDBY)
-    supcSym_BODVDD_STDBYCFG.setLabel("Brown Out Detector Operation Mode in Standby Sleep Mode ?")
+    supcSym_BODVDD_STDBYCFG = supcComponent.createKeyValueSetSymbol("SUPC_BODVDD_STDBYCFG", supcSym_BODVDD_Menu)
+    supcSym_BODVDD_STDBYCFG.setLabel("Select Standby mode operation")
     supcSym_BODVDD_STDBYCFG.setDescription("Configures whether BODVDD should operate in continuous or sampling mode in Standby Sleep mode")
     supcSym_BODVDD_STDBYCFG.addKey("CONT_MODE", "0", "Continuous Mode")
     supcSym_BODVDD_STDBYCFG.addKey("SAMP_MODE", "1", "Sampling Mode")
@@ -93,8 +126,8 @@ def instantiateComponent(supcComponent):
     supcSym_BODVDD_STDBYCFG.setDependencies(updateBODVDDOperationModeVisibleProperty, ["SUPC_BODVDD_RUNSTDBY"])
 
     #BODVDD ACTCFG mode
-    supcSym_BODVDD_ACTCFG = supcComponent.createKeyValueSetSymbol("SUPC_BODVDD_ACTCFG", None)
-    supcSym_BODVDD_ACTCFG.setLabel("Brown Out Detector Operation Mode in Active Mode ?")
+    supcSym_BODVDD_ACTCFG = supcComponent.createKeyValueSetSymbol("SUPC_BODVDD_ACTCFG", supcSym_BODVDD_Menu)
+    supcSym_BODVDD_ACTCFG.setLabel("Select Active mode operation")
     supcSym_BODVDD_ACTCFG.setDescription("Configures whether BODVDD should operate in continuous or sampling mode in Active mode")
     supcSym_BODVDD_ACTCFG.addKey("CONT_MODE", "0", "Continuous Mode")
     supcSym_BODVDD_ACTCFG.addKey("SAMP_MODE", "1", "Sampling Mode")
@@ -103,8 +136,8 @@ def instantiateComponent(supcComponent):
     supcSym_BODVDD_ACTCFG.setDisplayMode("Description")
 
     #BODVDD PSEL
-    supcSym_BODVDD_PSEL = supcComponent.createKeyValueSetSymbol("SUPC_BODVDD_PSEL", None)
-    supcSym_BODVDD_PSEL.setLabel("Brown Out Detector Sampling Mode Clock Prescaler")
+    supcSym_BODVDD_PSEL = supcComponent.createKeyValueSetSymbol("SUPC_BODVDD_PSEL", supcSym_BODVDD_Menu)
+    supcSym_BODVDD_PSEL.setLabel("Select Prescaler for Sampling Clock")
     supcSym_BODVDD_PSEL.setDescription("Configures the sampling clock prescaler when BODVDD is operating in sampling mode")
     supcSym_BODVDD_PSEL.setVisible(False)
     supcSym_BODVDD_PSEL.setDependencies(updateBODVDDPrescalerVisibleProperty, ["SUPC_BODVDD_STDBYCFG", "SUPC_BODVDD_ACTCFG"])
@@ -123,19 +156,18 @@ def instantiateComponent(supcComponent):
     supcSym_BODVDD_PSEL.setOutputMode("Key")
     supcSym_BODVDD_PSEL.setDisplayMode("Description")
 
-    #VREG RUNSTDBY mode
-    supcSym_VREG_RUNSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREG_RUNSTDBY", None)
-    supcSym_VREG_RUNSTDBY.setLabel("Voltage Regulator mode in Standby Sleep ?")
-    supcSym_VREG_RUNSTDBY.setDescription("Configures VREG operation in Standby Sleep Mode")
-    supcSym_VREG_RUNSTDBY.addKey("LP_OP", "0", "Low Power Operation")
-    supcSym_VREG_RUNSTDBY.addKey("NORMAL_OP", "1", "Normal Operation")
-    supcSym_VREG_RUNSTDBY.setDefaultValue(0)
-    supcSym_VREG_RUNSTDBY.setOutputMode("Value")
-    supcSym_VREG_RUNSTDBY.setDisplayMode("Description")
+
+    supcSym_VREF_Menu= supcComponent.createMenuSymbol("VREF_MENU", None)
+    supcSym_VREF_Menu.setLabel("Voltage Reference (VREF) Configuration")
+
+    #VREF VREFOE mode
+    supcSym_VREF_VREFOE = supcComponent.createBooleanSymbol("SUPC_VREF_VREFOE", supcSym_VREF_Menu)
+    supcSym_VREF_VREFOE.setLabel("Enable Voltage Reference Output")
+    supcSym_VREF_VREFOE.setDescription("Voltage Reference Output Enable")
 
     #VREF selection
-    supcSym_VREF_SEL = supcComponent.createKeyValueSetSymbol("SUPC_VREF_SEL", None)
-    supcSym_VREF_SEL.setLabel("VREF Voltage Level (for ADC, SDADC and DAC) ?")
+    supcSym_VREF_SEL = supcComponent.createKeyValueSetSymbol("SUPC_VREF_SEL", supcSym_VREF_Menu)
+    supcSym_VREF_SEL.setLabel("Select Reference Voltage Level")
     supcSym_VREF_SEL.setDescription("Configures VREF voltage level")
 
     supcVREFSelectionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"SUPC_VREF__SEL\"]")
@@ -153,58 +185,19 @@ def instantiateComponent(supcComponent):
     supcSym_VREF_SEL.setDisplayMode("Description")
 
     #VREF ONDEMAND mode
-    supcSym_VREF_ONDEMAND = supcComponent.createKeyValueSetSymbol("SUPC_VREF_ONDEMAND", None)
-    supcSym_VREF_ONDEMAND.setLabel("VREF Availability")
+    supcSym_VREF_ONDEMAND = supcComponent.createKeyValueSetSymbol("SUPC_VREF_ONDEMAND", supcSym_VREF_Menu)
+    supcSym_VREF_ONDEMAND.setLabel("Select On demand Control")
     supcSym_VREF_ONDEMAND.setDescription("Configures the VREF On Demand behavior")
-    supcSym_VREF_ONDEMAND.addKey("ALWAYS_AVA", "0", "Always Available")
-    supcSym_VREF_ONDEMAND.addKey("ON_PER_REQ", "1", "Only on Peripheral Request")
+    supcSym_VREF_ONDEMAND.addKey("ALWAYS_AVA", "0", "Always on")
+    supcSym_VREF_ONDEMAND.addKey("ON_PER_REQ", "1", "Enable on Demand")
     supcSym_VREF_ONDEMAND.setDefaultValue(0)
     supcSym_VREF_ONDEMAND.setOutputMode("Value")
     supcSym_VREF_ONDEMAND.setDisplayMode("Description")
 
     #VREF RUNSTDBY mode
-    supcSym_VREF_RUNSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREF_RUNSTDBY", None)
-    supcSym_VREF_RUNSTDBY.setLabel("Voltage Reference Available in Standby Sleep ?")
-    supcSym_VREF_RUNSTDBY.setDescription("Configures VREF operation in Standby Sleep Mode")
-    supcSym_VREF_RUNSTDBY.addKey("DISABLE", "0", "Disable in Standby Sleep")
-    supcSym_VREF_RUNSTDBY.addKey("AVAILABLE", "1", "Available in Standby Sleep")
-    supcSym_VREF_RUNSTDBY.setDefaultValue(0)
-    supcSym_VREF_RUNSTDBY.setOutputMode("Value")
-    supcSym_VREF_RUNSTDBY.setDisplayMode("Description")
-
-    #VREF VREFOE mode
-    supcSym_VREF_VREFOE = supcComponent.createBooleanSymbol("SUPC_VREF_VREFOE", None)
-    supcSym_VREF_VREFOE.setLabel("Connect VREF to ADC Channel ?")
-    supcSym_VREF_VREFOE.setDescription("Configures VREF availability to ADC input")
-
-    ############################################################################
-    #### Dependency ####
-    ############################################################################
-
-    InterruptVector = supcInstanceName.getValue()+"_INTERRUPT_ENABLE"
-    InterruptHandler = supcInstanceName.getValue()+"_INTERRUPT_HANDLER"
-    InterruptHandlerLock = supcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = supcInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
-
-    # Initial settings for CLK and Interrupt
-    Database.clearSymbolValue("core", InterruptVector)
-    Database.setSymbolValue("core", InterruptVector, True, 2)
-    Database.clearSymbolValue("core", InterruptHandler)
-    Database.setSymbolValue("core", InterruptHandler, supcInstanceName.getValue() + "_InterruptHandler", 2)
-    Database.clearSymbolValue("core", InterruptHandlerLock)
-    Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
-
-    # Interrupt Warning status
-    supcSym_IntEnComment = supcComponent.createCommentSymbol("SUPC_INTERRUPT_ENABLE_COMMENT", None)
-    supcSym_IntEnComment.setVisible(False)
-    supcSym_IntEnComment.setLabel("Warning!!! SUPC Interrupt is Disabled in Interrupt Manager")
-    supcSym_IntEnComment.setDependencies(updateSUPCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
-
-    # Clock Warning status
-    supcSym_ClkEnComment = supcComponent.createCommentSymbol("SUPC_CLOCK_ENABLE_COMMENT", None)
-    supcSym_ClkEnComment.setLabel("Warning!!! SUPC Peripheral Clock is Disabled in Clock Manager")
-    supcSym_ClkEnComment.setVisible(False)
-    supcSym_ClkEnComment.setDependencies(updateSUPCClockWarringStatus, ["core."+supcInstanceName.getValue()+"_CLOCK_ENABLE"])
+    supcSym_VREF_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_VREF_RUNSTDBY", supcSym_VREF_Menu)
+    supcSym_VREF_RUNSTDBY.setLabel("Run in Standby mode")
+    supcSym_VREF_RUNSTDBY.setDescription("Enable VREF operation in Standby Sleep Mode")
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
