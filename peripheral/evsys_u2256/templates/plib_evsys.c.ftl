@@ -46,9 +46,18 @@
 </#if>
 
 void ${EVSYS_INSTANCE_NAME}_Initialize( void )
-{
-<#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
+{<#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
 <#assign TOTAL_USER = EVSYS_USER_NUMBER?number >
+	/*Event Channel User Configuration*/
+<#list 0..TOTAL_USER as i>
+	<#assign CHANNEL = "EVSYS_USER_" + i >
+	<#if .vars[CHANNEL]?has_content>
+	<#if .vars[CHANNEL] != '0'>
+	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]});
+	</#if>
+	</#if>
+</#list>
+
 <#list 0..TOTAL_CHANNEL as i>
 	<#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >    
 	<#assign GENERATOR = "EVSYS_CHANNEL_" + i + "_GENERATOR">
@@ -61,21 +70,13 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 	/* Event Channel ${i} Configuration */
 	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL[${i}] = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
 									${(.vars[RUNSTANDBY])?then('| EVSYS_CHANNEL_RUNSTDBY_Msk', '')} ${(.vars[ONDEMAND])?then('| EVSYS_CHANNEL_ONDEMAND_Msk', '')};
-	while(${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHSTATUS && EVSYS_CHSTATUS_USRRDY${i}_Msk != EVSYS_CHSTATUS_USRRDY${i}_Msk);
-	
+    <#if .vars[PATH] != '2' >                                
+	while(${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHSTATUS & EVSYS_CHSTATUS_USRRDY${i}_Msk != EVSYS_CHSTATUS_USRRDY${i}_Msk);
+	</#if>
 	</#if>
 	</#if>
 </#list>
 
-	/*Event Channel User Configuration*/
-<#list 0..TOTAL_USER as i>
-	<#assign CHANNEL = "EVSYS_USER_" + i >
-	<#if .vars[CHANNEL]?has_content>
-	<#if .vars[CHANNEL] != '0'>
-	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]});
-	</#if>
-	</#if>
-</#list>
 <#if EVSYS_INTERRUPT_MODE>
 
 	/*Interupt setting for Event System*/
