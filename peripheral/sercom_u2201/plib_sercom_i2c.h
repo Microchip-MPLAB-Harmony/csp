@@ -174,8 +174,7 @@ void SERCOMx_I2C_Initialize(void);
 
 // *****************************************************************************
 /* Function:
-    bool SERCOMx_I2C_Read(uint16_t address, uint8_t *pdata,
-                                                                 uint8_t length)
+    bool SERCOMx_I2C_Read(uint16_t address, uint8_t *pdata, uint32_t length)
 
   Summary:
     Reads data from the slave.
@@ -244,12 +243,11 @@ void SERCOMx_I2C_Initialize(void);
     None.
 */
 
-bool SERCOMx_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t length);
+bool SERCOMx_I2C_Read(uint16_t address, uint8_t *pdata, uint32_t length);
 
 // *****************************************************************************
 /* Function:
-    bool SERCOMx_I2C_Write(uint16_t address, uint8_t *pdata,
-                                                                 uint8_t length)
+    bool SERCOMx_I2C_Write(uint16_t address, uint8_t *pdata, uint32_t length)
 
   Summary:
     Writes data to the slave.
@@ -317,12 +315,12 @@ bool SERCOMx_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t length);
     None.
 */
 
-bool SERCOMx_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t length);
+bool SERCOMx_I2C_Write(uint16_t address, uint8_t *pdata, uint32_t length);
 
 // *****************************************************************************
 /* Function:
     bool SERCOMx_I2C_WriteRead(uint16_t address, uint8_t *wdata,
-                               uint8_t wlength, uint8_t *rdata, uint8_t rlength)
+                               uint32_t wlength, uint8_t *rdata, uint32_t rlength)
 
   Summary:
     Write and Read data from Slave.
@@ -403,7 +401,7 @@ bool SERCOMx_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t length);
     the write and the read has completed.
 */
 
-bool SERCOMx_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength);
+bool SERCOMx_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint32_t wlength, uint8_t *rdata, uint32_t rlength);
 
 // *****************************************************************************
 /* Function:

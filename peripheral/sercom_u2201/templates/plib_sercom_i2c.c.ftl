@@ -284,7 +284,7 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool 
 // *****************************************************************************
 /* Function:
     bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata,
-                                                                 uint8_t length)
+                                                                 uint32_t length)
 
    Summary:
     Reads data from the slave.
@@ -303,7 +303,7 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool 
     False - Request has failed.
 */
 
-bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t length)
+bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint32_t length)
 {
     // Check for ongoing transfer
     if( ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE )
@@ -326,7 +326,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t 
 // *****************************************************************************
 /* Function:
     bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata,
-                                                                 uint8_t length)
+                                                                 uint32_t length)
 
    Summary:
     Writes data onto the slave.
@@ -345,7 +345,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint8_t 
     False - Request has failed.
 */
 
-bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t length)
+bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata, uint32_t length)
 {
     // Check for ongoing transfer
     if( ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE )
@@ -368,7 +368,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t
 // *****************************************************************************
 /* Function:
     bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead(uint16_t address, uint8_t *wdata,
-                               uint8_t wlength, uint8_t *rdata, uint8_t rlength)
+                               uint32_t wlength, uint8_t *rdata, uint32_t rlength)
 
    Summary:
     Write and Read data from Slave.
@@ -389,7 +389,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata, uint8_t
     False - Request has failed.
 */
 
-bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint8_t wlength, uint8_t *rdata, uint8_t rlength)
+bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint32_t wlength, uint8_t *rdata, uint32_t rlength)
 {
     // Check for ongoing transfer
     if( ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE )
