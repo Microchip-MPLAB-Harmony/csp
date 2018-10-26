@@ -1,7 +1,7 @@
 define memory mem with size = 4G;
 define region RAM_region           = mem:[from 0x00200000 to 0x0021FFFF];
-define region DDRAM_region         = mem:[from 0x26F00000 to 0x26FFFFFF];
-define region DDRAM_NOCACHE_region = mem:[from 0x24000000 to 0x24FFFFFF];
+define region DDRAM_region         = mem:[from 0x21000000 to 0x3FFFFFFF];
+define region DDRAM_NOCACHE_region = mem:[from 0x20000000 to 0x20FFFFFF];
 
 <#lt><#assign HEAP_SIZE = IAR_HEAP_SIZE!"0x200">
 <#lt><#assign USR_STACK_SIZE = IAR_USR_STACK_SIZE!"0x1000">
@@ -53,7 +53,7 @@ do not initialize { section .region_cache_aligned };
 place at start of RAM_region { section .vectors };
 place in RAM_region { block SRAM };
 
-place at start of DDRAM_region { section .cstartup };
+place at address 0x26F00000 { section .cstartup };
 place in DDRAM_region { ro };
 place in DDRAM_region { rw };
 place in DDRAM_region { block CACHE_ALIGNED_CONST };
