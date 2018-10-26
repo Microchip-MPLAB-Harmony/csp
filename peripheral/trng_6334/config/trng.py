@@ -50,10 +50,22 @@ def instantiateComponent(trngComponent):
     global trngInstanceName
     global interruptHandlerLock
 
+
     trngInstanceName = trngComponent.createStringSymbol("TRNG_INSTANCE_NAME", None)
     trngInstanceName.setVisible(False)
     trngInstanceName.setDefaultValue(trngComponent.getID().upper())
     Log.writeInfoMessage("Running " + trngInstanceName.getValue())
+
+    #The KEY name is KEY on some masks and WAKEY on others.  Parse the ATDF file to grab the correct name to use the in plib code
+    CRKeyName = trngComponent.createStringSymbol("CRKEYNAME", None)
+    CRKeyName.setVisible(False)
+    CRNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TRNG"]/register-group@[name="TRNG"]/register@[name="TRNG_CR"]')
+    for bitfield in CRNode.getChildren():
+        if "KEY" in bitfield.getAttribute("name"):
+            valuesName = bitfield.getAttribute("values")
+            valuesNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TRNG"]/value-group@[name="'+valuesName+'"]')
+            value = valuesNode.getChildren()[0]
+            CRKeyName.setDefaultValue(bitfield.getAttribute("name")+"_"+value.getAttribute("name"))
 
     interruptVector = trngInstanceName.getValue() + "_INTERRUPT_ENABLE"
     interruptHandler = trngInstanceName.getValue()+"_INTERRUPT_HANDLER"
