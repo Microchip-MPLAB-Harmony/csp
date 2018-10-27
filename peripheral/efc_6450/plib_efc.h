@@ -1,17 +1,17 @@
 /*******************************************************************************
- Interface definition of EEFC PLIB.
+ Interface definition of EFC PLIB.
 
  Company:
     Microchip Technology Inc.
 
  File Name:
-    plib_EEFC.h
+    plib_efc.h
 
  Summary:
-    Interface definition of EEFC Plib.
+    Interface definition of EFC Plib.
 
  Description:
-    This file defines the interface for the EEFC Plib.
+    This file defines the interface for the EFC Plib.
     It allows user to Program, Erase and lock the on-chip FLASH memory.
 *******************************************************************************/
 
@@ -50,9 +50,6 @@
 // *****************************************************************************
 /*  This section lists the other files that are included in this file.
 */
-/* This section lists the other files that are included in this file.
-*/
-
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -73,9 +70,9 @@
 // *****************************************************************************
 
 // *****************************************************************************
-/* EEFC ERR
+/*
  Summary:
-    Defines the data type for the EEFC Error.
+    Defines the data type for the EFC Error.
 
  Description:
     This enum is used to define error encountered during last Flash operation.
@@ -85,6 +82,7 @@
 */
 typedef enum
 {
+    /* No Error Occured */
     EFC_ERROR_NONE = 0x1,
     /*In-valid command*/
     EFC_CMD_ERROR = 0x2,
@@ -97,23 +95,22 @@ typedef enum
 } EFC_ERROR;
 
 // *****************************************************************************
-// *****************************************************************************
-/* Callback Function Pointer
+/*
  Summary:
-    Defines the data type and function signature for the EEFC peripheral
+    Defines the data type and function signature for the EFC peripheral
     callback function.
 
  Description:
-    This data type defines the function signature for the EEFC peripheral
-    callback function. The EEFC peripheral will call back the client's
-    function with this signature when the EEFC is ready to accept new operation.
+    This data type defines the function signature for the EFC peripheral
+    callback function. The EFC peripheral will callback the client's
+    function with this signature when EFC is ready to accept new operation.
 
  Precondition:
-    EEFC_CallbackRegister must have been called to set the function to be called.
+    EFCx_CallbackRegister must have been called to set the function to be called.
 
  Parameters:
     context - Allows the caller to provide a context value (usually a pointer
-            to the callers context for multi-instance clients).
+              to the callers context for multi-instance clients).
 
  Returns:
     None.
@@ -144,24 +141,25 @@ this interface.
     None
 
  Parameters:
-    data    :- pointer to user data buffer
-    length  :- Number of bytes to read
-    address :- FLASH address to be read from
+    data    - pointer to user data buffer
+    length  - Number of bytes to read
+    address - FLASH address to be read from
 
  Returns:
-    None.
+    - true: On successfull read
+    - false: On failure to read.
 
  Example:
     <code>
-        uint8_t buffer[256];
-        EFC0_Read( &buffer, 256, 0x500000);
+    uint8_t buffer[256];
+    EFC0_Read( &buffer, 256, 0x500000);
     </code>
 */
 bool EFCx_Read( uint32_t *data, uint32_t length, uint32_t address );
 
 // *****************************************************************************
 /* Function:
-    bool EFCx_QuadWordWrite( uint32_t address, uint32_t* data )
+    bool EFCx_QuadWordWrite( uint32_t* data, uint32_t address )
 
  Summary:
     Writes a 128-bit data to a given address in FLASH memory.
@@ -171,26 +169,33 @@ bool EFCx_Read( uint32_t *data, uint32_t length, uint32_t address );
     the given location in FLASH memory.
 
  Precondition:
-    None
+    Validate if EFCx controller is ready to accept new request by calling EFCx_IsBusy()
+
+    The Memory to be written should be in Erased State.
 
  Parameters:
-    address:- FLASH address to be modified
-    data   :- pointer to 128-bit data buffer
+    address - FLASH address to be modified
+    data    - pointer to 128-bit data buffer
 
  Returns:
-    None.
+    - true: On successfull write request.
+    - false: On failure to send write request.
 
  Example:
     <code>
-        while(EFC0_IsBusy());
         EFC0_QuadWordWrite( 0x500000, &buffer);
+        while(EFC0_IsBusy());
     </code>
+
+ Remarks:
+    Application needs to poll for busy bit or wait for callback to be called
+    before sending next request.
 */
 bool EFCx_QuadWordWrite( uint32_t* data, uint32_t address );
 
 // *****************************************************************************
 /* Function:
-    bool EFCx_PageWrite( uint32_t address, uint32_t* data )
+    bool EFCx_PageWrite( uint32_t* data, uint32_t address )
 
  Summary:
     Writes data of size equivalent to page size to a given FLASH address.
@@ -200,20 +205,27 @@ bool EFCx_QuadWordWrite( uint32_t* data, uint32_t address );
     and writes it to the given location in FLASH memory.
 
  Precondition:
-    None.
+    Validate if EFCx controller is ready to accept new request by calling EFCx_IsBusy()
+
+    The Page to be written should be in Erased State.
 
  Parameters:
-    address:- FLASH address to be modified
-    data   :- pointer to data buffer
+    address - FLASH address to be modified
+    data    - pointer to data buffer
 
  Returns:
-    None.
+    - true: On successfull write request.
+    - false: On failure to send write request.
 
  Example:
     <code>
-        while(EFC0_IsBusy());
-        EFC0_PageWrite( 0x500000, &buffer);
+    EFC0_PageWrite( 0x500000, &buffer);
+    while(EFC0_IsBusy());
     </code>
+
+ Remarks:
+    Application needs to poll for busy bit or wait for callback to be called
+    before sending next request.
 */
 bool EFCx_PageWrite( uint32_t* data, uint32_t address );
 
@@ -222,25 +234,30 @@ bool EFCx_PageWrite( uint32_t* data, uint32_t address );
     bool EFCx_SectorErase( uint32_t address)
 
  Summary:
-    Erases a Row in the FLASH.
+    Erases a Sector in the FLASH.
 
  Description:
-    This function is used to erase a row (collection of pages).
+    This function is used to erase a sector (collection of pages).
 
  Precondition:
-    None.
+    Validate if EFCx controller is ready to accept new request by calling EFCx_IsBusy()
 
  Parameters:
-    address:- FLASH address to be Erased
+    address - FLASH address to be Erased
 
  Returns:
-    None.
+    - true: On successfull erase request.
+    - false: On failure to send erase request.
 
  Example:
     <code>
-        while(EFC0_IsBusy());
-        EFC0_SectorErase( 0x500000 );
+    EFC0_SectorErase( 0x500000 );
+    while(EFC0_IsBusy());
     </code>
+
+ Remarks:
+    Application needs to poll for busy bit or wait for callback to be called
+    before sending next request.
 */
 bool EFCx_SectorErase( uint32_t address );
 
@@ -254,6 +271,8 @@ bool EFCx_SectorErase( uint32_t address );
  Description:
     This function is used to check error encountered by EFCx controller.
 
+    Return value can be mapped to EFC_ERROR to identify particular error.
+
  Precondition:
     None.
 
@@ -261,12 +280,11 @@ bool EFCx_SectorErase( uint32_t address );
     None
 
  Returns:
-    uint32_t :- EFCx controller error type
+    uint32_t - EFCx controller error type
 
  Example:
     <code>
-        uint32_t error = EFCx_ErrorGet();
-
+    uint32_t error = EFCx_ErrorGet();
     </code>
 */
 
@@ -287,13 +305,15 @@ uint32_t EFCx_ErrorGet( void );
 
  Parameters:
     None
+
  Returns:
-    bool :- EFCx status
+    - true: If EFCx peripheral is busy doing an operation.
+    - false: If EFCx peripheral is ready to accept new request..
 
  Example:
     <code>
-        while(EFC0_IsBusy());
-        EFC0_SectorErase( 0x500000 );
+    while(EFC0_IsBusy());
+    EFC0_SectorErase( 0x500000 );
     </code>
 */
 
@@ -321,8 +341,8 @@ bool EFCx_IsBusy(void);
 
  Example:
     <code>
-        while(EFC0_IsBusy());
-        EFCx0_RegionLock(0x00500000);
+    while(EFC0_IsBusy());
+    EFCx0_RegionLock(0x00500000);
     </code>
 */
 
@@ -343,15 +363,15 @@ void EFCx_RegionLock(uint32_t address);
     Validate if EFCx controller is ready to accept new request by calling EFCx_IsBusy()
 
  Parameters:
-    address:- Address of the page to be unlocked
+    address - Address of the page to be unlocked
 
  Returns:
     None.
 
  Example:
     <code>
-        while(EFC0_IsBusy());
-        EFCx0_RegionUnlock(0x00500000);
+    while(EFC0_IsBusy());
+    EFCx0_RegionUnlock(0x00500000);
     </code>
 */
 
@@ -359,7 +379,7 @@ void EFCx_RegionUnlock(uint32_t address);
 
 // *****************************************************************************
 /* Function:
-    void EFCx_CallbackRegister( EFCx_CALLBACK callback, uintptr_t context )
+    void EFCx_CallbackRegister( EFC_CALLBACK callback, uintptr_t context )
 
  Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -367,8 +387,10 @@ void EFCx_RegionUnlock(uint32_t address);
 
  Description:
     This function sets the pointer to a client function to be called "back"
-    when the EFCx is ready to receive new command. It also passes a context value that is passed into the
-    function when it is called.
+    when the EFCx is ready to receive new command.
+
+    It also passes a context value that is passed into the function when it is called.
+
     This function is available only in interrupt mode of operation.
 
  Precondition:
@@ -376,26 +398,26 @@ void EFCx_RegionUnlock(uint32_t address);
 
  Parameters:
     callback - A pointer to a function with a calling signature defined
-                by the EFCx_CALLBACK data type.
-    context - A value (usually a pointer) passed (unused) into the function
-                identified by the callback parameter.
+               by the EFC_CALLBACK data type.
+    context  - A value (usually a pointer) passed (unused) into the function
+               identified by the callback parameter.
 
  Returns:
     None.
 
  Example:
     <code>
-        EFCx_CallbackRegister(MyCallback, &myData);
+    EFCx_CallbackRegister(MyCallback, &myData);
     </code>
 
  Remarks:
     The context value may be set to NULL if it is not required. Note that the
     value of NULL will still be passed to the callback function.
     To disable the callback function, pass a NULL for the callback parameter.
-    See the EFCx_CALLBACK type definition for additional information.
+    See the EFC_CALLBACK type definition for additional information.
 */
 
-void EFCx_CallbackRegister( EFCx_CALLBACK callback, uintptr_t context );
+void EFCx_CallbackRegister( EFC_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
