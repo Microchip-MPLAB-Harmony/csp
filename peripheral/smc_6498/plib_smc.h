@@ -1,29 +1,19 @@
 /*******************************************************************
   Company:
     Microchip Technology Inc.
-    Memory System Service SMC Initialization File
 
   File Name:
     plib_smc.h
 
   Summary:
     Static Memory Controller (SMC) peripheral library interface.
-	This file contains the source code to initialize the SMC controller
+    This file contains the source code to initialize the SMC controller
 
   Description
     This file defines the interface to the SMC peripheral library.  This 
     library provides access to and control of the associated peripheral 
     instance.
 
-  Remarks:
-    This header is for documentation only.  The actual smc<x> headers will be
-    generated as required by the MCC (where <x> is the peripheral instance 
-    number).
-
-    Every interface symbol has a lower-case 'x' in it following the "SMC" 
-    abbreviation.  This 'x' will be replaced by the peripheral instance number
-    in the generated headers.  These are the actual functions that should be
-    used.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -52,8 +42,8 @@
 // DOM-IGNORE-END
 
 
-#ifndef _PLIB_SMC0_H		// Guards against multiple inclusion
-#define _PLIB_SMC0_H
+#ifndef _PLIB_SMC_H  // Guards against multiple inclusion
+#define _PLIB_SMC_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -77,7 +67,7 @@
 
 // *****************************************************************************
 /* Function:
-    void SMC${INDEX}_Initialize ( void )
+    void SMC_Initialize ( void )
 
   Summary:
     Initializes Static Memory Controller (SMC) interface.
@@ -97,7 +87,7 @@
   Example:
     <code>
     //Example 1: Do not alter the configuration bit settings
-    SMC0_Initialize ( );
+    SMC_Initialize ( );
 
     </code>
 
@@ -105,7 +95,7 @@
     None.
 */
 
-void SMC0_Initialize(void);
+void SMC_Initialize(void);
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
@@ -113,7 +103,7 @@ void SMC0_Initialize(void);
 #endif
 //DOM-IGNORE-END
 
-#endif // _PLIB_SMC${INDEX}_H
+#endif // _PLIB_SMC_H
 
 /*******************************************************************************
  End of File
