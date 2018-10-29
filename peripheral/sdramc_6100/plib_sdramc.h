@@ -1,10 +1,9 @@
 /*******************************************************************
   Company:
     Microchip Technology Inc.
-    Memory System Service SDRAMC Initialization File
 
   File Name:
-    plib_sdramc0.h
+    plib_sdramc.h
 
   Summary:
     SDRAMC Controller (SDRAMC). 
@@ -14,15 +13,6 @@
     the externally connected SDRAM device. This file contains the source code
     to initialize the SDRAMC controller
 
- Remarks:
-    This header is for documentation only.  The actual sdramc<x> headers will be
-    generated as required by the MCC (where <x> is the peripheral instance 
-    number).
-
-    Every interface symbol has a lower-case 'x' in it following the "SDRAMC" 
-    abbreviation.  This 'x' will be replaced by the peripheral instance number
-    in the generated headers.  These are the actual functions that should be
-    used.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -51,8 +41,8 @@
 // DOM-IGNORE-END
 
 
-#ifndef _PLIB_SDRAMC0_H
-#define _PLIB_SDRAMC0_H
+#ifndef _PLIB_SDRAMC_H
+#define _PLIB_SDRAMC_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -70,7 +60,7 @@
 
 //******************************************************************************
 /* Function:
-    void SDRAMC0_Initialize ( void )
+    void SDRAMC_Initialize ( void )
 
   Summary:
     Initializes and Enables the SDRAM Controller.
@@ -89,7 +79,7 @@
 
   Example:
   <code>
-    SDRAMC0_Initialize();
+    SDRAMC_Initialize();
   </code>
 
   Remarks:
@@ -99,7 +89,7 @@
     Not all features are available on all devices. Refer to the specific
 	device data sheet to determine availability.
 */
-void SDRAMC0_Initialize(void);
+void SDRAMC_Initialize(void);
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
@@ -107,7 +97,7 @@ void SDRAMC0_Initialize(void);
 #endif
 //DOM-IGNORE-END
 
-#endif // #ifndef _PLIB_SDRAMC0_H
+#endif // #ifndef _PLIB_SDRAMC_H
 
 /*******************************************************************************
  End of File
