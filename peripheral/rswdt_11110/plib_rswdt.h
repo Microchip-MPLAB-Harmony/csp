@@ -126,6 +126,7 @@ typedef void (*RSWDT_CALLBACK)(uintptr_t context);
 /* The following functions make up the methods (set of possible operations) of
 this interface.
 */
+
 // *****************************************************************************
 /* Function:
 	void RSWDT_Initialize( void )
@@ -181,9 +182,9 @@ void RSWDT_Initialize( void );
 	Certain devices does not allow disabling Watchdog timers.
 */
 
-// *****************************************************************************
 void RSWDT_Enable( RSWDT_MODE mode );
 
+// *****************************************************************************
 /* Function:
 	void RSWDT_Disable( void )
  Summary:
