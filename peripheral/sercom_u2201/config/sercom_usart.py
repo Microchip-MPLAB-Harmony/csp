@@ -100,7 +100,7 @@ for index in range(len(usartSym_CTRLA_RXPO_Values)):
     usartSym_CTRLA_RXPO.addKey(usartSym_CTRLA_RXPO_Key_Name, usartSym_CTRLA_RXPO_Key_Value, usartSym_CTRLA_RXPO_Key_Description)
 
 usartSym_CTRLA_RXPO.setDefaultValue(0)
-usartSym_CTRLA_RXPO.setOutputMode("Value")
+usartSym_CTRLA_RXPO.setOutputMode("Key")
 usartSym_CTRLA_RXPO.setDisplayMode("Description")
 usartSym_CTRLA_RXPO.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -119,7 +119,7 @@ for index in range(len(usartSym_CTRLA_TXPO_Values)):
     usartSym_CTRLA_TXPO.addKey(usartSym_CTRLA_TXPO_Key_Name, usartSym_CTRLA_TXPO_Key_Value, usartSym_CTRLA_TXPO_Key_Description)
 
 usartSym_CTRLA_TXPO.setDefaultValue(0)
-usartSym_CTRLA_TXPO.setOutputMode("Value")
+usartSym_CTRLA_TXPO.setOutputMode("Key")
 usartSym_CTRLA_TXPO.setDisplayMode("Description")
 usartSym_CTRLA_TXPO.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -130,7 +130,7 @@ usartSym_CTRLB_PMODE.addKey("EVEN", "0x0", "Even Parity")
 usartSym_CTRLB_PMODE.addKey("ODD", "0x1", "Odd Parity")
 usartSym_CTRLB_PMODE.addKey("NONE", "0x2", "No Parity")
 usartSym_CTRLB_PMODE.setDefaultValue(2)
-usartSym_CTRLB_PMODE.setOutputMode("Value")
+usartSym_CTRLB_PMODE.setOutputMode("Key")
 usartSym_CTRLB_PMODE.setDisplayMode("Description")
 usartSym_CTRLB_PMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -164,7 +164,7 @@ for index in range(len(usartSym_CTRLA_CHSIZE_Values)):
     usartSym_CTRLB_CHSIZE.addKey(usartSym_CTRLB_CHSIZE_Key_Name, usartSym_CTRLB_CHSIZE_Key_Value, usartSym_CTRLB_CHSIZE_Key_Description)
 
 usartSym_CTRLB_CHSIZE.setDefaultValue(0)
-usartSym_CTRLB_CHSIZE.setOutputMode("Value")
+usartSym_CTRLB_CHSIZE.setOutputMode("Key")
 usartSym_CTRLB_CHSIZE.setDisplayMode("Description")
 usartSym_CTRLB_CHSIZE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -208,7 +208,7 @@ for index in range(len(usartSym_CTRLA_SBMODE_Values)):
     usartSym_CTRLB_SBMODE.addKey(usartSym_CTRLB_SBMODE_Key_Name, usartSym_CTRLB_SBMODE_Key_Value, usartSym_CTRLB_SBMODE_Key_Description)
 
 usartSym_CTRLB_SBMODE.setDefaultValue(0)
-usartSym_CTRLB_SBMODE.setOutputMode("Value")
+usartSym_CTRLB_SBMODE.setOutputMode("Key")
 usartSym_CTRLB_SBMODE.setDisplayMode("Description")
 usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
