@@ -56,6 +56,7 @@
 */
 
 #include "plib_tc_common.h"
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -110,7 +111,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStart (void);
 void ${TC_INSTANCE_NAME}_QuadratureStop (void);
 
 <#if TC_INDEX_PULSE == true>
-__inline__ int16_t ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (void)
+__INLINE int16_t ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (void)
 {
     return (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CV);
 }
@@ -118,13 +119,13 @@ __inline__ int16_t ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (void)
 
 <#if TC_BMR_POSEN == "SPEED">
 
-__inline__ uint16_t ${TC_INSTANCE_NAME}_QuadratureSpeedGet (void)
+__INLINE uint16_t ${TC_INSTANCE_NAME}_QuadratureSpeedGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV;
 }
 
 <#else>
-__inline__ int16_t ${TC_INSTANCE_NAME}_QuadraturePositionGet (void)
+__INLINE int16_t ${TC_INSTANCE_NAME}_QuadraturePositionGet (void)
 {
     return (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV);
 }
