@@ -26,11 +26,6 @@
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
-#updating SPI GCLK clock
-def updatespiclock(symbol, event):
-
-    symbol.setValue(Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"), 2)
-
 # SPI Components Visible Property
 def updateSPIMasterConfigurationVisibleProperty(symbol, event):
 
@@ -42,7 +37,7 @@ def updateSPIMasterConfigurationVisibleProperty(symbol, event):
 #SPI BAUD Calculation
 def spibaudcalc(symbol, event):
 
-    sercom_gclk = Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY")
+    sercom_gclk = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SERCOM_CLOCK_FREQUENCY")
     spi_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_BAUD_RATE")
 
     baudReg = getspiBaud(sercom_gclk, spi_Speed)
@@ -106,7 +101,7 @@ for index in range(len(spiDOPOValues)):
     spiSym_CTRLA_DOPO.addKey(spiDOPOKeyName, spiDOPOKeyValue, spiDOPOKeyDescription)
 
 spiSym_CTRLA_DOPO.setDefaultValue(0)
-spiSym_CTRLA_DOPO.setOutputMode("Value")
+spiSym_CTRLA_DOPO.setOutputMode("Key")
 spiSym_CTRLA_DOPO.setDisplayMode("Description")
 spiSym_CTRLA_DOPO.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -126,7 +121,7 @@ for index in range(len(spiDIPOValues)):
     spiSym_CTRLA_DIPO.addKey(spiDIPOKeyName, spiDIPOKeyValue, spiDIPOKeyDescription)
 
 spiSym_CTRLA_DIPO.setDefaultValue(0)
-spiSym_CTRLA_DIPO.setOutputMode("Value")
+spiSym_CTRLA_DIPO.setOutputMode("Key")
 spiSym_CTRLA_DIPO.setDisplayMode("Description")
 spiSym_CTRLA_DIPO.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -146,7 +141,7 @@ for index in range(len(spiDORDValues)):
     spiSym_CTRLA_DORD.addKey(spiDORDKeyName, spiDORDKeyValue, spiDORDKeyDescription)
 
 spiSym_CTRLA_DORD.setDefaultValue(0)
-spiSym_CTRLA_DORD.setOutputMode("Value")
+spiSym_CTRLA_DORD.setOutputMode("Key")
 spiSym_CTRLA_DORD.setDisplayMode("Description")
 spiSym_CTRLA_DORD.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -173,7 +168,7 @@ for index in range(len(spiCHSIZEValues)):
     spiSym_CTRLB_CHSIZE.addKey(spiCHSIZEKeyName, spiCHSIZEKeyValue, spiCHSIZEKeyDescription)
 
 spiSym_CTRLB_CHSIZE.setDefaultValue(0)
-spiSym_CTRLB_CHSIZE.setOutputMode("Value")
+spiSym_CTRLB_CHSIZE.setOutputMode("Key")
 spiSym_CTRLB_CHSIZE.setDisplayMode("Description")
 spiSym_CTRLB_CHSIZE.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -276,19 +271,11 @@ spiSym_ClockModeComment.setLabel("***SPI Transfer Mode 0 is Selected***")
 spiSym_ClockModeComment.setVisible(False)
 spiSym_ClockModeComment.setDependencies(setSPIClockModeInfo, ["SERCOM_MODE", "SPI_CLOCK_PHASE", "SPI_CLOCK_POLARITY"])
 
-spidefaultvalue  = getspiBaud(Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"), spi_BAUDRATE.getValue())
+spidefaultvalue = getspiBaud(sercomSym_ClockFrequency.getValue(), spi_BAUDRATE.getValue())
 
 # SPI BAUDREG Value
 spi_BAUDREG = sercomComponent.createIntegerSymbol("SPI_BAUD_REG_VALUE", sercomSym_OperationMode)
 spi_BAUDREG.setLabel("SPI Baud ")
 spi_BAUDREG.setDefaultValue(spidefaultvalue)
 spi_BAUDREG.setVisible(False)
-spi_BAUDREG.setDependencies(spibaudcalc, ["core." + sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY", "SPI_BAUD_RATE"])
-
-# SPI GCLK clock Value
-spi_GCLK = sercomComponent.createIntegerSymbol("SPI_GCLK_CLOCK", sercomSym_OperationMode)
-spi_GCLK.setLabel("SPI GCLK CLOCK ")
-spi_GCLK.setDefaultValue(Database.getSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"))
-spi_GCLK.setVisible(False)
-spi_GCLK.setReadOnly(False)
-spi_GCLK.setDependencies(updatespiclock, ["core." + sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"])
+spi_BAUDREG.setDependencies(spibaudcalc, ["SERCOM_CLOCK_FREQUENCY", "SPI_BAUD_RATE"])
