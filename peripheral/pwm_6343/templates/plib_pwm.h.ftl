@@ -56,6 +56,7 @@
 */
 
 #include "plib_pwm_common.h"
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -92,7 +93,7 @@ extern "C" {
     </#if>
 </#list>
 
-__inline__ void ${PWM_INSTANCE_NAME}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
+__INLINE void ${PWM_INSTANCE_NAME}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
 {
   ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[channel].PWM_CDTYUPD= duty;
 }
