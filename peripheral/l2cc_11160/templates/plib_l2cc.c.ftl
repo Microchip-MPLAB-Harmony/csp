@@ -74,36 +74,36 @@ static void l2cacheEnable(void)
     __ISB();
 }
 
-static void l2cacheDisable(void)
-{
-    L2CC_REGS->L2CC_CR &= ~L2CC_CR_L2CEN_Msk;
-    __DSB();
-    __ISB();
-}
-
+<#if L2CC_ACR_EXCC>
 static void l2cacheSetExclusive(void)
 {
     L2CC_REGS->L2CC_ACR |= L2CC_ACR_EXCC_Msk;
 }
+<#else>
 
 static void l2cacheSetNonExclusive(void)
 {
     L2CC_REGS->L2CC_ACR &= ~L2CC_ACR_EXCC_Msk;
 }
+</#if>
 
+<#if L2CC_TRCR>
 static void setTagRamLatency(void)
 {
     L2CC_REGS->L2CC_TRCR = L2CC_TRCR_TSETLAT(${L2CC_TRCR_TSETLAT}) |
                       L2CC_TRCR_TRDLAT(${L2CC_TRCR_TRDLAT}) |
                       L2CC_TRCR_TWRLAT(${L2CC_TRCR_TWRLAT});
 };
+</#if>
 
+<#if L2CC_DRCR>
 static void setDataRamLatency(void)
 {
     L2CC_REGS->L2CC_DRCR = L2CC_DRCR_DSETLAT(${L2CC_DRCR_DSETLAT}) |
                       L2CC_DRCR_DRDLAT(${L2CC_DRCR_DRDLAT}) |
                       L2CC_DRCR_DWRLAT(${L2CC_DRCR_DWRLAT});
 }
+</#if>
 
 static void setConfig(void)
 {
@@ -145,6 +145,7 @@ static void instPrefetchEnable(void)
     L2CC_REGS->L2CC_PCR |= L2CC_PCR_INSPEN_Msk;
 }
 
+<#if L2CC_ECR_EVCEN>
 static void enableEventCounter(uint8_t event_counter)
 {
     switch (event_counter) {
@@ -175,52 +176,17 @@ static void eventConfig(uint8_t event_counter, uint8_t source, uint8_t it)
     }
 
 }
+</#if>
 
-static uint32_t eventCounterValue(uint8_t event_counter)
-{
-    switch (event_counter) {
-    case 0:
-        return L2CC_REGS->L2CC_EVR0;
-    case 1:
-        return L2CC_REGS->L2CC_EVR1;
-    default:
-        return 0;
-    }
-}
-
-/*TODO: Support interrupts! */
-/*TODO: These should be public??*/
-void enableInt(uint32_t sources)
-{
-    L2CC_REGS->L2CC_IMR |= sources;
-}
-
-void disableInt(uint32_t sources)
+static void disableInt(uint32_t sources)
 {
     L2CC_REGS->L2CC_IMR &= ~sources;
 }
 
-uint32_t intStatus(uint32_t sources)
-{
-    return L2CC_REGS->L2CC_RISR & sources;
-}
-
-uint32_t intStatusMask(uint32_t sources)
-{
-    return L2CC_REGS->L2CC_MISR & sources;
-}
-
-void clearInt(uint32_t sources)
+static void clearInt(uint32_t sources)
 {
     L2CC_REGS->L2CC_ICR |= sources;
 }
-
-/*
-bool l2cc_get_spniden(void)
-{
-    return (L2CC_REGS->L2CC_DCR & L2CC_DCR_SPNIDEN_Msk) != 0;
-}
-*/
 
 static void cacheSync(void)
 {
