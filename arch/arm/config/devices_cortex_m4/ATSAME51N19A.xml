@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<CSP id="ATSAME51N19A">
-    <CoreModule path="${__FRAMEWORK_ROOT}/csp/arch" />
-    <DataSheet name="SAM_D51_E51_E53_E54" />
-</CSP>

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<CSP id="ATSAML21E18A">
-    <CoreModule path="${__FRAMEWORK_ROOT}/csp/arch" />
-    <DataSheet name="SAM_L21" />
-</CSP>
