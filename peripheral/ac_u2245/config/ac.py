@@ -27,17 +27,26 @@ global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
 global acInstanceName
+global acSym_SCALERn
 
 #######################################################################################################################################
 #####################################        Callback Funtions ----START      #########################################################
 #######################################################################################################################################
 
 #Control VDD Scaler value visibility
-def setacScalerVisibility(symbol, event):
-    if acSym_COMPCTRL_MUXNEG.getSelectedValue() == "0":
-        acSym_SCALERn.setVisible(True)
+def setacScalerVisibility(MySymbol, event):
+    if event["value"] == 5:
+        MySymbol.setVisible(True)
     else:
-        acSym_SCALERn.setVisible(False)
+        MySymbol.setVisible(False)
+        
+#Control Hysteresis visibility
+def setacHystVisibility(MySymbol, event):
+    symObj = event["symbol"]
+    if symObj.getValue() == True:
+        MySymbol.setVisible(False)
+    else:
+        MySymbol.setVisible(True)
 
 #Update Symbol Visibility
 def setacSymbolVisibility(symbol, event):
@@ -89,7 +98,7 @@ def instantiateComponent(acComponent):
     acInstanceName.setDefaultValue(acComponent.getID().upper())
 
     acSym_Enable = []
-    
+    acSym_SCALERn = []
     #Clock enable
     Database.setSymbolValue("core", acInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
@@ -181,17 +190,17 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_MUXNEG.setOutputMode("Key")
         acSym_COMPCTRL_MUXNEG.setDisplayMode("Description")
         acSym_COMPCTRL_MUXNEG.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
-
+        
         #Scaling factor for VDD scaler
-        global acSym_SCALERn
-        acSym_SCALERn = acComponent.createIntegerSymbol("AC_SCALER_N_" + str(comparatorID), acSym_Enable[comparatorID])
-        acSym_SCALERn.setLabel("Scaling factor for VDD scaler")
-        acSym_SCALERn.setMin(0)
-        acSym_SCALERn.setMax(63)
-        acSym_SCALERn.setDefaultValue(0)
-        acSym_SCALERn.setVisible(False)
-        #TODO: This should be enabled only when mux neg value is VDDSCALER
-        acSym_SCALERn.setDependencies(setacScalerVisibility, ["AC" + str(comparatorID) + "_MUX_NEG"])
+        acSym_SCALERn.append(comparatorID)
+        acSym_SCALERn[comparatorID] = acComponent.createIntegerSymbol("AC_SCALER_N_" + str(comparatorID), acSym_Enable[comparatorID])
+        acSym_SCALERn[comparatorID].setLabel("Scaling factor for VDD scaler")
+        acSym_SCALERn[comparatorID].setMin(0)
+        acSym_SCALERn[comparatorID].setMax(63)
+        acSym_SCALERn[comparatorID].setDefaultValue(0)
+        acSym_SCALERn[comparatorID].setVisible(False)
+        #This should be enabled only when mux neg value is VDDSCALER
+        acSym_SCALERn[comparatorID].setDependencies(setacScalerVisibility, ["AC" + str(comparatorID) + "_MUX_NEG"])
 
         #Output Mode
         acSym_COMPCTRL_OUT = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_OUTPUT_TYPE", acSym_Enable[comparatorID])
@@ -262,11 +271,10 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_HYST = acComponent.createBooleanSymbol("AC" + str(comparatorID) + "_HYSTEN", acSym_AdvConf)
         acSym_COMPCTRL_HYST.setLabel("Hysteresis Enable")
         acSym_COMPCTRL_HYST.setDefaultValue(False)
-        acSym_COMPCTRL_HYST.setVisible(False)
-        #TODO: Should not be shown when single-shot is selected.
-        acSym_COMPCTRL_HYST.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+        acSym_COMPCTRL_HYST.setVisible(True)
+        #Should not be shown when single-shot is selected.
+        acSym_COMPCTRL_HYST.setDependencies(setacHystVisibility,["AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE"])
         
-
         #Speed selection
         acSym_COMPCTRL_SPEED = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_SPEED", acSym_AdvConf)
         acSym_COMPCTRL_SPEED.setLabel("Speed Selection")
