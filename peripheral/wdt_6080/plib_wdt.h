@@ -126,6 +126,7 @@ typedef void (*WDT_CALLBACK)(uintptr_t context);
 /* The following functions make up the methods (set of possible operations) of
 this interface.
 */
+
 // *****************************************************************************
 /* Function:
 	void WDT_Initialize( void )
