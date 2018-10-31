@@ -58,7 +58,7 @@ aicMaxPriorityName =        ""
 neverSecureList =           [ '49', '62' ]
 alwaysSecureList =          [  '0', '14', '15', '16', '18', '51', '61', '68', '69', '70' ]
 programmedSecureList =      []                                                                      # Todo create map interface to populate this list
-internalList =              [  '0',  '2', '49', '56', '57', '64', '65', '66', '67', '71', '72' ]
+externalList =              [  '0',  '49' ]  # '2', '56', '57', '64', '65', '66', '67', '71', '72' have been subsumed data sheet peripheral table is misleading
 
 ################################################################################
 #### Global Methods
@@ -297,8 +297,12 @@ for interrupt in interruptsChildren:
     aicVectorEnable.setLabel( "Enable " + aicNumber + " -- " + getInterruptDescription( interrupt ) )
     aicVectorEnable.setDefaultValue( False )
     ###
+    if (aicNumber in externalList):
+        vectorPreCursor = "External Vector: "
+    else:
+        vectorPreCursor = "Internal Vector: "
     aicVectorSourceGUILabel = coreComponent.createCommentSymbol( interruptName + "_INTERRUPT_VECTOR_LABEL", aicVectorEnable )
-    aicVectorSourceGUILabel.setLabel( "Vector: " + interruptName + "_IRQn" )
+    aicVectorSourceGUILabel.setLabel( vectorPreCursor + interruptName + "_IRQn" )
     #This is the same as aicVectorSourceGUILabel but creates a .var assignment accessible in plib_aic.c.ftl
     aicVectorSource = coreComponent.createStringSymbol( interruptName + interruptLastNameVector, aicVectorEnable )
     aicVectorSource.setDefaultValue( interruptName + "_IRQn" )
@@ -325,9 +329,10 @@ for interrupt in interruptsChildren:
     aicVectorSourceType = coreComponent.createKeyValueSetSymbol( interruptName + interruptLastNameSrcType, aicVectorEnable )
     aicVectorSourceType.setLabel( "Source Type" )
     for tupleElem in aicSrcTypes:
-        if (aicNumber in internalList) and ("internal" not in tupleElem[ 2 ]):
+        if (aicNumber not in externalList) and ("internal" not in tupleElem[ 2 ]):
             continue
         aicVectorSourceType.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
+
     aicVectorSourceType.setOutputMode( "Key" )
     aicVectorSourceType.setDisplayMode( "Description" )
     aicVectorSourceType.setDefaultValue( 0 )
