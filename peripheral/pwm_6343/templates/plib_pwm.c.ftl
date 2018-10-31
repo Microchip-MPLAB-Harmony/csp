@@ -319,10 +319,14 @@ void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMa
 bool ${PWM_INSTANCE_NAME}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
 {
     bool status;
+    <#if core.DEVICE_ARCH?contains("CORTEX-M")>
     NVIC_DisableIRQ(${PWM_INSTANCE_NAME}_IRQn);
+    </#if>
     status = ((${PWM_INSTANCE_NAME}_status | ${PWM_INSTANCE_NAME}_REGS->PWM_ISR1) >> channel) & 0x1U;
     ${PWM_INSTANCE_NAME}_status = 0x0U;
+    <#if core.DEVICE_ARCH?contains("CORTEX-M")>
     NVIC_EnableIRQ(${PWM_INSTANCE_NAME}_IRQn);
+    </#if>
     return status;
 }
 
