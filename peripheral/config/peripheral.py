@@ -49,6 +49,7 @@ peripherals = {
                 "RTT_6081"      : ["TMR"],
                 "RTC_U2250"     : ["TMR"],
                 "RTC_U2202"     : ["TMR"],
+                "LCDC_11062"    : ["LCDC"],
 }
 
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
