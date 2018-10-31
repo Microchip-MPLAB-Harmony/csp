@@ -79,6 +79,10 @@ def instantiateComponent(coreComponent):
     autoComponentIDTable = ["dfp", "cmsis"]
     res = Database.activateComponents(autoComponentIDTable)
 
+    deviceArch = coreComponent.createStringSymbol("DEVICE_ARCH", None);
+    deviceArch.setVisible(False)
+    deviceArch.setDefaultValue(ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("architecture"))
+
     devMenu = coreComponent.createMenuSymbol("CoreDevMenu", None)
     devMenu.setLabel("Device & Project Configuration")
 
