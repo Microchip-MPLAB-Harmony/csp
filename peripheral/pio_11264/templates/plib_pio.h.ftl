@@ -390,7 +390,7 @@ void PIO_Initialize(void);
   Remarks:
     None.
 */
-static inline void PIO_PinWrite(PIO_PIN pin, bool value);
+void PIO_PinWrite(PIO_PIN pin, bool value);
 
 // *****************************************************************************
 /* Function:
@@ -424,13 +424,13 @@ static inline void PIO_PinWrite(PIO_PIN pin, bool value);
     </code>
 
   Remarks:
-       To read the latched value on this pin, PIO_PinReadLatch API should be used.
+       To read the latched value on this pin, PIO_PinLatchRead API should be used.
 */
-static inline bool  PIO_PinRead(PIO_PIN pin);
+bool  PIO_PinRead(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
-    bool PIO_PinReadLatch ( PIO_PIN pin )
+    bool PIO_PinLatchRead ( PIO_PIN pin )
 
   Summary:
     Read the value driven on the selected pin.
@@ -453,14 +453,14 @@ static inline bool  PIO_PinRead(PIO_PIN pin);
     <code>
 
     bool value;
-    value = PIO_PinReadLatch(PIO_PIN_PB3);
+    value = PIO_PinLatchRead(PIO_PIN_PB3);
 
     </code>
 
   Remarks:
     To read actual pin value, PIO_PinRead API should be used.
 */
-static inline bool PIO_PinReadLatch( PIO_PIN pin);
+bool PIO_PinLatchRead( PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -491,7 +491,7 @@ static inline bool PIO_PinReadLatch( PIO_PIN pin);
   Remarks:
     None.
 */
-static inline void PIO_PinToggle(PIO_PIN pin);
+void PIO_PinToggle(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -522,7 +522,7 @@ static inline void PIO_PinToggle(PIO_PIN pin);
   Remarks:
     None.
 */
-static inline void PIO_PinSet(PIO_PIN pin);
+void PIO_PinSet(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -553,7 +553,7 @@ static inline void PIO_PinSet(PIO_PIN pin);
   Remarks:
     None.
 */
-static inline void PIO_PinClear(PIO_PIN pin);
+void PIO_PinClear(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -584,7 +584,7 @@ static inline void PIO_PinClear(PIO_PIN pin);
   Remarks:
     None.
 */
-static inline void PIO_PinInputEnable(PIO_PIN pin);
+void PIO_PinInputEnable(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -615,7 +615,7 @@ static inline void PIO_PinInputEnable(PIO_PIN pin);
   Remarks:
     None.
 */
-static inline void PIO_PinOutputEnable(PIO_PIN pin);
+void PIO_PinOutputEnable(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -646,7 +646,7 @@ static inline void PIO_PinOutputEnable(PIO_PIN pin);
   Remarks:
     None.
 */
-static inline void PIO_PinInterruptEnable(PIO_PIN pin);
+void PIO_PinInterruptEnable(PIO_PIN pin);
 
 // *****************************************************************************
 /* Function:
@@ -677,7 +677,7 @@ static inline void PIO_PinInterruptEnable(PIO_PIN pin);
   Remarks:
     None.
 */
-static inline void PIO_PinInterruptDisable(PIO_PIN pin);
+void PIO_PinInterruptDisable(PIO_PIN pin);
 
 <#if PORT_A_INTERRUPT_USED == true ||
      PORT_B_INTERRUPT_USED == true ||

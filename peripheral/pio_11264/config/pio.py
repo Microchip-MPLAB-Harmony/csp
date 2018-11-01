@@ -306,6 +306,11 @@ pinTotalPins = coreComponent.createIntegerSymbol("PIO_PIN_TOTAL" , pinConfigurat
 pinTotalPins.setVisible(False)
 pinTotalPins.setDefaultValue(packagePinCount)
 
+# Needed to map port system APIs to PLIB APIs
+pioSymAPI_Prefix = coreComponent.createStringSymbol("PORT_API_PREFIX", None)
+pioSymAPI_Prefix.setDefaultValue("PIO")
+pioSymAPI_Prefix.setVisible(False)
+
 portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(pioPackage.getValue()) + "\"]")
 for id in range(0,len(portBitPositionNode.getChildren())):
 	if "BGA" in pioPackage.getValue():
@@ -529,6 +534,12 @@ pioSystemDefFile.setType("STRING")
 pioSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 pioSystemDefFile.setSourcePath("../peripheral/pio_11264/templates/system/system_definitions.h.ftl")
 pioSystemDefFile.setMarkup(True)
+
+sysPortIncludeFile = coreComponent.createFileSymbol("PIO_SYSPORT_H", None)
+sysPortIncludeFile.setType("STRING")
+sysPortIncludeFile.setOutputName("core.LIST_SYS_PORT_INCLUDES")
+sysPortIncludeFile.setSourcePath("../peripheral/pio_11264/templates/plib_pio_sysport.h.ftl")
+sysPortIncludeFile.setMarkup(True)
 
 # bspIncludeFile = coreComponent.createFileSymbol("PIO_BSP_H", None)
 # bspIncludeFile.setType("STRING")
