@@ -77,7 +77,7 @@
 
 typedef enum
 {
-    TC_CAPTURE_STATUS_NONe = 0,
+    TC_CAPTURE_STATUS_NONE = 0,
     
     /* Capture status overflow */
     TC_CAPTURE_STATUS_OVERFLOW = TC_INTFLAG_OVF_Msk,

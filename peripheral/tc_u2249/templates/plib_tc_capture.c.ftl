@@ -53,7 +53,6 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "device.h"
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
@@ -76,7 +75,7 @@
         <#assign TC_CTRLA_VAL = "TC_CTRLA_CAPTEN0_Msk">
     </#if>
     <#if TC_CAPTURE_CTRLA_COPEN0 == "1">  <#-- input event -->
-        <#if TC_CAPTURE_TRIGGER_ACTION0 == "PPW" || TC_CAPTURE_TRIGGER_ACTION0 == "PPW">
+        <#if TC_CAPTURE_TRIGGER_ACTION0 == "PPW" || TC_CAPTURE_TRIGGER_ACTION0 == "PWP">
             <#if TC_CTRLA_VAL != "">
                 <#assign TC_CTRLA_VAL = TC_CTRLA_VAL + " | TC_CTRLA_CAPTEN1_Msk">
             <#else>
