@@ -27,7 +27,7 @@ typedef enum
 <#list 0..PORT_GROUP_COUNT - 1 as i>
     <#assign PORT_GROUP_INDEX = i>
     <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + i>
-    SYS_PORT_${.vars[PORT_GROUP_NAME]} = PORT${.vars[PORT_GROUP_NAME]}_BASE_ADDRESS,
+    SYS_PORT_${.vars[PORT_GROUP_NAME]} = PORT_BASE_ADDRESS + ${.vars[PORT_GROUP_NAME]} * (0x80),
 </#list>
 } SYS_PORT;
 

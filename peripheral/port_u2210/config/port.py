@@ -64,7 +64,6 @@ def packageChange(pin, pinout):
                 pin_position = sorted(pin_map.keys())
 
         pinNumber = int(str(pin.getID()).split("PORT_PIN")[1])
-        print pinNumber
         pin.setLabel("Pin " + str(pin_position[pinNumber - 1]))
         Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_PIN", -1, 2)
         Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_GROUP", "", 2)
@@ -171,10 +170,9 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
     global intPrePinMuxVal
     global prevID
     global prevVal
-
+    global portPackage
     bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
     groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
-
     peripheralFuncVal = 0
 
     if event["value"] not in peripheralFunctionality and event["value"] != "":
@@ -213,7 +211,7 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
         if event["id"] == prevID and event["value"] != prevVal:
             Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)), 1)
 
-        portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
+        portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(portPackage.getValue())) + "\"]/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
 
         if portPositionNodePin != None:
             Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , str(portPositionNodePin.getAttribute("pad")), 1)
@@ -226,6 +224,7 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
 ###################################################################################################
 ##packagepinout map
 global package
+global portPackage
 package = {}
 ## total number of pins
 global pincount
@@ -348,8 +347,8 @@ for pinNumber in range(1, pincount + 1):
     pinPeripheralFunction[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber-1])
     pinPeripheralFunction[pinNumber-1].setLabel("Peripheral Selection")
     pinPeripheralFunction[pinNumber-1].setReadOnly(True)
-
-    portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout/pin@[position=\""+ str(pinNumber) +"\"]")
+    
+    portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(portPackage.getValue())) + "\"]/pin@[position=\""+ str(pinNumber) +"\"]")
 
     if portBitPositionNode != None:
 
@@ -368,7 +367,6 @@ for pinNumber in range(1, pincount + 1):
 
         pinoutPadFirstHalf, pinoutPadSecondHalf = pinoutPad[:len(pinoutPad)/2], pinoutPad[len(pinoutPad)/2:]
         firstPart, secondPart = pinoutPadFirstHalf[:len(pinoutPadFirstHalf)/2], pinoutPadFirstHalf[len(pinoutPadFirstHalf)/2:]
-
         if firstPart == "P":
             pinBitPosition[pinNumber-1].setDefaultValue(int(pinoutPadSecondHalf))
             pinBitPosition[pinNumber-1].setReadOnly(True)
@@ -482,7 +480,7 @@ for portNumber in range(0, len(group)):
     portSym_GroupName.append(portNumber)
     portSym_GroupName[portNumber] = coreComponent.createStringSymbol("PORT_GROUP_NAME_" + str(portNumber), portConfiguration)
     portSym_GroupName[portNumber].setVisible(False)
-    portSym_GroupName[portNumber].setDefaultValue(str(portGroupName[portNumber]))
+    portSym_GroupName[portNumber].setDefaultValue(str(portNumber))
 
     usePort.append(portNumber)
     usePort[portNumber] = coreComponent.createBooleanSymbol("PORT_GROUP_" + str(portNumber), port[portNumber])
@@ -525,7 +523,7 @@ for portNumber in range(0, len(group)):
         portSym_PORT_PMUX.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PMUX" + str(pinNum))
         portSym_PORT_PMUX.setDefaultValue(str(hex(0)))
         portSym_PORT_PMUX.setVisible(visibility)
-        portSym_PORT_PMUX.setDependencies(setupPortPinMux, pinPinMuxList)
+        portSym_PORT_PMUX.setDependencies(setupPortPinMux, [pinPinMuxList[2 * pinNum], pinPinMuxList[(2 * pinNum) + 1]])
         
     if portEvsysActionNode != None:    
         portEVSYS = coreComponent.createMenuSymbol("PORT_MENU_EVSYS" + str(portNumber), port[portNumber])
@@ -586,14 +584,6 @@ portSym_HeaderFile.setDestPath("/peripheral/port/")
 portSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/port/")
 portSym_HeaderFile.setType("HEADER")
 portSym_HeaderFile.setMarkup(True)
-
-portPinHeaderFile = coreComponent.createFileSymbol("PORT_PIN_HEADER", None)
-portPinHeaderFile.setSourcePath("../peripheral/port_" + portModuleID + "/plib_port_pin.h")
-portPinHeaderFile.setOutputName("plib_port_pin.h")
-portPinHeaderFile.setDestPath("/peripheral/port/")
-portPinHeaderFile.setProjectPath("config/" + configName +"/peripheral/port/")
-portPinHeaderFile.setType("HEADER")
-portPinHeaderFile.setMarkup(False)
 
 portSym_SourceFile = coreComponent.createFileSymbol("PORT_SOURCE", None)
 portSym_SourceFile.setSourcePath("../peripheral/port_"+portModuleID+"/templates/plib_port.c.ftl")
