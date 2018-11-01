@@ -172,7 +172,7 @@ def instantiateComponent(evsysComponent):
 
     evsysUserNum = evsysComponent.createIntegerSymbol("EVSYS_USER_NUMBER",evsysSym_Menu)
     evsysUserNum.setVisible(False)
-    evsysUserNum.setDefaultValue(int(len(user.keys())))
+    evsysUserNum.setDefaultValue(int(max(user.keys())))
     for id in range(0,channel):
         evsysChannel = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" + str(id), evsysSym_Menu)
         evsysChannel.setLabel("Enable Channel" + str(id))
