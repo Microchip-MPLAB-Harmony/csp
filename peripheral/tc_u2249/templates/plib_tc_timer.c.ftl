@@ -53,7 +53,6 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "device.h"
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 <#assign TC_INTENSET_VAL = "">
@@ -126,6 +125,10 @@ void ${TC_INSTANCE_NAME}_TimerInitialize( void )
     <#if TC_INTENSET_VAL?has_content>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = ${TC_INTENSET_VAL};
     </#if>
+</#if>
+
+<#if TC_TIMER_EVCTRL_OVFEO == true>
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = TC_EVCTRL_OVFEO_Msk;
 </#if>
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))

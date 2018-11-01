@@ -53,11 +53,11 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "device.h"
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 <#assign TC_CTRLBSET_VAL = "">
 <#assign TC_DRVCTRL_VAL = "">
+<#assign TC_EVCTRL_VAL = "">
 <#if TC_COMPARE_CTRLBSET_DIR == "1">
     <#assign TC_CTRLBSET_VAL = "TC_CTRLBSET_DIR_Msk">
 </#if>
@@ -89,6 +89,17 @@
         <#assign TC_DRVCTRL_VAL = "TC_DRVCTRL_INVEN1_Msk">
     </#if>
 </#if>
+<#if TC_COMPARE_EVCTRL_OVFEO == true>
+    <#assign TC_EVCTRL_VAL = "TC_EVCTRL_OVFEO_Msk">
+</#if>
+<#if TC_COMPARE_EVCTRL_MCEO1 == true>
+    <#if TC_EVCTRL_VAL != "">
+        <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_MCEO1_Msk">
+    <#else>
+        <#assign TC_EVCTRL_VAL = "TC_EVCTRL_MCEO1_Msk">
+    </#if>
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data
@@ -149,6 +160,9 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = TC_INTENSET_OVF_Msk;
     </#if>
 
+    <#if TC_EVCTRL_VAL?has_content>
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
+    </#if>
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
     {
         /* Wait for Write Synchronization */
