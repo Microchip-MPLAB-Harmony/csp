@@ -56,6 +56,7 @@
 /* This section lists the other files that are included in this file.
 */
 
+#include "device.h"
 #include "plib_tc_common.h"
 
 // DOM-IGNORE-BEGIN
