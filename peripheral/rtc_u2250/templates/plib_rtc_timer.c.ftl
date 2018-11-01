@@ -53,33 +53,33 @@
 
 void ${RTC_INSTANCE_NAME}_Initialize(void)
 {
-    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.CTRLA = RTC_${RTC_MODULE_SELECTION}_CTRLA_SWRST_Msk;
+    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_CTRLA = RTC_${RTC_MODULE_SELECTION}_CTRLA_SWRST_Msk;
 
-    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.SYNCBUSY & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk)
+    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_SYNCBUSY & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for Synchronization after Software Reset */
     }
 
     <#if RTC_MODULE_SELECTION = "MODE0">
-        <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE0.CTRLA = RTC_MODE0_CTRLA_MODE(0) |
+        <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_MODE(0) |
                                                                 RTC_MODE0_CTRLA_PRESCALER(${RTC_MODE0_PRESCALER}) |
                                                                 RTC_MODE0_CTRLA_COUNTSYNC_Msk
                                                                 ${RTC_MODE0_MATCHCLR?then("|RTC_MODE0_CTRLA_MATCHCLR_Msk", "")};</@compress>
 
 
-        ${RTC_INSTANCE_NAME}_REGS->MODE0.COMP = 0x${RTC_MODE0_TIMER_COMPARE};
+        ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP = 0x${RTC_MODE0_TIMER_COMPARE};
         <#if RTC_MODE0_EVCTRL != "0">
-            <#lt>${RTC_INSTANCE_NAME}_REGS->MODE0.EVCTRL = 0x${RTC_MODE0_EVCTRL};
+            <#lt>${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_EVCTRL = 0x${RTC_MODE0_EVCTRL};
         </#if>
     <#else>
-        <#lt>   <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE1.CTRLA = RTC_MODE1_CTRLA_MODE(1) |
+        <#lt>   <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA = RTC_MODE1_CTRLA_MODE(1) |
         <#lt>                                                        RTC_MODE1_CTRLA_PRESCALER(${RTC_MODE1_PRESCALER}) |
         <#lt>                                                        RTC_MODE1_CTRLA_COUNTSYNC_Msk;</@compress>
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.COMP[0] = 0x${RTC_MODE1_COMPARE0_MATCH_VALUE};
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.COMP[1] = 0x${RTC_MODE1_COMPARE1_MATCH_VALUE};
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.PER = 0x${RTC_MODE1_TIMER_COUNTER_PERIOD};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[0] = 0x${RTC_MODE1_COMPARE0_MATCH_VALUE};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[1] = 0x${RTC_MODE1_COMPARE1_MATCH_VALUE};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_PER = 0x${RTC_MODE1_TIMER_COUNTER_PERIOD};
         <#if    RTC_MODE1_EVCTRL != "0">
-            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.EVCTRL = 0x${RTC_MODE1_EVCTRL};
+            <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_EVCTRL = 0x${RTC_MODE1_EVCTRL};
         </#if>
     </#if>
 }
@@ -94,11 +94,11 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>    /* Convert to positive value and adjust register sign bit. */
     <#lt>    if (correction < 0)
     <#lt>    {
-    <#lt>        newCorrectionValue |= RTC_${RTC_MODULE_SELECTION}_FREQCORR_SIGN_Msk;
+    <#lt>        newCorrectionValue |= RTC_FREQCORR_SIGN_Msk;
     <#lt>    }
         
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.FREQCORR = newCorrectionValue;
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.SYNCBUSY & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk)
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_FREQCORR = newCorrectionValue;
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_SYNCBUSY & RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk) == RTC_${RTC_MODULE_SELECTION}_SYNCBUSY_FREQCORR_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after writing Value to FREQCORR */
     <#lt>    }
@@ -111,20 +111,20 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#lt>   bool periodIntervalComplete = false;
         <#if RTC_MODULE_SELECTION = "MODE0" >
-    <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->MODE0.INTFLAG & period) == period)
+    <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG & period) == period)
     <#lt>   {
     <#lt>       periodIntervalComplete = true;
 
     <#lt>       /* Clear Periodic Interval Interrupt */
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE0.INTFLAG = period;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = period;
     <#lt>   }
         <#elseif RTC_MODULE_SELECTION = "MODE1" >
-    <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG & period) == period)
+    <#lt>   if( (${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG & period) == period)
     <#lt>   {
     <#lt>       periodIntervalComplete = true;
 
     <#lt>       /* Clear Periodic Interval Interrupt */
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG = period;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = period;
     <#lt>   }
         </#if>
 
@@ -137,10 +137,10 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#lt>   bool status = false;
 
-    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE0.INTFLAG & RTC_MODE0_INTFLAG_CMP0_Msk) == RTC_MODE0_INTFLAG_CMP0_Msk)
+    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG & RTC_MODE0_INTFLAG_CMP0_Msk) == RTC_MODE0_INTFLAG_CMP0_Msk)
     <#lt>   {
     <#lt>       status = true;
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE0.INTFLAG = RTC_MODE0_INTFLAG_CMP0_Msk;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_CMP0_Msk;
     <#lt>   }
 
     <#lt>   return status;
@@ -150,10 +150,10 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#lt>   bool status = false;
 
-    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE0.INTFLAG & RTC_MODE0_INTFLAG_OVF_Msk) == RTC_MODE0_INTFLAG_OVF_Msk)
+    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG & RTC_MODE0_INTFLAG_OVF_Msk) == RTC_MODE0_INTFLAG_OVF_Msk)
     <#lt>   {
     <#lt>       status = true;
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE0.INTFLAG = RTC_MODE0_INTFLAG_OVF_Msk;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_OVF_Msk;
     <#lt>   }
 
     <#lt>   return status;
@@ -166,10 +166,10 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#lt>   bool status = false;
 
-    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG & RTC_MODE1_INTFLAG_OVF_Msk ) == RTC_MODE1_INTFLAG_OVF_Msk)
+    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG & RTC_MODE1_INTFLAG_OVF_Msk ) == RTC_MODE1_INTFLAG_OVF_Msk)
     <#lt>   {
     <#lt>       status = true;
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_OVF_Msk;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = RTC_MODE1_INTFLAG_OVF_Msk;
     <#lt>   }
     <#lt>   return status;
     <#lt>}
@@ -178,12 +178,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#lt>   bool status = false;
 
-    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG & RTC_MODE1_INTFLAG_OVF_Msk ) == RTC_MODE1_INTFLAG_OVF_Msk)
+    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG & RTC_MODE1_INTFLAG_OVF_Msk ) == RTC_MODE1_INTFLAG_OVF_Msk)
     <#lt>   {
     <#lt>       status = true;
     <#lt>            
     <#lt>       /* Clear Counter Overflow Interrupt */
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_OVF_Msk;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = RTC_MODE1_INTFLAG_OVF_Msk;
     <#lt>   }
 
     <#lt>   return status;
@@ -193,12 +193,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#lt>   bool status = false;
 
-    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG & RTC_MODE1_INTFLAG_CMP0_Msk ) == RTC_MODE1_INTFLAG_CMP0_Msk)
+    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG & RTC_MODE1_INTFLAG_CMP0_Msk ) == RTC_MODE1_INTFLAG_CMP0_Msk)
     <#lt>   {
     <#lt>       status = true;
 
     <#lt>       /* Clear Compare 0 Match Flag */
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_CMP0_Msk;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = RTC_MODE1_INTFLAG_CMP0_Msk;
     <#lt>   }
 
     <#lt>   return status;
@@ -208,12 +208,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#lt>   bool status = false;
 
-    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG & RTC_MODE1_INTFLAG_CMP1_Msk ) == RTC_MODE1_INTFLAG_CMP1_Msk)
+    <#lt>   if((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG & RTC_MODE1_INTFLAG_CMP1_Msk ) == RTC_MODE1_INTFLAG_CMP1_Msk)
     <#lt>   {
     <#lt>       status = true;
 
     <#lt>       /* Clear Compare 1 Match Flag */
-    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_CMP1_Msk;
+    <#lt>       ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = RTC_MODE1_INTFLAG_CMP1_Msk;
     <#lt>   }
 
     <#lt>   return status;
@@ -224,9 +224,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32Start ( void )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.CTRLA |= RTC_MODE0_CTRLA_ENABLE_Msk;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA |= RTC_MODE0_CTRLA_ENABLE_Msk;
         
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
     <#lt>    {
     <#lt>        /* Wait for synchronization after Enabling RTC */
     <#lt>    }
@@ -235,9 +235,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32Stop ( void )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.CTRLA &= ~(RTC_MODE0_CTRLA_ENABLE_Msk);
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_CTRLA &= ~(RTC_MODE0_CTRLA_ENABLE_Msk);
 
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after Disabling RTC */
     <#lt>    }
@@ -245,9 +245,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32CounterSet ( uint32_t count )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.COUNT = count;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT = count;
 
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after writing value to Count Register */
     <#lt>    }
@@ -256,9 +256,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32CompareSet ( uint32_t compareValue )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.COMP = compareValue;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP = compareValue;
 
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after writing Compare Value */
     <#lt>    }
@@ -266,12 +266,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32CounterGet ( void )
     <#lt>{
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization before reading value from Count Register */
     <#lt>    }
         
-    <#lt>    return(${RTC_INSTANCE_NAME}_REGS->MODE0.COUNT);
+    <#lt>    return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT);
     <#lt>}
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32PeriodGet ( void )
@@ -289,12 +289,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#if RTC_MODE0_INTERRUPT = true>
         <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptEnable(RTC_TIMER32_INT_MASK interrupt)
         <#lt>{
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.INTENSET = interrupt;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTENSET = interrupt;
         <#lt>}
 
         <#lt>void ${RTC_INSTANCE_NAME}_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt)
         <#lt>{
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.INTENCLR = interrupt;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTENCLR = interrupt;
         <#lt>}
             
     </#if>
@@ -302,9 +302,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16Start ( void )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.CTRLA |= RTC_MODE1_CTRLA_ENABLE_Msk;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA |= RTC_MODE1_CTRLA_ENABLE_Msk;
 
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_ENABLE_Msk) == RTC_MODE1_SYNCBUSY_ENABLE_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_ENABLE_Msk) == RTC_MODE1_SYNCBUSY_ENABLE_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after Enabling RTC */
     <#lt>    }
@@ -312,9 +312,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16Stop ( void )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.CTRLA &= ~(RTC_MODE1_CTRLA_ENABLE_Msk);
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_CTRLA &= ~(RTC_MODE1_CTRLA_ENABLE_Msk);
 
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_ENABLE_Msk) == RTC_MODE1_SYNCBUSY_ENABLE_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_ENABLE_Msk) == RTC_MODE1_SYNCBUSY_ENABLE_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after Disabling RTC */
     <#lt>    }
@@ -323,9 +323,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16CounterSet ( uint16_t count )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.COUNT = count;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT = count;
 
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COUNT_Msk) == RTC_MODE1_SYNCBUSY_COUNT_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_COUNT_Msk) == RTC_MODE1_SYNCBUSY_COUNT_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after writing value to Count Register */
     <#lt>    }
@@ -334,9 +334,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16PeriodSet ( uint16_t period )
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.PER = period;
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_PER = period;
 
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_PER_Msk) == RTC_MODE1_SYNCBUSY_PER_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_PER_Msk) == RTC_MODE1_SYNCBUSY_PER_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after writing Counter Period */
     <#lt>    }
@@ -344,23 +344,23 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>uint16_t ${RTC_INSTANCE_NAME}_Timer16CounterGet ( void )
     <#lt>{
-    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COUNT_Msk) == RTC_MODE1_SYNCBUSY_COUNT_Msk)
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_COUNT_Msk) == RTC_MODE1_SYNCBUSY_COUNT_Msk)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after reading value from Count Register */
     <#lt>    }
-    <#lt>    return (${RTC_INSTANCE_NAME}_REGS->MODE1.COUNT);
+    <#lt>    return (${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT);
     <#lt>}
 
     <#lt>uint16_t ${RTC_INSTANCE_NAME}_Timer16PeriodGet ( void )
     <#lt>{
-    <#lt>    return (${RTC_INSTANCE_NAME}_REGS->MODE1.PER);
+    <#lt>    return (${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_PER);
     <#lt>}
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16Compare0Set ( uint16_t comparisionValue )
     <#lt>{
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.COMP[0] = comparisionValue;
+    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[0] = comparisionValue;
 
-    <#lt>   while((${RTC_INSTANCE_NAME}_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COMP0_Msk) == RTC_MODE1_SYNCBUSY_COMP0_Msk)
+    <#lt>   while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_COMP0_Msk) == RTC_MODE1_SYNCBUSY_COMP0_Msk)
     <#lt>   {
     <#lt>       /* Wait for Synchronization after writing Compare Value */
     <#lt>   }
@@ -368,9 +368,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16Compare1Set ( uint16_t comparisionValue )
     <#lt>{
-    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.COMP[1] = comparisionValue;
+    <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[1] = comparisionValue;
 
-    <#lt>   while((${RTC_INSTANCE_NAME}_REGS->MODE1.SYNCBUSY & RTC_MODE1_SYNCBUSY_COMP1_Msk) == RTC_MODE1_SYNCBUSY_COMP1_Msk)
+    <#lt>   while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_COMP1_Msk) == RTC_MODE1_SYNCBUSY_COMP1_Msk)
     <#lt>   {
     <#lt>       /* Wait for Synchronization after writing Compare Value */
     <#lt>   }
@@ -385,12 +385,12 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
         <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptEnable(RTC_TIMER16_INT_MASK interrupt)
         <#lt>{
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.INTENSET = interrupt;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENSET = interrupt;
         <#lt>}
 
         <#lt>void ${RTC_INSTANCE_NAME}_Timer16InterruptDisable(RTC_TIMER16_INT_MASK interrupt)
         <#lt>{
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.INTENCLR = interrupt;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENCLR = interrupt;
         <#lt>}
 
     </#if>
@@ -416,7 +416,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>void ${RTC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#if RTC_MODULE_SELECTION = "MODE0">
-        <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = ${RTC_INSTANCE_NAME}_REGS->MODE0.INTFLAG;
+        <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
 
         <#lt>    /* Invoke registered Callback function */
         <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback != NULL)
@@ -424,10 +424,10 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback( ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context );
         <#lt>    }
             
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.INTFLAG = RTC_MODE0_INTFLAG_Msk;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
     <#else>
         <#lt>    /* Update the event in RTC Peripheral Callback object */
-        <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause = ${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG;
+        <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause = ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG;
 
         <#lt>    /* Invoke registered Callback function */
         <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback != NULL)
@@ -435,7 +435,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback( ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context );
         <#lt>    }
 
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.INTFLAG = RTC_MODE1_INTFLAG_Msk;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = RTC_MODE1_INTFLAG_Msk;
     </#if>
     <#lt>}
 </#if>
