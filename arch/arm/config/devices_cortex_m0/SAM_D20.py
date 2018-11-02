@@ -81,7 +81,7 @@ cortexMenu.setDescription("Configuration for Cortex M0+")
 # coreComponent.addPlugin("../peripheral/dmac_u2223/plugin/dmamanager.jar")
 
 # load wdt
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2203/config/wdt.py")
 
 # load PAC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_u2211/config/pac.py")
