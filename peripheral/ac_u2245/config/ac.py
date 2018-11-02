@@ -126,7 +126,7 @@ def instantiateComponent(acComponent):
         global acInterrupt_Enable
         acInterrupt_Enable = acComponent.createBooleanSymbol("COMP" + str(comparatorID) + "INTERRUPT_ENABLE", acSym_Enable[comparatorID])
         print(acInterrupt_Enable)
-        acInterrupt_Enable.setLabel("Interrupt Enable")
+        acInterrupt_Enable.setLabel("Comparator Interrupt Enable")
         acInterrupt_Enable.setVisible(False)
         acInterrupt_Enable.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
 
@@ -297,7 +297,7 @@ def instantiateComponent(acComponent):
             acSym_COMPCTRL_SPEED.addKey(acSym_COMPCTRL_SPEED_Key_Name, acSym_COMPCTRL_SPEED_Key_Value, acSym_COMPCTRL_SPEED_Key_Description)
 
         acSym_COMPCTRL_SPEED.setDefaultValue(acSym_COMPCTRL_SPEED_Default_Val)
-        acSym_COMPCTRL_SPEED.setOutputMode("Key")
+        acSym_COMPCTRL_SPEED.setOutputMode("Value")
         acSym_COMPCTRL_SPEED.setDisplayMode("Description")
         acSym_COMPCTRL_SPEED.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
 
@@ -325,7 +325,7 @@ def instantiateComponent(acComponent):
     acSym_WINCTRL0.setDefaultValue(False)
     
     #Window 0 Interrupt Enable
-    acSym_INTENSET_WIN0 = acComponent.createBooleanSymbol("AC_INTENSET_WIN0", acSym_WindowConf)
+    acSym_INTENSET_WIN0 = acComponent.createBooleanSymbol("AC_INTENSET_WIN0", acSym_WINCTRL0)
     acSym_INTENSET_WIN0.setLabel("Window 0 Interrupt Enable")
     acSym_INTENSET_WIN0.setDefaultValue(False)
     
@@ -364,7 +364,7 @@ def instantiateComponent(acComponent):
     acSym_WINCTRL1.setDefaultValue(False)
     
     #Window 1 Interrupt Enable
-    acSym_INTENSET_WIN1 = acComponent.createBooleanSymbol("AC_INTENSET_WIN1", acSym_WindowConf)
+    acSym_INTENSET_WIN1 = acComponent.createBooleanSymbol("AC_INTENSET_WIN1", acSym_WINCTRL1)
     acSym_INTENSET_WIN1.setLabel("Window 1 Interrupt Enable")
     acSym_INTENSET_WIN1.setDefaultValue(False)
     
