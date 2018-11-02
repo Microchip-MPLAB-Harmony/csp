@@ -85,6 +85,14 @@ def tcSlaveModeVisible(symbol, event):
     else:
         symbol.setVisible(True)
 
+def tcSlaveClockEnable(symbol, event):
+    component = int(tcInstanceName.getValue()[-1]) + 1
+    if event["value"] == 2:   #COUNT32
+        #clock enable
+        Database.setSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE", True, 2)
+    else:
+        Database.setSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE", False, 2)
+
 def tcSlaveModeCommentVisible(symbol, event):
     if event["value"] == 2:
         symbol.setVisible(True)
@@ -273,6 +281,9 @@ def instantiateComponent(tcComponent):
     if (tcInstanceMasterValue == 2):
         tcSym_CTRLA_MODE.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
 
+    tcSym_SLAVE_CLOCK_ENABLE = tcComponent.createIntegerSymbol("TC_SLAVE_CLOCK_ENABLE", None)
+    tcSym_SLAVE_CLOCK_ENABLE.setVisible(False)
+    tcSym_SLAVE_CLOCK_ENABLE.setDependencies(tcSlaveClockEnable, ["TC_CTRLA_MODE"])
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
