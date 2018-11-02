@@ -57,9 +57,9 @@
 <#if AC_WINCTRL_WIN0 == true>
     <#if AC_WINTSEL0 ?has_content >
         <#if AC_WINCTRL_VAL != "">
-            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WEN0(${AC_WINTSEL0})">
+            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
         <#else>
-            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WEN0(${AC_WINTSEL0})">
+            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
         </#if>
     </#if>
 </#if>
@@ -73,9 +73,9 @@
 <#if AC_WINCTRL_WIN1 == true>
     <#if AC_WINTSEL1 ?has_content >
         <#if AC_WINCTRL_VAL != "">
-            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WEN1(${AC_WINTSEL1})">
+            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL1(${AC_WINTSEL1})">
         <#else>
-            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WEN1(${AC_WINTSEL1})">
+            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL1(${AC_WINTSEL1})">
         </#if>
     </#if>
 </#if>
@@ -145,7 +145,7 @@
         <#if AC_INTENSET_VAL != "">
         <#assign AC_INTENSET_VAL = AC_INTENSET_VAL + " | AC_INTENSET_WIN0_Msk">
         <#else>
-        <#assign AC_INTENSET_VAL = "AC_EVCTRL_WINEO0_Msk">
+        <#assign AC_INTENSET_VAL = "AC_INTENSET_WIN0_Msk">
         </#if>
     </#if>
 </#if>
@@ -169,8 +169,11 @@ AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 void ${AC_INSTANCE_NAME}_Initialize(void)
 {
     /*Reset AC registers*/
-     AC_REGS->AC_CTRLA = AC_CTRLA_SWRST_Msk;
-
+    AC_REGS->AC_CTRLA = AC_CTRLA_SWRST_Msk;
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_SWRST_Msk) == AC_SYNCBUSY_SWRST_Msk)
+    {
+        /* Wait for Synchronization */
+    }
      /* Disable the module and configure COMPCTRL */
     <#list 0..4 as i>
     <#assign ANALOG_COMPARATOR_ENABLE = "ANALOG_COMPARATOR_ENABLE_" + i>
@@ -180,16 +183,29 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     <#assign AC_COMPCTRL_OUTPUT_TYPE = "AC" + i + "_OUTPUT_TYPE">
     <#assign AC_COMPCTRL_INTSEL = "AC" + i + "_ISEL">
     <#assign AC_COMPCTRL_HYSTEN = "AC" + i + "_HYSTEN">
+    <#assign AC_COMPCTRL_RUNSTDBY = "AC" + i + "_COMPCTRL_RUNSTDBY">
+    <#assign AC_COMPCTRL_SPEED = "AC" + i + "_SPEED">
     <#assign AC_SCALERn = "AC_SCALER_N_" + i>
         <#if .vars[ANALOG_COMPARATOR_ENABLE]?has_content>
             <#if (.vars[ANALOG_COMPARATOR_ENABLE] != false)>
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_COMPCTRL${i}_Msk) == AC_SYNCBUSY_COMPCTRL${i}_Msk)
+    {
+        /* Wait for Synchronization */
+    }
     AC_REGS->AC_COMPCTRL[${i}] &= ~(AC_COMPCTRL_ENABLE_Msk);
+    /* Check Synchronization to ensure that the comparator is disabled */
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_COMPCTRL${i}_Msk) == AC_SYNCBUSY_COMPCTRL${i}_Msk)
+    {
+        /* Wait for Synchronization */
+    }
     <@compress single_line=true>AC_REGS->AC_COMPCTRL[${i}] = AC_COMPCTRL_MUXPOS_${.vars[AC_COMPCTRL_MUX_POS]}
                                   | AC_COMPCTRL_MUXNEG_${.vars[AC_COMPCTRL_MUX_NEG]}
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
                                   | AC_COMPCTRL_OUT_${.vars[AC_COMPCTRL_OUTPUT_TYPE]}
-                                    ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
-                                    ${.vars[AC_COMPCTRL_HYSTEN]?then(' | AC_COMPCTRL_HYSTEN_Msk','')};</@compress>
+                                  | AC_COMPCTRL_SPEED(${.vars[AC_COMPCTRL_SPEED]})
+                                  ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
+                                  ${.vars[AC_COMPCTRL_RUNSTDBY]?then(' | AC_COMPCTRL_RUNSTDBY_Msk','')}
+                                  ${.vars[AC_COMPCTRL_HYSTEN]?then(' | AC_COMPCTRL_HYSTEN_Msk','')};</@compress>
     AC_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
                 <#if .vars[AC_SCALERn]?has_content >
     AC_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]};
@@ -199,6 +215,10 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
         </#if>
     </#list>
 <#if AC_WINCTRL_VAL?has_content>
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_WINCTRL_Msk) == AC_SYNCBUSY_WINCTRL_Msk)
+    {
+        /* Wait for Synchronization */
+    }
     AC_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
 </#if>
 <#if AC_EVCTRL_VAL?has_content>
@@ -207,6 +227,10 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
 <#if AC_INTENSET_VAL?has_content>
     AC_REGS->AC_INTENSET = ${AC_INTENSET_VAL};
 </#if>
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
+    {
+        /* Wait for Synchronization */
+    }
     AC_REGS->AC_CTRLA = AC_CTRLA_ENABLE_Msk;
 }
 
@@ -218,8 +242,18 @@ void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
 
 void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
 {
+    /* Check Synchronization */
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }
     /* Disable comparator before swapping */
     AC_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
+    /* Check Synchronization to ensure that the comparator is disabled */
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }
     /* Swap inputs of the given comparator */
     AC_REGS->AC_COMPCTRL[channel_id] = AC_COMPCTRL_SWAP_Msk;
     AC_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
