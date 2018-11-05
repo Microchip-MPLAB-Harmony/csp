@@ -64,7 +64,7 @@ uint16_t adc_ch0_count, adc_ch5_count, adc_ch6_count;
 
 float adc_ch0_voltage, adc_ch5_voltage, adc_ch6_voltage;
 
-volatile bool result_ready;
+volatile bool result_ready = false;
 
 /* This function is called after conversion of last channel in the user sequence */
 void ADC_EventHandler(uintptr_t context)
@@ -97,11 +97,11 @@ int main ( void )
     printf("\n\r---------------------------------------------------------\n\r");
     printf("CH0 Count  CH0 Voltage  CH5 Count  CH5 Voltage  CH6 Count  CH6 Voltage \n\r");           
 
+    /* Start ADC conversion */
+    ADC_ConversionStart();
+
     while ( true )
     {
-         /* Start ADC conversion */
-        ADC_ConversionStart();
- 
         /* Check if result is ready to be transmitted to console */
         if (result_ready == true)
         {
@@ -115,6 +115,9 @@ int main ( void )
             result_ready = false;
  
             PIT_DelayMs(500);
+
+            /* Start ADC conversion */
+            ADC_ConversionStart();
         }
     }
 
