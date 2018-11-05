@@ -523,7 +523,7 @@ for portNumber in range(0, len(group)):
         portSym_PORT_PMUX.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PMUX" + str(pinNum))
         portSym_PORT_PMUX.setDefaultValue(str(hex(0)))
         portSym_PORT_PMUX.setVisible(visibility)
-        portSym_PORT_PMUX.setDependencies(setupPortPinMux, [pinPinMuxList[2 * pinNum], pinPinMuxList[(2 * pinNum) + 1]])
+        portSym_PORT_PMUX.setDependencies(setupPortPinMux, pinPinMuxList)
         
     if portEvsysActionNode != None:    
         portEVSYS = coreComponent.createMenuSymbol("PORT_MENU_EVSYS" + str(portNumber), port[portNumber])
