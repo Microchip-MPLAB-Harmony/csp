@@ -3,9 +3,8 @@ from os.path import join
 from xml.etree import ElementTree
 
 global generic_list
-#MCAN0 and 1 are missing because their missing instance ID's from the ATDF
 #UART, SPI, and TWI peripherals claim to be able to use GCLK but aren't in table 33-1
-generic_list = {"FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "CLASSD"};
+generic_list = {"FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "MCAN0", "MCAN1", "CLASSD"};
 
 global DICT_PCER0
 global DICT_PCER1
@@ -276,7 +275,6 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module):
     # get PMC_PCR register
     reg_pmc_pcr = pmc_reg_group.getRegister("PMC_PCR")
 
-    #TODO MCAN0 and 1 are missing instance id's in the ATDF!
     #for periph in ["FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "MCAN0", "MCAN1", "CLASSD"]:
     for periph in generic_list:
         module = periph
