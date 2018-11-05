@@ -158,20 +158,27 @@ def sort_alphanumeric(l):
 		
 	
 def portFunc(pin, func):
-	global port_mskr
-	global per_func
-	pin_num = int(str(pin.getID()).split("PIN_")[1].split("_PIO_PIN")[0])
-	port = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_CHANNEL")
-	bit_pos = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_PIN")
-	if port:
-		key = port + "_" + func["value"]
-		if func["value"] in per_func:
-			port_mskr[key] |= (1 << bit_pos)
-		else:
-			for id in per_func:
-				port_mskr[port + "_" + id] &= ~(1 << bit_pos)
-		if func["value"] in per_func:
-			Database.setSymbolValue("core", "PORT_" + str(port) + "_MSKR_Value" + str(func["value"]), str(hex(port_mskr[key])), 2)
+    global port_mskr
+    global per_func
+    pin_num = int(str(pin.getID()).split("PIN_")[1].split("_PIO_PIN")[0])
+    port = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_CHANNEL")
+    bit_pos = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_PIN")
+    if port:
+        key = port + "_" + func["value"]
+        if func["value"] in per_func:
+            for id in per_func:
+                if id == func["value"]:
+                    port_mskr[key] |= (1 << bit_pos)
+                else:
+                    port_mskr[port + "_" + id] &= ~(1 << bit_pos)
+        else:
+                        for id in per_func:
+                            port_mskr[port + "_" + id] &= ~(1 << bit_pos)
+        
+        if func["value"] in per_func:
+            for id in per_func:
+                Database.setSymbolValue("core", "PORT_" + str(port) + "_MSKR_Value" + str(id), str(hex(port_mskr[port + "_" + id])), 2)
+
 		
 def pinCFGR (pin, cfgr_reg):
 	cfgr = 0
