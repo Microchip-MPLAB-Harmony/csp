@@ -79,7 +79,7 @@ AT91_REMAP_BASE DEFINE 0x00600000
 
         PUBLIC  _reset_vector
         PUBLIC  __iar_program_start
-        PUBLIC  irqHandler
+        PUBWEAK  irqHandler
         PUBLIC  fiqHandler
 
         EXTERN  undefined_instruction_irq_handler
