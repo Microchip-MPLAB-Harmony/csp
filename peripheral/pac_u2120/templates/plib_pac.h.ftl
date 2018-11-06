@@ -53,11 +53,10 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
+#include <stdbool.h>
+#include <stddef.h>
 #include "device.h"
-#include "plib_pac_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -72,54 +71,54 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/* The following data type definitions are used by the functions in this
-    interface and should be considered part it.
-*/
-
-// *****************************************************************************
-/* Peripheral module Identifier enumeration
-
-  Summary:
-    List of available Peripheral module on which errors will be detected.
-
-  Description:
-    This enumeration identifies all the Peripheral modules used on which access
-    errors will be detected.
-
-  Remarks:
-    None.
-*/
 
 typedef enum
 {
-<#list 0..PAC_BRIDGE_COUNT as i>
-    <#assign PAC_BRIDGE = "PAC_" + i + "_BRIDGE">
-    <#assign PAC_BRIDGE_PERI_COUNT = "PAC_BRIDGE_" + i + "_PERI_COUNT">
-        <#if .vars[PAC_BRIDGE_PERI_COUNT]?has_content>
-            <#assign PAC_PERI_COUNT = .vars[PAC_BRIDGE_PERI_COUNT]>
-            <#list 0..PAC_PERI_COUNT as j>
-                <#assign PAC_BRIDGE_PERI_NAME = "PAC_BRIDGE_" + i + "_PERI_" + j + "_NAME">
-                    <#if .vars[PAC_BRIDGE_PERI_NAME]?has_content>
-    <#lt>    /* Interrupt flag for Peripheral bridge ${.vars[PAC_BRIDGE]} - ${.vars[PAC_BRIDGE_PERI_NAME]} */
-    <#lt>    PAC_PERIPHERAL_${.vars[PAC_BRIDGE]}_${.vars[PAC_BRIDGE_PERI_NAME]} = ${((i * 32 ) + j)},
+    /* No Action */
+    PAC_PROTECTION_OFF,
 
-                    </#if>
-            </#list>
+    /* Clear the peripheral write control protection */
+    PAC_PROTECTION_CLEAR,
+
+    /* Set the peripheral write control protection */
+    PAC_PROTECTION_SET,
+
+    /* Set and lock the peripheral write control until the next hardware reset */
+    PAC_PROTECTION_SET_AND_LOCK,
+
+} PAC_PROTECTION;
+
+typedef enum
+{
+<#list 0..PAC_PERI_COUNT as i>
+    <#assign PAC_PERI_NAME = "PAC_" + i + "_PERI_NAME">
+        <#if .vars[PAC_PERI_NAME]?has_content>
+    <#lt>    /* Instance Id for Peripheral ${.vars[PAC_PERI_NAME]} */
+    <#lt>    PAC_PERIPHERAL_${.vars[PAC_PERI_NAME]} = ID_${.vars[PAC_PERI_NAME]},
+
         </#if>
 </#list>
-    /* Interrupt flag for all Peripheral bridges */
-    PAC_PERIPHERAL_ANY = 0xFFFFFFFF
+    PAC_PERIPHERAL_NONE = -1
 
 } PAC_PERIPHERAL;
+
+<#if PAC_INTERRRUPT_MODE = true>
+typedef void (*PAC_CALLBACK)( uintptr_t context );
+
+typedef struct
+{
+    PAC_CALLBACK callback;
+
+    uintptr_t context;
+
+} PAC_CALLBACK_OBJ;
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-    this interface.
-*/
 
 void ${PAC_INSTANCE_NAME}_Initialize( void );
 
