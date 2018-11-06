@@ -50,8 +50,6 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include "plib_${PAC_INSTANCE_NAME?lower_case}.h"
 
@@ -80,7 +78,7 @@ void ${PAC_INSTANCE_NAME}_Initialize( void )
 </#if>
 <#if PAC_ERROR_EVENT == true>
     /* Enable PAC Error Event Output */
-    ${PAC_INSTANCE_NAME}_REGS->PAC_EVCTRL |= PAC_EVCTRL_ERREO_Msk;
+    ${PAC_INSTANCE_NAME}_REGS->PAC_EVCTRL = PAC_EVCTRL_ERREO_Msk;
 </#if>
 }
 

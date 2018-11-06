@@ -22,10 +22,12 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-global InterruptVector
-global InterruptHandler
-global InterruptHandlerLock
+global pacInterruptVector
+global pacInterruptHandler
+global pacInterruptHandlerLock
 global pacInstanceName
+global pacSym_Use
+global pacSym_INTENSET
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -33,142 +35,159 @@ global pacInstanceName
 
 def updatePACInterruptStatus(symbol, event):
 
-    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
-    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+    Database.setSymbolValue("core", pacInterruptVector, event["value"], 2)
+    Database.setSymbolValue("core", pacInterruptHandlerLock, event["value"], 2)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, pacInstanceName.getValue() + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_InterruptHandler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, pacInstanceName.getValue() + "_Handler", 2)
+        Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_Handler", 2)
 
 def updatePACInterruptWarringStatus(symbol, event):
 
-    if pacSym_INTENSET.getValue() == True:
+    if pacSym_INTENSET.getValue() == True and pacSym_Use.getValue() == True:
         symbol.setVisible(event["value"])
+
+def updatePACInterruptVisibleProperty(symbol, event):
+
+    symbol.setVisible(event["value"])
+
+    if pacSym_INTENSET.getValue() == True:
+        Database.setSymbolValue("core", pacInterruptVector, event["value"], 2)
+        Database.setSymbolValue("core", pacInterruptHandlerLock, event["value"], 2)
+
+        if event["value"] == True:
+            Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_InterruptHandler", 2)
+        else:
+            Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_Handler", 2)
+
+def updatePACErrorEventVisibleProperty(symbol, event):
+
+    component = symbol.getComponent()
+
+    component.getSymbolByID("PAC_HEADER").setEnabled(event["value"])
+    component.getSymbolByID("PAC_SOURCE").setEnabled(event["value"])
+    component.getSymbolByID("PAC_SYS_DEF").setEnabled(event["value"])
+    component.getSymbolByID("PAC_SYS_INIT").setEnabled(event["value"])
+
+    symbol.setVisible(event["value"])
+
+    if event["value"] == False:
+        component.getSymbolByID("PAC_INTERRUPT_ENABLE_COMMENT").setVisible(False)
 
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
 
-def instantiateComponent(pacComponent):
+#PAC menu
+pacSym_Menu = coreComponent.createMenuSymbol("PAC_MENU", None)
+pacSym_Menu.setLabel("PAC")
 
-    global InterruptVector
-    global InterruptHandler
-    global InterruptHandlerLock
-    global pacInstanceName
-    global pacSym_INTENSET
+instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PAC\"]").getChildren()
 
-    pacInstanceName = pacComponent.createStringSymbol("PAC_INSTANCE_NAME", None)
-    pacInstanceName.setVisible(False)
-    pacInstanceName.setDefaultValue(pacComponent.getID().upper())
+pacInstanceName = coreComponent.createStringSymbol("PAC_INSTANCE_NAME", pacSym_Menu)
+pacInstanceName.setVisible(False)
+pacInstanceName.setDefaultValue(instances[0].getAttribute("name"))
 
-    bridgeNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PAC\"]/instance@[name=\"" + pacInstanceName.getValue() + "\"]/parameters/param@[name=\"HPB_NUM\"]")
+#PAC Use
+pacSym_Use = coreComponent.createBooleanSymbol("PAC_USE", pacSym_Menu)
+pacSym_Use.setLabel("Use PAC ?")
 
-    bridgeCount = int(bridgeNode.getAttribute("value"))
+#interrupt mode
+pacSym_INTENSET = coreComponent.createBooleanSymbol("PAC_INTERRRUPT_MODE", pacSym_Use)
+pacSym_INTENSET.setLabel("Enable PAC Interrupt ?")
+pacSym_INTENSET.setVisible(False)
+pacSym_INTENSET.setDefaultValue(True)
+pacSym_INTENSET.setDependencies(updatePACInterruptVisibleProperty, ["PAC_USE"])
 
-    pacSym_BridgeCount = pacComponent.createIntegerSymbol("PAC_BRIDGE_COUNT", None)
-    pacSym_BridgeCount.setDefaultValue(bridgeCount)
-    pacSym_BridgeCount.setVisible(False)
+#Error Event
+pacSym_ErrEventSET = coreComponent.createBooleanSymbol("PAC_ERROR_EVENT", pacSym_Use)
+pacSym_ErrEventSET.setLabel("Generate Peripheral Access Error Event Output")
+pacSym_ErrEventSET.setVisible(False)
+pacSym_ErrEventSET.setDependencies(updatePACErrorEventVisibleProperty, ["PAC_USE"])
 
-    #interrupt mode
-    pacSym_INTENSET = pacComponent.createBooleanSymbol("PAC_INTERRRUPT_MODE", None)
-    pacSym_INTENSET.setLabel("Enable PAC Interrupt?")
-    pacSym_INTENSET.setDefaultValue(True)
+pacIndex = 0
 
-    #Error Event
-    pacSym_ErrEventSET = pacComponent.createBooleanSymbol("PAC_ERROR_EVENT", None)
-    pacSym_ErrEventSET.setLabel("Generate Peripheral Access Error Event Output")
+modules = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals").getChildren()
+for module in range (0, len(modules)):
+    instances = modules[module].getChildren()
+    for instance in range (0, len(instances)):
+        options = instances[instance].getChildren()
+        for option in range (0, len(options)):
+            parameters = options[option].getChildren()
+            for parameter in range(0, len(parameters)):
+                name = str(parameters[parameter].getAttribute("name"))
+                if "INSTANCE_ID" in name:
+                    periName = str(instances[instance].getAttribute("name"))
+                    instanceId = str(parameters[parameter].getAttribute("value"))
 
-    for bridge in range(0, bridgeCount):
+                    pacSym_PeripheralName = coreComponent.createStringSymbol("PAC_" + str(pacIndex) + "_PERI_NAME", pacSym_Use)
+                    pacSym_PeripheralName.setDefaultValue(periName)
+                    pacSym_PeripheralName.setVisible(False)
 
-        x = chr(ord("A") + bridge)
+                    pacIndex += 1
 
-        pacSym_Bridge = pacComponent.createStringSymbol("PAC_" + str(bridge) + "_BRIDGE", None)
-        pacSym_Bridge.setDefaultValue(str(x))
-        pacSym_Bridge.setVisible(False)
+pacSym_PeriCount = coreComponent.createIntegerSymbol("PAC_PERI_COUNT", pacSym_Use)
+pacSym_PeriCount.setDefaultValue(pacIndex)
+pacSym_PeriCount.setVisible(False)
 
-        bridgeXNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PAC\"]/register-group@[name=\"" + pacInstanceName.getValue() + "\"]/register@[name=\"INTFLAG" + str(x) + "\"]")
-        bridgeXPeripherals = []
-        bridgeXPeripherals = bridgeXNode.getChildren()
+############################################################################
+#### Dependency ####
+############################################################################
 
-        pacSym_BridgePeripheralCount = pacComponent.createIntegerSymbol("PAC_BRIDGE_" + str(bridge) + "_PERI_COUNT", None)
-        pacSym_BridgePeripheralCount.setDefaultValue(len(bridgeXPeripherals))
-        pacSym_BridgePeripheralCount.setVisible(False)
+pacInterruptVector = pacInstanceName.getValue() + "_INTERRUPT_ENABLE"
+pacInterruptHandler = pacInstanceName.getValue() + "_INTERRUPT_HANDLER"
+pacInterruptHandlerLock = pacInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+pacInterruptVectorUpdate = pacInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
-        for bitfield in range(0, len(bridgeXPeripherals)):
+# Interrupt Dynamic settings
+pacSym_UpdateInterruptStatus = coreComponent.createBooleanSymbol("PAC_INTERRUPT_STATUS", pacSym_Use)
+pacSym_UpdateInterruptStatus.setDependencies(updatePACInterruptStatus, ["PAC_INTERRRUPT_MODE"])
+pacSym_UpdateInterruptStatus.setVisible(False)
 
-            periName = str(bridgeXPeripherals[bitfield].getAttribute("caption"))
+# Interrupt Warning status
+pacSym_IntEnComment = coreComponent.createCommentSymbol("PAC_INTERRUPT_ENABLE_COMMENT", pacSym_Use)
+pacSym_IntEnComment.setVisible(False)
+pacSym_IntEnComment.setLabel("Warning!!! PAC Interrupt is Disabled in Interrupt Manager")
+pacSym_IntEnComment.setDependencies(updatePACInterruptWarringStatus, ["core." + pacInterruptVectorUpdate])
 
-            pacSym_PeriName = pacComponent.createStringSymbol("PAC_BRIDGE_" + str(bridge) + "_PERI_" + str(bitfield) + "_NAME", None)
-            pacSym_PeriName.setDefaultValue(periName)
-            pacSym_PeriName.setVisible(False)
+###################################################################################################
+####################################### Code Generation  ##########################################
+###################################################################################################
 
-    ############################################################################
-    #### Dependency ####
-    ############################################################################
+configName = Variables.get("__CONFIGURATION_NAME")
 
-    InterruptVector = pacInstanceName.getValue() + "_INTERRUPT_ENABLE"
-    InterruptHandler = pacInstanceName.getValue() + "_INTERRUPT_HANDLER"
-    InterruptHandlerLock = pacInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = pacInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+pacModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PAC\"]")
+pacModuleID = pacModuleNode.getAttribute("id")
 
-    # Initial settings for Interrupt
-    Database.setSymbolValue("core", InterruptVector, True, 2)
-    Database.setSymbolValue("core", InterruptHandler, pacInstanceName.getValue() + "_InterruptHandler", 2)
-    Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
+pacSym_HeaderFile = coreComponent.createFileSymbol("PAC_HEADER", None)
+pacSym_HeaderFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/plib_pac.h.ftl")
+pacSym_HeaderFile.setOutputName("plib_" + pacInstanceName.getValue().lower() + ".h")
+pacSym_HeaderFile.setDestPath("/peripheral/pac/")
+pacSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pac/")
+pacSym_HeaderFile.setType("HEADER")
+pacSym_HeaderFile.setMarkup(True)
+pacSym_HeaderFile.setEnabled(False)
 
-    # Interrupt Dynamic settings
-    pacSym_UpdateInterruptStatus = pacComponent.createBooleanSymbol("PAC_INTERRUPT_STATUS", None)
-    pacSym_UpdateInterruptStatus.setDependencies(updatePACInterruptStatus, ["PAC_INTERRRUPT_MODE"])
-    pacSym_UpdateInterruptStatus.setVisible(False)
+pacSym_SourceFile = coreComponent.createFileSymbol("PAC_SOURCE", None)
+pacSym_SourceFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/plib_pac.c.ftl")
+pacSym_SourceFile.setOutputName("plib_" + pacInstanceName.getValue().lower() + ".c")
+pacSym_SourceFile.setDestPath("/peripheral/pac/")
+pacSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pac/")
+pacSym_SourceFile.setType("SOURCE")
+pacSym_SourceFile.setMarkup(True)
+pacSym_SourceFile.setEnabled(False)
 
-    # Interrupt Warning status
-    pacSym_IntEnComment = pacComponent.createCommentSymbol("PAC_INTERRUPT_ENABLE_COMMENT", None)
-    pacSym_IntEnComment.setVisible(False)
-    pacSym_IntEnComment.setLabel("Warning!!! PAC Interrupt is Disabled in Interrupt Manager")
-    pacSym_IntEnComment.setDependencies(updatePACInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+pacSystemDefFile = coreComponent.createFileSymbol("PAC_SYS_DEF", None)
+pacSystemDefFile.setType("STRING")
+pacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+pacSystemDefFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/system/definitions.h.ftl")
+pacSystemDefFile.setMarkup(True)
+pacSystemDefFile.setEnabled(False)
 
-    ###################################################################################################
-    ####################################### Code Generation  ##########################################
-    ###################################################################################################
-
-    configName = Variables.get("__CONFIGURATION_NAME")
-
-    pacModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PAC\"]")
-    pacModuleID = pacModuleNode.getAttribute("id")
-
-    pacSym_CommonHeaderFile = pacComponent.createFileSymbol("PAC_COMMON_HEADER", None)
-    pacSym_CommonHeaderFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/plib_pac_common.h")
-    pacSym_CommonHeaderFile.setOutputName("plib_pac_common.h")
-    pacSym_CommonHeaderFile.setDestPath("/peripheral/pac/")
-    pacSym_CommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/pac/")
-    pacSym_CommonHeaderFile.setType("HEADER")
-    pacSym_CommonHeaderFile.setMarkup(True)
-
-    pacSym_HeaderFile = pacComponent.createFileSymbol("PAC_HEADER", None)
-    pacSym_HeaderFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/plib_pac.h.ftl")
-    pacSym_HeaderFile.setOutputName("plib_" + pacInstanceName.getValue().lower() + ".h")
-    pacSym_HeaderFile.setDestPath("/peripheral/pac/")
-    pacSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pac/")
-    pacSym_HeaderFile.setType("HEADER")
-    pacSym_HeaderFile.setMarkup(True)
-
-    pacSym_SourceFile = pacComponent.createFileSymbol("PAC_SOURCE", None)
-    pacSym_SourceFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/plib_pac.c.ftl")
-    pacSym_SourceFile.setOutputName("plib_" + pacInstanceName.getValue().lower() + ".c")
-    pacSym_SourceFile.setDestPath("/peripheral/pac/")
-    pacSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pac/")
-    pacSym_SourceFile.setType("SOURCE")
-    pacSym_SourceFile.setMarkup(True)
-
-    pacSystemDefFile = pacComponent.createFileSymbol("PAC_SYS_DEF", None)
-    pacSystemDefFile.setType("STRING")
-    pacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    pacSystemDefFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/system/definitions.h.ftl")
-    pacSystemDefFile.setMarkup(True)
-
-    pacSystemInitFile = pacComponent.createFileSymbol("PAC_SYS_INIT", None)
-    pacSystemInitFile.setType("STRING")
-    pacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    pacSystemInitFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/system/initialization.c.ftl")
-    pacSystemInitFile.setMarkup(True)
+pacSystemInitFile = coreComponent.createFileSymbol("PAC_SYS_INIT", None)
+pacSystemInitFile.setType("STRING")
+pacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+pacSystemInitFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/system/initialization.c.ftl")
+pacSystemInitFile.setMarkup(True)
+pacSystemInitFile.setEnabled(False)
