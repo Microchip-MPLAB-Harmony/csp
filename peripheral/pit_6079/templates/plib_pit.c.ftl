@@ -77,6 +77,7 @@ void ${PIT_INSTANCE_NAME}_TimerInitialize(void)
     <#else>
         <#assign INTENABLE=0>
     </#if>
+    ${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
     ${PIT_INSTANCE_NAME}_REGS->PIT_MR = PIT_MR_PIV(${PERIOD_TICKS}-1) | PIT_MR_PITEN(${ENABLE_COUNTER?string('1', '0')}) | PIT_MR_PITIEN(${INTENABLE});
 }
 
@@ -119,7 +120,7 @@ uint32_t ${PIT_INSTANCE_NAME}_TimerCounterGet(void)
 
 uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void)
 {
-    return ${core.MASTER_CLOCK_FREQUENCY} / 16;
+    return ${core.PCLOCK_LS_CLOCK_FREQUENCY} / 16;
 }
 
 <#if ENABLE_INTERRUPT == false>
