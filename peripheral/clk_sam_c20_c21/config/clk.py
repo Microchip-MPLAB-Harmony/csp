@@ -564,7 +564,7 @@ def setXOSC1KFreq(symbol, event):
     xoscmode = Database.getSymbolValue("core","XOSC32K_OSCILLATOR_MODE")
 
     if xosc and xosc1k and (xoscmode==1):
-        symbol.setValue(1000, 1)
+        symbol.setValue(1024, 1)
     else:
         symbol.setValue(0, 1)
 
@@ -583,7 +583,7 @@ def setOSC1KFreq(symbol, event):
     osc1kEnable = Database.getSymbolValue("core","OSC32K_EN1K")
     oscEnable = Database.getSymbolValue("core","CONF_CLOCK_OSC32K_ENABLE")
     if oscEnable and osc1kEnable:
-        symbol.setValue(1000, 1)
+        symbol.setValue(1024, 1)
     else:
         symbol.setValue(0, 1)
 
@@ -602,7 +602,7 @@ clkSym_OSCULP32K_Freq.setReadOnly(True)
 
 clkSym_OSCULP1K_Freq = coreComponent.createIntegerSymbol("OSCULP1K_FREQ", calculatedFreq_Menu)
 clkSym_OSCULP1K_Freq.setLabel("OSCULP1K Clock Frequency")
-clkSym_OSCULP1K_Freq.setDefaultValue(1000)
+clkSym_OSCULP1K_Freq.setDefaultValue(1024)
 clkSym_OSCULP1K_Freq.setReadOnly(True)
 
 
@@ -1568,12 +1568,12 @@ module_list = peripherals.getChildren()
 clkSym_WDT_CLK_FREQ = coreComponent.createIntegerSymbol("WDT_CLOCK_FREQUENCY", calculatedFreq_Menu)
 clkSym_WDT_CLK_FREQ.setLabel("WDT Clock Frequency")
 clkSym_WDT_CLK_FREQ.setReadOnly(True)
-clkSym_WDT_CLK_FREQ.setDefaultValue(1000)
+clkSym_WDT_CLK_FREQ.setDefaultValue(1024)
 
 clkSym_RTC_CLK_FREQ = coreComponent.createIntegerSymbol("RTC_CLOCK_FREQUENCY", calculatedFreq_Menu)
 clkSym_RTC_CLK_FREQ.setLabel("RTC Clock Frequency")
 clkSym_RTC_CLK_FREQ.setReadOnly(True)
-clkSym_RTC_CLK_FREQ.setDefaultValue(1000)
+clkSym_RTC_CLK_FREQ.setDefaultValue(1024)
 clkSym_RTC_CLK_FREQ.setDependencies(setFreq,["CONFIG_CLOCK_RTC_SRC", "OSCULP32K_FREQ", "OSCULP1K_FREQ", "OSC32K_FREQ", "OSC1K_FREQ", "XOSC32K_FREQ", "XOSC1K_FREQ"])
 
 
