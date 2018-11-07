@@ -62,7 +62,7 @@ void NVIC_Initialize( void )
     __enable_irq();
 
     /* Enable the interrupt sources and configure the priorities as configured
-     * from within the "Interrupt Manager" of MCC. */
+     * from within the "Interrupt Manager" of MHC. */
 <#list NVIC_VECTOR_MIN..NVIC_VECTOR_MAX as i>
     <#list 0..NVIC_VECTOR_MAX_MULTIPLE_HANDLERS as j>
         <#assign NVIC_VECTOR_NAME = "NVIC_" + i + "_" + j + "_VECTOR">
