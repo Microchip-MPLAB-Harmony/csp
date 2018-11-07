@@ -54,17 +54,24 @@ def getUSARTBaudValue(clk, baud):
     sampleCount = 0
     sampleRate = 0
 
-    if clk >= (16 * baud):
-        sampleRate = 0
-        sampleCount = 16
-    elif clk >= (8 * baud):
-        sampleRate = 2
-        sampleCount = 8
-    elif clk >= (3 * baud):
-        sampleRate = 4
-        sampleCount = 3
+    if "SAMD20" in sercomSym_DeviceName.getValue():
+        # Sample Rate is not supported in SAMD20
+        if clk >= (16 * baud):
+            sampleCount = 16
+        else:
+            return baudValue
     else:
-        return baudValue
+        if clk >= (16 * baud):
+            sampleRate = 0
+            sampleCount = 16
+        elif clk >= (8 * baud):
+            sampleRate = 2
+            sampleCount = 8
+        elif clk >= (3 * baud):
+            sampleRate = 4
+            sampleCount = 3
+        else:
+            return baudValue
 
     baudValue =  int(65536 * (1 - float("{0:.15f}".format(float(sampleCount * baud) / clk))))
 
@@ -291,6 +298,7 @@ def instantiateComponent(sercomComponent):
     global InterruptHandler
     global InterruptHandlerLock
     global sercomInstanceName
+    global sercomSym_DeviceName
     global sercomSym_OperationMode
 
     sercomInstanceName = sercomComponent.createStringSymbol("SERCOM_INSTANCE_NAME", None)
@@ -302,6 +310,11 @@ def instantiateComponent(sercomComponent):
     uartCapabilityId = sercomInstanceName.getValue() + "_UART"
     spiCapabilityId = sercomInstanceName.getValue() + "_SPI"
     i2cCapabilityId = sercomInstanceName.getValue() + "_I2C"
+
+    #Device name
+    sercomSym_DeviceName = sercomComponent.createStringSymbol("SERCOM_DEVICE_NAME", None)
+    sercomSym_DeviceName.setVisible(False)
+    sercomSym_DeviceName.setDefaultValue(Variables.get("__PROCESSOR"))
 
     #Clock enable
     Database.setSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_ENABLE", True, 2)
@@ -379,7 +392,7 @@ def instantiateComponent(sercomComponent):
 
     # Clock Warning status
     sercomSym_ClkEnComment = sercomComponent.createCommentSymbol("SERCOM_CLOCK_ENABLE_COMMENT", None)
-    sercomSym_ClkEnComment.setLabel("Warning!!! SERCOM Peripheral Clock is Disabled in Clock Manager")
+    sercomSym_ClkEnComment.setLabel("Warning!!! " + sercomInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
     sercomSym_ClkEnComment.setVisible(False)
     sercomSym_ClkEnComment.setDependencies(updateSERCOMClockWarningStatus, ["core." + sercomInstanceName.getValue() + "_CORE_CLOCK_ENABLE"])
 
