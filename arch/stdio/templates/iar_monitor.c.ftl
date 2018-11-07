@@ -37,6 +37,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+<#lt>#include <stddef.h>    // size_t
 <#lt><#if stdio?? && stdio.DEBUG_PERIPHERAL?has_content>
     <#lt>#include <yfuns.h>      // _LLIO_ERROR, _LLIO_STDOUT, _LLIO_STDIN, _LLIO_STDERR
     <#lt>#include <stdbool.h>    // true
