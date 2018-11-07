@@ -64,10 +64,10 @@ typedef struct
 } DMAC_CH_OBJECT ;
 
 /* Initial write back memory section for DMAC */
-static  dmacdescriptor_registers_t _write_back_section[DMAC_CHANNELS_NUMBER]    __attribute__((aligned(16)));
+static  dmac_descriptor_registers_t _write_back_section[DMAC_CHANNELS_NUMBER]    __attribute__((aligned(16)));
 
 /* Descriptor section for DMAC */
-static  dmacdescriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __attribute__((aligned(16)));
+static  dmac_descriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __attribute__((aligned(16)));
 
 /* DMAC Channels object information structure */
 DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
@@ -136,13 +136,13 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#lt>                                                       </#if>
         <#lt>                                                       ;
         <#lt>   </@compress>
-        <#lt>   <@compress single_line=true>descriptor_section[${i}].BTCTRL = DMAC_DESCRIPTOR_BTCTRL_BLOCKACT_INT
-        <#lt>                                                                       | DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_${.vars[DMAC_BTCTRL_BEATSIZE]}
-        <#lt>                                                                       | DMAC_DESCRIPTOR_BTCTRL_VALID_Msk
-        <#lt>                                                                       ${(.vars[DMAC_BTCTRL_SRCINC] == "INCREMENTED_AM")?then('| DMAC_DESCRIPTOR_BTCTRL_SRCINC_Msk','')}
-        <#lt>                                                                       ${(.vars[DMAC_BTCTRL_DSTINC] == "INCREMENTED_AM")?then('| DMAC_DESCRIPTOR_BTCTRL_DSTINC_Msk','')}
+        <#lt>   <@compress single_line=true>descriptor_section[${i}].DMAC_BTCTRL = DMAC_BTCTRL_BLOCKACT_INT
+        <#lt>                                                                       | DMAC_BTCTRL_BEATSIZE_${.vars[DMAC_BTCTRL_BEATSIZE]}
+        <#lt>                                                                       | DMAC_BTCTRL_VALID_Msk
+        <#lt>                                                                       ${(.vars[DMAC_BTCTRL_SRCINC] == "INCREMENTED_AM")?then('| DMAC_BTCTRL_SRCINC_Msk','')}
+        <#lt>                                                                       ${(.vars[DMAC_BTCTRL_DSTINC] == "INCREMENTED_AM")?then('| DMAC_BTCTRL_DSTINC_Msk','')}
         <#lt>                                                                       <#if i < DMA_EVSYS_CHANNEL_COUNT>
-        <#lt>                                                                       ${(.vars[DMAC_EVSYS_OUT])?then('| DMAC_DESCRIPTOR_BTCTRL_EVOSEL(${.vars[DMAC_EVSYS_EVOSEL]})','')}
+        <#lt>                                                                       ${(.vars[DMAC_EVSYS_OUT])?then('| DMAC_BTCTRL_EVOSEL(${.vars[DMAC_EVSYS_EVOSEL]})','')}
         <#lt>                                                                       </#if>
         <#lt>                                                                       ;
         <#lt>   </@compress>
@@ -166,35 +166,35 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
     if (dmacChannelObj[channel].busyStatus == false)
     {
         /* Get a pointer to the module hardware instance */
-        dmacdescriptor_registers_t *const dmacDescReg = &descriptor_section[channel];
+        dmac_descriptor_registers_t *const dmacDescReg = &descriptor_section[channel];
 
         dmacChannelObj[channel].busyStatus = true;
 
        /*Set source address */
-        if ( dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_SRCINC_Msk)
+        if ( dmacDescReg->DMAC_BTCTRL & DMAC_BTCTRL_SRCINC_Msk)
         {
-            dmacDescReg->SRCADDR = (uint32_t) (srcAddr + blockSize);
+            dmacDescReg->DMAC_SRCADDR = (uint32_t) (srcAddr + blockSize);
         }
         else
         {
-            dmacDescReg->SRCADDR = (uint32_t) (srcAddr);
+            dmacDescReg->DMAC_SRCADDR = (uint32_t) (srcAddr);
         }
 
         /* Set destination address */
-        if ( dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_DSTINC_Msk)
+        if ( dmacDescReg->DMAC_BTCTRL & DMAC_BTCTRL_DSTINC_Msk)
         {
-            dmacDescReg->DSTADDR = (uint32_t) (destAddr + blockSize);
+            dmacDescReg->DMAC_DSTADDR = (uint32_t) (destAddr + blockSize);
         }
         else
         {
-            dmacDescReg->DSTADDR = (uint32_t) (destAddr);
+            dmacDescReg->DMAC_DSTADDR = (uint32_t) (destAddr);
         }
 
         /*Calculate the beat size and then set the BTCNT value */
-        beat_size = (dmacDescReg->BTCTRL & DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Msk) >> DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_Pos;
+        beat_size = (dmacDescReg->DMAC_BTCTRL & DMAC_BTCTRL_BEATSIZE_Msk) >> DMAC_BTCTRL_BEATSIZE_Pos;
 
         /* Set Block Transfer Count */
-        dmacDescReg->BTCNT = blockSize / (1 << beat_size);
+        dmacDescReg->DMAC_BTCNT = blockSize / (1 << beat_size);
 
         /* Set the DMA channel */
         ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = channel;
@@ -290,9 +290,9 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister( DMAC_CHANNEL channel, const D
 DMAC_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMAC_CHANNEL channel)
 {
     /* Get a pointer to the module hardware instance */
-    dmacdescriptor_registers_t *const dmacDescReg = &descriptor_section[0];
+    dmac_descriptor_registers_t *const dmacDescReg = &descriptor_section[0];
 
-    return (dmacDescReg[channel].BTCTRL);
+    return (dmacDescReg[channel].DMAC_BTCTRL);
 }
 
 /*******************************************************************************
@@ -302,7 +302,7 @@ DMAC_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMAC_CHANNEL channe
 bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG setting)
 {
     /* Get a pointer to the module hardware instance */
-    dmacdescriptor_registers_t *const dmacDescReg = &descriptor_section[0];
+    dmac_descriptor_registers_t *const dmacDescReg = &descriptor_section[0];
 
     /* Disable the channel */
     /* Set the DMA Channel ID */
@@ -312,7 +312,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL
     ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA &= (~DMAC_CHCTRLA_ENABLE_Pos);
 
     /* Set the new settings */
-    dmacDescReg[channel].BTCTRL = setting;
+    dmacDescReg[channel].DMAC_BTCTRL = setting;
 
     return true;
 }
