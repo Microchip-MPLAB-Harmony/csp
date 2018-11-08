@@ -210,6 +210,12 @@ def instantiateComponent(tccComponent):
     tccSym_SIZE = tccComponent.createIntegerSymbol("TCC_SIZE", None)
     tccSym_SIZE.setDefaultValue(int(size))
     tccSym_SIZE.setVisible(False)
+    
+    tccSym_MCU_FAMILY = tccComponent.createStringSymbol("TCC_MCU_FAMILY", None)
+    tccSym_MCU_FAMILY.setVisible(False)
+    node = ATDF.getNode("/avr-tools-device-file/devices")
+    series = node.getChildren()[0].getAttribute("family")
+    tccSym_MCU_FAMILY.setDefaultValue(node.getChildren()[0].getAttribute("family"))
     ###########################################################################################
     
     #prescaler configuration

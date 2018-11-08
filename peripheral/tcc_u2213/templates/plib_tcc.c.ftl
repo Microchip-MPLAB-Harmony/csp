@@ -274,12 +274,20 @@ void ${TCC_INSTANCE_NAME}_PWMStop (void)
 <#if TCC_SIZE == 24>
 void ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet (uint32_t period)
 {
+<#if TCC_MCU_FAMILY == "SAMD">
+    ${TCC_INSTANCE_NAME}_REGS->TCC_PERB = period & 0xFFFFFF;
+<#else>
     ${TCC_INSTANCE_NAME}_REGS->TCC_PERBUF = period & 0xFFFFFF;
+</#if>
 }
 <#elseif TCC_SIZE == 16>
 void ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet (uint16_t period)
 {
+<#if TCC_MCU_FAMILY == "SAMD">
+    ${TCC_INSTANCE_NAME}_REGS->TCC_PERB = period;
+<#else>
     ${TCC_INSTANCE_NAME}_REGS->TCC_PERBUF = period;
+</#if>
 }
 </#if>
 
