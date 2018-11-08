@@ -129,9 +129,13 @@ uint32_t ${TCC_INSTANCE_NAME}_PWM24bitPeriodGet(void);
 
 void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet(uint32_t count);
 
-static inline void ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
+__INLINE void ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
 {
+<#if TCC_MCU_FAMILY == "SAMD">
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CCB[channel] = duty & 0xFFFFFF;
+<#else>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CCBUF[channel] = duty & 0xFFFFFF;
+</#if>
 }
 
 <#elseif TCC_SIZE == 16>
@@ -141,9 +145,13 @@ uint16_t ${TCC_INSTANCE_NAME}_PWM16bitPeriodGet(void);
 
 void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet(uint16_t count);
 
-static inline void ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
+__INLINE void ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
 {
+<#if TCC_MCU_FAMILY == "SAMD">
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CCB[channel] = duty;
+<#else>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CCBUF[channel] = duty;
+</#if>
 }
 </#if>
 // DOM-IGNORE-BEGIN
