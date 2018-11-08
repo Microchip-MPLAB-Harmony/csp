@@ -82,7 +82,7 @@ IrqData irqData[] = {
             <#lt><#assign AIC_SRC_TYPE = AIC_FIRST_NAME + "_INTERRUPT_SRC_TYPE">
             <#lt><#assign AIC_PRIORITY = AIC_FIRST_NAME + "_INTERRUPT_PRIORITY">
             <#lt><#assign PERIPH_ID = (ii + ",")?right_pad(5)>
-            <#lt><#if (.vars[AIC_MAP_TYPE]?string == "NonSecure") || (.vars[AIC_MAP_TYPE]?string == "RedirectedToNonSecure")>
+            <#lt><#if (.vars[AIC_MAP_TYPE]?string == "NonSecure") || (.vars[AIC_MAP_TYPE]?string == "NeverSecure") ||(.vars[AIC_MAP_TYPE]?string == "RedirectedToNonSecure")>
                 <#lt><#assign REG_NAME_STR = "AIC">
             <#lt><#else>
                 <#lt><#assign REG_NAME_STR = "SAIC">
