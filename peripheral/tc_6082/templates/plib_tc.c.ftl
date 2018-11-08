@@ -65,7 +65,11 @@
             <#assign start = 1>
         </#if>
     <#else>
-        <#assign start = 3>
+        <#if TC_INDEX_PULSE == true>
+            <#assign start = 3>
+        <#else>
+            <#assign start = 1>
+        </#if>
     </#if>
     </#compress>
 
@@ -184,6 +188,9 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
     <#if i == TC_MAX_CHANNELS>
         <#break>
     </#if> <#-- break the loop if quadrature speed mode is used -->
+    <#if TC_ENABLE_QEI == true && TC_INDEX_PULSE == false && TC_BMR_POSEN == "SPEED" && i == 2>
+        <#break>
+    </#if>
 <#assign TC_CH_ENABLE = "TC" + i + "_ENABLE">
 <#assign TC_CH_OPERATINGMODE = "TC" + i +"_OPERATING_MODE">
 <#assign CH_NUM = i >
