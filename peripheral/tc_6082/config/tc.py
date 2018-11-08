@@ -936,6 +936,8 @@ def instantiateComponent(tcComponent):
     tcSym_CH_QEI_CH2PERIOD = tcComponent.createIntegerSymbol("TC_QEI_PERIOD", tcSpeedMenu)
     tcSym_CH_QEI_CH2PERIOD.setLabel("Select Speed Time Base")
     tcSym_CH_QEI_CH2PERIOD.setDefaultValue(15015)
+    tcSym_CH_QEI_CH2PERIOD.setMin(0)
+    tcSym_CH_QEI_CH2PERIOD.setMax(65535)
 
     # CH2 time in us comment
     tcSym_CH_QEI_CH2PERIOD_COMMENT = tcComponent.createCommentSymbol("TC_QEI_PERIOD_COMMENT", tcSpeedMenu)
