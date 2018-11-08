@@ -44,6 +44,7 @@
 #ifndef PLIB_${TCC_INSTANCE_NAME}_H
 #define PLIB_${TCC_INSTANCE_NAME}_H
 
+#include "device.h"
 #include "plib_tcc_common.h"
 
 // DOM-IGNORE-BEGIN
