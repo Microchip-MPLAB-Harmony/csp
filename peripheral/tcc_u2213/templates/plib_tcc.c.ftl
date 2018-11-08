@@ -51,7 +51,7 @@
 
 /*  This section lists the other files that are included in this file.
 */
-#include "device.h"
+
 #include "plib_${TCC_INSTANCE_NAME?lower_case}.h"
 
 <#compress>
@@ -62,7 +62,7 @@
 <#assign TCC_PATT_VAL = "">
 <#assign TCC_EVCTRL_VAL = "">
 <#assign TCC_CTRLB_DIR = "">
-
+<#assign TCC_WAVE_VAL = "TCC_WAVE_WAVEGEN_" + TCC_WAVE_WAVEGEN>
 <#list 0..(TCC_NUM_CHANNELS-1) as i>
 <#assign CH_NUM = i >
 <#assign TCC_POLARITY = "TCC_"+i+"_WAVE_POL">
@@ -78,6 +78,7 @@
         </#if>
     </#if>
 </#if> <#-- Dead Time End -->
+
 <#-- swap -->
 <#if TCC_IS_SWAP == 1>
     <#assign TCC_SWAP_ENABLE = "TCC_"+i+"_WAVE_SWAP">
@@ -91,10 +92,12 @@
 </#if> <#-- Swap End -->
 <#-- polarity -->
 <#if (TCC_WAVE_WAVEGEN == "DSBOTTOM") || (TCC_WAVE_WAVEGEN == "DSBOTH") || (TCC_WAVE_WAVEGEN == "DSTOP") >
-    <#if TCC_WAVE_VAL != "">
-        <#assign TCC_WAVE_VAL = TCC_WAVE_VAL + " | TCC_WAVE_POL"+i+"("+.vars[TCC_POLARITY]+"U)">
-    <#else>
-        <#assign TCC_WAVE_VAL = "TCC_WAVE_POL"+i+"("+.vars[TCC_POLARITY]+"U)">
+    <#if .vars[TCC_POLARITY] == "1">
+        <#if TCC_WAVE_VAL != "">
+            <#assign TCC_WAVE_VAL = TCC_WAVE_VAL + " | TCC_WAVE_POL"+i+"_Msk">
+        <#else>
+            <#assign TCC_WAVE_VAL = "TCC_WAVE_POL"+i+"_Msk">
+        </#if>
     </#if>
 </#if>
 <#-- polarity end -->
@@ -118,11 +121,17 @@
 <#list 0..(TCC_NUM_OUTPUTS-1) as i>
 <#assign CH_NUM = i >
 <#assign TCC_FAULT_POLARITY = "TCC_"+i+"_DRVCTRL_NRE_NRV">
-<#if .vars[TCC_FAULT_POLARITY] != "-1">
+<#if .vars[TCC_FAULT_POLARITY] == "1">
     <#if TCC_DRVCTRL_FAULT_VAL != "">
-        <#assign TCC_DRVCTRL_FAULT_VAL = TCC_DRVCTRL_FAULT_VAL + "\n\t\t | TCC_DRVCTRL_NRE"+i+"("+.vars[TCC_FAULT_POLARITY]+"U)">
+        <#assign TCC_DRVCTRL_FAULT_VAL = TCC_DRVCTRL_FAULT_VAL + "\n\t\t | TCC_DRVCTRL_NRE"+i+"_Msk | TCC_DRVCTRL_NRV"+i+"_Msk">
     <#else>
-        <#assign TCC_DRVCTRL_FAULT_VAL = "TCC_DRVCTRL_NRE"+i+"("+.vars[TCC_FAULT_POLARITY]+"U)">
+        <#assign TCC_DRVCTRL_FAULT_VAL = "TCC_DRVCTRL_NRE"+i+"_Msk | TCC_DRVCTRL_NRV"+i+"_Msk">
+    </#if>
+<#elseif .vars[TCC_FAULT_POLARITY] == "0">
+    <#if TCC_DRVCTRL_FAULT_VAL != "">
+        <#assign TCC_DRVCTRL_FAULT_VAL = TCC_DRVCTRL_FAULT_VAL + "\n\t\t | TCC_DRVCTRL_NRE"+i+"_Msk">
+    <#else>
+        <#assign TCC_DRVCTRL_FAULT_VAL = "TCC_DRVCTRL_NRE"+i+"_Msk">
     </#if>
 </#if>
 </#list>
@@ -134,11 +143,19 @@
 <#assign TCC_PATT_PGE = "TCC_"+i+"PATT_PGE">
 <#assign TCC_PATT_PGV = "TCC_"+i+"PATT_PGV">
 <#if .vars[TCC_PATT_PGE] == true>
+    <#if .vars[TCC_PATT_PGV] == "1">
         <#if TCC_PATT_VAL != "">
-            <#assign TCC_PATT_VAL = TCC_PATT_VAL + " \n \t \t | TCC_PATT_PGE"+i+"_Msk | TCC_PATT_PGV"+i+"("+.vars[TCC_PATT_PGV]+"U)">
+            <#assign TCC_PATT_VAL = TCC_PATT_VAL + " \n \t \t | TCC_PATT_PGE"+i+"_Msk | TCC_PATT_PGV"+i+"_Msk">
         <#else>
-            <#assign TCC_PATT_VAL = "TCC_PATT_PGE"+i+"_Msk | TCC_PATT_PGV"+i+"("+.vars[TCC_PATT_PGV]+"U)">
+            <#assign TCC_PATT_VAL = "TCC_PATT_PGE"+i+"_Msk | TCC_PATT_PGV"+i+"_Msk">
         </#if>
+    <#else>
+        <#if TCC_PATT_VAL != "">
+            <#assign TCC_PATT_VAL = TCC_PATT_VAL + " \n \t \t | TCC_PATT_PGE"+i+"_Msk">
+        <#else>
+            <#assign TCC_PATT_VAL = "TCC_PATT_PGE"+i+"_Msk">
+        </#if>
+    </#if>
 </#if>
 </#list>
 </#if>
@@ -182,10 +199,8 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
     ${TCC_INSTANCE_NAME}_REGS->TCC_WEXCTRL |= ${TCC_WEXCTRL_DT_VAL};
 </#if>
 
-    /* PWM Waveform type */
-    ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE = TCC_WAVE_WAVEGEN_${TCC_WAVE_WAVEGEN};
 <#if TCC_WAVE_VAL?has_content>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE |= ${TCC_WAVE_VAL};
+    ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE = ${TCC_WAVE_VAL};
 </#if>
     
     /* Configure duty cycle values */
