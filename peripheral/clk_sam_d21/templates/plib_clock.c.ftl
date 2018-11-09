@@ -67,9 +67,9 @@ static void SYSCTRL_Initialize(void)
     /* Configure 8MHz Oscillator */
 	<@compress single_line=true>SYSCTRL_REGS->SYSCTRL_OSC8M = SYSCTRL_REGS->SYSCTRL_OSC8M | SYSCTRL_OSC8M_PRESC(${CONFIG_CLOCK_OSC8M_PRES})
                                                              ${CONFIG_CLOCK_OSC8M_RUNSTDY?then('| SYSCTRL_OSC8M_RUNSTDBY_Msk',' ')}
-															 ${(CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC8M_ONDEMAND_Msk',' ')};</@compress>	
-		
-    
+															 ${(CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC8M_ONDEMAND_Msk',' ')};</@compress>
+
+
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC8MRDY_Msk) != SYSCTRL_PCLKSR_OSC8MRDY_Msk)
     {
         /* Waiting for the OSC8M Ready state */
@@ -87,7 +87,7 @@ static void SYSCTRL_Initialize(void)
                                                                ${XOSC32K_RUNSTDBY?then('| SYSCTRL_XOSC32K_RUNSTDBY_Msk',' ')}
                                                                ${XOSC32K_EN32K?then('| SYSCTRL_XOSC32K_EN32K_Msk',' ')}
 															   ${(XOSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC32K_ONDEMAND_Msk',' ')}
-															   ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>															   
+															   ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
 
     while(!((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_XOSC32KRDY_Msk) == SYSCTRL_PCLKSR_XOSC32KRDY_Msk))
     {
@@ -112,7 +112,7 @@ static void SYSCTRL_Initialize(void)
 	SYSCTRL_REGS->SYSCTRL_OSC32K = 0x0;
 </#if>
 
-	
+
 }
 
 <#if CONFIG_CLOCK_DPLL_ENABLE == true >
@@ -121,13 +121,13 @@ static void FDPLL_Initialize(void)
 	<#if CONFIG_CLOCK_DPLL_REF_CLOCK == "0x2">
 	GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_GEN(${GCLK_ID_1_GENSEL})${GCLK_ID_1_WRITELOCK?then(' | GCLK_CLKCTRL_WRTLOCK_Msk', ' ')} | GCLK_CLKCTRL_CLKEN_Msk | GCLK_CLKCTRL_ID(${GCLK_ID_1_INDEX});
 	</#if>
-	
+
     /****************** DPLL Initialization  *********************************/
 
     /* Configure DPLL    */
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DPLLCTRLB = SYSCTRL_DPLLCTRLB_FILTER(${CONFIG_CLOCK_DPLL_FILTER}) |
                                                                    SYSCTRL_DPLLCTRLB_LTIME(${CONFIG_CLOCK_DPLL_LOCK_TIME})|
-																   SYSCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL_REF_CLOCK}) 
+																   SYSCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL_REF_CLOCK})
                                                                    ${CONFIG_CLOCK_DPLL_LOCK_BYPASS?then('| SYSCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}
                                                                    ${CONFIG_CLOCK_DPLL_WAKEUP_FAST?then('| SYSCTRL_DPLLCTRLB_WUF_Msk', ' ')}
                                                                    ${CONFIG_CLOCK_DPLL_LOWPOWER_ENABLE?then('| SYSCTRL_DPLLCTRLB_LPEN_Msk', ' ')}
@@ -158,21 +158,21 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for the Ready state */
     }
-    
+
 	<#if CONFIG_CLOCK_DFLL_OPMODE == "1">
 	GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_GEN(${GCLK_ID_0_GENSEL})${GCLK_ID_0_WRITELOCK?then(' | GCLK_CLKCTRL_WRTLOCK_Msk', ' ')} | GCLK_CLKCTRL_CLKEN_Msk | GCLK_CLKCTRL_ID(${GCLK_ID_0_INDEX});
-    
+
     SYSCTRL_REGS->SYSCTRL_DFLLMUL = SYSCTRL_DFLLMUL_MUL(${CONFIG_CLOCK_DFLL_MUL}) | SYSCTRL_DFLLMUL_FSTEP(${CONFIG_CLOCK_DFLL_FINE}) | SYSCTRL_DFLLMUL_CSTEP(${CONFIG_CLOCK_DFLL_COARSE});
-    
+
 	<#else>
-	
+
     /*Load Calibration Value*/
     uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)0x806024) >> 26 ) & 0x3f);
     uint16_t calibFine = (uint16_t)(((*(uint32_t*)0x806028)) & 0x3ff);
-    
+
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DFLLVAL = SYSCTRL_DFLLVAL_COARSE(calibCoarse) |
                                                                 SYSCTRL_DFLLVAL_FINE(calibFine);</@compress>
-    
+
     </#if>
 
     /* Configure DFLL    */
@@ -222,13 +222,13 @@ static void GCLK${i}_Initialize(void)
 
     <#if (.vars[GCLK_DIVISONVALUE] > 1)>
     GCLK_REGS->GCLK_GENDIV = GCLK_GENDIV_DIV(${.vars[GCLK_DIVISONVALUE]}) | GCLK_GENDIV_ID(${i});
-    </#if>                                                               
+    </#if>
     while((GCLK_REGS->GCLK_STATUS & GCLK_STATUS_SYNCBUSY_Msk) == GCLK_STATUS_SYNCBUSY_Msk)
     {
         /* wait for the Generator ${i} synchronization */
     }
 }
-	
+
             </#if>
         </#if>
 </#list>
@@ -239,14 +239,14 @@ void CLOCK_Initialize (void)
 
     /* Function to Initialize the Oscillators */
     SYSCTRL_Initialize();
-	
+
 ${CLK_INIT_LIST}
 
 <#if (CONF_CPU_CLOCK_DIVIDER != "0")>
     /* selection of the CPU clock Division */
     PM_REGS->PM_CPUSEL = PM_CPUSEL_CPUDIV(${CONF_CPU_CLOCK_DIVIDER});
-</#if>  
-	
+</#if>
+
 <#list 2..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">
     <#assign GCLK_ID_INDEX = "GCLK_ID_" + i + "_INDEX">
@@ -255,11 +255,8 @@ ${CLK_INIT_LIST}
     <#assign GCLK_ID_WRITELOCK = "GCLK_ID_" + i + "_WRITELOCK">
         <#if .vars[GCLK_ID_CHEN]?has_content>
             <#if (.vars[GCLK_ID_CHEN] != false)>
-	<#if CONFIG_CLOCK_DPLL_REF_CLOCK == "2" && i == 22>
-	<#else>
 	/* Selection of the Generator and write Lock for ${.vars[GCLK_ID_NAME]} */
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(${.vars[GCLK_ID_INDEX]}) | GCLK_CLKCTRL_GEN(${.vars[GCLK_ID_GENSEL]})${.vars[GCLK_ID_WRITELOCK]?then(' | GCLK_CLKCTRL_WRTLOCK_Msk', ' ')} | GCLK_CLKCTRL_CLKEN_Msk;
-	</#if>
     </#if>
     </#if>
 </#list>
@@ -267,30 +264,30 @@ ${CLK_INIT_LIST}
 	<#if PM_AHB_INITIAL_VALUE != "0x7f">
     /* Configure the AHB Bridge Clocks */
     PM_REGS->MCLK_AHBMASK = ${PM_AHB_INITIAL_VALUE};
-    
-    </#if>   
+
+    </#if>
     <#if PM_APBA_INITIAL_VALUE != "0x7f">
     /* Configure the APBA Bridge Clocks */
     PM_REGS->PM_APBAMASK = ${PM_APBA_INITIAL_VALUE};
-    
-    </#if>   
+
+    </#if>
     <#if PM_APBB_INITIAL_VALUE != "0x7f">
     /* Configure the APBB Bridge Clocks */
     PM_REGS->PM_APBBMASK = ${PM_APBB_INITIAL_VALUE};
-    
-    </#if>    
+
+    </#if>
     <#if PM_APBC_INITIAL_VALUE != "0x10000">
     <#if PM_APBC_INITIAL_VALUE??>
     /* Configure the APBC Bridge Clocks */
     PM_REGS->PM_APBCMASK = ${PM_APBC_INITIAL_VALUE};
-    
+
     </#if>
     </#if>
     <#if PM_APBD_INITIAL_VALUE??>
     <#if PM_APBD_INITIAL_VALUE != "0x0">
     /* Configure the APBD Bridge Clocks */
     PM_REGS->PM_APBDMASK = ${PM_APBD_INITIAL_VALUE};
-    
+
     </#if>
     </#if>
 }
