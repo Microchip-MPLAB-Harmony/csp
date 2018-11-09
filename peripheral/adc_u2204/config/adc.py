@@ -61,9 +61,8 @@ def updateADCClockWarringStatus(symbol, event):
 
 def adcCalcSampleTime(symbol, event):
     clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
-    component = int(adcInstanceName.getValue()[-1]) - 1
-    prescaler = (Database.getSymbolValue("adc" + str(component), "ADC_CTRLB_PRESCALER"))
-    prescaler = math.pow(2, prescaler+1)
+    prescaler = (Database.getSymbolValue("adc", "ADC_CTRLB_PRESCALER"))
+    prescaler = math.pow(2, prescaler+2)
     sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
     data_width = adcSym_CTRLC_RESSEL.getSelectedKey()[:-3]
     conv_time = float((((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000) / clock_freq))
@@ -209,7 +208,7 @@ def instantiateComponent(adcComponent):
     adcSym_SAMPCTRL_SAMPLEN.setMax(63)
     adcSym_SAMPCTRL_SAMPLEN.setDefaultValue(0)
 
-    clock_freq = 48000000   #Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
     prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
     sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
     data_width = 12
