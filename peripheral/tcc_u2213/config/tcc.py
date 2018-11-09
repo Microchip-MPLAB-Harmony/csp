@@ -128,10 +128,10 @@ def tccDeadTimeCalc(symbol, event):
     clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
     prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
     if (symbol.getID() == "TCC_DTLS_COMMENT"):
-        dead_time = ((clock_freq / prescaler) / tccSym_WEXCTRL_DTLS.getValue() / 1000000.0)
+        dead_time = (tccSym_WEXCTRL_DTLS.getValue() * 1000000.0 / (clock_freq / prescaler))
         symbol.setLabel("**** Low side dead time is "+str(dead_time)+ " uS ****")
     if (symbol.getID() == "TCC_DTHS_COMMENT"):
-        dead_time = ((clock_freq / prescaler) / tccSym_WEXCTRL_DTHS.getValue() / 1000000.0)
+        dead_time = (tccSym_WEXCTRL_DTHS.getValue() * 1000000.0 / (clock_freq / prescaler))
         symbol.setLabel("**** High side dead time is "+str(dead_time)+ " uS ****")
 
 ###################################################################################################
@@ -359,7 +359,7 @@ def instantiateComponent(tccComponent):
     tccSym_WEXCTRL_DTLS.setMin(0)
     tccSym_WEXCTRL_DTLS.setMax(255)
 
-    low_deadtime = ((clock_freq / prescaler) / tccSym_WEXCTRL_DTLS.getValue() / 1000000.0)
+    low_deadtime = (tccSym_WEXCTRL_DTLS.getValue() * 1000000.0 / (clock_freq / prescaler))
 
     tccSym_DTLS_COMMENT = tccComponent. createCommentSymbol("TCC_DTLS_COMMENT", tccSym_DeadTime_Menu)
     tccSym_DTLS_COMMENT.setLabel("**** Low side dead time is "+str(low_deadtime)+ " uS ****")
@@ -373,7 +373,7 @@ def instantiateComponent(tccComponent):
     tccSym_WEXCTRL_DTHS.setMin(0)
     tccSym_WEXCTRL_DTHS.setMax(255)
 
-    high_deadtime = ((clock_freq / prescaler) / tccSym_WEXCTRL_DTHS.getValue() / 1000000.0)
+    high_deadtime = (tccSym_WEXCTRL_DTHS.getValue() * 1000000.0 / (clock_freq / prescaler))
 
     tccSym_DTHS_COMMENT = tccComponent. createCommentSymbol("TCC_DTHS_COMMENT", tccSym_DeadTime_Menu)
     tccSym_DTHS_COMMENT.setLabel("**** High side dead time is "+str(high_deadtime)+ " uS ****")
