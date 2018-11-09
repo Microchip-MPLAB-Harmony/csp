@@ -314,8 +314,8 @@ def tcClockFreq(tcSym_CH_ClockFreqLocal, event):
     channelID = int(id[2])
     clock_Hz = int(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY"))
     global tcSym_CH_EXT_CLOCK
-    clock = (int(tcSym_CH_CMR_TCCLKS[channelID].getSelectedValue()))
-    if (clock > 5):
+    clock = ((tcSym_CH_CMR_TCCLKS[channelID].getSelectedKey()))
+    if ("XC" in clock):
         clock_Hz = (tcSym_CH_EXT_CLOCK[channelID].getValue())
     tcSym_CH_CLOCK_FREQ[channelID].clearValue()
     tcSym_CH_ClockFreqLocal.setValue(int(clock_Hz), 2)
