@@ -259,9 +259,9 @@ def updateSERCOMDMATransferRegister(symbol, event):
     symObj = event["symbol"]
 
     if symObj.getSelectedKey() == "USART_INT":
-        symbol.setValue("&(" + sercomInstanceName.getValue() + "_REGS->USART.DATA)", 2)
+        symbol.setValue("&(" + sercomInstanceName.getValue() + "_REGS->USART_INT.SERCOM_DATA)", 2)
     elif symObj.getSelectedKey() == "SPIM":
-        symbol.setValue("&(" + sercomInstanceName.getValue() + "_REGS->SPI.DATA)", 2)
+        symbol.setValue("&(" + sercomInstanceName.getValue() + "_REGS->SPIM.SERCOM_DATA)", 2)
     elif symObj.getSelectedKey() == "I2CS":
         # To be implemented
         pass
@@ -323,13 +323,13 @@ def instantiateComponent(sercomComponent):
 
     #SERCOM Transmit data register
     sercomSym_TxRegister = sercomComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", sercomSym_OperationMode)
-    sercomSym_TxRegister.setDefaultValue("&(" + sercomInstanceName.getValue() + "_REGS->USART.DATA)")
+    sercomSym_TxRegister.setDefaultValue("&(" + sercomInstanceName.getValue() + "_REGS->USART_INT.SERCOM_DATA)")
     sercomSym_TxRegister.setVisible(False)
     sercomSym_TxRegister.setDependencies(updateSERCOMDMATransferRegister, ["SERCOM_MODE"])
 
     #SERCOM Receive data register
     sercomSym_RxRegister = sercomComponent.createStringSymbol("RECEIVE_DATA_REGISTER", sercomSym_OperationMode)
-    sercomSym_RxRegister.setDefaultValue("&(" + sercomInstanceName.getValue() + "_REGS->USART.DATA)")
+    sercomSym_RxRegister.setDefaultValue("&(" + sercomInstanceName.getValue() + "_REGS->USART_INT.SERCOM_DATA)")
     sercomSym_RxRegister.setVisible(False)
     sercomSym_RxRegister.setDependencies(updateSERCOMDMATransferRegister, ["SERCOM_MODE"])
 
