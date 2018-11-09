@@ -171,8 +171,7 @@ def onCapabilityConnected(connectionInfo):
         tcSym_Timer_INTENSET_MC1.setValue(True,2)
         tcSym_Timer_INTENSET_OVF.setValue(False,2)
         tcSym_SYS_TIME_CONNECTED.setValue(True, 2)
-        tcSym_TimerPeriod.setVisible(False)
-        tcSym_TimerPeriod_Comment.setVisible(False)
+        tcSym_Timer_TIME_MS.setVisible(False)
 
 def onCapabilityDisconnected(connectionInfo):
     remoteComponent = connectionInfo["remoteComponent"]
@@ -181,8 +180,7 @@ def onCapabilityDisconnected(connectionInfo):
         tcSym_Timer_INTENSET_MC1.setValue(False,2)
         tcSym_Timer_INTENSET_OVF.setValue(True,2)
         tcSym_SYS_TIME_CONNECTED.setValue(False, 2)
-        tcSym_TimerPeriod.setVisible(True)
-        tcSym_TimerPeriod_Comment.setVisible(True)
+        tcSym_Timer_TIME_MS.setVisible(True)
 
 def sysTime_APIUpdate(symbol,event):
     global compareSetApiName_Sym
