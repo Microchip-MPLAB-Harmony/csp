@@ -28,7 +28,7 @@ from os.path import join
 from xml.etree import ElementTree
 from collections import defaultdict
 global topsort
-clkMenu = coreComponent.createMenuSymbol("SAMD21_CLK_MENU", None)
+clkMenu = coreComponent.createMenuSymbol("SAMD20_CLK_MENU", None)
 clkMenu.setLabel("Clock")
 clkMenu.setDescription("Configuration for Clock System Service")
 
@@ -81,12 +81,12 @@ calculatedFreq_Menu.setLabel("Clock Frequencies")
 def setOSC8MFreq(symbol, event):
     enable = Database.getSymbolValue("core", "CONFIG_CLOCK_OSC8M_ENABLE")
     freq = int(Database.getSymbolValue("core", "CONFIG_CLOCK_OSC8M_FREQ"))
-    
+
     pres = int(Database.getSymbolValue("core", "CONFIG_CLOCK_OSC8M_PRES"))
-    
+
     if enable:
         symbol.setValue((freq)/ (2**pres), 2)
-    
+
     else:
         symbol.setValue((freq)/ (2**pres), 2)
 
@@ -110,7 +110,7 @@ def setXOSCFreq(symbol, event):
         symbol.setValue(Database.getSymbolValue("core", "CONFIG_CLOCK_XOSC_FREQUENCY"), 1)
     else:
         symbol.setValue(0, 1)
-     
+
 def setOSC32KFreq(symbol, event):
     osc32kEnable = Database.getSymbolValue("core","OSC32K_EN32K")
     oscEnable = Database.getSymbolValue("core","CONF_CLOCK_OSC32K_ENABLE")
@@ -139,10 +139,10 @@ def setDfllFreq(symbol, event):
             mul =  int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_MUL"))
             refFreq = int(Database.getSymbolValue("core", "GCLK_ID_0_FREQ"))
             freq = mul*refFreq
-                
+
     symbol.setValue(freq, 2)
-    
-    
+
+
 ################################################################################
 #######          SYSCTRL Database Components      ##############################
 ################################################################################
@@ -527,13 +527,13 @@ def setGClockFreq(symbol, event):
         if src == "XOSC":
             srcFreq = int(Database.getSymbolValue("core","XOSC_FREQ"))
 
-        
+
         elif src == "OSC32K":
             srcFreq = int(Database.getSymbolValue("core","OSC32K_FREQ"))
-            
+
         elif src == "OSC8M":
             srcFreq = int(Database.getSymbolValue("core","OSC8M_CLOCK_FREQ"))
-        
+
         # GCLKIN
         elif 'GCLK_IN' in str(src):
             gclk_in_symbol = "GCLK_IO_"+str(index)+"_FREQ"
@@ -554,9 +554,9 @@ def setGClockFreq(symbol, event):
 
         #DFLL
         elif src == "DFLL":
-            srcFreq = int(Database.getSymbolValue("core","DFLL_CLOCK_FREQ"))           
+            srcFreq = int(Database.getSymbolValue("core","DFLL_CLOCK_FREQ"))
 
-            
+
         divSel = int(Database.getSymbolValue("core","GCLK_" + index + "_DIVSEL"))
         div = int(Database.getSymbolValue("core","GCLK_" + index + "_DIV"))
 
@@ -577,7 +577,7 @@ def setGClockFreq(symbol, event):
 
 def topsort(graph):
     from collections import deque
-    
+
     #Initialize the degree of vetexes to zero and increment dependents by 1
     degreeList = {}
     for vertex in graph:
@@ -586,34 +586,34 @@ def topsort(graph):
     for vertex in graph:
         for dependent in graph[vertex]:
             degreeList[dependent] = degreeList[dependent] + 1
- 
-    #initialize a dequeue pipe 
-    pipe = deque() 
 
-    #move vertexes with zero degree to the starting of pipe    
+    #initialize a dequeue pipe
+    pipe = deque()
+
+    #move vertexes with zero degree to the starting of pipe
     for vertex in degreeList:
         if degreeList[vertex] == 0:
             pipe.appendleft(vertex)
- 
-    outputList = []     
+
+    outputList = []
 
     #move vertexes with degree 0 to output list
     #visit the dependent and reduce the degree by one for every visited dependent
-    while pipe:                
-        vertex = pipe.pop()          
-        outputList.append(vertex)          
+    while pipe:
+        vertex = pipe.pop()
+        outputList.append(vertex)
         for dependent in graph[vertex]:
             degreeList[dependent] -= 1
             if degreeList[dependent] == 0:
                 pipe.appendleft(dependent)
-         
+
     #If there are no cycles that is the max degree of all vertices is 1
     #then the length of list should be equal to total number of vertices in graph else a cycle has been formed
     if len(outputList) == len(graph):
         return outputList
-    else:                     
-        return []         
-    
+    else:
+        return []
+
 def codeGen(symbol, event):
     global codeGenerationDep
     global topsort
@@ -634,29 +634,29 @@ def codeGen(symbol, event):
                     }
     symbol.clearValues()
     codeList = []
-    
+
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_ENABLE")) == True :
         if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_OPMODE"))) == 1):
             sourceDestmap["GCLK" + str(Database.getSymbolValue("core", "GCLK_ID_0_GENSEL"))].append("DFLL")
-           
+
     for i in range(0, 8):
         if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)):
            if gclkSym_GENCTRL_SRC[i].getSelectedKey() in ["DFLL", "GCLK1"]:
                 sourceDestmap[gclkSym_GENCTRL_SRC[i].getSelectedKey()].append("GCLK"+str(i))
-    
+
     codeList = topsort(sourceDestmap)
     if len(codeList) != 0:
         cycleFormed.setValue(False,2)
-        
-        
+
+
         if (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_ENABLE")) == False :
             codeList.remove("DFLL")
         for i in range(0, 8):
             if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)) == False:
                 codeList.remove("GCLK"+str(i))
-            
+
         for i in range(0,len(codeList)):
-            symbol.addValue("    " + codeList[i] + "_Initialize();")    
+            symbol.addValue("    " + codeList[i] + "_Initialize();")
     else:
         cycleFormed.setValue(True,2)
 
@@ -712,7 +712,7 @@ def setGCLKIOFreq(symbol, event):
     else:
         symbol.setValue(0, 2)
 
-                                                          
+
 ################################GCLK############################################
 
 gclkDependencyList = []
@@ -836,7 +836,7 @@ for gclknumber in range(0,8):
         gclkSym_GENCTRL_OOV[gclknumber].setDefaultValue(0)
         gclkSym_GENCTRL_OOV[gclknumber].setOutputMode("Key")
         gclkSym_GENCTRL_OOV[gclknumber].setDisplayMode("Description")
-        
+
         gclkInFreq = coreComponent.createIntegerSymbol("GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
         gclkInFreq.setLabel("Gclk Input Frequency")
         gclkInFreq.setDefaultValue(0)
@@ -1063,7 +1063,7 @@ def setMainClockFreq(symbol, event):
         Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_DUAL_Val", 2)
     else:
         Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_SINGLE_Val", 2)
-    
+
 def ahbValue(symbol,event):
     global ahbInit
     global pmDic
@@ -1095,20 +1095,20 @@ def apbValue(symbol,event):
 
     if "_ANA" in perInstance:
         perInstance = perInstance.split("_ANA")[0]
-        
+
     if "_SLOW" in perInstance:
         return
-    
+
     if "_DIG" in perInstance:
         return
-        
+
     if "EVSYS" in perInstance:
         perInstance = perInstance.split("_")[0]
         for i in range (0,12):
             if Database.getSymbolValue("core", "EVSYS_" + str(i) + "_CLOCK_ENABLE") == True:
                 enable = enable | True
                 break
-            
+
 
 
     for key in pmDic.keys():
@@ -1127,7 +1127,7 @@ def apbValue(symbol,event):
                     Database.setSymbolValue("core", "PM_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
                     break
 
-###############################PM###############################################  
+###############################PM###############################################
 global ahbInit
 numAPB = 0
 ahbInit = 0x0
@@ -1203,7 +1203,7 @@ pmSym_CPUDIV_CPUDIV.setDisplayMode("Key")
 nvm_rws = coreComponent.createStringSymbol("NVM_RWS", pmSym_Menu)
 nvm_rws.setReadOnly(True)
 nvm_rws.setDefaultValue("NVMCTRL_CTRLB_RWS_SINGLE_Val")
-nvm_rws.setVisible(False)   
+nvm_rws.setVisible(False)
 
 clkSym_MAIN_CLK_FREQ = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY", calculatedFreq_Menu)
 clkSym_MAIN_CLK_FREQ.setLabel("Main Clock Frequency")
@@ -1212,37 +1212,37 @@ clkSym_MAIN_CLK_FREQ.setDependencies(setMainClockFreq, ["GCLK_0_FREQ", "CONF_CPU
 
 divider = pmSym_CPUDIV_CPUDIV.getValue()
 gclk0_freq = int(gclkSym_Freq[0].getValue())
-clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)                                                    
+clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)
 ################################################################################
 ###########             CODE GENERATION                     ####################
 ################################################################################
 
 configName = Variables.get("__CONFIGURATION_NAME")
 
-clockSym_OSCCTRL_HeaderFile = coreComponent.createFileSymbol("SAMD21_CLOCK_HEADER", None)
-clockSym_OSCCTRL_HeaderFile.setSourcePath("../peripheral/clk_sam_d21/templates/plib_clock.h.ftl")
+clockSym_OSCCTRL_HeaderFile = coreComponent.createFileSymbol("SAMD20_CLOCK_HEADER", None)
+clockSym_OSCCTRL_HeaderFile.setSourcePath("../peripheral/clk_sam_d20/templates/plib_clock.h.ftl")
 clockSym_OSCCTRL_HeaderFile.setOutputName("plib_clock.h")
 clockSym_OSCCTRL_HeaderFile.setDestPath("peripheral/clock/")
 clockSym_OSCCTRL_HeaderFile.setProjectPath("config/" + configName + "/peripheral/clock/")
 clockSym_OSCCTRL_HeaderFile.setType("HEADER")
 clockSym_OSCCTRL_HeaderFile.setMarkup(True)
 
-clockSym_OSCCTRL_SourceFile = coreComponent.createFileSymbol("SAMD21_CLOCK_SOURCE", None)
-clockSym_OSCCTRL_SourceFile.setSourcePath("../peripheral/clk_sam_d21/templates/plib_clock.c.ftl")
+clockSym_OSCCTRL_SourceFile = coreComponent.createFileSymbol("SAMD20_CLOCK_SOURCE", None)
+clockSym_OSCCTRL_SourceFile.setSourcePath("../peripheral/clk_sam_d20/templates/plib_clock.c.ftl")
 clockSym_OSCCTRL_SourceFile.setOutputName("plib_clock.c")
 clockSym_OSCCTRL_SourceFile.setDestPath("peripheral/clock/")
 clockSym_OSCCTRL_SourceFile.setProjectPath("config/" + configName + "/peripheral/clock/")
 clockSym_OSCCTRL_SourceFile.setType("SOURCE")
 clockSym_OSCCTRL_SourceFile.setMarkup(True)
 
-clockSystemInitFile = coreComponent.createFileSymbol("SAMD21_CLOCK_INIT", None)
+clockSystemInitFile = coreComponent.createFileSymbol("SAMD20_CLOCK_INIT", None)
 clockSystemInitFile.setType("STRING")
 clockSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-clockSystemInitFile.setSourcePath("../peripheral/clk_sam_d21/templates/system/initialization.c.ftl")
+clockSystemInitFile.setSourcePath("../peripheral/clk_sam_d20/templates/system/initialization.c.ftl")
 clockSystemInitFile.setMarkup(True)
 
-clockSystemDefFile = coreComponent.createFileSymbol("SAMD21_CLOCK_SYS_DEF", None)
+clockSystemDefFile = coreComponent.createFileSymbol("SAMD20_CLOCK_SYS_DEF", None)
 clockSystemDefFile.setType("STRING")
 clockSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-clockSystemDefFile.setSourcePath("../peripheral/clk_sam_d21/templates/system/definitions.h.ftl")
+clockSystemDefFile.setSourcePath("../peripheral/clk_sam_d20/templates/system/definitions.h.ftl")
 clockSystemDefFile.setMarkup(True)
