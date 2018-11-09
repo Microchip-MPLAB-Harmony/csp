@@ -116,18 +116,18 @@ def systickCal(symbol, event):
     else:
         clock = 1
 
-    period = int(Database.getSymbolValue("core", "SYSTICK_PERIOD_MS"))
+    period = float(Database.getSymbolValue("core", "SYSTICK_PERIOD_MS"))
     freq_proc = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
 
     if clock == 0:
         if freq_ext != 0 and freq_ext != None:
-            value = int((float(freq_ext) / 1000) * period)
+            value = int(((float(freq_ext)/1000000) * int(round(period * 1000))))
     else:
         if freq_proc != 0 and freq_proc != None:
-            value = int((float(freq_proc) / 1000) * period)
+            value = int(((float(freq_proc)/1000000) * int(round(period * 1000))))
 
     symbol.setValue(str(hex(value)),2)
-    Database.setSymbolValue("core","SYSTICK_PERIOD_US", int(period * 1000), 2)
+    Database.setSymbolValue("core","SYSTICK_PERIOD_US", int(round(period * 1000)), 2)
 
 ################################################################################
 #### Menu ####
@@ -165,7 +165,7 @@ systickClock.setDefaultValue(int(Database.getSymbolValue("core","SYSTICK_EXTERNA
 systickNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SysTick"]/register-group@[name="SysTick"]/register@[name="CVR"]/bitfield@[name="CURRENT"]')
 maxCount = str(systickNode.getAttribute("mask"))
 max = ((float(1) / int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))) * int(maxCount, 0) * 1000)
-    
+
 systickPeriodMS = coreComponent.createFloatSymbol("SYSTICK_PERIOD_MS", systickConfigMenu)
 systickPeriodMS.setLabel("Systick Period(Milliseconds)")
 systickPeriodMS.setVisible(True)
