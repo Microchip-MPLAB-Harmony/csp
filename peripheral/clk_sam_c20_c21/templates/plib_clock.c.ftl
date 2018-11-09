@@ -76,7 +76,7 @@ static void OSCCTRL_Initialize(void)
 	/* Selection of the Clock failure detection (CFD) pre scalar */
 	OSCCTRL_REGS->OSCCTRL_CFDPRESC = ${CONFIG_CLOCK_XOSC_CFDPRESC};
     </#if>
-	
+
     /* Configure External Oscillator */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_XOSCCTRL = OSCCTRL_XOSCCTRL_STARTUP(${CONFIG_CLOCK_XOSC_STARTUP}) | OSCCTRL_XOSCCTRL_GAIN(${CONFIG_CLOCK_XOSC_GAIN})
                                                              ${CONFIG_CLOCK_XOSC_RUNSTDBY?then('| OSCCTRL_XOSCCTRL_RUNSTDBY_Msk',' ')}
@@ -105,14 +105,14 @@ static void OSCCTRL_Initialize(void)
     /* Configure 48MHz Oscillator */
 	<@compress single_line=true>OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = OSCCTRL_REGS->OSCCTRL_OSC48MCTRL
                                                              ${CONFIG_CLOCK_OSC48M_RUNSTDY?then('| OSCCTRL_OSC48MCTRL_RUNSTDBY_Msk',' ')}
-															 ${(CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE")?then('| OSCCTRL_OSC48MCTRL_ONDEMAND_Msk',' ')};</@compress>	
+															 ${(CONFIG_CLOCK_OSC48M_ONDEMAND == "ENABLE")?then('| OSCCTRL_OSC48MCTRL_ONDEMAND_Msk',' ')};</@compress>
 	</#if>
-	
+
 	<#if CONFIG_CLOCK_OSC48M_STARTUP != "7">
     /* Selection of the StartUp Delay */
     OSCCTRL_REGS->OSCCTRL_OSC48MSTUP = OSCCTRL_OSC48MSTUP_STARTUP(${CONFIG_CLOCK_OSC48M_STARTUP});
-	</#if>	
-	
+	</#if>
+
 	<#if CONFIG_CLOCK_OSC48M_DIV != "11">
     /* Selection of the Division Value */
     OSCCTRL_REGS->OSCCTRL_OSC48MDIV = OSCCTRL_OSC48MDIV_DIV(${CONFIG_CLOCK_OSC48M_DIV});
@@ -144,7 +144,7 @@ static void OSC32KCTRL_Initialize(void)
                                                                ${XOSC32K_EN32K?then('| OSC32KCTRL_XOSC32K_EN32K_Msk',' ')}
 															   ${(XOSC32K_ONDEMAND == "ENABLE")?then('| OSC32KCTRL_XOSC32K_ONDEMAND_Msk',' ')}
 															   ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| OSC32KCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
-															   
+
     <#if XOSC32K_CFDEN == true >
     /* Enable clock failure detection */
     OSC32KCTRL_REGS->OSC32KCTRL_CFDCTRL |= OSC32KCTRL_CFDCTRL_CFDEN_Msk  ${XOSC32K_CFDPRESC?then('| OSC32KCTRL_CFDCTRL_CFDPRESC_Msk','')};
@@ -158,11 +158,11 @@ static void OSC32KCTRL_Initialize(void)
 </#if>
 <#if CONF_CLOCK_OSC32K_ENABLE =true>
     /****************** OSC32K Initialization  ******************************/
-   
+
    uint32_t calibValue = (((*(uint32_t*)0x806020) >> 12 ) & 0x7f);
-    
+
     /* Configure 32K RC oscillator */
-    <@compress single_line=true>OSC32KCTRL_REGS->OSC32KCTRL_OSC32K = OSC32KCTRL_OSC32K_CALIB(calibValue) 
+    <@compress single_line=true>OSC32KCTRL_REGS->OSC32KCTRL_OSC32K = OSC32KCTRL_OSC32K_CALIB(calibValue)
                                                               | OSC32KCTRL_OSC32K_STARTUP(${OSC32K_STARTUP}) | OSC32KCTRL_OSC32K_ENABLE_Msk
                                                               ${OSC32K_RUNSTDBY?then('| OSC32KCTRL_OSC32K_RUNSTDBY_Msk',' ')}
                                                               ${OSC32K_EN1K?then('| OSC32KCTRL_OSC32K_EN1K_Msk',' ')}
@@ -190,13 +190,13 @@ static void FDPLL_Initialize(void)
         /* Wait for synchronization */
     }
 	</#if>
-	
+
     /****************** DPLL Initialization  *********************************/
 
     /* Configure DPLL    */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_FILTER(${CONFIG_CLOCK_DPLL_FILTER}) |
                                                                    OSCCTRL_DPLLCTRLB_LTIME(${CONFIG_CLOCK_DPLL_LOCK_TIME})|
-																   OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL_REF_CLOCK}) 
+																   OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL_REF_CLOCK})
                                                                    ${CONFIG_CLOCK_DPLL_LOCK_BYPASS?then('| OSCCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}
                                                                    ${CONFIG_CLOCK_DPLL_WAKEUP_FAST?then('| OSCCTRL_DPLLCTRLB_WUF_Msk', ' ')}
                                                                    ${CONFIG_CLOCK_DPLL_LOWPOWER_ENABLE?then('| OSCCTRL_DPLLCTRLB_LPEN_Msk', ' ')}
@@ -267,7 +267,7 @@ static void GCLK${i}_Initialize(void)
         /* wait for the Generator ${i} synchronization */
     }
 }
-	
+
             </#if>
         </#if>
 </#list>
@@ -281,7 +281,7 @@ void CLOCK_Initialize (void)
 
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
-	
+
 ${CLK_INIT_LIST}
 
 <#if CONF_CPU_CLOCK_DIVIDER != '0x01'>
@@ -292,8 +292,8 @@ ${CLK_INIT_LIST}
     {
         /* Wait for the Main Clock to be Ready */
     }
-</#if>    
-	
+</#if>
+
 <#list 1..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">
     <#assign GCLK_ID_INDEX = "GCLK_ID_" + i + "_INDEX">
@@ -302,8 +302,6 @@ ${CLK_INIT_LIST}
     <#assign GCLK_ID_WRITELOCK = "GCLK_ID_" + i + "_WRITELOCK">
         <#if .vars[GCLK_ID_CHEN]?has_content>
             <#if (.vars[GCLK_ID_CHEN] != false)>
-	<#if CONFIG_CLOCK_DPLL_REF_CLOCK == "2" && i == 22>
-	<#else>
 	/* Selection of the Generator and write Lock for ${.vars[GCLK_ID_NAME]} */
     GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] = GCLK_PCHCTRL_GEN(${.vars[GCLK_ID_GENSEL]})${.vars[GCLK_ID_WRITELOCK]?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
 
@@ -311,7 +309,6 @@ ${CLK_INIT_LIST}
     {
         /* Wait for synchronization */
     }
-	</#if>
     </#if>
     </#if>
 </#list>
@@ -319,30 +316,30 @@ ${CLK_INIT_LIST}
 	<#if MCLK_AHB_INITIAL_VALUE != "0x3cff">
     /* Configure the AHB Bridge Clocks */
     MCLK_REGS->MCLK_AHBMASK = ${MCLK_AHB_INITIAL_VALUE};
-    
-    </#if>   
+
+    </#if>
     <#if MCLK_APBA_INITIAL_VALUE != "0xfff">
     /* Configure the APBA Bridge Clocks */
     MCLK_REGS->MCLK_APBAMASK = ${MCLK_APBA_INITIAL_VALUE};
-    
-    </#if>   
+
+    </#if>
     <#if MCLK_APBB_INITIAL_VALUE != "0x7">
     /* Configure the APBB Bridge Clocks */
     MCLK_REGS->MCLK_APBBMASK = ${MCLK_APBB_INITIAL_VALUE};
-    
-    </#if>    
+
+    </#if>
     <#if MCLK_APBC_INITIAL_VALUE != "0x0">
     <#if MCLK_APBC_INITIAL_VALUE??>
     /* Configure the APBC Bridge Clocks */
     MCLK_REGS->MCLK_APBCMASK = ${MCLK_APBC_INITIAL_VALUE};
-    
+
     </#if>
     </#if>
     <#if MCLK_APBD_INITIAL_VALUE??>
     <#if MCLK_APBD_INITIAL_VALUE != "0x0">
     /* Configure the APBD Bridge Clocks */
     MCLK_REGS->MCLK_APBDMASK = ${MCLK_APBD_INITIAL_VALUE};
-    
+
     </#if>
     </#if>
 }
