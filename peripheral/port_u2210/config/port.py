@@ -71,13 +71,13 @@ def packageChange(pin, pinout):
             Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_PIN", int(re.findall('\d+', pin_map.get(pin_position[pinNumber - 1]))[0]), 2)
             Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_GROUP", pin_map.get(pin_position[pinNumber - 1])[1], 2)
         prev_package = cur_package
-        
+
 def sort_alphanumeric(l):
     import re
-    convert = lambda text: int(text) if text.isdigit() else text.lower() 
-    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
     return sorted(l, key = alphanum_key)
-    
+
 def setupPortPINCFG(usePortLocalPINCFG, event):
 
     pullEnable = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PULLEN")
@@ -151,21 +151,21 @@ def evsysControl(symbol, event):
                 status = True
                 break
         Database.setSymbolValue("evsys", "USER_PORT_EV_" + str(i) + "_READY", status, 2)
-    
+
     evctrl = 0
-    
+
     channelId = symbol.getID().split("_")[2]
-    
+
     for i in range (0,4):
         enable = Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_ENABLE")
         action = int(Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_ACTION"))
         pin = int(Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_PIN"))
         if enable == True:
             evctrl |=  1 << (7+(i*8)) | (action << (5+(i*8))) | (pin << (0+(i*8)))
-            
-    
+
+
     symbol.setValue(str(hex(evctrl)),2)
-        
+
 def setupPortPinMux(portSym_PORT_PMUX_local, event):
     global intPrePinMuxVal
     global prevID
@@ -347,7 +347,7 @@ for pinNumber in range(1, pincount + 1):
     pinPeripheralFunction[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber-1])
     pinPeripheralFunction[pinNumber-1].setLabel("Peripheral Selection")
     pinPeripheralFunction[pinNumber-1].setReadOnly(True)
-    
+
     portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(portPackage.getValue())) + "\"]/pin@[position=\""+ str(pinNumber) +"\"]")
 
     if portBitPositionNode != None:
@@ -448,7 +448,7 @@ portSym_PinCount.setVisible(False)
 portSym_PinCount.setDefaultValue(pincount)
 
 global portPeripheralFunc
-portPeripheralFunc = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+portPeripheralFunc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"]
 
 global group
 group = [0 for i in range(int(portModuleGC.getAttribute("count")))]
@@ -499,7 +499,7 @@ for portNumber in range(0, len(group)):
     portSym_PORT_LATCH.setDefaultValue(str(hex(0)))
     portSym_PORT_LATCH.setDependencies(setupPortLat, pinLatchList)
     portSym_PORT_LATCH.setVisible(visibility)
-    
+
     portSym_PORT_CTRL = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_CTRL", port[portNumber])
     portSym_PORT_CTRL.setLabel("Enable Input Synchronizer")
     portSym_PORT_CTRL.setDefaultValue(str(hex(0)))
@@ -513,7 +513,7 @@ for portNumber in range(0, len(group)):
         portSym_PORT_PINCFG.setLabel("PORT GROUP " + str(portGroupName[portNumber]) + " PINCFG" + str(pinNum))
         portSym_PORT_PINCFG.setDefaultValue(str(hex(0)))
         portSym_PORT_PINCFG.setVisible(visibility)
-        
+
         portPad = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_PAD_" + str(pinNum), port[portNumber])
         portPad.setVisible(False)
         portPad.setDefaultValue("0")
@@ -524,16 +524,16 @@ for portNumber in range(0, len(group)):
         portSym_PORT_PMUX.setDefaultValue(str(hex(0)))
         portSym_PORT_PMUX.setVisible(visibility)
         portSym_PORT_PMUX.setDependencies(setupPortPinMux, pinPinMuxList)
-        
-    if portEvsysActionNode != None:    
+
+    if portEvsysActionNode != None:
         portEVSYS = coreComponent.createMenuSymbol("PORT_MENU_EVSYS" + str(portNumber), port[portNumber])
         portEVSYS.setLabel("EVENT System Configuraiton")
-        
+
         for i in range(0,4):
             portEVSYSEnable = coreComponent.createBooleanSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE", portEVSYS)
             portEVSYSEnable.setLabel("Enable Event" + str(i) + " Input")
             evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE")
-            
+
             portEvsysAction = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION",portEVSYSEnable)
             portEvsysAction.setLabel("Event" + str(i) + " Action")
             for index in range(0, len(portEvsysActionValues)):
@@ -546,7 +546,7 @@ for portNumber in range(0, len(group)):
             portEvsysAction.setOutputMode("Value")
             portEvsysAction.setDisplayMode("Description")
             evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ACTION")
-            
+
             portEvsysPin = coreComponent.createKeyValueSetSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_PIN",portEVSYSEnable)
             portEvsysPin.setLabel("Event" + str(i) + " Pin")
             for index in range(0, 32):
@@ -565,10 +565,10 @@ for portNumber in range(0, len(group)):
 
 
 
-        
-        
-    
-    
+
+
+
+
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################
