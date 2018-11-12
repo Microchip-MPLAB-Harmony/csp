@@ -249,8 +249,14 @@ def portInterrupt(pin, interrupt):
 		
 		if port_interrupt[port] > 0:
 			Database.setSymbolValue("core", "PORT_" + str(port) + "_INTERRUPT_USED", True, 2)
+			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_ENABLE", True, 1)
+			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_HANDLER", "PIO"+str(port)+"_InterruptHandler", 1)
+			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_HANDLER_LOCK", True, 1)
 		else:
 			Database.setSymbolValue("core", "PORT_" + str(port) + "_INTERRUPT_USED", False, 2)
+			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_ENABLE", False, 1)
+			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_HANDLER", "PIO"+str(port)+"_Handler", 1)
+			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_HANDLER_LOCK", False, 1)
 	
 #####################################################################################################################
 
