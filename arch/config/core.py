@@ -147,6 +147,20 @@ def instantiateComponent(coreComponent):
     exceptionHandling.setDefaultValue(False)
     exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
 
+    arch = ""
+    if "CORTEX" in deviceArch.getValue():
+        arch="arm"
+    else
+        arch="mips"
+    toolChainSpecifics = coreComponent.createFileSymbol(None, None)
+    toolChainSpecifics.setSourcePath(arch+"/toolchain_specifics.h")
+    toolChainSpecifics.setOutputName("toolchain_specifics.h");
+    toolChainSpecifics.setMarkup(False)
+    toolChainSpecifics.setOverwrite(True)
+    toolChainSpecifics.setDestPath("../../"+arch)
+    toolChainSpecifics.setProjectPath(arch)
+    toolChainSpecifics.setType("HEADER")
+
     toolchainMenu = coreComponent.createMenuSymbol("CoreToolchainMenu", projMenu)
     toolchainMenu.setLabel("Toolchain Selection")
 
@@ -304,7 +318,7 @@ def instantiateComponent(coreComponent):
     defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
     defSym.setCategory("C32")
     defSym.setKey("extra-include-directories")
-    defSym.setValue("../src;../src/config/"+configName+";../src/packs/"+Variables.get("__PROCESSOR")+"_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/")
+    defSym.setValue("../src;../src/config/"+configName+";../src/packs/"+Variables.get("__PROCESSOR")+"_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/"+arch)
     defSym.setAppend(True, ";")
 
     # set XC32 option to not use the device startup code

@@ -41,4 +41,5 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+#include "toolchain_specifics.h"
 #include "${__PROCESSOR?lower_case}.h"
