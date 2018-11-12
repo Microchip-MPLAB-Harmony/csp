@@ -49,7 +49,9 @@ void SYSTICK_TimerInitialize ( void )
 {
 	SysTick->CTRL = 0;
 	SysTick->VAL = 0;
+    <#if SYSTICK_PERIOD != "0x0">
 	SysTick->LOAD = ${SYSTICK_PERIOD} - 1;
+    </#if>
 	<#if USE_SYSTICK_INTERRUPT == true && SYSTICK_CLOCK == "0">
 		<#lt>	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk;
 	</#if>
@@ -126,7 +128,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void )
 	<#lt>		}
 	<#lt>	}
 	<#lt>}
-	
+
 	<#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
 	<#lt>{
 	<#lt>	systick.callback = callback;
