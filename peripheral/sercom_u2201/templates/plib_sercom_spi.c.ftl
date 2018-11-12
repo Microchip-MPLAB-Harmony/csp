@@ -95,10 +95,18 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
     /* Selection of the Character Size and Receiver Enable */
     <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB = SERCOM_SPIM_CTRLB_CHSIZE_${SPI_CHARSIZE_BITS}
                                                                                   ${SPI_RECIEVER_ENABLE?then('| SERCOM_SPIM_CTRLB_RXEN_Msk', '')}
-                                                                                  ${SPI_MSSEN?then('| SERCOM_SPIM_CTRLB_MSSEN_Msk', '')};</@compress>
+                                                                                  <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+                                                                                  <#else>
+                                                                                  ${SPI_MSSEN?then('| SERCOM_SPIM_CTRLB_MSSEN_Msk', '')}
+                                                                                  </#if>
+                                                                                  ;</@compress>
 
     /* Wait for synchronization */
+    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+    <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+    </#if>
 
     /* Selection of the Baud Value */
     ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_BAUD = ${SPI_BAUD_REG_VALUE};
@@ -117,7 +125,11 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
                                                                                   ${SPI_RUNSTDBY?then(' | SERCOM_SPIM_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 
     /* Wait for synchronization */
+    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+    <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+    </#if>
 }
 
 // *****************************************************************************
@@ -164,7 +176,11 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
     ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLA &= ~(SERCOM_SPIM_CTRLA_ENABLE_Msk);
 
     /* Wait for synchronization */
+    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+    <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+    </#if>
 
     if(setup != NULL)
     {
@@ -182,7 +198,11 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
             ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLB |= setup->dataBits;
 
             /* Wait for synchronization */
+            <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+            while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+            <#else>
             while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+            </#if>
 
             statusValue = true;
         }
@@ -192,7 +212,11 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
     ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLA |= SERCOM_SPIM_CTRLA_ENABLE_Msk;
 
     /* Wait for synchronization */
+    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    while((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
+    <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_SYNCBUSY);
+    </#if>
 
     return statusValue;
 }

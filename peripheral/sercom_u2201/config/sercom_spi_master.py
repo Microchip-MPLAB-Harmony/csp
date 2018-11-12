@@ -26,6 +26,20 @@
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+
+def updateSPIConfigurationVisibleProperty(symbol, event):
+
+    if symbol.getID() == "SPI_BAUD_ERROR_COMMENT":
+        if (spi_BAUDREG.getValue() == 1 or spi_BAUDREG.getValue() ==255) and event["symbol"].getSelectedKey() == "SPIM":
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    else:
+        if event["symbol"].getSelectedKey() == "SPIM":
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+
 # SPI Components Visible Property
 def updateSPIMasterConfigurationVisibleProperty(symbol, event):
 
@@ -41,6 +55,11 @@ def spibaudcalc(symbol, event):
     spi_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_BAUD_RATE")
 
     baudReg = getspiBaud(sercom_gclk, spi_Speed)
+    if baudReg == 1 or baudReg == 255 :
+        spiSym_BaudError_Comment.setVisible(True)
+    else :
+        spiSym_BaudError_Comment.setVisible(False)
+
     symbol.setValue(baudReg, 2)
 
 #SPI Transfer Mode Comment
@@ -71,6 +90,7 @@ def setSPIClockModeInfo(symbol, event):
 ###################################################################################################
 
 global spiSym_Interrupt_Mode
+global sercomSym_DeviceName
 
 #SPI Interrupt Mode
 spiSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", sercomSym_OperationMode)
@@ -247,11 +267,12 @@ spiSym_STATUS_BUFOVF_Mask = sercomComponent.createStringSymbol("SPI_STATUS_OVERR
 spiSym_STATUS_BUFOVF_Mask.setDefaultValue("0x4")
 spiSym_STATUS_BUFOVF_Mask.setVisible(False)
 
-#SPI Hardware Slave Select control
-spiSym_CTRLB_MSSEN = sercomComponent.createBooleanSymbol("SPI_MSSEN", sercomSym_OperationMode)
-spiSym_CTRLB_MSSEN.setLabel("Enable SPI Master Hardware Slave Select")
-spiSym_CTRLB_MSSEN.setVisible(False)
-spiSym_CTRLB_MSSEN.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
+if "SAMD20" not in sercomSym_DeviceName.getValue():
+    #SPI Hardware Slave Select control
+    spiSym_CTRLB_MSSEN = sercomComponent.createBooleanSymbol("SPI_MSSEN", sercomSym_OperationMode)
+    spiSym_CTRLB_MSSEN.setLabel("Enable SPI Master Hardware Slave Select")
+    spiSym_CTRLB_MSSEN.setVisible(False)
+    spiSym_CTRLB_MSSEN.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #SPI Receiver Enable
 spiSym_CTRLB_RXEN = sercomComponent.createBooleanSymbol("SPI_RECIEVER_ENABLE", sercomSym_OperationMode)
@@ -271,11 +292,20 @@ spiSym_ClockModeComment.setLabel("***SPI Transfer Mode 0 is Selected***")
 spiSym_ClockModeComment.setVisible(False)
 spiSym_ClockModeComment.setDependencies(setSPIClockModeInfo, ["SERCOM_MODE", "SPI_CLOCK_PHASE", "SPI_CLOCK_POLARITY"])
 
+
+#SPI Baud Rate not supported comment
+global spiSym_BaudError_Comment
+spiSym_BaudError_Comment = sercomComponent.createCommentSymbol("SPI_BAUD_ERROR_COMMENT", sercomSym_OperationMode)
+spiSym_BaudError_Comment.setLabel("********** SPI Clock source is not suitable for the desired baud rate **********")
+spiSym_BaudError_Comment.setDependencies(updateSPIConfigurationVisibleProperty, ["SERCOM_MODE"])
+
 spidefaultvalue = getspiBaud(sercomSym_ClockFrequency.getValue(), spi_BAUDRATE.getValue())
 
 # SPI BAUDREG Value
+global spi_BAUDREG
 spi_BAUDREG = sercomComponent.createIntegerSymbol("SPI_BAUD_REG_VALUE", sercomSym_OperationMode)
 spi_BAUDREG.setLabel("SPI Baud ")
 spi_BAUDREG.setDefaultValue(spidefaultvalue)
 spi_BAUDREG.setVisible(False)
 spi_BAUDREG.setDependencies(spibaudcalc, ["SERCOM_CLOCK_FREQUENCY", "SPI_BAUD_RATE"])
+
