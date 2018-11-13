@@ -58,6 +58,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -100,53 +101,20 @@ typedef enum
 </#list>
 } RSTC_RESET_CAUSE;
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-    this interface.
-*/
+<#if RSTC_BKUPEXIT_LENGTH??>
+typedef enum
+{
 
-// *****************************************************************************
-/* Function:
-    RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet( void );
+<#list 0..(RSTC_BKUPEXIT_LENGTH - 1) as i>
+    <#assign resetBckup = "RSTC_BKUPEXIT" + i>
+    RSTC_BKUPEXIT_CAUSE_${.vars[resetBckup]} = RSTC_BKUPEXIT_${.vars[resetBckup]}_Msk,
 
-  Summary:
-    Reports the cause of the last reset.
+</#list>
+} RSTC_BKUPEXIT_CAUSE;
 
-  Description:
-    This function returns the cause of the last reset. The reset could be due to
-    multiple reasons. The application should compare the returned value against
-    different values in the RSTC_RESET_CAUSE enumeration to identify the possible
-    causes.
+RSTC_BKUPEXIT_CAUSE RSTC_BackupExitCauseGet (void);
 
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    RSTC_RESET_CAUSE - Identifies type of reset.
-
-  Example:
-   <code>
-
-    RSTC_RESET_CAUSE resetCause = RSTC_RESET_CAUSE_WDT_RESET | 
-                                  RSTC_RESET_CAUSE_BODVDD_RESET;
-
-    if (resetCause == ${RSTC_INSTANCE_NAME}_ResetCauseGet())
-    {
-        //Application related tasks
-    }
-    </code>
-
-  Remarks:
-    None.
-*/
-
+</#if>
 RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void);
 
 // DOM-IGNORE-BEGIN
