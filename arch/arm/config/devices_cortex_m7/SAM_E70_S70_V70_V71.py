@@ -217,9 +217,6 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/rswdt_11110/config/rswdt.
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
-# load device specific adc manager information
-coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
-
 
 # generate startup_xc32.c file
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
