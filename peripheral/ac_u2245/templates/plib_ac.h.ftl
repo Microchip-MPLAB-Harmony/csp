@@ -64,29 +64,6 @@
 
 typedef enum
 {
-    /* Analog Comparator Output Interrupt */
-    AC_OUTPUT_INTERRUPT = 0,
-
-    /* Analog Comparator Window Mode Output Interrupt */
-    AC_WIN_INTERRUPT = 1
-
-} AC_INTERRUPTS;
-
-typedef enum
-{
-    /* Analog Comparator Output - Non Interrupt Mode */
-    AC_OUTPUT = 0,
-
-    /* Analog Comparator Output - Interrupt Mode */
-    AC_INTERRUPT = 1,
-
-    /* Analog Comparator Output - Window Mode */
-    AC_WINDOW_INTERRUPT = 2
-
-} AC_STATUS;
-
-typedef enum
-{
 <#list 0 ..(AC_NUM_COMPARATORS -1) as i >
     <#assign CH_NUM = i>
     ${AC_INSTANCE_NAME}_CHANNEL${CH_NUM} = ${CH_NUM},
@@ -112,7 +89,9 @@ void ${AC_INSTANCE_NAME}_Initialize (void);
 
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id );
 
-bool ${AC_INSTANCE_NAME}_StatusGet ( AC_STATUS status, AC_CHANNEL channel);
+void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id );
+
+bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel);
 
 void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t context);
 
