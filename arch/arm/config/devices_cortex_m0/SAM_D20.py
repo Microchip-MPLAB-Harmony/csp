@@ -70,8 +70,8 @@ cortexMenu.setDescription("Configuration for Cortex M0+")
 #coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
 
 # load NVIC
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
-#coreComponent.addPlugin("../peripheral/nvic_m7/plugin/ARM_M7_NVICmanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
+coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
 
 #load systick
 #execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
