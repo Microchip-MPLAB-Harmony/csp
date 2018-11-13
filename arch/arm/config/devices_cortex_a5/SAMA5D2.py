@@ -47,6 +47,8 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
 # load ADC manager information
 coreComponent.addPlugin("../peripheral/adc_44073/plugin/ARM_44073_ADCManager.jar")
+# load AIC manager information
+coreComponent.addPlugin("../peripheral/aic_11051/plugin/AICManager_11051.jar")
 
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
 armSysStartSourceFile.setSourcePath("arm/templates/sam_a5_cstartup.s.ftl")
