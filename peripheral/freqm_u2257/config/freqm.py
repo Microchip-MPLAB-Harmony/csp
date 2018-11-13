@@ -105,6 +105,12 @@ def instantiateComponent(freqmComponent):
     freqmSym_CFGA_DIVREF = freqmComponent.createBooleanSymbol("FREQM_REF_CLK_DIV", None)
     freqmSym_CFGA_DIVREF.setLabel("Divide reference clock by 8")
     freqmSym_CFGA_DIVREF.setDescription("selection of either refclk1 or refclk8")
+    freqmSym_CFGA_DIVREF.setVisible(False)
+
+    freqmRef8 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FREQM"]/register-group@[name="FREQM"]/register@[name="CFGA"]')
+    for id in range(0,len(freqmRef8.getChildren())):
+        if freqmRef8.getChildren()[id].getAttribute("name") == "DIVREF":
+            freqmSym_CFGA_DIVREF.setVisible(True)
 
     #FREQM Reference Clock Frequency
     refClockFrequency = int(Database.getSymbolValue("core", freqmInstanceName.getValue() + "_REF_CLOCK_FREQUENCY"))
