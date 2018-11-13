@@ -592,3 +592,5 @@ def instantiateComponent(afecComponent):
     afecSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     afecSystemDefFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_definitions.h.ftl")
     afecSystemDefFile.setMarkup(True)
+    
+    afecComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
