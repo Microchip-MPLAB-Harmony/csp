@@ -47,8 +47,8 @@
 //         Definitions
 //------------------------------------------------------------------------------
 
-AT91C_BASE_AIC  DEFINE 0xFC020000
-AT91C_BASE_SAIC DEFINE 0xF803C000
+AIC_BASE_ADDRESS  DEFINE 0xFC020000
+SAIC_BASE_ADDRESS DEFINE 0xF803C000
 AIC_SMR         DEFINE 0x04
 AIC_IVR         DEFINE 0x10
 AIC_EOICR       DEFINE 0x38
@@ -69,7 +69,7 @@ ICACHE_BIT      DEFINE 0x1000
 DCACHE_BIT      DEFINE 0x04
 MMU_BIT         DEFINE 0x01
 
-AT91_REMAP_BASE DEFINE 0x00600000
+REMAP_BASE_ADDRESS DEFINE 0x00600000
 
 //------------------------------------------------------------------------------
 //         Startup routine
@@ -132,7 +132,7 @@ fiqHandler:
 
         ; Write in the IVR to support Protect Mode
 
-        ldr         lr, =AT91C_BASE_SAIC
+        ldr         lr, =SAIC_BASE_ADDRESS
         ldr         r0, [r14, #AIC_IVR]
         str         lr, [r14, #AIC_IVR]
         ; Dummy read to force AIC_IVR write completion
@@ -150,7 +150,7 @@ fiqHandler:
 
         ; Acknowledge interrupt
 
-        ldr         lr, =AT91C_BASE_SAIC
+        ldr         lr, =SAIC_BASE_ADDRESS
         str         lr, [r14, #AIC_EOICR]
 
         ; Restore interrupt context and branch back to calling code
@@ -173,7 +173,7 @@ irqHandler:
 
         ; Write in the IVR to support Protect Mode
 
-        ldr         lr, =AT91C_BASE_AIC
+        ldr         lr, =AIC_BASE_ADDRESS
         ldr         r0, [r14, #AIC_IVR]
         str         lr, [r14, #AIC_IVR]
         ; Dummy read to force AIC_IVR write completion
@@ -201,7 +201,7 @@ irqHandler:
 
         ; Acknowledge interrupt
 
-        ldr         lr, =AT91C_BASE_AIC
+        ldr         lr, =AIC_BASE_ADDRESS
         str         lr, [r14, #AIC_EOICR]
 
         ; Restore interrupt context and branch back to calling code
@@ -295,7 +295,7 @@ __iar_program_start:
         bl      __iar_data_init3
 
         ; Remap 0x0 to SRAM and invalidate I Cache
-        mov     r0, #AT91_REMAP_BASE
+        mov     r0, #REMAP_BASE_ADDRESS
         mov     r1, #1
         str     r1, [r0]
         mov     r0, #0
