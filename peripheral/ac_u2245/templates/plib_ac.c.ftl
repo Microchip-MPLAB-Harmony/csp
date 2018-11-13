@@ -259,7 +259,7 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
     AC_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
 }
 
-bool ${AC_INSTANCE_NAME}_StatusGet ( AC_STATUS status, AC_CHANNEL channel)
+bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel)
 {
     bool breturnVal = false;
 
