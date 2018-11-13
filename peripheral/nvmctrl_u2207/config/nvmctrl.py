@@ -107,6 +107,8 @@ def instantiateComponent(nvmctrlComponent):
         nvmctrlSym_RWW_PROGRAM_SIZE.setDefaultValue(nvmctrlRWWEEPROMNode.getAttribute("pagesize"))
 
     nvmctrlParamNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]/instance@[name=\""+nvmctrlInstanceName.getValue()+"\"]/parameters")
+    rowSize = "256"
+    eeRowSize = "0"
     if nvmctrlParamNode != None:
         param_values = []
         param_values = nvmctrlParamNode.getChildren()

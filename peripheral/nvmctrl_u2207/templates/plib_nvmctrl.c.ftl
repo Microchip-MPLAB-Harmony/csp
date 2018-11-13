@@ -109,7 +109,7 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
     <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_INVALL | NVMCTRL_CTRLA_CMDEX_KEY;
     <#lt>}
 </#if>
-
+<#if FLASH_RWWEEPROM_START_ADDRESS??>
 bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);
@@ -158,7 +158,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_RowErase( uint32_t address )
 </#if>
     return true;
 }
-
+</#if>
 bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);
@@ -240,4 +240,3 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock(uint32_t address)
 
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_UR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 }
-
