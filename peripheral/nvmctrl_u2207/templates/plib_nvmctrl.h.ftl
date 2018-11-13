@@ -67,10 +67,12 @@
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE             (${FLASH_PROGRAM_SIZE}U)
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_ROWSIZE              (${FLASH_ERASE_SIZE}U)
 
+<#if FLASH_RWWEEPROM_START_ADDRESS??>
 #define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_START_ADDRESS    (${.vars["FLASH_RWWEEPROM_START_ADDRESS"]}U)
 #define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_SIZE             (${FLASH_RWWEEPROM_SIZE}U)
 #define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PAGESIZE         (${FLASH_RWWEEPROM_PROGRAM_SIZE}U)
 #define ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_ROWSIZE          (${FLASH_RWWEEPROM_ERASE_SIZE}U)
+</#if>
 
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
@@ -105,6 +107,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t ad
 bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t* data, uint32_t address );
 
 bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address );
+<#if FLASH_RWWEEPROM_START_ADDRESS??>
 
 bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
@@ -112,6 +115,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_PageWrite( uint32_t* data, uint32_t addr
 
 bool ${NVMCTRL_INSTANCE_NAME}_RWWEEPROM_RowErase ( uint32_t address );
 
+</#if>
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void );
 
 bool ${NVMCTRL_INSTANCE_NAME}_IsBusy( void );
