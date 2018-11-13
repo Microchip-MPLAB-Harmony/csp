@@ -27,9 +27,6 @@
 ###################################################################################################
 
 def instantiateComponent(rstcComponent):
-
-    rstcSym_RCAUSE = []
-
     rstcInstanceName = rstcComponent.createStringSymbol("RSTC_INSTANCE_NAME", None)
     rstcInstanceName.setVisible(False)
     rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
@@ -46,13 +43,27 @@ def instantiateComponent(rstcComponent):
     rstcSym_RCAUSE_Index.setVisible(False)
 
     for id in range(0,len(rstcResetCause.getChildren())):
-        rstcSym_RCAUSE.append(id)
-        rstcSym_RCAUSE[id] = rstcComponent.createKeyValueSetSymbol("RSTC_RCAUSE"+str(id), None)
-        rstcSym_RCAUSE[id].setLabel(str(rstcResetCause.getChildren()[id].getAttribute("caption")))
-        rstcSym_RCAUSE[id].addKey(rstcResetCause.getChildren()[id].getAttribute("name"), str(id), rstcResetCause.getChildren()[id].getAttribute("caption"))
-        rstcSym_RCAUSE[id].setOutputMode("Key")
-        rstcSym_RCAUSE[id].setDisplayMode("Description")
-        rstcSym_RCAUSE[id].setVisible(False)
+        rstcSym_RCAUSE = rstcComponent.createKeyValueSetSymbol("RSTC_RCAUSE"+str(id), None)
+        rstcSym_RCAUSE.setLabel(str(rstcResetCause.getChildren()[id].getAttribute("caption")))
+        rstcSym_RCAUSE.addKey(rstcResetCause.getChildren()[id].getAttribute("name"), str(id), rstcResetCause.getChildren()[id].getAttribute("caption"))
+        rstcSym_RCAUSE.setOutputMode("Key")
+        rstcSym_RCAUSE.setDisplayMode("Description")
+        rstcSym_RCAUSE.setVisible(False)
+
+    rstcBkup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/register-group@[name="RSTC"]/register@[name="BKUPEXIT"]')
+    if rstcBkup != None:
+        rstcSym_BKUPEXIT_Index = rstcComponent.createIntegerSymbol("RSTC_BKUPEXIT_LENGTH", None)
+        rstcSym_BKUPEXIT_Index.setDefaultValue(len(rstcBkup.getChildren()))
+        rstcSym_BKUPEXIT_Index.setVisible(False)
+
+        for id in range(0,len(rstcBkup.getChildren())):
+            rstcSym_BKUPEXIT = rstcComponent.createKeyValueSetSymbol("RSTC_BKUPEXIT"+str(id), None)
+            rstcSym_BKUPEXIT.setLabel(str(rstcBkup.getChildren()[id].getAttribute("caption")))
+            rstcSym_BKUPEXIT.addKey(rstcBkup.getChildren()[id].getAttribute("name"), str(id), rstcBkup.getChildren()[id].getAttribute("caption"))
+            rstcSym_BKUPEXIT.setOutputMode("Key")
+            rstcSym_BKUPEXIT.setDisplayMode("Description")
+            rstcSym_BKUPEXIT.setVisible(False)
+
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################

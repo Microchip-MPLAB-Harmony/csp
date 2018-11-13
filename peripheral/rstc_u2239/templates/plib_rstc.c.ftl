@@ -53,7 +53,6 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "device.h"
 #include "plib_${RSTC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
@@ -80,3 +79,10 @@ RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet( void )
 {
     return ( RSTC_RESET_CAUSE ) ${RSTC_INSTANCE_NAME}_REGS->RSTC_RCAUSE;
 }
+
+<#if RSTC_BKUPEXIT_LENGTH??>
+RSTC_BKUPEXIT_CAUSE RSTC_BackupExitCauseGet (void)
+{
+    return ( RSTC_BKUPEXIT_CAUSE ) RSTC_REGS->RSTC_BKUPEXIT;
+}
+</#if>
