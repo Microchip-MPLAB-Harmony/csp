@@ -23,10 +23,14 @@
 *****************************************************************************"""
 
 global InterruptVector
+InterruptVector = []
 global InterruptHandler
+InterruptHandler = []
 global InterruptHandlerLock
+InterruptHandlerLock =[]
 global eicInstanceName
-
+global intPrev
+intPrev = 0
 ###################################################################################################
 ######################################### Callbacks ###############################################
 ###################################################################################################
@@ -47,44 +51,62 @@ def confMenu(symbol, event):
 
 def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
     global extIntCount
+    isEVCTL = False
+    if symbol.getID() == "EIC_EXTINTEO":
+        isEVCTL = True
     channel = int(event["id"].split("_")[2])
     if Database.getSymbolValue(event["namespace"], "EIC_CHAN_" + str(channel)):
         if not str(event["id"]).startswith("EIC_CHAN_"):
             if(event["value"] == True):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)) , 1)
-                Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
+                if isEVCTL:
+                    Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
             else:
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
-                Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+                if isEVCTL:
+                    Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
         else:
             parameter = symbol.getID().split("EIC_")[1]
             if(Database.getSymbolValue(event["namespace"], "EIC_" + str(parameter) + "_" + str(channel)) == True):
                 symbol.setValue((symbol.getValue() | (0x1 << channel)) , 1)
-                Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
+                if isEVCTL:
+                    Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", True, 2)
             else:
                 symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
-                Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+                if isEVCTL:
+                    Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
 
     else:
         symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
-        Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
-    
+        if isEVCTL:
+            Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+
 
 def updateEICInterruptStatus(symbol, event):
-
-    Database.clearSymbolValue("core", InterruptVector)
-    Database.setSymbolValue("core", InterruptVector, bool(event["value"]), 2)
-
-    Database.clearSymbolValue("core", InterruptHandlerLock)
-    Database.setSymbolValue("core", InterruptHandlerLock, bool(event["value"]), 2)
-
-    Database.clearSymbolValue("core", InterruptHandler)
-
-    if bool(event["value"]) == True:
-        Database.setSymbolValue("core", InterruptHandler, eicInstanceName.getValue() + "_InterruptHandler", 2)
+    import math
+    global InterruptVector
+    global InterruptHandlerLock
+    global InterruptHandler
+    global intPrev
+    if len(InterruptVector) == 1:
+        Database.setSymbolValue("core", InterruptVector[0], bool(event["value"]), 2)
+        Database.setSymbolValue("core", InterruptHandlerLock[0], bool(event["value"]), 2)
+        if bool(event["value"]) == True:
+            Database.setSymbolValue("core", InterruptHandler[0], InterruptHandler[0].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
+        else:
+            Database.setSymbolValue("core", InterruptHandler[0], InterruptHandler[0].split("_INTERRUPT_HANDLER")[0] + "_Handler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, "EIC_Handler", 2)
-
+        value = event["value"] ^ intPrev
+        if value > 0:
+            bitPos = int(math.log(value, 2))
+            result = bool(event["value"] & (1<<bitPos))
+            Database.setSymbolValue("core", InterruptVector[bitPos], result, 2)
+            Database.setSymbolValue("core", InterruptHandlerLock[bitPos], result, 2)
+            if result:
+                Database.setSymbolValue("core", InterruptHandler[bitPos], InterruptHandler[bitPos].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
+            else:
+                Database.setSymbolValue("core", InterruptHandler[bitPos], InterruptHandler[bitPos].split("_INTERRUPT_HANDLER")[0] + "_Handler", 2)
+        intPrev = event["value"]
 def updateEICInterruptWarringStatus(symbol, event):
 
     if EXTINT_Code.getValue() != 0x0:
@@ -136,8 +158,10 @@ def instantiateComponent(eicComponent):
     global InterruptHandler
     global InterruptHandlerLock
     global NMIInterruptHandler
-
+    global numInt
     global extIntCount
+    InterruptVectorUpdate = []
+
     eicInstanceName = eicComponent.createStringSymbol("EIC_INSTANCE_NAME", None)
     eicInstanceName.setVisible(False)
     eicInstanceName.setDefaultValue(eicComponent.getID().upper())
@@ -405,11 +429,21 @@ def instantiateComponent(eicComponent):
     ############################################################################
     #### Dependency ####
     ############################################################################
+    vectorNode=ATDF.getNode(
+        "/avr-tools-device-file/devices/device/interrupts")
+    vectorValues=vectorNode.getChildren()
+    for id in range(0, len(vectorNode.getChildren())):
+        if vectorValues[id].getAttribute("module-instance") == "EIC":
+            name=vectorValues[id].getAttribute("name")
+            InterruptVector.append(name + "_INTERRUPT_ENABLE")
+            InterruptHandler.append(name + "_INTERRUPT_HANDLER")
+            InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
+            InterruptVectorUpdate.append(
+                "core." + name + "_INTERRUPT_ENABLE_UPDATE")
 
-    InterruptVector = eicInstanceName.getValue() + "_INTERRUPT_ENABLE"
-    InterruptHandler = eicInstanceName.getValue() + "_INTERRUPT_HANDLER"
-    InterruptHandlerLock = eicInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = eicInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    eicIntLines = eicComponent.createIntegerSymbol("NUM_INT_LINES", None)
+    eicIntLines.setVisible(False)
+    eicIntLines.setDefaultValue((len(InterruptVector) - 1))
 
     NMIInterruptHandler = "NonMaskableInt_INTERRUPT_HANDLER"
 
@@ -422,7 +456,7 @@ def instantiateComponent(eicComponent):
     eicSym_IntEnComment = eicComponent.createCommentSymbol("EIC_INTERRUPT_ENABLE_COMMENT", None)
     eicSym_IntEnComment.setVisible(False)
     eicSym_IntEnComment.setLabel("Warning!!! EIC Interrupt is Disabled in Interrupt Manager")
-    eicSym_IntEnComment.setDependencies(updateEICInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+    eicSym_IntEnComment.setDependencies(updateEICInterruptWarringStatus, InterruptVectorUpdate)
 
     # Clock Warning status
     eicSym_ClkEnComment = eicComponent.createCommentSymbol("EIC_CLOCK_ENABLE_COMMENT", None)
