@@ -198,6 +198,7 @@ void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr
 
 </#if>
 <#if EIC_INT != "0">
+<#if NUM_INT_LINES == 0>
 void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint8_t currentChannel = 0;
@@ -226,6 +227,24 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
         }
     }
 }
+<#else>
+<#list 0..NUM_INT_LINES as x>
+<#assign Enable = "EIC_INT_" + x>
+<#if .vars[Enable]>
+void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
+{
+    /* Clear interrupt flag */
+    ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
+    /* Find any associated callback entries in the callback table */
+    if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback != NULL))
+    {
+        ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].context);
+    }
+
+}
+</#if>
+</#list>
+</#if>
 
 </#if>
 <#if NMI_CTRL == true>
