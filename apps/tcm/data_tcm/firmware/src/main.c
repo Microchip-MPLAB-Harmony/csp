@@ -128,11 +128,12 @@ int main ( void )
         {
             /* Echo back received buffer and Toggle LED */
             readStatus = false;
+            
+            memcpy(echoBuffer, readBuffer, READ_SIZE);
+            echoBuffer[READ_SIZE] = '\r';
+            echoBuffer[(READ_SIZE+1)] = '\n';            
 
-            strcpy(echoBuffer, readBuffer);
-            strcat(echoBuffer, "\r\n");
-
-            XDMAC_ChannelTransfer(XDMAC_CHANNEL_0, echoBuffer, (const void *)USART1_TRANSMIT_ADDRESS, READ_SIZE+strlen("\r\n"));
+            XDMAC_ChannelTransfer(XDMAC_CHANNEL_0, echoBuffer, (const void *)USART1_TRANSMIT_ADDRESS, (READ_SIZE + 2));
             LED_Toggle();
         }
         else if(writeStatus == true)
