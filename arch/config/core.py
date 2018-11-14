@@ -150,7 +150,7 @@ def instantiateComponent(coreComponent):
     arch = ""
     if "CORTEX" in deviceArch.getValue():
         arch="arm"
-    else
+    else:
         arch="mips"
     toolChainSpecifics = coreComponent.createFileSymbol(None, None)
     toolChainSpecifics.setSourcePath(arch+"/toolchain_specifics.h")
