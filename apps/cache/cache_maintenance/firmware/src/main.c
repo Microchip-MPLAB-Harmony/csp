@@ -64,7 +64,7 @@
 /* While using cache maintenance CMSIS API to handle cache coherency, buffer
  * size must be multiple of cache line (32 bytes) and buffers must be 32 byte
  * aligned*/
-static char __attribute__ ((aligned (32))) writeBuffer[] = "**** Cache \
+static char __attribute__ ((aligned (32))) writeBuffer[256] = "**** Cache \
 Maintenance with CMSIS ****\r\n**** Demo uses cache maintenance CMSIS \
 API to handle cache coherency ****\r\n**** Type a buffer of 10 characters and \
 observe it echo back ****\r\n**** LED toggles on each time buffer is echoed \
@@ -136,12 +136,13 @@ int main ( void )
             /* Invalidate cache lines having received buffer before using it
              * to load the latest data in the actual memory to the cache */
             SCB_InvalidateDCache_by_Addr((uint32_t *)readBuffer, sizeof(readBuffer));
-
-            strcpy(echoBuffer, readBuffer);
-            strcat(echoBuffer, "\r\n");
+            
+            memcpy(echoBuffer, readBuffer, READ_SIZE);
+            echoBuffer[READ_SIZE] = '\r';
+            echoBuffer[(READ_SIZE + 1)] = '\n';
 
             SCB_CleanDCache_by_Addr((uint32_t *)echoBuffer, sizeof(echoBuffer));
-            XDMAC_ChannelTransfer(XDMAC_CHANNEL_0, echoBuffer, (const void *)USART1_TRANSMIT_ADDRESS, READ_SIZE+strlen("\r\n"));
+            XDMAC_ChannelTransfer(XDMAC_CHANNEL_0, echoBuffer, (const void *)USART1_TRANSMIT_ADDRESS, (READ_SIZE+2));
             LED_Toggle();
         }
         else if(writeStatus == true)
