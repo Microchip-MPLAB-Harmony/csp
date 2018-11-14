@@ -6,8 +6,33 @@ global generic_list
 #UART, SPI, and TWI peripherals claim to be able to use GCLK but aren't in table 33-1
 generic_list = {"FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "MCAN0", "MCAN1", "CLASSD"};
 
+# Peripherals connected to 64 bit AHB matrix (i.e. with HS bus clocks)
+hs_peripherals_list = ["XDMAC0", "XDMAC1", "AESB", "MPDDRC", "SDMMC0", "SDMMC1", "LCDC", "ISC", "QSPI0", "QSPI1"]
+
+# Peripherals supporting multiple clock options
+multi_clock_peripheral_list = ["TC"]
+
 global DICT_PCER0
 global DICT_PCER1
+
+def periphFreqCalc(symbol, event):
+    symbol.setValue(int(event["value"]), 2)
+
+#currently this is a place holder and frequency is locked to the PCLOCK_LS
+def UpdateTCClockFrequency(symbol,event):
+    pass
+
+# if any channel of TC instance is enabled, enable the peripheral clock of that instance
+global UpdateTCClockEnable
+def UpdateTCClockEnable(symbol, event):
+    tcInstance = symbol.getID()[2]
+    enable_clock = False
+    for channel in range(3):
+        symbol_id = "TC" + str(tcInstance) + "_CHANNEL" + str(channel) + "_CLOCK_ENABLE"
+        if (Database.getSymbolValue("core", symbol_id) == True):
+            enable_clock = True
+            break
+    symbol.setValue(enable_clock, 2)
 
 global update_clk_component_visability
 
@@ -337,7 +362,7 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
     update_pcer1_value: Callback to calculate PCER1 Register Value.
     """
 
-    hs_periphs = ["XDMAC0", "XDMAC1", "AESB", "MPDDRC", "SDMMC0", "SDMMC1", "LCDC", "ISC", "QSPI0", "QSPI1"]
+
     global DICT_PCER0
     global DICT_PCER1
 
@@ -379,14 +404,24 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
                         list_pcer1_depend.append(symbol_id + "_CLOCK_ENABLE")
                         DICT_PCER1.update({""+symbol_id+"_CLOCK_ENABLE": clock_id})
 
-                    sym_perip_clk_freq = clk_comp.createIntegerSymbol(symbol_id + "_CLOCK_FREQUENCY", clk_menu)
-                    sym_perip_clk_freq.setVisible(False)
-                    sym_perip_clk_freq.setReadOnly(True)
-                    if instance.attrib["name"] in hs_periphs:
-                        freq = 166000000
-                    else:
-                        freq = 83000000
-                    sym_perip_clk_freq.setDefaultValue(freq)
+                    # SAMA5D2 has only one peripheral clock associated with each timer instance. Other masks provide
+                    # clocks per channel of an instance. The current design of the TC plib expects symbols per
+                    # channel. For compatibility we create symbols per channel which are are added as dependency
+                    # for the instance symbols
+                    if peripheral.attrib["name"] == "TC":
+                        tc_enable_dependent_list =[]
+
+                        #create a dummy symbol per channel
+                        for channel_number in range(3):
+                            tc_enable_symbol_id = instance.attrib["name"] + "_CHANNEL" + str(channel_number) + "_CLOCK_ENABLE"
+                            tc_channel_enable_symbol = clk_comp.createBooleanSymbol(tc_enable_symbol_id, None)
+                            tc_channel_enable_symbol.setVisible(False)
+                            tc_channel_enable_symbol.setReadOnly(True)
+                            tc_channel_enable_symbol.setDefaultValue(False)
+                            tc_enable_dependent_list.append("core." + tc_enable_symbol_id)
+
+                        sym_perip_clk.setDependencies(UpdateTCClockEnable, tc_enable_dependent_list)
+
 
     # create symbol for PMC_PCERx register values
     sym_pmc_pcer0 = clk_comp.createHexSymbol("PMC_PCER0", clk_menu)
@@ -614,6 +649,66 @@ if __name__ == "__main__":
 
     # creates calculated frequencies menu
     __calculated_clock_frequencies(coreComponent, SYM_CLK_MENU)
+
+    # calculated peripheral frequencies
+    peripherals = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
+    modules = peripherals.getChildren()
+    for module in range(0, len(modules)):
+        module_name = modules[module].getAttribute("name")
+
+        # if module supports multiple clock options, it will be handled separately
+        if module_name in multi_clock_peripheral_list:
+            continue
+
+        # iterate and create symbols for each instance
+        module_instances = modules[module].getChildren()
+        for module_instance_index in range(0, len(module_instances)):
+            clock_attribute = ATDF.getNode(
+                "/avr-tools-device-file/devices/device/peripherals/module@[name=\"" + str(module_name) + "\"]\
+                 /instance@[name=\"" + module_instances[module_instance_index].getAttribute("name") + "\"]\
+                 /parameters/param@[name=\"CLOCK_ID\"]")
+
+            # skip instances which do not have clock_id
+            if (clock_attribute == None):
+                continue
+
+            symbolID = module_instances[module_instance_index].getAttribute("name") + "_CLOCK_FREQUENCY"
+            sym_peripheral_clock_freq = coreComponent.createIntegerSymbol(symbolID, None)
+            sym_peripheral_clock_freq.setVisible(False)
+            sym_peripheral_clock_freq.setReadOnly(True)
+
+            # Set clock frequency based on what bus they are connected to
+            if module_name in hs_peripherals_list:
+                sym_peripheral_clock_freq.setDefaultValue(
+                    int(Database.getSymbolValue("core", "PCLOCK_HS_CLOCK_FREQUENCY")))
+                sym_peripheral_clock_freq.setDependencies(periphFreqCalc, ["core.PCLOCK_HS_CLOCK_FREQUENCY"])
+            else:
+                sym_peripheral_clock_freq.setDefaultValue(
+                    int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
+                sym_peripheral_clock_freq.setDependencies(periphFreqCalc, ["core.PCLOCK_LS_CLOCK_FREQUENCY"])
+
+    #TC clock symbol generation is handled seperately to accomodate per channel configuration
+    tc_module = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]")
+    num_tc_instances = tc_module.getChildren()
+
+    for tc_instance_number in range(0, len(num_tc_instances)):
+        tc_enable_dependent_list = []
+
+        #each TC only has 3 channels(0,1 and 2). TC plib expects a dummy symbol for Channel 3 which
+        # is related to quadrature mode calculations
+        for tc_channel_number in range(4):
+            tc_channel_id = "TC"+str(tc_instance_number)+"_CH" +str(tc_channel_number)+"_CLOCK_FREQUENCY"
+            tc_channel_symbol = coreComponent.createIntegerSymbol(tc_channel_id, None)
+            tc_channel_symbol.setVisible(False)
+            tc_channel_symbol.setReadOnly(True)
+            tc_channel_symbol.setDefaultValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
+            tc_dependent_symbol_list = ["tc"+str(tc_instance_number)+".TC"+str(tc_channel_number)+"__CMR_TCCLKS",
+                                        "tc"+str(tc_instance_number)+".TC_PCK_CLKSRC",
+                                        "core.PCLOCK_LS_CLOCK_FREQUENCY",
+                                        "core.CLK_SLOW_XTAL",
+                                        "tc"+str(tc_instance_number)+".TC"+str(tc_channel_number)+"_ENABLE"]
+            tc_channel_symbol.setDependencies(UpdateTCClockFrequency, tc_dependent_symbol_list)
+
 
     #MPDDRC is enabled by bootloader so make sure we don't disable it
     Database.setSymbolValue("core", "MPDDRC_CLOCK_ENABLE", True, 1)
