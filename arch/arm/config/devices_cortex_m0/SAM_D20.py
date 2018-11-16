@@ -100,7 +100,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2203/config/wdt.py")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_u2211/config/pac.py")
 
 # load device specific adc manager information
-#coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
+coreComponent.addPlugin("../peripheral/adc_u2204/plugin/adc_u2204.jar")
 
 # generate startup_xc32.c file
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
