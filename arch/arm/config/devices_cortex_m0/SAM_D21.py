@@ -61,24 +61,51 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M0+ Configuration")
 cortexMenu.setDescription("Configuration for Cortex M0+")
 
-# load clock manager information
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_d21/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_sam_d20_d21/plugin/clockmanager.jar")
+def setDMACDefaultSettings():
+
+    triggerSettings = {
+                        "Software Trigger"  : ["BLOCK", "INCREMENTED_AM", "INCREMENTED_AM", "WORD"],
+                        "Standard_Transmit" : ["BEAT", "INCREMENTED_AM", "FIXED_AM", "BYTE"],
+                        "Standard_Receive"  : ["BEAT", "FIXED_AM", "INCREMENTED_AM", "BYTE"]
+                    }
+
+    return triggerSettings
+	
+def setMPUDefaultSettings():
+    mpuRegions = 8
+    mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
+                    "RWW"               : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00400000",   "4MB"   ],
+                    "SRAM"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x20000000",   "4MB"   ],
+                    "PERIPHERALS"       : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
+                    "SYSTEM"            : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ]}
+    mpuSetUpLogicList = ["FLASH", "RWW", "SRAM", "PERIPHERALS", "SYSTEM"]
+
+    return mpuRegions, mpuSettings, mpuSetUpLogicList
+
+# SysTick External Clock Source
+systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
+systickExternal.setLabel("External Clock Source for SysTick Available")
+systickExternal.setDefaultValue(False)
+systickExternal.setVisible(False)
 
 # load device specific pin manager information
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
-#coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
+coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
+
+# load clock manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_d21/config/clk.py")
+coreComponent.addPlugin("../peripheral/clk_sam_d21/plugin/clk_sam_d21.jar")
 
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
 coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
 
 #load systick
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
 # load dma manager information
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2223/config/dmac.py")
-# coreComponent.addPlugin("../peripheral/dmac_u2223/plugin/dmamanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2223/config/dmac.py")
+coreComponent.addPlugin("../peripheral/dmac_u2223/plugin/dmamanager.jar")
 
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2203/config/wdt.py")
