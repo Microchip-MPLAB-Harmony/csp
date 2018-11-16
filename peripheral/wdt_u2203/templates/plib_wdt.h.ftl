@@ -86,8 +86,6 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 
-void ${WDT_INSTANCE_NAME}_Initialize( void );
-
 void ${WDT_INSTANCE_NAME}_Enable( void );
 
 void ${WDT_INSTANCE_NAME}_Disable( void );
