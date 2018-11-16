@@ -23,9 +23,9 @@
 *****************************************************************************"""
 
 global wdtInstanceName
-global InterruptVector
-global InterruptHandler
-global InterruptHandlerLock
+global wdtInterruptVector
+global wdtInterruptHandler
+global wdtInterruptHandlerLock
 global wdtSym_Use
 global wdtSym_CTRLA_EW
 
@@ -35,23 +35,24 @@ global wdtSym_CTRLA_EW
 
 def updateWDTInterruptStatus(symbol, event):
 
-    Database.clearSymbolValue("core", InterruptVector)
-    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+    Database.setSymbolValue("core", wdtInterruptVector, event["value"], 2)
+    Database.setSymbolValue("core", wdtInterruptHandlerLock, event["value"], 2)
 
-    Database.clearSymbolValue("core", InterruptHandlerLock)
-    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
-
-    Database.clearSymbolValue("core", InterruptHandler)
+    Database.clearSymbolValue("core", wdtInterruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, wdtInstanceName.getValue() + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", wdtInterruptHandler, wdtInstanceName.getValue() + "_InterruptHandler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, "WDT_Handler", 2)
+        Database.setSymbolValue("core", wdtInterruptHandler, wdtInstanceName.getValue() + "_Handler", 2)
 
-def updateWDTInterruptWarringStatus(symbol, event):
+def updateWDTInterruptWarningStatus(symbol, event):
 
     if wdtSym_CTRLA_EW.getValue() == True and wdtSym_Use.getValue() == True:
         symbol.setVisible(event["value"])
+
+def updateWDTConfigCommentVisibleProperty(symbol, event):
+
+    symbol.setVisible(event["value"])
 
 def updateWDTEnarlyInterruptVisibleProperty(symbol, event):
 
@@ -59,25 +60,17 @@ def updateWDTEnarlyInterruptVisibleProperty(symbol, event):
     component.getSymbolByID("WDT_HEADER").setEnabled(event["value"])
     component.getSymbolByID("WDT_SOURCE").setEnabled(event["value"])
     component.getSymbolByID("WDT_SYS_DEF").setEnabled(event["value"])
-    component.getSymbolByID("WDT_SYS_INIT").setEnabled(event["value"])
 
     symbol.setVisible(event["value"])
 
     if wdtSym_CTRLA_EW.getValue() == True:
-        Database.clearSymbolValue("core", InterruptVector)
-        Database.setSymbolValue("core", InterruptVector, event["value"], 2)
-
-        Database.clearSymbolValue("core", InterruptHandlerLock)
-        Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
-
-        Database.clearSymbolValue("core", InterruptHandler)
+        Database.setSymbolValue("core", wdtInterruptVector, event["value"], 2)
+        Database.setSymbolValue("core", wdtInterruptHandlerLock, event["value"], 2)
 
         if event["value"] == True:
-            Database.setSymbolValue("core", InterruptHandler, "WDT0_InterruptHandler", 2)
+            Database.setSymbolValue("core", wdtInterruptHandler, wdtInstanceName.getValue() + "_InterruptHandler", 2)
         else:
-            Database.setSymbolValue("core", InterruptHandler, "WDT0_Handler", 2)
-
-    Log.writeInfoMessage("updateWDTEnarlyInterruptVisibleProperty is : " + str(event["value"]))
+            Database.setSymbolValue("core", wdtInterruptHandler, wdtInstanceName.getValue() + "_Handler", 2)
 
 ###################################################################################################
 #############################################  WDT  ###############################################
@@ -93,11 +86,6 @@ wdtInstanceName.setDefaultValue(instances[0].getAttribute("name"))
 wdtMenu = coreComponent.createMenuSymbol("WDT_MENU", None)
 wdtMenu.setLabel("WDT")
 
-#WDT Index
-wdt_Index = coreComponent.createIntegerSymbol("WDT_INDEX", wdtMenu)
-wdt_Index.setVisible(False)
-wdt_Index.setDefaultValue(0)
-
 #WDT Use
 wdtSym_Use = coreComponent.createBooleanSymbol("WDT_USE", wdtMenu)
 wdtSym_Use.setLabel("Use WDT ?")
@@ -108,14 +96,20 @@ wdtSym_CTRLA_EW.setLabel("Enable Watchdog Early Interrupt")
 wdtSym_CTRLA_EW.setVisible(False)
 wdtSym_CTRLA_EW.setDependencies(updateWDTEnarlyInterruptVisibleProperty, ["WDT_USE"])
 
+#WDT Configuration comment
+wdtSym_ConfigComment = coreComponent.createCommentSymbol("WDT_CONFIG_COMMENT", wdtSym_Use)
+wdtSym_ConfigComment.setLabel("************** Configure WDT via Fuse ***************")
+wdtSym_ConfigComment.setVisible(False)
+wdtSym_ConfigComment.setDependencies(updateWDTConfigCommentVisibleProperty, ["WDT_USE"])
+
 ############################################################################
 #### Dependency ####
 ############################################################################
 
-InterruptVector = wdtInstanceName.getValue() + "_INTERRUPT_ENABLE"
-InterruptHandler = wdtInstanceName.getValue() + "_INTERRUPT_HANDLER"
-InterruptHandlerLock = wdtInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
-InterruptVectorUpdate = wdtInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+wdtInterruptVector = wdtInstanceName.getValue() + "_INTERRUPT_ENABLE"
+wdtInterruptHandler = wdtInstanceName.getValue() + "_INTERRUPT_HANDLER"
+wdtInterruptHandlerLock = wdtInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+wdtInterruptVectorUpdate = wdtInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
 # Interrupt Dynamic settings
 wdtSym_UpdateInterruptStatus = coreComponent.createBooleanSymbol("WDT_INTERRUPT_STATUS", wdtSym_Use)
@@ -126,7 +120,7 @@ wdtSym_UpdateInterruptStatus.setVisible(False)
 wdtSym_IntEnComment = coreComponent.createCommentSymbol("WDT_INTERRUPT_ENABLE_COMMENT", wdtSym_Use)
 wdtSym_IntEnComment.setVisible(False)
 wdtSym_IntEnComment.setLabel("Warning!!! WDT Interrupt is Disabled in Interrupt Manager")
-wdtSym_IntEnComment.setDependencies(updateWDTInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+wdtSym_IntEnComment.setDependencies(updateWDTInterruptWarningStatus, ["core." + wdtInterruptVectorUpdate])
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
@@ -154,13 +148,6 @@ wdtSourceFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
 wdtSourceFile.setType("SOURCE")
 wdtSourceFile.setMarkup(True)
 wdtSourceFile.setEnabled(False)
-
-wdtSystemInitFile = coreComponent.createFileSymbol("WDT_SYS_INIT", None)
-wdtSystemInitFile.setType("STRING")
-wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-wdtSystemInitFile.setSourcePath("../peripheral/wdt_" + wdtModuleID + "/templates/system/initialization.c.ftl")
-wdtSystemInitFile.setMarkup(True)
-wdtSystemInitFile.setEnabled(False)
 
 wdtSystemDefFile = coreComponent.createFileSymbol("WDT_SYS_DEF", None)
 wdtSystemDefFile.setType("STRING")
