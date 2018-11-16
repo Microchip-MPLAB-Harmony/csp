@@ -48,13 +48,16 @@ def updateWDTInterruptWarringStatus(symbol, event):
     if wdtSym_CTRLA_EW.getValue() == True and wdtSym_Use.getValue() == True:
         symbol.setVisible(event["value"])
 
+def updateWDTConfigCommentVisibleProperty(symbol, event):
+
+    symbol.setVisible(event["value"])
+
 def updateWDTEnarlyInterruptVisibleProperty(symbol, event):
 
     component = symbol.getComponent()
     component.getSymbolByID("WDT_HEADER").setEnabled(event["value"])
     component.getSymbolByID("WDT_SOURCE").setEnabled(event["value"])
     component.getSymbolByID("WDT_SYS_DEF").setEnabled(event["value"])
-    component.getSymbolByID("WDT_SYS_INIT").setEnabled(event["value"])
 
     symbol.setVisible(event["value"])
 
@@ -90,6 +93,12 @@ wdtSym_CTRLA_EW = coreComponent.createBooleanSymbol("WDT_EW_ENABLE", wdtSym_Use)
 wdtSym_CTRLA_EW.setLabel("Enable Watchdog Early Interrupt")
 wdtSym_CTRLA_EW.setVisible(False)
 wdtSym_CTRLA_EW.setDependencies(updateWDTEnarlyInterruptVisibleProperty, ["WDT_USE"])
+
+#WDT Configuration comment
+wdtSym_ConfigComment = coreComponent.createCommentSymbol("WDT_CONFIG_COMMENT", wdtSym_Use)
+wdtSym_ConfigComment.setLabel("************** Configure WDT via Fuse ***************")
+wdtSym_ConfigComment.setVisible(False)
+wdtSym_ConfigComment.setDependencies(updateWDTConfigCommentVisibleProperty, ["WDT_USE"])
 
 ############################################################################
 #### Dependency ####
@@ -137,13 +146,6 @@ wdtSourceFile.setProjectPath("config/" + configName + "/peripheral/wdt/")
 wdtSourceFile.setType("SOURCE")
 wdtSourceFile.setMarkup(True)
 wdtSourceFile.setEnabled(False)
-
-wdtSystemInitFile = coreComponent.createFileSymbol("WDT_SYS_INIT", None)
-wdtSystemInitFile.setType("STRING")
-wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-wdtSystemInitFile.setSourcePath("../peripheral/wdt_" + wdtModuleID + "/templates/system/initialization.c.ftl")
-wdtSystemInitFile.setMarkup(True)
-wdtSystemInitFile.setEnabled(False)
 
 wdtSystemDefFile = coreComponent.createFileSymbol("WDT_SYS_DEF", None)
 wdtSystemDefFile.setType("STRING")

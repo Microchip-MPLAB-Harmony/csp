@@ -64,24 +64,19 @@ WDT_CALLBACK_OBJECT ${WDT_INSTANCE_NAME?lower_case}CallbackObj;
 // *****************************************************************************
 // *****************************************************************************
 
-void ${WDT_INSTANCE_NAME}_Initialize( void )
-{
-    /* Empty Implementation */
-}
-
 void ${WDT_INSTANCE_NAME}_Enable( void )
 {
     /* Checking if Always On Bit is Enabled */
     if((${WDT_INSTANCE_NAME}_REGS->WDT_CTRL & WDT_CTRL_ALWAYSON_Msk) != WDT_CTRL_ALWAYSON_Msk)
     {
-        /* Enable Watchdog */
+        /* Enable Watchdog Timer */
         ${WDT_INSTANCE_NAME}_REGS->WDT_CTRL |= WDT_CTRL_ENABLE_Msk;
 
         /* Wait for synchronization */
         while(${WDT_INSTANCE_NAME}_REGS->WDT_STATUS);
     }
-
 <#if WDT_EW_ENABLE = true>
+
     /* Enable early warning interrupt */
     ${WDT_INSTANCE_NAME}_REGS->WDT_INTENSET = WDT_INTENSET_EW_Msk;
 </#if>
@@ -89,10 +84,10 @@ void ${WDT_INSTANCE_NAME}_Enable( void )
 
 void ${WDT_INSTANCE_NAME}_Disable( void )
 {
-    /* Disable Watchdog */
+    /* Disable Watchdog Timer */
     ${WDT_INSTANCE_NAME}_REGS->WDT_CTRL &= ~(WDT_CTRL_ENABLE_Msk);
-
 <#if WDT_EW_ENABLE = true>
+
     /* Disable Early Watchdog Interrupt */
     ${WDT_INSTANCE_NAME}_REGS->WDT_INTENCLR = WDT_INTENCLR_EW_Msk;
 </#if>
