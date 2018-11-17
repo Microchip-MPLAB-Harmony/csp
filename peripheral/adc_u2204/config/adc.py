@@ -345,7 +345,7 @@ def instantiateComponent(adcComponent):
             adcNagativeInputValues[index].getAttribute("caption"))
             gndIndex += 1
     adcSym_INPUTCTRL_MUXNEG.setDefaultValue(defaultIndex)
-    
+
     adcSym_INPUTCTRL_INPUTSCAN = adcComponent.createIntegerSymbol("ADC_INPUTCTRL_INPUTSCAN", adcChannelMenu)
     adcSym_INPUTCTRL_INPUTSCAN.setLabel("Number of inputs to scan")
     adcSym_INPUTCTRL_INPUTSCAN.setDefaultValue(0)
@@ -548,3 +548,6 @@ def instantiateComponent(adcComponent):
     adcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     adcSym_SystemDefFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/system/definitions.h.ftl")
     adcSym_SystemDefFile.setMarkup(True)
+
+    # load ADC manager
+    adcComponent.addPlugin("../peripheral/adc_u2204/plugin/adc_u2204.jar")

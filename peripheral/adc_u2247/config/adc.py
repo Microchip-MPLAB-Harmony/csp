@@ -249,7 +249,7 @@ def instantiateComponent(adcComponent):
     sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
     data_width = 12
     conv_time = float((((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000) / clock_freq))
-    
+
     component = int(adcInstanceName.getValue()[-1]) - 1
 
     #Sampling time calculation
@@ -564,3 +564,6 @@ def instantiateComponent(adcComponent):
     adcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     adcSym_SystemDefFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/system/definitions.h.ftl")
     adcSym_SystemDefFile.setMarkup(True)
+
+    # load ADC manager
+    adcComponent.addPlugin("../peripheral/adc_u2247/plugin/u2247_ADCManager.jar")
