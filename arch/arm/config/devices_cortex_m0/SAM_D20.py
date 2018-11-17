@@ -268,6 +268,10 @@ coreComponent.addPlugin("../peripheral/clk_sam_d20/plugin/clk_sam_d20.jar")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
 coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
 
+# load mpu
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
+coreComponent.addPlugin("../peripheral/mpu/plugin/MPUmanager.jar")
+
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
@@ -277,8 +281,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2203/config/wdt.py")
 # load PAC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_u2211/config/pac.py")
 
-# load device specific adc manager information
-coreComponent.addPlugin("../peripheral/adc_u2204/plugin/adc_u2204.jar")
+# Activate Event System
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EVSYS\"]")
+modules = periphNode.getChildren()
+components = []
+for evsys_instance in range (0, len(modules)):
+    components.append(str(modules[evsys_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
+
 
 # generate startup_xc32.c file
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)

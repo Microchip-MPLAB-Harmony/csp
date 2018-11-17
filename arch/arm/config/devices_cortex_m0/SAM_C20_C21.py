@@ -291,9 +291,6 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
 # load PAC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_u2120/config/pac.py")
 
-# load device specific adc manager information
-#coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
-
 # Activate Event System
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EVSYS\"]")
 modules = periphNode.getChildren()
