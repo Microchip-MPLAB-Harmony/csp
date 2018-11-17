@@ -65,8 +65,6 @@ void static ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
         {
 
             ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
-            ${USART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-            ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
             ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
@@ -99,8 +97,6 @@ void static ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
         if(${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${USART_INSTANCE_NAME?lower_case}Obj.txSize)
         {
             ${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
-            ${USART_INSTANCE_NAME?lower_case}Obj.txSize = 0;
-            ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = 0;
             ${USART_INSTANCE_NAME}_REGS->US_IDR = US_IDR_TXEMPTY_Msk;
 
             if(${USART_INSTANCE_NAME?lower_case}Obj.txCallback != NULL)
@@ -127,19 +123,17 @@ void ${USART_INSTANCE_NAME}_InterruptHandler( void )
     {
         /* Client must call USARTx_ErrorGet() function to clear the errors */
 
+        /* Disable Read, Overrun, Parity and Framing error interrupts */
+        ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
+
+        ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+
         /* USART errors are normally associated with the receiver, hence calling
-         * receiver context */
+         * receiver callback */
         if( ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
         {
             ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(${USART_INSTANCE_NAME?lower_case}Obj.rxContext);
         }
-
-        ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
-        ${USART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-        ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
-
-        /* Disable Read, Overrun, Parity and Framing error interrupts */
-        ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
     }
 
     /* Receiver status */
