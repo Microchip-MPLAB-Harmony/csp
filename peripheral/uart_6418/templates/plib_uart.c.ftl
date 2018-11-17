@@ -64,8 +64,6 @@ void static ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
         if(${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
             ${UART_INSTANCE_NAME}_REGS->UART_IDR = (UART_IDR_RXRDY_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
@@ -98,8 +96,6 @@ void static ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
         if(${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.txSize)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
-            ${UART_INSTANCE_NAME?lower_case}Obj.txSize = 0;
-            ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = 0;
             ${UART_INSTANCE_NAME}_REGS->UART_IDR = UART_IDR_TXEMPTY_Msk;
 
             if(${UART_INSTANCE_NAME?lower_case}Obj.txCallback != NULL)
@@ -126,19 +122,17 @@ void ${UART_INSTANCE_NAME}_InterruptHandler( void )
     {
         /* Client must call UARTx_ErrorGet() function to clear the errors */
 
+        /* Disable Read, Overrun, Parity and Framing error interrupts */
+        ${UART_INSTANCE_NAME}_REGS->UART_IDR = (UART_IDR_RXRDY_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
+
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+
         /* UART errors are normally associated with the receiver, hence calling
-         * receiver context */
+         * receiver callback */
         if( ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
         }
-
-        ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
-        ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-        ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
-
-        /* Disable Read, Overrun, Parity and Framing error interrupts */
-        ${UART_INSTANCE_NAME}_REGS->UART_IDR = (UART_IDR_RXRDY_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
     }
 
     /* Receiver status */
