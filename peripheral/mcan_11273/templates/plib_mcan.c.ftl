@@ -681,11 +681,12 @@ MCAN_ERROR ${MCAN_INSTANCE_NAME}_ErrorGet(void)
     MCAN_ERROR error;
     uint32_t   errorStatus = ${MCAN_INSTANCE_NAME}_REGS->MCAN_PSR;
 
-    error = (MCAN_ERROR) (MCAN_PSR_LEC(errorStatus) | MCAN_PSR_EP(errorStatus) | MCAN_PSR_EW(errorStatus)
-            | MCAN_PSR_BO(errorStatus) | MCAN_PSR_DLEC(errorStatus) | MCAN_PSR_PXE(errorStatus));
+    error = (MCAN_ERROR) ((errorStatus & MCAN_PSR_LEC_Msk) | (errorStatus & MCAN_PSR_EP_Msk) | (errorStatus & MCAN_PSR_EW_Msk)
+            | (errorStatus & MCAN_PSR_BO_Msk) | (errorStatus & MCAN_PSR_DLEC_Msk) | (errorStatus & MCAN_PSR_PXE_Msk));
 
     if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
     {
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_FDOE_ENABLED | MCAN_CCCR_BRSE_ENABLED','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
         while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
     }
