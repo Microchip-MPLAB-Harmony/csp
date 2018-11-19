@@ -170,7 +170,7 @@ uint32_t ${TC_INSTANCE_NAME}_TimerFrequencyGet()
 uint8_t ${TC_INSTANCE_NAME}_Timer8bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_COUNT_OFFSET;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_COUNT_REG_OFST;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
@@ -206,7 +206,7 @@ void ${TC_INSTANCE_NAME}_Timer8bitPeriodSet( uint8_t period )
 uint8_t ${TC_INSTANCE_NAME}_Timer8bitPeriodGet( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_OFFSET;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
@@ -231,7 +231,7 @@ void ${TC_INSTANCE_NAME}_Timer8bitCompareSet( uint8_t compare )
 uint16_t ${TC_INSTANCE_NAME}_Timer16bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_COUNT_OFFSET;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_COUNT_REG_OFST;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
@@ -267,7 +267,7 @@ void ${TC_INSTANCE_NAME}_Timer16bitPeriodSet( uint16_t period )
 uint16_t ${TC_INSTANCE_NAME}_Timer16bitPeriodGet( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_OFFSET;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
@@ -292,7 +292,7 @@ void ${TC_INSTANCE_NAME}_Timer16bitCompareSet( uint16_t compare )
 uint32_t ${TC_INSTANCE_NAME}_Timer32bitCounterGet( void )
 {
     /* Write command to force COUNT register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_COUNT_OFFSET;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_COUNT_REG_OFST;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
@@ -329,7 +329,7 @@ void ${TC_INSTANCE_NAME}_Timer32bitPeriodSet( uint32_t period )
 uint32_t ${TC_INSTANCE_NAME}_Timer32bitPeriodGet( void )
 {
     /* Write command to force CC register read synchronization */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_OFFSET;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_READREQ = TC_READREQ_RREQ_Msk | TC_${TC_CTRLA_MODE}_CC_REG_OFST;
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
