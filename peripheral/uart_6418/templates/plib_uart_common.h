@@ -44,6 +44,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "device.h" //For UART_*_Msk
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
