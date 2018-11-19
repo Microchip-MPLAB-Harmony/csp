@@ -1,14 +1,14 @@
 /*******************************************************************************
- Debug Console Source file 
+  EVSYS Peripheral Library
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    debug_console.c
+    plib_evsys.c
 
   Summary:
-    RSTC Source File
+    EVSYS Source File
 
   Description:
     None
@@ -38,20 +38,14 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "definitions.h"
+#include "device.h"
+#include "plib_evsys.h"
 
-int _mon_getc(int canblock)
-{
-   volatile int c = 0;
-   while(SERCOM4_USART_Read((void*)&c, 1) != true);
-   return c;
+
+void EVSYS_Initialize( void )
+{	/*Event Channel User Configuration*/
+
+
 }
 
-void _mon_putc(char c)
-{
-   uint8_t size = 0;
-   do
-   {
-       size = SERCOM4_USART_Write((void*)&c, 1);
-   }while (size != 1);
-}
+

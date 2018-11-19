@@ -58,39 +58,16 @@ static uint32_t status = 0;
 // *****************************************************************************
 // *****************************************************************************
 
-NVMCTRL_CALLBACK nvmctrlCallbackFunc;
-
-uintptr_t nvmctrlContext;
-
-void NVMCTRL_CallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context )
-{
-    /* Register callback function */
-    nvmctrlCallbackFunc = callback;
-    nvmctrlContext = context;
-}
-
-void NVMCTRL_InterruptHandler(void)
-{
-    NVMCTRL_REGS->NVMCTRL_INTENCLR = NVMCTRL_INTENCLR_READY_Msk;
-
-    if(nvmctrlCallbackFunc != NULL)
-    {
-        nvmctrlCallbackFunc(nvmctrlContext);
-    }
-}
 
 void NVMCTRL_Initialize(void)
 {
 
-    /* Clear interrupt flag */
-    NVMCTRL_REGS->NVMCTRL_INTENCLR = NVMCTRL_INTENCLR_READY_Msk;
 }
 
 void NVMCTRL_CacheInvalidate(void)
 {
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_INVALL | NVMCTRL_CTRLA_CMDEX_KEY;
 }
-
 bool NVMCTRL_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);
@@ -116,7 +93,6 @@ bool NVMCTRL_RWWEEPROM_PageWrite ( uint32_t *data, const uint32_t address )
 
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_RWWEEWP | NVMCTRL_CTRLA_CMDEX_KEY;
 
-    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
     return true;
 }
 
@@ -130,10 +106,8 @@ bool NVMCTRL_RWWEEPROM_RowErase( uint32_t address )
 
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_RWWEEER | NVMCTRL_CTRLA_CMDEX_KEY;
 
-    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
     return true;
 }
-
 bool NVMCTRL_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);
@@ -159,7 +133,6 @@ bool NVMCTRL_PageWrite( uint32_t *data, const uint32_t address )
 
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_WP_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 
-    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
     return true;
 }
 
@@ -173,7 +146,6 @@ bool NVMCTRL_RowErase( uint32_t address )
 
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_ER_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 
-    NVMCTRL_REGS->NVMCTRL_INTENSET = NVMCTRL_INTENSET_READY_Msk;
     return true;
 }
 
@@ -209,4 +181,3 @@ void NVMCTRL_RegionUnlock(uint32_t address)
 
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_UR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 }
-

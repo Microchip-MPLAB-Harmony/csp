@@ -71,16 +71,16 @@
 
 void PORT_Initialize(void)
 {
-   /************************** GROUP A Initialization *************************/
+   /************************** GROUP 0 Initialization *************************/
 
-                
-   /************************** GROUP B Initialization *************************/
+   /************************** GROUP 1 Initialization *************************/
+   PORT_REGS->GROUP[1].PORT_PINCFG[10] = 0x1;
+   PORT_REGS->GROUP[1].PORT_PINCFG[11] = 0x1;
 
-                
-   /************************** GROUP C Initialization *************************/
-   PORTC_REGS->PORT_DIR = 0x20;
+   PORT_REGS->GROUP[1].PORT_PMUX[5] = 0x33;
+   /************************** GROUP 2 Initialization *************************/
+   PORT_REGS->GROUP[2].PORT_DIR = 0x20;
 
-                
 }
 
 // *****************************************************************************
@@ -103,7 +103,7 @@ void PORT_Initialize(void)
 
 uint32_t PORT_GroupRead(PORT_GROUP group)
 {
-    return (((port_registers_t*)group)->PORT_IN);
+    return (((port_group_registers_t*)group)->PORT_IN);
 }
 
 // *****************************************************************************
@@ -136,7 +136,7 @@ uint32_t PORT_GroupRead(PORT_GROUP group)
 void PORT_GroupWrite(PORT_GROUP group, uint32_t mask, uint32_t value)
 {
     /* Write the desired value */
-    ((port_registers_t*)group)->PORT_OUT = (((port_registers_t*)group)->PORT_OUT & (~mask)) | (mask & value);
+    ((port_group_registers_t*)group)->PORT_OUT = (((port_group_registers_t*)group)->PORT_OUT & (~mask)) | (mask & value);
 }
 
 // *****************************************************************************
@@ -160,7 +160,7 @@ void PORT_GroupWrite(PORT_GROUP group, uint32_t mask, uint32_t value)
 
 uint32_t PORT_GroupLatchRead(PORT_GROUP group)
 {
-    return (((port_registers_t*)group)->PORT_OUT);
+    return (((port_group_registers_t*)group)->PORT_OUT);
 }
 
 // *****************************************************************************
@@ -183,7 +183,7 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group)
 
 void PORT_GroupSet(PORT_GROUP group, uint32_t mask)
 {
-    ((port_registers_t*)group)->PORT_OUTSET = mask;
+    ((port_group_registers_t*)group)->PORT_OUTSET = mask;
 }
 
 // *****************************************************************************
@@ -206,7 +206,7 @@ void PORT_GroupSet(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupClear(PORT_GROUP group, uint32_t mask)
 {
-    ((port_registers_t*)group)->PORT_OUTCLR = mask;
+    ((port_group_registers_t*)group)->PORT_OUTCLR = mask;
 }
 
 // *****************************************************************************
@@ -228,7 +228,7 @@ void PORT_GroupClear(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupToggle(PORT_GROUP group, uint32_t mask)
 {
-    ((port_registers_t*)group)->PORT_OUTTGL = mask;
+    ((port_group_registers_t*)group)->PORT_OUTTGL = mask;
 }
 
 // *****************************************************************************
@@ -249,7 +249,7 @@ void PORT_GroupToggle(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask)
 {
-    ((port_registers_t*)group)->PORT_DIRCLR = mask;
+    ((port_group_registers_t*)group)->PORT_DIRCLR = mask;
 }
 
 // *****************************************************************************
@@ -270,5 +270,5 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask)
 
 void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask)
 {
-   ((port_registers_t*)group)->PORT_DIRSET = mask;
+   ((port_group_registers_t*)group)->PORT_DIRSET = mask;
 }
