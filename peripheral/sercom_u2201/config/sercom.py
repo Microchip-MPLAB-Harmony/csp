@@ -36,7 +36,7 @@ global sercomInstanceName
 ###################################################################################################
 
 #BAUD Rate Calculation for SPI
-def getspiBaud(gclk,clkspeed):
+def getspiBaud(gclk, clkspeed):
 
     baud = int(round(float("{0:.15f}".format(float(gclk / (2 * clkspeed)))) - 1))
 
@@ -102,24 +102,24 @@ def geti2cBaud(gclk, clkSpeed, trise, mode):
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
-def onCapabilityConnected(event):
+def onAttachmentConnected(connectionInfo):
 
     global sercomSym_OperationMode
 
-    capability = event["capabilityID"]
-    sercomComponent = event["localComponent"]
+    capabilityId = connectionInfo["id"]
+    sercomComponent = connectionInfo["localComponent"]
 
-    if capability == uartCapabilityId:
+    if capabilityId == uartCapabilityId:
         sercomComponent.setCapabilityEnabled(uartCapabilityId, True)
         sercomComponent.setCapabilityEnabled(spiCapabilityId, False)
         sercomComponent.setCapabilityEnabled(i2cCapabilityId, False)
         sercomSym_OperationMode.setSelectedKey("USART_INT", 2)
-    elif capability == spiCapabilityId:
+    elif capabilityId == spiCapabilityId:
         sercomComponent.setCapabilityEnabled(uartCapabilityId, False)
         sercomComponent.setCapabilityEnabled(spiCapabilityId, True)
         sercomComponent.setCapabilityEnabled(i2cCapabilityId, False)
         sercomSym_OperationMode.setSelectedKey("SPIM", 2)
-    elif capability == i2cCapabilityId:
+    elif capabilityId == i2cCapabilityId:
         sercomComponent.setCapabilityEnabled(uartCapabilityId, False)
         sercomComponent.setCapabilityEnabled(spiCapabilityId, False)
         sercomComponent.setCapabilityEnabled(i2cCapabilityId, True)
@@ -127,12 +127,11 @@ def onCapabilityConnected(event):
 
     sercomSym_OperationMode.setReadOnly(True)
 
-def onCapabilityDisconnected(event):
+def onAttachmentDisconnected(connectionInfo):
 
     global sercomSym_OperationMode
 
-    capability = event["capabilityID"]
-    sercomComponent = event["localComponent"]
+    sercomComponent = connectionInfo["localComponent"]
 
     sercomComponent.setCapabilityEnabled(uartCapabilityId, True)
     sercomComponent.setCapabilityEnabled(spiCapabilityId, True)

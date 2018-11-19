@@ -49,7 +49,7 @@ def updateUSARTBaudValueProperty(symbol, event):
     if clk != 0 and baud != 0:
         brgVal = getUSARTBaudValue(clk, baud)
 
-    if brgVal < 1:
+    if brgVal < 1 and sercomSym_OperationMode.getSelectedKey() == "USART_INT":
         usartSym_BaudError_Comment.setVisible(True)
     else:
         usartSym_BaudError_Comment.setVisible(False)

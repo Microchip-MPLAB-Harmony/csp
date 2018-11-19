@@ -26,11 +26,11 @@
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
-
-def updateSPIConfigurationVisibleProperty(symbol, event):
+# SPI Components Visible Property
+def updateSPIMasterConfigurationVisibleProperty(symbol, event):
 
     if symbol.getID() == "SPI_BAUD_ERROR_COMMENT":
-        if (spi_BAUDREG.getValue() == 1 or spi_BAUDREG.getValue() ==255) and event["symbol"].getSelectedKey() == "SPIM":
+        if (spi_BAUDREG.getValue() == 1 or spi_BAUDREG.getValue() == 255) and event["symbol"].getSelectedKey() == "SPIM":
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
@@ -40,14 +40,6 @@ def updateSPIConfigurationVisibleProperty(symbol, event):
         else:
             symbol.setVisible(False)
 
-# SPI Components Visible Property
-def updateSPIMasterConfigurationVisibleProperty(symbol, event):
-
-    if event["symbol"].getSelectedKey() == "SPIM":
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
 #SPI BAUD Calculation
 def spibaudcalc(symbol, event):
 
@@ -55,9 +47,10 @@ def spibaudcalc(symbol, event):
     spi_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_BAUD_RATE")
 
     baudReg = getspiBaud(sercom_gclk, spi_Speed)
-    if baudReg == 1 or baudReg == 255 :
+
+    if (baudReg == 1 or baudReg == 255) and sercomSym_OperationMode.getSelectedKey() == "SPIM":
         spiSym_BaudError_Comment.setVisible(True)
-    else :
+    else:
         spiSym_BaudError_Comment.setVisible(False)
 
     symbol.setValue(baudReg, 2)
@@ -90,7 +83,6 @@ def setSPIClockModeInfo(symbol, event):
 ###################################################################################################
 
 global spiSym_Interrupt_Mode
-global sercomSym_DeviceName
 
 #SPI Interrupt Mode
 spiSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", sercomSym_OperationMode)
@@ -292,12 +284,12 @@ spiSym_ClockModeComment.setLabel("***SPI Transfer Mode 0 is Selected***")
 spiSym_ClockModeComment.setVisible(False)
 spiSym_ClockModeComment.setDependencies(setSPIClockModeInfo, ["SERCOM_MODE", "SPI_CLOCK_PHASE", "SPI_CLOCK_POLARITY"])
 
-
 #SPI Baud Rate not supported comment
 global spiSym_BaudError_Comment
 spiSym_BaudError_Comment = sercomComponent.createCommentSymbol("SPI_BAUD_ERROR_COMMENT", sercomSym_OperationMode)
 spiSym_BaudError_Comment.setLabel("********** SPI Clock source is not suitable for the desired baud rate **********")
-spiSym_BaudError_Comment.setDependencies(updateSPIConfigurationVisibleProperty, ["SERCOM_MODE"])
+spiSym_BaudError_Comment.setVisible(False)
+spiSym_BaudError_Comment.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 spidefaultvalue = getspiBaud(sercomSym_ClockFrequency.getValue(), spi_BAUDRATE.getValue())
 
@@ -308,4 +300,3 @@ spi_BAUDREG.setLabel("SPI Baud ")
 spi_BAUDREG.setDefaultValue(spidefaultvalue)
 spi_BAUDREG.setVisible(False)
 spi_BAUDREG.setDependencies(spibaudcalc, ["SERCOM_CLOCK_FREQUENCY", "SPI_BAUD_RATE"])
-
