@@ -26,7 +26,8 @@
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
-def updateI2CConfigurationVisibleProperty(symbol, event):
+# I2CM Components Visible Property
+def updateI2CMasterConfigurationVisibleProperty(symbol, event):
 
     if symbol.getID() == "I2C_BAUD_ERROR_COMMENT":
         if i2cmSym_BAUDREGVALUE.getValue() == 0 and event["symbol"].getSelectedKey() == "I2CM":
@@ -39,35 +40,29 @@ def updateI2CConfigurationVisibleProperty(symbol, event):
         else:
             symbol.setVisible(False)
 
-
-# I2CM Components Visible Property
-def updateI2CMasterConfigurationVisibleProperty(symbol, event):
-
-    if event["symbol"].getSelectedKey() == "I2CM":
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
 # baud rate calc
-def baudRateCalc(symbol,event):
+def baudRateCalc(symbol, event):
 
     component = symbol.getComponent()
+
     if component.getSymbolByID("SERCOM_MODE").getSelectedKey() == "I2CM":
         gclk_Freq = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SERCOM_CLOCK_FREQUENCY")
         clk_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_CLOCK_SPEED")
         i2cm_Trise = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_TRISE")
+
         if "SAMD20" not in sercomSym_DeviceName.getValue():
             clk_Genr_Mode = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_MODE")
 
         clk_Speed = (int(clk_Speed) * 1000)
+
         if "SAMD20" not in sercomSym_DeviceName.getValue():
             baudReg = geti2cBaud(gclk_Freq, clk_Speed, i2cm_Trise, int(clk_Genr_Mode))
-        else :
+        else:
             baudReg = geti2cBaud(gclk_Freq, clk_Speed, i2cm_Trise, 0)
 
-        if baudReg == 0:
+        if baudReg == 0 and sercomSym_OperationMode.getSelectedKey() == "I2CM":
             i2cmSym_BaudError_Comment.setVisible(True)
-        else :
+        else:
             i2cmSym_BaudError_Comment.setVisible(False)
 
         symbol.setValue(baudReg, 2)
@@ -77,7 +72,6 @@ def baudRateCalc(symbol,event):
 ###################################################################################################
 
 global i2cSym_Interrupt_Mode
-global sercomSym_DeviceName
 
 #I2C Interrupt Mode
 i2cSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("I2C_INTERRUPT_MODE", sercomSym_OperationMode)
@@ -160,9 +154,8 @@ i2cmSym_TRISEVALUE.setDependencies(updateI2CMasterConfigurationVisibleProperty, 
 
 if "SAMD20" in sercomSym_DeviceName.getValue():
     baudRegValue = geti2cBaud(sercomSym_ClockFrequency.getValue(), i2cmSym_BAUD.getValue() * 1000, i2cmSym_TRISEVALUE.getValue(), 0)
-else :
+else:
     baudRegValue = geti2cBaud(sercomSym_ClockFrequency.getValue(), i2cmSym_BAUD.getValue() * 1000, i2cmSym_TRISEVALUE.getValue(), i2cmSym_mode.getValue())
-
 
 # I2C BAUD register value
 global i2cmSym_BAUDREGVALUE
@@ -173,13 +166,12 @@ i2cmSym_BAUDREGVALUE.setVisible(False)
 i2cmSym_BAUDREGVALUE.setReadOnly(True)
 if "SAMD20" in sercomSym_DeviceName.getValue():
     i2cmSym_BAUDREGVALUE.setDependencies(baudRateCalc, ["I2C_CLOCK_SPEED", "SERCOM_CLOCK_FREQUENCY", "I2CM_TRISE"])
-else :
+else:
     i2cmSym_BAUDREGVALUE.setDependencies(baudRateCalc, ["I2CM_MODE", "I2C_CLOCK_SPEED", "SERCOM_CLOCK_FREQUENCY", "I2CM_TRISE"])
-
 
 #I2C Baud Rate not supported comment
 global i2cmSym_BaudError_Comment
 i2cmSym_BaudError_Comment = sercomComponent.createCommentSymbol("I2C_BAUD_ERROR_COMMENT", sercomSym_OperationMode)
 i2cmSym_BaudError_Comment.setLabel("********** value is not suitable for the desired baud rate **********")
 i2cmSym_BaudError_Comment.setVisible(False)
-i2cmSym_BaudError_Comment.setDependencies(updateI2CConfigurationVisibleProperty, ["SERCOM_MODE"])
+i2cmSym_BaudError_Comment.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
