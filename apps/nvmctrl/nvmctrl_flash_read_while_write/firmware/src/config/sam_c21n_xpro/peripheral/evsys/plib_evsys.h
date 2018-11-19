@@ -1,18 +1,18 @@
 /*******************************************************************************
- Debug Console Source file 
+  Interface definition of EVSYS PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    debug_console.c
+    plib_evsys.h
 
   Summary:
-    RSTC Source File
+    Interface definition of the Event System Plib (EVSYS).
 
   Description:
-    None
-
+    This file defines the interface for the EVSYS Plib.
+    It allows user to setup event generators and users.
 *******************************************************************************/
 
 /*******************************************************************************
@@ -38,20 +38,29 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "definitions.h"
+#ifndef EVSYS_H    // Guards against multiple inclusion
+#define EVSYS_H
 
-int _mon_getc(int canblock)
-{
-   volatile int c = 0;
-   while(SERCOM4_USART_Read((void*)&c, 1) != true);
-   return c;
-}
+#include <stdint.h>
+#include <stddef.h>
 
-void _mon_putc(char c)
-{
-   uint8_t size = 0;
-   do
-   {
-       size = SERCOM4_USART_Write((void*)&c, 1);
-   }while (size != 1);
-}
+#ifdef __cplusplus // Provide C++ Compatibility
+ extern "C" {
+#endif
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface
+// *****************************************************************************
+// *****************************************************************************
+
+
+/***************************** EVSYS API *******************************/
+void EVSYS_Initialize( void );
+	
+#ifdef __cplusplus // Provide C++ Compatibility
+ }
+#endif
+
+#endif

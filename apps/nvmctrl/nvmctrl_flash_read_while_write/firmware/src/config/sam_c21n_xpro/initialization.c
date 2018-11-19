@@ -52,6 +52,23 @@
 // ****************************************************************************
 // ****************************************************************************
 
+#pragma config NVMCTRL_BOOTPROT = SIZE_0BYTES
+#pragma config NVMCTRL_EEPROM_SIZE = SIZE_0BYTES
+#pragma config BODVDDUSERLEVEL = 0x8 // Enter Hexadecimal value
+#pragma config BODVDD_DIS = DISABLED
+#pragma config BODVDD_ACTION = NONE
+
+#pragma config BODVDD_HYST = DISABLED
+#pragma config NVMCTRL_REGION_LOCKS = 0xffff // Enter Hexadecimal value
+
+#pragma config WDT_ENABLE = DISABLED
+#pragma config WDT_ALWAYSON = DISABLED
+#pragma config WDT_PER = CYC8
+
+#pragma config WDT_WINDOW = CYC8
+#pragma config WDT_EWOFFSET = CYC8
+#pragma config WDT_WEN = DISABLED
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -97,9 +114,13 @@ void SYS_Initialize ( void* data )
 
 
 
+    NVMCTRL_Initialize( );
+
+    EVSYS_Initialize();
+
     NVIC_Initialize();
 	SYSTICK_TimerInitialize();
-    NVMCTRL_Initialize( );
+    SERCOM4_USART_Initialize();
 
 
 
