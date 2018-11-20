@@ -84,12 +84,12 @@ calculatedFreq_Menu.setLabel("Clock Frequencies")
 def setOSC8MFreq(symbol, event):
     enable = Database.getSymbolValue("core", "CONFIG_CLOCK_OSC8M_ENABLE")
     freq = int(Database.getSymbolValue("core", "CONFIG_CLOCK_OSC8M_FREQ"))
-    
+
     pres = int(Database.getSymbolValue("core", "CONFIG_CLOCK_OSC8M_PRES"))
-    
+
     if enable:
         symbol.setValue((freq)/ (2**pres), 2)
-    
+
     else:
         symbol.setValue((freq)/ (2**pres), 2)
 
@@ -113,7 +113,7 @@ def setXOSCFreq(symbol, event):
         symbol.setValue(Database.getSymbolValue("core", "CONFIG_CLOCK_XOSC_FREQUENCY"), 1)
     else:
         symbol.setValue(0, 1)
-     
+
 def setOSC32KFreq(symbol, event):
     osc32kEnable = Database.getSymbolValue("core","OSC32K_EN32K")
     oscEnable = Database.getSymbolValue("core","CONF_CLOCK_OSC32K_ENABLE")
@@ -142,11 +142,11 @@ def setDfllFreq(symbol, event):
             mul =  int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_MUL"))
             refFreq = int(Database.getSymbolValue("core", "GCLK_ID_0_FREQ"))
             freq = mul*refFreq
-                
+
     symbol.setValue(freq, 2)
-    
+
 def setDPLLClockFreq(symbol, event):
-    
+
     enable = Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_ENABLE")
 
     if enable:
@@ -188,7 +188,7 @@ def calcDpllXoscDivider(symbol, event):
     divisor = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_DIVIDER"))
     div_value = (2 * (divisor + 1))
     symbol.setValue(div_value,2)
-    
+
 ################################################################################
 #######          SYSCTRL Database Components      ##############################
 ################################################################################
@@ -200,15 +200,22 @@ osc8MEnable.setLabel("8MHz Internal Oscillator(OSC8M) Enable")
 osc8MEnable.setDescription("Internal 8mhz Oscillator Configuration enable feature")
 osc8MEnable.setDefaultValue(True)
 
-osc8MOverwrite = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC8M_FREQ_OVERWRITE", sysctrl_OSC8M)
-osc8MOverwrite.setLabel("Change Default Oscillator frequecy")
-osc8MOverwrite.setDescription("Default frequency range of OSC 8m can be changed using the FREQRANGE and CALIB bitfields in fuse settings")
+osc8MOverwrite = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC8M_CALIB_OVERWRITE", sysctrl_OSC8M)
+osc8MOverwrite.setLabel("Overwrite Default Oscillator Calibration")
+osc8MOverwrite.setDescription("Overwrite Default Oscillator Calibration")
 osc8MOverwrite.setDefaultValue(False)
+
+osc8MCalibValue = coreComponent.createIntegerSymbol("CONFIG_CLOCK_OSC8M_CALIB_VALUE", sysctrl_OSC8M)
+osc8MCalibValue.setLabel("Oscillator Calibration Value")
+osc8MCalibValue.setDescription("Set the Oscillator Calibration Value")
+osc8MCalibValue.setMin(0)
+osc8MCalibValue.setMax(0xFFF)
+osc8MCalibValue.setDefaultValue(0)
 
 osc8MFreqVal = coreComponent.createIntegerSymbol("CONFIG_CLOCK_OSC8M_FREQ", sysctrl_OSC8M)
 osc8MFreqVal.setLabel("Set OSC8M Frequency")
 osc8MFreqVal.setDescription("Default frequency range of OSC 8m can be changed using the FREQRANGE and CALIB bitfields in fuse settings")
-osc8MFreqVal.setDefaultValue(1000000)
+osc8MFreqVal.setDefaultValue(8000000)
 
 osc8MOndemand = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_OSC8M_ONDEMAND", sysctrl_OSC8M)
 osc8MOndemand.setLabel("Oscillator On-Demand Control")
@@ -237,14 +244,14 @@ for index in range(0, len(osc8mDivNodeValues)):
     osc8mdivKeyValue = osc8mDivNodeValues[index].getAttribute("value")
     osc8MPres.addKey(osc8mdivKeyName, osc8mdivKeyValue , osc8mdivKeyDescription)
 
-osc8MPres.setDefaultValue(3)
+osc8MPres.setDefaultValue(0)
 osc8MPres.setOutputMode("Value")
 osc8MPres.setDisplayMode("Description")
 
 osc8MFreq = coreComponent.createIntegerSymbol("OSC8M_CLOCK_FREQ", calculatedFreq_Menu)
 osc8MFreq.setLabel("OSC 8M Clock Frequency")
 osc8MFreq.setReadOnly(True)
-osc8MFreq.setDefaultValue(1000000)
+osc8MFreq.setDefaultValue(8000000)
 osc8MFreq.setDependencies(setOSC8MFreq, ["CONFIG_CLOCK_OSC8M_ENABLE", "CONFIG_CLOCK_OSC8M_PRES", "CONFIG_CLOCK_OSC8M_FREQ"])
 
 ######################################XOSC##########################################################
@@ -553,7 +560,7 @@ dpllMul = coreComponent.createFloatSymbol("CONFIG_CLOCK_DPLL_MULTIPLIER_VALUE", 
 dpllMul.setVisible(False)
 dpllMul.setDefaultValue(1)
 dpllMul.setDependencies(calcDpllMultiplier,["CONFIG_CLOCK_DPLL_LDRFRAC_FRACTION","CONFIG_CLOCK_DPLL_LDR_INTEGER"])
-    
+
 dpllLpen = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DPLL_LOWPOWER_ENABLE", dpll_Menu)
 dpllLpen.setLabel("DPLL Low Power Enable")
 dpllLpen.setDescription("Low Power Mode Enabled or not")
@@ -623,7 +630,7 @@ dpllDiv.setMin(0)
 dpllDivUI = coreComponent.createIntegerSymbol("CONFIG_CLOCK_DPLL_DIVIDER_VALUE", dpll_Menu)
 dpllDivUI.setDefaultValue(2)
 dpllDivUI.setDependencies(calcDpllXoscDivider,["CONFIG_CLOCK_DPLL_DIVIDER"])
-    
+
 dpllFreq = coreComponent.createIntegerSymbol("DPLL_CLOCK_FREQ", calculatedFreq_Menu)
 dpllFreq.setReadOnly(True)
 dpllFreq.setDefaultValue(0)
@@ -699,13 +706,13 @@ def setGClockFreq(symbol, event):
         if src == "XOSC":
             srcFreq = int(Database.getSymbolValue("core","XOSC_FREQ"))
 
-        
+
         elif src == "OSC32K":
             srcFreq = int(Database.getSymbolValue("core","OSC32K_FREQ"))
-            
+
         elif src == "OSC8M":
             srcFreq = int(Database.getSymbolValue("core","OSC8M_CLOCK_FREQ"))
-        
+
         # GCLKIN
         elif 'GCLK_IN' in str(src):
             gclk_in_symbol = "GCLK_IO_"+str(index)+"_FREQ"
@@ -727,12 +734,12 @@ def setGClockFreq(symbol, event):
         #DFLL
         elif src == "DFLL":
             srcFreq = int(Database.getSymbolValue("core","DFLL_CLOCK_FREQ"))
-            
+
         #FDPLL
         elif src == "FDPLL":
             srcFreq = int(Database.getSymbolValue("core","DPLL_CLOCK_FREQ"))
 
-            
+
         divSel = int(Database.getSymbolValue("core","GCLK_" + index + "_DIVSEL"))
         div = int(Database.getSymbolValue("core","GCLK_" + index + "_DIV"))
 
@@ -753,7 +760,7 @@ def setGClockFreq(symbol, event):
 
 def topsort(graph):
     from collections import deque
-    
+
     #Initialize the degree of vetexes to zero and increment dependents by 1
     degreeList = {}
     for vertex in graph:
@@ -762,34 +769,34 @@ def topsort(graph):
     for vertex in graph:
         for dependent in graph[vertex]:
             degreeList[dependent] = degreeList[dependent] + 1
- 
-    #initialize a dequeue pipe 
-    pipe = deque() 
 
-    #move vertexes with zero degree to the starting of pipe    
+    #initialize a dequeue pipe
+    pipe = deque()
+
+    #move vertexes with zero degree to the starting of pipe
     for vertex in degreeList:
         if degreeList[vertex] == 0:
             pipe.appendleft(vertex)
- 
-    outputList = []     
+
+    outputList = []
 
     #move vertexes with degree 0 to output list
     #visit the dependent and reduce the degree by one for every visited dependent
-    while pipe:                
-        vertex = pipe.pop()          
-        outputList.append(vertex)          
+    while pipe:
+        vertex = pipe.pop()
+        outputList.append(vertex)
         for dependent in graph[vertex]:
             degreeList[dependent] -= 1
             if degreeList[dependent] == 0:
                 pipe.appendleft(dependent)
-         
+
     #If there are no cycles that is the max degree of all vertices is 1
     #then the length of list should be equal to total number of vertices in graph else a cycle has been formed
     if len(outputList) == len(graph):
         return outputList
-    else:                     
-        return []         
-    
+    else:
+        return []
+
 def codeGen(symbol, event):
     global codeGenerationDep
     global topsort
@@ -812,25 +819,25 @@ def codeGen(symbol, event):
                     }
     symbol.clearValues()
     codeList = []
-    
+
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_ENABLE")) == True :
         if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_OPMODE"))) == 1):
             sourceDestmap["GCLK" + str(Database.getSymbolValue("core", "GCLK_ID_0_GENSEL"))].append("DFLL")
-    
+
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_ENABLE")) == True :
         if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_REF_CLOCK"))) == 3):
             sourceDestmap["GCLK" + str(Database.getSymbolValue("core", "GCLK_ID_1_GENSEL"))].append("FDPLL")
-           
+
     for i in range(0, 9):
         if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)):
            if gclkSym_GENCTRL_SRC[i].getSelectedKey() in ["DFLL", "FDPLL", "GCLK1"]:
                 sourceDestmap[gclkSym_GENCTRL_SRC[i].getSelectedKey()].append("GCLK"+str(i))
-    
+
     codeList = topsort(sourceDestmap)
     if len(codeList) != 0:
         cycleFormed.setValue(False,2)
-        
-        
+
+
         if (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_ENABLE")) == False :
             codeList.remove("DFLL")
         if (Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_ENABLE")) == False :
@@ -838,9 +845,9 @@ def codeGen(symbol, event):
         for i in range(0, 12):
             if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)) == False:
                 codeList.remove("GCLK"+str(i))
-            
+
         for i in range(0,len(codeList)):
-            symbol.addValue("    " + codeList[i] + "_Initialize();")    
+            symbol.addValue("    " + codeList[i] + "_Initialize();")
     else:
         cycleFormed.setValue(True,2)
 
@@ -896,7 +903,7 @@ def setGCLKIOFreq(symbol, event):
     else:
         symbol.setValue(0, 2)
 
-                                                          
+
 ################################GCLK############################################
 
 gclkDependencyList = []
@@ -1021,7 +1028,7 @@ for gclknumber in range(0,9):
         gclkSym_GENCTRL_OOV[gclknumber].setDefaultValue(0)
         gclkSym_GENCTRL_OOV[gclknumber].setOutputMode("Key")
         gclkSym_GENCTRL_OOV[gclknumber].setDisplayMode("Description")
-        
+
         gclkInFreq = coreComponent.createIntegerSymbol("GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
         gclkInFreq.setLabel("Gclk Input Frequency")
         gclkInFreq.setDefaultValue(0)
@@ -1237,7 +1244,7 @@ codeGenerationDep.append("CONFIG_CLOCK_DPLL_REF_CLOCK")
 codeGenerationDep.append("CONFIG_CLOCK_DPLL_ENABLE")
 codeGenerationDep.append("CONFIG_CLOCK_DFLL_ENABLE")
 codeGenerationList.setDependencies(codeGen, codeGenerationDep)
-codeGenerationList.addValue("   GCLK0_Initialize();")
+codeGenerationList.addValue("    GCLK0_Initialize();")
 codeGenerationList.setTarget("core.CLK_INIT_LIST")
 
 ##############################PM Callback######################################
@@ -1252,7 +1259,7 @@ def setMainClockFreq(symbol, event):
         Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_DUAL_Val", 2)
     else:
         Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_SINGLE_Val", 2)
-    
+
 def ahbValue(symbol,event):
     global ahbInit
     global pmDic
@@ -1284,20 +1291,20 @@ def apbValue(symbol,event):
 
     if "_ANA" in perInstance:
         perInstance = perInstance.split("_ANA")[0]
-        
+
     if "_SLOW" in perInstance:
         return
-    
+
     if "_DIG" in perInstance:
         return
-        
+
     if "EVSYS" in perInstance:
         perInstance = perInstance.split("_")[0]
         for i in range (0,12):
             if Database.getSymbolValue("core", "EVSYS_" + str(i) + "_CLOCK_ENABLE") == True:
                 enable = enable | True
                 break
-            
+
 
 
     for key in pmDic.keys():
@@ -1316,7 +1323,7 @@ def apbValue(symbol,event):
                     Database.setSymbolValue("core", "PM_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
                     break
 
-###############################PM###############################################  
+###############################PM###############################################
 global ahbInit
 numAPB = 0
 ahbInit = 0x0
@@ -1392,7 +1399,7 @@ pmSym_CPUDIV_CPUDIV.setDisplayMode("Key")
 nvm_rws = coreComponent.createStringSymbol("NVM_RWS", pmSym_Menu)
 nvm_rws.setReadOnly(True)
 nvm_rws.setDefaultValue("NVMCTRL_CTRLB_RWS_SINGLE_Val")
-nvm_rws.setVisible(False)   
+nvm_rws.setVisible(False)
 
 clkSym_MAIN_CLK_FREQ = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY", calculatedFreq_Menu)
 clkSym_MAIN_CLK_FREQ.setLabel("Main Clock Frequency")
@@ -1401,7 +1408,8 @@ clkSym_MAIN_CLK_FREQ.setDependencies(setMainClockFreq, ["GCLK_0_FREQ", "CONF_CPU
 
 divider = pmSym_CPUDIV_CPUDIV.getValue()
 gclk0_freq = int(gclkSym_Freq[0].getValue())
-clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)                                                    
+clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)
+
 ################################################################################
 ###########             CODE GENERATION                     ####################
 ################################################################################
@@ -1426,7 +1434,7 @@ clockSym_OSCCTRL_SourceFile.setMarkup(True)
 
 clockSystemInitFile = coreComponent.createFileSymbol("SAMD21_CLOCK_INIT", None)
 clockSystemInitFile.setType("STRING")
-clockSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+clockSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 clockSystemInitFile.setSourcePath("../peripheral/clk_sam_d21/templates/system/initialization.c.ftl")
 clockSystemInitFile.setMarkup(True)
 
