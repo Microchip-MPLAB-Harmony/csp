@@ -154,15 +154,22 @@ osc8MEnable.setLabel("8MHz Internal Oscillator(OSC8M) Enable")
 osc8MEnable.setDescription("Internal 8mhz Oscillator Configuration enable feature")
 osc8MEnable.setDefaultValue(True)
 
-osc8MOverwrite = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC8M_FREQ_OVERWRITE", sysctrl_OSC8M)
-osc8MOverwrite.setLabel("Change Default Oscillator frequecy")
-osc8MOverwrite.setDescription("Default frequency range of OSC 8m can be changed using the FREQRANGE and CALIB bitfields in fuse settings")
+osc8MOverwrite = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC8M_CALIB_OVERWRITE", sysctrl_OSC8M)
+osc8MOverwrite.setLabel("Overwrite Default Oscillator Calibration")
+osc8MOverwrite.setDescription("Overwrite Default Oscillator Calibration")
 osc8MOverwrite.setDefaultValue(False)
+
+osc8MCalibValue = coreComponent.createIntegerSymbol("CONFIG_CLOCK_OSC8M_CALIB_VALUE", sysctrl_OSC8M)
+osc8MCalibValue.setLabel("Oscillator Calibration Value")
+osc8MCalibValue.setDescription("Set the Oscillator Calibration Value")
+osc8MCalibValue.setMin(0)
+osc8MCalibValue.setMax(0xFFF)
+osc8MCalibValue.setDefaultValue(0)
 
 osc8MFreqVal = coreComponent.createIntegerSymbol("CONFIG_CLOCK_OSC8M_FREQ", sysctrl_OSC8M)
 osc8MFreqVal.setLabel("Set OSC8M Frequency")
 osc8MFreqVal.setDescription("Default frequency range of OSC 8m can be changed using the FREQRANGE and CALIB bitfields in fuse settings")
-osc8MFreqVal.setDefaultValue(1000000)
+osc8MFreqVal.setDefaultValue(8000000)
 
 osc8MOndemand = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_OSC8M_ONDEMAND", sysctrl_OSC8M)
 osc8MOndemand.setLabel("Oscillator On-Demand Control")
@@ -191,14 +198,14 @@ for index in range(0, len(osc8mDivNodeValues)):
     osc8mdivKeyValue = osc8mDivNodeValues[index].getAttribute("value")
     osc8MPres.addKey(osc8mdivKeyName, osc8mdivKeyValue , osc8mdivKeyDescription)
 
-osc8MPres.setDefaultValue(3)
+osc8MPres.setDefaultValue(0)
 osc8MPres.setOutputMode("Value")
 osc8MPres.setDisplayMode("Description")
 
 osc8MFreq = coreComponent.createIntegerSymbol("OSC8M_CLOCK_FREQ", calculatedFreq_Menu)
 osc8MFreq.setLabel("OSC 8M Clock Frequency")
 osc8MFreq.setReadOnly(True)
-osc8MFreq.setDefaultValue(1000000)
+osc8MFreq.setDefaultValue(8000000)
 osc8MFreq.setDependencies(setOSC8MFreq, ["CONFIG_CLOCK_OSC8M_ENABLE", "CONFIG_CLOCK_OSC8M_PRES", "CONFIG_CLOCK_OSC8M_FREQ"])
 
 ######################################XOSC##########################################################
@@ -1048,7 +1055,7 @@ codeGenerationList.setVisible(False)
 codeGenerationDep.append("GCLK_ID_0_GENSEL")
 codeGenerationDep.append("CONFIG_CLOCK_DFLL_ENABLE")
 codeGenerationList.setDependencies(codeGen, codeGenerationDep)
-codeGenerationList.addValue("   GCLK0_Initialize();")
+codeGenerationList.addValue("    GCLK0_Initialize();")
 codeGenerationList.setTarget("core.CLK_INIT_LIST")
 
 ##############################PM Callback######################################
@@ -1213,6 +1220,7 @@ clkSym_MAIN_CLK_FREQ.setDependencies(setMainClockFreq, ["GCLK_0_FREQ", "CONF_CPU
 divider = pmSym_CPUDIV_CPUDIV.getValue()
 gclk0_freq = int(gclkSym_Freq[0].getValue())
 clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)
+
 ################################################################################
 ###########             CODE GENERATION                     ####################
 ################################################################################
@@ -1237,7 +1245,7 @@ clockSym_OSCCTRL_SourceFile.setMarkup(True)
 
 clockSystemInitFile = coreComponent.createFileSymbol("SAMD20_CLOCK_INIT", None)
 clockSystemInitFile.setType("STRING")
-clockSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+clockSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
 clockSystemInitFile.setSourcePath("../peripheral/clk_sam_d20/templates/system/initialization.c.ftl")
 clockSystemInitFile.setMarkup(True)
 
