@@ -47,36 +47,44 @@ static void SYSCTRL_Initialize(void)
     /* Configure External Oscillator */
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_XOSC = SYSCTRL_XOSC_STARTUP(${CONFIG_CLOCK_XOSC_STARTUP}) | SYSCTRL_XOSC_GAIN(${CONFIG_CLOCK_XOSC_GAIN})
                                                              ${CONFIG_CLOCK_XOSC_RUNSTDBY?then('| SYSCTRL_XOSC_RUNSTDBY_Msk',' ')}
-															 ${(CONFIG_CLOCK_XOSC_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC_ONDEMAND_Msk',' ')}
-															 ${(XOSC_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC_XTALEN_Msk',' ')} | SYSCTRL_XOSC_ENABLE_Msk;</@compress>
+                                                             ${(CONFIG_CLOCK_XOSC_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC_ONDEMAND_Msk',' ')}
+                                                             ${(XOSC_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC_XTALEN_Msk',' ')} | SYSCTRL_XOSC_ENABLE_Msk;</@compress>
 
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_XOSCRDY_Msk) != SYSCTRL_PCLKSR_XOSCRDY_Msk)
     {
         /* Waiting for the XOSC Ready state */
     }
 
-    <#if XOSC_AMPGC == true >
+    <#if XOSC_AMPGC == true>
     /* Setting the Automatic Gain Control */
     SYSCTRL_REGS->SYSCTRL_XOSC |= SYSCTRL_XOSC_AMPGC_Msk;
+
     </#if>
 </#if>
 
 <#if CONFIG_CLOCK_OSC8M_ENABLE == true>
-
-	<#if (CONFIG_CLOCK_OSC8M_RUNSTDY == true) || (CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE" || CONFIG_CLOCK_OSC8M_PRES != "0x3")>
+    <#if (CONFIG_CLOCK_OSC8M_RUNSTDY == true) || (CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE" || CONFIG_CLOCK_OSC8M_PRES != "0x3")>
     /* Configure 8MHz Oscillator */
-	<@compress single_line=true>SYSCTRL_REGS->SYSCTRL_OSC8M = SYSCTRL_REGS->SYSCTRL_OSC8M | SYSCTRL_OSC8M_PRESC(${CONFIG_CLOCK_OSC8M_PRES})
-                                                             ${CONFIG_CLOCK_OSC8M_RUNSTDY?then('| SYSCTRL_OSC8M_RUNSTDBY_Msk',' ')}
-															 ${(CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC8M_ONDEMAND_Msk',' ')};</@compress>
-
+    /* Configure 8MHz Oscillator */
+    <#if CONFIG_CLOCK_OSC8M_CALIB_OVERWRITE == false>
+    <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_OSC8M = (SYSCTRL_REGS->SYSCTRL_OSC8M & (SYSCTRL_OSC8M_CALIB_Msk | SYSCTRL_OSC8M_FRANGE_Msk)) | SYSCTRL_OSC8M_ENABLE_Msk | SYSCTRL_OSC8M_PRESC(${CONFIG_CLOCK_OSC8M_PRES})
+                                                              ${CONFIG_CLOCK_OSC8M_RUNSTDY?then('| SYSCTRL_OSC8M_RUNSTDBY_Msk',' ')}
+                                                              ${(CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC8M_ONDEMAND_Msk',' ')};</@compress>
+    <#else>
+    <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_OSC8M = (SYSCTRL_REGS->SYSCTRL_OSC8M & SYSCTRL_OSC8M_FRANGE_Msk) | SYSCTRL_OSC8M_CALIB(${CONFIG_CLOCK_OSC8M_CALIB_VALUE}) | SYSCTRL_OSC8M_ENABLE_Msk | SYSCTRL_OSC8M_PRESC(${CONFIG_CLOCK_OSC8M_PRES})
+                                                              ${CONFIG_CLOCK_OSC8M_RUNSTDY?then('| SYSCTRL_OSC8M_RUNSTDBY_Msk',' ')}
+                                                              ${(CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC8M_ONDEMAND_Msk',' ')};</@compress>
+    </#if>
 
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC8MRDY_Msk) != SYSCTRL_PCLKSR_OSC8MRDY_Msk)
     {
         /* Waiting for the OSC8M Ready state */
     }
-	</#if>
+
+    </#if>
 <#else>
-	SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0;
+    SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0;
+
 </#if>
 
 <#if CONF_CLOCK_XOSC32K_ENABLE == true>
@@ -84,32 +92,33 @@ static void SYSCTRL_Initialize(void)
 
     /* Configure 32K External Oscillator */
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_XOSC32K = SYSCTRL_XOSC32K_STARTUP(${XOSC32K_STARTUP}) | SYSCTRL_XOSC32K_ENABLE_Msk
-                                                               ${XOSC32K_RUNSTDBY?then('| SYSCTRL_XOSC32K_RUNSTDBY_Msk',' ')}
-                                                               ${XOSC32K_EN32K?then('| SYSCTRL_XOSC32K_EN32K_Msk',' ')}
-															   ${(XOSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC32K_ONDEMAND_Msk',' ')}
-															   ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
+                                                                ${XOSC32K_RUNSTDBY?then('| SYSCTRL_XOSC32K_RUNSTDBY_Msk',' ')}
+                                                                ${XOSC32K_EN32K?then('| SYSCTRL_XOSC32K_EN32K_Msk',' ')}
+                                                                ${(XOSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC32K_ONDEMAND_Msk',' ')}
+                                                                ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
 
     while(!((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_XOSC32KRDY_Msk) == SYSCTRL_PCLKSR_XOSC32KRDY_Msk))
     {
         /* Waiting for the XOSC32K Ready state */
     }
+
 </#if>
 <#if CONF_CLOCK_OSC32K_ENABLE =true>
     /****************** OSC32K Initialization  ******************************/
     uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020) >> 38 ) & 0x7f);
     /* Configure 32K RC oscillator */
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_OSC32K = SYSCTRL_OSC32K_CALIB(calibValue) |
-                                                              SYSCTRL_OSC32K_STARTUP(${OSC32K_STARTUP}) | SYSCTRL_OSC32K_ENABLE_Msk
-                                                              ${OSC32K_RUNSTDBY?then('| SYSCTRL_OSC32K_RUNSTDBY_Msk',' ')}
-                                                              ${OSC32K_EN32K?then('| SYSCTRL_OSC32K_EN32K_Msk',' ')}
-															  ${(OSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC32K_ONDEMAND_Msk',' ')};</@compress>
+                                                               SYSCTRL_OSC32K_STARTUP(${OSC32K_STARTUP}) | SYSCTRL_OSC32K_ENABLE_Msk
+                                                               ${OSC32K_RUNSTDBY?then('| SYSCTRL_OSC32K_RUNSTDBY_Msk',' ')}
+                                                               ${OSC32K_EN32K?then('| SYSCTRL_OSC32K_EN32K_Msk',' ')}
+                                                               ${(OSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC32K_ONDEMAND_Msk',' ')};</@compress>
 
     while(!((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC32KRDY_Msk) == SYSCTRL_PCLKSR_OSC32KRDY_Msk))
     {
         /* Waiting for the OSC32K Ready state */
     }
 <#else>
-	SYSCTRL_REGS->SYSCTRL_OSC32K = 0x0;
+    SYSCTRL_REGS->SYSCTRL_OSC32K = 0x0;
 </#if>
 }
 
@@ -124,12 +133,12 @@ static void DFLL_Initialize(void)
         /* Waiting for the Ready state */
     }
 
-	<#if CONFIG_CLOCK_DFLL_OPMODE == "1">
-	GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_GEN(${GCLK_ID_0_GENSEL})${GCLK_ID_0_WRITELOCK?then(' | GCLK_CLKCTRL_WRTLOCK_Msk', ' ')} | GCLK_CLKCTRL_CLKEN_Msk | GCLK_CLKCTRL_ID(${GCLK_ID_0_INDEX});
+    <#if CONFIG_CLOCK_DFLL_OPMODE == "1">
+    GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_GEN(${GCLK_ID_0_GENSEL})${GCLK_ID_0_WRITELOCK?then(' | GCLK_CLKCTRL_WRTLOCK_Msk', ' ')} | GCLK_CLKCTRL_CLKEN_Msk | GCLK_CLKCTRL_ID(${GCLK_ID_0_INDEX});
 
     SYSCTRL_REGS->SYSCTRL_DFLLMUL = SYSCTRL_DFLLMUL_MUL(${CONFIG_CLOCK_DFLL_MUL}) | SYSCTRL_DFLLMUL_FSTEP(${CONFIG_CLOCK_DFLL_FINE}) | SYSCTRL_DFLLMUL_CSTEP(${CONFIG_CLOCK_DFLL_COARSE});
 
-	<#else>
+    <#else>
 
     /*Load Calibration Value*/
     uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)0x806024) >> 26 ) & 0x3f);
@@ -149,7 +158,7 @@ static void DFLL_Initialize(void)
     <#lt>                               ${CONFIG_CLOCK_DFLL_BYPASS_COARSE?then('| SYSCTRL_DFLLCTRL_BPLCKC_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_QUICK_LOCK?then('| SYSCTRL_DFLLCTRL_QLDIS_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_CHILL_CYCLE?then('| SYSCTRL_DFLLCTRL_CCDIS_Msk ', ' ')}
-    <#lt>                              ${CONFIG_CLOCK_DFLL_LLAW?then('| SYSCTRL_DFLLCTRL_LLAW_Msk ', ' ')}
+    <#lt>                               ${CONFIG_CLOCK_DFLL_LLAW?then('| SYSCTRL_DFLLCTRL_LLAW_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_STABLE?then('| SYSCTRL_DFLLCTRL_STABLE_Msk ', ' ')}
     <#lt>                               ;</@compress>
 
@@ -175,15 +184,15 @@ static void DFLL_Initialize(void)
 static void GCLK${i}_Initialize(void)
 {
     <@compress single_line=true>GCLK_REGS->GCLK_GENCTRL = GCLK_GENCTRL_SRC(${.vars[GCLK_SRC]})
-                                                               ${(.vars[GCLK_DIVISONSELECTION] == "DIV2")?then('| GCLK_GENCTRL_DIVSEL_Msk' , ' ')}
-                                                               ${(.vars[GCLK_IMPROVE_DUTYCYCLE])?then('| GCLK_GENCTRL_IDC_Msk', ' ')}
-                                                               ${(.vars[GCLK_RUNSTDBY])?then('| GCLK_GENCTRL_RUNSTDBY_Msk', ' ')}
-                                                               <#if i < GCLK_NUM_PADS >
-															   ${(.vars[GCLK_OUTPUTENABLE])?then('| GCLK_GENCTRL_OE_Msk', ' ')}
-															   ${((.vars[GCLK_OUTPUTOFFVALUE] == "HIGH"))?then('| GCLK_GENCTRL_OOV_Msk', ' ')}
-                                                               </#if>
-                                                               | GCLK_GENCTRL_GENEN_Msk
-                                                               | GCLK_GENCTRL_ID(${i});</@compress>
+                                                          ${(.vars[GCLK_DIVISONSELECTION] == "DIV2")?then('| GCLK_GENCTRL_DIVSEL_Msk' , ' ')}
+                                                          ${(.vars[GCLK_IMPROVE_DUTYCYCLE])?then('| GCLK_GENCTRL_IDC_Msk', ' ')}
+                                                          ${(.vars[GCLK_RUNSTDBY])?then('| GCLK_GENCTRL_RUNSTDBY_Msk', ' ')}
+                                                          <#if i < GCLK_NUM_PADS >
+                                                          ${(.vars[GCLK_OUTPUTENABLE])?then('| GCLK_GENCTRL_OE_Msk', ' ')}
+                                                          ${((.vars[GCLK_OUTPUTOFFVALUE] == "HIGH"))?then('| GCLK_GENCTRL_OOV_Msk', ' ')}
+                                                          </#if>
+                                                          | GCLK_GENCTRL_GENEN_Msk
+                                                          | GCLK_GENCTRL_ID(${i});</@compress>
 
     <#if (.vars[GCLK_DIVISONVALUE] > 1)>
     GCLK_REGS->GCLK_GENDIV = GCLK_GENDIV_DIV(${.vars[GCLK_DIVISONVALUE]}) | GCLK_GENDIV_ID(${i});
@@ -220,15 +229,15 @@ ${CLK_INIT_LIST}
     <#assign GCLK_ID_WRITELOCK = "GCLK_ID_" + i + "_WRITELOCK">
         <#if .vars[GCLK_ID_CHEN]?has_content>
             <#if (.vars[GCLK_ID_CHEN] != false)>
-	/* Selection of the Generator and write Lock for ${.vars[GCLK_ID_NAME]} */
+    /* Selection of the Generator and write Lock for ${.vars[GCLK_ID_NAME]} */
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(${.vars[GCLK_ID_INDEX]}) | GCLK_CLKCTRL_GEN(${.vars[GCLK_ID_GENSEL]})${.vars[GCLK_ID_WRITELOCK]?then(' | GCLK_CLKCTRL_WRTLOCK_Msk', ' ')} | GCLK_CLKCTRL_CLKEN_Msk;
     </#if>
     </#if>
 </#list>
 
-	<#if PM_AHB_INITIAL_VALUE != "0x7f">
+    <#if PM_AHB_INITIAL_VALUE != "0x7f">
     /* Configure the AHB Bridge Clocks */
-    PM_REGS->MCLK_AHBMASK = ${PM_AHB_INITIAL_VALUE};
+    PM_REGS->PM_AHBMASK = ${PM_AHB_INITIAL_VALUE};
 
     </#if>
     <#if PM_APBA_INITIAL_VALUE != "0x7f">
