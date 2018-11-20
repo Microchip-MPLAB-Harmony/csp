@@ -136,12 +136,6 @@ deviceTCMsize.addKey("64KB", "2", "DTCM: 64 KB, ITCM: 64KB")
 deviceTCMsize.addKey("128KB", "3", "DTCM: 128 KB,  ITCM: 128KB")
 deviceTCMsize.setSelectedKey("0KB",1)
 
-coreArch = coreComponent.createStringSymbol("CoreArchitecture", devCfgMenu)
-coreArch.setLabel("Core Architecture")
-coreArch.setDefaultValue("CORTEX-M7")
-coreArch.setReadOnly(True)
-coreArch.setVisible(False)
-
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
 coreFPU.setDefaultValue(True)

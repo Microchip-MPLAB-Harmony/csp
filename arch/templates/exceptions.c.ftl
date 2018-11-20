@@ -83,7 +83,7 @@ void NonMaskableInt_Handler(void)
 <#lt>   uint32_t stacked_lr;
 <#lt>   uint32_t stacked_pc;
 <#lt>   uint32_t stacked_psr;
-    <#if CoreArchitecture != "CORTEX-M0+">
+    <#if CoreArchitecture != "CORTEX-M0PLUS">
     <#lt>   uint32_t cfsr;
     <#lt>   uint32_t bus_fault_address;
     <#lt>   uint32_t memmanage_fault_address;
@@ -114,7 +114,7 @@ void NonMaskableInt_Handler(void)
 <#lt>   printf(" PC  = 0x%08lX\r\n", stacked_pc);
 <#lt>   printf(" PSR = 0x%08lX\r\n", stacked_psr);
 
-    <#if CoreArchitecture != "CORTEX-M0+">
+    <#if CoreArchitecture != "CORTEX-M0PLUS">
     <#lt>   printf("- FSR/FAR:\r\n");
     <#lt>   printf(" CFSR = 0x%08lX\r\n", cfsr);
     <#lt>   printf(" HFSR = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
@@ -137,7 +137,7 @@ void NonMaskableInt_Handler(void)
 <#lt>   }
 <#lt>}
 
-    <#if CoreArchitecture != "CORTEX-M0+">
+    <#if CoreArchitecture != "CORTEX-M0PLUS">
     <#lt>void DebugMonitor_Handler_C(uint32_t * hardfault_args, unsigned int lr_value)
     <#lt>{
     <#lt>   uint32_t stacked_r0;
@@ -377,7 +377,7 @@ void NonMaskableInt_Handler(void)
 <#lt>   }
 <#lt>}
 
-    <#if CoreArchitecture != "CORTEX-M0+">
+    <#if CoreArchitecture != "CORTEX-M0PLUS">
     <#lt>void DebugMonitor_Handler(void)
     <#lt>{
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)

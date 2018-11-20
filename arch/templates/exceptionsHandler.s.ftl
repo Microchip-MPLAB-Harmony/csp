@@ -56,7 +56,7 @@
 
 .thumb_func
 HardFault_Handler:
-<#if CoreArchitecture == "CORTEX-M0+">
+<#if CoreArchitecture == "CORTEX-M0PLUS">
     MOVS    R0, #4
     MOV     R1, LR
     TST     R0, R1              // Check bit 2 of LR (EXC_RETURN) is 0?.
@@ -82,7 +82,7 @@ get_LR_and_branch:
 
 
 
-<#if CoreArchitecture != "CORTEX-M0+">
+<#if CoreArchitecture != "CORTEX-M0PLUS">
 /*
 ;*******************************************************************************
 ;* Debug Monitor Handler
