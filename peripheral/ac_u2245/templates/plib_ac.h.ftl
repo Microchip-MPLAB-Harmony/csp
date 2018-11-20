@@ -95,4 +95,6 @@ bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel);
 
 void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t context);
 
+void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar);
+
 #endif /* PLIB_${AC_INSTANCE_NAME}_H */

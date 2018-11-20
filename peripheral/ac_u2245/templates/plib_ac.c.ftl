@@ -169,7 +169,7 @@ AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 void ${AC_INSTANCE_NAME}_Initialize(void)
 {
     /*Reset AC registers*/
-    AC_REGS->AC_CTRLA = AC_CTRLA_SWRST_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = AC_CTRLA_SWRST_Msk;
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_SWRST_Msk) == AC_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for Synchronization */
@@ -192,13 +192,13 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     {
         /* Wait for Synchronization */
     }
-    AC_REGS->AC_COMPCTRL[${i}] &= ~(AC_COMPCTRL_ENABLE_Msk);
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] &= ~(AC_COMPCTRL_ENABLE_Msk);
     /* Check Synchronization to ensure that the comparator is disabled */
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_COMPCTRL${i}_Msk) == AC_SYNCBUSY_COMPCTRL${i}_Msk)
     {
         /* Wait for Synchronization */
     }
-    <@compress single_line=true>AC_REGS->AC_COMPCTRL[${i}] = AC_COMPCTRL_MUXPOS_${.vars[AC_COMPCTRL_MUX_POS]}
+    <@compress single_line=true>${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] = AC_COMPCTRL_MUXPOS_${.vars[AC_COMPCTRL_MUX_POS]}
                                   | AC_COMPCTRL_MUXNEG_${.vars[AC_COMPCTRL_MUX_NEG]}
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
                                   | AC_COMPCTRL_OUT_${.vars[AC_COMPCTRL_OUTPUT_TYPE]}
@@ -206,9 +206,9 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
                                   ${.vars[AC_COMPCTRL_RUNSTDBY]?then(' | AC_COMPCTRL_RUNSTDBY_Msk','')}
                                   ${.vars[AC_COMPCTRL_HYSTEN]?then(' | AC_COMPCTRL_HYSTEN_Msk','')};</@compress>
-    AC_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
                 <#if .vars[AC_SCALERn]?has_content >
-    AC_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]};
+    ${AC_INSTANCE_NAME}_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]};
                 </#if>
 
             </#if>
@@ -219,25 +219,30 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     {
         /* Wait for Synchronization */
     }
-    AC_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
+    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
 </#if>
 <#if AC_EVCTRL_VAL?has_content>
-    AC_REGS->AC_EVCTRL = ${AC_EVCTRL_VAL};
+    ${AC_INSTANCE_NAME}_REGS->AC_EVCTRL = ${AC_EVCTRL_VAL};
 </#if>
 <#if AC_INTENSET_VAL?has_content>
-    AC_REGS->AC_INTENSET = ${AC_INTENSET_VAL};
+    ${AC_INSTANCE_NAME}_REGS->AC_INTENSET = ${AC_INTENSET_VAL};
 </#if>
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization */
     }
-    AC_REGS->AC_CTRLA = AC_CTRLA_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = AC_CTRLA_ENABLE_Msk;
 }
 
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
 {
     /* Start Comparison */
-    AC_REGS->AC_CTRLB |= (1 << channel_id);
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= (1 << channel_id);
+}
+
+void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar)
+{
+    ${AC_INSTANCE_NAME}_REGS->AC_SCALER[channel_id] = vdd_scalar;
 }
 
 void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
@@ -248,24 +253,24 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
         /* Wait for Synchronization */
     }
     /* Disable comparator before swapping */
-    AC_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
     /* Check Synchronization to ensure that the comparator is disabled */
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization */
     }
     /* Swap inputs of the given comparator */
-    AC_REGS->AC_COMPCTRL[channel_id] = AC_COMPCTRL_SWAP_Msk;
-    AC_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] = AC_COMPCTRL_SWAP_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
 }
 
 bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel)
 {
     bool breturnVal = false;
 
-    if((AC_REGS->AC_STATUSB & (AC_STATUSB_READY0_Msk << channel)) == (AC_STATUSB_READY0_Msk << channel))
+    if((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & (AC_STATUSB_READY0_Msk << channel)) == (AC_STATUSB_READY0_Msk << channel))
     {
-        if((AC_REGS->AC_STATUSA & (AC_STATUSA_STATE0_Msk << channel)) == (AC_STATUSA_STATE0_Msk << channel))
+        if((${AC_INSTANCE_NAME}_REGS->AC_STATUSA & (AC_STATUSA_STATE0_Msk << channel)) == (AC_STATUSA_STATE0_Msk << channel))
         {
             breturnVal = true;
         }
@@ -274,7 +279,7 @@ bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel)
             breturnVal = false;
         }
     }
-    
+
     return breturnVal;
 }
 
@@ -287,9 +292,9 @@ void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t conte
 void ${AC_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Copy the status to use inside the callback */
-    acObj.context = AC_REGS->AC_STATUSA;
+    acObj.context = ${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
     /* Clear the interrupt flags*/
-    AC_REGS->AC_INTFLAG = AC_INTFLAG_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_INTFLAG = AC_INTFLAG_Msk;
 
     /* Callback user function */
     if(${AC_INSTANCE_NAME?lower_case}Obj.callback != NULL)
