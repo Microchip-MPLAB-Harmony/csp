@@ -175,7 +175,7 @@ for i in range(0,mpuRegions):
 
     cpuArch = Database.getSymbolValue("core","CoreArchitecture")
 
-    if (cpuArch != "CORTEX-M0+"):
+    if (cpuArch != "CORTEX-M0PLUS"):
         coreMPURegSize.addKey("32B", str(4) , "32 Bytes" )
         coreMPURegSize.addKey("64B", str(5) , "64 bytes" )
         coreMPURegSize.addKey("128B", str(6) , "128 bytes" )
@@ -217,7 +217,7 @@ for i in range(0,mpuRegions):
     coreMPURegType.setOutputMode("Key")
     coreMPURegType.setDisplayMode("Description")
 
-    if (cpuArch == "CORTEX-M0+"):
+    if (cpuArch == "CORTEX-M0PLUS"):
         coreMPURegType.addKey("MPU_ATTR_STRONGLY_ORDERED", str(0) , "Strongly-Ordered Memory" )
         coreMPURegType.addKey("MPU_ATTR_DEVICE", str(1) , "Device Memory" )
         coreMPURegType.addKey("MPU_ATTR_NORMAL_WT", str(2) , "Normal memory, Write-through cache" )

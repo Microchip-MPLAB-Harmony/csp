@@ -75,7 +75,7 @@ void MPU_Initialize(void)
     </#if>
 </#list>
 
-<#if CoreArchitecture != "CORTEX-M0+">
+<#if CoreArchitecture != "CORTEX-M0PLUS">
     /* Enable Memory Management Fault */
     SCB->SHCSR |= (SCB_SHCSR_MEMFAULTENA_Msk);
 </#if>
