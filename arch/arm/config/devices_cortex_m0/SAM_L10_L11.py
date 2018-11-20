@@ -39,12 +39,6 @@ deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR",1)
 
 
-coreArch = coreComponent.createStringSymbol("CoreArchitecture", devCfgMenu)
-coreArch.setLabel("Core Architecture")
-coreArch.setDefaultValue("CORTEX-M0+")
-coreArch.setReadOnly(True)
-coreArch.setVisible(False)
-
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
 coreFPU.setDefaultValue(False)

@@ -3,7 +3,7 @@ extern uint32_t _stack;
 /* Brief default interrupt handler for unused IRQs.*/
 void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call))Dummy_Handler(void)
 {
-<#if CoreArchitecture != "CORTEX-M0+">
+<#if CoreArchitecture != "CORTEX-M0PLUS">
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     __builtin_software_breakpoint();
 #endif

@@ -217,12 +217,6 @@ wdtEarlyWarningOffset.setDefaultValue(11)
 wdtEarlyWarningOffset.setOutputMode("Key")
 wdtEarlyWarningOffset.setDisplayMode("Description")
 
-coreArch = coreComponent.createStringSymbol("CoreArchitecture", devCfgMenu)
-coreArch.setLabel("Core Architecture")
-coreArch.setDefaultValue("CORTEX-M0+")
-coreArch.setReadOnly(True)
-coreArch.setVisible(False)
-
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
 coreFPU.setDefaultValue(False)
