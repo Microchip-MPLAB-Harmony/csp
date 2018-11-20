@@ -464,7 +464,7 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel );
 // ******************************************************************************
 /* Function:
     bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel,
-                                     dmacdescriptor_registers_t * channelDesc );
+                                     dmac_descriptor_registers_t * channelDesc );
 
   Summary:
     The function submit a list of DMA transfers.
@@ -536,7 +536,7 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel );
     None.
 */
 
-bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmacdescriptor_registers_t * channelDesc );
+bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmac_descriptor_registers_t * channelDesc );
 </#if>
 
 // ******************************************************************************

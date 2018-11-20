@@ -244,7 +244,7 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel )
     This function submit a list of DMA transfers.
 ********************************************************************************/
 
-bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmacdescriptor_registers_t* channelDesc)
+bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_descriptor_registers_t* channelDesc)
 {
     bool returnStatus = false;
 
@@ -255,7 +255,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmacd
 
         dmacChannelObj[channel].busyStatus = true;
 
-        memcpy(&descriptor_section[channel], channelDesc, sizeof(dmacdescriptor_registers_t));
+        memcpy(&descriptor_section[channel], channelDesc, sizeof(dmac_descriptor_registers_t));
 
         /* Enable the channel */
         ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
