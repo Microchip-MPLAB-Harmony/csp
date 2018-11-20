@@ -52,7 +52,7 @@
 
 void NVIC_Initialize( void )
 {
-    <#if CoreArchitecture != "CORTEX-M0+">
+    <#if CoreArchitecture != "CORTEX-M0PLUS">
     /* Priority 0 to 7 and no sub-priority. 0 is the highest priority */
     NVIC_SetPriorityGrouping( 0x04 );
     </#if>
