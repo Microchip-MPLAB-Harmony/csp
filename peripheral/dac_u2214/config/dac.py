@@ -35,7 +35,10 @@ def updateDACClockWarringStatus(symbol, event):
 
 def evsysControl(symbol, event):
     evctrl = 0
-    inv = Database.getSymbolValue(event["namespace"], "DAC_INVERSION_OUTPUT")
+    
+    if "SAMC2" in dacSym_DeviceName.getValue():
+        inv = Database.getSymbolValue(event["namespace"], "DAC_INVERSION_OUTPUT")
+    
     out = Database.getSymbolValue(event["namespace"], "DAC_BUFFER_EMPTY_EVENT_OUTPUT")
     inp = int(Database.getSymbolValue(event["namespace"], "DAC_START_CONVERSION_EVENT_INPUT"))
     
@@ -43,7 +46,9 @@ def evsysControl(symbol, event):
         evctrl |= 1
     if out:
         evctrl |= 1 << 1
-    evctrl |= (inv) << 2
+    
+    if "SAMC2" in dacSym_DeviceName.getValue():
+        evctrl |= (inv) << 2
     
     Database.setSymbolValue("evsys", "GENERATOR_DAC_EMPTY_ACTIVE", inp, 2)
     Database.setSymbolValue("evsys", "USER_DAC_START_READY", inp, 2)
@@ -56,17 +61,24 @@ def evsysControl(symbol, event):
 
 def instantiateComponent(dacComponent):
 
+    global dacSym_DeviceName
+    
     dacInstanceName = dacComponent.createStringSymbol("DAC_INSTANCE_NAME", None)
     dacInstanceName.setVisible(False)
     dacInstanceName.setDefaultValue(dacComponent.getID().upper())
     Log.writeInfoMessage("Running " + dacInstanceName.getValue())
 
+    #Device name
+    dacSym_DeviceName = dacComponent.createStringSymbol("DAC_DEVICE_NAME", None)
+    dacSym_DeviceName.setVisible(False)
+    dacSym_DeviceName.setDefaultValue(Variables.get("__PROCESSOR"))
+    
     #clock enable
     Database.clearSymbolValue("core", dacInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", dacInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
     #Run StandBy
     dacSym_CTRLA_RUNSTDBY = dacComponent.createBooleanSymbol("DAC_RUNSTDBY", None)
-    dacSym_CTRLA_RUNSTDBY.setLabel("Disable output in Standby Sleep mode?")
+    dacSym_CTRLA_RUNSTDBY.setLabel("Enable output buffer in Standby Sleep mode?")
 
     #Reference Selection
     dacSym_CTRLB_REFSEL = dacComponent.createKeyValueSetSymbol("DAC_REFERENCE_SELECTION", None)
@@ -114,9 +126,10 @@ def instantiateComponent(dacComponent):
     dacSym_CTRLB_VPD.setLabel("Disable voltage pump to save power")
 
     #Dithering Mode
-    dacSym_CTRLB_DITHER = dacComponent.createBooleanSymbol("DAC_DITHERING_MODE", None)
-    dacSym_CTRLB_DITHER.setLabel("Enable 4-Bit Dithering?")
-    dacSym_CTRLB_DITHER.setVisible(True)
+    if "SAMC2" in dacSym_DeviceName.getValue():
+        dacSym_CTRLB_DITHER = dacComponent.createBooleanSymbol("DAC_DITHERING_MODE", None)
+        dacSym_CTRLB_DITHER.setLabel("Enable 4-Bit Dithering?")
+        dacSym_CTRLB_DITHER.setVisible(True)
 
     dacMenu = dacComponent.createMenuSymbol("DAC_MENU", None)
     dacMenu.setLabel("DAC Event Configuration")
@@ -131,13 +144,14 @@ def instantiateComponent(dacComponent):
     dacSym_EVCTRL_STARTEI.setLabel("Trigger conversion on event Detection")
     dacSym_EVCTRL_STARTEI.setVisible(True)
     
-    dacSym_EVCTRL_INVEI = dacComponent.createKeyValueSetSymbol("DAC_INVERSION_OUTPUT", dacMenu)
-    dacSym_EVCTRL_INVEI.setLabel("Edge Detection for Input Event")
-    dacSym_EVCTRL_INVEI.addKey("Rising", "0", "Detect on Rising Edge")
-    dacSym_EVCTRL_INVEI.addKey("Falling", "1", "Detect on Falling Edge")
-    dacSym_EVCTRL_INVEI.setVisible(True)
-    dacSym_EVCTRL_INVEI.setOutputMode("Value")
-    dacSym_EVCTRL_INVEI.setDisplayMode("Key")
+    if "SAMC2" in dacSym_DeviceName.getValue():
+        dacSym_EVCTRL_INVEI = dacComponent.createKeyValueSetSymbol("DAC_INVERSION_OUTPUT", dacMenu)
+        dacSym_EVCTRL_INVEI.setLabel("Edge Detection for Input Event")
+        dacSym_EVCTRL_INVEI.addKey("Rising", "0", "Detect on Rising Edge")
+        dacSym_EVCTRL_INVEI.addKey("Falling", "1", "Detect on Falling Edge")
+        dacSym_EVCTRL_INVEI.setVisible(True)
+        dacSym_EVCTRL_INVEI.setOutputMode("Value")
+        dacSym_EVCTRL_INVEI.setDisplayMode("Key")
     
     dacSym_EVCTRL = dacComponent.createHexSymbol("DAC_EVCTRL", None)
     dacSym_EVCTRL.setLabel("Trigger conversion on input event?")

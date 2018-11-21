@@ -56,20 +56,16 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-
 #ifdef __cplusplus // Provide C++ Compatibility
 extern "C" {
 #endif
 
-
 void ${DAC_INSTANCE_NAME}_Initialize(void);
 void ${DAC_INSTANCE_NAME}_DataWrite(uint16_t data);
-bool ${DAC_INSTANCE_NAME}_IsReady(void);
-
+<#if DAC_DEVICE_NAME?contains("SAMC2")>bool ${DAC_INSTANCE_NAME}_IsReady(void);</#if>
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 }
 #endif
-
 
 #endif /* PLIB_${DAC_INSTANCE_NAME}_H */
