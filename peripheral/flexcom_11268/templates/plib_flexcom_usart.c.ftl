@@ -289,7 +289,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *set
         /* Configure ${FLEXCOM_INSTANCE_NAME} USART mode */
         usartMode = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR;
         usartMode &= ~(FLEX_US_MR_CHRL_Msk | FLEX_US_MR_MODE9_Msk | FLEX_US_MR_PAR_Msk | FLEX_US_MR_NBSTOP_Msk | FLEX_US_MR_OVER_Msk);
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR = usartMode | (setup->dataWidth | setup->parity | setup->stopBits | overSampVal);
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR = usartMode | ((uint32_t)setup->dataWidth | (uint32_t)setup->parity | (uint32_t)setup->stopBits | overSampVal);
 
         /* Configure ${FLEXCOM_INSTANCE_NAME} USART Baud Rate */
         ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_BRGR = FLEX_US_BRGR_CD(brgVal);
@@ -403,20 +403,16 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 }
 
 <#if USART_INTERRUPT_MODE == true>
-bool ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
+void ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
 {
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback = callback;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txContext = context;
-
-    return true;
 }
 
-bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
+void ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
 {
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback = callback;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxContext = context;
-
-    return true;
 }
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_WriteIsBusy( void )

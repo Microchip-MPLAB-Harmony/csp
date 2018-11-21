@@ -297,9 +297,19 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * se
         scbr = 255;
     }
 
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}]= setup->clockPolarity | setup->clockPhase | setup->dataBits | FLEX_SPI_CSR_SCBR(scbr);
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}]= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | FLEX_SPI_CSR_SCBR(scbr);
 
     return true;
+}
+
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_Write(void* pTransmitData, size_t txSize)
+{
+    return(${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0));
+}
+
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize)
+{
+    return(${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
 <#if SPI_INTERRUPT_MODE == true >
@@ -309,7 +319,7 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister (FLEXCOM_SPI_CALLBACK callbac
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.context = context;
 }
 
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy()
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy(void)
 {
     return ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy;
 }
