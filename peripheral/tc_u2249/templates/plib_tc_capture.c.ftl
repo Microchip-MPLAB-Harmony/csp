@@ -267,7 +267,7 @@ void ${TC_INSTANCE_NAME}_CaptureStop( void )
     }
 }
 
-uint32_t ${TC_INSTANCE_NAME}_CaptureFrequencyGet()
+uint32_t ${TC_INSTANCE_NAME}_CaptureFrequencyGet( void )
 {
     return (uint32_t)(${TC_FREQUENCY}UL);
 }

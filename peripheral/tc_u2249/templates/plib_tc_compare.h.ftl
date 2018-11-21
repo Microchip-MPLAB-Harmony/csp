@@ -92,7 +92,7 @@ void ${TC_INSTANCE_NAME}_CompareStart( void );
 
 void ${TC_INSTANCE_NAME}_CompareStop( void );
 
-uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet();
+uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet( void );
 
 <#if TC_CTRLA_MODE = "COUNT8">
 

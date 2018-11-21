@@ -57,7 +57,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef void (*RTC_CALLBACK)(uintptr_t context, uint32_t int_cause);
+typedef void (*RTC_CALLBACK)(uint32_t int_cause, uintptr_t context);
 
 
 typedef enum 
@@ -72,19 +72,19 @@ typedef enum
     RTC_ALARM_MASK_HHMISS = 0x07,      // Every day
     RTC_ALARM_MASK_DDHHMISS = 0x0f,    // Every month
     RTC_ALARM_MASK_MODDHHMISS = 0x1f  // Every year
-} RTC_ALARM_MASK;	
+} RTC_ALARM_MASK;
 
 typedef enum 
 {
     RTC_INT_ALARM = 0x02,          // Alarm Event
     RTC_INT_TIME = 0x08 ,          // Time Event
     RTC_INT_CALENDAR = 0x10,          // Calendar enable
-} RTC_INT_MASK;	
+} RTC_INT_MASK;
 
 typedef struct
 {
     RTC_CALLBACK          callback; 
-    uintptr_t               context;
+    uintptr_t             context;
 } RTC_OBJECT ;
 
 

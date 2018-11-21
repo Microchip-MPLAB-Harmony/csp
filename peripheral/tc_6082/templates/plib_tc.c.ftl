@@ -294,7 +294,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerStop (void)
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
-uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerFrequencyGet()
+uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerFrequencyGet( void )
 {
     return (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL);
 }
@@ -426,7 +426,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStop (void)
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
-uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureFrequencyGet()
+uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureFrequencyGet( void )
 {
     return (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL);
 }
@@ -530,7 +530,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStop (void)
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
-uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareFrequencyGet()
+uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareFrequencyGet( void )
 {
     return (uint32_t)(${.vars[TC_CH_CLOCK_FREQ]}UL);
 }
