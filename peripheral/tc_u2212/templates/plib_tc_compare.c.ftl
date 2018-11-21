@@ -75,7 +75,7 @@
         <#assign TC_CTRLC_VAL = "TC_CTRLC_INVEN0_Msk">
     </#if>
 </#if>
-<#if TC_COMPARE_CTRLC_INVEN0 == true>
+<#if TC_COMPARE_CTRLC_INVEN1 == true>
     <#if TC_CTRLC_VAL != "">
         <#assign TC_CTRLC_VAL = TC_CTRLC_VAL + " | TC_CTRLC_INVEN1_Msk">
     <#else>
