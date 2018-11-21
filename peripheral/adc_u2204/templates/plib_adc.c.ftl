@@ -85,37 +85,25 @@
 </#if>
 <#if ADC_WINCTRL_WINMODE != "0" && ADC_WINDOW_OUTPUT_EVENT == true>
     <#if ADC_EVCTRL_VAL != "">
-        <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_WINMON_Msk">
+        <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_WINMONEO_Msk">
     <#else>
-        <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_WINMON_Msk">
+        <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_WINMONEO_Msk">
     </#if>
 </#if>
 
 <#if ADC_CONV_TRIGGER == "HW Event Trigger">
-    <#if ADC_EVCTRL_FLUSH == "1">
+    <#if ADC_EVCTRL_FLUSH == true>
         <#if ADC_EVCTRL_VAL != "">
-            <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_FLUSHEI_Msk">
+            <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_SYNCEI_Msk">
         <#else>
-            <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_FLUSHEI_Msk">
-        </#if>
-    <#elseif ADC_EVCTRL_FLUSH == "2">
-        <#if ADC_EVCTRL_VAL != "">
-            <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_FLUSHEI_Msk | ADC_EVCTRL_FLUSHINV_Msk">
-        <#else>
-            <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_FLUSHEI_Msk | ADC_EVCTRL_FLUSHINV_Msk">
+            <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_SYNCEI_Msk">
         </#if>
     </#if>
-    <#if ADC_EVCTRL_START == "1">
+    <#if ADC_EVCTRL_START == true>
         <#if ADC_EVCTRL_VAL != "">
             <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_STARTEI_Msk">
         <#else>
             <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_STARTEI_Msk">
-        </#if>
-    <#elseif ADC_EVCTRL_START == "2">
-        <#if ADC_EVCTRL_VAL != "">
-            <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_STARTEI_Msk | ADC_EVCTRL_STARTINV_Msk">
-        <#else>
-            <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_STARTEI_Msk | ADC_EVCTRL_STARTINV_Msk">
         </#if>
     </#if>
 </#if>
@@ -183,9 +171,6 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
         | ADC_CALIB_BIAS_CAL((((*(uint64_t*)OTP4_ADDR + 1) & ADC_BIASCAL_Msk) >> ADC_BIASCAL_POS));
 
 </#if>
-    /* prescaler */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER};
-
     /* Sampling length */
     ${ADC_INSTANCE_NAME}_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(${ADC_SAMPCTRL_SAMPLEN}U);
 
@@ -196,8 +181,8 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG} \
         | ADC_INPUTCTRL_INPUTSCAN(${ADC_INPUTCTRL_INPUTSCAN}) | ADC_INPUTCTRL_INPUTOFFSET(${ADC_INPUTCTRL_INPUTOFFSET}) | ADC_INPUTCTRL_GAIN_${ADC_INPUTCTRL_GAIN};
 
-    /* Resolution & Operation Mode */
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_RESSEL_${ADC_CTRLB_RESSEL} 
+    /* Prescaler, Resolution & Operation Mode */
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER} | ADC_CTRLB_RESSEL_${ADC_CTRLB_RESSEL} 
                                      <#if ADC_CTRLB_VAL?has_content>| ${ADC_CTRLB_VAL}</#if>;</@compress>
 
 <#if ADC_CTRLB_RESSEL == "16BIT">
