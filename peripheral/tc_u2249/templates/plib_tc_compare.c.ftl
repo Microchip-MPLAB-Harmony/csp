@@ -197,7 +197,7 @@ void ${TC_INSTANCE_NAME}_CompareStop( void )
     }
 }
 
-uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet()
+uint32_t ${TC_INSTANCE_NAME}_CompareFrequencyGet( void )
 {
     return (uint32_t)(${TC_FREQUENCY}UL);
 }

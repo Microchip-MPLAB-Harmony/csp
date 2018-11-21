@@ -160,7 +160,7 @@ void ${TC_INSTANCE_NAME}_TimerStop( void )
     }
 }
 
-uint32_t ${TC_INSTANCE_NAME}_TimerFrequencyGet()
+uint32_t ${TC_INSTANCE_NAME}_TimerFrequencyGet( void )
 {
     return (uint32_t)(${TC_FREQUENCY}UL);
 }

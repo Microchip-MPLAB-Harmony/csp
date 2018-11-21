@@ -98,7 +98,9 @@ extern "C" {
         <#lt>    RTC_CLOCK_INT_MASK_PER4 = 0x0010,
         <#lt>    RTC_CLOCK_INT_MASK_PER5 = 0x0020,
         <#lt>    RTC_CLOCK_INT_MASK_PER6 = 0x0040,
-        <#lt>    RTC_CLOCK_INT_MASK_PER7 = 0x0080
+        <#lt>    RTC_CLOCK_INT_MASK_PER7 = 0x0080,
+        <#lt>    /* Force the compiler to reserve 32-bit memory for enum */
+        <#lt>    RTC_CLOCK_INT_MASK_INVALID = 0xFFFFFFFF
         <#lt>} RTC_CLOCK_INT_MASK;
         
     <#elseif RTC_MODULE_SELECTION = "MODE0">
@@ -113,7 +115,9 @@ extern "C" {
         <#lt>    RTC_TIMER32_INT_MASK_PER4 = 0x0010,
         <#lt>    RTC_TIMER32_INT_MASK_PER5 = 0x0020,
         <#lt>    RTC_TIMER32_INT_MASK_PER6 = 0x0040,
-        <#lt>    RTC_TIMER32_INT_MASK_PER7 = 0x0080
+        <#lt>    RTC_TIMER32_INT_MASK_PER7 = 0x0080,
+        <#lt>    /* Force the compiler to reserve 32-bit memory for enum */
+        <#lt>    RTC_TIMER32_INT_MASK_INVALID = 0xFFFFFFFF
         <#lt>} RTC_TIMER32_INT_MASK;
     <#else>
         <#lt>typedef enum
@@ -128,7 +132,9 @@ extern "C" {
         <#lt>    RTC_TIMER16_INT_MASK_PER4 = 0x0010,
         <#lt>    RTC_TIMER16_INT_MASK_PER5 = 0x0020,
         <#lt>    RTC_TIMER16_INT_MASK_PER6 = 0x0040,
-        <#lt>    RTC_TIMER16_INT_MASK_PER7 = 0x0080
+        <#lt>    RTC_TIMER16_INT_MASK_PER7 = 0x0080,
+        <#lt>    /* Force the compiler to reserve 32-bit memory for enum */
+        <#lt>    RTC_TIMER16_INT_MASK_INVALID = 0xFFFFFFFF
         <#lt>} RTC_TIMER16_INT_MASK;
     </#if>    
     <#else>
@@ -141,8 +147,10 @@ extern "C" {
         <#lt>    RTC_PER4_MASK = 0x0010,
         <#lt>    RTC_PER5_MASK = 0x0020,
         <#lt>    RTC_PER6_MASK = 0x0040,
-        <#lt>    RTC_PER7_MASK = 0x0080
-        <#lt>} RTC_PERIODIC_INT_MASK;        
+        <#lt>    RTC_PER7_MASK = 0x0080,
+        <#lt>    /* Force the compiler to reserve 32-bit memory for enum */
+        <#lt>    RTC_PERIODIC_INT_MASK_INVALID = 0xFFFFFFFF
+        <#lt>} RTC_PERIODIC_INT_MASK;
 </#if>
 
 

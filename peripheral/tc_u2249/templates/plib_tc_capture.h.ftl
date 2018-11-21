@@ -119,7 +119,7 @@ void ${TC_INSTANCE_NAME}_CaptureStart ( void );
 
 void ${TC_INSTANCE_NAME}_CaptureStop ( void );
 
-uint32_t ${TC_INSTANCE_NAME}_CaptureFrequencyGet();
+uint32_t ${TC_INSTANCE_NAME}_CaptureFrequencyGet( void );
 
 <#if TC_CTRLA_MODE = "COUNT8">
 uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel0Get( void );
