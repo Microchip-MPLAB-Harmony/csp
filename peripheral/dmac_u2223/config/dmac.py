@@ -54,7 +54,7 @@ dmacActiveChannels = []
 global dmacChannelIds
 dmacChannelIds = []
 
-dmacDep = [] 
+dmacDep = []
 # Create lists for peripheral triggers and the corresponding ID values
 node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
 modules = node.getChildren()
@@ -93,6 +93,7 @@ triggerSettings = setDMACDefaultSettings()
 ################################################################################
 #### Business Logic ####
 ################################################################################
+
 def dmacTriggerLogic(symbol, event):
 
     global triggerSettings
@@ -208,14 +209,14 @@ def dmacTriggerCalc(symbol, event):
 
 def dmacEvsysControl(symbol, event):
     channel = symbol.getID().split("DMAC_EVSYS_DUMMY")[1]
-    
-    enable = Database.getSymbolValue("core","DMAC_ENABLE_CH_" + channel)
-    input = Database.getSymbolValue("core","DMAC_ENABLE_EVSYS_IN_" + channel)
-    output = Database.getSymbolValue("core","DMAC_ENABLE_EVSYS_OUT_" + channel) 
-    
+
+    enable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + channel)
+    input = Database.getSymbolValue("core", "DMAC_ENABLE_EVSYS_IN_" + channel)
+    output = Database.getSymbolValue("core", "DMAC_ENABLE_EVSYS_OUT_" + channel)
+
     Database.setSymbolValue("evsys", "GENERATOR_DMAC_CH_" + channel + "_ACTIVE", (enable & output), 2)
     Database.setSymbolValue("evsys", "USER_DMAC_CH_" + channel + "_READY", (enable & input), 2)
-    
+
 # This function enables DMA channel and selects respective trigger if DMA mode
 # is selected for any peripheral ID.
 # And once the DMA mode is unselected, then the corresponding DMA channel will
@@ -282,6 +283,11 @@ dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
 dmacMenu.setDescription("DMA (DMAC) Configuration")
 
+#Device name
+dmacSym_DeviceName = coreComponent.createStringSymbol("DMAC_DEVICE_NAME", None)
+dmacSym_DeviceName.setVisible(False)
+dmacSym_DeviceName.setDefaultValue(Variables.get("__PROCESSOR"))
+
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
 dmacEnable.setLabel("Use DMA Service ?")
@@ -331,10 +337,10 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacChannelEnable.setLabel("Use DMAC Channel " + str(channelID))
     dmacChannelIds.append("DMAC_ENABLE_CH_" + str(channelID))
 
-
-    #Channel Run in Standby
-    CH_CHCTRLA_RUNSTDBY_Ctrl = coreComponent.createBooleanSymbol("DMAC_CHCTRLA_RUNSTDBY_CH_" + str(channelID), dmacChannelEnable)
-    CH_CHCTRLA_RUNSTDBY_Ctrl.setLabel("Run Channel in Standby mode")
+    if "SAMD21" not in dmacSym_DeviceName.getValue():
+        #Channel Run in Standby
+        CH_CHCTRLA_RUNSTDBY_Ctrl = coreComponent.createBooleanSymbol("DMAC_CHCTRLA_RUNSTDBY_CH_" + str(channelID), dmacChannelEnable)
+        CH_CHCTRLA_RUNSTDBY_Ctrl.setLabel("Run Channel in Standby mode")
 
     # CHCTRLB - Trigger Source
     dmacSym_CHCTRLB_TRIGSRC = coreComponent.createComboSymbol("DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID), dmacChannelEnable, sorted(per_instance.keys()))
@@ -407,7 +413,7 @@ for channelID in range(0, dmacChCount.getValue()):
     for index in range(len(dmacBeatSizeValues)):
         dmacBeatSizeKeyName = dmacBeatSizeValues[index].getAttribute("name")
 
-        if (dmacBeatSizeKeyName == "WORD"):
+        if dmacBeatSizeKeyName == "WORD":
             dmacBeatSizeDefaultValue = index
 
         dmacBeatSizeKeyDescription = dmacBeatSizeValues[index].getAttribute("caption")
@@ -418,20 +424,19 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacSym_BTCTRL_BEATSIZE.setOutputMode("Key")
     dmacSym_BTCTRL_BEATSIZE.setDisplayMode("Description")
     dmacSym_BTCTRL_BEATSIZE.setDependencies(dmacTriggerLogic, ["DMAC_CHCTRLB_TRIGSRC_CH_"+ str(channelID)])
-    
-    if(channelID < 4):
-        dmaEVSYSMenu = coreComponent.createMenuSymbol("DMAC_EVSYS_MENU"+str(channelID), dmacChannelEnable)
+
+    if channelID < 4:
+        dmaEVSYSMenu = coreComponent.createMenuSymbol("DMAC_EVSYS_MENU" + str(channelID), dmacChannelEnable)
         dmaEVSYSMenu.setLabel("Event System Configuration")
 
         dmaEvsysOut = coreComponent.createBooleanSymbol("DMAC_ENABLE_EVSYS_OUT_" + str(channelID), dmaEVSYSMenu)
         dmaEvsysOut.setLabel("Enable Event Output for Channel " + str(channelID))
-       
+
         dmaEvsysEVOSEL = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_EVSYS_EVOSEL_" + str(channelID), dmaEVSYSMenu)
         dmaEvsysEVOSEL.setLabel("Event Output Selection")
 
         dmaEvsysEVOSELNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_BTCTRL__EVOSEL\"]")
         dmaEvsysEVOSELValues = dmaEvsysEVOSELNode.getChildren()
-
 
         for index in range(len(dmaEvsysEVOSELValues)):
             dmaEvsysEVOSELKeyName = dmaEvsysEVOSELValues[index].getAttribute("name")
@@ -441,16 +446,15 @@ for channelID in range(0, dmacChCount.getValue()):
 
         dmaEvsysEVOSEL.setOutputMode("Value")
         dmaEvsysEVOSEL.setDisplayMode("Description")
-        
+
         dmaEvsysIn = coreComponent.createBooleanSymbol("DMAC_ENABLE_EVSYS_IN_" + str(channelID), dmaEVSYSMenu)
         dmaEvsysIn.setLabel("Enable Event Input for Channel " + str(channelID))
-       
+
         dmaEvsysEVACT = coreComponent.createKeyValueSetSymbol("DMAC_CHCTRLB_EVACT_" + str(channelID), dmaEVSYSMenu)
         dmaEvsysEVACT.setLabel("Event Input Action")
 
         dmaEvsysEVACTNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_CHCTRLB__EVACT\"]")
         dmaEvsysEVACTValues = dmaEvsysEVACTNode.getChildren()
-
 
         for index in range(len(dmaEvsysEVACTValues)):
             dmaEvsysEVACTKeyName = dmaEvsysEVACTValues[index].getAttribute("name")
@@ -460,14 +464,15 @@ for channelID in range(0, dmacChCount.getValue()):
 
         dmaEvsysEVACT.setOutputMode("Value")
         dmaEvsysEVACT.setDisplayMode("Description")
+
         dmacDep.append("DMAC_ENABLE_CH_" + str(channelID))
         dmacDep.append("DMAC_ENABLE_EVSYS_OUT_" + str(channelID))
         dmacDep.append("DMAC_ENABLE_EVSYS_IN_" + str(channelID))
-        
+
         dmacEvsys = coreComponent.createBooleanSymbol("DMAC_EVSYS_DUMMY" + str(channelID) , dmacMenu)
         dmacEvsys.setVisible(False)
         dmacEvsys.setDependencies(dmacEvsysControl, ["DMAC_ENABLE_CH_" + str(channelID), "DMAC_ENABLE_EVSYS_OUT_" + str(channelID), "DMAC_ENABLE_EVSYS_IN_" + str(channelID)])
-        
+
 dmacEnable.setDependencies(dmacGlobalLogic, dmacChannelIds)
 dmacHighestCh.setDependencies(dmacGlobalLogic, dmacChannelIds)
 
@@ -538,19 +543,19 @@ dmacPERIDChannelUpdate.setLabel("Local dmacChannelAllocLogic")
 dmacPERIDChannelUpdate.setVisible(False)
 dmacPERIDChannelUpdate.setDependencies(dmacChannelAllocLogic, peridValueListSymbols)
 
-InterruptVectorUpdate = "DMAC_INTERRUPT_ENABLE_UPDATE"
+dmacInterruptVectorUpdate = "DMAC_INTERRUPT_ENABLE_UPDATE"
 
 # Interrupt Warning status
 dmacSym_IntEnComment = coreComponent.createCommentSymbol("DMAC_INTERRUPT_ENABLE_COMMENT", dmacMenu)
 dmacSym_IntEnComment.setVisible(False)
 dmacSym_IntEnComment.setLabel("Warning!!! DMAC Interrupt is Disabled in Interrupt Manager")
-dmacSym_IntEnComment.setDependencies(updateDMACInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+dmacSym_IntEnComment.setDependencies(updateDMACInterruptWarringStatus, ["core." + dmacInterruptVectorUpdate])
 
 # Clock Warning status
 dmacSym_ClkEnComment = coreComponent.createCommentSymbol("DMAC_CLOCK_ENABLE_COMMENT", dmacMenu)
 dmacSym_ClkEnComment.setLabel("Warning!!! DMAC Peripheral Clock is Disabled in Clock Manager")
 dmacSym_ClkEnComment.setVisible(False)
-dmacSym_ClkEnComment.setDependencies(updateDMACClockWarringStatus, ["core."+dmacInstanceName.getValue()+"_CLOCK_ENABLE"])
+dmacSym_ClkEnComment.setDependencies(updateDMACClockWarringStatus, ["core." + dmacInstanceName.getValue() + "_CLOCK_ENABLE"])
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
@@ -561,7 +566,7 @@ configName = Variables.get("__CONFIGURATION_NAME")
 # Instance Header File
 dmacHeaderFile = coreComponent.createFileSymbol("DMAC_HEADER", None)
 dmacHeaderFile.setSourcePath("../peripheral/dmac_u2223/templates/plib_dmac.h.ftl")
-dmacHeaderFile.setOutputName("plib_"+dmacInstanceName.getValue().lower()+".h")
+dmacHeaderFile.setOutputName("plib_" + dmacInstanceName.getValue().lower() + ".h")
 dmacHeaderFile.setDestPath("/peripheral/dmac/")
 dmacHeaderFile.setProjectPath("config/" + configName + "/peripheral/dmac/")
 dmacHeaderFile.setType("HEADER")
@@ -571,7 +576,7 @@ dmacHeaderFile.setEnabled(False)
 # Source File
 dmacSourceFile = coreComponent.createFileSymbol("DMAC_SOURCE", None)
 dmacSourceFile.setSourcePath("../peripheral/dmac_u2223/templates/plib_dmac.c.ftl")
-dmacSourceFile.setOutputName("plib_"+dmacInstanceName.getValue().lower()+".c")
+dmacSourceFile.setOutputName("plib_" + dmacInstanceName.getValue().lower() + ".c")
 dmacSourceFile.setDestPath("/peripheral/dmac/")
 dmacSourceFile.setProjectPath("config/" + configName + "/peripheral/dmac/")
 dmacSourceFile.setType("SOURCE")
