@@ -161,7 +161,7 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
 
     /* Branch to application's main function */
     main();
-<#if CoreArchitecture != "CORTEX-M0+">
+<#if CoreArchitecture != "CORTEX-M0PLUS">
 #if (defined(__DEBUG) || defined(__DEBUG_D)) && defined(__XC32)
     __builtin_software_breakpoint();
 #endif

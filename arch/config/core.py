@@ -149,7 +149,7 @@ def instantiateComponent(coreComponent):
     exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
 
     arch = ""
-    if "CORTEX" in deviceArch.getValue():
+    if "CORTEX" in coreArch.getValue():
         arch="arm"
     else:
         arch="mips"
