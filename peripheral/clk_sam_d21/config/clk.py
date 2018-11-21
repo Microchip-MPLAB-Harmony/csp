@@ -825,7 +825,7 @@ def codeGen(symbol, event):
             sourceDestmap["GCLK" + str(Database.getSymbolValue("core", "GCLK_ID_0_GENSEL"))].append("DFLL")
 
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_ENABLE")) == True :
-        if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_REF_CLOCK"))) == 3):
+        if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_REF_CLOCK"))) == 2):
             sourceDestmap["GCLK" + str(Database.getSymbolValue("core", "GCLK_ID_1_GENSEL"))].append("FDPLL")
 
     for i in range(0, 9):
