@@ -149,6 +149,16 @@ def instantiateComponent(rttComponent):
     rttinterruptControl.setDependencies(interruptControl, ["rttALMIEN", "rttINCIEN"])
     rttinterruptControl.setVisible(False)
 
+    if ((rttAlarm.getValue() == True) or (rttPeriodicInterrupt.getValue() == True)):
+        Database.clearSymbolValue("core", interruptVector)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+
+        Database.clearSymbolValue("core", interruptHandler)
+        Database.setSymbolValue("core", interruptHandler, rttInstanceName.getValue() + "_InterruptHandler", 2)
+
+        Database.clearSymbolValue("core", interruptHandlerLock)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     rttCommonHeader1File = rttComponent.createFileSymbol("RTT_FILE", None)
