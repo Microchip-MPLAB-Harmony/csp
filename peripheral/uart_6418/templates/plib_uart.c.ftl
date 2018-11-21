@@ -359,20 +359,18 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
 }
 
 <#if USART_INTERRUPT_MODE == true>
-bool ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context )
+void ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     ${UART_INSTANCE_NAME?lower_case}Obj.txCallback = callback;
-    ${UART_INSTANCE_NAME?lower_case}Obj.txContext = context;
 
-    return true;
+    ${UART_INSTANCE_NAME?lower_case}Obj.txContext = context;
 }
 
-bool ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
+void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback = callback;
-    ${UART_INSTANCE_NAME?lower_case}Obj.rxContext = context;
 
-    return true;
+    ${UART_INSTANCE_NAME?lower_case}Obj.rxContext = context;
 }
 
 bool ${UART_INSTANCE_NAME}_WriteIsBusy( void )
