@@ -408,20 +408,18 @@ bool ${USART_INSTANCE_NAME}_ReceiverIsReady( void )
 </#if>
 
 <#if USART_INTERRUPT_MODE == true>
-bool ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context )
+void ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context )
 {
     ${USART_INSTANCE_NAME?lower_case}Obj.txCallback = callback;
-    ${USART_INSTANCE_NAME?lower_case}Obj.txContext = context;
 
-    return true;
+    ${USART_INSTANCE_NAME?lower_case}Obj.txContext = context;
 }
 
-bool ${USART_INSTANCE_NAME}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context )
+void ${USART_INSTANCE_NAME}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context )
 {
     ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback = callback;
-    ${USART_INSTANCE_NAME?lower_case}Obj.rxContext = context;
 
-    return true;
+    ${USART_INSTANCE_NAME?lower_case}Obj.rxContext = context;
 }
 
 bool ${USART_INSTANCE_NAME}_WriteIsBusy( void )
