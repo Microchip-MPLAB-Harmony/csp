@@ -127,6 +127,32 @@ def setFLEXCOMCodeGenerationProperty(symbol, event):
         component.setCapabilityEnabled(spiCapabilityId, True)
         component.setCapabilityEnabled(i2cCapabilityId, True)
 
+def updateFLEXCOMTxDataRegister(symbol, event):
+
+    symObj = event["symbol"]
+
+    if symObj.getSelectedKey() == "USART":
+        symbol.setValue("&(" + flexcomInstanceName.getValue() + "_REGS->FLEX_US_THR)", 2)
+    elif symObj.getSelectedKey() == "SPI":
+        symbol.setValue("&(" + flexcomInstanceName.getValue() + "_REGS->FLEX_SPI_TDR)", 2)
+    elif symObj.getSelectedKey() == "TWI":
+        symbol.setValue("&(" + flexcomInstanceName.getValue() + "_REGS->FLEX_TWI_THR)", 2)
+    else:
+        symbol.setValue("", 2)
+
+def updateFLEXCOMRxDataRegister(symbol, event):
+
+    symObj = event["symbol"]
+
+    if symObj.getSelectedKey() == "USART":
+        symbol.setValue("&(" + flexcomInstanceName.getValue() + "_REGS->FLEX_US_RHR)", 2)
+    elif symObj.getSelectedKey() == "SPI":
+        symbol.setValue("&(" + flexcomInstanceName.getValue() + "_REGS->FLEX_SPI_RDR)", 2)
+    elif symObj.getSelectedKey() == "TWI":
+        symbol.setValue("&(" + flexcomInstanceName.getValue() + "_REGS->FLEX_TWI_RHR)", 2)
+    else:
+        symbol.setValue("", 2)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -221,6 +247,19 @@ def instantiateComponent(flexcomComponent):
     flexcomSym_CodeGeneration.setDependencies(setFLEXCOMCodeGenerationProperty, ["FLEXCOM_MODE"])
     flexcomModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]")
     flexcomModuleID = flexcomModuleNode.getAttribute("id")
+
+    ###################### Driver Symbols for DMA Transfer ######################
+    #FLEXCOM Transmit data register
+    flexcomSym_TxRegister = flexcomComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", flexcomSym_OperatingMode)
+    flexcomSym_TxRegister.setDefaultValue("")
+    flexcomSym_TxRegister.setVisible(False)
+    flexcomSym_TxRegister.setDependencies(updateFLEXCOMTxDataRegister, ["FLEXCOM_MODE"])
+
+    #FLEXCOM Receive data register
+    flexcomSym_RxRegister = flexcomComponent.createStringSymbol("RECEIVE_DATA_REGISTER", flexcomSym_OperatingMode)
+    flexcomSym_RxRegister.setDefaultValue("")
+    flexcomSym_RxRegister.setVisible(False)
+    flexcomSym_RxRegister.setDependencies(updateFLEXCOMRxDataRegister, ["FLEXCOM_MODE"])
 
     ###################### USART, SPI and TWI Sub-modules ######################
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/flexcom_" + flexcomModuleID + "/config/flexcom_usart.py")

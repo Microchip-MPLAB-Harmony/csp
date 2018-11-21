@@ -98,9 +98,9 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteCountGet( void );
 
 size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet( void );
 
-bool ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
+void ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
 
-bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
+void ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
 
 // *****************************************************************************
 // *****************************************************************************

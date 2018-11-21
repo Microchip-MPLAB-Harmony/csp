@@ -98,7 +98,10 @@ typedef enum
     FLEXCOM_USART_ERROR_NONE = 0,
     FLEXCOM_USART_ERROR_OVERRUN = FLEX_US_CSR_OVRE_Msk,
     FLEXCOM_USART_ERROR_PARITY = FLEX_US_CSR_PARE_Msk,
-    FLEXCOM_USART_ERROR_FRAMING = FLEX_US_CSR_FRAME_Msk
+    FLEXCOM_USART_ERROR_FRAMING = FLEX_US_CSR_FRAME_Msk,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    FLEXCOM_USART_ERROR_INVALID = 0xFFFFFFFF
 
 } FLEXCOM_USART_ERROR;
 
@@ -861,7 +864,7 @@ bool FLEXCOMx_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *setup, uint32_t src
 
 // *****************************************************************************
 /* Function:
-    bool FLEXCOMx_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
+    void FLEXCOMx_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -888,9 +891,7 @@ bool FLEXCOMx_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *setup, uint32_t src
     identified by the callback parameter.
 
    Returns:
-    Callback registration status.
-    True - Callback registration was successful
-    False - Callback registration failed.
+    None.
 
   Example:
     <code>
@@ -920,12 +921,12 @@ bool FLEXCOMx_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *setup, uint32_t src
     See the FLEXCOM_USART_CALLBACK type definition for additional information.
 */
 
-bool FLEXCOMx_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
+void FLEXCOMx_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
 
 
 // *****************************************************************************
 /* Function:
-    bool FLEXCOMx_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
+    void FLEXCOMx_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context )
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -952,9 +953,7 @@ bool FLEXCOMx_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uint
     identified by the callback parameter.
 
    Returns:
-    Callback registration status.
-    True - Callback registration was successful
-    False - Callback registration failed.
+    None.
 
   Example:
     <code>
@@ -984,7 +983,7 @@ bool FLEXCOMx_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uint
     See the FLEXCOM_USART_CALLBACK type definition for additional information.
 */
 
-bool FLEXCOMx_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
+void FLEXCOMx_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
 
 
 // DOM-IGNORE-BEGIN
