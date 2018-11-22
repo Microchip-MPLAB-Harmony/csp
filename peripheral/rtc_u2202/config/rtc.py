@@ -283,13 +283,6 @@ def instantiateComponent(rtcComponent):
     Database.clearSymbolValue("core", rtcInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", rtcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
-    #Frequency Correction
-    sysTimeTrigger_Sym = rtcComponent.createBooleanSymbol("SYS_TIME", None)
-    sysTimeTrigger_Sym.setVisible(False)
-    sysTimeTrigger_Sym.setDependencies(sysTime_modeSelection, ["RTC_MODULE_SELECTION"])
-    
-
-    
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
@@ -337,7 +330,9 @@ def instantiateComponent(rtcComponent):
     rtcModeSelection_Sym.setOutputMode("Key")
     rtcModeSelection_Sym.setDisplayMode("Description")
 
-
+    sysTimeTrigger_Sym = rtcComponent.createBooleanSymbol("SYS_TIME", None)
+    sysTimeTrigger_Sym.setVisible(False)
+    sysTimeTrigger_Sym.setDependencies(sysTime_modeSelection, ["RTC_MODULE_SELECTION"])
 #################################### MODE0 #####################################
 
     rtcSymMode0Menu = rtcComponent.createMenuSymbol("RTC_MODE0_MENU", rtcModeSelection_Sym)
