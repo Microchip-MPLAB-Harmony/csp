@@ -217,8 +217,9 @@ def instantiateComponent(adcComponent):
     #Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
     adcSym_SAMPCTRL_SAMPLEN_TIME.setLabel("**** Conversion Time is " + str(conv_time) + " us ****")
-    adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core.CPU_CLOCK_FREQUENCY", \
-        "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL"])
+    # Dependency registration is done after all dependencies are defined.
+    #adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core.CPU_CLOCK_FREQUENCY", \
+    #    "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLB_RESSEL"])
 
     #reference selection
     adcSym_INPUTCTRL_GAIN = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_GAIN", None)
@@ -406,6 +407,9 @@ def instantiateComponent(adcComponent):
     #event out mode
     adcSym_EVCTRL_RSERDYEO = adcComponent.createBooleanSymbol("ADC_EVCTRL_RESRDYEO", adcResultMenu)
     adcSym_EVCTRL_RSERDYEO.setLabel("Enable Result Ready Event Out")
+
+    adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core.CPU_CLOCK_FREQUENCY", \
+        "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLB_RESSEL"])
 
     adcWindowMenu = adcComponent.createMenuSymbol("ADC_WINDOW_CONFIG_MENU", None)
     adcWindowMenu.setLabel("Window Mode Configuration")

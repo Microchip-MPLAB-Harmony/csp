@@ -255,8 +255,9 @@ def instantiateComponent(adcComponent):
     #Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
     adcSym_SAMPCTRL_SAMPLEN_TIME.setLabel("**** Conversion Time is " + str(conv_time) + " us ****")
-    adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core.CPU_CLOCK_FREQUENCY", \
-        "adc"+str(component)+".ADC_CTRLB_PRESCALER", "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL", "ADC_CTRLA_SLAVEEN"])
+    # Dependency registration is done after all dependencies are defined.
+    # adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core.CPU_CLOCK_FREQUENCY", \
+        # "adc"+str(component)+".ADC_CTRLB_PRESCALER", "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL", "ADC_CTRLA_SLAVEEN"])
 
     #reference selection
     adcSym_REFCTRL_REFSEL = adcComponent.createKeyValueSetSymbol("ADC_REFCTRL_REFSEL", None)
@@ -472,6 +473,9 @@ def instantiateComponent(adcComponent):
     adcSym_HW_INP_EVENT.setLabel("Enable Window Monitor Event Out")
     adcSym_HW_INP_EVENT.setVisible(False)
     adcSym_HW_INP_EVENT.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
+
+    adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core.CPU_CLOCK_FREQUENCY", \
+        "adc"+str(component)+".ADC_CTRLB_PRESCALER", "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL", "ADC_CTRLA_SLAVEEN"])
 
     adcSleepMenu = adcComponent.createMenuSymbol("ADC_SLEEP_MENU", None)
     adcSleepMenu.setLabel("Sleep Mode Configuration")
