@@ -304,33 +304,6 @@ def instantiateComponent(afecComponent):
     afecSym_AvailableChannels = afecComponent.createComboSymbol("AFEC_AVAILABLE_CHANNELS", None, channel)
     afecSym_AvailableChannels.setVisible(False)
 
-    # Clock dynamic settings
-    afecSym_ClockControl = afecComponent.createBooleanSymbol(afecInstanceName.getValue()+"_CLOCK_ENABLE", None)
-    afecSym_ClockControl.setDependencies(afecClockControl, ["AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
-    "AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
-    afecSym_ClockControl.setVisible(False)
-
-    # NVIC Dynamic settings
-    afecSym_interruptControl = afecComponent.createBooleanSymbol("AFEC_NVIC_ENABLE", None)
-    afecSym_interruptControl.setDependencies(afecinterruptControl, ["AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
-    "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
-    afecSym_interruptControl.setVisible(False)
-
-    # Dependency Status
-    afecSym_ClkEnComment = afecComponent.createCommentSymbol("AFEC_CLK_ENABLE_COMMENT", None)
-    afecSym_ClkEnComment.setVisible(False)
-    afecSym_ClkEnComment.setLabel("Warning!!! "+afecInstanceName.getValue()+" Peripheral Clock is Disabled in Clock Manager")
-    afecSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core."+afecInstanceName.getValue()+"_CLOCK_ENABLE", "AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
-    "AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
-
-    interruptVectorUpdate = afecInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
-
-    afecSym_IntEnComment = afecComponent.createCommentSymbol("AFEC_NVIC_ENABLE_COMMENT", None)
-    afecSym_IntEnComment.setVisible(False)
-    afecSym_IntEnComment.setLabel("Warning!!! "+afecInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
-    afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptVectorUpdate, "AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
-    "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
-
     afecMenu = afecComponent.createMenuSymbol("AFEC_MENU", None)
     afecMenu.setLabel("ADC Configuration")
 
@@ -549,7 +522,32 @@ def instantiateComponent(afecComponent):
         afecSym_CH_IER_EOC[channelID].setDependencies(afecCHInterruptVisible, ["AFEC_"+str(channelID)+"_CHER"])
 
     #--------------------------------------------------------------------------------------
+    # Clock dynamic settings
+    afecSym_ClockControl = afecComponent.createBooleanSymbol(afecInstanceName.getValue()+"_CLOCK_ENABLE", None)
+    afecSym_ClockControl.setDependencies(afecClockControl, ["AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
+        "AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
+    afecSym_ClockControl.setVisible(False)
 
+    # NVIC Dynamic settings
+    afecSym_interruptControl = afecComponent.createBooleanSymbol("AFEC_NVIC_ENABLE", None)
+    afecSym_interruptControl.setDependencies(afecinterruptControl, ["AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
+        "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
+    afecSym_interruptControl.setVisible(False)
+
+    # Dependency Status
+    afecSym_ClkEnComment = afecComponent.createCommentSymbol("AFEC_CLK_ENABLE_COMMENT", None)
+    afecSym_ClkEnComment.setVisible(False)
+    afecSym_ClkEnComment.setLabel("Warning!!! "+afecInstanceName.getValue()+" Peripheral Clock is Disabled in Clock Manager")
+    afecSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core."+afecInstanceName.getValue()+"_CLOCK_ENABLE", "AFEC_0_CHER", "AFEC_1_CHER", "AFEC_2_CHER", "AFEC_3_CHER", "AFEC_4_CHER", \
+        "AFEC_5_CHER", "AFEC_6_CHER", "AFEC_7_CHER", "AFEC_8_CHER", "AFEC_9_CHER", "AFEC_10_CHER", "AFEC_11_CHER"])
+    interruptVectorUpdate = afecInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+
+    afecSym_IntEnComment = afecComponent.createCommentSymbol("AFEC_NVIC_ENABLE_COMMENT", None)
+    afecSym_IntEnComment.setVisible(False)
+    afecSym_IntEnComment.setLabel("Warning!!! "+afecInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
+    afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptVectorUpdate, "AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
+        "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
+    
     configName = Variables.get("__CONFIGURATION_NAME")
 
 ###################################################################################################
