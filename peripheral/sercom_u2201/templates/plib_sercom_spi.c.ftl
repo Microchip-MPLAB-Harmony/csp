@@ -535,6 +535,16 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
 }
 </#if>
 
+bool ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pTransmitData, size_t txSize)
+{
+    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0);
+}
+
+bool ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize)
+{
+    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize);
+}
+
 <#if SPI_INTERRUPT_MODE = true>
 // *****************************************************************************
 /* Function:
