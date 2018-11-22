@@ -237,7 +237,7 @@ def instantiateComponent(tcComponent):
     tcInstanceMasterValue = int(tcInstanceMasterNode.getAttribute("value"))
     isMasterSlaveModeEnable = False
     masterComponentSymbolId = ""
-    if (tcInstanceMasterValue == 0):
+    if (tcInstanceMasterValue == 0): #slave
         activeComponentList = Database.getActiveComponentIDs()
         temp = int(tcInstanceName.getValue().split("TC")[1])
         masterComponentID = "tc" + str(temp - 1)
@@ -245,7 +245,7 @@ def instantiateComponent(tcComponent):
 
         if masterComponentID in activeComponentList:
             value = Database.getSymbolValue(masterComponentID, "TC_CTRLA_MODE")
-            if value == 0:
+            if value == 2: #count32
                 isMasterSlaveModeEnable = True
 
     global tySym_Slave_Mode
@@ -253,6 +253,7 @@ def instantiateComponent(tcComponent):
     tySym_Slave_Mode.setLabel("Slave Mode")
     tySym_Slave_Mode.setDefaultValue(isMasterSlaveModeEnable)
     tySym_Slave_Mode.setVisible(False)
+    tySym_Slave_Mode.setReadOnly(True)
     if (tcInstanceMasterValue == 0):
         tySym_Slave_Mode.setDependencies(tcSlaveModeSet, [masterComponentSymbolId])
 
