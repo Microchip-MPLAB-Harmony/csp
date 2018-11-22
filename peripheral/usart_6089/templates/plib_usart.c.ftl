@@ -67,7 +67,7 @@ void static ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
             ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
-            ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
+            ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_USART_LIN_FRAME_Msk | US_IDR_USART_LIN_PARE_Msk | US_IDR_OVRE_Msk);
 
             if(${USART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL)
             {
@@ -117,14 +117,14 @@ void static ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
 void ${USART_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
-    uint32_t errorStatus = (${USART_INSTANCE_NAME}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
+    uint32_t errorStatus = (${USART_INSTANCE_NAME}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_USART_LIN_FRAME_Msk | US_CSR_USART_LIN_PARE_Msk));
 
     if(errorStatus != 0)
     {
         /* Client must call USARTx_ErrorGet() function to clear the errors */
 
         /* Disable Read, Overrun, Parity and Framing error interrupts */
-        ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
+        ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_USART_LIN_FRAME_Msk | US_IDR_USART_LIN_PARE_Msk | US_IDR_OVRE_Msk);
 
         ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
@@ -181,9 +181,9 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
 
     /* Configure ${USART_INSTANCE_NAME} mode */
     <#if USART_MR_MODE9 == true>
-    ${USART_INSTANCE_NAME}_REGS->US_MR = (US_MR_USCLKS_${USART_CLK_SRC} | US_MR_MODE9_Msk | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
+    ${USART_INSTANCE_NAME}_REGS->US_MR = (US_MR_USCLKS_${USART_CLK_SRC} | US_MR_USART_MODE9_Msk | US_MR_USART_PAR_${USART_MR_PAR} | US_MR_USART_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_OVER?string} << US_MR_USART_OVER_Pos));
     <#else>
-    ${USART_INSTANCE_NAME}_REGS->US_MR = (US_MR_USCLKS_${USART_CLK_SRC} | US_MR_CHRL_${USART_MR_CHRL} | US_MR_PAR_${USART_MR_PAR} | US_MR_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_OVER?string} << US_MR_OVER_Pos));
+    ${USART_INSTANCE_NAME}_REGS->US_MR = (US_MR_USCLKS_${USART_CLK_SRC} | US_MR_CHRL_${USART_MR_CHRL} | US_MR_USART_PAR_${USART_MR_PAR} | US_MR_USART_NBSTOP_${USART_MR_NBSTOP} | (${USART_MR_OVER?string} << US_MR_USART_OVER_Pos));
     </#if>
 
     /* Configure ${USART_INSTANCE_NAME} Baud Rate */
@@ -211,7 +211,7 @@ USART_ERROR ${USART_INSTANCE_NAME}_ErrorGet( void )
     USART_ERROR errors = USART_ERROR_NONE;
     uint32_t status = ${USART_INSTANCE_NAME}_REGS->US_CSR;
 
-    errors = status & (US_CSR_OVRE_Msk | US_CSR_PARE_Msk | US_CSR_FRAME_Msk);
+    errors = status & (US_CSR_OVRE_Msk | US_CSR_USART_LIN_PARE_Msk | US_CSR_USART_LIN_FRAME_Msk);
 
     if(errors != USART_ERROR_NONE)
     {
@@ -254,12 +254,12 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
         else
         {
             brgVal = (srcClkFreq / (8 * baud));
-            overSampVal = US_MR_OVER(1);
+            overSampVal = US_MR_USART_OVER(1);
         }
 
         /* Configure ${USART_INSTANCE_NAME} mode */
         usartMode = ${USART_INSTANCE_NAME}_REGS->US_MR;
-        usartMode &= ~(US_MR_CHRL_Msk | US_MR_MODE9_Msk | US_MR_PAR_Msk | US_MR_NBSTOP_Msk | US_MR_OVER_Msk);
+        usartMode &= ~(US_MR_CHRL_Msk | US_MR_USART_MODE9_Msk | US_MR_USART_PAR_Msk | US_MR_USART_NBSTOP_Msk | US_MR_USART_OVER_Msk);
         ${USART_INSTANCE_NAME}_REGS->US_MR = usartMode | (setup->dataWidth | setup->parity | setup->stopBits | overSampVal);
 
         /* Configure ${USART_INSTANCE_NAME} Baud Rate */
@@ -289,7 +289,7 @@ bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
         while( size > processedSize )
         {
             /* Error status */
-            errorStatus = (${USART_INSTANCE_NAME}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
+            errorStatus = (${USART_INSTANCE_NAME}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_USART_LIN_FRAME_Msk | US_CSR_USART_LIN_PARE_Msk));
 
             if(errorStatus != 0)
             {
@@ -319,7 +319,7 @@ bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
             status = true;
 
             /* Enable Read, Overrun, Parity and Framing error interrupts */
-            ${USART_INSTANCE_NAME}_REGS->US_IER = (US_IER_RXRDY_Msk | US_IER_FRAME_Msk | US_IER_PARE_Msk | US_IER_OVRE_Msk);
+            ${USART_INSTANCE_NAME}_REGS->US_IER = (US_IER_RXRDY_Msk | US_IER_USART_LIN_FRAME_Msk | US_IER_USART_LIN_PARE_Msk | US_IER_OVRE_Msk);
         }
 </#if>
     }
