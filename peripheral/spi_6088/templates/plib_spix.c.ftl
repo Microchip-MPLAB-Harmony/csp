@@ -265,6 +265,16 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 }
 </#if>
 
+bool ${SPI_INSTANCE_NAME}_Write(void* pTransmitData, size_t txSize)
+{
+    return(${SPI_INSTANCE_NAME}_WriteRead(pTransmitData, txSize, NULL, 0));
+}
+
+bool ${SPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize)
+{
+    return(${SPI_INSTANCE_NAME}_WriteRead(NULL, 0, pReceiveData, rxSize));
+}
+
 bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
