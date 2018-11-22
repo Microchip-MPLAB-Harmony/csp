@@ -260,20 +260,22 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
     uint8_t     rxBuffer[10];
     size_t      txSize = 4;
     size_t      rxSize = 10;
-    bool        reqAccepted;
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(${SERCOM_INSTANCE_NAME}_SPI_ErrorGet() == SPI_ERROR_NONE)
-        {
-            //Transfer was completed without error, do something else now.
-        }
+       //Transfer was completed without error, do something else now.
     }
 
     ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
-    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
-    reqAccepted = ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
-
+    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPITransferHandler, (uintptr_t)NULL);
+    if(${SERCOM_INSTANCE_NAME}_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize))
+    {
+        // request got accepted
+    }
+    else
+    {
+        // request didn't get accepted, try again later with correct arguments
+    }
     // The following code snippet shows non-interrupt or blocking mode
     // operation.
 
@@ -281,7 +283,6 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
     uint8_t rxBuffer[10];
     size_t txSize = 4;
     size_t rxSize = 10;
-    bool reqAccepted;
 
     ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
 
@@ -355,19 +356,22 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
     <code>
     uint8_t txBuffer[4];
     size_t txSize = 4;
-    bool reqAccepted;
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(${SERCOM_INSTANCE_NAME}_SPI_ErrorGet() == SPI_ERROR_NONE)
-        {
-            Transfer was completed without error, do something else now.
-        }
+        //Transfer was completed without error, do something else now.
     }
 
     ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
-    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
-    reqAccepted = ${SERCOM_INSTANCE_NAME}_SPI_Write(&txBuffer, txSize);
+    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPITransferHandler, (uintptr_t)NULL);
+    if(${SERCOM_INSTANCE_NAME}_SPI_Write(&txBuffer, txSize))
+    {
+        // request got accepted
+    }
+    else
+    {
+        // request didn't get accepted, try again later with correct arguments
+    }
 
     </code>
 
@@ -376,10 +380,7 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
 
 */
 
-static inline bool ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pTransmitData, size_t txSize)
-{
-    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0);
-}
+bool ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pTransmitData, size_t txSize);
 
 // *****************************************************************************
 /* Function:
@@ -440,30 +441,29 @@ static inline bool ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pTransmitData, size_t
     <code>
     uint8_t     rxBuffer[10];
     size_t      rxSize = 10;
-    bool        reqAccepted;
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(${SERCOM_INSTANCE_NAME}_SPI_ErrorGet() == SPI_ERROR_NONE)
-        {
-            Transfer was completed without error, do something else now.
-        }
+        //Transfer was completed without error, do something else now.
     }
 
     ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
-    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
-    reqAccepted = ${SERCOM_INSTANCE_NAME}_SPI_Read(&rxBuffer, rxSize);
-
+    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPITransferHandler, (uintptr_t)NULL);
+    if(${SERCOM_INSTANCE_NAME}_SPI_Read(&rxBuffer, rxSize))
+    {
+        // request got accepted
+    }
+    else
+    {
+        // request didn't get accepted, try again later with correct arguments
+    }
     </code>
 
   Remarks:
     None.
 */
 
-static inline bool ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize)
-{
-    return ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize);
-}
+bool ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize);
 
 <#if SPI_INTERRUPT_MODE = true>
 // *****************************************************************************
@@ -503,22 +503,25 @@ static inline bool ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t r
     <code>
     uint8_t txBuffer[10];
     uint8_t rxBuffer[10];
-    size_t size = 10;
-    size_t reqAccepted;
+    size_t txSize = 10;
+    size_t rxSize = 10;
 
     ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
 
-    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPICallBack, NULL);
+    ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(&APP_SPICallBack, (uintptr_t)NULL);
 
-    reqAccepted = ${SERCOM_INSTANCE_NAME}_SPI_WriteRead(
-                  &txBuffer, &rxBuffer, size);
+    if(${SERCOM_INSTANCE_NAME}_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize ))
+    {
+        // request got accepted
+    }
+    else
+    {
+        // request didn't get accepted, try again later with correct arguments
+    }
 
     void APP_SPICallBack(uintptr_t contextHandle)
         {
-            if( SPI_ERROR_NONE == ${SERCOM_INSTANCE_NAME}_SPI_ErrorGet())
-            {
-                //Exchange was completed without error, do something else.
-            }
+            //Exchange was completed without error, do something else.
         }
     </code>
 
@@ -567,7 +570,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, 
         uint8_t dataBuffer[20];
 
         ${SERCOM_INSTANCE_NAME}_SPI_Initialize();
-        ${SERCOM_INSTANCE_NAME}_SPI_Write(databuffer, 20);
+        ${SERCOM_INSTANCE_NAME}_SPI_Write(dataBuffer, 20);
 
         while (${SERCOM_INSTANCE_NAME}_SPI_IsBusy() == true)
         {
