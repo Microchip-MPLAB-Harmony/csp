@@ -320,42 +320,6 @@ def instantiateComponent(pwmComponent):
     pwmInstanceName.setDefaultValue(pwmComponent.getID().upper())
     Log.writeInfoMessage("Running " + pwmInstanceName.getValue())
 
-
-    #--------------------- Dependency ----------------------------------------
-    global pwminterruptVector
-    global pwminterruptHandler
-    global pwminterruptHandlerLock
-    global pwminterruptVectorUpdate
-
-    pwminterruptVector = pwmInstanceName.getValue() + "_INTERRUPT_ENABLE"
-    pwminterruptHandler = pwmInstanceName.getValue() + "_INTERRUPT_HANDLER"
-    pwminterruptHandlerLock = pwmInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
-    pwminterruptVectorUpdate = pwmInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
-
-    # NVIC Dynamic settings
-    pwmSym_interruptControl = pwmComponent.createBooleanSymbol("PWM_NVIC_ENABLE", None)
-    pwmSym_interruptControl.setDependencies(pwminterruptControl, ["PWM_CH_0_IER1_CHID", "PWM_CH_1_IER1_CHID", "PWM_CH_2_IER1_CHID", "PWM_CH_3_IER1_CHID"])
-    pwmSym_interruptControl.setVisible(False)
-
-    # Clock Dynamic settings
-    pwmSym_ClockControl = pwmComponent.createBooleanSymbol("PWM_CLOCK_ENABLE", None)
-    pwmSym_ClockControl.setDependencies(pwmClockControl, ["PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
-    pwmSym_ClockControl.setVisible(False)
-
-    # Dependency Status
-    pwmSymClkEnComment = pwmComponent.createCommentSymbol("PWM_CLK_ENABLE_COMMENT", None)
-    pwmSymClkEnComment.setVisible(False)
-    pwmSymClkEnComment.setLabel("Warning!!! PWM Peripheral Clock is Disabled in Clock Manager")
-
-    pwmSymClkEnComment.setDependencies(pwmClkDependencyStatus, ["core."+pwmInstanceName.getValue()+"_CLOCK_ENABLE", "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
-
-
-    pwmSymIntEnComment = pwmComponent.createCommentSymbol("PWM_NVIC_ENABLE_COMMENT", None)
-    pwmSymIntEnComment.setVisible(False)
-    pwmSymIntEnComment.setLabel("Warning!!! PWM Interrupt is Disabled in Interrupt Manager")
-    pwmSymIntEnComment.setDependencies(pwmNVICDependencyStatus, ["core." + pwminterruptVectorUpdate, "PWM_CH_0_IER1_CHID", "PWM_CH_1_IER1_CHID", "PWM_CH_2_IER1_CHID", "PWM_CH_3_IER1_CHID", \
-        "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
-
     #-----------------------------------------------------------------------------------------------------------
     #------------------------- ATDF Read -------------------------------------
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
@@ -805,6 +769,43 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_CMPM_CUPR[compareID].setDependencies(pwmCompMaxValue, ["PWM_COMP_"+str(compareID)+"_CMPM_CPR"])
 
     #-----------------------------------------------------------------------------------------------------------
+    #--------------------- Dependency ----------------------------------------
+    global pwminterruptVector
+    global pwminterruptHandler
+    global pwminterruptHandlerLock
+    global pwminterruptVectorUpdate
+
+    pwminterruptVector = pwmInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    pwminterruptHandler = pwmInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    pwminterruptHandlerLock = pwmInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+    pwminterruptVectorUpdate = pwmInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+
+    # NVIC Dynamic settings
+    pwmSym_interruptControl = pwmComponent.createBooleanSymbol("PWM_NVIC_ENABLE", None)
+    pwmSym_interruptControl.setDependencies(pwminterruptControl, ["PWM_CH_0_IER1_CHID", "PWM_CH_1_IER1_CHID", "PWM_CH_2_IER1_CHID", "PWM_CH_3_IER1_CHID"])
+    pwmSym_interruptControl.setVisible(False)
+
+    # Clock Dynamic settings
+    pwmSym_ClockControl = pwmComponent.createBooleanSymbol("PWM_CLOCK_ENABLE", None)
+    pwmSym_ClockControl.setDependencies(pwmClockControl, ["PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
+    pwmSym_ClockControl.setVisible(False)
+
+    # Dependency Status
+    pwmSymClkEnComment = pwmComponent.createCommentSymbol("PWM_CLK_ENABLE_COMMENT", None)
+    pwmSymClkEnComment.setVisible(False)
+    pwmSymClkEnComment.setLabel("Warning!!! PWM Peripheral Clock is Disabled in Clock Manager")
+
+    pwmSymClkEnComment.setDependencies(pwmClkDependencyStatus, ["core."+pwmInstanceName.getValue()+"_CLOCK_ENABLE", "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
+
+
+    pwmSymIntEnComment = pwmComponent.createCommentSymbol("PWM_NVIC_ENABLE_COMMENT", None)
+    pwmSymIntEnComment.setVisible(False)
+    pwmSymIntEnComment.setLabel("Warning!!! PWM Interrupt is Disabled in Interrupt Manager")
+    pwmSymIntEnComment.setDependencies(pwmNVICDependencyStatus, ["core." + pwminterruptVectorUpdate, "PWM_CH_0_IER1_CHID", "PWM_CH_1_IER1_CHID", "PWM_CH_2_IER1_CHID", "PWM_CH_3_IER1_CHID", \
+        "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
+
+
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
 ###################################################################################################
