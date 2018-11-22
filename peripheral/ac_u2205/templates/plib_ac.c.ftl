@@ -199,8 +199,12 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
                                   | AC_COMPCTRL_OUT_${.vars[AC_COMPCTRL_OUTPUT_TYPE]}
                                   | AC_COMPCTRL_SPEED(${.vars[AC_COMPCTRL_SPEED]})
-                                  ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
-                                  ${.vars[AC_COMPCTRL_HYSTEN]?then(' | AC_COMPCTRL_HYSTEN_Msk','')};</@compress>
+                                  ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')};</@compress>
+    <#if AC_COMPCTRL_SINGLE_MODE?has_content>
+        <#if (.vars[AC_COMPCTRL_SINGLE_MODE] == false)>
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_HYST_Msk;
+        </#if>
+    </#if>
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
                 <#if .vars[AC_SCALERn]?has_content >
     ${AC_INSTANCE_NAME}_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]};
@@ -236,6 +240,11 @@ void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
 {
     /* Start Comparison */
     ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= (1 << channel_id);
+}
+
+void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar)
+{
+    ${AC_INSTANCE_NAME}_REGS->AC_SCALER[channel_id] = vdd_scalar;
 }
 
 void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
