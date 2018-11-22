@@ -3,7 +3,7 @@
 
   Company:
     Microchip Technology Inc.
-
+  
   File Name:
     main.c
 
@@ -12,7 +12,7 @@
 
   Description:
     This file contains the "main" function for a project.  The
-    "main" function calls the "SYS_Initialize" function to initialize the state
+    "main" function calls the "SYS_Initialize" function to initialize the state 
     machines of all modules in the system
  *******************************************************************************/
 
@@ -58,7 +58,7 @@ void RTC_Callback(RTC_CLOCK_INT_MASK int_cause , uintptr_t  context)
 {
 	if (int_cause & RTC_CLOCK_INT_MASK_ALARM)
 	{
-        alarm_triggered = true;
+        alarm_triggered = true;        
         LED_Toggle();
 	}
 }
@@ -74,9 +74,9 @@ int main ( void )
     SYS_Initialize ( NULL );
     struct tm sys_time;
     struct tm alarm_time;
-
+   
     alarm_triggered = false;
-
+    
     //15-01-2018 12:00:00 Monday
     sys_time.tm_hour = 12;      /* hour [0,23] */
     sys_time.tm_sec = 00;       /* seconds [0,61] */
@@ -87,7 +87,7 @@ int main ( void )
     sys_time.tm_wday = 1;       /* day of week [0,6] (Sunday = 0) */
                                 /* tm_yday - day of year [0,365] */
                                 /* tm_isdst - daylight savings flag */
-
+    
     //15-01-2018 12:00:20 Monday
     alarm_time.tm_hour = 12;
     alarm_time.tm_sec = 20;
@@ -102,20 +102,20 @@ int main ( void )
     printf("\n\r---------------------------------------------------------\n\r");
 
     RTC_RTCCCallbackRegister(RTC_Callback, (uintptr_t) NULL);
-
-    RTC_RTCCTimeSet(&sys_time);
+    
+    RTC_RTCCTimeSet(&sys_time);        
     RTC_RTCCAlarmSet(&alarm_time, RTC_ALARM_MASK_HHMMSS);
 
     printf("\n\rThe Alarm will Trigger at 12:00:20\n\n\r");
-
+    
     while ( true )
     {
         RTC_RTCCTimeGet(&sys_time);
         printf("System time is:   %02d:%02d:%02d\r",sys_time.tm_hour, sys_time.tm_min, sys_time.tm_sec);
-
+        
         if(alarm_triggered == true)
         {
-            printf("\n\rAlarm Triggered !!!!!!!!\n\r");
+            printf("\n\rAlarm Triggered !!!!!!!!\n\r");            
             alarm_triggered = false;
         }
     }
