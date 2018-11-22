@@ -226,7 +226,7 @@ def instantiateComponent(tcComponent):
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
     tcInstanceName.setDefaultValue(tcComponent.getID().upper())
-    tcInstanceName.setDependencies(updateCodeGenerationProperty, ["TC_OPERATION_MODE", "TC_SLAVE_MODE"])
+
     Log.writeInfoMessage("Running " + tcInstanceName.getValue())
 
     #clock enable
@@ -405,6 +405,7 @@ def instantiateComponent(tcComponent):
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_" + tcModuleID + "/config/tc_compare.py")
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_" + tcModuleID + "/config/tc_capture.py")
 
+    tcInstanceName.setDependencies(updateCodeGenerationProperty, ["TC_OPERATION_MODE", "TC_SLAVE_MODE"])
     ############################################################################
     #### Dependency ####
     ############################################################################

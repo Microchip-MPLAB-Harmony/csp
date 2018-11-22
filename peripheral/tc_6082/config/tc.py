@@ -791,11 +791,6 @@ def instantiateComponent(tcComponent):
             else:
                 extClock[int(tc_signals[pad].getAttribute("index"))%3] = False
 
-
-    sysTimeTrigger_Sym = tcComponent.createBooleanSymbol("SYS_TIME", None)
-    sysTimeTrigger_Sym.setVisible(False)
-    sysTimeTrigger_Sym.setDependencies(sysTime_ChannelSelection, ["SYS_TIME_TC_CHANNEL"])
-
     sysTimeChannel_Sym = tcComponent.createKeyValueSetSymbol("SYS_TIME_TC_CHANNEL", None)
     sysTimeChannel_Sym.setLabel("Select TC Channel for Time System Service")
     sysTimeChannel_Sym.addKey("_CH0", "0", "Channel 0")
@@ -805,6 +800,10 @@ def instantiateComponent(tcComponent):
     sysTimeChannel_Sym.setDisplayMode("Description")
     sysTimeChannel_Sym.setDefaultValue(0)
     sysTimeChannel_Sym.setVisible(False)
+
+    sysTimeTrigger_Sym = tcComponent.createBooleanSymbol("SYS_TIME", None)
+    sysTimeTrigger_Sym.setVisible(False)
+    sysTimeTrigger_Sym.setDependencies(sysTime_ChannelSelection, ["SYS_TIME_TC_CHANNEL"])
 
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
@@ -876,7 +875,8 @@ def instantiateComponent(tcComponent):
 
     tcQuadratureComment = tcComponent.createCommentSymbol("TC_QUADRATURE_COMMENT", tcQuadratureMenu)
     tcQuadratureComment.setLabel("**** Quadrature mode uses two channels. Channel 0 to capture number of edges and Channel 1 to capture number of revolutions ****")
-    tcQuadratureComment.setDependencies(tcQuadratureCommentChange, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
+    # Dependency registration is done after all dependencies are defined.
+    #tcQuadratureComment.setDependencies(tcQuadratureCommentChange, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
 
     # Swap PhA and PhB
     tcSym_CH_QEI_BMR_SWAP = tcComponent.createBooleanSymbol("TC_BMR_SWAP", tcQuadratureMenu)
@@ -970,9 +970,11 @@ def instantiateComponent(tcComponent):
     tcSym_CH_PCK_CLKSRC.setLabel("Select PCK Clock Source")
     tcSym_CH_PCK_CLKSRC.setDefaultValue("PCK6")
     tcSym_CH_PCK_CLKSRC.setVisible(False)
-    tcSym_CH_PCK_CLKSRC.setDependencies(tcPCKVisible, ["TC0_CMR_TCCLKS", "TC1_CMR_TCCLKS", "TC2_CMR_TCCLKS", \
-        "TC3_CMR_TCCLKS", "TC_BMR_POSEN", "TC_ENABLE_QEI"])
+    # Dependency registration is done after all dependencies are defined.
+    #tcSym_CH_PCK_CLKSRC.setDependencies(tcPCKVisible, ["TC0_CMR_TCCLKS", "TC1_CMR_TCCLKS", "TC2_CMR_TCCLKS", \
+    #        "TC3_CMR_TCCLKS", "TC_BMR_POSEN", "TC_ENABLE_QEI"])
 
+    tcQuadratureComment.setDependencies(tcQuadratureCommentChange, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
     #*************************CHANNEL CONFIGURATIONS ******************************
     for channelID in range(0, len(channel)):
         #channel menu
@@ -1380,6 +1382,9 @@ def instantiateComponent(tcComponent):
         tcSym_CH_COMPARE_IER_CPCS[channelID] = tcComponent.createBooleanSymbol("TC"+str(channelID)+"_COMPARE_IER_CPCS", tcCompareMenu[channelID])
         tcSym_CH_COMPARE_IER_CPCS[channelID].setLabel("Enable Period Interrupt")
         tcSym_CH_COMPARE_IER_CPCS[channelID].setDefaultValue(True)
+
+    tcSym_CH_PCK_CLKSRC.setDependencies(tcPCKVisible, ["TC0_CMR_TCCLKS", "TC1_CMR_TCCLKS", "TC2_CMR_TCCLKS", \
+            "TC3_CMR_TCCLKS", "TC_BMR_POSEN", "TC_ENABLE_QEI"])
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
