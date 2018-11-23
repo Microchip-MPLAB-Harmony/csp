@@ -47,7 +47,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
-<#if RTC_MODULE_SELECTION ="MODE2">
+<#if RTC_MODULE_SELECTION = "MODE2">
 #include <time.h>
 </#if>
 
@@ -89,71 +89,25 @@ extern "C" {
 
         <#lt>typedef enum
         <#lt>{
-        <#lt>    RTC_CLOCK_INT_MASK_ALARM = 0x0100,
-        <#lt>    RTC_CLOCK_INT_MASK_YEAR_OVERFLOW = 0x8000,
-        <#lt>    RTC_CLOCK_INT_MASK_PER0 = 0x0001,
-        <#lt>    RTC_CLOCK_INT_MASK_PER1 = 0x0002,
-        <#lt>    RTC_CLOCK_INT_MASK_PER2 = 0x0004,
-        <#lt>    RTC_CLOCK_INT_MASK_PER3 = 0x0008,
-        <#lt>    RTC_CLOCK_INT_MASK_PER4 = 0x0010,
-        <#lt>    RTC_CLOCK_INT_MASK_PER5 = 0x0020,
-        <#lt>    RTC_CLOCK_INT_MASK_PER6 = 0x0040,
-        <#lt>    RTC_CLOCK_INT_MASK_PER7 = 0x0080,
-        <#lt>    /* Force the compiler to reserve 32-bit memory for enum */
-        <#lt>    RTC_CLOCK_INT_MASK_INVALID = 0xFFFFFFFF
+        <#lt>    RTC_CLOCK_INT_MASK_ALARM = 0x0001,
+        <#lt>    RTC_CLOCK_INT_MASK_YEAR_OVERFLOW = 0x0080
         <#lt>} RTC_CLOCK_INT_MASK;
-        
+
     <#elseif RTC_MODULE_SELECTION = "MODE0">
         <#lt>typedef enum
         <#lt>{
-        <#lt>    RTC_TIMER32_INT_MASK_COMPARE_MATCH = 0x0100, 
-        <#lt>    RTC_TIMER32_INT_MASK_COUNTER_OVERFLOW = 0x8000,
-        <#lt>    RTC_TIMER32_INT_MASK_PER0 = 0x0001,
-        <#lt>    RTC_TIMER32_INT_MASK_PER1 = 0x0002,
-        <#lt>    RTC_TIMER32_INT_MASK_PER2 = 0x0004,
-        <#lt>    RTC_TIMER32_INT_MASK_PER3 = 0x0008,
-        <#lt>    RTC_TIMER32_INT_MASK_PER4 = 0x0010,
-        <#lt>    RTC_TIMER32_INT_MASK_PER5 = 0x0020,
-        <#lt>    RTC_TIMER32_INT_MASK_PER6 = 0x0040,
-        <#lt>    RTC_TIMER32_INT_MASK_PER7 = 0x0080,
-        <#lt>    /* Force the compiler to reserve 32-bit memory for enum */
-        <#lt>    RTC_TIMER32_INT_MASK_INVALID = 0xFFFFFFFF
+        <#lt>    RTC_TIMER32_INT_MASK_COMPARE_MATCH = 0x0001,
+        <#lt>    RTC_TIMER32_INT_MASK_COUNTER_OVERFLOW = 0x0080,
         <#lt>} RTC_TIMER32_INT_MASK;
     <#else>
         <#lt>typedef enum
         <#lt>{
-        <#lt>    RTC_TIMER16_INT_MASK_COMPARE0_MATCH = 0x0100,
-        <#lt>    RTC_TIMER16_INT_MASK_COMPARE1_MATCH = 0x0200,
-        <#lt>    RTC_TIMER16_INT_MASK_PERIOD_MATCH = 0x8000,
-        <#lt>    RTC_TIMER16_INT_MASK_PER0 = 0x0001,
-        <#lt>    RTC_TIMER16_INT_MASK_PER1 = 0x0002,
-        <#lt>    RTC_TIMER16_INT_MASK_PER2 = 0x0004,
-        <#lt>    RTC_TIMER16_INT_MASK_PER3 = 0x0008,
-        <#lt>    RTC_TIMER16_INT_MASK_PER4 = 0x0010,
-        <#lt>    RTC_TIMER16_INT_MASK_PER5 = 0x0020,
-        <#lt>    RTC_TIMER16_INT_MASK_PER6 = 0x0040,
-        <#lt>    RTC_TIMER16_INT_MASK_PER7 = 0x0080,
-        <#lt>    /* Force the compiler to reserve 32-bit memory for enum */
-        <#lt>    RTC_TIMER16_INT_MASK_INVALID = 0xFFFFFFFF
+        <#lt>    RTC_TIMER16_INT_MASK_COMPARE0_MATCH = 0x0001,
+        <#lt>    RTC_TIMER16_INT_MASK_COMPARE1_MATCH = 0x0002,
+        <#lt>    RTC_TIMER16_INT_MASK_PERIOD_MATCH = 0x0080,
         <#lt>} RTC_TIMER16_INT_MASK;
-    </#if>    
-    <#else>
-        <#lt>typedef enum
-        <#lt>{
-        <#lt>    RTC_PER0_MASK = 0x0001,
-        <#lt>    RTC_PER1_MASK = 0x0002,
-        <#lt>    RTC_PER2_MASK = 0x0004,
-        <#lt>    RTC_PER3_MASK = 0x0008,
-        <#lt>    RTC_PER4_MASK = 0x0010,
-        <#lt>    RTC_PER5_MASK = 0x0020,
-        <#lt>    RTC_PER6_MASK = 0x0040,
-        <#lt>    RTC_PER7_MASK = 0x0080,
-        <#lt>    /* Force the compiler to reserve 32-bit memory for enum */
-        <#lt>    RTC_PERIODIC_INT_MASK_INVALID = 0xFFFFFFFF
-        <#lt>} RTC_PERIODIC_INT_MASK;
+    </#if>
 </#if>
-
-
 
 <#if RTC_MODE2_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE2" ||
      RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ||
@@ -194,10 +148,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
 <#if RTC_FREQCORR>
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction);
 </#if>
-<#if RTC_MODE0_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE0" ||
-     RTC_MODE1_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE1" >
-    <#lt>bool ${RTC_INSTANCE_NAME}_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period);
-</#if>
+
 <#if RTC_MODULE_SELECTION = "MODE0">
     <#if RTC_MODE0_INTERRUPT = false>
         <#lt>bool ${RTC_INSTANCE_NAME}_Timer32CounterHasOverflowed ( void );
@@ -216,7 +167,6 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
     </#if>
 <#elseif RTC_MODULE_SELECTION = "MODE1">
     <#if RTC_MODE1_INTERRUPT = false>
-        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16PeriodHasExpired ( void );
         <#lt>bool ${RTC_INSTANCE_NAME}_Timer16CounterHasOverflowed ( void );
         <#lt>bool ${RTC_INSTANCE_NAME}_Timer16Compare0HasMatched(void);
         <#lt>bool ${RTC_INSTANCE_NAME}_Timer16Compare1HasMatched(void);

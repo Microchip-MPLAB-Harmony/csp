@@ -120,24 +120,6 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>}
 </#if>
 
-<#if RTC_MODE2_INTERRUPT = false>
-
-    <#lt>bool ${RTC_INSTANCE_NAME}_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period)
-    <#lt>{
-    <#lt>    bool periodIntervalComplete = false;
-
-    <#lt>    if( (${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG & period) == period )
-    <#lt>    {
-    <#lt>        periodIntervalComplete = true;
-
-    <#lt>        /* Clear Periodic Interval Interrupt */
-    <#lt>        ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG = period;
-    <#lt>    }
-
-    <#lt>    return periodIntervalComplete;
-    <#lt>}
-</#if>
-
 bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime )
 {
     /*

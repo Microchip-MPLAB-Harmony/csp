@@ -47,7 +47,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
-<#if RTC_MODULE_SELECTION ="MODE2">
+<#if RTC_MODULE_SELECTION = "MODE2">
 #include <time.h>
 </#if>
 
@@ -153,8 +153,6 @@ extern "C" {
         <#lt>} RTC_PERIODIC_INT_MASK;
 </#if>
 
-
-
 <#if RTC_MODE2_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE2" ||
      RTC_MODE1_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE1" ||
      RTC_MODE0_INTERRUPT = true && RTC_MODULE_SELECTION = "MODE0" >
@@ -195,13 +193,14 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
     <#lt>void ${RTC_INSTANCE_NAME}_FrequencyCorrect (int8_t correction);
 </#if>
 <#if RTC_MODE0_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE0" ||
-     RTC_MODE1_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE1" >
+     RTC_MODE1_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE1" ||
+     RTC_MODE2_INTERRUPT = false && RTC_MODULE_SELECTION = "MODE2" >
     <#lt>bool ${RTC_INSTANCE_NAME}_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period);
 </#if>
 <#if RTC_MODULE_SELECTION = "MODE0">
     <#if RTC_MODE0_INTERRUPT = false>
         <#lt>bool ${RTC_INSTANCE_NAME}_Timer32CounterHasOverflowed ( void );
-        <#lt>bool ${RTC_INSTANCE_NAME}_Timer32CompareHasMatched(void);
+        <#lt>bool ${RTC_INSTANCE_NAME}_Timer32CompareHasMatched ( void );
     </#if>
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32Start ( void );
     <#lt>void ${RTC_INSTANCE_NAME}_Timer32Stop ( void );
@@ -216,10 +215,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
     </#if>
 <#elseif RTC_MODULE_SELECTION = "MODE1">
     <#if RTC_MODE1_INTERRUPT = false>
-        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16PeriodHasExpired ( void );
         <#lt>bool ${RTC_INSTANCE_NAME}_Timer16CounterHasOverflowed ( void );
-        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16Compare0HasMatched(void);
-        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16Compare1HasMatched(void);
+        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16Compare0HasMatched ( void );
+        <#lt>bool ${RTC_INSTANCE_NAME}_Timer16Compare1HasMatched ( void );
     </#if>
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16Start ( void );
     <#lt>void ${RTC_INSTANCE_NAME}_Timer16Stop ( void );
