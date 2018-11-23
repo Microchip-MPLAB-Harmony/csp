@@ -100,7 +100,9 @@ def instantiateComponent(acComponent):
     acSym_Enable = []
     acSym_SCALERn = []
     #Clock enable
-    Database.setSymbolValue("core", acInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
+    #Two generic clocks (GCLK_AC_DIG and GCLK_AC_ANA) are used by the AC.
+    Database.setSymbolValue("core", acInstanceName.getValue() + "_ANA_CLOCK_ENABLE", True, 2)
+    Database.setSymbolValue("core", acInstanceName.getValue() + "_DIG_CLOCK_ENABLE", True, 2)
 
     ################################ ATDF ####################################################
     node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AC\"]/instance@[name=\""+acInstanceName.getValue()+"\"]/parameters")
