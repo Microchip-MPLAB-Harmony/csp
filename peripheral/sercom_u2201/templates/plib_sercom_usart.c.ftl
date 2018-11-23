@@ -551,17 +551,17 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize)
         {
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++];
+        }
 
-            if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize)
+        if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize)
+        {
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus = false;
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize = 0;
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_DRE_Msk;
+
+            if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback != NULL)
             {
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus = false;
-                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize = 0;
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_DRE_Msk;
-
-                if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback != NULL)
-                {
-                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txContext);
-                }
+                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txContext);
             }
         }
     }
