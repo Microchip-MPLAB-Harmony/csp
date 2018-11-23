@@ -29,30 +29,32 @@ global rtcInstanceName
 global eventMap
 global eventMapInverse
 
-
 ################################################################################
 ########                        Callback Functions                      ########
 ################################################################################
 
 def evsysSetup(symbol, event):
     global eventMap
+
     if event["id"] == "RTC_MODULE_SELECTION" :
         selection = Database.getSymbolValue(event["namespace"], "RTC_MODULE_SELECTION")
         selection = "MODE" + str(selection)
+
         for value in eventMap.keys():
             if locals()['selection'] in value:
-               status = Database.getSymbolValue(event["namespace"], value)
-               Database.setSymbolValue("evsys", eventMap.get(value), status, 2)
+                status = Database.getSymbolValue(event["namespace"], value)
+                Database.setSymbolValue("evsys", eventMap.get(value), status, 2)
     else:
         Database.setSymbolValue("evsys", eventMap.get(event["id"]), event["value"], 2)
 
-            
 def setRTCInterruptData(status):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
+
     Database.setSymbolValue("core", InterruptVector, status, 2)
     Database.setSymbolValue("core", InterruptHandlerLock, status, 2)
+
     if status == True:
         Database.setSymbolValue("core", InterruptHandler, rtcInstanceName.getValue() + "_InterruptHandler", 2)
     else:
@@ -98,10 +100,21 @@ def Mode0Visible(symbol, event):
     else:
         symbol.setVisible(False)
 
+def rtcMode0Interrupt(symbol, event):
+    global rtcMode0InterruptMap
+    mask = rtcMode0InterruptMap.get(event["id"].split("RTC_MODE0_INTENSET_")[1].split("_ENABLE")[0])
+
+    if event["value"]:
+        value = symbol.getValue() | int(mask, 16)
+    else:
+        value = symbol.getValue() & ~(int(mask, 16))
+
+    symbol.setValue(value, 1)
+
 def rtcMode0Evctrl(symbol, event):
     global rtcMode0EvctrlMap
     mask = rtcMode0EvctrlMap.get(event["id"].split("RTC_MODE0_EVCTRL_")[1].split("_ENABLE")[0])
-    print mask
+
     if event["value"]:
         value = symbol.getValue() | int(mask, 16)
     else:
@@ -117,10 +130,21 @@ def Mode1Visible(symbol, event):
     else:
         symbol.setVisible(False)
 
+def rtcMode1Interrupt(symbol, event):
+    global rtcMode1InterruptMap
+    mask = rtcMode1InterruptMap.get(event["id"].split("RTC_MODE1_INTENSET_")[1].split("_ENABLE")[0])
+
+    if event["value"]:
+        value = symbol.getValue() | int(mask, 16)
+    else:
+        value = symbol.getValue() & ~(int(mask, 16))
+
+    symbol.setValue(value, 1)
+
 def rtcMode1Evctrl(symbol, event):
     global rtcMode1EvctrlMap
     mask = rtcMode1EvctrlMap.get(event["id"].split("RTC_MODE1_EVCTRL_")[1].split("_ENABLE")[0])
-    print mask
+
     if event["value"]:
         value = symbol.getValue() | int(mask, 16)
     else:
@@ -139,7 +163,7 @@ def Mode2Visible(symbol, event):
 def rtcMode2Evctrl(symbol, event):
     global rtcMode2EvctrlMap
     mask = rtcMode1EvctrlMap.get(event["id"].split("RTC_MODE2_EVCTRL_")[1].split("_ENABLE")[0])
-    print mask
+
     if event["value"]:
         value = symbol.getValue() | int(mask, 16)
     else:
@@ -152,6 +176,7 @@ def rtcMode2Evctrl(symbol, event):
 #Update Code Generation Property
 def updateCodeGenerationProperty(symbol, event):
     component = symbol.getComponent()
+
     if event["value"] == 2:
         component.getSymbolByID("RTC_CLOCK_SOURCE").setEnabled(True)
         component.getSymbolByID("RTC_TIMER_SOURCE").setEnabled(False)
@@ -163,10 +188,15 @@ def onCapabilityConnected(connectionInfo):
     global rtcModeSelection_Sym
 
     remoteComponent = connectionInfo["remoteComponent"]
-    if (remoteComponent.getID() == "sys_time"):
-        rtcModeSelection_Sym.setSelectedKey("MODE0",1)
+    localComponent = connectionInfo["localComponent"]
 
-def sysTime_modeSelection(symbol,event):
+    if (remoteComponent.getID() == "sys_time"):
+        Database.setSymbolValue(localComponent.getID(), "RTC_MODE0_INTENSET_CMP0_ENABLE", True, 1)
+        Database.setSymbolValue(localComponent.getID(), "RTC_MODE1_INTENSET_CMP0_ENABLE", True, 1)
+        Database.setSymbolValue(localComponent.getID(), "RTC_MODE1_INTENSET_CMP1_ENABLE", True, 1)
+        rtcModeSelection_Sym.setSelectedKey("MODE0", 1)
+
+def sysTime_modeSelection(symbol, event):
     global timerStartApiName_Sym
     global timeStopApiName_Sym
     global compareSetApiName_Sym
@@ -238,6 +268,8 @@ def instantiateComponent(rtcComponent):
     global irqEnumName_Sym
     global timerWidth_Sym
     global timerPeriodMax_Sym
+    global rtcMode0InterruptMap
+    global rtcMode1InterruptMap
     global rtcModeSelection_Sym
     global rtcMode0EvctrlMap
     global rtcMode1EvctrlMap
@@ -247,15 +279,19 @@ def instantiateComponent(rtcComponent):
     global rtcSymMode1_INTENSET
     global rtcSymMode2_INTENSET
     global evsysDep
+    rtcMode0InterruptMap = {}
+    rtcMode1InterruptMap = {}
     rtcMode0EvctrlMap = {}
     rtcMode1EvctrlMap = {}
     rtcMode2EvctrlMap = {}
+    rtcMode0InterruptDep = []
+    rtcMode1InterruptDep = []
     rtcMode0EvctrlDep = []
     rtcMode1EvctrlDep = []
     rtcMode2EvctrlDep = []
     evsysDep = []
     eventMap = defaultdict(list)
-    
+
     generatorsNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
     generatorsValue = generatorsNode.getChildren()
     for id in range(0,len(generatorsValue)):
@@ -266,7 +302,7 @@ def instantiateComponent(rtcComponent):
     rtcInstanceName.setVisible(False)
     rtcInstanceName.setDefaultValue(rtcComponent.getID().upper())
     Log.writeInfoMessage("Running " + rtcInstanceName.getValue())
-    
+
     InterruptVector = rtcInstanceName.getValue()+"_INTERRUPT_ENABLE"
     InterruptHandler = rtcInstanceName.getValue()+"_INTERRUPT_HANDLER"
     InterruptHandlerLock = rtcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
@@ -286,6 +322,7 @@ def instantiateComponent(rtcComponent):
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
+
     timerWidth_Sym = rtcComponent.createIntegerSymbol("TIMER_WIDTH", None)
     timerWidth_Sym.setVisible(False)
 
@@ -315,6 +352,7 @@ def instantiateComponent(rtcComponent):
 
     irqEnumName_Sym = rtcComponent.createStringSymbol("IRQ_ENUM_NAME", None)
     irqEnumName_Sym.setVisible(False)
+
 #------------------------------------------------------------
     #Frequency Correction
     rtcSymMode0_FREQCORR = rtcComponent.createBooleanSymbol("RTC_FREQCORR",rtcSym_Menu)
@@ -333,6 +371,7 @@ def instantiateComponent(rtcComponent):
     sysTimeTrigger_Sym = rtcComponent.createBooleanSymbol("SYS_TIME", None)
     sysTimeTrigger_Sym.setVisible(False)
     sysTimeTrigger_Sym.setDependencies(sysTime_modeSelection, ["RTC_MODULE_SELECTION"])
+
 #################################### MODE0 #####################################
 
     rtcSymMode0Menu = rtcComponent.createMenuSymbol("RTC_MODE0_MENU", rtcModeSelection_Sym)
@@ -341,8 +380,24 @@ def instantiateComponent(rtcComponent):
 
     #Interrupt Enable Set
     rtcSymMode0_INTENSET = rtcComponent.createBooleanSymbol("RTC_MODE0_INTERRUPT", rtcSymMode0Menu)
-    rtcSymMode0_INTENSET.setLabel("Enable Interrupts?")
+    rtcSymMode0_INTENSET.setLabel("Enable Interrupts ?")
     rtcSymMode0_INTENSET.setDefaultValue(True)
+
+    rtcMode0InterruptNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE0",name="INTENSET"]')
+    rtcMode0InterruptValues = rtcMode0InterruptNode.getChildren()
+
+    for i in range(0, len(rtcMode0InterruptValues)):
+        rtcSymMode0_Interrupt = rtcComponent.createBooleanSymbol("RTC_MODE0_INTENSET_" + rtcMode0InterruptValues[i].getAttribute("name") + "_ENABLE", rtcSymMode0_INTENSET)
+        rtcSymMode0_Interrupt.setLabel(rtcMode0InterruptValues[i].getAttribute("caption"))
+        rtcMode0InterruptMap[rtcMode0InterruptValues[i].getAttribute("name")] = rtcMode0InterruptValues[i].getAttribute("mask")
+        rtcMode0InterruptDep.append("RTC_MODE0_INTENSET_" + rtcMode0InterruptValues[i].getAttribute("name") + "_ENABLE")
+
+    #Interrupt Notification
+    rtcSymMode0InterruptMask = rtcComponent.createHexSymbol("RTC_MODE0_INTENSET", rtcSymMode0_INTENSET)
+    rtcSymMode0InterruptMask.setDefaultValue(0)
+    rtcSymMode0InterruptMask.setVisible(False)
+    rtcSymMode0InterruptMask.setDependencies(rtcMode0Interrupt, rtcMode0InterruptDep)
+
     setRTCInterruptData(True)
 
     #Prescaler
@@ -404,6 +459,7 @@ def instantiateComponent(rtcComponent):
     rtcSymMode0_PERIN.setDependencies(rtcMode0Evctrl, rtcMode0EvctrlDep)
 
 #################################### MODE1 #####################################
+
     rtcSymMode1Menu = rtcComponent.createMenuSymbol("RTC_MODE1_MENU", rtcModeSelection_Sym)
     rtcSymMode1Menu.setLabel("RTC MODE 1 Configuration")
     rtcSymMode1Menu.setVisible(False)
@@ -411,8 +467,23 @@ def instantiateComponent(rtcComponent):
 
     #Configure the RTC Interrupts
     rtcSymMode1_INTENSET = rtcComponent.createBooleanSymbol("RTC_MODE1_INTERRUPT", rtcSymMode1Menu)
-    rtcSymMode1_INTENSET.setLabel("Enable Interrupts?")
+    rtcSymMode1_INTENSET.setLabel("Enable Interrupts ?")
     rtcSymMode1_INTENSET.setDefaultValue(True)
+
+    rtcMode1InterruptNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE1",name="INTENSET"]')
+    rtcMode1InterruptValues = rtcMode1InterruptNode.getChildren()
+
+    for i in range(0, len(rtcMode1InterruptValues)):
+        rtcSymMode1_Interrupt = rtcComponent.createBooleanSymbol("RTC_MODE1_INTENSET_" + rtcMode1InterruptValues[i].getAttribute("name") + "_ENABLE", rtcSymMode1_INTENSET)
+        rtcSymMode1_Interrupt.setLabel(rtcMode1InterruptValues[i].getAttribute("caption"))
+        rtcMode1InterruptMap[rtcMode1InterruptValues[i].getAttribute("name")] = rtcMode1InterruptValues[i].getAttribute("mask")
+        rtcMode1InterruptDep.append("RTC_MODE1_INTENSET_" + rtcMode1InterruptValues[i].getAttribute("name") + "_ENABLE")
+
+    #Interrupt Notification
+    rtcSymMode1InterruptMask = rtcComponent.createHexSymbol("RTC_MODE1_INTENSET", rtcSymMode1_INTENSET)
+    rtcSymMode1InterruptMask.setDefaultValue(0)
+    rtcSymMode1InterruptMask.setVisible(False)
+    rtcSymMode1InterruptMask.setDependencies(rtcMode1Interrupt, rtcMode1InterruptDep)
 
     #Prescaler
     rtcSymMode1_CTRLA_PRESCALER = rtcComponent.createKeyValueSetSymbol("RTC_MODE1_PRESCALER", rtcSymMode1Menu)
@@ -475,7 +546,7 @@ def instantiateComponent(rtcComponent):
             eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_OVF_ACTIVE"
         if "CMP" in rtcEventsValues[i].getAttribute("name"):
             eventMap["RTC_MODE1_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_CMP_" + str(rtcEventsValues[i].getAttribute("name")).replace("CMPEO", "") + "_ACTIVE"
-            
+
     #Periodic Interval Notification
     rtcSymMode1_PERIN = rtcComponent.createHexSymbol("RTC_MODE1_EVCTRL", rtcSymMode1Menu)
     rtcSymMode1_PERIN.setDefaultValue(0)
@@ -483,6 +554,7 @@ def instantiateComponent(rtcComponent):
     rtcSymMode1_PERIN.setDependencies(rtcMode1Evctrl, rtcMode1EvctrlDep)
 
 #################################### MODE2 #####################################
+
     rtcSymMode2Menu = rtcComponent.createMenuSymbol("RTC_MODE2_MENU", rtcModeSelection_Sym)
     rtcSymMode2Menu.setLabel("RTC MODE 2 Configuration")
     rtcSymMode2Menu.setVisible(False)
@@ -537,7 +609,7 @@ def instantiateComponent(rtcComponent):
             eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_OVF_ACTIVE"
         if "ALARM" in rtcEventsValues[i].getAttribute("name"):
             eventMap["RTC_MODE2_EVCTRL_" + rtcEventsValues[i].getAttribute("name") + "_ENABLE"] = "GENERATOR_RTC_CMP_" + str(rtcEventsValues[i].getAttribute("name")).replace("ALARMEO", "") + "_ACTIVE"
-            
+
     #Periodic Interval Notification
     rtcSymMode2_PERIN = rtcComponent.createHexSymbol("RTC_MODE2_EVCTRL", rtcSymMode2Menu)
     rtcSymMode2_PERIN.setDefaultValue(0)
@@ -547,8 +619,6 @@ def instantiateComponent(rtcComponent):
     ############################################################################
     #### Dependency ####
     ############################################################################
-
-
 
     # Interrupt Dynamic settings
     rtcSym_UpdateInterruptStatus = rtcComponent.createBooleanSymbol("RTC_INTERRUPT_STATUS", None)
@@ -566,13 +636,13 @@ def instantiateComponent(rtcComponent):
     rtcSym_ClkEnComment.setLabel("Warning!!! RTC Peripheral Clock is Disabled in Clock Manager")
     rtcSym_ClkEnComment.setVisible(False)
     rtcSym_ClkEnComment.setDependencies(updateRTCClockWarringStatus, ["core."+rtcInstanceName.getValue()+"_CLOCK_ENABLE"])
-    
+
     evsysDep = rtcMode0EvctrlDep + rtcMode1EvctrlDep + rtcMode2EvctrlDep
     evsysDep.append("RTC_MODULE_SELECTION")
     evsysTrig = rtcComponent.createBooleanSymbol("EVSYS", None)
     evsysTrig.setVisible(False)
     evsysTrig.setDependencies(evsysSetup, evsysDep)
-    
+
 ################################ Code Generation ###############################
 
     configName = Variables.get("__CONFIGURATION_NAME")
