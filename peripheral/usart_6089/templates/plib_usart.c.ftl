@@ -211,7 +211,7 @@ USART_ERROR ${USART_INSTANCE_NAME}_ErrorGet( void )
     USART_ERROR errors = USART_ERROR_NONE;
     uint32_t status = ${USART_INSTANCE_NAME}_REGS->US_CSR;
 
-    errors = status & (US_CSR_OVRE_Msk | US_CSR_USART_LIN_PARE_Msk | US_CSR_USART_LIN_FRAME_Msk);
+    errors = (USART_ERROR)(status & (US_CSR_OVRE_Msk | US_CSR_USART_LIN_PARE_Msk | US_CSR_USART_LIN_FRAME_Msk));
 
     if(errors != USART_ERROR_NONE)
     {
