@@ -206,7 +206,7 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
     UART_ERROR errors = UART_ERROR_NONE;
     uint32_t status = ${UART_INSTANCE_NAME}_REGS->UART_SR;
 
-    errors = status & (UART_SR_OVRE_Msk | UART_SR_PARE_Msk | UART_SR_FRAME_Msk);
+    errors = (UART_ERROR)(status & (UART_SR_OVRE_Msk | UART_SR_PARE_Msk | UART_SR_FRAME_Msk));
 
     if(errors != UART_ERROR_NONE)
     {
