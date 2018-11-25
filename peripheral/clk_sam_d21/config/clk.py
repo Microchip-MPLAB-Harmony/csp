@@ -1120,7 +1120,7 @@ gclkIOpads.setDefaultValue(numPads)
 
 cycleFormed = coreComponent.createBooleanSymbol("GCLK_CYCLE_FORMED", clkMenu)
 cycleFormed.setDefaultValue(False)
-cycleFormed.setReadOnly(False)
+cycleFormed.setVisible(False)
 
 atdfFilePath = join(Variables.get("__DFP_PACK_DIR") , "atdf" , Variables.get("__PROCESSOR") + ".atdf")
 
