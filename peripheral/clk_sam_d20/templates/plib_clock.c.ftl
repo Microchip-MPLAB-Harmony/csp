@@ -149,9 +149,6 @@ static void DFLL_Initialize(void)
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DFLLCTRL = SYSCTRL_DFLLCTRL_ENABLE_Msk ${(CONFIG_CLOCK_DFLL_OPMODE == "1")?then('| SYSCTRL_DFLLCTRL_MODE_Msk ', ' ')}
     <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "ENABLE")?then("| SYSCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
     <#lt>                               ${CONFIG_CLOCK_DFLL_RUNSTDY?then('| SYSCTRL_DFLLCTRL_RUNSTDBY_Msk ', ' ')}
-    <#lt>                               ${CONFIG_CLOCK_DFLL_USB?then('| SYSCTRL_DFLLCTRL_USBCRM_Msk ', ' ')}
-    <#lt>                               ${CONFIG_CLOCK_DFLL_WAIT_LOCK?then('| SYSCTRL_DFLLCTRL_WAITLOCK_Msk ', ' ')}
-    <#lt>                               ${CONFIG_CLOCK_DFLL_BYPASS_COARSE?then('| SYSCTRL_DFLLCTRL_BPLCKC_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_QUICK_LOCK?then('| SYSCTRL_DFLLCTRL_QLDIS_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_CHILL_CYCLE?then('| SYSCTRL_DFLLCTRL_CCDIS_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_LLAW?then('| SYSCTRL_DFLLCTRL_LLAW_Msk ', ' ')}

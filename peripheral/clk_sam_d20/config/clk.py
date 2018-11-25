@@ -411,21 +411,6 @@ dfllRunstdy.setLabel("Run DFLL in Standby Sleep Mode")
 dfllRunstdy.setDescription("DFLL to run in standby mode or not")
 dfllRunstdy.setDefaultValue(False)
 
-dfllUsb = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_USB", dfll_Menu)
-dfllUsb.setLabel("USB Clock Recovery Mode")
-dfllUsb.setDescription("Enable or Disable USB Clock Recovery Mode")
-dfllUsb.setDefaultValue(False)
-
-dfllWaitLock = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_WAIT_LOCK", dfll_Menu)
-dfllWaitLock.setLabel("Wait for DFLL lock")
-dfllWaitLock.setDescription("Controls the DFLL output clock, depending on lock status")
-dfllWaitLock.setDefaultValue(False)
-
-dfllBypassCoarse = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_BYPASS_COARSE", dfll_Menu)
-dfllBypassCoarse.setLabel("Bypass Coarse Lock")
-dfllBypassCoarse.setDescription("Controls the coarse lock procedure")
-dfllBypassCoarse.setDefaultValue(False)
-
 dfllQuickLock = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_QUICK_LOCK", dfll_Menu)
 dfllQuickLock.setLabel("Quick lock disable")
 dfllQuickLock.setDescription("Disable quick lock")
