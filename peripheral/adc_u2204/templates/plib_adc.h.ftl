@@ -102,11 +102,21 @@ uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void );
 
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void );
 
+<#if ADC_WINCTRL_WINMODE != "0">
 void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold);
+</#if>
 
 <#if ADC_INTENSET_RESRDY = true || ADC_INTENSET_WINMON = true>
 
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
+<#else>
+bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void );
+
+<#if ADC_WINCTRL_WINMODE != "0">
+bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void );
+
+</#if>
+
 </#if>
 
 

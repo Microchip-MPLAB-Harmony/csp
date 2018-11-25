@@ -312,18 +312,18 @@ bool ${ADC_INSTANCE_NAME}_ConversionSequenceIsFinished(void)
     return seq_status;
 }
 
+<#if ADC_CTRLC_WINMODE != "0">
 /* Configure window comparison threshold values */
 void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = low_threshold;
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = high_threshold;
+    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    {
+        /* Wait for Synchronization */
+    }
 }
-
-/* Check whether result is ready */
-bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
-{
-    return (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
-}
+</#if>
 
 /* Read the conversion result */
 uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void )
@@ -343,11 +343,30 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 
 void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 {
+    volatile ADC_STATUS status;
+    status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;
+    /* Clear interrupt flag */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
-        ${ADC_INSTANCE_NAME}_CallbackObject.callback(${ADC_INSTANCE_NAME}_CallbackObject.context);
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
     }
 }
+
+<#else>
+/* Check whether result is ready */
+bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
+{
+    return (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+}
+
+<#if ADC_CTRLC_WINMODE != "0">
+/* Check whether window monitor result is ready */
+bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
+{
+    return (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) == ADC_INTFLAG_WINMON_Msk);
+}
+</#if>
 </#if>
 
 
