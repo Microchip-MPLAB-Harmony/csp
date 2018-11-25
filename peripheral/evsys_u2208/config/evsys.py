@@ -179,7 +179,7 @@ def instantiateComponent(evsysComponent):
     evsysUserNum.setDefaultValue((max(user.keys())))
     for id in range(0,channel):
         evsysChannel = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" + str(id), evsysSym_Menu)
-        evsysChannel.setLabel("Enable Channel" + str(id))
+        evsysChannel.setLabel("Enable Channel " + str(id))
         evsysChannel.setDefaultValue(False)
 
         # Dummy symbol to control clock enable
@@ -195,7 +195,7 @@ def instantiateComponent(evsysComponent):
 
         evsysGenerator.append(id)
         evsysGenerator[id] = evsysComponent.createKeyValueSetSymbol("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR", evsysChannelMenu)
-        evsysGenerator[id].setLabel("Event Generator")
+        evsysGenerator[id].setLabel("Event Source")
         evsysGenerator[id].setOutputMode("Value")
         for key in sorted(generator.keys()):
             evsysGenerator[id].addKey(key, str(generator.get(key)), key)
@@ -203,7 +203,8 @@ def instantiateComponent(evsysComponent):
         evsysGeneratorActive = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR_ACTIVE",evsysChannelMenu)
         evsysGeneratorActive.setDefaultValue(False)
         evsysGeneratorActive.setVisible(True)
-        evsysGeneratorActive.setLabel("Channel Generator source Active")
+        evsysGeneratorActive.setLabel("Event Source Status")
+        evsysGeneratorActive.setReadOnly(True)
         generatorSymbol.append("EVSYS_CHANNEL_" +  str(id) + "_GENERATOR")
         evsysGeneratorActive.setDependencies(channelSource, generatorSymbol)
         del generatorSymbol[-1]
@@ -239,7 +240,8 @@ def instantiateComponent(evsysComponent):
         evsysUserReady = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_" +  str(id) + "_USER_READY",evsysChannelMenu)
         evsysUserReady.setDefaultValue(False)
         evsysUserReady.setVisible(True)
-        evsysUserReady.setLabel("Channel" + str(id) + "Users Ready")
+        evsysUserReady.setLabel("Event Users Status")
+        evsysUserReady.setReadOnly(True)
         evsysUserReady.setDependencies(userStatus, channelUserDependency)
 
     evsysInterrupt = evsysComponent.createBooleanSymbol("EVSYS_INTERRUPT_MODE",  evsysSym_Menu)
