@@ -165,6 +165,7 @@ static void DFLL_Initialize(void)
 
     /*Load Calibration Value*/
     uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)0x806024) >> 26 ) & 0x3f);
+    calibCoarse = (((calibCoarse) == 0x3F) ? 0x1F : (calibCoarse));
     uint16_t calibFine = (uint16_t)(((*(uint32_t*)0x806028)) & 0x3ff);
 
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DFLLVAL = SYSCTRL_DFLLVAL_COARSE(calibCoarse) |
@@ -190,10 +191,17 @@ static void DFLL_Initialize(void)
     <#lt>                               ${CONFIG_CLOCK_DFLL_STABLE?then('| SYSCTRL_DFLLCTRL_STABLE_Msk ', ' ')}
     <#lt>                               ;</@compress>
 
+    <#if CONFIG_CLOCK_DFLL_OPMODE == "1">
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLLCKF_Msk) != SYSCTRL_PCLKSR_DFLLLCKF_Msk)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
+    <#else>
+    while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLRDY_Msk) != SYSCTRL_PCLKSR_DFLLRDY_Msk)
+    {
+        /* Waiting for DFLL to be ready */
+    }
+    </#if>
 }
 </#if>
 
