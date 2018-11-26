@@ -216,7 +216,7 @@ void ${SDADC_INSTANCE_NAME}_Initialize( void )
     }
 }
 
-
+<#if SDADC_TRIGGER == "1"> <#-- SW trigger -->
 void ${SDADC_INSTANCE_NAME}_ConversionStart( void )
 {
     /* Start conversion */
@@ -227,11 +227,7 @@ void ${SDADC_INSTANCE_NAME}_ConversionStart( void )
         /* Synchronization between SWTRIG start with the clock domain */
     }
 }
-
-bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady( void )
-{
-    return (${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk);
-}
+</#if>
 
 int16_t ${SDADC_INSTANCE_NAME}_ConversionResultGet( void )
 {
@@ -239,6 +235,7 @@ int16_t ${SDADC_INSTANCE_NAME}_ConversionResultGet( void )
     return ((int16_t)(${SDADC_INSTANCE_NAME}_REGS->SDADC_RESULT >> 8));
 }
 
+<#if SDADC_AUTO_SEQUENCE == true>
 bool ${SDADC_INSTANCE_NAME}_ConversionSequenceIsFinished(void)
 {
     bool seq_status = false;
@@ -248,13 +245,20 @@ bool ${SDADC_INSTANCE_NAME}_ConversionSequenceIsFinished(void)
     }
     return seq_status;
 }
+</#if>
 
+<#if SDADC_WINCTRL_WINMODE != "0">
 void ${SDADC_INSTANCE_NAME}_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold)
 {
     /* Update threshold values as 24-bit signed value */
     ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINLT = low_threshold << 8;
     ${SDADC_INSTANCE_NAME}_REGS->SDADC_WINUT = high_threshold << 8;
+    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY))
+    {
+        /* Wait for synchronization */
+    }
 }
+</#if>
 
 <#if SDADC_INTERRUPT_MODE == true>
 void ${SDADC_INSTANCE_NAME}_CallbackRegister( SDADC_CALLBACK callback, uintptr_t context )
@@ -267,11 +271,28 @@ void ${SDADC_INSTANCE_NAME}_CallbackRegister( SDADC_CALLBACK callback, uintptr_t
 
 void ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
 {
-    if (${SDADC_INSTANCE_NAME}_CallbackObj.callback != NULL)
-    {
-        ${SDADC_INSTANCE_NAME}_CallbackObj.callback(${SDADC_INSTANCE_NAME}_CallbackObj.context);
-    }
+    volatile SDADC_STATUS status;
+    status = ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG;
     /* Clear interrupt flags */
     ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_Msk;
+    
+    if (${SDADC_INSTANCE_NAME}_CallbackObj.callback != NULL)
+    {
+        ${SDADC_INSTANCE_NAME}_CallbackObj.callback(status, ${SDADC_INSTANCE_NAME}_CallbackObj.context);
+    }
+
 }
+
+<#else>
+bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady( void )
+{
+    return (bool)(${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk);
+}
+
+<#if SDADC_WINCTRL_WINMODE != "0">
+bool ${SDADC_INSTANCE_NAME}_WindowMonitorIsSet( void )
+{
+    return (bool)((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_WINMON_Msk) == SDADC_INTFLAG_WINMON_Msk);
+}
+</#if>
 </#if>
