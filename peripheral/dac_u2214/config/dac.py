@@ -35,26 +35,26 @@ def updateDACClockWarringStatus(symbol, event):
 
 def evsysControl(symbol, event):
     evctrl = 0
-    
-    if "SAMC2" in dacSym_DeviceName.getValue():
+    global invertAvailable
+    if invertAvailable:
         inv = Database.getSymbolValue(event["namespace"], "DAC_INVERSION_OUTPUT")
-    
+
     out = Database.getSymbolValue(event["namespace"], "DAC_BUFFER_EMPTY_EVENT_OUTPUT")
     inp = int(Database.getSymbolValue(event["namespace"], "DAC_START_CONVERSION_EVENT_INPUT"))
-    
+
     if inp:
         evctrl |= 1
     if out:
         evctrl |= 1 << 1
-    
-    if "SAMC2" in dacSym_DeviceName.getValue():
+
+    if invertAvailable:
         evctrl |= (inv) << 2
-    
-    Database.setSymbolValue("evsys", "GENERATOR_DAC_EMPTY_ACTIVE", inp, 2)
-    Database.setSymbolValue("evsys", "USER_DAC_START_READY", inp, 2)
-    
+
+    Database.setSymbolValue("evsys", "GENERATOR_DAC_EMPTY_ACTIVE", out, 2)
+    Database.setSymbolValue("evsys", "USER_DAC_START_READY", bool(inp), 2)
+
     symbol.setValue(evctrl, 2)
-    
+
 ################################################################################
 ########                        DAC Data Base Components               #########
 ################################################################################
@@ -62,7 +62,25 @@ def evsysControl(symbol, event):
 def instantiateComponent(dacComponent):
 
     global dacSym_DeviceName
-    
+    global invertAvailable
+    invertAvailable = False
+    ditheringSupported = False
+    evctrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DAC\"]/register-group@[name=\"DAC\"]/register@[name=\"EVCTRL\"]")
+    evctrlValue = evctrlNode.getChildren()
+    for index in range(len(evctrlValue)):
+        evctrlInvertKey = evctrlValue[index].getAttribute("name")
+        if evctrlInvertKey == "INVEI":
+            invertAvailable = True
+            break
+
+    ditherNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DAC\"]/register-group@[name=\"DAC\"]/register@[name=\"CTRLB\"]")
+    ditherValue = ditherNode.getChildren()
+    for index in range(len(ditherValue)):
+        ditherKey = ditherValue[index].getAttribute("name")
+        if ditherKey == "DITHER":
+            ditheringSupported = True
+            break
+
     dacInstanceName = dacComponent.createStringSymbol("DAC_INSTANCE_NAME", None)
     dacInstanceName.setVisible(False)
     dacInstanceName.setDefaultValue(dacComponent.getID().upper())
@@ -72,7 +90,7 @@ def instantiateComponent(dacComponent):
     dacSym_DeviceName = dacComponent.createStringSymbol("DAC_DEVICE_NAME", None)
     dacSym_DeviceName.setVisible(False)
     dacSym_DeviceName.setDefaultValue(Variables.get("__PROCESSOR"))
-    
+
     #clock enable
     Database.clearSymbolValue("core", dacInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", dacInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
@@ -106,7 +124,7 @@ def instantiateComponent(dacComponent):
     dacSym_CTRLB_REFSEL.setOutputMode("Value")
     dacSym_CTRLB_REFSEL.setDisplayMode("Description")
 
-    #DAC output as input to Analog Comparator or ADC or as External output 
+    #DAC output as input to Analog Comparator or ADC or as External output
     dacSym_CTRLB_IOEN_EOEN = dacComponent.createKeyValueSetSymbol("DAC_OUTPUT_MODE", None)
     dacSym_CTRLB_IOEN_EOEN.setLabel ("Select DAC Output Mode")
     dacSym_CTRLB_IOEN_EOEN.addKey("ANALOG_COMPARATOR", "0", "DAC output to Analog Comparator")
@@ -126,7 +144,7 @@ def instantiateComponent(dacComponent):
     dacSym_CTRLB_VPD.setLabel("Disable voltage pump to save power")
 
     #Dithering Mode
-    if "SAMC2" in dacSym_DeviceName.getValue():
+    if ditheringSupported:
         dacSym_CTRLB_DITHER = dacComponent.createBooleanSymbol("DAC_DITHERING_MODE", None)
         dacSym_CTRLB_DITHER.setLabel("Enable 4-Bit Dithering?")
         dacSym_CTRLB_DITHER.setVisible(True)
@@ -143,8 +161,8 @@ def instantiateComponent(dacComponent):
     dacSym_EVCTRL_STARTEI = dacComponent.createBooleanSymbol("DAC_START_CONVERSION_EVENT_INPUT", dacMenu)
     dacSym_EVCTRL_STARTEI.setLabel("Trigger conversion on event Detection")
     dacSym_EVCTRL_STARTEI.setVisible(True)
-    
-    if "SAMC2" in dacSym_DeviceName.getValue():
+
+    if invertAvailable:
         dacSym_EVCTRL_INVEI = dacComponent.createKeyValueSetSymbol("DAC_INVERSION_OUTPUT", dacMenu)
         dacSym_EVCTRL_INVEI.setLabel("Edge Detection for Input Event")
         dacSym_EVCTRL_INVEI.addKey("Rising", "0", "Detect on Rising Edge")
@@ -152,12 +170,12 @@ def instantiateComponent(dacComponent):
         dacSym_EVCTRL_INVEI.setVisible(True)
         dacSym_EVCTRL_INVEI.setOutputMode("Value")
         dacSym_EVCTRL_INVEI.setDisplayMode("Key")
-    
+
     dacSym_EVCTRL = dacComponent.createHexSymbol("DAC_EVCTRL", None)
     dacSym_EVCTRL.setLabel("Trigger conversion on input event?")
     dacSym_EVCTRL.setVisible(False)
     dacSym_EVCTRL.setDependencies(evsysControl,["DAC_BUFFER_EMPTY_EVENT_OUTPUT", "DAC_START_CONVERSION_EVENT_INPUT", "DAC_INVERSION_OUTPUT"])
-    
+
     # Clock Warning status
     dacSym_ClkEnComment = dacComponent.createCommentSymbol("DAC_CLOCK_ENABLE_COMMENT", None)
     dacSym_ClkEnComment.setLabel("Warning!!! DAC Peripheral Clock is Disabled in Clock Manager")
