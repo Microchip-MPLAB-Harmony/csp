@@ -91,19 +91,29 @@ extern "C" {
 
 void ${SDADC_INSTANCE_NAME}_Initialize( void );
 
+<#if SDADC_TRIGGER == "1"> <#-- SW trigger -->
 void ${SDADC_INSTANCE_NAME}_ConversionStart( void );
-
-bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady (void );
+</#if>
 
 int16_t ${SDADC_INSTANCE_NAME}_ConversionResultGet( void );
 
+<#if SDADC_AUTO_SEQUENCE == true>
 bool ${SDADC_INSTANCE_NAME}_ConversionSequenceIsFinished(void);
+</#if>
 
+<#if SDADC_WINCTRL_WINMODE != "0">
 void ${SDADC_INSTANCE_NAME}_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold);
+</#if>
 
 <#if SDADC_INTERRUPT_MODE == true>
 void ${SDADC_INSTANCE_NAME}_CallbackRegister(SDADC_CALLBACK callback, uintptr_t context);
 
+<#else>
+bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady (void );
+
+<#if SDADC_WINCTRL_WINMODE != "0">
+bool ${SDADC_INSTANCE_NAME}_WindowMonitorIsSet( void );
+</#if>
 </#if>
 
 
