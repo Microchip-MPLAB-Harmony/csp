@@ -10,7 +10,7 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_d20_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f8" displayName="ac" projectFiles="true">
+            <logicalFolder name="f7" displayName="ac" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/ac/plib_ac.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="clock" projectFiles="true">
@@ -28,7 +28,7 @@
             <logicalFolder name="f3" displayName="port" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/port/plib_port.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="rtc" projectFiles="true">
+            <logicalFolder name="f8" displayName="rtc" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/rtc/plib_rtc.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="sercom" projectFiles="true">
@@ -101,7 +101,7 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_d20_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f8" displayName="ac" projectFiles="true">
+            <logicalFolder name="f7" displayName="ac" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/ac/plib_ac.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="clock" projectFiles="true">
@@ -119,7 +119,7 @@
             <logicalFolder name="f3" displayName="port" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="rtc" projectFiles="true">
+            <logicalFolder name="f8" displayName="rtc" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/rtc/plib_rtc_timer.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="sercom" projectFiles="true">

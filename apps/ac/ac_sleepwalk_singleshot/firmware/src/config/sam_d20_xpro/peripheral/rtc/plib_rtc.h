@@ -57,26 +57,11 @@ extern "C" {
 /* Frequency of Counter Clock for RTC */
 #define RTC_COUNTER_CLOCK_FREQUENCY         0
 
-typedef enum
-{
-    RTC_PER0_MASK = 0x0001,
-    RTC_PER1_MASK = 0x0002,
-    RTC_PER2_MASK = 0x0004,
-    RTC_PER3_MASK = 0x0008,
-    RTC_PER4_MASK = 0x0010,
-    RTC_PER5_MASK = 0x0020,
-    RTC_PER6_MASK = 0x0040,
-    RTC_PER7_MASK = 0x0080,
-    /* Force the compiler to reserve 32-bit memory for enum */
-    RTC_PERIODIC_INT_MASK_INVALID = 0xFFFFFFFF
-} RTC_PERIODIC_INT_MASK;
-
-
 
 
 
 void RTC_Initialize(void);
-bool RTC_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period);
+
 bool RTC_Timer32CounterHasOverflowed ( void );
 bool RTC_Timer32CompareHasMatched(void);
 void RTC_Timer32Start ( void );

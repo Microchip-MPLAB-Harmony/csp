@@ -63,8 +63,7 @@ uintptr_t comparator_context;
 volatile bool change_detect = false;
 volatile bool ac_comparison_done = false;
 
-
-void ac_callBack(uintptr_t ac_context)
+void ac_callBack(uint8_t int_flag, uintptr_t ac_context)
 {
     ac_comparison_done = true;
     
@@ -72,7 +71,7 @@ void ac_callBack(uintptr_t ac_context)
     GPIO_PB30_Toggle();
     
     /* Check the comparator output state */
-    if(ac_context & AC_STATUSA_STATE0_Msk)
+    if(int_flag & AC_STATUSA_STATE0_Msk)
     {
         change_detect  = true;
     }
@@ -91,7 +90,7 @@ int main ( void )
     RTC_Timer32Start();
     RTC_Timer32CompareSet(RTC_COMPARE_VAL);
     AC_CallbackRegister(ac_callBack,comparator_context);
-    printf("\r\n\r\nAC Demo - RTC triggers AC comparison on PA04\r\n\r\n");
+    printf("\r\n\r\nAC Demo - RTC triggers AC comparison on PA04\r\n");
 
     while ( true )
     {

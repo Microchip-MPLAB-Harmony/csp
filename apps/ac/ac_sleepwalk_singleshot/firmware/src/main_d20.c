@@ -63,7 +63,7 @@ uintptr_t comparator_context;
 volatile bool change_detect = false;
 volatile bool ac_comparison_done = false;
 
-void ac_callBack(uintptr_t ac_context)
+void ac_callBack(uint8_t int_flag, uintptr_t ac_context)
 {
     ac_comparison_done = true;
     
@@ -71,7 +71,7 @@ void ac_callBack(uintptr_t ac_context)
     GPIO_PA14_Toggle();
     
     /* Check the comparator output state */
-    if(ac_context & AC_STATUSA_STATE0_Msk)
+    if(int_flag & AC_STATUSA_STATE0_Msk)
     {
         change_detect  = true;
     }

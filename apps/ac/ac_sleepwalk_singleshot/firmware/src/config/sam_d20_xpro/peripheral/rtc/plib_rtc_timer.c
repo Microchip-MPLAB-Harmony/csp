@@ -49,35 +49,21 @@
 void RTC_Initialize(void)
 {
     RTC_REGS->MODE0.RTC_CTRL = RTC_MODE0_CTRL_SWRST_Msk;
-    
+
     while((RTC_REGS->MODE0.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization after Software Reset */
     }
-    
+
     RTC_REGS->MODE0.RTC_READREQ |= RTC_READREQ_RCONT_Msk;
 
     RTC_REGS->MODE0.RTC_CTRL = RTC_MODE0_CTRL_MODE(0) | RTC_MODE0_CTRL_PRESCALER(0x0) |RTC_MODE0_CTRL_MATCHCLR_Msk;
 
-
     RTC_REGS->MODE0.RTC_COMP[0] = 0x100;
+
 RTC_REGS->MODE0.RTC_EVCTRL = 0x100;
 }
 
-
-bool RTC_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period)
-{
-   bool periodIntervalComplete = false;
-   if( (RTC_REGS->MODE0.RTC_INTFLAG & period) == period)
-   {
-       periodIntervalComplete = true;
-
-       /* Clear Periodic Interval Interrupt */
-       RTC_REGS->MODE0.RTC_INTFLAG = period;
-   }
-
-    return periodIntervalComplete;
-}
 
 
 bool RTC_Timer32CompareHasMatched(void)
@@ -87,6 +73,7 @@ bool RTC_Timer32CompareHasMatched(void)
    if((RTC_REGS->MODE0.RTC_INTFLAG & RTC_MODE0_INTFLAG_CMP0_Msk) == RTC_MODE0_INTFLAG_CMP0_Msk)
    {
        status = true;
+
        RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_CMP0_Msk;
    }
 
@@ -100,6 +87,7 @@ bool RTC_Timer32CounterHasOverflowed ( void )
    if((RTC_REGS->MODE0.RTC_INTFLAG & RTC_MODE0_INTFLAG_OVF_Msk) == RTC_MODE0_INTFLAG_OVF_Msk)
    {
        status = true;
+
        RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_OVF_Msk;
    }
 
@@ -110,13 +98,12 @@ bool RTC_Timer32CounterHasOverflowed ( void )
 void RTC_Timer32Start ( void )
 {
     RTC_REGS->MODE0.RTC_CTRL |= RTC_MODE0_CTRL_ENABLE_Msk;
-        
+
     while((RTC_REGS->MODE0.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     {
         /* Wait for synchronization after Enabling RTC */
     }
 }
-
 
 void RTC_Timer32Stop ( void )
 {
@@ -138,7 +125,6 @@ void RTC_Timer32CounterSet ( uint32_t count )
     }
 }
 
-
 void RTC_Timer32CompareSet ( uint32_t compareValue )
 {
     RTC_REGS->MODE0.RTC_COMP[0] = compareValue;
@@ -155,8 +141,8 @@ uint32_t RTC_Timer32CounterGet ( void )
     {
         /* Wait for Synchronization before reading value from Count Register */
     }
-        
-    return(RTC_REGS->MODE0.RTC_COUNT);
+
+    return(RTC_REGS->MODE0.RTC_COUNT) + 3;
 }
 
 uint32_t RTC_Timer32PeriodGet ( void )

@@ -64,39 +64,17 @@
 
 typedef enum
 {
-    /* Analog Comparator Output Interrupt */
-    AC_OUTPUT_INTERRUPT = 0,
-
-    /* Analog Comparator Window Mode Output Interrupt */
-    AC_WIN_INTERRUPT = 1
-
-} AC_INTERRUPTS;
-
-typedef enum
-{
-    /* Analog Comparator Output - Non Interrupt Mode */
-    AC_OUTPUT = 0,
-
-    /* Analog Comparator Output - Interrupt Mode */
-    AC_INTERRUPT = 1,
-
-    /* Analog Comparator Output - Window Mode */
-    AC_WINDOW_INTERRUPT = 2
-
-} AC_STATUS;
-
-typedef enum
-{
     AC_CHANNEL0 = 0,
     AC_CHANNEL1 = 1,
     AC_CHANNEL2 = 2,
     AC_CHANNEL3 = 3,
 }AC_CHANNEL;
 
-typedef void (*AC_CALLBACK) (uintptr_t context);
+typedef void (*AC_CALLBACK) (uint8_t int_flags, uintptr_t context);
 
 typedef struct
 {
+    uint8_t int_flags;
     AC_CALLBACK callback;
     uintptr_t    context;
 
@@ -112,8 +90,12 @@ void AC_Initialize (void);
 
 void AC_Start( AC_CHANNEL channel_id );
 
-bool AC_StatusGet ( AC_STATUS status, AC_CHANNEL channel);
+void AC_SwapInputs( AC_CHANNEL channel_id );
+
+bool AC_StatusGet (AC_CHANNEL channel);
 
 void AC_CallbackRegister (AC_CALLBACK callback, uintptr_t context);
+
+void AC_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar);
 
 #endif /* PLIB_AC_H */
