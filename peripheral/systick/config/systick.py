@@ -121,10 +121,10 @@ def systickCal(symbol, event):
 
     if clock == 0:
         if freq_ext != 0 and freq_ext != None:
-            value = int(((float(freq_ext)/1000000) * int(round(period * 1000))))
+            value = int(round(float(freq_ext) * (period / 1000)))
     else:
         if freq_proc != 0 and freq_proc != None:
-            value = int(((float(freq_proc)/1000000) * int(round(period * 1000))))
+            value = int(round((float(freq_proc)) * (period / 1000)))
 
     symbol.setValue(str(hex(value)),2)
     Database.setSymbolValue("core","SYSTICK_PERIOD_US", int(round(period * 1000)), 2)
