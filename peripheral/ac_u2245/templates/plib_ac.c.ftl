@@ -292,13 +292,13 @@ void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t conte
 void ${AC_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Copy the status to use inside the callback */
-    acObj.context = ${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
+    acObj.int_flags = ${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
     /* Clear the interrupt flags*/
     ${AC_INSTANCE_NAME}_REGS->AC_INTFLAG = AC_INTFLAG_Msk;
 
     /* Callback user function */
     if(${AC_INSTANCE_NAME?lower_case}Obj.callback != NULL)
     {
-        ${AC_INSTANCE_NAME?lower_case}Obj.callback(${AC_INSTANCE_NAME?lower_case}Obj.context);
+        ${AC_INSTANCE_NAME?lower_case}Obj.callback(${AC_INSTANCE_NAME?lower_case}Obj.int_flags, ${AC_INSTANCE_NAME?lower_case}Obj.context);
     }
 }
