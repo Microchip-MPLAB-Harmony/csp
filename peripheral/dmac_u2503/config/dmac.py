@@ -36,7 +36,10 @@ global dmacHeaderFile
 global dmacSourceFile
 global dmacSystemInitFile
 global dmacSystemDefFile
-
+global numGenerators
+global numUsers
+numGenerators = 0
+numUsers = 0
 global dmacEnable
 
 # Parse atdf xml file to get instance name for the peripheral which has DMA id.
@@ -82,6 +85,15 @@ for module in range (0, len(modules)):
 # Needs placed after above parsing as value of DMAC_ID for peripherals may be 0
 per_instance["Software Trigger"] = 0
 
+generatorNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
+for id in range(0,len(generatorNode.getChildren())):
+    if generatorNode.getChildren()[id].getAttribute("module-instance") == "DMAC":
+        numGenerators = numGenerators + 1
+
+usersNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/users")
+for id in range(0,len(usersNode.getChildren())):
+    if usersNode.getChildren()[id].getAttribute("module-instance") == "DMAC":
+        numUsers = numUsers + 1
 # This is the dictionary for all trigger sources and corresponding DMAC settings.
 # "dmacTriggerLogic" business logic will override the DMAC setting values
 # based on the trigger source selected.
@@ -217,10 +229,12 @@ def dmacEvsysControl(symbol, event):
 
     enable = Database.getSymbolValue("core","DMAC_ENABLE_CH_" + channel)
     input = Database.getSymbolValue("core","DMAC_ENABLE_EVSYS_IN_" + channel)
-    output = Database.getSymbolValue("core","DMAC_ENABLE_EVSYS_OUT_" + channel)
-
-    Database.setSymbolValue("evsys", "GENERATOR_DMAC_CH_" + channel + "_ACTIVE", (enable & output), 2)
-    Database.setSymbolValue("evsys", "USER_DMAC_CH_" + channel + "_READY", (enable & input), 2)
+    if Database.getSymbolValue("core","DMAC_ENABLE_EVSYS_OUT_" + channel) != None:
+        output = Database.getSymbolValue("core","DMAC_ENABLE_EVSYS_OUT_" + channel)
+        if Database.getSymbolValue("evsys", "GENERATOR_DMAC_CH_" + channel + "_ACTIVE") != (enable & output):
+            Database.setSymbolValue("evsys", "GENERATOR_DMAC_CH_" + channel + "_ACTIVE", (enable & output), 2)
+    if Database.getSymbolValue("evsys", "USER_DMAC_CH_" + channel + "_READY") != (enable & input):
+        Database.setSymbolValue("evsys", "USER_DMAC_CH_" + channel + "_READY", (enable & input), 2)
 
 # This function enables DMA channel and selects respective trigger if DMA mode
 # is selected for any peripheral ID.
@@ -282,7 +296,7 @@ dmacChannelCount = int(dmacChannelNode.getAttribute("value"))
 
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
 dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("SAMM0:SAMM0DMAModel")
+dmaManagerSelect.setDefaultValue("SAME5X:SAME5XDMAModel")
 
 dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
@@ -309,8 +323,12 @@ dmacChCount.setLabel("DMA (DMAC) Channels Count")
 dmacChCount.setDefaultValue(dmacChannelCount)
 dmacChCount.setVisible(False)
 
-dmacEventCount = coreComponent.createIntegerSymbol("DMA_EVSYS_CHANNEL_COUNT", dmacEnable)
-dmacEventCount.setDefaultValue(4)
+dmacEventCount = coreComponent.createIntegerSymbol("DMA_EVSYS_GENERATOR_COUNT", dmacEnable)
+dmacEventCount.setDefaultValue(numGenerators)
+dmacEventCount.setVisible(False)
+
+dmacEventCount = coreComponent.createIntegerSymbol("DMA_EVSYS_USER_COUNT", dmacEnable)
+dmacEventCount.setDefaultValue(numUsers)
 dmacEventCount.setVisible(False)
 
 dmacFileGen = coreComponent.createBooleanSymbol("DMAC_FILE_GEN", dmacEnable)
@@ -341,7 +359,8 @@ for dmacCount in range(0, 4):
 for channelID in range(0, dmacChCount.getValue()):
 
     global per_instance
-
+    global numUsers
+    global numGenerators
     dmacChannelEnable = coreComponent.createBooleanSymbol("DMAC_ENABLE_CH_" + str(channelID), dmacMenu)
     dmacChannelEnable.setLabel("Use DMAC Channel " + str(channelID))
     dmacChannelIds.append("DMAC_ENABLE_CH_" + str(channelID))
@@ -462,49 +481,49 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacSym_BTCTRL_BEATSIZE.setDisplayMode("Description")
     dmacSym_BTCTRL_BEATSIZE.setDependencies(dmacTriggerLogic, ["DMAC_CHCTRLB_TRIGSRC_CH_"+ str(channelID)])
 
-    if(channelID < 4):
+    if(channelID < numUsers):
         dmaEVSYSMenu = coreComponent.createMenuSymbol("DMAC_EVSYS_MENU"+str(channelID), dmacChannelEnable)
         dmaEVSYSMenu.setLabel("Event System Configuration")
+        if channelID < numGenerators:
+            dmaEvsysOut = coreComponent.createBooleanSymbol("DMAC_ENABLE_EVSYS_OUT_" + str(channelID), dmaEVSYSMenu)
+            dmaEvsysOut.setLabel("Enable Event Output for Channel " + str(channelID))
 
-        dmaEvsysOut = coreComponent.createBooleanSymbol("DMAC_ENABLE_EVSYS_OUT_" + str(channelID), dmaEVSYSMenu)
-        dmaEvsysOut.setLabel("Enable Event Output for Channel " + str(channelID))
+            dmaEvsysEVOSEL = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_EVSYS_EVOSEL_" + str(channelID), dmaEVSYSMenu)
+            dmaEvsysEVOSEL.setLabel("Event Output Selection")
 
-        dmaEvsysEVOSEL = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_EVSYS_EVOSEL_" + str(channelID), dmaEVSYSMenu)
-        dmaEvsysEVOSEL.setLabel("Event Output Selection")
+            dmaEvsysEVOMODE = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_EVSYS_EVOMODE_" + str(channelID), dmaEVSYSMenu)
+            dmaEvsysEVOMODE.setLabel("Event Output Selection")
 
-        dmaEvsysEVOMODE = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_EVSYS_EVOMODE_" + str(channelID), dmaEVSYSMenu)
-        dmaEvsysEVOMODE.setLabel("Event Output Selection")
-
-        dmaEvsysEVOMODENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_CHEVCTRL__EVOMODE\"]")
-        dmaEvsysEVOMODEValues = dmaEvsysEVOMODENode.getChildren()
-
-
-        for index in range(len(dmaEvsysEVOMODEValues)):
-            dmaEvsysEVOMODEKeyName = dmaEvsysEVOMODEValues[index].getAttribute("name")
-            dmaEvsysEVOMODEKeyDescription = dmaEvsysEVOMODEValues[index].getAttribute("caption")
-            dmaEvsysEVOMODEKeyValue = dmaEvsysEVOMODEValues[index].getAttribute("value")
-            dmaEvsysEVOMODE.addKey(dmaEvsysEVOMODEKeyName, dmaEvsysEVOMODEKeyValue, dmaEvsysEVOMODEKeyDescription)
-
-        dmaEvsysEVOMODE.setOutputMode("Value")
-        dmaEvsysEVOMODE.setDisplayMode("Key")
-
-        dmaEvsysEVOSELNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_BTCTRL__EVOSEL\"]")
-        dmaEvsysEVOSELValues = dmaEvsysEVOSELNode.getChildren()
+            dmaEvsysEVOMODENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_CHEVCTRL__EVOMODE\"]")
+            dmaEvsysEVOMODEValues = dmaEvsysEVOMODENode.getChildren()
 
 
-        for index in range(len(dmaEvsysEVOSELValues)):
-            dmaEvsysEVOSELKeyName = dmaEvsysEVOSELValues[index].getAttribute("name")
-            dmaEvsysEVOSELKeyDescription = dmaEvsysEVOSELValues[index].getAttribute("caption")
-            dmaEvsysEVOSELKeyValue = dmaEvsysEVOSELValues[index].getAttribute("value")
-            dmaEvsysEVOSEL.addKey(dmaEvsysEVOSELKeyName, dmaEvsysEVOSELKeyValue, dmaEvsysEVOSELKeyDescription)
+            for index in range(len(dmaEvsysEVOMODEValues)):
+                dmaEvsysEVOMODEKeyName = dmaEvsysEVOMODEValues[index].getAttribute("name")
+                dmaEvsysEVOMODEKeyDescription = dmaEvsysEVOMODEValues[index].getAttribute("caption")
+                dmaEvsysEVOMODEKeyValue = dmaEvsysEVOMODEValues[index].getAttribute("value")
+                dmaEvsysEVOMODE.addKey(dmaEvsysEVOMODEKeyName, dmaEvsysEVOMODEKeyValue, dmaEvsysEVOMODEKeyDescription)
 
-        dmaEvsysEVOSEL.setOutputMode("Value")
-        dmaEvsysEVOSEL.setDisplayMode("Description")
+            dmaEvsysEVOMODE.setOutputMode("Value")
+            dmaEvsysEVOMODE.setDisplayMode("Key")
+
+            dmaEvsysEVOSELNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_BTCTRL__EVOSEL\"]")
+            dmaEvsysEVOSELValues = dmaEvsysEVOSELNode.getChildren()
+
+
+            for index in range(len(dmaEvsysEVOSELValues)):
+                dmaEvsysEVOSELKeyName = dmaEvsysEVOSELValues[index].getAttribute("name")
+                dmaEvsysEVOSELKeyDescription = dmaEvsysEVOSELValues[index].getAttribute("caption")
+                dmaEvsysEVOSELKeyValue = dmaEvsysEVOSELValues[index].getAttribute("value")
+                dmaEvsysEVOSEL.addKey(dmaEvsysEVOSELKeyName, dmaEvsysEVOSELKeyValue, dmaEvsysEVOSELKeyDescription)
+
+            dmaEvsysEVOSEL.setOutputMode("Value")
+            dmaEvsysEVOSEL.setDisplayMode("Description")
 
         dmaEvsysIn = coreComponent.createBooleanSymbol("DMAC_ENABLE_EVSYS_IN_" + str(channelID), dmaEVSYSMenu)
         dmaEvsysIn.setLabel("Enable Event Input for Channel " + str(channelID))
 
-        dmaEvsysEVACT = coreComponent.createKeyValueSetSymbol("DMAC_CHCTRLB_EVACT_" + str(channelID), dmaEVSYSMenu)
+        dmaEvsysEVACT = coreComponent.createKeyValueSetSymbol("DMAC_CHEVCTRL_EVACT_" + str(channelID), dmaEVSYSMenu)
         dmaEvsysEVACT.setLabel("Event Input Action")
 
         dmaEvsysEVACTNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_CHEVCTRL__EVACT\"]")

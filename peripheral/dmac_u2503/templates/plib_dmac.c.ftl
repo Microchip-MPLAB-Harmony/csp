@@ -116,11 +116,13 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#assign DMAC_TRIGSRC_PERID_VAL = "DMAC_CHCTRLA_TRIGSRC_CH_" + i + "_PERID_VAL">
         <#assign DMAC_BURSTLEN = "DMAC_CHCTRLA_BURSTLEN_CH_" + i>
         <#assign DMAC_THRESH = "DMAC_CHCTRLA_THRESH_CH_" + i>
-        <#if i < DMA_EVSYS_CHANNEL_COUNT>
+        <#if i < DMA_EVSYS_GENERATOR_COUNT>
             <#assign DMAC_EVSYS_OUT = "DMAC_ENABLE_EVSYS_OUT_" + i >
-            <#assign DMAC_EVSYS_IN = "DMAC_ENABLE_EVSYS_IN_" + i >
             <#assign DMAC_EVSYS_EVOSEL = "DMAC_BTCTRL_EVSYS_EVOSEL_" + i >
             <#assign DMAC_EVSYS_EVOMODE = "DMAC_BTCTRL_EVSYS_EVOMODE_" + i >
+        </#if>
+        <#if i < DMA_EVSYS_USER_COUNT>
+            <#assign DMAC_EVSYS_IN = "DMAC_ENABLE_EVSYS_IN_" + i >
             <#assign DMAC_EVSYS_EVACT = "DMAC_CHEVCTRL_EVACT_" + i >
         </#if>
 
@@ -140,7 +142,7 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#lt>                                                                       | DMAC_BTCTRL_VALID_Msk
         <#lt>                                                                       ${(.vars[DMAC_BTCTRL_SRCINC] == "INCREMENTED_AM")?then('| DMAC_BTCTRL_SRCINC_Msk','')}
         <#lt>                                                                       ${(.vars[DMAC_BTCTRL_DSTINC] == "INCREMENTED_AM")?then('| DMAC_BTCTRL_DSTINC_Msk','')}
-        <#lt>                                                                       <#if i < DMA_EVSYS_CHANNEL_COUNT>
+        <#lt>                                                                       <#if i < DMA_EVSYS_GENERATOR_COUNT>
         <#lt>                                                                       ${(.vars[DMAC_EVSYS_OUT])?then('| DMAC_BTCTRL_EVOSEL(${.vars[DMAC_EVSYS_EVOSEL]})','')}
         <#lt>                                                                       </#if>
         <#lt>                                                                       ;
@@ -152,10 +154,12 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 
         <#lt>   ${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMAC_CHINTENSET = (DMAC_CHINTENSET_TERR_Msk | DMAC_CHINTENSET_TCMPL_Msk);
 
-        <#if i < DMA_EVSYS_CHANNEL_COUNT>
+        <#if i < DMA_EVSYS_USER_COUNT>
         <#if (.vars[DMAC_EVSYS_OUT] == true) || (.vars[DMAC_EVSYS_IN] == true)>
         <#lt>   <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->CHANNEL[${i}].DMAC_CHEVCTRL = DMAC_CHEVCTRL_EVACT(${.vars[DMAC_EVSYS_EVACT]})
+                                                                                            <#if i < DMA_EVSYS_GENERATOR_COUNT>
         <#lt>                                                                                ${(.vars[DMAC_EVSYS_OUT])?then('| DMAC_CHEVCTRL_EVOE_Msk | DMAC_CHEVCTRL_EVOMODE(${.vars[DMAC_EVSYS_EVOMODE]})','')}
+                                                                                            </#if>
         <#lt>                                                                                ${(.vars[DMAC_EVSYS_IN])?then('| DMAC_CHEVCTRL_EVIE_Msk','')}
         <#lt>
         <#lt>;</@compress>
@@ -251,7 +255,7 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel )
     This function submit a list of DMA transfers.
 ********************************************************************************/
 
-bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmacdescriptor_registers_t* channelDesc)
+bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmac_descriptor_registers_t* channelDesc)
 {
     bool returnStatus = false;
 
@@ -259,7 +263,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer (DMAC_CHANNEL channel, dmacd
     {
         dmacChannelObj[channel].busyStatus = true;
 
-        memcpy(&descriptor_section[channel], channelDesc, sizeof(dmacdescriptor_registers_t));
+        memcpy(&descriptor_section[channel], channelDesc, sizeof(dmac_descriptor_registers_t));
 
         /* Enable the channel */
         ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
