@@ -35,21 +35,20 @@
 #define RTC_COMPARE_VAL 2000
 
 uintptr_t comparator_context;
-volatile uint32_t change_detect = 0;
-volatile uint32_t ac_comparison_done = 0;
+volatile bool change_detect = false;
+volatile bool ac_comparison_done = false;
 
-
-void ac_callBack(uintptr_t ac_context)
+void ac_callBack(uint8_t int_flag, uintptr_t ac_context)
 {
-    ac_comparison_done = 1;
+    ac_comparison_done = true;
     
     /* Indication that a comparison is done */
-    PORT_PinToggle(PORT_PIN_PC05);
+    GPIO_PC05_Toggle();
     
     /* Check the comparator output state */
-    if(ac_context & AC_STATUSA_STATE0_Msk)
+    if(int_flag & AC_STATUSA_STATE0_Msk)
     {
-        change_detect  = 1;
+        change_detect  = true;
     }
 }
 
@@ -75,10 +74,10 @@ int main ( void )
         SYS_Tasks ( );
         if(ac_comparison_done)
         {
-            ac_comparison_done = 0;
+            ac_comparison_done = false;
             if(change_detect)
             {
-                change_detect = 0;
+                change_detect = false;
                 printf("\r\nPA04 voltage is above detect level\r\n");
             }
             else

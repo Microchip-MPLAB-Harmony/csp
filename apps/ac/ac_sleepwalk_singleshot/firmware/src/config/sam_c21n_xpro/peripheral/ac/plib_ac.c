@@ -71,7 +71,7 @@ void AC_Initialize(void)
     {
         /* Wait for Synchronization */
     }
-    AC_REGS->AC_COMPCTRL[0] = AC_COMPCTRL_MUXPOS_PIN0 | AC_COMPCTRL_MUXNEG_BANDGAP | AC_COMPCTRL_INTSEL_EOC | AC_COMPCTRL_OUT_ASYNC | AC_COMPCTRL_SPEED(0) | AC_COMPCTRL_SINGLE_Msk | AC_COMPCTRL_RUNSTDBY_Msk ;
+    AC_REGS->AC_COMPCTRL[0] = AC_COMPCTRL_MUXPOS_PIN0 | AC_COMPCTRL_MUXNEG_BANDGAP | AC_COMPCTRL_INTSEL_EOC | AC_COMPCTRL_OUT_OFF | AC_COMPCTRL_SPEED(0) | AC_COMPCTRL_SINGLE_Msk | AC_COMPCTRL_RUNSTDBY_Msk ;
     AC_REGS->AC_COMPCTRL[0] |= AC_COMPCTRL_ENABLE_Msk;
     AC_REGS->AC_SCALER[0] = 0;
 
@@ -88,6 +88,11 @@ void AC_Start( AC_CHANNEL channel_id )
 {
     /* Start Comparison */
     AC_REGS->AC_CTRLB |= (1 << channel_id);
+}
+
+void AC_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar)
+{
+    AC_REGS->AC_SCALER[channel_id] = vdd_scalar;
 }
 
 void AC_SwapInputs( AC_CHANNEL channel_id )
@@ -109,7 +114,7 @@ void AC_SwapInputs( AC_CHANNEL channel_id )
     AC_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
 }
 
-bool AC_StatusGet ( AC_STATUS status, AC_CHANNEL channel)
+bool AC_StatusGet (AC_CHANNEL channel)
 {
     bool breturnVal = false;
 
@@ -124,7 +129,7 @@ bool AC_StatusGet ( AC_STATUS status, AC_CHANNEL channel)
             breturnVal = false;
         }
     }
-    
+
     return breturnVal;
 }
 
@@ -137,13 +142,13 @@ void AC_CallbackRegister (AC_CALLBACK callback, uintptr_t context)
 void AC_InterruptHandler( void )
 {
     /* Copy the status to use inside the callback */
-    acObj.context = AC_REGS->AC_STATUSA;
+    acObj.int_flags = AC_REGS->AC_STATUSA;
     /* Clear the interrupt flags*/
     AC_REGS->AC_INTFLAG = AC_INTFLAG_Msk;
 
     /* Callback user function */
     if(acObj.callback != NULL)
     {
-        acObj.callback(acObj.context);
+        acObj.callback(acObj.int_flags, acObj.context);
     }
 }

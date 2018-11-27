@@ -51,16 +51,16 @@
           <Name dnOrder="1">plib_ac.c</Name>
           <LogicalPath dnOrder="2">config/sam_d21_xpro/peripheral/ac/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/ac/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8ED615320EB18D9E794021C8B2C086CD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8ED615320EB18D9E794021C8B2C086CD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BE3D814C31D7D2328985F73333888A15</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BE3D814C31D7D2328985F73333888A15</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_d21_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2257BC606991F633B24535CF0B4F1CE1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2257BC606991F633B24535CF0B4F1CE1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C06675B4EBF0D2F46FF927323153657D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C06675B4EBF0D2F46FF927323153657D</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
@@ -99,8 +99,8 @@
           <Name dnOrder="1">plib_rtc_timer.c</Name>
           <LogicalPath dnOrder="2">config/sam_d21_xpro/peripheral/rtc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/rtc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7C7CACB74173B74485A5956ABAAC28B0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">08F89748DF3C630786BE273CCE709BE8</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8377B3199682BD554883EAF971A195C1</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8377B3199682BD554883EAF971A195C1</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
@@ -323,8 +323,8 @@
           <Name dnOrder="1">plib_ac.h</Name>
           <LogicalPath dnOrder="2">config/sam_d21_xpro/peripheral/ac/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/ac/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0330A45F34AF5696FAC2EB4BA78C3709</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0330A45F34AF5696FAC2EB4BA78C3709</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1BF0762A4568146387B9440B7FD5FF04</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1BF0762A4568146387B9440B7FD5FF04</UserChecksum>
         </File>
         <File dnOrder="40">
           <Type dnOrder="0">HEADER</Type>
@@ -371,8 +371,8 @@
           <Name dnOrder="1">plib_rtc.h</Name>
           <LogicalPath dnOrder="2">config/sam_d21_xpro/peripheral/rtc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/rtc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4B819FDDFC1426962CAF37EC0EF8C51E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4B819FDDFC1426962CAF37EC0EF8C51E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">DFD9EF7C585777339FFD46EA0100A385</GeneratedChecksum>
+          <UserChecksum dnOrder="5">DFD9EF7C585777339FFD46EA0100A385</UserChecksum>
         </File>
         <File dnOrder="46">
           <Type dnOrder="0">HEADER</Type>
