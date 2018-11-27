@@ -81,7 +81,7 @@ def updateACClockWarningStatus(symbol, event):
 #######################################################################################################################################
 
 #######################################################################################################################################
-#####################################       Sercom Database Components      ##########################################################
+#####################################       Database Components      ##########################################################
 #######################################################################################################################################
 
 def instantiateComponent(acComponent):
@@ -125,7 +125,6 @@ def instantiateComponent(acComponent):
         #Interrupt Enable
         global acInterrupt_Enable
         acInterrupt_Enable = acComponent.createBooleanSymbol("COMP" + str(comparatorID) + "INTERRUPT_ENABLE", acSym_Enable[comparatorID])
-        print(acInterrupt_Enable)
         acInterrupt_Enable.setLabel("Comparator Interrupt Enable")
         acInterrupt_Enable.setVisible(False)
         acInterrupt_Enable.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])

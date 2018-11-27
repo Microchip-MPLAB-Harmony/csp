@@ -70,10 +70,11 @@ typedef enum
 </#list>
 }AC_CHANNEL;
 
-typedef void (*${AC_INSTANCE_NAME}_CALLBACK) (uintptr_t context);
+typedef void (*${AC_INSTANCE_NAME}_CALLBACK) (uint8_t int_flags, uintptr_t context);
 
 typedef struct
 {
+    uint8_t int_flags;
     AC_CALLBACK callback;
     uintptr_t    context;
 
