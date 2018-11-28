@@ -244,8 +244,8 @@
           <Attributes dnOrder="0">
             <StringArray dnOrder="0" id="values">
               <Values dnOrder="0">
-                <Value dnOrder="0">&amp;#160;&amp;#160;&amp;#160;&amp;#160;DFLL_Initialize();</Value>
-                <Value dnOrder="1">&amp;#160;&amp;#160;&amp;#160;&amp;#160;GCLK1_Initialize();</Value>
+                <Value dnOrder="0">&amp;#160;&amp;#160;&amp;#160;&amp;#160;GCLK1_Initialize();</Value>
+                <Value dnOrder="1">&amp;#160;&amp;#160;&amp;#160;&amp;#160;DFLL_Initialize();</Value>
                 <Value dnOrder="2">&amp;#160;&amp;#160;&amp;#160;&amp;#160;GCLK0_Initialize();</Value>
               </Values>
             </StringArray>
@@ -2393,86 +2393,60 @@
           </Values>
         </Integer>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="readOnly">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
+          <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </KeyValueSet>
-        <File dnOrder="3" id="SERCOM_USART_COMMON_HEADER">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <File dnOrder="4" id="SERCOM_USART_HEADER">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <File dnOrder="5" id="SERCOM_USART_SOURCE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <Integer dnOrder="6" id="SPI_BAUD_REG_VALUE">
+        <Integer dnOrder="3" id="SPI_BAUD_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="22"/>
             </Dynamic>
           </Values>
         </Integer>
-        <String dnOrder="7" id="TRANSMIT_DATA_REGISTER">
+        <String dnOrder="4" id="TRANSMIT_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="&amp;(SERCOM3_REGS-&gt;USART_INT.SERCOM_DATA)"/>
             </Dynamic>
           </Values>
         </String>
-        <Comment dnOrder="8" id="USART_BAUD_ERROR_COMMENT">
+        <Comment dnOrder="5" id="USART_BAUD_ERROR_COMMENT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Comment>
-        <Integer dnOrder="9" id="USART_BAUD_VALUE">
+        <Integer dnOrder="6" id="USART_BAUD_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="63017"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Boolean dnOrder="10" id="USART_INTERRUPT_MODE">
+        <Boolean dnOrder="7" id="USART_INTERRUPT_MODE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="stdio" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="11" id="USART_RXPO">
+        <KeyValueSet dnOrder="8" id="USART_RXPO">
           <Values dnOrder="0">
             <User dnOrder="0" value="1"/>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="12" id="USART_SAMPLE_COUNT">
+        <Integer dnOrder="9" id="USART_SAMPLE_COUNT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="16"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Integer dnOrder="13" id="USART_SAMPLE_RATE">
+        <Integer dnOrder="10" id="USART_SAMPLE_RATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="0"/>
@@ -2483,14 +2457,26 @@
       <Attachments dnOrder="1">
         <DirectCapability dnOrder="0" id="SERCOM3_I2C">
           <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0"/>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0"/>
+            </String>
+            <Boolean dnOrder="2" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </DirectCapability>
         <DirectCapability dnOrder="1" id="SERCOM3_SPI">
           <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0"/>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0"/>
+            </String>
+            <Boolean dnOrder="2" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
@@ -2631,7 +2617,16 @@
         </Float>
       </Symbols>
       <Attachments dnOrder="1">
-        <DirectCapability dnOrder="0" id="TC3_TMR"/>
+        <DirectCapability dnOrder="0" id="TC3_TMR">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0"/>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0"/>
+            </String>
+          </Attributes>
+        </DirectCapability>
       </Attachments>
     </UniqueComponent>
     <UniqueComponent dnOrder="8" id="tc4">
@@ -2732,13 +2727,21 @@
         </Float>
       </Symbols>
       <Attachments dnOrder="1">
-        <DirectCapability dnOrder="0" id="TC4_TMR"/>
+        <DirectCapability dnOrder="0" id="TC4_TMR">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0"/>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0"/>
+            </String>
+          </Attributes>
+        </DirectCapability>
       </Attachments>
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="170" y="60"/>
         <ElementPosition dnOrder="1" id="core" x="400" y="20"/>
@@ -2748,8 +2751,9 @@
         <ElementPosition dnOrder="5" id="sercom3" x="59" y="213"/>
         <ElementPosition dnOrder="6" id="stdio" x="275" y="276"/>
         <ElementPosition dnOrder="7" id="tc3" x="30" y="100"/>
-        <ElementPosition dnOrder="8" id="tc4" x="190" y="120"/>
+        <ElementPosition dnOrder="8" id="tc4" x="190" y="119"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
