@@ -57,10 +57,13 @@
  
 
  
+
  
  
+
  
  
+
  
 
  
@@ -70,14 +73,13 @@
 void TC3_CH2_CompareInitialize (void)
 {
     /* clock selection and waveform selection */
-    TC3_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_TCCLKS_TIMER_CLOCK4 | TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk | \
-                TC_CMR_ACPA_SET | TC_CMR_ACPC_CLEAR | TC_CMR_AEEVT_CLEAR | \
-                TC_CMR_BCPB_CLEAR | TC_CMR_BCPC_SET | TC_CMR_BEEVT_CLEAR ;
-
+    TC3_REGS->TC_CHANNEL[2].TC_CMR = TC_CMR_TCCLKS_TIMER_CLOCK4 | TC_CMR_WAVEFORM_WAVSEL_UP_RC | TC_CMR_WAVE_Msk | \
+            TC_CMR_WAVEFORM_ACPA_SET | TC_CMR_WAVEFORM_ACPC_CLEAR | TC_CMR_WAVEFORM_AEEVT_CLEAR \
+           | TC_CMR_WAVEFORM_BCPB_CLEAR | TC_CMR_WAVEFORM_BCPC_SET | TC_CMR_WAVEFORM_BEEVT_CLEAR ;
 
     /* external reset event configurations */
-    TC3_REGS->TC_CHANNEL[2].TC_CMR |= TC_CMR_ENETRG_Msk | TC_CMR_EEVT_XC0 | \
-                TC_CMR_EEVTEDG_NONE;
+    TC3_REGS->TC_CHANNEL[2].TC_CMR |= TC_CMR_WAVEFORM_ENETRG_Msk | TC_CMR_WAVEFORM_EEVT_XC0 | \
+                TC_CMR_WAVEFORM_EEVTEDG_NONE;
 
     /* write period */
     TC3_REGS->TC_CHANNEL[2].TC_RC = 11719U;
@@ -100,7 +102,7 @@ void TC3_CH2_CompareStop (void)
     TC3_REGS->TC_CHANNEL[2].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
-uint32_t TC3_CH2_CompareFrequencyGet()
+uint32_t TC3_CH2_CompareFrequencyGet( void )
 {
     return (uint32_t)(1171875UL);
 }
