@@ -53,7 +53,6 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "device.h"
 #include "plib_rstc.h"
 
 // *****************************************************************************
@@ -80,3 +79,4 @@ RSTC_RESET_CAUSE RSTC_ResetCauseGet( void )
 {
     return ( RSTC_RESET_CAUSE ) RSTC_REGS->RSTC_RCAUSE;
 }
+
