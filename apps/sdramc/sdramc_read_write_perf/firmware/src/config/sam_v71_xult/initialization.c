@@ -96,6 +96,7 @@ void SYS_Initialize ( void* data )
     SDRAMC_Initialize();
 
 
+
     NVIC_Initialize();
 	SYSTICK_TimerInitialize();
     XDMAC_Initialize();
@@ -104,7 +105,6 @@ void SYS_Initialize ( void* data )
 
 	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
 
-	BSP_Initialize();
 	USART1_Initialize();
 
 
