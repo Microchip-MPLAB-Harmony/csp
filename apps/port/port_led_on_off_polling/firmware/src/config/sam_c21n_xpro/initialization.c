@@ -97,9 +97,9 @@ void SYS_Initialize ( void* data )
 
 
 
-    NVIC_Initialize();
     EVSYS_Initialize();
 
+    NVIC_Initialize();
 
 
 
