@@ -92,7 +92,7 @@ void TC4_CompareStart( void );
 
 void TC4_CompareStop( void );
 
-uint32_t TC4_CompareFrequencyGet();
+uint32_t TC4_CompareFrequencyGet( void );
 
 
 void TC4_Compare16bitPeriodSet( uint16_t period );

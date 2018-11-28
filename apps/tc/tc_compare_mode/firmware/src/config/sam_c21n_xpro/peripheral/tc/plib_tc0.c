@@ -88,7 +88,7 @@ void TC0_CompareInitialize( void )
 
     
     TC0_REGS->COUNT16.TC_CC[0] = 10000U;
-    TC0_REGS->COUNT16.TC_CC[1] = 48U;
+    TC0_REGS->COUNT16.TC_CC[1] = 3000U;
     
     /* Clear all interrupt flags */
     TC0_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
@@ -120,7 +120,7 @@ void TC0_CompareStop( void )
     }
 }
 
-uint32_t TC0_CompareFrequencyGet()
+uint32_t TC0_CompareFrequencyGet( void )
 {
     return (uint32_t)(750000UL);
 }
