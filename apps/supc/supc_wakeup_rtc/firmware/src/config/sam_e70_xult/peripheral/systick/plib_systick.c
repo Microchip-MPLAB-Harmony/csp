@@ -47,8 +47,8 @@ void SYSTICK_TimerInitialize ( void )
 {
 	SysTick->CTRL = 0;
 	SysTick->VAL = 0;
-	SysTick->LOAD = 0x493e0 - 1;
-	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk;
+	SysTick->LOAD = 0xfe0f10 - 1;
+	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk;
 
 	systick.tickCounter = 0;
 	systick.callback = NULL;
@@ -107,7 +107,7 @@ void SYSTICK_DelayMs ( uint32_t delay)
 		}
 	}
 }
-	
+
 void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
 {
 	systick.callback = callback;
