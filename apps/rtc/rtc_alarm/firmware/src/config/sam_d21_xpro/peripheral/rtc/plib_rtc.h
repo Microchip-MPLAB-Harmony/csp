@@ -68,19 +68,9 @@ typedef enum
 
 typedef enum
 {
-    RTC_CLOCK_INT_MASK_ALARM = 0x1,
-    RTC_CLOCK_INT_MASK_YEAR_OVERFLOW = 0x8000,
-    RTC_CLOCK_INT_MASK_PER0 = 0x0001,
-    RTC_CLOCK_INT_MASK_PER1 = 0x0002,
-    RTC_CLOCK_INT_MASK_PER2 = 0x0004,
-    RTC_CLOCK_INT_MASK_PER3 = 0x0008,
-    RTC_CLOCK_INT_MASK_PER4 = 0x0010,
-    RTC_CLOCK_INT_MASK_PER5 = 0x0020,
-    RTC_CLOCK_INT_MASK_PER6 = 0x0040,
-    RTC_CLOCK_INT_MASK_PER7 = 0x0080
+    RTC_CLOCK_INT_MASK_ALARM = 0x0001,
+    RTC_CLOCK_INT_MASK_YEAR_OVERFLOW = 0x0080
 } RTC_CLOCK_INT_MASK;
-        
-
 
 
 typedef void (*RTC_CALLBACK)( RTC_CLOCK_INT_MASK intCause, uintptr_t context );
@@ -95,6 +85,7 @@ typedef struct
 } RTC_OBJECT;
 
 void RTC_Initialize(void);
+
 bool RTC_RTCCTimeSet (struct tm * initialTime );
 void RTC_RTCCTimeGet ( struct tm * currentTime );
 bool RTC_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask);
