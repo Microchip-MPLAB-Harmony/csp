@@ -1,21 +1,20 @@
 /*******************************************************************************
-  Watchdog Timer PLIB.
+  Interface definition of EVSYS PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_wdt.c
+    plib_evsys.h
 
   Summary:
-    Interface definition of WDT PLIB.
+    Interface definition of the Event System Plib (EVSYS).
 
   Description:
-    This file defines the interface for the WDT Plib.
-    It allows user to setup timeout duration and restart watch dog timer.
+    This file defines the interface for the EVSYS Plib.
+    It allows user to setup event generators and users.
 *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -38,46 +37,30 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-// DOM-IGNORE-END
+
+#ifndef EVSYS_H    // Guards against multiple inclusion
+#define EVSYS_H
+
+#include <stdint.h>
+#include <stddef.h>
+
+#ifdef __cplusplus // Provide C++ Compatibility
+ extern "C" {
+#endif
+
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files
+// Section: Interface
 // *****************************************************************************
 // *****************************************************************************
 
-#include "plib_wdt.h"
 
+/***************************** EVSYS API *******************************/
+void EVSYS_Initialize( void );
+	
+#ifdef __cplusplus // Provide C++ Compatibility
+ }
+#endif
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: WDT Interface Implementations
-// *****************************************************************************
-// *****************************************************************************
-
-void WDT_Enable( void )
-{
-    /* Checking if Always On Bit is Enabled */
-    if((WDT_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != WDT_CTRLA_ALWAYSON_Msk)
-    {
-        /* Enable Watchdog Timer */
-        WDT_REGS->WDT_CTRLA |= WDT_CTRLA_ENABLE_Msk;
-
-        /* Wait for synchronization */
-        while(WDT_REGS->WDT_SYNCBUSY);
-    }
-}
-
-void WDT_Disable( void )
-{
-    /* Disable Watchdog Timer */
-    WDT_REGS->WDT_CTRLA &= ~(WDT_CTRLA_ENABLE_Msk);
-}
-
-void WDT_Clear( void )
-{
-    /* Clear WDT and reset the WDT timer before the
-       timeout occurs */
-    WDT_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
-}
-
+#endif
