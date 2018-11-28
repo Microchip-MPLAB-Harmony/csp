@@ -77,11 +77,11 @@ typedef enum
     RTC_CLOCK_INT_MASK_PER4 = 0x0010,
     RTC_CLOCK_INT_MASK_PER5 = 0x0020,
     RTC_CLOCK_INT_MASK_PER6 = 0x0040,
-    RTC_CLOCK_INT_MASK_PER7 = 0x0080
+    RTC_CLOCK_INT_MASK_PER7 = 0x0080,
+    /* Force the compiler to reserve 32-bit memory for enum */
+    RTC_CLOCK_INT_MASK_INVALID = 0xFFFFFFFF
 } RTC_CLOCK_INT_MASK;
         
-
-
 
 typedef void (*RTC_CALLBACK)( RTC_CLOCK_INT_MASK intCause, uintptr_t context );
 
