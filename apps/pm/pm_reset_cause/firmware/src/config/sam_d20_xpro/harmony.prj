@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">38B11DDA20030DFBED94E3B8841C1861</GeneratedChecksum>
-          <UserChecksum dnOrder="5">38B11DDA20030DFBED94E3B8841C1861</UserChecksum>
+          <GeneratedChecksum dnOrder="4">40B0EE276644B0294AEE8484479209CE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">40B0EE276644B0294AEE8484479209CE</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -99,16 +99,16 @@
           <Name dnOrder="1">plib_sercom3_usart.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">EDC1C33F132A631EE9F6CE3D2A0BB91F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">EDC1C33F132A631EE9F6CE3D2A0BB91F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">5220BD417DA9B4ACFB7EE01BDE3B2D97</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5220BD417DA9B4ACFB7EE01BDE3B2D97</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_systick.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/systick/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/systick/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5293C9E9C001FE15AA8773B7356A0C71</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5293C9E9C001FE15AA8773B7356A0C71</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E01C1F2AF90A56E5F8320CA27ACC1E30</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E01C1F2AF90A56E5F8320CA27ACC1E30</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">SOURCE</Type>
@@ -347,8 +347,8 @@
           <Name dnOrder="1">plib_sercom3_usart.h</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E3F5D9CF09350CEAA4C62F5E424A0B15</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E3F5D9CF09350CEAA4C62F5E424A0B15</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1EB7AD96380303F5E28B3DF37C472EA0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1EB7AD96380303F5E28B3DF37C472EA0</UserChecksum>
         </File>
         <File dnOrder="43">
           <Type dnOrder="0">HEADER</Type>
@@ -363,8 +363,8 @@
           <Name dnOrder="1">plib_systick.h</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/systick/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/systick/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A87B8ACDC0E19D717E32AD0BDA425F81</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A87B8ACDC0E19D717E32AD0BDA425F81</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B988006FCBAA0CFD9F6B56066650680D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B988006FCBAA0CFD9F6B56066650680D</UserChecksum>
         </File>
         <File dnOrder="45">
           <Type dnOrder="0">HEADER</Type>

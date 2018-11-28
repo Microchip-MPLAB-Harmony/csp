@@ -90,7 +90,7 @@ USART_ERROR SERCOM3_USART_ErrorGet( void );
 
 uint32_t inline SERCOM3_USART_FrequencyGet( void )
 {
-    return (uint32_t) (48000000UL);
+    return (uint32_t) (47972352UL);
 }
 
 // DOM-IGNORE-BEGIN
