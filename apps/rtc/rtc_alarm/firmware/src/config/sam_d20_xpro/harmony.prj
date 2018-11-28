@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">112BB1EB26D54EE4EA5A246ED783E58D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">112BB1EB26D54EE4EA5A246ED783E58D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E0C640AB62FADCA0212599DC78764C12</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E0C640AB62FADCA0212599DC78764C12</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -307,8 +307,8 @@
           <Name dnOrder="1">plib_rtc.h</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/rtc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/rtc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">054F17A0B6A4714B1CA112B7DED5A672</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FBDC654A9E9307AC1C661F847D953CCA</UserChecksum>
+          <GeneratedChecksum dnOrder="4">EE04E56E7B740950A3A1A380F35B196F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">EE04E56E7B740950A3A1A380F35B196F</UserChecksum>
         </File>
         <File dnOrder="38">
           <Type dnOrder="0">HEADER</Type>
@@ -355,8 +355,8 @@
           <Name dnOrder="1">rtc.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAMD20J18_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAMD20J18_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">128085FB61AF0AA7058712AE21D3E7E6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">128085FB61AF0AA7058712AE21D3E7E6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">596F2D9E754089A0FE2DB15E44A827BA</GeneratedChecksum>
+          <UserChecksum dnOrder="5">596F2D9E754089A0FE2DB15E44A827BA</UserChecksum>
         </File>
         <File dnOrder="44">
           <Type dnOrder="0">HEADER</Type>
@@ -423,7 +423,7 @@
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMD20_DFP\1.3.127\samd20\atdf\ATSAMD20J18.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMD20_DFP\1.3.130\samd20\atdf\ATSAMD20J18.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
