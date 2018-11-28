@@ -313,19 +313,19 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 
 // *****************************************************************************
 /* Function:
-    void PIO_PinInterruptCallbackRegister(
+    bool PIO_PinInterruptCallbackRegister(
         PIO_PIN pin,
         const PIO_PIN_CALLBACK callback,
         uintptr_t context
     );
 
   Summary:
-    Allows application to register callback for every pin.
+    Allows application to register callback for configured pin.
 
   Remarks:
     See plib_pio.h for more details.
 */
-void PIO_PinInterruptCallbackRegister(
+bool PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
     const PIO_PIN_CALLBACK callback,
     uintptr_t context
@@ -342,37 +342,11 @@ void PIO_PinInterruptCallbackRegister(
         {
             portPinCbObj[i].callback = callback;
             portPinCbObj[i].context  = context;
-            break;
+            return true;
         }
     }
+    return false;
 }
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interrupt Service Routine (ISR) Implementation(s)
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void PIOA_InterruptHandler (void)
-
-  Summary:
-    Interrupt handler for PORTA.
-
-  Description:
-    This function defines the Interrupt service routine for PORTA.
-    This is the function which by default gets into Interrupt Vector Table.
-
-  Remarks:
-    User should not call this function.
-*/
-void PIOA_InterruptHandler(void)
-{
-    /* Local PIO Interrupt Handler */
-    _PIO_Interrupt_Handler(PIO_PORT_A);
-}
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Local Function Implementation
@@ -413,6 +387,33 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
     }
 
 }
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interrupt Service Routine (ISR) Implementation(s)
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+/* Function:
+    void PIOA_InterruptHandler (void)
+
+  Summary:
+    Interrupt handler for PORTA.
+
+  Description:
+    This function defines the Interrupt service routine for PORTA.
+    This is the function which by default gets into Interrupt Vector Table.
+
+  Remarks:
+    User should not call this function.
+*/
+void PIOA_InterruptHandler(void)
+{
+    /* Local PIO Interrupt Handler */
+    _PIO_Interrupt_Handler(PIO_PORT_A);
+}
+
+
 
 
 

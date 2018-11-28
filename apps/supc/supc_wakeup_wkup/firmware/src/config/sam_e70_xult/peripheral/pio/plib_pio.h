@@ -287,8 +287,6 @@ typedef struct {
 
 } PIO_PIN_CALLBACK_OBJ;
 
-void _PIO_Interrupt_Handler ( PIO_PORT port );
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: PIO Functions which operates on one pin at a time
@@ -345,7 +343,7 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
     PIO_PortInterruptDisable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
 }
 
-void PIO_PinInterruptCallbackRegister(
+bool PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
     const   PIO_PIN_CALLBACK callBack,
     uintptr_t context
