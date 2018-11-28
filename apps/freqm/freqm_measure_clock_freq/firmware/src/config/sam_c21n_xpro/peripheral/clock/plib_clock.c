@@ -45,10 +45,10 @@
 
 static void OSCCTRL_Initialize(void)
 {
+    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020) >> 19 ) & 0x3fffff);
+    OSCCTRL_REGS->OSCCTRL_CAL48M = calibValue;
 
 
-	
-	
     /* Selection of the Division Value */
     OSCCTRL_REGS->OSCCTRL_OSC48MDIV = OSCCTRL_OSC48MDIV_DIV(0);
 
@@ -69,7 +69,7 @@ static void OSC32KCTRL_Initialize(void)
 
     /* Configure 32K External Oscillator */
     OSC32KCTRL_REGS->OSC32KCTRL_XOSC32K = OSC32KCTRL_XOSC32K_STARTUP(0) | OSC32KCTRL_XOSC32K_ENABLE_Msk | OSC32KCTRL_XOSC32K_EN32K_Msk | OSC32KCTRL_XOSC32K_XTALEN_Msk;
-															   
+
 
     while(!((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSC32KCTRL_STATUS_XOSC32KRDY_Msk) == OSC32KCTRL_STATUS_XOSC32KRDY_Msk))
     {
@@ -91,7 +91,7 @@ static void GCLK0_Initialize(void)
         /* wait for the Generator 0 synchronization */
     }
 }
-	
+
 
 static void GCLK1_Initialize(void)
 {
@@ -102,7 +102,7 @@ static void GCLK1_Initialize(void)
         /* wait for the Generator 1 synchronization */
     }
 }
-	
+
 void CLOCK_Initialize (void)
 {
     /* NVM Wait States */
@@ -113,12 +113,12 @@ void CLOCK_Initialize (void)
 
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
-	
+
     GCLK0_Initialize();
     GCLK1_Initialize();
 
 
-	
+
 	/* Selection of the Generator and write Lock for FREQM_MSR */
     GCLK_REGS->GCLK_PCHCTRL[3] = GCLK_PCHCTRL_GEN(0x0)  | GCLK_PCHCTRL_CHEN_Msk;
 
@@ -143,7 +143,7 @@ void CLOCK_Initialize (void)
 
     /* Configure the APBC Bridge Clocks */
     MCLK_REGS->MCLK_APBCMASK = 0x20;
-    
+
 }
 
 
