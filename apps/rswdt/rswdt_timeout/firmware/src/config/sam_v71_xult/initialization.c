@@ -94,6 +94,7 @@ void SYS_Initialize ( void* data )
     CLK_Initialize();
 	PIO_Initialize();
 
+
     NVIC_Initialize();
 	SYSTICK_TimerInitialize();
 	RSWDT_Initialize();
