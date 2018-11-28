@@ -17515,7 +17515,7 @@ int main ( void )
         }
 
         /* Step: 4. Use DMA to write to SDRAM */
-        SYSTICK_TimerPeriodSet(0xFFFFFF);
+        SYSTICK_TimerPeriodSet(SYSTICK_MAX);
         SYSTICK_TimerStart();
         startCount = SYSTICK_TimerCounterGet();
 
@@ -17530,7 +17530,7 @@ int main ( void )
 
 
         /* Step: 5. Use DMA to read from SDRAM */
-        SYSTICK_TimerPeriodSet(0xFFFFFF);
+        SYSTICK_TimerPeriodSet(SYSTICK_MAX);
         SYSTICK_TimerStart();
         startCount = SYSTICK_TimerCounterGet();
 
