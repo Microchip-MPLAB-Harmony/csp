@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9FAA2382C0291EE26E70305F350109A7</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9FAA2382C0291EE26E70305F350109A7</UserChecksum>
+          <GeneratedChecksum dnOrder="4">2CA2FAC34DEC9E8B6B6CDB9B0FE861CB</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2CA2FAC34DEC9E8B6B6CDB9B0FE861CB</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -83,24 +83,24 @@
           <Name dnOrder="1">plib_tc3.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0722B5F34F24F89FA5A39055ABFE0A62</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0722B5F34F24F89FA5A39055ABFE0A62</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1ED7648CC9CE2379BDBC41E5162BB0B6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1ED7648CC9CE2379BDBC41E5162BB0B6</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_tc4.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B366D80AB4A15648DCEF4D9E60C614B5</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B366D80AB4A15648DCEF4D9E60C614B5</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AB7FB5BE80089AEF6FF2972FB807CC40</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AB7FB5BE80089AEF6FF2972FB807CC40</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_tc6.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">775805AF3B53F10ABE37626469DE9012</GeneratedChecksum>
-          <UserChecksum dnOrder="5">775805AF3B53F10ABE37626469DE9012</UserChecksum>
+          <GeneratedChecksum dnOrder="4">438BE95DEFDFF3D8463BC2A74A6010BD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">438BE95DEFDFF3D8463BC2A74A6010BD</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
