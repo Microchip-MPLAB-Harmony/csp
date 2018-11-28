@@ -80,7 +80,7 @@ void TC6_CompareInitialize( void )
     }
 
     /* Configure counter mode & prescaler */
-    TC6_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_WAVEGEN_MFRQ ;
+    TC6_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV64 | TC_CTRLA_WAVEGEN_MFRQ ;
 
     
     TC6_REGS->COUNT16.TC_CC[0] = 10000U;
@@ -118,7 +118,7 @@ void TC6_CompareStop( void )
 
 uint32_t TC6_CompareFrequencyGet( void )
 {
-    return (uint32_t)(47972352UL);
+    return (uint32_t)(749568UL);
 }
 
 /* Get the current counter value */

@@ -80,11 +80,11 @@ void TC4_CompareInitialize( void )
     }
 
     /* Configure counter mode & prescaler */
-    TC4_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_WAVEGEN_MPWM ;
+    TC4_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV64 | TC_CTRLA_WAVEGEN_MPWM ;
 
     
     TC4_REGS->COUNT16.TC_CC[0] = 10000U;
-    TC4_REGS->COUNT16.TC_CC[1] = 48U;
+    TC4_REGS->COUNT16.TC_CC[1] = 3000U;
     
     /* Clear all interrupt flags */
     TC4_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
@@ -119,7 +119,7 @@ void TC4_CompareStop( void )
 
 uint32_t TC4_CompareFrequencyGet( void )
 {
-    return (uint32_t)(47972352UL);
+    return (uint32_t)(749568UL);
 }
 
 /* Get the current counter value */
