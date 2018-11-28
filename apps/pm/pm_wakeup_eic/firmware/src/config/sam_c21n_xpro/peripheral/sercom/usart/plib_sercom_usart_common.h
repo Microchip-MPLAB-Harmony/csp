@@ -17,6 +17,7 @@
     None.
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -39,7 +40,6 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-
 // DOM-IGNORE-END
 
 #ifndef PLIB_SERCOM_USART_COMMON_H // Guards against multiple inclusion
@@ -50,8 +50,7 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -92,13 +91,13 @@ typedef enum
     USART_ERROR_NONE,
 
     /* Error status when parity error has occurred */
-    USART_ERROR_PARITY = SERCOM_USART_STATUS_PERR_Msk,
+    USART_ERROR_PARITY = SERCOM_USART_INT_STATUS_PERR_Msk,
 
     /* Error status when framing error has occurred */
-    USART_ERROR_FRAMING = SERCOM_USART_STATUS_FERR_Msk,
+    USART_ERROR_FRAMING = SERCOM_USART_INT_STATUS_FERR_Msk,
 
     /* Error status when overrun error has occurred */
-    USART_ERROR_OVERRUN = SERCOM_USART_STATUS_BUFOVF_Msk
+    USART_ERROR_OVERRUN = SERCOM_USART_INT_STATUS_BUFOVF_Msk
 
 } USART_ERROR;
 
@@ -118,15 +117,15 @@ typedef enum
 
 typedef enum
 {
-    USART_DATA_5_BIT = SERCOM_USART_CTRLB_CHSIZE(0x5),
+    USART_DATA_5_BIT = SERCOM_USART_INT_CTRLB_CHSIZE_5_BIT,
 
-    USART_DATA_6_BIT = SERCOM_USART_CTRLB_CHSIZE(0x6),
+    USART_DATA_6_BIT = SERCOM_USART_INT_CTRLB_CHSIZE_6_BIT,
 
-    USART_DATA_7_BIT = SERCOM_USART_CTRLB_CHSIZE(0x7),
+    USART_DATA_7_BIT = SERCOM_USART_INT_CTRLB_CHSIZE_7_BIT,
 
-    USART_DATA_8_BIT = SERCOM_USART_CTRLB_CHSIZE(0x0),
+    USART_DATA_8_BIT = SERCOM_USART_INT_CTRLB_CHSIZE_8_BIT,
 
-    USART_DATA_9_BIT = SERCOM_USART_CTRLB_CHSIZE(0x1),
+    USART_DATA_9_BIT = SERCOM_USART_INT_CTRLB_CHSIZE_9_BIT,
 
     /* Force the compiler to reserve 32-bit memory for each enum */
     USART_DATA_INVALID = 0xFFFFFFFF
@@ -149,9 +148,9 @@ typedef enum
 
 typedef enum
 {
-    USART_PARITY_EVEN = 0,
+    USART_PARITY_EVEN = SERCOM_USART_INT_CTRLB_PMODE_EVEN,
 
-    USART_PARITY_ODD = SERCOM_USART_CTRLB_PMODE_Msk,
+    USART_PARITY_ODD = SERCOM_USART_INT_CTRLB_PMODE_ODD,
 
     /* This enum is defined to set frame format only
      * This value won't be written to register
@@ -179,9 +178,9 @@ typedef enum
 
 typedef enum
 {
-    USART_STOP_1_BIT = 0,
+    USART_STOP_1_BIT = SERCOM_USART_INT_CTRLB_SBMODE_1_BIT,
 
-    USART_STOP_2_BIT = SERCOM_USART_CTRLB_SBMODE_Msk,
+    USART_STOP_2_BIT = SERCOM_USART_INT_CTRLB_SBMODE_2_BIT,
 
     /* Force the compiler to reserve 32-bit memory for each enum */
     USART_STOP_INVALID = 0xFFFFFFFF
