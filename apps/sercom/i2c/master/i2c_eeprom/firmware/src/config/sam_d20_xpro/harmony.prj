@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B91D0250FB8A26DE192CA983C3BD76C6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B91D0250FB8A26DE192CA983C3BD76C6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BA94427D0FF21B3A17C617D13C114E86</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BA94427D0FF21B3A17C617D13C114E86</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -83,8 +83,8 @@
           <Name dnOrder="1">plib_sercom2_i2c.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/sercom/i2cm/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/i2cm/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7B89E1E364FE2E6DD6328EC86AD6250D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7B89E1E364FE2E6DD6328EC86AD6250D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">62A31B5493A81F00D977800D20D801B3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">62A31B5493A81F00D977800D20D801B3</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
