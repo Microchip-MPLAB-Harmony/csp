@@ -58,6 +58,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -106,53 +107,6 @@ typedef enum
     RSTC_RESET_CAUSE_SYST_RESET = RSTC_RCAUSE_SYST_Msk,
 
 } RSTC_RESET_CAUSE;
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-    this interface.
-*/
-
-// *****************************************************************************
-/* Function:
-    RSTC_RESET_CAUSE RSTC_ResetCauseGet( void );
-
-  Summary:
-    Reports the cause of the last reset.
-
-  Description:
-    This function returns the cause of the last reset. The reset could be due to
-    multiple reasons. The application should compare the returned value against
-    different values in the RSTC_RESET_CAUSE enumeration to identify the possible
-    causes.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    RSTC_RESET_CAUSE - Identifies type of reset.
-
-  Example:
-   <code>
-
-    RSTC_RESET_CAUSE resetCause = RSTC_RESET_CAUSE_WDT_RESET | 
-                                  RSTC_RESET_CAUSE_BODVDD_RESET;
-
-    if (resetCause == RSTC_ResetCauseGet())
-    {
-        //Application related tasks
-    }
-    </code>
-
-  Remarks:
-    None.
-*/
 
 RSTC_RESET_CAUSE RSTC_ResetCauseGet (void);
 

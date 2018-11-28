@@ -45,106 +45,34 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include "plib_wdt.h"
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Data Types
-// *****************************************************************************
-// *****************************************************************************
-
 
 // *****************************************************************************
-/* Function:
-    void WDT_Initialize( void )
-
-  Summary:
-    Initializes given instance of the WDT peripheral.
-
-  Description:
-    This function initializes the given instance of the WDT peripheral as
-    configured by the user from within the MCC.
-
-  Remarks:
-    Refer plib_wdt.h file for more information.
-*/
-
-void WDT_Initialize( void )
-{
-    /* Empty Implementation */
-}
-
 // *****************************************************************************
-/* Function:
-    void WDT_Enable( void )
-
-  Summary:
-    Enables the WDT peripheral.
-
-  Description:
-    This function enables the WDT peripheral. Calling this function will cause
-    the WDT to start counting up to the configured timeout value.
-
-  Remarks:
-    Refer plib_wdt.h file for more information.
-*/
+// Section: WDT Interface Implementations
+// *****************************************************************************
+// *****************************************************************************
 
 void WDT_Enable( void )
 {
     /* Checking if Always On Bit is Enabled */
     if((WDT_REGS->WDT_CTRLA & WDT_CTRLA_ALWAYSON_Msk) != WDT_CTRLA_ALWAYSON_Msk)
     {
-        /* Enable Watchdog */
+        /* Enable Watchdog Timer */
         WDT_REGS->WDT_CTRLA |= WDT_CTRLA_ENABLE_Msk;
 
-        while((WDT_REGS->WDT_SYNCBUSY & WDT_SYNCBUSY_ENABLE_Msk) == WDT_SYNCBUSY_ENABLE_Msk)
-        {
-            /* Wait for synchronization */
-        }
+        /* Wait for synchronization */
+        while(WDT_REGS->WDT_SYNCBUSY);
     }
-
 }
-
-// *****************************************************************************
-/* Function:
-    void WDT_Disable( void )
-
-  Summary:
-    Disables the WDT peripheral.
-
-  Description:
-    This function is used to stop the WDT counter and disable WDT peripheral.
-
-  Remarks:
-    Refer plib_wdt.h file for more information.
-*/
 
 void WDT_Disable( void )
 {
-    /* Disable Watchdog */
+    /* Disable Watchdog Timer */
     WDT_REGS->WDT_CTRLA &= ~(WDT_CTRLA_ENABLE_Msk);
-
 }
-
-// *****************************************************************************
-/* Function:
-    void WDT_Clear( void )
-
-  Summary:
-    Restarts the WDT counter.
-
-  Description:
-    This function is used to restart the WDT counter to avoid timeout. Calling
-    this will clear the WDT timeout counter and restart the counting from 0.
-    Failure to call this function before the WDT timeout period will cause the
-    system to reset.
-
-  Remarks:
-    Refer plib_wdt.h file for more information.
-*/
 
 void WDT_Clear( void )
 {
