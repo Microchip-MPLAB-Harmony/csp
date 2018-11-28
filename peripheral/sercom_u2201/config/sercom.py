@@ -102,40 +102,47 @@ def geti2cBaud(gclk, clkSpeed, trise, mode):
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
-def onAttachmentConnected(connectionInfo):
+def onAttachmentConnected(source, target):
 
     global sercomSym_OperationMode
 
-    capabilityId = connectionInfo["id"]
-    sercomComponent = connectionInfo["localComponent"]
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
 
-    if capabilityId == uartCapabilityId:
-        sercomComponent.setCapabilityEnabled(uartCapabilityId, True)
-        sercomComponent.setCapabilityEnabled(spiCapabilityId, False)
-        sercomComponent.setCapabilityEnabled(i2cCapabilityId, False)
+    if connectID == uartCapabilityId:
+        localComponent.setCapabilityEnabled(uartCapabilityId, True)
+        localComponent.setCapabilityEnabled(spiCapabilityId, False)
+        localComponent.setCapabilityEnabled(i2cCapabilityId, False)
         sercomSym_OperationMode.setSelectedKey("USART_INT", 2)
-    elif capabilityId == spiCapabilityId:
-        sercomComponent.setCapabilityEnabled(uartCapabilityId, False)
-        sercomComponent.setCapabilityEnabled(spiCapabilityId, True)
-        sercomComponent.setCapabilityEnabled(i2cCapabilityId, False)
+    elif connectID == spiCapabilityId:
+        localComponent.setCapabilityEnabled(uartCapabilityId, False)
+        localComponent.setCapabilityEnabled(spiCapabilityId, True)
+        localComponent.setCapabilityEnabled(i2cCapabilityId, False)
         sercomSym_OperationMode.setSelectedKey("SPIM", 2)
-    elif capabilityId == i2cCapabilityId:
-        sercomComponent.setCapabilityEnabled(uartCapabilityId, False)
-        sercomComponent.setCapabilityEnabled(spiCapabilityId, False)
-        sercomComponent.setCapabilityEnabled(i2cCapabilityId, True)
+    elif connectID == i2cCapabilityId:
+        localComponent.setCapabilityEnabled(uartCapabilityId, False)
+        localComponent.setCapabilityEnabled(spiCapabilityId, False)
+        localComponent.setCapabilityEnabled(i2cCapabilityId, True)
         sercomSym_OperationMode.setSelectedKey("I2CM", 2)
 
     sercomSym_OperationMode.setReadOnly(True)
 
-def onAttachmentDisconnected(connectionInfo):
+def onAttachmentDisconnected(source, target):
 
     global sercomSym_OperationMode
 
-    sercomComponent = connectionInfo["localComponent"]
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
 
-    sercomComponent.setCapabilityEnabled(uartCapabilityId, True)
-    sercomComponent.setCapabilityEnabled(spiCapabilityId, True)
-    sercomComponent.setCapabilityEnabled(i2cCapabilityId, True)
+    localComponent.setCapabilityEnabled(uartCapabilityId, True)
+    localComponent.setCapabilityEnabled(spiCapabilityId, True)
+    localComponent.setCapabilityEnabled(i2cCapabilityId, True)
 
     sercomSym_OperationMode.setReadOnly(False)
 
