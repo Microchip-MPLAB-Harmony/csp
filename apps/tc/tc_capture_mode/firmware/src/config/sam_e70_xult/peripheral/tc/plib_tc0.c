@@ -57,6 +57,7 @@
  
 
  
+
  
 
 
@@ -66,11 +67,11 @@ void TC0_CH0_CaptureInitialize (void)
     /* Use peripheral clock */
     TC0_REGS->TC_CHANNEL[0].TC_EMR = TC_EMR_NODIVCLK_Msk;
         /* clock selection and capture configurations */
-    TC0_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_LDRA_RISING | TC_CMR_LDRB_FALLING;
+    TC0_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_CAPTURE_LDRA_RISING | TC_CMR_CAPTURE_LDRB_FALLING;
 
 
     /* external reset event configurations */
-    TC0_REGS->TC_CHANNEL[0].TC_CMR |=  TC_CMR_ABETRG_Msk |  TC_CMR_ETRGEDG_FALLING;
+    TC0_REGS->TC_CHANNEL[0].TC_CMR |=  TC_CMR_CAPTURE_ABETRG_Msk |  TC_CMR_CAPTURE_ETRGEDG_FALLING;
 
 }
 
@@ -86,7 +87,7 @@ void TC0_CH0_CaptureStop (void)
     TC0_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
-uint32_t TC0_CH0_CaptureFrequencyGet()
+uint32_t TC0_CH0_CaptureFrequencyGet( void )
 {
     return (uint32_t)(150000000UL);
 }
@@ -113,8 +114,10 @@ TC_CAPTURE_STATUS TC0_CH0_CaptureStatusGet(void)
 
  
  
+
  
  
+
  
 
 /**
