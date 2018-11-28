@@ -67,7 +67,16 @@ extern "C" {
 // *****************************************************************************
 // *****************************************************************************
 
-typedef void (*SDADC_CALLBACK)( uintptr_t context);
+typedef enum
+{
+    SDADC_STATUS_RESRDY = SDADC_INTFLAG_RESRDY_Msk,
+    SDADC_STATUS_OVERRUN = SDADC_INTFLAG_OVERRUN_Msk,
+    SDADC_STATUS_WINMON = SDADC_INTFLAG_WINMON_Msk,
+    /* Force compiler to reserve 32-bit memory for this enum */
+    SDADC_STATUS_INVALID = 0xFFFFFFFF
+}SDADC_STATUS;
+
+typedef void (*SDADC_CALLBACK)( SDADC_STATUS status, uintptr_t context);
 
 typedef struct
 {

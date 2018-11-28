@@ -84,15 +84,14 @@ extern "C" {
 
 void SDADC_Initialize( void );
 
+ 
 void SDADC_ConversionStart( void );
-
-bool SDADC_ConversionResultIsReady (void );
 
 int16_t SDADC_ConversionResultGet( void );
 
-bool SDADC_ConversionSequenceIsFinished(void);
 
-void SDADC_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold);
+
+bool SDADC_ConversionResultIsReady (void );
 
 
 
