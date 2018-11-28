@@ -79,7 +79,7 @@ void SERCOM3_USART_Initialize( void )
     SERCOM3_REGS->USART_INT.SERCOM_CTRLA = SERCOM_USART_INT_CTRLA_MODE_USART_INT_CLK | SERCOM_USART_INT_CTRLA_RXPO_PAD3 | SERCOM_USART_INT_CTRLA_TXPO_PAD2 | SERCOM_USART_INT_CTRLA_DORD_Msk | SERCOM_USART_INT_CTRLA_IBON_Msk | SERCOM_USART_INT_CTRLA_FORM(0x0) ;
 
     /* Configure Baud Rate */
-    SERCOM3_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(63019);
+    SERCOM3_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(63017);
 
     /*
      * Configures RXEN
@@ -329,17 +329,17 @@ void static SERCOM3_USART_ISR_TX_Handler( void )
         if(sercom3USARTObj.txProcessedSize < sercom3USARTObj.txSize)
         {
             SERCOM3_REGS->USART_INT.SERCOM_DATA = sercom3USARTObj.txBuffer[sercom3USARTObj.txProcessedSize++];
+        }
 
-            if(sercom3USARTObj.txProcessedSize == sercom3USARTObj.txSize)
+        if(sercom3USARTObj.txProcessedSize >= sercom3USARTObj.txSize)
+        {
+            sercom3USARTObj.txBusyStatus = false;
+            sercom3USARTObj.txSize = 0;
+            SERCOM3_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_DRE_Msk;
+
+            if(sercom3USARTObj.txCallback != NULL)
             {
-                sercom3USARTObj.txBusyStatus = false;
-                sercom3USARTObj.txSize = 0;
-                SERCOM3_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_DRE_Msk;
-
-                if(sercom3USARTObj.txCallback != NULL)
-                {
-                    sercom3USARTObj.txCallback(sercom3USARTObj.txContext);
-                }
+                sercom3USARTObj.txCallback(sercom3USARTObj.txContext);
             }
         }
     }
