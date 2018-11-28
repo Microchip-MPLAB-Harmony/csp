@@ -72,17 +72,17 @@ RTC_OBJECT rtcObj;
 
 void RTC_Initialize(void)
 {
-    RTC_REGS->MODE2.CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
+    RTC_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
+    while((RTC_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for synchronization after Software Reset */
     }
 
-    RTC_REGS->MODE2.CTRLA = RTC_MODE2_CTRLA_MODE(2) | RTC_MODE2_CTRLA_PRESCALER(0xB) | RTC_MODE2_CTRLA_CLOCKSYNC_Msk | RTC_MODE2_CTRLA_ENABLE_Msk;
+    RTC_REGS->MODE2.RTC_CTRLA = RTC_MODE2_CTRLA_MODE(2) | RTC_MODE2_CTRLA_PRESCALER(0xB) | RTC_MODE2_CTRLA_CLOCKSYNC_Msk | RTC_MODE2_CTRLA_ENABLE_Msk;
 
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
+    while((RTC_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Enabling RTC */
     }
@@ -97,14 +97,14 @@ bool RTC_RTCCTimeSet (struct tm * initialTime )
      * Set YEAR(according to Reference Year), MONTH and DAY
      *set Hour Minute and Second
      */
-    RTC_REGS->MODE2.CLOCK = ((TM_STRUCT_REFERENCE_YEAR + initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
+    RTC_REGS->MODE2.RTC_CLOCK = ((TM_STRUCT_REFERENCE_YEAR + initialTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
                     ((ADJUST_MONTH(initialTime->tm_mon)) << RTC_MODE2_CLOCK_MONTH_Pos) |
                     (initialTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
                     (initialTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
                     (initialTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
                     (initialTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
+    while((RTC_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCK_Msk) == RTC_MODE2_SYNCBUSY_CLOCK_Msk)
     {
         /* Synchronization after writing value to CLOCK Register */
     }
@@ -115,12 +115,12 @@ void RTC_RTCCTimeGet ( struct tm * currentTime )
 {
     uint32_t dataClockCalendar = 0;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
+    while((RTC_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk) == RTC_MODE2_SYNCBUSY_CLOCKSYNC_Msk)
     {
         /* Synchronization before reading value from CLOCK Register */
     }
 
-    dataClockCalendar = RTC_REGS->MODE2.CLOCK;
+    dataClockCalendar = RTC_REGS->MODE2.RTC_CLOCK;
 
     currentTime->tm_hour =  (dataClockCalendar & RTC_MODE2_CLOCK_HOUR_Msk) >> RTC_MODE2_CLOCK_HOUR_Pos;
     currentTime->tm_min  =  (dataClockCalendar & RTC_MODE2_CLOCK_MINUTE_Msk) >> RTC_MODE2_CLOCK_MINUTE_Pos;
@@ -138,26 +138,26 @@ bool RTC_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask)
      * Set YEAR(according to Reference Year), MONTH and DAY
      * Set Hour, Minute and second
      */
-    RTC_REGS->MODE2.Mode2Alarm = ((TM_STRUCT_REFERENCE_YEAR + alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
+    RTC_REGS->MODE2.RTC_Mode2Alarm = ((TM_STRUCT_REFERENCE_YEAR + alarmTime->tm_year) - REFERENCE_YEAR) << RTC_MODE2_CLOCK_YEAR_Pos |
                     (ADJUST_MONTH(alarmTime->tm_mon) << RTC_MODE2_CLOCK_MONTH_Pos) |
                     (alarmTime->tm_mday << RTC_MODE2_CLOCK_DAY_Pos) |
                     (alarmTime->tm_hour << RTC_MODE2_CLOCK_HOUR_Pos) |
                      (alarmTime->tm_min << RTC_MODE2_CLOCK_MINUTE_Pos) |
                      (alarmTime->tm_sec << RTC_MODE2_CLOCK_SECOND_Pos);
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_ALARM0_Msk) == RTC_MODE2_SYNCBUSY_ALARM0_Msk)
+    while((RTC_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_ALARM0_Msk) == RTC_MODE2_SYNCBUSY_ALARM0_Msk)
     {
         /* Synchronization after writing to ALARM register */
     }
 
-    RTC_REGS->MODE2.Mode2AlarmMask = mask;
+    RTC_REGS->MODE2.RTC_Mode2AlarmMask = mask;
 
-    while((RTC_REGS->MODE2.SYNCBUSY & RTC_MODE2_SYNCBUSY_MASK0_Msk) == RTC_MODE2_SYNCBUSY_MASK0_Msk)
+    while((RTC_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_MASK0_Msk) == RTC_MODE2_SYNCBUSY_MASK0_Msk)
     {
         /* Synchronization after writing value to MASK Register */
     }
         
-    RTC_REGS->MODE2.INTENSET = RTC_MODE2_INTENSET_ALARM0_Msk;
+    RTC_REGS->MODE2.RTC_INTENSET = RTC_MODE2_INTENSET_ALARM0_Msk;
      
     return true;
 }
@@ -171,7 +171,7 @@ void RTC_RTCCCallbackRegister ( RTC_CALLBACK callback, uintptr_t context)
 
 void RTC_InterruptHandler(void)
 {
-    rtcObj.intCause = RTC_REGS->MODE2.INTFLAG;
+    rtcObj.intCause = RTC_REGS->MODE2.RTC_INTFLAG;
 
     if(rtcObj.alarmCallback != NULL)
     {
@@ -179,5 +179,5 @@ void RTC_InterruptHandler(void)
     }
 
     /* Clear All Interrupts */
-    RTC_REGS->MODE2.INTFLAG = RTC_MODE2_INTFLAG_Msk;
+    RTC_REGS->MODE2.RTC_INTFLAG = RTC_MODE2_INTFLAG_Msk;
 }

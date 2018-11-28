@@ -97,10 +97,12 @@ void SYS_Initialize ( void* data )
 
 
 
-    NVIC_Initialize();
-    RTC_Initialize();
+    EVSYS_Initialize();
 
+    NVIC_Initialize();
     SERCOM4_USART_Initialize();
+
+    RTC_Initialize();
 
 
 
