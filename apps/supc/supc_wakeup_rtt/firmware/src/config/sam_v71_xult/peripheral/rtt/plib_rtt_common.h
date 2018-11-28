@@ -2,17 +2,17 @@
  Interface definition of RTT PLIB.
  
  Company:
-	Microchip Technology Inc.
-	
+    Microchip Technology Inc.
+    
  File Name:
-	plib_rtt_common.h
-	
+    plib_rtt_common.h
+    
  Summary:
-	Interface definition of rtt Plib.
-	
+    Interface definition of rtt Plib.
+    
  Description:
-	This file defines the interface for the rtt Plib.
-	It allows user to start, stop and configure the on-chip real time timer.
+    This file defines the interface for the rtt Plib.
+    It allows user to start, stop and configure the on-chip real time timer.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -48,23 +48,26 @@
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-	extern "C" {
+    extern "C" {
 #endif
 // DOM-IGNORE-END
 
 
 typedef enum
 {
-	RTT_PERIODIC = 0x20000, //Periodic interrupt
-	RTT_ALARM	 = 0x10000	// One time Alarm
+    RTT_PERIODIC = 0x20000,     //Periodic interrupt
+    RTT_ALARM     = 0x10000,     // One time Alarm
+
+    /* Force the compiler to reserve 32-bit memory for enum */
+    RTT_INTERRUPT_INVALID = 0xFFFFFFFF
 }RTT_INTERRUPT_TYPE;
 
 typedef void (*RTT_CALLBACK)(RTT_INTERRUPT_TYPE type, uintptr_t context);
 
 typedef struct
 {
-	RTT_CALLBACK          callback;
-	uintptr_t             context;
+    RTT_CALLBACK          callback;
+    uintptr_t             context;
 } RTT_OBJECT ;
 
 
