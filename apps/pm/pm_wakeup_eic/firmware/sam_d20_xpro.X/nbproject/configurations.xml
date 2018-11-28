@@ -13,7 +13,7 @@
             <logicalFolder name="f4" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="eic" projectFiles="true">
+            <logicalFolder name="f8" displayName="eic" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/eic/plib_eic.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="evsys" projectFiles="true">
@@ -22,7 +22,7 @@
             <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="pm" projectFiles="true">
+            <logicalFolder name="f7" displayName="pm" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/pm/plib_pm.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="port" projectFiles="true">
@@ -33,6 +33,9 @@
                 <itemPath>../src/config/sam_d20_xpro/peripheral/sercom/usart/plib_sercom3_usart.h</itemPath>
                 <itemPath>../src/config/sam_d20_xpro/peripheral/sercom/usart/plib_sercom_usart_common.h</itemPath>
               </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="systick" projectFiles="true">
+              <itemPath>../src/config/sam_d20_xpro/peripheral/systick/plib_systick.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <itemPath>../src/config/sam_d20_xpro/definitions.h</itemPath>
@@ -101,7 +104,7 @@
             <logicalFolder name="f4" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="eic" projectFiles="true">
+            <logicalFolder name="f8" displayName="eic" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/eic/plib_eic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="evsys" projectFiles="true">
@@ -110,7 +113,7 @@
             <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="pm" projectFiles="true">
+            <logicalFolder name="f7" displayName="pm" projectFiles="true">
               <itemPath>../src/config/sam_d20_xpro/peripheral/pm/plib_pm.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="port" projectFiles="true">
@@ -120,6 +123,9 @@
               <logicalFolder name="f1" displayName="usart" projectFiles="true">
                 <itemPath>../src/config/sam_d20_xpro/peripheral/sercom/usart/plib_sercom3_usart.c</itemPath>
               </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="systick" projectFiles="true">
+              <itemPath>../src/config/sam_d20_xpro/peripheral/systick/plib_systick.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f2" displayName="stdio" projectFiles="true">
@@ -132,7 +138,7 @@
           <itemPath>../src/config/sam_d20_xpro/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main.c</itemPath>
+      <itemPath>../src/main_d2x.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -217,7 +223,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/sam_d20_xpro;../src/packs/ATSAMD20J18_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;"/>
+                  value="../src;../src/config/sam_d20_xpro;../src/packs/ATSAMD20J18_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
