@@ -159,6 +159,16 @@ bool SPI0_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
     return isRequestAccepted;
 }
 
+bool SPI0_Write(void* pTransmitData, size_t txSize)
+{
+    return(SPI0_WriteRead(pTransmitData, txSize, NULL, 0));
+}
+
+bool SPI0_Read(void* pReceiveData, size_t rxSize)
+{
+    return(SPI0_WriteRead(NULL, 0, pReceiveData, rxSize));
+}
+
 bool SPI0_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
@@ -183,7 +193,7 @@ bool SPI0_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
         scbr = 255;
     }
 
-    SPI0_REGS->SPI_CSR[0]= setup->clockPolarity | setup->clockPhase | setup->dataBits | SPI_CSR_SCBR(scbr);
+    SPI0_REGS->SPI_CSR[0]= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
 
     return true;
 }
