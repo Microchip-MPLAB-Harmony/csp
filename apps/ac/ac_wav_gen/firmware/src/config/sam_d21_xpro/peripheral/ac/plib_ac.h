@@ -68,10 +68,11 @@ typedef enum
     AC_CHANNEL1 = 1,
 }AC_CHANNEL;
 
-typedef void (*AC_CALLBACK) (uintptr_t context);
+typedef void (*AC_CALLBACK) (uint8_t int_flags, uintptr_t context);
 
 typedef struct
 {
+    uint8_t int_flags;
     AC_CALLBACK callback;
     uintptr_t    context;
 
