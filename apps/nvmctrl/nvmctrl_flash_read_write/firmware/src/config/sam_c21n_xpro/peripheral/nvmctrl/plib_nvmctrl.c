@@ -68,7 +68,6 @@ void NVMCTRL_CacheInvalidate(void)
 {
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_INVALL | NVMCTRL_CTRLA_CMDEX_KEY;
 }
-
 bool NVMCTRL_RWWEEPROM_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);
@@ -109,7 +108,6 @@ bool NVMCTRL_RWWEEPROM_RowErase( uint32_t address )
 
     return true;
 }
-
 bool NVMCTRL_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);
@@ -183,4 +181,3 @@ void NVMCTRL_RegionUnlock(uint32_t address)
 
     NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_CMD_UR_Val | NVMCTRL_CTRLA_CMDEX_KEY;
 }
-
