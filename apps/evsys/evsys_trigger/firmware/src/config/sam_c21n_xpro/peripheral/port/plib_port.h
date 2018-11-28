@@ -67,12 +67,12 @@
 
 
 /*** Macros for LED pin ***/
-#define LED_Set()               (PORTC_REGS->PORT_OUTSET = 1 << 5)
-#define LED_Clear()             (PORTC_REGS->PORT_OUTCLR = 1 << 5)
-#define LED_Toggle()            (PORTC_REGS->PORT_OUTTGL = 1 << 5)
-#define LED_Get()               (((PORTC_REGS->PORT_IN >> 5)) & 0x01)
-#define LED_OutputEnable()      (PORTC_REGS->PORT_DIRSET = 1 << 5)
-#define LED_InputEnable()       (PORTC_REGS->PORT_DIRCLR = 1 << 5)
+#define LED_Set()               (PORT_REGS->GROUP[2].PORT_OUTSET = 1 << 5)
+#define LED_Clear()             (PORT_REGS->GROUP[2].PORT_OUTCLR = 1 << 5)
+#define LED_Toggle()            (PORT_REGS->GROUP[2].PORT_OUTTGL = 1 << 5)
+#define LED_Get()               (((PORT_REGS->GROUP[2].PORT_IN >> 5)) & 0x01)
+#define LED_OutputEnable()      (PORT_REGS->GROUP[2].PORT_DIRSET = 1 << 5)
+#define LED_InputEnable()       (PORT_REGS->GROUP[2].PORT_DIRCLR = 1 << 5)
 #define LED_PIN                  PORT_PIN_PC05
 
 
@@ -100,14 +100,14 @@
 typedef enum
 {
 
-    /* Group A */
-    PORT_GROUP_A = PORTA_BASE_ADDRESS,
+    /* Group 0 */
+    PORT_GROUP_0 = PORT_BASE_ADDRESS + 0 * (0x80),
 
-    /* Group B */
-    PORT_GROUP_B = PORTB_BASE_ADDRESS,
+    /* Group 1 */
+    PORT_GROUP_1 = PORT_BASE_ADDRESS + 1 * (0x80),
 
-    /* Group C */
-    PORT_GROUP_C = PORTC_BASE_ADDRESS,
+    /* Group 2 */
+    PORT_GROUP_2 = PORT_BASE_ADDRESS + 2 * (0x80),
 } PORT_GROUP;
 
 // *****************************************************************************
@@ -1058,7 +1058,173 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask);
 
 void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask);
 
-#include "plib_port_pin.h"
+// *****************************************************************************
+// *****************************************************************************
+// Section: PIO Functions which operates on one pin at a time
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinWrite(PORT_PIN pin, bool value)
+
+  Summary:
+    Writes the specified value to the selected pin.
+
+  Description:
+    This function writes/drives the "value" on the selected I/O line/pin.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+
+static inline void PORT_PinWrite(PORT_PIN pin, bool value)
+{
+    PORT_GroupWrite(PORT_BASE_ADDRESS + (0x80 * (pin>>5)), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
+}
+
+// *****************************************************************************
+/* Function:
+    bool PORT_PinRead(PORT_PIN pin)
+
+  Summary:
+    Read the selected pin value.
+
+  Description:
+    This function reads the present state at the selected input pin.  The
+    function can also be called to read the value of an output pin if input
+    sampling on the output pin is enabled in MHC. If input synchronization on
+    the pin is disabled in MHC, the function will cause a 2 PORT Clock cycles
+    delay. Enabling the synchronization eliminates the delay but will increase
+    power consumption.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+
+bool PORT_PinRead(PORT_PIN pin)
+{
+    return (bool)((PORT_GroupRead(PORT_BASE_ADDRESS + (0x80 * (pin>>5))) >> (pin & 0x1F)) & 0x1);
+}
+
+// *****************************************************************************
+/* Function:
+    bool PORT_PinLatchRead(PORT_PIN pin)
+
+  Summary:
+    Read the value driven on the selected pin.
+
+  Description:
+    This function reads the data driven on the selected I/O line/pin. The
+    function does not sample the state of the hardware pin. It only returns the
+    value that is written to output register. Refer to the PORT_PinRead()
+    function if the state of the output pin needs to be read.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+
+bool PORT_PinLatchRead(PORT_PIN pin)
+{
+    return (bool)((PORT_GroupLatchRead(PORT_BASE_ADDRESS + (0x80 * (pin>>5))) >> (pin & 0x1F)) & 0x1);
+}
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinToggle(PORT_PIN pin)
+
+  Summary:
+    Toggles the selected pin.
+
+  Description:
+    This function toggles/inverts the present value on the selected I/O line/pin.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+
+void PORT_PinToggle(PORT_PIN pin)
+{
+    PORT_GroupToggle(PORT_BASE_ADDRESS + (0x80 * (pin>>5)), 0x1 << (pin & 0x1F));
+}
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinSet(PORT_PIN pin)
+
+  Summary:
+    Sets the selected pin.
+
+  Description:
+    This function drives a logic 1 on the selected I/O line/pin.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+
+void PORT_PinSet(PORT_PIN pin)
+{
+    PORT_GroupSet(PORT_BASE_ADDRESS + (0x80 * (pin>>5)), 0x1 << (pin & 0x1F));
+}
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinClear(PORT_PIN pin)
+
+  Summary:
+    Clears the selected pin.
+
+  Description:
+    This function drives a logic 0 on the selected I/O line/pin.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+
+void PORT_PinClear(PORT_PIN pin)
+{
+    PORT_GroupClear(PORT_BASE_ADDRESS + (0x80 * (pin>>5)), 0x1 << (pin & 0x1F));
+}
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinInputEnable(PORT_PIN pin)
+
+  Summary:
+    Configures the selected IO pin as input.
+
+  Description:
+    This function configures the selected IO pin as input. This function
+    override the MHC input output pin settings.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+
+void PORT_PinInputEnable(PORT_PIN pin)
+{
+    PORT_GroupInputEnable(PORT_BASE_ADDRESS + (0x80 * (pin>>5)), 0x1 << (pin & 0x1F));
+}
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinOutputEnable(PORT_PIN pin)
+
+  Summary:
+    Enables selected IO pin as output.
+
+  Description:
+    This function enables selected IO pin as output. Calling this function will
+    override the MHC input output pin configuration.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+
+void PORT_PinOutputEnable(PORT_PIN pin)
+{
+    PORT_GroupOutputEnable(PORT_BASE_ADDRESS + (0x80 * (pin>>5)), 0x1 << (pin & 0x1F));
+}
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

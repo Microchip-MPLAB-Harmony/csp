@@ -1,290 +1,362 @@
 /**
- * \brief Header file for SAMC/SAMC21 AC
+ * \brief Component description for AC
  *
- * Copyright (c) 2017-2018 Microchip Technology Inc.
+ * © 2018 Microchip Technology Inc. and its subsidiaries.
  *
- * SPDX-License-Identifier: Apache-2.0
+ * Subject to your compliance with these terms, you may use Microchip software and any derivatives
+ * exclusively with Microchip products. It is your responsibility to comply with third party license
+ * terms applicable to your use of third party software (including open source software) that may
+ * accompany Microchip software.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY,
+ * APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND
+ * FITNESS FOR A PARTICULAR PURPOSE.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL
+ * LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF
+ * MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE FULLEST EXTENT
+ * ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT
+ * EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *
  */
 
-/* file generated from device description version 2018-06-27T08:27:01Z */
-#ifndef SAMC_SAMC21_AC_MODULE_H
-#define SAMC_SAMC21_AC_MODULE_H
+/* file generated from device description version 2018-11-13T10:12:59Z */
+#ifndef _SAMC21_AC_COMPONENT_H_
+#define _SAMC21_AC_COMPONENT_H_
 
-/** \addtogroup SAMC_SAMC21 Analog Comparators
- *  @{
- */
-/* ========================================================================== */
-/**  SOFTWARE API DEFINITION FOR SAMC21_AC                                    */
-/* ========================================================================== */
+/* ************************************************************************** */
+/*   SOFTWARE API DEFINITION FOR AC                                           */
+/* ************************************************************************** */
 
 /* -------- AC_CTRLA : (AC Offset: 0x00) (R/W 8) Control A -------- */
-#define AC_CTRLA_SWRST_Pos                    (0U)                                           /**< (AC_CTRLA) Software Reset Position */
-#define AC_CTRLA_SWRST_Msk                    (0x1U << AC_CTRLA_SWRST_Pos)                   /**< (AC_CTRLA) Software Reset Mask */
+#define AC_CTRLA_RESETVALUE                   _U_(0x00)                                            /**<  (AC_CTRLA) Control A  Reset Value */
+
+#define AC_CTRLA_SWRST_Pos                    _U_(0)                                               /**< (AC_CTRLA) Software Reset Position */
+#define AC_CTRLA_SWRST_Msk                    (_U_(0x1) << AC_CTRLA_SWRST_Pos)                     /**< (AC_CTRLA) Software Reset Mask */
 #define AC_CTRLA_SWRST(value)                 (AC_CTRLA_SWRST_Msk & ((value) << AC_CTRLA_SWRST_Pos))
-#define AC_CTRLA_ENABLE_Pos                   (1U)                                           /**< (AC_CTRLA) Enable Position */
-#define AC_CTRLA_ENABLE_Msk                   (0x1U << AC_CTRLA_ENABLE_Pos)                  /**< (AC_CTRLA) Enable Mask */
+#define AC_CTRLA_ENABLE_Pos                   _U_(1)                                               /**< (AC_CTRLA) Enable Position */
+#define AC_CTRLA_ENABLE_Msk                   (_U_(0x1) << AC_CTRLA_ENABLE_Pos)                    /**< (AC_CTRLA) Enable Mask */
 #define AC_CTRLA_ENABLE(value)                (AC_CTRLA_ENABLE_Msk & ((value) << AC_CTRLA_ENABLE_Pos))
-#define AC_CTRLA_Msk                          (0x00000003UL)                                 /**< (AC_CTRLA) Register Mask  */
+#define AC_CTRLA_Msk                          _U_(0x03)                                            /**< (AC_CTRLA) Register Mask  */
+
 
 /* -------- AC_CTRLB : (AC Offset: 0x01) ( /W 8) Control B -------- */
-#define AC_CTRLB_START0_Pos                   (0U)                                           /**< (AC_CTRLB) Comparator 0 Start Comparison Position */
-#define AC_CTRLB_START0_Msk                   (0x1U << AC_CTRLB_START0_Pos)                  /**< (AC_CTRLB) Comparator 0 Start Comparison Mask */
+#define AC_CTRLB_RESETVALUE                   _U_(0x00)                                            /**<  (AC_CTRLB) Control B  Reset Value */
+
+#define AC_CTRLB_START0_Pos                   _U_(0)                                               /**< (AC_CTRLB) Comparator 0 Start Comparison Position */
+#define AC_CTRLB_START0_Msk                   (_U_(0x1) << AC_CTRLB_START0_Pos)                    /**< (AC_CTRLB) Comparator 0 Start Comparison Mask */
 #define AC_CTRLB_START0(value)                (AC_CTRLB_START0_Msk & ((value) << AC_CTRLB_START0_Pos))
-#define AC_CTRLB_START1_Pos                   (1U)                                           /**< (AC_CTRLB) Comparator 1 Start Comparison Position */
-#define AC_CTRLB_START1_Msk                   (0x1U << AC_CTRLB_START1_Pos)                  /**< (AC_CTRLB) Comparator 1 Start Comparison Mask */
+#define AC_CTRLB_START1_Pos                   _U_(1)                                               /**< (AC_CTRLB) Comparator 1 Start Comparison Position */
+#define AC_CTRLB_START1_Msk                   (_U_(0x1) << AC_CTRLB_START1_Pos)                    /**< (AC_CTRLB) Comparator 1 Start Comparison Mask */
 #define AC_CTRLB_START1(value)                (AC_CTRLB_START1_Msk & ((value) << AC_CTRLB_START1_Pos))
-#define AC_CTRLB_START2_Pos                   (2U)                                           /**< (AC_CTRLB) Comparator 2 Start Comparison Position */
-#define AC_CTRLB_START2_Msk                   (0x1U << AC_CTRLB_START2_Pos)                  /**< (AC_CTRLB) Comparator 2 Start Comparison Mask */
+#define AC_CTRLB_START2_Pos                   _U_(2)                                               /**< (AC_CTRLB) Comparator 2 Start Comparison Position */
+#define AC_CTRLB_START2_Msk                   (_U_(0x1) << AC_CTRLB_START2_Pos)                    /**< (AC_CTRLB) Comparator 2 Start Comparison Mask */
 #define AC_CTRLB_START2(value)                (AC_CTRLB_START2_Msk & ((value) << AC_CTRLB_START2_Pos))
-#define AC_CTRLB_START3_Pos                   (3U)                                           /**< (AC_CTRLB) Comparator 3 Start Comparison Position */
-#define AC_CTRLB_START3_Msk                   (0x1U << AC_CTRLB_START3_Pos)                  /**< (AC_CTRLB) Comparator 3 Start Comparison Mask */
+#define AC_CTRLB_START3_Pos                   _U_(3)                                               /**< (AC_CTRLB) Comparator 3 Start Comparison Position */
+#define AC_CTRLB_START3_Msk                   (_U_(0x1) << AC_CTRLB_START3_Pos)                    /**< (AC_CTRLB) Comparator 3 Start Comparison Mask */
 #define AC_CTRLB_START3(value)                (AC_CTRLB_START3_Msk & ((value) << AC_CTRLB_START3_Pos))
-#define AC_CTRLB_Msk                          (0x0000000FUL)                                 /**< (AC_CTRLB) Register Mask  */
+#define AC_CTRLB_Msk                          _U_(0x0F)                                            /**< (AC_CTRLB) Register Mask  */
+
+#define AC_CTRLB_START_Pos                    _U_(0)                                               /**< (AC_CTRLB Position) Comparator 3 Start Comparison */
+#define AC_CTRLB_START_Msk                    (_U_(0xF) << AC_CTRLB_START_Pos)                     /**< (AC_CTRLB Mask) START */
+#define AC_CTRLB_START(value)                 (AC_CTRLB_START_Msk & ((value) << AC_CTRLB_START_Pos)) 
 
 /* -------- AC_EVCTRL : (AC Offset: 0x02) (R/W 16) Event Control -------- */
-#define AC_EVCTRL_COMPEO0_Pos                 (0U)                                           /**< (AC_EVCTRL) Comparator 0 Event Output Enable Position */
-#define AC_EVCTRL_COMPEO0_Msk                 (0x1U << AC_EVCTRL_COMPEO0_Pos)                /**< (AC_EVCTRL) Comparator 0 Event Output Enable Mask */
+#define AC_EVCTRL_RESETVALUE                  _U_(0x00)                                            /**<  (AC_EVCTRL) Event Control  Reset Value */
+
+#define AC_EVCTRL_COMPEO0_Pos                 _U_(0)                                               /**< (AC_EVCTRL) Comparator 0 Event Output Enable Position */
+#define AC_EVCTRL_COMPEO0_Msk                 (_U_(0x1) << AC_EVCTRL_COMPEO0_Pos)                  /**< (AC_EVCTRL) Comparator 0 Event Output Enable Mask */
 #define AC_EVCTRL_COMPEO0(value)              (AC_EVCTRL_COMPEO0_Msk & ((value) << AC_EVCTRL_COMPEO0_Pos))
-#define AC_EVCTRL_COMPEO1_Pos                 (1U)                                           /**< (AC_EVCTRL) Comparator 1 Event Output Enable Position */
-#define AC_EVCTRL_COMPEO1_Msk                 (0x1U << AC_EVCTRL_COMPEO1_Pos)                /**< (AC_EVCTRL) Comparator 1 Event Output Enable Mask */
+#define AC_EVCTRL_COMPEO1_Pos                 _U_(1)                                               /**< (AC_EVCTRL) Comparator 1 Event Output Enable Position */
+#define AC_EVCTRL_COMPEO1_Msk                 (_U_(0x1) << AC_EVCTRL_COMPEO1_Pos)                  /**< (AC_EVCTRL) Comparator 1 Event Output Enable Mask */
 #define AC_EVCTRL_COMPEO1(value)              (AC_EVCTRL_COMPEO1_Msk & ((value) << AC_EVCTRL_COMPEO1_Pos))
-#define AC_EVCTRL_COMPEO2_Pos                 (2U)                                           /**< (AC_EVCTRL) Comparator 2 Event Output Enable Position */
-#define AC_EVCTRL_COMPEO2_Msk                 (0x1U << AC_EVCTRL_COMPEO2_Pos)                /**< (AC_EVCTRL) Comparator 2 Event Output Enable Mask */
+#define AC_EVCTRL_COMPEO2_Pos                 _U_(2)                                               /**< (AC_EVCTRL) Comparator 2 Event Output Enable Position */
+#define AC_EVCTRL_COMPEO2_Msk                 (_U_(0x1) << AC_EVCTRL_COMPEO2_Pos)                  /**< (AC_EVCTRL) Comparator 2 Event Output Enable Mask */
 #define AC_EVCTRL_COMPEO2(value)              (AC_EVCTRL_COMPEO2_Msk & ((value) << AC_EVCTRL_COMPEO2_Pos))
-#define AC_EVCTRL_COMPEO3_Pos                 (3U)                                           /**< (AC_EVCTRL) Comparator 3 Event Output Enable Position */
-#define AC_EVCTRL_COMPEO3_Msk                 (0x1U << AC_EVCTRL_COMPEO3_Pos)                /**< (AC_EVCTRL) Comparator 3 Event Output Enable Mask */
+#define AC_EVCTRL_COMPEO3_Pos                 _U_(3)                                               /**< (AC_EVCTRL) Comparator 3 Event Output Enable Position */
+#define AC_EVCTRL_COMPEO3_Msk                 (_U_(0x1) << AC_EVCTRL_COMPEO3_Pos)                  /**< (AC_EVCTRL) Comparator 3 Event Output Enable Mask */
 #define AC_EVCTRL_COMPEO3(value)              (AC_EVCTRL_COMPEO3_Msk & ((value) << AC_EVCTRL_COMPEO3_Pos))
-#define AC_EVCTRL_WINEO0_Pos                  (4U)                                           /**< (AC_EVCTRL) Window 0 Event Output Enable Position */
-#define AC_EVCTRL_WINEO0_Msk                  (0x1U << AC_EVCTRL_WINEO0_Pos)                 /**< (AC_EVCTRL) Window 0 Event Output Enable Mask */
+#define AC_EVCTRL_WINEO0_Pos                  _U_(4)                                               /**< (AC_EVCTRL) Window 0 Event Output Enable Position */
+#define AC_EVCTRL_WINEO0_Msk                  (_U_(0x1) << AC_EVCTRL_WINEO0_Pos)                   /**< (AC_EVCTRL) Window 0 Event Output Enable Mask */
 #define AC_EVCTRL_WINEO0(value)               (AC_EVCTRL_WINEO0_Msk & ((value) << AC_EVCTRL_WINEO0_Pos))
-#define AC_EVCTRL_WINEO1_Pos                  (5U)                                           /**< (AC_EVCTRL) Window 1 Event Output Enable Position */
-#define AC_EVCTRL_WINEO1_Msk                  (0x1U << AC_EVCTRL_WINEO1_Pos)                 /**< (AC_EVCTRL) Window 1 Event Output Enable Mask */
+#define AC_EVCTRL_WINEO1_Pos                  _U_(5)                                               /**< (AC_EVCTRL) Window 1 Event Output Enable Position */
+#define AC_EVCTRL_WINEO1_Msk                  (_U_(0x1) << AC_EVCTRL_WINEO1_Pos)                   /**< (AC_EVCTRL) Window 1 Event Output Enable Mask */
 #define AC_EVCTRL_WINEO1(value)               (AC_EVCTRL_WINEO1_Msk & ((value) << AC_EVCTRL_WINEO1_Pos))
-#define AC_EVCTRL_COMPEI0_Pos                 (8U)                                           /**< (AC_EVCTRL) Comparator 0 Event Input Enable Position */
-#define AC_EVCTRL_COMPEI0_Msk                 (0x1U << AC_EVCTRL_COMPEI0_Pos)                /**< (AC_EVCTRL) Comparator 0 Event Input Enable Mask */
+#define AC_EVCTRL_COMPEI0_Pos                 _U_(8)                                               /**< (AC_EVCTRL) Comparator 0 Event Input Enable Position */
+#define AC_EVCTRL_COMPEI0_Msk                 (_U_(0x1) << AC_EVCTRL_COMPEI0_Pos)                  /**< (AC_EVCTRL) Comparator 0 Event Input Enable Mask */
 #define AC_EVCTRL_COMPEI0(value)              (AC_EVCTRL_COMPEI0_Msk & ((value) << AC_EVCTRL_COMPEI0_Pos))
-#define AC_EVCTRL_COMPEI1_Pos                 (9U)                                           /**< (AC_EVCTRL) Comparator 1 Event Input Enable Position */
-#define AC_EVCTRL_COMPEI1_Msk                 (0x1U << AC_EVCTRL_COMPEI1_Pos)                /**< (AC_EVCTRL) Comparator 1 Event Input Enable Mask */
+#define AC_EVCTRL_COMPEI1_Pos                 _U_(9)                                               /**< (AC_EVCTRL) Comparator 1 Event Input Enable Position */
+#define AC_EVCTRL_COMPEI1_Msk                 (_U_(0x1) << AC_EVCTRL_COMPEI1_Pos)                  /**< (AC_EVCTRL) Comparator 1 Event Input Enable Mask */
 #define AC_EVCTRL_COMPEI1(value)              (AC_EVCTRL_COMPEI1_Msk & ((value) << AC_EVCTRL_COMPEI1_Pos))
-#define AC_EVCTRL_COMPEI2_Pos                 (10U)                                          /**< (AC_EVCTRL) Comparator 2 Event Input Enable Position */
-#define AC_EVCTRL_COMPEI2_Msk                 (0x1U << AC_EVCTRL_COMPEI2_Pos)                /**< (AC_EVCTRL) Comparator 2 Event Input Enable Mask */
+#define AC_EVCTRL_COMPEI2_Pos                 _U_(10)                                              /**< (AC_EVCTRL) Comparator 2 Event Input Enable Position */
+#define AC_EVCTRL_COMPEI2_Msk                 (_U_(0x1) << AC_EVCTRL_COMPEI2_Pos)                  /**< (AC_EVCTRL) Comparator 2 Event Input Enable Mask */
 #define AC_EVCTRL_COMPEI2(value)              (AC_EVCTRL_COMPEI2_Msk & ((value) << AC_EVCTRL_COMPEI2_Pos))
-#define AC_EVCTRL_COMPEI3_Pos                 (11U)                                          /**< (AC_EVCTRL) Comparator 3 Event Input Enable Position */
-#define AC_EVCTRL_COMPEI3_Msk                 (0x1U << AC_EVCTRL_COMPEI3_Pos)                /**< (AC_EVCTRL) Comparator 3 Event Input Enable Mask */
+#define AC_EVCTRL_COMPEI3_Pos                 _U_(11)                                              /**< (AC_EVCTRL) Comparator 3 Event Input Enable Position */
+#define AC_EVCTRL_COMPEI3_Msk                 (_U_(0x1) << AC_EVCTRL_COMPEI3_Pos)                  /**< (AC_EVCTRL) Comparator 3 Event Input Enable Mask */
 #define AC_EVCTRL_COMPEI3(value)              (AC_EVCTRL_COMPEI3_Msk & ((value) << AC_EVCTRL_COMPEI3_Pos))
-#define AC_EVCTRL_INVEI0_Pos                  (12U)                                          /**< (AC_EVCTRL) Comparator 0 Input Event Invert Enable Position */
-#define AC_EVCTRL_INVEI0_Msk                  (0x1U << AC_EVCTRL_INVEI0_Pos)                 /**< (AC_EVCTRL) Comparator 0 Input Event Invert Enable Mask */
+#define AC_EVCTRL_INVEI0_Pos                  _U_(12)                                              /**< (AC_EVCTRL) Comparator 0 Input Event Invert Enable Position */
+#define AC_EVCTRL_INVEI0_Msk                  (_U_(0x1) << AC_EVCTRL_INVEI0_Pos)                   /**< (AC_EVCTRL) Comparator 0 Input Event Invert Enable Mask */
 #define AC_EVCTRL_INVEI0(value)               (AC_EVCTRL_INVEI0_Msk & ((value) << AC_EVCTRL_INVEI0_Pos))
-#define AC_EVCTRL_INVEI1_Pos                  (13U)                                          /**< (AC_EVCTRL) Comparator 1 Input Event Invert Enable Position */
-#define AC_EVCTRL_INVEI1_Msk                  (0x1U << AC_EVCTRL_INVEI1_Pos)                 /**< (AC_EVCTRL) Comparator 1 Input Event Invert Enable Mask */
+#define AC_EVCTRL_INVEI1_Pos                  _U_(13)                                              /**< (AC_EVCTRL) Comparator 1 Input Event Invert Enable Position */
+#define AC_EVCTRL_INVEI1_Msk                  (_U_(0x1) << AC_EVCTRL_INVEI1_Pos)                   /**< (AC_EVCTRL) Comparator 1 Input Event Invert Enable Mask */
 #define AC_EVCTRL_INVEI1(value)               (AC_EVCTRL_INVEI1_Msk & ((value) << AC_EVCTRL_INVEI1_Pos))
-#define AC_EVCTRL_INVEI2_Pos                  (14U)                                          /**< (AC_EVCTRL) Comparator 2 Input Event Invert Enable Position */
-#define AC_EVCTRL_INVEI2_Msk                  (0x1U << AC_EVCTRL_INVEI2_Pos)                 /**< (AC_EVCTRL) Comparator 2 Input Event Invert Enable Mask */
+#define AC_EVCTRL_INVEI2_Pos                  _U_(14)                                              /**< (AC_EVCTRL) Comparator 2 Input Event Invert Enable Position */
+#define AC_EVCTRL_INVEI2_Msk                  (_U_(0x1) << AC_EVCTRL_INVEI2_Pos)                   /**< (AC_EVCTRL) Comparator 2 Input Event Invert Enable Mask */
 #define AC_EVCTRL_INVEI2(value)               (AC_EVCTRL_INVEI2_Msk & ((value) << AC_EVCTRL_INVEI2_Pos))
-#define AC_EVCTRL_INVEI3_Pos                  (15U)                                          /**< (AC_EVCTRL) Comparator 3 Input Event Invert Enable Position */
-#define AC_EVCTRL_INVEI3_Msk                  (0x1U << AC_EVCTRL_INVEI3_Pos)                 /**< (AC_EVCTRL) Comparator 3 Input Event Invert Enable Mask */
+#define AC_EVCTRL_INVEI3_Pos                  _U_(15)                                              /**< (AC_EVCTRL) Comparator 3 Input Event Invert Enable Position */
+#define AC_EVCTRL_INVEI3_Msk                  (_U_(0x1) << AC_EVCTRL_INVEI3_Pos)                   /**< (AC_EVCTRL) Comparator 3 Input Event Invert Enable Mask */
 #define AC_EVCTRL_INVEI3(value)               (AC_EVCTRL_INVEI3_Msk & ((value) << AC_EVCTRL_INVEI3_Pos))
-#define AC_EVCTRL_Msk                         (0x0000FF3FUL)                                 /**< (AC_EVCTRL) Register Mask  */
+#define AC_EVCTRL_Msk                         _U_(0xFF3F)                                          /**< (AC_EVCTRL) Register Mask  */
+
+#define AC_EVCTRL_COMPEO_Pos                  _U_(0)                                               /**< (AC_EVCTRL Position) Comparator x Event Output Enable */
+#define AC_EVCTRL_COMPEO_Msk                  (_U_(0xF) << AC_EVCTRL_COMPEO_Pos)                   /**< (AC_EVCTRL Mask) COMPEO */
+#define AC_EVCTRL_COMPEO(value)               (AC_EVCTRL_COMPEO_Msk & ((value) << AC_EVCTRL_COMPEO_Pos)) 
+#define AC_EVCTRL_WINEO_Pos                   _U_(4)                                               /**< (AC_EVCTRL Position) Window x Event Output Enable */
+#define AC_EVCTRL_WINEO_Msk                   (_U_(0x3) << AC_EVCTRL_WINEO_Pos)                    /**< (AC_EVCTRL Mask) WINEO */
+#define AC_EVCTRL_WINEO(value)                (AC_EVCTRL_WINEO_Msk & ((value) << AC_EVCTRL_WINEO_Pos)) 
+#define AC_EVCTRL_COMPEI_Pos                  _U_(8)                                               /**< (AC_EVCTRL Position) Comparator x Event Input Enable */
+#define AC_EVCTRL_COMPEI_Msk                  (_U_(0xF) << AC_EVCTRL_COMPEI_Pos)                   /**< (AC_EVCTRL Mask) COMPEI */
+#define AC_EVCTRL_COMPEI(value)               (AC_EVCTRL_COMPEI_Msk & ((value) << AC_EVCTRL_COMPEI_Pos)) 
+#define AC_EVCTRL_INVEI_Pos                   _U_(12)                                              /**< (AC_EVCTRL Position) Comparator 3 Input Event Invert Enable */
+#define AC_EVCTRL_INVEI_Msk                   (_U_(0xF) << AC_EVCTRL_INVEI_Pos)                    /**< (AC_EVCTRL Mask) INVEI */
+#define AC_EVCTRL_INVEI(value)                (AC_EVCTRL_INVEI_Msk & ((value) << AC_EVCTRL_INVEI_Pos)) 
 
 /* -------- AC_INTENCLR : (AC Offset: 0x04) (R/W 8) Interrupt Enable Clear -------- */
-#define AC_INTENCLR_COMP0_Pos                 (0U)                                           /**< (AC_INTENCLR) Comparator 0 Interrupt Enable Position */
-#define AC_INTENCLR_COMP0_Msk                 (0x1U << AC_INTENCLR_COMP0_Pos)                /**< (AC_INTENCLR) Comparator 0 Interrupt Enable Mask */
+#define AC_INTENCLR_RESETVALUE                _U_(0x00)                                            /**<  (AC_INTENCLR) Interrupt Enable Clear  Reset Value */
+
+#define AC_INTENCLR_COMP0_Pos                 _U_(0)                                               /**< (AC_INTENCLR) Comparator 0 Interrupt Enable Position */
+#define AC_INTENCLR_COMP0_Msk                 (_U_(0x1) << AC_INTENCLR_COMP0_Pos)                  /**< (AC_INTENCLR) Comparator 0 Interrupt Enable Mask */
 #define AC_INTENCLR_COMP0(value)              (AC_INTENCLR_COMP0_Msk & ((value) << AC_INTENCLR_COMP0_Pos))
-#define AC_INTENCLR_COMP1_Pos                 (1U)                                           /**< (AC_INTENCLR) Comparator 1 Interrupt Enable Position */
-#define AC_INTENCLR_COMP1_Msk                 (0x1U << AC_INTENCLR_COMP1_Pos)                /**< (AC_INTENCLR) Comparator 1 Interrupt Enable Mask */
+#define AC_INTENCLR_COMP1_Pos                 _U_(1)                                               /**< (AC_INTENCLR) Comparator 1 Interrupt Enable Position */
+#define AC_INTENCLR_COMP1_Msk                 (_U_(0x1) << AC_INTENCLR_COMP1_Pos)                  /**< (AC_INTENCLR) Comparator 1 Interrupt Enable Mask */
 #define AC_INTENCLR_COMP1(value)              (AC_INTENCLR_COMP1_Msk & ((value) << AC_INTENCLR_COMP1_Pos))
-#define AC_INTENCLR_COMP2_Pos                 (2U)                                           /**< (AC_INTENCLR) Comparator 2 Interrupt Enable Position */
-#define AC_INTENCLR_COMP2_Msk                 (0x1U << AC_INTENCLR_COMP2_Pos)                /**< (AC_INTENCLR) Comparator 2 Interrupt Enable Mask */
+#define AC_INTENCLR_COMP2_Pos                 _U_(2)                                               /**< (AC_INTENCLR) Comparator 2 Interrupt Enable Position */
+#define AC_INTENCLR_COMP2_Msk                 (_U_(0x1) << AC_INTENCLR_COMP2_Pos)                  /**< (AC_INTENCLR) Comparator 2 Interrupt Enable Mask */
 #define AC_INTENCLR_COMP2(value)              (AC_INTENCLR_COMP2_Msk & ((value) << AC_INTENCLR_COMP2_Pos))
-#define AC_INTENCLR_COMP3_Pos                 (3U)                                           /**< (AC_INTENCLR) Comparator 3 Interrupt Enable Position */
-#define AC_INTENCLR_COMP3_Msk                 (0x1U << AC_INTENCLR_COMP3_Pos)                /**< (AC_INTENCLR) Comparator 3 Interrupt Enable Mask */
+#define AC_INTENCLR_COMP3_Pos                 _U_(3)                                               /**< (AC_INTENCLR) Comparator 3 Interrupt Enable Position */
+#define AC_INTENCLR_COMP3_Msk                 (_U_(0x1) << AC_INTENCLR_COMP3_Pos)                  /**< (AC_INTENCLR) Comparator 3 Interrupt Enable Mask */
 #define AC_INTENCLR_COMP3(value)              (AC_INTENCLR_COMP3_Msk & ((value) << AC_INTENCLR_COMP3_Pos))
-#define AC_INTENCLR_WIN0_Pos                  (4U)                                           /**< (AC_INTENCLR) Window 0 Interrupt Enable Position */
-#define AC_INTENCLR_WIN0_Msk                  (0x1U << AC_INTENCLR_WIN0_Pos)                 /**< (AC_INTENCLR) Window 0 Interrupt Enable Mask */
+#define AC_INTENCLR_WIN0_Pos                  _U_(4)                                               /**< (AC_INTENCLR) Window 0 Interrupt Enable Position */
+#define AC_INTENCLR_WIN0_Msk                  (_U_(0x1) << AC_INTENCLR_WIN0_Pos)                   /**< (AC_INTENCLR) Window 0 Interrupt Enable Mask */
 #define AC_INTENCLR_WIN0(value)               (AC_INTENCLR_WIN0_Msk & ((value) << AC_INTENCLR_WIN0_Pos))
-#define AC_INTENCLR_WIN1_Pos                  (5U)                                           /**< (AC_INTENCLR) Window 1 Interrupt Enable Position */
-#define AC_INTENCLR_WIN1_Msk                  (0x1U << AC_INTENCLR_WIN1_Pos)                 /**< (AC_INTENCLR) Window 1 Interrupt Enable Mask */
+#define AC_INTENCLR_WIN1_Pos                  _U_(5)                                               /**< (AC_INTENCLR) Window 1 Interrupt Enable Position */
+#define AC_INTENCLR_WIN1_Msk                  (_U_(0x1) << AC_INTENCLR_WIN1_Pos)                   /**< (AC_INTENCLR) Window 1 Interrupt Enable Mask */
 #define AC_INTENCLR_WIN1(value)               (AC_INTENCLR_WIN1_Msk & ((value) << AC_INTENCLR_WIN1_Pos))
-#define AC_INTENCLR_Msk                       (0x0000003FUL)                                 /**< (AC_INTENCLR) Register Mask  */
+#define AC_INTENCLR_Msk                       _U_(0x3F)                                            /**< (AC_INTENCLR) Register Mask  */
+
+#define AC_INTENCLR_COMP_Pos                  _U_(0)                                               /**< (AC_INTENCLR Position) Comparator x Interrupt Enable */
+#define AC_INTENCLR_COMP_Msk                  (_U_(0xF) << AC_INTENCLR_COMP_Pos)                   /**< (AC_INTENCLR Mask) COMP */
+#define AC_INTENCLR_COMP(value)               (AC_INTENCLR_COMP_Msk & ((value) << AC_INTENCLR_COMP_Pos)) 
+#define AC_INTENCLR_WIN_Pos                   _U_(4)                                               /**< (AC_INTENCLR Position) Window x Interrupt Enable */
+#define AC_INTENCLR_WIN_Msk                   (_U_(0x3) << AC_INTENCLR_WIN_Pos)                    /**< (AC_INTENCLR Mask) WIN */
+#define AC_INTENCLR_WIN(value)                (AC_INTENCLR_WIN_Msk & ((value) << AC_INTENCLR_WIN_Pos)) 
 
 /* -------- AC_INTENSET : (AC Offset: 0x05) (R/W 8) Interrupt Enable Set -------- */
-#define AC_INTENSET_COMP0_Pos                 (0U)                                           /**< (AC_INTENSET) Comparator 0 Interrupt Enable Position */
-#define AC_INTENSET_COMP0_Msk                 (0x1U << AC_INTENSET_COMP0_Pos)                /**< (AC_INTENSET) Comparator 0 Interrupt Enable Mask */
+#define AC_INTENSET_RESETVALUE                _U_(0x00)                                            /**<  (AC_INTENSET) Interrupt Enable Set  Reset Value */
+
+#define AC_INTENSET_COMP0_Pos                 _U_(0)                                               /**< (AC_INTENSET) Comparator 0 Interrupt Enable Position */
+#define AC_INTENSET_COMP0_Msk                 (_U_(0x1) << AC_INTENSET_COMP0_Pos)                  /**< (AC_INTENSET) Comparator 0 Interrupt Enable Mask */
 #define AC_INTENSET_COMP0(value)              (AC_INTENSET_COMP0_Msk & ((value) << AC_INTENSET_COMP0_Pos))
-#define AC_INTENSET_COMP1_Pos                 (1U)                                           /**< (AC_INTENSET) Comparator 1 Interrupt Enable Position */
-#define AC_INTENSET_COMP1_Msk                 (0x1U << AC_INTENSET_COMP1_Pos)                /**< (AC_INTENSET) Comparator 1 Interrupt Enable Mask */
+#define AC_INTENSET_COMP1_Pos                 _U_(1)                                               /**< (AC_INTENSET) Comparator 1 Interrupt Enable Position */
+#define AC_INTENSET_COMP1_Msk                 (_U_(0x1) << AC_INTENSET_COMP1_Pos)                  /**< (AC_INTENSET) Comparator 1 Interrupt Enable Mask */
 #define AC_INTENSET_COMP1(value)              (AC_INTENSET_COMP1_Msk & ((value) << AC_INTENSET_COMP1_Pos))
-#define AC_INTENSET_COMP2_Pos                 (2U)                                           /**< (AC_INTENSET) Comparator 2 Interrupt Enable Position */
-#define AC_INTENSET_COMP2_Msk                 (0x1U << AC_INTENSET_COMP2_Pos)                /**< (AC_INTENSET) Comparator 2 Interrupt Enable Mask */
+#define AC_INTENSET_COMP2_Pos                 _U_(2)                                               /**< (AC_INTENSET) Comparator 2 Interrupt Enable Position */
+#define AC_INTENSET_COMP2_Msk                 (_U_(0x1) << AC_INTENSET_COMP2_Pos)                  /**< (AC_INTENSET) Comparator 2 Interrupt Enable Mask */
 #define AC_INTENSET_COMP2(value)              (AC_INTENSET_COMP2_Msk & ((value) << AC_INTENSET_COMP2_Pos))
-#define AC_INTENSET_COMP3_Pos                 (3U)                                           /**< (AC_INTENSET) Comparator 3 Interrupt Enable Position */
-#define AC_INTENSET_COMP3_Msk                 (0x1U << AC_INTENSET_COMP3_Pos)                /**< (AC_INTENSET) Comparator 3 Interrupt Enable Mask */
+#define AC_INTENSET_COMP3_Pos                 _U_(3)                                               /**< (AC_INTENSET) Comparator 3 Interrupt Enable Position */
+#define AC_INTENSET_COMP3_Msk                 (_U_(0x1) << AC_INTENSET_COMP3_Pos)                  /**< (AC_INTENSET) Comparator 3 Interrupt Enable Mask */
 #define AC_INTENSET_COMP3(value)              (AC_INTENSET_COMP3_Msk & ((value) << AC_INTENSET_COMP3_Pos))
-#define AC_INTENSET_WIN0_Pos                  (4U)                                           /**< (AC_INTENSET) Window 0 Interrupt Enable Position */
-#define AC_INTENSET_WIN0_Msk                  (0x1U << AC_INTENSET_WIN0_Pos)                 /**< (AC_INTENSET) Window 0 Interrupt Enable Mask */
+#define AC_INTENSET_WIN0_Pos                  _U_(4)                                               /**< (AC_INTENSET) Window 0 Interrupt Enable Position */
+#define AC_INTENSET_WIN0_Msk                  (_U_(0x1) << AC_INTENSET_WIN0_Pos)                   /**< (AC_INTENSET) Window 0 Interrupt Enable Mask */
 #define AC_INTENSET_WIN0(value)               (AC_INTENSET_WIN0_Msk & ((value) << AC_INTENSET_WIN0_Pos))
-#define AC_INTENSET_WIN1_Pos                  (5U)                                           /**< (AC_INTENSET) Window 1 Interrupt Enable Position */
-#define AC_INTENSET_WIN1_Msk                  (0x1U << AC_INTENSET_WIN1_Pos)                 /**< (AC_INTENSET) Window 1 Interrupt Enable Mask */
+#define AC_INTENSET_WIN1_Pos                  _U_(5)                                               /**< (AC_INTENSET) Window 1 Interrupt Enable Position */
+#define AC_INTENSET_WIN1_Msk                  (_U_(0x1) << AC_INTENSET_WIN1_Pos)                   /**< (AC_INTENSET) Window 1 Interrupt Enable Mask */
 #define AC_INTENSET_WIN1(value)               (AC_INTENSET_WIN1_Msk & ((value) << AC_INTENSET_WIN1_Pos))
-#define AC_INTENSET_Msk                       (0x0000003FUL)                                 /**< (AC_INTENSET) Register Mask  */
+#define AC_INTENSET_Msk                       _U_(0x3F)                                            /**< (AC_INTENSET) Register Mask  */
+
+#define AC_INTENSET_COMP_Pos                  _U_(0)                                               /**< (AC_INTENSET Position) Comparator x Interrupt Enable */
+#define AC_INTENSET_COMP_Msk                  (_U_(0xF) << AC_INTENSET_COMP_Pos)                   /**< (AC_INTENSET Mask) COMP */
+#define AC_INTENSET_COMP(value)               (AC_INTENSET_COMP_Msk & ((value) << AC_INTENSET_COMP_Pos)) 
+#define AC_INTENSET_WIN_Pos                   _U_(4)                                               /**< (AC_INTENSET Position) Window x Interrupt Enable */
+#define AC_INTENSET_WIN_Msk                   (_U_(0x3) << AC_INTENSET_WIN_Pos)                    /**< (AC_INTENSET Mask) WIN */
+#define AC_INTENSET_WIN(value)                (AC_INTENSET_WIN_Msk & ((value) << AC_INTENSET_WIN_Pos)) 
 
 /* -------- AC_INTFLAG : (AC Offset: 0x06) (R/W 8) Interrupt Flag Status and Clear -------- */
-#define AC_INTFLAG_COMP0_Pos                  (0U)                                           /**< (AC_INTFLAG) Comparator 0 Position */
-#define AC_INTFLAG_COMP0_Msk                  (0x1U << AC_INTFLAG_COMP0_Pos)                 /**< (AC_INTFLAG) Comparator 0 Mask */
-#define AC_INTFLAG_COMP0(value)               (AC_INTFLAG_COMP0_Msk & ((value) << AC_INTFLAG_COMP0_Pos))
-#define AC_INTFLAG_COMP1_Pos                  (1U)                                           /**< (AC_INTFLAG) Comparator 1 Position */
-#define AC_INTFLAG_COMP1_Msk                  (0x1U << AC_INTFLAG_COMP1_Pos)                 /**< (AC_INTFLAG) Comparator 1 Mask */
-#define AC_INTFLAG_COMP1(value)               (AC_INTFLAG_COMP1_Msk & ((value) << AC_INTFLAG_COMP1_Pos))
-#define AC_INTFLAG_COMP2_Pos                  (2U)                                           /**< (AC_INTFLAG) Comparator 2 Position */
-#define AC_INTFLAG_COMP2_Msk                  (0x1U << AC_INTFLAG_COMP2_Pos)                 /**< (AC_INTFLAG) Comparator 2 Mask */
-#define AC_INTFLAG_COMP2(value)               (AC_INTFLAG_COMP2_Msk & ((value) << AC_INTFLAG_COMP2_Pos))
-#define AC_INTFLAG_COMP3_Pos                  (3U)                                           /**< (AC_INTFLAG) Comparator 3 Position */
-#define AC_INTFLAG_COMP3_Msk                  (0x1U << AC_INTFLAG_COMP3_Pos)                 /**< (AC_INTFLAG) Comparator 3 Mask */
-#define AC_INTFLAG_COMP3(value)               (AC_INTFLAG_COMP3_Msk & ((value) << AC_INTFLAG_COMP3_Pos))
-#define AC_INTFLAG_WIN0_Pos                   (4U)                                           /**< (AC_INTFLAG) Window 0 Position */
-#define AC_INTFLAG_WIN0_Msk                   (0x1U << AC_INTFLAG_WIN0_Pos)                  /**< (AC_INTFLAG) Window 0 Mask */
-#define AC_INTFLAG_WIN0(value)                (AC_INTFLAG_WIN0_Msk & ((value) << AC_INTFLAG_WIN0_Pos))
-#define AC_INTFLAG_WIN1_Pos                   (5U)                                           /**< (AC_INTFLAG) Window 1 Position */
-#define AC_INTFLAG_WIN1_Msk                   (0x1U << AC_INTFLAG_WIN1_Pos)                  /**< (AC_INTFLAG) Window 1 Mask */
-#define AC_INTFLAG_WIN1(value)                (AC_INTFLAG_WIN1_Msk & ((value) << AC_INTFLAG_WIN1_Pos))
-#define AC_INTFLAG_Msk                        (0x0000003FUL)                                 /**< (AC_INTFLAG) Register Mask  */
+#define AC_INTFLAG_RESETVALUE                 _U_(0x00)                                            /**<  (AC_INTFLAG) Interrupt Flag Status and Clear  Reset Value */
 
-/* -------- AC_STATUSA : (AC Offset: 0x07) (R/  8) Status A -------- */
-#define AC_STATUSA_STATE0_Pos                 (0U)                                           /**< (AC_STATUSA) Comparator 0 Current State Position */
-#define AC_STATUSA_STATE0_Msk                 (0x1U << AC_STATUSA_STATE0_Pos)                /**< (AC_STATUSA) Comparator 0 Current State Mask */
+#define AC_INTFLAG_COMP0_Pos                  _U_(0)                                               /**< (AC_INTFLAG) Comparator 0 Position */
+#define AC_INTFLAG_COMP0_Msk                  (_U_(0x1) << AC_INTFLAG_COMP0_Pos)                   /**< (AC_INTFLAG) Comparator 0 Mask */
+#define AC_INTFLAG_COMP0(value)               (AC_INTFLAG_COMP0_Msk & ((value) << AC_INTFLAG_COMP0_Pos))
+#define AC_INTFLAG_COMP1_Pos                  _U_(1)                                               /**< (AC_INTFLAG) Comparator 1 Position */
+#define AC_INTFLAG_COMP1_Msk                  (_U_(0x1) << AC_INTFLAG_COMP1_Pos)                   /**< (AC_INTFLAG) Comparator 1 Mask */
+#define AC_INTFLAG_COMP1(value)               (AC_INTFLAG_COMP1_Msk & ((value) << AC_INTFLAG_COMP1_Pos))
+#define AC_INTFLAG_COMP2_Pos                  _U_(2)                                               /**< (AC_INTFLAG) Comparator 2 Position */
+#define AC_INTFLAG_COMP2_Msk                  (_U_(0x1) << AC_INTFLAG_COMP2_Pos)                   /**< (AC_INTFLAG) Comparator 2 Mask */
+#define AC_INTFLAG_COMP2(value)               (AC_INTFLAG_COMP2_Msk & ((value) << AC_INTFLAG_COMP2_Pos))
+#define AC_INTFLAG_COMP3_Pos                  _U_(3)                                               /**< (AC_INTFLAG) Comparator 3 Position */
+#define AC_INTFLAG_COMP3_Msk                  (_U_(0x1) << AC_INTFLAG_COMP3_Pos)                   /**< (AC_INTFLAG) Comparator 3 Mask */
+#define AC_INTFLAG_COMP3(value)               (AC_INTFLAG_COMP3_Msk & ((value) << AC_INTFLAG_COMP3_Pos))
+#define AC_INTFLAG_WIN0_Pos                   _U_(4)                                               /**< (AC_INTFLAG) Window 0 Position */
+#define AC_INTFLAG_WIN0_Msk                   (_U_(0x1) << AC_INTFLAG_WIN0_Pos)                    /**< (AC_INTFLAG) Window 0 Mask */
+#define AC_INTFLAG_WIN0(value)                (AC_INTFLAG_WIN0_Msk & ((value) << AC_INTFLAG_WIN0_Pos))
+#define AC_INTFLAG_WIN1_Pos                   _U_(5)                                               /**< (AC_INTFLAG) Window 1 Position */
+#define AC_INTFLAG_WIN1_Msk                   (_U_(0x1) << AC_INTFLAG_WIN1_Pos)                    /**< (AC_INTFLAG) Window 1 Mask */
+#define AC_INTFLAG_WIN1(value)                (AC_INTFLAG_WIN1_Msk & ((value) << AC_INTFLAG_WIN1_Pos))
+#define AC_INTFLAG_Msk                        _U_(0x3F)                                            /**< (AC_INTFLAG) Register Mask  */
+
+#define AC_INTFLAG_COMP_Pos                   _U_(0)                                               /**< (AC_INTFLAG Position) Comparator x */
+#define AC_INTFLAG_COMP_Msk                   (_U_(0xF) << AC_INTFLAG_COMP_Pos)                    /**< (AC_INTFLAG Mask) COMP */
+#define AC_INTFLAG_COMP(value)                (AC_INTFLAG_COMP_Msk & ((value) << AC_INTFLAG_COMP_Pos)) 
+#define AC_INTFLAG_WIN_Pos                    _U_(4)                                               /**< (AC_INTFLAG Position) Window x */
+#define AC_INTFLAG_WIN_Msk                    (_U_(0x3) << AC_INTFLAG_WIN_Pos)                     /**< (AC_INTFLAG Mask) WIN */
+#define AC_INTFLAG_WIN(value)                 (AC_INTFLAG_WIN_Msk & ((value) << AC_INTFLAG_WIN_Pos)) 
+
+/* -------- AC_STATUSA : (AC Offset: 0x07) ( R/ 8) Status A -------- */
+#define AC_STATUSA_RESETVALUE                 _U_(0x00)                                            /**<  (AC_STATUSA) Status A  Reset Value */
+
+#define AC_STATUSA_STATE0_Pos                 _U_(0)                                               /**< (AC_STATUSA) Comparator 0 Current State Position */
+#define AC_STATUSA_STATE0_Msk                 (_U_(0x1) << AC_STATUSA_STATE0_Pos)                  /**< (AC_STATUSA) Comparator 0 Current State Mask */
 #define AC_STATUSA_STATE0(value)              (AC_STATUSA_STATE0_Msk & ((value) << AC_STATUSA_STATE0_Pos))
-#define AC_STATUSA_STATE1_Pos                 (1U)                                           /**< (AC_STATUSA) Comparator 1 Current State Position */
-#define AC_STATUSA_STATE1_Msk                 (0x1U << AC_STATUSA_STATE1_Pos)                /**< (AC_STATUSA) Comparator 1 Current State Mask */
+#define AC_STATUSA_STATE1_Pos                 _U_(1)                                               /**< (AC_STATUSA) Comparator 1 Current State Position */
+#define AC_STATUSA_STATE1_Msk                 (_U_(0x1) << AC_STATUSA_STATE1_Pos)                  /**< (AC_STATUSA) Comparator 1 Current State Mask */
 #define AC_STATUSA_STATE1(value)              (AC_STATUSA_STATE1_Msk & ((value) << AC_STATUSA_STATE1_Pos))
-#define AC_STATUSA_STATE2_Pos                 (2U)                                           /**< (AC_STATUSA) Comparator 2 Current State Position */
-#define AC_STATUSA_STATE2_Msk                 (0x1U << AC_STATUSA_STATE2_Pos)                /**< (AC_STATUSA) Comparator 2 Current State Mask */
+#define AC_STATUSA_STATE2_Pos                 _U_(2)                                               /**< (AC_STATUSA) Comparator 2 Current State Position */
+#define AC_STATUSA_STATE2_Msk                 (_U_(0x1) << AC_STATUSA_STATE2_Pos)                  /**< (AC_STATUSA) Comparator 2 Current State Mask */
 #define AC_STATUSA_STATE2(value)              (AC_STATUSA_STATE2_Msk & ((value) << AC_STATUSA_STATE2_Pos))
-#define AC_STATUSA_STATE3_Pos                 (3U)                                           /**< (AC_STATUSA) Comparator 3 Current State Position */
-#define AC_STATUSA_STATE3_Msk                 (0x1U << AC_STATUSA_STATE3_Pos)                /**< (AC_STATUSA) Comparator 3 Current State Mask */
+#define AC_STATUSA_STATE3_Pos                 _U_(3)                                               /**< (AC_STATUSA) Comparator 3 Current State Position */
+#define AC_STATUSA_STATE3_Msk                 (_U_(0x1) << AC_STATUSA_STATE3_Pos)                  /**< (AC_STATUSA) Comparator 3 Current State Mask */
 #define AC_STATUSA_STATE3(value)              (AC_STATUSA_STATE3_Msk & ((value) << AC_STATUSA_STATE3_Pos))
-#define AC_STATUSA_WSTATE0_Pos                (4U)                                           /**< (AC_STATUSA) Window 0 Current State Position */
-#define AC_STATUSA_WSTATE0_Msk                (0x3U << AC_STATUSA_WSTATE0_Pos)               /**< (AC_STATUSA) Window 0 Current State Mask */
+#define AC_STATUSA_WSTATE0_Pos                _U_(4)                                               /**< (AC_STATUSA) Window 0 Current State Position */
+#define AC_STATUSA_WSTATE0_Msk                (_U_(0x3) << AC_STATUSA_WSTATE0_Pos)                 /**< (AC_STATUSA) Window 0 Current State Mask */
 #define AC_STATUSA_WSTATE0(value)             (AC_STATUSA_WSTATE0_Msk & ((value) << AC_STATUSA_WSTATE0_Pos))
-#define   AC_STATUSA_WSTATE0_ABOVE_Val        (0U)                                           /**< (AC_STATUSA) Signal is above window  */
-#define   AC_STATUSA_WSTATE0_INSIDE_Val       (1U)                                           /**< (AC_STATUSA) Signal is inside window  */
-#define   AC_STATUSA_WSTATE0_BELOW_Val        (2U)                                           /**< (AC_STATUSA) Signal is below window  */
+#define   AC_STATUSA_WSTATE0_ABOVE_Val        _U_(0x0)                                             /**< (AC_STATUSA) Signal is above window  */
+#define   AC_STATUSA_WSTATE0_INSIDE_Val       _U_(0x1)                                             /**< (AC_STATUSA) Signal is inside window  */
+#define   AC_STATUSA_WSTATE0_BELOW_Val        _U_(0x2)                                             /**< (AC_STATUSA) Signal is below window  */
 #define AC_STATUSA_WSTATE0_ABOVE              (AC_STATUSA_WSTATE0_ABOVE_Val << AC_STATUSA_WSTATE0_Pos) /**< (AC_STATUSA) Signal is above window Position  */
 #define AC_STATUSA_WSTATE0_INSIDE             (AC_STATUSA_WSTATE0_INSIDE_Val << AC_STATUSA_WSTATE0_Pos) /**< (AC_STATUSA) Signal is inside window Position  */
 #define AC_STATUSA_WSTATE0_BELOW              (AC_STATUSA_WSTATE0_BELOW_Val << AC_STATUSA_WSTATE0_Pos) /**< (AC_STATUSA) Signal is below window Position  */
-#define AC_STATUSA_WSTATE1_Pos                (6U)                                           /**< (AC_STATUSA) Window 1 Current State Position */
-#define AC_STATUSA_WSTATE1_Msk                (0x3U << AC_STATUSA_WSTATE1_Pos)               /**< (AC_STATUSA) Window 1 Current State Mask */
+#define AC_STATUSA_WSTATE1_Pos                _U_(6)                                               /**< (AC_STATUSA) Window 1 Current State Position */
+#define AC_STATUSA_WSTATE1_Msk                (_U_(0x3) << AC_STATUSA_WSTATE1_Pos)                 /**< (AC_STATUSA) Window 1 Current State Mask */
 #define AC_STATUSA_WSTATE1(value)             (AC_STATUSA_WSTATE1_Msk & ((value) << AC_STATUSA_WSTATE1_Pos))
-#define   AC_STATUSA_WSTATE1_ABOVE_Val        (0U)                                           /**< (AC_STATUSA) Signal is above window  */
-#define   AC_STATUSA_WSTATE1_INSIDE_Val       (1U)                                           /**< (AC_STATUSA) Signal is inside window  */
-#define   AC_STATUSA_WSTATE1_BELOW_Val        (2U)                                           /**< (AC_STATUSA) Signal is below window  */
+#define   AC_STATUSA_WSTATE1_ABOVE_Val        _U_(0x0)                                             /**< (AC_STATUSA) Signal is above window  */
+#define   AC_STATUSA_WSTATE1_INSIDE_Val       _U_(0x1)                                             /**< (AC_STATUSA) Signal is inside window  */
+#define   AC_STATUSA_WSTATE1_BELOW_Val        _U_(0x2)                                             /**< (AC_STATUSA) Signal is below window  */
 #define AC_STATUSA_WSTATE1_ABOVE              (AC_STATUSA_WSTATE1_ABOVE_Val << AC_STATUSA_WSTATE1_Pos) /**< (AC_STATUSA) Signal is above window Position  */
 #define AC_STATUSA_WSTATE1_INSIDE             (AC_STATUSA_WSTATE1_INSIDE_Val << AC_STATUSA_WSTATE1_Pos) /**< (AC_STATUSA) Signal is inside window Position  */
 #define AC_STATUSA_WSTATE1_BELOW              (AC_STATUSA_WSTATE1_BELOW_Val << AC_STATUSA_WSTATE1_Pos) /**< (AC_STATUSA) Signal is below window Position  */
-#define AC_STATUSA_Msk                        (0x000000FFUL)                                 /**< (AC_STATUSA) Register Mask  */
+#define AC_STATUSA_Msk                        _U_(0xFF)                                            /**< (AC_STATUSA) Register Mask  */
 
-/* -------- AC_STATUSB : (AC Offset: 0x08) (R/  8) Status B -------- */
-#define AC_STATUSB_READY0_Pos                 (0U)                                           /**< (AC_STATUSB) Comparator 0 Ready Position */
-#define AC_STATUSB_READY0_Msk                 (0x1U << AC_STATUSB_READY0_Pos)                /**< (AC_STATUSB) Comparator 0 Ready Mask */
+#define AC_STATUSA_STATE_Pos                  _U_(0)                                               /**< (AC_STATUSA Position) Comparator x Current State */
+#define AC_STATUSA_STATE_Msk                  (_U_(0xF) << AC_STATUSA_STATE_Pos)                   /**< (AC_STATUSA Mask) STATE */
+#define AC_STATUSA_STATE(value)               (AC_STATUSA_STATE_Msk & ((value) << AC_STATUSA_STATE_Pos)) 
+
+/* -------- AC_STATUSB : (AC Offset: 0x08) ( R/ 8) Status B -------- */
+#define AC_STATUSB_RESETVALUE                 _U_(0x00)                                            /**<  (AC_STATUSB) Status B  Reset Value */
+
+#define AC_STATUSB_READY0_Pos                 _U_(0)                                               /**< (AC_STATUSB) Comparator 0 Ready Position */
+#define AC_STATUSB_READY0_Msk                 (_U_(0x1) << AC_STATUSB_READY0_Pos)                  /**< (AC_STATUSB) Comparator 0 Ready Mask */
 #define AC_STATUSB_READY0(value)              (AC_STATUSB_READY0_Msk & ((value) << AC_STATUSB_READY0_Pos))
-#define AC_STATUSB_READY1_Pos                 (1U)                                           /**< (AC_STATUSB) Comparator 1 Ready Position */
-#define AC_STATUSB_READY1_Msk                 (0x1U << AC_STATUSB_READY1_Pos)                /**< (AC_STATUSB) Comparator 1 Ready Mask */
+#define AC_STATUSB_READY1_Pos                 _U_(1)                                               /**< (AC_STATUSB) Comparator 1 Ready Position */
+#define AC_STATUSB_READY1_Msk                 (_U_(0x1) << AC_STATUSB_READY1_Pos)                  /**< (AC_STATUSB) Comparator 1 Ready Mask */
 #define AC_STATUSB_READY1(value)              (AC_STATUSB_READY1_Msk & ((value) << AC_STATUSB_READY1_Pos))
-#define AC_STATUSB_READY2_Pos                 (2U)                                           /**< (AC_STATUSB) Comparator 2 Ready Position */
-#define AC_STATUSB_READY2_Msk                 (0x1U << AC_STATUSB_READY2_Pos)                /**< (AC_STATUSB) Comparator 2 Ready Mask */
+#define AC_STATUSB_READY2_Pos                 _U_(2)                                               /**< (AC_STATUSB) Comparator 2 Ready Position */
+#define AC_STATUSB_READY2_Msk                 (_U_(0x1) << AC_STATUSB_READY2_Pos)                  /**< (AC_STATUSB) Comparator 2 Ready Mask */
 #define AC_STATUSB_READY2(value)              (AC_STATUSB_READY2_Msk & ((value) << AC_STATUSB_READY2_Pos))
-#define AC_STATUSB_READY3_Pos                 (3U)                                           /**< (AC_STATUSB) Comparator 3 Ready Position */
-#define AC_STATUSB_READY3_Msk                 (0x1U << AC_STATUSB_READY3_Pos)                /**< (AC_STATUSB) Comparator 3 Ready Mask */
+#define AC_STATUSB_READY3_Pos                 _U_(3)                                               /**< (AC_STATUSB) Comparator 3 Ready Position */
+#define AC_STATUSB_READY3_Msk                 (_U_(0x1) << AC_STATUSB_READY3_Pos)                  /**< (AC_STATUSB) Comparator 3 Ready Mask */
 #define AC_STATUSB_READY3(value)              (AC_STATUSB_READY3_Msk & ((value) << AC_STATUSB_READY3_Pos))
-#define AC_STATUSB_Msk                        (0x0000000FUL)                                 /**< (AC_STATUSB) Register Mask  */
+#define AC_STATUSB_Msk                        _U_(0x0F)                                            /**< (AC_STATUSB) Register Mask  */
+
+#define AC_STATUSB_READY_Pos                  _U_(0)                                               /**< (AC_STATUSB Position) Comparator 3 Ready */
+#define AC_STATUSB_READY_Msk                  (_U_(0xF) << AC_STATUSB_READY_Pos)                   /**< (AC_STATUSB Mask) READY */
+#define AC_STATUSB_READY(value)               (AC_STATUSB_READY_Msk & ((value) << AC_STATUSB_READY_Pos)) 
 
 /* -------- AC_DBGCTRL : (AC Offset: 0x09) (R/W 8) Debug Control -------- */
-#define AC_DBGCTRL_DBGRUN_Pos                 (0U)                                           /**< (AC_DBGCTRL) Debug Run Position */
-#define AC_DBGCTRL_DBGRUN_Msk                 (0x1U << AC_DBGCTRL_DBGRUN_Pos)                /**< (AC_DBGCTRL) Debug Run Mask */
+#define AC_DBGCTRL_RESETVALUE                 _U_(0x00)                                            /**<  (AC_DBGCTRL) Debug Control  Reset Value */
+
+#define AC_DBGCTRL_DBGRUN_Pos                 _U_(0)                                               /**< (AC_DBGCTRL) Debug Run Position */
+#define AC_DBGCTRL_DBGRUN_Msk                 (_U_(0x1) << AC_DBGCTRL_DBGRUN_Pos)                  /**< (AC_DBGCTRL) Debug Run Mask */
 #define AC_DBGCTRL_DBGRUN(value)              (AC_DBGCTRL_DBGRUN_Msk & ((value) << AC_DBGCTRL_DBGRUN_Pos))
-#define AC_DBGCTRL_Msk                        (0x00000001UL)                                 /**< (AC_DBGCTRL) Register Mask  */
+#define AC_DBGCTRL_Msk                        _U_(0x01)                                            /**< (AC_DBGCTRL) Register Mask  */
+
 
 /* -------- AC_WINCTRL : (AC Offset: 0x0A) (R/W 8) Window Control -------- */
-#define AC_WINCTRL_WEN0_Pos                   (0U)                                           /**< (AC_WINCTRL) Window 0 Mode Enable Position */
-#define AC_WINCTRL_WEN0_Msk                   (0x1U << AC_WINCTRL_WEN0_Pos)                  /**< (AC_WINCTRL) Window 0 Mode Enable Mask */
+#define AC_WINCTRL_RESETVALUE                 _U_(0x00)                                            /**<  (AC_WINCTRL) Window Control  Reset Value */
+
+#define AC_WINCTRL_WEN0_Pos                   _U_(0)                                               /**< (AC_WINCTRL) Window 0 Mode Enable Position */
+#define AC_WINCTRL_WEN0_Msk                   (_U_(0x1) << AC_WINCTRL_WEN0_Pos)                    /**< (AC_WINCTRL) Window 0 Mode Enable Mask */
 #define AC_WINCTRL_WEN0(value)                (AC_WINCTRL_WEN0_Msk & ((value) << AC_WINCTRL_WEN0_Pos))
-#define AC_WINCTRL_WINTSEL0_Pos               (1U)                                           /**< (AC_WINCTRL) Window 0 Interrupt Selection Position */
-#define AC_WINCTRL_WINTSEL0_Msk               (0x3U << AC_WINCTRL_WINTSEL0_Pos)              /**< (AC_WINCTRL) Window 0 Interrupt Selection Mask */
+#define AC_WINCTRL_WINTSEL0_Pos               _U_(1)                                               /**< (AC_WINCTRL) Window 0 Interrupt Selection Position */
+#define AC_WINCTRL_WINTSEL0_Msk               (_U_(0x3) << AC_WINCTRL_WINTSEL0_Pos)                /**< (AC_WINCTRL) Window 0 Interrupt Selection Mask */
 #define AC_WINCTRL_WINTSEL0(value)            (AC_WINCTRL_WINTSEL0_Msk & ((value) << AC_WINCTRL_WINTSEL0_Pos))
-#define   AC_WINCTRL_WINTSEL0_ABOVE_Val       (0U)                                           /**< (AC_WINCTRL) Interrupt on signal above window  */
-#define   AC_WINCTRL_WINTSEL0_INSIDE_Val      (1U)                                           /**< (AC_WINCTRL) Interrupt on signal inside window  */
-#define   AC_WINCTRL_WINTSEL0_BELOW_Val       (2U)                                           /**< (AC_WINCTRL) Interrupt on signal below window  */
-#define   AC_WINCTRL_WINTSEL0_OUTSIDE_Val     (3U)                                           /**< (AC_WINCTRL) Interrupt on signal outside window  */
+#define   AC_WINCTRL_WINTSEL0_ABOVE_Val       _U_(0x0)                                             /**< (AC_WINCTRL) Interrupt on signal above window  */
+#define   AC_WINCTRL_WINTSEL0_INSIDE_Val      _U_(0x1)                                             /**< (AC_WINCTRL) Interrupt on signal inside window  */
+#define   AC_WINCTRL_WINTSEL0_BELOW_Val       _U_(0x2)                                             /**< (AC_WINCTRL) Interrupt on signal below window  */
+#define   AC_WINCTRL_WINTSEL0_OUTSIDE_Val     _U_(0x3)                                             /**< (AC_WINCTRL) Interrupt on signal outside window  */
 #define AC_WINCTRL_WINTSEL0_ABOVE             (AC_WINCTRL_WINTSEL0_ABOVE_Val << AC_WINCTRL_WINTSEL0_Pos) /**< (AC_WINCTRL) Interrupt on signal above window Position  */
 #define AC_WINCTRL_WINTSEL0_INSIDE            (AC_WINCTRL_WINTSEL0_INSIDE_Val << AC_WINCTRL_WINTSEL0_Pos) /**< (AC_WINCTRL) Interrupt on signal inside window Position  */
 #define AC_WINCTRL_WINTSEL0_BELOW             (AC_WINCTRL_WINTSEL0_BELOW_Val << AC_WINCTRL_WINTSEL0_Pos) /**< (AC_WINCTRL) Interrupt on signal below window Position  */
 #define AC_WINCTRL_WINTSEL0_OUTSIDE           (AC_WINCTRL_WINTSEL0_OUTSIDE_Val << AC_WINCTRL_WINTSEL0_Pos) /**< (AC_WINCTRL) Interrupt on signal outside window Position  */
-#define AC_WINCTRL_WEN1_Pos                   (4U)                                           /**< (AC_WINCTRL) Window 1 Mode Enable Position */
-#define AC_WINCTRL_WEN1_Msk                   (0x1U << AC_WINCTRL_WEN1_Pos)                  /**< (AC_WINCTRL) Window 1 Mode Enable Mask */
+#define AC_WINCTRL_WEN1_Pos                   _U_(4)                                               /**< (AC_WINCTRL) Window 1 Mode Enable Position */
+#define AC_WINCTRL_WEN1_Msk                   (_U_(0x1) << AC_WINCTRL_WEN1_Pos)                    /**< (AC_WINCTRL) Window 1 Mode Enable Mask */
 #define AC_WINCTRL_WEN1(value)                (AC_WINCTRL_WEN1_Msk & ((value) << AC_WINCTRL_WEN1_Pos))
-#define AC_WINCTRL_WINTSEL1_Pos               (5U)                                           /**< (AC_WINCTRL) Window 1 Interrupt Selection Position */
-#define AC_WINCTRL_WINTSEL1_Msk               (0x3U << AC_WINCTRL_WINTSEL1_Pos)              /**< (AC_WINCTRL) Window 1 Interrupt Selection Mask */
+#define AC_WINCTRL_WINTSEL1_Pos               _U_(5)                                               /**< (AC_WINCTRL) Window 1 Interrupt Selection Position */
+#define AC_WINCTRL_WINTSEL1_Msk               (_U_(0x3) << AC_WINCTRL_WINTSEL1_Pos)                /**< (AC_WINCTRL) Window 1 Interrupt Selection Mask */
 #define AC_WINCTRL_WINTSEL1(value)            (AC_WINCTRL_WINTSEL1_Msk & ((value) << AC_WINCTRL_WINTSEL1_Pos))
-#define   AC_WINCTRL_WINTSEL1_ABOVE_Val       (0U)                                           /**< (AC_WINCTRL) Interrupt on signal above window  */
-#define   AC_WINCTRL_WINTSEL1_INSIDE_Val      (1U)                                           /**< (AC_WINCTRL) Interrupt on signal inside window  */
-#define   AC_WINCTRL_WINTSEL1_BELOW_Val       (2U)                                           /**< (AC_WINCTRL) Interrupt on signal below window  */
-#define   AC_WINCTRL_WINTSEL1_OUTSIDE_Val     (3U)                                           /**< (AC_WINCTRL) Interrupt on signal outside window  */
+#define   AC_WINCTRL_WINTSEL1_ABOVE_Val       _U_(0x0)                                             /**< (AC_WINCTRL) Interrupt on signal above window  */
+#define   AC_WINCTRL_WINTSEL1_INSIDE_Val      _U_(0x1)                                             /**< (AC_WINCTRL) Interrupt on signal inside window  */
+#define   AC_WINCTRL_WINTSEL1_BELOW_Val       _U_(0x2)                                             /**< (AC_WINCTRL) Interrupt on signal below window  */
+#define   AC_WINCTRL_WINTSEL1_OUTSIDE_Val     _U_(0x3)                                             /**< (AC_WINCTRL) Interrupt on signal outside window  */
 #define AC_WINCTRL_WINTSEL1_ABOVE             (AC_WINCTRL_WINTSEL1_ABOVE_Val << AC_WINCTRL_WINTSEL1_Pos) /**< (AC_WINCTRL) Interrupt on signal above window Position  */
 #define AC_WINCTRL_WINTSEL1_INSIDE            (AC_WINCTRL_WINTSEL1_INSIDE_Val << AC_WINCTRL_WINTSEL1_Pos) /**< (AC_WINCTRL) Interrupt on signal inside window Position  */
 #define AC_WINCTRL_WINTSEL1_BELOW             (AC_WINCTRL_WINTSEL1_BELOW_Val << AC_WINCTRL_WINTSEL1_Pos) /**< (AC_WINCTRL) Interrupt on signal below window Position  */
 #define AC_WINCTRL_WINTSEL1_OUTSIDE           (AC_WINCTRL_WINTSEL1_OUTSIDE_Val << AC_WINCTRL_WINTSEL1_Pos) /**< (AC_WINCTRL) Interrupt on signal outside window Position  */
-#define AC_WINCTRL_Msk                        (0x00000077UL)                                 /**< (AC_WINCTRL) Register Mask  */
+#define AC_WINCTRL_Msk                        _U_(0x77)                                            /**< (AC_WINCTRL) Register Mask  */
+
 
 /* -------- AC_SCALER : (AC Offset: 0x0C) (R/W 8) Scaler n -------- */
-#define AC_SCALER_VALUE_Pos                   (0U)                                           /**< (AC_SCALER) Scaler Value Position */
-#define AC_SCALER_VALUE_Msk                   (0x3FU << AC_SCALER_VALUE_Pos)                 /**< (AC_SCALER) Scaler Value Mask */
+#define AC_SCALER_RESETVALUE                  _U_(0x00)                                            /**<  (AC_SCALER) Scaler n  Reset Value */
+
+#define AC_SCALER_VALUE_Pos                   _U_(0)                                               /**< (AC_SCALER) Scaler Value Position */
+#define AC_SCALER_VALUE_Msk                   (_U_(0x3F) << AC_SCALER_VALUE_Pos)                   /**< (AC_SCALER) Scaler Value Mask */
 #define AC_SCALER_VALUE(value)                (AC_SCALER_VALUE_Msk & ((value) << AC_SCALER_VALUE_Pos))
-#define AC_SCALER_Msk                         (0x0000003FUL)                                 /**< (AC_SCALER) Register Mask  */
+#define AC_SCALER_Msk                         _U_(0x3F)                                            /**< (AC_SCALER) Register Mask  */
+
 
 /* -------- AC_COMPCTRL : (AC Offset: 0x10) (R/W 32) Comparator Control n -------- */
-#define AC_COMPCTRL_ENABLE_Pos                (1U)                                           /**< (AC_COMPCTRL) Enable Position */
-#define AC_COMPCTRL_ENABLE_Msk                (0x1U << AC_COMPCTRL_ENABLE_Pos)               /**< (AC_COMPCTRL) Enable Mask */
+#define AC_COMPCTRL_RESETVALUE                _U_(0x00)                                            /**<  (AC_COMPCTRL) Comparator Control n  Reset Value */
+
+#define AC_COMPCTRL_ENABLE_Pos                _U_(1)                                               /**< (AC_COMPCTRL) Enable Position */
+#define AC_COMPCTRL_ENABLE_Msk                (_U_(0x1) << AC_COMPCTRL_ENABLE_Pos)                 /**< (AC_COMPCTRL) Enable Mask */
 #define AC_COMPCTRL_ENABLE(value)             (AC_COMPCTRL_ENABLE_Msk & ((value) << AC_COMPCTRL_ENABLE_Pos))
-#define AC_COMPCTRL_SINGLE_Pos                (2U)                                           /**< (AC_COMPCTRL) Single-Shot Mode Position */
-#define AC_COMPCTRL_SINGLE_Msk                (0x1U << AC_COMPCTRL_SINGLE_Pos)               /**< (AC_COMPCTRL) Single-Shot Mode Mask */
+#define AC_COMPCTRL_SINGLE_Pos                _U_(2)                                               /**< (AC_COMPCTRL) Single-Shot Mode Position */
+#define AC_COMPCTRL_SINGLE_Msk                (_U_(0x1) << AC_COMPCTRL_SINGLE_Pos)                 /**< (AC_COMPCTRL) Single-Shot Mode Mask */
 #define AC_COMPCTRL_SINGLE(value)             (AC_COMPCTRL_SINGLE_Msk & ((value) << AC_COMPCTRL_SINGLE_Pos))
-#define AC_COMPCTRL_INTSEL_Pos                (3U)                                           /**< (AC_COMPCTRL) Interrupt Selection Position */
-#define AC_COMPCTRL_INTSEL_Msk                (0x3U << AC_COMPCTRL_INTSEL_Pos)               /**< (AC_COMPCTRL) Interrupt Selection Mask */
+#define AC_COMPCTRL_INTSEL_Pos                _U_(3)                                               /**< (AC_COMPCTRL) Interrupt Selection Position */
+#define AC_COMPCTRL_INTSEL_Msk                (_U_(0x3) << AC_COMPCTRL_INTSEL_Pos)                 /**< (AC_COMPCTRL) Interrupt Selection Mask */
 #define AC_COMPCTRL_INTSEL(value)             (AC_COMPCTRL_INTSEL_Msk & ((value) << AC_COMPCTRL_INTSEL_Pos))
-#define   AC_COMPCTRL_INTSEL_TOGGLE_Val       (0U)                                           /**< (AC_COMPCTRL) Interrupt on comparator output toggle  */
-#define   AC_COMPCTRL_INTSEL_RISING_Val       (1U)                                           /**< (AC_COMPCTRL) Interrupt on comparator output rising  */
-#define   AC_COMPCTRL_INTSEL_FALLING_Val      (2U)                                           /**< (AC_COMPCTRL) Interrupt on comparator output falling  */
-#define   AC_COMPCTRL_INTSEL_EOC_Val          (3U)                                           /**< (AC_COMPCTRL) Interrupt on end of comparison (single-shot mode only)  */
+#define   AC_COMPCTRL_INTSEL_TOGGLE_Val       _U_(0x0)                                             /**< (AC_COMPCTRL) Interrupt on comparator output toggle  */
+#define   AC_COMPCTRL_INTSEL_RISING_Val       _U_(0x1)                                             /**< (AC_COMPCTRL) Interrupt on comparator output rising  */
+#define   AC_COMPCTRL_INTSEL_FALLING_Val      _U_(0x2)                                             /**< (AC_COMPCTRL) Interrupt on comparator output falling  */
+#define   AC_COMPCTRL_INTSEL_EOC_Val          _U_(0x3)                                             /**< (AC_COMPCTRL) Interrupt on end of comparison (single-shot mode only)  */
 #define AC_COMPCTRL_INTSEL_TOGGLE             (AC_COMPCTRL_INTSEL_TOGGLE_Val << AC_COMPCTRL_INTSEL_Pos) /**< (AC_COMPCTRL) Interrupt on comparator output toggle Position  */
 #define AC_COMPCTRL_INTSEL_RISING             (AC_COMPCTRL_INTSEL_RISING_Val << AC_COMPCTRL_INTSEL_Pos) /**< (AC_COMPCTRL) Interrupt on comparator output rising Position  */
 #define AC_COMPCTRL_INTSEL_FALLING            (AC_COMPCTRL_INTSEL_FALLING_Val << AC_COMPCTRL_INTSEL_Pos) /**< (AC_COMPCTRL) Interrupt on comparator output falling Position  */
 #define AC_COMPCTRL_INTSEL_EOC                (AC_COMPCTRL_INTSEL_EOC_Val << AC_COMPCTRL_INTSEL_Pos) /**< (AC_COMPCTRL) Interrupt on end of comparison (single-shot mode only) Position  */
-#define AC_COMPCTRL_RUNSTDBY_Pos              (6U)                                           /**< (AC_COMPCTRL) Run in Standby Position */
-#define AC_COMPCTRL_RUNSTDBY_Msk              (0x1U << AC_COMPCTRL_RUNSTDBY_Pos)             /**< (AC_COMPCTRL) Run in Standby Mask */
+#define AC_COMPCTRL_RUNSTDBY_Pos              _U_(6)                                               /**< (AC_COMPCTRL) Run in Standby Position */
+#define AC_COMPCTRL_RUNSTDBY_Msk              (_U_(0x1) << AC_COMPCTRL_RUNSTDBY_Pos)               /**< (AC_COMPCTRL) Run in Standby Mask */
 #define AC_COMPCTRL_RUNSTDBY(value)           (AC_COMPCTRL_RUNSTDBY_Msk & ((value) << AC_COMPCTRL_RUNSTDBY_Pos))
-#define AC_COMPCTRL_MUXNEG_Pos                (8U)                                           /**< (AC_COMPCTRL) Negative Input Mux Selection Position */
-#define AC_COMPCTRL_MUXNEG_Msk                (0x7U << AC_COMPCTRL_MUXNEG_Pos)               /**< (AC_COMPCTRL) Negative Input Mux Selection Mask */
+#define AC_COMPCTRL_MUXNEG_Pos                _U_(8)                                               /**< (AC_COMPCTRL) Negative Input Mux Selection Position */
+#define AC_COMPCTRL_MUXNEG_Msk                (_U_(0x7) << AC_COMPCTRL_MUXNEG_Pos)                 /**< (AC_COMPCTRL) Negative Input Mux Selection Mask */
 #define AC_COMPCTRL_MUXNEG(value)             (AC_COMPCTRL_MUXNEG_Msk & ((value) << AC_COMPCTRL_MUXNEG_Pos))
-#define   AC_COMPCTRL_MUXNEG_PIN0_Val         (0U)                                           /**< (AC_COMPCTRL) I/O pin 0  */
-#define   AC_COMPCTRL_MUXNEG_PIN1_Val         (1U)                                           /**< (AC_COMPCTRL) I/O pin 1  */
-#define   AC_COMPCTRL_MUXNEG_PIN2_Val         (2U)                                           /**< (AC_COMPCTRL) I/O pin 2  */
-#define   AC_COMPCTRL_MUXNEG_PIN3_Val         (3U)                                           /**< (AC_COMPCTRL) I/O pin 3  */
-#define   AC_COMPCTRL_MUXNEG_GND_Val          (4U)                                           /**< (AC_COMPCTRL) Ground  */
-#define   AC_COMPCTRL_MUXNEG_VSCALE_Val       (5U)                                           /**< (AC_COMPCTRL) VDD scaler  */
-#define   AC_COMPCTRL_MUXNEG_BANDGAP_Val      (6U)                                           /**< (AC_COMPCTRL) Internal bandgap voltage  */
-#define   AC_COMPCTRL_MUXNEG_DAC_Val          (7U)                                           /**< (AC_COMPCTRL) DAC output  */
+#define   AC_COMPCTRL_MUXNEG_PIN0_Val         _U_(0x0)                                             /**< (AC_COMPCTRL) I/O pin 0  */
+#define   AC_COMPCTRL_MUXNEG_PIN1_Val         _U_(0x1)                                             /**< (AC_COMPCTRL) I/O pin 1  */
+#define   AC_COMPCTRL_MUXNEG_PIN2_Val         _U_(0x2)                                             /**< (AC_COMPCTRL) I/O pin 2  */
+#define   AC_COMPCTRL_MUXNEG_PIN3_Val         _U_(0x3)                                             /**< (AC_COMPCTRL) I/O pin 3  */
+#define   AC_COMPCTRL_MUXNEG_GND_Val          _U_(0x4)                                             /**< (AC_COMPCTRL) Ground  */
+#define   AC_COMPCTRL_MUXNEG_VSCALE_Val       _U_(0x5)                                             /**< (AC_COMPCTRL) VDD scaler  */
+#define   AC_COMPCTRL_MUXNEG_BANDGAP_Val      _U_(0x6)                                             /**< (AC_COMPCTRL) Internal bandgap voltage  */
+#define   AC_COMPCTRL_MUXNEG_DAC_Val          _U_(0x7)                                             /**< (AC_COMPCTRL) DAC output  */
 #define AC_COMPCTRL_MUXNEG_PIN0               (AC_COMPCTRL_MUXNEG_PIN0_Val << AC_COMPCTRL_MUXNEG_Pos) /**< (AC_COMPCTRL) I/O pin 0 Position  */
 #define AC_COMPCTRL_MUXNEG_PIN1               (AC_COMPCTRL_MUXNEG_PIN1_Val << AC_COMPCTRL_MUXNEG_Pos) /**< (AC_COMPCTRL) I/O pin 1 Position  */
 #define AC_COMPCTRL_MUXNEG_PIN2               (AC_COMPCTRL_MUXNEG_PIN2_Val << AC_COMPCTRL_MUXNEG_Pos) /**< (AC_COMPCTRL) I/O pin 2 Position  */
@@ -293,110 +365,118 @@
 #define AC_COMPCTRL_MUXNEG_VSCALE             (AC_COMPCTRL_MUXNEG_VSCALE_Val << AC_COMPCTRL_MUXNEG_Pos) /**< (AC_COMPCTRL) VDD scaler Position  */
 #define AC_COMPCTRL_MUXNEG_BANDGAP            (AC_COMPCTRL_MUXNEG_BANDGAP_Val << AC_COMPCTRL_MUXNEG_Pos) /**< (AC_COMPCTRL) Internal bandgap voltage Position  */
 #define AC_COMPCTRL_MUXNEG_DAC                (AC_COMPCTRL_MUXNEG_DAC_Val << AC_COMPCTRL_MUXNEG_Pos) /**< (AC_COMPCTRL) DAC output Position  */
-#define AC_COMPCTRL_MUXPOS_Pos                (12U)                                          /**< (AC_COMPCTRL) Positive Input Mux Selection Position */
-#define AC_COMPCTRL_MUXPOS_Msk                (0x7U << AC_COMPCTRL_MUXPOS_Pos)               /**< (AC_COMPCTRL) Positive Input Mux Selection Mask */
+#define AC_COMPCTRL_MUXPOS_Pos                _U_(12)                                              /**< (AC_COMPCTRL) Positive Input Mux Selection Position */
+#define AC_COMPCTRL_MUXPOS_Msk                (_U_(0x7) << AC_COMPCTRL_MUXPOS_Pos)                 /**< (AC_COMPCTRL) Positive Input Mux Selection Mask */
 #define AC_COMPCTRL_MUXPOS(value)             (AC_COMPCTRL_MUXPOS_Msk & ((value) << AC_COMPCTRL_MUXPOS_Pos))
-#define   AC_COMPCTRL_MUXPOS_PIN0_Val         (0U)                                           /**< (AC_COMPCTRL) I/O pin 0  */
-#define   AC_COMPCTRL_MUXPOS_PIN1_Val         (1U)                                           /**< (AC_COMPCTRL) I/O pin 1  */
-#define   AC_COMPCTRL_MUXPOS_PIN2_Val         (2U)                                           /**< (AC_COMPCTRL) I/O pin 2  */
-#define   AC_COMPCTRL_MUXPOS_PIN3_Val         (3U)                                           /**< (AC_COMPCTRL) I/O pin 3  */
-#define   AC_COMPCTRL_MUXPOS_VSCALE_Val       (4U)                                           /**< (AC_COMPCTRL) VDD Scaler  */
+#define   AC_COMPCTRL_MUXPOS_PIN0_Val         _U_(0x0)                                             /**< (AC_COMPCTRL) I/O pin 0  */
+#define   AC_COMPCTRL_MUXPOS_PIN1_Val         _U_(0x1)                                             /**< (AC_COMPCTRL) I/O pin 1  */
+#define   AC_COMPCTRL_MUXPOS_PIN2_Val         _U_(0x2)                                             /**< (AC_COMPCTRL) I/O pin 2  */
+#define   AC_COMPCTRL_MUXPOS_PIN3_Val         _U_(0x3)                                             /**< (AC_COMPCTRL) I/O pin 3  */
+#define   AC_COMPCTRL_MUXPOS_VSCALE_Val       _U_(0x4)                                             /**< (AC_COMPCTRL) VDD Scaler  */
 #define AC_COMPCTRL_MUXPOS_PIN0               (AC_COMPCTRL_MUXPOS_PIN0_Val << AC_COMPCTRL_MUXPOS_Pos) /**< (AC_COMPCTRL) I/O pin 0 Position  */
 #define AC_COMPCTRL_MUXPOS_PIN1               (AC_COMPCTRL_MUXPOS_PIN1_Val << AC_COMPCTRL_MUXPOS_Pos) /**< (AC_COMPCTRL) I/O pin 1 Position  */
 #define AC_COMPCTRL_MUXPOS_PIN2               (AC_COMPCTRL_MUXPOS_PIN2_Val << AC_COMPCTRL_MUXPOS_Pos) /**< (AC_COMPCTRL) I/O pin 2 Position  */
 #define AC_COMPCTRL_MUXPOS_PIN3               (AC_COMPCTRL_MUXPOS_PIN3_Val << AC_COMPCTRL_MUXPOS_Pos) /**< (AC_COMPCTRL) I/O pin 3 Position  */
 #define AC_COMPCTRL_MUXPOS_VSCALE             (AC_COMPCTRL_MUXPOS_VSCALE_Val << AC_COMPCTRL_MUXPOS_Pos) /**< (AC_COMPCTRL) VDD Scaler Position  */
-#define AC_COMPCTRL_SWAP_Pos                  (15U)                                          /**< (AC_COMPCTRL) Swap Inputs and Invert Position */
-#define AC_COMPCTRL_SWAP_Msk                  (0x1U << AC_COMPCTRL_SWAP_Pos)                 /**< (AC_COMPCTRL) Swap Inputs and Invert Mask */
+#define AC_COMPCTRL_SWAP_Pos                  _U_(15)                                              /**< (AC_COMPCTRL) Swap Inputs and Invert Position */
+#define AC_COMPCTRL_SWAP_Msk                  (_U_(0x1) << AC_COMPCTRL_SWAP_Pos)                   /**< (AC_COMPCTRL) Swap Inputs and Invert Mask */
 #define AC_COMPCTRL_SWAP(value)               (AC_COMPCTRL_SWAP_Msk & ((value) << AC_COMPCTRL_SWAP_Pos))
-#define AC_COMPCTRL_SPEED_Pos                 (16U)                                          /**< (AC_COMPCTRL) Speed Selection Position */
-#define AC_COMPCTRL_SPEED_Msk                 (0x3U << AC_COMPCTRL_SPEED_Pos)                /**< (AC_COMPCTRL) Speed Selection Mask */
+#define AC_COMPCTRL_SPEED_Pos                 _U_(16)                                              /**< (AC_COMPCTRL) Speed Selection Position */
+#define AC_COMPCTRL_SPEED_Msk                 (_U_(0x3) << AC_COMPCTRL_SPEED_Pos)                  /**< (AC_COMPCTRL) Speed Selection Mask */
 #define AC_COMPCTRL_SPEED(value)              (AC_COMPCTRL_SPEED_Msk & ((value) << AC_COMPCTRL_SPEED_Pos))
-#define   AC_COMPCTRL_SPEED_LOW_Val           (0U)                                           /**< (AC_COMPCTRL) Low speed  */
-#define   AC_COMPCTRL_SPEED_HIGH_Val          (3U)                                           /**< (AC_COMPCTRL) High speed  */
+#define   AC_COMPCTRL_SPEED_LOW_Val           _U_(0x0)                                             /**< (AC_COMPCTRL) Low speed  */
+#define   AC_COMPCTRL_SPEED_HIGH_Val          _U_(0x3)                                             /**< (AC_COMPCTRL) High speed  */
 #define AC_COMPCTRL_SPEED_LOW                 (AC_COMPCTRL_SPEED_LOW_Val << AC_COMPCTRL_SPEED_Pos) /**< (AC_COMPCTRL) Low speed Position  */
 #define AC_COMPCTRL_SPEED_HIGH                (AC_COMPCTRL_SPEED_HIGH_Val << AC_COMPCTRL_SPEED_Pos) /**< (AC_COMPCTRL) High speed Position  */
-#define AC_COMPCTRL_HYSTEN_Pos                (19U)                                          /**< (AC_COMPCTRL) Hysteresis Enable Position */
-#define AC_COMPCTRL_HYSTEN_Msk                (0x1U << AC_COMPCTRL_HYSTEN_Pos)               /**< (AC_COMPCTRL) Hysteresis Enable Mask */
+#define AC_COMPCTRL_HYSTEN_Pos                _U_(19)                                              /**< (AC_COMPCTRL) Hysteresis Enable Position */
+#define AC_COMPCTRL_HYSTEN_Msk                (_U_(0x1) << AC_COMPCTRL_HYSTEN_Pos)                 /**< (AC_COMPCTRL) Hysteresis Enable Mask */
 #define AC_COMPCTRL_HYSTEN(value)             (AC_COMPCTRL_HYSTEN_Msk & ((value) << AC_COMPCTRL_HYSTEN_Pos))
-#define AC_COMPCTRL_FLEN_Pos                  (24U)                                          /**< (AC_COMPCTRL) Filter Length Position */
-#define AC_COMPCTRL_FLEN_Msk                  (0x7U << AC_COMPCTRL_FLEN_Pos)                 /**< (AC_COMPCTRL) Filter Length Mask */
+#define AC_COMPCTRL_FLEN_Pos                  _U_(24)                                              /**< (AC_COMPCTRL) Filter Length Position */
+#define AC_COMPCTRL_FLEN_Msk                  (_U_(0x7) << AC_COMPCTRL_FLEN_Pos)                   /**< (AC_COMPCTRL) Filter Length Mask */
 #define AC_COMPCTRL_FLEN(value)               (AC_COMPCTRL_FLEN_Msk & ((value) << AC_COMPCTRL_FLEN_Pos))
-#define   AC_COMPCTRL_FLEN_OFF_Val            (0U)                                           /**< (AC_COMPCTRL) No filtering  */
-#define   AC_COMPCTRL_FLEN_MAJ3_Val           (1U)                                           /**< (AC_COMPCTRL) 3-bit majority function (2 of 3)  */
-#define   AC_COMPCTRL_FLEN_MAJ5_Val           (2U)                                           /**< (AC_COMPCTRL) 5-bit majority function (3 of 5)  */
-#define AC_COMPCTRL_FLEN_OFF                  (AC_COMPCTRL_FLEN_OFF_Val << AC_COMPCTRL_FLEN_Pos) /**< (AC_COMPCTRL) No filtering Position  */
-#define AC_COMPCTRL_FLEN_MAJ3                 (AC_COMPCTRL_FLEN_MAJ3_Val << AC_COMPCTRL_FLEN_Pos) /**< (AC_COMPCTRL) 3-bit majority function (2 of 3) Position  */
-#define AC_COMPCTRL_FLEN_MAJ5                 (AC_COMPCTRL_FLEN_MAJ5_Val << AC_COMPCTRL_FLEN_Pos) /**< (AC_COMPCTRL) 5-bit majority function (3 of 5) Position  */
-#define AC_COMPCTRL_OUT_Pos                   (28U)                                          /**< (AC_COMPCTRL) Output Position */
-#define AC_COMPCTRL_OUT_Msk                   (0x3U << AC_COMPCTRL_OUT_Pos)                  /**< (AC_COMPCTRL) Output Mask */
+#define   AC_COMPCTRL_FLEN_OFF_Val            _U_(0x0)                                             /**< (AC_COMPCTRL) No filtering  */
+#define   AC_COMPCTRL_FLEN_MAJ3_Val           _U_(0x1)                                             /**< (AC_COMPCTRL) 3-bit majority function (2 of 3)  */
+#define   AC_COMPCTRL_FLEN_MAJ5_Val           _U_(0x2)                                             /**< (AC_COMPCTRL) 5-bit majority function (3 of 5)  */
+#define AC_COMPCTRL_FLEN_OFF                  (AC_COMPCTRL_FLEN_OFF_Val << AC_COMPCTRL_FLEN_Pos)   /**< (AC_COMPCTRL) No filtering Position  */
+#define AC_COMPCTRL_FLEN_MAJ3                 (AC_COMPCTRL_FLEN_MAJ3_Val << AC_COMPCTRL_FLEN_Pos)  /**< (AC_COMPCTRL) 3-bit majority function (2 of 3) Position  */
+#define AC_COMPCTRL_FLEN_MAJ5                 (AC_COMPCTRL_FLEN_MAJ5_Val << AC_COMPCTRL_FLEN_Pos)  /**< (AC_COMPCTRL) 5-bit majority function (3 of 5) Position  */
+#define AC_COMPCTRL_OUT_Pos                   _U_(28)                                              /**< (AC_COMPCTRL) Output Position */
+#define AC_COMPCTRL_OUT_Msk                   (_U_(0x3) << AC_COMPCTRL_OUT_Pos)                    /**< (AC_COMPCTRL) Output Mask */
 #define AC_COMPCTRL_OUT(value)                (AC_COMPCTRL_OUT_Msk & ((value) << AC_COMPCTRL_OUT_Pos))
-#define   AC_COMPCTRL_OUT_OFF_Val             (0U)                                           /**< (AC_COMPCTRL) The output of COMPn is not routed to the COMPn I/O port  */
-#define   AC_COMPCTRL_OUT_ASYNC_Val           (1U)                                           /**< (AC_COMPCTRL) The asynchronous output of COMPn is routed to the COMPn I/O port  */
-#define   AC_COMPCTRL_OUT_SYNC_Val            (2U)                                           /**< (AC_COMPCTRL) The synchronous output (including filtering) of COMPn is routed to the COMPn I/O port  */
-#define AC_COMPCTRL_OUT_OFF                   (AC_COMPCTRL_OUT_OFF_Val << AC_COMPCTRL_OUT_Pos) /**< (AC_COMPCTRL) The output of COMPn is not routed to the COMPn I/O port Position  */
-#define AC_COMPCTRL_OUT_ASYNC                 (AC_COMPCTRL_OUT_ASYNC_Val << AC_COMPCTRL_OUT_Pos) /**< (AC_COMPCTRL) The asynchronous output of COMPn is routed to the COMPn I/O port Position  */
-#define AC_COMPCTRL_OUT_SYNC                  (AC_COMPCTRL_OUT_SYNC_Val << AC_COMPCTRL_OUT_Pos) /**< (AC_COMPCTRL) The synchronous output (including filtering) of COMPn is routed to the COMPn I/O port Position  */
-#define AC_COMPCTRL_Msk                       (0x370BF75EUL)                                 /**< (AC_COMPCTRL) Register Mask  */
+#define   AC_COMPCTRL_OUT_OFF_Val             _U_(0x0)                                             /**< (AC_COMPCTRL) The output of COMPn is not routed to the COMPn I/O port  */
+#define   AC_COMPCTRL_OUT_ASYNC_Val           _U_(0x1)                                             /**< (AC_COMPCTRL) The asynchronous output of COMPn is routed to the COMPn I/O port  */
+#define   AC_COMPCTRL_OUT_SYNC_Val            _U_(0x2)                                             /**< (AC_COMPCTRL) The synchronous output (including filtering) of COMPn is routed to the COMPn I/O port  */
+#define AC_COMPCTRL_OUT_OFF                   (AC_COMPCTRL_OUT_OFF_Val << AC_COMPCTRL_OUT_Pos)     /**< (AC_COMPCTRL) The output of COMPn is not routed to the COMPn I/O port Position  */
+#define AC_COMPCTRL_OUT_ASYNC                 (AC_COMPCTRL_OUT_ASYNC_Val << AC_COMPCTRL_OUT_Pos)   /**< (AC_COMPCTRL) The asynchronous output of COMPn is routed to the COMPn I/O port Position  */
+#define AC_COMPCTRL_OUT_SYNC                  (AC_COMPCTRL_OUT_SYNC_Val << AC_COMPCTRL_OUT_Pos)    /**< (AC_COMPCTRL) The synchronous output (including filtering) of COMPn is routed to the COMPn I/O port Position  */
+#define AC_COMPCTRL_Msk                       _U_(0x370BF75E)                                      /**< (AC_COMPCTRL) Register Mask  */
 
-/* -------- AC_SYNCBUSY : (AC Offset: 0x20) (R/  32) Synchronization Busy -------- */
-#define AC_SYNCBUSY_SWRST_Pos                 (0U)                                           /**< (AC_SYNCBUSY) Software Reset Synchronization Busy Position */
-#define AC_SYNCBUSY_SWRST_Msk                 (0x1U << AC_SYNCBUSY_SWRST_Pos)                /**< (AC_SYNCBUSY) Software Reset Synchronization Busy Mask */
+
+/* -------- AC_SYNCBUSY : (AC Offset: 0x20) ( R/ 32) Synchronization Busy -------- */
+#define AC_SYNCBUSY_RESETVALUE                _U_(0x00)                                            /**<  (AC_SYNCBUSY) Synchronization Busy  Reset Value */
+
+#define AC_SYNCBUSY_SWRST_Pos                 _U_(0)                                               /**< (AC_SYNCBUSY) Software Reset Synchronization Busy Position */
+#define AC_SYNCBUSY_SWRST_Msk                 (_U_(0x1) << AC_SYNCBUSY_SWRST_Pos)                  /**< (AC_SYNCBUSY) Software Reset Synchronization Busy Mask */
 #define AC_SYNCBUSY_SWRST(value)              (AC_SYNCBUSY_SWRST_Msk & ((value) << AC_SYNCBUSY_SWRST_Pos))
-#define AC_SYNCBUSY_ENABLE_Pos                (1U)                                           /**< (AC_SYNCBUSY) Enable Synchronization Busy Position */
-#define AC_SYNCBUSY_ENABLE_Msk                (0x1U << AC_SYNCBUSY_ENABLE_Pos)               /**< (AC_SYNCBUSY) Enable Synchronization Busy Mask */
+#define AC_SYNCBUSY_ENABLE_Pos                _U_(1)                                               /**< (AC_SYNCBUSY) Enable Synchronization Busy Position */
+#define AC_SYNCBUSY_ENABLE_Msk                (_U_(0x1) << AC_SYNCBUSY_ENABLE_Pos)                 /**< (AC_SYNCBUSY) Enable Synchronization Busy Mask */
 #define AC_SYNCBUSY_ENABLE(value)             (AC_SYNCBUSY_ENABLE_Msk & ((value) << AC_SYNCBUSY_ENABLE_Pos))
-#define AC_SYNCBUSY_WINCTRL_Pos               (2U)                                           /**< (AC_SYNCBUSY) WINCTRL Synchronization Busy Position */
-#define AC_SYNCBUSY_WINCTRL_Msk               (0x1U << AC_SYNCBUSY_WINCTRL_Pos)              /**< (AC_SYNCBUSY) WINCTRL Synchronization Busy Mask */
+#define AC_SYNCBUSY_WINCTRL_Pos               _U_(2)                                               /**< (AC_SYNCBUSY) WINCTRL Synchronization Busy Position */
+#define AC_SYNCBUSY_WINCTRL_Msk               (_U_(0x1) << AC_SYNCBUSY_WINCTRL_Pos)                /**< (AC_SYNCBUSY) WINCTRL Synchronization Busy Mask */
 #define AC_SYNCBUSY_WINCTRL(value)            (AC_SYNCBUSY_WINCTRL_Msk & ((value) << AC_SYNCBUSY_WINCTRL_Pos))
-#define AC_SYNCBUSY_COMPCTRL0_Pos             (3U)                                           /**< (AC_SYNCBUSY) COMPCTRL 0 Synchronization Busy Position */
-#define AC_SYNCBUSY_COMPCTRL0_Msk             (0x1U << AC_SYNCBUSY_COMPCTRL0_Pos)            /**< (AC_SYNCBUSY) COMPCTRL 0 Synchronization Busy Mask */
+#define AC_SYNCBUSY_COMPCTRL0_Pos             _U_(3)                                               /**< (AC_SYNCBUSY) COMPCTRL 0 Synchronization Busy Position */
+#define AC_SYNCBUSY_COMPCTRL0_Msk             (_U_(0x1) << AC_SYNCBUSY_COMPCTRL0_Pos)              /**< (AC_SYNCBUSY) COMPCTRL 0 Synchronization Busy Mask */
 #define AC_SYNCBUSY_COMPCTRL0(value)          (AC_SYNCBUSY_COMPCTRL0_Msk & ((value) << AC_SYNCBUSY_COMPCTRL0_Pos))
-#define AC_SYNCBUSY_COMPCTRL1_Pos             (4U)                                           /**< (AC_SYNCBUSY) COMPCTRL 1 Synchronization Busy Position */
-#define AC_SYNCBUSY_COMPCTRL1_Msk             (0x1U << AC_SYNCBUSY_COMPCTRL1_Pos)            /**< (AC_SYNCBUSY) COMPCTRL 1 Synchronization Busy Mask */
+#define AC_SYNCBUSY_COMPCTRL1_Pos             _U_(4)                                               /**< (AC_SYNCBUSY) COMPCTRL 1 Synchronization Busy Position */
+#define AC_SYNCBUSY_COMPCTRL1_Msk             (_U_(0x1) << AC_SYNCBUSY_COMPCTRL1_Pos)              /**< (AC_SYNCBUSY) COMPCTRL 1 Synchronization Busy Mask */
 #define AC_SYNCBUSY_COMPCTRL1(value)          (AC_SYNCBUSY_COMPCTRL1_Msk & ((value) << AC_SYNCBUSY_COMPCTRL1_Pos))
-#define AC_SYNCBUSY_COMPCTRL2_Pos             (5U)                                           /**< (AC_SYNCBUSY) COMPCTRL 2 Synchronization Busy Position */
-#define AC_SYNCBUSY_COMPCTRL2_Msk             (0x1U << AC_SYNCBUSY_COMPCTRL2_Pos)            /**< (AC_SYNCBUSY) COMPCTRL 2 Synchronization Busy Mask */
+#define AC_SYNCBUSY_COMPCTRL2_Pos             _U_(5)                                               /**< (AC_SYNCBUSY) COMPCTRL 2 Synchronization Busy Position */
+#define AC_SYNCBUSY_COMPCTRL2_Msk             (_U_(0x1) << AC_SYNCBUSY_COMPCTRL2_Pos)              /**< (AC_SYNCBUSY) COMPCTRL 2 Synchronization Busy Mask */
 #define AC_SYNCBUSY_COMPCTRL2(value)          (AC_SYNCBUSY_COMPCTRL2_Msk & ((value) << AC_SYNCBUSY_COMPCTRL2_Pos))
-#define AC_SYNCBUSY_COMPCTRL3_Pos             (6U)                                           /**< (AC_SYNCBUSY) COMPCTRL 3 Synchronization Busy Position */
-#define AC_SYNCBUSY_COMPCTRL3_Msk             (0x1U << AC_SYNCBUSY_COMPCTRL3_Pos)            /**< (AC_SYNCBUSY) COMPCTRL 3 Synchronization Busy Mask */
+#define AC_SYNCBUSY_COMPCTRL3_Pos             _U_(6)                                               /**< (AC_SYNCBUSY) COMPCTRL 3 Synchronization Busy Position */
+#define AC_SYNCBUSY_COMPCTRL3_Msk             (_U_(0x1) << AC_SYNCBUSY_COMPCTRL3_Pos)              /**< (AC_SYNCBUSY) COMPCTRL 3 Synchronization Busy Mask */
 #define AC_SYNCBUSY_COMPCTRL3(value)          (AC_SYNCBUSY_COMPCTRL3_Msk & ((value) << AC_SYNCBUSY_COMPCTRL3_Pos))
-#define AC_SYNCBUSY_Msk                       (0x0000007FUL)                                 /**< (AC_SYNCBUSY) Register Mask  */
+#define AC_SYNCBUSY_Msk                       _U_(0x0000007F)                                      /**< (AC_SYNCBUSY) Register Mask  */
+
+#define AC_SYNCBUSY_COMPCTRL_Pos              _U_(3)                                               /**< (AC_SYNCBUSY Position) COMPCTRL 3 Synchronization Busy */
+#define AC_SYNCBUSY_COMPCTRL_Msk              (_U_(0xF) << AC_SYNCBUSY_COMPCTRL_Pos)               /**< (AC_SYNCBUSY Mask) COMPCTRL */
+#define AC_SYNCBUSY_COMPCTRL(value)           (AC_SYNCBUSY_COMPCTRL_Msk & ((value) << AC_SYNCBUSY_COMPCTRL_Pos)) 
 
 /** \brief AC register offsets definitions */
-#define AC_CTRLA_OFFSET                (0x00)         /**< (AC_CTRLA) Control A Offset */
-#define AC_CTRLB_OFFSET                (0x01)         /**< (AC_CTRLB) Control B Offset */
-#define AC_EVCTRL_OFFSET               (0x02)         /**< (AC_EVCTRL) Event Control Offset */
-#define AC_INTENCLR_OFFSET             (0x04)         /**< (AC_INTENCLR) Interrupt Enable Clear Offset */
-#define AC_INTENSET_OFFSET             (0x05)         /**< (AC_INTENSET) Interrupt Enable Set Offset */
-#define AC_INTFLAG_OFFSET              (0x06)         /**< (AC_INTFLAG) Interrupt Flag Status and Clear Offset */
-#define AC_STATUSA_OFFSET              (0x07)         /**< (AC_STATUSA) Status A Offset */
-#define AC_STATUSB_OFFSET              (0x08)         /**< (AC_STATUSB) Status B Offset */
-#define AC_DBGCTRL_OFFSET              (0x09)         /**< (AC_DBGCTRL) Debug Control Offset */
-#define AC_WINCTRL_OFFSET              (0x0A)         /**< (AC_WINCTRL) Window Control Offset */
-#define AC_SCALER_OFFSET               (0x0C)         /**< (AC_SCALER) Scaler n Offset */
-#define AC_COMPCTRL_OFFSET             (0x10)         /**< (AC_COMPCTRL) Comparator Control n Offset */
-#define AC_SYNCBUSY_OFFSET             (0x20)         /**< (AC_SYNCBUSY) Synchronization Busy Offset */
+#define AC_CTRLA_REG_OFST              (0x00)              /**< (AC_CTRLA) Control A Offset */
+#define AC_CTRLB_REG_OFST              (0x01)              /**< (AC_CTRLB) Control B Offset */
+#define AC_EVCTRL_REG_OFST             (0x02)              /**< (AC_EVCTRL) Event Control Offset */
+#define AC_INTENCLR_REG_OFST           (0x04)              /**< (AC_INTENCLR) Interrupt Enable Clear Offset */
+#define AC_INTENSET_REG_OFST           (0x05)              /**< (AC_INTENSET) Interrupt Enable Set Offset */
+#define AC_INTFLAG_REG_OFST            (0x06)              /**< (AC_INTFLAG) Interrupt Flag Status and Clear Offset */
+#define AC_STATUSA_REG_OFST            (0x07)              /**< (AC_STATUSA) Status A Offset */
+#define AC_STATUSB_REG_OFST            (0x08)              /**< (AC_STATUSB) Status B Offset */
+#define AC_DBGCTRL_REG_OFST            (0x09)              /**< (AC_DBGCTRL) Debug Control Offset */
+#define AC_WINCTRL_REG_OFST            (0x0A)              /**< (AC_WINCTRL) Window Control Offset */
+#define AC_SCALER_REG_OFST             (0x0C)              /**< (AC_SCALER) Scaler n Offset */
+#define AC_COMPCTRL_REG_OFST           (0x10)              /**< (AC_COMPCTRL) Comparator Control n Offset */
+#define AC_SYNCBUSY_REG_OFST           (0x20)              /**< (AC_SYNCBUSY) Synchronization Busy Offset */
 
+#if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief AC register API structure */
 typedef struct
-{
-  __IO  uint8_t                        AC_CTRLA;        /**< Offset: 0x00 (R/W  8) Control A */
-  __O   uint8_t                        AC_CTRLB;        /**< Offset: 0x01 ( /W  8) Control B */
-  __IO  uint16_t                       AC_EVCTRL;       /**< Offset: 0x02 (R/W  16) Event Control */
-  __IO  uint8_t                        AC_INTENCLR;     /**< Offset: 0x04 (R/W  8) Interrupt Enable Clear */
-  __IO  uint8_t                        AC_INTENSET;     /**< Offset: 0x05 (R/W  8) Interrupt Enable Set */
-  __IO  uint8_t                        AC_INTFLAG;      /**< Offset: 0x06 (R/W  8) Interrupt Flag Status and Clear */
-  __I   uint8_t                        AC_STATUSA;      /**< Offset: 0x07 (R/   8) Status A */
-  __I   uint8_t                        AC_STATUSB;      /**< Offset: 0x08 (R/   8) Status B */
-  __IO  uint8_t                        AC_DBGCTRL;      /**< Offset: 0x09 (R/W  8) Debug Control */
-  __IO  uint8_t                        AC_WINCTRL;      /**< Offset: 0x0a (R/W  8) Window Control */
+{  /* Analog Comparators */
+  __IO  uint8_t                        AC_CTRLA;           /**< Offset: 0x00 (R/W  8) Control A */
+  __O   uint8_t                        AC_CTRLB;           /**< Offset: 0x01 ( /W  8) Control B */
+  __IO  uint16_t                       AC_EVCTRL;          /**< Offset: 0x02 (R/W  16) Event Control */
+  __IO  uint8_t                        AC_INTENCLR;        /**< Offset: 0x04 (R/W  8) Interrupt Enable Clear */
+  __IO  uint8_t                        AC_INTENSET;        /**< Offset: 0x05 (R/W  8) Interrupt Enable Set */
+  __IO  uint8_t                        AC_INTFLAG;         /**< Offset: 0x06 (R/W  8) Interrupt Flag Status and Clear */
+  __I   uint8_t                        AC_STATUSA;         /**< Offset: 0x07 (R/   8) Status A */
+  __I   uint8_t                        AC_STATUSB;         /**< Offset: 0x08 (R/   8) Status B */
+  __IO  uint8_t                        AC_DBGCTRL;         /**< Offset: 0x09 (R/W  8) Debug Control */
+  __IO  uint8_t                        AC_WINCTRL;         /**< Offset: 0x0A (R/W  8) Window Control */
   __I   uint8_t                        Reserved1[0x01];
-  __IO  uint8_t                        AC_SCALER[4];    /**< Offset: 0x0c (R/W  8) Scaler n */
-  __IO  uint32_t                       AC_COMPCTRL[4];  /**< Offset: 0x10 (R/W  32) Comparator Control n */
-  __I   uint32_t                       AC_SYNCBUSY;     /**< Offset: 0x20 (R/   32) Synchronization Busy */
+  __IO  uint8_t                        AC_SCALER[4];       /**< Offset: 0x0C (R/W  8) Scaler n */
+  __IO  uint32_t                       AC_COMPCTRL[4];     /**< Offset: 0x10 (R/W  32) Comparator Control n */
+  __I   uint32_t                       AC_SYNCBUSY;        /**< Offset: 0x20 (R/   32) Synchronization Busy */
 } ac_registers_t;
-/** @}  end of Analog Comparators */
 
-#endif /* SAMC_SAMC21_AC_MODULE_H */
 
+#endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
+#endif /* _SAMC21_AC_COMPONENT_H_ */
