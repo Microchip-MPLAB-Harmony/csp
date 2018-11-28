@@ -45,10 +45,10 @@
 
 static void OSCCTRL_Initialize(void)
 {
+    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020) >> 19 ) & 0x3fffff);
+    OSCCTRL_REGS->OSCCTRL_CAL48M = calibValue;
 
 
-	
-	
     /* Selection of the Division Value */
     OSCCTRL_REGS->OSCCTRL_OSC48MDIV = OSCCTRL_OSC48MDIV_DIV(0);
 
@@ -81,7 +81,7 @@ static void GCLK0_Initialize(void)
         /* wait for the Generator 0 synchronization */
     }
 }
-	
+
 void CLOCK_Initialize (void)
 {
     /* NVM Wait States */
@@ -92,11 +92,11 @@ void CLOCK_Initialize (void)
 
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
-	
+
    GCLK0_Initialize();
 
 
-	
+
 
 }
 
