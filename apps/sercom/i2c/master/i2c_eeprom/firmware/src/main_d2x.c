@@ -52,101 +52,16 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 #include <string.h>
-#define LED_On()                       LED_Clear()
-#define LED_Off()                      LED_Set()
-
-// *****************************************************************************
-/* I2C Address for the EEPROM 3 CLICK Board.
-
-  Summary:
-    Defines the EEPROM 3 CLICK Board's I2C Address.
-
-  Description:
-    This #define defines the on-board EEPROM 3 CLICK Board's I2C Address. It is used
-    by the TWIHS PLib API's to transmit and receive data.
-*/
+#define LED_ON()                       LED_Clear()
+#define LED_OFF()                      LED_Set()
 
 #define APP_AT24MAC_DEVICE_ADDR             0x0054
-
-// *****************************************************************************
-/* EEPROM AT24MAC402 Word Address.
-
-  Summary:
-    Defines the EEPROM 3 CLICK Board's Word Address.
-
-  Description:
-    This #define defines the EEPROM 3 CLICK Board's Word Address. Data is
-    read/write from/to the location starting from this address.
- */
-
 #define APP_AT24MAC_MEMORY_ADDR             0x00
 #define APP_AT24MAC_MEMORY_ADDR1            0x00
-// *****************************************************************************
-/* Transmit data length.
-
-  Summary:
-    Defines the length of the data to be transmitted to EEPROM 3 CLICK Board.
-
-  Description:
-    This #define defines the length of the data to be tranmitted to the EEPROM 3 CLICK Board.
-    This define is used by the TWIHS PLib Write API.
- */
-
 #define APP_TRANSMIT_DATA_LENGTH            6
-
-// *****************************************************************************
-/* Acknowledge polling data length.
-
-  Summary:
-    Defines the length of the data to be transmitted to EEPROM 3 CLICK Board
-    during Acknowledge polling.
-
-  Description:
-    This #define defines the length of the data to be tranmitted to the EEPROM 3 CLICK Board
-    during Acknowledge polling. This define is used by the TWIHS
-    PLib Write API.
- */
-
 #define APP_ACK_DATA_LENGTH                 1
-
-// *****************************************************************************
-/* Dummy write data length.
-
-  Summary:
-    Defines the length of the dummy bytes to be written to read actual data.
-
-  Description:
-    This #define defines the length of the dummy bytes(actually Address bytes)to be written to read actual data from EEPROM 3 CLICK Board.
- *  This define is used by the TWIHS PLib Read API.
- */
-
-#define APP_RECEIVE_DUMMY_WRITE_LENGTH           2
-
-// *****************************************************************************
-/* Receive data length.
-
-  Summary:
-    Defines the length of the data to be received from EEPROM 3 CLICK Board.
-
-  Description:
-    This #define defines the length of the data to be received from the EEPROM 3 CLICK Board.
- *  This define is used by the TWIHS PLib Read API.
- */
-
-#define APP_RECEIVE_DATA_LENGTH           4
-
-// *****************************************************************************
-/* Application Test Transmit Data array
-
-  Summary:
-    Holds the application test transmit data.
-
-  Description:
-    This array holds the application's test transmit data.
-
-  Remarks:
-    None.
-*/
+#define APP_RECEIVE_DUMMY_WRITE_LENGTH      2
+#define APP_RECEIVE_DATA_LENGTH             4
 
 static uint8_t testTxData[APP_TRANSMIT_DATA_LENGTH] =
 {
@@ -154,33 +69,8 @@ static uint8_t testTxData[APP_TRANSMIT_DATA_LENGTH] =
     'M','C','H','P',
 };
 
-// *****************************************************************************
-/* Application Test receive Data array.
-
-  Summary:
-    Holds the application received test data.
-
-  Description:
-    This array holds the application's received test data.
-
-  Remarks:
-    None.
-*/
-
 static uint8_t  testRxData[APP_RECEIVE_DATA_LENGTH];
 
-// *****************************************************************************
-/* Application's state machine enum
-
-  Summary:
-    Enumerator to define app states.
-
-  Description:
-    This enumerator defines all the possible application states.
-
-  Remarks:
-    None.
-*/
 typedef enum
 {
     APP_STATE_EEPROM_STATUS_VERIFY,
@@ -196,18 +86,6 @@ typedef enum
 
 } APP_STATES;
 
-// *****************************************************************************
-/* Transfer status enum
-
-  Summary:
-    Enumerator to define transfer status.
-
-  Description:
-    This enumerator defines all the possible transfer states.
-
-  Remarks:
-    None.
-*/
 typedef enum
 {
     APP_TRANSFER_STATUS_IN_PROGRESS,
@@ -217,28 +95,6 @@ typedef enum
 
 } APP_TRANSFER_STATUS;
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local functions
-// *****************************************************************************
-// *****************************************************************************
-
-/* This function will be called by I2C PLIB when transfer is completed */
-// *****************************************************************************
-/* void APP_I2CCallback(uintptr_t context)
-
-  Summary:
-    Function called by I2C PLIB upon transfer completion
-
-  Description:
-    This function will be called by I2C PLIB when transfer is completed.
-    In this function, current state of the application is obtained by context
-    parameter. Based on current state of the application and I2C error
-    state, next state of the application is decided.
-
-  Remarks:
-    None.
-*/
 void APP_I2CCallback(uintptr_t context )
 {
     APP_TRANSFER_STATUS* transferStatus = (APP_TRANSFER_STATUS*)context;
@@ -374,12 +230,12 @@ int main ( void )
 
             case APP_STATE_XFER_SUCCESSFUL:
             {
-                LED_On();
+                LED_ON();
                 break;
             }
             case APP_STATE_XFER_ERROR:
             {
-                LED_Off();
+                LED_OFF();
                 break;
             }
             default:
