@@ -4,7 +4,10 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="config" projectFiles="true">
+      <logicalFolder name="f2" displayName="arm" projectFiles="true">
+        <itemPath>../src/arm/toolchain_specifics.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_c21n_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f2" displayName="clock" projectFiles="true">
@@ -15,7 +18,6 @@
             </logicalFolder>
             <logicalFolder name="f1" displayName="port" projectFiles="true">
               <itemPath>../src/config/sam_c21n_xpro/peripheral/port/plib_port.h</itemPath>
-              <itemPath>../src/config/sam_c21n_xpro/peripheral/port/plib_port_pin.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="sercom" projectFiles="true">
               <logicalFolder name="f1" displayName="usart" projectFiles="true">
@@ -27,8 +29,8 @@
           <itemPath>../src/config/sam_c21n_xpro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="packs" projectFiles="true">
-        <logicalFolder name="f2" displayName="ATSAMC21N18A_DFP" projectFiles="true">
+      <logicalFolder name="f1" displayName="packs" projectFiles="true">
+        <logicalFolder name="f1" displayName="ATSAMC21N18A_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAMC21N18A_DFP/component/ac.h</itemPath>
             <itemPath>../src/packs/ATSAMC21N18A_DFP/component/adc.h</itemPath>
@@ -68,7 +70,7 @@
           <itemPath>../src/packs/ATSAMC21N18A_DFP/device.h</itemPath>
           <itemPath>../src/packs/ATSAMC21N18A_DFP/atsamc21n18a.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
+        <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
           <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
@@ -211,7 +213,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/sam_c21n_xpro;../src/packs/ATSAMC21N18A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/"/>
+                  value="../src;../src/config/sam_c21n_xpro;../src/packs/ATSAMC21N18A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
