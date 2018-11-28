@@ -56,6 +56,7 @@
 */
 
 #include "plib_tc_common.h"
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -89,6 +90,7 @@ extern "C" {
 
 
 
+
 void TC0_CH0_CaptureInitialize (void);
 
 void TC0_CH0_CaptureStart (void);
@@ -106,7 +108,9 @@ TC_CAPTURE_STATUS TC0_CH0_CaptureStatusGet(void);
 
 
  
+
  
+
 
 #endif //PLIB_TC0_H
 
