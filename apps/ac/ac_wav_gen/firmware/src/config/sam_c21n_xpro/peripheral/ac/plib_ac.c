@@ -141,13 +141,13 @@ void AC_CallbackRegister (AC_CALLBACK callback, uintptr_t context)
 void AC_InterruptHandler( void )
 {
     /* Copy the status to use inside the callback */
-    acObj.context = AC_REGS->AC_STATUSA;
+    acObj.int_flags = AC_REGS->AC_STATUSA;
     /* Clear the interrupt flags*/
     AC_REGS->AC_INTFLAG = AC_INTFLAG_Msk;
 
     /* Callback user function */
     if(acObj.callback != NULL)
     {
-        acObj.callback(acObj.context);
+        acObj.callback(acObj.int_flags, acObj.context);
     }
 }
