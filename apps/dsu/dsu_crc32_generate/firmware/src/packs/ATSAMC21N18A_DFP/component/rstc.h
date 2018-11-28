@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-10-29T09:40:38Z */
+/* file generated from device description version 2018-11-13T10:12:59Z */
 #ifndef _SAMC21_RSTC_COMPONENT_H_
 #define _SAMC21_RSTC_COMPONENT_H_
 
@@ -29,29 +29,35 @@
 /* ************************************************************************** */
 
 /* -------- RSTC_RCAUSE : (RSTC Offset: 0x00) ( R/ 8) Reset Cause -------- */
-#define RSTC_RCAUSE_POR_Pos                   _U_(0)                                         /**< (RSTC_RCAUSE) Power On Reset Position */
-#define RSTC_RCAUSE_POR_Msk                   (_U_(0x1) << RSTC_RCAUSE_POR_Pos)              /**< (RSTC_RCAUSE) Power On Reset Mask */
-#define RSTC_RCAUSE_BODCORE_Pos               _U_(1)                                         /**< (RSTC_RCAUSE) Brown Out CORE Detector Reset Position */
-#define RSTC_RCAUSE_BODCORE_Msk               (_U_(0x1) << RSTC_RCAUSE_BODCORE_Pos)          /**< (RSTC_RCAUSE) Brown Out CORE Detector Reset Mask */
-#define RSTC_RCAUSE_BODVDD_Pos                _U_(2)                                         /**< (RSTC_RCAUSE) Brown Out VDD Detector Reset Position */
-#define RSTC_RCAUSE_BODVDD_Msk                (_U_(0x1) << RSTC_RCAUSE_BODVDD_Pos)           /**< (RSTC_RCAUSE) Brown Out VDD Detector Reset Mask */
-#define RSTC_RCAUSE_EXT_Pos                   _U_(4)                                         /**< (RSTC_RCAUSE) External Reset Position */
-#define RSTC_RCAUSE_EXT_Msk                   (_U_(0x1) << RSTC_RCAUSE_EXT_Pos)              /**< (RSTC_RCAUSE) External Reset Mask */
-#define RSTC_RCAUSE_WDT_Pos                   _U_(5)                                         /**< (RSTC_RCAUSE) Watchdog Reset Position */
-#define RSTC_RCAUSE_WDT_Msk                   (_U_(0x1) << RSTC_RCAUSE_WDT_Pos)              /**< (RSTC_RCAUSE) Watchdog Reset Mask */
-#define RSTC_RCAUSE_SYST_Pos                  _U_(6)                                         /**< (RSTC_RCAUSE) System Reset Request Position */
-#define RSTC_RCAUSE_SYST_Msk                  (_U_(0x1) << RSTC_RCAUSE_SYST_Pos)             /**< (RSTC_RCAUSE) System Reset Request Mask */
-#define RSTC_RCAUSE_Msk                       _U_(0x77)                                      /**< (RSTC_RCAUSE) Register Mask  */
+#define RSTC_RCAUSE_POR_Pos                   _U_(0)                                               /**< (RSTC_RCAUSE) Power On Reset Position */
+#define RSTC_RCAUSE_POR_Msk                   (_U_(0x1) << RSTC_RCAUSE_POR_Pos)                    /**< (RSTC_RCAUSE) Power On Reset Mask */
+#define RSTC_RCAUSE_POR(value)                (RSTC_RCAUSE_POR_Msk & ((value) << RSTC_RCAUSE_POR_Pos))
+#define RSTC_RCAUSE_BODCORE_Pos               _U_(1)                                               /**< (RSTC_RCAUSE) Brown Out CORE Detector Reset Position */
+#define RSTC_RCAUSE_BODCORE_Msk               (_U_(0x1) << RSTC_RCAUSE_BODCORE_Pos)                /**< (RSTC_RCAUSE) Brown Out CORE Detector Reset Mask */
+#define RSTC_RCAUSE_BODCORE(value)            (RSTC_RCAUSE_BODCORE_Msk & ((value) << RSTC_RCAUSE_BODCORE_Pos))
+#define RSTC_RCAUSE_BODVDD_Pos                _U_(2)                                               /**< (RSTC_RCAUSE) Brown Out VDD Detector Reset Position */
+#define RSTC_RCAUSE_BODVDD_Msk                (_U_(0x1) << RSTC_RCAUSE_BODVDD_Pos)                 /**< (RSTC_RCAUSE) Brown Out VDD Detector Reset Mask */
+#define RSTC_RCAUSE_BODVDD(value)             (RSTC_RCAUSE_BODVDD_Msk & ((value) << RSTC_RCAUSE_BODVDD_Pos))
+#define RSTC_RCAUSE_EXT_Pos                   _U_(4)                                               /**< (RSTC_RCAUSE) External Reset Position */
+#define RSTC_RCAUSE_EXT_Msk                   (_U_(0x1) << RSTC_RCAUSE_EXT_Pos)                    /**< (RSTC_RCAUSE) External Reset Mask */
+#define RSTC_RCAUSE_EXT(value)                (RSTC_RCAUSE_EXT_Msk & ((value) << RSTC_RCAUSE_EXT_Pos))
+#define RSTC_RCAUSE_WDT_Pos                   _U_(5)                                               /**< (RSTC_RCAUSE) Watchdog Reset Position */
+#define RSTC_RCAUSE_WDT_Msk                   (_U_(0x1) << RSTC_RCAUSE_WDT_Pos)                    /**< (RSTC_RCAUSE) Watchdog Reset Mask */
+#define RSTC_RCAUSE_WDT(value)                (RSTC_RCAUSE_WDT_Msk & ((value) << RSTC_RCAUSE_WDT_Pos))
+#define RSTC_RCAUSE_SYST_Pos                  _U_(6)                                               /**< (RSTC_RCAUSE) System Reset Request Position */
+#define RSTC_RCAUSE_SYST_Msk                  (_U_(0x1) << RSTC_RCAUSE_SYST_Pos)                   /**< (RSTC_RCAUSE) System Reset Request Mask */
+#define RSTC_RCAUSE_SYST(value)               (RSTC_RCAUSE_SYST_Msk & ((value) << RSTC_RCAUSE_SYST_Pos))
+#define RSTC_RCAUSE_Msk                       _U_(0x77)                                            /**< (RSTC_RCAUSE) Register Mask  */
 
 
 /** \brief RSTC register offsets definitions */
-#define RSTC_RCAUSE_REG_OFST           (0x00)         /**< (RSTC_RCAUSE) Reset Cause Offset */
+#define RSTC_RCAUSE_REG_OFST           (0x00)              /**< (RSTC_RCAUSE) Reset Cause Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief RSTC register API structure */
 typedef struct
 {  /* Reset Controller */
-  __I   uint8_t                        RSTC_RCAUSE;     /**< Offset: 0x00 (R/   8) Reset Cause */
+  __I   uint8_t                        RSTC_RCAUSE;        /**< Offset: 0x00 (R/   8) Reset Cause */
 } rstc_registers_t;
 
 
