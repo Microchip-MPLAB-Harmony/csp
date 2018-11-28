@@ -97,12 +97,12 @@ void SYS_Initialize ( void* data )
 
 
 
-    NVIC_Initialize();
     EVSYS_Initialize();
 
-    FREQM_Initialize();
-
+    NVIC_Initialize();
     SERCOM4_USART_Initialize();
+
+    FREQM_Initialize();
 
 
 
