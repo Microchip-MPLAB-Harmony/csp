@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">837CC42D10C13C253FA632A199BE9F2D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">837CC42D10C13C253FA632A199BE9F2D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7BBFE272D3DDA6E3C2C10FCC3F2A6F20</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7BBFE272D3DDA6E3C2C10FCC3F2A6F20</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
