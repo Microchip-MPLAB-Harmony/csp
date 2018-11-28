@@ -627,16 +627,27 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_Resolution[channelID].setDependencies(tcClockResCalc, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
         "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
-def onCapabilityConnected(connectionInfo):
+def onAttachmentConnected(source, target):
     global sysTimeChannel_Sym
 
-    remoteComponent = connectionInfo["remoteComponent"]
-    if (remoteComponent.getID() == "sys_time"):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    if (remoteID == "sys_time"):
         sysTimeChannel_Sym.setSelectedKey("_CH0",1)
         sysTimeChannel_Sym.setVisible(True)
 
-def onCapabilityDisconnected(connectionInfo):
+def onAttachmentDisconnected(source, target):
     global sysTimeChannel_Sym
+
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
 
     tcSym_CH_TimerPeriod[0].setVisible(True)
     tcSym_CH_TimerPeriod[1].setVisible(True)
@@ -645,10 +656,8 @@ def onCapabilityDisconnected(connectionInfo):
     tcSym_CH_IER_CPAS[1].setVisible(False)
     tcSym_CH_IER_CPAS[2].setVisible(False)
 
-    remoteComponent = connectionInfo["remoteComponent"]
-    if (remoteComponent.getID() == "sys_time"):
+    if (remoteID == "sys_time"):
         sysTimeChannel_Sym.setVisible(False)
-
 
 def sysTime_ChannelSelection(symbol,event):
     global timerStartApiName_Sym
