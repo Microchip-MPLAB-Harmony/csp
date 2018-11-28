@@ -16,12 +16,12 @@
         </Boolean>
         <Integer dnOrder="2" id="CONFIG_CLOCK_DFLL_MUL">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
+            <User dnOrder="0" value="1464"/>
           </Values>
         </Integer>
         <KeyValueSet dnOrder="3" id="CONFIG_CLOCK_DFLL_OPMODE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
+            <User dnOrder="0" value="1"/>
           </Values>
         </KeyValueSet>
         <Integer dnOrder="4" id="CONFIG_CLOCK_DPLL_DIVIDER">
@@ -65,13 +65,13 @@
         </KeyValueSet>
         <Boolean dnOrder="11" id="CONF_CLOCK_XOSC32K_ENABLE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="false"/>
+            <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
         <Integer dnOrder="12" id="CPU_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="48000000"/>
+              <Value dnOrder="0" id="core" priority="1" value="47972352"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -139,7 +139,7 @@
         <Integer dnOrder="22" id="DFLL_CLOCK_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="48000000"/>
+              <Value dnOrder="0" id="core" priority="2" value="47972352"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -153,7 +153,7 @@
         <Integer dnOrder="24" id="GCLK_0_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="48000000"/>
+              <Value dnOrder="0" id="core" priority="1" value="47972352"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -170,7 +170,7 @@
         <Integer dnOrder="27" id="GCLK_1_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
+              <Value dnOrder="0" id="core" priority="1" value="32768"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -232,8 +232,9 @@
           <Attributes dnOrder="0">
             <StringArray dnOrder="0" id="values">
               <Values dnOrder="0">
-                <Value dnOrder="0">&amp;#160;&amp;#160;&amp;#160;&amp;#160;DFLL_Initialize();</Value>
-                <Value dnOrder="1">&amp;#160;&amp;#160;&amp;#160;&amp;#160;GCLK0_Initialize();</Value>
+                <Value dnOrder="0">&amp;#160;&amp;#160;&amp;#160;&amp;#160;GCLK1_Initialize();</Value>
+                <Value dnOrder="1">&amp;#160;&amp;#160;&amp;#160;&amp;#160;DFLL_Initialize();</Value>
+                <Value dnOrder="2">&amp;#160;&amp;#160;&amp;#160;&amp;#160;GCLK0_Initialize();</Value>
               </Values>
             </StringArray>
           </Attributes>
@@ -253,7 +254,7 @@
         <Integer dnOrder="39" id="GCLK_ID_0_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
+              <Value dnOrder="0" id="core" priority="1" value="32768"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -284,13 +285,13 @@
         <Integer dnOrder="44" id="GCLK_ID_23_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="48000000"/>
+              <Value dnOrder="0" id="core" priority="1" value="47972352"/>
             </Dynamic>
           </Values>
         </Integer>
         <Boolean dnOrder="45" id="GCLK_INST_NUM1">
           <Values dnOrder="0">
-            <User dnOrder="0" value="false"/>
+            <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
         <Integer dnOrder="46" id="GCLK_IN_0_FREQ">
@@ -1740,7 +1741,7 @@
         <Integer dnOrder="274" id="SERCOM3_CORE_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="48000000"/>
+              <Value dnOrder="0" id="core" priority="2" value="47972352"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -1775,14 +1776,14 @@
         <String dnOrder="279" id="SYSTICK_PERIOD">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0xbb80"/>
+              <Value dnOrder="0" id="core" priority="2" value="0xbb64"/>
             </Dynamic>
           </Values>
         </String>
         <Float dnOrder="280" id="SYSTICK_PERIOD_MS">
           <Attributes dnOrder="0">
             <Float dnOrder="0" id="max">
-              <Value dnOrder="0">349.5253</Value>
+              <Value dnOrder="0">349.72675</Value>
             </Float>
           </Attributes>
         </Float>
@@ -1795,13 +1796,13 @@
         </Integer>
         <Boolean dnOrder="282" id="XOSC32K_EN32K">
           <Values dnOrder="0">
-            <User dnOrder="0" value="false"/>
+            <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
         <Integer dnOrder="283" id="XOSC32K_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
+              <Value dnOrder="0" id="core" priority="1" value="32768"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -1813,14 +1814,14 @@
         <Integer dnOrder="0" id="SERCOM_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="sercom3" priority="2" value="48000000"/>
+              <Value dnOrder="0" id="sercom3" priority="2" value="47972352"/>
             </Dynamic>
           </Values>
         </Integer>
         <Integer dnOrder="1" id="SPI_BAUD_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="sercom3" priority="2" value="23"/>
+              <Value dnOrder="0" id="sercom3" priority="2" value="22"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -1834,7 +1835,7 @@
         <Integer dnOrder="3" id="USART_BAUD_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="sercom3" priority="2" value="63019"/>
+              <Value dnOrder="0" id="sercom3" priority="2" value="63017"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -1863,11 +1864,42 @@
           </Values>
         </Integer>
       </Symbols>
+      <Attachments dnOrder="1">
+        <DirectCapability dnOrder="0" id="SERCOM3_I2C">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0"/>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0"/>
+            </String>
+          </Attributes>
+        </DirectCapability>
+        <DirectCapability dnOrder="1" id="SERCOM3_SPI">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0"/>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0"/>
+            </String>
+          </Attributes>
+        </DirectCapability>
+        <DirectCapability dnOrder="2" id="SERCOM3_UART">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0"/>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0"/>
+            </String>
+          </Attributes>
+        </DirectCapability>
+      </Attachments>
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="500" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="400" y="20"/>
@@ -1875,5 +1907,6 @@
         <ElementPosition dnOrder="3" id="sercom3" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
