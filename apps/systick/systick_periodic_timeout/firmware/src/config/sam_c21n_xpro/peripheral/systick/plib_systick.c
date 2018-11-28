@@ -107,7 +107,7 @@ void SYSTICK_DelayMs ( uint32_t delay)
 		}
 	}
 }
-	
+
 void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context )
 {
 	systick.callback = callback;
