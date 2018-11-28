@@ -43,9 +43,9 @@
 
 
 void EVSYS_Initialize( void )
-{
+{	/*Event Channel User Configuration*/
 
-	/*Event Channel User Configuration*/
+
 }
 
 
