@@ -1,14 +1,14 @@
 /*******************************************************************************
-  NVIC PLIB Implementation
+  EVSYS Peripheral Library
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_nvic.c
+    plib_evsys.c
 
   Summary:
-    NVIC PLIB Source File
+    EVSYS Source File
 
   Description:
     None
@@ -39,26 +39,14 @@
 *******************************************************************************/
 
 #include "device.h"
-#include "plib_nvic.h"
+#include "plib_evsys.h"
 
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: NVIC Implementation
-// *****************************************************************************
-// *****************************************************************************
-
-void NVIC_Initialize( void )
+void EVSYS_Initialize( void )
 {
-
-    /* Enable NVIC Controller */
-    __DMB();
-    __enable_irq();
-
-    /* Enable the interrupt sources and configure the priorities as configured
-     * from within the "Interrupt Manager" of MHC. */
+	/*Event Channel User Configuration*/
 
 
-
-    return;
 }
+
+

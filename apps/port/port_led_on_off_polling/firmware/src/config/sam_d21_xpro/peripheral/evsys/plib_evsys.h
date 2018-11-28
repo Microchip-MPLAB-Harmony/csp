@@ -1,18 +1,18 @@
 /*******************************************************************************
-  NVIC PLIB Implementation
+  Interface definition of EVSYS PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_nvic.c
+    plib_evsys.h
 
   Summary:
-    NVIC PLIB Source File
+    Interface definition of the Event System Plib (EVSYS).
 
   Description:
-    None
-
+    This file defines the interface for the EVSYS Plib.
+    It allows user to setup event generators and users.
 *******************************************************************************/
 
 /*******************************************************************************
@@ -38,27 +38,29 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "device.h"
-#include "plib_nvic.h"
+#ifndef EVSYS_H    // Guards against multiple inclusion
+#define EVSYS_H
+
+#include <stdint.h>
+#include <stddef.h>
+
+#ifdef __cplusplus // Provide C++ Compatibility
+ extern "C" {
+#endif
 
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: NVIC Implementation
+// Section: Interface
 // *****************************************************************************
 // *****************************************************************************
 
-void NVIC_Initialize( void )
-{
 
-    /* Enable NVIC Controller */
-    __DMB();
-    __enable_irq();
+/***************************** EVSYS API *******************************/
+void EVSYS_Initialize( void );
+	
+#ifdef __cplusplus // Provide C++ Compatibility
+ }
+#endif
 
-    /* Enable the interrupt sources and configure the priorities as configured
-     * from within the "Interrupt Manager" of MHC. */
-
-
-
-    return;
-}
+#endif
