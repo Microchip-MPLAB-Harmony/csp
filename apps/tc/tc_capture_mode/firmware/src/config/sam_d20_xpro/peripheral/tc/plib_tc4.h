@@ -91,7 +91,7 @@ void TC4_CaptureStart ( void );
 
 void TC4_CaptureStop ( void );
 
-uint32_t TC4_CaptureFrequencyGet();
+uint32_t TC4_CaptureFrequencyGet( void );
 
 
 uint16_t TC4_Capture16bitChannel0Get( void );
