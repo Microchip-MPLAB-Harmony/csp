@@ -118,7 +118,7 @@ void TC1_CaptureStop( void )
     }
 }
 
-uint32_t TC1_CaptureFrequencyGet()
+uint32_t TC1_CaptureFrequencyGet( void )
 {
     return (uint32_t)(48000000UL);
 }

@@ -91,7 +91,7 @@ void TC1_CaptureStart ( void );
 
 void TC1_CaptureStop ( void );
 
-uint32_t TC1_CaptureFrequencyGet();
+uint32_t TC1_CaptureFrequencyGet( void );
 
 
 uint16_t TC1_Capture16bitChannel0Get( void );
