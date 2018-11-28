@@ -91,7 +91,6 @@ void RTC_Initialize(void)
     
 }
 
-
 bool RTC_RTCCTimeSet (struct tm * initialTime )
 {
     /*
