@@ -51,8 +51,8 @@
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/nvic/plib_nvic.h"
-#include "peripheral/tc/plib_TC0.h"
-#include "peripheral/tc/plib_TC3.h"
+#include "peripheral/tc/plib_tc0.h"
+#include "peripheral/tc/plib_tc3.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
