@@ -29,33 +29,33 @@
 /* ************************************************************************** */
 
 /* -------- PAC_WPCLR : (PAC Offset: 0x00) (R/W 32) Write Protection Clear -------- */
-#define PAC_WPCLR_RESETVALUE                _U_(0x00)                                     /**<  (PAC_WPCLR) Write Protection Clear  Reset Value */
+#define PAC_WPCLR_RESETVALUE                  _U_(0x00)                                            /**<  (PAC_WPCLR) Write Protection Clear  Reset Value */
 
-#define PAC_WPCLR_WP_Pos                      _U_(1)                                         /**< (PAC_WPCLR) Write Protection Clear Position */
-#define PAC_WPCLR_WP_Msk                      (_U_(0x7FFFFFFF) << PAC_WPCLR_WP_Pos)          /**< (PAC_WPCLR) Write Protection Clear Mask */
-#define PAC_WPCLR_WP(value)                   (PAC_WPCLR_WP_Msk & ((value) << PAC_WPCLR_WP_Pos))
-#define PAC_WPCLR_Msk                         _U_(0xFFFFFFFE)                                /**< (PAC_WPCLR) Register Mask  */
+#define PAC_WPCLR_WP_Pos                      _U_(1)                                               /**< (PAC_WPCLR) Write Protection Clear Position */
+#define PAC_WPCLR_WP_Msk                      (_U_(0x7FFFFFFF) << PAC_WPCLR_WP_Pos)                /**< (PAC_WPCLR) Write Protection Clear Mask */
+#define PAC_WPCLR_WP(value)                   (PAC_WPCLR_WP_Msk & ((value) << PAC_WPCLR_WP_Pos))  
+#define PAC_WPCLR_Msk                         _U_(0xFFFFFFFE)                                      /**< (PAC_WPCLR) Register Mask  */
 
 
 /* -------- PAC_WPSET : (PAC Offset: 0x04) (R/W 32) Write Protection Set -------- */
-#define PAC_WPSET_RESETVALUE                _U_(0x00)                                     /**<  (PAC_WPSET) Write Protection Set  Reset Value */
+#define PAC_WPSET_RESETVALUE                  _U_(0x00)                                            /**<  (PAC_WPSET) Write Protection Set  Reset Value */
 
-#define PAC_WPSET_WP_Pos                      _U_(1)                                         /**< (PAC_WPSET) Write Protection Set Position */
-#define PAC_WPSET_WP_Msk                      (_U_(0x7FFFFFFF) << PAC_WPSET_WP_Pos)          /**< (PAC_WPSET) Write Protection Set Mask */
-#define PAC_WPSET_WP(value)                   (PAC_WPSET_WP_Msk & ((value) << PAC_WPSET_WP_Pos))
-#define PAC_WPSET_Msk                         _U_(0xFFFFFFFE)                                /**< (PAC_WPSET) Register Mask  */
+#define PAC_WPSET_WP_Pos                      _U_(1)                                               /**< (PAC_WPSET) Write Protection Set Position */
+#define PAC_WPSET_WP_Msk                      (_U_(0x7FFFFFFF) << PAC_WPSET_WP_Pos)                /**< (PAC_WPSET) Write Protection Set Mask */
+#define PAC_WPSET_WP(value)                   (PAC_WPSET_WP_Msk & ((value) << PAC_WPSET_WP_Pos))  
+#define PAC_WPSET_Msk                         _U_(0xFFFFFFFE)                                      /**< (PAC_WPSET) Register Mask  */
 
 
 /** \brief PAC register offsets definitions */
-#define PAC_WPCLR_REG_OFST             (0x00)         /**< (PAC_WPCLR) Write Protection Clear Offset */
-#define PAC_WPSET_REG_OFST             (0x04)         /**< (PAC_WPSET) Write Protection Set Offset */
+#define PAC_WPCLR_REG_OFST             (0x00)              /**< (PAC_WPCLR) Write Protection Clear Offset */
+#define PAC_WPSET_REG_OFST             (0x04)              /**< (PAC_WPSET) Write Protection Set Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief PAC register API structure */
 typedef struct
 {  /* Peripheral Access Controller */
-  __IO  uint32_t                       PAC_WPCLR;       /**< Offset: 0x00 (R/W  32) Write Protection Clear */
-  __IO  uint32_t                       PAC_WPSET;       /**< Offset: 0x04 (R/W  32) Write Protection Set */
+  __IO  uint32_t                       PAC_WPCLR;          /**< Offset: 0x00 (R/W  32) Write Protection Clear */
+  __IO  uint32_t                       PAC_WPSET;          /**< Offset: 0x04 (R/W  32) Write Protection Set */
 } pac_registers_t;
 
 
