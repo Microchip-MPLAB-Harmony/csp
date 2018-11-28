@@ -103,7 +103,7 @@ void SDADC_Initialize( void )
     }
 }
 
-
+ 
 void SDADC_ConversionStart( void )
 {
     /* Start conversion */
@@ -115,31 +115,16 @@ void SDADC_ConversionStart( void )
     }
 }
 
-bool SDADC_ConversionResultIsReady( void )
-{
-    return (SDADC_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk);
-}
-
 int16_t SDADC_ConversionResultGet( void )
 {
     /* right-shift by 8-bits to get signed 16-bit result */
     return ((int16_t)(SDADC_REGS->SDADC_RESULT >> 8));
 }
 
-bool SDADC_ConversionSequenceIsFinished(void)
-{
-    bool seq_status = false;
-    if ((SDADC_REGS->SDADC_SEQSTATUS & SDADC_SEQSTATUS_SEQBUSY_Msk) != SDADC_SEQSTATUS_SEQBUSY_Msk)
-    {
-        seq_status = true;
-    }
-    return seq_status;
-}
 
-void SDADC_ComparisonWindowSet(int16_t low_threshold, int16_t high_threshold)
+
+bool SDADC_ConversionResultIsReady( void )
 {
-    /* Update threshold values as 24-bit signed value */
-    SDADC_REGS->SDADC_WINLT = low_threshold << 8;
-    SDADC_REGS->SDADC_WINUT = high_threshold << 8;
+    return (bool)(SDADC_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk);
 }
 
