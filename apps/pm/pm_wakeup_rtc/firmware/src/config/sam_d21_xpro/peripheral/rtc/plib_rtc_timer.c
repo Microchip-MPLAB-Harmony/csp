@@ -51,31 +51,30 @@ RTC_OBJECT rtcObj;
 void RTC_Initialize(void)
 {
     RTC_REGS->MODE0.RTC_CTRL = RTC_MODE0_CTRL_SWRST_Msk;
-    
+
     while((RTC_REGS->MODE0.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     {
         /* Wait for Synchronization after Software Reset */
     }
-    
+
     RTC_REGS->MODE0.RTC_READREQ |= RTC_READREQ_RCONT_Msk;
 
     RTC_REGS->MODE0.RTC_CTRL = RTC_MODE0_CTRL_MODE(0) | RTC_MODE0_CTRL_PRESCALER(0x0) ;
 
+    RTC_REGS->MODE0.RTC_COMP = 0x1000;
 
-    RTC_REGS->MODE0.RTC_COMP[0] = 0x1000;
 }
 
 
 void RTC_Timer32Start ( void )
 {
     RTC_REGS->MODE0.RTC_CTRL |= RTC_MODE0_CTRL_ENABLE_Msk;
-        
+
     while((RTC_REGS->MODE0.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     {
         /* Wait for synchronization after Enabling RTC */
     }
 }
-
 
 void RTC_Timer32Stop ( void )
 {
@@ -97,10 +96,9 @@ void RTC_Timer32CounterSet ( uint32_t count )
     }
 }
 
-
 void RTC_Timer32CompareSet ( uint32_t compareValue )
 {
-    RTC_REGS->MODE0.RTC_COMP[0] = compareValue;
+    RTC_REGS->MODE0.RTC_COMP = compareValue;
 
     while((RTC_REGS->MODE0.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
     {
@@ -114,8 +112,8 @@ uint32_t RTC_Timer32CounterGet ( void )
     {
         /* Wait for Synchronization before reading value from Count Register */
     }
-        
-    return(RTC_REGS->MODE0.RTC_COUNT);
+
+    return(RTC_REGS->MODE0.RTC_COUNT) + 3;
 }
 
 uint32_t RTC_Timer32PeriodGet ( void )
@@ -139,11 +137,12 @@ void RTC_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt)
 {
     RTC_REGS->MODE0.RTC_INTENCLR = interrupt;
 }
-            
+
 
 void RTC_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t context )
 {
     rtcObj.timer32BitCallback = callback;
+
     rtcObj.context            = context;
 }
 
@@ -156,6 +155,6 @@ void RTC_InterruptHandler(void)
     {
         rtcObj.timer32BitCallback( rtcObj.timer32intCause, rtcObj.context );
     }
-            
+
     RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
 }
