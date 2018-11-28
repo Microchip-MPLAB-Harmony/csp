@@ -53,7 +53,7 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"         		// SYS function prototypes
 
-void RTC_Callback( uintptr_t context, uint32_t int_cause )
+void RTC_Callback(uint32_t int_cause, uintptr_t context )
 {
 	if (int_cause & RTC_INT_ALARM)
 	{
