@@ -1,14 +1,14 @@
 /*******************************************************************************
- CLOCK PLIB
+  EVSYS Peripheral Library
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_clock.c
+    plib_evsys.c
 
   Summary:
-    CLOCK PLIB Implementation File.
+    EVSYS Source File
 
   Description:
     None
@@ -38,64 +38,12 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "plib_clock.h"
 #include "device.h"
+#include "plib_evsys.h"
 
 
-
-static void OSCCTRL_Initialize(void)
-{
-    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020) >> 19 ) & 0x3fffff);
-    OSCCTRL_REGS->OSCCTRL_CAL48M = calibValue;
-
-
-    /* Selection of the Division Value */
-    OSCCTRL_REGS->OSCCTRL_OSC48MDIV = OSCCTRL_OSC48MDIV_DIV(0);
-
-    while((OSCCTRL_REGS->OSCCTRL_OSC48MSYNCBUSY & OSCCTRL_OSC48MSYNCBUSY_OSC48MDIV_Msk) == OSCCTRL_OSC48MSYNCBUSY_OSC48MDIV_Msk)
-    {
-        /* Waiting for the synchronization */
-    }
-
-    while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_OSC48MRDY_Msk) != OSCCTRL_STATUS_OSC48MRDY_Msk)
-    {
-        /* Waiting for the OSC48M Ready state */
-    }
-}
-
-static void OSC32KCTRL_Initialize(void)
-{
-	OSC32KCTRL_REGS->OSC32KCTRL_OSC32K = 0x0;
-
-	OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(0);
-}
-
-
-
-static void GCLK0_Initialize(void)
-{
-    GCLK_REGS->GCLK_GENCTRL[0] = GCLK_GENCTRL_DIV(1) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_GENEN_Msk;
-
-    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL0_Msk) == GCLK_SYNCBUSY_GENCTRL0_Msk)
-    {
-        /* wait for the Generator 0 synchronization */
-    }
-}
-
-void CLOCK_Initialize (void)
-{
-    /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLB |= NVMCTRL_CTRLB_RWS(NVMCTRL_CTRLB_RWS_DUAL_Val);
-
-    /* Function to Initialize the Oscillators */
-    OSCCTRL_Initialize();
-
-    /* Function to Initialize the 32KHz Oscillators */
-    OSC32KCTRL_Initialize();
-
-   GCLK0_Initialize();
-
-
+void EVSYS_Initialize( void )
+{	/*Event Channel User Configuration*/
 
 
 }
