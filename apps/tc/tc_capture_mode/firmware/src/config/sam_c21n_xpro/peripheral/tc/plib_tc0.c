@@ -122,7 +122,7 @@ void TC0_CompareStop( void )
     }
 }
 
-uint32_t TC0_CompareFrequencyGet()
+uint32_t TC0_CompareFrequencyGet( void )
 {
     return (uint32_t)(48000000UL);
 }
