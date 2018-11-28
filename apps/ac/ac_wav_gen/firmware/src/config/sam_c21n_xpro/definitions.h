@@ -56,8 +56,8 @@
 #include "peripheral/sercom/usart/plib_sercom4_usart.h"
 #include "peripheral/supc/plib_supc.h"
 #include "peripheral/eic/plib_eic.h"
-#include "peripheral/tc/plib_tc0.h"
 #include "peripheral/ac/plib_ac.h"
+#include "peripheral/tc/plib_tc0.h"
 #include "peripheral/dac/plib_dac.h"
 
 // DOM-IGNORE-BEGIN

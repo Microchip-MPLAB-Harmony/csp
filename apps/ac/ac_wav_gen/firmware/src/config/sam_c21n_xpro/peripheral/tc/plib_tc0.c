@@ -125,7 +125,7 @@ void TC0_TimerStop( void )
     }
 }
 
-uint32_t TC0_TimerFrequencyGet()
+uint32_t TC0_TimerFrequencyGet( void )
 {
     return (uint32_t)(48000000UL);
 }

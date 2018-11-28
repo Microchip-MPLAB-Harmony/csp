@@ -93,7 +93,7 @@ void TC0_TimerStart( void );
 
 void TC0_TimerStop( void );
 
-uint32_t TC0_TimerFrequencyGet();
+uint32_t TC0_TimerFrequencyGet( void );
 
 
 void TC0_Timer16bitPeriodSet( uint16_t period );
