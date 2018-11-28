@@ -74,8 +74,6 @@ int USART1_ReadByte(void);
 
 void USART1_WriteByte(int data);
 
-void USART1_Sync(void);
-
 bool USART1_TransmitterIsReady( void );
 
 bool USART1_ReceiverIsReady( void );
