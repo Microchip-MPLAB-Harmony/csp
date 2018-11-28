@@ -98,7 +98,7 @@ def tcSlaveModeCommentVisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-        
+
 def tcSlaveModeSet(symbol, event):
     if event["value"] == 2:
         symbol.setVisible(True)
@@ -164,18 +164,28 @@ def updateTCClockWarringStatus(symbol, event):
     else:
         symbol.setVisible(False)
 
-def onCapabilityConnected(connectionInfo):
-    remoteComponent = connectionInfo["remoteComponent"]
-    if (remoteComponent.getID() == "sys_time"):
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    if remoteID == "sys_time":
         tcSym_Timer_INTENSET_MC1.setVisible(True)
         tcSym_Timer_INTENSET_MC1.setValue(True,2)
         tcSym_Timer_INTENSET_OVF.setValue(False,2)
         tcSym_SYS_TIME_CONNECTED.setValue(True, 2)
         tcSym_Timer_TIME_MS.setVisible(False)
 
-def onCapabilityDisconnected(connectionInfo):
-    remoteComponent = connectionInfo["remoteComponent"]
-    if (remoteComponent.getID() == "sys_time"):
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    if remoteID == "sys_time":
         tcSym_Timer_INTENSET_MC1.setVisible(False)
         tcSym_Timer_INTENSET_MC1.setValue(False,2)
         tcSym_Timer_INTENSET_OVF.setValue(True,2)
@@ -189,7 +199,7 @@ def sysTime_APIUpdate(symbol,event):
     global timerWidth_Sym
     global timerPeriodMax_Sym
     global tcInstanceName
-    
+
     symobj = event["symbol"]
     key = symobj.getSelectedKey()
 
@@ -378,7 +388,7 @@ def instantiateComponent(tcComponent):
     tcSym_OperationMode.setDefaultValue("Timer")
     if (tcInstanceMasterValue == 2):
         tcSym_OperationMode.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
-        
+
     tcSym_SlaveMode_Comment = tcComponent.createCommentSymbol("TC_SLAVE_MODE_COMMENT", None)
     tcSym_SlaveMode_Comment.setVisible(False)
     tcSym_SlaveMode_Comment.setLabel("TC is configured in Slave mode to support 32-bit operation")

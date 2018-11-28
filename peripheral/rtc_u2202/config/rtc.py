@@ -22,6 +22,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 from collections import defaultdict
+
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
@@ -184,16 +185,21 @@ def updateCodeGenerationProperty(symbol, event):
         component.getSymbolByID("RTC_CLOCK_SOURCE").setEnabled(False)
         component.getSymbolByID("RTC_TIMER_SOURCE").setEnabled(True)
 
-def onCapabilityConnected(connectionInfo):
+def onAttachmentConnected(source, target):
+
     global rtcModeSelection_Sym
 
-    remoteComponent = connectionInfo["remoteComponent"]
-    localComponent = connectionInfo["localComponent"]
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    localID = localComponent.getID()
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
 
-    if (remoteComponent.getID() == "sys_time"):
-        Database.setSymbolValue(localComponent.getID(), "RTC_MODE0_INTENSET_CMP0_ENABLE", True, 1)
-        Database.setSymbolValue(localComponent.getID(), "RTC_MODE1_INTENSET_CMP0_ENABLE", True, 1)
-        Database.setSymbolValue(localComponent.getID(), "RTC_MODE1_INTENSET_CMP1_ENABLE", True, 1)
+    if remoteID == "sys_time":
+        Database.setSymbolValue(localID, "RTC_MODE0_INTENSET_CMP0_ENABLE", True, 1)
+        Database.setSymbolValue(localID, "RTC_MODE1_INTENSET_CMP0_ENABLE", True, 1)
+        Database.setSymbolValue(localID, "RTC_MODE1_INTENSET_CMP1_ENABLE", True, 1)
         rtcModeSelection_Sym.setSelectedKey("MODE0", 1)
 
 def sysTime_modeSelection(symbol, event):
