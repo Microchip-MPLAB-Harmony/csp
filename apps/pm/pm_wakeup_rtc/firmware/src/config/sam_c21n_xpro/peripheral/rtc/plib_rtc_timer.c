@@ -50,25 +50,25 @@ RTC_OBJECT rtcObj;
 
 void RTC_Initialize(void)
 {
-    RTC_REGS->MODE0.CTRLA = RTC_MODE0_CTRLA_SWRST_Msk;
+    RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_SWRST_Msk;
 
-    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_SWRST_Msk) == RTC_MODE0_SYNCBUSY_SWRST_Msk)
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_SWRST_Msk) == RTC_MODE0_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for Synchronization after Software Reset */
     }
 
-        RTC_REGS->MODE0.CTRLA = RTC_MODE0_CTRLA_MODE(0) | RTC_MODE0_CTRLA_PRESCALER(0x1) | RTC_MODE0_CTRLA_COUNTSYNC_Msk ;
+    RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_MODE(0) | RTC_MODE0_CTRLA_PRESCALER(0x1) | RTC_MODE0_CTRLA_COUNTSYNC_Msk ;
 
+    RTC_REGS->MODE0.RTC_COMP = 0x1000;
 
-        RTC_REGS->MODE0.COMP = 0x1000;
 }
 
 
 void RTC_Timer32Start ( void )
 {
-    RTC_REGS->MODE0.CTRLA |= RTC_MODE0_CTRLA_ENABLE_Msk;
-        
-    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
+    RTC_REGS->MODE0.RTC_CTRLA |= RTC_MODE0_CTRLA_ENABLE_Msk;
+
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for synchronization after Enabling RTC */
     }
@@ -77,9 +77,9 @@ void RTC_Timer32Start ( void )
 
 void RTC_Timer32Stop ( void )
 {
-    RTC_REGS->MODE0.CTRLA &= ~(RTC_MODE0_CTRLA_ENABLE_Msk);
+    RTC_REGS->MODE0.RTC_CTRLA &= ~(RTC_MODE0_CTRLA_ENABLE_Msk);
 
-    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Disabling RTC */
     }
@@ -87,9 +87,9 @@ void RTC_Timer32Stop ( void )
 
 void RTC_Timer32CounterSet ( uint32_t count )
 {
-    RTC_REGS->MODE0.COUNT = count;
+    RTC_REGS->MODE0.RTC_COUNT = count;
 
-    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
     {
         /* Wait for Synchronization after writing value to Count Register */
     }
@@ -98,9 +98,9 @@ void RTC_Timer32CounterSet ( uint32_t count )
 
 void RTC_Timer32CompareSet ( uint32_t compareValue )
 {
-    RTC_REGS->MODE0.COMP = compareValue;
+    RTC_REGS->MODE0.RTC_COMP = compareValue;
 
-    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
     {
         /* Wait for Synchronization after writing Compare Value */
     }
@@ -108,12 +108,12 @@ void RTC_Timer32CompareSet ( uint32_t compareValue )
 
 uint32_t RTC_Timer32CounterGet ( void )
 {
-    while((RTC_REGS->MODE0.SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk) == RTC_MODE0_SYNCBUSY_COUNTSYNC_Msk)
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
     {
         /* Wait for Synchronization before reading value from Count Register */
     }
-        
-    return(RTC_REGS->MODE0.COUNT);
+
+    return(RTC_REGS->MODE0.RTC_COUNT + 3);
 }
 
 uint32_t RTC_Timer32PeriodGet ( void )
@@ -130,14 +130,14 @@ uint32_t RTC_Timer32FrequencyGet ( void )
 
 void RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK interrupt)
 {
-    RTC_REGS->MODE0.INTENSET = interrupt;
+    RTC_REGS->MODE0.RTC_INTENSET = interrupt;
 }
 
 void RTC_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt)
 {
-    RTC_REGS->MODE0.INTENCLR = interrupt;
+    RTC_REGS->MODE0.RTC_INTENCLR = interrupt;
 }
-            
+
 
 void RTC_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t context )
 {
@@ -147,13 +147,13 @@ void RTC_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t cont
 
 void RTC_InterruptHandler(void)
 {
-    rtcObj.timer32intCause = RTC_REGS->MODE0.INTFLAG;
+    rtcObj.timer32intCause = RTC_REGS->MODE0.RTC_INTFLAG;
 
     /* Invoke registered Callback function */
     if(rtcObj.timer32BitCallback != NULL)
     {
         rtcObj.timer32BitCallback( rtcObj.timer32intCause, rtcObj.context );
     }
-            
-    RTC_REGS->MODE0.INTFLAG = RTC_MODE0_INTFLAG_Msk;
+
+    RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
 }

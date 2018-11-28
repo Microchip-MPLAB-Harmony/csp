@@ -97,17 +97,17 @@ void SYS_Initialize ( void* data )
 
 
 
-    NVIC_Initialize();
-	SYSTICK_TimerInitialize();
     EVSYS_Initialize();
 
+    NVIC_Initialize();
+	SYSTICK_TimerInitialize();
     PM_Initialize();
-
-    RTC_Initialize();
 
     SERCOM4_USART_Initialize();
 
     SUPC_Initialize();
+
+    RTC_Initialize();
 
 
 
