@@ -24,15 +24,42 @@
 
 global debugID
 
-def onDependentComponentAdded(ownerComponent, id, dependencyComponent):
+###################################################################################################
+########################################## Callbacks  #############################################
+###################################################################################################
+
+def onAttachmentConnected(source, target):
+
     global debugID
-    Name = dependencyComponent.getID()
-    dependencyComponent.setSymbolValue("USART_INTERRUPT_MODE", False, 2)
-    debugID.setValue(str(Name), 2)
+
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    remoteComponent.setSymbolValue("USART_INTERRUPT_MODE", False, 2)
+    debugID.setValue(remoteID, 2)
+
+def onAttachmentDisconnected(source, target):
+
+    global debugID
+
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+    debugID.clearValue()
+
+###################################################################################################
+########################################## Component  #############################################
+###################################################################################################
 
 def instantiateComponent(debugComponent):
+
     global debugID
 
     debugID = debugComponent.createStringSymbol("DEBUG_PERIPHERAL", None)
     debugID.setVisible(False)
-
