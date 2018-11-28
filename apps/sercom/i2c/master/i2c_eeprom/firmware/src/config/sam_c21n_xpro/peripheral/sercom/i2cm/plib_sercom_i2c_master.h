@@ -61,11 +61,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-
+#include "device.h"
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-extern "C" {
+    extern "C" {
 
 #endif
 // DOM-IGNORE-END
@@ -77,7 +77,8 @@ extern "C" {
 // *****************************************************************************
 
 // *****************************************************************************
-/*
+/* SERCOM I2C Transfer type
+
   Summary:
     List of transfer direction.
 
@@ -132,11 +133,10 @@ typedef enum
 
    Remarks:
     None.
-
 */
 
-typedef enum {
-
+typedef enum
+{
     /* SERCOM PLib Task Error State */
     SERCOM_I2C_STATE_ERROR = -1,
 
@@ -198,7 +198,7 @@ typedef struct
 
     uint8_t *writeBuffer;
 
-    uint8_t    *readBuffer;
+    uint8_t *readBuffer;
 
     size_t  writeSize;
 
@@ -224,7 +224,9 @@ typedef struct
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-}
+
+    }
+
 #endif
 // DOM-IGNORE-END
 

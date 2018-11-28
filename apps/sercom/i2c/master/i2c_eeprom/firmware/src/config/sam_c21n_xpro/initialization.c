@@ -97,11 +97,11 @@ void SYS_Initialize ( void* data )
 
 
 
-    NVIC_Initialize();
-    EVSYS_Initialize();
-
     SERCOM1_I2C_Initialize();
 
+    EVSYS_Initialize();
+
+    NVIC_Initialize();
 
 
 
