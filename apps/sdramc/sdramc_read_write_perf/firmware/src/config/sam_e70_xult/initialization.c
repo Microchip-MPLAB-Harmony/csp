@@ -96,6 +96,7 @@ void SYS_Initialize ( void* data )
     SDRAMC_Initialize();
 
 
+
     NVIC_Initialize();
 	SYSTICK_TimerInitialize();
     XDMAC_Initialize();
