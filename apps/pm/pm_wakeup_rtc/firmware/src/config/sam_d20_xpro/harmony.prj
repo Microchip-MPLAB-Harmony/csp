@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">757B25D89C4B3AC8803BA145B9C70E72</GeneratedChecksum>
-          <UserChecksum dnOrder="5">757B25D89C4B3AC8803BA145B9C70E72</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4587D6603438F20502F307D5A185FA38</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4587D6603438F20502F307D5A185FA38</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -91,8 +91,8 @@
           <Name dnOrder="1">plib_rtc_timer.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/rtc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/rtc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7DF7FC6F62246112302FE893A278DC50</GeneratedChecksum>
-          <UserChecksum dnOrder="5">32E80E8482972CE3F1D0AEE615368033</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AA5939D57A5180CD4A83CAB0096F639D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AA5939D57A5180CD4A83CAB0096F639D</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
@@ -331,8 +331,8 @@
           <Name dnOrder="1">plib_rtc.h</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/rtc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/rtc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">62B545709AE756C3C6D0AA5EFC1C266C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">62B545709AE756C3C6D0AA5EFC1C266C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">3B7E7B89BA54F04F9C7368726C41220A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">3B7E7B89BA54F04F9C7368726C41220A</UserChecksum>
         </File>
         <File dnOrder="41">
           <Type dnOrder="0">HEADER</Type>
