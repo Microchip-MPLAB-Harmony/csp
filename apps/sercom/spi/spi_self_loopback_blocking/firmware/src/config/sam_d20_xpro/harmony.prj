@@ -83,8 +83,8 @@
           <Name dnOrder="1">plib_sercom1_spi.c</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/sercom/spim/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/spim/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">CFCABDFB2B17539B2D7B03A279B41E1D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">CFCABDFB2B17539B2D7B03A279B41E1D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B1987C3583A1DA7296DDC4E72459832F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B1987C3583A1DA7296DDC4E72459832F</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
@@ -299,8 +299,8 @@
           <Name dnOrder="1">plib_sercom1_spi.h</Name>
           <LogicalPath dnOrder="2">config/sam_d20_xpro/peripheral/sercom/spim/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/spim/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F57143A5216332005D52455922AF462D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F57143A5216332005D52455922AF462D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">60DEAD3AD8B49D031C0E47E3B8B1DB36</GeneratedChecksum>
+          <UserChecksum dnOrder="5">60DEAD3AD8B49D031C0E47E3B8B1DB36</UserChecksum>
         </File>
         <File dnOrder="37">
           <Type dnOrder="0">HEADER</Type>
