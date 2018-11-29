@@ -104,6 +104,11 @@ bool ADC_ConversionStatusGet( void );
 
 void ADC_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold);
 
+bool ADC_ConversionStatusGet( void );
+
+bool ADC_WindowMonitorStatusGet( void );
+
+
 
 
 // DOM-IGNORE-BEGIN
