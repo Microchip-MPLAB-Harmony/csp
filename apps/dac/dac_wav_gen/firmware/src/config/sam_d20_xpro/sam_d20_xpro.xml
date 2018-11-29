@@ -2058,19 +2058,28 @@
         </Float>
       </Symbols>
       <Attachments dnOrder="1">
-        <DirectCapability dnOrder="0" id="TC3_TMR"/>
+        <DirectCapability dnOrder="0" id="TC3_TMR">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0"/>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0"/>
+            </String>
+          </Attributes>
+        </DirectCapability>
       </Attachments>
     </UniqueComponent>
   </Components>
   <UserData>
     <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="cmsis" x="412" y="29"/>
-        <ElementPosition dnOrder="1" id="core" x="342" y="27"/>
+        <ElementPosition dnOrder="0" id="cmsis" x="225" y="40"/>
+        <ElementPosition dnOrder="1" id="core" x="153" y="41"/>
         <ElementPosition dnOrder="2" id="dac" x="31" y="62"/>
-        <ElementPosition dnOrder="3" id="dfp" x="159" y="25"/>
+        <ElementPosition dnOrder="3" id="dfp" x="154" y="16"/>
         <ElementPosition dnOrder="4" id="eic" x="157" y="64"/>
-        <ElementPosition dnOrder="5" id="evsys" x="33" y="15"/>
+        <ElementPosition dnOrder="5" id="evsys" x="31" y="15"/>
         <ElementPosition dnOrder="6" id="tc3" x="29" y="110"/>
       </ElementPositions>
     </ComponentGraph>
