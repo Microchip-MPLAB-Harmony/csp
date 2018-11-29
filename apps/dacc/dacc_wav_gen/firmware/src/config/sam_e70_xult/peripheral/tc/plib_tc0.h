@@ -56,6 +56,7 @@
 */
 
 #include "plib_tc_common.h"
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -88,6 +89,7 @@ extern "C" {
  
 
 
+
 void TC0_CH0_TimerInitialize (void);
 
 void TC0_CH0_TimerStart (void);
@@ -105,12 +107,12 @@ uint16_t TC0_CH0_TimerCounterGet (void);
 
 void TC0_CH0_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context);
 
-void TC0_CH0_InterruptHandler(void);
-
 
 
  
+
  
+
 
 #endif //PLIB_TC0_H
 
