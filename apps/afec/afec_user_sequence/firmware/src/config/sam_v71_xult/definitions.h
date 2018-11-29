@@ -49,10 +49,10 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "peripheral/afec/plib_afec1.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/nvic/plib_nvic.h"
-#include "peripheral/afec/plib_afec1.h"
 #include "peripheral/dacc/plib_dacc.h"
 #include "peripheral/tc/plib_tc1.h"
 #include "peripheral/usart/plib_usart1.h"

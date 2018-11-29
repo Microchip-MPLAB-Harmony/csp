@@ -46,7 +46,7 @@
 
 #define AFEC_CGR_GAIN_X1   (0x00U)
 #define AFEC_CGR_GAIN_X2   (0x01U)
-#define AFEC_CGR_GAIN_x4   (0x03U)
+#define AFEC_CGR_GAIN_X4   (0x03U)
 
 
 // *****************************************************************************
