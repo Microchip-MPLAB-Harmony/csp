@@ -60,13 +60,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <device.h>
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 
-extern "C" {
+    extern "C" {
 
 #endif
-
 // DOM-IGNORE-END
 
 // *****************************************************************************
@@ -93,11 +93,11 @@ typedef enum
 {
     /* Input data is sampled on clock trailing edge and changed on
        leading edge */
-    SPI_CLOCK_PHASE_TRAILING_EDGE   =  1 << SERCOM_SPI_CTRLA_CPHA_Pos,
+    SPI_CLOCK_PHASE_TRAILING_EDGE = SERCOM_SPIM_CTRLA_CPHA_TRAILING_EDGE,
 
-     /* Input data is sampled on clock leading edge and changed on
+    /* Input data is sampled on clock leading edge and changed on
        trailing edge */
-    SPI_CLOCK_PHASE_LEADING_EDGE  =  0 << SERCOM_SPI_CTRLA_CPHA_Pos,
+    SPI_CLOCK_PHASE_LEADING_EDGE = SERCOM_SPIM_CTRLA_CPHA_LEADING_EDGE,
 
     /* Force the compiler to reserve 32-bit space for each enum value */
     SPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
@@ -120,10 +120,10 @@ typedef enum
 typedef enum
 {
     /* The inactive state value of clock is logic level zero */
-    SPI_CLOCK_POLARITY_IDLE_LOW   =  0 << SERCOM_SPI_CTRLA_CPOL_Pos,
+    SPI_CLOCK_POLARITY_IDLE_LOW = SERCOM_SPIM_CTRLA_CPOL_IDLE_LOW,
 
     /* The inactive state value of clock is logic level one */
-    SPI_CLOCK_POLARITY_IDLE_HIGH  =  1 << SERCOM_SPI_CTRLA_CPOL_Pos,
+    SPI_CLOCK_POLARITY_IDLE_HIGH = SERCOM_SPIM_CTRLA_CPOL_IDLE_HIGH,
 
     /* Force the compiler to reserve 32-bit space for each enum value */
     SPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
@@ -146,11 +146,11 @@ typedef enum
 
 typedef enum
 {
-     /* 8 bits per transfer */
-    SPI_DATA_BITS_8  =  SERCOM_SPI_CTRLB_CHSIZE(0x0),
+    /* 8 bits per transfer */
+    SPI_DATA_BITS_8 = SERCOM_SPIM_CTRLB_CHSIZE_8_BIT,
 
     /* 9 bits per transfer */
-    SPI_DATA_BITS_9  =  SERCOM_SPI_CTRLB_CHSIZE(0x1),
+    SPI_DATA_BITS_9 = SERCOM_SPIM_CTRLB_CHSIZE_9_BIT,
 
     /* Force the compiler to reserve 32-bit space for each enum value */
     SPI_DATA_BITS_INVALID = 0xFFFFFFFF
@@ -158,7 +158,6 @@ typedef enum
 } SPI_DATA_BITS;
 
 // *****************************************************************************
-
 /* SPI Transfer Setup Parameters
 
   Summary:
@@ -170,7 +169,6 @@ typedef enum
 
   Remarks:
     None.
-
 */
 
 typedef struct
@@ -232,7 +230,7 @@ typedef struct
     </code>
 
   Remarks:
-        The context parameter contains the a handle to the client context,
+    The context parameter contains the a handle to the client context,
     provided at the time the event handling function was registered using the
     SPIx_CallbackRegister function. This context handle value is
     passed back to the client as the "context" parameter. It can be any value
@@ -289,10 +287,10 @@ typedef struct
     /* Exchange busy status of the SPI */
     bool                     transferIsBusy;
 
-    /* SPI Event handler  */
+    /* SPI Event handler */
     SERCOM_SPI_CALLBACK      callback;
 
-    /* Context  */
+    /* Context */
     uintptr_t                context;
 
     uint32_t                 status;
@@ -300,7 +298,9 @@ typedef struct
 } SPI_OBJECT;
 
 #ifdef __cplusplus // Provide C++ Compatibility
-}
+
+    }
+
 #endif
 
 #endif //PLIB_SERCOM_SPI_COMMON_H
