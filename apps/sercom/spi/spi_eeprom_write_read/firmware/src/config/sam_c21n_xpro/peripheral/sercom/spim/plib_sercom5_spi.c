@@ -89,23 +89,22 @@ void SERCOM5_SPI_Initialize(void)
     sercom5SPIObj.transferIsBusy = false ;
 
     /* Selection of the Character Size and Receiver Enable */
-    SERCOM5_REGS->SPI.CTRLB = SERCOM_SPI_CTRLB_CHSIZE(0x0) | SERCOM_SPI_CTRLB_RXEN_Msk ;
+    SERCOM5_REGS->SPIM.SERCOM_CTRLB = SERCOM_SPIM_CTRLB_CHSIZE_8_BIT | SERCOM_SPIM_CTRLB_RXEN_Msk ;
 
     /* Wait for synchronization */
-    while(SERCOM5_REGS->SPI.SYNCBUSY);
+    while(SERCOM5_REGS->SPIM.SERCOM_SYNCBUSY);
 
     /* Selection of the Baud Value */
-    SERCOM5_REGS->SPI.BAUD = 23;
+    SERCOM5_REGS->SPIM.SERCOM_BAUD = 23;
 
     /* Configure Data Out Pin Out , Master Mode,
      * Data In and Pin Out,Data Order and Standby mode if configured
      * and Selection of the Clock Phase and Polarity and Enable the SPI Module
      */
-    SERCOM5_REGS->SPI.CTRLA = SERCOM_SPI_CTRLA_MODE(0x03)| SERCOM_SPI_CTRLA_DOPO(0x1) | SERCOM_SPI_CTRLA_DIPO(0x0)| SPI_CLOCK_POLARITY_IDLE_LOW | SPI_CLOCK_PHASE_LEADING_EDGE | SERCOM_SPI_CTRLA_ENABLE_Msk ;
+    SERCOM5_REGS->SPIM.SERCOM_CTRLA = SERCOM_SPIM_CTRLA_MODE_SPI_MASTER | SERCOM_SPIM_CTRLA_DOPO_PAD1 | SERCOM_SPIM_CTRLA_DIPO_PAD0 | SERCOM_SPIM_CTRLA_CPOL_IDLE_LOW | SERCOM_SPIM_CTRLA_CPHA_LEADING_EDGE | SERCOM_SPIM_CTRLA_DORD_MSB | SERCOM_SPIM_CTRLA_ENABLE_Msk ;
 
     /* Wait for synchronization */
-    while(SERCOM5_REGS->SPI.SYNCBUSY);
-
+    while(SERCOM5_REGS->SPIM.SERCOM_SYNCBUSY);
 }
 
 // *****************************************************************************
@@ -149,38 +148,38 @@ bool SERCOM5_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceCloc
     }
 
     /* Disable the SPI Module */
-    SERCOM5_REGS->SPI.CTRLA &= ~(SERCOM_SPI_CTRLA_ENABLE_Msk);
+    SERCOM5_REGS->SPIM.SERCOM_CTRLA &= ~(SERCOM_SPIM_CTRLA_ENABLE_Msk);
 
-     /* Wait for synchronization */
-    while(SERCOM5_REGS->SPI.SYNCBUSY);
+    /* Wait for synchronization */
+    while(SERCOM5_REGS->SPIM.SERCOM_SYNCBUSY);
 
-    if ( setup != NULL )
+    if(setup != NULL)
     {
         baudValue = (spiSourceClock/(2*(setup->clockFrequency))) - 1;
 
-        if ((baudValue > 0) & (baudValue <= 255))
+        if((baudValue > 0) & (baudValue <= 255))
         {
             /* Selection of the Clock Polarity and Clock Phase */
-            SERCOM5_REGS->SPI.CTRLA |= setup->clockPolarity | setup->clockPhase;
+            SERCOM5_REGS->SPIM.SERCOM_CTRLA |= setup->clockPolarity | setup->clockPhase;
 
             /* Selection of the Baud Value */
-            SERCOM5_REGS->SPI.BAUD = baudValue;
+            SERCOM5_REGS->SPIM.SERCOM_BAUD = baudValue;
 
             /* Selection of the Character Size */
-            SERCOM5_REGS->SPI.CTRLB |= setup->dataBits;
+            SERCOM5_REGS->SPIM.SERCOM_CTRLB |= setup->dataBits;
 
             /* Wait for synchronization */
-            while(SERCOM5_REGS->SPI.SYNCBUSY);
+            while(SERCOM5_REGS->SPIM.SERCOM_SYNCBUSY);
 
             statusValue = true;
         }
     }
 
     /* Enabling the SPI Module */
-    SERCOM5_REGS->SPI.CTRLA |= SERCOM_SPI_CTRLA_ENABLE_Msk;
+    SERCOM5_REGS->SPIM.SERCOM_CTRLA |= SERCOM_SPIM_CTRLA_ENABLE_Msk;
 
     /* Wait for synchronization */
-    while(SERCOM5_REGS->SPI.SYNCBUSY);
+    while(SERCOM5_REGS->SPIM.SERCOM_SYNCBUSY);
 
     return statusValue;
 }
@@ -285,10 +284,10 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
     /* Verify the request */
     if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (sercom5SPIObj.transferIsBusy == false))
     {
-        if((SERCOM5_REGS->SPI.CTRLB & SERCOM_SPI_CTRLB_CHSIZE_Msk) == SPI_DATA_BITS_9)
+        if((SERCOM5_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk) == SPI_DATA_BITS_9)
         {
             /* For 9-bit transmission, the txSize and rxSize must be an even number. */
-            if ( ((txSize > 0) && (txSize & 0x01)) || ((rxSize > 0) && (rxSize & 0x01)))
+            if(((txSize > 0) && (txSize & 0x01)) || ((rxSize > 0) && (rxSize & 0x01)))
             {
                 return isRequestAccepted;
             }
@@ -300,7 +299,8 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
         sercom5SPIObj.rxCount = 0;
         sercom5SPIObj.txCount = 0;
         sercom5SPIObj.dummySize = 0;
-        if (pTransmitData != NULL)
+
+        if(pTransmitData != NULL)
         {
             sercom5SPIObj.txSize = txSize;
         }
@@ -309,7 +309,7 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
             sercom5SPIObj.txSize = 0;
         }
 
-        if (pReceiveData != NULL)
+        if(pReceiveData != NULL)
         {
             sercom5SPIObj.rxSize = rxSize;
         }
@@ -321,25 +321,25 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
         sercom5SPIObj.transferIsBusy = true;
 
         /* Flush out any unread data in SPI read buffer */
-        dummyData = SERCOM5_REGS->SPI.DATA;
+        dummyData = SERCOM5_REGS->SPIM.SERCOM_DATA;
         (void)dummyData;
 
-        if (sercom5SPIObj.rxSize > sercom5SPIObj.txSize)
+        if(sercom5SPIObj.rxSize > sercom5SPIObj.txSize)
         {
             sercom5SPIObj.dummySize = sercom5SPIObj.rxSize - sercom5SPIObj.txSize;
         }
 
         /* Start the first write here itself, rest will happen in ISR context */
-        if((SERCOM5_REGS->SPI.CTRLB & SERCOM_SPI_CTRLB_CHSIZE_Msk) == SPI_DATA_BITS_8)
+        if((SERCOM5_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk) == SPI_DATA_BITS_8)
         {
-            if (sercom5SPIObj.txCount < sercom5SPIObj.txSize)
+            if(sercom5SPIObj.txCount < sercom5SPIObj.txSize)
             {
-                SERCOM5_REGS->SPI.DATA = *((uint8_t*)sercom5SPIObj.txBuffer);
+                SERCOM5_REGS->SPIM.SERCOM_DATA = *((uint8_t*)sercom5SPIObj.txBuffer);
                 sercom5SPIObj.txCount++;
             }
-            else if (sercom5SPIObj.dummySize > 0)
+            else if(sercom5SPIObj.dummySize > 0)
             {
-                SERCOM5_REGS->SPI.DATA = 0xFF;
+                SERCOM5_REGS->SPIM.SERCOM_DATA = 0xFF;
                 sercom5SPIObj.dummySize--;
             }
         }
@@ -349,31 +349,41 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
             sercom5SPIObj.dummySize >>= 1;
             sercom5SPIObj.rxSize >>= 1;
 
-            if (sercom5SPIObj.txCount < sercom5SPIObj.txSize)
+            if(sercom5SPIObj.txCount < sercom5SPIObj.txSize)
             {
-                SERCOM5_REGS->SPI.DATA = *((uint16_t*)sercom5SPIObj.txBuffer) & SERCOM_SPI_DATA_Msk;
+                SERCOM5_REGS->SPIM.SERCOM_DATA = *((uint16_t*)sercom5SPIObj.txBuffer) & SERCOM_SPIM_DATA_Msk;
                 sercom5SPIObj.txCount++;
             }
-            else if (sercom5SPIObj.dummySize > 0)
+            else if(sercom5SPIObj.dummySize > 0)
             {
-                SERCOM5_REGS->SPI.DATA = 0xFFFF & SERCOM_SPI_DATA_Msk;
+                SERCOM5_REGS->SPIM.SERCOM_DATA = 0xFFFF & SERCOM_SPIM_DATA_Msk;
                 sercom5SPIObj.dummySize--;
             }
         }
 
-        if (rxSize > 0)
+        if(rxSize > 0)
         {
             /* Enable ReceiveComplete  */
-            SERCOM5_REGS->SPI.INTENSET = SERCOM_SPI_INTENSET_RXC_Msk;
+            SERCOM5_REGS->SPIM.SERCOM_INTENSET = SERCOM_SPIM_INTENSET_RXC_Msk;
         }
         else
         {
             /* Enable the DataRegisterEmpty  */
-            SERCOM5_REGS->SPI.INTENSET = SERCOM_SPI_INTENSET_DRE_Msk;
+            SERCOM5_REGS->SPIM.SERCOM_INTENSET = SERCOM_SPIM_INTENSET_DRE_Msk;
         }
     }
 
     return isRequestAccepted;
+}
+
+bool SERCOM5_SPI_Write(void* pTransmitData, size_t txSize)
+{
+    return SERCOM5_SPI_WriteRead(pTransmitData, txSize, NULL, 0);
+}
+
+bool SERCOM5_SPI_Read(void* pReceiveData, size_t rxSize)
+{
+    return SERCOM5_SPI_WriteRead(NULL, 0, pReceiveData, rxSize);
 }
 
 // *****************************************************************************
@@ -397,15 +407,15 @@ void SERCOM5_SPI_InterruptHandler(void)
     uint32_t receivedData = 0;
     static bool isLastByteTransferInProgress = false;
 
-    if(SERCOM5_REGS->SPI.INTENSET != 0)
+    if(SERCOM5_REGS->SPIM.SERCOM_INTENSET != 0)
     {
-        dataBits = SERCOM5_REGS->SPI.CTRLB & SERCOM_SPI_CTRLB_CHSIZE_Msk;
+        dataBits = SERCOM5_REGS->SPIM.SERCOM_CTRLB & SERCOM_SPIM_CTRLB_CHSIZE_Msk;
 
-        if ((SERCOM5_REGS->SPI.INTFLAG & SERCOM_SPI_INTFLAG_RXC_Msk) == SERCOM_SPI_INTFLAG_RXC_Msk)
+        if((SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk) == SERCOM_SPIM_INTFLAG_RXC_Msk)
         {
-            receivedData =  SERCOM5_REGS->SPI.DATA;
+            receivedData =  SERCOM5_REGS->SPIM.SERCOM_DATA;
 
-            if (sercom5SPIObj.rxCount < sercom5SPIObj.rxSize)
+            if(sercom5SPIObj.rxCount < sercom5SPIObj.rxSize)
             {
                 if(dataBits == SPI_DATA_BITS_8)
                 {
@@ -418,42 +428,40 @@ void SERCOM5_SPI_InterruptHandler(void)
             }
         }
 
-
         /* If there are more words to be transmitted, then transmit them here and keep track of the count */
-        if((SERCOM5_REGS->SPI.INTFLAG & SERCOM_SPI_INTFLAG_DRE_Msk) == SERCOM_SPI_INTFLAG_DRE_Msk)
+        if((SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_DRE_Msk) == SERCOM_SPIM_INTFLAG_DRE_Msk)
         {
             /* Disable the DRE interrupt. This will be enabled back if more than
              * one byte is pending to be transmitted */
 
-            SERCOM5_REGS->SPI.INTENCLR =  SERCOM_SPI_INTENCLR_DRE_Msk;
+            SERCOM5_REGS->SPIM.SERCOM_INTENCLR = SERCOM_SPIM_INTENCLR_DRE_Msk;
 
             if(dataBits == SPI_DATA_BITS_8)
             {
-                if (sercom5SPIObj.txCount < sercom5SPIObj.txSize)
+                if(sercom5SPIObj.txCount < sercom5SPIObj.txSize)
                 {
-                    SERCOM5_REGS->SPI.DATA = ((uint8_t*)sercom5SPIObj.txBuffer)[sercom5SPIObj.txCount++];
+                    SERCOM5_REGS->SPIM.SERCOM_DATA = ((uint8_t*)sercom5SPIObj.txBuffer)[sercom5SPIObj.txCount++];
                 }
-                else if (sercom5SPIObj.dummySize > 0)
+                else if(sercom5SPIObj.dummySize > 0)
                 {
-                    SERCOM5_REGS->SPI.DATA = 0xFF;
+                    SERCOM5_REGS->SPIM.SERCOM_DATA = 0xFF;
                     sercom5SPIObj.dummySize--;
                 }
             }
             else
             {
-                if (sercom5SPIObj.txCount < sercom5SPIObj.txSize)
+                if(sercom5SPIObj.txCount < sercom5SPIObj.txSize)
                 {
-                    SERCOM5_REGS->SPI.DATA = ((uint16_t*)sercom5SPIObj.txBuffer)[sercom5SPIObj.txCount++];
+                    SERCOM5_REGS->SPIM.SERCOM_DATA = ((uint16_t*)sercom5SPIObj.txBuffer)[sercom5SPIObj.txCount++];
                 }
-                else if (sercom5SPIObj.dummySize > 0)
+                else if(sercom5SPIObj.dummySize > 0)
                 {
-                    SERCOM5_REGS->SPI.DATA = 0xFFFF;
+                    SERCOM5_REGS->SPIM.SERCOM_DATA = 0xFFFF;
                     sercom5SPIObj.dummySize--;
                 }
             }
 
-
-            if ((sercom5SPIObj.txCount == sercom5SPIObj.txSize) && (0 == sercom5SPIObj.dummySize))
+            if((sercom5SPIObj.txCount == sercom5SPIObj.txSize) && (sercom5SPIObj.dummySize == 0))
             {
                  /* At higher baud rates, the data in the shift register can be
                  * shifted out and TXC flag can get set resulting in a
@@ -465,26 +473,24 @@ void SERCOM5_SPI_InterruptHandler(void)
                  */
 
                 isLastByteTransferInProgress = true;
-
             }
             else if(sercom5SPIObj.rxCount == sercom5SPIObj.rxSize)
             {
-                SERCOM5_REGS->SPI.INTENSET = SERCOM_SPI_INTENSET_DRE_Msk;
-                SERCOM5_REGS->SPI.INTENCLR = SERCOM_SPI_INTENCLR_RXC_Msk;
+                SERCOM5_REGS->SPIM.SERCOM_INTENSET = SERCOM_SPIM_INTENSET_DRE_Msk;
+                SERCOM5_REGS->SPIM.SERCOM_INTENCLR = SERCOM_SPIM_INTENCLR_RXC_Msk;
             }
         }
 
-
-        if(((SERCOM5_REGS->SPI.INTFLAG & SERCOM_SPI_INTFLAG_TXC_Msk) == SERCOM_SPI_INTFLAG_TXC_Msk) && (isLastByteTransferInProgress == true))
+        if(((SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) == SERCOM_SPIM_INTFLAG_TXC_Msk) && (isLastByteTransferInProgress == true))
         {
-            if (sercom5SPIObj.rxCount == sercom5SPIObj.rxSize)
+            if(sercom5SPIObj.rxCount == sercom5SPIObj.rxSize)
             {
                 sercom5SPIObj.transferIsBusy = false;
 
                 /* Disable the Data Register empty and Receive Complete Interrupt flags */
-                SERCOM5_REGS->SPI.INTENCLR = SERCOM_SPI_INTENCLR_DRE_Msk | SERCOM_SPI_INTENCLR_RXC_Msk | SERCOM_SPI_INTENSET_TXC_Msk;
+                SERCOM5_REGS->SPIM.SERCOM_INTENCLR = SERCOM_SPIM_INTENCLR_DRE_Msk | SERCOM_SPIM_INTENCLR_RXC_Msk | SERCOM_SPIM_INTENSET_TXC_Msk;
 
-                 isLastByteTransferInProgress = false;
+                isLastByteTransferInProgress = false;
 
                 if(sercom5SPIObj.callback != NULL)
                 {
@@ -499,7 +505,7 @@ void SERCOM5_SPI_InterruptHandler(void)
              * Enable TXC interrupt to ensure no data is present in the shift
              * register before application callback is called.
              */
-             SERCOM5_REGS->SPI.INTENSET = SERCOM_SPI_INTENSET_TXC_Msk;
+            SERCOM5_REGS->SPIM.SERCOM_INTENSET = SERCOM_SPIM_INTENSET_TXC_Msk;
         }
     }
 }
