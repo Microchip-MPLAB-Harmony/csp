@@ -169,23 +169,17 @@ bool ADC0_ConversionSequenceIsFinished(void)
     return seq_status;
 }
 
-/* Configure window comparison threshold values */
-void ADC0_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
+
+/* Read the conversion result */
+uint16_t ADC0_ConversionResultGet( void )
 {
-    ADC0_REGS->ADC_WINLT = low_threshold;
-    ADC0_REGS->ADC_WINUT = high_threshold;
+    return (uint16_t)ADC0_REGS->ADC_RESULT;
 }
 
 /* Check whether result is ready */
 bool ADC0_ConversionStatusGet( void )
 {
     return (bool)((ADC0_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
-}
-
-/* Read the conversion result */
-uint16_t ADC0_ConversionResultGet( void )
-{
-    return (uint16_t)ADC0_REGS->ADC_RESULT;
 }
 
 
