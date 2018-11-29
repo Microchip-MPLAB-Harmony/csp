@@ -52,7 +52,7 @@
 /*  This section lists the other files that are included in this file.
 */
 #include "device.h"
-#include "plib_PWM0.h"
+#include "plib_pwm0.h"
 
 
 static uint32_t PWM0_status;  /* Saves interrupt status */
