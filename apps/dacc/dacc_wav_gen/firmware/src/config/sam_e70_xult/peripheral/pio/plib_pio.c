@@ -302,19 +302,19 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 
 // *****************************************************************************
 /* Function:
-    void PIO_PinInterruptCallbackRegister(
+    bool PIO_PinInterruptCallbackRegister(
         PIO_PIN pin,
         const PIO_PIN_CALLBACK callback,
         uintptr_t context
     );
 
   Summary:
-    Allows application to register callback for every pin.
+    Allows application to register callback for configured pin.
 
   Remarks:
     See plib_pio.h for more details.
 */
-void PIO_PinInterruptCallbackRegister(
+bool PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
     const PIO_PIN_CALLBACK callback,
     uintptr_t context
@@ -331,11 +331,51 @@ void PIO_PinInterruptCallbackRegister(
         {
             portPinCbObj[i].callback = callback;
             portPinCbObj[i].context  = context;
-            break;
+            return true;
         }
     }
+    return false;
 }
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local Function Implementation
+// *****************************************************************************
+// *****************************************************************************
 
+// *****************************************************************************
+/* Function:
+    void _PIO_Interrupt_Handler ( PIO_PORT port )
+
+  Summary:
+    Interrupt handler for a selected port.
+
+  Description:
+    This function defines the Interrupt handler for a selected port.
+
+  Remarks:
+	It is an internal function used by the library, user should not call it.
+*/
+void _PIO_Interrupt_Handler ( PIO_PORT port )
+{
+    uint32_t status;
+    uint32_t i, portIndex;
+
+    status  = ((pio_registers_t*)port)->PIO_ISR;
+    status &= ((pio_registers_t*)port)->PIO_IMR;
+
+    /* get the index of the port channel: PIO_PORT_A--> 0, PIO_PORT_B--> 1 ... */
+    portIndex = (port - PIOA_BASE_ADDRESS) >> 9;
+
+    /* Check pending events and call callback if registered */
+    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
+    {
+        if((status & (1 << (portPinCbObj[i].pin & 0x1F))) && (portPinCbObj[i].callback != NULL))
+        {
+            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
+        }
+    }
+
+}
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interrupt Service Routine (ISR) Implementation(s)
@@ -362,46 +402,7 @@ void PIOA_InterruptHandler(void)
     _PIO_Interrupt_Handler(PIO_PORT_A);
 }
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local Function Implementation
-// *****************************************************************************
-// *****************************************************************************
 
-// *****************************************************************************
-/* Function:
-    void _PIO_Interrupt_Handler ( PIO_PORT port )
-
-  Summary:
-    Interrupt handler for a selected port.
-
-  Description:
-    This function defines the Interrupt handler for a selected port.
-
-  Remarks:
-	It is an internal function used by the library, user need not call it.
-*/
-void _PIO_Interrupt_Handler ( PIO_PORT port )
-{
-    uint32_t status;
-    uint32_t i, portIndex;
-
-    status  = ((pio_registers_t*)port)->PIO_ISR;
-    status &= ((pio_registers_t*)port)->PIO_IMR;
-
-    /* get the index of the port channel: PIO_PORT_A--> 0, PIO_PORT_B--> 1 ... */
-    portIndex = (port - PIOA_BASE_ADDRESS) >> 9;
-
-    /* Check pending events and call callback if registered */
-    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
-    {
-        if((status & (1 << (portPinCbObj[i].pin & 0x1F))) && (portPinCbObj[i].callback != NULL))
-        {
-            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
-        }
-    }
-
-}
 
 
 
