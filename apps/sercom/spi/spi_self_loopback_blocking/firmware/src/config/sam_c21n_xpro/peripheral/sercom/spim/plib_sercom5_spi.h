@@ -260,20 +260,22 @@ bool SERCOM5_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceCloc
     uint8_t     rxBuffer[10];
     size_t      txSize = 4;
     size_t      rxSize = 10;
-    bool        reqAccepted;
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SERCOM5_SPI_ErrorGet() == SPI_ERROR_NONE)
-        {
-            //Transfer was completed without error, do something else now.
-        }
+       //Transfer was completed without error, do something else now.
     }
 
     SERCOM5_SPI_Initialize();
-    SERCOM5_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
-    reqAccepted = SERCOM5_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize);
-
+    SERCOM5_SPI_CallbackRegister(&APP_SPITransferHandler, (uintptr_t)NULL);
+    if(SERCOM5_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize))
+    {
+        // request got accepted
+    }
+    else
+    {
+        // request didn't get accepted, try again later with correct arguments
+    }
     // The following code snippet shows non-interrupt or blocking mode
     // operation.
 
@@ -281,7 +283,6 @@ bool SERCOM5_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32_t spiSourceCloc
     uint8_t rxBuffer[10];
     size_t txSize = 4;
     size_t rxSize = 10;
-    bool reqAccepted;
 
     SERCOM5_SPI_Initialize();
 
@@ -355,19 +356,22 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
     <code>
     uint8_t txBuffer[4];
     size_t txSize = 4;
-    bool reqAccepted;
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SERCOM5_SPI_ErrorGet() == SPI_ERROR_NONE)
-        {
-            Transfer was completed without error, do something else now.
-        }
+        //Transfer was completed without error, do something else now.
     }
 
     SERCOM5_SPI_Initialize();
-    SERCOM5_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
-    reqAccepted = SERCOM5_SPI_Write(&txBuffer, txSize);
+    SERCOM5_SPI_CallbackRegister(&APP_SPITransferHandler, (uintptr_t)NULL);
+    if(SERCOM5_SPI_Write(&txBuffer, txSize))
+    {
+        // request got accepted
+    }
+    else
+    {
+        // request didn't get accepted, try again later with correct arguments
+    }
 
     </code>
 
@@ -376,10 +380,7 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
 
 */
 
-static inline bool SERCOM5_SPI_Write(void* pTransmitData, size_t txSize)
-{
-    return SERCOM5_SPI_WriteRead(pTransmitData, txSize, NULL, 0);
-}
+bool SERCOM5_SPI_Write(void* pTransmitData, size_t txSize);
 
 // *****************************************************************************
 /* Function:
@@ -440,30 +441,29 @@ static inline bool SERCOM5_SPI_Write(void* pTransmitData, size_t txSize)
     <code>
     uint8_t     rxBuffer[10];
     size_t      rxSize = 10;
-    bool        reqAccepted;
 
     void APP_SPITransferHandler(uintptr_t context)
     {
-        if(SERCOM5_SPI_ErrorGet() == SPI_ERROR_NONE)
-        {
-            Transfer was completed without error, do something else now.
-        }
+        //Transfer was completed without error, do something else now.
     }
 
     SERCOM5_SPI_Initialize();
-    SERCOM5_SPI_CallbackRegister(&APP_SPITransferHandler, NULL);
-    reqAccepted = SERCOM5_SPI_Read(&rxBuffer, rxSize);
-
+    SERCOM5_SPI_CallbackRegister(&APP_SPITransferHandler, (uintptr_t)NULL);
+    if(SERCOM5_SPI_Read(&rxBuffer, rxSize))
+    {
+        // request got accepted
+    }
+    else
+    {
+        // request didn't get accepted, try again later with correct arguments
+    }
     </code>
 
   Remarks:
     None.
 */
 
-static inline bool SERCOM5_SPI_Read(void* pReceiveData, size_t rxSize)
-{
-    return SERCOM5_SPI_WriteRead(NULL, 0, pReceiveData, rxSize);
-}
+bool SERCOM5_SPI_Read(void* pReceiveData, size_t rxSize);
 
 
 #ifdef __cplusplus // Provide C++ Compatibility
