@@ -304,19 +304,19 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 
 // *****************************************************************************
 /* Function:
-    void PIO_PinInterruptCallbackRegister(
+    bool PIO_PinInterruptCallbackRegister(
         PIO_PIN pin,
         const PIO_PIN_CALLBACK callback,
         uintptr_t context
     );
 
   Summary:
-    Allows application to register callback for every pin.
+    Allows application to register callback for configured pin.
 
   Remarks:
     See plib_pio.h for more details.
 */
-void PIO_PinInterruptCallbackRegister(
+bool PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
     const PIO_PIN_CALLBACK callback,
     uintptr_t context
@@ -333,9 +333,10 @@ void PIO_PinInterruptCallbackRegister(
         {
             portPinCbObj[i].callback = callback;
             portPinCbObj[i].context  = context;
-            break;
+            return true;
         }
     }
+    return false;
 }
 // *****************************************************************************
 // *****************************************************************************
