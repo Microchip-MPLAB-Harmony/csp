@@ -97,10 +97,10 @@ void SYS_Initialize ( void* data )
 
 
 
+    EVSYS_Initialize();
+
     NVIC_Initialize();
     DMAC_Initialize();
-
-    EVSYS_Initialize();
 
     SERCOM5_SPI_Initialize();
 

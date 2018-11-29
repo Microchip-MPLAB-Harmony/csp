@@ -85,46 +85,46 @@ uint8_t rxPongBuffer[sizeof(txPongBuffer)];
 
 volatile APP_STATES state = APP_STATE_INITIALIZE;
 
-__attribute__((__aligned__(16))) static dmacdescriptor_registers_t pTxLinkedListDesc[2], pRxLinkedListDesc[2];
+__attribute__((__aligned__(16))) static dmac_descriptor_registers_t pTxLinkedListDesc[2], pRxLinkedListDesc[2];
 
 
-#define PING_BUFEER0_TX_BTCTRL  (DMAC_DESCRIPTOR_BTCTRL_STEPSIZE_X1 | DMAC_DESCRIPTOR_BTCTRL_SRCINC_Msk |     \
-                                DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_BYTE | DMAC_DESCRIPTOR_BTCTRL_BLOCKACT_INT | DMAC_DESCRIPTOR_BTCTRL_VALID_Msk)
-#define PING_BUFEER1_TX_BTCTRL  (DMAC_DESCRIPTOR_BTCTRL_STEPSIZE_X1 | DMAC_DESCRIPTOR_BTCTRL_SRCINC_Msk |     \
-                                DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_BYTE | DMAC_DESCRIPTOR_BTCTRL_BLOCKACT_INT | DMAC_DESCRIPTOR_BTCTRL_VALID_Msk)
-#define PING_BUFEER0_RX_BTCTRL  (DMAC_DESCRIPTOR_BTCTRL_STEPSIZE_X1 | DMAC_DESCRIPTOR_BTCTRL_DSTINC_Msk |     \
-                                DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_BYTE | DMAC_DESCRIPTOR_BTCTRL_BLOCKACT_INT | DMAC_DESCRIPTOR_BTCTRL_VALID_Msk)
-#define PING_BUFEER1_RX_BTCTRL  (DMAC_DESCRIPTOR_BTCTRL_STEPSIZE_X1 | DMAC_DESCRIPTOR_BTCTRL_DSTINC_Msk |     \
-                                DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_BYTE | DMAC_DESCRIPTOR_BTCTRL_BLOCKACT_INT | DMAC_DESCRIPTOR_BTCTRL_VALID_Msk)
+#define PING_BUFEER0_TX_BTCTRL  (DMAC_BTCTRL_STEPSIZE_X1 | DMAC_BTCTRL_SRCINC_Msk |     \
+                                DMAC_BTCTRL_BEATSIZE_BYTE | DMAC_BTCTRL_BLOCKACT_INT | DMAC_BTCTRL_VALID_Msk)
+#define PING_BUFEER1_TX_BTCTRL  (DMAC_BTCTRL_STEPSIZE_X1 | DMAC_BTCTRL_SRCINC_Msk |     \
+                                DMAC_BTCTRL_BEATSIZE_BYTE | DMAC_BTCTRL_BLOCKACT_INT | DMAC_BTCTRL_VALID_Msk)
+#define PING_BUFEER0_RX_BTCTRL  (DMAC_BTCTRL_STEPSIZE_X1 | DMAC_BTCTRL_DSTINC_Msk |     \
+                                DMAC_BTCTRL_BEATSIZE_BYTE | DMAC_BTCTRL_BLOCKACT_INT | DMAC_BTCTRL_VALID_Msk)
+#define PING_BUFEER1_RX_BTCTRL  (DMAC_BTCTRL_STEPSIZE_X1 | DMAC_BTCTRL_DSTINC_Msk |     \
+                                DMAC_BTCTRL_BEATSIZE_BYTE | DMAC_BTCTRL_BLOCKACT_INT | DMAC_BTCTRL_VALID_Msk)
 
 void APP_InitializeTxLinkedListDescriptor(void)
 {
-    pTxLinkedListDesc[0].BTCTRL     = (uint16_t)PING_BUFEER0_TX_BTCTRL;
-    pTxLinkedListDesc[0].BTCNT      = (uint16_t)sizeof(txPingBuffer);
-    pTxLinkedListDesc[0].DESCADDR   = (uint32_t)&pTxLinkedListDesc[1];
-    pTxLinkedListDesc[0].DSTADDR    = (uint32_t)&SERCOM5_REGS->SPI.DATA;
-    pTxLinkedListDesc[0].SRCADDR    = (uint32_t)txPingBuffer + sizeof(txPingBuffer);
+    pTxLinkedListDesc[0].DMAC_BTCTRL     = (uint16_t)PING_BUFEER0_TX_BTCTRL;
+    pTxLinkedListDesc[0].DMAC_BTCNT      = (uint16_t)sizeof(txPingBuffer);
+    pTxLinkedListDesc[0].DMAC_DESCADDR   = (uint32_t)&pTxLinkedListDesc[1];
+    pTxLinkedListDesc[0].DMAC_DSTADDR    = (uint32_t)&SERCOM5_REGS->SPIM.SERCOM_DATA;
+    pTxLinkedListDesc[0].DMAC_SRCADDR    = (uint32_t)txPingBuffer + sizeof(txPingBuffer);
 
-    pTxLinkedListDesc[1].BTCTRL     = (uint16_t)PING_BUFEER1_TX_BTCTRL;
-    pTxLinkedListDesc[1].BTCNT      = (uint16_t)sizeof(txPongBuffer);
-    pTxLinkedListDesc[1].DESCADDR   = (uint32_t)&pTxLinkedListDesc[0];
-    pTxLinkedListDesc[1].DSTADDR    = (uint32_t)&SERCOM5_REGS->SPI.DATA;
-    pTxLinkedListDesc[1].SRCADDR    = (uint32_t)txPongBuffer + sizeof(txPingBuffer);
+    pTxLinkedListDesc[1].DMAC_BTCTRL     = (uint16_t)PING_BUFEER1_TX_BTCTRL;
+    pTxLinkedListDesc[1].DMAC_BTCNT      = (uint16_t)sizeof(txPongBuffer);
+    pTxLinkedListDesc[1].DMAC_DESCADDR   = (uint32_t)&pTxLinkedListDesc[0];
+    pTxLinkedListDesc[1].DMAC_DSTADDR    = (uint32_t)&SERCOM5_REGS->SPIM.SERCOM_DATA;
+    pTxLinkedListDesc[1].DMAC_SRCADDR    = (uint32_t)txPongBuffer + sizeof(txPingBuffer);
 }
 
 void APP_InitializeRxLinkedListDescriptor(void)
 {
-    pRxLinkedListDesc[0].BTCTRL     = (uint16_t)PING_BUFEER0_RX_BTCTRL;
-    pRxLinkedListDesc[0].BTCNT      = (uint16_t)sizeof(rxPingBuffer);
-    pRxLinkedListDesc[0].DESCADDR   = (uint32_t)&pRxLinkedListDesc[1];
-    pRxLinkedListDesc[0].SRCADDR    = (uint32_t)&SERCOM5_REGS->SPI.DATA;
-    pRxLinkedListDesc[0].DSTADDR    = (uint32_t)rxPingBuffer + sizeof(txPingBuffer);
+    pRxLinkedListDesc[0].DMAC_BTCTRL     = (uint16_t)PING_BUFEER0_RX_BTCTRL;
+    pRxLinkedListDesc[0].DMAC_BTCNT      = (uint16_t)sizeof(rxPingBuffer);
+    pRxLinkedListDesc[0].DMAC_DESCADDR   = (uint32_t)&pRxLinkedListDesc[1];
+    pRxLinkedListDesc[0].DMAC_SRCADDR    = (uint32_t)&SERCOM5_REGS->SPIM.SERCOM_DATA;
+    pRxLinkedListDesc[0].DMAC_DSTADDR    = (uint32_t)rxPingBuffer + sizeof(txPingBuffer);
 
-    pRxLinkedListDesc[1].BTCTRL     = (uint16_t)PING_BUFEER1_RX_BTCTRL;
-    pRxLinkedListDesc[1].BTCNT      = (uint16_t)sizeof(rxPongBuffer);
-    pRxLinkedListDesc[1].DESCADDR   = (uint32_t)&pRxLinkedListDesc[0];
-    pRxLinkedListDesc[1].SRCADDR    = (uint32_t)&SERCOM5_REGS->SPI.DATA;
-    pRxLinkedListDesc[1].DSTADDR    = (uint32_t)rxPongBuffer + sizeof(txPingBuffer);
+    pRxLinkedListDesc[1].DMAC_BTCTRL     = (uint16_t)PING_BUFEER1_RX_BTCTRL;
+    pRxLinkedListDesc[1].DMAC_BTCNT      = (uint16_t)sizeof(rxPongBuffer);
+    pRxLinkedListDesc[1].DMAC_DESCADDR   = (uint32_t)&pRxLinkedListDesc[0];
+    pRxLinkedListDesc[1].DMAC_SRCADDR    = (uint32_t)&SERCOM5_REGS->SPIM.SERCOM_DATA;
+    pRxLinkedListDesc[1].DMAC_DSTADDR    = (uint32_t)rxPongBuffer + sizeof(txPingBuffer);
 }
 
 static void APP_DMA_TxCallbackHandler(DMAC_TRANSFER_EVENT event, uintptr_t context)
