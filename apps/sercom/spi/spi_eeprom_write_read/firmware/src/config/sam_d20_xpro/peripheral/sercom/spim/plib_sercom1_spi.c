@@ -376,6 +376,16 @@ bool SERCOM1_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
     return isRequestAccepted;
 }
 
+bool SERCOM1_SPI_Write(void* pTransmitData, size_t txSize)
+{
+    return SERCOM1_SPI_WriteRead(pTransmitData, txSize, NULL, 0);
+}
+
+bool SERCOM1_SPI_Read(void* pReceiveData, size_t rxSize)
+{
+    return SERCOM1_SPI_WriteRead(NULL, 0, pReceiveData, rxSize);
+}
+
 // *****************************************************************************
 /* Function:
     void SERCOM1_SPI_InterruptHandler(void);
