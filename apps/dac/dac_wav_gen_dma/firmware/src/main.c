@@ -73,26 +73,26 @@ const uint16_t sine_wave[NUM_OF_SAMPLES] = {
 };
 
 
-__attribute__((__aligned__(16))) static dmacdescriptor_registers_t pTxLinkedListDesc[2];
+__attribute__((__aligned__(16))) static dmac_descriptor_registers_t pTxLinkedListDesc[2];
 
-#define BUFFER_TX_BTCTRL    (DMAC_DESCRIPTOR_BTCTRL_STEPSIZE_X2 | DMAC_DESCRIPTOR_BTCTRL_SRCINC_Msk |     \
-                             DMAC_DESCRIPTOR_BTCTRL_BEATSIZE_HWORD | DMAC_DESCRIPTOR_BTCTRL_BLOCKACT_INT | DMAC_DESCRIPTOR_BTCTRL_VALID_Msk)
+#define BUFFER_TX_BTCTRL    (DMAC_BTCTRL_STEPSIZE_X2 | DMAC_BTCTRL_SRCINC_Msk |     \
+                             DMAC_BTCTRL_BEATSIZE_HWORD | DMAC_BTCTRL_BLOCKACT_INT | DMAC_BTCTRL_VALID_Msk)
 
 
 void InitializeTxLinkedListDescriptor(void)
 {
-    pTxLinkedListDesc[0].BTCTRL     = (uint16_t)BUFFER_TX_BTCTRL;
-    pTxLinkedListDesc[0].BTCNT      = NUM_OF_SAMPLES;
-    pTxLinkedListDesc[0].DESCADDR   = (uint32_t)&pTxLinkedListDesc[1];
-    pTxLinkedListDesc[0].DSTADDR    = (uint32_t)&DAC_REGS->DAC_DATA;
-    pTxLinkedListDesc[0].SRCADDR    = (uint32_t)sine_wave + sizeof(sine_wave);
+    pTxLinkedListDesc[0].DMAC_BTCTRL     = (uint16_t)BUFFER_TX_BTCTRL;
+    pTxLinkedListDesc[0].DMAC_BTCNT      = NUM_OF_SAMPLES;
+    pTxLinkedListDesc[0].DMAC_DESCADDR   = (uint32_t)&pTxLinkedListDesc[1];
+    pTxLinkedListDesc[0].DMAC_DSTADDR    = (uint32_t)&DAC_REGS->DAC_DATA;
+    pTxLinkedListDesc[0].DMAC_SRCADDR    = (uint32_t)sine_wave + sizeof(sine_wave);
 
 
-    pTxLinkedListDesc[1].BTCTRL     = (uint16_t)BUFFER_TX_BTCTRL;
-    pTxLinkedListDesc[1].BTCNT      = NUM_OF_SAMPLES;
-    pTxLinkedListDesc[1].DESCADDR   = (uint32_t)&pTxLinkedListDesc[0];
-    pTxLinkedListDesc[1].DSTADDR    = (uint32_t)&DAC_REGS->DAC_DATA;
-    pTxLinkedListDesc[1].SRCADDR    = (uint32_t)sine_wave + sizeof(sine_wave);
+    pTxLinkedListDesc[1].DMAC_BTCTRL     = (uint16_t)BUFFER_TX_BTCTRL;
+    pTxLinkedListDesc[1].DMAC_BTCNT      = NUM_OF_SAMPLES;
+    pTxLinkedListDesc[1].DMAC_DESCADDR   = (uint32_t)&pTxLinkedListDesc[0];
+    pTxLinkedListDesc[1].DMAC_DSTADDR    = (uint32_t)&DAC_REGS->DAC_DATA;
+    pTxLinkedListDesc[1].DMAC_SRCADDR    = (uint32_t)sine_wave + sizeof(sine_wave);
 
 }
 
