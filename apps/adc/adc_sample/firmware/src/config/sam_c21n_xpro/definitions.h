@@ -49,16 +49,16 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "peripheral/evsys/plib_evsys.h"
+#include "peripheral/adc/plib_adc0.h"
 #include "peripheral/port/plib_port.h"
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/systick/plib_systick.h"
-#include "peripheral/adc/plib_adc0.h"
-#include "peripheral/dac/plib_dac.h"
-#include "peripheral/eic/plib_eic.h"
-#include "peripheral/evsys/plib_evsys.h"
 #include "peripheral/sercom/usart/plib_sercom4_usart.h"
 #include "peripheral/supc/plib_supc.h"
+#include "peripheral/eic/plib_eic.h"
+#include "peripheral/dac/plib_dac.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

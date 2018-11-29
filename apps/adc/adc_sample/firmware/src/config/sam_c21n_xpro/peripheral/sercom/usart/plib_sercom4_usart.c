@@ -47,8 +47,6 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include "plib_sercom4_usart.h"
 
@@ -61,12 +59,9 @@
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Interface Routines
+// Section: SERCOM4 USART Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-this interface.
-*/
 
 void SERCOM4_USART_Initialize( void )
 {
@@ -80,7 +75,7 @@ void SERCOM4_USART_Initialize( void )
      * Configures Parity
      * Configures Stop bits
      */
-    SERCOM4_REGS->USART_INT.SERCOM_CTRLA = SERCOM_USART_INT_CTRLA_MODE_USART_INT_CLK | SERCOM_USART_INT_CTRLA_RXPO_PAD3 | SERCOM_USART_INT_CTRLA_TXPO_PAD2 | SERCOM_USART_INT_CTRLA_DORD_Msk | SERCOM_USART_INT_CTRLA_SAMPR(0) | SERCOM_USART_INT_CTRLA_IBON_Msk | SERCOM_USART_INT_CTRLA_FORM(0x0) ;
+    SERCOM4_REGS->USART_INT.SERCOM_CTRLA = SERCOM_USART_INT_CTRLA_MODE_USART_INT_CLK | SERCOM_USART_INT_CTRLA_RXPO_PAD3 | SERCOM_USART_INT_CTRLA_TXPO_PAD2 | SERCOM_USART_INT_CTRLA_DORD_Msk | SERCOM_USART_INT_CTRLA_IBON_Msk | SERCOM_USART_INT_CTRLA_FORM(0x0) | SERCOM_USART_INT_CTRLA_SAMPR(0) ;
 
     /* Configure Baud Rate */
     SERCOM4_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(63019);
@@ -148,13 +143,13 @@ bool SERCOM4_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFr
             /* Configure Parity Options */
             if(serialSetup->parity == USART_PARITY_NONE)
             {
-                SERCOM4_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_SAMPR(sampleRate) | SERCOM_USART_INT_CTRLA_FORM(0x0);
+                SERCOM4_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x0)  | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
 
                 SERCOM4_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->stopBits;
             }
             else
             {
-                SERCOM4_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_SAMPR(sampleRate) | SERCOM_USART_INT_CTRLA_FORM(0x1);
+                SERCOM4_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x1)  | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
 
                 SERCOM4_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->parity | serialSetup->stopBits;
             }
