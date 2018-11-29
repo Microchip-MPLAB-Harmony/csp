@@ -181,7 +181,11 @@ void SYS_Tasks ( void );
 
 typedef struct
 {
+<#if LIST_SYSTEM_DEFINITIONS_H_OBJECTS?length gt 0>
 ${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
+<#else>
+    char RESERVED;
+</#if>
 } SYSTEM_OBJECTS;
 
     <#else>
