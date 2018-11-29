@@ -43,16 +43,16 @@
           <Name dnOrder="1">main_d21.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F81A00E640818EDFB9E79C9BD241AEF4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F81A00E640818EDFB9E79C9BD241AEF4</UserChecksum>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_d21_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5A2F2078E78DB44D46A8670DC4A7A944</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5A2F2078E78DB44D46A8670DC4A7A944</UserChecksum>
+          <GeneratedChecksum dnOrder="4">49B2F1F39E1458287972C036523800EC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">49B2F1F39E1458287972C036523800EC</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
