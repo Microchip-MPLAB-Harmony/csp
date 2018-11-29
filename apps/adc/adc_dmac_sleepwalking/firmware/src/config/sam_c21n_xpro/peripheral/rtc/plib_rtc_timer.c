@@ -55,10 +55,10 @@ void RTC_Initialize(void)
         /* Wait for Synchronization after Software Reset */
     }
 
-        RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_MODE(0) | RTC_MODE0_CTRLA_PRESCALER(0x1) | RTC_MODE0_CTRLA_COUNTSYNC_Msk |RTC_MODE0_CTRLA_MATCHCLR_Msk;
+    RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_MODE(0) | RTC_MODE0_CTRLA_PRESCALER(0x1) | RTC_MODE0_CTRLA_COUNTSYNC_Msk |RTC_MODE0_CTRLA_MATCHCLR_Msk;
 
+    RTC_REGS->MODE0.RTC_COMP = 0x100;
 
-        RTC_REGS->MODE0.RTC_COMP = 0x100;
 RTC_REGS->MODE0.RTC_EVCTRL = 0x100;
 }
 
@@ -85,6 +85,7 @@ bool RTC_Timer32CompareHasMatched(void)
    if((RTC_REGS->MODE0.RTC_INTFLAG & RTC_MODE0_INTFLAG_CMP0_Msk) == RTC_MODE0_INTFLAG_CMP0_Msk)
    {
        status = true;
+
        RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_CMP0_Msk;
    }
 
@@ -98,6 +99,7 @@ bool RTC_Timer32CounterHasOverflowed ( void )
    if((RTC_REGS->MODE0.RTC_INTFLAG & RTC_MODE0_INTFLAG_OVF_Msk) == RTC_MODE0_INTFLAG_OVF_Msk)
    {
        status = true;
+
        RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_OVF_Msk;
    }
 
@@ -108,7 +110,7 @@ bool RTC_Timer32CounterHasOverflowed ( void )
 void RTC_Timer32Start ( void )
 {
     RTC_REGS->MODE0.RTC_CTRLA |= RTC_MODE0_CTRLA_ENABLE_Msk;
-        
+
     while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_ENABLE_Msk) == RTC_MODE0_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for synchronization after Enabling RTC */
@@ -153,8 +155,8 @@ uint32_t RTC_Timer32CounterGet ( void )
     {
         /* Wait for Synchronization before reading value from Count Register */
     }
-        
-    return(RTC_REGS->MODE0.RTC_COUNT);
+
+    return(RTC_REGS->MODE0.RTC_COUNT + 3);
 }
 
 uint32_t RTC_Timer32PeriodGet ( void )

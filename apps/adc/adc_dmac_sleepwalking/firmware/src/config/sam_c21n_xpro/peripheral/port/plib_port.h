@@ -66,6 +66,15 @@
 // *****************************************************************************
 
 
+/*** Macros for LED pin ***/
+#define LED_Set()               (PORT_REGS->GROUP[2].PORT_OUTSET = 1 << 5)
+#define LED_Clear()             (PORT_REGS->GROUP[2].PORT_OUTCLR = 1 << 5)
+#define LED_Toggle()            (PORT_REGS->GROUP[2].PORT_OUTTGL = 1 << 5)
+#define LED_Get()               (((PORT_REGS->GROUP[2].PORT_IN >> 5)) & 0x01)
+#define LED_OutputEnable()      (PORT_REGS->GROUP[2].PORT_DIRSET = 1 << 5)
+#define LED_InputEnable()       (PORT_REGS->GROUP[2].PORT_DIRCLR = 1 << 5)
+#define LED_PIN                  PORT_PIN_PC05
+
 
 
 // *****************************************************************************

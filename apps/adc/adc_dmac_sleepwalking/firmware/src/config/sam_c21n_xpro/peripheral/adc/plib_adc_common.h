@@ -154,10 +154,19 @@ typedef enum
     ADC_NEGINPUT_GND = ADC_INPUTCTRL_MUXNEG(0x18u),
 
 } ADC_NEGINPUT;
+
+
+typedef enum
+{
+    ADC_STATUS_RESRDY = ADC_INTFLAG_RESRDY_Msk, 
+    ADC_STATUS_WINMON = ADC_INTFLAG_WINMON_Msk, 
+    /* Force compiler to reserve 32-bit for this enum */
+    ADC_STATUS_INVALID = 0xFFFFFFFF
+}ADC_STATUS;
 // *****************************************************************************
 
 
-typedef void (*ADC_CALLBACK)(uintptr_t context);
+typedef void (*ADC_CALLBACK)(ADC_STATUS status, uintptr_t context);
 
 
 typedef struct
