@@ -100,11 +100,11 @@ void ADC0_ConversionStart( void );
 
 uint16_t ADC0_ConversionResultGet( void );
 
-bool ADC0_ConversionStatusGet( void );
 
 bool ADC0_ConversionSequenceIsFinished(void);
 
-void ADC0_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold);
+bool ADC0_ConversionStatusGet( void );
+
 
 
 
