@@ -47,14 +47,20 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include "plib_${SERCOM_INSTANCE_NAME?lower_case}_i2c.h"
-#include "device.h"
-<#if !(SERCOM_DEVICE_NAME?contains("SAMD20"))>
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Global Data
+// *****************************************************************************
+// *****************************************************************************
+
+<#if I2C_ADDR_TENBITEN = true>
 #define RIGHT_ALIGNED (8U)
+
 #define TEN_BIT_ADDR_MASK (0x78U)
+
 </#if>
 static SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
 
@@ -86,11 +92,11 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB = SERCOM_I2CM_CTRLB_SMEN_Msk;
 
     /* Wait for synchronization */
-    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
     <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-    </#if>    
+    </#if>
 
     /* Baud rate - Master Baud Rate*/
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(${I2CM_BAUD});
@@ -98,28 +104,28 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
     /* Set Operation Mode (Master), SDA Hold time, run in stand by and i2c master enable */
     <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA = SERCOM_I2CM_CTRLA_MODE_I2C_MASTER |
                                                                                   SERCOM_I2CM_CTRLA_SDAHOLD_${I2C_SDAHOLD_TIME} |
-                                                                                  ${(SERCOM_DEVICE_NAME?contains("SAMD20"))?then('', ' SERCOM_I2CM_CTRLA_SPEED_${I2CM_MODE} |')}
+                                                                                  <#if I2CM_MODE??>SERCOM_I2CM_CTRLA_SPEED_${I2CM_MODE} |</#if>
                                                                                   SERCOM_I2CM_CTRLA_ENABLE_Msk
                                                                                   ${I2C_RUNSTDBY?then(' | SERCOM_I2CM_CTRLA_RUNSTDBY_Msk','')};</@compress>
 
     /* Wait for synchronization */
-    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
     <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-    </#if>    
+    </#if>
 
     /* Initial Bus State: IDLE */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS = SERCOM_I2CM_STATUS_BUSSTATE(0x01);
 
     /* Wait for synchronization */
-    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
     <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-    </#if>    
+    </#if>
 
-    // Initialize the sercom PLib Object
+    /* Initialize the sercom PLib Object */
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_IDLE;
 
@@ -142,7 +148,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
 
 static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateRead(uint16_t address)
 {
-    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    <#if I2C_ADDR_TENBITEN = false>
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
 
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
@@ -165,12 +171,13 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateRead(uint16_t address)
        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
     }
     </#if>
+
     /* Wait for synchronization */
-    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
     <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-    </#if>    
+    </#if>
 }
 
 // *****************************************************************************
@@ -224,26 +231,25 @@ void ${SERCOM_INSTANCE_NAME}_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback, 
 static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool type)
 {
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount = 0;
-
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount = 0;
 
     /* Clear all flags */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
 
-    /*Smart mode enabled - ACK is set to send while receiving the data*/
+    /* Smart mode enabled - ACK is set to send while receiving the data */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB &= ~SERCOM_I2CM_CTRLB_ACKACT_Msk;
 
     /* Wait for synchronization */
-    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
     <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-    </#if>    
+    </#if>
 
     /* Reset Error Information */
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
-    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    <#if I2C_ADDR_TENBITEN = false>
     if(type)
     {
         ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
@@ -257,7 +263,7 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool 
 
         /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 0*/
         ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE;
-    }  
+    }
     <#else>
     /* Check for 10-bit address */
     if(address > 0x007F)
@@ -298,13 +304,12 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool 
     </#if>
 
     /* Wait for synchronization */
-    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+    <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
     <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-    </#if>    
+    </#if>
 }
-
 
 // *****************************************************************************
 /* Function:
@@ -330,17 +335,17 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool 
 
 bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint32_t length)
 {
-    // Check for ongoing transfer
-    if( ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE )
+    /* Check for ongoing transfer */
+    if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE)
     {
         return false;
     }
 
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address=address;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer=pdata;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize=length;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address = address;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer = pdata;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize = length;
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer = NULL;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize=0;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize = 0;
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
     ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(address, true);
@@ -372,17 +377,17 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint32_t
 
 bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata, uint32_t length)
 {
-    // Check for ongoing transfer
-    if( ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE )
+    /* Check for ongoing transfer */
+    if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE)
     {
         return false;
     }
 
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address=address;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer=NULL;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize=0;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer=pdata;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize=length;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address = address;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer = NULL;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize = 0;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer = pdata;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize = length;
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
     ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(address, false);
@@ -416,22 +421,22 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata, uint32_
 
 bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint32_t wlength, uint8_t *rdata, uint32_t rlength)
 {
-    // Check for ongoing transfer
-    if( ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE )
+    /* Check for ongoing transfer */
+    if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE)
     {
         return false;
     }
 
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address=address;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer=rdata;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize=rlength;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer=wdata;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize=wlength;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address = address;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer = rdata;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize = rlength;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer = wdata;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize = wlength;
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
     ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(address, false);
 
-     return true;
+    return true;
 }
 
 // *****************************************************************************
@@ -547,12 +552,12 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                 {
                     if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize != 0)
                     {
-                        // Initiate Write transfer
+                        /* Initiate Write transfer */
                         ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address, false);
                     }
                     else
                     {
-                        // Initiate Read transfer
+                        /* Initiate Read transfer */
                         ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address, true);
                     }
 
@@ -563,22 +568,22 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                 {
                     break;
                 }
-                <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
-                <#else>    
+                <#if I2C_ADDR_TENBITEN = true>
                 case SERCOM_I2C_STATE_ADDR_SEND:
                 {
                     /*
-                    * Write ADDR[7:0] register to "11110 address[9:8] 1"
-                    * ADDR.TENBITEN must be cleared
-                    */
+                     * Write ADDR[7:0] register to "11110 address[9:8] 1"
+                     * ADDR.TENBITEN must be cleared
+                     */
                     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address >> RIGHT_ALIGNED) | TEN_BIT_ADDR_MASK) << 1) | I2C_TRANSFER_READ;
 
                     /* Wait for synchronization */
-                    <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+                    <#if SERCOM_SYNCBUSY = false>
                     while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
                     <#else>
                     while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
                     </#if>
+
                     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
 
                     break;
@@ -597,15 +602,16 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_CMD(3);
 
                             /* Wait for synchronization */
-                            <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+                            <#if SERCOM_SYNCBUSY = false>
                             while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
                             <#else>
                             while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-                            </#if>    
+                            </#if>
+
                             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_DONE;
                         }
                     }
-                    // Write next byte
+                    /* Write next byte */
                     else
                     {
                         ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount++];
@@ -621,11 +627,11 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                         ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_ACKACT_Msk | SERCOM_I2CM_CTRLB_CMD(3);
 
                         /* Wait for synchronization */
-                        <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+                        <#if SERCOM_SYNCBUSY = false>
                         while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
                         <#else>
                         while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-                        </#if>    
+                        </#if>
 
                         ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_DONE;
                     }
@@ -647,12 +653,13 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
         {
             /* Reset the PLib objects and Interrupts */
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_IDLE;
+
             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
+
             if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback != NULL)
             {
                 ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.context);
             }
-
         }
         /* Transfer Complete */
         else if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state == SERCOM_I2C_STATE_TRANSFER_DONE)
@@ -660,7 +667,9 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
             /* Reset the PLib objects and interrupts */
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_IDLE;
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
+
             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
+
             if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback != NULL)
             {
                 ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.context);

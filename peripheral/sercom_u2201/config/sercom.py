@@ -54,10 +54,10 @@ def getUSARTBaudValue(clk, baud):
     sampleCount = 0
     sampleRate = 0
 
-    if "SAMD20" in sercomSym_DeviceName.getValue():
-        # Sample Rate is not supported in SAMD20
+    if sampleRateSupported == False:
         if clk >= (16 * baud):
-            sampleCount = 16
+            baudValue = int(65536 * (1 - float("{0:.15f}".format(float(16 * baud) / clk))))
+            return baudValue
         else:
             return baudValue
     else:
@@ -73,11 +73,11 @@ def getUSARTBaudValue(clk, baud):
         else:
             return baudValue
 
-    baudValue =  int(65536 * (1 - float("{0:.15f}".format(float(sampleCount * baud) / clk))))
+    baudValue = int(65536 * (1 - float("{0:.15f}".format(float(sampleCount * baud) / clk))))
 
     if baudValue != 0:
-        usartSym_SAMPLE_COUNT.setValue(sampleCount, 2)
-        usartSym_CTRLA_SAMPR.setValue(sampleRate, 2)
+        usartSym_SAMPLE_COUNT.setValue(sampleCount, 1)
+        usartSym_CTRLA_SAMPR.setValue(sampleRate, 1)
 
     return baudValue
 
@@ -186,13 +186,18 @@ def updateSERCOMCodeGenerationProperty(symbol, event):
 
 def setSERCOMInterruptData(status, sercomMode):
 
-    Database.setSymbolValue("core", InterruptVector, status, 2)
-    Database.setSymbolValue("core", InterruptHandlerLock, status, 2)
+    for id in InterruptVector:
+        Database.setSymbolValue("core", id, status, 1)
 
-    if status == True:
-        Database.setSymbolValue("core", InterruptHandler, sercomInstanceName.getValue() + "_" + sercomMode + "_InterruptHandler", 2)
-    else:
-        Database.setSymbolValue("core", InterruptHandler, sercomInstanceName.getValue() + "_Handler", 2)
+    for id in InterruptHandlerLock:
+        Database.setSymbolValue("core", id, status, 1)
+
+    for id in InterruptHandler:
+        interruptName = id.split("_INTERRUPT_HANDLER")[0]
+        if status == True:
+            Database.setSymbolValue("core", id, sercomInstanceName.getValue() + "_" + sercomMode + "_InterruptHandler", 1)
+        else:
+            Database.setSymbolValue("core", id, interruptName + "_Handler", 1)
 
 def updateSERCOMInterruptStatus(symbol, event):
 
@@ -200,6 +205,7 @@ def updateSERCOMInterruptStatus(symbol, event):
     global spiSym_Interrupt_Mode
     global usartSym_Interrupt_Mode
     global sercomSym_OperationMode
+    global sercomSym_IntEnComment
 
     sercomMode = ""
 
@@ -237,6 +243,9 @@ def updateSERCOMInterruptStatus(symbol, event):
             sercomMode = "SPI"
 
         setSERCOMInterruptData(event["value"], sercomMode)
+
+        if event["value"] == False:
+            sercomSym_IntEnComment.setVisible(False)
 
 def updateSERCOMInterruptWarningStatus(symbol, event):
 
@@ -284,11 +293,11 @@ def updateSERCOMDMATransferRegister(symbol, event):
         # To be implemented
         pass
     else:
-        symbol.setValue("", 2)
+        symbol.setValue("", 1)
 
 def updateSERCOMClockFrequencyValueProperty(symbol, event):
 
-    symbol.setValue(int(event["value"]), 2)
+    symbol.setValue(int(event["value"]), 1)
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -303,8 +312,13 @@ def instantiateComponent(sercomComponent):
     global InterruptHandler
     global InterruptHandlerLock
     global sercomInstanceName
-    global sercomSym_DeviceName
     global sercomSym_OperationMode
+    global sercomSym_IntEnComment
+
+    InterruptVector = []
+    InterruptHandler = []
+    InterruptHandlerLock = []
+    InterruptVectorUpdate = []
 
     sercomInstanceName = sercomComponent.createStringSymbol("SERCOM_INSTANCE_NAME", None)
     sercomInstanceName.setVisible(False)
@@ -315,11 +329,6 @@ def instantiateComponent(sercomComponent):
     uartCapabilityId = sercomInstanceName.getValue() + "_UART"
     spiCapabilityId = sercomInstanceName.getValue() + "_SPI"
     i2cCapabilityId = sercomInstanceName.getValue() + "_I2C"
-
-    #Device name
-    sercomSym_DeviceName = sercomComponent.createStringSymbol("SERCOM_DEVICE_NAME", None)
-    sercomSym_DeviceName.setVisible(False)
-    sercomSym_DeviceName.setDefaultValue(Variables.get("__PROCESSOR"))
 
     #Clock enable
     Database.setSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_ENABLE", True, 2)
@@ -355,11 +364,18 @@ def instantiateComponent(sercomComponent):
     sercomClkFrequency = int(Database.getSymbolValue("core", sercomClkFrequencyId))
 
     #SERCOM Clock Frequency
-    sercomSym_ClockFrequency = sercomComponent.createIntegerSymbol("SERCOM_CLOCK_FREQUENCY", None)
+    sercomSym_ClockFrequency = sercomComponent.createIntegerSymbol("SERCOM_CLOCK_FREQUENCY", sercomSym_OperationMode)
     sercomSym_ClockFrequency.setLabel(sercomInstanceName.getValue() + " Clock Frequency")
     sercomSym_ClockFrequency.setDefaultValue(sercomClkFrequency)
     sercomSym_ClockFrequency.setVisible(False)
     sercomSym_ClockFrequency.setDependencies(updateSERCOMClockFrequencyValueProperty, ["core." + sercomClkFrequencyId])
+
+    syncbusyNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="SYNCBUSY"]')
+
+    #SERCOM is SYNCBUSY present
+    sercomSym_SYNCBUSY = sercomComponent.createBooleanSymbol("SERCOM_SYNCBUSY", sercomSym_OperationMode)
+    sercomSym_SYNCBUSY.setVisible(False)
+    sercomSym_SYNCBUSY.setDefaultValue((syncbusyNode != None))
 
     ###################################################################################################
     ########################################## SERCOM MODE ############################################
@@ -376,10 +392,15 @@ def instantiateComponent(sercomComponent):
     #### Dependency ####
     ############################################################################
 
-    InterruptVector = sercomInstanceName.getValue() + "_INTERRUPT_ENABLE"
-    InterruptHandler = sercomInstanceName.getValue() + "_INTERRUPT_HANDLER"
-    InterruptHandlerLock = sercomInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = sercomInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    interruptValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+
+    for index in range(0, len(interruptValues)):
+        if interruptValues[index].getAttribute("module-instance") == sercomInstanceName.getValue():
+            name = str(interruptValues[index].getAttribute("name"))
+            InterruptVector.append(name + "_INTERRUPT_ENABLE")
+            InterruptHandler.append(name + "_INTERRUPT_HANDLER")
+            InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
+            InterruptVectorUpdate.append("core." + name + "_INTERRUPT_ENABLE_UPDATE")
 
     # Initial settings for Interrupt
     setSERCOMInterruptData(True, "USART")
@@ -393,7 +414,7 @@ def instantiateComponent(sercomComponent):
     sercomSym_IntEnComment = sercomComponent.createCommentSymbol("SERCOM_INTERRUPT_ENABLE_COMMENT", None)
     sercomSym_IntEnComment.setVisible(False)
     sercomSym_IntEnComment.setLabel("Warning!!! " + sercomInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptWarningStatus, ["core." + InterruptVectorUpdate])
+    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptWarningStatus, InterruptVectorUpdate)
 
     # Clock Warning status
     sercomSym_ClkEnComment = sercomComponent.createCommentSymbol("SERCOM_CLOCK_ENABLE_COMMENT", None)

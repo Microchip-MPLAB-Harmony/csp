@@ -84,7 +84,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
                                                                                        SERCOM_USART_INT_CTRLA_DORD_Msk |
                                                                                        SERCOM_USART_INT_CTRLA_IBON_Msk |
                                                                                        SERCOM_USART_INT_CTRLA_FORM(${(USART_PARITY_MODE == "NONE")?then('0x0', '0x1')})
-                                                                                       ${(SERCOM_DEVICE_NAME?contains("SAMD20"))?then('', ' | SERCOM_USART_INT_CTRLA_SAMPR(${USART_SAMPLE_RATE})')}
+                                                                                       <#if USART_SAMPLE_RATE??>| SERCOM_USART_INT_CTRLA_SAMPR(${USART_SAMPLE_RATE})</#if>
                                                                                        ${USART_RUNSTDBY?then('| SERCOM_USART_INT_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 
     /* Configure Baud Rate */
@@ -104,7 +104,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
                                                                                        ${USART_TX_ENABLE?then('| SERCOM_USART_INT_CTRLB_TXEN_Msk', '')};</@compress>
 
     /* Wait for sync */
-<#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+<#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
 <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY);
@@ -114,13 +114,13 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
     ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
 
     /* Wait for sync */
-<#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+<#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
 <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY);
 </#if>
-
 <#if USART_INTERRUPT_MODE = true>
+
     /* Initialize instance object */
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer = NULL;
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0;
@@ -135,13 +135,18 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
 </#if>
 }
 
+uint32_t ${SERCOM_INSTANCE_NAME}_USART_FrequencyGet( void )
+{
+    return (uint32_t) (${SERCOM_CLOCK_FREQUENCY}UL);
+}
+
 bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency )
 {
     bool setupStatus       = false;
-<#if !(SERCOM_DEVICE_NAME?contains("SAMD20"))>
+    uint32_t baudValue     = 0;
+<#if USART_SAMPLE_RATE??>
     uint32_t sampleRate    = 0;
 </#if>
-    uint32_t baudValue     = 0;
 
 <#if USART_INTERRUPT_MODE == true>
     if((${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus == true) || (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus == true))
@@ -158,12 +163,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
             clkFrequency = ${SERCOM_INSTANCE_NAME}_USART_FrequencyGet();
         }
 
-        <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
-        if(clkFrequency >= (16 * serialSetup->baudRate))
-        {
-            baudValue = 65536 - ((uint64_t)65536 * 16 * serialSetup->baudRate) / clkFrequency;
-        }
-        <#else>
+        <#if USART_SAMPLE_RATE??>
         if(clkFrequency >= (16 * serialSetup->baudRate))
         {
             baudValue = 65536 - ((uint64_t)65536 * 16 * serialSetup->baudRate) / clkFrequency;
@@ -179,6 +179,11 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
             baudValue = 65536 - ((uint64_t)65536 * 3 * serialSetup->baudRate) / clkFrequency;
             sampleRate = 4;
         }
+        <#else>
+        if(clkFrequency >= (16 * serialSetup->baudRate))
+        {
+            baudValue = 65536 - ((uint64_t)65536 * 16 * serialSetup->baudRate) / clkFrequency;
+        }
         </#if>
 
         if(baudValue != 0)
@@ -187,7 +192,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA &= ~SERCOM_USART_INT_CTRLA_ENABLE_Msk;
 
             /* Wait for sync */
-            <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+            <#if SERCOM_SYNCBUSY = false>
             while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
             <#else>
             while(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY);
@@ -199,19 +204,19 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
             /* Configure Parity Options */
             if(serialSetup->parity == USART_PARITY_NONE)
             {
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x0) ${(SERCOM_DEVICE_NAME?contains("SAMD20"))?then('', ' | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate)')};
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x0) <#if USART_SAMPLE_RATE??>| SERCOM_USART_INT_CTRLA_SAMPR(sampleRate)</#if>;
 
                 ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->stopBits;
             }
             else
             {
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x1) ${(SERCOM_DEVICE_NAME?contains("SAMD20"))?then('', ' | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate)')};
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x1) <#if USART_SAMPLE_RATE??>| SERCOM_USART_INT_CTRLA_SAMPR(sampleRate)</#if>;
 
                 ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->parity | serialSetup->stopBits;
             }
 
             /* Wait for sync */
-            <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+            <#if SERCOM_SYNCBUSY = false>
             while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
             <#else>
             while(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY);
@@ -221,7 +226,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
 
             /* Wait for sync */
-            <#if SERCOM_DEVICE_NAME?contains("SAMD20")>
+            <#if SERCOM_SYNCBUSY = false>
             while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
             <#else>
             while(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY);
@@ -249,10 +254,8 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
         /* Blocks while buffer is being transferred */
         while(u32Length--)
         {
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk)
-            {
-                /* Check if USART is ready for new data */
-            }
+            /* Check if USART is ready for new data */
+            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk);
 
             /* Write data to USART module */
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = *pu8Data++;
@@ -291,7 +294,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 }
 
 <#if USART_INTERRUPT_MODE = true>
-bool ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy ( void )
+bool ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy( void )
 {
     return ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus;
 }
@@ -322,10 +325,8 @@ bool ${SERCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void )
 
 void ${SERCOM_INSTANCE_NAME}_USART_WriteByte( int data )
 {
-    while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk)
-    {
-        /* Check if USART is ready for new data */
-    }
+    /* Check if USART is ready for new data */
+    while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk);
 
     ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = data;
 }
@@ -349,7 +350,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
         /* Checks for error before receiving */
         if(${SERCOM_INSTANCE_NAME}_USART_ErrorGet() != USART_ERROR_NONE)
         {
-            <#if !(SERCOM_DEVICE_NAME?contains("SAMD20"))>
+            <#if USART_INTENSET_ERROR = true>
             /* Clear all error flags */
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG = SERCOM_USART_INT_INTFLAG_ERROR_Msk;
 
@@ -369,10 +370,8 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 
         while(u32Length--)
         {
-            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) != SERCOM_USART_INT_INTFLAG_RXC_Msk)
-            {
-                /* Check if USART has new data */
-            }
+            /* Check if USART has new data */
+            while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) != SERCOM_USART_INT_INTFLAG_RXC_Msk);
 
             /* Read data from USART module */
             *pu8Data++ = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
@@ -394,7 +393,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             /* Checks for error before receiving */
             if(${SERCOM_INSTANCE_NAME}_USART_ErrorGet() != USART_ERROR_NONE)
             {
-                <#if !(SERCOM_DEVICE_NAME?contains("SAMD20"))>
+                <#if USART_INTENSET_ERROR = true>
                 /* Clear all error flags */
                 ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG = SERCOM_USART_INT_INTFLAG_ERROR_Msk;
 
@@ -418,9 +417,9 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = true;
             readStatus = true;
 
-            <#if !(SERCOM_DEVICE_NAME?contains("SAMD20"))>
+            <#if USART_INTENSET_ERROR = true>
             /* Enable error interrupts */
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET |= SERCOM_USART_INT_INTENSET_ERROR_Msk;
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTENSET_ERROR_Msk;
 
             </#if>
             /* Enable Receive Complete interrupt */
@@ -482,7 +481,7 @@ USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 }
 
 <#if USART_INTERRUPT_MODE = true>
-<#if !(SERCOM_DEVICE_NAME?contains("SAMD20"))>
+<#if USART_INTENSET_ERROR = true>
 void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 {
     USART_ERROR errorStatus = USART_ERROR_NONE;
@@ -516,8 +515,8 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
         }
     }
 }
-</#if>
 
+</#if>
 <#if USART_RX_ENABLE = true>
 void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
@@ -541,8 +540,8 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
         }
     }
 }
-</#if>
 
+</#if>
 <#if USART_TX_ENABLE = true>
 void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
@@ -583,7 +582,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
         {
             ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
         }
-        <#if !(SERCOM_DEVICE_NAME?contains("SAMD20"))>
+        <#if USART_INTENSET_ERROR = true>
 
         /* Checks for error flag */
         if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_ERROR_Msk) == SERCOM_USART_INT_INTFLAG_ERROR_Msk)
