@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_d21_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3E625114B61C222F2ADB660F46E9E52E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3E625114B61C222F2ADB660F46E9E52E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">76FF405CE2C7548C1C0E8A1EAEF2CF3E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">76FF405CE2C7548C1C0E8A1EAEF2CF3E</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -491,7 +491,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
