@@ -48,11 +48,11 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "peripheral/evsys/plib_evsys.h"
 #include "peripheral/port/plib_port.h"
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/dmac/plib_dmac.h"
-#include "peripheral/evsys/plib_evsys.h"
 #include "peripheral/sercom/spim/plib_sercom5_spi.h"
 
 // DOM-IGNORE-BEGIN
