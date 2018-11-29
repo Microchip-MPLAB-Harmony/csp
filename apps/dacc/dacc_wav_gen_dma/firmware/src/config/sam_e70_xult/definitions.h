@@ -53,7 +53,7 @@
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/xdmac/plib_xdmac.h"
 #include "peripheral/dacc/plib_dacc.h"
-#include "peripheral/tc/plib_TC0.h"
+#include "peripheral/tc/plib_tc0.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
