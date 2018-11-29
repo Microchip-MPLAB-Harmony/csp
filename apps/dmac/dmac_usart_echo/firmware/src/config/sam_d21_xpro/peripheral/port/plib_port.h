@@ -67,13 +67,13 @@
 
 
 /*** Macros for LED pin ***/
-#define LED_Set()               (PORT_REGS->GROUP[0].PORT_OUTSET = 1 << 30)
-#define LED_Clear()             (PORT_REGS->GROUP[0].PORT_OUTCLR = 1 << 30)
-#define LED_Toggle()            (PORT_REGS->GROUP[0].PORT_OUTTGL = 1 << 30)
-#define LED_Get()               (((PORT_REGS->GROUP[0].PORT_IN >> 30)) & 0x01)
-#define LED_OutputEnable()      (PORT_REGS->GROUP[0].PORT_DIRSET = 1 << 30)
-#define LED_InputEnable()       (PORT_REGS->GROUP[0].PORT_DIRCLR = 1 << 30)
-#define LED_PIN                  PORT_PIN_PA30
+#define LED_Set()               (PORT_REGS->GROUP[1].PORT_OUTSET = 1 << 30)
+#define LED_Clear()             (PORT_REGS->GROUP[1].PORT_OUTCLR = 1 << 30)
+#define LED_Toggle()            (PORT_REGS->GROUP[1].PORT_OUTTGL = 1 << 30)
+#define LED_Get()               (((PORT_REGS->GROUP[1].PORT_IN >> 30)) & 0x01)
+#define LED_OutputEnable()      (PORT_REGS->GROUP[1].PORT_DIRSET = 1 << 30)
+#define LED_InputEnable()       (PORT_REGS->GROUP[1].PORT_DIRCLR = 1 << 30)
+#define LED_PIN                  PORT_PIN_PB30
 
 
 
