@@ -54,11 +54,9 @@
 #include <string.h>
 #include "definitions.h"                // SYS function prototypes
 
-uintptr_t rtc_context;
+
 uintptr_t adc_context;
-ADC_STATUS adc_app_status;
 volatile uint16_t adc_result = 0;
-volatile bool adc_conv_done = false;
 volatile bool adc_window_det = false;
 
 void adc0_cb(ADC_STATUS adc_app_status, uintptr_t context )
@@ -79,8 +77,11 @@ int main ( void )
     RTC_Timer32Start();
     RTC_Timer32CompareSet(1500);
     
-    printf("\r\nADC SleepWalking example\r\n");
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                    ADC Window Sleepwalking Demo                 ");
+    printf("\n\r---------------------------------------------------------\n\r");
     printf("\r\nApply test voltage on PB08 - AIN[2]\r\n");
+    
     ADC_Enable();
     ADC_CallbackRegister(adc0_cb, adc_context);
 
