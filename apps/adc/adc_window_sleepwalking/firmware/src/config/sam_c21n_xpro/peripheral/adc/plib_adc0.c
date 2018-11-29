@@ -184,12 +184,10 @@ void ADC0_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
 {
     ADC0_REGS->ADC_WINLT = low_threshold;
     ADC0_REGS->ADC_WINUT = high_threshold;
-}
-
-/* Check whether result is ready */
-bool ADC0_ConversionStatusGet( void )
-{
-    return (bool)((ADC0_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+    while((ADC0_REGS->ADC_SYNCBUSY))
+    {
+        /* Wait for Synchronization */
+    }
 }
 
 /* Read the conversion result */
@@ -209,11 +207,16 @@ void ADC0_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
 
 void ADC0_InterruptHandler( void )
 {
+    volatile ADC_STATUS status;
+    status = ADC0_REGS->ADC_INTFLAG;
+    /* Clear interrupt flag */
+    ADC0_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
     if (ADC0_CallbackObject.callback != NULL)
     {
-        ADC0_CallbackObject.callback(ADC0_CallbackObject.context);
+        ADC0_CallbackObject.callback(status, ADC0_CallbackObject.context);
     }
 }
+
 
 
 
