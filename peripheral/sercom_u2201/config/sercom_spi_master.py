@@ -184,16 +184,6 @@ spiSym_CTRLB_CHSIZE.setOutputMode("Key")
 spiSym_CTRLB_CHSIZE.setDisplayMode("Description")
 spiSym_CTRLB_CHSIZE.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-#SPI 8-bit Character size Mask
-spiSym_CTRLB_CHSIZE_8BIT = sercomComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", sercomSym_OperationMode)
-spiSym_CTRLB_CHSIZE_8BIT.setDefaultValue("0x0")
-spiSym_CTRLB_CHSIZE_8BIT.setVisible(False)
-
-#SPI 9-bit Character size Mask
-spiSym_CTRLB_CHSIZE_9BIT = sercomComponent.createStringSymbol("SPI_CHARSIZE_BITS_9_BIT_MASK", sercomSym_OperationMode)
-spiSym_CTRLB_CHSIZE_9BIT.setDefaultValue("0x1")
-spiSym_CTRLB_CHSIZE_9BIT.setVisible(False)
-
 #SPI Clock Phase
 spiSym_CTRLA_ClockPhase = sercomComponent.createKeyValueSetSymbol("SPI_CLOCK_PHASE", sercomSym_OperationMode)
 spiSym_CTRLA_ClockPhase.setLabel("SPI Clock Phase")
@@ -213,16 +203,6 @@ spiSym_CTRLA_ClockPhase.setDefaultValue(0)
 spiSym_CTRLA_ClockPhase.setOutputMode("Key")
 spiSym_CTRLA_ClockPhase.setDisplayMode("Description")
 spiSym_CTRLA_ClockPhase.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
-
-#SPI Clock Phase Trailing Edge Mask
-spiSym_CTRLA_CPHA_LE_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", sercomSym_OperationMode)
-spiSym_CTRLA_CPHA_LE_Mask.setDefaultValue("0x0")
-spiSym_CTRLA_CPHA_LE_Mask.setVisible(False)
-
-#SPI Clock Phase Leading Edge Mask
-spiSym_CTRLA_CPHA_TE_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", sercomSym_OperationMode)
-spiSym_CTRLA_CPHA_TE_Mask.setDefaultValue("0x10000000")
-spiSym_CTRLA_CPHA_TE_Mask.setVisible(False)
 
 #SPI Clock Polarity
 spiSym_CTRLA_ClockPolarity = sercomComponent.createKeyValueSetSymbol("SPI_CLOCK_POLARITY", sercomSym_OperationMode)
@@ -244,22 +224,18 @@ spiSym_CTRLA_ClockPolarity.setOutputMode("Key")
 spiSym_CTRLA_ClockPolarity.setDisplayMode("Description")
 spiSym_CTRLA_ClockPolarity.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-#SPI Clock Polarity Idle Low Mask
-spiSym_CTRLA_CPOL_IL_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", sercomSym_OperationMode)
-spiSym_CTRLA_CPOL_IL_Mask.setDefaultValue("0x0")
-spiSym_CTRLA_CPOL_IL_Mask.setVisible(False)
+mssenSupported = False
 
-#SPI Clock Polarity Idle High Mask
-spiSym_CTRLA_CPOL_IH_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_POLARITY_HIGH_MASK", sercomSym_OperationMode)
-spiSym_CTRLA_CPOL_IH_Mask.setDefaultValue("0x20000000")
-spiSym_CTRLA_CPOL_IH_Mask.setVisible(False)
+ctrlbNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="SPIM",name="CTRLB"]')
+ctrlbValue = ctrlbNode.getChildren()
 
-#SPI Status OVERRUN Mask
-spiSym_STATUS_BUFOVF_Mask = sercomComponent.createStringSymbol("SPI_STATUS_OVERRUN_MASK", sercomSym_OperationMode)
-spiSym_STATUS_BUFOVF_Mask.setDefaultValue("0x4")
-spiSym_STATUS_BUFOVF_Mask.setVisible(False)
+for index in range(len(ctrlbValue)):
+    bitFieldName = str(ctrlbValue[index].getAttribute("name"))
+    if bitFieldName == "MSSEN":
+        mssenSupported = True
+        break
 
-if "SAMD20" not in sercomSym_DeviceName.getValue():
+if mssenSupported == True:
     #SPI Hardware Slave Select control
     spiSym_CTRLB_MSSEN = sercomComponent.createBooleanSymbol("SPI_MSSEN", sercomSym_OperationMode)
     spiSym_CTRLB_MSSEN.setLabel("Enable SPI Master Hardware Slave Select")
@@ -272,11 +248,6 @@ spiSym_CTRLB_RXEN.setLabel("SPI Receiver Enable")
 spiSym_CTRLB_RXEN.setDefaultValue(True)
 spiSym_CTRLB_RXEN.setVisible(False)
 spiSym_CTRLB_RXEN.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
-
-#SPI API Prefix
-spiSym_API_Prefix = sercomComponent.createStringSymbol("SPI_PLIB_API_PREFIX", sercomSym_OperationMode)
-spiSym_API_Prefix.setDefaultValue(sercomInstanceName.getValue() + "_SPI")
-spiSym_API_Prefix.setVisible(False)
 
 # SPI Clock Mode
 spiSym_ClockModeComment = sercomComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", sercomSym_OperationMode)
@@ -300,3 +271,47 @@ spi_BAUDREG.setLabel("SPI Baud ")
 spi_BAUDREG.setDefaultValue(spidefaultvalue)
 spi_BAUDREG.setVisible(False)
 spi_BAUDREG.setDependencies(spibaudcalc, ["SERCOM_CLOCK_FREQUENCY", "SPI_BAUD_RATE"])
+
+###################################################################################################
+####################################### Driver Symbols ############################################
+###################################################################################################
+
+#SPI API Prefix
+spiSym_API_Prefix = sercomComponent.createStringSymbol("SPI_PLIB_API_PREFIX", sercomSym_OperationMode)
+spiSym_API_Prefix.setDefaultValue(sercomInstanceName.getValue() + "_SPI")
+spiSym_API_Prefix.setVisible(False)
+
+#SPI 8-bit Character size Mask
+spiSym_CTRLB_CHSIZE_8BIT = sercomComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", sercomSym_OperationMode)
+spiSym_CTRLB_CHSIZE_8BIT.setDefaultValue("0x0")
+spiSym_CTRLB_CHSIZE_8BIT.setVisible(False)
+
+#SPI 9-bit Character size Mask
+spiSym_CTRLB_CHSIZE_9BIT = sercomComponent.createStringSymbol("SPI_CHARSIZE_BITS_9_BIT_MASK", sercomSym_OperationMode)
+spiSym_CTRLB_CHSIZE_9BIT.setDefaultValue("0x1")
+spiSym_CTRLB_CHSIZE_9BIT.setVisible(False)
+
+#SPI Clock Phase Trailing Edge Mask
+spiSym_CTRLA_CPHA_LE_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", sercomSym_OperationMode)
+spiSym_CTRLA_CPHA_LE_Mask.setDefaultValue("0x0")
+spiSym_CTRLA_CPHA_LE_Mask.setVisible(False)
+
+#SPI Clock Phase Leading Edge Mask
+spiSym_CTRLA_CPHA_TE_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", sercomSym_OperationMode)
+spiSym_CTRLA_CPHA_TE_Mask.setDefaultValue("0x10000000")
+spiSym_CTRLA_CPHA_TE_Mask.setVisible(False)
+
+#SPI Clock Polarity Idle Low Mask
+spiSym_CTRLA_CPOL_IL_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", sercomSym_OperationMode)
+spiSym_CTRLA_CPOL_IL_Mask.setDefaultValue("0x0")
+spiSym_CTRLA_CPOL_IL_Mask.setVisible(False)
+
+#SPI Clock Polarity Idle High Mask
+spiSym_CTRLA_CPOL_IH_Mask = sercomComponent.createStringSymbol("SPI_CLOCK_POLARITY_HIGH_MASK", sercomSym_OperationMode)
+spiSym_CTRLA_CPOL_IH_Mask.setDefaultValue("0x20000000")
+spiSym_CTRLA_CPOL_IH_Mask.setVisible(False)
+
+#SPI Status OVERRUN Mask
+spiSym_STATUS_BUFOVF_Mask = sercomComponent.createStringSymbol("SPI_STATUS_OVERRUN_MASK", sercomSym_OperationMode)
+spiSym_STATUS_BUFOVF_Mask.setDefaultValue("0x4")
+spiSym_STATUS_BUFOVF_Mask.setVisible(False)

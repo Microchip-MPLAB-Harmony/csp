@@ -134,21 +134,6 @@ usartSym_CTRLB_PMODE.setOutputMode("Key")
 usartSym_CTRLB_PMODE.setDisplayMode("Description")
 usartSym_CTRLB_PMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-#USART EVEN Parity Mask
-usartSym_CTRLA_PMODE_EVEN_Mask = sercomComponent.createStringSymbol("USART_PARITY_EVEN_MASK", sercomSym_OperationMode)
-usartSym_CTRLA_PMODE_EVEN_Mask.setDefaultValue("0x0")
-usartSym_CTRLA_PMODE_EVEN_Mask.setVisible(False)
-
-#USART ODD Parity Mask
-usartSym_CTRLA_PMODE_ODD_Mask = sercomComponent.createStringSymbol("USART_PARITY_ODD_MASK", sercomSym_OperationMode)
-usartSym_CTRLA_PMODE_ODD_Mask.setDefaultValue("0x80000")
-usartSym_CTRLA_PMODE_ODD_Mask.setVisible(False)
-
-#USART NONE Parity Mask
-usartSym_Parity_NONE_Mask = sercomComponent.createStringSymbol("USART_PARITY_NONE_MASK", sercomSym_OperationMode)
-usartSym_Parity_NONE_Mask.setDefaultValue("0x2")
-usartSym_Parity_NONE_Mask.setVisible(False)
-
 #Character Size
 usartSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("USART_CHARSIZE_BITS", sercomSym_OperationMode)
 usartSym_CTRLB_CHSIZE.setLabel("Character Size")
@@ -167,31 +152,6 @@ usartSym_CTRLB_CHSIZE.setDefaultValue(0)
 usartSym_CTRLB_CHSIZE.setOutputMode("Key")
 usartSym_CTRLB_CHSIZE.setDisplayMode("Description")
 usartSym_CTRLB_CHSIZE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
-
-#USART Character Size 5 Mask
-usartSym_CTRLB_CHSIZE_5_Mask = sercomComponent.createStringSymbol("USART_DATA_5_BIT_MASK", sercomSym_OperationMode)
-usartSym_CTRLB_CHSIZE_5_Mask.setDefaultValue("0x5")
-usartSym_CTRLB_CHSIZE_5_Mask.setVisible(False)
-
-#USART Character Size 6 Mask
-usartSym_CTRLB_CHSIZE_6_Mask = sercomComponent.createStringSymbol("USART_DATA_6_BIT_MASK", sercomSym_OperationMode)
-usartSym_CTRLB_CHSIZE_6_Mask.setDefaultValue("0x6")
-usartSym_CTRLB_CHSIZE_6_Mask.setVisible(False)
-
-#USART Character Size 7 Mask
-usartSym_CTRLB_CHSIZE_7_Mask = sercomComponent.createStringSymbol("USART_DATA_7_BIT_MASK", sercomSym_OperationMode)
-usartSym_CTRLB_CHSIZE_7_Mask.setDefaultValue("0x7")
-usartSym_CTRLB_CHSIZE_7_Mask.setVisible(False)
-
-#USART Character Size 8 Mask
-usartSym_CTRLB_CHSIZE_8_Mask = sercomComponent.createStringSymbol("USART_DATA_8_BIT_MASK", sercomSym_OperationMode)
-usartSym_CTRLB_CHSIZE_8_Mask.setDefaultValue("0x0")
-usartSym_CTRLB_CHSIZE_8_Mask.setVisible(False)
-
-#USART Character Size 9 Mask
-usartSym_CTRLB_CHSIZE_9_Mask = sercomComponent.createStringSymbol("USART_DATA_9_BIT_MASK", sercomSym_OperationMode)
-usartSym_CTRLB_CHSIZE_9_Mask.setDefaultValue("0x1")
-usartSym_CTRLB_CHSIZE_9_Mask.setVisible(False)
 
 #Stop Bit
 usartSym_CTRLB_SBMODE = sercomComponent.createKeyValueSetSymbol("USART_STOP_BIT", sercomSym_OperationMode)
@@ -212,22 +172,26 @@ usartSym_CTRLB_SBMODE.setOutputMode("Key")
 usartSym_CTRLB_SBMODE.setDisplayMode("Description")
 usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-#USART Stop 1-bit Mask
-usartSym_CTRLB_SBMODE_1_Mask = sercomComponent.createStringSymbol("USART_STOP_1_BIT_MASK", None)
-usartSym_CTRLB_SBMODE_1_Mask.setDefaultValue("0x0")
-usartSym_CTRLB_SBMODE_1_Mask.setVisible(False)
+global sampleRateSupported
 
-#USART Stop 2-bit Mask
-usartSym_CTRLB_SBMODE_2_Mask = sercomComponent.createStringSymbol("USART_STOP_2_BIT_MASK", None)
-usartSym_CTRLB_SBMODE_2_Mask.setDefaultValue("0x40")
-usartSym_CTRLB_SBMODE_2_Mask.setVisible(False)
+sampleRateSupported = False
 
-#USART Over-Sampling using Baud Rate generation
-global usartSym_CTRLA_SAMPR
-usartSym_CTRLA_SAMPR = sercomComponent.createIntegerSymbol("USART_SAMPLE_RATE", sercomSym_OperationMode)
-usartSym_CTRLA_SAMPR.setLabel("Sample Rate")
-usartSym_CTRLA_SAMPR.setDefaultValue(0)
-usartSym_CTRLA_SAMPR.setVisible(False)
+sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="CTRLA"]')
+sampleRateValue = sampleRateNode.getChildren()
+
+for index in range(len(sampleRateValue)):
+    bitFieldName = str(sampleRateValue[index].getAttribute("name"))
+    if bitFieldName == "SAMPR":
+        sampleRateSupported = True
+        break
+
+if sampleRateSupported == True:
+    #USART Over-Sampling using Baud Rate generation
+    global usartSym_CTRLA_SAMPR
+    usartSym_CTRLA_SAMPR = sercomComponent.createIntegerSymbol("USART_SAMPLE_RATE", sercomSym_OperationMode)
+    usartSym_CTRLA_SAMPR.setLabel("Sample Rate")
+    usartSym_CTRLA_SAMPR.setDefaultValue(0)
+    usartSym_CTRLA_SAMPR.setVisible(False)
 
 #USART No Of Samples
 global usartSym_SAMPLE_COUNT
@@ -257,22 +221,92 @@ usartSym_BaudError_Comment.setLabel("********** USART Clock source value is low 
 usartSym_BaudError_Comment.setVisible(False)
 usartSym_BaudError_Comment.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+errorInterruptSupported = False
+
+intensetNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="INTENSET"]')
+intensetValue = intensetNode.getChildren()
+
+for index in range(len(intensetValue)):
+    bitFieldName = str(intensetValue[index].getAttribute("name"))
+    if bitFieldName == "ERROR":
+        errorInterruptSupported = True
+        break
+
+#USART is ERROR present
+sercomSym_ERROR = sercomComponent.createBooleanSymbol("USART_INTENSET_ERROR", None)
+sercomSym_ERROR.setVisible(False)
+sercomSym_ERROR.setDefaultValue(errorInterruptSupported)
+
+###################################################################################################
+####################################### Driver Symbols ############################################
+###################################################################################################
+
 #USART API Prefix
 usartSym_API_Prefix = sercomComponent.createStringSymbol("USART_PLIB_API_PREFIX", sercomSym_OperationMode)
 usartSym_API_Prefix.setDefaultValue(sercomInstanceName.getValue() + "_USART")
 usartSym_API_Prefix.setVisible(False)
 
+#USART EVEN Parity Mask
+usartSym_CTRLA_PMODE_EVEN_Mask = sercomComponent.createStringSymbol("USART_PARITY_EVEN_MASK", sercomSym_OperationMode)
+usartSym_CTRLA_PMODE_EVEN_Mask.setDefaultValue("0x0")
+usartSym_CTRLA_PMODE_EVEN_Mask.setVisible(False)
+
+#USART ODD Parity Mask
+usartSym_CTRLA_PMODE_ODD_Mask = sercomComponent.createStringSymbol("USART_PARITY_ODD_MASK", sercomSym_OperationMode)
+usartSym_CTRLA_PMODE_ODD_Mask.setDefaultValue("0x80000")
+usartSym_CTRLA_PMODE_ODD_Mask.setVisible(False)
+
+#USART NONE Parity Mask
+usartSym_Parity_NONE_Mask = sercomComponent.createStringSymbol("USART_PARITY_NONE_MASK", sercomSym_OperationMode)
+usartSym_Parity_NONE_Mask.setDefaultValue("0x2")
+usartSym_Parity_NONE_Mask.setVisible(False)
+
+#USART Character Size 5 Mask
+usartSym_CTRLB_CHSIZE_5_Mask = sercomComponent.createStringSymbol("USART_DATA_5_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_5_Mask.setDefaultValue("0x5")
+usartSym_CTRLB_CHSIZE_5_Mask.setVisible(False)
+
+#USART Character Size 6 Mask
+usartSym_CTRLB_CHSIZE_6_Mask = sercomComponent.createStringSymbol("USART_DATA_6_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_6_Mask.setDefaultValue("0x6")
+usartSym_CTRLB_CHSIZE_6_Mask.setVisible(False)
+
+#USART Character Size 7 Mask
+usartSym_CTRLB_CHSIZE_7_Mask = sercomComponent.createStringSymbol("USART_DATA_7_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_7_Mask.setDefaultValue("0x7")
+usartSym_CTRLB_CHSIZE_7_Mask.setVisible(False)
+
+#USART Character Size 8 Mask
+usartSym_CTRLB_CHSIZE_8_Mask = sercomComponent.createStringSymbol("USART_DATA_8_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_8_Mask.setDefaultValue("0x0")
+usartSym_CTRLB_CHSIZE_8_Mask.setVisible(False)
+
+#USART Character Size 9 Mask
+usartSym_CTRLB_CHSIZE_9_Mask = sercomComponent.createStringSymbol("USART_DATA_9_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_CHSIZE_9_Mask.setDefaultValue("0x1")
+usartSym_CTRLB_CHSIZE_9_Mask.setVisible(False)
+
+#USART Stop 1-bit Mask
+usartSym_CTRLB_SBMODE_1_Mask = sercomComponent.createStringSymbol("USART_STOP_1_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_SBMODE_1_Mask.setDefaultValue("0x0")
+usartSym_CTRLB_SBMODE_1_Mask.setVisible(False)
+
+#USART Stop 2-bit Mask
+usartSym_CTRLB_SBMODE_2_Mask = sercomComponent.createStringSymbol("USART_STOP_2_BIT_MASK", sercomSym_OperationMode)
+usartSym_CTRLB_SBMODE_2_Mask.setDefaultValue("0x40")
+usartSym_CTRLB_SBMODE_2_Mask.setVisible(False)
+
 #USART Overrun error Mask
-sercomSym_STATUS_BUFOVF_Mask = sercomComponent.createStringSymbol("USART_OVERRUN_ERROR_VALUE", None)
+sercomSym_STATUS_BUFOVF_Mask = sercomComponent.createStringSymbol("USART_OVERRUN_ERROR_VALUE", sercomSym_OperationMode)
 sercomSym_STATUS_BUFOVF_Mask.setDefaultValue("0x4")
 sercomSym_STATUS_BUFOVF_Mask.setVisible(False)
 
 #USART parity error Mask
-sercomSym_STATUS_PERR_Mask = sercomComponent.createStringSymbol("USART_PARITY_ERROR_VALUE", None)
+sercomSym_STATUS_PERR_Mask = sercomComponent.createStringSymbol("USART_PARITY_ERROR_VALUE", sercomSym_OperationMode)
 sercomSym_STATUS_PERR_Mask.setDefaultValue("0x0")
 sercomSym_STATUS_PERR_Mask.setVisible(False)
 
 #USART framing error Mask
-sercomSym_STATUS_FERR_Mask = sercomComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", None)
+sercomSym_STATUS_FERR_Mask = sercomComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", sercomSym_OperationMode)
 sercomSym_STATUS_FERR_Mask.setDefaultValue("0x2")
 sercomSym_STATUS_FERR_Mask.setVisible(False)
