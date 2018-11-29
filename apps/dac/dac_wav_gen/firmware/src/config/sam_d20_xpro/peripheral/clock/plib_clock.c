@@ -77,21 +77,21 @@ static void DFLL_Initialize(void)
         /* Waiting for the Ready state */
     }
 
-
     /*Load Calibration Value*/
     uint8_t calibCoarse = (uint8_t)(((*(uint32_t*)0x806024) >> 26 ) & 0x3f);
+    calibCoarse = (((calibCoarse) == 0x3F) ? 0x1F : (calibCoarse));
     uint16_t calibFine = (uint16_t)(((*(uint32_t*)0x806028)) & 0x3ff);
 
     SYSCTRL_REGS->SYSCTRL_DFLLVAL = SYSCTRL_DFLLVAL_COARSE(calibCoarse) | SYSCTRL_DFLLVAL_FINE(calibFine);
-
 
     /* Configure DFLL    */
     SYSCTRL_REGS->SYSCTRL_DFLLCTRL = SYSCTRL_DFLLCTRL_ENABLE_Msk ;
 
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLRDY_Msk) != SYSCTRL_PCLKSR_DFLLRDY_Msk)
     {
-        /* Waiting for the Ready state */
+        /* Waiting for DFLL to be ready */
     }
+
 }
 
 
