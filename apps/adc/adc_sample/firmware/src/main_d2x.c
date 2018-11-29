@@ -83,6 +83,11 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+    
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                    ADC Sample Demo                 ");
+    printf("\n\r---------------------------------------------------------\n\r");
+    
     ADC_Enable();
     SYSTICK_TimerStart();
     EIC_CallbackRegister(EIC_PIN_15, switch_handler, (uintptr_t) NULL);
