@@ -43,15 +43,13 @@
 
 
 void EVSYS_Initialize( void )
-{
+{	/*Event Channel User Configuration*/
+	EVSYS_REGS->EVSYS_USER[38] = EVSYS_USER_CHANNEL(0x1);
+
 	/* Event Channel 0 Configuration */
 	EVSYS_REGS->EVSYS_CHANNEL[0] = EVSYS_CHANNEL_EVGEN(52) | EVSYS_CHANNEL_PATH(2) | EVSYS_CHANNEL_EDGSEL(1) \
 									 | EVSYS_CHANNEL_ONDEMAND_Msk;
-	while(EVSYS_REGS->EVSYS_CHSTATUS && EVSYS_CHSTATUS_USRRDY0_Msk != EVSYS_CHSTATUS_USRRDY0_Msk);
-	
 
-	/*Event Channel User Configuration*/
-	EVSYS_REGS->EVSYS_USER[38] = EVSYS_USER_CHANNEL(0x1);
 }
 
 
