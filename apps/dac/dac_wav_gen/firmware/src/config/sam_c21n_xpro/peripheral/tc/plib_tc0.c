@@ -53,7 +53,6 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "device.h"
 #include "plib_tc0.h"
 
 
@@ -99,6 +98,7 @@ void TC0_TimerInitialize( void )
     /* Enable interrupt*/
     TC0_REGS->COUNT32.TC_INTENSET = TC_INTENSET_OVF_Msk;
 
+
     while((TC0_REGS->COUNT32.TC_SYNCBUSY))
     {
         /* Wait for Write Synchronization */
@@ -125,7 +125,7 @@ void TC0_TimerStop( void )
     }
 }
 
-uint32_t TC0_TimerFrequencyGet()
+uint32_t TC0_TimerFrequencyGet( void )
 {
     return (uint32_t)(48000000UL);
 }

@@ -56,6 +56,7 @@
 /* This section lists the other files that are included in this file.
 */
 
+#include "device.h"
 #include "plib_tc_common.h"
 
 // DOM-IGNORE-BEGIN
@@ -92,7 +93,7 @@ void TC0_TimerStart( void );
 
 void TC0_TimerStop( void );
 
-uint32_t TC0_TimerFrequencyGet();
+uint32_t TC0_TimerFrequencyGet( void );
 
 
 void TC0_Timer32bitPeriodSet( uint32_t period );

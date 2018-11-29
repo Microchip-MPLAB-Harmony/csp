@@ -1,22 +1,20 @@
 /*******************************************************************************
-  Digital-to-Analog Converter (DAC) PLIB
+  Interface definition of EVSYS PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_dac.c
+    plib_evsys.h
 
   Summary:
-    DAC PLIB Implementation file
+    Interface definition of the Event System Plib (EVSYS).
 
   Description:
-    This file defines the interface to the DAC peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
-
+    This file defines the interface for the EVSYS Plib.
+    It allows user to setup event generators and users.
 *******************************************************************************/
-// DOM-IGNORE-BEGIN
+
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -39,53 +37,30 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-// DOM-IGNORE-END
+
+#ifndef EVSYS_H    // Guards against multiple inclusion
+#define EVSYS_H
+
+#include <stdint.h>
+#include <stddef.h>
+
+#ifdef __cplusplus // Provide C++ Compatibility
+ extern "C" {
+#endif
+
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files
+// Section: Interface
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
-
-#include "plib_dac.h"
-#include "device.h"
 
 
-/* (DAC DATA) Mask DATA[15:10] Bit */
-#define DAC_DATA_MSB_MASK                    (0x03FFU)
+/***************************** EVSYS API *******************************/
+void EVSYS_Initialize( void );
+	
+#ifdef __cplusplus // Provide C++ Compatibility
+ }
+#endif
 
-
-void DAC_Initialize(void)
-{
-    /* Set Reference Voltage */
-    DAC_REGS->DAC_CTRLB = DAC_CTRLB_REFSEL(0) | DAC_CTRLB_EOEN_Msk ;
-
-    DAC_REGS->DAC_EVCTRL = 0;
-    
-    /* Enable DAC */
-    DAC_REGS->DAC_CTRLA = DAC_CTRLA_ENABLE_Msk  ;	
-
-    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)	
-    {
-        /* Wait for Synchronization after Enabling DAC */
-    }
-    
-}
-
-void DAC_DataWrite(uint16_t data)
-{
-    /* Write Data to DATA Register for conversion(DATA[9:0]) */
-    DAC_REGS->DAC_DATA = DAC_DATA_MSB_MASK & DAC_DATA_DATA(data);
-
-    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_DATA_Msk) == DAC_SYNCBUSY_DATA_Msk)	
-    {
-        /* Wait for Synchronization after writing Data to DATA Register */
-    }
-}
-
-bool DAC_IsReady(void)
-{
-    return ((DAC_REGS->DAC_STATUS & DAC_STATUS_READY_Msk) == DAC_STATUS_READY_Msk);
-}
+#endif

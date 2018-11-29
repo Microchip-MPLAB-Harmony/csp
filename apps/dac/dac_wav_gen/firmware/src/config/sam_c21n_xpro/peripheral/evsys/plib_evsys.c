@@ -1,22 +1,20 @@
 /*******************************************************************************
-  Digital-to-Analog Converter (DAC) PLIB
+  EVSYS Peripheral Library
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_dac.h
+    plib_evsys.c
 
   Summary:
-    DAC PLIB Header file
+    EVSYS Source File
 
   Description:
-    This file defines the interface to the DAC peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
+    None
 
 *******************************************************************************/
-// DOM-IGNORE-BEGIN
+
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -39,33 +37,15 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-// DOM-IGNORE-END
 
-#ifndef PLIB_DAC_H
-#define PLIB_DAC_H
+#include "device.h"
+#include "plib_evsys.h"
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
+void EVSYS_Initialize( void )
+{	/*Event Channel User Configuration*/
 
-#ifdef __cplusplus // Provide C++ Compatibility
-extern "C" {
-#endif
 
-void DAC_Initialize(void);
-void DAC_DataWrite(uint16_t data);
-bool DAC_IsReady(void);
-
-#ifdef __cplusplus  // Provide C++ Compatibility
 }
-#endif
 
-#endif /* PLIB_DAC_H */
+
