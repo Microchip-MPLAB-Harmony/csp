@@ -55,96 +55,12 @@
 #define LED_ON()                       LED_Clear()
 #define LED_OFF()                      LED_Set()
 
-// *****************************************************************************
-/* I2C Address for the on-board EEPROM AT24MAC402.
-
-  Summary:
-    Defines the on-board EEPROM AT24MAC402's I2C Address.
-
-  Description:
-    This macro defines the on-board EEPROM AT24MAC402's I2C Address.
-*/
-
 #define APP_AT24MAC_DEVICE_ADDR             (0x0057)
-
-// *****************************************************************************
-/* EEPROM AT24MAC402 memory address.
-
-  Summary:
-    Defines the on-board EEPROM AT24MAC402 memory address.
-
-  Description:
-    This macro defines the on-board EEPROM AT24MAC402 memory Address. Data is
-    read/write from/to the location starting from this address.
- */
-
 #define APP_AT24MAC_MEMORY_ADDR             (0x00)
-
-// *****************************************************************************
-/* Transmit data length.
-
-  Summary:
-    Defines the length of the data to be transmitted to on-board EEPROM AT24MAC402.
-
-  Description:
-    This macro defines the size of one page on the AT24 EEPROM.
- */
-
 #define APP_AT24MAC_PAGE_SIZE               (16)
-// *****************************************************************************
-/* Transmit data length.
-
-  Summary:
-    Defines the length of the data to be transmitted to on-board EEPROM AT24MAC402.
-
-  Description:
-    This macro defines the length of the data to be tranmitted to the on-board
-    EEPROM AT24MAC402. The length must be sufficient to hold the data and the
-    AT24 memory address.
- */
-
 #define APP_TRANSMIT_DATA_LENGTH            (APP_AT24MAC_PAGE_SIZE + 1)
-
-// *****************************************************************************
-/* Receive data length.
-
-  Summary:
-    Defines the length of the data to be received from on-board EEPROM AT24MAC402.
-
-  Description:
-    This macro defines the length of the data to be received from the on-board
-    EEPROM AT24MAC402.
- */
-
 #define APP_RECEIVE_DATA_LENGTH             (APP_AT24MAC_PAGE_SIZE)
-
-// *****************************************************************************
-/* Acknowledge polling data length.
-
-  Summary:
-    Defines the length of the data to be transmitted to on-board EEPROM AT24MAC402
-    during Acknowledge polling.
-
-  Description:
-    This macro defines the length of the data to be tranmitted to the on-board
-    EEPROM AT24MAC402 during Acknowledge polling. This define is used by the TWIHS
-    PLib Write API.
- */
-
 #define APP_ACK_DATA_LENGTH                 (1)
-
-// *****************************************************************************
-/* Application Test Transmit Data array
-
-  Summary:
-    Holds the application test transmit data.
-
-  Description:
-    This array holds the application's test transmit data.
-
-  Remarks:
-    None.
-*/
 
 static uint8_t testTxData[APP_TRANSMIT_DATA_LENGTH] =
 {
@@ -152,33 +68,8 @@ static uint8_t testTxData[APP_TRANSMIT_DATA_LENGTH] =
     'A', 'T', 'S', 'A', 'M', ' ', 'T', 'W', 'I', 'H', 'S', ' ', 'D', 'e', 'm', 'o',
 };
 
-// *****************************************************************************
-/* Application Test receive Data array.
-
-  Summary:
-    Holds the application received test data.
-
-  Description:
-    This array holds the application's received test data.
-
-  Remarks:
-    None.
-*/
-
 static uint8_t  testRxData[APP_RECEIVE_DATA_LENGTH];
 
-// *****************************************************************************
-/* Application's state machine enum
-
-  Summary:
-    Enumerator to define app states.
-
-  Description:
-    This enumerator defines all the possible application states.
-
-  Remarks:
-    None.
-*/
 typedef enum
 {
     APP_STATE_EEPROM_STATUS_VERIFY,
@@ -194,18 +85,6 @@ typedef enum
 
 } APP_STATES;
 
-// *****************************************************************************
-/* Transfer status enum
-
-  Summary:
-    Enumerator to define transfer status.
-
-  Description:
-    This enumerator defines all the possible transfer states.
-
-  Remarks:
-    None.
-*/
 typedef enum
 {
     APP_TRANSFER_STATUS_IN_PROGRESS,
@@ -214,28 +93,6 @@ typedef enum
     APP_TRANSFER_STATUS_IDLE,
 
 } APP_TRANSFER_STATUS;
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local functions
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* void APP_TWIHSCallback(uintptr_t context)
-
-  Summary:
-    Function called by TWIHS PLIB upon transfer completion
-
-  Description:
-    This function will be called by TWIHS PLIB when transfer is completed.
-    In this function, transferStatus variable is obtained from the context
-    parameter and is updated based on the value returned by the TWIHS PLIB
-    error get API.
-
-  Remarks:
-    None.
-*/
 
 void APP_TWIHSCallback(uintptr_t context )
 {
