@@ -175,18 +175,23 @@ void ADC_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
     }
 }
 
-/* Check whether result is ready */
-bool ADC_ConversionStatusGet( void )
-{
-    return (bool)((ADC_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
-}
-
 /* Read the conversion result */
 uint16_t ADC_ConversionResultGet( void )
 {
     return (uint16_t)ADC_REGS->ADC_RESULT;
 }
 
+/* Check whether result is ready */
+bool ADC_ConversionStatusGet( void )
+{
+    return (bool)((ADC_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+}
+
+/* Check whether window monitor result is ready */
+bool ADC_WindowMonitorStatusGet( void )
+{
+    return (bool)((ADC_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) == ADC_INTFLAG_WINMON_Msk);
+}
 
 
 

@@ -57,6 +57,9 @@
 #define DMAC_TRANSFER_BYTECOUNT 32
 #define RTC_COMPARE_VAL 100
 
+#define LED_OFF     LED_Set
+#define LED_ON      LED_Clear
+
 volatile bool dma_ch0Done = false;
 uint32_t myAppObj = 0;
 uint8_t adc_result_array[DMAC_TRANSFER_BYTECOUNT];
@@ -69,7 +72,7 @@ void DmacCh0Cb(DMAC_TRANSFER_EVENT returned_evnt, uintptr_t MyDmacContext)
     }
     else if (DMAC_TRANSFER_EVENT_ERROR == returned_evnt)
     {
-        PORT_PinSet(PORT_PIN_PB30);
+        LED_ON();
         while(1);
     }
  }
@@ -84,13 +87,22 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+    LED_OFF();
+    
     ADC_Enable();
+    
     RTC_Timer32Start();
     RTC_Timer32CompareSet(RTC_COMPARE_VAL);
+    
     DMAC_ChannelCallbackRegister(DMAC_CHANNEL_0, DmacCh0Cb, (uintptr_t)&myAppObj);
     DMAC_ChannelTransfer(DMAC_CHANNEL_0, (const void *)&ADC_REGS->ADC_RESULT, (const void *)adc_result_array, DMAC_TRANSFER_BYTECOUNT);
-    printf("\r\n\r\nADC Demo - Wake CPU after 'n' samples are taken\r\n");
+    
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                    ADC DMA Sleepwalking Demo                 ");
+    printf("\n\r---------------------------------------------------------\n\r");    
+    printf("\r\n\r\n Wake CPU after 16 samples are taken\r\n");
     printf("\r\nConnect the input to be measured onto PA02 (ADC0_AIN0)\r\n");
+    printf("\n\r---------------------------------------------------------\n\r");
     
     while ( true )
     {
