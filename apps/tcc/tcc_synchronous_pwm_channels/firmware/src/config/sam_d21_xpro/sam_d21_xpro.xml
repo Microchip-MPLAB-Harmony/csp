@@ -2107,24 +2107,38 @@
             </Boolean>
           </Attributes>
         </Boolean>
-        <Comment dnOrder="1" id="TCC_FREQUENCY">
+        <Comment dnOrder="1" id="TCC_DTHS_COMMENT">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="text">
+              <Value dnOrder="0">****&amp;#160;High&amp;#160;side&amp;#160;dead&amp;#160;time&amp;#160;is&amp;#160;1.33410177596&amp;#160;uS&amp;#160;****</Value>
+            </String>
+          </Attributes>
+        </Comment>
+        <Comment dnOrder="2" id="TCC_DTLS_COMMENT">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="text">
+              <Value dnOrder="0">****&amp;#160;Low&amp;#160;side&amp;#160;dead&amp;#160;time&amp;#160;is&amp;#160;1.33410177596&amp;#160;uS&amp;#160;****</Value>
+            </String>
+          </Attributes>
+        </Comment>
+        <Comment dnOrder="3" id="TCC_FREQUENCY">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****&amp;#160;PWM&amp;#160;Frequency&amp;#160;is&amp;#160;10002&amp;#160;Hz&amp;#160;****</Value>
             </String>
           </Attributes>
         </Comment>
-        <Boolean dnOrder="2" id="TCC_INTENSET_OVF">
+        <Boolean dnOrder="4" id="TCC_INTENSET_OVF">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="3" id="TCC_PER_PER">
+        <Integer dnOrder="5" id="TCC_PER_PER">
           <Values dnOrder="0">
             <User dnOrder="0" value="2397"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="4" id="TCC_WAVE_WAVEGEN">
+        <KeyValueSet dnOrder="6" id="TCC_WAVE_WAVEGEN">
           <Values dnOrder="0">
             <User dnOrder="0" value="1"/>
           </Values>
@@ -2133,8 +2147,7 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="500" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="401" y="20"/>
@@ -2143,5 +2156,6 @@
         <ElementPosition dnOrder="4" id="tcc0" x="170" y="60"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
