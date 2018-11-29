@@ -56,6 +56,7 @@
 */
 
 #include "plib_tc_common.h"
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -90,6 +91,7 @@ extern "C" {
 
 
 
+
 void TC0_CH0_CompareInitialize (void);
 
 void TC0_CH0_CompareStart (void);
@@ -111,7 +113,9 @@ void TC0_CH0_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t con
 
 
  
+
  
+
 
 #endif //PLIB_TC0_H
 
