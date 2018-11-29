@@ -1,12 +1,6 @@
 #ifndef XIP_IMAGE_PATTERN_HEX_H_
 #define XIP_IMAGE_PATTERN_HEX_H_
 
-/* The below xip image pattern is a LED Blink application generated to run from 
- *  QSPI FLASH memory (0x80000000).
- * xip_image_pattern[1] = 0x800005EC address of reset handler of the xip_image
- * application.
- */
-
 const uint8_t xip_image_pattern[2834] = 
 {
 0xf0, 0xff, 0x45, 0x20, 0xed, 0x05, 0x00, 0x80, 0x07, 0x0b, 0x00, 0x80, 0x09, 0x0b, 0x00, 0x80, 
