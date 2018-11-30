@@ -56,9 +56,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#if ENABLE_INTERRUPT == true>
 typedef struct
 {
-	PIT_CALLBACK        callback;
-	uintptr_t           context;
-	volatile uint32_t   tickCounter;
+    PIT_CALLBACK        callback;
+    uintptr_t           context;
+    volatile uint32_t   tickCounter;
 } PIT_OBJECT;
 
 // *****************************************************************************
@@ -84,7 +84,9 @@ void ${PIT_INSTANCE_NAME}_TimerInitialize(void)
 void ${PIT_INSTANCE_NAME}_TimerRestart(void)
 {
     ${PIT_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PITEN_Msk;
-    while ((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0);
+    while((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0) {
+        ;
+    }
     ${PIT_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PITEN_Msk;
 }
 
@@ -96,7 +98,9 @@ void ${PIT_INSTANCE_NAME}_TimerStart(void)
 void ${PIT_INSTANCE_NAME}_TimerStop(void)
 {
     ${PIT_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PITEN_Msk;
-    while ((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0);
+    while ((${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) != 0) {
+        ;
+    }
 }
 
 void ${PIT_INSTANCE_NAME}_TimerPeriodSet(uint32_t period)
@@ -105,7 +109,6 @@ void ${PIT_INSTANCE_NAME}_TimerPeriodSet(uint32_t period)
     ${PIT_INSTANCE_NAME}_REGS->PIT_MR &= ~PIT_MR_PIV_Msk;
     ${PIT_INSTANCE_NAME}_REGS->PIT_MR |= PIT_MR_PIV(period);
     ${PIT_INSTANCE_NAME}_TimerStart();
-
 }
 
 uint32_t ${PIT_INSTANCE_NAME}_TimerPeriodGet(void)
@@ -116,6 +119,11 @@ uint32_t ${PIT_INSTANCE_NAME}_TimerPeriodGet(void)
 uint32_t ${PIT_INSTANCE_NAME}_TimerCounterGet(void)
 {
     return (${PIT_INSTANCE_NAME}_REGS->PIT_PIIR & PIT_PIIR_CPIV_Msk) >> PIT_PIIR_CPIV_Pos;
+}
+
+void ${PIT_INSTANCE_NAME}_TimerCompareSet( uint16_t compare )
+{
+    (void) compare;
 }
 
 uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void)
@@ -132,15 +140,17 @@ bool ${PIT_INSTANCE_NAME}_TimerPeriodHasExpired(void)
 <#if ENABLE_INTERRUPT == true>
 void ${PIT_INSTANCE_NAME}_DelayMs(uint32_t delay)
 {
-	uint32_t tickStart, delayTicks;
+    uint32_t tickStart, delayTicks;
 
-	if((${PIT_INSTANCE_NAME}_REGS->PIT_MR & (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk)) == (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk))
-	{
-		tickStart=${PIT_INSTANCE_NAME?lower_case}.tickCounter;
-		delayTicks=delay/${PERIOD_MS};
+    if((${PIT_INSTANCE_NAME}_REGS->PIT_MR & (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk)) == (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk))
+    {
+        tickStart=${PIT_INSTANCE_NAME?lower_case}.tickCounter;
+        delayTicks=delay/${PERIOD_MS};
 
-		while((${PIT_INSTANCE_NAME?lower_case}.tickCounter-tickStart)<delayTicks);
-	}
+        while( (${PIT_INSTANCE_NAME?lower_case}.tickCounter-tickStart) < delayTicks ) {
+            ;
+        }
+    }
 }
 
 void ${PIT_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context)
