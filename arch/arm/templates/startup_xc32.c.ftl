@@ -96,8 +96,8 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
 </#if>
 
 <#if TCM_ENABLE??>
-<#if TCM_ENABLE>
 	TCM_Configure(${DEVICE_TCM_SIZE});
+<#if TCM_ENABLE>
     /* Enable TCM   */
     TCM_Enable();
 <#else>
@@ -109,8 +109,8 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
-	
-<#if STACK_IN_TCM??>	
+
+<#if STACK_IN_TCM??>
 <#if (STACK_IN_TCM)>
     /* Move the stack to Data Tightly Coupled Memory (DTCM) */
     __pic32c_TCM_StackInit();
