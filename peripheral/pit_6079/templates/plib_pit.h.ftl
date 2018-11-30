@@ -231,6 +231,30 @@ uint32_t ${PIT_INSTANCE_NAME}_TimerPeriodGet(void);
 */
 uint32_t ${PIT_INSTANCE_NAME}_TimerCounterGet(void);
 
+
+// *****************************************************************************
+/* Function:
+    void ${PIT_INSTANCE_NAME}_TimerCompareSet(void);
+
+  Summary:
+   Set the timer comparison value.
+
+  Description:
+    Provide a future PIT count value for comparison purposes.  When PIT timer
+    counter is greater than or equal to the value an event will be created.
+
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+  
+  Returns:
+    None.
+*/
+void ${PIT_INSTANCE_NAME}_TimerCompareSet( uint16_t compare );
+
+
 // *****************************************************************************
 /* Function:
     uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void);
