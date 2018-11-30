@@ -46,7 +46,7 @@ def xc32SetTcmSize(symbol, event):
 
 
 def xc32SetStackInTcm(symbol, event):
-    if (event["value"] == True):
+    if (event["value"]):
         xc32StackInTCMSym.setValue("true")
     else:
         xc32StackInTCMSym.setValue("false")
@@ -167,13 +167,13 @@ cortexMenu.setLabel("Cortex-M7 Configuration")
 cortexMenu.setDescription("Configuration for Cortex M7")
 
 # load clock manager information
-execfile(Variables.get("__CORE_DIR") +
-         "/../peripheral/clk_sam_e70/config/clk.py")
+execfile(Variables.get("__CORE_DIR")
+         + "/../peripheral/clk_sam_e70/config/clk.py")
 coreComponent.addPlugin("../peripheral/clk_sam_e70/plugin/clockmanager.jar")
 
 # load device specific pin manager information
-execfile(Variables.get("__CORE_DIR") +
-         "/../peripheral/pio_11004/config/pio.py")
+execfile(Variables.get("__CORE_DIR")
+         + "/../peripheral/pio_11004/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11004/plugin/SAME70pinmanager.jar")
 # Cortex-M7 IP Configuration
 tcmMenu = coreComponent.createMenuSymbol("TCM_MENU", cortexMenu)
@@ -217,17 +217,17 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
 coreComponent.addPlugin("../peripheral/mpu/plugin/MPUmanager.jar")
 
 # load systick
-execfile(Variables.get("__CORE_DIR") +
-         "/../peripheral/systick/config/systick.py")
+execfile(Variables.get("__CORE_DIR")
+         + "/../peripheral/systick/config/systick.py")
 
 # load dma manager information
-execfile(Variables.get("__CORE_DIR") +
-         "/../peripheral/xdmac_11161/config/xdmac.py")
+execfile(Variables.get("__CORE_DIR")
+         + "/../peripheral/xdmac_11161/config/xdmac.py")
 coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 
 # load rswdt
-execfile(Variables.get("__CORE_DIR") +
-         "/../peripheral/rswdt_11110/config/rswdt.py")
+execfile(Variables.get("__CORE_DIR")
+         + "/../peripheral/rswdt_11110/config/rswdt.py")
 
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
@@ -278,3 +278,11 @@ xc32StackInTCMSym.setCategory("C32Global")
 xc32StackInTCMSym.setKey("mstacktcm")
 xc32StackInTCMSym.setValue("false")
 xc32StackInTCMSym.setDependencies(xc32SetStackInTcm, ["STACK_IN_TCM"])
+
+devconSystemInitFile = coreComponent.createFileSymbol(
+    "DEVICE_CONFIG_SYSTEM_INIT", None)
+devconSystemInitFile.setType("STRING")
+devconSystemInitFile.setOutputName(
+    "core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
+devconSystemInitFile.setSourcePath("arm/templates/SAM_E70_S70_V70_V71.c.ftl")
+devconSystemInitFile.setMarkup(True)
