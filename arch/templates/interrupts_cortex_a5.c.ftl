@@ -25,10 +25,10 @@
     <#lt>    }
     <#lt>}
     <#lt>
+    <#lt>uint32_t spuriousEventCount = 0;
     <#lt>void DefaultInterruptHandlerForSpurious( void )
     <#lt>{
-    <#lt>    while( 1 ){
-    <#lt>    }
+    <#lt>    ++spuriousEventCount;
     <#lt>}
     <#lt>
 <#lt></#if>
