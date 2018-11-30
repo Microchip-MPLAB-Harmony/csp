@@ -170,7 +170,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
     <#lt>{
     <#lt>    TC_QUADRATURE_STATUS quadrature_status = ${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK;
     <#lt>    /* Call registered callback function */
-    <#lt>    if (${TC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
+    <#lt>    if ((TC_QUADRATURE_NONE != quadrature_status) && ${TC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
     <#lt>        ${TC_INSTANCE_NAME}_CallbackObj.callback_fn(quadrature_status, ${TC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
@@ -337,7 +337,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_TIMER_STATUS timer_status = ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK;
     /* Call registered callback function */
-    if (${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((TC_TIMER_NONE != timer_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
@@ -455,7 +455,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_CAPTURE_STATUS capture_status = ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK;
     /* Call registered callback function */
-    if (${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((TC_CAPTURE_NONE != capture_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(capture_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
@@ -572,7 +572,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
     TC_COMPARE_STATUS compare_status = ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK;
     /* Call registered callback function */
-    if (${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
+    if ((TC_COMPARE_NONE != compare_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(compare_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
@@ -588,6 +588,27 @@ TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void)
 </#if> <#-- CH_ENABLE -->
 </#list>
 
+<#--  If a common interrupt symbol exists -->
+<#if TC_COMMON_INTERRUPT_STATUS??>
+<#--  If common interrupt is enabled -->
+<#if TC_COMMON_INTERRUPT_STATUS == true>	
+/* Interrupt handler for ${TC_INSTANCE_NAME} */
+void ${TC_INSTANCE_NAME}_InterruptHandler(void)
+{	
+	<#if .vars[TC_INSTANCE_NAME + "_CH0_INTERRUPT_ENABLE"] == true>
+	${TC_INSTANCE_NAME}_CH0_InterruptHandler();
+	</#if>
+	
+	<#if .vars[TC_INSTANCE_NAME + "_CH1_INTERRUPT_ENABLE"] == true>
+	${TC_INSTANCE_NAME}_CH1_InterruptHandler();
+	</#if>
+
+	<#if .vars[TC_INSTANCE_NAME + "_CH2_INTERRUPT_ENABLE"] == true>
+	${TC_INSTANCE_NAME}_CH2_InterruptHandler();
+	</#if>
+}
+</#if> <#-- common interrupt is enabled -->
+</#if> <#-- common interrupt exists -->
 /**
  End of File
 */
