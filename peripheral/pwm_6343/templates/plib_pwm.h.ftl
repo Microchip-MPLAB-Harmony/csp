@@ -93,7 +93,7 @@ extern "C" {
     </#if>
 </#list>
 
-__INLINE void ${PWM_INSTANCE_NAME}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
+__STATIC_INLINE void ${PWM_INSTANCE_NAME}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint16_t duty)
 {
   ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[channel].PWM_CDTYUPD= duty;
 }
