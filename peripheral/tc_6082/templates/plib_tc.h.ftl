@@ -86,6 +86,15 @@ extern "C" {
 */
 
 // *****************************************************************************
+ <#compress>
+<#assign TC_UNSIGNED_INT_TYPE = "uint16_t">
+<#assign TC_SIGNED_INT_TYPE = "int16_t">
+<#if TIMER_WIDTH == 32>
+<#assign TC_UNSIGNED_INT_TYPE = "uint32_t">
+<#assign TC_SIGNED_INT_TYPE = "int32_t">
+</#if>
+ </#compress>
+
 <#assign start = 0>
 <#-- start index of the for loop. In quadrature position mode channel 0 and channel 1 are used. And in quadrature speed mode, all 3 channels are used -->
 <#if TC_ENABLE_QEI == true>
@@ -103,7 +112,7 @@ extern "C" {
             <#assign start = 1>
         </#if>
     </#if>
-    </#compress>
+    </#compress>       
 <#if TC_BMR_POSEN == "SPEED">
 #define ${TC_INSTANCE_NAME}_CH2_FrequencyGet()     (uint32_t)(${TC3_CLOCK_FREQ}UL)
 
@@ -115,7 +124,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStart (void);
 void ${TC_INSTANCE_NAME}_QuadratureStop (void);
 
 <#if TC_INDEX_PULSE == true>
-__INLINE int16_t ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (void)
+__INLINE ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (void)
 {
     return (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CV);
 }
@@ -123,13 +132,13 @@ __INLINE int16_t ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (void)
 
 <#if TC_BMR_POSEN == "SPEED">
 
-__INLINE uint16_t ${TC_INSTANCE_NAME}_QuadratureSpeedGet (void)
+__INLINE ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadratureSpeedGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV;
 }
 
 <#else>
-__INLINE int16_t ${TC_INSTANCE_NAME}_QuadraturePositionGet (void)
+__INLINE ${TC_SIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadraturePositionGet (void)
 {
     return (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV);
 }
@@ -171,17 +180,17 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerStart (void);
 
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerStop (void);
 
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodSet (uint16_t period);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodSet (${TC_UNSIGNED_INT_TYPE} period);
 
 <#if .vars[TC_TIMER_SYS_TIME_CONNECTED] == true>
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCompareSet (uint16_t compare);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCompareSet (${TC_UNSIGNED_INT_TYPE} compare);
 </#if>
 
 uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerFrequencyGet (void);
 
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodGet (void);
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodGet (void);
 
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void);
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void);
 
 <#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context);
@@ -200,9 +209,9 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStop (void);
 
 uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureFrequencyGet (void);
 
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureAGet (void);
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureAGet (void);
 
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureBGet (void);
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureBGet (void);
 
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context);
@@ -223,13 +232,13 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStop (void);
 
 uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareFrequencyGet (void);
 
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodSet (uint16_t period);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodSet (${TC_UNSIGNED_INT_TYPE} period);
 
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodGet (void);
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodGet (void);
 
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareASet (uint16_t value);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareASet (${TC_UNSIGNED_INT_TYPE} value);
 
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareBSet (uint16_t value);
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareBSet (${TC_UNSIGNED_INT_TYPE} value);
 
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t context);

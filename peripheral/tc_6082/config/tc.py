@@ -30,6 +30,7 @@ global extClock
 channel_periphId = [0, 0, 0]
 
 masks_without_channel_interrupt = ["SAMA5D2"]
+masks_with_32_bit_counter = ["SAMA5D2"]
 
 tcChannelMenu = []
 tcSym_CH_Enable = []
@@ -535,8 +536,8 @@ def tcPeriodCountCalc(symbol, event):
     time_period = int((time * 1000000.0 / float(resolution_ns)))
 
     if (mode == "TIMER"):
-        if (time_period > 65535):
-            tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is > 65535. Reduce timer period ****")
+        if (time_period > tcCounterMaxValue):
+            tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is >" + str(tcCounterMaxValue) + ". Reduce timer period ****")
         else:
             tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is " + str(time_period) + "****")
         tcSym_CH_TimerPeriodCount[channelID].clearValue()
@@ -547,7 +548,7 @@ def tcPeriodMaxVal(symbol, event):
     channelID = int(id[2])
     clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
     resolution_ns = tcGetClockResolution(clock, channelID)
-    symbol.setMax(float(((float(resolution_ns) * 65535.0)/1000000)))
+    symbol.setMax(float(((float(resolution_ns) * float(tcCounterMaxValue))/1000000)))
 
 def tcCompareMaxCalc(tcCompare, event):
     id = tcCompare.getID()
@@ -848,6 +849,7 @@ def instantiateComponent(tcComponent):
     global sysTimeChannel_Sym
     global tcInstanceName
     global tcInterruptSymbolSpace
+    global tcCounterMaxValue
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
@@ -932,7 +934,17 @@ def instantiateComponent(tcComponent):
 #------------------------------------------------------------
     timerWidth_Sym = tcComponent.createIntegerSymbol("TIMER_WIDTH", None)
     timerWidth_Sym.setVisible(False)
-    timerWidth_Sym.setDefaultValue(16)
+
+    #Set the counter bitwidth based on the masks. Some masks support 32 bit timers
+    counter_bitwidth = 16
+
+    #check if the mask supports 32 bit timers
+    if series in masks_with_32_bit_counter:
+        counter_bitwidth = 32
+
+    #adjust the count values accordingly
+    timerWidth_Sym.setDefaultValue(counter_bitwidth)
+    tcCounterMaxValue = pow(2, counter_bitwidth) - 1
 
     timerPeriodMax_Sym = tcComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
     timerPeriodMax_Sym.setVisible(False)
@@ -1032,11 +1044,11 @@ def instantiateComponent(tcComponent):
     tcPositionMenu.setDependencies(tcQuadraturePositionVisible, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
 
     #Num pulses
-    tcSym_CH_QEI_NUM_PULSES = tcComponent.createIntegerSymbol("TC_QEI_NUM_PULSES", tcPositionMenu)
+    tcSym_CH_QEI_NUM_PULSES = tcComponent.createLongSymbol("TC_QEI_NUM_PULSES", tcPositionMenu)
     tcSym_CH_QEI_NUM_PULSES.setLabel("Number of Quadrature Pulses per Revolution")
     tcSym_CH_QEI_NUM_PULSES.setDefaultValue(1024)
     tcSym_CH_QEI_NUM_PULSES.setMin(0)
-    tcSym_CH_QEI_NUM_PULSES.setMax(65535)
+    tcSym_CH_QEI_NUM_PULSES.setMax(tcCounterMaxValue)
 
     #Position reset interrupt
     global tcSym_CH_QEI_IER_CPCS
@@ -1061,11 +1073,11 @@ def instantiateComponent(tcComponent):
 
     # CH2 time period
     global tcSym_CH_QEI_CH2PERIOD
-    tcSym_CH_QEI_CH2PERIOD = tcComponent.createIntegerSymbol("TC_QEI_PERIOD", tcSpeedMenu)
+    tcSym_CH_QEI_CH2PERIOD = tcComponent.createLongSymbol("TC_QEI_PERIOD", tcSpeedMenu)
     tcSym_CH_QEI_CH2PERIOD.setLabel("Select Speed Time Base")
     tcSym_CH_QEI_CH2PERIOD.setDefaultValue(15015)
     tcSym_CH_QEI_CH2PERIOD.setMin(0)
-    tcSym_CH_QEI_CH2PERIOD.setMax(65535)
+    tcSym_CH_QEI_CH2PERIOD.setMax(tcCounterMaxValue)
 
     # CH2 time in us comment
     tcSym_CH_QEI_CH2PERIOD_COMMENT = tcComponent.createCommentSymbol("TC_QEI_PERIOD_COMMENT", tcSpeedMenu)
@@ -1201,7 +1213,7 @@ def instantiateComponent(tcComponent):
             "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
         tcSym_CH_TimerPeriodCount.append(channelID)
-        tcSym_CH_TimerPeriodCount[channelID] = tcComponent.createIntegerSymbol("TC"+str(channelID)+"_TIMER_PERIOD_COUNT", tcTimerMenu[channelID])
+        tcSym_CH_TimerPeriodCount[channelID] = tcComponent.createLongSymbol("TC"+str(channelID)+"_TIMER_PERIOD_COUNT", tcTimerMenu[channelID])
         tcSym_CH_TimerPeriodCount[channelID].setVisible(False)
         tcSym_CH_TimerPeriodCount[channelID].setDefaultValue(60000)
         tcSym_CH_TimerPeriodCount[channelID].setDependencies(tcPeriodCountCalc, \
@@ -1350,11 +1362,11 @@ def instantiateComponent(tcComponent):
         #period count
         global tcSym_CH_ComparePeriodCount
         tcSym_CH_ComparePeriodCount.append(channelID)
-        tcSym_CH_ComparePeriodCount[channelID] = tcComponent.createIntegerSymbol("TC"+str(channelID)+"_COMPARE_PERIOD_COUNT", tcCompareMenu[channelID])
+        tcSym_CH_ComparePeriodCount[channelID] = tcComponent.createLongSymbol("TC"+str(channelID)+"_COMPARE_PERIOD_COUNT", tcCompareMenu[channelID])
         tcSym_CH_ComparePeriodCount[channelID].setLabel("Period Value")
         tcSym_CH_ComparePeriodCount[channelID].setDefaultValue(10000)
         tcSym_CH_ComparePeriodCount[channelID].setMin(0)
-        tcSym_CH_ComparePeriodCount[channelID].setMax(65535)
+        tcSym_CH_ComparePeriodCount[channelID].setMax(tcCounterMaxValue)
 
         #period time in uS
         tcSym_CH_ComparePeriod.append(channelID)
@@ -1401,7 +1413,7 @@ def instantiateComponent(tcComponent):
         #compare A
         global tcSym_CH_CompareA
         tcSym_CH_CompareA.append(channelID)
-        tcSym_CH_CompareA[channelID] = tcComponent.createIntegerSymbol("TC"+str(channelID)+"_COMPARE_A", tcCompareAMenu[channelID])
+        tcSym_CH_CompareA[channelID] = tcComponent.createLongSymbol("TC"+str(channelID)+"_COMPARE_A", tcCompareAMenu[channelID])
         tcSym_CH_CompareA[channelID].setLabel("Compare Value")
         tcSym_CH_CompareA[channelID].setDefaultValue(5000)
         tcSym_CH_CompareA[channelID].setMin(0)
@@ -1455,7 +1467,7 @@ def instantiateComponent(tcComponent):
         #Compare B
         global tcSym_CH_CompareB
         tcSym_CH_CompareB.append(channelID)
-        tcSym_CH_CompareB[channelID] = tcComponent.createIntegerSymbol("TC"+str(channelID)+"_COMPARE_B", tcCompareBMenu[channelID])
+        tcSym_CH_CompareB[channelID] = tcComponent.createLongSymbol("TC"+str(channelID)+"_COMPARE_B", tcCompareBMenu[channelID])
         tcSym_CH_CompareB[channelID].setLabel("Compare Value")
         tcSym_CH_CompareB[channelID].setDefaultValue(3000)
         tcSym_CH_CompareB[channelID].setMin(0)
