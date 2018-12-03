@@ -18,9 +18,40 @@ global DICT_PCER1
 def periphFreqCalc(symbol, event):
     symbol.setValue(int(event["value"]), 2)
 
-#currently this is a place holder and frequency is locked to the PCLOCK_LS
 def UpdateTCClockFrequency(symbol,event):
-    pass
+    #symbol is named as "TC{instance_number}_CH{channel_number}_CLOCK_FREQUENCY.
+    #Extract the instance number
+    tcInstance = symbol.getID().split("TC")[1].split("_")[0]
+    #extract the channel number
+    chInstance = symbol.getID().split("_CH")[1].split("_")[0]
+
+    #check if the relevant channel is enabled
+    if (Database.getSymbolValue("tc" + str(tcInstance), "TC" + str(chInstance) + "_ENABLE") == True):
+        #Find the current clock source for the channel
+        clk_src = Database.getSymbolValue("tc" + str(tcInstance), "TC" + str(chInstance) + "_CMR_TCCLKS")
+        #if clock source is MCK (Enabled through extended registers of TC)
+        if (clk_src == 0):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")), 2)
+        #if clock source is processor independent GCLK
+        #TODO: Populate the correct GCLK frequency symbol
+        elif (clk_src == 1):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")), 2)
+        #if clock  source is MCK/8
+        elif (clk_src == 2):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))/8, 2)
+        # if clock  source is MCK/32
+        elif (clk_src == 3):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))/32, 2)
+        # if clock  source is MCK/128
+        elif (clk_src == 4):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")) / 128, 2)
+        # if clock  source is SLOW CLOCK
+        elif (clk_src == 5):
+            symbol.setValue(int(Database.getSymbolValue("core", "CLK_SLOW")), 2)
+        #set MCK/8 as the default value
+        else:
+            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")) / 8, 2)
+
 
 # if any channel of TC instance is enabled, enable the peripheral clock of that instance
 global UpdateTCClockEnable
@@ -702,10 +733,10 @@ if __name__ == "__main__":
             tc_channel_symbol.setVisible(False)
             tc_channel_symbol.setReadOnly(True)
             tc_channel_symbol.setDefaultValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
-            tc_dependent_symbol_list = ["tc"+str(tc_instance_number)+".TC"+str(tc_channel_number)+"__CMR_TCCLKS",
-                                        "tc"+str(tc_instance_number)+".TC_PCK_CLKSRC",
-                                        "core.PCLOCK_LS_CLOCK_FREQUENCY",
-                                        "core.CLK_SLOW_XTAL",
+            #TODO: Need to add GCLK frequency symbols as dependency
+            tc_dependent_symbol_list = ["core.PCLOCK_LS_CLOCK_FREQUENCY",
+                                        "core.CLK_SLOW",
+                                        "tc" + str(tc_instance_number) + ".TC" + str(tc_channel_number) + "_CMR_TCCLKS",
                                         "tc"+str(tc_instance_number)+".TC"+str(tc_channel_number)+"_ENABLE"]
             tc_channel_symbol.setDependencies(UpdateTCClockFrequency, tc_dependent_symbol_list)
 
