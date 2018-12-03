@@ -375,13 +375,6 @@ def instantiateComponent(coreComponent):
     xc32HeapSizeSym.setValue(str(xc32HeapSize.getValue()))
     xc32HeapSizeSym.setDependencies(heapSizeCallBack, ["XC32_HEAP_SIZE"])
 
-    # set IAR heap size
-    iarHeapSizeSym = coreComponent.createSettingSymbol("IAR_HEAP", None)
-    iarHeapSizeSym.setCategory("IAR-LD")
-    iarHeapSizeSym.setKey("heap-size")
-    iarHeapSizeSym.setValue(str(iarHeapSize.getValue()))
-    iarHeapSizeSym.setDependencies(heapSizeCallBack, ["IAR_HEAP_SIZE"])
-
     # set include path and monitor file
     processor = Variables.get("__PROCESSOR")
     corePath = ""
