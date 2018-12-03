@@ -53,7 +53,14 @@
 */
 #include "device.h"
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
-
+<#compress>
+<#assign TC_UNSIGNED_INT_TYPE = "uint16_t">
+<#assign TC_SIGNED_INT_TYPE = "int16_t">
+<#if TIMER_WIDTH == 32>
+<#assign TC_UNSIGNED_INT_TYPE = "uint32_t">
+<#assign TC_SIGNED_INT_TYPE = "int32_t">
+</#if>
+</#compress>
 <#assign start = 0>
 <#-- start index of the for loop. In quadrature position mode channel 0 and channel 1 are used. And in quadrature speed mode, all 3 channels are used -->
 <#if TC_ENABLE_QEI == true>
@@ -72,8 +79,6 @@
         </#if>
     </#if>
     </#compress>
-
-
 <#if TC_QIER_IDX == true || TC_QIER_QERR == true || TC_QEI_IER_CPCS == true>
 /* Callback object for channel 0 */
 TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
@@ -300,27 +305,27 @@ uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerFrequencyGet( void )
 }
 
 /* Configure timer period */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodSet (uint16_t period)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodSet (${TC_UNSIGNED_INT_TYPE} period)
 {
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = period;
 }
 
 <#if .vars[TC_TIMER_SYS_TIME_CONNECTED] == true>
 /* Configure timer compare */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCompareSet (uint16_t compare)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCompareSet (${TC_UNSIGNED_INT_TYPE} compare)
 {
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = compare;
 }
 </#if>
 
 /* Read timer period */
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodGet (void)
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
 }
 
 /* Read timer counter value */
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void)
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CV;
 }
@@ -432,13 +437,13 @@ uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureFrequencyGet( void )
 }
 
 /* Read last captured value of Capture A */
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureAGet (void)
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureAGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA;
 }
 
 /* Read last captured value of Capture B */
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureBGet (void)
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureBGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB;
 }
@@ -536,25 +541,25 @@ uint32_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareFrequencyGet( void )
 }
 
 /* Configure the period value */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodSet (uint16_t period)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodSet (${TC_UNSIGNED_INT_TYPE} period)
 {
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC = period;
 }
 
 /* Read the period value */
-uint16_t ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodGet (void)
+${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_ComparePeriodGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RC;
 }
 
 /* Set the compare A value */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareASet (uint16_t value)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareASet (${TC_UNSIGNED_INT_TYPE} value)
 {
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RA = value;
 }
 
 /* Set the compare B value */
-void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareBSet (uint16_t value)
+void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareBSet (${TC_UNSIGNED_INT_TYPE} value)
 {
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB = value;
 }
@@ -598,14 +603,14 @@ void ${TC_INSTANCE_NAME}_InterruptHandler(void)
 	<#if .vars[TC_INSTANCE_NAME + "_CH0_INTERRUPT_ENABLE"] == true>
 	${TC_INSTANCE_NAME}_CH0_InterruptHandler();
 	</#if>
-	
 	<#if .vars[TC_INSTANCE_NAME + "_CH1_INTERRUPT_ENABLE"] == true>
+	
 	${TC_INSTANCE_NAME}_CH1_InterruptHandler();
 	</#if>
-
 	<#if .vars[TC_INSTANCE_NAME + "_CH2_INTERRUPT_ENABLE"] == true>
+	
 	${TC_INSTANCE_NAME}_CH2_InterruptHandler();
-	</#if>
+	</#if>	
 }
 </#if> <#-- common interrupt is enabled -->
 </#if> <#-- common interrupt exists -->
