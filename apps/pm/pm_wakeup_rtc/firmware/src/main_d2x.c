@@ -129,7 +129,7 @@ int main ( void )
                 printf("\n\n\rConfiguring RTC Compare Match for wake up.......");
                 configure_alarm();
                 SYSTICK_TimerStop();
-                printf("\n\rEntering Standby Mode ");
+                printf("\n\rEntering Standby Mode\r\n");
                 LED_OFF();
                 PM_StandbyModeEnter();
                 printf("\n\rRTC Compare Match triggered waking up device from Standby mode");
