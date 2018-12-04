@@ -814,8 +814,14 @@ def sysTime_ChannelSelection(symbol,event):
     counterGetApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerCounterGet"
     frequencyGetApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerFrequencyGet"
     callbackApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerCallbackRegister"
-    irqEnumName = tcInstanceName.getValue() + str(tc_channel) + "_IRQn"
     periodSetApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerPeriodSet"
+
+    # if there are no per channel interrupts, tie the IRQn to the instance interrupt
+    series = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_MCU_SERIES")
+    if series in masks_without_channel_interrupt:
+        irqEnumName = tcInstanceName.getValue() + "_IRQn"
+    else:
+        irqEnumName = tcInstanceName.getValue() + str(tc_channel) + "_IRQn"
 
     timerStartApiName_Sym.setValue(timerStartApiName,2)
     timeStopApiName_Sym.setValue(timeStopApiName,2)
