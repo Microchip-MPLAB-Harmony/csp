@@ -2352,93 +2352,60 @@
           </Values>
         </Integer>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="readOnly">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
+          <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </KeyValueSet>
-        <File dnOrder="3" id="SERCOM_USART_COMMON_HEADER">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <File dnOrder="4" id="SERCOM_USART_HEADER">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <File dnOrder="5" id="SERCOM_USART_SOURCE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <Integer dnOrder="6" id="SPI_BAUD_REG_VALUE">
+        <Integer dnOrder="3" id="SPI_BAUD_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="22"/>
             </Dynamic>
           </Values>
         </Integer>
-        <String dnOrder="7" id="TRANSMIT_DATA_REGISTER">
+        <String dnOrder="4" id="TRANSMIT_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="&amp;(SERCOM3_REGS-&gt;USART_INT.SERCOM_DATA)"/>
             </Dynamic>
           </Values>
         </String>
-        <Comment dnOrder="8" id="USART_BAUD_ERROR_COMMENT">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </Comment>
-        <Integer dnOrder="9" id="USART_BAUD_VALUE">
+        <Integer dnOrder="5" id="USART_BAUD_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="63017"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Boolean dnOrder="10" id="USART_INTERRUPT_MODE">
+        <Boolean dnOrder="6" id="USART_INTERRUPT_MODE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="stdio" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="11" id="USART_RXPO">
+        <KeyValueSet dnOrder="7" id="USART_RXPO">
           <Values dnOrder="0">
             <User dnOrder="0" value="3"/>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="12" id="USART_SAMPLE_COUNT">
+        <Integer dnOrder="8" id="USART_SAMPLE_COUNT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="16"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Integer dnOrder="13" id="USART_SAMPLE_RATE">
+        <Integer dnOrder="9" id="USART_SAMPLE_RATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sercom3" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="14" id="USART_TXPO">
+        <KeyValueSet dnOrder="10" id="USART_TXPO">
           <Values dnOrder="0">
             <User dnOrder="0" value="1"/>
           </Values>
@@ -2447,26 +2414,14 @@
       <Attachments dnOrder="1">
         <DirectCapability dnOrder="0" id="SERCOM3_I2C">
           <Attributes dnOrder="0">
-            <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0"/>
-            </String>
-            <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0"/>
-            </String>
-            <Boolean dnOrder="2" id="enabled">
+            <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </DirectCapability>
         <DirectCapability dnOrder="1" id="SERCOM3_SPI">
           <Attributes dnOrder="0">
-            <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0"/>
-            </String>
-            <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0"/>
-            </String>
-            <Boolean dnOrder="2" id="enabled">
+            <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
@@ -2606,109 +2561,109 @@
           </Attributes>
         </Float>
       </Symbols>
-      <Attachments dnOrder="1">
-        <DirectCapability dnOrder="0" id="TC3_TMR">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0"/>
-            </String>
-            <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0"/>
-            </String>
-          </Attributes>
-        </DirectCapability>
-      </Attachments>
     </UniqueComponent>
     <UniqueComponent dnOrder="8" id="tc4">
       <Symbols dnOrder="0">
-        <Boolean dnOrder="0" id="TC_CAPTURE_INTERRUPT">
+        <Boolean dnOrder="0" id="TC_CAPTURE_ERR_INTERRUPT_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="false"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="1" id="TC_CAPTURE_INTERRUPT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc4" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="1" id="TC_CAPTURE_INTSET_MC0">
+        <Boolean dnOrder="2" id="TC_CAPTURE_INTSET_MC0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Menu dnOrder="2" id="TC_CAPTURE_MENU">
+        <Menu dnOrder="3" id="TC_CAPTURE_MENU">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <File dnOrder="3" id="TC_COMPARE_HEADER">
+        <File dnOrder="4" id="TC_COMPARE_HEADER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Comment dnOrder="4" id="TC_COMPARE_PERIOD_COMMENT">
+        <Comment dnOrder="5" id="TC_COMPARE_PERIOD_COMMENT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****&amp;#160;Timer&amp;#160;Period&amp;#160;is&amp;#160;1.00057633197&amp;#160;us&amp;#160;****</Value>
             </String>
           </Attributes>
         </Comment>
-        <File dnOrder="5" id="TC_COMPARE_SOURCE">
+        <File dnOrder="6" id="TC_COMPARE_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Integer dnOrder="6" id="TC_FREQUENCY">
+        <Integer dnOrder="7" id="TC_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc4" priority="2" value="47972352"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Combo dnOrder="7" id="TC_OPERATION_MODE">
+        <Comment dnOrder="8" id="TC_INTERRUPT_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Combo dnOrder="9" id="TC_OPERATION_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="Capture"/>
           </Values>
         </Combo>
-        <Comment dnOrder="8" id="TC_Resolution">
+        <Comment dnOrder="10" id="TC_Resolution">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****Timer&amp;#160;resolution&amp;#160;is&amp;#160;20.8453402493&amp;#160;nS****</Value>
             </String>
           </Attributes>
         </Comment>
-        <File dnOrder="9" id="TC_TIMER_HEADER">
+        <File dnOrder="11" id="TC_TIMER_HEADER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Menu dnOrder="10" id="TC_TIMER_MENU">
+        <Menu dnOrder="12" id="TC_TIMER_MENU">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <Long dnOrder="11" id="TC_TIMER_PERIOD">
+        <Long dnOrder="13" id="TC_TIMER_PERIOD">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc4" priority="2" value="47972"/>
             </Dynamic>
           </Values>
         </Long>
-        <File dnOrder="12" id="TC_TIMER_SOURCE">
+        <File dnOrder="14" id="TC_TIMER_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Float dnOrder="13" id="TC_TIMER_TIME_MS">
+        <Float dnOrder="15" id="TC_TIMER_TIME_MS">
           <Attributes dnOrder="0">
             <Float dnOrder="0" id="max">
               <Value dnOrder="0">1.3660994</Value>
@@ -2716,18 +2671,6 @@
           </Attributes>
         </Float>
       </Symbols>
-      <Attachments dnOrder="1">
-        <DirectCapability dnOrder="0" id="TC4_TMR">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0"/>
-            </String>
-            <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0"/>
-            </String>
-          </Attributes>
-        </DirectCapability>
-      </Attachments>
     </UniqueComponent>
   </Components>
   <UserData>
@@ -2741,7 +2684,7 @@
         <ElementPosition dnOrder="5" id="sercom3" x="330" y="60"/>
         <ElementPosition dnOrder="6" id="stdio" x="525" y="61"/>
         <ElementPosition dnOrder="7" id="tc3" x="24" y="109"/>
-        <ElementPosition dnOrder="8" id="tc4" x="800" y="20"/>
+        <ElementPosition dnOrder="8" id="tc4" x="23" y="194"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
