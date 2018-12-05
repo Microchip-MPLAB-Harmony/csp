@@ -4,7 +4,7 @@ from xml.etree import ElementTree
 
 global generic_list
 #UART, SPI, and TWI peripherals claim to be able to use GCLK but aren't in table 33-1
-generic_list = {"FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "MCAN0", "MCAN1", "CLASSD"};
+generic_list = ["FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3", "FLEXCOM4", "TC0", "TC1", "ADC", "LCDC", "I2SC0", "I2SC1", "MCAN0", "MCAN1", "CLASSD"]
 
 # Peripherals connected to 64 bit AHB matrix (i.e. with HS bus clocks)
 hs_peripherals_list = ["XDMAC0", "XDMAC1", "AESB", "MPDDRC", "SDMMC0", "SDMMC1", "LCDC", "ISC", "QSPI0", "QSPI1"]
@@ -12,13 +12,185 @@ hs_peripherals_list = ["XDMAC0", "XDMAC1", "AESB", "MPDDRC", "SDMMC0", "SDMMC1",
 # Peripherals supporting multiple clock options
 multi_clock_peripheral_list = ["TC"]
 
+global CLK_SAMA5D2_CONSTANTS_DICT
+CLK_SAMA5D2_CONSTANTS_DICT = {  "SLOW_RC_OSC_FREQ":32000,
+                                "SLOW_XTAL_OSC_FREQ":32768,
+                                "MAIN_RC_OSC_FREQ":12000000,
+                                "EXT_OSC_MIN_FREQ":8000000,
+                                "EXT_OSC_DEFAULT_FREQ":12000000,
+                                "EXT_OSC_MAX_FREQ":24000000,
+                                "PLLA_MULA_MIN":1,
+                                "PLLA_MULA_MAX":128,
+                                "PLLA_MULA_DEFAULT":83,
+                                "PLLA_DEFAULT_FREQ":498000000,
+                                "UTMI_PLL_FREQ":480000000,
+                                "PCLOCK_LS_MAX_FREQ":83000000}
+
+global CLK_SAMA5D2_UTMI_MUL_DICT
+CLK_SAMA5D2_UTMI_MUL_DICT= {12000000:0, 16000000:1, 20000000:2}
+
+global SAMA5D2_USE_BOOTLOADER_CLOCKS
+SAMA5D2_USE_BOOTLOADER_CLOCKS = True
+
+global clk_sama5d2_symbol_dict
+clk_sama5d2_symbol_dict = {}
+
+
 global DICT_PCER0
 global DICT_PCER1
 
-def periphFreqCalc(symbol, event):
+
+global set_symbol_value_from_atdf
+def set_symbol_value_from_atdf(symbol, module_name, value_group_name):
+    atdf_path = "/avr-tools-device-file/modules/module@[name=\"" + module_name + "\"]/value-group@[name=\"" +\
+                                                                                        value_group_name+ "\"]"
+    node = ATDF.getNode(atdf_path)
+    value = node.getChildren()
+    for index in range(len(value)):
+        symbol.addKey(value[index].getAttribute("name"),
+                      value[index].getAttribute("value"),
+                      value[index].getAttribute("caption"))
+
+
+
+global update_slow_clock_frequency
+def update_slow_clock_frequency(symbol, event):
+
+    source_key = clk_sama5d2_symbol_dict["SCK_CR_OSCSEL"].getSelectedKey()
+    #Possible values of the source key are "RC" or "XTAL"
+    symbol.setValue(CLK_SAMA5D2_CONSTANTS_DICT["SLOW_" + source_key + "_OSC_FREQ"], 2)
+
+global update_main_clock_frequency
+def update_main_clock_frequency(symbol, event):
+
+    #main crystal frequency is editable only if the crystal or bypass is enabled
+    if clk_sama5d2_symbol_dict["CKGR_MOR_MOSCXTEN"].getValue() == True or \
+                clk_sama5d2_symbol_dict["CKGR_MOR_MOSCXTBY"].getValue() == True:
+        clk_sama5d2_symbol_dict["MAIN_CRYSTAL_FREQUENCY"].setReadOnly(False)
+    else:
+        clk_sama5d2_symbol_dict["MAIN_CRYSTAL_FREQUENCY"].setReadOnly(True)
+
+    # Display a warning if the corresponding oscillators/clocks are not enabled
+    if clk_sama5d2_symbol_dict["CKGR_MOR_MOSCSEL"].getSelectedKey() == "XTAL":
+        show_warning = (clk_sama5d2_symbol_dict["CKGR_MOR_MOSCXTEN"].getValue() == False and \
+                        clk_sama5d2_symbol_dict["CKGR_MOR_MOSCXTBY"].getValue() == False)
+
+    else:
+        show_warning = (clk_sama5d2_symbol_dict["CKGR_MOR_MOSCRCEN"].getValue() == False)
+
+    clk_sama5d2_symbol_dict["MAIN_CLK_INVALID_COMMENT"].setVisible(show_warning)
+
+    #if crystal is selected, use the frequency configured by the user else use embedded RC frequency.
+    if clk_sama5d2_symbol_dict["CKGR_MOR_MOSCSEL"].getSelectedKey() == "XTAL":
+        main_clk_freq = clk_sama5d2_symbol_dict["MAIN_CRYSTAL_FREQUENCY"].getValue()
+        lock_moscxtst = False
+    else:
+        main_clk_freq = CLK_SAMA5D2_CONSTANTS_DICT["MAIN_RC_OSC_FREQ"]
+        lock_moscxtst = True
+
+    symbol.setValue(main_clk_freq, 2)
+    clk_sama5d2_symbol_dict["CKGR_MOR_MOSCXTST"].setReadOnly(lock_moscxtst)
+
+global update_plla_clock_frequency
+def update_plla_clock_frequency(symbol, event):
+    #base frequency
+    plla_freq =  clk_sama5d2_symbol_dict["MAIN_CLK_FREQUENCY"].getValue()
+
+    #input divider
+    plla_freq /= int(clk_sama5d2_symbol_dict["CKGR_PLLAR_DIVA"].getValue())
+
+    #output multiplier
+    plla_freq *= clk_sama5d2_symbol_dict["CKGR_PLLA_MULA"].getValue()
+
+    #second divider
+    plla_freq /= int(clk_sama5d2_symbol_dict["CKGR_PLLAR_PLLDIVA2"].getValue())
+
+    symbol.setValue(plla_freq, 2)
+
+global update_utmi_clock_frequency
+def update_utmi_clock_frequency(symbol, event):
+    show_warning = False
+    #if UPLL is enabled
+    if clk_sama5d2_symbol_dict["CKGR_UCKR_UPLLEN"].getValue() == True:
+        #Get the required multiplier to get a valid UPLL frequency of 480 MHz
+        plla_freq = clk_sama5d2_symbol_dict["MAIN_CLK_FREQUENCY"].getValue()
+        multiplier = CLK_SAMA5D2_UTMI_MUL_DICT.get(plla_freq)
+
+        #If the multiplier is not supported, then display warning
+        if multiplier == None:
+            show_warning = True
+        else:
+            clk_sama5d2_symbol_dict["SFR_UTMICKTRIM_FREQ"].setValue(multiplier, 2)
+
+    clk_sama5d2_symbol_dict["CLK_UTMI_INVALID_MAIN_CLOCK"].setVisible(show_warning)
+
+global update_processor_clock_frequency
+def update_processor_clock_frequency(symbol, event):
+
+    clock_source = clk_sama5d2_symbol_dict["PMC_MCKR_CSS"].getSelectedKey()
+    input_frequency = Database.getSymbolValue("core", clock_source + "_FREQUENCY")
+
+    prescaler = clk_sama5d2_symbol_dict["PMC_MCKR_PRES"].getSelectedKey()
+
+    # Key can be CLOCK or CLOCK_DIV{n}
+    divisor = 1 if "_DIV" not in prescaler else int(prescaler.split("_DIV")[1])
+
+    symbol.setValue(input_frequency/divisor, 2)
+
+global update_master_clock_frequency
+def update_master_clock_frequency(symbol, event):
+    # MCK clock source
+    clock_source = clk_sama5d2_symbol_dict["PMC_MCKR_CSS"].getSelectedKey()
+
+    # PLLA divider
+    plladiv2 = clk_sama5d2_symbol_dict["CKGR_PLLAR_PLLDIVA2"].getValue()
+
+    # MCK divider
+    mck_divider_key = clk_sama5d2_symbol_dict["PMC_MCKR_MDIV"].getSelectedKey()
+
+    #PLLA invalid clock warning
+    show_invalid_plla_warning = (clock_source == "PLLA_CLK") and (plladiv2 != "2") and (mck_divider_key == "PCK_DIV3")
+    clk_sama5d2_symbol_dict["CLK_MCK_DIV_INVALID"].setVisible(show_invalid_plla_warning)
+
+    #Processor clock frequency
+    input_frequency = clk_sama5d2_symbol_dict["PROCESSOR_CLOCK_FREQUENCY"].getValue()
+
+    #find the divider (named as EQ_PCK or PCK_DIV{n})
+    if "_DIV" not in mck_divider_key:
+        divisor = 1
+    else:
+        divisor = int(mck_divider_key.split("_DIV")[1])
+
+    #calculate the output frequency
+    output_frequency = input_frequency / divisor
+
+    #set the master clock frequency
+    symbol.setValue(output_frequency, 2)
+
+    #set the DDR clock frequency
+    clk_sama5d2_symbol_dict["DDR_CLOCK_FREQUENCY"].setValue(output_frequency, 2)
+    clk_sama5d2_symbol_dict["CLK_DDR_CLOCK_INVALID"].setVisible(divisor < 2)
+
+    #set the High speed bus clock frequency
+    clk_sama5d2_symbol_dict["PCLOCK_HS_CLOCK_FREQUENCY"].setValue( output_frequency, 2)
+
+global update_pclock_ls_frequency
+def update_pclock_ls_frequency(symbol,event):
+    input_frequency = clk_sama5d2_symbol_dict["MASTER_CLOCK_FREQUENCY"].getValue()
+
+    #symbol is named as H32MXDIV{n}
+    divisor = int(clk_sama5d2_symbol_dict["PMC_MCKR_H32MXDIV"].getSelectedKey().split("DIV")[1])
+
+    output_frequency = input_frequency / divisor
+    symbol.setValue(output_frequency, 2)
+
+    show_warning = output_frequency > CLK_SAMA5D2_CONSTANTS_DICT["PCLOCK_LS_MAX_FREQ"]
+    clk_sama5d2_symbol_dict["CLK_PCLOCK_LS_INVALID"].setVisible(show_warning)
+
+def update_peripheral_clock_frequencies(symbol, event):
     symbol.setValue(int(event["value"]), 2)
 
-def UpdateTCClockFrequency(symbol,event):
+def update_tc_clock_frequency(symbol, event):
     #symbol is named as "TC{instance_number}_CH{channel_number}_CLOCK_FREQUENCY.
     #Extract the instance number
     tcInstance = symbol.getID().split("TC")[1].split("_")[0]
@@ -31,31 +203,29 @@ def UpdateTCClockFrequency(symbol,event):
         clk_src = Database.getSymbolValue("tc" + str(tcInstance), "TC" + str(chInstance) + "_CMR_TCCLKS")
         #if clock source is MCK (Enabled through extended registers of TC)
         if (clk_src == 0):
-            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")), 2)
+            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"), 2)
         #if clock source is processor independent GCLK
-        #TODO: Populate the correct GCLK frequency symbol
         elif (clk_src == 1):
-            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")), 2)
+            symbol.setValue(Database.getSymbolValue("core", "TC" + str(tcInstance) + "GENERIC_CLOCK_FREQUENCY"), 2)
         #if clock  source is MCK/8
         elif (clk_src == 2):
-            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))/8, 2)
+            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")/8, 2)
         # if clock  source is MCK/32
         elif (clk_src == 3):
-            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))/32, 2)
+            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")/32, 2)
         # if clock  source is MCK/128
         elif (clk_src == 4):
-            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")) / 128, 2)
+            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY") / 128, 2)
         # if clock  source is SLOW CLOCK
         elif (clk_src == 5):
-            symbol.setValue(int(Database.getSymbolValue("core", "CLK_SLOW")), 2)
+            symbol.setValue(Database.getSymbolValue("core", "SLOW_CLK_FREQUENCY"), 2)
         #set MCK/8 as the default value
         else:
-            symbol.setValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")) / 8, 2)
-
+            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY") / 8, 2)
 
 # if any channel of TC instance is enabled, enable the peripheral clock of that instance
-global UpdateTCClockEnable
-def UpdateTCClockEnable(symbol, event):
+global update_tc_clock_enable
+def update_tc_clock_enable(symbol, event):
     tcInstance = symbol.getID()[2]
     enable_clock = False
     for channel in range(3):
@@ -66,7 +236,6 @@ def UpdateTCClockEnable(symbol, event):
     symbol.setValue(enable_clock, 2)
 
 global update_clk_component_visability
-
 def update_clk_component_visability(clk_comp, event):
     if event["value"] is True:
         clk_comp.setVisible(True)
@@ -107,30 +276,287 @@ def __update_pcer1_value(pmc_pcer1, perip_clk):
     else:
         pmc_pcer1.setValue(pcer1 & ~(1 << (DICT_PCER1[perip_clk["id"]] % 32)), 1)
 
-def __fixed_clock_menu(clk_comp, clk_menu):
-    fc_menu = clk_comp.createMenuSymbol("CLK_FIXED", clk_menu);
-    fc_menu.setLabel("Fixed Clocks");
-    fc_menu.setDescription("List of clock values configured by the bootloader.  Changing these clocks will break any image running out of DDR.")
+def __slow_clock_menu(clk_comp, clk_menu):
+    """
+       Slow Clock Menu Implementation.
 
-    clk = clk_comp.createIntegerSymbol("CLK_SLOW", fc_menu);
-    clk.setLabel("Slow Clock (Hz)")
-    clk.setValue(32768, 1)
-    clk.setReadOnly(True)
+       clk_comp: Clock Component handle
+       clk_menu: Clock Menu Symbol handle
+    """
 
-    clk = clk_comp.createIntegerSymbol("CLK_MAIN", fc_menu);
-    clk.setLabel("Main Clock (Crystal)(Hz)")
-    clk.setValue(12000000, 1)
-    clk.setReadOnly(True)
+    # creates Slow Clock Configuration Menu
+    slow_clk_menu = clk_comp.createMenuSymbol("CLK_SLOW_MENU", clk_menu)
+    slow_clk_menu.setLabel("Slow Clock Configuration")
 
-    clk = clk_comp.createIntegerSymbol("CLK_PLL", fc_menu);
-    clk.setLabel("PLL Clock (Hz)")
-    clk.setValue(498000000, 1)
-    clk.setReadOnly(True)
+    #create slow clock selector symbol
+    sym_slow_clock_selector = clk_comp.createKeyValueSetSymbol("SCK_CR_OSCSEL", slow_clk_menu)
+    sym_slow_clock_selector.setLabel("Slow Clock Selector")
 
-    clk = clk_comp.createIntegerSymbol("CLK_MCK", fc_menu);
-    clk.setLabel("Master Clock (MCK)(Hz)")
-    clk.setValue(166000000, 1)
-    clk.setReadOnly(True)
+    #Get the value group for the bitfield from atdf
+    set_symbol_value_from_atdf(sym_slow_clock_selector, "SCKC", "SCKC_CR__OSCSEL")
+
+    #set RC as the default value
+    sym_slow_clock_selector.setDefaultValue(1)
+    clk_sama5d2_symbol_dict["SCK_CR_OSCSEL"] = sym_slow_clock_selector
+
+    #symbol identifying the slow clock frequency
+    sym_clk_slow = clk_comp.createIntegerSymbol("SLOW_CLK_FREQUENCY", slow_clk_menu)
+    sym_clk_slow.setLabel("Slow Clock (Hz)")
+    sym_clk_slow.setDefaultValue(CLK_SAMA5D2_CONSTANTS_DICT["SLOW_XTAL_OSC_FREQ"])
+    sym_clk_slow.setReadOnly(True)
+    clk_sama5d2_symbol_dict["SLOW_CLK_FREQUENCY"] = sym_clk_slow
+    sym_clk_slow.setDependencies(update_slow_clock_frequency, ["SCK_CR_OSCSEL"])
+
+def __main_clock_menu(clk_comp, clk_menu):
+    """
+       Main Clock Menu Implementation.
+
+       clk_comp: Clock Component handle
+       clk_menu: Clock Menu Symbol handle
+    """
+
+    #main clock menu
+    main_clock_menu = clk_comp.createMenuSymbol("CLK_MAIN_MENU", clk_menu)
+    main_clock_menu.setLabel("Main clock configuration")
+
+    #symbol for the main crystal oscillator enable
+    sym_main_xtal_osc_enable = clk_comp.createBooleanSymbol("CKGR_MOR_MOSCXTEN", main_clock_menu)
+    sym_main_xtal_osc_enable.setLabel("External oscillator enable")
+    sym_main_xtal_osc_enable.setDefaultValue(True)
+    clk_sama5d2_symbol_dict["CKGR_MOR_MOSCXTEN"] = sym_main_xtal_osc_enable
+
+    #symbol for main crystal oscillator bypass
+    sym_main_xtal_osc_bypass = clk_comp.createBooleanSymbol("CKGR_MOR_MOSCXTBY", main_clock_menu)
+    sym_main_xtal_osc_bypass.setLabel("External oscillator bypass")
+    sym_main_xtal_osc_bypass.setDefaultValue(False)
+    clk_sama5d2_symbol_dict["CKGR_MOR_MOSCXTBY"] = sym_main_xtal_osc_bypass
+
+    #symbol for main crystal/clock input frequency
+    sym_main_xtal_input_frequency = clk_comp.createIntegerSymbol("MAIN_CRYSTAL_FREQUENCY", main_clock_menu)
+    sym_main_xtal_input_frequency.setLabel("External oscillator/clock frequency")
+    sym_main_xtal_input_frequency.setMin(CLK_SAMA5D2_CONSTANTS_DICT["EXT_OSC_MIN_FREQ"])
+    sym_main_xtal_input_frequency.setMax(CLK_SAMA5D2_CONSTANTS_DICT["EXT_OSC_MAX_FREQ"])
+    sym_main_xtal_input_frequency.setDefaultValue(CLK_SAMA5D2_CONSTANTS_DICT["EXT_OSC_DEFAULT_FREQ"])
+    clk_sama5d2_symbol_dict["MAIN_CRYSTAL_FREQUENCY"] = sym_main_xtal_input_frequency
+
+    #symbol for main crystal stabilization cycle count
+    sym_main_xtal_stabilization_count = clk_comp.createIntegerSymbol("CKGR_MOR_MOSCXTST", main_clock_menu)
+    sym_main_xtal_stabilization_count.setLabel("Main crystal stabilization count ( value x 8 SCLK cycles)")
+    sym_main_xtal_stabilization_count.setMin(0)
+    sym_main_xtal_stabilization_count.setMax(255)
+    clk_sama5d2_symbol_dict["CKGR_MOR_MOSCXTST"] = sym_main_xtal_stabilization_count
+
+    #symbol for main RC oscillator enable
+    sym_rc_osc_enable = clk_comp.createBooleanSymbol("CKGR_MOR_MOSCRCEN", main_clock_menu)
+    sym_rc_osc_enable.setLabel("Embedded RC oscillator enable")
+    sym_rc_osc_enable.setDefaultValue(False)
+    clk_sama5d2_symbol_dict["CKGR_MOR_MOSCRCEN"] = sym_rc_osc_enable
+
+    #symbol for main clock selection
+    sym_main_clk_selection = clk_comp.createKeyValueSetSymbol("CKGR_MOR_MOSCSEL", main_clock_menu)
+    sym_main_clk_selection.setLabel("Main clock source selection")
+    sym_main_clk_selection.addKey("RC", "0", "")
+    sym_main_clk_selection.addKey("XTAL", "1", "")
+    sym_main_clk_selection.setDefaultValue(1)
+    clk_sama5d2_symbol_dict["CKGR_MOR_MOSCSEL"] = sym_main_clk_selection
+
+    #symbol for main clock frequency
+    sym_main_clk_freq = clk_comp.createIntegerSymbol("MAIN_CLK_FREQUENCY", main_clock_menu)
+    sym_main_clk_freq.setLabel("Main Clock Frequency(Hz)")
+    sym_main_clk_freq.setDefaultValue(CLK_SAMA5D2_CONSTANTS_DICT["EXT_OSC_DEFAULT_FREQ"])
+    sym_main_clk_freq.setReadOnly(True)
+    clk_sama5d2_symbol_dict["MAIN_CLK_FREQUENCY"] = sym_main_clk_freq
+
+    #symbol for invalid clock source comment
+    sym_main_clk_src_invalid = clk_comp.createCommentSymbol("MAIN_CLK_INVALID_COMMENT", main_clock_menu)
+    sym_main_clk_src_invalid.setLabel("Oscillator/clock for current selection is not enabled !!!")
+    sym_main_clk_src_invalid.setVisible(False)
+    clk_sama5d2_symbol_dict["MAIN_CLK_INVALID_COMMENT"] = sym_main_clk_src_invalid
+
+def __plla_clock_menu(clk_comp, clk_menu):
+    """
+       PLLA Clock Menu Implementation.
+
+       clk_comp: Clock Component handle
+       clk_menu: Clock Menu Symbol handle
+    """
+    #plla clock menu
+    plla_clock_menu = clk_comp.createMenuSymbol("CLK_PLLA_MENU", clk_menu)
+    plla_clock_menu.setLabel("PLLA clock configuration")
+
+    #symbol for PLLA enable ( There is no corresponding register bit , it just sets MULA value to 0)
+    sym_plla_enable = clk_comp.createBooleanSymbol("CKGR_PLLAR_MULA0", plla_clock_menu)
+    sym_plla_enable.setLabel("PLLA Enable")
+    sym_plla_enable.setDefaultValue(True)
+    clk_sama5d2_symbol_dict["CKGR_PLLAR_MULA0"] = sym_plla_enable
+
+    #symbol for PLLA input divider
+    sym_plla_input_divider = clk_comp.createComboSymbol("CKGR_PLLAR_DIVA", plla_clock_menu, ["1", "2"])
+    sym_plla_input_divider.setLabel("PLLA input divider")
+    clk_sama5d2_symbol_dict["CKGR_PLLAR_DIVA"] = sym_plla_input_divider
+
+    #symbol for output multiplier
+    sym_plla_multiplier = clk_comp.createIntegerSymbol("CKGR_PLLA_MULA", plla_clock_menu)
+    sym_plla_multiplier.setLabel("PLLA multiplier")
+    sym_plla_multiplier.setMin(CLK_SAMA5D2_CONSTANTS_DICT["PLLA_MULA_MIN"])
+    sym_plla_multiplier.setMax(CLK_SAMA5D2_CONSTANTS_DICT["PLLA_MULA_MAX"])
+    sym_plla_multiplier.setDefaultValue(CLK_SAMA5D2_CONSTANTS_DICT["PLLA_MULA_DEFAULT"])
+    clk_sama5d2_symbol_dict["CKGR_PLLA_MULA"] = sym_plla_multiplier
+
+    #symbol for output divider
+    sym_plla_output_divider = clk_comp.createComboSymbol("CKGR_PLLAR_PLLDIVA2", plla_clock_menu, ["1", "2"])
+    sym_plla_output_divider.setLabel("PLLA output divider")
+    sym_plla_output_divider.setDefaultValue("2")
+    clk_sama5d2_symbol_dict["CKGR_PLLAR_PLLDIVA2"] = sym_plla_output_divider
+
+    #symbol for stabilization count
+    sym_plla_stabilization_count = clk_comp.createIntegerSymbol("CKGR_PLLAR_PLLACOUNT", plla_clock_menu)
+    sym_plla_stabilization_count.setLabel("PLLA stabilization count (in SCLK cycles)")
+    sym_plla_stabilization_count.setMin(0)
+    sym_plla_stabilization_count.setMax(63)
+    clk_sama5d2_symbol_dict["CKGR_PLLAR_PLLACOUNT"] = sym_plla_stabilization_count
+
+    #symbol for output clock frequency
+    sym_clk_plla_freq = clk_comp.createIntegerSymbol("PLLA_CLK_FREQUENCY", plla_clock_menu)
+    sym_clk_plla_freq.setLabel("PLL Clock (Hz)")
+    sym_clk_plla_freq.setDefaultValue(CLK_SAMA5D2_CONSTANTS_DICT["PLLA_DEFAULT_FREQ"])
+    sym_clk_plla_freq.setReadOnly(True)
+    clk_sama5d2_symbol_dict["PLLA_CLK_FREQUENCY"] = sym_clk_plla_freq
+
+def __utmi_pll_clock_menu(clk_comp, clk_menu):
+    """
+       UTMI Clock Menu Implementation.
+
+       clk_comp: Clock Component handle
+       clk_menu: Clock Menu Symbol handle
+    """
+    #utmi clock menu
+    utmi_clock_menu = clk_comp.createMenuSymbol("CLK_UTMI_PLL_MENU", clk_menu)
+    utmi_clock_menu.setLabel("UTMI clock menu")
+
+    #utmi clock enable
+    sym_utmi_pllen = clk_comp.createBooleanSymbol("CKGR_UCKR_UPLLEN", utmi_clock_menu)
+    sym_utmi_pllen.setLabel("UTMI PLL enable")
+    sym_utmi_pllen.setDefaultValue(True)
+    clk_sama5d2_symbol_dict["CKGR_UCKR_UPLLEN"] = sym_utmi_pllen
+
+    #utmi clock trimming
+    sym_utmi_cktrim = clk_comp.createKeyValueSetSymbol("SFR_UTMICKTRIM_FREQ", utmi_clock_menu)
+    sym_utmi_cktrim.addKey("x40", "0" ,"12MHz Reference Clock")
+    sym_utmi_cktrim.addKey("x30", "1", "16MHz Reference Clock")
+    sym_utmi_cktrim.addKey("x20", "2", "20MHz Reference Clock")
+    sym_utmi_cktrim.setLabel("Main clock multiplication factor")
+    sym_utmi_cktrim.setDefaultValue(0)
+    sym_utmi_cktrim.setReadOnly(True)
+    clk_sama5d2_symbol_dict["SFR_UTMICKTRIM_FREQ"] = sym_utmi_cktrim
+
+    #utmi invalid main clock comment
+    sym_utmi_invalid_comment = clk_comp.createCommentSymbol("CLK_UTMI_INVALID_MAIN_CLOCK", utmi_clock_menu)
+    sym_utmi_invalid_comment.setLabel("Current main clock cannot generate a valid UTMI clock of 480 MHz !!!")
+    sym_utmi_invalid_comment.setVisible(False)
+    clk_sama5d2_symbol_dict["CLK_UTMI_INVALID_MAIN_CLOCK"] = sym_utmi_invalid_comment
+
+    #utmi clock frequency symbol
+    sym_clk_utmi_freq = clk_comp.createIntegerSymbol("UPLL_CLK_FREQUENCY", utmi_clock_menu)
+    sym_clk_utmi_freq.setLabel("UTMI clock frequency(Hz)")
+    sym_clk_utmi_freq.setDefaultValue(CLK_SAMA5D2_CONSTANTS_DICT["UTMI_PLL_FREQ"])
+    sym_clk_utmi_freq.setReadOnly(True)
+    clk_sama5d2_symbol_dict["UPLL_CLK_FREQUENCY"] = sym_clk_utmi_freq
+
+def __master_clock_menu(clk_comp, clk_menu):
+    """
+       Master Clock Menu Implementation.
+
+       clk_comp: Clock Component handle
+       clk_menu: Clock Menu Symbol handle
+    """
+
+    #master clock menu
+    master_clock_menu = clk_comp.createMenuSymbol("CLK_MASTER_MENU", clk_menu)
+    master_clock_menu.setLabel("Master clock menu")
+
+    #MCK source selector
+    sym_mck_source_selector  = clk_comp.createKeyValueSetSymbol("PMC_MCKR_CSS", master_clock_menu)
+    sym_mck_source_selector.setLabel("MCK source selector")
+    # Get the value group for the bitfield from atdf
+    set_symbol_value_from_atdf(sym_mck_source_selector, "PMC", "PMC_MCKR__CSS")
+    sym_mck_source_selector.setDefaultValue(2)
+    clk_sama5d2_symbol_dict["PMC_MCKR_CSS"] = sym_mck_source_selector
+
+    #MCK source pre-scaler
+    sym_mck_prescaler = clk_comp.createKeyValueSetSymbol("PMC_MCKR_PRES", master_clock_menu)
+    sym_mck_prescaler.setLabel("MCK prescaler")
+    # Get the value group for the bitfield from atdf
+    set_symbol_value_from_atdf(sym_mck_prescaler, "PMC", "PMC_MCKR__PRES")
+    clk_sama5d2_symbol_dict["PMC_MCKR_PRES"] = sym_mck_prescaler
+
+    #Processor clock frequency
+    sym_processor_clk_freq = clk_comp.createIntegerSymbol("PROCESSOR_CLOCK_FREQUENCY", master_clock_menu)
+    sym_processor_clk_freq.setLabel("Processor Clock Frequency (HZ)")
+    sym_processor_clk_freq.setDefaultValue(clk_sama5d2_symbol_dict["PLLA_CLK_FREQUENCY"].getValue())
+    sym_processor_clk_freq.setReadOnly(True)
+    clk_sama5d2_symbol_dict["PROCESSOR_CLOCK_FREQUENCY"] = sym_processor_clk_freq
+
+    #MCK divider
+    sym_mck_divider = clk_comp.createKeyValueSetSymbol("PMC_MCKR_MDIV", master_clock_menu)
+    sym_mck_divider.setLabel("MCK divider")
+    # Get the value group for the bitfield from atdf
+    set_symbol_value_from_atdf(sym_mck_divider, "PMC", "PMC_MCKR__MDIV")
+    sym_mck_divider.setDefaultValue(3)
+    clk_sama5d2_symbol_dict["PMC_MCKR_MDIV"] = sym_mck_divider
+
+    sym_invalid_mck_divider = clk_comp.createCommentSymbol("CLK_MCK_DIV_INVALID", master_clock_menu)
+    sym_invalid_mck_divider.setLabel("If MCK divider is 3 and processor clock source is PLLA, PLLA2 divider " +
+                                                                            "should be enabled !!!")
+    sym_invalid_mck_divider.setVisible(False)
+    clk_sama5d2_symbol_dict["CLK_MCK_DIV_INVALID"] = sym_invalid_mck_divider
+
+    #Master clock frequency
+    sym_master_clk_freq = clk_comp.createIntegerSymbol("MASTER_CLOCK_FREQUENCY", master_clock_menu)
+    sym_master_clk_freq.setLabel("Master Clock Frequency (HZ)")
+    sym_master_clk_freq.setDefaultValue(clk_sama5d2_symbol_dict["PLLA_CLK_FREQUENCY"].getValue()/sym_mck_divider.getValue())
+    sym_master_clk_freq.setReadOnly(True)
+    clk_sama5d2_symbol_dict["MASTER_CLOCK_FREQUENCY"] = sym_master_clk_freq
+
+    #DDR clock frequency
+    sym_ddr_clk_freq = clk_comp.createIntegerSymbol("DDR_CLOCK_FREQUENCY", master_clock_menu)
+    sym_ddr_clk_freq.setLabel("DDR clock Frequency (Hz)")
+    sym_ddr_clk_freq.setDefaultValue(sym_master_clk_freq.getValue())
+    sym_ddr_clk_freq.setReadOnly(True)
+    clk_sama5d2_symbol_dict["DDR_CLOCK_FREQUENCY"] = sym_ddr_clk_freq
+
+    #DDR clock invalid comment
+    sym_ddr_clk_invalid_comment = clk_comp.createCommentSymbol("CLK_DDR_CLOCK_INVALID", master_clock_menu)
+    sym_ddr_clk_invalid_comment.setLabel("DDR clock is invalid when the master clock is equal to processor clock !!!")
+    sym_ddr_clk_invalid_comment.setVisible(False)
+    clk_sama5d2_symbol_dict["CLK_DDR_CLOCK_INVALID"] = sym_ddr_clk_invalid_comment
+
+    sym_periph_hs_clk_freq = clk_comp.createIntegerSymbol("PCLOCK_HS_CLOCK_FREQUENCY", master_clock_menu)
+    sym_periph_hs_clk_freq.setLabel("H64MX bus clock (HZ)")
+    sym_periph_hs_clk_freq.setDefaultValue(sym_master_clk_freq.getValue())
+    sym_periph_hs_clk_freq.setReadOnly(True)
+    clk_sama5d2_symbol_dict["PCLOCK_HS_CLOCK_FREQUENCY"] = sym_periph_hs_clk_freq
+
+    #Low speed bus clock divider
+    sym_h32mx_divider = clk_comp.createKeyValueSetSymbol("PMC_MCKR_H32MXDIV", master_clock_menu)
+    sym_h32mx_divider.setLabel("H32MX divider")
+    # Get the value group for the bitfield from atdf
+    set_symbol_value_from_atdf(sym_h32mx_divider, "PMC", "PMC_MCKR__H32MXDIV")
+    sym_h32mx_divider.setDefaultValue(1)
+    clk_sama5d2_symbol_dict["PMC_MCKR_H32MXDIV"] = sym_h32mx_divider
+
+    #Low speed bus clock frequency
+    sym_periph_clk_ls_freq = clk_comp.createIntegerSymbol("PCLOCK_LS_CLOCK_FREQUENCY", master_clock_menu)
+    sym_periph_clk_ls_freq.setLabel("H32MX bus clock(HZ)")
+    sym_periph_clk_ls_freq.setDefaultValue(sym_master_clk_freq.getDefaultValue()/2)
+    sym_periph_clk_ls_freq.setReadOnly(True)
+    clk_sama5d2_symbol_dict["PCLOCK_LS_CLOCK_FREQUENCY"] = sym_periph_clk_ls_freq
+
+    #Low speed bus clock invalid comment
+    sym_pclock_ls_invalid_comment = clk_comp.createCommentSymbol("CLK_PCLOCK_LS_INVALID", master_clock_menu)
+    sym_pclock_ls_invalid_comment.setLabel("H32MX bus clock cannot be higher than 83 MHz !!!")
+    sym_pclock_ls_invalid_comment.setVisible(False)
+    clk_sama5d2_symbol_dict["CLK_PCLOCK_LS_INVALID"] = sym_pclock_ls_invalid_comment
 
 def __audio_clock_menu(clk_comp, clk_menu, pmc_reg_module):
     """
@@ -231,8 +657,8 @@ def __usb_clock_menu(clk_comp, clk_menu, pmc_reg_module, sfr_reg_module):
     update_upll_divider_visibility: Callback to enable/disable UPLL Divider visibility
     """
     # create symbol for USB Clock Menu
-    clk_menu = clk_comp.createMenuSymbol("CLK_USB", clk_menu)
-    clk_menu.setLabel("USB Clock Configuration")
+    usb_clk_menu = clk_comp.createMenuSymbol("CLK_USB", clk_menu)
+    usb_clk_menu.setLabel("USB Clock Configuration")
 
     # get PMC register group
     pmc_reg_group = pmc_reg_module.getRegisterGroup("PMC")
@@ -244,7 +670,7 @@ def __usb_clock_menu(clk_comp, clk_menu, pmc_reg_module, sfr_reg_module):
     bitfield_ckgr_uckr_upllen = reg_ckgr_uckr.getBitfield("UPLLEN")
 
     # create symbol for UPLLEN Bitfield of CKGR_UCKR register
-    sym_ckgr_uckr_upllen = clk_comp.createBooleanSymbol("PMC_CKGR_UCKR_UPLLEN", clk_menu)
+    sym_ckgr_uckr_upllen = clk_comp.createBooleanSymbol("PMC_CKGR_UCKR_UPLLEN", usb_clk_menu)
     sym_ckgr_uckr_upllen.setLabel(bitfield_ckgr_uckr_upllen.getDescription())
 
     # UPLLCOUNT
@@ -282,14 +708,14 @@ def __usb_clock_menu(clk_comp, clk_menu, pmc_reg_module, sfr_reg_module):
     bitfield_pmc_scer_udpclk = reg_pmc_scer.getBitfield("UDP")
 
     # get symbol for UDPCLK bitfield of PMC_SCER register
-    sym_pmc_scer_udp = clk_comp.createBooleanSymbol("PMC_SCER_UDPCLK", clk_menu)
+    sym_pmc_scer_udp = clk_comp.createBooleanSymbol("PMC_SCER_UDPCLK", usb_clk_menu)
     sym_pmc_scer_udp.setLabel(bitfield_pmc_scer_udpclk.getDescription())
 
     # get UHP bitfield of PMC_SCER register
     bitfield_pmc_scer_uhpclk = reg_pmc_scer.getBitfield("UHP")
 
     # get symbol for UDPCLK bitfield of PMC_SCER register
-    sym_pmc_scer_uhpclk = clk_comp.createBooleanSymbol("PMC_SCER_UHPCLK", clk_menu)
+    sym_pmc_scer_uhpclk = clk_comp.createBooleanSymbol("PMC_SCER_UHPCLK", usb_clk_menu)
     sym_pmc_scer_uhpclk.setLabel(bitfield_pmc_scer_uhpclk.getDescription())
 
     # get PMC_USB register
@@ -307,11 +733,22 @@ def __usb_clock_menu(clk_comp, clk_menu, pmc_reg_module, sfr_reg_module):
     bitfield_pmc_usb_usbdiv = reg_pmc_usb.getBitfield("USBDIV")
 
     # create symbol for USBDIV bitfield of PMC_USB register
-    sym_usb_divider = clk_comp.createIntegerSymbol("PMC_USB_USBDIV", clk_menu)
+    sym_usb_divider = clk_comp.createIntegerSymbol("PMC_USB_USBDIV", usb_clk_menu)
     sym_usb_divider.setLabel(bitfield_pmc_usb_usbdiv.getDescription())
     sym_usb_divider.setMin(1)
     sym_usb_divider.setMax(16)
     sym_usb_divider.setDefaultValue(10)
+
+    #USB clock frequencies
+    sym_usb_fs_freq = clk_comp.createStringSymbol("USBFS_CLOCK_FREQUENCY", usb_clk_menu)
+    sym_usb_fs_freq.setLabel("USB Clock Frequency (HZ)")
+    sym_usb_fs_freq.setDefaultValue("48000000")
+    sym_usb_fs_freq.setReadOnly(True)
+
+    sym_usb_hs_freq = clk_comp.createStringSymbol("USBHS_CLOCK_FREQUENCY", usb_clk_menu)
+    sym_usb_hs_freq.setLabel("USB High Speed Clock Frequency (HZ)")
+    sym_usb_hs_freq.setDefaultValue("480000000")
+    sym_usb_hs_freq.setReadOnly(True)
 
 def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module):
     """
@@ -322,8 +759,8 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module):
     pmc_reg_module: PMC Register Module
     """
     # create symbol for generic clock
-    clk_menu = clk_comp.createMenuSymbol("CLK_GENERIC", clk_menu)
-    clk_menu.setLabel("Generic Clock Generator Configuration for select peripherals")
+    generic_clk_menu = clk_comp.createMenuSymbol("CLK_GENERIC", clk_menu)
+    generic_clk_menu.setLabel("Generic Clock Generator Configuration for select peripherals")
 
     # get PMC register group
     pmc_reg_group = pmc_reg_module.getRegisterGroup("PMC")
@@ -343,7 +780,7 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module):
         i = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\""+module+"\"]/instance@[name=\""+periph+"\"]/parameters/param@[name=\"INSTANCE_ID\"]").getAttribute("value")
 
         # create menu for Peripheral/Generic Clock
-        sym_gclkx_menu = clk_comp.createMenuSymbol("CLK_GEN" + str(i), clk_menu)
+        sym_gclkx_menu = clk_comp.createMenuSymbol("CLK_GEN" + str(i), generic_clk_menu)
         sym_gclkx_menu.setLabel("Generic Clock for Peripheral " + periph)
 
         # get GCLKEN bitfield of PMC_PCR register
@@ -381,6 +818,12 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module):
         sym_pmc_pcr_gckcss.setSelectedKey("SLOW_CLK",1)
         sym_pmc_pcr_gckcss.setDependencies(update_clk_component_visability, ["PMC_PCR_GCLK" + str(i) + "EN"])
 
+        #calculated generic clock frequency
+        gen_clk_freq = clk_comp.createIntegerSymbol(periph + "_GENERIC_CLOCK_FREQUENCY", sym_gclkx_menu)
+        gen_clk_freq.setLabel(periph + " Generic Clock Frequency (HZ)")
+        gen_clk_freq.setDefaultValue(166000000)
+        gen_clk_freq.setReadOnly(True)
+
 def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_pcer0_value, update_pcer1_value):
     """
     Peripheral Clock Menu Implementation.
@@ -392,7 +835,6 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
     update_pcer0_value: Callback to calculate PCER0 Register Value.
     update_pcer1_value: Callback to calculate PCER1 Register Value.
     """
-
 
     global DICT_PCER0
     global DICT_PCER1
@@ -451,7 +893,7 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
                             tc_channel_enable_symbol.setDefaultValue(False)
                             tc_enable_dependent_list.append("core." + tc_enable_symbol_id)
 
-                        sym_perip_clk.setDependencies(UpdateTCClockEnable, tc_enable_dependent_list)
+                        sym_perip_clk.setDependencies(update_tc_clock_enable, tc_enable_dependent_list)
 
 
     # create symbol for PMC_PCERx register values
@@ -527,6 +969,22 @@ def __programmable_clock_menu(clk_comp, clk_menu, pmc_reg_module):
         sym_pmc_pck_pres.setVisible(False)
         sym_pmc_pck_pres.setDependencies(update_clk_component_visability, ["PMC_SCER_PCK"+str(i)])
 
+    #calculated PCK frequencies
+    sym_pck0_freq = clk_comp.createStringSymbol("PCK0_CLOCK_FREQUENCY", sym_prog_clk_menu)
+    sym_pck0_freq.setLabel("Programmable clock #0 Frequency (HZ)")
+    sym_pck0_freq.setDefaultValue("12000000")
+    sym_pck0_freq.setReadOnly(True)
+
+    sym_pck1_freq = clk_comp.createStringSymbol("PCK1_CLOCK_FREQUENCY", sym_prog_clk_menu)
+    sym_pck1_freq.setLabel("Programmable clock #1 Frequency (HZ)")
+    sym_pck1_freq.setDefaultValue("6000000")
+    sym_pck1_freq.setReadOnly(True)
+
+    sym_pck2_freq = clk_comp.createStringSymbol("PCK2_CLOCK_FREQUENCY", sym_prog_clk_menu)
+    sym_pck2_freq.setLabel("Programmable clock #2 Frequency (HZ)")
+    sym_pck2_freq.setDefaultValue("4000000")
+    sym_pck2_freq.setReadOnly(True)
+
 def __lcd_clock_menu(clk_comp, clk_menu, pmc_reg_module):
     """
     LCD Clock Menu Implementation.
@@ -571,70 +1029,57 @@ def __isc_clock_menu(clk_comp, clk_menu, pmc_reg_module):
     sym_iscclk.setLabel(bitfield_pmc_scer_iscck.getDescription())
     sym_iscclk.setDefaultValue(False)
 
-    #currently these values are hard coded here and updated by the java gui
-def __calculated_clock_frequencies(clk_comp, clk_menu):
-    """
-    Calculated Clock frequencies Menu Implementation.
+#Add menu symbol dependencies
+def set_clock_symbol_dependencies():
 
-    clk_comp: Clock Component handle
-    clk_menu: Clock Menu Symbol handle
-    """
+    #slow clock frequency dependencies
+    clk_sama5d2_symbol_dict["SLOW_CLK_FREQUENCY"].setDependencies(update_slow_clock_frequency, ["SCK_CR_OSCSEL"])
 
-    #Calculated Clock Frequencies
-    sym_calc_freq_menu = clk_comp.createMenuSymbol("CALC_CLOCK_FREQ_MENU", clk_menu)
-    sym_calc_freq_menu.setLabel("Calculated Clock Frequencies")
+    #main clock frequency symbol dependencies
+    clk_sama5d2_symbol_dict["MAIN_CLK_FREQUENCY"].setDependencies(update_main_clock_frequency,
+                                                                   ["CKGR_MOR_MOSCXTEN",
+                                                                    "CKGR_MOR_MOSCXTBY",
+                                                                    "MAIN_CRYSTAL_FREQUENCY",
+                                                                    "CKGR_MOR_MOSCRCEN",
+                                                                    "CKGR_MOR_MOSCSEL"])
+    #PLLA clock frequency dependencies
+    clk_sama5d2_symbol_dict["PLLA_CLK_FREQUENCY"].setDependencies(update_plla_clock_frequency,
+                                                                   ["CKGR_PLLAR_MULA0",
+                                                                    "CKGR_PLLAR_DIVA",
+                                                                    "CKGR_PLLA_MULA",
+                                                                    "CKGR_PLLAR_PLLDIVA2"])
 
-    sym_proc_clk_freq = clk_comp.createStringSymbol("CPU_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_proc_clk_freq.setLabel("Processor Clock Frequency (HZ)")
-    sym_proc_clk_freq.setDefaultValue("498000000")
-    sym_proc_clk_freq.setReadOnly(True)
+    #UTMI clock symbol dependencies
+    clk_sama5d2_symbol_dict["SFR_UTMICKTRIM_FREQ"].setDependencies(update_utmi_clock_frequency,
+                                                                  ["CKGR_UCKR_UPLLEN",
+                                                                   "MAIN_CLK_FREQUENCY"])
 
-    sym_master_clk_freq = clk_comp.createStringSymbol("MASTER_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_master_clk_freq.setLabel("Master Clock Frequency (HZ)")
-    sym_master_clk_freq.setDefaultValue("166000000")
-    sym_master_clk_freq.setReadOnly(True)
+    #Processor clock symbol dependencies
+    clk_sama5d2_symbol_dict["PROCESSOR_CLOCK_FREQUENCY"].setDependencies(update_processor_clock_frequency,
+                                                                           ["PMC_MCKR_CSS",
+                                                                            "PMC_MCKR_PRES",
+                                                                            "SLOW_CLK_FREQUENCY",
+                                                                            "MAIN_CLK_FREQUENCY",
+                                                                            "PLLA_CLK_FREQUENCY",
+                                                                            "UPLL_CLK_FREQUENCY"])
 
-    periph_clk = clk_comp.createStringSymbol("PCLOCK_HS_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    periph_clk.setLabel("HS Peripheral Clock Frequency (HZ)")
-    periph_clk.setDefaultValue(sym_master_clk_freq.getDefaultValue())
-    periph_clk.setReadOnly(True)
+    #Master clock symbol dependencies
+    clk_sama5d2_symbol_dict["MASTER_CLOCK_FREQUENCY"].setDependencies(update_master_clock_frequency,
+                                                                      ["PROCESSOR_CLOCK_FREQUENCY",
+                                                                       "PMC_MCKR_MDIV"])
 
-    periph_clk_ls = clk_comp.createStringSymbol("PCLOCK_LS_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    periph_clk_ls.setLabel("LS Peripheral Clock Frequency (HZ)")
-    periph_clk_ls.setDefaultValue(str(int(sym_master_clk_freq.getDefaultValue())/2))
-    periph_clk_ls.setReadOnly(True)
+    #Low speed bus clock symbol dependencies
+    clk_sama5d2_symbol_dict["PCLOCK_LS_CLOCK_FREQUENCY"].setDependencies(update_pclock_ls_frequency,
+                                                                      ["MASTER_CLOCK_FREQUENCY",
+                                                                       "PMC_MCKR_H32MXDIV"])
 
-    sym_pck0_freq = clk_comp.createStringSymbol("PCK0_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck0_freq.setLabel("Programmable clock #0 Frequency (HZ)")
-    sym_pck0_freq.setDefaultValue("12000000")
-    sym_pck0_freq.setReadOnly(True)
 
-    sym_pck1_freq = clk_comp.createStringSymbol("PCK1_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck1_freq.setLabel("Programmable clock #1 Frequency (HZ)")
-    sym_pck1_freq.setDefaultValue("6000000")
-    sym_pck1_freq.setReadOnly(True)
+#Lock all fixed clock menus
+def use_fixed_clocks():
 
-    sym_pck2_freq = clk_comp.createStringSymbol("PCK2_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_pck2_freq.setLabel("Programmable clock #2 Frequency (HZ)")
-    sym_pck2_freq.setDefaultValue("4000000")
-    sym_pck2_freq.setReadOnly(True)
-
-    sym_usb_fs_freq = clk_comp.createStringSymbol("USBFS_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_usb_fs_freq.setLabel("USB Clock Frequency (HZ)")
-    sym_usb_fs_freq.setDefaultValue("48000000")
-    sym_usb_fs_freq.setReadOnly(True)
-
-    sym_usb_hs_freq = clk_comp.createStringSymbol("USBHS_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    sym_usb_hs_freq.setLabel("USB High Speed Clock Frequency (HZ)")
-    sym_usb_hs_freq.setDefaultValue("480000000")
-    sym_usb_hs_freq.setReadOnly(True)
-
-    for periph in generic_list:
-        gen_clk = clk_comp.createStringSymbol(periph+"_PROGRAMMABLE_CLOCK_FREQUENCY", sym_calc_freq_menu)
-        gen_clk.setLabel(periph + " Generic Clock Frequency (HZ)")
-        #gen_clk.setDefaultValue("32768")
-        gen_clk.setDefaultValue("166000000")
-        gen_clk.setReadOnly(True)
+    for name, symbol in clk_sama5d2_symbol_dict.items():
+        if symbol.getType() != "Comment":
+            symbol.setReadOnly(True)
 
 
 if __name__ == "__main__":
@@ -655,7 +1100,20 @@ if __name__ == "__main__":
     SCKC_REGISTERS = Register.getRegisterModule("SCKC")
     SFR_REGISTERS = Register.getRegisterModule("SFR")
 
-    __fixed_clock_menu(coreComponent, SYM_CLK_MENU)
+    #Slow clock
+    __slow_clock_menu(coreComponent, SYM_CLK_MENU)
+
+    #Main clock
+    __main_clock_menu(coreComponent, SYM_CLK_MENU)
+
+    #PLLA clock
+    __plla_clock_menu(coreComponent, SYM_CLK_MENU)
+
+    #UTMI clock
+    __utmi_pll_clock_menu(coreComponent, SYM_CLK_MENU)
+
+    #Master clock
+    __master_clock_menu(coreComponent, SYM_CLK_MENU)
 
     # Audio PLL
     __audio_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS)
@@ -678,8 +1136,13 @@ if __name__ == "__main__":
     # creates usb clock
     __usb_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, SFR_REGISTERS)
 
-    # creates calculated frequencies menu
-    __calculated_clock_frequencies(coreComponent, SYM_CLK_MENU)
+    #If the system is configured to use clocks set by bootloader, do not allow the
+    #user to modify the clock sources for processor and peripherals
+    if SAMA5D2_USE_BOOTLOADER_CLOCKS == True:
+        use_fixed_clocks()
+    #else enable dependency callbacks for the clock logic to work correctly
+    else:
+        set_clock_symbol_dependencies()
 
     # calculated peripheral frequencies
     peripherals = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
@@ -712,11 +1175,11 @@ if __name__ == "__main__":
             if module_name in hs_peripherals_list:
                 sym_peripheral_clock_freq.setDefaultValue(
                     int(Database.getSymbolValue("core", "PCLOCK_HS_CLOCK_FREQUENCY")))
-                sym_peripheral_clock_freq.setDependencies(periphFreqCalc, ["core.PCLOCK_HS_CLOCK_FREQUENCY"])
+                sym_peripheral_clock_freq.setDependencies(update_peripheral_clock_frequencies, ["core.PCLOCK_HS_CLOCK_FREQUENCY"])
             else:
                 sym_peripheral_clock_freq.setDefaultValue(
                     int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
-                sym_peripheral_clock_freq.setDependencies(periphFreqCalc, ["core.PCLOCK_LS_CLOCK_FREQUENCY"])
+                sym_peripheral_clock_freq.setDependencies(update_peripheral_clock_frequencies, ["core.PCLOCK_LS_CLOCK_FREQUENCY"])
 
     #TC clock symbol generation is handled seperately to accomodate per channel configuration
     tc_module = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]")
@@ -733,12 +1196,12 @@ if __name__ == "__main__":
             tc_channel_symbol.setVisible(False)
             tc_channel_symbol.setReadOnly(True)
             tc_channel_symbol.setDefaultValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
-            #TODO: Need to add GCLK frequency symbols as dependency
             tc_dependent_symbol_list = ["core.PCLOCK_LS_CLOCK_FREQUENCY",
-                                        "core.CLK_SLOW",
+                                        "core.SLOW_CLK_FREQUENCY",
+                                        "core.TC" + str(tc_instance_number) + "_GENERIC_CLOCK_FREQUENCY",
                                         "tc" + str(tc_instance_number) + ".TC" + str(tc_channel_number) + "_CMR_TCCLKS",
                                         "tc"+str(tc_instance_number)+".TC"+str(tc_channel_number)+"_ENABLE"]
-            tc_channel_symbol.setDependencies(UpdateTCClockFrequency, tc_dependent_symbol_list)
+            tc_channel_symbol.setDependencies(update_tc_clock_frequency, tc_dependent_symbol_list)
 
 
     #MPDDRC is enabled by bootloader so make sure we don't disable it
