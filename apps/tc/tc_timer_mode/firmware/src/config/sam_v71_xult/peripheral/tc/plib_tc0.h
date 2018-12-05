@@ -55,8 +55,8 @@
 /*  This section lists the other files that are included in this file.
 */
 
+
 #include "plib_tc_common.h"
-#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

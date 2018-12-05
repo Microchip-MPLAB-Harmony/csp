@@ -66,11 +66,11 @@ TC_TIMER_CALLBACK_OBJECT TC0_CH0_CallbackObj;
 void TC0_CH0_TimerInitialize (void)
 {
     /* clock selection and waveform selection */
-    TC0_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_TIMER_CLOCK5 | TC_CMR_WAVEFORM_WAVSEL_UP_RC | \
+    TC0_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_TIMER_CLOCK1 | TC_CMR_WAVEFORM_WAVSEL_UP_RC | \
                                                         TC_CMR_WAVE_Msk ;
 
     /* write period */
-    TC0_REGS->TC_CHANNEL[0].TC_RC = 32768U;
+    TC0_REGS->TC_CHANNEL[0].TC_RC = 32000U;
 
 
     /* enable interrupt */
@@ -92,7 +92,7 @@ void TC0_CH0_TimerStop (void)
 
 uint32_t TC0_CH0_TimerFrequencyGet( void )
 {
-    return (uint32_t)(50000000UL);
+    return (uint32_t)(32000UL);
 }
 
 /* Configure timer period */

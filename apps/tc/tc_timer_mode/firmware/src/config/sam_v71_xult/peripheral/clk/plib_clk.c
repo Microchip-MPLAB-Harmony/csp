@@ -50,6 +50,26 @@ static void CLK_MasterClockInitialize(void)
 
 
 
+/*********************************************************************************
+Initialize Programmable Clock (PCKx)
+*********************************************************************************/
+
+static void CLK_ProgrammableClockInitialize(void)
+{
+    /* Disable selected programmable clock  */
+    PMC_REGS->PMC_SCDR = PMC_SCDR_PCK6_Msk;
+
+    /* Configure selected programmable clock    */
+    PMC_REGS->PMC_PCK[6]= PMC_PCK_CSS_SLOW_CLK | PMC_PCK_PRES(0);
+
+    /* Enable selected programmable clock   */
+    PMC_REGS->PMC_SCER =    PMC_SCER_PCK6_Msk;
+
+    /* Wait for clock to be ready   */
+    while( (PMC_REGS->PMC_SR & (PMC_SR_PCKRDY6_Msk) ) != (PMC_SR_PCKRDY6_Msk));
+
+
+}
 
 
 /*********************************************************************************
@@ -71,6 +91,8 @@ void CLK_Initialize( void )
 
 
 
+    /* Initialize Programmable Clock */
+    CLK_ProgrammableClockInitialize();
 
     /* Enable Peripheral Clock */
     PMC_REGS->PMC_PCER0=0x831c00;
