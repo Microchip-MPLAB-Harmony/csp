@@ -1,3 +1,4 @@
+<#assign dummyHandlers = [] />
 <#list NVIC_VECTOR_MIN..NVIC_VECTOR_MAX as i>
     <#assign NVIC_COMMON_ENABLE = false>
     <#assign NVIC_NEXT_VECTOR = "NVIC_" + i + "_1_VECTOR">
@@ -27,7 +28,11 @@ void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, a
         <#assign NVIC_VECTOR_ENABLE = "NVIC_" + i + "_" + "0_ENABLE">
         <#assign NVIC_VECTOR_HANDLER = "NVIC_" + i + "_" + "0_HANDLER">
         <#if .vars[NVIC_VECTOR]?has_content && (.vars[NVIC_VECTOR] != "None")>
+            <#assign handler = .vars[NVIC_VECTOR_HANDLER]>
+            <#if !dummyHandlers?seq_contains(handler)>
+                <#assign dummyHandlers = dummyHandlers + [handler] />
 void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+            </#if>
         </#if>
     </#if>
 </#list>    
