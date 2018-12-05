@@ -70,11 +70,11 @@ int main ( void )
     number = 144;
     squareroot = DIVAS_SquareRoot(number);
     
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\r                SQUARE ROOT CALCULATION                  ");
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\rInput number = %lu\r\n",number);
-    printf("\n\n\rSquareroot = %lu\r\n",squareroot);
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                SQUARE ROOT CALCULATION                  ");
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\rInput Number = %lu\r",number);
+    printf("\n\rSquare Root = %lu\r",squareroot);
     
     int32_t sign_numerator;
     int32_t sign_denominator;
@@ -83,12 +83,12 @@ int main ( void )
     sign_denominator = -2000;
     sign_numerator = 10000;
     
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\r                SIGNED INTEGER DIVSION                   ");
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\rNumerator = %ld , Denominator = %ld\r\n",sign_numerator,sign_denominator);
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                SIGNED INTEGER DIVISION                  ");
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\rNumerator = %ld, Denominator = %ld\r",sign_numerator,sign_denominator);
     sign_quotient = DIVAS_DivSigned(sign_numerator, sign_denominator);
-    printf("\n\n\rQuotient = %ld\r\n",sign_quotient);
+    printf("\n\rQuotient = %ld\r",sign_quotient);
     
     uint32_t unsign_numerator;
     uint32_t unsign_denominator;
@@ -97,23 +97,23 @@ int main ( void )
     unsign_denominator = 2000;
     unsign_numerator = 10000;
 
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\r                UNSIGNED INTEGER DIVSION                 ");
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\rNumerator = %lu , Denominator = %lu\r\n",unsign_numerator,unsign_denominator);
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                UNSIGNED INTEGER DIVISION                ");
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\rNumerator = %lu, Denominator = %lu\r",unsign_numerator,unsign_denominator);
     unsign_quotient = DIVAS_DivUnsigned(unsign_numerator,unsign_denominator);
-    printf("\n\n\rQuotient = %lu\r\n",unsign_quotient);
+    printf("\n\rQuotient = %lu\r",unsign_quotient);
    
     unsign_denominator = 2000;
     unsign_numerator = 10001;
     uint64_t unsign_quotient2;
     
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\r          UNSIGNED INTEGER DIVSION WITH REMAINDER        ");
-    printf("\n\n\r---------------------------------------------------------");
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r          UNSIGNED INTEGER DIVISION WITH REMAINDER       ");
+    printf("\n\r---------------------------------------------------------");
     unsign_quotient2 = DIVAS_DivmodUnsigned(unsign_numerator,unsign_denominator);
-    printf("\n\n\rNumerator = %lu , Denominator = %lu\r\n",unsign_numerator,unsign_denominator);
-    printf("\n\n\rQuotient = %lu,remainder = %lu\r\n",(uint32_t)unsign_quotient2,(uint32_t)(unsign_quotient2 >> 32));
+    printf("\n\rNumerator = %lu, Denominator = %lu\r",unsign_numerator,unsign_denominator);
+    printf("\n\rQuotient = %lu, Remainder = %lu\n\r",(uint32_t)unsign_quotient2,(uint32_t)(unsign_quotient2 >> 32));
     /* Execution should not come here during normal operation */
 
     return ( EXIT_FAILURE );

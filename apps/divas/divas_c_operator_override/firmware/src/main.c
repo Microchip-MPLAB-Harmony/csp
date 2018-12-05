@@ -62,10 +62,6 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\r               DIVAS C Operator Override                 ");
-    printf("\n\n\r---------------------------------------------------------");
-    
     int32_t sign_numerator;
     int32_t sign_denominator;
     int32_t sign_quotient, sign_remainder;
@@ -73,13 +69,13 @@ int main ( void )
     sign_denominator = -2000;
     sign_numerator = 10001;
     
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\r                SIGNED INTEGER DIVSION                   ");
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\rNumerator = %ld , Denominator = %ld\r\n",sign_numerator,sign_denominator);
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                SIGNED INTEGER DIVISION                  ");
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\rNumerator = %ld , Denominator = %ld\r",sign_numerator,sign_denominator);
     sign_quotient = sign_numerator/sign_denominator;
     sign_remainder = sign_numerator%sign_denominator;
-    printf("\n\n\rQuotient = %ld Remainder = %ld\r\n",sign_quotient,sign_remainder);
+    printf("\n\rQuotient = %ld Remainder = %ld\r",sign_quotient,sign_remainder);
     
     uint32_t unsign_numerator;
     uint32_t unsign_denominator;
@@ -88,13 +84,13 @@ int main ( void )
     unsign_denominator = 2000;
     unsign_numerator = 10002;
 
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\r                UNSIGNED INTEGER DIVSION                 ");
-    printf("\n\n\r---------------------------------------------------------");
-    printf("\n\n\rNumerator = %lu , Denominator = %lu\r\n",unsign_numerator,unsign_denominator);
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                UNSIGNED INTEGER DIVISION                ");
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\rNumerator = %lu , Denominator = %lu\r",unsign_numerator,unsign_denominator);
     unsign_quotient = unsign_numerator/unsign_denominator;
     unsign_remainder = unsign_numerator%unsign_denominator;
-    printf("\n\n\rQuotient = %lu Remainder = %lu\r\n",unsign_quotient,unsign_remainder);
+    printf("\n\rQuotient = %lu, Remainder = %lu\n\r",unsign_quotient,unsign_remainder);
    
     /* Execution should not come here during normal operation */
 
