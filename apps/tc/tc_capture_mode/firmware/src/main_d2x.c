@@ -105,9 +105,12 @@ int main ( void )
         }
         TC3_Compare16bitSet(cmp_val);
         
-        /* Wait for compare event */
-        while(tc_buffer_ready != true);
+        /* Wait for 1 second */ 
+        SYSTICK_DelayMs(500);
         
+        /* Wait for capture event */
+        while(tc_buffer_ready != true);
+           
         /* Read Captured values */ 
         period = TC4_Capture16bitChannel0Get();
         on_time = TC4_Capture16bitChannel1Get();
@@ -117,12 +120,8 @@ int main ( void )
         frequency = (TC4_CaptureFrequencyGet() / period);
         
         /* Send the measured data to console for display  */
-        printf("Frequency of waveform: %d Hz \t Duty Cycle of waveform: %d ",(int) frequency,(int) duty);
-        printf("\r\n"); 
-                
-        /* Wait for 1 second */ 
-        SYSTICK_DelayMs(1000);
-        
+        printf("Frequency: %d Hz \t Duty Cycle: %d %%",(int) frequency,(int) duty);
+        printf("\r\n");       
         tc_buffer_ready = false;
     }
 

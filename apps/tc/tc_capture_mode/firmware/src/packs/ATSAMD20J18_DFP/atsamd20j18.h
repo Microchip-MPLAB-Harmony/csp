@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMD20J18
  *
- * © 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-11-07T16:07:45Z */
+/* file generated from device description version 2018-11-30T04:08:58Z */
 #ifndef _SAMD20J18_H_
 #define _SAMD20J18_H_
 
