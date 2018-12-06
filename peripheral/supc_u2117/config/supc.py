@@ -209,7 +209,7 @@ def instantiateComponent(supcComponent):
     supcModuleID = supcModuleNode.getAttribute("id")
 
     supcSym_HeaderFile = supcComponent.createFileSymbol("SUPC_HEADER", None)
-    supcSym_HeaderFile.setSourcePath("../peripheral/supc_"+supcModuleID+"/templates/plib_supc.h.ftl")
+    supcSym_HeaderFile.setSourcePath("../peripheral/supc_u2117/templates/plib_supc.h.ftl")
     supcSym_HeaderFile.setOutputName("plib_"+supcInstanceName.getValue().lower()+".h")
     supcSym_HeaderFile.setDestPath("/peripheral/supc/")
     supcSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/supc/")
@@ -217,7 +217,7 @@ def instantiateComponent(supcComponent):
     supcSym_HeaderFile.setMarkup(True)
 
     supcSym_SourceFile = supcComponent.createFileSymbol("SUPC_SOURCE", None)
-    supcSym_SourceFile.setSourcePath("../peripheral/supc_"+supcModuleID+"/templates/plib_supc.c.ftl")
+    supcSym_SourceFile.setSourcePath("../peripheral/supc_u2117/templates/plib_supc.c.ftl")
     supcSym_SourceFile.setOutputName("plib_"+supcInstanceName.getValue().lower()+".c")
     supcSym_SourceFile.setDestPath("/peripheral/supc/")
     supcSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/supc/")
@@ -227,11 +227,11 @@ def instantiateComponent(supcComponent):
     supcSym_SystemInitFile = supcComponent.createFileSymbol("SUPC_SYS_INT", None)
     supcSym_SystemInitFile.setType("STRING")
     supcSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    supcSym_SystemInitFile.setSourcePath("../peripheral/supc_"+supcModuleID+"/templates/system/initialization.c.ftl")
+    supcSym_SystemInitFile.setSourcePath("../peripheral/supc_u2117/templates/system/initialization.c.ftl")
     supcSym_SystemInitFile.setMarkup(True)
 
     supcSym_SystemDefFile = supcComponent.createFileSymbol("SUPC_SYS_DEF", None)
     supcSym_SystemDefFile.setType("STRING")
     supcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    supcSym_SystemDefFile.setSourcePath("../peripheral/supc_"+supcModuleID+"/templates/system/definitions.h.ftl")
+    supcSym_SystemDefFile.setSourcePath("../peripheral/supc_u2117/templates/system/definitions.h.ftl")
     supcSym_SystemDefFile.setMarkup(True)

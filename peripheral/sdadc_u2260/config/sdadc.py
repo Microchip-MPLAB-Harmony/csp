@@ -354,7 +354,7 @@ def instantiateComponent(sdadcComponent):
 
     # Global Header File
     sdadcGlobalHeaderFile = sdadcComponent.createFileSymbol("SDADC_GLOBAL_HEADER", None)
-    sdadcGlobalHeaderFile.setSourcePath("../peripheral/sdadc_"+ sdadcModuleID+"/templates/plib_sdadc_common.h")
+    sdadcGlobalHeaderFile.setSourcePath("../peripheral/sdadc_u2260/templates/plib_sdadc_common.h")
     sdadcGlobalHeaderFile.setOutputName("plib_sdadc_common.h")
     sdadcGlobalHeaderFile.setDestPath("/peripheral/sdadc/")
     sdadcGlobalHeaderFile.setProjectPath("config/" + configName + "/peripheral/sdadc/")
@@ -363,7 +363,7 @@ def instantiateComponent(sdadcComponent):
 
     # Instance Header File
     sdadcHeaderFile = sdadcComponent.createFileSymbol("SDADC_HEADER", None)
-    sdadcHeaderFile.setSourcePath("../peripheral/sdadc_"+ sdadcModuleID+"/templates/plib_sdadc.h.ftl")
+    sdadcHeaderFile.setSourcePath("../peripheral/sdadc_u2260/templates/plib_sdadc.h.ftl")
     sdadcHeaderFile.setOutputName("plib_"+sdadcInstanceName.getValue().lower()+".h")
     sdadcHeaderFile.setDestPath("/peripheral/sdadc/")
     sdadcHeaderFile.setProjectPath("config/" + configName + "/peripheral/sdadc/")
@@ -372,7 +372,7 @@ def instantiateComponent(sdadcComponent):
 
     # Source File
     sdadcSourceFile = sdadcComponent.createFileSymbol("SDADC_SOURCE", None)
-    sdadcSourceFile.setSourcePath("../peripheral/sdadc_"+sdadcModuleID+"/templates/plib_sdadc.c.ftl")
+    sdadcSourceFile.setSourcePath("../peripheral/sdadc_u2260/templates/plib_sdadc.c.ftl")
     sdadcSourceFile.setOutputName("plib_"+sdadcInstanceName.getValue().lower()+".c")
     sdadcSourceFile.setDestPath("/peripheral/sdadc/")
     sdadcSourceFile.setProjectPath("config/" + configName + "/peripheral/sdadc/")
@@ -383,12 +383,12 @@ def instantiateComponent(sdadcComponent):
     sdadcSystemInitFile = sdadcComponent.createFileSymbol("SDADC_SYS_INIT", None)
     sdadcSystemInitFile.setType("STRING")
     sdadcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    sdadcSystemInitFile.setSourcePath("../peripheral/sdadc_"+sdadcModuleID+"/templates/system/initialization.c.ftl")
+    sdadcSystemInitFile.setSourcePath("../peripheral/sdadc_u2260/templates/system/initialization.c.ftl")
     sdadcSystemInitFile.setMarkup(True)
 
     #System Definition
     sdadcSystemDefFile = sdadcComponent.createFileSymbol("SDADC_SYS_DEF", None)
     sdadcSystemDefFile.setType("STRING")
     sdadcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    sdadcSystemDefFile.setSourcePath("../peripheral/sdadc_"+sdadcModuleID+"/templates/system/definitions.h.ftl")
+    sdadcSystemDefFile.setSourcePath("../peripheral/sdadc_u2260/templates/system/definitions.h.ftl")
     sdadcSystemDefFile.setMarkup(True)

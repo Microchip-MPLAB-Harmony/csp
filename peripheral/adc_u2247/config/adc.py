@@ -534,7 +534,7 @@ def instantiateComponent(adcComponent):
     adcModuleID = adcModuleNode.getAttribute("id")
 
     adcSym_CommonHeaderFile = adcComponent.createFileSymbol("ADC_COMMON_HEADER", None)
-    adcSym_CommonHeaderFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/plib_adc_common.h")
+    adcSym_CommonHeaderFile.setSourcePath("../peripheral/adc_u2247/templates/plib_adc_common.h")
     adcSym_CommonHeaderFile.setOutputName("plib_adc_common.h")
     adcSym_CommonHeaderFile.setDestPath("/peripheral/adc/")
     adcSym_CommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
@@ -542,7 +542,7 @@ def instantiateComponent(adcComponent):
     adcSym_CommonHeaderFile.setMarkup(False)
 
     adcSym_HeaderFile = adcComponent.createFileSymbol("ADC_HEADER", None)
-    adcSym_HeaderFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/plib_adc.h.ftl")
+    adcSym_HeaderFile.setSourcePath("../peripheral/adc_u2247/templates/plib_adc.h.ftl")
     adcSym_HeaderFile.setOutputName("plib_"+adcInstanceName.getValue().lower()+".h")
     adcSym_HeaderFile.setDestPath("/peripheral/adc/")
     adcSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
@@ -550,7 +550,7 @@ def instantiateComponent(adcComponent):
     adcSym_HeaderFile.setMarkup(True)
 
     adcSym_SourceFile = adcComponent.createFileSymbol("ADC_SOURCE", None)
-    adcSym_SourceFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/plib_adc.c.ftl")
+    adcSym_SourceFile.setSourcePath("../peripheral/adc_u2247/templates/plib_adc.c.ftl")
     adcSym_SourceFile.setOutputName("plib_"+adcInstanceName.getValue().lower()+".c")
     adcSym_SourceFile.setDestPath("/peripheral/adc/")
     adcSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/adc/")
@@ -560,13 +560,13 @@ def instantiateComponent(adcComponent):
     adcSym_SystemInitFile = adcComponent.createFileSymbol("ADC_SYS_INIT", None)
     adcSym_SystemInitFile.setType("STRING")
     adcSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    adcSym_SystemInitFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/system/initialization.c.ftl")
+    adcSym_SystemInitFile.setSourcePath("../peripheral/adc_u2247/templates/system/initialization.c.ftl")
     adcSym_SystemInitFile.setMarkup(True)
 
     adcSym_SystemDefFile = adcComponent.createFileSymbol("ADC_SYS_DEF", None)
     adcSym_SystemDefFile.setType("STRING")
     adcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    adcSym_SystemDefFile.setSourcePath("../peripheral/adc_"+adcModuleID+"/templates/system/definitions.h.ftl")
+    adcSym_SystemDefFile.setSourcePath("../peripheral/adc_u2247/templates/system/definitions.h.ftl")
     adcSym_SystemDefFile.setMarkup(True)
 
     # load ADC manager

@@ -83,7 +83,7 @@ def instantiateComponent(pmComponent):
     pmModuleID = pmModuleNode.getAttribute("id")
 
     pmSym_HeaderFile = pmComponent.createFileSymbol("PM_HEADER", None)
-    pmSym_HeaderFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/plib_pm.h.ftl")
+    pmSym_HeaderFile.setSourcePath("../peripheral/pm_u2240/templates/plib_pm.h.ftl")
     pmSym_HeaderFile.setOutputName("plib_" + pmInstanceName.getValue().lower() + ".h")
     pmSym_HeaderFile.setDestPath("/peripheral/pm/")
     pmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pm/")
@@ -91,7 +91,7 @@ def instantiateComponent(pmComponent):
     pmSym_HeaderFile.setMarkup(True)
 
     pmSym_SourceFile = pmComponent.createFileSymbol("PM_SOURCE", None)
-    pmSym_SourceFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/plib_pm.c.ftl")
+    pmSym_SourceFile.setSourcePath("../peripheral/pm_u2240/templates/plib_pm.c.ftl")
     pmSym_SourceFile.setOutputName("plib_" + pmInstanceName.getValue().lower() + ".c")
     pmSym_SourceFile.setDestPath("/peripheral/pm/")
     pmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pm/")
@@ -101,11 +101,11 @@ def instantiateComponent(pmComponent):
     pmSym_SystemInitFile = pmComponent.createFileSymbol("PM_SYS_INIT", None)
     pmSym_SystemInitFile.setType("STRING")
     pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    pmSym_SystemInitFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/system/initialization.c.ftl")
+    pmSym_SystemInitFile.setSourcePath("../peripheral/pm_u2240/templates/system/initialization.c.ftl")
     pmSym_SystemInitFile.setMarkup(True)
 
     pmSymSystemDefFile = pmComponent.createFileSymbol("PM_SYS_DEF", None)
     pmSymSystemDefFile.setType("STRING")
     pmSymSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    pmSymSystemDefFile.setSourcePath("../peripheral/pm_" + pmModuleID + "/templates/system/definitions.h.ftl")
+    pmSymSystemDefFile.setSourcePath("../peripheral/pm_u2240/templates/system/definitions.h.ftl")
     pmSymSystemDefFile.setMarkup(True)

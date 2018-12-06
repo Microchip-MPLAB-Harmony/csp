@@ -557,7 +557,7 @@ def instantiateComponent(afecComponent):
     afecID = afec.getAttribute("id")
 
     afecHeaderFile = afecComponent.createFileSymbol("AFEC_HEADER", None)
-    afecHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/plib_afec.h.ftl")
+    afecHeaderFile.setSourcePath("../peripheral/afec_11147/templates/plib_afec.h.ftl")
     afecHeaderFile.setOutputName("plib_"+afecInstanceName.getValue().lower() + ".h")
     afecHeaderFile.setDestPath("peripheral/afec/")
     afecHeaderFile.setProjectPath("config/" + configName +"/peripheral/afec/")
@@ -565,14 +565,14 @@ def instantiateComponent(afecComponent):
     afecHeaderFile.setMarkup(True)
 
     afecGlobalHeaderFile = afecComponent.createFileSymbol("AFEC_GLOBALHEADER", None)
-    afecGlobalHeaderFile.setSourcePath("../peripheral/afec_"+str(afecID) + "/templates/plib_afec_common.h")
+    afecGlobalHeaderFile.setSourcePath("../peripheral/afec_11147/templates/plib_afec_common.h")
     afecGlobalHeaderFile.setOutputName("plib_afec_common.h")
     afecGlobalHeaderFile.setDestPath("peripheral/afec/")
     afecGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/afec/")
     afecGlobalHeaderFile.setType("HEADER")
 
     afecSource1File = afecComponent.createFileSymbol("AFEC_SOURCE", None)
-    afecSource1File.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/plib_afec.c.ftl")
+    afecSource1File.setSourcePath("../peripheral/afec_11147/templates/plib_afec.c.ftl")
     afecSource1File.setOutputName("plib_"+afecInstanceName.getValue().lower()+".c")
     afecSource1File.setDestPath("peripheral/afec/")
     afecSource1File.setProjectPath("config/" + configName +"/peripheral/afec/")
@@ -582,13 +582,13 @@ def instantiateComponent(afecComponent):
     afecSystemInitFile = afecComponent.createFileSymbol("AFEC_INIT", None)
     afecSystemInitFile.setType("STRING")
     afecSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    afecSystemInitFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_initialize.c.ftl")
+    afecSystemInitFile.setSourcePath("../peripheral/afec_11147/templates/system/system_initialize.c.ftl")
     afecSystemInitFile.setMarkup(True)
 
     afecSystemDefFile = afecComponent.createFileSymbol("AFEC_DEF", None)
     afecSystemDefFile.setType("STRING")
     afecSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    afecSystemDefFile.setSourcePath("../peripheral/afec_"+str(afecID)+"/templates/system/system_definitions.h.ftl")
+    afecSystemDefFile.setSourcePath("../peripheral/afec_11147/templates/system/system_definitions.h.ftl")
     afecSystemDefFile.setMarkup(True)
     
     afecComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")

@@ -408,7 +408,7 @@ def instantiateComponent(sercomComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     usartHeaderFile = sercomComponent.createFileSymbol("SERCOM_USART_HEADER", None)
-    usartHeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_usart.h.ftl")
+    usartHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_usart.h.ftl")
     usartHeaderFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_usart.h")
     usartHeaderFile.setDestPath("/peripheral/sercom/usart/")
     usartHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart/")
@@ -416,7 +416,7 @@ def instantiateComponent(sercomComponent):
     usartHeaderFile.setMarkup(True)
 
     usartCommonHeaderFile = sercomComponent.createFileSymbol("SERCOM_USART_COMMON_HEADER", None)
-    usartCommonHeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_usart_common.h")
+    usartCommonHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_usart_common.h")
     usartCommonHeaderFile.setOutputName("plib_sercom_usart_common.h")
     usartCommonHeaderFile.setDestPath("/peripheral/sercom/usart/")
     usartCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart/")
@@ -424,7 +424,7 @@ def instantiateComponent(sercomComponent):
     usartCommonHeaderFile.setMarkup(True)
 
     usartSourceFile = sercomComponent.createFileSymbol("SERCOM_USART_SOURCE", None)
-    usartSourceFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_usart.c.ftl")
+    usartSourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_usart.c.ftl")
     usartSourceFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_usart.c")
     usartSourceFile.setDestPath("/peripheral/sercom/usart/")
     usartSourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart/")
@@ -432,7 +432,7 @@ def instantiateComponent(sercomComponent):
     usartSourceFile.setMarkup(True)
 
     spiSym_HeaderFile = sercomComponent.createFileSymbol("SERCOM_SPIM_HEADER", None)
-    spiSym_HeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_spi.h.ftl")
+    spiSym_HeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi.h.ftl")
     spiSym_HeaderFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_spi.h")
     spiSym_HeaderFile.setDestPath("/peripheral/sercom/spim/")
     spiSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/spim/")
@@ -441,7 +441,7 @@ def instantiateComponent(sercomComponent):
     spiSym_HeaderFile.setEnabled(False)
 
     spiSym_Header1File = sercomComponent.createFileSymbol("SERCOM_SPIM_COMMON_HEADER", None)
-    spiSym_Header1File.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_spi_common.h")
+    spiSym_Header1File.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_common.h")
     spiSym_Header1File.setOutputName("plib_sercom_spi_common.h")
     spiSym_Header1File.setDestPath("/peripheral/sercom/spim/")
     spiSym_Header1File.setProjectPath("config/" + configName + "/peripheral/sercom/spim/")
@@ -450,7 +450,7 @@ def instantiateComponent(sercomComponent):
     spiSym_Header1File.setEnabled(False)
 
     spiSym_SourceFile = sercomComponent.createFileSymbol("SERCOM_SPIM_SOURCE", None)
-    spiSym_SourceFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_spi.c.ftl")
+    spiSym_SourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi.c.ftl")
     spiSym_SourceFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_spi.c")
     spiSym_SourceFile.setDestPath("/peripheral/sercom/spim/")
     spiSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/spim/")
@@ -459,7 +459,7 @@ def instantiateComponent(sercomComponent):
     spiSym_SourceFile.setEnabled(False)
 
     i2cmMasterHeaderFile = sercomComponent.createFileSymbol("SERCOM_I2CM_MASTER_HEADER", None)
-    i2cmMasterHeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_i2c_master.h")
+    i2cmMasterHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_i2c_master.h")
     i2cmMasterHeaderFile.setOutputName("plib_sercom_i2c_master.h")
     i2cmMasterHeaderFile.setDestPath("/peripheral/sercom/i2cm/")
     i2cmMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/i2cm/")
@@ -468,7 +468,7 @@ def instantiateComponent(sercomComponent):
     i2cmMasterHeaderFile.setEnabled(False)
 
     i2cmHeaderFile = sercomComponent.createFileSymbol("SERCOM_I2CM_HEADER", None)
-    i2cmHeaderFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_i2c.h.ftl")
+    i2cmHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_i2c.h.ftl")
     i2cmHeaderFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_i2c.h")
     i2cmHeaderFile.setDestPath("/peripheral/sercom/i2cm/")
     i2cmHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/i2cm/")
@@ -477,7 +477,7 @@ def instantiateComponent(sercomComponent):
     i2cmHeaderFile.setEnabled(False)
 
     i2cmSourceFile = sercomComponent.createFileSymbol("SERCOM_I2CM_SOURCE", None)
-    i2cmSourceFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/plib_sercom_i2c.c.ftl")
+    i2cmSourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_i2c.c.ftl")
     i2cmSourceFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_i2c.c")
     i2cmSourceFile.setDestPath("/peripheral/sercom/i2cm/")
     i2cmSourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/i2cm/")
@@ -488,11 +488,11 @@ def instantiateComponent(sercomComponent):
     sercomSystemInitFile = sercomComponent.createFileSymbol("SERCOM_SYS_INIT", None)
     sercomSystemInitFile.setType("STRING")
     sercomSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    sercomSystemInitFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/system/initialization.c.ftl")
+    sercomSystemInitFile.setSourcePath("../peripheral/sercom_u2201/templates/system/initialization.c.ftl")
     sercomSystemInitFile.setMarkup(True)
 
     sercomSystemDefFile = sercomComponent.createFileSymbol("SERCOM_SYS_DEF", None)
     sercomSystemDefFile.setType("STRING")
     sercomSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    sercomSystemDefFile.setSourcePath("../peripheral/sercom_" + sercomModuleID + "/templates/system/definitions.h.ftl")
+    sercomSystemDefFile.setSourcePath("../peripheral/sercom_u2201/templates/system/definitions.h.ftl")
     sercomSystemDefFile.setMarkup(True)

@@ -193,7 +193,7 @@ def instantiateComponent(dacComponent):
 
     # Instance Header File
     dacHeaderFile = dacComponent.createFileSymbol("DAC_INSTANCE_HEADER", None)
-    dacHeaderFile.setSourcePath("../peripheral/dac_"+ dacModuleID+"/templates/plib_dac.h.ftl")
+    dacHeaderFile.setSourcePath("../peripheral/dac_u2214/templates/plib_dac.h.ftl")
     dacHeaderFile.setOutputName("plib_"+dacInstanceName.getValue().lower()+".h")
     dacHeaderFile.setDestPath("/peripheral/dac/")
     dacHeaderFile.setProjectPath("config/" + configName + "/peripheral/dac/")
@@ -202,7 +202,7 @@ def instantiateComponent(dacComponent):
 
     # Source File
     dacSourceFile = dacComponent.createFileSymbol("DAC_SOURCE", None)
-    dacSourceFile.setSourcePath("../peripheral/dac_"+dacModuleID+"/templates/plib_dac.c.ftl")
+    dacSourceFile.setSourcePath("../peripheral/dac_u2214/templates/plib_dac.c.ftl")
     dacSourceFile.setOutputName("plib_" + dacInstanceName.getValue().lower() + ".c")
     dacSourceFile.setDestPath("/peripheral/dac/")
     dacSourceFile.setProjectPath("config/" + configName + "/peripheral/dac/")
@@ -213,12 +213,12 @@ def instantiateComponent(dacComponent):
     dacSystemInitFile = dacComponent.createFileSymbol("DAC_SYS_INIT", None)
     dacSystemInitFile.setType("STRING")
     dacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    dacSystemInitFile.setSourcePath("../peripheral/dac_"+dacModuleID+"/templates/system/initialization.c.ftl")
+    dacSystemInitFile.setSourcePath("../peripheral/dac_u2214/templates/system/initialization.c.ftl")
     dacSystemInitFile.setMarkup(True)
 
     #System Definition
     dacSystemDefFile = dacComponent.createFileSymbol("DAC_SYS_DEF", None)
     dacSystemDefFile.setType("STRING")
     dacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    dacSystemDefFile.setSourcePath("../peripheral/dac_"+dacModuleID+"/templates/system/definitions.h.ftl")
+    dacSystemDefFile.setSourcePath("../peripheral/dac_u2214/templates/system/definitions.h.ftl")
     dacSystemDefFile.setMarkup(True)

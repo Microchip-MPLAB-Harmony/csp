@@ -658,7 +658,7 @@ def instantiateComponent(rtcComponent):
 
     # Instance Header File
     rtcHeaderFile = rtcComponent.createFileSymbol("RTC_INSTANCE_HEADER", None)
-    rtcHeaderFile.setSourcePath("../peripheral/rtc_"+ rtcModuleID +"/templates/plib_rtc.h.ftl")
+    rtcHeaderFile.setSourcePath("../peripheral/rtc_u2250/templates/plib_rtc.h.ftl")
     rtcHeaderFile.setOutputName("plib_"+rtcInstanceName.getValue().lower()+".h")
     rtcHeaderFile.setDestPath("/peripheral/rtc/")
     rtcHeaderFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
@@ -668,7 +668,7 @@ def instantiateComponent(rtcComponent):
 
     # RTC Timer Mode (MODE0 and MODE1) Source File
     rtcSourceFile = rtcComponent.createFileSymbol("RTC_TIMER_SOURCE", None)
-    rtcSourceFile.setSourcePath("../peripheral/rtc_"+ rtcModuleID +"/templates/plib_rtc_timer.c.ftl")
+    rtcSourceFile.setSourcePath("../peripheral/rtc_u2250/templates/plib_rtc_timer.c.ftl")
     rtcSourceFile.setOutputName("plib_"+rtcInstanceName.getValue().lower()+"_timer.c")
     rtcSourceFile.setDestPath("/peripheral/rtc/")
     rtcSourceFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
@@ -677,7 +677,7 @@ def instantiateComponent(rtcComponent):
 
     # RTC Clock Mode (MODE2) Source File
     rtcSource1File = rtcComponent.createFileSymbol("RTC_CLOCK_SOURCE", None)
-    rtcSource1File.setSourcePath("../peripheral/rtc_"+ rtcModuleID +"/templates/plib_rtc_clock.c.ftl")
+    rtcSource1File.setSourcePath("../peripheral/rtc_u2250/templates/plib_rtc_clock.c.ftl")
     rtcSource1File.setOutputName("plib_"+rtcInstanceName.getValue().lower()+"_clock.c")
     rtcSource1File.setDestPath("/peripheral/rtc/")
     rtcSource1File.setProjectPath("config/" + configName + "/peripheral/rtc/")
@@ -689,12 +689,12 @@ def instantiateComponent(rtcComponent):
     rtcSystemInitFile = rtcComponent.createFileSymbol("RTC_SYS_INIT", None)
     rtcSystemInitFile.setType("STRING")
     rtcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    rtcSystemInitFile.setSourcePath("../peripheral/rtc_"+ rtcModuleID +"/templates/system/initialization.c.ftl")
+    rtcSystemInitFile.setSourcePath("../peripheral/rtc_u2250/templates/system/initialization.c.ftl")
     rtcSystemInitFile.setMarkup(True)
 
     # System Definition
     rtcSystemDefFile = rtcComponent.createFileSymbol("RTC_SYS_DEF", None)
     rtcSystemDefFile.setType("STRING")
     rtcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    rtcSystemDefFile.setSourcePath("../peripheral/rtc_"+ rtcModuleID +"/templates/system/definitions.h.ftl")
+    rtcSystemDefFile.setSourcePath("../peripheral/rtc_u2250/templates/system/definitions.h.ftl")
     rtcSystemDefFile.setMarkup(True)
