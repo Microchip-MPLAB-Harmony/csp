@@ -302,20 +302,20 @@ void MMU_Initialize(void)
 	                  | TTB_TYPE_SECT;
 
 	/* 0x20000000: DDR Chip Select */
-	/* (64MB cacheable, 448MB strongly ordered) */
-	for (addr = 0x200; addr < 0x240; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC
-	                  | TTB_SECT_CACHEABLE_WB
-	                  | TTB_TYPE_SECT;
-	for (addr = 0x240; addr < 0x400; addr++)
+	/* (16MB strongly ordered, 448MB cacheable) */
+	for (addr = 0x200; addr < 0x210; addr++)
 		tlb[addr] = TTB_SECT_ADDR(addr << 20)
 	                  | TTB_SECT_AP_FULL_ACCESS
 	                  | TTB_SECT_DOMAIN(0xf)
 	                  | TTB_SECT_EXEC
 	                  | TTB_SECT_STRONGLY_ORDERED
+	                  | TTB_TYPE_SECT;
+	for (addr = 0x210; addr < 0x400; addr++)
+		tlb[addr] = TTB_SECT_ADDR(addr << 20)
+	                  | TTB_SECT_AP_FULL_ACCESS
+	                  | TTB_SECT_DOMAIN(0xf)
+	                  | TTB_SECT_EXEC
+	                  | TTB_SECT_CACHEABLE_WB
 	                  | TTB_TYPE_SECT;
 
 	/* 0x40000000: DDR AESB Chip Select */
