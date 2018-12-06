@@ -195,7 +195,7 @@ def instantiateComponent(freqmComponent):
     freqmModuleID = freqmModuleNode.getAttribute("id")
 
     freqmSym_HeaderFile = freqmComponent.createFileSymbol("FREQM_HEADER", None)
-    freqmSym_HeaderFile.setSourcePath("../peripheral/freqm_" + freqmModuleID + "/templates/plib_freqm.h.ftl")
+    freqmSym_HeaderFile.setSourcePath("../peripheral/freqm_u2257/templates/plib_freqm.h.ftl")
     freqmSym_HeaderFile.setOutputName("plib_" + freqmInstanceName.getValue().lower() + ".h")
     freqmSym_HeaderFile.setDestPath("/peripheral/freqm/")
     freqmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/freqm/")
@@ -203,7 +203,7 @@ def instantiateComponent(freqmComponent):
     freqmSym_HeaderFile.setMarkup(True)
 
     freqmSym_SourceFile = freqmComponent.createFileSymbol("FREQM_SOURCE", None)
-    freqmSym_SourceFile.setSourcePath("../peripheral/freqm_" + freqmModuleID + "/templates/plib_freqm.c.ftl")
+    freqmSym_SourceFile.setSourcePath("../peripheral/freqm_u2257/templates/plib_freqm.c.ftl")
     freqmSym_SourceFile.setOutputName("plib_" + freqmInstanceName.getValue().lower() + ".c")
     freqmSym_SourceFile.setDestPath("/peripheral/freqm/")
     freqmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/freqm/")
@@ -213,11 +213,11 @@ def instantiateComponent(freqmComponent):
     freqmSystemInitFile = freqmComponent.createFileSymbol("FREQM_SYS_INIT", None)
     freqmSystemInitFile.setType("STRING")
     freqmSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    freqmSystemInitFile.setSourcePath("../peripheral/freqm_" + freqmModuleID + "/templates/system/initialization.c.ftl")
+    freqmSystemInitFile.setSourcePath("../peripheral/freqm_u2257/templates/system/initialization.c.ftl")
     freqmSystemInitFile.setMarkup(True)
 
     freqmSystemDefFile = freqmComponent.createFileSymbol("FREQM_SYS_DEF", None)
     freqmSystemDefFile.setType("STRING")
     freqmSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    freqmSystemDefFile.setSourcePath("../peripheral/freqm_" + freqmModuleID + "/templates/system/definitions.h.ftl")
+    freqmSystemDefFile.setSourcePath("../peripheral/freqm_u2257/templates/system/definitions.h.ftl")
     freqmSystemDefFile.setMarkup(True)

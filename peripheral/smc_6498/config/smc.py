@@ -340,7 +340,7 @@ def instantiateComponent(smcComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     smcHeader1File = smcComponent.createFileSymbol("PLIB_SMC_H", None)
-    smcHeader1File.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/plib_smc.h.ftl")
+    smcHeader1File.setSourcePath("../peripheral/smc_6498/templates/plib_smc.h.ftl")
     smcHeader1File.setOutputName("plib_"+smcInstanceName.getValue().lower()+".h")
     smcHeader1File.setDestPath("/peripheral/smc/")
     smcHeader1File.setProjectPath("config/" + configName + "/peripheral/smc/")
@@ -348,7 +348,7 @@ def instantiateComponent(smcComponent):
     smcHeader1File.setMarkup(True)
 
     smcSource1File = smcComponent.createFileSymbol("PLIB_SMC_C", None)
-    smcSource1File.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/plib_smc.c.ftl")
+    smcSource1File.setSourcePath("../peripheral/smc_6498/templates/plib_smc.c.ftl")
     smcSource1File.setOutputName("plib_"+smcInstanceName.getValue().lower()+".c")
     smcSource1File.setDestPath("/peripheral/smc/")
     smcSource1File.setProjectPath("config/" + configName + "/peripheral/smc/")
@@ -359,11 +359,11 @@ def instantiateComponent(smcComponent):
     smcHeader1FileEntry = smcComponent.createFileSymbol("PLIB_SMC_DEFINITIONS_H", None)
     smcHeader1FileEntry.setType("STRING")
     smcHeader1FileEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    smcHeader1FileEntry.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/system/system_definitions.h.ftl")
+    smcHeader1FileEntry.setSourcePath("../peripheral/smc_6498/templates/system/system_definitions.h.ftl")
     smcHeader1FileEntry.setMarkup(True)
 
     smcSystemInitFile = smcComponent.createFileSymbol("PLIB_SMC_INITIALIZE_H", None)
     smcSystemInitFile.setType("STRING")
     smcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    smcSystemInitFile.setSourcePath("../peripheral/smc_" + str(smcRegModuleID) + "/templates/system/system_initialize.c.ftl")
+    smcSystemInitFile.setSourcePath("../peripheral/smc_6498/templates/system/system_initialize.c.ftl")
     smcSystemInitFile.setMarkup(True)

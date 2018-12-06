@@ -88,7 +88,7 @@ pacModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PAC\
 pacModuleID = pacModuleNode.getAttribute("id")
 
 pacSym_HeaderFile = coreComponent.createFileSymbol("PAC_HEADER", None)
-pacSym_HeaderFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/plib_pac.h.ftl")
+pacSym_HeaderFile.setSourcePath("../peripheral/pac_u2211/templates/plib_pac.h.ftl")
 pacSym_HeaderFile.setOutputName("plib_" + pacInstanceName.getValue().lower() + ".h")
 pacSym_HeaderFile.setDestPath("/peripheral/pac/")
 pacSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pac/")
@@ -97,7 +97,7 @@ pacSym_HeaderFile.setMarkup(True)
 pacSym_HeaderFile.setEnabled(False)
 
 pacSym_SourceFile = coreComponent.createFileSymbol("PAC_SOURCE", None)
-pacSym_SourceFile.setSourcePath("../peripheral/pac_" + pacModuleID + "/templates/plib_pac.c.ftl")
+pacSym_SourceFile.setSourcePath("../peripheral/pac_u2211/templates/plib_pac.c.ftl")
 pacSym_SourceFile.setOutputName("plib_" + pacInstanceName.getValue().lower() + ".c")
 pacSym_SourceFile.setDestPath("/peripheral/pac/")
 pacSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pac/")

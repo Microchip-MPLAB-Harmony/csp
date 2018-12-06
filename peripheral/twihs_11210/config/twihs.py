@@ -126,7 +126,7 @@ def instantiateComponent(twihsComponent):
     #Master Header
     twihsMasterHeaderFile = twihsComponent.createFileSymbol("TWIHS_FILE_MASTER_HEADER", None)
     
-    twihsMasterHeaderFile.setSourcePath("../peripheral/twihs_" + REG_MODULE_TWIHS.getID() + "/plib_twihs_master.h")
+    twihsMasterHeaderFile.setSourcePath("../peripheral/twihs_11210/plib_twihs_master.h")
     twihsMasterHeaderFile.setOutputName("plib_twihs_master.h")
     twihsMasterHeaderFile.setDestPath("/peripheral/twihs/")
     twihsMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/twihs/")
@@ -135,7 +135,7 @@ def instantiateComponent(twihsComponent):
     #Source File
     twihsMainSourceFile = twihsComponent.createFileSymbol("TWIHS_FILE_SRC_MAIN", None)
     
-    twihsMainSourceFile.setSourcePath("../peripheral/twihs_" + REG_MODULE_TWIHS.getID() + "/templates/plib_twihs.c.ftl")
+    twihsMainSourceFile.setSourcePath("../peripheral/twihs_11210/templates/plib_twihs.c.ftl")
     twihsMainSourceFile.setOutputName("plib_"+twihsInstanceName.getValue().lower()+".c")
     twihsMainSourceFile.setDestPath("/peripheral/twihs/")
     twihsMainSourceFile.setProjectPath("config/" + configName + "/peripheral/twihs/")
@@ -145,7 +145,7 @@ def instantiateComponent(twihsComponent):
     #Instance Header File
     twihsInstHeaderFile = twihsComponent.createFileSymbol("TWIHS_FILE_MAIN_HEADER", None)
     
-    twihsInstHeaderFile.setSourcePath("../peripheral/twihs_" + REG_MODULE_TWIHS.getID() + "/templates/plib_twihs.h.ftl")
+    twihsInstHeaderFile.setSourcePath("../peripheral/twihs_11210/templates/plib_twihs.h.ftl")
     twihsInstHeaderFile.setOutputName("plib_"+twihsInstanceName.getValue().lower()+".h")
     twihsInstHeaderFile.setDestPath("/peripheral/twihs/")
     twihsInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/twihs/")
@@ -156,7 +156,7 @@ def instantiateComponent(twihsComponent):
     twihsSystemInitFile = twihsComponent.createFileSymbol("TWIHS_FILE_SYS_INIT", None)
     twihsSystemInitFile.setType("STRING")
     twihsSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    twihsSystemInitFile.setSourcePath("../peripheral/twihs_" + REG_MODULE_TWIHS.getID() + "/templates/system/system_initialize.c.ftl")
+    twihsSystemInitFile.setSourcePath("../peripheral/twihs_11210/templates/system/system_initialize.c.ftl")
     twihsSystemInitFile.setMarkup(True)
 
     #TWIHS definitions header
@@ -164,7 +164,7 @@ def instantiateComponent(twihsComponent):
     
     twihsSystemDefFile.setType("STRING")
     twihsSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    twihsSystemDefFile.setSourcePath("../peripheral/twihs_" + REG_MODULE_TWIHS.getID() + "/templates/system/system_definitions.h.ftl")
+    twihsSystemDefFile.setSourcePath("../peripheral/twihs_11210/templates/system/system_definitions.h.ftl")
     twihsSystemDefFile.setMarkup(True)
     
 def getMasterClockFreq():

@@ -472,7 +472,7 @@ def instantiateComponent(tccComponent):
     tccModuleID = tccModuleNode.getAttribute("id")
 
     tccSym_PWMHeaderFile = tccComponent.createFileSymbol("TCC_HEADER", None)
-    tccSym_PWMHeaderFile.setSourcePath("../peripheral/tcc_" + tccModuleID + "/templates/plib_tcc.h.ftl")
+    tccSym_PWMHeaderFile.setSourcePath("../peripheral/tcc_u2213/templates/plib_tcc.h.ftl")
     tccSym_PWMHeaderFile.setOutputName("plib_"+tccInstanceName.getValue().lower()+".h")
     tccSym_PWMHeaderFile.setDestPath("/peripheral/tcc/")
     tccSym_PWMHeaderFile.setProjectPath("config/" + configName + "/peripheral/tcc/")
@@ -480,7 +480,7 @@ def instantiateComponent(tccComponent):
     tccSym_PWMHeaderFile.setMarkup(True)
 
     tccSym_PWMSourceFile = tccComponent.createFileSymbol("TCC_SOURCE", None)
-    tccSym_PWMSourceFile.setSourcePath("../peripheral/tcc_" + tccModuleID + "/templates/plib_tcc.c.ftl")
+    tccSym_PWMSourceFile.setSourcePath("../peripheral/tcc_u2213/templates/plib_tcc.c.ftl")
     tccSym_PWMSourceFile.setOutputName("plib_"+tccInstanceName.getValue().lower()+".c")
     tccSym_PWMSourceFile.setDestPath("/peripheral/tcc/")
     tccSym_PWMSourceFile.setProjectPath("config/" + configName + "/peripheral/tcc/")
@@ -488,7 +488,7 @@ def instantiateComponent(tccComponent):
     tccSym_PWMSourceFile.setMarkup(True)
     
     tccSym_PWMGlobalHeaderFile = tccComponent.createFileSymbol("TCC_GLOBAL_HEADER", None)
-    tccSym_PWMGlobalHeaderFile.setSourcePath("../peripheral/tcc_"+str(tccModuleID)+"/templates/plib_tcc_common.h")
+    tccSym_PWMGlobalHeaderFile.setSourcePath("../peripheral/tcc_u2213/templates/plib_tcc_common.h")
     tccSym_PWMGlobalHeaderFile.setOutputName("plib_tcc_common.h")
     tccSym_PWMGlobalHeaderFile.setDestPath("/peripheral/tcc/")
     tccSym_PWMGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/tcc/")
@@ -498,11 +498,11 @@ def instantiateComponent(tccComponent):
     tccSym_SystemInitFile = tccComponent.createFileSymbol("TC_SYS_INT", None)
     tccSym_SystemInitFile.setType("STRING")
     tccSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    tccSym_SystemInitFile.setSourcePath("../peripheral/tcc_" + tccModuleID + "/templates/system/initialization.c.ftl")
+    tccSym_SystemInitFile.setSourcePath("../peripheral/tcc_u2213/templates/system/initialization.c.ftl")
     tccSym_SystemInitFile.setMarkup(True)
 
     tccSym_SystemDefFile = tccComponent.createFileSymbol("TC_SYS_DEF", None)
     tccSym_SystemDefFile.setType("STRING")
     tccSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    tccSym_SystemDefFile.setSourcePath("../peripheral/tcc_" + tccModuleID + "/templates/system/definitions.h.ftl")
+    tccSym_SystemDefFile.setSourcePath("../peripheral/tcc_u2213/templates/system/definitions.h.ftl")
     tccSym_SystemDefFile.setMarkup(True)

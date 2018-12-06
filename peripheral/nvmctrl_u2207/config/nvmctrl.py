@@ -282,7 +282,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlModuleID = nvmctrlModuleNode.getAttribute("id")
 
     nvmctrlSym_HeaderFile = nvmctrlComponent.createFileSymbol("NVMCTRL_HEADER", None)
-    nvmctrlSym_HeaderFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/plib_nvmctrl.h.ftl")
+    nvmctrlSym_HeaderFile.setSourcePath("../peripheral/nvmctrl_u2207/templates/plib_nvmctrl.h.ftl")
     nvmctrlSym_HeaderFile.setOutputName("plib_"+nvmctrlInstanceName.getValue().lower()+".h")
     nvmctrlSym_HeaderFile.setDestPath("/peripheral/nvmctrl/")
     nvmctrlSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/nvmctrl/")
@@ -290,7 +290,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_HeaderFile.setMarkup(True)
 
     nvmctrlSym_SourceFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SOURCE", None)
-    nvmctrlSym_SourceFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/plib_nvmctrl.c.ftl")
+    nvmctrlSym_SourceFile.setSourcePath("../peripheral/nvmctrl_u2207/templates/plib_nvmctrl.c.ftl")
     nvmctrlSym_SourceFile.setOutputName("plib_"+nvmctrlInstanceName.getValue().lower()+".c")
     nvmctrlSym_SourceFile.setDestPath("/peripheral/nvmctrl/")
     nvmctrlSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/nvmctrl/")
@@ -298,13 +298,13 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_SourceFile.setMarkup(True)
 
     nvmctrlSym_SystemInitFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_INIT", None)
-    nvmctrlSym_SystemInitFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/system/initialization.c.ftl")
+    nvmctrlSym_SystemInitFile.setSourcePath("../peripheral/nvmctrl_u2207/templates/system/initialization.c.ftl")
     nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     nvmctrlSym_SystemInitFile.setType("STRING")
     nvmctrlSym_SystemInitFile.setMarkup(True)
 
     nvmctrlSystemDefFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_DEF", None)
-    nvmctrlSystemDefFile.setSourcePath("../peripheral/nvmctrl_"+nvmctrlModuleID+"/templates/system/definitions.h.ftl")
+    nvmctrlSystemDefFile.setSourcePath("../peripheral/nvmctrl_u2207/templates/system/definitions.h.ftl")
     nvmctrlSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     nvmctrlSystemDefFile.setType("STRING")
     nvmctrlSystemDefFile.setMarkup(True)

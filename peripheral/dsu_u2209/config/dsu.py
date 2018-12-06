@@ -43,7 +43,7 @@ def instantiateComponent(dsuComponent):
     dsuModuleID = dsuModuleNode.getAttribute("id")
 
     dsuSym_HeaderFile = dsuComponent.createFileSymbol("DSU_HEADER", None)
-    dsuSym_HeaderFile.setSourcePath("../peripheral/dsu_"+dsuModuleID+"/templates/plib_dsu.h.ftl")
+    dsuSym_HeaderFile.setSourcePath("../peripheral/dsu_u2209/templates/plib_dsu.h.ftl")
     dsuSym_HeaderFile.setOutputName("plib_"+dsuInstanceName.getValue().lower()+".h")
     dsuSym_HeaderFile.setDestPath("peripheral/dsu/")
     dsuSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/dsu/")
@@ -51,7 +51,7 @@ def instantiateComponent(dsuComponent):
     dsuSym_HeaderFile.setMarkup(True)
 
     dsuSym_SourceFile = dsuComponent.createFileSymbol("DSU_SOURCE", None)
-    dsuSym_SourceFile.setSourcePath("../peripheral/dsu_"+dsuModuleID+"/templates/plib_dsu.c.ftl")
+    dsuSym_SourceFile.setSourcePath("../peripheral/dsu_u2209/templates/plib_dsu.c.ftl")
     dsuSym_SourceFile.setOutputName("plib_"+dsuInstanceName.getValue().lower() +".c")
     dsuSym_SourceFile.setDestPath("peripheral/dsu/")
     dsuSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/dsu/")
@@ -61,5 +61,5 @@ def instantiateComponent(dsuComponent):
     dsuSystemDefFile = dsuComponent.createFileSymbol("DSU_SYS_DEF", None)
     dsuSystemDefFile.setType("STRING")
     dsuSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    dsuSystemDefFile.setSourcePath("../peripheral/dsu_"+dsuModuleID+"/templates/system/definitions.h.ftl")
+    dsuSystemDefFile.setSourcePath("../peripheral/dsu_u2209/templates/system/definitions.h.ftl")
     dsuSystemDefFile.setMarkup(True)

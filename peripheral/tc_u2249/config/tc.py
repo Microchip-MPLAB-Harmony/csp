@@ -462,7 +462,7 @@ def instantiateComponent(tcComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     tcSym_CommonHeaderFile = tcComponent.createFileSymbol("TC_COMMON_HEADER", None)
-    tcSym_CommonHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_common.h")
+    tcSym_CommonHeaderFile.setSourcePath("../peripheral/tc_u2249/templates/plib_tc_common.h")
     tcSym_CommonHeaderFile.setOutputName("plib_tc_common.h")
     tcSym_CommonHeaderFile.setDestPath("/peripheral/tc/")
     tcSym_CommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -470,7 +470,7 @@ def instantiateComponent(tcComponent):
     tcSym_CommonHeaderFile.setMarkup(False)
 
     tcSym_TimerHeaderFile = tcComponent.createFileSymbol("TC_TIMER_HEADER", None)
-    tcSym_TimerHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_timer.h.ftl")
+    tcSym_TimerHeaderFile.setSourcePath("../peripheral/tc_u2249/templates/plib_tc_timer.h.ftl")
     tcSym_TimerHeaderFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".h")
     tcSym_TimerHeaderFile.setDestPath("/peripheral/tc/")
     tcSym_TimerHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -478,7 +478,7 @@ def instantiateComponent(tcComponent):
     tcSym_TimerHeaderFile.setMarkup(True)
 
     tcSym_TimerSourceFile = tcComponent.createFileSymbol("TC_TIMER_SOURCE", None)
-    tcSym_TimerSourceFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_timer.c.ftl")
+    tcSym_TimerSourceFile.setSourcePath("../peripheral/tc_u2249/templates/plib_tc_timer.c.ftl")
     tcSym_TimerSourceFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".c")
     tcSym_TimerSourceFile.setDestPath("/peripheral/tc/")
     tcSym_TimerSourceFile.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -486,7 +486,7 @@ def instantiateComponent(tcComponent):
     tcSym_TimerSourceFile.setMarkup(True)
 
     tcSym_CompareHeaderFile = tcComponent.createFileSymbol("TC_COMPARE_HEADER", None)
-    tcSym_CompareHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_compare.h.ftl")
+    tcSym_CompareHeaderFile.setSourcePath("../peripheral/tc_u2249/templates/plib_tc_compare.h.ftl")
     tcSym_CompareHeaderFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".h")
     tcSym_CompareHeaderFile.setDestPath("/peripheral/tc/")
     tcSym_CompareHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -494,7 +494,7 @@ def instantiateComponent(tcComponent):
     tcSym_CompareHeaderFile.setMarkup(True)
 
     tcSym_CompareSourceFile = tcComponent.createFileSymbol("TC_COMPARE_SOURCE", None)
-    tcSym_CompareSourceFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_compare.c.ftl")
+    tcSym_CompareSourceFile.setSourcePath("../peripheral/tc_u2249/templates/plib_tc_compare.c.ftl")
     tcSym_CompareSourceFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".c")
     tcSym_CompareSourceFile.setDestPath("/peripheral/tc/")
     tcSym_CompareSourceFile.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -502,7 +502,7 @@ def instantiateComponent(tcComponent):
     tcSym_CompareSourceFile.setMarkup(True)
 
     tcSym_CaptureHeaderFile = tcComponent.createFileSymbol("TC_CAPTURE_HEADER", None)
-    tcSym_CaptureHeaderFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_capture.h.ftl")
+    tcSym_CaptureHeaderFile.setSourcePath("../peripheral/tc_u2249/templates/plib_tc_capture.h.ftl")
     tcSym_CaptureHeaderFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".h")
     tcSym_CaptureHeaderFile.setDestPath("/peripheral/tc/")
     tcSym_CaptureHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -510,7 +510,7 @@ def instantiateComponent(tcComponent):
     tcSym_CaptureHeaderFile.setMarkup(True)
 
     tcSym_CaptureSourceFile = tcComponent.createFileSymbol("TC_CAPTURE_SOURCE", None)
-    tcSym_CaptureSourceFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/plib_tc_capture.c.ftl")
+    tcSym_CaptureSourceFile.setSourcePath("../peripheral/tc_u2249/templates/plib_tc_capture.c.ftl")
     tcSym_CaptureSourceFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".c")
     tcSym_CaptureSourceFile.setDestPath("/peripheral/tc/")
     tcSym_CaptureSourceFile.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -520,11 +520,11 @@ def instantiateComponent(tcComponent):
     tcSym_SystemInitFile = tcComponent.createFileSymbol("TC_SYS_INT", None)
     tcSym_SystemInitFile.setType("STRING")
     tcSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    tcSym_SystemInitFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/system/initialization.c.ftl")
+    tcSym_SystemInitFile.setSourcePath("../peripheral/tc_u2249/templates/system/initialization.c.ftl")
     tcSym_SystemInitFile.setMarkup(True)
 
     tcSym_SystemDefFile = tcComponent.createFileSymbol("TC_SYS_DEF", None)
     tcSym_SystemDefFile.setType("STRING")
     tcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    tcSym_SystemDefFile.setSourcePath("../peripheral/tc_" + tcModuleID + "/templates/system/definitions.h.ftl")
+    tcSym_SystemDefFile.setSourcePath("../peripheral/tc_u2249/templates/system/definitions.h.ftl")
     tcSym_SystemDefFile.setMarkup(True)

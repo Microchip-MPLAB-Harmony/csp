@@ -56,7 +56,7 @@ def instantiateComponent(divasComponent):
     divasModuleID = divasModuleNode.getAttribute("id")
 
     divasSym_HeaderFile = divasComponent.createFileSymbol("DIVAS_HEADER", None)
-    divasSym_HeaderFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/plib_divas.h.ftl")
+    divasSym_HeaderFile.setSourcePath("../peripheral/divas_u2258/templates/plib_divas.h.ftl")
     divasSym_HeaderFile.setOutputName("plib_"+divasInstanceName.getValue().lower()+".h")
     divasSym_HeaderFile.setDestPath("peripheral/divas")
     divasSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/divas/")
@@ -64,7 +64,7 @@ def instantiateComponent(divasComponent):
     divasSym_HeaderFile.setMarkup(True)
 
     divasSym_SourceFile = divasComponent.createFileSymbol("DIVAS_SOURCE", None)
-    divasSym_SourceFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/plib_divas.c.ftl")
+    divasSym_SourceFile.setSourcePath("../peripheral/divas_u2258/templates/plib_divas.c.ftl")
     divasSym_SourceFile.setOutputName("plib_"+divasInstanceName.getValue().lower()+".c")
     divasSym_SourceFile.setDestPath("peripheral/divas")
     divasSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/divas/")
@@ -74,13 +74,13 @@ def instantiateComponent(divasComponent):
     divasSystemDefFile = divasComponent.createFileSymbol("DIVAS_SYS_DEF", None)
     divasSystemDefFile.setType("STRING")
     divasSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    divasSystemDefFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/system/definitions.h.ftl")
+    divasSystemDefFile.setSourcePath("../peripheral/divas_u2258/templates/system/definitions.h.ftl")
     divasSystemDefFile.setMarkup(True)
 
     divasSystemInitFile = divasComponent.createFileSymbol("DIVAS_SYS_INIT", None)
     divasSystemInitFile.setType("STRING")
     divasSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    divasSystemInitFile.setSourcePath("../peripheral/divas_"+divasModuleID+"/templates/system/initialization.c.ftl")
+    divasSystemInitFile.setSourcePath("../peripheral/divas_u2258/templates/system/initialization.c.ftl")
     divasSystemInitFile.setMarkup(True)
 
 

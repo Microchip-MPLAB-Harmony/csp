@@ -262,7 +262,7 @@ def instantiateComponent(sdramcComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     sdramcHeader1File = sdramcComponent.createFileSymbol("SDRAMC_H", None)
-    sdramcHeader1File.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/plib_sdramc.h.ftl")
+    sdramcHeader1File.setSourcePath("../peripheral/sdramc_6100/templates/plib_sdramc.h.ftl")
     sdramcHeader1File.setOutputName("plib_"+sdramcInstanceName.getValue().lower()+".h")
     sdramcHeader1File.setDestPath("/peripheral/sdramc/")
     sdramcHeader1File.setProjectPath("config/" + configName + "/peripheral/sdramc/")
@@ -270,7 +270,7 @@ def instantiateComponent(sdramcComponent):
     sdramcHeader1File.setMarkup(True)
 
     sdramcSource1File = sdramcComponent.createFileSymbol("SDRAMC_C", None)
-    sdramcSource1File.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/plib_sdramc.c.ftl")
+    sdramcSource1File.setSourcePath("../peripheral/sdramc_6100/templates/plib_sdramc.c.ftl")
     sdramcSource1File.setOutputName("plib_"+sdramcInstanceName.getValue().lower()+".c")
     sdramcSource1File.setDestPath("/peripheral/sdramc/")
     sdramcSource1File.setProjectPath("config/" + configName + "/peripheral/sdramc/")
@@ -281,11 +281,11 @@ def instantiateComponent(sdramcComponent):
     sdramcHeader1FileEntry = sdramcComponent.createFileSymbol("SDRAMC_SYSTEM_DEFINITIONS_H", None)
     sdramcHeader1FileEntry.setType("STRING")
     sdramcHeader1FileEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    sdramcHeader1FileEntry.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/system/system_definitions.h.ftl")
+    sdramcHeader1FileEntry.setSourcePath("../peripheral/sdramc_6100/templates/system/system_definitions.h.ftl")
     sdramcHeader1FileEntry.setMarkup(True)
 
     sdramSystemInitFile = sdramcComponent.createFileSymbol("SDRAMC_SYSTEM_INITIALIZE_C", None)
     sdramSystemInitFile.setType("STRING")
     sdramSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-    sdramSystemInitFile.setSourcePath("../peripheral/sdramc_" + sdramcRegModule.getID() + "/templates/system/system_initialize.c.ftl")
+    sdramSystemInitFile.setSourcePath("../peripheral/sdramc_6100/templates/system/system_initialize.c.ftl")
     sdramSystemInitFile.setMarkup(True)

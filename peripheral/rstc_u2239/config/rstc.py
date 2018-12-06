@@ -75,7 +75,7 @@ def instantiateComponent(rstcComponent):
     rstcModuleID = rstcModuleNode.getAttribute("id")
 
     rstcSym_HeaderFile = rstcComponent.createFileSymbol("RSTC_HEADER", None)
-    rstcSym_HeaderFile.setSourcePath("../peripheral/rstc_"+rstcModuleID+"/templates/plib_rstc.h.ftl")
+    rstcSym_HeaderFile.setSourcePath("../peripheral/rstc_u2239/templates/plib_rstc.h.ftl")
     rstcSym_HeaderFile.setOutputName("plib_"+rstcInstanceName.getValue().lower()+".h")
     rstcSym_HeaderFile.setDestPath("peripheral/rstc/")
     rstcSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/rstc/")
@@ -83,7 +83,7 @@ def instantiateComponent(rstcComponent):
     rstcSym_HeaderFile.setMarkup(True)
 
     rstcSym_SourceFile = rstcComponent.createFileSymbol("RSTC_SOURCE", None)
-    rstcSym_SourceFile.setSourcePath("../peripheral/rstc_"+rstcModuleID+"/templates/plib_rstc.c.ftl")
+    rstcSym_SourceFile.setSourcePath("../peripheral/rstc_u2239/templates/plib_rstc.c.ftl")
     rstcSym_SourceFile.setOutputName("plib_"+rstcInstanceName.getValue().lower()+".c")
     rstcSym_SourceFile.setDestPath("peripheral/rstc/")
     rstcSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/rstc/")
@@ -93,5 +93,5 @@ def instantiateComponent(rstcComponent):
     rstcSym_SystemDefFile = rstcComponent.createFileSymbol("RSTC_SYS_DEF", None)
     rstcSym_SystemDefFile.setType("STRING")
     rstcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    rstcSym_SystemDefFile.setSourcePath("../peripheral/rstc_"+rstcModuleID+"/templates/system/definitions.h.ftl")
+    rstcSym_SystemDefFile.setSourcePath("../peripheral/rstc_u2239/templates/system/definitions.h.ftl")
     rstcSym_SystemDefFile.setMarkup(True)
