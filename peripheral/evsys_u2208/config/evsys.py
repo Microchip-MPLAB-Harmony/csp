@@ -75,7 +75,7 @@ def channelClockEnable(symbol, event):
         Database.setSymbolValue("core", evsysInstanceName.getValue() + "_" + chID + "_CLOCK_ENABLE", True, 1)
     else:
         Database.setSymbolValue("core", evsysInstanceName.getValue() + "_" + chID + "_CLOCK_ENABLE", False, 1)
-        
+
 
 def overrunInterrupt(interrupt, event):
     interrupt.setVisible(event["value"] != 2)
@@ -90,14 +90,14 @@ def evsysIntset(interrupt, val):
     global instance
     evsysInt = 0
     for id in range(0, channel):
-        event = Database.getSymbolValue("evsys0","EVSYS_CHANNEL_" + str(id) + "_EVENT")
-        overflow = Database.getSymbolValue("evsys0","EVSYS_CHANNEL_" + str(id) + "_OVERRUN")
+        event = Database.getSymbolValue(val["namespace"],"EVSYS_CHANNEL_" + str(id) + "_EVENT")
+        overflow = Database.getSymbolValue(val["namespace"],"EVSYS_CHANNEL_" + str(id) + "_OVERRUN")
         if event:
             evsysInt |= 1 << (id + 16)
         if overflow:
             evsysInt |= 1<< (id)
     interrupt.setValue(bool(evsysInt), 2)
-    Database.setSymbolValue("evsys0", "EVSYS_INTERRUPT_VALUE", str(hex(evsysInt)), 2)
+    Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_VALUE", str(hex(evsysInt)), 2)
 
     Database.clearSymbolValue("core", InterruptVector)
     Database.setSymbolValue("core", InterruptVector, bool(evsysInt), 2)
@@ -144,7 +144,7 @@ def instantiateComponent(evsysComponent):
     evsysOnDemand = evsysComponent.createBooleanSymbol("EVSYS_CHANNEL_ONDEMAND", evsysSym_Menu)
     evsysOnDemand.setLabel("Generic Clock On Demand")
     evsysOnDemand.setDefaultValue(False)
-    
+
     generatorSymbol = []
     generatorsNode = ATDF.getNode("/avr-tools-device-file/devices/device/events/generators")
     for id in range(0,len(generatorsNode.getChildren())):

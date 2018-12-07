@@ -38,7 +38,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "device.h"
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
 
 <#if EVSYS_INTERRUPT_MODE == true>
@@ -63,7 +62,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 </#list>
 
 <#list 0..TOTAL_CHANNEL as i>
-	<#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >    
+	<#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
 	<#assign GENERATOR = "EVSYS_CHANNEL_" + i + "_GENERATOR">
 	<#assign PATH = "EVSYS_CHANNEL_" + i + "_PATH">
 	<#assign EDGE = "EVSYS_CHANNEL_" + i + "_EDGE">
@@ -74,8 +73,8 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 	/* Event Channel ${i} Configuration */
 	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
 									| EVSYS_CHANNEL_CHANNEL(${i});
-    <#if .vars[PATH] != '2' >                                
-	while(${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHSTATUS & EVSYS_CHSTATUS_USRRDY${i}_Msk != EVSYS_CHSTATUS_USRRDY${i}_Msk);
+    <#if .vars[PATH] != '2' >
+	while((${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHSTATUS & EVSYS_CHSTATUS_USRRDY${i}_Msk) != EVSYS_CHSTATUS_USRRDY${i}_Msk);
 	</#if>
 	</#if>
 	</#if>
@@ -83,13 +82,13 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
 <#if EVSYS_INTERRUPT_MODE>
 
-	/*Interupt setting for Event System*/
-	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTESET = ${EVSYS_INTERRUPT_VALUE};
+	/*Interrupt setting for Event System*/
+	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = ${EVSYS_INTERRUPT_VALUE};
 </#if>
 }
 
 <#if EVSYS_INTERRUPT_MODE == true>
-		
+
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_INT_MASK interrupt)
 	<#lt>{
 	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = interrupt;
@@ -117,4 +116,4 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#lt>   	evsys.callback(evsys.context, status);
     <#lt>   }
 	<#lt>}
-</#if>	
+</#if>
