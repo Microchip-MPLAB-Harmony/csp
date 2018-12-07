@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">15C920D40D972DF2FBC3605D77EAF5A8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">15C920D40D972DF2FBC3605D77EAF5A8</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4A7DFCB2196A2300AF756B62A9DDD60C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4A7DFCB2196A2300AF756B62A9DDD60C</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -75,8 +75,8 @@
           <Name dnOrder="1">plib_tc0.c</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">521421E5FC5851779F003095B3A0EEC1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">521421E5FC5851779F003095B3A0EEC1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">607F26AD19AC6B20E2EB93AE70ACF91E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">607F26AD19AC6B20E2EB93AE70ACF91E</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -558,7 +558,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;csp;csp;"/>
     </Settings>
   </Configurator>
 </Configuration>

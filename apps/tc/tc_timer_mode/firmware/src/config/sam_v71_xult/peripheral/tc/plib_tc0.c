@@ -70,7 +70,7 @@ void TC0_CH0_TimerInitialize (void)
                                                         TC_CMR_WAVE_Msk ;
 
     /* write period */
-    TC0_REGS->TC_CHANNEL[0].TC_RC = 32000U;
+    TC0_REGS->TC_CHANNEL[0].TC_RC = 47058U;
 
 
     /* enable interrupt */
@@ -92,7 +92,7 @@ void TC0_CH0_TimerStop (void)
 
 uint32_t TC0_CH0_TimerFrequencyGet( void )
 {
-    return (uint32_t)(32000UL);
+    return (uint32_t)(47058UL);
 }
 
 /* Configure timer period */
