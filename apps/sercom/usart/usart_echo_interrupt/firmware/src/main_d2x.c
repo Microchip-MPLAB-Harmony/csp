@@ -57,11 +57,10 @@
 #define LED_ON    LED_Clear
 #define LED_OFF   LED_Set
 
-char messageStart[] = "**** USART echo interrupt demo ****\r\n\
-**** Type a buffer of 10 characters and observe it echo back ****\r\n\
-**** LED toggles on each time the buffer is echoed ****\r\n";
+char messageStart[] = "****  USART echo demo: Non-blocking Transfer with the interrupt  ****\r\n\
+**** Type 10 characters. The received characters are echoed back, and the LED is toggled ****\r\n";
 char receiveBuffer[RX_BUFFER_SIZE] = {};
-char echoBuffer[RX_BUFFER_SIZE+2] = {};
+char echoBuffer[RX_BUFFER_SIZE+4] = {};
 char messageError[] = "**** USART error occurred ****\r\n";
 
 bool errorStatus = false;
@@ -116,9 +115,11 @@ int main ( void )
             /* Echo back received buffer and Toggle LED */
             readStatus = false;
 
-            memcpy(echoBuffer, receiveBuffer,sizeof(receiveBuffer));
-            echoBuffer[RX_BUFFER_SIZE] = '\r';
-            echoBuffer[RX_BUFFER_SIZE+1] = '\n';
+            echoBuffer[0] = '\n';
+            echoBuffer[1] = '\r';
+            memcpy(&echoBuffer[2], receiveBuffer,sizeof(receiveBuffer));
+            echoBuffer[RX_BUFFER_SIZE+2] = '\n';
+            echoBuffer[RX_BUFFER_SIZE+3] = '\r';
 
             SERCOM3_USART_Write(&echoBuffer[0], sizeof(echoBuffer));
             LED_Toggle();

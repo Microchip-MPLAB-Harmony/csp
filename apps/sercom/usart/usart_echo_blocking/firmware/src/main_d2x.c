@@ -57,10 +57,9 @@
 #define LED_OFF   LED_Set
 
 
-char messageStart[] = "**** USART Line Echo Demo ****\r\n\
-**** Demo uses blocking model of USART PLIB. ****\r\n\
-**** Enter a line of characters, press ENTER key and observe it echo back. ****\
-\r\n**** LED toggles on each time the line is echoed ****\r\n";
+char messageStart[] = "**** USART Line Echo Demo: Blocking Transfer without the interrupt ****\r\n\
+**** Type a line of characters and press the Enter key. **** \r\n\
+**** Entered line will be echoed back, and the LED is toggled. ****\r\n";
 char newline[] = "\r\n";
 char errorMessage[] = "\r\n**** USART error has occurred ****\r\n";
 char receiveBuffer[RX_BUFFER_SIZE] = {};
@@ -93,6 +92,7 @@ int main ( void )
 
                 if((data == '\n') || (data == '\r'))
                 {
+                    SERCOM3_USART_Write(&newline[0],sizeof(newline));
                     SERCOM3_USART_Write(&receiveBuffer[0],rxCounter);
                     SERCOM3_USART_Write(&newline[0],sizeof(newline));
                     rxCounter = 0;
