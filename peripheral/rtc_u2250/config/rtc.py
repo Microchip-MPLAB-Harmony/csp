@@ -172,6 +172,17 @@ def rtcMode2Evctrl(symbol, event):
 
     symbol.setValue(value, 1)
 
+def rtcMode2Interrupt(symbol, event):
+    global rtcMode2InterruptMap
+    mask = rtcMode2InterruptMap.get(event["id"].split("RTC_MODE2_INTENSET_")[1].split("_ENABLE")[0])
+
+    if event["value"]:
+        value = symbol.getValue() | int(mask, 16)
+    else:
+        value = symbol.getValue() & ~(int(mask, 16))
+
+    symbol.setValue(value, 1)
+
 ########################## Code Generation Property ############################
 
 #Update Code Generation Property
@@ -276,6 +287,7 @@ def instantiateComponent(rtcComponent):
     global timerPeriodMax_Sym
     global rtcMode0InterruptMap
     global rtcMode1InterruptMap
+    global rtcMode2InterruptMap
     global rtcModeSelection_Sym
     global rtcMode0EvctrlMap
     global rtcMode1EvctrlMap
@@ -287,11 +299,13 @@ def instantiateComponent(rtcComponent):
     global evsysDep
     rtcMode0InterruptMap = {}
     rtcMode1InterruptMap = {}
+    rtcMode2InterruptMap = {}
     rtcMode0EvctrlMap = {}
     rtcMode1EvctrlMap = {}
     rtcMode2EvctrlMap = {}
     rtcMode0InterruptDep = []
     rtcMode1InterruptDep = []
+    rtcMode2InterruptDep = []
     rtcMode0EvctrlDep = []
     rtcMode1EvctrlDep = []
     rtcMode2EvctrlDep = []
@@ -621,6 +635,21 @@ def instantiateComponent(rtcComponent):
     rtcSymMode2_PERIN.setDefaultValue(0)
     rtcSymMode2_PERIN.setVisible(False)
     rtcSymMode2_PERIN.setDependencies(rtcMode2Evctrl, rtcMode2EvctrlDep)
+
+    rtcMode2InterruptNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE2",name="INTENSET"]')
+    rtcMode2InterruptValues = rtcMode2InterruptNode.getChildren()
+
+    for i in range(0, len(rtcMode2InterruptValues)):
+        rtcSymMode2_Interrupt = rtcComponent.createBooleanSymbol("RTC_MODE2_INTENSET_" + rtcMode2InterruptValues[i].getAttribute("name") + "_ENABLE", rtcSymMode2_INTENSET)
+        rtcSymMode2_Interrupt.setLabel(rtcMode2InterruptValues[i].getAttribute("caption"))
+        rtcMode2InterruptMap[rtcMode2InterruptValues[i].getAttribute("name")] = rtcMode2InterruptValues[i].getAttribute("mask")
+        rtcMode2InterruptDep.append("RTC_MODE2_INTENSET_" + rtcMode2InterruptValues[i].getAttribute("name") + "_ENABLE")
+
+    #Interrupt Notification
+    rtcSymMode2InterruptMask = rtcComponent.createHexSymbol("RTC_MODE2_INTENSET", rtcSymMode2_INTENSET)
+    rtcSymMode2InterruptMask.setDefaultValue(0)
+    rtcSymMode2InterruptMask.setVisible(False)
+    rtcSymMode2InterruptMask.setDependencies(rtcMode2Interrupt, rtcMode2InterruptDep)
 
     ############################################################################
     #### Dependency ####
