@@ -416,9 +416,9 @@ def instantiateComponent(tcComponent):
     tcModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TC\"]")
     tcModuleID = tcModuleNode.getAttribute("id")
 
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_" + tcModuleID + "/config/tc_timer.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_" + tcModuleID + "/config/tc_compare.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_" + tcModuleID + "/config/tc_capture.py")
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_u2249/config/tc_timer.py")
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_u2249/config/tc_compare.py")
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/tc_u2249/config/tc_capture.py")
 
     tcInstanceName.setDependencies(updateCodeGenerationProperty, ["TC_OPERATION_MODE", "TC_SLAVE_MODE"])
     ############################################################################
