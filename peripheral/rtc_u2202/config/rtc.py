@@ -163,7 +163,7 @@ def Mode2Visible(symbol, event):
 
 def rtcMode2Evctrl(symbol, event):
     global rtcMode2EvctrlMap
-    mask = rtcMode1EvctrlMap.get(event["id"].split("RTC_MODE2_EVCTRL_")[1].split("_ENABLE")[0])
+    mask = rtcMode2EvctrlMap.get(event["id"].split("RTC_MODE2_EVCTRL_")[1].split("_ENABLE")[0])
 
     if event["value"]:
         value = symbol.getValue() | int(mask, 16)
