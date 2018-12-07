@@ -754,7 +754,7 @@ def instantiateComponent(tcComponent):
     tcSym_MAX_CHANNELS = tcComponent.createIntegerSymbol("TC_MAX_CHANNELS", None)
     tcSym_MAX_CHANNELS.setDefaultValue(3)
     tcSym_MAX_CHANNELS.setVisible(False)
-    
+
     tcSym_MCU_SERIES = tcComponent.createStringSymbol("TC_MCU_SERIES", None)
     tcSym_MCU_SERIES.setVisible(False)
     node = ATDF.getNode("/avr-tools-device-file/devices")
@@ -1404,7 +1404,7 @@ def instantiateComponent(tcComponent):
     tcID = tc.getAttribute("id")
 
     tcHeaderFile = tcComponent.createFileSymbol("TC_HEADER", None)
-    tcHeaderFile.setSourcePath("../peripheral/tc_8082/templates/plib_tc.h.ftl")
+    tcHeaderFile.setSourcePath("../peripheral/tc_6082/templates/plib_tc.h.ftl")
     tcHeaderFile.setOutputName("plib_"+tcInstanceName.getValue().lower()+".h")
     tcHeaderFile.setDestPath("/peripheral/tc/")
     tcHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -1413,7 +1413,7 @@ def instantiateComponent(tcComponent):
     tcHeaderFile.setMarkup(True)
 
     tcSource1File = tcComponent.createFileSymbol("TC_SOURCE", None)
-    tcSource1File.setSourcePath("../peripheral/tc_8082/templates/plib_tc.c.ftl")
+    tcSource1File.setSourcePath("../peripheral/tc_6082/templates/plib_tc.c.ftl")
     tcSource1File.setOutputName("plib_"+tcInstanceName.getValue().lower()+".c")
     tcSource1File.setDestPath("/peripheral/tc/")
     tcSource1File.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -1422,7 +1422,7 @@ def instantiateComponent(tcComponent):
     tcSource1File.setMarkup(True)
 
     tcGlobalHeaderFile = tcComponent.createFileSymbol("TC_GLOBALHEADER", None)
-    tcGlobalHeaderFile.setSourcePath("../peripheral/tc_8082/templates/plib_tc_common.h")
+    tcGlobalHeaderFile.setSourcePath("../peripheral/tc_6082/templates/plib_tc_common.h")
     tcGlobalHeaderFile.setOutputName("plib_tc_common.h")
     tcGlobalHeaderFile.setDestPath("/peripheral/tc/")
     tcGlobalHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
@@ -1432,11 +1432,11 @@ def instantiateComponent(tcComponent):
     tcSystemInitFile = tcComponent.createFileSymbol("TC_INIT", None)
     tcSystemInitFile.setType("STRING")
     tcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    tcSystemInitFile.setSourcePath("../peripheral/tc_8082/templates/system/system_initialize.c.ftl")
+    tcSystemInitFile.setSourcePath("../peripheral/tc_6082/templates/system/system_initialize.c.ftl")
     tcSystemInitFile.setMarkup(True)
 
     tcSystemDefinitionFile = tcComponent.createFileSymbol("TC_DEF", None)
     tcSystemDefinitionFile.setType("STRING")
     tcSystemDefinitionFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    tcSystemDefinitionFile.setSourcePath("../peripheral/tc_8082/templates/system/system_definitions.h.ftl")
+    tcSystemDefinitionFile.setSourcePath("../peripheral/tc_6082/templates/system/system_definitions.h.ftl")
     tcSystemDefinitionFile.setMarkup(True)
