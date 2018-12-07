@@ -368,9 +368,9 @@ def instantiateComponent(sercomComponent):
     sercomModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]")
     sercomModuleID = sercomModuleNode.getAttribute("id")
 
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_" + sercomModuleID + "/config/sercom_usart.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_" + sercomModuleID + "/config/sercom_spi_master.py")
-    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_" + sercomModuleID + "/config/sercom_i2c_master.py")
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_usart.py")
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_spi_master.py")
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_i2c_master.py")
 
     ############################################################################
     #### Dependency ####

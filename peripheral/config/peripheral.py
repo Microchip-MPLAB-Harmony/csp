@@ -58,7 +58,7 @@ for module in range (0, len(modules)):
 
     periphName = str(modules[module].getAttribute("name"))
     periphID = str(modules[module].getAttribute("id"))
-    periphScript = "/peripheral/" + periphName.lower() + "_" + periphID + \
+    periphScript = "/peripheral/" + periphName.lower() + "_" + periphID.lower() + \
                     "/config/" + periphName.lower() + ".py"
 
     # Don't load system services. They will be loaded by family specific script
