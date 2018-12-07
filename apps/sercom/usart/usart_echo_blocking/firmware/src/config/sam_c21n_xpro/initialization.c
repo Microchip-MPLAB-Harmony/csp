@@ -97,6 +97,8 @@ void SYS_Initialize ( void* data )
 
 
 
+    EVSYS_Initialize();
+
     NVIC_Initialize();
     SERCOM4_USART_Initialize();
 
