@@ -60,7 +60,7 @@ static void CLK_ProgrammableClockInitialize(void)
     PMC_REGS->PMC_SCDR = PMC_SCDR_PCK6_Msk;
 
     /* Configure selected programmable clock    */
-    PMC_REGS->PMC_PCK[6]= PMC_PCK_CSS_SLOW_CLK | PMC_PCK_PRES(0);
+    PMC_REGS->PMC_PCK[6]= PMC_PCK_CSS_MAIN_CLK | PMC_PCK_PRES(254);
 
     /* Enable selected programmable clock   */
     PMC_REGS->PMC_SCER =    PMC_SCER_PCK6_Msk;
