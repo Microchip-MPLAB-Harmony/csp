@@ -948,7 +948,7 @@ def instantiateComponent(tcComponent):
 
     timerPeriodMax_Sym = tcComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
     timerPeriodMax_Sym.setVisible(False)
-    timerPeriodMax_Sym.setDefaultValue("0xFFFF")
+    timerPeriodMax_Sym.setDefaultValue(str(tcCounterMaxValue))
 
     timerStartApiName_Sym = tcComponent.createStringSymbol("TIMER_START_API_NAME", None)
     timerStartApiName_Sym.setVisible(False)
