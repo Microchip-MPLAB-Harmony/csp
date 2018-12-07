@@ -52,17 +52,14 @@
 #include "definitions.h"                // SYS function prototypes
 
 #define RX_BUFFER_SIZE                  10
-#define END_OF_LINE                     "\r\n"
-#define END_OF_LINE_SIZE                2
 
 #define LED_On()                        LED_Clear()
 #define LED_Off()                       LED_Set()
 
-char messageStart[] = "**** USART echo interrupt demo ****\r\n\
-**** Type a buffer of 10 characters and observe it echo back ****\r\n\
-**** LED toggles on each time the buffer is echoed ****\r\n";
+char messageStart[] = "****  USART echo demo: Non-blocking Transfer with the interrupt  ****\r\n\
+**** Type 10 characters. The received characters are echoed back, and the LED is toggled ****\r\n";
 char receiveBuffer[RX_BUFFER_SIZE] = {};
-char echoBuffer[RX_BUFFER_SIZE + END_OF_LINE_SIZE] = {};
+char echoBuffer[RX_BUFFER_SIZE + 4] = {};
 char messageError[] = "**** USART error occurred ****\r\n";
 
 bool errorStatus = false;
@@ -117,8 +114,11 @@ int main ( void )
             /* Echo back received buffer and Toggle LED */
             readStatus = false;
 
-            memcpy(echoBuffer, receiveBuffer, sizeof (receiveBuffer));
-            memcpy(&echoBuffer[RX_BUFFER_SIZE], END_OF_LINE, END_OF_LINE_SIZE);            
+            echoBuffer[0] = '\n';
+            echoBuffer[1] = '\r';
+            memcpy(&echoBuffer[2], receiveBuffer,sizeof(receiveBuffer));
+            echoBuffer[RX_BUFFER_SIZE+2] = '\n';
+            echoBuffer[RX_BUFFER_SIZE+3] = '\r';
 
             USART1_Write(&echoBuffer, sizeof(echoBuffer));
             LED_Toggle();
