@@ -131,7 +131,7 @@
 						<#if ledName?counter == ledPinPos?counter>
 							<#if ledName?counter == ledActiveLevel?counter>
 								/*** LED Macros for ${ledName} ***/
-								#define ${ledName}_Toggle()     (PIO${ledChannel}_REGS->PIO_ODSR ^= (1<<${ledPinPos}))
+								#define ${ledName}_Toggle()     do { PIO${ledChannel}_REGS->PIO_MSKR = (1<<${ledPinPos}); (PIO${ledChannel}_REGS->PIO_ODSR ^= (1<<${ledPinPos})); } while (0)
 								<#if ledActiveLevel == "High">
 									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_SODR = (1<<${ledPinPos}))
 									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_CODR = (1<<${ledPinPos}))
