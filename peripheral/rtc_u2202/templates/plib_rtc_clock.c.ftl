@@ -75,7 +75,7 @@
 void ${RTC_INSTANCE_NAME}_Initialize(void)
 {
     ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRL |= RTC_MODE2_CTRL_SWRST_Msk;
-    
+
     ${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_READREQ |= RTC_READREQ_RCONT_Msk;
 
     while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
@@ -92,9 +92,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     {
         /* Wait for Synchronization after Enabling RTC */
     }
-    
+
     <#if RTC_MODE2_EVCTRL != "0">
-        <#lt>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
     </#if>
 }
 <#if RTC_FREQCORR = true >
@@ -187,9 +187,9 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
     <#lt>    {
     <#lt>        /* Synchronization after writing value to MASK Register */
     <#lt>    }
-        
+
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = RTC_MODE2_INTENSET_ALARM0_Msk;
-     
+
     <#lt>    return true;
     <#lt>}
 

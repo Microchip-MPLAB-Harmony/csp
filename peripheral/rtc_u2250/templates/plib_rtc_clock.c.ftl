@@ -93,7 +93,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     }
 
     <#if RTC_MODE2_EVCTRL != "0">
-        <#lt>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
     </#if>
 }
 <#if RTC_FREQCORR = true >
