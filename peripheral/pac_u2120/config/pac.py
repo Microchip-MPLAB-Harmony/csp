@@ -75,6 +75,12 @@ def updatePACErrorEventVisibleProperty(symbol, event):
     if event["value"] == False:
         component.getSymbolByID("PAC_INTERRUPT_ENABLE_COMMENT").setVisible(False)
 
+def evsysSetup(symbol, event):
+    pacActive = Database.getSymbolValue(event["namespace"], "PAC_USE")
+    eventActive = Database.getSymbolValue(event["namespace"], "PAC_ERROR_EVENT")
+    prevStatus = Database.getSymbolValue("evsys", "GENERATOR_PAC_ACCERR_ACTIVE")
+    if (prevStatus != (pacActive & eventActive)):
+        Database.setSymbolValue("evsys", "GENERATOR_PAC_ACCERR_ACTIVE", (pacActive & eventActive), 2)
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -105,6 +111,11 @@ pacSym_ErrEventSET = coreComponent.createBooleanSymbol("PAC_ERROR_EVENT", pacSym
 pacSym_ErrEventSET.setLabel("Generate Peripheral Access Error Event Output")
 pacSym_ErrEventSET.setVisible(False)
 pacSym_ErrEventSET.setDependencies(updatePACErrorEventVisibleProperty, ["PAC_USE"])
+
+#Error Event
+pacSym_ErrEventSET = coreComponent.createBooleanSymbol("PAC_EVSYS_TRIGGER_DUMMY", pacSym_Use)
+pacSym_ErrEventSET.setVisible(False)
+pacSym_ErrEventSET.setDependencies(evsysSetup, ["PAC_ERROR_EVENT", "PAC_USE"])
 
 pacIndex = 0
 
