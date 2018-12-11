@@ -61,14 +61,17 @@
 <#assign TCC_DRVCTRL_FAULT_VAL = "">
 <#assign TCC_PATT_VAL = "">
 <#assign TCC_EVCTRL_VAL = "">
+<#assign TCC_INTENSET_VAL = "">
 <#assign TCC_CTRLB_DIR = "">
 <#assign TCC_WAVE_VAL = "TCC_WAVE_WAVEGEN_" + TCC_WAVE_WAVEGEN>
+
 <#list 0..(TCC_NUM_CHANNELS-1) as i>
 <#assign CH_NUM = i >
 <#assign TCC_POLARITY = "TCC_"+i+"_WAVE_POL">
-<#assign TCC_MCEO = "TCC_"+i+"_EVCTRL_MCEO">
+<#assign TCC_MCEO = "TCC_EVCTRL_MC_" + i>
+<#assign TCC_INT_MC = "TCC_INTENSET_MC_" + i>
 <#-- Dead Time -->
-<#if TCC_IS_DEAD_TIME == 1>
+<#if TCC_IS_DEAD_TIME == 1 && i < TCC_NUM_OUTPUTS/2>
     <#assign TCC_DT_ENABLE = "TCC_"+i+"_WEXCTRL_DTIEN">
     <#if .vars[TCC_DT_ENABLE] == true>
         <#if TCC_WEXCTRL_DT_VAL != "">
@@ -80,7 +83,7 @@
 </#if> <#-- Dead Time End -->
 
 <#-- swap -->
-<#if TCC_IS_SWAP == 1>
+<#if TCC_IS_SWAP == 1 && i < TCC_NUM_OUTPUTS/2>
     <#assign TCC_SWAP_ENABLE = "TCC_"+i+"_WAVE_SWAP">
     <#if .vars[TCC_SWAP_ENABLE] == true>
         <#if TCC_WAVE_VAL != "">
@@ -108,6 +111,15 @@
     <#else>
         <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_MCEO"+i+"_Msk">
     </#if>
+</#if>
+
+<#if .vars[TCC_INT_MC] == true>
+    <#if TCC_INTENSET_VAL != "">
+        <#assign TCC_INTENSET_VAL = TCC_INTENSET_VAL + " \n \t \t | TCC_INTENSET_MC"+i+"_Msk">
+    <#else>
+        <#assign TCC_INTENSET_VAL = "TCC_INTENSET_MC"+i+"_Msk">
+    </#if>
+    <#assign TCC_INTERRUPT = true>
 </#if>
 </#list>
 
@@ -159,8 +171,30 @@
 </#if>
 </#list>
 </#if>
+
 <#if TCC_INTENSET_OVF == true>
     <#assign TCC_INTERRUPT = true>
+    <#if TCC_INTENSET_VAL != "">
+        <#assign TCC_INTENSET_VAL = TCC_INTENSET_VAL + " \n \t \t | TCC_INTENSET_OVF_Msk">
+    <#else>
+        <#assign TCC_INTENSET_VAL = "TCC_INTENSET_OVF_Msk">
+    </#if>
+</#if>
+<#if TCC_INTENSET_FAULT0 == true>
+    <#assign TCC_INTERRUPT = true>
+    <#if TCC_INTENSET_VAL != "">
+        <#assign TCC_INTENSET_VAL = TCC_INTENSET_VAL + " \n \t \t | TCC_INTENSET_FAULT0_Msk">
+    <#else>
+        <#assign TCC_INTENSET_VAL = "TCC_INTENSET_FAULT0_Msk">
+    </#if>
+</#if>
+<#if TCC_INTENSET_FAULT1 == true>
+    <#assign TCC_INTERRUPT = true>
+    <#if TCC_INTENSET_VAL != "">
+        <#assign TCC_INTENSET_VAL = TCC_INTENSET_VAL + " \n \t \t | TCC_INTENSET_FAULT1_Msk">
+    <#else>
+        <#assign TCC_INTENSET_VAL = "TCC_INTENSET_FAULT1_Msk">
+    </#if>
 </#if>
 <#assign TCC_WEXCTRL_DT_VAL = TCC_WEXCTRL_DT_VAL + "\n \t \t | TCC_WEXCTRL_DTLS(${TCC_WEXCTRL_DTLS}U) | TCC_WEXCTRL_DTHS(${TCC_WEXCTRL_DTHS}U)">
 
@@ -188,14 +222,19 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
         /* Wait for sync */
     }
     /* Clock prescaler */
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER};
-<#if TCC_CTRLB_DIR?has_content>
+<#if TCC_SLAVE_MODE == true>
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_MSYNC_Msk;
+<#else>
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER};   
+</#if>
+<#if TCC_CTRLB_DIR?has_content && TCC_SLAVE_MODE == false>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET = ${TCC_CTRLB_DIR};
 </#if>
 <#if TCC_IS_OTM == 1>
     ${TCC_INSTANCE_NAME}_REGS->TCC_WEXCTRL = TCC_WEXCTRL_OTMX(${TCC_WEXCTRL_OTMX}U);
 </#if>
 <#if TCC_WEXCTRL_DT_VAL?has_content && TCC_IS_DEAD_TIME == 1>
+    /* Dead time configurations */
     ${TCC_INSTANCE_NAME}_REGS->TCC_WEXCTRL |= ${TCC_WEXCTRL_DT_VAL};
 </#if>
 
@@ -209,8 +248,9 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
     <#assign CH_NUM = i>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CC[${i}] = ${.vars[TCC_CC]}U;
 </#list>
-
+<#if TCC_SLAVE_MODE == false>
     ${TCC_INSTANCE_NAME}_REGS->TCC_PER = ${TCC_PER_PER}U;
+</#if>
 
 <#if TCC_EVCTRL_EVACT != "Disabled">
     /* Fault configurations */
@@ -236,8 +276,8 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
     ${TCC_INSTANCE_NAME}_REGS->TCC_PATT = ${TCC_PATT_VAL};
 </#if>
 
-<#if TCC_INTENSET_OVF == true>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_INTENSET = TCC_INTENSET_OVF_Msk;
+<#if TCC_INTENSET_VAL?has_content>
+    ${TCC_INSTANCE_NAME}_REGS->TCC_INTENSET = ${TCC_INTENSET_VAL};
 </#if>
 
 <#if TCC_EVCTRL_VAL?has_content>
@@ -274,20 +314,12 @@ void ${TCC_INSTANCE_NAME}_PWMStop (void)
 <#if TCC_SIZE == 24>
 void ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet (uint32_t period)
 {
-<#if TCC_MCU_FAMILY == "SAMD">
-    ${TCC_INSTANCE_NAME}_REGS->TCC_PERB = period & 0xFFFFFF;
-<#else>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_PERBUF = period & 0xFFFFFF;
-</#if>
+    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period & 0xFFFFFF;
 }
 <#elseif TCC_SIZE == 16>
 void ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet (uint16_t period)
 {
-<#if TCC_MCU_FAMILY == "SAMD">
-    ${TCC_INSTANCE_NAME}_REGS->TCC_PERB = period;
-<#else>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_PERBUF = period;
-</#if>
+    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period;
 }
 </#if>
 
@@ -318,6 +350,13 @@ void ${TCC_INSTANCE_NAME}_PWMDeadTimeSet (uint8_t deadtime_high, uint8_t deadtim
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_WEXCTRL &= ~(TCC_WEXCTRL_DTHS_Msk | TCC_WEXCTRL_DTLS_Msk);
     ${TCC_INSTANCE_NAME}_REGS->TCC_WEXCTRL |= TCC_WEXCTRL_DTHS(deadtime_high) | TCC_WEXCTRL_DTLS(deadtime_low);
+}
+</#if>
+
+<#if TCC_IS_PG == 1>
+void ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output)
+{
+    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PATBUF_REG_NAME} = (uint16_t)(pattern_enable | (pattern_output << 8));
 }
 </#if>
 
@@ -359,7 +398,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptEnable(void)
 }
 
 /* Disable the period interrupt - overflow or underflow interrupt */
-void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable()
+void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTENCLR = TCC_INTENCLR_OVF_Msk;
 }
@@ -372,21 +411,59 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable()
     <#lt>    ${TCC_INSTANCE_NAME}_CallbackObj.context = context;
     <#lt>}
 
-    <#lt>/* Interrupt Handler */
-    <#lt>void ${TCC_INSTANCE_NAME}_PWMInterruptHandler(void)
-    <#lt>{
-    <#lt>    uint32_t status;
-    <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
-    <#lt>    /* Clear interrupt flags */
-    <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
-    <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
-    <#lt>    {
-    <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
-    <#lt>    }
+    <#if TCC_NUM_INT_LINES != 1>
+        <#if TCC_INTENSET_OVF == true || TCC_INTENSET_FAULT0 == true || TCC_INTENSET_FAULT1 == true>
+            <#lt>/* Interrupt Handler */
+            <#lt>void ${TCC_INSTANCE_NAME}_PWMInterruptHandler(void)
+            <#lt>{
+            <#lt>    uint32_t status;
+            <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
+            <#lt>    /* Clear interrupt flags */
+            <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = 0xFFFF;
+            <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
+            <#lt>    {
+            <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
+            <#lt>    }
 
-    <#lt>}
+            <#lt>}
+        </#if>
 
-<#else>
+        <#list 0..(TCC_NUM_CHANNELS-1) as i>
+        <#assign TCC_INT_MC = "TCC_INTENSET_MC_" + i>
+            <#if .vars[TCC_INT_MC] == true>
+                <#lt>/* Interrupt Handler */
+                <#lt>void ${TCC_INSTANCE_NAME}_MC${i}_InterruptHandler(void)
+                <#lt>{
+                <#lt>    uint32_t status;
+                <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
+                <#lt>    /* Clear interrupt flags */
+                <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_MC${i}_Msk;
+                <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
+                <#lt>    {
+                <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
+                <#lt>    }
+
+                <#lt>}
+            </#if>
+        </#list>
+
+    <#else>  <#-- TCC_NUM_INT_LINES -->
+        <#lt>/* Interrupt Handler */
+        <#lt>void ${TCC_INSTANCE_NAME}_PWMInterruptHandler(void)
+        <#lt>{
+        <#lt>    uint32_t status;
+        <#lt>    status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
+        <#lt>    /* Clear interrupt flags */
+        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
+        <#lt>    if (${TCC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
+        <#lt>    {
+        <#lt>        ${TCC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${TCC_INSTANCE_NAME}_CallbackObj.context);
+        <#lt>    }
+
+        <#lt>}
+    </#if> <#-- TCC_NUM_INT_LINES -->
+
+<#else> 
 /* Read interrupt flags */
 uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void)
 {
@@ -397,6 +474,7 @@ uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void)
     return interrupt_status;
 }
 </#if>
+
 
 /**
  End of File

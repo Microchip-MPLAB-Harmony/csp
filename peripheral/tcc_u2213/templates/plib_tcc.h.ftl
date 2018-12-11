@@ -86,11 +86,39 @@ typedef enum
 </#list>
 }${TCC_INSTANCE_NAME}_CHANNEL_NUM;
 
+// *****************************************************************************
+
+/* TCC Channel interrupt status
+
+   Summary:
+    Identifies TCC PWM interrupt status flags
+
+   Description:
+    This enumeration identifies TCC PWM interrupt status falgs
+
+   Remarks:
+    None.
+*/
+typedef enum
+{
+    ${TCC_INSTANCE_NAME}_PWM_STATUS_OVF = TCC_INTFLAG_OVF_Msk,
+    ${TCC_INSTANCE_NAME}_PWM_STATUS_FAULT_0 = TCC_INTFLAG_FAULT0_Msk,
+    ${TCC_INSTANCE_NAME}_PWM_STATUS_FAULT_1 = TCC_INTFLAG_FAULT1_Msk,
+<#list 0 ..(TCC_NUM_CHANNELS -1) as i >
+    ${TCC_INSTANCE_NAME}_PWM_STATUS_MC_${i} = TCC_INTFLAG_MC${i}_Msk,
+</#list>
+}${TCC_INSTANCE_NAME}_PWM_STATUS;
+
 <#assign TCC_INTERRUPT = false>
-<#if TCC_INTENSET_OVF == true>
+<#list 0..(TCC_NUM_CHANNELS-1) as i>
+    <#assign TCC_INT_MC = "TCC_INTENSET_MC_" + i>
+    <#if .vars[TCC_INT_MC] == true>
+        <#assign TCC_INTERRUPT = true>
+    </#if>
+</#list>
+<#if TCC_INTENSET_OVF == true || TCC_INTENSET_FAULT0 == true || TCC_INTENSET_FAULT1 == true>
     <#assign TCC_INTERRUPT = true>
 </#if>
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -101,25 +129,30 @@ typedef enum
 */
 
 // *****************************************************************************
-void ${TCC_INSTANCE_NAME}_PWMInitialize();
+void ${TCC_INSTANCE_NAME}_PWMInitialize(void);
 
-void ${TCC_INSTANCE_NAME}_PWMStart();
+void ${TCC_INSTANCE_NAME}_PWMStart(void);
 
-void ${TCC_INSTANCE_NAME}_PWMStop();
+void ${TCC_INSTANCE_NAME}_PWMStop(void);
 
 <#if TCC_IS_DEAD_TIME == 1>
 void ${TCC_INSTANCE_NAME}_PWMDeadTimeSet(uint8_t deadtime_high, uint8_t deadtime_low);
 </#if>
+
 void ${TCC_INSTANCE_NAME}_PWMForceUpdate(void);
 
-void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptEnable();
+<#if TCC_IS_PG == 1>
+void ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output);
+</#if>
 
-void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable();
+void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptEnable(void);
+
+void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void);
 
 <#if TCC_INTERRUPT == true>
 void ${TCC_INSTANCE_NAME}_PWMCallbackRegister(TCC_CALLBACK callback, uintptr_t context);
 <#else>
-uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet();
+uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void);
 </#if>
 
 <#if TCC_SIZE == 24>
@@ -129,13 +162,9 @@ uint32_t ${TCC_INSTANCE_NAME}_PWM24bitPeriodGet(void);
 
 void ${TCC_INSTANCE_NAME}_PWM24bitCounterSet(uint32_t count);
 
-__INLINE void ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
+__STATIC_INLINE void ${TCC_INSTANCE_NAME}_PWM24bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint32_t duty)
 {
-<#if TCC_MCU_FAMILY == "SAMD">
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CCB[channel] = duty & 0xFFFFFF;
-<#else>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CCBUF[channel] = duty & 0xFFFFFF;
-</#if>
+    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty & 0xFFFFFF;
 }
 
 <#elseif TCC_SIZE == 16>
@@ -145,13 +174,9 @@ uint16_t ${TCC_INSTANCE_NAME}_PWM16bitPeriodGet(void);
 
 void ${TCC_INSTANCE_NAME}_PWM16bitCounterSet(uint16_t count);
 
-__INLINE void ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
+__STATIC_INLINE void ${TCC_INSTANCE_NAME}_PWM16bitDutySet(${TCC_INSTANCE_NAME}_CHANNEL_NUM channel, uint16_t duty)
 {
-<#if TCC_MCU_FAMILY == "SAMD">
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CCB[channel] = duty;
-<#else>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CCBUF[channel] = duty;
-</#if>
+    ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_CBUF_REG_NAME}[channel] = duty;
 }
 </#if>
 // DOM-IGNORE-BEGIN
