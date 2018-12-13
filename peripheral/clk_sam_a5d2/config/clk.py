@@ -153,7 +153,7 @@ def update_master_clock_frequency(symbol, event):
     clk_sama5d2_symbol_dict["CLK_MCK_DIV_INVALID"].setVisible(show_invalid_plla_warning)
 
     #Processor clock frequency
-    input_frequency = clk_sama5d2_symbol_dict["PROCESSOR_CLOCK_FREQUENCY"].getValue()
+    input_frequency = clk_sama5d2_symbol_dict["CPU_CLOCK_FREQUENCY"].getValue()
 
     #find the divider (named as EQ_PCK or PCK_DIV{n})
     if "_DIV" not in mck_divider_key:
@@ -491,11 +491,11 @@ def __master_clock_menu(clk_comp, clk_menu):
     clk_sama5d2_symbol_dict["PMC_MCKR_PRES"] = sym_mck_prescaler
 
     #Processor clock frequency
-    sym_processor_clk_freq = clk_comp.createIntegerSymbol("PROCESSOR_CLOCK_FREQUENCY", master_clock_menu)
+    sym_processor_clk_freq = clk_comp.createIntegerSymbol("CPU_CLOCK_FREQUENCY", master_clock_menu)
     sym_processor_clk_freq.setLabel("Processor Clock Frequency (HZ)")
     sym_processor_clk_freq.setDefaultValue(clk_sama5d2_symbol_dict["PLLA_CLK_FREQUENCY"].getValue())
     sym_processor_clk_freq.setReadOnly(True)
-    clk_sama5d2_symbol_dict["PROCESSOR_CLOCK_FREQUENCY"] = sym_processor_clk_freq
+    clk_sama5d2_symbol_dict["CPU_CLOCK_FREQUENCY"] = sym_processor_clk_freq
 
     #MCK divider
     sym_mck_divider = clk_comp.createKeyValueSetSymbol("PMC_MCKR_MDIV", master_clock_menu)
@@ -1055,7 +1055,7 @@ def set_clock_symbol_dependencies():
                                                                    "MAIN_CLK_FREQUENCY"])
 
     #Processor clock symbol dependencies
-    clk_sama5d2_symbol_dict["PROCESSOR_CLOCK_FREQUENCY"].setDependencies(update_processor_clock_frequency,
+    clk_sama5d2_symbol_dict["CPU_CLOCK_FREQUENCY"].setDependencies(update_processor_clock_frequency,
                                                                            ["PMC_MCKR_CSS",
                                                                             "PMC_MCKR_PRES",
                                                                             "SLOW_CLK_FREQUENCY",
@@ -1065,7 +1065,7 @@ def set_clock_symbol_dependencies():
 
     #Master clock symbol dependencies
     clk_sama5d2_symbol_dict["MASTER_CLOCK_FREQUENCY"].setDependencies(update_master_clock_frequency,
-                                                                      ["PROCESSOR_CLOCK_FREQUENCY",
+                                                                      ["CPU_CLOCK_FREQUENCY",
                                                                        "PMC_MCKR_MDIV"])
 
     #Low speed bus clock symbol dependencies
