@@ -143,7 +143,7 @@ def updateTCInterruptStatus(symbol, event):
     else:
         setTCInterruptData(event["value"], tcSym_OperationMode.getValue())
 
-def updateTCInterruptWarringStatus(symbol, event):
+def updateTCInterruptWarningStatus(symbol, event):
 
     global tcSym_Timer_INTENSET_OVF
     global tcSym_Timer_INTENSET_MC1
@@ -440,14 +440,14 @@ def instantiateComponent(tcComponent):
 
     # Interrupt Dynamic settings
     tcSym_UpdateInterruptStatus = tcComponent.createBooleanSymbol("TC_INTERRUPT_STATUS", None)
-    tcSym_UpdateInterruptStatus.setDependencies(updateTCInterruptStatus, ["TC_OPERATION_MODE", "TC_TIMER_INTERRUPT_MODE", "TC_COMPARE_INTENSET_OVF", "TC_CAPTURE_INTERRUPT"])
+    tcSym_UpdateInterruptStatus.setDependencies(updateTCInterruptStatus, ["TC_OPERATION_MODE", "TC_TIMER_INTENSET_OVF", "TC_TIMER_INTENSET_MC1", "TC_COMPARE_INTENSET_OVF", "TC_CAPTURE_INTERRUPT"])
     tcSym_UpdateInterruptStatus.setVisible(False)
 
     # Interrupt Warning status
     tcSym_IntEnComment = tcComponent.createCommentSymbol("TC_INTERRUPT_ENABLE_COMMENT", None)
     tcSym_IntEnComment.setVisible(False)
     tcSym_IntEnComment.setLabel("Warning!!! "+tcInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
-    tcSym_IntEnComment.setDependencies(updateTCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+    tcSym_IntEnComment.setDependencies(updateTCInterruptWarningStatus, ["core." + InterruptVectorUpdate])
 
     # Clock Warning status
     tcSym_ClkEnComment = tcComponent.createCommentSymbol("TC_CLOCK_ENABLE_COMMENT", None)

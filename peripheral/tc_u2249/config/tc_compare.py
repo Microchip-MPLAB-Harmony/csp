@@ -63,10 +63,27 @@ def tcEventVisible(symbol, event):
         symbol.setVisible(False)
 
 def tcCompareEvsys(symbol, event):
-    if(event["id"] == "TC_COMPARE_EVCTRL_OVFEO"):
-        Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
-    if(event["id"] == "TC_COMPARE_EVCTRL_MCEO1"):
-        Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", event["value"], 2)
+    component = symbol.getComponent()
+    if (event["id"] == "TC_OPERATION_MODE"):
+        evsysVal_ovf = Database.getSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE")
+        tcVal_ovf = component.getSymbolValue("TC_COMPARE_EVCTRL_OVFEO")
+        evsysVal_mc1 = Database.getSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE")
+        tcVal_mc1 = component.getSymbolValue("TC_COMPARE_EVCTRL_MCEO1")
+        if (event["value"] == "Compare"):
+            if (evsysVal_ovf != tcVal_ovf):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", tcVal_ovf, 2)
+            if (evsysVal_mc1 != tcVal_mc1):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", tcVal_mc1, 2)
+        else:
+            if(evsysVal_ovf == True and component.getSymbolValue("TC_TIMER_EVCTRL_OVFEO") == False):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", False, 2)
+            if(evsysVal_mc1 == True and component.getSymbolValue("TC_CAPTURE_EVCTRL_MCEO1") == False):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", False, 2)
+    else:
+        if(event["id"] == "TC_COMPARE_EVCTRL_OVFEO"):
+            Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
+        if(event["id"] == "TC_COMPARE_EVCTRL_MCEO1"):
+            Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", event["value"], 2)
 ###################################################################################################
 ####################################### Compare Mode ##############################################
 ###################################################################################################
@@ -158,4 +175,4 @@ tcSym_Compare_EVCTRL_MCEO1.setDependencies(tcEventVisible, ["TC_COMPARE_WAVE_WAV
 
 tcSym_Compare_EVESYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_COMPARE_EVSYS_CONFIGURE", tcSym_Compare_Events_Menu)
 tcSym_Compare_EVESYS_CONFIGURE.setVisible(False)
-tcSym_Compare_EVESYS_CONFIGURE.setDependencies(tcCompareEvsys, ["TC_COMPARE_EVCTRL_OVFEO", "TC_COMPARE_EVCTRL_MCEO1"])
+tcSym_Compare_EVESYS_CONFIGURE.setDependencies(tcCompareEvsys, ["TC_OPERATION_MODE", "TC_COMPARE_EVCTRL_OVFEO", "TC_COMPARE_EVCTRL_MCEO1"])
