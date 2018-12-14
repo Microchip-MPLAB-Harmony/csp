@@ -223,7 +223,7 @@ ${CLK_INIT_LIST}
     PM_REGS->PM_CPUSEL = PM_CPUSEL_CPUDIV(${CONF_CPU_CLOCK_DIVIDER});
 </#if>
 
-<#list 2..GCLK_MAX_ID as i>
+<#list 1..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">
     <#assign GCLK_ID_INDEX = "GCLK_ID_" + i + "_INDEX">
     <#assign GCLK_ID_NAME = "GCLK_ID_" + i + "_NAME">
