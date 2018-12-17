@@ -105,6 +105,7 @@ void SYS_Initialize ( void* data )
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
     <#lt>${LIST_SYSTEM_INIT_C_BOOTLOADER_TRIGGER}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS}
+    <#lt>${LIST_SYSTEM_INIT_INTERRUPTS}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS}
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES}
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE}
@@ -119,4 +120,3 @@ void SYS_Initialize ( void* data )
 /*******************************************************************************
  End of File
 */
-
