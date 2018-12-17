@@ -112,7 +112,7 @@ Application needs to poll for busy bit or wait for callback to be called before 
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    EFC0_QuadWordWrite( 0x500000, &amp;buffer);
+<div class="Element13"><div class="Element12"><pre class="Element12">    EFC0_QuadWordWrite((uint32_t *) buffer, 0x500000);
     <strong><span style="color: #000080">while</span></strong>(EFC0_IsBusy());</pre></div></div>
 </div>
 </div>
