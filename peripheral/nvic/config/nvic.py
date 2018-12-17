@@ -335,7 +335,7 @@ nvicSourceFile.setOverwrite(True)
 
 nvicSystemInitFile = coreComponent.createFileSymbol("NVIC_INIT", None)
 nvicSystemInitFile.setType("STRING")
-nvicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+nvicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_INTERRUPTS")
 nvicSystemInitFile.setSourcePath("../peripheral/nvic/templates/system/initialization.c.ftl")
 nvicSystemInitFile.setMarkup(True)
 
