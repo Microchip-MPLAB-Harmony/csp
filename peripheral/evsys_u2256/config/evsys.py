@@ -87,7 +87,7 @@ def evsysIntset(interrupt, val):
     global channel
     global InterruptVector
     global InterruptHandler
-    global instance
+    global evsysInstanceName
     evsysInt = 0
     for id in range(0, channel):
         event = Database.getSymbolValue(val["namespace"],"EVSYS_CHANNEL_" + str(id) + "_EVENT")
@@ -108,7 +108,7 @@ def evsysIntset(interrupt, val):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if bool(evsysInt):
-        Database.setSymbolValue("core", InterruptHandler, "EVSYS" + str(instance) + "_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, str(evsysInstanceName.getValue()) + "_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, "EVSYS_Handler", 2)
 
