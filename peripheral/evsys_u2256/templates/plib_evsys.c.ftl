@@ -69,9 +69,6 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 	/* Event Channel ${i} Configuration */
 	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL[${i}] = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
 									${(.vars[RUNSTANDBY])?then('| EVSYS_CHANNEL_RUNSTDBY_Msk', '')} ${(.vars[ONDEMAND])?then('| EVSYS_CHANNEL_ONDEMAND_Msk', '')};
-    <#if .vars[PATH] != '2' >
-	while((${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHSTATUS & EVSYS_CHSTATUS_USRRDY${i}_Msk) != EVSYS_CHSTATUS_USRRDY${i}_Msk);
-	</#if>
 	</#if>
 	</#if>
 </#list>
