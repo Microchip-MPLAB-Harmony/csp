@@ -33,13 +33,14 @@ peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH",
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
 
-def packageChange(pin, pinout):
+def packageChange(symbol, pinout):
     global uniquePinout
     global package
     import re
     global prev_package
     global cur_package
     global pin_map
+    global pin
     global pin_position
 
     ### No need to process if the device has only one pinout but multiple packages eg: TQFP, LQFP and QFN
@@ -63,13 +64,19 @@ def packageChange(pin, pinout):
             else:
                 pin_position = sorted(pin_map.keys())
 
-        pinNumber = int(str(pin.getID()).split("PORT_PIN")[1])
-        pin.setLabel("Pin " + str(pin_position[pinNumber - 1]))
-        Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_PIN", -1, 2)
-        Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_GROUP", "", 2)
-        if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
-            Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_PIN", int(re.findall('\d+', pin_map.get(pin_position[pinNumber - 1]))[0]), 2)
-            Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PORT_GROUP", pin_map.get(pin_position[pinNumber - 1])[1], 2)
+        for index in range(1, len(pin) + 1):
+            if index <= len(pin_position):
+                if not pin[index - 1].getVisible():
+                    pin[index - 1].setVisible(True)
+                pin[index - 1].setLabel("Pin " + str(pin_position[index - 1]))
+                if pin_map.get(pin_position[index-1]).startswith("P"):
+                    Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_PIN", int(re.findall('\d+', pin_map.get(pin_position[index - 1]))[0]), 2)
+                    Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_GROUP", pin_map.get(pin_position[index - 1])[1], 2)
+                else:
+                    Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_PIN", -1, 2)
+                    Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_GROUP", "", 2)
+            else:
+                pin[index - 1].setVisible(False)
         prev_package = cur_package
 
 def sort_alphanumeric(l):
@@ -279,6 +286,7 @@ global pin_map
 global pin_position
 pin_map = {}
 pin_position = []
+global pin
 pin = []
 pinName = []
 pinType = []
@@ -330,7 +338,6 @@ for pinNumber in range(1, pincount + 1):
     pin[pinNumber-1] = coreComponent.createMenuSymbol("PORT_PIN" + str(pinNumber), pinConfiguration)
     pin[pinNumber-1].setLabel("Pin " + str(pinNumber))
     pin[pinNumber-1].setDescription("Configuraiton for Pin " + str(pinNumber) )
-    pin[pinNumber-1].setDependencies(packageChange, ["COMPONENT_PACKAGE"])
 
     pinName.append(pinNumber)
     pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
@@ -432,6 +439,10 @@ for pinNumber in range(1, pincount + 1):
 ###################################################################################################
 ################################# PORT Configuration related code #################################
 ###################################################################################################
+
+packageUpdate = coreComponent.createBooleanSymbol("PACKAGE_UPDATE_DUMMY", None)
+packageUpdate.setVisible(False)
+packageUpdate.setDependencies(packageChange, ["COMPONENT_PACKAGE"])
 
 portConfiguration = coreComponent.createMenuSymbol("PORT_CONFIGURATIONS", portEnable)
 portConfiguration.setLabel("Port Registers Configuration")
