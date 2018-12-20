@@ -17,6 +17,11 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-A5 Configuration")
 cortexMenu.setDescription("Configuration for Cortex A5")
 
+freeRTOSVectors = coreComponent.createBooleanSymbol("USE_FREERTOS_VECTORS", None)
+freeRTOSVectors.setVisible(False)
+freeRTOSVectors.setReadOnly(True)
+freeRTOSVectors.setDefaultValue(False)
+
 #load MMU with default 1:1 mapping so we can use cache
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
 
