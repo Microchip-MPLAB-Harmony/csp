@@ -59,10 +59,9 @@ void __attribute__((optimize("-O1"), long_call)) Reset_Handler(void);
 <#include "startup_xc32_cortex_m7.c.ftl">
 <#include "startup_xc32_${DeviceFamily}.c.ftl">
 </#if>
-<#include "startup_xc32_cortex_m4.c.ftl">
 <#if CoreArchitecture == "CORTEX-M4">
 <#if FPU_Available>
-
+<#include "startup_xc32_cortex_m4.c.ftl">
 </#if>
 <#if DATA_CACHE_ENABLE??>
 <#include "startup_xc32_${DeviceFamily}.c.ftl">
