@@ -247,8 +247,8 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
     <#lt>bool ${RTC_INSTANCE_NAME}_RTCCTimeSet (struct tm * initialTime );
     <#lt>void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime );
     <#if RTC_MODE2_INTERRUPT = true>
-        <#if RTC_MODE2_NUM_ALARM == 0>
-        <#lt>bool ${RTC_INSTANCE_NAME}_RTCCAlarm${i}Set ( struct tm * alarmTime, RTC_ALARM_MASK mask );
+        <#if RTC_MODE2_NUM_ALARM == 1>
+        <#lt>bool ${RTC_INSTANCE_NAME}_RTCCAlarmSet ( struct tm * alarmTime, RTC_ALARM_MASK mask );
         <#else>
         <#list 0..(RTC_MODE2_NUM_ALARM - 1) as i>
         <#lt>bool ${RTC_INSTANCE_NAME}_RTCCAlarm${i}Set ( struct tm * alarmTime, RTC_ALARM_MASK mask );
