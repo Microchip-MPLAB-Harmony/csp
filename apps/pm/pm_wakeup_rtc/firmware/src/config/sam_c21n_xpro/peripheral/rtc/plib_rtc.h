@@ -44,6 +44,7 @@
 #ifndef PLIB_RTC_H
 #define PLIB_RTC_H
 
+#include "device.h"
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -59,22 +60,20 @@ extern "C" {
 
 typedef enum
 {
-    RTC_TIMER32_INT_MASK_COMPARE_MATCH = 0x0100, 
-    RTC_TIMER32_INT_MASK_COUNTER_OVERFLOW = 0x8000,
-    RTC_TIMER32_INT_MASK_PER0 = 0x0001,
-    RTC_TIMER32_INT_MASK_PER1 = 0x0002,
-    RTC_TIMER32_INT_MASK_PER2 = 0x0004,
-    RTC_TIMER32_INT_MASK_PER3 = 0x0008,
-    RTC_TIMER32_INT_MASK_PER4 = 0x0010,
-    RTC_TIMER32_INT_MASK_PER5 = 0x0020,
-    RTC_TIMER32_INT_MASK_PER6 = 0x0040,
-    RTC_TIMER32_INT_MASK_PER7 = 0x0080,
-    /* Force the compiler to reserve 32-bit memory for enum */
+    RTC_TIMER32_INT_MASK_PER0 = RTC_MODE0_INTENSET_PER0_Msk,
+    RTC_TIMER32_INT_MASK_PER1 = RTC_MODE0_INTENSET_PER1_Msk,
+    RTC_TIMER32_INT_MASK_PER2 = RTC_MODE0_INTENSET_PER2_Msk,
+    RTC_TIMER32_INT_MASK_PER3 = RTC_MODE0_INTENSET_PER3_Msk,
+    RTC_TIMER32_INT_MASK_PER4 = RTC_MODE0_INTENSET_PER4_Msk,
+    RTC_TIMER32_INT_MASK_PER5 = RTC_MODE0_INTENSET_PER5_Msk,
+    RTC_TIMER32_INT_MASK_PER6 = RTC_MODE0_INTENSET_PER6_Msk,
+    RTC_TIMER32_INT_MASK_PER7 = RTC_MODE0_INTENSET_PER7_Msk,
+    RTC_TIMER32_INT_MASK_CMP0 = RTC_MODE0_INTENSET_CMP0_Msk,
+    RTC_TIMER32_INT_MASK_OVF = RTC_MODE0_INTENSET_OVF_Msk,
+   /* Force the compiler to reserve 32-bit memory for enum */
     RTC_TIMER32_INT_MASK_INVALID = 0xFFFFFFFF
 } RTC_TIMER32_INT_MASK;
-
 typedef void (*RTC_TIMER32_CALLBACK)( RTC_TIMER32_INT_MASK intCause, uintptr_t context );
-
 
 typedef struct
 {
@@ -92,9 +91,8 @@ uint32_t RTC_Timer32CounterGet ( void );
 uint32_t RTC_Timer32FrequencyGet ( void );
 void RTC_Timer32CompareSet ( uint32_t compareValue );
 uint32_t RTC_Timer32PeriodGet ( void );
-void RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK interrupt);
-void RTC_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt);
-
+void RTC_Timer32InterruptEnable( RTC_TIMER32_INT_MASK interrupt );
+void RTC_Timer32InterruptDisable( RTC_TIMER32_INT_MASK interrupt );
 void RTC_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
