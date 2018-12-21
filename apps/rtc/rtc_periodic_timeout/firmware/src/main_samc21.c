@@ -1,20 +1,22 @@
 /*******************************************************************************
-  Interface definition of EVSYS PLIB.
+  Main Source File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_evsys.h
+    main.c
 
   Summary:
-    Interface definition of the Event System Plib (EVSYS).
+    This file contains the "main" function for a project.
 
   Description:
-    This file defines the interface for the EVSYS Plib.
-    It allows user to setup event generators and users.
-*******************************************************************************/
+    This file contains the "main" function for a project.  The
+    "main" function calls the "SYS_Initialize" function to initialize the state
+    machines of all modules in the system
+ *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -37,31 +39,52 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-
-#ifndef EVSYS_H    // Guards against multiple inclusion
-#define EVSYS_H
-
-#include "device.h"
-#include <stdint.h>
-#include <stddef.h>
-
-#ifdef __cplusplus // Provide C++ Compatibility
- extern "C" {
-#endif
-
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Interface
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 
+#include <stddef.h>                     // Defines NULL
+#include <stdbool.h>                    // Defines true
+#include <stdlib.h>                     // Defines EXIT_FAILURE
+#include "definitions.h"                // SYS function prototypes
 
-/***************************** EVSYS API *******************************/
-void EVSYS_Initialize( void );
+void Timeout_Handler(RTC_TIMER32_INT_MASK intCause, uintptr_t context)
+{
+    if((intCause & RTC_TIMER32_INT_MASK_CMP0) == RTC_TIMER32_INT_MASK_CMP0)
+    {
+        LED_Toggle();
+    }    
+}
 
-#ifdef __cplusplus // Provide C++ Compatibility
- }
-#endif
+// *****************************************************************************
+// *****************************************************************************
+// Section: Main Entry Point
+// *****************************************************************************
+// *****************************************************************************
 
-#endif
+int main ( void )
+{
+    /* Initialize all modules */
+    SYS_Initialize ( NULL );
+    RTC_Timer32CallbackRegister(Timeout_Handler,0);
+    RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK_CMP0);
+    RTC_Timer32Start();
+    while ( true )
+    {
+        /* Maintain state machines of all polled MPLAB Harmony modules. */
+        SYS_Tasks ( );
+    }
+
+    /* Execution should not come here during normal operation */
+
+    return ( EXIT_FAILURE );
+}
+
+
+/*******************************************************************************
+ End of File
+*/
