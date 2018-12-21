@@ -77,7 +77,7 @@ global pioSymChannel
 pioSymChannel = ["A", "B", "C", "D", "E"]
 global pin_map
 pin_map = {}
-global pin_position	
+global pin_position
 pin_position = []
 ##packagepinout map
 global package
@@ -118,13 +118,13 @@ def packageChange(pin, pinout):
 	global prev_package
 	global cur_package
 	global pin_map
-	global pin_position	
-	
+	global pin_position
+
 	### No need to process if the device has only one pinout but multiple packages eg: TQFP, LQFP and QFN
 	if uniquePinout > 1:
 		cur_package = package.get(pinout["value"])
-		
-		### No need to generate Pin map again for same pinout 
+
+		### No need to generate Pin map again for same pinout
 		if cur_package != prev_package:
 			pin_map = {}
 			pin_position = []
@@ -140,7 +140,7 @@ def packageChange(pin, pinout):
 				pin_position = sort_alphanumeric(pin_map.keys())
 			else:
 				pin_position = sorted(pin_map.keys())
-			
+
 		pinNumber = int(str(pin.getID()).split("PIO_PIN_CONFIGURATION")[1])
 		pin.setLabel("Pin " + str(pin_position[pinNumber - 1]))
 		Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PIO_PIN", -1, 2)
@@ -149,14 +149,14 @@ def packageChange(pin, pinout):
 			Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PIO_PIN", int(re.findall('\d+', pin_map.get(pin_position[pinNumber - 1]))[0]), 2)
 			Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PIO_CHANNEL", pin_map.get(pin_position[pinNumber - 1])[1], 2)
 		prev_package = cur_package
-		
+
 def sort_alphanumeric(l):
     import re
-    convert = lambda text: int(text) if text.isdigit() else text.lower() 
-    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
-    return sorted(l, key = alphanum_key)	
-		
-	
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+    return sorted(l, key = alphanum_key)
+
+
 def portFunc(pin, func):
     global port_mskr
     global per_func
@@ -174,12 +174,12 @@ def portFunc(pin, func):
         else:
                         for id in per_func:
                             port_mskr[port + "_" + id] &= ~(1 << bit_pos)
-        
+
         if func["value"] in per_func:
             for id in per_func:
                 Database.setSymbolValue("core", "PORT_" + str(port) + "_MSKR_Value" + str(id), str(hex(port_mskr[port + "_" + id])), 2)
 
-		
+
 def pinCFGR (pin, cfgr_reg):
 	cfgr = 0
 	global port_mskr
@@ -195,7 +195,7 @@ def pinCFGR (pin, cfgr_reg):
 	direction = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DIR")
 	schmitt = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_ST")
 	tamper = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_TAMPER")
-	filter = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFEN")
+	filter = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_FILTER")
 	filterclock = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFSCEN")
 	driver = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DRV")
 	if port:
@@ -219,9 +219,9 @@ def pinCFGR (pin, cfgr_reg):
 			cfgr |= 1 << 12
 		if filterclock == 1:
 			cfgr |= 1 << 13
-		
+
 		Database.setSymbolValue("core", "PORT_" + str(port) + "_CFGR_Value" + str(bit_pos), str(hex(cfgr)), 2)
-	
+
 def portLatch(pin, latch):
 	global latchValues
 	pin_num = int(str(pin.getID()).split("PIN_")[1].split("_LAT")[0])
@@ -232,9 +232,9 @@ def portLatch(pin, latch):
 			latchValues[port] |= 1 << bit_pos
 		else:
 			latchValues[port] &= ~(1 << bit_pos)
-		
+
 		Database.setSymbolValue("core", "PORT_" + str(port) + "_LATCH", str(hex(latchValues[port])), 2)
-	
+
 def portInterrupt(pin, interrupt):
 	global port_interrupt
 	pin_num = int(str(pin.getID()).split("PIN_")[1].split("_PIO_INTERRUPT")[0])
@@ -246,7 +246,7 @@ def portInterrupt(pin, interrupt):
 			port_interrupt[port] -= 1
 
 		Database.setSymbolValue("core", "PORT_" + str(port) + "_NUM_INT_PINS", int(port_interrupt[port]), 2)
-		
+
 		if port_interrupt[port] > 0:
 			Database.setSymbolValue("core", "PORT_" + str(port) + "_INTERRUPT_USED", True, 2)
 			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_ENABLE", True, 1)
@@ -257,7 +257,7 @@ def portInterrupt(pin, interrupt):
 			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_ENABLE", False, 1)
 			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_HANDLER", "PIO"+str(port)+"_Handler", 1)
 			Database.setSymbolValue("core", "PIO"+str(port)+"_INTERRUPT_HANDLER_LOCK", False, 1)
-	
+
 #####################################################################################################################
 
 ##########################################################################################################################
@@ -332,7 +332,7 @@ for pinNumber in range(1, packagePinCount + 1):
 	pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
 	pin[pinNumber-1].setDescription("Configuration for Pin " + str(pin_position[pinNumber-1]))
 	pin[pinNumber-1].setDependencies(packageChange, ["COMPONENT_PACKAGE"])
-	
+
 	pinName.append(pinNumber)
 	pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
 	pinName[pinNumber-1].setLabel("Name")
@@ -354,7 +354,7 @@ for pinNumber in range(1, packagePinCount + 1):
 	pinBitPosition[pinNumber-1].setLabel("Bit Position")
 	pinBitPosition[pinNumber-1].setReadOnly(True)
 	pinBitPosition[pinNumber-1].setDependencies(portFunc, ["PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION"])
-	
+
 	pinChannel.append(pinNumber)
 	pinChannel[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_CHANNEL", pin[pinNumber-1])
 	pinChannel[pinNumber-1].setLabel("Channel")
@@ -383,7 +383,7 @@ for pinNumber in range(1, packagePinCount + 1):
 	pinLatchValue[pinNumber-1].setReadOnly(True)
 	pinLatchValue[pinNumber-1].setVisible(False)
 	pinLatchValue[pinNumber-1].setDependencies(portLatch, ["PIN_" + str(pinNumber) + "_LAT"])
-	
+
 	pinOpenDrain.append(pinNumber)
 	pinOpenDrain[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_OD", pin[pinNumber-1])
 	pinOpenDrain[pinNumber-1].setLabel("Open Drain")
@@ -394,18 +394,18 @@ for pinNumber in range(1, packagePinCount + 1):
 	pinPullUp[pinNumber-1].setLabel("Pull Up")
 	pinPullUp[pinNumber-1].setReadOnly(True)
 
-	
+
 	pinPullDown.append(pinNumber)
 	pinPullDown[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PD", pin[pinNumber-1])
 	pinPullDown[pinNumber-1].setLabel("Pull Down")
 	pinPullDown[pinNumber-1].setReadOnly(True)
-	
+
 	pinSchmitt = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_ST", pin[pinNumber-1])
 	pinSchmitt.setLabel("Schmitt Trigger")
-	
+
 	pinTrigger = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_TAMPER", pin[pinNumber-1])
 	pinTrigger.setLabel("Tamper Enable")
-	
+
 	pinDRV = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRV", pin[pinNumber-1])
 	pinDRV.setLabel("Driver Strength")
 	pinDRV.setOutputMode("Value")
@@ -413,20 +413,20 @@ for pinNumber in range(1, packagePinCount + 1):
 	for id in range(0,len(drvSTRVal.getChildren())):
 		pinDRV.addKey(drvSTRVal.getChildren()[id].getAttribute("name"), str(drvSTRVal.getChildren()[id].getAttribute("value")) , drvSTRVal.getChildren()[id].getAttribute("caption") )
 
-	pinFilter = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_IFEN", pin[pinNumber-1])
+	pinFilter = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_PIO_FILTER", pin[pinNumber-1])
 	pinFilter.setLabel("Glitch Filter Enable")
-		
+
 	pinFilterClock = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IFSCEN", pin[pinNumber-1])
 	pinFilterClock.setLabel("Glitch filter Clock Source ")
 	pinFilterClock.addKey("MCK", str(0) , "The glitch filter is able to filter glitches with a duration < tmck/2" )
 	pinFilterClock.addKey("SLCK", str(1) , "The debouncing filter is able to filter pulses with a duration < tdiv_slck/2" )
-	
+
 	# This symbol ID name is split and pin number is extracted and used inside "setupInterrupt" function. so be careful while changing the name of this ID.
 	pinInterrupt.append(pinNumber)
 	pinInterrupt[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT", pin[pinNumber-1])
 	pinInterrupt[pinNumber-1].setLabel("PIO Interrupt")
 	pinInterrupt[pinNumber-1].setReadOnly(True)
-	
+
 	# This symbol ID name is split and pin number is extracted and used inside "setupInterrupt" function. so be careful while changing the name of this ID.
 	pinInterruptValue = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_INTERRUPT_VAL", pin[pinNumber-1])
 	pinInterruptValue.setReadOnly(True)
@@ -437,7 +437,7 @@ for pinNumber in range(1, packagePinCount + 1):
 	pincfgrValue[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_CFGR_Value", pin[pinNumber-1])
 	pincfgrValue[pinNumber-1].setReadOnly(True)
 	pincfgrValue[pinNumber-1].setVisible(False)
-	pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_IFEN", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
+	pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_PIO_FILTER", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
 
 
 for port in pioSymChannel:
@@ -446,31 +446,31 @@ for port in pioSymChannel:
 	portLATCH.setReadOnly(True)
 	portLATCH.setVisible(False)
 	portLATCH.setDefaultValue(str(hex(0)))
-	
+
 	for pin in range(0,32):
 		mskr = 1 << pin
 		pincfgr = coreComponent.createStringSymbol("PORT_" + str(port) + "_CFGR_Value" + str(pin), None)
 		pincfgr.setReadOnly(True)
 		pincfgr.setVisible(False)
 		pincfgr.setDefaultValue(str(hex(0)))
-		
+
 		pinmskr = coreComponent.createStringSymbol("PORT_" + str(port) + "_MSKR_Value" + str(pin), None)
 		pinmskr.setReadOnly(True)
 		pinmskr.setVisible(False)
 		pinmskr.setDefaultValue(str(hex(mskr)))
-		
+
 
 for port in pioSymChannel:
 	portIntEnable = coreComponent.createBooleanSymbol("PORT_" + str(port) + "_INTERRUPT_USED", None)
 	portIntEnable.setReadOnly(True)
 	portIntEnable.setVisible(False)
 	portIntEnable.setDefaultValue(False)
-	
+
 	portINT = coreComponent.createIntegerSymbol("PORT_" + str(port) + "_NUM_INT_PINS", None)
 	portINT.setReadOnly(True)
 	portINT.setVisible(False)
 	portINT.setDefaultValue(0)
-	
+
 	for per in per_func:
 		portperMSKR = coreComponent.createStringSymbol("PORT_" + str(port) + "_MSKR_Value" + str(per), None)
 		portperMSKR.setReadOnly(True)
@@ -484,7 +484,7 @@ for func in per_func:
 	portperMSKR.setVisible(False)
 	portperMSKR.setDefaultValue(str(hex(count)))
 	count += 1
-	
+
 portConfiguration = coreComponent.createMenuSymbol("PIO_CONFIGURATION", pioEnable)
 portConfiguration.setLabel("PIO Registers Configuration")
 for port in pioSymChannel:
