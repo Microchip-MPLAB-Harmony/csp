@@ -142,7 +142,7 @@
           <itemPath>../src/config/sam_e54_xpro/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main.c</itemPath>
+      <itemPath>../src/main_e54.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
