@@ -42,7 +42,6 @@
 // DOM-IGNORE-END
 
 #include "plib_rtc.h"
-#include "device.h"
 #include <stdlib.h>
 
 RTC_OBJECT rtcObj;
@@ -57,9 +56,10 @@ void RTC_Initialize(void)
         /* Wait for Synchronization after Software Reset */
     }
 
+
     RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_MODE(0) | RTC_MODE0_CTRLA_PRESCALER(0x1) | RTC_MODE0_CTRLA_COUNTSYNC_Msk ;
 
-    RTC_REGS->MODE0.RTC_COMP = 0x1000;
+   RTC_REGS->MODE0.RTC_COMP = 0x1000;
 
 }
 
@@ -95,7 +95,6 @@ void RTC_Timer32CounterSet ( uint32_t count )
     }
 }
 
-
 void RTC_Timer32CompareSet ( uint32_t compareValue )
 {
     RTC_REGS->MODE0.RTC_COMP = compareValue;
@@ -105,7 +104,6 @@ void RTC_Timer32CompareSet ( uint32_t compareValue )
         /* Wait for Synchronization after writing Compare Value */
     }
 }
-
 uint32_t RTC_Timer32CounterGet ( void )
 {
     while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COUNT_Msk) == RTC_MODE0_SYNCBUSY_COUNT_Msk)
@@ -113,7 +111,7 @@ uint32_t RTC_Timer32CounterGet ( void )
         /* Wait for Synchronization before reading value from Count Register */
     }
 
-    return(RTC_REGS->MODE0.RTC_COUNT + 3);
+    return(RTC_REGS->MODE0.RTC_COUNT);
 }
 
 uint32_t RTC_Timer32PeriodGet ( void )
@@ -145,7 +143,7 @@ void RTC_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t cont
     rtcObj.context            = context;
 }
 
-void RTC_InterruptHandler(void)
+void RTC_InterruptHandler( void )
 {
     rtcObj.timer32intCause = RTC_REGS->MODE0.RTC_INTFLAG;
 

@@ -105,7 +105,7 @@ int main ( void )
     
     SYSTICK_TimerCallbackSet(&timeout, (uintptr_t) NULL);
     SYSTICK_TimerStart();
-    RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK_COMPARE_MATCH);
+    RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK_CMP0);
     display_menu();
     while(1)
     {
