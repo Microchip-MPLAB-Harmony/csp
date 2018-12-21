@@ -50,7 +50,6 @@
 */
 
 #include "plib_rtc.h"
-#include "device.h"
 #include <stdlib.h>
 
 /* Reference Year */
@@ -79,7 +78,8 @@ void RTC_Initialize(void)
         /* Wait for synchronization after Software Reset */
     }
 
-    RTC_REGS->MODE2.RTC_CTRLA = RTC_MODE2_CTRLA_MODE(2) | RTC_MODE2_CTRLA_PRESCALER(0xB) | RTC_MODE2_CTRLA_CLOCKSYNC_Msk | RTC_MODE2_CTRLA_ENABLE_Msk;
+
+    RTC_REGS->MODE2.RTC_CTRLA = RTC_MODE2_CTRLA_MODE(2) | RTC_MODE2_CTRLA_PRESCALER(0xB) | RTC_MODE2_CTRLA_CLOCKSYNC_Msk | RTC_MODE2_CTRLA_ENABLE_Msk ;
 
 
     while((RTC_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_ENABLE_Msk) == RTC_MODE2_SYNCBUSY_ENABLE_Msk)
@@ -167,7 +167,6 @@ void RTC_RTCCCallbackRegister ( RTC_CALLBACK callback, uintptr_t context)
     rtcObj.alarmCallback = callback;
     rtcObj.context       = context;
 }
-
 
 void RTC_InterruptHandler(void)
 {

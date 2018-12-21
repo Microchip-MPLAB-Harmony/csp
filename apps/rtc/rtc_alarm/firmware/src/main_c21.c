@@ -56,7 +56,7 @@
 bool alarm_triggered;
 void RTC_Callback(RTC_CLOCK_INT_MASK int_cause , uintptr_t  context)
 {
-	if (int_cause & RTC_CLOCK_INT_MASK_ALARM)
+	if (int_cause & RTC_CLOCK_INT_MASK_ALARM0)
 	{
         alarm_triggered = true;
         LED_Toggle();
