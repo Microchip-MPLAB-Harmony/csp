@@ -97,14 +97,18 @@ void SERCOM4_USART_Initialize( void )
 
     /* Wait for sync */
     while(SERCOM4_REGS->USART_INT.SERCOM_SYNCBUSY);
+}
 
+uint32_t SERCOM4_USART_FrequencyGet( void )
+{
+    return (uint32_t) (48000000UL);
 }
 
 bool SERCOM4_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency )
 {
     bool setupStatus       = false;
-    uint32_t sampleRate    = 0;
     uint32_t baudValue     = 0;
+    uint32_t sampleRate    = 0;
 
     if((serialSetup != NULL) & (serialSetup->baudRate != 0))
     {
@@ -143,13 +147,13 @@ bool SERCOM4_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFr
             /* Configure Parity Options */
             if(serialSetup->parity == USART_PARITY_NONE)
             {
-                SERCOM4_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x0)  | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
+                SERCOM4_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x0) | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
 
                 SERCOM4_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->stopBits;
             }
             else
             {
-                SERCOM4_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x1)  | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
+                SERCOM4_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x1) | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
 
                 SERCOM4_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->parity | serialSetup->stopBits;
             }
@@ -181,10 +185,8 @@ bool SERCOM4_USART_Write( void *buffer, const size_t size )
         /* Blocks while buffer is being transferred */
         while(u32Length--)
         {
-            while((SERCOM4_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk)
-            {
-                /* Check if USART is ready for new data */
-            }
+            /* Check if USART is ready for new data */
+            while((SERCOM4_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk);
 
             /* Write data to USART module */
             SERCOM4_REGS->USART_INT.SERCOM_DATA = *pu8Data++;
@@ -210,10 +212,8 @@ bool SERCOM4_USART_TransmitterIsReady( void )
 
 void SERCOM4_USART_WriteByte( int data )
 {
-    while((SERCOM4_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk)
-    {
-        /* Check if USART is ready for new data */
-    }
+    /* Check if USART is ready for new data */
+    while((SERCOM4_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk);
 
     SERCOM4_REGS->USART_INT.SERCOM_DATA = data;
 }
@@ -249,10 +249,8 @@ bool SERCOM4_USART_Read( void *buffer, const size_t size )
 
         while(u32Length--)
         {
-            while((SERCOM4_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) != SERCOM_USART_INT_INTFLAG_RXC_Msk)
-            {
-                /* Check if USART has new data */
-            }
+            /* Check if USART has new data */
+            while((SERCOM4_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) != SERCOM_USART_INT_INTFLAG_RXC_Msk);
 
             /* Read data from USART module */
             *pu8Data++ = SERCOM4_REGS->USART_INT.SERCOM_DATA;
