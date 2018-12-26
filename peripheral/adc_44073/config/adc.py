@@ -208,10 +208,8 @@ def instantiateComponent(adcComponent):
     adcChannelsValues = [] #array used for combo symbol
     adcChannelsValues.append("NONE")
 
-    variant = ATDF.getNode("/avr-tools-device-file/variants/variant")
-    pinout = variant.getAttribute("pinout")
     children = []
-    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(pinout)+"\"]")
+    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + Database.getSymbolValue("core", "COMPONENT_PACKAGE") + "\"]")
     children = val.getChildren()
     for pad in range(0, len(children)):
         availablePins.append(children[pad].getAttribute("pad"))
@@ -229,31 +227,6 @@ def instantiateComponent(adcComponent):
 
     adcSym_AvailableChannels = adcComponent.createComboSymbol("ADC_AVAILABLE_CHANNELS", None, channel)
     adcSym_AvailableChannels.setVisible(False)
-
-    # Clock dynamic settings
-    adcSym_ClockControl = adcComponent.createBooleanSymbol("ADC_CLOCK_ENABLE", None)
-    adcSym_ClockControl.setDependencies(adcClockControl, ["ADC_0_CHER", "ADC_1_CHER", "ADC_2_CHER", "ADC_3_CHER", "ADC_4_CHER", \
-    "ADC_5_CHER", "ADC_6_CHER", "ADC_7_CHER", "ADC_8_CHER", "ADC_9_CHER", "ADC_10_CHER", "ADC_11_CHER"])
-    adcSym_ClockControl.setVisible(False)
-
-    # Interrupt Dynamic settings
-    adcSym_InterruptControl = adcComponent.createBooleanSymbol("ADC_INTERRUPT_ENABLE", None)
-    adcSym_InterruptControl.setDependencies(adcInterruptEnableDisableCallback, ["ADC_0_IER_EOC", "ADC_1_IER_EOC", "ADC_2_IER_EOC", "ADC_3_IER_EOC", "ADC_4_IER_EOC",\
-    "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC", "ADC_8_IER_EOC", "ADC_9_IER_EOC", "ADC_10_IER_EOC", "ADC_11_IER_EOC", "ADC_IER_COMPE"])
-    adcSym_InterruptControl.setVisible(False)
-
-    # Dependency Status
-    adcSym_ClkEnComment = adcComponent.createCommentSymbol("ADC_CLK_ENABLE_COMMENT", None)
-    adcSym_ClkEnComment.setVisible(False)
-    adcSym_ClkEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
-    adcSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core." + adcInstanceName.getValue() + "_CLOCK_ENABLE", "ADC_0_CHER", "ADC_1_CHER", "ADC_2_CHER", "ADC_3_CHER", "ADC_4_CHER", \
-    "ADC_5_CHER", "ADC_6_CHER", "ADC_7_CHER", "ADC_8_CHER", "ADC_9_CHER", "ADC_10_CHER", "ADC_11_CHER"])
-
-    adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_INTERRUPT_ENABLE_COMMENT", None)
-    adcSym_IntEnComment.setVisible(False)
-    adcSym_IntEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    adcSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptSymbolEnable, "ADC_0_IER_EOC", "ADC_1_IER_EOC", "ADC_2_IER_EOC", "ADC_3_IER_EOC", "ADC_4_IER_EOC",\
-    "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC", "ADC_8_IER_EOC", "ADC_9_IER_EOC", "ADC_10_IER_EOC", "ADC_11_IER_EOC", "ADC_IER_COMPE"])
 
     adcMenu = adcComponent.createMenuSymbol("ADC_MENU", None)
     adcMenu.setLabel("ADC Configuration")
@@ -518,6 +491,31 @@ def instantiateComponent(adcComponent):
         adcSym_CH_IER_EOC[channelID].setDefaultValue(False)
         adcSym_CH_IER_EOC[channelID].setVisible(False)
         adcSym_CH_IER_EOC[channelID].setDependencies(adcCHInterruptVisible, ["ADC_"+str(channelID)+"_CHER"])
+
+    # Clock dynamic settings
+    adcSym_ClockControl = adcComponent.createBooleanSymbol("ADC_CLOCK_ENABLE", None)
+    adcSym_ClockControl.setDependencies(adcClockControl, ["ADC_0_CHER", "ADC_1_CHER", "ADC_2_CHER", "ADC_3_CHER", "ADC_4_CHER", \
+    "ADC_5_CHER", "ADC_6_CHER", "ADC_7_CHER", "ADC_8_CHER", "ADC_9_CHER", "ADC_10_CHER", "ADC_11_CHER"])
+    adcSym_ClockControl.setVisible(False)
+
+    # Interrupt Dynamic settings
+    adcSym_InterruptControl = adcComponent.createBooleanSymbol("ADC_INTERRUPT_ENABLE", None)
+    adcSym_InterruptControl.setDependencies(adcInterruptEnableDisableCallback, ["ADC_0_IER_EOC", "ADC_1_IER_EOC", "ADC_2_IER_EOC", "ADC_3_IER_EOC", "ADC_4_IER_EOC",\
+    "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC", "ADC_8_IER_EOC", "ADC_9_IER_EOC", "ADC_10_IER_EOC", "ADC_11_IER_EOC", "ADC_IER_COMPE"])
+    adcSym_InterruptControl.setVisible(False)
+
+    # Dependency Status
+    adcSym_ClkEnComment = adcComponent.createCommentSymbol("ADC_CLK_ENABLE_COMMENT", None)
+    adcSym_ClkEnComment.setVisible(False)
+    adcSym_ClkEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    adcSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core." + adcInstanceName.getValue() + "_CLOCK_ENABLE", "ADC_0_CHER", "ADC_1_CHER", "ADC_2_CHER", "ADC_3_CHER", "ADC_4_CHER", \
+    "ADC_5_CHER", "ADC_6_CHER", "ADC_7_CHER", "ADC_8_CHER", "ADC_9_CHER", "ADC_10_CHER", "ADC_11_CHER"])
+
+    adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_INTERRUPT_ENABLE_COMMENT", None)
+    adcSym_IntEnComment.setVisible(False)
+    adcSym_IntEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
+    adcSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptSymbolEnable, "ADC_0_IER_EOC", "ADC_1_IER_EOC", "ADC_2_IER_EOC", "ADC_3_IER_EOC", "ADC_4_IER_EOC",\
+    "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC", "ADC_8_IER_EOC", "ADC_9_IER_EOC", "ADC_10_IER_EOC", "ADC_11_IER_EOC", "ADC_IER_COMPE"])
 
     #--------------------------------------------------------------------------------------
     configName = Variables.get("__CONFIGURATION_NAME")
