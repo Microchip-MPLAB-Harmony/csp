@@ -2,10 +2,6 @@
 #### Business Logic ####
 ################################################################################
 def flexcomInterruptEnableDisableCallback( uartInterruptEnableDisable, event ):
-    Database.clearSymbolValue( interruptNamespace, interruptSymbolHandlerLock)
-    Database.clearSymbolValue( interruptNamespace, interruptSymbolEnable)
-    Database.clearSymbolValue( interruptNamespace, interruptSymbolHandler)
-
     flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
     if (flexcom_mode != "NO_COM") and (Database.getSymbolValue(deviceNamespace, flexcom_mode + "_INTERRUPT_MODE") == True):
         Database.setSymbolValue( interruptNamespace, interruptSymbolEnable, True, 2)
@@ -210,7 +206,6 @@ def instantiateComponent(flexcomComponent):
 
     ###################### CLK and AIC Dependencies ######################
     # Initial settings for CLK
-    Database.clearSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_ENABLE")
     Database.setSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
     # Interrupt Dynamic Settings

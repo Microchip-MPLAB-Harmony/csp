@@ -1,6 +1,9 @@
 ################################################################################
 #### Business Logic ####
 ################################################################################
+# FLEXCOM USART clock source
+clock_source = {"Ext_clk_src_Freq" : 1000000}
+
 # Calculates BRG value and Oversampling
 def baudRateCalc(clk, baud):
     if (clk >= (16 * baud)):
@@ -30,7 +33,6 @@ def baudRateTrigger(symbol, event):
     if(brgVal < 1):
         Log.writeErrorMessage("FLEXCOM USART Clock source value is low for the desired baud rate")
 
-    symbol.clearValue()
     if symbol.getID() == "BRG_VALUE":
         symbol.setValue(brgVal, 2)
     if symbol.getID() == "FLEXCOM_USART_MR_OVER":
@@ -38,7 +40,6 @@ def baudRateTrigger(symbol, event):
 
 def clockSourceFreq(symbol, event):
     if (event["id"] == "FLEXCOM_USART_MR_USCLKS" or (event["id"] == flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY")):
-        symbol.clearValue()
         symbol.setValue(int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
     if (event["id"] == "FLEXCOM_MODE"):
         if event["value"] == 0x1:
@@ -47,7 +48,6 @@ def clockSourceFreq(symbol, event):
             symbol.setVisible(False)
 
 def dataWidthLogic(symbol, event):
-    symbol.clearValue()
     if(event["value"] == 4):
         symbol.setValue(True, 2)
     else:
@@ -92,7 +92,7 @@ flexcomSym_UsartClkSrc.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
 flexcomSym_UsartExternalClkValue = flexcomComponent.createIntegerSymbol("EXTERNAL_CLOCK_FREQ", flexcomSym_UsartClkSrc)
 flexcomSym_UsartExternalClkValue.setLabel("External Clock Source")
-flexcomSym_UsartExternalClkValue.setDefaultValue(32768)
+flexcomSym_UsartExternalClkValue.setDefaultValue(clock_source.get("Ext_clk_src_Freq"))
 flexcomSym_UsartExternalClkValue.setMin(1)
 flexcomSym_UsartExternalClkValue.setMax(int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY") / 3))
 flexcomSym_UsartExternalClkValue.setVisible(False)
