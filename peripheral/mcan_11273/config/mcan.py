@@ -141,22 +141,12 @@ def adjustExtFilters(filterList, event):
 
 def interruptControl(symbol, event):
     if event["value"] == True:
-        Database.clearSymbolValue("core", interruptVector)
         Database.setSymbolValue("core", interruptVector, True, 2)
-
-        Database.clearSymbolValue("core", interruptHandler)
         Database.setSymbolValue("core", interruptHandler, mcanInstanceName.getValue() + "_INT0_InterruptHandler", 2)
-
-        Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
-        Database.clearSymbolValue("core", interruptVector)
         Database.setSymbolValue("core", interruptVector, False, 2)
-
-        Database.clearSymbolValue("core", interruptHandler)
         Database.setSymbolValue("core", interruptHandler, mcanInstanceName.getValue() + "_INT0_Handler", 2)
-
-        Database.clearSymbolValue("core", interruptHandlerLock)
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 # Dependency Function to show or hide the warning message depending on Interrupt enable/disable status
@@ -570,7 +560,6 @@ def instantiateComponent(mcanComponent):
     mcanTCP.setMax(16)
 
     # Initialize peripheral clock
-    Database.clearSymbolValue("core", mcanInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", mcanInstanceName.getValue()+"_CLOCK_ENABLE", True, 1)
 
     # Interrupt Dynamic settings
