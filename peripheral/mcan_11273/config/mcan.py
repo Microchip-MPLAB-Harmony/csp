@@ -221,20 +221,40 @@ def instantiateComponent(mcanComponent):
     mcanSFRRegSym = mcanComponent.createBooleanSymbol("MCAN_SFR_CAN_ENABLE", mcanMenu)
     mcanSFRRegSym.setDefaultValue(False)
     mcanSFRRegSym.setVisible(False)
-    mcanSFRRegs = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SFR"]/register-group@[name="SFR"]')
-    mcanSFRReg = mcanSFRRegs.getChildren()
-    for index in range(0, len(mcanSFRReg)):
-        if (mcanSFRReg[index].getAttribute("name") == "SFR_CAN"):
-            mcanSFRRegSym.setValue(True, 2)
+    modules = ATDF.getNode('/avr-tools-device-file/modules')
+    moduleList = modules.getChildren()
+    for index in range(0, len(moduleList)):
+        if (moduleList[index].getAttribute("name") == "SFR"):
+            mcanSFRRegs = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SFR"]/register-group@[name="SFR"]')
+            mcanSFRReg = mcanSFRRegs.getChildren()
+            for index in range(0, len(mcanSFRReg)):
+                if (mcanSFRReg[index].getAttribute("name") == "SFR_CAN"):
+                    mcanSFRRegSym.setValue(True, 2)
+                    break
+            break
 
     mcanMATRIXRegSym = mcanComponent.createBooleanSymbol("MCAN_MATRIX_CAN_ENABLE", mcanMenu)
     mcanMATRIXRegSym.setDefaultValue(False)
     mcanMATRIXRegSym.setVisible(False)
-    mcanMATRIXRegs = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MATRIX"]/register-group@[name="MATRIX"]')
-    mcanMATRIXReg = mcanMATRIXRegs.getChildren()
-    for index in range(0, len(mcanMATRIXReg)):
-        if (mcanMATRIXReg[index].getAttribute("name") == "CCFG_CAN0"):
-            mcanMATRIXRegSym.setValue(True, 2)
+    for index in range(0, len(moduleList)):
+        if (moduleList[index].getAttribute("name") == "MATRIX"):
+            mcanMATRIXRegs = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MATRIX"]/register-group@[name="MATRIX"]')
+            mcanMATRIXReg = mcanMATRIXRegs.getChildren()
+            for index in range(0, len(mcanMATRIXReg)):
+                if (mcanMATRIXReg[index].getAttribute("name") == "CCFG_CAN0"):
+                    mcanMATRIXRegSym.setValue(True, 2)
+                    break
+            break
+
+    mcanRevisionASym = mcanComponent.createBooleanSymbol("MCAN_REVISION_A_ENABLE", mcanMenu)
+    mcanRevisionASym.setDefaultValue(False)
+    mcanRevisionASym.setVisible(False)
+    mcanRegs = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MCAN"]/register-group@[name="MCAN"]')
+    mcanReg = mcanRegs.getChildren()
+    for index in range(0, len(mcanReg)):
+        if (mcanReg[index].getAttribute("name") == "MCAN_FBTP"):
+            mcanRevisionASym.setValue(True, 2)
+            break
 
     # MCAN Timing FBTP for FD and BTP for normal operation mode
     mcanTimingMenu = mcanComponent.createMenuSymbol("timingMenu", mcanMenu)

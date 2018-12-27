@@ -216,12 +216,23 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
 
 <#if MCAN_OPMODE == "CAN FD">
+<#if MCAN_REVISION_A_ENABLE == true>
+    /* Set Fast Bit Timing and Prescaler Register */
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_FBTP = MCAN_FBTP_FTSEG2(${FBTP_FTSEG2}) | MCAN_FBTP_FTSEG1(${FBTP_FTSEG1}) | MCAN_FBTP_FBRP(${FBTP_FBRP}) | MCAN_FBTP_FSJW(${FBTP_FSJW});
+
+<#else>
     /* Set Data Bit Timing and Prescaler Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_DBTP = MCAN_DBTP_DTSEG2(${FBTP_FTSEG2}) | MCAN_DBTP_DTSEG1(${FBTP_FTSEG1}) | MCAN_DBTP_DBRP(${FBTP_FBRP}) | MCAN_DBTP_DSJW(${FBTP_FSJW});
 
 </#if>
+</#if>
+<#if MCAN_REVISION_A_ENABLE == true>
+    /* Set Bit timing and Prescaler Register */
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_BTP  = MCAN_BTP_TSEG2(${BTP_TSEG2}) | MCAN_BTP_TSEG1(${BTP_TSEG1}) | MCAN_BTP_BRP(${BTP_BRP}) | MCAN_BTP_SJW(${BTP_SJW});
+<#else>
     /* Set Nominal Bit timing and Prescaler Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_NBTP  = MCAN_NBTP_NTSEG2(${BTP_TSEG2}) | MCAN_NBTP_NTSEG1(${BTP_TSEG1}) | MCAN_NBTP_NBRP(${BTP_BRP}) | MCAN_NBTP_NSJW(${BTP_SJW});
+</#if>
 
 <#if RXF0_USE>
     /* Receive FIFO 0 Configuration Register */
@@ -321,7 +332,11 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 </#if>
 
     /* Set the operation mode */
+<#if MCAN_REVISION_A_ENABLE == true>
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_CME_FD | MCAN_CCCR_CMR_FD_BITRATE_SWITCH','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
+<#else>
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_FDOE_ENABLED | MCAN_CCCR_BRSE_ENABLED','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
+</#if>
     while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
 <#if INTERRUPT_MODE == true>
 
@@ -437,6 +452,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t address, uint8_t length, uin
 
     fifo->T1.val = MCAN_TXFE_DLC(dlc);
 
+<#if MCAN_REVISION_A_ENABLE == false>
     if(mode == MCAN_MODE_FD_WITH_BRS)
     {
         fifo->T1.val |= MCAN_TX_FDF_Msk | MCAN_TX_BRS_Msk;
@@ -445,6 +461,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t address, uint8_t length, uin
     {
         fifo->T1.val |= MCAN_TX_FDF_Msk;
     }
+</#if>
 <#else>
 
     /* Limit length */
@@ -462,8 +479,8 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t address, uint8_t length, uin
     {
         fifo->T0.val |= MCAN_TX_RTR_Msk;
     }
-
 <#if INTERRUPT_MODE == true>
+
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE = 1U << tfqpi;
     ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_TRANSMIT;
 </#if>
@@ -687,7 +704,11 @@ MCAN_ERROR ${MCAN_INSTANCE_NAME}_ErrorGet(void)
     if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
+<#if MCAN_REVISION_A_ENABLE == true>
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_CME_FD | MCAN_CCCR_CMR_FD_BITRATE_SWITCH','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
+<#else>
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED${(MCAN_OPMODE == "CAN FD")?then(' | MCAN_CCCR_FDOE_ENABLED | MCAN_CCCR_BRSE_ENABLED','')}<#if TX_PAUSE!false> | MCAN_CCCR_TXP_Msk</#if>;
+</#if>
         while ((${MCAN_INSTANCE_NAME}_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
     }
 
