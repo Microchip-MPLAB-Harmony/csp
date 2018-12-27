@@ -68,7 +68,7 @@ static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
   <#assign RXF0_ELEMENT_BYTES = 40 + 16 * (RXF0_BYTES_CFG?number - 5)>
 </#if>
 /* Configuration for the bytes in each element of RX FIFOs */
-static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx0_fifo[${RXF0_ELEMENTS} * ${RXF0_ELEMENT_BYTES}]__attribute__((aligned (4)));
+static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx0_fifo[${RXF0_ELEMENTS} * ${RXF0_ELEMENT_BYTES}]__attribute__((aligned (4))) __attribute__((__section__(".region_nocache")));
 
 </#if>
 <#if RXF1_USE>
@@ -78,7 +78,7 @@ static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx0_fifo[${RXF0_ELEMENTS} * ${RX
 <#else>
   <#assign RXF1_ELEMENT_BYTES = 40 + 16 * (RXF1_BYTES_CFG?number - 5)>
 </#if>
-static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx1_fifo[${RXF1_ELEMENTS} * ${RXF1_ELEMENT_BYTES}]__attribute__((aligned (4)));
+static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx1_fifo[${RXF1_ELEMENTS} * ${RXF1_ELEMENT_BYTES}]__attribute__((aligned (4))) __attribute__((__section__(".region_nocache")));
 
 </#if>
 <#if RXBUF_USE>
@@ -88,7 +88,7 @@ static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx1_fifo[${RXF1_ELEMENTS} * ${RX
 <#else>
   <#assign RX_BUFFER_ELEMENT_BYTES = 40 + 16 * (RX_BUFFER_BYTES_CFG?number - 5)>
 </#if>
-static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx_buffer[${RX_BUFFER_ELEMENTS} * ${RX_BUFFER_ELEMENT_BYTES}]__attribute__((aligned (4)));
+static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx_buffer[${RX_BUFFER_ELEMENTS} * ${RX_BUFFER_ELEMENT_BYTES}]__attribute__((aligned (4))) __attribute__((__section__(".region_nocache")));
 
 </#if>
 <#if TX_USE || TXBUF_USE>
@@ -99,13 +99,13 @@ static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_rx_buffer[${RX_BUFFER_ELEMENTS} 
   <#assign TX_ELEMENT_BYTES = 40 + 16 * (TX_FIFO_BYTES_CFG?number - 5)>
 </#if>
 /* Configuration for the bytes in each element of TX FIFOs */
-static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_tx_fifo[${TX_FIFO_ELEMENTS} * ${TX_ELEMENT_BYTES!0}]__attribute__((aligned (4)));
-static MCAN_TX_EVENT_FIFO_ENTRY ${MCAN_INSTANCE_NAME?lower_case}_tx_event_fifo[${TX_FIFO_ELEMENTS}]__attribute__((aligned (4)));
+static uint8_t ${MCAN_INSTANCE_NAME?lower_case}_tx_fifo[${TX_FIFO_ELEMENTS} * ${TX_ELEMENT_BYTES!0}]__attribute__((aligned (4))) __attribute__((__section__(".region_nocache")));
+static MCAN_TX_EVENT_FIFO_ENTRY ${MCAN_INSTANCE_NAME?lower_case}_tx_event_fifo[${TX_FIFO_ELEMENTS}]__attribute__((aligned (4))) __attribute__((__section__(".region_nocache")));
 
 </#if>
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
-__attribute__((aligned (4))) static MCAN_STANDARD_MESSAGE_ID_FILTER
+__attribute__((aligned (32))) __attribute__((__section__(".region_cache_aligned_const"))) static MCAN_STANDARD_MESSAGE_ID_FILTER
         ${MCAN_INSTANCE_NAME?lower_case}_std_filter[] =
 {
     <#list 1..(numInstance) as idx>
@@ -124,7 +124,7 @@ __attribute__((aligned (4))) static MCAN_STANDARD_MESSAGE_ID_FILTER
 #define CONF_${MCAN_INSTANCE_NAME}_XIDAM 0x1FFFFFFF
 
 <#assign numInstance=FILTERS_EXT?number>
-__attribute__((aligned (4))) static MCAN_EXTENDED_MESSAGE_ID_FILTER
+__attribute__((aligned (32))) __attribute__((__section__(".region_cache_aligned_const"))) static MCAN_EXTENDED_MESSAGE_ID_FILTER
     ${MCAN_INSTANCE_NAME?lower_case}_ext_filter[] =
 {
     <#list 1..(numInstance) as idx>
