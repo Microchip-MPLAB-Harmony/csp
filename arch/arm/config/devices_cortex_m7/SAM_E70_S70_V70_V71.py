@@ -232,11 +232,15 @@ execfile(Variables.get("__CORE_DIR")
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
+global armLibCSourceFile
+global devconSystemInitFile
+global compilerSpecifics
 
-# generate startup_xc32.c file
+compilerSelected = compilerChoice.getSelectedKey().lower()
+
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
-armSysStartSourceFile.setSourcePath("arm/templates/startup_xc32.c.ftl")
-armSysStartSourceFile.setOutputName("startup.c")
+armSysStartSourceFile.setSourcePath("../arch/arm/templates/" + compilerSelected + "/cortex_m/startup/startup_" + compilerSelected + ".c.ftl")
+armSysStartSourceFile.setOutputName("startup_" + compilerSelected + ".c")
 armSysStartSourceFile.setMarkup(True)
 armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
@@ -247,7 +251,7 @@ armSysStartSourceFile.setDependencies(
 
 # generate libc_syscalls.c file
 armLibCSourceFile = coreComponent.createFileSymbol("LIBC_SYSCALLS_C", None)
-armLibCSourceFile.setSourcePath("arm/templates/libc_syscalls.c.ftl")
+armLibCSourceFile.setSourcePath("arm/templates/xc32/libc_syscalls.c.ftl")
 armLibCSourceFile.setOutputName("libc_syscalls.c")
 armLibCSourceFile.setMarkup(True)
 armLibCSourceFile.setOverwrite(True)
@@ -284,5 +288,7 @@ devconSystemInitFile = coreComponent.createFileSymbol(
 devconSystemInitFile.setType("STRING")
 devconSystemInitFile.setOutputName(
     "core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
-devconSystemInitFile.setSourcePath("arm/templates/SAM_E70_S70_V70_V71.c.ftl")
+devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_E70_S70_V70_V71.c.ftl")
 devconSystemInitFile.setMarkup(True)
+
+compilerSpecifics = [armSysStartSourceFile]

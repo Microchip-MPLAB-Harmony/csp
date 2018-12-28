@@ -5,7 +5,7 @@ __STATIC_INLINE void FPU_Enable(void);
 /* Enable FPU */
 __STATIC_INLINE void FPU_Enable(void)
 {
-uint32_t prim;
+    uint32_t prim;
     prim = __get_PRIMASK();
     __disable_irq();
 

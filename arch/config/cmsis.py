@@ -41,14 +41,14 @@ def instantiateComponent(cmsisComponent):
             cmsisError.setVisible(True)
             return
         break
-		
+
     #check if it is a cortex M device
     archNode = ATDF.getNode('/avr-tools-device-file/devices')
     if ("m" in archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()):
         coreFile = "core_c" + str(archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()) + ".h"
 
         # add core header files
-        headerFileNames = ["cmsis_compiler.h", "cmsis_gcc.h", "tz_context.h", str(eval('coreFile')), "mpu_armv7.h", "cmsis_version.h"]
+        headerFileNames = ["cmsis_compiler.h", "cmsis_iccarm.h", "cmsis_gcc.h", "tz_context.h", str(eval('coreFile')), "mpu_armv7.h", "cmsis_version.h"]
 
         for headerFileName in headerFileNames:
             szSymbol = "{}_H".format(headerFileName[:-2].upper())

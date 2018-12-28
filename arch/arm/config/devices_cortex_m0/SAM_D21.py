@@ -242,7 +242,7 @@ def setDMACDefaultSettings():
                     }
 
     return triggerSettings
-	
+
 def setMPUDefaultSettings():
     mpuRegions = 8
     mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
@@ -297,20 +297,26 @@ for evsys_instance in range (0, len(modules)):
     components.append(str(modules[evsys_instance].getAttribute("name")).lower())
 Database.activateComponents(components)
 
-# generate startup_xc32.c file
+global armLibCSourceFile
+global devconSystemInitFile
+global compilerSpecifics
+
+compilerSelected = compilerChoice.getSelectedKey().lower()
+
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
-armSysStartSourceFile.setSourcePath("arm/templates/startup_xc32.c.ftl")
-armSysStartSourceFile.setOutputName("startup.c")
+armSysStartSourceFile.setSourcePath("../arch/arm/templates/" + compilerSelected + "/cortex_m/startup/startup_" + compilerSelected + ".c.ftl")
+armSysStartSourceFile.setOutputName("startup_" + compilerSelected + ".c")
 armSysStartSourceFile.setMarkup(True)
 armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
 armSysStartSourceFile.setProjectPath("config/" + configName + "/")
 armSysStartSourceFile.setType("SOURCE")
-armSysStartSourceFile.setDependencies(genSysSourceFile, ["CoreSysStartupFile", "CoreSysFiles"])
+armSysStartSourceFile.setDependencies(
+    genSysSourceFile, ["CoreSysStartupFile", "CoreSysFiles"])
 
 # generate libc_syscalls.c file
 armLibCSourceFile = coreComponent.createFileSymbol("LIBC_SYSCALLS_C", None)
-armLibCSourceFile.setSourcePath("arm/templates/libc_syscalls.c.ftl")
+armLibCSourceFile.setSourcePath("arm/templates/xc32/libc_syscalls.c.ftl")
 armLibCSourceFile.setOutputName("libc_syscalls.c")
 armLibCSourceFile.setMarkup(True)
 armLibCSourceFile.setOverwrite(True)
@@ -322,5 +328,7 @@ armLibCSourceFile.setDependencies(genSysSourceFile, ["CoreSysCallsFile", "CoreSy
 #devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
 #devconSystemInitFile.setType("STRING")
 #devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
-#devconSystemInitFile.setSourcePath("arm/templates/SAM_D20_D21.c.ftl")
+#devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_D20_D21.c.ftl")
 #devconSystemInitFile.setMarkup(True)
+
+compilerSpecifics = [armSysStartSourceFile]

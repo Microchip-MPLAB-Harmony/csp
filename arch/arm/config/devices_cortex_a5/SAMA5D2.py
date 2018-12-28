@@ -51,7 +51,7 @@ coreComponent.addPlugin("../peripheral/adc_44073/plugin/ARM_44073_ADCManager.jar
 coreComponent.addPlugin("../peripheral/aic_11051/plugin/AICManager_11051.jar")
 
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
-armSysStartSourceFile.setSourcePath("arm/templates/sam_a5_cstartup.s.ftl")
+armSysStartSourceFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_cstartup.s.ftl")
 armSysStartSourceFile.setOutputName("cstartup.s")
 armSysStartSourceFile.setMarkup(True)
 armSysStartSourceFile.setOverwrite(True)
@@ -61,7 +61,7 @@ armSysStartSourceFile.setType("SOURCE")
 
 #default exception handlers.
 faultSourceFile = coreComponent.createFileSymbol("DFLT_FAULT_HANDLER_C", None)
-faultSourceFile.setSourcePath("arm/templates/sam_a5_vectortrap.s.ftl")
+faultSourceFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_vectortrap.s.ftl")
 faultSourceFile.setOutputName("vectortrap.s")
 faultSourceFile.setMarkup(True)
 faultSourceFile.setOverwrite(True)
@@ -70,7 +70,7 @@ faultSourceFile.setProjectPath("config/" + configName + "/")
 faultSourceFile.setType("SOURCE")
 
 linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
-linkerFile.setSourcePath("arm/templates/sam_a5_ddr.icf.ftl")
+linkerFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_ddr.icf.ftl")
 linkerFile.setOutputName("ddr.icf")
 linkerFile.setMarkup(True)
 linkerFile.setOverwrite(True)

@@ -43,7 +43,7 @@ icacheEnable.setDefaultValue(True)
 # load wdt
 
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
-armSysStartSourceFile.setSourcePath("arm/templates/9x_cstartup.s.ftl")
+armSysStartSourceFile.setSourcePath("arm/templates/iar/arm_9/SAM9X6/9x_cstartup.s.ftl")
 armSysStartSourceFile.setOutputName("cstartup.s")
 armSysStartSourceFile.setMarkup(True)
 armSysStartSourceFile.setOverwrite(True)
@@ -53,7 +53,7 @@ armSysStartSourceFile.setType("SOURCE")
 
 #default exception handlers.
 faultSourceFile = coreComponent.createFileSymbol("DFLT_FAULT_HANDLER_C", None)
-faultSourceFile.setSourcePath("arm/templates/a5_vectortrap.s.ftl")
+faultSourceFile.setSourcePath("arm/templates/iar/arm_9/SAM9X6/a5_vectortrap.s.ftl")
 faultSourceFile.setOutputName("vectortrap.s")
 faultSourceFile.setMarkup(True)
 faultSourceFile.setOverwrite(True)

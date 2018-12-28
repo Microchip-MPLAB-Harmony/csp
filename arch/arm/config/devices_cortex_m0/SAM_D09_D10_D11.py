@@ -53,7 +53,7 @@ deviceFamily.setVisible(False)
 cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M0+ Configuration")
 cortexMenu.setDescription("Configuration for Cortex M0+")
-	
+
 # load clock manager information
 #execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_d09_d10_d11/config/clk.py")
 #coreComponent.addPlugin("../peripheral/clk_sam_d09_d10_d11/plugin/clockmanager.jar")
@@ -78,21 +78,26 @@ cortexMenu.setDescription("Configuration for Cortex M0+")
 
 # load device specific adc manager information
 #coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
+global armLibCSourceFile
+global devconSystemInitFile
+global compilerSpecifics
 
-# generate startup_xc32.c file
+compilerSelected = compilerChoice.getSelectedKey().lower()
+
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
-armSysStartSourceFile.setSourcePath("arm/templates/startup_xc32.c.ftl")
-armSysStartSourceFile.setOutputName("startup.c")
+armSysStartSourceFile.setSourcePath("../arch/arm/templates/" + compilerSelected + "/cortex_m/startup/startup_" + compilerSelected + ".c.ftl")
+armSysStartSourceFile.setOutputName("startup_" + compilerSelected + ".c")
 armSysStartSourceFile.setMarkup(True)
 armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
 armSysStartSourceFile.setProjectPath("config/" + configName + "/")
 armSysStartSourceFile.setType("SOURCE")
-armSysStartSourceFile.setDependencies(genSysSourceFile, ["CoreSysStartupFile", "CoreSysFiles"])
+armSysStartSourceFile.setDependencies(
+    genSysSourceFile, ["CoreSysStartupFile", "CoreSysFiles"])
 
 # generate libc_syscalls.c file
 armLibCSourceFile = coreComponent.createFileSymbol("LIBC_SYSCALLS_C", None)
-armLibCSourceFile.setSourcePath("arm/templates/libc_syscalls.c.ftl")
+armLibCSourceFile.setSourcePath("arm/templates/xc32/libc_syscalls.c.ftl")
 armLibCSourceFile.setOutputName("libc_syscalls.c")
 armLibCSourceFile.setMarkup(True)
 armLibCSourceFile.setOverwrite(True)
@@ -101,3 +106,4 @@ armLibCSourceFile.setProjectPath("config/" + configName + "/")
 armLibCSourceFile.setType("SOURCE")
 armLibCSourceFile.setDependencies(genSysSourceFile, ["CoreSysCallsFile", "CoreSysFiles"])
 
+compilerSpecifics = [armSysStartSourceFile]
