@@ -44,9 +44,9 @@ __STATIC_INLINE void TCM_Configure(uint32_t neededGpnvmValue)
     }
 }
 
-
+<#if TCM_ENABLE>
 /** Enable TCM memory */
-__STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Enable(void)
+__STATIC_INLINE void <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Enable(void)
 {
     __DSB();
     __ISB();
@@ -56,8 +56,9 @@ __STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Enable(void)
     __ISB();
 }
 
+<#else>
 /* Disable TCM memory */
-__STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Disable(void)
+__STATIC_INLINE void <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Disable(void)
 {
     __DSB();
     __ISB();
@@ -66,3 +67,5 @@ __STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Disable(void)
     __DSB();
     __ISB();
 }
+
+</#if>

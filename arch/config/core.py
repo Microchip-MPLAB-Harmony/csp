@@ -165,17 +165,21 @@ def instantiateComponent(coreComponent):
     toolChainMenu = coreComponent.createMenuSymbol("CoreToolChainMenu", projMenu)
     toolChainMenu.setLabel("Tool Chain Selections")
 
-    compilerSymbolName = "COMPILER_CHOICE"
-    compilerChoice = coreComponent.createKeyValueSetSymbol( compilerSymbolName, toolChainMenu )
+    global compilers
+    if "CORTEX-A" in coreArch.getValue():
+        compilers = ["IAR"]
+    else:
+        compilers = ["XC32", "IAR"]
+
+    compilerChoice = coreComponent.createKeyValueSetSymbol( "COMPILER_CHOICE", toolChainMenu )
     compilerChoice.setLabel( "Compiler" )
     compilerChoice.setOutputMode( "Key" )
-    compilerChoice.setDisplayMode( "Description" )
+    compilerChoice.setDisplayMode( "Key" )
     compilerChoice.setVisible( True )
-    compilerChoices =       [( "XC32_COMPILER",  "0", "XC32" ), 
-                             ( "IAR_COMPILER",   "1", "IAR" ), 
-                             ]
-    for tupleElem in compilerChoices:
-        compilerChoice.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
+    for index in range(0, len(compilers)):
+        compilerChoice.addKey( compilers[index], str(index), compilers[index] + " COMPILER" )
+
+    global xc32Menu
 
     ## xc32 Tool Config
     xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", toolChainMenu)
@@ -192,9 +196,12 @@ def instantiateComponent(coreComponent):
     xc32HeapSize.setDefaultValue(0)
     xc32HeapSize.setVisible(True)
 
+    global iarMenu
+
     ## iar Tool Config
     iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
     iarMenu.setLabel("IAR Global Options")
+    iarMenu.setVisible(False)
 
     iarLdMenu = coreComponent.createMenuSymbol("CoreIAR_LD", iarMenu)
     iarLdMenu.setLabel("Linker")
@@ -212,35 +219,36 @@ def instantiateComponent(coreComponent):
     iarUsrStackSize.setDefaultValue(4096)
     iarUsrStackSize.setVisible(True)
 
-    iarFiqStackSize = coreComponent.createIntegerSymbol("IAR_FIQ_STACK_SIZE", iarLdGeneralMenu)
-    iarFiqStackSize.setLabel("FIQ Stack Size (bytes)")
-    iarFiqStackSize.setDefaultValue(96)
-    iarFiqStackSize.setVisible(True)
+    if "CORTEX-M" not in coreArch.getValue():
+        iarFiqStackSize = coreComponent.createIntegerSymbol("IAR_FIQ_STACK_SIZE", iarLdGeneralMenu)
+        iarFiqStackSize.setLabel("FIQ Stack Size (bytes)")
+        iarFiqStackSize.setDefaultValue(96)
+        iarFiqStackSize.setVisible(True)
 
-    iarIrqStackSize = coreComponent.createIntegerSymbol("IAR_IRQ_STACK_SIZE", iarLdGeneralMenu)
-    iarIrqStackSize.setLabel("IRQ Stack Size (bytes)")
-    iarIrqStackSize.setDefaultValue(96)
-    iarIrqStackSize.setVisible(True)
+        iarIrqStackSize = coreComponent.createIntegerSymbol("IAR_IRQ_STACK_SIZE", iarLdGeneralMenu)
+        iarIrqStackSize.setLabel("IRQ Stack Size (bytes)")
+        iarIrqStackSize.setDefaultValue(96)
+        iarIrqStackSize.setVisible(True)
 
-    iarSvcStackSize = coreComponent.createIntegerSymbol("IAR_SVC_STACK_SIZE", iarLdGeneralMenu)
-    iarSvcStackSize.setLabel("Superviser Stack Size (bytes)")
-    iarSvcStackSize.setDefaultValue(96)
-    iarSvcStackSize.setVisible(True)
+        iarSvcStackSize = coreComponent.createIntegerSymbol("IAR_SVC_STACK_SIZE", iarLdGeneralMenu)
+        iarSvcStackSize.setLabel("Superviser Stack Size (bytes)")
+        iarSvcStackSize.setDefaultValue(96)
+        iarSvcStackSize.setVisible(True)
 
-    iarAbtStackSize = coreComponent.createIntegerSymbol("IAR_ABT_STACK_SIZE", iarLdGeneralMenu)
-    iarAbtStackSize.setLabel("Abort Stack Size (bytes)")
-    iarAbtStackSize.setDefaultValue(64)
-    iarAbtStackSize.setVisible(True)
+        iarAbtStackSize = coreComponent.createIntegerSymbol("IAR_ABT_STACK_SIZE", iarLdGeneralMenu)
+        iarAbtStackSize.setLabel("Abort Stack Size (bytes)")
+        iarAbtStackSize.setDefaultValue(64)
+        iarAbtStackSize.setVisible(True)
 
-    iarSysStackSize = coreComponent.createIntegerSymbol("IAR_SYS_STACK_SIZE", iarLdGeneralMenu)
-    iarSysStackSize.setLabel("System Stack Size (bytes)")
-    iarSysStackSize.setDefaultValue(64)
-    iarSysStackSize.setVisible(True)
+        iarSysStackSize = coreComponent.createIntegerSymbol("IAR_SYS_STACK_SIZE", iarLdGeneralMenu)
+        iarSysStackSize.setLabel("System Stack Size (bytes)")
+        iarSysStackSize.setDefaultValue(64)
+        iarSysStackSize.setVisible(True)
 
-    iarUndStackSize = coreComponent.createIntegerSymbol("IAR_UND_STACK_SIZE", iarLdGeneralMenu)
-    iarUndStackSize.setLabel("Undefined Stack Size (bytes)")
-    iarUndStackSize.setDefaultValue(64)
-    iarUndStackSize.setVisible(True)
+        iarUndStackSize = coreComponent.createIntegerSymbol("IAR_UND_STACK_SIZE", iarLdGeneralMenu)
+        iarUndStackSize.setLabel("Undefined Stack Size (bytes)")
+        iarUndStackSize.setDefaultValue(64)
+        iarUndStackSize.setVisible(True)
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
@@ -335,9 +343,9 @@ def instantiateComponent(coreComponent):
     systemIntVectorsSharedHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_SHARED_HANDLERS", None)
     systemIntVectorsHandlesList = coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_HANDLERS", None)
 
+    global debugSourceFile
+    
     debugSourceFile = coreComponent.createFileSymbol("DEBUG_CONSOLE_C", None)
-    debugSourceFile.setSourcePath("../arch/stdio/templates/xc32_monitor.c.ftl")
-    debugSourceFile.setOutputName("xc32_monitor.c")
     debugSourceFile.setMarkup(True)
     debugSourceFile.setOverwrite(True)
     debugSourceFile.setDestPath("/stdio/")
@@ -395,16 +403,11 @@ def instantiateComponent(coreComponent):
     xc32NoDeviceStartupCodeSym.setKey("no-device-startup-code")
     xc32NoDeviceStartupCodeSym.setValue("true")
 
-    debugSourceFile.setType("SOURCE")
-    debugSourceFile.setSourcePath("../arch/stdio/templates/xc32_monitor.c.ftl")
-    debugSourceFile.setOutputName("xc32_monitor.c")
-    debugSourceFile.setDependencies( debugSourceCallBack, [ compilerSymbolName ] )
-    monitorFile ="xc32_monitor.c"
-    if "IAR_COMPILER" == compilerChoice.getValue():
-        monitorFile ="iar_monitor.c"
+    compilerSelected = compilerChoice.getSelectedKey().lower()
 
-    debugSourceFile.setProjectPath("config/" + configName + "/stdio/")
-    debugSourceFile.setType("SOURCE")
+    debugSourceFile.setSourcePath("../arch/arm/templates/" + compilerSelected + "/stdio/" + compilerSelected + "_monitor.c.ftl")
+    debugSourceFile.setOutputName(compilerSelected + "_monitor.c")
+    debugSourceFile.setDependencies( compilerUpdate, [ "COMPILER_CHOICE" ] )
     # load device specific information, clock and pin manager
     execfile(Variables.get("__ARCH_DIR") + "/" + processor + ".py")
 
@@ -412,13 +415,37 @@ def instantiateComponent(coreComponent):
 def heapSizeCallBack(symbol, event):
     symbol.setValue(str(event["value"]))
 
+def updatePath(symbol, compilerSelected):
+    import re
+    sourcePath = symbol.getSourcePath()
+    pattern = '|'.join(str(p).lower() for p in compilers)
+    sourcePath = re.sub(pattern, compilerSelected, sourcePath)
+    symbol.setSourcePath(sourcePath)
+    outputName = symbol.getOutputName()
+    outputName = re.sub(pattern, compilerSelected, outputName)
+    symbol.setOutputName(outputName)
 
-def debugSourceCallBack( debugSourceFile, event ):
-    compilerChoiceSymbol = event[ "symbol" ]
-    monitorFile ="xc32_monitor.c"
-    if "IAR_COMPILER" == compilerChoiceSymbol.getSelectedKey():
-        monitorFile ="iar_monitor.c"
-    debugSourceFile.setSourcePath("../arch/stdio/templates/" + monitorFile + ".ftl")
-    debugSourceFile.setOutputName( monitorFile )
-    print "monitorFile:" + monitorFile 
-
+def compilerUpdate( symbol, event ):
+    global armLibCSourceFile
+    global devconSystemInitFile
+    global debugSourceFile
+    global compilerSpecifics
+    global iarMenu
+    global xc32Menu
+    global compilers
+    compilerSelected = event[ "symbol" ].getSelectedKey().lower()
+    compilerSpecifics.append(debugSourceFile)
+    if compilerSelected == "iar":
+        iarMenu.setVisible(True)
+        xc32Menu.setVisible(False)
+        if devconSystemInitFile != None:
+            devconSystemInitFile.setEnabled(False)
+        if armLibCSourceFile != None:
+            armLibCSourceFile.setEnabled(False)
+    elif compilerSelected == "xc32":
+        iarMenu.setVisible(False)
+        xc32Menu.setVisible(True)
+        devconSystemInitFile.setEnabled(True)
+        armLibCSourceFile.setEnabled(True)
+    for file in compilerSpecifics:
+        updatePath(file, compilerSelected)

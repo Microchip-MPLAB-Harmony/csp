@@ -1,5 +1,8 @@
-__STATIC_INLINE void TCM_Disable(void);
+<#if TCM_ENABLE>
 __STATIC_INLINE void TCM_Enable(void);
+<#else>
+__STATIC_INLINE void TCM_Disable(void);
+</#if>
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
 __STATIC_INLINE void ICache_Enable(void);
 __STATIC_INLINE void DCache_Enable(void);

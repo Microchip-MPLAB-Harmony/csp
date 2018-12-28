@@ -13,13 +13,13 @@ __STATIC_INLINE void TCM_Configure(uint32_t tcmSize)
 }
 
 /** Enable TCM memory */
-__STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Enable(void)
+__STATIC_INLINE void  <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Enable(void)
 {
     /* TCM cannot be enabled or disabled in SAME5x/SAMD5x family*/
 }
 
 /* Disable TCM memory */
-__STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Disable(void)
+__STATIC_INLINE void  <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Disable(void)
 {
     /* TCM cannot be enabled or disabled in SAME5x/SAMD5x family*/
 }

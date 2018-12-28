@@ -56,15 +56,15 @@ void __attribute__((optimize("-O1"), long_call)) Reset_Handler(void);
 /* Device Vector information is available in interrupt.c file */
 
 <#if CoreArchitecture == "CORTEX-M7">
-<#include "startup_xc32_cortex_m7.c.ftl">
-<#include "startup_xc32_${DeviceFamily}.c.ftl">
+<#include "arch/startup_xc32_cortex_m7.c.ftl">
+<#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
 </#if>
 <#if CoreArchitecture == "CORTEX-M4">
 <#if FPU_Available>
-<#include "startup_xc32_cortex_m4.c.ftl">
+<#include "arch/startup_xc32_cortex_m4.c.ftl">
 </#if>
 <#if DATA_CACHE_ENABLE??>
-<#include "startup_xc32_${DeviceFamily}.c.ftl">
+<#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
 </#if>
 </#if>
 /* Optional application-provided functions */

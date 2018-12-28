@@ -193,7 +193,7 @@ armSysStartSourceFile.setDependencies(genSysSourceFile, ["CoreSysStartupFile", "
 
 # generate libc_syscalls.c file
 armLibCSourceFile = coreComponent.createFileSymbol("LIBC_SYSCALLS_C", None)
-armLibCSourceFile.setSourcePath("arm/templates/libc_syscalls.c.ftl")
+armLibCSourceFile.setSourcePath("arm/templates/xc32/libc_syscalls.c.ftl")
 armLibCSourceFile.setOutputName("libc_syscalls.c")
 armLibCSourceFile.setMarkup(True)
 armLibCSourceFile.setOverwrite(True)
