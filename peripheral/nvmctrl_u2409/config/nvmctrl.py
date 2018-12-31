@@ -172,6 +172,10 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_APRDIS.setLabel("Disable Automatic Page Reallocation")
     nvmctrlSym_APRDIS.setDefaultValue(False)
     
+    #WDT Configuration comment
+    nvmctrlSym_FuseComment = nvmctrlComponent.createCommentSymbol("NVM_CONFIG_COMMENT", nvmctrlSymSEEP)
+    nvmctrlSym_FuseComment.setLabel("Note: Configure SBLK and PSZ Fuses for SmartEEPROM using 'System' component")
+
     ############################################################################
     #### Configuration for Memory Driver ####
     ############################################################################
