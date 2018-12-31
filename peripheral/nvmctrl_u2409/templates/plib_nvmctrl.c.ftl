@@ -235,7 +235,7 @@ void ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
 void ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
 {
     /* Set address and command */
-    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address;
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_EB | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 
@@ -261,7 +261,7 @@ uint16_t ${NVMCTRL_INSTANCE_NAME}_SmartEepromStatusGet( void )
 
 bool ${NVMCTRL_INSTANCE_NAME}_IsBusy(void)
 {
-    return (bool)(!(${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_DONE_Msk));
+    return (bool)(!(${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS & NVMCTRL_STATUS_READY_Msk));
 }
 
 void ${NVMCTRL_INSTANCE_NAME}_RegionLock(uint32_t address)
@@ -282,12 +282,12 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock(uint32_t address)
 
 bool ${NVMCTRL_INSTANCE_NAME}SmartEEPROM_IsBusy(void)
 {
-    return (bool)(!(${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEESTAT & NVMCTRL_SEESTAT_BUSY_Msk));
+    return (bool)(${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEESTAT & NVMCTRL_SEESTAT_BUSY_Msk);
 }
 
 bool ${NVMCTRL_INSTANCE_NAME}SmartEEPROM_IsActiveSectorFull(void)
 {
-    return (bool)(!(${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_SEESFULL_Msk));
+    return (bool)(${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_SEESFULL_Msk);
 }
 
 /* Use BankSwap only when there are valid applications in both NVM Banks */
