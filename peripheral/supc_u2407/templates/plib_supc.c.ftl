@@ -168,7 +168,7 @@
         </#if>
     </#if>
 </#if>
-<#if SUPC_INTERRUPT_ENABLE>
+<#if SUPC_INTERRUPT_ENABLE = true>
 typedef struct
 {
     SUPC_BOD33_CALLBACK callback;
@@ -183,22 +183,27 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
 <#if SUPC_BOD33_VAL?has_content>
     /* Configure BOD33. Mask the values loaded from NVM during reset. */
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 = (${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 & (${SUPC_BOD33_FACTORY_DATA_MASK})) | ${SUPC_BOD33_VAL};
+
 </#if>
 <#if SUPC_VREF_VAL?has_content>
     /* Configure VREF */
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREF = ${SUPC_VREF_VAL};
+
 </#if>
 <#if SUPC_BKOUT_VAL?has_content>
     /* Configure BKOUT */
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT = ${SUPC_BKOUT_VAL};
+
 </#if>
 <#if SUPC_BBPS_WAKEEN == true>
     /* Configure device wake on BBPS */
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_BBPS = SUPC_BBPS_WAKEEN_Msk;
+
 </#if>
-<#if SUPC_INTERRUPT_ENABLE>
+<#if SUPC_INTERRUPT_ENABLE = true>
     /* Enable BOD33 detect interrupt */
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTENSET = SUPC_INTFLAG_BOD33DET_Msk;
+
 </#if>
     /* Configure VREG. Mask the values loaded from NVM during reset.*/
     <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG = (${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG & (${SUPC_VREG_FACTORY_DATA_MASK}))
@@ -222,7 +227,7 @@ void ${SUPC_INSTANCE_NAME}_ClearOutputPin( SUPC_OUTPIN pin )
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1 << pin);
 }
 
-<#if SUPC_INTERRUPT_ENABLE>
+<#if SUPC_INTERRUPT_ENABLE = true>
 void ${SUPC_INSTANCE_NAME}_BOD33CallbackRegister( SUPC_BOD33_CALLBACK callback, uintptr_t context )
 {
     ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback = callback;
