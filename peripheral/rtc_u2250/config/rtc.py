@@ -269,14 +269,11 @@ def onAttachmentConnected(source, target):
     connectID = source["id"]
     targetID = target["id"]
 
-    if remoteID == "sys_time":
-        Database.setSymbolValue(
-            localID, "RTC_MODE0_INTENSET_CMP0_ENABLE", True, 1)
-        Database.setSymbolValue(
-            localID, "RTC_MODE1_INTENSET_CMP0_ENABLE", True, 1)
-        Database.setSymbolValue(
-            localID, "RTC_MODE1_INTENSET_CMP1_ENABLE", True, 1)
-        rtcModeSelection_Sym.setSelectedKey("MODE0", 1)
+
+    Database.setSymbolValue(
+        localID, "RTC_MODE0_INTENSET_CMP0_ENABLE", True, 1)
+
+    rtcModeSelection_Sym.setSelectedKey("MODE0", 1)
 
 
 def sysTime_modeSelection(symbol, event):
