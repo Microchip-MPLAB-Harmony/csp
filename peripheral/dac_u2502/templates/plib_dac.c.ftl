@@ -51,7 +51,7 @@
 						 (DAC_CHANNEL_0_FILTER)?then('| DAC_DACCTRL_FEXT_Msk','') + (DAC_CHANNEL_0_DITHER)?then(' | DAC_DACCTRL_DITHER_Msk ','') + 
 						 (DAC_CHANNEL_0_RSTDBY)?then('| DAC_DACCTRL_RUNSTDBY_Msk','')>
 						   
-<#assign DAC_CH_1_CTRL = "DAC_DACCTRL_ENABLE_Msk |" + " DAC_DACCTRL_CCTRL (" + DAC_CHANNEL_0_SPEED + ") " + (DAC_DATA_ADJUSTMENT1 == "LEFT-ADJUSTED")?then('| DAC_DACCTRL_LEFTADJ_Msk','') +
+<#assign DAC_CH_1_CTRL = "DAC_DACCTRL_ENABLE_Msk |" + " DAC_DACCTRL_CCTRL (" + DAC_CHANNEL_1_SPEED + ") " + (DAC_DATA_ADJUSTMENT1 == "LEFT-ADJUSTED")?then('| DAC_DACCTRL_LEFTADJ_Msk','') +
                          "| DAC_DACCTRL_OSR (" + DAC_CHANNEL_1_OVERSAMPLE + ") " + "| DAC_DACCTRL_REFRESH (" + DAC_CHANNEL_1_REFRESH + ") " + 
 						 (DAC_CHANNEL_1_FILTER)?then('| DAC_DACCTRL_FEXT_Msk','') + (DAC_CHANNEL_1_DITHER)?then(' | DAC_DACCTRL_DITHER_Msk ','') + 
 						 (DAC_CHANNEL_1_RSTDBY)?then('| DAC_DACCTRL_RUNSTDBY_Msk','')>					   
@@ -89,7 +89,7 @@ void ${DAC_INSTANCE_NAME}_Initialize (void)
 	<#assign DAC_CH_EVE_CTRL = "DAC_CH_" + i + "_EVE_CTRL">
 	
     <#if (.vars[DAC_CH_ENABLED] == true)>
-	${DAC_INSTANCE_NAME}_REGS->DACCTRL[${i}] = ${.vars[DAC_CH_CTRL]};
+	${DAC_INSTANCE_NAME}_REGS->DAC_DACCTRL[${i}] = ${.vars[DAC_CH_CTRL]};
 	<#if .vars[DAC_CH_EVE_CTRL]?has_content>
 	${DAC_INSTANCE_NAME}_REGS->DAC_EVCTRL = ${DAC_INSTANCE_NAME}_REGS->DAC_EVCTRL ${.vars[DAC_CH_EVE_CTRL]};
 	</#if>
