@@ -69,15 +69,23 @@
 
 typedef enum
 {
-    OUT0 = 0,
-    OUT1 = 1
+    SUPC_OUTPIN_OUT0 = 0,
+    SUPC_OUTPIN_OUT1 = 1
 }SUPC_OUTPIN;
 
 typedef enum
 {
-    PTAT = 0,
-    CTAT = 1
+    SUPC_TSSEL_PTAT = 0,
+    SUPC_TSSEL_CTAT = 1
 }SUPC_TSSEL;
+
+typedef enum
+{
+    SUPC_VREGSEL_LDO = 0,
+    SUPC_VREGSEL_BUCK = 1
+}SUPC_VREGSEL;
+
+void ${SUPC_INSTANCE_NAME}_SelectVoltageRegulator(SUPC_VREGSEL regsel);
 
 void ${SUPC_INSTANCE_NAME}_SelectTempSenorChannel( SUPC_TSSEL sensor );
 
