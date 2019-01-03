@@ -62,7 +62,7 @@ uint16_t smart_eep_status;
         <#if NVMCTRL_CTRLA_VAL != "">
             <#assign NVMCTRL_CTRLA_VAL = NVMCTRL_CTRLA_VAL + "| NVMCTRL_CTRLA_PRM("+NVMCTRL_CTRLA_POWER_REDUCTION_MODE+")">
         <#else>
-            <#assign NVMCTRL_CTRLA_VAL = "| NVMCTRL_CTRLA_PRM("+NVMCTRL_CTRLA_POWER_REDUCTION_MODE+")">
+            <#assign NVMCTRL_CTRLA_VAL = "NVMCTRL_CTRLA_PRM("+NVMCTRL_CTRLA_POWER_REDUCTION_MODE+")">
         </#if>
     </#if>
 </#if>
