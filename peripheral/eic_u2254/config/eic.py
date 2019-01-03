@@ -162,6 +162,12 @@ def instantiateComponent(eicComponent):
     global extIntCount
     InterruptVectorUpdate = []
 
+    debounceSupported = eicComponent.createBooleanSymbol("DEBOUNCE_SUPPORT", None)
+    eicTickOnNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__TICKON\"]")
+    if eicTickOnNode != None:
+        debounceSupported.setDefaultValue(True)
+    debounceSupported.setVisible(True)
+
     eicInstanceName = eicComponent.createStringSymbol("EIC_INSTANCE_NAME", None)
     eicInstanceName.setVisible(False)
     eicInstanceName.setDefaultValue(eicComponent.getID().upper())
@@ -299,11 +305,12 @@ def instantiateComponent(eicComponent):
         CONFIG_SENSE_SelectionSymbol.setOutputMode("Key")
         CONFIG_SENSE_SelectionSymbol.setDisplayMode("Description")
 
-        #DEBOUNCEN
-        DEBOUNCEN_Selection = eicComponent.createBooleanSymbol("EIC_DEBOUNCEN_" + str(extIntIndex) , eicConfiguration)
-        DEBOUNCEN_Selection.setLabel("Enable Debounce")
-        DEBOUNCEN_Selection.setVisible(False)
-        DEBOUNCEN_Selection.setDependencies(debounceEnable,["EIC_CONFIG_SENSE_" + str(extIntIndex)])
+        if debounceSupported.getValue():
+            #DEBOUNCEN
+            DEBOUNCEN_Selection = eicComponent.createBooleanSymbol("EIC_DEBOUNCEN_" + str(extIntIndex) , eicConfiguration)
+            DEBOUNCEN_Selection.setLabel("Enable Debounce")
+            DEBOUNCEN_Selection.setVisible(False)
+            DEBOUNCEN_Selection.setDependencies(debounceEnable,["EIC_CONFIG_SENSE_" + str(extIntIndex)])
 
         #CONFIG - Filter Enable
         CONFIG_FILTER_Selection = eicComponent.createBooleanSymbol("EIC_CONFIG_FILTEN_" + str(extIntIndex) , eicConfiguration)
@@ -332,99 +339,104 @@ def instantiateComponent(eicComponent):
 
     ASYNCH_Code = eicComponent.createHexSymbol("EIC_ASYNCH" , eicCalculation)
     ASYNCH_Code.setDefaultValue(0)
+    ASYNCH_Code.setVisible(False)
     ASYNCH_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_asynchList)
 
     DEBOUNCEN_Code = eicComponent.createHexSymbol("EIC_DEBOUNCEN" , eicCalculation)
     DEBOUNCEN_Code.setDefaultValue(0)
-    DEBOUNCEN_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_debounceList)
+    DEBOUNCEN_Code.setVisible(False)
+    if debounceSupported.getValue():
+        DEBOUNCEN_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_debounceList)
 
     EXTINT_Code = eicComponent.createHexSymbol("EIC_INT" , eicCalculation)
     EXTINT_Code.setDefaultValue(0)
+    EXTINT_Code.setVisible(False)
     EXTINT_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_InterruptList)
 
     eicDebounceMenu = eicComponent.createMenuSymbol("DEBOUNCE_MENU", None)
     eicDebounceMenu.setLabel("Debouncer ConfiGuration")
     eicDebounceMenu.setVisible(False)
-    eicDebounceMenu.setDependencies(debounceMenu, ["EIC_DEBOUNCEN"])
+    if debounceSupported.getValue():
+        eicDebounceMenu.setDependencies(debounceMenu, ["EIC_DEBOUNCEN"])
 
-    #DEBOUNCER - TICKON
-    PRESCALER_TICKON_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_PRESCALER_TICKON" , eicDebounceMenu)
-    PRESCALER_TICKON_SelectionSymbol.setLabel("Debouncer Sampler Clock Source")
+        #DEBOUNCER - TICKON
+        PRESCALER_TICKON_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_PRESCALER_TICKON" , eicDebounceMenu)
+        PRESCALER_TICKON_SelectionSymbol.setLabel("Debouncer Sampler Clock Source")
 
-    eicTickOnNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__TICKON\"]")
+        eicTickOnNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__TICKON\"]")
 
-    for index in range(len(eicTickOnNode.getChildren())):
-        eicTickOnKeyName = eicTickOnNode.getChildren()[index].getAttribute("name")
-        eicTickOnKeyDescription = eicTickOnNode.getChildren()[index].getAttribute("caption")
-        eicTickOnKeyValue = eicTickOnNode.getChildren()[index].getAttribute("value")
-        PRESCALER_TICKON_SelectionSymbol.addKey(eicTickOnKeyName, eicTickOnKeyValue , eicTickOnKeyDescription)
+        for index in range(len(eicTickOnNode.getChildren())):
+            eicTickOnKeyName = eicTickOnNode.getChildren()[index].getAttribute("name")
+            eicTickOnKeyDescription = eicTickOnNode.getChildren()[index].getAttribute("caption")
+            eicTickOnKeyValue = eicTickOnNode.getChildren()[index].getAttribute("value")
+            PRESCALER_TICKON_SelectionSymbol.addKey(eicTickOnKeyName, eicTickOnKeyValue , eicTickOnKeyDescription)
 
-    PRESCALER_TICKON_SelectionSymbol.setDefaultValue(0)
-    PRESCALER_TICKON_SelectionSymbol.setOutputMode("Value")
-    PRESCALER_TICKON_SelectionSymbol.setDisplayMode("Description")
+        PRESCALER_TICKON_SelectionSymbol.setDefaultValue(0)
+        PRESCALER_TICKON_SelectionSymbol.setOutputMode("Value")
+        PRESCALER_TICKON_SelectionSymbol.setDisplayMode("Description")
 
-    #DEBOUNCER - Number of States x (7:0)
-    DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_0" , eicDebounceMenu)
-    DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States for EXTINT[7:0]")
+        #DEBOUNCER - Number of States x (7:0)
+        DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_0" , eicDebounceMenu)
+        DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States for EXTINT[7:0]")
 
-    eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES0\"]")
+        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES0\"]")
 
-    for index in range(len(eicStatesxNode.getChildren())):
-        eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
-        eicStatesxKeyDescription = eicStatesxNode.getChildren()[index].getAttribute("caption")
-        eicStatesxKeyValue = eicStatesxNode.getChildren()[index].getAttribute("value")
-        DEBOUNCER_NO_STATES_SelectionSymbol.addKey(eicStatesxKeyName, eicStatesxKeyValue , eicStatesxKeyDescription)
+        for index in range(len(eicStatesxNode.getChildren())):
+            eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
+            eicStatesxKeyDescription = eicStatesxNode.getChildren()[index].getAttribute("caption")
+            eicStatesxKeyValue = eicStatesxNode.getChildren()[index].getAttribute("value")
+            DEBOUNCER_NO_STATES_SelectionSymbol.addKey(eicStatesxKeyName, eicStatesxKeyValue , eicStatesxKeyDescription)
 
-    DEBOUNCER_NO_STATES_SelectionSymbol.setDefaultValue(0)
-    DEBOUNCER_NO_STATES_SelectionSymbol.setOutputMode("Value")
-    DEBOUNCER_NO_STATES_SelectionSymbol.setDisplayMode("Description")
+        DEBOUNCER_NO_STATES_SelectionSymbol.setDefaultValue(0)
+        DEBOUNCER_NO_STATES_SelectionSymbol.setOutputMode("Value")
+        DEBOUNCER_NO_STATES_SelectionSymbol.setDisplayMode("Description")
 
-    #BOUNCER - Prescaler x (7:0)
-    DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_0" , eicDebounceMenu)
-    DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[7:0]")
+        #BOUNCER - Prescaler x (7:0)
+        DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_0" , eicDebounceMenu)
+        DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[7:0]")
 
-    eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER0\"]")
+        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER0\"]")
 
-    for index in range(len(eicPrescalerNode.getChildren())):
-        eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
-        eicPrescalerKeyDescription = eicPrescalerNode.getChildren()[index].getAttribute("caption")
-        eicPrescalerKeyValue = eicPrescalerNode.getChildren()[index].getAttribute("value")
-        DEBOUNCER_PRESCALER_SelectionSymbol.addKey(eicPrescalerKeyName, eicPrescalerKeyValue , eicPrescalerKeyDescription)
+        for index in range(len(eicPrescalerNode.getChildren())):
+            eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
+            eicPrescalerKeyDescription = eicPrescalerNode.getChildren()[index].getAttribute("caption")
+            eicPrescalerKeyValue = eicPrescalerNode.getChildren()[index].getAttribute("value")
+            DEBOUNCER_PRESCALER_SelectionSymbol.addKey(eicPrescalerKeyName, eicPrescalerKeyValue , eicPrescalerKeyDescription)
 
-    DEBOUNCER_PRESCALER_SelectionSymbol.setDefaultValue(0)
-    DEBOUNCER_PRESCALER_SelectionSymbol.setOutputMode("Value")
-    DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
+        DEBOUNCER_PRESCALER_SelectionSymbol.setDefaultValue(0)
+        DEBOUNCER_PRESCALER_SelectionSymbol.setOutputMode("Value")
+        DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
 
-    #DEBOUNCER - Number of States x (8:15)
-    DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , eicDebounceMenu)
-    DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States Duration for EXTINT[15:8]")
+        #DEBOUNCER - Number of States x (8:15)
+        DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , eicDebounceMenu)
+        DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States Duration for EXTINT[15:8]")
 
-    eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES1\"]")
-    for index in range(len(eicStatesxNode.getChildren())):
-        eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
-        eicStatesxKeyDescription = eicStatesxNode.getChildren()[index].getAttribute("caption")
-        eicStatesxKeyValue = eicStatesxNode.getChildren()[index].getAttribute("value")
-        DEBOUNCER_NO_STATES_SelectionSymbol.addKey(eicStatesxKeyName, eicStatesxKeyValue , eicStatesxKeyDescription)
+        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES1\"]")
+        for index in range(len(eicStatesxNode.getChildren())):
+            eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
+            eicStatesxKeyDescription = eicStatesxNode.getChildren()[index].getAttribute("caption")
+            eicStatesxKeyValue = eicStatesxNode.getChildren()[index].getAttribute("value")
+            DEBOUNCER_NO_STATES_SelectionSymbol.addKey(eicStatesxKeyName, eicStatesxKeyValue , eicStatesxKeyDescription)
 
-    DEBOUNCER_NO_STATES_SelectionSymbol.setDefaultValue(0)
-    DEBOUNCER_NO_STATES_SelectionSymbol.setOutputMode("Value")
-    DEBOUNCER_NO_STATES_SelectionSymbol.setDisplayMode("Description")
+        DEBOUNCER_NO_STATES_SelectionSymbol.setDefaultValue(0)
+        DEBOUNCER_NO_STATES_SelectionSymbol.setOutputMode("Value")
+        DEBOUNCER_NO_STATES_SelectionSymbol.setDisplayMode("Description")
 
-    #BOUNCER - Prescaler x (8:15)
-    DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_1" , eicDebounceMenu)
-    DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[15:8]")
+        #BOUNCER - Prescaler x (8:15)
+        DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_1" , eicDebounceMenu)
+        DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[15:8]")
 
-    eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER1\"]")
+        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER1\"]")
 
-    for index in range(len(eicPrescalerNode.getChildren())):
-        eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
-        eicPrescalerKeyDescription = eicPrescalerNode.getChildren()[index].getAttribute("caption")
-        eicPrescalerKeyValue = eicPrescalerNode.getChildren()[index].getAttribute("value")
-        DEBOUNCER_PRESCALER_SelectionSymbol.addKey(eicPrescalerKeyName, eicPrescalerKeyValue , eicPrescalerKeyDescription)
+        for index in range(len(eicPrescalerNode.getChildren())):
+            eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
+            eicPrescalerKeyDescription = eicPrescalerNode.getChildren()[index].getAttribute("caption")
+            eicPrescalerKeyValue = eicPrescalerNode.getChildren()[index].getAttribute("value")
+            DEBOUNCER_PRESCALER_SelectionSymbol.addKey(eicPrescalerKeyName, eicPrescalerKeyValue , eicPrescalerKeyDescription)
 
-    DEBOUNCER_PRESCALER_SelectionSymbol.setDefaultValue(0)
-    DEBOUNCER_PRESCALER_SelectionSymbol.setOutputMode("Value")
-    DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
+        DEBOUNCER_PRESCALER_SelectionSymbol.setDefaultValue(0)
+        DEBOUNCER_PRESCALER_SelectionSymbol.setOutputMode("Value")
+        DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
 
     ############################################################################
     #### Dependency ####
