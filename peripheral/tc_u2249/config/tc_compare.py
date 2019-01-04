@@ -52,7 +52,10 @@ def updateCompareDuty(symbol, event):
             symbol.setVisible(False)
 
 def tcComparePeriodCalc(symbol, event):
-    resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
+    resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / clock_freq
     time = tcSym_ComparePeriod.getValue() * resolution
     symbol.setLabel("**** Timer Period is " + str(time) + " us ****")
 
@@ -122,12 +125,15 @@ tcSym_ComparePeriod.setMax(65535)
 tcSym_ComparePeriod.setDependencies(updateCompareMaxValue, ["TC_CTRLA_MODE"])
 
 #period time in us
-resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
+if clk_freq == 0:
+    clk_freq = 1
+resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / clk_freq
 time = tcSym_ComparePeriod.getValue() * resolution
 tcSym_ComparePeriod_Comment = tcComponent.createCommentSymbol("TC_COMPARE_PERIOD_COMMENT", tcSym_CompareMenu)
 tcSym_ComparePeriod_Comment.setLabel("**** Timer Period is " + str(time) + " us ****")
 tcSym_ComparePeriod_Comment.setDependencies(tcComparePeriodCalc, ["TC_COMPARE_PERIOD", "TC_CTRLA_PRESCALER",\
-    "core.CPU_CLOCK_FREQUENCY"])
+    "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY"])
 
 #compare value
 tcSym_CompareDuty = tcComponent.createLongSymbol("TC_COMPARE_CC1", tcSym_CompareMenu)
