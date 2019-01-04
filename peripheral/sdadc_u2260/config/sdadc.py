@@ -34,14 +34,9 @@ global sdadcInstanceName
 ###################################################################################################
 
 def updateSDADCInterruptStatus(symbol, event):
-
-    Database.clearSymbolValue("core", InterruptVector)
     Database.setSymbolValue("core", InterruptVector, event["value"], 2)
 
-    Database.clearSymbolValue("core", InterruptHandlerLock)
     Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
-
-    Database.clearSymbolValue("core", InterruptHandler)
 
     if event["value"] == True:
         Database.setSymbolValue("core", InterruptHandler, sdadcInstanceName.getValue() + "_InterruptHandler", 2)
@@ -80,7 +75,9 @@ def sdadcEvesysConfigure(symbol, event):
 
 
 def sdadcCalcConvTime(symbol, event):
-    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", sdadcInstanceName.getValue()+"_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
     prescaler = sdadcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
     osr = sdadcSym_CTRLB_OSR.getSelectedKey()[3:]
 
@@ -127,7 +124,6 @@ def instantiateComponent(sdadcComponent):
     Log.writeInfoMessage("Running " + sdadcInstanceName.getValue())
 
     #clock enable
-    Database.clearSymbolValue("core", sdadcInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", sdadcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     #Prescaler Configuration
@@ -164,10 +160,17 @@ def instantiateComponent(sdadcComponent):
     sdadcSym_CTRLB_OSR.setOutputMode("Key")
     sdadcSym_CTRLB_OSR.setDisplayMode("Description")
 
+    clock_freq = Database.getSymbolValue("core", sdadcInstanceName.getValue()+"_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
+    prescaler = sdadcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
+    osr = sdadcSym_CTRLB_OSR.getSelectedKey()[3:]
+    conv_time = float(((int(osr) * int(prescaler) * 4 * 1000000) / clock_freq))
+    
     sdadcSym_CONV_TIME = sdadcComponent.createCommentSymbol("SDADC_CONV_TIME", None)
-    sdadcSym_CONV_TIME.setLabel("**** Conversion Time is 10.666 uS ****")
+    sdadcSym_CONV_TIME.setLabel("**** Conversion Time is " + str(conv_time) +" uS ****")
     sdadcSym_CONV_TIME.setDependencies(sdadcCalcConvTime, \
-        ["core.CPU_CLOCK_FREQUENCY", "SDADC_CTRLB_OSR", "SDADC_CTRLB_PRESCALER"])
+        ["core."+sdadcInstanceName.getValue()+"_CLOCK_FREQUENCY", "SDADC_CTRLB_OSR", "SDADC_CTRLB_PRESCALER"])
 
     #Reference Selection
     sdadcSym_REFCTRL_REFSEL = sdadcComponent.createKeyValueSetSymbol("SDADC_REFCTRL_REFSEL", None)
