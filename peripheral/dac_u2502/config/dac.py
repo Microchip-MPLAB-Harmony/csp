@@ -238,6 +238,11 @@ def instantiateComponent(dacComponent):
         channelInvert = dacComponent.createBooleanSymbol("DAC_CHANNEL_EVENT_INVEI" + str(channel), channelEvent)
         channelInvert.setLabel("Invert Start Conversion Event")
 
+        #Error Event
+        dacSym_Event = dacComponent.createBooleanSymbol("DAC_EVSYS" + str(channel) , channelEvent)
+        dacSym_Event.setVisible(False)
+        dacSym_Event.setDependencies(evsysSetup, evctrldep)
+    
     # Clock Warning status
     dacSym_ClkEnComment = dacComponent.createCommentSymbol("DAC_CLOCK_ENABLE_COMMENT", None)
     dacSym_ClkEnComment.setLabel("Warning!!!" + dacInstanceName.getValue() + " Clock is Disabled in Clock Manager")
