@@ -33,17 +33,10 @@ adcSym_SEQCTRL_SEQ = []
 ###################################################################################################
 
 def updateADCInterruptStatus(symbol, event):
-
-    Database.clearSymbolValue("core", InterruptVector)
     Database.setSymbolValue("core", InterruptVector, event["value"], 2)
-
-    Database.clearSymbolValue("core", InterruptHandlerLock)
     Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
 
-    Database.clearSymbolValue("core", InterruptHandler)
-
     if event["value"] == True:
-
         Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_Handler", 2)
@@ -61,7 +54,9 @@ def updateADCClockWarringStatus(symbol, event):
         symbol.setVisible(False)
 
 def adcCalcSampleTime(symbol, event):
-    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
     if (adcSym_CTRLA_SLAVEEN.getValue() == False):
         prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
     else:
@@ -168,7 +163,6 @@ def instantiateComponent(adcComponent):
     Log.writeInfoMessage("Running " + adcInstanceName.getValue())
 
     #clock enable
-    Database.clearSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE")
     Database.setSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
     #------------------------- ATDF Read -------------------------------------
@@ -244,7 +238,9 @@ def instantiateComponent(adcComponent):
     adcSym_SAMPCTRL_SAMPLEN.setMax(63)
     adcSym_SAMPCTRL_SAMPLEN.setDefaultValue(0)
 
-    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
     prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
     sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
     data_width = 12
@@ -256,8 +252,6 @@ def instantiateComponent(adcComponent):
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
     adcSym_SAMPCTRL_SAMPLEN_TIME.setLabel("**** Conversion Time is " + str(conv_time) + " us ****")
     # Dependency registration is done after all dependencies are defined.
-    # adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core.CPU_CLOCK_FREQUENCY", \
-        # "adc"+str(component)+".ADC_CTRLB_PRESCALER", "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL", "ADC_CTRLA_SLAVEEN"])
 
     #reference selection
     adcSym_REFCTRL_REFSEL = adcComponent.createKeyValueSetSymbol("ADC_REFCTRL_REFSEL", None)
@@ -474,7 +468,7 @@ def instantiateComponent(adcComponent):
     adcSym_HW_INP_EVENT.setVisible(False)
     adcSym_HW_INP_EVENT.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
 
-    adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core.CPU_CLOCK_FREQUENCY", \
+    adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core."+adcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
         "adc"+str(component)+".ADC_CTRLB_PRESCALER", "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLC_RESSEL", "ADC_CTRLA_SLAVEEN"])
 
     adcSleepMenu = adcComponent.createMenuSymbol("ADC_SLEEP_MENU", None)
