@@ -45,13 +45,15 @@ pin_inv_val = 0x00
 ###################################################################################################
 
 def pdecResolutionCalc(symbol, event):
-    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", pdecInstanceName.getValue()+"_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
     prescaler = int(pdecSym_PRESC_PRESC.getSelectedKey()[3:])
     resolution = (prescaler * 1000000000.0) / clock_freq
     symbol.setLabel("****PDEC Counter resolution is " + str(resolution) + " nS****")
 
 def pdecFreqCalc(symbol, event):
-    symbol.setValue(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY") / int(pdecSym_PRESC_PRESC.getSelectedKey()[3:]), 2)
+    symbol.setValue(Database.getSymbolValue("core", pdecInstanceName.getValue()+"_CLOCK_FREQUENCY") / int(pdecSym_PRESC_PRESC.getSelectedKey()[3:]), 2)
 
 def pdecRevolutionCalc(symbol, event):
     symbol.setValue(16 - event["value"], 2)
@@ -230,7 +232,6 @@ def instantiateComponent(pdecComponent):
     Log.writeInfoMessage("Running " + pdecInstanceName.getValue())
 
     #clock enable
-    Database.clearSymbolValue("core", pdecInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", pdecInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     #prescaler
@@ -254,17 +255,20 @@ def instantiateComponent(pdecComponent):
 
     #clock resolution display
     pdecSym_Resolution = pdecComponent.createCommentSymbol("PDEC_Resolution", None)
-    resolution = (int(pdecSym_PRESC_PRESC.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", pdecInstanceName.getValue()+"_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
+    resolution = (int(pdecSym_PRESC_PRESC.getSelectedKey()[3:]) * 1000000000.0) / clock_freq
     pdecSym_Resolution.setLabel("****PDEC Counter resolution is " + str(resolution) + " nS****")
-    pdecSym_Resolution.setDependencies(pdecResolutionCalc, ["core.CPU_CLOCK_FREQUENCY", \
+    pdecSym_Resolution.setDependencies(pdecResolutionCalc, ["core."+pdecInstanceName.getValue()+"_CLOCK_FREQUENCY", \
         "PDEC_PRESC_PRESC"])
 
     #PDEC clock frequency
     pdecSym_Frequency = pdecComponent.createIntegerSymbol("PDEC_FREQUENCY", None)
     pdecSym_Frequency.setLabel("Clock Frequency")
     pdecSym_Frequency.setVisible(False)
-    pdecSym_Frequency.setDefaultValue(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
-    pdecSym_Frequency.setDependencies(pdecFreqCalc, ["core.CPU_CLOCK_FREQUENCY", "PDEC_PRESC_PRESC"])
+    pdecSym_Frequency.setDefaultValue(Database.getSymbolValue("core", pdecInstanceName.getValue()+"_CLOCK_FREQUENCY"))
+    pdecSym_Frequency.setDependencies(pdecFreqCalc, ["core."+pdecInstanceName.getValue()+"_CLOCK_FREQUENCY", "PDEC_PRESC_PRESC"])
 
     #PDEC operation mode
     global pdecSym_OperationMode
