@@ -12,6 +12,7 @@
 		<package diagram="JEDEC_MS_026D_BED_LQFP100" id="5" name="TQFP100" />
 		<package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="6" name="TFBGA100" />
 		<package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="7" name="VFBGA100" />		
-		<package diagram="CTBGA64" id="8" name="CTBGA64" />		
+		<package diagram="CTBGA64" id="8" name="CTBGA64" />
+		<package diagram="TQFP128" id="9" name="TQFP128" />								
 	</packages>
 </pinfile>
