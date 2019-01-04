@@ -40,8 +40,9 @@
 
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
 
+<#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
 <#if EVSYS_INTERRUPT_MODE == true>
-	<#lt>EVSYS_OBJECT evsys;
+	<#lt>EVSYS_OBJECT evsys[${TOTAL_CHANNEL}];
 </#if>
 
 void ${EVSYS_INSTANCE_NAME}_Initialize( void )
@@ -49,7 +50,6 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CTRL = EVSYS_CTRL_GCLKREQ_Msk;
  </#if>
 
-<#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
 <#assign TOTAL_USER = EVSYS_USER_NUMBER?number >
 	/*Event Channel User Configuration*/
 <#list 0..TOTAL_USER as i>
@@ -86,31 +86,66 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
 <#if EVSYS_INTERRUPT_MODE == true>
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_INT_MASK interrupt)
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = interrupt;
+    <#lt>   if(channel > 7)
+    <#lt>   {
+    <#lt>       channel = channel + 8;
+    <#lt>   }
+	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = interrupt << channel;
 	<#lt>}
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_INT_MASK interrupt)
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENCLR = interrupt;
+    <#lt>   if(channel > 7)
+    <#lt>   {
+    <#lt>       channel = channel + 8;
+    <#lt>   }
+	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENCLR = interrupt << channel;
 	<#lt>}
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister( EVSYS_CALLBACK callback, uintptr_t context )
+	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context)
 	<#lt>{
-	<#lt>	evsys.callback = callback;
-	<#lt>	evsys.context = context;
+	<#lt>	evsys[channel].callback = callback;
+	<#lt>	evsys[channel].context = context;
 	<#lt>}
 </#if>
 
 <#if EVSYS_INTERRUPT_MODE == true>
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptHandler( void )
 	<#lt>{
-	<#lt>	volatile uint32_t status = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG;
-	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG = EVSYS_INTFLAG_Msk;
-	<#lt>	if(evsys.callback != NULL)
-    <#lt>   {
-    <#lt>   	evsys.callback(evsys.context, status);
-    <#lt>   }
+         <#lt>    uint8_t currentChannel = 0;
+         <#lt>    uint8_t channel = 0;
+         <#lt>    uint32_t eventIntFlagStatus = 0;
+         <#lt>    uint32_t overrunIntFlagStatus = 0;
+
+         <#lt>    /* Find any triggered channels, run associated callback handlers */
+         <#lt>    for (currentChannel = 0; currentChannel < ${TOTAL_CHANNEL}; currentChannel++)
+         <#lt>    {
+         <#lt>        if (currentChannel > 7)
+         <#lt>        {
+         <#lt>            channel = currentChannel + 8;
+         <#lt>        }
+         <#lt>        else
+         <#lt>        {
+         <#lt>            channel = currentChannel;
+         <#lt>        }
+
+         <#lt>        /* Read the interrupt flag status */
+         <#lt>        overrunIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & (EVSYS_INT_OVERRUN << channel);
+         <#lt>        eventIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & (EVSYS_INT_EVENT_DETECT << channel);
+
+         <#lt>        if (eventIntFlagStatus | overrunIntFlagStatus)
+         <#lt>        {
+         <#lt>            /* Find any associated callback entries in the callback table */
+         <#lt>            if (evsys[currentChannel].callback != NULL)
+         <#lt>            {
+         <#lt>                evsys[currentChannel].callback((uint32_t)((eventIntFlagStatus | overrunIntFlagStatus) >> channel), evsys[currentChannel].context);
+         <#lt>            }
+
+         <#lt>            /* Clear interrupt flag */
+         <#lt>            ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG = (EVSYS_INT_OVERRUN | EVSYS_INT_EVENT_DETECT) << channel;
+         <#lt>        }
+         <#lt>    }
 	<#lt>}
 </#if>

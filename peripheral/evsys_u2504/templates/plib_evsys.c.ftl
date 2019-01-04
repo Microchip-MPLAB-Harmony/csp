@@ -38,11 +38,10 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "device.h"
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
 
 <#if EVSYS_INTERRUPT_MODE0 || EVSYS_INTERRUPT_MODE1 || EVSYS_INTERRUPT_MODE2 || EVSYS_INTERRUPT_MODE3 || EVSYS_INTERRUPT_MODE_OTHER>
-	<#lt>EVSYS_OBJECT evsys;
+	<#lt>EVSYS_OBJECT evsys[${NUM_SYNC_CHANNELS}];
 </#if>
 
 void ${EVSYS_INSTANCE_NAME}_Initialize( void )
@@ -104,10 +103,10 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interrupt;
 	<#lt>}
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister( EVSYS_CALLBACK callback, uintptr_t context )
+	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
 	<#lt>{
-	<#lt>	evsys.callback = callback;
-	<#lt>	evsys.context = context;
+	<#lt>	evsys[channel].callback = callback;
+	<#lt>	evsys[channel].context = context;
 	<#lt>}
 </#if>
 <#list 0..3 as x>
@@ -117,9 +116,9 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 	<#lt>{
 	<#lt>	volatile uint32_t status = ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
 	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
-	<#lt>	if(evsys.callback != NULL)
+	<#lt>	if(evsys[channel].callback != NULL)
     <#lt>   {
-    <#lt>   	evsys.callback(evsys.context, ${x}, status);
+    <#lt>   	evsys[channel].callback(status, evsys[${x}].context);
     <#lt>   }
 	<#lt>}
 </#if>
@@ -130,10 +129,10 @@ void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     uint8_t channel = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTPEND & EVSYS_INTPEND_ID_Msk;
     volatile uint32_t status = ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
-    ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
-    if(evsys.callback != NULL)
+    if(evsys[channel].callback != NULL)
     {
-    	evsys.callback(evsys.context, channel, status);
+    	evsys[channel].callback(status, evsys[channel].context);
     }
+    ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
 }
 </#if>

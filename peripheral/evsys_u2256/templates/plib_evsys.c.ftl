@@ -40,8 +40,9 @@
 
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
 
+<#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
 <#if EVSYS_INTERRUPT_MODE == true>
-	<#lt>EVSYS_OBJECT evsys;
+	<#lt>EVSYS_OBJECT evsys[${TOTAL_CHANNEL}];
 </#if>
 
 void ${EVSYS_INSTANCE_NAME}_Initialize( void )
@@ -82,31 +83,49 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
 <#if EVSYS_INTERRUPT_MODE == true>
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_INT_MASK interrupt)
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = interrupt;
+	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = interrupt << channel;
 	<#lt>}
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_INT_MASK interrupt)
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENCLR = interrupt;
+	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENCLR = interrupt << channel;
 	<#lt>}
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister( EVSYS_CALLBACK callback, uintptr_t context )
+	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
 	<#lt>{
-	<#lt>	evsys.callback = callback;
-	<#lt>	evsys.context = context;
+	<#lt>	evsys[channel].callback = callback;
+	<#lt>	evsys[channel].context = context;
 	<#lt>}
 </#if>
 
 <#if EVSYS_INTERRUPT_MODE == true>
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptHandler( void )
-	<#lt>{
-	<#lt>	volatile uint32_t status = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG;
-	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG = EVSYS_INTFLAG_Msk;
-	<#lt>	if(evsys.callback != NULL)
-    <#lt>   {
-    <#lt>   	evsys.callback(evsys.context, status);
-    <#lt>   }
-	<#lt>}
+<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptHandler( void )
+<#lt>{
+     <#lt>    uint8_t currentChannel = 0;
+     <#lt>    uint32_t eventIntFlagStatus = 0;
+     <#lt>    uint32_t overrunIntFlagStatus = 0;
+
+     <#lt>    /* Find any triggered channels, run associated callback handlers */
+     <#lt>    for (currentChannel = 0; currentChannel < ${TOTAL_CHANNEL}; currentChannel++)
+     <#lt>    {
+
+     <#lt>        /* Read the interrupt flag status */
+     <#lt>        overrunIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & (EVSYS_INT_OVERRUN << currentChannel);
+     <#lt>        eventIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & (EVSYS_INT_EVENT_DETECT << currentChannel);
+
+     <#lt>        if (eventIntFlagStatus | overrunIntFlagStatus)
+     <#lt>        {
+     <#lt>            /* Find any associated callback entries in the callback table */
+     <#lt>            if (evsys[currentChannel].callback != NULL)
+     <#lt>            {
+     <#lt>                evsys[currentChannel].callback((uint32_t)((eventIntFlagStatus | overrunIntFlagStatus) >> currentChannel), evsys[currentChannel].context);
+     <#lt>            }
+
+     <#lt>            /* Clear interrupt flag */
+     <#lt>            ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG = (EVSYS_INT_OVERRUN  | EVSYS_INT_EVENT_DETECT) << currentChannel;
+     <#lt>        }
+     <#lt>    }
+<#lt>}
 </#if>
