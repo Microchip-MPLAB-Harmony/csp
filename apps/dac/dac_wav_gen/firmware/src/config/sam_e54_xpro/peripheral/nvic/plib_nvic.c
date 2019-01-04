@@ -1,4 +1,21 @@
 /*******************************************************************************
+  NVIC PLIB Implementation
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    plib_nvic.c
+
+  Summary:
+    NVIC PLIB Source File
+
+  Description:
+    None
+
+*******************************************************************************/
+
+/*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -21,20 +38,33 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef TOOLCHAIN_SPECIFICS_H
-#define TOOLCHAIN_SPECIFICS_H
-
-#ifdef __ICCARM__
-#define ssize_t long
-#define COMPILER_PRAGMA(arg)            _Pragma(#arg)
-#define SECTION(a) COMPILER_PRAGMA(location = a)
-#define NO_INIT __no_init
-
-#else
-#include <sys/types.h>
-#define NO_INIT __attribute__((section(".no_init")))
-#define SECTION(a) __attribute__((__section__(a)))
-#endif
+#include "device.h"
+#include "plib_nvic.h"
 
 
-#endif //TOOLCHAIN_SPECIFICS_H
+// *****************************************************************************
+// *****************************************************************************
+// Section: NVIC Implementation
+// *****************************************************************************
+// *****************************************************************************
+
+void NVIC_Initialize( void )
+{
+    /* Priority 0 to 7 and no sub-priority. 0 is the highest priority */
+    NVIC_SetPriorityGrouping( 0x04 );
+
+    /* Enable NVIC Controller */
+    __DMB();
+    __enable_irq();
+
+    /* Enable the interrupt sources and configure the priorities as configured
+     * from within the "Interrupt Manager" of MHC. */
+    NVIC_SetPriority(EIC_EXTINT_15_IRQn, 7);
+    NVIC_EnableIRQ(EIC_EXTINT_15_IRQn);
+    NVIC_SetPriority(TC0_IRQn, 7);
+    NVIC_EnableIRQ(TC0_IRQn);
+
+
+
+    return;
+}
