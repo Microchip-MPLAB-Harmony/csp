@@ -35,7 +35,9 @@ def updateTimerMenuVisibleProperty(symbol, event):
         symbol.setVisible(False)
 
 def tcTimeMaxValue(symbol, event):
-    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
     prescaler = int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
     resolution = (prescaler * 1000000000.0) / clock_freq
     mode = tcSym_CTRLA_MODE.getValue()
@@ -49,7 +51,9 @@ def tcTimeMaxValue(symbol, event):
     symbol.setMax(max)
 
 def tcPeriodCalc(symbol, event):
-    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
     prescaler = int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
     resolution = (prescaler * 1000.0) / clock_freq
     time = tcSym_Timer_TIME_MS.getValue()
@@ -96,14 +100,17 @@ tcSym_Timer_CTRLBSET_ONESHOT.setLabel("Enable One-Shot Mode")
 
 #time in float
 global tcSym_Timer_TIME_MS
-resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+clock_freq = Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
+if clock_freq == 0:
+    clock_freq = 1
+resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / 
 max = (65535.0 * resolution / 1000000)
 tcSym_Timer_TIME_MS = tcComponent.createFloatSymbol("TC_TIMER_TIME_MS", tcSym_TimerMenu)
 tcSym_Timer_TIME_MS.setLabel("Timer Period (Milli Sec)")
 tcSym_Timer_TIME_MS.setDefaultValue(1)
 tcSym_Timer_TIME_MS.setMin(0.0)
 tcSym_Timer_TIME_MS.setMax(max)
-tcSym_Timer_TIME_MS.setDependencies(tcTimeMaxValue, ["TC_CTRLA_MODE", "core.CPU_CLOCK_FREQUENCY", \
+tcSym_Timer_TIME_MS.setDependencies(tcTimeMaxValue, ["TC_CTRLA_MODE", "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
     "TC_CTRLA_PRESCALER"])
 
 #timer period
@@ -114,7 +121,7 @@ tcSym_TimerPeriod.setVisible(False)
 tcSym_TimerPeriod.setDefaultValue(long(period))
 tcSym_TimerPeriod.setMin(0)
 tcSym_TimerPeriod.setMax(4294967296)
-tcSym_TimerPeriod.setDependencies(tcPeriodCalc, ["TC_CTRLA_MODE", "core.CPU_CLOCK_FREQUENCY", \
+tcSym_TimerPeriod.setDependencies(tcPeriodCalc, ["TC_CTRLA_MODE", "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
     "TC_CTRLA_PRESCALER", "TC_TIMER_TIME_MS"])
 
 #timer interrupt mode

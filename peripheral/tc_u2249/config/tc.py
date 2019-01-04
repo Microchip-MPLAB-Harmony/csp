@@ -71,13 +71,15 @@ def tcResolutionCalc(symbol, event):
         else:
             symbol.setVisible(True)
     else:
-        clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+        clock_freq = Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
+        if clock_freq == 0:
+            clock_freq = 1
         prescaler = int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
         resolution = (prescaler * 1000000000.0) / clock_freq
         symbol.setLabel("****Timer resolution is " + str(resolution) + " nS****")
 
 def tcFreqCalc(symbol, event):
-    symbol.setValue(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY") / int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]), 2)
+    symbol.setValue(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY") / int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]), 2)
 
 def tcSlaveModeVisible(symbol, event):
     if event["value"] == 2:
@@ -108,14 +110,8 @@ def tcSlaveModeSet(symbol, event):
         symbol.setValue(False, 2)
 
 def setTCInterruptData(status, tcMode):
-
-    Database.clearSymbolValue("core", InterruptVector)
     Database.setSymbolValue("core", InterruptVector, status, 2)
-
-    Database.clearSymbolValue("core", InterruptHandlerLock)
     Database.setSymbolValue("core", InterruptHandlerLock, status, 2)
-
-    Database.clearSymbolValue("core", InterruptHandler)
 
     if status == True:
         Database.setSymbolValue("core", InterruptHandler, tcInstanceName.getValue() + "_" + tcMode + "InterruptHandler", 2)
@@ -240,7 +236,6 @@ def instantiateComponent(tcComponent):
     Log.writeInfoMessage("Running " + tcInstanceName.getValue())
 
     #clock enable
-    Database.clearSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     tcInstanceMasterNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters/param@[name=\"MASTER_SLAVE_MODE\"]")
@@ -368,17 +363,17 @@ def instantiateComponent(tcComponent):
 
     #clock resolution display
     tcSym_Resolution = tcComponent.createCommentSymbol("TC_Resolution", None)
-    resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
     tcSym_Resolution.setLabel("****Timer resolution is " + str(resolution) + " nS****")
-    tcSym_Resolution.setDependencies(tcResolutionCalc, [masterComponentSymbolId, "core.CPU_CLOCK_FREQUENCY", \
+    tcSym_Resolution.setDependencies(tcResolutionCalc, [masterComponentSymbolId, "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
         "TC_CTRLA_PRESCALER"])
 
     #TC clock frequency
     tcSym_Frequency = tcComponent.createIntegerSymbol("TC_FREQUENCY", None)
     tcSym_Frequency.setLabel("Clock Frequency")
     tcSym_Frequency.setVisible(False)
-    tcSym_Frequency.setDefaultValue(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
-    tcSym_Frequency.setDependencies(tcFreqCalc, ["core.CPU_CLOCK_FREQUENCY", "TC_CTRLA_PRESCALER"])
+    tcSym_Frequency.setDefaultValue(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+    tcSym_Frequency.setDependencies(tcFreqCalc, ["core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", "TC_CTRLA_PRESCALER"])
 
     #tc operation mode
     tcOperationModeList = ["Timer", "Compare", "Capture"]
@@ -431,11 +426,8 @@ def instantiateComponent(tcComponent):
     InterruptVectorUpdate = tcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and Interrupt
-    Database.clearSymbolValue("core", InterruptVector)
     Database.setSymbolValue("core", InterruptVector, True, 2)
-    Database.clearSymbolValue("core", InterruptHandler)
     Database.setSymbolValue("core", InterruptHandler, tcInstanceName.getValue() + "_TimerInterruptHandler", 2)
-    Database.clearSymbolValue("core", InterruptHandlerLock)
     Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
 
     # Interrupt Dynamic settings
