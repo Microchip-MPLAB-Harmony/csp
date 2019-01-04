@@ -157,7 +157,9 @@ def tccPattgenVisible(symbol, event):
 
 def tccPWMFreqCalc(symbol, event):
     if (tccSym_Slave_Mode.getValue() == False):
-        clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+        clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue()+"_CLOCK_FREQUENCY")
+        if clock_freq == 0:
+            clock_freq = 1
         prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
         period = tccSym_PER_PER.getValue() + 1
         if (tccSym_WAVE_WAVEGEN.getValue() == 0): #single slope PWM
@@ -171,7 +173,9 @@ def tccPWMFreqCalc(symbol, event):
         symbol.setVisible(not event["value"])
     
 def tccDeadTimeCalc(symbol, event):
-    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue()+"_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
     prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
     if (symbol.getID() == "TCC_DTLS_COMMENT"):
         dead_time = (tccSym_WEXCTRL_DTLS.getValue() * 1000000.0 / (clock_freq / prescaler))
@@ -218,7 +222,6 @@ def instantiateComponent(tccComponent):
     tccInstanceName.setDefaultValue(tccComponent.getID().upper())
     
     #clock enable
-    Database.clearSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_ENABLE")
     Database.setSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
     ################################ ATDF ####################################################
@@ -393,7 +396,9 @@ def instantiateComponent(tccComponent):
     tccSym_PER_PER.setMax(pow(2, size) - 1)
     tccSym_PER_PER.setDependencies(tccSlaveModeVisibility, ["TCC_SLAVE_MODE"])
 
-    clock_freq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+    clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue()+"_CLOCK_FREQUENCY")
+    if clock_freq == 0:
+        clock_freq = 1
     prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
     period = tccSym_PER_PER.getValue() + 1
     if (tccSym_WAVE_WAVEGEN.getValue() == 0):
@@ -404,7 +409,7 @@ def instantiateComponent(tccComponent):
     #Calculated frequency
     tccSym_Frequency = tccComponent.createCommentSymbol("TCC_FREQUENCY", None)
     tccSym_Frequency.setLabel("**** PWM Frequency is "+str(frequency)+" Hz ****")
-    tccSym_Frequency.setDependencies(tccPWMFreqCalc, ["core.CPU_CLOCK_FREQUENCY", "TCC_PER_PER", "TCC_WAVE_WAVEGEN", "TCC_CTRLA_PRESCALER", "TCC_SLAVE_MODE"])
+    tccSym_Frequency.setDependencies(tccPWMFreqCalc, ["core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", "TCC_PER_PER", "TCC_WAVE_WAVEGEN", "TCC_CTRLA_PRESCALER", "TCC_SLAVE_MODE"])
     
     #Period interrupt
     tccSym_INTENSET_OVF = tccComponent.createBooleanSymbol("TCC_INTENSET_OVF", None)
@@ -492,7 +497,7 @@ def instantiateComponent(tccComponent):
 
     tccSym_DTLS_COMMENT = tccComponent. createCommentSymbol("TCC_DTLS_COMMENT", tccSym_DeadTime_Menu)
     tccSym_DTLS_COMMENT.setLabel("**** Low side dead time is "+str(low_deadtime)+ " uS ****")
-    tccSym_DTLS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTLS", "core.CPU_CLOCK_FREQUENCY", "TCC_CTRLA_PRESCALER"])
+    tccSym_DTLS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTLS", "core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", "TCC_CTRLA_PRESCALER"])
     
     #High dead time
     global tccSym_WEXCTRL_DTHS
@@ -506,7 +511,7 @@ def instantiateComponent(tccComponent):
 
     tccSym_DTHS_COMMENT = tccComponent. createCommentSymbol("TCC_DTHS_COMMENT", tccSym_DeadTime_Menu)
     tccSym_DTHS_COMMENT.setLabel("**** High side dead time is "+str(high_deadtime)+ " uS ****")
-    tccSym_DTHS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTHS", "core.CPU_CLOCK_FREQUENCY", "TCC_CTRLA_PRESCALER"])
+    tccSym_DTHS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTHS", "core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", "TCC_CTRLA_PRESCALER"])
     
     #Fault menu
     tccSym_Fault_Menu = tccComponent.createMenuSymbol("TCC_FAULT_MENU", None)
