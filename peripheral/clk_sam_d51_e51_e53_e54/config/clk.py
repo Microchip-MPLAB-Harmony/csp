@@ -279,7 +279,7 @@ for i in range(0, 2):
         "/avr-tools-device-file/modules/module@[name=\"OSCCTRL\"]/value-group@[name=\"OSCCTRL_XOSCCTRL__STARTUP\"]")
     oscctrlSymXOSCStartupValues = []
     oscctrlSymXOSCStartupValues = oscctrlSymXOSCStartupNode.getChildren()
-    xoscstartupDefaultValue = 0
+    xoscstartupDefaultValue = 6
     for index in range(0, len(oscctrlSymXOSCStartupValues)):
         xoscstartupKeyName = oscctrlSymXOSCStartupValues[index].getAttribute(
             "name")
@@ -808,7 +808,7 @@ osc32kctrlXOSC32KStarupNode = ATDF.getNode(
     "/avr-tools-device-file/modules/module@[name=\"OSC32KCTRL\"]/value-group@[name=\"OSC32KCTRL_XOSC32K__STARTUP\"]")
 osc32kctrlXOSC32KStarupNodeValues = []
 osc32kctrlXOSC32KStarupNodeValues = osc32kctrlXOSC32KStarupNode.getChildren()
-xosc32kstartupDefaultValue = 0
+xosc32kstartupDefaultValue = 2
 for index in range(0, len(osc32kctrlXOSC32KStarupNodeValues)):
     xosc32kstartupKeyName = osc32kctrlXOSC32KStarupNodeValues[index].getAttribute(
         "name")
@@ -1330,12 +1330,8 @@ for gclknumber in range(0, 12):
     gclkSym_GENCTRL_DIV[gclknumber] = coreComponent.createIntegerSymbol(
         "GCLK_" + str(gclknumber) + "_DIV", gclkSym_num[gclknumber])
     gclkSym_GENCTRL_DIV[gclknumber].setLabel("Division Factor")
-    if (gclknumber == 0):
-        gclkSym_GENCTRL_DIV[gclknumber].setMax(0xFF)
-    elif (gclknumber == 1):
+    if (gclknumber == 1):
         gclkSym_GENCTRL_DIV[gclknumber].setMax(0xFFFF)
-    elif (gclknumber == 2):
-        gclkSym_GENCTRL_DIV[gclknumber].setMax(0x1F)
     else:
         gclkSym_GENCTRL_DIV[gclknumber].setMax(0xFF)
 
