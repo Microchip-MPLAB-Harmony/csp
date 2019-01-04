@@ -92,6 +92,7 @@ for i in range(0, len(registerNames)):
     fuseNodeValues = fuseNode.getChildren()
     for index in range(0, len(fuseNodeValues)):
         key = fuseNodeValues[index].getAttribute("name")
+        caption=fuseNodeValues[index].getAttribute("caption")
         valueGroup = fuseNodeValues[index].getAttribute("values")
         stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseMenu)
         stringSymbol.setDefaultValue(key)
@@ -101,15 +102,15 @@ for i in range(0, len(registerNames)):
             count = bin((int(mask, 16))).count("1")
             if count == 1:
                 keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseMenu)
-                keyValueSymbol.setLabel(key)
-                keyValueSymbol.addKey("CLEAR", "0", "DISABLE")
-                keyValueSymbol.addKey("SET", "1", "ENABLE")
+                keyValueSymbol.setLabel(caption)
+                keyValueSymbol.addKey("CLEAR", "0", "CLEAR")
+                keyValueSymbol.addKey("SET", "1", "SET")
                 keyValueSymbol.setDefaultValue(default[numfuses])
                 keyValueSymbol.setOutputMode("Key")
                 keyValueSymbol.setDisplayMode("Description")
             else:
                 hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseMenu)
-                hexSymbol.setLabel(key)
+                hexSymbol.setLabel(caption)
                 hexSymbol.setMin(0)
                 hexSymbol.setMax(getMaxValue(mask))
                 hexSymbol.setDefaultValue(default[numfuses])
@@ -118,7 +119,7 @@ for i in range(0, len(registerNames)):
             valueGroupNode = ATDF.getNode(valueGroupPath)
             valueGroupChildren = valueGroupNode.getChildren()
             keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseMenu)
-            keyValueSymbol.setLabel(key)
+            keyValueSymbol.setLabel(caption)
             for j in range(0, len(valueGroupChildren)):
                 name = valueGroupChildren[j].getAttribute("name")
                 value = valueGroupChildren[j].getAttribute("values")
