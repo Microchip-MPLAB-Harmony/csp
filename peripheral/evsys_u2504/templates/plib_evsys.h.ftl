@@ -41,6 +41,7 @@
 #ifndef ${EVSYS_INSTANCE_NAME}_H    // Guards against multiple inclusion
 #define ${EVSYS_INSTANCE_NAME}_H
 
+#include "device.h"
 #include <stdint.h>
 #include <stddef.h>
 
@@ -55,9 +56,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if EVSYS_INTERRUPT_MODE0 || EVSYS_INTERRUPT_MODE1 || EVSYS_INTERRUPT_MODE2 || EVSYS_INTERRUPT_MODE3 || EVSYS_INTERRUPT_MODE_OTHER>
-
-</#if>
 
 <#if EVSYS_INTERRUPT_MODE0 || EVSYS_INTERRUPT_MODE1 || EVSYS_INTERRUPT_MODE2 || EVSYS_INTERRUPT_MODE3 || EVSYS_INTERRUPT_MODE_OTHER>
 	<#lt>typedef enum
@@ -73,8 +71,8 @@
 
     <#lt>} EVSYS_CHANNEL;
 
-	<#lt>typedef void (*EVSYS_CALLBACK)(uintptr_t context, EVSYS_CHANNEL channel, uint32_t int_cause);
-    
+	<#lt>typedef void (*EVSYS_CALLBACK)(uint32_t int_cause, uintptr_t context);
+
 	<#lt>typedef struct
 	<#lt>{
 	<#lt>	EVSYS_CALLBACK          callback;
@@ -86,7 +84,7 @@
 /***************************** EVSYS API *******************************/
 void ${EVSYS_INSTANCE_NAME}_Initialize( void );
 <#if EVSYS_INTERRUPT_MODE0 || EVSYS_INTERRUPT_MODE1 || EVSYS_INTERRUPT_MODE2 || EVSYS_INTERRUPT_MODE3 || EVSYS_INTERRUPT_MODE_OTHER>
-	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister( EVSYS_CALLBACK callback, uintptr_t context );
+	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context );
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt);
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt);
 </#if>
