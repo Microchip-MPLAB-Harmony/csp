@@ -1,5 +1,5 @@
 /* Brief default interrupt handler for unused IRQs */
-<#lt><#if "XC32_COMPILER" == COMPILER_CHOICE>
+<#lt><#if "XC32" == COMPILER_CHOICE>
     <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandler"),long_call))DefaultInterruptHandler( void )
     <#lt>{
         <#lt>#if defined(__DEBUG) || defined(__DEBUG_D)
@@ -18,7 +18,7 @@
     <#lt>    }
     <#lt>}
     <#lt>
-<#lt><#elseif "IAR_COMPILER" == COMPILER_CHOICE>
+<#lt><#elseif "IAR" == COMPILER_CHOICE>
     <#lt>void DefaultInterruptHandler( void )
     <#lt>{
     <#lt>    while( 1 ){
