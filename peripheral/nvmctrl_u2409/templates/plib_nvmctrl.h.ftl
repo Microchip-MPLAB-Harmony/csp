@@ -158,6 +158,8 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionLock (uint32_t address);
 
 void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
 
+uint32_t ${NVMCTRL_INSTANCE_NAME}_RegionLockStatusGet ();
+
 bool ${NVMCTRL_INSTANCE_NAME}SmartEEPROM_IsBusy(void);
 
 uint16_t ${NVMCTRL_INSTANCE_NAME}_SmartEepromStatusGet( void );
