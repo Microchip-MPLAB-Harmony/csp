@@ -254,7 +254,7 @@ uint16_t ${NVMCTRL_INSTANCE_NAME}_StatusGet( void )
 
 uint16_t ${NVMCTRL_INSTANCE_NAME}_SmartEepromStatusGet( void )
 {
-    smart_eep_status = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS;
+    smart_eep_status = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEESTAT;
     
     return smart_eep_status;
 }
@@ -267,7 +267,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_IsBusy(void)
 void ${NVMCTRL_INSTANCE_NAME}_RegionLock(uint32_t address)
 {
     /* Set address and command */
-    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address;
 
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_LR | NVMCTRL_CTRLB_CMDEX_KEY;
 }
@@ -275,9 +275,14 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionLock(uint32_t address)
 void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock(uint32_t address)
 {
     /* Set address and command */
-    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address >> 1;
+    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address;
 
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_UR | NVMCTRL_CTRLB_CMDEX_KEY;
+}
+
+uint32_t ${NVMCTRL_INSTANCE_NAME}_RegionLockStatusGet (void)
+{
+    return (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_RUNLOCK);
 }
 
 bool ${NVMCTRL_INSTANCE_NAME}SmartEEPROM_IsBusy(void)
