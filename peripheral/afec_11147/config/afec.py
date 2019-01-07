@@ -591,4 +591,4 @@ def instantiateComponent(afecComponent):
     afecSystemDefFile.setSourcePath("../peripheral/afec_11147/templates/system/system_definitions.h.ftl")
     afecSystemDefFile.setMarkup(True)
     
-    afecComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
+    afecComponent.addPlugin("../peripheral/afec_11147/plugin/afec_11147.jar")
