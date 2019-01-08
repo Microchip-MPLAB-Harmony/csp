@@ -103,7 +103,7 @@ global tcSym_Timer_TIME_MS
 clock_freq = Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
 if clock_freq == 0:
     clock_freq = 1
-resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / 
+resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / clock_freq
 max = (65535.0 * resolution / 1000000)
 tcSym_Timer_TIME_MS = tcComponent.createFloatSymbol("TC_TIMER_TIME_MS", tcSym_TimerMenu)
 tcSym_Timer_TIME_MS.setLabel("Timer Period (Milli Sec)")
