@@ -55,6 +55,16 @@
 
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
 <#compress>
+<#assign DSEQCTRL_0_BIT =  "ADC_DSEQCTRL_INPUTCTRL_Msk">
+<#assign DSEQCTRL_1_BIT =  "ADC_DSEQCTRL_CTRLB_Msk">
+<#assign DSEQCTRL_2_BIT =  "ADC_DSEQCTRL_REFCTRL_Msk">
+<#assign DSEQCTRL_3_BIT =  "ADC_DSEQCTRL_AVGCTRL_Msk">
+<#assign DSEQCTRL_4_BIT =  "ADC_DSEQCTRL_SAMPCTRL_Msk">
+<#assign DSEQCTRL_5_BIT =  "ADC_DSEQCTRL_WINLT_Msk">
+<#assign DSEQCTRL_6_BIT =  "ADC_DSEQCTRL_WINUT_Msk">
+<#assign DSEQCTRL_7_BIT =  "ADC_DSEQCTRL_GAINCORR_Msk">
+<#assign DSEQCTRL_8_BIT =  "ADC_DSEQCTRL_OFFSETCORR_Msk">
+<#assign DSEQCTRL_9_BIT =  "ADC_DSEQCTRL_AUTOSTART_Msk">
 <#assign ADC_CTRLB_VAL = "">
 <#assign ADC_INPUTCTRL_VAL = "">
 <#assign ADC_SEQCTRL_VAL = "">
@@ -87,9 +97,9 @@
         <#assign ADC_SEQCTRL = "ADC_SEQCTRL_SEQ" + i>
         <#if .vars[ADC_SEQCTRL] == true>
             <#if ADC_SEQCTRL_VAL != "">
-                <#assign ADC_SEQCTRL_VAL = ADC_SEQCTRL_VAL + "\n\t\t | " + "ADC_DMA_SEQ_" + i>
+                <#assign ADC_SEQCTRL_VAL = ADC_SEQCTRL_VAL + "\n\t\t | " + .vars["DSEQCTRL_" + i +"_BIT"]>
             <#else>
-                <#assign ADC_SEQCTRL_VAL = "ADC_DMA_SEQ_" + i>
+                <#assign ADC_SEQCTRL_VAL = .vars["DSEQCTRL_" + i + "_BIT"]>
             </#if>
         </#if>
     </#list>
