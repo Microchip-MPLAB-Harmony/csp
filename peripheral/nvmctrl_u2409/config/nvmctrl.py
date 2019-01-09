@@ -46,7 +46,7 @@ def updateNVICSmartEEPInterruptState(symbol, event):
 
 def updateNVMCTRLInterruptWarringStatus(symbol, event):
 
-    if nvmctrlSym_Interrupt.getValue() == True:
+    if nvmctrlSym_Interrupt0.getValue() == True:
         symbol.setVisible(event["value"])
 
 def nvmctlrSetMemoryDependency(symbol, event):
@@ -67,7 +67,7 @@ def instantiateComponent(nvmctrlComponent):
     global InterruptVectorUpdate
     InterruptVectorUpdate = []
     global nvmctrlInstanceName
-    global nvmctrlSym_Interrupt
+    global nvmctrlSym_Interrupt0
 
     nvmctrlInstanceName = nvmctrlComponent.createStringSymbol("NVMCTRL_INSTANCE_NAME", None)
     nvmctrlInstanceName.setVisible(False)
@@ -105,9 +105,9 @@ def instantiateComponent(nvmctrlComponent):
             nvmFlashSize = int(parameters[param].getAttribute("value"))
 
     #Flash Erase size
-    nvmctrlSym_FLASH_PROGRAM_SIZE = nvmctrlComponent.createIntegerSymbol("FLASH_ERASE_SIZE", None)
-    nvmctrlSym_FLASH_PROGRAM_SIZE.setVisible(False)
-    nvmctrlSym_FLASH_PROGRAM_SIZE.setDefaultValue(nvmBlockSize)
+    nvmctrlSym_FLASH_ERASE_SIZE = nvmctrlComponent.createIntegerSymbol("FLASH_ERASE_SIZE", None)
+    nvmctrlSym_FLASH_ERASE_SIZE.setVisible(False)
+    nvmctrlSym_FLASH_ERASE_SIZE.setDefaultValue(nvmBlockSize)
         
     #Configures AUTOWS
     nvmctrlSym_CTRLA_AUTOWS = nvmctrlComponent.createBooleanSymbol("NVMCTRL_AUTOWS_ENABLE", None)
@@ -147,7 +147,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_CTRLA_CACHEDIS1.setLabel("Disable NVM Line Cache for AHB1")
     
     #Enable interrupt for Flash operations
-    nvmctrlSym_Interrupt0 = nvmctrlComponent.createBooleanSymbol("NVM_INTERRUPT0_ENABLE", None)
+    nvmctrlSym_Interrupt0 = nvmctrlComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
     nvmctrlSym_Interrupt0.setLabel("Enable Interrupt")
     nvmctrlSym_Interrupt0.setDefaultValue(False)
     nvmctrlSym_Interrupt0.setDescription("Enables interrupt for command execution complete condition. Rest of the interrupts need to be enabled via code")
@@ -208,7 +208,7 @@ def instantiateComponent(nvmctrlComponent):
 
     nvmctrlSym_MemoryEraseComment = nvmctrlComponent.createCommentSymbol("ERASE_COMMENT", None)
     nvmctrlSym_MemoryEraseComment.setVisible(False)
-    nvmctrlSym_MemoryEraseComment.setLabel("*** Should be equal to Row Erase Size ***")
+    nvmctrlSym_MemoryEraseComment.setLabel("*** Should be equal to Block Erase Size ***")
     nvmctrlSym_MemoryEraseComment.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
 
     nvmctrlSym_MemoryMediaSize = nvmctrlComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", None)
@@ -218,7 +218,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_MemoryMediaSize.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     writeApiName = nvmctrlComponent.getID().upper() + "_PageWrite"
-    eraseApiName = nvmctrlComponent.getID().upper() + "_RowErase"
+    eraseApiName = nvmctrlComponent.getID().upper() + "_BlockErase"
 
     nvmWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
     nvmWriteApiName.setVisible(False)
@@ -246,7 +246,7 @@ def instantiateComponent(nvmctrlComponent):
 
     # Interrupt Dynamic settings
     nvmctrlSym_UpdateInterrupt0Status = nvmctrlComponent.createBooleanSymbol("NVMCTRL_INTERRUPT0_STATUS", None)
-    nvmctrlSym_UpdateInterrupt0Status.setDependencies(updateNVICFlashInterruptState, ["NVM_INTERRUPT0_ENABLE"])
+    nvmctrlSym_UpdateInterrupt0Status.setDependencies(updateNVICFlashInterruptState, ["INTERRUPT_ENABLE"])
     nvmctrlSym_UpdateInterrupt0Status.setVisible(False)
 
     # Interrupt Dynamic settings

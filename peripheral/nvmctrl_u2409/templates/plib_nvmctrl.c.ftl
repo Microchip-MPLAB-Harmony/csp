@@ -94,7 +94,7 @@ uint16_t smart_eep_status;
         <#assign NVMCTRL_SEECFG_VAL = "NVMCTRL_SEECFG_APRDIS_Msk">
     </#if>
 </#if>
-<#if NVM_INTERRUPT0_ENABLE == true>
+<#if INTERRUPT_ENABLE == true>
     <#if NVMCTRL_INTENSET_VAL != "">
         <#assign NVMCTRL_INTENSET_VAL = NVMCTRL_INTENSET_VAL + " | NVMCTRL_INTENSET_DONE_Msk">
     <#else>
@@ -114,7 +114,7 @@ uint16_t smart_eep_status;
 // *****************************************************************************
 // *****************************************************************************
 
-<#if NVM_INTERRUPT0_ENABLE == true >
+<#if INTERRUPT_ENABLE == true >
     <#lt>NVMCTRL_CALLBACK_OBJECT ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain;
 </#if>
 
@@ -133,7 +133,7 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 <#if NVMCTRL_SEECFG_VAL?has_content >
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEECFG |= ${NVMCTRL_SEECFG_VAL};
 </#if>
-<#if NVM_INTERRUPT0_ENABLE == true || NVM_INTERRUPT1_ENABLE >
+<#if INTERRUPT_ENABLE == true || NVM_INTERRUPT1_ENABLE >
     /* Clear all interrupt flags */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = NVMCTRL_INTFLAG_Msk;
 </#if>
@@ -142,9 +142,11 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 </#if>
 }
 
-void ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
+bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);
+    
+    return true;
 }
 
 void ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WRITEMODE mode)
@@ -188,14 +190,14 @@ uint8_t ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t 
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
     
-    /* If the address is not a quad word address, return error */
+    /* If the address is not a double word address, return error */
     if((address & 0x01) != 0)
     {
         wr_status = -1;
     }
     else
     {
-        /* Configure Quad Word Write */
+        /* Configure Double Word Write */
         ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_CTRLA_WMODE_ADW);
 
         /* Writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits. */
@@ -213,7 +215,7 @@ uint8_t ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t 
 /* This function assumes that the page written is fresh or it is erased by
  * calling ${NVMCTRL_INSTANCE_NAME}_BlockErase
  */
-void ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address )
+bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address )
 {
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
@@ -230,13 +232,17 @@ void ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
         /* Set address and command */
         ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_WP | NVMCTRL_CTRLB_CMDEX_KEY;
     }
+    
+    return true;
 }
 
-void ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
+bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
 {
     /* Set address and command */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address;
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_EB | NVMCTRL_CTRLB_CMDEX_KEY;
+    
+    return true;
 }
 
 uint16_t ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
@@ -249,14 +255,8 @@ uint16_t ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 uint16_t ${NVMCTRL_INSTANCE_NAME}_StatusGet( void )
 {
     nvm_status = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS;
-    return nvm_status;
-}
-
-uint16_t ${NVMCTRL_INSTANCE_NAME}_SmartEepromStatusGet( void )
-{
-    smart_eep_status = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEESTAT;
     
-    return smart_eep_status;
+    return nvm_status;
 }
 
 bool ${NVMCTRL_INSTANCE_NAME}_IsBusy(void)
@@ -285,12 +285,19 @@ uint32_t ${NVMCTRL_INSTANCE_NAME}_RegionLockStatusGet (void)
     return (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_RUNLOCK);
 }
 
-bool ${NVMCTRL_INSTANCE_NAME}SmartEEPROM_IsBusy(void)
+bool ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_IsBusy(void)
 {
     return (bool)(${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEESTAT & NVMCTRL_SEESTAT_BUSY_Msk);
 }
 
-bool ${NVMCTRL_INSTANCE_NAME}SmartEEPROM_IsActiveSectorFull(void)
+uint16_t ${NVMCTRL_INSTANCE_NAME}_SmartEepromStatusGet( void )
+{
+    smart_eep_status = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEESTAT;
+    
+    return smart_eep_status;
+}
+
+bool ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_IsActiveSectorFull(void)
 {
     return (bool)(${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_SEESFULL_Msk);
 }
@@ -310,7 +317,7 @@ void ${NVMCTRL_INSTANCE_NAME}_SmartEepromFlushPageBuffer(void)
 {
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_SEEFLUSH | NVMCTRL_CTRLB_CMDEX_KEY;
 }
-<#if NVM_INTERRUPT0_ENABLE == true >
+<#if INTERRUPT_ENABLE == true >
 
 void ${NVMCTRL_INSTANCE_NAME}_EnableMainFlashInterruptSource(NVMCTRL_INTERRUPT0_SOURCE int_source)
 {
@@ -335,7 +342,7 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEepromInterruptSource(NVMCTRL_INTERRUP
 }
 </#if>
 
-<#if NVM_INTERRUPT0_ENABLE == true >
+<#if INTERRUPT_ENABLE == true >
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_MainCallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    /* Register callback function */

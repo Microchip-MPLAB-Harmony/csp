@@ -65,7 +65,7 @@
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_START_ADDRESS        (${.vars["FLASH_START_ADDRESS"]}U)
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_SIZE                 (${FLASH_SIZE}U)
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE             (${FLASH_PROGRAM_SIZE}U)
-#define ${NVMCTRL_INSTANCE_NAME}_FLASH_ROWSIZE              (${FLASH_ERASE_SIZE}U)
+#define ${NVMCTRL_INSTANCE_NAME}_FLASH_BLOCKSIZE            (${FLASH_ERASE_SIZE}U)
 
 <#if DRV_MEMORY_CONNECTED == true>
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
@@ -73,7 +73,7 @@
     <#lt>#define ${NVMCTRL_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
 </#if>
 
-<#if NVM_INTERRUPT0_ENABLE == true || NVM_INTERRUPT1_ENABLE == true>
+<#if INTERRUPT_ENABLE == true || NVM_INTERRUPT1_ENABLE == true>
 typedef void (*NVMCTRL_CALLBACK)(uint8_t int_flags, uintptr_t context);
 
 typedef struct
@@ -84,22 +84,6 @@ typedef struct
 }NVMCTRL_CALLBACK_OBJECT;
 </#if>
 
-typedef enum
-{
-    /* No error */
-    NVMCTRL_ERROR_NONE = 0x0,
-
-    /* NVMCTRL invalid commands and/or bad keywords error */
-    NVMCTRL_ERROR_PROG = 0x4,
-
-    /* NVMCTRL lock error */
-    NVMCTRL_ERROR_LOCK = 0x8,
-
-    /* NVMCTRL programming or erase error */
-    NVMCTRL_ERROR_NVM = 0x10,
-
-} NVMCTRL_ERROR;
-
 /* NVM supports four write modes */
 typedef enum
 {
@@ -109,7 +93,7 @@ typedef enum
     NVMCTRL_WMODE_AP = NVMCTRL_CTRLA_WMODE_AP,
 } NVMCTRL_WRITEMODE;
 
-<#if NVM_INTERRUPT0_ENABLE == true>
+<#if INTERRUPT_ENABLE == true>
 /* Interrupt sources for the main flash */
 typedef enum
 {
@@ -136,7 +120,7 @@ typedef enum
 
 void ${NVMCTRL_INSTANCE_NAME}_Initialize(void);
 
-void ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address );
 
 void ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WRITEMODE mode);
 
@@ -144,9 +128,9 @@ uint8_t ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t ad
 
 uint8_t ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t address);
 
-void ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t* data, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t* data, uint32_t address );
 
-void ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address );
 
 uint16_t ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void );
 
@@ -158,13 +142,13 @@ void ${NVMCTRL_INSTANCE_NAME}_RegionLock (uint32_t address);
 
 void ${NVMCTRL_INSTANCE_NAME}_RegionUnlock (uint32_t address);
 
-uint32_t ${NVMCTRL_INSTANCE_NAME}_RegionLockStatusGet ();
+uint32_t ${NVMCTRL_INSTANCE_NAME}_RegionLockStatusGet (void);
 
-bool ${NVMCTRL_INSTANCE_NAME}SmartEEPROM_IsBusy(void);
+bool ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_IsBusy(void);
 
 uint16_t ${NVMCTRL_INSTANCE_NAME}_SmartEepromStatusGet( void );
 
-bool ${NVMCTRL_INSTANCE_NAME}SmartEEPROM_IsActiveSectorFull(void);
+bool ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_IsActiveSectorFull(void);
 
 void ${NVMCTRL_INSTANCE_NAME}_SmartEepromSectorReallocate(void);
 
@@ -172,7 +156,7 @@ void ${NVMCTRL_INSTANCE_NAME}_SmartEepromFlushPageBuffer(void);
 
 void ${NVMCTRL_INSTANCE_NAME}_BankSwap(void);
 
-<#if NVM_INTERRUPT0_ENABLE == true>
+<#if INTERRUPT_ENABLE == true>
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_MainCallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context );
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_EnableMainFlashInterruptSource(NVMCTRL_INTERRUPT0_SOURCE int_source);
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_DisableMainFlashInterruptSource(NVMCTRL_INTERRUPT0_SOURCE int_source);
