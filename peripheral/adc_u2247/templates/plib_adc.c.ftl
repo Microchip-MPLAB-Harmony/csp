@@ -69,12 +69,14 @@
         <#assign ADC_CTRLC_VAL = "ADC_CTRLC_LEFTADJ_Msk">
     </#if>
 </#if>
+<#if ADC_CTRLA_SLAVEEN == false>
 <#if ADC_CONV_TRIGGER == "Free Run">
     <#if ADC_CTRLC_VAL != "">
         <#assign ADC_CTRLC_VAL = ADC_CTRLC_VAL + " | ADC_CTRLC_FREERUN_Msk">
     <#else>
         <#assign ADC_CTRLC_VAL = "ADC_CTRLC_FREERUN_Msk">
     </#if>
+</#if>
 </#if>
 
 <#if ADC_CONV_TRIGGER != "Free Run" && ADC_SEQ_ENABLE == true>
@@ -212,7 +214,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 
     /* reference */
     ${ADC_INSTANCE_NAME}_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_${ADC_REFCTRL_REFSEL};
-    
+
 <#if ADC_SEQCTRL_VAL?has_content>
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQCTRL = ${ADC_SEQCTRL_VAL};
 <#else>
@@ -247,7 +249,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 </#if>
 
 <#if ADC_CTRLA_RUNSTDBY == true || ADC_CTRLA_ONDEMAND == true>
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= 
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |=
                                       ${ADC_CTRLA_RUNSTDBY?then('ADC_CTRLA_RUNSTDBY_Msk', '')}
                                       ${ADC_CTRLA_ONDEMAND?then('| ADC_CTRLA_ONDEMAND_Msk', '')};</@compress>
 </#if>
@@ -368,6 +370,3 @@ bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 }
 </#if>
 </#if>
-
-
-

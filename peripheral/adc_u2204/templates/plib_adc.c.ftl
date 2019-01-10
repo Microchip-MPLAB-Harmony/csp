@@ -182,7 +182,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
         | ADC_INPUTCTRL_INPUTSCAN(${ADC_INPUTCTRL_INPUTSCAN}) | ADC_INPUTCTRL_INPUTOFFSET(${ADC_INPUTCTRL_INPUTOFFSET}) | ADC_INPUTCTRL_GAIN_${ADC_INPUTCTRL_GAIN};
 
     /* Prescaler, Resolution & Operation Mode */
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER} | ADC_CTRLB_RESSEL_${ADC_CTRLB_RESSEL} 
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER} | ADC_CTRLB_RESSEL_${ADC_CTRLB_RESSEL}
                                      <#if ADC_CTRLB_VAL?has_content>| ${ADC_CTRLB_VAL}</#if>;</@compress>
 
 <#if ADC_CTRLB_RESSEL == "16BIT">
@@ -210,7 +210,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 </#if>
 
 <#if ADC_CTRLA_RUNSTDBY == true>
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= 
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |=
                                       ${ADC_CTRLA_RUNSTDBY?then('ADC_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 </#if>
     while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
@@ -319,6 +319,3 @@ bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 }
 </#if>
 </#if>
-
-
-

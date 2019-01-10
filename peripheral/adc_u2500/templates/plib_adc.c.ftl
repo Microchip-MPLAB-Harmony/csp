@@ -84,12 +84,14 @@
         <#assign ADC_CTRLB_VAL = "ADC_CTRLB_LEFTADJ_Msk">
     </#if>
 </#if>
+<#if ADC_CTRLA_SLAVEEN == false>
 <#if ADC_CONV_TRIGGER == "Free Run">
     <#if ADC_CTRLB_VAL != "">
         <#assign ADC_CTRLB_VAL = ADC_CTRLB_VAL + " | ADC_CTRLB_FREERUN_Msk">
     <#else>
         <#assign ADC_CTRLB_VAL = "ADC_CTRLB_FREERUN_Msk">
     </#if>
+</#if>
 </#if>
 
 <#if ADC_SEQ_ENABLE == true>
@@ -419,6 +421,3 @@ bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 }
 </#if>
 </#if>
-
-
-
