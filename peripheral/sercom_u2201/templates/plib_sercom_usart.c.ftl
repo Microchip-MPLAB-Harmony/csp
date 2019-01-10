@@ -56,6 +56,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/* ${SERCOM_INSTANCE_NAME} USART baud value for ${USART_BAUD_RATE} Hz baud rate */
+#define ${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE			(${USART_BAUD_VALUE}U)
+
 <#if USART_INTERRUPT_MODE = true>
 SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
 </#if>
@@ -88,7 +91,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
                                                                                        ${USART_RUNSTDBY?then('| SERCOM_USART_INT_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 
     /* Configure Baud Rate */
-    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(${USART_BAUD_VALUE});
+    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE);
 
     /*
      * Configures RXEN
