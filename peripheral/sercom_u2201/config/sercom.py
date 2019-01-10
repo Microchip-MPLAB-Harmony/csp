@@ -395,8 +395,12 @@ def instantiateComponent(sercomComponent):
     interruptValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
     for index in range(0, len(interruptValues)):
-        if interruptValues[index].getAttribute("module-instance") == sercomInstanceName.getValue():
-            name = str(interruptValues[index].getAttribute("name"))
+        moduleInstance = list(str(interruptValues[index].getAttribute("module-instance")).split(" "))
+        if sercomInstanceName.getValue() in moduleInstance:
+            if len(moduleInstance) == 1:
+                name = str(interruptValues[index].getAttribute("name"))
+            else:
+                name = sercomInstanceName.getValue()
             InterruptVector.append(name + "_INTERRUPT_ENABLE")
             InterruptHandler.append(name + "_INTERRUPT_HANDLER")
             InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
