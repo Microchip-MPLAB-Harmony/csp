@@ -72,9 +72,6 @@ vectorSettings = {
                     "Peripheral"      : [False,  False,   True,     str(max(nvicPriorityGroup)),     False,   True,     False]
                 }
 
-global nvicVectorDataDictionary
-nvicVectorDataDictionary = {}
-
 nvicVectorNumber = []
 nvicVectorName = []
 nvicVectorEnable = []
@@ -86,20 +83,22 @@ nvicVectorPriorityGenerate = []
 nvicVectorHandler = []
 nvicVectorHandlerLock = []
 nvicVectorGenericHandler = []
-nvicVectorGenericName = []
 
-global interruptsChildrenList
-
-interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+global nvicVectorDataStructure
+nvicVectorDataStructure = []
 
 ################################################################################
 #### Business Logic ####
 ################################################################################
 
-def generateNVICVectorDataDictionary():
+def generateNVICVectorDataStructure():
+
+    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
     for interrupt in range (0, len(interruptsChildrenList)):
 
+        vectorDict = {}
+        vCaption = ""
         vIndex = int(interruptsChildrenList[interrupt].getAttribute("index"))
         vModuleInstance = str(interruptsChildrenList[interrupt].getAttribute("module-instance"))
 
@@ -108,40 +107,23 @@ def generateNVICVectorDataDictionary():
         else:
             vName = str(interruptsChildrenList[interrupt].getAttribute("name"))
 
-        if " " in vModuleInstance:
-            nvicVectorDataDictionary[vIndex] = list(vModuleInstance.split(" "))
+        if "header:alternate-caption" in interruptsChildrenList[interrupt].getAttributeList():
+            if str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption")) == "None":
+                vCaption = vName
+            else:
+                vCaption = str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption"))
         else:
-            nvicVectorDataDictionary[vIndex] = [vName]
-
-def getInterruptDescription(vIndex, periName):
-
-    for interrupt in range (0, len(interruptsChildrenList)):
-
-        if vIndex == int(interruptsChildrenList[interrupt].getAttribute("index")):
-            if "header:alternate-caption" in interruptsChildrenList[interrupt].getAttributeList():
-                if str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption")) == "None":
-                    return periName
-                else:
-                    return str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption"))
+            if str(interruptsChildrenList[interrupt].getAttribute("caption")) == "None":
+                vCaption = vName
             else:
-                if str(interruptsChildrenList[interrupt].getAttribute("caption")) == "None":
-                    return periName
-                else:
-                    return str(interruptsChildrenList[interrupt].getAttribute("caption"))
-    return periName
+                vCaption = str(interruptsChildrenList[interrupt].getAttribute("caption"))
 
-def getGenericVectorName(vecIndex):
+        vectorDict["index"] = vIndex
+        vectorDict["name"] = vName
+        vectorDict["caption"] = vCaption
+        vectorDict["module-instance"] = list(vModuleInstance.split(" "))
 
-    for interrupt in range (0, len(interruptsChildrenList)):
-
-        vName = str(interruptsChildrenList[interrupt].getAttribute("name"))
-        vIndex = str(interruptsChildrenList[interrupt].getAttribute("index"))
-
-        if str(vecIndex) == vIndex:
-            if "header:alternate-name" in interruptsChildrenList[interrupt].getAttributeList():
-                return str(interruptsChildrenList[interrupt].getAttribute("header:alternate-name"))
-            else:
-                return vName
+        nvicVectorDataStructure.append(vectorDict)
 
 def updateNVICVectorPeriEnableValue(symbol, event):
 
@@ -155,12 +137,12 @@ def updateNVICVectorParametersValue(symbol, event):
 #### Component ####
 ################################################################################
 
-generateNVICVectorDataDictionary()
+generateNVICVectorDataStructure()
 
-highestID = int(max(nvicVectorDataDictionary))
-lowestID = int(min(nvicVectorDataDictionary))
+lowestID = min([vectIndex['index'] for vectIndex in nvicVectorDataStructure])
+highestID = max([vectIndex['index'] for vectIndex in nvicVectorDataStructure])
 
-max_key, max_value = max(nvicVectorDataDictionary.items(), key = lambda x: len(set(x[1])))
+maxPeriAtVector = len(max([vectModuleInstance['module-instance'] for vectModuleInstance in nvicVectorDataStructure], key=len))
 
 nvicMenu = coreComponent.createMenuSymbol("NVIC_MENU", None)
 nvicMenu.setLabel("Interrupts (NVIC)")
@@ -178,13 +160,13 @@ nvicVectorMax.setVisible(False)
 
 nvicVectorMax = coreComponent.createIntegerSymbol("NVIC_VECTOR_MAX_MULTIPLE_HANDLERS", nvicMenu)
 nvicVectorMax.setLabel("Vector Max Multiple Hanler For Vector")
-nvicVectorMax.setDefaultValue(len(max_value))
+nvicVectorMax.setDefaultValue(maxPeriAtVector)
 nvicVectorMax.setVisible(False)
 
 index = 0
 priorityList = []
 
-for vIndex in sorted(nvicVectorDataDictionary):
+for vectorDict in nvicVectorDataStructure:
 
     nvicVectorNumber.append([])
     nvicVectorName.append([])
@@ -197,14 +179,21 @@ for vIndex in sorted(nvicVectorDataDictionary):
     nvicVectorHandler.append([])
     nvicVectorHandlerLock.append([])
     nvicVectorGenericHandler.append([])
-    nvicVectorGenericName.append([])
 
-    handlerList = nvicVectorDataDictionary.get(vIndex)
+    handlerList = vectorDict.get("module-instance")
+    vIndex = vectorDict.get("index")
+    genericName = vectorDict.get("name")
 
     for listIndex in range(0, len(handlerList)):
 
-        vName = handlerList[listIndex]
-        vDescription = str(getInterruptDescription(vIndex, vName))
+        # check weather sub-vectors or multiple peripherals are present at same interrupt line
+        if len(handlerList) == 1:
+            vName = vectorDict.get("name")
+            vDescription = vectorDict.get("caption")
+        else:
+            vName = handlerList[listIndex]
+            vDescription = vName
+
         vector = vName
 
         if vector not in vectorSettings:
@@ -288,19 +277,14 @@ for vIndex in sorted(nvicVectorDataDictionary):
         nvicVectorHandlerLock[index][listIndex].setDefaultValue(vectorSettings[vector][6])
         nvicVectorHandlerLock[index][listIndex].setDependencies(updateNVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER_LOCK"])
 
-        nvicVectorGenericName[index].append(listIndex)
-        nvicVectorGenericName[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_GENERIC_NAME", nvicVectorEnable[index][listIndex])
-        nvicVectorGenericName[index][listIndex].setLabel("Generic Vector Name")
-        nvicVectorGenericName[index][listIndex].setVisible(False)
-        nvicVectorGenericName[index][listIndex].setDefaultValue(str(getGenericVectorName(vIndex)))
-
+        # only if multiple peripherals connected to same interrupt line
         if len(handlerList) > 1:
 
             nvicVectorGenericHandler[index].append(listIndex)
             nvicVectorGenericHandler[index][listIndex] = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_GENERIC_HANDLER", nvicVectorEnable[index][listIndex])
             nvicVectorGenericHandler[index][listIndex].setLabel("Generic Handler")
             nvicVectorGenericHandler[index][listIndex].setVisible(False)
-            nvicVectorGenericHandler[index][listIndex].setDefaultValue(str(getGenericVectorName(vIndex) + "_Handler"))
+            nvicVectorGenericHandler[index][listIndex].setDefaultValue(genericName + "_Handler")
 
         nvicVectorPeriEnableUpdate = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE_UPDATE", nvicMenu)
         nvicVectorPeriEnableUpdate.setLabel("NVIC Peripheral Enable/Disable Update")
