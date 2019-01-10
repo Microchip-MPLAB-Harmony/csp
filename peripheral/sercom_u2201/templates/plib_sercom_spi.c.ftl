@@ -53,8 +53,11 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/* Sercom clk freq value for the baud calculation */
+/* ${SERCOM_INSTANCE_NAME} clk freq value for the baud calculation */
 #define ${SERCOM_INSTANCE_NAME}_Frequency      (uint32_t) (${SERCOM_CLOCK_FREQUENCY}UL)
+
+/* ${SERCOM_INSTANCE_NAME} SPI baud value for ${SPI_BAUD_RATE} Hz baud rate */
+#define ${SERCOM_INSTANCE_NAME}_SPIM_BAUD_VALUE			(${SPI_BAUD_REG_VALUE}U)
 
 <#if SPI_INTERRUPT_MODE = true>
 /*Global object to save SPI Exchange related data  */
@@ -105,7 +108,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
     </#if>
 
     /* Selection of the Baud Value */
-    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_BAUD = ${SPI_BAUD_REG_VALUE};
+    ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_BAUD = SERCOM_SPIM_BAUD_BAUD(${SERCOM_INSTANCE_NAME}_SPIM_BAUD_VALUE);
 
     /* Configure Data Out Pin Out , Master Mode,
      * Data In and Pin Out,Data Order and Standby mode if configured

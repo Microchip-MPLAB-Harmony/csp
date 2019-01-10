@@ -56,6 +56,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/* ${SERCOM_INSTANCE_NAME} I2C baud value for ${I2C_CLOCK_SPEED} Khz baud rate */
+#define ${SERCOM_INSTANCE_NAME}_I2CM_BAUD_VALUE			(${I2CM_BAUD}U)
+
 <#if I2C_ADDR_TENBITEN = true>
 #define RIGHT_ALIGNED (8U)
 
@@ -99,7 +102,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
     </#if>
 
     /* Baud rate - Master Baud Rate*/
-    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(${I2CM_BAUD});
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(${SERCOM_INSTANCE_NAME}_I2CM_BAUD_VALUE);
 
     /* Set Operation Mode (Master), SDA Hold time, run in stand by and i2c master enable */
     <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA = SERCOM_I2CM_CTRLA_MODE_I2C_MASTER |
@@ -125,7 +128,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
     while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
     </#if>
 
-    /* Initialize the sercom PLib Object */
+    /* Initialize the ${SERCOM_INSTANCE_NAME} PLib Object */
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_IDLE;
 
