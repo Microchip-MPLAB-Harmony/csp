@@ -166,7 +166,7 @@ def instantiateComponent(eicComponent):
     eicTickOnNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__TICKON\"]")
     if eicTickOnNode != None:
         debounceSupported.setDefaultValue(True)
-    debounceSupported.setVisible(True)
+    debounceSupported.setVisible(False)
 
     eicInstanceName = eicComponent.createStringSymbol("EIC_INSTANCE_NAME", None)
     eicInstanceName.setVisible(False)
