@@ -108,10 +108,10 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     ${DMA_INSTANCE_NAME}_REGS->DMAC_WRBADDR  = (uint32_t)_write_back_section;
 
     /* Update the Priority Control register */
-    <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->DMAC_PRICTRL0 = DMAC_PRICTRL0_LVLPRI0(${DMAC_LVLXPRIO_0}) |
-                                                                           DMAC_PRICTRL0_LVLPRI1(${DMAC_LVLXPRIO_1}) |
-                                                                           DMAC_PRICTRL0_LVLPRI2(${DMAC_LVLXPRIO_2}) |
-                                                                           DMAC_PRICTRL0_LVLPRI3(${DMAC_LVLXPRIO_3});</@compress>
+    <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->DMAC_PRICTRL0 = DMAC_PRICTRL0_LVLPRI0(${DMAC_LVLXPRIO_0}) | <#if DMAC_LVLXPRIO_0 == "1">DMAC_PRICTRL0_RRLVLEN0_Msk |</#if>
+                                                                           DMAC_PRICTRL0_LVLPRI1(${DMAC_LVLXPRIO_1}) | <#if DMAC_LVLXPRIO_1 == "1">DMAC_PRICTRL0_RRLVLEN1_Msk |</#if>
+                                                                           DMAC_PRICTRL0_LVLPRI2(${DMAC_LVLXPRIO_2}) | <#if DMAC_LVLXPRIO_2 == "1">DMAC_PRICTRL0_RRLVLEN2_Msk |</#if>
+                                                                           DMAC_PRICTRL0_LVLPRI3(${DMAC_LVLXPRIO_3})<#if DMAC_LVLXPRIO_3 == "1"> | DMAC_PRICTRL0_RRLVLEN3_Msk</#if>;</@compress>
 
     <#list 0..DMAC_HIGHEST_CHANNEL - 1 as i>
         <#assign DMAC_CHCTRLA_ENABLE    = "DMAC_ENABLE_CH_"           + i>
