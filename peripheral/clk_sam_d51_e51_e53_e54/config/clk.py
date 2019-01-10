@@ -1403,6 +1403,7 @@ gclkIOpads.setDefaultValue(numPads)
 
 cycleFormed = coreComponent.createBooleanSymbol("GCLK_CYCLE_FORMED", clkMenu)
 cycleFormed.setDefaultValue(False)
+cycleFormed.setVisible(False)
 
 atdfFilePath = join(Variables.get("__DFP_PACK_DIR"), "atdf",
                     Variables.get("__PROCESSOR") + ".atdf")
@@ -1639,6 +1640,7 @@ mclk_AHB_Clock_Value = coreComponent.createStringSymbol(
     "MCLK_AHB_INITIAL_VALUE", mclkSym_Menu)
 mclk_AHB_Clock_Value.setDefaultValue(str(ahbInit))
 mclk_AHB_Clock_Value.setDependencies(ahbValue, gclkDependencyList)
+mclk_AHB_Clock_Value.setReadOnly(True)
 
 ahbMaskNode = ATDF.getNode(
     '/avr-tools-device-file/modules/module@[name="MCLK"]/register-group@[name="MCLK"]/register@[name="AHBMASK"]')
@@ -1675,6 +1677,7 @@ for index in range(0, numAPB):
     mclk_Clock_Value = coreComponent.createStringSymbol(
         "MCLK_" + bridgeName + "_INITIAL_VALUE", mclkSym_Menu)
     mclk_Clock_Value.setDefaultValue(str(apbInit[bridgeName]))
+    mclk_Clock_Value.setReadOnly(True)
 # /////////////////////////Callback///////////////////////////////////////////#
 def setQspiFreq(symbol, event):
     clockEnable = Database.getSymbolValue(event["namespace"], "QSPI_CLOCK_ENABLE")

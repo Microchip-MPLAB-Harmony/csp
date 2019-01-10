@@ -1136,6 +1136,7 @@ for index in range(0, len(ahbNode.getChildren())):
 pm_AHB_Clock_Value = coreComponent.createStringSymbol("PM_AHB_INITIAL_VALUE",pmSym_Menu)
 pm_AHB_Clock_Value.setDefaultValue(str(ahbInit))
 pm_AHB_Clock_Value.setDependencies(ahbValue, gclkDependencyList)
+pm_AHB_Clock_Value.setReadOnly(True)
 
 ahbMaskNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PM"]/register-group@[name="PM"]/register@[name="AHBMASK"]')
 ahbMaskValues = ahbMaskNode.getChildren()
@@ -1166,6 +1167,7 @@ for index in range(0, numAPB):
     #APB Bridge Clock Initial Settings
     pm_Clock_Value = coreComponent.createStringSymbol("PM_" + bridgeName +"_INITIAL_VALUE",pmSym_Menu)
     pm_Clock_Value.setDefaultValue(str(apbInit[bridgeName]))
+    pm_Clock_Value.setReadOnly(True)
 
 pm_Clock_Value.setDependencies(apbValue, gclkDependencyList)
 
