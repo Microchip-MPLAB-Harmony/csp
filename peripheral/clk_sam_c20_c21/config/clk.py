@@ -882,7 +882,7 @@ def setGClockFreq(symbol, event):
 
 def topsort(graph):
     from collections import deque
-    
+
     #Initialize the degree of vetexes to zero and increment dependents by 1
     degreeList = {}
     for vertex in graph:
@@ -891,34 +891,34 @@ def topsort(graph):
     for vertex in graph:
         for dependent in graph[vertex]:
             degreeList[dependent] = degreeList[dependent] + 1
- 
-    #initialize a dequeue pipe 
-    pipe = deque() 
 
-    #move vertexes with zero degree to the starting of pipe    
+    #initialize a dequeue pipe
+    pipe = deque()
+
+    #move vertexes with zero degree to the starting of pipe
     for vertex in degreeList:
         if degreeList[vertex] == 0:
             pipe.appendleft(vertex)
- 
-    outputList = []     
+
+    outputList = []
 
     #move vertexes with degree 0 to output list
     #visit the dependent and reduce the degree by one for every visited dependent
-    while pipe:                
-        vertex = pipe.pop()          
-        outputList.append(vertex)          
+    while pipe:
+        vertex = pipe.pop()
+        outputList.append(vertex)
         for dependent in graph[vertex]:
             degreeList[dependent] -= 1
             if degreeList[dependent] == 0:
                 pipe.appendleft(dependent)
-         
+
     #If there are no cycles that is the max degree of all vertices is 1
     #then the length of list should be equal to total number of vertices in graph else a cycle has been formed
     if len(outputList) == len(graph):
         return outputList
-    else:                     
+    else:
         return []
-        
+
 def codeGen(symbol, event):
     global topsort
     global gclkSym_GENCTRL_SRC
@@ -939,20 +939,20 @@ def codeGen(symbol, event):
                     }
     symbol.clearValues()
     codeList = []
-    
+
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_ENABLE")) == True :
         if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_REF_CLOCK"))) == 2):
             sourceDestmap["GCLK" + str(Database.getSymbolValue("core", "GCLK_ID_0_GENSEL"))].append("FDPLL")
-           
+
     for i in range(0, 9):
         if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)):
            if gclkSym_GENCTRL_SRC[i].getSelectedKey() in ["FDPLL", "GCLK1"]:
                 sourceDestmap[gclkSym_GENCTRL_SRC[i].getSelectedKey()].append("GCLK"+str(i))
-    
+
     codeList = topsort(sourceDestmap)
     if len(codeList) != 0:
         cycleFormed.setValue(False,2)
-        
+
         if (Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_ENABLE")) == False :
             codeList.remove("FDPLL")
         for i in range(0, 9):
@@ -960,7 +960,7 @@ def codeGen(symbol, event):
                 codeList.remove("GCLK"+str(i))
         for i in range(0,len(codeList)):
             symbol.addValue("    " + codeList[i] + "_Initialize();")
-    
+
     else:
         cycleFormed.setValue(True,2)
 
@@ -1029,8 +1029,8 @@ def gclkMaxset(symbol, event):
             symbol.setMax(0xffff)
         else:
             symbol.setMax(0xff)
-        
-        
+
+
 ################################################################################
 #######          GCLK Database Components            ###########################
 ################################################################################
@@ -1153,7 +1153,7 @@ for gclknumber in range(0,9):
         gclkSym_GENCTRL_OOV[gclknumber].setDefaultValue(0)
         gclkSym_GENCTRL_OOV[gclknumber].setOutputMode("Key")
         gclkSym_GENCTRL_OOV[gclknumber].setDisplayMode("Description")
-        
+
         gclkInFreq = coreComponent.createIntegerSymbol("GCLK_IN_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
         gclkInFreq.setLabel("Gclk Input Frequency")
         gclkInFreq.setDefaultValue(0)
@@ -1192,7 +1192,7 @@ for gclknumber in range(0,9):
     gclkSym_GENCTRL_DIV[gclknumber].setDefaultValue(1)
     gclkSym_GENCTRL_DIV[gclknumber].setDependencies(gclkMaxset, ["GCLK_" + str(gclknumber) + "_DIVSEL"])
     gclkSym_GENCTRL_DIVSEL[gclknumber].setDefaultValue(gclkSymGenDivSelDefaultValue)
-  
+
   #GCLK Generator Division Factor to show in the UI
     gclkSym_GENCTRL_DIVIDER_VALUE.append(gclknumber)
     gclkSym_GENCTRL_DIVIDER_VALUE[gclknumber] = coreComponent.createIntegerSymbol("GCLK_" + str(gclknumber) + "_DIVIDER_VALUE", gclkSym_num[gclknumber])
@@ -1240,7 +1240,7 @@ maxGCLKId = 0
 
 cycleFormed = coreComponent.createBooleanSymbol("GCLK_CYCLE_FORMED", clkMenu)
 cycleFormed.setDefaultValue(False)
-cycleFormed.setReadOnly(False)
+cycleFormed.setVisible(False)
 
 atdfFilePath = join(Variables.get("__DFP_PACK_DIR") , "atdf" , Variables.get("__PROCESSOR") + ".atdf")
 
@@ -1400,20 +1400,20 @@ def apbValue(symbol,event):
 
     if "_ANA" in perInstance:
         perInstance = perInstance.split("_ANA")[0]
-        
+
     if "_SLOW" in perInstance:
         return
-    
+
     if "_DIG" in perInstance:
         return
-        
+
     if "EVSYS" in perInstance:
         perInstance = perInstance.split("_")[0]
         for i in range (0,12):
             if Database.getSymbolValue("core", "EVSYS_" + str(i) + "_CLOCK_ENABLE") == True:
                 enable = enable | True
                 break
-            
+
 
 
     for key in mclkDic.keys():
@@ -1454,7 +1454,7 @@ for index in range(0, len(ahbNode.getChildren())):
 mclk_AHB_Clock_Value = coreComponent.createStringSymbol("MCLK_AHB_INITIAL_VALUE",mclkSym_Menu)
 mclk_AHB_Clock_Value.setDefaultValue(str(ahbInit))
 mclk_AHB_Clock_Value.setDependencies(ahbValue, gclkDependencyList)
-
+mclk_AHB_Clock_Value.setReadOnly(True)
 ahbMaskNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MCLK"]/register-group@[name="MCLK"]/register@[name="AHBMASK"]')
 ahbMaskValues = ahbMaskNode.getChildren()
 for index in range(0, len(ahbMaskValues)):
@@ -1484,7 +1484,7 @@ for index in range(0, numAPB):
     #APB Bridge Clock Initial Settings
     mclk_Clock_Value = coreComponent.createStringSymbol("MCLK_" + bridgeName +"_INITIAL_VALUE",mclkSym_Menu)
     mclk_Clock_Value.setDefaultValue(str(apbInit[bridgeName]))
-
+    mclk_Clock_Value.setReadOnly(True)
 mclk_Clock_Value.setDependencies(apbValue, gclkDependencyList)
 
 #MCLK CPU Division
