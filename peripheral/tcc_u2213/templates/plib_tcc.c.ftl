@@ -196,7 +196,9 @@
         <#assign TCC_INTENSET_VAL = "TCC_INTENSET_FAULT1_Msk">
     </#if>
 </#if>
+<#if TCC_WEXCTRL_DT_VAL?has_content>
 <#assign TCC_WEXCTRL_DT_VAL = TCC_WEXCTRL_DT_VAL + "\n \t \t | TCC_WEXCTRL_DTLS(${TCC_WEXCTRL_DTLS}U) | TCC_WEXCTRL_DTHS(${TCC_WEXCTRL_DTHS}U)">
+</#if>
 
 <#if TCC_EVCTRL_OVFEO == true>
     <#if TCC_EVCTRL_VAL != "">
@@ -225,7 +227,7 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 <#if TCC_SLAVE_MODE == true>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_MSYNC_Msk;
 <#else>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER};   
+    ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_${TCC_CTRLA_PRESCALER};
 </#if>
 <#if TCC_CTRLB_DIR?has_content && TCC_SLAVE_MODE == false>
     ${TCC_INSTANCE_NAME}_REGS->TCC_CTRLBSET = ${TCC_CTRLB_DIR};
@@ -241,7 +243,7 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
 <#if TCC_WAVE_VAL?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_WAVE = ${TCC_WAVE_VAL};
 </#if>
-    
+
     /* Configure duty cycle values */
 <#list 0..(TCC_NUM_CHANNELS-1) as i>
     <#assign TCC_CC = "TCC_"+i+"_CC">
@@ -463,7 +465,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
         <#lt>}
     </#if> <#-- TCC_NUM_INT_LINES -->
 
-<#else> 
+<#else>
 /* Read interrupt flags */
 uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void)
 {
