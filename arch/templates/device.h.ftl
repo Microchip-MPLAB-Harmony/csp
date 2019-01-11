@@ -43,3 +43,5 @@
 
 #include "toolchain_specifics.h"
 #include "${__PROCESSOR?lower_case}.h"
+#include "device_cache.h"
+
