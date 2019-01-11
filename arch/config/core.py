@@ -148,11 +148,15 @@ def instantiateComponent(coreComponent):
     exceptionHandling.setDefaultValue(False)
     exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
 
+    processor = Variables.get("__PROCESSOR")
+    configName = Variables.get("__CONFIGURATION_NAME")
     arch = ""
     if "CORTEX" in coreArch.getValue():
         arch="arm"
     else:
         arch="mips"
+
+    ## toolchain specifics
     toolChainSpecifics = coreComponent.createFileSymbol(None, None)
     toolChainSpecifics.setSourcePath(arch+"/toolchain_specifics.h")
     toolChainSpecifics.setOutputName("toolchain_specifics.h");
@@ -162,9 +166,25 @@ def instantiateComponent(coreComponent):
     toolChainSpecifics.setProjectPath(arch)
     toolChainSpecifics.setType("HEADER")
 
+    ## cache macros
+    deviceCacheHeaderName = "cache_cortex_m.h.ftl" 
+    if "SAMA5" in processor:
+        deviceCacheHeaderName = "cache_cortex_a.h.ftl" 
+
+    deviceCacheHeaderFile = coreComponent.createFileSymbol("DEVICE_CACHE_H", None)
+    deviceCacheHeaderFile.setSourcePath( "/templates/" + deviceCacheHeaderName )
+    deviceCacheHeaderFile.setOutputName("device_cache.h")
+    deviceCacheHeaderFile.setMarkup(True)
+    deviceCacheHeaderFile.setOverwrite(True)
+    deviceCacheHeaderFile.setDestPath("")
+    deviceCacheHeaderFile.setProjectPath("config/" + configName + "/")
+    deviceCacheHeaderFile.setType("HEADER")
+
+    ## toolChainMenu
     toolChainMenu = coreComponent.createMenuSymbol("CoreToolChainMenu", projMenu)
     toolChainMenu.setLabel("Tool Chain Selections")
 
+    ## compiler choice
     global compilers
     if "CORTEX-A" in coreArch.getValue():
         compilers = ["IAR"]
@@ -178,10 +198,9 @@ def instantiateComponent(coreComponent):
     compilerChoice.setVisible( True )
     for index in range(0, len(compilers)):
         compilerChoice.addKey( compilers[index], str(index), compilers[index] + " COMPILER" )
-
-    global xc32Menu
-
+		
     ## xc32 Tool Config
+    global xc32Menu
     xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", toolChainMenu)
     xc32Menu.setLabel("XC32 Global Options")
 
@@ -196,9 +215,8 @@ def instantiateComponent(coreComponent):
     xc32HeapSize.setDefaultValue(0)
     xc32HeapSize.setVisible(True)
 
-    global iarMenu
-
     ## iar Tool Config
+    global iarMenu
     iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
     iarMenu.setLabel("IAR Global Options")
     iarMenu.setVisible(False)
@@ -249,8 +267,6 @@ def instantiateComponent(coreComponent):
         iarUndStackSize.setLabel("Undefined Stack Size (bytes)")
         iarUndStackSize.setDefaultValue(64)
         iarUndStackSize.setVisible(True)
-
-    configName = Variables.get("__CONFIGURATION_NAME")
 
     #################### Main File ####################
     # generate main.c file
@@ -384,7 +400,6 @@ def instantiateComponent(coreComponent):
     xc32HeapSizeSym.setDependencies(heapSizeCallBack, ["XC32_HEAP_SIZE"])
 
     # set include path and monitor file
-    processor = Variables.get("__PROCESSOR")
     corePath = ""
     if "SAMA5" in processor:
         corePath = "../src/packs/CMSIS/CMSIS/Core_A/Include"
