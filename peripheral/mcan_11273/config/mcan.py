@@ -208,8 +208,8 @@ def instantiateComponent(mcanComponent):
     interruptHandlerLock = mcanInstanceName.getValue() + "_INT0" + "_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = mcanInstanceName.getValue() + "_INT0" + "_INTERRUPT_ENABLE_UPDATE"
 
-    mcanSFRRegSym = mcanComponent.createBooleanSymbol("MCAN_SFR_CAN_ENABLE", mcanMenu)
-    mcanSFRRegSym.setDefaultValue(False)
+    mcanSFRRegSym = mcanComponent.createIntegerSymbol("MCAN_SFR_CAN_ENABLE_VALUE", mcanMenu)
+    mcanSFRRegSym.setDefaultValue(0)
     mcanSFRRegSym.setVisible(False)
     modules = ATDF.getNode('/avr-tools-device-file/modules')
     moduleList = modules.getChildren()
@@ -219,7 +219,10 @@ def instantiateComponent(mcanComponent):
             mcanSFRReg = mcanSFRRegs.getChildren()
             for index in range(0, len(mcanSFRReg)):
                 if (mcanSFRReg[index].getAttribute("name") == "SFR_CAN"):
-                    mcanSFRRegSym.setValue(True, 2)
+                    if (mcanSFRReg[index].getAttribute("count") > 1):
+                        mcanSFRRegSym.setValue(2, 2)
+                    else:
+                        mcanSFRRegSym.setValue(1, 2)
                     break
             break
 
