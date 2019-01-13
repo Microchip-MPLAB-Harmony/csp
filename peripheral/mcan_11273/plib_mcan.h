@@ -138,68 +138,6 @@ typedef enum
 } MCAN_MSG_RX_ATTRIBUTE;
 
 // *****************************************************************************
-/* MCAN Standard Filter Type
-
-   Summary:
-    MCAN Standard Filter Type.
-
-   Description:
-    This data type defines MCAN Rx Standard Filter Type.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    MCAN_STD_FILTER_RANGE = 0,
-    MCAN_STD_FILTER_DUAL,
-    MCAN_STD_FILTER_CLASSIC
-} MCAN_STD_TYPE;
-
-// *****************************************************************************
-/* MCAN Filter Configuration
-
-   Summary:
-    MCAN Filter Configuration.
-
-   Description:
-    This data type defines MCAN Rx Filter Configuration.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    MCAN_FILTER_CONFIG_DISABLED = 0,
-    MCAN_FILTER_CONFIG_FIFO_0,
-    MCAN_FILTER_CONFIG_FIFO_1,
-    MCAN_FILTER_CONFIG_REJECT,
-    MCAN_FILTER_CONFIG_PRIORITY,
-    MCAN_FILTER_CONFIG_PRIORITY_FIFO_0,
-    MCAN_FILTER_CONFIG_PRIORITY_FIFO_1,
-} MCAN_CONFIG;
-
-// *****************************************************************************
-/* MCAN Extended Filter Type
-
-   Summary:
-    MCAN Extended Filter Type.
-
-   Description:
-    This data type defines MCAN Rx Extended Filter Type.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    MCAN_EXT_FILTER_RANGE=0,
-    MCAN_EXT_FILTER_DUAL,
-    MCAN_EXT_FILTER_CLASSIC,
-    MCAN_EXT_FILTER_UNMASKED
-} MCAN_EXT_TYPE;
-
-// *****************************************************************************
 /* MCAN Transfer Error
 
    Summary:
@@ -327,6 +265,44 @@ typedef enum {
 typedef void (*MCAN_CALLBACK) (uintptr_t contextHandle);
 
 // *****************************************************************************
+/* MCAN Message RAM Configuration
+
+   Summary:
+    MCAN Message RAM Configuration structure.
+
+   Description:
+    This data structure defines the MCAN Message RAM Base address for Rx FIFO0,
+    Rx FIFO1, Rx Buffers, Tx Buffers/FIFO, Tx Event FIFO, Standard Message ID Filter and
+    Extended Message ID Filter configuration.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Rx FIFO0 base address */
+    mcan_rxf0e_registers_t *rxFIFO0Address;
+
+    /* Rx FIFO1 base address */
+    mcan_rxf1e_registers_t *rxFIFO1Address;
+
+    /* Rx Buffer base address */
+    mcan_rxbe_registers_t *rxBuffersAddress;
+
+    /* Tx Buffers/FIFO base address */
+    mcan_txbe_registers_t *txBuffersAddress;
+
+    /* Tx Event FIFO base address */
+    mcan_txefe_registers_t *txEventFIFOAddress;
+
+    /* Standard Message ID Filter base address */
+    mcan_sidfe_registers_t *stdMsgIDFilterAddress;
+
+    /* Extended Message ID Filter base address */
+    mcan_xidfe_registers_t *extMsgIDFilterAddress;
+} MCAN_MSG_RAM_CONFIG;
+
+// *****************************************************************************
 /* MCAN PLib Instance Object
 
    Summary:
@@ -357,240 +333,10 @@ typedef struct
     /* Transfer Event Callback Context */
     uintptr_t context;
 
+    /* Message RAM Configuration */
+    MCAN_MSG_RAM_CONFIG msgRAMConfig;
+
 } MCAN_OBJ;
-
-// *****************************************************************************
-/* MCAN Rx Buffer and FIFO element
-
-   Summary:
-    MCAN Rx Buffer, Rx FIFO0 and Rx FIFO1 element.
-
-   Description:
-    This data structure defines the Rx Buffer, Rx FIFO0 and Rx FIFO1 element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t ID:29;      /* Identifier */
-            uint32_t RTR:1;      /* Remote Transmission Request */
-            uint32_t XTD:1;      /* Extended Identifier */
-            uint32_t ESI:1;      /* Error State Indicator */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } R0;
-    union
-    {
-        struct
-        {
-            uint32_t RXTS:16;    /* Rx Timestamp */
-            uint32_t DLC:4;      /* Data Length Code */
-            uint32_t BRS:1;      /* Bit Rate Switch */
-            uint32_t FDF:1;      /* FD Format */
-            uint32_t reserved:2; /* Reserved */
-            uint32_t FIDX:7;     /* Filter Index */
-            uint32_t ANMF:1;     /* Accepted Non-matching Frame */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } R1;
-    uint8_t *data;               /* Up to 64 data bytes */
-} MCAN_RX_BUFFER_FIFO_ENTRY;
-
-// *****************************************************************************
-/* MCAN Tx Buffer and FIFO element
-
-   Summary:
-    MCAN Tx Buffer and Tx FIFO element.
-
-   Description:
-    This data structure defines the Tx Buffer and Tx FIFO element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t ID:29;      /* Identifier */
-            uint32_t RTR:1;      /* Remote Transmission Request */
-            uint32_t XTD:1;      /* Extended Identifier */
-            uint32_t ESI:1;      /* Error State Indicator */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } T0;
-    union
-    {
-        struct
-        {
-            uint32_t reserved:16;/* Reserved */
-            uint32_t DLC:4;      /* Data Length Code */
-            uint32_t BRS:1;      /* Bit Rate Switch */
-            uint32_t FDF:1;      /* FD Format */
-            uint32_t reserved1:1;/* Reserved */
-            uint32_t EFC:1;      /* Event FIFO Control */
-            uint32_t MM:8;       /* Message Marker */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } T1;
-    uint8_t *data;               /* Up to 64 data bytes */
-} MCAN_TX_BUFFER_FIFO_ENTRY;
-
-// *****************************************************************************
-/* MCAN Tx Event FIFO element
-
-   Summary:
-    MCAN Tx Event FIFO element.
-
-   Description:
-    This data structure defines the Tx Event FIFO element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t ID:29;    /* Identifier */
-            uint32_t RTR:1;    /* Remote Transmission Request */
-            uint32_t XTD:1;    /* Extended Identifier */
-            uint32_t ESI:1;    /* Error State Indicator */
-        } bit;
-        uint32_t val;          /* Type used for register access */
-    } E0;
-    union
-    {
-        struct
-        {
-            uint32_t TXTS:16;  /* Tx Timestamp */
-            uint32_t DLC:4;    /* Data Length Code */
-            uint32_t BRS:1;    /* Bit Rate Switch */
-            uint32_t FDF:1;    /* FD Format */
-            uint32_t ET:2;     /* Event Type */
-            uint32_t MM:8;     /* Message Marker */
-        } bit;
-        uint32_t val;          /* Type used for register access */
-    } E1;
-} MCAN_TX_EVENT_FIFO_ENTRY;
-
-// *****************************************************************************
-/* MCAN Standard Message ID Filter element
-
-   Summary:
-    MCAN Standard Message ID Filter element.
-
-   Description:
-    This data structure defines the MCAN Standard Message ID Filter element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t SFID2:11;   /* Standard Filter ID 2 */
-            uint32_t reserved:5; /* Reserved */
-            uint32_t SFID1:11;   /* Standard Filter ID 1 */
-            uint32_t SFEC:3;     /* Standard Filter Configuration */
-            uint32_t SFT:2;      /* Standard Filter Type */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } S0;
-} MCAN_STANDARD_MESSAGE_ID_FILTER;
-
-// *****************************************************************************
-/* MCAN extended Message ID Filter element
-
-   Summary:
-    MCAN extended Message ID Filter element.
-
-   Description:
-    This data structure defines the MCAN extended Message ID Filter element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t EFID1:29;  /* Extended Filter ID 1 */
-            uint32_t EFEC:3;    /* Extended Filter Configuration */
-        } bit;
-        uint32_t val;           /* Type used for register access */
-    } F0;
-    union
-    {
-        struct
-        {
-            uint32_t EFID2:29;  /* Extended Filter ID 2 */
-            uint32_t reserved:1;/* Reserved */
-            uint32_t EFT:2;     /* Extended Filter Type */
-        } bit;
-        uint32_t val;           /* Type used for register access */
-    } F1;
-} MCAN_EXTENDED_MESSAGE_ID_FILTER;
-
-// *****************************************************************************
-/* MCAN Message RAM Configuration
-
-   Summary:
-    MCAN Message RAM Configuration structure.
-
-   Description:
-    This data structure defines the MCAN Message RAM Base address and Size for Rx FIFO0,
-    Rx FIFO1, Rx Buffers, Tx Buffers/FIFO, Tx Event FIFO, Standard Message ID Filter and
-    Extended Message ID Filter configuration.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    /* Rx FIFO0 base address and size(in bytes) */
-    MCAN_RX_BUFFER_FIFO_ENTRY *rxFIFO0Address;
-    uint32_t rxFIFO0Size;
-
-    /* Rx FIFO1 base address and size(in bytes) */
-    MCAN_RX_BUFFER_FIFO_ENTRY *rxFIFO1Address;
-    uint32_t rxFIFO1Size;
-
-    /* Rx Buffer base address and size(in bytes) */
-    MCAN_RX_BUFFER_FIFO_ENTRY *rxBuffersAddress;
-    uint32_t rxBuffersSize;
-
-    /* Tx Buffers/FIFO base address and size(in bytes) */
-    MCAN_TX_BUFFER_FIFO_ENTRY *txBuffersAddress;
-    uint32_t txBuffersSize;
-
-    /* Tx Event FIFO base address and size(in bytes) */
-    MCAN_TX_EVENT_FIFO_ENTRY *txEventFIFOAddress;
-    uint32_t txEventFIFOSize;
-
-    /* Standard Message ID Filter base address and size(in bytes) */
-    MCAN_STANDARD_MESSAGE_ID_FILTER *stdMsgIDFilterAddress;
-    uint32_t stdMsgIDFilterSize;
-
-    /* Extended Message ID Filter base address and size(in bytes) */
-    MCAN_EXTENDED_MESSAGE_ID_FILTER *extMsgIDFilterAddress;
-    uint32_t extMsgIDFilterSize;
-
-} MCAN_MSG_RAM_CONFIG;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -780,27 +526,30 @@ void MCANx_InterruptClear(MCAN_INTERRUPT_MASK interruptMask);
 
 // *****************************************************************************
 /* Function:
-    void MCANx_MessageRAMConfigGet(MCAN_MSG_RAM_CONFIG *msgRAMConfig)
+    void MCANx_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
    Summary:
-    Get the Message RAM Configuration.
+    Set the Message RAM Configuration.
 
    Precondition:
     ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
 
    Parameters:
-    msgRAMConfig - Pointer to the Message RAM Configuration object
+    msgRAMConfigBaseAddress - Pointer to application allocated buffer base address.
+                              Application must allocate buffer from non-cached
+                              contiguous memory and buffer size must be
+                              ${MCAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE
 
    Example:
     <code>
-    MCAN_MSG_RAM_CONFIG messageRAMConfig;
-    MCAN0_MessageRAMConfigGet(&messageRAMConfig);
+    uint8_t messageRAMConfig[MCAN0_MESSAGE_RAM_CONFIG_SIZE]__attribute__((aligned (32))) __attribute__((__section__(".region_nocache")));
+    MCAN0_MessageRAMConfigSet(&messageRAMConfig);
     </code>
 
    Returns:
     None
 */
-void MCANx_MessageRAMConfigGet(MCAN_MSG_RAM_CONFIG *msgRAMConfig);
+void MCANx_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);
 
 // *****************************************************************************
 /* Function:
