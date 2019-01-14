@@ -56,15 +56,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#macro>
 </#compress>
 
-<#if PMC_CKGR_UCKR_UPLLEN>
+<#if PMC_CKGR_UCKR_UPLLEN && !USE_BOOTLOADER_CLOCKS>
 /*********************************************************************************
 Initialize UTMI PLL  (UPLLCK)
 *********************************************************************************/
 
 static void CLK_UTMIPLLInitialize(void)
 {
-
-	SFR_REGS->SFR_UTMICKTRIM |= (SFR_REGS->SFR_UTMICKTRIM & ~SFR_UTMICKTRIM_FREQ_Msk) | SFR_UTMICKTRIM_FREQ_${UTMI_CKTRIM_FREQ};
+    /* Set the UTMI reference clock */
+    uint32_t sfr_utmiclktrim_val = SFR_REGS->SFR_UTMICKTRIM & ~SFR_UTMICKTRIM_FREQ_Msk;
+	SFR_REGS->SFR_UTMICKTRIM = sfr_utmiclktrim_val | SFR_UTMICKTRIM_FREQ_${UTMI_CKTRIM_FREQ};
 	
 	/* Enable UPLL and configure UPLL lock time */
 	PMC_REGS->CKGR_UCKR = CKGR_UCKR_UPLLEN_Msk | CKGR_UCKR_UPLLCOUNT(${PMC_CKGR_UCKR_UPLLCOUNT});
@@ -120,15 +121,16 @@ Initialize Generic clock
 
 static void CLK_GenericClockInitialize(void)
 {
-<#list 1..79 as i>
-<#assign GEN_ENABLE = "PMC_PCR_GCLK"+i+"EN">
+<#list 1..79 as pid>
+<#assign GEN_ENABLE = "PMC_PCR_PID"+pid+"_GCKEN">
 <#if .vars[GEN_ENABLE]??>
-<#assign GEN_CSS = "PMC_PCR_GCK"+i+"CSS">
+<#assign GEN_CSS = "PMC_PCR_PID"+pid+"_GCKCSS">
 <#assign GEN_CSS_VAL = .vars[GEN_CSS]>
-<#assign GEN_DIV = "PMC_PCR_GCK"+i+"DIV">
-<#assign GEN_DIV_VAL = .vars[GEN_DIV]>
+<#assign GEN_DIV = "PMC_PCR_PID"+pid+"_GCKDIV">
+<#assign GEN_DIV_VAL = .vars[GEN_DIV] - 1>
     <#if .vars[GEN_ENABLE] == true>
-    PMC_REGS->PMC_PCR = PMC_PCR_PID(${i}) | PMC_PCR_GCKCSS(${GEN_CSS_VAL}) | PMC_PCR_CMD_Msk | PMC_PCR_GCKDIV(${GEN_DIV_VAL}) | PMC_PCR_EN_Msk | PMC_PCR_GCKEN_Msk; 
+    /* Enable GCLK for peripheral ID ${pid} */
+    PMC_REGS->PMC_PCR = PMC_PCR_PID(${pid}) | PMC_PCR_GCKCSS(${GEN_CSS_VAL}) | PMC_PCR_CMD_Msk | PMC_PCR_GCKDIV(${GEN_DIV_VAL}) | PMC_PCR_EN_Msk | PMC_PCR_GCKEN_Msk; 
     </#if>
 </#if>
 </#list>
@@ -201,38 +203,40 @@ Clock Initialize
 void CLK_Initialize( void )
 { 
 <#if PMC_AUDIO_PLL0_PLLEN>
+    /* Initialize Audio PLL */
     CLK_AudioPLLInitialize();
+
 </#if>
-	
-<#if PMC_CKGR_UCKR_UPLLEN>
+<#if PMC_CKGR_UCKR_UPLLEN && !USE_BOOTLOADER_CLOCKS>
 	/* Initialize UTMI PLL */
 	CLK_UTMIPLLInitialize();
-</#if>
 
+</#if>
 <#if PMC_SCER_UDPCLK || PMC_SCER_UHPCLK>
 	/* Initialize USB Clock */
 	CLK_USBClockInitialize();
-</#if>
 
+</#if>
 	/* Initialize Generic Clock */
 	CLK_GenericClockInitialize();
 
 <#if PMC_SCER_PCK0 || PMC_SCER_PCK1 || PMC_SCER_PCK2>
 	/* Initialize Programmable Clock */
 	CLK_ProgrammableClockInitialize();
-</#if>
 
+</#if>
 	/* Initialize Peripheral Clock */
 	CLK_PeripheralClockInitialize();
 
 <#if PMC_SCER_LCDCK>
     /* Initalize LCDC (MCKx2) Clock */
     CLK_LCDCClockInitialize();
-</#if>
 
+</#if>
 <#if PMC_SCER_ISCCK>
     /* Initalize ISC (MCKx2) Clock */
     CLK_ISCClockInitialize();
+
 </#if>
 }
 
