@@ -61,70 +61,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-/* Message RAM Tx/Rx */
-#define CAN_TX_XTD_Msk      (1u << 30)                       /* Extended identifier flag */
-#define CAN_STD_ID_Msk      (0x7ffu)                         /* ID mask for standard identifier */
-#define CAN_EXT_ID_Msk      (0x1fffffffu)                    /* ID mask for extended identifier */
-#define CAN_TXFE_DLC(value) ((0xfu << 16) & ((value) << 16)) /* Tx Data Length Code */
-#define CAN_TX_BRS_Msk      (0x1u << 20)                     /* Bit rate switching */
-#define CAN_TX_FDF_Msk      (0x1u << 21)                     /* CAN FD format */
-#define CAN_TX_RTR_Msk      (0x1u << 29)                     /* Remote Transmission Request */
-#define CAN_RX_DLC(value)   (((value) >> 16) & 0xfu)         /* Rx Data Length Code */
-#define CAN_RX_XTD(value)   (((value) >> 30) & 0x1u)         /* Rx Extended Identifier */
-
-/* Message RAM Standard Filter Element */
-#define CAN_SMF_SFID2_Pos     (0)
-#define CAN_SMF_SFID2_Msk     (0x7FFU << CAN_SMF_SFID2_Pos)
-#define CAN_SMF_SFID2(value)  (CAN_SMF_SFID2_Msk & ((value) << CAN_SMF_SFID2_Pos))
-#define CAN_SMF_SFID1_Pos     (16)
-#define CAN_SMF_SFID1_Msk     (0x7FFU << CAN_SMF_SFID1_Pos)
-#define CAN_SMF_SFID1(value)  (CAN_SMF_SFID1_Msk & ((value) << CAN_SMF_SFID1_Pos))
-#define CAN_SMF_SFEC_Pos      (27)
-#define CAN_SMF_SFEC_Msk      (0x7U << CAN_SMF_SFEC_Pos)
-#define CAN_SMF_SFEC(value)   (CAN_SMF_SFEC_Msk & ((value) << CAN_SMF_SFEC_Pos))
-#define CAN_SMF_SFT_Pos       (30)
-#define CAN_SMF_SFT_Msk       (0x3U << CAN_SMF_SFT_Pos)
-#define CAN_SMF_SFT(value)    (CAN_SMF_SFT_Msk & ((value) << CAN_SMF_SFT_Pos))
-
-#define _CAN_SFT_RANGE   0 /* Range filter from SFID1 to SFID2 */
-#define _CAN_SFT_DUAL    1 /* Dual ID filter for SFID1 or SFID2 */
-#define _CAN_SFT_CLASSIC 2 /* Classic filter: SFID1 = filter, SFID2 = mask */
-#define _CAN_SFEC_DISABLE  0 /* Disable filter element */
-#define _CAN_SFEC_STF0M    1 /* Store in Rx FIFO 0 if filter matches */
-#define _CAN_SFEC_STF1M    2 /* Store in Rx FIFO 1 if filter matches */
-#define _CAN_SFEC_REJECT   3 /* Reject ID if filter matches */
-#define _CAN_SFEC_PRIORITY 4 /* Set priority if filter matches. */
-#define _CAN_SFEC_PRIF0M   5 /* Set priority and store in FIFO 0 if filter matches */
-#define _CAN_SFEC_PRIF1M   6 /* Set priority and store in FIFO 1 if filter matches. */
-#define _CAN_SFEC_STRXBUF  7 /* Store into Rx Buffer or as debug message, configuration of SFT[1:0] ignored. */
-
-/* Message RAM Extended Filter Element */
-#define CAN_EFID2_Pos     (0)
-#define CAN_EFID2_Msk     (0x1FFFFFFFUL << CAN_EFID2_Pos)
-#define CAN_EFID2(value)  (CAN_EFID2_Msk & ((value) << CAN_EFID2_Pos))
-#define CAN_EFID1_Pos     (0)
-#define CAN_EFID1_Msk     (0x1FFFFFFFUL << CAN_EFID1_Pos)
-#define CAN_EFID1(value)  (CAN_EFID1_Msk & ((value) << CAN_EFID1_Pos))
-#define CAN_EFEC_Pos      (29)
-#define CAN_EFEC_Msk      (0x7UL << CAN_EFEC_Pos)
-#define CAN_EFEC(value)   (CAN_EFEC_Msk & ((value) << CAN_EFEC_Pos))
-#define CAN_EFT_Pos       (30)
-#define CAN_EFT_Msk       (0x3UL << CAN_EFT_Pos)
-#define CAN_EFT(value)    (CAN_EFT_Msk & ((value) << CAN_EFT_Pos))
-
-#define _CAN_EFT_RANGE   0 /* Range filter from SFID1 to SFID2 */
-#define _CAN_EFT_DUAL    1 /* Dual ID filter for SFID1 or SFID2 */
-#define _CAN_EFT_CLASSIC 2 /* Classic filter: SFID1 = filter, SFID2 = mask */
-#define _CAN_EFEC_DISABLE  0 /* Disable filter element */
-#define _CAN_EFEC_STF0M    1 /* Store in Rx FIFO 0 if filter matches */
-#define _CAN_EFEC_STF1M    2 /* Store in Rx FIFO 1 if filter matches */
-#define _CAN_EFEC_REJECT   3 /* Reject ID if filter matches */
-#define _CAN_EFEC_PRIORITY 4 /* Set priority if filter matches. */
-#define _CAN_EFEC_PRIF0M   5 /* Set priority and store in FIFO 0 if filter matches */
-#define _CAN_EFEC_PRIF1M   6 /* Set priority and store in FIFO 1 if filter matches. */
-#define _CAN_EFEC_STRXBUF  7 /* Store into Rx Buffer or as debug message, configuration of SFT[1:0] ignored. */
-
-
 // *****************************************************************************
 /* CAN Mode
 
@@ -185,68 +121,6 @@ typedef enum
     CAN_MSG_ATTR_RX_FIFO1,
     CAN_MSG_ATTR_RX_BUFFER
 } CAN_MSG_RX_ATTRIBUTE;
-
-// *****************************************************************************
-/* CAN Standard Filter Type
-
-   Summary:
-    CAN Standard Filter Type.
-
-   Description:
-    This data type defines CAN Rx Standard Filter Type.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    CAN_STD_FILTER_RANGE = 0,
-    CAN_STD_FILTER_DUAL,
-    CAN_STD_FILTER_CLASSIC
-} CAN_STD_TYPE;
-
-// *****************************************************************************
-/* CAN Filter Configuration
-
-   Summary:
-    CAN Filter Configuration.
-
-   Description:
-    This data type defines CAN Rx Filter Configuration.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    CAN_FILTER_CONFIG_DISABLED = 0,
-    CAN_FILTER_CONFIG_FIFO_0,
-    CAN_FILTER_CONFIG_FIFO_1,
-    CAN_FILTER_CONFIG_REJECT,
-    CAN_FILTER_CONFIG_PRIORITY,
-    CAN_FILTER_CONFIG_PRIORITY_FIFO_0,
-    CAN_FILTER_CONFIG_PRIORITY_FIFO_1,
-} CAN_CONFIG;
-
-// *****************************************************************************
-/* CAN Extended Filter Type
-
-   Summary:
-    CAN Extended Filter Type.
-
-   Description:
-    This data type defines CAN Rx Extended Filter Type.
-
-   Remarks:
-    None.
-*/
-typedef enum
-{
-    CAN_EXT_FILTER_RANGE=0,
-    CAN_EXT_FILTER_DUAL,
-    CAN_EXT_FILTER_CLASSIC,
-    CAN_EXT_FILTER_UNMASKED
-} CAN_EXT_TYPE;
 
 // *****************************************************************************
 /* CAN Transfer Error
@@ -376,6 +250,44 @@ typedef enum {
 typedef void (*CAN_CALLBACK) (uintptr_t contextHandle);
 
 // *****************************************************************************
+/* CAN Message RAM Configuration
+
+   Summary:
+    CAN Message RAM Configuration structure.
+
+   Description:
+    This data structure defines the CAN Message RAM Base address for Rx FIFO0,
+    Rx FIFO1, Rx Buffers, Tx Buffers/FIFO, Tx Event FIFO, Standard Message ID Filter and
+    Extended Message ID Filter configuration.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Rx FIFO0 base address */
+    can_rxf0e_registers_t *rxFIFO0Address;
+
+    /* Rx FIFO1 base address */
+    can_rxf1e_registers_t *rxFIFO1Address;
+
+    /* Rx Buffer base address */
+    can_rxbe_registers_t *rxBuffersAddress;
+
+    /* Tx Buffers/FIFO base address */
+    can_txbe_registers_t *txBuffersAddress;
+
+    /* Tx Event FIFO base address */
+    can_txefe_registers_t *txEventFIFOAddress;
+
+    /* Standard Message ID Filter base address */
+    can_sidfe_registers_t *stdMsgIDFilterAddress;
+
+    /* Extended Message ID Filter base address */
+    can_xidfe_registers_t *extMsgIDFilterAddress;
+} CAN_MSG_RAM_CONFIG;
+
+// *****************************************************************************
 /* CAN PLib Instance Object
 
    Summary:
@@ -392,8 +304,8 @@ typedef struct
     /* Tx Buffer Index */
     uint32_t txBufferIndex;
 
-    /* Rx Message address, buffer and size */
-    uint32_t *rxAddress;
+    /* Rx Message ID, buffer and size */
+    uint32_t *rxId;
     uint8_t *rxBuffer;
     uint8_t *rxsize;
 
@@ -406,240 +318,10 @@ typedef struct
     /* Transfer Event Callback Context */
     uintptr_t context;
 
+    /* Message RAM Configuration */
+    CAN_MSG_RAM_CONFIG msgRAMConfig;
+
 } CAN_OBJ;
-
-// *****************************************************************************
-/* CAN Rx Buffer and FIFO element
-
-   Summary:
-    CAN Rx Buffer, Rx FIFO0 and Rx FIFO1 element.
-
-   Description:
-    This data structure defines the Rx Buffer, Rx FIFO0 and Rx FIFO1 element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t ID:29;      /* Identifier */
-            uint32_t RTR:1;      /* Remote Transmission Request */
-            uint32_t XTD:1;      /* Extended Identifier */
-            uint32_t ESI:1;      /* Error State Indicator */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } R0;
-    union
-    {
-        struct
-        {
-            uint32_t RXTS:16;    /* Rx Timestamp */
-            uint32_t DLC:4;      /* Data Length Code */
-            uint32_t BRS:1;      /* Bit Rate Switch */
-            uint32_t FDF:1;      /* FD Format */
-            uint32_t reserved:2; /* Reserved */
-            uint32_t FIDX:7;     /* Filter Index */
-            uint32_t ANMF:1;     /* Accepted Non-matching Frame */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } R1;
-    uint8_t *data;               /* Up to 64 data bytes */
-} CAN_RX_BUFFER_FIFO_ENTRY;
-
-// *****************************************************************************
-/* CAN Tx Buffer and FIFO element
-
-   Summary:
-    CAN Tx Buffer and Tx FIFO element.
-
-   Description:
-    This data structure defines the Tx Buffer and Tx FIFO element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t ID:29;      /* Identifier */
-            uint32_t RTR:1;      /* Remote Transmission Request */
-            uint32_t XTD:1;      /* Extended Identifier */
-            uint32_t ESI:1;      /* Error State Indicator */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } T0;
-    union
-    {
-        struct
-        {
-            uint32_t reserved:16;/* Reserved */
-            uint32_t DLC:4;      /* Data Length Code */
-            uint32_t BRS:1;      /* Bit Rate Switch */
-            uint32_t FDF:1;      /* FD Format */
-            uint32_t reserved1:1;/* Reserved */
-            uint32_t EFC:1;      /* Event FIFO Control */
-            uint32_t MM:8;       /* Message Marker */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } T1;
-    uint8_t *data;               /* Up to 64 data bytes */
-} CAN_TX_BUFFER_FIFO_ENTRY;
-
-// *****************************************************************************
-/* CAN Tx Event FIFO element
-
-   Summary:
-    CAN Tx Event FIFO element.
-
-   Description:
-    This data structure defines the Tx Event FIFO element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t ID:29;    /* Identifier */
-            uint32_t RTR:1;    /* Remote Transmission Request */
-            uint32_t XTD:1;    /* Extended Identifier */
-            uint32_t ESI:1;    /* Error State Indicator */
-        } bit;
-        uint32_t val;          /* Type used for register access */
-    } E0;
-    union
-    {
-        struct
-        {
-            uint32_t TXTS:16;  /* Tx Timestamp */
-            uint32_t DLC:4;    /* Data Length Code */
-            uint32_t BRS:1;    /* Bit Rate Switch */
-            uint32_t FDF:1;    /* FD Format */
-            uint32_t ET:2;     /* Event Type */
-            uint32_t MM:8;     /* Message Marker */
-        } bit;
-        uint32_t val;          /* Type used for register access */
-    } E1;
-} CAN_TX_EVENT_FIFO_ENTRY;
-
-// *****************************************************************************
-/* CAN Standard Message ID Filter element
-
-   Summary:
-    CAN Standard Message ID Filter element.
-
-   Description:
-    This data structure defines the CAN Standard Message ID Filter element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t SFID2:11;   /* Standard Filter ID 2 */
-            uint32_t reserved:5; /* Reserved */
-            uint32_t SFID1:11;   /* Standard Filter ID 1 */
-            uint32_t SFEC:3;     /* Standard Filter Configuration */
-            uint32_t SFT:2;      /* Standard Filter Type */
-        } bit;
-        uint32_t val;            /* Type used for register access */
-    } S0;
-} CAN_STANDARD_MESSAGE_ID_FILTER;
-
-// *****************************************************************************
-/* CAN extended Message ID Filter element
-
-   Summary:
-    CAN extended Message ID Filter element.
-
-   Description:
-    This data structure defines the CAN extended Message ID Filter element.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    union
-    {
-        struct
-        {
-            uint32_t EFID1:29;  /* Extended Filter ID 1 */
-            uint32_t EFEC:3;    /* Extended Filter Configuration */
-        } bit;
-        uint32_t val;           /* Type used for register access */
-    } F0;
-    union
-    {
-        struct
-        {
-            uint32_t EFID2:29;  /* Extended Filter ID 2 */
-            uint32_t reserved:1;/* Reserved */
-            uint32_t EFT:2;     /* Extended Filter Type */
-        } bit;
-        uint32_t val;           /* Type used for register access */
-    } F1;
-} CAN_EXTENDED_MESSAGE_ID_FILTER;
-
-// *****************************************************************************
-/* CAN Message RAM Configuration
-
-   Summary:
-    CAN Message RAM Configuration structure.
-
-   Description:
-    This data structure defines the CAN Message RAM Base address and Size for Rx FIFO0,
-    Rx FIFO1, Rx Buffers, Tx Buffers/FIFO, Tx Event FIFO, Standard Message ID Filter and
-    Extended Message ID Filter configuration.
-
-   Remarks:
-    None.
-*/
-typedef struct
-{
-    /* Rx FIFO0 base address and size(in bytes) */
-    CAN_RX_BUFFER_FIFO_ENTRY *rxFIFO0Address;
-    uint32_t rxFIFO0Size;
-
-    /* Rx FIFO1 base address and size(in bytes) */
-    CAN_RX_BUFFER_FIFO_ENTRY *rxFIFO1Address;
-    uint32_t rxFIFO1Size;
-
-    /* Rx Buffer base address and size(in bytes) */
-    CAN_RX_BUFFER_FIFO_ENTRY *rxBuffersAddress;
-    uint32_t rxBuffersSize;
-
-    /* Tx Buffers/FIFO base address and size(in bytes) */
-    CAN_TX_BUFFER_FIFO_ENTRY *txBuffersAddress;
-    uint32_t txBuffersSize;
-
-    /* Tx Event FIFO base address and size(in bytes) */
-    CAN_TX_EVENT_FIFO_ENTRY *txEventFIFOAddress;
-    uint32_t txEventFIFOSize;
-
-    /* Standard Message ID Filter base address and size(in bytes) */
-    CAN_STANDARD_MESSAGE_ID_FILTER *stdMsgIDFilterAddress;
-    uint32_t stdMsgIDFilterSize;
-
-    /* Extended Message ID Filter base address and size(in bytes) */
-    CAN_EXTENDED_MESSAGE_ID_FILTER *extMsgIDFilterAddress;
-    uint32_t extMsgIDFilterSize;
-
-} CAN_MSG_RAM_CONFIG;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

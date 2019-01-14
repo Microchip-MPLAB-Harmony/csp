@@ -70,16 +70,93 @@
 
 // *****************************************************************************
 // *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+/* ${CAN_INSTANCE_NAME} Message RAM Configuration Size */
+<#assign CAN_MESSAGE_RAM_CONFIG_SIZE = 0>
+<#if RXF0_USE>
+  <#assign RXF0_BYTES_CFG = RXF0_BYTES_CFG!0>
+  <#if RXF0_BYTES_CFG?number < 5>
+    <#assign RXF0_ELEMENT_BYTES = 16 + RXF0_BYTES_CFG?number * 4>
+  <#else>
+    <#assign RXF0_ELEMENT_BYTES = 40 + 16 * (RXF0_BYTES_CFG?number - 5)>
+  </#if>
+  <#assign RX_FIFO0_SIZE = RXF0_ELEMENTS * RXF0_ELEMENT_BYTES>
+  <#lt>#define ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE       ${RXF0_ELEMENT_BYTES}
+  <#lt>#define ${CAN_INSTANCE_NAME}_RX_FIFO0_SIZE               ${RX_FIFO0_SIZE}
+  <#assign CAN_MESSAGE_RAM_CONFIG_SIZE = CAN_MESSAGE_RAM_CONFIG_SIZE + RX_FIFO0_SIZE>
+</#if>
+<#if RXF1_USE>
+  <#assign RXF1_BYTES_CFG = RXF1_BYTES_CFG!0>
+  <#if RXF1_BYTES_CFG?number < 5>
+    <#assign RXF1_ELEMENT_BYTES = 16 + RXF1_BYTES_CFG?number * 4>
+  <#else>
+    <#assign RXF1_ELEMENT_BYTES = 40 + 16 * (RXF1_BYTES_CFG?number - 5)>
+  </#if>
+  <#assign RX_FIFO1_SIZE = RXF1_ELEMENTS * RXF1_ELEMENT_BYTES>
+  <#lt>#define ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE       ${RXF1_ELEMENT_BYTES}
+  <#lt>#define ${CAN_INSTANCE_NAME}_RX_FIFO1_SIZE               ${RX_FIFO1_SIZE}
+  <#assign CAN_MESSAGE_RAM_CONFIG_SIZE = CAN_MESSAGE_RAM_CONFIG_SIZE + RX_FIFO1_SIZE>
+</#if>
+<#if RXBUF_USE>
+  <#assign RX_BUFFER_BYTES_CFG = RX_BUFFER_BYTES_CFG!0>
+  <#if RX_BUFFER_BYTES_CFG?number < 5>
+    <#assign RX_BUFFER_ELEMENT_BYTES = 16 + RX_BUFFER_BYTES_CFG?number * 4>
+  <#else>
+    <#assign RX_BUFFER_ELEMENT_BYTES = 40 + 16 * (RX_BUFFER_BYTES_CFG?number - 5)>
+  </#if>
+  <#assign RX_BUFFER_SIZE = RX_BUFFER_ELEMENTS * RX_BUFFER_ELEMENT_BYTES>
+  <#lt>#define ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE      ${RX_BUFFER_ELEMENT_BYTES}
+  <#lt>#define ${CAN_INSTANCE_NAME}_RX_BUFFER_SIZE              ${RX_BUFFER_SIZE}
+  <#assign CAN_MESSAGE_RAM_CONFIG_SIZE = CAN_MESSAGE_RAM_CONFIG_SIZE + RX_BUFFER_SIZE>
+</#if>
+<#if TX_USE || TXBUF_USE>
+  <#assign TX_FIFO_BYTES_CFG = TX_FIFO_BYTES_CFG!0>
+  <#if TX_FIFO_BYTES_CFG?number < 5>
+    <#assign TX_ELEMENT_BYTES = 16 + TX_FIFO_BYTES_CFG?number * 4>
+  <#else>
+    <#assign TX_ELEMENT_BYTES = 40 + 16 * (TX_FIFO_BYTES_CFG?number - 5)>
+  </#if>
+  <#if TXBUF_USE>
+    <#assign TX_FIFO_BUFFER_ELEMENTS = TX_FIFO_ELEMENTS + TX_BUFFER_ELEMENTS>
+  <#else>
+    <#assign TX_FIFO_BUFFER_ELEMENTS = TX_FIFO_ELEMENTS>
+  </#if>
+  <#assign TX_FIFO_BUFFER_SIZE = TX_FIFO_BUFFER_ELEMENTS * TX_ELEMENT_BYTES>
+  <#lt>#define ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE ${TX_ELEMENT_BYTES}
+  <#lt>#define ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE         ${TX_FIFO_BUFFER_SIZE}
+  <#assign TX_EVENT_FIFO_SIZE = TX_FIFO_BUFFER_ELEMENTS * 8>
+  <#lt>#define ${CAN_INSTANCE_NAME}_TX_EVENT_FIFO_SIZE          ${TX_EVENT_FIFO_SIZE}
+  <#assign CAN_MESSAGE_RAM_CONFIG_SIZE = CAN_MESSAGE_RAM_CONFIG_SIZE + TX_FIFO_BUFFER_SIZE + TX_EVENT_FIFO_SIZE>
+</#if>
+<#if FILTERS_STD?number gt 0>
+  <#assign STD_MSG_ID_FILTER_SIZE = FILTERS_STD * 4>
+  <#lt>#define ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE      ${STD_MSG_ID_FILTER_SIZE}
+  <#assign CAN_MESSAGE_RAM_CONFIG_SIZE = CAN_MESSAGE_RAM_CONFIG_SIZE + STD_MSG_ID_FILTER_SIZE>
+</#if>
+<#if FILTERS_EXT?number gt 0>
+  <#assign EXT_MSG_ID_FILTER_SIZE = FILTERS_EXT * 8>
+  <#lt>#define ${CAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE      ${EXT_MSG_ID_FILTER_SIZE}
+  <#assign CAN_MESSAGE_RAM_CONFIG_SIZE = CAN_MESSAGE_RAM_CONFIG_SIZE + EXT_MSG_ID_FILTER_SIZE>
+</#if>
+
+/* ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE to be used by application or driver
+   for allocating buffer from non-cached contiguous memory */
+#define ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE     ${CAN_MESSAGE_RAM_CONFIG_SIZE}
+
+// *****************************************************************************
+// *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 void ${CAN_INSTANCE_NAME}_Initialize (void);
-bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t address, uint8_t length, uint8_t* data, CAN_MODE mode, CAN_MSG_TX_ATTRIBUTE msgAttr);
-bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *address, uint8_t *length, uint8_t *data, CAN_MSG_RX_ATTRIBUTE msgAttr);
+bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE mode, CAN_MSG_TX_ATTRIBUTE msgAttr);
+bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MSG_RX_ATTRIBUTE msgAttr);
 CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void);
 bool ${CAN_INSTANCE_NAME}_InterruptGet(CAN_INTERRUPT_MASK interruptMask);
 void ${CAN_INSTANCE_NAME}_InterruptClear(CAN_INTERRUPT_MASK interruptMask);
-void ${CAN_INSTANCE_NAME}_MessageRAMConfigGet(CAN_MSG_RAM_CONFIG *msgRAMConfig);
+void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);
 <#if INTERRUPT_MODE == true>
 bool ${CAN_INSTANCE_NAME}_IsBusy(void);
 void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle);
