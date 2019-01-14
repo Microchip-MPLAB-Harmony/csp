@@ -35,12 +35,16 @@ __attribute__ ((section(".vectors")))
 <#elseif COMPILER_CHOICE == "IAR">
 #pragma location = ".intvec"
 </#if>
+<#if COMPILER_CHOICE == "XC32">
 const DeviceVectors exception_table=
-{<#if COMPILER_CHOICE == "XC32">
-  /* Configure Initial Stack Pointer, using linker-generated symbols */
-  .pvStack = (void*) (&_stack),
-  <#elseif COMPILER_CHOICE == "IAR">
-  .pvStack = __sfe( "CSTACK" ),
+{
+    /* Configure Initial Stack Pointer, using linker-generated symbols */
+    .pvStack = (void*) (&_stack),
+<#elseif COMPILER_CHOICE == "IAR">
+__root const DeviceVectors __vector_table=
+{
+    /* Configure Initial Stack Pointer, using linker-generated symbols */
+    .pvStack = __sfe( "CSTACK" ),
   </#if>
 
 ${LIST_SYSTEM_INTERRUPT_HANDLERS}

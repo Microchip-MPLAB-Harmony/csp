@@ -34,24 +34,24 @@ void __iar_data_init3(void);
 </#if>
 <#if CoreArchitecture == "CORTEX-M4">
 <#if FPU_Available>
-<#include "arch/startup_xc32_cortex_m4.c.ftl">
+<#include "arch/startup_iar_cortex_m4.c.ftl">
 </#if>
 <#if DATA_CACHE_ENABLE??>
-<#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
+<#include "devices/startup_iar_${DeviceFamily}.c.ftl">
 </#if>
 </#if>
 
 void Reset_Handler(void)
 {
 <#if FPU_Available>
-    #if (__ARM_FP==14) || (__ARM_FP==4)
+    #if (__FPU_PRESENT)
     /* Enable the FPU if the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
     FPU_Enable();
     #endif
 </#if>
 
 <#if TCM_ENABLE??>
-	TCM_Configure(${DEVICE_TCM_SIZE});
+    TCM_Configure(${DEVICE_TCM_SIZE});
 <#if TCM_ENABLE>
     /* Enable TCM   */
     TCM_Enable();
@@ -61,9 +61,15 @@ void Reset_Handler(void)
 </#if>
 </#if>
 
-	/* Execute relocations & zero BSS */
-	__iar_data_init3();
+     /* Execute relocations & zero BSS */
+     __iar_data_init3();
 
+    #pragma section=".intvec"
+    uint32_t* pSrc;
+
+    /*  Set the vector-table base address in FLASH */
+    pSrc = __sfb( ".intvec" );
+    SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 <#if CoreUseMPU??>
 <#if CoreUseMPU>
     /* Initialize MPU */
@@ -85,9 +91,9 @@ void Reset_Handler(void)
 </#if>
 </#if>
 
-	/* branch to main function */
-	main();
+    /* branch to main function */
+    main();
 
-	/* program done, block in infinite loop */
-	while (1);
+    /* program done, block in infinite loop */
+    while (1);
 }
