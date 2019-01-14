@@ -113,9 +113,15 @@ def instantiateComponent(usartComponent):
 
     usartClkSrc = usartComponent.createKeyValueSetSymbol("USART_CLK_SRC", None)
     usartClkSrc.setLabel("Select Clock Source")
-    usartClkSrc.addKey("MCK", "0", "MCK")
-    usartClkSrc.addKey("DIV", "1", "MCK/8")
-    usartClkSrc.addKey("PCK", "2", "PCK4")
+    usart_clock = []
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"USART\"]/instance@[name=\""+usartInstanceName.getValue()+"\"]/parameters")
+    usart_clock = node.getChildren()
+    for clock in range(0, len(usart_clock)):
+        if ("USCLKS" in usart_clock[clock].getAttribute("name")):
+            if ("SCK" not in usart_clock[clock].getAttribute("name")):
+                name_split = usart_clock[clock].getAttribute("name").split("_")[1:]
+                name = "_".join(name_split)
+                usartClkSrc.addKey(name, usart_clock[clock].getAttribute("value"), usart_clock[clock].getAttribute("caption"))
     usartClkSrc.setDisplayMode("Description")
     usartClkSrc.setOutputMode("Key")
     usartClkSrc.setDefaultValue(0)
