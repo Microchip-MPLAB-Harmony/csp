@@ -111,44 +111,51 @@ drvSTRVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/val
 
 ############################################Callbacks##############################################
 
-def packageChange(pin, pinout):
-	global uniquePinout
-	global package
-	import re
-	global prev_package
-	global cur_package
-	global pin_map
-	global pin_position
+def packageChange(symbol, pinout):
+    global uniquePinout
+    global package
+    import re
+    global prev_package
+    global cur_package
+    global pin_map
+    global pin
+    global pin_position
 
-	### No need to process if the device has only one pinout but multiple packages eg: TQFP, LQFP and QFN
-	if uniquePinout > 1:
-		cur_package = package.get(pinout["value"])
+    ### No need to process if the device has only one pinout but multiple packages eg: TQFP, LQFP and QFN
+    if uniquePinout > 1:
+        cur_package = package.get(pinout["value"])
 
-		### No need to generate Pin map again for same pinout
-		if cur_package != prev_package:
-			pin_map = {}
-			pin_position = []
-			portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(pinout["value"])) + "\"]")
-			for id in range(0,len(portBitPositionNode.getChildren())):
-				if "BGA" in pinout["value"]:
-					pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = portBitPositionNode.getChildren()[id].getAttribute("pad")
-				else:
-					pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+        ### No need to generate Pin map again for same pinout
+        if cur_package != prev_package:
+            pin_map = {}
+            pin_position = []
+            portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(pinout["value"])) + "\"]")
+            for id in range(0,len(portBitPositionNode.getChildren())):
+                if "BGA" in pinout["value"]:
+                    pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = portBitPositionNode.getChildren()[id].getAttribute("pad")
+                else:
+                    pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = portBitPositionNode.getChildren()[id].getAttribute("pad")
 
-			if "BGA" in pinout["value"]:
-				## BGA package ID's are alphanumeric unlike TQFP special sorting required
-				pin_position = sort_alphanumeric(pin_map.keys())
-			else:
-				pin_position = sorted(pin_map.keys())
+            if "BGA" in pinout["value"]:
+                ## BGA package ID's are alphanumeric unlike TQFP special sorting required
+                pin_position = sort_alphanumeric(pin_map.keys())
+            else:
+                pin_position = sorted(pin_map.keys())
 
-		pinNumber = int(str(pin.getID()).split("PIO_PIN_CONFIGURATION")[1])
-		pin.setLabel("Pin " + str(pin_position[pinNumber - 1]))
-		Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PIO_PIN", -1, 2)
-		Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PIO_CHANNEL", "", 2)
-		if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
-			Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PIO_PIN", int(re.findall('\d+', pin_map.get(pin_position[pinNumber - 1]))[0]), 2)
-			Database.setSymbolValue("core", "PIN_" + str(pinNumber) + "_PIO_CHANNEL", pin_map.get(pin_position[pinNumber - 1])[1], 2)
-		prev_package = cur_package
+        for index in range(1, len(pin) + 1):
+            if index <= len(pin_position):
+                if not pin[index - 1].getVisible():
+                    pin[index - 1].setVisible(True)
+                pin[index - 1].setLabel("Pin " + str(pin_position[index - 1]))
+                if pin_map.get(pin_position[index-1]).startswith("P"):
+                    Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_PIN", int(re.findall('\d+', pin_map.get(pin_position[index - 1]))[0]), 2)
+                    Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_GROUP", pin_map.get(pin_position[index - 1])[1], 2)
+                else:
+                    Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_PIN", -1, 2)
+                    Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_GROUP", "", 2)
+            else:
+                pin[index - 1].setVisible(False)
+        prev_package = cur_package
 
 def sort_alphanumeric(l):
     import re
@@ -174,10 +181,10 @@ def portFunc(pin, func):
         else:
                         for id in per_func:
                             port_mskr[port + "_" + id] &= ~(1 << bit_pos)
+                            print port_mskr[port + "_" + id]
 
-        if func["value"] in per_func:
-            for id in per_func:
-                Database.setSymbolValue("core", "PORT_" + str(port) + "_MSKR_Value" + str(id), str(hex(port_mskr[port + "_" + id])), 2)
+        for id in per_func:
+            Database.setSymbolValue("core", "PORT_" + str(port) + "_MSKR_Value" + str(id), str(hex(port_mskr[port + "_" + id])), 2)
 
 
 def pinCFGR (pin, cfgr_reg):
@@ -331,7 +338,6 @@ for pinNumber in range(1, packagePinCount + 1):
 	pin[pinNumber-1]= coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION" + str(pinNumber), pinConfiguration)
 	pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
 	pin[pinNumber-1].setDescription("Configuration for Pin " + str(pin_position[pinNumber-1]))
-	pin[pinNumber-1].setDependencies(packageChange, ["COMPONENT_PACKAGE"])
 
 	pinName.append(pinNumber)
 	pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
@@ -432,13 +438,18 @@ for pinNumber in range(1, packagePinCount + 1):
 	pinInterruptValue.setReadOnly(True)
 	pinInterruptValue.setVisible(False)
 	pinInterruptValue.setDependencies(portInterrupt, ["PIN_" + str(pinNumber) + "_PIO_INTERRUPT"])
-	
+
 	pincfgrValue.append(pinNumber)
 	pincfgrValue[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_CFGR_Value", pin[pinNumber-1])
 	pincfgrValue[pinNumber-1].setReadOnly(True)
 	pincfgrValue[pinNumber-1].setVisible(False)
 	pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_PIO_FILTER", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
 
+
+
+packageUpdate = coreComponent.createBooleanSymbol("PACKAGE_UPDATE_DUMMY", None)
+packageUpdate.setVisible(False)
+packageUpdate.setDependencies(packageChange, ["COMPONENT_PACKAGE"])
 
 for port in pioSymChannel:
 	mskr = 0
