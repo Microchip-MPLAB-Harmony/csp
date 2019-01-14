@@ -36,10 +36,16 @@ extFilterList = []
 def showWhenFD(element, event):
     if event["value"] == 'CAN FD':
         element.setVisible(True)
-        element.setEnabled(True)
     else:
         element.setVisible(False)
-        element.setEnabled(False)
+
+# Rx Buffer Element size
+def RxBufferElementSize(element, event):
+    if ((event["id"] == 'MCAN_OPMODE' and event["value"] == 'CAN FD' and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "RXBUF_USE") == True)
+    or (event["id"] == 'RXBUF_USE' and event["value"] == True and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_OPMODE") == 'CAN FD')):
+        element.setVisible(True)
+    else:
+        element.setVisible(False)
 
 # for FD. Expects keyValue symbol. Use for RX and TX
 def adornElementSize(fifo):
@@ -54,7 +60,6 @@ def adornElementSize(fifo):
     fifo.setDefaultValue(0)
     fifo.setOutputMode("Value")
     fifo.setDisplayMode("Description")
-    fifo.setDependencies(showWhenFD, ["MCAN_OPMODE"])
 
 # for extended and standard filters
 def adornFilterType(filterType):
@@ -83,15 +88,19 @@ def mcanCreateStdFilter(component, menu, filterNumber):
     stdFilter = component.createMenuSymbol(mcanInstanceName.getValue() + "_STD_FILTER"+ str(filterNumber), menu)
     stdFilter.setLabel("Standard Filter " + str(filterNumber))
     stdFilterType = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE", stdFilter)
+    stdFilterType.setLabel("Type")
     adornFilterType(stdFilterType)
     sfid1 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1", stdFilter)
+    sfid1.setLabel("ID1")
     sfid1.setMin(0)
     sfid1.setMax(2047)
     sfid2 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2", stdFilter)
+    sfid2.setLabel("ID2")
     sfid2.setMin(0)
     sfid2.setMax(2047)
 
     config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG", stdFilter)
+    config.setLabel("Element Configuration")
     adornFilterConfig(config)
 
     stdFilter.setVisible(False)
@@ -102,15 +111,19 @@ def mcanCreateExtFilter(component, menu, filterNumber):
     extFilter = component.createMenuSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber), menu)
     extFilter.setLabel("Extended Filter " + str(filterNumber))
     extFilterType = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE", extFilter)
+    extFilterType.setLabel("Type")
     adornFilterType(extFilterType)
     efid1 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1", extFilter)
+    efid1.setLabel("ID1")
     efid1.setMin(0)
     efid1.setMax(2047)
     efid2 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2", extFilter)
+    efid2.setLabel("ID2")
     efid2.setMin(0)
     efid2.setMax(2047)
 
     config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG", extFilter)
+    config.setLabel("Element Configuration")
     adornFilterConfig(config)
 
     extFilter.setVisible(False)
@@ -166,17 +179,12 @@ def instantiateComponent(mcanComponent):
     mcanInstanceName.setDefaultValue(mcanComponent.getID().upper())
     print("Running " + mcanInstanceName.getValue())
 
-    #main menu
-    mcanMenu = mcanComponent.createMenuSymbol("topMenu", None)
-    mcanMenu.setLabel("Hardware Settings")
-
     # PCK5 clock needs to be enabled and have a prescale value
     Database.setSymbolValue("core", "PMC_SCER_PCK5", True, 2)
     Database.setSymbolValue("core", "PMC_PCK5_PRES", 1, 2)
 
     def hideMenu(menu, event):
         menu.setVisible(event["value"])
-        menu.setEnabled(event["value"])
 
     #either the watermark % changed or the number of elements
     def RXF0WatermarkUpdate(watermark, event):
@@ -195,11 +203,11 @@ def instantiateComponent(mcanComponent):
         watermark.setValue(watermark_percentage * number_of_elements / 100, 0)
 
     # MCAN operation mode - default to FD
-    mcanOpMode = mcanComponent.createComboSymbol("MCAN_OPMODE", mcanMenu, opModeValues)
+    mcanOpMode = mcanComponent.createComboSymbol("MCAN_OPMODE", None, opModeValues)
     mcanOpMode.setLabel("MCAN Operation Mode")
     mcanOpMode.setDefaultValue("NORMAL")
 
-    mcanInterruptMode = mcanComponent.createBooleanSymbol("INTERRUPT_MODE", mcanMenu)
+    mcanInterruptMode = mcanComponent.createBooleanSymbol("INTERRUPT_MODE", None)
     mcanInterruptMode.setLabel("Interrupt Mode")
     mcanInterruptMode.setDefaultValue(False)
 
@@ -208,7 +216,7 @@ def instantiateComponent(mcanComponent):
     interruptHandlerLock = mcanInstanceName.getValue() + "_INT0" + "_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = mcanInstanceName.getValue() + "_INT0" + "_INTERRUPT_ENABLE_UPDATE"
 
-    mcanSFRRegSym = mcanComponent.createIntegerSymbol("MCAN_SFR_CAN_ENABLE_VALUE", mcanMenu)
+    mcanSFRRegSym = mcanComponent.createIntegerSymbol("MCAN_SFR_CAN_ENABLE_VALUE", None)
     mcanSFRRegSym.setDefaultValue(0)
     mcanSFRRegSym.setVisible(False)
     modules = ATDF.getNode('/avr-tools-device-file/modules')
@@ -226,7 +234,7 @@ def instantiateComponent(mcanComponent):
                     break
             break
 
-    mcanMATRIXRegSym = mcanComponent.createBooleanSymbol("MCAN_MATRIX_CAN_ENABLE", mcanMenu)
+    mcanMATRIXRegSym = mcanComponent.createBooleanSymbol("MCAN_MATRIX_CAN_ENABLE", None)
     mcanMATRIXRegSym.setDefaultValue(False)
     mcanMATRIXRegSym.setVisible(False)
     for index in range(0, len(moduleList)):
@@ -239,7 +247,7 @@ def instantiateComponent(mcanComponent):
                     break
             break
 
-    mcanRevisionASym = mcanComponent.createBooleanSymbol("MCAN_REVISION_A_ENABLE", mcanMenu)
+    mcanRevisionASym = mcanComponent.createBooleanSymbol("MCAN_REVISION_A_ENABLE", None)
     mcanRevisionASym.setDefaultValue(False)
     mcanRevisionASym.setVisible(False)
     mcanRegs = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MCAN"]/register-group@[name="MCAN"]')
@@ -250,66 +258,66 @@ def instantiateComponent(mcanComponent):
             break
 
     # MCAN Timing FBTP for FD and BTP for normal operation mode
-    mcanTimingMenu = mcanComponent.createMenuSymbol("timingMenu", mcanMenu)
+    mcanTimingMenu = mcanComponent.createMenuSymbol("timingMenu", None)
     mcanTimingMenu.setLabel("Timing for Normal operation and FD arbitration")
     mcanTimingMenu.setDescription("This timing must be less or equal to the FD data rate (if used)")
 
-    BTPsyncJump = mcanComponent.createIntegerSymbol("BTP_SJW", mcanTimingMenu)
-    BTPsyncJump.setLabel("Synchronization Jump Width")
+    BTPsyncJump = mcanComponent.createIntegerSymbol("NBTP_NSJW", mcanTimingMenu)
+    BTPsyncJump.setLabel("Nominal Synchronization Jump Width")
     BTPsyncJump.setMin(0)
     BTPsyncJump.setMax(15)
     BTPsyncJump.setDefaultValue(3)
 
-    BTPBefore = mcanComponent.createIntegerSymbol("BTP_TSEG1", mcanTimingMenu)
-    BTPBefore.setLabel("Segment Before duration:")
+    BTPBefore = mcanComponent.createIntegerSymbol("NBTP_NTSEG1", mcanTimingMenu)
+    BTPBefore.setLabel("Nominal Time Segment Before Sample Point")
     BTPBefore.setMin(1)
     BTPBefore.setMax(63)
     BTPBefore.setDefaultValue(10)
 
-    BTPAfter = mcanComponent.createIntegerSymbol("BTP_TSEG2", mcanTimingMenu)
-    BTPAfter.setLabel("Segment After duration:")
+    BTPAfter = mcanComponent.createIntegerSymbol("NBTP_NTSEG2", mcanTimingMenu)
+    BTPAfter.setLabel("Nominal Time Segment After Sample Point")
     BTPAfter.setMin(0)
     BTPAfter.setMax(15)
     BTPAfter.setDefaultValue(3)
 
-    BTPprescale = mcanComponent.createIntegerSymbol("BTP_BRP", mcanTimingMenu)
-    BTPprescale.setLabel("BAUD rate prescaler:")
+    BTPprescale = mcanComponent.createIntegerSymbol("NBTP_NBRP", mcanTimingMenu)
+    BTPprescale.setLabel("Nominal Bit Rate Prescaler")
     BTPprescale.setMin(0)
     BTPprescale.setMax(1023)
     BTPprescale.setDefaultValue(0)
 
-    mcanFastTimingMenu = mcanComponent.createMenuSymbol("fastTimingMenu", mcanMenu)
+    mcanFastTimingMenu = mcanComponent.createMenuSymbol("DataTimingMenu", None)
     mcanFastTimingMenu.setLabel("Timing for FD operation")
     mcanFastTimingMenu.setVisible(False)
     mcanFastTimingMenu.setDependencies(showWhenFD, ["MCAN_OPMODE"])
 
-    FBTPsyncJump = mcanComponent.createIntegerSymbol("FBTP_FSJW", mcanFastTimingMenu)
-    FBTPsyncJump.setLabel("Fast Synchronization Jump Width")
+    FBTPsyncJump = mcanComponent.createIntegerSymbol("DBTP_DSJW", mcanFastTimingMenu)
+    FBTPsyncJump.setLabel("Data Synchronization Jump Width")
     FBTPsyncJump.setMin(0)
     FBTPsyncJump.setDefaultValue(3)
     FBTPsyncJump.setMax(3)
 
-    FBTPBefore = mcanComponent.createIntegerSymbol("FBTP_FTSEG1", mcanFastTimingMenu)
-    FBTPBefore.setLabel("Segment Before duration:")
+    FBTPBefore = mcanComponent.createIntegerSymbol("DBTP_DTSEG1", mcanFastTimingMenu)
+    FBTPBefore.setLabel("Data Time Segment Before Sample Point")
     FBTPBefore.setMin(1)
     FBTPBefore.setMax(15)
     FBTPBefore.setDefaultValue(10)
 
-    FBTPAfter = mcanComponent.createIntegerSymbol("FBTP_FTSEG2", mcanFastTimingMenu)
-    FBTPAfter.setLabel("Segment After duration:")
+    FBTPAfter = mcanComponent.createIntegerSymbol("DBTP_DTSEG2", mcanFastTimingMenu)
+    FBTPAfter.setLabel("Data Time Segment After Sample Point")
     FBTPAfter.setMin(0)
     FBTPAfter.setDefaultValue(3)
     FBTPAfter.setMax(7)
 
-    FBTPprescale = mcanComponent.createIntegerSymbol("FBTP_FBRP", mcanFastTimingMenu)
-    FBTPprescale.setLabel("BAUD rate prescaler:")
+    FBTPprescale = mcanComponent.createIntegerSymbol("DBTP_DBRP", mcanFastTimingMenu)
+    FBTPprescale.setLabel("Data Bit Rate Prescaler")
     FBTPprescale.setMin(0)
     FBTPprescale.setMax(31)
     FBTPprescale.setDefaultValue(0)
 
     # ----- Rx FIFO 0 -----
-    mcanRXF0 = mcanComponent.createBooleanSymbol("RXF0_USE", mcanMenu)
-    mcanRXF0.setLabel("Use RX0 FIFO")
+    mcanRXF0 = mcanComponent.createBooleanSymbol("RXF0_USE", None)
+    mcanRXF0.setLabel("Use RX FIFO 0")
     mcanRXF0.setDefaultValue(True)
     mcanRXF0.setReadOnly(True)
 
@@ -319,37 +327,39 @@ def instantiateComponent(mcanComponent):
 
     # number of RX FIFO 0 elements
     mcanRXF0Elements = mcanComponent.createIntegerSymbol("RXF0_ELEMENTS", mcanRXF0Menu)
-    mcanRXF0Elements.setLabel("Number of RX FIFO 0 Elements")
+    mcanRXF0Elements.setLabel("Number of Elements")
     mcanRXF0Elements.setDefaultValue(1)
     mcanRXF0Elements.setMin(0)
     mcanRXF0Elements.setMax(64)
 
     mcanRXF0watermarkP = mcanComponent.createIntegerSymbol("RXF0_WP", mcanRXF0Menu)
-    mcanRXF0watermarkP.setLabel("RX FIFO 0 Watermark %")
+    mcanRXF0watermarkP.setLabel("Watermark %")
     mcanRXF0watermarkP.setDefaultValue(0)
     mcanRXF0watermarkP.setMin(0)
     mcanRXF0watermarkP.setMax(99)
 
     #This is a computed value
     mcanRXF0watermark = mcanComponent.createIntegerSymbol("RXF0_WATERMARK", mcanRXF0Menu)
-    mcanRXF0watermark.setLabel("Watermark at element: ")
+    mcanRXF0watermark.setLabel("Watermark at element")
     mcanRXF0watermark.setDescription("A value of 0 disables watermark")
     mcanRXF0watermark.setDefaultValue(0)
     mcanRXF0watermark.setReadOnly(True)
     mcanRXF0watermark.setDependencies(RXF0WatermarkUpdate, ["RXF0_ELEMENTS", "RXF0_WP"])
 
     mcanRXF0elementSize = mcanComponent.createKeyValueSetSymbol("RXF0_BYTES_CFG", mcanRXF0Menu)
-    mcanRXF0elementSize.setLabel("RX FIFO 0 Element Size:")
+    mcanRXF0elementSize.setLabel("Element Size")
+    mcanRXF0elementSize.setVisible(False)
     adornElementSize(mcanRXF0elementSize)
+    mcanRXF0elementSize.setDependencies(showWhenFD, ["MCAN_OPMODE"])
 
     mcanRx0overwrite = mcanComponent.createBooleanSymbol("RXF0_OVERWRITE", mcanRXF0Menu)
-    mcanRx0overwrite.setLabel("Use RX FIFO 0 Overwrite Mode")
+    mcanRx0overwrite.setLabel("Use Overwrite Mode")
     mcanRx0overwrite.setDescription("Overwrite RX FIFO 0 entries without blocking")
     mcanRx0overwrite.setDefaultValue(True)
 
     # ----- Rx FIFO 1 -----
-    mcanRXF1 = mcanComponent.createBooleanSymbol("RXF1_USE", mcanMenu)
-    mcanRXF1.setLabel("Use RX1 FIFO")
+    mcanRXF1 = mcanComponent.createBooleanSymbol("RXF1_USE", None)
+    mcanRXF1.setLabel("Use RX FIFO 1")
     mcanRXF1.setDefaultValue(True)
 
     mcanRXF1Menu = mcanComponent.createMenuSymbol("rxf1menu", mcanRXF1)
@@ -357,52 +367,58 @@ def instantiateComponent(mcanComponent):
     mcanRXF1Menu.setDependencies(hideMenu, ["RXF1_USE"])
 
     mcanRXF1Elements = mcanComponent.createIntegerSymbol("RXF1_ELEMENTS", mcanRXF1Menu)
-    mcanRXF1Elements.setLabel("Number of RX FIFO 1 Elements")
+    mcanRXF1Elements.setLabel("Number of Elements")
     mcanRXF1Elements.setDefaultValue(1)
     mcanRXF1Elements.setMin(1)
     mcanRXF1Elements.setMax(64)
 
     mcanRXF1watermarkP = mcanComponent.createIntegerSymbol("RXF1_WP", mcanRXF1Menu)
-    mcanRXF1watermarkP.setLabel("RX FIFO 1 Watermark %")
+    mcanRXF1watermarkP.setLabel("Watermark %")
     mcanRXF1watermarkP.setDefaultValue(0)
     mcanRXF1watermarkP.setMin(0)
     mcanRXF1watermarkP.setMax(99)
 
     #This is a computed value for watermark
     mcanRX1watermark = mcanComponent.createIntegerSymbol("RXF1_WATERMARK", mcanRXF1Menu)
-    mcanRX1watermark.setLabel("Watermark at element: ")
+    mcanRX1watermark.setLabel("Watermark at element")
     mcanRX1watermark.setDescription("A value of 0 disables watermark")
     mcanRX1watermark.setDefaultValue(0)
     mcanRX1watermark.setReadOnly(True)
     mcanRX1watermark.setDependencies(RXF1WatermarkUpdate, ["RXF1_ELEMENTS", "RXF1_WP"])
 
     mcanRXF1elementSize = mcanComponent.createKeyValueSetSymbol("RXF1_BYTES_CFG", mcanRXF1Menu)
-    mcanRXF1elementSize.setLabel("RX FIFO 1 Element Size:")
+    mcanRXF1elementSize.setLabel("Element Size")
+    mcanRXF1elementSize.setVisible(False)
     adornElementSize(mcanRXF1elementSize)
+    mcanRXF1elementSize.setDependencies(showWhenFD, ["MCAN_OPMODE"])
 
     mcanRXF1overwrite = mcanComponent.createBooleanSymbol("RXF1_OVERWRITE", mcanRXF1Menu)
-    mcanRXF1overwrite.setLabel("Use RX FIFO 1 Overwrite Mode")
+    mcanRXF1overwrite.setLabel("Use Overwrite Mode")
     mcanRXF1overwrite.setDescription("Overwrite RX FIFO 1 entries without blocking")
     mcanRXF1overwrite.setDefaultValue(True)
 
     # ----- Rx Buffer -----
-    mcanRXBuf = mcanComponent.createBooleanSymbol("RXBUF_USE", mcanMenu)
+    mcanRXBuf = mcanComponent.createBooleanSymbol("RXBUF_USE", None)
     mcanRXBuf.setLabel("Use Dedicated Rx Buffer")
     mcanRXBuf.setDefaultValue(False)
 
     mcanRXBufElements = mcanComponent.createIntegerSymbol("RX_BUFFER_ELEMENTS", mcanRXBuf)
-    mcanRXBufElements.setLabel("Number of Rx Buffer Elements")
+    mcanRXBufElements.setLabel("Number of Elements")
     mcanRXBufElements.setDefaultValue(1)
     mcanRXBufElements.setMin(1)
     mcanRXBufElements.setMax(64)
+    mcanRXBufElements.setVisible(False)
+    mcanRXBufElements.setDependencies(hideMenu, ["RXBUF_USE"])
 
     mcanRXBufelementSize = mcanComponent.createKeyValueSetSymbol("RX_BUFFER_BYTES_CFG", mcanRXBuf)
-    mcanRXBufelementSize.setLabel("Rx Buffer 0 Element Size:")
+    mcanRXBufelementSize.setLabel("Element Size")
+    mcanRXBufelementSize.setVisible(False)
     adornElementSize(mcanRXBufelementSize)
+    mcanRXBufelementSize.setDependencies(RxBufferElementSize, ["MCAN_OPMODE", "RXBUF_USE"])
 
     # ------  T X  --------------
     # ----- Tx FIFO -----
-    mcanTX = mcanComponent.createBooleanSymbol("TX_USE", mcanMenu)
+    mcanTX = mcanComponent.createBooleanSymbol("TX_USE", None)
     mcanTX.setLabel("Use TX FIFO")
     mcanTX.setDefaultValue(True)
     mcanTX.setReadOnly(True)
@@ -414,48 +430,52 @@ def instantiateComponent(mcanComponent):
 
     # number of TX FIFO elements
     mcanTXnumElements = mcanComponent.createIntegerSymbol("TX_FIFO_ELEMENTS", mcanTXmenu)
-    mcanTXnumElements.setLabel("Number of TX FIFO Elements")
+    mcanTXnumElements.setLabel("Number of Elements")
     mcanTXnumElements.setDefaultValue(1)
     mcanTXnumElements.setMin(1)
     mcanTXnumElements.setMax(32)
 
     mcanTXwatermarkP = mcanComponent.createIntegerSymbol("TX_FIFO_WP", mcanTXmenu)
-    mcanTXwatermarkP.setLabel("TX FIFO Watermark %")
+    mcanTXwatermarkP.setLabel("Watermark %")
     mcanTXwatermarkP.setDefaultValue(0)
     mcanTXwatermarkP.setMin(0)
     mcanTXwatermarkP.setMax(99)
 
     #This is a computed value for watermark
     mcanTXwatermark = mcanComponent.createIntegerSymbol("TX_FIFO_WATERMARK", mcanTXmenu)
-    mcanTXwatermark.setLabel("Watermark at element: ")
+    mcanTXwatermark.setLabel("Watermark at element")
     mcanTXwatermark.setDescription("A value of 0 disables watermark")
     mcanTXwatermark.setDefaultValue(0)
     mcanTXwatermark.setReadOnly(True)
     mcanTXwatermark.setDependencies(TXWatermarkUpdate, ["TX_FIFO_ELEMENTS", "TX_FIFO_WP"])
 
     mcanTXElementCfg = mcanComponent.createKeyValueSetSymbol("TX_FIFO_BYTES_CFG", mcanTXmenu)
-    mcanTXElementCfg.setLabel("TX Element Size:")
+    mcanTXElementCfg.setLabel("Element Size")
     adornElementSize(mcanTXElementCfg)
+    mcanTXElementCfg.setVisible(False)
+    mcanTXElementCfg.setDependencies(showWhenFD, ["MCAN_OPMODE"])
 
-    mcanTXpause = mcanComponent.createBooleanSymbol("TX_PAUSE", mcanTXmenu)
+    mcanTXpause = mcanComponent.createBooleanSymbol("TX_PAUSE", None)
     mcanTXpause.setLabel("Enable TX Pause")
     mcanTXpause.setDescription("Pause 2 MCAN bit times between transmissions")
     mcanTXpause.setDefaultValue(False)
 
     # ----- Tx Buffer -----
-    mcanTXBuf = mcanComponent.createBooleanSymbol("TXBUF_USE", mcanMenu)
+    mcanTXBuf = mcanComponent.createBooleanSymbol("TXBUF_USE", None)
     mcanTXBuf.setLabel("Use Dedicated Tx Buffer")
     mcanTXBuf.setDefaultValue(False)
 
     # number of TX buffer elements
     mcanTXBufElements = mcanComponent.createIntegerSymbol("TX_BUFFER_ELEMENTS", mcanTXBuf)
     mcanTXBufElements.setLabel("Number of TX Buffer Elements")
-    mcanTXBufElements.setDefaultValue(0)
-    mcanTXBufElements.setMin(0)
+    mcanTXBufElements.setDefaultValue(1)
+    mcanTXBufElements.setMin(1)
     mcanTXBufElements.setMax(32)
+    mcanTXBufElements.setVisible(False)
+    mcanTXBufElements.setDependencies(hideMenu, ["TXBUF_USE"])
 
     # up to 128 standard filters
-    mcanStdFilterMenu = mcanComponent.createMenuSymbol("stdFilterMenu", mcanMenu)
+    mcanStdFilterMenu = mcanComponent.createMenuSymbol("stdFilterMenu", None)
     mcanStdFilterMenu.setLabel("Standard Filters (up to 128)")
     mcanStdFilterMenu.setDependencies(adjustStdFilters, ["FILTERS_STD"])
 
@@ -470,7 +490,7 @@ def instantiateComponent(mcanComponent):
         stdFilterList.append(mcanCreateStdFilter(mcanComponent, mcanStdFilterMenu, filter + 1))
 
     #What to do when a NO-MATCH is detected on a standard packet
-    mcanNoMatchStandard = mcanComponent.createKeyValueSetSymbol("FILTERS_STD_NOMATCH", mcanMenu)
+    mcanNoMatchStandard = mcanComponent.createKeyValueSetSymbol("FILTERS_STD_NOMATCH", None)
     mcanNoMatchStandard.setLabel("Standard message No-Match disposition:")
     mcanNoMatchStandard.addKey("MCAN_GFC_ANFS_RX_FIFO_0", "0", "Move to RX FIFO 0")
     mcanNoMatchStandard.addKey("MCAN_GFC_ANFS_RX_FIFO_1", "1", "Move to RX FIFO 1")
@@ -480,13 +500,13 @@ def instantiateComponent(mcanComponent):
     mcanNoMatchStandard.setDefaultValue(2)
 
     # Reject all standard IDs?
-    mcanStdReject = mcanComponent.createBooleanSymbol("FILTERS_STD_REJECT", mcanMenu)
-    mcanStdReject.setLabel("Reject all Standard Messages")
+    mcanStdReject = mcanComponent.createBooleanSymbol("FILTERS_STD_REJECT", None)
+    mcanStdReject.setLabel("Reject Standard Remote Frames")
     mcanStdReject.setDescription("Reject all remote frames with 11-bit standard IDs")
     mcanStdReject.setDefaultValue(False)
 
     # 64 extended filters
-    mcanExtFilterMenu = mcanComponent.createMenuSymbol("extFilterMenu", mcanMenu)
+    mcanExtFilterMenu = mcanComponent.createMenuSymbol("extFilterMenu", None)
     mcanExtFilterMenu.setLabel("Extended Filters (up to 64)")
     mcanExtFilterMenu.setDependencies(adjustExtFilters, ["FILTERS_EXT"])
 
@@ -502,7 +522,7 @@ def instantiateComponent(mcanComponent):
         extFilterList.append(mcanCreateExtFilter(mcanComponent, mcanExtFilterMenu, filter + 1))
 
     #What to do when a NO-MATCH is detected on an extended message
-    mcanNoMatchExtended = mcanComponent.createKeyValueSetSymbol("FILTERS_EXT_NOMATCH", mcanMenu)
+    mcanNoMatchExtended = mcanComponent.createKeyValueSetSymbol("FILTERS_EXT_NOMATCH", None)
     mcanNoMatchExtended.setLabel("Extended message No-Match disposition:")
     mcanNoMatchExtended.addKey("MCAN_GFC_ANFE_RX_FIFO_0", "0", "Move to RX FIFO 0")
     mcanNoMatchExtended.addKey("MCAN_GFC_ANFE_RX_FIFO_1", "1", "Move to RX FIFO 1")
@@ -512,13 +532,13 @@ def instantiateComponent(mcanComponent):
     mcanNoMatchExtended.setDefaultValue(2)
 
     # Reject all extended IDs?
-    mcanExtReject = mcanComponent.createBooleanSymbol("FILTERS_EXT_REJECT", mcanMenu)
-    mcanExtReject.setLabel("Reject all Extended Messages")
+    mcanExtReject = mcanComponent.createBooleanSymbol("FILTERS_EXT_REJECT", None)
+    mcanExtReject.setLabel("Reject Extended Remote Frames")
     mcanExtReject.setDescription("Reject all remote frames with 29-bit extended IDs")
     mcanExtReject.setDefaultValue(False)
 
     #use timeout?
-    mcanUseTimeout = mcanComponent.createBooleanSymbol("MCAN_TIMEOUT", mcanMenu)
+    mcanUseTimeout = mcanComponent.createBooleanSymbol("MCAN_TIMEOUT", None)
     mcanUseTimeout.setLabel("Use Timeout Counter")
     mcanUseTimeout.setDescription("Enables Timeout Counter")
     mcanUseTimeout.setDefaultValue(False)
@@ -530,6 +550,8 @@ def instantiateComponent(mcanComponent):
     mcanTimeoutCount.setDefaultValue(40000)
     mcanTimeoutCount.setMin(10)
     mcanTimeoutCount.setMax(65535)
+    mcanTimeoutCount.setVisible(False)
+    mcanTimeoutCount.setDependencies(hideMenu, ["MCAN_TIMEOUT"])
 
     #timeout mode
     mcanTimeoutMode = mcanComponent.createKeyValueSetSymbol("TIMEOUT_SELECT", mcanUseTimeout)
@@ -540,11 +562,12 @@ def instantiateComponent(mcanComponent):
     mcanTimeoutMode.addKey("MCAN_TOCC_TOS_RX1_EV_TIMEOUT", "3", "RX1 EVENT")
     mcanTimeoutMode.setOutputMode("Key")
     mcanTimeoutMode.setDisplayMode("Description")
+    mcanTimeoutMode.setVisible(False)
     mcanTimeoutMode.setDependencies(hideMenu, ["MCAN_TIMEOUT"])
     mcanTimeoutMode.setDefaultValue(1)
 
     #timestamp Modes
-    mcanTimestampMode = mcanComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", mcanMenu)
+    mcanTimestampMode = mcanComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", None)
     mcanTimestampMode.setLabel("Timestamp mode")
     mcanTimestampMode.setDescription("EXT INC: external counter (needed for FD). ZERO: timestamp is always 0x0000. TCP INC: incremented according to TCP.")
     mcanTimestampMode.addKey("MCAN_TSCC_TSS_ALWAYS_0", "0", "ZERO")
@@ -555,7 +578,7 @@ def instantiateComponent(mcanComponent):
     mcanTimestampMode.setDefaultValue(1)
 
     #timestamp/timeout Counter Prescaler
-    mcanTCP = mcanComponent.createIntegerSymbol("TIMESTAMP_PRESCALER", mcanMenu)
+    mcanTCP = mcanComponent.createIntegerSymbol("TIMESTAMP_PRESCALER", None)
     mcanTCP.setLabel("Timestamp/Timeout Counter Prescaler (TCP):")
     mcanTCP.setDescription("Configures Timestamp & Timeout counter prescaler in multiples of MCAN bit times.")
     mcanTCP.setDefaultValue(1)

@@ -304,8 +304,8 @@ typedef struct
     /* Tx Buffer Index */
     uint32_t txBufferIndex;
 
-    /* Rx Message address, buffer and size */
-    uint32_t *rxAddress;
+    /* Rx Message ID, buffer and size */
+    uint32_t *rxId;
     uint8_t *rxBuffer;
     uint8_t *rxsize;
 
