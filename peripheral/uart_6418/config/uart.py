@@ -105,8 +105,14 @@ def instantiateComponent(uartComponent):
 
     uartClkSrc = uartComponent.createKeyValueSetSymbol("UART_CLK_SRC", None)
     uartClkSrc.setLabel("Select Clock Source")
-    uartClkSrc.addKey("PERIPH_CLK", "0", "MCK")
-    uartClkSrc.addKey("PMC_PCK", "1", "PCK4")
+    uart_clock = []
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"UART\"]/instance@[name=\""+uartInstanceName.getValue()+"\"]/parameters")
+    uart_clock = node.getChildren()
+    for clock in range(0, len(uart_clock)):
+        if ("BRSRCCK" in uart_clock[clock].getAttribute("name")):
+            name_split = uart_clock[clock].getAttribute("name").split("_")[1:]
+            name = "_".join(name_split)
+            uartClkSrc.addKey(name, uart_clock[clock].getAttribute("value"), uart_clock[clock].getAttribute("caption"))
     uartClkSrc.setDisplayMode("Description")
     uartClkSrc.setOutputMode("Key")
     uartClkSrc.setDefaultValue(0)
