@@ -151,8 +151,8 @@
 // *****************************************************************************
 // *****************************************************************************
 void ${MCAN_INSTANCE_NAME}_Initialize (void);
-bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t address, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr);
-bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *address, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr);
+bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr);
+bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr);
 MCAN_ERROR ${MCAN_INSTANCE_NAME}_ErrorGet(void);
 bool ${MCAN_INSTANCE_NAME}_InterruptGet(MCAN_INTERRUPT_MASK interruptMask);
 void ${MCAN_INSTANCE_NAME}_InterruptClear(MCAN_INTERRUPT_MASK interruptMask);
