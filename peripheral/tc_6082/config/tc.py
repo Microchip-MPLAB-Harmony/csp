@@ -27,10 +27,8 @@
 ###################################################################################################
 global tcInstanceName
 global extClock
+global tcNumInterruptLines
 channel_periphId = [0, 0, 0]
-
-masks_without_channel_interrupt = ["SAMA5D2"]
-masks_with_32_bit_counter = ["SAMA5D2"]
 
 tcChannelMenu = []
 tcSym_CH_Enable = []
@@ -192,9 +190,7 @@ def tcClockControl(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
     if(tcSym_CH_EnableQEI.getValue() == True):
-        Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL0_CLOCK_ENABLE")
         Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL0_CLOCK_ENABLE", True, 2)
-        Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL1_CLOCK_ENABLE")
         if(tcSym_CH_QEI_INDEX_PULSE.getValue() == True):
             Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL1_CLOCK_ENABLE", True, 2)
         else:
@@ -203,21 +199,16 @@ def tcClockControl(symbol, event):
             else:
                 Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL1_CLOCK_ENABLE", False, 2)
         if(tcSym_CH_BMR_POSEN.getValue() == "SPEED"):
-            Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE")
             Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE", True, 2)
         else:
             if(tcSym_CH_Enable[2].getValue() == True):
-                Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE")
                 Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE", True, 2)
             else:
-                Database.clearSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE")
                 Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL2_CLOCK_ENABLE", False, 2)
     else:
         if(tcSym_CH_Enable[channelID].getValue() == True):
-            Database.clearSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE")
             Database.setSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", True, 2)
         else:
-            Database.clearSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE")
             Database.setSymbolValue("core", tcInstanceName.getValue() + "_CHANNEL"+str(channelID) + "_CLOCK_ENABLE", False, 2)
 
 #Enable/Disable interrupt
@@ -234,9 +225,6 @@ def tcinterruptControl(symbol, event):
         interruptVector = tcInstanceName.getValue() + "_CH0_INTERRUPT_ENABLE"
         interruptHandler = tcInstanceName.getValue() + "_CH0_INTERRUPT_HANDLER"
         interruptHandlerLock = tcInstanceName.getValue() + "_CH0_INTERRUPT_HANDLER_LOCK"
-        Database.clearSymbolValue(tcInterruptSymbolSpace, interruptVector)
-        Database.clearSymbolValue(tcInterruptSymbolSpace, interruptHandler)
-        Database.clearSymbolValue(tcInterruptSymbolSpace, interruptHandlerLock)
         if(tcSym_CH_QIER_IDX.getValue() == True or tcSym_CH_QIER_QERR.getValue() == True or tcSym_CH_QEI_IER_CPCS.getValue() == True):
             Database.setSymbolValue(tcInterruptSymbolSpace, interruptVector, True, 2)
             Database.setSymbolValue(tcInterruptSymbolSpace, interruptHandler, tcInstanceName.getValue() + "_CH0_InterruptHandler", 2)
@@ -251,9 +239,6 @@ def tcinterruptControl(symbol, event):
             interruptHandler = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
             interruptHandlerLock = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
             if (tcSym_CH_Enable[channelID].getValue() == True):
-                Database.clearSymbolValue(tcInterruptSymbolSpace, interruptVector)
-                Database.clearSymbolValue(tcInterruptSymbolSpace, interruptHandler)
-                Database.clearSymbolValue(tcInterruptSymbolSpace, interruptHandlerLock)
                 if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue(tcInterruptSymbolSpace, interruptVector, True, 2)
                     Database.setSymbolValue(tcInterruptSymbolSpace, interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
@@ -282,9 +267,6 @@ def tcinterruptControl(symbol, event):
             interruptHandler = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
             interruptHandlerLock = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
             if (tcSym_CH_Enable[channelID].getValue() == True):
-                Database.clearSymbolValue(tcInterruptSymbolSpace, interruptVector)
-                Database.clearSymbolValue(tcInterruptSymbolSpace, interruptHandler)
-                Database.clearSymbolValue(tcInterruptSymbolSpace, interruptHandlerLock)
                 if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and tcSym_CH_IER_CPCS[channelID].getValue() == True):
                     Database.setSymbolValue(tcInterruptSymbolSpace, interruptVector, True, 2)
                     Database.setSymbolValue(tcInterruptSymbolSpace, interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_InterruptHandler", 2)
@@ -308,9 +290,6 @@ def tcinterruptControl(symbol, event):
                 Database.setSymbolValue(tcInterruptSymbolSpace, interruptHandler, tcInstanceName.getValue() + "_CH"+str(channelID)+"_Handler", 2)
                 Database.setSymbolValue(tcInterruptSymbolSpace, interruptHandlerLock, False, 2)
     else:
-        Database.clearSymbolValue(tcInterruptSymbolSpace, interruptVector)
-        Database.clearSymbolValue(tcInterruptSymbolSpace, interruptHandler)
-        Database.clearSymbolValue(tcInterruptSymbolSpace, interruptHandlerLock)
         if(tcSym_CH_Enable[channelID].getValue() == True):
             if(tcSym_CH_OperatingMode[channelID].getValue() == "TIMER" and (tcSym_CH_IER_CPCS[channelID].getValue() == True or tcSym_CH_IER_CPAS[channelID].getValue() == True)):
                 Database.setSymbolValue(tcInterruptSymbolSpace, interruptVector, True, 2)
@@ -414,7 +393,6 @@ def tcClockFreq(tcSym_CH_ClockFreqLocal, event):
     clock = ((tcSym_CH_CMR_TCCLKS[channelID].getSelectedKey()))
     if ("XC" in clock):
         clock_Hz = (tcSym_CH_EXT_CLOCK[channelID].getValue())
-    tcSym_CH_CLOCK_FREQ[channelID].clearValue()
     tcSym_CH_ClockFreqLocal.setValue(int(clock_Hz), 2)
 
 def tcClockResCalc(tcSym_CH_ResolutionLocal, event):
@@ -440,14 +418,13 @@ def tcPCK7Set(tcSym_CH_PCK7Local, event):
     source = tcSym_CH_CMR_TCCLKS[channelID].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[channelID].getSelectedValue()))
     if (source == "PCK"):
         if (tcSym_CH_PCK_CLKSRC.getValue() == "PCK7"):
-            tcSym_CH_PCK7[channelID].clearValue()
-            tcSym_CH_PCK7[channelID].setValue(True, 1)
+            tcSym_CH_PCK7[channelID].setValue(True, 2)
         elif (tcSym_CH_PCK_CLKSRC.getValue() == "PCK6"):
-            tcSym_CH_PCK7[channelID].clearValue()
-            tcSym_CH_PCK7[channelID].setValue(False, 1)
+            tcSym_CH_PCK7[channelID].setValue(False, 2)
         else:
-            tcSym_CH_PCK7[channelID].clearValue()
-            tcSym_CH_PCK7[channelID].setValue(False, 1)
+            tcSym_CH_PCK7[channelID].setValue(False, 2)
+    else:
+        tcSym_CH_PCK7[channelID].setValue(False, 2)
 
 def tcTimerVisible(tcTimerMenuLocal, event):
     id = tcTimerMenuLocal.getID()
@@ -540,7 +517,6 @@ def tcPeriodCountCalc(symbol, event):
             tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is >" + str(tcCounterMaxValue) + ". Reduce timer period ****")
         else:
             tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is " + str(time_period) + "****")
-        tcSym_CH_TimerPeriodCount[channelID].clearValue()
         tcSym_CH_TimerPeriodCount[channelID].setValue(int(time_period), 2)
 
 def tcPeriodMaxVal(symbol, event):
@@ -664,32 +640,22 @@ def tcPCKVisible(symbol, event):
 
 def tcClockSymbols(tcComponent, channelID, menu):
     #clock selection
-    #Added keys here as this symbol combines two bit-fields CMR_TCCLKS and EMR_NODIVCLK
+    #this symbol combines two bit-fields CMR_TCCLKS and EMR_NODIVCLK
     global tcSym_CH_CMR_TCCLKS
-    i = 0 #value of the key. As keys are added conditionally, incrementing value with variable i
     tcSym_CH_CMR_TCCLKS[channelID] = tcComponent.createKeyValueSetSymbol("TC"+str(channelID)+"_CMR_TCCLKS", menu)
     tcSym_CH_CMR_TCCLKS[channelID].setLabel("Select Clock Source")
-    tcSym_CH_CMR_TCCLKS[channelID].addKey("", str(i), "MCK")
-
-    if (int(tcInstanceName.getValue().split("TC")[1]) == 0):
-        tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK")
-    else:
-        tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK1", str(i + 1), "PCK6")
-    i = i + 1
-    tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK2", str(i + 2), "MCK/8")
-    tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK3", str(i + 3), "MCK/32")
-    tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK4", str(i + 4), "MCK/128")
-    tcSym_CH_CMR_TCCLKS[channelID].addKey("TIMER_CLOCK5", str(i + 5), "SLCK")
-    i = i + 5
-    if(extClock[0] == True):
-        tcSym_CH_CMR_TCCLKS[channelID].addKey("XC0", str(i + 1), "XC0")
-        i = i + 1
-    if(extClock[1] == True):
-        tcSym_CH_CMR_TCCLKS[channelID].addKey("XC1", str(i + 1), "XC1")
-        i = i + 1
-    if(extClock[2] == True):
-        tcSym_CH_CMR_TCCLKS[channelID].addKey("XC2", str(i + 1), "XC2")
-        i = i + 1
+    tc_clock = []
+    tc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters")
+    tc_clock = tc.getChildren()
+    for clock in range(0, len(tc_clock)):
+        if ("TCCLKS" in tc_clock[clock].getAttribute("name")):
+            name_split = tc_clock[clock].getAttribute("name").split("_")[1:]
+            name = "_".join(name_split)
+            if ("TCCLKS_XC" in tc_clock[clock].getAttribute("name")):
+                if(extClock[int(tc_clock[clock].getAttribute("name")[-1])] == True):
+                    tcSym_CH_CMR_TCCLKS[channelID].addKey(name, tc_clock[clock].getAttribute("value"), tc_clock[clock].getAttribute("caption"))
+            else:
+                tcSym_CH_CMR_TCCLKS[channelID].addKey(name, tc_clock[clock].getAttribute("value"), tc_clock[clock].getAttribute("caption"))
     tcSym_CH_CMR_TCCLKS[channelID].setDefaultValue(0)
     tcSym_CH_CMR_TCCLKS[channelID].setOutputMode("Key")
     tcSym_CH_CMR_TCCLKS[channelID].setDisplayMode("Description")
@@ -766,6 +732,7 @@ def sysTime_ChannelSelection(symbol,event):
     global callbackApiName_Sym
     global irqEnumName_Sym
     global tcInstanceName
+    global tcNumInterruptLines
 
 
     symObj=event["symbol"]
@@ -818,8 +785,7 @@ def sysTime_ChannelSelection(symbol,event):
     periodSetApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerPeriodSet"
 
     # if there are no per channel interrupts, tie the IRQn to the instance interrupt
-    series = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC_MCU_SERIES")
-    if series in masks_without_channel_interrupt:
+    if int(tcNumInterruptLines) == 1 :
         irqEnumName = tcInstanceName.getValue() + "_IRQn"
     else:
         irqEnumName = tcInstanceName.getValue() + str(tc_channel) + "_IRQn"
@@ -850,6 +816,7 @@ def instantiateComponent(tcComponent):
     global tcInstanceName
     global tcInterruptSymbolSpace
     global tcCounterMaxValue
+    global tcNumInterruptLines
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
@@ -860,17 +827,19 @@ def instantiateComponent(tcComponent):
     tcSym_MAX_CHANNELS.setDefaultValue(3)
     tcSym_MAX_CHANNELS.setVisible(False)
 
-    tcSym_MCU_SERIES = tcComponent.createStringSymbol("TC_MCU_SERIES", None)
-    tcSym_MCU_SERIES.setVisible(False)
-    node = ATDF.getNode("/avr-tools-device-file/devices")
-    series = node.getChildren()[0].getAttribute("series")
-    tcSym_MCU_SERIES.setDefaultValue(node.getChildren()[0].getAttribute("series"))
+    tcSym_MATRIX_PRESENT = tcComponent.createBooleanSymbol("TC_MATRIX_PRESENT", None)
+    tcSym_MATRIX_PRESENT.setVisible(False)
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"MATRIX\"]/register-group@[name=\"MATRIX\"]/register@[name=\"CCFG_PCCR\"]")
+    if(node):
+        tcSym_MATRIX_PRESENT.setDefaultValue(True)
+    else:
+        tcSym_MATRIX_PRESENT.setDefaultValue(False)
 
-    #TC plib is written with the assumption that there are interrupt symbols provided for each channel of the TC instance.
-    # For certian masks (SAMA5D2 MPU, for example) all TC interrupts of an instance are tried to one interrupt line.
-    # To accommodate this behavior with the least amount of code change, create dummy symbols and associate them with
+    tcNumInterruptLines = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters/param@[name=\"NUM_INTERRUPT_LINES\"]").getAttribute("value")
+
+    # Create dummy symbols for interrupt if number of interrupt lines is 1 and associate them with
     # the instance symbol provided by the interrupt controller.
-    if series in masks_without_channel_interrupt:
+    if int(tcNumInterruptLines) == 1:
         tcCreateLocalInterruptSymbols(tcComponent)
         tcInterruptSymbolSpace = tcInstanceName.getValue().lower()
     else:
@@ -934,17 +903,10 @@ def instantiateComponent(tcComponent):
 #------------------------------------------------------------
     timerWidth_Sym = tcComponent.createIntegerSymbol("TIMER_WIDTH", None)
     timerWidth_Sym.setVisible(False)
-
     #Set the counter bitwidth based on the masks. Some masks support 32 bit timers
-    counter_bitwidth = 16
-
-    #check if the mask supports 32 bit timers
-    if series in masks_with_32_bit_counter:
-        counter_bitwidth = 32
-
-    #adjust the count values accordingly
-    timerWidth_Sym.setDefaultValue(counter_bitwidth)
-    tcCounterMaxValue = pow(2, counter_bitwidth) - 1
+    counter_bitwidth = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters/param@[name=\"TIMER_WIDTH\"]").getAttribute("value")
+    timerWidth_Sym.setDefaultValue(int(counter_bitwidth))
+    tcCounterMaxValue = pow(2, int(counter_bitwidth)) - 1
 
     timerPeriodMax_Sym = tcComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
     timerPeriodMax_Sym.setVisible(False)
