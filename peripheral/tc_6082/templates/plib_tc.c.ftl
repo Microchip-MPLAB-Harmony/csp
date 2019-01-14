@@ -106,7 +106,7 @@ void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
 
     <#if TC_BMR_POSEN == "SPEED">
     /* Channel 2 configurations */
-        <#if TC_MCU_SERIES == "SAME70" || TC_MCU_SERIES == "SAMS70" || TC_MCU_SERIES == "SAMV70" || TC_MCU_SERIES == "SAMV71">
+        <#if TC_MATRIX_PRESENT == true>
             <#if TC3_PCK7 == true>
             <#lt>    /* Enable PCK7 */
             <#lt>    MATRIX_REGS->CCFG_PCCR |= CCFG_PCCR_TC0CC_Msk;
@@ -245,7 +245,7 @@ TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 /* Initialize channel in timer mode */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerInitialize (void)
 {
-    <#if TC_MCU_SERIES == "SAME70" || TC_MCU_SERIES == "SAMS70" || TC_MCU_SERIES == "SAMV70" || TC_MCU_SERIES == "SAMV71">
+    <#if TC_MATRIX_PRESENT == true>
         <#if .vars[TC_PCK7] == true>
         <#lt>    /* Enable PCK7 */
         <#lt>    MATRIX_REGS->CCFG_PCCR |= CCFG_PCCR_TC0CC_Msk;
@@ -366,7 +366,7 @@ TC_CAPTURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 /* Initialize channel in capture mode */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureInitialize (void)
 {
-    <#if TC_MCU_SERIES == "SAME70" || TC_MCU_SERIES == "SAMS70" || TC_MCU_SERIES == "SAMV70" || TC_MCU_SERIES == "SAMV71">
+    <#if TC_MATRIX_PRESENT == true>
         <#if .vars[TC_PCK7] == true>
         <#lt>    /* Enable PCK7 */
         <#lt>    MATRIX_REGS->CCFG_PCCR |= CCFG_PCCR_TC0CC_Msk;
@@ -482,7 +482,7 @@ TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 /* Initialize channel in compare mode */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareInitialize (void)
 {
-    <#if TC_MCU_SERIES == "SAME70" || TC_MCU_SERIES == "SAMS70" || TC_MCU_SERIES == "SAMV70" || TC_MCU_SERIES == "SAMV71">
+    <#if TC_MATRIX_PRESENT == true>
         <#if .vars[TC_PCK7] == true>
         <#lt>    /* Enable PCK7 */
         <#lt>    MATRIX_REGS->CCFG_PCCR |= CCFG_PCCR_TC0CC_Msk;
@@ -596,21 +596,21 @@ TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void)
 <#--  If a common interrupt symbol exists -->
 <#if TC_COMMON_INTERRUPT_STATUS??>
 <#--  If common interrupt is enabled -->
-<#if TC_COMMON_INTERRUPT_STATUS == true>	
+<#if TC_COMMON_INTERRUPT_STATUS == true>
 /* Interrupt handler for ${TC_INSTANCE_NAME} */
 void ${TC_INSTANCE_NAME}_InterruptHandler(void)
-{	
+{
 	<#if .vars[TC_INSTANCE_NAME + "_CH0_INTERRUPT_ENABLE"] == true>
 	${TC_INSTANCE_NAME}_CH0_InterruptHandler();
 	</#if>
 	<#if .vars[TC_INSTANCE_NAME + "_CH1_INTERRUPT_ENABLE"] == true>
-	
+
 	${TC_INSTANCE_NAME}_CH1_InterruptHandler();
 	</#if>
 	<#if .vars[TC_INSTANCE_NAME + "_CH2_INTERRUPT_ENABLE"] == true>
-	
+
 	${TC_INSTANCE_NAME}_CH2_InterruptHandler();
-	</#if>	
+	</#if>
 }
 </#if> <#-- common interrupt is enabled -->
 </#if> <#-- common interrupt exists -->
