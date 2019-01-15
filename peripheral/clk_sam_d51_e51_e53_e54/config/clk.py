@@ -1590,13 +1590,28 @@ def ahbValue(symbol, event):
 def apbValue(symbol, event):
     global apbInit
     global mclkDic
+    enable = event["value"]
     perInstance = event["id"].split("_CLOCK_ENABLE")[0]
-    perInstance = perInstance.split("_")[0]
     if "_CORE" in perInstance:
         perInstance = perInstance.split("_CORE")[0]
 
+    if "_ANA" in perInstance:
+        perInstance = perInstance.split("_ANA")[0]
+
     if "_SLOW" in perInstance:
         return
+
+    if "_DIG" in perInstance:
+        return
+
+    if "EVSYS" in perInstance:
+        perInstance = perInstance.split("_")[0]
+        for i in range (0,12):
+            if Database.getSymbolValue("core", "EVSYS_" + str(i) + "_CLOCK_ENABLE") == True:
+                enable = enable | True
+                break
+
+
 
     for key in mclkDic.keys():
         if mclkDic.get(key) == perInstance:
@@ -1604,17 +1619,14 @@ def apbValue(symbol, event):
                 bridge = key.split("_")[0]
 
                 bitmask = int(key.split("_")[1])
-                apbVal = int(Database.getSymbolValue(
-                        "core", "MCLK_" + bridge + "_INITIAL_VALUE"), 16)
-                if event["value"] == True:
-                    apbVal = apbVal | bitmask
-                    Database.setSymbolValue(
-                        "core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal), 2)
+                apbVal = int(Database.getSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE"),16)
+                if enable == True:
+                    apbVal =  apbVal | bitmask
+                    Database.setSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
                     break
                 else:
-                    apbVal = apbVal & ~(bitmask)
-                    Database.setSymbolValue(
-                        "core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal), 2)
+                    apbVal =  apbVal & ~(bitmask)
+                    Database.setSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
                     break
 
 
