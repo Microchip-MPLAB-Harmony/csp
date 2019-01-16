@@ -29,8 +29,8 @@ extern void main(void);
 void __iar_data_init3(void);
 
 <#if CoreArchitecture == "CORTEX-M7">
-<#include "arch/startup_xc32_cortex_m7.c.ftl">
-<#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
+<#include "arch/startup_iar_cortex_m7.c.ftl">
+<#include "devices/startup_iar_${DeviceFamily}.c.ftl">
 </#if>
 <#if CoreArchitecture == "CORTEX-M4">
 <#if FPU_Available>
