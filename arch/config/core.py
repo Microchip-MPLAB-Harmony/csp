@@ -208,9 +208,9 @@ def instantiateComponent( coreComponent ):
 
         ## toolchain specifics
         toolChainSpecifics = coreComponent.createFileSymbol( None, None )
-        toolChainSpecifics.setSourcePath( baseArchDir + "/toolchain_specifics.h" )
+        toolChainSpecifics.setSourcePath( baseArchDir + "/templates/toolchain_specifics.h.ftl" )
         toolChainSpecifics.setOutputName( "toolchain_specifics.h" );
-        toolChainSpecifics.setMarkup( False )
+        toolChainSpecifics.setMarkup( True )
         toolChainSpecifics.setOverwrite( True )
         toolChainSpecifics.setDestPath( "../../" + baseArchDir )
         toolChainSpecifics.setProjectPath( baseArchDir )
