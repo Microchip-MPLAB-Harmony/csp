@@ -108,8 +108,6 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK
 // *****************************************************************************
 // *****************************************************************************
 
-void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void );
-
 </#if>
 
 // DOM-IGNORE-BEGIN
