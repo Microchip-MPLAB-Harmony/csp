@@ -194,6 +194,17 @@ icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cac
 icacheEnable.setLabel("Enable Instruction Cache")
 icacheEnable.setDefaultValue(False)
 
+periInstanceMultiVectorSupport = coreComponent.createBooleanSymbol("PERIPHERAL_MULTI_VECTOR", None)
+periInstanceMultiVectorSupport.setDefaultValue(True)
+periInstanceMultiVectorSupport.setVisible(False)
+
+def getCorePeripherals():
+
+    # Components which are creating critical section
+    corePeripherals = ["DMAC", "I2S", "RTC", "TC", "SERCOM"]
+
+    return corePeripherals
+
 def setDMACDefaultSettings():
 
     triggerSettings = {
@@ -209,7 +220,7 @@ def setMPUDefaultSettings():
     mpuRegions = 8
     mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
                     "SRAM"              : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "8MB"],
-	                "PERIPHERALS"   	: ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
+                    "PERIPHERALS"       : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
                     "SYSTEM"            : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ],
                     "QSPI"              : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x04000000",   "256MB"],}
     mpuSetUpLogicList = ["FLASH", "SRAM", "PERIPHERALS", "SYSTEM", "QSPI"]

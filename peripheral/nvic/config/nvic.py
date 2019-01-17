@@ -293,6 +293,41 @@ for vectorDict in nvicVectorDataStructure:
 
     index += 1
 
+if Database.getSymbolValue("core", "PERIPHERAL_MULTI_VECTOR") != None:
+
+    # Components which are creating critical section
+    corePeripherals = getCorePeripherals()
+
+    modules = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals").getChildren()
+
+    for module in range (0, len(modules)):
+        periphName = str(modules[module].getAttribute("name"))
+        if periphName in corePeripherals:
+            instances = modules[module].getChildren()
+            for instance in range (0, len(instances)):
+                isMatched = False
+                periphInstanceName = str(instances[instance].getAttribute("name"))
+                moduleInstance = [dict for dict in nvicVectorDataStructure if periphInstanceName in dict["module-instance"]]
+                if len(moduleInstance) > 1:
+                    options = instances[instance].getChildren()
+                    for option in range (0, len(options)):
+                        parameters = options[option].getChildren()
+                        for parameter in range(0, len(parameters)):
+                            name = str(parameters[parameter].getAttribute("name"))
+                            if "INT_SRC" in name:
+                                isMatched = True
+                                value = int(parameters[parameter].getAttribute("value"))
+                                vectIndexes = [dict for dict in nvicVectorDataStructure if value == dict["index"]]
+                                vectName = vectIndexes[0].get("name") + "_IRQn"
+                                nvicVectorNumber = coreComponent.createStringSymbol(periphInstanceName + "_" + name, None)
+                                nvicVectorNumber.setDefaultValue(vectName)
+                                nvicVectorNumber.setVisible(False)
+
+                if isMatched:
+                    nvicMultiVector = coreComponent.createBooleanSymbol(periphInstanceName + "_MULTI_IRQn", None)
+                    nvicMultiVector.setDefaultValue(True)
+                    nvicMultiVector.setVisible(False)
+
 ############################################################################
 #### Code Generation ####
 ############################################################################
