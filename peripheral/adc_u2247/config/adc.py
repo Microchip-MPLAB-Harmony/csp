@@ -332,12 +332,21 @@ def instantiateComponent(adcComponent):
     adcSym_INPUTCTRL_MUXPOS.setDefaultValue(0)
     adcSym_INPUTCTRL_MUXPOS.setOutputMode("Key")
     adcSym_INPUTCTRL_MUXPOS.setDisplayMode("Description")
+    posInput = 0
     for index in range(0, len(adcPositiveInputValues)):
         if "AIN" in adcPositiveInputValues[index].getAttribute("name"):
             if adcPositiveInputValues[index].getAttribute("name") in channel:
+                adcSym_MUXPOS_ENUM = adcComponent.createStringSymbol("ADC_MUXPOS_ENUM"+str(posInput), None)
+                adcSym_MUXPOS_ENUM.setDefaultValue(adcPositiveInputValues[index].getAttribute("name"))
+                adcSym_MUXPOS_ENUM.setVisible(False)
+                posInput = posInput + 1
                 adcSym_INPUTCTRL_MUXPOS.addKey(adcPositiveInputValues[index].getAttribute("name"), adcPositiveInputValues[index].getAttribute("value"),
                 adcPositiveInputValues[index].getAttribute("caption"))
         else:
+            adcSym_MUXPOS_ENUM = adcComponent.createStringSymbol("ADC_MUXPOS_ENUM"+str(posInput), None)
+            adcSym_MUXPOS_ENUM.setDefaultValue(adcPositiveInputValues[index].getAttribute("name"))
+            adcSym_MUXPOS_ENUM.setVisible(False)
+            posInput = posInput + 1
             adcSym_INPUTCTRL_MUXPOS.addKey(adcPositiveInputValues[index].getAttribute("name"), adcPositiveInputValues[index].getAttribute("value"),
             adcPositiveInputValues[index].getAttribute("caption"))
     adcSym_INPUTCTRL_MUXPOS.setDependencies(adcPosInpVisible, ["ADC_CONV_TRIGGER", "ADC_SEQ_ENABLE"])
@@ -349,6 +358,7 @@ def instantiateComponent(adcComponent):
     adcSym_INPUTCTRL_MUXNEG.setDisplayMode("Description")
     defaultIndex = 0
     gndIndex = 0
+    posInput = 0
     adcNagativeInputNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_INPUTCTRL__MUXNEG\"]")
     adcNagativeInputValues = []
     adcNagativeInputValues = adcNagativeInputNode.getChildren()
@@ -357,10 +367,18 @@ def instantiateComponent(adcComponent):
             defaultIndex = gndIndex
         if "AIN" in adcNagativeInputValues[index].getAttribute("name"):
             if adcNagativeInputValues[index].getAttribute("name") in channel:
+                adcSym_MUXNEG_ENUM = adcComponent.createStringSymbol("ADC_MUXNEG_ENUM"+str(posInput), None)
+                adcSym_MUXNEG_ENUM.setDefaultValue(adcNagativeInputValues[index].getAttribute("name"))
+                adcSym_MUXNEG_ENUM.setVisible(False)
+                posInput = posInput + 1
                 adcSym_INPUTCTRL_MUXNEG.addKey(adcNagativeInputValues[index].getAttribute("name"), adcNagativeInputValues[index].getAttribute("value"),
                 adcNagativeInputValues[index].getAttribute("caption"))
                 gndIndex += 1
         else:
+            adcSym_MUXNEG_ENUM = adcComponent.createStringSymbol("ADC_MUXNEG_ENUM"+str(posInput), None)
+            adcSym_MUXNEG_ENUM.setDefaultValue(adcNagativeInputValues[index].getAttribute("name"))
+            adcSym_MUXNEG_ENUM.setVisible(False)
+            posInput = posInput + 1
             adcSym_INPUTCTRL_MUXNEG.addKey(adcNagativeInputValues[index].getAttribute("name"), adcNagativeInputValues[index].getAttribute("value"),
             adcNagativeInputValues[index].getAttribute("caption"))
             gndIndex += 1
@@ -528,12 +546,12 @@ def instantiateComponent(adcComponent):
     adcModuleID = adcModuleNode.getAttribute("id")
 
     adcSym_CommonHeaderFile = adcComponent.createFileSymbol("ADC_COMMON_HEADER", None)
-    adcSym_CommonHeaderFile.setSourcePath("../peripheral/adc_u2247/templates/plib_adc_common.h")
+    adcSym_CommonHeaderFile.setSourcePath("../peripheral/adc_u2247/templates/plib_adc_common.h.ftl")
     adcSym_CommonHeaderFile.setOutputName("plib_adc_common.h")
     adcSym_CommonHeaderFile.setDestPath("/peripheral/adc/")
     adcSym_CommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcSym_CommonHeaderFile.setType("HEADER")
-    adcSym_CommonHeaderFile.setMarkup(False)
+    adcSym_CommonHeaderFile.setMarkup(True)
 
     adcSym_HeaderFile = adcComponent.createFileSymbol("ADC_HEADER", None)
     adcSym_HeaderFile.setSourcePath("../peripheral/adc_u2247/templates/plib_adc.h.ftl")
