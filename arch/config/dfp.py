@@ -1,4 +1,3 @@
-# coding: utf-8
 """*****************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -56,48 +55,49 @@ def instantiateComponent(dfpComponent):
                     dfpInformation.setLabel("Release Information: " + str(release.attrib))
                     break
 
-    #add pack files to a project
-    headerFileNames = listdir(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/component")
-
-    for headerFileName in headerFileNames:
-        szSymbol = "PART_PERIPH_{}_DEFS".format(headerFileName[:-2].upper())
-        headerFile = dfpComponent.createFileSymbol(szSymbol, None)
-        headerFile.setRelative(False)
-        headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/component/" + headerFileName)
-        headerFile.setOutputName(headerFileName)
-        headerFile.setMarkup(False)
-        headerFile.setOverwrite(True)
-        headerFile.setDestPath("../../packs/" + Variables.get("__PROCESSOR") + "_DFP/component/")
-        headerFile.setProjectPath("packs/" + Variables.get("__PROCESSOR") + "_DFP/component/")
-        headerFile.setType("HEADER")
-
     processorName = Variables.get("__PROCESSOR")
 
     deviceHeaderFile = dfpComponent.createFileSymbol("deviceHeaderFile", None)
     deviceHeaderFile.setMarkup(True)
     deviceHeaderFile.setSourcePath("templates/device.h.ftl")
     deviceHeaderFile.setOutputName("device.h")
-    deviceHeaderFile.setDestPath("../../packs/" + Variables.get("__PROCESSOR") + "_DFP/")
-    deviceHeaderFile.setProjectPath("packs/" + Variables.get("__PROCESSOR") + "_DFP/")
+    deviceHeaderFile.setDestPath("../../packs/" + processorName + "_DFP/")
+    deviceHeaderFile.setProjectPath("packs/" + processorName + "_DFP/")
     deviceHeaderFile.setType("HEADER")
     deviceHeaderFile.setOverwrite(True)
 
-    headerFile = dfpComponent.createFileSymbol("PART_MAIN_DEFS", None)
-    headerFile.setRelative(False)
-    headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/" + processorName.replace("ATSAM", "SAM").lower() + ".h")
-    headerFile.setOutputName(processorName.lower() + ".h")
-    headerFile.setMarkup(False)
-    headerFile.setOverwrite(True)
-    headerFile.setDestPath("../../packs/" + Variables.get("__PROCESSOR") + "_DFP/")
-    headerFile.setProjectPath("packs/" + Variables.get("__PROCESSOR") + "_DFP/")
-    headerFile.setType("HEADER")
+    if( "PIC32M" not in processorName):
+        #add pack files to a project
+        headerFileNames = listdir(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/component")
 
-    headerFile = dfpComponent.createFileSymbol("PART_IO_DEFS", None)
-    headerFile.setRelative(False)
-    headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/pio/" + processorName.replace("ATSAM", "SAM").lower() + ".h")
-    headerFile.setOutputName(processorName.replace("ATSAM", "SAM").lower() + ".h")
-    headerFile.setMarkup(False)
-    headerFile.setOverwrite(True)
-    headerFile.setDestPath("../../packs/" + Variables.get("__PROCESSOR") + "_DFP/pio/")
-    headerFile.setProjectPath("packs/" + Variables.get("__PROCESSOR") + "_DFP/pio/")
-    headerFile.setType("HEADER")
+        for headerFileName in headerFileNames:
+            szSymbol = "PART_PERIPH_{}_DEFS".format(headerFileName[:-2].upper())
+            headerFile = dfpComponent.createFileSymbol(szSymbol, None)
+            headerFile.setRelative(False)
+            headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/component/" + headerFileName)
+            headerFile.setOutputName(headerFileName)
+            headerFile.setMarkup(False)
+            headerFile.setOverwrite(True)
+            headerFile.setDestPath("../../packs/" + processorName + "_DFP/component/")
+            headerFile.setProjectPath("packs/" + processorName + "_DFP/component/")
+            headerFile.setType("HEADER")
+
+        headerFile = dfpComponent.createFileSymbol("PART_MAIN_DEFS", None)
+        headerFile.setRelative(False)
+        headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/" + processorName.replace("ATSAM", "SAM").lower() + ".h")
+        headerFile.setOutputName(processorName.lower() + ".h")
+        headerFile.setMarkup(False)
+        headerFile.setOverwrite(True)
+        headerFile.setDestPath("../../packs/" + processorName + "_DFP/")
+        headerFile.setProjectPath("packs/" + processorName + "_DFP/")
+        headerFile.setType("HEADER")
+
+        headerFile = dfpComponent.createFileSymbol("PART_IO_DEFS", None)
+        headerFile.setRelative(False)
+        headerFile.setSourcePath(Variables.get("__DFP_PACK_DIR") + MCC_HEADERS_SUBPATH + "/pio/" + processorName.replace("ATSAM", "SAM").lower() + ".h")
+        headerFile.setOutputName(processorName.replace("ATSAM", "SAM").lower() + ".h")
+        headerFile.setMarkup(False)
+        headerFile.setOverwrite(True)
+        headerFile.setDestPath("../../packs/" + processorName + "_DFP/pio/")
+        headerFile.setProjectPath("packs/" + processorName + "_DFP/pio/")
+        headerFile.setType("HEADER")

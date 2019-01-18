@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<CSP id="PIC32MZ2025DAL176">
+    <CoreModule path="${__FRAMEWORK_ROOT}/csp/arch"/>
+    <DataSheet name="DS60001361"/>
+</CSP>
