@@ -197,9 +197,9 @@ def instantiateComponent(adcComponent):
     global adcSym_SAMPCTRL_SAMPLEN
     adcSym_SAMPCTRL_SAMPLEN = adcComponent.createIntegerSymbol("ADC_SAMPCTRL_SAMPLEN", None)
     adcSym_SAMPCTRL_SAMPLEN.setLabel("Select Sample Length (cycles)")
-    adcSym_SAMPCTRL_SAMPLEN.setMin(0)
-    adcSym_SAMPCTRL_SAMPLEN.setMax(63)
-    adcSym_SAMPCTRL_SAMPLEN.setDefaultValue(0)
+    adcSym_SAMPCTRL_SAMPLEN.setMin(1)
+    adcSym_SAMPCTRL_SAMPLEN.setMax(64)
+    adcSym_SAMPCTRL_SAMPLEN.setDefaultValue(4)
 
     clock_freq = Database.getSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_FREQUENCY")
     if clock_freq == 0:
