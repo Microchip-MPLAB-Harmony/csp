@@ -114,7 +114,79 @@ static void mmu_enable(void)
 		__set_SCTLR(control | SCTLR_M_Msk);
 }
 
+// *****************************************************************************
+/* Function:
+     void icache_invalidate(void)
 
+  Summary:
+    Invalidate instruction cache.
+
+*/
+static void icache_invalidate(void)
+{
+	__set_ICIALLU(0);
+	__ISB();
+}
+
+// *****************************************************************************
+/* Function(or Macro):
+     void icache_enable(void)
+
+  Summary:
+    Enable instruction cache.
+
+*/
+static void icache_enable(void)
+{
+	uint32_t sctlr = __get_SCTLR();
+	if ((sctlr & SCTLR_I_Msk) == 0) {
+		icache_invalidate();
+		__set_SCTLR(sctlr | SCTLR_I_Msk);
+	}
+}
+
+// *****************************************************************************
+/* Function(or Macro):
+     void dcache_invalidate(void)
+
+  Summary:
+    Invalidate data cache.
+
+*/
+static void dcache_invalidate(void)
+{
+	__set_DCCIMVAC(0);
+	__DSB();
+}
+
+// *****************************************************************************
+/* Function(or Macro):
+     void dcache_enable(void)
+
+  Summary:
+    Enable data cache
+
+*/
+static void dcache_enable(void)
+{
+	uint32_t sctlr = __get_SCTLR();
+	if ((sctlr & SCTLR_C_Msk) == 0) {
+		dcache_invalidate();
+		__set_SCTLR(sctlr | SCTLR_C_Msk);
+	}
+}
+
+static inline uint32_t cp15_read_sctlr(void)
+{
+    uint32_t sctlr;
+    asm("mrc p15, 0, %0, c1, c0, 0" : "=r"(sctlr));
+    return sctlr;
+}
+
+static inline void cp15_write_sctlr(uint32_t value)
+{
+    asm("mcr p15, 0, %0, c1, c0, 0" :: "r"(value));
+}
 
 // *****************************************************************************
 /* Function:
@@ -364,7 +436,14 @@ void MMU_Initialize(void)
 
 	/* Enable MMU, I-Cache and D-Cache */
 	mmu_configure(tlb);
+	icache_enable();
 	mmu_enable();
+	dcache_enable();
+
+    // disable the processor alignment fault testing
+    uint32_t sctlrValue = cp15_read_sctlr();
+    sctlrValue &= ~0x00000002;
+    cp15_write_sctlr( sctlrValue );
 }
 
 /*******************************************************************************
