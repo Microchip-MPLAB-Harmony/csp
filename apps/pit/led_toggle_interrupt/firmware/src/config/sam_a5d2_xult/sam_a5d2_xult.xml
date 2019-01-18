@@ -111,7 +111,7 @@
               <Value dnOrder="0">iar_monitor.c</Value>
             </String>
             <String dnOrder="1" id="source">
-              <Value dnOrder="0">../arch/stdio/templates/iar_monitor.c.ftl</Value>
+              <Value dnOrder="0">../arch/arm/templates/iar/stdio/iar_monitor.c.ftl</Value>
             </String>
           </Attributes>
         </File>
