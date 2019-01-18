@@ -47,101 +47,113 @@ def tcClockFreqCalc(symbol, event):
     pck6_set = False
     pck7_set = False
     id = event["id"]
+    activeComponents = Database.getActiveComponentIDs()
     for module in range(0, len(num_tc_instances)):
         for ch in range (0, 4):
-            if(Database.getSymbolValue("tc"+str(module), "TC" + str(ch) + "_ENABLE") == True):
-                if (module == 0):
-                    if(Database.getSymbolValue("tc"+str(module), "TC" + str(ch) + "_CMR_TCCLKS") == 1):
-                        if (Database.getSymbolValue("tc"+str(module), "TC_PCK_CLKSRC") == "PCK6"):
+            if("tc"+str(module) in activeComponents):
+                if(Database.getSymbolValue("tc"+str(module), "TC" + str(ch) + "_ENABLE") == True):
+                    if (module == 0):
+                        if(Database.getSymbolValue("tc"+str(module), "TC" + str(ch) + "_CMR_TCCLKS") == 1):
+                            if (Database.getSymbolValue("tc"+str(module), "TC_PCK_CLKSRC") == "PCK6"):
+                                pck6_set = True
+                            else:
+                                pck7_set = True
+                    else:
+                        if(Database.getSymbolValue("tc"+str(module), "TC" + str(ch) + "_CMR_TCCLKS") == 1):
                             pck6_set = True
-                        else:
-                            pck7_set = True
-                else:
-                    if(Database.getSymbolValue("tc"+str(module), "TC" + str(ch) + "_CMR_TCCLKS") == 1):
-                        pck6_set = True
     if (pck6_set == False):
         Database.setSymbolValue("core", "PMC_SCER_PCK6", False, 2)
     if (pck7_set == False):
         Database.setSymbolValue("core", "PMC_SCER_PCK7", False, 2)
 
-    if (Database.getSymbolValue("tc"+str(tcInstance), "TC" + str(chInstance) + "_ENABLE") == True):
-        if (id == "TC_PCK_CLKSRC"):
-            clk_src = event["value"]
-            if (clk_src == "PCK6"):
-                symbol.setValue(int(Database.getSymbolValue("core", "PCK6_CLOCK_FREQUENCY")), 2)
-                Database.setSymbolValue("core", "PMC_SCER_PCK6", True, 2)
-            elif (clk_src == "PCK7"):
-                symbol.setValue(int(Database.getSymbolValue("core", "PCK7_CLOCK_FREQUENCY")), 2)
-                Database.setSymbolValue("core", "PMC_SCER_PCK7", True, 2)
-        else:
-            clk_src = Database.getSymbolValue("tc"+str(tcInstance), "TC" + str(chInstance) + "_CMR_TCCLKS")
-            #clk_src will be NONE when TC PLIB is not instantiated
-            if (clk_src == 0):
-                symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
-            elif (clk_src == 1):
-                if (Database.getSymbolValue("tc"+str(tcInstance), "TC_PCK_CLKSRC") == "PCK6"):
+    if("tc"+str(tcInstance) in activeComponents):
+        if (Database.getSymbolValue("tc"+str(tcInstance), "TC" + str(chInstance) + "_ENABLE") == True):
+            if (id == "TC_PCK_CLKSRC"):
+                clk_src = event["value"]
+                if (clk_src == "PCK6"):
                     symbol.setValue(int(Database.getSymbolValue("core", "PCK6_CLOCK_FREQUENCY")), 2)
                     Database.setSymbolValue("core", "PMC_SCER_PCK6", True, 2)
-                else:
+                elif (clk_src == "PCK7"):
                     symbol.setValue(int(Database.getSymbolValue("core", "PCK7_CLOCK_FREQUENCY")), 2)
                     Database.setSymbolValue("core", "PMC_SCER_PCK7", True, 2)
-            elif (clk_src == 2):
-                symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8, 2)
-            elif (clk_src == 3):
-                symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/32, 2)
-            elif (clk_src == 4):
-                symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/128, 2)
-            elif (clk_src == 5):
-                symbol.setValue(int(Database.getSymbolValue("core", "CLK_SLOW_XTAL")), 2)
             else:
-                symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+                clk_src = Database.getSymbolValue("tc"+str(tcInstance), "TC" + str(chInstance) + "_CMR_TCCLKS")
+                #clk_src will be NONE when TC PLIB is not instantiated
+                if (clk_src == 0):
+                    symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+                elif (clk_src == 1):
+                    if (Database.getSymbolValue("tc"+str(tcInstance), "TC_PCK_CLKSRC") == "PCK6"):
+                        symbol.setValue(int(Database.getSymbolValue("core", "PCK6_CLOCK_FREQUENCY")), 2)
+                        Database.setSymbolValue("core", "PMC_SCER_PCK6", True, 2)
+                    else:
+                        symbol.setValue(int(Database.getSymbolValue("core", "PCK7_CLOCK_FREQUENCY")), 2)
+                        Database.setSymbolValue("core", "PMC_SCER_PCK7", True, 2)
+                elif (clk_src == 2):
+                    symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8, 2)
+                elif (clk_src == 3):
+                    symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/32, 2)
+                elif (clk_src == 4):
+                    symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/128, 2)
+                elif (clk_src == 5):
+                    symbol.setValue(int(Database.getSymbolValue("core", "CLK_SLOW_XTAL")), 2)
+                else:
+                    symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
 
 def uartClockFreqCalc(symbol, event):
     uartInstance = symbol.getID()[4]
     pck4_set = False
+    activeComponents = Database.getActiveComponentIDs()
     for module in range(0, len(num_uart_instances)):
-        if(Database.getSymbolValue("uart"+str(module), "UART_CLK_SRC") == 1):
-            pck4_set = True
+        if("uart"+str(module) in activeComponents):
+            if(Database.getSymbolValue("uart"+str(module), "UART_CLK_SRC") == 1):
+                pck4_set = True
     for module in range(0, len(num_usart_instances)):
-        if(Database.getSymbolValue("usart"+str(module), "USART_CLK_SRC") == 2):
-            pck4_set = True
+        if("usart"+str(module) in activeComponents):
+            if(Database.getSymbolValue("usart"+str(module), "USART_CLK_SRC") == 2):
+                pck4_set = True
     if (pck4_set == False):
         Database.setSymbolValue("core", "PMC_SCER_PCK4", False, 2)
 
-    clk_src = (Database.getSymbolValue("uart"+str(uartInstance), "UART_CLK_SRC"))
-    #clk_src will be NONE when UART PLIB is not instantiated
-    symbol.clearValue()
-    if (clk_src == 0):
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
-    elif (clk_src == 1):
-        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
-        Database.setSymbolValue("core", "PMC_SCER_PCK4", True, 2)
-    else:
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+    if("uart"+str(uartInstance) in activeComponents):
+        clk_src = (Database.getSymbolValue("uart"+str(uartInstance), "UART_CLK_SRC"))
+        #clk_src will be NONE when UART PLIB is not instantiated
+        symbol.clearValue()
+        if (clk_src == 0):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+        elif (clk_src == 1):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
+            Database.setSymbolValue("core", "PMC_SCER_PCK4", True, 2)
+        else:
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
 
 def usartClockFreqCalc(symbol, event):
     usartInstance = symbol.getID()[5]
     pck4_set = False
+    activeComponents = Database.getActiveComponentIDs()
     for module in range(0, len(num_uart_instances)):
-        if(Database.getSymbolValue("uart"+str(module), "UART_CLK_SRC") == 1):
-            pck4_set = True
+        if("uart"+str(module) in activeComponents):
+            if(Database.getSymbolValue("uart"+str(module), "UART_CLK_SRC") == 1):
+                pck4_set = True
     for module in range(0, len(num_usart_instances)):
-        if(Database.getSymbolValue("usart"+str(module), "USART_CLK_SRC") == 2):
-            pck4_set = True
+        if("usart"+str(module) in activeComponents):
+            if(Database.getSymbolValue("usart"+str(module), "USART_CLK_SRC") == 2):
+                pck4_set = True
     if (pck4_set == False):
         Database.setSymbolValue("core", "PMC_SCER_PCK4", False, 2)
-    clk_src = (Database.getSymbolValue("usart"+str(usartInstance), "USART_CLK_SRC"))
-    #clk_src will be NONE when USART PLIB is not instantiated
-    symbol.clearValue()
-    if (clk_src == 0):
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
-    elif (clk_src == 1):
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8, 2)
-    elif (clk_src == 2):
-        symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
-        Database.setSymbolValue("core", "PMC_SCER_PCK4", True, 2)
-    else:
-        symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+
+    if("usart"+str(usartInstance) in activeComponents):
+        clk_src = (Database.getSymbolValue("usart"+str(usartInstance), "USART_CLK_SRC"))
+        #clk_src will be NONE when USART PLIB is not instantiated
+        symbol.clearValue()
+        if (clk_src == 0):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
+        elif (clk_src == 1):
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8, 2)
+        elif (clk_src == 2):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCK4_CLOCK_FREQUENCY")), 2)
+            Database.setSymbolValue("core", "PMC_SCER_PCK4", True, 2)
+        else:
+            symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
 
 def __update_fws_value(flash_wait_states, event):
     """
@@ -994,7 +1006,7 @@ if __name__ == "__main__":
         sym_uart_clock_freq[uartInstance].setVisible(False)
         sym_uart_clock_freq[uartInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_uart_clock_freq[uartInstance].setDependencies(uartClockFreqCalc, ["uart"+str(uartInstance)+".UART_CLK_SRC", \
-            "core.MASTER_CLOCK_FREQUENCY", "core.PCK4_CLOCK_FREQUENCY"])
+            "core.MASTER_CLOCK_FREQUENCY", "core.PCK4_CLOCK_FREQUENCY", "core.UART"+str(uartInstance)+"_CLOCK_ENABLE"])
 
     #USART
     global num_usart_instances
@@ -1007,7 +1019,7 @@ if __name__ == "__main__":
         sym_usart_clock_freq[usartInstance].setVisible(False)
         sym_usart_clock_freq[usartInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_usart_clock_freq[usartInstance].setDependencies(usartClockFreqCalc, ["usart"+str(usartInstance)+".USART_CLK_SRC", \
-            "core.MASTER_CLOCK_FREQUENCY", "core.PCK4_CLOCK_FREQUENCY"])
+            "core.MASTER_CLOCK_FREQUENCY", "core.PCK4_CLOCK_FREQUENCY", "core.USART"+str(usartInstance)+"_CLOCK_ENABLE"])
 
     #TC
     global num_tc_instances
@@ -1020,21 +1032,24 @@ if __name__ == "__main__":
         sym_tc_ch0_clock_freq[tcInstance].setVisible(False)
         sym_tc_ch0_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_tc_ch0_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC0_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC", \
-        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC0_ENABLE"])
+        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC0_ENABLE", \
+        "core.TC"+str(tcInstance)+"_CHANNEL0_CLOCK_ENABLE"])
 
         sym_tc_ch1_clock_freq.append(tcInstance)
         sym_tc_ch1_clock_freq[tcInstance] = coreComponent.createIntegerSymbol("TC"+str(tcInstance)+"_CH1_CLOCK_FREQUENCY", None)
         sym_tc_ch1_clock_freq[tcInstance].setVisible(False)
         sym_tc_ch1_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_tc_ch1_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC1_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC", \
-        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC1_ENABLE"])
+        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC1_ENABLE", \
+        "core.TC"+str(tcInstance)+"_CHANNEL1_CLOCK_ENABLE"])
 
         sym_tc_ch2_clock_freq.append(tcInstance)
         sym_tc_ch2_clock_freq[tcInstance] = coreComponent.createIntegerSymbol("TC"+str(tcInstance)+"_CH2_CLOCK_FREQUENCY", None)
         sym_tc_ch2_clock_freq[tcInstance].setVisible(False)
         sym_tc_ch2_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_tc_ch2_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC2_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC", \
-        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC2_ENABLE"])
+        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC2_ENABLE", \
+        "core.TC"+str(tcInstance)+"_CHANNEL2_CLOCK_ENABLE"])
 
         #CH3 is used for quadrature speed mode
         sym_tc_ch3_clock_freq.append(tcInstance)
@@ -1042,7 +1057,8 @@ if __name__ == "__main__":
         sym_tc_ch3_clock_freq[tcInstance].setVisible(False)
         sym_tc_ch3_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_tc_ch3_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC3_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC", \
-        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC3_ENABLE"])
+        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC3_ENABLE", \
+        "core.TC"+str(tcInstance)+"_CHANNEL3_CLOCK_ENABLE"])
 
     #File handling
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
