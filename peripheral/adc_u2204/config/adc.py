@@ -59,7 +59,7 @@ def adcCalcSampleTime(symbol, event):
     prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
     sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
     data_width = adcSym_CTRLC_RESSEL.getSelectedKey()[:-3]
-    conv_time = float((((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000) / clock_freq))
+    conv_time = float((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000.0) / clock_freq
     symbol.setLabel("**** Conversion Time is " + str(conv_time) + " uS ****")
 
 def adcEvesysConfigure(symbol, event):
@@ -207,7 +207,7 @@ def instantiateComponent(adcComponent):
     prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
     sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
     data_width = 12
-    conv_time = float((((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000) / clock_freq))
+    conv_time = float((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000.0) / clock_freq
 
     #Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
