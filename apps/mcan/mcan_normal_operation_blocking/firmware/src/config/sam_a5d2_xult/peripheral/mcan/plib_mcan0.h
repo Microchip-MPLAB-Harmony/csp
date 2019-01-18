@@ -70,16 +70,34 @@
 
 // *****************************************************************************
 // *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+/* MCAN0 Message RAM Configuration Size */
+#define MCAN0_RX_FIFO0_ELEMENT_SIZE       16
+#define MCAN0_RX_FIFO0_SIZE               16
+#define MCAN0_RX_FIFO1_ELEMENT_SIZE       16
+#define MCAN0_RX_FIFO1_SIZE               16
+#define MCAN0_TX_FIFO_BUFFER_ELEMENT_SIZE 16
+#define MCAN0_TX_FIFO_BUFFER_SIZE         16
+#define MCAN0_TX_EVENT_FIFO_SIZE          8
+
+/* MCAN0_MESSAGE_RAM_CONFIG_SIZE to be used by application or driver
+   for allocating buffer from non-cached contiguous memory */
+#define MCAN0_MESSAGE_RAM_CONFIG_SIZE     56
+
+// *****************************************************************************
+// *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 void MCAN0_Initialize (void);
-bool MCAN0_MessageTransmit(uint32_t address, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr);
-bool MCAN0_MessageReceive(uint32_t *address, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr);
+bool MCAN0_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr);
+bool MCAN0_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr);
 MCAN_ERROR MCAN0_ErrorGet(void);
 bool MCAN0_InterruptGet(MCAN_INTERRUPT_MASK interruptMask);
 void MCAN0_InterruptClear(MCAN_INTERRUPT_MASK interruptMask);
-void MCAN0_MessageRAMConfigGet(MCAN_MSG_RAM_CONFIG *msgRAMConfig);
+void MCAN0_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }

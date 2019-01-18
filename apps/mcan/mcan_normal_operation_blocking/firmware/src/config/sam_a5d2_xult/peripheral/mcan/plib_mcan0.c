@@ -57,18 +57,9 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
+#define MCAN_STD_ID_Msk    0x7FF
 
 static MCAN_OBJ mcan0Obj;
-
-/* Configuration for the bytes in each element of RX FIFOs */
-static uint8_t mcan0_rx0_fifo[1 * 16]__attribute__((aligned (4)));
-
-static uint8_t mcan0_rx1_fifo[1 * 16]__attribute__((aligned (4)));
-
-/* Configuration for the bytes in each element of TX FIFOs */
-static uint8_t mcan0_tx_fifo[1 * 16]__attribute__((aligned (4)));
-static MCAN_TX_EVENT_FIFO_ENTRY mcan0_tx_event_fifo[1]__attribute__((aligned (4)));
-
 
 /******************************************************************************
 Local Functions
@@ -113,27 +104,6 @@ void MCAN0_Initialize(void)
     /* Set Nominal Bit timing and Prescaler Register */
     MCAN0_REGS->MCAN_NBTP  = MCAN_NBTP_NTSEG2(3) | MCAN_NBTP_NTSEG1(10) | MCAN_NBTP_NBRP(0) | MCAN_NBTP_NSJW(3);
 
-    /* Receive FIFO 0 Configuration Register */
-    MCAN0_REGS->MCAN_RXF0C = MCAN_RXF0C_F0S(1) | MCAN_RXF0C_F0WM(0) | MCAN_RXF0C_F0OM_Msk |
-            MCAN_RXF0C_F0SA(((uint32_t)mcan0_rx0_fifo >> 2));
-
-    /* Receive FIFO 1 Configuration Register */
-    MCAN0_REGS->MCAN_RXF1C = MCAN_RXF1C_F1S(1) | MCAN_RXF1C_F1WM(0) | MCAN_RXF1C_F1OM_Msk |
-            MCAN_RXF1C_F1SA(((uint32_t)mcan0_rx1_fifo >> 2));
-
-    /* Receive Buffer / FIFO Element Size Configuration Register */
-    MCAN0_REGS->MCAN_RXESC = 0  | MCAN_RXESC_F0DS(0) | MCAN_RXESC_F1DS(0);
-
-    /* Transmit Buffer/FIFO Configuration Register */
-    MCAN0_REGS->MCAN_TXBC = MCAN_TXBC_TFQS(1) | MCAN_TXBC_NDTB(0) |
-            MCAN_TXBC_TBSA(((uint32_t)mcan0_tx_fifo >> 2));
-
-    /* Transmit Buffer/FIFO Element Size Configuration Register */
-    MCAN0_REGS->MCAN_TXESC = MCAN_TXESC_TBDS(0);
-
-    /* Transmit Event FIFO Configuration Register */
-    MCAN0_REGS->MCAN_TXEFC = MCAN_TXEFC_EFWM(0) | MCAN_TXEFC_EFS(1) |
-            MCAN_TXEFC_EFSA(((uint32_t)mcan0_tx_event_fifo >> 2));
 
     /* Global Filter Configuration Register */
     MCAN0_REGS->MCAN_GFC = MCAN_GFC_ANFS_RX_FIFO_0 | MCAN_GFC_ANFE_RX_FIFO_0;
@@ -141,24 +111,15 @@ void MCAN0_Initialize(void)
     /* Timestamp Counter Configuration Register */
     MCAN0_REGS->MCAN_TSCC = MCAN_TSCC_TSS_TCP_INC | MCAN_TSCC_TCP(1);
 
-    /* Set 16-bit MSB of mcan0 base address */
-    SFR_REGS->SFR_CAN = (SFR_REGS->SFR_CAN & ~SFR_CAN_EXT_MEM_CAN0_ADDR_Msk)
-                       | SFR_CAN_EXT_MEM_CAN0_ADDR((uint32_t)mcan0_rx0_fifo >> 16);
-
-    /* Clear Tx/Rx FIFO */
-    memset((void*)mcan0_rx0_fifo, 0x00, (1 * 16));
-    memset((void*)mcan0_rx1_fifo, 0x00, (1 * 16));
-    memset((void*)mcan0_tx_fifo, 0x00, (1 * 16));
-    memset((void*)mcan0_tx_event_fifo, 0x00, (sizeof(MCAN_TX_EVENT_FIFO_ENTRY) * 1));
-
     /* Set the operation mode */
     MCAN0_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED;
     while ((MCAN0_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
+    memset((void*)&mcan0Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
 }
 
 // *****************************************************************************
 /* Function:
-    bool MCAN0_MessageTransmit(uint32_t address, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr)
+    bool MCAN0_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr)
 
    Summary:
     Transmits a message into CAN bus.
@@ -167,7 +128,7 @@ void MCAN0_Initialize(void)
     MCAN0_Initialize must have been called for the associated MCAN instance.
 
    Parameters:
-    address - 11-bit / 29-bit identifier (ID).
+    id      - 11-bit / 29-bit identifier (ID).
     length  - length of data buffer in number of bytes.
     data    - pointer to source data buffer
     mode    - MCAN mode Classic CAN or CAN FD without BRS or CAN FD with BRS
@@ -178,10 +139,10 @@ void MCAN0_Initialize(void)
     true  - Request was successful.
     false - Request has failed.
 */
-bool MCAN0_MessageTransmit(uint32_t address, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr)
+bool MCAN0_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr)
 {
     uint8_t tfqpi = 0;
-    MCAN_TX_BUFFER_FIFO_ENTRY *fifo = NULL;
+    mcan_txbe_registers_t *fifo = NULL;
 
     switch (msgAttr)
     {
@@ -193,41 +154,39 @@ bool MCAN0_MessageTransmit(uint32_t address, uint8_t length, uint8_t* data, MCAN
                 return false;
             }
             tfqpi = (uint8_t)((MCAN0_REGS->MCAN_TXFQS & MCAN_TXFQS_TFQPI_Msk) >> MCAN_TXFQS_TFQPI_Pos);
-            mcan0Obj.txBufferIndex |= (1 << ((tfqpi - 0) & 0x1F));
-            fifo = (MCAN_TX_BUFFER_FIFO_ENTRY *) (mcan0_tx_fifo + tfqpi * 16);
+            fifo = (mcan_txbe_registers_t *) ((uint8_t *)mcan0Obj.msgRAMConfig.txBuffersAddress + tfqpi * MCAN0_TX_FIFO_BUFFER_ELEMENT_SIZE);
             break;
         default:
             /* Invalid Message Attribute */
             return false;
     }
 
-    /* If the address is longer than 11 bits, it is considered as extended identifier */
-    if (address > MCAN_STD_ID_Msk)
+    /* If the id is longer than 11 bits, it is considered as extended identifier */
+    if (id > MCAN_STD_ID_Msk)
     {
         /* An extended identifier is stored into ID */
-        fifo->T0.val = (address & MCAN_EXT_ID_Msk) | MCAN_TX_XTD_Msk;
+        fifo->MCAN_TXBE_0 = (id & MCAN_TXBE_0_ID_Msk) | MCAN_TXBE_0_XTD_Msk;
     }
     else
     {
         /* A standard identifier is stored into ID[28:18] */
-        fifo->T0.val = address << 18;
+        fifo->MCAN_TXBE_0 = id << 18;
     }
 
     /* Limit length */
     if (length > 8)
         length = 8;
-    fifo->T1.val = MCAN_TXFE_DLC(length);
+    fifo->MCAN_TXBE_1 = MCAN_TXBE_1_DLC(length);
 
     if (msgAttr == MCAN_MSG_ATTR_TX_BUFFER_DATA_FRAME || msgAttr == MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME)
     {
         /* copy the data into the payload */
-        memcpy((uint8_t *)&fifo->data, data, length);
+        memcpy((uint8_t *)&fifo->MCAN_TXBE_DATA, data, length);
     }
     else if (msgAttr == MCAN_MSG_ATTR_TX_BUFFER_RTR_FRAME || msgAttr == MCAN_MSG_ATTR_TX_FIFO_RTR_FRAME)
     {
-        fifo->T0.val |= MCAN_TX_RTR_Msk;
+        fifo->MCAN_TXBE_0 |= MCAN_TXBE_0_RTR_Msk;
     }
-
 
     /* request the transmit */
     MCAN0_REGS->MCAN_TXBAR = 1U << tfqpi;
@@ -237,7 +196,7 @@ bool MCAN0_MessageTransmit(uint32_t address, uint8_t length, uint8_t* data, MCAN
 
 // *****************************************************************************
 /* Function:
-    bool MCAN0_MessageReceive(uint32_t *address, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+    bool MCAN0_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -246,7 +205,7 @@ bool MCAN0_MessageTransmit(uint32_t address, uint8_t length, uint8_t* data, MCAN
     MCAN0_Initialize must have been called for the associated MCAN instance.
 
    Parameters:
-    address - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    id      - Pointer to 11-bit / 29-bit identifier (ID) to be received.
     length  - Pointer to data length in number of bytes to be received.
     data    - pointer to destination data buffer
     msgAttr - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
@@ -256,11 +215,12 @@ bool MCAN0_MessageTransmit(uint32_t address, uint8_t length, uint8_t* data, MCAN
     true  - Request was successful.
     false - Request has failed.
 */
-bool MCAN0_MessageReceive(uint32_t *address, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+bool MCAN0_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr)
 {
     uint8_t msgLength = 0;
     uint8_t rxgi = 0;
-    MCAN_RX_BUFFER_FIFO_ENTRY *fifo = NULL;
+    mcan_rxf0e_registers_t *rxf0eFifo = NULL;
+    mcan_rxf1e_registers_t *rxf1eFifo = NULL;
     bool status = false;
 
     switch (msgAttr)
@@ -273,23 +233,23 @@ bool MCAN0_MessageReceive(uint32_t *address, uint8_t *length, uint8_t *data, MCA
             }
             /* Read data from the Rx FIFO0 */
             rxgi = (uint8_t)((MCAN0_REGS->MCAN_RXF0S & MCAN_RXF0S_F0GI_Msk) >> MCAN_RXF0S_F0GI_Pos);
-            fifo = (MCAN_RX_BUFFER_FIFO_ENTRY *) (mcan0_rx0_fifo + rxgi * 16);
+            rxf0eFifo = (mcan_rxf0e_registers_t *) ((uint8_t *)mcan0Obj.msgRAMConfig.rxFIFO0Address + rxgi * MCAN0_RX_FIFO0_ELEMENT_SIZE);
 
             /* Get received identifier */
-            if (MCAN_RX_XTD(fifo->R0.val))
+            if (rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_XTD_Msk)
             {
-                *address = fifo->R0.val & MCAN_EXT_ID_Msk;
+                *id = rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_ID_Msk;
             }
             else
             {
-                *address = (fifo->R0.val >> 18) & MCAN_STD_ID_Msk;
+                *id = (rxf0eFifo->MCAN_RXF0E_0 >> 18) & MCAN_STD_ID_Msk;
             }
 
             /* Get received data length */
-            msgLength = MCANDlcToLengthGet((MCAN_RX_DLC(fifo->R1.val)));
+            msgLength = MCANDlcToLengthGet(((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_DLC_Msk) >> MCAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(data, (uint8_t *)&fifo->data, msgLength);
+            memcpy(data, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, msgLength);
             *length = msgLength;
 
             /* Ack the fifo position */
@@ -304,23 +264,23 @@ bool MCAN0_MessageReceive(uint32_t *address, uint8_t *length, uint8_t *data, MCA
             }
             /* Read data from the Rx FIFO1 */
             rxgi = (uint8_t)((MCAN0_REGS->MCAN_RXF1S & MCAN_RXF1S_F1GI_Msk) >> MCAN_RXF1S_F1GI_Pos);
-            fifo = (MCAN_RX_BUFFER_FIFO_ENTRY *) (mcan0_rx1_fifo + rxgi * 16);
+            rxf1eFifo = (mcan_rxf1e_registers_t *) ((uint8_t *)mcan0Obj.msgRAMConfig.rxFIFO1Address + rxgi * MCAN0_RX_FIFO1_ELEMENT_SIZE);
 
             /* Get received identifier */
-            if (MCAN_RX_XTD(fifo->R0.val))
+            if (rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_XTD_Msk)
             {
-                *address = fifo->R0.val & MCAN_EXT_ID_Msk;
+                *id = rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_ID_Msk;
             }
             else
             {
-                *address = (fifo->R0.val >> 18) & MCAN_STD_ID_Msk;
+                *id = (rxf1eFifo->MCAN_RXF1E_0 >> 18) & MCAN_STD_ID_Msk;
             }
 
             /* Get received data length */
-            msgLength = MCANDlcToLengthGet((MCAN_RX_DLC(fifo->R1.val)));
+            msgLength = MCANDlcToLengthGet(((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_DLC_Msk) >> MCAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(data, (uint8_t *)&fifo->data, msgLength);
+            memcpy(data, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, msgLength);
             *length = msgLength;
 
             /* Ack the fifo position */
@@ -412,32 +372,67 @@ void MCAN0_InterruptClear(MCAN_INTERRUPT_MASK interruptMask)
 
 // *****************************************************************************
 /* Function:
-    void MCAN0_MessageRAMConfigGet(MCAN_MSG_RAM_CONFIG *msgRAMConfig)
+    void MCAN0_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
    Summary:
-    Get the Message RAM Configuration.
+    Set the Message RAM Configuration.
 
    Precondition:
     MCAN0_Initialize must have been called for the associated MCAN instance.
 
    Parameters:
-    msgRAMConfig - Pointer to the Message RAM Configuration object
+    msgRAMConfigBaseAddress - Pointer to application allocated buffer base address.
+                              Application must allocate buffer from non-cached
+                              contiguous memory and buffer size must be
+                              MCAN0_MESSAGE_RAM_CONFIG_SIZE
 
    Returns:
     None
 */
-void MCAN0_MessageRAMConfigGet(MCAN_MSG_RAM_CONFIG *msgRAMConfig)
+void MCAN0_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
-    memset((void*)msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
+    uint32_t offset = 0;
 
-    msgRAMConfig->rxFIFO0Address = (MCAN_RX_BUFFER_FIFO_ENTRY *)mcan0_rx0_fifo;
-    msgRAMConfig->rxFIFO0Size = (1 * 16);
-    msgRAMConfig->rxFIFO1Address = (MCAN_RX_BUFFER_FIFO_ENTRY *)mcan0_rx1_fifo;
-    msgRAMConfig->rxFIFO1Size = (1 * 16);
-    msgRAMConfig->txBuffersAddress = (MCAN_TX_BUFFER_FIFO_ENTRY *)mcan0_tx_fifo;
-    msgRAMConfig->txBuffersSize = (1 * 16);
-    msgRAMConfig->txEventFIFOAddress =  (MCAN_TX_EVENT_FIFO_ENTRY *)mcan0_tx_event_fifo;
-    msgRAMConfig->txEventFIFOSize = (1 * sizeof(MCAN_TX_EVENT_FIFO_ENTRY));
+    memset((void*)msgRAMConfigBaseAddress, 0x00, MCAN0_MESSAGE_RAM_CONFIG_SIZE);
+
+    /* Set MCAN CCCR Init for Message RAM Configuration */
+    MCAN0_REGS->MCAN_CCCR = MCAN_CCCR_INIT_ENABLED;
+    while ((MCAN0_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) != MCAN_CCCR_INIT_Msk);
+
+    /* Set CCE to unlock the configuration registers */
+    MCAN0_REGS->MCAN_CCCR |= MCAN_CCCR_CCE_Msk;
+
+    mcan0Obj.msgRAMConfig.rxFIFO0Address = (mcan_rxf0e_registers_t *)msgRAMConfigBaseAddress;
+    offset = MCAN0_RX_FIFO0_SIZE;
+    /* Receive FIFO 0 Configuration Register */
+    MCAN0_REGS->MCAN_RXF0C = MCAN_RXF0C_F0S(1) | MCAN_RXF0C_F0WM(0) | MCAN_RXF0C_F0OM_Msk |
+            MCAN_RXF0C_F0SA(((uint32_t)mcan0Obj.msgRAMConfig.rxFIFO0Address >> 2));
+
+    mcan0Obj.msgRAMConfig.rxFIFO1Address = (mcan_rxf1e_registers_t *)(msgRAMConfigBaseAddress + offset);
+    offset += MCAN0_RX_FIFO1_SIZE;
+    /* Receive FIFO 1 Configuration Register */
+    MCAN0_REGS->MCAN_RXF1C = MCAN_RXF1C_F1S(1) | MCAN_RXF1C_F1WM(0) | MCAN_RXF1C_F1OM_Msk |
+            MCAN_RXF1C_F1SA(((uint32_t)mcan0Obj.msgRAMConfig.rxFIFO1Address >> 2));
+
+    mcan0Obj.msgRAMConfig.txBuffersAddress = (mcan_txbe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    offset += MCAN0_TX_FIFO_BUFFER_SIZE;
+    /* Transmit Buffer/FIFO Configuration Register */
+    MCAN0_REGS->MCAN_TXBC = MCAN_TXBC_TFQS(1) |
+            MCAN_TXBC_TBSA(((uint32_t)mcan0Obj.msgRAMConfig.txBuffersAddress >> 2));
+
+    mcan0Obj.msgRAMConfig.txEventFIFOAddress =  (mcan_txefe_registers_t *)(msgRAMConfigBaseAddress + offset);
+    offset += MCAN0_TX_EVENT_FIFO_SIZE;
+    /* Transmit Event FIFO Configuration Register */
+    MCAN0_REGS->MCAN_TXEFC = MCAN_TXEFC_EFWM(0) | MCAN_TXEFC_EFS(1) |
+            MCAN_TXEFC_EFSA(((uint32_t)mcan0Obj.msgRAMConfig.txEventFIFOAddress >> 2));
+
+    /* Set 16-bit MSB of mcan0 base address */
+    SFR_REGS->SFR_CAN = (SFR_REGS->SFR_CAN & ~SFR_CAN_EXT_MEM_CAN0_ADDR_Msk)
+                       | SFR_CAN_EXT_MEM_CAN0_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16));
+
+    /* Complete Message RAM Configuration by clearing MCAN CCCR Init */
+    MCAN0_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED;
+    while ((MCAN0_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
 }
 
 
