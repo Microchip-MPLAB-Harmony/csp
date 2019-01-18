@@ -101,10 +101,13 @@ void SYS_Initialize ( void* data )
     MMU_Initialize();
     Matrix_Initialize();
 
+    PLIB_L2CC_Initialize();
+
     INT_Initialize();
 	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
 
     MCAN0_Initialize();
+
 
 
 
@@ -116,4 +119,3 @@ void SYS_Initialize ( void* data )
 /*******************************************************************************
  End of File
 */
-

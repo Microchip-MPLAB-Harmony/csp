@@ -65,6 +65,8 @@ MCAN - Normal operation mode, MCAN clock source is 8 MHz and bitrate is 500 Kbps
 #define LED_On()                        LED_Clear()
 #define LED_Off()                       LED_Set()
 
+uint8_t Mcan0MessageRAM[MCAN0_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32))) __attribute__((__section__(".region_nocache")));
+
 char messageStart[] = "**** MCAN Normal Operation Blocking Demo ****\r\n\
 **** Demo uses blocking model of MCAN PLIB. ****\r\n\
 **** Receive message from CAN Bus and transmit back received message to CAN Bus and UART1 serial port ****\r\n\
@@ -85,6 +87,9 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     LED_Off();
+
+    /* Set Message RAM Configuration */
+    MCAN0_MessageRAMConfigSet(Mcan0MessageRAM);
 
     /* Send start message */
     UART1_Write(&messageStart, sizeof(messageStart));
