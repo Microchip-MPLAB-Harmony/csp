@@ -244,7 +244,7 @@ static void DFLL_Initialize(void)
     }
 <#else>
     <#if (CONFIG_CLOCK_DFLL_ONDEMAND == "ENABLE") || CONFIG_CLOCK_DFLL_RUNSTDY>
-        <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA =
+        <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = 0x0
         <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "ENABLE")?then("| OSCCTRL_DFLLCTRLA_ONDEMAND_Msk ", "")}
         <#lt>                               ${CONFIG_CLOCK_DFLL_RUNSTDY?then('| OSCCTRL_DFLLCTRLA_RUNSTDBY_Msk ', ' ')}
         <#lt>                               ;</@compress>
