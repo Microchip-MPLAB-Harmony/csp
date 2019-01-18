@@ -52,12 +52,14 @@
 #include "device.h"
 
 
+
 // ****************************************************************************
 // ****************************************************************************
 // Section: Configuration Bits
 // ****************************************************************************
 // ****************************************************************************
 ${LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION}
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -77,6 +79,7 @@ ${LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA}
         <#lt>SYSTEM_OBJECTS sysObj;
     </#if>
 </#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Library/Stack Initialization Data
@@ -91,6 +94,7 @@ ${LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA}
 // *****************************************************************************
 ${LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION}
 
+
 /*******************************************************************************
   Function:
     void SYS_Initialize ( void *data )
@@ -103,6 +107,7 @@ ${LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION}
 
 void SYS_Initialize ( void* data )
 {
+    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START}  <#-- global disable of interrupts before initializing anything -->
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
     <#lt>${LIST_SYSTEM_INIT_C_BOOTLOADER_TRIGGER}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS}
@@ -115,6 +120,7 @@ void SYS_Initialize ( void* data )
                 <#lt>${LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA}
         <#lt></#if>
     </#if>
+    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_END}  <#-- enable interrupts at the end of initialize -->
 }
 
 

@@ -1,4 +1,3 @@
-# coding: utf-8
 """*****************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -34,15 +33,12 @@ def genExceptionAsmSourceFile(symbol, event):
     else:
         symbol.setEnabled(False)
 
-
 def setFileVisibility (symbol, event):
     symbol.setVisible(event["value"])
-
 
 def setSysFileVisibility (symbol, event):
     symbol.setVisible(event["value"])
     symbol.setValue(event["value"], 1)
-
 
 def genMainSourceFile(symbol, event):
     mainName    = Database.getSymbolValue("core", "CoreMainFileName")
@@ -53,7 +49,6 @@ def genMainSourceFile(symbol, event):
         symbol.setEnabled(True)
     else:
         symbol.setEnabled(False)
-
 
 def genSysSourceFile(symbol, event):
     coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
@@ -79,10 +74,9 @@ def genSysSourceFile(symbol, event):
     else:
         symbol.setEnabled(False)
 
-
 def instantiateComponent( coreComponent ):
     global compilers
-    global compilerSpecifics 
+    global compilerSpecifics
     global armLibCSourceFile
     global devconSystemInitFile
     global debugSourceFile
@@ -91,10 +85,10 @@ def instantiateComponent( coreComponent ):
     global xc32Available
     global iarMenu
     global iarAvailable
-    
-    compilerSpecifics =     None 
+
+    compilerSpecifics =     None
     armLibCSourceFile =     None
-    devconSystemInitFile =  None 
+    devconSystemInitFile =  None
     naQualifier = " (n/a)"      ## warn not to use; but don't prohibit
 
     processor =     Variables.get( "__PROCESSOR" )
@@ -112,26 +106,26 @@ def instantiateComponent( coreComponent ):
     coreArch.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" ) )
     coreArch.setReadOnly( True )
     coreArch.setVisible( False )
-    
+
     if "CORTEX-A" in coreArch.getValue():
         isCortexA = True
         baseArchDir = "arm"
         compilers = [ "XC32" + naQualifier, "IAR" ]
         iarAvailable = True
         iarAllStacks = True
-        deviceCacheHeaderName = "cache_cortex_a.h.ftl" 
+        deviceCacheHeaderName = "cache_cortex_a.h.ftl"
     elif "CORTEX-M" in coreArch.getValue():
         isCortexM = True
         baseArchDir = "arm"
         compilers = [ "XC32", "IAR" ]
         xc32Available = True
         iarAvailable = True
-        deviceCacheHeaderName = "cache_cortex_m.h.ftl" 
+        deviceCacheHeaderName = "cache_cortex_m.h.ftl"
     else: # "mips"
         isMips = True
         baseArchDir = "mips"
         compilers = [ "XC32", "IAR" + naQualifier ]
-        deviceCacheHeaderName = "" 
+        deviceCacheHeaderName = ""
         xc32Available = True
 
     autoComponentIDTable = [ "dfp", "cmsis" ]
@@ -212,15 +206,15 @@ def instantiateComponent( coreComponent ):
         deviceCacheHeaderFile.setProjectPath("config/" + configName + "/")
         deviceCacheHeaderFile.setType("HEADER")
 
-    ## toolchain specifics
-    toolChainSpecifics = coreComponent.createFileSymbol( None, None )
-    toolChainSpecifics.setSourcePath( baseArchDir + "/toolchain_specifics.h" )
-    toolChainSpecifics.setOutputName( "toolchain_specifics.h" );
-    toolChainSpecifics.setMarkup( False )
-    toolChainSpecifics.setOverwrite( True )
-    toolChainSpecifics.setDestPath( "../../" + baseArchDir )
-    toolChainSpecifics.setProjectPath( baseArchDir )
-    toolChainSpecifics.setType( "HEADER" )
+        ## toolchain specifics
+        toolChainSpecifics = coreComponent.createFileSymbol( None, None )
+        toolChainSpecifics.setSourcePath( baseArchDir + "/toolchain_specifics.h" )
+        toolChainSpecifics.setOutputName( "toolchain_specifics.h" );
+        toolChainSpecifics.setMarkup( False )
+        toolChainSpecifics.setOverwrite( True )
+        toolChainSpecifics.setDestPath( "../../" + baseArchDir )
+        toolChainSpecifics.setProjectPath( baseArchDir )
+        toolChainSpecifics.setType( "HEADER" )
 
     ## toolChainMenu
     toolChainMenu = coreComponent.createMenuSymbol("CoreToolChainMenu", projMenu)
@@ -288,7 +282,7 @@ def instantiateComponent( coreComponent ):
     iarIrqStackSize.setVisible( iarAllStacks )
 
     iarSvcStackSize = coreComponent.createIntegerSymbol("IAR_SVC_STACK_SIZE", iarLdGeneralMenu)
-    iarSvcStackSize.setLabel("Superviser Stack Size (bytes)")
+    iarSvcStackSize.setLabel("Supervisor Stack Size (bytes)")
     iarSvcStackSize.setDefaultValue(96)
     iarSvcStackSize.setVisible( iarAllStacks )
 
@@ -375,6 +369,7 @@ def instantiateComponent( coreComponent ):
     systemInitSysList =         coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION",         None )
     systemAppInitDataList =     coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA",           None )
 
+    systemInitStartList =       coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START",          None )
     systemInitCoreList =        coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE",           None )
     systemInitInterruptList =   coreComponent.createListSymbol( "LIST_SYSTEM_INIT_INTERRUPTS",                      None )
     systemInitBootloaderList =  coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_BOOTLOADER_TRIGGER",            None )
@@ -382,6 +377,7 @@ def instantiateComponent( coreComponent ):
     systemInitDriver2List =     coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS",        None )
     systemInitSysList =         coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES",    None )
     systemInitMWList =          coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE",         None )
+    systemInitEndList =         coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_END",            None )
 
     # generate interrupts.c file
     intSourceFile = coreComponent.createFileSymbol( "INTERRUPTS_C", None )
@@ -403,7 +399,10 @@ def instantiateComponent( coreComponent ):
 
     # generate exceptions.c file
     exceptSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
-    exceptSourceFile.setSourcePath("templates/exceptions.c.ftl")
+    if "PIC32M" in processor:
+        exceptSourceFile.setSourcePath("templates/exceptions_xc32_mips.c.ftl")
+    else:
+        exceptSourceFile.setSourcePath("templates/exceptions_xc32_cortex_m.c.ftl")
     exceptSourceFile.setOutputName("exceptions.c")
     exceptSourceFile.setMarkup(True)
     exceptSourceFile.setOverwrite(True)
@@ -436,16 +435,26 @@ def instantiateComponent( coreComponent ):
     if "SAMA5" in processor:
         corePath = "../src/packs/CMSIS/CMSIS/Core_A/Include"
     else:
-        corePath = "../src/packs/CMSIS/CMSIS/Core/Include"
+        if "PIC32M" in processor:
+            corePath = ""
+        else:
+            corePath = "../src/packs/CMSIS/CMSIS/Core/Include"
 
     defSym = coreComponent.createSettingSymbol("XC32_INCLUDE_DIRS", None)
     defSym.setCategory("C32")
     defSym.setKey("extra-include-directories")
-    defSym.setValue( "../src;../src/config/" + configName 
-                    + ";../src/packs/" + processor + "_DFP;"
-                    + corePath 
-                    + ";../src/packs/CMSIS/;../src/" + baseArchDir
-                    )
+    if "PIC32M" in processor:
+        defSym.setValue( "../src;../src/config/" + configName
+                        + ";../src/packs/" + processor + "_DFP;"
+                        + corePath
+                        + ";../src/" + baseArchDir
+                        )
+    else:
+        defSym.setValue( "../src;../src/config/" + configName
+                        + ";../src/packs/" + processor + "_DFP;"
+                        + corePath
+                        + ";../src/packs/CMSIS/;../src/" + baseArchDir
+                        )
     defSym.setAppend(True, ";")
 
     # set XC32 option to not use the device startup code
@@ -472,7 +481,6 @@ def instantiateComponent( coreComponent ):
 def heapSizeCallBack(symbol, event):
     symbol.setValue(str(event["value"]))
 
-
 def updatePath(symbol, compilerSelected):
     import re
     sourcePath = symbol.getSourcePath()
@@ -483,9 +491,8 @@ def updatePath(symbol, compilerSelected):
     outputName = re.sub(pattern, compilerSelected, outputName)
     symbol.setOutputName(outputName)
 
-
 def compilerUpdate( symbol, event ):
-    global compilerSpecifics        # used in processor + ".py" modules 
+    global compilerSpecifics        # used in processor + ".py" modules
     global devconSystemInitFile     # set in processor + ".py" modules
     global armLibCSourceFile        # set in processor + ".py" modules
     global debugSourceFile          # set in core/system/console/config/sys_console.py
@@ -498,18 +505,19 @@ def compilerUpdate( symbol, event ):
     compilersVisibleFlag = True
     compilerSelected = event[ "symbol" ].getSelectedKey()
     if naQualifier in compilerSelected:
-        compilersVisibleFlag = False 
+        compilersVisibleFlag = False
         compilerSelected = compilerSelected.replace( naQualifier, "" )
     compilerSelected.lower()
 
     xc32Menu.setVisible( compilersVisibleFlag and xc32Available )
     iarMenu.setVisible(  compilersVisibleFlag and iarAvailable )
 
-    debugSourceFile.setSourcePath( "../arch/arm/templates/" + compilerSelected + "/stdio/" + compilerSelected + "_monitor.c.ftl" )
-    debugSourceFile.setOutputName( compilerSelected + "_monitor.c" )
-    
+    if "PIC32M" not in processor:
+        debugSourceFile.setSourcePath( "../arch/arm/templates/" + compilerSelected + "/stdio/" + compilerSelected + "_monitor.c.ftl" )
+        debugSourceFile.setOutputName( compilerSelected + "_monitor.c" )
+
     if not compilerSpecifics:
-        compilerSpecifics = []    
+        compilerSpecifics = []
     compilerSpecifics.append( debugSourceFile )
 
     if compilerSelected == "iar":
