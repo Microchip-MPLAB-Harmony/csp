@@ -219,7 +219,7 @@ void ${SUPC_INSTANCE_NAME}_SelectTempSenorChannel( SUPC_TSSEL sensor )
 
 void ${SUPC_INSTANCE_NAME}_SetOutputPin( SUPC_OUTPIN pin )
 {
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT(1 << pin);
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_SET(1 << pin);
 }
 
 void ${SUPC_INSTANCE_NAME}_SelectVoltageRegulator(SUPC_VREGSEL regsel)
@@ -231,7 +231,7 @@ void ${SUPC_INSTANCE_NAME}_SelectVoltageRegulator(SUPC_VREGSEL regsel)
 
 void ${SUPC_INSTANCE_NAME}_ClearOutputPin( SUPC_OUTPIN pin )
 {
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1 << pin);
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLR(1 << pin);
 }
 
 <#if SUPC_INTERRUPT_ENABLE = true>
