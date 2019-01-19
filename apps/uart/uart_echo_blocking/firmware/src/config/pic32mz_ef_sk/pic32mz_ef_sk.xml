@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Configuration>
+  <Components>
+    <UniqueComponent dnOrder="0" id="core">
+      <Symbols dnOrder="0">
+        <Combo dnOrder="0" id="CONFIG_FDMTEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="OFF"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="1" id="CONFIG_FMIIEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="OFF"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="2" id="CONFIG_FPLLICLK">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="PLL_POSC"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="3" id="CONFIG_FPLLIDIV">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIV_3"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="4" id="CONFIG_FSOSCEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="OFF"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="5" id="CONFIG_FWDTEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="OFF"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="6" id="CONFIG_ICESEL">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="ICS_PGx2"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="7" id="CONFIG_IESO">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="OFF"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="8" id="CONFIG_JTAGEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="OFF"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="9" id="CONFIG_POSCMOD">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="EC"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="10" id="CONFIG_TRCEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="OFF"/>
+          </Values>
+        </Combo>
+        <Boolean dnOrder="11" id="NVIC_144_0_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="false"/>
+            </Dynamic>
+            <User dnOrder="1" value="false"/>
+          </Values>
+        </Boolean>
+        <Combo dnOrder="12" id="NVIC_144_0_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
+            </Dynamic>
+          </Values>
+        </Combo>
+        <Boolean dnOrder="13" id="NVIC_145_0_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="false"/>
+            </Dynamic>
+            <User dnOrder="1" value="false"/>
+          </Values>
+        </Boolean>
+        <Combo dnOrder="14" id="NVIC_145_0_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
+            </Dynamic>
+          </Values>
+        </Combo>
+        <Boolean dnOrder="15" id="NVIC_146_0_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="false"/>
+            </Dynamic>
+            <User dnOrder="1" value="false"/>
+          </Values>
+        </Boolean>
+        <Combo dnOrder="16" id="NVIC_146_0_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
+            </Dynamic>
+          </Values>
+        </Combo>
+        <Boolean dnOrder="17" id="NVIC_147_0_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="false"/>
+            </Dynamic>
+            <User dnOrder="1" value="false"/>
+          </Values>
+        </Boolean>
+        <Combo dnOrder="18" id="NVIC_147_0_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
+            </Dynamic>
+          </Values>
+        </Combo>
+        <Combo dnOrder="19" id="SPI2_TX_SUBPRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
+            </Dynamic>
+          </Values>
+        </Combo>
+        <Combo dnOrder="20" id="UART2_FAULT_SUBPRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
+            </Dynamic>
+          </Values>
+        </Combo>
+        <Combo dnOrder="21" id="UART2_RX_SUBPRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
+            </Dynamic>
+          </Values>
+        </Combo>
+        <Combo dnOrder="22" id="UART2_TX_SUBPRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
+            </Dynamic>
+          </Values>
+        </Combo>
+        <KeyValueSet dnOrder="23" id="clkSvcMode">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="0"/>
+            </Dynamic>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="1" id="dfp"/>
+    <UniqueComponent dnOrder="2" id="uart2">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="UART_BRGH">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </KeyValueSet>
+        <Comment dnOrder="1" id="UART_FAULTINTR_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Boolean dnOrder="2" id="UART_FAULT_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="1" value="false"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Hex dnOrder="3" id="UART_FAULT_IPC_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="4" id="UART_FLT_IPC_PRI_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="5" id="UART_FLT_IPC_SUBPRI_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Boolean dnOrder="6" id="UART_INTERRUPT_MODE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="1" value="false"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Comment dnOrder="7" id="UART_INTRRUPT_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="text">
+              <Value dnOrder="0">&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;***INTERRUPT&amp;#160;MODE&amp;#160;Selected***</Value>
+            </String>
+            <Boolean dnOrder="1" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Comment dnOrder="8" id="UART_RXINTR_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Boolean dnOrder="9" id="UART_RX_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="1" value="false"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Hex dnOrder="10" id="UART_RX_IPC_PRI_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="11" id="UART_RX_IPC_SUBPRI_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="12" id="UART_RX_IPC_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Comment dnOrder="13" id="UART_TXINTR_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Boolean dnOrder="14" id="UART_TX_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="1" value="false"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Hex dnOrder="15" id="UART_TX_IPC_PRI_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="16" id="UART_TX_IPC_SUBPRI_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="17" id="UART_TX_IPC_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="18" id="UMODE_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="8"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+      </Symbols>
+    </UniqueComponent>
+  </Components>
+  <UserData>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="core" x="240" y="22"/>
+        <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
+        <ElementPosition dnOrder="2" id="uart2" x="392" y="294"/>
+      </ElementPositions>
+    </ComponentGraph>
+  </UserData>
+</Configuration>
