@@ -1,0 +1,1 @@
+	ICAP${INDEX}_Initialize();
