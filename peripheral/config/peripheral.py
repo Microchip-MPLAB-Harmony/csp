@@ -1,4 +1,3 @@
-# coding: utf-8
 """*****************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -51,6 +50,14 @@ peripherals = {
                 "RTC_U2250"     : ["TMR"],
                 "RTC_U2202"     : ["TMR"],
                 "LCDC_11062"    : ["LCDC"],
+                "WDT_02674"     : ["WDT"],
+                "DMT_01520"     : ["DMT"],
+                "SPI_01329"     : ["SPI"],
+                "UART_00734"    : ["UART"],
+                "NVM_02819"     : ["MEMORY"],
+                "RTCC_00748"    : ["TMR"],
+                "TMR_00745"     : ["TMR"],
+                "TMR1_00687"    : ["TMR"],
 }
 
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
@@ -72,11 +79,9 @@ for module in range (0, len(modules)):
     if (os.path.isfile(Variables.get("__CSP_DIR") + periphScript)):
 
         instances = modules[module].getChildren()
-
         for instance in range (0, len(instances)):
 
             periphInstanceName = str(instances[instance].getAttribute("name"))
-
             print("CSP: create component: Peripheral " + periphInstanceName + " (ID = " + periphID + ")")
 
             periphComponent = Module.CreateComponent(periphInstanceName.lower(), periphInstanceName.upper(), "/Peripherals/" +
