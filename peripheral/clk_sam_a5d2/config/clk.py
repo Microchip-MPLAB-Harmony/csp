@@ -17,10 +17,8 @@ generic_clock_peripheral_list = ["FLEXCOM0", "FLEXCOM1", "FLEXCOM2", "FLEXCOM3",
                                  "CLASSD"]
 
 # Peripherals connected to 64 bit AHB matrix (i.e. with HS bus clocks)
+global hs_peripherals_list
 hs_peripherals_list = ["XDMAC0", "XDMAC1", "AESB", "MPDDRC", "SDMMC0", "SDMMC1", "LCDC", "ISC", "QSPI0", "QSPI1"]
-
-# Peripherals supporting multiple clock options
-multi_clock_peripheral_list = ["TC"]
 
 global CLK_SAMA5D2_CONSTANTS_DICT
 CLK_SAMA5D2_CONSTANTS_DICT = {"SLOW_RC_OSC_FREQ": 32000,
@@ -69,6 +67,7 @@ def set_symbol_value_from_atdf(symbol, module_name, value_group_name):
         symbol.addKey(value[index].getAttribute("name"),
                       value[index].getAttribute("value"),
                       value[index].getAttribute("caption"))
+
 
 global get_pid_from_instance
 def get_pid_from_instance(instance_name):
@@ -243,13 +242,13 @@ def update_generic_clock_frequency(symbol, event):
 
     symbol.setValue(frequency,2)
 
-
+global update_peripheral_clock_frequencies
 def update_peripheral_clock_frequencies(symbol, event):
     symbol.setValue(int(event["value"]), 2)
 
 
-global update_pck_clk_frequency
-def update_pck_clk_frequency(symbol, value):
+global update_programmable_clk_frequency
+def update_programmable_clk_frequency(symbol, value):
     pck_clk_frequency = 0
     # find pck index
     pck_index = symbol.getID().split("PCK")[1].split("_")[0]
@@ -317,47 +316,46 @@ def update_isc_clk_frequency(symbol, event):
         lcd_clk_frequency = Database.getSymbolValue("core", "MCK_CLK_FREQUENCY") * 2
     symbol.setValue(lcd_clk_frequency, 2)
 
+global update_tc_clock_frequency
 def update_tc_clock_frequency(symbol, event):
     # symbol is named as "TC{instance_number}_CH{channel_number}_CLOCK_FREQUENCY.
     # Extract the instance number
-    tcInstance = symbol.getID().split("TC")[1].split("_")[0]
+    instance_num = symbol.getID().split("TC")[1].split("_")[0]
     # extract the channel number
-    chInstance = symbol.getID().split("_CH")[1].split("_")[0]
-
+    channel_num = symbol.getID().split("_CH")[1].split("_")[0]
     # check if the relevant channel is enabled
-    if (Database.getSymbolValue("tc" + str(tcInstance), "TC" + str(chInstance) + "_ENABLE") == True):
+    if (Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_ENABLE") == True):
         # Find the current clock source for the channel
-        clk_src = Database.getSymbolValue("tc" + str(tcInstance), "TC" + str(chInstance) + "_CMR_TCCLKS")
-        # if clock source is MCK (Enabled through extended registers of TC)
-        if (clk_src == 0):
-            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"), 2)
+        clk_src = Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_CMR_TCCLKS")
         # if clock source is processor independent GCLK
-        elif (clk_src == 1):
-            symbol.setValue(Database.getSymbolValue("core", "TC" + str(tcInstance) + "GENERIC_CLOCK_FREQUENCY"), 2)
+        if (clk_src == 1):
+            clk_frequency = Database.getSymbolValue("core", "TC" + str(instance_num) + "_GENERIC_CLOCK_FREQUENCY")
         # if clock  source is MCK/8
         elif (clk_src == 2):
-            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")/8, 2)
+            clk_frequency = Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")/8
         # if clock  source is MCK/32
         elif (clk_src == 3):
-            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")/32, 2)
+            clk_frequency = Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")/32
         # if clock  source is MCK/128
         elif (clk_src == 4):
-            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY") / 128, 2)
+            clk_frequency = Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY") / 128
         # if clock  source is SLOW CLOCK
         elif (clk_src == 5):
-            symbol.setValue(Database.getSymbolValue("core", "SLOW_CLK_FREQUENCY"), 2)
-        # set MCK/8 as the default value
+            clk_frequency = Database.getSymbolValue("core", "SLOW_CLK_FREQUENCY")
+        # default  clock source is MCK (Enabled through extended registers of TC)
         else:
-            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY") / 8, 2)
+            clk_frequency = Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")
+
+        symbol.setValue(clk_frequency, 2)
 
 
 global update_tc_clock_enable
 # if any channel of TC instance is enabled, enable the peripheral clock of that instance
 def update_tc_clock_enable(symbol, event):
-    tcInstance = symbol.getID()[2]
+    instance_num = symbol.getID()[2]
     enable_clock = False
     for channel in range(3):
-        symbol_id = "TC" + str(tcInstance) + "_CHANNEL" + str(channel) + "_CLOCK_ENABLE"
+        symbol_id = "TC" + str(instance_num) + "_CHANNEL" + str(channel) + "_CLOCK_ENABLE"
         if (Database.getSymbolValue("core", symbol_id) == True):
             enable_clock = True
             break
@@ -969,7 +967,7 @@ def __generic_clock_menu(clk_comp, clk_menu, pmc_reg_module):
         sym_pmc_pcr_gckdiv = clk_comp.createIntegerSymbol("PMC_PCR_PID" + pid +"_GCKDIV", sym_gclkx_menu)
         sym_pmc_pcr_gckdiv.setLabel(bitfield_pmc_pcr_gckdiv.getDescription())
         sym_pmc_pcr_gckdiv.setMin(1)
-        sym_pmc_pcr_gckdiv.setMax(16)
+        sym_pmc_pcr_gckdiv.setMax(256)
         sym_pmc_pcr_gckdiv.setDefaultValue(1)
         sym_pmc_pcr_gckdiv.setReadOnly(True)
         sym_pmc_pcr_gckdiv.setDependencies(set_component_editable, ["PMC_PCR_PID" + pid  +"_GCKEN"])
@@ -1158,15 +1156,15 @@ def __programmable_clock_menu(clk_comp, clk_menu, pmc_reg_module):
         sym_pck_freq = clk_comp.createIntegerSymbol("PCK" +str(i)+"_CLOCK_FREQUENCY", sym_prog_clk_menu)
         sym_pck_freq.setLabel("Programmable clock #"+str(i)+" Frequency (HZ)")
         sym_pck_freq.setDefaultValue(0)
-        sym_pck_freq.setDependencies(update_pck_clk_frequency, ["PMC_SCER_PCK" + str(i),
-                                                                "PMC_PCK" + str(i) + "_CSS",
-                                                                "PMC_PCK" + str(i) + "_PRES",
-                                                                "SLOW_CLK_FREQUENCY",
-                                                                "MAIN_CLK_FREQUENCY",
-                                                                "PLLA_CLK_FREQUENCY",
-                                                                "UPLL_CLK_FREQUENCY",
-                                                                "MCK_CLK_FREQUENCY",
-                                                                "AUDIO_CLK_FREQUENCY"])
+        sym_pck_freq.setDependencies(update_programmable_clk_frequency, ["PMC_SCER_PCK" + str(i),
+                                                                         "PMC_PCK" + str(i) + "_CSS",
+                                                                         "PMC_PCK" + str(i) + "_PRES",
+                                                                         "SLOW_CLK_FREQUENCY",
+                                                                         "MAIN_CLK_FREQUENCY",
+                                                                         "PLLA_CLK_FREQUENCY",
+                                                                         "UPLL_CLK_FREQUENCY",
+                                                                         "MCK_CLK_FREQUENCY",
+                                                                         "AUDIO_CLK_FREQUENCY"])
         sym_pck_freq.setReadOnly(True)
         sama5d2_pck_clk_sym_dict["PCK" + str(i) + "_CLOCK_FREQUENCY"] = sym_pck_freq
 
@@ -1229,6 +1227,67 @@ def __isc_clock_menu(clk_comp, clk_menu, pmc_reg_module):
                                                                 "PMC_SCER_ISCCK"])
 
 
+def __create_peripheral_clock_frequency_symbols(clock_comp, clk_menu):
+    """
+    Create peripheral clock frequency symbols
+    clk_comp: Clock Component handle
+    clk_menu: Clock Menu Symbol handle
+    """
+    # iterate through all modules in ATDF
+    modules = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals").getChildren()
+    for module_index in range(0, len(modules)):
+        module_name = modules[module_index].getAttribute("name")
+
+        # Get the symbol constructor for the module.
+        # Returns the default constructor if no specialized constructors are available for the module.
+        sym_constructor = freq_sym_constructor_dict.get(module_name, create_default_freq_symbol)
+
+        # iterate and create symbols for each instance
+        instances = modules[module_index].getChildren()
+        for instance_index in range(0, len(instances)):
+            instance_name = instances[instance_index].getAttribute("name")
+            clock_attribute = ATDF.getNode(
+                "/avr-tools-device-file/devices/device/peripherals/module@[name=\"" + module_name + "\"]\
+                 /instance@[name=\"" + instance_name + "\"]/parameters/param@[name=\"CLOCK_ID\"]")
+
+            # skip instances which do not have clock_id
+            if clock_attribute is not None:
+                sym_constructor(instance_name, clock_comp, clk_menu)
+
+
+global create_default_freq_symbol
+def create_default_freq_symbol (instance_name, clock_comp, clk_menu):
+    # find the bus clock freq symbol
+    bus_clk_freq = "PCLOCK_HS_CLOCK_FREQUENCY" if instance_name in hs_peripherals_list else "PCLOCK_LS_CLOCK_FREQUENCY"
+    
+    sym_peripheral_clock_freq = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
+    sym_peripheral_clock_freq.setVisible(False)
+    sym_peripheral_clock_freq.setReadOnly(True)
+    sym_peripheral_clock_freq.setDefaultValue(Database.getSymbolValue("core", bus_clk_freq))
+    sym_peripheral_clock_freq.setDependencies(update_peripheral_clock_frequencies, [bus_clk_freq])
+
+
+global create_tc_clock_frequency_symbol
+def create_tc_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
+    # each TC only has 3 channels(0,1 and 2). TC plib expects a dummy symbol for Channel 3 which
+    # is related to quadrature mode calculations
+    for channel_num in range(4):
+        tc_channel_id = instance_name + "_CH" + str(channel_num) + "_CLOCK_FREQUENCY"
+        tc_channel_symbol = clock_comp.createIntegerSymbol(tc_channel_id, clk_menu)
+        tc_channel_symbol.setVisible(False)
+        tc_channel_symbol.setReadOnly(True)
+        tc_channel_symbol.setDefaultValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
+        tc_channel_symbol.setDependencies(update_tc_clock_frequency,
+                                          ["PCLOCK_LS_CLOCK_FREQUENCY",
+                                           "SLOW_CLK_FREQUENCY",
+                                           instance_name + "_GENERIC_CLOCK_FREQUENCY",
+                                           instance_name.lower() + ".TC" + str(channel_num) + "_CMR_TCCLKS",
+                                           instance_name.lower() + ".TC" + str(channel_num) + "_ENABLE"])
+
+
+global freq_sym_constructor_dict
+freq_sym_constructor_dict = {"TC": create_tc_clock_frequency_symbol}
+
 # Add menu symbol dependencies
 def set_fixed_clock_symbol_dependencies():
     # slow clock frequency dependencies
@@ -1273,7 +1332,7 @@ def set_fixed_clock_symbol_dependencies():
                                                                              "PMC_MCKR_H32MXDIV"])
 
 
-#Lock all fixed clock menus
+# Lock all fixed clock menus
 def use_fixed_clocks():
     for name, symbol in sama5d2_fixed_clk_sym_dict.items():
         if symbol.getType() != "Comment":
@@ -1335,6 +1394,9 @@ if __name__ == "__main__":
     # creates usb clock
     __usb_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, SFR_REGISTERS)
 
+    # create peripheral clock frequency symbols that gets updated based on the selected source clock
+    __create_peripheral_clock_frequency_symbols(coreComponent, SYM_CLK_MENU)
+
     # If the system is configured to use clocks set by bootloader, do not allow the
     # user to modify the processor and master clocks
     if sym_use_bootloader_clocks.getValue() == True:
@@ -1342,64 +1404,6 @@ if __name__ == "__main__":
     # else enable dependency callbacks for the clock logic to work correctly
     else:
         set_fixed_clock_symbol_dependencies()
-
-    # calculated peripheral frequencies
-    peripherals = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
-    modules = peripherals.getChildren()
-    for module in range(0, len(modules)):
-        module_name = modules[module].getAttribute("name")
-
-        # if module supports multiple clock options, it will be handled separately
-        if module_name in multi_clock_peripheral_list:
-            continue
-
-        # iterate and create symbols for each instance
-        module_instances = modules[module].getChildren()
-        for module_instance_index in range(0, len(module_instances)):
-            clock_attribute = ATDF.getNode(
-                "/avr-tools-device-file/devices/device/peripherals/module@[name=\"" + str(module_name) + "\"]\
-                 /instance@[name=\"" + module_instances[module_instance_index].getAttribute("name") + "\"]\
-                 /parameters/param@[name=\"CLOCK_ID\"]")
-
-            # skip instances which do not have clock_id
-            if (clock_attribute == None):
-                continue
-
-            symbolID = module_instances[module_instance_index].getAttribute("name") + "_CLOCK_FREQUENCY"
-            sym_peripheral_clock_freq = coreComponent.createIntegerSymbol(symbolID, None)
-            sym_peripheral_clock_freq.setVisible(False)
-            sym_peripheral_clock_freq.setReadOnly(True)
-
-            # Set clock frequency based on what bus they are connected to
-            if module_name in hs_peripherals_list:
-                sym_peripheral_clock_freq.setDefaultValue(
-                    int(Database.getSymbolValue("core", "PCLOCK_HS_CLOCK_FREQUENCY")))
-                sym_peripheral_clock_freq.setDependencies(update_peripheral_clock_frequencies, ["core.PCLOCK_HS_CLOCK_FREQUENCY"])
-            else:
-                sym_peripheral_clock_freq.setDefaultValue(
-                    int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
-                sym_peripheral_clock_freq.setDependencies(update_peripheral_clock_frequencies, ["core.PCLOCK_LS_CLOCK_FREQUENCY"])
-
-    # TC clock symbol generation is handled seperately to accomodate per channel configuration
-    tc_module = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]")
-    num_tc_instances = tc_module.getChildren()
-
-    for tc_instance_number in range(0, len(num_tc_instances)):
-        # each TC only has 3 channels(0,1 and 2). TC plib expects a dummy symbol for Channel 3 which
-        # is related to quadrature mode calculations
-        for tc_channel_number in range(4):
-            tc_channel_id = "TC"+str(tc_instance_number)+"_CH" +str(tc_channel_number)+"_CLOCK_FREQUENCY"
-            tc_channel_symbol = coreComponent.createIntegerSymbol(tc_channel_id, None)
-            tc_channel_symbol.setVisible(False)
-            tc_channel_symbol.setReadOnly(True)
-            tc_channel_symbol.setDefaultValue(int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")))
-            tc_dependent_symbol_list = ["core.PCLOCK_LS_CLOCK_FREQUENCY",
-                                        "core.SLOW_CLK_FREQUENCY",
-                                        "core.TC" + str(tc_instance_number) + "_GENERIC_CLOCK_FREQUENCY",
-                                        "tc" + str(tc_instance_number) + ".TC" + str(tc_channel_number) + "_CMR_TCCLKS",
-                                        "tc"+str(tc_instance_number)+".TC"+str(tc_channel_number)+"_ENABLE"]
-            tc_channel_symbol.setDependencies(update_tc_clock_frequency, tc_dependent_symbol_list)
-
 
     # MPDDRC is enabled by bootloader so make sure we don't disable it
     Database.setSymbolValue("core", "MPDDRC_CLOCK_ENABLE", True, 1)
