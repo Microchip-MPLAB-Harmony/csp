@@ -187,8 +187,6 @@ void ${ADC_INSTANCE_NAME}_ComparisonRestart(void);
 <#if ADC_INTERRUPT == true>
 
 void ${ADC_INSTANCE_NAME}_CallbackRegister(ADC_CALLBACK callback, uintptr_t context);
-
-void ${ADC_INSTANCE_NAME}_InterruptHandler(void);
 </#if>
 // *****************************************************************************
 
