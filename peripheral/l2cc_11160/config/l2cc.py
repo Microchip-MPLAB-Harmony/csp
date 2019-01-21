@@ -7,6 +7,19 @@ global update_component_visability
 def update_component_visability(comp, event):
     comp.setVisible(event["value"])
 
+def updateL1CacheSettings(symbol, event):
+    cacheNamespace = "core"
+    dataCacheEnableId = "DATA_CACHE_ENABLE"
+    instructionCacheEnableId = "INSTRUCTION_CACHE_ENABLE"
+
+    component = symbol.getComponent()
+
+    if event["value"] == True:
+        Database.setSymbolValue(cacheNamespace, dataCacheEnableId, event["value"], 2)
+        Database.setSymbolValue(cacheNamespace, instructionCacheEnableId, event["value"], 2)
+    component.getSymbolByID(dataCacheEnableId).setReadOnly(event["value"])
+    component.getSymbolByID(instructionCacheEnableId).setReadOnly(event["value"])
+
 Log.writeInfoMessage("Loading L2CC for " + Variables.get("__PROCESSOR"))
 
 l2cc_menu = coreComponent.createMenuSymbol("L2CC_MENU", None)
@@ -19,6 +32,7 @@ l2cc_cr_l2cen = Register.getRegisterModule("L2CC").getRegisterGroup("L2CC").\
 l2cc_enable = coreComponent.createBooleanSymbol("L2CC_ENABLE", l2cc_menu)
 l2cc_enable.setLabel(l2cc_cr_l2cen.getDescription())
 l2cc_enable.setDefaultValue(False)
+l2cc_enable.setDependencies(updateL1CacheSettings, ["L2CC_ENABLE"])
 
 l2cc_acr_hpso = Register.getRegisterModule("L2CC").getRegisterGroup("L2CC").\
                 getRegister("L2CC_ACR").getBitfield("HPSO")
