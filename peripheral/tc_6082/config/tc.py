@@ -37,6 +37,7 @@ tcSym_CH_EXT_CLOCK = [0, 0, 0, 0]
 tcSym_CH_CLOCK_FREQ = [0, 0, 0, 0]
 tcSym_CH_PCK7 = [0, 0, 0, 0]
 tcSym_CH_Resolution = [0, 0, 0, 0]
+tcSym_CH_Invalid_Source = [0,0,0,0]
 tcSym_CH_OperatingMode = []
 
 tcTimerMenu = []
@@ -375,15 +376,13 @@ def tcQEIDependencyIntStatus(symbol, event):
             symbol.setVisible(False)
 
 def tcGetClockResolution(clockSource, channelID):
-    resolution_nS = str(1000000000.0/Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY"))
-    global tcSym_CH_EXT_CLOCK
-    ext_clock_Hz = tcSym_CH_EXT_CLOCK[channelID].getValue()
-    if (ext_clock_Hz == 0):
-        Log.writeErrorMessage("External clock frequency is zero")
-        ext_clock_Hz = 1
     if (clockSource > 5):
-        resolution_nS = str(1000000000.0/ext_clock_Hz)
-    return resolution_nS
+        source_clk_freq = tcSym_CH_EXT_CLOCK[channelID].getValue()
+    else:
+        source_clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY")
+    if source_clk_freq == 0:
+        source_clk_freq = 1
+    return str(1000000000.0/source_clk_freq)
 
 def tcClockFreq(tcSym_CH_ClockFreqLocal, event):
     id = tcSym_CH_ClockFreqLocal.getID()
@@ -400,8 +399,18 @@ def tcClockResCalc(tcSym_CH_ResolutionLocal, event):
     channelID = int(id[2])
     resolution = None
     clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
-    resolution = tcGetClockResolution(clock, channelID)
-    tcSym_CH_Resolution[channelID].setLabel("****Clock resolution is " + str(resolution) + " nS****")
+    if (clock > 5):
+        source_clk_freq = tcSym_CH_EXT_CLOCK[channelID].getValue()
+    else:
+        source_clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY")
+    if source_clk_freq == 0:
+        tcSym_CH_Resolution[channelID].setVisible(False)
+        tcSym_CH_Invalid_Source[channelID].setVisible(True)
+    else:
+        tcSym_CH_Invalid_Source[channelID].setVisible(False)
+        resolution = tcGetClockResolution(clock, channelID)
+        tcSym_CH_Resolution[channelID].setLabel("****Clock resolution is " + str(resolution) + " nS****")
+        tcSym_CH_Resolution[channelID].setVisible(True)
 
 def tcExtClockVisible(tcSym_CH_Ext_ClockLocal, event):
     id = tcSym_CH_Ext_ClockLocal.getID()
@@ -689,6 +698,11 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_Resolution[channelID].setLabel("****Timer resolution is " + str(6.66) + " nS****")
     tcSym_CH_Resolution[channelID].setDependencies(tcClockResCalc, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
         "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+
+    #clock source zero frequency warning
+    tcSym_CH_Invalid_Source[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_Zero_Freq", menu)
+    tcSym_CH_Invalid_Source[channelID].setLabel("Channel source clock frequency is zero !!! (Check if clock is enabled)")
+    tcSym_CH_Invalid_Source[channelID].setVisible(False)
 
 def onAttachmentConnected(source, target):
     global sysTimeChannel_Sym
