@@ -86,8 +86,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void CLK_Initialize( void )
 {
     bool int_flag = false;
-    volatile uint32_t *reg;
-    uint8_t ii;
     
     int_flag = (bool)__builtin_disable_interrupts();
     /* unlock system for clock configuration */

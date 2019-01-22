@@ -141,7 +141,7 @@ int main ( void )
     //LED1_Initialize();
 
     /* Register callback functions and send start message */
-    UART2_FaultCallbackRegister(APP_FaultCallback);
+    UART2_FaultCallbackRegister(APP_FaultCallback, 0);
     UART2_WriteCallbackRegister(APP_WriteCallback, 0);
     UART2_ReadCallbackRegister(APP_ReadCallback, 0);
     UART2_Write(&messageStart, sizeof(messageStart));

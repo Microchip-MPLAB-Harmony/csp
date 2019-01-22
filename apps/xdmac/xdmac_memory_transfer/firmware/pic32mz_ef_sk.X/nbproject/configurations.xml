@@ -62,8 +62,7 @@
           <itemPath>../src/config/pic32mz_ef_sk/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main_pic32mz.c</itemPath>
-      <itemPath>../src/main.c</itemPath>
+      <itemPath>../src/main_pic32mz_ef_sk.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

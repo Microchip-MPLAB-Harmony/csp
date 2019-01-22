@@ -509,7 +509,6 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
     uint8_t chanIndex;
     DMA_CHANNEL_OBJECT *chanObj;
-    volatile uint32_t * regs;
 
     /* Enable the DMA module */
     *(volatile uint32_t *)(&DMACONSET) = _DMACON_ON_MASK;

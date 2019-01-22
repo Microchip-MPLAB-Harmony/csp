@@ -461,7 +461,7 @@ uint16_t ${TMR1_INSTANCE_NAME}_CounterGet(void)
 uint32_t ${TMR1_INSTANCE_NAME}_FrequencyGet(void)
 {
     uint32_t prescale, tmr1BaseFreq;
-    if( _T1CON_TCS_MASK == T1CON & _T1CON_TCS_MASK)
+    if( _T1CON_TCS_MASK == (T1CON & _T1CON_TCS_MASK))
     {
       /* Set external clock Freq fed through TCK pin */
       tmr1BaseFreq = TIMER1_EXT_CLOCK_INPUT_FREQ;

@@ -81,11 +81,11 @@ void ${SPI_INSTANCE_NAME}_FaultCallbackRegister(const SPI_CALLBACK callback, uin
 
 void ${SPI_INSTANCE_NAME}_FAULT_Tasks (void);
 
-void ${SPI_INSTANCE_NAME}_RxCallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
+void ${SPI_INSTANCE_NAME}_ReadCallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
 
 void ${SPI_INSTANCE_NAME}_RX_Tasks (void);
 
-void ${SPI_INSTANCE_NAME}_TxCallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
+void ${SPI_INSTANCE_NAME}_WriteCallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
 
 void ${SPI_INSTANCE_NAME}_TX_Tasks (void);
 

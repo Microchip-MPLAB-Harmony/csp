@@ -3,77 +3,26 @@
   <Components>
     <UniqueComponent dnOrder="0" id="core">
       <Symbols dnOrder="0">
-        <KeyValueSet dnOrder="0" id="CONFIG_FDMTEN">
+        <KeyValueSet dnOrder="0" id="COMPILER_CHOICE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="0"/>
+            </Dynamic>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="1" id="CONFIG_FNOSC">
+        <String dnOrder="1" id="CoreMainFileName">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
+            <User dnOrder="0" value="main_pic32mz"/>
           </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="2" id="CONFIG_FPLLICLK">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="3" id="CONFIG_FPLLIDIV">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="2"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="4" id="CONFIG_FPLLMULT">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="49"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="5" id="CONFIG_FPLLODIV">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="6" id="CONFIG_FPLLRNG">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="7" id="CONFIG_FSOSCEN">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="8" id="CONFIG_ICESEL">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="9" id="CONFIG_IESO">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="10" id="CONFIG_JTAGEN">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="11" id="CONFIG_POSCMOD">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="12" id="CONFIG_TRCEN">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="13" id="CONFIG_WDTPS">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="13"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="14" id="clkSvcMode">
+        </String>
+        <File dnOrder="2" id="MAIN_C">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="name">
+              <Value dnOrder="0">main_pic32mz.c</Value>
+            </String>
+          </Attributes>
+        </File>
+        <KeyValueSet dnOrder="3" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="0"/>
@@ -85,12 +34,12 @@
     <UniqueComponent dnOrder="1" id="dfp"/>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

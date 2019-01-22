@@ -1,1 +1,1 @@
-#include "peripheral/tmr1/plib_${TMR1_INSTANCE_NAME}.h"
+#include "peripheral/tmr1/plib_tmr1.h"

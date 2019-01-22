@@ -32,7 +32,7 @@
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">main.c</Name>
+          <Name dnOrder="1">main_pic32mz.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F81A00E640818EDFB9E79C9BD241AEF4</GeneratedChecksum>
