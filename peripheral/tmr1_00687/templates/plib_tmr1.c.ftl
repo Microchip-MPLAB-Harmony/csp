@@ -228,11 +228,6 @@ void ${TMR1_INSTANCE_NAME}_Initialize(void)
 
     /* Setup TMR1 Interrupt */
     <#if TMR1_INTERRUPT_ENABLE?c == "true">
-    /* TMR1 interrupt priority and subpriority.  Clear field then write new value. */
-    /* Priority	= ${TMR1_IPC_PRI_VALUE}	*/
-	/* Sub-priority	= ${TMR1_IPC_SUBPRI_VALUE}	*/
-    ${TMR1_IPC_REG}SET = 0x${TMR1_IPC_VALUE};
-
     ${TMR1_INSTANCE_NAME}_InterruptEnable();  /* Enable interrupt on the way out */
 
     </#if>

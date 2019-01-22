@@ -214,15 +214,6 @@ void ${RTC_INSTANCE_NAME}_Initialize ( void )
     /* Set RTCC clock source (LPRC/SOSC) */
     RTCCONbits.RTCCLKSEL = ${RTCC_CLOCK_SOURCE};
 
-    <#if RTC_VEC_ENABLE?c == "true">
-    /* Setup RTCC Interrupt */
-    /* RTCC interrupt priority. */
-    ${RTC_PRIOREG_WRT} = (${RTC_PRIORITY} << ${RTC_PRIOREG_SHIFT});
-    
-    /* RTCC interrupt subpriority. */
-    ${RTC_PRIOREG_WRT} = (${core.RTCC_SUBPRIORITY} << ${RTC_SUBPRIOREG_SHIFT});
-    </#if>
-    
     rtc.interruptSource = ${RTC_VECTOR_NUMBER};
 
     /* start the RTC */

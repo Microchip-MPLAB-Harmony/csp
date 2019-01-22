@@ -108,7 +108,7 @@ def _get_enblReg_parms(vectorNumber):
     # This takes in vector index for interrupt, and returns the IECx register name as well as 
     # mask and bit location within it for given interrupt
     if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
+        ( ("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
         temp = float(vectorNumber) / 32.0
         index = int(temp)
         bit = float(temp%1)
@@ -121,7 +121,7 @@ def _get_statReg_parms(vectorNumber):
     # This takes in vector index for interrupt, and returns the IFSx register name as well as 
     # mask and bit location within it for given interrupt
     if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
+        ( ("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
         temp = float(vectorNumber) / 32.0
         index = int(temp)
         bit = float(temp%1)
@@ -134,7 +134,7 @@ def _get_sub_priority_parms(vectorNumber):
     # This returns the IPCx register name, priority bit shift, priority mask, subpriority bit shift, 
     # and subpriority bitmask for input vector number
     if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
+        ( ("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
         temp = float(vectorNumber) / 4.0
         index = int(temp)
         subPrioBit = 8*(vectorNumber & 0x3)
@@ -238,6 +238,13 @@ def updatePrio(menu, event):
     global _get_channel_from_nvic_name
     channel = _get_channel_from_nvic_name(event["id"])
     dmaIrqPriority[channel].setValue(str(event["value"]),2)
+    
+def updateSubprio(menu, event):
+    # updates interrupt priority in DMA, when updated
+    global dmaIrqSubPriority
+    global _get_channel_from_nvic_name
+    channel = _get_channel_from_nvic_name(event["id"])
+    dmaIrqSubPriority[channel].setValue(str(event["value"]),2)
 
 def updateEnbl(menu, event):
     # updates interrupt enable status in DMA, when updated
@@ -269,6 +276,7 @@ global chpriSym
 global dmacInterruptWarn
 global dmacPriorityVal
 global dmaIrqPriority
+global dmaIrqSubPriority
 global dmaIrqEnable
 global dmaIrqHandler
 global dmaVectorNum
@@ -290,6 +298,7 @@ dmacPriority = []
 dmacPriorityVal = []
 chpriSym = []
 dmaIrqPriority = []
+dmaIrqSubPriority = []
 dmaIrqEnable = []
 dmaIrqHandler = []
 vectorChanMap = {}
@@ -421,7 +430,7 @@ for child in node:
         dmaChannelNum[childIndex].setVisible(False)
         
         if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-            (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
+            (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
             # this name could be different for different families - this isn't from the datasheet
             SymId = "DCH"+name[-1]+"INTbits_REG"
             symbol = coreComponent.createStringSymbol(SymId, None)
@@ -442,7 +451,7 @@ for child in node:
         
 # below parameters facilitate computation of register addresses at runtime
 if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-    (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
+    (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
     # base address for DMA registers - get from atdf
     address = dmacBaseAddress.getAttribute("offset")
     SymId = "DMAC_BASE_ADDR"
@@ -667,6 +676,15 @@ for dmaChannel in range(0,numDMAChans):
     dmaIrqPriority[dmaChannel].setDefaultValue(val)
     dmaIrqPriority[dmaChannel].setDependencies(updatePrio,["core." + targetSym])
     dmaIrqPriority[dmaChannel].setVisible(False)
+    
+    # interrupt subpriority:  for use in ftl file
+    dmaIrqSubPriority.append(dmaChannel)
+    dmaIrqSubPriority[dmaChannel] = coreComponent.createStringSymbol("DMA_"+str(dmaChannel)+"_IRQ_SUBPRIORITY", None)
+    targetSym = "NVIC_" + str(dmaVectorNum[dmaChannel].getValue()) + "_0_SUBPRIORITY"
+    val = Database.getSymbolValue("core",targetSym)
+    dmaIrqSubPriority[dmaChannel].setDefaultValue(val)
+    dmaIrqSubPriority[dmaChannel].setDependencies(updateSubprio,["core." + targetSym])
+    dmaIrqSubPriority[dmaChannel].setVisible(False)
     
     # interrupt enable:  for use in ftl file
     dmaIrqEnable.append(dmaChannel)

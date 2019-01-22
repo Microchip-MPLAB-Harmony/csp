@@ -92,7 +92,7 @@ def _get_enblReg_parms(vectorNumber):
     # This takes in vector index for interrupt, and returns the IECx register name as well as 
     # mask and bit location within it for given interrupt
     if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
+        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
         temp = float(vectorNumber) / 32.0
         index = int(temp)
         bit = float(temp%1)
@@ -104,7 +104,7 @@ def _get_statReg_parms(vectorNumber):
     # This takes in vector index for interrupt, and returns the IFSx register name as well as 
     # mask and bit location within it for given interrupt
     if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
+        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
         temp = float(vectorNumber) / 32.0
         index = int(temp)
         bit = float(temp%1)
@@ -116,7 +116,7 @@ def _get_sub_priority_parms(vectorNumber):
     # This returns the IPCx register name, priority bit shift, priority mask, subpriority bit shift, 
     # and subpriority bitmask for input vector number
     if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
+        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
         temp = float(vectorNumber) / 4.0
         index = int(temp)
         subPrioBit = 8*(vectorNumber & 0x3)

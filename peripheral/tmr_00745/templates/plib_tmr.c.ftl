@@ -227,13 +227,7 @@ void ${TMR_INSTANCE_NAME}_Initialize(void)
 
     /* Setup TMR Interrupt */
     <#if TMR_INTERRUPT_ENABLE?c == "true">
-    /* TMR interrupt priority and subpriority.  Clear field then write new value. */
-    /* Priority	= ${TMR_IPC_PRI_VALUE}	*/
-	/* Sub-priority	= ${TMR_IPC_SUBPRI_VALUE}	*/
-    ${TMR_IPC_REG}SET = 0x${TMR_IPC_VALUE};
-
     ${TMR_INSTANCE_NAME}_InterruptEnable();  /* Enable interrupt on the way out */
-
     </#if>
    
     /* start the TMR */

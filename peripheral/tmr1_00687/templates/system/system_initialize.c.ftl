@@ -1,1 +1,1 @@
-${TMR1_INSTANCE_NAME}_Initialize();
+    ${TMR1_INSTANCE_NAME}_Initialize();

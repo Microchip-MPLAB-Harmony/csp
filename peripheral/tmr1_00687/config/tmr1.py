@@ -129,22 +129,9 @@ def updateIntPSValues(symbol, event):
 
 def updateHandlerName(symbol, event):
     handlername = str(event["value"])
-    symbol.setValue(handlername, 1)     
+    symbol.setValue(handlername, 1)
 
-def combinetmr1IPC_Values(symbol, event):
-    global tmr1VectorNum
-    pr, ps, pm, sps, spm = _get_sub_priority_parms(tmr1VectorNum)
-    ipc = symbol.getValue()
-    if(event["id"] == "TMR1_IPC_PRI_VALUE"):
-        ipcPriValue = int(event["symbol"].getValue())
-        ipc = ipc & ~((int(pm))<< (int(ps)))
-        ipc = ipc | (ipcPriValue<<(int (ps)))
 
-    if(event["id"] == "TMR1_IPC_SUBPRI_VALUE"):
-        ipcSPriValue = int(event["symbol"].getValue())
-        ipc = ipc & ~((int(spm))<< (int(sps)))
-        ipc = ipc | (ipcSPriValue<<(int (sps)))
-    symbol.setValue(ipc, 2)
 
 def timerModeMax(symbol,event):
     if ((int(event["symbol"].getKeyValue(event["value"]))) == 1):
@@ -221,10 +208,6 @@ def instantiateComponent(tmr1Component):
     tmr1IFS.setDefaultValue(statRegName)
     tmr1IFS.setVisible(False)
 
-    #IPC REG
-    tmr1IPC = tmr1Component.createStringSymbol("TMR1_IPC_REG", None)
-    tmr1IPC.setDefaultValue(prioRegName)
-    tmr1IPC.setVisible(False)
 
     #PRIORITY VALUE
     tmr1VectorPriSym = "NVIC_" + str(tmr1VectorNum) + "_0_PRIORITY"
@@ -236,19 +219,13 @@ def instantiateComponent(tmr1Component):
 
     #SUBPRIORITY VALUE
 
-    tmr1VectorSubPriSym = "TIMER_" + str(instanceNum) + "_SUBPRIORITY"
+    tmr1VectorSubPriSym = "NVIC_" + str(tmr1VectorNum) + "_0_SUBPRIORITY"
     tmr1subpriValue = Database.getSymbolValue("core",tmr1VectorSubPriSym)
     tmr1IPC_SubpriValue = tmr1Component.createHexSymbol("TMR1_IPC_SUBPRI_VALUE", None)
     tmr1IPC_SubpriValue.setDefaultValue(int(tmr1subpriValue))
     tmr1IPC_SubpriValue.setVisible(False)
     tmr1IPC_SubpriValue.setDependencies(updateIntPSValues, [ tmr1VectorSubPriSym])
 
-    #IPC REG VALUE
-    tmr1IPC_Val = tmr1Component.createHexSymbol("TMR1_IPC_VALUE", None)
-    tmr1IPC_Val.setDefaultValue((int (tmr1IPC_PriValue.getDefaultValue()) << int(prioShift)) + (int (tmr1IPC_SubpriValue.getDefaultValue()) << int(subprioShift)))
-    tmr1IPC_Val.setVisible(False)    
-    tmr1IPC_Val.setDependencies(combinetmr1IPC_Values, ["TMR1_IPC_PRI_VALUE"])
-    tmr1IPC_Val.setDependencies(combinetmr1IPC_Values, ["TMR1_IPC_SUBPRI_VALUE"])
 
     #HANDLER NAME
     tmr1VectorHandlerSym = "NVIC_" + str(tmr1VectorNum) + "_0_HANDLER"

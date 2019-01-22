@@ -153,17 +153,7 @@ def combine2Values(symbol, event):
     symbol.setValue(cmconValue, 2)
     print cmconValue
 
-def combineCMP1IPC_Values(symbol, event):
-    cmp1IpcPri = int(cmp1IPC_PriValue.getValue()) << int(cmp1PriShift)
-    cmp1IpcSub = int(cmp1IPC_SubpriValue.getValue()) << int(cmp1SubShift)
-    cmp1Ipc = cmp1IpcPri + cmp1IpcSub
-    symbol.setValue(cmp1Ipc, 2)
 
-def combineCMP2IPC_Values(symbol, event):
-    cmp2IpcPri = int(cmp2IPC_PriValue.getValue()) << int(cmp2PriShift)
-    cmp2IpcSub = int(cmp2IPC_SubpriValue.getValue()) << int(cmp2SubShift)
-    cmp2Ipc = cmp2IpcPri + cmp2IpcSub
-    symbol.setValue(cmp2Ipc, 2)
     
 def getIRQnumber(string):
     interrupts = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts')
@@ -341,10 +331,6 @@ def instantiateComponent(cmpComponent):
     cmp1IFS.setDefaultValue(cmp1StatRegName)
     cmp1IFS.setVisible(False)
 
-    #CMP1 IPC REG
-    cmp1IPC = cmpComponent.createStringSymbol("CMP1_IPC_REG", None)
-    cmp1IPC.setDefaultValue(cmp1PriRegName)
-    cmp1IPC.setVisible(False)
 
     #CMP1 PRIORITY VALUE
     cmp1IPC_PriValue = cmpComponent.createHexSymbol("CMP1_IPC_PRI_VALUE", None)
@@ -358,12 +344,6 @@ def instantiateComponent(cmpComponent):
     cmp1IPC_SubpriValue.setVisible(False)
     cmp1IPC_SubpriValue.setDependencies(updateIRQValues, ["core.COMPARATOR_1_SUBPRIORITY"])
 
-    #CMP1 IPC VALUE
-    cmp1IPC = cmpComponent.createHexSymbol("CMP1_IPC_VALUE", None)
-    cmp1IPC.setDefaultValue(2031616)
-    cmp1IPC.setVisible(False)    
-    cmp1IPC.setDependencies(combineCMP1IPC_Values, ["CMP1_IPC_PRI_VALUE"])
-    cmp1IPC.setDependencies(combineCMP1IPC_Values, ["CMP1_IPC_SUBPRI_VALUE"])
 
     #CMP1 HANDLER NAME
     cmp1IPC_handlerStr = cmpComponent.createStringSymbol("CMP1_ISR_HANDLER_NAME", None)
@@ -387,10 +367,6 @@ def instantiateComponent(cmpComponent):
     cmp2IFS.setDefaultValue(cmp2StatRegName)
     cmp2IFS.setVisible(False)
 
-    #CMP2 IPC REG
-    cmp2IPC = cmpComponent.createStringSymbol("CMP2_IPC_REG", None)
-    cmp2IPC.setDefaultValue(cmp2PriRegName)
-    cmp2IPC.setVisible(False)
 
     #CMP2 PRIORITY VALUE
     cmp2IPC_PriValue = cmpComponent.createHexSymbol("CMP2_IPC_PRI_VALUE", None)
@@ -404,12 +380,6 @@ def instantiateComponent(cmpComponent):
     cmp2IPC_SubpriValue.setVisible(False)
     cmp2IPC_SubpriValue.setDependencies(updateIRQValues, ["core.COMPARATOR_2_SUBPRIORITY"])
 
-    #CMP2 IPC VALUE
-    cmp2IPC = cmpComponent.createHexSymbol("CMP2_IPC_VALUE", None)
-    cmp2IPC.setDefaultValue(520093696)
-    cmp2IPC.setVisible(False)    
-    cmp2IPC.setDependencies(combineCMP2IPC_Values, ["CMP2_IPC_PRI_VALUE"])
-    cmp2IPC.setDependencies(combineCMP2IPC_Values, ["CMP2_IPC_SUBPRI_VALUE"])
 
     #CMP2 HANDLER NAME
     cmp2IPC_handlerStr = cmpComponent.createStringSymbol("CMP2_ISR_HANDLER_NAME", None)

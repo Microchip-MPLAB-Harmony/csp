@@ -75,24 +75,12 @@ void ICAP${INDEX}_Initialize (void)
 	/*SIDL 	= ${ICAP_ICxCON_SIDL?then('true', 'false')}	*/
 
 	IC${INDEX}CON = 0x${ICxCON_VALUE};
-	<#if ICAP_INTERRUPT_ENABLE?c == 'true'>
-	
-	/*Setup ICAP${INDEX} Interrupt*/
-	/* Priority		= ${ICAPx_IPC_PRI_VALUE}	*/
-	/* Subpriority	= ${ICAPx_IPC_SUBPRI_VALUE}	*/
-	
-	${ICAPx_IPC_REG}SET = 0x${IPC_VALUE};
-	${ICAPx_IEC_REG}SET = _${ICAPx_IEC_REG}_IC${INDEX}IE_MASK;
-	</#if>
-	<#if ICAP_ERROR_INTERRUPT_ENABLE?c == 'true'>
-	
-	/*Setup ICAP${INDEX} Error Interrupt*/
-	/* Priority		= ${ICAPx_ERROR_IPC_PRI_VALUE}	*/
-	/* Subpriority	= ${ICAPx_ERROR_IPC_SUBPRI_VALUE}	*/
-	
-	${ERROR_IPC_REG}SET = 0x${ERROR_IPC_VALUE};
-	${ERROR_IEC_REG}SET = _${ERROR_IEC_REG}_IC${INDEX}EIE_MASK;
-	</#if>
+    <#if ICAP_INTERRUPT_ENABLE?c == 'true'>
+    ${ICAPx_IEC_REG}SET = _${ICAPx_IEC_REG}_IC${INDEX}IE_MASK;
+    </#if>
+    <#if ICAP_ERROR_INTERRUPT_ENABLE?c == 'true'>
+    ${ERROR_IEC_REG}SET = _${ERROR_IEC_REG}_IC${INDEX}EIE_MASK;
+    </#if>
 }
 
 // *****************************************************************************
@@ -214,9 +202,25 @@ void ICAP${INDEX}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
     icap${INDEX}Obj.context = context;
 }
 
-void __ISR(_INPUT_CAPTURE_${INDEX}_VECTOR, ipl${ICAPx_IPC_PRI_VALUE}AUTO) ${ISR_HANDLER_NAME} (void)
+// *****************************************************************************
+/* Function:
+  void INPUT_CAPTURE_${INDEX}_Tasks( void )
+
+  Summary:
+    Interrupt handler.
+  Description:
+    This function does the PLIB-specific actions, and is called by the actual handler
+    function.
+  Precondition:
+    None.
+  Parameters:
+    None.
+  Returns:
+    void
+*/
+void INPUT_CAPTURE_${INDEX}_Tasks (void)
 {
-	${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;	//Clear IRQ flag
+    ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;	//Clear IRQ flag
 
 	if( (icap${INDEX}Obj.callback != NULL))
 	{
@@ -258,9 +262,25 @@ void ICAP${INDEX}_Error_CallbackRegister(ICAP_CALLBACK callback, uintptr_t conte
     icap${INDEX}errObj.context = context;
 }
 
-void __ISR(_INPUT_CAPTURE_${INDEX}_ERROR_VECTOR, ipl${ICAPx_ERROR_IPC_PRI_VALUE}AUTO) ${ISR_ERROR_HANDLER_NAME} (void)
+
+// *****************************************************************************
+/* Function:
+  void INPUT_CAPTURE_${INDEX}_ERROR_Tasks (void)
+  Summary:
+    Error interrupt handler.
+  Description:
+    This function does the PLIB-specific actions, and is called by the actual handler
+    function.
+  Precondition:
+    None.
+  Parameters:
+    None.
+  Returns:
+    void
+*/
+void INPUT_CAPTURE_${INDEX}_ERROR_Tasks (void)
 {
-	${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}EIF_MASK;	//Clear IRQ flag
+    ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}EIF_MASK;	//Clear IRQ flag
 
 	if( (icap${INDEX}errObj.callback != NULL))
 	{

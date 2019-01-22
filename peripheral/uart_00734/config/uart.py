@@ -325,11 +325,6 @@ def instantiateComponent(uartComponent):
     uartFaultIFS.setDefaultValue(statRegName)
     uartFaultIFS.setVisible(False)
 
-    #IPC REG
-    uartFaultIPC = uartComponent.createStringSymbol("UART_FAULT_IPC_REG", None)
-    uartFaultIPC.setDefaultValue(prioRegName)
-    uartFaultIPC.setVisible(False)
-
     #PRIORITY VALUE
     uartVectorPriSym = "NVIC_" + str(uartFaultVectorNum) + "_0_PRIORITY"
     uartFltpriValue = Database.getSymbolValue("core",uartVectorPriSym)
@@ -339,7 +334,7 @@ def instantiateComponent(uartComponent):
     uartFaultIPC_PriValue.setDependencies(updateIRQValues, ["core." + uartVectorPriSym])
 
     #SUBPRIORITY VALUE
-    uartVectorSubPriSym = uartInstanceName.getValue() + "_FAULT_SUBPRIORITY"
+    uartVectorSubPriSym = "NVIC_" + str(uartFaultVectorNum) + "_0_SUBPRIORITY"
     uartFaultSubPriValue = Database.getSymbolValue("core",uartVectorSubPriSym)
     uartFaultIPC_SubpriValue = uartComponent.createHexSymbol("UART_FLT_IPC_SUBPRI_VALUE", None)
     uartFaultIPC_SubpriValue.setDefaultValue(int(uartFaultSubPriValue))
@@ -378,11 +373,6 @@ def instantiateComponent(uartComponent):
     uartRXIFS.setDefaultValue(urxstatRegName)
     uartRXIFS.setVisible(False)
 
-    #IPC REG
-    uartRXIPC = uartComponent.createStringSymbol("UART_RX_IPC_REG", None)
-    uartRXIPC.setDefaultValue(urxprioRegName)
-    uartRXIPC.setVisible(False)
-
    #PRIORITY VALUE
     uartRxVectorPriSym = "NVIC_" + str(uartRxVectorNum) + "_0_PRIORITY"
     uartRxpriValue = Database.getSymbolValue("core",uartRxVectorPriSym)
@@ -392,7 +382,7 @@ def instantiateComponent(uartComponent):
     uartRXIPC_PriValue.setDependencies(updateIRQValues, ["core."+ uartRxVectorPriSym])
 
     #SUBPRIORITY VALUE
-    uartRxVectorSubPriSym = uartInstanceName.getValue() + "_RX_SUBPRIORITY"
+    uartRxVectorSubPriSym = "NVIC_" + str(uartRxVectorNum) + "_0_SUBPRIORITY"
     uartRxSubPriValue = Database.getSymbolValue("core",uartRxVectorSubPriSym)
     uartRXIPC_SubpriValue = uartComponent.createHexSymbol("UART_RX_IPC_SUBPRI_VALUE", None)
     uartRXIPC_SubpriValue.setDefaultValue(int(uartRxSubPriValue))
@@ -431,11 +421,6 @@ def instantiateComponent(uartComponent):
     uartTXIFS.setDefaultValue(utxstatRegName)
     uartTXIFS.setVisible(False)
 
-    #IPC REG
-    uartTXIPC = uartComponent.createStringSymbol("UART_TX_IPC_REG", None)
-    uartTXIPC.setDefaultValue(utxprioRegName)
-    uartTXIPC.setVisible(False)
-
     #PRIORITY VALUE
     uartTxVectorPriSym = "NVIC_" + str(uartTxVectorNum) + "_0_PRIORITY"
     uartTxpriValue = Database.getSymbolValue("core",uartTxVectorPriSym)
@@ -445,7 +430,7 @@ def instantiateComponent(uartComponent):
     uartTXIPC_PriValue.setDependencies(updateIRQValues, ["core." + uartTxVectorPriSym])
 
     #SUBPRIORITY VALUE
-    uartTxVectorSubPriSym = uartInstanceName.getValue() + "_TX_SUBPRIORITY"
+    uartTxVectorSubPriSym = "NVIC_" + str(uartTxVectorNum) + "_0_SUBPRIORITY"
     uartTxSubPriValue = Database.getSymbolValue("core",uartTxVectorSubPriSym)
     uartTXIPC_SubpriValue = uartComponent.createHexSymbol("UART_TX_IPC_SUBPRI_VALUE", None)
     uartTXIPC_SubpriValue.setDefaultValue(int(uartTxSubPriValue))

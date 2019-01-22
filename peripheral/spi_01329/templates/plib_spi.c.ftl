@@ -76,24 +76,9 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     ${SPI_TX_IFS_REG}CLR = _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK;
 
  <#if (SPI_INTERRUPT_MODE == true)> 
-    /*Clear ${SPI_INSTANCE_NAME} Fault Priority and Sub-priority*/
-    ${SPI_FLT_IPC_REG}CLR = _${SPI_FLT_IPC_REG}_${SPI_INSTANCE_NAME}EIP_MASK | _${SPI_FLT_IPC_REG}_${SPI_INSTANCE_NAME}EIS_MASK;
-    /*Clear ${SPI_INSTANCE_NAME} RX Priority and Sub-priority*/
-    ${SPI_RX_IPC_REG}CLR = _${SPI_RX_IPC_REG}_${SPI_INSTANCE_NAME}RXIP_MASK | _${SPI_RX_IPC_REG}_${SPI_INSTANCE_NAME}RXIS_MASK;
-     /*Clear ${SPI_INSTANCE_NAME} TX Priority and Sub-priority*/
-    ${SPI_TX_IPC_REG}CLR = _${SPI_TX_IPC_REG}_${SPI_INSTANCE_NAME}TXIP_MASK | _${SPI_TX_IPC_REG}_${SPI_INSTANCE_NAME}TXIS_MASK;
 
-    /* Priority	= ${SPI_FLT_IPC_PRI_VALUE}	*/
-	/* Sub-priority	= ${SPI_FLT_IPC_SUBPRI_VALUE}	*/
-    ${SPI_FLT_IPC_REG}SET = 0x${SPI_FLT_IPC_VALUE}; 
 
-    /* Priority	= ${SPI_RX_IPC_PRI_VALUE}	*/
-	/* Sub-priority	= ${SPI_RX_IPC_SUBPRI_VALUE}	*/
-    ${SPI_RX_IPC_REG}SET = 0x${SPI_RX_IPC_VALUE}; 
 
-     /* Priority	= ${SPI_TX_IPC_PRI_VALUE}	*/
-	/* Sub-priority	= ${SPI_TX_IPC_SUBPRI_VALUE}	*/
-    ${SPI_TX_IPC_REG}SET = 0x${SPI_TX_IPC_VALUE}; 
 
     /*Enable ${SPI_INSTANCE_NAME}_FAULT Interrupt, */
     /*Enable ${SPI_INSTANCE_NAME}_RX Interrupt, */

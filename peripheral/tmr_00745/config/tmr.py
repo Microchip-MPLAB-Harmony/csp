@@ -129,22 +129,7 @@ def updateIntPSValues(symbol, event):
 
 def updateHandlerName(symbol, event):
     handlername = str(event["value"])
-    symbol.setValue(handlername, 1)     
-
-def combinetmrIPC_Values(symbol, event):
-    global tmrVectorNum
-    pr, ps, pm, sps, spm = _get_sub_priority_parms(tmrVectorNum)
-    ipc = symbol.getValue()
-    if(event["id"] == "TMR_IPC_PRI_VALUE"):
-        ipcPriValue = int(event["symbol"].getValue())
-        ipc = ipc & ~((int(pm))<< (int(ps)))
-        ipc = ipc | (ipcPriValue<<(int (ps)))
-
-    if(event["id"] == "TMR_IPC_SUBPRI_VALUE"):
-        ipcSPriValue = int(event["symbol"].getValue())
-        ipc = ipc & ~((int(spm))<< (int(sps)))
-        ipc = ipc | (ipcSPriValue<<(int (sps)))
-    symbol.setValue(ipc, 2)
+    symbol.setValue(handlername, 1)
 
 def timerModeMax(symbol,event):
     if ((int(event["symbol"].getKeyValue(event["value"]))) == 1):
@@ -225,11 +210,6 @@ def instantiateComponent(tmrComponent):
     tmrIFS.setDefaultValue(statRegName)
     tmrIFS.setVisible(False)
 
-    #IPC REG
-    tmrIPC = tmrComponent.createStringSymbol("TMR_IPC_REG", None)
-    tmrIPC.setDefaultValue(prioRegName)
-    tmrIPC.setVisible(False)
-
     #PRIORITY VALUE
     tmrVectorPriSym = "NVIC_" + str(tmrVectorNum) + "_0_PRIORITY"
     tmrpriValue = Database.getSymbolValue("core",tmrVectorPriSym)
@@ -239,20 +219,12 @@ def instantiateComponent(tmrComponent):
     tmrIPC_PriValue.setDependencies(updateIntPSValues, ["core." + tmrVectorPriSym])
 
     #SUBPRIORITY VALUE
-
-    tmrVectorSubPriSym = "TIMER_" + str(instanceNum) + "_SUBPRIORITY"
+    tmrVectorSubPriSym = "NVIC_" + str(tmrVectorNum) + "_0_SUBPRIORITY"
     tmrsubpriValue = Database.getSymbolValue("core",tmrVectorSubPriSym)
     tmrIPC_SubpriValue = tmrComponent.createHexSymbol("TMR_IPC_SUBPRI_VALUE", None)
     tmrIPC_SubpriValue.setDefaultValue(int(tmrsubpriValue))
     tmrIPC_SubpriValue.setVisible(False)
     tmrIPC_SubpriValue.setDependencies(updateIntPSValues, [ tmrVectorSubPriSym])
-
-    #IPC REG VALUE
-    tmrIPC_Val = tmrComponent.createHexSymbol("TMR_IPC_VALUE", None)
-    tmrIPC_Val.setDefaultValue((int (tmrIPC_PriValue.getDefaultValue()) << int(prioShift)) + (int (tmrIPC_SubpriValue.getDefaultValue()) << int(subprioShift)))
-    tmrIPC_Val.setVisible(False)    
-    tmrIPC_Val.setDependencies(combinetmrIPC_Values, ["TMR_IPC_PRI_VALUE"])
-    tmrIPC_Val.setDependencies(combinetmrIPC_Values, ["TMR_IPC_SUBPRI_VALUE"])
 
     #HANDLER NAME
     tmrVectorHandlerSym = "NVIC_" + str(tmrVectorNum) + "_0_HANDLER"

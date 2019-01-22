@@ -73,15 +73,9 @@ void OCMP${INDEX}_Initialize (void)
 	/*SIDL 		= ${OCMP_OCxCON_SIDL?then('true', 'false')}	*/
 	
 	OC${INDEX}CON = 0x${OCxCON_VALUE};
-	<#if OCMP_INTERRUPT_ENABLE?c == 'true'>
-	
-	/*Setup OCMP${INDEX} Interrupt*/
-	/*Priority		= ${IPC_PRI_VALUE}	*/
-	/*Subpriority	= ${IPC_SUBPRI_VALUE}	*/
-	
-	${IPC_REG} = 0x${IPC_VALUE};
-	${IEC_REG} = _${IEC_REG}_OC${INDEX}IE_MASK;
-	</#if>
+    <#if OCMP_INTERRUPT_ENABLE?c == 'true'>
+    ${IEC_REG} = _${IEC_REG}_OC${INDEX}IE_MASK;
+    </#if>
 }
 
 // *****************************************************************************
@@ -270,10 +264,26 @@ void OCMP${INDEX}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t context)
     ocmp${INDEX}Obj.context = context;
 }
 
-void __ISR(_OUTPUT_COMPARE_${INDEX}_VECTOR, ipl${IPC_PRI_VALUE}AUTO) ${ISR_HANDLER_NAME} (void)
-{
-	${IFS_REG}CLR = _${IFS_REG}_IC${INDEX}IF_MASK;	//Clear IRQ flag
+// *****************************************************************************
+/* Function:
+  void OUTPUT_COMPARE_${INDEX}_Tasks (void)
 
+  Summary:
+    Interrupt handler function.
+  Description:
+    This function runs the PLIB-specific actions needed for when an interrupt
+    occurs.  Is called by the ISR.
+  Precondition:
+    None.
+  Parameters:
+    None.
+  Returns:
+    void
+*/
+void OUTPUT_COMPARE_${INDEX}_Tasks (void)
+{
+    ${IFS_REG}CLR = _${IFS_REG}_IC${INDEX}IF_MASK;	//Clear IRQ flag
+    
 	if( (ocmp${INDEX}Obj.callback != NULL))
 	{
 		ocmp${INDEX}Obj.callback(ocmp${INDEX}Obj.context);
