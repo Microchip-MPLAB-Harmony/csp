@@ -1,22 +1,26 @@
 /*******************************************************************************
-  NVIC PLIB Implementation
-
-  Company:
-    Microchip Technology Inc.
+  L1, L2 Cache Header
 
   File Name:
-    plib_nvic.c
+    cache_cortex_a.h
 
   Summary:
-    NVIC PLIB Source File
+    Preprocessor definitions to provide L1 and L2 Cache control.
 
   Description:
-    None
+    An MPLAB PLIB or Project can include this header to perform cache cleans,
+    invalidates etc. For the DCache and ICache.
+
+  Remarks:
+    This header should not define any prototypes or data definitions, or 
+    include any files that do.  The file only provides macro definitions for 
+    build-time.
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -37,30 +41,41 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#include "device.h"
-#include "plib_nvic.h"
-
+#ifndef CACHE_CORTEX_M_H
+#define CACHE_CORTEX_M_H
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: NVIC Implementation
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
+/*  This section Includes other configuration headers necessary to completely
+    define this configuration.
+*/
 
-void NVIC_Initialize( void )
-{
-    /* Priority 0 to 7 and no sub-priority. 0 is the highest priority */
-    NVIC_SetPriorityGrouping( 0x04 );
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-    /* Enable NVIC Controller */
-    __DMB();
-    __enable_irq();
+extern "C" {
 
-    /* Enable the interrupt sources and configure the priorities as configured
-     * from within the "Interrupt Manager" of MHC. */
+#endif
+// DOM-IGNORE-END
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: L1, L2 Cache Configuration
+// *****************************************************************************
+// *****************************************************************************
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+#define DATA_CACHE_ENABLED                             false
 
-
-    return;
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
 }
+#endif
+//DOM-IGNORE-END
+
+#endif // end of header

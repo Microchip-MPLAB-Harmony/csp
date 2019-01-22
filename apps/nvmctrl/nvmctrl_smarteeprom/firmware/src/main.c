@@ -78,7 +78,7 @@ uint8_t eeprom_data_buffer[MAX_BUFF_SIZE] = {0};
 void invert_seep_byte(uint8_t index)
 {
 	/* Wait till the SmartEEPROM is free */
-	while (NVMCTRLSmartEEPROM_IsBusy());
+	while (NVMCTRL_SmartEEPROM_IsBusy());
 
 	/* Read the data, invert it, and write it back */
 	data_8              = SmartEEPROM8[index];
@@ -95,7 +95,7 @@ void invert_seep_byte(uint8_t index)
 int8_t verify_seep_signature(void)
 {
     uint32_t        NVMCTRL_SEESBLK_FuseConfig    = ((*(uint32_t *)(USER_PAGE_ADDR + 4)) >> 0) & NVMCTRL_SEESBLK_MASK_BITS;
-	NVMCTRL_ERROR   ret_val                       = NVMCTRL_ERROR_NONE;
+	int8_t          ret_val                       = 0;
 
 	/* If SBLK fuse is not configured, inform the user and wait here */
 	if (!NVMCTRL_SEESBLK_FuseConfig)
@@ -106,7 +106,7 @@ int8_t verify_seep_signature(void)
 
 	if (SMEE_CUSTOM_SIG != SmartEEPROM32[0])
     {
-		ret_val = NVMCTRL_ERROR_PROG;
+		ret_val = 0x4;
 	}
 
 	return ret_val;
@@ -153,7 +153,7 @@ int main ( void )
 
 	printf("\r\n\r\n=============SmartEEPROM Example=============\r\n");
 
-	if (NVMCTRL_ERROR_NONE == verify_seep_signature())
+	if (verify_seep_signature() == 0)
     {
 		printf("\r\nSmartEEPROM contains valid data \r\n");
 	}
@@ -161,7 +161,7 @@ int main ( void )
     {
 		printf("\r\nStoring signature to SmartEEPROM address 0x00 to 0x03\r\n");
         /* Wait till the SmartEEPROM is free */
-        while (NVMCTRLSmartEEPROM_IsBusy())
+        while (NVMCTRL_SmartEEPROM_IsBusy())
         {
             ;
         }
