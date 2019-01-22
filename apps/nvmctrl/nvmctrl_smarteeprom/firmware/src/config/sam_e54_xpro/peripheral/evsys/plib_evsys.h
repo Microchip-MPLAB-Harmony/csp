@@ -41,6 +41,7 @@
 #ifndef EVSYS_H    // Guards against multiple inclusion
 #define EVSYS_H
 
+#include "device.h"
 #include <stdint.h>
 #include <stddef.h>
 
