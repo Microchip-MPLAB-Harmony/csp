@@ -270,7 +270,7 @@ coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
 
 # #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
-coreComponent.addPlugin("../peripheral/mpu/plugin/MPUmanager.jar")
+coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
 
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
