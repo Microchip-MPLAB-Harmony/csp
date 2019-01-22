@@ -151,7 +151,7 @@ cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("(no additional MIPS configuration)")
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
-coreComponent.addPlugin("../peripheral/evic_02907/plugin/NVICmanager.jar")
+coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
 
 # load dmt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmt_01520/config/dmt.py")
