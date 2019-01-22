@@ -155,6 +155,22 @@ bool ICAP${INDEX}_StatusGet (ICAP_STATUS_SOURCE source);
 
 // *****************************************************************************
 /* Function:
+  void INPUT_CAPTURE_${INDEX}_Tasks( void )
+  Summary:
+    Interrupt handler.
+  Description:
+    This function does the PLIB-specific actions, and is called by the actual handler
+    function.
+  Precondition:
+    None.
+  Parameters:
+    None.
+  Returns:
+    void
+*/
+void INPUT_CAPTURE_${INDEX}_Tasks (void);
+// *****************************************************************************
+/* Function:
   void ICAP${INDEX}_CallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
 
   Summary:
@@ -206,6 +222,22 @@ void ICAP${INDEX}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
     void
 */
 void ICAP${INDEX}_Error_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
+// *****************************************************************************
+/* Function:
+  void INPUT_CAPTURE_${INDEX}_ERROR_Tasks (void)
+  Summary:
+    Error interrupt handler.
+  Description:
+    This function does the PLIB-specific actions, and is called by the actual handler
+    function.
+  Precondition:
+    None.
+  Parameters:
+    None.
+  Returns:
+    void
+*/
+void INPUT_CAPTURE_${INDEX}_ERROR_Tasks (void);
 </#if>
 
 // DOM-IGNORE-BEGIN

@@ -89,7 +89,7 @@ uint32_t dmaIrqPriority[${NUM_DMA_CHANS}] =
 uint32_t dmaIrqSubPriority[${NUM_DMA_CHANS}] =
 {
 <#list 0..NUM_DMA_CHANS-1 as i>
-<#assign TARGET = "DMA"+i+"_SUBPRIORITY">
+<#assign TARGET = "DMA_"+i+"_IRQ_SUBPRIORITY">
 <#assign SHIFT = "DMA"+i+"_SUBPRIOREG_SHIFT">
     ${.vars[TARGET]} << ${.vars[SHIFT]},  /* DMA${i} */
 </#list>

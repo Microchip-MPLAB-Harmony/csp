@@ -49,6 +49,23 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 void INT_Initialize( void )
 {
     INTCONSET = _INTCON_MVEC_MASK;
+    
+    /* Set up priority / subpriority of enabled interrupts */
+<#list INT_VECTOR_MIN..INT_VECTOR_MAX as i>
+    <#lt><#assign INT_FIRST_NAME_KEY =  "INT_FIRST_NAME_KEY_" + i?string >
+    <#lt><#if .vars[INT_FIRST_NAME_KEY]??>
+        <#lt><#assign ENABLE = "NVIC_"+i+"_0_ENABLE">
+        <#lt><#assign IPCREG = "NVIC_"+i+"_0_REGNAME">  <#-- IPCx register for given interrupt -->
+        <#lt><#assign PRIOVALUE = "NVIC_" + i + "_0_PRIORITY">
+        <#lt><#assign SUBPRIOVALUE = "NVIC_" + i + "_0_SUBPRIORITY">
+        <#lt><#assign PRIOVALUE_SHIFTED = "NVIC_"+i+"_0_PRIVALUE">  <#-- priority, shifted to correct place in IPCx register -->
+        <#lt><#assign SUBPRIOVALUE_SHIFTED = "NVIC_"+i+"_0_SUBPRIVALUE">  <#-- subpriority, shifted to correct place in IPCx register -->
+        <#lt><#assign INTNAME = "INT_FIRST_NAME_STRING_"+i>
+        <#lt><#if .vars[ENABLE]?c == "true">
+        <#lt>    ${.vars[IPCREG]}SET = 0x${.vars[PRIOVALUE_SHIFTED]} | 0x${.vars[SUBPRIOVALUE_SHIFTED]};  /* ${.vars[INTNAME]}:  Priority ${.vars[PRIOVALUE]} / Subpriority ${.vars[SUBPRIOVALUE]} */
+        <#lt></#if>
+    <#lt></#if>
+</#list>
 }
 
 

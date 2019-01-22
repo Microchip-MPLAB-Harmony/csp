@@ -77,11 +77,6 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
 	CM1CON = 0x${CM1CON_VALUE};
 <#if CMP1_INTERRUPT_ENABLE?c == "true">
 
-	/* CMP1 Interrupt	*/
-	/* Priority		= ${CMP1_IPC_PRI_VALUE}	*/
-	/* Subpriority	= ${CMP1_IPC_SUBPRI_VALUE}	*/
-	
-	${CMP1_IPC_REG}SET = 0x${CMP1_IPC_VALUE};
 	${CMP1_IEC_REG}SET = _${CMP1_IEC_REG}_${CMP_INSTANCE_NAME}1IE_MASK;
 </#if>
 
@@ -95,11 +90,6 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
 	CM2CON = 0x${CM2CON_VALUE};
 <#if CMP1_INTERRUPT_ENABLE?c == "true">
 	
-	/* CMP2 Interrupt	*/
-	/* Priority		= ${CMP2_IPC_PRI_VALUE}	*/
-	/* Subpriority	= ${CMP2_IPC_SUBPRI_VALUE}	*/
-	
-	${CMP2_IPC_REG}SET = 0x${CMP2_IPC_VALUE};
 	${CMP2_IEC_REG}SET = _${CMP2_IEC_REG}_${CMP_INSTANCE_NAME}2IE_MASK;
 </#if>	
 }

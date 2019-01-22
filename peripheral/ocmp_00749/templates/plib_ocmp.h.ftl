@@ -231,6 +231,22 @@ uint32_t OCMP${INDEX}_CompareSecondaryValueGet (void);
     void
 */
 void OCMP${INDEX}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t context);
+// *****************************************************************************
+/* Function:
+  void OUTPUT_COMPARE_${INDEX}_Tasks (void)
+  Summary:
+    Interrupt handler function.
+  Description:
+    This function runs the PLIB-specific actions needed for when an interrupt
+    occurs.  Is called by the ISR.
+  Precondition:
+    None.
+  Parameters:
+    None.
+  Returns:
+    void
+*/
+void OUTPUT_COMPARE_${INDEX}_Tasks (void);
 </#if>
 
 // DOM-IGNORE-BEGIN

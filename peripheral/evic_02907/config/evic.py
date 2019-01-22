@@ -23,6 +23,7 @@ if( "PIC32M" in Variables.get("__PROCESSOR")):
     intSubPriorityLevels = int(node.getAttribute("value"))
     node = ATDF.getNode("/avr-tools-device-file/devices/device/parameters/param@[name=\"__INT_NUM_SHADOW_SETS\"]")
     intNumShadowRegSets = int(node.getAttribute("value"))
+    intModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"INT\"]/register-group@[name=\"INT\"]").getChildren()
 
 intPriorityGroup = list(range(intPriorityLevels+1))  # 0 to number of levels possible values
 maxPriority = max(intPriorityGroup)
@@ -46,6 +47,24 @@ interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/int
 ################################################################################
 #### Business Logic ####
 ################################################################################
+global find_intIndex
+def find_intIndex(stringval):
+    # used with event id's, looks for the number within it
+    # the 1st number in the id (which is the symbol ID) is the interrupt number
+    nullVal = "X"
+    armed = False
+    result = ''
+    for s in list(stringval):
+        if((armed == False) and s.isdigit()):  # just found 1st digit in stringval
+            armed = True      # look for more digits that follow
+            result = s
+        elif(armed == True):
+            if(s.isdigit()==False):  # just got to the end of all the digits.  Done with the finding interrupt number.
+                return result
+            else:             # more to add to the digits (i.e., interrupt index > 9, like 139 or 18)
+                result += s
+    print("find_intIndex: could not find interrupt index within ",stringval)
+    return nullVal
 
 def generateIntVectorDataDictionary():
 
@@ -97,7 +116,7 @@ def updateIntVectorSubPrioValue(symbol, event):
         symbol.setValue(str(minSubPriority), 1)
     else:
         symbol.setValue(str(maxSubPriority), 1)
-
+        
 
 def updateIntVectorParametersValue(symbol, event):
     symbol.clearValue()
@@ -107,6 +126,57 @@ def updateIntHandlerParametersValue(symbol, event):
     symbol.clearValue()
     symbol.setValue(event["value"], 2)
     
+def _get_enblReg_parms(vectorNumber):
+    # This takes in vector index for interrupt, and returns the IECx register name as well as 
+    # mask and bit location within it for the given interrupt
+    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
+        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
+        temp = float(vectorNumber) / 32.0
+        index = int(temp)
+        bit = float(temp%1)
+        bitPosn = int(32.0*bit)
+        bitMask = hex(1<<bitPosn)
+        regName = "IEC"+str(index)
+    return regName, str(bitPosn), str(bitMask)
+    
+def _get_sub_priority_parms(vectorNumber):
+    # This returns the IPCx register name, priority bit shift, priority mask, subpriority bit shift, 
+    # and subpriority bitmask for input vector number
+    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
+        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
+        temp = float(vectorNumber) / 4.0
+        index = int(temp)
+        subPrioBit = 8*(vectorNumber & 0x3) # bit shift of subpriority field for this interrupt
+        subPrioMask = 0x3  # always 2 bits
+        prioMask = 0x7     # always 3 bits
+        prioBit = subPrioBit + 2            # bit shift of priority field for this interrupt
+        regName = "IPC"+str(index)
+    return regName, str(prioBit), str(prioMask), str(subPrioBit), str(subPrioMask)
+def updateValue(symbol, event):
+    global prioShift
+    global subprioShift
+    
+    # pick off interrupt index number embedded within event ID
+    index = find_intIndex(event["id"])
+    symbol.clearValue()
+    found = False
+    if(event["id"].find("_PRIORITY")!=-1):
+        for ii in prioShift:  # this is a list of dictionaries - need to find the right one
+            if(int(ii['vIndex']) == int(index)):  # found a match
+                shiftval = int(ii['symbol'].getValue())
+                symbol.setValue(int(event["value"]) << shiftval, 2)
+                found = True
+                break
+    else:
+        for ii in subprioShift:  # this is a list of dictionaries - need to find the right one
+            if(int(ii['vIndex']) == int(index)):  # found a match
+                shiftval = int(ii['symbol'].getValue())
+                symbol.setValue(int(event["value"]) << shiftval, 2)
+                found = True
+                break
+                
+    if(found == False):
+        print("***********prioShift: cannot find anything ***************index ",index)
 ################################################################################
 #### Component ####
 ################################################################################
@@ -130,10 +200,14 @@ intVectorMin = coreComponent.createIntegerSymbol("INT_VECTOR_MIN", intMenu)
 intVectorMin.setDefaultValue(lowestID)
 intVectorMin.setVisible(False)
 
-index = 0
 priorityList = intPriorityGroup
 subPriorityList = intSubPriorityGroup
 handlerList = []
+global intVectorPriority
+global prioShift
+global subprioShift
+prioShift = []
+subprioShift = []
 
 for vIndex in sorted(intVectorDataDictionary):
     name = (intVectorDataDictionary.get(vIndex))
@@ -156,7 +230,7 @@ for vIndex in sorted(intVectorDataDictionary):
     intVectorPriority.setDefaultValue("0")
     intVectorPriority.setDependencies(updateIntVectorPrioValue,["NVIC_" + str(vIndex) + "_0_ENABLE"])
     
-    intVectorSubPriority = coreComponent.createComboSymbol(vName + "_SUBPRIORITY", intVectorEnable, subPriorityList)
+    intVectorSubPriority = coreComponent.createComboSymbol("NVIC_" + str(vIndex) + "_0_SUBPRIORITY", intVectorEnable, subPriorityList)
     intVectorSubPriority.setLabel("Subpriority")
     intVectorSubPriority.setDefaultValue("0")
     intVectorSubPriority.setDependencies(updateIntVectorSubPrioValue,["NVIC_" + str(vIndex) + "_0_ENABLE"])    
@@ -170,12 +244,45 @@ for vIndex in sorted(intVectorDataDictionary):
     
     # Enable locks - not needed for MIPS.
     
-    # only for use by the interrupt ftl code
+    # Below is for ftl files
+    
+    regName, prioBit, prioMask, subPrioBit, subPrioMask = _get_sub_priority_parms(vIndex)
+    # IPCx register name for this interrupt
+    symbol = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_0_REGNAME", intVectorEnable )
+    symbol.setDefaultValue( regName )
+    symbol.setVisible( False )
+    
+    # priority bit shift value
+    symbol = coreComponent.createIntegerSymbol("NVIC_" + str(vIndex) + "_0_PRIOSHIFT", intVectorEnable )
+    symbol.setDefaultValue( int(prioBit) )
+    symbol.setVisible( False )
+    dict = { 'vIndex':str(vIndex), 'symbol':symbol}
+    prioShift.append(dict)
+    
+    # priority bit shift value
+    symbol = coreComponent.createIntegerSymbol("NVIC_" + str(vIndex) + "_0_SUBPRIOSHIFT", intVectorEnable )
+    symbol.setDefaultValue( int(subPrioBit) )
+    symbol.setVisible( False )
+    dict = { 'vIndex':str(vIndex), 'symbol':symbol}
+    subprioShift.append(dict)
+    
+    # priority value, shifted to correct bit position, for this interrupt
+    symbol = coreComponent.createHexSymbol("NVIC_" + str(vIndex) + "_0_PRIVALUE", intVectorEnable )
+    symbol.setDefaultValue( int(intVectorPriority.getValue()) << int(prioBit) )
+    symbol.setDependencies(updateValue, ["NVIC_" + str(vIndex) + "_0_PRIORITY"])
+    symbol.setVisible( False )
+    
+    # subpriority, shifted to correct bit position, for this interrupt
+    symbol = coreComponent.createHexSymbol("NVIC_" + str(vIndex) + "_0_SUBPRIVALUE", intVectorEnable )
+    symbol.setDefaultValue( int(intVectorSubPriority.getValue()) << int(subPrioBit) )
+    symbol.setDependencies(updateValue, ["NVIC_" + str(vIndex) + "_0_SUBPRIORITY"])
+    symbol.setVisible( False )
+    
     symbol = coreComponent.createStringSymbol("INT_FIRST_NAME_KEY_" + str(vIndex), intVectorEnable )
     symbol.setDefaultValue( str(vIndex) )
     symbol.setVisible( False )
     
-    # only for use by the interrupt ftl code - cross-reference name with index number
+    # for cross-referencing of name with index number
     symbol = coreComponent.createStringSymbol("INT_FIRST_NAME_STRING_" + str(vIndex), intVectorEnable )
     symbol.setDefaultValue( vName )
     symbol.setVisible( False )

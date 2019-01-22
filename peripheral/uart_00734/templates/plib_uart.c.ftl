@@ -465,24 +465,12 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     /*Setup ${UART_INSTANCE_NAME}_FAULT Interrupt*/
 	/*Enable ${UART_INSTANCE_NAME}_FAULT Interrupt*/
     ${UART_FAULT_IEC_REG}SET = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
-    /* Priority		= ${UART_FLT_IPC_PRI_VALUE}	*/
-	/* Subpriority	= ${UART_FLT_IPC_SUBPRI_VALUE}	*/
-    ${UART_FAULT_IPC_REG}SET = 0x${UART_FAULT_IPC_VALUE};  
-  
     /*Setup ${UART_INSTANCE_NAME}_RX Interrupt*/
 	/*Enable ${UART_INSTANCE_NAME}_RX Interrupt*/
     ${UART_RX_IEC_REG}SET = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
-    /* Priority		= ${UART_RX_IPC_PRI_VALUE}	*/
-	/* Subpriority	= ${UART_RX_IPC_SUBPRI_VALUE}	*/
-    ${UART_RX_IPC_REG}SET = 0x${UART_RX_IPC_VALUE};
- 
     /*Setup ${UART_INSTANCE_NAME}_TX Interrupt*/
 	/*Disable ${UART_INSTANCE_NAME}_TX Interrupt*/
     ${UART_TX_IEC_REG}CLR = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
-    
-    /* Priority		= ${UART_TX_IPC_PRI_VALUE}	*/
-	/* Subpriority	= ${UART_TX_IPC_SUBPRI_VALUE}	*/
-    ${UART_TX_IPC_REG}SET = 0x${UART_TX_IPC_VALUE};     
 
     /* Initialize instance object */
     ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer = NULL;

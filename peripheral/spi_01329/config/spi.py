@@ -379,10 +379,6 @@ def instantiateComponent(spiComponent):
     spiIFS.setDefaultValue(statRegName)
     spiIFS.setVisible(False)
 
-    ## IPC REG
-    spiIPC = spiComponent.createStringSymbol("SPI_FLT_IPC_REG", None)
-    spiIPC.setDefaultValue(prioRegName)
-    spiIPC.setVisible(False)
 
     ## PRIORITY VALUE
     spiFaultVectorPriSym = "NVIC_" + str(spiFaultVectorNum) + "_0_PRIORITY"
@@ -393,7 +389,7 @@ def instantiateComponent(spiComponent):
     spiIPC_PriValue.setDependencies(updateIRQValues, ["core." + spiFaultVectorPriSym])
 
     ## SUBPRIORITY VALUE
-    spiFaultVectorSubPriSym = spiInstanceName.getValue() + "_FAULT_SUBPRIORITY"
+    spiFaultVectorSubPriSym = "NVIC_" + str(spiFaultVectorNum) + "_0_SUBPRIORITY"
     spiFltSubPriValue = Database.getSymbolValue("core",spiFaultVectorSubPriSym)
     spiIPC_SubpriValue = spiComponent.createHexSymbol("SPI_FLT_IPC_SUBPRI_VALUE", None)
     spiIPC_SubpriValue.setDefaultValue(int(spiFltSubPriValue))
@@ -433,10 +429,6 @@ def instantiateComponent(spiComponent):
     spiRXIFS.setDefaultValue(spirxstatRegName)
     spiRXIFS.setVisible(False)
 
-    ## IPC REG
-    spiRXIPC = spiComponent.createStringSymbol("SPI_RX_IPC_REG", None)
-    spiRXIPC.setDefaultValue(spirxprioRegName)
-    spiRXIPC.setVisible(False)
 
     ## PRIORITY VALUE
     spiRxVectorPriSym = "NVIC_" + str(spiRxVectorNum) + "_0_PRIORITY"
@@ -447,7 +439,7 @@ def instantiateComponent(spiComponent):
     spiRXIPC_PriValue.setDependencies(updateIRQValues, ["core."+ spiRxVectorPriSym])
 
     ## SUBPRIORITY VALUE
-    spiRxVectorSubPriSym = spiInstanceName.getValue() + "_RX_SUBPRIORITY"
+    spiRxVectorSubPriSym =  "NVIC_" + str(spiRxVectorNum) + "_0_SUBPRIORITY"
     spiRxSubPriValue = Database.getSymbolValue("core",spiRxVectorSubPriSym)
     spiRXIPC_SubpriValue = spiComponent.createHexSymbol("SPI_RX_IPC_SUBPRI_VALUE", None)
     spiRXIPC_SubpriValue.setDefaultValue(int(spiRxSubPriValue))
@@ -486,10 +478,6 @@ def instantiateComponent(spiComponent):
     spiTXIFS.setDefaultValue(spitxstatRegName)
     spiTXIFS.setVisible(False)
 
-    ## IPC REG
-    spiTXIPC = spiComponent.createStringSymbol("SPI_TX_IPC_REG", None)
-    spiTXIPC.setDefaultValue(spitxprioRegName)
-    spiTXIPC.setVisible(False)
 
     ## PRIORITY VALUE
     spiTxVectorPriSym = "NVIC_" + str(spiTxVectorNum) + "_0_PRIORITY"
@@ -500,7 +488,7 @@ def instantiateComponent(spiComponent):
     spiTXIPC_PriValue.setDependencies(updateIRQValues, ["core." + spiTxVectorPriSym])
 
     ## SUBPRIORITY VALUE
-    spiTxVectorSubPriSym = spiInstanceName.getValue() + "_TX_SUBPRIORITY"
+    spiTxVectorSubPriSym = "NVIC_" + str(spiTxVectorNum) + "_0_SUBPRIORITY"
     spiTxSubPriValue = Database.getSymbolValue("core",spiTxVectorSubPriSym)
     spiTXIPC_SubpriValue = spiComponent.createHexSymbol("SPI_TX_IPC_SUBPRI_VALUE", None)
     spiTXIPC_SubpriValue.setDefaultValue(int(spiTxSubPriValue))
