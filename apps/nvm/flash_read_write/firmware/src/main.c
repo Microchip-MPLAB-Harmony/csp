@@ -25,6 +25,7 @@
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
+#include <string.h>
 #include "definitions.h"                // SYS function prototypes
 
 #define buffer_size                 128
@@ -71,7 +72,7 @@ int main ( void )
     if (!memcmp(data, (void *)start_address, sizeof(data)))
     {
         // If the code ever gets here, then something went wrong.
-        Nop();
+		return ( EXIT_FAILURE );
     }
     
     while ( true )

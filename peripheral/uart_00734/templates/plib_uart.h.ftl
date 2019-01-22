@@ -88,7 +88,7 @@ size_t ${UART_INSTANCE_NAME}_ReadCountGet( void );
 bool ${UART_INSTANCE_NAME}_WriteIsBusy( void );
 size_t ${UART_INSTANCE_NAME}_WriteCountGet( void );
 
-void ${UART_INSTANCE_NAME}_faultCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+void ${UART_INSTANCE_NAME}_FaultCallbackRegister( UART_CALLBACK callback, uintptr_t context );
 
 void ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context );
 

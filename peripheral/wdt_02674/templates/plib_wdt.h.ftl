@@ -47,7 +47,6 @@
 #ifdef __cplusplus // Provide C++ Compatibility
  extern "C" {
 #endif
-<#--
 
 // *****************************************************************************
 // *****************************************************************************
@@ -55,26 +54,11 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if wdtinterruptMode == true>
-	<#lt>typedef void (*WDT_CALLBACK)(uintptr_t context);
-</#if>
-
-<#if wdtinterruptMode == true>
-	<#lt>typedef struct
-	<#lt>{
-	<#lt>	WDT_CALLBACK          callback; 
-	<#lt>	uintptr_t               context;
-	<#lt>} WDT_OBJECT ;
-</#if>
-
-/***************************** WDT API *******************************/
 void ${WDT_INSTANCE_NAME}_Initialize( void );
 void ${WDT_INSTANCE_NAME}_Clear( void );
-<#if wdtinterruptMode == true>
-	<#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
-</#if>	
+void ${WDT_INSTANCE_NAME}_Enable( void );
+void ${WDT_INSTANCE_NAME}_Disable( void );
 
--->	
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif

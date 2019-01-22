@@ -66,6 +66,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
 
     /*Clear the Receiver buffer */
     rdata = ${SPI_INSTANCE_NAME}BUF;
+	rdata = rdata;
 
     /*clear ${SPI_INSTANCE_NAME}_FAULT Interrupt flag */
     /*clear ${SPI_INSTANCE_NAME}_RX Interrupt flag */
@@ -139,7 +140,6 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
     size_t rxCount = 0;
     size_t dummySize = 0;
     size_t receivedData;
-    uint32_t dataBits;
     bool isSuccess = false;
 
     /* Verify the request */
@@ -154,8 +154,6 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
             rxSize = 0;
         }
 
-        dataBits = ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK | _${SPI_INSTANCE_NAME}CON_MODE16_MASK);
-
         /* Flush out any unread data in SPI read buffer from the previous transfer */
         receivedData = ${SPI_INSTANCE_NAME}BUF;
 
@@ -164,14 +162,14 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
             dummySize = rxSize - txSize;
         }
         /* If dataBit size is 32 bits */
-        if (_${SPI_INSTANCE_NAME}CON_MODE32_MASK == ${SPI_INSTANCE_NAME}CON & _${SPI_INSTANCE_NAME}CON_MODE32_MASK)
+        if (_${SPI_INSTANCE_NAME}CON_MODE32_MASK == (${SPI_INSTANCE_NAME}CON & _${SPI_INSTANCE_NAME}CON_MODE32_MASK))
         {
             rxSize >>= 2;
             txSize >>= 2;
             dummySize >>= 2;
         }
         /* If dataBit size is 16 bits */
-        else if (_${SPI_INSTANCE_NAME}CON_MODE16_MASK == ${SPI_INSTANCE_NAME}CON & _${SPI_INSTANCE_NAME}CON_MODE16_MASK)
+        else if (_${SPI_INSTANCE_NAME}CON_MODE16_MASK == (${SPI_INSTANCE_NAME}CON & _${SPI_INSTANCE_NAME}CON_MODE16_MASK))
         {
             rxSize >>= 1;
             txSize >>= 1;
@@ -188,11 +186,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         {
             if (txCount != txSize)
             {
-                if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK))
+                if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
                 {
                     ${SPI_INSTANCE_NAME}BUF= ((uint32_t*)pTransmitData)[txCount++];
                 }
-                else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)) 
+                else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
                 {
                     ${SPI_INSTANCE_NAME}BUF= ((uint16_t*)pTransmitData)[txCount++];
                 }
@@ -226,11 +224,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
                 receivedData = ${SPI_INSTANCE_NAME}BUF;
                 if (rxCount < rxSize)
                 {
-                    if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK))
+                    if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
                     {
                         ((uint32_t*)pReceiveData)[rxCount++]  = receivedData;
                     }
-                    else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)) 
+                    else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
                     {
                         ((uint16_t*)pReceiveData)[rxCount++]  = receivedData;
                     }
@@ -244,7 +242,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         if(_${SPI_INSTANCE_NAME}CON_ENHBUF_MASK == (${SPI_INSTANCE_NAME}CON & _${SPI_INSTANCE_NAME}CON_ENHBUF_MASK))
         {
             /* Make sure no data is pending in the shift register */
-            while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK == false))
+            while ((bool)((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == false))
             {
                 ;
             }
@@ -298,7 +296,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         }
 
         /* Start the first write here itself, rest will happen in ISR context */
-         if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK))
+         if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
          {
             ${SPI_INSTANCE_NAME?lower_case}Obj.txSize >>= 2;
             ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 2;
@@ -315,7 +313,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
          }
-         else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK))
+         else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
          {
             ${SPI_INSTANCE_NAME?lower_case}Obj.txSize >>= 1;
             ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
@@ -467,11 +465,11 @@ void ${SPI_INSTANCE_NAME}_RX_Tasks (void)
               /* Enable Transmit interrupt for transmit*/
                ${SPI_TX_IEC_REG}SET = _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK;
 
-            if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK))
+            if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
             {
                 ((uint32_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = receivedData;
             }
-            else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)) 
+            else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
             {
                 ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = receivedData;
             }
@@ -504,9 +502,7 @@ void ${SPI_INSTANCE_NAME}_WriteCallbackRegister (SPI_CALLBACK callback, uintptr_
 
 void ${SPI_INSTANCE_NAME}_TX_Tasks (void)
 {
-    uint32_t dataBits ;
     uint32_t receivedData;
-    static bool isLastByteTransferInProgress = false;
      
      /* If there are more words to be transmitted, then transmit them here and keep track of the count */
     if(_${SPI_INSTANCE_NAME}STAT_SPITBE_MASK  == (${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPITBE_MASK))
@@ -518,7 +514,7 @@ void ${SPI_INSTANCE_NAME}_TX_Tasks (void)
                 ${SPI_TX_IEC_REG}CLR = _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK;
          }
 
-        if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK))
+        if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
         {
              if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
@@ -530,7 +526,7 @@ void ${SPI_INSTANCE_NAME}_TX_Tasks (void)
               ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }    
         }
-        else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == ${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)) 
+        else if((_${SPI_INSTANCE_NAME}CON_MODE16_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE16_MASK)))
         {
             if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
