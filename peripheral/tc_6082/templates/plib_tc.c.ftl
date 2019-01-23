@@ -173,7 +173,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
 
     <#lt>void ${TC_INSTANCE_NAME}_CH0_InterruptHandler(void)
     <#lt>{
-    <#lt>    TC_QUADRATURE_STATUS quadrature_status = ${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK;
+    <#lt>    TC_QUADRATURE_STATUS quadrature_status = (TC_QUADRATURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK);
     <#lt>    /* Call registered callback function */
     <#lt>    if ((TC_QUADRATURE_NONE != quadrature_status) && ${TC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
@@ -184,7 +184,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
 <#else>
 TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 {
-    return ((${TC_INSTANCE_NAME}_REGS->TC_QISR) & TC_QUADRATURE_STATUS_MSK);
+    return (TC_QUADRATURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- QUADRATURE -->
@@ -340,7 +340,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK cal
 
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC_TIMER_STATUS timer_status = ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK;
+    TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_TIMER_STATUS_MSK);
     /* Call registered callback function */
     if ((TC_TIMER_NONE != timer_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
@@ -458,7 +458,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK
 
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC_CAPTURE_STATUS capture_status = ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK;
+    TC_CAPTURE_STATUS capture_status = (TC_CAPTURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
     /* Call registered callback function */
     if ((TC_CAPTURE_NONE != capture_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
@@ -468,7 +468,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 <#else>
 TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void)
 {
-    return ((${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_CAPTURE_STATUS_MSK);
+    return (TC_CAPTURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- CAPTURE -->
@@ -575,7 +575,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK
 /* Interrupt Handler */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 {
-    TC_COMPARE_STATUS compare_status = ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK;
+    TC_COMPARE_STATUS compare_status = (TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK);
     /* Call registered callback function */
     if ((TC_COMPARE_NONE != compare_status) && ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn != NULL)
     {
@@ -585,7 +585,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
 <#else>
 TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void)
 {
-    return ((${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR) & TC_COMPARE_STATUS_MSK);
+    return (TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- COMPARE -->
