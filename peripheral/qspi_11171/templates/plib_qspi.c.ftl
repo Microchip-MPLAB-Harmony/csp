@@ -85,6 +85,7 @@ static inline void ${QSPI_INSTANCE_NAME?lower_case}_end_transfer( void )
 static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t *qspi_memory_xfer, uint8_t tfr_type, uint32_t address )
 {
     uint32_t mask = 0;
+    volatile uint32_t dummy = 0;
 
     /* Set instruction address register */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
@@ -116,7 +117,7 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR;
+    dummy = ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR;
 
     return true;
 }
@@ -153,6 +154,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
 {
     uint32_t *qspi_buffer = (uint32_t *)${QSPI_INSTANCE_NAME}MEM_ADDR;
     uint32_t mask = 0;
+    volatile uint32_t dummy = 0;
 
     /* Configure Instruction */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
@@ -169,7 +171,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR;
+    dummy = ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR;
 
     /* Read the register content */
     ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_buffer,  rx_data_length);
@@ -189,6 +191,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
 {
     uint32_t *qspi_buffer = (uint32_t *)${QSPI_INSTANCE_NAME}MEM_ADDR;
     uint32_t mask = 0;
+    volatile uint32_t dummy = 0;
 
     /* Configure Instruction */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
@@ -203,7 +206,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR;
+    dummy = ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR;
 
     /* Write the content to register */
     ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)qspi_buffer, (uint8_t *)tx_data, tx_data_length);
@@ -223,6 +226,7 @@ bool ${QSPI_INSTANCE_NAME}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uin
 {
     uint32_t *qspi_mem = (uint32_t *)(${QSPI_INSTANCE_NAME}MEM_ADDR | address);
     uint32_t length_32bit, length_8bit;
+    volatile uint32_t dummy = 0;
 
     if (false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY_Val, address))
         return false;
@@ -241,7 +245,7 @@ bool ${QSPI_INSTANCE_NAME}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uin
         ${QSPI_INSTANCE_NAME?lower_case}_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_mem,  length_8bit);
 
     /* Dummy Read to clear QSPI_SR.INSTRE and QSPI_SR.CSR */
-    (volatile uint32_t)${QSPI_INSTANCE_NAME}_REGS->QSPI_SR;
+    dummy = ${QSPI_INSTANCE_NAME}_REGS->QSPI_SR;
 
     __DSB();
     __ISB();
