@@ -317,6 +317,11 @@ def update_isc_clk_frequency(symbol, event):
     symbol.setValue(lcd_clk_frequency, 2)
 
 
+global update_mcan_clock_frequency
+def update_mcan_clock_frequency(symbol, event):
+    symbol.setValue(event["value"], 2)
+
+
 global update_flexcomm_clock_frequency
 def update_flexcomm_clock_frequency(symbol,event):
     frequency = -1
@@ -1355,6 +1360,8 @@ def create_uart_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
     uart_clock_freq_sym.setDependencies(update_uart_clock_frequency, ["PCLOCK_LS_CLOCK_FREQUENCY",
                                                                       instance_name + "_GENERIC_CLOCK_FREQUENCY",
                                                                       instance_name.lower() + ".UART_CLK_SRC"])
+
+
 global create_flexcom_clock_frequency_symbol
 def create_flexcom_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
     flexcom_clock_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
@@ -1367,14 +1374,23 @@ def create_flexcom_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
                                                instance_name.lower() + ".FLEXCOM_MODE",
                                                instance_name.lower() + ".FLEXCOM_USART_MR_USCLKS",
                                                instance_name.lower() + ".FLEXCOM_SPI_MR_BRSRCCLK",
-                                               instance_name.lower() + ".FLEXCOM_TWI_CWGR_BRSRCCLK"]
-                                           )
+                                               instance_name.lower() + ".FLEXCOM_TWI_CWGR_BRSRCCLK"])
+
+
+global create_mcan_clock_frequency_symbol
+def create_mcan_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
+    mcan_clock_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
+    mcan_clock_freq_sym.setVisible(False)
+    mcan_clock_freq_sym.setReadOnly(True)
+    mcan_clock_freq_sym.setDefaultValue(Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY"))
+    mcan_clock_freq_sym.setDependencies(update_mcan_clock_frequency, [instance_name + "_GENERIC_CLOCK_FREQUENCY"])
 
 
 global freq_sym_constructor_dict
 freq_sym_constructor_dict = {"TC": create_tc_clock_frequency_symbol,
                              "UART": create_uart_clock_frequency_symbol,
-                             "FLEXCOM": create_flexcom_clock_frequency_symbol}
+                             "FLEXCOM": create_flexcom_clock_frequency_symbol,
+                             "MCAN": create_mcan_clock_frequency_symbol}
 
 # Add menu symbol dependencies
 def set_fixed_clock_symbol_dependencies():
