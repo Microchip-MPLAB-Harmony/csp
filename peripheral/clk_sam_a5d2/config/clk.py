@@ -316,6 +316,54 @@ def update_isc_clk_frequency(symbol, event):
         lcd_clk_frequency = Database.getSymbolValue("core", "MCK_CLK_FREQUENCY") * 2
     symbol.setValue(lcd_clk_frequency, 2)
 
+
+global update_flexcomm_clock_frequency
+def update_flexcomm_clock_frequency(symbol,event):
+    frequency = -1
+    instance_name = symbol.getID().split("_CLOCK_FREQUENCY")[0]
+    op_mode = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_MODE")
+    # Flexcom is operating as UART
+    if op_mode == 1 :
+        #Get the UART mode source clock
+        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_USART_MR_USCLKS")
+        # Source clock is bus clock
+        if source_clock == 0:
+            frequency = Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")
+        # Source clock is bus clock / 8
+        elif source_clock == 1:
+            frequency = Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY") / 8
+        # Source clock is GCLK
+        elif source_clock == 2:
+            frequency = Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY")
+        # Source clock is external, set the internal frequency to zero
+        else:
+            frequency = 0
+    #Flexcom is operating in SPI mode
+    elif op_mode == 2:
+        #Get the SPI mode source clock
+        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_SPI_MR_BRSRCCLK")
+        # Source clock is bus clock
+        if source_clock == 0:
+            frequency = Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")
+        # Source clock is GCLK
+        elif source_clock == 1:
+            frequency = Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY")
+    #Flexcom is operating in TWI mode
+    elif op_mode == 3:
+        #Get the SPI mode source clock
+        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_TWI_CWGR_BRSRCCLK")
+        # Source clock is bus clock
+        if source_clock == 0:
+            frequency = Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY")
+        # Source clock is GCLK
+        elif source_clock == 1:
+            frequency = Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY")
+
+    # Update the frequency only if the clock selections are valid
+    if frequency >= 0:
+        symbol.setValue(frequency, 2)
+
+
 global update_tc_clock_frequency
 def update_tc_clock_frequency(symbol, event):
     # symbol is named as "TC{instance_number}_CH{channel_number}_CLOCK_FREQUENCY.
@@ -1307,11 +1355,26 @@ def create_uart_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
     uart_clock_freq_sym.setDependencies(update_uart_clock_frequency, ["PCLOCK_LS_CLOCK_FREQUENCY",
                                                                       instance_name + "_GENERIC_CLOCK_FREQUENCY",
                                                                       instance_name.lower() + ".UART_CLK_SRC"])
+global create_flexcom_clock_frequency_symbol
+def create_flexcom_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
+    flexcom_clock_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
+    flexcom_clock_freq_sym.setVisible(False)
+    flexcom_clock_freq_sym.setReadOnly(True)
+    flexcom_clock_freq_sym.setDefaultValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
+    flexcom_clock_freq_sym.setDependencies(update_flexcomm_clock_frequency,
+                                              ["PCLOCK_LS_CLOCK_FREQUENCY",
+                                               instance_name + "_GENERIC_CLOCK_FREQUENCY",
+                                               instance_name.lower() + ".FLEXCOM_MODE",
+                                               instance_name.lower() + ".FLEXCOM_USART_MR_USCLKS",
+                                               instance_name.lower() + ".FLEXCOM_SPI_MR_BRSRCCLK",
+                                               instance_name.lower() + ".FLEXCOM_TWI_CWGR_BRSRCCLK"]
+                                           )
 
 
 global freq_sym_constructor_dict
 freq_sym_constructor_dict = {"TC": create_tc_clock_frequency_symbol,
-                             "UART": create_uart_clock_frequency_symbol}
+                             "UART": create_uart_clock_frequency_symbol,
+                             "FLEXCOM": create_flexcom_clock_frequency_symbol}
 
 # Add menu symbol dependencies
 def set_fixed_clock_symbol_dependencies():
