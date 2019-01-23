@@ -362,6 +362,20 @@ def update_tc_clock_enable(symbol, event):
     symbol.setValue(enable_clock, 2)
 
 
+global update_uart_clock_frequency
+def update_uart_clock_frequency(symbol, event):
+    uart_instance = symbol.getID().split("_CLOCK_FREQUENCY")[0]
+    clock_source = Database.getSymbolValue(uart_instance.lower(), "UART_CLK_SRC")
+    # peripheral clock
+    if clock_source == 0:
+        symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"), 2)
+    #Generic clock
+    elif clock_source == 1:
+        symbol.setValue(Database.getSymbolValue("core", uart_instance + "_GENERIC_CLOCK_FREQUENCY"), 2)
+    #Symbol does not exist in database (value is None)
+    else:
+        pass
+
 global set_component_editable
 def set_component_editable(symbol, event):
     symbol.setReadOnly(not event["value"])
@@ -1284,9 +1298,20 @@ def create_tc_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
                                            instance_name.lower() + ".TC" + str(channel_num) + "_CMR_TCCLKS",
                                            instance_name.lower() + ".TC" + str(channel_num) + "_ENABLE"])
 
+global create_uart_clock_frequency_symbol
+def create_uart_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
+    uart_clock_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
+    uart_clock_freq_sym.setVisible(False)
+    uart_clock_freq_sym.setReadOnly(True)
+    uart_clock_freq_sym.setDefaultValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
+    uart_clock_freq_sym.setDependencies(update_uart_clock_frequency, ["PCLOCK_LS_CLOCK_FREQUENCY",
+                                                                      instance_name + "_GENERIC_CLOCK_FREQUENCY",
+                                                                      instance_name.lower() + ".UART_CLK_SRC"])
+
 
 global freq_sym_constructor_dict
-freq_sym_constructor_dict = {"TC": create_tc_clock_frequency_symbol}
+freq_sym_constructor_dict = {"TC": create_tc_clock_frequency_symbol,
+                             "UART": create_uart_clock_frequency_symbol}
 
 # Add menu symbol dependencies
 def set_fixed_clock_symbol_dependencies():
