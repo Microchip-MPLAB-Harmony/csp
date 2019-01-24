@@ -6,74 +6,96 @@ Log.writeInfoMessage("Loading Interrupt Manager for " + Variables.get("__PROCESS
 #### Global Variables ####
 ################################################################################
 
-global maxPriority
-global minPriority
-global maxSubPriority
-global minSubPriority
-global intPriorityLevels
-intPriorityLevels = 0
+global evicPriorityGroup
+evicPriorityGroup = []
 
-global intPriorityGroup
-intPriorityGroup = []
+global evicSubPriorityGroup
+evicSubPriorityGroup = []
 
-if( "PIC32M" in Variables.get("__PROCESSOR")):
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/parameters/param@[name=\"__INT_PRIO_LEVELS\"]")
-    intPriorityLevels = int(node.getAttribute("value"))
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/parameters/param@[name=\"__INT_SUBPRIO_LEVELS\"]")
-    intSubPriorityLevels = int(node.getAttribute("value"))
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/parameters/param@[name=\"__INT_NUM_SHADOW_SETS\"]")
-    intNumShadowRegSets = int(node.getAttribute("value"))
-    intModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"INT\"]/register-group@[name=\"INT\"]").getChildren()
+node = ATDF.getNode("/avr-tools-device-file/devices/device/parameters/param@[name=\"__INT_PRIO_LEVELS\"]")
+if node != None:
+    evicPriorityLevels = int(node.getAttribute("value"))
+else:
+    Log.writeErrorMessage("__INT_PRIO_LEVELS parameter missing in " + + Variables.get("__PROCESSOR") + " ATDF")
 
-intPriorityGroup = list(range(intPriorityLevels+1))  # 0 to number of levels possible values
-maxPriority = max(intPriorityGroup)
-minPriority = min(intPriorityGroup)
-intPriorityGroup = [str(item) for item in intPriorityGroup]
+node = ATDF.getNode("/avr-tools-device-file/devices/device/parameters/param@[name=\"__INT_SUBPRIO_LEVELS\"]")
+if node != None:
+    evicSubPriorityLevels = int(node.getAttribute("value"))
+else:
+    Log.writeErrorMessage("__INT_SUBPRIO_LEVELS parameter missing in " + + Variables.get("__PROCESSOR") + " ATDF")
 
-intSubPriorityGroup = list(range(intSubPriorityLevels))
-maxSubPriority = max(intSubPriorityGroup)
-minSubPriority = min(intSubPriorityGroup)
-intSubPriorityGroup = [str(item) for item in intSubPriorityGroup]
+node = ATDF.getNode("/avr-tools-device-file/devices/device/parameters/param@[name=\"__INT_NUM_SHADOW_SETS\"]")
+if node != None:
+    evicNumShadowRegSets = int(node.getAttribute("value"))
+else:
+    Log.writeErrorMessage("__INT_NUM_SHADOW_SETS parameter missing in " + + Variables.get("__PROCESSOR") + " ATDF")
 
+evicPriorityGroup = list(range(evicPriorityLevels + 1))  # 0 to number of levels possible values
+evicPriorityGroup = [str(item) for item in evicPriorityGroup]
 
-global vectorSettings
+evicSubPriorityGroup = list(range(evicSubPriorityLevels))
+evicSubPriorityGroup = [str(item) for item in evicSubPriorityGroup]
 
-global intVectorDataDictionary
-intVectorDataDictionary = {}
-
-global interruptsChildrenList
-interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+global evicVectorDataStructure
+evicVectorDataStructure = []
 
 ################################################################################
 #### Business Logic ####
 ################################################################################
-global find_intIndex
-def find_intIndex(stringval):
-    # used with event id's, looks for the number within it
-    # the 1st number in the id (which is the symbol ID) is the interrupt number
-    nullVal = "X"
-    armed = False
-    result = ''
-    for s in list(stringval):
-        if((armed == False) and s.isdigit()):  # just found 1st digit in stringval
-            armed = True      # look for more digits that follow
-            result = s
-        elif(armed == True):
-            if(s.isdigit()==False):  # just got to the end of all the digits.  Done with the finding interrupt number.
-                return result
-            else:             # more to add to the digits (i.e., interrupt index > 9, like 139 or 18)
-                result += s
-    print("find_intIndex: could not find interrupt index within ",stringval)
-    return nullVal
 
-def generateIntVectorDataDictionary():
+def _get_sub_priority_parms(vectorNumber):
+
+    # This returns the IPCx register name, priority bit shift, priority mask, subpriority bit shift,
+    # and subpriority bitmask for input vector number
+    temp = float(vectorNumber) / 4.0
+    index = int(temp)
+    subPrioBit = 8 * (vectorNumber & 0x3) # bit shift of subpriority field for this interrupt
+    subPrioMask = 0x3  # always 2 bits
+    prioMask = 0x7     # always 3 bits
+    prioBit = subPrioBit + 2            # bit shift of priority field for this interrupt
+    regName = "IPC" + str(index)
+
+    return regName, str(prioBit), str(prioMask), str(subPrioBit), str(subPrioMask)
+
+def updateInterruptPriorityAndSubpriorityValue(symbol, event):
+
+    global prioShift
+    global subprioShift
+
+    found = False
+
+    # pick off interrupt index number embedded within event ID
+    index = event["id"].replace("EVIC_", "")
+
+    if "_PRIORITY" in event["id"]:
+        index = index.replace("_PRIORITY", "")
+        prioList = [dict for dict in prioShift if index == dict["index"]]
+        if len(prioList) != 0:
+            shiftval = prioList[0].get("priorityBit")
+            symbol.setValue(int(event["value"]) << shiftval, 2)
+            found = True
+    elif "_SUBPRIORITY" in event["id"]:
+        index = index.replace("_SUBPRIORITY", "")
+        subPrioList = [dict for dict in subprioShift if index == dict["index"]]
+        if len(subPrioList) != 0:
+            shiftval = subPrioList[0].get("subPriorityBit")
+            symbol.setValue(int(event["value"]) << shiftval, 2)
+            found = True
+
+    if found == False:
+        Log.writeErrorMessage("***********prioShift: cannot find anything ***************index ", index)
+
+def generateEVICVectorDataStructure():
+
+    interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
     for interrupt in range (0, len(interruptsChildrenList)):
 
+        vectorDict = {}
+        vCaption = ""
+        vModuleInstance = ""
         vIndex = int(interruptsChildrenList[interrupt].getAttribute("index"))
-        
-        # Not all entries have a module-instance field
-        vModuleInstance = ''
+
         if "module-instance" in interruptsChildrenList[interrupt].getAttributeList():
             vModuleInstance = str(interruptsChildrenList[interrupt].getAttribute("module-instance"))
 
@@ -82,281 +104,203 @@ def generateIntVectorDataDictionary():
         else:
             vName = str(interruptsChildrenList[interrupt].getAttribute("name"))
 
-        if " " in vModuleInstance:
-            intVectorDataDictionary[vIndex] = list(vModuleInstance.split(" "))
-        else:
-            intVectorDataDictionary[vIndex] = [vName]
-
-def getInterruptDescription(vIndex, periName):
-    for interrupt in range (0, len(interruptsChildrenList)):
-        if vIndex == int(interruptsChildrenList[interrupt].getAttribute("index")):
-            if "header:alternate-caption" in interruptsChildrenList[interrupt].getAttributeList():
-                if str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption")) == "None":
-                    return periName
-                else:
-                    return str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption"))
+        if "header:alternate-caption" in interruptsChildrenList[interrupt].getAttributeList():
+            if str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption")) == "None":
+                vCaption = vName
             else:
-                if str(interruptsChildrenList[interrupt].getAttribute("caption")) == "None":
-                    return periName
-                else:
-                    return str(interruptsChildrenList[interrupt].getAttribute("caption"))
-    return periName
+                vCaption = str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption"))
+        else:
+            if str(interruptsChildrenList[interrupt].getAttribute("caption")) == "None":
+                vCaption = vName
+            else:
+                vCaption = str(interruptsChildrenList[interrupt].getAttribute("caption"))
 
-def updateIntVectorPrioValue(symbol, event):
-    symbol.clearValue()
-    if event["value"] == False:
-        symbol.setValue(str(minPriority), 1)
-    else:
-        symbol.setValue(str(maxPriority), 1)
+        vectorDict["index"] = vIndex
+        vectorDict["name"] = vName
+        vectorDict["caption"] = vCaption
+        vectorDict["module-instance"] = vModuleInstance
 
-def updateIntVectorSubPrioValue(symbol, event):
-    #symObj=event["symbol"]
-    symbol.clearValue()
-    if event["value"] == False:
-        symbol.setValue(str(minSubPriority), 1)
-    else:
-        symbol.setValue(str(maxSubPriority), 1)
-        
+        evicVectorDataStructure.append(vectorDict)
 
-def updateIntVectorParametersValue(symbol, event):
-    symbol.clearValue()
+def updateEVICVectorEnableUpdateValue(symbol, event):
+
+    symbol.setValue(not event["value"], 2)
+
+def updateEVICVectorParametersValue(symbol, event):
+
     symbol.setValue(event["value"], 2)
 
-def updateIntHandlerParametersValue(symbol, event):
-    symbol.clearValue()
-    symbol.setValue(event["value"], 2)
-    
-def _get_enblReg_parms(vectorNumber):
-    # This takes in vector index for interrupt, and returns the IECx register name as well as 
-    # mask and bit location within it for the given interrupt
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
-        temp = float(vectorNumber) / 32.0
-        index = int(temp)
-        bit = float(temp%1)
-        bitPosn = int(32.0*bit)
-        bitMask = hex(1<<bitPosn)
-        regName = "IEC"+str(index)
-    return regName, str(bitPosn), str(bitMask)
-    
-def _get_sub_priority_parms(vectorNumber):
-    # This returns the IPCx register name, priority bit shift, priority mask, subpriority bit shift, 
-    # and subpriority bitmask for input vector number
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
-        temp = float(vectorNumber) / 4.0
-        index = int(temp)
-        subPrioBit = 8*(vectorNumber & 0x3) # bit shift of subpriority field for this interrupt
-        subPrioMask = 0x3  # always 2 bits
-        prioMask = 0x7     # always 3 bits
-        prioBit = subPrioBit + 2            # bit shift of priority field for this interrupt
-        regName = "IPC"+str(index)
-    return regName, str(prioBit), str(prioMask), str(subPrioBit), str(subPrioMask)
-def updateValue(symbol, event):
-    global prioShift
-    global subprioShift
-    
-    # pick off interrupt index number embedded within event ID
-    index = find_intIndex(event["id"])
-    symbol.clearValue()
-    found = False
-    if(event["id"].find("_PRIORITY")!=-1):
-        for ii in prioShift:  # this is a list of dictionaries - need to find the right one
-            if(int(ii['vIndex']) == int(index)):  # found a match
-                shiftval = int(ii['symbol'].getValue())
-                symbol.setValue(int(event["value"]) << shiftval, 2)
-                found = True
-                break
-    else:
-        for ii in subprioShift:  # this is a list of dictionaries - need to find the right one
-            if(int(ii['vIndex']) == int(index)):  # found a match
-                shiftval = int(ii['symbol'].getValue())
-                symbol.setValue(int(event["value"]) << shiftval, 2)
-                found = True
-                break
-                
-    if(found == False):
-        print("***********prioShift: cannot find anything ***************index ",index)
 ################################################################################
 #### Component ####
 ################################################################################
 
-generateIntVectorDataDictionary()
+generateEVICVectorDataStructure()
 
-highestID = int(max(intVectorDataDictionary))
-lowestID = int(min(intVectorDataDictionary))
+lowestID = min([vectIndex["index"] for vectIndex in evicVectorDataStructure])
+highestID = max([vectIndex["index"] for vectIndex in evicVectorDataStructure])
 
-max_key, max_value = max(intVectorDataDictionary.items(), key = lambda x: len(set(x[1])))
+evicMenu = coreComponent.createMenuSymbol("EVIC_MENU", None)
+evicMenu.setLabel("PIC32MZ Interrupts")
+evicMenu.setDescription("Configuration for PIC32MZ Interrupts")
 
-intMenu = coreComponent.createMenuSymbol("INT_MENU", None)
-intMenu.setLabel("PIC32MZ Interrupts")
-intMenu.setDescription("Configuration for PIC32MZ Initialization")
+evicVectorMax = coreComponent.createIntegerSymbol("EVIC_VECTOR_MAX", evicMenu)
+evicVectorMax.setDefaultValue(highestID)
+evicVectorMax.setVisible(False)
 
-intVectorMax = coreComponent.createIntegerSymbol("INT_VECTOR_MAX", intMenu)
-intVectorMax.setDefaultValue(highestID)
-intVectorMax.setVisible(False)
+evicVectorMin = coreComponent.createIntegerSymbol("EVIC_VECTOR_MIN", evicMenu)
+evicVectorMin.setDefaultValue(lowestID)
+evicVectorMin.setVisible(False)
 
-intVectorMin = coreComponent.createIntegerSymbol("INT_VECTOR_MIN", intMenu)
-intVectorMin.setDefaultValue(lowestID)
-intVectorMin.setVisible(False)
-
-priorityList = intPriorityGroup
-subPriorityList = intSubPriorityGroup
-handlerList = []
-global intVectorPriority
 global prioShift
 global subprioShift
+
 prioShift = []
 subprioShift = []
 
-for vIndex in sorted(intVectorDataDictionary):
-    name = (intVectorDataDictionary.get(vIndex))
-    vName = name[0] # 1-element list converted to string to avoid errors below
-    
-    vDescription = str(getInterruptDescription(vIndex, vName))
-    vector = vName
+for vectorDict in evicVectorDataStructure:
+
+    vModuleInstance = vectorDict.get("module-instance")
+    vIndex = vectorDict.get("index")
+    vName = vectorDict.get("name")
+    vDescription = vectorDict.get("caption")
+
+    evicVectorPeriEnable = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE", evicMenu)
+    evicVectorPeriEnable.setLabel("Vector Peripheral Enable")
+    evicVectorPeriEnable.setVisible(False)
+
+    evicVectorPeriHandler = coreComponent.createStringSymbol(vName + "_INTERRUPT_HANDLER", evicMenu)
+    evicVectorPeriHandler.setLabel("Vector Peripheral Handler")
+    evicVectorPeriHandler.setVisible(False)
+    evicVectorPeriHandler.setDefaultValue(vName + "_Handler")
+
+    evicVectorPeriHandlerLock = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_HANDLER_LOCK", evicMenu)
+    evicVectorPeriHandlerLock.setLabel("Vector Peripheral Handler Lock")
+    evicVectorPeriHandlerLock.setVisible(False)
+
+    evicVectorEnable = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE", evicMenu)
+    evicVectorEnable.setLabel("Enable " + vDescription + " Interrupt")
+    evicVectorEnable.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_ENABLE"])
+
     #Vector symbol name:  xc32 toolchain expects underscore as leading character for the vector symbol name
-    interruptName = coreComponent.createStringSymbol(vName + "_VECTOR", intMenu)
-    interruptName.setDefaultValue("_" + vName + "_VECTOR")
-    interruptName.setVisible(False)
+    evicInterruptVector = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_VECTOR", evicVectorEnable)
+    evicInterruptVector.setDefaultValue("_" + vName + "_VECTOR")
+    evicInterruptVector.setVisible(False)
 
-    intVectorEnable = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_0_ENABLE", intMenu)
-    intVectorEnable.setLabel("Enable " + vDescription + " Interrupt")
-    intVectorEnable.setDefaultValue(False)
-    intVectorEnable.setDependencies(updateIntVectorParametersValue, ["NVIC_" + str(vIndex) + "_0_ENABLE"])
-    
-    intVectorPriority = coreComponent.createComboSymbol("NVIC_" + str(vIndex) + "_0_PRIORITY", intVectorEnable, priorityList)
-    intVectorPriority.setLabel("Priority")
-    intVectorPriority.setDefaultValue("0")
-    intVectorPriority.setDependencies(updateIntVectorPrioValue,["NVIC_" + str(vIndex) + "_0_ENABLE"])
-    
-    intVectorSubPriority = coreComponent.createComboSymbol("NVIC_" + str(vIndex) + "_0_SUBPRIORITY", intVectorEnable, subPriorityList)
-    intVectorSubPriority.setLabel("Subpriority")
-    intVectorSubPriority.setDefaultValue("0")
-    intVectorSubPriority.setDependencies(updateIntVectorSubPrioValue,["NVIC_" + str(vIndex) + "_0_ENABLE"])    
-    
-    intVectorHandler = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_0_HANDLER", intVectorEnable)
-    intVectorHandler.setLabel("Handler")
-    intVectorHandler.setDefaultValue(vName + "_Handler")
-    intVectorHandler.setDependencies(updateIntHandlerParametersValue, ["NVIC_" + str(vIndex) + "_0_HANDLER"])
+    evicInterruptName = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_NAME", evicVectorEnable)
+    evicInterruptName.setLabel("Vector Name")
+    evicInterruptName.setDefaultValue(vName)
+    evicInterruptName.setVisible(False)
 
-    # Handler locks - not needed for MIPS.
-    
-    # Enable locks - not needed for MIPS.
-    
-    # Below is for ftl files
-    
+    evicVectorNumber = coreComponent.createIntegerSymbol("EVIC_" + str(vIndex) + "_NUMBER", evicVectorEnable)
+    evicVectorNumber.setLabel("Vector Number")
+    evicVectorNumber.setDefaultValue(vIndex)
+    evicVectorNumber.setVisible(False)
+
+    evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
+    evicVectorPriority.setLabel("Priority")
+    evicVectorPriority.setDefaultValue(min(evicPriorityGroup) + 1)     #Setting default priority to 1
+
+    evicVectorSubPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY", evicVectorEnable, evicSubPriorityGroup)
+    evicVectorSubPriority.setLabel("Subpriority")
+    evicVectorSubPriority.setDefaultValue(min(evicSubPriorityGroup))
+
+    evicVectorHandler = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_HANDLER", evicVectorEnable)
+    evicVectorHandler.setLabel("Handler")
+    evicVectorHandler.setDefaultValue(vName + "_Handler")
+
+    # Used for mapping plib defined handler
+    evicInterruptHandler = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_INTERRUPT_HANDLER", evicVectorEnable)
+    evicInterruptHandler.setDefaultValue(vName + "_Handler")
+    evicInterruptHandler.setVisible(False)
+    evicInterruptHandler.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER"])
+
+    evicVectorHandlerLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_HANDLER_LOCK", evicVectorEnable)
+    evicVectorHandlerLock.setVisible(False)
+    evicVectorHandlerLock.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER_LOCK"])
+
+    evicVectorEnableUpdate = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE_UPDATE", evicVectorEnable)
+    evicVectorEnableUpdate.setVisible(False)
+    evicVectorEnableUpdate.setDependencies(updateEVICVectorEnableUpdateValue, ["EVIC_" + str(vIndex) + "_ENABLE"])
+
     regName, prioBit, prioMask, subPrioBit, subPrioMask = _get_sub_priority_parms(vIndex)
-    # IPCx register name for this interrupt
-    symbol = coreComponent.createStringSymbol("NVIC_" + str(vIndex) + "_0_REGNAME", intVectorEnable )
-    symbol.setDefaultValue( regName )
-    symbol.setVisible( False )
-    
-    # priority bit shift value
-    symbol = coreComponent.createIntegerSymbol("NVIC_" + str(vIndex) + "_0_PRIOSHIFT", intVectorEnable )
-    symbol.setDefaultValue( int(prioBit) )
-    symbol.setVisible( False )
-    dict = { 'vIndex':str(vIndex), 'symbol':symbol}
-    prioShift.append(dict)
-    
-    # priority bit shift value
-    symbol = coreComponent.createIntegerSymbol("NVIC_" + str(vIndex) + "_0_SUBPRIOSHIFT", intVectorEnable )
-    symbol.setDefaultValue( int(subPrioBit) )
-    symbol.setVisible( False )
-    dict = { 'vIndex':str(vIndex), 'symbol':symbol}
-    subprioShift.append(dict)
-    
-    # priority value, shifted to correct bit position, for this interrupt
-    symbol = coreComponent.createHexSymbol("NVIC_" + str(vIndex) + "_0_PRIVALUE", intVectorEnable )
-    symbol.setDefaultValue( int(intVectorPriority.getValue()) << int(prioBit) )
-    symbol.setDependencies(updateValue, ["NVIC_" + str(vIndex) + "_0_PRIORITY"])
-    symbol.setVisible( False )
-    
-    # subpriority, shifted to correct bit position, for this interrupt
-    symbol = coreComponent.createHexSymbol("NVIC_" + str(vIndex) + "_0_SUBPRIVALUE", intVectorEnable )
-    symbol.setDefaultValue( int(intVectorSubPriority.getValue()) << int(subPrioBit) )
-    symbol.setDependencies(updateValue, ["NVIC_" + str(vIndex) + "_0_SUBPRIORITY"])
-    symbol.setVisible( False )
-    
-    symbol = coreComponent.createStringSymbol("INT_FIRST_NAME_KEY_" + str(vIndex), intVectorEnable )
-    symbol.setDefaultValue( str(vIndex) )
-    symbol.setVisible( False )
-    
-    # for cross-referencing of name with index number
-    symbol = coreComponent.createStringSymbol("INT_FIRST_NAME_STRING_" + str(vIndex), intVectorEnable )
-    symbol.setDefaultValue( vName )
-    symbol.setVisible( False )
-    
-    # Below is for interrupt manager support only
-    symbol = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_0_HANDLER_LOCK", intVectorEnable)
-    symbol.setDefaultValue(False)
-    symbol.setVisible(False)
 
-    symbol = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_0_ENABLE_LOCK", intVectorEnable)
-    symbol.setDefaultValue(False)
-    symbol.setVisible(False)
-    
-    symbol = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_0_PRIORITY_LOCK", intVectorEnable)
-    symbol.setDefaultValue(False)
-    symbol.setVisible(False)
-    
-    symbol = coreComponent.createIntegerSymbol("NVIC_" + str(vIndex) + "_0_NUMBER", intVectorEnable)
-    symbol.setDefaultValue(vIndex)
-    symbol.setVisible(False)
+    # IPCx register name for this interrupt
+    evicVectorRegName = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_REGNAME", evicVectorEnable)
+    evicVectorRegName.setDefaultValue(regName)
+    evicVectorRegName.setVisible(False)
+
+    prioShiftDict = {}
+    prioShiftDict["index"] = str(vIndex)
+    prioShiftDict["priorityBit"] = int(prioBit)
+    prioShift.append(prioShiftDict)
+
+    subPrioShiftDict = {}
+    subPrioShiftDict["index"] = str(vIndex)
+    subPrioShiftDict["subPriorityBit"] = int(subPrioBit)
+    subprioShift.append(subPrioShiftDict)
+
+    # priority value, shifted to correct bit position, for this interrupt
+    evicVectorPriorityValue = coreComponent.createHexSymbol("EVIC_" + str(vIndex) + "_PRIVALUE", evicVectorEnable)
+    evicVectorPriorityValue.setDefaultValue(int(evicVectorPriority.getValue()) << int(prioBit))
+    evicVectorPriorityValue.setVisible(False)
+    evicVectorPriorityValue.setDependencies(updateInterruptPriorityAndSubpriorityValue, ["EVIC_" + str(vIndex) + "_PRIORITY"])
+
+    # subpriority, shifted to correct bit position, for this interrupt
+    evicVectorSubPriorityValue = coreComponent.createHexSymbol("EVIC_" + str(vIndex) + "_SUBPRIVALUE", evicVectorEnable)
+    evicVectorSubPriorityValue.setDefaultValue(int(evicVectorSubPriority.getValue()) << int(subPrioBit))
+    evicVectorSubPriorityValue.setVisible(False)
+    evicVectorSubPriorityValue.setDependencies(updateInterruptPriorityAndSubpriorityValue, ["EVIC_" + str(vIndex) + "_SUBPRIORITY"])
 
 ############################################################################
 #### Code Generation ####
 ############################################################################
 
-
 configName = Variables.get("__CONFIGURATION_NAME")
 
-intSystemDefFile = coreComponent.createFileSymbol("INT_DEF", None)
-intSystemDefFile.setType("STRING")
-intSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-intSystemDefFile.setSourcePath("../peripheral/evic_02907/templates/system/definitions.h.ftl")
-intSystemDefFile.setMarkup(True)
+evicSourceFile = coreComponent.createFileSymbol("EVIC_SOURCE", None)
+evicSourceFile.setType("SOURCE")
+evicSourceFile.setSourcePath("../peripheral/evic_02907/templates/plib_evic.c.ftl")
+evicSourceFile.setOutputName("plib_evic.c")
+evicSourceFile.setDestPath("/peripheral/evic/")
+evicSourceFile.setProjectPath("config/" + configName + "/peripheral/evic/")
+evicSourceFile.setMarkup(True)
+evicSourceFile.setOverwrite(True)
 
-intSystemInitFile = coreComponent.createFileSymbol("INT_INIT", None)
-intSystemInitFile.setType("STRING")
-intSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-intSystemInitFile.setSourcePath("../peripheral/evic_02907/templates/system/initialization.c.ftl")
-intSystemInitFile.setMarkup(True)
+evicHeaderFile = coreComponent.createFileSymbol("EVIC_HEADER", None)
+evicHeaderFile.setType("HEADER")
+evicHeaderFile.setSourcePath("../peripheral/evic_02907/templates/plib_evic.h.ftl")
+evicHeaderFile.setOutputName("plib_evic.h")
+evicHeaderFile.setDestPath("/peripheral/evic/")
+evicHeaderFile.setProjectPath("config/" + configName + "/peripheral/evic/")
+evicHeaderFile.setMarkup(True)
+evicHeaderFile.setOverwrite(True)
 
-intSystemInitStartFile = coreComponent.createFileSymbol("INT_INIT_START", None)
-intSystemInitStartFile.setType("STRING")
-intSystemInitStartFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
-intSystemInitStartFile.setSourcePath("../peripheral/evic_02907/templates/system/initialization_mips_start.c.ftl")
-intSystemInitStartFile.setMarkup(True)
+evicSystemDefFile = coreComponent.createFileSymbol("EVIC_DEF", None)
+evicSystemDefFile.setType("STRING")
+evicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+evicSystemDefFile.setSourcePath("../peripheral/evic_02907/templates/system/definitions.h.ftl")
+evicSystemDefFile.setMarkup(True)
 
-intSystemInitEndFile = coreComponent.createFileSymbol("INT_INIT_END", None)
-intSystemInitEndFile.setType("STRING")
-intSystemInitEndFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_END")
-intSystemInitEndFile.setSourcePath("../peripheral/evic_02907/templates/system/initialization_mips_end.c.ftl")
-intSystemInitEndFile.setMarkup(True)
+evicSystemInitFile = coreComponent.createFileSymbol("EVIC_INIT", None)
+evicSystemInitFile.setType("STRING")
+evicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_INTERRUPTS")
+evicSystemInitFile.setSourcePath("../peripheral/evic_02907/templates/system/initialization.c.ftl")
+evicSystemInitFile.setMarkup(True)
 
-intSourceFile = coreComponent.createFileSymbol("INT_SOURCE", None)
-intSourceFile.setType("SOURCE")
-intSourceFile.setSourcePath("../peripheral/evic_02907/templates/plib_int.c.ftl")
-intSourceFile.setOutputName("plib_int.c")
-intSourceFile.setDestPath("/peripheral/evic_02907/")
-intSourceFile.setProjectPath("config/" + configName + "/peripheral/evic_02907/")
-intSourceFile.setMarkup(True)
-intSourceFile.setOverwrite(True)
+evicSystemIntInitFile = coreComponent.createFileSymbol("EVIC_INT_ENABLE", None)
+evicSystemIntInitFile.setType("STRING")
+evicSystemIntInitFile.setOutputName("core.LIST_SYSTEM_INIT_INTERRUPTS")
+evicSystemIntInitFile.setSourcePath("../peripheral/evic_02907/templates/system/initialization_interrupts_global_enable.c.ftl")
+evicSystemIntInitFile.setMarkup(True)
 
-intHeaderFile = coreComponent.createFileSymbol("INT_HEADER", None)
-intHeaderFile.setType("HEADER")
-intHeaderFile.setSourcePath("../peripheral/evic_02907/templates/plib_int.h.ftl")
-intHeaderFile.setOutputName("plib_int.h")
-intHeaderFile.setDestPath("/peripheral/evic_02907/")
-intHeaderFile.setProjectPath("config/" + configName + "/peripheral/evic_02907/")
-intHeaderFile.setMarkup(True)
-intHeaderFile.setOverwrite(True)
+evicSystemInitStartFile = coreComponent.createFileSymbol("EVIC_INT_DISABLE", None)
+evicSystemInitStartFile.setType("STRING")
+evicSystemInitStartFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
+evicSystemInitStartFile.setSourcePath("../peripheral/evic_02907/templates/system/initialization_interrupts_global_disable.c.ftl")
+evicSystemInitStartFile.setMarkup(True)
 
-intSystemIntTableFile = coreComponent.createFileSymbol("NVIC_INT_TABLE", None)
-intSystemIntTableFile.setType("STRING")
-intSystemIntTableFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_HANDLERS")
-intSystemIntTableFile.setDestPath("/peripheral/evic_02907/")
-intSystemIntTableFile.setProjectPath("config/" + configName + "/peripheral/evic_02907/")
-intSystemIntTableFile.setSourcePath("../peripheral/evic_02907/templates/system/interrupts_vector_table.h.ftl")
-intSystemIntTableFile.setMarkup(True)
+evicSystemIntTableFile = coreComponent.createFileSymbol("EVIC_INT_TABLE", None)
+evicSystemIntTableFile.setType("STRING")
+evicSystemIntTableFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_HANDLERS")
+evicSystemIntTableFile.setSourcePath("../peripheral/evic_02907/templates/system/interrupts_vector_table.h.ftl")
+evicSystemIntTableFile.setMarkup(True)

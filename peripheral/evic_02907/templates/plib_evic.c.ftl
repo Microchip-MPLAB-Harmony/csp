@@ -1,14 +1,14 @@
 /*******************************************************************************
-  INT PLIB Header
+  EVIC PLIB Implementation
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_int.h
+    plib_evic.c
 
   Summary:
-    PIC32MZ Interrupt Module PLIB Header File
+    EVIC PLIB Source File
 
   Description:
     None
@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-Copyright (c) 2018 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -38,62 +38,33 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_INT_H
-#define PLIB_INT_H
+#include "device.h"
+#include "plib_evic.h"
 
-#include <stddef.h>
+// *****************************************************************************
+// *****************************************************************************
+// Section: IRQ Implementation
+// *****************************************************************************
+// *****************************************************************************
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    extern "C" {
-
-#endif
-// DOM-IGNORE-END
-
-
-
-
-//******************************************************************************
-/* Function:
-    void INT_Initialize ( void )
-
-  Summary:
-    Configures and initializes the interrupt subsystem.
-
-  Description:
-    This  function configures and initializes the interrupt subsystem
-    appropriately for the current system design.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-  <code>
-  // Initialize the interrupt system. This needs to done in the initialization
-  // code.
-  INT_Initialize();
-  </code>
-
-  Remarks:
-    None.
-*/
-
-void INT_Initialize ( void );
+void EVIC_Initialize( void )
+{
+    INTCONSET = _INTCON_MVEC_MASK;
+    
+    /* Set up priority / subpriority of enabled interrupts */
+<#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
+    <#lt><#assign ENABLE = "EVIC_" + i + "_ENABLE">
+    <#lt><#assign IPCREG = "EVIC_" + i + "_REGNAME">  <#-- IPCx register for given interrupt -->
+    <#lt><#assign PRIOVALUE = "EVIC_" + i + "_PRIORITY">
+    <#lt><#assign SUBPRIOVALUE = "EVIC_" + i + "_SUBPRIORITY">
+    <#lt><#assign PRIOVALUE_SHIFTED = "EVIC_" + i + "_PRIVALUE">  <#-- priority, shifted to correct place in IPCx register -->
+    <#lt><#assign SUBPRIOVALUE_SHIFTED = "EVIC_" + i + "_SUBPRIVALUE">  <#-- subpriority, shifted to correct place in IPCx register -->
+    <#lt><#assign INT_NAME = "EVIC_" + i + "_NAME">
+    <#lt><#if .vars[ENABLE]?? && .vars[ENABLE] == true>
+    <#lt>    ${.vars[IPCREG]}SET = 0x${.vars[PRIOVALUE_SHIFTED]} | 0x${.vars[SUBPRIOVALUE_SHIFTED]};  /* ${.vars[INT_NAME]}:  Priority ${.vars[PRIOVALUE]} / Subpriority ${.vars[SUBPRIOVALUE]} */
+    <#lt></#if>
+</#list>
+}
 
 
-                 
 
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-    }
-#endif
-// DOM-IGNORE-END
-#endif // PLIB_INT_H
