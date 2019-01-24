@@ -1,1 +1,1 @@
-    INT_Initialize();
+    EVIC_Initialize();
