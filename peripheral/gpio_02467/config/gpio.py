@@ -38,6 +38,8 @@ global packageIdMap
 packageIdMap = {}
 global pin_map
 pin_map = {}
+global pinModifierMap
+pinModifierMap = {}
 global pin_position
 pin_position = []
 global sort_alphanumeric
@@ -59,7 +61,6 @@ def InterruptStatusWarning(symbol, event):
 def PPSOptionsVisibilityControl(symbol, event):
     symbol.setVisible(event["value"] )
 
-
 # Dependency Function to pass interrupt related info to Interrupt Manager.
 # This function will be entered only by internal change happening to PORT channel interrupt, never by manual
 # change because channel interrupt is not user configurable directly.
@@ -76,7 +77,6 @@ def pioInterruptControl(pioInterrupt, event):
         Database.setSymbolValue("core", pioSymInterruptHandlerLock[k], True, 1)
     else :
         Database.setSymbolValue("core", pioSymInterruptVector[k], False, 1)
-        Database.setSymbolValue("core", pioSymInterruptHandler[k], "CHANGE_NOTICE_" + i[2] + "_Handler", 1)
         Database.setSymbolValue("core", pioSymInterruptHandlerLock[k], False, 1)
 
 def pinLatchCal(pin, event):
@@ -128,12 +128,12 @@ def pinModeCal(pin, event):
     pin_num = int((pin.getID()).split("_")[2])
     portChannel = pinChannel[pin_num-1].getValue()
 
-    if portChannel != "":
+    if portChannel != "" and portChannel != "None" and pinModifierMap.get(pin_position[pin_num-1]) == False:
         channelIndex = pioSymChannel.index(portChannel)
         bit_pos = pinBitPosition[pin_num-1].getValue()
         ANSEL_Value = gpioSym_GPIO_ANSEL[channelIndex].getValue()
 
-        if event["value"] == "Digital":
+        if event["value"] == "DIGITAL":
             ANSEL_Value |= 1 << bit_pos
         else:
             ANSEL_Value &= ~(1 << bit_pos)
@@ -258,18 +258,26 @@ def createPinMap(packageSymbol):
     global pinoutXmlPath
     pin_map = {}
     pin_position = []
+    global pinModifierMap
+    pinModifierMap = {}
 
     tree = ET.parse(pinoutXmlPath)
     root = tree.getroot()
 
     for myPins in root.findall('pins'):
         for myPin in myPins.findall('pin'):
+            if myPin.find('modifiers') != None:
+                modeLock = True
+            else:
+                modeLock = False
             for myPackageNumber in myPin.findall('number'):
                 if packageIdMap.get(packageSymbol.getValue()) == myPackageNumber.get("package"):
                     if "BGA" in packageSymbol.getValue():
                         pin_map[myPackageNumber.get("pin")] = myPin.get("name")
+                        pinModifierMap[myPackageNumber.get("pin")] = modeLock
                     else:
                         pin_map[int(myPackageNumber.get("pin"))] = myPin.get("name")
+                        pinModifierMap[int(myPackageNumber.get("pin"))] = modeLock
 
     if "BGA" in packageSymbol.getValue():
         pin_position = sort_alphanumeric(pin_map.keys())
@@ -585,6 +593,7 @@ gpioSym_GPIO_ANSEL =[]
 global gpioSym_GPIO_CNEN
 gpioSym_GPIO_CNEN =[]
 
+
 global pioSymInterruptVector
 pioSymInterruptVector = []
 global pioSymInterruptHandler
@@ -611,6 +620,13 @@ for interrupt in range (0, len(interruptsChildrenList)):
     if "CHANGE_NOTICE_" in vName:
         intVectorDataDictionary[vName] = vIndex
 
+# This symbol gives which IFS/IEC register should be used for CN interrupt handling.
+# it is assumed (true for all the existing MIPS mask) that all the CN interrupts belong to same IFS/IEC register.
+gpioSym_IFS_RegIndex = coreComponent.createStringSymbol("SYS_PORT_IFS_REG_INDEX", pioEnable)
+gpioSym_IFS_RegIndex.setLabel("IFS Register Index")
+gpioSym_IFS_RegIndex.setDefaultValue(str((int(intVectorDataDictionary.get("CHANGE_NOTICE_B")))/32)) # Note that CHANGE_NOTICE_B is present in all the MIPS devices, but CHANGE_NOTICE_A is not.
+gpioSym_IFS_RegIndex.setReadOnly(True)
+gpioSym_IFS_RegIndex.setVisible(False)
 
 for portNumber in range(0, len(pioSymChannel)):
 
@@ -678,11 +694,12 @@ for portNumber in range(0, len(pioSymChannel)):
 
     #symbols and variables for interrupt handling
     pioSymInterruptVector.append(portNumber)
-    pioSymInterruptVector[portNumber] = "NVIC_" + str(intVectorDataDictionary.get("CHANGE_NOTICE_" + str(pioSymChannel[portNumber]))) + "_0_ENABLE"
+    pioSymInterruptVector[portNumber] = "CHANGE_NOTICE_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_ENABLE"
     pioSymInterruptHandler.append(portNumber)
-    pioSymInterruptHandler[portNumber] = "NVIC_" + str(intVectorDataDictionary.get("CHANGE_NOTICE_" + str(pioSymChannel[portNumber]))) + "_0_HANDLER"
+    pioSymInterruptHandler[portNumber] = "CHANGE_NOTICE_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER"
     pioSymInterruptHandlerLock.append(portNumber)
-    pioSymInterruptHandlerLock[portNumber] = "NVIC_" + str(intVectorDataDictionary.get("CHANGE_NOTICE_" + str(pioSymChannel[portNumber]))) + "_0_HANDLER_LOCK"
+    pioSymInterruptHandlerLock[portNumber] = "CHANGE_NOTICE_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER_LOCK"
+
     # Not used for now
     #pioSymInterruptVectorUpdate.append(portNumber)
     #pioSymInterruptVectorUpdate[portNumber] = "NVIC_" + str(intVectorDataDictionary.get("CHANGE_NOTICE_" + str(pioSymChannel[portNumber]))) + "_INTERRUPT_ENABLE_UPDATE"
@@ -695,7 +712,7 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSymIntEnComment[portNumber].setDependencies(InterruptStatusWarning, ["core." + pioSymInterruptVector[portNumber], "SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CN_USED"])
 
 # Interrupt Dynamic settings
-pioSymInterruptControl = coreComponent.createBooleanSymbol("NVIC_GPIO_ENABLE", pioMenu)
+pioSymInterruptControl = coreComponent.createBooleanSymbol("EVIC_GPIO_ENABLE", pioMenu)
 pioSymInterruptControl.setDependencies(pioInterruptControl, portInterruptList)
 pioSymInterruptControl.setVisible(False)
 

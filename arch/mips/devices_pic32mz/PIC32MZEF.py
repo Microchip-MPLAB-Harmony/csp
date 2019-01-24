@@ -31,8 +31,8 @@ def _find_default_value(bitfieldNode, initialRegValue):
     '''
     # make initialRegValue an integer
     registerValue = int(initialRegValue[2:],16)   # get rid of the '0x'
-    
-    # find bitshift of lsb of field 
+
+    # find bitshift of lsb of field
     maskStr = bitfieldNode.getAttribute('mask').strip('L')
     if(maskStr.find('0x') != -1):
         mask = int(maskStr[2:],16)
@@ -67,7 +67,7 @@ def _process_valuegroup_entry(node):
     value = int(newstring,16)
     return str(value)
 
-    
+
 
 
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
@@ -109,7 +109,7 @@ for ii in range(len(register)):
             bitfielditem.setDefaultValue(_find_key(_find_default_value(bitfields[jj], porValue),keyVals))
 
         bitfielditem.setVisible(True)
-        
+
         if(bitfieldName in bitfieldIntegerSymbols):
             bitfielditem.setDefaultValue(_find_default_value(bitfields[jj], porValue))
 
@@ -117,7 +117,7 @@ for ii in range(len(register)):
         bitfielditem.setLabel(label)
         bitfielditem.setDescription(bitfields[jj].getAttribute('caption'))
 # End of scanning atdf file for parameters in fuse area
-        
+
 # The following symbols are not used in Chicagoland, but are created for the clock manager.
 symbol = coreComponent.createBooleanSymbol("SYS_CLK_FSOSCEN_OVERRIDE", None)
 symbol.setDefaultValue(False)
@@ -140,7 +140,7 @@ coreComponent.addPlugin("../peripheral/clk_pic32mz/plugin/clockmanager.jar")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
-#coreComponent.addPlugin("../peripheral/gpio_02467/plugin/pinmanager.jar")
+coreComponent.addPlugin("../peripheral/gpio_02467/plugin/gpio_02467.jar")
 print("NO JAR PINMANAGER FILE AVAILABLE FOR MZ/EF - SKIP LOADING FOR NOW")
 
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
