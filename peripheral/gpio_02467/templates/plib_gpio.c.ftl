@@ -73,6 +73,7 @@
 </#compress>
 <#if GPIO_ATLEAST_ONE_INTERRUPT_USED == true >
     <@"<#assign port${.vars['GPIO_CHANNEL_0_NAME']}IndexStart = 0>"?interpret />
+    <#assign portNumCbList = [] />
     <#assign TOTAL_NUM_OF_INT_USED = 0>
 
     <#list 1..GPIO_CHANNEL_TOTAL as i>
@@ -84,19 +85,25 @@
         </#if>
     </#list>
 
+    <#-- Create a list of indexes -->
+    <#list 0..GPIO_CHANNEL_TOTAL as i>
+        <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
+        <#if .vars[channel]?has_content>
+            <@"<#assign portNumCbList = portNumCbList + [port${.vars[channel]}IndexStart]>"?interpret />
+        </#if>
+    </#list>
+    <#assign portNumCbList = portNumCbList + [TOTAL_NUM_OF_INT_USED] >
+
     <#lt>/* Array to store callback objects of each configured interrupt */
     <#lt>GPIO_PIN_CALLBACK_OBJ portPinCbObj[${TOTAL_NUM_OF_INT_USED}];
 
     <#lt>/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
     <@compress single_line=true>
         <#lt>uint8_t portNumCb[${GPIO_CHANNEL_TOTAL} + 1] = {
-                            <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
-                                <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
-                                <#if .vars[channel]?has_content>
-                                    ${.vars["port${.vars[channel]}IndexStart"]},
-                                </#if>
-                            </#list>
-                                    ${TOTAL_NUM_OF_INT_USED}};
+                                                                <#list portNumCbList as i>
+                                                                    ${i},
+                                                                </#list>
+                                                            };
     </@compress>
 </#if>
 
@@ -137,8 +144,9 @@ void GPIO_Initialize ( void )
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_CN_USED"] == true>
              <#lt>    /* Change Notice Enable */
-             <#lt>    CNCON${.vars[channel]}SET = _CNCONB_ON_MASK;
+             <#lt>    CNCON${.vars[channel]}SET = _CNCON${.vars[channel]}_ON_MASK;
              <#lt>    PORT${.vars[channel]};
+             <#lt>    IEC${SYS_PORT_IFS_REG_INDEX}SET = _IEC${SYS_PORT_IFS_REG_INDEX}_CN${.vars[channel]}IE_MASK;
         </#if>
    <#--     <#if .vars["SYS_PORT_${.vars[channel]}_CNEN"] != "0">
              <#lt>    CNEN${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNEN"]};
@@ -429,48 +437,10 @@ bool GPIO_PinInterruptCallbackRegister(
     }
     return false;
 }
-<#if GPIO_ATLEAST_ONE_INTERRUPT_USED == true >
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Local Function Implementation
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void _CHANGE_NOTICE_Interrupt_Handler ( GPIO_PORT port )
-
-  Summary:
-    Interrupt handler for a selected port.
-
-  Description:
-    This function defines the Interrupt handler for a selected port.
-
-  Remarks:
-	It is an internal function used by the library, user should not call it.
-*/
-void _CHANGE_NOTICE_Interrupt_Handler ( GPIO_PORT port )
-{
-    uint8_t i;
-    uint32_t status;
-
-    status  = (*(volatile uint32_t *)(&CNSTAT${GPIO_CHANNEL_0_NAME} + (port * 0x40)));
-    status &= (*(volatile uint32_t *)(&CNEN${GPIO_CHANNEL_0_NAME} + (port * 0x40)));
-
-    /* Check pending events and call callback if registered */
-    for(i = portNumCb[port]; i < portNumCb[port+1]; i++)
-    {
-        if((status & (1 << (portPinCbObj[i].pin & 0x1F))) && (portPinCbObj[i].callback != NULL))
-        {
-            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
-        }
-    }
-
-}
-</#if>
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interrupt Service Routine (ISR) Implementation(s)
 // *****************************************************************************
 // *****************************************************************************
 </#if>
@@ -479,28 +449,41 @@ void _CHANGE_NOTICE_Interrupt_Handler ( GPIO_PORT port )
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
         <#if .vars["SYS_PORT_${.vars[channel]}_CN_USED"] == true>
+
 // *****************************************************************************
 /* Function:
-    void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler (void)
+    void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler()
 
   Summary:
-    Interrupt handler for PORT${.vars[channel]}.
-
-  Description:
-    This function defines the Interrupt service routine for PORT${.vars[channel]}.
-    This is the function which by default gets into Interrupt Vector Table.
+    Interrupt Handler for change notice interrupt for channel ${.vars[channel]}.
 
   Remarks:
-    User should not call this function.
+	It is an internal function called from ISR, user should not call it directly.
 */
-void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
+void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler()
 {
-    /* Local Change Notice Interrupt Handler */
-    _CHANGE_NOTICE_Interrupt_Handler(GPIO_PORT_${.vars[channel]});
+    uint8_t i;
+    uint32_t status;
+
+    status  = CNSTAT${.vars[channel]};
+    status &= CNEN${.vars[channel]};
+
+    PORT${.vars[channel]};
+    IFS${SYS_PORT_IFS_REG_INDEX}CLR = _IFS${SYS_PORT_IFS_REG_INDEX}_CN${.vars[channel]}IF_MASK;
+
+    /* Check pending events and call callback if registered */
+    for(i = ${portNumCbList[i]}; i < ${portNumCbList[i+1]}; i++)
+    {
+        if((status & (1 << (portPinCbObj[i].pin & 0x1F))) && (portPinCbObj[i].callback != NULL))
+        {
+            portPinCbObj[i].callback (portPinCbObj[i].pin, portPinCbObj[i].context);
+        }
+    }
 }
         </#if>
     </#if>
 </#list>
+
 
 /*******************************************************************************
  End of File

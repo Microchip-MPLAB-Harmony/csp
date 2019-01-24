@@ -86,7 +86,7 @@
     <#assign pinChannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
 
     <#if .vars[pinPort]?has_content>
-        <#if .vars[pinChannel]?has_content>
+        <#if .vars[pinChannel]?has_content && .vars[pinChannel] != "None">
                 <@"<#assign PORT${.vars[pinChannel]}_Pin_List = PORT${.vars[pinChannel]}_Pin_List + [.vars[pinPort]]>"?interpret />
         </#if>
     </#if>
@@ -94,10 +94,6 @@
 
 </#compress>
 <#-- Generate Pin Macros for all the GPIO Pins -->
-    <#assign GPIO_Name_List = []>
-    <#assign GPIO_PortPin_List = []>
-    <#assign GPIO_PortChannel_List = []>
-    <#assign GPIO_Interrupt_List = []>
     <#list 1..GPIO_PIN_TOTAL as i>
         <#assign functype = "BSP_PIN_" + i + "_FUNCTION_TYPE">
         <#assign funcname = "BSP_PIN_" + i + "_FUNCTION_NAME">
