@@ -16,12 +16,11 @@ def baudRateCalc(clk, baud):
     return [brgVal, overSamp]
 
 def baudRateTrigger(symbol, event):
-    clk = Database.getSymbolValue(deviceNamespace, "FLEX_USART_CLOCK_FREQ")
+    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_USART_MR_USCLKS") == 0x3:
+        clk = Database.getSymbolValue(deviceNamespace, "EXTERNAL_CLOCK_FREQ")
+    else:
+        clk = Database.getSymbolValue(deviceNamespace, "FLEX_USART_CLOCK_FREQ")
     baud = Database.getSymbolValue(deviceNamespace, "BAUD_RATE")
-    if event["id"] == "BAUD_RATE":
-        baud = event["value"]
-    if event["id"] == "FLEX_USART_CLOCK_FREQ":
-        clk = int(event["value"])
 
     if (clk >= (16 * baud)):
         brgVal = (clk / (16 * baud))
@@ -30,8 +29,8 @@ def baudRateTrigger(symbol, event):
         brgVal = (clk / (8 * baud))
         overSamp = 1
 
-    if(brgVal < 1):
-        Log.writeErrorMessage("FLEXCOM USART Clock source value is low for the desired baud rate")
+    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1:
+        flexcomClockInvalidSym.setVisible((brgVal < 1))
 
     if symbol.getID() == "BRG_VALUE":
         symbol.setValue(brgVal, 2)
@@ -46,6 +45,11 @@ def clockSourceFreq(symbol, event):
             symbol.setVisible(True)
         else :
             symbol.setVisible(False)
+    elif event["id"] == "FLEXCOM_USART_MR_USCLKS":
+        if event["value"] == 0x3:
+            symbol.setVisible(False)
+        else :
+            symbol.setVisible(True)
 
 def dataWidthLogic(symbol, event):
     if(event["value"] == 4):
@@ -115,12 +119,12 @@ brgVal, overSamp = baudRateCalc(flexcomSym_UsartClkValue.getValue(), flexcomSym_
 flexcomSym_MR_OVER = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_MR_OVER", flexcomSym_OperatingMode)
 flexcomSym_MR_OVER.setVisible(False)
 flexcomSym_MR_OVER.setDefaultValue(overSamp)
-flexcomSym_MR_OVER.setDependencies(baudRateTrigger, ["BAUD_RATE", "FLEX_USART_CLOCK_FREQ"])
+flexcomSym_MR_OVER.setDependencies(baudRateTrigger, ["BAUD_RATE", "FLEX_USART_CLOCK_FREQ", "EXTERNAL_CLOCK_FREQ"])
 
 flexcomSym_UsartBRGValue = flexcomComponent.createIntegerSymbol("BRG_VALUE", flexcomSym_OperatingMode)
 flexcomSym_UsartBRGValue.setVisible(False)
 flexcomSym_UsartBRGValue.setDefaultValue(brgVal)
-flexcomSym_UsartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "FLEX_USART_CLOCK_FREQ"])
+flexcomSym_UsartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "FLEX_USART_CLOCK_FREQ", "EXTERNAL_CLOCK_FREQ"])
 
 flexcomSym_Usart_MR_CHRL = flexcomComponent.createKeyValueSetSymbol("FLEX_USART_MR_CHRL", flexcomSym_OperatingMode)
 flexcomSym_Usart_MR_CHRL.setLabel("Data")

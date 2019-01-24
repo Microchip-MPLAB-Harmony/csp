@@ -169,6 +169,7 @@ def instantiateComponent(flexcomComponent):
     global interruptSymbolEnable
     global interruptSymbolHandler
     global interruptSymbolHandlerLock
+    global flexcomClockInvalidSym
 
     flexcomInstanceName = flexcomComponent.createStringSymbol("FLEXCOM_INSTANCE_NAME", None)
     flexcomInstanceName.setVisible(False)
@@ -216,13 +217,17 @@ def instantiateComponent(flexcomComponent):
     # Dependency Status
     flexcomSym_ClkEnComment = flexcomComponent.createCommentSymbol("FLEXCOM_CLK_ENABLE_COMMENT", None)
     flexcomSym_ClkEnComment.setVisible(False)
-    flexcomSym_ClkEnComment.setLabel("Warning!!! FLEXCOM Peripheral Clock is Disabled in Clock Manager")
+    flexcomSym_ClkEnComment.setLabel("Warning!!! " + flexcomComponent.getID().upper() + " Peripheral Clock is Disabled in Clock Manager")
     flexcomSym_ClkEnComment.setDependencies(dependencyStatus, ["core." + flexcomInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     flexcomSym_IntEnComment = flexcomComponent.createCommentSymbol("FLEXCOM_AIC_ENABLE_COMMENT", None)
     flexcomSym_IntEnComment.setVisible(False)
-    flexcomSym_IntEnComment.setLabel("Warning!!! FLEXCOM Interrupt is Disabled in Interrupt Manager")
+    flexcomSym_IntEnComment.setLabel("Warning!!! " + flexcomComponent.getID().upper() + " Interrupt is Disabled in Interrupt Manager")
     flexcomSym_IntEnComment.setDependencies(dependencyStatus, ["core." + interruptSymbolEnable])
+
+    flexcomClockInvalidSym = flexcomComponent.createCommentSymbol("FLEXCOM_CLOCK_INVALID_COMMENT", None)
+    flexcomClockInvalidSym.setLabel(flexcomComponent.getID().upper() + " clock frequency is too low for required baud rate")
+    flexcomClockInvalidSym.setVisible(False)
 
     ###################### Code Generation ######################
     global flexcomHeaderFile

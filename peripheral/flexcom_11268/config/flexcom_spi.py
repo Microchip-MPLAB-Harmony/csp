@@ -42,6 +42,10 @@ def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
         clk = int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"))
 
     SCBR = clk/baud
+
+    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x2:
+        flexcomClockInvalidSym.setVisible((SCBR < 1))
+
     if SCBR == 0:
         SCBR = 1
     elif SCBR > 255:

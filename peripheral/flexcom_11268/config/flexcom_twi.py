@@ -11,6 +11,9 @@ def getFlexcomTwiClockDividerValue(flexcomTwiClkSpeed):
     flexcomTwiClkSpeed = flexcomTwiClkSpeed * 1000 # FLEXCOM TWI clock speed in Hz
     cldiv = peripheralClockFreq / ( flexcomTwiClkSpeed * 2 ) - 3
 
+    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x3:
+        flexcomClockInvalidSym.setVisible((cldiv < 1))
+
     while int(cldiv) > clockDividerMaxValue and ckdiv < clockDividerMinValue:
         ckdiv += 1
         cldiv /= 2
