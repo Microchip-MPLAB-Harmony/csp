@@ -27,6 +27,7 @@ global twihsInstanceName
 def instantiateComponent(twihsComponent):
 
     global twihsInstanceName
+    global twihsSymClockInvalid
 
     twihsInstanceName = twihsComponent.createStringSymbol("TWIHS_INSTANCE_NAME", None)
     twihsInstanceName.setVisible(False)
@@ -46,13 +47,41 @@ def instantiateComponent(twihsComponent):
     
     twihsOpMode.setLabel("TWIHS Operation Mode")
     twihsOpMode.setDefaultValue("MASTER")
-    
-    #Clock speed
-    twihsSymClockSpeed = twihsComponent.createIntegerSymbol("I2C_CLOCK_SPEED", twihsMenu)
 
+    # Provide a source clock selection symbol for masks that supports it
+    valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"TWIHS\"]/value-group@[name=\"TWIHS_CWGR__CKSRC\"]"
+    valueGroup = ATDF.getNode(valueGroupPath)
+    if valueGroup is not None:
+        twihsSymClockSrc = twihsComponent.createKeyValueSetSymbol("TWIHS_CLK_SRC", twihsMenu)
+        twihsSymClockSrc.setLabel(valueGroup.getAttribute("caption"))
+        values = valueGroup.getChildren()
+        for index in range(len(values)):
+            twihsSymClockSrc.addKey(values[index].getAttribute("name"),
+                                    values[index].getAttribute("value"),
+                                    values[index].getAttribute("caption"))
+        twihsSymClockSrc.setOutputMode("Key")
+        twihsSymClockSrc.setDisplayMode("Key")
+
+    # Source Clock Frequency
+    twihsSymMasterClkFreq = twihsComponent.createIntegerSymbol("TWIHS_CLK_SRC_FREQ", twihsMenu)
+    twihsSymMasterClkFreq.setLabel("Source Clock Frequency (Hz)")
+    twihsSymMasterClkFreq.setVisible(True)
+    twihsSymMasterClkFreq.setReadOnly(True)
+    twihsSymMasterClkFreq.setDefaultValue(
+        int(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    twihsSymMasterClkFreq.setDependencies(setClockSourceFreq,
+                                          ["core." + twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    # Clock speed
+    twihsSymClockSpeed = twihsComponent.createIntegerSymbol("I2C_CLOCK_SPEED", twihsMenu)
     twihsSymClockSpeed.setLabel("Clock Speed")
     twihsSymClockSpeed.setDefaultValue(400000)
     twihsSymClockSpeed.setMax(400000)
+
+    #clock invalid comment
+    twihsSymClockInvalid = twihsComponent.createCommentSymbol("TW_HS_INVALID_CLOCK", twihsMenu)
+    twihsSymClockInvalid.setLabel("Cannot generate required clock speed from configured clock source !!!")
+    twihsSymClockInvalid.setVisible(False)
 
     cldiv, chdiv, ckdiv = getTWIHSClockDividerValue(twihsSymClockSpeed.getValue())
     
@@ -60,7 +89,7 @@ def instantiateComponent(twihsComponent):
     twihsSymDivider = twihsComponent.createStringSymbol("TWIHS_DIVIDER", twihsMenu)
     
     twihsSymDivider.setVisible(False)
-    twihsSymDivider.setDependencies(setClockDividerValue, ["I2C_CLOCK_SPEED", "core." + twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    twihsSymDivider.setDependencies(setClockDividerValue, ["I2C_CLOCK_SPEED", "TWIHS_CLK_SRC_FREQ"])
     
     #CLDIV
     twihsSym_CWGR_CLDIV = twihsComponent.createIntegerSymbol("TWIHS_CWGR_CLDIV", twihsMenu)
@@ -96,12 +125,6 @@ def instantiateComponent(twihsComponent):
     Database.clearSymbolValue("core", twihsInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK")
     Database.setSymbolValue("core", twihsInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK", True, 1)
 
-    # Master Clock Frequency
-    twihsSymMasterClkFreq = twihsComponent.createStringSymbol("TWIHS_CLK_SRC_FREQ", twihsMenu)
-    twihsSymMasterClkFreq.setVisible(False)
-    twihsSymMasterClkFreq.setDefaultValue(str(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_FREQUENCY")))
-    twihsSymMasterClkFreq.setDependencies(setClockSourceFreq, ["core."+ twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"])
-    
     # Warning for change in Clock Enable Symbol
     twihsSymClkEnComment = twihsComponent.createCommentSymbol("TWIHS_CLK_EN_COMMENT", twihsMenu)
     twihsSymClkEnComment.setVisible(False)
@@ -168,7 +191,7 @@ def instantiateComponent(twihsComponent):
     twihsSystemDefFile.setMarkup(True)
     
 def getMasterClockFreq():
-    return int(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+    return int(Database.getSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CLK_SRC_FREQ"))
         
 def getTWIHSClkSpeed():
     global num
@@ -216,23 +239,27 @@ def getTWIHSClockDividerValue( twihsClkSpeed ):
 def setClockDividerValue( twihsSymDivider, event):
 
     global twihsInstanceName
-    cldiv, chdiv, ckdiv = getTWIHSClockDividerValue( getTWIHSClkSpeed( ) )
+    cldiv, chdiv, ckdiv = getTWIHSClockDividerValue( getTWIHSClkSpeed())
 
-    # set CLDIV Value
-    Database.setSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CWGR_CLDIV", cldiv, 1)
+    if cldiv < 0 or cldiv > getTWIHSClockDividerMaxValue():
+        twihsSymClockInvalid.setVisible(True)
+    else:
+        twihsSymClockInvalid.setVisible(False)
 
-    # set CHDIV Value
-    Database.setSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CWGR_CHDIV", chdiv, 1)
+        # set CLDIV Value
+        Database.setSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CWGR_CLDIV", cldiv, 1)
 
-    # set CKDIV Value
-    Database.setSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CWGR_CKDIV", ckdiv, 1)
+        # set CHDIV Value
+        Database.setSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CWGR_CHDIV", chdiv, 1)
+
+        # set CKDIV Value
+        Database.setSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CWGR_CKDIV", ckdiv, 1)
 
 def setEnCommentVisibility( twihsSymComment, event ):
     twihsSymComment.setVisible(event["value"])
 
 def setClockSourceFreq( twihsSymClockFreq, event ):
-    masterClockFreq = str(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"))
-    twihsSymClockFreq.setValue(masterClockFreq, 1)
+    twihsSymClockFreq.setValue(event["value"], 2)
 
 '''********************************End of the file*************************'''
     
