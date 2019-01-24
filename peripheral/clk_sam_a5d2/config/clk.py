@@ -348,6 +348,19 @@ def update_mcan_clock_frequency(symbol, event):
     symbol.setValue(event["value"], 2)
 
 
+global update_twihs_clock_frequency
+def update_twihs_clock_frequency(symbol, event):
+    instance_name = symbol.getID().split("_CLOCK_FREQUENCY")[0]
+    src_clk = Database.getSymbolValue(instance_name.lower(), "TWIHS_CLK_SRC")
+    if src_clk == 0:
+        symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"), 2)
+    elif src_clk == 1:
+        symbol.setValue(Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY"), 2)
+    #symbol does not exist in db
+    else:
+        pass
+
+
 global update_flexcomm_clock_frequency
 def update_flexcomm_clock_frequency(symbol,event):
     frequency = -1
@@ -1403,6 +1416,18 @@ def create_flexcom_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
                                                instance_name.lower() + ".FLEXCOM_TWI_CWGR_BRSRCCLK"])
 
 
+global create_twihs_clock_frequency_symbol
+def create_twihs_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
+    twihs_clock_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
+    twihs_clock_freq_sym.setVisible(False)
+    twihs_clock_freq_sym.setReadOnly(True)
+    twihs_clock_freq_sym.setDefaultValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
+    twihs_clock_freq_sym.setDependencies(update_twihs_clock_frequency,
+                                           ["PCLOCK_LS_CLOCK_FREQUENCY",
+                                            instance_name + "_GENERIC_CLOCK_FREQUENCY",
+                                            instance_name.lower() + ".TWIHS_CLK_SRC"])
+
+
 global create_mcan_clock_frequency_symbol
 def create_mcan_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
     mcan_clock_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
@@ -1437,7 +1462,8 @@ freq_sym_constructor_dict = {"TC": create_tc_clock_frequency_symbol,
                              "FLEXCOM": create_flexcom_clock_frequency_symbol,
                              "MCAN": create_mcan_clock_frequency_symbol,
                              "SPI": create_spi_clock_frequency_symbol,
-                             "ADC": create_adc_clock_source_frequency_symbol}
+                             "ADC": create_adc_clock_source_frequency_symbol,
+                             "TWIHS": create_twihs_clock_frequency_symbol}
 
 # Add menu symbol dependencies
 def set_fixed_clock_symbol_dependencies():
