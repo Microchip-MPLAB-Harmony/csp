@@ -106,9 +106,14 @@ void ${TWIHS_INSTANCE_NAME}_Initialize(void)
 
     // Set Baud rate
     ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CWGR) |
-                                            ( TWIHS_CWGR_CLDIV(${TWIHS_CWGR_CLDIV}) |
-                                              TWIHS_CWGR_CHDIV(${TWIHS_CWGR_CHDIV}) |
-                                              TWIHS_CWGR_CKDIV(${TWIHS_CWGR_CKDIV}) );
+                                            <#if TWIHS_CLK_SRC??>
+                                                ( TWIHS_CWGR_CKSRC_${TWIHS_CLK_SRC} |
+                                                  TWIHS_CWGR_CLDIV(${TWIHS_CWGR_CLDIV}) |
+                                            <#else>
+                                                ( TWIHS_CWGR_CLDIV(${TWIHS_CWGR_CLDIV}) |
+                                            </#if>
+                                                  TWIHS_CWGR_CHDIV(${TWIHS_CWGR_CHDIV}) |
+                                                  TWIHS_CWGR_CKDIV(${TWIHS_CWGR_CKDIV}) );
 
     // Starts the transfer by clearing the transmit hold register
     ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_THRCLR_Msk;
