@@ -118,6 +118,7 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
 
     /* To synchronize APB and AHB accesses */
     dummy = ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR;
+    (void)dummy;
 
     return true;
 }
@@ -184,6 +185,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     /* Poll Status register to know status if instruction has end */
     while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
+    (void)dummy;
     return true;
 }
 
@@ -219,6 +221,7 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     /* Poll Status register to know status if instruction has end */
     while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
+    (void)dummy;
     return true;
 }
 
@@ -255,6 +258,7 @@ bool ${QSPI_INSTANCE_NAME}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uin
     /* Poll Status register to know status if instruction has end */
     while(!(${QSPI_INSTANCE_NAME}_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
+    (void)dummy;
     return true;
 }
 
