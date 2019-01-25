@@ -1,1 +1,1 @@
-#include "peripheral/icap/plib_icap${INDEX}.h"
+#include "peripheral/icap/plib_${ICAP_INSTANCE_NAME?lower_case}.h"
