@@ -317,6 +317,18 @@ def update_isc_clk_frequency(symbol, event):
     symbol.setValue(lcd_clk_frequency, 2)
 
 
+global update_spi_clock_frequency
+def update_spi_clock_frequency(symbol, event):
+    instance_name = symbol.getID().split("_CLOCK_FREQUENCY")[0]
+    src_clk = Database.getSymbolValue(instance_name.lower(), "SPI_CLK_SRC")
+    if src_clk == 0:
+        symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"), 2)
+    elif src_clk == 1:
+        symbol.setValue(Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY"), 2)
+    # symbol does not exist in db
+    else:
+        pass
+
 global update_mcan_clock_frequency
 def update_mcan_clock_frequency(symbol, event):
     symbol.setValue(event["value"], 2)
@@ -1386,11 +1398,23 @@ def create_mcan_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
     mcan_clock_freq_sym.setDependencies(update_mcan_clock_frequency, [instance_name + "_GENERIC_CLOCK_FREQUENCY"])
 
 
+global create_spi_clock_frequency_symbol
+def create_spi_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
+    spi_clock_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
+    spi_clock_freq_sym.setVisible(False)
+    spi_clock_freq_sym.setReadOnly(True)
+    spi_clock_freq_sym.setDefaultValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
+    spi_clock_freq_sym.setDependencies(update_spi_clock_frequency, ["PCLOCK_LS_CLOCK_FREQUENCY",
+                                                                      instance_name + "_GENERIC_CLOCK_FREQUENCY",
+                                                                      instance_name.lower() + ".SPI_CLK_SRC"])
+
+
 global freq_sym_constructor_dict
 freq_sym_constructor_dict = {"TC": create_tc_clock_frequency_symbol,
                              "UART": create_uart_clock_frequency_symbol,
                              "FLEXCOM": create_flexcom_clock_frequency_symbol,
-                             "MCAN": create_mcan_clock_frequency_symbol}
+                             "MCAN": create_mcan_clock_frequency_symbol,
+                             "SPI": create_spi_clock_frequency_symbol}
 
 # Add menu symbol dependencies
 def set_fixed_clock_symbol_dependencies():
