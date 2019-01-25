@@ -35,6 +35,11 @@ dummyDataDict = {
                     "_16_BIT"    :   0xFFFF,
                 }
 
+
+# clock frequency symbol update callback
+def SPISourceClockChanged(symbol, event):
+    symbol.setValue(event["value"], 2)
+
 # Dependency Function to show or hide the warning message depending on Clock enable/disable status
 def ClockStatusWarning(symbol, event):
     if event["value"] == False:
@@ -103,7 +108,7 @@ def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
         spiInterrupt.setReadOnly(False)
 
 def getMasterClockFreq():
-    clkSymMasterClockFreq = Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    clkSymMasterClockFreq = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_MASTER_CLOCK")
     return int(clkSymMasterClockFreq)
 
 def showMasterDependencies(spiSym_MR_Dependencies, event):
@@ -114,15 +119,16 @@ def showMasterDependencies(spiSym_MR_Dependencies, event):
 
 def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
 
-    if event["id"] == spiInstanceName.getValue() + "_CLOCK_FREQUENCY":
+    if event["id"] == "SPI_MASTER_CLOCK":
         clk = int(event["value"])
         baud = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_BAUD_RATE")
     else:
         #This means there is change in baud rate provided by user in GUI
         baud = event["value"]
-        clk = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+        clk = int(Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_MASTER_CLOCK"))
 
     SCBR = clk/baud
+    spiSymInvalidClock.setVisible(SCBR < 1 or SCBR > 255)
     if SCBR == 0:
         SCBR = 1
     elif SCBR > 255:
@@ -233,10 +239,27 @@ def instantiateComponent(spiComponent):
     defaultbaudRate = 1000000
     defaultSCBR = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))/defaultbaudRate
 
+    # Provide a source clock selection symbol for masks that supports it
+    valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"SPI\"]/value-group@[name=\"SPI_MR__BRSRCCLK\"]"
+    valueGroup = ATDF.getNode(valueGroupPath)
+    if valueGroup is not None:
+        spiSymClockSrc = spiComponent.createKeyValueSetSymbol("SPI_CLK_SRC", None)
+        spiSymClockSrc.setLabel(valueGroup.getAttribute("caption"))
+        values = valueGroup.getChildren()
+        for index in range(len(values)):
+            spiSymClockSrc.addKey(values[index].getAttribute("name"),
+                                    values[index].getAttribute("value"),
+                                    values[index].getAttribute("caption"))
+            spiSymClockSrc.setOutputMode("Key")
+            spiSymClockSrc.setDisplayMode("Key")
+
     # Used to pass master clock frequency to SPI FTL
     spiSymMasterClock = spiComponent.createIntegerSymbol("SPI_MASTER_CLOCK", None)
-    spiSymMasterClock.setDefaultValue(getMasterClockFreq())
-    spiSymMasterClock.setVisible(False)
+    spiSymMasterClock.setLabel("Bit rate source clock frequency (Hz)")
+    spiSymMasterClock.setDefaultValue(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY" ))
+    spiSymMasterClock.setVisible(True)
+    spiSymMasterClock.setReadOnly(True)
+    spiSymMasterClock.setDependencies(SPISourceClockChanged, ["core." + spiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     spiSym_CSR_SCBR = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", None)
     spiSym_CSR_SCBR.setLabel("Baud Rate in Hz")
@@ -245,11 +268,17 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_SCBR.setMin(1)
     spiSym_CSR_SCBR.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
 
+    global spiSymInvalidClock
+    spiSymInvalidClock = spiComponent.createCommentSymbol("SPI_CLOCK_INVALID_COMMENT", None)
+    spiSymInvalidClock.setLabel("Cannot generate input baud rate from the configured source clock frequency !!!")
+    spiSymInvalidClock.setVisible(False)
+
+
     #local variable for code generation
     spiSym_CSR_SCBR_VALUE = spiComponent.createIntegerSymbol("SPI_CSR_SCBR_VALUE", None)
     spiSym_CSR_SCBR_VALUE.setDefaultValue(defaultSCBR)
     spiSym_CSR_SCBR_VALUE.setVisible(False)
-    spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE", "core." + spiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE", "SPI_MASTER_CLOCK"])
 
     spiSym_CSR_BITS = spiComponent.createKeyValueSetSymbol("SPI_CHARSIZE_BITS", None)
     spiSym_CSR_BITS.setLabel(spiBitField_CSR_BITS.getAttribute("caption"))
