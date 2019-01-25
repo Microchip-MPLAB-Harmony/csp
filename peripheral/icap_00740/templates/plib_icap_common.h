@@ -15,11 +15,11 @@
 
   Remarks:
     None.
-    
+
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -67,9 +67,8 @@
 
 typedef enum
 {
-	overFlow 	 = 0x4,
-	buffNotEmpty = 0x3
-
+    ICAP_STATUS_OVERFLOW      = 0x4,
+    ICAP_STATUS_BUFNOTEMPTY   = 0x3
 } ICAP_STATUS_SOURCE;
 
 typedef void (*ICAP_CALLBACK) (uintptr_t context);
@@ -81,10 +80,10 @@ typedef void (*ICAP_CALLBACK) (uintptr_t context);
 // *****************************************************************************
 
 typedef struct
-{    
+{
     ICAP_CALLBACK callback;
-	uintptr_t    context;
-	
+    uintptr_t    context;
+
 } ICAP_OBJECT ;
 
 // DOM-IGNORE-BEGIN

@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Input Capture (ICAP${INDEX}) Peripheral Library (PLIB)
+  Input Capture (${ICAP_INSTANCE_NAME}) Peripheral Library (PLIB)
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_icap${INDEX}.c
+    plib_${ICAP_INSTANCE_NAME?lower_case}.c
 
   Summary:
-    ICAP${INDEX} Source File
+    ${ICAP_INSTANCE_NAME} Source File
 
   Description:
     None
@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -37,254 +37,146 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-#include "plib_icap${INDEX}.h"
+#include "plib_${ICAP_INSTANCE_NAME?lower_case}.h"
+
+<#assign INDEX = ICAP_INSTANCE_NUM>
+
+<#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
+
+ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}errObj;
+</#if>
+
+<#if ICAP_INTERRUPT_ENABLE?c == "true">
+
+ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
 
 // *****************************************************************************
-// Section: ICAP${INDEX} Implementation
+// Section: ${ICAP_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
+<#assign ICAP_IEC_REG_VAL = "">
 
-// *****************************************************************************
-/* Function:
-   void ICAP${INDEX}_Initialize (void)
+<#if ICAPx_IEC_REG == ERROR_IEC_REG>
+    <#if ICAP_INTERRUPT_ENABLE?c == 'true'>
+        <#assign ICAP_IEC_REG_VAL = "_"+ICAPx_IEC_REG+"_IC"+INDEX+"IE_MASK">
+    </#if>
+    <#if ICAP_ERROR_INTERRUPT_ENABLE?c == 'true'>
+        <#if ICAP_IEC_REG_VAL != "">
+            <#assign ICAP_IEC_REG_VAL = ICAP_IEC_REG_VAL + " | _"+ICAPx_IEC_REG+"_IC"+INDEX+"EIE_MASK">
+        <#else>
+            <#assign ICAP_IEC_REG_VAL = "_"+ICAPx_IEC_REG+"_IC"+INDEX+"EIE_MASK">
+        </#if>
+    </#if>
+</#if>
 
-  Summary:
-    Initialization function ICAP${INDEX} peripheral
-
-  Description:
-    This function initializes the ICAP${INDEX} peripheral with user input 
-	from the configurator.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-void ICAP${INDEX}_Initialize (void)
+void ${ICAP_INSTANCE_NAME}_Initialize (void)
 {
-	/*Setup IC${INDEX}CON	*/
-	/*ICM 	= ${ICAP_ICxCON_ICM}		*/
-	/*ICI 	= ${ICAP_ICxCON_ICI}		*/
-	/*ICTMR = ${ICAP_ICxCON_ICTMR}		*/
-	/*C32 	= ${ICAP_ICxCON_C32}		*/
-	/*FEDGE = ${ICAP_ICxCON_FEDGE}		*/
-	/*SIDL 	= ${ICAP_ICxCON_SIDL?then('true', 'false')}	*/
+    /*Setup IC${INDEX}CON    */
+    /*ICM     = ${ICAP_ICxCON_ICM}        */
+    /*ICI     = ${ICAP_ICxCON_ICI}        */
+    /*ICTMR = ${ICAP_CFGCON_ICACLK?then('${ICAP_ICxCON_ICTMR_ALT}','${ICAP_ICxCON_ICTMR}')}*/
+    /*C32     = ${ICAP_ICxCON_C32}        */
+    /*FEDGE = ${ICAP_ICxCON_FEDGE}        */
+    /*SIDL     = ${ICAP_ICxCON_SIDL?then('true', 'false')}    */
 
-	IC${INDEX}CON = 0x${ICxCON_VALUE};
+    IC${INDEX}CON = 0x${ICxCON_VALUE};
+
+    <#if ICAP_CFGCON_ICACLK?c == 'true'>
+    CFGCON |= _CFGCON_ICACLK_MASK;
+    </#if>
+
+<#if (ICAPx_IEC_REG == ERROR_IEC_REG) && ICAP_IEC_REG_VAL?has_content>
+    ${ICAPx_IEC_REG}SET = ${ICAP_IEC_REG_VAL};
+<#else>
     <#if ICAP_INTERRUPT_ENABLE?c == 'true'>
     ${ICAPx_IEC_REG}SET = _${ICAPx_IEC_REG}_IC${INDEX}IE_MASK;
     </#if>
     <#if ICAP_ERROR_INTERRUPT_ENABLE?c == 'true'>
     ${ERROR_IEC_REG}SET = _${ERROR_IEC_REG}_IC${INDEX}EIE_MASK;
     </#if>
+</#if>
+
 }
 
-// *****************************************************************************
-/* Function:
-   void ICAP${INDEX}_CaptureEnable (void)
 
-  Summary:
-    Enable function for the ICAP${INDEX} peripheral
-
-  Description:
-    This function enables the ICAP${INDEX} peripheral.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-void ICAP${INDEX}_CaptureEnable (void)
+void ${ICAP_INSTANCE_NAME}_Enable (void)
 {
-	IC${INDEX}CONSET = _IC${INDEX}CON_ON_MASK;
+    IC${INDEX}CONSET = _IC${INDEX}CON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-   void ICAP${INDEX}_CaptureDisable (void)
 
-  Summary:
-    Disable function for the ICAP${INDEX} peripheral
-
-  Description:
-    This function disables the ICAP${INDEX} peripheral.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-void ICAP${INDEX}_CaptureDisable (void)
+void ${ICAP_INSTANCE_NAME}_Disable (void)
 {
-	IC${INDEX}CONCLR = _IC${INDEX}CON_ON_MASK;
+    IC${INDEX}CONCLR = _IC${INDEX}CON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-   uint32_t ICAP${INDEX}_BufferRead (void)
-
-  Summary:
-    Read buffer function ICAP${INDEX} peripheral
-
-  Description:
-    This function will return the value contained in the ICAP${INDEX} peripheral 
-	buffer.
-
-  Parameters:
-    none
-
-  Returns:
-    uint32_t
-*/
-uint32_t ICAP${INDEX}_CaptureReadBuffer (void)
+<#if ICAP_ICxCON_C32 == "1">
+uint32_t ${ICAP_INSTANCE_NAME}_CaptureBufferRead (void)
 {
-	uint32_t buffer = IC${INDEX}BUF;
-	return buffer;
+    return IC${INDEX}BUF;
 }
-
-// *****************************************************************************
-/* Function:
-   void ICAP${INDEX}_StatusGet (void)
-
-  Summary:
-    ICAP${INDEX} status
-
-  Description:
-    Returns the current state overflow or buffer not empty flags
-
-  Parameters:
-    source	overFlow, buffNotEmpty
-
-  Returns:
-    bool
-*/
-bool ICAP${INDEX}_StatusGet (ICAP_STATUS_SOURCE source)
+<#else>
+uint16_t ${ICAP_INSTANCE_NAME}_CaptureBufferRead (void)
 {
-	return ((IC${INDEX}CON >> source) & 0x1);
+    return (uint16_t)IC${INDEX}BUF;
 }
+</#if>
+
+
 <#if ICAP_INTERRUPT_ENABLE?c == "true">
 
-ICAP_OBJECT icap${INDEX}Obj;
-
-// *****************************************************************************
-/* Function:
-  void ICAP${INDEX}_CallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
-
-  Summary:
-    Sets the callback function for a icap interrupt.
-
-  Description:
-    This function sets the callback function that will be called when the ICAP
-    conditions are met.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *callback   - a pointer to the function to be called when value is reached.
-                  Use NULL to Un Register the compare callback
-
-    context     - a pointer to user defined data to be used when the callback
-                  function is called. NULL can be passed in if no data needed.
-
-  Returns:
-    void
-*/
-void ICAP${INDEX}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
+void ${ICAP_INSTANCE_NAME}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
 {
-    icap${INDEX}Obj.callback = callback;
-    icap${INDEX}Obj.context = context;
+    ${ICAP_INSTANCE_NAME?lower_case}Obj.callback = callback;
+    ${ICAP_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-// *****************************************************************************
-/* Function:
-  void INPUT_CAPTURE_${INDEX}_Tasks( void )
-
-  Summary:
-    Interrupt handler.
-  Description:
-    This function does the PLIB-specific actions, and is called by the actual handler
-    function.
-  Precondition:
-    None.
-  Parameters:
-    None.
-  Returns:
-    void
-*/
-void INPUT_CAPTURE_${INDEX}_Tasks (void)
+void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
 {
-    ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;	//Clear IRQ flag
+    ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
 
-	if( (icap${INDEX}Obj.callback != NULL))
-	{
-		icap${INDEX}Obj.callback(icap${INDEX}Obj.context);
-	}
+    if( (${ICAP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
+    {
+        ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(${ICAP_INSTANCE_NAME?lower_case}Obj.context);
+    }
+}
+
+<#else>
+
+bool ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void)
+{
+    bool status;
+    status = ((IC${INDEX}CON >> ICAP_STATUS_BUFNOTEMPTY) & 0x1);
+    return status;
 }
 </#if>
 <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
 
-ICAP_OBJECT icap${INDEX}errObj;
-
-// *****************************************************************************
-/* Function:
-  void ICAP${INDEX}_Error_CallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
-
-  Summary:
-    Sets the callback function for a icap error interrupt.
-
-  Description:
-    This function sets the callback function that will be called when the ICAP
-    conditions are met.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *callback   - a pointer to the function to be called when value is reached.
-                  Use NULL to Un Register the compare callback
-
-    context     - a pointer to user defined data to be used when the callback
-                  function is called. NULL can be passed in if no data needed.
-
-  Returns:
-    void
-*/
-void ICAP${INDEX}_Error_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
+void ${ICAP_INSTANCE_NAME}_ErrorCallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
 {
-    icap${INDEX}errObj.callback = callback;
-    icap${INDEX}errObj.context = context;
+    ${ICAP_INSTANCE_NAME?lower_case}errObj.callback = callback;
+    ${ICAP_INSTANCE_NAME?lower_case}errObj.context = context;
 }
 
-
-// *****************************************************************************
-/* Function:
-  void INPUT_CAPTURE_${INDEX}_ERROR_Tasks (void)
-  Summary:
-    Error interrupt handler.
-  Description:
-    This function does the PLIB-specific actions, and is called by the actual handler
-    function.
-  Precondition:
-    None.
-  Parameters:
-    None.
-  Returns:
-    void
-*/
-void INPUT_CAPTURE_${INDEX}_ERROR_Tasks (void)
+void INPUT_CAPTURE_${INDEX}_ERROR_InterruptHandler(void)
 {
-    ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}EIF_MASK;	//Clear IRQ flag
+    ${ERROR_IFS_REG}CLR = _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK;    //Clear IRQ flag
 
-	if( (icap${INDEX}errObj.callback != NULL))
-	{
-		icap${INDEX}errObj.callback(icap${INDEX}errObj.context);
-	}
+    if( (${ICAP_INSTANCE_NAME?lower_case}errObj.callback != NULL))
+    {
+        ${ICAP_INSTANCE_NAME?lower_case}errObj.callback(${ICAP_INSTANCE_NAME?lower_case}errObj.context);
+    }
+}
+<#else>
+
+bool ${ICAP_INSTANCE_NAME}_ErrorStatusGet (void)
+{
+    bool status;
+    status = ((IC${INDEX}CON >> ICAP_STATUS_OVERFLOW) & 0x1);
+    return status;
 }
 </#if>

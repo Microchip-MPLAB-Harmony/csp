@@ -1,1 +1,1 @@
-	ICAP${INDEX}_Initialize();
+    ${ICAP_INSTANCE_NAME}_Initialize();

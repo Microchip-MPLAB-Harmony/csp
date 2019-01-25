@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_icap${INDEX}.h
+    plib_${ICAP_INSTANCE_NAME?lower_case}.h
 
   Summary:
     ICAP PLIB Header File
@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -38,8 +38,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef _PLIB_ICAP${INDEX}_H
-#define _PLIB_ICAP${INDEX}_H
+#ifndef _PLIB_${ICAP_INSTANCE_NAME}_H
+#define _PLIB_${ICAP_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -59,17 +59,17 @@
 // *****************************************************************************
 // *****************************************************************************
 
-// *************************** ICAP${INDEX} API ***************************************/
+// *************************** ${ICAP_INSTANCE_NAME} API ***************************************/
 // *****************************************************************************
 /* Function:
-   void ICAP${INDEX}_Initialize (void)
+   void ${ICAP_INSTANCE_NAME}_Initialize (void)
 
   Summary:
-    Initialization function ICAP${INDEX} peripheral
+    Initialization function ${ICAP_INSTANCE_NAME} peripheral
 
   Description:
-    This function initializes the ICAP${INDEX} peripheral with user input 
-	from the configurator.
+    This function initializes the ${ICAP_INSTANCE_NAME} peripheral with user input
+    from the configurator.
 
   Parameters:
     none
@@ -77,17 +77,17 @@
   Returns:
     void
 */
-void ICAP${INDEX}_Initialize (void);
+void ${ICAP_INSTANCE_NAME}_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-   void ICAP${INDEX}_CaptureEnable (void)
+   void ${ICAP_INSTANCE_NAME}_Enable (void)
 
   Summary:
-    Enable function for the ICAP${INDEX} peripheral
+    Enable function for the ${ICAP_INSTANCE_NAME} peripheral
 
   Description:
-    This function enables the ICAP${INDEX} peripheral.
+    This function enables the ${ICAP_INSTANCE_NAME} peripheral.
 
   Parameters:
     none
@@ -95,17 +95,17 @@ void ICAP${INDEX}_Initialize (void);
   Returns:
     void
 */
-void ICAP${INDEX}_CaptureEnable (void);
+void ${ICAP_INSTANCE_NAME}_Enable (void);
 
 // *****************************************************************************
 /* Function:
-   void ICAP${INDEX}_CaptureDisable (void)
+   void ${ICAP_INSTANCE_NAME}_Disable (void)
 
   Summary:
-    Disable function for the ICAP${INDEX} peripheral
+    Disable function for the ${ICAP_INSTANCE_NAME} peripheral
 
   Description:
-    This function disables the ICAP${INDEX} peripheral.
+    This function disables the ${ICAP_INSTANCE_NAME} peripheral.
 
   Parameters:
     none
@@ -113,18 +113,19 @@ void ICAP${INDEX}_CaptureEnable (void);
   Returns:
     void
 */
-void ICAP${INDEX}_CaptureDisable (void);
+void ${ICAP_INSTANCE_NAME}_Disable (void);
 
+<#if ICAP_ICxCON_C32 == "1">
 // *****************************************************************************
 /* Function:
-   uint32_t ICAP${INDEX}_BufferRead (void)
+   uint32_t ${ICAP_INSTANCE_NAME}_CaptureBufferRead (void)
 
   Summary:
-    Read buffer function ICAP${INDEX} peripheral
+    Read buffer function ${ICAP_INSTANCE_NAME} peripheral
 
   Description:
-    This function will return the value contained in the ICAP${INDEX} peripheral 
-	buffer.
+    This function will return the value contained in the ${ICAP_INSTANCE_NAME} peripheral
+    buffer.
 
   Parameters:
     none
@@ -132,46 +133,33 @@ void ICAP${INDEX}_CaptureDisable (void);
   Returns:
     uint32_t
 */
-uint32_t ICAP${INDEX}_CaptureBufferRead (void);
+uint32_t ${ICAP_INSTANCE_NAME}_CaptureBufferRead (void);
 
+<#else>
 // *****************************************************************************
 /* Function:
-   void ICAP${INDEX}_StatusGet (void)
+   uint16_t ${ICAP_INSTANCE_NAME}_CaptureBufferRead (void)
 
   Summary:
-    ICAP${INDEX} status
+    Read buffer function ${ICAP_INSTANCE_NAME} peripheral
 
   Description:
-    Returns the current state overflow or buffer not empty flags
+    This function will return the value contained in the ${ICAP_INSTANCE_NAME} peripheral
+    buffer.
 
   Parameters:
-    source	overFlow, buffNotEmpty
+    none
 
   Returns:
-    bool
+    uint16_t
 */
-bool ICAP${INDEX}_StatusGet (ICAP_STATUS_SOURCE source);
+uint16_t ${ICAP_INSTANCE_NAME}_CaptureBufferRead (void);
+</#if>
+
 <#if ICAP_INTERRUPT_ENABLE?c == "true">
-
 // *****************************************************************************
 /* Function:
-  void INPUT_CAPTURE_${INDEX}_Tasks( void )
-  Summary:
-    Interrupt handler.
-  Description:
-    This function does the PLIB-specific actions, and is called by the actual handler
-    function.
-  Precondition:
-    None.
-  Parameters:
-    None.
-  Returns:
-    void
-*/
-void INPUT_CAPTURE_${INDEX}_Tasks (void);
-// *****************************************************************************
-/* Function:
-  void ICAP${INDEX}_CallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
+  void ${ICAP_INSTANCE_NAME}_CallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
 
   Summary:
     Sets the callback function for a icap interrupt.
@@ -193,13 +181,33 @@ void INPUT_CAPTURE_${INDEX}_Tasks (void);
   Returns:
     void
 */
-void ICAP${INDEX}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
-</#if>
-<#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
+void ${ICAP_INSTANCE_NAME}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
 
+<#else>
 // *****************************************************************************
 /* Function:
-  void ICAP${INDEX}_Error_CallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
+   void ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void)
+
+  Summary:
+    ${ICAP_INSTANCE_NAME} status
+
+  Description:
+    Returns the current state overflow or buffer not empty flags
+
+  Parameters:
+    None
+
+  Returns:
+    bool
+*/
+bool ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void);
+
+</#if>
+
+<#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
+// *****************************************************************************
+/* Function:
+  void ${ICAP_INSTANCE_NAME}_Error_CallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
 
   Summary:
     Sets the callback function for a icap error interrupt.
@@ -213,7 +221,7 @@ void ICAP${INDEX}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
 
   Parameters:
     *callback   - a pointer to the function to be called when value is reached.
-                  Use NULL to Un Register the compare callback
+                  Use NULL to Unregister the compare callback
 
     context     - a pointer to user defined data to be used when the callback
                   function is called. NULL can be passed in if no data needed.
@@ -221,23 +229,26 @@ void ICAP${INDEX}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
   Returns:
     void
 */
-void ICAP${INDEX}_Error_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
+void ${ICAP_INSTANCE_NAME}_Error_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
+
+<#else>
 // *****************************************************************************
 /* Function:
-  void INPUT_CAPTURE_${INDEX}_ERROR_Tasks (void)
+   void ${ICAP_INSTANCE_NAME}_ErrorStatusGet (void)
+
   Summary:
-    Error interrupt handler.
+    ${ICAP_INSTANCE_NAME} status
+
   Description:
-    This function does the PLIB-specific actions, and is called by the actual handler
-    function.
-  Precondition:
-    None.
+    Returns the current state of overflow
+
   Parameters:
-    None.
+    None
+
   Returns:
-    void
+    bool
 */
-void INPUT_CAPTURE_${INDEX}_ERROR_Tasks (void);
+bool ${ICAP_INSTANCE_NAME}_ErrorStatusGet (void);
 </#if>
 
 // DOM-IGNORE-BEGIN
@@ -246,4 +257,4 @@ void INPUT_CAPTURE_${INDEX}_ERROR_Tasks (void);
 #endif
 
 // DOM-IGNORE-END
-#endif // _PLIB_ICAP${INDEX}_H
+#endif // _PLIB_${ICAP_INSTANCE_NAME}_H
