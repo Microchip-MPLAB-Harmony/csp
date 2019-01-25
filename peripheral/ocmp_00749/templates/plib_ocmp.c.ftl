@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Output Compare (OCMP${INDEX}) Peripheral Library (PLIB)
+  Output Compare ${OCMP_INSTANCE_NAME} Peripheral Library (PLIB)
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_ocmp${INDEX}.c
+    plib_${OCMP_INSTANCE_NAME?lower_case}.c
 
   Summary:
-    OCMP${INDEX} Source File
+    ${OCMP_INSTANCE_NAME} Source File
 
   Description:
     None
@@ -37,256 +37,102 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-#include "plib_ocmp${INDEX}.h"
+#include "plib_${OCMP_INSTANCE_NAME?lower_case}.h"
 
 <#--Implementation-->
 // *****************************************************************************
 
 // *****************************************************************************
-// Section: OCMP${INDEX} Implementation
+// Section: ${OCMP_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
-/* Function:
-   void OCMP${INDEX}_Initialize (void)
+<#assign mode = OCMP_OCxCON_OCM?number>
+<#assign INDEX = OCMP_INSTANCE_NAME?remove_beginning("OCMP")>
 
-  Summary:
-    Initialization function OCMP${INDEX} peripheral
+<#if OCMP_INTERRUPT_ENABLE?c == "true">
 
-  Description:
-    This function initializes the OCMP${INDEX} peripheral with user input 
-	from the configurator.
+OCMP_OBJECT ${OCMP_INSTANCE_NAME}?lower_caseObj;
+</#if>
 
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-void OCMP${INDEX}_Initialize (void)
+void ${OCMP_INSTANCE_NAME}_Initialize (void)
 {
-	/*Setup OC${INDEX}CON		*/
-	/*OCM 		= ${OCMP_OCxCON_OCM}		*/
-	/*OCTSEL	= ${OCMP_OCxCON_OCTSEL}		*/
-	/*OC32	 	= ${OCMP_OCxCON_OC32}		*/
-	/*SIDL 		= ${OCMP_OCxCON_SIDL?then('true', 'false')}	*/
-	
-	OC${INDEX}CON = 0x${OCxCON_VALUE};
+    /*Setup OC${INDEX}CON        */
+    /*OCM         = ${OCMP_OCxCON_OCM}        */
+    /*OCTSEL    = ${OCMP_CFGCON_OCACLK?then('${OCMP_OCxCON_OCTSEL_ALT}','${OCMP_OCxCON_OCTSEL}')}        */
+    /*OC32         = ${OCMP_OCxCON_OC32}        */
+    /*SIDL         = ${OCMP_OCxCON_SIDL?then('true', 'false')}    */
+
+    OC${INDEX}CON = 0x${OCxCON_VALUE};
+
+  <#if OCMP_CFGCON_OCACLK?c == 'true'>
+    CFGCON |= _CFGCON_OCACLK_MASK;
+  </#if>
+
     <#if OCMP_INTERRUPT_ENABLE?c == 'true'>
     ${IEC_REG} = _${IEC_REG}_OC${INDEX}IE_MASK;
     </#if>
 }
 
-// *****************************************************************************
-/* Function:
-   void OCMP${INDEX}_Enable (void)
 
-  Summary:
-    Enable function OCMP${INDEX} peripheral
-
-  Description:
-    This function enables the OCMP${INDEX} peripheral
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-void OCMP${INDEX}_Enable (void)
+void ${OCMP_INSTANCE_NAME}_Enable (void)
 {
-	OC${INDEX}CONSET = _OC${INDEX}CON_ON_MASK;
+    OC${INDEX}CONSET = _OC${INDEX}CON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-   void OCMP${INDEX}_Disable (void)
 
-  Summary:
-    Disable function OCMP${INDEX} peripheral
-
-  Description:
-    This function disables the OCMP${INDEX} peripheral.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-void OCMP${INDEX}_Disable (void)
+void ${OCMP_INSTANCE_NAME}_Disable (void)
 {
-	OC${INDEX}CONCLR = _OC${INDEX}CON_ON_MASK;
+    OC${INDEX}CONCLR = _OC${INDEX}CON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-   bool OCMP${INDEX}_StatusGet (void)
-
-  Summary:
-    Get OCMP${INDEX} status
-
-  Description:
-    Returns the current state of PWM Fault Condition status bit
-
-  Parameters:
-    void
-
-  Returns:
-    bool
-*/
-bool OCMP${INDEX}_StatusGet (void)
+<#if mode == 7>
+bool ${OCMP_INSTANCE_NAME}_FaultStatusGet (void)
 {
-	bool status = OC${INDEX}CON & _OC${INDEX}CON_OCFLT_MASK;
-	
-	return status;
+    return (bool)(OC${INDEX}CON & _OC${INDEX}CON_OCFLT_MASK);
+}
+</#if>
+
+<#if mode lt 6>
+void ${OCMP_INSTANCE_NAME}_CompareValueSet (uint32_t value)
+{
+    OC${INDEX}R = value;
+}
+</#if>
+
+uint32_t ${OCMP_INSTANCE_NAME}_CompareValueGet (void)
+{
+    return OC${INDEX}R;
 }
 
-// *****************************************************************************
-/* Function:
-   void OCMP${INDEX}_CompareValueSet (uint32_t value)
-
-  Summary:
-    Set OCMP${INDEX} Compare Register
-
-  Description:
-    Sets the value in the Compare Register
-
-  Parameters:
-    uint32_t 
-
-  Returns:
-    void
-*/
-void OCMP${INDEX}_CompareValueSet (uint32_t value)
+<#if mode gt 3 >
+void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint32_t value)
 {
-	OC${INDEX}R = value;
+    OC${INDEX}RS = value;
 }
 
-// *****************************************************************************
-/* Function:
-   void OCMP${INDEX}_CompareSecondaryValueSet (uint32_t value)
-
-  Summary:
-    Set OCMP${INDEX} Secondary Compare Register
-
-  Description:
-    Sets the value in the Secondary Compare Register
-
-  Parameters:
-    uint32_t 
-
-  Returns:
-    void
-*/
-void OCMP${INDEX}_CompareSecondaryValueSet (uint32_t value)
+uint32_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void)
 {
-	OC${INDEX}RS = value;
+    return OC${INDEX}RS;
 }
+</#if>
 
-// *****************************************************************************
-/* Function:
-   uint32_t OCMP${INDEX}_CompareValueGet (void)
-
-  Summary:
-    Get OCMP${INDEX} Compare Register
-
-  Description:
-    Gets the value in the Compare Register
-
-  Parameters:
-    void 
-
-  Returns:
-    uint32_t
-*/
-uint32_t OCMP${INDEX}_CompareValueGet (void)
-{
-	uint32_t value = OC${INDEX}R;
-	
-	return value;
-}
-
-// *****************************************************************************
-/* Function:
-   uint32_t OCMP${INDEX}_CompareSecondaryValueGet (void)
-
-  Summary:
-    Get OCMP${INDEX} Secondary Compare Register
-
-  Description:
-    Gets the value in the Secondary Compare Register
-
-  Parameters:
-    void 
-
-  Returns:
-    uint32_t
-*/
-uint32_t OCMP${INDEX}_CompareSecondaryValueGet (void)
-{
-	uint32_t value = OC${INDEX}RS;
-	
-	return value;
-}
 <#if OCMP_INTERRUPT_ENABLE?c == "true">
 
-OCMP_OBJECT ocmp${INDEX}Obj;
-
-// *****************************************************************************
-/* Function:
-  void OCMP${INDEX}_CallbackRegister( OCMP_CALLBACK callback, uintptr_t context )
-
-  Summary:
-    Sets the callback function for a ocmp interrupt.
-
-  Description:
-    This function sets the callback function that will be called when the OCMP
-    conditions are met.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *callback   - a pointer to the function to be called when value is reached.
-                  Use NULL to Un Register the compare callback
-
-    context     - a pointer to user defined data to be used when the callback
-                  function is called. NULL can be passed in if no data needed.
-
-  Returns:
-    void
-*/
-void OCMP${INDEX}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t context)
+void ${OCMP_INSTANCE_NAME}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t context)
 {
-    ocmp${INDEX}Obj.callback = callback;
-    ocmp${INDEX}Obj.context = context;
+    ${OCMP_INSTANCE_NAME}?lower_caseObj.callback = callback;
+    ${OCMP_INSTANCE_NAME}?lower_caseObj.context = context;
 }
 
-// *****************************************************************************
-/* Function:
-  void OUTPUT_COMPARE_${INDEX}_Tasks (void)
-
-  Summary:
-    Interrupt handler function.
-  Description:
-    This function runs the PLIB-specific actions needed for when an interrupt
-    occurs.  Is called by the ISR.
-  Precondition:
-    None.
-  Parameters:
-    None.
-  Returns:
-    void
-*/
-void OUTPUT_COMPARE_${INDEX}_Tasks (void)
+void OUTPUT_COMPARE_${INDEX}_InterruptHandler (void)
 {
-    ${IFS_REG}CLR = _${IFS_REG}_IC${INDEX}IF_MASK;	//Clear IRQ flag
-    
-	if( (ocmp${INDEX}Obj.callback != NULL))
-	{
-		ocmp${INDEX}Obj.callback(ocmp${INDEX}Obj.context);
-	}
+    ${IFS_REG}CLR = _${IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
+
+    if( (${OCMP_INSTANCE_NAME}?lower_caseObj.callback != NULL))
+    {
+        ${OCMP_INSTANCE_NAME}?lower_caseObj.callback(${OCMP_INSTANCE_NAME}?lower_caseObj.context);
+    }
 }
 </#if>

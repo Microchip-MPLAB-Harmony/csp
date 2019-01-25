@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_ocmp${INDEX}.h
+    plib_${OCMP_INSTANCE_NAME}?lower_case.h
 
   Summary:
     OCMP PLIB Header File
@@ -38,8 +38,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef _PLIB_OCMP${INDEX}_H
-#define _PLIB_OCMP${INDEX}_H
+#ifndef _PLIB_${OCMP_INSTANCE_NAME}_H
+#define _PLIB_${OCMP_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -58,17 +58,18 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+<#assign mode = OCMP_OCxCON_OCM?number>
 
-/*************************** OCMP${INDEX} API ****************************************/
+/*************************** ${OCMP_INSTANCE_NAME} API ****************************************/
 // *****************************************************************************
 /* Function:
-   void OCMP${INDEX}_Initialize (void)
+   void ${OCMP_INSTANCE_NAME}_Initialize (void)
 
   Summary:
-    Initialization function OCMP${INDEX} peripheral
+    Initialization function ${OCMP_INSTANCE_NAME} peripheral
 
   Description:
-    This function initializes the OCMP${INDEX} peripheral with user input 
+    This function initializes the ${OCMP_INSTANCE_NAME} peripheral with user input
 	from the configurator.
 
   Parameters:
@@ -77,17 +78,17 @@
   Returns:
     void
 */
-void OCMP${INDEX}_Initialize (void);
+void ${OCMP_INSTANCE_NAME}_Initialize (void);
 
 // *****************************************************************************
 /* Function:
-   void OCMP${INDEX}_Enable (void)
+   void ${OCMP_INSTANCE_NAME}_Enable (void)
 
   Summary:
-    Enable function OCMP${INDEX} peripheral
+    Enable function ${OCMP_INSTANCE_NAME} peripheral
 
   Description:
-    This function enables the OCMP${INDEX} peripheral
+    This function enables the ${OCMP_INSTANCE_NAME} peripheral
 
   Parameters:
     void
@@ -95,17 +96,17 @@ void OCMP${INDEX}_Initialize (void);
   Returns:
     void
 */
-void OCMP${INDEX}_Enable (void);
+void ${OCMP_INSTANCE_NAME}_Enable (void);
 
 // *****************************************************************************
 /* Function:
-   void OCMP${INDEX}_Disable (void)
+   void ${OCMP_INSTANCE_NAME}_Disable (void)
 
   Summary:
-    Disable function OCMP${INDEX} peripheral
+    Disable function ${OCMP_INSTANCE_NAME} peripheral
 
   Description:
-    This function disables the OCMP${INDEX} peripheral.
+    This function disables the ${OCMP_INSTANCE_NAME} peripheral.
 
   Parameters:
     void
@@ -113,14 +114,15 @@ void OCMP${INDEX}_Enable (void);
   Returns:
     void
 */
-void OCMP${INDEX}_Disable (void);
+void ${OCMP_INSTANCE_NAME}_Disable (void);
 
+<#if mode == 7>
 // *****************************************************************************
 /* Function:
-   bool OCMP${INDEX}_StatusGet (void)
+   bool ${OCMP_INSTANCE_NAME}_FaultStatusGet (void)
 
   Summary:
-    Get OCMP${INDEX} status
+    Get ${OCMP_INSTANCE_NAME} status
 
   Description:
     Returns the current state of PWM Fault Condition status bit
@@ -131,84 +133,87 @@ void OCMP${INDEX}_Disable (void);
   Returns:
     bool
 */
-bool OCMP${INDEX}_StatusGet (void);
-
+bool ${OCMP_INSTANCE_NAME}_FaultStatusGet (void);
+</#if>
+<#if mode lt 6>
 // *****************************************************************************
 /* Function:
-   void OCMP${INDEX}_CompareValueSet (uint32_t value)
+   void ${OCMP_INSTANCE_NAME}_CompareValueSet (uint32_t value)
 
   Summary:
-    Set OCMP${INDEX} Compare Register
+    Set ${OCMP_INSTANCE_NAME} Compare Register
 
   Description:
     Sets the value in the Compare Register
 
   Parameters:
-    uint32_t 
+    uint32_t
 
   Returns:
     void
 */
-void OCMP${INDEX}_CompareValueSet (uint32_t value);
+void ${OCMP_INSTANCE_NAME}_CompareValueSet (uint32_t value);
+</#if>
+
 
 // *****************************************************************************
 /* Function:
-   void OCMP${INDEX}_CompareSecondaryValueSet (uint32_t value)
+   uint32_t ${OCMP_INSTANCE_NAME}_CompareValueGet (void)
 
   Summary:
-    Set OCMP${INDEX} Secondary Compare Register
-
-  Description:
-    Sets the value in the Secondary Compare Register
-
-  Parameters:
-    uint32_t 
-
-  Returns:
-    void
-*/
-void OCMP${INDEX}_CompareSecondaryValueSet (uint32_t value);
-
-// *****************************************************************************
-/* Function:
-   uint32_t OCMP${INDEX}_CompareValueGet (void)
-
-  Summary:
-    Get OCMP${INDEX} Compare Register
+    Get ${OCMP_INSTANCE_NAME} Compare Register
 
   Description:
     Gets the value in the Compare Register
 
   Parameters:
-    void 
+    void
 
   Returns:
     uint32_t
 */
-uint32_t OCMP${INDEX}_CompareValueGet (void);
-
+uint32_t ${OCMP_INSTANCE_NAME}_CompareValueGet (void);
+<#if mode gt 3 >
 // *****************************************************************************
 /* Function:
-   uint32_t OCMP${INDEX}_CompareSecondaryValueGet (void)
+   uint32_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void)
 
   Summary:
-    Get OCMP${INDEX} Secondary Compare Register
+    Get ${OCMP_INSTANCE_NAME} Secondary Compare Register
 
   Description:
     Gets the value in the Secondary Compare Register
 
   Parameters:
-    void 
+    void
 
   Returns:
     uint32_t
 */
-uint32_t OCMP${INDEX}_CompareSecondaryValueGet (void);
-<#if OCMP_INTERRUPT_ENABLE?c == "true">
+uint32_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void);
 
 // *****************************************************************************
 /* Function:
-  void OCMP${INDEX}_CallbackRegister( OCMP_CALLBACK callback, uintptr_t context )
+   void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint32_t value)
+
+  Summary:
+    Set ${OCMP_INSTANCE_NAME} Secondary Compare Register
+
+  Description:
+    Sets the value in the Secondary Compare Register
+
+  Parameters:
+    uint32_t
+
+  Returns:
+    void
+*/
+void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint32_t value);
+</#if>
+<#if OCMP_INTERRUPT_ENABLE?c == "true">
+// *****************************************************************************
+/* Function:
+  void ${OCMP_INSTANCE_NAME}_CallbackRegister( OCMP_CALLBACK callback, uintptr_t context )
 
   Summary:
     Sets the callback function for a ocmp interrupt.
@@ -230,23 +235,7 @@ uint32_t OCMP${INDEX}_CompareSecondaryValueGet (void);
   Returns:
     void
 */
-void OCMP${INDEX}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t context);
-// *****************************************************************************
-/* Function:
-  void OUTPUT_COMPARE_${INDEX}_Tasks (void)
-  Summary:
-    Interrupt handler function.
-  Description:
-    This function runs the PLIB-specific actions needed for when an interrupt
-    occurs.  Is called by the ISR.
-  Precondition:
-    None.
-  Parameters:
-    None.
-  Returns:
-    void
-*/
-void OUTPUT_COMPARE_${INDEX}_Tasks (void);
+void ${OCMP_INSTANCE_NAME}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t context);
 </#if>
 
 // DOM-IGNORE-BEGIN
@@ -255,4 +244,4 @@ void OUTPUT_COMPARE_${INDEX}_Tasks (void);
 #endif
 
 // DOM-IGNORE-END
-#endif // _PLIB_OCMP${INDEX}_H
+#endif // _PLIB_${OCMP_INSTANCE_NAME}_H
