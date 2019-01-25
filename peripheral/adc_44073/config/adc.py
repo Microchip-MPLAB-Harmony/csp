@@ -236,12 +236,26 @@ def instantiateComponent(adcComponent):
     adcSym_NUM_CHANNELS.setDefaultValue(12)
     adcSym_NUM_CHANNELS.setVisible(False)
 
+    # Provide a source clock selection symbol for masks that supports it
+    valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_EMR__SRCCLK\"]"
+    valueGroup = ATDF.getNode(valueGroupPath)
+    if valueGroup is not None:
+        adcSym_EMR_SRCCLK = adcComponent.createKeyValueSetSymbol("ADC_CLK_SRC", adcMenu)
+        adcSym_EMR_SRCCLK.setLabel(valueGroup.getAttribute("caption"))
+        values = valueGroup.getChildren()
+        for index in range(len(values)):
+            adcSym_EMR_SRCCLK.addKey(values[index].getAttribute("name"),
+                                    values[index].getAttribute("value"),
+                                    values[index].getAttribute("caption"))
+            adcSym_EMR_SRCCLK.setOutputMode("Key")
+            adcSym_EMR_SRCCLK.setDisplayMode("Key")
+
     #Clock prescaler
     global adcSym_MR_PRESCAL
     adcSym_MR_PRESCAL = adcComponent.createIntegerSymbol("ADC_MR_PRESCAL", adcMenu)
     adcSym_MR_PRESCAL.setLabel("Select Prescaler")
     adcSym_MR_PRESCAL.setDefaultValue(9)
-    adcSym_MR_PRESCAL.setMin(1)
+    adcSym_MR_PRESCAL.setMin(0)
     adcSym_MR_PRESCAL.setMax(255)
 
     #clock selection
