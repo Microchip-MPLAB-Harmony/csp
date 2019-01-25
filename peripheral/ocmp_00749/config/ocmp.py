@@ -25,14 +25,9 @@
 #### Register Information ####
 ################################################################################
 ocmpValGrp_OCxCON_OCM 	    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OCM"]')
-ocmpValGrp_OCxCON_OCTSEL    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OCTSEL"]')
 ocmpValGrp_OCxCON_OC32 	    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OC32"]')
 ocmpValGrp_OCxCON_SIDL 	    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__SIDL"]')
 
-ocmpBitFld_OCxCON_OCM       = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/register-group@[name="OCMP"]/register@[name="OC1CON"]/bitfield@[name="OCM"]')
-ocmpBitFld_OCxCON_OCTSEL    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/register-group@[name="OCMP"]/register@[name="OC1CON"]/bitfield@[name="OCTSEL"]')
-ocmpBitFld_OCxCON_OC32      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/register-group@[name="OCMP"]/register@[name="OC1CON"]/bitfield@[name="OC32"]')
-ocmpBitFld_OCxCON_SIDL 	    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/register-group@[name="OCMP"]/register@[name="OC1CON"]/bitfield@[name="SIDL"]')
 ################################################################################
 #### Global Variables ####
 ################################################################################
@@ -41,11 +36,17 @@ global ocmpSym_OCxCON_OCM
 global ocmpSym_OCxCON_OCTSEL
 global ocmpSym_OCxCON_OC32
 global ocmpSym_OCxCON_SIDL
-global ocmpIPC_PriValue
-global ocmpIPC_SubpriValue
-global prioShift
-global subprioShift
-
+global ocmpSym_OCxCON_OCTSEL_ALT
+global ocmpSym_CFGCON_OCACLK
+global index
+global InterruptVector
+InterruptVector = []
+global InterruptHandler
+InterruptHandler = []
+global InterruptHandlerLock
+InterruptHandlerLock = []
+global InterruptVectorUpdate
+InterruptVectorUpdate = []
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -54,13 +55,18 @@ def interruptControl(symbol, event):
         symbol.setValue(True, 2)
     else :
         symbol.setValue(False, 2)
-		
+
 def dependencyStatus(symbol, event):
-    if (event["value"] == True):
-        symbol.setVisible(True)
+    global InterruptVectorUpdate
+    component = symbol.getComponent()
+    if(component.getSymbolValue("OCMP_INTERRUPT_ENABLE")):
+        if(Database.getSymbolValue("core", InterruptVectorUpdate[0].split(".")[-1]) == True):
+            symbol.setVisible(False)
+        else:
+            symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-	
+
 def _get_bitfield_names(node, outputList):
     valueNodes = node.getChildren()
     for ii in reversed(valueNodes):
@@ -75,12 +81,12 @@ def _get_bitfield_names(node, outputList):
             else:
                 tempint = int(value)
             dict['value'] = str(tempint)
-            outputList.append(dict)        
+            outputList.append(dict)
 
 def _get_enblReg_parms(vectorNumber):
-    # This takes in vector index for interrupt, and returns the IECx register name as well as 
+    # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
+    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and
         (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
         temp = float(vectorNumber) / 32.0
         index = int(temp)
@@ -88,11 +94,11 @@ def _get_enblReg_parms(vectorNumber):
         bitPosn = int(32.0*bit)
         regName = "IEC"+str(index)
     return regName, str(bitPosn)
-    
+
 def _get_statReg_parms(vectorNumber):
-    # This takes in vector index for interrupt, and returns the IFSx register name as well as 
+    # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
+    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and
         (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
         temp = float(vectorNumber) / 32.0
         index = int(temp)
@@ -100,39 +106,24 @@ def _get_statReg_parms(vectorNumber):
         bitPosn = int(32.0*bit)
         regName = "IFS"+str(index)
     return regName, str(bitPosn)
-    
-def _get_sub_priority_parms(vectorNumber):
-    # This returns the IPCx register name, priority bit shift, priority mask, subpriority bit shift, 
-    # and subpriority bitmask for input vector number
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
-        temp = float(vectorNumber) / 4.0
-        index = int(temp)
-        subPrioBit = 8*(vectorNumber & 0x3)
-        prioBit = subPrioBit + 2
-        regName = "IPC"+str(index)
-    return regName, str(prioBit), str(subPrioBit)
 
 def combineValues(symbol, event):
     ocmValue    = ocmpSym_OCxCON_OCM.getValue() << 0
-    octselValue = ocmpSym_OCxCON_OCTSEL.getValue() << 3
+    if(ocmpSym_CFGCON_OCACLK == True):
+        octselValue = ocmpSym_OCxCON_OCTSEL_ALT.getValue() << 3
+    else:
+        octselValue = ocmpSym_OCxCON_OCTSEL.getValue() << 3
     oc32Value   = ocmpSym_OCxCON_OC32.getValue() << 5
     sidlValue   = int(ocmpSym_OCxCON_SIDL.getValue()) << 13
     ocxconValue = sidlValue + oc32Value + octselValue + ocmValue
     symbol.setValue(ocxconValue, 2)
-    print ocxconValue
-
-def combineIPC_Values(symbol, event):
-    ocmpPri = int(ocmpIPC_PriValue.getValue()) << int(prioShift)
-    ocmpSub = int(ocmpIPC_SubpriValue.getValue()) << int(subprioShift)
-    ipc = ocmpPri + ocmpSub
-    symbol.setValue(ipc, 2)
 
 def getIRQnumber(string):
+    irq_index = 0
     interrupts = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts')
     interruptsChildren = interrupts.getChildren()
-    for param in interruptsChildren:  
-        modInst = param.getAttribute('module-instance')
+    for param in interruptsChildren:
+        modInst = param.getAttribute('name')
         if(string == modInst):
             irq_index = param.getAttribute('index')
     return irq_index
@@ -144,7 +135,45 @@ def updateIRQValues(symbol, event):
 def updateHandlerName(symbol, event):
     handlername = str(event["value"])
     symbol.setValue(handlername, 2)
-    
+
+def ocmpSymbolVisible(symbol, event):
+    symbol.setVisible(event["value"])
+
+def ocmpTimerSourceVisibility(symbol, event):
+    symbol.setVisible(not event["value"])
+
+def ocmpCompareMax(symbol, event):
+    if(event["value"] == 0):
+        symbol.setMax(0xFFFF)
+    else:
+        symbol.setMax(0xFFFFFFFF)
+
+def ocmpSecondaryCompare(symbol, event):
+    if (event["id"] == "OCMP_OCxCON_OC32"):
+        if(event["value"] == 0):
+            symbol.setMax(0xFFFF)
+        else:
+            symbol.setMax(0xFFFFFFFF)
+    if(event["id"] == "OCMP_OCxCON_OCM"):
+        #Secondary compare value is required only for dual compare match modes
+        if(event["value"] == 4 or event["value"] == 5):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+
+def ocmpCommentVisible(symbol, event):
+    #Only for PWM mode
+    if (event["value"] == 6 or event["value"] == 7):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def ocmpInterruptSet(symbol, event):
+    global InterruptVector
+    if (event["id"] == "OCMP_INTERRUPT_ENABLE"):
+        Database.setSymbolValue("core", InterruptVector[0], event["value"], 2)
+        Database.setSymbolValue("core", InterruptHandlerLock[0], event["value"], 2)
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -152,74 +181,121 @@ def instantiateComponent(ocmpComponent):
     global ocmpInstanceName
     global ocmpSym_OCxCON_OCM
     global ocmpSym_OCxCON_OCTSEL
+    global ocmpSym_OCxCON_OCTSEL_ALT
     global ocmpSym_OCxCON_OC32
     global ocmpSym_OCxCON_SIDL
-    global ocmpIPC_PriValue
-    global ocmpIPC_SubpriValue
-    global prioShift
-    global subprioShift
+    global ocmpSym_CFGCON_OCACLK
+    global index
+    global InterruptVector
+    global InterruptHandlerLock
+    global InterruptHandler
+    global InterruptVectorUpdate
+    interruptDepList = []
 
-    ocmpInstanceIndex = ocmpComponent.createStringSymbol("INDEX", None)
-    ocmpInstanceIndex.setVisible(False)
-    componentName = str(ocmpComponent.getID())
-    for s in list(componentName):
-        if s.isdigit():
-            index = s
-    ocmpInstanceIndex.setDefaultValue(index)
-    
+    #instance
+    ocmpInstanceName = ocmpComponent.createStringSymbol("OCMP_INSTANCE_NAME", None)
+    ocmpInstanceName.setVisible(False)
+    ocmpInstanceName.setDefaultValue(ocmpComponent.getID().upper())
+    Log.writeInfoMessage("Running " + ocmpInstanceName.getValue())
+
+    index = ocmpInstanceName.getValue()[-1]
+
     ocmpxOCM_names = []
     _get_bitfield_names(ocmpValGrp_OCxCON_OCM, ocmpxOCM_names)
     ocmpSym_OCxCON_OCM = ocmpComponent.createKeyValueSetSymbol("OCMP_OCxCON_OCM", None)
-    ocmpSym_OCxCON_OCM.setLabel(ocmpBitFld_OCxCON_OCM.getAttribute("caption"))
-    ocmpSym_OCxCON_OCM.setDefaultValue(0)
+    ocmpSym_OCxCON_OCM.setLabel("Select Output Compare Mode")
+    ocmpSym_OCxCON_OCM.setDefaultValue(1)
     ocmpSym_OCxCON_OCM.setOutputMode("Value")
     ocmpSym_OCxCON_OCM.setDisplayMode("Description")
     for ii in ocmpxOCM_names:
-        ocmpSym_OCxCON_OCM.addKey( ii['desc'], ii['value'], ii['key'] )    
+        ocmpSym_OCxCON_OCM.addKey( ii['desc'], ii['value'], ii['key'] )
     ocmpSym_OCxCON_OCM.setVisible(True)
 
+    ocmpSym_CFGCON_OCACLK = ocmpComponent.createBooleanSymbol("OCMP_CFGCON_OCACLK", None)
+    ocmpSym_CFGCON_OCACLK.setLabel("Use Alternate Timer Source")
+    ocmpSym_CFGCON_OCACLK.setDefaultValue(0)
+
     ocmpxOCTSEL_names = []
-    _get_bitfield_names(ocmpValGrp_OCxCON_OCTSEL, ocmpxOCTSEL_names)
     ocmpSym_OCxCON_OCTSEL = ocmpComponent.createKeyValueSetSymbol("OCMP_OCxCON_OCTSEL", None)
-    ocmpSym_OCxCON_OCTSEL.setLabel(ocmpBitFld_OCxCON_OCTSEL.getAttribute("caption"))
+    ocmpSym_OCxCON_OCTSEL.setLabel("Select Timer Source")
     ocmpSym_OCxCON_OCTSEL.setDefaultValue(0)
     ocmpSym_OCxCON_OCTSEL.setOutputMode("Value")
     ocmpSym_OCxCON_OCTSEL.setDisplayMode("Description")
-    for ii in ocmpxOCTSEL_names:
-        ocmpSym_OCxCON_OCTSEL.addKey( ii['desc'], ii['value'], ii['key'] )    
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"OCMP\"]/instance@[name=\""+ocmpInstanceName.getValue()+"\"]/parameters")
+    ocmpxOCTSEL_names = node.getChildren()
+    for ii in range(len(ocmpxOCTSEL_names)):
+        if("TMR_SRC" in ocmpxOCTSEL_names[ii].getAttribute("name") ):
+            ocmpSym_OCxCON_OCTSEL.addKey(ocmpxOCTSEL_names[ii].getAttribute("name"),
+            ocmpxOCTSEL_names[ii].getAttribute("value"), ocmpxOCTSEL_names[ii].getAttribute("caption") )
     ocmpSym_OCxCON_OCTSEL.setVisible(True)
+    ocmpSym_OCxCON_OCTSEL.setDependencies(ocmpTimerSourceVisibility, ["OCMP_CFGCON_OCACLK"])
+
+    ocmpxOCTSEL_names = []
+    ocmpSym_OCxCON_OCTSEL_ALT = ocmpComponent.createKeyValueSetSymbol("OCMP_OCxCON_OCTSEL_ALT", None)
+    ocmpSym_OCxCON_OCTSEL_ALT.setLabel("Select Timer Source")
+    ocmpSym_OCxCON_OCTSEL_ALT.setDefaultValue(0)
+    ocmpSym_OCxCON_OCTSEL_ALT.setOutputMode("Value")
+    ocmpSym_OCxCON_OCTSEL_ALT.setDisplayMode("Description")
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"OCMP\"]/instance@[name=\""+ocmpInstanceName.getValue()+"\"]/parameters")
+    ocmpxOCTSEL_names = node.getChildren()
+    for ii in range(len(ocmpxOCTSEL_names)):
+        if("TMR_ALTERNATE_SRC" in ocmpxOCTSEL_names[ii].getAttribute("name") ):
+            ocmpSym_OCxCON_OCTSEL_ALT.addKey(ocmpxOCTSEL_names[ii].getAttribute("name"),
+            ocmpxOCTSEL_names[ii].getAttribute("value"), ocmpxOCTSEL_names[ii].getAttribute("caption") )
+    ocmpSym_OCxCON_OCTSEL_ALT.setVisible(False)
+    ocmpSym_OCxCON_OCTSEL_ALT.setDependencies(ocmpSymbolVisible, ["OCMP_CFGCON_OCACLK"])
+
+    ocmpSym_TIMER_COMMENT = ocmpComponent.createCommentSymbol("OCMP_TIMER_COMMENT", None)
+    ocmpSym_TIMER_COMMENT.setLabel("**** Configure Selected Timer Source (Timerx) in TMRx Component ****")
+    ocmpSym_TIMER_COMMENT.setVisible(True)
 
     ocmpxOC32_names = []
     _get_bitfield_names(ocmpValGrp_OCxCON_OC32, ocmpxOC32_names)
     ocmpSym_OCxCON_OC32 = ocmpComponent.createKeyValueSetSymbol("OCMP_OCxCON_OC32", None)
-    ocmpSym_OCxCON_OC32.setLabel(ocmpBitFld_OCxCON_OC32.getAttribute("caption"))
+    ocmpSym_OCxCON_OC32.setLabel("Select Timer Width")
     ocmpSym_OCxCON_OC32.setDefaultValue(0)
     ocmpSym_OCxCON_OC32.setOutputMode("Value")
     ocmpSym_OCxCON_OC32.setDisplayMode("Description")
     for ii in ocmpxOC32_names:
-        ocmpSym_OCxCON_OC32.addKey( ii['desc'], ii['value'], ii['key'] )    
+        ocmpSym_OCxCON_OC32.addKey( ii['desc'], ii['value'], ii['key'] )
     ocmpSym_OCxCON_OC32.setVisible(True)
-    
+
+    ocmpSym_COMPARE_VAL = ocmpComponent.createHexSymbol("OCMP_OCxR", None)
+    ocmpSym_COMPARE_VAL.setLabel("Compare Value")
+    ocmpSym_COMPARE_VAL.setMin(0x0)
+    ocmpSym_COMPARE_VAL.setMax(0xFFFF)
+    ocmpSym_COMPARE_VAL.setDependencies(ocmpCompareMax, ["OCMP_OCxCON_OC32"])
+
+    ocmpSym_SEC_COMPARE_VAL = ocmpComponent.createHexSymbol("OCMP_OCxRS", None)
+    ocmpSym_SEC_COMPARE_VAL.setLabel("Secondary Compare Value")
+    ocmpSym_SEC_COMPARE_VAL.setMin(0x0)
+    ocmpSym_SEC_COMPARE_VAL.setMax(0xFFFF)
+    ocmpSym_SEC_COMPARE_VAL.setVisible(False)
+    ocmpSym_SEC_COMPARE_VAL.setDependencies(ocmpSecondaryCompare, ["OCMP_OCxCON_OC32", "OCMP_OCxCON_OCM"])
+
+    ocmpSym_PERIOD_COMMENT = ocmpComponent.createCommentSymbol("OCMP_PERIOD_COMMENT", None)
+    ocmpSym_PERIOD_COMMENT.setLabel("**** Configure PWM Period in Selected Timer Source ****")
+    ocmpSym_PERIOD_COMMENT.setVisible(False)
+    ocmpSym_PERIOD_COMMENT.setDependencies(ocmpCommentVisible, ["OCMP_OCxCON_OCM"])
+
     ocmpSym_OCxCON_SIDL = ocmpComponent.createBooleanSymbol("OCMP_OCxCON_SIDL", None)
-    ocmpSym_OCxCON_SIDL.setLabel(ocmpBitFld_OCxCON_SIDL.getAttribute("caption"))
+    ocmpSym_OCxCON_SIDL.setLabel("Stop in IDLE")
     ocmpSym_OCxCON_SIDL.setDefaultValue(False)
     ocmpSym_OCxCON_SIDL.setVisible(True)
-	
+
     #Collect user input to combine into OCxCON register
     ocmpSym_ICM = ocmpComponent.createHexSymbol("OCxCON_VALUE", None)
     ocmpSym_ICM.setDefaultValue(0)
     ocmpSym_ICM.setVisible(False)
-    ocmpSym_ICM.setDependencies(combineValues, ["OCMP_OCxCON_OCM"])
-    ocmpSym_ICM.setDependencies(combineValues, ["OCMP_OCxCON_OCTSEL"])
-    ocmpSym_ICM.setDependencies(combineValues, ["OCMP_OCxCON_OC32"])
-    ocmpSym_ICM.setDependencies(combineValues, ["OCMP_OCxCON_SIDL"])
-    
+    depList = ["OCMP_OCxCON_OCM", "OCMP_CFGCON_OCACLK", "OCMP_OCxCON_OCTSEL", "OCMP_OCxCON_OCTSEL_ALT", "OCMP_OCxCON_OC32",
+        "OCMP_OCxCON_SIDL"]
+    ocmpSym_ICM.setDependencies(combineValues, depList)
+
     #Calculate the proper interrupt registers for IEC, IFS, IPC, priority shift, and subpriority shift
     irqString = "OUTPUT_COMPARE_" + str(index)
     vectorNum = int(getIRQnumber(irqString))
     enblRegName, enblBitPosn = _get_enblReg_parms(vectorNum)
     statRegName, statBitPosn = _get_statReg_parms(vectorNum)
-    prioRegName, prioShift, subprioShift = _get_sub_priority_parms(vectorNum)
 
     #IEC_REG
     ocmpIEC = ocmpComponent.createStringSymbol("IEC_REG", None)
@@ -231,60 +307,43 @@ def instantiateComponent(ocmpComponent):
     ocmpIFS.setDefaultValue(statRegName)
     ocmpIFS.setVisible(False)
 
-    #IPC_REG
-    ocmpIPC = ocmpComponent.createStringSymbol("IPC_REG", None)
-    ocmpIPC.setDefaultValue(prioRegName)
-    ocmpIPC.setVisible(False)
-
-    #PRIORITY VALUE
-    priValueString = "core.OUTPUT_COMPARE_" + str(index) + "_PRIORITY"
-    ocmpIPC_PriValue = ocmpComponent.createHexSymbol("IPC_PRI_VALUE", None)
-    ocmpIPC_PriValue.setDefaultValue(7)
-    ocmpIPC_PriValue.setVisible(False)
-    ocmpIPC_PriValue.setDependencies(updateIRQValues, [priValueString])
-
-    #SUBPRIORITY VALUE
-    subpriValueString = "core.OUTPUT_COMPARE_" + str(index) + "_SUBPRIORITY"
-    ocmpIPC_SubpriValue = ocmpComponent.createHexSymbol("IPC_SUBPRI_VALUE", None)
-    ocmpIPC_SubpriValue.setDefaultValue(3)
-    ocmpIPC_SubpriValue.setVisible(False)
-    ocmpIPC_SubpriValue.setDependencies(updateIRQValues, [subpriValueString])
-
-    #IPC VALUE
-    ocmpIPC = ocmpComponent.createHexSymbol("IPC_VALUE", None)
-    ocmpIPC.setDefaultValue(0)
-    ocmpIPC.setVisible(False)    
-    ocmpIPC.setDependencies(combineIPC_Values, ["IPC_PRI_VALUE"])
-    ocmpIPC.setDependencies(combineIPC_Values, ["IPC_SUBPRI_VALUE"])
-
-    #HANDLER NAME
-    handlerString = "core.OUTPUT_COMPARE_" + str(index) + "_HANDLER"
-    ocmpIPC_handlerStr = ocmpComponent.createStringSymbol("ISR_HANDLER_NAME", None)
-    ocmpIPC_handlerStr.setDefaultValue("OUTPUT_COMPARE_"+ str(index) + "_Handler")
-    ocmpIPC_handlerStr.setVisible(False)
-    ocmpIPC_handlerStr.setDependencies(updateHandlerName, [handlerString])
-    
 ############################################################################
 #### Dependency ####
 ############################################################################
-    
+    vectorNode = ATDF.getNode(
+        "/avr-tools-device-file/devices/device/interrupts")
+    vectorValues = vectorNode.getChildren()
+    for id in range(0, len(vectorNode.getChildren())):
+        if vectorValues[id].getAttribute("module-instance") == ocmpInstanceName.getValue():
+            name = vectorValues[id].getAttribute("name")
+            InterruptVector.append(name + "_INTERRUPT_ENABLE")
+            InterruptHandler.append(name + "_INTERRUPT_HANDLER")
+            InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
+            InterruptVectorUpdate.append(
+                "core." + name + "_INTERRUPT_ENABLE_UPDATE")
+
     # NVIC Dynamic settings
     ocmpinterrupt1Control = ocmpComponent.createBooleanSymbol("OCMP_INTERRUPT_ENABLE", None)
     ocmpinterrupt1Control.setVisible(True)
-    ocmpinterrupt1Control.setLabel("Interrupt Enable")
+    ocmpinterrupt1Control.setLabel("Enable Interrupt")
     ocmpinterrupt1Control.setDefaultValue(False)
     ocmpinterrupt1Control.setDependencies(interruptControl, ["OCMP_INTERRUPT_ENABLE"])
-    
+    interruptDepList.append("OCMP_INTERRUPT_ENABLE")
+
+    ocmpSym_EVIC_SYMBOL = ocmpComponent.createStringSymbol("OCMP_EVIC_SYMBOL_SET", None)
+    ocmpSym_EVIC_SYMBOL.setVisible(False)
+    ocmpSym_EVIC_SYMBOL.setDependencies(ocmpInterruptSet, ["OCMP_INTERRUPT_ENABLE"])
+
     # Dependency Status
-    ocmpSymInt1EnComment = ocmpComponent.createCommentSymbol("INTERRUPT_ENABLE_COMMENT", ocmpinterrupt1Control)
+    ocmpSymInt1EnComment = ocmpComponent.createCommentSymbol("INTERRUPT_ENABLE_COMMENT", None)
     ocmpSymInt1EnComment.setVisible(False)
-    ocmpSymInt1EnComment.setLabel("Warning!!! Output Compare " + str(index) + " Interrupt is Disabled in Interrupt Manager")
-    ocmpSymInt1EnComment.setDependencies(dependencyStatus, ["OCMP_INTERRUPT_ENABLE"])
-    
+    ocmpSymInt1EnComment.setLabel("Warning!!! " + ocmpInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
+    ocmpSymInt1EnComment.setDependencies(dependencyStatus, interruptDepList + InterruptVectorUpdate)
+
 ############################################################################
 #### Code Generation ####
 ############################################################################
-    
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     ocmpHeaderFile = ocmpComponent.createFileSymbol("OCMP_COMMON_HEADER", None)
@@ -299,7 +358,7 @@ def instantiateComponent(ocmpComponent):
     ocmpHeader1File = ocmpComponent.createFileSymbol("OCMP_HEADER1", None)
     ocmpHeader1File.setMarkup(True)
     ocmpHeader1File.setSourcePath("../peripheral/ocmp_00749/templates/plib_ocmp.h.ftl")
-    ocmpHeader1File.setOutputName("plib_ocmp"+ str(index) + ".h")
+    ocmpHeader1File.setOutputName("plib_" + ocmpInstanceName.getValue().lower() + ".h")
     ocmpHeader1File.setDestPath("peripheral/ocmp/")
     ocmpHeader1File.setProjectPath("config/" + configName + "/peripheral/ocmp/")
     ocmpHeader1File.setType("HEADER")
@@ -308,7 +367,7 @@ def instantiateComponent(ocmpComponent):
     ocmpSource1File = ocmpComponent.createFileSymbol("OCMP_SOURCE1", None)
     ocmpSource1File.setMarkup(True)
     ocmpSource1File.setSourcePath("../peripheral/ocmp_00749/templates/plib_ocmp.c.ftl")
-    ocmpSource1File.setOutputName("plib_ocmp"+ str(index) + ".c")
+    ocmpSource1File.setOutputName("plib_"+ ocmpInstanceName.getValue().lower() + ".c")
     ocmpSource1File.setDestPath("peripheral/ocmp/")
     ocmpSource1File.setProjectPath("config/" + configName + "/peripheral/ocmp/")
     ocmpSource1File.setType("SOURCE")
@@ -325,4 +384,3 @@ def instantiateComponent(ocmpComponent):
     ocmpSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     ocmpSystemDefFile.setSourcePath("../peripheral/ocmp_00749/templates/system/system_definitions.h.ftl")
     ocmpSystemDefFile.setMarkup(True)
- 

@@ -15,7 +15,7 @@
 
   Remarks:
     None.
-    
+
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
@@ -74,10 +74,10 @@ typedef void (*OCMP_CALLBACK) (uintptr_t context);
 // *****************************************************************************
 
 typedef struct
-{    
-    OCMP_CALLBACK callback;
-	uintptr_t    context;
-	
+{
+  OCMP_CALLBACK callback;
+  uintptr_t    context;
+
 } OCMP_OBJECT ;
 
 // DOM-IGNORE-BEGIN
