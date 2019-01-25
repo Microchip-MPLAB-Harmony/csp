@@ -57,11 +57,11 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_SPIDIS_Msk | SPI_CR_SWRST_Msk;
 
 <#if SPI_MR_MSTR =="MASTER">
-    /* Enable Master mode, select particular NPCS line for chip select and disable mode fault detection */
-    ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  SPI_MR_MSTR_Msk | SPI_MR_PCS_${SPI_MR_PCS} | SPI_MR_MODFDIS_Msk;
+    /* Enable Master mode, <#if SPI_CLK_SRC??>select source clock, </#if>select particular NPCS line for chip select and disable mode fault detection */
+    ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  SPI_MR_MSTR_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC} </#if>| SPI_MR_PCS_${SPI_MR_PCS} | SPI_MR_MODFDIS_Msk;
 <#else>
-    /* SPI is by default in Slave Mode, disable mode fault detection */
-    ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  SPI_MR_MODFDIS_Msk;
+    /* SPI is by default in Slave Mode, disable mode fault detection <#if SPI_CLK_SRC??> and select source clock </#if>*/
+    ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  SPI_MR_MODFDIS_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC}</#if>;
 </#if>
 
     /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
