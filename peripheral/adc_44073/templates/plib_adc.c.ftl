@@ -176,8 +176,8 @@ void ${ADC_INSTANCE_NAME}_Initialize()
         <#lt>${((ADC_TRGR_MODE == "TRGMOD_EXT_TRIG_RISE") || (ADC_TRGR_MODE == "TRGMOD_EXT_TRIG_FALL") || (ADC_TRGR_MODE == "TRGMOD_EXT_TRIG_ANY"))?then(' | ADC_MR_${ADC_MR_TRGSEL_VALUE}', '')}<#rt>
         <#lt>${(ADC_MR_SLEEP == true)?then(' | ADC_MR_SLEEP_Msk | ADC_MR_FWUP_${ADC_MR_FWUP}', '')};
 
-    /* resolution and sign mode of result */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR = ${ADC_OSR} ${ADC_ASTE}
+    /* resolution<#if ADC_CLK_SRC??>, source clock</#if> and sign mode of result */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR = ${ADC_OSR} ${ADC_ASTE} <#if ADC_CLK_SRC??>| ADC_EMR_SRCCLK_${ADC_CLK_SRC} </#if>
          | ADC_EMR_SIGNMODE_${ADC_EMR_SIGNMODE_VALUE} | ADC_EMR_TAG_Msk;
 
     /* Trigger mode */
