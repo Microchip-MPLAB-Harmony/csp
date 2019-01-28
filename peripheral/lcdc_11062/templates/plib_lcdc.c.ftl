@@ -44,6 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "definitions.h"
 
+${LCDC_INSTANCE_NAME}_IRQ_CALLBACK_OBJECT ${LCDC_INSTANCE_NAME}_IRQ_CallbackObj;
+
 void ${LCDC_INSTANCE_NAME}_SetPixelClockPolarity(${LCDC_INSTANCE_NAME}_SIGNAL_POLARITY polarity)
 {
     ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG0 = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG0 & ~${LCDC_INSTANCE_NAME}_LCDCFG0_CLKPOL_Msk) | 
@@ -900,4 +902,220 @@ void ${LCDC_INSTANCE_NAME}_UpdateAttribute(${LCDC_INSTANCE_NAME}_LAYER_ID layer)
           break;
     }   
 
+}
+
+/* Register callback for period interrupt */
+void ${LCDC_INSTANCE_NAME}_IRQ_CallbackRegister(${LCDC_INSTANCE_NAME}_IRQ_CALLBACK callback, uintptr_t context)
+{
+    ${LCDC_INSTANCE_NAME}_IRQ_CallbackObj.callback_fn = callback;
+    ${LCDC_INSTANCE_NAME}_IRQ_CallbackObj.context = context;
+}
+
+void ${LCDC_INSTANCE_NAME}_IRQ_Enable(LCDC_INTERRUPT interrupt)
+{
+    switch(interrupt)
+    {
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_SOF:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_SOFIE_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIER_SOFIE(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_DIS:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_DISIE_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIER_DISIE(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_DISP:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_DISPIE_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIER_DISPIE(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_FIFOERR:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_FIFOERRIE_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIER_FIFOERRIE(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_BASE:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_BASEIE_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIER_BASEIE(1);          
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_OVR1:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_OVR1IE_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIER_OVR1IE(1);          
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_OVR2:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_OVR2IE_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIER_OVR2IE(1);          
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_HEO:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_HEOIE_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIER_HEOIE(1);                    
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_PP:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_PPIE_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIER_PPIE(1);                 
+            break;
+        default:
+          break;
+    }
+}
+
+void ${LCDC_INSTANCE_NAME}_IRQ_Disable(LCDC_INTERRUPT interrupt)
+{
+    switch(interrupt)
+    {
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_SOF:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_SOFID_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIDR_SOFID(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_DIS:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_DISID_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIDR_DISID(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_DISP:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_DISPID_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIDR_DISPID(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_FIFOERR:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_FIFOERRID_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIDR_FIFOERRID(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_BASE:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_BASEID_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIDR_BASEID(1);          
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_OVR1:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_OVR1ID_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIDR_OVR1ID(1);          
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_OVR2:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_OVR2ID_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIDR_OVR2ID(1);          
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_HEO:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_HEOID_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIDR_HEOID(1);                    
+            break;
+        case ${LCDC_INSTANCE_NAME}_INTERRUPT_PP:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_PPID_Msk) |
+                                      ${LCDC_INSTANCE_NAME}_LCDIDR_PPID(1);
+            break;
+        default:
+          break;
+    }
+}
+
+uint32_t ${LCDC_INSTANCE_NAME}_IRQ_Status(void)
+{
+    return ${LCDC_INSTANCE_NAME}_REGS->LCDC_LCDISR;
+}
+    
+void ${LCDC_INSTANCE_NAME}_LAYER_IRQ_Enable(${LCDC_INSTANCE_NAME}_LAYER_ID layer, ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT interrupt)
+{
+    uint32_t volatile * reg;
+    switch(layer)
+    {
+        case ${LCDC_INSTANCE_NAME}_LAYER_BASE:
+            reg = &${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_BASEIER;
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR1:
+            reg = &${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1IER;
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR2:
+            reg = &${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR2IER;
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_HEO:
+            reg = &${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOIER;
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_PP:
+        default:
+            return;
+    }
+    
+    switch(interrupt)
+    {
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_DMA:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIER_DMA_Msk) | ${LCDC_INSTANCE_NAME}_BASEIER_DMA(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_DSCR:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIER_DSCR_Msk) | ${LCDC_INSTANCE_NAME}_BASEIER_DSCR(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_ADD:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIER_ADD_Msk) | ${LCDC_INSTANCE_NAME}_BASEIER_ADD(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_DONE:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIER_DONE_Msk) | ${LCDC_INSTANCE_NAME}_BASEIER_DONE(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_OVR:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIER_OVR_Msk) | ${LCDC_INSTANCE_NAME}_BASEIER_OVR(1);
+            break;
+        default:
+            break;
+    }
+}
+
+void ${LCDC_INSTANCE_NAME}_LAYER_IRQ_Disable(${LCDC_INSTANCE_NAME}_LAYER_ID layer, ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT interrupt)
+{
+    uint32_t volatile * reg;
+    switch(layer)
+    {
+        case ${LCDC_INSTANCE_NAME}_LAYER_BASE:
+            reg = &${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_BASEIDR;
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR1:
+            reg = &${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1IDR;
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR2:
+            reg = &${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR2IDR;
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_HEO:
+            reg = &${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOIDR;
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_PP:
+        default:
+            return;
+    }
+    
+    switch(interrupt)
+    {
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_DMA:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIDR_DMA_Msk) | ${LCDC_INSTANCE_NAME}_BASEIDR_DMA(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_DSCR:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIDR_DSCR_Msk) | ${LCDC_INSTANCE_NAME}_BASEIDR_DSCR(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_ADD:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIDR_ADD_Msk) | ${LCDC_INSTANCE_NAME}_BASEIDR_ADD(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_DONE:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIDR_DONE_Msk) | ${LCDC_INSTANCE_NAME}_BASEIDR_DONE(1);
+            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_INTERRUPT_OVR:
+            *reg = (*reg & ~${LCDC_INSTANCE_NAME}_BASEIDR_OVR_Msk) | ${LCDC_INSTANCE_NAME}_BASEIDR_OVR(1);
+            break;
+        default:
+            break;
+    }
+}
+
+uint32_t ${LCDC_INSTANCE_NAME}_LAYER_IRQ_Status(${LCDC_INSTANCE_NAME}_LAYER_ID layer)
+{
+    switch(layer)
+    {
+        case ${LCDC_INSTANCE_NAME}_LAYER_BASE:
+            return ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_BASEISR;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR1:
+            return ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1ISR;
+        case ${LCDC_INSTANCE_NAME}_LAYER_OVR2:
+            return ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR2ISR;
+        case ${LCDC_INSTANCE_NAME}_LAYER_HEO:
+            return ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOISR;
+        case ${LCDC_INSTANCE_NAME}_LAYER_PP:
+        default:
+            return 0;
+    }
+}
+
+void ${LCDC_INSTANCE_NAME}_Interrupt_Handler(void)
+{
+    if (${LCDC_INSTANCE_NAME}_IRQ_CallbackObj.callback_fn != NULL)
+    {
+        ${LCDC_INSTANCE_NAME}_IRQ_CallbackObj.callback_fn(${LCDC_INSTANCE_NAME}_IRQ_CallbackObj.context);
+    }
 }
