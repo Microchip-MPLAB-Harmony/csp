@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Comparator (CVR) Peripheral Library (PLIB)
+  Comparator Voltage Reference (CVR) Peripheral Library Interface Source File
 
   Company:
     Microchip Technology Inc.
@@ -68,9 +68,8 @@ void ${CVR_INSTANCE_NAME}_Stop (void)
 	CVRCONCLR = _CVRCON_ON_MASK;
 }
 
-
-
-
-
-
-
+/* Function to update CVREF Value */
+void ${CVR_INSTANCE_NAME}_UpdateValue (uint8_t value)
+{
+	CVRCONbits.CVR = (value & _CVRCON_CVR_MASK);
+}
