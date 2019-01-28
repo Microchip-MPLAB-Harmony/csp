@@ -66,6 +66,8 @@ void ${CVR_INSTANCE_NAME}_Start (void);
 
 void ${CVR_INSTANCE_NAME}_Stop (void);
 
+void ${CVR_INSTANCE_NAME}_UpdateValue (uint8_t value);
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
