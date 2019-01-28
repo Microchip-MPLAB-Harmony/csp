@@ -101,9 +101,9 @@
 </#if>
 <#if ADC_CTRLC_WINMODE != "0" && ADC_WINDOW_OUTPUT_EVENT == true>
     <#if ADC_EVCTRL_VAL != "">
-        <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_WINMON_Msk">
+        <#assign ADC_EVCTRL_VAL = ADC_EVCTRL_VAL + " | ADC_EVCTRL_WINMONEO_Msk">
     <#else>
-        <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_WINMON_Msk">
+        <#assign ADC_EVCTRL_VAL = "ADC_EVCTRL_WINMONEO_Msk">
     </#if>
 </#if>
 
@@ -333,7 +333,7 @@ uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void )
     return (uint16_t)${ADC_INSTANCE_NAME}_REGS->ADC_RESULT;
 }
 
-<#if ADC_INTENSET_RESRDY = true || ADC_INTENSET_WINMON = true>
+<#if ADC_INTENSET_RESRDY == true || ADC_INTENSET_WINMON == true>
 /* Register callback function */
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
 {
@@ -348,25 +348,30 @@ void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
     volatile ADC_STATUS status;
     status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;
     /* Clear interrupt flag */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ${ADC_INTENSET_VAL};
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
         ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
     }
 }
-
-<#else>
+</#if>
+<#if ADC_INTENSET_RESRDY == false>
 /* Check whether result is ready */
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
-    return (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+    bool status;
+    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    return status;
 }
-
-<#if ADC_CTRLC_WINMODE != "0">
+</#if>
+<#if ADC_CTRLC_WINMODE != "0" && ADC_INTENSET_WINMON == false>
 /* Check whether window monitor result is ready */
 bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 {
-    return (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) == ADC_INTFLAG_WINMON_Msk);
+    bool status;
+    status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
+    return status;
 }
-</#if>
 </#if>
