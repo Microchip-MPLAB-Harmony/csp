@@ -4,9 +4,16 @@ def instantiateComponent(lcdcComponent):
     instanceName = lcdcComponent.createStringSymbol("LCDC_INSTANCE_NAME", None)
     instanceName.setReadOnly(True)
     instanceName.setDefaultValue(lcdcComponent.getID().upper())
+    InterruptVector = instanceName.getValue() + "_INTERRUPT_ENABLE"
+    InterruptHandler = instanceName.getValue() + "_INTERRUPT_HANDLER"
 
     #Enable the LCDC clock
     Database.setSymbolValue("core", "LCDC_CLOCK_ENABLE", True, 2)
+
+    #Enable the LCDC Interrupt
+    Database.setSymbolValue("core", InterruptVector, True, 2)
+    Database.setSymbolValue("core", InterruptHandler, instanceName.getValue() + "_Interrupt_Handler", 2)
+
 
     #Generate Output Header
     lcdcHeaderFile = lcdcComponent.createFileSymbol("lcdcHeaderFile", None)
@@ -17,6 +24,7 @@ def instantiateComponent(lcdcComponent):
     lcdcHeaderFile.setDestPath("peripheral/lcdc/")
     lcdcHeaderFile.setProjectPath("config/" + configName + "/peripheral/lcdc/")
     lcdcHeaderFile.setType("HEADER")
+
     #Generate Output source
     lcdcSourceFile = lcdcComponent.createFileSymbol("lcdcSourceFile", None)
     lcdcSourceFile.setSourcePath("../peripheral/lcdc_11062/templates/plib_lcdc.c.ftl")
