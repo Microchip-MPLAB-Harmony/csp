@@ -25,6 +25,7 @@ import math
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
+global InterruptVectorUpdate
 global adcInstanceName
 
 ###################################################################################################
@@ -32,21 +33,25 @@ global adcInstanceName
 ###################################################################################################
 
 def updateADCInterruptStatus(symbol, event):
-    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
-    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
-
-    if event["value"] == True:
+    if adcSym_INTENSET_RESRDY.getValue() == True or adcSym_INTENSET_WINMON.getValue() == True:
+        Database.setSymbolValue("core", InterruptVector, True, 2)
+        Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
         Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_InterruptHandler", 2)
     else:
+        Database.setSymbolValue("core", InterruptVector, False, 2)
+        Database.setSymbolValue("core", InterruptHandlerLock, False, 2)
         Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_Handler", 2)
 
-def updateADCInterruptWarringStatus(symbol, event):
+def updateADCInterruptWarningStatus(symbol, event):
+    if adcSym_INTENSET_RESRDY.getValue() == True or adcSym_INTENSET_WINMON.getValue() == True:
+        if (Database.getSymbolValue("core", InterruptVectorUpdate) == True):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    else:
+        symbol.setVisible(False)
 
-    if adcSym_INTENSET_RESRDY.getValue() == True:
-        symbol.setVisible(event["value"])
-
-def updateADCClockWarringStatus(symbol, event):
-
+def updateADCClockWarningStatus(symbol, event):
     if event["value"] == False:
         symbol.setVisible(True)
     else:
@@ -134,6 +139,7 @@ def instantiateComponent(adcComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
+    global InterruptVectorUpdate
     global adcInstanceName
 
     adcInstanceName = adcComponent.createStringSymbol("ADC_INSTANCE_NAME", None)
@@ -485,13 +491,13 @@ def instantiateComponent(adcComponent):
     adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_INTERRUPT_ENABLE_COMMENT", None)
     adcSym_IntEnComment.setVisible(False)
     adcSym_IntEnComment.setLabel("Warning!!! "+adcInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
-    adcSym_IntEnComment.setDependencies(updateADCInterruptWarringStatus, ["core." + InterruptVectorUpdate])
+    adcSym_IntEnComment.setDependencies(updateADCInterruptWarningStatus, ["core." + InterruptVectorUpdate, "ADC_INTENSET_RESRDY", "ADC_INTENSET_WINMON"])
 
     # Clock Warning status
     adcSym_ClkEnComment = adcComponent.createCommentSymbol("ADC_CLOCK_ENABLE_COMMENT", None)
     adcSym_ClkEnComment.setVisible(False)
     adcSym_ClkEnComment.setLabel("Warning!!! " +adcInstanceName.getValue()+" Clock is Disabled in Clock Manager")
-    adcSym_ClkEnComment.setDependencies(updateADCClockWarringStatus, ["core." + adcInstanceName.getValue() + "_CLOCK_ENABLE"])
+    adcSym_ClkEnComment.setDependencies(updateADCClockWarningStatus, ["core." + adcInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
