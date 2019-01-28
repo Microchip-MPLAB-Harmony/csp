@@ -167,21 +167,66 @@ def InterruptStatusWarning(symbol, event):
     if (Database.getSymbolValue(mcanInstanceName.getValue().lower(), "INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
+def mcanCoreClockFreq(symbol, event):
+    symbol.setValue(int(Database.getSymbolValue("core", mcanInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
+
+def bitTimingCalculation(bitTiming, lowTq, highTq):
+    clk = Database.getSymbolValue("core", mcanInstanceName.getValue() + "_CLOCK_FREQUENCY")
+
+    if (bitTiming == "Data"):
+        prescaler = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "DBTP_DBRP")
+        bitrate = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "DATA_BITRATE")
+        samplePoint = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "DATA_SAMPLE_POINT")
+    else:
+        prescaler = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "NBTP_NBRP")
+        bitrate = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "NOMINAL_BITRATE")
+        samplePoint = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "NOMINAL_SAMPLE_POINT")
+
+    numOfTimeQuanta = clk / ((bitrate * 1000) * (prescaler + 1))
+    if (numOfTimeQuanta < lowTq):
+        mcanTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too low for required " + bitTiming + " Bit Timing")
+        mcanTimeQuantaInvalidSym.setVisible(True)
+        mcanCoreClockInvalidSym.setLabel("Warning!!! " + mcanInstanceName.getValue() + " Clock Frequency is too low for required " + bitTiming + " Bit Timing")
+        mcanCoreClockInvalidSym.setVisible(True)
+    elif (numOfTimeQuanta > highTq):
+        mcanTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too high for required " + bitTiming + " Bit Timing")
+        mcanTimeQuantaInvalidSym.setVisible(True)
+        mcanCoreClockInvalidSym.setLabel("Warning!!! " + mcanInstanceName.getValue() + " Clock Frequency is too high for required " + bitTiming + " Bit Timing")
+        mcanCoreClockInvalidSym.setVisible(True)
+    else:
+        mcanTimeQuantaInvalidSym.setVisible(False)
+        mcanCoreClockInvalidSym.setVisible(False)
+
+    tseg1 = int((numOfTimeQuanta * samplePoint) / 100.0)
+    tseg2 = numOfTimeQuanta - tseg1 - 1
+    tseg1 -= 2
+
+    return tseg1, tseg2
+
+def dataBitTimingCalculation(symbol, event):
+    if (Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_OPMODE") == "CAN FD"):
+        tseg1, tseg2 = bitTimingCalculation("Data", 4, 49)
+        Database.setSymbolValue(mcanInstanceName.getValue().lower(), "DBTP_DTSEG1", tseg1, 2)
+        Database.setSymbolValue(mcanInstanceName.getValue().lower(), "DBTP_DTSEG2", tseg2, 2)
+
+def nominalBitTimingCalculation(symbol, event):
+    tseg1, tseg2 = bitTimingCalculation("Nominal", 4, 385)
+    Database.setSymbolValue(mcanInstanceName.getValue().lower(), "NBTP_NTSEG1", tseg1, 2)
+    Database.setSymbolValue(mcanInstanceName.getValue().lower(), "NBTP_NTSEG2", tseg2, 2)
+
 def instantiateComponent(mcanComponent):
     global mcanInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
     global interruptVectorUpdate
+    global mcanCoreClockInvalidSym
+    global mcanTimeQuantaInvalidSym
 
     mcanInstanceName = mcanComponent.createStringSymbol("MCAN_INSTANCE_NAME", None)
     mcanInstanceName.setVisible(False)
     mcanInstanceName.setDefaultValue(mcanComponent.getID().upper())
     print("Running " + mcanInstanceName.getValue())
-
-    # PCK5 clock needs to be enabled and have a prescale value
-    Database.setSymbolValue("core", "PMC_SCER_PCK5", True, 2)
-    Database.setSymbolValue("core", "PMC_PCK5_PRES", 1, 2)
 
     def hideMenu(menu, event):
         menu.setVisible(event["value"])
@@ -201,6 +246,9 @@ def instantiateComponent(mcanComponent):
         watermark_percentage = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "TX_FIFO_WP")
         number_of_elements   = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "TX_FIFO_ELEMENTS")
         watermark.setValue(watermark_percentage * number_of_elements / 100, 0)
+
+    # Initialize peripheral clock
+    Database.setSymbolValue("core", mcanInstanceName.getValue()+"_CLOCK_ENABLE", True, 1)
 
     # MCAN operation mode - default to FD
     mcanOpMode = mcanComponent.createComboSymbol("MCAN_OPMODE", None, opModeValues)
@@ -257,63 +305,120 @@ def instantiateComponent(mcanComponent):
             mcanRevisionASym.setValue(True, 2)
             break
 
-    # MCAN Timing FBTP for FD and BTP for normal operation mode
-    mcanTimingMenu = mcanComponent.createMenuSymbol("timingMenu", None)
-    mcanTimingMenu.setLabel("Timing for Normal operation and FD arbitration")
-    mcanTimingMenu.setDescription("This timing must be less or equal to the FD data rate (if used)")
+    # MCAN Bit Timing Calculation
+    mcanBitTimingCalculationMenu = mcanComponent.createMenuSymbol("BIT_TIMING_CALCULATION", None)
+    mcanBitTimingCalculationMenu.setLabel("Bit Timing Calculation")
+    mcanBitTimingCalculationMenu.setDescription("MCAN Bit Timing Calculation for Normal and CAN-FD Operation")
 
-    BTPsyncJump = mcanComponent.createIntegerSymbol("NBTP_NSJW", mcanTimingMenu)
-    BTPsyncJump.setLabel("Nominal Synchronization Jump Width")
-    BTPsyncJump.setMin(0)
-    BTPsyncJump.setMax(15)
-    BTPsyncJump.setDefaultValue(3)
+    mcanCoreClockValue = mcanComponent.createIntegerSymbol("MCAN_CORE_CLOCK_FREQ", mcanBitTimingCalculationMenu)
+    mcanCoreClockValue.setLabel("Clock Frequency")
+    mcanCoreClockValue.setReadOnly(True)
+    mcanCoreClockValue.setDefaultValue(int(Database.getSymbolValue("core", mcanInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    mcanCoreClockValue.setVisible(True)
+    mcanCoreClockValue.setDependencies(mcanCoreClockFreq, ["core." + mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
-    BTPBefore = mcanComponent.createIntegerSymbol("NBTP_NTSEG1", mcanTimingMenu)
-    BTPBefore.setLabel("Nominal Time Segment Before Sample Point")
-    BTPBefore.setMin(1)
-    BTPBefore.setMax(63)
-    BTPBefore.setDefaultValue(10)
+    mcanCoreClockInvalidSym = mcanComponent.createCommentSymbol("MCAN_CORE_CLOCK_INVALID_COMMENT", None)
+    mcanCoreClockInvalidSym.setLabel("Warning!!! " + mcanInstanceName.getValue() + " Clock Frequency is too low for required Nominal Bit Timing")
+    mcanCoreClockInvalidSym.setVisible((mcanCoreClockValue.getValue() == 0))
 
-    BTPAfter = mcanComponent.createIntegerSymbol("NBTP_NTSEG2", mcanTimingMenu)
-    BTPAfter.setLabel("Nominal Time Segment After Sample Point")
-    BTPAfter.setMin(0)
-    BTPAfter.setMax(15)
-    BTPAfter.setDefaultValue(3)
+    mcanTimeQuantaInvalidSym = mcanComponent.createCommentSymbol("MCAN_TIME_QUANTA_INVALID_COMMENT", None)
+    mcanTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too low for required Nominal Bit Timing")
+    mcanTimeQuantaInvalidSym.setVisible(False)
 
-    BTPprescale = mcanComponent.createIntegerSymbol("NBTP_NBRP", mcanTimingMenu)
-    BTPprescale.setLabel("Nominal Bit Rate Prescaler")
-    BTPprescale.setMin(0)
-    BTPprescale.setMax(1023)
-    BTPprescale.setDefaultValue(0)
+    # MCAN Nominal Bit Timing Calculation
+    mcanNominalBitTimingMenu = mcanComponent.createMenuSymbol("NOMINAL_BIT_TIMING_CALCULATION", mcanBitTimingCalculationMenu)
+    mcanNominalBitTimingMenu.setLabel("Nominal Bit Timing")
+    mcanNominalBitTimingMenu.setDescription("This timing must be less or equal to the CAN-FD Data Bit Timing if used")
 
-    mcanFastTimingMenu = mcanComponent.createMenuSymbol("DataTimingMenu", None)
-    mcanFastTimingMenu.setLabel("Timing for FD operation")
-    mcanFastTimingMenu.setVisible(False)
-    mcanFastTimingMenu.setDependencies(showWhenFD, ["MCAN_OPMODE"])
+    mcanNominalBitrate = mcanComponent.createIntegerSymbol("NOMINAL_BITRATE", mcanNominalBitTimingMenu)
+    mcanNominalBitrate.setLabel("Bit Rate (Kbps)")
+    mcanNominalBitrate.setMin(1)
+    mcanNominalBitrate.setMax(1000)
+    mcanNominalBitrate.setDefaultValue(500)
+    mcanNominalBitrate.setDependencies(nominalBitTimingCalculation, ["NOMINAL_BITRATE", "core." + mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
-    FBTPsyncJump = mcanComponent.createIntegerSymbol("DBTP_DSJW", mcanFastTimingMenu)
-    FBTPsyncJump.setLabel("Data Synchronization Jump Width")
-    FBTPsyncJump.setMin(0)
-    FBTPsyncJump.setDefaultValue(3)
-    FBTPsyncJump.setMax(3)
+    mcanNominalSamplePoint = mcanComponent.createFloatSymbol("NOMINAL_SAMPLE_POINT", mcanNominalBitTimingMenu)
+    mcanNominalSamplePoint.setLabel("Sample Point %")
+    mcanNominalSamplePoint.setMin(50.0)
+    mcanNominalSamplePoint.setMax(100.0)
+    mcanNominalSamplePoint.setDefaultValue(75.0)
+    mcanNominalSamplePoint.setDependencies(nominalBitTimingCalculation, ["NOMINAL_SAMPLE_POINT"])
 
-    FBTPBefore = mcanComponent.createIntegerSymbol("DBTP_DTSEG1", mcanFastTimingMenu)
-    FBTPBefore.setLabel("Data Time Segment Before Sample Point")
-    FBTPBefore.setMin(1)
-    FBTPBefore.setMax(15)
-    FBTPBefore.setDefaultValue(10)
+    NBTPsyncJump = mcanComponent.createIntegerSymbol("NBTP_NSJW", mcanNominalBitTimingMenu)
+    NBTPsyncJump.setLabel("Synchronization Jump Width")
+    NBTPsyncJump.setMin(0)
+    NBTPsyncJump.setMax(127)
+    NBTPsyncJump.setDefaultValue(3)
 
-    FBTPAfter = mcanComponent.createIntegerSymbol("DBTP_DTSEG2", mcanFastTimingMenu)
-    FBTPAfter.setLabel("Data Time Segment After Sample Point")
-    FBTPAfter.setMin(0)
-    FBTPAfter.setDefaultValue(3)
-    FBTPAfter.setMax(7)
+    NBTPprescale = mcanComponent.createIntegerSymbol("NBTP_NBRP", mcanNominalBitTimingMenu)
+    NBTPprescale.setLabel("Bit Rate Prescaler")
+    NBTPprescale.setMin(0)
+    NBTPprescale.setMax(511)
+    NBTPprescale.setDefaultValue(0)
+    NBTPprescale.setDependencies(nominalBitTimingCalculation, ["NBTP_NBRP"])
 
-    FBTPprescale = mcanComponent.createIntegerSymbol("DBTP_DBRP", mcanFastTimingMenu)
-    FBTPprescale.setLabel("Data Bit Rate Prescaler")
-    FBTPprescale.setMin(0)
-    FBTPprescale.setMax(31)
-    FBTPprescale.setDefaultValue(0)
+    tseg1, tseg2 = bitTimingCalculation("Nominal", 4, 385)
+
+    NBTPBeforeSP = mcanComponent.createIntegerSymbol("NBTP_NTSEG1", mcanNominalBitTimingMenu)
+    NBTPBeforeSP.setLabel("Time Segment Before Sample Point")
+    NBTPBeforeSP.setMin(1)
+    NBTPBeforeSP.setMax(255)
+    NBTPBeforeSP.setDefaultValue(tseg1)
+    NBTPBeforeSP.setReadOnly(True)
+
+    NBTPAfterSP = mcanComponent.createIntegerSymbol("NBTP_NTSEG2", mcanNominalBitTimingMenu)
+    NBTPAfterSP.setLabel("Time Segment After Sample Point")
+    NBTPAfterSP.setMin(0)
+    NBTPAfterSP.setMax(127)
+    NBTPAfterSP.setDefaultValue(tseg2)
+    NBTPAfterSP.setReadOnly(True)
+
+    # MCAN Data Bit Timing Calculation
+    mcanDataBitTimingMenu = mcanComponent.createMenuSymbol("DATA_BIT_TIMING_CALCULATION", mcanBitTimingCalculationMenu)
+    mcanDataBitTimingMenu.setLabel("Data Bit Timing")
+    mcanDataBitTimingMenu.setDescription("This timing must be greater or equal to the Nominal Bit Timing")
+    mcanDataBitTimingMenu.setVisible(False)
+    mcanDataBitTimingMenu.setDependencies(showWhenFD, ["MCAN_OPMODE"])
+
+    mcanDataBitrate = mcanComponent.createIntegerSymbol("DATA_BITRATE", mcanDataBitTimingMenu)
+    mcanDataBitrate.setLabel("Bit Rate (Kbps)")
+    mcanDataBitrate.setMin(1)
+    mcanDataBitrate.setDefaultValue(500)
+    mcanDataBitrate.setDependencies(dataBitTimingCalculation, ["DATA_BITRATE", "MCAN_OPMODE", "core." + mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    mcanDataSamplePoint = mcanComponent.createFloatSymbol("DATA_SAMPLE_POINT", mcanDataBitTimingMenu)
+    mcanDataSamplePoint.setLabel("Sample Point %")
+    mcanDataSamplePoint.setMin(50.0)
+    mcanDataSamplePoint.setMax(100.0)
+    mcanDataSamplePoint.setDefaultValue(75.0)
+    mcanDataSamplePoint.setDependencies(dataBitTimingCalculation, ["DATA_SAMPLE_POINT"])
+
+    DBTPsyncJump = mcanComponent.createIntegerSymbol("DBTP_DSJW", mcanDataBitTimingMenu)
+    DBTPsyncJump.setLabel("Synchronization Jump Width")
+    DBTPsyncJump.setMin(0)
+    DBTPsyncJump.setDefaultValue(3)
+    DBTPsyncJump.setMax(7)
+
+    DBTPprescale = mcanComponent.createIntegerSymbol("DBTP_DBRP", mcanDataBitTimingMenu)
+    DBTPprescale.setLabel("Bit Rate Prescaler")
+    DBTPprescale.setMin(0)
+    DBTPprescale.setMax(31)
+    DBTPprescale.setDefaultValue(0)
+    DBTPprescale.setDependencies(dataBitTimingCalculation, ["DBTP_DBRP"])
+
+    DBTPBeforeSP = mcanComponent.createIntegerSymbol("DBTP_DTSEG1", mcanDataBitTimingMenu)
+    DBTPBeforeSP.setLabel("Time Segment Before Sample Point")
+    DBTPBeforeSP.setMin(1)
+    DBTPBeforeSP.setMax(31)
+    DBTPBeforeSP.setDefaultValue(10)
+    DBTPBeforeSP.setReadOnly(True)
+
+    DBTPAfterSP = mcanComponent.createIntegerSymbol("DBTP_DTSEG2", mcanDataBitTimingMenu)
+    DBTPAfterSP.setLabel("Time Segment After Sample Point")
+    DBTPAfterSP.setMin(0)
+    DBTPAfterSP.setDefaultValue(3)
+    DBTPAfterSP.setMax(15)
+    DBTPAfterSP.setReadOnly(True)
 
     # ----- Rx FIFO 0 -----
     mcanRXF0 = mcanComponent.createBooleanSymbol("RXF0_USE", None)
@@ -584,9 +689,6 @@ def instantiateComponent(mcanComponent):
     mcanTCP.setDefaultValue(1)
     mcanTCP.setMin(1)
     mcanTCP.setMax(16)
-
-    # Initialize peripheral clock
-    Database.setSymbolValue("core", mcanInstanceName.getValue()+"_CLOCK_ENABLE", True, 1)
 
     # Interrupt Dynamic settings
     mcaninterruptControl = mcanComponent.createBooleanSymbol("MCAN_INTERRUPT_ENABLE", None)
