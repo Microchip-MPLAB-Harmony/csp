@@ -34,16 +34,16 @@ adcSym_SEQCTRL_SEQ = []
 ###################################################################################################
 
 def updateADCInterruptStatus(symbol, event):
-    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
-    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
-
-    if event["value"] == True:
+    if adcSym_INTENSET_RESRDY.getValue() == True or adcSym_INTENSET_WINMON.getValue() == True:
+        Database.setSymbolValue("core", InterruptVector, True, 2)
+        Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
         Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_InterruptHandler", 2)
     else:
+        Database.setSymbolValue("core", InterruptVector, False, 2)
+        Database.setSymbolValue("core", InterruptHandlerLock, False, 2)
         Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_Handler", 2)
 
 def updateADCInterruptWarningStatus(symbol, event):
-
     if adcSym_INTENSET_RESRDY.getValue() == True or adcSym_INTENSET_WINMON.getValue() == True:
         if (Database.getSymbolValue("core", InterruptVectorUpdate) == True):
             symbol.setVisible(True)
@@ -53,7 +53,6 @@ def updateADCInterruptWarningStatus(symbol, event):
         symbol.setVisible(False)
 
 def updateADCClockWarningStatus(symbol, event):
-
     if event["value"] == False:
         symbol.setVisible(True)
     else:
