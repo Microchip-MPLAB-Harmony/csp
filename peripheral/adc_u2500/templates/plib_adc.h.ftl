@@ -106,20 +106,18 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
 
 uint16_t ${ADC_INSTANCE_NAME}_LastConversionResultGet( void );
 
-<#if ADC_INTENSET_RESRDY = true || ADC_INTENSET_WINMON = true>
+<#if ADC_INTENSET_RESRDY == true || ADC_INTENSET_WINMON == true>
 
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
+</#if>
 
-<#else>
+<#if ADC_INTENSET_RESRDY == false>
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void );
+</#if>
 
-<#if ADC_CTRLB_WINMODE != "0">
+<#if ADC_CTRLB_WINMODE != "0" && ADC_INTENSET_WINMON == false>
 bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void );
-
 </#if>
-
-</#if>
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

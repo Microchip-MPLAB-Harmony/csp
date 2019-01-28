@@ -362,7 +362,7 @@ void ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
     volatile ADC_STATUS status;
     status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk;
     /* Clear interrupt flag */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG |= ADC_INTFLAG_RESRDY_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
         ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
@@ -372,7 +372,11 @@ void ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
 /* Check whether result is ready */
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
-    return (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+    bool status;
+    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    /* Clear interrupt flag */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    return status;
 }
 </#if>
 <#if ADC_INTENSET_WINMON = true && ADC_CTRLB_WINMODE != "0">
@@ -381,7 +385,7 @@ void ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     volatile ADC_STATUS status;
     status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;
     /* Clear interrupt flag */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG |= ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
         ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
@@ -392,12 +396,12 @@ void ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 /* Check whether window monitor result is ready */
 bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 {
-    volatile ADC_STATUS status;
-    status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk;
+    volatile bool status;
+    status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
     /* Clear interrupt flag */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG |= ADC_INTFLAG_WINMON_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
 
-    return ((bool)status);
+    return (status);
 }
 </#if>
 </#if>
@@ -405,19 +409,23 @@ bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 /* Check whether result is ready */
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
-    return (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+    bool status;
+    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    /* Clear interrupt flag */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    return status;
 }
 
-<#if ADC_CTRLB_WINMODE != "0">
+<#if ADC_CTRLB_WINMODE != "0" && ADC_INTENSET_WINMON == false>
 /* Check whether window monitor result is ready */
 bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 {
-    volatile ADC_STATUS status;
-    status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk;
+    volatile bool status;
+    status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
     /* Clear interrupt flag */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG |= ADC_INTFLAG_WINMON_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
 
-    return ((bool)status);
+    return (status);
 }
 </#if>
 </#if>
