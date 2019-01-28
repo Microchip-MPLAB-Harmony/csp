@@ -43,6 +43,7 @@ peripherals = {
                 "USART_11278"   : ["UART"],
                 "QSPI_U2008"    : ["SQI"],
                 "QSPI_11171"    : ["SQI"],
+                "SQI_00206"     : ["SQI"],
                 "TC_U2212"      : ["TMR"],
                 "TC_U2249"      : ["TMR"],
                 "TC_6082"       : ["TMR"],
