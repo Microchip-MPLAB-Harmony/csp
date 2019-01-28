@@ -167,12 +167,61 @@ def InterruptStatusWarning(symbol, event):
     if (Database.getSymbolValue(canInstanceName.getValue().lower(), "INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
+def canCoreClockFreq(symbol, event):
+    symbol.setValue(int(Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
+
+def bitTimingCalculation(bitTiming, lowTq, highTq):
+    clk = Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")
+
+    if (bitTiming == "Data"):
+        prescaler = Database.getSymbolValue(canInstanceName.getValue().lower(), "DBTP_DBRP")
+        bitrate = Database.getSymbolValue(canInstanceName.getValue().lower(), "DATA_BITRATE")
+        samplePoint = Database.getSymbolValue(canInstanceName.getValue().lower(), "DATA_SAMPLE_POINT")
+    else:
+        prescaler = Database.getSymbolValue(canInstanceName.getValue().lower(), "NBTP_NBRP")
+        bitrate = Database.getSymbolValue(canInstanceName.getValue().lower(), "NOMINAL_BITRATE")
+        samplePoint = Database.getSymbolValue(canInstanceName.getValue().lower(), "NOMINAL_SAMPLE_POINT")
+
+    numOfTimeQuanta = clk / ((bitrate * 1000) * (prescaler + 1))
+    if (numOfTimeQuanta < lowTq):
+        canTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too low for required " + bitTiming + " Bit Timing")
+        canTimeQuantaInvalidSym.setVisible(True)
+        canCoreClockInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too low for required " + bitTiming + " Bit Timing")
+        canCoreClockInvalidSym.setVisible(True)
+    elif (numOfTimeQuanta > highTq):
+        canTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too high for required " + bitTiming + " Bit Timing")
+        canTimeQuantaInvalidSym.setVisible(True)
+        canCoreClockInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too high for required " + bitTiming + " Bit Timing")
+        canCoreClockInvalidSym.setVisible(True)
+    else:
+        canTimeQuantaInvalidSym.setVisible(False)
+        canCoreClockInvalidSym.setVisible(False)
+
+    tseg1 = int((numOfTimeQuanta * samplePoint) / 100.0)
+    tseg2 = numOfTimeQuanta - tseg1 - 1
+    tseg1 -= 2
+
+    return tseg1, tseg2
+
+def dataBitTimingCalculation(symbol, event):
+    if (Database.getSymbolValue(canInstanceName.getValue().lower(), "CAN_OPMODE") == "CAN FD"):
+        tseg1, tseg2 = bitTimingCalculation("Data", 4, 49)
+        Database.setSymbolValue(canInstanceName.getValue().lower(), "DBTP_DTSEG1", tseg1, 2)
+        Database.setSymbolValue(canInstanceName.getValue().lower(), "DBTP_DTSEG2", tseg2, 2)
+
+def nominalBitTimingCalculation(symbol, event):
+    tseg1, tseg2 = bitTimingCalculation("Nominal", 4, 385)
+    Database.setSymbolValue(canInstanceName.getValue().lower(), "NBTP_NTSEG1", tseg1, 2)
+    Database.setSymbolValue(canInstanceName.getValue().lower(), "NBTP_NTSEG2", tseg2, 2)
+
 def instantiateComponent(canComponent):
     global canInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
     global interruptVectorUpdate
+    global canCoreClockInvalidSym
+    global canTimeQuantaInvalidSym
 
     canInstanceName = canComponent.createStringSymbol("CAN_INSTANCE_NAME", None)
     canInstanceName.setVisible(False)
@@ -198,6 +247,9 @@ def instantiateComponent(canComponent):
         number_of_elements   = Database.getSymbolValue(canInstanceName.getValue().lower(), "TX_FIFO_ELEMENTS")
         watermark.setValue(watermark_percentage * number_of_elements / 100, 0)
 
+    # Initialize peripheral clock
+    Database.setSymbolValue("core", canInstanceName.getValue()+"_CLOCK_ENABLE", True, 1)
+
     # CAN operation mode - default to FD
     canOpMode = canComponent.createComboSymbol("CAN_OPMODE", None, opModeValues)
     canOpMode.setLabel("CAN Operation Mode")
@@ -212,63 +264,120 @@ def instantiateComponent(canComponent):
     interruptHandlerLock = canInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
-    # CAN Timing DBTP for FD and NBTP for normal operation mode
-    canTimingMenu = canComponent.createMenuSymbol("timingMenu", None)
-    canTimingMenu.setLabel("Timing for Normal operation and FD arbitration")
-    canTimingMenu.setDescription("This timing must be less or equal to the FD data rate (if used)")
+    # CAN Bit Timing Calculation
+    canBitTimingCalculationMenu = canComponent.createMenuSymbol("BIT_TIMING_CALCULATION", None)
+    canBitTimingCalculationMenu.setLabel("Bit Timing Calculation")
+    canBitTimingCalculationMenu.setDescription("CAN Bit Timing Calculation for Normal and CAN-FD Operation")
 
-    BTPsyncJump = canComponent.createIntegerSymbol("NBTP_NSJW", canTimingMenu)
-    BTPsyncJump.setLabel("Nominal Synchronization Jump Width")
-    BTPsyncJump.setMin(0)
-    BTPsyncJump.setMax(15)
-    BTPsyncJump.setDefaultValue(3)
+    canCoreClockValue = canComponent.createIntegerSymbol("CAN_CORE_CLOCK_FREQ", canBitTimingCalculationMenu)
+    canCoreClockValue.setLabel("Clock Frequency")
+    canCoreClockValue.setReadOnly(True)
+    canCoreClockValue.setDefaultValue(int(Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    canCoreClockValue.setVisible(True)
+    canCoreClockValue.setDependencies(canCoreClockFreq, ["core." + canInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
-    BTPBefore = canComponent.createIntegerSymbol("NBTP_NTSEG1", canTimingMenu)
-    BTPBefore.setLabel("Nominal Time Segment Before Sample Point")
-    BTPBefore.setMin(1)
-    BTPBefore.setMax(63)
-    BTPBefore.setDefaultValue(10)
+    canCoreClockInvalidSym = canComponent.createCommentSymbol("CAN_CORE_CLOCK_INVALID_COMMENT", None)
+    canCoreClockInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too low for required Nominal Bit Timing")
+    canCoreClockInvalidSym.setVisible((canCoreClockValue.getValue() == 0))
 
-    BTPAfter = canComponent.createIntegerSymbol("NBTP_NTSEG2", canTimingMenu)
-    BTPAfter.setLabel("Nominal Time Segment After Sample Point")
-    BTPAfter.setMin(0)
-    BTPAfter.setMax(15)
-    BTPAfter.setDefaultValue(3)
+    canTimeQuantaInvalidSym = canComponent.createCommentSymbol("CAN_TIME_QUANTA_INVALID_COMMENT", None)
+    canTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too low for required Nominal Bit Timing")
+    canTimeQuantaInvalidSym.setVisible(False)
 
-    BTPprescale = canComponent.createIntegerSymbol("NBTP_NBRP", canTimingMenu)
-    BTPprescale.setLabel("Nominal Bit Rate Prescaler")
-    BTPprescale.setMin(0)
-    BTPprescale.setMax(1023)
-    BTPprescale.setDefaultValue(0)
+    # CAN Nominal Bit Timing Calculation
+    canNominalBitTimingMenu = canComponent.createMenuSymbol("NOMINAL_BIT_TIMING_CALCULATION", canBitTimingCalculationMenu)
+    canNominalBitTimingMenu.setLabel("Nominal Bit Timing")
+    canNominalBitTimingMenu.setDescription("This timing must be less or equal to the CAN-FD Data Bit Timing if used")
 
-    canFastTimingMenu = canComponent.createMenuSymbol("DataTimingMenu", None)
-    canFastTimingMenu.setLabel("Timing for FD operation")
-    canFastTimingMenu.setVisible(False)
-    canFastTimingMenu.setDependencies(showWhenFD, ["CAN_OPMODE"])
+    canNominalBitrate = canComponent.createIntegerSymbol("NOMINAL_BITRATE", canNominalBitTimingMenu)
+    canNominalBitrate.setLabel("Bit Rate (Kbps)")
+    canNominalBitrate.setMin(1)
+    canNominalBitrate.setMax(1000)
+    canNominalBitrate.setDefaultValue(500)
+    canNominalBitrate.setDependencies(nominalBitTimingCalculation, ["NOMINAL_BITRATE", "core." + canInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
-    FBTPsyncJump = canComponent.createIntegerSymbol("DBTP_DSJW", canFastTimingMenu)
-    FBTPsyncJump.setLabel("Data Synchronization Jump Width")
-    FBTPsyncJump.setMin(0)
-    FBTPsyncJump.setDefaultValue(3)
-    FBTPsyncJump.setMax(3)
+    canNominalSamplePoint = canComponent.createFloatSymbol("NOMINAL_SAMPLE_POINT", canNominalBitTimingMenu)
+    canNominalSamplePoint.setLabel("Sample Point %")
+    canNominalSamplePoint.setMin(50.0)
+    canNominalSamplePoint.setMax(100.0)
+    canNominalSamplePoint.setDefaultValue(75.0)
+    canNominalSamplePoint.setDependencies(nominalBitTimingCalculation, ["NOMINAL_SAMPLE_POINT"])
 
-    FBTPBefore = canComponent.createIntegerSymbol("DBTP_DTSEG1", canFastTimingMenu)
-    FBTPBefore.setLabel("Data Time Segment Before Sample Point")
-    FBTPBefore.setMin(1)
-    FBTPBefore.setMax(15)
-    FBTPBefore.setDefaultValue(10)
+    NBTPsyncJump = canComponent.createIntegerSymbol("NBTP_NSJW", canNominalBitTimingMenu)
+    NBTPsyncJump.setLabel("Synchronization Jump Width")
+    NBTPsyncJump.setMin(0)
+    NBTPsyncJump.setMax(127)
+    NBTPsyncJump.setDefaultValue(3)
 
-    FBTPAfter = canComponent.createIntegerSymbol("DBTP_DTSEG2", canFastTimingMenu)
-    FBTPAfter.setLabel("Data Time Segment After Sample Point")
-    FBTPAfter.setMin(0)
-    FBTPAfter.setDefaultValue(3)
-    FBTPAfter.setMax(7)
+    NBTPprescale = canComponent.createIntegerSymbol("NBTP_NBRP", canNominalBitTimingMenu)
+    NBTPprescale.setLabel("Bit Rate Prescaler")
+    NBTPprescale.setMin(0)
+    NBTPprescale.setMax(511)
+    NBTPprescale.setDefaultValue(0)
+    NBTPprescale.setDependencies(nominalBitTimingCalculation, ["NBTP_NBRP"])
 
-    FBTPprescale = canComponent.createIntegerSymbol("DBTP_DBRP", canFastTimingMenu)
-    FBTPprescale.setLabel("Data Bit Rate Prescaler")
-    FBTPprescale.setMin(0)
-    FBTPprescale.setMax(31)
-    FBTPprescale.setDefaultValue(0)
+    tseg1, tseg2 = bitTimingCalculation("Nominal", 4, 385)
+
+    NBTPBeforeSP = canComponent.createIntegerSymbol("NBTP_NTSEG1", canNominalBitTimingMenu)
+    NBTPBeforeSP.setLabel("Time Segment Before Sample Point")
+    NBTPBeforeSP.setMin(1)
+    NBTPBeforeSP.setMax(255)
+    NBTPBeforeSP.setDefaultValue(tseg1)
+    NBTPBeforeSP.setReadOnly(True)
+
+    NBTPAfterSP = canComponent.createIntegerSymbol("NBTP_NTSEG2", canNominalBitTimingMenu)
+    NBTPAfterSP.setLabel("Time Segment After Sample Point")
+    NBTPAfterSP.setMin(0)
+    NBTPAfterSP.setMax(127)
+    NBTPAfterSP.setDefaultValue(tseg2)
+    NBTPAfterSP.setReadOnly(True)
+
+    # CAN Data Bit Timing Calculation
+    canDataBitTimingMenu = canComponent.createMenuSymbol("DATA_BIT_TIMING_CALCULATION", canBitTimingCalculationMenu)
+    canDataBitTimingMenu.setLabel("Data Bit Timing")
+    canDataBitTimingMenu.setDescription("This timing must be greater or equal to the Nominal Bit Timing")
+    canDataBitTimingMenu.setVisible(False)
+    canDataBitTimingMenu.setDependencies(showWhenFD, ["CAN_OPMODE"])
+
+    canDataBitrate = canComponent.createIntegerSymbol("DATA_BITRATE", canDataBitTimingMenu)
+    canDataBitrate.setLabel("Bit Rate (Kbps)")
+    canDataBitrate.setMin(1)
+    canDataBitrate.setDefaultValue(500)
+    canDataBitrate.setDependencies(dataBitTimingCalculation, ["DATA_BITRATE", "CAN_OPMODE", "core." + canInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    canDataSamplePoint = canComponent.createFloatSymbol("DATA_SAMPLE_POINT", canDataBitTimingMenu)
+    canDataSamplePoint.setLabel("Sample Point %")
+    canDataSamplePoint.setMin(50.0)
+    canDataSamplePoint.setMax(100.0)
+    canDataSamplePoint.setDefaultValue(75.0)
+    canDataSamplePoint.setDependencies(dataBitTimingCalculation, ["DATA_SAMPLE_POINT"])
+
+    DBTPsyncJump = canComponent.createIntegerSymbol("DBTP_DSJW", canDataBitTimingMenu)
+    DBTPsyncJump.setLabel("Synchronization Jump Width")
+    DBTPsyncJump.setMin(0)
+    DBTPsyncJump.setDefaultValue(3)
+    DBTPsyncJump.setMax(7)
+
+    DBTPprescale = canComponent.createIntegerSymbol("DBTP_DBRP", canDataBitTimingMenu)
+    DBTPprescale.setLabel("Bit Rate Prescaler")
+    DBTPprescale.setMin(0)
+    DBTPprescale.setMax(31)
+    DBTPprescale.setDefaultValue(0)
+    DBTPprescale.setDependencies(dataBitTimingCalculation, ["DBTP_DBRP"])
+
+    DBTPBeforeSP = canComponent.createIntegerSymbol("DBTP_DTSEG1", canDataBitTimingMenu)
+    DBTPBeforeSP.setLabel("Time Segment Before Sample Point")
+    DBTPBeforeSP.setMin(1)
+    DBTPBeforeSP.setMax(31)
+    DBTPBeforeSP.setDefaultValue(10)
+    DBTPBeforeSP.setReadOnly(True)
+
+    DBTPAfterSP = canComponent.createIntegerSymbol("DBTP_DTSEG2", canDataBitTimingMenu)
+    DBTPAfterSP.setLabel("Time Segment After Sample Point")
+    DBTPAfterSP.setMin(0)
+    DBTPAfterSP.setDefaultValue(3)
+    DBTPAfterSP.setMax(15)
+    DBTPAfterSP.setReadOnly(True)
 
     # ----- Rx FIFO 0 -----
     canRXF0 = canComponent.createBooleanSymbol("RXF0_USE", None)
@@ -539,9 +648,6 @@ def instantiateComponent(canComponent):
     canTCP.setDefaultValue(1)
     canTCP.setMin(1)
     canTCP.setMax(16)
-
-    # Initialize GCLK
-    Database.setSymbolValue("core", canInstanceName.getValue()+"_CLOCK_ENABLE", True, 1)
 
     # Interrupt Dynamic settings
     caninterruptControl = canComponent.createBooleanSymbol("CAN_INTERRUPT_ENABLE", None)
