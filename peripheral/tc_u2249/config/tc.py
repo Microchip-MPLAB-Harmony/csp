@@ -137,7 +137,13 @@ def updateTCInterruptStatus(symbol, event):
 
         setTCInterruptData(tcInterruptStatus, event["value"])
     else:
-        setTCInterruptData(event["value"], tcSym_OperationMode.getValue())
+        if(tcSym_OperationMode.getValue() == "Timer"):
+            if(tcSym_Timer_INTENSET_OVF.getValue() == True or tcSym_Timer_INTENSET_MC1.getValue() == True):
+                setTCInterruptData(True, tcSym_OperationMode.getValue())
+            else:
+                setTCInterruptData(False, tcSym_OperationMode.getValue())
+        else:
+            setTCInterruptData(event["value"], tcSym_OperationMode.getValue())
 
 def updateTCInterruptWarningStatus(symbol, event):
 
