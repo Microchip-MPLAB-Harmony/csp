@@ -265,7 +265,7 @@ def instantiateComponent(sdadcComponent):
     #Window monitor mode
     sdadcSym_WINCTRL_WINMODE = sdadcComponent.createKeyValueSetSymbol("SDADC_WINCTRL_WINMODE", sdadcSym_WINMODE_MENU)
     sdadcSym_WINCTRL_WINMODE.setLabel("Select Window Monitor Mode")
-    sdadcSym_WINCTRL_WINMODE.addKey("DISBALED", "0", "Disabled")
+    sdadcSym_WINCTRL_WINMODE.addKey("DISABLED", "0", "Disabled")
     sdadcSym_WINCTRL_WINMODE.addKey("ABOVE", "1", "Result is greater than lower threshold")
     sdadcSym_WINCTRL_WINMODE.addKey("BELOW", "2", "Result is lower than upper threshold")
     sdadcSym_WINCTRL_WINMODE.addKey("INSIDE", "3", "Result is between lower and upper threshold")
