@@ -311,10 +311,15 @@ def update_lcd_clk_frequency(symbol, event):
 
 global update_isc_clk_frequency
 def update_isc_clk_frequency(symbol, event):
-    lcd_clk_frequency = 0
+    isc_clk_frequency = 0
     if Database.getSymbolValue("core", "PMC_SCER_ISCCK") is True:
-        lcd_clk_frequency = Database.getSymbolValue("core", "MCK_CLK_FREQUENCY") * 2
-    symbol.setValue(lcd_clk_frequency, 2)
+        isc_clk_frequency = Database.getSymbolValue("core", "MCK_CLK_FREQUENCY") * 2
+    symbol.setValue(isc_clk_frequency, 2)
+
+
+global update_sdmmc_clock_frequency
+def update_sdmmc_clock_frequency(symbol, event):
+    symbol.setValue(event["value"], 2)
 
 
 global update_spi_clock_frequency
@@ -1456,6 +1461,15 @@ def create_adc_clock_source_frequency_symbol(instance_name, clock_comp, clk_menu
                                                                       instance_name + "_GENERIC_CLOCK_FREQUENCY",
                                                                       instance_name.lower() + ".ADC_CLK_SRC"])
 
+global create_sdmmc_clock_frequency_symbol
+def create_sdmmc_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
+    sdmmc_clock_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
+    sdmmc_clock_freq_sym.setVisible(False)
+    sdmmc_clock_freq_sym.setReadOnly(True)
+    sdmmc_clock_freq_sym.setDefaultValue(Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY"))
+    sdmmc_clock_freq_sym.setDependencies(update_sdmmc_clock_frequency, [instance_name + "_GENERIC_CLOCK_FREQUENCY"])
+
+
 global freq_sym_constructor_dict
 freq_sym_constructor_dict = {"TC": create_tc_clock_frequency_symbol,
                              "UART": create_uart_clock_frequency_symbol,
@@ -1463,7 +1477,8 @@ freq_sym_constructor_dict = {"TC": create_tc_clock_frequency_symbol,
                              "MCAN": create_mcan_clock_frequency_symbol,
                              "SPI": create_spi_clock_frequency_symbol,
                              "ADC": create_adc_clock_source_frequency_symbol,
-                             "TWIHS": create_twihs_clock_frequency_symbol}
+                             "TWIHS": create_twihs_clock_frequency_symbol,
+                             "SDMMC": create_sdmmc_clock_frequency_symbol}
 
 # Add menu symbol dependencies
 def set_fixed_clock_symbol_dependencies():
