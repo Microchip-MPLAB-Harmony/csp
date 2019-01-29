@@ -461,7 +461,8 @@ def instantiateComponent(sscComponent):
 
     sscLRCPin = sscComponent.createStringSymbol("SSC_LRCLK_PIN_DEFINE", None)     # used for SSC_LRCLK_GET() 
     sscLRCPin.setVisible(False)
-    sscSignalsNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SSC\"]/instance@[name=\"SSC\"]/signals")
+    sscSignalsNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SSC\"]" +
+                                  "/instance@[name=\"" + sscInstanceName.getValue() + "\"]/signals")
     sscSignals =  sscSignalsNode.getChildren()
     sscLRCPinDefine = "Undefined"
     for pad in range(0, len(sscSignals)):
