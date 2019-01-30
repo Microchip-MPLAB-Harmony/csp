@@ -59,6 +59,7 @@ peripherals = {
                 "RTCC_00748"    : ["TMR"],
                 "TMR_00745"     : ["TMR"],
                 "TMR1_00687"    : ["TMR"],
+                "SDMMC_44002"   : ["SDHC"]
 }
 
 if ("PIC32M" in Variables.get("__PROCESSOR")):
