@@ -24,6 +24,7 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
+
 cmpValGrp_CM1CON_CCH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CCH"]')
 cmpValGrp_CM1CON_CREF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CREF"]')
 cmpValGrp_CM1CON_EVPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__EVPOL"]')
@@ -46,137 +47,148 @@ cmpBitFld_CM2CON_COE = ATDF.getNode('/avr-tools-device-file/modules/module@[name
 ################################################################################
 #### Global Variables ####
 ################################################################################
-global cmpInstanceName
-global cmpSym_CM1CON_CREF
-global cmpSym_CM1CON_CCH
-global cmpSym_CM1CON_EVPOL
-global cmpSym_CM1CON_CPOL
-global cmpSym_CM1CON_COE
-global cmpSym_CM2CON_CREF
-global cmpSym_CM2CON_CCH
-global cmpSym_CM2CON_EVPOL
-global cmpSym_CM2CON_CPOL
-global cmpSym_CM2CON_COE
-global cmp1IPC_PriValue
-global cmp1IPC_SubpriValue
-global cmp2IPC_PriValue
-global cmp2IPC_SubpriValue
-global cmp1PriShift
-global cmp1SubShift
-global cmp2PriShift
-global cmp2SubShift
+
+global interruptsChildren
+interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 
 ################################################################################
 #### Business Logic ####
 ################################################################################
-def interruptControl(symbol, event):
-    if (int(event["symbol"].getKeyValue(event["value"])) != 0):
-        symbol.setValue(True, 2)
-    else :
-        symbol.setValue(False, 2)
-	
-def dependencyStatus(symbol, event):
-    if (event["value"] == True):
+
+def setCMP1InterruptData(status):
+
+    Database.setSymbolValue("core", cmp1InterruptVector, status, 1)
+    Database.setSymbolValue("core", cmp1InterruptHandlerLock, status, 1)
+
+    interruptName = cmp1InterruptHandler.split("_INTERRUPT_HANDLER")[0]
+
+    if status == True:
+        Database.setSymbolValue("core", cmp1InterruptHandler, interruptName + "_InterruptHandler", 1)
+    else:
+        Database.setSymbolValue("core", cmp1InterruptHandler, interruptName + "_Handler", 1)
+
+def setCMP2InterruptData(status):
+
+    Database.setSymbolValue("core", cmp2InterruptVector, status, 1)
+    Database.setSymbolValue("core", cmp2InterruptHandlerLock, status, 1)
+
+    interruptName = cmp2InterruptHandler.split("_INTERRUPT_HANDLER")[0]
+
+    if status == True:
+        Database.setSymbolValue("core", cmp2InterruptHandler, interruptName + "_InterruptHandler", 1)
+    else:
+        Database.setSymbolValue("core", cmp2InterruptHandler, interruptName + "_Handler", 1)
+
+def updateCMP1InterruptData(symbol, event):
+
+    status = int(cmpSym_CM1CON_EVPOL.getSelectedValue()) != 0
+
+    if event["id"] == "CMP_CM1CON_EVPOL":
+        setCMP1InterruptData(status)
+
+    if Database.getSymbolValue("core", cmp1InterruptVectorUpdate) == True and status == True:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def updateCMP2InterruptData(symbol, event):
+
+    status = int(cmpSym_CM2CON_EVPOL.getSelectedValue()) != 0
+
+    if event["id"] == "CMP_CM2CON_EVPOL":
+        setCMP2InterruptData(status)
+
+    if Database.getSymbolValue("core", cmp2InterruptVectorUpdate) == True and status == True:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 def _get_enblReg_parms(vectorNumber):
-    # This takes in vector index for interrupt, and returns the IECx register name as well as 
+
+    # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
-        temp = float(vectorNumber) / 32.0
-        index = int(temp)
-        bit = float(temp%1)
-        bitPosn = int(32.0*bit)
-        regName = "IEC"+str(index)
-    return regName, str(bitPosn)
-    
+    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
+        index = int(vectorNumber / 32)
+        regName = "IEC" + str(index)
+        return regName
+
 def _get_statReg_parms(vectorNumber):
-    # This takes in vector index for interrupt, and returns the IFSx register name as well as 
+
+    # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
-        temp = float(vectorNumber) / 32.0
-        index = int(temp)
-        bit = float(temp%1)
-        bitPosn = int(32.0*bit)
-        regName = "IFS"+str(index)
-    return regName, str(bitPosn)
-    
-def _get_sub_priority_parms(vectorNumber):
-    # This returns the IPCx register name, priority bit shift, priority mask, subpriority bit shift, 
-    # and subpriority bitmask for input vector number
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        (("EF" in Variables.get("__PROCESSOR"))) or (("DA" in Variables.get("__PROCESSOR"))) ):
-        temp = float(vectorNumber) / 4.0
-        index = int(temp)
-        subPrioBit = 8*(vectorNumber & 0x3)
-        prioBit = subPrioBit + 2
-        regName = "IPC"+str(index)
-    return regName, str(prioBit), str(subPrioBit)
+    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
+        index = int(vectorNumber / 32)
+        regName = "IFS" + str(index)
+        return regName
 
 def _get_bitfield_names(node, outputList):
+
     valueNodes = node.getChildren()
-    for ii in reversed(valueNodes):
+
+    for bitfield in reversed(valueNodes):   ##  do this for all <value > entries for this bitfield
         dict = {}
-        if(ii.getAttribute('caption').lower() != "reserved"):
-            dict['desc'] = ii.getAttribute('caption')
-            dict['key'] = ii.getAttribute('caption')
-            value = ii.getAttribute('value')
-            if(value[:2]=='0x'):
+        if bitfield.getAttribute("caption").lower() != "reserved":  ##  skip (unused) reserved fields
+            dict["desc"] = bitfield.getAttribute("caption")
+            dict["key"] = bitfield.getAttribute("caption")
+
+            ##  Get rid of leading '0x', and convert to int if was hex
+            value = bitfield.getAttribute("value")
+
+            if(value[:2] == "0x"):
                 temp = value[2:]
-                tempint = int(temp,16)
+                tempint = int(temp, 16)
             else:
                 tempint = int(value)
-            dict['value'] = str(tempint)
-            outputList.append(dict)        
+
+            dict["value"] = str(tempint)
+            outputList.append(dict)
 
 def combine1Values(symbol, event):
+
     cchValue   = cmpSym_CM1CON_CCH.getValue() << 0
     crefValue  = cmpSym_CM1CON_CREF.getValue() << 4
     evpolValue = cmpSym_CM1CON_EVPOL.getValue() << 6
     cpolValue  = cmpSym_CM1CON_CPOL.getValue() << 13
     coeValue   = cmpSym_CM1CON_COE.getValue() << 14
     cmconValue = crefValue + cchValue + evpolValue + cpolValue + coeValue
+
     symbol.setValue(cmconValue, 2)
-    print cmconValue
 
 def combine2Values(symbol, event):
+
     cchValue   = cmpSym_CM2CON_CCH.getValue() << 0
     crefValue  = cmpSym_CM2CON_CREF.getValue() << 4
     evpolValue = cmpSym_CM2CON_EVPOL.getValue() << 6
     cpolValue  = cmpSym_CM2CON_CPOL.getValue() << 13
     coeValue   = cmpSym_CM2CON_COE.getValue() << 14
     cmconValue = crefValue + cchValue + evpolValue + cpolValue + coeValue
+
     symbol.setValue(cmconValue, 2)
-    print cmconValue
 
-
-    
 def getIRQnumber(string):
-    interrupts = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts')
-    interruptsChildren = interrupts.getChildren()
-    for param in interruptsChildren:  
-        modInst = param.getAttribute('module-instance')
-        if(string == modInst):
-            irq_index = param.getAttribute('index')
+
+    for param in interruptsChildren:
+        modInst = param.getAttribute("name")
+        if string == modInst:
+            irq_index = param.getAttribute("index")
+
     return irq_index
 
-def updateIRQValues(symbol, event):
-    irqvalue = int(event["value"])
-    symbol.setValue(irqvalue, 2)
-
-def updateHandlerName(symbol, event):
-    handlername = str(event["value"])
-    symbol.setValue(handlername, 2)
-    
 ################################################################################
 #### Component ####
 ################################################################################
+
 def instantiateComponent(cmpComponent):
+
     global cmpInstanceName
+    global cmp1InterruptVector
+    global cmp1InterruptHandlerLock
+    global cmp1InterruptHandler
+    global cmp1InterruptVectorUpdate
+    global cmp2InterruptVector
+    global cmp2InterruptHandlerLock
+    global cmp2InterruptHandler
+    global cmp2InterruptVectorUpdate
     global cmpSym_CM1CON_CREF
     global cmpSym_CM1CON_CCH
     global cmpSym_CM1CON_EVPOL
@@ -187,14 +199,6 @@ def instantiateComponent(cmpComponent):
     global cmpSym_CM2CON_EVPOL
     global cmpSym_CM2CON_CPOL
     global cmpSym_CM2CON_COE
-    global cmp1IPC_PriValue
-    global cmp1IPC_SubpriValue
-    global cmp2IPC_PriValue
-    global cmp2IPC_SubpriValue
-    global cmp1PriShift
-    global cmp1SubShift
-    global cmp2PriShift
-    global cmp2SubShift
 
     cmpInstanceName = cmpComponent.createStringSymbol("CMP_INSTANCE_NAME", None)
     cmpInstanceName.setVisible(False)
@@ -203,7 +207,6 @@ def instantiateComponent(cmpComponent):
 
     cmpSym_CM1CON_STRING = cmpComponent.createCommentSymbol("CMP1_STRING", None)
     cmpSym_CM1CON_STRING.setLabel("Comparator 1")
-    cmpSym_CM1CON_STRING.setVisible(True)
 
     cmp1CREF_names = []
     _get_bitfield_names(cmpValGrp_CM1CON_CREF, cmp1CREF_names)
@@ -213,19 +216,17 @@ def instantiateComponent(cmpComponent):
     cmpSym_CM1CON_CREF.setOutputMode("Value")
     cmpSym_CM1CON_CREF.setDisplayMode("Description")
     for ii in cmp1CREF_names:
-        cmpSym_CM1CON_CREF.addKey( ii['desc'], ii['value'], ii['key'] )    
-    cmpSym_CM1CON_CREF.setVisible(True)
+        cmpSym_CM1CON_CREF.addKey( ii['desc'], ii['value'], ii['key'] )
 
     cmp1CCH_names = []
-    _get_bitfield_names(cmpValGrp_CM1CON_CCH, cmp1CCH_names)       
+    _get_bitfield_names(cmpValGrp_CM1CON_CCH, cmp1CCH_names)
     cmpSym_CM1CON_CCH = cmpComponent.createKeyValueSetSymbol("CMP_CM1CON_CCH", cmpSym_CM1CON_STRING)
     cmpSym_CM1CON_CCH.setLabel(cmpBitFld_CM1CON_CCH.getAttribute("caption"))
     cmpSym_CM1CON_CCH.setDefaultValue(0)
     cmpSym_CM1CON_CCH.setOutputMode("Value")
     cmpSym_CM1CON_CCH.setDisplayMode("Description")
     for ii in cmp1CCH_names:
-        cmpSym_CM1CON_CCH.addKey( ii['desc'], ii['value'], ii['key'] ) 
-    cmpSym_CM1CON_CCH.setVisible(True)
+        cmpSym_CM1CON_CCH.addKey( ii['desc'], ii['value'], ii['key'] )
 
     cmp1EVPOL_names = []
     _get_bitfield_names(cmpValGrp_CM1CON_EVPOL, cmp1EVPOL_names)
@@ -236,21 +237,15 @@ def instantiateComponent(cmpComponent):
     cmpSym_CM1CON_EVPOL.setDisplayMode("Description")
     for ii in cmp1EVPOL_names:
         cmpSym_CM1CON_EVPOL.addKey( ii['desc'], ii['value'], ii['key'] )
-    cmpSym_CM1CON_EVPOL.setVisible(True)
 
     cmpSym_CM1CON_CPOL = cmpComponent.createBooleanSymbol("CMP_CM1CON_CPOL", cmpSym_CM1CON_STRING)
     cmpSym_CM1CON_CPOL.setLabel(cmpBitFld_CM1CON_CPOL.getAttribute("caption"))
-    cmpSym_CM1CON_CPOL.setDefaultValue(False)
-    cmpSym_CM1CON_CPOL.setVisible(True)
 
     cmpSym_CM1CON_COE = cmpComponent.createBooleanSymbol("CMP_CM1CON_COE", cmpSym_CM1CON_STRING)
     cmpSym_CM1CON_COE.setLabel(cmpBitFld_CM1CON_COE.getAttribute("caption"))
-    cmpSym_CM1CON_COE.setDefaultValue(False)
-    cmpSym_CM1CON_COE.setVisible(True)
 
     cmpSym_CM2CON_STRING = cmpComponent.createCommentSymbol("CMP2_STRING", None)
     cmpSym_CM2CON_STRING.setLabel("Comparator 2")
-    cmpSym_CM2CON_STRING.setVisible(True)
 
     cmp2CREF_names = []
     _get_bitfield_names(cmpValGrp_CM2CON_CREF, cmp2CREF_names)
@@ -260,8 +255,7 @@ def instantiateComponent(cmpComponent):
     cmpSym_CM2CON_CREF.setOutputMode("Value")
     cmpSym_CM2CON_CREF.setDisplayMode("Description")
     for ii in cmp2CREF_names:
-        cmpSym_CM2CON_CREF.addKey( ii['desc'], ii['value'], ii['key'] )     
-    cmpSym_CM2CON_CREF.setVisible(True)
+        cmpSym_CM2CON_CREF.addKey( ii['desc'], ii['value'], ii['key'] )
 
     cmp2CCH_names = []
     _get_bitfield_names(cmpValGrp_CM2CON_CCH, cmp2CCH_names)
@@ -271,55 +265,46 @@ def instantiateComponent(cmpComponent):
     cmpSym_CM2CON_CCH.setOutputMode("Value")
     cmpSym_CM2CON_CCH.setDisplayMode("Description")
     for ii in cmp2CCH_names:
-        cmpSym_CM2CON_CCH.addKey( ii['desc'], ii['value'], ii['key'] )     
-    cmpSym_CM2CON_CCH.setVisible(True)
+        cmpSym_CM2CON_CCH.addKey( ii['desc'], ii['value'], ii['key'] )
 
     cmp2EVPOL_names = []
-    _get_bitfield_names(cmpValGrp_CM2CON_EVPOL, cmp2EVPOL_names)    
+    _get_bitfield_names(cmpValGrp_CM2CON_EVPOL, cmp2EVPOL_names)
     cmpSym_CM2CON_EVPOL = cmpComponent.createKeyValueSetSymbol("CMP_CM2CON_EVPOL", cmpSym_CM2CON_STRING)
     cmpSym_CM2CON_EVPOL.setLabel(cmpBitFld_CM2CON_EVPOL.getAttribute("caption"))
     cmpSym_CM2CON_EVPOL.setDefaultValue(0)
     cmpSym_CM2CON_EVPOL.setOutputMode("Value")
     cmpSym_CM2CON_EVPOL.setDisplayMode("Description")
     for ii in cmp2EVPOL_names:
-        cmpSym_CM2CON_EVPOL.addKey( ii['desc'], ii['value'], ii['key'] )     
-    cmpSym_CM2CON_EVPOL.setVisible(True)
+        cmpSym_CM2CON_EVPOL.addKey( ii['desc'], ii['value'], ii['key'] )
 
     cmpSym_CM2CON_CPOL = cmpComponent.createBooleanSymbol("CMP_CM2CON_CPOL", cmpSym_CM2CON_STRING)
     cmpSym_CM2CON_CPOL.setLabel(cmpBitFld_CM2CON_CPOL.getAttribute("caption"))
-    cmpSym_CM2CON_CPOL.setDefaultValue(False)
-    cmpSym_CM2CON_CPOL.setVisible(True)
 
     cmpSym_CM2CON_COE = cmpComponent.createBooleanSymbol("CMP_CM2CON_COE", cmpSym_CM2CON_STRING)
     cmpSym_CM2CON_COE.setLabel(cmpBitFld_CM2CON_COE.getAttribute("caption"))
-    cmpSym_CM2CON_COE.setDefaultValue(False)
-    cmpSym_CM2CON_COE.setVisible(True)
 
     #Collecting user input to combine into CMPxCON register
     #CMPxCON is updated every time a user selection changes
     cmpSym_CMP1CON = cmpComponent.createHexSymbol("CM1CON_VALUE", None)
     cmpSym_CMP1CON.setDefaultValue(0)
     cmpSym_CMP1CON.setVisible(False)
-    cmpSym_CMP1CON.setDependencies(combine1Values, ["CMP_CM1CON_CREF"])
-    cmpSym_CMP1CON.setDependencies(combine1Values, ["CMP_CM1CON_CCH"])
-    cmpSym_CMP1CON.setDependencies(combine1Values, ["CMP_CM1CON_EVPOL"])    
-    cmpSym_CMP1CON.setDependencies(combine1Values, ["CMP_CM1CON_CPOL"])
-    cmpSym_CMP1CON.setDependencies(combine1Values, ["CMP_CM1CON_COE"])
+    cmpSym_CMP1CON.setDependencies(combine1Values, ["CMP_CM1CON_CREF", "CMP_CM1CON_CCH", "CMP_CM1CON_EVPOL", "CMP_CM1CON_CPOL", "CMP_CM1CON_COE"])
 
     cmpSym_CMP2CON = cmpComponent.createHexSymbol("CM2CON_VALUE", None)
     cmpSym_CMP2CON.setDefaultValue(0)
     cmpSym_CMP2CON.setVisible(False)
-    cmpSym_CMP2CON.setDependencies(combine2Values, ["CMP_CM2CON_CREF"])
-    cmpSym_CMP2CON.setDependencies(combine2Values, ["CMP_CM2CON_CCH"])
-    cmpSym_CMP2CON.setDependencies(combine2Values, ["CMP_CM2CON_EVPOL"])    
-    cmpSym_CMP2CON.setDependencies(combine2Values, ["CMP_CM2CON_CPOL"])
-    cmpSym_CMP2CON.setDependencies(combine2Values, ["CMP_CM2CON_COE"])
+    cmpSym_CMP2CON.setDependencies(combine2Values, ["CMP_CM2CON_CREF", "CMP_CM2CON_CCH", "CMP_CM2CON_EVPOL", "CMP_CM2CON_CPOL", "CMP_CM2CON_COE"])
 
     #Calculate the proper interrupt registers using IRQ#
-    cmp1Irq_index = int(getIRQnumber("COMPARATOR_1"))
-    cmp1EnblRegName, enblBitPosn = _get_enblReg_parms(cmp1Irq_index)
-    cmp1StatRegName, statBitPosn = _get_statReg_parms(cmp1Irq_index)
-    cmp1PriRegName, cmp1PriShift, cmp1SubShift = _get_sub_priority_parms(cmp1Irq_index)
+    cmp1Irq = "COMPARATOR_1"
+    cmp1InterruptVector = cmp1Irq + "_INTERRUPT_ENABLE"
+    cmp1InterruptHandler = cmp1Irq + "_INTERRUPT_HANDLER"
+    cmp1InterruptHandlerLock = cmp1Irq + "_INTERRUPT_HANDLER_LOCK"
+    cmp1InterruptVectorUpdate = cmp1Irq + "_INTERRUPT_ENABLE_UPDATE"
+    cmp1Irq_index = int(getIRQnumber(cmp1Irq))
+
+    cmp1EnblRegName = _get_enblReg_parms(cmp1Irq_index)
+    cmp1StatRegName = _get_statReg_parms(cmp1Irq_index)
 
     #CMP1 IEC REG
     cmp1IEC = cmpComponent.createStringSymbol("CMP1_IEC_REG", None)
@@ -331,31 +316,16 @@ def instantiateComponent(cmpComponent):
     cmp1IFS.setDefaultValue(cmp1StatRegName)
     cmp1IFS.setVisible(False)
 
-
-    #CMP1 PRIORITY VALUE
-    cmp1IPC_PriValue = cmpComponent.createHexSymbol("CMP1_IPC_PRI_VALUE", None)
-    cmp1IPC_PriValue.setDefaultValue(7)
-    cmp1IPC_PriValue.setVisible(False)
-    cmp1IPC_PriValue.setDependencies(updateIRQValues, ["core.COMPARATOR_1_PRIORITY"])
-
-    #CMP1 SUBPRIORITY VALUE
-    cmp1IPC_SubpriValue = cmpComponent.createHexSymbol("CMP1_IPC_SUBPRI_VALUE", None)
-    cmp1IPC_SubpriValue.setDefaultValue(3)
-    cmp1IPC_SubpriValue.setVisible(False)
-    cmp1IPC_SubpriValue.setDependencies(updateIRQValues, ["core.COMPARATOR_1_SUBPRIORITY"])
-
-
-    #CMP1 HANDLER NAME
-    cmp1IPC_handlerStr = cmpComponent.createStringSymbol("CMP1_ISR_HANDLER_NAME", None)
-    cmp1IPC_handlerStr.setDefaultValue("COMPARATOR_1_Handler")
-    cmp1IPC_handlerStr.setVisible(False)
-    cmp1IPC_handlerStr.setDependencies(updateHandlerName, ["core.COMPARATOR_1_HANDLER"])
-
     #Calculate the proper interrupt registers using IRQ#
-    cmp2Irq_index = int(getIRQnumber("COMPARATOR_2"))
-    cmp2EnblRegName, enblBitPosn = _get_enblReg_parms(cmp2Irq_index)
-    cmp2StatRegName, statBitPosn = _get_statReg_parms(cmp2Irq_index)
-    cmp2PriRegName, cmp2PriShift, cmp2SubShift = _get_sub_priority_parms(cmp2Irq_index)
+    cmp2Irq = "COMPARATOR_2"
+    cmp2InterruptVector = cmp2Irq + "_INTERRUPT_ENABLE"
+    cmp2InterruptHandler = cmp2Irq + "_INTERRUPT_HANDLER"
+    cmp2InterruptHandlerLock = cmp2Irq + "_INTERRUPT_HANDLER_LOCK"
+    cmp2InterruptVectorUpdate = cmp2Irq + "_INTERRUPT_ENABLE_UPDATE"
+    cmp2Irq_index = int(getIRQnumber(cmp2Irq))
+
+    cmp2EnblRegName = _get_enblReg_parms(cmp2Irq_index)
+    cmp2StatRegName = _get_statReg_parms(cmp2Irq_index)
 
     #CMP2 IEC REG
     cmp2IEC = cmpComponent.createStringSymbol("CMP2_IEC_REG", None)
@@ -367,53 +337,26 @@ def instantiateComponent(cmpComponent):
     cmp2IFS.setDefaultValue(cmp2StatRegName)
     cmp2IFS.setVisible(False)
 
-
-    #CMP2 PRIORITY VALUE
-    cmp2IPC_PriValue = cmpComponent.createHexSymbol("CMP2_IPC_PRI_VALUE", None)
-    cmp2IPC_PriValue.setDefaultValue(7)
-    cmp2IPC_PriValue.setVisible(False)
-    cmp2IPC_PriValue.setDependencies(updateIRQValues, ["core.COMPARATOR_2_PRIORITY"])
-
-    #CMP2 SUBPRIORITY VALUE
-    cmp2IPC_SubpriValue = cmpComponent.createHexSymbol("CMP2_IPC_SUBPRI_VALUE", None)
-    cmp2IPC_SubpriValue.setDefaultValue(3)
-    cmp2IPC_SubpriValue.setVisible(False)
-    cmp2IPC_SubpriValue.setDependencies(updateIRQValues, ["core.COMPARATOR_2_SUBPRIORITY"])
-
-
-    #CMP2 HANDLER NAME
-    cmp2IPC_handlerStr = cmpComponent.createStringSymbol("CMP2_ISR_HANDLER_NAME", None)
-    cmp2IPC_handlerStr.setDefaultValue("COMPARATOR_2_Handler")
-    cmp2IPC_handlerStr.setVisible(False)
-    cmp2IPC_handlerStr.setDependencies(updateHandlerName, ["core.COMPARATOR_2_HANDLER"])
-    
 ############################################################################
 #### Dependency ####
 ############################################################################
 
-    # NVIC Dynamic settings
-    cmpinterrupt1Control = cmpComponent.createBooleanSymbol("CMP1_INTERRUPT_ENABLE", None)
-    cmpinterrupt1Control.setDependencies(interruptControl, ["CMP_CM1CON_EVPOL"])
-    cmpinterrupt1Control.setVisible(False)
-	
-    cmpinterrupt2Control = cmpComponent.createBooleanSymbol("CMP2_INTERRUPT_ENABLE", None)
-    cmpinterrupt2Control.setDependencies(interruptControl, ["CMP_CM2CON_EVPOL"])
-    cmpinterrupt2Control.setVisible(False)
-
+    # EVIC Dynamic settings
     # Dependency Status
     cmpSymInt1EnComment = cmpComponent.createCommentSymbol("CMP1_INTERRUPT_ENABLE_COMMENT", cmpSym_CM1CON_STRING)
     cmpSymInt1EnComment.setVisible(False)
     cmpSymInt1EnComment.setLabel("Warning!!! Comparator 1 Interrupt is Disabled in Interrupt Manager")
-    cmpSymInt1EnComment.setDependencies(dependencyStatus, ["CMP1_INTERRUPT_ENABLE"])
+    cmpSymInt1EnComment.setDependencies(updateCMP1InterruptData, ["CMP_CM1CON_EVPOL", "core." + cmp1InterruptVectorUpdate])
 
     cmpSymInt2EnComment = cmpComponent.createCommentSymbol("CMP2_INTERRUPT_ENABLE_COMMENT", cmpSym_CM2CON_STRING)
     cmpSymInt2EnComment.setVisible(False)
     cmpSymInt2EnComment.setLabel("Warning!!! Comparator 2 Interrupt is Disabled in Interrupt Manager")
-    cmpSymInt2EnComment.setDependencies(dependencyStatus, ["CMP2_INTERRUPT_ENABLE"])    
-    
+    cmpSymInt2EnComment.setDependencies(updateCMP2InterruptData, ["CMP_CM2CON_EVPOL", "core." + cmp2InterruptVectorUpdate])
+
 ############################################################################
 #### Code Generation ####
 ############################################################################
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     cmpHeaderFile = cmpComponent.createFileSymbol("CMP_COMMON_HEADER", None)
@@ -428,7 +371,7 @@ def instantiateComponent(cmpComponent):
     cmpHeader1File = cmpComponent.createFileSymbol("CMP_HEADER1", None)
     cmpHeader1File.setMarkup(True)
     cmpHeader1File.setSourcePath("../peripheral/cmp_00866/templates/plib_cmp.h.ftl")
-    cmpHeader1File.setOutputName("plib_"+ cmpInstanceName.getValue().lower()+ ".h")
+    cmpHeader1File.setOutputName("plib_" + cmpInstanceName.getValue().lower() + ".h")
     cmpHeader1File.setDestPath("peripheral/cmp/")
     cmpHeader1File.setProjectPath("config/" + configName + "/peripheral/cmp/")
     cmpHeader1File.setType("HEADER")
@@ -437,7 +380,7 @@ def instantiateComponent(cmpComponent):
     cmpSource1File = cmpComponent.createFileSymbol("CMP_SOURCE1", None)
     cmpSource1File.setMarkup(True)
     cmpSource1File.setSourcePath("../peripheral/cmp_00866/templates/plib_cmp.c.ftl")
-    cmpSource1File.setOutputName("plib_"+cmpInstanceName.getValue().lower() + ".c")
+    cmpSource1File.setOutputName("plib_" + cmpInstanceName.getValue().lower() + ".c")
     cmpSource1File.setDestPath("peripheral/cmp/")
     cmpSource1File.setProjectPath("config/" + configName + "/peripheral/cmp/")
     cmpSource1File.setType("SOURCE")
@@ -454,4 +397,4 @@ def instantiateComponent(cmpComponent):
     cmpSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     cmpSystemDefFile.setSourcePath("../peripheral/cmp_00866/templates/system/system_definitions.h.ftl")
     cmpSystemDefFile.setMarkup(True)
-    
+

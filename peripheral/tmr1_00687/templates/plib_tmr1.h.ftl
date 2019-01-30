@@ -64,43 +64,38 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this
-    interface and should be considered part of it.
-*/
 
 #define TIMER1_EXT_CLOCK_INPUT_FREQ  10000000
 
-	
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
-/*  Functions to support the system service for Timer.
-*/
-<#if (TMR1_INTERRUPT_ENABLE == true)>
-void ${TMR1_INSTANCE_NAME}_InterruptEnable();
-void ${TMR1_INSTANCE_NAME}_InterruptDisable();
-void ${TMR1_INSTANCE_NAME}_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_t context );
-void TIMER_1_Tasks (void);
-</#if>
-
 // *****************************************************************************
-void ${TMR1_INSTANCE_NAME}_Initialize();
+void ${TMR1_INSTANCE_NAME}_Initialize(void);
 
-void ${TMR1_INSTANCE_NAME}_Start();
+void ${TMR1_INSTANCE_NAME}_Start(void);
 
-void ${TMR1_INSTANCE_NAME}_Stop();
+void ${TMR1_INSTANCE_NAME}_Stop(void);
 
 void ${TMR1_INSTANCE_NAME}_PeriodSet(uint16_t);
 
-uint16_t ${TMR1_INSTANCE_NAME}_PeriodGet();
+uint16_t ${TMR1_INSTANCE_NAME}_PeriodGet(void);
 
-uint16_t ${TMR1_INSTANCE_NAME}_CounterGet();
+uint16_t ${TMR1_INSTANCE_NAME}_CounterGet(void);
 
-uint32_t ${TMR1_INSTANCE_NAME}_FrequencyGet();
+uint32_t ${TMR1_INSTANCE_NAME}_FrequencyGet(void);
 
+<#if TMR1_INTERRUPT_MODE == true>
+void ${TMR1_INSTANCE_NAME}_InterruptEnable(void);
+
+void ${TMR1_INSTANCE_NAME}_InterruptDisable(void);
+
+void ${TMR1_INSTANCE_NAME}_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_t context );
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

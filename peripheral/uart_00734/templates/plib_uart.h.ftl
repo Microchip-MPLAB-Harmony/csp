@@ -46,6 +46,7 @@
 #include <stdint.h>
 #include "device.h"
 #include "plib_uart_common.h"
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -60,13 +61,12 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+
 #define ${UART_INSTANCE_NAME}_FrequencyGet()    (uint32_t)(${UART_CLOCK_FREQ}UL)
 
 /****************************** ${UART_INSTANCE_NAME} API *********************************/
 
 void ${UART_INSTANCE_NAME}_Initialize( void );
-
-UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void );
 
 bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
@@ -74,18 +74,15 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size );
 
 bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size );
 
-<#if UART_INTERRUPT_MODE == false >
-int ${UART_INSTANCE_NAME}_ReadByte( void );
-bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void );
-void ${UART_INSTANCE_NAME}_WriteByte( int data );
-void ${UART_INSTANCE_NAME}_Sync(void);
-bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void );
-</#if>
+UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void );
 
-<#if UART_INTERRUPT_MODE == true >
+<#if USART_INTERRUPT_MODE == true>
 bool ${UART_INSTANCE_NAME}_ReadIsBusy( void );
+
 size_t ${UART_INSTANCE_NAME}_ReadCountGet( void );
+
 bool ${UART_INSTANCE_NAME}_WriteIsBusy( void );
+
 size_t ${UART_INSTANCE_NAME}_WriteCountGet( void );
 
 void ${UART_INSTANCE_NAME}_FaultCallbackRegister( UART_CALLBACK callback, uintptr_t context );
@@ -93,19 +90,16 @@ void ${UART_INSTANCE_NAME}_FaultCallbackRegister( UART_CALLBACK callback, uintpt
 void ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context );
 
 void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+<#else>
+int ${UART_INSTANCE_NAME}_ReadByte( void );
+
+bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void );
+
+void ${UART_INSTANCE_NAME}_WriteByte( int data );
+
+bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void );
 </#if>
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
-
-<#if UART_INTERRUPT_MODE == true >
-void ${UART_INSTANCE_NAME}_FAULT_Tasks (void);
-void ${UART_INSTANCE_NAME}_RX_Tasks (void);
-void ${UART_INSTANCE_NAME}_TX_Tasks (void);
-</#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -113,4 +107,5 @@ void ${UART_INSTANCE_NAME}_TX_Tasks (void);
 
 #endif
 // DOM-IGNORE-END
+
 #endif // PLIB_${UART_INSTANCE_NAME}_H

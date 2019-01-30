@@ -51,9 +51,9 @@
 <#assign mode = OCMP_OCxCON_OCM?number>
 <#assign INDEX = OCMP_INSTANCE_NAME?remove_beginning("OCMP")>
 
-<#if OCMP_INTERRUPT_ENABLE?c == "true">
+<#if OCMP_INTERRUPT_ENABLE == true>
 
-OCMP_OBJECT ${OCMP_INSTANCE_NAME}?lower_caseObj;
+OCMP_OBJECT ${OCMP_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
 void ${OCMP_INSTANCE_NAME}_Initialize (void)
@@ -70,17 +70,15 @@ void ${OCMP_INSTANCE_NAME}_Initialize (void)
     CFGCON |= _CFGCON_OCACLK_MASK;
   </#if>
 
-    <#if OCMP_INTERRUPT_ENABLE?c == 'true'>
+<#if OCMP_INTERRUPT_ENABLE == true>
     ${IEC_REG} = _${IEC_REG}_OC${INDEX}IE_MASK;
-    </#if>
+</#if>
 }
-
 
 void ${OCMP_INSTANCE_NAME}_Enable (void)
 {
     OC${INDEX}CONSET = _OC${INDEX}CON_ON_MASK;
 }
-
 
 void ${OCMP_INSTANCE_NAME}_Disable (void)
 {
@@ -118,21 +116,22 @@ uint32_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void)
 }
 </#if>
 
-<#if OCMP_INTERRUPT_ENABLE?c == "true">
-
+<#if OCMP_INTERRUPT_ENABLE == true>
 void ${OCMP_INSTANCE_NAME}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t context)
 {
-    ${OCMP_INSTANCE_NAME}?lower_caseObj.callback = callback;
-    ${OCMP_INSTANCE_NAME}?lower_caseObj.context = context;
+    ${OCMP_INSTANCE_NAME?lower_case}Obj.callback = callback;
+
+    ${OCMP_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
 void OUTPUT_COMPARE_${INDEX}_InterruptHandler (void)
 {
     ${IFS_REG}CLR = _${IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
 
-    if( (${OCMP_INSTANCE_NAME}?lower_caseObj.callback != NULL))
+    if( (${OCMP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
-        ${OCMP_INSTANCE_NAME}?lower_caseObj.callback(${OCMP_INSTANCE_NAME}?lower_caseObj.context);
+        ${OCMP_INSTANCE_NAME?lower_case}Obj.callback(${OCMP_INSTANCE_NAME?lower_case}Obj.context);
     }
 }
+
 </#if>

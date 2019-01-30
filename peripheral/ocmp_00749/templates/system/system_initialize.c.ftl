@@ -1,1 +1,1 @@
-${OCMP_INSTANCE_NAME}_Initialize();
+    ${OCMP_INSTANCE_NAME}_Initialize();

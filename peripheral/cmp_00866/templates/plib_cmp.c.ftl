@@ -37,10 +37,14 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+
 #include "plib_${CMP_INSTANCE_NAME?lower_case}.h"
 
 <#--Implementation-->
 // *****************************************************************************
+
+<#if CMP_CM1CON_EVPOL != "0">CMP_OBJECT cmp1Obj;</#if>
+<#if CMP_CM2CON_EVPOL != "0">CMP_OBJECT cmp2Obj;</#if>
 
 // *****************************************************************************
 // Section: CMP Implementation
@@ -55,8 +59,8 @@
     Initialization function for both CMP1 & CMP2 channels of the CMP peripheral
 
   Description:
-    This function initializes the CMP peripheral with user input from the 
-	configurator.
+    This function initializes the CMP peripheral with user input from the
+    configurator.
 
   Parameters:
     none
@@ -67,31 +71,31 @@
 
 void ${CMP_INSTANCE_NAME}_Initialize (void)
 {
-	/*	Setup CM1CON	*/
-	/*	CCH		= ${CMP_CM1CON_CCH}		*/
-	/*	CREF 	= ${CMP_CM1CON_CREF}		*/
-	/*	EVPOL 	= ${CMP_CM1CON_EVPOL}		*/
-	/*	CPOL 	= ${CMP_CM1CON_CPOL?then('true', 'false')} 	*/
-	/*	COE 	= ${CMP_CM1CON_COE?then('true', 'false')}	*/
+    /*  Setup CM1CON    */
+    /*  CCH     = ${CMP_CM1CON_CCH}     */
+    /*  CREF    = ${CMP_CM1CON_CREF}        */
+    /*  EVPOL   = ${CMP_CM1CON_EVPOL}       */
+    /*  CPOL    = ${CMP_CM1CON_CPOL?then('true', 'false')}  */
+    /*  COE     = ${CMP_CM1CON_COE?then('true', 'false')}   */
 
-	CM1CON = 0x${CM1CON_VALUE};
-<#if CMP1_INTERRUPT_ENABLE?c == "true">
+    CM1CON = 0x${CM1CON_VALUE};
+<#if CMP_CM1CON_EVPOL != "0">
 
-	${CMP1_IEC_REG}SET = _${CMP1_IEC_REG}_${CMP_INSTANCE_NAME}1IE_MASK;
+    ${CMP1_IEC_REG}SET = _${CMP1_IEC_REG}_${CMP_INSTANCE_NAME}1IE_MASK;
 </#if>
 
-	/*	Setup CM2CON	*/
-	/*	CCH 	= ${CMP_CM2CON_CCH}		*/
-	/*	CREF 	= ${CMP_CM2CON_CREF}		*/
-	/*	EVPOL 	= ${CMP_CM2CON_EVPOL}		*/
-	/*	CPOL 	= ${CMP_CM2CON_CPOL?then('true', 'false')}	*/ 
-	/*	COE 	= ${CMP_CM2CON_COE?then('true', 'false')}	*/
+    /*  Setup CM2CON    */
+    /*  CCH     = ${CMP_CM2CON_CCH}     */
+    /*  CREF    = ${CMP_CM2CON_CREF}        */
+    /*  EVPOL   = ${CMP_CM2CON_EVPOL}       */
+    /*  CPOL    = ${CMP_CM2CON_CPOL?then('true', 'false')}  */
+    /*  COE     = ${CMP_CM2CON_COE?then('true', 'false')}   */
 
-	CM2CON = 0x${CM2CON_VALUE};
-<#if CMP1_INTERRUPT_ENABLE?c == "true">
-	
-	${CMP2_IEC_REG}SET = _${CMP2_IEC_REG}_${CMP_INSTANCE_NAME}2IE_MASK;
-</#if>	
+    CM2CON = 0x${CM2CON_VALUE};
+<#if CMP_CM2CON_EVPOL != "0">
+
+    ${CMP2_IEC_REG}SET = _${CMP2_IEC_REG}_${CMP_INSTANCE_NAME}2IE_MASK;
+</#if>
 }
 
 // *****************************************************************************
@@ -102,7 +106,7 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
     Enable function of the CMP1 Channel
 
   Description:
-    This function enables the CMP1 Channel 
+    This function enables the CMP1 Channel
 
   Parameters:
     none
@@ -113,7 +117,7 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
 
 void ${CMP_INSTANCE_NAME}_1_CompareEnable (void)
 {
-	CM1CONSET = _CM1CON_ON_MASK;
+    CM1CONSET = _CM1CON_ON_MASK;
 }
 
 // *****************************************************************************
@@ -135,7 +139,7 @@ void ${CMP_INSTANCE_NAME}_1_CompareEnable (void)
 
 void ${CMP_INSTANCE_NAME}_1_CompareDisable (void)
 {
-	CM1CONCLR = _CM1CON_ON_MASK;
+    CM1CONCLR = _CM1CON_ON_MASK;
 }
 
 // *****************************************************************************
@@ -157,7 +161,7 @@ void ${CMP_INSTANCE_NAME}_1_CompareDisable (void)
 
 void ${CMP_INSTANCE_NAME}_2_CompareEnable (void)
 {
-	CM2CONSET = _CM2CON_ON_MASK;
+    CM2CONSET = _CM2CON_ON_MASK;
 }
 
 // *****************************************************************************
@@ -179,7 +183,7 @@ void ${CMP_INSTANCE_NAME}_2_CompareEnable (void)
 
 void ${CMP_INSTANCE_NAME}_2_CompareDisable (void)
 {
-	CM2CONCLR = _CM2CON_ON_MASK;
+    CM2CONCLR = _CM2CON_ON_MASK;
 }
 
 // *****************************************************************************
@@ -193,19 +197,18 @@ void ${CMP_INSTANCE_NAME}_2_CompareDisable (void)
     Returns the current state of requested CMP Channel
 
   Parameters:
-    source	cmp channel
+    source  cmp channel
 
   Returns:
-    bool	current value of cmp channel output
+    bool    current value of cmp channel output
 */
 
 bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE ch_status)
 {
-    return ((CMSTAT >> ch_status) & 0x1); 
+    return ((CMSTAT >> ch_status) & 0x1);
 }
 
-CMP_OBJECT cmp1Obj;
-<#if CMP1_INTERRUPT_ENABLE?c == "true">
+<#if CMP_CM1CON_EVPOL != "0">
 // *****************************************************************************
 /* Function:
   void ${CMP_INSTANCE_NAME}_1_CallbackRegister( CMP_CALLBACK callback, uintptr_t context )
@@ -234,13 +237,13 @@ CMP_OBJECT cmp1Obj;
 void ${CMP_INSTANCE_NAME}_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
 {
     cmp1Obj.callback = callback;
+
     cmp1Obj.context = context;
 }
-</#if>
 
 // *****************************************************************************
 /* Function:
-  void COMPARATOR_1_Tasks( void )
+  void COMPARATOR_1_InterruptHandler( void )
 
   Summary:
     Is run when interrupt occurs, or during polling.  Calls the callback function if present.
@@ -257,18 +260,19 @@ void ${CMP_INSTANCE_NAME}_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t co
   Returns:
     void
 */
-void COMPARATOR_1_Tasks(void)
+void COMPARATOR_1_InterruptHandler(void)
 {
-	${CMP1_IFS_REG}CLR = _${CMP1_IFS_REG}_${CMP_INSTANCE_NAME}1IF_MASK;	//Clear IRQ flag
+    ${CMP1_IFS_REG}CLR = _${CMP1_IFS_REG}_${CMP_INSTANCE_NAME}1IF_MASK; //Clear IRQ flag
 
-	if(cmp1Obj.callback != NULL)
-	{
-		cmp1Obj.callback(cmp1Obj.context);
-	}
+    if(cmp1Obj.callback != NULL)
+    {
+        cmp1Obj.callback(cmp1Obj.context);
+    }
 }
 
-CMP_OBJECT cmp2Obj;
-<#if CMP2_INTERRUPT_ENABLE?c == "true">
+</#if>
+
+<#if CMP_CM2CON_EVPOL != "0">
 // *****************************************************************************
 /* Function:
   void ${CMP_INSTANCE_NAME}_2_CallbackRegister( CMP_CALLBACK callback, uintptr_t context )
@@ -296,13 +300,13 @@ CMP_OBJECT cmp2Obj;
 void ${CMP_INSTANCE_NAME}_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
 {
     cmp2Obj.callback = callback;
+
     cmp2Obj.context = context;
 }
-</#if>
 
 // *****************************************************************************
 /* Function:
-  void COMPARATOR_2_Tasks( void )
+  void COMPARATOR_2_InterruptHandler( void )
 
   Summary:
     Is run when interrupt occurs, or during polling.  Calls the callback function if present.
@@ -319,15 +323,16 @@ void ${CMP_INSTANCE_NAME}_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t co
   Returns:
     void
 */
-void COMPARATOR_2_Tasks(void)
+void COMPARATOR_2_InterruptHandler(void)
 {
-    ${CMP2_IFS_REG}CLR = _${CMP2_IFS_REG}_${CMP_INSTANCE_NAME}2IF_MASK;	//Clear IRQ flag
+    ${CMP2_IFS_REG}CLR = _${CMP2_IFS_REG}_${CMP_INSTANCE_NAME}2IF_MASK; //Clear IRQ flag
 
-	if(cmp2Obj.callback != NULL)
-	{
-		cmp2Obj.callback(cmp2Obj.context);
-	}
+    if(cmp2Obj.callback != NULL)
+    {
+        cmp2Obj.callback(cmp2Obj.context);
+    }
 }
+</#if>
 
 <#--
 /*******************************************************************************

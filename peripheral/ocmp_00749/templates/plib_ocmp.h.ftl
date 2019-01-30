@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${OCMP_INSTANCE_NAME}?lower_case.h
+    plib_${OCMP_INSTANCE_NAME?lower_case}.h
 
   Summary:
     OCMP PLIB Header File
@@ -155,7 +155,6 @@ bool ${OCMP_INSTANCE_NAME}_FaultStatusGet (void);
 void ${OCMP_INSTANCE_NAME}_CompareValueSet (uint32_t value);
 </#if>
 
-
 // *****************************************************************************
 /* Function:
    uint32_t ${OCMP_INSTANCE_NAME}_CompareValueGet (void)
@@ -210,7 +209,7 @@ uint32_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void);
 */
 void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint32_t value);
 </#if>
-<#if OCMP_INTERRUPT_ENABLE?c == "true">
+<#if OCMP_INTERRUPT_ENABLE == true>
 // *****************************************************************************
 /* Function:
   void ${OCMP_INSTANCE_NAME}_CallbackRegister( OCMP_CALLBACK callback, uintptr_t context )

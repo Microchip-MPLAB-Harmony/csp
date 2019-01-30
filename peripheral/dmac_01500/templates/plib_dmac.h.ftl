@@ -53,8 +53,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/*  This section lists the other files that are included in this file.
-*/
 #include <device.h>
 #include <string.h>
 #include <stdbool.h>
@@ -73,7 +71,7 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-// *****************************************************************************
+
 typedef uint32_t DMA_CHANNEL_CONFIG;
 
 typedef uintptr_t DMA_CHANNEL_HANDLE;
@@ -129,14 +127,13 @@ typedef enum
 
     /* Data transfer was aborted. */
     DMA_TRANSFER_EVENT_ABORT,
-            
+
     /* No events yet. */
     DMA_TRANSFER_EVENT_NONE
 
 } DMA_TRANSFER_EVENT;
 
-typedef void (*DMA_CHANNEL_CALLBACK) (DMA_TRANSFER_EVENT status,
-        uintptr_t contextHandle);
+typedef void (*DMA_CHANNEL_CALLBACK) (DMA_TRANSFER_EVENT status, uintptr_t contextHandle);
 
 // *****************************************************************************
 /* DMA channel object
@@ -158,7 +155,7 @@ typedef struct
     /* Inidcates the error information for
        the last DMA operation on this channel */
     DMA_ERROR errorInfo;
-    
+
     /* Call back function for this DMA channel */
     DMA_CHANNEL_CALLBACK  pEventCallBack;
 
@@ -179,21 +176,23 @@ typedef struct
   Remarks:
     None
 */
-typedef enum {
-<#list 0..NUM_DMA_CHANS-1 as i>
-<#assign CHAN = "DMA_"+i+"_CHANNEL_NUMBER">
+typedef enum
+{
+<#list 0..NUM_DMA_CHANS - 1 as i>
+<#assign CHAN = "DMA_" + i + "_CHANNEL_NUMBER">
     DMA_CHANNEL_${i} = 0x${.vars[CHAN]},
+
 </#list>
     DMA_NUMBER_OF_CHANNELS = 0x${NUM_DMA_CHANS}
+
 } DMA_CHANNEL;
-
-
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: DMAC API
 // *****************************************************************************
 // *****************************************************************************
+
 // *****************************************************************************
 /* Function:
    void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister
@@ -211,7 +210,7 @@ typedef enum {
 
   Returns:
     void
-    
+
   Example:
     <code>
     ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL_0, DMA_Callback, 0);
@@ -227,7 +226,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL channel, const DMA
     DMA channel transfer function
 
   Description:
-    Sets up a DMA transfer, and starts the transfer if user specified a 
+    Sets up a DMA transfer, and starts the transfer if user specified a
     software-initiated transfer in Harmony.
 
   Parameters:
@@ -238,7 +237,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL channel, const DMA
 
   Returns:
     false, if DMA already is busy / true, if DMA is not busy before calling function
-    
+
   Example:
     <code>
     ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL_0, DMA_Callback, 0);
@@ -262,7 +261,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
 
   Returns:
     void
-    
+
   Example:
     <code>
     ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL_0);
@@ -286,7 +285,7 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL channel);
   Returns:
     true - channel is busy
     false - channel is not busy
-    
+
   Example:
     <code>
     bool returnVal;
@@ -313,7 +312,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMA_CHANNEL channel);
 
   Returns:
     void
-    
+
   Example:
     <code>
     ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet(DMA_CHANNEL_0, 100);
@@ -329,7 +328,7 @@ void ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet (DMA_CHANNEL channel, uint16_t l
     DMA channel settings set function.
 
   Description:
-    Sets the indicated DMA channel with user-specified settings.  Overwrites 
+    Sets the indicated DMA channel with user-specified settings.  Overwrites
     DCHxCON register with new settings.
 
   Parameters:
@@ -338,7 +337,7 @@ void ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet (DMA_CHANNEL channel, uint16_t l
 
   Returns:
     true
-    
+
   Example:
     <code>
     DMA_CHANNEL_CONFIG chanSettings;
@@ -366,7 +365,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMA_CHANNEL channel, uint32_t sett
   Returns:
     DMA_CHANNEL_CONFIG - DCHxCON value
     0 - user error condition where channel was specified out-of-bounds
-    
+
   Example:
     <code>
     DMA_CHANNEL_CONFIG chanSettings;
@@ -392,40 +391,13 @@ DMA_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMA_CHANNEL channel)
 
   Returns:
     void
-    
+
   Example:
     <code>
     ${DMA_INSTANCE_NAME}_Initialize();
     </code>
 */
 void ${DMA_INSTANCE_NAME}_Initialize( void );
-
-<#list 0..NUM_DMA_CHANS-1 as i>
-<#assign ENABLE = "DMA_"+i+"_INTERRUPT_ENABLE">
-<#assign CHANENABLE = "DMAC_CHAN"+i+"_ENBL">
-<#if .vars[ENABLE]?c == "true">
-<#if .vars[CHANENABLE]?c == "true">
-<#assign DMATASKNAME = "DMA"+i+"_Tasks">
-// *****************************************************************************
-/* Function:
-   void ${DMATASKNAME} (void)
-
-  Summary:
-    Interrupt handler for interrupts from DMA${i}.
-
-  Description:
-    None
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-void ${DMATASKNAME} (void);
-</#if>  <#-- .vars[CHANENABLE]?c == "true" -->
-</#if>  <#-- .vars[ENABLE]?c == "true" -->
-</#list>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
