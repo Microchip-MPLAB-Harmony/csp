@@ -1,14 +1,14 @@
 /*******************************************************************************
-  Real Time Counter (${RTC_INSTANCE_NAME}) PLIB
+  Real Time Counter (${RTCC_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_${RTC_INSTANCE_NAME?lower_case}.h
+    plib_${RTCC_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    ${RTC_INSTANCE_NAME} PLIB Header file
+    ${RTCC_INSTANCE_NAME} PLIB Header file
 
   Description:
     This file defines the interface to the RTC peripheral library. This
@@ -41,8 +41,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_${RTC_INSTANCE_NAME}_H
-#define PLIB_${RTC_INSTANCE_NAME}_H
+#ifndef PLIB_${RTCC_INSTANCE_NAME}_H
+#define PLIB_${RTCC_INSTANCE_NAME}_H
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -53,7 +53,9 @@
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-extern "C" {
+
+	extern "C" {
+
 #endif
 // DOM-IGNORE-END
 
@@ -62,6 +64,7 @@ extern "C" {
 // Section: type definitions
 // *****************************************************************************
 // *****************************************************************************
+
 typedef enum 
 {
     RTC_ALARM_MASK_HALF_SECOND = 0x00,   // Every half-second
@@ -75,6 +78,7 @@ typedef enum
     RTC_ALARM_MASK_MONTH = 0x08,         // Once a month
     RTC_ALARM_MASK_YEAR = 0x09,          // Once a year
     RTC_ALARM_MASK_OFF = 0xFF            // Disabled
+
 } RTC_ALARM_MASK;	
 
 // *****************************************************************************
@@ -125,15 +129,15 @@ typedef enum  /* Not used by this DOSID, but kept to preserve API interface */
 
 /*  Functions to support the system service for RTCC.
 */
-<#if RTC_VEC_ENABLE?c == "true">
-void ${RTC_INSTANCE_NAME}_InterruptEnable(RTC_INT_MASK interrupt);
-void ${RTC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt);
-void RTCC_Tasks(void);
+<#if RTCC_INTERRUPT_MODE == true>
+void ${RTCC_INSTANCE_NAME}_InterruptEnable(RTC_INT_MASK interrupt);
+
+void ${RTCC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt);
 </#if>
 
 // *****************************************************************************
 /* Function:
-  bool ${RTC_INSTANCE_NAME}_TimeSet( struct tm *Time )
+  bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
 
   Summary:
     Sets the Real Time Clock Calendar time.
@@ -160,14 +164,14 @@ void RTCC_Tasks(void);
     time.tm_mon = 10;
     time.tm_mday = 29;
     time.tm_wday = 1;   
-    status = ${RTC_INSTANCE_NAME}_TimeSet(&time);
+    status = ${RTCC_INSTANCE_NAME}_TimeSet(&time);
     </code>
 */
-bool ${RTC_INSTANCE_NAME}_TimeSet ( struct tm *Time );
+bool ${RTCC_INSTANCE_NAME}_TimeSet ( struct tm *Time );
 
 // *****************************************************************************
 /* Function:
-  void ${RTC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
+  void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
 
   Summary:
     Gets the Real Time Clock Calendar time.
@@ -187,14 +191,14 @@ bool ${RTC_INSTANCE_NAME}_TimeSet ( struct tm *Time );
   Example:
     <code>
     struct tm time;
-    ${RTC_INSTANCE_NAME}_TimeGet(&time);
+    ${RTCC_INSTANCE_NAME}_TimeGet(&time);
     </code>
 */
-void ${RTC_INSTANCE_NAME}_TimeGet (struct tm  *Time );
+void ${RTCC_INSTANCE_NAME}_TimeGet (struct tm  *Time );
 
 // *****************************************************************************
 /* Function:
-  bool ${RTC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
+  bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
 
   Summary:
     Sets the Real Time Clock Calendar alarm time.
@@ -223,14 +227,14 @@ void ${RTC_INSTANCE_NAME}_TimeGet (struct tm  *Time );
     time.tm_mon = 10;
     time.tm_mday = 29;
     time.tm_wday = 1;
-    ${RTC_INSTANCE_NAME}_AlarmSet(&time, RTC_ALARM_MASK_SS);
+    ${RTCC_INSTANCE_NAME}_AlarmSet(&time, RTC_ALARM_MASK_SS);
     </code>
 */
-bool ${RTC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq );
+bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq );
 
 // *****************************************************************************
 /* Function:
-  void ${RTC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
+  void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
 
   Summary:
     Sets the callback function for an alarm.
@@ -257,12 +261,12 @@ bool ${RTC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFr
     RTCC_CallbackRegister(myfunction, (uintptr_t) NULL);
     </code>
 */
-void ${RTC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
+void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
 
 //*******************************************************************************
 /*
   Function:
-    void ${RTC_INSTANCE_NAME}_Initialize ( void )
+    void ${RTCC_INSTANCE_NAME}_Initialize ( void )
 
   Summary:
     Real-Time Clock Calendar System Service initialization function.
@@ -282,18 +286,20 @@ void ${RTC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t con
 
   Example:
     <code>
-    ${RTC_INSTANCE_NAME}_Initialize();
+    ${RTCC_INSTANCE_NAME}_Initialize();
     </code>
 
   Remarks:
     This function loops and blocks until initialization sequence is complete.
 */
-void ${RTC_INSTANCE_NAME}_Initialize ( void );
+void ${RTCC_INSTANCE_NAME}_Initialize ( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-}
+
+	}
+
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_${RTC_INSTANCE_NAME}_H */
+#endif /* PLIB_${RTCC_INSTANCE_NAME}_H */

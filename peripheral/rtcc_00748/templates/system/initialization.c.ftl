@@ -1,1 +1,1 @@
-    ${RTC_INSTANCE_NAME}_Initialize();
+    ${RTCC_INSTANCE_NAME}_Initialize();

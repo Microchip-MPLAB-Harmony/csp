@@ -28,10 +28,26 @@ from xml.etree import ElementTree
 Log.writeInfoMessage("Loading DMA Manager for " + Variables.get("__PROCESSOR"))
 
 global dmaBitfield_DCH0CON_CHPRI
+
+global dmacActiveChannels
+dmacActiveChannels = []
+
+global dmacInstanceName
+
+global dmacInterruptVectorUpdate
+dmacInterruptVectorUpdate = []
+
+global dmacHeaderFile
+global dmacSourceFile
+global dmacSystemInitFile
+global dmacSystemDefFile
+
+global dmacEnable
+
 dmaReg_DMAECON_SIRQEN     = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0ECON"]/bitfield@[name="SIRQEN"]')
 dmaBitVal_DMAECON_SIRQEN  = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/value-group@[name="DCH0ECON__SIRQEN"]').getChildren()
 dmaValGrp_DCH0CON_CHPRI   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/value-group@[name="DCH0CON__CHPRI"]')
-dmaBitfield_DCH0CON_CHPRI = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0CON"]/bitfield@[name="CHPRI"]')        
+dmaBitfield_DCH0CON_CHPRI = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="DCH0CON"]/bitfield@[name="CHPRI"]')
 dmacBaseAddress           = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="DMAC"]/instance@[name="DMAC"]/register-group')
 
 ################################################################################
@@ -48,102 +64,133 @@ def _get_position(maskval):
         if(int(value) & (1<<ii)):
             break
     return ii
-    
-global _find_channel
-def _find_channel(stringval):
-    nullVal = "X"
-    for s in list(stringval):
-        if s.isdigit():
-            return s
-    return nullVal
-    
+
 def dmacTriggerCalc(symbol, event):
     global per_instance
-    
+
     # the "chan enable" boolean is for in/visible setting
-    if(event["id"].find("DMAC_CHAN") != -1):
-        menu.setVisible(event["value"])
+    if event["id"].find("DMAC_CHAN") != -1:
+        symbol.setVisible(event["value"])
         return
     else:  # get the value for the given key, namely, the interrupt number for this key name
-        symbol.clearValue()
         symbol.setValue(int(per_instance.get(event["value"])), 2)
+
+# The following business logic creates a list of enabled DMA channels and sorts
+# them in the descending order. The left most channel number will be the highest
+# index enabled, also if the list is empty then none of the channel is enabled.
+# Highest index will be used to create DMAC objects in source code.
+# List empty or non-empty status helps to generate/discard DMAC code.
+def dmacGlobalLogic(symbol, event):
+
+    global dmacActiveChannels
+
+    index = (event["id"].replace("DMAC_CHAN", "")).replace("_ENBL", "")
+
+    try:
+        index = int(index)
+    except:
+        return
+
+    if event["value"] == True:
+        if index not in dmacActiveChannels:
+            dmacActiveChannels.append(index)
+    else :
+        if index in dmacActiveChannels:
+            dmacActiveChannels.remove(index)
+
+    dmacActiveChannels.sort()
+    dmacActiveChannels.reverse()
+
+    # Check if the list is not empty first since list element is accessed in the code
+    if dmacActiveChannels:
+        if symbol.getID() == "DMAC_HIGHEST_CHANNEL":
+            symbol.setValue(int(dmacActiveChannels[0]) + 1, 2)
+
+    if symbol.getID() == "DMA_ENABLE":
+        if dmacActiveChannels and symbol.getValue() == False:
+            symbol.setValue(True, 2)
+
+        if not dmacActiveChannels:
+            symbol.setValue(False, 2)
+
+def onGlobalEnableLogic(symbol, event):
+
+    # File generation logic
+    dmacHeaderFile.setEnabled(event["value"])
+    dmacSourceFile.setEnabled(event["value"])
+    dmacSystemInitFile.setEnabled(event["value"])
+    dmacSystemDefFile.setEnabled(event["value"])
 
 def dmacPriorityCalc(symbol, event):
     global per_priority
-    
+
     # the "chan enable" boolean is for in/visible setting
     if(event["id"].find("DMAC_CHAN") != -1):
-        menu.setVisible(event["value"])
+        symbol.setVisible(event["value"])
         return
     else:  # get the value for the given key, namely, the priority number for this key name
         symbol.clearValue()
         symbol.setValue(int(per_priority.get(event["value"])), 2)
-        
-def channelCallback(menu, event):
-    # the "chan enable" boolean is for in/visible setting
-    if(event["id"].find("DMAC_CHAN") != -1):
-        menu.setVisible(event["value"])
-        return # nothing more to do in this function call for this event id
 
-def checkIntSetting(menu, event):
+def updateDMACChannelInterruptData(symbol, event):
     # Sees if the user has not enabled the particular DMAC interrupt when enabling this channel.
     # If so, will display a warning message.
-    global dmacInterruptWarn
-    
-    # the "chan enable" boolean is for in/visible setting
-    chan = _find_channel(event["id"])
-    if(event["id"].find("_ENBL") == -1):
-        menu.setVisible(event["value"])
-        return # nothing more to do in this function call for this event id    
-    else:
-        chan = _find_channel(event["id"])
-        targetSymId = "DMA"+chan+"_INTERRUPT_ENABLE"
-        int_enbl = Database.getSymbolValue("core", targetSymId)
-        if((int_enbl==False) and (event["value"]==True)):
-            dmacInterruptWarn[int(chan)].setVisible(True)
+
+    if "_ENBL" in event["id"]:
+        # the "chan enable" boolean is for in/visible setting
+        channelNumber = (event["id"].replace("DMAC_CHAN", "")).replace("_ENBL", "")
+
+        InterruptVector = "DMA" + channelNumber + "_INTERRUPT_ENABLE"
+        InterruptHandler = "DMA" + channelNumber + "_INTERRUPT_HANDLER"
+        InterruptHandlerLock = "DMA" + channelNumber + "_INTERRUPT_HANDLER_LOCK"
+        InterruptVectorUpdate = "DMA" + channelNumber + "_INTERRUPT_ENABLE_UPDATE"
+
+        Database.setSymbolValue("core", InterruptVector, event["value"], 1)
+        Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 1)
+
+        if event["value"] == True:
+            Database.setSymbolValue("core", InterruptHandler, "DMA" + channelNumber + "_InterruptHandler", 1)
         else:
-            dmacInterruptWarn[int(chan)].setVisible(False)
-    
+            Database.setSymbolValue("core", InterruptHandler, "DMA" + channelNumber + "_Handler", 1)
+
+    else:
+        InterruptVectorUpdate = event["id"].replace("core.", "")
+
+    if event["value"] == True and Database.getSymbolValue("core", InterruptVectorUpdate) == True :
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 def _get_enblReg_parms(vectorNumber):
-    # This takes in vector index for interrupt, and returns the IECx register name as well as 
+
+    # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        ( ("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
+    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
+        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
         temp = float(vectorNumber) / 32.0
         index = int(temp)
-        bit = float(temp%1)
-        bitPosn = int(32.0*bit)
-        bitMask = hex(1<<bitPosn)
-        regName = "IEC"+str(index)
+        bit = float(temp % 1)
+        bitPosn = int(32.0 * bit)
+        bitMask = hex(1 << bitPosn)
+        regName = "IEC" + str(index)
+
     return regName, str(bitPosn), str(bitMask)
-    
+
 def _get_statReg_parms(vectorNumber):
-    # This takes in vector index for interrupt, and returns the IFSx register name as well as 
+
+    # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        ( ("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
+    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
+        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
         temp = float(vectorNumber) / 32.0
         index = int(temp)
-        bit = float(temp%1)
-        bitPosn = int(32.0*bit)
-        bitMask = hex(1<<bitPosn)
-        regName = "IFS"+str(index)
+        bit = float(temp % 1)
+        bitPosn = int(32.0 * bit)
+        bitMask = hex(1 << bitPosn)
+        regName = "IFS" + str(index)
+
     return regName, str(bitPosn), str(bitMask)
-    
-def _get_sub_priority_parms(vectorNumber):
-    # This returns the IPCx register name, priority bit shift, priority mask, subpriority bit shift, 
-    # and subpriority bitmask for input vector number
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-        ( ("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
-        temp = float(vectorNumber) / 4.0
-        index = int(temp)
-        subPrioBit = 8*(vectorNumber & 0x3)
-        subPrioMask = 0x3  # always 2 bits
-        prioMask = 0x7
-        prioBit = subPrioBit + 2
-        regName = "IPC"+str(index)
-    return regName, str(prioBit), str(prioMask), str(subPrioBit), str(subPrioMask)
-    
+
 def dchconCallback(symbol, event):
     # callback for setting the register DCHxCON
     global chenSym
@@ -156,7 +203,7 @@ def dchconCallback(symbol, event):
     for s in list(event["id"]):
         if s.isdigit():
             channel = int(s)
-    if((event["id"] == "DMAC_CHAN"+str(channel)+"_ENBL") and (event["value"] == False)):  
+    if((event["id"] == "DMAC_CHAN" + str(channel) + "_ENBL") and (event["value"] == False)):
         dmacDchconSym[channel].setValue(0,2)  # for not enabled channel, clear register
         chpriSym[channel].setValue("0",2)       # for comment in ftl file
         chenSym[channel].setValue("0",2)      # for comment in ftl file
@@ -166,33 +213,33 @@ def dchconCallback(symbol, event):
         priority = int(dmacPriorityVal[channel].getValue())
         shifted_priority = priority << prio_lsb
         dmacDchconSym[channel].setValue(shifted_priority,2)
-        chpriSym[channel].setValue(str(priority),2)       # for comment in ftl file        
+        chpriSym[channel].setValue(str(priority),2)       # for comment in ftl file
 
 def dcheconCallback(symbol, event):
     # sets up DCHxECON register setting from user-set menu inputs
     global dmacChanReqSrcVal
     global dmacDcheconSym
     global sirqenSym
-    
+
     channel = 0
     # callback for setting the register DCHxECON
     for s in list(event["id"]):
         if s.isdigit():
             channel = int(s)    # one digit: 0-7
-    
+
     if((event["id"] == "DMAC_CHAN"+str(channel)+"_ENBL") and (event["value"] == False)):
         # zero out relevant variables since channel is not enabled
         sirqenSym[channel].setValue(0,2)              # for a comment in ftl code
         dmacDcheconSym[channel].setValue(0,2)
     else:
         intnum = int(dmacChanReqSrcVal[channel].getValue())  # interrupt number
-        if(intnum == 0):    # software will force a transfer 
+        if(intnum == 0):    # software will force a transfer
             dmacDcheconSym[channel].setValue(0,2)           # CFORCE will be set later on
             sirqenSym[channel].setValue(0,2)                # for a comment in ftl code
             dmacChanReqSrcVal[channel].setValue(0,2)
         else:                    # peripheral will start a transfer
             sirqenSym[channel].setValue(1,2)
-            payload = 0x10                              # SIRQEN=1, enable 
+            payload = 0x10                              # SIRQEN=1, enable
             payload |= (intnum & 0xff) << 8  # CHSIRQ, interrupt number to trigger DMA xfer
             dmacDcheconSym[channel].setValue(payload,2)
 
@@ -200,69 +247,27 @@ def dchintCallback(symbol, event):
     # sets up DCHxINT register based on user-input menu settings
     global dmacDchxIntSym
     global chbcieSym
-    
+
     channel = 0
     # callback for setting the register DCHxECON
     for s in list(event["id"]):
         if s.isdigit():
             channel = int(s)    # one digit: 0-7
-            
+
     if((event["id"] == "DMAC_CHAN"+str(channel)+"_ENBL") and (event["value"]==False)):
         # disable channel:  do not enable any DMA interrupts
         chbcieSym[channel].setValue("0",2)              # for a comment in ftl code
         dmacDchxIntSym[channel].setValue(0, 2)
-    else:   
+    else:
         # always enable block transfer complete interrupts, for DMA to indicate when done
         chbcieSym[channel].setValue("1",2)                # for a comment in ftl code
         payload = 0x80000       # CHBCIE=1, block transfer complete interrupt enable
         dmacDchxIntSym[channel].setValue(payload, 2)
 
-global _get_channel_from_nvic_name
-def _get_channel_from_nvic_name(eventId):
-    # due to naming symbols in interrupt side according to a predetermined format,
-    # the channel number needs to be obtained from it.  Naming format is of this type:
-    #     NVIC_134_0_HANDLER
-    # Need to extract the vector number (134 here), and map that to channel value.
-    global vectorChanMap  # set in main part of this python file
-    vector = ""
-    for s in list(eventId[5:]):  # skip the prefix "NVIC_".  Want the number right after it.
-        if(s != "_"):
-            vector += s
-        else:
-            break  # got the numerical value between the 1st two "_".  No more to get from event id.
-    return int(vectorChanMap[vector])  # convert to channel number, and send back
-    
-def updatePrio(menu, event):
-    # updates interrupt priority in DMA, when updated
-    global dmaIrqPriority
-    global _get_channel_from_nvic_name
-    channel = _get_channel_from_nvic_name(event["id"])
-    dmaIrqPriority[channel].setValue(str(event["value"]),2)
-    
-def updateSubprio(menu, event):
-    # updates interrupt priority in DMA, when updated
-    global dmaIrqSubPriority
-    global _get_channel_from_nvic_name
-    channel = _get_channel_from_nvic_name(event["id"])
-    dmaIrqSubPriority[channel].setValue(str(event["value"]),2)
-
-def updateEnbl(menu, event):
-    # updates interrupt enable status in DMA, when updated
-    global dmaIrqEnable
-    global _get_channel_from_nvic_name
-    channel = _get_channel_from_nvic_name(event["id"])
-    dmaIrqEnable[channel].setValue(int(event["value"]),2)
-    
-def updateHandler(menu, event):
-    # updates interrupt handler name in DMA, when updated
-    global dmaIrqHandler
-    global _get_channel_from_nvic_name
-    channel = _get_channel_from_nvic_name(event["id"])
-    dmaIrqHandler[channel].setValue(str(event["value"]),2)    
-    
 ################################################################################
 #### Component ####
 ################################################################################
+
 global per_instance
 global per_priority
 global dmacDchconSym
@@ -275,15 +280,14 @@ global chenSym
 global chpriSym
 global dmacInterruptWarn
 global dmacPriorityVal
-global dmaIrqPriority
-global dmaIrqSubPriority
 global dmaIrqEnable
 global dmaIrqHandler
 global dmaVectorNum
 global vectorChanMap
+
 dmaVectorNum = []
 dmaChannelNum = []
-dmacChanEnblSym = []
+dmacChannelIds = []
 dmacChanAutoSym = []
 dmacChanCrcSym = []
 dmacDchconSym = []
@@ -297,8 +301,6 @@ dmacInterruptWarn = []
 dmacPriority = []
 dmacPriorityVal = []
 chpriSym = []
-dmaIrqPriority = []
-dmaIrqSubPriority = []
 dmaIrqEnable = []
 dmaIrqHandler = []
 vectorChanMap = {}
@@ -342,78 +344,54 @@ dmacInstanceName.setVisible(False)
 # Interrupt-related logic: scan atdf file for all DMA interrupts (there are many of them)
 node = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 childIndex = 0
+
 for child in node:
+
     name = child.getAttribute("name")
-    if(name[:3]=="DMA"):  # found a DMA-related interrupt from atdf file - make 
+
+    if name[:3] == "DMA":  # found a DMA-related interrupt from atdf file - make
+
+        dmacInterruptVectorUpdate.append("core.DMA" + str(childIndex) + "_INTERRUPT_ENABLE_UPDATE")
+
         vectorNum = int(child.getAttribute("index"))
         enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(vectorNum)
         statRegName, statBitPosn, statMask = _get_statReg_parms(vectorNum)
-        prioRegName, prioShift, prioMask, subprioShift, subprioMask = _get_sub_priority_parms(vectorNum)        
-        SymId = name+"_PRIOREG_WRT"
-        dmaPrioRegWrt = coreComponent.createStringSymbol(SymId, None)
-        dmaPrioRegWrt.setDefaultValue(prioRegName+"SET")
-        dmaPrioRegWrt.setVisible(False)
-        
-        SymId = name + "_PRIOREG_SHIFT"
-        dmaPrioRegShift = coreComponent.createStringSymbol(SymId, None)
-        dmaPrioRegShift.setDefaultValue(prioShift)
-        dmaPrioRegShift.setVisible(False)
-        
-        SymId = name + "_SUBPRIOREG_SHIFT"
-        dmaSubPrioRegShift = coreComponent.createStringSymbol(SymId, None)
-        dmaSubPrioRegShift.setDefaultValue(subprioShift)
-        dmaSubPrioRegShift.setVisible(False)
-        
+
         SymId = name + "_ENBLREG_RD"
         dmaEnblRegWrt = coreComponent.createStringSymbol(SymId, None)
         dmaEnblRegWrt.setDefaultValue(enblRegName)
         dmaEnblRegWrt.setVisible(False)
-        
-        SymId = name + "_ENBLREG_WRT"
-        dmaEnblRegWrt = coreComponent.createStringSymbol(SymId, None)
-        dmaEnblRegWrt.setDefaultValue(enblRegName+"SET")
-        dmaEnblRegWrt.setVisible(False)
-        
-        SymId = name + "_ENBLREG_CLR"
-        dmaEnblRegClr = coreComponent.createStringSymbol(SymId, None)
-        dmaEnblRegClr.setDefaultValue(enblRegName+"CLR")
-        dmaEnblRegClr.setVisible(False) 
-        
+
         SymId = name + "_ENBLREG_SHIFT"
         dmaEnblRegShift = coreComponent.createStringSymbol(SymId, None)
         dmaEnblRegShift.setDefaultValue(enblBitPosn)
         dmaEnblRegShift.setVisible(False)
-        
+
         SymId = name + "_ENBLREG_ENABLE_VALUE"
         dmaEnblRegVal = coreComponent.createStringSymbol(SymId, None)
         dmaEnblRegVal.setDefaultValue(str(hex(1<<int(enblBitPosn))))
         dmaEnblRegVal.setVisible(False)
-        
-        SymId = name + "_STATREG_CLR"
-        dmaStatRegClr = coreComponent.createStringSymbol(SymId, None)
-        dmaStatRegClr.setDefaultValue(statRegName+"CLR")
-        dmaStatRegClr.setVisible(False)
-        
+
         SymId = name + "_STATREG_RD"
         dmaStatRegRd = coreComponent.createStringSymbol(SymId, None)
         dmaStatRegRd.setDefaultValue(statRegName)
         dmaStatRegRd.setVisible(False)
-        
+
         SymId = name + "_STATREG_SHIFT"
         dmaStatRegShift = coreComponent.createStringSymbol(SymId, None)
         dmaStatRegShift.setDefaultValue(statBitPosn)
         dmaStatRegShift.setVisible(False)
-        
+
         SymId = name + "_STATREG_SHIFT_VALUE"
         dmaStatRegShiftVal = coreComponent.createStringSymbol(SymId, None)
         dmaStatRegShiftVal.setDefaultValue(str(hex(1<<int(statBitPosn))))
         dmaStatRegShiftVal.setVisible(False)
-        
+
         SymId = name + "_STATREG_MASK"
         dmaStatRegMask = coreComponent.createStringSymbol(SymId, None)
         dmaStatRegMask.setDefaultValue(statMask)
         dmaStatRegMask.setVisible(False)
-        
+
         #used by ftl header file
         dmaVectorNum.append(childIndex)
         SymId = "DMA_" + str(childIndex) + "_VECTOR_NUMBER"
@@ -421,37 +399,37 @@ for child in node:
         dmaVectorNum[childIndex].setDefaultValue(vectorNum)
         dmaVectorNum[childIndex].setVisible(False)
         vectorChanMap[str(vectorNum)] = str(childIndex)
-        
+
         #used by ftl header file
         dmaChannelNum.append(childIndex)
         SymId = "DMA_" + str(childIndex) + "_CHANNEL_NUMBER"
         dmaChannelNum[childIndex] = coreComponent.createIntegerSymbol(SymId, None)
         dmaChannelNum[childIndex].setDefaultValue(childIndex)
         dmaChannelNum[childIndex].setVisible(False)
-        
-        if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-            (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
+
+        if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
+            (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
             # this name could be different for different families - this isn't from the datasheet
-            SymId = "DCH"+name[-1]+"INTbits_REG"
+            SymId = "DCH" + name[-1] + "INTbits_REG"
             symbol = coreComponent.createStringSymbol(SymId, None)
-            symbol.setDefaultValue("DCH"+name[-1]+"INTbits")
+            symbol.setDefaultValue("DCH" + name[-1] + "INTbits")
             symbol.setVisible(False)
-        
-        SymId = "DCH"+name[-1]+"INT_REG"
+
+        SymId = "DCH" + name[-1] + "INT_REG"
         symbol = coreComponent.createStringSymbol(SymId, None)
-        symbol.setDefaultValue("DCH"+name[-1]+"INT")
+        symbol.setDefaultValue("DCH" + name[-1] + "INT")
         symbol.setVisible(False)
-        
-        SymId = "DCH"+name[-1]+"ECONSET_REG"
+
+        SymId = "DCH" + name[-1] + "ECONSET_REG"
         symbol = coreComponent.createStringSymbol(SymId, None)
-        symbol.setDefaultValue("DCH"+name[-1]+"ECONSET")
+        symbol.setDefaultValue("DCH" + name[-1] + "ECONSET")
         symbol.setVisible(False)
-        
+
         childIndex += 1
-        
+
 # below parameters facilitate computation of register addresses at runtime
-if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and 
-    (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
+if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
+    (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
     # base address for DMA registers - get from atdf
     address = dmacBaseAddress.getAttribute("offset")
     SymId = "DMAC_BASE_ADDR"
@@ -464,7 +442,7 @@ if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and
     symbol = coreComponent.createStringSymbol(SymId, None)
     symbol.setDefaultValue("0x60")
     symbol.setVisible(False)
-    
+
     # base address for channel-specific registers
     SymId = "DMAC_CH_BASE_ADDR"
     symbol = coreComponent.createStringSymbol(SymId, None)
@@ -476,13 +454,13 @@ if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and
     symbol = coreComponent.createStringSymbol(SymId, None)
     symbol.setDefaultValue("0xC0")
     symbol.setVisible(False)
-    
+
     # offset of DCHxCON from channel base address
     SymId = "DMAC_CON_OFST"
     symbol = coreComponent.createStringSymbol(SymId, None)
     symbol.setDefaultValue("0x0")
-    symbol.setVisible(False)    
-    
+    symbol.setVisible(False)
+
     # offset of DCHxECON from channel base address
     SymId = "DMAC_ECON_OFST"
     symbol = coreComponent.createStringSymbol(SymId, None)
@@ -494,25 +472,25 @@ if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and
     symbol = coreComponent.createStringSymbol(SymId, None)
     symbol.setDefaultValue("0x20")
     symbol.setVisible(False)
-    
+
     # offset of DCHxSSA from channel base address
     SymId = "DMAC_SSA_OFST"
     symbol = coreComponent.createStringSymbol(SymId, None)
     symbol.setDefaultValue("0x30")
     symbol.setVisible(False)
-    
+
     # offset of DCHxDSA from channel base address
     SymId = "DMAC_DSA_OFST"
     symbol = coreComponent.createStringSymbol(SymId, None)
     symbol.setDefaultValue("0x40")
     symbol.setVisible(False)
-    
+
     # offset of DCHxSSIZ from channel base address
     SymId = "DMAC_SSIZ_OFST"
     symbol = coreComponent.createStringSymbol(SymId, None)
     symbol.setDefaultValue("0x50")
     symbol.setVisible(False)
-    
+
     # offset of DCHxDSIZ from channel base address
     SymId = "DMAC_DSIZ_OFST"
     symbol = coreComponent.createStringSymbol(SymId, None)
@@ -528,56 +506,65 @@ if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and
 # for DMA manager to work
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
 dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("dmac_01500:DMAC01500Model")    
-    
+dmaManagerSelect.setDefaultValue("dmac_01500:DMAC01500Model")
+
 # start of menu-related items
 dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
 dmacMenu.setDescription("DMA (DMAC) Configuration")
 
+# DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
+dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
+dmacEnable.setLabel("Use DMA Service ?")
+dmacEnable.setVisible(False)
+
+dmacFileGen = coreComponent.createBooleanSymbol("DMAC_FILE_GEN", dmacEnable)
+dmacFileGen.setLabel("DMA (DMAC) File Generation")
+dmacFileGen.setVisible(False)
+dmacFileGen.setDependencies(onGlobalEnableLogic, ["DMA_ENABLE"])
+
+dmacHighestCh = coreComponent.createIntegerSymbol("DMAC_HIGHEST_CHANNEL", dmacEnable)
+dmacHighestCh.setLabel("DMA (DMAC) Highest Active Channel")
+dmacHighestCh.setVisible(False)
+
 # per-channel configurations start here
-for dmaChannel in range(0,numDMAChans):
+for dmaChannel in range(0, numDMAChans):
     ###################################### User Menu Controls ##################################################
+
     # DMA channel enable - menu item
-    dmacChanEnSymId = "DMAC_CHAN"+ str(dmaChannel)+"_ENBL"
-    symbol = coreComponent.createBooleanSymbol(dmacChanEnSymId, dmacMenu)
-    symbol.setLabel("Enable channel "+str(dmaChannel)+"?")
-    symbol.setVisible(True)
-    symbol.setDefaultValue(False)
-    symbol.setDependencies(checkIntSetting, [dmacChanEnSymId])
-    dmacChanEnblSym.append(symbol)
-    
+    dmacChanEnSymId = "DMAC_CHAN" + str(dmaChannel) + "_ENBL"
+    dmacChannelEnable = coreComponent.createBooleanSymbol(dmacChanEnSymId, dmacMenu)
+    dmacChannelEnable.setLabel("Enable Channel " + str(dmaChannel) + " ?")
+    dmacChannelIds.append(dmacChanEnSymId)
+
     # DMA requestor source - menu item.  Name of particular interrupt for src.  SW trigger, or peripheral-triggered.
     dmacChanReqSymId = "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE"
-    symbol = coreComponent.createComboSymbol(dmacChanReqSymId, dmacChanEnblSym[dmaChannel], sorted(per_instance.keys()))
-    symbol.setVisible(True)
+    symbol = coreComponent.createComboSymbol(dmacChanReqSymId, dmacChannelEnable, sorted(per_instance.keys()))
     symbol.setLabel("DMA requestor source")
     symbol.setDefaultValue("Software Trigger")
-    symbol.setDependencies(channelCallback, [dmacChanEnSymId])
-    symbol.setUseSingleDynamicValue(True)
-    
-    # DMA channel priority
-    dmacPrioritySymId = "DMAC_" + str(dmaChannel) + "_PRIORITY"
-    symbol = coreComponent.createComboSymbol(dmacPrioritySymId, dmacChanEnblSym[dmaChannel], sorted(per_priority.keys()))
-    symbol.setVisible(True)
-    symbol.setLabel(dmaValGrp_DCH0CON_CHPRI.getAttribute("caption"))
-    symbol.setDefaultValue("0")
-    symbol.setDependencies(channelCallback,[dmacChanEnSymId])
     symbol.setUseSingleDynamicValue(True)
 
-    
+    # DMA channel priority
+    dmacPrioritySymId = "DMAC_" + str(dmaChannel) + "_PRIORITY"
+    symbol = coreComponent.createComboSymbol(dmacPrioritySymId, dmacChannelEnable, sorted(per_priority.keys()))
+    symbol.setLabel(dmaValGrp_DCH0CON_CHPRI.getAttribute("caption"))
+    symbol.setDefaultValue("0")
+    symbol.setUseSingleDynamicValue(True)
+
     ########################## Derived symbols for registers / register settings ###########################
+
     # Warning menu item for when DMA is enabled but interrupt has not been set - not visible by default
     dmacInterruptWarn.append(dmaChannel)
     symId = "DMAC_" + str(dmaChannel) + "_IRQ_WARNING"
-    dmacInterruptWarn[dmaChannel] = coreComponent.createMenuSymbol(symId,dmacChanEnblSym[dmaChannel])
-    dmacInterruptWarn[dmaChannel].setLabel("*** Warning: enable DMA Channel "+str(dmaChannel)+" Interrupt in PIC32MZ Interrupt settings ***")
+    dmacInterruptWarn[dmaChannel] = coreComponent.createCommentSymbol(symId, dmacChannelEnable)
+    dmacInterruptWarn[dmaChannel].setLabel("*** Warning: enable DMA Channel " + str(dmaChannel) + " Interrupt in PIC32MZ Interrupt settings ***")
     dmacInterruptWarn[dmaChannel].setVisible(False)
-    
+    dmacInterruptWarn[dmaChannel].setDependencies(updateDMACChannelInterruptData, [dmacInterruptVectorUpdate[dmaChannel], dmacChanEnSymId])
+
     # derived symbol, used with above:  this will have the interrupt value (which is what is actually needed)
     dmacChanReqSrcVal.append(dmaChannel)
     dmacChanReqSrcValSymId = "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE_VALUE"
-    dmacChanReqSrcVal[dmaChannel] = coreComponent.createIntegerSymbol(dmacChanReqSrcValSymId, dmacChanEnblSym[dmaChannel])
+    dmacChanReqSrcVal[dmaChannel] = coreComponent.createIntegerSymbol(dmacChanReqSrcValSymId, dmacChannelEnable)
     dmacChanReqSrcVal[dmaChannel].setDefaultValue(0)  # software-generated interrupt
     dmacChanReqSrcVal[dmaChannel].setDependencies(dmacTriggerCalc, ["DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE"])
     dmacChanReqSrcVal[dmaChannel].setVisible(False)
@@ -585,49 +572,49 @@ for dmaChannel in range(0,numDMAChans):
     # derived symbol, used with DMA channel priority
     dmacPriorityVal.append(dmaChannel)
     dmacPriorityValSymId = "DMAC_" + str(dmaChannel) + "_PRIORITY_VALUE"
-    dmacPriorityVal[dmaChannel] = coreComponent.createIntegerSymbol(dmacPriorityValSymId, dmacChanEnblSym[dmaChannel])
+    dmacPriorityVal[dmaChannel] = coreComponent.createIntegerSymbol(dmacPriorityValSymId, dmacChannelEnable)
     dmacPriorityVal[dmaChannel].setDefaultValue(0)
     dmacPriorityVal[dmaChannel].setDependencies(dmacPriorityCalc, ["DMAC_" + str(dmaChannel) + "_PRIORITY"])
     dmacPriorityVal[dmaChannel].setVisible(False)
-    
+
     # Start of channel-level register values to calculate for ftl to use
     # DCHxCON register value - set by python callback function
     dmacDchconSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_CON_VALUE"
-    dmacDchconSym[dmaChannel] = coreComponent.createHexSymbol(symId, dmacChanEnblSym[dmaChannel])
+    dmacDchconSym[dmaChannel] = coreComponent.createHexSymbol(symId, dmacChannelEnable)
     dmacDchconSym[dmaChannel].setVisible(False)
     dmacDchconSym[dmaChannel].setDefaultValue(0)
     dmacDchconSym[dmaChannel].setDependencies(dchconCallback, [dmacChanEnSymId, dmacPriorityValSymId])
-    
+
     # DCHxECON register value - set by python callback function
     dmacDcheconSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_ECON_VALUE"
-    dmacDcheconSym[dmaChannel] = coreComponent.createHexSymbol(symId, dmacChanEnblSym[dmaChannel])
+    dmacDcheconSym[dmaChannel] = coreComponent.createHexSymbol(symId, dmacChannelEnable)
     dmacDcheconSym[dmaChannel].setVisible(False)
     dmacDcheconSym[dmaChannel].setDefaultValue(0x00000000)
     dmacDcheconSym[dmaChannel].setDependencies(dcheconCallback, [dmacChanEnSymId, dmacChanReqSrcValSymId])
-    
+
     # DCHxINT register value - set by python callback function
     dmacDchxIntSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_INT_VALUE"
-    dmacDchxIntSym[dmaChannel] = coreComponent.createHexSymbol(symId, dmacChanEnblSym[dmaChannel])
+    dmacDchxIntSym[dmaChannel] = coreComponent.createHexSymbol(symId, dmacChannelEnable)
     dmacDchxIntSym[dmaChannel].setVisible(False)
     dmacDchxIntSym[dmaChannel].setDefaultValue(0)
-    dmacDchxIntSym[dmaChannel].setDependencies(dchintCallback, [dmacChanEnSymId, dmacChanReqSrcValSymId])    
+    dmacDchxIntSym[dmaChannel].setDependencies(dchintCallback, [dmacChanEnSymId, dmacChanReqSrcValSymId])
 
     # DCHxECON<SIRQEN> field value - set by python callback function
     sirqenSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_ECON_SIRQEN_VALUE"
     sirqenSym[dmaChannel] = coreComponent.createIntegerSymbol(symId, None)
     sirqenSym[dmaChannel].setDefaultValue(0)
-    sirqenSym[dmaChannel].setVisible(False)    
-    
+    sirqenSym[dmaChannel].setVisible(False)
+
     # DCHxINT<CHBCIE> field value - set by python callback function
     chbcieSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_INT_CHBCIE_VALUE"
     chbcieSym[dmaChannel] = coreComponent.createStringSymbol(symId, None)
     chbcieSym[dmaChannel].setDefaultValue("0")
-    chbcieSym[dmaChannel].setVisible(False) 
+    chbcieSym[dmaChannel].setVisible(False)
 
     # DCHxCON<CHEN> field value - set by python callback function
     chenSym.append(dmaChannel)
@@ -635,75 +622,43 @@ for dmaChannel in range(0,numDMAChans):
     chenSym[dmaChannel] = coreComponent.createStringSymbol(symId, None)
     chenSym[dmaChannel].setDefaultValue("0")
     chenSym[dmaChannel].setVisible(False)
-    
+
     chpriSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_CON_CHPRI_VALUE"
     chpriSym[dmaChannel] = coreComponent.createStringSymbol(symId, None)
     chpriSym[dmaChannel].setDefaultValue("0")
     chpriSym[dmaChannel].setVisible(False)
-    
+
     # DCHxCON register name - used in ftl file to refer to registers set at initialization time
-    SymId = "DCH_"+str(dmaChannel)+"_CONREG"
+    SymId = "DCH_" + str(dmaChannel) + "_CONREG"
     symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("DCH"+str(dmaChannel)+"CONbits")
+    symbol.setDefaultValue("DCH" + str(dmaChannel) + "CONbits")
     symbol.setVisible(False)
-    
+
     # DCHxECON register name - used in ftl file
-    SymId = "DCH_"+str(dmaChannel)+"_ECONREG"
+    SymId = "DCH_" + str(dmaChannel) + "_ECONREG"
     symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("DCH"+str(dmaChannel)+"ECONbits")
+    symbol.setDefaultValue("DCH" + str(dmaChannel) + "ECONbits")
     symbol.setVisible(False)
-    
+
     # DCHxINT register name - used in ftl file
-    SymId = "DCH_"+str(dmaChannel)+"_INTREG"
+    SymId = "DCH_" + str(dmaChannel) + "_INTREG"
     symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("DCH"+str(dmaChannel)+"INTbits")
+    symbol.setDefaultValue("DCH" + str(dmaChannel) + "INTbits")
     symbol.setVisible(False)
-    
+
     # DCHxSSA - populated by API, not python
-    # DCHxDSA - populated by API, not python    
+    # DCHxDSA - populated by API, not python
     # DCHxSSIZ - populated by API, not python
     # DCHxDSIZ - populated by API, not python
     # DCHxSPTR - populated by API, not python
     # DCHxDPTR - populated by API, not python
     # DCHxDAT - feature not used (pattern matching)
-    
-    # interrupt priority:  for use in ftl file
-    dmaIrqPriority.append(dmaChannel)
-    dmaIrqPriority[dmaChannel] = coreComponent.createStringSymbol("DMA_"+str(dmaChannel)+"_IRQ_PRIORITY", None)
-    targetSym = "NVIC_" + str(dmaVectorNum[dmaChannel].getValue()) + "_0_PRIORITY"
-    val = Database.getSymbolValue("core",targetSym)
-    dmaIrqPriority[dmaChannel].setDefaultValue(val)
-    dmaIrqPriority[dmaChannel].setDependencies(updatePrio,["core." + targetSym])
-    dmaIrqPriority[dmaChannel].setVisible(False)
-    
-    # interrupt subpriority:  for use in ftl file
-    dmaIrqSubPriority.append(dmaChannel)
-    dmaIrqSubPriority[dmaChannel] = coreComponent.createStringSymbol("DMA_"+str(dmaChannel)+"_IRQ_SUBPRIORITY", None)
-    targetSym = "NVIC_" + str(dmaVectorNum[dmaChannel].getValue()) + "_0_SUBPRIORITY"
-    val = Database.getSymbolValue("core",targetSym)
-    dmaIrqSubPriority[dmaChannel].setDefaultValue(val)
-    dmaIrqSubPriority[dmaChannel].setDependencies(updateSubprio,["core." + targetSym])
-    dmaIrqSubPriority[dmaChannel].setVisible(False)
-    
-    # interrupt enable:  for use in ftl file
-    dmaIrqEnable.append(dmaChannel)
-    dmaIrqEnable[dmaChannel] = coreComponent.createBooleanSymbol("DMA_"+str(dmaChannel)+"_INTERRUPT_ENABLE", None)
-    targetSym = "NVIC_" + str(dmaVectorNum[dmaChannel].getValue()) + "_0_ENABLE"
-    val = Database.getSymbolValue("core",targetSym)
-    dmaIrqEnable[dmaChannel].setDefaultValue(val)
-    dmaIrqEnable[dmaChannel].setDependencies(updateEnbl,["core." + targetSym])
-    dmaIrqEnable[dmaChannel].setVisible(False)
-    
-    # handler name:  for use in ftl file
-    dmaIrqHandler.append(dmaChannel)
-    dmaIrqHandler[dmaChannel] = coreComponent.createStringSymbol("DMA_"+str(dmaChannel)+"_IRQ_HANDLER", None)
-    targetSym = "NVIC_" + str(dmaVectorNum[dmaChannel].getValue()) + "_0_HANDLER"
-    val = Database.getSymbolValue("core",targetSym)
-    dmaIrqHandler[dmaChannel].setDefaultValue(val)
-    dmaIrqHandler[dmaChannel].setDependencies(updateHandler,["core." + targetSym])
-    dmaIrqHandler[dmaChannel].setVisible(False)
+
 # end of per-channel configurations
+
+dmacEnable.setDependencies(dmacGlobalLogic, dmacChannelIds)
+dmacHighestCh.setDependencies(dmacGlobalLogic, dmacChannelIds)
 
 # DMACON register value - used in ftl
 SymId = "DMACON_REG_VALUE"
@@ -716,10 +671,8 @@ symId = "SIRQEN_SHIFT"
 shiftVal = _get_position(dmaReg_DMAECON_SIRQEN.getAttribute('mask'))
 symbol = coreComponent.createIntegerSymbol(symId, None)
 symbol.setDefaultValue(shiftVal)
-symbol.setVisible(False) 
+symbol.setVisible(False)
 
-   
-    
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################
@@ -729,22 +682,22 @@ configName = Variables.get("__CONFIGURATION_NAME")
 # Instance Header File
 dmacHeaderFile = coreComponent.createFileSymbol("DMAC_HEADER", None)
 dmacHeaderFile.setSourcePath("../peripheral/dmac_01500/templates/plib_dmac.h.ftl")
-dmacHeaderFile.setOutputName("plib_"+dmacInstanceName.getValue().lower()+".h")
+dmacHeaderFile.setOutputName("plib_" + dmacInstanceName.getValue().lower() + ".h")
 dmacHeaderFile.setDestPath("/peripheral/dmac/")
 dmacHeaderFile.setProjectPath("config/" + configName + "/peripheral/dmac/")
 dmacHeaderFile.setType("HEADER")
 dmacHeaderFile.setMarkup(True)
-dmacHeaderFile.setEnabled(True)
+dmacHeaderFile.setEnabled(False)
 
 # Source File
 dmacSourceFile = coreComponent.createFileSymbol("DMAC_SOURCE", None)
 dmacSourceFile.setSourcePath("../peripheral/dmac_01500/templates/plib_dmac.c.ftl")
-dmacSourceFile.setOutputName("plib_"+dmacInstanceName.getValue().lower()+".c")
+dmacSourceFile.setOutputName("plib_" + dmacInstanceName.getValue().lower() + ".c")
 dmacSourceFile.setDestPath("/peripheral/dmac/")
 dmacSourceFile.setProjectPath("config/" + configName + "/peripheral/dmac/")
 dmacSourceFile.setType("SOURCE")
 dmacSourceFile.setMarkup(True)
-dmacSourceFile.setEnabled(True)
+dmacSourceFile.setEnabled(False)
 
 #System Initialization
 dmacSystemInitFile = coreComponent.createFileSymbol("DMAC_SYS_INIT", None)
@@ -752,7 +705,7 @@ dmacSystemInitFile.setType("STRING")
 dmacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 dmacSystemInitFile.setSourcePath("../peripheral/dmac_01500/templates/system/initialization.c.ftl")
 dmacSystemInitFile.setMarkup(True)
-dmacSystemInitFile.setEnabled(True)
+dmacSystemInitFile.setEnabled(False)
 
 #System Definition
 dmacSystemDefFile = coreComponent.createFileSymbol("DMAC_SYS_DEF", None)
@@ -760,4 +713,4 @@ dmacSystemDefFile.setType("STRING")
 dmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 dmacSystemDefFile.setSourcePath("../peripheral/dmac_01500/templates/system/definitions.h.ftl")
 dmacSystemDefFile.setMarkup(True)
-dmacSystemDefFile.setEnabled(True)
+dmacSystemDefFile.setEnabled(False)

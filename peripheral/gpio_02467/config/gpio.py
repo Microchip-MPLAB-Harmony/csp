@@ -53,7 +53,7 @@ global createPinMap
 def InterruptStatusWarning(symbol, event):
     global portInterrupt
     channelIndex = pioSymChannel.index((symbol.getID()).split("_")[2])
-    if portInterrupt[channelIndex].getValue() == True and Database.getSymbolValue("core", pioSymInterruptVector[channelIndex]) == False:
+    if portInterrupt[channelIndex].getValue() == True and Database.getSymbolValue("core", pioSymInterruptVectorUpdate[channelIndex]) == True:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -71,13 +71,13 @@ def pioInterruptControl(pioInterrupt, event):
     i = event["id"].split("_")
     k = pioSymChannel.index(i[2])
 
-    if (event["value"] == True):
-        Database.setSymbolValue("core", pioSymInterruptVector[k], True, 1)
+    Database.setSymbolValue("core", pioSymInterruptVector[k], event["value"], 1)
+    Database.setSymbolValue("core", pioSymInterruptHandlerLock[k], event["value"], 1)
+
+    if event["value"] == True:
         Database.setSymbolValue("core", pioSymInterruptHandler[k], "CHANGE_NOTICE_" + i[2] + "_InterruptHandler", 1)
-        Database.setSymbolValue("core", pioSymInterruptHandlerLock[k], True, 1)
     else :
-        Database.setSymbolValue("core", pioSymInterruptVector[k], False, 1)
-        Database.setSymbolValue("core", pioSymInterruptHandlerLock[k], False, 1)
+        Database.setSymbolValue("core", pioSymInterruptHandler[k], "CHANGE_NOTICE_" + i[2] + "_Handler", 1)
 
 def pinLatchCal(pin, event):
     global gpioSym_GPIO_LAT
@@ -636,11 +636,11 @@ for portNumber in range(0, len(pioSymChannel)):
     gpioChannelName[portNumber].setDefaultValue(pioSymChannel[portNumber])
 
     port.append(portNumber)
-    port[portNumber]= coreComponent.createMenuSymbol("PORT_CONFIGURATION" + str(portNumber), channelConfiguration)
+    port[portNumber] = coreComponent.createMenuSymbol("PORT_CONFIGURATION" + str(portNumber), channelConfiguration)
     port[portNumber].setLabel("PORT " + pioSymChannel[portNumber] + " Configuration")
 
     portInterrupt.append(portNumber)
-    portInterrupt[portNumber]= coreComponent.createBooleanSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CN_USED", port[portNumber])
+    portInterrupt[portNumber] = coreComponent.createBooleanSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CN_USED", port[portNumber])
     portInterrupt[portNumber].setLabel("Use Change Notice On PORT " + pioSymChannel[portNumber])
     portInterrupt[portNumber].setDefaultValue(False)
     portInterrupt[portNumber].setVisible(True)
@@ -699,17 +699,15 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSymInterruptHandler[portNumber] = "CHANGE_NOTICE_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER"
     pioSymInterruptHandlerLock.append(portNumber)
     pioSymInterruptHandlerLock[portNumber] = "CHANGE_NOTICE_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER_LOCK"
-
-    # Not used for now
-    #pioSymInterruptVectorUpdate.append(portNumber)
-    #pioSymInterruptVectorUpdate[portNumber] = "NVIC_" + str(intVectorDataDictionary.get("CHANGE_NOTICE_" + str(pioSymChannel[portNumber]))) + "_INTERRUPT_ENABLE_UPDATE"
+    pioSymInterruptVectorUpdate.append(portNumber)
+    pioSymInterruptVectorUpdate[portNumber] = "CHANGE_NOTICE_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_ENABLE_UPDATE"
 
     # Dependency Status for interrupt
     pioSymIntEnComment.append(portNumber)
     pioSymIntEnComment[portNumber] = coreComponent.createCommentSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_NVIC_ENABLE_COMMENT", pioMenu)
     pioSymIntEnComment[portNumber].setVisible(False)
     pioSymIntEnComment[portNumber].setLabel("Warning!!! GPIO" + str(pioSymChannel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
-    pioSymIntEnComment[portNumber].setDependencies(InterruptStatusWarning, ["core." + pioSymInterruptVector[portNumber], "SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CN_USED"])
+    pioSymIntEnComment[portNumber].setDependencies(InterruptStatusWarning, ["core." + pioSymInterruptVectorUpdate[portNumber], "SYS_PORT_" + str(pioSymChannel[portNumber]) + "_CN_USED"])
 
 # Interrupt Dynamic settings
 pioSymInterruptControl = coreComponent.createBooleanSymbol("EVIC_GPIO_ENABLE", pioMenu)

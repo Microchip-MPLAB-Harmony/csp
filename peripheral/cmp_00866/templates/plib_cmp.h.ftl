@@ -68,8 +68,8 @@
     Initialization function for both CMP1 & CMP2 channels of the CMP peripheral
 
   Description:
-    This function initializes the CMP peripheral with user input from the 
-	configurator.
+    This function initializes the CMP peripheral with user input from the
+    configurator.
 
   Parameters:
     none
@@ -88,7 +88,7 @@ void ${CMP_INSTANCE_NAME}_Initialize (void);
     Enable function of the CMP1 Channel
 
   Description:
-    This function enables the CMP1 Channel 
+    This function enables the CMP1 Channel
 
   Parameters:
     none
@@ -167,56 +167,15 @@ void ${CMP_INSTANCE_NAME}_2_CompareDisable (void);
     Returns the current state of requested CMP Channel
 
   Parameters:
-    source	cmp channel
+    source  cmp channel
 
   Returns:
-    bool	current value of cmp channel output
+    bool    current value of cmp channel output
 */
 
 bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE source);
 
-// *****************************************************************************
-/* Function:
-  void COMPARATOR_1_Tasks( void )
-
-  Summary:
-    Is run when interrupt occurs, or during polling.  Calls the callback function if present.
-
-  Description:
-    This function is called when the comparator 1 interrupt occurs.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    void
-*/
-void COMPARATOR_1_Tasks(void);
-
-// *****************************************************************************
-/* Function:
-  void COMPARATOR_2_Tasks( void )
-
-  Summary:
-    Is run when interrupt occurs, or during polling.  Calls the callback function if present.
-
-  Description:
-    This function is called when the comparator 2 interrupt occurs.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    void
-*/
-void COMPARATOR_2_Tasks(void);
-<#if CMP1_INTERRUPT_ENABLE?c == "true">
+<#if CMP_CM1CON_EVPOL != "0">
 
 // *****************************************************************************
 /* Function:
@@ -245,7 +204,7 @@ void COMPARATOR_2_Tasks(void);
 
 void ${CMP_INSTANCE_NAME}_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 </#if>
-<#if CMP2_INTERRUPT_ENABLE?c == "true">
+<#if CMP_CM2CON_EVPOL != "0">
 
 // *****************************************************************************
 /* Function:

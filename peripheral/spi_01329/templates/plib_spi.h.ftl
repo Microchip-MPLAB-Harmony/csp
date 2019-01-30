@@ -53,41 +53,28 @@
 #endif
 
 
-
 /****************************** ${SPI_INSTANCE_NAME} Interface *********************************/
 
 void ${SPI_INSTANCE_NAME}_Initialize ( void );
 
 bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
 
-static inline bool ${SPI_INSTANCE_NAME}_Write(void* pTransmitData, size_t txSize)
-{
-    return(${SPI_INSTANCE_NAME}_WriteRead(pTransmitData, txSize, NULL, 0));
-}
+bool ${SPI_INSTANCE_NAME}_Write(void* pTransmitData, size_t txSize);
 
-static inline bool ${SPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize)
-{
-    return(${SPI_INSTANCE_NAME}_WriteRead(NULL, 0, pReceiveData, rxSize));
-}
+bool ${SPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize);
 
 bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
 
-<#if (SPI_INTERRUPT_MODE == true) >
+<#if SPI_INTERRUPT_MODE == true>
 bool ${SPI_INSTANCE_NAME}_IsBusy(void);
 
 SPI_ERROR ${SPI_INSTANCE_NAME}_ErrorGet( void );
 
-void ${SPI_INSTANCE_NAME}_FaultCallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
+void ${SPI_INSTANCE_NAME}_FaultCallbackRegister(SPI_CALLBACK callback, uintptr_t context);
 
-void ${SPI_INSTANCE_NAME}_FAULT_Tasks (void);
+void ${SPI_INSTANCE_NAME}_ReadCallbackRegister(SPI_CALLBACK callback, uintptr_t context);
 
-void ${SPI_INSTANCE_NAME}_ReadCallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
-
-void ${SPI_INSTANCE_NAME}_RX_Tasks (void);
-
-void ${SPI_INSTANCE_NAME}_WriteCallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
-
-void ${SPI_INSTANCE_NAME}_TX_Tasks (void);
+void ${SPI_INSTANCE_NAME}_WriteCallbackRegister(SPI_CALLBACK callback, uintptr_t context);
 
 </#if>
 

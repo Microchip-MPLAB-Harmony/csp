@@ -24,13 +24,14 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
-ocmpValGrp_OCxCON_OCM 	    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OCM"]')
-ocmpValGrp_OCxCON_OC32 	    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OC32"]')
-ocmpValGrp_OCxCON_SIDL 	    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__SIDL"]')
+ocmpValGrp_OCxCON_OCM       = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OCM"]')
+ocmpValGrp_OCxCON_OC32      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OC32"]')
+ocmpValGrp_OCxCON_SIDL      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__SIDL"]')
 
 ################################################################################
 #### Global Variables ####
 ################################################################################
+
 global ocmpInstanceName
 global ocmpSym_OCxCON_OCM
 global ocmpSym_OCxCON_OCTSEL
@@ -39,73 +40,84 @@ global ocmpSym_OCxCON_SIDL
 global ocmpSym_OCxCON_OCTSEL_ALT
 global ocmpSym_CFGCON_OCACLK
 global index
-global InterruptVector
-InterruptVector = []
-global InterruptHandler
-InterruptHandler = []
-global InterruptHandlerLock
-InterruptHandlerLock = []
-global InterruptVectorUpdate
-InterruptVectorUpdate = []
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
-def interruptControl(symbol, event):
-    if (event["value"] == True):
-        symbol.setValue(True, 2)
-    else :
-        symbol.setValue(False, 2)
 
-def dependencyStatus(symbol, event):
-    global InterruptVectorUpdate
-    component = symbol.getComponent()
-    if(component.getSymbolValue("OCMP_INTERRUPT_ENABLE")):
-        if(Database.getSymbolValue("core", InterruptVectorUpdate[0].split(".")[-1]) == True):
-            symbol.setVisible(False)
-        else:
-            symbol.setVisible(True)
+def setOCMPInterruptData(status):
+
+    Database.setSymbolValue("core", ocmpInterruptVector, status, 1)
+    Database.setSymbolValue("core", ocmpInterruptHandlerLock, status, 1)
+
+    interruptName = ocmpInterruptHandler.split("_INTERRUPT_HANDLER")[0]
+
+    if status == True:
+        Database.setSymbolValue("core", ocmpInterruptHandler, interruptName + "_InterruptHandler", 1)
+    else:
+        Database.setSymbolValue("core", ocmpInterruptHandler, interruptName + "_Handler", 1)
+
+def updateOCMPInterruptData(symbol, event):
+
+    if event["id"] == "OCMP_INTERRUPT_ENABLE":
+        setOCMPInterruptData(event["value"])
+
+    if ocmpSymInterruptMode.getValue() == True and Database.getSymbolValue("core", ocmpInterruptVectorUpdate) == True:
+        symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
-def _get_bitfield_names(node, outputList):
-    valueNodes = node.getChildren()
-    for ii in reversed(valueNodes):
-        dict = {}
-        if(ii.getAttribute('caption').lower() != "reserved"):
-            dict['desc'] = ii.getAttribute('caption')
-            dict['key'] = ii.getAttribute('caption')
-            value = ii.getAttribute('value')
-            if(value[:2]=='0x'):
-                temp = value[2:]
-                tempint = int(temp,16)
-            else:
-                tempint = int(value)
-            dict['value'] = str(tempint)
-            outputList.append(dict)
-
 def _get_enblReg_parms(vectorNumber):
+
     # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and
-        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
-        temp = float(vectorNumber) / 32.0
-        index = int(temp)
-        bit = float(temp%1)
-        bitPosn = int(32.0*bit)
-        regName = "IEC"+str(index)
-    return regName, str(bitPosn)
+    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
+        index = int(vectorNumber / 32)
+        regName = "IEC" + str(index)
+        return regName
 
 def _get_statReg_parms(vectorNumber):
+
     # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and
-        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR"))) ):
-        temp = float(vectorNumber) / 32.0
-        index = int(temp)
-        bit = float(temp%1)
-        bitPosn = int(32.0*bit)
-        regName = "IFS"+str(index)
-    return regName, str(bitPosn)
+    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
+        index = int(vectorNumber / 32)
+        regName = "IFS" + str(index)
+        return regName
+
+def _get_bitfield_names(node, outputList):
+
+    valueNodes = node.getChildren()
+
+    for bitfield in valueNodes:   ##  do this for all <value > entries for this bitfield
+        dict = {}
+        if bitfield.getAttribute("caption").lower() != "reserved":  ##  skip (unused) reserved fields
+            dict["desc"] = bitfield.getAttribute("caption")
+            dict["key"] = bitfield.getAttribute("caption")
+
+            ##  Get rid of leading '0x', and convert to int if was hex
+            value = bitfield.getAttribute("value")
+
+            if(value[:2] == "0x"):
+                temp = value[2:]
+                tempint = int(temp, 16)
+            else:
+                tempint = int(value)
+
+            dict["value"] = str(tempint)
+            outputList.append(dict)
+
+def getIRQnumber(string):
+
+    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+
+    for param in interruptsChildren:
+        name = param.getAttribute("name")
+        if string == name:
+            irq_index = param.getAttribute("index")
+            break
+
+    return irq_index
 
 def combineValues(symbol, event):
     ocmValue    = ocmpSym_OCxCON_OCM.getValue() << 0
@@ -117,24 +129,6 @@ def combineValues(symbol, event):
     sidlValue   = int(ocmpSym_OCxCON_SIDL.getValue()) << 13
     ocxconValue = sidlValue + oc32Value + octselValue + ocmValue
     symbol.setValue(ocxconValue, 2)
-
-def getIRQnumber(string):
-    irq_index = 0
-    interrupts = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts')
-    interruptsChildren = interrupts.getChildren()
-    for param in interruptsChildren:
-        modInst = param.getAttribute('name')
-        if(string == modInst):
-            irq_index = param.getAttribute('index')
-    return irq_index
-
-def updateIRQValues(symbol, event):
-    irqvalue = int(event["value"])
-    symbol.setValue(irqvalue, 2)
-
-def updateHandlerName(symbol, event):
-    handlername = str(event["value"])
-    symbol.setValue(handlername, 2)
 
 def ocmpSymbolVisible(symbol, event):
     symbol.setVisible(event["value"])
@@ -168,17 +162,14 @@ def ocmpCommentVisible(symbol, event):
     else:
         symbol.setVisible(False)
 
-def ocmpInterruptSet(symbol, event):
-    global InterruptVector
-    if (event["id"] == "OCMP_INTERRUPT_ENABLE"):
-        Database.setSymbolValue("core", InterruptVector[0], event["value"], 2)
-        Database.setSymbolValue("core", InterruptHandlerLock[0], event["value"], 2)
-
 ################################################################################
 #### Component ####
 ################################################################################
+
 def instantiateComponent(ocmpComponent):
+
     global ocmpInstanceName
+    global ocmpSymInterruptMode
     global ocmpSym_OCxCON_OCM
     global ocmpSym_OCxCON_OCTSEL
     global ocmpSym_OCxCON_OCTSEL_ALT
@@ -186,11 +177,10 @@ def instantiateComponent(ocmpComponent):
     global ocmpSym_OCxCON_SIDL
     global ocmpSym_CFGCON_OCACLK
     global index
-    global InterruptVector
-    global InterruptHandlerLock
-    global InterruptHandler
-    global InterruptVectorUpdate
-    interruptDepList = []
+    global ocmpInterruptVector
+    global ocmpInterruptHandlerLock
+    global ocmpInterruptHandler
+    global ocmpInterruptVectorUpdate
 
     #instance
     ocmpInstanceName = ocmpComponent.createStringSymbol("OCMP_INSTANCE_NAME", None)
@@ -199,6 +189,9 @@ def instantiateComponent(ocmpComponent):
     Log.writeInfoMessage("Running " + ocmpInstanceName.getValue())
 
     index = ocmpInstanceName.getValue()[-1]
+
+    ocmpSymInterruptMode = ocmpComponent.createBooleanSymbol("OCMP_INTERRUPT_ENABLE", None)
+    ocmpSymInterruptMode.setLabel("Enable Interrupt ?")
 
     ocmpxOCM_names = []
     _get_bitfield_names(ocmpValGrp_OCxCON_OCM, ocmpxOCM_names)
@@ -292,10 +285,15 @@ def instantiateComponent(ocmpComponent):
     ocmpSym_ICM.setDependencies(combineValues, depList)
 
     #Calculate the proper interrupt registers for IEC, IFS, IPC, priority shift, and subpriority shift
-    irqString = "OUTPUT_COMPARE_" + str(index)
-    vectorNum = int(getIRQnumber(irqString))
-    enblRegName, enblBitPosn = _get_enblReg_parms(vectorNum)
-    statRegName, statBitPosn = _get_statReg_parms(vectorNum)
+    ocmpIrq = "OUTPUT_COMPARE_" + str(index)
+    ocmpInterruptVector = ocmpIrq + "_INTERRUPT_ENABLE"
+    ocmpInterruptHandler = ocmpIrq + "_INTERRUPT_HANDLER"
+    ocmpInterruptHandlerLock = ocmpIrq + "_INTERRUPT_HANDLER_LOCK"
+    ocmpInterruptVectorUpdate = ocmpIrq + "_INTERRUPT_ENABLE_UPDATE"
+    ocmpIrq_index = int(getIRQnumber(ocmpIrq))
+
+    enblRegName = _get_enblReg_parms(ocmpIrq_index)
+    statRegName = _get_statReg_parms(ocmpIrq_index)
 
     #IEC_REG
     ocmpIEC = ocmpComponent.createStringSymbol("IEC_REG", None)
@@ -307,42 +305,18 @@ def instantiateComponent(ocmpComponent):
     ocmpIFS.setDefaultValue(statRegName)
     ocmpIFS.setVisible(False)
 
-############################################################################
-#### Dependency ####
-############################################################################
-    vectorNode = ATDF.getNode(
-        "/avr-tools-device-file/devices/device/interrupts")
-    vectorValues = vectorNode.getChildren()
-    for id in range(0, len(vectorNode.getChildren())):
-        if vectorValues[id].getAttribute("module-instance") == ocmpInstanceName.getValue():
-            name = vectorValues[id].getAttribute("name")
-            InterruptVector.append(name + "_INTERRUPT_ENABLE")
-            InterruptHandler.append(name + "_INTERRUPT_HANDLER")
-            InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
-            InterruptVectorUpdate.append(
-                "core." + name + "_INTERRUPT_ENABLE_UPDATE")
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
 
-    # NVIC Dynamic settings
-    ocmpinterrupt1Control = ocmpComponent.createBooleanSymbol("OCMP_INTERRUPT_ENABLE", None)
-    ocmpinterrupt1Control.setVisible(True)
-    ocmpinterrupt1Control.setLabel("Enable Interrupt")
-    ocmpinterrupt1Control.setDefaultValue(False)
-    ocmpinterrupt1Control.setDependencies(interruptControl, ["OCMP_INTERRUPT_ENABLE"])
-    interruptDepList.append("OCMP_INTERRUPT_ENABLE")
+    ocmpSymIntEnComment = ocmpComponent.createCommentSymbol("OCMP_INTRRUPT_ENABLE_COMMENT", None)
+    ocmpSymIntEnComment.setLabel("Warning!!! " + ocmpInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
+    ocmpSymIntEnComment.setVisible(False)
+    ocmpSymIntEnComment.setDependencies(updateOCMPInterruptData, ["OCMP_INTERRUPT_ENABLE", "core." + ocmpInterruptVectorUpdate])
 
-    ocmpSym_EVIC_SYMBOL = ocmpComponent.createStringSymbol("OCMP_EVIC_SYMBOL_SET", None)
-    ocmpSym_EVIC_SYMBOL.setVisible(False)
-    ocmpSym_EVIC_SYMBOL.setDependencies(ocmpInterruptSet, ["OCMP_INTERRUPT_ENABLE"])
-
-    # Dependency Status
-    ocmpSymInt1EnComment = ocmpComponent.createCommentSymbol("INTERRUPT_ENABLE_COMMENT", None)
-    ocmpSymInt1EnComment.setVisible(False)
-    ocmpSymInt1EnComment.setLabel("Warning!!! " + ocmpInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    ocmpSymInt1EnComment.setDependencies(dependencyStatus, interruptDepList + InterruptVectorUpdate)
-
-############################################################################
-#### Code Generation ####
-############################################################################
+    ############################################################################
+    #### Code Generation ####
+    ############################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
 

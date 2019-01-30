@@ -30,7 +30,7 @@ if node != None:
 else:
     Log.writeErrorMessage("__INT_NUM_SHADOW_SETS parameter missing in " + + Variables.get("__PROCESSOR") + " ATDF")
 
-evicPriorityGroup = list(range(evicPriorityLevels + 1))  # 0 to number of levels possible values
+evicPriorityGroup = list(range(1, evicPriorityLevels + 1))  # 1 to number of levels possible values
 evicPriorityGroup = [str(item) for item in evicPriorityGroup]
 
 evicSubPriorityGroup = list(range(evicSubPriorityLevels))
@@ -198,7 +198,7 @@ for vectorDict in evicVectorDataStructure:
 
     evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
     evicVectorPriority.setLabel("Priority")
-    evicVectorPriority.setDefaultValue("1")     #Setting default priority to 1
+    evicVectorPriority.setDefaultValue(min(evicPriorityGroup))     #Setting default priority to 1
 
     evicVectorSubPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY", evicVectorEnable, evicSubPriorityGroup)
     evicVectorSubPriority.setLabel("Subpriority")
@@ -298,6 +298,12 @@ evicSystemInitStartFile.setType("STRING")
 evicSystemInitStartFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
 evicSystemInitStartFile.setSourcePath("../peripheral/evic_02907/templates/system/initialization_interrupts_global_disable.c.ftl")
 evicSystemInitStartFile.setMarkup(True)
+
+evicSystemIntWeakHandleFile = coreComponent.createFileSymbol("EVIC_INT_HANDLER", None)
+evicSystemIntWeakHandleFile.setType("STRING")
+evicSystemIntWeakHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS")
+evicSystemIntWeakHandleFile.setSourcePath("../peripheral/evic_02907/templates/system/interrupts_weak_handlers.h.ftl")
+evicSystemIntWeakHandleFile.setMarkup(True)
 
 evicSystemIntTableFile = coreComponent.createFileSymbol("EVIC_INT_TABLE", None)
 evicSystemIntTableFile.setType("STRING")
