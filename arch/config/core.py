@@ -212,9 +212,9 @@ def instantiateComponent( coreComponent ):
         toolChainSpecifics.setOutputName( "toolchain_specifics.h" );
         toolChainSpecifics.setMarkup( True )
         toolChainSpecifics.setOverwrite( True )
-        toolChainSpecifics.setDestPath( "../../" + baseArchDir )
-        toolChainSpecifics.setProjectPath( baseArchDir )
-        toolChainSpecifics.setType( "HEADER" )
+        toolChainSpecifics.setDestPath("")
+        toolChainSpecifics.setProjectPath("config/" + configName + "/")
+        toolChainSpecifics.setType("HEADER")
 
     ## toolChainMenu
     toolChainMenu = coreComponent.createMenuSymbol("CoreToolChainMenu", projMenu)
