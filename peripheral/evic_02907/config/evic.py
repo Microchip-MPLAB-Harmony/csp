@@ -198,7 +198,7 @@ for vectorDict in evicVectorDataStructure:
 
     evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
     evicVectorPriority.setLabel("Priority")
-    evicVectorPriority.setDefaultValue(min(evicPriorityGroup) + 1)     #Setting default priority to 1
+    evicVectorPriority.setDefaultValue("1")     #Setting default priority to 1
 
     evicVectorSubPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY", evicVectorEnable, evicSubPriorityGroup)
     evicVectorSubPriority.setLabel("Subpriority")
