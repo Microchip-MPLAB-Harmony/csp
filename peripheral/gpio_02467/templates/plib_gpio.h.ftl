@@ -106,15 +106,15 @@
                     <#if .vars[pinPort]?has_content>
                         <#if .vars[pinChannel]?has_content>
                             <#lt>/*** Macros for ${.vars[funcname]} pin ***/
-                            <#lt>#define ${.vars[funcname]}_Set()               (*(&LAT${.vars[pinChannel]}SET) = (1<<${.vars[pinPort]}))
-                            <#lt>#define ${.vars[funcname]}_Clear()             (*(&LAT${.vars[pinChannel]}CLR) = (1<<${.vars[pinPort]}))
-                            <#lt>#define ${.vars[funcname]}_Toggle()            (*(&LAT${.vars[pinChannel]}INV)= (1<<${.vars[pinPort]}))
-                            <#lt>#define ${.vars[funcname]}_Get()               ((*(&PORT${.vars[pinChannel]}) >> ${.vars[pinPort]}) & 0x1)
-                            <#lt>#define ${.vars[funcname]}_OutputEnable()      (*(&TRIS${.vars[pinChannel]}CLR) = (1<<${.vars[pinPort]}))
-                            <#lt>#define ${.vars[funcname]}_InputEnable()       (*(&TRIS${.vars[pinChannel]}SET) = (1<<${.vars[pinPort]}))
+                            <#lt>#define ${.vars[funcname]}_Set()               (LAT${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
+                            <#lt>#define ${.vars[funcname]}_Clear()             (LAT${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
+                            <#lt>#define ${.vars[funcname]}_Toggle()            (LAT${.vars[pinChannel]}INV= (1<<${.vars[pinPort]}))
+                            <#lt>#define ${.vars[funcname]}_Get()               ((PORT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1)
+                            <#lt>#define ${.vars[funcname]}_OutputEnable()      (TRIS${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
+                            <#lt>#define ${.vars[funcname]}_InputEnable()       (TRIS${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
                             <#if .vars[interruptType]?has_content>
-                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (*(&CNEN${.vars[pinChannel]}SET) = (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (*(&CNEN${.vars[pinChannel]}CLR) = (1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
+                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (CNEN${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
                             </#if>
                             <#lt>#define ${.vars[funcname]}_PIN                  GPIO_PIN_R${.vars[pinChannel]}${.vars[pinPort]}
                         </#if>
@@ -179,7 +179,7 @@ typedef enum
         <#if .vars["PORT${.vars[channel]}_Pin_List"]?has_content>
             <@"<#assign PORT${.vars[channel]}_Pin_List =  PORT${.vars[channel]}_Pin_List?sort>"?interpret />
             <#list .vars["PORT${.vars[channel]}_Pin_List"] as pin>
-                <#lt>    GPIO_PIN_R${.vars[channel]}${pin} = ${pin+(32*i)},
+                <#lt>    GPIO_PIN_R${.vars[channel]}${pin} = ${pin+(16*i)},
             </#list>
         </#if>
     </#if>
@@ -252,53 +252,53 @@ typedef struct {
 
 static inline void GPIO_PinWrite(GPIO_PIN pin, bool value)
 {
-    GPIO_PortWrite(pin>>5, (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
+    GPIO_PortWrite(pin>>4, (uint32_t)(0x1) << (pin & 0xF), (uint32_t)(value) << (pin & 0xF));
 }
 
 static inline bool GPIO_PinRead(GPIO_PIN pin)
 {
-    return (bool)(((GPIO_PortRead(pin>>5)) >> (pin & 0x1F)) & 0x1);
+    return (bool)(((GPIO_PortRead(pin>>4)) >> (pin & 0xF)) & 0x1);
 }
 
 static inline bool GPIO_PinLatchRead(GPIO_PIN pin)
 {
-    return (bool)((GPIO_PortLatchRead(pin>>5) >> (pin & 0x1F)) & 0x1);
+    return (bool)((GPIO_PortLatchRead(pin>>4) >> (pin & 0xF)) & 0x1);
 }
 
 static inline void GPIO_PinToggle(GPIO_PIN pin)
 {
-    GPIO_PortToggle(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortToggle(pin>>4, 0x1 << (pin & 0xF));
 }
 
 static inline void GPIO_PinSet(GPIO_PIN pin)
 {
-    GPIO_PortSet(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortSet(pin>>4, 0x1 << (pin & 0xF));
 }
 
 static inline void GPIO_PinClear(GPIO_PIN pin)
 {
-    GPIO_PortClear(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortClear(pin>>4, 0x1 << (pin & 0xF));
 }
 
 static inline void GPIO_PinInputEnable(GPIO_PIN pin)
 {
-    GPIO_PortInputEnable(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortInputEnable(pin>>4, 0x1 << (pin & 0xF));
 }
 
 static inline void GPIO_PinOutputEnable(GPIO_PIN pin)
 {
-    GPIO_PortOutputEnable(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortOutputEnable(pin>>4, 0x1 << (pin & 0xF));
 }
 
 <#if GPIO_ATLEAST_ONE_INTERRUPT_USED == true >
 static inline void GPIO_PinInterruptEnable(GPIO_PIN pin)
 {
-    GPIO_PortInterruptEnable(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortInterruptEnable(pin>>4, 0x1 << (pin & 0xF));
 }
 
 static inline void GPIO_PinInterruptDisable(GPIO_PIN pin)
 {
-    GPIO_PortInterruptDisable(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortInterruptDisable(pin>>4, 0x1 << (pin & 0xF));
 }
 
 bool GPIO_PinInterruptCallbackRegister(

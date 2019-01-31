@@ -9,10 +9,10 @@
 	<#assign LED_ActiveLevel_List = []>
 
 	<#list 1..GPIO_PIN_TOTAL as i>
-		<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-		<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-		<#assign pinport = "PIN_" + i + "_GPIO_PIN">
-		<#assign pinchannel = "PIN_" + i + "_GPIO_CHANNEL">
+		<#assign functype = "BSP_PIN_" + i + "_FUNCTION_TYPE">
+		<#assign funcname = "BSP_PIN_" + i + "_FUNCTION_NAME">
+		<#assign pinport = "BSP_PIN_" + i + "_PORT_PIN">
+		<#assign pinchannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
 
 		<#if .vars[functype]?has_content>
 			<#if (.vars[functype] == "LED_AH") || (.vars[functype] == "LED_AL")>
@@ -47,10 +47,10 @@
 	<#assign SWITCH_ActiveLevel_List = []>
 
 	<#list 1..GPIO_PIN_TOTAL as i>
-		<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-		<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-		<#assign pinport = "PIN_" + i + "_GPIO_PIN">
-		<#assign pinchannel = "PIN_" + i + "_GPIO_CHANNEL">
+		<#assign functype = "BSP_PIN_" + i + "_FUNCTION_TYPE">
+		<#assign funcname = "BSP_PIN_" + i + "_FUNCTION_NAME">
+		<#assign pinport = "BSP_PIN_" + i + "_PORT_PIN">
+		<#assign pinchannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
 
 		<#if .vars[functype]?has_content>
 			<#if (.vars[functype] == "SWITCH_AH") || (.vars[functype] == "SWITCH_AL")>
@@ -85,10 +85,10 @@
 	<#assign VBUS_ActiveLevel_List = []>
 
 	<#list 1..GPIO_PIN_TOTAL as i>
-		<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-		<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-		<#assign pinport = "PIN_" + i + "_GPIO_PIN">
-		<#assign pinchannel = "PIN_" + i + "_GPIO_CHANNEL">
+		<#assign functype = "BSP_PIN_" + i + "_FUNCTION_TYPE">
+		<#assign funcname = "BSP_PIN_" + i + "_FUNCTION_NAME">
+		<#assign pinport = "BSP_PIN_" + i + "_PORT_PIN">
+		<#assign pinchannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
 
 		<#if .vars[functype]?has_content>
 			<#if (.vars[functype] == "VBUS_AH") || (.vars[functype] == "VBUS_AL") || (.vars[functype] == "VBUS")>
