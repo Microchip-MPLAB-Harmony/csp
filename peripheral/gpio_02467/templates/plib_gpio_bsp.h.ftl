@@ -9,10 +9,10 @@
 	<#assign LED_ActiveLevel_List = []>
 
 	<#list 1..GPIO_PIN_TOTAL as i>
-		<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-		<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-		<#assign pinport = "PIN_" + i + "_GPIO_PIN">
-		<#assign pinchannel = "PIN_" + i + "_GPIO_CHANNEL">
+		<#assign functype = "BSP_PIN_" + i + "_FUNCTION_TYPE">
+		<#assign funcname = "BSP_PIN_" + i + "_FUNCTION_NAME">
+		<#assign pinport = "BSP_PIN_" + i + "_PORT_PIN">
+		<#assign pinchannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
 
 		<#if .vars[functype]?has_content>
 			<#if (.vars[functype] == "LED_AH") || (.vars[functype] == "LED_AL")>
@@ -47,10 +47,10 @@
 	<#assign SWITCH_ActiveLevel_List = []>
 
 	<#list 1..GPIO_PIN_TOTAL as i>
-		<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-		<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-		<#assign pinport = "PIN_" + i + "_GPIO_PIN">
-		<#assign pinchannel = "PIN_" + i + "_GPIO_CHANNEL">
+		<#assign functype = "BSP_PIN_" + i + "_FUNCTION_TYPE">
+		<#assign funcname = "BSP_PIN_" + i + "_FUNCTION_NAME">
+		<#assign pinport = "BSP_PIN_" + i + "_PORT_PIN">
+		<#assign pinchannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
 
 		<#if .vars[functype]?has_content>
 			<#if (.vars[functype] == "SWITCH_AH") || (.vars[functype] == "SWITCH_AL")>
@@ -85,10 +85,10 @@
 	<#assign VBUS_ActiveLevel_List = []>
 
 	<#list 1..GPIO_PIN_TOTAL as i>
-		<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-		<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-		<#assign pinport = "PIN_" + i + "_GPIO_PIN">
-		<#assign pinchannel = "PIN_" + i + "_GPIO_CHANNEL">
+		<#assign functype = "BSP_PIN_" + i + "_FUNCTION_TYPE">
+		<#assign funcname = "BSP_PIN_" + i + "_FUNCTION_NAME">
+		<#assign pinport = "BSP_PIN_" + i + "_PORT_PIN">
+		<#assign pinchannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
 
 		<#if .vars[functype]?has_content>
 			<#if (.vars[functype] == "VBUS_AH") || (.vars[functype] == "VBUS_AL") || (.vars[functype] == "VBUS")>
@@ -131,13 +131,14 @@
 						<#if ledName?counter == ledPinPos?counter>
 							<#if ledName?counter == ledActiveLevel?counter>
 								/*** LED Macros for ${ledName} ***/
-								#define ${ledName}_Toggle()     (GPIO${ledChannel}_REGS->GPIO_ODSR ^= (1<<${ledPinPos}))
+								#define ${ledName}_Toggle()     (LAT${ledChannel}INV = (1<<${ledPinPos}))
+								#define ${ledName}_Get()        ((PORT${ledChannel} >> ${ledPinPos}) & 0x1)
 								<#if ledActiveLevel == "High">
-									#define ${ledName}_On()         (GPIO${ledChannel}_REGS->GPIO_SODR = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (GPIO${ledChannel}_REGS->GPIO_CODR = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (LAT${ledChannel}SET = (1<<${ledPinPos}))
+									#define ${ledName}_Off()        (LAT${ledChannel}CLR = (1<<${ledPinPos}))
 								<#else>
-									#define ${ledName}_On()         (GPIO${ledChannel}_REGS->GPIO_CODR = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (GPIO${ledChannel}_REGS->GPIO_SODR = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (LAT${ledChannel}CLR = (1<<${ledPinPos}))
+									#define ${ledName}_Off()        (LAT${ledChannel}SET = (1<<${ledPinPos}))
 								</#if>
 							</#if>
 						</#if>
@@ -159,7 +160,7 @@
 						<#if switchName?counter == switchPinPos?counter>
 							<#if switchName?counter == switchActiveLevel?counter>
 								/*** SWITCH Macros for ${switchName} ***/
-								#define ${switchName}_Get()     ((GPIO${switchChannel}_REGS->GPIO_PDSR >> ${switchPinPos}) & 0x1)
+								#define ${switchName}_Get()     ((PORT${switchChannel} >> ${switchPinPos}) & 0x1)
 								<#if switchActiveLevel == "High">
 									#define ${switchName}_STATE_PRESSED  1
 									#define ${switchName}_STATE_RELEASED 0
@@ -188,11 +189,11 @@
 							<#if vbusChannel?counter == vbusActiveLevel?counter>
 								/*** VBUS Macros for ${vbusName} ***/
 								<#if vbusActiveLevel == "High">
-									#define ${vbusName}_PowerEnable()         (GPIO${vbusChannel}_REGS->GPIO_SODR = (1<<${vbusPinPos}))
-									#define ${vbusName}_PowerDisable()        (GPIO${vbusChannel}_REGS->GPIO_CODR = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}SET = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}CLR = (1<<${vbusPinPos}))
 								<#else>
-									#define ${vbusName}_PowerEnable()         (GPIO${vbusChannel}_REGS->GPIO_CODR = (1<<${vbusPinPos}))
-									#define ${vbusName}_PowerDisable()         (GPIO${vbusChannel}_REGS->GPIO_SODR = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (LAT${vbusChannel}CLR = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerDisable()        (LAT${vbusChannel}SET = (1<<${vbusPinPos}))
 								</#if>
 							</#if>
 						</#if>
