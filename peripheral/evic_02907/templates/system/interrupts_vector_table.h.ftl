@@ -9,7 +9,7 @@
     <#lt>void __ISR(${.vars[INT_VECTOR]}, ipl${.vars[INT_PRIORITY]}AUTO) ${.vars[INT_HANDLER]} (void)
     <#lt>{
         <#if .vars[INT_HANDLER_LOCK] == true>
-    <#lt>   ${.vars[INTERRUT_HANDLER]}();
+    <#lt>    ${.vars[INTERRUT_HANDLER]}();
         </#if>
     <#lt>}
 
