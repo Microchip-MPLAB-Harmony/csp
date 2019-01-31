@@ -32,6 +32,7 @@ peripherals = {
                 "FLEXCOM_11268" : ["UART", "SPI", "I2C"],
                 "SERCOM_U2201"  : ["UART", "SPI", "I2C"],
                 "SPI_6088"      : ["SPI"],
+                "I2S_U2224"     : ["I2S"],
                 "I2SC_11241"    : ["I2S"],
                 "SSC_6078"      : ["I2S"],
                 "TWI_6212"      : ["I2C"],
