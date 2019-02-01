@@ -206,15 +206,15 @@ def instantiateComponent( coreComponent ):
         deviceCacheHeaderFile.setProjectPath("config/" + configName + "/")
         deviceCacheHeaderFile.setType("HEADER")
 
-        ## toolchain specifics
-        toolChainSpecifics = coreComponent.createFileSymbol( None, None )
-        toolChainSpecifics.setSourcePath( baseArchDir + "/templates/toolchain_specifics.h.ftl" )
-        toolChainSpecifics.setOutputName( "toolchain_specifics.h" );
-        toolChainSpecifics.setMarkup( True )
-        toolChainSpecifics.setOverwrite( True )
-        toolChainSpecifics.setDestPath("")
-        toolChainSpecifics.setProjectPath("config/" + configName + "/")
-        toolChainSpecifics.setType("HEADER")
+    ## toolchain specifics
+    toolChainSpecifics = coreComponent.createFileSymbol( None, None )
+    toolChainSpecifics.setSourcePath( baseArchDir + "/templates/toolchain_specifics.h.ftl" )
+    toolChainSpecifics.setOutputName( "toolchain_specifics.h" );
+    toolChainSpecifics.setMarkup( True )
+    toolChainSpecifics.setOverwrite( True )
+    toolChainSpecifics.setDestPath("")
+    toolChainSpecifics.setProjectPath("config/" + configName + "/")
+    toolChainSpecifics.setType("HEADER")
 
     ## toolChainMenu
     toolChainMenu = coreComponent.createMenuSymbol("CoreToolChainMenu", projMenu)
