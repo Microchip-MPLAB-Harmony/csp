@@ -1,0 +1,1 @@
+    CORETIMER_Initialize();

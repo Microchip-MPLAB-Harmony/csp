@@ -61,6 +61,11 @@ peripherals = {
                 "TMR1_00687"    : ["TMR"],
 }
 
+if ("PIC32M" in Variables.get("__PROCESSOR")):
+    coreTimerComponent = Module.CreateComponent("core_timer", "CORE TIMER", "/Peripherals/CORE TIMER/", "../peripheral/coretimer/config/coretimer.py")
+    coreTimerComponent.addCapability("CORE_TIMER_TMR", "TMR")
+    coreTimerComponent.setDisplayType("Peripheral Library")
+
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
 modules = periphNode.getChildren()
 
