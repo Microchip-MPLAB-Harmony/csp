@@ -1,39 +1,24 @@
 
 <#compress> <#-- To remove unwanted new lines -->
 
-<#-- Create List of all the port pins for enum creation -->
-
-<#assign PORTA_Pin_List = []>
-<#assign PORTB_Pin_List = []>
-<#assign PORTC_Pin_List = []>
-<#assign PORTD_Pin_List = []>
-<#assign PORTE_Pin_List = []>
+<#list 0..GPIO_CHANNEL_TOTAL-1 as i>
+    <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
+    <#if .vars[channel]?has_content>
+        <@"<#assign PORT${.vars[channel]}_Pin_List = []>"?interpret />
+    </#if>
+</#list>
 
 <#list 1..GPIO_PIN_TOTAL as i>
-    <#assign pinport = "PIN_" + i + "_GPIO_PIN">
-    <#assign pinchannel = "PIN_" + i + "_GPIO_CHANNEL">
+    <#assign pinPort = "BSP_PIN_" + i + "_PORT_PIN">
+    <#assign pinChannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
 
-    <#if .vars[pinport]?has_content>
-        <#if .vars[pinchannel]?has_content>
-            <#if .vars[pinchannel] == "A">
-                <#assign PORTA_Pin_List = PORTA_Pin_List + [.vars[pinport]]>
-
-            <#elseif .vars[pinchannel] == "B">
-                <#assign PORTB_Pin_List = PORTB_Pin_List + [.vars[pinport]]>
-
-            <#elseif .vars[pinchannel] == "C">
-                <#assign PORTC_Pin_List = PORTC_Pin_List + [.vars[pinport]]>
-
-            <#elseif .vars[pinchannel] == "D">
-                <#assign PORTD_Pin_List = PORTD_Pin_List + [.vars[pinport]]>
-
-            <#elseif .vars[pinchannel] == "E">
-                <#assign PORTE_Pin_List = PORTE_Pin_List + [.vars[pinport]]>
-            </#if>
-
+    <#if .vars[pinPort]?has_content>
+        <#if .vars[pinChannel]?has_content && .vars[pinChannel] != "None">
+                <@"<#assign PORT${.vars[pinChannel]}_Pin_List = PORT${.vars[pinChannel]}_Pin_List + [.vars[pinPort]]>"?interpret />
         </#if>
     </#if>
 </#list>
+
 
 </#compress>
 // *****************************************************************************
@@ -63,21 +48,15 @@
 
 typedef enum
 {
-    <#if PORTA_Pin_List?has_content>
-    SYS_PORT_A = GPIOA_BASE_ADDRESS,
+<#list 0..GPIO_CHANNEL_TOTAL-1 as i>
+    <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
+    <#if .vars[channel]?has_content>
+        <#if (.vars["PORT${.vars[channel]}_Pin_List"])?has_content>
+                <#lt>    SYS_PORT_${.vars[channel]} = ${i},
+        </#if>
     </#if>
-    <#if PORTB_Pin_List?has_content>
-    SYS_PORT_B = GPIOB_BASE_ADDRESS,
-    </#if>
-    <#if PORTC_Pin_List?has_content>
-    SYS_PORT_C = GPIOC_BASE_ADDRESS,
-    </#if>
-    <#if PORTD_Pin_List?has_content>
-    SYS_PORT_D = GPIOD_BASE_ADDRESS,
-    </#if>
-    <#if PORTE_Pin_List?has_content>
-    SYS_PORT_E = GPIOE_BASE_ADDRESS
-    </#if>
+</#list>
+
 } SYS_PORT;
 
 
@@ -100,26 +79,19 @@ typedef enum
 
 typedef enum
 {
-    <#assign PORTA_Pin_List =  PORTA_Pin_List?sort>
-    <#list PORTA_Pin_List as pin>
-    SYS_PORT_PIN_PA${pin} = ${pin},
-    </#list>
-    <#assign PORTB_Pin_List =  PORTB_Pin_List?sort>
-    <#list PORTB_Pin_List as pin>
-    SYS_PORT_PIN_PB${pin} = ${pin+32},
-    </#list>
-    <#assign PORTC_Pin_List =  PORTC_Pin_List?sort>
-    <#list PORTC_Pin_List as pin>
-    SYS_PORT_PIN_PC${pin} = ${pin+64},
-    </#list>
-    <#assign PORTD_Pin_List =  PORTD_Pin_List?sort>
-    <#list PORTD_Pin_List as pin>
-    SYS_PORT_PIN_PD${pin} = ${pin+96},
-    </#list>
-    <#assign PORTE_Pin_List =  PORTE_Pin_List?sort>
-    <#list PORTE_Pin_List as pin>
-    SYS_PORT_PIN_PE${pin} = ${pin+128},
-    </#list>
+
+<#list 0..GPIO_CHANNEL_TOTAL-1 as i>
+    <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
+    <#if .vars[channel]?has_content>
+        <#if .vars["PORT${.vars[channel]}_Pin_List"]?has_content>
+            <@"<#assign PORT${.vars[channel]}_Pin_List =  PORT${.vars[channel]}_Pin_List?sort>"?interpret />
+            <#list .vars["PORT${.vars[channel]}_Pin_List"] as pin>
+                <#lt>    SYS_PORT_PIN_R${.vars[channel]}${pin} = ${pin+(16*i)},
+            </#list>
+        </#if>
+    </#if>
+</#list>
+
     /* This element should not be used in any of the PORTS APIs.
        It will be used by other modules or application to denote that none of the PORT Pin is used */
     SYS_PORT_PIN_NONE = -1
