@@ -129,7 +129,7 @@ void ${TC_INSTANCE_NAME}_TimerInitialize( void )
 </#if>
     /* Configure timer period */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0U] = ${TC_TIMER_PERIOD}U;
-    
+
     /* Clear all interrupt flags */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 
@@ -361,13 +361,16 @@ void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uint
 /* Timer Interrupt handler */
 void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
 {
-    TC_TIMER_STATUS status;
-    status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
-    /* Clear interrupt flags */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
-    if((status != TC_TIMER_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+    if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0)
     {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        TC_TIMER_STATUS status;
+        status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+        /* Clear interrupt flags */
+        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+        if((status != TC_TIMER_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+        {
+            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        }
     }
 }
 
@@ -381,6 +384,3 @@ bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void )
     return timer_status;
 }
 </#if>
-
-
-

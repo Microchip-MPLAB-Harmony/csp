@@ -118,7 +118,7 @@
                 <#assign TC_DRVCTRL_VAL = "TC_DRVCTRL_INVEN0_Msk">
             </#if>
         </#if>
-        
+
         <#if TC_CAPTURE_CTRLA_CAPTEN1 == true>
             <#if TC_CAPTURE_CTRLA_COPEN1 == "0">  <#-- io pin event -->
                 <#if TC_CTRLA_VAL != "">
@@ -229,7 +229,7 @@ void ${TC_INSTANCE_NAME}_CaptureInitialize( void )
 <#if TC_DRVCTRL_VAL?has_content>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = ${TC_DRVCTRL_VAL};
 </#if>
-    
+
 <#if TC_EVCTRL_VAL?has_content>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
 </#if>
@@ -317,14 +317,17 @@ void ${TC_INSTANCE_NAME}_CaptureCallbackRegister( TC_CAPTURE_CALLBACK callback, 
 
 void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 {
-    TC_CAPTURE_STATUS status;
-    status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
-    /* Clear all interrupts */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
-
-    if((status != TC_CAPTURE_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+    if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0)
     {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        TC_CAPTURE_STATUS status;
+        status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+        /* Clear all interrupts */
+        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
+
+        if((status != TC_CAPTURE_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+        {
+            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        }
     }
 }
 

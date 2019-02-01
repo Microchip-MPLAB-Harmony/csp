@@ -141,16 +141,16 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     /* Configure timer one shot mode & direction */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = ${TC_CTRLBSET_VAL};
     </#if>
-    
+
     <#if TC_DRVCTRL_VAL?has_content>
     /* Configure timer one shot mode & direction */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = ${TC_DRVCTRL_VAL};
     </#if>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = ${TC_COMPARE_PERIOD}U;
-    <#if TC_COMPARE_WAVE_WAVEGEN == "MPWM"> 
+    <#if TC_COMPARE_WAVE_WAVEGEN == "MPWM">
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = ${TC_COMPARE_CC1}U;
     </#if>
-    
+
     /* Clear all interrupt flags */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 
@@ -248,7 +248,7 @@ uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
     return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
 
-<#if TC_COMPARE_WAVE_WAVEGEN == "MPWM"> 
+<#if TC_COMPARE_WAVE_WAVEGEN == "MPWM">
 /* Configure duty cycle value */
 void ${TC_INSTANCE_NAME}_Compare8bitSet( uint8_t compareValue )
 {
@@ -309,7 +309,7 @@ uint16_t ${TC_INSTANCE_NAME}_Compare16bitPeriodGet( void )
 }
 
 
-<#if TC_COMPARE_WAVE_WAVEGEN == "MPWM"> 
+<#if TC_COMPARE_WAVE_WAVEGEN == "MPWM">
 /* Configure duty cycle value */
 void ${TC_INSTANCE_NAME}_Compare16bitSet( uint16_t compareValue )
 {
@@ -398,13 +398,16 @@ void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, 
 /* Compare match interrupt handler */
 void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 {
-    TC_COMPARE_STATUS status;
-    status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
-    /* clear period interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
-    if((status != TC_COMPARE_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+    if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0)
     {
-        ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        TC_COMPARE_STATUS status;
+        status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+        /* clear period interrupt */
+        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+        if((status != TC_COMPARE_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+        {
+            ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
+        }
     }
 }
 
@@ -419,6 +422,3 @@ TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void )
     return compare_status;
 }
 </#if>
-
-
-
