@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -47,7 +47,7 @@ global rngSym_RNGCON_TRNGMODE
 ################################################################################
 #### Business Logic ####
 ################################################################################
-	
+
 def _get_bitfield_names(node, outputList):
     valueNodes = node.getChildren()
     for ii in reversed(valueNodes):
@@ -72,7 +72,7 @@ def combineValues(symbol, event):
     trngValue	= rngSym_RNGCON_TRNGMODE.getValue() << 11
     rngconValue = plenValue + trngenValue + prngenValue + contValue + trngValue
     symbol.setValue(rngconValue, 2)
-    
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -93,7 +93,7 @@ def instantiateComponent(rngComponent):
     rngSym_RNGCON_PLEN.setLabel(rngBitFld_RNGCON_PLEN.getAttribute("caption"))
     rngSym_RNGCON_PLEN.setDefaultValue(0)
     rngSym_RNGCON_PLEN.setMin(0)
-    rngSym_RNGCON_PLEN.setMax(255)
+    rngSym_RNGCON_PLEN.setMax(64)
     rngSym_RNGCON_PLEN.setVisible(True)
 
     rngTRNGEN_names = []
@@ -139,7 +139,7 @@ def instantiateComponent(rngComponent):
     for ii in rngTRNGMODE_names:
         rngSym_RNGCON_TRNGMODE.addKey( ii['desc'], ii['value'], ii['key'] )    
     rngSym_RNGCON_TRNGMODE.setVisible(True)
-    
+
     #Collect user input to combine into RNGCON register
     rngSym_RNGCON = rngComponent.createHexSymbol("RNGCON_VALUE", None)
     rngSym_RNGCON.setDefaultValue(0)
@@ -154,11 +154,11 @@ def instantiateComponent(rngComponent):
 #### Dependency ####
 ############################################################################
 
-    
+
 ############################################################################
 #### Code Generation ####
 ############################################################################
-    
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     rngHeader1File = rngComponent.createFileSymbol("RNG_HEADER1", None)
