@@ -275,24 +275,31 @@ void ${SDADC_INSTANCE_NAME}_InterruptHandler( void )
     status = ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG;
     /* Clear interrupt flags */
     ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_Msk;
-    
+
     if (${SDADC_INSTANCE_NAME}_CallbackObj.callback != NULL)
     {
         ${SDADC_INSTANCE_NAME}_CallbackObj.callback(status, ${SDADC_INSTANCE_NAME}_CallbackObj.context);
     }
 
 }
+</#if>
 
-<#else>
+<#if SDADC_INTENSET_RESRDY == false>
 bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady( void )
 {
-    return (bool)(${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk);
-}
-
-<#if SDADC_WINCTRL_WINMODE != "0">
-bool ${SDADC_INSTANCE_NAME}_WindowMonitorIsSet( void )
-{
-    return (bool)((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_WINMON_Msk) == SDADC_INTFLAG_WINMON_Msk);
+    bool status;
+    status = (bool)((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk) >> SDADC_INTFLAG_RESRDY_Pos);
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_RESRDY_Msk;
+    return status;
 }
 </#if>
+
+<#if (SDADC_WINCTRL_WINMODE != "0") && SDADC_INTENSET_WINMON == false>
+bool ${SDADC_INSTANCE_NAME}_WindowMonitorIsSet( void )
+{
+    bool status;
+    status =  (bool)((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_WINMON_Msk) >> SDADC_INTFLAG_WINMON_Pos);
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_WINMON_Msk;
+    return status;
+}
 </#if>
