@@ -213,7 +213,7 @@ def sysTime_APIUpdate(symbol,event):
     counterApiName_Sym.setValue(counterGetApiName,2)
     periodSetApiName_Sym.setValue(periodSetApiName,2)
     timerWidth_Sym.setValue(int(key[5:]), 2)
-    timerPeriodMax_Sym.setValue(str(int(math.pow(2, int(key[5:])))), 2)
+    timerPeriodMax_Sym.setValue(str(int(math.pow(2, int(key[5:])) - 1)), 2)
 
 ###################################################################################################
 ########################################## Component  #############################################

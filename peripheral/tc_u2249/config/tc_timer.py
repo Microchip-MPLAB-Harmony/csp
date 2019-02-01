@@ -47,7 +47,7 @@ def tcTimeMaxValue(symbol, event):
     elif (mode == 1):
         max = (255.0 * resolution / 1000000)
     elif (mode == 2):
-        max = (4294967296.0 * resolution / 1000000)
+        max = (4294967295.0 * resolution / 1000000)
     symbol.setMax(max)
 
 def tcPeriodCalc(symbol, event):
@@ -120,7 +120,7 @@ tcSym_TimerPeriod.setLabel("Timer Period")
 tcSym_TimerPeriod.setVisible(False)
 tcSym_TimerPeriod.setDefaultValue(long(period))
 tcSym_TimerPeriod.setMin(0)
-tcSym_TimerPeriod.setMax(4294967296)
+tcSym_TimerPeriod.setMax(65535)
 tcSym_TimerPeriod.setDependencies(tcPeriodCalc, ["TC_CTRLA_MODE", "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
     "TC_CTRLA_PRESCALER", "TC_TIMER_TIME_MS"])
 
@@ -130,11 +130,14 @@ tcSym_Timer_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_TIMER_INTENSET_OV
 tcSym_Timer_INTENSET_OVF.setLabel("Enable Timer Period Interrupt")
 tcSym_Timer_INTENSET_OVF.setDefaultValue(True)
 
-tcSym_Timer_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_OVFEO", tcSym_TimerMenu)
+tcSym_TimerEventMenu = tcComponent.createMenuSymbol("TC_TIMER_EVENT_MENU", tcSym_TimerMenu)
+tcSym_TimerEventMenu.setLabel("Events")
+
+tcSym_Timer_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_OVFEO", tcSym_TimerEventMenu)
 tcSym_Timer_EVCTRL_OVFEO.setLabel("Enable Timer Period Overflow Event")
 tcSym_Timer_EVCTRL_OVFEO.setDefaultValue(False)
 
-tcSym_Timer_EVCTRL_EV = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_EV", tcSym_TimerMenu)
+tcSym_Timer_EVCTRL_EV = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_EV", tcSym_TimerEventMenu)
 tcSym_Timer_EVCTRL_EV.setLabel("Enable Timer Input Event")
 tcSym_Timer_EVCTRL_EV.setDefaultValue(False)
 
