@@ -65,7 +65,7 @@ static void CLK_UTMIPLLInitialize(void)
 {
     /* Set the UTMI reference clock */
     uint32_t sfr_utmiclktrim_val = SFR_REGS->SFR_UTMICKTRIM & ~SFR_UTMICKTRIM_FREQ_Msk;
-	SFR_REGS->SFR_UTMICKTRIM = sfr_utmiclktrim_val | SFR_UTMICKTRIM_FREQ_${UTMI_CKTRIM_FREQ};
+	SFR_REGS->SFR_UTMICKTRIM = sfr_utmiclktrim_val | SFR_UTMICKTRIM_FREQ${UTMI_CKTRIM_FREQ};
 	
 	/* Enable UPLL and configure UPLL lock time */
 	PMC_REGS->CKGR_UCKR = CKGR_UCKR_UPLLEN_Msk | CKGR_UCKR_UPLLCOUNT(${PMC_CKGR_UCKR_UPLLCOUNT});
@@ -99,7 +99,7 @@ static void CLK_AudioPLLInitialize(void)
 }
 </#if>
 
-<#if PMC_SCER_UDPCLK || PMC_SCER_UHPCLK>
+<#if PMC_SCER_UHPCLK>
 /*********************************************************************************
 Initialize USB FS clock 
 *********************************************************************************/
@@ -111,7 +111,7 @@ static void CLK_USBClockInitialize ( void )
 	
 	
 	/* Enable Full-Speed USB Clock Output */
-    PMC_REGS->PMC_SCER |= PMC_SCER_UDP(${PMC_SCER_UDPCLK?then(1,0)}) | PMC_SCER_UHP(${PMC_SCER_UHPCLK?then(1,0)});
+    PMC_REGS->PMC_SCER |= PMC_SCER_UHP(${PMC_SCER_UHPCLK?then(1,0)});
 }
 </#if>
 
@@ -212,7 +212,7 @@ void CLK_Initialize( void )
 	CLK_UTMIPLLInitialize();
 
 </#if>
-<#if PMC_SCER_UDPCLK || PMC_SCER_UHPCLK>
+<#if PMC_SCER_UHPCLK>
 	/* Initialize USB Clock */
 	CLK_USBClockInitialize();
 
