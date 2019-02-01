@@ -45,8 +45,8 @@
 #include <xc.h>
 #include <sys/attribs.h>
 <#else>
-#include "toolchain_specifics.h"
 #include "${__PROCESSOR?lower_case}.h"
 #include "device_cache.h"
 </#if>
+#include "toolchain_specifics.h"
 
