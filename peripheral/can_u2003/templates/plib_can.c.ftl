@@ -366,7 +366,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = 1U << tfqpi;
 
 <#if INTERRUPT_MODE == true>
-    ${CAN_INSTANCE_NAME}_REGS->CAN_IE = CAN_IE_TCE_Msk;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= CAN_IE_TCE_Msk;
 </#if>
 <#if TXBUF_USE && INTERRUPT_MODE == false>
     for (bufferIndex = 0; bufferIndex < (${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
@@ -569,7 +569,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxId = id;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer = data;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
-    ${CAN_INSTANCE_NAME}_REGS->CAN_IE = rxInterrupt;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= rxInterrupt;
 </#if>
     return status;
 }
@@ -688,7 +688,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     offset = ${CAN_INSTANCE_NAME}_RX_FIFO0_SIZE;
     /* Receive FIFO 0 Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0C = CAN_RXF0C_F0S(${RXF0_ELEMENTS}) | CAN_RXF0C_F0WM(${RXF0_WATERMARK})<#if RXF0_OVERWRITE> | CAN_RXF0C_F0OM_Msk</#if> |
-            CAN_RXF0C_F0SA(((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address >> 2));
+            CAN_RXF0C_F0SA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address);
 
 </#if>
 <#if RXF1_USE>
@@ -696,13 +696,13 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     offset += ${CAN_INSTANCE_NAME}_RX_FIFO1_SIZE;
     /* Receive FIFO 1 Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1C = CAN_RXF1C_F1S(${RXF1_ELEMENTS}) | CAN_RXF1C_F1WM(${RXF1_WATERMARK})<#if RXF1_OVERWRITE> | CAN_RXF1C_F1OM_Msk</#if> |
-            CAN_RXF1C_F1SA(((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address >> 2));
+            CAN_RXF1C_F1SA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address);
 
 </#if>
 <#if RXBUF_USE>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress = (can_rxbe_registers_t *)(msgRAMConfigBaseAddress + offset);
     offset += ${CAN_INSTANCE_NAME}_RX_BUFFER_SIZE;
-    ${CAN_INSTANCE_NAME}_REGS->CAN_RXBC = CAN_RXBC_RBSA(((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress >> 2));
+    ${CAN_INSTANCE_NAME}_REGS->CAN_RXBC = CAN_RXBC_RBSA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress);
 
 </#if>
 <#if TX_USE || TXBUF_USE>
@@ -710,13 +710,13 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     offset += ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE;
     /* Transmit Buffer/FIFO Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_TXBC = CAN_TXBC_TFQS(${TX_FIFO_ELEMENTS})<#if TXBUF_USE> | CAN_TXBC_NDTB(${TX_BUFFER_ELEMENTS})</#if> |
-            CAN_TXBC_TBSA(((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress >> 2));
+            CAN_TXBC_TBSA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress);
 
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress =  (can_txefe_registers_t *)(msgRAMConfigBaseAddress + offset);
     offset += ${CAN_INSTANCE_NAME}_TX_EVENT_FIFO_SIZE;
     /* Transmit Event FIFO Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_TXEFC = CAN_TXEFC_EFWM(${TX_FIFO_WATERMARK}) | CAN_TXEFC_EFS(${TX_FIFO_ELEMENTS}) |
-            CAN_TXEFC_EFSA(((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress >> 2));
+            CAN_TXEFC_EFSA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress);
 
 </#if>
 <#if FILTERS_STD?number gt 0>
@@ -727,7 +727,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     offset += ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
     /* Standard ID Filter Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_SIDFC = CAN_SIDFC_LSS(${FILTERS_STD}) |
-            CAN_SIDFC_FLSSA(((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress >> 2));
+            CAN_SIDFC_FLSSA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress);
 
 </#if>
 <#if FILTERS_EXT?number gt 0>
@@ -737,7 +737,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
            ${CAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_XIDFC = CAN_XIDFC_LSE(${FILTERS_EXT}) |
-            CAN_XIDFC_FLESA(((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress >> 2));
+            CAN_XIDFC_FLESA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress);
 
 </#if>
 

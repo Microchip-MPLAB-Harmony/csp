@@ -143,7 +143,7 @@ typedef enum
     CAN_ERROR_LEC_BIT1 = 0x4,
     CAN_ERROR_LEC_BIT0 = 0x5,
     CAN_ERROR_LEC_CRC = 0x6,
-    /* 0x7 - No Error */
+    CAN_ERROR_LEC_NC = 0x7,
     CAN_ERROR_PASSIVE = 0x20,
     CAN_ERROR_WARNING_STATUS = 0x40,
     CAN_ERROR_BUS_OFF = 0x80,
@@ -153,7 +153,7 @@ typedef enum
     CAN_ERROR_DLEC_BIT1 = 0x400,
     CAN_ERROR_DLEC_BIT0 = 0x500,
     CAN_ERROR_DLEC_CRC = 0x600,
-    /* 0x700 - No Error */
+    CAN_ERROR_DLEC_NC = 0x700,
     CAN_ERROR_PROTOCOL_EXCEPTION_EVENT = 0x4000,
     /* Force the compiler to reserve 32-bit space for each enum value */
     CAN_ERROR_INVALID = 0xFFFFFFFF

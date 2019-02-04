@@ -84,6 +84,21 @@ def adornFilterConfig(config):
     config.setDisplayMode("Description")
     config.setDefaultValue(1)
 
+def standardFilterRangeCheck(symbol, event):
+    filterNumber = event["id"].split("_")[2].split("FILTER")[1]
+    if Database.getSymbolValue(canInstanceName.getValue().lower(),
+                               canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE") == 0:
+        id1 = Database.getSymbolValue(canInstanceName.getValue().lower(),
+                                   canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1")
+        id2 = Database.getSymbolValue(canInstanceName.getValue().lower(),
+                                      canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2")
+        if id1 > id2:
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    else:
+        symbol.setVisible(False)
+
 def canCreateStdFilter(component, menu, filterNumber):
     stdFilter = component.createMenuSymbol(canInstanceName.getValue() + "_STD_FILTER"+ str(filterNumber), menu)
     stdFilter.setLabel("Standard Filter " + str(filterNumber))
@@ -99,6 +114,13 @@ def canCreateStdFilter(component, menu, filterNumber):
     sfid2.setMin(0)
     sfid2.setMax(2047)
 
+    stdFilterRangeInvalidSym = component.createCommentSymbol(canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_COMMENT", stdFilter)
+    stdFilterRangeInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Standard Filter " + str(filterNumber) + " ID2 must be greater or equal to ID1")
+    stdFilterRangeInvalidSym.setVisible(False)
+    stdFilterRangeInvalidSym.setDependencies(standardFilterRangeCheck, [canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE",
+                                                                        canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1",
+                                                                        canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2"])
+
     config = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG", stdFilter)
     config.setLabel("Element Configuration")
     adornFilterConfig(config)
@@ -106,6 +128,21 @@ def canCreateStdFilter(component, menu, filterNumber):
     stdFilter.setVisible(False)
     stdFilter.setEnabled(False)
     return stdFilter
+
+def extendedFilterRangeCheck(symbol, event):
+    filterNumber = event["id"].split("_")[2].split("FILTER")[1]
+    if Database.getSymbolValue(canInstanceName.getValue().lower(),
+                               canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE") == 0:
+        id1 = Database.getSymbolValue(canInstanceName.getValue().lower(),
+                                   canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1")
+        id2 = Database.getSymbolValue(canInstanceName.getValue().lower(),
+                                      canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2")
+        if id1 > id2:
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    else:
+        symbol.setVisible(False)
 
 def canCreateExtFilter(component, menu, filterNumber):
     extFilter = component.createMenuSymbol(canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber), menu)
@@ -116,11 +153,18 @@ def canCreateExtFilter(component, menu, filterNumber):
     efid1 = component.createIntegerSymbol(canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1", extFilter)
     efid1.setLabel("ID1")
     efid1.setMin(0)
-    efid1.setMax(2047)
+    efid1.setMax(536870911)
     efid2 = component.createIntegerSymbol(canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2", extFilter)
     efid2.setLabel("ID2")
     efid2.setMin(0)
-    efid2.setMax(2047)
+    efid2.setMax(536870911)
+
+    extFilterRangeInvalidSym = component.createCommentSymbol(canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_COMMENT", extFilter)
+    extFilterRangeInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Extended Filter " + str(filterNumber) + " ID2 must be greater or equal to ID1")
+    extFilterRangeInvalidSym.setVisible(False)
+    extFilterRangeInvalidSym.setDependencies(extendedFilterRangeCheck, [canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE",
+                                                                        canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1",
+                                                                        canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2"])
 
     config = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG", extFilter)
     config.setLabel("Element Configuration")
@@ -633,10 +677,10 @@ def instantiateComponent(canComponent):
     #timestamp Modes
     canTimestampMode = canComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", None)
     canTimestampMode.setLabel("Timestamp mode")
-    canTimestampMode.setDescription("EXT INC: external counter (needed for FD). ZERO: timestamp is always 0x0000. TCP INC: incremented according to TCP.")
+    canTimestampMode.setDescription("EXT TIMESTAMP: external counter (needed for FD). ZERO: timestamp is always 0x0000. TCP INC: incremented according to TCP.")
     canTimestampMode.addKey("CAN_TSCC_TSS_ZERO", "0", "ZERO")
     canTimestampMode.addKey("CAN_TSCC_TSS_INC", "1", "TCP INC")
-    canTimestampMode.addKey("CAN_TSCC_TSS_EXT", "2", "EXT INC")
+    canTimestampMode.addKey("CAN_TSCC_TSS_EXT", "2", "EXT TIMESTAMP")
     canTimestampMode.setOutputMode("Key")
     canTimestampMode.setDisplayMode("Description")
     canTimestampMode.setDefaultValue(1)
@@ -702,5 +746,3 @@ def instantiateComponent(canComponent):
     canSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     canSystemDefFile.setSourcePath("../peripheral/can_" + REG_MODULE_CAN.getID() + "/templates/system/system_definitions.h.ftl")
     canSystemDefFile.setMarkup(True)
-
-'''********************************End of the file*************************'''
