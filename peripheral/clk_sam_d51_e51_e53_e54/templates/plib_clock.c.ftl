@@ -112,7 +112,7 @@ static void FDPLL0_Initialize(void)
     }
     </#if>
 
-    /****************** DPLL Initialization  *********************************/
+    /****************** DPLL0 Initialization  *********************************/
 
     /* Configure DPLL    */
     <@compress single_line=true>OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_FILTER(${CONFIG_CLOCK_DPLL0_FILTER}) |
@@ -120,7 +120,7 @@ static void FDPLL0_Initialize(void)
                                                                    OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL0_REF_CLOCK})
                                                                    ${CONFIG_CLOCK_DPLL0_LOCK_BYPASS?then('| OSCCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}
                                                                    ${CONFIG_CLOCK_DPLL0_WAKEUP_FAST?then('| OSCCTRL_DPLLCTRLB_WUF_Msk', ' ')}
-                                                                   ${CONFIG_CLOCK_DPLL0_DCOEN?then('| OSCCTRL_DPLLCTRLB_DCOEN_Msk', ' ')}
+                                                                   ${CONFIG_CLOCK_DPLL0_DCOEN?then('| OSCCTRL_DPLLCTRLB_DCOEN_Msk | OSCCTRL_DPLLCTRLB_DCOFILTER(${CONFIG_CLOCK_DPLL0_DCOFILTER})', ' ')}
                                                                    ${((CONFIG_CLOCK_DPLL0_REF_CLOCK == "2") || (CONFIG_CLOCK_DPLL0_REF_CLOCK == "3"))?then('| OSCCTRL_DPLLCTRLB_DIV(${CONFIG_CLOCK_DPLL0_DIVIDER})', ' ')};</@compress>
 
 
@@ -159,7 +159,7 @@ static void FDPLL1_Initialize(void)
     }
     </#if>
 
-    /****************** DPLL Initialization  *********************************/
+    /****************** DPLL1 Initialization  *********************************/
 
     /* Configure DPLL    */
     <@compress single_line=true>OSCCTRL_REGS->DPLL[1].OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_FILTER(${CONFIG_CLOCK_DPLL1_FILTER}) |
@@ -167,7 +167,7 @@ static void FDPLL1_Initialize(void)
                                                                    OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL1_REF_CLOCK})
                                                                    ${CONFIG_CLOCK_DPLL1_LOCK_BYPASS?then('| OSCCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}
                                                                    ${CONFIG_CLOCK_DPLL1_WAKEUP_FAST?then('| OSCCTRL_DPLLCTRLB_WUF_Msk', ' ')}
-                                                                   ${CONFIG_CLOCK_DPLL1_DCOEN?then('| OSCCTRL_DPLLCTRLB_DCOEN_Msk', ' ')}
+                                                                   ${CONFIG_CLOCK_DPLL1_DCOEN?then('| OSCCTRL_DPLLCTRLB_DCOEN_Msk | OSCCTRL_DPLLCTRLB_DCOFILTER(${CONFIG_CLOCK_DPLL1_DCOFILTER})', ' ')}
                                                                    ${((CONFIG_CLOCK_DPLL1_REF_CLOCK == "2") || (CONFIG_CLOCK_DPLL1_REF_CLOCK == "3"))?then('| OSCCTRL_DPLLCTRLB_DIV(${CONFIG_CLOCK_DPLL1_DIVIDER})', ' ')};</@compress>
 
 
