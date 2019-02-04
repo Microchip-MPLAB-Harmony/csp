@@ -67,8 +67,12 @@ def _process_valuegroup_entry(node):
     value = int(newstring,16)
     return str(value)
 
+def getCorePeripherals():
 
+    # Components which are creating critical section
+    corePeripherals = ["UART", "SPI", "I2C", "DMAC", "OCMP", "TMR", "TMR1", "CORE"]
 
+    return corePeripherals
 
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
