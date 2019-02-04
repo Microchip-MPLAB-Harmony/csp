@@ -19,7 +19,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -45,7 +45,6 @@
 #define PLIB_${TMR1_INSTANCE_NAME}_H
 
 #include <stddef.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
 #include "plib_tmr1_common.h"
@@ -64,9 +63,6 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-
-#define TIMER1_EXT_CLOCK_INPUT_FREQ  10000000
-
 
 // *****************************************************************************
 // *****************************************************************************
