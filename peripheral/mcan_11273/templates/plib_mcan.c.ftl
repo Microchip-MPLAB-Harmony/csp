@@ -383,7 +383,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBAR = 1U << tfqpi;
 
 <#if INTERRUPT_MODE == true>
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE = MCAN_IE_TCE_Msk;
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE |= MCAN_IE_TCE_Msk;
 </#if>
 <#if TXBUF_USE && INTERRUPT_MODE == false>
     for (bufferIndex = 0; bufferIndex < (${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${MCAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
@@ -586,7 +586,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
     ${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = id;
     ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer = data;
     ${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE = rxInterrupt;
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE |= rxInterrupt;
 </#if>
     return status;
 }
