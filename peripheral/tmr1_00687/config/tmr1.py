@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -27,9 +27,6 @@
 
 tmr1BitField_T1CON_SIDL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TMR1"]/register-group@[name="TMR1"]/register@[name="T1CON"]/bitfield@[name="SIDL"]')
 tmr1ValGrp_T1CON_SIDL = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TMR1\"]/value-group@[name=\"T1CON__SIDL\"]")
-
-tmr1BitField_T1CON_ON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TMR1"]/register-group@[name="TMR1"]/register@[name="T1CON"]/bitfield@[name="ON"]')
-tmr1ValGrp_T1CON_ON = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TMR1\"]/value-group@[name=\"T1CON__ON\"]")
 
 tmr1BitField_T1CON_PRESCALER = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TMR1"]/register-group@[name="TMR1"]/register@[name="T1CON"]/bitfield@[name="TCKPS"]')
 tmr1ValGrp_T1CON_PRESCALER = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TMR1\"]/value-group@[name=\"T1CON__TCKPS\"]")
@@ -62,7 +59,8 @@ def _get_enblReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
+    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
+        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
         index = int(vectorNumber / 32)
         regName = "IEC" + str(index)
         return regName
@@ -71,7 +69,8 @@ def _get_statReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
+    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
+        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
         index = int(vectorNumber / 32)
         regName = "IFS" + str(index)
         return regName
@@ -136,13 +135,6 @@ def updateTMR1InterruptData(symbol, event):
     else:
         symbol.setVisible(False)
 
-def timerModeMax(symbol, event):
-
-    if int(event["symbol"].getKeyValue(event["value"])) == 1:
-        symbol.setMax(4294967295)
-    else:
-        symbol.setMax(65535)
-
 def T1CONcombineValues(symbol, event):
 
     t1conValue = symbol.getValue()
@@ -160,10 +152,10 @@ def T1CONcombineValues(symbol, event):
         t1conValue = t1conValue | (prescalerValue << 4)
 
     if event["id"] == "TIMER1_TSYNC_SEL":
-        tsyncValue = int(event["symbol"].getKeyValue(event["value"]))
+        tsyncValue = int(event["value"])
         maskvalue = tmr1BitField_T1CON_TSYNC.getAttribute("mask")
         t1conValue = t1conValue & (~int(maskvalue, 0))
-        t1conValue = t1conValue | (tsyncValue << 3)
+        t1conValue = t1conValue | (tsyncValue << 2)
 
     if event["id"] == "TIMER1_SRC_SEL":
         tmr1SrcSelValue = int(event["symbol"].getKeyValue(event["value"]))
@@ -174,8 +166,37 @@ def T1CONcombineValues(symbol, event):
     symbol.setValue(t1conValue, 2)
 
 def PreScaler_ValueUpdate(symbol, event):
-
     symbol.setValue(PrescalerDict[event["symbol"].getKey(event["value"])], 1)
+
+def tmr1TsyncVisible(symbol, event):
+    symbol.setVisible(not bool(event["value"]))
+
+def calcTimerFreq(symbol, event):
+    component = symbol.getComponent()
+    src = component.getSymbolValue("TIMER1_SRC_SEL")
+    if(src == 0):
+        clock = component.getSymbolValue("TIMER1_EXT_CLOCK_FREQ")
+    else:
+        clock = Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK3_FREQ")
+    prescaler = component.getSymbolValue("TMR1_PRESCALER_VALUE")
+    symbol.setValue(int(clock)/int(prescaler), 2)
+
+def timerMaxValue(symbol, event):
+    clock = event["value"]
+    print(clock)
+    if(clock == 0):
+        clock = 1
+    resolution = 1000.0/clock
+    symbol.setMax(65535.0 * resolution)
+
+def timerPeriodCalc(symbol, event):
+    component = symbol.getComponent()
+    clock = component.getSymbolValue("TIMER1_CLOCK_FREQ")
+    if(clock == 0):
+        clock = 1
+    resolution = 1000.0/clock
+    period = component.getSymbolValue("TIMER1_TIME_PERIOD_MS") / resolution
+    symbol.setValue(long(period), 2)
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -225,6 +246,74 @@ def instantiateComponent(tmr1Component):
     tmr1IFS.setDefaultValue(statRegName)
     tmr1IFS.setVisible(False)
 
+    #prescaler configuration
+    prescale_names = []
+    _get_bitfield_names(tmr1ValGrp_T1CON_PRESCALER, prescale_names)
+    tmr1Sym_T1CON_PRESCALER = tmr1Component.createKeyValueSetSymbol("TIMER1_PRE_SCALER", None)
+    tmr1Sym_T1CON_PRESCALER.setLabel("Select Prescaler")
+    tmr1Sym_T1CON_PRESCALER.setOutputMode("Value")
+    tmr1Sym_T1CON_PRESCALER.setDisplayMode("Description")
+    for ii in prescale_names:
+        tmr1Sym_T1CON_PRESCALER.addKey( ii['desc'], ii['value'], ii['key'] )
+    tmr1Sym_T1CON_PRESCALER.setDefaultValue(3)
+    tmr1Sym_T1CON_PRESCALER.setVisible(True)
+
+    #Prescaler Value
+    tmr1PrescalerValue = tmr1Component.createIntegerSymbol("TMR1_PRESCALER_VALUE", None)
+    tmr1PrescalerValue.setVisible(False)
+    tmr1PrescalerValue.setLabel("Prescaler Value")
+    tmr1PrescalerValue.setDescription("Timer1 Prescaler value")
+    tmr1PrescalerValue.setDefaultValue(1)
+    tmr1PrescalerValue.setMin(1)
+    tmr1PrescalerValue.setDependencies(PreScaler_ValueUpdate, ["TIMER1_PRE_SCALER"])
+
+    #Timer1 clock Source Slection configuration
+    tcs_names = []
+    _get_bitfield_names(tmr1ValGrp_T1CON_TCS, tcs_names)
+    tmr1Sym_T1CON_SOURCE_SEL = tmr1Component.createKeyValueSetSymbol("TIMER1_SRC_SEL", None)
+    tmr1Sym_T1CON_SOURCE_SEL.setLabel("Select Timer Clock Source")
+    tmr1Sym_T1CON_SOURCE_SEL.setOutputMode("Value")
+    tmr1Sym_T1CON_SOURCE_SEL.setDisplayMode("Description")
+    for ii in tcs_names:
+        tmr1Sym_T1CON_SOURCE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
+    tmr1Sym_T1CON_SOURCE_SEL.setDefaultValue(1)
+
+    tmr1Sym_EXT_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_EXT_CLOCK_FREQ", tmr1Sym_T1CON_SOURCE_SEL)
+    tmr1Sym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
+    tmr1Sym_EXT_CLOCK_FREQ.setVisible(False)
+    tmr1Sym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
+    tmr1Sym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
+
+    #Sync ext clock
+    tmr1Sym_T1CON_SYNC_SEL = tmr1Component.createBooleanSymbol("TIMER1_TSYNC_SEL", tmr1Sym_T1CON_SOURCE_SEL)
+    tmr1Sym_T1CON_SYNC_SEL.setLabel("Synchronize External Clock")
+    tmr1Sym_T1CON_SYNC_SEL.setDefaultValue(False)
+    tmr1Sym_T1CON_SYNC_SEL.setVisible(False)
+    tmr1Sym_T1CON_SYNC_SEL.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
+
+    tmr1Sym_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_CLOCK_FREQ", None)
+    tmr1Sym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
+    tmr1Sym_CLOCK_FREQ.setVisible(True)
+    tmr1Sym_CLOCK_FREQ.setReadOnly(True)
+    tmr1Sym_CLOCK_FREQ.setDefaultValue(100000000)
+    tmr1Sym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["TMR1_PRESCALER_VALUE", "TIMER1_SRC_SEL", "TIMER1_EXT_CLOCK_FREQ"])
+
+    tmr1Sym_PERIOD_MS = tmr1Component.createFloatSymbol("TIMER1_TIME_PERIOD_MS", None)
+    tmr1Sym_PERIOD_MS.setLabel("Timer Period (Milli Sec)")
+    tmr1Sym_PERIOD_MS.setDefaultValue(0.3)
+    tmr1Sym_PERIOD_MS.setMin(0.0)
+    tmr1Sym_PERIOD_MS.setMax(0.65535)
+    tmr1Sym_PERIOD_MS.setDependencies(timerMaxValue, ["TIMER1_CLOCK_FREQ"])
+
+    #Timer1 Period Register
+    tmr1Sym_PR1 = tmr1Component.createLongSymbol("TIMER1_PERIOD", tmr1Sym_PERIOD_MS)
+    tmr1Sym_PR1.setLabel("Period Register")
+    tmr1Sym_PR1.setDefaultValue(30000)
+    tmr1Sym_PR1.setReadOnly(True)
+    tmr1Sym_PR1.setMin(0)
+    tmr1Sym_PR1.setMax(65535)
+    tmr1Sym_PR1.setDependencies(timerPeriodCalc, ["TIMER1_TIME_PERIOD_MS", "TIMER1_CLOCK_FREQ"])
+
     #timer SIDL configuration
     sidl_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_SIDL, sidl_names)
@@ -236,82 +325,12 @@ def instantiateComponent(tmr1Component):
         tmr1SymField_T1CON_SIDL.addKey( ii['key'],ii['value'], ii['desc'] )
     tmr1SymField_T1CON_SIDL.setDefaultValue(1)
 
-    #timer on off configuration
-    on_names = []
-    _get_bitfield_names(tmr1ValGrp_T1CON_ON, on_names)
-    tmr1Sym_T1CON_ON = tmr1Component.createKeyValueSetSymbol("TIMER1_START", None)
-    tmr1Sym_T1CON_ON.setLabel(tmr1BitField_T1CON_ON.getAttribute("caption"))
-    tmr1Sym_T1CON_ON.setOutputMode( "Value" )
-    tmr1Sym_T1CON_ON.setDisplayMode( "Description" )
-    for ii in on_names:
-        tmr1Sym_T1CON_ON.addKey( ii['key'],ii['value'], ii['desc'] )
-    tmr1Sym_T1CON_ON.setDefaultValue(1)
-    tmr1Sym_T1CON_ON.setVisible(False)
-
-    #prescaler configuration
-    prescale_names = []
-    _get_bitfield_names(tmr1ValGrp_T1CON_PRESCALER, prescale_names)
-    tmr1Sym_T1CON_PRESCALER = tmr1Component.createKeyValueSetSymbol("TIMER1_PRE_SCALER", None)
-    tmr1Sym_T1CON_PRESCALER.setLabel(tmr1BitField_T1CON_PRESCALER.getAttribute("caption"))
-    tmr1Sym_T1CON_PRESCALER.setOutputMode("Value")
-    tmr1Sym_T1CON_PRESCALER.setDisplayMode("Description")
-    for ii in prescale_names:
-        tmr1Sym_T1CON_PRESCALER.addKey( ii['desc'], ii['value'], ii['key'] )
-    tmr1Sym_T1CON_PRESCALER.setDefaultValue(0)
-    tmr1Sym_T1CON_PRESCALER.setVisible(False)
-
-    #Prescaler Value
-    tmr1PrescalerValue = tmr1Component.createIntegerSymbol("TMR1_PRESCALER_VALUE", None)
-    tmr1PrescalerValue.setVisible(False)
-    tmr1PrescalerValue.setLabel("Prescaler Value")
-    tmr1PrescalerValue.setDescription("Timer1 Prescaler value")
-    tmr1PrescalerValue.setDefaultValue(256)
-    tmr1PrescalerValue.setMin(1)
-    tmr1PrescalerValue.setDependencies(PreScaler_ValueUpdate, ["TIMER1_PRE_SCALER"])
-
-    #Timer External sync selection bits
-    tsync_names = []
-    _get_bitfield_names(tmr1ValGrp_T1CON_TSYNC, tsync_names)
-    tmr1Sym_T1CON_SYNC_SEL = tmr1Component.createKeyValueSetSymbol("TIMER1_TSYNC_SEL", None)
-    tmr1Sym_T1CON_SYNC_SEL.setLabel(tmr1BitField_T1CON_TSYNC.getAttribute("caption"))
-    tmr1Sym_T1CON_SYNC_SEL.setOutputMode("Value")
-    tmr1Sym_T1CON_SYNC_SEL.setDisplayMode("Description")
-    for ii in tsync_names:
-        tmr1Sym_T1CON_SYNC_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
-    tmr1Sym_T1CON_SYNC_SEL.setDefaultValue(0)
-
-    #Timer1 clock Source Slection configuration
-    tcs_names = []
-    _get_bitfield_names(tmr1ValGrp_T1CON_TCS, tcs_names)
-    tmr1Sym_T1CON_SOURCE_SEL = tmr1Component.createKeyValueSetSymbol("TIMER1_SRC_SEL", None)
-    tmr1Sym_T1CON_SOURCE_SEL.setLabel(tmr1BitField_T1CON_TCS.getAttribute("caption"))
-    tmr1Sym_T1CON_SOURCE_SEL.setOutputMode("Value")
-    tmr1Sym_T1CON_SOURCE_SEL.setDisplayMode("Description")
-    for ii in tcs_names:
-        tmr1Sym_T1CON_SOURCE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
-    tmr1Sym_T1CON_SOURCE_SEL.setDefaultValue(1)
-
     #Timer1 TxCON Reg Value
     tmr1Sym_T1CON_Value = tmr1Component.createHexSymbol("TCON_REG_VALUE", None)
     tmr1Sym_T1CON_Value.setDefaultValue((int(tmr1SymField_T1CON_SIDL.getSelectedValue()) << 13) | (int(tmr1Sym_T1CON_PRESCALER.getSelectedValue()) << 4) \
-    | (int(tmr1Sym_T1CON_SYNC_SEL.getSelectedValue()) << 3) | (int(tmr1Sym_T1CON_SOURCE_SEL.getSelectedValue()) << 1))
+    | (int(tmr1Sym_T1CON_SYNC_SEL.getValue()) << 3) | (int(tmr1Sym_T1CON_SOURCE_SEL.getSelectedValue()) << 1))
     tmr1Sym_T1CON_Value.setVisible(False)
     tmr1Sym_T1CON_Value.setDependencies(T1CONcombineValues,["TIMER1_SIDL", "TIMER1_PRE_SCALER", "TIMER1_TSYNC_SEL", "TIMER1_SRC_SEL"])
-
-    #Timer1 Period Register
-    tmr1Sym_PR1 = tmr1Component.createLongSymbol("TIMER1_PERIOD", None)
-    tmr1Sym_PR1.setLabel(tmr1BitField_PR1_BITS.getAttribute("caption"))
-    tmr1Sym_PR1.setDefaultValue(64000)
-    tmr1Sym_PR1.setMin(0)
-
-    # 16 bit mode
-    if((tmr1Sym_T1CON_SYNC_SEL.getSelectedValue) == 0):
-        tmr1Sym_PR1.setMax(65535)
-    #32 bit mode
-    else:
-        tmr1Sym_PR1.setMax(4294967295)
-
-    tmr1Sym_PR1.setDependencies(timerModeMax,["TIMER1_32BIT_MODE_SEL"])
 
     ############################################################################
     #### Dependency ####
