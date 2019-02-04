@@ -146,48 +146,6 @@ def getIRQnumber(string):
 
     return irq_index
 
-def combineValues(symbol, event):
-
-    spi1conValue = symbol.getValue()
-
-    if event["id"] == "SPI_MSTR_MODE_EN":
-        mstenValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = spiBitField_SPI1CON_MSTEN.getAttribute("mask")
-        spi1conValue = spi1conValue & (~int(maskvalue, 0))
-        spi1conValue = spi1conValue | (mstenValue << 5)
-
-    if event["id"] == "SPI_SPICON_CLK_POL":
-        clkpolValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = spiBitField_SPI1CON_CKP.getAttribute("mask")
-        spi1conValue = spi1conValue & (~int(maskvalue, 0))
-        spi1conValue = spi1conValue | (clkpolValue << 6)
-
-    if event["id"] == "SPI_SPICON_CLK_PH":
-        clkphValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = spiBitField_SPI1CON_CKE.getAttribute("mask")
-        spi1conValue = spi1conValue & (~int(maskvalue, 0))
-        spi1conValue =  spi1conValue | (clkphValue << 8)
-
-    if event["id"] == "SPI_SPICON_MODE":
-        modeValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = spiBitField_SPI1CON_MODE.getAttribute("mask")
-        spi1conValue = spi1conValue & (~int(maskvalue, 0))
-        spi1conValue = spi1conValue | (modeValue << 10)
-
-    if event["id"] == "SPI_MASTER_CLOCK":
-        Value = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = spiBitField_SPI1CON_MCLKSEL.getAttribute("mask")
-        spi1conValue = spi1conValue & (~int(maskvalue, 0))
-        spi1conValue = spi1conValue | (Value << 23)
-
-    if event["id"] == "SPI_SPICON_MSSEN":
-        Value = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = spiBitField_SPI1CON_MSSEN.getAttribute("mask")
-        spi1conValue = spi1conValue & (~int(maskvalue, 0))
-        spi1conValue = spi1conValue | (Value << 28)
-
-    symbol.setValue(spi1conValue, 2)
-
 ##  Dependency Function to show or hide the warning message depending on Clock enable/disable status
 def ClockStatusWarning(symbol, event):
 
@@ -311,10 +269,6 @@ def instantiateComponent(spiComponent):
 
     ## Fault Interrrupt Setup
     spiIrqFault = spiInstanceName.getValue() + "_FAULT"
-    InterruptVector.append(spiIrqFault + "_INTERRUPT_ENABLE")
-    InterruptHandler.append(spiIrqFault + "_INTERRUPT_HANDLER")
-    InterruptHandlerLock.append(spiIrqFault + "_INTERRUPT_HANDLER_LOCK")
-    InterruptVectorUpdate.append("core." + spiIrqFault + "_INTERRUPT_ENABLE_UPDATE")
     spiFaultVectorNum = int(getIRQnumber(spiIrqFault))
 
     enblRegName = _get_enblReg_parms(spiFaultVectorNum)
@@ -440,17 +394,9 @@ def instantiateComponent(spiComponent):
     for ii in msclk_names:
         spiSym_SPI1CON_MCLKSEL.addKey( ii['key'],ii['value'], ii['desc'] )
 
-    spiSym_SPI1CON_Value = spiComponent.createHexSymbol("SPICON_REG_VALUE",None)
-    spiSym_SPI1CON_Value.setDefaultValue((int(spiSym_SPICON_MSTEN.getSelectedValue()) << 5) | (int(spiSym_SPICON_CLKPOL.getSelectedValue()) << 6) \
-    | (int(spiSym_SPICON_CLKPH.getSelectedValue()) << 8) | (int(spiSym_SPICON_MODE.getSelectedValue()) << 10) | (int(spiSym_SPI1CON_MCLKSEL.getSelectedValue()) << 23)\
-    | (int(spiSym_SPICON_MSSEN.getSelectedValue()) << 28))
-    spiSym_SPI1CON_Value.setVisible(False)
-    spiSym_SPI1CON_Value.setDependencies(combineValues, ["SPI_MSTR_MODE_EN", "SPI_SPICON_CLK_POL", "SPI_SPICON_CLK_PH", "SPI_SPICON_MODE", "SPI_MASTER_CLOCK", "SPI_SPICON_MSSEN"])
-
     spiSym_Baud_Rate = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", None)
     spiSym_Baud_Rate.setLabel("Baud Rate in Hz")
     spiSym_Baud_Rate.setDefaultValue(1000000)
-    spiSym_Baud_Rate.setVisible(True)
     spiSym_Baud_Rate.setMin(1)
     spiSym_Baud_Rate.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
 
@@ -493,6 +439,50 @@ def instantiateComponent(spiComponent):
     spiSymIntEnComment.setLabel("Warning!!! " + spiInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     spiSymIntEnComment.setVisible(False)
     spiSymIntEnComment.setDependencies(updateSPIInterruptData, ["SPI_INTERRUPT_MODE"] + InterruptVectorUpdate)
+
+    ###################################################################################################
+    ####################################### Driver Symbols ############################################
+    ###################################################################################################
+
+    #SPI 8-bit Character size Mask
+    spiSym_CHSIZE_8BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", None)
+    spiSym_CHSIZE_8BIT.setDefaultValue("0x00000000")
+    spiSym_CHSIZE_8BIT.setVisible(False)
+
+    #SPI 16-bit Character size Mask
+    spiSym_CHSIZE_16BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_16_BIT_MASK", None)
+    spiSym_CHSIZE_16BIT.setDefaultValue("0x00000400")
+    spiSym_CHSIZE_16BIT.setVisible(False)
+
+    #SPI 32-bit Character size Mask
+    spiSym_CHSIZE_32BIT = spiComponent.createStringSymbol("SPI_CHARSIZE_BITS_32_BIT_MASK", None)
+    spiSym_CHSIZE_32BIT.setDefaultValue("0x00000800")
+    spiSym_CHSIZE_32BIT.setVisible(False)
+
+    #SPI Clock Phase Leading Edge Mask
+    spiSym_CPHA_LE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", None)
+    spiSym_CPHA_LE_Mask.setDefaultValue("0x00000100")
+    spiSym_CPHA_LE_Mask.setVisible(False)
+
+    #SPI Clock Phase Trailing Edge Mask
+    spiSym_CPHA_TE_Mask = spiComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", None)
+    spiSym_CPHA_TE_Mask.setDefaultValue("0x00000000")
+    spiSym_CPHA_TE_Mask.setVisible(False)
+
+    #SPI Clock Polarity Idle Low Mask
+    spiSym_CPOL_IL_Mask = spiComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", None)
+    spiSym_CPOL_IL_Mask.setDefaultValue("0x00000000")
+    spiSym_CPOL_IL_Mask.setVisible(False)
+
+    #SPI Clock Polarity Idle High Mask
+    spiSym_CPOL_IH_Mask = spiComponent.createStringSymbol("SPI_CLOCK_POLARITY_HIGH_MASK", None)
+    spiSym_CPOL_IH_Mask.setDefaultValue("0x00000040")
+    spiSym_CPOL_IH_Mask.setVisible(False)
+
+    #SPI API Prefix
+    spiSym_API_Prefix = spiComponent.createStringSymbol("SPI_PLIB_API_PREFIX", None)
+    spiSym_API_Prefix.setDefaultValue(spiInstanceName.getValue())
+    spiSym_API_Prefix.setVisible(False)
 
     ############################################################################
     #### Code Generation ####

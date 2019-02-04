@@ -78,9 +78,9 @@ typedef enum
 
 typedef enum
 {
-    SPI_DATA_BITS_8 = 0x00000000, 
+    SPI_DATA_BITS_8 = 0x00000000,
     SPI_DATA_BITS_16 = 0x00000400,
-    SPI_DATA_BITS_32 = 0x00000800, 
+    SPI_DATA_BITS_32 = 0x00000800,
 
     /* Force the compiler to reserve 32-bit space for each enum value */
     SPI_DATA_BITS_INVALID = 0xFFFFFFFF
@@ -96,20 +96,6 @@ typedef struct
 
 }SPI_TRANSFER_SETUP;
 
-// *****************************************************************************
-/* SPI Errors
-*/
-
-typedef enum
-{
-/* No Error */
-SPI_ERROR_NONE,
-
-/* Overrun Error */
-SPI_ERROR_OVERRUN
-
-}SPI_ERROR;
-
 typedef  void (*SPI_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
@@ -123,17 +109,13 @@ typedef struct
     void*                   txBuffer;
     void*                   rxBuffer;
     size_t                  txSize;
-	size_t                  rxSize;
-	size_t                  dummySize;
+    size_t                  rxSize;
+    size_t                  dummySize;
     size_t                  rxCount;
     size_t                  txCount;
     bool                    transferIsBusy;
-    SPI_CALLBACK       		faultcallback;
-    uintptr_t               faultcontext;
-    SPI_CALLBACK       		rxcallback;
-    uintptr_t               rxcontext;
-    SPI_CALLBACK       		txcallback;
-    uintptr_t               txcontext;
+    SPI_CALLBACK            callback;
+    uintptr_t               context;
 
 } SPI_OBJECT ;
 
@@ -145,7 +127,3 @@ typedef struct
 #endif
 
 #endif // PLIB_SPI_COMMON_H
-
-/*******************************************************************************
- End of File
-*/
