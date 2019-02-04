@@ -1,3 +1,26 @@
+"""*****************************************************************************
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************"""
+
 from os.path import join
 
 Log.writeInfoMessage("Loading Interrupt Manager for " + Variables.get("__PROCESSOR"))
@@ -250,6 +273,54 @@ for vectorDict in evicVectorDataStructure:
     evicVectorSubPriorityValue.setDefaultValue(int(evicVectorSubPriority.getValue()) << int(subPrioBit))
     evicVectorSubPriorityValue.setVisible(False)
     evicVectorSubPriorityValue.setDependencies(updateInterruptPriorityAndSubpriorityValue, ["EVIC_" + str(vIndex) + "_SUBPRIORITY"])
+
+###################################################################################################
+####################################### Driver Symbols ############################################
+###################################################################################################
+
+# Components which are creating critical section
+corePeripherals = getCorePeripherals()
+
+modules = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals").getChildren()
+
+for module in range (len(modules)):
+    periphName = str(modules[module].getAttribute("name"))
+    if periphName in corePeripherals:
+        instances = modules[module].getChildren()
+        for instance in range (len(instances)):
+            isMatched = False
+            periphInstanceName = str(instances[instance].getAttribute("name"))
+            moduleInstance = [dict for dict in evicVectorDataStructure if periphInstanceName in dict["module-instance"]]
+            if len(moduleInstance) > 1:
+                options = instances[instance].getChildren()
+                for option in range (len(options)):
+                    parameters = options[option].getChildren()
+                    for parameter in range(len(parameters)):
+                        name = str(parameters[parameter].getAttribute("name"))
+
+                        # Check for multi vector details are defined in ATDF
+                        if "INT_SRC" in name:
+                            isMatched = True
+                            value = int(parameters[parameter].getAttribute("value"))
+                            vectIndexes = [dict for dict in evicVectorDataStructure if value == dict["index"]]
+                            vectName = "_" + vectIndexes[0].get("name") + "_VECTOR"
+                            evicVectorNumber = coreComponent.createStringSymbol(periphInstanceName + "_" + name, None)
+                            evicVectorNumber.setDefaultValue(vectName)
+                            evicVectorNumber.setVisible(False)
+
+            if isMatched:
+                # Symbol to check peripheral contains multi vector
+                evicMultiVector = coreComponent.createBooleanSymbol(periphInstanceName + "_MULTI_IRQn", None)
+                evicMultiVector.setDefaultValue(True)
+                evicMultiVector.setVisible(False)
+            else:
+                if len(moduleInstance) != 0:
+                    vectName = "_" + moduleInstance[0].get("name") + "_VECTOR"
+
+                    # Symbol to get interrupt vector of peripheral containing single vector
+                    evicVectorName = coreComponent.createStringSymbol(periphInstanceName + "_SINGLE_IRQn", None)
+                    evicVectorName.setDefaultValue(vectName)
+                    evicVectorName.setVisible(False)
 
 ############################################################################
 #### Code Generation ####
