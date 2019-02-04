@@ -428,6 +428,35 @@ for i in range(0, 2):
     oscctrlSym_DPLLCTRLB_DCOEN.setDescription("DCO Filter Enable")
     oscctrlSym_DPLLCTRLB_DCOEN.setDefaultValue(False)
 
+    # Digital Phase Locked Loop(DPLL) Filter
+    oscctrlSym_DPLLCTRLB_DCOFILTER = coreComponent.createKeyValueSetSymbol(
+        "CONFIG_CLOCK_DPLL" + str(i) + "_DCOFILTER", dpll_Menu[i])
+    oscctrlSym_DPLLCTRLB_DCOFILTER.setLabel("Sigma-Delta DCO Filter Selection")
+    oscctrlSym_DPLLCTRLB_DCOFILTER.setDescription("Sigma-Delta DCO Filter Selection")
+    oscctrlSymDPLLFilterNode = ATDF.getNode(
+        "/avr-tools-device-file/modules/module@[name=\"OSCCTRL\"]/value-group@[name=\"OSCCTRL_DPLLCTRLB__DCOFILTER\"]")
+    oscctrlSymDPLLFilterNodeValues = []
+    oscctrlSymDPLLFilterNodeValues = oscctrlSymDPLLFilterNode.getChildren()
+    dpllfilterDefaultValue = 0
+    for index in range(0, len(oscctrlSymDPLLFilterNodeValues)):
+        dpllfilterKeyName = oscctrlSymDPLLFilterNodeValues[index].getAttribute(
+            "name")
+
+        if (dpllfilterKeyName == "DEFAULT"):
+            dpllfilterDefaultValue = index
+
+        dpllfilterKeyDescription = oscctrlSymDPLLFilterNodeValues[index].getAttribute(
+            "caption")
+        dpllfilterKeyValue = oscctrlSymDPLLFilterNodeValues[index].getAttribute(
+            "value")
+        oscctrlSym_DPLLCTRLB_DCOFILTER.addKey(
+            dpllfilterKeyName, dpllfilterKeyValue, dpllfilterKeyDescription)
+
+    oscctrlSym_DPLLCTRLB_DCOFILTER.setDefaultValue(dpllfilterDefaultValue)
+    oscctrlSym_DPLLCTRLB_DCOFILTER.setOutputMode("Value")
+    oscctrlSym_DPLLCTRLB_DCOFILTER.setDisplayMode("Description")
+
+
     # Digital Phase Locked Loop(DPLL) wakeUp Fast
     oscctrlSym_DPLLCTRLB_WUF = coreComponent.createBooleanSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_WAKEUP_FAST", dpll_Menu[i])
