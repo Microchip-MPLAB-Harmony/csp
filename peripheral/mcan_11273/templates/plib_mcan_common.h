@@ -143,7 +143,7 @@ typedef enum
     MCAN_ERROR_LEC_BIT1 = 0x4,
     MCAN_ERROR_LEC_BIT0 = 0x5,
     MCAN_ERROR_LEC_CRC = 0x6,
-    /* 0x7 - No Error */
+    MCAN_ERROR_LEC_NO_CHANGE = 0x7,
     MCAN_ERROR_PASSIVE = 0x20,
     MCAN_ERROR_WARNING_STATUS = 0x40,
     MCAN_ERROR_BUS_OFF = 0x80,
@@ -153,7 +153,7 @@ typedef enum
     MCAN_ERROR_DLEC_BIT1 = 0x400,
     MCAN_ERROR_DLEC_BIT0 = 0x500,
     MCAN_ERROR_DLEC_CRC = 0x600,
-    /* 0x700 - No Error */
+    MCAN_ERROR_DLEC_NO_CHANGE = 0x700,
     MCAN_ERROR_PROTOCOL_EXCEPTION_EVENT = 0x4000,
     /* Force the compiler to reserve 32-bit space for each enum value */
     MCAN_ERROR_INVALID = 0xFFFFFFFF

@@ -84,6 +84,21 @@ def adornFilterConfig(config):
     config.setDisplayMode("Description")
     config.setDefaultValue(1)
 
+def standardFilterRangeCheck(symbol, event):
+    filterNumber = event["id"].split("_")[2].split("FILTER")[1]
+    if Database.getSymbolValue(mcanInstanceName.getValue().lower(),
+                               mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE") == 0:
+        id1 = Database.getSymbolValue(mcanInstanceName.getValue().lower(),
+                                   mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1")
+        id2 = Database.getSymbolValue(mcanInstanceName.getValue().lower(),
+                                      mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2")
+        if id1 > id2:
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    else:
+        symbol.setVisible(False)
+
 def mcanCreateStdFilter(component, menu, filterNumber):
     stdFilter = component.createMenuSymbol(mcanInstanceName.getValue() + "_STD_FILTER"+ str(filterNumber), menu)
     stdFilter.setLabel("Standard Filter " + str(filterNumber))
@@ -99,6 +114,13 @@ def mcanCreateStdFilter(component, menu, filterNumber):
     sfid2.setMin(0)
     sfid2.setMax(2047)
 
+    stdFilterRangeInvalidSym = component.createCommentSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_COMMENT", stdFilter)
+    stdFilterRangeInvalidSym.setLabel("Warning!!! " + mcanInstanceName.getValue() + " Standard Filter " + str(filterNumber) + " ID2 must be greater or equal to ID1")
+    stdFilterRangeInvalidSym.setVisible(False)
+    stdFilterRangeInvalidSym.setDependencies(standardFilterRangeCheck, [mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE",
+                                                                        mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1",
+                                                                        mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2"])
+
     config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG", stdFilter)
     config.setLabel("Element Configuration")
     adornFilterConfig(config)
@@ -106,6 +128,21 @@ def mcanCreateStdFilter(component, menu, filterNumber):
     stdFilter.setVisible(False)
     stdFilter.setEnabled(False)
     return stdFilter
+
+def extendedFilterRangeCheck(symbol, event):
+    filterNumber = event["id"].split("_")[2].split("FILTER")[1]
+    if Database.getSymbolValue(mcanInstanceName.getValue().lower(),
+                               mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE") == 0:
+        id1 = Database.getSymbolValue(mcanInstanceName.getValue().lower(),
+                                   mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1")
+        id2 = Database.getSymbolValue(mcanInstanceName.getValue().lower(),
+                                      mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2")
+        if id1 > id2:
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+    else:
+        symbol.setVisible(False)
 
 def mcanCreateExtFilter(component, menu, filterNumber):
     extFilter = component.createMenuSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber), menu)
@@ -116,11 +153,18 @@ def mcanCreateExtFilter(component, menu, filterNumber):
     efid1 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1", extFilter)
     efid1.setLabel("ID1")
     efid1.setMin(0)
-    efid1.setMax(2047)
+    efid1.setMax(536870911)
     efid2 = component.createIntegerSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2", extFilter)
     efid2.setLabel("ID2")
     efid2.setMin(0)
-    efid2.setMax(2047)
+    efid2.setMax(536870911)
+
+    extFilterRangeInvalidSym = component.createCommentSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_COMMENT", extFilter)
+    extFilterRangeInvalidSym.setLabel("Warning!!! " + mcanInstanceName.getValue() + " Extended Filter " + str(filterNumber) + " ID2 must be greater or equal to ID1")
+    extFilterRangeInvalidSym.setVisible(False)
+    extFilterRangeInvalidSym.setDependencies(extendedFilterRangeCheck, [mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE",
+                                                                        mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1",
+                                                                        mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2"])
 
     config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG", extFilter)
     config.setLabel("Element Configuration")
@@ -674,10 +718,10 @@ def instantiateComponent(mcanComponent):
     #timestamp Modes
     mcanTimestampMode = mcanComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", None)
     mcanTimestampMode.setLabel("Timestamp mode")
-    mcanTimestampMode.setDescription("EXT INC: external counter (needed for FD). ZERO: timestamp is always 0x0000. TCP INC: incremented according to TCP.")
+    mcanTimestampMode.setDescription("EXT TIMESTAMP: external counter (needed for FD). ZERO: timestamp is always 0x0000. TCP INC: incremented according to TCP.")
     mcanTimestampMode.addKey("MCAN_TSCC_TSS_ALWAYS_0", "0", "ZERO")
     mcanTimestampMode.addKey("MCAN_TSCC_TSS_TCP_INC", "1", "TCP INC")
-    mcanTimestampMode.addKey("MCAN_TSCC_TSS_EXT_TIMESTAMP", "2", "EXT INC")
+    mcanTimestampMode.addKey("MCAN_TSCC_TSS_EXT_TIMESTAMP", "2", "EXT TIMESTAMP")
     mcanTimestampMode.setOutputMode("Key")
     mcanTimestampMode.setDisplayMode("Description")
     mcanTimestampMode.setDefaultValue(1)
