@@ -66,15 +66,6 @@
 #endif
 // DOM-IGNORE-END
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Data Types
-// *****************************************************************************
-// *****************************************************************************
-
-typedef uint32_t DMA_CHANNEL_CONFIG;
-
-typedef uintptr_t DMA_CHANNEL_HANDLE;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -98,12 +89,12 @@ typedef uintptr_t DMA_CHANNEL_HANDLE;
 typedef enum
 {
     /* Data was transferred successfully. */
-    DMA_ERROR_NONE /*DOM-IGNORE-BEGIN*/ = 1, /* DOM-IGNORE-END*/
+    DMAC_ERROR_NONE /*DOM-IGNORE-BEGIN*/ = 1, /* DOM-IGNORE-END*/
 
     /* DMA address error. */
-    DMA_ERROR_ADDRESS_ERROR /*DOM-IGNORE-BEGIN*/ = 2 /* DOM-IGNORE-END*/
+    DMAC_ERROR_ADDRESS_ERROR /*DOM-IGNORE-BEGIN*/ = 2 /* DOM-IGNORE-END*/
 
-} DMA_ERROR;
+} DMAC_ERROR;
 
 // *****************************************************************************
 /* DMA transfer event
@@ -120,20 +111,20 @@ typedef enum
 typedef enum
 {
     /* Data was transferred successfully. */
-    DMA_TRANSFER_EVENT_COMPLETE,
+    DMAC_TRANSFER_EVENT_COMPLETE,
 
     /* Error while processing the request */
-    DMA_TRANSFER_EVENT_ERROR,
+    DMAC_TRANSFER_EVENT_ERROR,
 
     /* Data transfer was aborted. */
-    DMA_TRANSFER_EVENT_ABORT,
+    DMAC_TRANSFER_EVENT_ABORT,
 
     /* No events yet. */
-    DMA_TRANSFER_EVENT_NONE
+    DMAC_TRANSFER_EVENT_NONE
 
-} DMA_TRANSFER_EVENT;
+} DMAC_TRANSFER_EVENT;
 
-typedef void (*DMA_CHANNEL_CALLBACK) (DMA_TRANSFER_EVENT status, uintptr_t contextHandle);
+typedef void (*DMAC_CHANNEL_CALLBACK) (DMAC_TRANSFER_EVENT status, uintptr_t contextHandle);
 
 // *****************************************************************************
 /* DMA channel object
@@ -154,15 +145,15 @@ typedef struct
 
     /* Inidcates the error information for
        the last DMA operation on this channel */
-    DMA_ERROR errorInfo;
+    DMAC_ERROR errorInfo;
 
     /* Call back function for this DMA channel */
-    DMA_CHANNEL_CALLBACK  pEventCallBack;
+    DMAC_CHANNEL_CALLBACK  pEventCallBack;
 
     /* Client data(Event Context) that will be returned at callback */
     uintptr_t hClientArg;
 
-} DMA_CHANNEL_OBJECT;
+} DMAC_CHANNEL_OBJECT;
 
 // *****************************************************************************
 /* DMA channel
@@ -180,12 +171,12 @@ typedef enum
 {
 <#list 0..NUM_DMA_CHANS - 1 as i>
 <#assign CHAN = "DMA_" + i + "_CHANNEL_NUMBER">
-    DMA_CHANNEL_${i} = 0x${.vars[CHAN]},
+    DMAC_CHANNEL_${i} = 0x${.vars[CHAN]},
 
 </#list>
-    DMA_NUMBER_OF_CHANNELS = 0x${NUM_DMA_CHANS}
+    DMAC_NUMBER_OF_CHANNELS = 0x${NUM_DMA_CHANS}
 
-} DMA_CHANNEL;
+} DMAC_CHANNEL;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -204,8 +195,8 @@ typedef enum
     Registers the callback function (and context pointer, if used) for a given DMA interrupt.
 
   Parameters:
-    DMA_CHANNEL channel - DMA channel this callback pertains to
-    const DMA_CHANNEL_TRANSFER_EVENT_HANDLER eventHandler - pointer to callback function
+    DMAC_CHANNEL channel - DMA channel this callback pertains to
+    const DMAC_CHANNEL_CALLBACK eventHandler - pointer to callback function
     const uintptr_t contextHandle - pointer of context information callback is to use (set to NULL if not used)
 
   Returns:
@@ -213,10 +204,10 @@ typedef enum
 
   Example:
     <code>
-    ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL_0, DMA_Callback, 0);
+    ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMAC_CHANNEL_0, DMAC_Callback, 0);
     </code>
 */
-void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL channel, const DMA_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle );
+void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle );
 
 // *****************************************************************************
 /* Function:
@@ -230,25 +221,27 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL channel, const DMA
     software-initiated transfer in Harmony.
 
   Parameters:
-    DMA_CHANNEL channel - DMA channel to use for this transfer
+    DMAC_CHANNEL channel - DMA channel to use for this transfer
     const void *srcAddr - pointer to source data
+    size_t srcSize - Size of the source
     const void *destAddr - pointer to where data is to be moved to
-    size_t blockSize - the transfer size to use
+    size_t destSize - Size of the destination
+    size_t cellSize - Size of the cell
 
   Returns:
     false, if DMA already is busy / true, if DMA is not busy before calling function
 
   Example:
     <code>
-    ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL_0, DMA_Callback, 0);
-    ${DMA_INSTANCE_NAME}_ChannelTransfer(DMA_CHANNEL_0,source, destination, TRANSFER_SIZE );
+    ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMAC_CHANNEL_0, DMAC_Callback, 0);
+    ${DMA_INSTANCE_NAME}_ChannelTransfer(DMAC_CHANNEL_0,srcAddr,srcSize,destAddr,destSize,cellSize);
     </code>
 */
-bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize);
+bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, size_t srcSize, const void *destAddr, size_t destSize, size_t cellSize);
 
 // *****************************************************************************
 /* Function:
-   void ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL channel)
+   void ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL channel)
 
   Summary:
     This function disables the DMA channel.
@@ -257,21 +250,21 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
     Disables the DMA channel specified.
 
   Parameters:
-    DMA_CHANNEL channel - the particular channel to be disabled
+    DMAC_CHANNEL channel - the particular channel to be disabled
 
   Returns:
     void
 
   Example:
     <code>
-    ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL_0);
+    ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL_0);
     </code>
 */
-void ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL channel);
+void ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL channel);
 
 // *****************************************************************************
 /* Function:
-   bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMA_CHANNEL channel)
+   bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
 
   Summary:
     Reads the busy status of a channel.
@@ -280,7 +273,7 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL channel);
     Reads the busy status of a channel and returns status to caller.
 
   Parameters:
-    DMA_CHANNEL channel - the particular channel to be interrogated
+    DMAC_CHANNEL channel - the particular channel to be interrogated
 
   Returns:
     true - channel is busy
@@ -289,92 +282,12 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL channel);
   Example:
     <code>
     bool returnVal;
-    returnVal = ${DMA_INSTANCE_NAME}_ChannelIsBusy(DMA_CHANNEL_0);
+    returnVal = ${DMA_INSTANCE_NAME}_ChannelIsBusy(DMAC_CHANNEL_0);
     while( returnVal )
         ;
     </code>
 */
-bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMA_CHANNEL channel);
-
-// *****************************************************************************
-/* Function:
-   void ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet (DMA_CHANNEL channel, uint16_t length)
-
-  Summary:
-    Sets the size of data to send.
-
-  Description:
-    Sets the chunk size for the indicated DMA channel.
-
-  Parameters:
-    DMA_CHANNEL channel - the particular channel to be set
-    uint16_t length - new size of data to send out
-
-  Returns:
-    void
-
-  Example:
-    <code>
-    ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet(DMA_CHANNEL_0, 100);
-    </code>
-*/
-void ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet (DMA_CHANNEL channel, uint16_t length);
-
-// *****************************************************************************
-/* Function:
-   bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMA_CHANNEL channel, uint32_t setting)
-
-  Summary:
-    DMA channel settings set function.
-
-  Description:
-    Sets the indicated DMA channel with user-specified settings.  Overwrites
-    DCHxCON register with new settings.
-
-  Parameters:
-    DMA_CHANNEL channel - the particular channel to be set
-    uint16_t setting - new settins for channel
-
-  Returns:
-    true
-
-  Example:
-    <code>
-    DMA_CHANNEL_CONFIG chanSettings;
-    chanSettings = ${DMA_INSTANCE_NAME}_ChannelSettingsGet(DMA_CHANNEL_3);
-    chanSettings &= ~0x20;
-    (void)${DMA_INSTANCE_NAME}_ChannelSettingsGet(DMA_CHANNEL_3, chanSettings);
-    </code>
-*/
-bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMA_CHANNEL channel, uint32_t setting);
-
-// *****************************************************************************
-/* Function:
-   DMA_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMA_CHANNEL channel)
-
-  Summary:
-    DMA channel settings get function.
-
-  Description:
-    Gets the indicated DMA channel settings in DCHxCON register and returns value
-    to user.
-
-  Parameters:
-    DMA_CHANNEL channel - the particular channel to be set
-
-  Returns:
-    DMA_CHANNEL_CONFIG - DCHxCON value
-    0 - user error condition where channel was specified out-of-bounds
-
-  Example:
-    <code>
-    DMA_CHANNEL_CONFIG chanSettings;
-    chanSettings = ${DMA_INSTANCE_NAME}_ChannelSettingsGet(DMA_CHANNEL_3);
-    chanSettings &= ~0x20;
-    (void)${DMA_INSTANCE_NAME}_ChannelSettingsGet(DMA_CHANNEL_3, chanSettings);
-    </code>
-*/
-DMA_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMA_CHANNEL channel);
+bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel);
 
 // *****************************************************************************
 /* Function:

@@ -52,7 +52,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-DMA_CHANNEL_OBJECT  gSysDMAChannelObj[${NUM_DMA_CHANS}];
+DMAC_CHANNEL_OBJECT  gSysDMAChannelObj[${NUM_DMA_CHANS}];
 
 #define ConvertToPhysicalAddress(a) ((uint32_t)KVA_TO_PA(a))
 #define ConvertToVirtualAddress(a)  PA_TO_KVA1(a)
@@ -63,16 +63,6 @@ uint32_t dmaIrqEnbl[${NUM_DMA_CHANS}] =
 <#list 0..NUM_DMA_CHANS - 1 as i>
 <#assign TARGET = "DMA" + i + "_ENBLREG_ENABLE_VALUE">
     ${.vars[TARGET]}, /* DMA${i} */
-</#list>
-};
-
-/* Indicator of whether peripheral or SW should start a transfer. On a
-   per-channel basis, used at runtime in channel-based function call.  */
-bool dmaInterruptStartXfer[${NUM_DMA_CHANS}] =
-{
-<#list 0..NUM_DMA_CHANS - 1 as i>
-<#assign VALUE = "DCH" + i + "_ECON_SIRQEN_VALUE">
-    ${.vars[VALUE]},
 </#list>
 };
 
@@ -94,14 +84,14 @@ bool dmaInterruptStartXfer[${NUM_DMA_CHANS}] =
     address registers DCHxSSA and DCHxDSA.
 
   Parameters:
-    DMA_CHANNEL channel - DMA channel this function call pertains to
+    DMAC_CHANNEL channel - DMA channel this function call pertains to
     const void *srcAddr - starting address of source buffer to transfer
     const void *destAddr - starting address of destination buffer to transfer
 
   Returns:
     void
 */
-static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMA_CHANNEL channel, const void *srcAddr, const void *destAddr)
+static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMAC_CHANNEL channel, const void *srcAddr, const void *destAddr)
 {
     uint32_t sourceAddress = (uint32_t)srcAddr;
     uint32_t destAddress = (uint32_t)destAddr;
@@ -209,20 +199,20 @@ static void ${DMA_INSTANCE_NAME}_ChannelSetAddresses( DMA_CHANNEL channel, const
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
     uint8_t chanIndex;
-    DMA_CHANNEL_OBJECT *chanObj;
+    DMAC_CHANNEL_OBJECT *chanObj;
 
     /* Enable the DMA module */
     *(volatile uint32_t *)(&DMACONSET) = _DMACON_ON_MASK;
 
     /* Initialize the available channel objects */
-    chanObj             =   (DMA_CHANNEL_OBJECT *)&gSysDMAChannelObj[0];
+    chanObj             =   (DMAC_CHANNEL_OBJECT *)&gSysDMAChannelObj[0];
 
     for(chanIndex = 0; chanIndex < ${NUM_DMA_CHANS}; chanIndex++)
     {
         chanObj->inUse          =    false;
         chanObj->pEventCallBack =    NULL;
         chanObj->hClientArg     =    0;
-        chanObj->errorInfo      =    DMA_ERROR_NONE;
+        chanObj->errorInfo      =    DMAC_ERROR_NONE;
         chanObj                 =    chanObj + 1;  /* linked list 'next' */
     }
 
@@ -282,14 +272,14 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     Registers the callback function (and context pointer, if used) for a given DMA interrupt.
 
   Parameters:
-    DMA_CHANNEL channel - DMA channel this callback pertains to
-    const DMA_CHANNEL_TRANSFER_EVENT_HANDLER eventHandler - pointer to callback function
+    DMAC_CHANNEL channel - DMA channel this callback pertains to
+    const DMAC_CHANNEL_CALLBACK eventHandler - pointer to callback function
     const uintptr_t contextHandle - pointer of context information callback is to use (set to NULL if not used)
 
   Returns:
     void
 */
-void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL channel, const DMA_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle)
+void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle)
 {
     gSysDMAChannelObj[channel].pEventCallBack = eventHandler;
 
@@ -308,7 +298,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL channel, const DMA
     software-initiated transfer in Harmony.
 
   Parameters:
-    DMA_CHANNEL channel - DMA channel to use for this transfer
+    DMAC_CHANNEL channel - DMA channel to use for this transfer
     const void *srcAddr - pointer to source data
     const void *destAddr - pointer to where data is to be moved to
     size_t blockSize - the transfer size to use
@@ -316,7 +306,7 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMA_CHANNEL channel, const DMA
   Returns:
     false, if DMA already is busy / true, if DMA is not busy before calling function
 */
-bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcAddr, const void *destAddr, size_t blockSize)
+bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, size_t srcSize, const void *destAddr, size_t destSize, size_t cellSize)
 {
     volatile uint32_t status = 0;
     bool returnStatus = false;
@@ -326,37 +316,40 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
     {
         gSysDMAChannelObj[channel].inUse = true;
         returnStatus = true;
-    }
 
-    /* Set the source / destination addresses, DCHxSSA and DCHxDSA */
-    ${DMA_INSTANCE_NAME}_ChannelSetAddresses(channel, srcAddr, destAddr);
+        /* Set the source / destination addresses, DCHxSSA and DCHxDSA */
+        ${DMA_INSTANCE_NAME}_ChannelSetAddresses(channel, srcAddr, destAddr);
 
-    /* Set the source size, DCHxSSIZ */
-    regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_SSIZ_OFST});
-    *(volatile uint32_t *)(regs) = blockSize;
+        /* Set the source size, DCHxSSIZ */
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_SSIZ_OFST});
+        *(volatile uint32_t *)(regs) = srcSize;
 
-    /* Set the destination size (set same as source size), DCHxDSIZ */
-    regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_DSIZ_OFST});
-    *(volatile uint32_t *)(regs) = blockSize;
+        /* Set the destination size (set same as source size), DCHxDSIZ */
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_DSIZ_OFST});
+        *(volatile uint32_t *)(regs) = destSize;
 
-    /* Set the cell size (set same as source size), DCHxCSIZ */
-    regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CSIZ_OFST});
-    *(volatile uint32_t *)(regs) = blockSize;
+        /* Set the cell size (set same as source size), DCHxCSIZ */
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CSIZ_OFST});
+        *(volatile uint32_t *)(regs) = cellSize;
 
-    /* Enable the DMA interrupt.  There's one interrupt per channel; use the particular bitmask for this channel. */
-    IEC4SET = dmaIrqEnbl[channel];
+        /* Enable the DMA interrupt.  There's one interrupt per channel; use the particular bitmask for this channel. */
+        IEC4SET = dmaIrqEnbl[channel];
 
-    /* Enable the channel */
-    /* CHEN = 1 */
-    regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST})+2;
-    *(volatile uint32_t *)(regs) = _DCH0CON_CHEN_MASK;
+        /* Enable the channel */
+        /* CHEN = 1 */
+        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST})+2;
+        *(volatile uint32_t *)(regs) = _DCH0CON_CHEN_MASK;
 
-    /* Initiate transfer if user did not set up channel for interrupt-initiated transfer. */
-    if(dmaInterruptStartXfer[channel] == false)
-    {
-        /* CFORCE = 1 */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_ECON_OFST})+2;
-        *(volatile uint32_t *)(regs) = _DCH0ECON_CFORCE_MASK;
+        /* Check Channel Start IRQ Enable bit - SIRQEN */
+         regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_ECON_OFST});
+
+        /* Initiate transfer if user did not set up channel for interrupt-initiated transfer. */
+        if((*(volatile uint32_t *)(regs) & _DCH1ECON_SIRQEN_MASK) == 0)
+        {
+            /* CFORCE = 1 */
+            regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_ECON_OFST})+2;
+            *(volatile uint32_t *)(regs) = _DCH0ECON_CFORCE_MASK;
+        }
     }
 
     return returnStatus;
@@ -364,7 +357,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
 
 // *****************************************************************************
 /* Function:
-   void ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL channel)
+   void ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL channel)
 
   Summary:
     This function disables the DMA channel.
@@ -373,12 +366,12 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMA_CHANNEL channel, const void *srcA
     Disables the DMA channel specified.
 
   Parameters:
-    DMA_CHANNEL channel - the particular channel to be disabled
+    DMAC_CHANNEL channel - the particular channel to be disabled
 
   Returns:
     void
 */
-void ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL channel)
+void ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL channel)
 {
     volatile uint32_t * regs;
 
@@ -388,12 +381,15 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL channel)
         /* CHEN = 0 */
         regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST})+1;
         *(volatile uint32_t *)(regs) = _DCH0CON_CHEN_MASK;
+
+        gSysDMAChannelObj[channel].inUse = false;
+
     }
 }
 
 // *****************************************************************************
 /* Function:
-   bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMA_CHANNEL channel)
+   bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
 
   Summary:
     Reads the busy status of a channel.
@@ -402,132 +398,20 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMA_CHANNEL channel)
     Reads the busy status of a channel and returns status to caller.
 
   Parameters:
-    DMA_CHANNEL channel - the particular channel to be interrogated
+    DMAC_CHANNEL channel - the particular channel to be interrogated
 
   Returns:
     true - channel is busy
     false - channel is not busy
 */
-bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMA_CHANNEL channel)
+bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
 {
     volatile uint32_t * regs;
 
-    if(channel < ${NUM_DMA_CHANS})
-    {
-        /* Read channel busy bit in register DCHxCON */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST});
-        return (bool)((*regs & _DCH0CON_CHBUSY_MASK) >> _DCH0CON_CHBUSY_POSITION);
-    }
-    else
-    {
-        return true;  /* return true for user error condition */
-    }
+    return (gSysDMAChannelObj[channel].inUse);
+
 }
 
-// *****************************************************************************
-/* Function:
-   void ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet (DMA_CHANNEL channel, uint16_t length)
-
-  Summary:
-    Sets the size of data to send.
-
-  Description:
-    Sets the chunk size for the indicated DMA channel.
-
-  Parameters:
-    DMA_CHANNEL channel - the particular channel to be set
-    uint16_t length - new size of data to send out
-
-  Returns:
-    void
-*/
-void ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet (DMA_CHANNEL channel, uint16_t length)
-{
-    volatile uint32_t * regs;
-
-    if(channel < ${NUM_DMA_CHANS})
-    {
-        /* Disable the channel via register DCHxCON, before applying new setting */
-        /* CHEN = 0 */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST})+1;
-        *(volatile uint32_t *)(regs) = _DCH0CON_CHEN_MASK;
-
-        /* Set DCHxCSIZ to new value */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CSIZ_OFST});
-        *(volatile uint32_t *)(regs) = length;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-   bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMA_CHANNEL channel, uint32_t setting)
-
-  Summary:
-    DMA channel settings set function.
-
-  Description:
-    Sets the indicated DMA channel with user-specified settings.  Overwrites
-    DCHxCON register with new settings.
-
-  Parameters:
-    DMA_CHANNEL channel - the particular channel to be set
-    uint16_t setting - new settins for channel
-
-  Returns:
-    true
-*/
-bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMA_CHANNEL channel, uint32_t setting)
-{
-    volatile uint32_t * regs;
-
-    if(channel < ${NUM_DMA_CHANS})
-    {
-        /* Disable the channel via register DCHxCON, before applying new settings */
-        /* CHEN = 0 */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST})+1;
-        *(volatile uint32_t *)(regs) = _DCH0CON_CHEN_MASK;
-
-        /* Set DCHxCON with new setting */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST});
-        *(volatile uint32_t *)(regs) = setting;
-    }
-
-    return true;
-}
-
-// *****************************************************************************
-/* Function:
-   DMA_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMA_CHANNEL channel)
-
-  Summary:
-    DMA channel settings get function.
-
-  Description:
-    Gets the indicated DMA channel settings in DCHxCON register and returns value
-    to user.
-
-  Parameters:
-    DMA_CHANNEL channel - the particular channel to be set
-
-  Returns:
-    DMA_CHANNEL_CONFIG - DCHxCON value
-    0 - user error condition where channel was specified out-of-bounds
-*/
-DMA_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMA_CHANNEL channel)
-{
-    volatile uint32_t * regs;
-
-    if(channel < ${NUM_DMA_CHANS})
-    {
-        /* Get DCHxCON */
-        regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST});
-        return (DMA_CHANNEL_CONFIG)*regs;
-    }
-    else
-    {
-        return 0;  /* return 0 for user error case */
-    }
-}
 
 <#list 0..NUM_DMA_CHANS - 1 as i>
     <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
@@ -554,12 +438,12 @@ DMA_CHANNEL_CONFIG ${DMA_INSTANCE_NAME}_ChannelSettingsGet (DMA_CHANNEL channel)
 */
 void DMA${i}_InterruptHandler (void)
 {
-    DMA_CHANNEL_OBJECT *chanObj;
-    DMA_TRANSFER_EVENT dmaEvent = DMA_TRANSFER_EVENT_NONE;
+    DMAC_CHANNEL_OBJECT *chanObj;
+    DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
     bool retVal;
 
     /* Find out the channel object */
-    chanObj = (DMA_CHANNEL_OBJECT *) &gSysDMAChannelObj[${i}];
+    chanObj = (DMAC_CHANNEL_OBJECT *) &gSysDMAChannelObj[${i}];
 
     /* Check whether the active DMA channel event has occurred */
     retVal = ${.vars[INTBITSREG]}.CHBCIF;
@@ -571,8 +455,8 @@ void DMA${i}_InterruptHandler (void)
         *(volatile uint32_t *)(&${.vars[INTREG]}CLR) = _DCH${i}INT_CHBCIF_MASK;
 
         /* Update error and event */
-        chanObj->errorInfo = DMA_ERROR_NONE;
-        dmaEvent = DMA_TRANSFER_EVENT_COMPLETE;
+        chanObj->errorInfo = DMAC_ERROR_NONE;
+        dmaEvent = DMAC_TRANSFER_EVENT_COMPLETE;
     }
     else if(true == ${.vars[INTBITSREG]}.CHTAIF) /* irq due to transfer abort */
     {
@@ -581,8 +465,8 @@ void DMA${i}_InterruptHandler (void)
         *(volatile uint32_t *)(&${.vars[INTREG]}CLR) = _DCH${i}INT_CHTAIF_MASK;
 
         /* Update error and event */
-        chanObj->errorInfo = DMA_ERROR_NONE;
-        dmaEvent = DMA_TRANSFER_EVENT_ABORT;
+        chanObj->errorInfo = DMAC_ERROR_NONE;
+        dmaEvent = DMAC_TRANSFER_EVENT_ABORT;
     }
     else if(true == ${.vars[INTBITSREG]}.CHERIF)
     {
@@ -590,12 +474,14 @@ void DMA${i}_InterruptHandler (void)
         *(volatile uint32_t *)(&${.vars[INTREG]}CLR) = _DCH${i}INT_CHERIF_MASK;
 
         /* Update error and event */
-        chanObj->errorInfo = DMA_ERROR_ADDRESS_ERROR;
-        dmaEvent = DMA_TRANSFER_EVENT_ERROR;
+        chanObj->errorInfo = DMAC_ERROR_ADDRESS_ERROR;
+        dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
     }
 
+    chanObj->inUse = false;
+
     /* Clear the interrupt flag and call event handler */
-    if((NULL != chanObj->pEventCallBack) && (DMA_TRANSFER_EVENT_NONE != dmaEvent))
+    if((NULL != chanObj->pEventCallBack) && (DMAC_TRANSFER_EVENT_NONE != dmaEvent))
     {
         ${.vars[STATCLRREG]}CLR = ${.vars[STATREGMASK]};
         chanObj->pEventCallBack(dmaEvent, chanObj->hClientArg);
