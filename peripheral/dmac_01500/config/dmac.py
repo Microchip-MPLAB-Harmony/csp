@@ -518,6 +518,12 @@ dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
 dmacEnable.setLabel("Use DMA Service ?")
 dmacEnable.setVisible(False)
 
+# DMA_CHANNEL_COUNT: Needed for DMA system service to generate channel enum
+dmacChCount = coreComponent.createIntegerSymbol("DMA_CHANNEL_COUNT", dmacEnable)
+dmacChCount.setLabel("DMA (DMAC) Channels Count")
+dmacChCount.setDefaultValue(numDMAChans)
+dmacChCount.setVisible(False)
+
 dmacFileGen = coreComponent.createBooleanSymbol("DMAC_FILE_GEN", dmacEnable)
 dmacFileGen.setLabel("DMA (DMAC) File Generation")
 dmacFileGen.setVisible(False)
