@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -50,6 +50,9 @@ def updateRTCCInterruptData(symbol, event):
 def updateSymbolVisblity(symbol, event):
 
     symbol.setVisible(event["value"])
+
+def toggleMenu(menu, event):
+	menu.setVisible(not(event["value"]))
 
 def updateAlarmMenuVisiblity(symbol, event):
     '''
@@ -205,7 +208,7 @@ def instantiateComponent(rtccComponent):
     rtccSym_RTCCON_RTCCLKSEL.setDisplayMode( "Description" )
     for ii in clkSel_names:
         rtccSym_RTCCON_RTCCLKSEL.addKey( ii['desc'], ii['value'], ii['key'] )
-    rtccSym_RTCCON_RTCCLKSEL.setDefaultValue(0)
+    rtccSym_RTCCON_RTCCLKSEL.setDefaultValue(1)
     rtccSym_RTCCON_RTCCLKSEL.setDependencies(checkSoscSetting,["RTCC_CLOCK_SOURCE"])
 
     # Create warning menu for when user selects external source but SOSCEN not set in clock module
@@ -215,7 +218,9 @@ def instantiateComponent(rtccComponent):
 
     # RTCC output enable
     rtccSym_RTCCON_RTCOE = rtccComponent.createBooleanSymbol("RTCC_OUTPUT_ENABLE", None)
+    rtccSym_RTCCON_RTCOE.setVisible(True)
     rtccSym_RTCCON_RTCOE.setLabel(rtcBitField_RTCCON_RTCOE.getAttribute("caption"))
+    rtccSym_RTCCON_RTCOE.setDefaultValue(False)
 
     # output select
     rtcOutSel_names = []
@@ -227,6 +232,7 @@ def instantiateComponent(rtccComponent):
     for ii in rtcOutSel_names:
         rtccSym_RTCCON_RTCOUTSEL.addKey( ii['desc'], ii['value'], ii['key'] )
     rtccSym_RTCCON_RTCOUTSEL.setDefaultValue(0)
+    rtccSym_RTCCON_RTCOUTSEL.setVisible(False)
     rtccSym_RTCCON_RTCOUTSEL.setDependencies(updateSymbolVisblity,["RTCC_OUTPUT_ENABLE"])
 
     rtccSym_RTCCON_TIMEDATE = rtccComponent.createMenuSymbol("RTC_TIMEANDDATE", None)
@@ -240,7 +246,7 @@ def instantiateComponent(rtccComponent):
     # Date.  User's entry here spans most significant 24 bits of register RTCDATE
     rtccSym_RTCDATE_DATE = rtccComponent.createStringSymbol("RTCTIME_DATE",rtccSym_RTCCON_TIMEDATE)
     rtccSym_RTCDATE_DATE.setLabel("Date (YYMMDD, where YY:00-99, MM:01-12, DD:01-31)")
-    rtccSym_RTCDATE_DATE.setDefaultValue("180101")
+    rtccSym_RTCDATE_DATE.setDefaultValue("181231")
 
     # Day of week.
     rtccSym_RTCDATE_WEEKDAY = rtccComponent.createIntegerSymbol("RTCTIME_WEEKDAY",rtccSym_RTCCON_TIMEDATE)
@@ -253,44 +259,47 @@ def instantiateComponent(rtccComponent):
     # Alarm time.  Note: the user entry spans the upper 24 bits of the register ALRMTIME
     rtccSym_ALRMTIME_TIME = rtccComponent.createStringSymbol("RTCALRM_TIME",rtccSym_RTCCON_ALARMMENU)
     rtccSym_ALRMTIME_TIME.setLabel("Alarm Time (HHMMSS, where HH:00-24, MM:00-59, SS:00-59)")
-    rtccSym_ALRMTIME_TIME.setDefaultValue("000005")
+    rtccSym_ALRMTIME_TIME.setDefaultValue("235955")
 
     # Alarm date.  User settings span a contiguous set of bitfields.
     rtccSym_RTCCON_ALRMDATE = rtccComponent.createStringSymbol("RTCALRM_DATE",rtccSym_RTCCON_ALARMMENU)
     rtccSym_RTCCON_ALRMDATE.setLabel("Alarm Date (MMDD, where MM:01-12, DD:01-31)")
-    rtccSym_RTCCON_ALRMDATE.setDefaultValue("0101")
+    rtccSym_RTCCON_ALRMDATE.setDefaultValue("1231")
 
     # Alarm mask
     alrmMask_names = []
     _get_bitfield_names(rtcValGrp_RTCALRM_AMASK, alrmMask_names)
-    rtccSym_RTCALRM_AMASK = rtccComponent.createKeyValueSetSymbol( "RTCC_ALARM_MASK", None )
+    rtccSym_RTCALRM_AMASK = rtccComponent.createKeyValueSetSymbol( "RTCC_ALARM_MASK", rtccSym_RTCCON_ALARMMENU )
     rtccSym_RTCALRM_AMASK.setLabel(rtcBitField_RTCALRM_AMASK.getAttribute("caption"))
     rtccSym_RTCALRM_AMASK.setOutputMode( "Value" )
     rtccSym_RTCALRM_AMASK.setDisplayMode( "Description" )
     for ii in alrmMask_names:
         rtccSym_RTCALRM_AMASK.addKey( ii['desc'], ii['value'], ii['key'] )
-    rtccSym_RTCALRM_AMASK.setDefaultValue(0)
+    rtccSym_RTCALRM_AMASK.setDefaultValue(1)
 
     # Alarm day of week.  Only allowed to be user-set if alarm mask is set to once a week.
     rtccSym_ALRMTIME_WDAY = rtccComponent.createIntegerSymbol("RTCALRM_DAY", rtccSym_RTCALRM_AMASK)
     rtccSym_ALRMTIME_WDAY.setLabel("Alarm Weekday (0-6)")
     rtccSym_ALRMTIME_WDAY.setDefaultValue(0)
     rtccSym_ALRMTIME_WDAY.setMin(0)
-    rtccSym_ALRMTIME_WDAY.setMax(255)
+    rtccSym_ALRMTIME_WDAY.setMax(6)
     rtccSym_ALRMTIME_WDAY.setVisible(False)
     rtccSym_ALRMTIME_WDAY.setDependencies(updateAlarmMenuVisiblity, ["RTCC_ALARM_MASK"])
 
     # Alarm repeat forever
-    rtccSym_RTCALRM_ARPT = rtccComponent.createBooleanSymbol("RTCC_ALARM_REPEAT_FOREVER", None)
+    rtccSym_RTCALRM_ARPT = rtccComponent.createBooleanSymbol("RTCC_ALARM_REPEAT_FOREVER", rtccSym_RTCCON_ALARMMENU)
+    rtccSym_RTCALRM_ARPT.setVisible(True)
     rtccSym_RTCALRM_ARPT.setLabel("Alarm Repeats Forever")
+    rtccSym_RTCALRM_ARPT.setDefaultValue(False)
 
     # Alarm repeat count
     rtccSym_RTCALRM_ARPTCNT = rtccComponent.createIntegerSymbol("RTCALRM_ARPT", rtccSym_RTCALRM_ARPT)
+    rtccSym_RTCALRM_ARPTCNT.setVisible(True)
     rtccSym_RTCALRM_ARPTCNT.setLabel(rtcBitField_RTCALRM_ARPT.getAttribute("caption"))
     rtccSym_RTCALRM_ARPTCNT.setMin(0)
     rtccSym_RTCALRM_ARPTCNT.setMax(255)
     rtccSym_RTCALRM_ARPTCNT.setDefaultValue(0)
-    rtccSym_RTCALRM_ARPTCNT.setDependencies(updateSymbolVisblity, ["RTCC_ALARM_REPEAT_FOREVER"])
+    rtccSym_RTCALRM_ARPTCNT.setDependencies(toggleMenu, ["RTCC_ALARM_REPEAT_FOREVER"])
 
     ############################################################################
     #### Dependency ####

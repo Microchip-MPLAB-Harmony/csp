@@ -18,7 +18,7 @@
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -53,53 +53,24 @@
 #define decimaltobcd(x)                 (((x/10)<<4)+((x - ((x/10)*10))))
 #define bcdtodecimal(x)                 ((x & 0xF0) >> 4) * 10 + (x & 0x0F)
 
-// *****************************************************************************
 /* Real Time Clock System Service Object
 */
 typedef struct _SYS_RTCC_OBJ_STRUCT
 {
-    /* - Call back function for RTCC. Happens at ALARMED */
+	/* Call back function for RTCC.*/
     RTC_CALLBACK  callback;
-
-    /* - Client data (Event Context) that will be passed to callback */
+	/* Client data (Event Context) that will be passed to callback */
     uintptr_t context;
-
-    /* - RTCC Alarm handle */
-    RTCC_ALARM_HANDLE handle;
-
-    /* - Interrupt source */
-    uint32_t interruptSource;
-
 } RTCC_OBJECT;
 
 static RTCC_OBJECT rtc;
 
-// *****************************************************************************
-/* Function:
-   void ${RTCC_INSTANCE_NAME}_Initialize ( void )
-
-  Summary:
-    Initializes hardware and data for the instance of the RTCC module and opens
-    the specific module instance.
-
-  Description:
-    This function initializes hardware for the instance of the RTCC module,
-    using the specified hardware initialization data. It also initializes any
-    internal data structures.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 void ${RTCC_INSTANCE_NAME}_Initialize ( void )
 {
     /* Unlock System */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
-
 
     /* Initialize RTCC */
     RTCCONSET = _RTCCON_RTCWREN_MASK;  /* Enable writes to RTCC */
@@ -127,6 +98,7 @@ void ${RTCC_INSTANCE_NAME}_Initialize ( void )
     RTCALRMSET = _RTCALRM_CHIME_MASK;  /* Set alarm to repeat forever */
     <#else>
     RTCALRMCLR = _RTCALRM_CHIME_MASK;  /* Set alarm to repeat finite number of times */
+    
     RTCALRMbits.ARPT = ${RTCALRM_ARPT};
     </#if>
 
@@ -144,31 +116,22 @@ void ${RTCC_INSTANCE_NAME}_Initialize ( void )
     /* Set RTCC clock source (LPRC/SOSC) */
     RTCCONbits.RTCCLKSEL = ${RTCC_CLOCK_SOURCE};
 
-    rtc.interruptSource = ${RTCC_VECTOR_NUMBER};
-
     /* start the RTC */
     RTCCONSET = _RTCCON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-  bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
+<#if RTCC_INTERRUPT_MODE == true>
+void ${RTCC_INSTANCE_NAME}_InterruptEnable(RTC_INT_MASK interrupt)
+{
+    ${RTCC_IEC_REG}SET = interrupt;
+}
 
-  Summary:
-    Sets the Real Time Clock Calendar time.
+void ${RTCC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt)
+{
+    ${RTCC_IEC_REG}CLR = interrupt;
+}
+</#if>
 
-  Description:
-    The function sets the time for the RTCC.
-
-  Precondition:
-    None.
-
-  Parameters:
-    time    time is in standard time format
-
-  Returns:
-    bool    always returns true
-*/
 bool ${RTCC_INSTANCE_NAME}_TimeSet ( struct tm *Time )
 {
     uint32_t timeField, dateField;
@@ -177,6 +140,7 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet ( struct tm *Time )
     timeField |= (decimaltobcd(Time->tm_min) << _RTCTIME_MIN01_POSITION) & (_RTCTIME_MIN10_MASK | _RTCTIME_MIN01_MASK);
     timeField |= (decimaltobcd(Time->tm_sec) << _RTCTIME_SEC01_POSITION) & (_RTCTIME_SEC10_MASK | _RTCTIME_SEC01_MASK);
 
+    while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
     RTCTIME = timeField;
 
     dateField = (decimaltobcd(Time->tm_year % 100) << _RTCDATE_YEAR01_POSITION) & (_RTCDATE_YEAR01_MASK | _RTCDATE_YEAR10_MASK);
@@ -184,6 +148,7 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet ( struct tm *Time )
     dateField |= (decimaltobcd(Time->tm_mday) << _RTCDATE_DAY01_POSITION) & (_RTCDATE_DAY01_MASK | _RTCDATE_DAY10_MASK);
     dateField |= decimaltobcd(Time->tm_wday) & _RTCDATE_WDAY01_MASK;
 
+    while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
     RTCDATE = dateField;
 
     RTCCONSET = _RTCCON_ON_MASK;  /* Start the RTCC module */
@@ -191,30 +156,11 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet ( struct tm *Time )
     return true;    /* This PLIB has no way of indicating wrong device operation so always return true */
 }
 
-// *****************************************************************************
-/* Function:
-  void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
-
-  Summary:
-    Gets the Real Time Clock Calendar time.
-
-  Description:
-    The function gets the time from the RTCC.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *Time    a pointer to a time type
-
-  Returns:
-    void
-*/
-
 void ${RTCC_INSTANCE_NAME}_TimeGet (struct tm  *Time )
 {
     uint32_t dataTime, dataDate;
 
+    while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
     dataTime = RTCTIME;  /* read the time from the RTC */
 
     Time->tm_hour = 10 * (bcdtodecimal((dataTime & _RTCTIME_HR10_MASK) >> _RTCTIME_HR10_POSITION)) +
@@ -224,6 +170,7 @@ void ${RTCC_INSTANCE_NAME}_TimeGet (struct tm  *Time )
     Time->tm_sec =  10 * (bcdtodecimal((dataTime & _RTCTIME_SEC10_MASK) >> _RTCTIME_SEC10_POSITION)) +
                          bcdtodecimal((dataTime & _RTCTIME_SEC01_MASK) >> _RTCTIME_SEC01_POSITION);
 
+    while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
     dataDate = RTCDATE;  /* read the date from the RTC */
 
     Time->tm_year = 10 * (bcdtodecimal((dataDate & _RTCDATE_YEAR10_MASK) >> _RTCDATE_YEAR10_POSITION)) +
@@ -239,34 +186,13 @@ void ${RTCC_INSTANCE_NAME}_TimeGet (struct tm  *Time )
     Time->tm_isdst = 0;    /* not used */
 }
 
-// *****************************************************************************
-/* Function:
-  bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
-
-  Summary:
-    Sets the Real Time Clock Calendar alarm time.
-
-  Description:
-    The function sets the time for the RTCC alarm.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *alarmTime  *alarmTime  in time format
-
-    alarmFreq   frequency alarm repeats itself for generating alarm condition
-
-  Returns:
-    bool        always returns true
-*/
 bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
 {
     uint32_t dataDate, dataTime;
 
     <#lt><#if RTCC_INTERRUPT_MODE == true>
     /* Disable interrupt, if enabled, before setting up alarm */
-    ${RTCC_INSTANCE_NAME}_InterruptDisable(0x00);
+    ${RTCC_INSTANCE_NAME}_InterruptDisable(RTC_INT_ALARM);
     <#lt></#if>
 
     if(RTC_ALARM_MASK_OFF != alarmFreq)
@@ -279,11 +205,13 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmF
         dataTime |= (decimaltobcd(alarmTime->tm_min) << _RTCTIME_MIN01_POSITION) & (_RTCTIME_MIN10_MASK | _RTCTIME_MIN01_MASK);
         dataTime |= (decimaltobcd(alarmTime->tm_sec) << _RTCTIME_SEC01_POSITION) & (_RTCTIME_SEC10_MASK | _RTCTIME_SEC01_MASK);
 
+        while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
         ALRMDATE = dataDate;
+        while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
         ALRMTIME = dataTime;
 
-        /* AMASK = maskVal */
-        RTCALRMSET = (alarmFreq << _RTCALRM_AMASK_POSITION) & _RTCALRM_AMASK_MASK;
+        /* Configure alarm repetition */
+        RTCALRMbits.AMASK = alarmFreq;
 
         /* ALRMEN = 1 */
         RTCALRMSET = _RTCALRM_ALRMEN_MASK;  /* Enable the alarm */
@@ -294,35 +222,11 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmF
         RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable the alarm */
     }
     <#lt><#if RTCC_INTERRUPT_MODE == true>
-    ${RTCC_INSTANCE_NAME}_InterruptEnable(0x00);  /* Enable the interrupt to the interrupt controller */
+    ${RTCC_INSTANCE_NAME}_InterruptEnable(RTC_INT_ALARM);  /* Enable the interrupt to the interrupt controller */
     <#lt></#if>
     return true;  /* This PLIB has no way of indicating wrong device operation so always return true */
 }
 
-// *****************************************************************************
-/* Function:
-  void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
-
-  Summary:
-    Sets the callback function for an alarm.
-
-  Description:
-    This function sets the callback function that will be called when the RTCC
-    alarm is reached.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *callback   - a pointer to the function to be called when alarm is reached.
-                  Use NULL to Un Register the alarm callback
-
-    context     - a pointer to user defined data to be used when the callback
-                  function is called. NULL can be passed in if no data needed.
-
-  Returns:
-    void
-*/
 void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
 {
     /* - Un-register callback if NULL */
@@ -334,78 +238,16 @@ void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t co
     /* - Save callback and context in local memory */
     rtc.callback = callback;
     rtc.context = context;
-    rtc.handle = (RTCC_ALARM_HANDLE)&rtc;
 }
 
-// *****************************************************************************
-/* Function:
-   void RTCC_InterruptHandler (void)
-
-  Summary:
-    Interrupt handler for RTCC interrupts.
-
-  Description:
-    This function calls the user-registered callback, if registered.
-    Also clears the interrupt source bit to allow future RTCC interrupts to occur.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 void RTCC_InterruptHandler(void)
 {
     ${RTCC_IFS_REG}CLR = ${RTCC_STATREG_SHIFT_VALUE}; /* clear the status flag */
 
     if((rtc.callback != NULL))
     {
-        rtc.callback(rtc.handle, rtc.context);
+        rtc.callback(rtc.context);
     }
-}
-
-// *****************************************************************************
-/* Function:
-   void ${RTCC_INSTANCE_NAME}_InterruptEnable(RTC_INT_MASK interrupt)
-
-  Summary:
-    Enable RTCC interrupts.
-
-  Description:
-    This function enables RTCC interrupts.  The mask is not used in the PIC32MZ
-    family, so the argument is ignored.  This maintains the existing API for H3.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-void ${RTCC_INSTANCE_NAME}_InterruptEnable(RTC_INT_MASK interrupt)
-{
-    ${RTCC_IEC_REG}SET = ${RTCC_ENBLREG_ENABLE_VALUE};
-}
-
-// *****************************************************************************
-/* Function:
-   void ${RTCC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt)
-
-  Summary:
-    Disable RTCC interrupts.
-
-  Description:
-    This function disables RTCC interrupts.  The mask is not used in the PIC32MZ
-    family, so the argument is ignored.  This maintains the existing API for H3.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-void ${RTCC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt)
-{
-    ${RTCC_IEC_REG}CLR = ${RTCC_ENBLREG_ENABLE_VALUE};
 }
 
 <#--
