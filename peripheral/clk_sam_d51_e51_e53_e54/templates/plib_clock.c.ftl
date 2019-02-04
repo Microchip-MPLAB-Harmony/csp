@@ -115,7 +115,7 @@ static void FDPLL0_Initialize(void)
     /****************** DPLL Initialization  *********************************/
 
     /* Configure DPLL    */
-    <@compress single_line=true>OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_DCOFILTER(${CONFIG_CLOCK_DPLL0_FILTER}) |
+    <@compress single_line=true>OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_FILTER(${CONFIG_CLOCK_DPLL0_FILTER}) |
                                                                    OSCCTRL_DPLLCTRLB_LTIME(${CONFIG_CLOCK_DPLL0_LOCK_TIME})|
                                                                    OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL0_REF_CLOCK})
                                                                    ${CONFIG_CLOCK_DPLL0_LOCK_BYPASS?then('| OSCCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}
@@ -162,7 +162,7 @@ static void FDPLL1_Initialize(void)
     /****************** DPLL Initialization  *********************************/
 
     /* Configure DPLL    */
-    <@compress single_line=true>OSCCTRL_REGS->DPLL[1].OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_DCOFILTER(${CONFIG_CLOCK_DPLL1_FILTER}) |
+    <@compress single_line=true>OSCCTRL_REGS->DPLL[1].OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_FILTER(${CONFIG_CLOCK_DPLL1_FILTER}) |
                                                                    OSCCTRL_DPLLCTRLB_LTIME(${CONFIG_CLOCK_DPLL1_LOCK_TIME})|
                                                                    OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL1_REF_CLOCK})
                                                                    ${CONFIG_CLOCK_DPLL1_LOCK_BYPASS?then('| OSCCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}

@@ -469,10 +469,10 @@ for i in range(0, 2):
     # Digital Phase Locked Loop(DPLL) Filter
     oscctrlSym_DPLLCTRLB_FILTER = coreComponent.createKeyValueSetSymbol(
         "CONFIG_CLOCK_DPLL" + str(i) + "_FILTER", dpll_Menu[i])
-    oscctrlSym_DPLLCTRLB_FILTER.setLabel("DPLL Feedback Filter Selection")
-    oscctrlSym_DPLLCTRLB_FILTER.setDescription("DPLL filter type selection")
+    oscctrlSym_DPLLCTRLB_FILTER.setLabel("Proportional Integral Filter selection")
+    oscctrlSym_DPLLCTRLB_FILTER.setDescription("Proportional Integral Filter selection")
     oscctrlSymDPLLFilterNode = ATDF.getNode(
-        "/avr-tools-device-file/modules/module@[name=\"OSCCTRL\"]/value-group@[name=\"OSCCTRL_DPLLCTRLB__DCOFILTER\"]")
+        "/avr-tools-device-file/modules/module@[name=\"OSCCTRL\"]/value-group@[name=\"OSCCTRL_DPLLCTRLB__FILTER\"]")
     oscctrlSymDPLLFilterNodeValues = []
     oscctrlSymDPLLFilterNodeValues = oscctrlSymDPLLFilterNode.getChildren()
     dpllfilterDefaultValue = 0
