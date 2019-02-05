@@ -16,6 +16,31 @@
     machines of all modules in the system
  *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*******************************************************************************/
+// DOM-IGNORE-END
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
@@ -28,18 +53,33 @@
 #include <string.h>
 #include "definitions.h"                // SYS function prototypes
 
-#define buffer_size                 128
+#define BUFFER_SIZE             (NVM_FLASH_ROWSIZE / sizeof(uint32_t))
 
-void populate_buffer(uint32_t* data)
+#define APP_FLASH_ADDRESS       (NVM_FLASH_START_ADDRESS + 0x100000)
+
+#define LED_ON                  LED1_Set
+#define LED_OFF                 LED1_Clear
+#define LED_TOGGLE              LED1_Toggle
+
+uint32_t writeData[BUFFER_SIZE] __ALIGNED(16) __COHERENT;
+uint32_t readData[BUFFER_SIZE]  __ALIGNED(16) __COHERENT;
+
+static volatile bool xferDone = false;
+
+static void populate_buffer(void)
 {
-    int i = 0;
+    uint32_t i = 0;
 
-    for (i = 0; i < buffer_size; i++)
+    for (i = 0; i < BUFFER_SIZE; i++)
     {
-        *(data + i) = i;
+        writeData[i] = i;
     }
 }
 
+static void eventHandler(uintptr_t context)
+{
+    xferDone = true;
+}
 
 // *****************************************************************************
 // *****************************************************************************
@@ -49,30 +89,38 @@ void populate_buffer(uint32_t* data)
 
 int main ( void )
 {
-    uint32_t data [buffer_size] = {0};
-    uint32_t start_address = NVM_FLASH_START_ADDRESS;
+    uint32_t address = APP_FLASH_ADDRESS;
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
     /*Populate random data to programmed*/
-    populate_buffer(data);
-    
-    while(NVM_IsBusy());
-    
-    /*Erase the sector*/
-    NVM_PageErase(start_address);
-    
-    while(NVM_IsBusy());
+    populate_buffer();
 
-    /*Program 512 byte page*/
-    NVM_RowWrite(data, start_address);
+    NVM_CallbackRegister(eventHandler, (uintptr_t)NULL);
+    
+    while(NVM_IsBusy() == true);
+    
+    /* Erase the Page */
+    NVM_PageErase(address);
+    
+    while(xferDone == false);
+    
+    xferDone = false;
+
+    /* Program 2048 byte Row*/
+    NVM_RowWrite(writeData, address);
+
+    while(xferDone == false);
+    
+    xferDone = false;
+    
+    NVM_Read(readData, sizeof(writeData), address);
     
     /* Verify the programmed content*/
-    if (!memcmp(data, (void *)start_address, sizeof(data)))
+    if (!memcmp(writeData, readData, sizeof(writeData)))
     {
-        // If the code ever gets here, then something went wrong.
-		return ( EXIT_FAILURE );
+        LED_ON();
     }
     
     while ( true )
