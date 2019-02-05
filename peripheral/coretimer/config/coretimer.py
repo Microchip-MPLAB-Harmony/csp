@@ -76,25 +76,23 @@ def _get_enblReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
-        temp = float(vectorNumber) / 32.0
-        index = int(vectorNumber / 32)
-        regName = "IEC" + str(index)
-        bit = float(temp % 1)
-        bitPosn = int(32.0 * bit)
-        return regName, str(bitPosn)
+    temp = float(vectorNumber) / 32.0
+    index = int(vectorNumber / 32)
+    regName = "IEC" + str(index)
+    bit = float(temp % 1)
+    bitPosn = int(32.0 * bit)
+    return regName, str(bitPosn)
 
 def _get_statReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
-        temp = float(vectorNumber) / 32.0
-        index = int(vectorNumber / 32)
-        regName = "IFS" + str(index)
-        bit = float(temp % 1)
-        bitPosn = int(32.0 * bit)
-        return regName, str(bitPosn)
+    temp = float(vectorNumber) / 32.0
+    index = int(vectorNumber / 32)
+    regName = "IFS" + str(index)
+    bit = float(temp % 1)
+    bitPosn = int(32.0 * bit)
+    return regName, str(bitPosn)
 
 def getIRQnumber(string):
 
