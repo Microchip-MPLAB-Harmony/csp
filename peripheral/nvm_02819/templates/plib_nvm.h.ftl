@@ -14,10 +14,11 @@
     This file defines the interface for the ${NVM_INSTANCE_NAME} Plib.
     It allows user to Program, Erase and lock the on-chip Non Volatile Flash
     Memory.
+
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -59,10 +60,16 @@
 
 // DOM-IGNORE-END
 
-#define ${NVM_INSTANCE_NAME}_FLASH_START_ADDRESS   (${.vars["FLASH_START_ADDRESS"]}U)
-#define ${NVM_INSTANCE_NAME}_FLASH_SIZE            (${FLASH_SIZE}U)
-#define ${NVM_INSTANCE_NAME}_FLASH_PAGESIZE        NVM_PAGE_SIZE
-#define ${NVM_INSTANCE_NAME}_FLASH_ROWSIZE         NVM_ROW_SIZE
+#define ${NVM_INSTANCE_NAME}_FLASH_START_ADDRESS    (${.vars["FLASH_START_ADDRESS"]}U)
+#define ${NVM_INSTANCE_NAME}_FLASH_SIZE             (${FLASH_SIZE}U)
+#define ${NVM_INSTANCE_NAME}_FLASH_ROWSIZE          (${FLASH_PROGRAM_SIZE}U)
+#define ${NVM_INSTANCE_NAME}_FLASH_PAGESIZE         (${FLASH_ERASE_SIZE}U)
+
+<#if DRV_MEMORY_CONNECTED == true>
+    <#lt>#define ${NVM_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
+    <#lt>#define ${NVM_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}
+    <#lt>#define ${NVM_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
+</#if>
 
 typedef enum
 {
@@ -76,6 +83,10 @@ typedef enum
     NVM_ERROR_LOWVOLTAGE = _NVMCON_LVDERR_MASK,
 
 } NVM_ERROR;
+
+<#if INTERRUPT_ENABLE == true>
+    <#lt>typedef void (*NVM_CALLBACK)(uintptr_t context);
+</#if>
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
@@ -91,11 +102,14 @@ NVM_ERROR ${NVM_INSTANCE_NAME}_ErrorGet( void );
 
 bool ${NVM_INSTANCE_NAME}_IsBusy( void );
 
+<#if INTERRUPT_ENABLE == true>
+    <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister ( NVM_CALLBACK callback, uintptr_t context );
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 }
 #endif
+
 // DOM-IGNORE-END
 #endif // PLIB_${NVM_INSTANCE_NAME}_H
-
