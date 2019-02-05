@@ -19,7 +19,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -56,36 +56,7 @@
 static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
-// *****************************************************************************
-/* Function:
-    void ${TMR_INSTANCE_NAME}_Initialize (void);
 
-  Summary:
-    Initializes timer
-
-  Description:
-    This function initializes given instance of timer with
-    the options configured in MCC GUI.
-
-  Precondition:
-    MCC GUI should be configured with the desired values.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    ${TMR_INSTANCE_NAME}_Initialize();
-    </code>
-
-  Remarks:
-    This function must be called before any other Timer function is
-    called.  This function is normally only be called once during system
-    initialization.
-*/
 void ${TMR_INSTANCE_NAME}_Initialize(void)
 {
     /* Disable Timer */
@@ -103,266 +74,86 @@ void ${TMR_INSTANCE_NAME}_Initialize(void)
     TMR${TMR_INSTANCE_NUM} = 0x0;
 
     /*Set period */
-    PR${TMR_INSTANCE_NUM} = ${TIMER_PERIOD};
+    PR${TMR_INSTANCE_NUM} = ${TIMER_PERIOD}U;
 
-    /* Setup TMR Interrupt */
     <#if TMR_INTERRUPT_MODE == true>
-    ${TMR_INSTANCE_NAME}_InterruptEnable();  /* Enable interrupt on the way out */
+    <#if TIMER_32BIT_MODE_SEL =="0">
+    /* Enable TMR Interrupt */
+    ${TMR_IEC_REG}SET = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM}IE_MASK;
+    <#else>
+    /* Enable TMR Interrupt of odd numbered timer in 32-bit mode */
+    ${TMR_IEC_REG}SET = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM?number + 1}IE_MASK;
+    </#if>
     </#if>
 
     /* start the TMR */
     T${TMR_INSTANCE_NUM}CONSET = _T${TMR_INSTANCE_NUM}CON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-    void ${TMR_INSTANCE_NAME}_Start (void);
 
-  Summary:
-    Starts the given Timer
-
-  Description:
-    This function enables the clock and starts the counter of the timer.
-
-  Precondition:
-    ${TMR_INSTANCE_NAME}_Initialize() function must have been called first.
-
-  Parameters:
-    None
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    ${TMR_INSTANCE_NAME}_Initialize();
-    ${TMR_INSTANCE_NAME}_Start();
-    </code>
-
-  Remarks:
-    None
-*/
 void ${TMR_INSTANCE_NAME}_Start(void)
 {
     T${TMR_INSTANCE_NUM}CONSET = _T${TMR_INSTANCE_NUM}CON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-void ${TMR_INSTANCE_NAME}_Stop (void);
 
-Summary:
-  Stops the given Timer counter
-
-Description:
-  This function stops the clock and thus counter.
-
-Precondition:
-   ${TMR_INSTANCE_NAME}_Initialize() function must have been called first for the given
-  timer.
-
-Parameters:
-  None
-
-Returns:
-  None.
-
-Example:
-  <code>
-  ${TMR_INSTANCE_NAME}_Initialize();
-  ${TMR_INSTANCE_NAME}_Start();
-  ${TMR_INSTANCE_NAME}_Stop();
-  </code>
-
-Remarks:
-  None
-*/
 void ${TMR_INSTANCE_NAME}_Stop (void)
 {
     T${TMR_INSTANCE_NUM}CONCLR = _T${TMR_INSTANCE_NUM}CON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-    ${TMR_INSTANCE_NAME}_PeriodSet ( uint16_t period );
-
-  Summary:
-    Sets the period value of a given timer.
-
-  Description:
-    This function writes the period value.  When timer counter matches period
-    value counter is reset and interrupt can be generated.
-
-  Precondition:
-    ${TMR_INSTANCE_NAME}_Initialize() function must have been called first for the given
-    timer.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    ${TMR_INSTANCE_NAME}_Initialize();
-    ${TMR_INSTANCE_NAME}_PeriodSet();
-    </code>
-
-  Remarks:
-    None.
-*/
+<#if TIMER_32BIT_MODE_SEL =="0">
 void ${TMR_INSTANCE_NAME}_PeriodSet(uint16_t period)
 {
     PR${TMR_INSTANCE_NUM}  = period;
 }
 
-// *****************************************************************************
-/* Function:
-    uint16_t ${TMR_INSTANCE_NAME}_PeriodGet(void);
-
-  Summary:
-    Reads the period value of given timer
-
-  Description:
-    This function reads the value of period of given timer .
-
-  Precondition:
-    ${TMR_INSTANCE_NAME}_Initialize() function must have been called first.
-
-  Parameters:
-    None
-
-  Returns:
-    The timer's period value.
-
-  Example:
-    <code>
-    uint16_t period;
-
-    ${TMR_INSTANCE_NAME}_Initialize();
-    period =  ${TMR_INSTANCE_NAME}_PeriodGet();;
-    </code>
-
-  Remarks:
-    None
-*/
 uint16_t ${TMR_INSTANCE_NAME}_PeriodGet(void)
 {
     return (uint16_t)PR${TMR_INSTANCE_NUM};
 }
 
-// *****************************************************************************
-/* Function:
-    uint16_t ${TMR_INSTANCE_NAME}_CounterGet ( void );
-
-  Summary:
-    Reads the timer counter value
-
-  Description:
-    This function reads the timer counter value.
-
-  Precondition:
-    ${TMR_INSTANCE_NAME}_Initialize() function must have been called first.
-
-  Parameters:
-    None
-
-  Returns:
-    The timer's counter value
-
-  Example:
-    <code>
-    uint16_t counter;
-
-    ${TMR_INSTANCE_NAME}_Initialize();
-    ${TMR_INSTANCE_NAME}_Start();
-    counter =  ${TMR_INSTANCE_NAME}_CounterGet;
-    </code>
-
-  Remarks:
-    None
-*/
-
 uint16_t ${TMR_INSTANCE_NAME}_CounterGet(void)
 {
-    return(TMR${TMR_INSTANCE_NUM});
+    return (uint16_t)(TMR${TMR_INSTANCE_NUM});
 }
 
-// *****************************************************************************
-/* Function:
-    uint16_t ${TMR_INSTANCE_NAME}_FrequencyGet ( void );
+<#else>
+void ${TMR_INSTANCE_NAME}_PeriodSet(uint32_t period)
+{
+    PR${TMR_INSTANCE_NUM}  = period;
+}
 
-  Summary:
-    Provides the given timer's counter-increment frequency.
+uint32_t ${TMR_INSTANCE_NAME}_PeriodGet(void)
+{
+    return PR${TMR_INSTANCE_NUM};
+}
 
-  Description:
-    This function provides the frequency at which the given counter
-    increments. It can be used to convert differences between counter values
-    to real time or real-time intervals to timer period values.
+uint32_t ${TMR_INSTANCE_NAME}_CounterGet(void)
+{
+    return (TMR${TMR_INSTANCE_NUM});
+}
 
-  Precondition:
-    ${TMR_INSTANCE_NAME}_Initialize() function must have been called first.
-
-  Parameters:
-    None
-
-  Returns:
-    The frequency (in Hz) at which the timer's counter increments.
-
-  Example:
-    <code>
-    uint16_t frequency;
-
-    ${TMR_INSTANCE_NAME}_Initialize();
-    frequency =  ${TMR_INSTANCE_NAME}_Initialize();;
-    </code>
-
-  Remarks:
-    None
-*/
+</#if>
 
 uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void)
 {
-    uint32_t prescale, tmrBaseFreq;
-
-    if( _T${TMR_INSTANCE_NUM}CON_TCS_MASK == (T${TMR_INSTANCE_NUM}CON & _T${TMR_INSTANCE_NUM}CON_TCS_MASK))
-    {
-        /* Set external clock Freq fed through TCK pin */
-        tmrBaseFreq = TIMER${TMR_INSTANCE_NUM}_EXT_CLOCK_INPUT_FREQ;
-    }
-    else
-    {
-        tmrBaseFreq = ${core.CONFIG_SYS_CLK_PBCLK2_FREQ};
-    }
-
-    prescale = ${TMR_PRESCALER_VALUE};
-
-    return ( tmrBaseFreq / prescale );
+    return (${TIMER_CLOCK_FREQ});
 }
 
 <#if TMR_INTERRUPT_MODE == true>
-// *****************************************************************************
-/* Function:
-   void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void);
-
-  Summary:
-    Interrupt handler for tmr interrupts.
-
-  Description:
-    This function calls the user-registered callback_fn, if registered.
-    Also clears the interrupt source bit to allow future tmr interrupts to occur.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-
+<#if TIMER_32BIT_MODE_SEL =="0">
 void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
+<#else>
+void TIMER_${TMR_INSTANCE_NUM?number + 1}_InterruptHandler (void)
+</#if>
 {
+<#if TIMER_32BIT_MODE_SEL =="0">
     ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
+<#else>
+    /* Enable TMR Interrupt of odd numbered timer in 32-bit mode */
+    ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM?number + 1}IF_MASK;
+</#if>
 
     if((${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
@@ -370,85 +161,30 @@ void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
     }
 }
 
-// *****************************************************************************
-/* Function:
-   void ${TMR_INSTANCE_NAME}_InterruptEnable(TMR_INT_MASK interrupt);
 
-  Summary:
-    Enable TMR interrupts.
-
-  Description:
-    This function enables TMR interrupts.  The mask is not used in the PIC32MZ
-    family, so the argument is ignored.  This maintains the existing API for H3.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 void ${TMR_INSTANCE_NAME}_InterruptEnable(void)
 {
+<#if TIMER_32BIT_MODE_SEL =="0">
     ${TMR_IEC_REG}SET = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM}IE_MASK;
+<#else>
+    ${TMR_IEC_REG}SET = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM?number + 1}IE_MASK;
+</#if>
 }
 
-// *****************************************************************************
-/* Function:
-   void ${TMR_INSTANCE_NAME}_InterruptDisable(TMR_INT_MASK interrupt);
 
-  Summary:
-    Disable TMR interrupts.
-
-  Description:
-    This function disables TMR interrupts.  The mask is not used in the PIC32MZ
-    family, so the argument is ignored.  This maintains the existing API for H3.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 void ${TMR_INSTANCE_NAME}_InterruptDisable(void)
 {
+<#if TIMER_32BIT_MODE_SEL =="0">
     ${TMR_IEC_REG}CLR = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM}IE_MASK;
+<#else>
+    ${TMR_IEC_REG}CLR = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM?number + 1}IE_MASK;
+</#if>
 }
 
-// *****************************************************************************
-/* Function:
-  void ${TMR_INSTANCE_NAME}_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context );
 
-  Summary:
-    Sets the callback_fn function for an match.
-
-  Description:
-    This function sets the callback_fn function that will be called when the TMR
-    match is reached.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *callback_fn   - a pointer to the function to be called when match is reached.
-                  Use NULL to Un Register the match callback_fn
-
-    context     - a pointer to user defined data to be used when the callback_fn
-                  function is called. NULL can be passed in if no data needed.
-
-  Returns:
-    None
-*/
 void ${TMR_INSTANCE_NAME}_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context )
 {
-    /* - Un-register callback_fn if NULL */
-    if (callback_fn == NULL)
-    {
-        ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn = NULL;
-        ${TMR_INSTANCE_NAME?lower_case}Obj.context = (uintptr_t) NULL;
-        return;
-    }
-
-    /* - Save callback_fn and context in local memory */
+    /* Save callback_fn and context in local memory */
     ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn = callback_fn;
     ${TMR_INSTANCE_NAME?lower_case}Obj.context = context;
 }
