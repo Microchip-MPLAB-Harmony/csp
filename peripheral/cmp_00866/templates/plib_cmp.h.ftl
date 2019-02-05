@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -45,7 +45,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
-#include "plib_cmp_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -53,183 +52,52 @@
 #endif
 // DOM-IGNORE-END
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+
+typedef enum
+{
+    /*CMP Output*/
+    CMP1_OUTPUT_STATUS = _CMSTAT_C1OUT_MASK,      
+
+    CMP2_OUTPUT_STATUS = _CMSTAT_C2OUT_MASK  
+
+} CMP_STATUS_SOURCE;
+
+typedef void (*CMP_CALLBACK) (uintptr_t context);
+
+typedef struct
+{    
+    CMP_CALLBACK callback;
+	uintptr_t    context;
+	
+} CMP_OBJECT ;
 
 // *****************************************************************************
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
 
-/*************************** ${CMP_INSTANCE_NAME} API ******************************************/
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_Initialize (void)
-
-  Summary:
-    Initialization function for both CMP1 & CMP2 channels of the CMP peripheral
-
-  Description:
-    This function initializes the CMP peripheral with user input from the
-    configurator.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-
 void ${CMP_INSTANCE_NAME}_Initialize (void);
-
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_1_CompareEnable (void)
-
-  Summary:
-    Enable function of the CMP1 Channel
-
-  Description:
-    This function enables the CMP1 Channel
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 
 void ${CMP_INSTANCE_NAME}_1_CompareEnable (void);
 
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_1_CompareDisable (void)
-
-  Summary:
-    Disable function of the CMP1 Channel
-
-  Description:
-    This function disables the CMP1 Channel
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-
 void ${CMP_INSTANCE_NAME}_1_CompareDisable (void);
-
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_2_CompareEnable (void)
-
-  Summary:
-    Enable function of the CMP2 Channel
-
-  Description:
-    This function enables the CMP2 Channel
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 
 void ${CMP_INSTANCE_NAME}_2_CompareEnable (void);
 
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_2_CompareDisable (void)
-
-  Summary:
-    Disable function of the CMP2 Channel
-
-  Description:
-    This function disables the CMP2 Channel
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-
 void ${CMP_INSTANCE_NAME}_2_CompareDisable (void);
-
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE source)
-
-  Summary:
-    CMP Channel status
-
-  Description:
-    Returns the current state of requested CMP Channel
-
-  Parameters:
-    source  cmp channel
-
-  Returns:
-    bool    current value of cmp channel output
-*/
 
 bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE source);
 
 <#if CMP_CM1CON_EVPOL != "0">
 
-// *****************************************************************************
-/* Function:
-  void ${CMP_INSTANCE_NAME}_1_CallbackRegister( CMP_CALLBACK callback, uintptr_t context )
-
-  Summary:
-    Sets the callback function for a cmp interrupt.
-
-  Description:
-    This function sets the callback function that will be called when the CMP
-    value is reached.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *callback   - a pointer to the function to be called when value is reached.
-                  Use NULL to Un Register the compare callback
-
-    context     - a pointer to user defined data to be used when the callback
-                  function is called. NULL can be passed in if no data needed.
-
-  Returns:
-    void
-*/
-
 void ${CMP_INSTANCE_NAME}_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 </#if>
 <#if CMP_CM2CON_EVPOL != "0">
-
-// *****************************************************************************
-/* Function:
-  void ${CMP_INSTANCE_NAME}_2_CallbackRegister( CMP_CALLBACK callback, uintptr_t context )
-
-  Summary:
-    Sets the callback function for a cmp interrupt.
-
-  Description:
-    This function sets the callback function that will be called when the CMP
-    value is reached.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *callback   - a pointer to the function to be called when value is reached.
-                  Use NULL to Un Register the compare callback
-
-    context     - a pointer to user defined data to be used when the callback
-                  function is called. NULL can be passed in if no data needed.
-
-  Returns:
-    void
-*/
 
 void ${CMP_INSTANCE_NAME}_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 </#if>

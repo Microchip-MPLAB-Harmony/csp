@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -208,6 +208,7 @@ def instantiateComponent(cmpComponent):
     cmpSym_CM1CON_STRING = cmpComponent.createCommentSymbol("CMP1_STRING", None)
     cmpSym_CM1CON_STRING.setLabel("Comparator 1")
 
+    #Positive input of Comparator 1
     cmp1CREF_names = []
     _get_bitfield_names(cmpValGrp_CM1CON_CREF, cmp1CREF_names)
     cmpSym_CM1CON_CREF = cmpComponent.createKeyValueSetSymbol("CMP_CM1CON_CREF", cmpSym_CM1CON_STRING)
@@ -218,6 +219,7 @@ def instantiateComponent(cmpComponent):
     for ii in cmp1CREF_names:
         cmpSym_CM1CON_CREF.addKey( ii['desc'], ii['value'], ii['key'] )
 
+    #Negative input of Comparator 1
     cmp1CCH_names = []
     _get_bitfield_names(cmpValGrp_CM1CON_CCH, cmp1CCH_names)
     cmpSym_CM1CON_CCH = cmpComponent.createKeyValueSetSymbol("CMP_CM1CON_CCH", cmpSym_CM1CON_STRING)
@@ -228,6 +230,7 @@ def instantiateComponent(cmpComponent):
     for ii in cmp1CCH_names:
         cmpSym_CM1CON_CCH.addKey( ii['desc'], ii['value'], ii['key'] )
 
+    #Edge selection for interrupt generation
     cmp1EVPOL_names = []
     _get_bitfield_names(cmpValGrp_CM1CON_EVPOL, cmp1EVPOL_names)
     cmpSym_CM1CON_EVPOL = cmpComponent.createKeyValueSetSymbol("CMP_CM1CON_EVPOL", cmpSym_CM1CON_STRING)
@@ -238,15 +241,19 @@ def instantiateComponent(cmpComponent):
     for ii in cmp1EVPOL_names:
         cmpSym_CM1CON_EVPOL.addKey( ii['desc'], ii['value'], ii['key'] )
 
+    #Comparator output invert
     cmpSym_CM1CON_CPOL = cmpComponent.createBooleanSymbol("CMP_CM1CON_CPOL", cmpSym_CM1CON_STRING)
     cmpSym_CM1CON_CPOL.setLabel(cmpBitFld_CM1CON_CPOL.getAttribute("caption"))
 
+    #Comparator output on pin
     cmpSym_CM1CON_COE = cmpComponent.createBooleanSymbol("CMP_CM1CON_COE", cmpSym_CM1CON_STRING)
     cmpSym_CM1CON_COE.setLabel(cmpBitFld_CM1CON_COE.getAttribute("caption"))
+    cmpSym_CM1CON_COE.setDefaultValue(False)
 
     cmpSym_CM2CON_STRING = cmpComponent.createCommentSymbol("CMP2_STRING", None)
     cmpSym_CM2CON_STRING.setLabel("Comparator 2")
 
+    #Positive input of Comparator 2
     cmp2CREF_names = []
     _get_bitfield_names(cmpValGrp_CM2CON_CREF, cmp2CREF_names)
     cmpSym_CM2CON_CREF = cmpComponent.createKeyValueSetSymbol("CMP_CM2CON_CREF", cmpSym_CM2CON_STRING)
@@ -257,6 +264,7 @@ def instantiateComponent(cmpComponent):
     for ii in cmp2CREF_names:
         cmpSym_CM2CON_CREF.addKey( ii['desc'], ii['value'], ii['key'] )
 
+    #Negative input of Comparator 2
     cmp2CCH_names = []
     _get_bitfield_names(cmpValGrp_CM2CON_CCH, cmp2CCH_names)
     cmpSym_CM2CON_CCH = cmpComponent.createKeyValueSetSymbol("CMP_CM2CON_CCH", cmpSym_CM2CON_STRING)
@@ -267,6 +275,7 @@ def instantiateComponent(cmpComponent):
     for ii in cmp2CCH_names:
         cmpSym_CM2CON_CCH.addKey( ii['desc'], ii['value'], ii['key'] )
 
+    #Edge selection for interrupt generation
     cmp2EVPOL_names = []
     _get_bitfield_names(cmpValGrp_CM2CON_EVPOL, cmp2EVPOL_names)
     cmpSym_CM2CON_EVPOL = cmpComponent.createKeyValueSetSymbol("CMP_CM2CON_EVPOL", cmpSym_CM2CON_STRING)
@@ -277,11 +286,15 @@ def instantiateComponent(cmpComponent):
     for ii in cmp2EVPOL_names:
         cmpSym_CM2CON_EVPOL.addKey( ii['desc'], ii['value'], ii['key'] )
 
+    #Comparator output invert
     cmpSym_CM2CON_CPOL = cmpComponent.createBooleanSymbol("CMP_CM2CON_CPOL", cmpSym_CM2CON_STRING)
     cmpSym_CM2CON_CPOL.setLabel(cmpBitFld_CM2CON_CPOL.getAttribute("caption"))
+    cmpSym_CM2CON_CPOL.setDefaultValue(False)
 
+    #Comparator output on pin
     cmpSym_CM2CON_COE = cmpComponent.createBooleanSymbol("CMP_CM2CON_COE", cmpSym_CM2CON_STRING)
     cmpSym_CM2CON_COE.setLabel(cmpBitFld_CM2CON_COE.getAttribute("caption"))
+    cmpSym_CM2CON_COE.setDefaultValue(False)
 
     #Collecting user input to combine into CMPxCON register
     #CMPxCON is updated every time a user selection changes
@@ -358,15 +371,6 @@ def instantiateComponent(cmpComponent):
 ############################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
-
-    cmpHeaderFile = cmpComponent.createFileSymbol("CMP_COMMON_HEADER", None)
-    cmpHeaderFile.setMarkup(True)
-    cmpHeaderFile.setSourcePath("../peripheral/cmp_00866/templates/plib_cmp_common.h")
-    cmpHeaderFile.setOutputName("plib_cmp_common.h")
-    cmpHeaderFile.setDestPath("peripheral/cmp/")
-    cmpHeaderFile.setProjectPath("config/" + configName + "/peripheral/cmp/")
-    cmpHeaderFile.setType("HEADER")
-    cmpHeaderFile.setOverwrite(True)
 
     cmpHeader1File = cmpComponent.createFileSymbol("CMP_HEADER1", None)
     cmpHeader1File.setMarkup(True)
