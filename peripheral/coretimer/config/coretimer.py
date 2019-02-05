@@ -38,8 +38,7 @@ global setTimerInterruptData
 
 def coreFreqCalc(symbol, event):
     SysClkFreq=Database.getSymbolValue("core", "SYS_CLK_FREQ")
-    periodMS = float(Database.getSymbolValue("core", "CORE_TIMER_PERIOD_MS"))
-
+    periodMS = coretimerPeriodMS.getValue()
     timerFrequency=int(SysClkFreq)/2
     coretimerFrequency.setValue(timerFrequency,2)
     coretimerFreqComment.setLabel("*** Core Timer Clock Frequency " + str(timerFrequency) + " Hz ***")
