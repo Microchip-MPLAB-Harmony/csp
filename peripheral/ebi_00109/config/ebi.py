@@ -355,7 +355,7 @@ def instantiateComponent(ebiComponent):
     addLinesChildren = addLines.getChildren()
     for param in addLinesChildren:  
         caption = param.getAttribute('caption')
-        if(caption == "EBI Address Pin Enable bits"):
+        if(caption.find("EBI Address Pin Enable bit") != -1):
             addressLines += 1
     
     #Get Chip Selects

@@ -107,19 +107,17 @@ def _get_enblReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
-        index = int(vectorNumber / 32)
-        regName = "IEC" + str(index)
-        return regName
+    index = int(vectorNumber / 32)
+    regName = "IEC" + str(index)
+    return regName
 
 def _get_statReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
-        index = int(vectorNumber / 32)
-        regName = "IFS" + str(index)
-        return regName
+    index = int(vectorNumber / 32)
+    regName = "IFS" + str(index)
+    return regName
 
 def _get_bitfield_names(node, outputList):
 
