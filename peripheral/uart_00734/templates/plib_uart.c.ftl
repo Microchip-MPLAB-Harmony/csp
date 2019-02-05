@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -109,12 +109,12 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
 
 <#if USART_INTERRUPT_MODE == true>
     /*Setup ${UART_INSTANCE_NAME}_FAULT Interrupt*/
-    /*Enable ${UART_INSTANCE_NAME}_FAULT Interrupt*/
-    ${UART_FAULT_IEC_REG}SET = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
+    /*Disable ${UART_INSTANCE_NAME}_FAULT Interrupt*/
+    ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
 
     /*Setup ${UART_INSTANCE_NAME}_RX Interrupt*/
-    /*Enable ${UART_INSTANCE_NAME}_RX Interrupt*/
-    ${UART_RX_IEC_REG}SET = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
+    /*Disable ${UART_INSTANCE_NAME}_RX Interrupt*/
+    ${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 
     /*Setup ${UART_INSTANCE_NAME}_TX Interrupt*/
     /*Disable ${UART_INSTANCE_NAME}_TX Interrupt*/
@@ -131,7 +131,6 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = 0;
     ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.txCallback = NULL;
-    ${UART_INSTANCE_NAME?lower_case}Obj.faultCallback = NULL;
 
 </#if>
     /* Turn ON ${UART_INSTANCE_NAME}*/
@@ -182,10 +181,34 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
             return status;
         }
 
+        if(setup->dataWidth == UART_DATA_9_BIT)
+        {
+            if(setup->parity != UART_PARITY_NONE)
+            {
+               return status;
+
+            }
+            else
+            {
+               /* Configure ${UART_INSTANCE_NAME} mode */
+               uartMode = U${UART_INSTANCE_NUM}MODE;
+               uartMode &= ~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK;
+               U${UART_INSTANCE_NUM}MODE = uartMode | setup->dataWidth;
+            }
+
+        }
+        else
+        {
+            /* Configure ${UART_INSTANCE_NAME} mode */
+            uartMode = U${UART_INSTANCE_NUM}MODE;
+            uartMode &= ~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK;
+            U${UART_INSTANCE_NUM}MODE = uartMode | setup->parity ;
+        }
+
         /* Configure ${UART_INSTANCE_NAME} mode */
         uartMode = U${UART_INSTANCE_NUM}MODE;
-        uartMode &= ~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK;
-        U${UART_INSTANCE_NUM}MODE = uartMode | setup->parity ;
+        uartMode &= ~_U${UART_INSTANCE_NUM}MODE_STSEL_MASK;
+        U${UART_INSTANCE_NUM}MODE = uartMode | setup->stopBits ;
 
         /* Configure ${UART_INSTANCE_NAME} Baud Rate */
         U${UART_INSTANCE_NUM}BRG = brgVal;
@@ -244,6 +267,12 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = true;
             status = true;
         }
+
+        /*Enable ${UART_INSTANCE_NAME}_FAULT Interrupt*/
+        ${UART_FAULT_IEC_REG}SET = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
+
+        /*Enable ${UART_INSTANCE_NAME}_RX Interrupt*/
+        ${UART_RX_IEC_REG}SET = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 </#if>
     }
 
@@ -313,13 +342,6 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
 }
 
 <#if USART_INTERRUPT_MODE == true>
-void ${UART_INSTANCE_NAME}_FaultCallbackRegister( UART_CALLBACK callback, uintptr_t context )
-{
-    ${UART_INSTANCE_NAME?lower_case}Obj.faultCallback = callback;
-
-    ${UART_INSTANCE_NAME?lower_case}Obj.faultContext = context;
-}
-
 void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback = callback;
@@ -357,9 +379,9 @@ size_t ${UART_INSTANCE_NAME}_WriteCountGet( void )
 void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 {
     /* Client must call UARTx_ErrorGet() function to clear the errors */
-    if( ${UART_INSTANCE_NAME?lower_case}Obj.faultCallback != NULL )
+    if( ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
     {
-        ${UART_INSTANCE_NAME?lower_case}Obj.faultCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
     }
 
     /* Clear size and rx status */
@@ -367,14 +389,10 @@ void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
     ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
     ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
 
-    /* If it's a overrun error then clear it to flush FIFO */
-    if(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_OERR_MASK)
-    {
-        U${UART_INSTANCE_NUM}STACLR = _U${UART_INSTANCE_NUM}STA_OERR_MASK;
-    }
+    ${UART_INSTANCE_NAME}_ErrorClear();
 
-    /* Clear ${UART_INSTANCE_NAME} Error IRQ flag after clearing error */
-    ${UART_FAULT_IFS_REG}CLR = _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}EIF_MASK;
+    /* Disable the interrupt*/
+    ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
 }
 
 void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
@@ -395,6 +413,9 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
             ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
             ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
+
+            /* Disable the interrupt*/
+            ${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 
             if(${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL)
             {
@@ -472,7 +493,7 @@ bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void )
 {
     bool status = false;
 
-    if(_U${UART_INSTANCE_NUM}STA_URXDA_MASK != (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_URXDA_MASK))
+    if(_U${UART_INSTANCE_NUM}STA_URXDA_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_URXDA_MASK))
     {
         status = true;
     }
