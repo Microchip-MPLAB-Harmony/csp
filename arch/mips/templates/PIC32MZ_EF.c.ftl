@@ -235,7 +235,7 @@
 
 /*** DEVCFG3 ***/
 <#if CONFIG_USERID?has_content>
-#pragma config USERID =     ${CONFIG_USERID}
+#pragma config USERID =     0x${CONFIG_USERID}
 </#if>
 <#if CONFIG_AI2C1?has_content>
 #pragma config AI2C1 =      ${CONFIG_AI2C1}
@@ -293,7 +293,7 @@
 #pragma config FVBUSIO1 =  ${CONFIG_FVBUSIO1}
 </#if>
 <#if CONFIG_USER_ID?has_content>
-#pragma config USER_ID =  ${CONFIG_USER_ID}
+#pragma config USER_ID =  0x${CONFIG_USER_ID}
 </#if>
 <#if CONFIG_PWMLOCK?has_content>
 #pragma config PWMLOCK =  ${CONFIG_PWMLOCK}
@@ -308,10 +308,10 @@
 
 /*** BF1SEQ0 ***/
 
-#pragma config TSEQ =       ${CONFIG_TSEQ}
+#pragma config TSEQ =       0x${CONFIG_TSEQ}
 </#if>
 <#if CONFIG_CSEQ?has_content>
-#pragma config CSEQ =       ${CONFIG_CSEQ}
+#pragma config CSEQ =       0x${CONFIG_CSEQ}
 </#if>
 <#if CONFIG_BOOTSEL?has_content>
 #pragma config BOOTSEL =       ${CONFIG_BOOTSEL}
