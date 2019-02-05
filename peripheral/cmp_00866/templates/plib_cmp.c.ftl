@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -43,31 +43,10 @@
 <#--Implementation-->
 // *****************************************************************************
 
-<#if CMP_CM1CON_EVPOL != "0">CMP_OBJECT cmp1Obj;</#if>
-<#if CMP_CM2CON_EVPOL != "0">CMP_OBJECT cmp2Obj;</#if>
-
 // *****************************************************************************
 // Section: CMP Implementation
 // *****************************************************************************
 // *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_Initialize (void)
-
-  Summary:
-    Initialization function for both CMP1 & CMP2 channels of the CMP peripheral
-
-  Description:
-    This function initializes the CMP peripheral with user input from the
-    configurator.
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 
 void ${CMP_INSTANCE_NAME}_Initialize (void)
 {
@@ -98,141 +77,34 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
 </#if>
 }
 
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_1_CompareEnable (void)
-
-  Summary:
-    Enable function of the CMP1 Channel
-
-  Description:
-    This function enables the CMP1 Channel
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-
 void ${CMP_INSTANCE_NAME}_1_CompareEnable (void)
 {
     CM1CONSET = _CM1CON_ON_MASK;
 }
-
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_1_CompareDisable (void)
-
-  Summary:
-    Disable function of the CMP1 Channel
-
-  Description:
-    This function disables the CMP1 Channel
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 
 void ${CMP_INSTANCE_NAME}_1_CompareDisable (void)
 {
     CM1CONCLR = _CM1CON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_2_CompareEnable (void)
-
-  Summary:
-    Enable function of the CMP2 Channel
-
-  Description:
-    This function enables the CMP2 Channel
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
-
 void ${CMP_INSTANCE_NAME}_2_CompareEnable (void)
 {
     CM2CONSET = _CM2CON_ON_MASK;
 }
-
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_2_CompareDisable (void)
-
-  Summary:
-    Disable function of the CMP2 Channel
-
-  Description:
-    This function disables the CMP2 Channel
-
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 
 void ${CMP_INSTANCE_NAME}_2_CompareDisable (void)
 {
     CM2CONCLR = _CM2CON_ON_MASK;
 }
 
-// *****************************************************************************
-/* Function:
-   void ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE source)
-
-  Summary:
-    CMP Channel status
-
-  Description:
-    Returns the current state of requested CMP Channel
-
-  Parameters:
-    source  cmp channel
-
-  Returns:
-    bool    current value of cmp channel output
-*/
-
 bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE ch_status)
 {
-    return ((CMSTAT >> ch_status) & 0x1);
+    return ((CMSTAT & ch_status)?true:false);
 }
 
 <#if CMP_CM1CON_EVPOL != "0">
-// *****************************************************************************
-/* Function:
-  void ${CMP_INSTANCE_NAME}_1_CallbackRegister( CMP_CALLBACK callback, uintptr_t context )
 
-  Summary:
-    Sets the callback function for a cmp interrupt.
-
-  Description:
-    This function sets the callback function that will be called when the CMP
-    value is reached.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *callback   - a pointer to the function to be called when value is reached.
-                  Use NULL to Un Register the compare callback
-
-    context     - a pointer to user defined data to be used when the callback
-                  function is called. NULL can be passed in if no data needed.
-
-  Returns:
-    void
-*/
+CMP_OBJECT cmp1Obj;
 
 void ${CMP_INSTANCE_NAME}_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
 {
@@ -241,25 +113,6 @@ void ${CMP_INSTANCE_NAME}_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t co
     cmp1Obj.context = context;
 }
 
-// *****************************************************************************
-/* Function:
-  void COMPARATOR_1_InterruptHandler( void )
-
-  Summary:
-    Is run when interrupt occurs, or during polling.  Calls the callback function if present.
-
-  Description:
-    This function is called when the comparator 1 interrupt occurs.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    void
-*/
 void COMPARATOR_1_InterruptHandler(void)
 {
     ${CMP1_IFS_REG}CLR = _${CMP1_IFS_REG}_${CMP_INSTANCE_NAME}1IF_MASK; //Clear IRQ flag
@@ -273,30 +126,9 @@ void COMPARATOR_1_InterruptHandler(void)
 </#if>
 
 <#if CMP_CM2CON_EVPOL != "0">
-// *****************************************************************************
-/* Function:
-  void ${CMP_INSTANCE_NAME}_2_CallbackRegister( CMP_CALLBACK callback, uintptr_t context )
 
-  Summary:
-    Sets the callback function for a cmp interrupt.
+CMP_OBJECT cmp2Obj;
 
-  Description:
-    This function sets the callback function that will be called when the CMP
-    value is reached.
-
-  Precondition:
-    None.
-
-  Parameters:
-    *callback   - a pointer to the function to be called when value is reached.
-                  Use NULL to Un Register the compare callback
-
-    context     - a pointer to user defined data to be used when the callback
-                  function is called. NULL can be passed in if no data needed.
-
-  Returns:
-    void
-*/
 void ${CMP_INSTANCE_NAME}_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
 {
     cmp2Obj.callback = callback;
@@ -304,25 +136,6 @@ void ${CMP_INSTANCE_NAME}_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t co
     cmp2Obj.context = context;
 }
 
-// *****************************************************************************
-/* Function:
-  void COMPARATOR_2_InterruptHandler( void )
-
-  Summary:
-    Is run when interrupt occurs, or during polling.  Calls the callback function if present.
-
-  Description:
-    This function is called when the comparator 2 interrupt occurs.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    void
-*/
 void COMPARATOR_2_InterruptHandler(void)
 {
     ${CMP2_IFS_REG}CLR = _${CMP2_IFS_REG}_${CMP_INSTANCE_NAME}2IF_MASK; //Clear IRQ flag
