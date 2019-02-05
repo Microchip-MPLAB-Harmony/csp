@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -109,19 +109,17 @@ def _get_enblReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
-        index = int(vectorNumber / 32)
-        regName = "IEC" + str(index)
-        return regName
+    index = int(vectorNumber / 32)
+    regName = "IEC" + str(index)
+    return regName
 
 def _get_statReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR"))):
-        index = int(vectorNumber / 32)
-        regName = "IFS" + str(index)
-        return regName
+    index = int(vectorNumber / 32)
+    regName = "IFS" + str(index)
+    return regName
 
 def _get_bitfield_names(node, outputList):
 
@@ -372,7 +370,7 @@ def instantiateComponent(uartComponent):
     ## Baud Rate setting
     uartBaud = uartComponent.createIntegerSymbol("BAUD_RATE", None)
     uartBaud.setLabel("Baud Rate")
-    uartBaud.setDefaultValue(9600)
+    uartBaud.setDefaultValue(115200)
 
     brgVal = baudRateCalc(uartClkValue.getValue(), uartBaud.getValue())
 
@@ -393,6 +391,76 @@ def instantiateComponent(uartComponent):
     uartSymIntEnComment.setLabel("Warning!!! " + uartInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     uartSymIntEnComment.setVisible(False)
     uartSymIntEnComment.setDependencies(updateUARTInterruptData, ["USART_INTERRUPT_MODE"] + InterruptVectorUpdate)
+
+    ###################################################################################################
+    ####################################### Driver Symbols ############################################
+    ###################################################################################################
+
+    #USART API Prefix
+    usartSym_API_Prefix = uartComponent.createStringSymbol("USART_PLIB_API_PREFIX", None)
+    usartSym_API_Prefix.setDefaultValue(uartInstanceName.getValue())
+    usartSym_API_Prefix.setVisible(False)
+
+    #UART Stop 1-bit Mask
+    uartStopBit_1_Mask = uartComponent.createStringSymbol("USART_STOP_1_BIT_MASK", None)
+    uartStopBit_1_Mask.setDefaultValue("0x0")
+    uartStopBit_1_Mask.setVisible(False)
+
+    #UART Stop 2-bit Mask
+    uartStopBit_2_Mask = uartComponent.createStringSymbol("USART_STOP_2_BIT_MASK", None)
+    uartStopBit_2_Mask.setDefaultValue("0x1")
+    uartStopBit_2_Mask.setVisible(False)
+
+    #UART EVEN Parity Mask
+    uartSym_MR_PAR_EVEN_Mask = uartComponent.createStringSymbol("USART_PARITY_EVEN_MASK", None)
+    uartSym_MR_PAR_EVEN_Mask.setDefaultValue("0x2")
+    uartSym_MR_PAR_EVEN_Mask.setVisible(False)
+
+    #UART ODD Parity Mask
+    uartSym_MR_PAR_ODD_Mask = uartComponent.createStringSymbol("USART_PARITY_ODD_MASK", None)
+    uartSym_MR_PAR_ODD_Mask.setDefaultValue("0x4")
+    uartSym_MR_PAR_ODD_Mask.setVisible(False)
+
+    #UART NO Parity Mask
+    uartSym_MR_PAR_NO_Mask = uartComponent.createStringSymbol("USART_PARITY_NONE_MASK", None)
+    uartSym_MR_PAR_NO_Mask.setDefaultValue("0x0")
+    uartSym_MR_PAR_NO_Mask.setVisible(False)
+
+    #USART Character Size 8 Mask
+    usartSym_CTRLB_CHSIZE_8_Mask = uartComponent.createStringSymbol("USART_DATA_8_BIT_MASK", None)
+    usartSym_CTRLB_CHSIZE_8_Mask.setDefaultValue("0x0")
+    usartSym_CTRLB_CHSIZE_8_Mask.setVisible(False)
+
+    #USART Character Size 9 Mask
+    usartSym_CTRLB_CHSIZE_9_Mask = uartComponent.createStringSymbol("USART_DATA_9_BIT_MASK", None)
+    usartSym_CTRLB_CHSIZE_9_Mask.setDefaultValue("0x6")
+    usartSym_CTRLB_CHSIZE_9_Mask.setVisible(False)
+
+    #USART Overrun error Mask
+    usartSym_STATUS_BUFOVF_Mask = uartComponent.createStringSymbol("USART_OVERRUN_ERROR_VALUE", None)
+    usartSym_STATUS_BUFOVF_Mask.setDefaultValue("0x2")
+    usartSym_STATUS_BUFOVF_Mask.setVisible(False)
+
+    #USART parity error Mask
+    usartSym_STATUS_PERR_Mask = uartComponent.createStringSymbol("USART_PARITY_ERROR_VALUE", None)
+    usartSym_STATUS_PERR_Mask.setDefaultValue("0x8")
+    usartSym_STATUS_PERR_Mask.setVisible(False)
+
+    #USART framing error Mask
+    usartSym_STATUS_FERR_Mask = uartComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", None)
+    usartSym_STATUS_FERR_Mask.setDefaultValue("0x4")
+    usartSym_STATUS_FERR_Mask.setVisible(False)
+
+    #uart Transmit data register
+    uartSym_TxRegister = uartComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
+    uartSym_TxRegister.setDefaultValue("&(U" + uartInstanceNum.getValue() + "TXREG)")
+    uartSym_TxRegister.setVisible(False)
+
+    #uart Receive data register
+    uartSym_RxRegister = uartComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
+    uartSym_RxRegister.setDefaultValue("&(U" + uartInstanceNum.getValue() + "RXREG)")
+    uartSym_RxRegister.setVisible(False)
+
 
     ############################################################################
     #### Code Generation ####
