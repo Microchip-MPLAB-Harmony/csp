@@ -15,9 +15,10 @@
     "main" function calls the "SYS_Initialize" function to initialize the state
     machines of all modules in the system
  *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2018-2019 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2019 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -50,33 +51,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
-#include "device.h"
-/*LED Toggling subroutines*/
-void LED1_Initialize(void)
-{
-    *(&ODCBSET + (7 - 1) * 0x40) = 0;
-    *(&LATB + (7 - 1) * 0x40) = 0;
-    *(&TRISBCLR + (7 - 1) * 0x40) = 7;  //think mask val is right
-    *(&CNCONBSET + (7 - 1) * 0x40) = _CNCONB_ON_MASK;
-    *(&ANSELBCLR + (7 - 1) * 0x40) = 0xFF8F;  //think mask val is right
-    *(&CNENBSET + (7 - 1) * 0x40) = 0;
-    *(&CNPUBSET + (7 - 1) * 0x40) = 0;
-    *(&CNPDBSET + (7 - 1) * 0x40) = 0;    
-}
 
-
-#define LED1_Toggle()   *(&LATBINV + (7 - 1) * 0x40) = 1<<0;
-
-/* This function is called after period matches */
+/* This function is called after period matches in Timer 3 (32-bit timer) */
 void TIMER3_InterruptSvcRoutine(uintptr_t context)
 {
     /* Toggle LED */
     LED1_Toggle();
-  
-    
-    
 }
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -87,9 +68,10 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    LED1_Initialize();
-    TMR3_CallbackRegister(TIMER3_InterruptSvcRoutine,NULL);
-    TMR3_Start();
+    
+    TMR2_CallbackRegister(TIMER3_InterruptSvcRoutine,NULL);
+    TMR2_Start();
+
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */

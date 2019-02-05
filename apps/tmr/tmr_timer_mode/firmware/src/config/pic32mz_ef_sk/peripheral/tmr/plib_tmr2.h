@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_tmr3.h
+    plib_tmr2.h
 
   Summary:
     Data Type definition of the Timer Peripheral Interface Plib.
@@ -19,7 +19,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -41,15 +41,13 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef PLIB_TMR3_H
-#define PLIB_TMR3_H
+#ifndef PLIB_TMR2_H
+#define PLIB_TMR2_H
 
 #include <stddef.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
 #include "plib_tmr_common.h"
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -64,41 +62,33 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this
-    interface and should be considered part of it.
-*/
 
-#define TIMER3_EXT_CLOCK_INPUT_FREQ  10000000
-
-	
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
-/*  Functions to support the system service for Timer.
-*/
-void TMR3_InterruptEnable();
-void TMR3_InterruptDisable();
-void TIMER_3_Tasks (void);
-void TMR3_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context );
-
 // *****************************************************************************
-void TMR3_Initialize();
+void TMR2_Initialize(void);
 
-void TMR3_Start();
+void TMR2_Start(void);
 
-void TMR3_Stop();
+void TMR2_Stop(void);
 
-void TMR3_PeriodSet(uint16_t);
+void TMR2_PeriodSet(uint32_t);
 
-uint16_t TMR3_PeriodGet();
+uint32_t TMR2_PeriodGet(void);
 
-uint16_t TMR3_CounterGet();
+uint32_t TMR2_CounterGet(void);
 
-uint32_t TMR3_FrequencyGet();
+uint32_t TMR2_FrequencyGet(void);
 
+void TMR2_InterruptEnable(void);
+
+void TMR2_InterruptDisable(void);
+
+void TMR2_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -107,4 +97,4 @@ uint32_t TMR3_FrequencyGet();
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_TMR3_H */
+#endif /* PLIB_TMR2_H */

@@ -2,8 +2,8 @@
 <Configuration>
   <Configurator>
     <Name dnOrder="0" value="pic32mz_ef_sk"/>
-    <Processor dnOrder="1" value="PIC32MZ2048EFM144"/>
-    <Harmony dnOrder="2" path="../../../../MH3TimerMult"/>
+    <Processor dnOrder="1" value="PIC32MZ2048EFH144"/>
+    <Harmony dnOrder="2" path="../../../.."/>
     <Manifest dnOrder="3">
       <Files dnOrder="0">
         <File dnOrder="0">
@@ -19,66 +19,58 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E6EB25FA7C61B11ADB967FD266CCB5A3</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E6EB25FA7C61B11ADB967FD266CCB5A3</UserChecksum>
+          <GeneratedChecksum dnOrder="4">DD0B8BD4592ECC73959B939895B501A3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">DD0B8BD4592ECC73959B939895B501A3</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">interrupts.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F2464A2A06AF41F9238EA1D02E1BA8DB</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F2464A2A06AF41F9238EA1D02E1BA8DB</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AC03E3CA7436F90D9419A0002C401BC6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AC03E3CA7436F90D9419A0002C401BC6</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">main.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4"/>
-          <UserChecksum dnOrder="5"/>
+          <GeneratedChecksum dnOrder="4">F81A00E640818EDFB9E79C9BD241AEF4</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F81A00E640818EDFB9E79C9BD241AEF4</UserChecksum>
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AF1AF20F48E27AE125E1646C780E83AE</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AF1AF20F48E27AE125E1646C780E83AE</UserChecksum>
+          <GeneratedChecksum dnOrder="4">73FF06EE44C9B2B1B074FA81BA4028CF</GeneratedChecksum>
+          <UserChecksum dnOrder="5">73FF06EE44C9B2B1B074FA81BA4028CF</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">plib_dmac.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/dmac/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/dmac/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4D14699BC44AAF46065B16B247581F65</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4D14699BC44AAF46065B16B247581F65</UserChecksum>
+          <Name dnOrder="1">plib_evic.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">0CB7424F201174013724572B226511E9</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0CB7424F201174013724572B226511E9</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_gpio.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/gpio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A87B75C236A6F49C12B99B9FF857E007</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A87B75C236A6F49C12B99B9FF857E007</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0D05D357A0B2F70BB89862824BCD11B6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0D05D357A0B2F70BB89862824BCD11B6</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">plib_int.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/pic32mz_int/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/pic32mz_int/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FB028F14692F79D211B6197E8D1AFC3A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FB028F14692F79D211B6197E8D1AFC3A</UserChecksum>
-        </File>
-        <File dnOrder="8">
-          <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">plib_tmr3.c</Name>
+          <Name dnOrder="1">plib_tmr2.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/tmr/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AD4789ECD93B3EFB44D261A9A1153D9E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AD4789ECD93B3EFB44D261A9A1153D9E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">970C7B93A5435302BCCE9E1BAA457208</GeneratedChecksum>
+          <UserChecksum dnOrder="5">970C7B93A5435302BCCE9E1BAA457208</UserChecksum>
         </File>
-        <File dnOrder="9">
+        <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_wdt.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/wdt/</LogicalPath>
@@ -86,7 +78,7 @@
           <GeneratedChecksum dnOrder="4">171B33F15A7D47957FA9902DC77C7878</GeneratedChecksum>
           <UserChecksum dnOrder="5">171B33F15A7D47957FA9902DC77C7878</UserChecksum>
         </File>
-        <File dnOrder="10">
+        <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">xc32_monitor.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/stdio/</LogicalPath>
@@ -94,23 +86,23 @@
           <GeneratedChecksum dnOrder="4">0CDCE9B6891797FCD2AEA243F841353F</GeneratedChecksum>
           <UserChecksum dnOrder="5">0CDCE9B6891797FCD2AEA243F841353F</UserChecksum>
         </File>
-        <File dnOrder="11">
+        <File dnOrder="10">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">definitions.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7DE607BD1F6403FA564776829623F235</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7DE607BD1F6403FA564776829623F235</UserChecksum>
+          <GeneratedChecksum dnOrder="4">CF78A7421CD51D8D96399064DD5F8DC6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">CF78A7421CD51D8D96399064DD5F8DC6</UserChecksum>
         </File>
-        <File dnOrder="12">
+        <File dnOrder="11">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">device.h</Name>
-          <LogicalPath dnOrder="2">packs/PIC32MZ2048EFM144_DFP/</LogicalPath>
-          <PhysicalPath dnOrder="3">/../../packs/PIC32MZ2048EFM144_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">94774069D6DD7F50ED809A0D44B13D65</GeneratedChecksum>
-          <UserChecksum dnOrder="5">94774069D6DD7F50ED809A0D44B13D65</UserChecksum>
+          <LogicalPath dnOrder="2">packs/PIC32MZ2048EFH144_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="3">/../../packs/PIC32MZ2048EFH144_DFP/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
         </File>
-        <File dnOrder="13">
+        <File dnOrder="12">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_clk.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/clk/</LogicalPath>
@@ -118,68 +110,68 @@
           <GeneratedChecksum dnOrder="4">97DD80BC27ABDDC370B1628A74E51C1F</GeneratedChecksum>
           <UserChecksum dnOrder="5">97DD80BC27ABDDC370B1628A74E51C1F</UserChecksum>
         </File>
-        <File dnOrder="14">
+        <File dnOrder="13">
           <Type dnOrder="0">HEADER</Type>
-          <Name dnOrder="1">plib_dmac.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/dmac/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/dmac/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A4E37B8983AAEF186E368B5CDC7DB27E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A4E37B8983AAEF186E368B5CDC7DB27E</UserChecksum>
+          <Name dnOrder="1">plib_evic.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">10DA86EA8FAC649160FE4C46A9773D19</GeneratedChecksum>
+          <UserChecksum dnOrder="5">10DA86EA8FAC649160FE4C46A9773D19</UserChecksum>
         </File>
-        <File dnOrder="15">
+        <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_gpio.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/gpio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3577E8C75F7209CF25354953D38CF087</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3577E8C75F7209CF25354953D38CF087</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FDDCFEA1F3A791A70FCF7C39E5BD9272</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FDDCFEA1F3A791A70FCF7C39E5BD9272</UserChecksum>
         </File>
-        <File dnOrder="16">
+        <File dnOrder="15">
           <Type dnOrder="0">HEADER</Type>
-          <Name dnOrder="1">plib_int.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/pic32mz_int/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/pic32mz_int/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">ABF0191223ECA8B425D270714C19CBCA</GeneratedChecksum>
-          <UserChecksum dnOrder="5">ABF0191223ECA8B425D270714C19CBCA</UserChecksum>
-        </File>
-        <File dnOrder="17">
-          <Type dnOrder="0">HEADER</Type>
-          <Name dnOrder="1">plib_tmr3.h</Name>
+          <Name dnOrder="1">plib_tmr2.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/tmr/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">07D16DCFD52D69CEFF2094A40DD4D732</GeneratedChecksum>
-          <UserChecksum dnOrder="5">07D16DCFD52D69CEFF2094A40DD4D732</UserChecksum>
+          <GeneratedChecksum dnOrder="4">951CB6B720EFCD3044875413BC7D7773</GeneratedChecksum>
+          <UserChecksum dnOrder="5">951CB6B720EFCD3044875413BC7D7773</UserChecksum>
         </File>
-        <File dnOrder="18">
+        <File dnOrder="16">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_tmr_common.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/tmr/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9FF7AA767239ADC949A0B5136C025298</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9FF7AA767239ADC949A0B5136C025298</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BC8B04D2CA76DC42F155F4A9DE965074</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BC8B04D2CA76DC42F155F4A9DE965074</UserChecksum>
         </File>
-        <File dnOrder="19">
+        <File dnOrder="17">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_wdt.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/wdt/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/wdt/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DA8BA70FDF303BD53DC663CF7729FC0D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DA8BA70FDF303BD53DC663CF7729FC0D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9799E3845FD58183EBBD52E5606ECA72</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9799E3845FD58183EBBD52E5606ECA72</UserChecksum>
+        </File>
+        <File dnOrder="18">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">toolchain_specifics.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">B454F7F8E428FF5F456D81EC32E59DA8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B454F7F8E428FF5F456D81EC32E59DA8</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
-        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFM144_DFP;"/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFH144_DFP;;../src/mips"/>
         <Setting category="C32-LD" dnOrder="1" key="heap-size" value="0"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\0.1\PIC32MZEF\atdf\PIC32MZ2048EFM144.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\0.1\PIC32MZEF\atdf\PIC32MZ2048EFH144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;"/>
     </Settings>
   </Configurator>
 </Configuration>

@@ -44,6 +44,7 @@
 // *****************************************************************************
 // *****************************************************************************
 #include "definitions.h"
+#include "device.h"
 
 
 
@@ -52,13 +53,12 @@
 // Section: Configuration Bits
 // ****************************************************************************
 // ****************************************************************************
-// <editor-fold defaultstate="collapsed" desc="Configuration Bits">
 
 /*** DEVCFG0 ***/
 #pragma config DEBUG =      OFF
 #pragma config JTAGEN =     ON
-#pragma config ICESEL =     ICS_PGx2
-#pragma config TRCEN =      OFF
+#pragma config ICESEL =     ICS_PGx1
+#pragma config TRCEN =      ON
 #pragma config BOOTISA =    MIPS32
 #pragma config FECCCON =    OFF_UNLOCKED
 #pragma config FSLEEP =     OFF
@@ -74,30 +74,30 @@
 /*** DEVCFG1 ***/
 #pragma config FNOSC =      SPLL
 #pragma config DMTINTV =    WIN_127_128
-#pragma config FSOSCEN =    OFF
-#pragma config IESO =       OFF
-#pragma config POSCMOD =    EC
+#pragma config FSOSCEN =    ON
+#pragma config IESO =       ON
+#pragma config POSCMOD =    OFF
 #pragma config OSCIOFNC =   OFF
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
 #pragma config WDTSPGM =    STOP
-#pragma config FWDTEN =     OFF
+#pragma config FWDTEN =     ON
 #pragma config WINDIS =     NORMAL
 #pragma config FWDTWINSZ =  WINSZ_75
 #pragma config DMTCNT =     DMT31
-#pragma config FDMTEN =     OFF
+#pragma config FDMTEN =     ON
 
 /*** DEVCFG2 ***/
-#pragma config FPLLIDIV =   DIV_3
+#pragma config FPLLIDIV =   DIV_1
 #pragma config FPLLRNG =    RANGE_5_10_MHZ
-#pragma config FPLLICLK =   PLL_POSC
+#pragma config FPLLICLK =   PLL_FRC
 #pragma config FPLLMULT =   MUL_50
 #pragma config FPLLODIV =   DIV_2
 #pragma config UPLLFSEL =   FREQ_24MHZ
 
 /*** DEVCFG3 ***/
 #pragma config USERID =     65535
-#pragma config FMIIEN =     OFF
+#pragma config FMIIEN =     ON
 #pragma config FETHIO =     ON
 #pragma config PGL1WAY =    ON
 #pragma config PMDL1WAY =   ON
@@ -109,13 +109,6 @@
 #pragma config TSEQ =       65535
 #pragma config CSEQ =       65535
 
-
-
-
-
-
-
-// </editor-fold>
 
 
 
@@ -167,23 +160,25 @@ void SYS_Initialize ( void* data )
     CLK_Initialize();
 	GPIO_Initialize();
 
-	TMR3_Initialize();
 
-    INT_Initialize();
+    TMR2_Initialize();
+
+
     WDT_Initialize();
 
 
 
 
 
+    EVIC_Initialize();
 
+	/* Enable global interrupts */
     __builtin_enable_interrupts();
 
-  
+
 }
 
 
 /*******************************************************************************
  End of File
 */
-

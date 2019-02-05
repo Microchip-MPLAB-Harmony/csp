@@ -56,11 +56,18 @@
 // Section: System Interrupt Vector Functions
 // *****************************************************************************
 // *****************************************************************************
+
+
+void TIMER_3_InterruptHandler( void );
+
+
+
 /* All the handlers are defined here.  Each will call its PLIB-specific function. */
-void __ISR(_TIMER_3_VECTOR, ipl7AUTO) TIMER_3_Handler (void)
+void __ISR(_TIMER_3_VECTOR, ipl1AUTO) TIMER_3_Handler (void)
 {
-   TIMER_3_Tasks();
+    TIMER_3_InterruptHandler();
 }
+
 
 
 

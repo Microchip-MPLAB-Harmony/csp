@@ -1,11 +1,11 @@
 /*******************************************************************************
-  INT PLIB Header
+  EVIC PLIB Header
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_int.h
+    plib_evic.h
 
   Summary:
     PIC32MZ Interrupt Module PLIB Header File
@@ -38,8 +38,8 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 
-#ifndef PLIB_INT_H
-#define PLIB_INT_H
+#ifndef PLIB_EVIC_H
+#define PLIB_EVIC_H
 
 #include <stddef.h>
 
@@ -52,17 +52,15 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // DOM-IGNORE-END
 
 
-
-
 //******************************************************************************
 /* Function:
-    void INT_Initialize ( void )
+    void EVIC_Initialize ( void )
 
   Summary:
     Configures and initializes the interrupt subsystem.
 
   Description:
-    This  function configures and initializes the interrupt subsystem
+    This function configures and initializes the interrupt subsystem
     appropriately for the current system design.
 
   Precondition:
@@ -78,22 +76,20 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
   <code>
   // Initialize the interrupt system. This needs to done in the initialization
   // code.
-  INT_Initialize();
+  EVIC_Initialize();
   </code>
 
   Remarks:
     None.
 */
 
-void INT_Initialize ( void );
-
-
-                 
-
+void EVIC_Initialize ( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     }
+
 #endif
 // DOM-IGNORE-END
-#endif // PLIB_INT_H
+#endif // PLIB_EVIC_H
