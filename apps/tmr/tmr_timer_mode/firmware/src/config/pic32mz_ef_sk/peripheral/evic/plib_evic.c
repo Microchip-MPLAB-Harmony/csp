@@ -1,14 +1,14 @@
 /*******************************************************************************
-  PIC32MZ PLIB Implementation
+  EVIC PLIB Implementation
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_int.c
+    plib_evic.c
 
   Summary:
-    NVIC PLIB Source File
+    EVIC PLIB Source File
 
   Description:
     None
@@ -39,16 +39,20 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 *******************************************************************************/
 
 #include "device.h"
-#include "plib_int.h"
+#include "plib_evic.h"
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: IRQ Implementation
 // *****************************************************************************
 // *****************************************************************************
-void INT_Initialize( void )
+
+void EVIC_Initialize( void )
 {
     INTCONSET = _INTCON_MVEC_MASK;
+    
+    /* Set up priority / subpriority of enabled interrupts */
+    IPC3SET = 0x40000 | 0x0;  /* TIMER_3:  Priority 1 / Subpriority 0 */
 }
 
 
