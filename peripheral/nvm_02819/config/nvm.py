@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -23,28 +23,208 @@
 
 global nvmInstanceName
 
+def nvmSetMemoryDependency(symbol, event):
+    symbol.setVisible(event["value"])
+
+def setNVMInterruptData(status):
+
+    Database.setSymbolValue("core", nvmInterruptVector, status, 1)
+    Database.setSymbolValue("core", nvmInterruptHandlerLock, status, 1)
+
+    if status == True:
+        Database.setSymbolValue("core", nvmInterruptHandler, nvmInstanceName.getValue() + "_InterruptHandler", 1)
+    else:
+        Database.setSymbolValue("core", nvmInterruptHandler, "FLASH_CONTROL_Handler", 1)
+
+def updateNVMInterruptData(symbol, event):
+
+    if event["id"] == "INTERRUPT_ENABLE":
+        setNVMInterruptData(event["value"])
+
+    if nvmInterruptEnable.getValue() == True and Database.getSymbolValue("core", nvmInterruptVectorUpdate) == True:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def _get_enblReg_parms(vectorNumber):
+
+    # This takes in vector index for interrupt, and returns the IECx register name as well as
+    # mask and bit location within it for given interrupt
+    temp = float(vectorNumber) / 32.0
+    index = int(vectorNumber / 32)
+    regName = "IEC" + str(index)
+    bit = float(temp % 1)
+    bitPosn = int(32.0 * bit)
+    return regName, str(bitPosn)
+
+def _get_statReg_parms(vectorNumber):
+
+    # This takes in vector index for interrupt, and returns the IFSx register name as well as
+    # mask and bit location within it for given interrupt
+    temp = float(vectorNumber) / 32.0
+    index = int(vectorNumber / 32)
+    regName = "IFS" + str(index)
+    bit = float(temp % 1)
+    bitPosn = int(32.0 * bit)
+    return regName, str(bitPosn)
+
+def getIRQnumber(string):
+
+    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+
+    for param in interruptsChildren:
+        modInst = param.getAttribute("name")
+        if string == modInst:
+            irq_index = param.getAttribute("index")
+
+    return irq_index
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
+
 def instantiateComponent(nvmComponent):
 
     global nvmInstanceName
+    global nvmInterruptVector
+    global nvmInterruptHandlerLock
+    global nvmInterruptHandler
+    global nvmInterruptVectorUpdate
+    global nvmInterruptEnable
 
     nvmInstanceName = nvmComponent.createStringSymbol("NVM_INSTANCE_NAME", None)
     nvmInstanceName.setVisible(False)
     nvmInstanceName.setDefaultValue(nvmComponent.getID().upper())
     Log.writeInfoMessage("Running " + nvmInstanceName.getValue())
 
-    #Flash Address
     nvmFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"code\"]")
+
+    ##### Do not modify below symbol names as they are used by Memory Driver #####
+
+    flashStartAddress = nvmFlashNode.getAttribute("start")
+
+    #Convert Physical Address to Virtual Address 0x1Dxxxxx to 0x9Dxxxx
+    flashStartAddress = flashStartAddress[:2] + flashStartAddress[2:].replace('1', '9')
+
+    #Flash Address
     nvmSym_FLASH_ADDRESS = nvmComponent.createStringSymbol("FLASH_START_ADDRESS", None)
     nvmSym_FLASH_ADDRESS.setVisible(False)
-    nvmSym_FLASH_ADDRESS.setDefaultValue(nvmFlashNode.getAttribute("start"))
+    nvmSym_FLASH_ADDRESS.setDefaultValue(flashStartAddress)
 
     #Flash size
     nvmSym_FLASH_SIZE = nvmComponent.createStringSymbol("FLASH_SIZE", None)
     nvmSym_FLASH_SIZE.setVisible(False)
     nvmSym_FLASH_SIZE.setDefaultValue(nvmFlashNode.getAttribute("size"))
+
+    #Flash Row size
+    nvmSym_FLASH_PROGRAM_SIZE = nvmComponent.createStringSymbol("FLASH_PROGRAM_SIZE", None)
+    nvmSym_FLASH_PROGRAM_SIZE.setVisible(False)
+    nvmSym_FLASH_PROGRAM_SIZE.setDefaultValue("0x800")
+
+    #Flash Page size
+    nvmSym_ERASE_SIZE = nvmComponent.createStringSymbol("FLASH_ERASE_SIZE", None)
+    nvmSym_ERASE_SIZE.setVisible(False)
+    nvmSym_ERASE_SIZE.setDefaultValue("0x4000")
+
+    #Configuration when interfaced with memory driver
+    nvmSym_MemoryDriver = nvmComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", None)
+    nvmSym_MemoryDriver.setLabel("Memory Driver Connected")
+    nvmSym_MemoryDriver.setVisible(False)
+    nvmSym_MemoryDriver.setDefaultValue(False)
+
+    offsetStart = (int(nvmSym_FLASH_SIZE.getValue(),16) / 2)
+
+    nvmOffset = int(flashStartAddress,16) + offsetStart
+    nvmOffset = format(nvmOffset, 'x')
+
+    nvmSym_MemoryStartAddr = nvmComponent.createStringSymbol("START_ADDRESS", None)
+    nvmSym_MemoryStartAddr.setLabel("NVM Media Start Address")
+    nvmSym_MemoryStartAddr.setVisible(False)
+    nvmSym_MemoryStartAddr.setDefaultValue(nvmOffset)
+    nvmSym_MemoryStartAddr.setDependencies(nvmSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
+
+    memMediaSizeKB = (offsetStart / 1024)
+
+    nvmSym_MemoryMediaSize = nvmComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", None)
+    nvmSym_MemoryMediaSize.setLabel("NVM Media Size (KB)")
+    nvmSym_MemoryMediaSize.setVisible(False)
+    nvmSym_MemoryMediaSize.setDefaultValue(memMediaSizeKB)
+    nvmSym_MemoryMediaSize.setDependencies(nvmSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
+
+    nvmSym_MemoryEraseEnable = nvmComponent.createBooleanSymbol("ERASE_ENABLE", None)
+    nvmSym_MemoryEraseEnable.setLabel("NVM Erase Enable")
+    nvmSym_MemoryEraseEnable.setVisible(False)
+    nvmSym_MemoryEraseEnable.setDefaultValue(True)
+    nvmSym_MemoryEraseEnable.setReadOnly(True)
+
+    nvmSym_MemoryEraseBufferSize = nvmComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", None)
+    nvmSym_MemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
+    nvmSym_MemoryEraseBufferSize.setVisible(False)
+    nvmSym_MemoryEraseBufferSize.setDefaultValue(int(nvmSym_ERASE_SIZE.getValue(), 16))
+    nvmSym_MemoryEraseBufferSize.setDependencies(nvmSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
+
+    nvmSym_MemoryEraseComment = nvmComponent.createCommentSymbol("ERASE_COMMENT", None)
+    nvmSym_MemoryEraseComment.setVisible(False)
+    nvmSym_MemoryEraseComment.setLabel("*** Should be equal to Page Erase Size ***")
+    nvmSym_MemoryEraseComment.setDependencies(nvmSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
+
+    ################# Interrupt Settings ###########################
+
+    # Get register names, mask values, bit shifts based on vector number
+    nvmInterruptVector = "FLASH_CONTROL_INTERRUPT_ENABLE"
+    nvmInterruptHandler = "FLASH_CONTROL_INTERRUPT_HANDLER"
+    nvmInterruptHandlerLock = "FLASH_CONTROL_INTERRUPT_HANDLER_LOCK"
+    nvmInterruptVectorUpdate = "FLASH_CONTROL_INTERRUPT_ENABLE_UPDATE"
+    nvmIrq_index = int(getIRQnumber("FLASH_CONTROL"))
+
+    #Configures the library for interrupt mode operations
+    nvmInterruptEnable = nvmComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
+    nvmInterruptEnable.setLabel("Enable Interrupt?")
+    nvmInterruptEnable.setDefaultValue(True)
+
+    nvmInterruptComment = nvmComponent.createCommentSymbol("NVM_INTRRUPT_ENABLE_COMMENT", None)
+    nvmInterruptComment.setLabel("Warning!!! " + nvmInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
+    nvmInterruptComment.setVisible(False)
+    nvmInterruptComment.setDependencies(updateNVMInterruptData, ["INTERRUPT_ENABLE", "core." + nvmInterruptVectorUpdate])
+
+    setNVMInterruptData(True)
+
+    enblRegName, enblBitPosn = _get_enblReg_parms(nvmIrq_index)
+    statRegName, statBitPosn = _get_statReg_parms(nvmIrq_index)
+
+    # Below create family-specific register names / masking needed by ftl file
+    nvmEnblRegWrt = nvmComponent.createStringSymbol("NVM_IEC_REG", None)
+    nvmEnblRegWrt.setDefaultValue(enblRegName)
+    nvmEnblRegWrt.setVisible(False)
+
+    nvmEnblRegVal = nvmComponent.createStringSymbol("NVM_IEC_REG_VALUE", None)
+    nvmEnblRegVal.setDefaultValue(str(hex(1<<int(enblBitPosn))))
+    nvmEnblRegVal.setVisible(False)
+
+    nvmStatRegRd = nvmComponent.createStringSymbol("NVM_IFS_REG", None)
+    nvmStatRegRd.setDefaultValue(statRegName)
+    nvmStatRegRd.setVisible(False)
+
+    nvmStatRegShiftVal = nvmComponent.createStringSymbol("NVM_IFS_REG_VALUE", None)
+    nvmStatRegShiftVal.setDefaultValue(str(hex(1<<int(statBitPosn))))
+    nvmStatRegShiftVal.setVisible(False)
+
+    nvmVectorNum = nvmComponent.createIntegerSymbol("NVM_VECTOR_NUMBER", None)
+    nvmVectorNum.setDefaultValue(nvmIrq_index)
+    nvmVectorNum.setVisible(False)
+
+    writeApiName = nvmComponent.getID().upper() + "_RowWrite"
+    eraseApiName = nvmComponent.getID().upper() + "_PageErase"
+
+    nvmWriteApiName = nvmComponent.createStringSymbol("WRITE_API_NAME", None)
+    nvmWriteApiName.setVisible(False)
+    nvmWriteApiName.setReadOnly(True)
+    nvmWriteApiName.setDefaultValue(writeApiName)
+
+    nvmEraseApiName = nvmComponent.createStringSymbol("ERASE_API_NAME", None)
+    nvmEraseApiName.setVisible(False)
+    nvmEraseApiName.setReadOnly(True)
+    nvmEraseApiName.setDefaultValue(eraseApiName)
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
