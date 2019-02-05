@@ -19,7 +19,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -55,7 +55,6 @@
 /*  This section lists the other files that are included in this file.
 */
 #include <stddef.h>
-#include <stdbool.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -83,12 +82,12 @@ extern "C" {
     Use to register a callback with the TMR.
 
   Description:
-    When a match is asserted, a callback can be activated. 
+    When a match is asserted, a callback can be activated.
     Use TMR_CALLBACK as the function pointer to register the callback
     with the match.
 
   Remarks:
-    The callback should look like: 
+    The callback should look like:
       void callback(handle, context);
 	Make sure the return value and parameters of the callback are correct.
 */

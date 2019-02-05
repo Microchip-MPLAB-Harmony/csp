@@ -19,7 +19,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -45,7 +45,6 @@
 #define PLIB_${TMR_INSTANCE_NAME}_H
 
 #include <stddef.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
 #include "plib_tmr_common.h"
@@ -64,8 +63,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define TIMER${TMR_INSTANCE_NUM}_EXT_CLOCK_INPUT_FREQ  10000000
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -79,11 +76,19 @@ void ${TMR_INSTANCE_NAME}_Start(void);
 
 void ${TMR_INSTANCE_NAME}_Stop(void);
 
+<#if TIMER_32BIT_MODE_SEL =="0">
 void ${TMR_INSTANCE_NAME}_PeriodSet(uint16_t);
 
 uint16_t ${TMR_INSTANCE_NAME}_PeriodGet(void);
 
 uint16_t ${TMR_INSTANCE_NAME}_CounterGet(void);
+<#else>
+void ${TMR_INSTANCE_NAME}_PeriodSet(uint32_t);
+
+uint32_t ${TMR_INSTANCE_NAME}_PeriodGet(void);
+
+uint32_t ${TMR_INSTANCE_NAME}_CounterGet(void);
+</#if>
 
 uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void);
 
