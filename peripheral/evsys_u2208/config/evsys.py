@@ -48,7 +48,6 @@ def userStatus(symbol,event):
     channelNumber = int(str(symbol.getID()).split("EVSYS_CHANNEL_")[1].split("_USER_READY")[0])
     if event["id"].startswith("EVSYS_USER_"):
         channelAssigned = event["value"] - 1
-        channelUser = user.get(int(event["id"].split("EVSYS_USER_")[1]))
         channelUserMap[event["id"]] = channelAssigned
 
     userAvailable = False
@@ -92,8 +91,10 @@ def evsysIntset(interrupt, val):
     for id in range(0, channel):
         event = Database.getSymbolValue(val["namespace"],"EVSYS_CHANNEL_" + str(id) + "_EVENT")
         overflow = Database.getSymbolValue(val["namespace"],"EVSYS_CHANNEL_" + str(id) + "_OVERRUN")
+        if id > 7:
+            id = id + 8
         if event:
-            evsysInt |= 1 << (id + 16)
+            evsysInt |= 1 << (id + 8)
         if overflow:
             evsysInt |= 1<< (id)
     interrupt.setValue(bool(evsysInt), 2)
@@ -132,7 +133,7 @@ def instantiateComponent(evsysComponent):
     evsysGenerator = []
     channelUserDependency = []
 
-    evsysInstanceName = evsysComponent.createStringSymbol("EVSYS_INSTANCE_NAME", None);
+    evsysInstanceName = evsysComponent.createStringSymbol("EVSYS_INSTANCE_NAME", None)
     evsysInstanceName.setVisible(False)
     evsysInstanceName.setDefaultValue(evsysComponent.getID().upper())
     Log.writeInfoMessage("Running " + evsysInstanceName.getValue())
