@@ -236,31 +236,49 @@ ${CLK_INIT_LIST}
     </#if>
     </#if>
 </#list>
+    <#if PM_APBA_DIV != "0">
 
+    /* Configure APBA Divider */
+    PM_REGS->PM_APBASEL = ${PM_APBA_DIV};
+    </#if>
+    <#if PM_APBB_DIV != "0">
+
+    /* Configure APBB Divider */
+    PM_REGS->PM_APBBSEL = ${PM_APBB_DIV};
+    </#if>
+    <#if PM_APBC_DIV != "0">
+    
+    /* Configure APBC Divider */
+    PM_REGS->PM_APBCSEL = ${PM_APBC_DIV};
+    </#if>
     <#if PM_AHB_INITIAL_VALUE != "0x7f">
+
     /* Configure the AHB Bridge Clocks */
     PM_REGS->PM_AHBMASK = ${PM_AHB_INITIAL_VALUE};
 
     </#if>
     <#if PM_APBA_INITIAL_VALUE != "0x7f">
+
     /* Configure the APBA Bridge Clocks */
     PM_REGS->PM_APBAMASK = ${PM_APBA_INITIAL_VALUE};
 
     </#if>
     <#if PM_APBB_INITIAL_VALUE != "0x7f">
+
     /* Configure the APBB Bridge Clocks */
     PM_REGS->PM_APBBMASK = ${PM_APBB_INITIAL_VALUE};
 
     </#if>
     <#if PM_APBC_INITIAL_VALUE != "0x10000">
     <#if PM_APBC_INITIAL_VALUE??>
+
     /* Configure the APBC Bridge Clocks */
     PM_REGS->PM_APBCMASK = ${PM_APBC_INITIAL_VALUE};
-
     </#if>
     </#if>
     <#if PM_APBD_INITIAL_VALUE??>
     <#if PM_APBD_INITIAL_VALUE != "0x0">
+
     /* Configure the APBD Bridge Clocks */
     PM_REGS->PM_APBDMASK = ${PM_APBD_INITIAL_VALUE};
 

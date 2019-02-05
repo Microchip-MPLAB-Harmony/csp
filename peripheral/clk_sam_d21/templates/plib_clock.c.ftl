@@ -270,7 +270,22 @@ ${CLK_INIT_LIST}
     </#if>
     </#if>
 </#list>
+    <#if PM_APBA_DIV != "0">
 
+    /* Configure APBA Divider */
+    PM_REGS->PM_APBASEL = ${PM_APBA_DIV};
+    </#if>
+    <#if PM_APBB_DIV != "0">
+
+    /* Configure APBB Divider */
+    PM_REGS->PM_APBBSEL = ${PM_APBB_DIV};
+    </#if>
+    <#if PM_APBC_DIV != "0">
+    
+    /* Configure APBC Divider */
+    PM_REGS->PM_APBCSEL = ${PM_APBC_DIV};
+    </#if>
+    
     <#if PM_AHB_INITIAL_VALUE != "0x7f">
     /* Configure the AHB Bridge Clocks */
     PM_REGS->PM_AHBMASK = ${PM_AHB_INITIAL_VALUE};

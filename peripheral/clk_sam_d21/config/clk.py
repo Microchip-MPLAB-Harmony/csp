@@ -1340,7 +1340,7 @@ for index in range(0, len(ahbNode.getChildren())):
 pm_AHB_Clock_Value = coreComponent.createStringSymbol("PM_AHB_INITIAL_VALUE",pmSym_Menu)
 pm_AHB_Clock_Value.setDefaultValue(str(ahbInit))
 pm_AHB_Clock_Value.setDependencies(ahbValue, gclkDependencyList)
-pm_AHB_Clock_Value.setReadOnly(True)
+pm_AHB_Clock_Value.setVisible(False)
 
 ahbMaskNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PM"]/register-group@[name="PM"]/register@[name="AHBMASK"]')
 ahbMaskValues = ahbMaskNode.getChildren()
@@ -1355,6 +1355,27 @@ apbInit = {"APBA" : "",
            "APBC" : "",
            "APBD" : ""
            }
+
+for index in range(0, numAPB):
+    bridgeName = "PM_" + bridges[index] + "SEL__" + bridges[index]
+    path = "/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"" + bridgeName + "DIV\"]"
+    print path
+    apbDivNode = ATDF.getNode(path)
+    apbDivValues = apbDivNode.getChildren()
+
+    pmAPBDiv = coreComponent.createKeyValueSetSymbol("PM_" + bridges[index] +"_DIV", pmSym_Menu)
+    pmAPBDiv.setLabel(bridges[index] + " Divider")
+    for i in range(0, len(apbDivValues)):
+        key = apbDivValues[i].getAttribute("name")
+        value = apbDivValues[i].getAttribute("value")
+        caption = apbDivValues[i].getAttribute("caption")
+        pmAPBDiv.addKey(key, value, caption)
+
+    pmAPBDiv.setOutputMode("Value")
+    pmAPBDiv.setDisplayMode("Key")
+    pmAPBDiv.setDefaultValue(0)
+
+
 for index in range(0, numAPB):
     bridgeName = bridges[index]
     path = "/avr-tools-device-file/modules/module@[name=\"PM\"]/register-group@[name=\"PM\"]/register@[name=\"" + bridgeName + "MASK\"]"
@@ -1371,7 +1392,7 @@ for index in range(0, numAPB):
     #APB Bridge Clock Initial Settings
     pm_Clock_Value = coreComponent.createStringSymbol("PM_" + bridgeName +"_INITIAL_VALUE",pmSym_Menu)
     pm_Clock_Value.setDefaultValue(str(apbInit[bridgeName]))
-    pm_Clock_Value.setReadOnly(True)
+    pm_Clock_Value.setVisible(False)
 
 pm_Clock_Value.setDependencies(apbValue, gclkDependencyList)
 
