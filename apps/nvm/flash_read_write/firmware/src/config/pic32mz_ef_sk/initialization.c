@@ -44,6 +44,7 @@
 // *****************************************************************************
 // *****************************************************************************
 #include "definitions.h"
+#include "device.h"
 
 
 
@@ -52,12 +53,11 @@
 // Section: Configuration Bits
 // ****************************************************************************
 // ****************************************************************************
-// <editor-fold defaultstate="collapsed" desc="Configuration Bits">
 
 /*** DEVCFG0 ***/
 #pragma config DEBUG =      OFF
 #pragma config JTAGEN =     ON
-#pragma config ICESEL =     ICS_PGx1
+#pragma config ICESEL =     ICS_PGx2
 #pragma config TRCEN =      ON
 #pragma config BOOTISA =    MIPS32
 #pragma config FECCCON =    OFF_UNLOCKED
@@ -81,11 +81,11 @@
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
 #pragma config WDTSPGM =    STOP
-#pragma config FWDTEN =     ON
+#pragma config FWDTEN =     OFF
 #pragma config WINDIS =     NORMAL
 #pragma config FWDTWINSZ =  WINSZ_75
 #pragma config DMTCNT =     DMT31
-#pragma config FDMTEN =     ON
+#pragma config FDMTEN =     OFF
 
 /*** DEVCFG2 ***/
 #pragma config FPLLIDIV =   DIV_1
@@ -109,13 +109,6 @@
 #pragma config TSEQ =       65535
 #pragma config CSEQ =       65535
 
-
-
-
-
-
-
-// </editor-fold>
 
 
 
@@ -167,20 +160,22 @@ void SYS_Initialize ( void* data )
     CLK_Initialize();
 	GPIO_Initialize();
 
-    INT_Initialize();
+
     WDT_Initialize();
 
 
 
 
 
+    EVIC_Initialize();
+
+	/* Enable global interrupts */
+    __builtin_enable_interrupts();
 
 
-  
 }
 
 
 /*******************************************************************************
  End of File
 */
-

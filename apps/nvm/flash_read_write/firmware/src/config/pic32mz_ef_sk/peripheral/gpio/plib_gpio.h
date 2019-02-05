@@ -17,7 +17,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -61,6 +61,14 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/*** Macros for LED1 pin ***/
+#define LED1_Set()               (LATHSET = (1<<0))
+#define LED1_Clear()             (LATHCLR = (1<<0))
+#define LED1_Toggle()            (LATHINV= (1<<0))
+#define LED1_Get()               ((PORTH >> 0) & 0x1)
+#define LED1_OutputEnable()      (TRISHCLR = (1<<0))
+#define LED1_InputEnable()       (TRISHSET = (1<<0))
+#define LED1_PIN                  GPIO_PIN_RH0
 
 
 // *****************************************************************************
@@ -125,114 +133,114 @@ typedef enum
     GPIO_PIN_RA10 = 10,
     GPIO_PIN_RA14 = 14,
     GPIO_PIN_RA15 = 15,
-    GPIO_PIN_RB0 = 32,
-    GPIO_PIN_RB1 = 33,
-    GPIO_PIN_RB2 = 34,
-    GPIO_PIN_RB3 = 35,
-    GPIO_PIN_RB4 = 36,
-    GPIO_PIN_RB5 = 37,
-    GPIO_PIN_RB6 = 38,
-    GPIO_PIN_RB7 = 39,
-    GPIO_PIN_RB8 = 40,
-    GPIO_PIN_RB9 = 41,
-    GPIO_PIN_RB10 = 42,
-    GPIO_PIN_RB11 = 43,
-    GPIO_PIN_RB12 = 44,
-    GPIO_PIN_RB13 = 45,
-    GPIO_PIN_RB14 = 46,
-    GPIO_PIN_RB15 = 47,
-    GPIO_PIN_RC1 = 65,
-    GPIO_PIN_RC2 = 66,
-    GPIO_PIN_RC3 = 67,
-    GPIO_PIN_RC4 = 68,
-    GPIO_PIN_RC12 = 76,
-    GPIO_PIN_RC13 = 77,
-    GPIO_PIN_RC14 = 78,
-    GPIO_PIN_RC15 = 79,
-    GPIO_PIN_RD0 = 96,
-    GPIO_PIN_RD1 = 97,
-    GPIO_PIN_RD2 = 98,
-    GPIO_PIN_RD3 = 99,
-    GPIO_PIN_RD4 = 100,
-    GPIO_PIN_RD5 = 101,
-    GPIO_PIN_RD6 = 102,
-    GPIO_PIN_RD7 = 103,
-    GPIO_PIN_RD9 = 105,
-    GPIO_PIN_RD10 = 106,
-    GPIO_PIN_RD11 = 107,
-    GPIO_PIN_RD12 = 108,
-    GPIO_PIN_RD13 = 109,
-    GPIO_PIN_RD14 = 110,
-    GPIO_PIN_RD15 = 111,
-    GPIO_PIN_RE0 = 128,
-    GPIO_PIN_RE1 = 129,
-    GPIO_PIN_RE2 = 130,
-    GPIO_PIN_RE3 = 131,
-    GPIO_PIN_RE4 = 132,
-    GPIO_PIN_RE5 = 133,
-    GPIO_PIN_RE6 = 134,
-    GPIO_PIN_RE7 = 135,
-    GPIO_PIN_RE8 = 136,
-    GPIO_PIN_RE9 = 137,
-    GPIO_PIN_RF0 = 160,
-    GPIO_PIN_RF1 = 161,
-    GPIO_PIN_RF2 = 162,
-    GPIO_PIN_RF3 = 163,
-    GPIO_PIN_RF4 = 164,
-    GPIO_PIN_RF5 = 165,
-    GPIO_PIN_RF8 = 168,
-    GPIO_PIN_RF12 = 172,
-    GPIO_PIN_RF13 = 173,
-    GPIO_PIN_RG0 = 192,
-    GPIO_PIN_RG1 = 193,
-    GPIO_PIN_RG6 = 198,
-    GPIO_PIN_RG7 = 199,
-    GPIO_PIN_RG8 = 200,
-    GPIO_PIN_RG9 = 201,
-    GPIO_PIN_RG12 = 204,
-    GPIO_PIN_RG13 = 205,
-    GPIO_PIN_RG14 = 206,
-    GPIO_PIN_RG15 = 207,
-    GPIO_PIN_RH0 = 224,
-    GPIO_PIN_RH1 = 225,
-    GPIO_PIN_RH2 = 226,
-    GPIO_PIN_RH3 = 227,
-    GPIO_PIN_RH4 = 228,
-    GPIO_PIN_RH5 = 229,
-    GPIO_PIN_RH6 = 230,
-    GPIO_PIN_RH7 = 231,
-    GPIO_PIN_RH8 = 232,
-    GPIO_PIN_RH9 = 233,
-    GPIO_PIN_RH10 = 234,
-    GPIO_PIN_RH11 = 235,
-    GPIO_PIN_RH12 = 236,
-    GPIO_PIN_RH13 = 237,
-    GPIO_PIN_RH14 = 238,
-    GPIO_PIN_RH15 = 239,
-    GPIO_PIN_RJ0 = 256,
-    GPIO_PIN_RJ1 = 257,
-    GPIO_PIN_RJ2 = 258,
-    GPIO_PIN_RJ3 = 259,
-    GPIO_PIN_RJ4 = 260,
-    GPIO_PIN_RJ5 = 261,
-    GPIO_PIN_RJ6 = 262,
-    GPIO_PIN_RJ7 = 263,
-    GPIO_PIN_RJ8 = 264,
-    GPIO_PIN_RJ9 = 265,
-    GPIO_PIN_RJ10 = 266,
-    GPIO_PIN_RJ11 = 267,
-    GPIO_PIN_RJ12 = 268,
-    GPIO_PIN_RJ13 = 269,
-    GPIO_PIN_RJ14 = 270,
-    GPIO_PIN_RJ15 = 271,
-    GPIO_PIN_RK0 = 288,
-    GPIO_PIN_RK1 = 289,
-    GPIO_PIN_RK2 = 290,
-    GPIO_PIN_RK3 = 291,
-    GPIO_PIN_RK4 = 292,
-    GPIO_PIN_RK5 = 293,
-    GPIO_PIN_RK6 = 294,
-    GPIO_PIN_RK7 = 295,
+    GPIO_PIN_RB0 = 16,
+    GPIO_PIN_RB1 = 17,
+    GPIO_PIN_RB2 = 18,
+    GPIO_PIN_RB3 = 19,
+    GPIO_PIN_RB4 = 20,
+    GPIO_PIN_RB5 = 21,
+    GPIO_PIN_RB6 = 22,
+    GPIO_PIN_RB7 = 23,
+    GPIO_PIN_RB8 = 24,
+    GPIO_PIN_RB9 = 25,
+    GPIO_PIN_RB10 = 26,
+    GPIO_PIN_RB11 = 27,
+    GPIO_PIN_RB12 = 28,
+    GPIO_PIN_RB13 = 29,
+    GPIO_PIN_RB14 = 30,
+    GPIO_PIN_RB15 = 31,
+    GPIO_PIN_RC1 = 33,
+    GPIO_PIN_RC2 = 34,
+    GPIO_PIN_RC3 = 35,
+    GPIO_PIN_RC4 = 36,
+    GPIO_PIN_RC12 = 44,
+    GPIO_PIN_RC13 = 45,
+    GPIO_PIN_RC14 = 46,
+    GPIO_PIN_RC15 = 47,
+    GPIO_PIN_RD0 = 48,
+    GPIO_PIN_RD1 = 49,
+    GPIO_PIN_RD2 = 50,
+    GPIO_PIN_RD3 = 51,
+    GPIO_PIN_RD4 = 52,
+    GPIO_PIN_RD5 = 53,
+    GPIO_PIN_RD6 = 54,
+    GPIO_PIN_RD7 = 55,
+    GPIO_PIN_RD9 = 57,
+    GPIO_PIN_RD10 = 58,
+    GPIO_PIN_RD11 = 59,
+    GPIO_PIN_RD12 = 60,
+    GPIO_PIN_RD13 = 61,
+    GPIO_PIN_RD14 = 62,
+    GPIO_PIN_RD15 = 63,
+    GPIO_PIN_RE0 = 64,
+    GPIO_PIN_RE1 = 65,
+    GPIO_PIN_RE2 = 66,
+    GPIO_PIN_RE3 = 67,
+    GPIO_PIN_RE4 = 68,
+    GPIO_PIN_RE5 = 69,
+    GPIO_PIN_RE6 = 70,
+    GPIO_PIN_RE7 = 71,
+    GPIO_PIN_RE8 = 72,
+    GPIO_PIN_RE9 = 73,
+    GPIO_PIN_RF0 = 80,
+    GPIO_PIN_RF1 = 81,
+    GPIO_PIN_RF2 = 82,
+    GPIO_PIN_RF3 = 83,
+    GPIO_PIN_RF4 = 84,
+    GPIO_PIN_RF5 = 85,
+    GPIO_PIN_RF8 = 88,
+    GPIO_PIN_RF12 = 92,
+    GPIO_PIN_RF13 = 93,
+    GPIO_PIN_RG0 = 96,
+    GPIO_PIN_RG1 = 97,
+    GPIO_PIN_RG6 = 102,
+    GPIO_PIN_RG7 = 103,
+    GPIO_PIN_RG8 = 104,
+    GPIO_PIN_RG9 = 105,
+    GPIO_PIN_RG12 = 108,
+    GPIO_PIN_RG13 = 109,
+    GPIO_PIN_RG14 = 110,
+    GPIO_PIN_RG15 = 111,
+    GPIO_PIN_RH0 = 112,
+    GPIO_PIN_RH1 = 113,
+    GPIO_PIN_RH2 = 114,
+    GPIO_PIN_RH3 = 115,
+    GPIO_PIN_RH4 = 116,
+    GPIO_PIN_RH5 = 117,
+    GPIO_PIN_RH6 = 118,
+    GPIO_PIN_RH7 = 119,
+    GPIO_PIN_RH8 = 120,
+    GPIO_PIN_RH9 = 121,
+    GPIO_PIN_RH10 = 122,
+    GPIO_PIN_RH11 = 123,
+    GPIO_PIN_RH12 = 124,
+    GPIO_PIN_RH13 = 125,
+    GPIO_PIN_RH14 = 126,
+    GPIO_PIN_RH15 = 127,
+    GPIO_PIN_RJ0 = 128,
+    GPIO_PIN_RJ1 = 129,
+    GPIO_PIN_RJ2 = 130,
+    GPIO_PIN_RJ3 = 131,
+    GPIO_PIN_RJ4 = 132,
+    GPIO_PIN_RJ5 = 133,
+    GPIO_PIN_RJ6 = 134,
+    GPIO_PIN_RJ7 = 135,
+    GPIO_PIN_RJ8 = 136,
+    GPIO_PIN_RJ9 = 137,
+    GPIO_PIN_RJ10 = 138,
+    GPIO_PIN_RJ11 = 139,
+    GPIO_PIN_RJ12 = 140,
+    GPIO_PIN_RJ13 = 141,
+    GPIO_PIN_RJ14 = 142,
+    GPIO_PIN_RJ15 = 143,
+    GPIO_PIN_RK0 = 144,
+    GPIO_PIN_RK1 = 145,
+    GPIO_PIN_RK2 = 146,
+    GPIO_PIN_RK3 = 147,
+    GPIO_PIN_RK4 = 148,
+    GPIO_PIN_RK5 = 149,
+    GPIO_PIN_RK6 = 150,
+    GPIO_PIN_RK7 = 151,
 
     /* This element should not be used in any of the GPIO APIs.
        It will be used by other modules or application to denote that none of the GPIO Pin is used */
@@ -273,42 +281,42 @@ void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask);
 
 static inline void GPIO_PinWrite(GPIO_PIN pin, bool value)
 {
-    GPIO_PortWrite(pin>>5, (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
+    GPIO_PortWrite(pin>>4, (uint32_t)(0x1) << (pin & 0xF), (uint32_t)(value) << (pin & 0xF));
 }
 
 static inline bool GPIO_PinRead(GPIO_PIN pin)
 {
-    return (bool)(((GPIO_PortRead(pin>>5)) >> (pin & 0x1F)) & 0x1);
+    return (bool)(((GPIO_PortRead(pin>>4)) >> (pin & 0xF)) & 0x1);
 }
 
 static inline bool GPIO_PinLatchRead(GPIO_PIN pin)
 {
-    return (bool)((GPIO_PortLatchRead(pin>>5) >> (pin & 0x1F)) & 0x1);
+    return (bool)((GPIO_PortLatchRead(pin>>4) >> (pin & 0xF)) & 0x1);
 }
 
 static inline void GPIO_PinToggle(GPIO_PIN pin)
 {
-    GPIO_PortToggle(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortToggle(pin>>4, 0x1 << (pin & 0xF));
 }
 
 static inline void GPIO_PinSet(GPIO_PIN pin)
 {
-    GPIO_PortSet(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortSet(pin>>4, 0x1 << (pin & 0xF));
 }
 
 static inline void GPIO_PinClear(GPIO_PIN pin)
 {
-    GPIO_PortClear(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortClear(pin>>4, 0x1 << (pin & 0xF));
 }
 
 static inline void GPIO_PinInputEnable(GPIO_PIN pin)
 {
-    GPIO_PortInputEnable(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortInputEnable(pin>>4, 0x1 << (pin & 0xF));
 }
 
 static inline void GPIO_PinOutputEnable(GPIO_PIN pin)
 {
-    GPIO_PortOutputEnable(pin>>5, 0x1 << (pin & 0x1F));
+    GPIO_PortOutputEnable(pin>>4, 0x1 << (pin & 0xF));
 }
 
 
