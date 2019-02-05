@@ -47,6 +47,18 @@
 #ifdef __cplusplus // Provide C++ Compatibility
  extern "C" {
 #endif
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface
+// *****************************************************************************
+// *****************************************************************************
+
+void WDT_Initialize( void );
+void WDT_Clear( void );
+void WDT_Enable( void );
+void WDT_Disable( void );
+
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif

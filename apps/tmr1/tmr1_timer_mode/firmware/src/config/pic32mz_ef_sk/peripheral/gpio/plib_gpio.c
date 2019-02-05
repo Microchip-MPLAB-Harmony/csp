@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -71,6 +71,8 @@ void GPIO_Initialize ( void )
     /* PORTG Initialization */
 
     /* PORTH Initialization */
+    TRISHCLR = 0x1; /* Direction Control */
+    ANSELHCLR = 0x1; /* Digital Mode Enable */
 
     /* PORTJ Initialization */
 
@@ -222,6 +224,7 @@ void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask)
 {
     *(volatile uint32_t *)(&TRISACLR + (port * 0x40)) = mask;
 }
+
 
 
 

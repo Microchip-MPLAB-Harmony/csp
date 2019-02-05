@@ -19,7 +19,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -45,7 +45,6 @@
 #define PLIB_TMR1_H
 
 #include <stddef.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
 #include "plib_tmr1_common.h"
@@ -64,41 +63,33 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this
-    interface and should be considered part of it.
-*/
 
-#define TIMER1_EXT_CLOCK_INPUT_FREQ  10000000
-
-	
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
-/*  Functions to support the system service for Timer.
-*/
-void TMR1_InterruptEnable();
-void TMR1_InterruptDisable();
-void TMR1_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_t context );
-void TIMER_1_Tasks (void);
-
 // *****************************************************************************
-void TMR1_Initialize();
+void TMR1_Initialize(void);
 
-void TMR1_Start();
+void TMR1_Start(void);
 
-void TMR1_Stop();
+void TMR1_Stop(void);
 
 void TMR1_PeriodSet(uint16_t);
 
-uint16_t TMR1_PeriodGet();
+uint16_t TMR1_PeriodGet(void);
 
-uint16_t TMR1_CounterGet();
+uint16_t TMR1_CounterGet(void);
 
-uint32_t TMR1_FrequencyGet();
+uint32_t TMR1_FrequencyGet(void);
 
+void TMR1_InterruptEnable(void);
+
+void TMR1_InterruptDisable(void);
+
+void TMR1_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
