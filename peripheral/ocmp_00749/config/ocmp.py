@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -39,7 +39,6 @@ global ocmpSym_OCxCON_OC32
 global ocmpSym_OCxCON_SIDL
 global ocmpSym_OCxCON_OCTSEL_ALT
 global ocmpSym_CFGCON_OCACLK
-global index
 
 ################################################################################
 #### Business Logic ####
@@ -87,7 +86,7 @@ def _get_bitfield_names(node, outputList):
 
     valueNodes = node.getChildren()
 
-    for bitfield in valueNodes:   ##  do this for all <value > entries for this bitfield
+    for bitfield in reversed(valueNodes):   ##  do this for all <value > entries for this bitfield
         dict = {}
         if bitfield.getAttribute("caption").lower() != "reserved":  ##  skip (unused) reserved fields
             dict["desc"] = bitfield.getAttribute("caption")
@@ -136,16 +135,16 @@ def ocmpTimerSourceVisibility(symbol, event):
 
 def ocmpCompareMax(symbol, event):
     if(event["value"] == 0):
-        symbol.setMax(0xFFFF)
+        symbol.setMax(65535)
     else:
-        symbol.setMax(0xFFFFFFFF)
+        symbol.setMax(4294967295)
 
 def ocmpSecondaryCompare(symbol, event):
     if (event["id"] == "OCMP_OCxCON_OC32"):
         if(event["value"] == 0):
-            symbol.setMax(0xFFFF)
+            symbol.setMax(65535)
         else:
-            symbol.setMax(0xFFFFFFFF)
+            symbol.setMax(4294967295)
     if(event["id"] == "OCMP_OCxCON_OCM"):
         #Secondary compare value is required only for dual compare match modes
         if(event["value"] == 4 or event["value"] == 5):
@@ -154,8 +153,8 @@ def ocmpSecondaryCompare(symbol, event):
             symbol.setVisible(False)
 
 def ocmpCommentVisible(symbol, event):
-    #Only for PWM mode
-    if (event["value"] == 6 or event["value"] == 7):
+    #Only for PWM mode and continuous pulse
+    if (int(event["value"]) > 4):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -174,7 +173,6 @@ def instantiateComponent(ocmpComponent):
     global ocmpSym_OCxCON_OC32
     global ocmpSym_OCxCON_SIDL
     global ocmpSym_CFGCON_OCACLK
-    global index
     global ocmpInterruptVector
     global ocmpInterruptHandlerLock
     global ocmpInterruptHandler
@@ -186,7 +184,10 @@ def instantiateComponent(ocmpComponent):
     ocmpInstanceName.setDefaultValue(ocmpComponent.getID().upper())
     Log.writeInfoMessage("Running " + ocmpInstanceName.getValue())
 
-    index = ocmpInstanceName.getValue()[-1]
+    ocmpInstanceNum = ocmpComponent.createStringSymbol("OCMP_INSTANCE_NUM", None)
+    ocmpInstanceNum.setVisible(False)
+    instanceNum = filter(str.isdigit,str(ocmpComponent.getID()))
+    ocmpInstanceNum.setDefaultValue(instanceNum)
 
     ocmpSymInterruptMode = ocmpComponent.createBooleanSymbol("OCMP_INTERRUPT_ENABLE", None)
     ocmpSymInterruptMode.setLabel("Enable Interrupt ?")
@@ -237,7 +238,7 @@ def instantiateComponent(ocmpComponent):
     ocmpSym_OCxCON_OCTSEL_ALT.setDependencies(ocmpSymbolVisible, ["OCMP_CFGCON_OCACLK"])
 
     ocmpSym_TIMER_COMMENT = ocmpComponent.createCommentSymbol("OCMP_TIMER_COMMENT", None)
-    ocmpSym_TIMER_COMMENT.setLabel("**** Configure Selected Timer Source (Timerx) in TMRx Component ****")
+    ocmpSym_TIMER_COMMENT.setLabel("**** Configure Selected Timer Source (Timer x) in TMRx Component ****")
     ocmpSym_TIMER_COMMENT.setVisible(True)
 
     ocmpxOC32_names = []
@@ -251,16 +252,18 @@ def instantiateComponent(ocmpComponent):
         ocmpSym_OCxCON_OC32.addKey( ii['desc'], ii['value'], ii['key'] )
     ocmpSym_OCxCON_OC32.setVisible(True)
 
-    ocmpSym_COMPARE_VAL = ocmpComponent.createHexSymbol("OCMP_OCxR", None)
+    ocmpSym_COMPARE_VAL = ocmpComponent.createLongSymbol("OCMP_OCxR", None)
     ocmpSym_COMPARE_VAL.setLabel("Compare Value")
-    ocmpSym_COMPARE_VAL.setMin(0x0)
-    ocmpSym_COMPARE_VAL.setMax(0xFFFF)
+    ocmpSym_COMPARE_VAL.setDefaultValue(2000)
+    ocmpSym_COMPARE_VAL.setMin(0)
+    ocmpSym_COMPARE_VAL.setMax(65535)
     ocmpSym_COMPARE_VAL.setDependencies(ocmpCompareMax, ["OCMP_OCxCON_OC32"])
 
-    ocmpSym_SEC_COMPARE_VAL = ocmpComponent.createHexSymbol("OCMP_OCxRS", None)
+    ocmpSym_SEC_COMPARE_VAL = ocmpComponent.createLongSymbol("OCMP_OCxRS", None)
     ocmpSym_SEC_COMPARE_VAL.setLabel("Secondary Compare Value")
-    ocmpSym_SEC_COMPARE_VAL.setMin(0x0)
-    ocmpSym_SEC_COMPARE_VAL.setMax(0xFFFF)
+    ocmpSym_SEC_COMPARE_VAL.setDefaultValue(4000)
+    ocmpSym_SEC_COMPARE_VAL.setMin(0)
+    ocmpSym_SEC_COMPARE_VAL.setMax(65535)
     ocmpSym_SEC_COMPARE_VAL.setVisible(False)
     ocmpSym_SEC_COMPARE_VAL.setDependencies(ocmpSecondaryCompare, ["OCMP_OCxCON_OC32", "OCMP_OCxCON_OCM"])
 
@@ -276,14 +279,14 @@ def instantiateComponent(ocmpComponent):
 
     #Collect user input to combine into OCxCON register
     ocmpSym_ICM = ocmpComponent.createHexSymbol("OCxCON_VALUE", None)
-    ocmpSym_ICM.setDefaultValue(0)
+    ocmpSym_ICM.setDefaultValue(0x1)
     ocmpSym_ICM.setVisible(False)
     depList = ["OCMP_OCxCON_OCM", "OCMP_CFGCON_OCACLK", "OCMP_OCxCON_OCTSEL", "OCMP_OCxCON_OCTSEL_ALT", "OCMP_OCxCON_OC32",
         "OCMP_OCxCON_SIDL"]
     ocmpSym_ICM.setDependencies(combineValues, depList)
 
     #Calculate the proper interrupt registers for IEC, IFS, IPC, priority shift, and subpriority shift
-    ocmpIrq = "OUTPUT_COMPARE_" + str(index)
+    ocmpIrq = "OUTPUT_COMPARE_" + str(instanceNum)
     ocmpInterruptVector = ocmpIrq + "_INTERRUPT_ENABLE"
     ocmpInterruptHandler = ocmpIrq + "_INTERRUPT_HANDLER"
     ocmpInterruptHandlerLock = ocmpIrq + "_INTERRUPT_HANDLER_LOCK"

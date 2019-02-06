@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -49,7 +49,7 @@
 
 // *****************************************************************************
 <#assign mode = OCMP_OCxCON_OCM?number>
-<#assign INDEX = OCMP_INSTANCE_NAME?remove_beginning("OCMP")>
+<#assign INDEX = OCMP_INSTANCE_NUM>
 
 <#if OCMP_INTERRUPT_ENABLE == true>
 
@@ -69,6 +69,14 @@ void ${OCMP_INSTANCE_NAME}_Initialize (void)
   <#if OCMP_CFGCON_OCACLK?c == 'true'>
     CFGCON |= _CFGCON_OCACLK_MASK;
   </#if>
+
+    OC${INDEX}R = ${OCMP_OCxR};
+    <#if mode == 4 || mode == 5>
+    OC${INDEX}RS = ${OCMP_OCxRS};
+    </#if>
+    <#if mode == 6 || mode == 7>
+    OC${INDEX}RS = ${OCMP_OCxR};
+    </#if>
 
 <#if OCMP_INTERRUPT_ENABLE == true>
     ${IEC_REG} = _${IEC_REG}_OC${INDEX}IE_MASK;
@@ -93,18 +101,33 @@ bool ${OCMP_INSTANCE_NAME}_FaultStatusGet (void)
 </#if>
 
 <#if mode lt 6>
+<#if OCMP_OCxCON_OC32 == "1">
 void ${OCMP_INSTANCE_NAME}_CompareValueSet (uint32_t value)
 {
     OC${INDEX}R = value;
 }
+<#else>
+void ${OCMP_INSTANCE_NAME}_CompareValueSet (uint16_t value)
+{
+    OC${INDEX}R = value;
+}
+</#if>
 </#if>
 
+<#if OCMP_OCxCON_OC32 == "1">
 uint32_t ${OCMP_INSTANCE_NAME}_CompareValueGet (void)
 {
     return OC${INDEX}R;
 }
+<#else>
+uint16_t ${OCMP_INSTANCE_NAME}_CompareValueGet (void)
+{
+    return (uint16_t)OC${INDEX}R;
+}
+</#if>
 
 <#if mode gt 3 >
+<#if OCMP_OCxCON_OC32 == "1">
 void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint32_t value)
 {
     OC${INDEX}RS = value;
@@ -114,6 +137,18 @@ uint32_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void)
 {
     return OC${INDEX}RS;
 }
+
+<#else>
+void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint16_t value)
+{
+    OC${INDEX}RS = value;
+}
+
+uint16_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void)
+{
+    return (uint16_t)OC${INDEX}RS;
+}
+</#if>
 </#if>
 
 <#if OCMP_INTERRUPT_ENABLE == true>
