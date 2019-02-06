@@ -103,8 +103,8 @@ def adcFreqCalc(symbol, event):
 
 def adcCalcConversionTime(adcSym_CONV_TIME, event):
     clock = adcGetPeripheralClock()
+    adcClockSourceInvalidSym.setVisible((clock == 0))
     if (clock == 0):
-        Log.writeErrorMessage("Peripheral clock frequency is zero")
         clock = 1
     prescaler = adcSym_MR_PRESCAL.getValue() + 1
     over_sampling_rate = adcSym_EMR_OSR_VALUE.getSelectedKey()
@@ -193,6 +193,7 @@ def adcSymbolVisible(symbol, event):
 def instantiateComponent(adcComponent):
     global adcInstanceName
     global interruptSymbolEnable
+    global adcClockSourceInvalidSym
 
     adcInstanceName = adcComponent.createStringSymbol("ADC_INSTANCE_NAME", None)
     adcInstanceName.setVisible(False)
@@ -249,6 +250,10 @@ def instantiateComponent(adcComponent):
                                     values[index].getAttribute("caption"))
             adcSym_EMR_SRCCLK.setOutputMode("Key")
             adcSym_EMR_SRCCLK.setDisplayMode("Key")
+
+    adcClockSourceInvalidSym = adcComponent.createCommentSymbol("ADC_CLK_SRC_INVALID_COMMENT", adcMenu)
+    adcClockSourceInvalidSym.setLabel("Warning!!! " + adcInstanceName.getValue() + " clock frequency is zero")
+    adcClockSourceInvalidSym.setVisible(False)
 
     #Clock prescaler
     global adcSym_MR_PRESCAL
@@ -334,7 +339,7 @@ def instantiateComponent(adcComponent):
     adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG6", "6", "TIOA3")
     adcSym_MR_TRGSEL_VALUE.addKey("TRGSEL_ADC_TRIG7", "7", "RTCOUT0")
     adcSym_MR_TRGSEL_VALUE.setDependencies(adcTriggerVisible, ["ADC_TRGR_MODE"])
-	
+
     #ADC Internal Periodic Trigger
     global adcSym_TRIGGER_TIME
     adcSym_TRIGGER_TIME = adcComponent.createIntegerSymbol("ADC_TRIGGER_TIME", adcSym_TRGR_MODE)
