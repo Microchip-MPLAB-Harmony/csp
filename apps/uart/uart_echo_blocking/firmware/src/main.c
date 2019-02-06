@@ -15,9 +15,9 @@
     "main" function calls the "SYS_Initialize" function to initialize the state
     machines of all modules in the system
  *******************************************************************************/
-// DOM-IGNORE-BEGIN
+
 /*******************************************************************************
-* Copyright (C) 2018-19 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -38,7 +38,6 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -49,53 +48,20 @@
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
-#include <string.h>
 #include "definitions.h"                // SYS function prototypes
-#include "device.h"
-
 
 #define RX_BUFFER_SIZE 256
+#define LED_On()                        LED_Set()
+#define LED_Off()                       LED_Clear()
 
-char messageStart[] = "**** UART Line Echo Demo ****\r\n\
-**** Demo uses blocking model of UART PLIB. ****\r\n\
-**** Enter a line of characters, press ENTER key and observe it echo back. ****\
-\r\n**** LED toggles on each time the line is echoed ****\r\n";
+char messageStart[] = "**** UART Line Echo Demo: Blocking Transfer without the interrupt ****\r\n\
+**** Type a line of characters and press the Enter key. **** \r\n\
+**** Entered line will be echoed back, and the LED is toggled. ****\r\n";
 char newline[] = "\r\n";
 char errorMessage[] = "\r\n**** UART error has occurred ****\r\n";
 char receiveBuffer[RX_BUFFER_SIZE] = {};
 char data = 0;
 
-/*LED Toggling subroutines*/
-void LED1_Initialize(void)
-{
-   *(&ODCBSET + (7 - 1) * 0x40) = 0;
-    *(&LATB + (7 - 1) * 0x40) = 0;
-    *(&TRISBCLR + (7 - 1) * 0x40) = 7;  
-    *(&CNCONBSET + (7 - 1) * 0x40) = _CNCONB_ON_MASK;
-    *(&ANSELBCLR + (7 - 1) * 0x40) = 0xFF8F;  
-    *(&CNENBSET + (7 - 1) * 0x40) = 0;
-    *(&CNPUBSET + (7 - 1) * 0x40) = 0;
-    *(&CNPDBSET + (7 - 1) * 0x40) = 0;    
-}
-
-#define LED1_Toggle()   *(&LATBINV + (7 - 1) * 0x40) = 1<<0;
-#define LED1_SET()      *(&LATBSET + (7 - 1) * 0x40) = 1<<0;
-
- //Convenient macro to do IOUNLOCK
-#define PPSUnLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=0;} 
-#define PPSLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=1;}
-
-void UART2_PortInitialization(void)
-{
-    /* set RG6 to digital input for UART2*/
-    ANSELGCLR = (1<<6); //
-    TRISGSET = (1<<6); //
-    /* Peripheral Pin Select (PPS) Settings for UART2 */
-    PPSUnLock();
-    U2RXRbits.U2RXR = 0x1; 
-    RPB14Rbits.RPB14R = 0x2;
-    PPSLock();     
-}
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -108,12 +74,11 @@ int main ( void )
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    UART2_PortInitialization();
-    LED1_Initialize();
-    LED1_SET();
+    LED_Off();
 
     /* Send start message */
     UART2_Write(&messageStart, sizeof(messageStart));
+
     while ( true )
     {
         /* Check if there is a received character */
@@ -125,10 +90,11 @@ int main ( void )
 
                 if((data == '\n') || (data == '\r'))
                 {
+                    UART2_Write(newline,sizeof(newline));
                     UART2_Write(receiveBuffer,rxCounter);
                     UART2_Write(newline,sizeof(newline));
                     rxCounter = 0;
-                    LED1_Toggle();
+                    LED_Toggle();
                 }
                 else
                 {
@@ -146,6 +112,7 @@ int main ( void )
 
     return ( EXIT_FAILURE );
 }
+
 
 /*******************************************************************************
  End of File

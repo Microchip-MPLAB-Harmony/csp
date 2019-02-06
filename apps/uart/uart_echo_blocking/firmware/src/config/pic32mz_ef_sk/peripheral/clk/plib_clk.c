@@ -62,8 +62,6 @@
 void CLK_Initialize( void )
 {
     bool int_flag = false;
-    volatile uint32_t *reg;
-    uint8_t ii;
     
     int_flag = (bool)__builtin_disable_interrupts();
     /* unlock system for clock configuration */
@@ -115,7 +113,6 @@ void CLK_Initialize( void )
     /* PBDIV = 1-1 */
     /* ON = 1                             */
     *(volatile uint32_t *)(&PB7DIV) = 0x8000;
-
 
     /* Enable Peripheral Bus 8 */
     /* PBDIV = 2-1 */
