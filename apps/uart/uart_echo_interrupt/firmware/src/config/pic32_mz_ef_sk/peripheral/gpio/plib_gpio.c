@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -59,6 +59,7 @@ void GPIO_Initialize ( void )
     /* PORTA Initialization */
 
     /* PORTB Initialization */
+    ANSELBCLR = 0x4000; /* Digital Mode Enable */
 
     /* PORTC Initialization */
 
@@ -69,19 +70,34 @@ void GPIO_Initialize ( void )
     /* PORTF Initialization */
 
     /* PORTG Initialization */
+    ANSELGCLR = 0x40; /* Digital Mode Enable */
 
     /* PORTH Initialization */
+    TRISHCLR = 0x1; /* Direction Control */
+    ANSELHCLR = 0x1; /* Digital Mode Enable */
 
     /* PORTJ Initialization */
 
     /* PORTK Initialization */
 
 
+    /* unlock system for PPS configuration */
+    SYSKEY = 0x00000000;
+    SYSKEY = 0xAA996655;
+    SYSKEY = 0x556699AA;
+    CFGCONbits.IOLOCK = 0;
 
     /* PPS Input Remapping */
+    U2RXR = 1;
 
     /* PPS Output Remapping */
+    RPB14R = 2;
 
+    /* Lock back the system after PPS configuration */
+    SYSKEY = 0x00000000;
+    SYSKEY = 0xAA996655;
+    SYSKEY = 0x556699AA;
+    CFGCONbits.IOLOCK = 1;
 
 }
 
@@ -222,6 +238,7 @@ void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask)
 {
     *(volatile uint32_t *)(&TRISACLR + (port * 0x40)) = mask;
 }
+
 
 
 

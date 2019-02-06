@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -41,7 +41,6 @@
 #include "device.h"
 #include "plib_uart2.h"
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: UART2 Implementation
@@ -50,146 +49,85 @@
 
 UART_OBJECT uart2Obj;
 
-void UART2_FAULT_Tasks (void)
-{   
-    /* Client must call UARTx_ErrorGet() function to clear the errors */
-    if( uart2Obj.faultCallback != NULL )
-    {
-        uart2Obj.faultCallback(uart2Obj.rxContext);
-    }
-    
-    /* Clear size and rx status */
-    uart2Obj.rxBusyStatus = false;
-    uart2Obj.rxSize = 0;
-    uart2Obj.rxProcessedSize = 0;
-    
-    /* If it's a overrun error then clear it to flush FIFO */
-    if(U2STA & _U2STA_OERR_MASK)
-    {
-        U2STACLR = _U2STA_OERR_MASK;
-    }  
-     /*Clear UART2 Error IRQ flag after clearing error */
-    IFS4CLR = _IFS4_U2EIF_MASK;	
-}
-
-void UART2_RX_Tasks (void)
-{    
-    if(uart2Obj.rxBusyStatus == true)
-    {
-        while((_U2STA_URXDA_MASK == (U2STA & _U2STA_URXDA_MASK)) && (uart2Obj.rxSize > uart2Obj.rxProcessedSize) )
-        {
-            uart2Obj.rxBuffer[uart2Obj.rxProcessedSize++] = (uint8_t )(U2RXREG);
-        }
-
-        /*Clear UART2 RX Interrupt flag after reading data buffer */
-        IFS4CLR = _IFS4_U2RXIF_MASK;
-        /*Check if the buffer is done */ 
-        if(uart2Obj.rxProcessedSize >= uart2Obj.rxSize)
-        {
-            uart2Obj.rxBusyStatus = false;
-            uart2Obj.rxSize = 0;
-            uart2Obj.rxProcessedSize = 0;
-            if(uart2Obj.rxCallback != NULL)
-            {
-                uart2Obj.rxCallback(uart2Obj.rxContext);
-            }
-        }
-    }
-    else
-    {
-        // Nothing to process 
-        ;
-    } 
-
-}
-
-
-void UART2_TX_Tasks (void)
-{
-    
-    if(uart2Obj.txBusyStatus == true)
-    {
-        while((_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK)) && (uart2Obj.txSize > uart2Obj.txProcessedSize) )
-        {
-            U2TXREG = uart2Obj.txBuffer[uart2Obj.txProcessedSize++];
-        }
-
-        /*Clear UART2TX Interrupt flag after writing to buffer*/
-        IFS4CLR = _IFS4_U2TXIF_MASK;
-
-        /* Check if the buffer is done */
-        if(uart2Obj.txProcessedSize >= uart2Obj.txSize)
-        {
-            uart2Obj.txBusyStatus = false;
-            uart2Obj.txSize = 0;
-            uart2Obj.txProcessedSize = 0;
-            
-            /* Disable the interrupt, to avoid calling ISR continuously*/
-            IEC4CLR = _IEC4_U2TXIE_MASK;
-            
-            if(uart2Obj.txCallback != NULL)
-            {
-                uart2Obj.txCallback(uart2Obj.txContext);
-            }
-        }
-    }
-    else
-    {
-        // Nothing to process 
-        ;
-    } 
-
-}
-
-
 void static UART2_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
     /* rxBufferLen = (FIFO level + RX register) */
     uint8_t rxBufferLen = UART_RXFIFO_DEPTH;
-    
+
     /* If it's a overrun error then clear it to flush FIFO */
     if(U2STA & _U2STA_OERR_MASK)
     {
-       U2STACLR = _U2STA_OERR_MASK;
-    } 
+        U2STACLR = _U2STA_OERR_MASK;
+    }
 
-    /* Read existing error bytes from FIFO to clear parity and framing error flags*/ 
+    /* Read existing error bytes from FIFO to clear parity and framing error flags */
     while(U2STA & (_U2STA_FERR_MASK | _U2STA_PERR_MASK))
     {
         dummyData = (uint8_t )(U2RXREG );
         rxBufferLen--;
-         /* Try to flush error bytes for one full FIFO and exit instead of
-         * blocking here if more error bytes are received*/
+
+        /* Try to flush error bytes for one full FIFO and exit instead of
+         * blocking here if more error bytes are received */
         if(0u ==  rxBufferLen)
         {
             break;
-        }      
+        }
     }
-    // Ignore the warning 
-    (void)dummyData; 
-     /* Clear error interrupt flag */
+
+    // Ignore the warning
+    (void)dummyData;
+
+    /* Clear error interrupt flag */
     IFS4CLR = _IFS4_U2EIF_MASK;
+
     /* Clear up the receive interrupt flag so that RX interrupt is not
-     * triggered for error bytes*/
+     * triggered for error bytes */
     IFS4CLR = _IFS4_U2RXIF_MASK;
+
     return;
 }
 
-UART_ERROR UART2_ErrorGet( void )
+void UART2_Initialize( void )
 {
-    UART_ERROR errors = UART_ERROR_NONE;
-    uint32_t status = U2STA;
+    /*Set up UxMODE bits */
+    /*STSEL  = 0*/
+    /*PDSEL = 0 */
 
-    errors = (UART_ERROR)(status & (_U2STA_OERR_MASK | _U2STA_FERR_MASK | _U2STA_PERR_MASK));
+    U2MODE = 0x8;
 
-    if(errors != UART_ERROR_NONE)
-    {
-        UART2_ErrorClear();
-    }
+    /*Enable UUART2 Receiver and Transmitter */
+    U2STASET = (_U2STA_UTXEN_MASK | _U2STA_URXEN_MASK);
 
-    /* All errors are cleared, but send the previous error state */
-    return errors;
+    /* BAUD Rate register Setup */
+    U2BRG = 216;
+
+    /*Setup UART2_FAULT Interrupt*/
+    /*Disable UART2_FAULT Interrupt*/
+    IEC4CLR = _IEC4_U2EIE_MASK;
+
+    /*Setup UART2_RX Interrupt*/
+    /*Disable UART2_RX Interrupt*/
+    IEC4CLR = _IEC4_U2RXIE_MASK;
+
+    /*Setup UART2_TX Interrupt*/
+    /*Disable UART2_TX Interrupt*/
+    IEC4CLR = _IEC4_U2TXIE_MASK;
+
+    /* Initialize instance object */
+    uart2Obj.rxBuffer = NULL;
+    uart2Obj.rxSize = 0;
+    uart2Obj.rxProcessedSize = 0;
+    uart2Obj.rxBusyStatus = false;
+    uart2Obj.rxCallback = NULL;
+    uart2Obj.txBuffer = NULL;
+    uart2Obj.txSize = 0;
+    uart2Obj.txProcessedSize = 0;
+    uart2Obj.txBusyStatus = false;
+    uart2Obj.txCallback = NULL;
+
+    /* Turn ON UART2*/
+    U2MODESET = _U2MODE_ON_MASK;
 }
 
 bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
@@ -200,7 +138,6 @@ bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
     uint32_t brgValLow = 0;
     uint32_t brgVal = 0;
     uint32_t uartMode;
-
 
     if((uart2Obj.rxBusyStatus == true) || (uart2Obj.txBusyStatus == true))
     {
@@ -216,31 +153,56 @@ bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
         }
 
         /* Calculate BRG value */
-        brgValLow = ((srcClkFreq /baud)>>4)-1;
-        brgValHigh = ((srcClkFreq /baud)>>2)-1;
+        brgValLow = ((srcClkFreq / baud) >> 4) - 1;
+        brgValHigh = ((srcClkFreq / baud) >> 2) - 1;
+
         /* Check if the baud value can be set with low baud settings */
         if((brgValHigh >= 0) && (brgValHigh <= UINT16_MAX))
         {
-            brgVal =  (((srcClkFreq >> 2) + (baud >> 1)) / baud ) - 1;  
+            brgVal =  (((srcClkFreq >> 2) + (baud >> 1)) / baud ) - 1;
             U2MODESET = _U2MODE_BRGH_MASK;
         }
         else if ((brgValLow >= 0) && (brgValLow <= UINT16_MAX))
         {
-            brgVal = ( ((srcClkFreq >> 4) + (baud >> 1)) / baud ) - 1;  
+            brgVal = ( ((srcClkFreq >> 4) + (baud >> 1)) / baud ) - 1;
             U2MODECLR = _U2MODE_BRGH_MASK;
-        } 
-        else  
+        }
+        else
         {
             return status;
-        }            
-      
+        }
+
+        if(setup->dataWidth == UART_DATA_9_BIT)
+        {
+            if(setup->parity != UART_PARITY_NONE)
+            {
+               return status;
+
+            }
+            else
+            {
+               /* Configure UART2 mode */
+               uartMode = U2MODE;
+               uartMode &= ~_U2MODE_PDSEL_MASK;
+               U2MODE = uartMode | setup->dataWidth;
+            }
+
+        }
+        else
+        {
+            /* Configure UART2 mode */
+            uartMode = U2MODE;
+            uartMode &= ~_U2MODE_PDSEL_MASK;
+            U2MODE = uartMode | setup->parity ;
+        }
+
         /* Configure UART2 mode */
         uartMode = U2MODE;
-        uartMode &= ~_U2MODE_PDSEL_MASK;
-        U2MODE = uartMode | setup->parity ;
+        uartMode &= ~_U2MODE_STSEL_MASK;
+        U2MODE = uartMode | setup->stopBits ;
 
         /* Configure UART2 Baud Rate */
-         U2BRG = brgVal;
+        U2BRG = brgVal;
 
         status = true;
     }
@@ -251,7 +213,6 @@ bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 bool UART2_Read( void *buffer, const size_t size )
 {
     bool status = false;
-
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if(NULL != lBuffer)
@@ -268,13 +229,17 @@ bool UART2_Read( void *buffer, const size_t size )
             uart2Obj.rxProcessedSize = 0;
             uart2Obj.rxBusyStatus = true;
             status = true;
-
         }
+
+        /*Enable UART2_FAULT Interrupt*/
+        IEC4SET = _IEC4_U2EIE_MASK;
+
+        /*Enable UART2_RX Interrupt*/
+        IEC4SET = _IEC4_U2RXIE_MASK;
     }
 
     return status;
 }
-
 
 bool UART2_Write( void *buffer, const size_t size )
 {
@@ -306,19 +271,27 @@ bool UART2_Write( void *buffer, const size_t size )
     return status;
 }
 
-void UART2_FaultCallbackRegister( UART_CALLBACK callback, uintptr_t context )
+UART_ERROR UART2_ErrorGet( void )
 {
-    uart2Obj.faultCallback = callback;
-    uart2Obj.faultContext = context;
+    UART_ERROR errors = UART_ERROR_NONE;
+    uint32_t status = U2STA;
 
+    errors = (UART_ERROR)(status & (_U2STA_OERR_MASK | _U2STA_FERR_MASK | _U2STA_PERR_MASK));
+
+    if(errors != UART_ERROR_NONE)
+    {
+        UART2_ErrorClear();
+    }
+
+    /* All errors are cleared, but send the previous error state */
+    return errors;
 }
-
 
 void UART2_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     uart2Obj.rxCallback = callback;
-    uart2Obj.rxContext = context;
 
+    uart2Obj.rxContext = context;
 }
 
 bool UART2_ReadIsBusy( void )
@@ -334,6 +307,7 @@ size_t UART2_ReadCountGet( void )
 void UART2_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     uart2Obj.txCallback = callback;
+
     uart2Obj.txContext = context;
 }
 
@@ -342,64 +316,96 @@ bool UART2_WriteIsBusy( void )
     return uart2Obj.txBusyStatus;
 }
 
-
 size_t UART2_WriteCountGet( void )
 {
     return uart2Obj.txProcessedSize;
 }
 
-
-
-
-void UART2_Initialize( void )
+void UART2_FAULT_InterruptHandler (void)
 {
-    /*Set up UxMODE bits */
-    /*STSEL  = 0*/
-    /*PDSEL = 0 */
-    
-    U2MODE = 0x8;
-    
-    /*Enable UUART2 Receiver and Transmitter */
-    U2STASET = (_U2STA_UTXEN_MASK | _U2STA_URXEN_MASK);
-    
-    /* BAUD Rate register Setup */
-    U2BRG = 2603;
-    
-    /*Setup UART2_FAULT Interrupt*/
-	/*Enable UART2_FAULT Interrupt*/
-    IEC4SET = _IEC4_U2EIE_MASK;
-    /* Priority		= 7	*/
-	/* Subpriority	= 3	*/
-    IPC36SET = 0x1f00;  
-  
-    /*Setup UART2_RX Interrupt*/
-	/*Enable UART2_RX Interrupt*/
-    IEC4SET = _IEC4_U2RXIE_MASK;
-    /* Priority		= 7	*/
-	/* Subpriority	= 3	*/
-    IPC36SET = 0x1f0000;
- 
-    /*Setup UART2_TX Interrupt*/
-	/*Disable UART2_TX Interrupt*/
-    IEC4CLR = _IEC4_U2TXIE_MASK;
-    
-    /* Priority		= 7	*/
-	/* Subpriority	= 3	*/
-    IPC36SET = 0x1f000000;     
+    /* Client must call UARTx_ErrorGet() function to clear the errors */
+    if( uart2Obj.rxCallback != NULL )
+    {
+        uart2Obj.rxCallback(uart2Obj.rxContext);
+    }
 
-    /* Initialize instance object */
-    uart2Obj.rxBuffer = NULL;
+    /* Clear size and rx status */
+    uart2Obj.rxBusyStatus = false;
     uart2Obj.rxSize = 0;
     uart2Obj.rxProcessedSize = 0;
-    uart2Obj.rxBusyStatus = false;
-    uart2Obj.rxCallback = NULL;
-    uart2Obj.txBuffer = NULL;
-    uart2Obj.txSize = 0;
-    uart2Obj.txProcessedSize = 0;
-    uart2Obj.txBusyStatus = false;
-    uart2Obj.txCallback = NULL;
-    uart2Obj.faultCallback = NULL;
 
-    /* Turn ON UART2*/
-    U2MODESET = _U2MODE_ON_MASK;
+    UART2_ErrorClear();
+
+    /* Disable the interrupt*/
+    IEC4CLR = _IEC4_U2EIE_MASK;
+}
+
+void UART2_RX_InterruptHandler (void)
+{
+    if(uart2Obj.rxBusyStatus == true)
+    {
+        while((_U2STA_URXDA_MASK == (U2STA & _U2STA_URXDA_MASK)) && (uart2Obj.rxSize > uart2Obj.rxProcessedSize) )
+        {
+            uart2Obj.rxBuffer[uart2Obj.rxProcessedSize++] = (uint8_t )(U2RXREG);
+        }
+
+        /* Clear UART2 RX Interrupt flag after reading data buffer */
+        IFS4CLR = _IFS4_U2RXIF_MASK;
+
+        /* Check if the buffer is done */
+        if(uart2Obj.rxProcessedSize >= uart2Obj.rxSize)
+        {
+            uart2Obj.rxBusyStatus = false;
+            uart2Obj.rxSize = 0;
+            uart2Obj.rxProcessedSize = 0;
+
+            /* Disable the interrupt*/
+            IEC4CLR = _IEC4_U2RXIE_MASK;
+
+            if(uart2Obj.rxCallback != NULL)
+            {
+                uart2Obj.rxCallback(uart2Obj.rxContext);
+            }
+        }
+    }
+    else
+    {
+        // Nothing to process
+        ;
+    }
+}
+
+void UART2_TX_InterruptHandler (void)
+{
+    if(uart2Obj.txBusyStatus == true)
+    {
+        while((_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK)) && (uart2Obj.txSize > uart2Obj.txProcessedSize) )
+        {
+            U2TXREG = uart2Obj.txBuffer[uart2Obj.txProcessedSize++];
+        }
+
+        /* Clear UART2TX Interrupt flag after writing to buffer */
+        IFS4CLR = _IFS4_U2TXIF_MASK;
+
+        /* Check if the buffer is done */
+        if(uart2Obj.txProcessedSize >= uart2Obj.txSize)
+        {
+            uart2Obj.txBusyStatus = false;
+            uart2Obj.txSize = 0;
+            uart2Obj.txProcessedSize = 0;
+
+            /* Disable the interrupt, to avoid calling ISR continuously*/
+            IEC4CLR = _IEC4_U2TXIE_MASK;
+
+            if(uart2Obj.txCallback != NULL)
+            {
+                uart2Obj.txCallback(uart2Obj.txContext);
+            }
+        }
+    }
+    else
+    {
+        // Nothing to process
+        ;
+    }
 }
