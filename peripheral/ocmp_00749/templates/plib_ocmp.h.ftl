@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -135,80 +135,31 @@ void ${OCMP_INSTANCE_NAME}_Disable (void);
 */
 bool ${OCMP_INSTANCE_NAME}_FaultStatusGet (void);
 </#if>
+
 <#if mode lt 6>
-// *****************************************************************************
-/* Function:
-   void ${OCMP_INSTANCE_NAME}_CompareValueSet (uint32_t value)
-
-  Summary:
-    Set ${OCMP_INSTANCE_NAME} Compare Register
-
-  Description:
-    Sets the value in the Compare Register
-
-  Parameters:
-    uint32_t
-
-  Returns:
-    void
-*/
+<#if OCMP_OCxCON_OC32 == "1">
 void ${OCMP_INSTANCE_NAME}_CompareValueSet (uint32_t value);
+<#else>
+void ${OCMP_INSTANCE_NAME}_CompareValueSet (uint16_t value);
+</#if>
 </#if>
 
-// *****************************************************************************
-/* Function:
-   uint32_t ${OCMP_INSTANCE_NAME}_CompareValueGet (void)
-
-  Summary:
-    Get ${OCMP_INSTANCE_NAME} Compare Register
-
-  Description:
-    Gets the value in the Compare Register
-
-  Parameters:
-    void
-
-  Returns:
-    uint32_t
-*/
+<#if OCMP_OCxCON_OC32 == "1">
 uint32_t ${OCMP_INSTANCE_NAME}_CompareValueGet (void);
-<#if mode gt 3 >
-// *****************************************************************************
-/* Function:
-   uint32_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void)
-
-  Summary:
-    Get ${OCMP_INSTANCE_NAME} Secondary Compare Register
-
-  Description:
-    Gets the value in the Secondary Compare Register
-
-  Parameters:
-    void
-
-  Returns:
-    uint32_t
-*/
-uint32_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void);
-
-// *****************************************************************************
-/* Function:
-   void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint32_t value)
-
-  Summary:
-    Set ${OCMP_INSTANCE_NAME} Secondary Compare Register
-
-  Description:
-    Sets the value in the Secondary Compare Register
-
-  Parameters:
-    uint32_t
-
-  Returns:
-    void
-*/
-void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint32_t value);
+<#else>
+uint16_t ${OCMP_INSTANCE_NAME}_CompareValueGet (void);
 </#if>
+
+<#if mode gt 3 >
+<#if OCMP_OCxCON_OC32 == "1">
+uint32_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void);
+void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint32_t value);
+<#else>
+uint16_t ${OCMP_INSTANCE_NAME}_CompareSecondaryValueGet (void);
+void ${OCMP_INSTANCE_NAME}_CompareSecondaryValueSet (uint16_t value);
+</#if>
+</#if>
+
 <#if OCMP_INTERRUPT_ENABLE == true>
 // *****************************************************************************
 /* Function:
