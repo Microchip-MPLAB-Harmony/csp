@@ -197,6 +197,8 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_CTRLB_CACHEENABLE.setLabel("Enable Instruction Cache?")
     nvmctrlSym_CTRLB_CACHEENABLE.setDefaultValue(True)
 
+    ##### Do not modify below symbol names as they are used by Memory Driver #####
+
     #Configures the library for interrupt mode operations
     nvmctrlSym_Interrupt = nvmctrlComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
     nvmctrlSym_Interrupt.setLabel("Enable Interrupt?")
@@ -208,13 +210,23 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_MemoryDriver.setVisible(False)
     nvmctrlSym_MemoryDriver.setDefaultValue(False)
 
-    nvmOffset = str(hex(int(nvmctrlSym_FLASH_ADDRESS.getValue(),16) + (int(nvmctrlSym_FLASH_SIZE.getValue(),16) / 2)))
+    offsetStart = (int(nvmctrlSym_FLASH_SIZE.getValue(),16) / 2)
+
+    nvmOffset = str(hex(int(nvmctrlSym_FLASH_ADDRESS.getValue(),16) + offsetStart))
 
     nvmctrlSym_MemoryStartAddr = nvmctrlComponent.createStringSymbol("START_ADDRESS", None)
-    nvmctrlSym_MemoryStartAddr.setLabel("NVM Offset for File System")
+    nvmctrlSym_MemoryStartAddr.setLabel("NVM Media Start Address")
     nvmctrlSym_MemoryStartAddr.setVisible(False)
     nvmctrlSym_MemoryStartAddr.setDefaultValue(nvmOffset[2:])
     nvmctrlSym_MemoryStartAddr.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
+
+    memMediaSizeKB = (offsetStart / 1024)
+
+    nvmctrlSym_MemoryMediaSize = nvmctrlComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", None)
+    nvmctrlSym_MemoryMediaSize.setLabel("NVM Media Size (KB)")
+    nvmctrlSym_MemoryMediaSize.setVisible(False)
+    nvmctrlSym_MemoryMediaSize.setDefaultValue(memMediaSizeKB)
+    nvmctrlSym_MemoryMediaSize.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     nvmctrlSym_MemoryEraseEnable = nvmctrlComponent.createBooleanSymbol("ERASE_ENABLE", None)
     nvmctrlSym_MemoryEraseEnable.setLabel("NVM Erase Enable")
@@ -233,24 +245,18 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_MemoryEraseComment.setLabel("*** Should be equal to Row Erase Size ***")
     nvmctrlSym_MemoryEraseComment.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
 
-    nvmctrlSym_MemoryMediaSize = nvmctrlComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", None)
-    nvmctrlSym_MemoryMediaSize.setLabel("NVM Memory Media Size")
-    nvmctrlSym_MemoryMediaSize.setVisible(False)
-    nvmctrlSym_MemoryMediaSize.setDefaultValue(1024)
-    nvmctrlSym_MemoryMediaSize.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
-
     writeApiName = nvmctrlComponent.getID().upper() + "_PageWrite"
     eraseApiName = nvmctrlComponent.getID().upper() + "_RowErase"
 
-    efcWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
-    efcWriteApiName.setVisible(False)
-    efcWriteApiName.setReadOnly(True)
-    efcWriteApiName.setDefaultValue(writeApiName)
+    nvmctrlWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
+    nvmctrlWriteApiName.setVisible(False)
+    nvmctrlWriteApiName.setReadOnly(True)
+    nvmctrlWriteApiName.setDefaultValue(writeApiName)
 
-    efcEraseApiName = nvmctrlComponent.createStringSymbol("ERASE_API_NAME", None)
-    efcEraseApiName.setVisible(False)
-    efcEraseApiName.setReadOnly(True)
-    efcEraseApiName.setDefaultValue(eraseApiName)
+    nvmctrlEraseApiName = nvmctrlComponent.createStringSymbol("ERASE_API_NAME", None)
+    nvmctrlEraseApiName.setVisible(False)
+    nvmctrlEraseApiName.setReadOnly(True)
+    nvmctrlEraseApiName.setDefaultValue(eraseApiName)
 
     ############################################################################
     #### Dependency ####
