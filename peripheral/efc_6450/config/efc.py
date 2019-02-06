@@ -69,6 +69,8 @@ def instantiateComponent(efcComponent):
     efcMenu = efcComponent.createMenuSymbol(None, None)
     efcMenu.setLabel("Hardware Settings ")
 
+    ##### Do not modify below symbol names as they are used by Memory Driver #####
+
     #Flash Details
     efcFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"IFLASH\"]")
     if efcFlashNode != None:
@@ -101,13 +103,23 @@ def instantiateComponent(efcComponent):
     efcMemoryDriver.setVisible(False)
     efcMemoryDriver.setDefaultValue(False)
 
-    nvmOffset = str(hex(int(efcFlashStartAddress.getValue(),16) + (int(efcFlashSize.getValue(),16) / 2)))
+    offsetStart = (int(efcFlashSize.getValue(),16) / 2)
+
+    nvmOffset = str(hex(int(efcFlashStartAddress.getValue(),16) + offsetStart))
 
     efcMemoryStartAddr = efcComponent.createStringSymbol("START_ADDRESS", efcMenu)
-    efcMemoryStartAddr.setLabel("NVM Offset for File System")
+    efcMemoryStartAddr.setLabel("NVM Media Start Address")
     efcMemoryStartAddr.setVisible(False)
     efcMemoryStartAddr.setDefaultValue(nvmOffset[2:])
     efcMemoryStartAddr.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
+
+    memMediaSizeKB = (offsetStart / 1024)
+
+    efcMemoryMediaSize = efcComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", efcMenu)
+    efcMemoryMediaSize.setLabel("NVM Media Size (KB)")
+    efcMemoryMediaSize.setVisible(False)
+    efcMemoryMediaSize.setDefaultValue(memMediaSizeKB)
+    efcMemoryMediaSize.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     efcMemoryEraseEnable = efcComponent.createBooleanSymbol("ERASE_ENABLE", None)
     efcMemoryEraseEnable.setLabel("NVM Erase Enable")
@@ -125,12 +137,6 @@ def instantiateComponent(efcComponent):
     efcMemoryEraseComment.setVisible(False)
     efcMemoryEraseComment.setLabel("*** Should be equal to Sector Erase Size ***")
     efcMemoryEraseComment.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
-
-    efcMemoryMediaSize = efcComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", efcMenu)
-    efcMemoryMediaSize.setLabel("NVM Memory Media Size")
-    efcMemoryMediaSize.setVisible(False)
-    efcMemoryMediaSize.setDefaultValue(1024)
-    efcMemoryMediaSize.setDependencies(efcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     interruptVector = efcInstanceName.getValue() + "_INTERRUPT_ENABLE"
     interruptHandler = efcInstanceName.getValue() + "_INTERRUPT_HANDLER"
