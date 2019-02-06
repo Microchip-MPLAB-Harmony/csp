@@ -28,6 +28,9 @@
 tmr1BitField_T1CON_SIDL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TMR1"]/register-group@[name="TMR1"]/register@[name="T1CON"]/bitfield@[name="SIDL"]')
 tmr1ValGrp_T1CON_SIDL = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TMR1\"]/value-group@[name=\"T1CON__SIDL\"]")
 
+tmr1BitField_T1CON_TWDIS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TMR1"]/register-group@[name="TMR1"]/register@[name="T1CON"]/bitfield@[name="TWDIS"]')
+tmr1ValGrp_T1CON_TWDIS = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TMR1\"]/value-group@[name=\"T1CON__TWDIS\"]")
+
 tmr1BitField_T1CON_PRESCALER = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TMR1"]/register-group@[name="TMR1"]/register@[name="T1CON"]/bitfield@[name="TCKPS"]')
 tmr1ValGrp_T1CON_PRESCALER = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TMR1\"]/value-group@[name=\"T1CON__TCKPS\"]")
 
@@ -38,6 +41,9 @@ tmr1BitField_PR1_BITS = ATDF.getNode('/avr-tools-device-file/modules/module@[nam
 
 tmr1BitField_T1CON_TSYNC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TMR1"]/register-group@[name="TMR1"]/register@[name="T1CON"]/bitfield@[name="TSYNC"]')
 tmr1ValGrp_T1CON_TSYNC = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TMR1\"]/value-group@[name=\"T1CON__TSYNC\"]")
+
+tmr1BitField_T1CON_TGATE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="TMR1"]/register-group@[name="TMR1"]/register@[name="T1CON"]/bitfield@[name="TGATE"]')
+tmr1ValGrp_T1CON_TGATE = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TMR1\"]/value-group@[name=\"T1CON__TGATE\"]")
 
 ################################################################################
 #### Global Variables ####
@@ -109,6 +115,38 @@ def getIRQnumber(string):
 
     return irq_index
 
+
+def find_key_value(value, keypairs):
+    '''
+    Helper function that finds the keyname for the given value.  This function is used with bitfield values for a given
+    <value-group>, to set up default values for key value symbols.  
+    Arguments:
+          value - the value to be looked for in the dictionary, a particular bitfield value to be found in 'keypairs'
+          keypairs - the dictionary to be searched over, represents all bitfield values in a <value-group > to scanned over
+          
+    Without this helper function, setDefaultValue(<some_integer_value>) would not be very helpful for key/value symbols.  
+    Just inputting an integer value would require the user to see what order the bitfields are populated in the atdf file, 
+    to know what integer to use for setting a menu entry to a desired value.  This function removes the user requirement 
+    for figuring out what integer value should be used in order to get a particular bitfield value set by default.  
+    
+    The (integer) value returned by this function call corresponds to the particular entry of the
+    list that has the user-input key value.  The returned index value is dependent on the order 
+    of accumulation of bitfield entries from the atdf file.  This function removes that dependence by 
+    scanning the list (i.e., scans keypairs) for the particular key 'value' that matches what is being 
+    looked for, returning the element number for that (in the order it was scanned from the atdf file).
+
+    The *.setDefaultValue( ) method that called this function will use that value to correctly populate
+    the menu item.
+    '''
+    index = 0
+    for ii in keypairs:
+        if(ii["value"] == str(value)):
+            return index  # return occurrence of <bitfield > entry which has matching value
+        index += 1
+
+    print("find_key: could not find value in dictionary") # should never get here
+    return ""
+    
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -145,14 +183,26 @@ def T1CONcombineValues(symbol, event):
         t1conValue = t1conValue & (~int(maskvalue, 0))
         t1conValue = t1conValue | (sidlValue << 13)
 
+    if event["id"] == "TIMER1_TWDIS":
+        twdisValue = int(event["symbol"].getKeyValue(event["value"]))
+        maskvalue = tmr1BitField_T1CON_TWDIS.getAttribute("mask")
+        t1conValue = t1conValue & (~int(maskvalue, 0))
+        t1conValue = t1conValue | (twdisValue << 12)
+        
+    if event["id"] == "TIMER1_TGATE":
+        tgateValue = int(event["symbol"].getKeyValue(event["value"]))
+        maskvalue = tmr1BitField_T1CON_TGATE.getAttribute("mask")
+        t1conValue = t1conValue & (~int(maskvalue, 0))
+        t1conValue = t1conValue | (tgateValue << 7)
+        
     if event["id"] == "TIMER1_PRE_SCALER":
         prescalerValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = tmr1BitField_T1CON_PRESCALER.getAttribute("mask")
         t1conValue = t1conValue & (~int(maskvalue, 0))
         t1conValue = t1conValue | (prescalerValue << 4)
 
-    if event["id"] == "TIMER1_TSYNC_SEL":
-        tsyncValue = int(event["value"])
+    if event["id"] == "TIMER1_TSYNC":
+        tsyncValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = tmr1BitField_T1CON_TSYNC.getAttribute("mask")
         t1conValue = t1conValue & (~int(maskvalue, 0))
         t1conValue = t1conValue | (tsyncValue << 2)
@@ -170,6 +220,9 @@ def PreScaler_ValueUpdate(symbol, event):
 
 def tmr1TsyncVisible(symbol, event):
     symbol.setVisible(not bool(event["value"]))
+    
+def tmr1TgateVisible(symbol, event):
+    symbol.setVisible(bool(event["value"]))
 
 def calcTimerFreq(symbol, event):
     component = symbol.getComponent()
@@ -246,16 +299,16 @@ def instantiateComponent(tmr1Component):
     tmr1IFS.setDefaultValue(statRegName)
     tmr1IFS.setVisible(False)
 
-    #prescaler configuration
+    #TCKPS, prescaler configuration
     prescale_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_PRESCALER, prescale_names)
     tmr1Sym_T1CON_PRESCALER = tmr1Component.createKeyValueSetSymbol("TIMER1_PRE_SCALER", None)
-    tmr1Sym_T1CON_PRESCALER.setLabel("Select Prescaler")
+    tmr1Sym_T1CON_PRESCALER.setLabel(tmr1ValGrp_T1CON_PRESCALER.getAttribute("caption"))
     tmr1Sym_T1CON_PRESCALER.setOutputMode("Value")
     tmr1Sym_T1CON_PRESCALER.setDisplayMode("Description")
     for ii in prescale_names:
         tmr1Sym_T1CON_PRESCALER.addKey( ii['desc'], ii['value'], ii['key'] )
-    tmr1Sym_T1CON_PRESCALER.setDefaultValue(3)
+    tmr1Sym_T1CON_PRESCALER.setDefaultValue(find_key_value(0,prescale_names))  # 1:1 prescalar
     tmr1Sym_T1CON_PRESCALER.setVisible(True)
 
     #Prescaler Value
@@ -267,16 +320,17 @@ def instantiateComponent(tmr1Component):
     tmr1PrescalerValue.setMin(1)
     tmr1PrescalerValue.setDependencies(PreScaler_ValueUpdate, ["TIMER1_PRE_SCALER"])
 
-    #Timer1 clock Source Slection configuration
+   
+    #TCS, Timer1 clock Source Selection configuration
     tcs_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_TCS, tcs_names)
     tmr1Sym_T1CON_SOURCE_SEL = tmr1Component.createKeyValueSetSymbol("TIMER1_SRC_SEL", None)
-    tmr1Sym_T1CON_SOURCE_SEL.setLabel("Select Timer Clock Source")
+    tmr1Sym_T1CON_SOURCE_SEL.setLabel(tmr1BitField_T1CON_TCS.getAttribute("caption"))
     tmr1Sym_T1CON_SOURCE_SEL.setOutputMode("Value")
     tmr1Sym_T1CON_SOURCE_SEL.setDisplayMode("Description")
     for ii in tcs_names:
         tmr1Sym_T1CON_SOURCE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
-    tmr1Sym_T1CON_SOURCE_SEL.setDefaultValue(1)
+    tmr1Sym_T1CON_SOURCE_SEL.setDefaultValue(find_key_value(0,tcs_names))   # internal peripheral clock
 
     tmr1Sym_EXT_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_EXT_CLOCK_FREQ", tmr1Sym_T1CON_SOURCE_SEL)
     tmr1Sym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
@@ -284,12 +338,17 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
     tmr1Sym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
 
-    #Sync ext clock
-    tmr1Sym_T1CON_SYNC_SEL = tmr1Component.createBooleanSymbol("TIMER1_TSYNC_SEL", tmr1Sym_T1CON_SOURCE_SEL)
-    tmr1Sym_T1CON_SYNC_SEL.setLabel("Synchronize External Clock")
-    tmr1Sym_T1CON_SYNC_SEL.setDefaultValue(False)
-    tmr1Sym_T1CON_SYNC_SEL.setVisible(False)
-    tmr1Sym_T1CON_SYNC_SEL.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
+    #TSYNC, Timer1 External Clock Input Synchronization Selection
+    tsync_names = []
+    _get_bitfield_names(tmr1ValGrp_T1CON_TSYNC, tsync_names)
+    tmr1Sym_T1CON_TSYNC = tmr1Component.createKeyValueSetSymbol("TIMER1_TSYNC", tmr1Sym_T1CON_SOURCE_SEL)
+    tmr1Sym_T1CON_TSYNC.setLabel(tmr1BitField_T1CON_TSYNC.getAttribute("caption"))
+    tmr1Sym_T1CON_TSYNC.setOutputMode("Value")
+    tmr1Sym_T1CON_TSYNC.setDisplayMode("Description")
+    for ii in tsync_names:
+        tmr1Sym_T1CON_TSYNC.addKey( ii['desc'], ii['value'], ii['key'] )
+    tmr1Sym_T1CON_TSYNC.setDefaultValue(find_key_value(0,tsync_names))   # internal peripheral clock    
+    tmr1Sym_T1CON_TSYNC.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
 
     tmr1Sym_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_CLOCK_FREQ", None)
     tmr1Sym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
@@ -323,14 +382,40 @@ def instantiateComponent(tmr1Component):
     tmr1SymField_T1CON_SIDL.setDisplayMode( "Description" )
     for ii in sidl_names:
         tmr1SymField_T1CON_SIDL.addKey( ii['key'],ii['value'], ii['desc'] )
-    tmr1SymField_T1CON_SIDL.setDefaultValue(1)
+    tmr1SymField_T1CON_SIDL.setDefaultValue(find_key_value(0,sidl_names))  # continue operation when in idle mode
+    
+    #timer TWDIS configuration
+    twdis_names = []
+    _get_bitfield_names(tmr1ValGrp_T1CON_TWDIS, twdis_names)
+    tmr1SymField_T1CON_TWDIS = tmr1Component.createKeyValueSetSymbol("TIMER1_TWDIS", None)
+    tmr1SymField_T1CON_TWDIS.setLabel(tmr1BitField_T1CON_TWDIS.getAttribute("caption"))
+    tmr1SymField_T1CON_TWDIS.setOutputMode( "Value" )
+    tmr1SymField_T1CON_TWDIS.setDisplayMode( "Description" )
+    for ii in twdis_names:
+        tmr1SymField_T1CON_TWDIS.addKey( ii['key'],ii['value'], ii['desc'] )
+    tmr1SymField_T1CON_TWDIS.setDefaultValue(find_key_value(0,twdis_names))  # back-to-back writes enabled
 
+    
+    #timer TGATE configuration
+    tgate_names = []
+    _get_bitfield_names(tmr1ValGrp_T1CON_TGATE, tgate_names)
+    tmr1SymField_T1CON_TGATE = tmr1Component.createKeyValueSetSymbol("TIMER1_TGATE", tmr1Sym_T1CON_SOURCE_SEL)
+    tmr1SymField_T1CON_TGATE.setLabel(tmr1BitField_T1CON_TGATE.getAttribute("caption"))
+    tmr1SymField_T1CON_TGATE.setOutputMode( "Value" )
+    tmr1SymField_T1CON_TGATE.setDisplayMode( "Description" )
+    for ii in tgate_names:
+        tmr1SymField_T1CON_TGATE.addKey( ii['key'],ii['value'], ii['desc'] )
+    tmr1SymField_T1CON_TGATE.setDefaultValue(find_key_value(0,tgate_names))  # gated time accumulation disabled
+    tmr1SymField_T1CON_TGATE.setDependencies(tmr1TgateVisible, ["TIMER1_SRC_SEL"])
+    
     #Timer1 TxCON Reg Value
     tmr1Sym_T1CON_Value = tmr1Component.createHexSymbol("TCON_REG_VALUE", None)
-    tmr1Sym_T1CON_Value.setDefaultValue((int(tmr1SymField_T1CON_SIDL.getSelectedValue()) << 13) | (int(tmr1Sym_T1CON_PRESCALER.getSelectedValue()) << 4) \
-    | (int(tmr1Sym_T1CON_SYNC_SEL.getValue()) << 3) | (int(tmr1Sym_T1CON_SOURCE_SEL.getSelectedValue()) << 1))
+    default_value = (int(tmr1SymField_T1CON_SIDL.getSelectedValue()) << 13) | (int(tmr1SymField_T1CON_TWDIS.getSelectedValue()) << 12) | \
+                    (int(tmr1SymField_T1CON_TGATE.getSelectedValue()) << 7) | (int(tmr1Sym_T1CON_PRESCALER.getSelectedValue()) << 4) | (int(tmr1Sym_T1CON_TSYNC.getValue()) << 2) | \
+                    (int(tmr1Sym_T1CON_SOURCE_SEL.getSelectedValue()) << 1)
+    tmr1Sym_T1CON_Value.setDefaultValue(default_value)
     tmr1Sym_T1CON_Value.setVisible(False)
-    tmr1Sym_T1CON_Value.setDependencies(T1CONcombineValues,["TIMER1_SIDL", "TIMER1_PRE_SCALER", "TIMER1_TSYNC_SEL", "TIMER1_SRC_SEL"])
+    tmr1Sym_T1CON_Value.setDependencies(T1CONcombineValues,["TIMER1_SIDL", "TIMER1_TWDIS", "TIMER1_TGATE", "TIMER1_PRE_SCALER", "TIMER1_TSYNC", "TIMER1_SRC_SEL"])
 
     ############################################################################
     #### Dependency ####

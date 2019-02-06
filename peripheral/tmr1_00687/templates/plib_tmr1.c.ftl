@@ -62,8 +62,10 @@ void ${TMR1_INSTANCE_NAME}_Initialize(void)
 
     /*
     SIDL = ${TIMER1_SIDL}
-    TCKPS =${TIMER1_PRE_SCALER}
-    TSYNC   = ${TIMER1_TSYNC_SEL?c}
+    TWDIS = ${TIMER1_TWDIS}
+    TGATE = ${TIMER1_TGATE}
+    TCKPS = ${TIMER1_PRE_SCALER}
+    TSYNC = ${TIMER1_TSYNC}
     TCS = ${TIMER1_SRC_SEL}
     */
     T1CONSET = 0x${TCON_REG_VALUE};
