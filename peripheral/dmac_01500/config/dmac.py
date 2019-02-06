@@ -32,6 +32,9 @@ global dmaBitfield_DCH0CON_CHPRI
 global dmacActiveChannels
 dmacActiveChannels = []
 
+global peridValueListSymbols
+peridValueListSymbols = []
+
 global dmacInstanceName
 
 global dmacInterruptVectorUpdate
@@ -74,6 +77,52 @@ def dmacTriggerCalc(symbol, event):
         return
     else:  # get the value for the given key, namely, the interrupt number for this key name
         symbol.setValue(int(per_instance.get(event["value"])), 2)
+
+# This function enables DMA channel and selects respective trigger if DMA mode
+# is selected for any peripheral ID.
+# And once the DMA mode is unselected, then the corresponding DMA channel will
+# be disabled and trigger source will be reset to "Software trigger"
+def dmacChannelAllocLogic(symbol, event):
+
+    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
+    perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
+    channelAllocated = False
+
+    triggerSource = perID
+
+    if "Transmit" in perID:
+        triggerSource = perID.replace("Transmit", "TX")
+    elif "Receive" in perID:
+        triggerSource = perID.replace("Receive", "RX")
+
+    for dmaChannel in range(dmaChannelCount):
+        dmaChannelEnable = Database.getSymbolValue("core", "DMAC_CHAN" + str(dmaChannel) + "_ENBL")
+        dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE"))
+
+        # Client requested to allocate channel
+        if event["value"] == True:
+            # Reserve the first available free channel
+            if dmaChannelEnable == False:
+                Database.setSymbolValue("core", "DMAC_CHAN" + str(dmaChannel) + "_ENBL", True, 2)
+                Database.setSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE", triggerSource, 2)
+                Database.setSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_PERID_LOCK", True, 2)
+                Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, dmaChannel, 2)
+                channelAllocated = True
+                break
+
+        # Client requested to deallocate channel
+        else:
+            # Reset the previously allocated channel
+            if triggerSource == dmaChannelPerID and dmaChannelEnable == True:
+                Database.setSymbolValue("core", "DMAC_CHAN" + str(dmaChannel) + "_ENBL", False, 2)
+                Database.setSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE", "Software Trigger", 2)
+                Database.setSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_PERID_LOCK", False, 2)
+                Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
+
+    if event["value"] == True and channelAllocated == False:
+        # Couldn't find any free DMA channel, hence set warning.
+        Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
+        Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
 
 # The following business logic creates a list of enabled DMA channels and sorts
 # them in the descending order. The left most channel number will be the highest
@@ -165,14 +214,12 @@ def _get_enblReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
-        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
-        temp = float(vectorNumber) / 32.0
-        index = int(temp)
-        bit = float(temp % 1)
-        bitPosn = int(32.0 * bit)
-        bitMask = hex(1 << bitPosn)
-        regName = "IEC" + str(index)
+    temp = float(vectorNumber) / 32.0
+    index = int(temp)
+    bit = float(temp % 1)
+    bitPosn = int(32.0 * bit)
+    bitMask = hex(1 << bitPosn)
+    regName = "IEC" + str(index)
 
     return regName, str(bitPosn), str(bitMask)
 
@@ -180,14 +227,12 @@ def _get_statReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
-        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
-        temp = float(vectorNumber) / 32.0
-        index = int(temp)
-        bit = float(temp % 1)
-        bitPosn = int(32.0 * bit)
-        bitMask = hex(1 << bitPosn)
-        regName = "IFS" + str(index)
+    temp = float(vectorNumber) / 32.0
+    index = int(temp)
+    bit = float(temp % 1)
+    bitPosn = int(32.0 * bit)
+    bitMask = hex(1 << bitPosn)
+    regName = "IFS" + str(index)
 
     return regName, str(bitPosn), str(bitMask)
 
@@ -550,6 +595,12 @@ for dmaChannel in range(0, numDMAChans):
     symbol.setDefaultValue("Software Trigger")
     symbol.setUseSingleDynamicValue(True)
 
+    # DMA manager will use LOCK symbol to lock the "DMAC_CHCTRLB_TRIGSRC_CH_ + str(dmaChannel)" symbol
+    symbol = coreComponent.createBooleanSymbol("DMAC_REQUEST_" + str(dmaChannel) + "_PERID_LOCK", dmacChannelEnable)
+    symbol.setLabel("Lock DMA Request")
+    symbol.setVisible(False)
+    symbol.setUseSingleDynamicValue(True)
+
     # DMA channel priority
     dmacPrioritySymId = "DMAC_" + str(dmaChannel) + "_PRIORITY"
     symbol = coreComponent.createComboSymbol(dmacPrioritySymId, dmacChannelEnable, sorted(per_priority.keys()))
@@ -678,6 +729,31 @@ shiftVal = _get_position(dmaReg_DMAECON_SIRQEN.getAttribute('mask'))
 symbol = coreComponent.createIntegerSymbol(symId, None)
 symbol.setDefaultValue(shiftVal)
 symbol.setVisible(False)
+
+#Interface for Peripheral clients
+for per in per_instance.keys():
+
+    name = per
+
+    if "TX" in per:
+        name = name.replace('TX', 'Transmit')
+    elif "RX" in per:
+        name = name.replace('RX', 'Receive')
+
+    dmacChannelNeeded = coreComponent.createBooleanSymbol("DMA_CH_NEEDED_FOR_" + str(name), dmacMenu)
+    dmacChannelNeeded.setLabel("Local DMA_CH_NEEDED_FOR_" + str(name))
+    dmacChannelNeeded.setVisible(False)
+    peridValueListSymbols.append("DMA_CH_NEEDED_FOR_" + str(name))
+
+    dmacChannel = coreComponent.createIntegerSymbol("DMA_CH_FOR_" + str(name), dmacMenu)
+    dmacChannel.setLabel("Local DMA_CH_FOR_" + str(name))
+    dmacChannel.setDefaultValue(-1)
+    dmacChannel.setVisible(False)
+
+dmacPERIDChannelUpdate = coreComponent.createBooleanSymbol("DMA_CHANNEL_ALLOC", dmacMenu)
+dmacPERIDChannelUpdate.setLabel("Local dmacChannelAllocLogic")
+dmacPERIDChannelUpdate.setVisible(False)
+dmacPERIDChannelUpdate.setDependencies(dmacChannelAllocLogic, peridValueListSymbols)
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
