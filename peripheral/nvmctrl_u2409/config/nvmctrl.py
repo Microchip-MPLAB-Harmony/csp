@@ -186,13 +186,23 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_MemoryDriver.setVisible(False)
     nvmctrlSym_MemoryDriver.setDefaultValue(False)
 
-    nvmOffset = str(hex(nvmctrlSym_FLASH_ADDRESS.getValue() + (nvmctrlSym_FLASH_SIZE.getValue() / 2)))
+    offsetStart = (int(nvmctrlSym_FLASH_SIZE.getValue(),16) / 2)
+
+    nvmOffset = str(hex(nvmctrlSym_FLASH_ADDRESS.getValue() + offsetStart))
 
     nvmctrlSym_MemoryStartAddr = nvmctrlComponent.createStringSymbol("START_ADDRESS", None)
-    nvmctrlSym_MemoryStartAddr.setLabel("NVM Offset for File System")
+    nvmctrlSym_MemoryStartAddr.setLabel("NVM Media Start Address")
     nvmctrlSym_MemoryStartAddr.setVisible(False)
     nvmctrlSym_MemoryStartAddr.setDefaultValue(nvmOffset[2:])
     nvmctrlSym_MemoryStartAddr.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
+
+    memMediaSizeKB = (offsetStart / 1024)
+
+    nvmctrlSym_MemoryMediaSize = nvmctrlComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", None)
+    nvmctrlSym_MemoryMediaSize.setLabel("NVM Media Size (KB)")
+    nvmctrlSym_MemoryMediaSize.setVisible(False)
+    nvmctrlSym_MemoryMediaSize.setDefaultValue(memMediaSizeKB)
+    nvmctrlSym_MemoryMediaSize.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
 
     nvmctrlSym_MemoryEraseEnable = nvmctrlComponent.createBooleanSymbol("ERASE_ENABLE", None)
     nvmctrlSym_MemoryEraseEnable.setLabel("NVM Erase Enable")
@@ -211,24 +221,18 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_MemoryEraseComment.setLabel("*** Should be equal to Block Erase Size ***")
     nvmctrlSym_MemoryEraseComment.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
 
-    nvmctrlSym_MemoryMediaSize = nvmctrlComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", None)
-    nvmctrlSym_MemoryMediaSize.setLabel("NVM Memory Media Size")
-    nvmctrlSym_MemoryMediaSize.setVisible(False)
-    nvmctrlSym_MemoryMediaSize.setDefaultValue(1024)
-    nvmctrlSym_MemoryMediaSize.setDependencies(nvmctlrSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
-
     writeApiName = nvmctrlComponent.getID().upper() + "_PageWrite"
     eraseApiName = nvmctrlComponent.getID().upper() + "_BlockErase"
 
-    nvmWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
-    nvmWriteApiName.setVisible(False)
-    nvmWriteApiName.setReadOnly(True)
-    nvmWriteApiName.setDefaultValue(writeApiName)
+    nvmctrlWriteApiName = nvmctrlComponent.createStringSymbol("WRITE_API_NAME", None)
+    nvmctrlWriteApiName.setVisible(False)
+    nvmctrlWriteApiName.setReadOnly(True)
+    nvmctrlWriteApiName.setDefaultValue(writeApiName)
 
-    nvmEraseApiName = nvmctrlComponent.createStringSymbol("ERASE_API_NAME", None)
-    nvmEraseApiName.setVisible(False)
-    nvmEraseApiName.setReadOnly(True)
-    nvmEraseApiName.setDefaultValue(eraseApiName)
+    nvmctrlEraseApiName = nvmctrlComponent.createStringSymbol("ERASE_API_NAME", None)
+    nvmctrlEraseApiName.setVisible(False)
+    nvmctrlEraseApiName.setReadOnly(True)
+    nvmctrlEraseApiName.setDefaultValue(eraseApiName)
 
     ############################################################################
     #### Dependency ####
