@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -46,6 +46,7 @@
 #include <stdint.h>
 #include "device.h"
 #include "plib_uart_common.h"
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -59,13 +60,12 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+
 #define UART2_FrequencyGet()    (uint32_t)(100000000UL)
 
 /****************************** UART2 API *********************************/
 
 void UART2_Initialize( void );
-
-UART_ERROR UART2_ErrorGet( void );
 
 bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
@@ -73,18 +73,15 @@ bool UART2_Write( void *buffer, const size_t size );
 
 bool UART2_Read( void *buffer, const size_t size );
 
+UART_ERROR UART2_ErrorGet( void );
+
 int UART2_ReadByte( void );
+
 bool UART2_ReceiverIsReady( void );
+
 void UART2_WriteByte( int data );
-void UART2_Sync(void);
+
 bool UART2_TransmitterIsReady( void );
-
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -93,4 +90,5 @@ bool UART2_TransmitterIsReady( void );
 
 #endif
 // DOM-IGNORE-END
+
 #endif // PLIB_UART2_H
