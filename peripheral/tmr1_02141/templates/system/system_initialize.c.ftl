@@ -1,0 +1,1 @@
+    ${TMR1_INSTANCE_NAME}_Initialize();
