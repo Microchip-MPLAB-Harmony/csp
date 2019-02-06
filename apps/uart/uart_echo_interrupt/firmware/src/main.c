@@ -15,9 +15,9 @@
     "main" function calls the "SYS_Initialize" function to initialize the state
     machines of all modules in the system
  *******************************************************************************/
-// DOM-IGNORE-BEGIN
+
 /*******************************************************************************
-* Copyright (C) 2018-19 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -38,7 +38,6 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -51,70 +50,28 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include <string.h>
 #include "definitions.h"                // SYS function prototypes
-#include "device.h"
 
-#define RX_BUFFER_SIZE 10
-char messageStart[] = "**** UART echo interrupt demo ****\r\n\
-**** Type a buffer of 10 characters and observe it echo back ****\r\n\
-**** LED toggles on each time the buffer is echoed ****\r\n";
+#define RX_BUFFER_SIZE                  10
+
+#define LED_On()                        LED_Set()
+#define LED_Off()                       LED_Clear()
+
+char messageStart[] = "****  USART echo demo: Non-blocking Transfer with the interrupt  ****\r\n\
+**** Type 10 characters. The received characters are echoed back, and the LED is toggled ****\r\n";
 char receiveBuffer[RX_BUFFER_SIZE] = {};
-char echoBuffer[2*RX_BUFFER_SIZE] = {};
-char messageError[] = "**** UART error occurred ****\r\n";
+char echoBuffer[RX_BUFFER_SIZE + 4] = {};
+char messageError[] = "**** USART error occurred ****\r\n";
 
 bool errorStatus = false;
 bool writeStatus = false;
 bool readStatus = false;
 
-/*LED Toggling subroutines*/
-void LED1_Initialize(void)
-{
-    *(&ODCBSET + (7 - 1) * 0x40) = 0;
-    *(&LATB + (7 - 1) * 0x40) = 0;
-    *(&TRISBCLR + (7 - 1) * 0x40) = 7;  //think mask val is right
-    *(&CNCONBSET + (7 - 1) * 0x40) = _CNCONB_ON_MASK;
-    *(&ANSELBCLR + (7 - 1) * 0x40) = 0xFF8F;  //think mask val is right
-    *(&CNENBSET + (7 - 1) * 0x40) = 0;
-    *(&CNPUBSET + (7 - 1) * 0x40) = 0;
-    *(&CNPDBSET + (7 - 1) * 0x40) = 0;    
-}
-
-#define LED1_Toggle()   *(&LATBINV + (7 - 1) * 0x40) = 1<<0;
-#define LED1_SET()      *(&LATBSET + (7 - 1) * 0x40) = 1<<0;
-
- //Convenient macrso to do IOUNLOCK
-#define PPSUnLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=0;} 
-#define PPSLock() {SYSKEY=0x0;SYSKEY=0xAA996655;SYSKEY=0x556699AA;CFGCONbits.IOLOCK=1;}
-
-void UART2_PortInitialization(void)
-{
-     /* RG6 as RX set RG6 to digital;*/
-    ANSELGCLR = (1<<6); 
-    TRISGSET =  (1<<6); 
-    U2RXRbits.U2RXR = 0b0001;
-    /* RB14 as TX */
-    RPB14Rbits.RPB14R = 0b0010;   
-    PPSLock();     
-}
-        
 void APP_WriteCallback(uintptr_t context)
 {
     writeStatus = true;
 }
 
 void APP_ReadCallback(uintptr_t context)
-{
-    if(UART2_ErrorGet() != UART_ERROR_NONE)
-    {
-        /* ErrorGet clears errors, set error flag to notify console */
-        errorStatus = true;
-    }
-    else
-    {
-        readStatus = true;
-    }
-}
-
-void APP_FaultCallback(uintptr_t context)
 {
     if(UART2_ErrorGet() != UART_ERROR_NONE)
     {
@@ -137,16 +94,13 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    UART2_PortInitialization();
-    //LED1_Initialize();
+    LED_Off();
 
     /* Register callback functions and send start message */
-    UART2_FaultCallbackRegister(APP_FaultCallback, 0);
     UART2_WriteCallbackRegister(APP_WriteCallback, 0);
     UART2_ReadCallbackRegister(APP_ReadCallback, 0);
     UART2_Write(&messageStart, sizeof(messageStart));
-   // writeStatus = true;
-    LED1_SET(); 
+
     while ( true )
     {
         if(errorStatus == true)
@@ -160,11 +114,14 @@ int main ( void )
             /* Echo back received buffer and Toggle LED */
             readStatus = false;
 
-            strcpy(echoBuffer, receiveBuffer);
-            strcat(echoBuffer, "\r\n");
+            echoBuffer[0] = '\n';
+            echoBuffer[1] = '\r';
+            memcpy(&echoBuffer[2], receiveBuffer,sizeof(receiveBuffer));
+            echoBuffer[RX_BUFFER_SIZE+2] = '\n';
+            echoBuffer[RX_BUFFER_SIZE+3] = '\r';
 
             UART2_Write(&echoBuffer, sizeof(echoBuffer));
-            LED1_Toggle();
+            LED_Toggle();
         }
         else if(writeStatus == true)
         {

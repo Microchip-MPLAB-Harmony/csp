@@ -1,20 +1,21 @@
 /*******************************************************************************
-  UART2 PLIB
+  EVIC PLIB Implementation
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_uart2.h
+    plib_evic.c
 
   Summary:
-    UART2 PLIB Header File
+    EVIC PLIB Source File
 
   Description:
     None
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
@@ -37,62 +38,70 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef PLIB_UART2_H
-#define PLIB_UART2_H
-
-#include <stddef.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include "device.h"
-#include "plib_uart_common.h"
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    extern "C" {
-
-#endif
-// DOM-IGNORE-END
+#include "plib_evic.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Interface
+// Section: IRQ Implementation
 // *****************************************************************************
 // *****************************************************************************
 
-#define UART2_FrequencyGet()    (uint32_t)(100000000UL)
+void EVIC_Initialize( void )
+{
+    INTCONSET = _INTCON_MVEC_MASK;
 
-/****************************** UART2 API *********************************/
+    /* Set up priority / subpriority of enabled interrupts */
+    IPC36SET = 0x400 | 0x0;  /* UART2_FAULT:  Priority 1 / Subpriority 0 */
+    IPC36SET = 0x40000 | 0x0;  /* UART2_RX:  Priority 1 / Subpriority 0 */
+    IPC36SET = 0x4000000 | 0x0;  /* UART2_TX:  Priority 1 / Subpriority 0 */
+}
 
-void UART2_Initialize( void );
+void EVIC_SourceEnable( INT_SOURCE source )
+{
+    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IECxSET = (volatile uint32_t *)(IECx + 2);
 
-bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
+    *IECxSET = 1 << (source & 0x1f);
+}
 
-bool UART2_Write( void *buffer, const size_t size );
+void EVIC_SourceDisable( INT_SOURCE source )
+{
+    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IECxCLR = (volatile uint32_t *)(IECx + 1);
 
-bool UART2_Read( void *buffer, const size_t size );
+    *IECxCLR = 1 << (source & 0x1f);
+}
 
-UART_ERROR UART2_ErrorGet( void );
+bool EVIC_SourceIsEnabled( INT_SOURCE source )
+{
+    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
 
-bool UART2_ReadIsBusy( void );
+    return (bool)((*IECx >> (source & 0x1f)) & 0x01);
+}
 
-size_t UART2_ReadCountGet( void );
+bool EVIC_SourceStatusGet( INT_SOURCE source )
+{
+    volatile uint32_t *IFSx = (volatile uint32_t *)(&IFS0 + ((0x10 * (source / 32)) / 4));
 
-bool UART2_WriteIsBusy( void );
+    return (bool)((*IFSx >> (source & 0x1f)) & 0x1);
+}
 
-size_t UART2_WriteCountGet( void );
+void EVIC_SourceStatusSet( INT_SOURCE source )
+{
+    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IFSxSET = (volatile uint32_t *)(IFSx + 2);
 
-void UART2_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+    *IFSxSET = 1 << (source & 0x1f);
+}
 
-void UART2_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+void EVIC_SourceStatusClear( INT_SOURCE source )
+{
+    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IFSxCLR = (volatile uint32_t *)(IFSx + 1);
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+    *IFSxCLR = 1 << (source & 0x1f);
+}
 
-    }
-
-#endif
-// DOM-IGNORE-END
-
-#endif // PLIB_UART2_H
