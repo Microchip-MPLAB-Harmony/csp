@@ -74,6 +74,9 @@ def genSysSourceFile(symbol, event):
     else:
         symbol.setEnabled(False)
 
+def deviceCacheEnable (symbol, event):
+    symbol.setEnabled(event["value"])
+
 def instantiateComponent( coreComponent ):
     global compilers
     global compilerSpecifics
@@ -125,7 +128,7 @@ def instantiateComponent( coreComponent ):
         isMips = True
         baseArchDir = "mips"
         compilers = [ "XC32", "IAR" + naQualifier ]
-        deviceCacheHeaderName = ""
+        deviceCacheHeaderName = "cache_pic32mz.h.ftl"
         xc32Available = True
 
     autoComponentIDTable = [ "dfp", "cmsis" ]
@@ -196,15 +199,17 @@ def instantiateComponent( coreComponent ):
     exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
 
     ## cache macros
-    if isCortexA or isCortexM:
-        deviceCacheHeaderFile = coreComponent.createFileSymbol("DEVICE_CACHE_H", None)
-        deviceCacheHeaderFile.setSourcePath( "/templates/" + deviceCacheHeaderName )
-        deviceCacheHeaderFile.setOutputName("device_cache.h")
-        deviceCacheHeaderFile.setMarkup(True)
-        deviceCacheHeaderFile.setOverwrite(True)
-        deviceCacheHeaderFile.setDestPath("")
-        deviceCacheHeaderFile.setProjectPath("config/" + configName + "/")
-        deviceCacheHeaderFile.setType("HEADER")
+    deviceCacheHeaderFile = coreComponent.createFileSymbol("DEVICE_CACHE_H", None)
+    deviceCacheHeaderFile.setSourcePath( "/templates/" + deviceCacheHeaderName )
+    deviceCacheHeaderFile.setOutputName("device_cache.h")
+    deviceCacheHeaderFile.setMarkup(True)
+    deviceCacheHeaderFile.setOverwrite(True)
+    deviceCacheHeaderFile.setDestPath("")
+    deviceCacheHeaderFile.setProjectPath("config/" + configName + "/")
+    deviceCacheHeaderFile.setType("HEADER")
+    if isMips:
+        deviceCacheHeaderFile.setEnabled(False)
+        deviceCacheHeaderFile.setDependencies(deviceCacheEnable, ["USE_CACHE_MAINTENANCE"])
 
     ## toolchain specifics
     toolChainSpecifics = coreComponent.createFileSymbol( None, None )
