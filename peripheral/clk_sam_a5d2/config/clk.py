@@ -1232,7 +1232,7 @@ def __programmable_clock_menu(clk_comp, clk_menu, pmc_reg_module):
         # create symbol for CSS bitfield of PMC_PCK# register
         sym_pmc_pck_css = clk_comp.createKeyValueSetSymbol("PMC_PCK" + str(i) + "_CSS", sym_prog_clk_menu)
         sym_pmc_pck_css.setLabel(bitfield_pmc_pck_css.getDescription())
-        sym_pmc_pck_css.setOutputMode("Value")
+        sym_pmc_pck_css.setOutputMode("Key")
         sym_pmc_pck_css.setDisplayMode("Description")
         for name in valgrp_pmc_pck_css.getValueNames():
             value = valgrp_pmc_pck_css.getValue(name)
