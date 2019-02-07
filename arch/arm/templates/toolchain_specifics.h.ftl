@@ -24,16 +24,17 @@
 #ifndef TOOLCHAIN_SPECIFICS_H
 #define TOOLCHAIN_SPECIFICS_H
 
-<#lt><#if "XC32" == COMPILER_CHOICE>
+<#if "XC32" == COMPILER_CHOICE>
     <#lt>#include <sys/types.h>
     <#lt>#define NO_INIT        __attribute__((section(".no_init")))
     <#lt>#define SECTION(a)     __attribute__((__section__(a)))
-    <#if core.CACHE_ALIGN?? >
-        <#lt>#define CACHE_ALIGN    __ALIGNED(${core.CACHE_ALIGN})
+
+    <#if CACHE_ALIGN?? >
+        <#lt>#define CACHE_ALIGN    __ALIGNED(${CACHE_ALIGN})
     <#else>
         <#lt>#define CACHE_ALIGN
     </#if>
-<#lt><#elseif "IAR" == COMPILER_CHOICE>
+<#elseif "IAR" == COMPILER_CHOICE>
     <#lt>#define COMPILER_PRAGMA(arg)            _Pragma(#arg)
     <#lt>#define SECTION(a)                      COMPILER_PRAGMA(location = a)
     <#lt>#define NO_INIT                         __no_init
@@ -41,8 +42,8 @@
     <#lt>#include <stdint.h>
     <#lt>#define __inline__                      inline
 
-    <#if core.CACHE_ALIGN?? >
-        <#lt>#define CACHE_ALIGN    __ALIGNED(${core.CACHE_ALIGN})
+    <#if CACHE_ALIGN?? >
+        <#lt>#define CACHE_ALIGN                     __ALIGNED(${CACHE_ALIGN})
     <#else>
         <#lt>#define CACHE_ALIGN
     </#if>
@@ -146,7 +147,7 @@
     <#lt>#define EWOULDBLOCK     (80) /* Operation would block */
     <#lt>#define EXDEV           (81) /* Cross-device link */
 
-<#lt></#if>
+</#if>
 
 
 #endif // end of header
