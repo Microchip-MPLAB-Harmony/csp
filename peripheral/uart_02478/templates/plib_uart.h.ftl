@@ -1,23 +1,22 @@
 /*******************************************************************************
-  EVIC PLIB Header
+  ${UART_INSTANCE_NAME} PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_evic.h
+    plib_${UART_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    PIC32MZ Interrupt Module PLIB Header File
+    ${UART_INSTANCE_NAME} PLIB Header File
 
   Description:
     None
 
 *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -38,20 +37,15 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-// DOM-IGNORE-END
 
-#ifndef PLIB_EVIC_H
-#define PLIB_EVIC_H
+#ifndef PLIB_${UART_INSTANCE_NAME}_H
+#define PLIB_${UART_INSTANCE_NAME}_H
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
-#include <device.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include <device.h>
+#include <stdint.h>
+#include "device.h"
+#include "plib_uart_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -61,43 +55,50 @@
 #endif
 // DOM-IGNORE-END
 
+<#--Interface To Use-->
 // *****************************************************************************
 // *****************************************************************************
-// Section: Data Types
-// *****************************************************************************
-// *****************************************************************************
-
-typedef enum
-{
-<#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
-    <#assign INT_NAME = "EVIC_" + i + "_NAME">
-    <#assign VECT_NAME = "EVIC_" + i + "_VECTOR">
-    <#if .vars[INT_NAME]?? && .vars[VECT_NAME]?? && .vars[INT_NAME] != "None" && .vars[VECT_NAME] != "None">
-        <#lt>    INT_SOURCE_${.vars[INT_NAME]} = ${.vars[VECT_NAME]},
-
-    </#if>
-</#list>
-} INT_SOURCE;
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
+// Section: Interface
 // *****************************************************************************
 // *****************************************************************************
 
-void EVIC_Initialize ( void );
+#define ${UART_INSTANCE_NAME}_FrequencyGet()    (uint32_t)(${UART_CLOCK_FREQ}UL)
 
-void EVIC_SourceEnable( INT_SOURCE source );
+/****************************** ${UART_INSTANCE_NAME} API *********************************/
 
-void EVIC_SourceDisable( INT_SOURCE source );
+void ${UART_INSTANCE_NAME}_Initialize( void );
 
-bool EVIC_SourceIsEnabled( INT_SOURCE source );
+bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
-bool EVIC_SourceStatusGet( INT_SOURCE source );
+bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size );
 
-void EVIC_SourceStatusSet( INT_SOURCE source );
+bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size );
 
-void EVIC_SourceStatusClear( INT_SOURCE source );
+UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void );
+
+<#if USART_INTERRUPT_MODE == true>
+bool ${UART_INSTANCE_NAME}_ReadIsBusy( void );
+
+size_t ${UART_INSTANCE_NAME}_ReadCountGet( void );
+
+bool ${UART_INSTANCE_NAME}_WriteIsBusy( void );
+
+size_t ${UART_INSTANCE_NAME}_WriteCountGet( void );
+
+void ${UART_INSTANCE_NAME}_FaultCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+
+void ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+
+void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
+<#else>
+int ${UART_INSTANCE_NAME}_ReadByte( void );
+
+bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void );
+
+void ${UART_INSTANCE_NAME}_WriteByte( int data );
+
+bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void );
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -107,4 +108,4 @@ void EVIC_SourceStatusClear( INT_SOURCE source );
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_EVIC_H
+#endif // PLIB_${UART_INSTANCE_NAME}_H
