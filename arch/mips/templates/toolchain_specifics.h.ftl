@@ -69,6 +69,12 @@
     <#lt>#ifndef   __RESTRICT
     <#lt>    #define __RESTRICT                 __restrict__
     <#lt>#endif
+
+    <#if core.CACHE_ALIGN?? >
+        <#lt>#define CACHE_ALIGN                    __ALIGNED(${core.CACHE_ALIGN})
+    <#else>
+        <#lt>#define CACHE_ALIGN
+    </#if>
 </#if>
 
 #endif // end of header

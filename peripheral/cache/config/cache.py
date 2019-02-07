@@ -46,6 +46,11 @@ icacheEnable.setVisible(False)
 icacheEnable.setReadOnly(True)
 icacheEnable.setDependencies(cacheEnable, ["USE_CACHE_MAINTENANCE"])
 
+cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
+cacheAlign.setLabel("Cache Alignment Length")
+cacheAlign.setVisible(False)
+cacheAlign.setDefaultValue(16)
+
 ############################################################################
 #### Code Generation ####
 ############################################################################

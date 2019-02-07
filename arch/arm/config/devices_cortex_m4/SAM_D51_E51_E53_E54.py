@@ -194,6 +194,11 @@ icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cac
 icacheEnable.setLabel("Enable Instruction Cache")
 icacheEnable.setDefaultValue(False)
 
+cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
+cacheAlign.setLabel("Cache Alignment Length")
+cacheAlign.setVisible(False)
+cacheAlign.setDefaultValue(16)
+
 periInstanceMultiVectorSupport = coreComponent.createBooleanSymbol("PERIPHERAL_MULTI_VECTOR", None)
 periInstanceMultiVectorSupport.setDefaultValue(True)
 periInstanceMultiVectorSupport.setVisible(False)

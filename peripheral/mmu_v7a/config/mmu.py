@@ -12,6 +12,11 @@ icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cac
 icacheEnable.setLabel("Enable Instruction Cache")
 icacheEnable.setDefaultValue(True)
 
+cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
+cacheAlign.setLabel("Cache Alignment Length")
+cacheAlign.setVisible(False)
+cacheAlign.setDefaultValue(32)
+
 configName = Variables.get("__CONFIGURATION_NAME")
 
 mmuFile = coreComponent.createFileSymbol("MMU_C", None)

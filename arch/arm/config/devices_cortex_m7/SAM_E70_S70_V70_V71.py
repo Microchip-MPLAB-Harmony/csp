@@ -209,6 +209,11 @@ icacheEnable = coreComponent.createBooleanSymbol(
 icacheEnable.setLabel("Enable Instruction Cache")
 icacheEnable.setDefaultValue(True)
 
+cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
+cacheAlign.setLabel("Cache Alignment Length")
+cacheAlign.setVisible(False)
+cacheAlign.setDefaultValue(32)
+
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
 coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
 
