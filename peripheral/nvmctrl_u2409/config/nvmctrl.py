@@ -186,7 +186,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_MemoryDriver.setVisible(False)
     nvmctrlSym_MemoryDriver.setDefaultValue(False)
 
-    offsetStart = (int(nvmctrlSym_FLASH_SIZE.getValue(),16) / 2)
+    offsetStart = (nvmctrlSym_FLASH_SIZE.getValue() / 2)
 
     nvmOffset = str(hex(nvmctrlSym_FLASH_ADDRESS.getValue() + offsetStart))
 
