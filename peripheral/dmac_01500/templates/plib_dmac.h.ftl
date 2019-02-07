@@ -116,9 +116,6 @@ typedef enum
     /* Error while processing the request */
     DMAC_TRANSFER_EVENT_ERROR,
 
-    /* Data transfer was aborted. */
-    DMAC_TRANSFER_EVENT_ABORT,
-
     /* No events yet. */
     DMAC_TRANSFER_EVENT_NONE
 
