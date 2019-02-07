@@ -612,7 +612,7 @@ dfllOndemand.setOutputMode("Value")
 dfllOndemand.setDisplayMode("Description")
 dfllOndemand.addKey("Disable", str(0), "Always Enable")
 dfllOndemand.addKey("Enable", str(1), "Only on Peripheral Request")
-dfllOndemand.setDefaultValue(0)
+dfllOndemand.setDefaultValue(1)
 
 dfllRunstdy = coreComponent.createBooleanSymbol(
     "CONFIG_CLOCK_DFLL_RUNSTDY", dfll_Menu)
@@ -797,8 +797,7 @@ osc32kctrlSym_XOSC32K_EN1K.setLabel("Enable 1KHz Output")
 
 xosc32KGain = coreComponent.createKeyValueSetSymbol(
     "XOSC32K_CGM", xosc32k_Menu)
-xosc32KGain.setLabel("Oscillator Startup Time ")
-xosc32KGain.setDescription("XOSC start up time ")
+xosc32KGain.setLabel("Control Gain Mode")
 xosc32KGainNode = ATDF.getNode(
     "/avr-tools-device-file/modules/module@[name=\"OSC32KCTRL\"]/value-group@[name=\"OSC32KCTRL_XOSC32K__CGM\"]")
 xosc32KGainNodeValues = xosc32KGainNode.getChildren()
@@ -858,7 +857,7 @@ osc32kctrlSym_XOSC32K_STARTUP.setDisplayMode("Description")
 
 # RTC Clock Selection
 rtcClockSourceSelection = coreComponent.createKeyValueSetSymbol(
-    "CONFIG_CLOCK_RTC_SRC", xosc32k_Menu)  # FIXME base component by Kathir
+    "CONFIG_CLOCK_RTC_SRC", xosc32k_Menu)  
 rtcClockSourceSelection.setLabel("RTC Clock Selection")
 rtcClockSourceSelection.setDescription("Clock Source selection for RTC")
 
