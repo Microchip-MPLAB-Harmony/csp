@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_wdt.h
+    plib_${WDT_INSTANCE_NAME?lower_case}.h
 
   Summary:
     Interface definition of the Watch Dog Timer Plib (WDT).
@@ -15,8 +15,9 @@
     It allows user to setup timeout duration and restart watch dog timer.
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -37,16 +38,27 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef ${WDT_INSTANCE_NAME}_H    // Guards against multiple inclusion
-#define ${WDT_INSTANCE_NAME}_H
+#ifndef PLIB_${WDT_INSTANCE_NAME}_H    // Guards against multiple inclusion
+#define PLIB_${WDT_INSTANCE_NAME}_H
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
 
 #include <stdint.h>
 #include <stddef.h>
 
-#ifdef __cplusplus // Provide C++ Compatibility
- extern "C" {
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
 #endif
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -54,13 +66,26 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void ${WDT_INSTANCE_NAME}_Initialize( void );
-void ${WDT_INSTANCE_NAME}_Clear( void );
+<#if CONFIG_FWDTEN == "OFF">
 void ${WDT_INSTANCE_NAME}_Enable( void );
+
 void ${WDT_INSTANCE_NAME}_Disable( void );
 
-#ifdef __cplusplus // Provide C++ Compatibility
- }
-#endif
+</#if>
+<#if CONFIG_WINDIS == "WINDOW">
+void ${WDT_INSTANCE_NAME}_WindowEnable( void );
 
-#endif 
+void ${WDT_INSTANCE_NAME}_WindowDisable( void );
+
+</#if>
+void ${WDT_INSTANCE_NAME}_Clear( void );
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+
+#endif
+// DOM-IGNORE-END
+
+#endif // PLIB_${WDT_INSTANCE_NAME}_H

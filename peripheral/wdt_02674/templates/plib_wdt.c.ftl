@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_wdt.c
+    plib_${WDT_INSTANCE_NAME?lower_case}.c
 
   Summary:
     WDT Source File
@@ -15,8 +15,9 @@
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -37,10 +38,29 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
 
 #include "device.h"
 #include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: ${WDT_INSTANCE_NAME} Implementation
+// *****************************************************************************
+// *****************************************************************************
+
+<#if CONFIG_FWDTEN == "OFF">
+void ${WDT_INSTANCE_NAME}_Enable(void)
+{
+    /* ON = 1 */
+    WDTCONSET = _WDTCON_ON_MASK;
+}
 
 void ${WDT_INSTANCE_NAME}_Disable(void)
 {
@@ -49,15 +69,21 @@ void ${WDT_INSTANCE_NAME}_Disable(void)
     WDTCONCLR = _WDTCON_ON_MASK;
 }
 
-
-<#if USE_SYS_WDT?c == "true">
-void ${WDT_INSTANCE_NAME}_Initialize( void )
+</#if>
+<#if CONFIG_WINDIS == "WINDOW">
+void ${WDT_INSTANCE_NAME}_WindowEnable( void )
 {
-    /* Enable WDT */
-    /* ON = 1 */
-    WDTCONSET = _WDTCON_ON_MASK;
+    /* WDTWINEN = 1 */
+    WDTCONSET = _WDTCON_WDTWINEN_MASK;
 }
 
+void ${WDT_INSTANCE_NAME}_WindowDisable( void )
+{
+    /* WDTWINEN = 0 */
+    WDTCONCLR = _WDTCON_WDTWINEN_MASK;
+}
+
+</#if>
 void ${WDT_INSTANCE_NAME}_Clear(void)
 {
     <#-- Below is done family-by-family, as there are differences in clearing WDT -->
@@ -68,17 +94,3 @@ void ${WDT_INSTANCE_NAME}_Clear(void)
     wdtclrkey = ( (volatile uint16_t *)&WDTCON ) + 1;
     *wdtclrkey = 0x5743;
 }
-
-void ${WDT_INSTANCE_NAME}_Enable(void)
-{
-    <#lt><#if CONFIG_WINDIS == "WINDOW">
-    /* WDTWINEN = 1 */
-    WDTCONSET = _WDTCON_WDTWINEN_MASK;
-    <#lt><#else>
-    /* WDTWINEN = 0 */
-    WDTCONCLR = _WDTCON_WDTWINEN_MASK;
-    <#lt></#if>
-    /* ON = 1 */
-    WDTCONSET = _WDTCON_ON_MASK;
-}
-</#if>
