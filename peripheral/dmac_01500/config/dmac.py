@@ -306,7 +306,7 @@ def dchintCallback(symbol, event):
     else:
         # always enable block transfer complete interrupts, for DMA to indicate when done
         chbcieSym[channel].setValue("1",2)                # for a comment in ftl code
-        payload = 0x80000       # CHBCIE=1, block transfer complete interrupt enable
+        payload = 0xB0000       # CHBCIE=1, CHTAIE=1, CHERIE=1
         dmacDchxIntSym[channel].setValue(payload, 2)
 
 ################################################################################

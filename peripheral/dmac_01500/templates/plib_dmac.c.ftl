@@ -52,7 +52,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-DMAC_CHANNEL_OBJECT  gSysDMAChannelObj[${NUM_DMA_CHANS}];
+static DMAC_CHANNEL_OBJECT  gDMAChannelObj[${NUM_DMA_CHANS}];
 
 #define ConvertToPhysicalAddress(a) ((uint32_t)KVA_TO_PA(a))
 #define ConvertToVirtualAddress(a)  PA_TO_KVA1(a)
@@ -205,7 +205,7 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     *(volatile uint32_t *)(&DMACONSET) = _DMACON_ON_MASK;
 
     /* Initialize the available channel objects */
-    chanObj             =   (DMAC_CHANNEL_OBJECT *)&gSysDMAChannelObj[0];
+    chanObj             =   (DMAC_CHANNEL_OBJECT *)&gDMAChannelObj[0];
 
     for(chanIndex = 0; chanIndex < ${NUM_DMA_CHANS}; chanIndex++)
     {
@@ -281,9 +281,9 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 */
 void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle)
 {
-    gSysDMAChannelObj[channel].pEventCallBack = eventHandler;
+    gDMAChannelObj[channel].pEventCallBack = eventHandler;
 
-    gSysDMAChannelObj[channel].hClientArg = contextHandle;
+    gDMAChannelObj[channel].hClientArg = contextHandle;
 }
 
 // *****************************************************************************
@@ -312,9 +312,9 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
     bool returnStatus = false;
     volatile uint32_t *regs;
 
-    if(gSysDMAChannelObj[channel].inUse == false)
+    if(gDMAChannelObj[channel].inUse == false)
     {
-        gSysDMAChannelObj[channel].inUse = true;
+        gDMAChannelObj[channel].inUse = true;
         returnStatus = true;
 
         /* Set the source / destination addresses, DCHxSSA and DCHxDSA */
@@ -382,7 +382,7 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL channel)
         regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CON_OFST})+1;
         *(volatile uint32_t *)(regs) = _DCH0CON_CHEN_MASK;
 
-        gSysDMAChannelObj[channel].inUse = false;
+        gDMAChannelObj[channel].inUse = false;
 
     }
 }
@@ -408,7 +408,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
 {
     volatile uint32_t * regs;
 
-    return (gSysDMAChannelObj[channel].inUse);
+    return (gDMAChannelObj[channel].inUse);
 
 }
 
@@ -443,7 +443,7 @@ void DMA${i}_InterruptHandler (void)
     bool retVal;
 
     /* Find out the channel object */
-    chanObj = (DMAC_CHANNEL_OBJECT *) &gSysDMAChannelObj[${i}];
+    chanObj = (DMAC_CHANNEL_OBJECT *) &gDMAChannelObj[${i}];
 
     /* Check whether the active DMA channel event has occurred */
     retVal = ${.vars[INTBITSREG]}.CHBCIF;
@@ -466,7 +466,7 @@ void DMA${i}_InterruptHandler (void)
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
-        dmaEvent = DMAC_TRANSFER_EVENT_ABORT;
+        dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
     }
     else if(true == ${.vars[INTBITSREG]}.CHERIF)
     {
@@ -480,12 +480,15 @@ void DMA${i}_InterruptHandler (void)
 
     chanObj->inUse = false;
 
+    ${.vars[STATCLRREG]}CLR = ${.vars[STATREGMASK]};
+
     /* Clear the interrupt flag and call event handler */
     if((NULL != chanObj->pEventCallBack) && (DMAC_TRANSFER_EVENT_NONE != dmaEvent))
     {
-        ${.vars[STATCLRREG]}CLR = ${.vars[STATREGMASK]};
         chanObj->pEventCallBack(dmaEvent, chanObj->hClientArg);
     }
+
+
 }
 </#if>
 </#list>
