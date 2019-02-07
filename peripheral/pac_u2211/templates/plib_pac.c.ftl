@@ -72,12 +72,12 @@ void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC
     if(operation == PAC_PROTECTION_SET)
     {
         /* Lock the Peripheral interface */
-        ((pac_registers_t *)(PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * (peripheral >> 5))))->PAC_WPSET = PAC_WPSET_WP(peripheral & 0x1f);
+        ((pac_registers_t *)(PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * (peripheral >> 5))))->PAC_WPSET = PAC_WPSET_WP_Pos << (peripheral & 0x1f);
     }
     else if(operation == PAC_PROTECTION_CLEAR)
     {
         /* Unlock the Peripheral interface */
-        ((pac_registers_t *)(PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * (peripheral >> 5))))->PAC_WPCLR = PAC_WPCLR_WP(peripheral & 0x1f);
+        ((pac_registers_t *)(PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * (peripheral >> 5))))->PAC_WPCLR = PAC_WPCLR_WP_Pos << (peripheral & 0x1f);
     }
 }
 
