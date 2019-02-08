@@ -278,49 +278,40 @@ for vectorDict in evicVectorDataStructure:
 ####################################### Driver Symbols ############################################
 ###################################################################################################
 
+corePeripherals = {}
+
 # Components which are creating critical section
-corePeripherals = getCorePeripherals()
+corePeripherals = getCorePeripheralsInterruptDataStructure()
 
-modules = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals").getChildren()
+for moduleInstance in corePeripherals:
 
-for module in range (len(modules)):
-    periphName = str(modules[module].getAttribute("name"))
-    if periphName in corePeripherals:
-        instances = modules[module].getChildren()
-        for instance in range (len(instances)):
-            isMatched = False
-            periphInstanceName = str(instances[instance].getAttribute("name"))
-            moduleInstance = [dict for dict in evicVectorDataStructure if periphInstanceName in dict["module-instance"]]
-            if len(moduleInstance) > 1:
-                options = instances[instance].getChildren()
-                for option in range (len(options)):
-                    parameters = options[option].getChildren()
-                    for parameter in range(len(parameters)):
-                        name = str(parameters[parameter].getAttribute("name"))
+    dict = {}
+    dict = corePeripherals.get(moduleInstance)
+    vectName = dict.get("name")
+    vectIntSrc = dict.get("INT_SRC")
 
-                        # Check for multi vector details are defined in ATDF
-                        if "INT_SRC" in name:
-                            isMatched = True
-                            value = int(parameters[parameter].getAttribute("value"))
-                            vectIndexes = [dict for dict in evicVectorDataStructure if value == dict["index"]]
-                            vectName = "_" + vectIndexes[0].get("name") + "_VECTOR"
-                            evicVectorNumber = coreComponent.createStringSymbol(periphInstanceName + "_" + name, None)
-                            evicVectorNumber.setDefaultValue(vectName)
-                            evicVectorNumber.setVisible(False)
+    if len(vectName) > 1:
+        # Symbol to check peripheral contains multi vector
+        evicMultiVector = coreComponent.createBooleanSymbol(moduleInstance + "_MULTI_IRQn", None)
+        evicMultiVector.setDefaultValue(True)
+        evicMultiVector.setVisible(False)
 
-            if isMatched:
-                # Symbol to check peripheral contains multi vector
-                evicMultiVector = coreComponent.createBooleanSymbol(periphInstanceName + "_MULTI_IRQn", None)
-                evicMultiVector.setDefaultValue(True)
-                evicMultiVector.setVisible(False)
-            else:
-                if len(moduleInstance) != 0:
-                    vectName = "_" + moduleInstance[0].get("name") + "_VECTOR"
+        for intSrc in range(len(vectIntSrc)):
 
-                    # Symbol to get interrupt vector of peripheral containing single vector
-                    evicVectorName = coreComponent.createStringSymbol(periphInstanceName + "_SINGLE_IRQn", None)
-                    evicVectorName.setDefaultValue(vectName)
-                    evicVectorName.setVisible(False)
+            name = "_" + vectName[intSrc] + "_VECTOR"
+
+            # Symbol to get individual interrupt vector of peripheral containing multi vector
+            evicVectorNumber = coreComponent.createStringSymbol(moduleInstance + "_" + vectIntSrc[intSrc] + "_INT_SRC", None)
+            evicVectorNumber.setDefaultValue(name)
+            evicVectorNumber.setVisible(False)
+    else:
+        if len(vectName) != 0:
+            name = "_" + vectName[0] + "_VECTOR"
+
+            # Symbol to get interrupt vector of peripheral containing single vector
+            evicVectorName = coreComponent.createStringSymbol(moduleInstance + "_SINGLE_IRQn", None)
+            evicVectorName.setDefaultValue(name)
+            evicVectorName.setVisible(False)
 
 ############################################################################
 #### Code Generation ####
