@@ -178,7 +178,7 @@ bool NVM_Read( uint32_t *data, uint32_t length, const uint32_t address )
 }
 bool NVM_WordWrite(uint32_t data, uint32_t address)
 {
-    NVMDATA0SET = (uint32_t )data;
+    NVMDATA0 = (uint32_t )data;
 
     NVM_StartOperationAtAddress( address,  WORD_PROGRAM_OPERATION);
 
@@ -187,10 +187,10 @@ bool NVM_WordWrite(uint32_t data, uint32_t address)
 
 bool NVM_QuadWordWrite(uint32_t *data, uint32_t address)
 {
-   NVMDATA0SET = *(data++);
-   NVMDATA1SET = *(data++);
-   NVMDATA2SET = *(data++);
-   NVMDATA3SET = *(data++);
+   NVMDATA0 = *(data++);
+   NVMDATA1 = *(data++);
+   NVMDATA2 = *(data++);
+   NVMDATA3 = *(data++);
 
    NVM_StartOperationAtAddress( address,  QUAD_WORD_PROGRAM_OPERATION);
 
@@ -199,7 +199,7 @@ bool NVM_QuadWordWrite(uint32_t *data, uint32_t address)
 
 bool NVM_RowWrite(uint32_t *data, uint32_t address)
 {
-   NVMSRCADDRSET = (uint32_t )KVA_TO_PA(data);
+   NVMSRCADDR = (uint32_t )KVA_TO_PA(data);
 
    NVM_StartOperationAtAddress( address,  ROW_PROGRAM_OPERATION);
 

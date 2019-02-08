@@ -61,8 +61,8 @@
 #define LED_OFF                 LED1_Clear
 #define LED_TOGGLE              LED1_Toggle
 
-uint32_t writeData[BUFFER_SIZE] __ALIGNED(16) __COHERENT;
-uint32_t readData[BUFFER_SIZE]  __ALIGNED(16) __COHERENT;
+uint32_t writeData[BUFFER_SIZE] __COHERENT;
+uint32_t readData[BUFFER_SIZE];
 
 static volatile bool xferDone = false;
 
@@ -130,9 +130,3 @@ int main ( void )
     /* Execution should not come here during normal operation */
     return ( EXIT_FAILURE );
 }
-
-
-/*******************************************************************************
- End of File
-*/
-

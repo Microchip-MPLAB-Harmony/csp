@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6D74B1DA8D3C85F752EE4070C575F153</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6D74B1DA8D3C85F752EE4070C575F153</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AA03C94BE651E69D8DDB826E111D96E3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AA03C94BE651E69D8DDB826E111D96E3</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_evic.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">550CCE5823682F8A902E7E281E1B85E4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">550CCE5823682F8A902E7E281E1B85E4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AC4696C0BF785F09454055FD7A382781</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AC4696C0BF785F09454055FD7A382781</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -67,8 +67,8 @@
           <Name dnOrder="1">plib_nvm.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/nvm/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/nvm/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">74BF5F1E3769D1E0ED5B76C807CC77F5</GeneratedChecksum>
-          <UserChecksum dnOrder="5">74BF5F1E3769D1E0ED5B76C807CC77F5</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6D0C3B34067AA6B96A4E812D0B950D8D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6D0C3B34067AA6B96A4E812D0B950D8D</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
@@ -115,8 +115,8 @@
           <Name dnOrder="1">plib_evic.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">10DA86EA8FAC649160FE4C46A9773D19</GeneratedChecksum>
-          <UserChecksum dnOrder="5">10DA86EA8FAC649160FE4C46A9773D19</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FAEB09D667F9B4ED5BB82521EBDE6596</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FAEB09D667F9B4ED5BB82521EBDE6596</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
@@ -147,8 +147,8 @@
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B454F7F8E428FF5F456D81EC32E59DA8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B454F7F8E428FF5F456D81EC32E59DA8</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8DF770B26F328FDC2BAB855C1DD46577</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8DF770B26F328FDC2BAB855C1DD46577</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
