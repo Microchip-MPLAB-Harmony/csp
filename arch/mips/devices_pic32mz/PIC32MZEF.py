@@ -67,10 +67,39 @@ def _process_valuegroup_entry(node):
     value = int(newstring,16)
     return str(value)
 
-def getCorePeripherals():
+def getCorePeripheralsInterruptDataStructure():
 
-    # Components which are creating critical section
-    corePeripherals = ["UART", "SPI", "I2C", "DMAC", "OCMP", "TMR", "TMR1", "CORE"]
+    dmacVectName = ["DMA0", "DMA1", "DMA2", "DMA3", "DMA4", "DMA5", "DMA6", "DMA7"]
+    dmacIntSrc = ["CHANNEL0", "CHANNEL1", "CHANNEL2", "CHANNEL3", "CHANNEL4", "CHANNEL5", "CHANNEL6", "CHANNEL7"]
+    uartIntSrc = ["USART_ERROR", "USART_RX", "USART_TX_COMPLETE"]
+    spiIntSrc = ["SPI_ERROR", "SPI_RX", "SPI_TX_COMPLETE"]
+    i2cIntSrc = ["I2C_0", "I2C_1", "I2C_2"]
+
+    corePeripherals = {
+
+            "DMAC" : {"name":dmacVectName, "INT_SRC":dmacIntSrc},
+
+            "UART1" : {"name":["UART1_FAULT", "UART1_RX", "UART1_TX"], "INT_SRC":uartIntSrc},
+            "UART2" : {"name":["UART2_FAULT", "UART2_RX", "UART2_TX"], "INT_SRC":uartIntSrc},
+            "UART3" : {"name":["UART3_FAULT", "UART3_RX", "UART3_TX"], "INT_SRC":uartIntSrc},
+            "UART4" : {"name":["UART4_FAULT", "UART4_RX", "UART4_TX"], "INT_SRC":uartIntSrc},
+            "UART5" : {"name":["UART5_FAULT", "UART5_RX", "UART5_TX"], "INT_SRC":uartIntSrc},
+            "UART6" : {"name":["UART6_FAULT", "UART6_RX", "UART6_TX"], "INT_SRC":uartIntSrc},
+
+            "SPI1" : {"name":["SPI1_FAULT", "SPI1_RX", "SPI1_TX"], "INT_SRC":spiIntSrc},
+            "SPI2" : {"name":["SPI2_FAULT", "SPI2_RX", "SPI2_TX"], "INT_SRC":spiIntSrc},
+            "SPI3" : {"name":["SPI3_FAULT", "SPI3_RX", "SPI3_TX"], "INT_SRC":spiIntSrc},
+            "SPI4" : {"name":["SPI4_FAULT", "SPI4_RX", "SPI4_TX"], "INT_SRC":spiIntSrc},
+            "SPI5" : {"name":["SPI5_FAULT", "SPI5_RX", "SPI5_TX"], "INT_SRC":spiIntSrc},
+            "SPI6" : {"name":["SPI6_FAULT", "SPI6_RX", "SPI6_TX"], "INT_SRC":spiIntSrc},
+
+            "I2C1" : {"name":["I2C1_FAULT", "I2C1_RX", "I2C1_TX"], "INT_SRC":i2cIntSrc},
+            "I2C2" : {"name":["I2C2_FAULT", "I2C2_RX", "I2C2_TX"], "INT_SRC":i2cIntSrc},
+            "I2C3" : {"name":["I2C3_FAULT", "I2C3_RX", "I2C3_TX"], "INT_SRC":i2cIntSrc},
+            "I2C4" : {"name":["I2C4_FAULT", "I2C4_RX", "I2C4_TX"], "INT_SRC":i2cIntSrc},
+            "I2C5" : {"name":["I2C5_FAULT", "I2C5_RX", "I2C5_TX"], "INT_SRC":i2cIntSrc}
+
+    }
 
     return corePeripherals
 
@@ -145,7 +174,6 @@ coreComponent.addPlugin("../peripheral/clk_pic32mz/plugin/clockmanager.jar")
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
 coreComponent.addPlugin("../peripheral/gpio_02467/plugin/gpio_02467.jar")
-print("NO JAR PINMANAGER FILE AVAILABLE FOR MZ/EF - SKIP LOADING FOR NOW")
 
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("CACHE")
