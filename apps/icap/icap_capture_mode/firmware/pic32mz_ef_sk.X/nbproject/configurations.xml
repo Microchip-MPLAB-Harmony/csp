@@ -27,7 +27,6 @@
             <logicalFolder name="f1" displayName="tmr" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/tmr/plib_tmr_common.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/tmr/plib_tmr2.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/tmr/plib_tmr3.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="wdt" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/wdt/plib_wdt.h</itemPath>
@@ -72,7 +71,6 @@
             </logicalFolder>
             <logicalFolder name="f1" displayName="tmr" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/tmr/plib_tmr2.c</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/tmr/plib_tmr3.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="wdt" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/wdt/plib_wdt.c</itemPath>
