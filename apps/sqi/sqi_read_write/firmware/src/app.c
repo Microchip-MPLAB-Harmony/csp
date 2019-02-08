@@ -70,34 +70,34 @@
     Application strings and buffers are be defined outside this structure.
 */
 
-APP_DATA CACHE_ALIGN appData;
+APP_DATA COHERENT_ALIGN appData;
 
 static uint32_t write_index = 0;
 static uint32_t sector_index = 0;
 
-sqi_dma_desc_t CACHE_ALIGN sqiCmdDesc[CMD_DESC_NUMBER];
-sqi_dma_desc_t CACHE_ALIGN sqiBufDesc[BUFF_DESC_NUMBER];
+sqi_dma_desc_t COHERENT_ALIGN sqiCmdDesc[CMD_DESC_NUMBER];
+sqi_dma_desc_t COHERENT_ALIGN sqiBufDesc[BUFF_DESC_NUMBER];
 
-uint8_t CACHE_ALIGN sqi_cmd_jedec[2];
-uint8_t CACHE_ALIGN sqi_cmd_eqio;
-uint8_t CACHE_ALIGN sqi_cmd_rsten;
-uint8_t CACHE_ALIGN sqi_cmd_rst;
-uint8_t CACHE_ALIGN sqi_cmd_wren;
-uint8_t CACHE_ALIGN sqi_cmd_rdsr[2];
-uint8_t CACHE_ALIGN sqi_cmd_ce;
-uint8_t CACHE_ALIGN sqi_cmd_se[4];
-uint8_t CACHE_ALIGN sqi_cmd_be[4];
-uint8_t CACHE_ALIGN sqi_cmd_pp[4];
-uint8_t CACHE_ALIGN sqi_cmd_hsr[7];
-uint8_t CACHE_ALIGN sqi_cmd_ULBPR;
-uint8_t CACHE_ALIGN sqi_cmd_dummy[6];
+uint8_t COHERENT_ALIGN sqi_cmd_jedec[2];
+uint8_t COHERENT_ALIGN sqi_cmd_eqio;
+uint8_t COHERENT_ALIGN sqi_cmd_rsten;
+uint8_t COHERENT_ALIGN sqi_cmd_rst;
+uint8_t COHERENT_ALIGN sqi_cmd_wren;
+uint8_t COHERENT_ALIGN sqi_cmd_rdsr[2];
+uint8_t COHERENT_ALIGN sqi_cmd_ce;
+uint8_t COHERENT_ALIGN sqi_cmd_se[4];
+uint8_t COHERENT_ALIGN sqi_cmd_be[4];
+uint8_t COHERENT_ALIGN sqi_cmd_pp[4];
+uint8_t COHERENT_ALIGN sqi_cmd_hsr[7];
+uint8_t COHERENT_ALIGN sqi_cmd_ULBPR;
+uint8_t COHERENT_ALIGN sqi_cmd_dummy[6];
 
 static void APP_EventHandler(uintptr_t context)
 {
     appData.xfer_done = true;
 }
 
-static void APP_ResetFlash(void)
+void APP_ResetFlash(void)
 {
     appData.xfer_done = false;
 
@@ -130,7 +130,7 @@ static void APP_ResetFlash(void)
     while(appData.xfer_done == false);
 }
 
-static void APP_EnableQuadIO(void)
+void APP_EnableQuadIO(void)
 {
     appData.xfer_done = false;
 
@@ -148,7 +148,7 @@ static void APP_EnableQuadIO(void)
     while(appData.xfer_done == false);
 }
 
-static void APP_WriteEnable(void)
+void APP_WriteEnable(void)
 {
     sqiCmdDesc[0].bd_ctrl       = ( SQI_BDCTRL_BUFFLEN_VAL(1) | SQI_BDCTRL_MODE_QUAD_LANE |
                                     SQI_BDCTRL_SQICS_CS1 | SQI_BDCTRL_DEASSERT |
@@ -159,7 +159,7 @@ static void APP_WriteEnable(void)
     sqiCmdDesc[0].bd_nxtptr     = (sqi_dma_desc_t *)KVA_TO_PA(&sqiCmdDesc[1]);
 }
 
-static void APP_UnlockFlash(void)
+void APP_UnlockFlash(void)
 {
     appData.xfer_done = false;
 
@@ -179,7 +179,7 @@ static void APP_UnlockFlash(void)
     while(appData.xfer_done == false);
 }
 
-static void  APP_ReadJedecId( uint32_t *jedec_id)
+void  APP_ReadJedecId( uint32_t *jedec_id)
 {
     appData.xfer_done = false;
 
@@ -208,7 +208,7 @@ static void  APP_ReadJedecId( uint32_t *jedec_id)
     while(appData.xfer_done == false);
 }
 
-static void  APP_ReadStatus( void *rx_data, uint32_t rx_data_length )
+void  APP_ReadStatus( void *rx_data, uint32_t rx_data_length )
 {
     appData.xfer_done = false;
 
@@ -237,7 +237,7 @@ static void  APP_ReadStatus( void *rx_data, uint32_t rx_data_length )
     while(appData.xfer_done == false);
 }
 
-static void APP_Read( void *rx_data, uint32_t rx_data_length, uint32_t address )
+void APP_Read( void *rx_data, uint32_t rx_data_length, uint32_t address )
 {
     uint32_t pendingBytes   = rx_data_length;
     uint8_t *readBuffer     = (uint8_t *)rx_data;
@@ -299,7 +299,7 @@ static void APP_Read( void *rx_data, uint32_t rx_data_length, uint32_t address )
     SQI1_DMATransfer((sqi_dma_desc_t *)KVA_TO_PA(&sqiCmdDesc[0]));
 }
 
-static void APP_PageWrite( void *tx_data, uint32_t address )
+void APP_PageWrite( void *tx_data, uint32_t address )
 {
     appData.xfer_done = false;
 
@@ -331,7 +331,7 @@ static void APP_PageWrite( void *tx_data, uint32_t address )
     SQI1_DMATransfer((sqi_dma_desc_t *)KVA_TO_PA(&sqiCmdDesc[0]));
 }
 
-static void APP_Erase( uint8_t *instruction, uint32_t length )
+void APP_Erase( uint8_t *instruction, uint32_t length )
 {
     appData.xfer_done = false;
 
@@ -350,7 +350,7 @@ static void APP_Erase( uint8_t *instruction, uint32_t length )
     SQI1_DMATransfer((sqi_dma_desc_t *)KVA_TO_PA(&sqiCmdDesc[0]));
 }
 
-static void APP_SectorErase( uint32_t address )
+void APP_SectorErase( uint32_t address )
 {
     sqi_cmd_se[1] = (0xff & (address>>16));
     sqi_cmd_se[2] = (0xff & (address>>8));
@@ -359,7 +359,7 @@ static void APP_SectorErase( uint32_t address )
     APP_Erase(&sqi_cmd_se[0], 4);
 }
 
-static void APP_BulkErase( uint32_t address )
+void APP_BulkErase( uint32_t address )
 {
     sqi_cmd_be[1] = (0xff & (address>>16));
     sqi_cmd_be[2] = (0xff & (address>>8));
@@ -368,7 +368,7 @@ static void APP_BulkErase( uint32_t address )
     APP_Erase(&sqi_cmd_be[0], 4);
 }
 
-static void APP_ChipErase( void )
+void APP_ChipErase( void )
 {
     APP_Erase(&sqi_cmd_ce, 1);
 }

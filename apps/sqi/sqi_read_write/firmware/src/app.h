@@ -98,7 +98,7 @@ extern "C" {
 
 #define SWITCH_PRESSED              (bool)!SWITCH_3_Get()
     
-#define CACHE_ALIGN                 __COHERENT __ALIGNED(16)
+#define COHERENT_ALIGN              __COHERENT CACHE_ALIGN
 
 // *****************************************************************************
 /* Application states
@@ -179,7 +179,7 @@ typedef struct
     volatile bool xfer_done;
 
     /* Jedec-ID*/
-    uint32_t jedec_id CACHE_ALIGN;
+    uint32_t jedec_id;
 
     /* Read Buffer */
     uint8_t readBuffer[BUFFER_SIZE] CACHE_ALIGN;
