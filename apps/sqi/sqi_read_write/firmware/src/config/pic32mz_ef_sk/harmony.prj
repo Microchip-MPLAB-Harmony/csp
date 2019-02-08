@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">CCE9DA19022D5956D2D6F8707F22284F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">CCE9DA19022D5956D2D6F8707F22284F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D78CF00E121954908FF1F268B71EDFFD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D78CF00E121954908FF1F268B71EDFFD</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_evic.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4DAB278490F7147BECC24ACD72D01216</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4DAB278490F7147BECC24ACD72D01216</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1D61E7BB3CB89E2F2B538D63212CA04A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1D61E7BB3CB89E2F2B538D63212CA04A</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -115,8 +115,8 @@
           <Name dnOrder="1">plib_evic.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">10DA86EA8FAC649160FE4C46A9773D19</GeneratedChecksum>
-          <UserChecksum dnOrder="5">10DA86EA8FAC649160FE4C46A9773D19</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FAEB09D667F9B4ED5BB82521EBDE6596</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FAEB09D667F9B4ED5BB82521EBDE6596</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
@@ -155,8 +155,8 @@
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B454F7F8E428FF5F456D81EC32E59DA8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B454F7F8E428FF5F456D81EC32E59DA8</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8DF770B26F328FDC2BAB855C1DD46577</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8DF770B26F328FDC2BAB855C1DD46577</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
