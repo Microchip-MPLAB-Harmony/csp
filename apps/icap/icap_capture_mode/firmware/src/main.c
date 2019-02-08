@@ -70,8 +70,6 @@ int main ( void )
     
     TMR2_Start();
     
-    TMR3_Start();
-    
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */

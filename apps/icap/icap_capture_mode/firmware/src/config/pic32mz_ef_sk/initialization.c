@@ -56,9 +56,9 @@
 
 /*** DEVCFG0 ***/
 #pragma config DEBUG =      OFF
-#pragma config JTAGEN =     OFF
+#pragma config JTAGEN =     ON
 #pragma config ICESEL =     ICS_PGx2
-#pragma config TRCEN =      OFF
+#pragma config TRCEN =      ON
 #pragma config BOOTISA =    MIPS32
 #pragma config FECCCON =    OFF_UNLOCKED
 #pragma config FSLEEP =     OFF
@@ -74,18 +74,18 @@
 /*** DEVCFG1 ***/
 #pragma config FNOSC =      SPLL
 #pragma config DMTINTV =    WIN_127_128
-#pragma config FSOSCEN =    OFF
-#pragma config IESO =       OFF
+#pragma config FSOSCEN =    ON
+#pragma config IESO =       ON
 #pragma config POSCMOD =    OFF
 #pragma config OSCIOFNC =   OFF
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
 #pragma config WDTSPGM =    STOP
-#pragma config FWDTEN =     OFF
+#pragma config FWDTEN =     ON
 #pragma config WINDIS =     NORMAL
-#pragma config FWDTWINSZ =  WINSZ_25
+#pragma config FWDTWINSZ =  WINSZ_75
 #pragma config DMTCNT =     DMT31
-#pragma config FDMTEN =     OFF
+#pragma config FDMTEN =     ON
 
 /*** DEVCFG2 ***/
 #pragma config FPLLIDIV =   DIV_1
@@ -107,7 +107,7 @@
 /*** BF1SEQ0 ***/
 
 #pragma config TSEQ =       0xffff
-#pragma config CSEQ =       0x0
+#pragma config CSEQ =       0xffff
 
 
 
@@ -162,8 +162,6 @@ void SYS_Initialize ( void* data )
 
 
     TMR2_Initialize();
-
-    TMR3_Initialize();
 
     WDT_Initialize();
 
