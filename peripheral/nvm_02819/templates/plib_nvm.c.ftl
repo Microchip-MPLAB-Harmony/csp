@@ -182,7 +182,7 @@ bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t 
 }
 bool ${NVM_INSTANCE_NAME}_WordWrite(uint32_t data, uint32_t address)
 {
-    NVMDATA0SET = (uint32_t )data;
+    NVMDATA0 = (uint32_t )data;
 
     ${NVM_INSTANCE_NAME}_StartOperationAtAddress( address,  WORD_PROGRAM_OPERATION);
 
@@ -191,10 +191,10 @@ bool ${NVM_INSTANCE_NAME}_WordWrite(uint32_t data, uint32_t address)
 
 bool ${NVM_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, uint32_t address)
 {
-   NVMDATA0SET = *(data++);
-   NVMDATA1SET = *(data++);
-   NVMDATA2SET = *(data++);
-   NVMDATA3SET = *(data++);
+   NVMDATA0 = *(data++);
+   NVMDATA1 = *(data++);
+   NVMDATA2 = *(data++);
+   NVMDATA3 = *(data++);
 
    ${NVM_INSTANCE_NAME}_StartOperationAtAddress( address,  QUAD_WORD_PROGRAM_OPERATION);
 
@@ -203,7 +203,7 @@ bool ${NVM_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, uint32_t address)
 
 bool ${NVM_INSTANCE_NAME}_RowWrite(uint32_t *data, uint32_t address)
 {
-   NVMSRCADDRSET = (uint32_t )KVA_TO_PA(data);
+   NVMSRCADDR = (uint32_t )KVA_TO_PA(data);
 
    ${NVM_INSTANCE_NAME}_StartOperationAtAddress( address,  ROW_PROGRAM_OPERATION);
 
