@@ -404,12 +404,24 @@ def instantiateComponent( coreComponent ):
     intSourceFile.setType("SOURCE")
     intSourceFile.setDependencies(genSysSourceFile, ["CoreSysIntFile", "CoreSysFiles"])
 
+    if "PIC32M" in processor:
+        intASMSourceFile = coreComponent.createFileSymbol("INTERRUPTS_ASM", None)
+        intASMSourceFile.setSourcePath("templates/interrupts_a.S.ftl")
+        intASMSourceFile.setOutputName("interrupts_a.S")
+        intASMSourceFile.setDestPath("")
+        intASMSourceFile.setProjectPath("config/" + configName + "/")
+        intASMSourceFile.setType("SOURCE")
+        intASMSourceFile.setMarkup(True)
+        intASMSourceFile.setOverwrite(True)
+        intASMSourceFile.setDependencies(genSysSourceFile, ["CoreSysIntFile", "CoreSysFiles"])
+
     systemIntHeadersList =                  coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_C_INCLUDES",         None )
     systemIntVectorsList =                  coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_C_VECTORS",          None )
     systemIntVectorsMultipleHandlesList =   coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS",  None )
     systemIntVectorsWeakHandlesList =       coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS",      None )
     systemIntVectorsSharedHandlesList =     coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SHARED_HANDLERS",    None )
     systemIntVectorsHandlesList =           coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_HANDLERS",           None )
+    systemIntVectorsASMList =               coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_ASM",                None )
 
     # generate exceptions.c file
     exceptSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
