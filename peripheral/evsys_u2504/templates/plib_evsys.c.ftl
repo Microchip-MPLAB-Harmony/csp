@@ -116,9 +116,9 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 	<#lt>{
 	<#lt>	volatile uint32_t status = ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
 	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
-	<#lt>	if(evsys[channel].callback != NULL)
+	<#lt>	if(evsys[${x}].callback != NULL)
     <#lt>   {
-    <#lt>   	evsys[channel].callback(status, evsys[${x}].context);
+    <#lt>   	evsys[${x}].callback(status, evsys[${x}].context);
     <#lt>   }
 	<#lt>}
 </#if>
