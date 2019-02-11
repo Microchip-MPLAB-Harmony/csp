@@ -88,7 +88,7 @@ def instantiateComponent( coreComponent ):
     global xc32Available
     global iarMenu
     global iarAvailable
-
+    global processor
     compilerSpecifics =     None
     armLibCSourceFile =     None
     devconSystemInitFile =  None
@@ -104,6 +104,9 @@ def instantiateComponent( coreComponent ):
     xc32Available = False
     iarAvailable =  False
     iarAllStacks =  False
+    iarVisiblity =  False
+    xc32Visibility = False
+    multiCompilerSupport = False
 
     coreArch = coreComponent.createStringSymbol( "CoreArchitecture", None )
     coreArch.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" ) )
@@ -115,6 +118,7 @@ def instantiateComponent( coreComponent ):
         baseArchDir = "arm"
         compilers = [ "XC32" + naQualifier, "IAR" ]
         iarAvailable = True
+        iarVisiblity = True
         iarAllStacks = True
         deviceCacheHeaderName = "cache_cortex_a.h.ftl"
     elif "CORTEX-M" in coreArch.getValue():
@@ -122,7 +126,9 @@ def instantiateComponent( coreComponent ):
         baseArchDir = "arm"
         compilers = [ "XC32", "IAR" ]
         xc32Available = True
+        xc32Visibility = True
         iarAvailable = True
+        multiCompilerSupport = True
         deviceCacheHeaderName = "cache_cortex_m.h.ftl"
     else: # "mips"
         isMips = True
@@ -130,6 +136,7 @@ def instantiateComponent( coreComponent ):
         compilers = [ "XC32", "IAR" + naQualifier ]
         deviceCacheHeaderName = "cache_pic32mz.h.ftl"
         xc32Available = True
+        xc32Visibility = True
 
     autoComponentIDTable = [ "dfp", "cmsis" ]
     res = Database.activateComponents(autoComponentIDTable)
@@ -239,10 +246,12 @@ def instantiateComponent( coreComponent ):
             compilerChoice.setDefaultValue( index )
             compilerChoice.setValue( index, 2 )
 
+    compilerChoice.setReadOnly(not multiCompilerSupport)
+
     ## xc32 Tool Config
     xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", toolChainMenu)
     xc32Menu.setLabel("XC32 Global Options")
-    xc32Menu.setVisible( xc32Available )
+    xc32Menu.setVisible( xc32Available & xc32Visibility )
 
     xc32LdMenu = coreComponent.createMenuSymbol("CoreXC32_LD", xc32Menu)
     xc32LdMenu.setLabel("Linker")
@@ -257,7 +266,7 @@ def instantiateComponent( coreComponent ):
     ## iar Tool Config
     iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
     iarMenu.setLabel("IAR Global Options")
-    iarMenu.setVisible( iarAvailable )
+    iarMenu.setVisible( iarAvailable & iarVisiblity )
 
     iarLdMenu = coreComponent.createMenuSymbol("CoreIAR_LD", iarMenu)
     iarLdMenu.setLabel( "Linker" )
@@ -506,36 +515,34 @@ def compilerUpdate( symbol, event ):
     global xc32Available
     global iarMenu
     global iarAvailable
+    global processor
 
     compilersVisibleFlag = True
     compilerSelected = event[ "symbol" ].getSelectedKey()
     if naQualifier in compilerSelected:
         compilersVisibleFlag = False
         compilerSelected = compilerSelected.replace( naQualifier, "" )
-    compilerSelected.lower()
 
     xc32Menu.setVisible( compilersVisibleFlag and xc32Available )
     iarMenu.setVisible(  compilersVisibleFlag and iarAvailable )
-
-    if "PIC32M" not in processor:
-        debugSourceFile.setSourcePath( "../arch/arm/templates/" + compilerSelected + "/stdio/" + compilerSelected + "_monitor.c.ftl" )
-        debugSourceFile.setOutputName( compilerSelected + "_monitor.c" )
 
     if not compilerSpecifics:
         compilerSpecifics = []
     compilerSpecifics.append( debugSourceFile )
 
-    if compilerSelected == "iar":
+    if compilerSelected == "IAR":
+        xc32Menu.setVisible(False)
         if devconSystemInitFile != None:
             devconSystemInitFile.setEnabled( False )
         if armLibCSourceFile != None:
             armLibCSourceFile.setEnabled( False )
-    elif compilerSelected == "xc32":
+    elif compilerSelected == "XC32":
+        iarMenu.setVisible(False)
         if devconSystemInitFile != None:
             devconSystemInitFile.setEnabled( True )
         if armLibCSourceFile != None:
             armLibCSourceFile.setEnabled( True )
 
     for file in compilerSpecifics:
-        updatePath( file, compilerSelected )
+        updatePath( file, compilerSelected.lower() )
 
