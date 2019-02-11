@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<diagram min_x="1300" min_y="1300" >
+	<shape type="complex_rect" width="1150" height="1150">
+		<corner loc="topleft" type="notch" length="20"/>
+	</shape>
+	
+	<layout type="grid" pin_margin="40" pin_name_margin="0" pin_rows="18" pin_cols="18" pin_radius="11" />
+</diagram>
