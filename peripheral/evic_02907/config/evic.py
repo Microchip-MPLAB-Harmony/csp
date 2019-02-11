@@ -62,6 +62,27 @@ evicSubPriorityGroup = [str(item) for item in evicSubPriorityGroup]
 global evicVectorDataStructure
 evicVectorDataStructure = []
 
+global evicVectorSettings
+
+#Default configuration for vector with RTOS support
+evicVectorSettings = {
+
+    #Entry : [ #Enable value,
+               #Enable Lock,
+               #Enable Generate,
+               #Initial Priority value,
+               #Priority Lock,
+               #Priority Generate,
+               #Initial subPriority value,
+               #SubPriority Lock,
+               #SubPriority Generate,
+               #Handler Lock ]
+
+    "TIMER_1"    : [False, True, False, str(min(evicPriorityGroup)), True, False, str(min(evicSubPriorityGroup)), True, False, True],  # With RTOS
+    "Peripheral" : [False, False, True, str(min(evicPriorityGroup)), False, True, str(min(evicSubPriorityGroup)), False, True, False]  # With Baremetal
+
+}
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -152,6 +173,23 @@ def updateEVICVectorEnableUpdateValue(symbol, event):
 def updateEVICVectorParametersValue(symbol, event):
 
     symbol.setValue(event["value"], 2)
+
+def updateEVICVectorSettings(symbol, event):
+
+    symbolId = symbol.getID()
+
+    if "_ENABLE_LOCK" in symbolId:
+        symbol.setValue((event["value"] != "BareMetal"), 1)
+    elif "_ENABLE_GENERATE" in symbolId:
+        symbol.setValue((event["value"] == "BareMetal"), 1)
+    elif "_PRIORITY_LOCK" in symbolId:
+        symbol.setValue((event["value"] != "BareMetal"), 1)
+    elif "_PRIORITY_GENERATE" in symbolId:
+        symbol.setValue((event["value"] == "BareMetal"), 1)
+    elif "_SUBPRIORITY_LOCK" in symbolId:
+        symbol.setValue((event["value"] != "BareMetal"), 1)
+    elif "_SUBPRIORITY_GENERATE" in symbolId:
+        symbol.setValue((event["value"] == "BareMetal"), 1)
 
 ################################################################################
 #### Component ####
@@ -244,6 +282,44 @@ for vectorDict in evicVectorDataStructure:
     evicVectorEnableUpdate = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE_UPDATE", evicVectorEnable)
     evicVectorEnableUpdate.setVisible(False)
     evicVectorEnableUpdate.setDependencies(updateEVICVectorEnableUpdateValue, ["EVIC_" + str(vIndex) + "_ENABLE"])
+
+    #Only created for vector used by RTOS
+    if vName in evicVectorSettings:
+
+        vector = "Peripheral"
+
+        evicVectorHandlerLock.setDefaultValue(evicVectorSettings[vector][9])
+        evicVectorHandlerLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+
+        evicVectorEnableLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE_LOCK", evicVectorEnable)
+        evicVectorEnableLock.setVisible(False)
+        evicVectorEnableLock.setDefaultValue(evicVectorSettings[vector][1])
+        evicVectorEnableLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+
+        evicVectorEnableGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE_GENERATE", evicVectorEnable)
+        evicVectorEnableGenerate.setVisible(False)
+        evicVectorEnableGenerate.setDefaultValue(evicVectorSettings[vector][2])
+        evicVectorEnableGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+
+        evicVectorPriorityLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_PRIORITY_LOCK", evicVectorEnable)
+        evicVectorPriorityLock.setVisible(False)
+        evicVectorPriorityLock.setDefaultValue(evicVectorSettings[vector][4])
+        evicVectorPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+
+        evicVectorPriorityGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_PRIORITY_GENERATE", evicVectorEnable)
+        evicVectorPriorityGenerate.setVisible(False)
+        evicVectorPriorityGenerate.setDefaultValue(evicVectorSettings[vector][5])
+        evicVectorPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+
+        evicVectorSubPriorityLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY_LOCK", evicVectorEnable)
+        evicVectorSubPriorityLock.setVisible(False)
+        evicVectorSubPriorityLock.setDefaultValue(evicVectorSettings[vector][7])
+        evicVectorSubPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+
+        evicVectorSubPriorityGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY_GENERATE", evicVectorEnable)
+        evicVectorSubPriorityGenerate.setVisible(False)
+        evicVectorSubPriorityGenerate.setDefaultValue(evicVectorSettings[vector][8])
+        evicVectorSubPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
 
     regName, prioBit, prioMask, subPrioBit, subPrioMask = _get_sub_priority_parms(vIndex)
 
@@ -372,3 +448,9 @@ evicSystemIntTableFile.setType("STRING")
 evicSystemIntTableFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_HANDLERS")
 evicSystemIntTableFile.setSourcePath("../peripheral/evic_02907/templates/system/interrupts_vector_table.h.ftl")
 evicSystemIntTableFile.setMarkup(True)
+
+evicSystemIntASMFile = coreComponent.createFileSymbol("EVIC_INT_ASM", None)
+evicSystemIntASMFile.setType("STRING")
+evicSystemIntASMFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_ASM")
+evicSystemIntASMFile.setSourcePath("../peripheral/evic_02907/templates/system/interrupts_vector_asm.h.ftl")
+evicSystemIntASMFile.setMarkup(True)

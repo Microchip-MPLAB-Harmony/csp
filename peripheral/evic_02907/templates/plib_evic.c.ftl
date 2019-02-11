@@ -55,16 +55,19 @@ void EVIC_Initialize( void )
 
     /* Set up priority / subpriority of enabled interrupts */
 <#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
-    <#lt><#assign ENABLE = "EVIC_" + i + "_ENABLE">
-    <#lt><#assign IPCREG = "EVIC_" + i + "_REGNAME">  <#-- IPCx register for given interrupt -->
-    <#lt><#assign PRIOVALUE = "EVIC_" + i + "_PRIORITY">
-    <#lt><#assign SUBPRIOVALUE = "EVIC_" + i + "_SUBPRIORITY">
-    <#lt><#assign PRIOVALUE_SHIFTED = "EVIC_" + i + "_PRIVALUE">  <#-- priority, shifted to correct place in IPCx register -->
-    <#lt><#assign SUBPRIOVALUE_SHIFTED = "EVIC_" + i + "_SUBPRIVALUE">  <#-- subpriority, shifted to correct place in IPCx register -->
-    <#lt><#assign INT_NAME = "EVIC_" + i + "_NAME">
-    <#lt><#if .vars[ENABLE]?? && .vars[ENABLE] == true>
-    <#lt>    ${.vars[IPCREG]}SET = 0x${.vars[PRIOVALUE_SHIFTED]} | 0x${.vars[SUBPRIOVALUE_SHIFTED]};  /* ${.vars[INT_NAME]}:  Priority ${.vars[PRIOVALUE]} / Subpriority ${.vars[SUBPRIOVALUE]} */
-    <#lt></#if>
+    <#assign ENABLE = "EVIC_" + i + "_ENABLE">
+    <#assign IPCREG = "EVIC_" + i + "_REGNAME">  <#-- IPCx register for given interrupt -->
+    <#assign INT_PRIORITY_GENERATE = "EVIC_" + i + "_PRIORITY_GENERATE">
+    <#assign PRIOVALUE = "EVIC_" + i + "_PRIORITY">
+    <#assign SUBPRIOVALUE = "EVIC_" + i + "_SUBPRIORITY">
+    <#assign PRIOVALUE_SHIFTED = "EVIC_" + i + "_PRIVALUE">  <#-- priority, shifted to correct place in IPCx register -->
+    <#assign SUBPRIOVALUE_SHIFTED = "EVIC_" + i + "_SUBPRIVALUE">  <#-- subpriority, shifted to correct place in IPCx register -->
+    <#assign INT_NAME = "EVIC_" + i + "_NAME">
+    <#if .vars[ENABLE]?? && .vars[ENABLE] == true>
+        <#if !((.vars[INT_PRIORITY_GENERATE]??) && (.vars[INT_PRIORITY_GENERATE] == false))>
+            <#lt>    ${.vars[IPCREG]}SET = 0x${.vars[PRIOVALUE_SHIFTED]} | 0x${.vars[SUBPRIOVALUE_SHIFTED]};  /* ${.vars[INT_NAME]}:  Priority ${.vars[PRIOVALUE]} / Subpriority ${.vars[SUBPRIOVALUE]} */
+        </#if>
+    </#if>
 </#list>
 }
 
