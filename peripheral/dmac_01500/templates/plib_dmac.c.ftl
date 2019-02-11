@@ -308,7 +308,6 @@ void ${DMA_INSTANCE_NAME}_ChannelCallbackRegister(DMAC_CHANNEL channel, const DM
 */
 bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, size_t srcSize, const void *destAddr, size_t destSize, size_t cellSize)
 {
-    volatile uint32_t status = 0;
     bool returnStatus = false;
     volatile uint32_t *regs;
 
@@ -406,8 +405,6 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable (DMAC_CHANNEL channel)
 */
 bool ${DMA_INSTANCE_NAME}_ChannelIsBusy (DMAC_CHANNEL channel)
 {
-    volatile uint32_t * regs;
-
     return (gDMAChannelObj[channel].inUse);
 
 }
