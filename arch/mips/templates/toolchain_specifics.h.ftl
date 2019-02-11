@@ -71,7 +71,7 @@
     <#lt>#endif
 
     <#if CACHE_ALIGN?? >
-        <#lt>#define CACHE_ALIGN                    __ALIGNED(${CACHE_ALIGN})
+        <#lt>#define CACHE_ALIGN                    __COHERENT
     <#else>
         <#lt>#define CACHE_ALIGN
     </#if>
