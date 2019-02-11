@@ -71,9 +71,6 @@ def _process_valuegroup_entry(node):
     value = int(newstring,16)
     return str(value)
 
-    
-
-
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
@@ -81,7 +78,7 @@ fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSEC
 # load device specific configurations (fuses), temporary, to be removed once XC32 updated
 # loaded from atdf file
 # Most fields are key/value pairs, but a handful of them are integer.  Need to know which ones those are.
-bitfieldIntegerSymbols = [ 'USERID', 'TSEQ', 'CSEQ' ]
+bitfieldHexSymbols = [ 'USERID', 'TSEQ', 'CSEQ' ]
 
 node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]/register-group")
 register = node.getChildren() # these are <register > fields for fuse config section
@@ -94,8 +91,8 @@ for ii in range(len(register)):
     bitfields = register[ii].getChildren()
     for jj in range(len(bitfields)):
         bitfieldName = bitfields[jj].getAttribute('name')
-        if(bitfieldName in bitfieldIntegerSymbols):
-            bitfielditem = coreComponent.createIntegerSymbol('CONFIG_'+bitfieldName,menuitem) # symbol ID must match ftl file symbol
+        if(bitfieldName in bitfieldHexSymbols):
+            bitfielditem = coreComponent.createHexSymbol('CONFIG_'+bitfieldName,menuitem) # symbol ID must match ftl file symbol
         else: # key value type symbol
             moduleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]")
             submodnode = moduleNode.getChildren()   # <value-group > entries
@@ -114,7 +111,7 @@ for ii in range(len(register)):
 
         bitfielditem.setVisible(True)
         
-        if(bitfieldName in bitfieldIntegerSymbols):
+        if(bitfieldName in bitfieldHexSymbols):
             bitfielditem.setDefaultValue(_find_default_value(bitfields[jj], porValue))
 
         label = bitfields[jj].getAttribute('caption')+' ('+bitfields[jj].getAttribute('name')+')'
