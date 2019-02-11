@@ -59,6 +59,7 @@ peripherals = {
                 "NVM_02819"     : ["MEMORY"],
                 "RTCC_00748"    : ["TMR"],
                 "TMR_00745"     : ["TMR"],
+                "TMR_02815"     : ["TMR"],
                 "TMR1_00687"    : ["TMR"],
                 "TMR1_02141"    : ["TMR"],
                 "SDMMC_44002"   : ["SDHC"],
