@@ -171,8 +171,6 @@ void GPIO_Initialize ( void )
     <#if .vars[usePPSInputPin]?has_content>
         <#if .vars[usePPSInputPin] == true>
             <#lt>    ${.vars[inputFunction]}R = ${.vars[remapInputPin]};
-        <#else>
-            <#break>
         </#if>
     </#if>
 </#list>
@@ -185,8 +183,6 @@ void GPIO_Initialize ( void )
     <#if .vars[usePPSOutputPin]?has_content>
         <#if .vars[usePPSOutputPin] == true>
             <#lt>    ${.vars[remapOutputPin]}R = ${.vars[outputFunction]};
-        <#else>
-            <#break>
         </#if>
     </#if>
 </#list>
