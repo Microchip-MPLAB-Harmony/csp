@@ -629,4 +629,4 @@ def instantiateComponent(adcComponent):
     adcSym_SystemDefFile.setMarkup(True)
 
     # load ADC manager
-    adcComponent.addPlugin("../peripheral/adc_u2500/plugin/u2500_ADCManager.jar")
+    adcComponent.addPlugin("../peripheral/adc_u2500/plugin/adc_u2500.jar")
