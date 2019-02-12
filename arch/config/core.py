@@ -74,6 +74,18 @@ def genSysSourceFile(symbol, event):
     else:
         symbol.setEnabled(False)
 
+def genSysIntASMSourceFile(symbol, event):
+
+    symbol.setEnabled(False)
+
+    #Should be enable only for RTOS
+    if event["value"] != "BareMetal":
+        coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
+        coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysIntFile")
+
+        if coreSysFileEnabled and coreSysSourceFileEnabled:
+            symbol.setEnabled(True)
+
 def deviceCacheEnable (symbol, event):
     symbol.setEnabled(event["value"])
 
@@ -413,7 +425,8 @@ def instantiateComponent( coreComponent ):
         intASMSourceFile.setType("SOURCE")
         intASMSourceFile.setMarkup(True)
         intASMSourceFile.setOverwrite(True)
-        intASMSourceFile.setDependencies(genSysSourceFile, ["CoreSysIntFile", "CoreSysFiles"])
+        intASMSourceFile.setEnabled(False)
+        intASMSourceFile.setDependencies(genSysIntASMSourceFile, ["CoreSysIntFile", "CoreSysFiles", "HarmonyCore.SELECT_RTOS"])
 
     systemIntHeadersList =                  coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_C_INCLUDES",         None )
     systemIntVectorsList =                  coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_C_VECTORS",          None )
