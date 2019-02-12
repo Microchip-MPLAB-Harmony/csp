@@ -258,7 +258,7 @@ systickExternal.setVisible(False)
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
-coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
+coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_c20_c21/config/clk.py")
