@@ -29,6 +29,8 @@ Log.writeInfoMessage("Loading Interrupt Manager for " + Variables.get("__PROCESS
 #### Global Variables ####
 ################################################################################
 
+global evicSystemIntASMFile
+
 global evicPriorityGroup
 evicPriorityGroup = []
 
@@ -78,8 +80,9 @@ evicVectorSettings = {
                #SubPriority Generate,
                #Handler Lock ]
 
-    "TIMER_1"    : [False, True, False, str(min(evicPriorityGroup)), True, False, str(min(evicSubPriorityGroup)), True, False, True],  # With RTOS
-    "Peripheral" : [False, False, True, str(min(evicPriorityGroup)), False, True, str(min(evicSubPriorityGroup)), False, True, False]  # With Baremetal
+    "CORE_SOFTWARE_0" : [True, True, False, str(min(evicPriorityGroup)), True, False, str(min(evicSubPriorityGroup)), True, False, True],  # Specific to FreeRTOS
+    "TIMER_1"         : [False, True, False, str(min(evicPriorityGroup)), True, False, str(min(evicSubPriorityGroup)), True, False, True],  # With RTOS
+    "Peripheral"      : [False, False, True, str(min(evicPriorityGroup)), False, True, str(min(evicSubPriorityGroup)), False, True, False]  # With Baremetal
 
 }
 
@@ -190,6 +193,10 @@ def updateEVICVectorSettings(symbol, event):
         symbol.setValue((event["value"] != "BareMetal"), 1)
     elif "_SUBPRIORITY_GENERATE" in symbolId:
         symbol.setValue((event["value"] == "BareMetal"), 1)
+    else:
+        symbol.setValue((event["value"] != "BareMetal"), 1)         # For CORE_TIMER_0 with FreeRtos
+
+    evicSystemIntASMFile.setEnabled((event["value"] != "BareMetal"))
 
 ################################################################################
 #### Component ####
@@ -285,6 +292,9 @@ for vectorDict in evicVectorDataStructure:
 
     #Only created for vector used by RTOS
     if vName in evicVectorSettings:
+
+        if evicVectorSettings[vName][0] == True:
+            evicVectorEnable.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
 
         vector = "Peripheral"
 
@@ -454,3 +464,4 @@ evicSystemIntASMFile.setType("STRING")
 evicSystemIntASMFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_ASM")
 evicSystemIntASMFile.setSourcePath("../peripheral/evic_02907/templates/system/interrupts_vector_asm.h.ftl")
 evicSystemIntASMFile.setMarkup(True)
+evicSystemIntASMFile.setEnabled(False)
