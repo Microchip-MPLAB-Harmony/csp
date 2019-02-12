@@ -103,6 +103,32 @@ def getCorePeripheralsInterruptDataStructure():
 
     return corePeripherals
 
+global SYM_ECCCON
+def calcWaitStates(symbol, event):
+
+    sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+    ecc = int(SYM_ECCCON.getValue())
+    ws=2
+
+    if(ecc < 2):
+        if (sysclk <= 200000000):
+            ws=2
+        if (sysclk <= 120000000):
+            ws=1
+        if(sysclk <= 60000000):
+            ws=0
+
+    else:
+        if (sysclk <= 200000000):
+            ws=2
+        if (sysclk <= 140000000):
+            ws=1
+        if(sysclk <= 74000000):
+            ws=0
+
+    symbol.setValue(ws,2)
+
+
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
@@ -163,6 +189,36 @@ coreFPU.setDefaultValue(True)
 coreFPU.setReadOnly(True)
 coreFPU.setVisible(False)
 
+prefetchMenu = coreComponent.createMenuSymbol("PREFETCH_MENU", None)
+prefetchMenu.setLabel("Prefetch and Flash Configuration")
+prefetchMenu.setDescription("Configure Prefetch and Flash")
+
+SYM_ECCCON = coreComponent.createKeyValueSetSymbol("CONFIG_CFGCON_ECCCON", prefetchMenu)
+SYM_ECCCON.setLabel("Flash ECC Configuration")
+SYM_ECCCON.addKey("OPTION1", "0", "Flash ECC is enabled (Locked)")
+SYM_ECCCON.addKey("OPTION2", "1", "Dynamic Flash ECC is enabled (Locked)")
+SYM_ECCCON.addKey("OPTION3", "2", "ECC and dynamic ECC are disabled (Locked)")
+SYM_ECCCON.addKey("OPTION4", "3", "ECC and dynamic ECC are disabled (Writable)")
+SYM_ECCCON.setOutputMode("Value")
+SYM_ECCCON.setDisplayMode("Description")
+SYM_ECCCON.setDefaultValue(3)
+
+SYM_REFEN = coreComponent.createKeyValueSetSymbol("CONFIG_PRECON_PREFEN", prefetchMenu)
+SYM_REFEN.setLabel("Predictive Prefetch Configuration")
+SYM_REFEN.addKey("OPTION1", "0", "Disable predictive prefetch")
+SYM_REFEN.addKey("OPTION2", "1", "Enable predictive prefetch for CPU instructions only")
+SYM_REFEN.addKey("OPTION3", "2", "Enable predictive prefetch for CPU instructions and CPU data")
+SYM_REFEN.addKey("OPTION4", "3", "Enable predictive prefetch for any address")
+SYM_REFEN.setOutputMode("Value")
+SYM_REFEN.setDisplayMode("Description")
+SYM_REFEN.setDefaultValue(3)
+
+SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_PRECON_PFMWS", prefetchMenu)
+SYM_PFMWS.setReadOnly(True)
+SYM_PFMWS.setDefaultValue(2)
+SYM_PFMWS.setLabel("Program Flash memory waitstates")
+SYM_PFMWS.setDependencies(calcWaitStates,["CPU_CLOCK_FREQUENCY", "CONFIG_CFGCON_ECCCON"])
+
 mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
 mipsMenu.setLabel("MIPS Configuration")
 mipsMenu.setDescription("Configuration for MIPS processor")
@@ -195,11 +251,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_01500/config/dmac.py")
 coreComponent.addPlugin("../peripheral/dmac_01500/plugin/dmamanager.jar")
 
-
-
 devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
 devconSystemInitFile.setType("STRING")
 devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
 devconSystemInitFile.setSourcePath("mips/templates/PIC32MZ_EF.c.ftl")
 devconSystemInitFile.setMarkup(True)
 
+devconSystemInitFile = coreComponent.createFileSymbol("DEVCON_INIT", None)
+devconSystemInitFile.setType("STRING")
+devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+devconSystemInitFile.setSourcePath("mips/templates/PIC32MZ_EF_DEVCON.c.ftl")
+devconSystemInitFile.setMarkup(True)

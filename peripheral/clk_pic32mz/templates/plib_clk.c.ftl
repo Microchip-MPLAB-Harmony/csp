@@ -37,15 +37,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
   Description:
     The Clock System Service provides a simple interface to manage the oscillators
-    on Microchip microcontrollers. This file defines the static implementation for the 
+    on Microchip microcontrollers. This file defines the static implementation for the
     Clock System Service.
-    
+
   Remarks:
     Static functions incorporate all system clock configuration settings as
-    determined by the user via the Microchip Harmony Configurator GUI.  It provides 
-    static version of the routines, eliminating the need for an object ID or 
+    determined by the user via the Microchip Harmony Configurator GUI.  It provides
+    static version of the routines, eliminating the need for an object ID or
     object handle.
-    
+
     Static single-open interfaces also eliminate the need for the open handle.
 *******************************************************************************/
 // *****************************************************************************
@@ -76,17 +76,17 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     Clock Service.
 
   Remarks:
-    This is configuration values for the static version of the Clock System Service 
+    This is configuration values for the static version of the Clock System Service
     module is determined by the user via the Microchip Harmony Configurator GUI.
 
     The objective is to eliminate the user's need to be knowledgeable in the function of
-    the 'configuration bits' to configure the system oscillators. 
+    the 'configuration bits' to configure the system oscillators.
 */
 
 void CLK_Initialize( void )
 {
     bool int_flag = false;
-    
+
     int_flag = (bool)__builtin_disable_interrupts();
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000;
@@ -96,9 +96,9 @@ void CLK_Initialize( void )
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
-    
+
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
-    
+
 <#if CONFIG_SYS_CLK_CONFIG_SOSCEN == "1">
     /* Enable Secondary Oscillator */
     OSCCONSET = _OSCCON_SOSCEN_MASK;
@@ -190,7 +190,7 @@ void CLK_Initialize( void )
 </#if>
 </#if>
 
-<#if CONFIG_HAVE_REFCLOCK == true>  
+<#if CONFIG_HAVE_REFCLOCK == true>
 <#list 1..NUM_REFOSC_ELEMENTS as i>
     <#assign ENBL = "CONFIG_SYS_CLK_REFCLK"+i+"_ENABLE">
     <#assign REFCONREG = "REFCON"+i+"REG">
@@ -207,12 +207,12 @@ void CLK_Initialize( void )
 
 
     /* Set up Reference Clock ${i} */
-    /* REFO${i}CON register */        
+    /* REFO${i}CON register */
     /* ROSEL =  ${.vars[ROSELVAL]} */
     /* DIVSWEN = 1 */
     /* RODIV = ${.vars[REFOCONRODIV]} */
     *(volatile uint32_t *)(&${.vars[REFCONREG]}) = ${.vars[REFCONVAL]};
-    
+
     /* REFO${i}TRIM register */
     /* ROTRIM = ${.vars[ROTRIMVAL]} */
     *(volatile uint32_t *)(&${.vars[REFTRIMREG]}) = ${.vars[REFOTRIMVAL]};
@@ -249,16 +249,16 @@ void CLK_Initialize( void )
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
-    SYSKEY = 0x33333333;  
+    SYSKEY = 0x33333333;
     if (int_flag) /* if interrupts originally were enabled, re-enable them */
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001));
     }
 }
 
- 
- 
- 
+
+
+
 <#--
 /*******************************************************************************
  End of File
