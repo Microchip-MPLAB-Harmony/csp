@@ -938,7 +938,7 @@ if __name__ == "__main__":
 
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
-    CLK_MANAGER_SELECT.setDefaultValue("SAME70:SAME70ClockModel")
+    CLK_MANAGER_SELECT.setDefaultValue("clk_sam_e70:SAME70ClockModel")
 
     CLK_MENU_COMMENT = coreComponent.createCommentSymbol("clkSettingsComment", SYM_CLK_MENU)
     CLK_MENU_COMMENT.setLabel("**** All settings listed here can be configured using the Clock Configurator ****")
