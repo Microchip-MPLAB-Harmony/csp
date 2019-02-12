@@ -299,7 +299,7 @@ dmacChannelCount = int(dmacChannelNode.getAttribute("value"))
 
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
 dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("SAME5X:SAME5XDMAModel")
+dmaManagerSelect.setDefaultValue("dmac_u2503:SAME5XDMAModel")
 
 dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
