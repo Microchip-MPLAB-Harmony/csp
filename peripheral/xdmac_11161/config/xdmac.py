@@ -284,7 +284,7 @@ def xdmacChannelAllocLogic(Sym, event):
 dmaManagerSelect = coreComponent.createStringSymbol(
     "DMA_MANAGER_PLUGIN_SELECT", None)
 dmaManagerSelect.setVisible(False)
-dmaManagerSelect.setDefaultValue("SAME70:SAME70DMAModel")
+dmaManagerSelect.setDefaultValue("xdmac_11161:SAME70DMAModel")
 
 xdmacMenu = coreComponent.createMenuSymbol("XDMAC_MENU", None)
 xdmacMenu.setLabel("DMA (XDMAC)")
