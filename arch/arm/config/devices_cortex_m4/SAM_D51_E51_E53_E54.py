@@ -242,7 +242,7 @@ coreComponent.addPlugin("../peripheral/clk_sam_d51_e51_e53_e54/plugin/clk_sam_e5
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
+coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
 
 # #load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
