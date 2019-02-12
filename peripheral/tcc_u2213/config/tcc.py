@@ -579,6 +579,9 @@ def instantiateComponent(tccComponent):
             tccSym_PATT_PGV[output].setDisplayMode("Description")
             tccSym_PATT_PGV[output].setDependencies(tccPattgenVisible, ["TCC_"+str(output)+"PATT_PGE"])
 
+    tccSym_CTRLA_RUNSTDBY = tccComponent.createBooleanSymbol("TCC_CTRLA_RUNSTDBY", None)
+    tccSym_CTRLA_RUNSTDBY.setLabel("Run during Standby")
+
     ############################################################################
     #### Dependency ####
     ############################################################################
