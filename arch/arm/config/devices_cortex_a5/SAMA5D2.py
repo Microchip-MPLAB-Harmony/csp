@@ -37,7 +37,7 @@ coreComponent.addPlugin("../peripheral/clk_sam_a5d2/plugin/clk_sam_a5d2.jar")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
-coreComponent.addPlugin("../peripheral/pio_11264/plugin/SAME70pinmanager.jar")
+coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
 
 # load AIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/aic_11051/config/aic.py")
