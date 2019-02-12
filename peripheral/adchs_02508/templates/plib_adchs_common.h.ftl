@@ -5,15 +5,14 @@
     Microchip Technology Inc.
 
   File Name
-    plib_${ADCHS_INSTANCE_NAME?lower_case}.h
+    plib_adchs_common.h
 
   Summary
-    ${ADCHS_INSTANCE_NAME} peripheral library interface.
+    Commonly needed stuff for the ADCHS peripheral libraries interfaces.
 
   Description
-    This file defines the interface to the ADCHS peripheral library.  This
-    library provides access to and control of the associated peripheral
-    instance.
+    This file defines several items commonly needed by the interfaces to
+    the ADCHS peripheral libraries.
 
 *******************************************************************************/
 
@@ -42,8 +41,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_${ADCHS_INSTANCE_NAME}_H    // Guards against multiple inclusion
-#define PLIB_${ADCHS_INSTANCE_NAME}_H
+#ifndef PLIB_ADCHS_COMMON_H    // Guards against multiple inclusion
+#define PLIB_ADCHS_COMMON_H
 
 
 // *****************************************************************************
@@ -55,7 +54,9 @@
 /*  This section lists the other files that are included in this file.
 */
 
-#include "plib_adchs_common.h"
+#include <stddef.h>
+#include <stdbool.h>
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -71,62 +72,46 @@ extern "C" {
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this
-    interface and should be considered part it.
-*/
-<#compress>
-<#list 0..(ADCHS_NUM_CHANNELS - 1) as i>
-    <#assign ADCHS_CH_ENABLE = "ADCHS_"+i+"_ENABLE">
-    <#assign ADCHS_CH_NAME = "ADCHS_"+i+"_NAME">
-    <#assign CH_NUM = i>
-    <#if .vars[ADCHS_CH_ENABLE] == true>
 
-        #define ${.vars[ADCHS_CH_NAME]} (${CH_NUM}U)
-    </#if> <#-- CH ENABLE -->
+// *****************************************************************************
 
+typedef enum
+{
+<#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
+    ADCHS_MODULE${i}_MASK = (1U << ${i}U),
 </#list>
-</#compress>
+    ADCHS_MODULE7_MASK = (1U << 7U)
+}ADCHS_MODULE_MASK;
+
+
+typedef enum
+{
+<#list 0..((ADCHS_NUM_SIGNALS) - 1) as i>
+    ADCHS_CH${i} = ${i}U,
+</#list>
+}ADCHS_CHANNEL_NUM;
+
 
 // *****************************************************************************
+
+typedef void (*ADCHS_CALLBACK)(ADCHS_CHANNEL_NUM channel, uintptr_t context);
 // *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-   this interface.
-*/
 
-void ${ADCHS_INSTANCE_NAME}_Initialize (void);
-
-void ${ADCHS_INSTANCE_NAME}_ModulesEnable (ADCHS_MODULE_MASK modulesMask);
-void ${ADCHS_INSTANCE_NAME}_ModulesDisable (ADCHS_MODULE_MASK modulesMask);
-
-void ADCHS_GlobalEdgeConversionStart(void);
-void ADCHS_GlobalLevelConversionStart(void);
-void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel);
-
-void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptEnable (ADCHS_CHANNEL_NUM channel);
-void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM channel);
-void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptEnable (ADCHS_CHANNEL_NUM channel);
-void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM channel);
-
-bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel);
-uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel);
-
-<#if ADCHS_INTERRUPT == true>
-    <#lt>void ${ADCHS_INSTANCE_NAME}_CallbackRegister(ADCHS_CHANNEL_NUM channel, ADCHS_CALLBACK callback, uintptr_t context);
-</#if>
-
-// *****************************************************************************
+typedef struct
+{
+    ADCHS_CALLBACK callback_fn;
+    uintptr_t context;
+}ADCHS_CALLBACK_OBJECT;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
 }
+
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_${ADCHS_INSTANCE_NAME}_H
+#endif //PLIB_ADCHS_COMMMON_H
 
 /**
  End of File
