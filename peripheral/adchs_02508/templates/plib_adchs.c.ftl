@@ -17,7 +17,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -42,10 +42,7 @@
 #include "device.h"
 #include "plib_${ADCHS_INSTANCE_NAME?lower_case}.h"
 
-<#compress>
-
-
-</#compress>
+#define ADCHS_CHANNEL_32  (32U)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -53,227 +50,222 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#-- 
 <#if ADCHS_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
-    <#lt>ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj;
+    <#lt>ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
 </#if>
- -->
- 
+
+
 void ${ADCHS_INSTANCE_NAME}_Initialize()
 {
-
     ADCCON1bits.ON = 0;
 
-<#list 0..((ADCHS_NUM_CLASS1_SIGNALS + ADCHS_NUM_CLASS2_SIGNALS) - 1) as i>
-    <#assign ADCHS_CH_ENABLE = "ADCHS_"+i+"_ENABLE">
-    <#assign ADCHS_CH_NAME = "ADCHS_"+i+"_NAME">
-    <#assign ADCHS_CH_ADCDIV = "ADC"+i+"TIME__ADCDIV">
-    <#assign ADCHS_CH_SAMC = "ADC"+i+"TIME__SAMC">
-    <#assign ADCHS_CH_SELRES = "ADC"+i+"TIME__SELRES">
-    <#assign ADCHS_CH_ADCEIS = "ADC"+i+"TIME__ADCEIS">
-    <#assign ADCHS_CH_SSAMPEN = "ADCTRGMODE__SSAMPEN"+i>
-    <#assign ADCHS_CH_STRGEN = "ADCTRGMODE__STRGEN"+i>
-    <#assign ADCHS_CH_SHxALT = "ADCTRGMODE__SH"+i+"ALT">
-    <#assign ADCHS_CH_TRGSRC = "ADCTRG"+((i/4)+1)+"__TRGSRC"+i>
-    <#assign ADCHS_CH_LVL = "ADCTRGSNS__LVL"+i>
-    <#assign ADCHS_CH_DIFF = "ADCIMCON"+((i/16)+1)+"__DIFF"+i>
-    <#assign ADCHS_CH_SIGN = "ADCIMCON"+((i/16)+1)+"__SIGN"+i>
+<#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
+    <#assign ADCHS_CH_ENABLE = "ADCHS_"+ i + "_ENABLE">
+    <#assign ADCHS_TIME = "ADCHS_ADCTIME" + i>
     <#if .vars[ADCHS_CH_ENABLE] == true>
-        // Activation for ADC${i}
-        <#if i lt ADCHS_NUM_CLASS1_SIGNALS >
-            // Initialize the ADC${i} calibration values
-            DEVADC${i} = ADC${i}CFG;
-            // keeping all DIGENx = 0
-            ADCCON3bits.DIGEN${i} = 0;
-            // keeping all analog enables ANENx bit = 0,
-            ADCANCONbits.ANEN${i} = 0;
+    ADC${i}CFG = DEVADC${i};
+    ADC${i}TIME = 0x${.vars[ADCHS_TIME]};
 
-            // ADC${i}TIME
-            //   ADCDIV<6:0> ADC${i} Clock 2x Divisor bits
-            //     These bits divide the ADC control clock with period
-            //     TQ to generate the clock for ADC${i} (TAD${i}).
-            //     ${.vars[ADCHS_CH_ADCDIV]*2} * TQ = TAD${i}
-            ADC${i}TIMEbits.ADCDIV = ${.vars[ADCHS_CH_ADCDIV]};
-            //   SAMC<9:0>: ADC${i} Sample Time bits
-            //     Where TAD${i} = period of the ADC conversion clock for the
-            //     dedicated ADC controlled by the ADCDIV<6:0> bits.
-            //     ${.vars[ADCHS_CH_SAMC]+2} TAD${i}
-            ADC${i}TIMEbits.SAMC = ${.vars[ADCHS_CH_SAMC]};
-            //   SELRES<1:0>: ADC${i} Resolution Select bits
-            //      ${.vars[ADCHS_CH_SELRES]?number} means ${.vars[ADCHS_CH_SELRES]?number*2+6} bits
-            ADC${i}TIMEbits.SELRES = ${.vars[ADCHS_CH_SELRES]};
-            //   ADCEIS<2:0>: ADC${i} Early Interrupt Select bits
-            //      The data ready interrupt is generated 
-            //      ${.vars[ADCHS_CH_ADCEIS]?number+1} ADC clocks prior to the end of conversion
-            ADC${i}TIMEbits.ADCEIS = ${.vars[ADCHS_CH_ADCEIS]};
-            
-            ADCTRGMODEbits.SSAMPEN${i} = ${.vars[ADCHS_CH_SSAMPEN]?c};
-            ADCTRGMODEbits.STRGEN${i} = ${.vars[ADCHS_CH_STRGEN]?c};
-            ADCTRGMODEbits.SH${i}ALT = ${.vars[ADCHS_CH_SHxALT]};
-            ADCTRG${(i/4)+1}bits.TRGSRC${i} = ${.vars[ADCHS_CH_TRGSRC]};
-            ADCTRGSNSbits.LVL${i} = ${.vars[ADCHS_CH_LVL]?c};
-            //   ADCDIFF: ADC${i} Differential Mode bit
-            //      ADCADC${i} Differential Mode ${.vars[ADCHS_CH_DIFF]?c}
-            ADCIMCON${((i/16)+1)}bits.DIFF${i} = ${.vars[ADCHS_CH_DIFF]?c};
-            //   ADCSIGN: ADC${i} Signed Data Mode bit
-            //      ADCADC${i} Signed Data Mode ${.vars[ADCHS_CH_SIGN]?c}
-            ADCIMCON${((i/16)+1)}bits.SIGN${i} = ${.vars[ADCHS_CH_SIGN]?c};
-        <#elseif i == 7 >
-            DEVADC${i} = ADC${i}CFG;
-            // Shared ADC ADCDIV<6:0>, and SAMC<9:0>, SELRES<1:0>
-            ADCCON2bits.ADCDIV = ${ADCCON2__ADCDIV};
-            ADCCON2bits.SAMC = ${ADCCON2__SAMC};
-            // Shared ADC (ADC7) Resolution
-            //    ${ADCCON1__SELRES?number} means ${ADCCON1__SELRES?number*2+6} bits
-            ADCCON1bits.SELRES= ${ADCCON1__SELRES};
-            // Scan Trigger Source Select
-            ADCCON1bits.STRGSRC = ${ADCCON1__STRGSRC};
-            // Scan Trigger High Level/Positive Edge Sensitivity
-            ADCCON1bits.STRGLVL = ${ADCCON1__STRGLVL};
-            //   ADCEIS<2:0>: ADC${i} Early Interrupt Select bits
-            //      The data ready interrupt is generated 
-            //      ${ADCCON2__ADCEIS?number+1} ADC clocks prior to the end of conversion
-            ADCCON2bits.ADCEIS = ${ADCCON2__ADCEIS};
-            
-        </#if>
     </#if>
 </#list>
 
-    // Interrupt Vector Shift
-    ADCCON1bits.IRQVS = ${ADCCON1__IRQVS};
-    // Fast Synchronous Peripheral Clock to ADC Control Clock
-    ADCCON1bits.FSPBCLKEN = ${ADCCON1__FSPBCLKEN};
-    // Fast Synchronous System Clock to ADC Control Clock
-    ADCCON1bits.FSSCLKEN = ${ADCCON1__FSSCLKEN};
-    // Capacitive Voltage Division Enable
-    ADCCON1bits.CVDEN = ${ADCCON1__CVDEN};
-    // Configure the AICPMPEN bit (ADCCON1<12> and the
-    // IOANCPEN bit (CFGCON<7>) = 1 if and only if VDD is
-    // less than 2.5V. The default is ‘0’, which assumes VDD
-    // is greater than or equal to 2.5V.
-    // ADCCON1bits.AICPMPEN = 1;
-    // CFGCONbits.IOANCPEN = 1;
-    // TBD
-    // Stop in Idle Mode
-    ADCCON1bits.SIDL = ${ADCCON1__SIDL};
-    // Fractional Data Output Format
-    ADCCON1bits.FRACT = ${ADCCON1__FRACT};
-    // Capacitor Voltage Divider (CVD) Setting
-    ADCCON2bits.CVDCPL = ${ADCCON2__CVDCPL};
-    // Voltage Reference (VREF) Input Selection
-    ADCCON3bits.VREFSEL = ${ADCCON3__VREFSEL};
-    // Analog-to-Digital Control Clock (TQ) Divider
-    ADCCON3bits.CONCLKDIV = ${ADCCON3__CONCLKDIV};
-    // Analog-to-Digital Clock Source (TCLK)
-    ADCCON3bits.ADCSEL = ${ADCCON3__ADCSEL};
-    // Wake-up Clock Count
-    // These bits represent the number of ADC clocks required to warm-up the 
-    // ADC module before it can perform conversion. Although the clocks are 
-    // specific to each ADC, the WKUPCLKCNT bit is common to all ADC modules
-    ADCANCONbits.WKUPCLKCNT = 0x0A;
+    ADCCON1 = 0x${ADCHS_ADCCON1};
+    ADCCON2 = 0x${ADCHS_ADCCON2};
+    ADCCON3 = 0x${ADCHS_ADCCON3};
 
-    // Step 3: Set the ON bit to ‘1’, which enables the ADC control clock.
+    ADCTRGMODE = 0x${ADCHS_ADCTRGMODE};
+
+    ADCTRG1 = 0x${ADCHS_ADCTRG1};
+    ADCTRG2 = 0x${ADCHS_ADCTRG2};
+    ADCTRG3 = 0x${ADCHS_ADCTRG3};
+
+    ADCTRGSNS = 0x${ADCHS_ADCTRGSNS};
+
+    ADCIMCON1 = 0x${ADCHS_ADCIMCON1};
+    ADCIMCON2 = 0x${ADCHS_ADCIMCON2};
+    ADCIMCON3 = 0x${ADCHS_ADCIMCON3};
+
+    /* Input scan */
+    ADCCSS1 = 0x${ADCHS_ADCCSS1};
+    ADCCSS2 = 0x${ADCHS_ADCCSS2};
+
+<#if ADCHS_INTERRUPT == true>
+    /* Result interrupt enable */
+    ADCGIRQEN1 = 0x${ADCHS_ADCGIRQEN1};
+    ADCGIRQEN2 = 0x${ADCHS_ADCGIRQEN2};
+
+    /* Interrupt Enable */
+    <#if ADCHS_IEC0_REG??>
+    ${ADCHS_IEC0_REG}SET = 0x${ADCHS_IEC0};
+    </#if>
+    <#if ADCHS_IEC1_REG??>
+    ${ADCHS_IEC1_REG}SET = 0x${ADCHS_IEC1};
+    </#if>
+    <#if ADCHS_IEC2_REG??>
+    ${ADCHS_IEC2_REG}SET = 0x${ADCHS_IEC2};
+    </#if>
+</#if>
+    /* Turn ON ADC */
     ADCCON1bits.ON = 1;
-    // Step 4: Poll the status bit BGVRRDY until it is 1, which signals that
-    // the device analog environment (band gap and VREF) is ready.
-    while ( ADCCON2bits.BGVRRDY ==0 );
+    while(!ADCCON2bits.BGVRRDY); // Wait until the reference voltage is ready
+    while(ADCCON2bits.REFFLT); // Wait if there is a fault with the reference voltage
 
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
+    <#assign ADCHS_CH_ENABLE = "ADCHS_"+ i + "_ENABLE">
     <#if .vars[ADCHS_CH_ENABLE] == true>
-        // Analog and Bias Circuitry Enable for ADC${i}
-        // Step 5: Set the ANEN bit to ‘1’ for each of the ADC
-        // SAR cores to be used.
-        ADCANCONbits.ANEN${i} = 1;
-        // Step 6: Wait for the interrupt or polls the warm-up
-        // ready bits WKRDY = 1, which signals that the
-        // respective ADC SAR cores are ready to operate.
-        while ( ADCANCONbits.WKRDY${i} == 0 );
-        // Step 7: Set the DIGENx bit to ‘1’, which enables the
-        // digital circuitry to immediately begin processing
-        // incoming triggers to perform data conversions.
-        ADCCON3bits.DIGEN${i} = 1;
+    /* ADC ${i} */
+    ADCANCONbits.ANEN${i} = 1;      // Enable the clock to analog bias
+    while(!ADCANCONbits.WKRDY${i}); // Wait until ADC is ready
+    ADCCON3bits.DIGEN${i} = 1;      // Enable ADC
+
     </#if>
 </#list>
-    // Comparators, filters, and so on
-    //<TBD>
 }
 
 
 /* Enable ADCHS channels */
-void ${ADCHS_INSTANCE_NAME}_ChannelsEnable (ADCHS_CHANNEL_MASK channelsMask)
+void ${ADCHS_INSTANCE_NAME}_ModulesEnable (ADCHS_MODULE_MASK moduleMask)
 {
-<#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
-    <#if .vars[ADCHS_CH_ENABLE] == true>
-        ADCCON3bits.DIGEN${i} = 1;
-    </#if>
-</#list>
+    ADCCON3 |= (moduleMask << 16);
 }
 
 /* Disable ADCHS channels */
-void ${ADCHS_INSTANCE_NAME}_ChannelsDisable (ADCHS_CHANNEL_MASK channelsMask)
+void ${ADCHS_INSTANCE_NAME}_ModulesDisable (ADCHS_MODULE_MASK moduleMask)
 {
-<#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
-    <#if .vars[ADCHS_CH_ENABLE] == true>
-        ADCCON3bits.DIGEN${i} = 0;
-    </#if>
-</#list>
+    ADCCON3 &= ~(moduleMask << 16);
 }
 
-/* Enable Interrupts from ADCHS channels */
-void ${ADCHS_INSTANCE_NAME}_ChannelsInterruptEnable (ADCHS_INTERRUPT_MASK channelsInterruptMask)
+
+void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptEnable (ADCHS_CHANNEL_NUM channel)
 {
-}
-/* Disable Interrupts from ADCHS channels */
-void ${ADCHS_INSTANCE_NAME}_ChannelsInterruptDisable (ADCHS_INTERRUPT_MASK channelsInterruptMask)
-{
+    if (channel < ADCHS_CHANNEL_32)
+    {
+        ADCGIRQEN1 |= 0x01 << channel;
+    }
+    else
+    {
+        ADCGIRQEN2 |= 0x01 << (channel - 32);
+    }
 }
 
-void ${ADCHS_INSTANCE_NAME}_ConversionStart(void)
+void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM channel)
 {
-    // Start Channel 0 conversion
-    ADCCON3bits.ADINSEL = 0;
-    ADCCON3bits.RQCNVRT = 1;
+    if (channel < ADCHS_CHANNEL_32)
+    {
+        ADCGIRQEN1 &= ~(0x01 << channel);
+    }
+    else
+    {
+        ADCGIRQEN2 &= ~(0x01 << (channel - 32));
+    }
 }
 
-// ****NEW****
-/* Start all conversions with software global trigger */
-void ${ADCHS_INSTANCE_NAME}_GlobalConversionStart(void)
+void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptEnable (ADCHS_CHANNEL_NUM channel)
+{
+    if (channel < ADCHS_CHANNEL_32)
+    {
+        ADCEIEN1 |= (0x01 << channel);
+    }
+    else
+    {
+        ADCEIEN2 |= (0x01 << (channel - 32));
+    }
+}
+
+void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM channel)
+{
+    if (channel < ADCHS_CHANNEL_32)
+    {
+        ADCEIEN1 &= ~(0x01 << channel);
+    }
+    else
+    {
+        ADCEIEN2 &= ~(0x01 << (channel - 32));
+    }
+}
+
+void ADCHS_GlobalEdgeConversionStart(void)
 {
     ADCCON3bits.GSWTRG = 1;
 }
 
-// ****NEW****
-/* Start the conversion of a specific channel */
-void ${ADCHS_INSTANCE_NAME}_ChannelConversionStart (ADCHS_CHANNEL_NUM channel)
+void ADCHS_GlobalLevelConversionStart(void)
 {
-    // Start Channel conversion
+    ADCCON3bits.GLSWTRG = 1;
+}
+
+void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel)
+{
     ADCCON3bits.ADINSEL = channel;
     ADCCON3bits.RQCNVRT = 1;
 }
 
+
 /*Check if conversion result is available */
 bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 {
-    return((ADCDSTAT1+channel/32)&0x01<<(channel%32));
+    bool status;
+    if (channel < ADCHS_CHANNEL_32)
+    {
+        status = (ADCDSTAT1 >> channel) & 0x01;
+    }
+    else
+    {
+        status = (ADCDSTAT2 >> (channel - 32)) & 0x01;
+    }
+    return status;
 }
 
 /* Read the conversion result */
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
-    return(*((&ADCDATA0)+sizeof(ADCDATA0)*channel));
+    return (*((&ADCDATA0) + channel));
 }
 
-///* Define the conversion sequence */
-//void ${ADCHS_INSTANCE_NAME}_ConversionSequenceSet(ADCHS_CHANNEL_NUM *channelList, uint8_t numChannel)
-//{
-//}
-///* Set the gain for a channel */
-//void ${ADCHS_INSTANCE_NAME}_ChannelGainSet(ADCHS_CHANNEL_NUM channel, ADCHS_CHANNEL_GAIN gain)
-//{
-//}
-///* Set the offset for a channel */
-//void ${ADCHS_INSTANCE_NAME}_ChannelOffsetSet(ADCHS_CHANNEL_NUM channel, uint16_t offset)
-//{
-//}
+<#if ADCHS_INTERRUPT == true>
+void ${ADCHS_INSTANCE_NAME}_CallbackRegister(ADCHS_CHANNEL_NUM channel, ADCHS_CALLBACK callback, uintptr_t context)
+{
+    ${ADCHS_INSTANCE_NAME}_CallbackObj[channel].callback_fn = callback;
+    ${ADCHS_INSTANCE_NAME}_CallbackObj[channel].context = context;
+}
+</#if>
 
+<#list 0..31 as i>
+<#assign ADCHS_DATA_INTERRUPT_ENABLE = "ADCGIRQEN1__AGIEN" + i>
+<#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? && .vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
+void ADC_DATA${i}_InterruptHandler(void)
+{
+<#if i < ADCHS_IFS0_NUM_IRQ>
+    IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_ADCD${i}IF_MASK;
+<#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>
+    IFS${ADCHS_IFS_START_INDEX + 1}CLR = _IFS${ADCHS_IFS_START_INDEX+1}_ADCD${i}IF_MASK;
+</#if>
+    if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
+    {
+      ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
+    }
+}
+</#if>
+</#list>
+
+<#list 32..((ADCHS_NUM_SIGNALS) - 1) as i>
+<#assign ADCHS_DATA_INTERRUPT_ENABLE = "ADCGIRQEN2__AGIEN" + i>
+<#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? &&.vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
+void ADC_DATA${i}_InterruptHandler(void)
+{
+<#if i < ADCHS_IFS0_NUM_IRQ>
+    IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_ADCD${i}IF_MASK;
+<#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>
+    IFS${ADCHS_IFS_START_INDEX + 1}CLR = _IFS${ADCHS_IFS_START_INDEX+1}_ADCD${i}IF_MASK;
+<#else>
+    IFS${ADCHS_IFS_START_INDEX + 2}CLR = _IFS${ADCHS_IFS_START_INDEX+2}_ADCD${i}IF_MASK;
+</#if>
+    if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
+    {
+        ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
+    }
+
+}
+</#if>
+</#list>
