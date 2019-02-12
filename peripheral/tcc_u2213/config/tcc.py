@@ -100,7 +100,7 @@ def updateTCCInterruptStatus(symbol, event):
                 Database.setSymbolValue("core", InterruptHandler[mcInstance+1], InterruptHandler[mcInstance+1].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
             else:
                 Database.setSymbolValue("core", InterruptHandler[mcInstance+1], InterruptHandler[mcInstance+1].split("_INTERRUPT_HANDLER")[0] + "_Handler", 2)
-                
+
 def updateTCCInterruptWarningStatus(symbol, event):
     global InterruptVectorUpdate
     global numOfChannels
@@ -148,7 +148,7 @@ def tccDeadTimeVisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-        
+
 def tccPattgenVisible(symbol, event):
     if(event["value"] == True):
         symbol.setVisible(True)
@@ -171,17 +171,16 @@ def tccPWMFreqCalc(symbol, event):
         symbol.setVisible(True)
     elif (event["id"] == "TCC_SLAVE_MODE"):
         symbol.setVisible(not event["value"])
-    
+
 def tccDeadTimeCalc(symbol, event):
     clock_freq = Database.getSymbolValue("core", tccInstanceName.getValue()+"_CLOCK_FREQUENCY")
     if clock_freq == 0:
         clock_freq = 1
-    prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
     if (symbol.getID() == "TCC_DTLS_COMMENT"):
-        dead_time = (tccSym_WEXCTRL_DTLS.getValue() * 1000000.0 / (clock_freq / prescaler))
+        dead_time = (tccSym_WEXCTRL_DTLS.getValue() * 1000000.0 / (clock_freq))
         symbol.setLabel("**** Low side dead time is "+str(dead_time)+ " uS ****")
     if (symbol.getID() == "TCC_DTHS_COMMENT"):
-        dead_time = (tccSym_WEXCTRL_DTHS.getValue() * 1000000.0 / (clock_freq / prescaler))
+        dead_time = (tccSym_WEXCTRL_DTHS.getValue() * 1000000.0 / (clock_freq))
         symbol.setLabel("**** High side dead time is "+str(dead_time)+ " uS ****")
 
 def tccSlaveCommentVisible(symbol, event):
@@ -192,7 +191,7 @@ def tccFault0IntVisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-    
+
 def tccFault1IntVisible(symbol, event):
     if ("Event 1" in event["value"]):
         symbol.setVisible(True)
@@ -208,7 +207,7 @@ def tccSlaveModeVisibility(symbol, event):
 
 def instantiateComponent(tccComponent):
 
-    global InterruptVector 
+    global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
     global tccInstanceName
@@ -220,7 +219,7 @@ def instantiateComponent(tccComponent):
     tccInstanceName = tccComponent.createStringSymbol("TCC_INSTANCE_NAME", None)
     tccInstanceName.setVisible(False)
     tccInstanceName.setDefaultValue(tccComponent.getID().upper())
-    
+
     #clock enable
     Database.setSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
@@ -251,45 +250,45 @@ def instantiateComponent(tccComponent):
             patternGenImplemented = int(parameters[param].getAttribute("value"))
         if(parameters[param].getAttribute("name") == "SIZE"):
             size = int(parameters[param].getAttribute("value"))
-            
+
     tccSym_NUM_CHANNELS = tccComponent.createIntegerSymbol("TCC_NUM_CHANNELS", None)
     tccSym_NUM_CHANNELS.setDefaultValue(int(numOfChannels))
     tccSym_NUM_CHANNELS.setVisible(False)
-    
+
     tccSym_NUM_OUTPUTS = tccComponent.createIntegerSymbol("TCC_NUM_OUTPUTS", None)
     tccSym_NUM_OUTPUTS.setDefaultValue(int(numOfOutputs))
     tccSym_NUM_OUTPUTS.setVisible(False)
-    
+
     tccSym_Is_DeadTime = tccComponent.createIntegerSymbol("TCC_IS_DEAD_TIME", None)
     tccSym_Is_DeadTime.setDefaultValue(int(deadTimeImplemented))
     tccSym_Is_DeadTime.setVisible(False)
-    
+
     tccSym_Is_Swap = tccComponent.createIntegerSymbol("TCC_IS_SWAP", None)
     tccSym_Is_Swap.setDefaultValue(int(swapImplemented))
     tccSym_Is_Swap.setVisible(False)
-    
+
     tccSym_Is_OTM = tccComponent.createIntegerSymbol("TCC_IS_OTM", None)
     tccSym_Is_OTM.setDefaultValue(int(outputMatrixImplemented))
     tccSym_Is_OTM.setVisible(False)
-    
+
     tccSym_Is_PG = tccComponent.createIntegerSymbol("TCC_IS_PG", None)
     tccSym_Is_PG.setDefaultValue(int(patternGenImplemented))
     tccSym_Is_PG.setVisible(False)
-    
+
     tccSym_SIZE = tccComponent.createIntegerSymbol("TCC_SIZE", None)
     tccSym_SIZE.setDefaultValue(int(size))
     tccSym_SIZE.setVisible(False)
-    
+
     tccSym_MCU_FAMILY = tccComponent.createStringSymbol("TCC_MCU_FAMILY", None)
     tccSym_MCU_FAMILY.setVisible(False)
     node = ATDF.getNode("/avr-tools-device-file/devices")
     series = node.getChildren()[0].getAttribute("family")
     tccSym_MCU_FAMILY.setDefaultValue(node.getChildren()[0].getAttribute("family"))
-    
+
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TCC\"]/register-group@[name=\"TCC\"]")
     register_names = []
     register_names = node.getChildren()
-    
+
     tccSym_CBUF_REG_NAME = tccComponent.createStringSymbol("TCC_CBUF_REG_NAME", None)
     tccSym_CBUF_REG_NAME.setVisible(False)
     for index in range(0, len(register_names)):
@@ -298,7 +297,7 @@ def instantiateComponent(tccComponent):
             break
         else:
             tccSym_CBUF_REG_NAME.setDefaultValue("CCB")
-         
+
     tccSym_PBUF_REG_NAME = tccComponent.createStringSymbol("TCC_PBUF_REG_NAME", None)
     tccSym_PBUF_REG_NAME.setVisible(False)
     for index in range(0, len(register_names)):
@@ -316,7 +315,7 @@ def instantiateComponent(tccComponent):
             break
         else:
             tccSym_PATBUF_REG_NAME.setDefaultValue("PATTB")
-            
+
     # master slave mode
     tccInstanceMasterValue = 0
     tccInstanceMasterNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TCC\"]/instance@[name=\""+tccInstanceName.getValue()+"\"]/parameters/param@[name=\"MASTER_SLAVE_MODE\"]")
@@ -335,14 +334,14 @@ def instantiateComponent(tccComponent):
         tccSym_Slave_Mode.setVisible(True)
     else:
         tccSym_Slave_Mode.setVisible(False)
-    
+
     if (tccInstanceMasterValue == 2):  #slave
         tccSym_Slave_Mode_Comment = tccComponent.createCommentSymbol("TCC_SLAVE_MODE_COMMENT", None)
         tccSym_Slave_Mode_Comment.setLabel("**** Ensure Master - " + str(masterComponentID) + " is in active components ****")
         tccSym_Slave_Mode_Comment.setVisible(False)
         tccSym_Slave_Mode_Comment.setDependencies(tccSlaveCommentVisible, ["TCC_SLAVE_MODE"])
     ###########################################################################################
-    
+
     #prescaler configuration
     global tccSym_CTRLA_PRESCALER
     tccSym_CTRLA_PRESCALER = tccComponent.createKeyValueSetSymbol("TCC_CTRLA_PRESCALER", None)
@@ -354,10 +353,10 @@ def instantiateComponent(tccComponent):
     values = []
     values = node.getChildren()
     for index in range(0, len(values)):
-        tccSym_CTRLA_PRESCALER.addKey(values[index].getAttribute("name"), values[index].getAttribute("value"), 
+        tccSym_CTRLA_PRESCALER.addKey(values[index].getAttribute("name"), values[index].getAttribute("value"),
         values[index].getAttribute("caption"))
     tccSym_CTRLA_PRESCALER.setDependencies(tccSlaveModeVisibility, ["TCC_SLAVE_MODE"])
-    
+
     #waveform option
     global tccSym_WAVE_WAVEGEN
     tccSym_WAVE_WAVEGEN = tccComponent.createKeyValueSetSymbol("TCC_WAVE_WAVEGEN", None)
@@ -375,7 +374,7 @@ def instantiateComponent(tccComponent):
     tccSym_CTRLBSET_DIR.setLabel("PWM Direction - Count Down")
     tccSym_CTRLBSET_DIR.setDefaultValue(False)
     tccSym_CTRLBSET_DIR.setDependencies(tccDirVisible, ["TCC_WAVE_WAVEGEN", "TCC_SLAVE_MODE"])
-    
+
     if (outputMatrixImplemented == 1):
         tccSym_WEXCTRL_OTMX = tccComponent.createKeyValueSetSymbol("TCC_WEXCTRL_OTMX", None)
         tccSym_WEXCTRL_OTMX.setLabel("Select Output Matrix")
@@ -386,7 +385,7 @@ def instantiateComponent(tccComponent):
         tccSym_WEXCTRL_OTMX.addKey("OTMX_1", "1", "Modulo Half Number of Channel Outputs")
         tccSym_WEXCTRL_OTMX.addKey("OTMX_2", "2", "Only Channel 0 Outputs")
         tccSym_WEXCTRL_OTMX.addKey("OTMX_3", "3", "Channel 0 + Remaining Channel 1 Outputs")
-        
+
     #Period Value
     global tccSym_PER_PER
     tccSym_PER_PER = tccComponent.createIntegerSymbol("TCC_PER_PER", None)
@@ -410,28 +409,28 @@ def instantiateComponent(tccComponent):
     tccSym_Frequency = tccComponent.createCommentSymbol("TCC_FREQUENCY", None)
     tccSym_Frequency.setLabel("**** PWM Frequency is "+str(frequency)+" Hz ****")
     tccSym_Frequency.setDependencies(tccPWMFreqCalc, ["core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", "TCC_PER_PER", "TCC_WAVE_WAVEGEN", "TCC_CTRLA_PRESCALER", "TCC_SLAVE_MODE"])
-    
+
     #Period interrupt
     tccSym_INTENSET_OVF = tccComponent.createBooleanSymbol("TCC_INTENSET_OVF", None)
     tccSym_INTENSET_OVF.setLabel("Enable Period Interrupt")
     tccSym_INTENSET_OVF.setDefaultValue(False)
     interruptDepList.append("TCC_INTENSET_OVF")
-    
+
     #Period out event
     tccSym_EVCTRL_OVFEO = tccComponent.createBooleanSymbol("TCC_EVCTRL_OVFEO", None)
     tccSym_EVCTRL_OVFEO.setLabel("Enable Period Event Out")
     tccSym_EVCTRL_OVFEO.setDefaultValue(False)
     eventDepList.append("TCC_EVCTRL_OVFEO")
-    
+
     tccSym_MainChannel_Menu = tccComponent.createMenuSymbol("TCC_CHANNEL", None)
     tccSym_MainChannel_Menu.setLabel("Channel Configurations")
-    
+
     for channelID in range(0, int(numOfChannels)):
         #channel menu
         tccSym_Channel_Menu.append(channelID)
         tccSym_Channel_Menu[channelID] = tccComponent.createMenuSymbol("TCC_CHANNEL"+str(channelID), tccSym_MainChannel_Menu)
         tccSym_Channel_Menu[channelID].setLabel("Channel "+str(channelID))
-        
+
         #Duty
         tccSym_Channel_CC.append(channelID)
         tccSym_Channel_CC[channelID] = tccComponent.createIntegerSymbol("TCC_"+str(channelID)+"_CC", tccSym_Channel_Menu[channelID])
@@ -447,28 +446,28 @@ def instantiateComponent(tccComponent):
         tccSym_Channel_Polarity[channelID].addKey("HIGH","1","Waveform starts at high level")
         tccSym_Channel_Polarity[channelID].setOutputMode("Value")
         tccSym_Channel_Polarity[channelID].setDisplayMode("Description")
-        
+
         if (deadTimeImplemented == 1 and (channelID < (numOfOutputs/2))):
             #dead time
             tccSym_Channel_WEXCTRL_DTIEN.append(channelID)
             tccSym_Channel_WEXCTRL_DTIEN[channelID] = tccComponent.createBooleanSymbol("TCC_"+str(channelID)+"_WEXCTRL_DTIEN", tccSym_Channel_Menu[channelID])
             tccSym_Channel_WEXCTRL_DTIEN[channelID].setLabel("Enable Dead Time")
             tccSym_Channel_WEXCTRL_DTIEN[channelID].setDefaultValue(True)
-        
+
         if (swapImplemented == 1 and (channelID < (numOfOutputs/2))):
             #swap dead time outputs
             tccSym_Channel_WAVE_SWAP.append(channelID)
             tccSym_Channel_WAVE_SWAP[channelID] = tccComponent.createBooleanSymbol("TCC_"+str(channelID)+"_WAVE_SWAP", tccSym_Channel_Menu[channelID])
             tccSym_Channel_WAVE_SWAP[channelID].setLabel("Swap Outputs")
             tccSym_Channel_WAVE_SWAP[channelID].setDefaultValue(False)
-        
+
         #compare match event out
         tccSym_Channel_INTENSET_MC.append(channelID)
         tccSym_Channel_INTENSET_MC[channelID] = tccComponent.createBooleanSymbol("TCC_INTENSET_MC_"+str(channelID), tccSym_Channel_Menu[channelID])
         tccSym_Channel_INTENSET_MC[channelID].setLabel("Enable Compare Match Interrupt")
         tccSym_Channel_INTENSET_MC[channelID].setDefaultValue(False)
         interruptDepList.append("TCC_INTENSET_MC_"+str(channelID))
-        
+
         #compare match event out
         tccSym_Channel_EVCTRL_MCEO.append(channelID)
         tccSym_Channel_EVCTRL_MCEO[channelID] = tccComponent.createBooleanSymbol("TCC_EVCTRL_MC_"+str(channelID), tccSym_Channel_Menu[channelID])
@@ -484,7 +483,7 @@ def instantiateComponent(tccComponent):
     else:
         tccSym_DeadTime_Menu.setVisible(False)
     tccSym_DeadTime_Menu.setDependencies(tccDeadTimeVisible, ["TCC_0_WEXCTRL_DTIEN","TCC_1_WEXCTRL_DTIEN", "TCC_2_WEXCTRL_DTIEN", "TCC_3_WEXCTRL_DTIEN"])
-    
+
     #Low dead time
     global tccSym_WEXCTRL_DTLS
     tccSym_WEXCTRL_DTLS = tccComponent.createIntegerSymbol("TCC_WEXCTRL_DTLS", tccSym_DeadTime_Menu)
@@ -493,12 +492,12 @@ def instantiateComponent(tccComponent):
     tccSym_WEXCTRL_DTLS.setMin(0)
     tccSym_WEXCTRL_DTLS.setMax(255)
 
-    low_deadtime = (tccSym_WEXCTRL_DTLS.getValue() * 1000000.0 / (clock_freq / prescaler))
+    low_deadtime = (tccSym_WEXCTRL_DTLS.getValue() * 1000000.0 / (clock_freq))
 
     tccSym_DTLS_COMMENT = tccComponent. createCommentSymbol("TCC_DTLS_COMMENT", tccSym_DeadTime_Menu)
     tccSym_DTLS_COMMENT.setLabel("**** Low side dead time is "+str(low_deadtime)+ " uS ****")
     tccSym_DTLS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTLS", "core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", "TCC_CTRLA_PRESCALER"])
-    
+
     #High dead time
     global tccSym_WEXCTRL_DTHS
     tccSym_WEXCTRL_DTHS = tccComponent.createIntegerSymbol("TCC_WEXCTRL_DTHS", tccSym_DeadTime_Menu)
@@ -507,22 +506,22 @@ def instantiateComponent(tccComponent):
     tccSym_WEXCTRL_DTHS.setMin(0)
     tccSym_WEXCTRL_DTHS.setMax(255)
 
-    high_deadtime = (tccSym_WEXCTRL_DTHS.getValue() * 1000000.0 / (clock_freq / prescaler))
+    high_deadtime = (tccSym_WEXCTRL_DTHS.getValue() * 1000000.0 / (clock_freq))
 
     tccSym_DTHS_COMMENT = tccComponent. createCommentSymbol("TCC_DTHS_COMMENT", tccSym_DeadTime_Menu)
     tccSym_DTHS_COMMENT.setLabel("**** High side dead time is "+str(high_deadtime)+ " uS ****")
     tccSym_DTHS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTHS", "core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", "TCC_CTRLA_PRESCALER"])
-    
+
     #Fault menu
     tccSym_Fault_Menu = tccComponent.createMenuSymbol("TCC_FAULT_MENU", None)
     tccSym_Fault_Menu.setLabel("Fault Configurations")
-    
+
     #fault source
     fault_source = ["Disabled", "Event 0 Rising Edge", "Event 0 Falling Edge", "Event 1 Rising Edge", "Event 1 Falling Edge"]
     tccSym_EVCTRL_EVACT = tccComponent.createComboSymbol("TCC_EVCTRL_EVACT", tccSym_Fault_Menu, fault_source)
     tccSym_EVCTRL_EVACT.setLabel("Select Fault Source")
     eventDepList.append("TCC_EVCTRL_EVACT")
-    
+
     #fault filter value
     tccSym_DRVCTRL_FILTERVAL = tccComponent.createIntegerSymbol("TCC_DRVCTRL_FILTERVAL", tccSym_EVCTRL_EVACT)
     tccSym_DRVCTRL_FILTERVAL.setLabel("Filter Value")
@@ -531,7 +530,7 @@ def instantiateComponent(tccComponent):
     tccSym_DRVCTRL_FILTERVAL.setDefaultValue(0)
     tccSym_DRVCTRL_FILTERVAL.setVisible(False)
     tccSym_DRVCTRL_FILTERVAL.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT"])
-    
+
     #output polarity after fault
     for output in range(0, numOfOutputs):
         tccSym_DRVCTRL_NRE_NRV.append(output)
@@ -544,14 +543,14 @@ def instantiateComponent(tccComponent):
         tccSym_DRVCTRL_NRE_NRV[output].setOutputMode("Value")
         tccSym_DRVCTRL_NRE_NRV[output].setDisplayMode("Description")
         tccSym_DRVCTRL_NRE_NRV[output].setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT"])
-    
+
     tccSym_INTENSET_FAULT0 = tccComponent.createBooleanSymbol("TCC_INTENSET_FAULT0", tccSym_EVCTRL_EVACT)
     tccSym_INTENSET_FAULT0.setLabel("Enable Fault 0 Interrupt")
     tccSym_INTENSET_FAULT0.setDefaultValue(False)
     tccSym_INTENSET_FAULT0.setVisible(False)
     tccSym_INTENSET_FAULT0.setDependencies(tccFault0IntVisible, ["TCC_EVCTRL_EVACT"])
     interruptDepList.append("TCC_INTENSET_FAULT0")
-    
+
     tccSym_INTENSET_FAULT1 = tccComponent.createBooleanSymbol("TCC_INTENSET_FAULT1", tccSym_EVCTRL_EVACT)
     tccSym_INTENSET_FAULT1.setLabel("Enable Fault 1 Interrupt")
     tccSym_INTENSET_FAULT1.setDefaultValue(False)
@@ -569,7 +568,7 @@ def instantiateComponent(tccComponent):
             tccSym_PATT_PGE[output] = tccComponent.createBooleanSymbol("TCC_"+str(output)+"PATT_PGE", tccSym_PatGen_Menu)
             tccSym_PATT_PGE[output].setLabel("Enable for Output " +str(output))
             tccSym_PATT_PGE[output].setDefaultValue(False)
-            
+
             tccSym_PATT_PGV.append(output)
             tccSym_PATT_PGV[output] = tccComponent.createKeyValueSetSymbol("TCC_"+str(output)+"PATT_PGV", tccSym_PATT_PGE[output])
             tccSym_PATT_PGV[output].setLabel("Select Pattern Level for Output " +str(output))
@@ -615,7 +614,7 @@ def instantiateComponent(tccComponent):
     tccSym_ClkEnComment.setLabel("Warning!!! TCC Peripheral Clock is Disabled in Clock Manager")
     tccSym_ClkEnComment.setVisible(False)
     tccSym_ClkEnComment.setDependencies(updateTCCClockWarningStatus, ["core." + tccInstanceName.getValue() + "_CLOCK_ENABLE"])
-    
+
     tccSym_EVSYS_CONFIGURE = tccComponent.createIntegerSymbol("TCC_TIMER_EVSYS_CONFIGURE", None)
     tccSym_EVSYS_CONFIGURE.setVisible(False)
     tccSym_EVSYS_CONFIGURE.setDependencies(tccEvsys, eventDepList)
@@ -641,7 +640,7 @@ def instantiateComponent(tccComponent):
     tccSym_PWMSourceFile.setProjectPath("config/" + configName + "/peripheral/tcc/")
     tccSym_PWMSourceFile.setType("SOURCE")
     tccSym_PWMSourceFile.setMarkup(True)
-    
+
     tccSym_PWMGlobalHeaderFile = tccComponent.createFileSymbol("TCC_GLOBAL_HEADER", None)
     tccSym_PWMGlobalHeaderFile.setSourcePath("../peripheral/tcc_u2213/templates/plib_tcc_common.h")
     tccSym_PWMGlobalHeaderFile.setOutputName("plib_tcc_common.h")
