@@ -270,7 +270,7 @@ coreComponent.addPlugin("../peripheral/clk_sam_d21/plugin/clk_sam_d21.jar")
 
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
+coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
 
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")

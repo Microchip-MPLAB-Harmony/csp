@@ -215,7 +215,7 @@ cacheAlign.setVisible(False)
 cacheAlign.setDefaultValue(32)
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
-coreComponent.addPlugin("../peripheral/nvic/plugin/NVICmanager.jar")
+coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
 
 # load mpu
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
