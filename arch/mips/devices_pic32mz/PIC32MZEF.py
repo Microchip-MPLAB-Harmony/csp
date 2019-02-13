@@ -189,9 +189,18 @@ coreFPU.setDefaultValue(True)
 coreFPU.setReadOnly(True)
 coreFPU.setVisible(False)
 
+
+mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
+mipsMenu.setLabel("MIPS Configuration")
+mipsMenu.setDescription("Configuration for MIPS processor")
+
 prefetchMenu = coreComponent.createMenuSymbol("PREFETCH_MENU", None)
 prefetchMenu.setLabel("Prefetch and Flash Configuration")
 prefetchMenu.setDescription("Configure Prefetch and Flash")
+
+# load clock manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mz/config/clk.py")
+coreComponent.addPlugin("../peripheral/clk_pic32mz/plugin/clockmanager.jar")
 
 SYM_ECCCON = coreComponent.createKeyValueSetSymbol("CONFIG_CFGCON_ECCCON", prefetchMenu)
 SYM_ECCCON.setLabel("Flash ECC Configuration")
@@ -219,13 +228,6 @@ SYM_PFMWS.setDefaultValue(2)
 SYM_PFMWS.setLabel("Program Flash memory waitstates")
 SYM_PFMWS.setDependencies(calcWaitStates,["CPU_CLOCK_FREQUENCY", "CONFIG_CFGCON_ECCCON"])
 
-mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
-mipsMenu.setLabel("MIPS Configuration")
-mipsMenu.setDescription("Configuration for MIPS processor")
-
-# load clock manager information
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mz/config/clk.py")
-coreComponent.addPlugin("../peripheral/clk_pic32mz/plugin/clockmanager.jar")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
