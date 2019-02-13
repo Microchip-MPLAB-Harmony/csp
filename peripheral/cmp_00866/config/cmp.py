@@ -44,6 +44,8 @@ cmpBitFld_CM2CON_EVPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[na
 cmpBitFld_CM2CON_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM2CON"]/bitfield@[name="CPOL"]')
 cmpBitFld_CM2CON_COE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM2CON"]/bitfield@[name="COE"]')
 
+cmpBitFld_CMSTAT_SIDL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CMSTAT"]/bitfield@[name="SIDL"]')
+
 ################################################################################
 #### Global Variables ####
 ################################################################################
@@ -203,6 +205,12 @@ def instantiateComponent(cmpComponent):
     cmpInstanceName.setDefaultValue(cmpComponent.getID().upper())
     print("Running " + cmpInstanceName.getValue())
 
+    #Stop in Idle mode
+    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and (("DA" in Variables.get("__PROCESSOR"))) ):
+        cmpSym_CMSTAT_SIDL = cmpComponent.createBooleanSymbol("CMP_CMSTAT_SIDL", None)
+        cmpSym_CMSTAT_SIDL.setLabel(cmpBitFld_CMSTAT_SIDL.getAttribute("caption"))
+        cmpSym_CMSTAT_SIDL.setDefaultValue(False)
+    
     cmpSym_CM1CON_STRING = cmpComponent.createCommentSymbol("CMP1_STRING", None)
     cmpSym_CM1CON_STRING.setLabel("Comparator 1")
 
