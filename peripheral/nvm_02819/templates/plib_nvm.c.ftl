@@ -176,7 +176,7 @@ static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM
 /* ************************************************************************** */
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)address, length);
+    memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
 
     return true;
 }
