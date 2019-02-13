@@ -37,7 +37,7 @@ __STATIC_INLINE void ICache_Enable(void)
                     <#lt>    {
                     <#lt>        /*Wait for the operation to complete*/
                     <#lt>    }
-                    <#lt>    CMCC_REGS->CMCC_CFG |= (CMCC_CTRL_CFG_DCDIS_Msk);
+                    <#lt>    CMCC_REGS->CMCC_CFG |= (CMCC_CFG_DCDIS_Msk);
                     </#if>
                 </#if>
                 <#lt>    CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
@@ -59,7 +59,7 @@ __STATIC_INLINE void DCache_Enable(void)
                     <#lt>    {
                     <#lt>        /*Wait for the operation to complete*/
                     <#lt>    }
-                    <#lt>    CMCC_REGS->CMCC_CFG |= (CMCC_CTRL_CFG_ICDIS_Msk);
+                    <#lt>    CMCC_REGS->CMCC_CFG |= (CMCC_CFG_ICDIS_Msk);
                     <#lt>    CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
                     </#if>
                 </#if>
