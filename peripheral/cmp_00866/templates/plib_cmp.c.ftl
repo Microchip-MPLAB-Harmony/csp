@@ -71,6 +71,18 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
     /*  COE     = ${CMP_CM2CON_COE?then('true', 'false')}   */
 
     CM2CON = 0x${CM2CON_VALUE};
+    <#if CMP_CMSTAT_SIDL?has_content >
+    
+    /*  Setup CMSTAT    */
+    /*  SIDL     = ${CMP_CMSTAT_SIDL?then('true', 'false')}   */
+    
+    <#if CMP_CMSTAT_SIDL == true>
+    CMSTATSET = _CMSTAT_SIDL_MASK;
+    <#else>
+    CMSTATCLR = _CMSTAT_SIDL_MASK;
+    </#if>
+    </#if>
+    
 <#if CMP_CM2CON_EVPOL != "0">
 
     ${CMP2_IEC_REG}SET = _${CMP2_IEC_REG}_${CMP_INSTANCE_NAME}2IE_MASK;
