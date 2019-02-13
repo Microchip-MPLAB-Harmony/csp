@@ -181,7 +181,6 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
     bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
     groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
     peripheralFuncVal = 0
-
     if event["value"] not in peripheralFunctionality and event["value"] != "":
 
         prePinMuxVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
@@ -316,6 +315,18 @@ portGroupName = []
 for letter in range(65,91):
     portGroupName.append(chr(letter))
 
+pinoutNode = ATDF.getNode('/avr-tools-device-file/pinouts/pinout@[name= "' + str(package.get(portPackage.getValue())) + '"]')
+for id in range(0,len(pinoutNode.getChildren())):
+    if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue():
+        pin_map[pinoutNode.getChildren()[id].getAttribute("position")] = pinoutNode.getChildren()[id].getAttribute("pad")
+    else:
+        pin_map[int(pinoutNode.getChildren()[id].getAttribute("position"))] = pinoutNode.getChildren()[id].getAttribute("pad")
+
+if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue():
+    pin_position = sort_alphanumeric(pin_map.keys())
+else:
+    pin_position = sorted(pin_map.keys())
+
 for pinNumber in range(1, pincount + 1):
 
     portSignalNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/signals/signal@[index=\""+ str(pinNumber - 1) +"\"]")
@@ -334,10 +345,31 @@ for pinNumber in range(1, pincount + 1):
             portSym_PinIndex.setVisible(False)
             portSym_PinIndex.setDefaultValue(signalIndex)
 
+
+
     pin.append(pinNumber)
     pin[pinNumber-1] = coreComponent.createMenuSymbol("PORT_PIN" + str(pinNumber), pinConfiguration)
-    pin[pinNumber-1].setLabel("Pin " + str(pinNumber))
-    pin[pinNumber-1].setDescription("Configuraiton for Pin " + str(pinNumber) )
+    pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
+    pin[pinNumber-1].setDescription("Configuraiton for Pin " + str(pin_position[pinNumber-1]) )
+
+    pinBitPosition.append(pinNumber)
+    pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PORT_PIN", pin[pinNumber-1])
+    pinBitPosition[pinNumber-1].setLabel("Bit Position")
+    pinBitPosition[pinNumber-1].setReadOnly(True)
+
+    pinGroup.append(pinNumber)
+    pinGroup[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PORT_GROUP", pin[pinNumber-1])
+    pinGroup[pinNumber-1].setLabel("Group")
+    pinGroup[pinNumber-1].setReadOnly(True)
+
+    pinGroupNum.append(pinNumber)
+    pinGroupNum[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_GROUP", pin[pinNumber-1])
+    pinGroupNum[pinNumber-1].setVisible(False)
+
+    if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
+        pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
+        pinGroup[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
+        pinGroupNum[pinNumber-1] = portGroupName.index(str(pin_map.get(pin_position[pinNumber-1]))[1])
 
     pinName.append(pinNumber)
     pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
@@ -354,43 +386,6 @@ for pinNumber in range(1, pincount + 1):
     pinPeripheralFunction[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PERIPHERAL_FUNCTION", pin[pinNumber-1])
     pinPeripheralFunction[pinNumber-1].setLabel("Peripheral Selection")
     pinPeripheralFunction[pinNumber-1].setReadOnly(True)
-
-    portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(portPackage.getValue())) + "\"]/pin@[position=\""+ str(pinNumber) +"\"]")
-
-    if portBitPositionNode != None:
-
-        pinoutPad = str(portBitPositionNode.getAttribute("pad"))
-
-        pinBitPosition.append(pinNumber)
-        pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PORT_PIN", pin[pinNumber-1])
-        pinBitPosition[pinNumber-1].setLabel("Bit Position")
-
-        pinGroup.append(pinNumber)
-        pinGroup[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PORT_GROUP", pin[pinNumber-1])
-        pinGroup[pinNumber-1].setLabel("Group")
-
-        pinGroupNum.append(pinNumber)
-        pinGroupNum[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_GROUP", pin[pinNumber-1])
-
-        pinoutPadFirstHalf, pinoutPadSecondHalf = pinoutPad[:len(pinoutPad)/2], pinoutPad[len(pinoutPad)/2:]
-        firstPart, secondPart = pinoutPadFirstHalf[:len(pinoutPadFirstHalf)/2], pinoutPadFirstHalf[len(pinoutPadFirstHalf)/2:]
-        if firstPart == "P":
-            pinBitPosition[pinNumber-1].setDefaultValue(int(pinoutPadSecondHalf))
-            pinBitPosition[pinNumber-1].setReadOnly(True)
-
-            pinGroup[pinNumber-1].setDefaultValue(str(secondPart))
-            pinGroup[pinNumber-1].setReadOnly(True)
-
-            portGrpNum = portGroupName.index(str(secondPart))
-            pinGroupNum[pinNumber-1].setVisible(False)
-            pinGroupNum[pinNumber-1].setDefaultValue(portGrpNum)
-
-        else:
-            pinBitPosition[pinNumber-1].setDefaultValue(-1)
-            pinBitPosition[pinNumber-1].setReadOnly(True)
-
-            pinGroup[pinNumber-1].setDefaultValue("None")
-            pinGroup[pinNumber-1].setReadOnly(True)
 
     pinMode.append(pinNumber)
     pinMode[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_MODE", pin[pinNumber-1])
@@ -434,7 +429,6 @@ for pinNumber in range(1, pincount + 1):
     portSym_PIN_PINCFG[pinNumber-1].setReadOnly(True)
     portSym_PIN_PINCFG[pinNumber-1].setVisible(False)
     portSym_PIN_PINCFG[pinNumber-1].setDependencies(setupPortPINCFG, ["PIN_" + str(pinNumber) +"_INEN", "PIN_" + str(pinNumber) +"_PULLEN", "PIN_" + str(pinNumber) +"_PERIPHERAL_FUNCTION"])
-
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
