@@ -37,9 +37,20 @@ pin_map = {}
 global pin_position
 pin_position = []
 global sort_alphanumeric
+
+global availablePinDictionary
+availablePinDictionary = {}
+
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
+
+global getAvailablePins
+
+# API used by core to return available pins to sender component
+def getAvailablePins():
+
+    return availablePinDictionary
 
 # Dependency Function to show or hide the warning message depending on Interrupt
 def InterruptStatusWarning(symbol, event):
@@ -377,6 +388,7 @@ pioSymAPI_Prefix.setVisible(False)
 ###################################################################################################
 ################################# Pin Configuration related code ##################################
 ###################################################################################################
+
 global pin
 pin = []
 pinName = []
@@ -468,9 +480,12 @@ for pinNumber in range(1, packagePinCount + 1):
     pinChannel[pinNumber-1].setLabel("Channel")
     pinChannel[pinNumber-1].setDefaultValue("")
     pinChannel[pinNumber-1].setReadOnly(True)
+
     if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
         pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
         pinChannel[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
+
+        availablePinDictionary[str(pinNumber)] = "P" + str(pinChannel[pinNumber-1].getValue()) + str(pinBitPosition[pinNumber-1].getValue())
 
     pinDirection.append(pinNumber)
     pinDirection[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DIR", pin[pinNumber-1])
@@ -523,9 +538,6 @@ for pinNumber in range(1, packagePinCount + 1):
     #list created only for dependency
     pinInterruptList.append(pinNumber)
     pinInterruptList[pinNumber-1] = "PIN_" + str(pinNumber) +"_PIO_INTERRUPT"
-
-
-
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
@@ -580,7 +592,6 @@ pioSymInterruptVectorUpdate = []
 pioSymClkEnComment = []
 global pioSymIntEnComment
 pioSymIntEnComment = []
-
 
 for portNumber in range(0, len(pioSymChannel)):
 
@@ -722,7 +733,6 @@ pioMatrixSym_CCFG_SYSIO.setDescription("System Pins as GPIO")
 pioMatrixSym_CCFG_SYSIO.setDefaultValue(0x00000000)
 pioMatrixSym_CCFG_SYSIO.setReadOnly(True)
 
-
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################
@@ -744,7 +754,6 @@ pioSource1File.setDestPath("/peripheral/pio/")
 pioSource1File.setProjectPath("config/" + configName +"/peripheral/pio/")
 pioSource1File.setType("SOURCE")
 pioSource1File.setMarkup(True)
-
 
 pioSystemInitFile = coreComponent.createFileSymbol("PIO_INIT", None)
 pioSystemInitFile.setType("STRING")

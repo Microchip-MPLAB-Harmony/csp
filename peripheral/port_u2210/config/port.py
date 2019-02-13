@@ -23,15 +23,26 @@
 *****************************************************************************"""
 
 Log.writeInfoMessage("Loading Pin Manager for " + Variables.get("__PROCESSOR"))
+
 import re
 global sort_alphanumeric
 global peripheralFunctionality
 
 peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH", "SWITCH_AL"]
 
+global availablePinDictionary
+availablePinDictionary = {}
+
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
+
+global getAvailablePins
+
+# API used by core to return available pins to sender component
+def getAvailablePins():
+
+    return availablePinDictionary
 
 def packageChange(symbol, pinout):
     global uniquePinout
@@ -77,6 +88,7 @@ def packageChange(symbol, pinout):
                     Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_GROUP", "", 2)
             else:
                 pin[index - 1].setVisible(False)
+
         prev_package = cur_package
 
 def sort_alphanumeric(l):
@@ -112,7 +124,6 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
 
         Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PINCFG" + str(bitPosition), str(hex(cfgValue)), 1)
 
-
 def setupPortDir(usePortLocalDir, event):
 
     bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
@@ -129,8 +140,8 @@ def setupPortDir(usePortLocalDir, event):
         dirValue |= 1 << bitPosition
     else:
         dirValue &= ~ (1 << bitPosition)
-    Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_DIR", str((hex(dirValue).rstrip("L"))), 1)
 
+    Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_DIR", str((hex(dirValue).rstrip("L"))), 1)
 
 def setupPortLat(usePortLocalLatch, event):
 
@@ -169,7 +180,6 @@ def evsysControl(symbol, event):
         pin = int(Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_PIN"))
         if enable == True:
             evctrl |=  1 << (7+(i*8)) | (action << (5+(i*8))) | (pin << (0+(i*8)))
-
 
     symbol.setValue(str(hex(evctrl)),2)
 
@@ -226,8 +236,9 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
     prevVal = event["value"]
 
 ###################################################################################################
-######################################### PORT Main Menu  ##########################################
+######################################### PORT Main Menu  #########################################
 ###################################################################################################
+
 ##packagepinout map
 global package
 global portPackage
@@ -252,7 +263,6 @@ portEnable.setLabel("Use PORT PLIB ?")
 portEnable.setDefaultValue(True)
 portEnable.setReadOnly(True)
 
-
 # Build package pinout map
 packageNode = ATDF.getNode("/avr-tools-device-file/variants")
 for id in range(0,len(packageNode.getChildren())):
@@ -275,7 +285,6 @@ pincount = int(re.findall(r'\d+', package.keys()[0])[0])
 pinConfiguration = coreComponent.createMenuSymbol("PORT_PIN_CONFIGURATION", portEnable)
 pinConfiguration.setLabel("Pin Configuration")
 pinConfiguration.setDescription("Configuraiton for PORT Pins")
-
 
 global prev_package
 global cur_package
@@ -345,8 +354,6 @@ for pinNumber in range(1, pincount + 1):
             portSym_PinIndex.setVisible(False)
             portSym_PinIndex.setDefaultValue(signalIndex)
 
-
-
     pin.append(pinNumber)
     pin[pinNumber-1] = coreComponent.createMenuSymbol("PORT_PIN" + str(pinNumber), pinConfiguration)
     pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
@@ -370,6 +377,8 @@ for pinNumber in range(1, pincount + 1):
         pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
         pinGroup[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
         pinGroupNum[pinNumber-1] = portGroupName.index(str(pin_map.get(pin_position[pinNumber-1]))[1])
+
+        availablePinDictionary[str(pinNumber)] = "P" + str(pinGroup[pinNumber-1].getValue()) + str(pinBitPosition[pinNumber-1].getValue())
 
     pinName.append(pinNumber)
     pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
@@ -568,15 +577,10 @@ for portNumber in range(0, len(group)):
         portSym_PORT_EVCTRL.setDefaultValue(str(hex(0)))
         portSym_PORT_EVCTRL.setDependencies(evsysControl, evsysDep)
 
-
-
-
-
-
-
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################
+
 configName = Variables.get("__CONFIGURATION_NAME")
 
 portModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]")
@@ -615,7 +619,6 @@ sysPortIncludeFile.setType("STRING")
 sysPortIncludeFile.setOutputName("core.LIST_SYS_PORT_INCLUDES")
 sysPortIncludeFile.setSourcePath("../peripheral/port_u2210/templates/plib_port_sysport.h.ftl")
 sysPortIncludeFile.setMarkup(True)
-
 
 portSym_SystemInitFile = coreComponent.createFileSymbol("PORT_SYS_INIT", None)
 portSym_SystemInitFile.setSourcePath("../peripheral/port_u2210/templates/system/initialization.c.ftl")

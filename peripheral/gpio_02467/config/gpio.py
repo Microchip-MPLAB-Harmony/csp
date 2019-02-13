@@ -45,9 +45,19 @@ pin_position = []
 global sort_alphanumeric
 global createPinMap
 
+global availablePinDictionary
+availablePinDictionary = {}
+
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
+
+global getAvailablePins
+
+# API used by core to return available pins to sender component
+def getAvailablePins():
+
+    return availablePinDictionary
 
 # Dependency Function to show or hide the warning message depending on Interrupt
 def InterruptStatusWarning(symbol, event):
@@ -409,6 +419,8 @@ for pinNumber in range(1, packagePinCount + 1):
         # Assign channel and bit position value for each pin
         pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
         pinChannel[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
+
+        availablePinDictionary[str(pinNumber)] = "R" + str(pinChannel[pinNumber-1].getValue()) + str(pinBitPosition[pinNumber-1].getValue())
 
     pinMode.append(pinNumber)
     pinMode[pinNumber-1] = coreComponent.createStringSymbol("BSP_PIN_" + str(pinNumber) + "_MODE", pin[pinNumber-1])
