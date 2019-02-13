@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<diagram min_x="600" min_y="600" >
+	<shape type="complex_rect" width="350" height="380" />    
+	<shape type="string" y="-240" line="000000" val="$DEVICE_NAME" orientation="right" size="16"/>
+	<shape type="string_array" x="-200" y="-150" line="000000" vals="A,B,C,D,E,F,G,H" orientation="down" size="14" margin="45" stroke="2" />
+	<shape type="string_array" x="-145" y="-200" line="000000" vals="1,2,3,4,5,6,7" orientation="right" size="14" margin="45" stroke="2"/>
+	<layout type="grid" pin_margin="25" pin_name_margin="0" pin_rows="8" pin_cols="7" pin_radius="10" />
+</diagram>
