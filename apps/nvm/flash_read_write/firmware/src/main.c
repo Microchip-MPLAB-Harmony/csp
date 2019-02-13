@@ -61,7 +61,7 @@
 #define LED_OFF                 LED1_Clear
 #define LED_TOGGLE              LED1_Toggle
 
-uint32_t writeData[BUFFER_SIZE] __COHERENT;
+uint32_t writeData[BUFFER_SIZE] CACHE_ALIGN;
 uint32_t readData[BUFFER_SIZE];
 
 static volatile bool xferDone = false;
