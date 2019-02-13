@@ -598,7 +598,7 @@ dfllOpmode = coreComponent.createKeyValueSetSymbol(
 dfllOpmode.setLabel("DFLL operation mode")
 dfllOpmode.setDescription("Selects DFLL operating mode")
 dfllOpmode.setOutputMode("Value")
-dfllOpmode.setDisplayMode("Description")
+dfllOpmode.setDisplayMode("Key")
 dfllOpmode.addKey("Open", str(0), "The DFLL operates in open-loop operation.")
 dfllOpmode.addKey("Closed", str(
     1), "The DFLL operates in closed-loop operation.")
@@ -866,9 +866,9 @@ rtcClockSourceSelection.addKey(
 rtcClockSourceSelection.addKey(
     "OSCULP32K", "1", "32 KHz Ultra Low-Power Internal Oscillator (32 KHz Output)")
 rtcClockSourceSelection.addKey(
-    "XSOC1K", "4", "32.768 KHz External Crystal Oscillator (1.024 KHz Output)")
+    "XOSC1K", "4", "32.768 KHz External Crystal Oscillator (1.024 KHz Output)")
 rtcClockSourceSelection.addKey(
-    "XSOC32K", "5", "32.768 KHz External Crystal Oscillator (32.768 KHz Output)")
+    "XOSC32K", "5", "32.768 KHz External Crystal Oscillator (32.768 KHz Output)")
 
 rtcClockSourceSelection.setDefaultValue(0)
 rtcClockSourceSelection.setOutputMode("Value")
