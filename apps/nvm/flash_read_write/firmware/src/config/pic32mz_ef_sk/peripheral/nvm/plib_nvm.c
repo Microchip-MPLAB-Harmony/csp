@@ -172,7 +172,7 @@ static void NVM_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE o
 /* ************************************************************************** */
 bool NVM_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
-    memcpy((void *)data, (void *)address, length);
+    memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
 
     return true;
 }

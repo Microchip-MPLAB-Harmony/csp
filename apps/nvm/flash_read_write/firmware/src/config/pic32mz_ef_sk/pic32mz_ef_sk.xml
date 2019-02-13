@@ -3121,92 +3121,82 @@
             <User dnOrder="0" value="TQFP"/>
           </Values>
         </Combo>
-        <Combo dnOrder="508" id="CONFIG_FDMTEN">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="OFF"/>
-          </Values>
-        </Combo>
-        <Combo dnOrder="509" id="CONFIG_FWDTEN">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="OFF"/>
-          </Values>
-        </Combo>
-        <Combo dnOrder="510" id="CONFIG_ICESEL">
+        <Combo dnOrder="508" id="CONFIG_ICESEL">
           <Values dnOrder="0">
             <User dnOrder="0" value="ICS_PGx2"/>
           </Values>
         </Combo>
-        <Boolean dnOrder="511" id="EVIC_167_ENABLE">
+        <Boolean dnOrder="509" id="EVIC_167_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="512" id="EVIC_167_HANDLER_LOCK">
+        <Boolean dnOrder="510" id="EVIC_167_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="513" id="EVIC_167_INTERRUPT_HANDLER">
+        <String dnOrder="511" id="EVIC_167_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="NVM_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="514" id="FLASH_CONTROL_INTERRUPT_ENABLE">
+        <Boolean dnOrder="512" id="FLASH_CONTROL_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="nvm" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="515" id="FLASH_CONTROL_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="513" id="FLASH_CONTROL_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="516" id="FLASH_CONTROL_INTERRUPT_HANDLER">
+        <String dnOrder="514" id="FLASH_CONTROL_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="nvm" priority="1" value="NVM_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="517" id="FLASH_CONTROL_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="515" id="FLASH_CONTROL_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="nvm" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Hex dnOrder="518" id="SYS_PORT_H_ANSEL">
+        <Hex dnOrder="516" id="SYS_PORT_H_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="1"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="519" id="SYS_PORT_H_LAT">
+        <Hex dnOrder="517" id="SYS_PORT_H_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="520" id="SYS_PORT_H_TRIS">
+        <Hex dnOrder="518" id="SYS_PORT_H_TRIS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="1"/>
             </Dynamic>
           </Values>
         </Hex>
-        <KeyValueSet dnOrder="521" id="clkSvcMode">
+        <KeyValueSet dnOrder="519" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="0"/>
