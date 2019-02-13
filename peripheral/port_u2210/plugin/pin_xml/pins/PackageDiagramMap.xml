@@ -13,6 +13,12 @@
 		<package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="6" name="TFBGA100" />
 		<package diagram="JEDEC_MO_275A_DDAC_1_TFBGA100" id="7" name="VFBGA100" />		
 		<package diagram="CTBGA64" id="8" name="CTBGA64" />
-		<package diagram="TQFP128" id="9" name="TQFP128" />								
+		<package diagram="TQFP128" id="9" name="TQFP128" />		
+        <package diagram="MX_32_TQFP_Round" id="10" name="TQFP32" />		
+        <package diagram="MX_32_QFN" id="11" name="QFN32" />
+        <package diagram="MX_48_TQFP_Round" id="12" name="TQFP48" />		
+        <package diagram="MX_48_QFN" id="13" name="QFN48" />   
+        <package diagram="MX_56_WLCSP" id="14" name="WLCSP56" />   
+        
 	</packages>
 </pinfile>
