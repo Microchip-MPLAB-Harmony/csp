@@ -484,6 +484,16 @@ def instantiateComponent(spiComponent):
     spiSym_API_Prefix.setDefaultValue(spiInstanceName.getValue())
     spiSym_API_Prefix.setVisible(False)
 
+    #SPI Transmit data register
+    transmitRegister = spiComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
+    transmitRegister.setDefaultValue("&("+spiInstanceName.getValue()+"BUF)")
+    transmitRegister.setVisible(False)
+
+    #SPI Receive data register
+    receiveRegister = spiComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
+    receiveRegister.setDefaultValue("&("+spiInstanceName.getValue()+"BUF)")
+    receiveRegister.setVisible(False)
+
     ############################################################################
     #### Code Generation ####
     ############################################################################

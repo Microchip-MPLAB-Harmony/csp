@@ -104,6 +104,10 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     */
     ${SPI_INSTANCE_NAME}CONSET = (${SPI_INSTANCE_NAME}_CON_MSSEN | ${SPI_INSTANCE_NAME}_CON_MCLKSEL | ${SPI_INSTANCE_NAME}_CON_ENHBUF | ${SPI_INSTANCE_NAME}_CON_MODE_32_MODE_16 | ${SPI_INSTANCE_NAME}_CON_CKE | ${SPI_INSTANCE_NAME}_CON_CKP | ${SPI_INSTANCE_NAME}_CON_MSTEN);
 
+    /* Enable transmit interrupt when transmit buffer is completely empty (STXISEL = '01') */
+    /* Enable receive interrupt when the receive buffer is not empty (SRXISEL = '01') */
+    ${SPI_INSTANCE_NAME}CONSET = 0x00000005;
+
 <#if SPI_INTERRUPT_MODE == true>
     /* Initialize global variables */
     ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
