@@ -89,6 +89,9 @@ packagePinCount = 0
 global uniquePinout
 uniquePinout = 1
 
+global availablePinDictionary
+availablePinDictionary = {}
+
 ##########################################################################################################################
 pinMode = []
 pinDirection = []
@@ -110,6 +113,13 @@ drvSTRVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/val
 ###########################################Local Variables################################################################
 
 ############################################Callbacks##############################################
+
+global getAvailablePins
+
+# API used by core to return available pins to sender component
+def getAvailablePins():
+
+    return availablePinDictionary
 
 def packageChange(symbol, pinout):
     global uniquePinout
@@ -301,6 +311,7 @@ packagePinCount = int(re.findall(r'\d+', package.keys()[0])[0])
 pioPackage = coreComponent.createComboSymbol("COMPONENT_PACKAGE", pioEnable, package.values())
 pioPackage.setLabel("Pin Package")
 pioPackage.setReadOnly(True)
+
 ###################################################################################################
 ################################# Pin Configuration related code ##################################
 ###################################################################################################
@@ -364,9 +375,12 @@ for pinNumber in range(1, packagePinCount + 1):
 	pinChannel.append(pinNumber)
 	pinChannel[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_CHANNEL", pin[pinNumber-1])
 	pinChannel[pinNumber-1].setLabel("Channel")
+
 	if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
 		pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
 		pinChannel[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
+
+		availablePinDictionary[str(pinNumber)] = "P" + str(pinChannel[pinNumber-1].getValue()) + str(pinBitPosition[pinNumber-1].getValue())
 	pinChannel[pinNumber-1].setReadOnly(True)
 
 	pinMode.append(pinNumber)
@@ -399,7 +413,6 @@ for pinNumber in range(1, packagePinCount + 1):
 	pinPullUp[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PU", pin[pinNumber-1])
 	pinPullUp[pinNumber-1].setLabel("Pull Up")
 	pinPullUp[pinNumber-1].setReadOnly(True)
-
 
 	pinPullDown.append(pinNumber)
 	pinPullDown[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PD", pin[pinNumber-1])
@@ -445,8 +458,6 @@ for pinNumber in range(1, packagePinCount + 1):
 	pincfgrValue[pinNumber-1].setVisible(False)
 	pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_PIO_FILTER", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
 
-
-
 packageUpdate = coreComponent.createBooleanSymbol("PACKAGE_UPDATE_DUMMY", None)
 packageUpdate.setVisible(False)
 packageUpdate.setDependencies(packageChange, ["COMPONENT_PACKAGE"])
@@ -469,7 +480,6 @@ for port in pioSymChannel:
 		pinmskr.setReadOnly(True)
 		pinmskr.setVisible(False)
 		pinmskr.setDefaultValue(str(hex(mskr)))
-
 
 for port in pioSymChannel:
 	portIntEnable = coreComponent.createBooleanSymbol("PORT_" + str(port) + "_INTERRUPT_USED", None)
@@ -503,6 +513,7 @@ for port in pioSymChannel:
 	pioSCLKDIV.setLabel("PORT" + str(port) + " Slow Clock Divider")
 	pioSCLKDIV.setMax(8192)
 	pioSCLKDIV.setDefaultValue(0)
+
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################
@@ -532,7 +543,6 @@ pioSource1File.setDestPath("/peripheral/pio/")
 pioSource1File.setProjectPath("config/" + configName +"/peripheral/pio/")
 pioSource1File.setType("SOURCE")
 pioSource1File.setMarkup(True)
-
 
 pioSystemInitFile = coreComponent.createFileSymbol("PIO_INIT", None)
 pioSystemInitFile.setType("STRING")

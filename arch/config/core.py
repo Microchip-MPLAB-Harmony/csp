@@ -21,6 +21,16 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+# Callback for all the messages sent to core component
+def handleMessage(messageID, args):
+
+    symbolDict = {}
+
+    if messageID == "PIN_LIST":              # Indicates core to return available pins for device
+        symbolDict = getAvailablePins()      # this API must be defined as global in every port plibs
+
+    return symbolDict
+
 def genExceptionAsmSourceFile(symbol, event):
     coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
     coreSysExceptionFileEnabled = Database.getSymbolValue("core", "CoreSysExceptionFile")
