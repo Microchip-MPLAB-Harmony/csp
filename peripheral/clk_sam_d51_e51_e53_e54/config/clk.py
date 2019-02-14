@@ -598,7 +598,7 @@ dfllOpmode = coreComponent.createKeyValueSetSymbol(
 dfllOpmode.setLabel("DFLL operation mode")
 dfllOpmode.setDescription("Selects DFLL operating mode")
 dfllOpmode.setOutputMode("Value")
-dfllOpmode.setDisplayMode("Key")
+dfllOpmode.setDisplayMode("Description")
 dfllOpmode.addKey("Open", str(0), "The DFLL operates in open-loop operation.")
 dfllOpmode.addKey("Closed", str(
     1), "The DFLL operates in closed-loop operation.")
