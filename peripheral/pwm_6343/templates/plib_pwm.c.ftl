@@ -148,8 +148,6 @@
 </#list>
 </#compress>
 
-static uint32_t ${PWM_INSTANCE_NAME}_status;  /* Saves interrupt status */
-
 <#if PWM_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
     <#lt>PWM_CALLBACK_OBJECT ${PWM_INSTANCE_NAME}_CallbackObj;
@@ -315,20 +313,6 @@ void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMa
     ${PWM_INSTANCE_NAME}_REGS->PWM_IDR1 = channelMask;
 }
 
-/* Check the status of counter event */
-bool ${PWM_INSTANCE_NAME}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
-{
-    bool status;
-    <#if core.CoreArchitecture?contains("CORTEX-M")>
-    NVIC_DisableIRQ(${PWM_INSTANCE_NAME}_IRQn);
-    </#if>
-    status = ((${PWM_INSTANCE_NAME}_status | ${PWM_INSTANCE_NAME}_REGS->PWM_ISR1) >> channel) & 0x1U;
-    ${PWM_INSTANCE_NAME}_status = 0x0U;
-    <#if core.CoreArchitecture?contains("CORTEX-M")>
-    NVIC_EnableIRQ(${PWM_INSTANCE_NAME}_IRQn);
-    </#if>
-    return status;
-}
 
 /* Enable synchronous update */
 void ${PWM_INSTANCE_NAME}_SyncUpdateEnable (void)
@@ -353,13 +337,23 @@ void ${PWM_INSTANCE_NAME}_FaultStatusClear(PWM_FAULT_ID fault_id)
     <#lt>/* Interrupt Handler */
     <#lt>void ${PWM_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    ${PWM_INSTANCE_NAME}_status = ${PWM_INSTANCE_NAME}_REGS->PWM_ISR1;
+    <#lt>    uint32_t status;
+    <#lt>    status = ${PWM_INSTANCE_NAME}_REGS->PWM_ISR1;
     <#lt>    if (${PWM_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${PWM_INSTANCE_NAME}_CallbackObj.callback_fn(${PWM_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${PWM_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${PWM_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
     <#lt>}
 
+<#else>
+
+/* Check the status of counter event */
+bool ${PWM_INSTANCE_NAME}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
+{
+    bool status;
+    status = (${PWM_INSTANCE_NAME}_REGS->PWM_ISR1 >> channel) & 0x1U;
+    return status;
+}
 </#if>
 
 /**
