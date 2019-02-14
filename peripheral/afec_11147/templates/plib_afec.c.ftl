@@ -331,7 +331,7 @@ void ${AFEC_INSTANCE_NAME}_ConversionStart(void)
 /*Check if conversion result is available */
 bool ${AFEC_INSTANCE_NAME}_ChannelResultIsReady(AFEC_CHANNEL_NUM channel)
 {
-    return (${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR>> channel) & 0x1U;
+    return (${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR >> channel) & 0x1U;
 }
 
 /* Read the conversion result */
@@ -390,9 +390,11 @@ void ${AFEC_INSTANCE_NAME}_ChannelOffsetSet(AFEC_CHANNEL_NUM channel, uint16_t o
     <#lt>/* Interrupt Handler */
     <#lt>void ${AFEC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
+    <#lt>    uint32_t status;
+    <#lt>    status = ${AFEC_INSTANCE_NAME}_REGS->AFEC_ISR;
     <#lt>    if (${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(${AFEC_INSTANCE_NAME}_CallbackObj.context);
+    <#lt>        ${AFEC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${AFEC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
     <#lt>}
 </#if>
