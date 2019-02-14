@@ -288,7 +288,7 @@ def sysTime_modeSelection(symbol, event):
     global timerWidth_Sym
     global timerPeriodMax_Sym
     global rtcInstanceName
-
+    global rtcMode0Compare
     symObj = event["symbol"]
     rtcMode = symObj.getSelectedKey()
 
@@ -302,7 +302,10 @@ def sysTime_modeSelection(symbol, event):
         timerPeriodMax_Sym.setValue("0xFFFFFFFF", 2)
         timerStartApiName = rtcInstanceName.getValue() + "_Timer32Start"
         timeStopApiName = rtcInstanceName.getValue() + "_Timer32Stop"
-        compareSetApiName = rtcInstanceName.getValue() + "_Timer32Compare0Set"
+        if rtcMode0Compare.getValue() > 1:
+            compareSetApiName = rtcInstanceName.getValue() + "_Timer32Compare0Set"
+        else:
+            compareSetApiName = rtcInstanceName.getValue() + "_Timer32CompareSet"
         counterGetApiName = rtcInstanceName.getValue() + "_Timer32CounterGet"
         frequencyGetApiName = rtcInstanceName.getValue() + "_Timer32FrequencyGet"
         callbackApiName = rtcInstanceName.getValue() + "_Timer32CallbackRegister"
@@ -361,6 +364,7 @@ def instantiateComponent(rtcComponent):
     global rtcSymMode1_INTENSET
     global rtcSymMode2_INTENSET
     global evsysDep
+    global rtcMode0Compare
     rtcMode0InterruptMap = {}
     rtcMode1InterruptMap = {}
     rtcMode2InterruptMap = {}
