@@ -116,14 +116,14 @@ void ${PWM_INSTANCE_NAME}_ChannelCounterEventEnable (PWM_CHANNEL_MASK channelMas
 
 void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK  channelMask);
 
-bool ${PWM_INSTANCE_NAME}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel);
-
 void ${PWM_INSTANCE_NAME}_SyncUpdateEnable (void);
 
 void ${PWM_INSTANCE_NAME}_FaultStatusClear(PWM_FAULT_ID fault_id);
 
 <#if PWM_INTERRUPT == true>
 void ${PWM_INSTANCE_NAME}_CallbackRegister(PWM_CALLBACK callback, uintptr_t context);
+<#else>
+bool ${PWM_INSTANCE_NAME}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel);
 </#if>
 
 #endif //PLIB_${PWM_INSTANCE_NAME}_H
