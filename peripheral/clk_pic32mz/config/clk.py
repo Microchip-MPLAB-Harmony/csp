@@ -1008,7 +1008,7 @@ if __name__ == "__main__":
         symbolEnName.setDefaultValue(True)
 
         # PBDIV field
-        symbolDivName = coreComponent.createIntegerSymbol(symbolDivId, CLK_CFG_SETTINGS)
+        symbolDivName = coreComponent.createIntegerSymbol(symbolDivId, symbolEnName)
         if(pbus!='1'):  # cannot disable peripheral bus 1
             symbolDivName.setDependencies(enableMenu, [symbolEnId])
         symbolDivName.setLabel(labelDivVal)
