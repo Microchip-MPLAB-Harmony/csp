@@ -344,6 +344,12 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             (void)dummyData;
         }
 
+        /* Configure SPI to generate receive interrupt when receive buffer is empty (SRXISEL = '01') */
+        ${SPI_INSTANCE_NAME}CONSET = 0x00000001;
+
+        /* Configure SPI to generate transmit interrupt when the transmit shift register is empty (STXISEL = '00')*/
+        ${SPI_INSTANCE_NAME}CONCLR = _${SPI_INSTANCE_NAME}CON_STXISEL_MASK;
+
         /* Clear the receive interrupt flag */
         ${SPI_RX_IFS_REG}CLR = _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK;
 
@@ -355,10 +361,6 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
         /* Disable the transmit interrupt */
         ${SPI_TX_IEC_REG}CLR = _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK;
-
-        /* Enable transmit interrupt when transmit buffer is completely empty (STXISEL = '01') */
-        /* Enable receive interrupt when the receive buffer is not empty (SRXISEL = '01') */
-        ${SPI_INSTANCE_NAME}CONSET = 0x00000005;
 
         /* Start the first write here itself, rest will happen in ISR context */
         if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
@@ -419,6 +421,12 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         }
         else
         {
+            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount != ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            {
+                /* Configure SPI to generate transmit buffer empty interrupt only if more than 
+                 * data is pending (STXISEL = '01')  */
+                ${SPI_INSTANCE_NAME}CONSET = 0x00000004;
+            }
             /* Enable transmit interrupt to complete the transfer in ISR context */
             ${SPI_TX_IEC_REG}SET = _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK;
         }
@@ -574,7 +582,7 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
                 ${SPI_INSTANCE_NAME}CONCLR = _${SPI_INSTANCE_NAME}CON_STXISEL_MASK;
             }
         }
-        else if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+        else if ((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK))
         {
             /* This part of code is executed when the shift register is empty. */
 
