@@ -1,14 +1,14 @@
 /*******************************************************************************
-  WDT Peripheral Library
+  EVIC PLIB Implementation
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_wdt.c
+    plib_evic.c
 
   Summary:
-    WDT Source File
+    EVIC PLIB Source File
 
   Description:
     None
@@ -40,43 +40,67 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
-
 #include "device.h"
-#include "plib_wdt.h"
+#include "plib_evic.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: WDT Implementation
+// Section: IRQ Implementation
 // *****************************************************************************
 // *****************************************************************************
 
-void WDT_Enable(void)
+void EVIC_Initialize( void )
 {
-    /* WDTWINEN = 0 */
-    WDTCONCLR = _WDTCON_WDTWINEN_MASK;
+    INTCONSET = _INTCON_MVEC_MASK;
 
-    /* ON = 1 */
-    WDTCONSET = _WDTCON_ON_MASK;
+    /* Set up priority / subpriority of enabled interrupts */
+    IPC0SET = 0x4 | 0x0;  /* CORE_TIMER:  Priority 1 / Subpriority 0 */
+    IPC29SET = 0x4000000 | 0x0;  /* CHANGE_NOTICE_B:  Priority 1 / Subpriority 0 */
 }
 
-void WDT_Disable(void)
+void EVIC_SourceEnable( INT_SOURCE source )
 {
-    /* Disable WDT */
-    /* ON = 0 */
-    WDTCONCLR = _WDTCON_ON_MASK;
+    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IECxSET = (volatile uint32_t *)(IECx + 2);
+
+    *IECxSET = 1 << (source & 0x1f);
 }
 
-void WDT_Clear(void)
+void EVIC_SourceDisable( INT_SOURCE source )
 {
-    /* Writing specific value to only upper 16 bits of WDTCON register clears WDT counter */
-    /* Only write to the upper 16 bits of the register when clearing. */
-    /* WDTCLRKEY = 0x5743 */
-    volatile uint16_t * wdtclrkey;
-    wdtclrkey = ( (volatile uint16_t *)&WDTCON ) + 1;
-    *wdtclrkey = 0x5743;
+    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IECxCLR = (volatile uint32_t *)(IECx + 1);
+
+    *IECxCLR = 1 << (source & 0x1f);
 }
+
+bool EVIC_SourceIsEnabled( INT_SOURCE source )
+{
+    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
+
+    return (bool)((*IECx >> (source & 0x1f)) & 0x01);
+}
+
+bool EVIC_SourceStatusGet( INT_SOURCE source )
+{
+    volatile uint32_t *IFSx = (volatile uint32_t *)(&IFS0 + ((0x10 * (source / 32)) / 4));
+
+    return (bool)((*IFSx >> (source & 0x1f)) & 0x1);
+}
+
+void EVIC_SourceStatusSet( INT_SOURCE source )
+{
+    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IFSxSET = (volatile uint32_t *)(IFSx + 2);
+
+    *IFSxSET = 1 << (source & 0x1f);
+}
+
+void EVIC_SourceStatusClear( INT_SOURCE source )
+{
+    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10 * (source / 32)) / 4));
+    volatile uint32_t *IFSxCLR = (volatile uint32_t *)(IFSx + 1);
+
+    *IFSxCLR = 1 << (source & 0x1f);
+}
+

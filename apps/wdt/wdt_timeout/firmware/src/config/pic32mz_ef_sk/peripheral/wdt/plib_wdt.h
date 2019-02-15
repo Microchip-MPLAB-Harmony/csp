@@ -15,8 +15,9 @@
     It allows user to setup timeout duration and restart watch dog timer.
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -37,18 +38,46 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef WDT_H    // Guards against multiple inclusion
-#define WDT_H
+#ifndef PLIB_WDT_H    // Guards against multiple inclusion
+#define PLIB_WDT_H
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
 
 #include <stdint.h>
 #include <stddef.h>
 
-#ifdef __cplusplus // Provide C++ Compatibility
- extern "C" {
-#endif
-#ifdef __cplusplus // Provide C++ Compatibility
- }
-#endif
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-#endif 
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface
+// *****************************************************************************
+// *****************************************************************************
+
+void WDT_Enable( void );
+
+void WDT_Disable( void );
+
+void WDT_Clear( void );
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+
+#endif
+// DOM-IGNORE-END
+
+#endif // PLIB_WDT_H
