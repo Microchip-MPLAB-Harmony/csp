@@ -292,7 +292,7 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
 <#if USART_INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK))
+            if(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
             {
                 U${UART_INSTANCE_NUM}TXREG = *lBuffer++;
                 processedSize++;
@@ -311,13 +311,12 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK))
+            if(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
             {
                 U${UART_INSTANCE_NUM}TXREG = *lBuffer;
                 ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
-                ${UART_TX_IEC_REG}SET = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
-
             }
+            ${UART_TX_IEC_REG}SET = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
         }
 </#if>
     }
@@ -434,7 +433,7 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
-        while((_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
+        while((!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
         {
             U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
         }
@@ -467,7 +466,7 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#else>
 void ${UART_INSTANCE_NAME}_WriteByte(int data)
 {
-    while ((_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK)) == 0);
+    while (!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK));
 
     U${UART_INSTANCE_NUM}TXREG = data;
 }
@@ -476,7 +475,7 @@ bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void )
 {
     bool status = false;
 
-    if(_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK))
+    if(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
     {
         status = true;
     }
