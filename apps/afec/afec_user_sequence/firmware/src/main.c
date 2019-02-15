@@ -84,7 +84,7 @@ void switch_handler( PIO_PIN pin, uintptr_t context )
 }
 
 /* This function is called after conversion of last channel in the user sequence */
-void AFEC_EventHandler(uintptr_t context)
+void AFEC_EventHandler(uint32_t status, uintptr_t context)
 {
     /* Read the result of 3 channels*/
     adc_ch5_count = AFEC1_ChannelResultGet(CH5_VDD);
