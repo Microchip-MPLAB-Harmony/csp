@@ -395,6 +395,14 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
         symbolRefoscFreqList[index].setReadOnly(True)
         index += 1
 
+def adchsClockFreqCalc(symbol, event):
+    adchsClkSrc = (Database.getSymbolValue("adchs", "ADCCON3__ADCSEL"))
+    if (adchsClkSrc != None and adchsClkSrc != 3):
+        symbol.setValue(int(Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc])), 2)
+    if adchsClkSrc == 3:
+        # calculate FRC frequency
+        symbol.setValue(8000000 / int(Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]).split("DIV_")[1]), 2)
+
 def find_lsb_position(field):
     # Take a field, and return the least significant bit position.  Range: 0-31
     if(field[:2] == "0x"):
@@ -1140,6 +1148,20 @@ if __name__ == "__main__":
     # creates calculated frequencies menu
     calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, join, ElementTree, newPoscFreq)
 
+    #ADCHS Clock source
+    global adchs_clock_map
+    adchs_clock_map = {}
+    adchs_clock_map[0] = "CONFIG_SYS_CLK_PBCLK3_FREQ"
+    adchs_clock_map[1] = "SYS_CLK_FREQ"
+    adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
+    adchs_clock_map[3] = "CONFIG_SYS_CLK_FRCDIV"
+
+    sym_adchs_clock_freq = coreComponent.createIntegerSymbol("ADCHS_CLOCK_FREQUENCY", None)
+    sym_adchs_clock_freq.setVisible(False)
+    sym_adchs_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK3_FREQ")))
+    sym_adchs_clock_freq.setDependencies(adchsClockFreqCalc, ["adchs.ADCCON3__ADCSEL", "CONFIG_SYS_CLK_PBCLK3_FREQ",
+        "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK3_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
+
 
     # File handling below
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
@@ -1172,4 +1194,3 @@ if __name__ == "__main__":
     CLK_SYS_INIT_LIST_ENTRY.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
     CLK_SYS_INIT_LIST_ENTRY.setSourcePath("../peripheral/clk_pic32mz/templates/system/system_initialize.c.ftl")
     CLK_SYS_INIT_LIST_ENTRY.setMarkup(True)
-
