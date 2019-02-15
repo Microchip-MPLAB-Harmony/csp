@@ -48,9 +48,14 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "peripheral/clk/plib_clk.h"
-#include "peripheral/pic32mz_int/plib_int.h"
+#include <stdio.h>
 #include "peripheral/adchs/plib_adchs.h"
+#include "peripheral/uart/plib_uart2.h"
+#include "peripheral/tmr/plib_tmr3.h"
+#include "peripheral/clk/plib_clk.h"
+#include "peripheral/gpio/plib_gpio.h"
+#include "peripheral/evic/plib_evic.h"
+#include "peripheral/wdt/plib_wdt.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

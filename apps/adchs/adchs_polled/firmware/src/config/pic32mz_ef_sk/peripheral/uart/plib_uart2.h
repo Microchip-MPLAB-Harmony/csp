@@ -1,14 +1,14 @@
 /*******************************************************************************
- Debug Console Source file 
+  UART2 PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    debug_console.c
+    plib_uart2.h
 
   Summary:
-    RSTC Source File
+    UART2 PLIB Header File
 
   Description:
     None
@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -38,20 +38,57 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "definitions.h"
+#ifndef PLIB_UART2_H
+#define PLIB_UART2_H
 
-int _mon_getc(int canblock)
-{
-   volatile int c = 0;
-   while(UART2_Read((void*)&c, 1) != true);
-   return c;
-}
+#include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include "device.h"
+#include "plib_uart_common.h"
 
-void _mon_putc(char c)
-{
-   uint8_t size = 0;
-   do
-   {
-       size = UART2_Write((void*)&c, 1);
-   }while (size != 1);
-}
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface
+// *****************************************************************************
+// *****************************************************************************
+
+#define UART2_FrequencyGet()    (uint32_t)(100000000UL)
+
+/****************************** UART2 API *********************************/
+
+void UART2_Initialize( void );
+
+bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
+
+bool UART2_Write( void *buffer, const size_t size );
+
+bool UART2_Read( void *buffer, const size_t size );
+
+UART_ERROR UART2_ErrorGet( void );
+
+int UART2_ReadByte( void );
+
+bool UART2_ReceiverIsReady( void );
+
+void UART2_WriteByte( int data );
+
+bool UART2_TransmitterIsReady( void );
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+
+#endif
+// DOM-IGNORE-END
+
+#endif // PLIB_UART2_H

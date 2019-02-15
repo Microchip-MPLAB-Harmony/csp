@@ -1,14 +1,14 @@
 /*******************************************************************************
- Debug Console Source file 
+  WDT Peripheral Library
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    debug_console.c
+    plib_wdt.c
 
   Summary:
-    RSTC Source File
+    WDT Source File
 
   Description:
     None
@@ -38,20 +38,39 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "definitions.h"
+#include "device.h"
+#include "plib_wdt.h"
 
-int _mon_getc(int canblock)
+
+void WDT_Disable(void)
 {
-   volatile int c = 0;
-   while(UART2_Read((void*)&c, 1) != true);
-   return c;
+    /* Disable WDT */
+    /* ON = 0 */
+    WDTCONCLR = _WDTCON_ON_MASK;
 }
 
-void _mon_putc(char c)
+
+void WDT_Initialize( void )
 {
-   uint8_t size = 0;
-   do
-   {
-       size = UART2_Write((void*)&c, 1);
-   }while (size != 1);
+    /* Enable WDT */
+    /* ON = 1 */
+    WDTCONSET = _WDTCON_ON_MASK;
+}
+
+void WDT_Clear(void)
+{
+    /* Writing specific value to only upper 16 bits of WDTCON register clears WDT counter */
+    /* Only write to the upper 16 bits of the register when clearing. */
+    /* WDTCLRKEY = 0x5743 */
+    volatile uint16_t * wdtclrkey;
+    wdtclrkey = ( (volatile uint16_t *)&WDTCON ) + 1;
+    *wdtclrkey = 0x5743;
+}
+
+void WDT_Enable(void)
+{
+    /* WDTWINEN = 0 */
+    WDTCONCLR = _WDTCON_WDTWINEN_MASK;
+    /* ON = 1 */
+    WDTCONSET = _WDTCON_ON_MASK;
 }

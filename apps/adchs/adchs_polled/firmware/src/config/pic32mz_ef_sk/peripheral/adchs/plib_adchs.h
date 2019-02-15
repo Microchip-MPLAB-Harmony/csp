@@ -19,7 +19,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -74,7 +74,7 @@ extern "C" {
 /*  The following data type definitions are used by the functions in this
     interface and should be considered part it.
 */
-#define CHANNEL_0 (0U)
+#define CHANNEL_3 (3U)
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -86,21 +86,21 @@ extern "C" {
 
 void ADCHS_Initialize (void);
 
-void ADCHS_ChannelsEnable (ADCHS_CHANNEL_MASK channelsMask);
+void ADCHS_ModulesEnable (ADCHS_MODULE_MASK modulesMask);
+void ADCHS_ModulesDisable (ADCHS_MODULE_MASK modulesMask);
 
-void ADCHS_ChannelsDisable (ADCHS_CHANNEL_MASK channelsMask);
-
-void ADCHS_ChannelsInterruptEnable (ADCHS_INTERRUPT_MASK channelsInterruptMask);
-
-void ADCHS_ChannelsInterruptDisable (ADCHS_INTERRUPT_MASK channelsInterruptMask);
-
-void ADCHS_ConversionStart(void);
-void ADCHS_GlobalConversionStart(void);
+void ADCHS_GlobalEdgeConversionStart(void);
+void ADCHS_GlobalLevelConversionStart(void);
 void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel);
 
-bool ADCHS_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel);
+void ADCHS_ChannelResultInterruptEnable (ADCHS_CHANNEL_NUM channel);
+void ADCHS_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM channel);
+void ADCHS_ChannelEarlyInterruptEnable (ADCHS_CHANNEL_NUM channel);
+void ADCHS_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM channel);
 
+bool ADCHS_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel);
 uint16_t ADCHS_ChannelResultGet(ADCHS_CHANNEL_NUM channel);
+
 
 // *****************************************************************************
 
@@ -116,4 +116,3 @@ uint16_t ADCHS_ChannelResultGet(ADCHS_CHANNEL_NUM channel);
 /**
  End of File
 */
-
