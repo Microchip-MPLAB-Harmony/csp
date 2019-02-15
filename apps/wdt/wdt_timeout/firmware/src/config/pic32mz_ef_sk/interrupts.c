@@ -56,7 +56,26 @@
 // Section: System Interrupt Vector Functions
 // *****************************************************************************
 // *****************************************************************************
-/* ADD PROPER INCLUDE HERE WHEN ADDING IN INTERRUPT MODULE SUPPORT FOR FAMILY */
+
+
+void CORE_TIMER_InterruptHandler( void );
+void CHANGE_NOTICE_B_InterruptHandler( void );
+
+
+
+/* All the handlers are defined here.  Each will call its PLIB-specific function. */
+void __ISR(_CORE_TIMER_VECTOR, ipl1AUTO) CORE_TIMER_Handler (void)
+{
+    CORE_TIMER_InterruptHandler();
+}
+
+void __ISR(_CHANGE_NOTICE_B_VECTOR, ipl1AUTO) CHANGE_NOTICE_B_Handler (void)
+{
+    CHANGE_NOTICE_B_InterruptHandler();
+}
+
+
+
 
 /*******************************************************************************
  End of File

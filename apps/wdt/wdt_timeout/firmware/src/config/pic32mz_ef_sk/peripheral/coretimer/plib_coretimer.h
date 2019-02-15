@@ -1,24 +1,21 @@
 /*******************************************************************************
-  Device Header File
+  Interface definition of Core Timer PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    device.h
+    plib_coretimer.h
 
   Summary:
-    This file includes the selected device from within the project.
-    The device will provide access to respective device packs.
+    Interface definition of the Core Timer Plib .
 
   Description:
-    None
-
+    This file defines the interface for the Core Timer Plib.
 *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -39,9 +36,42 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-// DOM-IGNORE-END
 
-#include <xc.h>
-#include <sys/attribs.h>
-#include "toolchain_specifics.h"
+#ifndef PLIB_CORETIMER_H    // Guards against multiple inclusion
+#define PLIB_CORETIMER_H
 
+#include <stdint.h>
+
+#ifdef __cplusplus // Provide C++ Compatibility
+	extern "C" {
+#endif
+
+#define CORE_TIMER_FREQUENCY    100000000
+
+#define CORE_TIMER_INTERRUPT_PERIOD_VALUE    0x186a0
+#define CORE_TIMER_INTERRUPT_PERIOD_IN_US     1000
+
+typedef void (*CORETIMER_CALLBACK)(uintptr_t context);
+
+typedef struct
+{
+    CORETIMER_CALLBACK  callback;
+    uintptr_t           context;
+    volatile uint32_t   tickCounter;
+    uint32_t            period;
+} CORETIMER_OBJECT ;
+
+void CORETIMER_Initialize( void );
+void CORETIMER_CallbackSet ( CORETIMER_CALLBACK callback, uintptr_t context );
+uint32_t CORETIMER_FrequencyGet ( void );
+void CORETIMER_PeriodSet ( uint32_t period );
+void CORETIMER_Start();
+void CORETIMER_Stop();
+void CORETIMER_DelayMs ( uint32_t delay_ms);
+
+
+#ifdef __cplusplus // Provide C++ Compatibility
+ }
+#endif
+
+#endif
