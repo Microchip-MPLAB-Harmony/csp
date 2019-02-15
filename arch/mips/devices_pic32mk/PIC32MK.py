@@ -31,8 +31,8 @@ def _find_default_value(bitfieldNode, initialRegValue):
     '''
     # make initialRegValue an integer
     registerValue = int(initialRegValue[2:],16)   # get rid of the '0x'
-    
-    # find bitshift of lsb of field 
+
+    # find bitshift of lsb of field
     maskStr = bitfieldNode.getAttribute('mask').strip('L')
     if(maskStr.find('0x') != -1):
         mask = int(maskStr[2:],16)
@@ -103,8 +103,8 @@ def getCorePeripheralsInterruptDataStructure():
     }
 
     return corePeripherals
-    
-    
+
+
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
@@ -144,7 +144,7 @@ for ii in range(len(register)):
             bitfielditem.setDefaultValue(_find_key(_find_default_value(bitfields[jj], porValue),keyVals))
 
         bitfielditem.setVisible(True)
-        
+
         if(bitfieldName in bitfieldHexSymbols):
             bitfielditem.setDefaultValue(_find_default_value(bitfields[jj], porValue))
 
@@ -152,7 +152,7 @@ for ii in range(len(register)):
         bitfielditem.setLabel(label)
         bitfielditem.setDescription(bitfields[jj].getAttribute('caption'))
 # End of scanning atdf file for parameters in fuse area
-        
+
 # The following symbols are not used in Chicagoland, but are created for the clock manager.
 symbol = coreComponent.createBooleanSymbol("SYS_CLK_FSOSCEN_OVERRIDE", None)
 symbol.setDefaultValue(False)
@@ -175,9 +175,8 @@ print("NO JAR CLOCKMANAGER FILE AVAILABLE FOR MK - SKIP LOADING FOR NOW")
 #coreComponent.addPlugin("../peripheral/clk_pic32mk/plugin/clockmanager.jar")
 
 # load device specific pin manager information
-#dkf ADD LATER execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
-#coreComponent.addPlugin("../peripheral/gpio_02467/plugin/pinmanager.jar")
-print("NO JAR PINMANAGER FILE AVAILABLE FOR MK - SKIP LOADING FOR NOW")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
+coreComponent.addPlugin("../peripheral/gpio_02467/plugin/gpio_02467.jar")
 
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("(no additional MIPS configuration)")

@@ -1,0 +1,532 @@
+<?xml version="1.0"?>
+<!-- This is an auto-generated pin data file created: 11:29:59 02/15/19 -->
+<pinfile family="MK_MC">
+   <packages>
+     <package diagram="MX_64_QFN" id="1" name="QFN" />
+    <package diagram="JEDEC_MS_026D_BCD_LQFP64" id="2" name="TQFP" />
+  </packages>
+  <pins>
+     <pin name="RA7">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="1" />
+      <number package="2" pin="1" />
+      <function name="TCK" />
+      <function name="RPA7" />
+      <function name="PWM10H" />
+      <function name="PWM4L" />
+      <function name="PMD5" />
+    </pin>
+    <pin name="RB14">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="2" />
+      <number package="2" pin="2" />
+      <function name="RPB14" />
+      <function name="PWM1H" />
+      <function name="VBUSON1" />
+      <function name="PMD6" />
+    </pin>
+    <pin name="RB15">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="3" />
+      <number package="2" pin="3" />
+      <function name="RPB15" />
+      <function name="PWM7H" />
+      <function name="PWM1L" />
+      <function name="PMD7" />
+    </pin>
+    <pin name="RG6">
+       <number package="1" pin="4" />
+      <number package="2" pin="4" />
+      <function name="AN19" />
+      <function name="RPG6" />
+      <function name="PMA5" />
+    </pin>
+    <pin name="RG7">
+       <number package="1" pin="5" />
+      <number package="2" pin="5" />
+      <function name="AN18" />
+      <function name="RPG7" />
+      <function name="PMA4" />
+    </pin>
+    <pin name="RG8">
+       <number package="1" pin="6" />
+      <number package="2" pin="6" />
+      <function name="AN17" />
+      <function name="RPG8" />
+      <function name="PMA3" />
+    </pin>
+    <pin name="MCLR">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="7" />
+      <number package="2" pin="7" />
+    </pin>
+    <pin name="RG9">
+       <number package="1" pin="8" />
+      <number package="2" pin="8" />
+      <function name="AN16" />
+      <function name="RPG9" />
+      <function name="PMA2" />
+    </pin>
+    <pin name="VSS">
+       <number package="1" pin="9" />
+      <number package="2" pin="9" />
+    </pin>
+    <pin name="VDD">
+       <number package="1" pin="10" />
+      <number package="2" pin="10" />
+    </pin>
+    <pin name="RA12">
+       <number package="1" pin="11" />
+      <number package="2" pin="11" />
+      <function name="AN10" />
+      <function name="RPA12" />
+    </pin>
+    <pin name="RA11">
+       <number package="1" pin="12" />
+      <number package="2" pin="12" />
+      <function name="AN9" />
+      <function name="RPA11" />
+      <function name="USBOEN1" />
+    </pin>
+    <pin name="RA0">
+       <number package="1" pin="13" />
+      <number package="2" pin="13" />
+      <function name="OA2OUT" />
+      <function name="AN0" />
+      <function name="C2IN4-" />
+      <function name="C4IN3-" />
+      <function name="RPA0" />
+    </pin>
+    <pin name="RA1">
+       <number package="1" pin="14" />
+      <number package="2" pin="14" />
+      <function name="OA2IN+" />
+      <function name="AN1" />
+      <function name="C2IN1+" />
+      <function name="RPA1" />
+    </pin>
+    <pin name="RB0">
+       <number package="1" pin="15" />
+      <number package="2" pin="15" />
+      <function name="PGED3" />
+      <function name="VREF-" />
+      <function name="OA2IN-" />
+      <function name="AN2" />
+      <function name="C2IN1-" />
+      <function name="RPB0" />
+      <function name="CTED2" />
+    </pin>
+    <pin name="RB1">
+       <number package="1" pin="16" />
+      <number package="2" pin="16" />
+      <function name="PGEC3" />
+      <function name="OA1OUT" />
+      <function name="VREF+" />
+      <function name="AN3" />
+      <function name="C1IN4-" />
+      <function name="C4IN2-" />
+      <function name="RPB1" />
+      <function name="CTED1" />
+      <function name="PMA6" />
+    </pin>
+    <pin name="RB2">
+       <number package="1" pin="17" />
+      <number package="2" pin="17" />
+      <function name="PGEC1" />
+      <function name="OA1IN+" />
+      <function name="AN4" />
+      <function name="C1IN1+" />
+      <function name="C1IN3-" />
+      <function name="C2IN3-" />
+      <function name="RPB2" />
+    </pin>
+    <pin name="RB3">
+       <number package="1" pin="18" />
+      <number package="2" pin="18" />
+      <function name="PGED1" />
+      <function name="OA1IN-" />
+      <function name="AN5" />
+      <function name="CTCMP" />
+      <function name="C1IN1-" />
+      <function name="RTCC" />
+      <function name="RPB3" />
+    </pin>
+    <pin name="AVDD">
+       <number package="1" pin="19" />
+      <number package="2" pin="19" />
+    </pin>
+    <pin name="AVSS">
+       <number package="1" pin="20" />
+      <number package="2" pin="20" />
+    </pin>
+    <pin name="RC0">
+       <number package="1" pin="21" />
+      <number package="2" pin="21" />
+      <function name="OA3OUT" />
+      <function name="AN6" />
+      <function name="C3IN4-" />
+      <function name="C4IN1+" />
+      <function name="C4IN4-" />
+      <function name="RPC0" />
+    </pin>
+    <pin name="RC1">
+       <number package="1" pin="22" />
+      <number package="2" pin="22" />
+      <function name="OA3IN-" />
+      <function name="AN7" />
+      <function name="C3IN1-" />
+      <function name="C4IN1-" />
+      <function name="RPC1" />
+      <function name="PMA7" />
+    </pin>
+    <pin name="RC2">
+       <number package="1" pin="23" />
+      <number package="2" pin="23" />
+      <function name="OA3IN+" />
+      <function name="AN8" />
+      <function name="C3IN1+" />
+      <function name="C3IN3-" />
+      <function name="RPC2" />
+      <function name="FLT3" />
+      <function name="PMA13" />
+    </pin>
+    <pin name="RC11">
+       <number package="1" pin="24" />
+      <number package="2" pin="24" />
+      <function name="AN11" />
+      <function name="C1IN2-" />
+      <function name="FLT4" />
+      <function name="PMA12" />
+    </pin>
+    <pin name="VSS">
+       <number package="1" pin="25" />
+      <number package="2" pin="25" />
+    </pin>
+    <pin name="VDD">
+       <number package="1" pin="26" />
+      <number package="2" pin="26" />
+    </pin>
+    <pin name="RE12">
+       <number package="1" pin="27" />
+      <number package="2" pin="27" />
+      <function name="AN12" />
+      <function name="C2IN2-" />
+      <function name="C5IN2-" />
+      <function name="FLT5" />
+      <function name="PMA11" />
+    </pin>
+    <pin name="RE13">
+       <number package="1" pin="28" />
+      <number package="2" pin="28" />
+      <function name="AN13" />
+      <function name="C3IN2-" />
+      <function name="FLT6" />
+      <function name="PMA10" />
+    </pin>
+    <pin name="RE14">
+       <number package="1" pin="29" />
+      <number package="2" pin="29" />
+      <function name="AN14" />
+      <function name="RPE14" />
+      <function name="FLT7" />
+      <function name="PMA1" />
+    </pin>
+    <pin name="RE15">
+       <number package="1" pin="30" />
+      <number package="2" pin="30" />
+      <function name="AN15" />
+      <function name="RPE15" />
+      <function name="FLT8" />
+      <function name="PMA0" />
+    </pin>
+    <pin name="RA8">
+       <number package="1" pin="31" />
+      <number package="2" pin="31" />
+      <function name="TDI" />
+      <function name="DAC3" />
+      <function name="AN26" />
+      <function name="RPA8" />
+      <function name="PMA9" />
+    </pin>
+    <pin name="RB4">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="32" />
+      <number package="2" pin="32" />
+      <function name="FLT15" />
+      <function name="RPB4" />
+      <function name="PMA8" />
+    </pin>
+    <pin name="RA4">
+       <number package="1" pin="33" />
+      <number package="2" pin="33" />
+      <function name="OA5IN+" />
+      <function name="DAC1" />
+      <function name="AN24" />
+      <function name="C5IN1+" />
+      <function name="C5IN3-" />
+      <function name="RPA4" />
+      <function name="T1CK" />
+    </pin>
+    <pin name="VBUS">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="34" />
+      <number package="2" pin="34" />
+    </pin>
+    <pin name="VUSB3V3">
+       <number package="1" pin="35" />
+      <number package="2" pin="35" />
+    </pin>
+    <pin name="D-">
+       <number package="1" pin="36" />
+      <number package="2" pin="36" />
+    </pin>
+    <pin name="D+">
+       <number package="1" pin="37" />
+      <number package="2" pin="37" />
+    </pin>
+    <pin name="VDD">
+       <number package="1" pin="38" />
+      <number package="2" pin="38" />
+    </pin>
+    <pin name="RC12">
+       <number package="1" pin="39" />
+      <number package="2" pin="39" />
+      <function name="OSC1" />
+      <function name="CLKI" />
+      <function name="AN49" />
+      <function name="RPC12" />
+    </pin>
+    <pin name="RC15">
+       <number package="1" pin="40" />
+      <number package="2" pin="40" />
+      <function name="OSC2" />
+      <function name="CLKO" />
+      <function name="RPC15" />
+    </pin>
+    <pin name="VSS">
+       <number package="1" pin="41" />
+      <number package="2" pin="41" />
+    </pin>
+    <pin name="RD8">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="42" />
+      <number package="2" pin="42" />
+    </pin>
+    <pin name="RB5">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="43" />
+      <number package="2" pin="43" />
+      <function name="PGED2" />
+      <function name="RPB5" />
+      <function name="USBID1" />
+    </pin>
+    <pin name="RB6">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="44" />
+      <number package="2" pin="44" />
+      <function name="PGEC2" />
+      <function name="RPB6" />
+      <function name="SCK2" />
+      <function name="PMA15" />
+    </pin>
+    <pin name="RC10">
+       <number package="1" pin="45" />
+      <number package="2" pin="45" />
+      <function name="DAC2" />
+      <function name="AN48" />
+      <function name="RPC10" />
+      <function name="PMA14" />
+    </pin>
+    <pin name="RB7">
+       <number package="1" pin="46" />
+      <number package="2" pin="46" />
+      <function name="OA5OUT" />
+      <function name="AN25" />
+      <function name="C5IN4-" />
+      <function name="RPB7" />
+      <function name="SCK1" />
+      <function name="INT0" />
+    </pin>
+    <pin name="RC13">
+       <number package="1" pin="47" />
+      <number package="2" pin="47" />
+      <function name="SOSCI" />
+      <function name="RPC13" />
+    </pin>
+    <pin name="RB8">
+       <number package="1" pin="48" />
+      <number package="2" pin="48" />
+      <function name="SOSCO" />
+      <function name="RPB8" />
+    </pin>
+    <pin name="RB9">
+       <number package="1" pin="49" />
+      <number package="2" pin="49" />
+      <function name="TMS" />
+      <function name="OA5IN-" />
+      <function name="AN27" />
+      <function name="C5IN1-" />
+      <function name="RPB9" />
+    </pin>
+    <pin name="RC6">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="50" />
+      <number package="2" pin="50" />
+      <function name="TRCLK" />
+      <function name="RPC6" />
+      <function name="PWM6H" />
+    </pin>
+    <pin name="RC7">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="51" />
+      <number package="2" pin="51" />
+      <function name="TRD0" />
+      <function name="RPC7" />
+      <function name="PWM12H" />
+      <function name="PWM6L" />
+    </pin>
+    <pin name="RC8">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="52" />
+      <number package="2" pin="52" />
+      <function name="TRD1" />
+      <function name="RPC8" />
+      <function name="PWM5H" />
+      <function name="PMWR" />
+    </pin>
+    <pin name="RD5">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="53" />
+      <number package="2" pin="53" />
+      <function name="TRD2" />
+      <function name="RPD5" />
+      <function name="PWM12H" />
+      <function name="PMRD" />
+    </pin>
+    <pin name="RD6">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="54" />
+      <number package="2" pin="54" />
+      <function name="TRD3" />
+      <function name="RPD6" />
+      <function name="PWM12L" />
+    </pin>
+    <pin name="RC9">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="55" />
+      <number package="2" pin="55" />
+      <function name="RPC9" />
+      <function name="PWM11H" />
+      <function name="PWM5L" />
+    </pin>
+    <pin name="VSS">
+       <number package="1" pin="56" />
+      <number package="2" pin="56" />
+    </pin>
+    <pin name="VDD">
+       <number package="1" pin="57" />
+      <number package="2" pin="57" />
+    </pin>
+    <pin name="RF0">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="58" />
+      <number package="2" pin="58" />
+      <function name="RPF0" />
+      <function name="PWM11H" />
+    </pin>
+    <pin name="RF1">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="59" />
+      <number package="2" pin="59" />
+      <function name="RPF1" />
+      <function name="PWM11L" />
+    </pin>
+    <pin name="RB10">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="60" />
+      <number package="2" pin="60" />
+      <function name="RPB10" />
+      <function name="PWM3H" />
+      <function name="PMD0" />
+    </pin>
+    <pin name="RB11">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="61" />
+      <number package="2" pin="61" />
+      <function name="RPB11" />
+      <function name="PWM9H" />
+      <function name="PWM3L" />
+      <function name="PMD1" />
+    </pin>
+    <pin name="RB12">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="62" />
+      <number package="2" pin="62" />
+      <function name="RPB12" />
+      <function name="PWM2H" />
+      <function name="PMD2" />
+    </pin>
+    <pin name="RB13">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="63" />
+      <number package="2" pin="63" />
+      <function name="RPB13" />
+      <function name="PWM8H" />
+      <function name="PWM2L" />
+      <function name="CTPLS" />
+      <function name="PMD3" />
+    </pin>
+    <pin name="RA10">
+       <modifiers>
+         <modifier value="5V" />
+      </modifiers>
+      <number package="1" pin="64" />
+      <number package="2" pin="64" />
+      <function name="TDO" />
+      <function name="PWM4H" />
+      <function name="PMD4" />
+    </pin>
+  </pins>
+</pinfile>
