@@ -709,7 +709,7 @@ def instantiateComponent(canComponent):
 
     #Master Header
     canMasterHeaderFile = canComponent.createFileSymbol("headerFile", None)
-    canMasterHeaderFile.setSourcePath("../peripheral/can_" + REG_MODULE_CAN.getID() + "/templates/plib_can_common.h")
+    canMasterHeaderFile.setSourcePath("../peripheral/can_u2003/templates/plib_can_common.h")
     canMasterHeaderFile.setOutputName("plib_can_common.h")
     canMasterHeaderFile.setDestPath("/peripheral/can/")
     canMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/can/")
@@ -717,7 +717,7 @@ def instantiateComponent(canComponent):
 
     #Instance Source File
     canMainSourceFile = canComponent.createFileSymbol("sourceFile", None)
-    canMainSourceFile.setSourcePath("../peripheral/can_" + REG_MODULE_CAN.getID() + "/templates/plib_can.c.ftl")
+    canMainSourceFile.setSourcePath("../peripheral/can_u2003/templates/plib_can.c.ftl")
     canMainSourceFile.setOutputName("plib_"+canInstanceName.getValue().lower()+".c")
     canMainSourceFile.setDestPath("/peripheral/can/")
     canMainSourceFile.setProjectPath("config/" + configName + "/peripheral/can/")
@@ -726,7 +726,7 @@ def instantiateComponent(canComponent):
 
     #Instance Header File
     canInstHeaderFile = canComponent.createFileSymbol("instHeaderFile", None)
-    canInstHeaderFile.setSourcePath("../peripheral/can_" + REG_MODULE_CAN.getID() + "/templates/plib_can.h.ftl")
+    canInstHeaderFile.setSourcePath("../peripheral/can_u2003/templates/plib_can.h.ftl")
     canInstHeaderFile.setOutputName("plib_"+canInstanceName.getValue().lower()+".h")
     canInstHeaderFile.setDestPath("/peripheral/can/")
     canInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/can/")
@@ -737,12 +737,12 @@ def instantiateComponent(canComponent):
     canSystemInitFile = canComponent.createFileSymbol("initFile", None)
     canSystemInitFile.setType("STRING")
     canSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    canSystemInitFile.setSourcePath("../peripheral/can_" + REG_MODULE_CAN.getID() + "/templates/system/system_initialize.c.ftl")
+    canSystemInitFile.setSourcePath("../peripheral/can_u2003/templates/system/system_initialize.c.ftl")
     canSystemInitFile.setMarkup(True)
 
     #CAN definitions header
     canSystemDefFile = canComponent.createFileSymbol("defFile", None)
     canSystemDefFile.setType("STRING")
     canSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    canSystemDefFile.setSourcePath("../peripheral/can_" + REG_MODULE_CAN.getID() + "/templates/system/system_definitions.h.ftl")
+    canSystemDefFile.setSourcePath("../peripheral/can_u2003/templates/system/system_definitions.h.ftl")
     canSystemDefFile.setMarkup(True)
