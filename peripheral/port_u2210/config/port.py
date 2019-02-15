@@ -376,7 +376,7 @@ for pinNumber in range(1, pincount + 1):
     if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
         pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
         pinGroup[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
-        pinGroupNum[pinNumber-1] = portGroupName.index(str(pin_map.get(pin_position[pinNumber-1]))[1])
+        pinGroupNum[pinNumber-1].setDefaultValue(portGroupName.index(str(pin_map.get(pin_position[pinNumber-1]))[1]))
 
         availablePinDictionary[str(pinNumber)] = "P" + str(pinGroup[pinNumber-1].getValue()) + str(pinBitPosition[pinNumber-1].getValue())
 
