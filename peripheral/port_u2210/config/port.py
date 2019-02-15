@@ -162,19 +162,21 @@ def setupPortLat(usePortLocalLatch, event):
     Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_OUT", str((hex(outValue).rstrip("L"))), 1)
 
 def evsysControl(symbol, event):
-    for i in range (0,4):
+    global group
+    for i in range (0, 4):
         status = False
-        for j in range(0,3):
+        for j in range(0,len(group)):
             if(Database.getSymbolValue("core", "PORT_"+ str(j) + "_EVACT"+str(i)+"_ENABLE")) == True:
                 status = True
                 break
-        Database.setSymbolValue("evsys", "USER_PORT_EV_" + str(i) + "_READY", status, 2)
+        if Database.getSymbolValue("evsys", "USER_PORT_EV_" + str(i) + "_READY") != status:
+            Database.setSymbolValue("evsys", "USER_PORT_EV_" + str(i) + "_READY", status, 2)
 
     evctrl = 0
 
     channelId = symbol.getID().split("_")[2]
 
-    for i in range (0,4):
+    for i in range (0,len(group)):
         enable = Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_ENABLE")
         action = int(Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_ACTION"))
         pin = int(Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_PIN"))
@@ -543,7 +545,7 @@ for portNumber in range(0, len(group)):
         portEVSYS = coreComponent.createMenuSymbol("PORT_MENU_EVSYS" + str(portNumber), port[portNumber])
         portEVSYS.setLabel("EVENT System Configuraiton")
 
-        for i in range(0,4):
+        for i in range(0,len(group)):
             portEVSYSEnable = coreComponent.createBooleanSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE", portEVSYS)
             portEVSYSEnable.setLabel("Enable Event" + str(i) + " Input")
             evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE")
