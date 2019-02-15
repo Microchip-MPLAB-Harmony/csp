@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 09:28:27 01/08/19 -->
+<!-- This is an auto-generated pin data file created: 13:30:36 02/14/19 -->
 <pinfile family="MZ_EF">
    <packages>
-     <package diagram="TQFP100" id="1" name="TQFP" />
+     <package diagram="JEDEC_MS_026D_BED_LQFP100" id="1" name="TQFP" />
   </packages>
   <pins>
      <pin name="RG15">

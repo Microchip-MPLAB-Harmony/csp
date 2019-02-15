@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 09:28:27 01/08/19 -->
+<!-- This is an auto-generated pin data file created: 13:30:35 02/14/19 -->
 <pinfile family="MZ_EF">
    <packages>
-     <package diagram="TQFP64_QFN64" id="1" name="QFN" />
-    <package diagram="TQFP64_QFN64" id="2" name="TQFP" />
+     <package diagram="MX_64_QFN" id="1" name="QFN" />
+    <package diagram="JEDEC_MS_026D_BCD_LQFP64" id="2" name="TQFP" />
   </packages>
   <pins>
      <pin name="RE5">
