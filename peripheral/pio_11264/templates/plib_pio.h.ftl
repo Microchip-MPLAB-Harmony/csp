@@ -447,7 +447,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value);
 
 // *****************************************************************************
 /* Function:
-    uint32_t PIO_PortReadLatch ( PIO_PORT port )
+    uint32_t PIO_PortLatchRead ( PIO_PORT port )
 
   Summary:
     Read the latched value on all the I/O lines of the selected port.
@@ -472,7 +472,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value);
     <code>
 
     uint32_t value;
-    value = PIO_PortReadLatch(PIO_PORT_C);
+    value = PIO_PortLatchRead(PIO_PORT_C);
 
     </code>
 
@@ -481,7 +481,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value);
     low (0).
     Implemented pins are Right aligned in the 32-bit return value.
 */
-uint32_t PIO_PortReadLatch ( PIO_PORT port );
+uint32_t PIO_PortLatchRead ( PIO_PORT port );
 
 // *****************************************************************************
 /* Function:
@@ -897,9 +897,9 @@ static inline bool PIO_PinRead(PIO_PIN pin)
   Remarks:
     To read actual pin value, PIO_PinRead API should be used.
 */
-static inline bool PIO_PinReadLatch(PIO_PIN pin)
+static inline bool PIO_PinLatchRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortReadLatch((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+    return (bool)((PIO_PortLatchRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
 }
 
 // *****************************************************************************
