@@ -1,18 +1,18 @@
 /*******************************************************************************
- Debug Console Source file 
+  Interface definition of WDT PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    debug_console.c
+    plib_wdt.h
 
   Summary:
-    RSTC Source File
+    Interface definition of the Watch Dog Timer Plib (WDT).
 
   Description:
-    None
-
+    This file defines the interface for the WDT Plib.
+    It allows user to setup timeout duration and restart watch dog timer.
 *******************************************************************************/
 
 /*******************************************************************************
@@ -38,20 +38,29 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "definitions.h"
+#ifndef WDT_H    // Guards against multiple inclusion
+#define WDT_H
 
-int _mon_getc(int canblock)
-{
-   volatile int c = 0;
-   while(UART2_Read((void*)&c, 1) != true);
-   return c;
-}
+#include <stdint.h>
+#include <stddef.h>
 
-void _mon_putc(char c)
-{
-   uint8_t size = 0;
-   do
-   {
-       size = UART2_Write((void*)&c, 1);
-   }while (size != 1);
-}
+#ifdef __cplusplus // Provide C++ Compatibility
+ extern "C" {
+#endif
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface
+// *****************************************************************************
+// *****************************************************************************
+
+void WDT_Initialize( void );
+void WDT_Clear( void );
+void WDT_Enable( void );
+void WDT_Disable( void );
+
+#ifdef __cplusplus // Provide C++ Compatibility
+ }
+#endif
+
+#endif 

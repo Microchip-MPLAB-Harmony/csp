@@ -56,7 +56,14 @@
 // Section: System Interrupt Vector Functions
 // *****************************************************************************
 // *****************************************************************************
-/* ADD PROPER INCLUDE HERE WHEN ADDING IN INTERRUPT MODULE SUPPORT FOR FAMILY */
+
+
+
+
+
+/* All the handlers are defined here.  Each will call its PLIB-specific function. */
+
+
 
 /*******************************************************************************
  End of File

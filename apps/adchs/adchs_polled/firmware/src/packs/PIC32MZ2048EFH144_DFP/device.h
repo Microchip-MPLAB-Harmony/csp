@@ -42,3 +42,6 @@
 // DOM-IGNORE-END
 
 #include <xc.h>
+#include <sys/attribs.h>
+#include "toolchain_specifics.h"
+
