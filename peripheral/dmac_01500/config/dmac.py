@@ -210,35 +210,21 @@ def updateDMACChannelInterruptData(symbol, event):
     else:
         symbol.setVisible(False)
 
-def _get_enblReg_parms(vectorNumber):
-
-    # This takes in vector index for interrupt, and returns the IECx register name as well as
-    # mask and bit location within it for given interrupt
-    temp = float(vectorNumber) / 32.0
-    index = int(temp)
-    bit = float(temp % 1)
-    bitPosn = int(32.0 * bit)
-    bitMask = hex(1 << bitPosn)
-    regName = "IEC" + str(index)
-
-    return regName, str(bitPosn), str(bitMask)
-
 def _get_statReg_parms(vectorNumber):
 
-    # This takes in vector index for interrupt, and returns the IFSx register name as well as
+    # This takes in vector index for interrupt, and returns the IFSx/IECx register index as well as
     # mask and bit location within it for given interrupt
     temp = float(vectorNumber) / 32.0
     index = int(temp)
     bit = float(temp % 1)
     bitPosn = int(32.0 * bit)
     bitMask = hex(1 << bitPosn)
-    regName = "IFS" + str(index)
+    regIndex = str(index)
 
-    return regName, str(bitPosn), str(bitMask)
+    return regIndex, str(bitPosn), str(bitMask)
 
 def dchconCallback(symbol, event):
     # callback for setting the register DCHxCON
-    global chenSym
     global dmaBitfield_DCH0CON_CHPRI
     global dmacPriorityVal
     global _get_position
@@ -251,7 +237,6 @@ def dchconCallback(symbol, event):
     if((event["id"] == "DMAC_CHAN" + str(channel) + "_ENBL") and (event["value"] == False)):
         dmacDchconSym[channel].setValue(0,2)  # for not enabled channel, clear register
         chpriSym[channel].setValue("0",2)       # for comment in ftl file
-        chenSym[channel].setValue("0",2)      # for comment in ftl file
     else:
         prio_mask = dmaBitfield_DCH0CON_CHPRI.getAttribute("mask")  # get mask from atdf file
         prio_lsb = _get_position(prio_mask)  # compute shift value of CHPRI bitfield
@@ -288,27 +273,6 @@ def dcheconCallback(symbol, event):
             payload |= (intnum & 0xff) << 8  # CHSIRQ, interrupt number to trigger DMA xfer
             dmacDcheconSym[channel].setValue(payload,2)
 
-def dchintCallback(symbol, event):
-    # sets up DCHxINT register based on user-input menu settings
-    global dmacDchxIntSym
-    global chbcieSym
-
-    channel = 0
-    # callback for setting the register DCHxECON
-    for s in list(event["id"]):
-        if s.isdigit():
-            channel = int(s)    # one digit: 0-7
-
-    if((event["id"] == "DMAC_CHAN"+str(channel)+"_ENBL") and (event["value"]==False)):
-        # disable channel:  do not enable any DMA interrupts
-        chbcieSym[channel].setValue("0",2)              # for a comment in ftl code
-        dmacDchxIntSym[channel].setValue(0, 2)
-    else:
-        # always enable block transfer complete interrupts, for DMA to indicate when done
-        chbcieSym[channel].setValue("1",2)                # for a comment in ftl code
-        payload = 0xB0000       # CHBCIE=1, CHTAIE=1, CHERIE=1
-        dmacDchxIntSym[channel].setValue(payload, 2)
-
 ################################################################################
 #### Component ####
 ################################################################################
@@ -321,7 +285,6 @@ global dmacDchxIntSym
 global dmacDcheconSym
 global sirqenSym
 global chbcieSym
-global chenSym
 global chpriSym
 global dmacInterruptWarn
 global dmacPriorityVal
@@ -341,7 +304,6 @@ dmacDchxIntSym = []
 dmacChanReqSrcVal = []
 sirqenSym = []
 chbcieSym = []
-chenSym = []
 dmacInterruptWarn = []
 dmacPriority = []
 dmacPriorityVal = []
@@ -399,27 +361,11 @@ for child in node:
         dmacInterruptVectorUpdate.append("core.DMA" + str(childIndex) + "_INTERRUPT_ENABLE_UPDATE")
 
         vectorNum = int(child.getAttribute("index"))
-        enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(vectorNum)
-        statRegName, statBitPosn, statMask = _get_statReg_parms(vectorNum)
-
-        SymId = name + "_ENBLREG_RD"
-        dmaEnblRegWrt = coreComponent.createStringSymbol(SymId, None)
-        dmaEnblRegWrt.setDefaultValue(enblRegName)
-        dmaEnblRegWrt.setVisible(False)
-
-        SymId = name + "_ENBLREG_SHIFT"
-        dmaEnblRegShift = coreComponent.createStringSymbol(SymId, None)
-        dmaEnblRegShift.setDefaultValue(enblBitPosn)
-        dmaEnblRegShift.setVisible(False)
-
-        SymId = name + "_ENBLREG_ENABLE_VALUE"
-        dmaEnblRegVal = coreComponent.createStringSymbol(SymId, None)
-        dmaEnblRegVal.setDefaultValue(str(hex(1<<int(enblBitPosn))))
-        dmaEnblRegVal.setVisible(False)
+        statRegIndex, statBitPosn, statMask = _get_statReg_parms(vectorNum)
 
         SymId = name + "_STATREG_RD"
         dmaStatRegRd = coreComponent.createStringSymbol(SymId, None)
-        dmaStatRegRd.setDefaultValue(statRegName)
+        dmaStatRegRd.setDefaultValue(statRegIndex)
         dmaStatRegRd.setVisible(False)
 
         SymId = name + "_STATREG_SHIFT"
@@ -651,34 +597,12 @@ for dmaChannel in range(0, numDMAChans):
     dmacDcheconSym[dmaChannel].setDefaultValue(0x00000000)
     dmacDcheconSym[dmaChannel].setDependencies(dcheconCallback, [dmacChanEnSymId, dmacChanReqSrcValSymId])
 
-    # DCHxINT register value - set by python callback function
-    dmacDchxIntSym.append(dmaChannel)
-    symId = "DCH" + str(dmaChannel) + "_INT_VALUE"
-    dmacDchxIntSym[dmaChannel] = coreComponent.createHexSymbol(symId, dmacChannelEnable)
-    dmacDchxIntSym[dmaChannel].setVisible(False)
-    dmacDchxIntSym[dmaChannel].setDefaultValue(0)
-    dmacDchxIntSym[dmaChannel].setDependencies(dchintCallback, [dmacChanEnSymId, dmacChanReqSrcValSymId])
-
     # DCHxECON<SIRQEN> field value - set by python callback function
     sirqenSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_ECON_SIRQEN_VALUE"
     sirqenSym[dmaChannel] = coreComponent.createIntegerSymbol(symId, None)
     sirqenSym[dmaChannel].setDefaultValue(0)
     sirqenSym[dmaChannel].setVisible(False)
-
-    # DCHxINT<CHBCIE> field value - set by python callback function
-    chbcieSym.append(dmaChannel)
-    symId = "DCH" + str(dmaChannel) + "_INT_CHBCIE_VALUE"
-    chbcieSym[dmaChannel] = coreComponent.createStringSymbol(symId, None)
-    chbcieSym[dmaChannel].setDefaultValue("0")
-    chbcieSym[dmaChannel].setVisible(False)
-
-    # DCHxCON<CHEN> field value - set by python callback function
-    chenSym.append(dmaChannel)
-    symId = "DCH" + str(dmaChannel) + "_CON_CHEN_VALUE"
-    chenSym[dmaChannel] = coreComponent.createStringSymbol(symId, None)
-    chenSym[dmaChannel].setDefaultValue("0")
-    chenSym[dmaChannel].setVisible(False)
 
     chpriSym.append(dmaChannel)
     symId = "DCH" + str(dmaChannel) + "_CON_CHPRI_VALUE"
