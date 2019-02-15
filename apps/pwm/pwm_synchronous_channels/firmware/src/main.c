@@ -69,7 +69,7 @@
 uint16_t period;
 
 /* This function is called after PWM0 counter event */
-void PWM0_CounterEventHandler(uintptr_t context)
+void PWM0_CounterEventHandler(uint32_t status, uintptr_t context)
 {
     /* duty cycle values */
     static uint16_t duty0 = 0U;
