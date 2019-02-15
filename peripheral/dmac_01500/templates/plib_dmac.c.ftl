@@ -57,15 +57,6 @@ static DMAC_CHANNEL_OBJECT  gDMAChannelObj[${NUM_DMA_CHANS}];
 #define ConvertToPhysicalAddress(a) ((uint32_t)KVA_TO_PA(a))
 #define ConvertToVirtualAddress(a)  PA_TO_KVA1(a)
 
-/* Enable/disable interrupt mask bits for each DMA channel */
-uint32_t dmaIrqEnbl[${NUM_DMA_CHANS}] =
-{
-<#list 0..NUM_DMA_CHANS - 1 as i>
-<#assign TARGET = "DMA" + i + "_ENBLREG_ENABLE_VALUE">
-    ${.vars[TARGET]}, /* DMA${i} */
-</#list>
-};
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: DMAC PLib Local Functions
@@ -202,7 +193,7 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     DMAC_CHANNEL_OBJECT *chanObj;
 
     /* Enable the DMA module */
-    *(volatile uint32_t *)(&DMACONSET) = _DMACON_ON_MASK;
+    DMACONSET = _DMACON_ON_MASK;
 
     /* Initialize the available channel objects */
     chanObj             =   (DMAC_CHANNEL_OBJECT *)&gDMAChannelObj[0];
@@ -223,42 +214,40 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
     /* DMA channel-level control registers.  They will have additional settings made when starting a transfer. */
 <#list 0..NUM_DMA_CHANS - 1 as i>
     <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
-    <#assign DMACONREG = "DCH" + i + "CON">
-    <#assign DMAECONREG = "DCH" + i + "ECON">
-    <#assign DMAINTREG = "DCH" + i + "INT">
-    <#assign DMACONVAL = "DCH" + i + "_CON_VALUE">
-    <#assign DMAECONVAL = "DCH" + i + "_ECON_VALUE">
-    <#assign DMAINTVAL = "DCH" + i + "_INT_VALUE">
-    <#assign CHSIRQ = "DMAC_REQUEST_" + i + "_SOURCE_VALUE">
-    <#assign SIRQEN = "DCH" + i + "_ECON_SIRQEN_VALUE">
-    <#assign CHBSIE = "DCH" + i + "_INT_CHBCIE_VALUE">
-    <#assign CHEN = "DCH" + i + "_CON_CHEN_VALUE">
-    <#assign CHPRI = "DCH" + i + "_CON_CHPRI_VALUE">
     <#if .vars[CHANENABLE] == true>
-        <#lt>    /* DMA channel ${i} */
-        <#lt>   /* DCHxCON */
-        <#lt>   /* CHEN = ${.vars[CHEN]} */
-        <#lt>   /* CHPRI = ${.vars[CHPRI]} */
-        <#lt>   ${DMACONREG} = 0x${.vars[DMACONVAL]};
-
-        <#lt>   /* DCHxECON */
-        <#lt>   /* CHSIRQ = ${.vars[CHSIRQ]} */
-        <#lt>   /* SIRQEN = ${.vars[SIRQEN]} */
-        <#lt>   ${DMAECONREG} = 0x${.vars[DMAECONVAL]};
-
-        <#lt>   /* DCHxCON */
-        <#lt>   /* CHBCIE = ${.vars[CHBSIE]} */
-        <#lt>   ${DMAINTREG} = 0x${.vars[DMAINTVAL]};
-
-        <#else>
-        <#lt>   /* DMA channel ${i} - not enabled */
-        <#lt>   /* Set registers for disabled configuration */
-        <#lt>   ${DMAECONREG} = 0x${.vars[DMAECONVAL]};
-        <#lt>   ${DMAINTREG} = 0x${.vars[DMAINTVAL]};
-        <#lt>   ${DMACONREG} = 0x${.vars[DMACONVAL]};
+        <#assign DMACONREG = "DCH" + i + "CON">
+        <#assign DMAECONREG = "DCH" + i + "ECON">
+        <#assign DMAINTREG = "DCH" + i + "INT">
+        <#assign DMACONVAL = "DCH" + i + "_CON_VALUE">
+        <#assign DMAECONVAL = "DCH" + i + "_ECON_VALUE">
+        <#assign CHSIRQ = "DMAC_REQUEST_" + i + "_SOURCE_VALUE">
+        <#assign SIRQEN = "DCH" + i + "_ECON_SIRQEN_VALUE">
+        <#assign CHBSIE = "DCH" + i + "_INT_CHBCIE_VALUE">
+        <#assign CHPRI = "DCH" + i + "_CON_CHPRI_VALUE">
+        <#assign STATCLRREG = "DMA" + i + "_STATREG_RD">
+        <#lt>    /* DMA channel ${i} configuration */
+        <#lt>    /* CHPRI = ${.vars[CHPRI]} */
+        <#lt>    ${DMACONREG} = 0x${.vars[DMACONVAL]};
+        <#lt>    /* CHSIRQ = ${.vars[CHSIRQ]}, SIRQEN = ${.vars[SIRQEN]} */
+        <#lt>    ${DMAECONREG} = 0x${.vars[DMAECONVAL]};
+        <#lt>    /* CHBCIE = 1, CHTAIE=1, CHERIE=1 */
+        <#lt>    ${DMAINTREG} = 0xB0000;
 
     </#if>
 </#list>
+<#lt>    /* Enable DMA channel interrupts */
+<#lt>    <@compress single_line=true>
+<#lt>    IEC${.vars[STATCLRREG]}SET = 0
+<#list 0..NUM_DMA_CHANS - 1 as i>
+    <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
+    <#if .vars[CHANENABLE] == true>
+        <#assign STATREGMASK = "DMA" + i + "_STATREG_MASK">
+         | ${.vars[STATREGMASK]}
+    </#if>
+</#list>
+;
+</@compress>
+
 }
 
 // *****************************************************************************
@@ -330,9 +319,6 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
         /* Set the cell size (set same as source size), DCHxCSIZ */
         regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + ${DMAC_CHAN_OFST} + (channel * ${DMAC_CH_SPACING}) + ${DMAC_CSIZ_OFST});
         *(volatile uint32_t *)(regs) = cellSize;
-
-        /* Enable the DMA interrupt.  There's one interrupt per channel; use the particular bitmask for this channel. */
-        IEC4SET = dmaIrqEnbl[channel];
 
         /* Enable the channel */
         /* CHEN = 1 */
@@ -449,7 +435,7 @@ void DMA${i}_InterruptHandler (void)
     {
         /* Channel is by default disabled on completion of a block transfer */
         /* Clear the Block transfer complete flag */
-        *(volatile uint32_t *)(&${.vars[INTREG]}CLR) = _DCH${i}INT_CHBCIF_MASK;
+        ${.vars[INTREG]}CLR = _DCH${i}INT_CHBCIF_MASK;
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
@@ -459,7 +445,7 @@ void DMA${i}_InterruptHandler (void)
     {
         /* Channel is by default disabled on Transfer Abortion */
         /* Clear the Abort transfer complete flag */
-        *(volatile uint32_t *)(&${.vars[INTREG]}CLR) = _DCH${i}INT_CHTAIF_MASK;
+        ${.vars[INTREG]}CLR = _DCH${i}INT_CHTAIF_MASK;
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
@@ -468,7 +454,7 @@ void DMA${i}_InterruptHandler (void)
     else if(true == ${.vars[INTBITSREG]}.CHERIF)
     {
         /* Clear the Block transfer complete flag */
-        *(volatile uint32_t *)(&${.vars[INTREG]}CLR) = _DCH${i}INT_CHERIF_MASK;
+        ${.vars[INTREG]}CLR = _DCH${i}INT_CHERIF_MASK;
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_ADDRESS_ERROR;
@@ -477,7 +463,7 @@ void DMA${i}_InterruptHandler (void)
 
     chanObj->inUse = false;
 
-    ${.vars[STATCLRREG]}CLR = ${.vars[STATREGMASK]};
+    IFS${.vars[STATCLRREG]}CLR = ${.vars[STATREGMASK]};
 
     /* Clear the interrupt flag and call event handler */
     if((NULL != chanObj->pEventCallBack) && (DMAC_TRANSFER_EVENT_NONE != dmaEvent))
