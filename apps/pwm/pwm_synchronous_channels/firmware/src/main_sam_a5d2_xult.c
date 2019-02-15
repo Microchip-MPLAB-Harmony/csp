@@ -64,7 +64,7 @@
 uint16_t period;
 
 /* This function is called after PWM counter event */
-void PWM_CounterEventHandler(uintptr_t context)
+void PWM_CounterEventHandler(uint32_t status, uintptr_t context)
 {
     /* duty cycle values */
     static uint16_t duty0 = 0U;
@@ -74,12 +74,12 @@ void PWM_CounterEventHandler(uintptr_t context)
     PWM_ChannelDutySet(PWM_CHANNEL_0, duty0);
     PWM_ChannelDutySet(PWM_CHANNEL_1, duty1);
     PWM_ChannelDutySet(PWM_CHANNEL_2, duty2);
-    
+
     /* Increment duty cycle values */
     duty0 += DUTY_INCREMENT;
     duty1 += DUTY_INCREMENT;
     duty2 += DUTY_INCREMENT;
-    
+
     if (duty0 > period)
         duty0 = 0U;
     if (duty1 > period)
@@ -98,13 +98,13 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
+
     /* Register callback function for Channel 0 counter event */
     PWM_CallbackRegister(PWM_CounterEventHandler, (uintptr_t)NULL);
-    
+
     /* Read the period */
     period = PWM_ChannelPeriodGet(PWM_CHANNEL_0);
-    
+
     /* Start all synchronous channels by starting channel 0*/
     PWM_ChannelsStart(PWM_CHANNEL_0_MASK);
 
@@ -123,4 +123,3 @@ int main ( void )
 /*******************************************************************************
  End of File
 */
-
