@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 09:28:27 01/08/19 -->
+<!-- This is an auto-generated pin data file created: 13:30:36 02/14/19 -->
 <pinfile family="MZ_EF">
    <packages>
-     <package diagram="VTLA124" id="1" name="VTLA" />
+     <package diagram="MX_124_VTLA" id="1" name="VTLA" />
   </packages>
   <pins>
      <pin name="NO CONNECT">
