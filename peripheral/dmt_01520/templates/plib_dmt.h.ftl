@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Real Time Counter (${DMT_INSTANCE_NAME}) PLIB
+  Deadman Timer (${DMT_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
@@ -16,6 +16,7 @@
     instance.
 
 *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
@@ -44,25 +45,23 @@
 #ifndef PLIB_${DMT_INSTANCE_NAME}_H
 #define PLIB_${DMT_INSTANCE_NAME}_H
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
 #include <stddef.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
 
-
-
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-extern "C" {
+
+	extern "C" {
+
 #endif
 // DOM-IGNORE-END
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: type definitions
-// *****************************************************************************
-// *****************************************************************************
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -70,34 +69,19 @@ extern "C" {
 // *****************************************************************************
 // *****************************************************************************
 
+<#if CONFIG_FDMTEN == "OFF">
+void ${DMT_INSTANCE_NAME}_Enable(void);
 
-// *****************************************************************************
-/* Function:
-   void ${DMT_INSTANCE_NAME}_Clear ( void )
+void ${DMT_INSTANCE_NAME}_Disable(void);
 
-  Summary:
-    Clears DMT counter.
-
-  Description:
-    This function clears the DMT counter by writing specific numbers to DMT 
-    registers in the proper order.
-
-  Parameters:
-    none
-
-  Example:
-    <code>
-    ${DMT_INSTANCE_NAME}_Clear()
-    </code>
-    
-  Returns:
-    void
-*/
+</#if>
 void ${DMT_INSTANCE_NAME}_Clear ( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-}
+
+	}
+
 #endif
 // DOM-IGNORE-END
 

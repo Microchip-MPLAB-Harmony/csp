@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Real Time Counter (${DMT_INSTANCE_NAME}) PLIB
+  Deadman Timer (${DMT_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
@@ -11,10 +11,11 @@
     ${DMT_INSTANCE_NAME} PLIB Implementation file
 
   Description:
-    This file defines the interface to the deadman timer (DMT) peripheral library. 
+    This file defines the interface to the deadman timer (DMT) peripheral library.
     This library provides ability to clear the DMT counter.
 
 *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
@@ -45,40 +46,34 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
+
 #include "plib_${DMT_INSTANCE_NAME?lower_case}.h"
 
-
 // *****************************************************************************
-/* Function:
-   void ${DMT_INSTANCE_NAME}_Clear ( void )
+// *****************************************************************************
+// Section: ${DMT_INSTANCE_NAME} Implementation
+// *****************************************************************************
+// *****************************************************************************
 
-  Summary:
-    Clears DMT counter.
+<#if CONFIG_FDMTEN == "OFF">
+void ${DMT_INSTANCE_NAME}_Enable(void)
+{
+    /* ON = 1 */
+    DMTCON = _DMTCON_ON_MASK;
+}
 
-  Description:
-    This function clears the DMT counter by writing specific numbers to DMT 
-    registers in the proper order.
+void ${DMT_INSTANCE_NAME}_Disable(void)
+{
+    /* ON = 0 */
+    DMTCON = _DMTCON_ON_MASK;
+}
 
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
+</#if>
 void ${DMT_INSTANCE_NAME}_Clear ( void )
 {
-    /* ${DMTSTEP1_REG} register */
-    /*     STEP1 = ${STEP1_VAL} */
-    ${DMTSTEP1_REG} = ${DMTPRECLR_VAL};
-    
-    /* ${DMTSTEP2_REG} register */
-    /*     STEP2 = ${STEP2_VAL} */
-    ${DMTSTEP2_REG} = ${DMTCLR_VAL};
+    /* STEP1 */
+    DMTPRECLR = (_DMTPRECLR_STEP1_MASK & (0x40 << _DMTPRECLR_STEP1_POSITION));
+
+    /* STEP2 */
+    DMTCLR = (_DMTCLR_STEP2_MASK & 0x8);
 }
-<#--
-/*******************************************************************************
- End of File
-*/
--->
