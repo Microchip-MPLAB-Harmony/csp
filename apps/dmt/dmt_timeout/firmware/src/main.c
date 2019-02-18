@@ -66,7 +66,6 @@ void switch_handler( GPIO_PIN pin, uintptr_t context )
 
 int main ( void )
 {
-
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     printf ("\n\r -------------------------------------------------------------");
@@ -74,6 +73,7 @@ int main ( void )
     printf ("\n\r -------------------------------------------------------------");
     printf ("\n\r Press switch to emulate deadlock "); 
     CORETIMER_Start();
+    DMT_Enable();
     GPIO_PinInterruptCallbackRegister(SWITCH_PIN, &switch_handler, (uintptr_t) NULL );
     GPIO_PinInterruptEnable(SWITCH_PIN);
     switch_pressed = false;
@@ -88,7 +88,7 @@ int main ( void )
         else
         {   
             printf ("\n\r Emulating deadlock................ ");
-            printf ("\n\r DMT should reset device in 4 seconds ");           
+            printf ("\n\r DMT should reset device............");
             while(1);
         }
     }
