@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -109,7 +109,7 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     /*SLPEN = ${UART_SLPEN} */
     U${UART_INSTANCE_NUM}MODE = 0x${UMODE_VALUE};
 
-    /*Enable U${UART_INSTANCE_NAME} Receiver and Transmitter */
+    /*Enable ${UART_INSTANCE_NAME} Receiver and Transmitter */
     U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK);
 
     /* BAUD Rate register Setup */
@@ -138,7 +138,6 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = 0;
     ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.txCallback = NULL;
-    ${UART_INSTANCE_NAME?lower_case}Obj.faultCallback = NULL;
 
 </#if>
     /* Turn ON ${UART_INSTANCE_NAME}*/
@@ -164,6 +163,9 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
 </#if>
     if (setup != NULL)
     {
+        /* Turn OFF ${UART_INSTANCE_NAME}*/
+        U${UART_INSTANCE_NUM}MODECLR = _U${UART_INSTANCE_NUM}MODE_ON_MASK;
+
         if(srcClkFreq == 0)
         {
             srcClkFreq = ${UART_INSTANCE_NAME}_FrequencyGet();
@@ -189,13 +191,39 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
             return status;
         }
 
+        if(setup->dataWidth == UART_DATA_9_BIT)
+        {
+            if(setup->parity != UART_PARITY_NONE)
+            {
+               return status;
+
+            }
+            else
+            {
+               /* Configure ${UART_INSTANCE_NAME} mode */
+               uartMode = U${UART_INSTANCE_NUM}MODE;
+               uartMode &= ~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK;
+               U${UART_INSTANCE_NUM}MODE = uartMode | setup->dataWidth;
+            }
+
+        }
+        else
+        {
+            /* Configure ${UART_INSTANCE_NAME} mode */
+            uartMode = U${UART_INSTANCE_NUM}MODE;
+            uartMode &= ~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK;
+            U${UART_INSTANCE_NUM}MODE = uartMode | setup->parity ;
+        }
+
         /* Configure ${UART_INSTANCE_NAME} mode */
         uartMode = U${UART_INSTANCE_NUM}MODE;
-        uartMode &= ~_U${UART_INSTANCE_NUM}MODE_PDSEL_MASK;
-        U${UART_INSTANCE_NUM}MODE = uartMode | setup->parity ;
+        uartMode &= ~_U${UART_INSTANCE_NUM}MODE_STSEL_MASK;
+        U${UART_INSTANCE_NUM}MODE = uartMode | setup->stopBits ;
 
         /* Configure ${UART_INSTANCE_NAME} Baud Rate */
         U${UART_INSTANCE_NUM}BRG = brgVal;
+
+        U${UART_INSTANCE_NUM}MODESET = _U${UART_INSTANCE_NUM}MODE_ON_MASK;
 
         status = true;
     }
@@ -274,7 +302,7 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
 <#if USART_INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK))
+            if(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
             {
                 U${UART_INSTANCE_NUM}TXREG = *lBuffer++;
                 processedSize++;
@@ -293,13 +321,12 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK))
+            if(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
             {
                 U${UART_INSTANCE_NUM}TXREG = *lBuffer;
                 ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
-                ${UART_TX_IEC_REG}SET = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
-
             }
+            ${UART_TX_IEC_REG}SET = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
         }
 </#if>
     }
@@ -324,12 +351,6 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
 }
 
 <#if USART_INTERRUPT_MODE == true>
-void ${UART_INSTANCE_NAME}_FaultCallbackRegister( UART_CALLBACK callback, uintptr_t context )
-{
-    ${UART_INSTANCE_NAME?lower_case}Obj.faultCallback = callback;
-
-    ${UART_INSTANCE_NAME?lower_case}Obj.faultContext = context;
-}
 
 void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
@@ -368,9 +389,9 @@ size_t ${UART_INSTANCE_NAME}_WriteCountGet( void )
 void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 {
     /* Client must call UARTx_ErrorGet() function to clear the errors */
-    if( ${UART_INSTANCE_NAME?lower_case}Obj.faultCallback != NULL )
+    if( ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
     {
-        ${UART_INSTANCE_NAME?lower_case}Obj.faultCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
     }
 
     /* Clear size and rx status */
@@ -378,17 +399,10 @@ void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
     ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
     ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
 
-    /* If it's a overrun error then clear it to flush FIFO */
-    if(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_OERR_MASK)
-    {
-        U${UART_INSTANCE_NUM}STACLR = _U${UART_INSTANCE_NUM}STA_OERR_MASK;
-    }
+    ${UART_INSTANCE_NAME}_ErrorClear();
 
-    /* Clear ${UART_INSTANCE_NAME} Error IRQ flag after clearing error */
-    ${UART_FAULT_IFS_REG}CLR = _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}EIF_MASK;
-    
     /* Disable the interrupt*/
-    ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;    
+    ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
 }
 
 void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
@@ -429,7 +443,7 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
-        while((_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
+        while((!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize))
         {
             U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
         }
@@ -462,7 +476,7 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 <#else>
 void ${UART_INSTANCE_NAME}_WriteByte(int data)
 {
-    while ((_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK)) == 0);
+    while (!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK));
 
     U${UART_INSTANCE_NUM}TXREG = data;
 }
@@ -471,7 +485,7 @@ bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void )
 {
     bool status = false;
 
-    if(_U${UART_INSTANCE_NUM}STA_TRMT_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK))
+    if(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
     {
         status = true;
     }
@@ -488,7 +502,7 @@ bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void )
 {
     bool status = false;
 
-    if(_U${UART_INSTANCE_NUM}STA_URXDA_MASK != (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_URXDA_MASK))
+    if(_U${UART_INSTANCE_NUM}STA_URXDA_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_URXDA_MASK))
     {
         status = true;
     }
