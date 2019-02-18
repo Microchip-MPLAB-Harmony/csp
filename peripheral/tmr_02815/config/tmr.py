@@ -249,7 +249,7 @@ def timerMaxValue(symbol, event):
     clock = event["value"]
     if(clock == 0):
         clock = 1
-    resolution = 1000.0/clock
+    resolution = 1000.0/float(clock)
     mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
     if(mode_32 == 0):
         symbol.setMax(4294967295.0 * resolution)
@@ -285,27 +285,27 @@ def updateCodeGeneration(symbol, event):
     if (event["value"] == False):
         component.getSymbolByID("TMR_SOURCE").setEnabled(True)
         component.getSymbolByID("TMR_HEADER1").setEnabled(True)
-        
+
 def tmrTgateVisible(symbol, event):
     symbol.setVisible(bool(event["value"]))
-    
+
 def find_key_value(value, keypairs):
     '''
     Helper function that finds the keyname for the given value.  This function is used with bitfield values for a given
-    <value-group>, to set up default values for key value symbols.  
+    <value-group>, to set up default values for key value symbols.
     Arguments:
           value - the value to be looked for in the dictionary, a particular bitfield value to be found in 'keypairs'
           keypairs - the dictionary to be searched over, represents all bitfield values in a <value-group > to scanned over
-          
-    Without this helper function, setDefaultValue(<some_integer_value>) would not be very helpful for key/value symbols.  
-    Just inputting an integer value would require the user to see what order the bitfields are populated in the atdf file, 
-    to know what integer to use for setting a menu entry to a desired value.  This function removes the user requirement 
-    for figuring out what integer value should be used in order to get a particular bitfield value set by default.  
-    
+
+    Without this helper function, setDefaultValue(<some_integer_value>) would not be very helpful for key/value symbols.
+    Just inputting an integer value would require the user to see what order the bitfields are populated in the atdf file,
+    to know what integer to use for setting a menu entry to a desired value.  This function removes the user requirement
+    for figuring out what integer value should be used in order to get a particular bitfield value set by default.
+
     The (integer) value returned by this function call corresponds to the particular entry of the
-    list that has the user-input key value.  The returned index value is dependent on the order 
-    of accumulation of bitfield entries from the atdf file.  This function removes that dependence by 
-    scanning the list (i.e., scans keypairs) for the particular key 'value' that matches what is being 
+    list that has the user-input key value.  The returned index value is dependent on the order
+    of accumulation of bitfield entries from the atdf file.  This function removes that dependence by
+    scanning the list (i.e., scans keypairs) for the particular key 'value' that matches what is being
     looked for, returning the element number for that (in the order it was scanned from the atdf file).
 
     The *.setDefaultValue( ) method that called this function will use that value to correctly populate
@@ -319,7 +319,7 @@ def find_key_value(value, keypairs):
 
     print("find_key: could not find value in dictionary") # should never get here
     return ""
-    
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -354,8 +354,8 @@ def instantiateComponent(tmrComponent):
     for ii in tcs_names:
         tmrSym_T2CON_SOURCE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
     tmrSym_T2CON_SOURCE_SEL.setDefaultValue(1)
-    tmrSym_T2CON_SOURCE_SEL.setVisible(True)  
-        
+    tmrSym_T2CON_SOURCE_SEL.setVisible(True)
+
     tmrSymInterruptMode = tmrComponent.createBooleanSymbol("TMR_INTERRUPT_MODE", None)
     tmrSymInterruptMode.setLabel("Enable Interrrupts ?")
     tmrSymInterruptMode.setDefaultValue(True)
@@ -406,7 +406,7 @@ def instantiateComponent(tmrComponent):
     tmrSym_T2CON_TGATE.setDefaultValue(find_key_value(0,tgate_names))  # gated time accumulation disabled
     tmrSym_T2CON_TGATE.setDependencies(tmrTgateVisible, ["TIMER_SRC_SEL"])
     tmrSym_T2CON_TGATE.setVisible(True)
-    
+
     # SYNC, TMRx Synchronized Timer Start/Stop Enable bit
     sync_names = []
     _get_bitfield_names(tmrValGrp_T2CON_SYNC, sync_names)
@@ -428,15 +428,16 @@ def instantiateComponent(tmrComponent):
     tmrSym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
     tmrSym_CLOCK_FREQ.setVisible(True)
     tmrSym_CLOCK_FREQ.setReadOnly(True)
-    tmrSym_CLOCK_FREQ.setDefaultValue(100000000)
-    tmrSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["TMR_PRESCALER_VALUE", "TIMER_SRC_SEL", "TIMER_EXT_CLOCK_FREQ"])
+    tmrSym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK3_FREQ")))
+    tmrSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core.CONFIG_SYS_CLK_PBCLK3_FREQ",
+        "TMR_PRESCALER_VALUE", "TIMER_SRC_SEL", "TIMER_EXT_CLOCK_FREQ"])
 
     tmrSym_PERIOD_MS = tmrComponent.createFloatSymbol("TIMER_TIME_PERIOD_MS", None)
     tmrSym_PERIOD_MS.setLabel("Timer Period (Milli Sec)")
     tmrSym_PERIOD_MS.setDefaultValue(0.3)
     tmrSym_PERIOD_MS.setMin(0.0)
     tmrSym_PERIOD_MS.setMax(0.65535)
-    tmrSym_PERIOD_MS.setDependencies(timerMaxValue, ["TIMER_CLOCK_FREQ", "TIMER_32BIT_MODE_SEL"])
+    tmrSym_PERIOD_MS.setDependencies(timerMaxValue, ["core.CONFIG_SYS_CLK_PBCLK3_FREQ", "TIMER_CLOCK_FREQ", "TIMER_32BIT_MODE_SEL"])
     tmrSym_PERIOD_MS.setVisible(True)
 
     #Timer1 Period Register
@@ -447,7 +448,8 @@ def instantiateComponent(tmrComponent):
     tmrSym_PR2.setMin(0)
     tmrSym_PR2.setMax(65535)
     tmrSym_PR2.setVisible(True)
-    tmrSym_PR2.setDependencies(timerPeriodCalc, ["TIMER_TIME_PERIOD_MS", "TIMER_CLOCK_FREQ", "TIMER_32BIT_MODE_SEL"])
+    tmrSym_PR2.setDependencies(timerPeriodCalc, ["core.CONFIG_SYS_CLK_PBCLK3_FREQ", "TIMER_TIME_PERIOD_MS",
+        "TIMER_CLOCK_FREQ", "TIMER_32BIT_MODE_SEL"])
 
     #timer SIDL configuration
     sidl_names = []
