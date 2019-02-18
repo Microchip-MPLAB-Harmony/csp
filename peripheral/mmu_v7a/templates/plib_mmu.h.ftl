@@ -73,6 +73,21 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 void MMU_Initialize(void);
 
+<#if INSTRUCTION_CACHE_ENABLE>
+void icache_InvalidateAll(void);
+void icache_Enable(void);
+void icache_Disable(void);
+</#if>
+<#if DATA_CACHE_ENABLE>
+void dcache_InvalidateAll(void);
+void dcache_CleanAll(void);
+void dcache_CleanInvalidateAll(void);
+void dcache_InvalidateByAddr (uint32_t *addr, uint32_t size);
+void dcache_CleanByAddr (uint32_t *addr, uint32_t size);
+void dcache_CleanInvalidateByAddr (uint32_t *addr, uint32_t size);
+void dcache_Enable(void);
+void dcache_Disable(void);
+</#if>
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -81,7 +96,3 @@ void MMU_Initialize(void);
 #endif
 
 #endif // _PLIB_MMU_H
-
-/*******************************************************************************
- End of File
-*/
