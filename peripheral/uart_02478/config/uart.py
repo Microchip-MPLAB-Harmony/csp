@@ -232,86 +232,86 @@ def u1ModecombineValues(symbol, event):
         maskvalue = uartBitField_U1MODE_BRGH.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (brghValue << 3)
-        
+
     if event["id"] == "UART_RXINV":
         rxinvValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_RXINV.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (rxinvValue << 4)
-        
+
     if event["id"] == "UART_ABAUD":
         abaudValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_ABAUD.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (abaudValue << 5)
-        
+
     if event["id"] == "UART_LPBACK":
         lpbackValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_LPBACK.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (lpbackValue << 6)
-        
+
     if event["id"] == "UART_WAKE":
         wakeValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_WAKE.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
-        uart1modeValue = uart1modeValue | (wakeValue << 7)   
-        
+        uart1modeValue = uart1modeValue | (wakeValue << 7)
+
     if event["id"] == "UART_RTSMD":
         rstmdValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_RTSMD.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
-        uart1modeValue = uart1modeValue | (rstmdValue << 11)   
-        
+        uart1modeValue = uart1modeValue | (rstmdValue << 11)
+
     if event["id"] == "UART_IREN":
         irenValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_IREN.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
-        uart1modeValue = uart1modeValue | (irenValue << 12)   
-        
+        uart1modeValue = uart1modeValue | (irenValue << 12)
+
     if event["id"] == "UART_SIDL":
         sidlValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_SIDL.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (sidlValue << 13)
-        
+
     if event["id"] == "UART_RUNOVF":
         runovfValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_RUNOVF.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
-        uart1modeValue = uart1modeValue | (runovfValue << 16)   
+        uart1modeValue = uart1modeValue | (runovfValue << 16)
 
     if event["id"] == "UART_CLKSEL":
         clkselValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_CLKSEL.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
-        uart1modeValue = uart1modeValue | (clkselValue << 17)           
+        uart1modeValue = uart1modeValue | (clkselValue << 17)
 
     if event["id"] == "UART_SLPEN":
         slpenValue = int(event["symbol"].getKeyValue(event["value"]))
         maskvalue = uartBitField_U1MODE_SLPEN.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
-        uart1modeValue = uart1modeValue | (slpenValue << 23)      
-        
+        uart1modeValue = uart1modeValue | (slpenValue << 23)
+
     symbol.setValue(uart1modeValue, 2)
 
 def find_key_value(value, keypairs):
     '''
     Helper function that finds the keyname for the given value.  This function is used with bitfield values for a given
-    <value-group>, to set up default values for key value symbols.  
+    <value-group>, to set up default values for key value symbols.
     Arguments:
           value - the value to be looked for in the dictionary, a particular bitfield value to be found in 'keypairs'
           keypairs - the dictionary to be searched over, represents all bitfield values in a <value-group > to scanned over
-          
-    Without this helper function, setDefaultValue(<some_integer_value>) would not be very helpful for key/value symbols.  
-    Just inputting an integer value would require the user to see what order the bitfields are populated in the atdf file, 
-    to know what integer to use for setting a menu entry to a desired value.  This function removes the user requirement 
-    for figuring out what integer value should be used in order to get a particular bitfield value set by default.  
-    
+
+    Without this helper function, setDefaultValue(<some_integer_value>) would not be very helpful for key/value symbols.
+    Just inputting an integer value would require the user to see what order the bitfields are populated in the atdf file,
+    to know what integer to use for setting a menu entry to a desired value.  This function removes the user requirement
+    for figuring out what integer value should be used in order to get a particular bitfield value set by default.
+
     The (integer) value returned by this function call corresponds to the particular entry of the
-    list that has the user-input key value.  The returned index value is dependent on the order 
-    of accumulation of bitfield entries from the atdf file.  This function removes that dependence by 
-    scanning the list (i.e., scans keypairs) for the particular key 'value' that matches what is being 
+    list that has the user-input key value.  The returned index value is dependent on the order
+    of accumulation of bitfield entries from the atdf file.  This function removes that dependence by
+    scanning the list (i.e., scans keypairs) for the particular key 'value' that matches what is being
     looked for, returning the element number for that (in the order it was scanned from the atdf file).
 
     The *.setDefaultValue( ) method that called this function will use that value to correctly populate
@@ -325,7 +325,7 @@ def find_key_value(value, keypairs):
 
     print("find_key: could not find value in dictionary") # should never get here
     return ""
-    
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -454,7 +454,7 @@ def instantiateComponent(uartComponent):
     for ii in BRGH_names:
         uartSym_U1MODE_BRGH.addKey( ii['key'],ii['value'], ii['desc'] )
     uartSym_U1MODE_BRGH.setReadOnly(True)
-        
+
     #RXINV, Rx polarity inversion bit
     RXINV_names = []
     _get_bitfield_names(uartValGrp_U1MODE_RXINV, RXINV_names)
@@ -463,6 +463,7 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_RXINV.setDefaultValue(find_key_value(0,RXINV_names)) # standard speed mode
     uartSym_U1MODE_RXINV.setOutputMode( "Value" )
     uartSym_U1MODE_RXINV.setDisplayMode( "Description" )
+    uartSym_U1MODE_RXINV.setVisible(False)
     for ii in RXINV_names:
         uartSym_U1MODE_RXINV.addKey( ii['key'],ii['value'], ii['desc'] )
 
@@ -474,6 +475,7 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_ABAUD.setDefaultValue(find_key_value(0,ABAUD_names)) # baud rate measurement disabled
     uartSym_U1MODE_ABAUD.setOutputMode( "Value" )
     uartSym_U1MODE_ABAUD.setDisplayMode( "Description" )
+    uartSym_U1MODE_ABAUD.setVisible(False)
     for ii in ABAUD_names:
         uartSym_U1MODE_ABAUD.addKey( ii['key'],ii['value'], ii['desc'] )
 
@@ -486,6 +488,7 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_LPBACK.setDefaultValue(find_key_value(0,LPBACK_names)) # loopback mode disabled
     uartSym_U1MODE_LPBACK.setOutputMode( "Value" )
     uartSym_U1MODE_LPBACK.setDisplayMode( "Description" )
+    uartSym_U1MODE_LPBACK.setVisible(False)
     for ii in LPBACK_names:
         uartSym_U1MODE_LPBACK.addKey( ii['key'],ii['value'], ii['desc'] )
 
@@ -497,6 +500,7 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_WAKE.setDefaultValue(find_key_value(0,WAKE_names)) # wake-up disabled
     uartSym_U1MODE_WAKE.setOutputMode( "Value" )
     uartSym_U1MODE_WAKE.setDisplayMode( "Description" )
+    uartSym_U1MODE_WAKE.setVisible(False)
     for ii in WAKE_names:
         uartSym_U1MODE_WAKE.addKey( ii['key'],ii['value'], ii['desc'] )
 
@@ -508,6 +512,7 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_RTSMD.setDefaultValue(find_key_value(0,RTSMD_names)) # /UxRTS pin is in Flow Control mode
     uartSym_U1MODE_RTSMD.setOutputMode( "Value" )
     uartSym_U1MODE_RTSMD.setDisplayMode( "Description" )
+    uartSym_U1MODE_RTSMD.setVisible(False)
     for ii in RTSMD_names:
         uartSym_U1MODE_RTSMD.addKey( ii['key'],ii['value'], ii['desc'] )
 
@@ -519,9 +524,10 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_IREN.setDefaultValue(find_key_value(0,IREN_names)) # IrDA is disabled
     uartSym_U1MODE_IREN.setOutputMode( "Value" )
     uartSym_U1MODE_IREN.setDisplayMode( "Description" )
+    uartSym_U1MODE_IREN.setVisible(False)
     for ii in IREN_names:
         uartSym_U1MODE_IREN.addKey( ii['key'],ii['value'], ii['desc'] )
-        
+
     #SIDL, Stop in Idle Mode bit
     SIDL_names = []
     _get_bitfield_names(uartValGrp_U1MODE_SIDL, SIDL_names)
@@ -530,9 +536,10 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_SIDL.setDefaultValue(find_key_value(0,SIDL_names)) # continue operation in idle mode
     uartSym_U1MODE_SIDL.setOutputMode( "Value" )
     uartSym_U1MODE_SIDL.setDisplayMode( "Description" )
+    uartSym_U1MODE_SIDL.setVisible(False)
     for ii in SIDL_names:
         uartSym_U1MODE_SIDL.addKey( ii['key'],ii['value'], ii['desc'] )
-        
+
     #RUNOVF, Run During Overflow Condition Mode bit
     RUNOVF_names = []
     _get_bitfield_names(uartValGrp_U1MODE_RUNOVF, RUNOVF_names)
@@ -541,9 +548,10 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_RUNOVF.setDefaultValue(find_key_value(0,RUNOVF_names)) # shift register stops during overflow
     uartSym_U1MODE_RUNOVF.setOutputMode( "Value" )
     uartSym_U1MODE_RUNOVF.setDisplayMode( "Description" )
+    uartSym_U1MODE_RUNOVF.setVisible(False)
     for ii in RUNOVF_names:
         uartSym_U1MODE_RUNOVF.addKey( ii['key'],ii['value'], ii['desc'] )
-        
+
     #CLKSEL, UARTx Module Clock Selection bits
     CLKSEL_names = []
     _get_bitfield_names(uartValGrp_U1MODE_CLKSEL, CLKSEL_names)
@@ -552,10 +560,11 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_CLKSEL.setDefaultValue(find_key_value(0,CLKSEL_names)) # BRG clock is PBCLK2
     uartSym_U1MODE_CLKSEL.setOutputMode( "Value" )
     uartSym_U1MODE_CLKSEL.setDisplayMode( "Description" )
+    uartSym_U1MODE_CLKSEL.setVisible(False)
     for ii in CLKSEL_names:
         uartSym_U1MODE_CLKSEL.addKey( ii['key'],ii['value'], ii['desc'] )
-        
-        
+
+
     #SLPEN, Run During Sleep Enable bit
     SLPEN_names = []
     _get_bitfield_names(uartValGrp_U1MODE_SLPEN, SLPEN_names)
@@ -564,9 +573,10 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_SLPEN.setDefaultValue(find_key_value(0,SLPEN_names)) # BRG clock off during sleep mode
     uartSym_U1MODE_SLPEN.setOutputMode( "Value" )
     uartSym_U1MODE_SLPEN.setDisplayMode( "Description" )
+    uartSym_U1MODE_SLPEN.setVisible(False)
     for ii in SLPEN_names:
         uartSym_U1MODE_SLPEN.addKey( ii['key'],ii['value'], ii['desc'] )
-        
+
     uartSym_U1MODE = uartComponent.createHexSymbol("UMODE_VALUE", None)
     uartSym_U1MODE.setDefaultValue((int(uartSym_U1MODE_BRGH.getSelectedValue()) << 3) | (int(uartSym_U1MODE_PDSEL.getSelectedValue()) << 1) | (int(uartSym_U1MODE_STSEL.getSelectedValue()) << 0))
     uartSym_U1MODE.setVisible(False)
@@ -659,8 +669,8 @@ def instantiateComponent(uartComponent):
     #uart Receive data register
     uartSym_RxRegister = uartComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
     uartSym_RxRegister.setDefaultValue("&(U" + uartInstanceNum.getValue() + "RXREG)")
-    uartSym_RxRegister.setVisible(False)    
-    
+    uartSym_RxRegister.setVisible(False)
+
     ############################################################################
     #### Dependency ####
     ############################################################################
