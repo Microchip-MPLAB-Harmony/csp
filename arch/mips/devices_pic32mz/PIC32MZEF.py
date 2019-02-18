@@ -259,8 +259,8 @@ devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALI
 devconSystemInitFile.setSourcePath("mips/templates/PIC32MZ_EF.c.ftl")
 devconSystemInitFile.setMarkup(True)
 
-devconSystemInitFile = coreComponent.createFileSymbol("DEVCON_INIT", None)
-devconSystemInitFile.setType("STRING")
-devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-devconSystemInitFile.setSourcePath("mips/templates/PIC32MZ_EF_DEVCON.c.ftl")
-devconSystemInitFile.setMarkup(True)
+devconInitFile = coreComponent.createFileSymbol("DEVCON_INIT", None)
+devconInitFile.setType("STRING")
+devconInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+devconInitFile.setSourcePath("mips/templates/PIC32MZ_DEVCON.c.ftl")
+devconInitFile.setMarkup(True)
