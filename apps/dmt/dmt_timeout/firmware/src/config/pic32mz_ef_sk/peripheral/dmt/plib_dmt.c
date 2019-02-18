@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Real Time Counter (DMT) PLIB
+  Deadman Timer (DMT) PLIB
 
   Company:
     Microchip Technology Inc.
@@ -11,10 +11,11 @@
     DMT PLIB Implementation file
 
   Description:
-    This file defines the interface to the deadman timer (DMT) peripheral library. 
+    This file defines the interface to the deadman timer (DMT) peripheral library.
     This library provides ability to clear the DMT counter.
 
 *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
@@ -45,35 +46,32 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
+
 #include "plib_dmt.h"
 
-
 // *****************************************************************************
-/* Function:
-   void DMT_Clear ( void )
+// *****************************************************************************
+// Section: DMT Implementation
+// *****************************************************************************
+// *****************************************************************************
 
-  Summary:
-    Clears DMT counter.
+void DMT_Enable(void)
+{
+    /* ON = 1 */
+    DMTCON = _DMTCON_ON_MASK;
+}
 
-  Description:
-    This function clears the DMT counter by writing specific numbers to DMT 
-    registers in the proper order.
+void DMT_Disable(void)
+{
+    /* ON = 0 */
+    DMTCON = _DMTCON_ON_MASK;
+}
 
-  Parameters:
-    none
-
-  Returns:
-    void
-*/
 void DMT_Clear ( void )
 {
-    /* DMTPRECLR register */
-    /*     STEP1 = 64 */
-    DMTPRECLR = 16384;
-    
-    /* DMTCLR register */
-    /*     STEP2 = 8 */
-    DMTCLR = 8;
+    /* STEP1 */
+    DMTPRECLR = (_DMTPRECLR_STEP1_MASK & (0x40 << _DMTPRECLR_STEP1_POSITION));
+
+    /* STEP2 */
+    DMTCLR = (_DMTCLR_STEP2_MASK & 0x8);
 }

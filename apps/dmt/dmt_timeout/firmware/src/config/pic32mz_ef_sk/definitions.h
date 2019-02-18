@@ -51,11 +51,10 @@
 #include <stdio.h>
 #include "peripheral/coretimer/plib_coretimer.h"
 #include "peripheral/uart/plib_uart2.h"
-#include "peripheral/dmt/plib_dmt.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gpio/plib_gpio.h"
 #include "peripheral/evic/plib_evic.h"
-#include "peripheral/wdt/plib_wdt.h"
+#include "peripheral/dmt/plib_dmt.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

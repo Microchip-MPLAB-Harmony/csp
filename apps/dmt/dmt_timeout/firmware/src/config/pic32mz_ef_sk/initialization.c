@@ -85,7 +85,7 @@
 #pragma config WINDIS =     NORMAL
 #pragma config FWDTWINSZ =  WINSZ_25
 #pragma config DMTCNT =     DMT31
-#pragma config FDMTEN =     ON
+#pragma config FDMTEN =     OFF
 
 /*** DEVCFG2 ***/
 #pragma config FPLLIDIV =   DIV_1
@@ -160,11 +160,15 @@ void SYS_Initialize ( void* data )
     CLK_Initialize();
 	GPIO_Initialize();
 
+    /* Configure Prefetch, Wait States and ECC */
+    PRECONbits.PREFEN = 3;
+    PRECONbits.PFMWS = 2;
+    CFGCONbits.ECCCON = 3;
+
+
 
     CORETIMER_Initialize();
 	UART2_Initialize();
-
-    WDT_Initialize();
 
 
 
