@@ -53,7 +53,8 @@
 #include <string.h>
 #include "definitions.h"                // SYS function prototypes
 
-#define BUFFER_SIZE             (NVM_FLASH_ROWSIZE / sizeof(uint32_t))
+#define READ_WRITE_SIZE         (NVM_FLASH_PAGESIZE)
+#define BUFFER_SIZE             (READ_WRITE_SIZE / sizeof(uint32_t))
 
 #define APP_FLASH_ADDRESS       (NVM_FLASH_START_ADDRESS + 0x100000)
 
@@ -90,6 +91,8 @@ static void eventHandler(uintptr_t context)
 int main ( void )
 {
     uint32_t address = APP_FLASH_ADDRESS;
+    uint8_t *writePtr = (uint8_t *)writeData;
+    uint32_t i = 0;
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
@@ -107,16 +110,22 @@ int main ( void )
     while(xferDone == false);
     
     xferDone = false;
+    
+    for (i = 0; i < READ_WRITE_SIZE; i+= NVM_FLASH_ROWSIZE)
+    {
+        /* Program 2048 byte Row*/
+        NVM_RowWrite((uint32_t *)writePtr, address);
 
-    /* Program 2048 byte Row*/
-    NVM_RowWrite(writeData, address);
+        while(xferDone == false);
 
-    while(xferDone == false);
+        xferDone = false;
+
+        writePtr += NVM_FLASH_ROWSIZE;
+        address  += NVM_FLASH_ROWSIZE;
+    }
     
-    xferDone = false;
-    
-    NVM_Read(readData, sizeof(writeData), address);
-    
+    NVM_Read(readData, sizeof(writeData), APP_FLASH_ADDRESS);
+
     /* Verify the programmed content*/
     if (!memcmp(writeData, readData, sizeof(writeData)))
     {
