@@ -97,11 +97,11 @@ def getCorePeripheralsInterruptDataStructure():
             "SPI5" : {"name":["SPI5_FAULT", "SPI5_RX", "SPI5_TX"], "INT_SRC":spiIntSrc},
             "SPI6" : {"name":["SPI6_FAULT", "SPI6_RX", "SPI6_TX"], "INT_SRC":spiIntSrc},
 
-            "I2C1" : {"name":["I2C1_FAULT", "I2C1_RX", "I2C1_TX"], "INT_SRC":i2cIntSrc},
-            "I2C2" : {"name":["I2C2_FAULT", "I2C2_RX", "I2C2_TX"], "INT_SRC":i2cIntSrc},
-            "I2C3" : {"name":["I2C3_FAULT", "I2C3_RX", "I2C3_TX"], "INT_SRC":i2cIntSrc},
-            "I2C4" : {"name":["I2C4_FAULT", "I2C4_RX", "I2C4_TX"], "INT_SRC":i2cIntSrc},
-            "I2C5" : {"name":["I2C5_FAULT", "I2C5_RX", "I2C5_TX"], "INT_SRC":i2cIntSrc}
+            "I2C1" : {"name":["I2C1_BUS", "I2C1_SLAVE", "I2C1_MASTER"], "INT_SRC":i2cIntSrc},
+            "I2C2" : {"name":["I2C2_BUS", "I2C2_SLAVE", "I2C2_MASTER"], "INT_SRC":i2cIntSrc},
+            "I2C3" : {"name":["I2C3_BUS", "I2C3_SLAVE", "I2C3_MASTER"], "INT_SRC":i2cIntSrc},
+            "I2C4" : {"name":["I2C4_BUS", "I2C4_SLAVE", "I2C4_MASTER"], "INT_SRC":i2cIntSrc},
+            "I2C5" : {"name":["I2C5_BUS", "I2C5_SLAVE", "I2C5_MASTER"], "INT_SRC":i2cIntSrc}
 
     }
 
