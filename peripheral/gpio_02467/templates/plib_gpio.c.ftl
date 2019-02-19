@@ -44,17 +44,15 @@
 #include "plib_gpio.h"
 <#compress> <#-- To remove unwanted new lines -->
 
-<#-- Find out number of active interrupt pins for each channel -->
-
-<#-- Initialize variables to 0 -->
-<#assign GPIO_ATLEAST_ONE_INTERRUPT_USED = false>
+<#-- Initialize variables -->
+<#assign TOTAL_NUM_OF_INT_USED = 0>
+<#assign portNumCbList = [0]>
 
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
         <@"<#assign GPIO_${.vars[channel]}_NUM_INT_PINS = 0>"?interpret />
         <@"<#assign port${.vars[channel]}IndexStart = 0>"?interpret />
-        <#assign GPIO_ATLEAST_ONE_INTERRUPT_USED = GPIO_ATLEAST_ONE_INTERRUPT_USED || .vars["SYS_PORT_${.vars[channel]}_CN_USED"]>
     </#if>
 </#list>
 
@@ -64,31 +62,21 @@
     <#assign intConfig = "BSP_PIN_" + i + "_CN">
 
     <#if .vars[intConfig]?has_content>
-        <#if (.vars[intConfig] != "Disabled")>
+        <#if (.vars[intConfig] == "True")>
             <@"<#assign GPIO_${.vars[pinChannel]}_NUM_INT_PINS = GPIO_${.vars[pinChannel]}_NUM_INT_PINS + 1>"?interpret />
+            <#assign TOTAL_NUM_OF_INT_USED = TOTAL_NUM_OF_INT_USED + 1>
         </#if>
     </#if>
 </#list>
-
 </#compress>
-<#if GPIO_ATLEAST_ONE_INTERRUPT_USED == true >
-    <@"<#assign port${.vars['GPIO_CHANNEL_0_NAME']}IndexStart = 0>"?interpret />
-    <#assign portNumCbList = [] />
-    <#assign TOTAL_NUM_OF_INT_USED = 0>
 
-    <#list 1..GPIO_CHANNEL_TOTAL as i>
+<#-- Create a list of indexes and use it as initialization values for portNumCb array -->
+<#if TOTAL_NUM_OF_INT_USED gt 0 >
+    <#list 1..GPIO_CHANNEL_TOTAL-1 as i>
         <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
         <#assign prevChannel = "GPIO_CHANNEL_" + (i - 1) + "_NAME">
         <#if .vars[channel]?has_content>
             <@"<#assign port${.vars[channel]}IndexStart = port${.vars[prevChannel]}IndexStart + GPIO_${.vars[prevChannel]}_NUM_INT_PINS>"?interpret />
-            <@"<#assign TOTAL_NUM_OF_INT_USED = TOTAL_NUM_OF_INT_USED + GPIO_${.vars[prevChannel]}_NUM_INT_PINS>"?interpret />
-        </#if>
-    </#list>
-
-    <#-- Create a list of indexes -->
-    <#list 0..GPIO_CHANNEL_TOTAL as i>
-        <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
-        <#if .vars[channel]?has_content>
             <@"<#assign portNumCbList = portNumCbList + [port${.vars[channel]}IndexStart]>"?interpret />
         </#if>
     </#list>
@@ -195,7 +183,7 @@ void GPIO_Initialize ( void )
     CFGCONbits.IOLOCK = 1;
 </#if>
 
-<#if GPIO_ATLEAST_ONE_INTERRUPT_USED == true >
+<#if TOTAL_NUM_OF_INT_USED gt 0>
     uint32_t i;
     /* Initialize Interrupt Pin data structures */
     <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
@@ -360,7 +348,7 @@ void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask)
     *(volatile uint32_t *)(&TRIS${GPIO_CHANNEL_0_NAME}CLR + (port * 0x40)) = mask;
 }
 
-<#if GPIO_ATLEAST_ONE_INTERRUPT_USED == true >
+<#if TOTAL_NUM_OF_INT_USED gt 0>
 // *****************************************************************************
 /* Function:
     void GPIO_PortInterruptEnable(GPIO_PORT port, uint32_t mask)
