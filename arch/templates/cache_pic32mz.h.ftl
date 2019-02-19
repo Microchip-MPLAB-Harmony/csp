@@ -43,8 +43,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef CACHE_PIC32MZ_H
-#define CACHE_PIC32MZ_H
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -68,14 +68,36 @@ extern "C" {
 // Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
-<#if DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
-    <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  CACHE_DataCacheClean(addr,sz)
-    <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             CACHE_DataCacheInvalidate(addr,sz)
-    <#lt>#define DATA_CACHE_ENABLED                             true
-<#else>
-    <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)
-    <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
-    <#lt>#define DATA_CACHE_ENABLED                             false
+<#if INSTRUCTION_CACHE_ENABLE?? >
+    <#lt>#define ICACHE_ENABLE()
+    <#lt>#define ICACHE_DISABLE()
+    <#if INSTRUCTION_CACHE_ENABLE == true>
+        <#lt>#define ICACHE_INVALIDATE()                            CACHE_InstructionCacheFlush()
+        <#lt>#define INSTRUCTION_CACHE_ENABLED                      true
+    <#else>
+        <#lt>#define ICACHE_INVALIDATE()
+        <#lt>#define INSTRUCTION_CACHE_ENABLED                      false
+    </#if>
+</#if>
+
+<#if DATA_CACHE_ENABLE?? >
+    <#lt>#define DCACHE_ENABLE()
+    <#lt>#define DCACHE_DISABLE()
+    <#lt>#define DCACHE_CLEAN()
+    <#lt>#define DCACHE_CLEAN_INVALIDATE()
+    <#if DATA_CACHE_ENABLE == true >
+        <#lt>#define DCACHE_INVALIDATE()                            CACHE_DataCacheFlush()
+        <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  CACHE_DataCacheClean(addr,sz)
+        <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             CACHE_DataCacheInvalidate(addr,sz)
+        <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       CACHE_DataCacheClean(addr,sz)
+        <#lt>#define DATA_CACHE_ENABLED                             true
+    <#else>
+        <#lt>#define DCACHE_INVALIDATE()
+        <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)
+        <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+        <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+        <#lt>#define DATA_CACHE_ENABLED                             false
+    </#if>
 </#if>
 
 //DOM-IGNORE-BEGIN
@@ -84,4 +106,4 @@ extern "C" {
 #endif
 //DOM-IGNORE-END
 
-#endif // #ifndef CACHE_PIC32MZ_H
+#endif // #ifndef DEVICE_CACHE_H

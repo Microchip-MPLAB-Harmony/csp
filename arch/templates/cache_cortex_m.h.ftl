@@ -1,11 +1,11 @@
 /*******************************************************************************
-  L1, L2 Cache Header
+  Cortex-M L1 Cache Header
 
   File Name:
-    cache_cortex_a.h
+    device_cache.h
 
   Summary:
-    Preprocessor definitions to provide L1 and L2 Cache control.
+    Preprocessor definitions to provide L1 Cache control.
 
   Description:
     An MPLAB PLIB or Project can include this header to perform cache cleans,
@@ -43,8 +43,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef CACHE_CORTEX_M_H
-#define CACHE_CORTEX_M_H
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -65,16 +65,40 @@ extern "C" {
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: L1, L2 Cache Configuration
+// Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
+<#if INSTRUCTION_CACHE_ENABLE?? && INSTRUCTION_CACHE_ENABLE == true>
+    <#lt>#define ICACHE_ENABLE()                                SCB_EnableICache()
+    <#lt>#define ICACHE_DISABLE()                               SCB_DisableICache()
+    <#lt>#define ICACHE_INVALIDATE()                            SCB_InvalidateICache()
+    <#lt>#define INSTRUCTION_CACHE_ENABLED                      true
+<#else>
+    <#lt>#define ICACHE_ENABLE()
+    <#lt>#define ICACHE_DISABLE()
+    <#lt>#define ICACHE_INVALIDATE()
+    <#lt>#define INSTRUCTION_CACHE_ENABLED                      false
+</#if>
+
 <#if DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+    <#lt>#define DCACHE_ENABLE()                                SCB_EnableDCache()
+    <#lt>#define DCACHE_DISABLE()                               SCB_DisableDCache()
+    <#lt>#define DCACHE_INVALIDATE()                            SCB_InvalidateDCache()
+    <#lt>#define DCACHE_CLEAN()                                 SCB_CleanDCache()
+    <#lt>#define DCACHE_CLEAN_INVALIDATE()                      SCB_CleanInvalidateDCache()
     <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  SCB_CleanDCache_by_Addr(addr,sz)
     <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             SCB_InvalidateDCache_by_Addr(addr,sz)
+    <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       SCB_CleanInvalidateDCache_by_Addr(addr,sz)
     <#lt>#define DATA_CACHE_ENABLED                             true
 <#else>
+    <#lt>#define DCACHE_ENABLE()
+    <#lt>#define DCACHE_DISABLE()
+    <#lt>#define DCACHE_INVALIDATE()
+    <#lt>#define DCACHE_CLEAN()
+    <#lt>#define DCACHE_CLEAN_INVALIDATE()
     <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)
     <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+    <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
     <#lt>#define DATA_CACHE_ENABLED                             false
 </#if>
 
@@ -84,4 +108,4 @@ extern "C" {
 #endif
 //DOM-IGNORE-END
 
-#endif // end of header
+#endif // #ifndef DEVICE_CACHE_H
