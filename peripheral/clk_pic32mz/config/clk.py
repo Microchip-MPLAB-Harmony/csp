@@ -35,7 +35,6 @@ def update_frc_div_value(symbol, event):
     # updates this symbol value with value from key/value pair
     global per_divider
     # event["value"] is the key name.  Need the corresponding value from that key name.
-    symbol.clearValue()
     symbol.setValue(per_divider.get(event["value"]), 2)
 
 def _get_bitfield_names(node, outputList):
@@ -588,7 +587,10 @@ if __name__ == "__main__":
 
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
-    CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mz:MZClockModel")
+    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) ):
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mzda:MZDAClockModel")
+    else:
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mz:MZClockModel")
 
     # parse atdf file to get key parameters
     atdf_file_path = join(Variables.get("__DFP_PACK_DIR"), "atdf", Variables.get("__PROCESSOR") + ".atdf")
@@ -782,7 +784,10 @@ if __name__ == "__main__":
     FRC_CLK_SETTING = coreComponent.createComboSymbol("CONFIG_SYS_CLK_FRCDIV", CLK_CFG_SETTINGS, frcdiv.keys())
     FRC_CLK_SETTING.setLabel("FRC Clock Divider")
     FRC_CLK_SETTING.setDescription(clkValGrp_OSCCON__FRCDIV.getAttribute('caption'))
-    FRC_CLK_SETTING.setDefaultValue("OSC_FRC_DIV_1")
+    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) ):
+        FRC_CLK_SETTING.setDefaultValue("DIV1")
+    else:
+        FRC_CLK_SETTING.setDefaultValue("OSC_FRC_DIV_1")
     FRC_CLK_SETTING.setVisible(True)
 
     # derived from above symbol - used in ftl file
@@ -854,7 +859,7 @@ if __name__ == "__main__":
         MPLLMULT_SYM = coreComponent.createComboSymbol("CLK_MPLLMULT", CLK_CFG_SETTINGS, sorted(mpllmult.keys()))
         MPLLMULT_SYM.setLabel(clkValGrp_CFGMPLL__MPLLMULT.getAttribute('caption'))
         MPLLMULT_SYM.setDescription(clkValGrp_CFGMPLL__MPLLMULT.getAttribute('caption'))
-        MPLLMULT_SYM.setDefaultValue(_get_default_value(clkReg_CFGMPLL, 'MPLLMULT', clkValGrp_CFGMPLL__MPLLMULT))
+        MPLLMULT_SYM.setDefaultValue("MUL_160")
         MPLLMULT_SYM.setVisible(True)
 
         global MPLLMULT_BITFIELDMASK
@@ -1004,15 +1009,13 @@ if __name__ == "__main__":
     for pbus in pbList:
         symbolEnId = "CONFIG_SYS_CLK_PBCLK"+pbus+"_ENABLE"
         labelEnVal = "Enable Peripheral Clock Bus #"+pbus
-        symbolEnName = "PERIP_CLK_BUS"+pbus+"EN"
         symbolDivId = "CONFIG_SYS_CLK_PBDIV"+pbus
-        symbolDivName = "PERIP_CLK_BUS"+pbus+"DIV"
         labelDivVal = "Peripheral Clock Bus #"+pbus+" Divisor (1-128)"
         symbolEnName = coreComponent.createBooleanSymbol(symbolEnId, CLK_CFG_SETTINGS)
         pbclkEnNameList.append(symbolEnId)
         symbolEnName.setLabel(labelEnVal)
         if(pbus=='1'):
-            symbolEnName.setVisible(False)  # cannot disable peripheral bus 1
+            symbolEnName.setReadOnly(True)  # cannot disable peripheral bus 1
         symbolEnName.setDefaultValue(True)
 
         # PBDIV field
@@ -1054,16 +1057,18 @@ if __name__ == "__main__":
         enSymbolList[listIndex] = coreComponent.createBooleanSymbol(enSymId, CLK_CFG_SETTINGS)
         enSymbolList[listIndex].setLabel("Enable Reference Clock REFCLKO"+clk)
         enSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 enabled")
-        enSymbolList[listIndex].setDefaultValue(True)
+        enSymbolList[listIndex].setDefaultValue(False)
 
-        # output enable of ref clk
-        oeSymId = "CONFIG_SYS_CLK_REFCLK"+clk+"_OE"
-        oeSymbolList[listIndex] = coreComponent.createBooleanSymbol(oeSymId, enSymbolList[listIndex])
-        oeSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
-        oeSymbolList[listIndex].setLabel("Reference Clock "+clk+" Output Enable")
-        oeSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 output enable")
-        oeSymbolList[listIndex].setReadOnly(False)
-        oeSymbolList[listIndex].setDefaultValue(False)
+        if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR")) ) or (("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) and (int(clk) in [1,3,4] )):
+            # output enable of ref clk
+            oeSymId = "CONFIG_SYS_CLK_REFCLK"+clk+"_OE"
+            oeSymbolList[listIndex] = coreComponent.createBooleanSymbol(oeSymId, enSymbolList[listIndex])
+            oeSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
+            oeSymbolList[listIndex].setLabel("Reference Clock "+clk+" Output Enable")
+            oeSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 output enable")
+            oeSymbolList[listIndex].setReadOnly(False)
+            oeSymbolList[listIndex].setDefaultValue(False)
+            oeSymbolList[listIndex].setVisible(False)
 
         # ROSEL
         srcSymId = "CONFIG_SYS_CLK_REFCLK_SOURCE" + clk
@@ -1075,7 +1080,8 @@ if __name__ == "__main__":
         sourceSymbolList[listIndex].setLabel("Reference Clock Source Select ROSEL")
         sourceSymbolList[listIndex].setDescription(clkValGrp_REFO1CON__ROSEL.getAttribute('caption'))
         sourceSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
-        sourceSymbolList[listIndex].setVisible(True)
+        sourceSymbolList[listIndex].setDefaultValue("SYSCLK")
+        sourceSymbolList[listIndex].setVisible(False)
         symbolRoselValueList.append({'symbol':sourceSymbolList[listIndex],'index':clk})
         for ii in roselsrc:
             roselMap[ii] = roselsrc[ii]
@@ -1090,7 +1096,7 @@ if __name__ == "__main__":
         rodivSymbolList[listIndex].setMin(minValue)
         rodivSymbolList[listIndex].setMax(maxValue)
         rodivSymbolList[listIndex].setDefaultValue(0)
-        rodivSymbolList[listIndex].setVisible(True)
+        rodivSymbolList[listIndex].setVisible(False)
         symbolRodivValueList.append({'symbol':rodivSymbolList[listIndex],'index':clk})
 
         # ROTRIM
@@ -1102,7 +1108,7 @@ if __name__ == "__main__":
         rotrimSymbolList[listIndex].setMin(minValue)
         rotrimSymbolList[listIndex].setMax(maxValue)
         rotrimSymbolList[listIndex].setDefaultValue(0)
-        rotrimSymbolList[listIndex].setVisible(True)
+        rotrimSymbolList[listIndex].setVisible(False)
         symbolRotrimUserVal.append({'symbol':rotrimSymbolList[listIndex],'index':clk})
 
         # python-computed REFOxCON register setting to use in ftl file
