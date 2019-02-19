@@ -7,13 +7,13 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="pic32mz_ef_sk" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f2" displayName="clk" projectFiles="true">
+            <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="evic" projectFiles="true">
+            <logicalFolder name="f5" displayName="evic" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/evic/plib_evic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gpio" projectFiles="true">
+            <logicalFolder name="f4" displayName="gpio" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/gpio/plib_gpio.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="icap" projectFiles="true">
@@ -24,12 +24,13 @@
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/ocmp/plib_ocmp_common.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/ocmp/plib_ocmp3.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="tmr" projectFiles="true">
+            <logicalFolder name="f2" displayName="tmr" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/tmr/plib_tmr_common.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/tmr/plib_tmr2.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="wdt" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/wdt/plib_wdt.h</itemPath>
+            <logicalFolder name="f1" displayName="uart" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart_common.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart2.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <itemPath>../src/config/pic32mz_ef_sk/toolchain_specifics.h</itemPath>
@@ -54,13 +55,13 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="pic32mz_ef_sk" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f2" displayName="clk" projectFiles="true">
+            <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="evic" projectFiles="true">
+            <logicalFolder name="f5" displayName="evic" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/evic/plib_evic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gpio" projectFiles="true">
+            <logicalFolder name="f4" displayName="gpio" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/gpio/plib_gpio.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="icap" projectFiles="true">
@@ -69,11 +70,11 @@
             <logicalFolder name="f7" displayName="ocmp" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/ocmp/plib_ocmp3.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="tmr" projectFiles="true">
+            <logicalFolder name="f2" displayName="tmr" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/tmr/plib_tmr2.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="wdt" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/wdt/plib_wdt.c</itemPath>
+            <logicalFolder name="f1" displayName="uart" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart2.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f2" displayName="stdio" projectFiles="true">
@@ -144,7 +145,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFH144_DFP;../src/mips;"/>
+                  value="../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFH144_DFP;../src/mips"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -380,7 +381,6 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="memories.configurationmemory" value="true"/>
         <property key="memories.dataflash" value="true"/>
         <property key="memories.eeprom" value="true"/>

@@ -49,9 +49,10 @@
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
+#include "stdio.h"
 
 uint16_t capturedValue[2];
-uint8_t captureIndex;
+volatile uint8_t captureIndex = 0;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -63,7 +64,7 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
+
     ICAP1_Enable();
     
     OCMP3_Enable();
@@ -79,8 +80,10 @@ int main ( void )
 
         capturedValue[captureIndex++] = ICAP1_CaptureBufferRead();
 
-        if ( captureIndex >= 1)
+        if ( captureIndex > 1){
+            printf("Pulse width = %d\r\n",(capturedValue[1] - capturedValue[0]));
             captureIndex = 0;
+        }
     }
 
     /* Execution should not come here during normal operation */

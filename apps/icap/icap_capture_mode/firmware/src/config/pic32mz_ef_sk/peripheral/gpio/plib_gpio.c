@@ -86,12 +86,18 @@ void GPIO_Initialize ( void )
     CFGCONbits.IOLOCK = 0;
 
     /* PPS Input Remapping */
+    IC1R = 3;
     IC1R = 0;
     U2RXR = 1;
+    U2RXR = 1;
+    IC1R = 0;
 
     /* PPS Output Remapping */
     RPA14R = 11;
+    RPA14R = 11;
     RPB14R = 2;
+    RPB14R = 2;
+    RPA14R = 11;
 
     /* Lock back the system after PPS configuration */
     SYSKEY = 0x00000000;
