@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Configuration>
+  <Configurator>
+    <Name dnOrder="0" value="pic32mz_das_sk"/>
+    <Processor dnOrder="1" value="PIC32MZ2064DAS169"/>
+    <Harmony dnOrder="2" path="../../../.."/>
+    <Manifest dnOrder="3">
+      <Files dnOrder="0">
+        <File dnOrder="0">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">exceptions.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">03C0381AE78C5B4A24AF7ABF3463E60B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">03C0381AE78C5B4A24AF7ABF3463E60B</UserChecksum>
+        </File>
+        <File dnOrder="1">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">initialization.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">5D387AE26183FF9C77DDCA70F9EFC0F9</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5D387AE26183FF9C77DDCA70F9EFC0F9</UserChecksum>
+        </File>
+        <File dnOrder="2">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">interrupts.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">15F12CF529AD04AD6FA65F678765767F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">15F12CF529AD04AD6FA65F678765767F</UserChecksum>
+        </File>
+        <File dnOrder="3">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">main.c</Name>
+          <LogicalPath dnOrder="2"/>
+          <PhysicalPath dnOrder="3">/../../</PhysicalPath>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
+        </File>
+        <File dnOrder="4">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_clk.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">8207E76B23B3866B4B2F4C5F47CF8594</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8207E76B23B3866B4B2F4C5F47CF8594</UserChecksum>
+        </File>
+        <File dnOrder="5">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_evic.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">1D61E7BB3CB89E2F2B538D63212CA04A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1D61E7BB3CB89E2F2B538D63212CA04A</UserChecksum>
+        </File>
+        <File dnOrder="6">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_gpio.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">4D708240169147DAA9E29DC03F0B4DF6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4D708240169147DAA9E29DC03F0B4DF6</UserChecksum>
+        </File>
+        <File dnOrder="7">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_sqi1.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/sqi/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/sqi/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">FDFE082AE65300910C832D5A06F01720</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FDFE082AE65300910C832D5A06F01720</UserChecksum>
+        </File>
+        <File dnOrder="8">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">xc32_monitor.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/stdio/</LogicalPath>
+          <PhysicalPath dnOrder="3">/stdio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">0CDCE9B6891797FCD2AEA243F841353F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0CDCE9B6891797FCD2AEA243F841353F</UserChecksum>
+        </File>
+        <File dnOrder="9">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">definitions.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">D094B06475361C22E70464A59C8BC00A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D094B06475361C22E70464A59C8BC00A</UserChecksum>
+        </File>
+        <File dnOrder="10">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">device.h</Name>
+          <LogicalPath dnOrder="2">packs/PIC32MZ2064DAS169_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="3">/../../packs/PIC32MZ2064DAS169_DFP/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
+        </File>
+        <File dnOrder="11">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_clk.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">97DD80BC27ABDDC370B1628A74E51C1F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">97DD80BC27ABDDC370B1628A74E51C1F</UserChecksum>
+        </File>
+        <File dnOrder="12">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_evic.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">C4A57B6C13A85773816473616994AAFE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C4A57B6C13A85773816473616994AAFE</UserChecksum>
+        </File>
+        <File dnOrder="13">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_gpio.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">ED6DB1E245877C7690CB255126531B44</GeneratedChecksum>
+          <UserChecksum dnOrder="5">ED6DB1E245877C7690CB255126531B44</UserChecksum>
+        </File>
+        <File dnOrder="14">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_sqi1.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/sqi/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/sqi/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">83A29BB1714DD4AF71B7176C4A487262</GeneratedChecksum>
+          <UserChecksum dnOrder="5">83A29BB1714DD4AF71B7176C4A487262</UserChecksum>
+        </File>
+        <File dnOrder="15">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_sqi_common.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/sqi/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/sqi/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">BA2AAEA19E581F59C1E78E73982F7C78</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BA2AAEA19E581F59C1E78E73982F7C78</UserChecksum>
+        </File>
+        <File dnOrder="16">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">toolchain_specifics.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">F7924D60AC5CC08996AB2DAEC62D3C54</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F7924D60AC5CC08996AB2DAEC62D3C54</UserChecksum>
+        </File>
+      </Files>
+      <Settings dnOrder="1">
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mz_das_sk;../src/packs/PIC32MZ2064DAS169_DFP;;../src/mips"/>
+        <Setting category="C32-LD" dnOrder="1" key="heap-size" value="0"/>
+        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
+      </Settings>
+    </Manifest>
+    <Settings dnOrder="4">
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_DA_DFP\0.1\PIC32MZDA\atdf\PIC32MZ2064DAS169.atdf"/>
+      <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
+      <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+    </Settings>
+  </Configurator>
+</Configuration>

@@ -98,8 +98,6 @@ extern "C" {
 
 #define SWITCH_PRESSED              (bool)!SWITCH_3_Get()
     
-#define COHERENT_ALIGN              __COHERENT CACHE_ALIGN
-
 // *****************************************************************************
 /* Application states
 
