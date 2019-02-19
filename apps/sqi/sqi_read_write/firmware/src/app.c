@@ -70,27 +70,27 @@
     Application strings and buffers are be defined outside this structure.
 */
 
-APP_DATA COHERENT_ALIGN appData;
+APP_DATA CACHE_ALIGN appData;
 
 static uint32_t write_index = 0;
 static uint32_t sector_index = 0;
 
-sqi_dma_desc_t COHERENT_ALIGN sqiCmdDesc[CMD_DESC_NUMBER];
-sqi_dma_desc_t COHERENT_ALIGN sqiBufDesc[BUFF_DESC_NUMBER];
+sqi_dma_desc_t CACHE_ALIGN sqiCmdDesc[CMD_DESC_NUMBER];
+sqi_dma_desc_t CACHE_ALIGN sqiBufDesc[BUFF_DESC_NUMBER];
 
-uint8_t COHERENT_ALIGN sqi_cmd_jedec[2];
-uint8_t COHERENT_ALIGN sqi_cmd_eqio;
-uint8_t COHERENT_ALIGN sqi_cmd_rsten;
-uint8_t COHERENT_ALIGN sqi_cmd_rst;
-uint8_t COHERENT_ALIGN sqi_cmd_wren;
-uint8_t COHERENT_ALIGN sqi_cmd_rdsr[2];
-uint8_t COHERENT_ALIGN sqi_cmd_ce;
-uint8_t COHERENT_ALIGN sqi_cmd_se[4];
-uint8_t COHERENT_ALIGN sqi_cmd_be[4];
-uint8_t COHERENT_ALIGN sqi_cmd_pp[4];
-uint8_t COHERENT_ALIGN sqi_cmd_hsr[7];
-uint8_t COHERENT_ALIGN sqi_cmd_ULBPR;
-uint8_t COHERENT_ALIGN sqi_cmd_dummy[6];
+uint8_t CACHE_ALIGN sqi_cmd_jedec[2];
+uint8_t CACHE_ALIGN sqi_cmd_eqio;
+uint8_t CACHE_ALIGN sqi_cmd_rsten;
+uint8_t CACHE_ALIGN sqi_cmd_rst;
+uint8_t CACHE_ALIGN sqi_cmd_wren;
+uint8_t CACHE_ALIGN sqi_cmd_rdsr[2];
+uint8_t CACHE_ALIGN sqi_cmd_ce;
+uint8_t CACHE_ALIGN sqi_cmd_se[4];
+uint8_t CACHE_ALIGN sqi_cmd_be[4];
+uint8_t CACHE_ALIGN sqi_cmd_pp[4];
+uint8_t CACHE_ALIGN sqi_cmd_hsr[7];
+uint8_t CACHE_ALIGN sqi_cmd_ULBPR;
+uint8_t CACHE_ALIGN sqi_cmd_dummy[6];
 
 static void APP_EventHandler(uintptr_t context)
 {
