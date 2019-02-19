@@ -77,7 +77,7 @@ def getCorePeripheralsInterruptDataStructure():
     dmacIntSrc = ["CHANNEL0", "CHANNEL1", "CHANNEL2", "CHANNEL3", "CHANNEL4", "CHANNEL5", "CHANNEL6", "CHANNEL7"]
     uartIntSrc = ["USART_ERROR", "USART_RX", "USART_TX_COMPLETE"]
     spiIntSrc = ["SPI_ERROR", "SPI_RX", "SPI_TX_COMPLETE"]
-    i2cIntSrc = ["I2C_0", "I2C_1", "I2C_2"]
+    i2cIntSrc = ["I2C_0", "I2C_1"]
 
     corePeripherals = {
 
@@ -97,11 +97,11 @@ def getCorePeripheralsInterruptDataStructure():
             "SPI5" : {"name":["SPI5_FAULT", "SPI5_RX", "SPI5_TX"], "INT_SRC":spiIntSrc},
             "SPI6" : {"name":["SPI6_FAULT", "SPI6_RX", "SPI6_TX"], "INT_SRC":spiIntSrc},
 
-            "I2C1" : {"name":["I2C1_BUS", "I2C1_SLAVE", "I2C1_MASTER"], "INT_SRC":i2cIntSrc},
-            "I2C2" : {"name":["I2C2_BUS", "I2C2_SLAVE", "I2C2_MASTER"], "INT_SRC":i2cIntSrc},
-            "I2C3" : {"name":["I2C3_BUS", "I2C3_SLAVE", "I2C3_MASTER"], "INT_SRC":i2cIntSrc},
-            "I2C4" : {"name":["I2C4_BUS", "I2C4_SLAVE", "I2C4_MASTER"], "INT_SRC":i2cIntSrc},
-            "I2C5" : {"name":["I2C5_BUS", "I2C5_SLAVE", "I2C5_MASTER"], "INT_SRC":i2cIntSrc}
+            "I2C1" : {"name":["I2C1_BUS", "I2C1_MASTER"], "INT_SRC":i2cIntSrc},
+            "I2C2" : {"name":["I2C2_BUS", "I2C2_MASTER"], "INT_SRC":i2cIntSrc},
+            "I2C3" : {"name":["I2C3_BUS", "I2C3_MASTER"], "INT_SRC":i2cIntSrc},
+            "I2C4" : {"name":["I2C4_BUS", "I2C4_MASTER"], "INT_SRC":i2cIntSrc},
+            "I2C5" : {"name":["I2C5_BUS", "I2C5_MASTER"], "INT_SRC":i2cIntSrc}
 
     }
 
