@@ -41,5 +41,7 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#include "toolchain_specifics.h"
 #include "atsamd20j18.h"
+#include "device_cache.h"
+#include "toolchain_specifics.h"
+

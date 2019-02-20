@@ -73,7 +73,7 @@ RTC_OBJECT rtcObj;
 void RTC_Initialize(void)
 {
     RTC_REGS->MODE2.RTC_CTRL |= RTC_MODE2_CTRL_SWRST_Msk;
-    
+
     RTC_REGS->MODE2.RTC_READREQ |= RTC_READREQ_RCONT_Msk;
 
     while((RTC_REGS->MODE2.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
@@ -88,7 +88,8 @@ void RTC_Initialize(void)
     {
         /* Wait for Synchronization after Enabling RTC */
     }
-    
+
+
 }
 
 bool RTC_RTCCTimeSet (struct tm * initialTime )
@@ -157,9 +158,9 @@ bool RTC_RTCCAlarmSet (struct tm * alarmTime, RTC_ALARM_MASK mask)
     {
         /* Synchronization after writing value to MASK Register */
     }
-        
+
     RTC_REGS->MODE2.RTC_INTENSET = RTC_MODE2_INTENSET_ALARM0_Msk;
-     
+
     return true;
 }
 
