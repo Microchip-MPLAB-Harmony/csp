@@ -56,6 +56,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/* SERCOM3 USART baud value for 115200 Hz baud rate */
+#define SERCOM3_USART_INT_BAUD_VALUE			(63017U)
+
 SERCOM_USART_OBJECT sercom3USARTObj;
 
 // *****************************************************************************
@@ -79,7 +82,7 @@ void SERCOM3_USART_Initialize( void )
     SERCOM3_REGS->USART_INT.SERCOM_CTRLA = SERCOM_USART_INT_CTRLA_MODE_USART_INT_CLK | SERCOM_USART_INT_CTRLA_RXPO_PAD1 | SERCOM_USART_INT_CTRLA_TXPO_PAD0 | SERCOM_USART_INT_CTRLA_DORD_Msk | SERCOM_USART_INT_CTRLA_IBON_Msk | SERCOM_USART_INT_CTRLA_FORM(0x0) | SERCOM_USART_INT_CTRLA_SAMPR(0) ;
 
     /* Configure Baud Rate */
-    SERCOM3_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(63017);
+    SERCOM3_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(SERCOM3_USART_INT_BAUD_VALUE);
 
     /*
      * Configures RXEN
@@ -112,11 +115,16 @@ void SERCOM3_USART_Initialize( void )
     sercom3USARTObj.txCallback = NULL;
 }
 
+uint32_t SERCOM3_USART_FrequencyGet( void )
+{
+    return (uint32_t) (47972352UL);
+}
+
 bool SERCOM3_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency )
 {
     bool setupStatus       = false;
-    uint32_t sampleRate    = 0;
     uint32_t baudValue     = 0;
+    uint32_t sampleRate    = 0;
 
     if((sercom3USARTObj.rxBusyStatus == true) || (sercom3USARTObj.txBusyStatus == true))
     {
@@ -161,13 +169,13 @@ bool SERCOM3_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFr
             /* Configure Parity Options */
             if(serialSetup->parity == USART_PARITY_NONE)
             {
-                SERCOM3_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x0)  | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
+                SERCOM3_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x0) | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
 
                 SERCOM3_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->stopBits;
             }
             else
             {
-                SERCOM3_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x1)  | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
+                SERCOM3_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x1) | SERCOM_USART_INT_CTRLA_SAMPR(sampleRate);
 
                 SERCOM3_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->parity | serialSetup->stopBits;
             }
@@ -224,7 +232,7 @@ bool SERCOM3_USART_Write( void *buffer, const size_t size )
     return writeStatus;
 }
 
-bool SERCOM3_USART_WriteIsBusy ( void )
+bool SERCOM3_USART_WriteIsBusy( void )
 {
     return sercom3USARTObj.txBusyStatus;
 }
@@ -277,7 +285,7 @@ bool SERCOM3_USART_Read( void *buffer, const size_t size )
             readStatus = true;
 
             /* Enable error interrupts */
-            SERCOM3_REGS->USART_INT.SERCOM_INTENSET |= SERCOM_USART_INT_INTENSET_ERROR_Msk;
+            SERCOM3_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTENSET_ERROR_Msk;
 
             /* Enable Receive Complete interrupt */
             SERCOM3_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTENSET_RXC_Msk;
