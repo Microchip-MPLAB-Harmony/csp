@@ -85,6 +85,7 @@ static inline void qspi_end_transfer( void )
 static bool qspi_setup_transfer( qspi_memory_xfer_t *qspi_memory_xfer, uint8_t tfr_type, uint32_t address )
 {
     uint32_t mask = 0;
+    volatile uint32_t dummy = 0;
 
     /* Set instruction address register */
     QSPI_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
@@ -116,7 +117,8 @@ static bool qspi_setup_transfer( qspi_memory_xfer_t *qspi_memory_xfer, uint8_t t
     QSPI_REGS->QSPI_IFR = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)QSPI_REGS->QSPI_IFR;
+    dummy = QSPI_REGS->QSPI_IFR;
+    (void)dummy;
 
     return true;
 }
@@ -153,6 +155,7 @@ bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
 {
     uint32_t *qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
     uint32_t mask = 0;
+    volatile uint32_t dummy = 0;
 
     /* Configure Instruction */
     QSPI_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
@@ -169,7 +172,7 @@ bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
     QSPI_REGS->QSPI_IFR = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)QSPI_REGS->QSPI_IFR;
+    dummy = QSPI_REGS->QSPI_IFR;
 
     /* Read the register content */
     qspi_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_buffer,  rx_data_length);
@@ -182,6 +185,7 @@ bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
     /* Poll Status register to know status if instruction has end */
     while(!(QSPI_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
+    (void)dummy;
     return true;
 }
 
@@ -189,6 +193,7 @@ bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_
 {
     uint32_t *qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
     uint32_t mask = 0;
+    volatile uint32_t dummy = 0;
 
     /* Configure Instruction */
     QSPI_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
@@ -203,7 +208,7 @@ bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_
     QSPI_REGS->QSPI_IFR = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)QSPI_REGS->QSPI_IFR;
+    dummy = QSPI_REGS->QSPI_IFR;
 
     /* Write the content to register */
     qspi_memcpy_8bit((uint8_t *)qspi_buffer, (uint8_t *)tx_data, tx_data_length);
@@ -216,6 +221,7 @@ bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_
     /* Poll Status register to know status if instruction has end */
     while(!(QSPI_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
+    (void)dummy;
     return true;
 }
 
@@ -223,6 +229,7 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
 {
     uint32_t *qspi_mem = (uint32_t *)(QSPIMEM_ADDR | address);
     uint32_t length_32bit, length_8bit;
+    volatile uint32_t dummy = 0;
 
     if (false == qspi_setup_transfer(qspi_memory_xfer, QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY_Val, address))
         return false;
@@ -241,7 +248,7 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
         qspi_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_mem,  length_8bit);
 
     /* Dummy Read to clear QSPI_SR.INSTRE and QSPI_SR.CSR */
-    (volatile uint32_t)QSPI_REGS->QSPI_SR;
+    dummy = QSPI_REGS->QSPI_SR;
 
     __DSB();
     __ISB();
@@ -251,6 +258,7 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
     /* Poll Status register to know status if instruction has end */
     while(!(QSPI_REGS->QSPI_SR& QSPI_SR_INSTRE_Msk));
 
+    (void)dummy;
     return true;
 }
 
