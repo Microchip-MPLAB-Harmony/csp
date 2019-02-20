@@ -119,6 +119,18 @@ static void GCLK1_Initialize(void)
     }
 }
 
+
+static void GCLK2_Initialize(void)
+{
+    GCLK_REGS->GCLK_GENCTRL = GCLK_GENCTRL_SRC(5) | GCLK_GENCTRL_GENEN_Msk | GCLK_GENCTRL_ID(2);
+
+    GCLK_REGS->GCLK_GENDIV = GCLK_GENDIV_DIV(31) | GCLK_GENDIV_ID(2);
+    while((GCLK_REGS->GCLK_STATUS & GCLK_STATUS_SYNCBUSY_Msk) == GCLK_STATUS_SYNCBUSY_Msk)
+    {
+        /* wait for the Generator 2 synchronization */
+    }
+}
+
 void CLOCK_Initialize (void)
 {
     /* NVM Wait States */
@@ -128,11 +140,14 @@ void CLOCK_Initialize (void)
     SYSCTRL_Initialize();
 
     GCLK1_Initialize();
+    GCLK2_Initialize();
     DFLL_Initialize();
     GCLK0_Initialize();
 
 
 
+    /* Selection of the Generator and write Lock for WDT */
+    GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(1) | GCLK_CLKCTRL_GEN(0x2)  | GCLK_CLKCTRL_CLKEN_Msk;
     /* Selection of the Generator and write Lock for EIC */
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(3) | GCLK_CLKCTRL_GEN(0x0)  | GCLK_CLKCTRL_CLKEN_Msk;
     /* Selection of the Generator and write Lock for SERCOM3_CORE */
@@ -141,10 +156,11 @@ void CLOCK_Initialize (void)
     /* Configure the AHB Bridge Clocks */
     PM_REGS->PM_AHBMASK = 0x1f;
 
+
     /* Configure the APBB Bridge Clocks */
     PM_REGS->PM_APBBMASK = 0x1f;
 
+
     /* Configure the APBC Bridge Clocks */
     PM_REGS->PM_APBCMASK = 0x10020;
-
 }
