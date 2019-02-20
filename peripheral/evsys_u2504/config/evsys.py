@@ -408,14 +408,14 @@ def instantiateComponent(evsysComponent):
     evsysSystemInitFile.setOutputName(
         "core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     evsysSystemInitFile.setSourcePath(
-        "../peripheral/evsys_u2504/templates/system/system_initialize.c.ftl")
+        "../peripheral/evsys_u2504/templates/system/initialization.c.ftl")
     evsysSystemInitFile.setMarkup(True)
 
     evsysSystemDefFile=evsysComponent.createFileSymbol("EVSYS_SYS_DEF", None)
     evsysSystemDefFile.setType("STRING")
     evsysSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     evsysSystemDefFile.setSourcePath(
-        "../peripheral/evsys_u2504/templates/system/system_definitions.h.ftl")
+        "../peripheral/evsys_u2504/templates/system/definitions.h.ftl")
     evsysSystemDefFile.setMarkup(True)
 
     evsysComponent.addPlugin(

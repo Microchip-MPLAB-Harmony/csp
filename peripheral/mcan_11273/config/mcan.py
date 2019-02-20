@@ -778,14 +778,14 @@ def instantiateComponent(mcanComponent):
     mcanSystemInitFile = mcanComponent.createFileSymbol("initFile", None)
     mcanSystemInitFile.setType("STRING")
     mcanSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    mcanSystemInitFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/system/system_initialize.c.ftl")
+    mcanSystemInitFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/system/initialization.c.ftl")
     mcanSystemInitFile.setMarkup(True)
 
     #MCAN definitions header
     mcanSystemDefFile = mcanComponent.createFileSymbol("defFile", None)
     mcanSystemDefFile.setType("STRING")
     mcanSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    mcanSystemDefFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/system/system_definitions.h.ftl")
+    mcanSystemDefFile.setSourcePath("../peripheral/mcan_" + REG_MODULE_MCAN.getID() + "/templates/system/definitions.h.ftl")
     mcanSystemDefFile.setMarkup(True)
 
 '''********************************End of the file*************************'''

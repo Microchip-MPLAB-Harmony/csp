@@ -342,12 +342,12 @@ def instantiateComponent(supcComponent):
     supcSystemInitFile = supcComponent.createFileSymbol("SUPC_INIT", None)
     supcSystemInitFile.setType("STRING")
     supcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    supcSystemInitFile.setSourcePath("../peripheral/supc_6452/templates/system/system_initialize.c.ftl")
+    supcSystemInitFile.setSourcePath("../peripheral/supc_6452/templates/system/initialization.c.ftl")
     supcSystemInitFile.setMarkup(True)
 
     supcSystemDefFile = supcComponent.createFileSymbol("SUPC_DEF", None)
     supcSystemDefFile.setType("STRING")
     supcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    supcSystemDefFile.setSourcePath("../peripheral/supc_6452/templates/system/system_definitions.h.ftl")
+    supcSystemDefFile.setSourcePath("../peripheral/supc_6452/templates/system/definitions.h.ftl")
     supcSystemDefFile.setMarkup(True)
 

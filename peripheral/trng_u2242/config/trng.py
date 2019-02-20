@@ -127,7 +127,7 @@ def instantiateComponent(trngComponent):
     trngSystemDefFile = trngComponent.createFileSymbol("TRNG_FILE_2", None)
     trngSystemDefFile.setType("STRING")
     trngSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    trngSystemDefFile.setSourcePath("../peripheral/trng_u2242/templates/system/system_definitions.h.ftl")
+    trngSystemDefFile.setSourcePath("../peripheral/trng_u2242/templates/system/definitions.h.ftl")
     trngSystemDefFile.setMarkup(True)
     
         #System Initialization

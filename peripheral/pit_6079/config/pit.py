@@ -130,13 +130,13 @@ def instantiateComponent( pitComponent ):
     File.setMarkup(True)
 
     File = pitComponent.createFileSymbol("PIT_INIT", None)
-    File.setSourcePath("../peripheral/pit_6079/templates/system/system_initialize.c.ftl")
+    File.setSourcePath("../peripheral/pit_6079/templates/system/initialization.c.ftl")
     File.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     File.setType("STRING")
     File.setMarkup(True)
 
     File = pitComponent.createFileSymbol("PIT_DEF", None)
-    File.setSourcePath("../peripheral/pit_6079/templates/system/system_definitions.h.ftl")
+    File.setSourcePath("../peripheral/pit_6079/templates/system/definitions.h.ftl")
     File.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     File.setType("STRING")
     File.setMarkup(True)

@@ -1090,12 +1090,12 @@ def instantiateComponent(ebiComponent):
     ebiSystemInitFile = ebiComponent.createFileSymbol("EBI_INIT", None)
     ebiSystemInitFile.setType("STRING")
     ebiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    ebiSystemInitFile.setSourcePath("../peripheral/ebi_00109/templates/system/system_initialize.c.ftl")
+    ebiSystemInitFile.setSourcePath("../peripheral/ebi_00109/templates/system/initialization.c.ftl")
     ebiSystemInitFile.setMarkup(True)
 
     ebiSystemDefFile = ebiComponent.createFileSymbol("EBI_DEF", None)
     ebiSystemDefFile.setType("STRING")
     ebiSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    ebiSystemDefFile.setSourcePath("../peripheral/ebi_00109/templates/system/system_definitions.h.ftl")
+    ebiSystemDefFile.setSourcePath("../peripheral/ebi_00109/templates/system/definitions.h.ftl")
     ebiSystemDefFile.setMarkup(True)
 

@@ -233,12 +233,12 @@ def instantiateComponent(accComponent):
     accSystemInitFile = accComponent.createFileSymbol("ACC_INIT", None)
     accSystemInitFile.setType("STRING")
     accSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    accSystemInitFile.setSourcePath("../peripheral/acc_6490/templates/system/system_initialize.c.ftl")
+    accSystemInitFile.setSourcePath("../peripheral/acc_6490/templates/system/initialization.c.ftl")
     accSystemInitFile.setMarkup(True)
 
     accSystemDefFile = accComponent.createFileSymbol("ACC_DEF", None)
     accSystemDefFile.setType("STRING")
     accSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    accSystemDefFile.setSourcePath("../peripheral/acc_6490/templates/system/system_definitions.h.ftl")
+    accSystemDefFile.setSourcePath("../peripheral/acc_6490/templates/system/definitions.h.ftl")
     accSystemDefFile.setMarkup(True)
 

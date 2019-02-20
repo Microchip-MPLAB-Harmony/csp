@@ -294,7 +294,7 @@ def instantiateComponent(sqiComponent):
     sqiSystemInitFile = sqiComponent.createFileSymbol("SQI_INIT", None)
     sqiSystemInitFile.setType("STRING")
     sqiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    sqiSystemInitFile.setSourcePath("../peripheral/sqi_00206/templates/system/initialize.c.ftl")
+    sqiSystemInitFile.setSourcePath("../peripheral/sqi_00206/templates/system/initialization.c.ftl")
     sqiSystemInitFile.setMarkup(True)
 
     #SQI definitions header

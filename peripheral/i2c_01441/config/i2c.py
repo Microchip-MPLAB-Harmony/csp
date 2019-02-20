@@ -282,11 +282,11 @@ def instantiateComponent(i2cComponent):
     i2cSystemInitFile = i2cComponent.createFileSymbol("I2C_INIT", None)
     i2cSystemInitFile.setType("STRING")
     i2cSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    i2cSystemInitFile.setSourcePath("../peripheral/i2c_01441/templates/system/system_initialize.c.ftl")
+    i2cSystemInitFile.setSourcePath("../peripheral/i2c_01441/templates/system/initialization.c.ftl")
     i2cSystemInitFile.setMarkup(True)
 
     i2cSystemDefFile = i2cComponent.createFileSymbol("I2C_DEF", None)
     i2cSystemDefFile.setType("STRING")
     i2cSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    i2cSystemDefFile.setSourcePath("../peripheral/i2c_01441/templates/system/system_definitions.h.ftl")
+    i2cSystemDefFile.setSourcePath("../peripheral/i2c_01441/templates/system/definitions.h.ftl")
     i2cSystemDefFile.setMarkup(True)

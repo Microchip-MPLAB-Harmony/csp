@@ -313,13 +313,13 @@ def instantiateComponent(evsysComponent):
     evsysSystemInitFile = evsysComponent.createFileSymbol("EVSYS_SYS_INIT", None)
     evsysSystemInitFile.setType("STRING")
     evsysSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    evsysSystemInitFile.setSourcePath("../peripheral/evsys_u2256/templates/system/system_initialize.c.ftl")
+    evsysSystemInitFile.setSourcePath("../peripheral/evsys_u2256/templates/system/initialization.c.ftl")
     evsysSystemInitFile.setMarkup(True)
 
     evsysSystemDefFile = evsysComponent.createFileSymbol("EVSYS_SYS_DEF", None)
     evsysSystemDefFile.setType("STRING")
     evsysSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    evsysSystemDefFile.setSourcePath("../peripheral/evsys_u2256/templates/system/system_definitions.h.ftl")
+    evsysSystemDefFile.setSourcePath("../peripheral/evsys_u2256/templates/system/definitions.h.ftl")
     evsysSystemDefFile.setMarkup(True)
 
     evsysComponent.addPlugin("../peripheral/evsys_u2256/plugin/eventsystem.jar")

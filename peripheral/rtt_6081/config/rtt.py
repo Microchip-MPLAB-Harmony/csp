@@ -188,13 +188,13 @@ def instantiateComponent(rttComponent):
     rttSystemInitFile = rttComponent.createFileSymbol("RTT_FILE_2", None)
     rttSystemInitFile.setType("STRING")
     rttSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    rttSystemInitFile.setSourcePath("../peripheral/rtt_6081/templates/system/system_initialize.c.ftl")
+    rttSystemInitFile.setSourcePath("../peripheral/rtt_6081/templates/system/initialization.c.ftl")
     rttSystemInitFile.setMarkup(True)
 
     rttSystemDefFile = rttComponent.createFileSymbol("RTT_FILE_3", None)
     rttSystemDefFile.setType("STRING")
     rttSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    rttSystemDefFile.setSourcePath("../peripheral/rtt_6081/templates/system/system_definitions.h.ftl")
+    rttSystemDefFile.setSourcePath("../peripheral/rtt_6081/templates/system/definitions.h.ftl")
     rttSystemDefFile.setMarkup(True)
 
 def rttPrescaleHide(rttPrescaleValue, event):

@@ -380,11 +380,11 @@ def instantiateComponent(icapComponent):
     icapSystemInitFile = icapComponent.createFileSymbol("ICAP_INIT", None)
     icapSystemInitFile.setType("STRING")
     icapSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    icapSystemInitFile.setSourcePath("../peripheral/icap_00740/templates/system/system_initialize.c.ftl")
+    icapSystemInitFile.setSourcePath("../peripheral/icap_00740/templates/system/initialization.c.ftl")
     icapSystemInitFile.setMarkup(True)
 
     icapSystemDefFile = icapComponent.createFileSymbol("ICAP_DEF", None)
     icapSystemDefFile.setType("STRING")
     icapSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    icapSystemDefFile.setSourcePath("../peripheral/icap_00740/templates/system/system_definitions.h.ftl")
+    icapSystemDefFile.setSourcePath("../peripheral/icap_00740/templates/system/definitions.h.ftl")
     icapSystemDefFile.setMarkup(True)

@@ -483,11 +483,11 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_SystemInitFile = tmr1Component.createFileSymbol("TMR1_SYS_INT", None)
     tmr1Sym_SystemInitFile.setType("STRING")
     tmr1Sym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    tmr1Sym_SystemInitFile.setSourcePath("../peripheral/tmr1_02141/templates/system/system_initialize.c.ftl")
+    tmr1Sym_SystemInitFile.setSourcePath("../peripheral/tmr1_02141/templates/system/initialization.c.ftl")
     tmr1Sym_SystemInitFile.setMarkup(True)
 
     tmr1Sym_SystemDefFile = tmr1Component.createFileSymbol("TMR1_SYS_DEF", None)
     tmr1Sym_SystemDefFile.setType("STRING")
     tmr1Sym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    tmr1Sym_SystemDefFile.setSourcePath("../peripheral/tmr1_02141/templates/system/system_definitions.h.ftl")
+    tmr1Sym_SystemDefFile.setSourcePath("../peripheral/tmr1_02141/templates/system/definitions.h.ftl")
     tmr1Sym_SystemDefFile.setMarkup(True)

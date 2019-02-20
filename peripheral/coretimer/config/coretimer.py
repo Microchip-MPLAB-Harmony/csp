@@ -310,6 +310,6 @@ def instantiateComponent(tmrComponent):
     coretimerSystemInitFile = tmrComponent.createFileSymbol("CORETIMER_FILE_3", None)
     coretimerSystemInitFile.setType("STRING")
     coretimerSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    coretimerSystemInitFile.setSourcePath("../peripheral/coretimer/templates/system/initialize.c.ftl")
+    coretimerSystemInitFile.setSourcePath("../peripheral/coretimer/templates/system/initialization.c.ftl")
     coretimerSystemInitFile.setMarkup(True)
     coretimerSystemInitFile.setEnabled(True)

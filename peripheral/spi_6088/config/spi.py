@@ -466,11 +466,11 @@ def instantiateComponent(spiComponent):
     spiSystemInitFile = spiComponent.createFileSymbol("SPI_INIT", None)
     spiSystemInitFile.setType("STRING")
     spiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    spiSystemInitFile.setSourcePath("../peripheral/spi_6088/templates/system/system_initialize.c.ftl")
+    spiSystemInitFile.setSourcePath("../peripheral/spi_6088/templates/system/initialization.c.ftl")
     spiSystemInitFile.setMarkup(True)
 
     spiSystemDefFile = spiComponent.createFileSymbol("SPI_DEF", None)
     spiSystemDefFile.setType("STRING")
     spiSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    spiSystemDefFile.setSourcePath("../peripheral/spi_6088/templates/system/system_definitions.h.ftl")
+    spiSystemDefFile.setSourcePath("../peripheral/spi_6088/templates/system/definitions.h.ftl")
     spiSystemDefFile.setMarkup(True)

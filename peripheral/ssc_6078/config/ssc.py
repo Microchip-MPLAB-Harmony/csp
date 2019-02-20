@@ -496,12 +496,12 @@ def instantiateComponent(sscComponent):
     sscSystemInitFile = sscComponent.createFileSymbol("SSC_INIT", None)
     sscSystemInitFile.setType("STRING")
     sscSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    sscSystemInitFile.setSourcePath("../peripheral/ssc_6078/templates/system/system_initialize.c.ftl")
+    sscSystemInitFile.setSourcePath("../peripheral/ssc_6078/templates/system/initialization.c.ftl")
     sscSystemInitFile.setMarkup(True)
     
     sscSystemDefFile = sscComponent.createFileSymbol("SSC_DEF", None)
     sscSystemDefFile.setType("STRING")
     sscSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    sscSystemDefFile.setSourcePath("../peripheral/ssc_6078/templates/system/system_definitions.h.ftl")
+    sscSystemDefFile.setSourcePath("../peripheral/ssc_6078/templates/system/definitions.h.ftl")
     sscSystemDefFile.setMarkup(True)
     

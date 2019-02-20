@@ -255,11 +255,11 @@ def instantiateComponent(daccComponent):
     daccSystemInitFile = daccComponent.createFileSymbol("DACC_INIT", None)
     daccSystemInitFile.setType("STRING")
     daccSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    daccSystemInitFile.setSourcePath("../peripheral/dacc_11246/templates/system/system_initialize.c.ftl")
+    daccSystemInitFile.setSourcePath("../peripheral/dacc_11246/templates/system/initialization.c.ftl")
     daccSystemInitFile.setMarkup(True)
 
     daccSystemDefFile = daccComponent.createFileSymbol("DACC_DEF", None)
     daccSystemDefFile.setType("STRING")
     daccSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    daccSystemDefFile.setSourcePath("../peripheral/dacc_11246/templates/system/system_definitions.h.ftl")
+    daccSystemDefFile.setSourcePath("../peripheral/dacc_11246/templates/system/definitions.h.ftl")
     daccSystemDefFile.setMarkup(True)

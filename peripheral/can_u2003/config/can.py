@@ -737,12 +737,12 @@ def instantiateComponent(canComponent):
     canSystemInitFile = canComponent.createFileSymbol("initFile", None)
     canSystemInitFile.setType("STRING")
     canSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    canSystemInitFile.setSourcePath("../peripheral/can_u2003/templates/system/system_initialize.c.ftl")
+    canSystemInitFile.setSourcePath("../peripheral/can_u2003/templates/system/initialization.c.ftl")
     canSystemInitFile.setMarkup(True)
 
     #CAN definitions header
     canSystemDefFile = canComponent.createFileSymbol("defFile", None)
     canSystemDefFile.setType("STRING")
     canSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    canSystemDefFile.setSourcePath("../peripheral/can_u2003/templates/system/system_definitions.h.ftl")
+    canSystemDefFile.setSourcePath("../peripheral/can_u2003/templates/system/definitions.h.ftl")
     canSystemDefFile.setMarkup(True)

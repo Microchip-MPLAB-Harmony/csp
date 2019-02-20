@@ -179,7 +179,7 @@ def instantiateComponent(twihsComponent):
     twihsSystemInitFile = twihsComponent.createFileSymbol("TWIHS_FILE_SYS_INIT", None)
     twihsSystemInitFile.setType("STRING")
     twihsSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    twihsSystemInitFile.setSourcePath("../peripheral/twihs_11210/templates/system/system_initialize.c.ftl")
+    twihsSystemInitFile.setSourcePath("../peripheral/twihs_11210/templates/system/initialization.c.ftl")
     twihsSystemInitFile.setMarkup(True)
 
     #TWIHS definitions header
@@ -187,7 +187,7 @@ def instantiateComponent(twihsComponent):
     
     twihsSystemDefFile.setType("STRING")
     twihsSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    twihsSystemDefFile.setSourcePath("../peripheral/twihs_11210/templates/system/system_definitions.h.ftl")
+    twihsSystemDefFile.setSourcePath("../peripheral/twihs_11210/templates/system/definitions.h.ftl")
     twihsSystemDefFile.setMarkup(True)
     
 def getMasterClockFreq():

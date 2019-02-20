@@ -359,11 +359,11 @@ def instantiateComponent(smcComponent):
     smcHeader1FileEntry = smcComponent.createFileSymbol("PLIB_SMC_DEFINITIONS_H", None)
     smcHeader1FileEntry.setType("STRING")
     smcHeader1FileEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    smcHeader1FileEntry.setSourcePath("../peripheral/smc_6498/templates/system/system_definitions.h.ftl")
+    smcHeader1FileEntry.setSourcePath("../peripheral/smc_6498/templates/system/definitions.h.ftl")
     smcHeader1FileEntry.setMarkup(True)
 
     smcSystemInitFile = smcComponent.createFileSymbol("PLIB_SMC_INITIALIZE_H", None)
     smcSystemInitFile.setType("STRING")
     smcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    smcSystemInitFile.setSourcePath("../peripheral/smc_6498/templates/system/system_initialize.c.ftl")
+    smcSystemInitFile.setSourcePath("../peripheral/smc_6498/templates/system/initialization.c.ftl")
     smcSystemInitFile.setMarkup(True)

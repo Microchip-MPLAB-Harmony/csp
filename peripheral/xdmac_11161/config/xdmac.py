@@ -632,7 +632,7 @@ xdmacSystemInitFile.setType("STRING")
 xdmacSystemInitFile.setOutputName(
     "core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 xdmacSystemInitFile.setSourcePath(
-    "../peripheral/xdmac_11161/templates/system/system_initialize.c.ftl")
+    "../peripheral/xdmac_11161/templates/system/initialization.c.ftl")
 xdmacSystemInitFile.setMarkup(True)
 xdmacSystemInitFile.setEnabled(False)
 
@@ -640,6 +640,6 @@ xdmacSystemDefFile = coreComponent.createFileSymbol("xdmacSystemDefFile", None)
 xdmacSystemDefFile.setType("STRING")
 xdmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 xdmacSystemDefFile.setSourcePath(
-    "../peripheral/xdmac_11161/templates/system/system_definitions.h.ftl")
+    "../peripheral/xdmac_11161/templates/system/definitions.h.ftl")
 xdmacSystemDefFile.setMarkup(True)
 xdmacSystemDefFile.setEnabled(False)

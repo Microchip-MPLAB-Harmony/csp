@@ -357,11 +357,11 @@ def instantiateComponent(usartComponent):
     usartSystemInitFile = usartComponent.createFileSymbol("USART_INIT", None)
     usartSystemInitFile.setType("STRING")
     usartSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    usartSystemInitFile.setSourcePath("../peripheral/usart_6089/templates/system/system_initialize.c.ftl")
+    usartSystemInitFile.setSourcePath("../peripheral/usart_6089/templates/system/initialization.c.ftl")
     usartSystemInitFile.setMarkup(True)
 
     usartSystemDefFile = usartComponent.createFileSymbol("USART_DEF", None)
     usartSystemDefFile.setType("STRING")
     usartSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    usartSystemDefFile.setSourcePath("../peripheral/usart_6089/templates/system/system_definitions.h.ftl")
+    usartSystemDefFile.setSourcePath("../peripheral/usart_6089/templates/system/definitions.h.ftl")
     usartSystemDefFile.setMarkup(True)

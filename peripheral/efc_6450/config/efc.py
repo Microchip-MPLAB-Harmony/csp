@@ -191,7 +191,7 @@ def instantiateComponent(efcComponent):
     efcSystemDefFile = efcComponent.createFileSymbol("EFC_FILE_2", None)
     efcSystemDefFile.setType("STRING")
     efcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    efcSystemDefFile.setSourcePath("../peripheral/efc_6450/templates/system/system_definitions.h.ftl")
+    efcSystemDefFile.setSourcePath("../peripheral/efc_6450/templates/system/definitions.h.ftl")
     efcSystemDefFile.setMarkup(True)
 
 def destroyComponent(efcComponent):

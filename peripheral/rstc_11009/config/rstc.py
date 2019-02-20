@@ -148,12 +148,12 @@ def instantiateComponent(rstcComponent):
     rstcSystemInitFile = rstcComponent.createFileSymbol("RSTC_INIT", None)
     rstcSystemInitFile.setType("STRING")
     rstcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    rstcSystemInitFile.setSourcePath("../peripheral/rstc_11009/templates/system/system_initialize.c.ftl")
+    rstcSystemInitFile.setSourcePath("../peripheral/rstc_11009/templates/system/initialization.c.ftl")
     rstcSystemInitFile.setMarkup(True)
 
     rstcSystemDefFile = rstcComponent.createFileSymbol("RSTC_DEF", None)
     rstcSystemDefFile.setType("STRING")
     rstcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    rstcSystemDefFile.setSourcePath("../peripheral/rstc_11009/templates/system/system_definitions.h.ftl")
+    rstcSystemDefFile.setSourcePath("../peripheral/rstc_11009/templates/system/definitions.h.ftl")
     rstcSystemDefFile.setMarkup(True)
 

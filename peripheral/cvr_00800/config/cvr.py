@@ -156,11 +156,11 @@ def instantiateComponent(cvrComponent):
     cvrSystemInitFile = cvrComponent.createFileSymbol("CVR_INIT", None)
     cvrSystemInitFile.setType("STRING")
     cvrSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    cvrSystemInitFile.setSourcePath("../peripheral/cvr_00800/templates/system/system_initialize.c.ftl")
+    cvrSystemInitFile.setSourcePath("../peripheral/cvr_00800/templates/system/initialization.c.ftl")
     cvrSystemInitFile.setMarkup(True)
 
     cvrSystemDefFile = cvrComponent.createFileSymbol("CVR_DEF", None)
     cvrSystemDefFile.setType("STRING")
     cvrSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    cvrSystemDefFile.setSourcePath("../peripheral/cvr_00800/templates/system/system_definitions.h.ftl")
+    cvrSystemDefFile.setSourcePath("../peripheral/cvr_00800/templates/system/definitions.h.ftl")
     cvrSystemDefFile.setMarkup(True)

@@ -148,11 +148,11 @@ def instantiateComponent(sdhcComponent):
     sdhcSystemInitFile = sdhcComponent.createFileSymbol("SDHC_INIT", None)
     sdhcSystemInitFile.setType("STRING")
     sdhcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    sdhcSystemInitFile.setSourcePath("../peripheral/sdhc_u2011/templates/system/system_initialize.c.ftl")
+    sdhcSystemInitFile.setSourcePath("../peripheral/sdhc_u2011/templates/system/initialization.c.ftl")
     sdhcSystemInitFile.setMarkup(True)
 
     sdhcSystemDefFile = sdhcComponent.createFileSymbol("SDHC_DEF", None)
     sdhcSystemDefFile.setType("STRING")
     sdhcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    sdhcSystemDefFile.setSourcePath("../peripheral/sdhc_u2011/templates/system/system_definitions.h.ftl")
+    sdhcSystemDefFile.setSourcePath("../peripheral/sdhc_u2011/templates/system/definitions.h.ftl")
     sdhcSystemDefFile.setMarkup(True)

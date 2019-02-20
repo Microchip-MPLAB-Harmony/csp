@@ -1192,11 +1192,11 @@ if __name__ == "__main__":
     CLK_SYS_DEF_LIST_ENTRY = coreComponent.createFileSymbol("CLK_SYSTEM_DEFINITIONS_H", None)
     CLK_SYS_DEF_LIST_ENTRY.setType("STRING")
     CLK_SYS_DEF_LIST_ENTRY.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    CLK_SYS_DEF_LIST_ENTRY.setSourcePath("../peripheral/clk_pic32mz/templates/system/system_definitions.h.ftl")
+    CLK_SYS_DEF_LIST_ENTRY.setSourcePath("../peripheral/clk_pic32mz/templates/system/definitions.h.ftl")
     CLK_SYS_DEF_LIST_ENTRY.setMarkup(True)
 
     CLK_SYS_INIT_LIST_ENTRY = coreComponent.createFileSymbol("CLK_SYSTEM_INITIALIZE_C", None)
     CLK_SYS_INIT_LIST_ENTRY.setType("STRING")
     CLK_SYS_INIT_LIST_ENTRY.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-    CLK_SYS_INIT_LIST_ENTRY.setSourcePath("../peripheral/clk_pic32mz/templates/system/system_initialize.c.ftl")
+    CLK_SYS_INIT_LIST_ENTRY.setSourcePath("../peripheral/clk_pic32mz/templates/system/initialization.c.ftl")
     CLK_SYS_INIT_LIST_ENTRY.setMarkup(True)

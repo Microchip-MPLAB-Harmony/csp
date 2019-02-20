@@ -718,11 +718,11 @@ def instantiateComponent(uartComponent):
     uartSystemInitFile = uartComponent.createFileSymbol("UART_INIT", None)
     uartSystemInitFile.setType("STRING")
     uartSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    uartSystemInitFile.setSourcePath("../peripheral/uart_02478/templates/system/system_initialize.c.ftl")
+    uartSystemInitFile.setSourcePath("../peripheral/uart_02478/templates/system/initialization.c.ftl")
     uartSystemInitFile.setMarkup(True)
 
     uartSystemDefFile = uartComponent.createFileSymbol("UART_DEF", None)
     uartSystemDefFile.setType("STRING")
     uartSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    uartSystemDefFile.setSourcePath("../peripheral/uart_02478/templates/system/system_definitions.h.ftl")
+    uartSystemDefFile.setSourcePath("../peripheral/uart_02478/templates/system/definitions.h.ftl")
     uartSystemDefFile.setMarkup(True)
