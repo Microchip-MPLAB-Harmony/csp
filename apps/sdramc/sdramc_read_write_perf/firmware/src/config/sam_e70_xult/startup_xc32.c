@@ -56,7 +56,6 @@ void __attribute__((optimize("-O1"), long_call)) Reset_Handler(void);
 /* Device Vector information is available in interrupt.c file */
 
 __STATIC_INLINE void TCM_Disable(void);
-__STATIC_INLINE void TCM_Enable(void);
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
 __STATIC_INLINE void ICache_Enable(void);
 __STATIC_INLINE void DCache_Enable(void);
@@ -137,18 +136,6 @@ __STATIC_INLINE void TCM_Configure(uint32_t neededGpnvmValue)
         /* Reset the device for the programmed fuse value to take effect */
         RSTC_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | RSTC_CR_PROCRST_Msk;
     }
-}
-
-
-/** Enable TCM memory */
-__STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Enable(void)
-{
-    __DSB();
-    __ISB();
-    SCB->ITCMCR = (SCB_ITCMCR_EN_Msk  | SCB_ITCMCR_RMW_Msk | SCB_ITCMCR_RETEN_Msk);
-    SCB->DTCMCR = (SCB_DTCMCR_EN_Msk | SCB_DTCMCR_RMW_Msk | SCB_DTCMCR_RETEN_Msk);
-    __DSB();
-    __ISB();
 }
 
 /* Disable TCM memory */
