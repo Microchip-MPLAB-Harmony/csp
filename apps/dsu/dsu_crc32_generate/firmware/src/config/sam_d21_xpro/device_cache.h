@@ -1,28 +1,26 @@
 /*******************************************************************************
-  Peripheral Access Controller (PAC) PLIB
+  Cortex-M L1 Cache Header
 
-  Company
-    Microchip Technology Inc.
+  File Name:
+    device_cache.h
 
-  File Name
-    plib_pac.c
+  Summary:
+    Preprocessor definitions to provide L1 Cache control.
 
-  Summary
-    Source for PAC peripheral library interface Implementation.
-
-  Description
-    This file defines the interface to the PAC peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
+  Description:
+    An MPLAB PLIB or Project can include this header to perform cache cleans,
+    invalidates etc. For the DCache and ICache.
 
   Remarks:
-    None.
+    This header should not define any prototypes or data definitions, or 
+    include any files that do.  The file only provides macro definitions for 
+    build-time.
 
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -45,39 +43,50 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
+/*  This section Includes other configuration headers necessary to completely
+    define this configuration.
+*/
 
-#include "plib_pac.h"
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+extern "C" {
+
+#endif
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: MACROS Definitions
+// Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
+#define ICACHE_ENABLE()
+#define ICACHE_DISABLE()
+#define ICACHE_INVALIDATE()
+#define INSTRUCTION_CACHE_ENABLED                      false
 
-#define PAC_INSTANCE_OFFSET        (0x1000000)
+#define DCACHE_ENABLE()
+#define DCACHE_DISABLE()
+#define DCACHE_INVALIDATE()
+#define DCACHE_CLEAN()
+#define DCACHE_CLEAN_INVALIDATE()
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+#define DATA_CACHE_ENABLED                             false
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: PAC Implementations
-// *****************************************************************************
-// *****************************************************************************
-
-void PAC_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation )
-{
-    if(operation == PAC_PROTECTION_SET)
-    {
-        /* Lock the Peripheral interface */
-        ((pac_registers_t *)(PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * (peripheral >> 5))))->PAC_WPSET = PAC_WPSET_WP_Pos << (peripheral & 0x1f);
-    }
-    else if(operation == PAC_PROTECTION_CLEAR)
-    {
-        /* Unlock the Peripheral interface */
-        ((pac_registers_t *)(PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * (peripheral >> 5))))->PAC_WPCLR = PAC_WPCLR_WP_Pos << (peripheral & 0x1f);
-    }
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
 }
+#endif
+//DOM-IGNORE-END
 
+#endif // #ifndef DEVICE_CACHE_H
