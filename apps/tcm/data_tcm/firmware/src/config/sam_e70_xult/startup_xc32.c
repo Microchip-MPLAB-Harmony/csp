@@ -55,7 +55,6 @@ void __attribute__((optimize("-O1"), long_call)) Reset_Handler(void);
 
 /* Device Vector information is available in interrupt.c file */
 
-__STATIC_INLINE void TCM_Disable(void);
 __STATIC_INLINE void TCM_Enable(void);
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
 __STATIC_INLINE void ICache_Enable(void);
@@ -139,7 +138,6 @@ __STATIC_INLINE void TCM_Configure(uint32_t neededGpnvmValue)
     }
 }
 
-
 /** Enable TCM memory */
 __STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Enable(void)
 {
@@ -147,17 +145,6 @@ __STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Enable(void)
     __ISB();
     SCB->ITCMCR = (SCB_ITCMCR_EN_Msk  | SCB_ITCMCR_RMW_Msk | SCB_ITCMCR_RETEN_Msk);
     SCB->DTCMCR = (SCB_DTCMCR_EN_Msk | SCB_DTCMCR_RMW_Msk | SCB_DTCMCR_RETEN_Msk);
-    __DSB();
-    __ISB();
-}
-
-/* Disable TCM memory */
-__STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Disable(void)
-{
-    __DSB();
-    __ISB();
-    SCB->ITCMCR &= ~(uint32_t)SCB_ITCMCR_EN_Msk;
-    SCB->DTCMCR &= ~(uint32_t)SCB_ITCMCR_EN_Msk;
     __DSB();
     __ISB();
 }
@@ -201,7 +188,7 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
-	
+
 
 #  ifdef SCB_VTOR_TBLOFF_Msk
     /*  Set the vector-table base address in FLASH */
