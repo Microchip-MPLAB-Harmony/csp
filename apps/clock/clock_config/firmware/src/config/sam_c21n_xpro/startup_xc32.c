@@ -55,8 +55,6 @@ void __attribute__((optimize("-O1"), long_call)) Reset_Handler(void);
 
 /* Device Vector information is available in interrupt.c file */
 
-
-
 /* Optional application-provided functions */
 extern void __attribute__((weak,long_call)) _on_reset(void);
 extern void __attribute__((weak,long_call)) _on_bootstrap(void);
@@ -89,7 +87,7 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
-	
+
 
 #  ifdef SCB_VTOR_TBLOFF_Msk
     /*  Set the vector-table base address in FLASH */
