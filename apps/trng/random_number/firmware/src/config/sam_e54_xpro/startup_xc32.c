@@ -62,7 +62,7 @@ __STATIC_INLINE void FPU_Enable(void);
 /* Enable FPU */
 __STATIC_INLINE void FPU_Enable(void)
 {
-uint32_t prim;
+    uint32_t prim;
     prim = __get_PRIMASK();
     __disable_irq();
 
@@ -76,7 +76,6 @@ uint32_t prim;
     }
 }
 #endif /* (__ARM_FP==14) || (__ARM_FP==4) */
-
 __STATIC_INLINE void TCM_Disable(void);
 __STATIC_INLINE void TCM_Enable(void);
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
@@ -90,13 +89,13 @@ __STATIC_INLINE void TCM_Configure(uint32_t tcmSize)
 }
 
 /** Enable TCM memory */
-__STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Enable(void)
+__STATIC_INLINE void  __attribute__((optimize("-O1"))) TCM_Enable(void)
 {
     /* TCM cannot be enabled or disabled in SAME5x/SAMD5x family*/
 }
 
 /* Disable TCM memory */
-__STATIC_INLINE void __attribute__((optimize("-O1"))) TCM_Disable(void)
+__STATIC_INLINE void  __attribute__((optimize("-O1"))) TCM_Disable(void)
 {
     /* TCM cannot be enabled or disabled in SAME5x/SAMD5x family*/
 }
