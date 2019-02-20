@@ -49,7 +49,7 @@ static void OSCCTRL_Initialize(void)
 static void OSC32KCTRL_Initialize(void)
 {
 
-	OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(0);
+    OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(0);
 }
 
 
@@ -63,7 +63,7 @@ static void GCLK0_Initialize(void)
 {
     GCLK_REGS->GCLK_GENCTRL[0] = GCLK_GENCTRL_DIV(1) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_GENEN_Msk;
 
-    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL0_Msk) == GCLK_SYNCBUSY_GENCTRL0_Msk)
+    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL_GCLK0) == GCLK_SYNCBUSY_GENCTRL_GCLK0)
     {
         /* wait for the Generator 0 synchronization */
     }
@@ -72,7 +72,7 @@ static void GCLK0_Initialize(void)
 void CLOCK_Initialize (void)
 {
     /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLB |= NVMCTRL_CTRLA_RWS(1);
+    NVMCTRL_REGS->NVMCTRL_CTRLA |= NVMCTRL_CTRLA_RWS(1);
 
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();

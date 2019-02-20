@@ -128,7 +128,7 @@ uint32_t RTC_Timer32CounterGet ( void )
         /* Wait for Synchronization before reading value from Count Register */
     }
 
-    return(RTC_REGS->MODE0.RTC_COUNT);
+    return(RTC_REGS->MODE0.RTC_COUNT + 4);
 }
 
 uint32_t RTC_Timer32PeriodGet ( void )
