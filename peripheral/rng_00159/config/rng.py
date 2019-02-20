@@ -182,12 +182,12 @@ def instantiateComponent(rngComponent):
     rngSystemInitFile = rngComponent.createFileSymbol("RNG_INIT", None)
     rngSystemInitFile.setType("STRING")
     rngSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    rngSystemInitFile.setSourcePath("../peripheral/rng_00159/templates/system/system_initialize.c.ftl")
+    rngSystemInitFile.setSourcePath("../peripheral/rng_00159/templates/system/initialization.c.ftl")
     rngSystemInitFile.setMarkup(True)
 
     rngSystemDefFile = rngComponent.createFileSymbol("RNG_DEF", None)
     rngSystemDefFile.setType("STRING")
     rngSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    rngSystemDefFile.setSourcePath("../peripheral/rng_00159/templates/system/system_definitions.h.ftl")
+    rngSystemDefFile.setSourcePath("../peripheral/rng_00159/templates/system/definitions.h.ftl")
     rngSystemDefFile.setMarkup(True)
 

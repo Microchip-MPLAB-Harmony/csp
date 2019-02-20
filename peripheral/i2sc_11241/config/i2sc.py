@@ -238,12 +238,12 @@ def instantiateComponent(i2scComponent):
     i2scSystemInitFile = i2scComponent.createFileSymbol("I2SC_INIT", None)
     i2scSystemInitFile.setType("STRING")
     i2scSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    i2scSystemInitFile.setSourcePath("../peripheral/i2sc_11241/templates/system/system_initialize.c.ftl")
+    i2scSystemInitFile.setSourcePath("../peripheral/i2sc_11241/templates/system/initialization.c.ftl")
     i2scSystemInitFile.setMarkup(True)
     
     i2scSystemDefFile = i2scComponent.createFileSymbol("I2SC_DEF", None)
     i2scSystemDefFile.setType("STRING")
     i2scSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    i2scSystemDefFile.setSourcePath("../peripheral/i2sc_11241/templates/system/system_definitions.h.ftl")
+    i2scSystemDefFile.setSourcePath("../peripheral/i2sc_11241/templates/system/definitions.h.ftl")
     i2scSystemDefFile.setMarkup(True)
     

@@ -1534,11 +1534,11 @@ def instantiateComponent(tcComponent):
     tcSystemInitFile = tcComponent.createFileSymbol("TC_INIT", None)
     tcSystemInitFile.setType("STRING")
     tcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    tcSystemInitFile.setSourcePath("../peripheral/tc_6082/templates/system/system_initialize.c.ftl")
+    tcSystemInitFile.setSourcePath("../peripheral/tc_6082/templates/system/initialization.c.ftl")
     tcSystemInitFile.setMarkup(True)
 
     tcSystemDefinitionFile = tcComponent.createFileSymbol("TC_DEF", None)
     tcSystemDefinitionFile.setType("STRING")
     tcSystemDefinitionFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    tcSystemDefinitionFile.setSourcePath("../peripheral/tc_6082/templates/system/system_definitions.h.ftl")
+    tcSystemDefinitionFile.setSourcePath("../peripheral/tc_6082/templates/system/definitions.h.ftl")
     tcSystemDefinitionFile.setMarkup(True)

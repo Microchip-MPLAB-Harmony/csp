@@ -184,12 +184,12 @@ def instantiateComponent(qspiComponent):
     qspiSystemInitFile = qspiComponent.createFileSymbol("QSPI_INIT", None)
     qspiSystemInitFile.setType("STRING")
     qspiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    qspiSystemInitFile.setSourcePath("../peripheral/qspi_11171/templates/system/system_initialize.c.ftl")
+    qspiSystemInitFile.setSourcePath("../peripheral/qspi_11171/templates/system/initialization.c.ftl")
     qspiSystemInitFile.setMarkup(True)
 
     #QSPI definitions header
     qspiSystemDefFile = qspiComponent.createFileSymbol("QSPI_DEF", None)
     qspiSystemDefFile.setType("STRING")
     qspiSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    qspiSystemDefFile.setSourcePath("../peripheral/qspi_11171/templates/system/system_definitions.h.ftl")
+    qspiSystemDefFile.setSourcePath("../peripheral/qspi_11171/templates/system/definitions.h.ftl")
     qspiSystemDefFile.setMarkup(True)

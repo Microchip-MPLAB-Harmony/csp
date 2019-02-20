@@ -399,12 +399,12 @@ def instantiateComponent(cmpComponent):
     cmpSystemInitFile = cmpComponent.createFileSymbol("CMP_INIT", None)
     cmpSystemInitFile.setType("STRING")
     cmpSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    cmpSystemInitFile.setSourcePath("../peripheral/cmp_00866/templates/system/system_initialize.c.ftl")
+    cmpSystemInitFile.setSourcePath("../peripheral/cmp_00866/templates/system/initialization.c.ftl")
     cmpSystemInitFile.setMarkup(True)
 
     cmpSystemDefFile = cmpComponent.createFileSymbol("CMP_DEF", None)
     cmpSystemDefFile.setType("STRING")
     cmpSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    cmpSystemDefFile.setSourcePath("../peripheral/cmp_00866/templates/system/system_definitions.h.ftl")
+    cmpSystemDefFile.setSourcePath("../peripheral/cmp_00866/templates/system/definitions.h.ftl")
     cmpSystemDefFile.setMarkup(True)
 

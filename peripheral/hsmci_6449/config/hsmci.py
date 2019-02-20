@@ -146,11 +146,11 @@ def instantiateComponent(hsmciComponent):
     hsmciSystemInitFile = hsmciComponent.createFileSymbol("HSMCI_INIT", None)
     hsmciSystemInitFile.setType("STRING")
     hsmciSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    hsmciSystemInitFile.setSourcePath("../peripheral/hsmci_6449/templates/system/system_initialize.c.ftl")
+    hsmciSystemInitFile.setSourcePath("../peripheral/hsmci_6449/templates/system/initialization.c.ftl")
     hsmciSystemInitFile.setMarkup(True)
 
     hsmciSystemDefFile = hsmciComponent.createFileSymbol("HSMCI_DEF", None)
     hsmciSystemDefFile.setType("STRING")
     hsmciSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    hsmciSystemDefFile.setSourcePath("../peripheral/hsmci_6449/templates/system/system_definitions.h.ftl")
+    hsmciSystemDefFile.setSourcePath("../peripheral/hsmci_6449/templates/system/definitions.h.ftl")
     hsmciSystemDefFile.setMarkup(True)

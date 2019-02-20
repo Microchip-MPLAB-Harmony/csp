@@ -582,13 +582,13 @@ def instantiateComponent(afecComponent):
     afecSystemInitFile = afecComponent.createFileSymbol("AFEC_INIT", None)
     afecSystemInitFile.setType("STRING")
     afecSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    afecSystemInitFile.setSourcePath("../peripheral/afec_11147/templates/system/system_initialize.c.ftl")
+    afecSystemInitFile.setSourcePath("../peripheral/afec_11147/templates/system/initialization.c.ftl")
     afecSystemInitFile.setMarkup(True)
 
     afecSystemDefFile = afecComponent.createFileSymbol("AFEC_DEF", None)
     afecSystemDefFile.setType("STRING")
     afecSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    afecSystemDefFile.setSourcePath("../peripheral/afec_11147/templates/system/system_definitions.h.ftl")
+    afecSystemDefFile.setSourcePath("../peripheral/afec_11147/templates/system/definitions.h.ftl")
     afecSystemDefFile.setMarkup(True)
     
     afecComponent.addPlugin("../peripheral/afec_11147/plugin/afec_11147.jar")

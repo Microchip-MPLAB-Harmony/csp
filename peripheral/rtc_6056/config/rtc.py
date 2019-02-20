@@ -180,13 +180,13 @@ def instantiateComponent(rtcComponent):
     rtcSystemInitFile = rtcComponent.createFileSymbol("RTC_FILE_2", None)
     rtcSystemInitFile.setType("STRING")
     rtcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    rtcSystemInitFile.setSourcePath("../peripheral/rtc_6056/templates/system/system_initialize.c.ftl")
+    rtcSystemInitFile.setSourcePath("../peripheral/rtc_6056/templates/system/initialization.c.ftl")
     rtcSystemInitFile.setMarkup(True)
 
     rtcSystemDefFile = rtcComponent.createFileSymbol("RTC_FILE_3", None)
     rtcSystemDefFile.setType("STRING")
     rtcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    rtcSystemDefFile.setSourcePath("../peripheral/rtc_6056/templates/system/system_definitions.h.ftl")
+    rtcSystemDefFile.setSourcePath("../peripheral/rtc_6056/templates/system/definitions.h.ftl")
     rtcSystemDefFile.setMarkup(True)
 
 

@@ -83,11 +83,11 @@ def instantiateComponent(shdwcComponent):
     shdwcSystemInitFile = shdwcComponent.createFileSymbol(None, None)
     shdwcSystemInitFile.setType("STRING")
     shdwcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    shdwcSystemInitFile.setSourcePath("../peripheral/shdwc_6122/templates/system/system_initialize.c.ftl")
+    shdwcSystemInitFile.setSourcePath("../peripheral/shdwc_6122/templates/system/initialization.c.ftl")
     shdwcSystemInitFile.setMarkup(True)
 
     shdwcSystemDefFile = shdwcComponent.createFileSymbol(None, None)
     shdwcSystemDefFile.setType("STRING")
     shdwcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    shdwcSystemDefFile.setSourcePath("../peripheral/shdwc_6122/templates/system/system_definitions.h.ftl")
+    shdwcSystemDefFile.setSourcePath("../peripheral/shdwc_6122/templates/system/definitions.h.ftl")
     shdwcSystemDefFile.setMarkup(True)

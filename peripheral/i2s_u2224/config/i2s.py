@@ -284,12 +284,12 @@ def instantiateComponent(i2sComponent):
     i2sSystemInitFile = i2sComponent.createFileSymbol("I2S_INIT", None)
     i2sSystemInitFile.setType("STRING")
     i2sSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    i2sSystemInitFile.setSourcePath("../peripheral/i2s_u2224/templates/system/system_initialize.c.ftl")
+    i2sSystemInitFile.setSourcePath("../peripheral/i2s_u2224/templates/system/initialization.c.ftl")
     i2sSystemInitFile.setMarkup(True)
 
     i2sSystemDefFile = i2sComponent.createFileSymbol("I2S_DEF", None)
     i2sSystemDefFile.setType("STRING")
     i2sSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    i2sSystemDefFile.setSourcePath("../peripheral/i2s_u2224/templates/system/system_definitions.h.ftl")
+    i2sSystemDefFile.setSourcePath("../peripheral/i2s_u2224/templates/system/definitions.h.ftl")
     i2sSystemDefFile.setMarkup(True)
 

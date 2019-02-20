@@ -844,11 +844,11 @@ def instantiateComponent(pwmComponent):
     pwmSystemInitFile = pwmComponent.createFileSymbol("PWM_INIT", None)
     pwmSystemInitFile.setType("STRING")
     pwmSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    pwmSystemInitFile.setSourcePath("../peripheral/pwm_6343/templates/system/system_initialize.c.ftl")
+    pwmSystemInitFile.setSourcePath("../peripheral/pwm_6343/templates/system/initialization.c.ftl")
     pwmSystemInitFile.setMarkup(True)
 
     pwmSystemDefinitionFile = pwmComponent.createFileSymbol("PWM_DEF", None)
     pwmSystemDefinitionFile.setType("STRING")
     pwmSystemDefinitionFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    pwmSystemDefinitionFile.setSourcePath("../peripheral/pwm_6343/templates/system/system_definitions.h.ftl")
+    pwmSystemDefinitionFile.setSourcePath("../peripheral/pwm_6343/templates/system/definitions.h.ftl")
     pwmSystemDefinitionFile.setMarkup(True)

@@ -66,11 +66,11 @@ def instantiateComponent(rxlpComponent):
     rxlpSystemInitFile = rxlpComponent.createFileSymbol(None, None)
     rxlpSystemInitFile.setType("STRING")
     rxlpSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    rxlpSystemInitFile.setSourcePath("../peripheral/rxlp_11285/templates/system/system_initialize.c.ftl")
+    rxlpSystemInitFile.setSourcePath("../peripheral/rxlp_11285/templates/system/initialization.c.ftl")
     rxlpSystemInitFile.setMarkup(True)
 
     rxlpSystemDefFile = rxlpComponent.createFileSymbol(None, None)
     rxlpSystemDefFile.setType("STRING")
     rxlpSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    rxlpSystemDefFile.setSourcePath("../peripheral/rxlp_11285/templates/system/system_definitions.h.ftl")
+    rxlpSystemDefFile.setSourcePath("../peripheral/rxlp_11285/templates/system/definitions.h.ftl")
     rxlpSystemDefFile.setMarkup(True)

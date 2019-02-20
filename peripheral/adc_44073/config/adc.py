@@ -571,11 +571,11 @@ def instantiateComponent(adcComponent):
     adcSystemInitFile = adcComponent.createFileSymbol("ADC_INIT", None)
     adcSystemInitFile.setType("STRING")
     adcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    adcSystemInitFile.setSourcePath("../peripheral/adc_"+str(adcID)+"/templates/system/system_initialize.c.ftl")
+    adcSystemInitFile.setSourcePath("../peripheral/adc_"+str(adcID)+"/templates/system/initialization.c.ftl")
     adcSystemInitFile.setMarkup(True)
 
     adcSystemDefFile = adcComponent.createFileSymbol("ADC_DEF", None)
     adcSystemDefFile.setType("STRING")
     adcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    adcSystemDefFile.setSourcePath("../peripheral/adc_"+str(adcID)+"/templates/system/system_definitions.h.ftl")
+    adcSystemDefFile.setSourcePath("../peripheral/adc_"+str(adcID)+"/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)

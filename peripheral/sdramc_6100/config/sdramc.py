@@ -281,11 +281,11 @@ def instantiateComponent(sdramcComponent):
     sdramcHeader1FileEntry = sdramcComponent.createFileSymbol("SDRAMC_SYSTEM_DEFINITIONS_H", None)
     sdramcHeader1FileEntry.setType("STRING")
     sdramcHeader1FileEntry.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    sdramcHeader1FileEntry.setSourcePath("../peripheral/sdramc_6100/templates/system/system_definitions.h.ftl")
+    sdramcHeader1FileEntry.setSourcePath("../peripheral/sdramc_6100/templates/system/definitions.h.ftl")
     sdramcHeader1FileEntry.setMarkup(True)
 
     sdramSystemInitFile = sdramcComponent.createFileSymbol("SDRAMC_SYSTEM_INITIALIZE_C", None)
     sdramSystemInitFile.setType("STRING")
     sdramSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
-    sdramSystemInitFile.setSourcePath("../peripheral/sdramc_6100/templates/system/system_initialize.c.ftl")
+    sdramSystemInitFile.setSourcePath("../peripheral/sdramc_6100/templates/system/initialization.c.ftl")
     sdramSystemInitFile.setMarkup(True)

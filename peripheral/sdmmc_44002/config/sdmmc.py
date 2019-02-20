@@ -160,11 +160,11 @@ def instantiateComponent(sdmmcComponent):
     sdmmcSystemInitFile = sdmmcComponent.createFileSymbol("SDMMC_INIT", None)
     sdmmcSystemInitFile.setType("STRING")
     sdmmcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    sdmmcSystemInitFile.setSourcePath("../peripheral/sdmmc_44002/templates/system/system_initialize.c.ftl")
+    sdmmcSystemInitFile.setSourcePath("../peripheral/sdmmc_44002/templates/system/initialization.c.ftl")
     sdmmcSystemInitFile.setMarkup(True)
 
     sdmmcSystemDefFile = sdmmcComponent.createFileSymbol("SDMMC_DEF", None)
     sdmmcSystemDefFile.setType("STRING")
     sdmmcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    sdmmcSystemDefFile.setSourcePath("../peripheral/sdmmc_44002/templates/system/system_definitions.h.ftl")
+    sdmmcSystemDefFile.setSourcePath("../peripheral/sdmmc_44002/templates/system/definitions.h.ftl")
     sdmmcSystemDefFile.setMarkup(True)

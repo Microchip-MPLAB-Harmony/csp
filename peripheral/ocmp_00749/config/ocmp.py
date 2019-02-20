@@ -351,11 +351,11 @@ def instantiateComponent(ocmpComponent):
     ocmpSystemInitFile = ocmpComponent.createFileSymbol("OCMP_INIT", None)
     ocmpSystemInitFile.setType("STRING")
     ocmpSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    ocmpSystemInitFile.setSourcePath("../peripheral/ocmp_00749/templates/system/system_initialize.c.ftl")
+    ocmpSystemInitFile.setSourcePath("../peripheral/ocmp_00749/templates/system/initialization.c.ftl")
     ocmpSystemInitFile.setMarkup(True)
 
     ocmpSystemDefFile = ocmpComponent.createFileSymbol("OCMP_DEF", None)
     ocmpSystemDefFile.setType("STRING")
     ocmpSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    ocmpSystemDefFile.setSourcePath("../peripheral/ocmp_00749/templates/system/system_definitions.h.ftl")
+    ocmpSystemDefFile.setSourcePath("../peripheral/ocmp_00749/templates/system/definitions.h.ftl")
     ocmpSystemDefFile.setMarkup(True)

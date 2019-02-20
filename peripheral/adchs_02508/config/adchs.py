@@ -1470,11 +1470,11 @@ def instantiateComponent(adchsComponent):
     adchsSystemInitFile = adchsComponent.createFileSymbol("ADCHS_INIT", None)
     adchsSystemInitFile.setType("STRING")
     adchsSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    adchsSystemInitFile.setSourcePath("../peripheral/adchs_02508/templates/system/system_initialize.c.ftl")
+    adchsSystemInitFile.setSourcePath("../peripheral/adchs_02508/templates/system/initialization.c.ftl")
     adchsSystemInitFile.setMarkup(True)
 
     adchsSystemDefFile = adchsComponent.createFileSymbol("ADCHS_DEF", None)
     adchsSystemDefFile.setType("STRING")
     adchsSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    adchsSystemDefFile.setSourcePath("../peripheral/adchs_02508/templates/system/system_definitions.h.ftl")
+    adchsSystemDefFile.setSourcePath("../peripheral/adchs_02508/templates/system/definitions.h.ftl")
     adchsSystemDefFile.setMarkup(True)

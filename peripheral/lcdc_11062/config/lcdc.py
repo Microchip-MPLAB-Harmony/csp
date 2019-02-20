@@ -38,6 +38,6 @@ def instantiateComponent(lcdcComponent):
     lcdcSystemDefFile = lcdcComponent.createFileSymbol("lcdcSystemDefFile", None)
     lcdcSystemDefFile.setType("STRING")
     lcdcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    lcdcSystemDefFile.setSourcePath("../peripheral/lcdc_11062/templates/system/system_definitions.h.ftl")
+    lcdcSystemDefFile.setSourcePath("../peripheral/lcdc_11062/templates/system/definitions.h.ftl")
     lcdcSystemDefFile.setMarkup(True)
 
