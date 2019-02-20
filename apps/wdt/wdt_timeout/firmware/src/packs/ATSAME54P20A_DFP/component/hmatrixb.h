@@ -1,7 +1,7 @@
 /**
  * \brief Component description for HMATRIXB
  *
- * © 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-05T04:45:25Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_HMATRIXB_COMPONENT_H_
 #define _SAME54_HMATRIXB_COMPONENT_H_
 
@@ -29,27 +29,27 @@
 /* ************************************************************************** */
 
 /* -------- HMATRIXB_PRAS : (HMATRIXB Offset: 0x00) (R/W 32) Priority A for Slave -------- */
-#define HMATRIXB_PRAS_RESETVALUE            _U_(0x00)                                     /**<  (HMATRIXB_PRAS) Priority A for Slave  Reset Value */
+#define HMATRIXB_PRAS_RESETVALUE              _U_(0x00)                                            /**<  (HMATRIXB_PRAS) Priority A for Slave  Reset Value */
 
-#define HMATRIXB_PRAS_Msk                     _U_(0x00000000)                                /**< (HMATRIXB_PRAS) Register Mask  */
+#define HMATRIXB_PRAS_Msk                     _U_(0x00000000)                                      /**< (HMATRIXB_PRAS) Register Mask  */
 
 
 /* -------- HMATRIXB_PRBS : (HMATRIXB Offset: 0x04) (R/W 32) Priority B for Slave -------- */
-#define HMATRIXB_PRBS_RESETVALUE            _U_(0x00)                                     /**<  (HMATRIXB_PRBS) Priority B for Slave  Reset Value */
+#define HMATRIXB_PRBS_RESETVALUE              _U_(0x00)                                            /**<  (HMATRIXB_PRBS) Priority B for Slave  Reset Value */
 
-#define HMATRIXB_PRBS_Msk                     _U_(0x00000000)                                /**< (HMATRIXB_PRBS) Register Mask  */
+#define HMATRIXB_PRBS_Msk                     _U_(0x00000000)                                      /**< (HMATRIXB_PRBS) Register Mask  */
 
 
 /** \brief HMATRIXB register offsets definitions */
-#define HMATRIXB_PRAS_REG_OFST         (0x00)         /**< (HMATRIXB_PRAS) Priority A for Slave Offset */
-#define HMATRIXB_PRBS_REG_OFST         (0x04)         /**< (HMATRIXB_PRBS) Priority B for Slave Offset */
+#define HMATRIXB_PRAS_REG_OFST         (0x00)              /**< (HMATRIXB_PRAS) Priority A for Slave Offset */
+#define HMATRIXB_PRBS_REG_OFST         (0x04)              /**< (HMATRIXB_PRBS) Priority B for Slave Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief PRS register API structure */
 typedef struct
 {
-  __IO  uint32_t                       HMATRIXB_PRAS;   /**< Offset: 0x00 (R/W  32) Priority A for Slave */
-  __IO  uint32_t                       HMATRIXB_PRBS;   /**< Offset: 0x04 (R/W  32) Priority B for Slave */
+  __IO  uint32_t                       HMATRIXB_PRAS;      /**< Offset: 0x00 (R/W  32) Priority A for Slave */
+  __IO  uint32_t                       HMATRIXB_PRBS;      /**< Offset: 0x04 (R/W  32) Priority B for Slave */
 } hmatrixb_prs_registers_t;
 
 #define PRS_NUMBER _U_(16)
