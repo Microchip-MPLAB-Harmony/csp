@@ -41,6 +41,7 @@
 #ifndef EVSYS_H    // Guards against multiple inclusion
 #define EVSYS_H
 
+#include "device.h"
 #include <stdint.h>
 #include <stddef.h>
 
@@ -58,7 +59,7 @@
 
 /***************************** EVSYS API *******************************/
 void EVSYS_Initialize( void );
-	
+
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif
