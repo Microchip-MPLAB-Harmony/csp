@@ -65,25 +65,9 @@
 #define NVMCTRL_FLASH_START_ADDRESS        (0U)
 #define NVMCTRL_FLASH_SIZE                 (1048576U)
 #define NVMCTRL_FLASH_PAGESIZE             (512U)
-#define NVMCTRL_FLASH_ROWSIZE              (8192U)
+#define NVMCTRL_FLASH_BLOCKSIZE            (8192U)
 
 
-
-typedef enum
-{
-    /* No error */
-    NVMCTRL_ERROR_NONE = 0x0,
-
-    /* NVMCTRL invalid commands and/or bad keywords error */
-    NVMCTRL_ERROR_PROG = 0x4,
-
-    /* NVMCTRL lock error */
-    NVMCTRL_ERROR_LOCK = 0x8,
-
-    /* NVMCTRL programming or erase error */
-    NVMCTRL_ERROR_NVM = 0x10,
-
-} NVMCTRL_ERROR;
 
 /* NVM supports four write modes */
 typedef enum
@@ -98,7 +82,7 @@ typedef enum
 
 void NVMCTRL_Initialize(void);
 
-void NVMCTRL_Read( uint32_t *data, uint32_t length, uint32_t address );
+bool NVMCTRL_Read( uint32_t *data, uint32_t length, uint32_t address );
 
 void NVMCTRL_SetWriteMode(NVMCTRL_WRITEMODE mode);
 
@@ -106,9 +90,9 @@ uint8_t NVMCTRL_QuadWordWrite(uint32_t *data, const uint32_t address);
 
 uint8_t NVMCTRL_DoubleWordWrite(uint32_t *data, const uint32_t address);
 
-void NVMCTRL_PageWrite( uint32_t* data, uint32_t address );
+bool NVMCTRL_PageWrite( uint32_t* data, uint32_t address );
 
-void NVMCTRL_BlockErase( uint32_t address );
+bool NVMCTRL_BlockErase( uint32_t address );
 
 uint16_t NVMCTRL_ErrorGet( void );
 
@@ -120,11 +104,13 @@ void NVMCTRL_RegionLock (uint32_t address);
 
 void NVMCTRL_RegionUnlock (uint32_t address);
 
-bool NVMCTRLSmartEEPROM_IsBusy(void);
+uint32_t NVMCTRL_RegionLockStatusGet (void);
+
+bool NVMCTRL_SmartEEPROM_IsBusy(void);
 
 uint16_t NVMCTRL_SmartEepromStatusGet( void );
 
-bool NVMCTRLSmartEEPROM_IsActiveSectorFull(void);
+bool NVMCTRL_SmartEEPROM_IsActiveSectorFull(void);
 
 void NVMCTRL_SmartEepromSectorReallocate(void);
 

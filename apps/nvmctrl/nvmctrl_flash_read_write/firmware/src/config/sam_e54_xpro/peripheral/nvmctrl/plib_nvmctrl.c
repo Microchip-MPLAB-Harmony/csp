@@ -66,9 +66,11 @@ void NVMCTRL_Initialize(void)
 {
 }
 
-void NVMCTRL_Read( uint32_t *data, uint32_t length, const uint32_t address )
+bool NVMCTRL_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);
+    
+    return true;
 }
 
 void NVMCTRL_SetWriteMode(NVMCTRL_WRITEMODE mode)
@@ -112,14 +114,14 @@ uint8_t NVMCTRL_DoubleWordWrite(uint32_t *data, const uint32_t address)
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (NVMCTRL_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
     
-    /* If the address is not a quad word address, return error */
+    /* If the address is not a double word address, return error */
     if((address & 0x01) != 0)
     {
         wr_status = -1;
     }
     else
     {
-        /* Configure Quad Word Write */
+        /* Configure Double Word Write */
         NVMCTRL_SetWriteMode(NVMCTRL_CTRLA_WMODE_ADW);
 
         /* Writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits. */
@@ -137,7 +139,7 @@ uint8_t NVMCTRL_DoubleWordWrite(uint32_t *data, const uint32_t address)
 /* This function assumes that the page written is fresh or it is erased by
  * calling NVMCTRL_BlockErase
  */
-void NVMCTRL_PageWrite( uint32_t *data, const uint32_t address )
+bool NVMCTRL_PageWrite( uint32_t *data, const uint32_t address )
 {
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
@@ -154,13 +156,17 @@ void NVMCTRL_PageWrite( uint32_t *data, const uint32_t address )
         /* Set address and command */
         NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_WP | NVMCTRL_CTRLB_CMDEX_KEY;
     }
+    
+    return true;
 }
 
-void NVMCTRL_BlockErase( uint32_t address )
+bool NVMCTRL_BlockErase( uint32_t address )
 {
     /* Set address and command */
     NVMCTRL_REGS->NVMCTRL_ADDR = address;
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_EB | NVMCTRL_CTRLB_CMDEX_KEY;
+    
+    return true;
 }
 
 uint16_t NVMCTRL_ErrorGet( void )
@@ -173,14 +179,8 @@ uint16_t NVMCTRL_ErrorGet( void )
 uint16_t NVMCTRL_StatusGet( void )
 {
     nvm_status = NVMCTRL_REGS->NVMCTRL_STATUS;
-    return nvm_status;
-}
-
-uint16_t NVMCTRL_SmartEepromStatusGet( void )
-{
-    smart_eep_status = NVMCTRL_REGS->NVMCTRL_STATUS;
     
-    return smart_eep_status;
+    return nvm_status;
 }
 
 bool NVMCTRL_IsBusy(void)
@@ -191,7 +191,7 @@ bool NVMCTRL_IsBusy(void)
 void NVMCTRL_RegionLock(uint32_t address)
 {
     /* Set address and command */
-    NVMCTRL_REGS->NVMCTRL_ADDR = address >> 1;
+    NVMCTRL_REGS->NVMCTRL_ADDR = address;
 
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_LR | NVMCTRL_CTRLB_CMDEX_KEY;
 }
@@ -199,17 +199,29 @@ void NVMCTRL_RegionLock(uint32_t address)
 void NVMCTRL_RegionUnlock(uint32_t address)
 {
     /* Set address and command */
-    NVMCTRL_REGS->NVMCTRL_ADDR = address >> 1;
+    NVMCTRL_REGS->NVMCTRL_ADDR = address;
 
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_UR | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 
-bool NVMCTRLSmartEEPROM_IsBusy(void)
+uint32_t NVMCTRL_RegionLockStatusGet (void)
+{
+    return (NVMCTRL_REGS->NVMCTRL_RUNLOCK);
+}
+
+bool NVMCTRL_SmartEEPROM_IsBusy(void)
 {
     return (bool)(NVMCTRL_REGS->NVMCTRL_SEESTAT & NVMCTRL_SEESTAT_BUSY_Msk);
 }
 
-bool NVMCTRLSmartEEPROM_IsActiveSectorFull(void)
+uint16_t NVMCTRL_SmartEepromStatusGet( void )
+{
+    smart_eep_status = NVMCTRL_REGS->NVMCTRL_SEESTAT;
+    
+    return smart_eep_status;
+}
+
+bool NVMCTRL_SmartEEPROM_IsActiveSectorFull(void)
 {
     return (bool)(NVMCTRL_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_SEESFULL_Msk);
 }
