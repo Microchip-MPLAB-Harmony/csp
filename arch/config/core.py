@@ -270,6 +270,11 @@ def instantiateComponent( coreComponent ):
 
     compilerChoice.setReadOnly(not multiCompilerSupport)
 
+    ## Dummy Symbol to trigger compilerUpdate callback on compiler choice change
+    compilerUpdateSym = coreComponent.createBooleanSymbol("COMPILER_UPDATE", toolChainMenu)
+    compilerUpdateSym.setVisible(False)
+    compilerUpdateSym.setDependencies( compilerUpdate, [ "COMPILER_CHOICE" ] )
+
     ## xc32 Tool Config
     xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", toolChainMenu)
     xc32Menu.setLabel("XC32 Global Options")
@@ -522,7 +527,7 @@ def instantiateComponent( coreComponent ):
     debugSourceFile.setDependencies( genSysSourceFile, [ "CoreSysStdioSyscallsFile", "CoreSysFiles" ] )
     debugSourceFile.setSourcePath( "../arch/arm/templates/" + compilerSelected + "/stdio/" + compilerSelected + "_monitor.c.ftl" )
     debugSourceFile.setOutputName( compilerSelected + "_monitor.c" )
-    debugSourceFile.setDependencies( compilerUpdate, [ "COMPILER_CHOICE" ] )
+
     # load device specific information, clock and pin manager
     execfile( Variables.get( "__ARCH_DIR") + "/" + processor + ".py" )
 
@@ -553,6 +558,7 @@ def compilerUpdate( symbol, event ):
     global processor
 
     compilersVisibleFlag = True
+
     compilerSelected = event[ "symbol" ].getSelectedKey()
     if naQualifier in compilerSelected:
         compilersVisibleFlag = False
