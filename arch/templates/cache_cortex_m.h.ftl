@@ -68,7 +68,7 @@ extern "C" {
 // Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
-<#if INSTRUCTION_CACHE_ENABLE?? && INSTRUCTION_CACHE_ENABLE == true>
+<#if !__PROCESSOR?matches("ATSAME5.*") && INSTRUCTION_CACHE_ENABLE?? && INSTRUCTION_CACHE_ENABLE == true>
     <#lt>#define ICACHE_ENABLE()                                SCB_EnableICache()
     <#lt>#define ICACHE_DISABLE()                               SCB_DisableICache()
     <#lt>#define ICACHE_INVALIDATE()                            SCB_InvalidateICache()
@@ -80,7 +80,7 @@ extern "C" {
     <#lt>#define INSTRUCTION_CACHE_ENABLED                      false
 </#if>
 
-<#if DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
+<#if !__PROCESSOR?matches("ATSAME5.*") && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
     <#lt>#define DCACHE_ENABLE()                                SCB_EnableDCache()
     <#lt>#define DCACHE_DISABLE()                               SCB_DisableDCache()
     <#lt>#define DCACHE_INVALIDATE()                            SCB_InvalidateDCache()
