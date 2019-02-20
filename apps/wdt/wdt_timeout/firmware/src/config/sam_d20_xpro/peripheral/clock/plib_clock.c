@@ -146,6 +146,8 @@ void CLOCK_Initialize (void)
 
 
 
+    /* Selection of the Generator and write Lock for WDT */
+    GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(1) | GCLK_CLKCTRL_GEN(0x1)  | GCLK_CLKCTRL_CLKEN_Msk;
     /* Selection of the Generator and write Lock for EIC */
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(3) | GCLK_CLKCTRL_GEN(0x0)  | GCLK_CLKCTRL_CLKEN_Msk;
     /* Selection of the Generator and write Lock for SERCOM3_CORE */
@@ -154,10 +156,11 @@ void CLOCK_Initialize (void)
     /* Configure the AHB Bridge Clocks */
     PM_REGS->PM_AHBMASK = 0x1f;
 
+
     /* Configure the APBB Bridge Clocks */
     PM_REGS->PM_APBBMASK = 0x1f;
 
+
     /* Configure the APBC Bridge Clocks */
     PM_REGS->PM_APBCMASK = 0x10020;
-
 }
