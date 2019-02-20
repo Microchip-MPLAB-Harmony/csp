@@ -44,6 +44,8 @@
 // *****************************************************************************
 // *****************************************************************************
 #include "definitions.h"
+#include "device.h"
+
 
 
 // ****************************************************************************
@@ -51,6 +53,24 @@
 // Section: Configuration Bits
 // ****************************************************************************
 // ****************************************************************************
+
+#pragma config NVMCTRL_BOOTPROT = SIZE_0BYTES
+#pragma config NVMCTRL_EEPROM_SIZE = SIZE_0BYTES
+#pragma config BODVDDUSERLEVEL = 0x8 // Enter Hexadecimal value
+#pragma config BODVDD_DIS = DISABLED
+#pragma config BODVDD_ACTION = NONE
+
+#pragma config BODVDD_HYST = DISABLED
+#pragma config NVMCTRL_REGION_LOCKS = 0xffff // Enter Hexadecimal value
+
+#pragma config WDT_ENABLE = ENABLED
+#pragma config WDT_ALWAYSON = DISABLED
+#pragma config WDT_PER = CYC4096
+
+#pragma config WDT_WINDOW = CYC16384
+#pragma config WDT_EWOFFSET = CYC16384
+#pragma config WDT_WEN = DISABLED
+
 
 
 // *****************************************************************************
@@ -65,6 +85,7 @@
 // Section: System Data
 // *****************************************************************************
 // *****************************************************************************
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Library/Stack Initialization Data
@@ -79,6 +100,7 @@
 // *****************************************************************************
 
 
+
 /*******************************************************************************
   Function:
     void SYS_Initialize ( void *data )
@@ -91,15 +113,13 @@
 
 void SYS_Initialize ( void* data )
 {
+  
     PORT_Initialize();
 
     CLOCK_Initialize();
 
 
 
-    EVSYS_Initialize();
-
-    NVIC_Initialize();
 	SYSTICK_TimerInitialize();
     SERCOM4_USART_Initialize();
 
@@ -109,10 +129,11 @@ void SYS_Initialize ( void* data )
 
 
 
+    NVIC_Initialize();
+
 }
 
 
 /*******************************************************************************
  End of File
 */
-

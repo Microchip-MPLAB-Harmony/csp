@@ -66,7 +66,6 @@ void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call))Du
     {
     }
 }
-
 /* Device vectors list dummy definition*/
 void Reset_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void NMI_EIC_InterruptHandler   ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -105,7 +104,7 @@ void AC_Handler                 ( void ) __attribute__((weak, alias("Dummy_Handl
 void DAC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SDADC_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void PTC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-    
+
 
 
 /* Mutiple handlers for vector */
@@ -115,8 +114,8 @@ void PTC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handl
 __attribute__ ((section(".vectors")))
 const DeviceVectors exception_table=
 {
-  /* Configure Initial Stack Pointer, using linker-generated symbols */
-  .pvStack = (void*) (&_stack),
+    /* Configure Initial Stack Pointer, using linker-generated symbols */
+    .pvStack = (void*) (&_stack),
 
     .pfnReset_Handler              = ( void * ) Reset_Handler,
     .pfnNonMaskableInt_Handler     = ( void * ) NMI_EIC_InterruptHandler,
@@ -158,7 +157,6 @@ const DeviceVectors exception_table=
 
 
 };
-
 
 /*******************************************************************************
  End of File
