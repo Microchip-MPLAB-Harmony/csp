@@ -1,28 +1,26 @@
 /*******************************************************************************
-  Timer/Counter(TC0) PLIB
+  Cortex-M L1 Cache Header
 
-  Company
-    Microchip Technology Inc.
+  File Name:
+    device_cache.h
 
-  File Name
-    plib_tc0.h
+  Summary:
+    Preprocessor definitions to provide L1 Cache control.
 
-  Summary
-    TC0 PLIB Header File.
-
-  Description
-    This file defines the interface to the TC peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
+  Description:
+    An MPLAB PLIB or Project can include this header to perform cache cleans,
+    invalidates etc. For the DCache and ICache.
 
   Remarks:
-    None.
+    This header should not define any prototypes or data definitions, or 
+    include any files that do.  The file only provides macro definitions for 
+    build-time.
 
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -45,79 +43,50 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TC0_H      // Guards against multiple inclusion
-#define PLIB_TC0_H
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
+/*  This section Includes other configuration headers necessary to completely
+    define this configuration.
 */
-
-#include "plib_tc_common.h"
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C Compatibility
-
-    extern "C" {
-
-#endif
-// DOM-IGNORE-END
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Data Types
-// *****************************************************************************
-// *****************************************************************************
-/* The following data type definitions are used by the functions in this
-    interface and should be considered part it.
-*/
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-   this interface.
-*/
-
-// *****************************************************************************
-
-void TC0_TimerInitialize( void );
-
-void TC0_TimerStart( void );
-
-void TC0_TimerStop( void );
-
-uint32_t TC0_TimerFrequencyGet();
-
-
-void TC0_Timer16bitPeriodSet( uint16_t period );
-
-uint16_t TC0_Timer16bitPeriodGet( void );
-
-uint16_t TC0_Timer16bitCounterGet( void );
-
-void TC0_Timer16bitCounterSet( uint16_t count );
-
-
-
-
-void TC0_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uintptr_t context );
-
-
-
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-    }
+extern "C" {
 
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_TC0_H */
+// *****************************************************************************
+// *****************************************************************************
+// Section: L1 Cache Configuration
+// *****************************************************************************
+// *****************************************************************************
+#define ICACHE_ENABLE()
+#define ICACHE_DISABLE()
+#define ICACHE_INVALIDATE()
+#define INSTRUCTION_CACHE_ENABLED                      false
+
+#define DCACHE_ENABLE()
+#define DCACHE_DISABLE()
+#define DCACHE_INVALIDATE()
+#define DCACHE_CLEAN()
+#define DCACHE_CLEAN_INVALIDATE()
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+#define DATA_CACHE_ENABLED                             false
+
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
+#endif
+//DOM-IGNORE-END
+
+#endif // #ifndef DEVICE_CACHE_H
