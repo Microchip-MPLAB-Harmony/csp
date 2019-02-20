@@ -56,6 +56,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/* SERCOM2 USART baud value for 115200 Hz baud rate */
+#define SERCOM2_USART_INT_BAUD_VALUE			(55469U)
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -78,7 +81,7 @@ void SERCOM2_USART_Initialize( void )
     SERCOM2_REGS->USART_INT.SERCOM_CTRLA = SERCOM_USART_INT_CTRLA_MODE_USART_INT_CLK | SERCOM_USART_INT_CTRLA_RXPO_PAD1 | SERCOM_USART_INT_CTRLA_TXPO_PAD0 | SERCOM_USART_INT_CTRLA_DORD_Msk | SERCOM_USART_INT_CTRLA_IBON_Msk | SERCOM_USART_INT_CTRLA_FORM(0x0) | SERCOM_USART_INT_CTRLA_SAMPR(0) ;
 
     /* Configure Baud Rate */
-    SERCOM2_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(55469);
+    SERCOM2_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(SERCOM2_USART_INT_BAUD_VALUE);
 
     /*
      * Configures RXEN
