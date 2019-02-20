@@ -109,5 +109,5 @@ void CLOCK_Initialize (void)
 
     /* Selection of the Generator and write Lock for EIC */
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(5) | GCLK_CLKCTRL_GEN(0x0)  | GCLK_CLKCTRL_CLKEN_Msk;
-
+    
 }
