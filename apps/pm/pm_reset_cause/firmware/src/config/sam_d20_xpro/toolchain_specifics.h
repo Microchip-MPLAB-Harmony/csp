@@ -1,21 +1,4 @@
 /*******************************************************************************
-  SysTick Peripheral Library
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    plib_systick.c
-
-  Summary:
-    Systick Source File
-
-  Description:
-    None
-
-*******************************************************************************/
-
-/*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -38,58 +21,15 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "device.h"
-#include "peripheral/systick/plib_systick.h"
+#ifndef TOOLCHAIN_SPECIFICS_H
+#define TOOLCHAIN_SPECIFICS_H
+
+#include <sys/types.h>
+#define NO_INIT        __attribute__((section(".no_init")))
+#define SECTION(a)     __attribute__((__section__(a)))
+
+#define CACHE_ALIGN
 
 
-void SYSTICK_TimerInitialize ( void )
-{
-	SysTick->CTRL = 0;
-	SysTick->VAL = 0;
-	SysTick->LOAD = 0x493333 - 1;
-	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk;
-}
-
-void SYSTICK_TimerRestart ( void )
-{
-	SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
-	SysTick->VAL = 0;
-	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
-}
-
-void SYSTICK_TimerStart ( void )
-{
-	SysTick->VAL = 0;
-	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
-}
-
-void SYSTICK_TimerStop ( void )
-{
-	SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk);
-}
-
-void SYSTICK_TimerPeriodSet ( uint32_t period )
-{
-	SysTick->LOAD = period - 1;
-}
-
-uint32_t SYSTICK_TimerPeriodGet ( void )
-{
-		return(SysTick->LOAD);
-}
-
-uint32_t SYSTICK_TimerCounterGet ( void )
-{
-	return (SysTick->VAL);
-}
-
-uint32_t SYSTICK_TimerFrequencyGet ( void )
-{
-	return (SYSTICK_FREQ);
-}
-
-bool SYSTICK_TimerPeriodHasExpired(void)
-{
-	return (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) > 0;
-}
+#endif // end of header
 
