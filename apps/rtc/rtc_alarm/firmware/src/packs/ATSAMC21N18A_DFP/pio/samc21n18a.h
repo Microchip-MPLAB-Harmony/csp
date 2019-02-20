@@ -1,7 +1,7 @@
 /**
  * \brief Peripheral I/O description for SAMC21N18A
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-11-30T04:44:36Z */
+/* file generated from device description version 2019-01-07T09:49:01Z */
 #ifndef _SAMC21N18A_GPIO_H_
 #define _SAMC21N18A_GPIO_H_
 
