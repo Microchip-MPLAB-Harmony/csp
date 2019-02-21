@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.30.2.18207</state>
+                    <state>8.32.3.20186</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>50</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>50</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>50</state>
                 </option>
                 <option>
@@ -215,7 +215,7 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>34</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -468,6 +468,10 @@
                     <name>IccRTTI2</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OICompilerExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -642,15 +646,15 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>3</version>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state></state>
+                    <state>harmony.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -658,7 +662,7 @@
                 </option>
                 <option>
                     <name>OOCObjCopyEnable</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -688,7 +692,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>21</version>
+                <version>22</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1004,6 +1008,10 @@
                     <name>IlinkTrustzoneImportLibraryOut</name>
                     <state>tc_timer_mode_sam_a5d2_xult_import_lib.o</state>
                 </option>
+                <option>
+                    <name>OILinkExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1153,7 +1161,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1170,7 +1178,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1193,7 +1201,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1252,7 +1260,7 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>34</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1505,6 +1513,10 @@
                     <name>IccRTTI2</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OICompilerExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1725,7 +1737,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>21</version>
+                <version>22</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -2041,6 +2053,10 @@
                     <name>IlinkTrustzoneImportLibraryOut</name>
                     <state>###Unitialized###</state>
                 </option>
+                <option>
+                    <name>OILinkExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -2137,6 +2153,9 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\device.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\device_cache.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\flexcom.h</name>
             </file>
             <file>
@@ -2192,9 +2211,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio_pin.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\tc\plib_tc0.h</name>
@@ -2266,7 +2282,7 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\tdes.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\arm\toolchain_specifics.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\toolchain_specifics.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\trng.h</name>
