@@ -94,8 +94,6 @@ void FLEXCOM0_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintp
 // *****************************************************************************
 // *****************************************************************************
 
-void FLEXCOM0_InterruptHandler( void );
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
