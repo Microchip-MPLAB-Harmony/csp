@@ -54,14 +54,11 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/*
- * This section lists the other files that are included in this file.
- */
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include "device.h"
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -209,10 +206,10 @@ typedef struct
     size_t  readCount;
 
     /* State */
-    SERCOM_I2C_STATE state;
+    volatile SERCOM_I2C_STATE state;
 
     /* Transfer status */
-    SERCOM_I2C_ERROR error;
+    volatile SERCOM_I2C_ERROR error;
 
     /* Transfer Event Callback */
     SERCOM_I2C_CALLBACK callback;

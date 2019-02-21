@@ -47,11 +47,18 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include "plib_sercom2_i2c.h"
-#include "device.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Global Data
+// *****************************************************************************
+// *****************************************************************************
+
+/* SERCOM2 I2C baud value for 400 Khz baud rate */
+#define SERCOM2_I2CM_BAUD_VALUE			(52U)
+
 static SERCOM_I2C_OBJ sercom2I2CObj;
 
 // *****************************************************************************
@@ -85,7 +92,7 @@ void SERCOM2_I2C_Initialize(void)
     while((SERCOM2_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
 
     /* Baud rate - Master Baud Rate*/
-    SERCOM2_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(52);
+    SERCOM2_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(SERCOM2_I2CM_BAUD_VALUE);
 
     /* Set Operation Mode (Master), SDA Hold time, run in stand by and i2c master enable */
     SERCOM2_REGS->I2CM.SERCOM_CTRLA = SERCOM_I2CM_CTRLA_MODE_I2C_MASTER | SERCOM_I2CM_CTRLA_SDAHOLD_75NS | SERCOM_I2CM_CTRLA_ENABLE_Msk ;
@@ -99,7 +106,7 @@ void SERCOM2_I2C_Initialize(void)
     /* Wait for synchronization */
     while((SERCOM2_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
 
-    // Initialize the sercom PLib Object
+    /* Initialize the SERCOM2 PLib Object */
     sercom2I2CObj.error = SERCOM_I2C_ERROR_NONE;
     sercom2I2CObj.state = SERCOM_I2C_STATE_IDLE;
 
@@ -125,6 +132,7 @@ static void SERCOM2_I2C_InitiateRead(uint16_t address)
     sercom2I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
 
     SERCOM2_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
+
     /* Wait for synchronization */
     while((SERCOM2_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
 }
@@ -180,13 +188,12 @@ void SERCOM2_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback, uintptr_t contex
 static void SERCOM2_I2C_InitiateTransfer(uint16_t address, bool type)
 {
     sercom2I2CObj.writeCount = 0;
-
     sercom2I2CObj.readCount = 0;
 
     /* Clear all flags */
     SERCOM2_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
 
-    /*Smart mode enabled - ACK is set to send while receiving the data*/
+    /* Smart mode enabled - ACK is set to send while receiving the data */
     SERCOM2_REGS->I2CM.SERCOM_CTRLB &= ~SERCOM_I2CM_CTRLB_ACKACT_Msk;
 
     /* Wait for synchronization */
@@ -208,12 +215,11 @@ static void SERCOM2_I2C_InitiateTransfer(uint16_t address, bool type)
 
         /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 0*/
         SERCOM2_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE;
-    }  
+    }
 
     /* Wait for synchronization */
     while((SERCOM2_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
 }
-
 
 // *****************************************************************************
 /* Function:
@@ -239,17 +245,17 @@ static void SERCOM2_I2C_InitiateTransfer(uint16_t address, bool type)
 
 bool SERCOM2_I2C_Read(uint16_t address, uint8_t *pdata, uint32_t length)
 {
-    // Check for ongoing transfer
-    if( sercom2I2CObj.state != SERCOM_I2C_STATE_IDLE )
+    /* Check for ongoing transfer */
+    if(sercom2I2CObj.state != SERCOM_I2C_STATE_IDLE)
     {
         return false;
     }
 
-    sercom2I2CObj.address=address;
-    sercom2I2CObj.readBuffer=pdata;
-    sercom2I2CObj.readSize=length;
+    sercom2I2CObj.address = address;
+    sercom2I2CObj.readBuffer = pdata;
+    sercom2I2CObj.readSize = length;
     sercom2I2CObj.writeBuffer = NULL;
-    sercom2I2CObj.writeSize=0;
+    sercom2I2CObj.writeSize = 0;
     sercom2I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
     SERCOM2_I2C_InitiateTransfer(address, true);
@@ -281,17 +287,17 @@ bool SERCOM2_I2C_Read(uint16_t address, uint8_t *pdata, uint32_t length)
 
 bool SERCOM2_I2C_Write(uint16_t address, uint8_t *pdata, uint32_t length)
 {
-    // Check for ongoing transfer
-    if( sercom2I2CObj.state != SERCOM_I2C_STATE_IDLE )
+    /* Check for ongoing transfer */
+    if(sercom2I2CObj.state != SERCOM_I2C_STATE_IDLE)
     {
         return false;
     }
 
-    sercom2I2CObj.address=address;
-    sercom2I2CObj.readBuffer=NULL;
-    sercom2I2CObj.readSize=0;
-    sercom2I2CObj.writeBuffer=pdata;
-    sercom2I2CObj.writeSize=length;
+    sercom2I2CObj.address = address;
+    sercom2I2CObj.readBuffer = NULL;
+    sercom2I2CObj.readSize = 0;
+    sercom2I2CObj.writeBuffer = pdata;
+    sercom2I2CObj.writeSize = length;
     sercom2I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
     SERCOM2_I2C_InitiateTransfer(address, false);
@@ -325,22 +331,22 @@ bool SERCOM2_I2C_Write(uint16_t address, uint8_t *pdata, uint32_t length)
 
 bool SERCOM2_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint32_t wlength, uint8_t *rdata, uint32_t rlength)
 {
-    // Check for ongoing transfer
-    if( sercom2I2CObj.state != SERCOM_I2C_STATE_IDLE )
+    /* Check for ongoing transfer */
+    if(sercom2I2CObj.state != SERCOM_I2C_STATE_IDLE)
     {
         return false;
     }
 
-    sercom2I2CObj.address=address;
-    sercom2I2CObj.readBuffer=rdata;
-    sercom2I2CObj.readSize=rlength;
-    sercom2I2CObj.writeBuffer=wdata;
-    sercom2I2CObj.writeSize=wlength;
+    sercom2I2CObj.address = address;
+    sercom2I2CObj.readBuffer = rdata;
+    sercom2I2CObj.readSize = rlength;
+    sercom2I2CObj.writeBuffer = wdata;
+    sercom2I2CObj.writeSize = wlength;
     sercom2I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
     SERCOM2_I2C_InitiateTransfer(address, false);
 
-     return true;
+    return true;
 }
 
 // *****************************************************************************
@@ -456,12 +462,12 @@ void SERCOM2_I2C_InterruptHandler(void)
                 {
                     if (sercom2I2CObj.writeSize != 0)
                     {
-                        // Initiate Write transfer
+                        /* Initiate Write transfer */
                         SERCOM2_I2C_InitiateTransfer(sercom2I2CObj.address, false);
                     }
                     else
                     {
-                        // Initiate Read transfer
+                        /* Initiate Read transfer */
                         SERCOM2_I2C_InitiateTransfer(sercom2I2CObj.address, true);
                     }
 
@@ -486,10 +492,11 @@ void SERCOM2_I2C_InterruptHandler(void)
 
                             /* Wait for synchronization */
                             while((SERCOM2_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+
                             sercom2I2CObj.state = SERCOM_I2C_STATE_TRANSFER_DONE;
                         }
                     }
-                    // Write next byte
+                    /* Write next byte */
                     else
                     {
                         SERCOM2_REGS->I2CM.SERCOM_DATA = sercom2I2CObj.writeBuffer[sercom2I2CObj.writeCount++];
@@ -527,12 +534,13 @@ void SERCOM2_I2C_InterruptHandler(void)
         {
             /* Reset the PLib objects and Interrupts */
             sercom2I2CObj.state = SERCOM_I2C_STATE_IDLE;
+
             SERCOM2_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
+
             if (sercom2I2CObj.callback != NULL)
             {
                 sercom2I2CObj.callback(sercom2I2CObj.context);
             }
-
         }
         /* Transfer Complete */
         else if(sercom2I2CObj.state == SERCOM_I2C_STATE_TRANSFER_DONE)
@@ -540,7 +548,9 @@ void SERCOM2_I2C_InterruptHandler(void)
             /* Reset the PLib objects and interrupts */
             sercom2I2CObj.state = SERCOM_I2C_STATE_IDLE;
             sercom2I2CObj.error = SERCOM_I2C_ERROR_NONE;
+
             SERCOM2_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
+
             if(sercom2I2CObj.callback != NULL)
             {
                 sercom2I2CObj.callback(sercom2I2CObj.context);
