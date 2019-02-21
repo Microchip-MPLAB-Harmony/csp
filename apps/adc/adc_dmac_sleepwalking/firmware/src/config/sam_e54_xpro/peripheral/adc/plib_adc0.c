@@ -98,7 +98,7 @@ void ADC0_Initialize( void )
     ADC0_REGS->ADC_CTRLA = ADC_CTRLA_PRESCALER_DIV16;
 
     /* Sampling length */
-    ADC0_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(0U);
+    ADC0_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(3U);
 
     /* reference */
     ADC0_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_INTVCC1;
@@ -183,9 +183,13 @@ uint16_t ADC0_LastConversionResultGet( void )
 /* Check whether result is ready */
 bool ADC0_ConversionStatusGet( void )
 {
-    return (bool)((ADC0_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+    bool status;
+    status =  (bool)((ADC0_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    if (status == true)
+    {
+        /* Clear interrupt flag */
+        ADC0_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    }
+    return status;
 }
-
-
-
 
