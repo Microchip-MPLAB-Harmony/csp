@@ -1,7 +1,7 @@
 /**
  * \brief Component description for PMC
  *
- * © 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-09-19T14:04:45Z */
+/* file generated from device description version 2019-01-18T21:21:15Z */
 #ifndef _SAMV71_PMC_COMPONENT_H_
 #define _SAMV71_PMC_COMPONENT_H_
 
@@ -998,6 +998,9 @@
 #define PMC_PCER1_PID52_Pos                   _U_(20)                                              /**< (PMC_PCER1) Peripheral Clock 52 Enable Position */
 #define PMC_PCER1_PID52_Msk                   (_U_(0x1) << PMC_PCER1_PID52_Pos)                    /**< (PMC_PCER1) Peripheral Clock 52 Enable Mask */
 #define PMC_PCER1_PID52(value)                (PMC_PCER1_PID52_Msk & ((value) << PMC_PCER1_PID52_Pos))
+#define PMC_PCER1_PID53_Pos                   _U_(21)                                              /**< (PMC_PCER1) Peripheral Clock 53 Enable Position */
+#define PMC_PCER1_PID53_Msk                   (_U_(0x1) << PMC_PCER1_PID53_Pos)                    /**< (PMC_PCER1) Peripheral Clock 53 Enable Mask */
+#define PMC_PCER1_PID53(value)                (PMC_PCER1_PID53_Msk & ((value) << PMC_PCER1_PID53_Pos))
 #define PMC_PCER1_PID56_Pos                   _U_(24)                                              /**< (PMC_PCER1) Peripheral Clock 56 Enable Position */
 #define PMC_PCER1_PID56_Msk                   (_U_(0x1) << PMC_PCER1_PID56_Pos)                    /**< (PMC_PCER1) Peripheral Clock 56 Enable Mask */
 #define PMC_PCER1_PID56(value)                (PMC_PCER1_PID56_Msk & ((value) << PMC_PCER1_PID56_Pos))
@@ -1013,10 +1016,10 @@
 #define PMC_PCER1_PID60_Pos                   _U_(28)                                              /**< (PMC_PCER1) Peripheral Clock 60 Enable Position */
 #define PMC_PCER1_PID60_Msk                   (_U_(0x1) << PMC_PCER1_PID60_Pos)                    /**< (PMC_PCER1) Peripheral Clock 60 Enable Mask */
 #define PMC_PCER1_PID60(value)                (PMC_PCER1_PID60_Msk & ((value) << PMC_PCER1_PID60_Pos))
-#define PMC_PCER1_Msk                         _U_(0x1F1FFFAF)                                      /**< (PMC_PCER1) Register Mask  */
+#define PMC_PCER1_Msk                         _U_(0x1F3FFFAF)                                      /**< (PMC_PCER1) Register Mask  */
 
 #define PMC_PCER1_PID_Pos                     _U_(0)                                               /**< (PMC_PCER1 Position) Peripheral Clock 6x Enable */
-#define PMC_PCER1_PID_Msk                     (_U_(0xFFFFFF) << PMC_PCER1_PID_Pos)                 /**< (PMC_PCER1 Mask) PID */
+#define PMC_PCER1_PID_Msk                     (_U_(0x1FFFFFF) << PMC_PCER1_PID_Pos)                /**< (PMC_PCER1 Mask) PID */
 #define PMC_PCER1_PID(value)                  (PMC_PCER1_PID_Msk & ((value) << PMC_PCER1_PID_Pos)) 
 
 /* -------- PMC_PCDR1 : (PMC Offset: 0x104) ( /W 32) Peripheral Clock Disable Register 1 -------- */
@@ -1077,6 +1080,9 @@
 #define PMC_PCDR1_PID52_Pos                   _U_(20)                                              /**< (PMC_PCDR1) Peripheral Clock 52 Disable Position */
 #define PMC_PCDR1_PID52_Msk                   (_U_(0x1) << PMC_PCDR1_PID52_Pos)                    /**< (PMC_PCDR1) Peripheral Clock 52 Disable Mask */
 #define PMC_PCDR1_PID52(value)                (PMC_PCDR1_PID52_Msk & ((value) << PMC_PCDR1_PID52_Pos))
+#define PMC_PCDR1_PID53_Pos                   _U_(21)                                              /**< (PMC_PCDR1) Peripheral Clock 53 Disable Position */
+#define PMC_PCDR1_PID53_Msk                   (_U_(0x1) << PMC_PCDR1_PID53_Pos)                    /**< (PMC_PCDR1) Peripheral Clock 53 Disable Mask */
+#define PMC_PCDR1_PID53(value)                (PMC_PCDR1_PID53_Msk & ((value) << PMC_PCDR1_PID53_Pos))
 #define PMC_PCDR1_PID56_Pos                   _U_(24)                                              /**< (PMC_PCDR1) Peripheral Clock 56 Disable Position */
 #define PMC_PCDR1_PID56_Msk                   (_U_(0x1) << PMC_PCDR1_PID56_Pos)                    /**< (PMC_PCDR1) Peripheral Clock 56 Disable Mask */
 #define PMC_PCDR1_PID56(value)                (PMC_PCDR1_PID56_Msk & ((value) << PMC_PCDR1_PID56_Pos))
@@ -1092,10 +1098,10 @@
 #define PMC_PCDR1_PID60_Pos                   _U_(28)                                              /**< (PMC_PCDR1) Peripheral Clock 60 Disable Position */
 #define PMC_PCDR1_PID60_Msk                   (_U_(0x1) << PMC_PCDR1_PID60_Pos)                    /**< (PMC_PCDR1) Peripheral Clock 60 Disable Mask */
 #define PMC_PCDR1_PID60(value)                (PMC_PCDR1_PID60_Msk & ((value) << PMC_PCDR1_PID60_Pos))
-#define PMC_PCDR1_Msk                         _U_(0x1F1FFFAF)                                      /**< (PMC_PCDR1) Register Mask  */
+#define PMC_PCDR1_Msk                         _U_(0x1F3FFFAF)                                      /**< (PMC_PCDR1) Register Mask  */
 
 #define PMC_PCDR1_PID_Pos                     _U_(0)                                               /**< (PMC_PCDR1 Position) Peripheral Clock 6x Disable */
-#define PMC_PCDR1_PID_Msk                     (_U_(0xFFFFFF) << PMC_PCDR1_PID_Pos)                 /**< (PMC_PCDR1 Mask) PID */
+#define PMC_PCDR1_PID_Msk                     (_U_(0x1FFFFFF) << PMC_PCDR1_PID_Pos)                /**< (PMC_PCDR1 Mask) PID */
 #define PMC_PCDR1_PID(value)                  (PMC_PCDR1_PID_Msk & ((value) << PMC_PCDR1_PID_Pos)) 
 
 /* -------- PMC_PCSR1 : (PMC Offset: 0x108) ( R/ 32) Peripheral Clock Status Register 1 -------- */
@@ -1156,6 +1162,9 @@
 #define PMC_PCSR1_PID52_Pos                   _U_(20)                                              /**< (PMC_PCSR1) Peripheral Clock 52 Status Position */
 #define PMC_PCSR1_PID52_Msk                   (_U_(0x1) << PMC_PCSR1_PID52_Pos)                    /**< (PMC_PCSR1) Peripheral Clock 52 Status Mask */
 #define PMC_PCSR1_PID52(value)                (PMC_PCSR1_PID52_Msk & ((value) << PMC_PCSR1_PID52_Pos))
+#define PMC_PCSR1_PID53_Pos                   _U_(21)                                              /**< (PMC_PCSR1) Peripheral Clock 53 Status Position */
+#define PMC_PCSR1_PID53_Msk                   (_U_(0x1) << PMC_PCSR1_PID53_Pos)                    /**< (PMC_PCSR1) Peripheral Clock 53 Status Mask */
+#define PMC_PCSR1_PID53(value)                (PMC_PCSR1_PID53_Msk & ((value) << PMC_PCSR1_PID53_Pos))
 #define PMC_PCSR1_PID56_Pos                   _U_(24)                                              /**< (PMC_PCSR1) Peripheral Clock 56 Status Position */
 #define PMC_PCSR1_PID56_Msk                   (_U_(0x1) << PMC_PCSR1_PID56_Pos)                    /**< (PMC_PCSR1) Peripheral Clock 56 Status Mask */
 #define PMC_PCSR1_PID56(value)                (PMC_PCSR1_PID56_Msk & ((value) << PMC_PCSR1_PID56_Pos))
@@ -1171,10 +1180,10 @@
 #define PMC_PCSR1_PID60_Pos                   _U_(28)                                              /**< (PMC_PCSR1) Peripheral Clock 60 Status Position */
 #define PMC_PCSR1_PID60_Msk                   (_U_(0x1) << PMC_PCSR1_PID60_Pos)                    /**< (PMC_PCSR1) Peripheral Clock 60 Status Mask */
 #define PMC_PCSR1_PID60(value)                (PMC_PCSR1_PID60_Msk & ((value) << PMC_PCSR1_PID60_Pos))
-#define PMC_PCSR1_Msk                         _U_(0x1F1FFFAF)                                      /**< (PMC_PCSR1) Register Mask  */
+#define PMC_PCSR1_Msk                         _U_(0x1F3FFFAF)                                      /**< (PMC_PCSR1) Register Mask  */
 
 #define PMC_PCSR1_PID_Pos                     _U_(0)                                               /**< (PMC_PCSR1 Position) Peripheral Clock 6x Status */
-#define PMC_PCSR1_PID_Msk                     (_U_(0xFFFFFF) << PMC_PCSR1_PID_Pos)                 /**< (PMC_PCSR1 Mask) PID */
+#define PMC_PCSR1_PID_Msk                     (_U_(0x1FFFFFF) << PMC_PCSR1_PID_Pos)                /**< (PMC_PCSR1 Mask) PID */
 #define PMC_PCSR1_PID(value)                  (PMC_PCSR1_PID_Msk & ((value) << PMC_PCSR1_PID_Pos)) 
 
 /* -------- PMC_PCR : (PMC Offset: 0x10C) (R/W 32) Peripheral Control Register -------- */
@@ -1624,6 +1633,9 @@
 #define PMC_SLPWK_ER1_PID52_Pos               _U_(20)                                              /**< (PMC_SLPWK_ER1) Peripheral 52 SleepWalking Enable Position */
 #define PMC_SLPWK_ER1_PID52_Msk               (_U_(0x1) << PMC_SLPWK_ER1_PID52_Pos)                /**< (PMC_SLPWK_ER1) Peripheral 52 SleepWalking Enable Mask */
 #define PMC_SLPWK_ER1_PID52(value)            (PMC_SLPWK_ER1_PID52_Msk & ((value) << PMC_SLPWK_ER1_PID52_Pos))
+#define PMC_SLPWK_ER1_PID53_Pos               _U_(21)                                              /**< (PMC_SLPWK_ER1) Peripheral 53 SleepWalking Enable Position */
+#define PMC_SLPWK_ER1_PID53_Msk               (_U_(0x1) << PMC_SLPWK_ER1_PID53_Pos)                /**< (PMC_SLPWK_ER1) Peripheral 53 SleepWalking Enable Mask */
+#define PMC_SLPWK_ER1_PID53(value)            (PMC_SLPWK_ER1_PID53_Msk & ((value) << PMC_SLPWK_ER1_PID53_Pos))
 #define PMC_SLPWK_ER1_PID56_Pos               _U_(24)                                              /**< (PMC_SLPWK_ER1) Peripheral 56 SleepWalking Enable Position */
 #define PMC_SLPWK_ER1_PID56_Msk               (_U_(0x1) << PMC_SLPWK_ER1_PID56_Pos)                /**< (PMC_SLPWK_ER1) Peripheral 56 SleepWalking Enable Mask */
 #define PMC_SLPWK_ER1_PID56(value)            (PMC_SLPWK_ER1_PID56_Msk & ((value) << PMC_SLPWK_ER1_PID56_Pos))
@@ -1639,10 +1651,10 @@
 #define PMC_SLPWK_ER1_PID60_Pos               _U_(28)                                              /**< (PMC_SLPWK_ER1) Peripheral 60 SleepWalking Enable Position */
 #define PMC_SLPWK_ER1_PID60_Msk               (_U_(0x1) << PMC_SLPWK_ER1_PID60_Pos)                /**< (PMC_SLPWK_ER1) Peripheral 60 SleepWalking Enable Mask */
 #define PMC_SLPWK_ER1_PID60(value)            (PMC_SLPWK_ER1_PID60_Msk & ((value) << PMC_SLPWK_ER1_PID60_Pos))
-#define PMC_SLPWK_ER1_Msk                     _U_(0x1F1FFFAF)                                      /**< (PMC_SLPWK_ER1) Register Mask  */
+#define PMC_SLPWK_ER1_Msk                     _U_(0x1F3FFFAF)                                      /**< (PMC_SLPWK_ER1) Register Mask  */
 
 #define PMC_SLPWK_ER1_PID_Pos                 _U_(0)                                               /**< (PMC_SLPWK_ER1 Position) Peripheral 6x SleepWalking Enable */
-#define PMC_SLPWK_ER1_PID_Msk                 (_U_(0xFFFFFF) << PMC_SLPWK_ER1_PID_Pos)             /**< (PMC_SLPWK_ER1 Mask) PID */
+#define PMC_SLPWK_ER1_PID_Msk                 (_U_(0x1FFFFFF) << PMC_SLPWK_ER1_PID_Pos)            /**< (PMC_SLPWK_ER1 Mask) PID */
 #define PMC_SLPWK_ER1_PID(value)              (PMC_SLPWK_ER1_PID_Msk & ((value) << PMC_SLPWK_ER1_PID_Pos)) 
 
 /* -------- PMC_SLPWK_DR1 : (PMC Offset: 0x138) ( /W 32) SleepWalking Disable Register 1 -------- */
@@ -1703,6 +1715,9 @@
 #define PMC_SLPWK_DR1_PID52_Pos               _U_(20)                                              /**< (PMC_SLPWK_DR1) Peripheral 52 SleepWalking Disable Position */
 #define PMC_SLPWK_DR1_PID52_Msk               (_U_(0x1) << PMC_SLPWK_DR1_PID52_Pos)                /**< (PMC_SLPWK_DR1) Peripheral 52 SleepWalking Disable Mask */
 #define PMC_SLPWK_DR1_PID52(value)            (PMC_SLPWK_DR1_PID52_Msk & ((value) << PMC_SLPWK_DR1_PID52_Pos))
+#define PMC_SLPWK_DR1_PID53_Pos               _U_(21)                                              /**< (PMC_SLPWK_DR1) Peripheral 53 SleepWalking Disable Position */
+#define PMC_SLPWK_DR1_PID53_Msk               (_U_(0x1) << PMC_SLPWK_DR1_PID53_Pos)                /**< (PMC_SLPWK_DR1) Peripheral 53 SleepWalking Disable Mask */
+#define PMC_SLPWK_DR1_PID53(value)            (PMC_SLPWK_DR1_PID53_Msk & ((value) << PMC_SLPWK_DR1_PID53_Pos))
 #define PMC_SLPWK_DR1_PID56_Pos               _U_(24)                                              /**< (PMC_SLPWK_DR1) Peripheral 56 SleepWalking Disable Position */
 #define PMC_SLPWK_DR1_PID56_Msk               (_U_(0x1) << PMC_SLPWK_DR1_PID56_Pos)                /**< (PMC_SLPWK_DR1) Peripheral 56 SleepWalking Disable Mask */
 #define PMC_SLPWK_DR1_PID56(value)            (PMC_SLPWK_DR1_PID56_Msk & ((value) << PMC_SLPWK_DR1_PID56_Pos))
@@ -1718,10 +1733,10 @@
 #define PMC_SLPWK_DR1_PID60_Pos               _U_(28)                                              /**< (PMC_SLPWK_DR1) Peripheral 60 SleepWalking Disable Position */
 #define PMC_SLPWK_DR1_PID60_Msk               (_U_(0x1) << PMC_SLPWK_DR1_PID60_Pos)                /**< (PMC_SLPWK_DR1) Peripheral 60 SleepWalking Disable Mask */
 #define PMC_SLPWK_DR1_PID60(value)            (PMC_SLPWK_DR1_PID60_Msk & ((value) << PMC_SLPWK_DR1_PID60_Pos))
-#define PMC_SLPWK_DR1_Msk                     _U_(0x1F1FFFAF)                                      /**< (PMC_SLPWK_DR1) Register Mask  */
+#define PMC_SLPWK_DR1_Msk                     _U_(0x1F3FFFAF)                                      /**< (PMC_SLPWK_DR1) Register Mask  */
 
 #define PMC_SLPWK_DR1_PID_Pos                 _U_(0)                                               /**< (PMC_SLPWK_DR1 Position) Peripheral 6x SleepWalking Disable */
-#define PMC_SLPWK_DR1_PID_Msk                 (_U_(0xFFFFFF) << PMC_SLPWK_DR1_PID_Pos)             /**< (PMC_SLPWK_DR1 Mask) PID */
+#define PMC_SLPWK_DR1_PID_Msk                 (_U_(0x1FFFFFF) << PMC_SLPWK_DR1_PID_Pos)            /**< (PMC_SLPWK_DR1 Mask) PID */
 #define PMC_SLPWK_DR1_PID(value)              (PMC_SLPWK_DR1_PID_Msk & ((value) << PMC_SLPWK_DR1_PID_Pos)) 
 
 /* -------- PMC_SLPWK_SR1 : (PMC Offset: 0x13C) ( R/ 32) SleepWalking Status Register 1 -------- */
@@ -1782,6 +1797,9 @@
 #define PMC_SLPWK_SR1_PID52_Pos               _U_(20)                                              /**< (PMC_SLPWK_SR1) Peripheral 52 SleepWalking Status Position */
 #define PMC_SLPWK_SR1_PID52_Msk               (_U_(0x1) << PMC_SLPWK_SR1_PID52_Pos)                /**< (PMC_SLPWK_SR1) Peripheral 52 SleepWalking Status Mask */
 #define PMC_SLPWK_SR1_PID52(value)            (PMC_SLPWK_SR1_PID52_Msk & ((value) << PMC_SLPWK_SR1_PID52_Pos))
+#define PMC_SLPWK_SR1_PID53_Pos               _U_(21)                                              /**< (PMC_SLPWK_SR1) Peripheral 53 SleepWalking Status Position */
+#define PMC_SLPWK_SR1_PID53_Msk               (_U_(0x1) << PMC_SLPWK_SR1_PID53_Pos)                /**< (PMC_SLPWK_SR1) Peripheral 53 SleepWalking Status Mask */
+#define PMC_SLPWK_SR1_PID53(value)            (PMC_SLPWK_SR1_PID53_Msk & ((value) << PMC_SLPWK_SR1_PID53_Pos))
 #define PMC_SLPWK_SR1_PID56_Pos               _U_(24)                                              /**< (PMC_SLPWK_SR1) Peripheral 56 SleepWalking Status Position */
 #define PMC_SLPWK_SR1_PID56_Msk               (_U_(0x1) << PMC_SLPWK_SR1_PID56_Pos)                /**< (PMC_SLPWK_SR1) Peripheral 56 SleepWalking Status Mask */
 #define PMC_SLPWK_SR1_PID56(value)            (PMC_SLPWK_SR1_PID56_Msk & ((value) << PMC_SLPWK_SR1_PID56_Pos))
@@ -1797,10 +1815,10 @@
 #define PMC_SLPWK_SR1_PID60_Pos               _U_(28)                                              /**< (PMC_SLPWK_SR1) Peripheral 60 SleepWalking Status Position */
 #define PMC_SLPWK_SR1_PID60_Msk               (_U_(0x1) << PMC_SLPWK_SR1_PID60_Pos)                /**< (PMC_SLPWK_SR1) Peripheral 60 SleepWalking Status Mask */
 #define PMC_SLPWK_SR1_PID60(value)            (PMC_SLPWK_SR1_PID60_Msk & ((value) << PMC_SLPWK_SR1_PID60_Pos))
-#define PMC_SLPWK_SR1_Msk                     _U_(0x1F1FFFAF)                                      /**< (PMC_SLPWK_SR1) Register Mask  */
+#define PMC_SLPWK_SR1_Msk                     _U_(0x1F3FFFAF)                                      /**< (PMC_SLPWK_SR1) Register Mask  */
 
 #define PMC_SLPWK_SR1_PID_Pos                 _U_(0)                                               /**< (PMC_SLPWK_SR1 Position) Peripheral 6x SleepWalking Status */
-#define PMC_SLPWK_SR1_PID_Msk                 (_U_(0xFFFFFF) << PMC_SLPWK_SR1_PID_Pos)             /**< (PMC_SLPWK_SR1 Mask) PID */
+#define PMC_SLPWK_SR1_PID_Msk                 (_U_(0x1FFFFFF) << PMC_SLPWK_SR1_PID_Pos)            /**< (PMC_SLPWK_SR1 Mask) PID */
 #define PMC_SLPWK_SR1_PID(value)              (PMC_SLPWK_SR1_PID_Msk & ((value) << PMC_SLPWK_SR1_PID_Pos)) 
 
 /* -------- PMC_SLPWK_ASR1 : (PMC Offset: 0x140) ( R/ 32) SleepWalking Activity Status Register 1 -------- */
@@ -1861,6 +1879,9 @@
 #define PMC_SLPWK_ASR1_PID52_Pos              _U_(20)                                              /**< (PMC_SLPWK_ASR1) Peripheral 52 Activity Status Position */
 #define PMC_SLPWK_ASR1_PID52_Msk              (_U_(0x1) << PMC_SLPWK_ASR1_PID52_Pos)               /**< (PMC_SLPWK_ASR1) Peripheral 52 Activity Status Mask */
 #define PMC_SLPWK_ASR1_PID52(value)           (PMC_SLPWK_ASR1_PID52_Msk & ((value) << PMC_SLPWK_ASR1_PID52_Pos))
+#define PMC_SLPWK_ASR1_PID53_Pos              _U_(21)                                              /**< (PMC_SLPWK_ASR1) Peripheral 53 Activity Status Position */
+#define PMC_SLPWK_ASR1_PID53_Msk              (_U_(0x1) << PMC_SLPWK_ASR1_PID53_Pos)               /**< (PMC_SLPWK_ASR1) Peripheral 53 Activity Status Mask */
+#define PMC_SLPWK_ASR1_PID53(value)           (PMC_SLPWK_ASR1_PID53_Msk & ((value) << PMC_SLPWK_ASR1_PID53_Pos))
 #define PMC_SLPWK_ASR1_PID56_Pos              _U_(24)                                              /**< (PMC_SLPWK_ASR1) Peripheral 56 Activity Status Position */
 #define PMC_SLPWK_ASR1_PID56_Msk              (_U_(0x1) << PMC_SLPWK_ASR1_PID56_Pos)               /**< (PMC_SLPWK_ASR1) Peripheral 56 Activity Status Mask */
 #define PMC_SLPWK_ASR1_PID56(value)           (PMC_SLPWK_ASR1_PID56_Msk & ((value) << PMC_SLPWK_ASR1_PID56_Pos))
@@ -1876,10 +1897,10 @@
 #define PMC_SLPWK_ASR1_PID60_Pos              _U_(28)                                              /**< (PMC_SLPWK_ASR1) Peripheral 60 Activity Status Position */
 #define PMC_SLPWK_ASR1_PID60_Msk              (_U_(0x1) << PMC_SLPWK_ASR1_PID60_Pos)               /**< (PMC_SLPWK_ASR1) Peripheral 60 Activity Status Mask */
 #define PMC_SLPWK_ASR1_PID60(value)           (PMC_SLPWK_ASR1_PID60_Msk & ((value) << PMC_SLPWK_ASR1_PID60_Pos))
-#define PMC_SLPWK_ASR1_Msk                    _U_(0x1F1FFFAF)                                      /**< (PMC_SLPWK_ASR1) Register Mask  */
+#define PMC_SLPWK_ASR1_Msk                    _U_(0x1F3FFFAF)                                      /**< (PMC_SLPWK_ASR1) Register Mask  */
 
 #define PMC_SLPWK_ASR1_PID_Pos                _U_(0)                                               /**< (PMC_SLPWK_ASR1 Position) Peripheral 6x Activity Status */
-#define PMC_SLPWK_ASR1_PID_Msk                (_U_(0xFFFFFF) << PMC_SLPWK_ASR1_PID_Pos)            /**< (PMC_SLPWK_ASR1 Mask) PID */
+#define PMC_SLPWK_ASR1_PID_Msk                (_U_(0x1FFFFFF) << PMC_SLPWK_ASR1_PID_Pos)           /**< (PMC_SLPWK_ASR1 Mask) PID */
 #define PMC_SLPWK_ASR1_PID(value)             (PMC_SLPWK_ASR1_PID_Msk & ((value) << PMC_SLPWK_ASR1_PID_Pos)) 
 
 /* -------- PMC_SLPWK_AIPR : (PMC Offset: 0x144) ( R/ 32) SleepWalking Activity In Progress Register -------- */
