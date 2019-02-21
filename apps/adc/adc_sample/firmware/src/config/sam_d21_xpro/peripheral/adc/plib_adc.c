@@ -96,7 +96,7 @@ void ADC_Initialize( void )
         | ADC_CALIB_BIAS_CAL((((*(uint64_t*)OTP4_ADDR + 1) & ADC_BIASCAL_Msk) >> ADC_BIASCAL_POS));
 
     /* Sampling length */
-    ADC_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(0U);
+    ADC_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(3U);
 
     /* reference */
     ADC_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_INTVCC1;
@@ -162,16 +162,6 @@ void ADC_ConversionStart( void )
     }
 }
 
-/* Configure window comparison threshold values */
-void ADC_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
-{
-    ADC_REGS->ADC_WINLT = low_threshold;
-    ADC_REGS->ADC_WINUT = high_threshold;
-    while(ADC_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
-    {
-        /* Wait for Synchronization */
-    }
-}
 
 /* Read the conversion result */
 uint16_t ADC_ConversionResultGet( void )
@@ -179,17 +169,15 @@ uint16_t ADC_ConversionResultGet( void )
     return (uint16_t)ADC_REGS->ADC_RESULT;
 }
 
+
 /* Check whether result is ready */
 bool ADC_ConversionStatusGet( void )
 {
-    return (bool)((ADC_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+    bool status;
+    status =  (bool)((ADC_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    if (status == true)
+    {
+        ADC_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    }
+    return status;
 }
-
-/* Check whether window monitor result is ready */
-bool ADC_WindowMonitorStatusGet( void )
-{
-    return (bool)((ADC_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) == ADC_INTFLAG_WINMON_Msk);
-}
-
-
-
