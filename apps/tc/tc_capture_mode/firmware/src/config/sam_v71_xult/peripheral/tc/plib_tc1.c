@@ -53,7 +53,6 @@
 */
 #include "device.h"
 #include "plib_tc1.h"
-
  
 
  
@@ -84,7 +83,7 @@ void TC1_CH2_CompareInitialize (void)
                 TC_CMR_WAVEFORM_EEVTEDG_NONE;
 
     /* write period */
-    TC1_REGS->TC_CHANNEL[2].TC_RC = 60000U;
+    TC1_REGS->TC_CHANNEL[2].TC_RC = 10000U;
 
     /* write compare values */
     TC1_REGS->TC_CHANNEL[2].TC_RA = 5000U;
@@ -135,12 +134,13 @@ void TC1_CH2_CompareBSet (uint16_t value)
 
 TC_COMPARE_STATUS TC1_CH2_CompareStatusGet(void)
 {
-    return ((TC1_REGS->TC_CHANNEL[2].TC_SR) & TC_COMPARE_STATUS_MSK);
+    return (TC_COMPARE_STATUS)(TC1_REGS->TC_CHANNEL[2].TC_SR & TC_COMPARE_STATUS_MSK);
 }
  
 
  
 
+ 
 /**
  End of File
 */
