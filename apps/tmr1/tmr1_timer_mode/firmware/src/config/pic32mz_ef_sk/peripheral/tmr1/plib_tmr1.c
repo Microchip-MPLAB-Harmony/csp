@@ -60,8 +60,10 @@ void TMR1_Initialize(void)
 
     /*
     SIDL = 0
-    TCKPS =3
-    TSYNC   = false
+    TWDIS = 0
+    TGATE = 0
+    TCKPS = 3
+    TSYNC = 0
     TCS = 0
     */
     T1CONSET = 0x30;
