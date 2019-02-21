@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-21T10:09:56Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_AES_COMPONENT_H_
 #define _SAME54_AES_COMPONENT_H_
 
