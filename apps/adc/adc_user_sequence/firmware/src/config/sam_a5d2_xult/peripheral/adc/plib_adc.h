@@ -119,8 +119,6 @@ bool ADC_ComparisonEventResultIsReady(void);
 void ADC_ComparisonRestart(void);
 
 void ADC_CallbackRegister(ADC_CALLBACK callback, uintptr_t context);
-
-void ADC_InterruptHandler(void);
 // *****************************************************************************
 
 // DOM-IGNORE-BEGIN
