@@ -57,7 +57,7 @@
 /*** DEVCFG0 ***/
 #pragma config DEBUG =      OFF
 #pragma config JTAGEN =     OFF
-#pragma config ICESEL =     ICS_PGx2
+#pragma config ICESEL =     ICS_PGx1
 #pragma config TRCEN =      OFF
 #pragma config BOOTISA =    MIPS32
 #pragma config FECCCON =    OFF_UNLOCKED
@@ -70,7 +70,7 @@
 #pragma config POSCBOOST =  ON
 #pragma config POSCFGAIN =  GAIN_G3
 #pragma config POSCAGCDLY = POSCAGCDLY1
-#pragma config POSCAGC =      OFF
+#pragma config POSCAGC =      ON
 #pragma config EJTAGBEN =   NORMAL
 
 /*** DEVCFG1 ***/
@@ -105,8 +105,8 @@
 
 /*** DEVCFG3 ***/
 #pragma config USERID =     0xffff
-#pragma config EXTDDRSIZE = DDR_SIZE_32MB
-#pragma config FMIIEN =     OFF
+#pragma config EXTDDRSIZE = DDR_SIZE_128MB
+#pragma config FMIIEN =     ON
 #pragma config FETHIO =     ON
 #pragma config PGL1WAY =    ON
 #pragma config PMDL1WAY =   ON
@@ -169,6 +169,11 @@ void SYS_Initialize ( void* data )
   
     CLK_Initialize();
 	GPIO_Initialize();
+    /* Configure Prefetch, Wait States and ECC */
+    PRECONbits.PREFEN = 3;
+    PRECONbits.PFMWS = 2;
+    CFGCONbits.ECCCON = 3;
+
 
 
 	UART2_Initialize();
