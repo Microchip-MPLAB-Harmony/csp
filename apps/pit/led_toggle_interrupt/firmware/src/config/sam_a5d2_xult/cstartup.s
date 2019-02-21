@@ -86,6 +86,7 @@ REMAP_BASE_ADDRESS DEFINE 0x00600000
         EXTERN  prefetch_abort_irq_handler
         EXTERN  data_abort_irq_handler
         EXTERN  software_interrupt_irq_handler
+        
 
         DATA
 
