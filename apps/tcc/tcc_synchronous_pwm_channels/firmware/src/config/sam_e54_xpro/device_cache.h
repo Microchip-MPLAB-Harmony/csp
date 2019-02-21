@@ -1,26 +1,26 @@
 /*******************************************************************************
-  Timer/Counter for Control(TCC) Peripheral Library Interface Header File
+  Cortex-M L1 Cache Header
 
-  Company
-    Microchip Technology Inc.
+  File Name:
+    device_cache.h
 
-  File Name
-    plib_tcc_common.h
+  Summary:
+    Preprocessor definitions to provide L1 Cache control.
 
-  Summary
-    TCC peripheral library interface.
+  Description:
+    An MPLAB PLIB or Project can include this header to perform cache cleans,
+    invalidates etc. For the DCache and ICache.
 
-  Description
-    This file defines the interface to the TCC peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
-
+  Remarks:
+    This header should not define any prototypes or data definitions, or 
+    include any files that do.  The file only provides macro definitions for 
+    build-time.
 
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -43,55 +43,50 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TCC_COMMON_H    // Guards against multiple inclusion
-#define PLIB_TCC_COMMON_H
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/*  This section lists the other files that are included in this file.
+/*  This section Includes other configuration headers necessary to completely
+    define this configuration.
 */
-
-#include <stdbool.h>
-#include <stddef.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-    extern "C" {
+extern "C" {
 
 #endif
 // DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Data Types
+// Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this
-    interface and should be considered part it.
-*/
-// *****************************************************************************
+#define ICACHE_ENABLE()
+#define ICACHE_DISABLE()
+#define ICACHE_INVALIDATE()
+#define INSTRUCTION_CACHE_ENABLED                      false
 
-typedef void (*TCC_CALLBACK)( uint32_t status, uintptr_t context );
-// *****************************************************************************
+#define DCACHE_ENABLE()
+#define DCACHE_DISABLE()
+#define DCACHE_INVALIDATE()
+#define DCACHE_CLEAN()
+#define DCACHE_CLEAN_INVALIDATE()
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+#define DATA_CACHE_ENABLED                             false
 
-typedef struct
-{
-    TCC_CALLBACK callback_fn;
-    uintptr_t context;
-}TCC_CALLBACK_OBJECT;
-
-
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    }
-
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
 #endif
-// DOM-IGNORE-END
+//DOM-IGNORE-END
 
-#endif /* PLIB_TCC_COMMON_H */
+#endif // #ifndef DEVICE_CACHE_H
