@@ -53,7 +53,6 @@
 */
 #include "device.h"
 #include "plib_tc1.h"
-
  
 
  
@@ -78,10 +77,10 @@ void TC1_CH0_CompareInitialize (void)
                 TC_CMR_WAVEFORM_EEVTEDG_NONE;
 
     /* write period */
-    TC1_REGS->TC_CHANNEL[0].TC_RC = 8192U;
+    TC1_REGS->TC_CHANNEL[0].TC_RC = 10000U;
 
     /* write compare values */
-    TC1_REGS->TC_CHANNEL[0].TC_RA = 1000U;
+    TC1_REGS->TC_CHANNEL[0].TC_RA = 5000U;
     TC1_REGS->TC_CHANNEL[0].TC_RB = 3000U;
 
     /* enable interrupt */
@@ -140,9 +139,9 @@ void TC1_CH0_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t con
 /* Interrupt Handler */
 void TC1_CH0_InterruptHandler(void)
 {
-    TC_COMPARE_STATUS compare_status = TC1_REGS->TC_CHANNEL[0].TC_SR & TC_COMPARE_STATUS_MSK;
+    TC_COMPARE_STATUS compare_status = (TC_COMPARE_STATUS)(TC1_REGS->TC_CHANNEL[0].TC_SR & TC_COMPARE_STATUS_MSK);
     /* Call registered callback function */
-    if (TC1_CH0_CallbackObj.callback_fn != NULL)
+    if ((TC_COMPARE_NONE != compare_status) && TC1_CH0_CallbackObj.callback_fn != NULL)
     {
         TC1_CH0_CallbackObj.callback_fn(compare_status, TC1_CH0_CallbackObj.context);
     }
@@ -157,6 +156,7 @@ void TC1_CH0_InterruptHandler(void)
 
  
 
+ 
 /**
  End of File
 */
