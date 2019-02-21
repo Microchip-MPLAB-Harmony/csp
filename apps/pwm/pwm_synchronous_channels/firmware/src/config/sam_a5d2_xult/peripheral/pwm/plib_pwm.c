@@ -55,8 +55,6 @@
 #include "plib_pwm.h"
 
 
-static uint32_t PWM_status;  /* Saves interrupt status */
-
 /* Object to hold callback function and context */
 PWM_CALLBACK_OBJECT PWM_CallbackObj;
 
@@ -158,14 +156,6 @@ void PWM_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMask)
     PWM_REGS->PWM_IDR1 = channelMask;
 }
 
-/* Check the status of counter event */
-bool PWM_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel)
-{
-    bool status;
-    status = ((PWM_status | PWM_REGS->PWM_ISR1) >> channel) & 0x1U;
-    PWM_status = 0x0U;
-    return status;
-}
 
 /* Enable synchronous update */
 void PWM_SyncUpdateEnable (void)
@@ -189,10 +179,11 @@ void PWM_CallbackRegister(PWM_CALLBACK callback, uintptr_t context)
 /* Interrupt Handler */
 void PWM_InterruptHandler(void)
 {
-    PWM_status = PWM_REGS->PWM_ISR1;
+    uint32_t status;
+    status = PWM_REGS->PWM_ISR1;
     if (PWM_CallbackObj.callback_fn != NULL)
     {
-        PWM_CallbackObj.callback_fn(PWM_CallbackObj.context);
+        PWM_CallbackObj.callback_fn(status, PWM_CallbackObj.context);
     }
 }
 
