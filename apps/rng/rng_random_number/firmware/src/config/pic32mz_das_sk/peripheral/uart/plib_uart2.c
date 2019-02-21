@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -96,7 +96,7 @@ void UART2_Initialize( void )
     /*SLPEN = 0 */
     U2MODE = 0x8;
 
-    /*Enable UUART2 Receiver and Transmitter */
+    /*Enable UART2 Receiver and Transmitter */
     U2STASET = (_U2STA_UTXEN_MASK | _U2STA_URXEN_MASK);
 
     /* BAUD Rate register Setup */
@@ -117,6 +117,9 @@ bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 
     if (setup != NULL)
     {
+        /* Turn OFF UART2*/
+        U2MODECLR = _U2MODE_ON_MASK;
+
         if(srcClkFreq == 0)
         {
             srcClkFreq = UART2_FrequencyGet();
@@ -142,13 +145,39 @@ bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
             return status;
         }
 
+        if(setup->dataWidth == UART_DATA_9_BIT)
+        {
+            if(setup->parity != UART_PARITY_NONE)
+            {
+               return status;
+
+            }
+            else
+            {
+               /* Configure UART2 mode */
+               uartMode = U2MODE;
+               uartMode &= ~_U2MODE_PDSEL_MASK;
+               U2MODE = uartMode | setup->dataWidth;
+            }
+
+        }
+        else
+        {
+            /* Configure UART2 mode */
+            uartMode = U2MODE;
+            uartMode &= ~_U2MODE_PDSEL_MASK;
+            U2MODE = uartMode | setup->parity ;
+        }
+
         /* Configure UART2 mode */
         uartMode = U2MODE;
-        uartMode &= ~_U2MODE_PDSEL_MASK;
-        U2MODE = uartMode | setup->parity ;
+        uartMode &= ~_U2MODE_STSEL_MASK;
+        U2MODE = uartMode | setup->stopBits ;
 
         /* Configure UART2 Baud Rate */
         U2BRG = brgVal;
+
+        U2MODESET = _U2MODE_ON_MASK;
 
         status = true;
     }
@@ -206,7 +235,7 @@ bool UART2_Write( void *buffer, const size_t size )
     {
         while( size > processedSize )
         {
-            if(_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK))
+            if(!(U2STA & _U2STA_UTXBF_MASK))
             {
                 U2TXREG = *lBuffer++;
                 processedSize++;
@@ -237,7 +266,7 @@ UART_ERROR UART2_ErrorGet( void )
 
 void UART2_WriteByte(int data)
 {
-    while ((_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK)) == 0);
+    while (!(U2STA & _U2STA_UTXBF_MASK));
 
     U2TXREG = data;
 }
@@ -246,7 +275,7 @@ bool UART2_TransmitterIsReady( void )
 {
     bool status = false;
 
-    if(_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK))
+    if(!(U2STA & _U2STA_UTXBF_MASK))
     {
         status = true;
     }
@@ -263,7 +292,7 @@ bool UART2_ReceiverIsReady( void )
 {
     bool status = false;
 
-    if(_U2STA_URXDA_MASK != (U2STA & _U2STA_URXDA_MASK))
+    if(_U2STA_URXDA_MASK == (U2STA & _U2STA_URXDA_MASK))
     {
         status = true;
     }
