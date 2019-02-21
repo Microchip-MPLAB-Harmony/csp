@@ -135,7 +135,7 @@ void CLOCK_Initialize (void)
 
     /* Selection of the Generator and write Lock for SERCOM2_CORE */
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(22) | GCLK_CLKCTRL_GEN(0x0)  | GCLK_CLKCTRL_CLKEN_Msk;
-
+    
     /* Configure the APBA Bridge Clocks */
     PM_REGS->PM_APBAMASK = 0x3f;
 
