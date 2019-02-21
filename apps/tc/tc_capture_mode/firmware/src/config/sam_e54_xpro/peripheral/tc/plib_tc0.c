@@ -86,10 +86,10 @@ void TC0_CompareInitialize( void )
     /* Configure waveform generation mode */
     TC0_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_MPWM;
 
-    
+
     TC0_REGS->COUNT16.TC_CC[0] = 60000U;
     TC0_REGS->COUNT16.TC_CC[1] = 0U;
-    
+
     /* Clear all interrupt flags */
     TC0_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
 
@@ -185,6 +185,3 @@ TC_COMPARE_STATUS TC0_CompareStatusGet( void )
     TC0_REGS->COUNT16.TC_INTFLAG = TC_COMPARE_STATUS_MSK;
     return compare_status;
 }
-
-
-
