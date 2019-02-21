@@ -56,6 +56,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/* SERCOM3 USART baud value for 115200 Hz baud rate */
+#define SERCOM3_USART_INT_BAUD_VALUE			(63017U)
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -78,7 +81,7 @@ void SERCOM3_USART_Initialize( void )
     SERCOM3_REGS->USART_INT.SERCOM_CTRLA = SERCOM_USART_INT_CTRLA_MODE_USART_INT_CLK | SERCOM_USART_INT_CTRLA_RXPO_PAD3 | SERCOM_USART_INT_CTRLA_TXPO_PAD2 | SERCOM_USART_INT_CTRLA_DORD_Msk | SERCOM_USART_INT_CTRLA_IBON_Msk | SERCOM_USART_INT_CTRLA_FORM(0x0) ;
 
     /* Configure Baud Rate */
-    SERCOM3_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(63017);
+    SERCOM3_REGS->USART_INT.SERCOM_BAUD = SERCOM_USART_INT_BAUD_BAUD(SERCOM3_USART_INT_BAUD_VALUE);
 
     /*
      * Configures RXEN
@@ -97,7 +100,11 @@ void SERCOM3_USART_Initialize( void )
 
     /* Wait for sync */
     while((SERCOM3_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
+}
 
+uint32_t SERCOM3_USART_FrequencyGet( void )
+{
+    return (uint32_t) (47972352UL);
 }
 
 bool SERCOM3_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency )
@@ -169,10 +176,8 @@ bool SERCOM3_USART_Write( void *buffer, const size_t size )
         /* Blocks while buffer is being transferred */
         while(u32Length--)
         {
-            while((SERCOM3_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk)
-            {
-                /* Check if USART is ready for new data */
-            }
+            /* Check if USART is ready for new data */
+            while((SERCOM3_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk);
 
             /* Write data to USART module */
             SERCOM3_REGS->USART_INT.SERCOM_DATA = *pu8Data++;
@@ -198,10 +203,8 @@ bool SERCOM3_USART_TransmitterIsReady( void )
 
 void SERCOM3_USART_WriteByte( int data )
 {
-    while((SERCOM3_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk)
-    {
-        /* Check if USART is ready for new data */
-    }
+    /* Check if USART is ready for new data */
+    while((SERCOM3_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk);
 
     SERCOM3_REGS->USART_INT.SERCOM_DATA = data;
 }
@@ -234,10 +237,8 @@ bool SERCOM3_USART_Read( void *buffer, const size_t size )
 
         while(u32Length--)
         {
-            while((SERCOM3_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) != SERCOM_USART_INT_INTFLAG_RXC_Msk)
-            {
-                /* Check if USART has new data */
-            }
+            /* Check if USART has new data */
+            while((SERCOM3_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) != SERCOM_USART_INT_INTFLAG_RXC_Msk);
 
             /* Read data from USART module */
             *pu8Data++ = SERCOM3_REGS->USART_INT.SERCOM_DATA;
