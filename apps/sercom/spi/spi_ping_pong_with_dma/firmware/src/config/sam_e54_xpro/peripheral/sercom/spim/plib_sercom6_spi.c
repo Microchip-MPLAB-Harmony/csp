@@ -53,8 +53,11 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/* Sercom clk freq value for the baud calculation */
+/* SERCOM6 clk freq value for the baud calculation */
 #define SERCOM6_Frequency      (uint32_t) (48000000UL)
+
+/* SERCOM6 SPI baud value for 1000000 Hz baud rate */
+#define SERCOM6_SPIM_BAUD_VALUE			(23U)
 
 /*Global object to save SPI Exchange related data  */
 SPI_OBJECT sercom6SPIObj;
@@ -95,7 +98,7 @@ void SERCOM6_SPI_Initialize(void)
     while(SERCOM6_REGS->SPIM.SERCOM_SYNCBUSY);
 
     /* Selection of the Baud Value */
-    SERCOM6_REGS->SPIM.SERCOM_BAUD = 23;
+    SERCOM6_REGS->SPIM.SERCOM_BAUD = SERCOM_SPIM_BAUD_BAUD(SERCOM6_SPIM_BAUD_VALUE);
 
     /* Configure Data Out Pin Out , Master Mode,
      * Data In and Pin Out,Data Order and Standby mode if configured

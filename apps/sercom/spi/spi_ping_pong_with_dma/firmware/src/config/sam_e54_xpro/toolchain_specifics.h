@@ -1,21 +1,4 @@
 /*******************************************************************************
-  Interface definition of EVSYS PLIB.
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    plib_evsys.h
-
-  Summary:
-    Interface definition of the Event System Plib (EVSYS).
-
-  Description:
-    This file defines the interface for the EVSYS Plib.
-    It allows user to setup event generators and users.
-*******************************************************************************/
-
-/*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -38,31 +21,15 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef EVSYS_H    // Guards against multiple inclusion
-#define EVSYS_H
+#ifndef TOOLCHAIN_SPECIFICS_H
+#define TOOLCHAIN_SPECIFICS_H
 
-#include "device.h"
-#include <stdint.h>
-#include <stddef.h>
+#include <sys/types.h>
+#define NO_INIT        __attribute__((section(".no_init")))
+#define SECTION(a)     __attribute__((__section__(a)))
 
-#ifdef __cplusplus // Provide C++ Compatibility
- extern "C" {
-#endif
+#define CACHE_ALIGN    __ALIGNED(16)
 
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface
-// *****************************************************************************
-// *****************************************************************************
+#endif // end of header
 
-
-
-/***************************** EVSYS API *******************************/
-void EVSYS_Initialize( void );
-
-#ifdef __cplusplus // Provide C++ Compatibility
- }
-#endif
-
-#endif
