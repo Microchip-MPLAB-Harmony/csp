@@ -210,7 +210,7 @@ bool MCAN0_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE
     /* request the transmit */
     MCAN0_REGS->MCAN_TXBAR = 1U << tfqpi;
 
-    MCAN0_REGS->MCAN_IE = MCAN_IE_TCE_Msk;
+    MCAN0_REGS->MCAN_IE |= MCAN_IE_TCE_Msk;
     return true;
 }
 
@@ -257,7 +257,7 @@ bool MCAN0_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG
     mcan0Obj.rxId = id;
     mcan0Obj.rxBuffer = data;
     mcan0Obj.rxsize = length;
-    MCAN0_REGS->MCAN_IE = rxInterrupt;
+    MCAN0_REGS->MCAN_IE |= rxInterrupt;
     return status;
 }
 

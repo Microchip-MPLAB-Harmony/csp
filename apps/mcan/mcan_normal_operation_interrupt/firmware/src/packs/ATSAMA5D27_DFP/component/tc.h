@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-07T09:15:13Z */
+/* file generated from device description version 2019-01-23T22:42:14Z */
 #ifndef _SAMA5D2_TC_COMPONENT_H_
 #define _SAMA5D2_TC_COMPONENT_H_
 
