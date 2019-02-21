@@ -86,6 +86,29 @@ typedef enum
     TCC0_CHANNEL3,
 }TCC0_CHANNEL_NUM;
 
+// *****************************************************************************
+
+/* TCC Channel interrupt status
+
+   Summary:
+    Identifies TCC PWM interrupt status flags
+
+   Description:
+    This enumeration identifies TCC PWM interrupt status falgs
+
+   Remarks:
+    None.
+*/
+typedef enum
+{
+    TCC0_PWM_STATUS_OVF = TCC_INTFLAG_OVF_Msk,
+    TCC0_PWM_STATUS_FAULT_0 = TCC_INTFLAG_FAULT0_Msk,
+    TCC0_PWM_STATUS_FAULT_1 = TCC_INTFLAG_FAULT1_Msk,
+    TCC0_PWM_STATUS_MC_0 = TCC_INTFLAG_MC0_Msk,
+    TCC0_PWM_STATUS_MC_1 = TCC_INTFLAG_MC1_Msk,
+    TCC0_PWM_STATUS_MC_2 = TCC_INTFLAG_MC2_Msk,
+    TCC0_PWM_STATUS_MC_3 = TCC_INTFLAG_MC3_Msk,
+}TCC0_PWM_STATUS;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -97,18 +120,21 @@ typedef enum
 */
 
 // *****************************************************************************
-void TCC0_PWMInitialize();
+void TCC0_PWMInitialize(void);
 
-void TCC0_PWMStart();
+void TCC0_PWMStart(void);
 
-void TCC0_PWMStop();
+void TCC0_PWMStop(void);
 
 void TCC0_PWMDeadTimeSet(uint8_t deadtime_high, uint8_t deadtime_low);
+
 void TCC0_PWMForceUpdate(void);
 
-void TCC0_PWMPeriodInterruptEnable();
+void TCC0_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output);
 
-void TCC0_PWMPeriodInterruptDisable();
+void TCC0_PWMPeriodInterruptEnable(void);
+
+void TCC0_PWMPeriodInterruptDisable(void);
 
 void TCC0_PWMCallbackRegister(TCC_CALLBACK callback, uintptr_t context);
 
@@ -118,7 +144,7 @@ uint32_t TCC0_PWM24bitPeriodGet(void);
 
 void TCC0_PWM24bitCounterSet(uint32_t count);
 
-__INLINE void TCC0_PWM24bitDutySet(TCC0_CHANNEL_NUM channel, uint32_t duty)
+__STATIC_INLINE void TCC0_PWM24bitDutySet(TCC0_CHANNEL_NUM channel, uint32_t duty)
 {
     TCC0_REGS->TCC_CCB[channel] = duty & 0xFFFFFF;
 }
