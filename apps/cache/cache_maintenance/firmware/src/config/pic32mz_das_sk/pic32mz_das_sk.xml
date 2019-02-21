@@ -3859,1796 +3859,1895 @@
             <User dnOrder="0" value="LFBGA"/>
           </Values>
         </Combo>
-        <Boolean dnOrder="630" id="CORE_SOFTWARE_0_INTERRUPT_ENABLE_UPDATE">
+        <Combo dnOrder="630" id="CONFIG_FPLLICLK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <User dnOrder="0" value="PLL_POSC"/>
           </Values>
-        </Boolean>
-        <String dnOrder="631" id="CoreMainFileName">
+        </Combo>
+        <Combo dnOrder="631" id="CONFIG_FPLLIDIV">
           <Values dnOrder="0">
-            <User dnOrder="0" value="main_pic32mz_ef_sk"/>
+            <User dnOrder="0" value="DIV_3"/>
           </Values>
-        </String>
-        <Boolean dnOrder="632" id="DATA_CACHE_ENABLE">
+        </Combo>
+        <Combo dnOrder="632" id="CONFIG_POSCMOD">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <User dnOrder="0" value="EC"/>
           </Values>
-        </Boolean>
-        <String dnOrder="633" id="DCH0_CON_CHPRI_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
-          </Values>
-        </String>
-        <Hex dnOrder="634" id="DCH0_CON_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
-          </Values>
-        </Hex>
-        <Integer dnOrder="635" id="DCH0_ECON_SIRQEN_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
-          </Values>
-        </Integer>
-        <Hex dnOrder="636" id="DCH0_ECON_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="37648"/>
-            </Dynamic>
-          </Values>
-        </Hex>
-        <String dnOrder="637" id="DCH1_CON_CHPRI_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
-          </Values>
-        </String>
-        <Hex dnOrder="638" id="DCH1_CON_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
-          </Values>
-        </Hex>
-        <Integer dnOrder="639" id="DCH1_ECON_SIRQEN_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
-          </Values>
-        </Integer>
-        <Hex dnOrder="640" id="DCH1_ECON_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="37392"/>
-            </Dynamic>
-          </Values>
-        </Hex>
-        <File dnOrder="641" id="DEVICE_CACHE_H">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <Boolean dnOrder="642" id="DMA0_INTERRUPT_ENABLE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="643" id="DMA0_INTERRUPT_ENABLE_UPDATE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
-          </Values>
-        </Boolean>
-        <String dnOrder="644" id="DMA0_INTERRUPT_HANDLER">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="DMA0_InterruptHandler"/>
-            </Dynamic>
-          </Values>
-        </String>
-        <Boolean dnOrder="645" id="DMA0_INTERRUPT_HANDLER_LOCK">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="646" id="DMA1_INTERRUPT_ENABLE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="647" id="DMA1_INTERRUPT_ENABLE_UPDATE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
-          </Values>
-        </Boolean>
-        <String dnOrder="648" id="DMA1_INTERRUPT_HANDLER">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="DMA1_InterruptHandler"/>
-            </Dynamic>
-          </Values>
-        </String>
-        <Boolean dnOrder="649" id="DMA1_INTERRUPT_HANDLER_LOCK">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="650" id="DMAC_CHAN0_ENBL">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="651" id="DMAC_CHAN1_ENBL">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <File dnOrder="652" id="DMAC_HEADER">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <Integer dnOrder="653" id="DMAC_HIGHEST_CHANNEL">
+        </Combo>
+        <Integer dnOrder="633" id="CONFIG_PRECON_PFMWS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="2"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Combo dnOrder="654" id="DMAC_REQUEST_0_SOURCE">
+        <Combo dnOrder="634" id="CONFIG_SYS_CLK_CONFIG_SOSCEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="ON"/>
+          </Values>
+        </Combo>
+        <String dnOrder="635" id="CONFIG_SYS_CLK_PBCLK1_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="100000000"/>
+          </Values>
+        </String>
+        <String dnOrder="636" id="CONFIG_SYS_CLK_PBCLK2_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="100000000"/>
+          </Values>
+        </String>
+        <String dnOrder="637" id="CONFIG_SYS_CLK_PBCLK3_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="100000000"/>
+          </Values>
+        </String>
+        <String dnOrder="638" id="CONFIG_SYS_CLK_PBCLK4_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="100000000"/>
+          </Values>
+        </String>
+        <String dnOrder="639" id="CONFIG_SYS_CLK_PBCLK5_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="100000000"/>
+          </Values>
+        </String>
+        <String dnOrder="640" id="CONFIG_SYS_CLK_PBCLK6_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="100000000"/>
+          </Values>
+        </String>
+        <String dnOrder="641" id="CONFIG_SYS_CLK_PBCLK7_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="200000000"/>
+          </Values>
+        </String>
+        <String dnOrder="642" id="CONFIG_SYS_CLK_REFCLK1_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="200000000"/>
+          </Values>
+        </String>
+        <String dnOrder="643" id="CONFIG_SYS_CLK_REFCLK2_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="200000000"/>
+          </Values>
+        </String>
+        <String dnOrder="644" id="CONFIG_SYS_CLK_REFCLK3_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="200000000"/>
+          </Values>
+        </String>
+        <String dnOrder="645" id="CONFIG_SYS_CLK_REFCLK4_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="200000000"/>
+          </Values>
+        </String>
+        <String dnOrder="646" id="CONFIG_SYS_CLK_REFCLK5_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="200000000"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="647" id="CORE_SOFTWARE_0_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <String dnOrder="648" id="CPU_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <String dnOrder="649" id="CoreMainFileName">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="main_pic32mz_ef_sk"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="650" id="DATA_CACHE_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <String dnOrder="651" id="DCH0_CON_CHPRI_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <Hex dnOrder="652" id="DCH0_CON_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Integer dnOrder="653" id="DCH0_ECON_SIRQEN_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="1"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Hex dnOrder="654" id="DCH0_ECON_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="37648"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <String dnOrder="655" id="DCH1_CON_CHPRI_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <Hex dnOrder="656" id="DCH1_CON_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Integer dnOrder="657" id="DCH1_ECON_SIRQEN_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="1"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Hex dnOrder="658" id="DCH1_ECON_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="37392"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <File dnOrder="659" id="DEVICE_CACHE_H">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <Boolean dnOrder="660" id="DMA0_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="661" id="DMA0_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="false"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <String dnOrder="662" id="DMA0_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="DMA0_InterruptHandler"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <Boolean dnOrder="663" id="DMA0_INTERRUPT_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="664" id="DMA1_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="665" id="DMA1_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="false"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <String dnOrder="666" id="DMA1_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="DMA1_InterruptHandler"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <Boolean dnOrder="667" id="DMA1_INTERRUPT_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="668" id="DMAC_CHAN0_ENBL">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="669" id="DMAC_CHAN1_ENBL">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="true"/>
+          </Values>
+        </Boolean>
+        <File dnOrder="670" id="DMAC_HEADER">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <Integer dnOrder="671" id="DMAC_HIGHEST_CHANNEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="2"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Combo dnOrder="672" id="DMAC_REQUEST_0_SOURCE">
           <Values dnOrder="0">
             <User dnOrder="0" value="UART2_TX"/>
           </Values>
         </Combo>
-        <Integer dnOrder="655" id="DMAC_REQUEST_0_SOURCE_VALUE">
+        <Integer dnOrder="673" id="DMAC_REQUEST_0_SOURCE_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="147"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Combo dnOrder="656" id="DMAC_REQUEST_1_SOURCE">
+        <Combo dnOrder="674" id="DMAC_REQUEST_1_SOURCE">
           <Values dnOrder="0">
             <User dnOrder="0" value="UART2_RX"/>
           </Values>
         </Combo>
-        <Integer dnOrder="657" id="DMAC_REQUEST_1_SOURCE_VALUE">
+        <Integer dnOrder="675" id="DMAC_REQUEST_1_SOURCE_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="146"/>
             </Dynamic>
           </Values>
         </Integer>
-        <File dnOrder="658" id="DMAC_SOURCE">
+        <File dnOrder="676" id="DMAC_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="659" id="DMAC_SYS_DEF">
+        <File dnOrder="677" id="DMAC_SYS_DEF">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="660" id="DMAC_SYS_INIT">
+        <File dnOrder="678" id="DMAC_SYS_INIT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Boolean dnOrder="661" id="DMA_ENABLE">
+        <Boolean dnOrder="679" id="DMA_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="662" id="EVIC_119_ENABLE">
+        <Boolean dnOrder="680" id="EVIC_119_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="663" id="EVIC_119_HANDLER_LOCK">
+        <Boolean dnOrder="681" id="EVIC_119_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="664" id="EVIC_119_INTERRUPT_HANDLER">
+        <String dnOrder="682" id="EVIC_119_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="CHANGE_NOTICE_B_Handler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="665" id="EVIC_125_ENABLE">
+        <Boolean dnOrder="683" id="EVIC_125_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="666" id="EVIC_125_HANDLER_LOCK">
+        <Boolean dnOrder="684" id="EVIC_125_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="667" id="EVIC_125_INTERRUPT_HANDLER">
+        <String dnOrder="685" id="EVIC_125_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="CHANGE_NOTICE_H_Handler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="668" id="EVIC_134_ENABLE">
+        <Boolean dnOrder="686" id="EVIC_134_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="669" id="EVIC_134_HANDLER_LOCK">
+        <Boolean dnOrder="687" id="EVIC_134_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="670" id="EVIC_134_INTERRUPT_HANDLER">
+        <String dnOrder="688" id="EVIC_134_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="DMA0_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="671" id="EVIC_135_ENABLE">
+        <Boolean dnOrder="689" id="EVIC_135_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="672" id="EVIC_135_HANDLER_LOCK">
+        <Boolean dnOrder="690" id="EVIC_135_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="673" id="EVIC_135_INTERRUPT_HANDLER">
+        <String dnOrder="691" id="EVIC_135_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="DMA1_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="674" id="EVIC_145_ENABLE">
+        <Boolean dnOrder="692" id="EVIC_145_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="675" id="EVIC_145_HANDLER_LOCK">
+        <Boolean dnOrder="693" id="EVIC_145_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="676" id="EVIC_145_INTERRUPT_HANDLER">
+        <String dnOrder="694" id="EVIC_145_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="UART2_FAULT_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="677" id="EVIC_146_ENABLE">
+        <Boolean dnOrder="695" id="EVIC_146_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="678" id="EVIC_146_HANDLER_LOCK">
+        <Boolean dnOrder="696" id="EVIC_146_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="679" id="EVIC_146_INTERRUPT_HANDLER">
+        <String dnOrder="697" id="EVIC_146_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="UART2_RX_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="680" id="EVIC_147_ENABLE">
+        <Boolean dnOrder="698" id="EVIC_147_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="681" id="EVIC_147_HANDLER_LOCK">
+        <Boolean dnOrder="699" id="EVIC_147_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="682" id="EVIC_147_INTERRUPT_HANDLER">
+        <String dnOrder="700" id="EVIC_147_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="UART2_TX_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="683" id="EVIC_1_ENABLE">
+        <Boolean dnOrder="701" id="EVIC_1_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="684" id="EVIC_1_ENABLE_GENERATE">
+        <Boolean dnOrder="702" id="EVIC_1_ENABLE_GENERATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="685" id="EVIC_1_ENABLE_LOCK">
+        <Boolean dnOrder="703" id="EVIC_1_ENABLE_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="686" id="EVIC_1_HANDLER_LOCK">
+        <Boolean dnOrder="704" id="EVIC_1_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="687" id="EVIC_1_PRIORITY_GENERATE">
+        <Boolean dnOrder="705" id="EVIC_1_PRIORITY_GENERATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="688" id="EVIC_1_PRIORITY_LOCK">
+        <Boolean dnOrder="706" id="EVIC_1_PRIORITY_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="689" id="EVIC_1_SUBPRIORITY_GENERATE">
+        <Boolean dnOrder="707" id="EVIC_1_SUBPRIORITY_GENERATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="690" id="EVIC_1_SUBPRIORITY_LOCK">
+        <Boolean dnOrder="708" id="EVIC_1_SUBPRIORITY_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="691" id="EVIC_4_ENABLE_GENERATE">
+        <Boolean dnOrder="709" id="EVIC_4_ENABLE_GENERATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="692" id="EVIC_4_ENABLE_LOCK">
+        <Boolean dnOrder="710" id="EVIC_4_ENABLE_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="693" id="EVIC_4_HANDLER_LOCK">
+        <Boolean dnOrder="711" id="EVIC_4_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="694" id="EVIC_4_PRIORITY_GENERATE">
+        <Boolean dnOrder="712" id="EVIC_4_PRIORITY_GENERATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="695" id="EVIC_4_PRIORITY_LOCK">
+        <Boolean dnOrder="713" id="EVIC_4_PRIORITY_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Hex dnOrder="696" id="EVIC_4_PRIVALUE">
+        <Hex dnOrder="714" id="EVIC_4_PRIVALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="4"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Boolean dnOrder="697" id="EVIC_4_SUBPRIORITY_GENERATE">
+        <Boolean dnOrder="715" id="EVIC_4_SUBPRIORITY_GENERATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="698" id="EVIC_4_SUBPRIORITY_LOCK">
+        <Boolean dnOrder="716" id="EVIC_4_SUBPRIORITY_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Hex dnOrder="699" id="EVIC_4_SUBPRIVALUE">
+        <Hex dnOrder="717" id="EVIC_4_SUBPRIVALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Menu dnOrder="700" id="GPIO_PIN_CONFIGURATION0">
+        <Menu dnOrder="718" id="GPIO_PIN_CONFIGURATION0">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="701" id="GPIO_PIN_CONFIGURATION1">
+        <Menu dnOrder="719" id="GPIO_PIN_CONFIGURATION1">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="702" id="GPIO_PIN_CONFIGURATION10">
+        <Menu dnOrder="720" id="GPIO_PIN_CONFIGURATION10">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="703" id="GPIO_PIN_CONFIGURATION100">
+        <Menu dnOrder="721" id="GPIO_PIN_CONFIGURATION100">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="704" id="GPIO_PIN_CONFIGURATION101">
+        <Menu dnOrder="722" id="GPIO_PIN_CONFIGURATION101">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="705" id="GPIO_PIN_CONFIGURATION102">
+        <Menu dnOrder="723" id="GPIO_PIN_CONFIGURATION102">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="706" id="GPIO_PIN_CONFIGURATION103">
+        <Menu dnOrder="724" id="GPIO_PIN_CONFIGURATION103">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="707" id="GPIO_PIN_CONFIGURATION104">
+        <Menu dnOrder="725" id="GPIO_PIN_CONFIGURATION104">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="708" id="GPIO_PIN_CONFIGURATION105">
+        <Menu dnOrder="726" id="GPIO_PIN_CONFIGURATION105">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="709" id="GPIO_PIN_CONFIGURATION106">
+        <Menu dnOrder="727" id="GPIO_PIN_CONFIGURATION106">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="710" id="GPIO_PIN_CONFIGURATION107">
+        <Menu dnOrder="728" id="GPIO_PIN_CONFIGURATION107">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="711" id="GPIO_PIN_CONFIGURATION108">
+        <Menu dnOrder="729" id="GPIO_PIN_CONFIGURATION108">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="712" id="GPIO_PIN_CONFIGURATION109">
+        <Menu dnOrder="730" id="GPIO_PIN_CONFIGURATION109">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="713" id="GPIO_PIN_CONFIGURATION11">
+        <Menu dnOrder="731" id="GPIO_PIN_CONFIGURATION11">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="714" id="GPIO_PIN_CONFIGURATION110">
+        <Menu dnOrder="732" id="GPIO_PIN_CONFIGURATION110">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="715" id="GPIO_PIN_CONFIGURATION111">
+        <Menu dnOrder="733" id="GPIO_PIN_CONFIGURATION111">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="716" id="GPIO_PIN_CONFIGURATION112">
+        <Menu dnOrder="734" id="GPIO_PIN_CONFIGURATION112">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="717" id="GPIO_PIN_CONFIGURATION113">
+        <Menu dnOrder="735" id="GPIO_PIN_CONFIGURATION113">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="718" id="GPIO_PIN_CONFIGURATION114">
+        <Menu dnOrder="736" id="GPIO_PIN_CONFIGURATION114">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="719" id="GPIO_PIN_CONFIGURATION115">
+        <Menu dnOrder="737" id="GPIO_PIN_CONFIGURATION115">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="720" id="GPIO_PIN_CONFIGURATION116">
+        <Menu dnOrder="738" id="GPIO_PIN_CONFIGURATION116">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;J13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="721" id="GPIO_PIN_CONFIGURATION117">
+        <Menu dnOrder="739" id="GPIO_PIN_CONFIGURATION117">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="722" id="GPIO_PIN_CONFIGURATION118">
+        <Menu dnOrder="740" id="GPIO_PIN_CONFIGURATION118">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="723" id="GPIO_PIN_CONFIGURATION119">
+        <Menu dnOrder="741" id="GPIO_PIN_CONFIGURATION119">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="724" id="GPIO_PIN_CONFIGURATION12">
+        <Menu dnOrder="742" id="GPIO_PIN_CONFIGURATION12">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="725" id="GPIO_PIN_CONFIGURATION120">
+        <Menu dnOrder="743" id="GPIO_PIN_CONFIGURATION120">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="726" id="GPIO_PIN_CONFIGURATION121">
+        <Menu dnOrder="744" id="GPIO_PIN_CONFIGURATION121">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="727" id="GPIO_PIN_CONFIGURATION122">
+        <Menu dnOrder="745" id="GPIO_PIN_CONFIGURATION122">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="728" id="GPIO_PIN_CONFIGURATION123">
+        <Menu dnOrder="746" id="GPIO_PIN_CONFIGURATION123">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="729" id="GPIO_PIN_CONFIGURATION124">
+        <Menu dnOrder="747" id="GPIO_PIN_CONFIGURATION124">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="730" id="GPIO_PIN_CONFIGURATION125">
+        <Menu dnOrder="748" id="GPIO_PIN_CONFIGURATION125">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="731" id="GPIO_PIN_CONFIGURATION126">
+        <Menu dnOrder="749" id="GPIO_PIN_CONFIGURATION126">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="732" id="GPIO_PIN_CONFIGURATION127">
+        <Menu dnOrder="750" id="GPIO_PIN_CONFIGURATION127">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="733" id="GPIO_PIN_CONFIGURATION128">
+        <Menu dnOrder="751" id="GPIO_PIN_CONFIGURATION128">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="734" id="GPIO_PIN_CONFIGURATION129">
+        <Menu dnOrder="752" id="GPIO_PIN_CONFIGURATION129">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;K13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="735" id="GPIO_PIN_CONFIGURATION13">
+        <Menu dnOrder="753" id="GPIO_PIN_CONFIGURATION13">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="736" id="GPIO_PIN_CONFIGURATION130">
+        <Menu dnOrder="754" id="GPIO_PIN_CONFIGURATION130">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="737" id="GPIO_PIN_CONFIGURATION131">
+        <Menu dnOrder="755" id="GPIO_PIN_CONFIGURATION131">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="738" id="GPIO_PIN_CONFIGURATION132">
+        <Menu dnOrder="756" id="GPIO_PIN_CONFIGURATION132">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="739" id="GPIO_PIN_CONFIGURATION133">
+        <Menu dnOrder="757" id="GPIO_PIN_CONFIGURATION133">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="740" id="GPIO_PIN_CONFIGURATION134">
+        <Menu dnOrder="758" id="GPIO_PIN_CONFIGURATION134">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="741" id="GPIO_PIN_CONFIGURATION135">
+        <Menu dnOrder="759" id="GPIO_PIN_CONFIGURATION135">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="742" id="GPIO_PIN_CONFIGURATION136">
+        <Menu dnOrder="760" id="GPIO_PIN_CONFIGURATION136">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="743" id="GPIO_PIN_CONFIGURATION137">
+        <Menu dnOrder="761" id="GPIO_PIN_CONFIGURATION137">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="744" id="GPIO_PIN_CONFIGURATION138">
+        <Menu dnOrder="762" id="GPIO_PIN_CONFIGURATION138">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="745" id="GPIO_PIN_CONFIGURATION139">
+        <Menu dnOrder="763" id="GPIO_PIN_CONFIGURATION139">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="746" id="GPIO_PIN_CONFIGURATION14">
+        <Menu dnOrder="764" id="GPIO_PIN_CONFIGURATION14">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="747" id="GPIO_PIN_CONFIGURATION140">
+        <Menu dnOrder="765" id="GPIO_PIN_CONFIGURATION140">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="748" id="GPIO_PIN_CONFIGURATION141">
+        <Menu dnOrder="766" id="GPIO_PIN_CONFIGURATION141">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="749" id="GPIO_PIN_CONFIGURATION142">
+        <Menu dnOrder="767" id="GPIO_PIN_CONFIGURATION142">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;L13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="750" id="GPIO_PIN_CONFIGURATION143">
+        <Menu dnOrder="768" id="GPIO_PIN_CONFIGURATION143">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="751" id="GPIO_PIN_CONFIGURATION144">
+        <Menu dnOrder="769" id="GPIO_PIN_CONFIGURATION144">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="752" id="GPIO_PIN_CONFIGURATION145">
+        <Menu dnOrder="770" id="GPIO_PIN_CONFIGURATION145">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="753" id="GPIO_PIN_CONFIGURATION146">
+        <Menu dnOrder="771" id="GPIO_PIN_CONFIGURATION146">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="754" id="GPIO_PIN_CONFIGURATION147">
+        <Menu dnOrder="772" id="GPIO_PIN_CONFIGURATION147">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="755" id="GPIO_PIN_CONFIGURATION148">
+        <Menu dnOrder="773" id="GPIO_PIN_CONFIGURATION148">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="756" id="GPIO_PIN_CONFIGURATION149">
+        <Menu dnOrder="774" id="GPIO_PIN_CONFIGURATION149">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="757" id="GPIO_PIN_CONFIGURATION15">
+        <Menu dnOrder="775" id="GPIO_PIN_CONFIGURATION15">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="758" id="GPIO_PIN_CONFIGURATION150">
+        <Menu dnOrder="776" id="GPIO_PIN_CONFIGURATION150">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="759" id="GPIO_PIN_CONFIGURATION151">
+        <Menu dnOrder="777" id="GPIO_PIN_CONFIGURATION151">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="760" id="GPIO_PIN_CONFIGURATION152">
+        <Menu dnOrder="778" id="GPIO_PIN_CONFIGURATION152">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="761" id="GPIO_PIN_CONFIGURATION153">
+        <Menu dnOrder="779" id="GPIO_PIN_CONFIGURATION153">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="762" id="GPIO_PIN_CONFIGURATION154">
+        <Menu dnOrder="780" id="GPIO_PIN_CONFIGURATION154">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="763" id="GPIO_PIN_CONFIGURATION155">
+        <Menu dnOrder="781" id="GPIO_PIN_CONFIGURATION155">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;M13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="764" id="GPIO_PIN_CONFIGURATION156">
+        <Menu dnOrder="782" id="GPIO_PIN_CONFIGURATION156">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="765" id="GPIO_PIN_CONFIGURATION157">
+        <Menu dnOrder="783" id="GPIO_PIN_CONFIGURATION157">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="766" id="GPIO_PIN_CONFIGURATION158">
+        <Menu dnOrder="784" id="GPIO_PIN_CONFIGURATION158">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="767" id="GPIO_PIN_CONFIGURATION159">
+        <Menu dnOrder="785" id="GPIO_PIN_CONFIGURATION159">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="768" id="GPIO_PIN_CONFIGURATION16">
+        <Menu dnOrder="786" id="GPIO_PIN_CONFIGURATION16">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="769" id="GPIO_PIN_CONFIGURATION160">
+        <Menu dnOrder="787" id="GPIO_PIN_CONFIGURATION160">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="770" id="GPIO_PIN_CONFIGURATION161">
+        <Menu dnOrder="788" id="GPIO_PIN_CONFIGURATION161">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="771" id="GPIO_PIN_CONFIGURATION162">
+        <Menu dnOrder="789" id="GPIO_PIN_CONFIGURATION162">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="772" id="GPIO_PIN_CONFIGURATION163">
+        <Menu dnOrder="790" id="GPIO_PIN_CONFIGURATION163">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="773" id="GPIO_PIN_CONFIGURATION164">
+        <Menu dnOrder="791" id="GPIO_PIN_CONFIGURATION164">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="774" id="GPIO_PIN_CONFIGURATION165">
+        <Menu dnOrder="792" id="GPIO_PIN_CONFIGURATION165">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="775" id="GPIO_PIN_CONFIGURATION166">
+        <Menu dnOrder="793" id="GPIO_PIN_CONFIGURATION166">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="776" id="GPIO_PIN_CONFIGURATION167">
+        <Menu dnOrder="794" id="GPIO_PIN_CONFIGURATION167">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="777" id="GPIO_PIN_CONFIGURATION168">
+        <Menu dnOrder="795" id="GPIO_PIN_CONFIGURATION168">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;N13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="778" id="GPIO_PIN_CONFIGURATION17">
+        <Menu dnOrder="796" id="GPIO_PIN_CONFIGURATION17">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="779" id="GPIO_PIN_CONFIGURATION18">
+        <Menu dnOrder="797" id="GPIO_PIN_CONFIGURATION18">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="780" id="GPIO_PIN_CONFIGURATION19">
+        <Menu dnOrder="798" id="GPIO_PIN_CONFIGURATION19">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="781" id="GPIO_PIN_CONFIGURATION2">
+        <Menu dnOrder="799" id="GPIO_PIN_CONFIGURATION2">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="782" id="GPIO_PIN_CONFIGURATION20">
+        <Menu dnOrder="800" id="GPIO_PIN_CONFIGURATION20">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="783" id="GPIO_PIN_CONFIGURATION21">
+        <Menu dnOrder="801" id="GPIO_PIN_CONFIGURATION21">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="784" id="GPIO_PIN_CONFIGURATION22">
+        <Menu dnOrder="802" id="GPIO_PIN_CONFIGURATION22">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="785" id="GPIO_PIN_CONFIGURATION23">
+        <Menu dnOrder="803" id="GPIO_PIN_CONFIGURATION23">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="786" id="GPIO_PIN_CONFIGURATION24">
+        <Menu dnOrder="804" id="GPIO_PIN_CONFIGURATION24">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="787" id="GPIO_PIN_CONFIGURATION25">
+        <Menu dnOrder="805" id="GPIO_PIN_CONFIGURATION25">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;B13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="788" id="GPIO_PIN_CONFIGURATION26">
+        <Menu dnOrder="806" id="GPIO_PIN_CONFIGURATION26">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="789" id="GPIO_PIN_CONFIGURATION27">
+        <Menu dnOrder="807" id="GPIO_PIN_CONFIGURATION27">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="790" id="GPIO_PIN_CONFIGURATION28">
+        <Menu dnOrder="808" id="GPIO_PIN_CONFIGURATION28">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="791" id="GPIO_PIN_CONFIGURATION29">
+        <Menu dnOrder="809" id="GPIO_PIN_CONFIGURATION29">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="792" id="GPIO_PIN_CONFIGURATION3">
+        <Menu dnOrder="810" id="GPIO_PIN_CONFIGURATION3">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="793" id="GPIO_PIN_CONFIGURATION30">
+        <Menu dnOrder="811" id="GPIO_PIN_CONFIGURATION30">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="794" id="GPIO_PIN_CONFIGURATION31">
+        <Menu dnOrder="812" id="GPIO_PIN_CONFIGURATION31">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="795" id="GPIO_PIN_CONFIGURATION32">
+        <Menu dnOrder="813" id="GPIO_PIN_CONFIGURATION32">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="796" id="GPIO_PIN_CONFIGURATION33">
+        <Menu dnOrder="814" id="GPIO_PIN_CONFIGURATION33">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="797" id="GPIO_PIN_CONFIGURATION34">
+        <Menu dnOrder="815" id="GPIO_PIN_CONFIGURATION34">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="798" id="GPIO_PIN_CONFIGURATION35">
+        <Menu dnOrder="816" id="GPIO_PIN_CONFIGURATION35">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="799" id="GPIO_PIN_CONFIGURATION36">
+        <Menu dnOrder="817" id="GPIO_PIN_CONFIGURATION36">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="800" id="GPIO_PIN_CONFIGURATION37">
+        <Menu dnOrder="818" id="GPIO_PIN_CONFIGURATION37">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="801" id="GPIO_PIN_CONFIGURATION38">
+        <Menu dnOrder="819" id="GPIO_PIN_CONFIGURATION38">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;C13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="802" id="GPIO_PIN_CONFIGURATION39">
+        <Menu dnOrder="820" id="GPIO_PIN_CONFIGURATION39">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="803" id="GPIO_PIN_CONFIGURATION4">
+        <Menu dnOrder="821" id="GPIO_PIN_CONFIGURATION4">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="804" id="GPIO_PIN_CONFIGURATION40">
+        <Menu dnOrder="822" id="GPIO_PIN_CONFIGURATION40">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="805" id="GPIO_PIN_CONFIGURATION41">
+        <Menu dnOrder="823" id="GPIO_PIN_CONFIGURATION41">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="806" id="GPIO_PIN_CONFIGURATION42">
+        <Menu dnOrder="824" id="GPIO_PIN_CONFIGURATION42">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="807" id="GPIO_PIN_CONFIGURATION43">
+        <Menu dnOrder="825" id="GPIO_PIN_CONFIGURATION43">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="808" id="GPIO_PIN_CONFIGURATION44">
+        <Menu dnOrder="826" id="GPIO_PIN_CONFIGURATION44">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="809" id="GPIO_PIN_CONFIGURATION45">
+        <Menu dnOrder="827" id="GPIO_PIN_CONFIGURATION45">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="810" id="GPIO_PIN_CONFIGURATION46">
+        <Menu dnOrder="828" id="GPIO_PIN_CONFIGURATION46">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="811" id="GPIO_PIN_CONFIGURATION47">
+        <Menu dnOrder="829" id="GPIO_PIN_CONFIGURATION47">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="812" id="GPIO_PIN_CONFIGURATION48">
+        <Menu dnOrder="830" id="GPIO_PIN_CONFIGURATION48">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="813" id="GPIO_PIN_CONFIGURATION49">
+        <Menu dnOrder="831" id="GPIO_PIN_CONFIGURATION49">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="814" id="GPIO_PIN_CONFIGURATION5">
+        <Menu dnOrder="832" id="GPIO_PIN_CONFIGURATION5">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="815" id="GPIO_PIN_CONFIGURATION50">
+        <Menu dnOrder="833" id="GPIO_PIN_CONFIGURATION50">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="816" id="GPIO_PIN_CONFIGURATION51">
+        <Menu dnOrder="834" id="GPIO_PIN_CONFIGURATION51">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;D13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="817" id="GPIO_PIN_CONFIGURATION52">
+        <Menu dnOrder="835" id="GPIO_PIN_CONFIGURATION52">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="818" id="GPIO_PIN_CONFIGURATION53">
+        <Menu dnOrder="836" id="GPIO_PIN_CONFIGURATION53">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="819" id="GPIO_PIN_CONFIGURATION54">
+        <Menu dnOrder="837" id="GPIO_PIN_CONFIGURATION54">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="820" id="GPIO_PIN_CONFIGURATION55">
+        <Menu dnOrder="838" id="GPIO_PIN_CONFIGURATION55">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="821" id="GPIO_PIN_CONFIGURATION56">
+        <Menu dnOrder="839" id="GPIO_PIN_CONFIGURATION56">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="822" id="GPIO_PIN_CONFIGURATION57">
+        <Menu dnOrder="840" id="GPIO_PIN_CONFIGURATION57">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="823" id="GPIO_PIN_CONFIGURATION58">
+        <Menu dnOrder="841" id="GPIO_PIN_CONFIGURATION58">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="824" id="GPIO_PIN_CONFIGURATION59">
+        <Menu dnOrder="842" id="GPIO_PIN_CONFIGURATION59">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="825" id="GPIO_PIN_CONFIGURATION6">
+        <Menu dnOrder="843" id="GPIO_PIN_CONFIGURATION6">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="826" id="GPIO_PIN_CONFIGURATION60">
+        <Menu dnOrder="844" id="GPIO_PIN_CONFIGURATION60">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="827" id="GPIO_PIN_CONFIGURATION61">
+        <Menu dnOrder="845" id="GPIO_PIN_CONFIGURATION61">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="828" id="GPIO_PIN_CONFIGURATION62">
+        <Menu dnOrder="846" id="GPIO_PIN_CONFIGURATION62">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="829" id="GPIO_PIN_CONFIGURATION63">
+        <Menu dnOrder="847" id="GPIO_PIN_CONFIGURATION63">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="830" id="GPIO_PIN_CONFIGURATION64">
+        <Menu dnOrder="848" id="GPIO_PIN_CONFIGURATION64">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;E13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="831" id="GPIO_PIN_CONFIGURATION65">
+        <Menu dnOrder="849" id="GPIO_PIN_CONFIGURATION65">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="832" id="GPIO_PIN_CONFIGURATION66">
+        <Menu dnOrder="850" id="GPIO_PIN_CONFIGURATION66">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="833" id="GPIO_PIN_CONFIGURATION67">
+        <Menu dnOrder="851" id="GPIO_PIN_CONFIGURATION67">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="834" id="GPIO_PIN_CONFIGURATION68">
+        <Menu dnOrder="852" id="GPIO_PIN_CONFIGURATION68">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="835" id="GPIO_PIN_CONFIGURATION69">
+        <Menu dnOrder="853" id="GPIO_PIN_CONFIGURATION69">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="836" id="GPIO_PIN_CONFIGURATION7">
+        <Menu dnOrder="854" id="GPIO_PIN_CONFIGURATION7">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="837" id="GPIO_PIN_CONFIGURATION70">
+        <Menu dnOrder="855" id="GPIO_PIN_CONFIGURATION70">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="838" id="GPIO_PIN_CONFIGURATION71">
+        <Menu dnOrder="856" id="GPIO_PIN_CONFIGURATION71">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="839" id="GPIO_PIN_CONFIGURATION72">
+        <Menu dnOrder="857" id="GPIO_PIN_CONFIGURATION72">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="840" id="GPIO_PIN_CONFIGURATION73">
+        <Menu dnOrder="858" id="GPIO_PIN_CONFIGURATION73">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="841" id="GPIO_PIN_CONFIGURATION74">
+        <Menu dnOrder="859" id="GPIO_PIN_CONFIGURATION74">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="842" id="GPIO_PIN_CONFIGURATION75">
+        <Menu dnOrder="860" id="GPIO_PIN_CONFIGURATION75">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="843" id="GPIO_PIN_CONFIGURATION76">
+        <Menu dnOrder="861" id="GPIO_PIN_CONFIGURATION76">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="844" id="GPIO_PIN_CONFIGURATION77">
+        <Menu dnOrder="862" id="GPIO_PIN_CONFIGURATION77">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;F13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="845" id="GPIO_PIN_CONFIGURATION78">
+        <Menu dnOrder="863" id="GPIO_PIN_CONFIGURATION78">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="846" id="GPIO_PIN_CONFIGURATION79">
+        <Menu dnOrder="864" id="GPIO_PIN_CONFIGURATION79">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="847" id="GPIO_PIN_CONFIGURATION8">
+        <Menu dnOrder="865" id="GPIO_PIN_CONFIGURATION8">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="848" id="GPIO_PIN_CONFIGURATION80">
+        <Menu dnOrder="866" id="GPIO_PIN_CONFIGURATION80">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="849" id="GPIO_PIN_CONFIGURATION81">
+        <Menu dnOrder="867" id="GPIO_PIN_CONFIGURATION81">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="850" id="GPIO_PIN_CONFIGURATION82">
+        <Menu dnOrder="868" id="GPIO_PIN_CONFIGURATION82">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="851" id="GPIO_PIN_CONFIGURATION83">
+        <Menu dnOrder="869" id="GPIO_PIN_CONFIGURATION83">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="852" id="GPIO_PIN_CONFIGURATION84">
+        <Menu dnOrder="870" id="GPIO_PIN_CONFIGURATION84">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="853" id="GPIO_PIN_CONFIGURATION85">
+        <Menu dnOrder="871" id="GPIO_PIN_CONFIGURATION85">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="854" id="GPIO_PIN_CONFIGURATION86">
+        <Menu dnOrder="872" id="GPIO_PIN_CONFIGURATION86">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="855" id="GPIO_PIN_CONFIGURATION87">
+        <Menu dnOrder="873" id="GPIO_PIN_CONFIGURATION87">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="856" id="GPIO_PIN_CONFIGURATION88">
+        <Menu dnOrder="874" id="GPIO_PIN_CONFIGURATION88">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="857" id="GPIO_PIN_CONFIGURATION89">
+        <Menu dnOrder="875" id="GPIO_PIN_CONFIGURATION89">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="858" id="GPIO_PIN_CONFIGURATION9">
+        <Menu dnOrder="876" id="GPIO_PIN_CONFIGURATION9">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;A10</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="859" id="GPIO_PIN_CONFIGURATION90">
+        <Menu dnOrder="877" id="GPIO_PIN_CONFIGURATION90">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;G13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="860" id="GPIO_PIN_CONFIGURATION91">
+        <Menu dnOrder="878" id="GPIO_PIN_CONFIGURATION91">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H1</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="861" id="GPIO_PIN_CONFIGURATION92">
+        <Menu dnOrder="879" id="GPIO_PIN_CONFIGURATION92">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="862" id="GPIO_PIN_CONFIGURATION93">
+        <Menu dnOrder="880" id="GPIO_PIN_CONFIGURATION93">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="863" id="GPIO_PIN_CONFIGURATION94">
+        <Menu dnOrder="881" id="GPIO_PIN_CONFIGURATION94">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="864" id="GPIO_PIN_CONFIGURATION95">
+        <Menu dnOrder="882" id="GPIO_PIN_CONFIGURATION95">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="865" id="GPIO_PIN_CONFIGURATION96">
+        <Menu dnOrder="883" id="GPIO_PIN_CONFIGURATION96">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="866" id="GPIO_PIN_CONFIGURATION97">
+        <Menu dnOrder="884" id="GPIO_PIN_CONFIGURATION97">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="867" id="GPIO_PIN_CONFIGURATION98">
+        <Menu dnOrder="885" id="GPIO_PIN_CONFIGURATION98">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="868" id="GPIO_PIN_CONFIGURATION99">
+        <Menu dnOrder="886" id="GPIO_PIN_CONFIGURATION99">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;H9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Boolean dnOrder="869" id="INSTRUCTION_CACHE_ENABLE">
+        <Boolean dnOrder="887" id="INSTRUCTION_CACHE_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <File dnOrder="870" id="MAIN_C">
+        <File dnOrder="888" id="MAIN_C">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="name">
               <Value dnOrder="0">main_pic32mz_ef_sk.c</Value>
             </String>
           </Attributes>
         </File>
-        <Hex dnOrder="871" id="SYS_PORT_B_ANSEL">
+        <String dnOrder="889" id="SYS_CLK_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="200000000"/>
+          </Values>
+        </String>
+        <Hex dnOrder="890" id="SYS_PORT_B_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="1"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="872" id="SYS_PORT_B_CNEN">
+        <Hex dnOrder="891" id="SYS_PORT_B_CNEN">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="873" id="SYS_PORT_B_CNPD">
+        <Hex dnOrder="892" id="SYS_PORT_B_CNPD">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="874" id="SYS_PORT_B_CNPU">
+        <Hex dnOrder="893" id="SYS_PORT_B_CNPU">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Boolean dnOrder="875" id="SYS_PORT_B_CN_USED">
+        <Boolean dnOrder="894" id="SYS_PORT_B_CN_USED">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Hex dnOrder="876" id="SYS_PORT_B_LAT">
+        <Hex dnOrder="895" id="SYS_PORT_B_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="877" id="SYS_PORT_B_ODC">
+        <Hex dnOrder="896" id="SYS_PORT_B_ODC">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="878" id="SYS_PORT_B_TRIS">
+        <Hex dnOrder="897" id="SYS_PORT_B_TRIS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="879" id="SYS_PORT_G_ANSEL">
+        <Hex dnOrder="898" id="SYS_PORT_G_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="512"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="880" id="SYS_PORT_H_CNEN">
+        <Hex dnOrder="899" id="SYS_PORT_H_CNEN">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="881" id="SYS_PORT_H_CNPD">
+        <Hex dnOrder="900" id="SYS_PORT_H_CNPD">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="882" id="SYS_PORT_H_CNPU">
+        <Hex dnOrder="901" id="SYS_PORT_H_CNPU">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Boolean dnOrder="883" id="SYS_PORT_H_CN_USED">
+        <Boolean dnOrder="902" id="SYS_PORT_H_CN_USED">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Hex dnOrder="884" id="SYS_PORT_H_LAT">
+        <Hex dnOrder="903" id="SYS_PORT_H_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="885" id="SYS_PORT_H_ODC">
+        <Hex dnOrder="904" id="SYS_PORT_H_ODC">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="886" id="SYS_PORT_H_TRIS">
+        <Hex dnOrder="905" id="SYS_PORT_H_TRIS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="1"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Combo dnOrder="887" id="SYS_PORT_PPS_INPUT_FUNCTION_0">
+        <Combo dnOrder="906" id="SYS_PORT_PPS_INPUT_FUNCTION_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -5658,7 +5757,7 @@
             <User dnOrder="0" value="U2RX"/>
           </Values>
         </Combo>
-        <KeyValueSet dnOrder="888" id="SYS_PORT_PPS_INPUT_PIN_0">
+        <KeyValueSet dnOrder="907" id="SYS_PORT_PPS_INPUT_PIN_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -5668,7 +5767,7 @@
             <User dnOrder="0" value="10"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="889" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
+        <KeyValueSet dnOrder="908" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -5678,7 +5777,7 @@
             <User dnOrder="0" value="25"/>
           </Values>
         </KeyValueSet>
-        <Combo dnOrder="890" id="SYS_PORT_PPS_OUTPUT_PIN_0">
+        <Combo dnOrder="909" id="SYS_PORT_PPS_OUTPUT_PIN_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -5688,113 +5787,113 @@
             <User dnOrder="0" value="RPG9"/>
           </Values>
         </Combo>
-        <Boolean dnOrder="891" id="TIMER_1_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="910" id="TIMER_1_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="892" id="UART2_FAULT_INTERRUPT_ENABLE">
+        <Boolean dnOrder="911" id="UART2_FAULT_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="893" id="UART2_FAULT_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="912" id="UART2_FAULT_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="894" id="UART2_FAULT_INTERRUPT_HANDLER">
+        <String dnOrder="913" id="UART2_FAULT_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="1" value="UART2_FAULT_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="895" id="UART2_FAULT_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="914" id="UART2_FAULT_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="896" id="UART2_RX_INTERRUPT_ENABLE">
+        <Boolean dnOrder="915" id="UART2_RX_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="897" id="UART2_RX_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="916" id="UART2_RX_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="898" id="UART2_RX_INTERRUPT_HANDLER">
+        <String dnOrder="917" id="UART2_RX_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="1" value="UART2_RX_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="899" id="UART2_RX_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="918" id="UART2_RX_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="900" id="UART2_TX_INTERRUPT_ENABLE">
+        <Boolean dnOrder="919" id="UART2_TX_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="901" id="UART2_TX_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="920" id="UART2_TX_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="902" id="UART2_TX_INTERRUPT_HANDLER">
+        <String dnOrder="921" id="UART2_TX_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="1" value="UART2_TX_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="903" id="UART2_TX_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="922" id="UART2_TX_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="904" id="USE_CACHE_MAINTENANCE">
+        <Boolean dnOrder="923" id="USE_CACHE_MAINTENANCE">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="905" id="USE_PPS_INPUT_0">
+        <Boolean dnOrder="924" id="USE_PPS_INPUT_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="906" id="USE_PPS_OUTPUT_0">
+        <Boolean dnOrder="925" id="USE_PPS_OUTPUT_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="907" id="clkSvcMode">
+        <KeyValueSet dnOrder="926" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="0"/>
@@ -5806,14 +5905,28 @@
     <UniqueComponent dnOrder="1" id="dfp"/>
     <UniqueComponent dnOrder="2" id="uart2">
       <Symbols dnOrder="0">
-        <KeyValueSet dnOrder="0" id="UART_BRGH">
+        <Integer dnOrder="0" id="BRG_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="216"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="1" id="UART_BRGH">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </KeyValueSet>
-        <Hex dnOrder="1" id="UMODE_VALUE">
+        <Integer dnOrder="2" id="UART_CLOCK_FREQ">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="uart2" priority="2" value="100000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Hex dnOrder="3" id="UMODE_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="uart2" priority="2" value="8"/>

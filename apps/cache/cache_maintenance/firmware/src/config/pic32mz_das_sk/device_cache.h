@@ -43,8 +43,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef CACHE_PIC32MZ_H
-#define CACHE_PIC32MZ_H
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -68,8 +68,19 @@ extern "C" {
 // Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
+#define ICACHE_ENABLE()
+#define ICACHE_DISABLE()
+#define ICACHE_INVALIDATE()                            CACHE_InstructionCacheFlush()
+#define INSTRUCTION_CACHE_ENABLED                      true
+
+#define DCACHE_ENABLE()
+#define DCACHE_DISABLE()
+#define DCACHE_CLEAN()
+#define DCACHE_CLEAN_INVALIDATE()
+#define DCACHE_INVALIDATE()                            CACHE_DataCacheFlush()
 #define DCACHE_CLEAN_BY_ADDR(addr,sz)                  CACHE_DataCacheClean(addr,sz)
 #define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             CACHE_DataCacheInvalidate(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       CACHE_DataCacheClean(addr,sz)
 #define DATA_CACHE_ENABLED                             true
 
 //DOM-IGNORE-BEGIN
@@ -78,4 +89,4 @@ extern "C" {
 #endif
 //DOM-IGNORE-END
 
-#endif // #ifndef CACHE_PIC32MZ_H
+#endif // #ifndef DEVICE_CACHE_H
