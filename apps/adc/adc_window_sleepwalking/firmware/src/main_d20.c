@@ -80,7 +80,6 @@ int main ( void )
     printf("\n\r---------------------------------------------------------");
     printf("\n\r                    ADC Window Sleepwalking Demo                 ");
     printf("\n\r---------------------------------------------------------\n\r");
-    printf("\r\nApply test voltage on PB08 - AIN[2]\r\n");
     
     ADC_Enable();
     ADC_CallbackRegister(adc0_cb, adc_context);
