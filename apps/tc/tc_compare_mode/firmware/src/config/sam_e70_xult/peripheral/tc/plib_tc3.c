@@ -53,7 +53,6 @@
 */
 #include "device.h"
 #include "plib_tc3.h"
-
  
 
  
@@ -133,12 +132,13 @@ void TC3_CH2_CompareBSet (uint16_t value)
 
 TC_COMPARE_STATUS TC3_CH2_CompareStatusGet(void)
 {
-    return ((TC3_REGS->TC_CHANNEL[2].TC_SR) & TC_COMPARE_STATUS_MSK);
+    return (TC_COMPARE_STATUS)(TC3_REGS->TC_CHANNEL[2].TC_SR & TC_COMPARE_STATUS_MSK);
 }
  
 
  
 
+ 
 /**
  End of File
 */
