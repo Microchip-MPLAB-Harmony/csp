@@ -4,9 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f2" displayName="arm" projectFiles="true">
-        <itemPath>../src/arm/toolchain_specifics.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_c21n_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
@@ -43,10 +40,12 @@
               <itemPath>../src/config/sam_c21n_xpro/peripheral/tc/plib_tc0.h</itemPath>
             </logicalFolder>
           </logicalFolder>
+          <itemPath>../src/config/sam_c21n_xpro/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_c21n_xpro/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/sam_c21n_xpro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="packs" projectFiles="true">
+      <logicalFolder name="f2" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAMC21N18A_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAMC21N18A_DFP/component/ac.h</itemPath>
@@ -92,6 +91,7 @@
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
@@ -119,14 +119,11 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_c21n_xpro" projectFiles="true">
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f3" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_c21n_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="divas" projectFiles="true">
-              <itemPath>../src/config/sam_c21n_xpro/peripheral/divas/plib_divas.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f8" displayName="eic" projectFiles="true">
+            <logicalFolder name="f7" displayName="eic" projectFiles="true">
               <itemPath>../src/config/sam_c21n_xpro/peripheral/eic/plib_eic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="evsys" projectFiles="true">
@@ -138,26 +135,26 @@
             <logicalFolder name="f2" displayName="port" projectFiles="true">
               <itemPath>../src/config/sam_c21n_xpro/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="sercom" projectFiles="true">
+            <logicalFolder name="f6" displayName="sercom" projectFiles="true">
               <logicalFolder name="f1" displayName="usart" projectFiles="true">
                 <itemPath>../src/config/sam_c21n_xpro/peripheral/sercom/usart/plib_sercom4_usart.c</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="systick" projectFiles="true">
+            <logicalFolder name="f5" displayName="systick" projectFiles="true">
               <itemPath>../src/config/sam_c21n_xpro/peripheral/systick/plib_systick.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f9" displayName="tc" projectFiles="true">
+            <logicalFolder name="f8" displayName="tc" projectFiles="true">
               <itemPath>../src/config/sam_c21n_xpro/peripheral/tc/plib_tc1.c</itemPath>
               <itemPath>../src/config/sam_c21n_xpro/peripheral/tc/plib_tc0.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="stdio" projectFiles="true">
+          <logicalFolder name="f2" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_c21n_xpro/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <itemPath>../src/config/sam_c21n_xpro/initialization.c</itemPath>
           <itemPath>../src/config/sam_c21n_xpro/interrupts.c</itemPath>
           <itemPath>../src/config/sam_c21n_xpro/exceptions.c</itemPath>
-          <itemPath>../src/config/sam_c21n_xpro/startup.c</itemPath>
+          <itemPath>../src/config/sam_c21n_xpro/startup_xc32.c</itemPath>
           <itemPath>../src/config/sam_c21n_xpro/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
@@ -186,8 +183,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMC21_DFP" vendor="Atmel" version="1.2.166"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
+        <pack name="SAMC21_DFP" vendor="Microchip" version="2.0.5"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -391,6 +388,7 @@
         <property key="programoptions.preserveprogram.ranges" value=""/>
         <property key="programoptions.preserveprogramrange" value="false"/>
         <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
       </EdbgTool>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
