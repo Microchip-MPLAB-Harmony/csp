@@ -620,7 +620,12 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\..\firmware\src</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -654,7 +659,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>u-boot.bin</state>
+                    <state>harmony.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -1660,7 +1665,12 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\..\firmware\src</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -2143,6 +2153,9 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\device.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\device_cache.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\flexcom.h</name>
             </file>
             <file>
@@ -2197,9 +2210,6 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\flexcom\usart\plib_flexcom_usart_local.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\l2cc\plib_l2cc.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\matrix\plib_matrix.h</name>
             </file>
             <file>
@@ -2207,9 +2217,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio_pin.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pmc.h</name>
@@ -2275,7 +2282,7 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\tdes.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\arm\toolchain_specifics.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\toolchain_specifics.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\trng.h</name>
@@ -2327,9 +2334,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\flexcom\usart\plib_flexcom0_usart.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\l2cc\plib_l2cc.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\matrix\plib_matrix.c</name>

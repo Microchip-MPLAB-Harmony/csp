@@ -55,7 +55,7 @@ FLEXCOM USART - Connect USB UART click board to mikroBUS Xplained Pro extension 
               - Connect mikroBUS Xplained Pro extension Board to XPRO EXT2 Connector.
 *************************************************************************************/
 
-#define RX_BUFFER_SIZE 256
+#define RX_BUFFER_SIZE 255
 #define LED_On()                        LED_Clear()
 #define LED_Off()                       LED_Set()
 
