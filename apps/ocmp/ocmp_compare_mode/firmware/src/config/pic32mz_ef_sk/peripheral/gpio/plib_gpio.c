@@ -44,6 +44,7 @@
 #include "plib_gpio.h"
 
 
+
 /******************************************************************************
   Function:
     GPIO_Initialize ( void )
@@ -86,6 +87,9 @@ void GPIO_Initialize ( void )
     /* PPS Input Remapping */
 
     /* PPS Output Remapping */
+    RPD10R = 11;
+    RPD0R = 12;
+    RPD1R = 11;
     RPD10R = 11;
     RPD0R = 12;
     RPD1R = 11;
