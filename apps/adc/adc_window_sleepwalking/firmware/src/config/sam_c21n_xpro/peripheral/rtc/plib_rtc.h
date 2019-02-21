@@ -44,6 +44,7 @@
 #ifndef PLIB_RTC_H
 #define PLIB_RTC_H
 
+#include "device.h"
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -66,17 +67,14 @@ typedef enum
     RTC_PER4_MASK = 0x0010,
     RTC_PER5_MASK = 0x0020,
     RTC_PER6_MASK = 0x0040,
-    RTC_PER7_MASK = 0x0080,
-    /* Force the compiler to reserve 32-bit memory for enum */
-    RTC_PERIODIC_INT_MASK_INVALID = 0xFFFFFFFF
+    RTC_PER7_MASK = 0x0080
 } RTC_PERIODIC_INT_MASK;
 
 
-
 void RTC_Initialize(void);
-bool RTC_PeriodicIntervalHasCompleted (RTC_PERIODIC_INT_MASK period);
+bool RTC_PeriodicIntervalHasCompleted ( RTC_PERIODIC_INT_MASK period );
 bool RTC_Timer32CounterHasOverflowed ( void );
-bool RTC_Timer32CompareHasMatched ( void );
+bool RTC_Timer32Compare0HasMatched( void );
 void RTC_Timer32Start ( void );
 void RTC_Timer32Stop ( void );
 void RTC_Timer32CounterSet ( uint32_t count );
@@ -84,7 +82,6 @@ uint32_t RTC_Timer32CounterGet ( void );
 uint32_t RTC_Timer32FrequencyGet ( void );
 void RTC_Timer32CompareSet ( uint32_t compareValue );
 uint32_t RTC_Timer32PeriodGet ( void );
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
