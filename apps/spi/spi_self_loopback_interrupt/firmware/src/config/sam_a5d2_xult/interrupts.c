@@ -151,7 +151,7 @@ void PMC_Handler( void )                 __attribute__((weak, alias("DefaultInte
 void RSTC_Handler( void )                __attribute__((weak, alias("DefaultInterruptHandler")));
 void RTC_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
 
-void SPI0_InterruptHandler(              void );
+void SPI1_InterruptHandler(              void );
 
 /* Handlers for vectors that are shared by multiple interrupts */
 void SYSC_SharedHandler( void )
@@ -160,11 +160,10 @@ void SYSC_SharedHandler( void )
 
 /* data for irq register initialization */
 IrqData irqData[] = {
-    { 33,  (uint32_t) AIC_REGS,    SPI0_InterruptHandler,      AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  AIC_SMR_PRIORITY_MINIMUM_Val   },
+    { 34,  (uint32_t) AIC_REGS,    SPI1_InterruptHandler,      AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  AIC_SMR_PRIORITY_MINIMUM_Val   },
 };
 
 uint32_t irqDataEntryCount = sizeof( irqData ) / sizeof( irqData[ 0 ]);
-
 
 
 
