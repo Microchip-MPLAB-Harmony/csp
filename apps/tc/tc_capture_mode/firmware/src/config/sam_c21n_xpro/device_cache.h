@@ -1,24 +1,26 @@
 /*******************************************************************************
-  Divide Square Root Accelerator (DIVAS) PLIB
-
-  Company:
-    Microchip Technology Inc.
+  Cortex-M L1 Cache Header
 
   File Name:
-    plib_divas.h
+    device_cache.h
 
   Summary:
-    DIVAS PLIB Header File
+    Preprocessor definitions to provide L1 Cache control.
 
   Description:
-    This file defines the interface to the DIVAS peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
+    An MPLAB PLIB or Project can include this header to perform cache cleans,
+    invalidates etc. For the DCache and ICache.
+
+  Remarks:
+    This header should not define any prototypes or data definitions, or 
+    include any files that do.  The file only provides macro definitions for 
+    build-time.
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -39,43 +41,52 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-// DOM-IGNORE-BEGIN
-#ifndef PLIB_DIVAS_H
-#define PLIB_DIVAS_H
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
+/*  This section Includes other configuration headers necessary to completely
+    define this configuration.
 */
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
 
-#ifdef __cplusplus // Provide C++ Compatibility
-extern "C"
-{
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+extern "C" {
+
 #endif
-
 // DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Interface Routines
+// Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
+#define ICACHE_ENABLE()
+#define ICACHE_DISABLE()
+#define ICACHE_INVALIDATE()
+#define INSTRUCTION_CACHE_ENABLED                      false
 
-void DIVAS_Initialize(void);
+#define DCACHE_ENABLE()
+#define DCACHE_DISABLE()
+#define DCACHE_INVALIDATE()
+#define DCACHE_CLEAN()
+#define DCACHE_CLEAN_INVALIDATE()
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+#define DATA_CACHE_ENABLED                             false
 
-
-/* 32-bit Square Root */
-uint32_t DIVAS_SquareRoot (uint32_t number);
-
-#ifdef __cplusplus // Provide C++ Compatibility
- }
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
 #endif
+//DOM-IGNORE-END
 
-#endif /* PLIB_DIVAS_H */
+#endif // #ifndef DEVICE_CACHE_H
