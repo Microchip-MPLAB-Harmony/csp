@@ -51,6 +51,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "device.h" // static inline macro
+
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     extern "C" {
@@ -339,6 +341,31 @@ void PIT_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context);
     None.
 */
 void PIT_InterruptHandler(void);
+
+// *****************************************************************************
+/* Function:
+    void PIT_ClearInterrupt(void);
+
+  Summary:
+    PIT Clear Interrupt.
+
+  Description:
+    Clear the PIT interrupt by reading the PIVR register.  Meant
+    to be used by external interrupt handlers (e.g. FreeRTOS tick hanlder).
+
+  Precondition:
+    None.
+
+  Parameters:
+    None.
+  
+  Returns:
+    None.
+*/
+__STATIC_INLINE void PIT_ClearInterrupt(void)
+{
+    (uint32_t)PIT_REGS->PIT_PIVR;
+}
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
