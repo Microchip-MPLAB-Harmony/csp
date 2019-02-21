@@ -56,15 +56,15 @@
 
 /*** DEVCFG0 ***/
 #pragma config DEBUG =      OFF
-#pragma config JTAGEN =     ON
+#pragma config JTAGEN =     OFF
 #pragma config ICESEL =     ICS_PGx2
-#pragma config TRCEN =      ON
+#pragma config TRCEN =      OFF
 #pragma config BOOTISA =    MIPS32
 #pragma config FECCCON =    OFF_UNLOCKED
 #pragma config FSLEEP =     OFF
 #pragma config DBGPER =     PG_ALL
 #pragma config SMCLR =      MCLR_NORM
-#pragma config SOSCGAIN =   GAIN_2X
+#pragma config SOSCGAIN =   GAIN_LEVEL_3
 #pragma config SOSCBOOST =  ON
 #pragma config POSCGAIN =   GAIN_LEVEL_3
 #pragma config POSCBOOST =  ON
@@ -74,16 +74,16 @@
 /*** DEVCFG1 ***/
 #pragma config FNOSC =      SPLL
 #pragma config DMTINTV =    WIN_127_128
-#pragma config FSOSCEN =    ON
-#pragma config IESO =       ON
+#pragma config FSOSCEN =    OFF
+#pragma config IESO =       OFF
 #pragma config POSCMOD =    OFF
 #pragma config OSCIOFNC =   OFF
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
 #pragma config WDTSPGM =    STOP
-#pragma config FWDTEN =     ON
+#pragma config FWDTEN =     OFF
 #pragma config WINDIS =     NORMAL
-#pragma config FWDTWINSZ =  WINSZ_75
+#pragma config FWDTWINSZ =  WINSZ_25
 #pragma config DMTCNT =     DMT31
 #pragma config FDMTEN =     OFF
 
@@ -96,7 +96,7 @@
 #pragma config UPLLFSEL =   FREQ_24MHZ
 
 /*** DEVCFG3 ***/
-#pragma config USERID =     65535
+#pragma config USERID =     0xffff
 #pragma config FMIIEN =     ON
 #pragma config FETHIO =     ON
 #pragma config PGL1WAY =    ON
@@ -106,8 +106,8 @@
 
 /*** BF1SEQ0 ***/
 
-#pragma config TSEQ =       65535
-#pragma config CSEQ =       65535
+#pragma config TSEQ =       0xffff
+#pragma config CSEQ =       0x0
 
 
 
@@ -159,11 +159,14 @@ void SYS_Initialize ( void* data )
   
     CLK_Initialize();
 	GPIO_Initialize();
+    /* Configure Prefetch, Wait States and ECC */
+    PRECONbits.PREFEN = 3;
+    PRECONbits.PFMWS = 2;
+    CFGCONbits.ECCCON = 3;
+
 
 
 	UART2_Initialize();
-
-    WDT_Initialize();
 
     RTCC_Initialize();
 
