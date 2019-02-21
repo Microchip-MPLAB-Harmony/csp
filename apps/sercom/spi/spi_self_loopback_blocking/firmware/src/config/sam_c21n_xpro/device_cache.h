@@ -1,26 +1,26 @@
 /*******************************************************************************
-  SERCOM Universal Synchronous/Asynchrnous Receiver/Transmitter PLIB
+  Cortex-M L1 Cache Header
 
-  Company
-    Microchip Technology Inc.
+  File Name:
+    device_cache.h
 
-  File Name
-    plib_sercom5_usart.h
+  Summary:
+    Preprocessor definitions to provide L1 Cache control.
 
-  Summary
-    USART peripheral library interface.
-
-  Description
-    This file defines the interface to the USART peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
+  Description:
+    An MPLAB PLIB or Project can include this header to perform cache cleans,
+    invalidates etc. For the DCache and ICache.
 
   Remarks:
-    None.
+    This header should not define any prototypes or data definitions, or 
+    include any files that do.  The file only provides macro definitions for 
+    build-time.
+
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -41,68 +41,52 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef PLIB_SERCOM5_USART_H // Guards against multiple inclusion
-#define PLIB_SERCOM5_USART_H
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
+/*  This section Includes other configuration headers necessary to completely
+    define this configuration.
 */
-
-#include "plib_sercom_usart_common.h"
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
-extern "C" {
-#endif
-// DOM-IGNORE-END
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-this interface.
-*/
-
-void SERCOM5_USART_Initialize( void );
-
-bool SERCOM5_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency );
-
-bool SERCOM5_USART_Write( void *buffer, const size_t size );
-
-bool SERCOM5_USART_WriteIsBusy( void );
-
-size_t SERCOM5_USART_WriteCountGet( void );
-
-void SERCOM5_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context );
-
-bool SERCOM5_USART_Read( void *buffer, const size_t size );
-
-bool SERCOM5_USART_ReadIsBusy( void );
-
-size_t SERCOM5_USART_ReadCountGet( void );
-
-void SERCOM5_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context );
-
-USART_ERROR SERCOM5_USART_ErrorGet( void );
-
-uint32_t inline SERCOM5_USART_FrequencyGet( void )
-{
-    return (uint32_t) (4000000UL);
-}
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-    }
+extern "C" {
 
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_SERCOM5_USART_H
+// *****************************************************************************
+// *****************************************************************************
+// Section: L1 Cache Configuration
+// *****************************************************************************
+// *****************************************************************************
+#define ICACHE_ENABLE()
+#define ICACHE_DISABLE()
+#define ICACHE_INVALIDATE()
+#define INSTRUCTION_CACHE_ENABLED                      false
+
+#define DCACHE_ENABLE()
+#define DCACHE_DISABLE()
+#define DCACHE_INVALIDATE()
+#define DCACHE_CLEAN()
+#define DCACHE_CLEAN_INVALIDATE()
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+#define DATA_CACHE_ENABLED                             false
+
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
+#endif
+//DOM-IGNORE-END
+
+#endif // #ifndef DEVICE_CACHE_H

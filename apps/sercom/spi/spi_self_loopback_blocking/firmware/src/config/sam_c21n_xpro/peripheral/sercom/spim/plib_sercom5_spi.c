@@ -46,15 +46,18 @@
 // DOM-IGNORE-END
 
 #include "plib_sercom5_spi.h"
-#include "device.h"
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: MACROS Definitions
 // *****************************************************************************
 // *****************************************************************************
-/* Sercom clk freq value for the baud calculation */
+
+/* SERCOM5 clk freq value for the baud calculation */
 #define SERCOM5_Frequency      (uint32_t) (48000000UL)
+
+/* SERCOM5 SPI baud value for 1000000 Hz baud rate */
+#define SERCOM5_SPIM_BAUD_VALUE			(23U)
 
 
 // *****************************************************************************
@@ -90,7 +93,7 @@ void SERCOM5_SPI_Initialize(void)
     while(SERCOM5_REGS->SPIM.SERCOM_SYNCBUSY);
 
     /* Selection of the Baud Value */
-    SERCOM5_REGS->SPIM.SERCOM_BAUD = 23;
+    SERCOM5_REGS->SPIM.SERCOM_BAUD = SERCOM_SPIM_BAUD_BAUD(SERCOM5_SPIM_BAUD_VALUE);
 
     /* Configure Data Out Pin Out , Master Mode,
      * Data In and Pin Out,Data Order and Standby mode if configured
@@ -299,14 +302,11 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
             {
                 /* For transmit only request, wait for DRE to become empty */
                 while((SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_DRE_Msk) != SERCOM_SPIM_INTFLAG_DRE_Msk);
-
             }
             else
             {
-                while((SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk) != SERCOM_SPIM_INTFLAG_RXC_Msk)
-                {
-                    /* If data is read, wait for the Receiver Data Register to become full */
-                }
+                /* If data is read, wait for the Receiver Data Register to become full */
+                while((SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk) != SERCOM_SPIM_INTFLAG_RXC_Msk);
 
                 receivedData = SERCOM5_REGS->SPIM.SERCOM_DATA;
 
@@ -324,10 +324,8 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
             }
         }
 
-        while((SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) != SERCOM_SPIM_INTFLAG_TXC_Msk)
-        {
-            /* Make sure no data is pending in the shift register */
-        }
+        /* Make sure no data is pending in the shift register */
+        while((SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) != SERCOM_SPIM_INTFLAG_TXC_Msk);
 
         isSuccess = true;
     }
