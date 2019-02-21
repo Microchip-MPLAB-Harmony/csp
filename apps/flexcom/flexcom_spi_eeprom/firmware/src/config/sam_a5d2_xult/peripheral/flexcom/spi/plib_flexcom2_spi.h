@@ -69,17 +69,13 @@ extern "C" {
 
 /****************************** FLEXCOM2 SPI Interface *********************************/
 
-void FLEXCOM2_SPI_Initialize ( void );
-
-bool FLEXCOM2_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
-
-bool FLEXCOM2_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
-
-bool FLEXCOM2_SPI_IsBusy(void);
-
-void FLEXCOM2_SPI_CallbackRegister(FLEXCOM_SPI_CALLBACK callback, uintptr_t context);
-
-void FLEXCOM2_InterruptHandler(void);
+void FLEXCOM2_SPI_Initialize( void );
+bool FLEXCOM2_SPI_WriteRead( void * pTransmitData, size_t txSize, void * pReceiveData, size_t rxSize );
+bool FLEXCOM2_SPI_Write( void * pTransmitData, size_t txSize );
+bool FLEXCOM2_SPI_Read( void * pReceiveData, size_t rxSize );
+bool FLEXCOM2_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock );
+bool FLEXCOM2_SPI_IsBusy( void );
+void FLEXCOM2_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context );
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
