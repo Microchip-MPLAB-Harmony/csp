@@ -68,19 +68,19 @@ void TCC0_PWMInitialize(void)
         /* Wait for sync */
     }
     /* Clock prescaler */
-    TCC0_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_DIV1;
+    TCC0_REGS->TCC_CTRLA = TCC_CTRLA_PRESCALER_DIV1 ;
     TCC0_REGS->TCC_WEXCTRL = TCC_WEXCTRL_OTMX(0U);
+    /* Dead time configurations */
     TCC0_REGS->TCC_WEXCTRL |= TCC_WEXCTRL_DTIEN0_Msk | TCC_WEXCTRL_DTIEN1_Msk | TCC_WEXCTRL_DTIEN2_Msk | TCC_WEXCTRL_DTIEN3_Msk
  	 	 | TCC_WEXCTRL_DTLS(64U) | TCC_WEXCTRL_DTHS(64U);
 
     TCC0_REGS->TCC_WAVE = TCC_WAVE_WAVEGEN_DSBOTTOM;
-    
+
     /* Configure duty cycle values */
     TCC0_REGS->TCC_CC[0] = 0U;
     TCC0_REGS->TCC_CC[1] = 0U;
     TCC0_REGS->TCC_CC[2] = 0U;
     TCC0_REGS->TCC_CC[3] = 0U;
-
     TCC0_REGS->TCC_PER = 2397U;
 
 
@@ -137,6 +137,11 @@ void TCC0_PWMDeadTimeSet (uint8_t deadtime_high, uint8_t deadtime_low)
     TCC0_REGS->TCC_WEXCTRL |= TCC_WEXCTRL_DTHS(deadtime_high) | TCC_WEXCTRL_DTLS(deadtime_low);
 }
 
+void TCC0_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output)
+{
+    TCC0_REGS->TCC_PATTB = (uint16_t)(pattern_enable | (pattern_output << 8));
+}
+
 /* Set the counter*/
 void TCC0_PWM24bitCounterSet (uint32_t count_value)
 {
@@ -164,7 +169,7 @@ void TCC0_PWMPeriodInterruptEnable(void)
 }
 
 /* Disable the period interrupt - overflow or underflow interrupt */
-void TCC0_PWMPeriodInterruptDisable()
+void TCC0_PWMPeriodInterruptDisable(void)
 {
     TCC0_REGS->TCC_INTENCLR = TCC_INTENCLR_OVF_Msk;
 }
@@ -182,13 +187,17 @@ void TCC0_PWMInterruptHandler(void)
     uint32_t status;
     status = TCC0_REGS->TCC_INTFLAG;
     /* Clear interrupt flags */
-    TCC0_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
+    TCC0_REGS->TCC_INTFLAG = 0xFFFF;
     if (TCC0_CallbackObj.callback_fn != NULL)
     {
         TCC0_CallbackObj.callback_fn(status, TCC0_CallbackObj.context);
     }
 
 }
+
+
+     
+
 
 
 /**
