@@ -3123,7 +3123,7 @@
         </Combo>
         <Combo dnOrder="508" id="CONFIG_SYS_CLK_CONFIG_SOSCEN">
           <Values dnOrder="0">
-            <User dnOrder="0" value="ON"/>
+            <User dnOrder="0" value="OFF"/>
           </Values>
         </Combo>
         <String dnOrder="509" id="CONFIG_SYS_CLK_PBCLK1_FREQ">
@@ -3168,22 +3168,22 @@
         </Integer>
         <String dnOrder="517" id="CONFIG_SYS_CLK_REFCLK1_FREQ">
           <Values dnOrder="0">
-            <User dnOrder="0" value="8000000"/>
+            <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
         <String dnOrder="518" id="CONFIG_SYS_CLK_REFCLK2_FREQ">
           <Values dnOrder="0">
-            <User dnOrder="0" value="8000000"/>
+            <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
         <String dnOrder="519" id="CONFIG_SYS_CLK_REFCLK3_FREQ">
           <Values dnOrder="0">
-            <User dnOrder="0" value="8000000"/>
+            <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
         <String dnOrder="520" id="CONFIG_SYS_CLK_REFCLK4_FREQ">
           <Values dnOrder="0">
-            <User dnOrder="0" value="8000000"/>
+            <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
         <String dnOrder="521" id="CPU_CLOCK_FREQUENCY">
@@ -3214,68 +3214,75 @@
             </Dynamic>
           </Values>
         </String>
-        <String dnOrder="525" id="PB3DIV_VALUE">
+        <File dnOrder="525" id="EVIC_INT_ASM">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <String dnOrder="526" id="PB3DIV_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0x8005"/>
             </Dynamic>
           </Values>
         </String>
-        <String dnOrder="526" id="SYS_CLK_FREQ">
+        <String dnOrder="527" id="SYS_CLK_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <Hex dnOrder="527" id="SYS_PORT_H_ANSEL">
+        <Hex dnOrder="528" id="SYS_PORT_H_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="1"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="528" id="SYS_PORT_H_LAT">
+        <Hex dnOrder="529" id="SYS_PORT_H_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="529" id="SYS_PORT_H_TRIS">
+        <Hex dnOrder="530" id="SYS_PORT_H_TRIS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="1"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Boolean dnOrder="530" id="TIMER_1_INTERRUPT_ENABLE">
+        <Boolean dnOrder="531" id="TIMER_1_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tmr1" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="531" id="TIMER_1_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="532" id="TIMER_1_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="532" id="TIMER_1_INTERRUPT_HANDLER">
+        <String dnOrder="533" id="TIMER_1_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tmr1" priority="1" value="TIMER_1_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="533" id="TIMER_1_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="534" id="TIMER_1_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tmr1" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="534" id="clkSvcMode">
+        <KeyValueSet dnOrder="535" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="0"/>
@@ -3334,13 +3341,13 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="tmr1" x="340" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
