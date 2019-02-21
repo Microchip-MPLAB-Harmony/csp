@@ -49,15 +49,14 @@ static void OSCCTRL_Initialize(void)
 static void OSC32KCTRL_Initialize(void)
 {
 
-	OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(0);
+    OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(0);
 }
 
 
 
 static void DFLL_Initialize(void)
 {
-    OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk | OSCCTRL_DFLLCTRLA_RUNSTDBY_Msk;
-    
+    OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk | OSCCTRL_DFLLCTRLA_RUNSTDBY_Msk ;
 }
 
 
@@ -65,7 +64,7 @@ static void GCLK0_Initialize(void)
 {
     GCLK_REGS->GCLK_GENCTRL[0] = GCLK_GENCTRL_DIV(1) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_RUNSTDBY_Msk | GCLK_GENCTRL_GENEN_Msk;
 
-    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL0_Msk) == GCLK_SYNCBUSY_GENCTRL0_Msk)
+    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL_GCLK0) == GCLK_SYNCBUSY_GENCTRL_GCLK0)
     {
         /* wait for the Generator 0 synchronization */
     }
@@ -81,11 +80,10 @@ void CLOCK_Initialize (void)
 
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
-    
-    DFLL_Initialize();
-    
-    GCLK0_Initialize();
- 
+
+   GCLK0_Initialize();
+   DFLL_Initialize();
+
     /* selection of the CPU clock Division */
     MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_DIV(0x01);
 
@@ -94,21 +92,21 @@ void CLOCK_Initialize (void)
         /* Wait for the Main Clock to be Ready */
     }
 
-	/* Selection of the Generator and write Lock for EVSYS_0 */
+    /* Selection of the Generator and write Lock for EVSYS_0 */
     GCLK_REGS->GCLK_PCHCTRL[11] = GCLK_PCHCTRL_GEN(0x0)  | GCLK_PCHCTRL_CHEN_Msk;
 
     while ((GCLK_REGS->GCLK_PCHCTRL[11] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
     {
         /* Wait for synchronization */
     }
-	/* Selection of the Generator and write Lock for SERCOM2_CORE */
+    /* Selection of the Generator and write Lock for SERCOM2_CORE */
     GCLK_REGS->GCLK_PCHCTRL[23] = GCLK_PCHCTRL_GEN(0x0)  | GCLK_PCHCTRL_CHEN_Msk;
 
     while ((GCLK_REGS->GCLK_PCHCTRL[23] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
     {
         /* Wait for synchronization */
     }
-	/* Selection of the Generator and write Lock for AC */
+    /* Selection of the Generator and write Lock for AC */
     GCLK_REGS->GCLK_PCHCTRL[32] = GCLK_PCHCTRL_GEN(0x0)  | GCLK_PCHCTRL_CHEN_Msk;
 
     while ((GCLK_REGS->GCLK_PCHCTRL[32] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
