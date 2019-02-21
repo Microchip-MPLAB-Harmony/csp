@@ -76,16 +76,17 @@ int main ( void )
     printf("\n\r---------------------------------------------------------");
     printf("\n\r           ADC Automatic Window Comparison Demo             ");
     printf("\n\r---------------------------------------------------------\n\r");
-    
+
+    /* Start ADC conversion */
+    ADC_ConversionStart();
+
     while (1)
     {
-        /* Start ADC conversion */
-        ADC_ConversionStart();
-
         /* Wait till ADC conversion result is available */
         while(!ADC_ComparisonEventResultIsReady())
         {
-
+            PIT_DelayMs(500);
+            ADC_ConversionStart();
         };
 
         /* Read the ADC result */
@@ -95,8 +96,6 @@ int main ( void )
         printf("ADC Count = 0x%03x, ADC Input Voltage = %0.2f V \r",adc_count, input_voltage);
 
         ADC_ComparisonRestart();
-
-        PIT_DelayMs(500);
     }
     
     /* Execution should not come here during normal operation */
