@@ -100,6 +100,10 @@ void SPI3_Initialize ( void )
     */
     SPI3CONSET = (SPI3_CON_MSSEN | SPI3_CON_MCLKSEL | SPI3_CON_ENHBUF | SPI3_CON_MODE_32_MODE_16 | SPI3_CON_CKE | SPI3_CON_CKP | SPI3_CON_MSTEN);
 
+    /* Enable transmit interrupt when transmit buffer is completely empty (STXISEL = '01') */
+    /* Enable receive interrupt when the receive buffer is not empty (SRXISEL = '01') */
+    SPI3CONSET = 0x00000005;
+
 
     /* Enable SPI3 */
     SPI3CONSET= _SPI3CON_ON_MASK;
