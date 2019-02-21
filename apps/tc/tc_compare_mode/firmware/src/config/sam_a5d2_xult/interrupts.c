@@ -69,7 +69,6 @@ void DefaultInterruptHandlerForSpurious( void )
     ++spuriousEventCount;
 }
 
-
 /*******************************************************************************
  End of File
 */
