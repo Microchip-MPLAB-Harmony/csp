@@ -103,9 +103,8 @@ uint16_t ADC0_ConversionResultGet( void );
 
 bool ADC0_ConversionSequenceIsFinished(void);
 
+
 bool ADC0_ConversionStatusGet( void );
-
-
 
 
 // DOM-IGNORE-BEGIN

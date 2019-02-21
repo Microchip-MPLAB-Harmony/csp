@@ -55,8 +55,6 @@ void __attribute__((optimize("-O1"), long_call)) Reset_Handler(void);
 
 /* Device Vector information is available in interrupt.c file */
 
-
-
 /* Optional application-provided functions */
 extern void __attribute__((weak,long_call)) _on_reset(void);
 extern void __attribute__((weak,long_call)) _on_bootstrap(void);
