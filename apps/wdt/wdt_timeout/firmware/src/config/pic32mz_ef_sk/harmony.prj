@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">73FF06EE44C9B2B1B074FA81BA4028CF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">73FF06EE44C9B2B1B074FA81BA4028CF</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C4C33D754A88185B9741FC9B2085273C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C4C33D754A88185B9741FC9B2085273C</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -75,16 +75,16 @@
           <Name dnOrder="1">plib_uart2.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">71CF16BEFAEECA82DF658C131E31D66E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">71CF16BEFAEECA82DF658C131E31D66E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">78C442BDB07E46909609BD9D52553479</GeneratedChecksum>
+          <UserChecksum dnOrder="5">78C442BDB07E46909609BD9D52553479</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_wdt.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/wdt/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/wdt/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">470274CEC7CCEE67A3FD3D1D6B8B74F7</GeneratedChecksum>
-          <UserChecksum dnOrder="5">470274CEC7CCEE67A3FD3D1D6B8B74F7</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A5D424B92915E58BF59910B6FCEED7FC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A5D424B92915E58BF59910B6FCEED7FC</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
