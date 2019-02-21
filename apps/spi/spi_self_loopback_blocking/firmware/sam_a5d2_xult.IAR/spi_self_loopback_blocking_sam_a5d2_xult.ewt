@@ -2431,6 +2431,9 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\device.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\device_cache.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\flexcom.h</name>
             </file>
             <file>
@@ -2488,10 +2491,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio_pin.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\spi\plib_spi0.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\spi\plib_spi1.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\spi\plib_spi_common.h</name>
@@ -2560,7 +2560,7 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\tdes.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\arm\toolchain_specifics.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\toolchain_specifics.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\trng.h</name>
@@ -2602,7 +2602,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\interrupts.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\main.c</name>
+                <name>$PROJ_DIR$\..\src\main_sama5d2.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\aic\plib_aic.c</name>
@@ -2620,7 +2620,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\spi\plib_spi0.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\spi\plib_spi1.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\vectortrap.s</name>
