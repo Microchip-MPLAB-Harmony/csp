@@ -54,8 +54,8 @@ void SPI0_Initialize ( void )
     /* Disable and Reset the SPI*/
     SPI0_REGS->SPI_CR = SPI_CR_SPIDIS_Msk | SPI_CR_SWRST_Msk;
 
-    /* Enable Master mode, select particular NPCS line for chip select and disable mode fault detection */
-    SPI0_REGS->SPI_MR =  SPI_MR_MSTR_Msk | SPI_MR_PCS_NPCS0 | SPI_MR_MODFDIS_Msk;
+    /* Enable Master mode, select source clock, select particular NPCS line for chip select and disable mode fault detection */
+    SPI0_REGS->SPI_MR =  SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_PERIPH_CLK | SPI_MR_PCS_NPCS0 | SPI_MR_MODFDIS_Msk;
 
     /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
     SPI0_REGS->SPI_CSR[0] = SPI_CSR_CPOL_IDLE_LOW | SPI_CSR_NCPHA_VALID_LEADING_EDGE | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(83);

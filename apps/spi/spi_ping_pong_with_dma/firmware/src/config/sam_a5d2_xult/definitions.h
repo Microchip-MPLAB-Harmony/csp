@@ -54,7 +54,7 @@
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/aic/plib_aic.h"
 #include "peripheral/xdmac/plib_xdmac0.h"
-#include "peripheral/spi/plib_spi0.h"
+#include "peripheral/spi/plib_spi1.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
