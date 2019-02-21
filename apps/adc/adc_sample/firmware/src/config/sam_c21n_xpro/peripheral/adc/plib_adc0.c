@@ -93,11 +93,11 @@ void ADC0_Initialize( void )
     /* prescaler */
     ADC0_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_DIV8;
     /* Sampling length */
-    ADC0_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(0U);
+    ADC0_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(3U);
 
     /* reference */
     ADC0_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_INTVCC2;
-    
+
     /* positive and negative input pins */
     ADC0_REGS->ADC_INPUTCTRL = ADC_POSINPUT_AIN1 | ADC_NEGINPUT_GND;
 
@@ -179,9 +179,11 @@ uint16_t ADC0_ConversionResultGet( void )
 /* Check whether result is ready */
 bool ADC0_ConversionStatusGet( void )
 {
-    return (bool)((ADC0_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+    bool status;
+    status =  (bool)((ADC0_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    if (status == true)
+    {
+        ADC0_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    }
+    return status;
 }
-
-
-
-
