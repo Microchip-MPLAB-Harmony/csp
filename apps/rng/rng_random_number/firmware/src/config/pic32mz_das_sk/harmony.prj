@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">451E96EA07E30EED11FDB85497D370F0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">451E96EA07E30EED11FDB85497D370F0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D5715C3C1F9AB18BEAA42E5A2E8FF7D9</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D5715C3C1F9AB18BEAA42E5A2E8FF7D9</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">93FF1AD9ED2F8925B908417929719917</GeneratedChecksum>
-          <UserChecksum dnOrder="5">93FF1AD9ED2F8925B908417929719917</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9CD41D61BFE59A8C80082E1C70E41E5A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9CD41D61BFE59A8C80082E1C70E41E5A</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -83,8 +83,8 @@
           <Name dnOrder="1">plib_uart2.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A97A2DF49A8BAC502A9059998D85BC6F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A97A2DF49A8BAC502A9059998D85BC6F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E8A3B5D750452BEB96013C730BBD2F85</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E8A3B5D750452BEB96013C730BBD2F85</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
@@ -155,24 +155,24 @@
           <Name dnOrder="1">plib_uart2.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7C4BC73FC6E66B41895023894728A3B0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7C4BC73FC6E66B41895023894728A3B0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">EB089E1CC93023A4B238399FBDC693B7</GeneratedChecksum>
+          <UserChecksum dnOrder="5">EB089E1CC93023A4B238399FBDC693B7</UserChecksum>
         </File>
         <File dnOrder="19">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_uart_common.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">10BCA5D32335B7F3DD6B40D4E6F859C1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">10BCA5D32335B7F3DD6B40D4E6F859C1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">ACBD2B4A88E233BD4B260CD136DA33A8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">ACBD2B4A88E233BD4B260CD136DA33A8</UserChecksum>
         </File>
         <File dnOrder="20">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5F0B87C955FBF569CBD67F4861B6B7AD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5F0B87C955FBF569CBD67F4861B6B7AD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F7924D60AC5CC08996AB2DAEC62D3C54</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F7924D60AC5CC08996AB2DAEC62D3C54</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
