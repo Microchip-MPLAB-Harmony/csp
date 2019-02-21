@@ -136,7 +136,7 @@ void AFEC1_ConversionStart(void)
 /*Check if conversion result is available */
 bool AFEC1_ChannelResultIsReady(AFEC_CHANNEL_NUM channel)
 {
-    return (AFEC1_REGS->AFEC_ISR>> channel) & 0x1U;
+    return (AFEC1_REGS->AFEC_ISR >> channel) & 0x1U;
 }
 
 /* Read the conversion result */
@@ -192,8 +192,10 @@ void AFEC1_CallbackRegister(AFEC_CALLBACK callback, uintptr_t context)
 /* Interrupt Handler */
 void AFEC1_InterruptHandler(void)
 {
+    uint32_t status;
+    status = AFEC1_REGS->AFEC_ISR;
     if (AFEC1_CallbackObj.callback_fn != NULL)
     {
-        AFEC1_CallbackObj.callback_fn(AFEC1_CallbackObj.context);
+        AFEC1_CallbackObj.callback_fn(status, AFEC1_CallbackObj.context);
     }
 }
