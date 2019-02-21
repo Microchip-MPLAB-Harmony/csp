@@ -11,12 +11,12 @@
     TWIHS peripheral library interface.
 
   Description
-    This file defines the interface to the TWIHS peripheral library.  This 
-    library provides access to and control of the associated peripheral 
+    This file defines the interface to the TWIHS peripheral library.  This
+    library provides access to and control of the associated peripheral
     instance.
 
   Remarks:
-    
+
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -44,7 +44,7 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TWIHS_MASTER_H   
+#ifndef PLIB_TWIHS_MASTER_H
 #define PLIB_TWIHS_MASTER_H
 
 // *****************************************************************************
@@ -86,13 +86,13 @@
 */
 
 typedef enum
-{	
-	/* No Error */
+{
+  /* No Error */
     TWIHS_ERROR_NONE,
-	
-	/* Slave returned Nack */
+
+  /* Slave returned Nack */
     TWIHS_ERROR_NACK,
-	
+
 } TWIHS_ERROR;
 
 // *****************************************************************************
@@ -106,31 +106,31 @@ typedef enum
 
    Remarks:
     None.
-  
+
 */
 
 typedef enum {
 
     /* TWIHS PLib Task Error State */
-	TWIHS_STATE_ERROR = -1,
-	
-	/* TWIHS PLib Task Idle State */
-	TWIHS_STATE_IDLE,
-	
-	/* TWIHS PLib Task Address Send State */
-	TWIHS_STATE_ADDR_SEND,
-	
-	/* TWIHS PLib Task Read Transfer State */
-	TWIHS_STATE_TRANSFER_READ,
-	
-	/* TWIHS PLib Task Write Transfer State */
-	TWIHS_STATE_TRANSFER_WRITE,
-	
-	/* TWIHS PLib Task Transfer Complete State */
-	TWIHS_STATE_WAIT_FOR_TXCOMP,
-	
-	/* TWIHS PLib Task Transfer Done State */
-	TWIHS_STATE_TRANSFER_DONE,
+    TWIHS_STATE_ERROR = -1,
+
+    /* TWIHS PLib Task Idle State */
+    TWIHS_STATE_IDLE,
+
+    /* TWIHS PLib Task Address Send State */
+    TWIHS_STATE_ADDR_SEND,
+
+    /* TWIHS PLib Task Read Transfer State */
+    TWIHS_STATE_TRANSFER_READ,
+
+    /* TWIHS PLib Task Write Transfer State */
+    TWIHS_STATE_TRANSFER_WRITE,
+
+    /* TWIHS PLib Task Transfer Complete State */
+    TWIHS_STATE_WAIT_FOR_TXCOMP,
+
+    /* TWIHS PLib Task Transfer Done State */
+    TWIHS_STATE_TRANSFER_DONE,
 
 } TWIHS_STATE;
 
@@ -147,10 +147,10 @@ typedef enum {
     None.
 */
 
-typedef void (*TWIHS_CALLBACK) 
-(   
+typedef void (*TWIHS_CALLBACK)
+(
     /* Transfer context */
-    uintptr_t contextHandle 
+    uintptr_t contextHandle
 );
 
 // *****************************************************************************
@@ -170,23 +170,23 @@ typedef struct
 {
     uint16_t address;
     uint8_t *writeBuffer;
-    uint8_t	*readBuffer;
+    uint8_t *readBuffer;
     size_t  writeSize;
-	size_t  readSize;
+    size_t  readSize;
     size_t  writeCount;
-	size_t  readCount;
-	
-	/* State */
-	TWIHS_STATE state;
-	
-	/* Transfer status */
-    TWIHS_ERROR error;
-	
-	/* Transfer Event Callback */
-	TWIHS_CALLBACK callback;
+    size_t  readCount;
+
+    /* State */
+    volatile TWIHS_STATE state;
+
+    /* Transfer status */
+    volatile TWIHS_ERROR error;
+
+    /* Transfer Event Callback */
+    TWIHS_CALLBACK callback;
 
     /* Transfer context */
-    uintptr_t context;	
+    uintptr_t context;
 
 } TWIHS_OBJ;
 
@@ -203,7 +203,7 @@ typedef struct
     None.
 */
 
-typedef struct 
+typedef struct
 {
     /* TWIHS Clock Speed */
     uint32_t clkSpeed;
