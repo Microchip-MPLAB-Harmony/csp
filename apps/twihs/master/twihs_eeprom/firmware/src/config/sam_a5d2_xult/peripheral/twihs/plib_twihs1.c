@@ -106,9 +106,10 @@ void TWIHS1_Initialize(void)
 
     // Set Baud rate
     TWIHS1_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS1_Module->TWIHS_CWGR) |
-                                            ( TWIHS_CWGR_CLDIV(105) |
-                                              TWIHS_CWGR_CHDIV(96) |
-                                              TWIHS_CWGR_CKDIV(0) );
+                                                ( TWIHS_CWGR_CKSRC_PERIPH_CK |
+                                                  TWIHS_CWGR_CLDIV(105) |
+                                                  TWIHS_CWGR_CHDIV(96) |
+                                                  TWIHS_CWGR_CKDIV(0) );
 
     // Starts the transfer by clearing the transmit hold register
     TWIHS1_Module->TWIHS_CR = TWIHS_CR_THRCLR_Msk;
