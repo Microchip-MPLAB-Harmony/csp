@@ -61,16 +61,11 @@ Clock Initialize
 
 void CLK_Initialize( void )
 { 
-	
-
-
 	/* Initialize Generic Clock */
 	CLK_GenericClockInitialize();
 
-
 	/* Initialize Peripheral Clock */
 	CLK_PeripheralClockInitialize();
-
 
 }
 
