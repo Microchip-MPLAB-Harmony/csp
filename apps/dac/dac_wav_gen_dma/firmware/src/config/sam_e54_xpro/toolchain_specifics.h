@@ -1,21 +1,4 @@
 /*******************************************************************************
-  EVSYS Peripheral Library
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    plib_evsys.c
-
-  Summary:
-    EVSYS Source File
-
-  Description:
-    None
-
-*******************************************************************************/
-
-/*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -38,17 +21,15 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "plib_evsys.h"
+#ifndef TOOLCHAIN_SPECIFICS_H
+#define TOOLCHAIN_SPECIFICS_H
+
+#include <sys/types.h>
+#define NO_INIT        __attribute__((section(".no_init")))
+#define SECTION(a)     __attribute__((__section__(a)))
+
+#define CACHE_ALIGN    __ALIGNED(16)
 
 
-void EVSYS_Initialize( void )
-{
-	/*Event Channel User Configuration*/
-	EVSYS_REGS->EVSYS_USER[61] = EVSYS_USER_CHANNEL(0x1);
-
-	/* Event Channel 0 Configuration */
-	EVSYS_REGS->CHANNEL[0].EVSYS_CHANNEL = EVSYS_CHANNEL_EVGEN(73) | EVSYS_CHANNEL_PATH(2) | EVSYS_CHANNEL_EDGSEL(1) \
-									 ;
-}
-
+#endif // end of header
 

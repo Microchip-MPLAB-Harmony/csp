@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-21T10:09:56Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54P20A_GPIO_H_
 #define _SAME54P20A_GPIO_H_
 
