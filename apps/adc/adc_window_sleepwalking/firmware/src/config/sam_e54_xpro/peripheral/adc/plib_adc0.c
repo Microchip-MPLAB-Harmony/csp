@@ -99,7 +99,7 @@ void ADC0_Initialize( void )
     ADC0_REGS->ADC_CTRLA = ADC_CTRLA_PRESCALER_DIV16;
 
     /* Sampling length */
-    ADC0_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(0U);
+    ADC0_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(3U);
 
     /* reference */
     ADC0_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_INTVCC1;
@@ -208,19 +208,20 @@ void ADC0_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
 /* Check whether result is ready */
 bool ADC0_ConversionStatusGet( void )
 {
-    return (bool)((ADC0_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) == ADC_INTFLAG_RESRDY_Msk);
+    bool status;
+    status =  (bool)((ADC0_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    /* Clear interrupt flag */
+    ADC0_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    return status;
 }
 void ADC0_OTHER_InterruptHandler( void )
 {
     volatile ADC_STATUS status;
     status = ADC0_REGS->ADC_INTFLAG;
     /* Clear interrupt flag */
-    ADC0_REGS->ADC_INTFLAG |= ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
+    ADC0_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
     if (ADC0_CallbackObject.callback != NULL)
     {
         ADC0_CallbackObject.callback(status, ADC0_CallbackObject.context);
     }
 }
-
-
-
