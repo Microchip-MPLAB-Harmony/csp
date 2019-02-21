@@ -56,6 +56,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/* SERCOM7 I2C baud value for 400 Khz baud rate */
+#define SERCOM7_I2CM_BAUD_VALUE			(13620U)
+
 static SERCOM_I2C_OBJ sercom7I2CObj;
 
 // *****************************************************************************
@@ -89,7 +92,7 @@ void SERCOM7_I2C_Initialize(void)
     while(SERCOM7_REGS->I2CM.SERCOM_SYNCBUSY);
 
     /* Baud rate - Master Baud Rate*/
-    SERCOM7_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(13620);
+    SERCOM7_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(SERCOM7_I2CM_BAUD_VALUE);
 
     /* Set Operation Mode (Master), SDA Hold time, run in stand by and i2c master enable */
     SERCOM7_REGS->I2CM.SERCOM_CTRLA = SERCOM_I2CM_CTRLA_MODE_I2C_MASTER | SERCOM_I2CM_CTRLA_SDAHOLD_75NS | SERCOM_I2CM_CTRLA_SPEED_STANDARD_AND_FAST_MODE | SERCOM_I2CM_CTRLA_ENABLE_Msk ;
@@ -103,7 +106,7 @@ void SERCOM7_I2C_Initialize(void)
     /* Wait for synchronization */
     while(SERCOM7_REGS->I2CM.SERCOM_SYNCBUSY);
 
-    /* Initialize the sercom PLib Object */
+    /* Initialize the SERCOM7 PLib Object */
     sercom7I2CObj.error = SERCOM_I2C_ERROR_NONE;
     sercom7I2CObj.state = SERCOM_I2C_STATE_IDLE;
 
