@@ -84,7 +84,7 @@ void TC1_CaptureInitialize( void )
     TC1_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_PRESCSYNC_PRESC
                                   | TC_CTRLA_CAPTEN0_Msk | TC_CTRLA_CAPTEN1_Msk  ;
 
-    
+
     TC1_REGS->COUNT16.TC_EVCTRL = TC_EVCTRL_EVACT_PPW | TC_EVCTRL_TCEI_Msk;
 
     /* Clear all interrupt flags */
@@ -142,14 +142,17 @@ void TC1_CaptureCallbackRegister( TC_CAPTURE_CALLBACK callback, uintptr_t contex
 
 void TC1_CaptureInterruptHandler( void )
 {
-    TC_CAPTURE_STATUS status;
-    status = TC1_REGS->COUNT16.TC_INTFLAG;
-    /* Clear all interrupts */
-    TC1_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
-
-    if((status != TC_CAPTURE_STATUS_NONE) && TC1_CallbackObject.callback != NULL)
+    if (TC1_REGS->COUNT16.TC_INTENSET != 0)
     {
-        TC1_CallbackObject.callback(status, TC1_CallbackObject.context);
+        TC_CAPTURE_STATUS status;
+        status = TC1_REGS->COUNT16.TC_INTFLAG;
+        /* Clear all interrupts */
+        TC1_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
+
+        if((status != TC_CAPTURE_STATUS_NONE) && TC1_CallbackObject.callback != NULL)
+        {
+            TC1_CallbackObject.callback(status, TC1_CallbackObject.context);
+        }
     }
 }
 
