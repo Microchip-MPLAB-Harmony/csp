@@ -54,8 +54,8 @@
 #define DMA_CHANNEL_RECEIVE             XDMAC_CHANNEL_0
 #define DMA_CHANNEL_TRANSMIT            XDMAC_CHANNEL_1
 
-#define SPI0_RECEIVE_ADDRESS            (&SPI0_REGS->SPI_RDR)
-#define SPI0_TRANSMIT_ADDRESS           (&SPI0_REGS->SPI_TDR)
+#define SPI1_RECEIVE_ADDRESS            (&SPI1_REGS->SPI_RDR)
+#define SPI1_TRANSMIT_ADDRESS           (&SPI1_REGS->SPI_TDR)
 
 #define LED_On()                        LED_Clear()
 #define LED_Off()                       LED_Set()
@@ -107,7 +107,7 @@ void APP_InitializeTxLinkedListDescriptor(void)
 {
     pTxLinkedListDesc[0].mbr_nda = (uint32_t)&pTxLinkedListDesc[1];
     pTxLinkedListDesc[0].mbr_sa = (uint32_t)&txPingBuffer;
-    pTxLinkedListDesc[0].mbr_da = (uint32_t)SPI0_TRANSMIT_ADDRESS;
+    pTxLinkedListDesc[0].mbr_da = (uint32_t)SPI1_TRANSMIT_ADDRESS;
     pTxLinkedListDesc[0].mbr_ubc.blockDataLength = sizeof(txPingBuffer);
     pTxLinkedListDesc[0].mbr_ubc.nextDescriptorControl.fetchEnable = 1;
     pTxLinkedListDesc[0].mbr_ubc.nextDescriptorControl.sourceUpdate = 1;
@@ -117,7 +117,7 @@ void APP_InitializeTxLinkedListDescriptor(void)
 
     pTxLinkedListDesc[1].mbr_nda = (uint32_t)&pTxLinkedListDesc[0];
     pTxLinkedListDesc[1].mbr_sa = (uint32_t)&txPongBuffer;
-    pTxLinkedListDesc[1].mbr_da = (uint32_t)SPI0_TRANSMIT_ADDRESS;
+    pTxLinkedListDesc[1].mbr_da = (uint32_t)SPI1_TRANSMIT_ADDRESS;
     pTxLinkedListDesc[1].mbr_ubc.blockDataLength = sizeof(txPongBuffer);
     pTxLinkedListDesc[1].mbr_ubc.nextDescriptorControl.fetchEnable = 1;
     pTxLinkedListDesc[1].mbr_ubc.nextDescriptorControl.sourceUpdate = 1;
@@ -128,7 +128,7 @@ void APP_InitializeTxLinkedListDescriptor(void)
 void APP_InitializeRxLinkedListDescriptor(void)
 {
     pRxLinkedListDesc[0].mbr_nda = (uint32_t)&pRxLinkedListDesc[1];
-    pRxLinkedListDesc[0].mbr_sa = (uint32_t)SPI0_RECEIVE_ADDRESS;
+    pRxLinkedListDesc[0].mbr_sa = (uint32_t)SPI1_RECEIVE_ADDRESS;
     pRxLinkedListDesc[0].mbr_da = (uint32_t)&rxPingBuffer;
     pRxLinkedListDesc[0].mbr_ubc.blockDataLength = sizeof(rxPingBuffer);
     pRxLinkedListDesc[0].mbr_ubc.nextDescriptorControl.fetchEnable= 1;
@@ -138,7 +138,7 @@ void APP_InitializeRxLinkedListDescriptor(void)
 
 
     pRxLinkedListDesc[1].mbr_nda = (uint32_t)&pRxLinkedListDesc[0];
-    pRxLinkedListDesc[1].mbr_sa = (uint32_t)SPI0_RECEIVE_ADDRESS;
+    pRxLinkedListDesc[1].mbr_sa = (uint32_t)SPI1_RECEIVE_ADDRESS;
     pRxLinkedListDesc[1].mbr_da = (uint32_t)&rxPongBuffer;
     pRxLinkedListDesc[1].mbr_ubc.blockDataLength = sizeof(rxPongBuffer);
     pRxLinkedListDesc[1].mbr_ubc.nextDescriptorControl.fetchEnable = 0;

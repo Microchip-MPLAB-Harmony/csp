@@ -12,22 +12,31 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
     </includePath>
+    <asmIncludePath>
+        <path>$PROJ_DIR$\..\..\firmware\src</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
+    </asmIncludePath>
     <linkerFile>
         <override>true</override>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\ddr.icf</path>
     </linkerFile>
     <files relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult">
         <group name="Header Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult">
-            <path>\..\..\arm\toolchain_specifics.h</path>
+            <path>\device_cache.h</path>
+            <path>\toolchain_specifics.h</path>
             <path>\definitions.h</path>
             <path>\peripheral\mmu\plib_mmu.h</path>
             <path>\peripheral\matrix\plib_matrix.h</path>
             <path>\peripheral\clk\plib_clk.h</path>
             <path>\peripheral\pio\plib_pio.h</path>
-            <path>\peripheral\pio\plib_pio_pin.h</path>
             <path>\peripheral\aic\plib_aic.h</path>
             <path>\peripheral\xdmac\plib_xdmac_common.h</path>
             <path>\peripheral\xdmac\plib_xdmac0.h</path>
+            <path>\..\..\packs\ATSAMA5D27_DFP\device.h</path>
             <path>\..\..\packs\ATSAMA5D27_DFP\component\acc.h</path>
             <path>\..\..\packs\ATSAMA5D27_DFP\component\adc.h</path>
             <path>\..\..\packs\ATSAMA5D27_DFP\component\aes.h</path>
@@ -77,11 +86,8 @@
             <path>\..\..\packs\ATSAMA5D27_DFP\component\uhphs.h</path>
             <path>\..\..\packs\ATSAMA5D27_DFP\component\wdt.h</path>
             <path>\..\..\packs\ATSAMA5D27_DFP\component\xdmac.h</path>
-            <path>\..\..\packs\ATSAMA5D27_DFP\device.h</path>
             <path>\..\..\packs\ATSAMA5D27_DFP\atsama5d27.h</path>
             <path>\..\..\packs\ATSAMA5D27_DFP\pio\sama5d27.h</path>
-            <path>\peripheral\spi\plib_spi_common.h</path>
-            <path>\peripheral\spi\plib_spi0.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_compiler.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_gcc.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_iccarm.h</path>
@@ -90,13 +96,15 @@
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</path>
+            <path>\peripheral\spi\plib_spi_common.h</path>
+            <path>\peripheral\spi\plib_spi1.h</path>
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult">
             <path>\..\..\main_sam_a5d2_xult.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>
-            <path>\stdio\iar_monitor.c</path>
             <path>\exceptions.c</path>
+            <path>\stdio\iar_monitor.c</path>
             <path>\peripheral\mmu\plib_mmu.c</path>
             <path>\peripheral\matrix\plib_matrix.c</path>
             <path>\peripheral\clk\plib_clk.c</path>
@@ -105,7 +113,7 @@
             <path>\peripheral\xdmac\plib_xdmac0.c</path>
             <path>\cstartup.s</path>
             <path>\vectortrap.s</path>
-            <path>\peripheral\spi\plib_spi0.c</path>
+            <path>\peripheral\spi\plib_spi1.c</path>
         </group>
     </files>
 </iarProjectConnection>
