@@ -59,20 +59,23 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 void PIO_Initialize ( void )
 {
- /* Port A Peripheral function A configuration */
-	PIOA_REGS->PIO_MSKR = 0x1c000;
-	PIOA_REGS->PIO_CFGR = 0x1;
-	
- /* Port B Pin 0 configuration */
-	PIOB_REGS->PIO_MSKR = 0x1;
+ /* Port B Pin 5 configuration */
+	PIOB_REGS->PIO_MSKR = 0x20;
 	PIOB_REGS->PIO_CFGR |= 0x100;
 	
  /* Port B Latch configuration */
-	PIOB_REGS->PIO_SODR = 0x1;
+	PIOB_REGS->PIO_SODR = 0x20;
 	
  /* Port D Peripheral function A configuration */
-	PIOD_REGS->PIO_MSKR = 0x3c0;
+	PIOD_REGS->PIO_MSKR = 0xe000000;
 	PIOD_REGS->PIO_CFGR = 0x1;
+	
+ /* Port D Pin 28 configuration */
+	PIOD_REGS->PIO_MSKR = 0x10000000;
+	PIOD_REGS->PIO_CFGR |= 0x100;
+	
+ /* Port D Latch configuration */
+	PIOD_REGS->PIO_SODR = 0x10000000;
 	
 }
 
@@ -127,7 +130,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 
 // *****************************************************************************
 /* Function:
-    uint32_t PIO_PortReadLatch ( PIO_PORT port )
+    uint32_t PIO_PortLatchRead ( PIO_PORT port )
 
   Summary:
     Read the latched value on all the I/O lines of the selected port.
@@ -135,7 +138,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
   Remarks:
     See plib_pio.h for more details.
 */
-uint32_t PIO_PortReadLatch(PIO_PORT port)
+uint32_t PIO_PortLatchRead(PIO_PORT port)
 {
     return ((pio_registers_t*)port)->PIO_ODSR;
 }
