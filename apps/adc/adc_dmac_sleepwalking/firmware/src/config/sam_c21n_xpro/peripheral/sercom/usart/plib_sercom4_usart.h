@@ -50,14 +50,14 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include "plib_sercom_usart_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-extern "C" {
+
+	extern "C" {
+
 #endif
 // DOM-IGNORE-END
 
@@ -66,9 +66,6 @@ extern "C" {
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-this interface.
-*/
 
 void SERCOM4_USART_Initialize( void );
 
@@ -88,10 +85,7 @@ int SERCOM4_USART_ReadByte( void );
 
 USART_ERROR SERCOM4_USART_ErrorGet( void );
 
-uint32_t inline SERCOM4_USART_FrequencyGet( void )
-{
-    return (uint32_t) (48000000UL);
-}
+uint32_t SERCOM4_USART_FrequencyGet( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
