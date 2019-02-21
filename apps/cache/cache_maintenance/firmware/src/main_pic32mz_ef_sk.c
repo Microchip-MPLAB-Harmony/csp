@@ -62,7 +62,7 @@
 #define CACHE_LINE_SIZE         16                      // 16 Bytes per cache line
 #define BUFFER_SIZE             (2*CACHE_LINE_SIZE)     // Buffer size in terms of cache lines
 
-char __attribute__ ((aligned (16))) messageStart[] = "**** UART echo interrupt demo ****\r\n\
+char __attribute__ ((aligned (16))) messageStart[] = "**** CACHE maintenance demo with UART ****\r\n\
 **** Type a buffer of 10 characters and observe it echo back ****\r\n\
 **** LED toggles on each time the buffer is echoed ****\r\n";
 char __attribute__ ((aligned (16))) receiveBuffer[BUFFER_SIZE] = {};
