@@ -167,7 +167,6 @@ uint32_t irqDataEntryCount = sizeof( irqData ) / sizeof( irqData[ 0 ]);
 
 
 
-
 /*******************************************************************************
  End of File
 */
