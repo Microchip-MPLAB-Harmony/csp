@@ -46,15 +46,18 @@
 // DOM-IGNORE-END
 
 #include "plib_sercom1_spi.h"
-#include "device.h"
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: MACROS Definitions
 // *****************************************************************************
 // *****************************************************************************
-/* Sercom clk freq value for the baud calculation */
+
+/* SERCOM1 clk freq value for the baud calculation */
 #define SERCOM1_Frequency      (uint32_t) (8000000UL)
+
+/* SERCOM1 SPI baud value for 1000000 Hz baud rate */
+#define SERCOM1_SPIM_BAUD_VALUE			(3U)
 
 /*Global object to save SPI Exchange related data  */
 SPI_OBJECT sercom1SPIObj;
@@ -95,7 +98,7 @@ void SERCOM1_SPI_Initialize(void)
     while((SERCOM1_REGS->SPIM.SERCOM_STATUS & SERCOM_SPIM_STATUS_SYNCBUSY_Msk) & SERCOM_SPIM_STATUS_SYNCBUSY_Msk);
 
     /* Selection of the Baud Value */
-    SERCOM1_REGS->SPIM.SERCOM_BAUD = 3;
+    SERCOM1_REGS->SPIM.SERCOM_BAUD = SERCOM_SPIM_BAUD_BAUD(SERCOM1_SPIM_BAUD_VALUE);
 
     /* Configure Data Out Pin Out , Master Mode,
      * Data In and Pin Out,Data Order and Standby mode if configured
@@ -335,11 +338,13 @@ bool SERCOM1_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
             if(sercom1SPIObj.txCount < sercom1SPIObj.txSize)
             {
                 SERCOM1_REGS->SPIM.SERCOM_DATA = *((uint8_t*)sercom1SPIObj.txBuffer);
+
                 sercom1SPIObj.txCount++;
             }
             else if(sercom1SPIObj.dummySize > 0)
             {
                 SERCOM1_REGS->SPIM.SERCOM_DATA = 0xFF;
+
                 sercom1SPIObj.dummySize--;
             }
         }
@@ -352,11 +357,13 @@ bool SERCOM1_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
             if(sercom1SPIObj.txCount < sercom1SPIObj.txSize)
             {
                 SERCOM1_REGS->SPIM.SERCOM_DATA = *((uint16_t*)sercom1SPIObj.txBuffer) & SERCOM_SPIM_DATA_Msk;
+
                 sercom1SPIObj.txCount++;
             }
             else if(sercom1SPIObj.dummySize > 0)
             {
                 SERCOM1_REGS->SPIM.SERCOM_DATA = 0xFFFF & SERCOM_SPIM_DATA_Msk;
+
                 sercom1SPIObj.dummySize--;
             }
         }
@@ -433,7 +440,6 @@ void SERCOM1_SPI_InterruptHandler(void)
         {
             /* Disable the DRE interrupt. This will be enabled back if more than
              * one byte is pending to be transmitted */
-
             SERCOM1_REGS->SPIM.SERCOM_INTENCLR = SERCOM_SPIM_INTENCLR_DRE_Msk;
 
             if(dataBits == SPI_DATA_BITS_8)
@@ -445,6 +451,7 @@ void SERCOM1_SPI_InterruptHandler(void)
                 else if(sercom1SPIObj.dummySize > 0)
                 {
                     SERCOM1_REGS->SPIM.SERCOM_DATA = 0xFF;
+
                     sercom1SPIObj.dummySize--;
                 }
             }
@@ -457,6 +464,7 @@ void SERCOM1_SPI_InterruptHandler(void)
                 else if(sercom1SPIObj.dummySize > 0)
                 {
                     SERCOM1_REGS->SPIM.SERCOM_DATA = 0xFFFF;
+
                     sercom1SPIObj.dummySize--;
                 }
             }
@@ -477,6 +485,7 @@ void SERCOM1_SPI_InterruptHandler(void)
             else if(sercom1SPIObj.rxCount == sercom1SPIObj.rxSize)
             {
                 SERCOM1_REGS->SPIM.SERCOM_INTENSET = SERCOM_SPIM_INTENSET_DRE_Msk;
+
                 SERCOM1_REGS->SPIM.SERCOM_INTENCLR = SERCOM_SPIM_INTENCLR_RXC_Msk;
             }
         }
@@ -501,7 +510,7 @@ void SERCOM1_SPI_InterruptHandler(void)
 
         if(isLastByteTransferInProgress == true)
         {
-            /* For the last byte transfer, the TDRE interrupt is already disabled.
+            /* For the last byte transfer, the DRE interrupt is already disabled.
              * Enable TXC interrupt to ensure no data is present in the shift
              * register before application callback is called.
              */
