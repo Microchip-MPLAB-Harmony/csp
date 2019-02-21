@@ -53,8 +53,7 @@
 #include <string.h>
 
 /*************************************************************************************
-FLEXCOM TWI   - Connect EEPROM 3 click board to mikroBUS Xplained Pro extension Board.
-              - Connect mikroBUS Xplained Pro extension Board to XPRO EXT2 Connector.
+FLEXCOM TWI   - Connect EEPROM 3 click board to XPRO EXT2 Connector.
 *************************************************************************************/
 
 #define LED_ON()                       LED_Clear()
