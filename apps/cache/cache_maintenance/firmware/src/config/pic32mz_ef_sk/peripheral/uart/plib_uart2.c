@@ -258,13 +258,12 @@ bool UART2_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK))
+            if(!(U2STA & _U2STA_UTXBF_MASK))
             {
                 U2TXREG = *lBuffer;
                 uart2Obj.txProcessedSize++;
-                IEC4SET = _IEC4_U2TXIE_MASK;
-
             }
+            IEC4SET = _IEC4_U2TXIE_MASK;
         }
     }
 
@@ -379,7 +378,7 @@ void UART2_TX_InterruptHandler (void)
 {
     if(uart2Obj.txBusyStatus == true)
     {
-        while((_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK)) && (uart2Obj.txSize > uart2Obj.txProcessedSize) )
+        while((!(U2STA & _U2STA_UTXBF_MASK)) && (uart2Obj.txSize > uart2Obj.txProcessedSize) )
         {
             U2TXREG = uart2Obj.txBuffer[uart2Obj.txProcessedSize++];
         }
