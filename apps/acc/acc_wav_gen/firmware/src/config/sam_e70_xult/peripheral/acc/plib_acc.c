@@ -47,26 +47,32 @@
 
 void ACC_Initialize (void)
 {
+    uint32_t regValue = 0;
     /*Reset ACC registers*/
-	ACC_REGS->ACC_CR = ACC_CR_SWRST_Msk;
-    
-    /*Set Comparator Positive and Negative Input, Output Invert status to 
-      Enable/Disable, Fault Generation to Enable/Disable, Set Fault source and 
+    ACC_REGS->ACC_CR = ACC_CR_SWRST_Msk;
+
+    /*Set Comparator Positive and Negative Input, Output Invert status to
+      Enable/Disable, Fault Generation to Enable/Disable, Set Fault source and
       Output Edge type*/
-	ACC_REGS->ACC_MR = ACC_MR_SELMINUS(0x2)| ACC_MR_SELPLUS(0x0) | ACC_MR_EDGETYP(0x2) \
-							  | ACC_MR_SELFS_CE | ACC_MR_ACEN_Msk;
+    regValue |= ACC_MR_SELMINUS(0x2);
+    regValue |= ACC_MR_SELPLUS(0x0);
+    regValue |= 0;
+    regValue |= 0;
+    regValue |= ACC_MR_SELFS_CE;
+    regValue |= ACC_MR_ACEN_Msk;
+    ACC_REGS->ACC_MR = regValue;
 
-    /*Set Current level and Hysteresis level*/    
-    ACC_REGS->ACC_ACR = ACC_ACR_ISEL_LOPW | ACC_ACR_HYST(0);       
+    /*Set Current level and Hysteresis level*/
+    ACC_REGS->ACC_ACR = ACC_ACR_ISEL_LOPW | ACC_ACR_HYST(0);
 
-	
+
     /*Wait till output mask period gets over*/
-    while (ACC_REGS->ACC_ISR& (uint32_t) ACC_ISR_MASK_Msk);  
+    while (ACC_REGS->ACC_ISR& (uint32_t) ACC_ISR_MASK_Msk);
 }
 
 bool ACC_StatusGet (ACC_STATUS_SOURCE status)
 {
-    return (bool)(ACC_REGS->ACC_ISR& status); 
+    return (bool)(ACC_REGS->ACC_ISR& status);
 }
 
 
