@@ -109,7 +109,7 @@ uint32_t TC0_CH2_CaptureBGet (void)
 
 TC_CAPTURE_STATUS TC0_CH2_CaptureStatusGet(void)
 {
-    return ((TC0_REGS->TC_CHANNEL[2].TC_SR) & TC_CAPTURE_STATUS_MSK);
+    return (TC_CAPTURE_STATUS)(TC0_REGS->TC_CHANNEL[2].TC_SR & TC_CAPTURE_STATUS_MSK);
 }
  
 

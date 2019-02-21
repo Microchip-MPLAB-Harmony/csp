@@ -139,7 +139,7 @@ void TC1_CH0_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t con
 /* Interrupt Handler */
 void TC1_CH0_InterruptHandler(void)
 {
-    TC_COMPARE_STATUS compare_status = TC1_REGS->TC_CHANNEL[0].TC_SR & TC_COMPARE_STATUS_MSK;
+    TC_COMPARE_STATUS compare_status = (TC_COMPARE_STATUS)(TC1_REGS->TC_CHANNEL[0].TC_SR & TC_COMPARE_STATUS_MSK);
     /* Call registered callback function */
     if ((TC_COMPARE_NONE != compare_status) && TC1_CH0_CallbackObj.callback_fn != NULL)
     {
@@ -216,7 +216,7 @@ void TC1_CH1_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context
 
 void TC1_CH1_InterruptHandler(void)
 {
-    TC_TIMER_STATUS timer_status = TC1_REGS->TC_CHANNEL[1].TC_SR & TC_TIMER_STATUS_MSK;
+    TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(TC1_REGS->TC_CHANNEL[1].TC_SR & TC_TIMER_STATUS_MSK);
     /* Call registered callback function */
     if ((TC_TIMER_NONE != timer_status) && TC1_CH1_CallbackObj.callback_fn != NULL)
     {
@@ -237,9 +237,9 @@ void TC1_CH1_InterruptHandler(void)
 
 /* Interrupt handler for TC1 */
 void TC1_InterruptHandler(void)
-{	
+{
 	TC1_CH0_InterruptHandler();
-	
+
 	TC1_CH1_InterruptHandler();
 }
  
