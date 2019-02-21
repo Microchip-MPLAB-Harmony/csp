@@ -77,138 +77,29 @@ void CLK_Initialize( void )
 
 
 
-    /* Enable Peripheral Bus 1 */
-    /* PBDIV = 2-1 */
-    *(volatile uint32_t *)(&PB1DIV) = 0x1;
-
-
-    /* Enable Peripheral Bus 2 */
-    /* PBDIV = 2-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&PB2DIV) = 0x8001;
-
-
-    /* Enable Peripheral Bus 3 */
-    /* PBDIV = 2-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&PB3DIV) = 0x8001;
-
-
-
-
-    /* Enable Peripheral Bus 4 */
-    /* PBDIV = 2-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&PB4DIV) = 0x8001;
-
-
-
-    /* Enable Peripheral Bus 5 */
-    /* PBDIV = 2-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&PB5DIV) = 0x8001;
-
-
-    /* Enable Peripheral Bus 7 */
-    /* PBDIV = 1-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&PB7DIV) = 0x8000;
-
-
-
-    /* Set up Reference Clock 1 */
-    /* REFO1CON register */
-    /* ROSEL =  BFRC */
-    /* DIVSWEN = 1 */
-    /* RODIV = 0 */
-    *(volatile uint32_t *)(&REFO1CON) = 0x209;
-
-    /* REFO1TRIM register */
-    /* ROTRIM = 0 */
-    *(volatile uint32_t *)(&REFO1TRIM) = 0x0;
-
-    /* ON - enable oscillator */
-    *(volatile uint32_t *)(&REFO1CONSET) = 0x00008000;
-    /* Clear Output Enable bit, OE */
-    *(volatile uint32_t *)(&REFO1CONCLR) = 0x00001000;
-
 
     /* Set up Reference Clock 2 */
     /* REFO2CON register */
     /* ROSEL =  SYSCLK */
     /* DIVSWEN = 1 */
     /* RODIV = 2 */
-    *(volatile uint32_t *)(&REFO2CON) = 0x20200;
-
+    REFO2CON = 0x20200;
     /* REFO2TRIM register */
     /* ROTRIM = 0 */
-    *(volatile uint32_t *)(&REFO2TRIM) = 0x0;
+    REFO2TRIM = 0x0;
+    /* Enable oscillator (ON bit) */
+    REFO2CONSET = 0x00008000;
 
-    /* ON - enable oscillator */
-    *(volatile uint32_t *)(&REFO2CONSET) = 0x00008000;
-    /* Clear Output Enable bit, OE */
-    *(volatile uint32_t *)(&REFO2CONCLR) = 0x00001000;
-
-
-    /* Set up Reference Clock 3 */
-    /* REFO3CON register */
-    /* ROSEL =  BFRC */
-    /* DIVSWEN = 1 */
-    /* RODIV = 0 */
-    *(volatile uint32_t *)(&REFO3CON) = 0x209;
-
-    /* REFO3TRIM register */
-    /* ROTRIM = 0 */
-    *(volatile uint32_t *)(&REFO3TRIM) = 0x0;
-
-    /* ON - enable oscillator */
-    *(volatile uint32_t *)(&REFO3CONSET) = 0x00008000;
-    /* Clear Output Enable bit, OE */
-    *(volatile uint32_t *)(&REFO3CONCLR) = 0x00001000;
-
-
-    /* Set up Reference Clock 4 */
-    /* REFO4CON register */
-    /* ROSEL =  BFRC */
-    /* DIVSWEN = 1 */
-    /* RODIV = 0 */
-    *(volatile uint32_t *)(&REFO4CON) = 0x209;
-
-    /* REFO4TRIM register */
-    /* ROTRIM = 0 */
-    *(volatile uint32_t *)(&REFO4TRIM) = 0x0;
-
-    /* ON - enable oscillator */
-    *(volatile uint32_t *)(&REFO4CONSET) = 0x00008000;
-    /* Clear Output Enable bit, OE */
-    *(volatile uint32_t *)(&REFO4CONCLR) = 0x00001000;
-
-
-    /* Set up Reference Clock 5 */
-    /* REFO5CON register */
-    /* ROSEL =  BFRC */
-    /* DIVSWEN = 1 */
-    /* RODIV = 0 */
-    *(volatile uint32_t *)(&REFO5CON) = 0x209;
-
-    /* REFO5TRIM register */
-    /* ROTRIM = 0 */
-    *(volatile uint32_t *)(&REFO5TRIM) = 0x0;
-
-    /* ON - enable oscillator */
-    *(volatile uint32_t *)(&REFO5CONSET) = 0x00008000;
-    /* Clear Output Enable bit, OE */
-    *(volatile uint32_t *)(&REFO5CONCLR) = 0x00001000;
 
     /* CFGMPLL */
     /* MPLLDIS = DISABLED */
     /* MPLLODIV2 = DIV_7 */
     /* MPLLODIV1 = DIV_7 */
     /* MPLLVREGDIS = DISABLED */
-    /* MPLLMULT = RESERVED */
+    /* MPLLMULT = MUL_160 */
     /* INTVREFCON = INTERNAL_DDRV */
     /* MPLLIDIV = DIV_63 */
-    *(volatile uint32_t *)(&CFGMPLL) = 0x7f40ffff;
+    CFGMPLL = 0x7f40ffff;
   
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
