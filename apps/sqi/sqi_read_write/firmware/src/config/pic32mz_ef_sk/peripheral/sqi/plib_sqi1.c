@@ -50,6 +50,8 @@
 #define SQI1_CFG_XIP_MODE            (SQI_XIP_MODE << _SQI1CFG_MODE_POSITION)
 #define SQI1_CFG_DATAEN              (QUAD_MODE << _SQI1CFG_DATAEN_POSITION)
 
+#define SQI1_CFG_CHIP_SELECT         (0x3 << _SQI1CFG_CSEN_POSITION)
+
 #define SQI1_CLKCON_CLK_DIV          (0x0 << _SQI1CLKCON_CLKDIV_POSITION)
 
 #define SQI1_CMDTHR_RXCMDTHR(val)    (val << _SQI1CMDTHR_RXCMDTHR_POSITION)
@@ -76,7 +78,7 @@ void SQI1_Initialize(void)
 
     // Set Config Register values
     SQI1CFG = ( SQI1_CFG_DMA_MODE | _SQI1CFG_BURSTEN_MASK |
-                SQI1_CFG_DATAEN | _SQI1CFG_CSEN_MASK)  ;
+                SQI1_CFG_DATAEN | SQI1_CFG_CHIP_SELECT)  ;
 
      // SQICLK configuration
     SQI1CLKCON      = _SQI1CLKCON_EN_MASK;              // Enable Clock
@@ -102,6 +104,7 @@ void SQI1_Initialize(void)
     // Flash status check
     SQI1MEMSTAT     = SQI1_MEMSTAT_STATCMD_VAL | SQI1_MEMSTAT_STATBYTES_VAL |
                       SQI1_MEMSTAT_STATTYPE_VAL | SQI1_MEMSTAT_STATPOS_VAL;
+
 
     IEC5SET         = SQI1_INTERRUPT_ENABLE_MASK;
 
