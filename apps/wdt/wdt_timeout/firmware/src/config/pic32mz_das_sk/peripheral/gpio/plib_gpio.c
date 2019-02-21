@@ -44,7 +44,6 @@
 #include "plib_gpio.h"
 
 
-
 /* Array to store callback objects of each configured interrupt */
 GPIO_PIN_CALLBACK_OBJ portPinCbObj[1];
 
