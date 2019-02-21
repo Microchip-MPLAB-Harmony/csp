@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-07T09:15:13Z */
+/* file generated from device description version 2019-01-23T22:42:14Z */
 #ifndef _SAMA5D2_SMC_COMPONENT_H_
 #define _SAMA5D2_SMC_COMPONENT_H_
 
@@ -554,6 +554,10 @@
 #define HSMC_PMECCFG_SECTORSZ_Pos             _U_(4)                                               /**< (HSMC_PMECCFG) Sector Size Position */
 #define HSMC_PMECCFG_SECTORSZ_Msk             (_U_(0x1) << HSMC_PMECCFG_SECTORSZ_Pos)              /**< (HSMC_PMECCFG) Sector Size Mask */
 #define HSMC_PMECCFG_SECTORSZ(value)          (HSMC_PMECCFG_SECTORSZ_Msk & ((value) << HSMC_PMECCFG_SECTORSZ_Pos))
+#define   HSMC_PMECCFG_SECTORSZ_SECTORSZ0_Val _U_(0x0)                                             /**< (HSMC_PMECCFG) Use  512 Byte Sector in ECC Computation  */
+#define   HSMC_PMECCFG_SECTORSZ_SECTORSZ1_Val _U_(0x1)                                             /**< (HSMC_PMECCFG) Use 1024 Byte Sector in ECC Computation  */
+#define HSMC_PMECCFG_SECTORSZ_SECTORSZ0       (HSMC_PMECCFG_SECTORSZ_SECTORSZ0_Val << HSMC_PMECCFG_SECTORSZ_Pos) /**< (HSMC_PMECCFG) Use  512 Byte Sector in ECC Computation Position  */
+#define HSMC_PMECCFG_SECTORSZ_SECTORSZ1       (HSMC_PMECCFG_SECTORSZ_SECTORSZ1_Val << HSMC_PMECCFG_SECTORSZ_Pos) /**< (HSMC_PMECCFG) Use 1024 Byte Sector in ECC Computation Position  */
 #define HSMC_PMECCFG_PAGESIZE_Pos             _U_(8)                                               /**< (HSMC_PMECCFG) Number of Sectors in the Page Position */
 #define HSMC_PMECCFG_PAGESIZE_Msk             (_U_(0x3) << HSMC_PMECCFG_PAGESIZE_Pos)              /**< (HSMC_PMECCFG) Number of Sectors in the Page Mask */
 #define HSMC_PMECCFG_PAGESIZE(value)          (HSMC_PMECCFG_PAGESIZE_Msk & ((value) << HSMC_PMECCFG_PAGESIZE_Pos))
@@ -659,6 +663,10 @@
 #define HSMC_ELCFG_SECTORSZ_Pos               _U_(0)                                               /**< (HSMC_ELCFG) Sector Size Position */
 #define HSMC_ELCFG_SECTORSZ_Msk               (_U_(0x1) << HSMC_ELCFG_SECTORSZ_Pos)                /**< (HSMC_ELCFG) Sector Size Mask */
 #define HSMC_ELCFG_SECTORSZ(value)            (HSMC_ELCFG_SECTORSZ_Msk & ((value) << HSMC_ELCFG_SECTORSZ_Pos))
+#define   HSMC_ELCFG_SECTORSZ_SECTORSZ0_Val   _U_(0x0)                                             /**< (HSMC_ELCFG) Use  512 Byte Sector in Location Computation  */
+#define   HSMC_ELCFG_SECTORSZ_SECTORSZ1_Val   _U_(0x1)                                             /**< (HSMC_ELCFG) Use 1024 Byte Sector in Location Computation  */
+#define HSMC_ELCFG_SECTORSZ_SECTORSZ0         (HSMC_ELCFG_SECTORSZ_SECTORSZ0_Val << HSMC_ELCFG_SECTORSZ_Pos) /**< (HSMC_ELCFG) Use  512 Byte Sector in Location Computation Position  */
+#define HSMC_ELCFG_SECTORSZ_SECTORSZ1         (HSMC_ELCFG_SECTORSZ_SECTORSZ1_Val << HSMC_ELCFG_SECTORSZ_Pos) /**< (HSMC_ELCFG) Use 1024 Byte Sector in Location Computation Position  */
 #define HSMC_ELCFG_ERRNUM_Pos                 _U_(16)                                              /**< (HSMC_ELCFG) Number of Errors Position */
 #define HSMC_ELCFG_ERRNUM_Msk                 (_U_(0x1F) << HSMC_ELCFG_ERRNUM_Pos)                 /**< (HSMC_ELCFG) Number of Errors Mask */
 #define HSMC_ELCFG_ERRNUM(value)              (HSMC_ELCFG_ERRNUM_Msk & ((value) << HSMC_ELCFG_ERRNUM_Pos))
