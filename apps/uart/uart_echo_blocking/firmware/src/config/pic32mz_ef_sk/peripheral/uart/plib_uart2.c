@@ -222,7 +222,7 @@ bool UART2_Write( void *buffer, const size_t size )
     {
         while( size > processedSize )
         {
-            if(_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK))
+            if(!(U2STA & _U2STA_UTXBF_MASK))
             {
                 U2TXREG = *lBuffer++;
                 processedSize++;
@@ -253,7 +253,7 @@ UART_ERROR UART2_ErrorGet( void )
 
 void UART2_WriteByte(int data)
 {
-    while ((_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK)) == 0);
+    while (!(U2STA & _U2STA_UTXBF_MASK));
 
     U2TXREG = data;
 }
@@ -262,7 +262,7 @@ bool UART2_TransmitterIsReady( void )
 {
     bool status = false;
 
-    if(_U2STA_TRMT_MASK == (U2STA & _U2STA_TRMT_MASK))
+    if(!(U2STA & _U2STA_UTXBF_MASK))
     {
         status = true;
     }
