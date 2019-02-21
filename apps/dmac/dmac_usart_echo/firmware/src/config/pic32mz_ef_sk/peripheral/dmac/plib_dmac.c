@@ -57,19 +57,6 @@ static DMAC_CHANNEL_OBJECT  gDMAChannelObj[8];
 #define ConvertToPhysicalAddress(a) ((uint32_t)KVA_TO_PA(a))
 #define ConvertToVirtualAddress(a)  PA_TO_KVA1(a)
 
-/* Enable/disable interrupt mask bits for each DMA channel */
-uint32_t dmaIrqEnbl[8] =
-{
-    0x40, /* DMA0 */
-    0x80, /* DMA1 */
-    0x100, /* DMA2 */
-    0x200, /* DMA3 */
-    0x400, /* DMA4 */
-    0x800, /* DMA5 */
-    0x1000, /* DMA6 */
-    0x2000, /* DMA7 */
-};
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: DMAC PLib Local Functions
@@ -206,7 +193,7 @@ void DMAC_Initialize( void )
     DMAC_CHANNEL_OBJECT *chanObj;
 
     /* Enable the DMA module */
-    *(volatile uint32_t *)(&DMACONSET) = _DMACON_ON_MASK;
+    DMACONSET = _DMACON_ON_MASK;
 
     /* Initialize the available channel objects */
     chanObj             =   (DMAC_CHANNEL_OBJECT *)&gDMAChannelObj[0];
@@ -225,72 +212,24 @@ void DMAC_Initialize( void )
     DMACON = 0x8000;
 
     /* DMA channel-level control registers.  They will have additional settings made when starting a transfer. */
-    /* DMA channel 0 */
-   /* DCHxCON */
-   /* CHEN = 0 */
-   /* CHPRI = 0 */
-   DCH0CON = 0x0;
+    /* DMA channel 0 configuration */
+    /* CHPRI = 0 */
+    DCH0CON = 0x0;
+    /* CHSIRQ = 147, SIRQEN = 1 */
+    DCH0ECON = 0x9310;
+    /* CHBCIE = 1, CHTAIE=1, CHERIE=1 */
+    DCH0INT = 0xB0000;
 
-   /* DCHxECON */
-   /* CHSIRQ = 147 */
-   /* SIRQEN = 1 */
-   DCH0ECON = 0x9310;
+    /* DMA channel 1 configuration */
+    /* CHPRI = 0 */
+    DCH1CON = 0x0;
+    /* CHSIRQ = 146, SIRQEN = 1 */
+    DCH1ECON = 0x9210;
+    /* CHBCIE = 1, CHTAIE=1, CHERIE=1 */
+    DCH1INT = 0xB0000;
 
-   /* DCHxCON */
-   /* CHBCIE = 1 */
-   DCH0INT = 0x80000;
-
-    /* DMA channel 1 */
-   /* DCHxCON */
-   /* CHEN = 0 */
-   /* CHPRI = 0 */
-   DCH1CON = 0x0;
-
-   /* DCHxECON */
-   /* CHSIRQ = 146 */
-   /* SIRQEN = 1 */
-   DCH1ECON = 0x9210;
-
-   /* DCHxCON */
-   /* CHBCIE = 1 */
-   DCH1INT = 0x80000;
-
-   /* DMA channel 2 - not enabled */
-   /* Set registers for disabled configuration */
-   DCH2ECON = 0x0;
-   DCH2INT = 0x0;
-   DCH2CON = 0x0;
-
-   /* DMA channel 3 - not enabled */
-   /* Set registers for disabled configuration */
-   DCH3ECON = 0x0;
-   DCH3INT = 0x0;
-   DCH3CON = 0x0;
-
-   /* DMA channel 4 - not enabled */
-   /* Set registers for disabled configuration */
-   DCH4ECON = 0x0;
-   DCH4INT = 0x0;
-   DCH4CON = 0x0;
-
-   /* DMA channel 5 - not enabled */
-   /* Set registers for disabled configuration */
-   DCH5ECON = 0x0;
-   DCH5INT = 0x0;
-   DCH5CON = 0x0;
-
-   /* DMA channel 6 - not enabled */
-   /* Set registers for disabled configuration */
-   DCH6ECON = 0x0;
-   DCH6INT = 0x0;
-   DCH6CON = 0x0;
-
-   /* DMA channel 7 - not enabled */
-   /* Set registers for disabled configuration */
-   DCH7ECON = 0x0;
-   DCH7INT = 0x0;
-   DCH7CON = 0x0;
-
+    /* Enable DMA channel interrupts */
+    IEC4SET = 0 | 0x40 | 0x80 ;
 }
 
 // *****************************************************************************
@@ -340,7 +279,6 @@ void DMAC_ChannelCallbackRegister(DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLB
 */
 bool DMAC_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, size_t srcSize, const void *destAddr, size_t destSize, size_t cellSize)
 {
-    volatile uint32_t status = 0;
     bool returnStatus = false;
     volatile uint32_t *regs;
 
@@ -363,9 +301,6 @@ bool DMAC_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, size_t src
         /* Set the cell size (set same as source size), DCHxCSIZ */
         regs = (volatile uint32_t *)(_DMAC_BASE_ADDRESS + 0x60 + (channel * 0xC0) + 0x90);
         *(volatile uint32_t *)(regs) = cellSize;
-
-        /* Enable the DMA interrupt.  There's one interrupt per channel; use the particular bitmask for this channel. */
-        IEC4SET = dmaIrqEnbl[channel];
 
         /* Enable the channel */
         /* CHEN = 1 */
@@ -438,8 +373,6 @@ void DMAC_ChannelDisable (DMAC_CHANNEL channel)
 */
 bool DMAC_ChannelIsBusy (DMAC_CHANNEL channel)
 {
-    volatile uint32_t * regs;
-
     return (gDMAChannelObj[channel].inUse);
 
 }
@@ -477,7 +410,7 @@ void DMA0_InterruptHandler (void)
     {
         /* Channel is by default disabled on completion of a block transfer */
         /* Clear the Block transfer complete flag */
-        *(volatile uint32_t *)(&DCH0INTCLR) = _DCH0INT_CHBCIF_MASK;
+        DCH0INTCLR = _DCH0INT_CHBCIF_MASK;
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
@@ -487,7 +420,7 @@ void DMA0_InterruptHandler (void)
     {
         /* Channel is by default disabled on Transfer Abortion */
         /* Clear the Abort transfer complete flag */
-        *(volatile uint32_t *)(&DCH0INTCLR) = _DCH0INT_CHTAIF_MASK;
+        DCH0INTCLR = _DCH0INT_CHTAIF_MASK;
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
@@ -496,7 +429,7 @@ void DMA0_InterruptHandler (void)
     else if(true == DCH0INTbits.CHERIF)
     {
         /* Clear the Block transfer complete flag */
-        *(volatile uint32_t *)(&DCH0INTCLR) = _DCH0INT_CHERIF_MASK;
+        DCH0INTCLR = _DCH0INT_CHERIF_MASK;
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_ADDRESS_ERROR;
@@ -547,7 +480,7 @@ void DMA1_InterruptHandler (void)
     {
         /* Channel is by default disabled on completion of a block transfer */
         /* Clear the Block transfer complete flag */
-        *(volatile uint32_t *)(&DCH1INTCLR) = _DCH1INT_CHBCIF_MASK;
+        DCH1INTCLR = _DCH1INT_CHBCIF_MASK;
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
@@ -557,7 +490,7 @@ void DMA1_InterruptHandler (void)
     {
         /* Channel is by default disabled on Transfer Abortion */
         /* Clear the Abort transfer complete flag */
-        *(volatile uint32_t *)(&DCH1INTCLR) = _DCH1INT_CHTAIF_MASK;
+        DCH1INTCLR = _DCH1INT_CHTAIF_MASK;
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_NONE;
@@ -566,7 +499,7 @@ void DMA1_InterruptHandler (void)
     else if(true == DCH1INTbits.CHERIF)
     {
         /* Clear the Block transfer complete flag */
-        *(volatile uint32_t *)(&DCH1INTCLR) = _DCH1INT_CHERIF_MASK;
+        DCH1INTCLR = _DCH1INT_CHERIF_MASK;
 
         /* Update error and event */
         chanObj->errorInfo = DMAC_ERROR_ADDRESS_ERROR;
