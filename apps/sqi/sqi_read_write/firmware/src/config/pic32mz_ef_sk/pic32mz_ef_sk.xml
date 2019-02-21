@@ -3198,7 +3198,7 @@
         </Combo>
         <Combo dnOrder="523" id="CONFIG_SYS_CLK_CONFIG_SOSCEN">
           <Values dnOrder="0">
-            <User dnOrder="0" value="ON"/>
+            <User dnOrder="0" value="OFF"/>
           </Values>
         </Combo>
         <String dnOrder="524" id="CONFIG_SYS_CLK_PBCLK1_FREQ">
@@ -3238,160 +3238,189 @@
         </String>
         <String dnOrder="531" id="CONFIG_SYS_CLK_REFCLK1_FREQ">
           <Values dnOrder="0">
-            <User dnOrder="0" value="8000000"/>
+            <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <String dnOrder="532" id="CONFIG_SYS_CLK_REFCLK2_FREQ">
+        <Boolean dnOrder="532" id="CONFIG_SYS_CLK_REFCLK2_ENABLE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="true"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="533" id="CONFIG_SYS_CLK_REFCLK2_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="50000000"/>
           </Values>
         </String>
-        <String dnOrder="533" id="CONFIG_SYS_CLK_REFCLK3_FREQ">
+        <Boolean dnOrder="534" id="CONFIG_SYS_CLK_REFCLK2_OE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </Boolean>
+        <String dnOrder="535" id="CONFIG_SYS_CLK_REFCLK3_FREQ">
           <Values dnOrder="0">
-            <User dnOrder="0" value="8000000"/>
+            <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <String dnOrder="534" id="CONFIG_SYS_CLK_REFCLK4_FREQ">
+        <String dnOrder="536" id="CONFIG_SYS_CLK_REFCLK4_FREQ">
           <Values dnOrder="0">
-            <User dnOrder="0" value="8000000"/>
+            <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <Combo dnOrder="535" id="CONFIG_SYS_CLK_REFCLK_SOURCE2">
-          <Values dnOrder="0">
+        <Combo dnOrder="537" id="CONFIG_SYS_CLK_REFCLK_SOURCE2">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <User dnOrder="0" value="SYSCLK"/>
           </Values>
         </Combo>
-        <Integer dnOrder="536" id="CONFIG_SYS_CLK_RODIV2">
-          <Values dnOrder="0">
+        <Integer dnOrder="538" id="CONFIG_SYS_CLK_RODIV2">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <User dnOrder="0" value="2"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="537" id="EVIC_169_ENABLE">
+        <Integer dnOrder="539" id="CONFIG_SYS_CLK_ROTRIM2">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </Integer>
+        <Boolean dnOrder="540" id="EVIC_169_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="538" id="EVIC_169_HANDLER_LOCK">
+        <Boolean dnOrder="541" id="EVIC_169_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="539" id="EVIC_169_INTERRUPT_HANDLER">
+        <String dnOrder="542" id="EVIC_169_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="SQI1_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <String dnOrder="540" id="REFOCON2_VALUE">
+        <String dnOrder="543" id="REFOCON2_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0x20200"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="541" id="SQI1_INTERRUPT_ENABLE">
+        <Boolean dnOrder="544" id="SQI1_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sqi1" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="542" id="SQI1_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="545" id="SQI1_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="543" id="SQI1_INTERRUPT_HANDLER">
+        <String dnOrder="546" id="SQI1_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sqi1" priority="1" value="SQI1_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="544" id="SQI1_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="547" id="SQI1_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sqi1" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="545" id="SYS_CLK_FREQ">
+        <String dnOrder="548" id="SYS_CLK_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <Hex dnOrder="546" id="SYS_PORT_B_ANSEL">
+        <Hex dnOrder="549" id="SYS_PORT_B_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="16384"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="547" id="SYS_PORT_B_CNPU">
+        <Hex dnOrder="550" id="SYS_PORT_B_CNPU">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="16384"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="548" id="SYS_PORT_B_LAT">
+        <Hex dnOrder="551" id="SYS_PORT_B_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="549" id="SYS_PORT_B_TRIS">
+        <Hex dnOrder="552" id="SYS_PORT_B_TRIS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="550" id="SYS_PORT_H_ANSEL">
+        <Hex dnOrder="553" id="SYS_PORT_H_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="3"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="551" id="SYS_PORT_H_LAT">
+        <Hex dnOrder="554" id="SYS_PORT_H_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Hex>
-        <Hex dnOrder="552" id="SYS_PORT_H_TRIS">
+        <Hex dnOrder="555" id="SYS_PORT_H_TRIS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="7"/>
             </Dynamic>
           </Values>
         </Hex>
-        <KeyValueSet dnOrder="553" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
+        <KeyValueSet dnOrder="556" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="39"/>
           </Values>
         </KeyValueSet>
-        <Combo dnOrder="554" id="SYS_PORT_PPS_OUTPUT_PIN_0">
+        <Combo dnOrder="557" id="SYS_PORT_PPS_OUTPUT_PIN_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="RPD5"/>
           </Values>
         </Combo>
-        <Boolean dnOrder="555" id="USE_PPS_OUTPUT_0">
+        <Boolean dnOrder="558" id="USE_PPS_OUTPUT_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="false"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="556" id="clkSvcMode">
+        <KeyValueSet dnOrder="559" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="0"/>
@@ -3421,13 +3450,13 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="sqi1" x="340" y="20"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
