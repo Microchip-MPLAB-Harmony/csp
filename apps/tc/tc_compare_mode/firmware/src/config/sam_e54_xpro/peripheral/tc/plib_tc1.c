@@ -86,12 +86,12 @@ void TC1_CompareInitialize( void )
     /* Configure waveform generation mode */
     TC1_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_MPWM;
 
-    
+
     /* Configure timer one shot mode & direction */
     TC1_REGS->COUNT16.TC_DRVCTRL = TC_DRVCTRL_INVEN1_Msk;
     TC1_REGS->COUNT16.TC_CC[0] = 10000U;
     TC1_REGS->COUNT16.TC_CC[1] = 3000U;
-    
+
     /* Clear all interrupt flags */
     TC1_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
 
@@ -187,6 +187,3 @@ TC_COMPARE_STATUS TC1_CompareStatusGet( void )
     TC1_REGS->COUNT16.TC_INTFLAG = TC_COMPARE_STATUS_MSK;
     return compare_status;
 }
-
-
-
