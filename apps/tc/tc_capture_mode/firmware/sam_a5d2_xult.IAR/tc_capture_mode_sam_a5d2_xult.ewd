@@ -48,7 +48,7 @@
                 </option>
                 <option>
                     <name>RunToEnable</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>RunToName</name>
@@ -88,7 +88,7 @@
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state>8.30.2.18207</state>
+                    <state>8.32.3.20186</state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -1003,7 +1003,7 @@
             <name>STLINK_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>5</version>
+                <version>6</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1101,7 +1101,7 @@
                 </option>
                 <option>
                     <name>CCSTLinkJtagSpeedList</name>
-                    <version>1</version>
+                    <version>2</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -1115,6 +1115,11 @@
                 <option>
                     <name>CCSTLinkUseServerSelect</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>CCSTLinkProbeList</name>
+                    <version>0</version>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -2479,7 +2484,7 @@
             <name>STLINK_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>5</version>
+                <version>6</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -2577,7 +2582,7 @@
                 </option>
                 <option>
                     <name>CCSTLinkJtagSpeedList</name>
-                    <version>1</version>
+                    <version>2</version>
                     <state>0</state>
                 </option>
                 <option>
@@ -2591,6 +2596,11 @@
                 <option>
                     <name>CCSTLinkUseServerSelect</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>CCSTLinkProbeList</name>
+                    <version>0</version>
+                    <state>1</state>
                 </option>
             </data>
         </settings>

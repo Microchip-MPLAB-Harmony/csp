@@ -87,6 +87,9 @@ int main ( void )
     cmp_period = TC1_CH0_ComparePeriodGet();
     TC0_CH2_CaptureStart();
     TC1_CH0_CompareStart();
+    
+    /* Wait for 1 second  for UART to initialize */ 
+    TC1_DelayMs(1000);
 
     printf("\n\r---------------------------------------------------------");
     printf("\n\r                    TC Capture Demo                 ");
