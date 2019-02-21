@@ -108,10 +108,11 @@ void CLOCK_Initialize (void)
     /* Configure the AHB Bridge Clocks */
     PM_REGS->PM_AHBMASK = 0x1f;
 
+
     /* Configure the APBB Bridge Clocks */
     PM_REGS->PM_APBBMASK = 0x1f;
 
+
     /* Configure the APBC Bridge Clocks */
     PM_REGS->PM_APBCMASK = 0x20022;
-
 }
