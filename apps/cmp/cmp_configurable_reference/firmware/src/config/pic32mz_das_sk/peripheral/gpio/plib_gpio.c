@@ -44,6 +44,7 @@
 #include "plib_gpio.h"
 
 
+
 /******************************************************************************
   Function:
     GPIO_Initialize ( void )
@@ -86,7 +87,7 @@ void GPIO_Initialize ( void )
     CFGCONbits.IOLOCK = 0;
 
     /* PPS Input Remapping */
-    C2RXR = 5;
+    U2RXR = 5;
 
     /* PPS Output Remapping */
     RPG9R = 2;
