@@ -53,7 +53,6 @@
 */
 #include "device.h"
 #include "plib_tc0.h"
-
  
 
  
@@ -106,7 +105,7 @@ uint16_t TC0_CH0_CaptureBGet (void)
 
 TC_CAPTURE_STATUS TC0_CH0_CaptureStatusGet(void)
 {
-    return ((TC0_REGS->TC_CHANNEL[0].TC_SR) & TC_CAPTURE_STATUS_MSK);
+    return (TC_CAPTURE_STATUS)(TC0_REGS->TC_CHANNEL[0].TC_SR & TC_CAPTURE_STATUS_MSK);
 }
  
 
@@ -120,6 +119,7 @@ TC_CAPTURE_STATUS TC0_CH0_CaptureStatusGet(void)
 
  
 
+ 
 /**
  End of File
 */
