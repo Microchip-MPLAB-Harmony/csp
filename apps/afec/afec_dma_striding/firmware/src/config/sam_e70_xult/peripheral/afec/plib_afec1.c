@@ -126,7 +126,7 @@ void AFEC1_ConversionStart(void)
 /*Check if conversion result is available */
 bool AFEC1_ChannelResultIsReady(AFEC_CHANNEL_NUM channel)
 {
-    return (AFEC1_REGS->AFEC_ISR>> channel) & 0x1U;
+    return (AFEC1_REGS->AFEC_ISR >> channel) & 0x1U;
 }
 
 /* Read the conversion result */
