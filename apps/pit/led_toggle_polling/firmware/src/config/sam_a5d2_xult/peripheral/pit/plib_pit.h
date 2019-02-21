@@ -51,6 +51,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "device.h" // static inline macro
+
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     extern "C" {
