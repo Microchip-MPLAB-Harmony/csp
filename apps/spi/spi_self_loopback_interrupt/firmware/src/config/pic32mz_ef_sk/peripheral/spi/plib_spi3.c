@@ -102,6 +102,10 @@ void SPI3_Initialize ( void )
     */
     SPI3CONSET = (SPI3_CON_MSSEN | SPI3_CON_MCLKSEL | SPI3_CON_ENHBUF | SPI3_CON_MODE_32_MODE_16 | SPI3_CON_CKE | SPI3_CON_CKP | SPI3_CON_MSTEN);
 
+    /* Enable transmit interrupt when transmit buffer is completely empty (STXISEL = '01') */
+    /* Enable receive interrupt when the receive buffer is not empty (SRXISEL = '01') */
+    SPI3CONSET = 0x00000005;
+
     /* Initialize global variables */
     spi3Obj.transferIsBusy = false;
     spi3Obj.callback = NULL;
@@ -217,6 +221,12 @@ bool SPI3_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
             (void)dummyData;
         }
 
+        /* Configure SPI to generate receive interrupt when receive buffer is empty (SRXISEL = '01') */
+        SPI3CONSET = 0x00000001;
+
+        /* Configure SPI to generate transmit interrupt when the transmit shift register is empty (STXISEL = '00')*/
+        SPI3CONCLR = _SPI3CON_STXISEL_MASK;
+
         /* Clear the receive interrupt flag */
         IFS4CLR = _IFS4_SPI3RXIF_MASK;
 
@@ -228,10 +238,6 @@ bool SPI3_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
 
         /* Disable the transmit interrupt */
         IEC4CLR = _IEC4_SPI3TXIE_MASK;
-
-        /* Enable transmit interrupt when transmit buffer is completely empty (STXISEL = '01') */
-        /* Enable receive interrupt when the receive buffer is not empty (SRXISEL = '01') */
-        SPI3CONSET = 0x00000005;
 
         /* Start the first write here itself, rest will happen in ISR context */
         if((_SPI3CON_MODE32_MASK) == (SPI3CON & (_SPI3CON_MODE32_MASK)))
@@ -292,6 +298,12 @@ bool SPI3_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
         }
         else
         {
+            if (spi3Obj.txCount != spi3Obj.txSize)
+            {
+                /* Configure SPI to generate transmit buffer empty interrupt only if more than 
+                 * data is pending (STXISEL = '01')  */
+                SPI3CONSET = 0x00000004;
+            }
             /* Enable transmit interrupt to complete the transfer in ISR context */
             IEC4SET = _IEC4_SPI3TXIE_MASK;
         }
@@ -447,7 +459,7 @@ void SPI3_TX_InterruptHandler (void)
                 SPI3CONCLR = _SPI3CON_STXISEL_MASK;
             }
         }
-        else if (spi3Obj.txCount == spi3Obj.txSize)
+        else if ((spi3Obj.txCount == spi3Obj.txSize) && (SPI3STAT & _SPI3STAT_SRMT_MASK))
         {
             /* This part of code is executed when the shift register is empty. */
 
