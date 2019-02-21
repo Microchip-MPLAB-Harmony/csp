@@ -57,9 +57,6 @@
 
 void WDT_Enable(void)
 {
-    /* WDTWINEN = 0 */
-    WDTCONCLR = _WDTCON_WDTWINEN_MASK;
-
     /* ON = 1 */
     WDTCONSET = _WDTCON_ON_MASK;
 }
