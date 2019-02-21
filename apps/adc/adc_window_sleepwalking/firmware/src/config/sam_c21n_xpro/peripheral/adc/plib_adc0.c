@@ -94,11 +94,11 @@ void ADC0_Initialize( void )
     /* prescaler */
     ADC0_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_DIV16;
     /* Sampling length */
-    ADC0_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(0U);
+    ADC0_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(3U);
 
     /* reference */
     ADC0_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_INTVCC2;
-    
+
     /* positive and negative input pins */
     ADC0_REGS->ADC_INPUTCTRL = ADC_POSINPUT_AIN2 | ADC_NEGINPUT_GND;
 
@@ -210,13 +210,20 @@ void ADC0_InterruptHandler( void )
     volatile ADC_STATUS status;
     status = ADC0_REGS->ADC_INTFLAG;
     /* Clear interrupt flag */
-    ADC0_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
+    ADC0_REGS->ADC_INTFLAG = ADC_INTENSET_WINMON_Msk;
     if (ADC0_CallbackObject.callback != NULL)
     {
         ADC0_CallbackObject.callback(status, ADC0_CallbackObject.context);
     }
 }
-
-
-
-
+/* Check whether result is ready */
+bool ADC0_ConversionStatusGet( void )
+{
+    bool status;
+    status =  (bool)((ADC0_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    if (status == true)
+    {
+        ADC0_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    }
+    return status;
+}

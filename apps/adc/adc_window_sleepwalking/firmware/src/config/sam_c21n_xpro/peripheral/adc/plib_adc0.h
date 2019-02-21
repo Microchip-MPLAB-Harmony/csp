@@ -107,6 +107,7 @@ bool ADC0_ConversionSequenceIsFinished(void);
 
 void ADC0_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
 
+bool ADC0_ConversionStatusGet( void );
 
 
 // DOM-IGNORE-BEGIN
