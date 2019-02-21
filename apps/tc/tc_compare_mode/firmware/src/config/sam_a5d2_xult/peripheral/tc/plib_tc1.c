@@ -126,7 +126,7 @@ void TC1_CH0_CompareBSet (uint32_t value)
 
 TC_COMPARE_STATUS TC1_CH0_CompareStatusGet(void)
 {
-    return ((TC1_REGS->TC_CHANNEL[0].TC_SR) & TC_COMPARE_STATUS_MSK);
+    return (TC_COMPARE_STATUS)(TC1_REGS->TC_CHANNEL[0].TC_SR & TC_COMPARE_STATUS_MSK);
 }
  
 
