@@ -1,28 +1,26 @@
 /*******************************************************************************
-  Supply Controller(SUPC) PLIB
+  Cortex-M L1 Cache Header
 
-  Company
-    Microchip Technology Inc.
+  File Name:
+    device_cache.h
 
-  File Name
-    plib_supc.c
+  Summary:
+    Preprocessor definitions to provide L1 Cache control.
 
-  Summary
-    SUPC PLIB Implementation File.
-
-  Description
-    This file defines the interface to the SUPC peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
+  Description:
+    An MPLAB PLIB or Project can include this header to perform cache cleans,
+    invalidates etc. For the DCache and ICache.
 
   Remarks:
-    None.
+    This header should not define any prototypes or data definitions, or 
+    include any files that do.  The file only provides macro definitions for 
+    build-time.
 
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -45,38 +43,50 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
+/*  This section Includes other configuration headers necessary to completely
+    define this configuration.
 */
 
-#include "device.h"
-#include "plib_supc.h"
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
 
+extern "C" {
 
-void SUPC_Initialize( void )
-{
-    /* Configure VREF */
-    SUPC_REGS->SUPC_VREF = SUPC_VREF_SEL(0x6);
-    /* Configure VREG. Mask the values loaded from NVM during reset.*/
-    SUPC_REGS->SUPC_VREG = (SUPC_REGS->SUPC_VREG & (SUPC_VREG_SEL_Msk | SUPC_VREG_ENABLE_Msk)) | SUPC_VREG_VSPER(0) ;
+#endif
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: L1 Cache Configuration
+// *****************************************************************************
+// *****************************************************************************
+#define ICACHE_ENABLE()
+#define ICACHE_DISABLE()
+#define ICACHE_INVALIDATE()
+#define INSTRUCTION_CACHE_ENABLED                      false
+
+#define DCACHE_ENABLE()
+#define DCACHE_DISABLE()
+#define DCACHE_INVALIDATE()
+#define DCACHE_CLEAN()
+#define DCACHE_CLEAN_INVALIDATE()
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+#define DATA_CACHE_ENABLED                             false
+
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
 }
+#endif
+//DOM-IGNORE-END
 
-void SUPC_SelectTempSenorChannel( SUPC_TSSEL sensor )
-{
-    SUPC_REGS->SUPC_VREF = (SUPC_REGS->SUPC_VREF & (~SUPC_VREF_TSSEL_Msk)) | (sensor << SUPC_VREF_TSSEL_Pos);
-}
-
-void SUPC_SetOutputPin( SUPC_OUTPIN pin )
-{
-    SUPC_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT(1 << pin);
-}
-
-void SUPC_ClearOutputPin( SUPC_OUTPIN pin )
-{
-    SUPC_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1 << pin);
-}
-
+#endif // #ifndef DEVICE_CACHE_H
