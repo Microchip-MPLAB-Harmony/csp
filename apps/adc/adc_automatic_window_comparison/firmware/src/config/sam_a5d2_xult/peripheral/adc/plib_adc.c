@@ -60,8 +60,8 @@ void ADC_Initialize()
     ADC_REGS->ADC_MR = ADC_MR_PRESCAL(9U) | ADC_MR_TRACKTIM(15U) | ADC_MR_STARTUP_SUT512 |
         ADC_MR_TRANSFER(2U) | ADC_MR_ANACH_ALLOWED;
 
-    /* resolution and sign mode of result */
-    ADC_REGS->ADC_EMR = ADC_EMR_OSR_NO_AVERAGE 
+    /* resolution, source clock and sign mode of result */
+    ADC_REGS->ADC_EMR = ADC_EMR_OSR_NO_AVERAGE  | ADC_EMR_SRCCLK_PERIPH_CLK 
          | ADC_EMR_SIGNMODE_SE_UNSG_DF_SIGN | ADC_EMR_TAG_Msk;
 
     /* Trigger mode */

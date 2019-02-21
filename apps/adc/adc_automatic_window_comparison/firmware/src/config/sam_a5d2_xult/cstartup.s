@@ -1,24 +1,29 @@
 /* ----------------------------------------------------------------------------
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
-*
-* Subject to your compliance with these terms, you may use Microchip software
-* and any derivatives exclusively with Microchip products. It is your
-* responsibility to comply with third party license terms applicable to your
-* use of third party software (including open source software) that may
-* accompany Microchip software.
-*
-* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
-* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
-* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
-* PARTICULAR PURPOSE.
-*
-* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
-* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
-* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
-* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
-* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
-* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
-* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+ *         SAM Software Package License
+ * ----------------------------------------------------------------------------
+ * Copyright (c) 2015, Atmel Corporation
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * - Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the disclaimer below.
+ *
+ * Atmel's name may not be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
 
@@ -42,29 +47,29 @@
 //         Definitions
 //------------------------------------------------------------------------------
 
-SAM_A5_BASE_AIC     DEFINE 0xFC020000
-SAM_A5_BASE_SAIC    DEFINE 0xF803C000
-AIC_SMR             DEFINE 0x04
-AIC_IVR             DEFINE 0x10
-AIC_EOICR           DEFINE 0x38
+AIC_BASE_ADDRESS  DEFINE 0xFC020000
+SAIC_BASE_ADDRESS DEFINE 0xF803C000
+AIC_SMR         DEFINE 0x04
+AIC_IVR         DEFINE 0x10
+AIC_EOICR       DEFINE 0x38
 
-MODE_MSK            DEFINE 0x1F  ; Bit mask for mode bits in CPSR
+MODE_MSK        DEFINE 0x1F  ; Bit mask for mode bits in CPSR
 
-ARM_MODE_ABT        DEFINE 0x17
-ARM_MODE_FIQ        DEFINE 0x11
-ARM_MODE_IRQ        DEFINE 0x12
-ARM_MODE_SVC        DEFINE 0x13
-ARM_MODE_SYS        DEFINE 0x1F
-ARM_MODE_UND        DEFINE 0x1B
+ARM_MODE_ABT    DEFINE 0x17
+ARM_MODE_FIQ    DEFINE 0x11
+ARM_MODE_IRQ    DEFINE 0x12
+ARM_MODE_SVC    DEFINE 0x13
+ARM_MODE_SYS    DEFINE 0x1F
+ARM_MODE_UND    DEFINE 0x1B
 
-I_BIT               DEFINE 0x80
-F_BIT               DEFINE 0x40
+I_BIT           DEFINE 0x80
+F_BIT           DEFINE 0x40
 
-ICACHE_BIT          DEFINE 0x1000
-DCACHE_BIT          DEFINE 0x04
-MMU_BIT             DEFINE 0x01
+ICACHE_BIT      DEFINE 0x1000
+DCACHE_BIT      DEFINE 0x04
+MMU_BIT         DEFINE 0x01
 
-SAM_A5_REMAP_BASE   DEFINE 0x00600000
+REMAP_BASE_ADDRESS DEFINE 0x00600000
 
 //------------------------------------------------------------------------------
 //         Startup routine
@@ -74,13 +79,14 @@ SAM_A5_REMAP_BASE   DEFINE 0x00600000
 
         PUBLIC  _reset_vector
         PUBLIC  __iar_program_start
-        PUBLIC  irqHandler
+        PUBWEAK  irqHandler
         PUBLIC  fiqHandler
 
         EXTERN  undefined_instruction_irq_handler
         EXTERN  prefetch_abort_irq_handler
         EXTERN  data_abort_irq_handler
         EXTERN  software_interrupt_irq_handler
+        
 
         DATA
 
@@ -127,7 +133,7 @@ fiqHandler:
 
         ; Write in the IVR to support Protect Mode
 
-        ldr         lr, =SAM_A5_BASE_SAIC
+        ldr         lr, =SAIC_BASE_ADDRESS
         ldr         r0, [r14, #AIC_IVR]
         str         lr, [r14, #AIC_IVR]
         ; Dummy read to force AIC_IVR write completion
@@ -145,7 +151,7 @@ fiqHandler:
 
         ; Acknowledge interrupt
 
-        ldr         lr, =SAM_A5_BASE_SAIC
+        ldr         lr, =SAIC_BASE_ADDRESS
         str         lr, [r14, #AIC_EOICR]
 
         ; Restore interrupt context and branch back to calling code
@@ -168,7 +174,7 @@ irqHandler:
 
         ; Write in the IVR to support Protect Mode
 
-        ldr         lr, =SAM_A5_BASE_AIC
+        ldr         lr, =AIC_BASE_ADDRESS
         ldr         r0, [r14, #AIC_IVR]
         str         lr, [r14, #AIC_IVR]
         ; Dummy read to force AIC_IVR write completion
@@ -196,7 +202,7 @@ irqHandler:
 
         ; Acknowledge interrupt
 
-        ldr         lr, =SAM_A5_BASE_AIC
+        ldr         lr, =AIC_BASE_ADDRESS
         str         lr, [r14, #AIC_EOICR]
 
         ; Restore interrupt context and branch back to calling code
@@ -290,7 +296,7 @@ __iar_program_start:
         bl      __iar_data_init3
 
         ; Remap 0x0 to SRAM and invalidate I Cache
-        mov     r0, #SAM_A5_REMAP_BASE
+        mov     r0, #REMAP_BASE_ADDRESS
         mov     r1, #1
         str     r1, [r0]
         mov     r0, #0
