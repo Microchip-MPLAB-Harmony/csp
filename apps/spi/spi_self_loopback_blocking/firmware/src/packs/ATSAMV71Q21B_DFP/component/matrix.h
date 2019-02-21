@@ -1,7 +1,7 @@
 /**
  * \brief Component description for MATRIX
  *
- * © 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-09-19T14:04:45Z */
+/* file generated from device description version 2019-01-18T21:21:15Z */
 #ifndef _SAMV71_MATRIX_COMPONENT_H_
 #define _SAMV71_MATRIX_COMPONENT_H_
 
@@ -50,7 +50,10 @@
 #define MATRIX_PRAS_M6PR_Pos                  _U_(24)                                              /**< (MATRIX_PRAS) Master 6 Priority Position */
 #define MATRIX_PRAS_M6PR_Msk                  (_U_(0x3) << MATRIX_PRAS_M6PR_Pos)                   /**< (MATRIX_PRAS) Master 6 Priority Mask */
 #define MATRIX_PRAS_M6PR(value)               (MATRIX_PRAS_M6PR_Msk & ((value) << MATRIX_PRAS_M6PR_Pos))
-#define MATRIX_PRAS_Msk                       _U_(0x03333333)                                      /**< (MATRIX_PRAS) Register Mask  */
+#define MATRIX_PRAS_M7PR_Pos                  _U_(28)                                              /**< (MATRIX_PRAS) Master 7 Priority Position */
+#define MATRIX_PRAS_M7PR_Msk                  (_U_(0x3) << MATRIX_PRAS_M7PR_Pos)                   /**< (MATRIX_PRAS) Master 7 Priority Mask */
+#define MATRIX_PRAS_M7PR(value)               (MATRIX_PRAS_M7PR_Msk & ((value) << MATRIX_PRAS_M7PR_Pos))
+#define MATRIX_PRAS_Msk                       _U_(0x33333333)                                      /**< (MATRIX_PRAS) Register Mask  */
 
 
 /* -------- MATRIX_PRBS : (MATRIX Offset: 0x04) (R/W 32) Priority Register B for Slave 0 -------- */
@@ -136,6 +139,9 @@
 #define MATRIX_MRCR_RCB6_Pos                  _U_(6)                                               /**< (MATRIX_MRCR) Remap Command Bit for Master 6 Position */
 #define MATRIX_MRCR_RCB6_Msk                  (_U_(0x1) << MATRIX_MRCR_RCB6_Pos)                   /**< (MATRIX_MRCR) Remap Command Bit for Master 6 Mask */
 #define MATRIX_MRCR_RCB6(value)               (MATRIX_MRCR_RCB6_Msk & ((value) << MATRIX_MRCR_RCB6_Pos))
+#define MATRIX_MRCR_RCB7_Pos                  _U_(7)                                               /**< (MATRIX_MRCR) Remap Command Bit for Master 7 Position */
+#define MATRIX_MRCR_RCB7_Msk                  (_U_(0x1) << MATRIX_MRCR_RCB7_Pos)                   /**< (MATRIX_MRCR) Remap Command Bit for Master 7 Mask */
+#define MATRIX_MRCR_RCB7(value)               (MATRIX_MRCR_RCB7_Msk & ((value) << MATRIX_MRCR_RCB7_Pos))
 #define MATRIX_MRCR_RCB8_Pos                  _U_(8)                                               /**< (MATRIX_MRCR) Remap Command Bit for Master 8 Position */
 #define MATRIX_MRCR_RCB8_Msk                  (_U_(0x1) << MATRIX_MRCR_RCB8_Pos)                   /**< (MATRIX_MRCR) Remap Command Bit for Master 8 Mask */
 #define MATRIX_MRCR_RCB8(value)               (MATRIX_MRCR_RCB8_Msk & ((value) << MATRIX_MRCR_RCB8_Pos))
@@ -151,10 +157,10 @@
 #define MATRIX_MRCR_RCB12_Pos                 _U_(12)                                              /**< (MATRIX_MRCR) Remap Command Bit for Master 12 Position */
 #define MATRIX_MRCR_RCB12_Msk                 (_U_(0x1) << MATRIX_MRCR_RCB12_Pos)                  /**< (MATRIX_MRCR) Remap Command Bit for Master 12 Mask */
 #define MATRIX_MRCR_RCB12(value)              (MATRIX_MRCR_RCB12_Msk & ((value) << MATRIX_MRCR_RCB12_Pos))
-#define MATRIX_MRCR_Msk                       _U_(0x00001F7F)                                      /**< (MATRIX_MRCR) Register Mask  */
+#define MATRIX_MRCR_Msk                       _U_(0x00001FFF)                                      /**< (MATRIX_MRCR) Register Mask  */
 
 #define MATRIX_MRCR_RCB_Pos                   _U_(0)                                               /**< (MATRIX_MRCR Position) Remap Command Bit for Master x2 */
-#define MATRIX_MRCR_RCB_Msk                   (_U_(0xFFF) << MATRIX_MRCR_RCB_Pos)                  /**< (MATRIX_MRCR Mask) RCB */
+#define MATRIX_MRCR_RCB_Msk                   (_U_(0x1FFF) << MATRIX_MRCR_RCB_Pos)                 /**< (MATRIX_MRCR Mask) RCB */
 #define MATRIX_MRCR_RCB(value)                (MATRIX_MRCR_RCB_Msk & ((value) << MATRIX_MRCR_RCB_Pos)) 
 
 /* -------- CCFG_CAN0 : (MATRIX Offset: 0x110) (R/W 32) CAN0 Configuration Register -------- */
