@@ -107,6 +107,9 @@ void ADC_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold);
 
 void ADC_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
 
+bool ADC_ConversionStatusGet( void );
+
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
