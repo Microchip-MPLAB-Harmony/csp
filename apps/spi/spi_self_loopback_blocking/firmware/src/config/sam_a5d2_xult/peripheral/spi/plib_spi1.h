@@ -1,17 +1,18 @@
 /*******************************************************************************
- Debug Console Source file 
+  SPI PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    debug_console.c
+    plib_spi1.h
 
   Summary:
-    RSTC Source File
+    SPI1 PLIB Header File
 
   Description:
-    None
+    This file has prototype of all the interfaces provided for particular
+    SPI peripheral.
 
 *******************************************************************************/
 
@@ -38,12 +39,41 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
+#ifndef PLIB_SPI1_H
+#define PLIB_SPI1_H
 
-int _mon_getc(int canblock)
-{
-   return 0;
-}
+#include "device.h"
+#include "plib_spi_common.h"
 
-void _mon_putc(char c)
-{
-}
+/* Provide C++ Compatibility */
+#ifdef __cplusplus
+
+    extern "C" {
+
+#endif
+
+/****************************** SPI1 Interface *********************************/
+
+void SPI1_Initialize ( void );
+
+bool SPI1_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
+
+bool SPI1_Write(void* pTransmitData, size_t txSize);
+
+bool SPI1_Read(void* pReceiveData, size_t rxSize);
+
+bool SPI1_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
+
+
+/* Provide C++ Compatibility */
+#ifdef __cplusplus
+
+    }
+
+#endif
+
+#endif // PLIB_SPI1_H
+
+/*******************************************************************************
+ End of File
+*/
