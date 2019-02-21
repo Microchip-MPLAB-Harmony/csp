@@ -139,7 +139,7 @@ void CLOCK_Initialize (void)
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(28) | GCLK_CLKCTRL_GEN(0x0)  | GCLK_CLKCTRL_CLKEN_Msk;
     /* Selection of the Generator and write Lock for TC6 TC7 */
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_ID(29) | GCLK_CLKCTRL_GEN(0x0)  | GCLK_CLKCTRL_CLKEN_Msk;
-
+    
     /* Configure the APBC Bridge Clocks */
     PM_REGS->PM_APBCMASK = 0x15800;
 
