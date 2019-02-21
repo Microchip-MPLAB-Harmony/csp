@@ -69,5 +69,7 @@
     #define __RESTRICT                 __restrict__
 #endif
 
+#define CACHE_ALIGN                    __COHERENT
+
 #endif // end of header
 
