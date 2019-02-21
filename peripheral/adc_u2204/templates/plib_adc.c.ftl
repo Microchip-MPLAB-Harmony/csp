@@ -311,7 +311,10 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
     bool status;
     status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    if (status == true)
+    {
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    }
     return status;
 }
 </#if>
@@ -321,7 +324,10 @@ bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 {
     bool status;
     status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
+    if (status == true)
+    {
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
+    }
     return status;
 }
 </#if>

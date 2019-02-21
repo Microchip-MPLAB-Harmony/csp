@@ -289,7 +289,10 @@ bool ${SDADC_INSTANCE_NAME}_ConversionResultIsReady( void )
 {
     bool status;
     status = (bool)((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk) >> SDADC_INTFLAG_RESRDY_Pos);
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_RESRDY_Msk;
+    if (status == true)
+    {
+        ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_RESRDY_Msk;
+    }
     return status;
 }
 </#if>
@@ -299,7 +302,10 @@ bool ${SDADC_INSTANCE_NAME}_WindowMonitorIsSet( void )
 {
     bool status;
     status =  (bool)((${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG & SDADC_INTFLAG_WINMON_Msk) >> SDADC_INTFLAG_WINMON_Pos);
-    ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_WINMON_Msk;
+    if (status == true)
+    {
+        ${SDADC_INSTANCE_NAME}_REGS->SDADC_INTFLAG = SDADC_INTFLAG_WINMON_Msk;
+    }
     return status;
 }
 </#if>
