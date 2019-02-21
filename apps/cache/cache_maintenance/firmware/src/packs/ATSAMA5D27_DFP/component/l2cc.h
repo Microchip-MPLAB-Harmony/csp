@@ -1,7 +1,7 @@
 /**
  * \brief Component description for L2CC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-11-28T22:21:13Z */
+/* file generated from device description version 2019-01-23T22:42:14Z */
 #ifndef _SAMA5D2_L2CC_COMPONENT_H_
 #define _SAMA5D2_L2CC_COMPONENT_H_
 
@@ -73,7 +73,7 @@
 #define L2CC_ACR_SAIE(value)                  (L2CC_ACR_SAIE_Msk & ((value) << L2CC_ACR_SAIE_Pos))
 #define L2CC_ACR_ASS_Pos                      _U_(16)                                              /**< (L2CC_ACR) Associativity Position */
 #define L2CC_ACR_ASS_Msk                      (_U_(0x1) << L2CC_ACR_ASS_Pos)                       /**< (L2CC_ACR) Associativity Mask */
-#define L2CC_ACR_ASS(value)                   (L2CC_ACR_ASS_Msk & ((value) << L2CC_ACR_ASS_Pos))
+#define L2CC_ACR_ASS(value)                   (L2CC_ACR_ASS_Msk & ((value) << L2CC_ACR_ASS_Pos))  
 #define L2CC_ACR_WAYSIZE_Pos                  _U_(17)                                              /**< (L2CC_ACR) Way Size Position */
 #define L2CC_ACR_WAYSIZE_Msk                  (_U_(0x7) << L2CC_ACR_WAYSIZE_Pos)                   /**< (L2CC_ACR) Way Size Mask */
 #define L2CC_ACR_WAYSIZE(value)               (L2CC_ACR_WAYSIZE_Msk & ((value) << L2CC_ACR_WAYSIZE_Pos))
@@ -84,13 +84,13 @@
 #define L2CC_ACR_EMBEN(value)                 (L2CC_ACR_EMBEN_Msk & ((value) << L2CC_ACR_EMBEN_Pos))
 #define L2CC_ACR_PEN_Pos                      _U_(21)                                              /**< (L2CC_ACR) Parity Enable Position */
 #define L2CC_ACR_PEN_Msk                      (_U_(0x1) << L2CC_ACR_PEN_Pos)                       /**< (L2CC_ACR) Parity Enable Mask */
-#define L2CC_ACR_PEN(value)                   (L2CC_ACR_PEN_Msk & ((value) << L2CC_ACR_PEN_Pos))
+#define L2CC_ACR_PEN(value)                   (L2CC_ACR_PEN_Msk & ((value) << L2CC_ACR_PEN_Pos))  
 #define L2CC_ACR_SAOEN_Pos                    _U_(22)                                              /**< (L2CC_ACR) Shared Attribute Override Enable Position */
 #define L2CC_ACR_SAOEN_Msk                    (_U_(0x1) << L2CC_ACR_SAOEN_Pos)                     /**< (L2CC_ACR) Shared Attribute Override Enable Mask */
 #define L2CC_ACR_SAOEN(value)                 (L2CC_ACR_SAOEN_Msk & ((value) << L2CC_ACR_SAOEN_Pos))
 #define L2CC_ACR_FWA_Pos                      _U_(23)                                              /**< (L2CC_ACR) Force Write Allocate Position */
 #define L2CC_ACR_FWA_Msk                      (_U_(0x3) << L2CC_ACR_FWA_Pos)                       /**< (L2CC_ACR) Force Write Allocate Mask */
-#define L2CC_ACR_FWA(value)                   (L2CC_ACR_FWA_Msk & ((value) << L2CC_ACR_FWA_Pos))
+#define L2CC_ACR_FWA(value)                   (L2CC_ACR_FWA_Msk & ((value) << L2CC_ACR_FWA_Pos))  
 #define L2CC_ACR_CRPOL_Pos                    _U_(25)                                              /**< (L2CC_ACR) Cache Replacement Policy Position */
 #define L2CC_ACR_CRPOL_Msk                    (_U_(0x1) << L2CC_ACR_CRPOL_Pos)                     /**< (L2CC_ACR) Cache Replacement Policy Mask */
 #define L2CC_ACR_CRPOL(value)                 (L2CC_ACR_CRPOL_Msk & ((value) << L2CC_ACR_CRPOL_Pos))
@@ -389,14 +389,14 @@
 /* -------- L2CC_CSR : (L2CC Offset: 0x730) (R/W 32) Cache Synchronization Register -------- */
 #define L2CC_CSR_C_Pos                        _U_(0)                                               /**< (L2CC_CSR) Cache Synchronization Status Position */
 #define L2CC_CSR_C_Msk                        (_U_(0x1) << L2CC_CSR_C_Pos)                         /**< (L2CC_CSR) Cache Synchronization Status Mask */
-#define L2CC_CSR_C(value)                     (L2CC_CSR_C_Msk & ((value) << L2CC_CSR_C_Pos))
+#define L2CC_CSR_C(value)                     (L2CC_CSR_C_Msk & ((value) << L2CC_CSR_C_Pos))      
 #define L2CC_CSR_Msk                          _U_(0x00000001)                                      /**< (L2CC_CSR) Register Mask  */
 
 
 /* -------- L2CC_IPALR : (L2CC Offset: 0x770) (R/W 32) Invalidate Physical Address Line Register -------- */
 #define L2CC_IPALR_C_Pos                      _U_(0)                                               /**< (L2CC_IPALR) Cache Synchronization Status Position */
 #define L2CC_IPALR_C_Msk                      (_U_(0x1) << L2CC_IPALR_C_Pos)                       /**< (L2CC_IPALR) Cache Synchronization Status Mask */
-#define L2CC_IPALR_C(value)                   (L2CC_IPALR_C_Msk & ((value) << L2CC_IPALR_C_Pos))
+#define L2CC_IPALR_C(value)                   (L2CC_IPALR_C_Msk & ((value) << L2CC_IPALR_C_Pos))  
 #define L2CC_IPALR_IDX_Pos                    _U_(5)                                               /**< (L2CC_IPALR) Index Number Position */
 #define L2CC_IPALR_IDX_Msk                    (_U_(0x1FF) << L2CC_IPALR_IDX_Pos)                   /**< (L2CC_IPALR) Index Number Mask */
 #define L2CC_IPALR_IDX(value)                 (L2CC_IPALR_IDX_Msk & ((value) << L2CC_IPALR_IDX_Pos))
@@ -440,7 +440,7 @@
 /* -------- L2CC_CPALR : (L2CC Offset: 0x7B0) (R/W 32) Clean Physical Address Line Register -------- */
 #define L2CC_CPALR_C_Pos                      _U_(0)                                               /**< (L2CC_CPALR) Cache Synchronization Status Position */
 #define L2CC_CPALR_C_Msk                      (_U_(0x1) << L2CC_CPALR_C_Pos)                       /**< (L2CC_CPALR) Cache Synchronization Status Mask */
-#define L2CC_CPALR_C(value)                   (L2CC_CPALR_C_Msk & ((value) << L2CC_CPALR_C_Pos))
+#define L2CC_CPALR_C(value)                   (L2CC_CPALR_C_Msk & ((value) << L2CC_CPALR_C_Pos))  
 #define L2CC_CPALR_IDX_Pos                    _U_(5)                                               /**< (L2CC_CPALR) Index number Position */
 #define L2CC_CPALR_IDX_Msk                    (_U_(0x1FF) << L2CC_CPALR_IDX_Pos)                   /**< (L2CC_CPALR) Index number Mask */
 #define L2CC_CPALR_IDX(value)                 (L2CC_CPALR_IDX_Msk & ((value) << L2CC_CPALR_IDX_Pos))
@@ -453,13 +453,13 @@
 /* -------- L2CC_CIR : (L2CC Offset: 0x7B8) (R/W 32) Clean Index Register -------- */
 #define L2CC_CIR_C_Pos                        _U_(0)                                               /**< (L2CC_CIR) Cache Synchronization Status Position */
 #define L2CC_CIR_C_Msk                        (_U_(0x1) << L2CC_CIR_C_Pos)                         /**< (L2CC_CIR) Cache Synchronization Status Mask */
-#define L2CC_CIR_C(value)                     (L2CC_CIR_C_Msk & ((value) << L2CC_CIR_C_Pos))
+#define L2CC_CIR_C(value)                     (L2CC_CIR_C_Msk & ((value) << L2CC_CIR_C_Pos))      
 #define L2CC_CIR_IDX_Pos                      _U_(5)                                               /**< (L2CC_CIR) Index number Position */
 #define L2CC_CIR_IDX_Msk                      (_U_(0x1FF) << L2CC_CIR_IDX_Pos)                     /**< (L2CC_CIR) Index number Mask */
-#define L2CC_CIR_IDX(value)                   (L2CC_CIR_IDX_Msk & ((value) << L2CC_CIR_IDX_Pos))
+#define L2CC_CIR_IDX(value)                   (L2CC_CIR_IDX_Msk & ((value) << L2CC_CIR_IDX_Pos))  
 #define L2CC_CIR_WAY_Pos                      _U_(28)                                              /**< (L2CC_CIR) Way number Position */
 #define L2CC_CIR_WAY_Msk                      (_U_(0x7) << L2CC_CIR_WAY_Pos)                       /**< (L2CC_CIR) Way number Mask */
-#define L2CC_CIR_WAY(value)                   (L2CC_CIR_WAY_Msk & ((value) << L2CC_CIR_WAY_Pos))
+#define L2CC_CIR_WAY(value)                   (L2CC_CIR_WAY_Msk & ((value) << L2CC_CIR_WAY_Pos))  
 #define L2CC_CIR_Msk                          _U_(0x70003FE1)                                      /**< (L2CC_CIR) Register Mask  */
 
 
@@ -510,7 +510,7 @@
 /* -------- L2CC_CIIR : (L2CC Offset: 0x7F8) (R/W 32) Clean Invalidate Index Register -------- */
 #define L2CC_CIIR_C_Pos                       _U_(0)                                               /**< (L2CC_CIIR) Cache Synchronization Status Position */
 #define L2CC_CIIR_C_Msk                       (_U_(0x1) << L2CC_CIIR_C_Pos)                        /**< (L2CC_CIIR) Cache Synchronization Status Mask */
-#define L2CC_CIIR_C(value)                    (L2CC_CIIR_C_Msk & ((value) << L2CC_CIIR_C_Pos))
+#define L2CC_CIIR_C(value)                    (L2CC_CIIR_C_Msk & ((value) << L2CC_CIIR_C_Pos))    
 #define L2CC_CIIR_IDX_Pos                     _U_(5)                                               /**< (L2CC_CIIR) Index Number Position */
 #define L2CC_CIIR_IDX_Msk                     (_U_(0x1FF) << L2CC_CIIR_IDX_Pos)                    /**< (L2CC_CIIR) Index Number Mask */
 #define L2CC_CIIR_IDX(value)                  (L2CC_CIIR_IDX_Msk & ((value) << L2CC_CIIR_IDX_Pos))
@@ -616,10 +616,10 @@
 /* -------- L2CC_DCR : (L2CC Offset: 0xF40) (R/W 32) Debug Control Register -------- */
 #define L2CC_DCR_DCL_Pos                      _U_(0)                                               /**< (L2CC_DCR) Disable Cache Linefill Position */
 #define L2CC_DCR_DCL_Msk                      (_U_(0x1) << L2CC_DCR_DCL_Pos)                       /**< (L2CC_DCR) Disable Cache Linefill Mask */
-#define L2CC_DCR_DCL(value)                   (L2CC_DCR_DCL_Msk & ((value) << L2CC_DCR_DCL_Pos))
+#define L2CC_DCR_DCL(value)                   (L2CC_DCR_DCL_Msk & ((value) << L2CC_DCR_DCL_Pos))  
 #define L2CC_DCR_DWB_Pos                      _U_(1)                                               /**< (L2CC_DCR) Disable Write-back, Force Write-through Position */
 #define L2CC_DCR_DWB_Msk                      (_U_(0x1) << L2CC_DCR_DWB_Pos)                       /**< (L2CC_DCR) Disable Write-back, Force Write-through Mask */
-#define L2CC_DCR_DWB(value)                   (L2CC_DCR_DWB_Msk & ((value) << L2CC_DCR_DWB_Pos))
+#define L2CC_DCR_DWB(value)                   (L2CC_DCR_DWB_Msk & ((value) << L2CC_DCR_DWB_Pos))  
 #define L2CC_DCR_SPNIDEN_Pos                  _U_(2)                                               /**< (L2CC_DCR) SPNIDEN Value Position */
 #define L2CC_DCR_SPNIDEN_Msk                  (_U_(0x1) << L2CC_DCR_SPNIDEN_Pos)                   /**< (L2CC_DCR) SPNIDEN Value Mask */
 #define L2CC_DCR_SPNIDEN(value)               (L2CC_DCR_SPNIDEN_Msk & ((value) << L2CC_DCR_SPNIDEN_Pos))
@@ -699,27 +699,27 @@
 /** \brief L2CC register API structure */
 typedef struct
 {
-  __I   uint32_t                       L2CC_IDR;        /**< Offset: 0x00 (R/   32) Cache ID Register */
-  __I   uint32_t                       L2CC_TYPR;       /**< Offset: 0x04 (R/   32) Cache Type Register */
+  __I   uint32_t                       L2CC_IDR;           /**< Offset: 0x00 (R/   32) Cache ID Register */
+  __I   uint32_t                       L2CC_TYPR;          /**< Offset: 0x04 (R/   32) Cache Type Register */
   __I   uint8_t                        Reserved1[0xF8];
-  __IO  uint32_t                       L2CC_CR;         /**< Offset: 0x100 (R/W  32) Control Register */
-  __IO  uint32_t                       L2CC_ACR;        /**< Offset: 0x104 (R/W  32) Auxiliary Control Register */
-  __IO  uint32_t                       L2CC_TRCR;       /**< Offset: 0x108 (R/W  32) Tag RAM Control Register */
+  __IO  uint32_t                       L2CC_CR;            /**< Offset: 0x100 (R/W  32) Control Register */
+  __IO  uint32_t                       L2CC_ACR;           /**< Offset: 0x104 (R/W  32) Auxiliary Control Register */
+  __IO  uint32_t                       L2CC_TRCR;          /**< Offset: 0x108 (R/W  32) Tag RAM Control Register */
   __IO  uint32_t                       L2CC_DRCR;          /**< Offset: 0x10C (R/W  32) Data RAM Control Register */
   __I   uint8_t                        Reserved2[0xF0];
-  __IO  uint32_t                       L2CC_ECR;        /**< Offset: 0x200 (R/W  32) Event Counter Control Register */
-  __IO  uint32_t                       L2CC_ECFGR1;     /**< Offset: 0x204 (R/W  32) Event Counter 1 Configuration Register */
-  __IO  uint32_t                       L2CC_ECFGR0;     /**< Offset: 0x208 (R/W  32) Event Counter 0 Configuration Register */
+  __IO  uint32_t                       L2CC_ECR;           /**< Offset: 0x200 (R/W  32) Event Counter Control Register */
+  __IO  uint32_t                       L2CC_ECFGR1;        /**< Offset: 0x204 (R/W  32) Event Counter 1 Configuration Register */
+  __IO  uint32_t                       L2CC_ECFGR0;        /**< Offset: 0x208 (R/W  32) Event Counter 0 Configuration Register */
   __IO  uint32_t                       L2CC_EVR1;          /**< Offset: 0x20C (R/W  32) Event Counter 1 Value Register */
-  __IO  uint32_t                       L2CC_EVR0;       /**< Offset: 0x210 (R/W  32) Event Counter 0 Value Register */
-  __IO  uint32_t                       L2CC_IMR;        /**< Offset: 0x214 (R/W  32) Interrupt Mask Register */
-  __I   uint32_t                       L2CC_MISR;       /**< Offset: 0x218 (R/   32) Masked Interrupt Status Register */
+  __IO  uint32_t                       L2CC_EVR0;          /**< Offset: 0x210 (R/W  32) Event Counter 0 Value Register */
+  __IO  uint32_t                       L2CC_IMR;           /**< Offset: 0x214 (R/W  32) Interrupt Mask Register */
+  __I   uint32_t                       L2CC_MISR;          /**< Offset: 0x218 (R/   32) Masked Interrupt Status Register */
   __I   uint32_t                       L2CC_RISR;          /**< Offset: 0x21C (R/   32) Raw Interrupt Status Register */
-  __IO  uint32_t                       L2CC_ICR;        /**< Offset: 0x220 (R/W  32) Interrupt Clear Register */
+  __IO  uint32_t                       L2CC_ICR;           /**< Offset: 0x220 (R/W  32) Interrupt Clear Register */
   __I   uint8_t                        Reserved3[0x50C];
-  __IO  uint32_t                       L2CC_CSR;        /**< Offset: 0x730 (R/W  32) Cache Synchronization Register */
+  __IO  uint32_t                       L2CC_CSR;           /**< Offset: 0x730 (R/W  32) Cache Synchronization Register */
   __I   uint8_t                        Reserved4[0x3C];
-  __IO  uint32_t                       L2CC_IPALR;      /**< Offset: 0x770 (R/W  32) Invalidate Physical Address Line Register */
+  __IO  uint32_t                       L2CC_IPALR;         /**< Offset: 0x770 (R/W  32) Invalidate Physical Address Line Register */
   __I   uint8_t                        Reserved5[0x08];
   __IO  uint32_t                       L2CC_IWR;           /**< Offset: 0x77C (R/W  32) Invalidate Way Register */
   __I   uint8_t                        Reserved6[0x30];
@@ -733,8 +733,8 @@ typedef struct
   __IO  uint32_t                       L2CC_CIIR;          /**< Offset: 0x7F8 (R/W  32) Clean Invalidate Index Register */
   __IO  uint32_t                       L2CC_CIWR;          /**< Offset: 0x7FC (R/W  32) Clean Invalidate Way Register */
   __I   uint8_t                        Reserved10[0x100];
-  __IO  uint32_t                       L2CC_DLKR;       /**< Offset: 0x900 (R/W  32) Data Lockdown Register */
-  __IO  uint32_t                       L2CC_ILKR;       /**< Offset: 0x904 (R/W  32) Instruction Lockdown Register */
+  __IO  uint32_t                       L2CC_DLKR;          /**< Offset: 0x900 (R/W  32) Data Lockdown Register */
+  __IO  uint32_t                       L2CC_ILKR;          /**< Offset: 0x904 (R/W  32) Instruction Lockdown Register */
   __I   uint8_t                        Reserved11[0x638];
   __IO  uint32_t                       L2CC_DCR;           /**< Offset: 0xF40 (R/W  32) Debug Control Register */
   __I   uint8_t                        Reserved12[0x1C];
