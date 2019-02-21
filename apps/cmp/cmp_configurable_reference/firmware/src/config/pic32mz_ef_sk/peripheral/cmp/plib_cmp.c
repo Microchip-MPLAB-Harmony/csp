@@ -68,6 +68,7 @@ void CMP_Initialize (void)
     /*  COE     = false   */
 
     CM2CON = 0x0;
+    
 }
 
 void CMP_1_CompareEnable (void)
