@@ -88,7 +88,7 @@ void TC0_TimerInitialize( void )
 
     /* Configure timer period */
     TC0_REGS->COUNT16.TC_CC[0U] = 23437U;
-    
+
     /* Clear all interrupt flags */
     TC0_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
 
@@ -178,6 +178,3 @@ bool TC0_TimerPeriodHasExpired( void )
     TC0_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
     return timer_status;
 }
-
-
-
