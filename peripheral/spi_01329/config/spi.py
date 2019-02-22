@@ -104,7 +104,10 @@ def _get_enblReg_parms(vectorNumber):
     # mask and bit location within it for given interrupt
     index = int(vectorNumber / 32)
     regName = "IEC" + str(index)
-    return regName
+    bitPosn = int(vectorNumber % 32)
+    bitMask = hex(1 << bitPosn)
+
+    return regName, str(bitPosn), str(bitMask)
 
 def _get_statReg_parms(vectorNumber):
 
@@ -112,7 +115,10 @@ def _get_statReg_parms(vectorNumber):
     # mask and bit location within it for given interrupt
     index = int(vectorNumber / 32)
     regName = "IFS" + str(index)
-    return regName
+    bitPosn = int(vectorNumber % 32)
+    bitMask = hex(1 << bitPosn)
+
+    return regName, str(bitPosn), str(bitMask)
 
 def _get_bitfield_names(node, outputList):
 
@@ -271,18 +277,28 @@ def instantiateComponent(spiComponent):
     spiIrqFault = spiInstanceName.getValue() + "_FAULT"
     spiFaultVectorNum = int(getIRQnumber(spiIrqFault))
 
-    enblRegName = _get_enblReg_parms(spiFaultVectorNum)
-    statRegName = _get_statReg_parms(spiFaultVectorNum)
+    enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(spiFaultVectorNum)
+    statRegName, statBitPosn, statMask = _get_statReg_parms(spiFaultVectorNum)
 
     ## IEC REG
     spiIEC = spiComponent.createStringSymbol("SPI_FLT_IEC_REG", None)
     spiIEC.setDefaultValue(enblRegName)
     spiIEC.setVisible(False)
 
+    ## IEC REG MASK
+    spiIECMask = spiComponent.createStringSymbol("SPI_FLT_IEC_REG_MASK", None)
+    spiIECMask.setDefaultValue(enblMask)
+    spiIECMask.setVisible(False)
+
     ## IFS REG
     spiIFS = spiComponent.createStringSymbol("SPI_FLT_IFS_REG", None)
     spiIFS.setDefaultValue(statRegName)
     spiIFS.setVisible(False)
+
+    ## IFS REG MASK
+    spiIFSMask = spiComponent.createStringSymbol("SPI_FLT_IFS_REG_MASK", None)
+    spiIFSMask.setDefaultValue(statMask)
+    spiIFSMask.setVisible(False)
 
     ## SPI RX Interrupt
     spiIrqrRx = spiInstanceName.getValue() + "_RX"
@@ -292,18 +308,28 @@ def instantiateComponent(spiComponent):
     InterruptVectorUpdate.append("core." + spiIrqrRx + "_INTERRUPT_ENABLE_UPDATE")
     spiRxVectorNum = int(getIRQnumber(spiIrqrRx))
 
-    enblRegName = _get_enblReg_parms(spiRxVectorNum)
-    statRegName = _get_statReg_parms(spiRxVectorNum)
+    enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(spiRxVectorNum)
+    statRegName, statBitPosn, statMask = _get_statReg_parms(spiRxVectorNum)
 
     ## IEC REG
     spiRXIEC = spiComponent.createStringSymbol("SPI_RX_IEC_REG", None)
     spiRXIEC.setDefaultValue(enblRegName)
     spiRXIEC.setVisible(False)
 
+    ## IEC REG MASK
+    spiRXIECMask = spiComponent.createStringSymbol("SPI_RX_IEC_REG_MASK", None)
+    spiRXIECMask.setDefaultValue(enblMask)
+    spiRXIECMask.setVisible(False)
+
     ## IFS REG
     spiRXIFS = spiComponent.createStringSymbol("SPI_RX_IFS_REG", None)
     spiRXIFS.setDefaultValue(statRegName)
     spiRXIFS.setVisible(False)
+
+    ## IFS REG MASK
+    spiRXIFSMask = spiComponent.createStringSymbol("SPI_RX_IFS_REG_MASK", None)
+    spiRXIFSMask.setDefaultValue(statMask)
+    spiRXIFSMask.setVisible(False)
 
     ##SPI TX Interrupt
     spiIrqTx = spiInstanceName.getValue() + "_TX"
@@ -313,18 +339,28 @@ def instantiateComponent(spiComponent):
     InterruptVectorUpdate.append("core." + spiIrqTx + "_INTERRUPT_ENABLE_UPDATE")
     spiTxVectorNum = int(getIRQnumber(spiIrqTx))
 
-    enblRegName = _get_enblReg_parms(spiTxVectorNum)
-    statRegName = _get_statReg_parms(spiTxVectorNum)
+    enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(spiTxVectorNum)
+    statRegName, statBitPosn, statMask = _get_statReg_parms(spiTxVectorNum)
 
     ## IEC REG
     spiTXIEC = spiComponent.createStringSymbol("SPI_TX_IEC_REG", None)
     spiTXIEC.setDefaultValue(enblRegName)
     spiTXIEC.setVisible(False)
 
+    ## IEC REG MASK
+    spiTXIECMask = spiComponent.createStringSymbol("SPI_TX_IEC_REG_MASK", None)
+    spiTXIECMask.setDefaultValue(enblMask)
+    spiTXIECMask.setVisible(False)
+
     ## IFS REG
     spiTXIFS = spiComponent.createStringSymbol("SPI_TX_IFS_REG", None)
     spiTXIFS.setDefaultValue(statRegName)
     spiTXIFS.setVisible(False)
+
+    ## IFS REG MASK
+    spiTXIFSMask = spiComponent.createStringSymbol("SPI_TX_IFS_REG_MASK", None)
+    spiTXIFSMask.setDefaultValue(statMask)
+    spiTXIFSMask.setVisible(False)
 
     ## MSTEN Selection Bit
     msten_names = []
