@@ -44,6 +44,7 @@
 #include "plib_gpio.h"
 
 
+
 /******************************************************************************
   Function:
     GPIO_Initialize ( void )
@@ -73,6 +74,7 @@ void GPIO_Initialize ( void )
     ANSELGCLR = 0x200; /* Digital Mode Enable */
 
     /* PORTH Initialization */
+    LATH = 0x1; /* Initial Latch Value */
     TRISHCLR = 0x1; /* Direction Control */
 
     /* PORTJ Initialization */
