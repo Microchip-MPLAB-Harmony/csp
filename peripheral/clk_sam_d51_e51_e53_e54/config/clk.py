@@ -1628,10 +1628,16 @@ def apbValue(symbol, event):
     if "_ANA" in perInstance:
         perInstance = perInstance.split("_ANA")[0]
 
+    if "_MSR" in perInstance:
+        perInstance = perInstance.split("_MSR")[0]
+
     if "_SLOW" in perInstance:
         return
 
     if "_DIG" in perInstance:
+        return
+
+    if "_REF" in perInstance:
         return
 
     if "EVSYS" in perInstance:
