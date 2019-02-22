@@ -381,12 +381,7 @@ def adchsCalcADCCON1(symbol, event):
     slres = component.getSymbolValue("ADCCON1__SELRES") << 21
     strgsrc = component.getSymbolValue("ADCCON1__STRGSRC") << 16
     sidl = component.getSymbolValue("ADCCON1__SIDL") << 13
-    cvden = component.getSymbolValue("ADCCON1__CVDEN") << 11
-    fssclken = component.getSymbolValue("ADCCON1__FSSCLKEN") << 10
-    fspbcclken = component.getSymbolValue("ADCCON1__FSPBCLKEN") << 9
-    irqvs = component.getSymbolValue("ADCCON1__IRQVS") << 4
-    strglvl = component.getSymbolValue("ADCCON1__STRGLVL") << 3
-    adccon1 = fract + slres + strgsrc + sidl + cvden + fssclken + fspbcclken + irqvs + strglvl
+    adccon1 = fract + slres + strgsrc + sidl
     symbol.setValue(adccon1, 2)
 
 def adchsCalcADCCON2(symbol, event):
@@ -395,8 +390,7 @@ def adchsCalcADCCON2(symbol, event):
     adcdiv = component.getSymbolValue("ADCCON2__ADCDIV") << 0
     adceis = component.getSymbolValue("ADCCON2__ADCEIS") << 8
     samc = component.getSymbolValue("ADCCON2__SAMC") << 16
-    cvdcpl = component.getSymbolValue("ADCCON2__CVDCPL") << 26
-    adccon2 = adcdiv + adceis + samc + cvdcpl
+    adccon2 = adcdiv + adceis + samc
     symbol.setValue(adccon2, 2)
 
 def adchsCalcADCCON3(symbol, event):
@@ -428,9 +422,9 @@ def adchsCalcADCIMCON1(symbol, event):
     diff = 0x0
     component = symbol.getComponent()
     for channelID in range(0, 16):
-        if (component.getSymbolValue("ADCIMCON3__SIGN" + str(channelID)) != None):
+        if (component.getSymbolValue("ADCIMCON1__SIGN" + str(channelID)) != None):
             sign = sign + (component.getSymbolValue("ADCIMCON1__SIGN" + str(channelID)) << (channelID*2))
-        if (component.getSymbolValue("ADCIMCON3__DIFF" + str(channelID)) != None):
+        if (component.getSymbolValue("ADCIMCON1__DIFF" + str(channelID)) != None):
             diff = diff + (component.getSymbolValue("ADCIMCON1__DIFF" + str(channelID)) << ((channelID * 2) + 1))
     adcimcon1 = sign + diff
     symbol.setValue(adcimcon1, 2)
@@ -441,9 +435,9 @@ def adchsCalcADCIMCON2(symbol, event):
     diff = 0x0
     component = symbol.getComponent()
     for channelID in range(16, 32):
-        if (component.getSymbolValue("ADCIMCON3__SIGN" + str(channelID)) != None):
+        if (component.getSymbolValue("ADCIMCON2__SIGN" + str(channelID)) != None):
             sign = sign + (component.getSymbolValue("ADCIMCON2__SIGN" + str(channelID)) << ((channelID - 16) * 2))
-        if (component.getSymbolValue("ADCIMCON3__DIFF" + str(channelID)) != None):
+        if (component.getSymbolValue("ADCIMCON2__DIFF" + str(channelID)) != None):
             diff = diff + (component.getSymbolValue("ADCIMCON2__DIFF" + str(channelID)) << (((channelID - 16) * 2) + 1))
     adcimcon2 = sign + diff
     symbol.setValue(adcimcon2, 2)
@@ -604,10 +598,64 @@ def adchsInterruptMode(symbol, event):
     else:
         Database.setSymbolValue("core", InterruptHandler, interruptName + "_Handler", 1)
 
+def getTCLKValue():
+    clk_freq = Database.getSymbolValue("core", "ADCHS_CLOCK_FREQUENCY")
+    if (clk_freq == 0):
+        clk_freq = 1
+    return float((1.0/clk_freq) * 1000000000)
+
 def adchsClockCalc(symbol, event):
     component = symbol.getComponent()
-    symbol.setValue(Database.getSymbolValue("core", "ADCHS_CLOCK_FREQUENCY") / component.getSymbolValue("ADCCON3__CONCLKDIV"), 2)
+    symbol.setValue(getTCLKValue() * component.getSymbolValue("ADCCON3__CONCLKDIV"), 2)
 
+def adchsTCLKCalc(symbol, event):
+    symbol.setValue((getTCLKValue()), 2)
+
+def adchsTADCCalc(symbol, event):
+    component = symbol.getComponent()
+    channelID = symbol.getID()[-1]
+    tq = component.getSymbolValue("ADCHS_TQ")
+    clk_div = component.getSymbolValue("ADC"+str(channelID)+"TIME__ADCDIV")
+    if (clk_div == 0):
+        symbol.setValue(tq , 2)
+    else:
+        symbol.setValue(tq * 2 *clk_div, 2)
+    ch_enable = component.getSymbolValue("ADCHS_"+str(channelID)+"_ENABLE")
+    symbol.setVisible(ch_enable)
+
+def adchsSharedTADCCalc(symbol, event):
+    component = symbol.getComponent()
+    channelID = symbol.getID()[-1]
+    tq = component.getSymbolValue("ADCHS_TQ")
+    clk_div = component.getSymbolValue("ADCCON2__ADCDIV")
+    if (clk_div == 0):
+        symbol.setValue(tq , 2)
+    else:
+        symbol.setValue(tq * 2 * clk_div, 2)
+    ch_enable = component.getSymbolValue("ADCHS_"+str(channelID)+"_ENABLE")
+    symbol.setVisible(ch_enable)
+
+def adchsConvRateCalc(symbol, event):
+    component = symbol.getComponent()
+    channelID = (symbol.getID()[-1])
+    tadc = component.getSymbolValue("ADCHS_TADC"+str(channelID))
+    samc = component.getSymbolValue("ADC"+str(channelID)+"TIME__SAMC")
+    resolution = component.getSymbolValue("ADC"+str(channelID)+"TIME__SELRES")
+    resolution = (resolution * 2) + 7
+    symbol.setValue((1000000.0 / ((2 + samc + resolution) * tadc )), 2)
+    ch_enable = component.getSymbolValue("ADCHS_"+str(channelID)+"_ENABLE")
+    symbol.setVisible(ch_enable)
+
+def adchsSharedConvRateCalc(symbol, event):
+    component = symbol.getComponent()
+    channelID = (symbol.getID()[-1])
+    tadc = component.getSymbolValue("ADCHS_TADC"+str(channelID))
+    samc = component.getSymbolValue("ADCCON2__SAMC")
+    resolution = component.getSymbolValue("ADCCON1__SELRES")
+    resolution = (resolution * 2) + 7
+    symbol.setValue((1000000.0 / ((2 + samc + resolution) * tadc )), 2)
+    ch_enable = component.getSymbolValue("ADCHS_"+str(channelID)+"_ENABLE")
+    symbol.setVisible(ch_enable)
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################
@@ -763,6 +811,66 @@ def instantiateComponent(adchsComponent):
     adchsCHConfMenu = adchsComponent.createMenuSymbol("ADCHS_CH_CONF", None)
     adchsCHConfMenu.setLabel("Module Configuration")
 
+################################################################################
+########## ADCHS Menu ################################################
+########################################################################
+
+    adchsSym_ADCCON3__ADCSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADCSEL", adchsMenu, True)
+
+    adchsSym_TCLK = adchsComponent.createFloatSymbol("ADCHS_TCLK", adchsMenu)
+    adchsSym_TCLK.setLabel("ADCHS Clock (Tclk) (nano sec)")
+    adchsSym_TCLK.setDefaultValue(getTCLKValue())
+    adchsSym_TCLK.setReadOnly(True)
+    adchsSym_TCLK.setDependencies(adchsTCLKCalc, ["core.ADCHS_CLOCK_FREQUENCY", "ADCCON3__CONCLKDIV"])
+
+    adchsSym_ADCCON3__CONCLKDIV = adchsAddLongFromATDFBitfieldCaption(adchsComponent, Module, "ADCCON3", "CONCLKDIV", adchsMenu, True)
+    adchsSym_ADCCON3__CONCLKDIV.setDefaultValue(2)
+    adchsSym_ADCCON3__CONCLKDIV.setLabel("Select Clock Divider")
+    adchsSym_ADCCON3__CONCLKDIV.setMin(1)
+    adchsSym_ADCCON3__CONCLKDIV.setMax(64)
+
+    adchsSym_CLOCK = adchsComponent.createFloatSymbol("ADCHS_TQ", adchsMenu)
+    adchsSym_CLOCK.setLabel("ADCHS Control clock (Tq) (nano sec)")
+    adchsSym_CLOCK.setDefaultValue((getTCLKValue() * adchsSym_ADCCON3__CONCLKDIV.getValue()))
+    adchsSym_CLOCK.setDependencies(adchsClockCalc, ["core.ADCHS_CLOCK_FREQUENCY", "ADCCON3__CONCLKDIV"])
+    adchsSym_CLOCK.setReadOnly(True)
+
+    adchsSym_ADCCON3__VREFSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "VREFSEL", adchsMenu, True)
+    #adchsSym_ADCCON1__FSPBCLKEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FSPBCLKEN", adchsMenu, True)
+    #adchsSym_ADCCON1__FSSCLKEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FSSCLKEN", adchsMenu, True)
+    adchsSym_ADCCON1__FRACT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FRACT", adchsMenu, True)
+    #adchsSym_ADCCON1__CVDEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "CVDEN", adchsMenu, True)
+    #adchsSym_ADCCON2__CVDCPL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "CVDCPL", adchsMenu, True)
+    #adchsSym_ADCCON1__IRQVS = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "IRQVS", adchsMenu, True)
+    adchsSym_ADCCON1__SIDL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "SIDL", adchsMenu, True)
+
+    #adchsMenu_ADCCON1 = adchsAddRegisterSubMenuFromATDF(adchsComponent, Module, "ADCCON1", adchsMenu)
+    #adchsSym_ADCCON1__AICPMPEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "AICPMPEN", adchsMenu, True)
+    #adchsSym_ADCCON1__ON = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "ON", adchsMenu, True)
+    #adchsSym_ADCCON1__TRBSLV = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBSLV", adchsMenu, True)
+    #adchsSym_ADCCON1__TRBMST = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBMST", adchsMenu, True)
+    #adchsSym_ADCCON1__TRBERR = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBERR", adchsMenu, True)
+    #adchsSym_ADCCON1__TRBEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBEN", adchsMenu, True)
+
+    #adchsMenu_ADCCON2 = adchsAddRegisterSubMenuFromATDF(adchsComponent, Module, "ADCCON2", adchsMenu)
+    #adchsSym_ADCCON2__ADCEIOVR = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "ADCEIOVR", adchsMenu, True)
+    #adchsSym_ADCCON2__EOSIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "EOSIEN", adchsMenu, True)
+    #adchsSym_ADCCON2__REFFLTIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "REFFLTIEN", adchsMenu, True)
+    #adchsSym_ADCCON2__BGVRIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "BGVRIEN", adchsMenu, True)
+    #adchsSym_ADCCON2__EOSRDY = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "EOSRDY", adchsMenu, True)
+    #adchsSym_ADCCON2__REFFLT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "REFFLT", adchsMenu, True)
+    #adchsSym_ADCCON2__BGVRRDY = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "BGVRRDY", adchsMenu, True)
+
+    #adchsMenu_ADCCON3 = adchsAddRegisterSubMenuFromATDF(adchsComponent, Module, "ADCCON3", adchsMenu)
+    #adchsSym_ADCCON3__ADINSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADINSEL", adchsMenu, True)
+    #adchsSym_ADCCON3__GSWTRG = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "GSWTRG", adchsMenu, True)
+    #adchsSym_ADCCON3__GLSWTRG = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "GLSWTRG", adchsMenu, True)
+    #adchsSym_ADCCON3__RQCNVRT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "RQCNVRT", adchsMenu, True)
+    #adchsSym_ADCCON3__SAMP = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "SAMP", adchsMenu, True)
+    #adchsSym_ADCCON3__UPDRDY = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "UPDRDY", adchsMenu, True)
+    #adchsSym_ADCCON3__UPDIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "UPDIEN", adchsMenu, True)
+    #adchsSym_ADCCON3__TRGSUSP = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "TRGSUSP", adchsMenu, True)
+
     adchsSym_ADCCON3__DIGEN = []
     adchsSym_ADCTRGMODE__SSAMPEN = []
     adchsSym_ADCTRGMODE__STRGEN = []
@@ -775,6 +883,8 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCTRGSNS__LVL = []
     adchsSym_ADCCSS__CSS = []
     adchsSym_class2 = []
+    adcSym_TADC = []
+    adcSym_CONV_RATE = []
 
     for channelID in range(0, ADC_Max_Class_1):
         #Channel enable
@@ -844,12 +954,19 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCTIME__ADCDIV[channelID].setMax(127)
         adctime_deplist[channelID].append(RegisterName + "__" + BitFieldBaseName_ADCDIV)
 
+        adcSym_TADC.append(channelID)
+        adcSym_TADC[channelID] = adchsComponent.createFloatSymbol("ADCHS_TADC" + str(channelID), adchsSym_CH_ENABLE[channelID])
+        adcSym_TADC[channelID].setLabel("ADC" + str(channelID) + " Clock (Tadc) (nano sec)")
+        adcSym_TADC[channelID].setReadOnly(True)
+        adcSym_TADC[channelID].setDefaultValue(adchsSym_CLOCK.getValue())
+        adcSym_TADC[channelID].setDependencies(adchsTADCCalc, ["ADCHS_TQ", "ADC"+str(channelID)+"TIME__ADCDIV", "ADCHS_"+str(channelID)+"_ENABLE"])
+
         #sample time
         adchsSym_ADCTIME__SAMC.append(channelID)
         adchsSym_ADCTIME__SAMC[channelID] = adchsAddLongFromATDFBitfieldCaption(adchsComponent,
             Module, RegisterName, BitFieldBaseName_SAMC,
             adchsSym_CH_ENABLE[channelID], False)
-        adchsSym_ADCTIME__SAMC[channelID].setDefaultValue(2)
+        adchsSym_ADCTIME__SAMC[channelID].setDefaultValue(1)
         adchsSym_ADCTIME__SAMC[channelID].setMin(0)
         adchsSym_ADCTIME__SAMC[channelID].setMax(1023)
         adchsSym_ADCTIME__SAMC[channelID].setDependencies(adchsVisibilityOnEvent,
@@ -865,6 +982,14 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCTIME__SELRES[channelID].setDependencies(adchsVisibilityOnEvent,
             ["ADCHS_"+str(channelID)+"_ENABLE"])
         adctime_deplist[channelID].append(RegisterName + "__" + BitFieldBaseName_SELRES)
+
+        conv_rate = (1000.0 / ((2 + 13) * adchsSym_CLOCK.getValue() ))
+        adcSym_CONV_RATE.append(channelID)
+        adcSym_CONV_RATE[channelID] = adchsComponent.createFloatSymbol("ADCHS_CONV_RATE"+str(channelID), adchsSym_CH_ENABLE[channelID])
+        adcSym_CONV_RATE[channelID].setLabel("ADC"+str(channelID)+" Conversion Rate (ksps)")
+        adcSym_CONV_RATE[channelID].setReadOnly(True)
+        adcSym_CONV_RATE[channelID].setDependencies(adchsConvRateCalc, ["ADCHS_TADC"+str(channelID), \
+            "ADC"+str(channelID)+"TIME__SAMC", "ADC"+str(channelID)+"TIME__SELRES", "ADCHS_"+str(channelID)+"_ENABLE"])
 
         #early interrupt
         adchsSym_ADCTIME__ADCEIS.append(channelID)
@@ -934,10 +1059,16 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON2__ADCDIV.setMax(127)
     adchsSym_ADCCON2__ADCDIV.setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
 
+    adcSym_TADC7 = adchsComponent.createFloatSymbol("ADCHS_TADC" + str(channelID), adchsSym_CH_ENABLE7)
+    adcSym_TADC7.setLabel("ADC" + str(channelID) + " Clock (Tadc) (nano sec)")
+    adcSym_TADC7.setReadOnly(True)
+    adcSym_TADC7.setDefaultValue(adchsSym_CLOCK.getValue())
+    adcSym_TADC7.setDependencies(adchsSharedTADCCalc, ["ADCHS_TQ", "ADCCON2__ADCDIV", "ADCHS_"+str(channelID)+"_ENABLE"])
+
     #sample time
     adchsSym_ADCCON2__SAMC = adchsAddLongFromATDFBitfieldCaption(adchsComponent,
         Module, "ADCCON2", "SAMC", adchsSym_CH_ENABLE7, False)
-    adchsSym_ADCCON2__SAMC.setDefaultValue(2)
+    adchsSym_ADCCON2__SAMC.setDefaultValue(1)
     adchsSym_ADCCON2__SAMC.setMin(0)
     adchsSym_ADCCON2__SAMC.setMax(1023)
     adchsSym_ADCCON2__SAMC.setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
@@ -946,6 +1077,13 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON1__SELRES = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module,
         "ADCCON1", "SELRES", adchsSym_CH_ENABLE7, False)
     adchsSym_ADCCON1__SELRES.setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
+
+    conv_rate = (1000.0 / ((2 + 13) * adchsSym_CLOCK.getValue() ))
+    adcSym_CONV_RATE7 = adchsComponent.createFloatSymbol("ADCHS_CONV_RATE"+str(channelID), adchsSym_CH_ENABLE7)
+    adcSym_CONV_RATE7.setLabel("ADC"+str(channelID)+" Conversion Rate (ksps)")
+    adcSym_CONV_RATE7.setReadOnly(True)
+    adcSym_CONV_RATE7.setDependencies(adchsSharedConvRateCalc, ["ADCHS_TADC"+str(channelID), \
+        "ADCCON2__SAMC", "ADCCON1__SELRES", "ADCHS_"+str(channelID)+"_ENABLE"])
 
     # early interrupt
     adchsSym_ADCCON2__ADCEIS = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "ADCEIS", adchsSym_CH_ENABLE7, False)
@@ -990,7 +1128,7 @@ def instantiateComponent(adchsComponent):
             adchsSym_class2[channelID - ADC_Max_Class_1], False)
         adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
         adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
-        adccss_deplist[int(channelID/32)].append(RegisterBaseName_ADCCSS + "__" + BitFieldBaseName_CSS + str(channelID))
+        adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
 
     adchsSym_class3 = adchsComponent.createCommentSymbol("ADCHS_CLASS3_INPUTS", adchsSym_CH_ENABLE7)
     adchsSym_class3.setLabel("CLASS 3 Inputs")
@@ -1018,55 +1156,7 @@ def instantiateComponent(adchsComponent):
             adchsSym_class3, False)
         adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
         adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
-
-    adchsSym_ADCCON3__ADCSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADCSEL", adchsMenu, True)
-    adchsSym_ADCCON3__CONCLKDIV = adchsAddLongFromATDFBitfieldCaption(adchsComponent, Module, "ADCCON3", "CONCLKDIV", adchsMenu, True)
-    adchsSym_ADCCON3__CONCLKDIV.setDefaultValue(3)
-    adchsSym_ADCCON3__CONCLKDIV.setLabel("Select Clock Divider")
-    adchsSym_ADCCON3__CONCLKDIV.setMin(1)
-    adchsSym_ADCCON3__CONCLKDIV.setMax(64)
-
-    adchsSym_CLOCK = adchsComponent.createIntegerSymbol("ADCHS_CLOCK", adchsMenu)
-    adchsSym_CLOCK.setLabel("ADCHS Clock Frequency (Tq)")
-    adchsSym_CLOCK.setDefaultValue((Database.getSymbolValue("core", "ADCHS_CLOCK_FREQUENCY")/adchsSym_ADCCON3__CONCLKDIV.getValue()))
-    adchsSym_CLOCK.setDependencies(adchsClockCalc, ["core.ADCHS_CLOCK_FREQUENCY", "ADCCON3__CONCLKDIV"])
-    adchsSym_CLOCK.setReadOnly(True)
-
-    adchsSym_ADCCON3__VREFSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "VREFSEL", adchsMenu, True)
-    #adchsSym_ADCCON1__FSPBCLKEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FSPBCLKEN", adchsMenu, True)
-    #adchsSym_ADCCON1__FSSCLKEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FSSCLKEN", adchsMenu, True)
-    adchsSym_ADCCON1__FRACT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FRACT", adchsMenu, True)
-    #adchsSym_ADCCON1__CVDEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "CVDEN", adchsMenu, True)
-    #adchsSym_ADCCON2__CVDCPL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "CVDCPL", adchsMenu, True)
-    #adchsSym_ADCCON1__IRQVS = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "IRQVS", adchsMenu, True)
-    adchsSym_ADCCON1__SIDL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "SIDL", adchsMenu, True)
-
-    #adchsMenu_ADCCON1 = adchsAddRegisterSubMenuFromATDF(adchsComponent, Module, "ADCCON1", adchsMenu)
-    #adchsSym_ADCCON1__AICPMPEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "AICPMPEN", adchsMenu, True)
-    #adchsSym_ADCCON1__ON = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "ON", adchsMenu, True)
-    #adchsSym_ADCCON1__TRBSLV = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBSLV", adchsMenu, True)
-    #adchsSym_ADCCON1__TRBMST = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBMST", adchsMenu, True)
-    #adchsSym_ADCCON1__TRBERR = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBERR", adchsMenu, True)
-    #adchsSym_ADCCON1__TRBEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBEN", adchsMenu, True)
-
-    #adchsMenu_ADCCON2 = adchsAddRegisterSubMenuFromATDF(adchsComponent, Module, "ADCCON2", adchsMenu)
-    #adchsSym_ADCCON2__ADCEIOVR = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "ADCEIOVR", adchsMenu, True)
-    #adchsSym_ADCCON2__EOSIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "EOSIEN", adchsMenu, True)
-    #adchsSym_ADCCON2__REFFLTIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "REFFLTIEN", adchsMenu, True)
-    #adchsSym_ADCCON2__BGVRIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "BGVRIEN", adchsMenu, True)
-    #adchsSym_ADCCON2__EOSRDY = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "EOSRDY", adchsMenu, True)
-    #adchsSym_ADCCON2__REFFLT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "REFFLT", adchsMenu, True)
-    #adchsSym_ADCCON2__BGVRRDY = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "BGVRRDY", adchsMenu, True)
-
-    #adchsMenu_ADCCON3 = adchsAddRegisterSubMenuFromATDF(adchsComponent, Module, "ADCCON3", adchsMenu)
-    #adchsSym_ADCCON3__ADINSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADINSEL", adchsMenu, True)
-    #adchsSym_ADCCON3__GSWTRG = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "GSWTRG", adchsMenu, True)
-    #adchsSym_ADCCON3__GLSWTRG = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "GLSWTRG", adchsMenu, True)
-    #adchsSym_ADCCON3__RQCNVRT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "RQCNVRT", adchsMenu, True)
-    #adchsSym_ADCCON3__SAMP = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "SAMP", adchsMenu, True)
-    #adchsSym_ADCCON3__UPDRDY = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "UPDRDY", adchsMenu, True)
-    #adchsSym_ADCCON3__UPDIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "UPDIEN", adchsMenu, True)
-    #adchsSym_ADCCON3__TRGSUSP = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "TRGSUSP", adchsMenu, True)
+        adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
 
     # Comparator Configuration Menu
     adchsComparatorConfigMenu = adchsComponent.createMenuSymbol("ADCHS_COMPARATOR_MENU", None)
@@ -1321,7 +1411,7 @@ def instantiateComponent(adchsComponent):
 ###################################################################################################
 
     adccon1_deplist = ["ADCCON1__IRQVS", "ADCCON1__SIDL", "ADCCON1__CVDEN", "ADCCON1__FRACT",
-    "ADCCON1__SELRES", "ADCCON1__STRGLVL", "ADCCON1__FSSCLKEN", "ADCCON1__FSPBCLKEN"]
+    "ADCCON1__SELRES", "ADCCON1__STRGLVL", "ADCCON1__FSSCLKEN", "ADCCON1__FSPBCLKEN", "ADCCON1__STRGSRC"]
     adchsSym_ADCCON1 = adchsComponent.createHexSymbol("ADCHS_ADCCON1", adchsMenu)
     adchsSym_ADCCON1.setLabel("ADCCON1 register value")
     adchsSym_ADCCON1.setVisible(False)
