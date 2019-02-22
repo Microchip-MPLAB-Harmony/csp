@@ -70,6 +70,10 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     </#if>
 </#list>
 
+<#if ADCHS_7_ENABLE == true>
+    ADC7CFG = DEVADC7;
+</#if>
+
     ADCCON1 = 0x${ADCHS_ADCCON1};
     ADCCON2 = 0x${ADCHS_ADCCON2};
     ADCCON3 = 0x${ADCHS_ADCCON3};
@@ -121,6 +125,12 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 
     </#if>
 </#list>
+<#if ADCHS_7_ENABLE == true>
+    /* ADC 7 */
+    ADCANCONbits.ANEN7 = 1;      // Enable the clock to analog bias
+    while(!ADCANCONbits.WKRDY7); // Wait until ADC is ready
+    ADCCON3bits.DIGEN7 = 1;      // Enable ADC
+</#if>
 }
 
 
