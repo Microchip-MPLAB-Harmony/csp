@@ -123,8 +123,15 @@ int16_t SDADC_ConversionResultGet( void )
 
 
 
+
 bool SDADC_ConversionResultIsReady( void )
 {
-    return (bool)(SDADC_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk);
+    bool status;
+    status = (bool)((SDADC_REGS->SDADC_INTFLAG & SDADC_INTFLAG_RESRDY_Msk) >> SDADC_INTFLAG_RESRDY_Pos);
+    if (status == true)
+    {
+        SDADC_REGS->SDADC_INTFLAG = SDADC_INTFLAG_RESRDY_Msk;
+    }
+    return status;
 }
 
