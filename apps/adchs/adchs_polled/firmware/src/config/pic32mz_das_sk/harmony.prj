@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">BF0FB81357F2A8CC91FB38809930FF68</GeneratedChecksum>
-          <UserChecksum dnOrder="5">BF0FB81357F2A8CC91FB38809930FF68</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0484C824B8E3B6DB3EA56C104BC2CBCE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0484C824B8E3B6DB3EA56C104BC2CBCE</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">93FF1AD9ED2F8925B908417929719917</GeneratedChecksum>
-          <UserChecksum dnOrder="5">93FF1AD9ED2F8925B908417929719917</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9CD41D61BFE59A8C80082E1C70E41E5A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9CD41D61BFE59A8C80082E1C70E41E5A</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -75,8 +75,8 @@
           <Name dnOrder="1">plib_tmr3.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/tmr/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2381A1EF4D6810C562F573AD27C751B0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2381A1EF4D6810C562F573AD27C751B0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">ACE87D0FFC1C1001DF29E82401A310FC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">ACE87D0FFC1C1001DF29E82401A310FC</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -203,7 +203,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;csp;csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
