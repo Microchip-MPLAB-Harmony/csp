@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMA5D27
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-11-28T22:21:11Z */
+/* file generated from device description version 2019-01-23T22:42:12Z */
 #ifndef _SAMA5D27_H_
 #define _SAMA5D27_H_
 
@@ -472,6 +472,7 @@ typedef enum IRQn
 #define NFC_SIZE                       _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define QSPI0MEM_SIZE                  _UL_(0x08000000)    /* 131072kB Memory segment type: other */
 #define QSPI1MEM_SIZE                  _UL_(0x08000000)    /* 131072kB Memory segment type: other */
+#define PERIPHERALS_SIZE               _UL_(0x10000000)    /* 262144kB Memory segment type: io */
 #define IROM_SIZE                      _UL_(0x00010000)    /*   64kB Memory segment type: rom */
 #define ECC_ROM_SIZE                   _UL_(0x00018000)    /*   96kB Memory segment type: other */
 #define NFC_RAM_SIZE                   _UL_(0x00002400)    /*    9kB Memory segment type: other */
@@ -498,6 +499,7 @@ typedef enum IRQn
 #define NFC_ADDR                       _UL_(0xc0000000)    /**< NFC base address (type: other)*/
 #define QSPI0MEM_ADDR                  _UL_(0xd0000000)    /**< QSPI0MEM base address (type: other)*/
 #define QSPI1MEM_ADDR                  _UL_(0xd8000000)    /**< QSPI1MEM base address (type: other)*/
+#define PERIPHERALS_ADDR               _UL_(0xf0000000)    /**< PERIPHERALS base address (type: io)*/
 #define IROM_ADDR                      _UL_(0x00000000)    /**< IROM base address (type: rom)*/
 #define ECC_ROM_ADDR                   _UL_(0x00040000)    /**< ECC_ROM base address (type: other)*/
 #define NFC_RAM_ADDR                   _UL_(0x00100000)    /**< NFC_RAM base address (type: other)*/
