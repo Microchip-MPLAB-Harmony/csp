@@ -156,7 +156,8 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spi
     }
 
     ${SPI_INSTANCE_NAME}BRG = t_brg;
-    ${SPI_INSTANCE_NAME}CONSET = setup->clockPolarity | setup->clockPhase | setup->dataBits;
+    ${SPI_INSTANCE_NAME}CON = (${SPI_INSTANCE_NAME}CON & (~(_${SPI_INSTANCE_NAME}CON_MODE16_MASK | _${SPI_INSTANCE_NAME}CON_MODE32_MASK | _${SPI_INSTANCE_NAME}CON_CKP_MASK | _${SPI_INSTANCE_NAME}CON_CKE_MASK))) |
+                            (setup->clockPolarity | setup->clockPhase | setup->dataBits);
 
     return true;
 }
@@ -193,10 +194,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         }
 
         /* Clear the receive overflow error if any */
-        if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK) == _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK)
-        {
-            ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
-        }
+        ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
 
         /* Flush out any unread data in SPI read buffer from the previous transfer */
         while ((bool)(${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIRBE_MASK) == false)
@@ -331,10 +329,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         }
 
         /* Clear the receive overflow error if any */
-        if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK) == _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK)
-        {
-            ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
-        }
+        ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
 
         /* Make sure there is no data pending in the RX FIFO */
         /* Depending on 8/16/32 bit mode, there may be 16/8/4 bytes in the FIFO */
@@ -423,7 +418,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         {
             if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount != ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
-                /* Configure SPI to generate transmit buffer empty interrupt only if more than 
+                /* Configure SPI to generate transmit buffer empty interrupt only if more than
                  * data is pending (STXISEL = '01')  */
                 ${SPI_INSTANCE_NAME}CONSET = 0x00000004;
             }
@@ -530,11 +525,8 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
         {
             if((${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize) && (${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize))
             {
-                if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK) == _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK)
-                {
-                    /* Clear receiver overflow error*/
-                    ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
-                }
+                /* Clear receiver overflow error if any */
+                ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
 
                 /* Disable receive interrupt */
                 ${SPI_RX_IEC_REG}CLR = ${SPI_RX_IEC_REG_MASK};
@@ -586,11 +578,8 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
         {
             /* This part of code is executed when the shift register is empty. */
 
-            if ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK) == _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK)
-            {
-                /* Clear receiver overflow error*/
-                ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
-            }
+            /* Clear receiver overflow error if any */
+            ${SPI_INSTANCE_NAME}STATCLR = _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK;
 
             /* Disable transmit interrupt */
             ${SPI_TX_IEC_REG}CLR = ${SPI_TX_IEC_REG_MASK};
