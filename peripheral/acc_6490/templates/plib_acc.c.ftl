@@ -55,7 +55,7 @@ void ${ACC_INSTANCE_NAME}_Initialize (void)
     /*Set Comparator Positive and Negative Input, Output Invert status to
       Enable/Disable, Fault Generation to Enable/Disable, Set Fault source and
       Output Edge type*/
-    <#if HAS_MINUS_COMPARATOR_SELECTION_??>
+    <#if HAS_MINUS_COMPARATOR_SELECTION??>
     regValue |= ACC_MR_SELMINUS(${ACC_MR_SELMINUS});
     </#if>
     <#if HAS_PLUS_COMPARATOR_SELECTION??>
