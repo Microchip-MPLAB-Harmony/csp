@@ -69,9 +69,9 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     /*Disable ${SPI_INSTANCE_NAME}_FAULT Interrupt, */
     /*Disable ${SPI_INSTANCE_NAME}_RX Interrupt, */
     /*Disable ${SPI_INSTANCE_NAME}_TX Interrupt */
-    ${SPI_FLT_IEC_REG}CLR = _${SPI_FLT_IEC_REG}_${SPI_INSTANCE_NAME}EIE_MASK;
-    ${SPI_RX_IEC_REG}CLR = _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK;
-    ${SPI_TX_IEC_REG}CLR = _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK;
+    ${SPI_FLT_IEC_REG}CLR = ${SPI_FLT_IEC_REG_MASK};
+    ${SPI_RX_IEC_REG}CLR = ${SPI_RX_IEC_REG_MASK};
+    ${SPI_TX_IEC_REG}CLR = ${SPI_TX_IEC_REG_MASK};
 
     /* STOP and Reset the SPI*/
     ${SPI_INSTANCE_NAME}CON = 0;
@@ -83,9 +83,9 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
     /* Clear ${SPI_INSTANCE_NAME}_FAULT Interrupt flag */
     /* Clear ${SPI_INSTANCE_NAME}_RX Interrupt flag */
     /* Clear ${SPI_INSTANCE_NAME}_TX Interrupt flag */
-    ${SPI_FLT_IFS_REG}CLR = _${SPI_FLT_IFS_REG}_${SPI_INSTANCE_NAME}EIF_MASK;
-    ${SPI_RX_IFS_REG}CLR = _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK;
-    ${SPI_TX_IFS_REG}CLR = _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK;
+    ${SPI_FLT_IFS_REG}CLR = ${SPI_FLT_IFS_REG_MASK};
+    ${SPI_RX_IFS_REG}CLR = ${SPI_RX_IFS_REG_MASK};
+    ${SPI_TX_IFS_REG}CLR = ${SPI_TX_IFS_REG_MASK};
 
     /* BAUD Rate register Setup */
     ${SPI_INSTANCE_NAME}BRG = ${SPI_BRG_VALUE};
@@ -351,16 +351,16 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         ${SPI_INSTANCE_NAME}CONCLR = _${SPI_INSTANCE_NAME}CON_STXISEL_MASK;
 
         /* Clear the receive interrupt flag */
-        ${SPI_RX_IFS_REG}CLR = _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK;
+        ${SPI_RX_IFS_REG}CLR = ${SPI_RX_IFS_REG_MASK};
 
         /* Clear the transmit interrupt flag */
-        ${SPI_TX_IFS_REG}CLR = _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK;
+        ${SPI_TX_IFS_REG}CLR = ${SPI_TX_IFS_REG_MASK};
 
         /* Disable the receive interrupt */
-        ${SPI_RX_IEC_REG}CLR = _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK;
+        ${SPI_RX_IEC_REG}CLR = ${SPI_RX_IEC_REG_MASK};
 
         /* Disable the transmit interrupt */
-        ${SPI_TX_IEC_REG}CLR = _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK;
+        ${SPI_TX_IEC_REG}CLR = ${SPI_TX_IEC_REG_MASK};
 
         /* Start the first write here itself, rest will happen in ISR context */
         if((_${SPI_INSTANCE_NAME}CON_MODE32_MASK) == (${SPI_INSTANCE_NAME}CON & (_${SPI_INSTANCE_NAME}CON_MODE32_MASK)))
@@ -417,7 +417,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
              * Keep the transmit interrupt disabled. Transmit interrupt will be
              * enabled later if txCount < txSize, when rxCount = rxSize.
              */
-            ${SPI_RX_IEC_REG}SET = _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK;
+            ${SPI_RX_IEC_REG}SET = ${SPI_RX_IEC_REG_MASK};
         }
         else
         {
@@ -428,7 +428,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
                 ${SPI_INSTANCE_NAME}CONSET = 0x00000004;
             }
             /* Enable transmit interrupt to complete the transfer in ISR context */
-            ${SPI_TX_IEC_REG}SET = _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK;
+            ${SPI_TX_IEC_REG}SET = ${SPI_TX_IEC_REG_MASK};
         }
     }
 
@@ -479,11 +479,11 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
                  * transmission of the remaining bytes from the transmit interrupt. */
 
                 /* Disable the receive interrupt */
-                ${SPI_RX_IEC_REG}CLR = _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK;
+                ${SPI_RX_IEC_REG}CLR = ${SPI_RX_IEC_REG_MASK};
 
                 /* Enable the transmit interrupt. Callback will be given from the
                  * transmit interrupt, when all bytes are shifted out. */
-                ${SPI_TX_IEC_REG}SET = _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK;
+                ${SPI_TX_IEC_REG}SET = ${SPI_TX_IEC_REG_MASK};
             }
         }
         if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
@@ -537,7 +537,7 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
                 }
 
                 /* Disable receive interrupt */
-                ${SPI_RX_IEC_REG}CLR = _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK;
+                ${SPI_RX_IEC_REG}CLR = ${SPI_RX_IEC_REG_MASK};
 
                 /* Transfer complete. Give a callback */
                 ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
@@ -552,7 +552,7 @@ void ${SPI_INSTANCE_NAME}_RX_InterruptHandler (void)
 
     /* Clear ${SPI_INSTANCE_NAME} RX Interrupt flag */
     /* This flag should cleared only after reading buffer */
-    ${SPI_RX_IFS_REG}CLR = _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK;
+    ${SPI_RX_IFS_REG}CLR = ${SPI_RX_IFS_REG_MASK};
 }
 
 void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
@@ -593,7 +593,7 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
             }
 
             /* Disable transmit interrupt */
-            ${SPI_TX_IEC_REG}CLR = _${SPI_TX_IEC_REG}_${SPI_INSTANCE_NAME}TXIE_MASK;
+            ${SPI_TX_IEC_REG}CLR = ${SPI_TX_IEC_REG_MASK};
 
             /* Transfer complete. Give a callback */
             ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
@@ -605,6 +605,6 @@ void ${SPI_INSTANCE_NAME}_TX_InterruptHandler (void)
         }
     }
     /* Clear the transmit interrupt flag */
-    ${SPI_TX_IFS_REG}CLR = _${SPI_TX_IFS_REG}_${SPI_INSTANCE_NAME}TXIF_MASK;
+    ${SPI_TX_IFS_REG}CLR = ${SPI_TX_IFS_REG_MASK};
 }
 </#if>
