@@ -1568,3 +1568,5 @@ def instantiateComponent(adchsComponent):
     adchsSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     adchsSystemDefFile.setSourcePath("../peripheral/adchs_02508/templates/system/definitions.h.ftl")
     adchsSystemDefFile.setMarkup(True)
+    
+    adchsComponent.addPlugin("../peripheral/adchs_02508/plugin/adchs_02508.jar")
