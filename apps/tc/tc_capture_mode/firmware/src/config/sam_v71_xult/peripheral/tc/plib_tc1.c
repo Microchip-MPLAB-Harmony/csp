@@ -83,11 +83,11 @@ void TC1_CH2_CompareInitialize (void)
                 TC_CMR_WAVEFORM_EEVTEDG_NONE;
 
     /* write period */
-    TC1_REGS->TC_CHANNEL[2].TC_RC = 10000U;
+    TC1_REGS->TC_CHANNEL[2].TC_RC = 60000U;
 
     /* write compare values */
     TC1_REGS->TC_CHANNEL[2].TC_RA = 5000U;
-    TC1_REGS->TC_CHANNEL[2].TC_RB = 3000U;
+    TC1_REGS->TC_CHANNEL[2].TC_RB = 600U;
 
 }
 
