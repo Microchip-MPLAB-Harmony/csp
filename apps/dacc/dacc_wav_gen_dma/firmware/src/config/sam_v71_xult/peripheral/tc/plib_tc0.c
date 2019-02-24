@@ -79,11 +79,11 @@ void TC0_CH0_CompareInitialize (void)
                 TC_CMR_WAVEFORM_EEVTEDG_NONE;
 
     /* write period */
-    TC0_REGS->TC_CHANNEL[0].TC_RC = 10000U;
+    TC0_REGS->TC_CHANNEL[0].TC_RC = 300U;
 
     /* write compare values */
-    TC0_REGS->TC_CHANNEL[0].TC_RA = 5000U;
-    TC0_REGS->TC_CHANNEL[0].TC_RB = 3000U;
+    TC0_REGS->TC_CHANNEL[0].TC_RA = 148U;
+    TC0_REGS->TC_CHANNEL[0].TC_RB = 300U;
 
     /* enable interrupt */
     TC0_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPCS_Msk;
