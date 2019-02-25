@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>SERCOMx_USART_WriteCallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="02042.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="02046.html" target="topic">Using the Library</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="01960.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="01971.html" target="topic">USART</a> &gt; <a href="01975.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02046.html" target="topic">SERCOMx_USART_WriteCallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02037.html" target="topic">Previous</a> | <a href="02042.html" target="topic">Up</a> | <a href="02043.html" target="topic">Next</a></div>
+<a href="02042.html" target="topic">Previous</a> | <a href="01975.html" target="topic">Up</a> | <a href="02038.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC 6452 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_WriteCallbackRegister@SERCOMx_USART_CALLBACK@uintptr_t Topic Title: SERCOMx_USART_WriteCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+SERCOMx_USART_WriteCallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,36 +49,82 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SUPC Peripheral library provides API's and they can be used to perform below functionalities.</p>
-<ul class="Element630">
-<li class="Element600">To put the device either in Sleep, Backup or Wait mode.</li>
-<li class="Element600">To read and write the General Purpose Backup Register (GPBR).</li>
-<li class="Element600">Generate supply monitor callback to save critical data to prepare the system for a power down. Supply monitor can generate interrupt or Reset the device when supply voltage crosses below the specified threshold level.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+This function sets the pointer to a client function to be called &quot;back&quot; when the given USART's write events occur. It also passes a context value (usually a pointer to a context structure) that is passed into the function when it is called.&nbsp;</p>
 <p class="Element10">
-The examples shows the code to enter sleep, backup and wait mode. </p><div class="Element13"><div class="Element12"><pre class="Element12">  <strong><span style="color: #000080">while</span></strong>(1)
+This function is available only in interrupt or non-blocking mode of operation.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SERCOMx_USART_WriteCallbackRegister</span></strong>(
+    <a href="02032.html" target="topic">SERCOMx_USART_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="02035.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the function to be called when the <a href="02044.html" target="topic">SERCOMx_USART_Write</a>() function has completed. Setting this to NULL will disable the callback feature.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The context parameter is ignored if the pointer passed is NULL. To disable the callback function, pass a NULL for the callback parameter. See the USART_CALLBACK type definition for additional information.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Data tracking what each of my instances is doing.</span></i>
+<strong><span style="color: #000080">char</span></strong> myData[2];
+
+<strong><span style="color: #000080">void</span></strong> MyUsartCallback ( uintptr_t context )
+{
+    <strong><span style="color: #000080">if</span></strong>(USART_ERROR_NONE != SERCOM0_USART_ErrorGet())
     {
-        <strong><span style="color: #000080">switch</span></strong>(cmd)
-        {
-            <strong><span style="color: #000080">case</span></strong> SLEEP_MODE:
-            {
-                SUPC_SleepModeEnter();
-                <strong><span style="color: #000080">break</span></strong>;
-            }
-            <strong><span style="color: #000080">case</span></strong> WAIT_MODE:
-            {
-                SUPC_WaitModeEnter(PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN, WAITMODE_WKUP_WKUP7);
-                <strong><span style="color: #000080">break</span></strong>;
-            }
-            <strong><span style="color: #000080">case</span></strong> BACKUP_MODE:
-            {
-                SUPC_BackupModeEnter();
-                <strong><span style="color: #000080">break</span></strong>;
-            }
-        }
+        <i><span style="color: #008000">//Handle error case</span></i>
     }
-</pre></div></div>
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">//Transfer completed successfully</span></i>
+    }
+}
+
+SERCOM0_USART_WriteCallbackRegister(MyUsartCallback, (uintptr_t)&amp;myData[0]);</pre></div></div>
 </div>
 </div>
 </div>
@@ -86,7 +132,7 @@ The examples shows the code to enter sleep, backup and wait mode. </p><div class
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="02042.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="02046.html" target="topic">Using the Library</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="01960.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="01971.html" target="topic">USART</a> &gt; <a href="01975.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02046.html" target="topic">SERCOMx_USART_WriteCallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -94,13 +140,13 @@ The examples shows the code to enter sleep, backup and wait mode. </p><div class
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02037.html" target="topic">Previous</a> | <a href="02042.html" target="topic">Up</a> | <a href="02043.html" target="topic">Next</a></div>
+<a href="02042.html" target="topic">Previous</a> | <a href="01975.html" target="topic">Up</a> | <a href="02038.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC 6452 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_WriteCallbackRegister@SERCOMx_USART_CALLBACK@uintptr_t Topic Title: SERCOMx_USART_WriteCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

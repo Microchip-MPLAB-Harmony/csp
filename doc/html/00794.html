@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PACy_CALLBACK Type</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="00781.html" target="topic">PAC Peripheral Library Help</a> &gt; <a href="00782.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="00794.html" target="topic">PACy_CALLBACK Type</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="00793.html" target="topic">I2SC Peripheral Library Help</a> &gt; <a href="00794.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00847.html" target="topic">Previous</a> | <a href="00782.html" target="topic">Up</a> | <a href="00797.html" target="topic">Next</a></div>
+<a href="00796.html" target="topic">Previous</a> | <a href="00793.html" target="topic">Up</a> | <a href="00797.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PACy_CALLBACK Topic Title: PACy_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2SC 11241 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PACy_CALLBACK Type</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -46,68 +46,52 @@ PACy_CALLBACK Type</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Callback function Pointer&nbsp;</p>
-<p class="Element10">
-This data type defines the function signature for the PAC peripheral callback function. The PAC peripheral will call back the function with this signature when a access violation has been detected.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">PACy_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00797.html" target="topic">I2SCx_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Initializes I2SCx module of the device&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<a name="6229205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
+b) Transaction Functions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The callback feature is only available when the library was generated with interrupt option (in MHC) enabled. The function will execute within an interrupt context. Avoid calling computationally intensive or blocking functions from within the callback function.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  <strong><span style="color: #000080">void</span></strong> APP_PACErrorCallback( uintptr_t context )
-  {
-        <i><span style="color: #008000">// PAC Error occurred. Fix the root-cause so that PAC error never occurs. </span></i>
-  }
-
-  <a href="00795.html" target="topic">PACy_CallbackRegister</a>(APP_PACErrorCallback, NULL);
-</pre></div></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00798.html" target="topic">I2SCx_LRCLK_Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get the level of the I2S LRCLK (left/right clock) signal&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -115,7 +99,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="00781.html" target="topic">PAC Peripheral Library Help</a> &gt; <a href="00782.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="00794.html" target="topic">PACy_CALLBACK Type</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="00793.html" target="topic">I2SC Peripheral Library Help</a> &gt; <a href="00794.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -123,13 +107,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00847.html" target="topic">Previous</a> | <a href="00782.html" target="topic">Up</a> | <a href="00797.html" target="topic">Next</a></div>
+<a href="00796.html" target="topic">Previous</a> | <a href="00793.html" target="topic">Up</a> | <a href="00797.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PACy_CALLBACK Topic Title: PACy_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2SC 11241 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

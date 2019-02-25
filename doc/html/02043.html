@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>SERCOMx_USART_TransmitterIsReady Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="02042.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="02043.html" target="topic">Library Interface</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="01960.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="01971.html" target="topic">USART</a> &gt; <a href="01975.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02043.html" target="topic">SERCOMx_USART_TransmitterIsReady Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02046.html" target="topic">Previous</a> | <a href="02042.html" target="topic">Up</a> | <a href="02077.html" target="topic">Next</a></div>
+<a href="02041.html" target="topic">Previous</a> | <a href="01975.html" target="topic">Up</a> | <a href="02049.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC 6452 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_TransmitterIsReady Topic Title: SERCOMx_USART_TransmitterIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+SERCOMx_USART_TransmitterIsReady Function</div>
 </div>
 </div>
 
@@ -46,142 +46,54 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
-a) Initialization Function</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function returns the hardware status associated with the transmit hardware FIFO of the given USART peripheral instance. When the transmitter is ready, user can submit data to be transmitted.&nbsp;</p>
+<p class="Element10">
+This function is available only in non-interrupt mode of operation. It can be used to achieve non-blocking behavior of write request in the non-interrupt mode. If non-blocking behavior is desired, this function should be called to check if the transmitter is ready and then the <a href="02044.html" target="topic">SERCOMx_USART_Write</a>() function should be called with a buffer size of 1.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_USART_TransmitterIsReady</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02077.html" target="topic">SUPCx_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes SUPC x module of the device&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="02035.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
 </div>
-</div>
-<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
-b) Setup Functions</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02074.html" target="topic">SUPCx_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Allows application to register callback with PLIB.&nbsp;</div></td></tr></table></div></div>
+
+<ul class="Element630">
+<li class="Element600">true - if transmit hardware FIFO has empty space to accept data.</li>
+<li class="Element600">false - if transmit hardware FIFO is full.</li>
+</ul></div>
 </div>
-</div>
-<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
-c) Transaction Functions</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02076.html" target="topic">SUPCx_GPBRWrite</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Writes data to the General Purpose Backup Register(GPBR)&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02075.html" target="topic">SUPCx_GPBRRead</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads the data from General Purpose Backup Register(GPBR)&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02072.html" target="topic">SUPCx_BackupModeEnter</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Puts the device into Backup mode&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02078.html" target="topic">SUPCx_SleepModeEnter</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Puts the device into Sleep mode&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02079.html" target="topic">SUPCx_WaitModeEnter</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Puts the device into Wait mode&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+If user submits write request for more than 1 byte after checking the ready status, then write API will block until the submitted length of data is processed. This is the native behavior of the write API in the non-interrupt or blocking mode of the library.</p></div>
 </div>
-</div>
-<a name="6429204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-d) Data Types and Constants</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02073.html" target="topic">SUPCx_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Pointer to a SUPC callback function&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02706.html" target="topic">WAITMODEx_FLASH_STATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies Flash Low-power mode&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02709.html" target="topic">WAITMODEx_WKUP_SOURCE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies the wakeup input source&nbsp;</div></td></tr></table></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == SERCOM0_USART_TransmitterIsReady())
+{
+    <i><span style="color: #008000">// Empty space is available in Transmitter FIFO, hence can write a byte</span></i>
+    SERCOM0_USART_Write(&quot;A&quot;, 1);
+}
+<strong><span style="color: #000080">else</span></strong>
+{
+    <i><span style="color: #008000">//Transmitter is busy</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -189,7 +101,7 @@ Identifies the wakeup input source&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="02042.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="02043.html" target="topic">Library Interface</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="01960.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="01971.html" target="topic">USART</a> &gt; <a href="01975.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02043.html" target="topic">SERCOMx_USART_TransmitterIsReady Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -197,13 +109,13 @@ Identifies the wakeup input source&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02046.html" target="topic">Previous</a> | <a href="02042.html" target="topic">Up</a> | <a href="02077.html" target="topic">Next</a></div>
+<a href="02041.html" target="topic">Previous</a> | <a href="01975.html" target="topic">Up</a> | <a href="02049.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC 6452 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_TransmitterIsReady Topic Title: SERCOMx_USART_TransmitterIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

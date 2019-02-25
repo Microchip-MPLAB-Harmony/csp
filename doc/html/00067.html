@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>ACy_SwapInputs Function</title>
+<title>Running the Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="00027.html" target="topic">AC Peripheral Library Help</a> &gt; <a href="00028.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00067.html" target="topic">ACy_SwapInputs Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="00069.html" target="topic">ACC Applications</a> &gt; <a href="00068.html" target="topic">acc_wav_gen</a> &gt; <a href="00067.html" target="topic">Running the Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00064.html" target="topic">Previous</a> | <a href="00028.html" target="topic">Up</a> | <a href="00066.html" target="topic">Next</a></div>
+<a href="00065.html" target="topic">Previous</a> | <a href="00068.html" target="topic">Up</a> | <a href="00123.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ACy_SwapInputs@ACy_CHANNEL Topic Title: ACy_SwapInputs Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ACC acc_wav_gen Running The Application Topic Title: Running the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-ACy_SwapInputs Function</div>
+Running the Application</div>
 </div>
 </div>
 
@@ -49,59 +49,31 @@ ACy_SwapInputs Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function swaps inputs of a comparator. This allows the user to measure or compensate for the comparator input offset voltage.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">ACy_SwapInputs</span></strong>(
-    <a href="00058.html" target="topic">ACy_CHANNEL</a> <strong><span style="color: #000000">channel</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="00063.html" target="topic">ACy_Initialize</a> must have been called for the AC.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<strong>Description</strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
+<li value="2" class="Element600">Reset the device and see the following message in the console.</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Points to AC Channel&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    ACy_SwapInputs (AC_CHANNEL_0);</pre></div></div>
+<td class="Element65" valign="top" width="9%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="91%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="91%">
+<div class="Element68">
+Success: Observe pin PB03 &quot;Pin 7 of the J502&quot; on oscilloscope.<br>Change the positive input of the comparator from 0 to 3.3 V and observe the duty cycle of the square wave changing from 0% to 100%.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="91%">
+<div class="Element68">
+Success: Observe pin PB03 &quot;Pin 7 of the J504&quot; on oscilloscope.<br>Change the positive input of the comparator from 0 to 3.3 V and observe the duty cycle of the square wave changing from 0% to 100%.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -109,7 +81,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="00027.html" target="topic">AC Peripheral Library Help</a> &gt; <a href="00028.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00067.html" target="topic">ACy_SwapInputs Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="00069.html" target="topic">ACC Applications</a> &gt; <a href="00068.html" target="topic">acc_wav_gen</a> &gt; <a href="00067.html" target="topic">Running the Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -117,13 +89,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00064.html" target="topic">Previous</a> | <a href="00028.html" target="topic">Up</a> | <a href="00066.html" target="topic">Next</a></div>
+<a href="00065.html" target="topic">Previous</a> | <a href="00068.html" target="topic">Up</a> | <a href="00123.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ACy_SwapInputs@ACy_CHANNEL Topic Title: ACy_SwapInputs Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ACC acc_wav_gen Running The Application Topic Title: Running the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

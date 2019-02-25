@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_USART_ReadCallbackRegister Function</title>
+<title>SERCOM SPI Applications</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="01870.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="01881.html" target="topic">USART</a> &gt; <a href="01885.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01928.html" target="topic">SERCOMx_USART_ReadCallbackRegister Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="01921.html" target="topic">SERCOM Applications</a> &gt; <a href="01928.html" target="topic">SERCOM SPI Applications</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01936.html" target="topic">Previous</a> | <a href="01885.html" target="topic">Up</a> | <a href="01926.html" target="topic">Next</a></div>
+<a href="01927.html" target="topic">Previous</a> | <a href="01921.html" target="topic">Up</a> | <a href="01929.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOMx_USART_ReadCallbackRegister@SERCOMx_USART_CALLBACK@uintptr_t Topic Title: SERCOMx_USART_ReadCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM SPI Applications Help Topic Title: SERCOM SPI Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_USART_ReadCallbackRegister Function</div>
+SERCOM SPI Applications</div>
 </div>
 </div>
 
@@ -49,82 +49,41 @@ SERCOMx_USART_ReadCallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the pointer to a client function to be called &quot;back&quot; when the given USART's read events occur. It also passes a context value (usually a pointer to a context structure) that is passed into the function when it is called.&nbsp;</p>
-<p class="Element10">
-This function is available only in interrupt or non-blocking mode of operation.</p></div>
+This Section provides help for the SERCOM SPI PLIB Applications.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SERCOMx_USART_ReadCallbackRegister</span></strong>(
-    <a href="01922.html" target="topic">SERCOMx_USART_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">context</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="01925.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the function that will be called when <a href="01926.html" target="topic">SERCOMx_USART_Read</a>() function has completed. Setting this to NULl will disable the callback feature.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The context parameter is ignored if the pointer passed is NULL. To disable the callback function, pass a NULL for the callback parameter. See the USART_CALLBACK type definition for additional information.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Data tracking what each of my instances is doing.</span></i>
-<strong><span style="color: #000080">char</span></strong> myData[2];
-
-<strong><span style="color: #000080">void</span></strong> MyUsartCallback ( uintptr_t context )
-{
-    <strong><span style="color: #000080">if</span></strong>(USART_ERROR_NONE != SERCOM0_USART_ErrorGet())
-    {
-        <i><span style="color: #008000">//Handle error case</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Transfer completed successfully</span></i>
-    }
-}
-
-SERCOM0_USART_ReadCallbackRegister(MyUsartCallback, (uintptr_t)&amp;myData[0]);</pre></div></div>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01929.html" target="topic">spi_eeprom_write_read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+<span style="color: #000000">This example application demonstrates how to use the SERCOM SPI peripheral to write and read from the SPI serial EEPROM memory.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01930.html" target="topic">spi_ping_pong_with_dma</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+<span style="color: #000000">This example demonstrates how to continuously transmit and receive data over a SPI interface using ping pong buffers with the DMA.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01931.html" target="topic">spi_self_loopback_blocking</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+<span style="color: #000000">This example application demonstrates how to use the SERCOM SPI peripheral to transmit and receive a block of data in</span> a blocking manner.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01932.html" target="topic">spi_self_loopback_interrupt</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This example application shows how to use SERCOM SPI PLIB with external loop back to write and then read back an array of data in interrupt mode.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -132,7 +91,7 @@ SERCOM0_USART_ReadCallbackRegister(MyUsartCallback, (uintptr_t)&amp;myData[0]);<
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="01870.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="01881.html" target="topic">USART</a> &gt; <a href="01885.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01928.html" target="topic">SERCOMx_USART_ReadCallbackRegister Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="01921.html" target="topic">SERCOM Applications</a> &gt; <a href="01928.html" target="topic">SERCOM SPI Applications</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,13 +99,13 @@ SERCOM0_USART_ReadCallbackRegister(MyUsartCallback, (uintptr_t)&amp;myData[0]);<
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01936.html" target="topic">Previous</a> | <a href="01885.html" target="topic">Up</a> | <a href="01926.html" target="topic">Next</a></div>
+<a href="01927.html" target="topic">Previous</a> | <a href="01921.html" target="topic">Up</a> | <a href="01929.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOMx_USART_ReadCallbackRegister@SERCOMx_USART_CALLBACK@uintptr_t Topic Title: SERCOMx_USART_ReadCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM SPI Applications Help Topic Title: SERCOM SPI Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

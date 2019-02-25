@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TWIHS_CALLBACK Type</title>
+<title>TCx_CaptureStart Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="02550.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="02551.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02563.html" target="topic">TWIHS_CALLBACK Type</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="02370.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="02349.html" target="topic">Capture</a> &gt; <a href="02352.html" target="topic">Library Interface</a> &gt; <a href="02357.html" target="topic">c) Transaction Functions</a> &gt; <a href="02563.html" target="topic">TCx_CaptureStart Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02568.html" target="topic">Previous</a> | <a href="02551.html" target="topic">Up</a> | <a href="02564.html" target="topic">Next</a></div>
+<a href="02357.html" target="topic">Previous</a> | <a href="02357.html" target="topic">Up</a> | <a href="02565.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHS_CALLBACK Topic Title: TWIHS_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_CaptureStart Topic Title: TCx_CaptureStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TWIHS_CALLBACK Type</div>
+TCx_CaptureStart Function</div>
 </div>
 </div>
 
@@ -49,39 +49,17 @@ TWIHS_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TWIHS Transfer Event Callback Function Pointer.&nbsp;</p>
-<p class="Element10">
-This data type defines the function signature for the TWIHS peripheral callback function. The TWIHS peripheral will call back the client's function with this signature when the TWIHS Transfer event has occurred.</p></div>
+This function enables the clock and starts the timer.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">TWIHS_CALLBACK</span></strong>)(uintptr_t contextHandle);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_CaptureStart</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="02569.html" target="topic">TWIHSx_Initialize</a> must have been called for the given TWIHS peripheral instance and <a href="02567.html" target="topic">TWIHSx_CallbackRegister</a> must have been called to set the function to be called.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
-</div>
+<a href="02562.html" target="topic">TCx_CaptureInitialize</a>() function must have been called first.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -101,25 +79,8 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Data tracking what each of my instances is doing.</span></i>
-MY_DATA myData[2];
-
-<strong><span style="color: #000080">void</span></strong> MyTWIHSCallback ( uintptr_t context )
-{
-    MY_DATA *mePtr = (MY_DATA *)context;
-
-    <strong><span style="color: #000080">if</span></strong>(TWIHS_ERROR_NONE == TWIHS1_ErrorGet())
-    {
-        <i><span style="color: #008000">//Handle complete status here based on context</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Handle error here</span></i>
-    }
-}
-
-TWIHS1_CallbackSet(MyTWIHSCallback, &amp;myData[0]);
-TWIHS2_CallbackSet(MyTWIHSCallback, &amp;myData[1]);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">  <a href="02562.html" target="topic">TCx_CaptureInitialize</a>();
+  TCx_CaptureStart();</pre></div></div>
 </div>
 </div>
 </div>
@@ -127,7 +88,7 @@ TWIHS2_CallbackSet(MyTWIHSCallback, &amp;myData[1]);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="02550.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="02551.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02563.html" target="topic">TWIHS_CALLBACK Type</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="02370.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="02349.html" target="topic">Capture</a> &gt; <a href="02352.html" target="topic">Library Interface</a> &gt; <a href="02357.html" target="topic">c) Transaction Functions</a> &gt; <a href="02563.html" target="topic">TCx_CaptureStart Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -135,13 +96,13 @@ TWIHS2_CallbackSet(MyTWIHSCallback, &amp;myData[1]);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02568.html" target="topic">Previous</a> | <a href="02551.html" target="topic">Up</a> | <a href="02564.html" target="topic">Next</a></div>
+<a href="02357.html" target="topic">Previous</a> | <a href="02357.html" target="topic">Up</a> | <a href="02565.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHS_CALLBACK Topic Title: TWIHS_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_CaptureStart Topic Title: TCx_CaptureStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

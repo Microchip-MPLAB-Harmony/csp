@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MPLAB Harmony Configurations</title>
+<title>AC_CHANNEL Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00285.html" target="topic">Applications Help</a> &gt; <a href="00048.html" target="topic">ACC Applications</a> &gt; <a href="00047.html" target="topic">acc_wav_gen</a> &gt; <a href="00045.html" target="topic">MPLAB Harmony Configurations</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="00025.html" target="topic">AC Peripheral Library Help</a> &gt; <a href="00026.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00045.html" target="topic">AC_CHANNEL Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00043.html" target="topic">Previous</a> | <a href="00047.html" target="topic">Up</a> | <a href="00044.html" target="topic">Next</a></div>
+<a href="00043.html" target="topic">Previous</a> | <a href="00026.html" target="topic">Up</a> | <a href="00059.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ACC acc_wav_gen MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ac_u2245::AC_CHANNEL Topic Title: AC_CHANNEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MPLAB Harmony Configurations</div>
+AC_CHANNEL Enumeration</div>
 </div>
 </div>
 
@@ -49,16 +49,66 @@ MPLAB Harmony Configurations</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Refer to the MHC project graph for the components used and the respective configuration options. </p><p class="Element10" style="text-align: center;">
-&nbsp;</p>
+AC Output Channels&nbsp;</p>
+<p class="Element10">
+This enumeration can be used as an argument to APIs where it needs to indicate a specific comparator. For example, it is used as below, <a href="00052.html" target="topic">AC_Start</a>(AC_CHANNEL_0);</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">AC_CHANNEL_0</span></strong> = 0,
+  <strong><span style="color: #000000">AC_CHANNEL_1</span></strong> = 1,
+  <strong><span style="color: #000000">AC_CHANNEL_2</span></strong> = 2,
+  <strong><span style="color: #000000">AC_CHANNEL_3</span></strong> = 3
+} AC_CHANNEL;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+AC_CHANNEL_0 = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Comparator channel 0&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+AC_CHANNEL_1 = 1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Comparator channel 1&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+AC_CHANNEL_2 = 2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Comparator channel 2&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+AC_CHANNEL_3 = 3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Comparator channel 3&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00285.html" target="topic">Applications Help</a> &gt; <a href="00048.html" target="topic">ACC Applications</a> &gt; <a href="00047.html" target="topic">acc_wav_gen</a> &gt; <a href="00045.html" target="topic">MPLAB Harmony Configurations</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="00025.html" target="topic">AC Peripheral Library Help</a> &gt; <a href="00026.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00045.html" target="topic">AC_CHANNEL Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -66,13 +116,13 @@ Refer to the MHC project graph for the components used and the respective config
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00043.html" target="topic">Previous</a> | <a href="00047.html" target="topic">Up</a> | <a href="00044.html" target="topic">Next</a></div>
+<a href="00043.html" target="topic">Previous</a> | <a href="00026.html" target="topic">Up</a> | <a href="00059.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ACC acc_wav_gen MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ac_u2245::AC_CHANNEL Topic Title: AC_CHANNEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

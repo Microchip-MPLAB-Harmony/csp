@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>ACz_SetVddScalar Function</title>
+<title>ACC_STATUS_SOURCE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="00016.html" target="topic">AC Peripheral Library Help</a> &gt; <a href="00017.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00074.html" target="topic">ACz_SetVddScalar Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="00059.html" target="topic">ACC Peripheral Library Help</a> &gt; <a href="00060.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="00074.html" target="topic">ACC_STATUS_SOURCE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00075.html" target="topic">Previous</a> | <a href="00017.html" target="topic">Up</a> | <a href="00077.html" target="topic">Next</a></div>
+<a href="00071.html" target="topic">Previous</a> | <a href="00060.html" target="topic">Up</a> | <a href="00082.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ACz_SetVddScalar@ACz_CHANNEL@uint8_t Topic Title: ACz_SetVddScalar Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: acc_6490::ACC_STATUS_SOURCE Topic Title: ACC_STATUS_SOURCE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-ACz_SetVddScalar Function</div>
+ACC_STATUS_SOURCE Enumeration</div>
 </div>
 </div>
 
@@ -49,52 +49,40 @@ ACz_SetVddScalar Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets VDDSCALERn of a comparator. The VDDSCALERn associated with a comparator (COMPn) can be used as one of the inputs to the comparator. This allows to set flexible compare voltages.</p></div>
+ACC comparison status&nbsp;</p>
+<p class="Element10">
+This enumeration identifies the ACC Comparison status either from Comparison edge or synchronized comparator output.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">ACz_SetVddScalar</span></strong>(
-    <a href="00070.html" target="topic">ACz_CHANNEL</a> <strong><span style="color: #000000">channel_id</span></strong>, 
-    uint8_t <strong><span style="color: #000000">vdd_scalar</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ACC_STATUS_SOURCE_COMPARATOR_OUTPUT</span></strong>,
+  <strong><span style="color: #000000">ACC_STATUS_SOURCE_COMPARISON_EDGE</span></strong>
+} ACC_STATUS_SOURCE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="00073.html" target="topic">ACz_Initialize</a> must have been called for the associated AC instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Points to AC Channel&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-vdd_scalar&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Scaling factor (6-bits) ranges from 0 to 63.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ACC_STATUS_SOURCE_COMPARATOR_OUTPUT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ACC synchronized comparator output&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ACC_STATUS_SOURCE_COMPARISON_EDGE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ACC comparison edge&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -103,19 +91,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">     ACz_SetVddScalar (AC_CHANNEL_0, 0x0B);</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="00016.html" target="topic">AC Peripheral Library Help</a> &gt; <a href="00017.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00074.html" target="topic">ACz_SetVddScalar Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="00059.html" target="topic">ACC Peripheral Library Help</a> &gt; <a href="00060.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="00074.html" target="topic">ACC_STATUS_SOURCE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -123,13 +104,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00075.html" target="topic">Previous</a> | <a href="00017.html" target="topic">Up</a> | <a href="00077.html" target="topic">Next</a></div>
+<a href="00071.html" target="topic">Previous</a> | <a href="00060.html" target="topic">Up</a> | <a href="00082.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ACz_SetVddScalar@ACz_CHANNEL@uint8_t Topic Title: ACz_SetVddScalar Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: acc_6490::ACC_STATUS_SOURCE Topic Title: ACC_STATUS_SOURCE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

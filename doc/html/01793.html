@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>RTC_Timer16CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="01788.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="01793.html" target="topic">Using the Library</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="01640.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="01651.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="01657.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01793.html" target="topic">RTC_Timer16CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01783.html" target="topic">Previous</a> | <a href="01788.html" target="topic">Up</a> | <a href="01789.html" target="topic">Next</a></div>
+<a href="01657.html" target="topic">Previous</a> | <a href="01657.html" target="topic">Up</a> | <a href="01806.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16CallbackRegister@RTC_TIMER16_CALLBACK@uintptr_t Topic Title: RTC_Timer16CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+RTC_Timer16CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,91 +49,74 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SDADC converts enabled channel on software or hardware triggers. It provides both polling and callback methods to indicate the end of conversion to read the converted data from the result register.</p>
-<ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the conversion is completed.</li>
-<li class="Element600">With callback, the registered callback function will be called once the conversion is completed. This means the application do not have to poll continuously.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+This function registers the callback function that the library will call when an interrupt occurs. The library will return the event that has caused the interrupt and the application specified context in the callback function.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer16CallbackRegister</span></strong>(
+    <a href="01780.html" target="topic">RTC_TIMER16_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>Callback method</strong>&nbsp;</p>
+The <a href="01765.html" target="topic">RTC_Initialize</a>() function should have been called to initialize the RTC module. The module should have been conifgured for 16-bit Timer Counter operation in MHC. The library should have been configured for Interrupt mode operation.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A pointer to a function with a calling signature defined by the <a href="01780.html" target="topic">RTC_TIMER16_CALLBACK</a> data type. Passing a NULL value disables the callback.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A value (usually a pointer) that passed into the callback function when the callback function is called.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-This example demonstrates how to read conversion result in the callback function. One channel is enabled and configured to start conversion on hardware trigger.&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">int16_t result;</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* This function is called after conversion of last channel in the user sequence */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">void SDADC_EventHandler(<a href="01798.html" target="topic">SDADC_STATUS</a> status, uintptr_t context)</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146"> result = SDADC_ConversionResultGet();</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">}</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">int main(void)</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146"> /* Register callback function for SDADC end of conversion interrupt*/</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146"> SDADC_CallbackRegister(SDADC_EventHandler, (uintptr_t)NULL);</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">while(true)</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">}</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">}</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Polling method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to start conversion and read the converted data in polled mode. One channel is enabled and configured to start conversion on software trigger.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* Start conversion */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">SDADC_ConversionStart();</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* Wait till ADC conversion result is available */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">while(!SDADC_ConversionResultIsReady(CH0))</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">};</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* Read the ADC result */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">result = SDADC_ConversionResultGet();</span>&nbsp;</p></div>
+To disable the callback function, pass a NULL for the callback parameter. See the <a href="01780.html" target="topic">RTC_TIMER16_CALLBACK</a> type definition for additional information.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Refer to the description of the RTC_TIMER16_CALLBACK data type for</span></i>
+    <i><span style="color: #008000">// example usage of this function.</span></i></pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="01788.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="01793.html" target="topic">Using the Library</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="01020.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01186.html" target="topic">Peripheral Libraries</a> &gt; <a href="01640.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="01651.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="01657.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01793.html" target="topic">RTC_Timer16CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -141,13 +124,13 @@ This example demonstrates how to start conversion and read the converted data in
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01783.html" target="topic">Previous</a> | <a href="01788.html" target="topic">Up</a> | <a href="01789.html" target="topic">Next</a></div>
+<a href="01657.html" target="topic">Previous</a> | <a href="01657.html" target="topic">Up</a> | <a href="01806.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16CallbackRegister@RTC_TIMER16_CALLBACK@uintptr_t Topic Title: RTC_Timer16CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
