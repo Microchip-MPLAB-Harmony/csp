@@ -59,8 +59,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">05EA05A88974C9857638FB5F969A05C1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">05EA05A88974C9857638FB5F969A05C1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6345B2D4920138E4B8EFA10A4CB13001</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6345B2D4920138E4B8EFA10A4CB13001</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
@@ -83,8 +83,8 @@
           <Name dnOrder="1">plib_pio.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">C7109D094267464FA6BAFCCC5CC34316</GeneratedChecksum>
-          <UserChecksum dnOrder="5">C7109D094267464FA6BAFCCC5CC34316</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D71FF817F878F52CB8D9E993293982D3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D71FF817F878F52CB8D9E993293982D3</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
