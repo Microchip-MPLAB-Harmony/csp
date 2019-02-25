@@ -83,7 +83,8 @@
 /* Callback object for channel 0 */
 TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
 </#if>
-/* Initialize channel in timer mode */
+
+/* Initialize channel in quadrature mode */
 void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
 {
     uint32_t status;
@@ -175,7 +176,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStop (void)
     <#lt>{
     <#lt>    TC_QUADRATURE_STATUS quadrature_status = (TC_QUADRATURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_QISR & TC_QUADRATURE_STATUS_MSK);
     <#lt>    /* Call registered callback function */
-    <#lt>    if ((TC_QUADRATURE_NONE != quadrature_status) && ${TC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
+    <#lt>    if (${TC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     <#lt>    {
     <#lt>        ${TC_INSTANCE_NAME}_CallbackObj.callback_fn(quadrature_status, ${TC_INSTANCE_NAME}_CallbackObj.context);
     <#lt>    }
