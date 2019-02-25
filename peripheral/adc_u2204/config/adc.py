@@ -152,12 +152,10 @@ def instantiateComponent(adcComponent):
 
     #------------------------- ATDF Read -------------------------------------
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
-    #TODO
-    packageName = "TQFP64"
     availablePins = []      # array to save available pins
     channel = []
 
-    pinout = "SAMC21N"
+    pinout = ""
     val = ATDF.getNode("/avr-tools-device-file/variants")
     children = val.getChildren()
     for index in range(0, len(children)):
