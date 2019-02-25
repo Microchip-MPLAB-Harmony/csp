@@ -57,7 +57,7 @@
 // *****************************************************************************
 
 /* ${SERCOM_INSTANCE_NAME} USART baud value for ${USART_BAUD_RATE} Hz baud rate */
-#define ${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE			(${USART_BAUD_VALUE}U)
+#define ${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE            (${USART_BAUD_VALUE}U)
 
 <#if USART_INTERRUPT_MODE = true>
 SERCOM_USART_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
@@ -574,19 +574,23 @@ void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
 {
     if(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET != 0)
     {
+        <#if USART_TX_ENABLE = true>
         /* Checks for data register empty flag */
         if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk)
         {
             ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
         }
 
+        </#if>
+        <#if USART_RX_ENABLE = true>
         /* Checks for receive complete empty flag */
         if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) == SERCOM_USART_INT_INTFLAG_RXC_Msk)
         {
             ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
         }
-        <#if USART_INTENSET_ERROR = true>
 
+        </#if>
+        <#if USART_INTENSET_ERROR = true>
         /* Checks for error flag */
         if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_ERROR_Msk) == SERCOM_USART_INT_INTFLAG_ERROR_Msk)
         {
