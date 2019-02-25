@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_USART_SerialSetup Function</title>
+<title>spi_self_loopback_interrupt</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="01870.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="01881.html" target="topic">USART</a> &gt; <a href="01885.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01932.html" target="topic">SERCOMx_USART_SerialSetup Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="01921.html" target="topic">SERCOM Applications</a> &gt; <a href="01928.html" target="topic">SERCOM SPI Applications</a> &gt; <a href="01932.html" target="topic">spi_self_loopback_interrupt</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01925.html" target="topic">Previous</a> | <a href="01885.html" target="topic">Up</a> | <a href="01936.html" target="topic">Next</a></div>
+<a href="01944.html" target="topic">Previous</a> | <a href="01928.html" target="topic">Up</a> | <a href="01945.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOMx_USART_SerialSetup@USARTx_SERIAL_SETUP *@uint32_t Topic Title: SERCOMx_USART_SerialSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM SPI Applications spi_self_loopback_interrupt Topic Title: spi_self_loopback_interrupt)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_USART_SerialSetup Function</div>
+spi_self_loopback_interrupt</div>
 </div>
 </div>
 
@@ -49,82 +49,41 @@ SERCOMx_USART_SerialSetup Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets all the serial configurations of the peripheral. It provides run-time interface to configure the baud, parity, stop bits and data character size parameters of the serial connection.&nbsp;</p>
-<p class="Element10">
-Calling this function when a serial communication is in progress can disrupt the communication. The caller should be ensure that there is no serial communication in progress.&nbsp;</p>
-<p class="Element10">
-In case of success, the function will update all parameters specified in the serialSetup parameter, even if some parameter may have not changed since a previous call to this function. In case of failure, all parameter stay unchanged.</p></div>
+This example shows the transmit and receive operation over a SPI interface in a non-blocking manner. The peripheral interrupt is used to manage the transfer. <span style="color: #000000">It transmits an array of values and verifies the value transmitted by receiving the values back with look back and comparing it to the value transmitted. The loop back</span> test requires the MOSI output pin to be connected to the MISO input pin so that anything transmitted will also be received.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_USART_SerialSetup</span></strong>(
-    <a href="02654.html" target="topic">USARTx_SERIAL_SETUP</a> * <strong><span style="color: #000000">serialSetup</span></strong>, 
-    uint32_t <strong><span style="color: #000000">clkFrequency</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="01925.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-clkFrequency&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Input clock frequency to the Baud Rate Generator.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-serialSetup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer with serial configuration details.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - if serial configuration was successful.</li>
-<li class="Element600">false - if the specified serial configuration could not be supported. This, for example, could happen if the requested baud is not supported.</li>
-</ul></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    USART_SERIAL_SETUP setup;
-    setup.baudRate = 1000000;
-    setup.dataWidth = USART_DATA_8_BIT;
-    setup.parity = USART_PARITY_EVEN;
-    setup.stopBits = USART_STOP_2_BIT;
-
-    <i><span style="color: #008000">// Assuming 20 MHz as peripheral Master clock frequency</span></i>
-    <strong><span style="color: #000080">if</span></strong> (SERCOM0_USART_SerialSetup (&amp;setup, 20000000) == <strong><span style="color: #000080">false</span></strong>)
-    {
-        <i><span style="color: #008000">// this means setup could not be done, debug the reason.</span></i>
-    }</pre></div></div>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01945.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to build application using MPLAB X IDE.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01947.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic provides information on MHC configurations.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01946.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01948.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to run the application using the MPLAB X IDE.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -132,7 +91,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="01870.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="01881.html" target="topic">USART</a> &gt; <a href="01885.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01932.html" target="topic">SERCOMx_USART_SerialSetup Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="01921.html" target="topic">SERCOM Applications</a> &gt; <a href="01928.html" target="topic">SERCOM SPI Applications</a> &gt; <a href="01932.html" target="topic">spi_self_loopback_interrupt</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,13 +99,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01925.html" target="topic">Previous</a> | <a href="01885.html" target="topic">Up</a> | <a href="01936.html" target="topic">Next</a></div>
+<a href="01944.html" target="topic">Previous</a> | <a href="01928.html" target="topic">Up</a> | <a href="01945.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOMx_USART_SerialSetup@USARTx_SERIAL_SETUP *@uint32_t Topic Title: SERCOMx_USART_SerialSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM SPI Applications spi_self_loopback_interrupt Topic Title: spi_self_loopback_interrupt)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

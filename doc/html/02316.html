@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCx_CHy_CompareStop Function</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="02137.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="02125.html" target="topic">Compare</a> &gt; <a href="02128.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02316.html" target="topic">TCx_CHy_CompareStop Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="02301.html" target="topic">TC Applications</a> &gt; <a href="02304.html" target="topic">tc_timer_mode</a> &gt; <a href="02316.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02314.html" target="topic">Previous</a> | <a href="02128.html" target="topic">Up</a> | <a href="02315.html" target="topic">Next</a></div>
+<a href="02314.html" target="topic">Previous</a> | <a href="02304.html" target="topic">Up</a> | <a href="02303.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCx_CHy_CompareStop Topic Title: TCx_CHy_CompareStop Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_timer_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCx_CHy_CompareStop Function</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -49,40 +49,88 @@ TCx_CHy_CompareStop Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function stops the clock and thus counter of associated channel, freezing the associated waveform generation.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_CHy_CompareStop</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+ &nbsp;</p>
 <p class="Element10">
-<a href="02311.html" target="topic">TCx_CHy_CompareInitialize</a> function must have been called first for the given channel.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+<strong><u>Running project with MPLAB X IDE</u></strong>&nbsp;</p>
+<ol class="Element630">
+<li value="1" class="Element600">For MCU projects, build and Program the application using the MPLAB X IDE.</li>
+<li value="2" class="Element600">For building running the project for SAM A5D2 XULT with IAR Embedded workbench, follow the steps as documented below:</li>
+<li value="3" class="Element600">For MPU projects, repeat the steps as follows:
+<ul class="Element631">
+<li class="Element601">Build the project using IAR Embedded Workbench</li>
+<li class="Element601">On successful build, output file named &quot;harmony.bin&quot; will be created in the project output folder</li>
+<li class="Element601">Copy the file &quot;harmony.bin&quot; into the SD Card configured using the steps defined in <a href="02314.html" target="topic">hardware setup</a></li>
+<li class="Element601">Insert the SD card into SDMMC Slot 1 on the evaluation kit</li>
+<li class="Element601">Reset the board using the reset switch to run the application</li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="3" class="Element600">Observe the output as described in the following table:</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="31%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="69%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="31%">
+<div class="Element68">
+sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="69%">
+<div class="Element68">
+Success: LED0 blinks at 1 sec rate&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="31%">
+<div class="Element68">
+sam_d20_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="69%">
+<div class="Element68">
+Success: LED0 blinks at 1 sec rate&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="31%">
+<div class="Element68">
+sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="69%">
+<div class="Element68">
+Success: LED0 blinks at 1 sec rate&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="31%">
+<div class="Element68">
+sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="69%">
+<div class="Element68">
+Success: LED0 blinks at 1 sec rate&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="31%">
+<div class="Element68">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="69%">
+<div class="Element68">
+Success: LED1 blinks at 1 sec rate&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="31%">
+<div class="Element68">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="69%">
+<div class="Element68">
+Success: LED0 blinks at 1 sec rate&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-None</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">TC0_CH1_CompareInitialize();
-TC0_CH1_CompareStart();
-<i><span style="color: #008000">// Generate waveform a long as desired, then...</span></i>
-TC0_CH1_CompareStop();</pre></div></div>
+<strong><u>Running project with IAR Embedded work bench</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Build the project using IAR Embedded Workbench</li>
+<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="02314.html" target="topic">hardware setup</a></li>
+<li value="3" class="Element600">Reset the board to run the application</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="33%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="67%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="33%">
+<div class="Element68">
+sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="67%">
+<div class="Element68">
+Success: RGB_LED blinks in blue color at 1 sec rate&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +138,7 @@ TC0_CH1_CompareStop();</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00895.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="01062.html" target="topic">Peripheral Libraries</a> &gt; <a href="02137.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="02125.html" target="topic">Compare</a> &gt; <a href="02128.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02316.html" target="topic">TCx_CHy_CompareStop Function</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="02301.html" target="topic">TC Applications</a> &gt; <a href="02304.html" target="topic">tc_timer_mode</a> &gt; <a href="02316.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +146,13 @@ TC0_CH1_CompareStop();</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02314.html" target="topic">Previous</a> | <a href="02128.html" target="topic">Up</a> | <a href="02315.html" target="topic">Next</a></div>
+<a href="02314.html" target="topic">Previous</a> | <a href="02304.html" target="topic">Up</a> | <a href="02303.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCx_CHy_CompareStop Topic Title: TCx_CHy_CompareStop Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_timer_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>Running the Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00285.html" target="topic">Applications Help</a> &gt; <a href="00324.html" target="topic">Clock Applications</a> &gt; <a href="00323.html" target="topic">clock_config</a> &gt; <a href="00326.html" target="topic">Hardware Setup</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="00322.html" target="topic">Cache Applications</a> &gt; <a href="00321.html" target="topic">cache_maintenance</a> &gt; <a href="00326.html" target="topic">Running the Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00327.html" target="topic">Previous</a> | <a href="00323.html" target="topic">Up</a> | <a href="00328.html" target="topic">Next</a></div>
+<a href="00324.html" target="topic">Previous</a> | <a href="00321.html" target="topic">Up</a> | <a href="00328.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Clock clock_config Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Cache cache_maintenance Running tthe Application Topic Title: Running the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+Running the Application</div>
 </div>
 </div>
 
@@ -50,90 +50,62 @@ Hardware Setup</div>
 <div class="Element10">
 
 <ol class="Element630">
-<li value="1" class="Element600"><strong>Project sam_c21n_xpro.X</strong>
+<li value="1" class="Element600">Build and program the application using the MPLAB X IDE.</li>
+<li value="2" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
+<li value="3" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
 <ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamc21n-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM C21N Xplained Pro Evaluation Kit</a></li>
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
 </ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect an oscilloscope to monitor the PORT pin PB23 (Pin number #8 on the EXT3 on the SAM C21n Xplained Pro Evaluation Kit)</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
+<li value="4" class="Element600">For SAM devices: Reset the device and see the following message in the console.</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="cache_maintenance_output.png" border="0" alt="" title=""></p>
 <ol class="Element630">
-<li value="2" class="Element600"> <strong> Project sam_d20_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAMD20-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D20 Xplained Pro Evaluation Kit.</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect an oscilloscope to monitor the PORT pin PB14 (Pin 9 of the EXT2 header on the SAM D20 Xplained Pro Evaluation Kit)</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
+<li value="5" class="Element600">For PIC32MZ devices: Reset the device and see the following message in the console.</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="cache_maintenance_output_pic32mz.png" border="0" alt="" title=""></p>
 <ol class="Element630">
-<li value="3" class="Element600"><strong>Project sam_d21_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd21-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D21 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect an oscilloscope to monitor the PORT pin PB14 (Pin 9 of the EXT2 header on the SAM D21 Xplained Pro Evaluation Kit)</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="4" class="Element600"><strong>Project sam_e70_xult.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602">SAM E70 Xplained Ultra Evaluation Kit</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect an oscilloscope to monitor the PORT pin PA03 (J505 header on the SAM E70 Xplained Ultra Evaluation Kit)</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="5" class="Element600"><strong>Project sam_v71_xult.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamv71-xult');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM V71 Xplained Ultra Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect an oscilloscope to monitor the PORT pin PA03 (Pin 11 of EXT1 header on the SAM V71 Xplained Ultra Evaluation Kit)</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol></div>
+<li value="6" class="Element600">Type 10 characters in the terminal. It will echo back the received bytes and toggles the LED. The following table provides the LED name.</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="89%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="11%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="89%">
+<div class="Element68">
+PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="11%">
+<div class="Element68">
+LED1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="89%">
+<div class="Element68">
+PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="11%">
+<div class="Element68">
+LED1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="89%">
+<div class="Element68">
+SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="11%">
+<div class="Element68">
+LED1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="89%">
+<div class="Element68">
+SAM V71 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="11%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01063.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00285.html" target="topic">Applications Help</a> &gt; <a href="00324.html" target="topic">Clock Applications</a> &gt; <a href="00323.html" target="topic">clock_config</a> &gt; <a href="00326.html" target="topic">Hardware Setup</a></div>
+<a href="01187.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00320.html" target="topic">Applications Help</a> &gt; <a href="00322.html" target="topic">Cache Applications</a> &gt; <a href="00321.html" target="topic">cache_maintenance</a> &gt; <a href="00326.html" target="topic">Running the Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -141,13 +113,13 @@ Hardware Setup</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01063.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01187.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00327.html" target="topic">Previous</a> | <a href="00323.html" target="topic">Up</a> | <a href="00328.html" target="topic">Next</a></div>
+<a href="00324.html" target="topic">Previous</a> | <a href="00321.html" target="topic">Up</a> | <a href="00328.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Clock clock_config Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Cache cache_maintenance Running tthe Application Topic Title: Running the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
