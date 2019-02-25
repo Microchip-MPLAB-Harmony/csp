@@ -259,8 +259,8 @@
           <Name dnOrder="1">device_cache.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6D7E462FF2BAB390D1846FBB4F1BBEB6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6D7E462FF2BAB390D1846FBB4F1BBEB6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9ED2219AFB6FDB7A6E9A066E468DAE8B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9ED2219AFB6FDB7A6E9A066E468DAE8B</UserChecksum>
         </File>
         <File dnOrder="32">
           <Type dnOrder="0">HEADER</Type>
@@ -451,8 +451,8 @@
           <Name dnOrder="1">plib_port.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9DC238AD29BA07AE6B9C2043D400E1DB</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9DC238AD29BA07AE6B9C2043D400E1DB</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7602B019EBF41D0878D58D6F9B3CF403</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7602B019EBF41D0878D58D6F9B3CF403</UserChecksum>
         </File>
         <File dnOrder="56">
           <Type dnOrder="0">HEADER</Type>
@@ -630,7 +630,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;validation;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;"/>
     </Settings>
   </Configurator>
 </Configuration>

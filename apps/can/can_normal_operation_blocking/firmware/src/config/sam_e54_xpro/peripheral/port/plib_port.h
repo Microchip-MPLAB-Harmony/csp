@@ -67,13 +67,13 @@
 
 
 /*** Macros for STANDBY pin ***/
-#define STANDBY_Set()               (PORT_REGS->GROUP[0].PORT_OUTSET = 1 << 13)
-#define STANDBY_Clear()             (PORT_REGS->GROUP[0].PORT_OUTCLR = 1 << 13)
-#define STANDBY_Toggle()            (PORT_REGS->GROUP[0].PORT_OUTTGL = 1 << 13)
-#define STANDBY_Get()               (((PORT_REGS->GROUP[0].PORT_IN >> 13)) & 0x01)
-#define STANDBY_OutputEnable()      (PORT_REGS->GROUP[0].PORT_DIRSET = 1 << 13)
-#define STANDBY_InputEnable()       (PORT_REGS->GROUP[0].PORT_DIRCLR = 1 << 13)
-#define STANDBY_PIN                  PORT_PIN_0
+#define STANDBY_Set()               (PORT_REGS->GROUP[2].PORT_OUTSET = 1 << 13)
+#define STANDBY_Clear()             (PORT_REGS->GROUP[2].PORT_OUTCLR = 1 << 13)
+#define STANDBY_Toggle()            (PORT_REGS->GROUP[2].PORT_OUTTGL = 1 << 13)
+#define STANDBY_Get()               (((PORT_REGS->GROUP[2].PORT_IN >> 13)) & 0x01)
+#define STANDBY_OutputEnable()      (PORT_REGS->GROUP[2].PORT_DIRSET = 1 << 13)
+#define STANDBY_InputEnable()       (PORT_REGS->GROUP[2].PORT_DIRCLR = 1 << 13)
+#define STANDBY_PIN                  PORT_PIN_PC13
 
 
 
