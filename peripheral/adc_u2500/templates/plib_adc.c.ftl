@@ -70,6 +70,7 @@
 <#assign ADC_SEQCTRL_VAL = "">
 <#assign ADC_EVCTRL_VAL = "">
 <#assign ADC_INTENSET_VAL = "">
+<#assign ADC_CTRLA_VAL = "">
 <#if ADC_INPUTCTRL_MUXNEG != "GND">
     <#if ADC_INPUTCTRL_VAL ! = "">
         <#assign ADC_INPUTCTRL_VAL = ADC_INPUTCTRL_VAL + " | ADC_INPUTCTRL_DIFFMODE_Msk">
@@ -163,6 +164,16 @@
         <#assign ADC_INTENSET_VAL = ADC_INTENSET_VAL + " | ADC_INTENSET_WINMON_Msk">
     <#else>
         <#assign ADC_INTENSET_VAL = "ADC_INTENSET_WINMON_Msk">
+    </#if>
+</#if>
+<#if ADC_CTRLA_RUNSTDBY == true>
+    <#assign ADC_CTRLA_VAL = "ADC_CTRLA_RUNSTDBY_Msk">
+</#if>
+<#if ADC_CTRLA_ONDEMAND == true>
+    <#if ADC_CTRLA_VAL != "">
+        <#assign ADC_CTRLA_VAL = ADC_CTRLA_VAL + " | ADC_CTRLA_ONDEMAND_Msk">
+    <#else>
+        <#assign ADC_CTRLA_VAL = "ADC_CTRLA_ONDEMAND_Msk">
     </#if>
 </#if>
 </#compress>
@@ -267,10 +278,8 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_EVCTRL = ${ADC_EVCTRL_VAL};
 </#if>
 
-<#if ADC_CTRLA_RUNSTDBY == true || ADC_CTRLA_ONDEMAND == true>
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |=
-                                      ${ADC_CTRLA_RUNSTDBY?then('ADC_CTRLA_RUNSTDBY_Msk', '')}
-                                      ${ADC_CTRLA_ONDEMAND?then('| ADC_CTRLA_ONDEMAND_Msk', '')};</@compress>
+<#if ADC_CTRLA_VAL?has_content>
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ${ADC_CTRLA_VAL};</@compress>
 </#if>
     while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
     {
