@@ -1,0 +1,56 @@
+Log.writeInfoMessage("Loading MMU for " + Variables.get("__PROCESSOR"))
+
+cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
+cacheMenu.setLabel("CACHE")
+cacheMenu.setDescription("CACHE Configuration")
+
+dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
+dcacheEnable.setLabel("Enable Data Cache")
+dcacheEnable.setDefaultValue(True)
+
+icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
+icacheEnable.setLabel("Enable Instruction Cache")
+icacheEnable.setDefaultValue(True)
+
+cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
+cacheAlign.setLabel("Cache Alignment Length")
+cacheAlign.setVisible(False)
+cacheAlign.setDefaultValue(32)
+
+configName = Variables.get("__CONFIGURATION_NAME")
+
+mmuFile = coreComponent.createFileSymbol(None, None)
+mmuFile.setSourcePath("../peripheral/mmu_sam_9x60/templates/plib_mmu.c.ftl")
+mmuFile.setOutputName("plib_mmu.c")
+mmuFile.setDestPath("peripheral/mmu/")
+mmuFile.setProjectPath("config/" + configName + "/peripheral/mmu/")
+mmuFile.setType("SOURCE")
+mmuFile.setMarkup(True)
+
+mmuHeader = coreComponent.createFileSymbol(None, None)
+mmuHeader.setSourcePath("../peripheral/mmu_sam_9x60/templates/plib_mmu.h.ftl")
+mmuHeader.setOutputName("plib_mmu.h")
+mmuHeader.setDestPath("peripheral/mmu/")
+mmuHeader.setProjectPath("config/" + configName + "/peripheral/mmu/")
+mmuHeader.setType("HEADER")
+mmuHeader.setMarkup(True)
+
+cp15Header = coreComponent.createFileSymbol(None, None)
+cp15Header.setSourcePath("../peripheral/mmu_sam_9x60/templates/cp15.h")
+cp15Header.setOutputName("cp15.h")
+cp15Header.setDestPath("peripheral/mmu/")
+cp15Header.setProjectPath("config/" + configName + "/peripheral/mmu/")
+cp15Header.setType("HEADER")
+cp15Header.setMarkup(False)
+
+mmuSystemInitFile = coreComponent.createFileSymbol(None, None)
+mmuSystemInitFile.setType("STRING")
+mmuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+mmuSystemInitFile.setSourcePath("../peripheral/mmu_sam_9x60/templates/system/initialization.c.ftl")
+mmuSystemInitFile.setMarkup(True)
+
+mmuSystemDefFile = coreComponent.createFileSymbol(None, None)
+mmuSystemDefFile.setType("STRING")
+mmuSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+mmuSystemDefFile.setSourcePath("../peripheral/mmu_sam_9x60/templates/system/definitions.h.ftl")
+mmuSystemDefFile.setMarkup(True)

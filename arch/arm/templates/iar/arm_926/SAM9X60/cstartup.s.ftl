@@ -1,39 +1,34 @@
-/* ----------------------------------------------------------------------------
- *         SAM Software Package License
- * ----------------------------------------------------------------------------
- * Copyright (c) 2016, Atmel Corporation
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * - Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the disclaimer below.
- *
- * Atmel's name may not be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ----------------------------------------------------------------------------
- */
+/*******************************************************************************
+Copyright (c) 2019 released Microchip Technology Inc.  All rights reserved.
+
+Microchip licenses to you the right to use, modify, copy and distribute
+Software only when embedded on a Microchip microcontroller or digital signal
+controller that is integrated into your product or third party product
+(pursuant to the sublicense terms in the accompanying license agreement).
+
+You should refer to the license agreement accompanying this Software for
+additional information regarding your rights and obligations.
+
+SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
+MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
+CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
+OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
+INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
+CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
+SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
+(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+*******************************************************************************/
 
         MODULE  ?cstartup
 
         ;; Forward declaration of sections.
         SECTION IRQ_STACK:DATA:NOROOT(2)
+        SECTION FIQ_STACK:DATA:NOROOT(2)
         SECTION ABT_STACK:DATA:NOROOT(2)
         SECTION UND_STACK:DATA:NOROOT(2)
-        SECTION SYS_STACK:DATA:NOROOT(2)
+        SECTION SVC_STACK:DATA:NOROOT(2)
         SECTION CSTACK:DATA:NOROOT(3)
 
 //------------------------------------------------------------------------------
@@ -46,10 +41,10 @@
 //         Definitions
 //------------------------------------------------------------------------------
 
-AT91C_BASE_AIC  DEFINE 0xFFFFF000
-AIC_SMR0        DEFINE 0x000
-AIC_IVR         DEFINE 0x100
-AIC_EOICR       DEFINE 0x130
+AIC_BASE_ADDRESS  DEFINE 0xFC020000
+AIC_SMR         DEFINE 0x04
+AIC_IVR         DEFINE 0x10
+AIC_EOICR       DEFINE 0x38
 
 MODE_MSK        DEFINE 0x1F  ; Bit mask for mode bits in CPSR
 
@@ -57,27 +52,38 @@ ARM_MODE_ABT    DEFINE 0x17
 ARM_MODE_FIQ    DEFINE 0x11
 ARM_MODE_IRQ    DEFINE 0x12
 ARM_MODE_SVC    DEFINE 0x13
-ARM_MODE_SYS    DEFINE 0x1F
+ARM_MODE_USR    DEFINE 0x10
 ARM_MODE_UND    DEFINE 0x1B
 
 I_BIT           DEFINE 0x80
 F_BIT           DEFINE 0x40
 
+ICACHE_BIT      DEFINE 0x1000
+DCACHE_BIT      DEFINE 0x04
+MMU_BIT         DEFINE 0x01
+
+REMAP_BASE_ADDRESS DEFINE 0xFFFFDE00 + 0x100
+
 //------------------------------------------------------------------------------
 //         Startup routine
 //------------------------------------------------------------------------------
 
-        SECTION .intvec:CODE:NOROOT(2)
+        SECTION .vectors:CODE:NOROOT(2)
 
         PUBLIC  _reset_vector
         PUBLIC  __iar_program_start
-        PUBLIC  irqHandler
+        PUBWEAK  irqHandler
         PUBLIC  fiqHandler
 
         EXTERN  undefined_instruction_irq_handler
         EXTERN  prefetch_abort_irq_handler
         EXTERN  data_abort_irq_handler
         EXTERN  software_interrupt_irq_handler
+        <#if USE_FREERTOS_VECTORS>
+        EXTERN FreeRTOS_IRQ_Handler
+        EXTERN FreeRTOS_SWI_Handler
+        </#if>
+
 
         DATA
 
@@ -105,10 +111,18 @@ _reset_vector:                  ; Make this a DATA label, so that stack usage
 ; If a handler is defined by the application it will take precedence.
 reset_addr:        DCD   __iar_program_start
 undefined_addr:    DCD   undefined_instruction_irq_handler
+<#if USE_FREERTOS_VECTORS>
+soft_int_addr:     DCD   FreeRTOS_SWI_Handler
+<#else>
 soft_int_addr:     DCD   software_interrupt_irq_handler
+</#if>
 prefetch_abt_addr: DCD   prefetch_abort_irq_handler
 data_abt_addr:     DCD   data_abort_irq_handler
+<#if USE_FREERTOS_VECTORS>
+irq_addr:          DCD   FreeRTOS_IRQ_Handler
+<#else>
 irq_addr:          DCD   irqHandler
+</#if>
 fiq_addr:          DCD   fiqHandler
 
 ;------------------------------------------------------------------------------
@@ -118,7 +132,36 @@ fiq_addr:          DCD   fiqHandler
         SECTION .text:CODE:NOROOT(2)
         ARM
 fiqHandler:
-        b           fiqHandler
+        sub         lr, lr, #4
+        stmfd       sp!, {lr}
+        stmfd       sp!, {r0}
+
+        ; Write in the IVR to support Protect Mode
+
+        ldr         lr, =AIC_BASE_ADDRESS
+        ldr         r0, [r14, #AIC_IVR]
+        str         lr, [r14, #AIC_IVR]
+        ; Dummy read to force AIC_IVR write completion
+        ldr         lr, [r14, #AIC_SMR]
+
+        ; Branch to interrupt handler in Supervisor mode
+
+        msr         CPSR_c, #ARM_MODE_SVC
+        stmfd       sp!, { r1-r3, r4, r12, lr}
+
+        blx          r0
+
+        ldmia       sp!, { r1-r3, r4, r12, lr}
+        msr         CPSR_c, #ARM_MODE_FIQ | I_BIT | F_BIT
+
+        ; Acknowledge interrupt
+
+        ldr         lr, =AIC_BASE_ADDRESS
+        str         lr, [r14, #AIC_EOICR]
+
+        ; Restore interrupt context and branch back to calling code
+        ldmia       sp!, {r0}
+        ldmia       sp!, {pc}^
 
 ;------------------------------------------------------------------------------
 ; Handles incoming interrupt requests by branching to the corresponding
@@ -136,11 +179,11 @@ irqHandler:
 
         ; Write in the IVR to support Protect Mode
 
-        ldr         lr, =AT91C_BASE_AIC
+        ldr         lr, =AIC_BASE_ADDRESS
         ldr         r0, [r14, #AIC_IVR]
         str         lr, [r14, #AIC_IVR]
-        ; Dummy read to force AIC_IVR write completion */ ;
-        ldr         lr, [r14, #AIC_SMR0]
+        ; Dummy read to force AIC_IVR write completion
+        ldr         lr, [r14, #AIC_SMR]
 
         ; Branch to interrupt handler in Supervisor mode
 
@@ -160,11 +203,11 @@ irqHandler:
         add         sp, sp, r1
 
         ldmia       sp!, { r1-r3, r4, r12, lr}
-        msr         CPSR_c, #ARM_MODE_IRQ | I_BIT
+        msr         CPSR_c, #ARM_MODE_IRQ | I_BIT | F_BIT
 
         ; Acknowledge interrupt
 
-        ldr         lr, =AT91C_BASE_AIC
+        ldr         lr, =AIC_BASE_ADDRESS
         str         lr, [r14, #AIC_EOICR]
 
         ; Restore interrupt context and branch back to calling code
@@ -180,8 +223,6 @@ irqHandler:
         SECTION .cstartup:CODE:NOROOT(2)
         PUBLIC  __iar_program_start
         EXTERN  main
-        EXTERN  matrix_remap_ram
-        EXTERN  board_init
         REQUIRE _reset_vector
 
         EXTWEAK __iar_data_init3
@@ -191,8 +232,28 @@ irqHandler:
 
         ARM
 
+        /* Dummy vector table for ROM-code for cases when the real vector table
+         * is relocated (QSPI-XIP) */
+        ldr     pc, =__iar_program_start
+        ldr     pc, =__iar_program_start
+        ldr     pc, =__iar_program_start
+        ldr     pc, =__iar_program_start
+        ldr     pc, =__iar_program_start
+        DCD     0
+        ldr     pc, =__iar_program_start
+        ldr     pc, =__iar_program_start
+
 __iar_program_start:
 ?cstartup:
+
+        ; Set up the fast interrupt stack pointer
+
+        mrs     r0, CPSR
+        bic     r0, r0, #MODE_MSK
+        orr     r0, r0, #ARM_MODE_FIQ
+        msr     cpsr_c, r0
+        ldr     sp, =SFE(FIQ_STACK)
+        bic     sp, sp, #0x7
 
         ; Set up the normal interrupt stack pointer
 
@@ -218,20 +279,15 @@ __iar_program_start:
         ldr     sp, =SFE(UND_STACK)
         bic     sp, sp, #0x7
 
-        ; Set up the system mode stack pointer
-
-        bic     r0, r0, #MODE_MSK
-        orr     r0, r0, #ARM_MODE_SYS
-        msr     CPSR_c, r0
-        ldr     sp, =SFE(SYS_STACK)
-        bic     sp, sp, #0x7
+        ; Can't set up the user mode stack here as we can't
+        ; switch out of user mode using cpsr
 
         ; Set up the supervisor mode stack pointer
 
         bic     r0 ,r0, #MODE_MSK
         orr     r0 ,r0, #ARM_MODE_SVC
         msr     cpsr_c, r0
-        ldr     sp, =SFE(CSTACK)
+        ldr     sp, =SFE(SVC_STACK)
         bic     sp, sp, #0x7
 
         ; Execute relocations & zero BSS
@@ -239,19 +295,16 @@ __iar_program_start:
         FUNCALL __iar_program_start, __iar_data_init3
         bl      __iar_data_init3
 
-        ; Remap SRAM at 0x00000000
-        ;FUNCALL __iar_program_start, matrix_remap_ram
-        ;bl      matrix_remap_ram
+        ; Remap 0x0 to SRAM
+        ldr     r0, =REMAP_BASE_ADDRESS
+        ldr     r1, =0x7fff
+        str     r1, [r0]
+        mov     r0, #0
 
         ; Turn on core features assumed to be enabled
 
         FUNCALL __iar_program_start, __iar_init_core
         bl      __iar_init_core
-
-        ; Perform board initialization
-
-        ;FUNCALL __iar_program_start, board_init
-        ;bl      board_init
 
         ; Setup command line
 

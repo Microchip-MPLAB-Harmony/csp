@@ -24,6 +24,26 @@
 #ifndef TOOLCHAIN_SPECIFICS_H
 #define TOOLCHAIN_SPECIFICS_H
 
+<#if CoreArchitecture?contains("ARM926")>
+static inline void __DMB(void)
+{
+	asm("" ::: "memory");
+}
+
+static inline void __DSB(void)
+{
+	asm("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
+}
+
+static inline void __ISB(void)
+{
+	asm("" ::: "memory");
+}
+    <#if COMPILER_CHOICE == "IAR">
+        <#lt>#define __ALIGNED(x) __attribute__((aligned(x)))
+    </#if>
+</#if>
+
 <#if "XC32" == COMPILER_CHOICE>
     <#lt>#include <sys/types.h>
     <#lt>#define NO_INIT        __attribute__((section(".no_init")))
