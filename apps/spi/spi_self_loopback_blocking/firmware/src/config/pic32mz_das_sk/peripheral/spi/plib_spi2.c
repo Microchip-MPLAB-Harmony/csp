@@ -65,9 +65,9 @@ void SPI2_Initialize ( void )
     /*Disable SPI2_FAULT Interrupt, */
     /*Disable SPI2_RX Interrupt, */
     /*Disable SPI2_TX Interrupt */
-    IEC4CLR = _IEC4_SPI2EIE_MASK;
-    IEC4CLR = _IEC4_SPI2RXIE_MASK;
-    IEC4CLR = _IEC4_SPI2TXIE_MASK;
+    IEC4CLR = 0x4000;
+    IEC4CLR = 0x8000;
+    IEC4CLR = 0x10000;
 
     /* STOP and Reset the SPI*/
     SPI2CON = 0;
@@ -79,9 +79,9 @@ void SPI2_Initialize ( void )
     /* Clear SPI2_FAULT Interrupt flag */
     /* Clear SPI2_RX Interrupt flag */
     /* Clear SPI2_TX Interrupt flag */
-    IFS4CLR = _IFS4_SPI2EIF_MASK;
-    IFS4CLR = _IFS4_SPI2RXIF_MASK;
-    IFS4CLR = _IFS4_SPI2TXIF_MASK;
+    IFS4CLR = 0x4000;
+    IFS4CLR = 0x8000;
+    IFS4CLR = 0x10000;
 
     /* BAUD Rate register Setup */
     SPI2BRG = 49;
@@ -147,7 +147,8 @@ bool SPI2_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
     }
 
     SPI2BRG = t_brg;
-    SPI2CONSET = setup->clockPolarity | setup->clockPhase | setup->dataBits;
+    SPI2CON = (SPI2CON & (~(_SPI2CON_MODE16_MASK | _SPI2CON_MODE32_MASK | _SPI2CON_CKP_MASK | _SPI2CON_CKE_MASK))) |
+                            (setup->clockPolarity | setup->clockPhase | setup->dataBits);
 
     return true;
 }
@@ -183,10 +184,7 @@ bool SPI2_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
         }
 
         /* Clear the receive overflow error if any */
-        if ((SPI2STAT & _SPI2STAT_SPIROV_MASK) == _SPI2STAT_SPIROV_MASK)
-        {
-            SPI2STATCLR = _SPI2STAT_SPIROV_MASK;
-        }
+        SPI2STATCLR = _SPI2STAT_SPIROV_MASK;
 
         /* Flush out any unread data in SPI read buffer from the previous transfer */
         while ((bool)(SPI2STAT & _SPI2STAT_SPIRBE_MASK) == false)

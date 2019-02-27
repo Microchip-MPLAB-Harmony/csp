@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">17B3AA2053E069C109743B26FF1673AF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">17B3AA2053E069C109743B26FF1673AF</UserChecksum>
+          <GeneratedChecksum dnOrder="4">42E5D044221F5AC1071BDC7ADF1DC3B5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">42E5D044221F5AC1071BDC7ADF1DC3B5</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
