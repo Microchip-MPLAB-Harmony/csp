@@ -3596,118 +3596,116 @@
             <User dnOrder="0" value="LFBGA"/>
           </Values>
         </Combo>
-        <Integer dnOrder="583" id="CONFIG_PRECON_PFMWS">
+        <Combo dnOrder="583" id="CONFIG_ICESEL">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="ICS_PGx2"/>
+          </Values>
+        </Combo>
+        <Integer dnOrder="584" id="CONFIG_PRECON_PFMWS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="2"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Combo dnOrder="584" id="CONFIG_SYS_CLK_CONFIG_SOSCEN">
+        <Combo dnOrder="585" id="CONFIG_SYS_CLK_CONFIG_SOSCEN">
           <Values dnOrder="0">
             <User dnOrder="0" value="ON"/>
           </Values>
         </Combo>
-        <String dnOrder="585" id="CONFIG_SYS_CLK_PBCLK1_FREQ">
+        <String dnOrder="586" id="CONFIG_SYS_CLK_PBCLK1_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="100000000"/>
           </Values>
         </String>
-        <String dnOrder="586" id="CONFIG_SYS_CLK_PBCLK2_FREQ">
+        <String dnOrder="587" id="CONFIG_SYS_CLK_PBCLK2_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="100000000"/>
           </Values>
         </String>
-        <String dnOrder="587" id="CONFIG_SYS_CLK_PBCLK3_FREQ">
+        <String dnOrder="588" id="CONFIG_SYS_CLK_PBCLK3_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="100000000"/>
           </Values>
         </String>
-        <String dnOrder="588" id="CONFIG_SYS_CLK_PBCLK4_FREQ">
+        <String dnOrder="589" id="CONFIG_SYS_CLK_PBCLK4_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="100000000"/>
           </Values>
         </String>
-        <String dnOrder="589" id="CONFIG_SYS_CLK_PBCLK5_FREQ">
+        <String dnOrder="590" id="CONFIG_SYS_CLK_PBCLK5_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="100000000"/>
           </Values>
         </String>
-        <String dnOrder="590" id="CONFIG_SYS_CLK_PBCLK6_FREQ">
+        <String dnOrder="591" id="CONFIG_SYS_CLK_PBCLK6_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="100000000"/>
           </Values>
         </String>
-        <String dnOrder="591" id="CONFIG_SYS_CLK_PBCLK7_FREQ">
+        <String dnOrder="592" id="CONFIG_SYS_CLK_PBCLK7_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <Integer dnOrder="592" id="CONFIG_SYS_CLK_PBDIV3">
+        <Integer dnOrder="593" id="CONFIG_SYS_CLK_PBDIV3">
           <Values dnOrder="0">
             <User dnOrder="0" value="2"/>
           </Values>
         </Integer>
-        <String dnOrder="593" id="CONFIG_SYS_CLK_REFCLK1_FREQ">
+        <String dnOrder="594" id="CONFIG_SYS_CLK_REFCLK1_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <String dnOrder="594" id="CONFIG_SYS_CLK_REFCLK2_FREQ">
+        <String dnOrder="595" id="CONFIG_SYS_CLK_REFCLK2_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <String dnOrder="595" id="CONFIG_SYS_CLK_REFCLK3_FREQ">
+        <String dnOrder="596" id="CONFIG_SYS_CLK_REFCLK3_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <String dnOrder="596" id="CONFIG_SYS_CLK_REFCLK4_FREQ">
+        <String dnOrder="597" id="CONFIG_SYS_CLK_REFCLK4_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <String dnOrder="597" id="CONFIG_SYS_CLK_REFCLK5_FREQ">
+        <String dnOrder="598" id="CONFIG_SYS_CLK_REFCLK5_FREQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="200000000"/>
           </Values>
         </String>
-        <String dnOrder="598" id="CPU_CLOCK_FREQUENCY">
+        <String dnOrder="599" id="CPU_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="200000000"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="599" id="EVIC_4_ENABLE">
+        <Boolean dnOrder="600" id="EVIC_4_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="600" id="EVIC_4_HANDLER_LOCK">
+        <Boolean dnOrder="601" id="EVIC_4_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="601" id="EVIC_4_INTERRUPT_HANDLER">
+        <String dnOrder="602" id="EVIC_4_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="core" priority="2" value="TIMER_1_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
-        <File dnOrder="602" id="EVIC_INT_ASM">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
         <Menu dnOrder="603" id="GPIO_PIN_CONFIGURATION0">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">

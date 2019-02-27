@@ -67,9 +67,9 @@ void SPI2_Initialize ( void )
     /*Disable SPI2_FAULT Interrupt, */
     /*Disable SPI2_RX Interrupt, */
     /*Disable SPI2_TX Interrupt */
-    IEC4CLR = _IEC4_SPI2EIE_MASK;
-    IEC4CLR = _IEC4_SPI2RXIE_MASK;
-    IEC4CLR = _IEC4_SPI2TXIE_MASK;
+    IEC4CLR = 0x4000;
+    IEC4CLR = 0x8000;
+    IEC4CLR = 0x10000;
 
     /* STOP and Reset the SPI*/
     SPI2CON = 0;
@@ -81,9 +81,9 @@ void SPI2_Initialize ( void )
     /* Clear SPI2_FAULT Interrupt flag */
     /* Clear SPI2_RX Interrupt flag */
     /* Clear SPI2_TX Interrupt flag */
-    IFS4CLR = _IFS4_SPI2EIF_MASK;
-    IFS4CLR = _IFS4_SPI2RXIF_MASK;
-    IFS4CLR = _IFS4_SPI2TXIF_MASK;
+    IFS4CLR = 0x4000;
+    IFS4CLR = 0x8000;
+    IFS4CLR = 0x10000;
 
     /* BAUD Rate register Setup */
     SPI2BRG = 49;
@@ -152,7 +152,8 @@ bool SPI2_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
     }
 
     SPI2BRG = t_brg;
-    SPI2CONSET = setup->clockPolarity | setup->clockPhase | setup->dataBits;
+    SPI2CON = (SPI2CON & (~(_SPI2CON_MODE16_MASK | _SPI2CON_MODE32_MASK | _SPI2CON_CKP_MASK | _SPI2CON_CKE_MASK))) |
+                            (setup->clockPolarity | setup->clockPhase | setup->dataBits);
 
     return true;
 }
@@ -208,10 +209,7 @@ bool SPI2_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
         }
 
         /* Clear the receive overflow error if any */
-        if ((SPI2STAT & _SPI2STAT_SPIROV_MASK) == _SPI2STAT_SPIROV_MASK)
-        {
-            SPI2STATCLR = _SPI2STAT_SPIROV_MASK;
-        }
+        SPI2STATCLR = _SPI2STAT_SPIROV_MASK;
 
         /* Make sure there is no data pending in the RX FIFO */
         /* Depending on 8/16/32 bit mode, there may be 16/8/4 bytes in the FIFO */
@@ -228,16 +226,16 @@ bool SPI2_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
         SPI2CONCLR = _SPI2CON_STXISEL_MASK;
 
         /* Clear the receive interrupt flag */
-        IFS4CLR = _IFS4_SPI2RXIF_MASK;
+        IFS4CLR = 0x8000;
 
         /* Clear the transmit interrupt flag */
-        IFS4CLR = _IFS4_SPI2TXIF_MASK;
+        IFS4CLR = 0x10000;
 
         /* Disable the receive interrupt */
-        IEC4CLR = _IEC4_SPI2RXIE_MASK;
+        IEC4CLR = 0x8000;
 
         /* Disable the transmit interrupt */
-        IEC4CLR = _IEC4_SPI2TXIE_MASK;
+        IEC4CLR = 0x10000;
 
         /* Start the first write here itself, rest will happen in ISR context */
         if((_SPI2CON_MODE32_MASK) == (SPI2CON & (_SPI2CON_MODE32_MASK)))
@@ -294,18 +292,18 @@ bool SPI2_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
              * Keep the transmit interrupt disabled. Transmit interrupt will be
              * enabled later if txCount < txSize, when rxCount = rxSize.
              */
-            IEC4SET = _IEC4_SPI2RXIE_MASK;
+            IEC4SET = 0x8000;
         }
         else
         {
             if (spi2Obj.txCount != spi2Obj.txSize)
             {
-                /* Configure SPI to generate transmit buffer empty interrupt only if more than 
+                /* Configure SPI to generate transmit buffer empty interrupt only if more than
                  * data is pending (STXISEL = '01')  */
                 SPI2CONSET = 0x00000004;
             }
             /* Enable transmit interrupt to complete the transfer in ISR context */
-            IEC4SET = _IEC4_SPI2TXIE_MASK;
+            IEC4SET = 0x10000;
         }
     }
 
@@ -356,11 +354,11 @@ void SPI2_RX_InterruptHandler (void)
                  * transmission of the remaining bytes from the transmit interrupt. */
 
                 /* Disable the receive interrupt */
-                IEC4CLR = _IEC4_SPI2RXIE_MASK;
+                IEC4CLR = 0x8000;
 
                 /* Enable the transmit interrupt. Callback will be given from the
                  * transmit interrupt, when all bytes are shifted out. */
-                IEC4SET = _IEC4_SPI2TXIE_MASK;
+                IEC4SET = 0x10000;
             }
         }
         if (spi2Obj.rxCount < spi2Obj.rxSize)
@@ -407,14 +405,11 @@ void SPI2_RX_InterruptHandler (void)
         {
             if((spi2Obj.rxCount == spi2Obj.rxSize) && (spi2Obj.txCount == spi2Obj.txSize))
             {
-                if ((SPI2STAT & _SPI2STAT_SPIROV_MASK) == _SPI2STAT_SPIROV_MASK)
-                {
-                    /* Clear receiver overflow error*/
-                    SPI2STATCLR = _SPI2STAT_SPIROV_MASK;
-                }
+                /* Clear receiver overflow error if any */
+                SPI2STATCLR = _SPI2STAT_SPIROV_MASK;
 
                 /* Disable receive interrupt */
-                IEC4CLR = _IEC4_SPI2RXIE_MASK;
+                IEC4CLR = 0x8000;
 
                 /* Transfer complete. Give a callback */
                 spi2Obj.transferIsBusy = false;
@@ -429,7 +424,7 @@ void SPI2_RX_InterruptHandler (void)
 
     /* Clear SPI2 RX Interrupt flag */
     /* This flag should cleared only after reading buffer */
-    IFS4CLR = _IFS4_SPI2RXIF_MASK;
+    IFS4CLR = 0x8000;
 }
 
 void SPI2_TX_InterruptHandler (void)
@@ -463,14 +458,11 @@ void SPI2_TX_InterruptHandler (void)
         {
             /* This part of code is executed when the shift register is empty. */
 
-            if ((SPI2STAT & _SPI2STAT_SPIROV_MASK) == _SPI2STAT_SPIROV_MASK)
-            {
-                /* Clear receiver overflow error*/
-                SPI2STATCLR = _SPI2STAT_SPIROV_MASK;
-            }
+            /* Clear receiver overflow error if any */
+            SPI2STATCLR = _SPI2STAT_SPIROV_MASK;
 
             /* Disable transmit interrupt */
-            IEC4CLR = _IEC4_SPI2TXIE_MASK;
+            IEC4CLR = 0x10000;
 
             /* Transfer complete. Give a callback */
             spi2Obj.transferIsBusy = false;
@@ -482,5 +474,5 @@ void SPI2_TX_InterruptHandler (void)
         }
     }
     /* Clear the transmit interrupt flag */
-    IFS4CLR = _IFS4_SPI2TXIF_MASK;
+    IFS4CLR = 0x10000;
 }

@@ -60,6 +60,7 @@ void ADCHS_Initialize()
     ADC3TIME = 0x0;
 
 
+
     ADCCON1 = 0x600000;
     ADCCON2 = 0x0;
     ADCCON3 = 0x0;

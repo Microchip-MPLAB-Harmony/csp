@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">114CDB029F85D6A68AE4ED588AEA600F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">114CDB029F85D6A68AE4ED588AEA600F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7DC0F5A97FE2C212A3A20630ACFCAB63</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7DC0F5A97FE2C212A3A20630ACFCAB63</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -67,8 +67,8 @@
           <Name dnOrder="1">plib_spi2.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/spi/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/spi/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FD89C5304D07059B390568267EB690A3</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FD89C5304D07059B390568267EB690A3</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BBBA0402724BA455967C8D4B96D4CBAC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BBBA0402724BA455967C8D4B96D4CBAC</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
