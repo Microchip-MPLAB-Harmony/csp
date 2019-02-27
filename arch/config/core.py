@@ -152,6 +152,13 @@ def instantiateComponent( coreComponent ):
         iarAvailable = True
         multiCompilerSupport = True
         deviceCacheHeaderName = "cache_cortex_m.h.ftl"
+    elif "ARM926" in coreArch.getValue():
+        baseArchDir = "arm"
+        compilers = [ "XC32" + naQualifier, "IAR" ]
+        iarAvailable = True
+        iarVisiblity = True
+        iarAllStacks = True
+        deviceCacheHeaderName = "cache_arm9.h.ftl"
     else: # "mips"
         isMips = True
         baseArchDir = "mips"
