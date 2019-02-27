@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0C7D699B921E60B690DC7D8EB66AB2F1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0C7D699B921E60B690DC7D8EB66AB2F1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4C19920582E783A9A6C3DA7B0A484E25</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4C19920582E783A9A6C3DA7B0A484E25</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -131,7 +131,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
