@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">605B380E87704AC80EE9FD61EE250D18</GeneratedChecksum>
-          <UserChecksum dnOrder="5">605B380E87704AC80EE9FD61EE250D18</UserChecksum>
+          <GeneratedChecksum dnOrder="4">2A13B1380F8749895F11287240BA91C6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2A13B1380F8749895F11287240BA91C6</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -67,8 +67,8 @@
           <Name dnOrder="1">plib_spi3.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/spi/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/spi/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">434A2AC883299431680CD7473603A941</GeneratedChecksum>
-          <UserChecksum dnOrder="5">434A2AC883299431680CD7473603A941</UserChecksum>
+          <GeneratedChecksum dnOrder="4">56BDD54F815021DFD6BC4146AF21313A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">56BDD54F815021DFD6BC4146AF21313A</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
@@ -155,7 +155,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
