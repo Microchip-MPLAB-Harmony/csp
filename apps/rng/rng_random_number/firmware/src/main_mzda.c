@@ -80,18 +80,19 @@ int main ( void )
             RNG_WaitForTrngCnt();
             rand_num[0] = RNG_Seed1Get();
             rand_num[1] = RNG_Seed2Get();
-            printf("\r\n\r\nSeed available in TRNG 0x%x%x", rand_num[0], rand_num[1]);
+            printf("\r\n\r\nSeed available in TRNG 0x%x%x", rand_num[1], rand_num[0]);
 
             /* Prepare PRNG to get seed from TRNG */
             RNG_LoadSet();
+            RNG_Poly1Set(0x00C00003);
             RNG_PrngEnable();
             /* Wait for at least 64 clock cycles */
             CORETIMER_DelayUs(1);
             rand_num[0] = RNG_NumGen1Get();
             rand_num[1] = RNG_NumGen2Get();
             RNG_PrngDisable();
-            printf("\r\nGenerated 64-bit Pseudo-Random Number 0x%x%x\r\n", rand_num[0], rand_num[1]);
-            /* Wait till SW0 is released */
+            printf("\r\nGenerated 64-bit Pseudo-Random Number 0x%x%x\r\n", rand_num[1], rand_num[0]);
+            /* Wait till SW1 is released */
             while(!(SW1_Get()));
             LED1_Clear();
         }
@@ -106,4 +107,3 @@ int main ( void )
 /*******************************************************************************
  End of File
 */
-
