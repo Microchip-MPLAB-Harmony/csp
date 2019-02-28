@@ -42,6 +42,7 @@ freeRTOSVectors.setDefaultValue(False)
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_sam_9x60/config/mmu.py")
 
 # load clock manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_9x60/config/clk.py")
 
 # load device specific pin manager information
 
