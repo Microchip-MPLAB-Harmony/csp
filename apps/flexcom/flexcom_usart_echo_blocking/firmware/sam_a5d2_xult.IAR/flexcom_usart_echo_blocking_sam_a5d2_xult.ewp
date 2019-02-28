@@ -2210,6 +2210,9 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\flexcom\usart\plib_flexcom_usart_local.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\l2cc\plib_l2cc.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\matrix\plib_matrix.h</name>
             </file>
             <file>
@@ -2334,6 +2337,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\flexcom\usart\plib_flexcom0_usart.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\l2cc\plib_l2cc.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\matrix\plib_matrix.c</name>
