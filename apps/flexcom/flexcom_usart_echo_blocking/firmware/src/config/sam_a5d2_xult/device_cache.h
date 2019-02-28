@@ -55,6 +55,8 @@
     define this configuration.
 */
 
+#include <stdint.h>
+#include "peripheral/l2cc/plib_l2cc.h"
 #include "peripheral/mmu/plib_mmu.h"
 
 // DOM-IGNORE-BEGIN
@@ -82,18 +84,24 @@ extern "C" {
 #define L1_DCACHE_INVALIDATE_ALL()                     dcache_InvalidateAll()
 #define L1_DCACHE_CLEAN_INVALIDATE_ALL()               dcache_CleanInvalidateAll()
 
-#define L2_DCACHE_IN_USE                               false
-#define L2_DCACHE_CLEAN_ALL()
-#define L2_DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+#define L2_DCACHE_IN_USE                               true
+#define L2_DCACHE_CLEAN_ALL()                          PLIB_L2CC_CleanCache()
+#define L2_DCACHE_INVALIDATE_BY_ADDR(addr,sz)          PLIB_L2CC_InvalidateCacheByAddr(addr,sz)
 //
-#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  dcache_CleanByAddr(addr,sz)
-#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             dcache_InvalidateByAddr(addr,sz)
-#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       dcache_CleanInvalidateByAddr(addr,sz)
-#define DCACHE_CLEAN_ALL()                             dcache_CleanAll()
-#define DCACHE_INVALIDATE_ALL()                        dcache_InvalidateAll()
-#define DCACHE_CLEAN_INVALIDATE_ALL()                  dcache_CleanInvalidateAll()
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  dcache_CleanByAddr(addr,sz);\
+                                                       PLIB_L2CC_CleanCacheByAddr(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             PLIB_L2CC_InvalidateCacheByAddr(addr,sz);\
+                                                       dcache_InvalidateByAddr(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       dcache_CleanInvalidateByAddr(addr,sz);\
+                                                       PLIB_L2CC_CleanInvalidateCacheByAddr(addr,sz)
+#define DCACHE_CLEAN_ALL()                             dcache_CleanAll();\
+                                                       PLIB_L2CC_CleanCache()
+#define DCACHE_INVALIDATE_ALL()                        PLIB_L2CC_InvalidateCache();\
+                                                       dcache_InvalidateAll()
+#define DCACHE_CLEAN_INVALIDATE_ALL()                  dcache_CleanInvalidateAll();\
+                                                       PLIB_L2CC_CleanInvalidateCache()
 //
-#define DATA_CACHE_ENABLED                             false
+#define DATA_CACHE_ENABLED                             true
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
