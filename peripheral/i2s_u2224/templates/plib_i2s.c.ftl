@@ -49,21 +49,14 @@
 
 void ${I2S_INSTANCE_NAME}_Initialize ( void )
 {
-    // Disable and reset the I2S
-    ${I2S_INSTANCE_NAME}_REGS->I2S_CTRLA =  I2S_CTRLA_SWRST_Msk;
+    // enable CLK_I2S_APB clock so we can write to I2S registers
+    MCLK_REGS->MCLK_APBDMASK |= MCLK_APBDMASK_I2S_Msk;
 
-    // Enable the desired components
-    ${I2S_INSTANCE_NAME}_REGS->I2S_CTRLA =  I2S_CTRLA_RXEN(${I2S_RX_SERIALIZER_ENABLE?then('1', '0')}) |
-                                            I2S_CTRLA_TXEN(${I2S_RX_SERIALIZER_ENABLE?then('1', '0')}) |
-                                            I2S_CTRLA_CKEN0(${I2S_CLKCTRL_0_ENABLE?then('1', '0')})
-<#if I2S_NUM_GENERIC_CLOCKS == 2>
-                                          | I2S_CTRLA_CKEN1(${I2S_CLKCTRL_1_ENABLE?then('1', '0')})
-</#if>
-                                           ;
-
+    // configure clock unit 0
     ${I2S_INSTANCE_NAME}_REGS->I2S_CLKCTRL[0] =
                                             I2S_CLKCTRL_MCKOUTDIV(${I2S_CLKCTRL_0_MCKOUTDIV}-1) |
                                             I2S_CLKCTRL_MCKDIV(${I2S_CLKCTRL_0_MCKDIV}-1) |
+                                            I2S_CLKCTRL_MCKEN(1-${I2S_CLKCTRL_0_CLKMODE}) |
                                             I2S_CLKCTRL_MCKSEL(${I2S_CLKCTRL_0_CLKMODE}) |
                                             I2S_CLKCTRL_SCKSEL(${I2S_CLKCTRL_0_CLKMODE}) |
                                             I2S_CLKCTRL_FSOUTINV(${I2S_CLKCTRL_0_FSOUTINV}) |
@@ -74,9 +67,11 @@ void ${I2S_INSTANCE_NAME}_Initialize ( void )
                                             I2S_CLKCTRL_SLOTSIZE(${I2S_CLKCTRL_0_SLOTSIZE});
 
 <#if I2S_NUM_GENERIC_CLOCKS == 2>
+    // configure clock unit 1
     ${I2S_INSTANCE_NAME}_REGS->I2S_CLKCTRL[1] =
                                             I2S_CLKCTRL_MCKOUTDIV(${I2S_CLKCTRL_1_MCKOUTDIV}-1) |
                                             I2S_CLKCTRL_MCKDIV(${I2S_CLKCTRL_1_MCKDIV}-1) |
+                                            I2S_CLKCTRL_MCKEN(1-${I2S_CLKCTRL_1_CLKMODE}) |
                                             I2S_CLKCTRL_MCKSEL(${I2S_CLKCTRL_1_CLKMODE}) |
                                             I2S_CLKCTRL_SCKSEL(${I2S_CLKCTRL_1_CLKMODE}) |
                                             I2S_CLKCTRL_FSOUTINV(${I2S_CLKCTRL_1_FSOUTINV}) |
@@ -87,6 +82,7 @@ void ${I2S_INSTANCE_NAME}_Initialize ( void )
                                             I2S_CLKCTRL_SLOTSIZE(${I2S_CLKCTRL_1_SLOTSIZE});
 </#if>
 
+    // configure TX serializer
     ${I2S_INSTANCE_NAME}_REGS->I2S_TXCTRL = I2S_TXCTRL_MONO(${I2S_TXCTRL_MONO}) |
                                             I2S_TXCTRL_WORDADJ(${I2S_TXCTRL_WORDADJ}) |
                                             I2S_TXCTRL_DATASIZE(${I2S_TXCTRL_DATASIZE}) |
@@ -94,6 +90,7 @@ void ${I2S_INSTANCE_NAME}_Initialize ( void )
                                             I2S_TXCTRL_CLKSEL(${I2S_TXCTRL_CLKSEL}) |
                                             I2S_TXCTRL_SERMODE(I2S_TXCTRL_SERMODE_TX_Val);
 
+    // configure RX serializer
     ${I2S_INSTANCE_NAME}_REGS->I2S_RXCTRL = I2S_RXCTRL_MONO(${I2S_RXCTRL_MONO}) |
                                             I2S_RXCTRL_WORDADJ(${I2S_RXCTRL_WORDADJ}) |
                                             I2S_RXCTRL_DATASIZE(${I2S_RXCTRL_DATASIZE}) |
@@ -101,9 +98,15 @@ void ${I2S_INSTANCE_NAME}_Initialize ( void )
                                             I2S_RXCTRL_CLKSEL(${I2S_RXCTRL_CLKSEL}) |
                                             I2S_RXCTRL_SERMODE(I2S_RXCTRL_SERMODE_RX_Val);
 
-    
-    // Enable the I2S
-    ${I2S_INSTANCE_NAME}_REGS->I2S_CTRLA |= I2S_CTRLA_ENABLE_Msk;
+    // enable the desired components
+    ${I2S_INSTANCE_NAME}_REGS->I2S_CTRLA =  I2S_CTRLA_RXEN(${I2S_RX_SERIALIZER_ENABLE?then('1', '0')}) |
+                                            I2S_CTRLA_TXEN(${I2S_RX_SERIALIZER_ENABLE?then('1', '0')}) |
+                                            I2S_CTRLA_CKEN0(${I2S_CLKCTRL_0_ENABLE?then('1', '0')})
+<#if I2S_NUM_GENERIC_CLOCKS == 2>
+                                          | I2S_CTRLA_CKEN1(${I2S_CLKCTRL_1_ENABLE?then('1', '0')})
+</#if>   
+    // and the I2S module
+                                          | I2S_CTRLA_ENABLE_Msk;
 }
 
 <#if I2S_LRCLK_INVERT== "1">

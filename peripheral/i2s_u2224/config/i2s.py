@@ -57,16 +57,16 @@ def instantiateComponent(i2sComponent):
 
                 i2sClkMODE = i2sComponent.createKeyValueSetSymbol("I2S_CLKCTRL_" + str(clkctrl) + "_CLKMODE", i2sCtrlCKEN)
                 i2sClkMODE.setLabel("Master/Slave Mode")
-                i2sClkMODE.addKey("SLAVE", "0", "Slave")
-                i2sClkMODE.addKey("MASTER", "1", "Master")
+                i2sClkMODE.addKey("MASTER", "0", "Master")
+                i2sClkMODE.addKey("SLAVE", "1", "Slave")
                 i2sClkMODE.setDisplayMode("Description")
                 i2sClkMODE.setOutputMode("Value")
-                i2sClkMODE.setDefaultValue(1)
+                i2sClkMODE.setDefaultValue(0)
 
                 i2sClkMCKOUTDIV = i2sComponent.createIntegerSymbol("I2S_CLKCTRL_" + str(clkctrl) + "_MCKOUTDIV", i2sCtrlCKEN)
                 # Generic clock is divided by (MCKOUTDIV+1) to obtain Master Clock n output
                 i2sClkMCKOUTDIV.setLabel("Master Clock Ouput Division Factor")
-                i2sClkMCKOUTDIV.setDefaultValue(24)
+                i2sClkMCKOUTDIV.setDefaultValue(3)
 
                 i2sClkMCKDIV = i2sComponent.createIntegerSymbol("I2S_CLKCTRL_" + str(clkctrl) + "_MCKDIV", i2sCtrlCKEN)
                 # Master Clock n is divided by (MCKDIV+1) to obtain Serial Clock n
