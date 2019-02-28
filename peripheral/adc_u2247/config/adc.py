@@ -1,6 +1,6 @@
 # coding: utf-8
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -251,8 +251,10 @@ def instantiateComponent(adcComponent):
     sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
     data_width = 12
     conv_time = float((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000.0) / clock_freq
-
-    component = int(adcInstanceName.getValue()[-1]) - 1
+    if adcInstanceName.getValue()[-1].isdigit():
+        component = int(adcInstanceName.getValue()[-1]) - 1
+    else:
+        component = ""
 
     #Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
