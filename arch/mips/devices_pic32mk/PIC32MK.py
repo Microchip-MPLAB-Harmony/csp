@@ -171,8 +171,7 @@ mipsMenu.setDescription("Configuration for MIPS processor")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mk/config/clk.py")
-print("NO JAR CLOCKMANAGER FILE AVAILABLE FOR MK - SKIP LOADING FOR NOW")
-#coreComponent.addPlugin("../peripheral/clk_pic32mk/plugin/clockmanager.jar")
+coreComponent.addPlugin("../peripheral/clk_pic32mk/plugin/clockmanager.jar")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
