@@ -50,9 +50,9 @@
 #include <string.h>
 #include "plib_${NVMCTRL_INSTANCE_NAME?lower_case}.h"
 
-uint16_t nvm_error;
-uint16_t nvm_status;
-uint16_t smart_eep_status;
+static volatile uint16_t nvm_error;
+static uint16_t nvm_status;
+static uint16_t smart_eep_status;
 
 <#assign NVMCTRL_CTRLA_VAL = "">
 <#assign NVMCTRL_SEECFG_VAL = "">
@@ -133,7 +133,7 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 <#if NVMCTRL_SEECFG_VAL?has_content >
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEECFG |= ${NVMCTRL_SEECFG_VAL};
 </#if>
-<#if INTERRUPT_ENABLE == true || NVM_INTERRUPT1_ENABLE >
+<#if INTERRUPT_ENABLE == true || NVM_INTERRUPT1_ENABLE == true >
     /* Clear all interrupt flags */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = NVMCTRL_INTFLAG_Msk;
 </#if>
@@ -160,7 +160,10 @@ uint8_t ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t ad
     int8_t wr_status = -1;
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
-    
+
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* If the address is not a quad word address, return error */
     if((address & 0x03) != 0)
     {
@@ -189,7 +192,10 @@ uint8_t ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t 
     int8_t wr_status = -1;
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
-    
+
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* If the address is not a double word address, return error */
     if((address & 0x01) != 0)
     {
@@ -220,6 +226,9 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
 
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits */
     for (i = 0; i < (${NVMCTRL_INSTANCE_NAME}_FLASH_PAGESIZE/4); i++)
     {
@@ -238,6 +247,9 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address 
 
 bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
 {
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* Set address and command */
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_ADDR = address;
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_EB | NVMCTRL_CTRLB_CMDEX_KEY;
@@ -247,8 +259,8 @@ bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
 
 uint16_t ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
-    nvm_error = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
-    
+    nvm_error |= ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+
     return nvm_error;
 }
 
@@ -315,6 +327,9 @@ void ${NVMCTRL_INSTANCE_NAME}_SmartEepromSectorReallocate(void)
 
 void ${NVMCTRL_INSTANCE_NAME}_SmartEepromFlushPageBuffer(void)
 {
+    /* Clear global error flag */
+    nvm_error = 0;
+
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_SEEFLUSH | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 <#if INTERRUPT_ENABLE == true >
@@ -343,7 +358,7 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEepromInterruptSource(NVMCTRL_INTERRUP
 </#if>
 
 <#if INTERRUPT_ENABLE == true >
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_MainCallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context )
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context )
     <#lt>{
     <#lt>    /* Register callback function */
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn = callback;
@@ -351,12 +366,14 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEepromInterruptSource(NVMCTRL_INTERRUP
     <#lt>}
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_Main_Interrupt_Handler(void)
     <#lt>{
-    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.int_flags = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG & 0xff);
-    <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = 0xff;
+    <#lt>    /* Store previous and current error flags */
+    <#lt>    nvm_error |= ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+
+    <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
 
     <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.int_flags, ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.context);
+    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.callback_fn(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.context);
     <#lt>    }
     <#lt>}
 </#if>
@@ -370,12 +387,14 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEepromInterruptSource(NVMCTRL_INTERRUP
     <#lt>}
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_Interrupt_Handler(void)
     <#lt>{
-    <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.int_flags = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG & 0x700);
-    <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = 0x700;
+    <#lt>    /* Store previous and current error flags */
+    <#lt>    nvm_error |= ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+
+    <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
 
     <#lt>    if(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn != NULL)
     <#lt>    {
-    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.int_flags, ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.context);
+    <#lt>        ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.callback_fn(${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjSmartEE.context);
     <#lt>    }
     <#lt>}
 </#if>
