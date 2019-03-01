@@ -74,13 +74,12 @@
 </#if>
 
 <#if INTERRUPT_ENABLE == true || NVM_INTERRUPT1_ENABLE == true>
-typedef void (*NVMCTRL_CALLBACK)(uint8_t int_flags, uintptr_t context);
+typedef void (*NVMCTRL_CALLBACK)(uintptr_t context);
 
 typedef struct
 {
     NVMCTRL_CALLBACK callback_fn;
     uintptr_t context;
-    uint8_t int_flags;
 }NVMCTRL_CALLBACK_OBJECT;
 </#if>
 
@@ -157,7 +156,7 @@ void ${NVMCTRL_INSTANCE_NAME}_SmartEepromFlushPageBuffer(void);
 void ${NVMCTRL_INSTANCE_NAME}_BankSwap(void);
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_MainCallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context );
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_CallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context );
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_EnableMainFlashInterruptSource(NVMCTRL_INTERRUPT0_SOURCE int_source);
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_DisableMainFlashInterruptSource(NVMCTRL_INTERRUPT0_SOURCE int_source);
 </#if>
