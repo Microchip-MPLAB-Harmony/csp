@@ -37,15 +37,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
   Description:
     The Clock System Service provides a simple interface to manage the oscillators
-    on Microchip microcontrollers. This file defines the static implementation for the 
+    on Microchip microcontrollers. This file defines the static implementation for the
     Clock System Service.
-    
+
   Remarks:
     Static functions incorporate all system clock configuration settings as
-    determined by the user via the Microchip Harmony Configurator GUI.  It provides 
-    static version of the routines, eliminating the need for an object ID or 
+    determined by the user via the Microchip Harmony Configurator GUI.  It provides
+    static version of the routines, eliminating the need for an object ID or
     object handle.
-    
+
     Static single-open interfaces also eliminate the need for the open handle.
 *******************************************************************************/
 // *****************************************************************************
@@ -76,17 +76,17 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     Clock Service.
 
   Remarks:
-    This is configuration values for the static version of the Clock System Service 
+    This is configuration values for the static version of the Clock System Service
     module is determined by the user via the Microchip Harmony Configurator GUI.
 
     The objective is to eliminate the user's need to be knowledgeable in the function of
-    the 'configuration bits' to configure the system oscillators. 
+    the 'configuration bits' to configure the system oscillators.
 */
 
 void CLK_Initialize( void )
 {
     bool int_flag = false;
-    
+
     int_flag = (bool)__builtin_disable_interrupts();
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000;
@@ -96,7 +96,7 @@ void CLK_Initialize( void )
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
-    
+
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
 <#if UPLL_EN == true>  <#-- UPLL_EN is dependent on DEVCFG2:UPLLEN -->
     /* Configure UPLL */
@@ -105,100 +105,67 @@ void CLK_Initialize( void )
     /* PLLMULT = ${PLLMULT_VAL} */
     /* PLLIDIV = ${PLLIDIV_VAL} */
     /* PLLRANGE = ${PLLRANGE_VAL} */
-    ${UPLLCON_REG}SET = 0x${UPLLCON_REG_VALUE};
+    ${UPLLCON_REG} = 0x${UPLLCON_REG_VALUE};
 </#if>
-<#if CONFIG_SYS_CLK_CONFIG_SOSCEN == "1">
-    /* Enable Secondary Oscillator */
-    OSCCONSET = _OSCCON_SOSCEN_MASK;
-<#elseif CONFIG_SYS_CLK_CONFIG_SOSCEN == "0">
-    /* Disable Secondary Oscillator */
-    OSCCONCLR = _OSCCON_SOSCEN_MASK;
+<#if UFRCEN_VAL == "FRC">
+    /* Make FRC as the input clock for USB */
+    OSCCONSET = _OSCCON_UFRCEN_MASK;
 </#if>
 
-<#if CONFIG_SYS_CLK_PBCLK1_ENABLE == true>
-
-    /* Enable Peripheral Bus 1 */
-    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV1}-1 */
-    *(volatile uint32_t *)(&${PBREGNAME1}) = ${PB1DIV_VALUE};
+<#if CONFIG_SYS_CLK_PBCLK1_ENABLE == true && CONFIG_SYS_CLK_PBDIV1 != 2>
+    /* Peripheral Bus 1 is by default enabled, set its divisor */
+    ${PBREGNAME1}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV1 -1};
 </#if>
-
 <#if CONFIG_SYS_CLK_PBCLK2_ENABLE == true>
-
-    /* Enable Peripheral Bus 2 */
-    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV2}-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&${PBREGNAME2}) = ${PB2DIV_VALUE};
+    <#if CONFIG_SYS_CLK_PBDIV2 != 2>
+        <#lt>    /* Peripheral Bus 2 is by default enabled, set its divisor */
+        <#lt>    ${PBREGNAME2}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV2 -1};
+    </#if>
 <#else>
     /* Disable Peripheral Bus 2 */
-    /* ON = 0                   */
-    *(volatile uint32_t *)(&${PBREGNAME2}CLR) = ${PBONMASK2};
+    ${PBREGNAME2}CLR = ${PBONMASK2};
 </#if>
-
 <#if CONFIG_SYS_CLK_PBCLK3_ENABLE == true>
-
-    /* Enable Peripheral Bus 3 */
-    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV3}-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&${PBREGNAME3}) = ${PB3DIV_VALUE};
+    <#if CONFIG_SYS_CLK_PBDIV3 != 2>
+        <#lt>    /* Peripheral Bus 3 is by default enabled, set its divisor */
+        <#lt>    ${PBREGNAME3}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV3 -1};
+    </#if>
 <#else>
     /* Disable Peripheral Bus 3 */
-    /* ON = 0                   */
-    *(volatile uint32_t *)(&${PBREGNAME3}CLR) = ${PBONMASK3};
+    ${PBREGNAME3}CLR = ${PBONMASK3};
 </#if>
-
-
-
 <#if CONFIG_SYS_CLK_PBCLK4_ENABLE == true>
-
-    /* Enable Peripheral Bus 4 */
-    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV4}-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&${PBREGNAME4}) = ${PB4DIV_VALUE};
+    <#if CONFIG_SYS_CLK_PBDIV4 != 2>
+        <#lt>    /* Peripheral Bus 4 is by default enabled, set its divisor */
+        <#lt>    ${PBREGNAME4}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV4 -1};
+    </#if>
 <#else>
     /* Disable Peripheral Bus 4 */
-    /* ON = 0                   */
-    *(volatile uint32_t *)(&${PBREGNAME4}CLR) = ${PBONMASK4};
+    ${PBREGNAME4}CLR = ${PBONMASK4};
 </#if>
-
-
 <#if CONFIG_SYS_CLK_PBCLK5_ENABLE == true>
-
-    /* Enable Peripheral Bus 5 */
-    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV5}-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&${PBREGNAME5}) = ${PB5DIV_VALUE};
+    <#if CONFIG_SYS_CLK_PBDIV5 != 2>
+        <#lt>    /* Peripheral Bus 5 is by default enabled, set its divisor */
+        <#lt>    ${PBREGNAME5}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV5 -1};
+    </#if>
 <#else>
     /* Disable Peripheral Bus 5 */
-    /* ON = 0                   */
-    *(volatile uint32_t *)(&${PBREGNAME5}CLR) = ${PBONMASK5};
+    ${PBREGNAME5}CLR = ${PBONMASK5};
 </#if>
-
-<#if CONFIG_SYS_CLK_PBCLK7_ENABLE == true>
-
-    /* Enable Peripheral Bus 7 */
-    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV7}-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&${PBREGNAME7}) = ${PB7DIV_VALUE};
+<#if CONFIG_SYS_CLK_PBCLK6_ENABLE?has_content>
+<#if CONFIG_SYS_CLK_PBCLK6_ENABLE == true>
+    <#if CONFIG_SYS_CLK_PBDIV6 != 4>
+        <#lt>    /* Peripheral Bus 6 is by default enabled, set its divisor */
+        <#lt>    ${PBREGNAME6}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV6 -1};
+    </#if>
 <#else>
-    /* Disable Peripheral Bus 7 */
-    /* ON = 0                   */
-    *(volatile uint32_t *)(&${PBREGNAME7}CLR) = ${PBONMASK7};
-</#if>
-<#if CONFIG_SYS_CLK_PBCLK8_ENABLE?has_content>
-<#if CONFIG_SYS_CLK_PBCLK8_ENABLE == true>
-
-    /* Enable Peripheral Bus 8 */
-    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV8}-1 */
-    /* ON = 1                             */
-    *(volatile uint32_t *)(&${PBREGNAME8}) = ${PB8DIV_VALUE};
-<#else>
-    /* Disable Peripheral Bus 8 */
-    /* ON = 0                   */
-    *(volatile uint32_t *)(&${PBREGNAME8}CLR) = ${PBONMASK8};
+    /* Disable Peripheral Bus 6 */
+    ${PBREGNAME6}CLR = ${PBONMASK6};
 </#if>
 </#if>
 
-<#if CONFIG_HAVE_REFCLOCK == true>  
+
+<#if CONFIG_HAVE_REFCLOCK == true>
 <#list 1..NUM_REFOSC_ELEMENTS as i>
     <#assign ENBL = "CONFIG_SYS_CLK_REFCLK"+i+"_ENABLE">
     <#assign REFCONREG = "REFCON"+i+"REG">
@@ -213,32 +180,23 @@ void CLK_Initialize( void )
     <#assign REFOCONRODIV = "CONFIG_SYS_CLK_RODIV"+i>
 <#if .vars[ENBL] = true>
 
-
     /* Set up Reference Clock ${i} */
-    /* REFO${i}CON register */        
+    /* REFO${i}CON register */
     /* ROSEL =  ${.vars[ROSELVAL]} */
     /* DIVSWEN = 1 */
     /* RODIV = ${.vars[REFOCONRODIV]} */
-    *(volatile uint32_t *)(&${.vars[REFCONREG]}) = ${.vars[REFCONVAL]};
-    
+    ${.vars[REFCONREG]} = ${.vars[REFCONVAL]};
     /* REFO${i}TRIM register */
     /* ROTRIM = ${.vars[ROTRIMVAL]} */
-    *(volatile uint32_t *)(&${.vars[REFTRIMREG]}) = ${.vars[REFOTRIMVAL]};
+    ${.vars[REFTRIMREG]} = ${.vars[REFOTRIMVAL]};
+    <#if (.vars[REFCLKOE]?has_content) && (.vars[REFCLKOE] == true)>
+        <#lt>    /* Enable oscillator (ON bit) and Enable Output (OE bit) */
+        <#lt>    ${.vars[REFCONREG]}SET = ${.vars[OEMASK]} | ${.vars[ONMASK]};
+    <#else>
+        <#lt>    /* Enable oscillator (ON bit) */
+        <#lt>    ${.vars[REFCONREG]}SET = ${.vars[ONMASK]};
+    </#if>
 
-    /* ON - enable oscillator */
-    *(volatile uint32_t *)(&${.vars[REFCONREG]}SET) = ${.vars[ONMASK]};
-<#else>
-
-    /* Disable Reference Clock ${i} */
-    /* ON = 0 */
-    *(volatile uint32_t *)(&${.vars[REFCONREG]}CLR) = ${.vars[ONMASK]};
-</#if>
-<#if (.vars[REFCLKOE] == true) && (.vars[ENBL] = true)>  <#-- no need to set OE bit if disabled -->
-    /* Set Output Enable bit, OE */
-    *(volatile uint32_t *)(&${.vars[REFCONREG]}SET) = ${.vars[OEMASK]};
-<#else>
-    /* Clear Output Enable bit, OE */
-    *(volatile uint32_t *)(&${.vars[REFCONREG]}CLR) = ${.vars[OEMASK]};
 </#if>
 </#list>
 
@@ -246,16 +204,16 @@ void CLK_Initialize( void )
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
-    SYSKEY = 0x33333333;  
+    SYSKEY = 0x33333333;
     if (int_flag) /* if interrupts originally were enabled, re-enable them */
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001));
     }
 }
 
- 
- 
- 
+
+
+
 <#--
 /*******************************************************************************
  End of File

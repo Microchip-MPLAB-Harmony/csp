@@ -45,9 +45,8 @@ def update_frc_div_value(symbol, event):
     # updates this symbol value with value from key/value pair
     global per_divider
     # event["value"] is the key name.  Need the corresponding value from that key name.
-    symbol.clearValue()
     symbol.setValue(per_divider.get(event["value"]), 2)
-    
+
 def _get_bitfield_names(node, outputList):
     '''
     Gets all <value > children of 'node', appending dictionary entries to 'outputList'
@@ -67,7 +66,7 @@ def _get_bitfield_names(node, outputList):
             else:
                 tempint = int(value)
             outputList[ii.getAttribute('name')] = str(tempint)
-            
+
 def enableMenu(menu, event):
     menu.setVisible(event["value"])
 
@@ -78,8 +77,6 @@ def get_val_from_str(stringVal):
     else:
         intVal = int(stringVal)
     return intVal
-    
-global _find_key    
 def _find_key(value, keypairs):
     '''
     Helper function that finds the keyname for the given value.  Needed for setting up combo symbol value.
@@ -91,15 +88,15 @@ def _find_key(value, keypairs):
             return keyname
     print("_find_key: could not find value in dictionary") # should never get here
     return ""
-    
+
 def _get_default_value(register, bitfield, value_group):
     '''
     Extracts the default value from 'initval' field of given value-group, based on register bitfield
     Input arguments:
-        register - atdf node, register name to get the intial value 
+        register - atdf node, register name to get the intial value
         bitfield - the bitfield in the register we are interested in (to get mask value from)
-        value_group - atdf node, the value group from which we want 
-        
+        value_group - atdf node, the value group from which we want
+
     Returns:
         String, representing the key value default name of that bitfield
     '''
@@ -122,7 +119,7 @@ def _get_default_value(register, bitfield, value_group):
         if(ii.getAttribute('value') == value):
             keyDefault = ii.getAttribute('name')
     return keyDefault
-    
+
 def updatePoscFreq(symbol, event):
     global newPoscFreq
     newPoscFreq = event["value"]
@@ -183,25 +180,25 @@ def set_refocon_value(clknum):
         mydict = dict(ii)
         if(mydict['index'] == str(clknum)):
             mask = get_val_from_str(mydict['symbol'].getValue())
-                
+
     # get the DIVSWEN mask value
     for ii in symbolDivswenMask:
         mydict = dict(ii)
         if(mydict['index'] == str(clknum)):
             divswenmask = get_val_from_str(mydict['symbol'].getValue())
-                
+
     # get the RODIV mask value
     for ii in symbolRodivMask:
         mydict = dict(ii)
         if(mydict['index'] == str(clknum)):
             rodivmask = get_val_from_str(mydict['symbol'].getValue())
-    
+
     # get the RODIV field bit shift value
     for ii in symbolRodivMaskLsb:
         mydict = dict(ii)
         if(mydict['index'] == str(clknum)):
             rodivmasklsb = get_val_from_str(mydict['symbol'].getValue())
-    
+
     payload = 0
     # get the user-set value for the ROSEL field (in symbolRoselValueList[ ], symbolID: CONFIG_SYS_CLK_REFCLK_SOURCEx)
     # modify payload value based on that user-set value
@@ -211,7 +208,7 @@ def set_refocon_value(clknum):
             payload = int(roselMap[mydict['symbol'].getValue()]) << int(masklsb.getValue())
             payload = payload & int(mask)
             payload = payload | divswenmask
-    
+
     # get the user-set value for the RODIV field (in symbolRodivValueList[ ], symbolID: CONFIG_SYS_CLK_RODIV)
     # modify payload value based on that user-set value
     for ii in symbolRodivValueList:         # find the right entry in this list, indicated by last char of event["id"]
@@ -219,12 +216,12 @@ def set_refocon_value(clknum):
         if(mydict['index'] == str(clknum)):  # have found right symbol (indicated in symbolID REFOCONx_VALUE)
             contributor = rodivmask & (mydict['symbol'].getValue() << rodivmasklsb)
             payload = payload | contributor
-    
+
     return str(hex(payload))
 
 def refocon_update(symbol, event):
     '''
-    This is the callback for REFOCON_VALUEx symbolID.  
+    This is the callback for REFOCON_VALUEx symbolID.
     It is called when the user changes either of the following:
         CONFIG_SYS_CLK_REFCLK_SOURCEx
         CONFIG_SYS_CLK_RODIVx
@@ -266,7 +263,7 @@ def set_pbdiv_value(clknum):
         mydict = dict(ii)
         if(mydict['index'] == str(clknum)):  # find the entry for this peripheral bus number
             onmaskval = get_val_from_str(mydict['symbol'].getValue())
-            
+
     # get the user-set value in PBDIV field
     payload = 0
     for ii in symbolPbdivList:
@@ -280,7 +277,7 @@ def set_pbdiv_value(clknum):
 
 def pbdiv_update(symbol, event):
     '''
-    This is the callback for REFOCON_VALUEx symbolID.  
+    This is the callback for REFOCON_VALUEx symbolID.
     It is called when the user changes either of the following:
         CONFIG_SYS_CLK_REFCLK_SOURCEx
         CONFIG_SYS_CLK_RODIVx
@@ -324,14 +321,14 @@ def set_refotrim_value(clknum):
 
 def refotrim_update(symbol, event):
     '''
-    This is the callback for REFOxTRIM_VALUE symbolID.  
+    This is the callback for REFOxTRIM_VALUE symbolID.
     It is called when the user changes the following:
         CONFIG_SYS_CLK_ROTRIMx
     '''
     # find out which bus applies by looking at the id.  The last char in the id is bus number
     bus = int(event["id"][-1])
     symbol.setValue(set_refotrim_value(bus),2)
-    
+
 def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, new_posc_freq):
     """
     Calculated Clock frequencies Menu Implementation.
@@ -345,7 +342,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     global LIST_FWS_MAX_FREQ
     symbolPbFreqList = []
     symbolRefoscFreqList = []
-    
+
     #Calculated Clock Frequencies
     sym_calc_freq_menu = clk_comp.createMenuSymbol("CALC_CLOCK_FREQ_MENU", clk_menu)
     sym_calc_freq_menu.setLabel("Calculated Clock Frequencies")
@@ -364,7 +361,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
         symbolPbFreqList.append([])
         targetName = "CONFIG_SYS_CLK_PBCLK" + clkInstance + "_FREQ"
         symbolPbFreqList[index] = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
-        symbolPbFreqList[index].setLabel("Peripheral Bus Clock #"+clkInstance+" Frequency (Hz)")        
+        symbolPbFreqList[index].setLabel("Peripheral Bus Clock #"+clkInstance+" Frequency (Hz)")
         targetName = "__PB" + clkInstance + "_DEF_FREQ"
         params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
         paramsChildren = params.getChildren()
@@ -392,8 +389,8 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
                 symbolRefoscFreqList[index].setDefaultValue(param.getAttribute("value"))
         symbolRefoscFreqList[index].setReadOnly(True)
         index += 1
-    
-global find_lsb_position    
+
+global find_lsb_position
 def find_lsb_position(field):
     # Take a field, and return the least significant bit position.  Range: 0-31
     if(field[:2] == "0x"):
@@ -406,7 +403,7 @@ def find_lsb_position(field):
         else:
             field_int  = field_int>>1
     return i
-    
+
 def find_max_min(node):
     # Finds the maximum and minimum values from atdf file for a given <value-group >
     children = node.getChildren()
@@ -424,15 +421,15 @@ def find_max_min(node):
         if(minval > test):
             minval = test
     return maxval, minval
-    
+
 def getBitMask(node, bitfield):
     '''
     returns mask value for given bitfield
-    
+
     Input:
         node - node of <register ...>
         bitfield - name of bitfield needing mask from
-        
+
     Returns:
         string, mask value of bitfield
     '''
@@ -441,8 +438,8 @@ def getBitMask(node, bitfield):
         if(ii.getAttribute('name') == bitfield):
             return ii.getAttribute('mask')
     print("getBitMask:  cannot find ",bitfield)    # should never get here
-    return '' 
-    
+    return ''
+
 def upllEnableUpdate(symbol, event):
     '''
     Updates symbol value based on core symbol value, taken from DEVCFG:UPLLEN field
@@ -453,17 +450,20 @@ def upllEnableUpdate(symbol, event):
         symbol.setValue(False,2)
     else:
         symbol.setValue(True,2)
-    
+
 global upllval_set_visibility
+
 def upllval_set_visibility(symbol, event):
-    if(event["id"] == 'UPOSCEN_VAL'):  # for setting visibility of symbol
-        if(event["value"] == 'POSC'):
-            symbol.setVisible(False)
-        else:
-            symbol.setVisible(True)
-    else: # get value from event and set symbol value to it
-        symbol.setValue(event['value'],2)
-        
+    global UPOSCEN_VALSYM
+    global UFRCEN_VALSYM
+    global UsbClkSrcUPOSCEN
+
+    if (UPOSCEN_VALSYM.getValue() == "UPLL") and (UFRCEN_VALSYM.getValue() == UsbClkSrcUPOSCEN):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+
 def updateUpllcon(symbol, event):
     # updates the UPLLCON register value based on any of its bitfields being changed by the user
     global UPLLCON_VALSYM
@@ -477,7 +477,7 @@ def updateUpllcon(symbol, event):
     global pllodivKeyvals
     global symbolUposcenMask
     global uposcenKeyvals
-    
+
     startVal = UPLLCON_VALSYM.getValue()
     if(event['id']=='PLLRANGE_VAL'):
         startVal &= ~int(Database.getSymbolValue("core","PLLRANGE_MASK"),16)
@@ -510,7 +510,6 @@ def scan_atdf_for_upll_fields(coreComponent):
     global pllmultKeyvals
     global pllodivKeyvals
     global uposcenKeyvals
-    global clkValGrp_DEVCFG1__FSOSCEN 
     global clkValGrp_OSCCON__FRCDIV
     global clkValGrp_REFO1CON__ROSEL
     global clkValGrp_REFO1CON__RODIV
@@ -521,15 +520,16 @@ def scan_atdf_for_upll_fields(coreComponent):
     global clkValGrp_UPLLCON__PLLODIV
     global clkValGrp_UPLLCON__UPOSCEN
     global UPOSCEN_VALSYM
+    global UPLL_SYM
     symbolName = []
     index = 0
-    
+
     for register_group in atdf_content.iter("register-group"):
         if "CRU" in register_group.attrib["name"]:
             for register_tag in register_group.iter("register"):
 
                 # looking for UPLLCON in atdf file
-                
+
                 if(register_tag.attrib["name"] == "UPLLCON"):
                     # register name for use in ftl file
                     symbolName.append([])
@@ -543,7 +543,7 @@ def scan_atdf_for_upll_fields(coreComponent):
                             PLLRANGE bitfield value
                                 get key/value pairs first from atdf file
                                 then define the combo symbol using those pairs
-                                
+
                                 Default value set by DEVCFG2::FPLLRNG field
                             '''
                             items = clkValGrp_UPLLCON__PLLRANGE.getChildren()  # all <value > children of this bitfield
@@ -552,22 +552,18 @@ def scan_atdf_for_upll_fields(coreComponent):
                                 if(ii.getAttribute("name") != ""):
                                     keyVals[ii.getAttribute("name")] = _process_valuegroup_entry(ii)
                             pllrangeKeyvals = keyVals
-                            PLLRANGE_VALSYM = coreComponent.createComboSymbol("PLLRANGE_VAL", UPOSCEN_VALSYM, sorted(keyVals.keys()))
+                            PLLRANGE_VALSYM = coreComponent.createComboSymbol("PLLRANGE_VAL", UPLL_SYM, sorted(keyVals.keys()))
                             PLLRANGE_VALSYM.setLabel("PLLRANGE")
                             PLLRANGE_VALSYM.setVisible(True)
-                            targetsym = "CONFIG_FPLLRNG"
-                            odivVal = Database.getSymbolValue("core",targetsym)
-                            for ii in keyVals:
-                                if(ii == odivVal):
-                                    PLLRANGE_VALSYM.setDefaultValue(str(ii))
-                            PLLRANGE_VALSYM.setDependencies(upllval_set_visibility, ["UPOSCEN_VAL", "core."+targetsym])
-                            
+                            PLLRANGE_VALSYM.setDefaultValue("RANGE_8_16_MHZ")
+                            PLLRANGE_VALSYM.setDependencies(upllval_set_visibility, ["UPOSCEN_VAL","UFRCEN_VAL"])
+
                             # this is for bitfield mask value - put into a symbol for ftl file retrieval
                             PLLRANGE_SYM = coreComponent.createStringSymbol("PLLRANGE_MASK", None)
                             PLLRANGE_SYM.setVisible(False)
                             PLLRANGE_SYM.setDefaultValue(bitfield_tag.attrib["mask"])
                             symbolPllRangeMask.append(PLLRANGE_SYM)
-                            
+
                         if(bitfield_tag.attrib["name"] == "PLLIDIV"):  # PLLIDIV field
                             '''
                             PLLIDIV bitfield value
@@ -580,17 +576,12 @@ def scan_atdf_for_upll_fields(coreComponent):
                                 if(ii.getAttribute("name") != ""):
                                     keyVals[ii.getAttribute("name")] = _process_valuegroup_entry(ii)
                             pllidivKeyVals = keyVals
-                            PLLIDIV_VALSYM = coreComponent.createComboSymbol("PLLIDIV_VAL", UPOSCEN_VALSYM, sorted(keyVals.keys()))
+                            PLLIDIV_VALSYM = coreComponent.createComboSymbol("PLLIDIV_VAL", UPLL_SYM, sorted(keyVals.keys()))
                             PLLIDIV_VALSYM.setLabel("PLLIDIV")
                             PLLIDIV_VALSYM.setVisible(True)
-                            # default setting is specified by FPLLIDIV<2:0> in DEVCFG2 register - use that value for default setting
-                            targetsym = "CONFIG_FPLLIDIV"
-                            idivVal = Database.getSymbolValue("core",targetsym)
-                            for ii in keyVals:
-                                if(ii == idivVal):
-                                    PLLIDIV_VALSYM.setDefaultValue(str(ii))
-                            PLLIDIV_VALSYM.setDependencies(upllval_set_visibility, ["UPOSCEN_VAL", "core."+targetsym])  # keep register value in sync with DEVCFG2 FPLLIDIV<2:0> bitfield
-                            
+                            PLLIDIV_VALSYM.setDefaultValue("DIV_1")
+                            PLLIDIV_VALSYM.setDependencies(upllval_set_visibility, ["UPOSCEN_VAL", "UFRCEN_VAL"])
+
                             # this is for bitfield mask value - put into a symbol for ftl file retrieval
                             symbolName.append([])
                             symbolName[index] = coreComponent.createStringSymbol("PLLIDIV_MASK", None)
@@ -611,17 +602,12 @@ def scan_atdf_for_upll_fields(coreComponent):
                                 if(ii.getAttribute("name") != ""):
                                     keyVals[ii.getAttribute("name")] = _process_valuegroup_entry(ii)
                             pllmultKeyvals = keyVals
-                            PLLMULT_VALSYM = coreComponent.createComboSymbol("PLLMULT_VAL", UPOSCEN_VALSYM, sorted(keyVals.keys()))
+                            PLLMULT_VALSYM = coreComponent.createComboSymbol("PLLMULT_VAL", UPLL_SYM, sorted(keyVals.keys()))
                             PLLMULT_VALSYM.setLabel("PLLMULT")
                             PLLMULT_VALSYM.setVisible(True)
-                            # default setting is specified by FPLLMULT<6:0> in DEVCFG2 register - use that value for default setting
-                            targetsym = "CONFIG_FPLLMULT"
-                            multVal = Database.getSymbolValue("core",targetsym)
-                            for ii in keyVals:
-                                if(ii == multVal):
-                                    PLLMULT_VALSYM.setDefaultValue(str(ii))
-                            PLLMULT_VALSYM.setDependencies(upllval_set_visibility, ["UPOSCEN_VAL", "core."+targetsym])  # keep register value in sync with DEVCFG2 FPLLMULT<6:0> bitfield
-                        
+                            PLLMULT_VALSYM.setDefaultValue("MUL_32")
+                            PLLMULT_VALSYM.setDependencies(upllval_set_visibility, ["UPOSCEN_VAL", "UFRCEN_VAL"])
+
                             # this is for bitfield mask value - put into a symbol for ftl file retrieval
                             symbolName.append([])
                             symbolName[index] = coreComponent.createStringSymbol("PLLMULT_MASK", None)
@@ -629,7 +615,7 @@ def scan_atdf_for_upll_fields(coreComponent):
                             symbolName[index].setDefaultValue(bitfield_tag.attrib["mask"])
                             symbolPllMultMask.append(symbolName[index])
                             index += 1
-                            
+
                         if(bitfield_tag.attrib["name"] == "PLLODIV"):  # PLLODIV field
                             '''
                             PLLODIV bitfield value
@@ -642,17 +628,12 @@ def scan_atdf_for_upll_fields(coreComponent):
                                 if(ii.getAttribute("name") != ""):
                                     keyVals[ii.getAttribute("name")] = _process_valuegroup_entry(ii)
                             pllodivKeyvals = keyVals
-                            PLLODIV_VALSYM = coreComponent.createComboSymbol("PLLODIV_VAL", UPOSCEN_VALSYM, sorted(keyVals.keys()))
+                            PLLODIV_VALSYM = coreComponent.createComboSymbol("PLLODIV_VAL", UPLL_SYM, sorted(keyVals.keys()))
                             PLLODIV_VALSYM.setLabel("PLLODIV")
                             PLLODIV_VALSYM.setVisible(True)
-                            # default setting is specified by FPLLODIV<2:0> in DEVCFG2 register - use that value for default setting
-                            targetsym = "CONFIG_FPLLODIV"
-                            odivVal = Database.getSymbolValue("core",targetsym)
-                            for ii in keyVals:
-                                if(ii == odivVal):
-                                    PLLODIV_VALSYM.setDefaultValue(str(ii))
-                            PLLODIV_VALSYM.setDependencies(upllval_set_visibility, ["UPOSCEN_VAL", "core."+targetsym])  # keep register value in sync with DEVCFG2 FPLLODIV<2:0> bitfield
-                        
+                            PLLODIV_VALSYM.setDefaultValue("DIV_8")
+                            PLLODIV_VALSYM.setDependencies(upllval_set_visibility, ["UPOSCEN_VAL", "UFRCEN_VAL"])
+
                             # this is for bitfield mask value - put into a symbol for ftl file retrieval
                             symbolName.append([])
                             symbolName[index] = coreComponent.createStringSymbol("PLLODIV_MASK", None)
@@ -660,7 +641,7 @@ def scan_atdf_for_upll_fields(coreComponent):
                             symbolName[index].setDefaultValue(bitfield_tag.attrib["mask"])
                             symbolPllodivMask.append(symbolName[index])
                             index += 1
-                            
+
                         if(bitfield_tag.attrib["name"] == "UPOSCEN"):  # UPOSCEN field
                             # this is for bitfield mask value - put into a symbol for ftl file retrieval
                             symbolName.append([])
@@ -669,9 +650,9 @@ def scan_atdf_for_upll_fields(coreComponent):
                             symbolName[index].setDefaultValue(bitfield_tag.attrib["mask"])
                             symbolUposcenMask.append(symbolName[index])
                             index += 1
-                            
 
-        
+
+
 if __name__ == "__main__":
     global atdf_content
     global refOscList
@@ -695,7 +676,6 @@ if __name__ == "__main__":
     global symbolRotrimmaskLsb
     global symbolRotrimMask
     global per_divider
-    global clkValGrp_DEVCFG1__FSOSCEN 
     global clkValGrp_OSCCON__FRCDIV
     global clkValGrp_REFO1CON__ROSEL
     global clkValGrp_REFO1CON__RODIV
@@ -706,24 +686,26 @@ if __name__ == "__main__":
     global clkValGrp_UPLLCON__PLLODIV
     global clkValGrp_UPLLCON__UPOSCEN
     global UPOSCEN_VALSYM
+    global UFRCEN_VALSYM
     global UPLLCON_VALSYM
     global pllrangeKeyvals
     global pllidivKeyVals
     global pllmultKeyvals
-    global pllodivKeyvals    
+    global pllodivKeyvals
+    global UPLL_SYM
+    global UsbClkSrcUPOSCEN
 
     # atdf-specific areas
-    clkValGrp_DEVCFG1__FSOSCEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="DEVCFG1__FSOSCEN"]')
     clkValGrp_OSCCON__FRCDIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="OSCCON__FRCDIV"]')
     clkValGrp_REFO1CON__ROSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="REFO1CON__ROSEL"]')
-    clkValGrp_REFO1CON__RODIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="REFO1CON__RODIV"]')    
-    clkValGrp_REFO1TRIM__ROTRIM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="REFO1TRIM__ROTRIM"]')   
+    clkValGrp_REFO1CON__RODIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="REFO1CON__RODIV"]')
+    clkValGrp_REFO1TRIM__ROTRIM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="REFO1TRIM__ROTRIM"]')
     clkValGrp_UPLLCON__PLLRANGE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="UPLLCON__PLLRANGE"]')
     clkValGrp_UPLLCON__PLLIDIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="UPLLCON__PLLIDIV"]')
     clkValGrp_UPLLCON__PLLMULT = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="UPLLCON__PLLMULT"]')
     clkValGrp_UPLLCON__PLLODIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="UPLLCON__PLLODIV"]')
     clkValGrp_UPLLCON__UPOSCEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="UPLLCON__UPOSCEN"]')
-    
+
     # divider value:  get values/keys from atdf
     per_divider = {}
     node = clkValGrp_OSCCON__FRCDIV.getChildren()
@@ -734,14 +716,14 @@ if __name__ == "__main__":
         else:
             argval = argterm
         per_divider[node[ii].getAttribute("name")] = argval
-    
+
     # Used to include family-specific code in ftl file
     PROC_FAM_SYMBOL = coreComponent.createStringSymbol("PROC_FAMILY",None)
     PROC_FAM_SYMBOL.setVisible(False)
     PROC_FAM_SYMBOL.setDefaultValue('Default')              # set to nominal value
-    if("PIC32MK" in Variables.get("__PROCESSOR")):  
+    if("PIC32MK" in Variables.get("__PROCESSOR")):
         PROC_FAM_SYMBOL.setDefaultValue('PIC32MK')
-    
+
     # Clock Manager Configuration Menu
     SYM_CLK_MENU = coreComponent.createMenuSymbol("CLK_MIPS32", None)
     SYM_CLK_MENU.setLabel("Clock Menu")
@@ -749,7 +731,7 @@ if __name__ == "__main__":
 
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
-    CLK_MANAGER_SELECT.setDefaultValue("mz:MZClockModel")
+    CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk:MKClockModel")
 
     # see if UPLL is enabled through FUSE configuration
     upllEnableSym = coreComponent.createBooleanSymbol("UPLL_EN", None)
@@ -761,8 +743,8 @@ if __name__ == "__main__":
     else:
         upllEnableSym.setDefaultValue(True)
     upllEnableSym.setDependencies(upllEnableUpdate, [targetSym]) # in case user changes DEFCFG2:UPLLEN
-    
-    
+
+
     pbList = []
     symbolName = []
     symbolPbRegMaskLsb = []     # for REFOxCON:PBxDIV field bit shift, contains list of {symbolName, bus number}
@@ -794,7 +776,7 @@ if __name__ == "__main__":
                 #looking for PB1DIV, PB2DIV, ... (for making menu entries - further down, and ftl-related symbols)
                 if ("PB" in register_tag.attrib["name"]) and ("DIV" in register_tag.attrib["name"]):
                     clockNum = register_tag.attrib["name"][2]  # get the clock number (char position 2 of field)
-                    pbList.append(clockNum)   
+                    pbList.append(clockNum)
                     for bitfield_tag in register_tag.iter("bitfield"):
                         if(bitfield_tag.attrib["name"] == "PBDIV"):  # PBDIV field
                             # this is for bitfield mask value - put into a symbol for ftl file retrieval
@@ -813,7 +795,7 @@ if __name__ == "__main__":
                             symbolName[index].setDefaultValue(str(lsb))
                             symbolPbRegMaskLsb.append({'symbol':symbolName[index], 'index':clockNum})
                             index += 1
-                            
+
                         elif(bitfield_tag.attrib["name"] == "ON"):  # ON field mask
                             symbolName.append([])
                             symbolName[index] = coreComponent.createStringSymbol("PBONMASK"+clockNum, None)
@@ -823,23 +805,23 @@ if __name__ == "__main__":
                             index += 1
                     # this is for actual register name - put  into a symbol for ftl file retrieval
                     symbolName.append([])
-                    
+
                     symbolName[index] = coreComponent.createStringSymbol("PBREGNAME"+clockNum, None)
                     symbolName[index].setVisible(False)
                     symbolName[index].setDefaultValue(register_tag.attrib["name"])
                     index += 1
-                    symbolName.append([])                    
+                    symbolName.append([])
                     symbolName[index] = coreComponent.createStringSymbol("PBREGNAME"+clockNum+"_CLR", None)
                     symbolName[index].setVisible(False)
                     symbolName[index].setDefaultValue(register_tag.attrib["name"]+"CLR")
                     index += 1
-                    symbolName.append([])                    
+                    symbolName.append([])
                     symbolName[index] = coreComponent.createStringSymbol("PBREGNAME"+clockNum+"_SET", None)
                     symbolName[index].setVisible(False)
                     symbolName[index].setDefaultValue(register_tag.attrib["name"]+"SET")
                     index += 1
-    
-                #looking for REFO1CON, REFO2CON, ... 
+
+                #looking for REFO1CON, REFO2CON, ...
                 if ("REFO" in register_tag.attrib["name"]) and ("CON" in register_tag.attrib["name"]):
                     refoscNum = register_tag.attrib["name"][4]  # get the clock number (char position 4 of REFOxCON field in atdf file)
                     refOscList.append(refoscNum)
@@ -903,7 +885,7 @@ if __name__ == "__main__":
                             symbolName[index].setVisible(False)
                             symbolName[index].setDefaultValue(bitfield_tag.attrib["mask"])
                             index += 1
-                            
+
                 # looking for REFO1TRIM, REFO2TRIM, ... in atdf file
                 if ("REFO" in register_tag.attrib["name"]) and ("TRIM" in register_tag.attrib["name"]):
                     refoscNum = register_tag.attrib["name"][4]  # get the clock number (char position 4 of REFOxCON field in atdf file)
@@ -935,11 +917,11 @@ if __name__ == "__main__":
     symbolLen.setVisible(False)
     symbolLen.setDefaultValue(len(refOscList))
     # end of generation of ftl file-related symbols (values derived from atdf file)
-    
+
     # Menu items listed here
     CLK_MENU_COMMENT = coreComponent.createCommentSymbol("clkSettingsComment", SYM_CLK_MENU)
     CLK_MENU_COMMENT.setLabel("**** All settings listed here can be configured using the Clock Configurator ****")
-    
+
     # static or dynamic - always static
     CLK_SVC_MODE = coreComponent.createKeyValueSetSymbol("clkSvcMode", SYM_CLK_MENU)
     CLK_SVC_MODE.setDependencies(enableMenu, ["ClkSvcMenu"])
@@ -956,33 +938,25 @@ if __name__ == "__main__":
     CLK_CFG_SETTINGS.setLabel("Clock Configurator Settings")
     CLK_CFG_SETTINGS.setDescription("Various Clock System Settings")
     CLK_CFG_SETTINGS.setVisible(True)
-    
+
     frcdiv = {}
     _get_bitfield_names(clkValGrp_OSCCON__FRCDIV, frcdiv)
     FRC_CLK_SETTING = coreComponent.createComboSymbol("CONFIG_SYS_CLK_FRCDIV", CLK_CFG_SETTINGS, frcdiv.keys())
     FRC_CLK_SETTING.setLabel("FRC Clock Divider")
     FRC_CLK_SETTING.setDescription(clkValGrp_OSCCON__FRCDIV.getAttribute('caption'))
-    FRC_CLK_SETTING.setDefaultValue("OSC_FRC_DIV_1")
+    FRC_CLK_SETTING.setDefaultValue("DIV1")
     FRC_CLK_SETTING.setVisible(True)
-    
+
     # derived from above symbol - used in ftl file
     FRC_CLK_VALUE = coreComponent.createStringSymbol("SYS_CLK_FRCDIV", None)
     FRC_CLK_VALUE.setVisible(False)
     FRC_CLK_VALUE.setDefaultValue("0")
     FRC_CLK_VALUE.setDependencies(update_frc_div_value,["CONFIG_SYS_CLK_FRCDIV"])
-    
+
     HAVE_REFCLK = coreComponent.createBooleanSymbol("CONFIG_HAVE_REFCLOCK", CLK_CFG_SETTINGS)
     HAVE_REFCLK.setLabel("Have reference clock available")
     HAVE_REFCLK.setVisible(False)
     HAVE_REFCLK.setDefaultValue(True)
-    
-    # secondary oscillator enable - made this by default enabled
-    soscen = {}
-    _get_bitfield_names(clkValGrp_DEVCFG1__FSOSCEN, soscen)
-    SOSC_EN_SETTING = coreComponent.createComboSymbol("CONFIG_SYS_CLK_CONFIG_SOSCEN", CLK_CFG_SETTINGS, sorted(soscen.keys()))
-    SOSC_EN_SETTING.setLabel("Secondary oscillator enable")
-    SOSC_EN_SETTING.setDescription(clkValGrp_DEVCFG1__FSOSCEN.getAttribute('caption'))
-    SOSC_EN_SETTING.setVisible(True)
 
     # now create the menus for all peripheral buses present in this part
     global pbclkEnNameList
@@ -1010,28 +984,28 @@ if __name__ == "__main__":
     refotrimval = []
     symbolrefotrimval = []
     symbolRotrimUserVal = []
-    
+
     # Peripheral Bus symbol creation
     # pbList was all Peripheral Bus clock indices found in the atdf file.
     pbindex = 0
     for pbus in pbList:
         symbolEnId = "CONFIG_SYS_CLK_PBCLK"+pbus+"_ENABLE"
         labelEnVal = "Enable Peripheral Clock Bus #"+pbus
-        symbolEnName = "PERIP_CLK_BUS"+pbus+"EN" 
         symbolDivId = "CONFIG_SYS_CLK_PBDIV"+pbus
-        symbolDivName = "PERIP_CLK_BUS"+pbus+"DIV"
         labelDivVal = "Peripheral Clock Bus #"+pbus+" Divisor (1-128)"
         symbolEnName = coreComponent.createBooleanSymbol(symbolEnId, CLK_CFG_SETTINGS)
         pbclkEnNameList.append(symbolEnId)
         symbolEnName.setLabel(labelEnVal)
-        if(pbus=='1'):
-            symbolEnName.setVisible(False)  # cannot disable peripheral bus 1
+        if(pbus=='1') or (pbus=='7'):
+            symbolEnName.setReadOnly(True)  # cannot disable peripheral bus 1
         symbolEnName.setDefaultValue(True)
-        
+
         # PBDIV field
         symbolDivName = coreComponent.createIntegerSymbol(symbolDivId, symbolEnName)
-        if(pbus!='1'):  # cannot disable peripheral bus 1
+        if(pbus!='1') or (pbus!='7') :  # cannot disable peripheral bus 1 or 7
             symbolDivName.setDependencies(enableMenu, [symbolEnId])
+        if(pbus=='7'):
+            symbolDivName.setReadOnly(True)
         symbolDivName.setLabel(labelDivVal)
         symbolDivName.setMin(1)
         symbolDivName.setMax(128)
@@ -1044,7 +1018,7 @@ if __name__ == "__main__":
                 symbolDivName.setDefaultValue(int(param.getAttribute("value")))
         symbolDivName.setVisible(True)
         symbolPbdivList.append({"symbol":symbolDivName, "index":pbus})
-        
+
         # Setting for PBxDIV to use in ftl file - for when a Peripheral Bus has been enabled
         symbolPbdiv.append([])
         symbolPbdiv[pbindex] = coreComponent.createStringSymbol("PB"+pbus+"DIV_VALUE", None)
@@ -1062,13 +1036,13 @@ if __name__ == "__main__":
         roselSymbolList.append([])
         rodivSymbolList.append([])
         rotrimSymbolList.append([])
-        
+
         enSymId = "CONFIG_SYS_CLK_REFCLK"+clk+"_ENABLE"
         enSymbolList[listIndex] = coreComponent.createBooleanSymbol(enSymId, CLK_CFG_SETTINGS)
         enSymbolList[listIndex].setLabel("Enable Reference Clock REFCLKO"+clk)
         enSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 enabled")
-        enSymbolList[listIndex].setDefaultValue(True)
-        
+        enSymbolList[listIndex].setDefaultValue(False)
+
         # output enable of ref clk
         oeSymId = "CONFIG_SYS_CLK_REFCLK"+clk+"_OE"
         oeSymbolList[listIndex] = coreComponent.createBooleanSymbol(oeSymId, enSymbolList[listIndex])
@@ -1077,7 +1051,8 @@ if __name__ == "__main__":
         oeSymbolList[listIndex].setDescription("Sets whether to have reference clock 1 output enable")
         oeSymbolList[listIndex].setReadOnly(False)
         oeSymbolList[listIndex].setDefaultValue(False)
-        
+        oeSymbolList[listIndex].setVisible(False)
+
         # ROSEL
         srcSymId = "CONFIG_SYS_CLK_REFCLK_SOURCE" + clk
         labelName = "clkValGrp_REFO" + clk + "CON__ROSEL"
@@ -1088,7 +1063,8 @@ if __name__ == "__main__":
         sourceSymbolList[listIndex].setLabel("Reference Clock Source Select ROSEL")
         sourceSymbolList[listIndex].setDescription(clkValGrp_REFO1CON__ROSEL.getAttribute('caption'))
         sourceSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
-        sourceSymbolList[listIndex].setVisible(True)
+        sourceSymbolList[listIndex].setDefaultValue("SYSCLK")
+        sourceSymbolList[listIndex].setVisible(False)
         symbolRoselValueList.append({'symbol':sourceSymbolList[listIndex],'index':clk})
         for ii in roselsrc:
             roselMap[ii] = roselsrc[ii]
@@ -1103,9 +1079,9 @@ if __name__ == "__main__":
         rodivSymbolList[listIndex].setMin(minValue)
         rodivSymbolList[listIndex].setMax(maxValue)
         rodivSymbolList[listIndex].setDefaultValue(0)
-        rodivSymbolList[listIndex].setVisible(True)
+        rodivSymbolList[listIndex].setVisible(False)
         symbolRodivValueList.append({'symbol':rodivSymbolList[listIndex],'index':clk})
-  
+
         # ROTRIM
         maxValue, minValue = find_max_min(clkValGrp_REFO1TRIM__ROTRIM)
         rotrimSymId = "CONFIG_SYS_CLK_ROTRIM"+clk
@@ -1115,9 +1091,9 @@ if __name__ == "__main__":
         rotrimSymbolList[listIndex].setMin(minValue)
         rotrimSymbolList[listIndex].setMax(maxValue)
         rotrimSymbolList[listIndex].setDefaultValue(0)
-        rotrimSymbolList[listIndex].setVisible(True)
+        rotrimSymbolList[listIndex].setVisible(False)
         symbolRotrimUserVal.append({'symbol':rotrimSymbolList[listIndex],'index':clk})
-        
+
         # python-computed REFOxCON register setting to use in ftl file
         refconval.append([])
         refconval[listIndex] = coreComponent.createStringSymbol("REFOCON"+clk+"_VALUE", None)
@@ -1125,7 +1101,7 @@ if __name__ == "__main__":
         refconval[listIndex].setDefaultValue(set_refocon_value(clk))
         # change based on CONFIG_SYS_CLK_REFCLK_ROSELx or CONFIG_SYS_CLK_RODIVx changes
         refconval[listIndex].setDependencies(refocon_update, [srcSymId, rodivSymId])
-        
+
         # python-computed REFOxTRIM register setting to use in ftl file
         refotrimval.append([])
         refotrimval[listIndex] = coreComponent.createStringSymbol("REFO"+clk+"TRIM_VALUE", None)
@@ -1144,7 +1120,7 @@ if __name__ == "__main__":
     node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__POSC_DEF_FREQ"]')
     POSC_IN_FREQ.setDefaultValue(int(node.getAttribute("value")))
     POSC_IN_FREQ.setVisible(True)
-    
+
     # secondary oscillator frequency
     SOSC_IN_FREQ = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL", CLK_CFG_SETTINGS)
     SOSC_IN_FREQ.setLabel("Secondary Oscillator Input Frequency (Hz)")
@@ -1155,27 +1131,33 @@ if __name__ == "__main__":
 
     # UPLL
     UPLL_SYM = coreComponent.createMenuSymbol("CONFIG_UPLL", CLK_CFG_SETTINGS)
-    UPLL_SYM.setLabel("USB PLL")
+    UPLL_SYM.setLabel("USB Clock Configuration")
     UPLL_SYM.setVisible(True)
-    
+
     # UPOSCEN, Output Enable bit
     '''
         get key/value pairs first from atdf file
         then define the combo symbol using those pairs
-    '''    
+    '''
+    UsbClkSrcUPOSCEN = "USB Input Clock Source 1"
     items = clkValGrp_UPLLCON__UPOSCEN.getChildren()
     keyVals = {}
     for ii in items:  # get all key values from atdf file for this bitfield
         if(ii.getAttribute("name") != ""):
             keyVals[ii.getAttribute("name")] = _process_valuegroup_entry(ii)
     uposcenKeyvals = keyVals
-    UPOSCEN_VALSYM = coreComponent.createComboSymbol("UPOSCEN_VAL", UPLL_SYM, sorted(keyVals.keys()))
-    UPOSCEN_VALSYM.setLabel("USB Output Enable")
+    UPOSCEN_VALSYM = coreComponent.createComboSymbol("UPOSCEN_VAL",UPLL_SYM, ["UPLL","POSC"])
+    UPOSCEN_VALSYM.setLabel(UsbClkSrcUPOSCEN)
     UPOSCEN_VALSYM.setVisible(True)
-    UPOSCEN_VALSYM.setDefaultValue(_find_key('0',keyVals))  # USB input clock is UPLL
+    UPOSCEN_VALSYM.setDefaultValue("UPLL")  # USB input clock is UPLL
+
+    UFRCEN_VALSYM = coreComponent.createComboSymbol("UFRCEN_VAL", UPLL_SYM, ["FRC",UsbClkSrcUPOSCEN])
+    UFRCEN_VALSYM.setLabel("USB Input Clock Source")
+    UFRCEN_VALSYM.setVisible(True)
+    UFRCEN_VALSYM.setDefaultValue(UsbClkSrcUPOSCEN)  # USB input clock is selected from UPOSCEN
 
     scan_atdf_for_upll_fields(coreComponent)
-    
+
 
     # UPLLCON register value for use in ftl files
     UPLLCON_VALSYM = coreComponent.createHexSymbol("UPLLCON_REG_VALUE",None)
@@ -1188,16 +1170,16 @@ if __name__ == "__main__":
     UPLLCON_VALSYM.setDefaultValue(defaultValue)
     UPLLCON_VALSYM.setDependencies(updateUpllcon, ['PLLRANGE_VAL', 'PLLIDIV_VAL', 'PLLMULT_VAL', 'PLLODIV_VAL', 'UPOSCEN_VAL'])
 
-    
-    
+
+
     # this is added to resolve a dependency in ftl file
     HAVE_REFCLK5 = coreComponent.createBooleanSymbol("CONFIG_HAVE_REFCLOCK5", CLK_CFG_SETTINGS)
     HAVE_REFCLK5.setVisible(False)
     HAVE_REFCLK5.setDefaultValue(False)
-    
+
     # creates calculated frequencies menu
     calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, join, ElementTree, newPoscFreq)
-    
+
     # File handling below
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
 
@@ -1229,4 +1211,4 @@ if __name__ == "__main__":
     CLK_SYS_INIT_LIST_ENTRY.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
     CLK_SYS_INIT_LIST_ENTRY.setSourcePath("../peripheral/clk_pic32mk/templates/system/initialization.c.ftl")
     CLK_SYS_INIT_LIST_ENTRY.setMarkup(True)
- 
+
