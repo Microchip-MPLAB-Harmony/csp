@@ -1,3 +1,4 @@
+<#--
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
@@ -23,6 +24,7 @@
 *******************************************************************************/
 
 // DOM-IGNORE-END
+-->
 <#if DEVICE_TCM_SIZE?has_content>
 #pragma config TCM_CONFIGURATION = ${DEVICE_TCM_SIZE}
 </#if>

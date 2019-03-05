@@ -1,3 +1,4 @@
+<#--
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
@@ -21,8 +22,9 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-
 // DOM-IGNORE-END
+-->
+
 <#list 0..NUMBER_OF_FUSES-1 as i>
 <#assign name = "FUSE_SYMBOL_NAME" + i>
 <#assign value = "FUSE_SYMBOL_VALUE" + i>
