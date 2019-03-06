@@ -53,11 +53,18 @@
 // *****************************************************************************
 // *****************************************************************************
 
+<#assign SPI_PLIB = "SERCOM_INSTANCE_NAME">
+<#assign SPI_PLIB_CLOCK_FREQUENCY = "core." + SPI_PLIB?eval + "_CORE_CLOCK_FREQUENCY">
+
 /* ${SERCOM_INSTANCE_NAME} clk freq value for the baud calculation */
-#define ${SERCOM_INSTANCE_NAME}_Frequency      (uint32_t) (${SERCOM_CLOCK_FREQUENCY}UL)
+<#if SPI_PLIB_CLOCK_FREQUENCY?eval??>
+    <#lt>#define ${SERCOM_INSTANCE_NAME}_Frequency      (uint32_t) (${SPI_PLIB_CLOCK_FREQUENCY?eval}UL)
+<#else>
+    <#lt>#define ${SERCOM_INSTANCE_NAME}_Frequency      0
+</#if>
 
 /* ${SERCOM_INSTANCE_NAME} SPI baud value for ${SPI_BAUD_RATE} Hz baud rate */
-#define ${SERCOM_INSTANCE_NAME}_SPIM_BAUD_VALUE			(${SPI_BAUD_REG_VALUE}U)
+#define ${SERCOM_INSTANCE_NAME}_SPIM_BAUD_VALUE         (${SPI_BAUD_REG_VALUE}U)
 
 <#if SPI_INTERRUPT_MODE = true>
 /*Global object to save SPI Exchange related data  */

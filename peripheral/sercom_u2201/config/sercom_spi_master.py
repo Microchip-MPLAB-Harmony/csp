@@ -23,46 +23,61 @@
 *****************************************************************************"""
 
 ###################################################################################################
+###################################### BAUD Calculation ###########################################
+###################################################################################################
+
+global getSPIBaudValue
+
+def getSPIBaudValue():
+
+    global desiredSPIBaudRate
+
+    baud = 0
+
+    refClkFreq = int(Database.getSymbolValue("core", sercomClkFrequencyId))
+    baudRate = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_BAUD_RATE")
+
+    # Check if baudrate is outside of valid range
+    if refClkFreq >= (2 * baudRate):
+        desiredSPIBaudRate = True
+        spiSym_BaudError_Comment.setVisible(False)
+        baud = int(round(float("{0:.15f}".format(float(refClkFreq / (2 * baudRate)))) - 1))
+    else:
+        desiredSPIBaudRate = False
+
+        if baud < 0:
+            baud = 0
+        elif baud > 255:
+            baud = 255
+
+        spiSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "SPIM")
+
+    return baud
+
+###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
 # SPI Components Visible Property
 def updateSPIMasterConfigurationVisibleProperty(symbol, event):
 
+    global desiredSPIBaudRate
+
     if symbol.getID() == "SPI_BAUD_ERROR_COMMENT":
-        if (spi_BAUDREG.getValue() == 1 or spi_BAUDREG.getValue() == 255) and event["symbol"].getSelectedKey() == "SPIM":
-            symbol.setVisible(True)
-        else:
-            symbol.setVisible(False)
+        symbol.setVisible(desiredSPIBaudRate == False and sercomSym_OperationMode.getSelectedKey() == "SPIM")
     else:
-        if event["symbol"].getSelectedKey() == "SPIM":
-            symbol.setVisible(True)
-        else:
-            symbol.setVisible(False)
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "SPIM")
 
 #SPI BAUD Calculation
-def spibaudcalc(symbol, event):
+def updateSPIBaudValueProperty(symbol, event):
 
-    sercom_gclk = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SERCOM_CLOCK_FREQUENCY")
-    spi_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_BAUD_RATE")
-
-    baudReg = getspiBaud(sercom_gclk, spi_Speed)
-
-    if (baudReg == 1 or baudReg == 255) and sercomSym_OperationMode.getSelectedKey() == "SPIM":
-        spiSym_BaudError_Comment.setVisible(True)
-    else:
-        spiSym_BaudError_Comment.setVisible(False)
-
-    symbol.setValue(baudReg, 2)
+    symbol.setValue(getSPIBaudValue(), 1)
 
 #SPI Transfer Mode Comment
 def setSPIClockModeInfo(symbol, event):
 
     if event["id"] == "SERCOM_MODE":
-        if event["symbol"].getSelectedKey() == "SPIM":
-            symbol.setVisible(True)
-        else:
-            symbol.setVisible(False)
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "SPIM")
     else:
         component = symbol.getComponent().getID()
 
@@ -103,7 +118,6 @@ spiSym_CTRLA_DOPO.setLabel("SPI Data Out Pad")
 spiSym_CTRLA_DOPO.setVisible(False)
 
 spiDOPONode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DOPO\"]")
-spiDOPOValues = []
 spiDOPOValues = spiDOPONode.getChildren()
 
 for index in range(len(spiDOPOValues)):
@@ -123,7 +137,6 @@ spiSym_CTRLA_DIPO.setLabel("SPI Data In Pad Selection")
 spiSym_CTRLA_DIPO.setVisible(False)
 
 spiDIPONode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DIPO\"]")
-spiDIPOValues = []
 spiDIPOValues = spiDIPONode.getChildren()
 
 for index in range(len(spiDIPOValues)):
@@ -143,7 +156,6 @@ spiSym_CTRLA_DORD.setLabel("SPI Data Order")
 spiSym_CTRLA_DORD.setVisible(False)
 
 spiDORDNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__DORD\"]")
-spiDORDValues = []
 spiDORDValues = spiDORDNode.getChildren()
 
 for index in range(len(spiDORDValues)):
@@ -161,6 +173,7 @@ spiSym_CTRLA_DORD.setDependencies(updateSPIMasterConfigurationVisibleProperty, [
 spi_BAUDRATE = sercomComponent.createIntegerSymbol("SPI_BAUD_RATE", sercomSym_OperationMode)
 spi_BAUDRATE.setLabel("SPI Speed in Hz")
 spi_BAUDRATE.setDefaultValue(1000000)
+spi_BAUDRATE.setMin(1)
 spi_BAUDRATE.setVisible(False)
 spi_BAUDRATE.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -170,7 +183,6 @@ spiSym_CTRLB_CHSIZE.setLabel("SPI Data Character Size")
 spiSym_CTRLB_CHSIZE.setVisible(False)
 
 spiCHSIZENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLB__CHSIZE\"]")
-spiCHSIZEValues = []
 spiCHSIZEValues = spiCHSIZENode.getChildren()
 
 for index in range(len(spiCHSIZEValues)):
@@ -190,7 +202,6 @@ spiSym_CTRLA_ClockPhase.setLabel("SPI Clock Phase")
 spiSym_CTRLA_ClockPhase.setVisible(False)
 
 spiCLKPHASENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__CPHA\"]")
-spiCLKPHASEValues = []
 spiCLKPHASEValues = spiCLKPHASENode.getChildren()
 
 for index in range(len(spiCLKPHASEValues)):
@@ -210,7 +221,6 @@ spiSym_CTRLA_ClockPolarity.setLabel("SPI Clock Polarity")
 spiSym_CTRLA_ClockPolarity.setVisible(False)
 
 spiCLKPLORITYNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_SPIM_CTRLA__CPOL\"]")
-spiCLKPLORITYValues = []
 spiCLKPLORITYValues = spiCLKPLORITYNode.getChildren()
 
 for index in range(len(spiCLKPLORITYValues)):
@@ -262,15 +272,14 @@ spiSym_BaudError_Comment.setLabel("********** SPI Clock source is not suitable f
 spiSym_BaudError_Comment.setVisible(False)
 spiSym_BaudError_Comment.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-spidefaultvalue = getspiBaud(sercomSym_ClockFrequency.getValue(), spi_BAUDRATE.getValue())
-
-# SPI BAUDREG Value
-global spi_BAUDREG
+# SPI BAUD REG Value
 spi_BAUDREG = sercomComponent.createIntegerSymbol("SPI_BAUD_REG_VALUE", sercomSym_OperationMode)
-spi_BAUDREG.setLabel("SPI Baud ")
-spi_BAUDREG.setDefaultValue(spidefaultvalue)
+spi_BAUDREG.setLabel("SPI Baud")
 spi_BAUDREG.setVisible(False)
-spi_BAUDREG.setDependencies(spibaudcalc, ["SERCOM_CLOCK_FREQUENCY", "SPI_BAUD_RATE"])
+spi_BAUDREG.setDependencies(updateSPIBaudValueProperty, ["core." + sercomClkFrequencyId, "SPI_BAUD_RATE"])
+
+#Use setValue instead of setDefaultValue to store symbol value in default.xml
+spi_BAUDREG.setValue(getSPIBaudValue(), 1)
 
 ###################################################################################################
 ####################################### Driver Symbols ############################################

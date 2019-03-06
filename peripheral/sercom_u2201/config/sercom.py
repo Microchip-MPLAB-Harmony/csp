@@ -22,82 +22,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-global uartCapabilityId
-global spiCapabilityId
-global i2cCapabilityId
-
-global InterruptVector
-global InterruptHandler
-global InterruptHandlerLock
-global sercomInstanceName
-
-###################################################################################################
-###################################### BAUD Calculation ###########################################
-###################################################################################################
-
-#BAUD Rate Calculation for SPI
-def getspiBaud(gclk, clkspeed):
-
-    baud = int(round(float("{0:.15f}".format(float(gclk / (2 * clkspeed)))) - 1))
-
-    if baud <= 0:
-        baud = 1
-    elif baud > 255:
-        baud = 255
-
-    return baud
-
-#BAUD Rate Calculation for USART
-def getUSARTBaudValue(clk, baud):
-
-    baudValue = 0
-    sampleCount = 0
-    sampleRate = 0
-
-    if sampleRateSupported == False:
-        if clk >= (16 * baud):
-            baudValue = int(65536 * (1 - float("{0:.15f}".format(float(16 * baud) / clk))))
-            return baudValue
-        else:
-            return baudValue
-    else:
-        if clk >= (16 * baud):
-            sampleRate = 0
-            sampleCount = 16
-        elif clk >= (8 * baud):
-            sampleRate = 2
-            sampleCount = 8
-        elif clk >= (3 * baud):
-            sampleRate = 4
-            sampleCount = 3
-        else:
-            return baudValue
-
-    baudValue = int(65536 * (1 - float("{0:.15f}".format(float(sampleCount * baud) / clk))))
-
-    if baudValue != 0:
-        usartSym_SAMPLE_COUNT.setValue(sampleCount, 1)
-        usartSym_CTRLA_SAMPR.setValue(sampleRate, 1)
-
-    return baudValue
-
-#BAUD Rate Calculation for I2C
-def geti2cBaud(gclk, clkSpeed, trise, mode):
-
-    baudlow = int(round(((gclk / clkSpeed) * (1 - float("{0:.15f}".format(float(trise * clkSpeed) / 1000000000)))) - 10))
-
-    if baudlow >= (0xFF * 2) or (baudlow <= 1):
-        baud = 0
-    else:
-        if mode == 0:
-            baud = ((baudlow / 2) + (((baudlow / 2) + 1) << 8)) if(baudlow & 0x1) \
-            else (baudlow / 2)
-        else:
-            baud = ((baudlow / 3) + ((((2 * baudlow) / 3) + 1) << 8)) if(baudlow & 0x1) \
-            else (baudlow / 3)
-
-    return baud
-
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -199,7 +123,7 @@ def setSERCOMInterruptData(status, sercomMode):
         else:
             Database.setSymbolValue("core", id, interruptName + "_Handler", 1)
 
-def updateSERCOMInterruptStatus(symbol, event):
+def updateSERCOMInterruptData(symbol, event):
 
     global i2cSym_Interrupt_Mode
     global spiSym_Interrupt_Mode
@@ -208,6 +132,11 @@ def updateSERCOMInterruptStatus(symbol, event):
     global sercomSym_IntEnComment
 
     sercomMode = ""
+    status = False
+
+    sercomUSARTMode = (sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (usartSym_Interrupt_Mode.getValue() == True)
+    sercomSPIMode = (sercomSym_OperationMode.getSelectedKey() == "SPIM") and (spiSym_Interrupt_Mode.getValue() == True)
+    sercomI2CMode = (sercomSym_OperationMode.getSelectedKey() == "I2CM") and (i2cSym_Interrupt_Mode.getValue() == True)
 
     if event["id"] == "SERCOM_MODE":
         if sercomSym_OperationMode.getSelectedKey() == "I2CS":
@@ -221,9 +150,6 @@ def updateSERCOMInterruptStatus(symbol, event):
             pass
         else:
             sercomInterruptStatus = False
-            sercomUSARTMode = (sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (usartSym_Interrupt_Mode.getValue() == True)
-            sercomSPIMode = (sercomSym_OperationMode.getSelectedKey() == "SPIM") and (spiSym_Interrupt_Mode.getValue() == True)
-            sercomI2CMode = (sercomSym_OperationMode.getSelectedKey() == "I2CM") and (i2cSym_Interrupt_Mode.getValue() == True)
 
             if sercomUSARTMode == True:
                 sercomMode = "USART"
@@ -236,7 +162,7 @@ def updateSERCOMInterruptStatus(symbol, event):
                 sercomInterruptStatus = True
 
             setSERCOMInterruptData(sercomInterruptStatus, sercomMode)
-    else:
+    elif "INTERRUPT_MODE" in event["id"]:
         if sercomSym_OperationMode.getSelectedKey() == "USART_INT":
             sercomMode = "USART"
         elif sercomSym_OperationMode.getSelectedKey() == "SPIM":
@@ -244,32 +170,16 @@ def updateSERCOMInterruptStatus(symbol, event):
 
         setSERCOMInterruptData(event["value"], sercomMode)
 
-        if event["value"] == False:
-            sercomSym_IntEnComment.setVisible(False)
+    for id in InterruptVectorUpdate:
+        id = id.replace("core.", "")
+        if Database.getSymbolValue("core", id) == True:
+            status = True
+            break
 
-def updateSERCOMInterruptWarningStatus(symbol, event):
-
-    global i2cSym_Interrupt_Mode
-    global spiSym_Interrupt_Mode
-    global usartSym_Interrupt_Mode
-    global sercomSym_OperationMode
-
-    if sercomSym_OperationMode.getSelectedKey() == "I2CS":
-        # To be implemented
-        pass
-    elif sercomSym_OperationMode.getSelectedKey() == "SPIS":
-        # To be implemented
-        pass
-    elif sercomSym_OperationMode.getSelectedKey() == "USART_EXT":
-        # To be implemented
-        pass
+    if (sercomUSARTMode == True or sercomSPIMode == True or sercomI2CMode == True) and status == True:
+        symbol.setVisible(True)
     else:
-        sercomUSARTMode = (sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (usartSym_Interrupt_Mode.getValue() == True)
-        sercomSPIMode = (sercomSym_OperationMode.getSelectedKey() == "SPIM") and (spiSym_Interrupt_Mode.getValue() == True)
-        sercomI2CMode = (sercomSym_OperationMode.getSelectedKey() == "I2CM") and (i2cSym_Interrupt_Mode.getValue() == True)
-
-        if sercomUSARTMode == True or sercomSPIMode == True or sercomI2CMode == True:
-            symbol.setVisible(event["value"])
+        symbol.setVisible(False)
 
 def updateSERCOMClockWarningStatus(symbol, event):
 
@@ -295,10 +205,6 @@ def updateSERCOMDMATransferRegister(symbol, event):
     else:
         symbol.setValue("", 1)
 
-def updateSERCOMClockFrequencyValueProperty(symbol, event):
-
-    symbol.setValue(int(event["value"]), 1)
-
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -311,9 +217,10 @@ def instantiateComponent(sercomComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
+    global InterruptVectorUpdate
     global sercomInstanceName
     global sercomSym_OperationMode
-    global sercomSym_IntEnComment
+    global sercomClkFrequencyId
 
     InterruptVector = []
     InterruptHandler = []
@@ -329,6 +236,8 @@ def instantiateComponent(sercomComponent):
     uartCapabilityId = sercomInstanceName.getValue() + "_UART"
     spiCapabilityId = sercomInstanceName.getValue() + "_SPI"
     i2cCapabilityId = sercomInstanceName.getValue() + "_I2C"
+
+    sercomClkFrequencyId = sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"
 
     #Clock enable
     Database.setSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_ENABLE", True, 2)
@@ -360,16 +269,6 @@ def instantiateComponent(sercomComponent):
     sercomSym_RxRegister.setVisible(False)
     sercomSym_RxRegister.setDependencies(updateSERCOMDMATransferRegister, ["SERCOM_MODE"])
 
-    sercomClkFrequencyId = sercomInstanceName.getValue() + "_CORE_CLOCK_FREQUENCY"
-    sercomClkFrequency = int(Database.getSymbolValue("core", sercomClkFrequencyId))
-
-    #SERCOM Clock Frequency
-    sercomSym_ClockFrequency = sercomComponent.createIntegerSymbol("SERCOM_CLOCK_FREQUENCY", sercomSym_OperationMode)
-    sercomSym_ClockFrequency.setLabel(sercomInstanceName.getValue() + " Clock Frequency")
-    sercomSym_ClockFrequency.setDefaultValue(sercomClkFrequency)
-    sercomSym_ClockFrequency.setVisible(False)
-    sercomSym_ClockFrequency.setDependencies(updateSERCOMClockFrequencyValueProperty, ["core." + sercomClkFrequencyId])
-
     syncbusyNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="SYNCBUSY"]')
 
     #SERCOM is SYNCBUSY present
@@ -381,9 +280,6 @@ def instantiateComponent(sercomComponent):
     ########################################## SERCOM MODE ############################################
     ###################################################################################################
 
-    sercomModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]")
-    sercomModuleID = sercomModuleNode.getAttribute("id")
-
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_usart.py")
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_spi_master.py")
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_i2c_master.py")
@@ -394,13 +290,16 @@ def instantiateComponent(sercomComponent):
 
     interruptValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
-    for index in range(0, len(interruptValues)):
+    for index in range(len(interruptValues)):
         moduleInstance = list(str(interruptValues[index].getAttribute("module-instance")).split(" "))
         if sercomInstanceName.getValue() in moduleInstance:
+
+            # check weather sub-vectors or multiple peripherals are present at same interrupt line
             if len(moduleInstance) == 1:
                 name = str(interruptValues[index].getAttribute("name"))
             else:
                 name = sercomInstanceName.getValue()
+
             InterruptVector.append(name + "_INTERRUPT_ENABLE")
             InterruptHandler.append(name + "_INTERRUPT_HANDLER")
             InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
@@ -409,16 +308,11 @@ def instantiateComponent(sercomComponent):
     # Initial settings for Interrupt
     setSERCOMInterruptData(True, "USART")
 
-    # Interrupt Dynamic settings
-    sercomSym_UpdateInterruptStatus = sercomComponent.createBooleanSymbol("SERCOM_INTERRUPT_STATUS", None)
-    sercomSym_UpdateInterruptStatus.setDependencies(updateSERCOMInterruptStatus, ["SERCOM_MODE", "USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE"])
-    sercomSym_UpdateInterruptStatus.setVisible(False)
-
     # Interrupt Warning status
     sercomSym_IntEnComment = sercomComponent.createCommentSymbol("SERCOM_INTERRUPT_ENABLE_COMMENT", None)
     sercomSym_IntEnComment.setVisible(False)
     sercomSym_IntEnComment.setLabel("Warning!!! " + sercomInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptWarningStatus, InterruptVectorUpdate)
+    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptData, ["SERCOM_MODE", "USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE"] + InterruptVectorUpdate)
 
     # Clock Warning status
     sercomSym_ClkEnComment = sercomComponent.createCommentSymbol("SERCOM_CLOCK_ENABLE_COMMENT", None)
@@ -439,6 +333,7 @@ def instantiateComponent(sercomComponent):
     usartHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart/")
     usartHeaderFile.setType("HEADER")
     usartHeaderFile.setMarkup(True)
+    usartHeaderFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
     usartCommonHeaderFile = sercomComponent.createFileSymbol("SERCOM_USART_COMMON_HEADER", None)
     usartCommonHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_usart_common.h")
@@ -447,6 +342,7 @@ def instantiateComponent(sercomComponent):
     usartCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart/")
     usartCommonHeaderFile.setType("HEADER")
     usartCommonHeaderFile.setMarkup(True)
+    usartCommonHeaderFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
     usartSourceFile = sercomComponent.createFileSymbol("SERCOM_USART_SOURCE", None)
     usartSourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_usart.c.ftl")
@@ -455,6 +351,7 @@ def instantiateComponent(sercomComponent):
     usartSourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart/")
     usartSourceFile.setType("SOURCE")
     usartSourceFile.setMarkup(True)
+    usartSourceFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
     spiSym_HeaderFile = sercomComponent.createFileSymbol("SERCOM_SPIM_HEADER", None)
     spiSym_HeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi.h.ftl")
@@ -463,7 +360,7 @@ def instantiateComponent(sercomComponent):
     spiSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/spim/")
     spiSym_HeaderFile.setType("HEADER")
     spiSym_HeaderFile.setMarkup(True)
-    spiSym_HeaderFile.setEnabled(False)
+    spiSym_HeaderFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "SPIM")
 
     spiSym_Header1File = sercomComponent.createFileSymbol("SERCOM_SPIM_COMMON_HEADER", None)
     spiSym_Header1File.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_common.h")
@@ -472,7 +369,7 @@ def instantiateComponent(sercomComponent):
     spiSym_Header1File.setProjectPath("config/" + configName + "/peripheral/sercom/spim/")
     spiSym_Header1File.setType("HEADER")
     spiSym_Header1File.setMarkup(True)
-    spiSym_Header1File.setEnabled(False)
+    spiSym_Header1File.setEnabled(sercomSym_OperationMode.getSelectedKey() == "SPIM")
 
     spiSym_SourceFile = sercomComponent.createFileSymbol("SERCOM_SPIM_SOURCE", None)
     spiSym_SourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi.c.ftl")
@@ -481,7 +378,7 @@ def instantiateComponent(sercomComponent):
     spiSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/spim/")
     spiSym_SourceFile.setType("SOURCE")
     spiSym_SourceFile.setMarkup(True)
-    spiSym_SourceFile.setEnabled(False)
+    spiSym_SourceFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "SPIM")
 
     i2cmMasterHeaderFile = sercomComponent.createFileSymbol("SERCOM_I2CM_MASTER_HEADER", None)
     i2cmMasterHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_i2c_master.h")
@@ -490,7 +387,7 @@ def instantiateComponent(sercomComponent):
     i2cmMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/i2cm/")
     i2cmMasterHeaderFile.setType("HEADER")
     i2cmMasterHeaderFile.setMarkup(True)
-    i2cmMasterHeaderFile.setEnabled(False)
+    i2cmMasterHeaderFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 
     i2cmHeaderFile = sercomComponent.createFileSymbol("SERCOM_I2CM_HEADER", None)
     i2cmHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_i2c.h.ftl")
@@ -499,7 +396,7 @@ def instantiateComponent(sercomComponent):
     i2cmHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/i2cm/")
     i2cmHeaderFile.setType("HEADER")
     i2cmHeaderFile.setMarkup(True)
-    i2cmHeaderFile.setEnabled(False)
+    i2cmHeaderFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 
     i2cmSourceFile = sercomComponent.createFileSymbol("SERCOM_I2CM_SOURCE", None)
     i2cmSourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_i2c.c.ftl")
@@ -508,7 +405,7 @@ def instantiateComponent(sercomComponent):
     i2cmSourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/i2cm/")
     i2cmSourceFile.setType("SOURCE")
     i2cmSourceFile.setMarkup(True)
-    i2cmSourceFile.setEnabled(False)
+    i2cmSourceFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 
     sercomSystemInitFile = sercomComponent.createFileSymbol("SERCOM_SYS_INIT", None)
     sercomSystemInitFile.setType("STRING")
