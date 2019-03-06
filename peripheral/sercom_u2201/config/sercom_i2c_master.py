@@ -23,48 +23,64 @@
 *****************************************************************************"""
 
 ###################################################################################################
+###################################### BAUD Calculation ###########################################
+###################################################################################################
+
+global getI2CBaudValue
+
+def getI2CBaudValue():
+
+    global desiredI2CBaudRate
+
+    baud = 0
+    mode = 0
+    refClkFreq = int(Database.getSymbolValue("core", sercomClkFrequencyId))
+    clkSpeed = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_CLOCK_SPEED")) * 1000
+    trise = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_TRISE")
+
+    if speedSupported == True:
+        mode = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_MODE")
+
+    # Check if baudrate is outside of valid range
+    if refClkFreq >= (2 * clkSpeed):
+        desiredI2CBaudRate = True
+        i2cmSym_BaudError_Comment.setVisible(False)
+
+        baudlow = int(round(((refClkFreq / clkSpeed) * (1 - float("{0:.15f}".format(float(trise * clkSpeed) / 1000000000)))) - 10))
+
+        if baudlow >= (0xFF * 2) or (baudlow <= 1):
+            baud = 0
+        else:
+            if mode == 0:
+                baud = ((baudlow / 2) + (((baudlow / 2) + 1) << 8)) if(baudlow & 0x1) \
+                else (baudlow / 2)
+            else:
+                baud = ((baudlow / 3) + ((((2 * baudlow) / 3) + 1) << 8)) if(baudlow & 0x1) \
+                else (baudlow / 3)
+    else:
+        desiredI2CBaudRate = False
+        i2cmSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
+
+    return baud
+
+###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
 # I2CM Components Visible Property
 def updateI2CMasterConfigurationVisibleProperty(symbol, event):
 
+    global desiredI2CBaudRate
+
     if symbol.getID() == "I2C_BAUD_ERROR_COMMENT":
-        if i2cmSym_BAUDREGVALUE.getValue() == 0 and event["symbol"].getSelectedKey() == "I2CM":
-            symbol.setVisible(True)
-        else:
-            symbol.setVisible(False)
+        symbol.setVisible(desiredI2CBaudRate == False and sercomSym_OperationMode.getSelectedKey() == "I2CM")
     else:
-        if event["symbol"].getSelectedKey() == "I2CM":
-            symbol.setVisible(True)
-        else:
-            symbol.setVisible(False)
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 
 # baud rate calc
-def baudRateCalc(symbol, event):
+def updateI2CBaudValueProperty(symbol, event):
 
-    component = symbol.getComponent()
-
-    if component.getSymbolByID("SERCOM_MODE").getSelectedKey() == "I2CM":
-        gclk_Freq = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SERCOM_CLOCK_FREQUENCY")
-        clk_Speed = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_CLOCK_SPEED")
-        i2cm_Trise = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_TRISE")
-
-        clk_Genr_Mode = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_MODE")
-
-        clk_Speed = (int(clk_Speed) * 1000)
-
-        if speedSupported == True:
-            baudReg = geti2cBaud(gclk_Freq, clk_Speed, i2cm_Trise, int(clk_Genr_Mode))
-        else:
-            baudReg = geti2cBaud(gclk_Freq, clk_Speed, i2cm_Trise, 0)
-
-        if baudReg == 0 and sercomSym_OperationMode.getSelectedKey() == "I2CM":
-            i2cmSym_BaudError_Comment.setVisible(True)
-        else:
-            i2cmSym_BaudError_Comment.setVisible(False)
-
-        symbol.setValue(baudReg, 2)
+    symbol.setValue(getI2CBaudValue(), 1)
 
 ###################################################################################################
 ######################################## I2C MASTER ###############################################
@@ -97,10 +113,9 @@ if speedSupported == True:
     i2cmSym_mode.setVisible(False)
 
     i2cmTransferSpeedNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/value-group@[name="SERCOM_I2CM_CTRLA__SPEED"]')
-    i2cmTransferSpeedNodeValues = []
     i2cmTransferSpeedNodeValues = i2cmTransferSpeedNode.getChildren()
 
-    for index in range(0, (len(i2cmTransferSpeedNodeValues) - 1)):
+    for index in range((len(i2cmTransferSpeedNodeValues) - 1)):
         i2cmTransferSpeedKeyName = i2cmTransferSpeedNodeValues[index].getAttribute("name")
         i2cmTransferSpeedKeyValue = i2cmTransferSpeedNodeValues[index].getAttribute("value")
         i2cmTransferSpeedKeyDescription = i2cmTransferSpeedNodeValues[index].getAttribute("caption")
@@ -123,7 +138,6 @@ i2cmSym_CTRLA_SDAHOLD.setLabel("SDA Hold Time")
 i2cmSym_CTRLA_SDAHOLD.setVisible(False)
 
 i2cmSDAHoldTimeReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SDAHOLD\"]")
-i2cmSDAHoldTimeReferenceValues = []
 i2cmSDAHoldTimeReferenceValues = i2cmSDAHoldTimeReferenceNode.getChildren()
 
 for index in range(len(i2cmSDAHoldTimeReferenceValues)):
@@ -158,22 +172,15 @@ i2cmSym_TRISEVALUE.setDefaultValue(100)
 i2cmSym_TRISEVALUE.setVisible(False)
 i2cmSym_TRISEVALUE.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-if speedSupported == True:
-    baudRegValue = geti2cBaud(sercomSym_ClockFrequency.getValue(), i2cmSym_BAUD.getValue() * 1000, i2cmSym_TRISEVALUE.getValue(), i2cmSym_mode.getValue())
-else:
-    baudRegValue = geti2cBaud(sercomSym_ClockFrequency.getValue(), i2cmSym_BAUD.getValue() * 1000, i2cmSym_TRISEVALUE.getValue(), 0)
-
 # I2C BAUD register value
-global i2cmSym_BAUDREGVALUE
 i2cmSym_BAUDREGVALUE = sercomComponent.createIntegerSymbol("I2CM_BAUD", sercomSym_OperationMode)
 i2cmSym_BAUDREGVALUE.setLabel("I2C BAUD")
-i2cmSym_BAUDREGVALUE.setDefaultValue(baudRegValue)
 i2cmSym_BAUDREGVALUE.setVisible(False)
 i2cmSym_BAUDREGVALUE.setReadOnly(True)
 if speedSupported == True:
-    i2cmSym_BAUDREGVALUE.setDependencies(baudRateCalc, ["I2C_CLOCK_SPEED", "SERCOM_CLOCK_FREQUENCY", "I2CM_TRISE"])
+    i2cmSym_BAUDREGVALUE.setDependencies(updateI2CBaudValueProperty, ["I2C_CLOCK_SPEED", "I2CM_TRISE", "core." + sercomClkFrequencyId])
 else:
-    i2cmSym_BAUDREGVALUE.setDependencies(baudRateCalc, ["I2CM_MODE", "I2C_CLOCK_SPEED", "SERCOM_CLOCK_FREQUENCY", "I2CM_TRISE"])
+    i2cmSym_BAUDREGVALUE.setDependencies(updateI2CBaudValueProperty, ["I2CM_MODE", "I2C_CLOCK_SPEED", "I2CM_TRISE", "core." + sercomClkFrequencyId])
 
 #I2C Baud Rate not supported comment
 global i2cmSym_BaudError_Comment
@@ -185,7 +192,7 @@ i2cmSym_BaudError_Comment.setDependencies(updateI2CMasterConfigurationVisiblePro
 tenBitAddrSupported = False
 
 addrNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="I2CM",name="ADDR"]')
-addrValue = ctrlaNode.getChildren()
+addrValue = addrNode.getChildren()
 
 for index in range(len(addrValue)):
     bitFieldName = str(addrValue[index].getAttribute("name"))
@@ -197,6 +204,9 @@ for index in range(len(addrValue)):
 i2cSym_TENBITEN = sercomComponent.createBooleanSymbol("I2C_ADDR_TENBITEN", sercomSym_OperationMode)
 i2cSym_TENBITEN.setDefaultValue(tenBitAddrSupported)
 i2cSym_TENBITEN.setVisible(False)
+
+#Use setValue instead of setDefaultValue to store symbol value in default.xml
+i2cmSym_BAUDREGVALUE.setValue(getI2CBaudValue(), 1)
 
 ###################################################################################################
 ####################################### Driver Symbols ############################################

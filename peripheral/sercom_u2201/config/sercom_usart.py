@@ -23,38 +23,75 @@
 *****************************************************************************"""
 
 ###################################################################################################
+###################################### BAUD Calculation ###########################################
+###################################################################################################
+
+global getUSARTBaudValue
+
+def getUSARTBaudValue():
+
+    global desiredUSARTBaudRate
+
+    baudValue = 0
+    sampleCount = 0
+    sampleRate = 0
+    desiredUSARTBaudRate = True
+
+    refClkFreq = int(Database.getSymbolValue("core", sercomClkFrequencyId))
+    baudRate = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_BAUD_RATE"))
+
+    if refClkFreq != 0:
+        if sampleRateSupported == False:
+            # Check if baudrate is outside of valid range
+            if refClkFreq >= (16 * baudRate):
+                sampleCount = 16
+            else:
+                desiredUSARTBaudRate = False
+        else:
+            # Check if baudrate is outside of valid range
+            if refClkFreq >= (16 * baudRate):
+                sampleRate = 0
+                sampleCount = 16
+            elif refClkFreq >= (8 * baudRate):
+                sampleRate = 2
+                sampleCount = 8
+            elif refClkFreq >= (3 * baudRate):
+                sampleRate = 4
+                sampleCount = 3
+            else:
+                desiredUSARTBaudRate = False
+
+        if desiredUSARTBaudRate == True:
+            usartSym_BaudError_Comment.setVisible(False)
+            baudValue = int(65536 * (1 - float("{0:.15f}".format(float(sampleCount * baudRate) / refClkFreq))))
+
+            if sampleRateSupported == True:
+                usartSym_CTRLA_SAMPR.setValue(sampleRate, 1)
+                usartSym_SAMPLE_COUNT.setValue(sampleCount, 1)
+        else:
+            usartSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+    else:
+        desiredUSARTBaudRate = False
+        usartSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+
+    return baudValue
+
+###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
 def updateUSARTConfigurationVisibleProperty(symbol, event):
 
+    global desiredUSARTBaudRate
+
     if symbol.getID() == "USART_BAUD_ERROR_COMMENT":
-        if usartSym_BAUD_VALUE.getValue() == 0 and event["symbol"].getSelectedKey() == "USART_INT":
-            symbol.setVisible(True)
-        else:
-            symbol.setVisible(False)
+        symbol.setVisible(desiredUSARTBaudRate == False and sercomSym_OperationMode.getSelectedKey() == "USART_INT")
     else:
-        if event["symbol"].getSelectedKey() == "USART_INT":
-            symbol.setVisible(True)
-        else:
-            symbol.setVisible(False)
+        symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 
 def updateUSARTBaudValueProperty(symbol, event):
 
-    brgVal = 0
-
-    clk = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SERCOM_CLOCK_FREQUENCY"))
-    baud = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_BAUD_RATE"))
-
-    if clk != 0 and baud != 0:
-        brgVal = getUSARTBaudValue(clk, baud)
-
-    if brgVal < 1 and sercomSym_OperationMode.getSelectedKey() == "USART_INT":
-        usartSym_BaudError_Comment.setVisible(True)
-    else:
-        usartSym_BaudError_Comment.setVisible(False)
-
-    symbol.setValue(brgVal, 2)
+    symbol.setValue(getUSARTBaudValue(), 1)
 
 ###################################################################################################
 ############################################ USART ################################################
@@ -90,7 +127,6 @@ usartSym_CTRLA_RXPO = sercomComponent.createKeyValueSetSymbol("USART_RXPO", serc
 usartSym_CTRLA_RXPO.setLabel("Receive Pinout")
 
 usartSym_CTRLA_RXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__RXPO\"]")
-usartSym_CTRLA_RXPO_Values = []
 usartSym_CTRLA_RXPO_Values = usartSym_CTRLA_RXPO_Node.getChildren()
 
 for index in range(len(usartSym_CTRLA_RXPO_Values)):
@@ -109,7 +145,6 @@ usartSym_CTRLA_TXPO = sercomComponent.createKeyValueSetSymbol("USART_TXPO", serc
 usartSym_CTRLA_TXPO.setLabel("Transmit Pinout")
 
 usartSym_CTRLA_TXPO_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__TXPO\"]")
-usartSym_CTRLA_TXPO_Values = []
 usartSym_CTRLA_TXPO_Values = usartSym_CTRLA_TXPO_Node.getChildren()
 
 for index in range(len(usartSym_CTRLA_TXPO_Values)):
@@ -139,7 +174,6 @@ usartSym_CTRLB_CHSIZE = sercomComponent.createKeyValueSetSymbol("USART_CHARSIZE_
 usartSym_CTRLB_CHSIZE.setLabel("Character Size")
 
 usartSym_CTRLA_CHSIZE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__CHSIZE\"]")
-usartSym_CTRLA_CHSIZE_Values = []
 usartSym_CTRLA_CHSIZE_Values = usartSym_CTRLA_CHSIZE_Node.getChildren()
 
 for index in range(len(usartSym_CTRLA_CHSIZE_Values)):
@@ -158,7 +192,6 @@ usartSym_CTRLB_SBMODE = sercomComponent.createKeyValueSetSymbol("USART_STOP_BIT"
 usartSym_CTRLB_SBMODE.setLabel("Stop Bit Mode")
 
 usartSym_CTRLA_SBMODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLB__SBMODE\"]")
-usartSym_CTRLA_SBMODE_Values = []
 usartSym_CTRLA_SBMODE_Values = usartSym_CTRLA_SBMODE_Node.getChildren()
 
 for index in range(len(usartSym_CTRLA_SBMODE_Values)):
@@ -204,15 +237,15 @@ usartSym_SAMPLE_COUNT.setVisible(False)
 usartSym_BAUD_RATE = sercomComponent.createIntegerSymbol("USART_BAUD_RATE", sercomSym_OperationMode)
 usartSym_BAUD_RATE.setLabel("Baud Rate in Hz")
 usartSym_BAUD_RATE.setDefaultValue(115200)
+usartSym_BAUD_RATE.setMin(1)
 usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #USART Baud Value
 global usartSym_BAUD_VALUE
 usartSym_BAUD_VALUE = sercomComponent.createIntegerSymbol("USART_BAUD_VALUE", sercomSym_OperationMode)
-usartSym_BAUD_VALUE.setDefaultValue(getUSARTBaudValue(sercomSym_ClockFrequency.getValue(), usartSym_BAUD_RATE.getValue()))
 usartSym_BAUD_VALUE.setLabel("Baud Rate Value")
 usartSym_BAUD_VALUE.setVisible(False)
-usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "SERCOM_CLOCK_FREQUENCY"])
+usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "core." + sercomClkFrequencyId])
 
 #USART Baud Rate not supported comment
 global usartSym_BaudError_Comment
@@ -236,6 +269,9 @@ for index in range(len(intensetValue)):
 sercomSym_ERROR = sercomComponent.createBooleanSymbol("USART_INTENSET_ERROR", None)
 sercomSym_ERROR.setVisible(False)
 sercomSym_ERROR.setDefaultValue(errorInterruptSupported)
+
+#Use setValue instead of setDefaultValue to store symbol value in default.xml
+usartSym_BAUD_VALUE.setValue(getUSARTBaudValue(), 1)
 
 ###################################################################################################
 ####################################### Driver Symbols ############################################
