@@ -20,6 +20,8 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+def setXDMACDefaultSettings():
+    triggerSettings = { "Software Trigger"  : ["MEM_TRAN", "PER2MEM", "HWR_CONNECTED", "INCREMENTED_AM", "INCREMENTED_AM", "AHB_IF1", "AHB_IF1", "BYTE", "CHK_1", "SINGLE"]}
 
 print ("Loading System Services for " + Variables.get("__PROCESSOR"))
 
@@ -51,6 +53,8 @@ coreComponent.addPlugin("../peripheral/pio_11004/plugin/pio_11004.jar")
 # load AIC
 
 # load dma manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
+coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 
 # load wdt
 
