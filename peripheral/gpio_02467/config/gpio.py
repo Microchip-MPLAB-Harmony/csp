@@ -282,14 +282,14 @@ def createPinMap(packageSymbol):
                 modeLock = False
             for myPackageNumber in myPin.findall('number'):
                 if packageIdMap.get(packageSymbol.getValue()) == myPackageNumber.get("package"):
-                    if "BGA" in packageSymbol.getValue():
+                    if "BGA" or "VTLA" in packageSymbol.getValue():
                         pin_map[myPackageNumber.get("pin")] = myPin.get("name")
                         pinModifierMap[myPackageNumber.get("pin")] = modeLock
                     else:
                         pin_map[int(myPackageNumber.get("pin"))] = myPin.get("name")
                         pinModifierMap[int(myPackageNumber.get("pin"))] = modeLock
 
-    if "BGA" in packageSymbol.getValue():
+    if "BGA" or "VTLA" in packageSymbol.getValue():
         pin_position = sort_alphanumeric(pin_map.keys())
     else:
         pin_position = sorted(pin_map.keys())
