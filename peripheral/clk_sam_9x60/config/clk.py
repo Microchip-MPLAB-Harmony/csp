@@ -652,6 +652,11 @@ gen_code.setDescription("Generate code for initializing Slow clocks, mainclock, 
 gen_code_comment = coreComponent.createCommentSymbol(None, gen_code)
 gen_code_comment.setLabel("WARNING: This could cause lock ups if running out of DDR.  Only enable if running out of SRAM.")
 
+pit = coreComponent.createIntegerSymbol("PIT_CLOCK_FREQUENCY", None)
+pit.setVisible(False)
+pit.setDefaultValue(mck.getValue())
+pit.setDependencies(lambda symbol, event: symbol.setValue(event['value'],0), ['MCK_FREQUENCY'])
+
 config = Variables.get("__CONFIGURATION_NAME")
 
 cfile = coreComponent.createFileSymbol(None, None)
