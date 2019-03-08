@@ -162,7 +162,7 @@ gclk_dependency_map = {
     "ADC" : "SOME_SYMBOL",
     "LCDC" : "SOME_SYMBOL",
     "I2SMCC" : "SOME_SYMBOL",
-    "PIT64B" : "SOME_SYMBOL",
+    "PIT64B" : "SGCLK",
     "CLASSD" : "SOME_SYMBOL",
     "DBGU" : "SOME_SYMBOL"
 }
@@ -175,7 +175,7 @@ def generic_gclk_update_freq(symbol, event):
     mck = event['source'].getSymbolByID("MCK_FREQUENCY")
     gclk = event['source'].getSymbolByID(instance_name + "_GCLK_FREQUENCY")
 
-    periph_css = Database.getSymbolValue(instance_name, gclk_dependency_map[instance_name])
+    periph_css = Database.getSymbolValue(instance_name.lower(), gclk_dependency_map[instance_name])
 
     if periph_css == None or periph_css == 0:
         symbol.setValue(mck.getValue(), 0)
