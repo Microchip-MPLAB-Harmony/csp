@@ -42,6 +42,8 @@ static inline void __ISB(void)
     <#if COMPILER_CHOICE == "IAR">
         <#lt>#define __ALIGNED(x) __attribute__((aligned(x)))
     </#if>
+
+#define __STATIC_INLINE static inline
 </#if>
 
 <#if "XC32" == COMPILER_CHOICE>
