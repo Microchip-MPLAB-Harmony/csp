@@ -398,13 +398,10 @@ for child in node:
         dmaChannelNum[childIndex].setDefaultValue(childIndex)
         dmaChannelNum[childIndex].setVisible(False)
 
-        if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
-            (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
-            # this name could be different for different families - this isn't from the datasheet
-            SymId = "DCH" + name[-1] + "INTbits_REG"
-            symbol = coreComponent.createStringSymbol(SymId, None)
-            symbol.setDefaultValue("DCH" + name[-1] + "INTbits")
-            symbol.setVisible(False)
+        SymId = "DCH" + name[-1] + "INTbits_REG"
+        symbol = coreComponent.createStringSymbol(SymId, None)
+        symbol.setDefaultValue("DCH" + name[-1] + "INTbits")
+        symbol.setVisible(False)
 
         SymId = "DCH" + name[-1] + "INT_REG"
         symbol = coreComponent.createStringSymbol(SymId, None)
@@ -419,80 +416,79 @@ for child in node:
         childIndex += 1
 
 # below parameters facilitate computation of register addresses at runtime
-if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
-    (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
-    # base address for DMA registers - get from atdf
-    address = dmacBaseAddress.getAttribute("offset")
-    SymId = "DMAC_BASE_ADDR"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue(address)
-    symbol.setVisible(False)
 
-    # offset from DMAC base address for channel-level registers
-    SymId = "DMAC_CHAN_OFST"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0x60")
-    symbol.setVisible(False)
+# base address for DMA registers - get from atdf
+address = dmacBaseAddress.getAttribute("offset")
+SymId = "DMAC_BASE_ADDR"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue(address)
+symbol.setVisible(False)
 
-    # base address for channel-specific registers
-    SymId = "DMAC_CH_BASE_ADDR"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0xBF811060")
-    symbol.setVisible(False)
+# offset from DMAC base address for channel-level registers
+SymId = "DMAC_CHAN_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0x60")
+symbol.setVisible(False)
 
-    # size each channel takes in registers
-    SymId = "DMAC_CH_SPACING"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0xC0")
-    symbol.setVisible(False)
+# base address for channel-specific registers
+SymId = "DMAC_CH_BASE_ADDR"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0xBF811060")
+symbol.setVisible(False)
 
-    # offset of DCHxCON from channel base address
-    SymId = "DMAC_CON_OFST"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0x0")
-    symbol.setVisible(False)
+# size each channel takes in registers
+SymId = "DMAC_CH_SPACING"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0xC0")
+symbol.setVisible(False)
 
-    # offset of DCHxECON from channel base address
-    SymId = "DMAC_ECON_OFST"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0x10")
-    symbol.setVisible(False)
+# offset of DCHxCON from channel base address
+SymId = "DMAC_CON_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0x0")
+symbol.setVisible(False)
 
-    # offset of DCHxINT from channel base address
-    SymId = "DMAC_INT_OFST"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0x20")
-    symbol.setVisible(False)
+# offset of DCHxECON from channel base address
+SymId = "DMAC_ECON_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0x10")
+symbol.setVisible(False)
 
-    # offset of DCHxSSA from channel base address
-    SymId = "DMAC_SSA_OFST"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0x30")
-    symbol.setVisible(False)
+# offset of DCHxINT from channel base address
+SymId = "DMAC_INT_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0x20")
+symbol.setVisible(False)
 
-    # offset of DCHxDSA from channel base address
-    SymId = "DMAC_DSA_OFST"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0x40")
-    symbol.setVisible(False)
+# offset of DCHxSSA from channel base address
+SymId = "DMAC_SSA_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0x30")
+symbol.setVisible(False)
 
-    # offset of DCHxSSIZ from channel base address
-    SymId = "DMAC_SSIZ_OFST"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0x50")
-    symbol.setVisible(False)
+# offset of DCHxDSA from channel base address
+SymId = "DMAC_DSA_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0x40")
+symbol.setVisible(False)
 
-    # offset of DCHxDSIZ from channel base address
-    SymId = "DMAC_DSIZ_OFST"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0x60")
-    symbol.setVisible(False)
+# offset of DCHxSSIZ from channel base address
+SymId = "DMAC_SSIZ_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0x50")
+symbol.setVisible(False)
 
-    # offset of DCHxCSIZ from channel base address
-    SymId = "DMAC_CSIZ_OFST"
-    symbol = coreComponent.createStringSymbol(SymId, None)
-    symbol.setDefaultValue("0x90")
-    symbol.setVisible(False)
+# offset of DCHxDSIZ from channel base address
+SymId = "DMAC_DSIZ_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0x60")
+symbol.setVisible(False)
+
+# offset of DCHxCSIZ from channel base address
+SymId = "DMAC_CSIZ_OFST"
+symbol = coreComponent.createStringSymbol(SymId, None)
+symbol.setDefaultValue("0x90")
+symbol.setVisible(False)
 
 # for DMA manager to work
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
@@ -560,7 +556,7 @@ for dmaChannel in range(0, numDMAChans):
     dmacInterruptWarn.append(dmaChannel)
     symId = "DMAC_" + str(dmaChannel) + "_IRQ_WARNING"
     dmacInterruptWarn[dmaChannel] = coreComponent.createCommentSymbol(symId, dmacChannelEnable)
-    dmacInterruptWarn[dmaChannel].setLabel("*** Warning: enable DMA Channel " + str(dmaChannel) + " Interrupt in PIC32MZ Interrupt settings ***")
+    dmacInterruptWarn[dmaChannel].setLabel("*** Warning: enable DMA Channel " + str(dmaChannel) + " Interrupt in Interrupt settings ***")
     dmacInterruptWarn[dmaChannel].setVisible(False)
     dmacInterruptWarn[dmaChannel].setDependencies(updateDMACChannelInterruptData, [dmacInterruptVectorUpdate[dmaChannel], dmacChanEnSymId])
 
