@@ -159,20 +159,21 @@ def ClockStatusWarning(symbol, event):
 
 def ClockModeInfo(symbol, event):
 
-    CPHAINDEX = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_SPICON_CLK_PH")
+    CKEINDEX = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_SPICON_CLK_PH")
     CPOLINDEX = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_SPICON_CLK_POL")
 
     if event["id"] == "SPI_SPICON_CLK_PH":
-        CPHA = int(event["symbol"].getKeyValue(event["value"]))
+        CKE = int(event["symbol"].getKeyValue(event["value"]))
         CPOL = 1 if CPOLINDEX == 0 else 0
     elif event["id"] == "SPI_SPICON_CLK_POL":
         CPOL = int(event["symbol"].getKeyValue(event["value"]))
-        CPHA = 1 if CPHAINDEX == 0 else 0
-    if (CPOL == 0) and (CPHA == 0):
+        CKE = 1 if CKEINDEX == 0 else 0
+
+    if (CPOL == 0) and (CKE == 1):
         symbol.setLabel("***SPI Mode 0 is Selected***")
-    elif (CPOL == 0) and (CPHA == 1):
+    elif (CPOL == 0) and (CKE == 0):
         symbol.setLabel("***SPI Mode 1 is Selected***")
-    elif (CPOL == 1) and (CPHA == 0):
+    elif (CPOL == 1) and (CKE == 1):
         symbol.setLabel("***SPI Mode 2 is Selected***")
     else:
         symbol.setLabel("***SPI Mode 3 is Selected***")
@@ -390,7 +391,7 @@ def instantiateComponent(spiComponent):
     _get_bitfield_names(spiValGrp_SPI1CON_CKE, clkph_names)
     spiSym_SPICON_CLKPH = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_CLK_PH",None)
     spiSym_SPICON_CLKPH.setLabel(spiBitField_SPI1CON_CKE.getAttribute("caption"))
-    spiSym_SPICON_CLKPH.setDefaultValue(1)
+    spiSym_SPICON_CLKPH.setDefaultValue(0)
     spiSym_SPICON_CLKPH.setOutputMode( "Value" )
     spiSym_SPICON_CLKPH.setDisplayMode( "Description" )
     for ii in clkph_names:
