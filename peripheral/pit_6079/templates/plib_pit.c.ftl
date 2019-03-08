@@ -128,7 +128,7 @@ void ${PIT_INSTANCE_NAME}_TimerCompareSet( uint16_t compare )
 
 uint32_t ${PIT_INSTANCE_NAME}_TimerFrequencyGet(void)
 {
-    return ${core.PCLOCK_LS_CLOCK_FREQUENCY} / 16;
+    return ${core.PIT_CLOCK_FREQUENCY} / 16;
 }
 
 <#if ENABLE_INTERRUPT == false>

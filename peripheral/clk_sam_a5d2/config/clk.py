@@ -1654,6 +1654,11 @@ if __name__ == "__main__":
     # MPDDRC is enabled by bootloader so make sure we don't disable it
     Database.setSymbolValue("core", "MPDDRC_CLOCK_ENABLE", True, 1)
 
+    pit = coreComponent.createIntegerSymbol("PIT_CLOCK_FREQUENCY", None)
+    pit.setVisible(False)
+    pit.setDefaultValue(pit.getComponent().getSymbolValue("PCLOCK_LS_CLOCK_FREQUENCY"))
+    pit.setDependencies(lambda symbol, event: symbol.setValue(event['value'],0), ['PCLOCK_LS_CLOCK_FREQUENCY'])
+
     # File handling
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
 

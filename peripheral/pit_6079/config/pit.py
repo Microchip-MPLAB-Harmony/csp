@@ -34,7 +34,7 @@ def updateInterrupt(symbol, event):
 
 
 def calcPIV(period_ms):
-    clk_freq = int(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
+    clk_freq = int(Database.getSymbolValue("core", "PIT_CLOCK_FREQUENCY"))
     clk_freq = clk_freq / 16;
 
     return int(period_ms * clk_freq / 1000)
@@ -121,18 +121,22 @@ def instantiateComponent( pitComponent ):
         Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE", True, 2)
         Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER", instanceName.getValue()+"_InterruptHandler", 2)
 
+
+    clk = Database.getSymbolValue("core", "PIT_CLOCK_FREQUENCY")
+    clk = clk / 16
+    maxval = float(pow(2,20) * 1000.0 / float(clk))
     period = pitComponent.createFloatSymbol("PERIOD_MS", None)
     period.setLabel("Period (ms)")
-    period.setMax(101.06)
+    period.setMax(maxval)
     period.setMin(0)
-    period.setDefaultValue(100.0)
+    period.setDefaultValue(1)
 
     piv = calcPIV(period.getValue())
     piv_sym = pitComponent.createIntegerSymbol("PERIOD_TICKS", None)
     piv_sym.setLabel("Period")
     piv_sym.setDefaultValue(piv)
     piv_sym.setReadOnly(True)
-    piv_sym.setDependencies(updatePIV,["PERIOD_MS", "core.PCLOCK_LS_CLOCK_FREQUENCY"])
+    piv_sym.setDependencies(updatePIV,["PERIOD_MS", "core.PIT_CLOCK_FREQUENCY"])
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
