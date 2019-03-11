@@ -30,7 +30,14 @@ def updateSDWPENCommentVisibility(symbol, event):
     symbol.setVisible(event["value"])
 
 def updateSDMMCClkFreq(symbol, event):
-    symbol.setValue(int(event["value"]), 2)
+    # round the frequency value to the nearest KHz to avoid integer division errors arising out
+    # configuring fractional PLL sources
+    symbol.setValue(int(round((event["value"]), -3)), 2)
+
+    # Display warning if the required clock sources are not enabled
+    sdmmcBaseClkSrcComment.setVisible(0 == Database.getSymbolValue(sdmmcInstanceName.getValue().lower(), "SDMMC_BASECLK_FREQ"))
+    sdmmcMultClkSrcComment.setVisible(0 == Database.getSymbolValue(sdmmcInstanceName.getValue().lower(), "SDMMC_MULTCLK_FREQ"))
+
 
 # Dependency Function to show or hide the warning message depending on Interrupt enable/disable status
 def interruptStatusWarning(symbol, event):
@@ -58,6 +65,8 @@ def instantiateComponent(sdmmcComponent):
     global interruptHandler
     global interruptHandlerLock
     global sdmmcInstanceName
+    global sdmmcBaseClkSrcComment
+    global sdmmcMultClkSrcComment
 
     sdmmcInstanceName = sdmmcComponent.createStringSymbol("SDMMC_INSTANCE_NAME", None)
     sdmmcInstanceName.setVisible(False)
@@ -77,16 +86,42 @@ def instantiateComponent(sdmmcComponent):
     Database.setSymbolValue(coreNamespace, interruptEnable, True, 2)
     Database.setSymbolValue(coreNamespace, interruptHandler, sdmmcInstanceName.getValue() + "_InterruptHandler", 2)
     Database.setSymbolValue(coreNamespace, interruptHandlerLock, True, 2)
+
     sdmmcInterrupt = sdmmcComponent.createBooleanSymbol("INTERRUPT_MODE", None)
     sdmmcInterrupt.setLabel("Interrupt Mode")
     sdmmcInterrupt.setDefaultValue(True)
     sdmmcInterrupt.setReadOnly(True)
 
+    sdmmcHClk = sdmmcComponent.createIntegerSymbol("SDMMC_HCLOCK_FREQ", None)
+    sdmmcHClk.setVisible(False)
+    sdmmcHClk.setDefaultValue(int(round(Database.getSymbolValue("core", sdmmcInstanceName.getValue() + "_CLOCK_FREQUENCY"), -3)))
+    sdmmcHClk.setDependencies(updateSDMMCClkFreq, ["core." + sdmmcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    sdmmcBaseClk = sdmmcComponent.createIntegerSymbol("SDMMC_BASECLK_FREQ", None)
+    sdmmcBaseClk.setLabel("Base Clock Frequency (Hz)")
+    sdmmcBaseClk.setDefaultValue(int(round(Database.getSymbolValue("core", sdmmcInstanceName.getValue() + "_BASECLK_FREQUENCY"), 3)))
+    sdmmcBaseClk.setDependencies(updateSDMMCClkFreq, ["core." + sdmmcInstanceName.getValue() + "_BASECLK_FREQUENCY"])
+    sdmmcBaseClk.setReadOnly(True)
+
+    sdmmcBaseClkSrcComment = sdmmcComponent.createCommentSymbol("SDMMC_BASE_CLOCK_SOURCE_COMMENT", None)
+    sdmmcBaseClkSrcComment.setVisible(False)
+    sdmmcBaseClkSrcComment.setLabel("Source clock for divided clock mode is not enabled !!!")
+
+    sdmmcMultClk = sdmmcComponent.createIntegerSymbol("SDMMC_MULTCLK_FREQ", None)
+    sdmmcMultClk.setLabel("Programmable Clock Frequency (Hz)")
+    sdmmcMultClk.setReadOnly(True)
+    sdmmcMultClk.setDefaultValue(int(round(Database.getSymbolValue("core", sdmmcInstanceName.getValue() + "_MULTCLK_FREQUENCY"), -3)))
+    sdmmcMultClk.setDependencies(updateSDMMCClkFreq, ["core." + sdmmcInstanceName.getValue() + "_MULTCLK_FREQUENCY"])
+
+    sdmmcMultClkSrcComment = sdmmcComponent.createCommentSymbol("SDMMC_MULT_CLOCK_SOURCE_COMMENT", None)
+    sdmmcMultClkSrcComment.setVisible(False)
+    sdmmcMultClkSrcComment.setLabel("Source clock for programmable clock mode is not enabled !!!")
+
     sdmmcCD = sdmmcComponent.createBooleanSymbol("SDMMC_SDCDEN", None)
     sdmmcCD.setLabel("Use SD Card Detect (SDCD#) Pin")
     sdmmcCD.setDefaultValue(True)
 
-    sdmmcCDComment = sdmmcComponent.createCommentSymbol("SDMMC_SDCDEN_COMMENT", sdmmcCD)
+    sdmmcCDComment = sdmmcComponent.createCommentSymbol("SDMMC_SDCDEN_COMMENT", None)
     sdmmcCDComment.setLabel("!!!Configure SDCD pin in Pin Configuration!!!")
     sdmmcCDComment.setVisible(sdmmcCD.getValue())
     sdmmcCDComment.setDependencies(updateSDCDENCommentVisibility, ["SDMMC_SDCDEN"])
@@ -95,7 +130,7 @@ def instantiateComponent(sdmmcComponent):
     sdmmcWP.setLabel("Use SD Write Protect (SDWP#) Pin")
     sdmmcWP.setDefaultValue(True)
 
-    sdmmcWPComment = sdmmcComponent.createCommentSymbol("SDMMC_SDWPEN_COMMENT", sdmmcWP)
+    sdmmcWPComment = sdmmcComponent.createCommentSymbol("SDMMC_SDWPEN_COMMENT", None)
     sdmmcWPComment.setLabel("!!!Configure SDWP pin in Pin Configuration!!!")
     sdmmcWPComment.setVisible(sdmmcWP.getValue())
     sdmmcWPComment.setDependencies(updateSDWPENCommentVisibility, ["SDMMC_SDWPEN"])
@@ -105,14 +140,6 @@ def instantiateComponent(sdmmcComponent):
     sdmmcDescLines.setMin(1)
     sdmmcDescLines.setMax(10)
     sdmmcDescLines.setDefaultValue(1)
-
-    sdmmcCLK = sdmmcComponent.createIntegerSymbol("SDMMC_CLK_FREQ", None)
-    sdmmcCLK.setVisible(False)
-    sdmmcCLK.setDefaultValue(int(Database.getSymbolValue("core", sdmmcInstanceName.getValue() + "_CLOCK_FREQUENCY")))
-    sdmmcCLK.setDependencies(updateSDMMCClkFreq, ["core." + sdmmcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
-
-    sdmmcClockSourceComment = sdmmcComponent.createCommentSymbol("SDMMC_CLOCK_SOURCE_COMMENT", None)
-    sdmmcClockSourceComment.setLabel("!!!Configure " + sdmmcInstanceName.getValue() + " Clock in Clock Configuration!!!")
 
     # Dependency Status for interrupt
     sdmmcSymIntEnComment = sdmmcComponent.createCommentSymbol(sdmmcInstanceName.getValue() + "_INTERRUPT_ENABLE_COMMENT", None)

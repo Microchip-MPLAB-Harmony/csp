@@ -70,7 +70,7 @@ bool ${SDMMC_INSTANCE_NAME}_IsWriteProtected ( void );
 
 bool ${SDMMC_INSTANCE_NAME}_IsCardAttached ( void );
 
-bool ${SDMMC_INSTANCE_NAME}_ClockSet ( uint32_t clock );
+bool ${SDMMC_INSTANCE_NAME}_ClockSet ( uint32_t freq );
 
 void ${SDMMC_INSTANCE_NAME}_ClockEnable ( void );
 
