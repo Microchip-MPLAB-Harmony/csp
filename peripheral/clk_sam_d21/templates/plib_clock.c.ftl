@@ -80,9 +80,6 @@ static void SYSCTRL_Initialize(void)
     }
 
     </#if>
-<#else>
-    SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0;
-
 </#if>
 <#if CONF_CLOCK_XOSC32K_ENABLE == true>
     /****************** XOSC32K initialization  ******************************/
@@ -315,4 +312,9 @@ ${CLK_INIT_LIST}
 
     </#if>
     </#if>
+
+<#if CONFIG_CLOCK_OSC8M_ENABLE == false>
+    /*Disable RC oscillator*/
+    SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0;
+</#if>
 }
