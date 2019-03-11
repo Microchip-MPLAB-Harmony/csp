@@ -54,6 +54,7 @@ void ACC_Initialize (void)
     /*Set Comparator Positive and Negative Input, Output Invert status to
       Enable/Disable, Fault Generation to Enable/Disable, Set Fault source and
       Output Edge type*/
+    regValue |= ACC_MR_SELMINUS(0x2);
     regValue |= ACC_MR_SELPLUS(0x0);
     regValue |= 0;
     regValue |= 0;
