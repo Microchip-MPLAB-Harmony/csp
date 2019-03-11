@@ -359,8 +359,18 @@ def update_isc_clk_frequency(symbol, event):
 
 global update_sdmmc_clock_frequency
 def update_sdmmc_clock_frequency(symbol, event):
-    symbol.setValue(event["value"], 2)
+    instance_name = symbol.getID().split("_CLOCK_FREQUENCY")[0]
 
+    # set the PMC clock frequency
+    symbol.setValue(Database.getSymbolValue("core", "PCLOCK_HS_CLOCK_FREQUENCY"), 2)
+
+    # set the base clock frequency
+    new_frequency = Database.getSymbolValue("core", "MAIN_CLK_FREQUENCY")
+    Database.setSymbolValue("core", instance_name + "_BASECLK_FREQUENCY", new_frequency, 2)
+
+    # set the multiplier clock frequency
+    new_frequency = Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY")
+    Database.setSymbolValue("core", instance_name + "_MULTCLK_FREQUENCY", new_frequency, 2)
 
 global update_spi_clock_frequency
 def update_spi_clock_frequency(symbol, event):
@@ -1516,8 +1526,20 @@ def create_sdmmc_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
     sdmmc_clock_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
     sdmmc_clock_freq_sym.setVisible(False)
     sdmmc_clock_freq_sym.setReadOnly(True)
-    sdmmc_clock_freq_sym.setDefaultValue(Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY"))
-    sdmmc_clock_freq_sym.setDependencies(update_sdmmc_clock_frequency, [instance_name + "_GENERIC_CLOCK_FREQUENCY"])
+    sdmmc_clock_freq_sym.setDefaultValue(Database.getSymbolValue("core","PCLOCK_HS_CLOCK_FREQUENCY"))
+    sdmmc_clock_freq_sym.setDependencies(update_sdmmc_clock_frequency, ["MAIN_CLK_FREQUENCY",
+                                                                        "PCLOCK_HS_CLOCK_FREQUENCY",
+                                                                        instance_name + "_GENERIC_CLOCK_FREQUENCY"])
+
+    sdmmc_baseclk_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_BASECLK_FREQUENCY", clk_menu)
+    sdmmc_baseclk_freq_sym.setVisible(False)
+    sdmmc_baseclk_freq_sym.setReadOnly(True)
+    sdmmc_baseclk_freq_sym.setDefaultValue(Database.getSymbolValue("core", "MAIN_CLK_FREQUENCY"))
+
+    sdmmc_multclk_freq_sym = clock_comp.createIntegerSymbol(instance_name + "_MULTCLK_FREQUENCY", clk_menu)
+    sdmmc_multclk_freq_sym.setVisible(False)
+    sdmmc_multclk_freq_sym.setReadOnly(True)
+    sdmmc_multclk_freq_sym.setDefaultValue(Database.getSymbolValue("core", instance_name + "_GENERIC_CLOCK_FREQUENCY"))
 
 
 global freq_sym_constructor_dict
