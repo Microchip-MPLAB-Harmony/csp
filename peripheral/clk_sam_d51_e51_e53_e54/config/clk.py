@@ -1020,8 +1020,9 @@ def setGClockFreq(symbol, event):
 
         prevFreq = symbol.getValue()
 
-        if prevFreq != gclk_freq :
-            symbol.setValue(gclk_freq, 1)
+        if prevFreq != gclk_freq:
+            if gclk_freq < 4294967295:
+                symbol.setValue(gclk_freq, 1)
 
     else:
         if symbol.getValue() > 0:
@@ -1898,7 +1899,16 @@ clkSym_RTC_CLK_FREQ.setDefaultValue(1024)
 clkSym_RTC_CLK_FREQ.setDependencies(setFreq, [
                                     "CONFIG_CLOCK_RTC_SRC", "OSCULP32K_FREQ", "OSC1K_FREQ", "XOSC32K_FREQ", "XOSC1K_FREQ"])
 
-
+#########################Default Clock##########################################
+gclkSym_num[2].setValue(True, 2)
+gclkSym_GENCTRL_SRC[2].setValue(6, 2)
+gclkSym_GENCTRL_DIV[2].setValue(48, 2)
+Database.setSymbolValue("core", "GCLK_ID_1_CHEN", True, 2)
+Database.setSymbolValue("core", "GCLK_ID_1_GENSEL", 2, 2)
+Database.setSymbolValue("core", "CONFIG_CLOCK_DPLL0_ENABLE", True, 2)
+Database.setSymbolValue("core", "CONFIG_CLOCK_DPLL0_REF_CLOCK", 3, 2)
+Database.setSymbolValue("core", "CONFIG_CLOCK_DPLL0_LDR_INTEGER", 119, 2)
+gclkSym_GENCTRL_SRC[0].setValue(7, 2)
 ################################################################################
 ###########             CODE GENERATION                     ####################
 ################################################################################
