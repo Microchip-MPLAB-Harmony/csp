@@ -127,8 +127,6 @@ static void OSCCTRL_Initialize(void)
         /* Waiting for the OSC48M Ready state */
     }
 	</#if>
-<#else>
-	OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = 0x0;
 </#if>
 }
 
@@ -341,6 +339,12 @@ ${CLK_INIT_LIST}
     MCLK_REGS->MCLK_APBDMASK = ${MCLK_APBD_INITIAL_VALUE};
 
     </#if>
+    </#if>
+
+    <#if CONFIG_CLOCK_OSC48M_ENABLE == false>
+    /*Disable RC oscillator*/
+    
+    OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = 0x0;
     </#if>
 }
 
