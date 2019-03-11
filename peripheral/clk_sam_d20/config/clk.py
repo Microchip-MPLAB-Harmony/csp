@@ -88,7 +88,7 @@ def setOSC8MFreq(symbol, event):
         symbol.setValue((freq)/ (2**pres), 2)
 
     else:
-        symbol.setValue((freq)/ (2**pres), 2)
+        symbol.setValue(0, 2)
 
 def setXOSCGain(symbol, event):
     if(event["value"] <= 2000000):
@@ -1226,6 +1226,18 @@ divider = pmSym_CPUDIV_CPUDIV.getValue()
 gclk0_freq = int(gclkSym_Freq[0].getValue())
 clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)
 
+
+#####################Default clock Setup####################################
+#Enable DFLL
+dfllEnable.setValue(True, 1)
+
+#Select DFLL as default clock source
+gclkSym_GENCTRL_SRC[0].setValue(7, 1)
+
+#Disable RC oscillator
+osc8MEnable.setValue(False, 1)
+
+##########################################################################
 ################################################################################
 ###########             CODE GENERATION                     ####################
 ################################################################################
