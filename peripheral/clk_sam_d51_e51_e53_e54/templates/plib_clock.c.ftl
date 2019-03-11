@@ -250,12 +250,6 @@ static void DFLL_Initialize(void)
         <#lt>                               ;</@compress>
     </#if>
 </#if>
-<#else>
-    OSCCTRL_REGS->OSCCTRL_DFLLCTRLA &= ~(OSCCTRL_DFLLCTRLA_ENABLE_Msk);
-    while((OSCCTRL_REGS->OSCCTRL_DFLLSYNC & OSCCTRL_DFLLSYNC_ENABLE_Msk) == OSCCTRL_DFLLSYNC_ENABLE_Msk )
-    {
-        /* Waiting for the DPLL enable synchronization */
-    }
 </#if>
 }
 
@@ -362,5 +356,15 @@ ${CLK_INIT_LIST}
     MCLK_REGS->MCLK_APBDMASK = ${MCLK_APBD_INITIAL_VALUE};
 
     </#if>
+    </#if>
+
+    <#if CONFIG_CLOCK_DFLL_ENABLE == false>
+
+    /* Disable DFLL */
+    OSCCTRL_REGS->OSCCTRL_DFLLCTRLA &= ~(OSCCTRL_DFLLCTRLA_ENABLE_Msk);
+    while((OSCCTRL_REGS->OSCCTRL_DFLLSYNC & OSCCTRL_DFLLSYNC_ENABLE_Msk) == OSCCTRL_DFLLSYNC_ENABLE_Msk )
+    {
+        /* Waiting for the DPLL enable synchronization */
+    }
     </#if>
 }
