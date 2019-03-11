@@ -116,17 +116,33 @@ def instantiateComponent(nvmComponent):
     nvmSym_FLASH_SIZE.setVisible(False)
     nvmSym_FLASH_SIZE.setDefaultValue(nvmFlashNode.getAttribute("size"))
 
-    #Flash Row size
-    nvmSym_FLASH_PROGRAM_SIZE = nvmComponent.createStringSymbol("FLASH_PROGRAM_SIZE", None)
-    nvmSym_FLASH_PROGRAM_SIZE.setVisible(False)
-    nvmSym_FLASH_PROGRAM_SIZE.setDefaultValue("0x800")
+    nvmParamNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVM\"]/instance@[name=\"" + nvmInstanceName.getValue() + "\"]/parameters")
 
-    #Flash Page size
-    nvmSym_ERASE_SIZE = nvmComponent.createStringSymbol("FLASH_ERASE_SIZE", None)
-    nvmSym_ERASE_SIZE.setVisible(False)
-    nvmSym_ERASE_SIZE.setDefaultValue("0x4000")
+    pageSize = "4096"
+    rowSize = "512"
 
-    #Configuration when interfaced with memory driver
+    if nvmParamNode != None:
+        param_values = []
+        param_values = nvmParamNode.getChildren()
+        for index in range(0, len(param_values)):
+            if "PAGE_SIZE" in param_values[index].getAttribute("name"):
+                pageSize = param_values[index].getAttribute("value")
+
+            if "ROW_SIZE" in param_values[index].getAttribute("name"):
+                rowSize = param_values[index].getAttribute("value")
+
+        #Flash Row size
+        nvmSym_FLASH_PROGRAM_SIZE = nvmComponent.createStringSymbol("FLASH_PROGRAM_SIZE", None)
+        nvmSym_FLASH_PROGRAM_SIZE.setVisible(False)
+        nvmSym_FLASH_PROGRAM_SIZE.setDefaultValue(rowSize)
+
+        #Flash Page size
+        nvmSym_ERASE_SIZE = nvmComponent.createStringSymbol("FLASH_ERASE_SIZE", None)
+        nvmSym_ERASE_SIZE.setVisible(False)
+        nvmSym_ERASE_SIZE.setDefaultValue(pageSize)
+
+    ##### Do not modify below symbol names as they are used by Memory Driver #####
+
     nvmSym_MemoryDriver = nvmComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", None)
     nvmSym_MemoryDriver.setLabel("Memory Driver Connected")
     nvmSym_MemoryDriver.setVisible(False)
@@ -160,7 +176,7 @@ def instantiateComponent(nvmComponent):
     nvmSym_MemoryEraseBufferSize = nvmComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", None)
     nvmSym_MemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
     nvmSym_MemoryEraseBufferSize.setVisible(False)
-    nvmSym_MemoryEraseBufferSize.setDefaultValue(int(nvmSym_ERASE_SIZE.getValue(), 16))
+    nvmSym_MemoryEraseBufferSize.setDefaultValue(int(nvmSym_ERASE_SIZE.getValue()))
     nvmSym_MemoryEraseBufferSize.setDependencies(nvmSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
 
     nvmSym_MemoryEraseComment = nvmComponent.createCommentSymbol("ERASE_COMMENT", None)
