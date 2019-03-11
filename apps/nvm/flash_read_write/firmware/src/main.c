@@ -56,7 +56,7 @@
 #define READ_WRITE_SIZE         (NVM_FLASH_PAGESIZE)
 #define BUFFER_SIZE             (READ_WRITE_SIZE / sizeof(uint32_t))
 
-#define APP_FLASH_ADDRESS       (NVM_FLASH_START_ADDRESS + 0x100000)
+#define APP_FLASH_ADDRESS       (NVM_FLASH_START_ADDRESS + (NVM_FLASH_SIZE / 2))
 
 #define LED_ON                  LED1_Set
 #define LED_OFF                 LED1_Clear
@@ -110,10 +110,10 @@ int main ( void )
     while(xferDone == false);
     
     xferDone = false;
-    
+
     for (i = 0; i < READ_WRITE_SIZE; i+= NVM_FLASH_ROWSIZE)
     {
-        /* Program 2048 byte Row*/
+        /* Program a row of data */
         NVM_RowWrite((uint32_t *)writePtr, address);
 
         while(xferDone == false);
