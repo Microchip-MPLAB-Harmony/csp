@@ -109,9 +109,13 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     /*SLPEN = ${UART_SLPEN} */
     U${UART_INSTANCE_NUM}MODE = 0x${UMODE_VALUE};
 
-    /*Enable ${UART_INSTANCE_NAME} Receiver and Transmitter */
+<#if USART_INTERRUPT_MODE == true>
+    /*Enable ${UART_INSTANCE_NAME} Receiver, Transmitter and TX Interrupt selection */
+    U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK | _U${UART_INSTANCE_NUM}STA_UTXISEL0_MASK);
+<#else>
+    /*Enable ${UART_INSTANCE_NAME} Receiver and Transmitter*/
     U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK);
-
+</#if>
     /* BAUD Rate register Setup */
     U${UART_INSTANCE_NUM}BRG = ${BRG_VALUE};
 
