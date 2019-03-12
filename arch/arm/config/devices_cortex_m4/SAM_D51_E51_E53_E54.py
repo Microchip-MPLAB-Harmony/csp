@@ -141,17 +141,6 @@ systickExternal.setLabel("External Clock Source for SysTick Available")
 systickExternal.setDefaultValue(False)
 systickExternal.setVisible(False)
 
-
-deviceTCMsize = coreComponent.createKeyValueSetSymbol("DEVICE_TCM_SIZE", devCfgMenu)
-deviceTCMsize.setLabel("TCM and cache Size")
-deviceTCMsize.setOutputMode("Value")
-deviceTCMsize.setDisplayMode("Description")
-deviceTCMsize.addKey("0KB", "2", "TCM: 0 KB, Cache: 4 KB" )
-deviceTCMsize.addKey("2KB", "1", "TCM: 2 KB, Cache: 2 KB")
-deviceTCMsize.addKey("3KB", "0", "TCM: 3 KB, Cache: 1 KB")
-deviceTCMsize.addKey("4KB", "3", "TCM: 4 KB,  Cache: 0 KB")
-deviceTCMsize.setSelectedKey("0KB",1)
-
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
 coreFPU.setDefaultValue(True)
@@ -168,23 +157,20 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M4 Configuration")
 cortexMenu.setDescription("Configuration for Cortex M4")
 
-#Cortex-M4 IP Configuration
-tcmMenu = coreComponent.createMenuSymbol("TCM_MENU", cortexMenu)
-tcmMenu.setLabel("TCM")
-tcmMenu.setDescription("TCM Configuration")
-
-tcmEnable = coreComponent.createBooleanSymbol("TCM_ENABLE", tcmMenu)
-tcmEnable.setLabel("Enable TCM")
-tcmEnable.setDefaultValue(False)
-tcmEnable.setVisible(False)
-
-stackTCM = coreComponent.createBooleanSymbol("STACK_IN_TCM", tcmMenu)
-stackTCM.setLabel("Locate Stack in TCM")
-stackTCM.setDefaultValue(False)
-
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
-cacheMenu.setLabel("CACHE")
+cacheMenu.setLabel("CMCC Configuration")
 cacheMenu.setDescription("CACHE Configuration")
+
+deviceTCMsize = coreComponent.createKeyValueSetSymbol("DEVICE_TCM_SIZE", cacheMenu)
+deviceTCMsize.setLabel("TCM and cache Size")
+deviceTCMsize.setOutputMode("Value")
+deviceTCMsize.setDisplayMode("Description")
+deviceTCMsize.addKey("0KB", "2", "TCM: 0 KB, Cache: 4 KB" )
+deviceTCMsize.addKey("2KB", "1", "TCM: 2 KB, Cache: 2 KB")
+deviceTCMsize.addKey("3KB", "0", "TCM: 3 KB, Cache: 1 KB")
+deviceTCMsize.addKey("4KB", "3", "TCM: 4 KB,  Cache: 0 KB")
+deviceTCMsize.setSelectedKey("0KB",1)
+
 
 dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
 dcacheEnable.setLabel("Enable Data Cache")
@@ -192,7 +178,12 @@ dcacheEnable.setDefaultValue(False)
 
 icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
 icacheEnable.setLabel("Enable Instruction Cache")
-icacheEnable.setDefaultValue(False)
+icacheEnable.setDefaultValue(True)
+
+stackTCM = coreComponent.createBooleanSymbol("STACK_IN_TCM", cacheMenu)
+stackTCM.setLabel("Locate Stack in TCM")
+stackTCM.setDefaultValue(False)
+stackTCM.setVisible(False)
 
 cacheAlign = coreComponent.createIntegerSymbol("CACHE_ALIGN", cacheMenu)
 cacheAlign.setLabel("Cache Alignment Length")
@@ -260,6 +251,9 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
 
 # load PAC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_u2120/config/pac.py")
+
+#  load CMCC
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/cmcc/config/cmcc.py")
 
 # # load device specific adc manager information
 # coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")

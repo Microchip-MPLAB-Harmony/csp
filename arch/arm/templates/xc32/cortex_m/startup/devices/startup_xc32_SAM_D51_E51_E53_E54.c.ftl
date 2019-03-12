@@ -33,7 +33,7 @@ __STATIC_INLINE void ICache_Enable(void)
                     <#if (DATA_CACHE_ENABLE)>
                     <#else>
                     <#lt>    CMCC_REGS->CMCC_CTRL &= ~(CMCC_CTRL_CEN_Msk);
-                    <#lt>    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) != CMCC_SR_CSTS_Msk)
+                    <#lt>    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
                     <#lt>    {
                     <#lt>        /*Wait for the operation to complete*/
                     <#lt>    }
@@ -55,7 +55,7 @@ __STATIC_INLINE void DCache_Enable(void)
                     <#if (INSTRUCTION_CACHE_ENABLE)>
                     <#else>
                     <#lt>    CMCC_REGS->CMCC_CTRL &= ~(CMCC_CTRL_CEN_Msk);
-                    <#lt>    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) != CMCC_SR_CSTS_Msk)
+                    <#lt>    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
                     <#lt>    {
                     <#lt>        /*Wait for the operation to complete*/
                     <#lt>    }
