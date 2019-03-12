@@ -87,8 +87,9 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     ADCTRGSNS = 0x${ADCHS_ADCTRGSNS};
 
     ADCIMCON1 = 0x${ADCHS_ADCIMCON1};
-    ADCIMCON2 = 0x${ADCHS_ADCIMCON2};
-    ADCIMCON3 = 0x${ADCHS_ADCIMCON3};
+    <#if ADCHS_ADCIMCON2??>ADCIMCON2 = 0x${ADCHS_ADCIMCON2}; </#if>
+    <#if ADCHS_ADCIMCON3??>ADCIMCON3 = 0x${ADCHS_ADCIMCON3}; </#if>
+    <#if ADCHS_ADCIMCON4??>ADCIMCON4 = 0x${ADCHS_ADCIMCON4}; </#if>
 
     /* Input scan */
     ADCCSS1 = 0x${ADCHS_ADCCSS1};
@@ -246,11 +247,22 @@ void ${ADCHS_INSTANCE_NAME}_CallbackRegister(ADCHS_CHANNEL_NUM channel, ADCHS_CA
 <#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? && .vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
 void ADC_DATA${i}_InterruptHandler(void)
 {
+<#if __PROCESSOR?contains("PIC32MZ")>
 <#if i < ADCHS_IFS0_NUM_IRQ>
     IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_ADCD${i}IF_MASK;
 <#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>
     IFS${ADCHS_IFS_START_INDEX + 1}CLR = _IFS${ADCHS_IFS_START_INDEX+1}_ADCD${i}IF_MASK;
 </#if>
+</#if>
+
+<#if __PROCESSOR?contains("PIC32MK")>
+<#if i < ADCHS_IFS0_NUM_IRQ>
+    IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_AD1D${i}IF_MASK;
+<#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>
+    IFS${ADCHS_IFS_START_INDEX + 1}CLR = _IFS${ADCHS_IFS_START_INDEX+1}_AD1D${i}IF_MASK;
+</#if>
+</#if>
+
     if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
     {
       ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
@@ -264,6 +276,7 @@ void ADC_DATA${i}_InterruptHandler(void)
 <#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? &&.vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
 void ADC_DATA${i}_InterruptHandler(void)
 {
+<#if __PROCESSOR?contains("PIC32MZ")>
 <#if i < ADCHS_IFS0_NUM_IRQ>
     IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_ADCD${i}IF_MASK;
 <#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>
@@ -271,6 +284,18 @@ void ADC_DATA${i}_InterruptHandler(void)
 <#else>
     IFS${ADCHS_IFS_START_INDEX + 2}CLR = _IFS${ADCHS_IFS_START_INDEX+2}_ADCD${i}IF_MASK;
 </#if>
+</#if>
+
+<#if __PROCESSOR?contains("PIC32MK")>
+<#if i < ADCHS_IFS0_NUM_IRQ>
+    IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_AD1D${i}IF_MASK;
+<#elseif (i gt ADCHS_IFS0_NUM_IRQ) && (i < ADCHS_IFS1_NUM_IRQ)>
+    IFS${ADCHS_IFS_START_INDEX + 1}CLR = _IFS${ADCHS_IFS_START_INDEX+1}_AD1D${i}IF_MASK;
+<#else>
+    IFS${ADCHS_IFS_START_INDEX + 2}CLR = _IFS${ADCHS_IFS_START_INDEX+2}_AD1D${i}IF_MASK;
+</#if>
+</#if>
+
     if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
     {
         ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);

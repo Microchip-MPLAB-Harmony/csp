@@ -20,6 +20,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+import math
 
 ###################################################################################################
 ########################### Global variables   #################################
@@ -29,7 +30,7 @@ global adchsInstanceName
 
 # A set of arrays for keeping track of each chanel's parameters.
 adchsCHMenu = []
-adchsCONMenu = []
+adchsCONMenu = [None] * 64
 adchsSym_CH_ENABLE = []
 adchsSym_CH_NAME = []
 
@@ -180,8 +181,6 @@ def adchsAddKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, BitFi
                 + '__' + BitFieldName)
             value_groupNode = ATDF.getNode(value_groupPath)
             if value_groupNode is not None:
-                # Log.writeInfoMessage("    KeyValueSet ID String" + RegisterName + '__' +
-                    # BitFieldName)
                 Component = Parent.createKeyValueSetSymbol(RegisterName + '__' +
                     BitFieldName, Menu)
                 adchsValGrp_names = []
@@ -195,8 +194,6 @@ def adchsAddKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, BitFi
 
                 initval = registerNode.getAttribute('initval')
                 if initval is not None:
-                    # Log.writeInfoMessage(" Register: " + RegisterName + " initval: " + initval)
-                    #_find_default_value(labelNode, initval):
                     valuenode = value_groupNode.getChildren()  # look at all the <value ..> entries underneath <value-group >
                     Component.setDefaultValue(_find_default_value(labelNode, initval))
                 else:
@@ -252,8 +249,8 @@ def adchsAddBooleanFromATDF1ValueValueGroup(Parent, ModuleName, RegisterName, Bi
         Component.setVisible(Visibility)
         return Component
     else:
-        Log.writeErrorMessage("Adding Boolean: Failed!! no such node. " + value_groupPath)
-    return None
+        #Log.writeErrorMessage("Adding Boolean: Failed!! no such node. " + value_groupPath)
+        return None
 
 def adchsAddBooleanFromATDFBitfieldName(Parent, ModuleName, RegisterName, BitFieldName, Menu, Visibility):
     # Log.writeInfoMessage("Adding Boolean: " + ModuleName + " " + RegisterName +
@@ -388,9 +385,8 @@ def adchsCalcADCCON2(symbol, event):
     adccon2 = 0x0
     component = symbol.getComponent()
     adcdiv = component.getSymbolValue("ADCCON2__ADCDIV") << 0
-    adceis = component.getSymbolValue("ADCCON2__ADCEIS") << 8
     samc = component.getSymbolValue("ADCCON2__SAMC") << 16
-    adccon2 = adcdiv + adceis + samc
+    adccon2 = adcdiv + samc
     symbol.setValue(adccon2, 2)
 
 def adchsCalcADCCON3(symbol, event):
@@ -410,10 +406,8 @@ def adchsCalcADCTRGMODE(symbol, event):
     component = symbol.getComponent()
     for channelID in range(0, ADC_Max_Class_1):
         if(component.getSymbolValue("ADCHS_"+str(channelID)+"_ENABLE")):
-            ssampen = ssampen + (component.getSymbolValue("ADCTRGMODE__SSAMPEN" + str(channelID)) << channelID)
-            strgen = strgen + (component.getSymbolValue("ADCTRGMODE__STRGEN" + str(channelID)) << (channelID + 8))
             shalt = shalt + (component.getSymbolValue("ADCTRGMODE__SH" + str(channelID) + "ALT") << (channelID * 2 + 16))
-    adctrgmode = ssampen + strgen + shalt
+    adctrgmode = shalt
     symbol.setValue(adctrgmode, 2)
 
 def adchsCalcADCIMCON1(symbol, event):
@@ -455,6 +449,19 @@ def adchsCalcADCIMCON3(symbol, event):
     adcimcon3 = sign + diff
     symbol.setValue(adcimcon3, 2)
 
+def adchsCalcADCIMCON4(symbol, event):
+    adcimcon4 = 0x0
+    sign = 0x0
+    diff = 0x0
+    component = symbol.getComponent()
+    for channelID in range(48, ADC_Max_Signals):
+        if (component.getSymbolValue("ADCIMCON4__SIGN" + str(channelID)) != None):
+            sign = sign + (component.getSymbolValue("ADCIMCON4__SIGN" + str(channelID)) << ((channelID - 48) * 2))
+        if (component.getSymbolValue("ADCIMCON4__DIFF" + str(channelID)) != None):
+            diff = diff + (component.getSymbolValue("ADCIMCON4__DIFF" + str(channelID)) << (((channelID - 48) * 2) + 1))
+    adcimcon4 = sign + diff
+    symbol.setValue(adcimcon4, 2)
+
 def adchsCalcADCTRG1(symbol, value):
     adctrg1 = 0x0
     trgsrc = 0x0
@@ -492,9 +499,8 @@ def adchsCalcADCTIME(symbol, event):
         samc = (component.getSymbolValue("ADC"+ str(channelID)+"TIME__SAMC") << (0))
         adcdiv = (component.getSymbolValue("ADC"+ str(channelID)+"TIME__ADCDIV") << (16))
         selres = (component.getSymbolValue("ADC"+ str(channelID)+"TIME__SELRES") << (24))
-        adceis = (component.getSymbolValue("ADC"+ str(channelID)+"TIME__ADCEIS") << (26))
         adctime.append(channelID)
-        adctime[channelID] = samc +  adcdiv + selres + adceis
+        adctime[channelID] = samc +  adcdiv + selres
         adchsSym_ADCTIME[channelID].setValue(adctime[channelID], 2)
 
 def adchsCalcADCTRGSNS(symbol, event):
@@ -664,10 +670,11 @@ def instantiateComponent(adchsComponent):
     global ADC_Max_Class_1
     global ADC_Max_Signals
     global ADC_Max_Class_1and2
-    global ADC_Max_Signals
     global Irq_index
     global adciec_depList
     global adcinterruptmode_deplist
+
+    MAX_AVAILABLE_SIGNALS = 64
 
     adchsInstanceName = adchsComponent.createStringSymbol("ADCHS_INSTANCE_NAME", None)
     adchsInstanceName.setVisible(False)
@@ -685,13 +692,14 @@ def instantiateComponent(adchsComponent):
     ADC_Max_Class_1and2 = 0
     ADC_Max_Class_1 = 0
     ADC_Max_Class_2 = 0
+    ADC_Input_Signals_List = [False] * MAX_AVAILABLE_SIGNALS
+
     # Each of the dedicated ADCHS SARs must have a DIGEN bit field in the
     # ADCCON3 SFR.  So, counting them give the number of dedicated ADC
     # channels.  Note, ADC7 should always exist as the shared SAR.
     for ChannelNumber in range(0, 7):
         labelPath = adchsATDFRegisterBitfieldPath(Module, "ADCCON3",
             "DIGEN" + str(ChannelNumber))
-        # Log.writeInfoMessage("Looking for Attribute of " + labelPath)
         labelNode = ATDF.getNode(labelPath).getAttribute("values")
         if labelNode is not None:
             ADC_Max_DedicatedChannels += 1
@@ -700,18 +708,12 @@ def instantiateComponent(adchsComponent):
     # Each Analog channel on the part must have a Data Register.  Each existing
     # Data register should indicate that there is an Analog pin for that signal.
     SignalNumber = 0
-    labelPath = adchsATDFRegisterPath(Module, "ADCDATA" + str(SignalNumber))
-    labelNode = ATDF.getNode(labelPath)
-    while labelNode is not None:
-        ADC_Max_Signals += 1
-        SignalNumber += 1
+    for SignalNumber in range (0, MAX_AVAILABLE_SIGNALS):
         labelPath = adchsATDFRegisterPath(Module, "ADCDATA" + str(SignalNumber))
         labelNode = ATDF.getNode(labelPath)
-    # for SignalNumber in range(0, 43):
-        # labelPath = adchsATDFRegisterPath(Module, "ADCDATA" + str(SignalNumber))
-        # labelNode = ATDF.getNode(labelPath)
-        # if labelNode is not None:
-            # ADC_Max_Signals += 1
+        if labelNode is not None:
+            ADC_Input_Signals_List[SignalNumber] = True
+            ADC_Max_Signals = SignalNumber + 1
 
     # The dedicated channels use class 1 signals.  All Class 1 AND class 2
     # signals must have a TRGSRC bit field in one of the ADCTRG SFRs.
@@ -726,7 +728,6 @@ def instantiateComponent(adchsComponent):
                 SignalName = "TRGSRC" + str(signalID)
                 labelPath = adchsATDFRegisterBitfieldPath(Module, RegisterName,
                     SignalName )
-                # Log.writeInfoMessage("Looking for Bitfield" + labelPath)
                 labelNode = ATDF.getNode(labelPath)
                 if labelNode is not None:
                     ADC_Max_Class_1and2 += 1
@@ -755,7 +756,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_IFS0_INDEX.setVisible(False)
     adchsSym_IFS0_INDEX.setDefaultValue( num_intrpt_in_first_iec)
 
-    if ((ADC_Max_Signals - (num_intrpt_in_first_iec))) > 32:
+    if ((ADC_Max_Signals - (num_intrpt_in_first_iec))) >= 32:
         #IEC REG
         adchsSym_IEC1 = adchsComponent.createStringSymbol("ADCHS_IEC1_REG", None)
         adchsSym_IEC1.setDefaultValue("IEC"+str(enblRegIndex+1))
@@ -773,15 +774,21 @@ def instantiateComponent(adchsComponent):
         adchsSym_IEC2.setVisible(False)
         ADC_MAX_EIC_REG = ADC_MAX_EIC_REG + 1
 
+############################## Dependency Lists ##################################
     adctrgmode_deplist = []
     adctrgsns_deplist = []
-    adctrg_deplist = [[] for i in range (3)]
+    adctrg_deplist = [[] for i in range (ADC_Max_Class_1and2 / 4)]
     adctime_deplist = [[] for i in range (ADC_Max_Class_1)]
     adcgirqen_deplist = [[] for i in range (2)]
     adccss_deplist = [[] for i in range (2)]
     adciec_depList = [[] for i in range (ADC_MAX_EIC_REG)]
     adcinterruptmode_deplist = []
+    adcimcon_deplist = [[] for i in range (int(math.ceil(ADC_Max_Signals / 16.0)))]
+############################## Dependency Lists End ##################################
 
+################################################################################
+########## ADCHS Menu ################################################
+########################################################################
     adchsMenu = adchsComponent.createMenuSymbol("ADCHS_MENU", None)
     adchsMenu.setLabel("ADCHS Configuration")
 
@@ -789,31 +796,21 @@ def instantiateComponent(adchsComponent):
     adchsSym_NUM_CHANNELS = adchsComponent.createIntegerSymbol("ADCHS_NUM_CHANNELS", adchsMenu)
     adchsSym_NUM_CHANNELS.setDefaultValue(ADC_Max_DedicatedChannels)
     adchsSym_NUM_CHANNELS.setVisible(False)
-    #adchsSym_NUM_CHANNELS.setVisible(True)
 
     #max no of signals
     adchsSym_NUM_SIGNALS = adchsComponent.createIntegerSymbol("ADCHS_NUM_SIGNALS", adchsMenu)
     adchsSym_NUM_SIGNALS.setDefaultValue(ADC_Max_Signals)
     adchsSym_NUM_SIGNALS.setVisible(False)
-    #adchsSym_NUM_SIGNALS.setVisible(True)
 
     #no of Class 1 signals
     adchsSym_NUM_CLASS1_SIGNALS = adchsComponent.createIntegerSymbol("ADCHS_NUM_CLASS1_SIGNALS", adchsMenu)
     adchsSym_NUM_CLASS1_SIGNALS.setDefaultValue(ADC_Max_Class_1)
     adchsSym_NUM_CLASS1_SIGNALS.setVisible(False)
-    #adchsSym_NUM_CLASS1_SIGNALS.setVisible(True)
 
     #no of Class 2 signals
     adchsSym_NUM_CLASS2_SIGNALS = adchsComponent.createIntegerSymbol("ADCHS_NUM_CLASS2_SIGNALS", adchsMenu)
     adchsSym_NUM_CLASS2_SIGNALS.setDefaultValue(ADC_Max_Class_2)
     adchsSym_NUM_CLASS2_SIGNALS.setVisible(False)
-
-    adchsCHConfMenu = adchsComponent.createMenuSymbol("ADCHS_CH_CONF", None)
-    adchsCHConfMenu.setLabel("Module Configuration")
-
-################################################################################
-########## ADCHS Menu ################################################
-########################################################################
 
     adchsSym_ADCCON3__ADCSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADCSEL", adchsMenu, True)
 
@@ -836,62 +833,36 @@ def instantiateComponent(adchsComponent):
     adchsSym_CLOCK.setReadOnly(True)
 
     adchsSym_ADCCON3__VREFSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "VREFSEL", adchsMenu, True)
-    #adchsSym_ADCCON1__FSPBCLKEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FSPBCLKEN", adchsMenu, True)
-    #adchsSym_ADCCON1__FSSCLKEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FSSCLKEN", adchsMenu, True)
     adchsSym_ADCCON1__FRACT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "FRACT", adchsMenu, True)
-    #adchsSym_ADCCON1__CVDEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "CVDEN", adchsMenu, True)
-    #adchsSym_ADCCON2__CVDCPL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "CVDCPL", adchsMenu, True)
-    #adchsSym_ADCCON1__IRQVS = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "IRQVS", adchsMenu, True)
     adchsSym_ADCCON1__SIDL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "SIDL", adchsMenu, True)
 
-    #adchsMenu_ADCCON1 = adchsAddRegisterSubMenuFromATDF(adchsComponent, Module, "ADCCON1", adchsMenu)
-    #adchsSym_ADCCON1__AICPMPEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "AICPMPEN", adchsMenu, True)
-    #adchsSym_ADCCON1__ON = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "ON", adchsMenu, True)
-    #adchsSym_ADCCON1__TRBSLV = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBSLV", adchsMenu, True)
-    #adchsSym_ADCCON1__TRBMST = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBMST", adchsMenu, True)
-    #adchsSym_ADCCON1__TRBERR = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBERR", adchsMenu, True)
-    #adchsSym_ADCCON1__TRBEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "TRBEN", adchsMenu, True)
-
-    #adchsMenu_ADCCON2 = adchsAddRegisterSubMenuFromATDF(adchsComponent, Module, "ADCCON2", adchsMenu)
-    #adchsSym_ADCCON2__ADCEIOVR = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "ADCEIOVR", adchsMenu, True)
-    #adchsSym_ADCCON2__EOSIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "EOSIEN", adchsMenu, True)
-    #adchsSym_ADCCON2__REFFLTIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "REFFLTIEN", adchsMenu, True)
-    #adchsSym_ADCCON2__BGVRIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "BGVRIEN", adchsMenu, True)
-    #adchsSym_ADCCON2__EOSRDY = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "EOSRDY", adchsMenu, True)
-    #adchsSym_ADCCON2__REFFLT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "REFFLT", adchsMenu, True)
-    #adchsSym_ADCCON2__BGVRRDY = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "BGVRRDY", adchsMenu, True)
-
-    #adchsMenu_ADCCON3 = adchsAddRegisterSubMenuFromATDF(adchsComponent, Module, "ADCCON3", adchsMenu)
-    #adchsSym_ADCCON3__ADINSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADINSEL", adchsMenu, True)
-    #adchsSym_ADCCON3__GSWTRG = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "GSWTRG", adchsMenu, True)
-    #adchsSym_ADCCON3__GLSWTRG = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "GLSWTRG", adchsMenu, True)
-    #adchsSym_ADCCON3__RQCNVRT = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "RQCNVRT", adchsMenu, True)
-    #adchsSym_ADCCON3__SAMP = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "SAMP", adchsMenu, True)
-    #adchsSym_ADCCON3__UPDRDY = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "UPDRDY", adchsMenu, True)
-    #adchsSym_ADCCON3__UPDIEN = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "UPDIEN", adchsMenu, True)
-    #adchsSym_ADCCON3__TRGSUSP = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "TRGSUSP", adchsMenu, True)
-
+################################################################################
+########## ADCHS Module Configurations  ################################################
+########################################################################
     adchsSym_ADCCON3__DIGEN = []
-    adchsSym_ADCTRGMODE__SSAMPEN = []
-    adchsSym_ADCTRGMODE__STRGEN = []
     adchsSym_ADCTRGMODE__SHxALT = []
     adchsSym_ADCTIME__SAMC = []
     adchsSym_ADCTIME__ADCDIV = []
     adchsSym_ADCTIME__SELRES = []
-    adchsSym_ADCTIME__ADCEIS = []
     adchsSym_ADCTRG__TRGSRC = []
     adchsSym_ADCTRGSNS__LVL = []
-    adchsSym_ADCCSS__CSS = []
+    adchsSym_ADCCSS__CSS = [None] * MAX_AVAILABLE_SIGNALS
     adchsSym_class2 = []
     adcSym_TADC = []
     adcSym_CONV_RATE = []
+
+    adchsCHConfMenu = adchsComponent.createMenuSymbol("ADCHS_CH_CONF", None)
+    adchsCHConfMenu.setLabel("Module Configuration")
+
+    adchsDedicatedADCMenu = adchsComponent.createMenuSymbol("ADCHS_DEDICATED_ADC_CONF", adchsCHConfMenu)
+    adchsDedicatedADCMenu.setLabel("Dedicated ADC Modules")
 
     for channelID in range(0, ADC_Max_Class_1):
         #Channel enable
         adchsSym_CH_ENABLE.append(channelID)
         adchsSym_CH_ENABLE[channelID] = adchsComponent.createBooleanSymbol(
-            "ADCHS_"+str(channelID)+"_ENABLE", adchsCHConfMenu)
-        adchsSym_CH_ENABLE[channelID].setLabel("Dedicated Module " + str(channelID))
+            "ADCHS_"+str(channelID)+"_ENABLE", adchsDedicatedADCMenu)
+        adchsSym_CH_ENABLE[channelID].setLabel("ADC " + str(channelID))
         adchsSym_CH_ENABLE[channelID].setDefaultValue(False)
 
         adctrgmode_deplist.append("ADCHS_"+str(channelID)+"_ENABLE")
@@ -905,26 +876,6 @@ def instantiateComponent(adchsComponent):
         adchsSym_CH_NAME[channelID].setVisible(False)
         adchsSym_CH_NAME[channelID].setDependencies(adchsVisibilityOnEvent,
             ["ADCHS_"+str(channelID)+"_ENABLE"])
-
-        # Channel Synchronous Sample Enable
-        adchsSym_ADCTRGMODE__SSAMPEN.append(channelID)
-        adchsSym_ADCTRGMODE__SSAMPEN[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
-            adchsComponent, Module, "ADCTRGMODE", "SSAMPEN" + str(channelID),
-            adchsSym_CH_ENABLE[channelID], False)
-        # adchsSym_ADCTRGMODE__SSAMPEN[channelID].setDependencies(adchsVisibilityOnEvent,
-        #     ["ADCHS_"+str(channelID)+"_ENABLE"])
-        adctrgmode_deplist.append("ADCTRGMODE__SSAMPEN" + str(channelID))
-        adchsSym_ADCTRGMODE__SSAMPEN[channelID].setVisible(False)
-
-        # Channel PreSynchronous Trigger Enable
-        adchsSym_ADCTRGMODE__STRGEN.append(channelID)
-        adchsSym_ADCTRGMODE__STRGEN[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
-            adchsComponent, Module, "ADCTRGMODE", "STRGEN" + str(channelID),
-            adchsSym_CH_ENABLE[channelID], False)
-        # adchsSym_ADCTRGMODE__STRGEN[channelID].setDependencies(adchsVisibilityOnEvent,
-        #     ["ADCHS_"+str(channelID)+"_ENABLE"])
-        adctrgmode_deplist.append("ADCTRGMODE__STRGEN" + str(channelID))
-        adchsSym_ADCTRGMODE__STRGEN[channelID].setVisible(False)
 
         # Channel Analog Input Select
         adchsSym_ADCTRGMODE__SHxALT.append(channelID)
@@ -940,7 +891,6 @@ def instantiateComponent(adchsComponent):
         BitFieldBaseName_SAMC = "SAMC"
         BitFieldBaseName_ADCDIV = "ADCDIV"
         BitFieldBaseName_SELRES = "SELRES"
-        BitFieldBaseName_ADCEIS = "ADCEIS"
         RegisterName = str(RegisterNameBase1 + str(channelID) + RegisterNameBase2)
 
         #clock divider
@@ -991,16 +941,6 @@ def instantiateComponent(adchsComponent):
         adcSym_CONV_RATE[channelID].setDependencies(adchsConvRateCalc, ["ADCHS_TADC"+str(channelID), \
             "ADC"+str(channelID)+"TIME__SAMC", "ADC"+str(channelID)+"TIME__SELRES", "ADCHS_"+str(channelID)+"_ENABLE"])
 
-        #early interrupt
-        adchsSym_ADCTIME__ADCEIS.append(channelID)
-        adchsSym_ADCTIME__ADCEIS[channelID] = adchsAddKeyValueSetFromATDFInitValue(
-            adchsComponent, Module, RegisterName, BitFieldBaseName_ADCEIS,
-            adchsSym_CH_ENABLE[channelID], False)
-        # adchsSym_ADCTIME__ADCEIS[channelID].setDependencies(adchsVisibilityOnEvent,
-        #     ["ADCHS_"+str(channelID)+"_ENABLE"])
-        adctime_deplist[channelID].append(RegisterName + "__" + BitFieldBaseName_ADCEIS)
-        adchsSym_ADCTIME__ADCEIS[channelID].setVisible(False)
-
         RegisterNameBase = "ADCTRG"
         BitFieldBaseName_TRGSRC = "TRGSRC"
         RegisterName = RegisterNameBase + str((channelID/4)+1)
@@ -1014,19 +954,6 @@ def instantiateComponent(adchsComponent):
             ["ADCHS_"+str(channelID)+"_ENABLE"])
         adctrg_deplist[int((channelID/4))].append(RegisterName + "__" + BitFieldBaseName_TRGSRC + str(channelID))
 
-        RegisterNameBase = "ADCTRGSNS"
-        BitFieldBaseName_LVL = "LVL"
-        #trigger level
-        adchsSym_ADCTRGSNS__LVL.append(channelID)
-        adchsSym_ADCTRGSNS__LVL[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
-            adchsComponent, Module, RegisterNameBase, BitFieldBaseName_LVL + str(channelID),
-            adchsSym_CH_ENABLE[channelID], False)
-        adchsSym_ADCTRGSNS__LVL[channelID].setLabel("High Level Sensitivity of a Trigger")
-        # adchsSym_ADCTRGSNS__LVL[channelID].setDependencies(adchsVisibilityOnEvent,
-        #     ["ADCHS_"+str(channelID)+"_ENABLE"])
-        adctrgsns_deplist.append(RegisterNameBase + "__" + BitFieldBaseName_LVL + str(channelID))
-        adchsSym_ADCTRGSNS__LVL[channelID].setVisible(False)
-
         RegisterBaseName_ADCCSS = "ADCCSS1"
         BitFieldBaseName_CSS = "CSS"
         adchsSym_ADCCSS__CSS.append(channelID)
@@ -1037,10 +964,13 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
         adccss_deplist[0].append(RegisterBaseName_ADCCSS + "__" + BitFieldBaseName_CSS + str(channelID))
 
+    adchsSharedADCMenu = adchsComponent.createMenuSymbol("ADCHS_SHARED_ADC_CONF", adchsCHConfMenu)
+    adchsSharedADCMenu.setLabel("Shared ADC Module")
+
     channelID = 7  # shared ADC module is fixed as 7. Class 2 and class 3 inputs are processed by shared ADC module.
     #Channel enable
     adchsSym_CH_ENABLE7 = adchsComponent.createBooleanSymbol(
-        "ADCHS_"+str(channelID)+"_ENABLE", adchsCHConfMenu)
+        "ADCHS_"+str(channelID)+"_ENABLE", adchsSharedADCMenu)
     adchsSym_CH_ENABLE7.setLabel("Shared Module " + str(channelID))
     adchsSym_CH_ENABLE7.setDefaultValue(False)
 
@@ -1085,11 +1015,6 @@ def instantiateComponent(adchsComponent):
     adcSym_CONV_RATE7.setDependencies(adchsSharedConvRateCalc, ["ADCHS_TADC"+str(channelID), \
         "ADCCON2__SAMC", "ADCCON1__SELRES", "ADCHS_"+str(channelID)+"_ENABLE"])
 
-    # early interrupt
-    adchsSym_ADCCON2__ADCEIS = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON2", "ADCEIS", adchsSym_CH_ENABLE7, False)
-    #adchsSym_ADCCON2__ADCEIS.setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
-    adchsSym_ADCCON2__ADCEIS.setVisible(False)
-
     for channelID in range(ADC_Max_Class_1, ADC_Max_Class_1and2):
         adchsSym_class2.append(channelID - ADC_Max_Class_1)
         adchsSym_class2[channelID - ADC_Max_Class_1] = adchsComponent.createCommentSymbol("ADCHS_CLASS2_INPUT" + str(channelID), adchsSym_CH_ENABLE7)
@@ -1107,17 +1032,6 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCTRG__TRGSRC[channelID].setLabel("Select Trigger Source")
         adchsSym_ADCTRG__TRGSRC[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
         adctrg_deplist[int((channelID/4))].append(RegisterName + "__" + BitFieldBaseName_TRGSRC + str(channelID))
-
-        RegisterNameBase = "ADCTRGSNS"
-        BitFieldBaseName_LVL = "LVL"
-        adchsSym_ADCTRGSNS__LVL.append(channelID)
-        adchsSym_ADCTRGSNS__LVL[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
-            adchsComponent, Module, RegisterNameBase, BitFieldBaseName_LVL + str(channelID),
-            adchsSym_class2[channelID - ADC_Max_Class_1], False)
-        adchsSym_ADCTRGSNS__LVL[channelID].setLabel("High Level Sensitivity of a Trigger")
-        #adchsSym_ADCTRGSNS__LVL[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
-        adctrgsns_deplist.append(RegisterNameBase + "__" + BitFieldBaseName_LVL + str(channelID))
-        adchsSym_ADCTRGSNS__LVL[channelID].setVisible(False)
 
         RegisterBaseName_ADCCSS = "ADCCSS"
         BitFieldBaseName_CSS = "CSS"
@@ -1140,204 +1054,17 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON1__STRGSRC.setLabel("Select Trigger Source")
     adchsSym_ADCCON1__STRGSRC.setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
 
-    # trigger level
-    adchsSym_ADCCON1__STRGLVL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "STRGLVL", adchsSym_class3, False)
-    adchsSym_ADCCON1__STRGLVL.setLabel("Select Trigger Level")
-    #adchsSym_ADCCON1__STRGLVL.setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
-    adchsSym_ADCCON1__STRGLVL.setVisible(False)
-
     for channelID in range(ADC_Max_Class_1and2, ADC_Max_Signals):
-        RegisterBaseName_ADCCSS = "ADCCSS"
-        BitFieldBaseName_CSS = "CSS"
-        RegisterName = RegisterBaseName_ADCCSS + str((channelID/32)+1)
-        adchsSym_ADCCSS__CSS.append(channelID)
-        adchsSym_ADCCSS__CSS[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
-            adchsComponent, Module, RegisterName, BitFieldBaseName_CSS + str(channelID),
-            adchsSym_class3, False)
-        adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
-        adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
-        adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
-
-    # Comparator Configuration Menu
-    adchsComparatorConfigMenu = adchsComponent.createMenuSymbol("ADCHS_COMPARATOR_MENU", None)
-    adchsComparatorConfigMenu.setLabel("ADC Comparator Configuration")
-    adchsComparatorConfigMenu.setVisible(False)
-    RegisterBaseName_ADCCMPEN = "ADCCMPEN"
-    BitFieldBaseName_CMPE = "CMPE"
-    adchsSym_ADCCMPEN__CMPE = []
-    RegisterBaseName_ADCCMP = "ADCCMP"
-    BitFieldBaseName_DCMPLO = "DCMPLO"
-    BitFieldBaseName_DCMPHI = "DCMPHI"
-    adchsComparatorMenu = []
-    adchsSym_ADCCMP__DCMPLO = []
-    adchsSym_ADCCMP__DCMPHI = []
-    RegisterBaseName_ADCCMPCON = "ADCCMPCON"
-    BitFieldBaseName_IELOLO = "IELOLO"
-    BitFieldBaseName_IELOHI = "IELOHI"
-    BitFieldBaseName_IEHILO = "IEHILO"
-    BitFieldBaseName_IEHIHI = "IEHIHI"
-    BitFieldBaseName_IEBTWN = "IEBTWN"
-    BitFieldBaseName_ENDCMP = "ENDCMP"
-    BitFieldBaseName_DCMPGIEN = "DCMPGIEN"
-    adchsSym_ADCCMPCON__IELOLO = []
-    adchsSym_ADCCMPCON__IELOHI = []
-    adchsSym_ADCCMPCON__IEHILO = []
-    adchsSym_ADCCMPCON__IEHIHI = []
-    adchsSym_ADCCMPCON__IEBTWN = []
-    adchsSym_ADCCMPCON__ENDCMP = []
-    adchsSym_ADCCMPCON__DCMPGIEN = []
-    for RegisterNumber in range(0, 6):
-        RegisterName = RegisterBaseName_ADCCMPEN + str(RegisterNumber+1)
-        adchsComparatorMenu.append(RegisterNumber)
-        adchsComparatorMenu[RegisterNumber] = adchsComponent.createBooleanSymbol(
-            "COMP"+str(RegisterNumber), adchsComparatorConfigMenu)
-        adchsComparatorMenu[RegisterNumber].setLabel("Enable Comparator "+str(RegisterNumber))
-        adchsComparatorMenu[RegisterNumber].setDefaultValue(False)
-
-        for signalNum in range(0, 32):
-            if (signalNum < ADC_Max_Signals):
-                # Log.writeInfoMessage("Signal: "+str(signalNum))
-                adchsSym_ADCCMPEN__CMPE.append(signalNum)
-                adchsSym_ADCCMPEN__CMPE[signalNum] = adchsAddBooleanFromATDFBitfieldName(
-                    adchsComponent, Module, RegisterName, BitFieldBaseName_CMPE +
-                    str(signalNum), adchsComparatorMenu[RegisterNumber], False)
-                adchsSym_ADCCMPEN__CMPE[signalNum].setDependencies(adchsVisibilityOnEvent,
-                    ["COMP"+str(RegisterNumber)])
-
-
-        RegisterName = RegisterBaseName_ADCCMP + str(RegisterNumber+1)
-        adchsSym_ADCCMP__DCMPLO.append(RegisterNumber)
-        adchsSym_ADCCMP__DCMPLO[RegisterNumber] = adchsAddLongFromATDFRegisterCaption(
-            adchsComponent, Module, RegisterName, BitFieldBaseName_DCMPLO,
-            adchsComparatorMenu[RegisterNumber], False)
-        adchsSym_ADCCMP__DCMPLO[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["COMP"+str(RegisterNumber)])
-
-        adchsSym_ADCCMP__DCMPHI.append(RegisterNumber)
-        adchsSym_ADCCMP__DCMPHI[RegisterNumber] = adchsAddLongFromATDFRegisterCaption(
-            adchsComponent, Module, RegisterName, BitFieldBaseName_DCMPHI,
-            adchsComparatorMenu[RegisterNumber], False)
-        adchsSym_ADCCMP__DCMPHI[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["COMP"+str(RegisterNumber)])
-
-        RegisterName = RegisterBaseName_ADCCMPCON + str(RegisterNumber+1)
-        # IELOLO bitfield
-        adchsSym_ADCCMPCON__IELOLO.append(RegisterNumber)
-        adchsSym_ADCCMPCON__IELOLO[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_IELOLO,
-            adchsComparatorMenu[RegisterNumber], False))
-        adchsSym_ADCCMPCON__IELOLO[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["COMP"+str(RegisterNumber)])
-        # IELOHI boolean
-        adchsSym_ADCCMPCON__IELOHI.append(RegisterNumber)
-        adchsSym_ADCCMPCON__IELOHI[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_IELOHI,
-            adchsComparatorMenu[RegisterNumber], False))
-        adchsSym_ADCCMPCON__IELOHI[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["COMP"+str(RegisterNumber)])
-        # IEHILO bitfield
-        adchsSym_ADCCMPCON__IEHILO.append(RegisterNumber)
-        adchsSym_ADCCMPCON__IEHILO[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_IEHILO,
-            adchsComparatorMenu[RegisterNumber], False))
-        adchsSym_ADCCMPCON__IEHILO[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["COMP"+str(RegisterNumber)])
-        # IEHIHI boolean
-        adchsSym_ADCCMPCON__IEHIHI.append(RegisterNumber)
-        adchsSym_ADCCMPCON__IEHIHI[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_IEHIHI,
-            adchsComparatorMenu[RegisterNumber], False))
-        adchsSym_ADCCMPCON__IEHIHI[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["COMP"+str(RegisterNumber)])
-        # IEBTWN Boolean
-        adchsSym_ADCCMPCON__IEBTWN.append(RegisterNumber)
-        adchsSym_ADCCMPCON__IEBTWN[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_IEBTWN,
-            adchsComparatorMenu[RegisterNumber], False))
-        adchsSym_ADCCMPCON__IEBTWN[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["COMP"+str(RegisterNumber)])
-        # ENDCMP bitfield
-        adchsSym_ADCCMPCON__ENDCMP.append(RegisterNumber)
-        adchsSym_ADCCMPCON__ENDCMP[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_ENDCMP,
-            adchsComparatorMenu[RegisterNumber], False))
-        adchsSym_ADCCMPCON__ENDCMP[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["COMP"+str(RegisterNumber)])
-        # DCMPGIEN bitfield
-        adchsSym_ADCCMPCON__DCMPGIEN.append(RegisterNumber)
-        adchsSym_ADCCMPCON__DCMPGIEN[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_DCMPGIEN,
-            adchsComparatorMenu[RegisterNumber], False))
-        adchsSym_ADCCMPCON__DCMPGIEN[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["COMP"+str(RegisterNumber)])
-
-    # Filter Configuration Menu
-    adchsFilterConfigMenu = adchsComponent.createMenuSymbol("ADCHS_FILTER_MENU", None)
-    adchsFilterConfigMenu.setLabel("ADC Filter Configuration")
-    adchsFilterConfigMenu.setVisible(False)
-    RegisterBaseName_ADCFLTR = "ADCFLTR"
-    BitFieldBaseName_CHNLID = "CHNLID"
-    BitFieldBaseName_AFGIEN = "AFGIEN"
-    BitFieldBaseName_OVRSAM = "OVRSAM"
-    BitFieldBaseName_DFMODE = "DFMODE"
-    BitFieldBaseName_DATA16EN = "DATA16EN"
-    BitFieldBaseName_AFEN = "AFEN"
-    adchsFilterMenu = []
-    adchsSym_ADCFLTR__CHNLID = []
-    adchsSym_ADCFLTR__AFGIEN = []
-    adchsSym_ADCFLTR__OVRSAM = []
-    adchsSym_ADCFLTR__DFMODE = []
-    adchsSym_ADCFLTR__DATA16EN = []
-    adchsSym_ADCFLTR__AFEN = []
-    for RegisterNumber in range(0, 6):
-        RegisterName = RegisterBaseName_ADCFLTR + str(RegisterNumber+1)
-        adchsFilterMenu.append(RegisterNumber)
-        adchsFilterMenu[RegisterNumber] = adchsComponent.createBooleanSymbol(
-            "FLTR"+str(RegisterNumber), adchsFilterConfigMenu)
-        adchsFilterMenu[RegisterNumber].setLabel("Enable Filter "+str(RegisterNumber))
-        adchsFilterMenu[RegisterNumber].setDefaultValue(False)
-        # CHNLID bitfield
-        adchsSym_ADCFLTR__CHNLID.append(RegisterNumber)
-        adchsSym_ADCFLTR__CHNLID[RegisterNumber] = (adchsAddKeyValueSetFromATDFInitValue
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_CHNLID,
-            adchsFilterMenu[RegisterNumber], False))
-        adchsSym_ADCFLTR__CHNLID[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["FLTR"+str(RegisterNumber)])
-        # AFGIEN boolean
-        adchsSym_ADCFLTR__AFGIEN.append(RegisterNumber)
-        adchsSym_ADCFLTR__AFGIEN[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_AFGIEN,
-            adchsFilterMenu[RegisterNumber], False))
-        adchsSym_ADCFLTR__AFGIEN[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["FLTR"+str(RegisterNumber)])
-        # OVRSAM bitfield
-        adchsSym_ADCFLTR__OVRSAM.append(RegisterNumber)
-        adchsSym_ADCFLTR__OVRSAM[RegisterNumber] = (adchsAddKeyValueSetFromATDFInitValue
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_OVRSAM,
-            adchsFilterMenu[RegisterNumber], False))
-        adchsSym_ADCFLTR__OVRSAM[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["FLTR"+str(RegisterNumber)])
-        # DFMODE boolean
-        adchsSym_ADCFLTR__DFMODE.append(RegisterNumber)
-        adchsSym_ADCFLTR__DFMODE[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_DFMODE,
-            adchsFilterMenu[RegisterNumber], False))
-        adchsSym_ADCFLTR__DFMODE[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["FLTR"+str(RegisterNumber)])
-        # DATA16EN Boolean
-        adchsSym_ADCFLTR__DATA16EN.append(RegisterNumber)
-        adchsSym_ADCFLTR__DATA16EN[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_DATA16EN,
-            adchsFilterMenu[RegisterNumber], False))
-        adchsSym_ADCFLTR__DATA16EN[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["FLTR"+str(RegisterNumber)])
-        # AFEN bitfield
-        adchsSym_ADCFLTR__AFEN.append(RegisterNumber)
-        adchsSym_ADCFLTR__AFEN[RegisterNumber] = (adchsAddBooleanFromATDF1ValueValueGroup
-            (adchsComponent, Module, RegisterName, BitFieldBaseName_AFEN,
-            adchsFilterMenu[RegisterNumber], False))
-        adchsSym_ADCFLTR__AFEN[RegisterNumber].setDependencies(adchsVisibilityOnEvent,
-            ["FLTR"+str(RegisterNumber)])
+        if (ADC_Input_Signals_List[channelID] == True):
+            RegisterBaseName_ADCCSS = "ADCCSS"
+            BitFieldBaseName_CSS = "CSS"
+            RegisterName = RegisterBaseName_ADCCSS + str((channelID/32)+1)
+            adchsSym_ADCCSS__CSS[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
+                adchsComponent, Module, RegisterName, BitFieldBaseName_CSS + str(channelID),
+                adchsSym_class3, False)
+            adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
+            adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
+            adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
 
     #Signal Conditioning menu
     adchsSignalConditionMenu = adchsComponent.createMenuSymbol("ADCHS_SIGNAL_CONDITION_CONF", None)
@@ -1347,64 +1074,68 @@ def instantiateComponent(adchsComponent):
     BitFieldBaseName_DIFF = "DIFF"
     RegisterBaseName_ADCGIRQEN = "ADCGIRQEN"
     BitFieldBaseName_AGIEN = "AGIEN"
-    adchsSym_ADCIMCON__SIGN = []
-    adchsSym_ADCIMCON__DIFF = []
-    adchsSym_ADCGIRQEN__AGIEN = []
+    adchsSym_ADCIMCON__SIGN = [None] * MAX_AVAILABLE_SIGNALS
+    adchsSym_ADCIMCON__DIFF = [None] * MAX_AVAILABLE_SIGNALS
+    adchsSym_ADCGIRQEN__AGIEN = [None] * MAX_AVAILABLE_SIGNALS
     RegisterBaseName_ADCEIEN = "ADCEIEN"
     BitFieldBaseName_EIEN = "EIEN"
-    adchsSym_ADCEIEN__EIEN = []
-    adcimcon_deplist = [[] for i in range (3)]
+    adchsSym_ADCEIEN__EIEN = [None] * MAX_AVAILABLE_SIGNALS
+
+    adchsClass1SignalMenu = adchsComponent.createMenuSymbol("ADCHS_CLASS1_SIGNALS_CONF", adchsSignalConditionMenu)
+    adchsClass1SignalMenu.setLabel("Class 1 Signals")
+
+    adchsClass2SignalMenu = adchsComponent.createMenuSymbol("ADCHS_CLASS2_SIGNALS_CONF", adchsSignalConditionMenu)
+    adchsClass2SignalMenu.setLabel("Class 2 Signals")
+
+    adchsClass3SignalMenu = adchsComponent.createMenuSymbol("ADCHS_CLASS3_SIGNALS_CONF", adchsSignalConditionMenu)
+    adchsClass3SignalMenu.setLabel("Class 3 Signals")
 
     for signalID in range(0, ADC_Max_Signals):
-        global adchsCONMenu
-        adchsCONMenu.append(signalID)
-        adchsCONMenu[signalID] = adchsComponent.createBooleanSymbol(
-            "AN"+str(signalID), adchsSignalConditionMenu)
-        adchsCONMenu[signalID].setLabel("Configure Analog Input AN"+str(signalID))
+        if ADC_Input_Signals_List[signalID] == True:
+            if (signalID < ADC_Max_Class_1):
+                menu = adchsClass1SignalMenu
+            elif ((signalID >= ADC_Max_Class_1) and (signalID < ADC_Max_Class_1and2)):
+                menu = adchsClass2SignalMenu
+            else:
+                menu = adchsClass3SignalMenu
 
-        RegisterName = RegisterBaseName_ADCIMCON + str((signalID/16)+1)
-        index = int(((signalID/16)))
+            adchsCONMenu[signalID] = adchsComponent.createBooleanSymbol(
+                "AN"+str(signalID), menu)
+            adchsCONMenu[signalID].setLabel("Configure Analog Input AN"+str(signalID))
 
-        adchsSym_ADCIMCON__SIGN.append(signalID)
-        adchsSym_ADCIMCON__SIGN[signalID] = adchsAddBooleanFromATDF1ValueValueGroup(
-            adchsComponent, Module, RegisterName, BitFieldBaseName_SIGN + str(signalID),
-            adchsCONMenu[signalID], False)
-        adchsSym_ADCIMCON__SIGN[signalID].setDependencies(adchsVisibilityOnEvent,
-            ["AN"+str(signalID)])
-        adcimcon_deplist[index].append(RegisterName + "__" + BitFieldBaseName_SIGN + str(signalID))
+            RegisterName = RegisterBaseName_ADCIMCON + str((signalID/16)+1)
+            index = int(((signalID/16)))
 
-        adchsSym_ADCIMCON__DIFF.append(signalID)
-        adchsSym_ADCIMCON__DIFF[signalID] = adchsAddBooleanFromATDF1ValueValueGroup(
-            adchsComponent, Module, RegisterName, BitFieldBaseName_DIFF + str(signalID),
-            adchsCONMenu[signalID], False)
-        adchsSym_ADCIMCON__DIFF[signalID].setDependencies(adchsVisibilityOnEvent,
-            ["AN"+str(signalID)])
-        adcimcon_deplist[index].append(RegisterName + "__" + BitFieldBaseName_DIFF + str(signalID))
+            adchsSym_ADCIMCON__SIGN[signalID] = adchsAddBooleanFromATDF1ValueValueGroup(
+                adchsComponent, Module, RegisterName, BitFieldBaseName_SIGN + str(signalID),
+                adchsCONMenu[signalID], False)
+            if adchsSym_ADCIMCON__SIGN[signalID] != None:
+                adchsSym_ADCIMCON__SIGN[signalID].setDependencies(adchsVisibilityOnEvent,
+                    ["AN"+str(signalID)])
+                adcimcon_deplist[index].append(RegisterName + "__" + BitFieldBaseName_SIGN + str(signalID))
 
-        RegisterName = RegisterBaseName_ADCGIRQEN + str((signalID/32)+1)
-        adchsSym_ADCGIRQEN__AGIEN.append(signalID)
-        adchsSym_ADCGIRQEN__AGIEN[signalID] = adchsAddBooleanFromATDFBitfieldCaption(
-            adchsComponent, Module, RegisterName, BitFieldBaseName_AGIEN + str(signalID),
-            adchsCONMenu[signalID], False)
-        adchsSym_ADCGIRQEN__AGIEN[signalID].setDependencies(adchsVisibilityOnEvent,
-            ["AN"+str(signalID)])
-        adcinterruptmode_deplist.append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-        adcgirqen_deplist[int(signalID/32)].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-        if (signalID < (num_intrpt_in_first_iec)):
-            adciec_depList[0].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-        elif ((signalID >= (num_intrpt_in_first_iec)) and (signalID < (32 + (num_intrpt_in_first_iec)))):
-            adciec_depList[1].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-        else:
-            adciec_depList[2].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+            adchsSym_ADCIMCON__DIFF[signalID] = adchsAddBooleanFromATDF1ValueValueGroup(
+                adchsComponent, Module, RegisterName, BitFieldBaseName_DIFF + str(signalID),
+                adchsCONMenu[signalID], False)
+            if adchsSym_ADCIMCON__DIFF[signalID] != None:
+                adchsSym_ADCIMCON__DIFF[signalID].setDependencies(adchsVisibilityOnEvent,
+                    ["AN"+str(signalID)])
+                adcimcon_deplist[index].append(RegisterName + "__" + BitFieldBaseName_DIFF + str(signalID))
 
-        # RegisterName = RegisterBaseName_ADCEIEN + str((signalID/32)+1)
-        # signalName = BitFieldBaseName_EIEN + str(signalID)
-        # adchsSym_ADCEIEN__EIEN.append(signalID)
-        # adchsSym_ADCEIEN__EIEN[signalID] = adchsAddBooleanFromATDFBitfieldCaption(
-        #     adchsComponent, Module, RegisterName, signalName,
-        #     adchsCONMenu[signalID], False)
-        # adchsSym_ADCEIEN__EIEN[signalID].setDependencies(adchsVisibilityOnEvent,
-        #     ["AN"+str(signalID)])
+            RegisterName = RegisterBaseName_ADCGIRQEN + str((signalID/32)+1)
+            adchsSym_ADCGIRQEN__AGIEN[signalID] = adchsAddBooleanFromATDFBitfieldCaption(
+                adchsComponent, Module, RegisterName, BitFieldBaseName_AGIEN + str(signalID),
+                adchsCONMenu[signalID], False)
+            adchsSym_ADCGIRQEN__AGIEN[signalID].setDependencies(adchsVisibilityOnEvent,
+                ["AN"+str(signalID)])
+            adcinterruptmode_deplist.append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+            adcgirqen_deplist[int(signalID/32)].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+            if (signalID < (num_intrpt_in_first_iec)):
+                adciec_depList[0].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+            elif ((signalID >= (num_intrpt_in_first_iec)) and (signalID < (32 + (num_intrpt_in_first_iec)))):
+                adciec_depList[1].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+            else:
+                adciec_depList[2].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
 
 ###################################################################################################
 ########################### Register Values Calculation   #################################
@@ -1418,7 +1149,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON1.setDefaultValue(0x600000)
     adchsSym_ADCCON1.setDependencies(adchsCalcADCCON1, adccon1_deplist)
 
-    adccon2_deplist = ["ADCCON2__CVDCPL", "ADCCON2__ADCDIV", "ADCCON2__SAMC", "ADCCON2__ADCEIS"]
+    adccon2_deplist = ["ADCCON2__CVDCPL", "ADCCON2__ADCDIV", "ADCCON2__SAMC"]
     adchsSym_ADCCON2 = adchsComponent.createHexSymbol("ADCHS_ADCCON2", adchsMenu)
     adchsSym_ADCCON2.setLabel("ADCCON2 register value")
     adchsSym_ADCCON2.setVisible(False)
@@ -1442,15 +1173,23 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCIMCON1.setVisible(False)
     adchsSym_ADCIMCON1.setDependencies(adchsCalcADCIMCON1, adcimcon_deplist[0])
 
-    adchsSym_ADCIMCON2 = adchsComponent.createHexSymbol("ADCHS_ADCIMCON2", None)
-    adchsSym_ADCIMCON2.setLabel("ADCIMCON2 Register")
-    adchsSym_ADCIMCON2.setVisible(False)
-    adchsSym_ADCIMCON2.setDependencies(adchsCalcADCIMCON2, adcimcon_deplist[1])
+    if (len(adcimcon_deplist) > 1):
+        adchsSym_ADCIMCON2 = adchsComponent.createHexSymbol("ADCHS_ADCIMCON2", None)
+        adchsSym_ADCIMCON2.setLabel("ADCIMCON2 Register")
+        adchsSym_ADCIMCON2.setVisible(False)
+        adchsSym_ADCIMCON2.setDependencies(adchsCalcADCIMCON2, adcimcon_deplist[1])
 
-    adchsSym_ADCIMCON3 = adchsComponent.createHexSymbol("ADCHS_ADCIMCON3", None)
-    adchsSym_ADCIMCON3.setLabel("ADCIMCON3 Register")
-    adchsSym_ADCIMCON3.setVisible(False)
-    adchsSym_ADCIMCON3.setDependencies(adchsCalcADCIMCON3, adcimcon_deplist[2])
+    if (len(adcimcon_deplist) > 2):
+        adchsSym_ADCIMCON3 = adchsComponent.createHexSymbol("ADCHS_ADCIMCON3", None)
+        adchsSym_ADCIMCON3.setLabel("ADCIMCON3 Register")
+        adchsSym_ADCIMCON3.setVisible(False)
+        adchsSym_ADCIMCON3.setDependencies(adchsCalcADCIMCON3, adcimcon_deplist[2])
+
+    if (len(adcimcon_deplist) > 3):
+        adchsSym_ADCIMCON4 = adchsComponent.createHexSymbol("ADCHS_ADCIMCON4", None)
+        adchsSym_ADCIMCON4.setLabel("ADCIMCON4 Register")
+        adchsSym_ADCIMCON4.setVisible(False)
+        adchsSym_ADCIMCON4.setDependencies(adchsCalcADCIMCON4, adcimcon_deplist[3])
 
     adchsSym_ADCTRG1 = adchsComponent.createHexSymbol("ADCHS_ADCTRG1", None)
     adchsSym_ADCTRG1.setLabel("ADCTRG1 Register")
@@ -1568,5 +1307,5 @@ def instantiateComponent(adchsComponent):
     adchsSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     adchsSystemDefFile.setSourcePath("../peripheral/adchs_02508/templates/system/definitions.h.ftl")
     adchsSystemDefFile.setMarkup(True)
-    
+
     adchsComponent.addPlugin("../peripheral/adchs_02508/plugin/adchs_02508.jar")
