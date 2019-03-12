@@ -207,9 +207,12 @@ generateEVICVectorDataStructure()
 lowestID = min([vectIndex["index"] for vectIndex in evicVectorDataStructure])
 highestID = max([vectIndex["index"] for vectIndex in evicVectorDataStructure])
 
+deviceSeriesNode = ATDF.getNode("/avr-tools-device-file/devices/device@[architecture=\"MIPS\"]")
+deviceSeries = deviceSeriesNode.getAttribute("series")
+
 evicMenu = coreComponent.createMenuSymbol("EVIC_MENU", None)
-evicMenu.setLabel("PIC32MZ Interrupts")
-evicMenu.setDescription("Configuration for PIC32MZ Interrupts")
+evicMenu.setLabel(deviceSeries + " Interrupts")
+evicMenu.setDescription("Configuration for " + deviceSeries + " Interrupts")
 
 evicVectorMax = coreComponent.createIntegerSymbol("EVIC_VECTOR_MAX", evicMenu)
 evicVectorMax.setDefaultValue(highestID)
