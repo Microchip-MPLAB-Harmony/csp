@@ -61,6 +61,7 @@ def genMainSourceFile(symbol, event):
         symbol.setEnabled(False)
 
 def genSysSourceFile(symbol, event):
+    global processor
     coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
     coreSysSourceFileEnabled = False
 
@@ -78,6 +79,16 @@ def genSysSourceFile(symbol, event):
         coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysCallsFile")
     elif(event["id"] == "CoreSysStdioSyscallsFile"):
         coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysStdioSyscallsFile")
+    elif(event["id"] == "FILTERING_EXCEPTION") or (event["id"] == "ADVANCED_EXCEPTION"):
+        coreSysSourceFileEnabled = True
+        if "PIC32M" in processor:
+            if (Database.getSymbolValue("core", "FILTERING_EXCEPTION")== True) and (Database.getSymbolValue("core", "ADVANCED_EXCEPTION")== True):
+                symbol.setSourcePath("templates/filtering_exceptions_xc32_mips.c.ftl")
+            elif Database.getSymbolValue("core", "ADVANCED_EXCEPTION")== True:
+                symbol.setSourcePath("templates/advanced_exceptions_xc32_mips.c.ftl")
+            else:
+                # this means basic general exception code needs to be generated
+                symbol.setSourcePath("templates/exceptions_xc32_mips.c.ftl")
 
     if ((coreSysFileEnabled == True) and (coreSysSourceFileEnabled == True)):
         symbol.setEnabled(True)
@@ -233,6 +244,14 @@ def instantiateComponent( coreComponent ):
     exceptionHandling.setLabel("Use Advanced Exception Handling")
     exceptionHandling.setDefaultValue(False)
     exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
+
+
+    filteringExceptionHandling = coreComponent.createBooleanSymbol("FILTERING_EXCEPTION", exceptionHandling)
+    filteringExceptionHandling.setLabel("Use Advanced Exception Handling With Filtering Support")
+    filteringExceptionHandling.setDefaultValue(False)
+    filteringExceptionHandling.setVisible(False)
+    if isMips:
+        filteringExceptionHandling.setDependencies(setFileVisibility, ["ADVANCED_EXCEPTION"])
 
     ## cache macros
     deviceCacheHeaderFile = coreComponent.createFileSymbol("DEVICE_CACHE_H", None)
@@ -470,12 +489,15 @@ def instantiateComponent( coreComponent ):
     exceptSourceFile.setDestPath("")
     exceptSourceFile.setProjectPath("config/" + configName + "/")
     exceptSourceFile.setType("SOURCE")
-    exceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles" ] )
+    exceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "FILTERING_EXCEPTION", "ADVANCED_EXCEPTION" ] )
 
     # generate exceptionsHandler.s file
     exceptionAsmSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_ASM", None)
-    exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
-    exceptionAsmSourceFile.setOutputName("exceptionsHandler.s")
+    if "PIC32M" in processor:
+        exceptionAsmSourceFile.setSourcePath("templates/general-exception-context_mips.S.ftl")
+    else:
+        exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
+    exceptionAsmSourceFile.setOutputName("exceptionsHandler.S")
     exceptionAsmSourceFile.setMarkup(True)
     exceptionAsmSourceFile.setOverwrite(True)
     exceptionAsmSourceFile.setDestPath("")
