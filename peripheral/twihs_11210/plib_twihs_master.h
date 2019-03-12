@@ -129,6 +129,9 @@ typedef enum {
     /* TWIHS PLib Task Transfer Complete State */
     TWIHS_STATE_WAIT_FOR_TXCOMP,
 
+    /* TWIHS PLib Task Wait for Stop State */
+    TWIHS_STATE_WAIT_FOR_STOP,
+
     /* TWIHS PLib Task Transfer Done State */
     TWIHS_STATE_TRANSFER_DONE,
 
