@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Configuration>
+  <Components>
+    <UniqueComponent dnOrder="0" id="core">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="ADC_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="1" id="CLASSD_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="2" id="COMPILER_CHOICE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="1"/>
+            </Dynamic>
+          </Values>
+        </KeyValueSet>
+        <Integer dnOrder="3" id="FLEXCOM0_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="4" id="FLEXCOM10_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="5" id="FLEXCOM11_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="6" id="FLEXCOM12_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="7" id="FLEXCOM1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="8" id="FLEXCOM2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="9" id="FLEXCOM3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="10" id="FLEXCOM4_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="11" id="FLEXCOM5_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="12" id="FLEXCOM6_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="13" id="FLEXCOM7_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="14" id="FLEXCOM8_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="15" id="FLEXCOM9_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="16" id="I2SMCC_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="17" id="LCDC_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <String dnOrder="18" id="PIN_4_DIR">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="Out"/>
+          </Values>
+        </String>
+        <String dnOrder="19" id="PIN_4_FUNCTION_NAME">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="LED_BLUE"/>
+          </Values>
+        </String>
+        <String dnOrder="20" id="PIN_4_FUNCTION_TYPE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="GPIO"/>
+          </Values>
+        </String>
+        <String dnOrder="21" id="PIN_4_PERIPHERAL_FUNCTION">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="GPIO"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="22" id="PIOA_CLOCK_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Hex dnOrder="23" id="PIOB_ABCDSR1_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="24" id="PIOB_ABCDSR2_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Boolean dnOrder="25" id="PIOB_CLOCK_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Hex dnOrder="26" id="PIOB_OER_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="8192"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Hex dnOrder="27" id="PIOB_PDR_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="2" value="0"/>
+            </Dynamic>
+          </Values>
+        </Hex>
+        <Boolean dnOrder="28" id="PIOC_CLOCK_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="29" id="PIOD_CLOCK_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="1" value="true"/>
+            </Dynamic>
+          </Values>
+        </Boolean>
+        <Integer dnOrder="30" id="PIT64B_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="31" id="SDMMC0_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="32" id="SDMMC1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="33" id="TC0_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <Integer dnOrder="34" id="TC1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="core" priority="0" value="200000000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="1" id="dfp"/>
+    <UniqueComponent dnOrder="2" id="pit">
+      <Symbols dnOrder="0">
+        <String dnOrder="0" id="CALLBACK_API_NAME">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="pit" priority="1" value="PIT_TimerCallbackSet"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <String dnOrder="1" id="COMPARE_SET_API_NAME">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="pit" priority="1" value="PIT_TimerCompareSet"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <String dnOrder="2" id="COUNTER_GET_API_NAME">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="pit" priority="1" value="PIT_TimerCounterGet"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <Boolean dnOrder="3" id="ENABLE_INTERRUPT">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="4" id="FREQUENCY_GET_API_NAME">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="pit" priority="1" value="PIT_TimerFrequencyGet"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <String dnOrder="5" id="IRQ_ENUM_NAME">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="pit" priority="1" value="PIT_IRQn"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <Float dnOrder="6" id="PERIOD_MS">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="50.0"/>
+          </Values>
+        </Float>
+        <String dnOrder="7" id="PERIOD_SET_API_NAME">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="pit" priority="1" value="PIT_TimerPeriodSet"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <Integer dnOrder="8" id="PERIOD_TICKS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="pit" priority="1" value="625000"/>
+            </Dynamic>
+          </Values>
+        </Integer>
+        <String dnOrder="9" id="TIMER_START_API_NAME">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="pit" priority="1" value="PIT_TimerStart"/>
+            </Dynamic>
+          </Values>
+        </String>
+        <String dnOrder="10" id="TIMER_STOP_API_NAME">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0">
+              <Value dnOrder="0" id="pit" priority="1" value="PIT_TimerStop "/>
+            </Dynamic>
+          </Values>
+        </String>
+      </Symbols>
+    </UniqueComponent>
+  </Components>
+  <UserData>
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
+        <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
+        <ElementPosition dnOrder="2" id="pit" x="340" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
+  </UserData>
+</Configuration>
