@@ -87,7 +87,10 @@ typedef enum
 typedef enum
 {
 <#list 0..((ADCHS_NUM_SIGNALS) - 1) as i>
+<#assign ADCHS_SIGNAL = "AN"+ i >
+<#if .vars[ADCHS_SIGNAL]??>
     ADCHS_CH${i} = ${i}U,
+</#if>
 </#list>
 }ADCHS_CHANNEL_NUM;
 
