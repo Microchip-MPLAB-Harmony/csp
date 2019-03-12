@@ -1662,3 +1662,5 @@ clockSystemDefFile.setType("STRING")
 clockSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 clockSystemDefFile.setSourcePath("../peripheral/clk_sam_l21/templates/system/definitions.h.ftl")
 clockSystemDefFile.setMarkup(True)
+
+coreComponent.addPlugin("../peripheral/clk_sam_l21/plugin/clk_sam_l21.jar")
