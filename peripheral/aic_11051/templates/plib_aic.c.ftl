@@ -41,6 +41,9 @@
 *******************************************************************************/
 //DOM-IGNORE-END
 #include "definitions.h"
+<#lt><#if __PROCESSOR?matches("SAM9X60.*")>
+    <#lt>#include "toolchain_specifics.h"    // __disable_irq, __enable_irq
+<#lt></#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -57,29 +60,38 @@ void
 INT_Initialize( void )
 {   <#-- // DSB/ISB/DMB usage is based on ARM app note 321, section 4.6 -->
 <#lt><#if AIC_CODE_GENERATION == "AIC" || AIC_CODE_GENERATION == "SAIC" || AIC_CODE_GENERATION == "AICandSAIC" >
+    <#lt><#assign MaxNumPeripherals = AIC_VECTOR_MAX + 1>
+    <#lt><#if __PROCESSOR?matches("ATSAMA5.*")>
+        <#lt>    const uint32_t      keyGuard = 0xb6d81c4d;
+    <#lt></#if>
+    <#lt>    const unsigned      MaxNumPeripherals = ${MaxNumPeripherals};
     const unsigned      MaxInterruptDepth = 8;
-    const unsigned      MaxNumPeripherals = 0x7F;           // 127
-    const uint32_t      keyGuard = 0xb6d81c4d;
     uint32_t            ii;
     aic_registers_t *   aicPtr;
 
     __disable_irq();
     __DMB();                                                // Data Memory Barrier
     __ISB();                                                // Instruction Synchronization Barrier
-    <#lt><#if SECURE_TO_NONSECURE_REDIRECTION >
-    ////// secure to nonSecure redirection
-    SFR_REGS->SFR_AICREDIR = (keyGuard ^ SFR_REGS->SFR_SN1) | SFR_AICREDIR_NSAIC_Msk;
-    <#lt><#else>
-    ////// disable secure to nonSecure redirection
-    SFR_REGS->SFR_AICREDIR = (keyGuard ^ SFR_REGS->SFR_SN1) & ~SFR_AICREDIR_NSAIC_Msk;
+    <#lt><#if __PROCESSOR?matches("ATSAMA5.*")>
+        <#lt><#if SECURE_TO_NONSECURE_REDIRECTION >
+            <#lt>    ////// secure to nonSecure redirection
+            <#lt>    SFR_REGS->SFR_AICREDIR = (keyGuard ^ SFR_REGS->SFR_SN1) | SFR_AICREDIR_NSAIC_Msk;
+        <#lt><#else>
+            <#lt>    ////// disable secure to nonSecure redirection
+            <#lt>    SFR_REGS->SFR_AICREDIR = (keyGuard ^ SFR_REGS->SFR_SN1) & ~SFR_AICREDIR_NSAIC_Msk;
+        <#lt></#if>
     <#lt></#if>
     <#lt><#if AIC_CODE_GENERATION == "AIC" || AIC_CODE_GENERATION == "AICandSAIC" >
-    ////// nonsecure registers
+    //////
     aicPtr = (aic_registers_t *) AIC_REGS;
     for( ii= 0; ii < MaxNumPeripherals; ++ii )
     {
         aicPtr->AIC_SSR = AIC_SSR_INTSEL( ii );
         aicPtr->AIC_IDCR = AIC_IDCR_Msk;
+        <#lt><#if __PROCESSOR?matches("SAM9X60.*")>
+            <#lt>        aicPtr->AIC_FFDR = AIC_FFDR_Msk;
+            <#lt>        aicPtr->AIC_SVRRDR = AIC_SVRRDR_Msk;
+        <#lt></#if>
         __DSB();
         __ISB();
         aicPtr->AIC_ICCR = AIC_ICCR_INTCLR_Msk;
@@ -111,8 +123,8 @@ INT_Initialize( void )
     {   // inspect irqData array in interrupts.c to see the configuration data 
         aicPtr = (aic_registers_t *) irqData[ ii ].targetRegisters;
         aicPtr->AIC_SSR = AIC_SSR_INTSEL( irqData[ ii ].peripheralId );
-        aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~AIC_SMR_SRCTYPE_Msk)  | AIC_SMR_SRCTYPE( irqData[ ii ].srcType );
-        aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~AIC_SMR_PRIORITY_Msk) | (irqData[ ii ].priority << AIC_SMR_PRIORITY_Pos);
+        aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~${AIC_SMR_SRCTYPE_SYMBOL}_Msk)  | ${AIC_SMR_SRCTYPE_SYMBOL}( irqData[ ii ].srcType );
+        aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~${AIC_SMR_PRIORITY_SYMBOL}_Msk) | (irqData[ ii ].priority << ${AIC_SMR_PRIORITY_SYMBOL}_Pos);
         aicPtr->AIC_SPU = (uint32_t) DefaultInterruptHandlerForSpurious;
         aicPtr->AIC_SVR = (uint32_t) irqData[ ii ].handler;
         aicPtr->AIC_IECR = AIC_IECR_Msk;

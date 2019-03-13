@@ -62,13 +62,14 @@ ${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 // *****************************************************************************
 // *****************************************************************************
 
-<#if __PROCESSOR?matches("ATSAMA5.*")>
-<#include "interrupts_cortex_a5.c.ftl">
-<#elseif __PROCESSOR?matches("ATSAM9X60.*")>
-<#elseif __PROCESSOR?matches("PIC32M.*")>
-    <#include "interrupts_xc32_mips.c.ftl">
+<#if CoreArchitecture?matches("CORTEX-A.*")>
+    <#lt><#include "interrupts_cortex_a5.c.ftl">
+<#elseif CoreArchitecture?matches("CORTEX-M.*")>
+    <#lt><#include "interrupts_xc32_cortex_m.c.ftl">
+<#elseif CoreArchitecture?matches("ARM926.*")>
+    <#lt><#include "interrupts_arm_9.c.ftl">
 <#else>
-<#include "interrupts_xc32_cortex_m.c.ftl">
+    <#lt><#include "interrupts_xc32_mips.c.ftl">
 </#if>
 
 /*******************************************************************************

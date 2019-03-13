@@ -61,10 +61,16 @@ global interruptLastNameMapType
 global interruptLastNameVector
 global interruptLastNameSrcType
 global interruptLastNamePriority
+
+global aicMenuTitle
+global aicRedirectionVisibility
+global aicMapTypeVisibility
+global aicPriorityOutputMode
 global aicPriorityChoices
 global aicSrcTypes
 global aicMinPriorityName
 global aicMaxPriorityName
+
 
 interruptLastNameMapType =  "_INTERRUPT_MAP_TYPE"
 interruptLastNameVector =   "_INTERRUPT_VECTOR"
@@ -73,15 +79,21 @@ interruptLastNamePriority = "_INTERRUPT_PRIORITY"
 
 interruptsChildren = ATDF.getNode( "/avr-tools-device-file/devices/device/interrupts" ).getChildren()
 
-aicCodeGenerationDependencies = []
+aicMenuTitle =              ""
+aicRedirectionVisibility =  False
+aicMapTypeVisibility =      False
+aicPriorityOutputMode =     ""
 aicPriorityChoices =        []
 aicSrcTypes =               []
 aicMinPriorityName =        ""
 aicMaxPriorityName =        ""
-neverSecureList =           [ '49', '62' ]
-alwaysSecureList =          [  '0', '14', '15', '16', '18', '51', '61', '68', '69', '70' ]
-programmedSecureList =      []                                                                      # Todo create map interface to populate this list
-externalList =              [  '0',  '49' ]  # '2', '56', '57', '64', '65', '66', '67', '71', '72' have been subsumed data sheet peripheral table is misleading
+
+aicCodeGenerationDependencies = []
+
+neverSecureList =           []
+alwaysSecureList =          []
+programmedSecureList =      []
+externalList =              []
 
 ################################################################################
 #### Global Methods
@@ -104,29 +116,31 @@ def getInterruptDescription( interruptNode ):
     return( str( retval ) )
 
 
+global getNameValueCaptionTuple
 def getNameValueCaptionTuple( aGroupName, aTupleArray ):
     choiceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AIC\"]/value-group@[name=\"" + aGroupName + "\"]")
-    if not choiceNode:
-        choiceValues = []
-    else:
+    if choiceNode:
         choiceValues = choiceNode.getChildren()
-    for ii in range( 0, len( choiceValues ) ):
-        aTupleArray.append( ( choiceValues[ ii ].getAttribute("name"), 
-                             choiceValues[ ii ].getAttribute("value"),
-                             choiceValues[ ii ].getAttribute("caption")
-                             ) )
+        del aTupleArray[:]
+        for ii in range( 0, len( choiceValues ) ):
+            aTupleArray.append( ( choiceValues[ ii ].getAttribute("name"), 
+                                 choiceValues[ ii ].getAttribute("value"),
+                                 choiceValues[ ii ].getAttribute("caption")
+                                ) )
 
-        
+
 def getTupleNameContaining( aTupleArray, aString ):
-    tupleName = aTupleArray[ 0 ][ 0 ]
-    aString = aString.upper()
-    for tuple in aTupleArray:
-        if( aString in tuple[ 0 ].upper() ):
-            tupleName = tuple[ 0 ]
-            break
+    tupleName = ""
+    if len( aTupleArray ):
+        tupleName = aTupleArray[ 0 ][ 0 ]
+        aString = aString.upper()
+        for tuple in aTupleArray:
+            if( aString in tuple[ 0 ].upper() ):
+                tupleName = tuple[ 0 ]
+                break
     return tupleName
 
-       
+
 def aicMapTypeRedirectionCallback( aicMapType, eventDictionary ):
     if( True == eventDictionary[ "value" ] ):
         # Mapping Secure to NonSecure
@@ -150,7 +164,7 @@ def priorityMapTypeCallback( aicVectorPriority, eventDictionary ):
         aicVectorPriority.setVisible( False )
     else:
         aicVectorPriority.setVisible( True )
-    
+
 
 def aicCodeGenerationCallback( aicCodeGeneration, eventDictionary ):
     global interruptLastNameEnable 
@@ -195,16 +209,16 @@ def aicVectorEnableCallback( aicVectorEnable, eventDictionary ):
 
     sharedInterrupt = subVectorToSharedVector.get( interrupt )
     if( sharedInterrupt ):
-            # check if any sibling is enabled
-            component = aicVectorEnable.getComponent()
-            desiredValue = False
-            for elem in sharedVectors[ sharedInterrupt ]:
-                vectorEnable = component.getSymbolByID( elem + interruptLastNameEnable )
-                if vectorEnable and vectorEnable.getValue():
-                    desiredValue = True
+        # check if any sibling is enabled
+        component = aicVectorEnable.getComponent()
+        desiredValue = False
+        for elem in sharedVectors[ sharedInterrupt ]:
+            vectorEnable = component.getSymbolByID( elem + interruptLastNameEnable )
+            if vectorEnable and vectorEnable.getValue():
+                desiredValue = True
 
-            aicVectorEnable = component.getSymbolByID( sharedInterrupt + interruptLastNameEnable )
-            aicVectorEnable.setValue( desiredValue, 1 )
+        aicVectorEnable = component.getSymbolByID( sharedInterrupt + interruptLastNameEnable )
+        aicVectorEnable.setValue( desiredValue, 1 )
 
 
 def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHandler ):
@@ -273,23 +287,77 @@ def setupSharedVectorFtlSymbols( component, anInterrupt, aicVectorEnable ):
             ii = ii + 1
 
 
+def formAicPyGlobalData( theProcessor, theCoreComponent ):
+    global getNameValueCaptionTuple
+    global aicMenuTitle
+    global aicRedirectionVisibility
+    global aicMapTypeVisibility
+    global aicPriorityOutputMode
+    global aicPriorityChoices
+    global aicSrcTypes
+
+    aicPriorityOutputMode = "Key"
+    aicPrioritySymbolStem = "PRIORITY"
+    # set choice defaults, in case not in the atdf
+    getNameValueCaptionTuple( "AIC_SMR__" + aicPrioritySymbolStem, aicPriorityChoices )
+    if not len( aicPriorityChoices ):
+        aicPriorityOutputMode = "Value"
+        aicPrioritySymbolStem = "PRIOR"
+        aicPriorityChoices.append( ( "MINIMUM",    "0x0", "Minimum priority" ) )
+        aicPriorityChoices.append( ( "VERY_LOW",   "0x1", "Very low priority" ) )
+        aicPriorityChoices.append( ( "LOW",        "0x2", "Low priority" ) )
+        aicPriorityChoices.append( ( "MEDIUM_LOW", "0x3", "Medium priority" ) )
+        aicPriorityChoices.append( ( "MEDIUM_HIGH","0x4", "Medium high priority" ) )
+        aicPriorityChoices.append( ( "HIGH",       "0x5", "High priority" ) )
+        aicPriorityChoices.append( ( "VERY_HIGH",  "0x6", "Very high priority" ) )
+        aicPriorityChoices.append( ( "MAXIMUM",    "0x7", "Maximum priority" ) )
+
+    aicSmrPrioritySymbol = theCoreComponent.createStringSymbol( "AIC_SMR_PRIORITY_SYMBOL", None )
+    aicSmrPrioritySymbol.setDefaultValue( "AIC_SMR_" + aicPrioritySymbolStem )
+    aicSmrPrioritySymbol.setVisible( False )
+    #
+    aicSrcTypeSymbolStem =  "SRCTYPE"
+    getNameValueCaptionTuple( "AIC_SMR__" + aicSrcTypeSymbolStem, aicSrcTypes )
+    aicSmrSrcTypeSymbol = theCoreComponent.createStringSymbol( "AIC_SMR_SRCTYPE_SYMBOL", None )
+    aicSmrSrcTypeSymbol.setDefaultValue( "AIC_SMR_" + aicSrcTypeSymbolStem )
+    aicSmrSrcTypeSymbol.setVisible( False )
+    #
+    if "SAMA5" in theProcessor:
+        aicMenuTitle =              "Interrupts (AIC/SAIC)"
+        aicRedirectionVisibility =  True
+        aicMapTypeVisibility =      True
+        neverSecureList =           [ '49', '62' ]
+        alwaysSecureList =          [  '0', '14', '15', '16', '18', '51', '61', '68', '69', '70' ]
+        programmedSecureList =      []                                                                      # Todo create map interface to populate this list
+        externalList =              [  '0', '49' ] # '2', '56', '57', '64', '65', '66', '67', '71', '72' have been subsumed data sheet peripheral table is misleading
+    elif "SAM9X60" in theProcessor:
+        aicMenuTitle =              "Interrupts"
+        aicRedirectionVisibility =  False
+        aicMapTypeVisibility =      False
+        neverSecureList =           [ str( ii ) for ii in list( range( 0, 50 ) ) ]     # '0', '1',...'49'
+        alwaysSecureList =          []
+        programmedSecureList =      []
+        externalList =              [  '0', '31' ]
+
+
 ################################################################################
 #### Component
 ################################################################################
-getNameValueCaptionTuple( "AIC_SMR__PRIORITY", aicPriorityChoices )
-getNameValueCaptionTuple( "AIC_SMR__SRCTYPE", aicSrcTypes )
+theProcessor = Variables.get("__PROCESSOR")
+formAicPyGlobalData( theProcessor, coreComponent )
 
 aicMinPriorityName = getTupleNameContaining( aicPriorityChoices, "min" )
 aicMaxPriorityName = getTupleNameContaining( aicPriorityChoices, "max" )
 
 aicMenu = coreComponent.createMenuSymbol( "AIC_MENU", cortexMenu )
-aicMenu.setLabel( "Interrupts (AIC/SAIC)" )
+aicMenu.setLabel( aicMenuTitle )
 aicMenu.setDescription( "Configuration for AIC Initialization" )
 
 ### Symbol for interrupt redirection decision
 aicRedirection = coreComponent.createBooleanSymbol( "SECURE_TO_NONSECURE_REDIRECTION", aicMenu )
 aicRedirection.setLabel( "Secure to NonSecure Redirection" )
 aicRedirection.setDefaultValue( True )
+aicRedirection.setVisible( aicRedirectionVisibility )
 
 aicVectorMax = coreComponent.createIntegerSymbol( "AIC_VECTOR_MAX", aicMenu )
 aicVectorMax.setDefaultValue( Interrupt.getMaxInterruptID() )
@@ -345,6 +413,7 @@ for interrupt in interruptsChildren:
     aicMapType = coreComponent.createStringSymbol( interruptName + interruptLastNameMapType, aicVectorEnable )
     aicMapType.setLabel( "Map Type" )
     aicMapType.setDefaultValue( mapTypeDefault )
+    aicMapType.setVisible( aicMapTypeVisibility )
     aicMapType.clearValue()
     aicMapType.setReadOnly( True )
     aicMapType.setDependencies( aicMapTypeRedirectionCallback, [ "SECURE_TO_NONSECURE_REDIRECTION" ] )
@@ -365,7 +434,7 @@ for interrupt in interruptsChildren:
     aicVectorPriority.setLabel( "Priority" )
     for tupleElem in aicPriorityChoices:
         aicVectorPriority.addKey( tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
-    aicVectorPriority.setOutputMode( "Key" )
+    aicVectorPriority.setOutputMode( aicPriorityOutputMode )
     aicVectorPriority.setDisplayMode( "Description" )
     aicVectorPriority.setDefaultValue( 0 )
     if( ("AlwaysSecure" == aicMapType.value) or ("Secure" == aicMapType.value) ):

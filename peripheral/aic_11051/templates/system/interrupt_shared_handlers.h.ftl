@@ -52,6 +52,9 @@
 <#lt><#if NUM_SHARED_VECTORS?? >
     <#lt>/* Handlers for vectors that are shared by multiple interrupts */
     <#lt><#list 0..(NUM_SHARED_VECTORS - 1) as ii>
+        <#lt><#assign SHARED_VECTOR_NAME =  "SHARED_VECTOR_" + ii?string >
+        <#lt><#assign NUM_SHARES_REF = .vars[ SHARED_VECTOR_NAME ]?string + "_NUM_SHARES">
+        <#lt><#assign NUM_SHARES = .vars[ NUM_SHARES_REF ]>
         <#lt>void ${.vars[ SHARED_VECTOR_NAME ]}_SharedHandler( void )
         <#lt>{
         <#lt><#list 0..(NUM_SHARES - 1) as jj>
@@ -90,7 +93,11 @@ IrqData irqData[] = {
             <#lt><#assign TARGET_REGISTERS_STR = ("(uint32_t) " + REG_NAME_STR + "_REGS,")?right_pad(24)>
             <#lt><#assign AIC_HANDLER_STR   = (.vars[AIC_HANDLER]  + ",")?right_pad(28) >
             <#lt><#assign AIC_SRC_TYPE_STR  = (REG_NAME_STR + "_SMR_SRCTYPE_"  + .vars[AIC_SRC_TYPE] + "_Val,")?right_pad(42) >
-            <#lt><#assign AIC_PRIORITY_STR  = (REG_NAME_STR + "_SMR_PRIORITY_" + .vars[AIC_PRIORITY] + "_Val ")?right_pad(30) >
+            <#lt><#if AIC_SMR_PRIORITY_SYMBOL?matches(".*PRIORITY.*")>
+                <#lt><#assign AIC_PRIORITY_STR  = (REG_NAME_STR + "_SMR_PRIORITY_" + .vars[AIC_PRIORITY] + "_Val ")?right_pad(30) >
+            <#lt><#else>
+                <#lt><#assign AIC_PRIORITY_STR  = .vars[AIC_PRIORITY] >
+            <#lt></#if>
             <#lt>    { ${PERIPH_ID}${TARGET_REGISTERS_STR}${AIC_HANDLER_STR}${AIC_SRC_TYPE_STR}${AIC_PRIORITY_STR} }<#sep>,</#sep>
         <#lt></#if>
     <#lt></#if>
