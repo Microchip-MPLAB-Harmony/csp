@@ -329,6 +329,10 @@ def refotrim_update(symbol, event):
     bus = int(event["id"][-1])
     symbol.setValue(set_refotrim_value(bus),2)
 
+global calcCPUFreq
+def calcCPUFreq(symbol, event):
+    symbol.setValue(event["value"],1)
+
 def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, new_posc_freq):
     """
     Calculated Clock frequencies Menu Implementation.
@@ -351,6 +355,13 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__SYS_DEF_FREQ"]')
     sys_clk_freq.setDefaultValue(node.getAttribute("value"))
     sys_clk_freq.setReadOnly(True)
+
+    # CPU_CLOCK_FREQUENCY symbol is needed for SYS_TIME
+    cpu_clk_freq = clk_comp.createStringSymbol("CPU_CLOCK_FREQUENCY", sym_calc_freq_menu)
+    cpu_clk_freq.setLabel("CPU Clock Frequency (HZ)")
+    cpu_clk_freq.setReadOnly(True)
+    cpu_clk_freq.setDefaultValue(node.getAttribute("value"))
+    cpu_clk_freq.setDependencies(calcCPUFreq,["SYS_CLK_FREQ"])
 
     # Peripheral Bus clock frequencies
     index = 0
