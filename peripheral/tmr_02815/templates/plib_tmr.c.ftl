@@ -79,13 +79,7 @@ void ${TMR_INSTANCE_NAME}_Initialize(void)
     PR${TMR_INSTANCE_NUM} = ${TIMER_PERIOD}U;
 
     <#if TMR_INTERRUPT_MODE == true>
-    <#if TIMER_32BIT_MODE_SEL =="0">
-    /* Enable TMR Interrupt */
     ${TMR_IEC_REG}SET = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM}IE_MASK;
-    <#else>
-    /* Enable TMR Interrupt of odd numbered timer in 32-bit mode */
-    ${TMR_IEC_REG}SET = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM?number + 1}IE_MASK;
-    </#if>
     </#if>
 
     /* start the TMR */
@@ -144,18 +138,9 @@ uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void)
 }
 
 <#if TMR_INTERRUPT_MODE == true>
-<#if TIMER_32BIT_MODE_SEL =="0">
 void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
-<#else>
-void TIMER_${TMR_INSTANCE_NUM?number + 1}_InterruptHandler (void)
-</#if>
 {
-<#if TIMER_32BIT_MODE_SEL =="0">
     ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
-<#else>
-    /* Enable TMR Interrupt of odd numbered timer in 32-bit mode */
-    ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM?number + 1}IF_MASK;
-</#if>
 
     if((${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
@@ -166,21 +151,14 @@ void TIMER_${TMR_INSTANCE_NUM?number + 1}_InterruptHandler (void)
 
 void ${TMR_INSTANCE_NAME}_InterruptEnable(void)
 {
-<#if TIMER_32BIT_MODE_SEL =="0">
+
     ${TMR_IEC_REG}SET = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM}IE_MASK;
-<#else>
-    ${TMR_IEC_REG}SET = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM?number + 1}IE_MASK;
-</#if>
 }
 
 
 void ${TMR_INSTANCE_NAME}_InterruptDisable(void)
 {
-<#if TIMER_32BIT_MODE_SEL =="0">
     ${TMR_IEC_REG}CLR = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM}IE_MASK;
-<#else>
-    ${TMR_IEC_REG}CLR = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM?number + 1}IE_MASK;
-</#if>
 }
 
 
