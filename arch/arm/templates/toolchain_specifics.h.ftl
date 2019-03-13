@@ -25,6 +25,21 @@
 #define TOOLCHAIN_SPECIFICS_H
 
 <#if CoreArchitecture?contains("ARM926")>
+
+static inline void __disable_irq( void )
+{   // read, modify and write back the CPSR
+    asm("MRS r0, cpsr");
+    asm("ORR r0, r0, #0xC0");
+    asm("MSR cpsr_c, r0");
+}
+
+static inline void __enable_irq( void )
+{   // read, modify and write back the CPSR
+    asm("MRS r0, cpsr");
+    asm("BIC r0, r0, #0x80");
+    asm("MSR cpsr_c, r0");
+}
+
 static inline void __DMB(void)
 {
 	asm("" ::: "memory");
