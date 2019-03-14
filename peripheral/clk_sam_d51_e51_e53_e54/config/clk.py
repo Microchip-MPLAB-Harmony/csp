@@ -1821,7 +1821,7 @@ def setMainClockFreq(symbol, event):
     divider = int(Database.getSymbolValue("core", "CONF_CPU_CLOCK_DIVIDER"))
     gclk0_freq = int(Database.getSymbolValue("core", "GCLK_0_FREQ"))
 
-    symbol.setValue(gclk0_freq / (divider + 1), 1)
+    symbol.setValue(gclk0_freq / (1 << divider), 1)
     Database.setSymbolValue(event["namespace"], "MAIN_CLOCK_FREQUENCY", gclk0_freq, 2)
 
     if (gclk0_freq > 2400000 and gclk0_freq < 51000000):
