@@ -100,23 +100,34 @@ __attribute__((__aligned__(32))) static XDMAC_DESCRIPTOR_CONTROL first_descripto
     .view = 3
 };
 
-/* View 3 linked list */
-__attribute__((__aligned__(32))) static XDMAC_DESCRIPTOR_VIEW_3 lld_3 = 
+typedef struct
 {
-    .mbr_nda = (uint32_t)0,                       /* Next descriptor */
-    .mbr_da = (uint32_t)&adc_count[0],              /* Destination address as adc_count array */
-    .mbr_sa = (uint32_t)&AFEC1_REGS->AFEC_LCDR,   /* Source address as ADC result register */
-    .mbr_bc = NUM_CONVERSIONS_PER_CHANNEL - 1U,   /* Micro-block length */
-    .mbr_ds = 198U << XDMAC_CDS_MSP_DDS_MSP_Pos,  /* Data stride in terms of bytes. 99 positions * 2 bytes */
-    .mbr_sus = 0U,                                /* Source microblock stride is disabled */
-    .mbr_dus = -400,                              /* Destination microblock stride in bytes. 200 positions * 2 bytes */
-    /* Enable destination data and micro-block stride */
-    .mbr_cfg = XDMAC_CC_TYPE_PER_TRAN | XDMAC_CC_PERID(36U) | XDMAC_CC_MEMSET_NORMAL_MODE | XDMAC_CC_DSYNC_PER2MEM | XDMAC_CC_SWREQ_HWR_CONNECTED | XDMAC_CC_DAM_UBS_DS_AM | XDMAC_CC_SAM_FIXED_AM | XDMAC_CC_SIF_AHB_IF1 | XDMAC_CC_DIF_AHB_IF0 | XDMAC_CC_DWIDTH_HALFWORD | XDMAC_CC_CSIZE_CHK_1 | XDMAC_CC_MBSIZE_SINGLE,
-    .mbr_ubc.blockDataLength = NUM_CHANNELS,   /* Number of microblocks */
-    .mbr_ubc.nextDescriptorControl.destinationUpdate = 0,     /* Next destination update disabled */
-    .mbr_ubc.nextDescriptorControl.sourceUpdate = 0,      /* Next source update disabled */
-    .mbr_ubc.nextDescriptorControl.fetchEnable = 0,    /* Next descriptor fetch disabled */
-    .mbr_ubc.nextDescriptorControl.view = 0            /* No next descriptor */
+    XDMAC_DESCRIPTOR_VIEW_3 lld_3;
+    
+    /* Align to the cache line (32-byte) boundary*/
+    uint8_t                 dummy[16];
+}XDMAC_DESCRIPTORS;
+
+/* View 3 linked list */
+__attribute__((__aligned__(32))) static XDMAC_DESCRIPTORS xdmacDescriptor = 
+{
+    .lld_3 = 
+    {
+        .mbr_nda = (uint32_t)0,                       /* Next descriptor */
+        .mbr_da = (uint32_t)&adc_count[0],              /* Destination address as adc_count array */
+        .mbr_sa = (uint32_t)&AFEC1_REGS->AFEC_LCDR,   /* Source address as ADC result register */
+        .mbr_bc = NUM_CONVERSIONS_PER_CHANNEL - 1U,   /* Micro-block length */
+        .mbr_ds = 198U << XDMAC_CDS_MSP_DDS_MSP_Pos,  /* Data stride in terms of bytes. 99 positions * 2 bytes */
+        .mbr_sus = 0U,                                /* Source microblock stride is disabled */
+        .mbr_dus = -400,                              /* Destination microblock stride in bytes. 200 positions * 2 bytes */
+        /* Enable destination data and micro-block stride */
+        .mbr_cfg = XDMAC_CC_TYPE_PER_TRAN | XDMAC_CC_PERID(36U) | XDMAC_CC_MEMSET_NORMAL_MODE | XDMAC_CC_DSYNC_PER2MEM | XDMAC_CC_SWREQ_HWR_CONNECTED | XDMAC_CC_DAM_UBS_DS_AM | XDMAC_CC_SAM_FIXED_AM | XDMAC_CC_SIF_AHB_IF1 | XDMAC_CC_DIF_AHB_IF0 | XDMAC_CC_DWIDTH_HALFWORD | XDMAC_CC_CSIZE_CHK_1 | XDMAC_CC_MBSIZE_SINGLE,
+        .mbr_ubc.blockDataLength = NUM_CHANNELS,   /* Number of microblocks */
+        .mbr_ubc.nextDescriptorControl.destinationUpdate = 0,     /* Next destination update disabled */
+        .mbr_ubc.nextDescriptorControl.sourceUpdate = 0,      /* Next source update disabled */
+        .mbr_ubc.nextDescriptorControl.fetchEnable = 0,    /* Next descriptor fetch disabled */
+        .mbr_ubc.nextDescriptorControl.view = 0            /* No next descriptor */
+    }
 };
 
 /* This is called after linked list transfer is done */
@@ -150,12 +161,16 @@ int main ( void )
     uint8_t i;
     float adc_ch0_voltage, adc_ch5_voltage, adc_ch6_voltage;
     
-    SCB_CleanDCache_by_Addr((uint32_t *)&lld_3, sizeof(lld_3));
+    DCACHE_CLEAN_BY_ADDR((uint32_t *)&xdmacDescriptor, sizeof(xdmacDescriptor));
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     
     XDMAC_ChannelCallbackRegister(XDMAC_CHANNEL_0, DMA_EventHandler, (uintptr_t)NULL);
-    XDMAC_ChannelLinkedListTransfer(XDMAC_CHANNEL_0, (uint32_t)&lld_3, &first_descriptor_control);
+    XDMAC_ChannelLinkedListTransfer(XDMAC_CHANNEL_0, (uint32_t)&xdmacDescriptor, &first_descriptor_control);
+    
+    /* Invalidate cache lines having received buffer before using it
+     * to load the latest data in the actual memory to the cache */
+    DCACHE_INVALIDATE_BY_ADDR((uint32_t *)&adc_count, sizeof(adc_count));    
     
     DACC_DataWrite(DACC_CHANNEL_0, sine_wave[sine_index]);
     
@@ -172,10 +187,6 @@ int main ( void )
     {
         if (transfer_done == true)
         {
-            /* Invalidate cache lines having received buffer before using it
-             * to load the latest data in the actual memory to the cache */
-            SCB_InvalidateDCache_by_Addr((uint32_t *)&adc_count, sizeof(adc_count));
-            
             transfer_done = false;
              
             for (i = 0U; i < NUM_CONVERSIONS_PER_CHANNEL; i++)
