@@ -118,11 +118,15 @@ int main ( void )
     /* Clean cache lines having source buffer before submitting a transfer
      * request to DMA to load the latest data in the cache to the actual
      * memory */
-    SCB_CleanDCache_by_Addr((uint32_t *)srcBuffer, TRANSFER_SIZE);
+    DCACHE_CLEAN_BY_ADDR((uint32_t *)srcBuffer, TRANSFER_SIZE);
 
     /* Register a callback with XDMAC PLIB to get transfer complete and error
      * events. */
     XDMAC_ChannelCallbackRegister(XDMAC_CHANNEL_0, APP_Callback, 0);
+    
+    /* Invalidate cache lines before submitting DMA request */
+    DCACHE_INVALIDATE_BY_ADDR((uint32_t *)dstBuffer1, TRANSFER_SIZE);
+    DCACHE_INVALIDATE_BY_ADDR((uint32_t *)dstBuffer2, TRANSFER_SIZE);
 
     /* Performing first transfer from srcBuffer to dstBuffer1 with configured
      * burst size of 1 data */
@@ -154,12 +158,7 @@ int main ( void )
                 XDMAC_ChannelTransfer(XDMAC_CHANNEL_0, &srcBuffer, &dstBuffer2, TRANSFER_SIZE);
             }
             else if(transfersDone == 2)
-            {
-                /* Invalidate cache lines having received buffer before using it
-                 * to load the latest data in the actual memory to the cache */
-                SCB_InvalidateDCache_by_Addr((uint32_t *)dstBuffer1, TRANSFER_SIZE);
-                SCB_InvalidateDCache_by_Addr((uint32_t *)dstBuffer2, TRANSFER_SIZE);
-
+            {                
                 transferCyclesBurstSize16=timeStamp;
 
                 /* Verify both the transfers */
