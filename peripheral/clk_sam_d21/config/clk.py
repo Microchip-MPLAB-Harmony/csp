@@ -1252,7 +1252,7 @@ def setMainClockFreq(symbol, event):
     divider = int(Database.getSymbolValue("core","CONF_CPU_CLOCK_DIVIDER"))
     gclk0_freq = int(Database.getSymbolValue("core","GCLK_0_FREQ"))
 
-    symbol.setValue(gclk0_freq / (divider + 1), 1)
+    symbol.setValue(gclk0_freq / (1 << divider), 1)
     if (gclk0_freq > 19000000 and gclk0_freq < 38000000):
         Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_HALF_Val", 2)
     elif (gclk0_freq >= 38000000):
@@ -1359,7 +1359,6 @@ apbInit = {"APBA" : "",
 for index in range(0, numAPB):
     bridgeName = "PM_" + bridges[index] + "SEL__" + bridges[index]
     path = "/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"" + bridgeName + "DIV\"]"
-    print path
     apbDivNode = ATDF.getNode(path)
     apbDivValues = apbDivNode.getChildren()
 
