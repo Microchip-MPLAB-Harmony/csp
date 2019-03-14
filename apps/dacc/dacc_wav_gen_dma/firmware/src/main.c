@@ -80,9 +80,19 @@ __attribute__((__aligned__(4))) static XDMAC_DESCRIPTOR_CONTROL first_descriptor
     .view = 1
 };
 
-__attribute__((__aligned__(32))) static XDMAC_DESCRIPTOR_VIEW_1 lld = 
+typedef struct
 {
-        .mbr_nda = (uint32_t)&lld,
+    XDMAC_DESCRIPTOR_VIEW_1 lld;
+    
+    /* Align to the cache line (32-byte) boundary*/
+    uint8_t                 dummy[16];
+}XDMAC_DESCRIPTORS;
+
+static __attribute__((__aligned__(32))) XDMAC_DESCRIPTORS xdmacDescriptor = 
+{    
+    .lld = 
+    {
+        .mbr_nda = (uint32_t)&xdmacDescriptor.lld,
         .mbr_da = (uint32_t)&DACC_REGS->DACC_CDR[0],
         .mbr_sa = (uint32_t)&sineWave,
         .mbr_ubc.blockDataLength = 100,
@@ -90,6 +100,7 @@ __attribute__((__aligned__(32))) static XDMAC_DESCRIPTOR_VIEW_1 lld =
         .mbr_ubc.nextDescriptorControl.sourceUpdate = 1,
         .mbr_ubc.nextDescriptorControl.fetchEnable = 1,
         .mbr_ubc.nextDescriptorControl.view = 1
+    }
 };
 
 // *****************************************************************************
@@ -100,12 +111,12 @@ __attribute__((__aligned__(32))) static XDMAC_DESCRIPTOR_VIEW_1 lld =
 
 int main ( void )
 {
-    SCB_CleanDCache_by_Addr((uint32_t *)&lld, sizeof(lld));
+    DCACHE_CLEAN_BY_ADDR((uint32_t *)&xdmacDescriptor, sizeof(xdmacDescriptor));
     
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
-    XDMAC_ChannelLinkedListTransfer(XDMAC_CHANNEL_0, (uint32_t)&lld, &first_descriptor_control);
+    XDMAC_ChannelLinkedListTransfer(XDMAC_CHANNEL_0, (uint32_t)&xdmacDescriptor.lld, &first_descriptor_control);
     TC0_CH0_CompareStart();
     
     while ( true )
