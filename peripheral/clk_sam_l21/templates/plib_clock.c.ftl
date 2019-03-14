@@ -282,6 +282,16 @@ void CLOCK_Initialize (void)
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
 
+<#if CONF_LP_CLOCK_DIVIDER != "0">
+    /*Initialize low Power Divider*/
+    MCLK_REGS->MCLK_LPDIV = MCLK_LPDIV_LPDIV(${CONF_LP_CLOCK_DIVIDER});
+</#if>
+
+<#if CONF_BUP_CLOCK_DIVIDER!= "0">
+    /*Initialize Backup Divider*/    
+    MCLK_REGS->MCLK_BUPDIV = MCLK_BUPDIV_BUPDIV(${CONF_BUP_CLOCK_DIVIDER});
+</#if>
+
 ${CLK_INIT_LIST}
 
 <#if CONF_CPU_CLOCK_DIVIDER != '0x01'>

@@ -25,6 +25,137 @@
 
 Log.writeInfoMessage("Loading Clock Manager for " + Variables.get("__PROCESSOR"))
 
+global nvmWaitStateMap
+nvmWaitStateMap = [
+                    [ #PL0
+                            #VDD
+                            { #VDD > 1.6
+                                6000000 : 0,
+                                12000000 : 1
+                            },
+                            { #VDD > 2.7
+                                7500000 : 0,
+                                12000000 : 1
+                            }
+                    ],
+                    [  #PL1  
+                            { #VDD > 1.6
+                                14000000 : 0,
+                                28000000 : 1,
+                                42000000 : 2,
+                                48000000 : 3
+                            },
+                            { #VDD > 2.7
+                                24000000 : 0,
+                                45000000 : 1,
+                                48000000 : 2
+                            }
+                        ]
+                    ]
+global maxFrequencyPl0
+maxFrequencyPl0 = {
+    "CPU_CLOCK_FREQUENCY" : 12000000,
+    "BACKUP_CLOCK_FREQUENCY" : 6000000,
+    "LOWPOWER_CLOCK_FREQUENCY" : 12000000,
+    "GCLK_ID_0_FREQ" : 0,
+    "GCLK_ID_1_FREQ" : 2000000,
+    "GCLK_ID_2_FREQ" : 32768,
+    "GCLK_ID_3_FREQ" : 12000000,
+    "GCLK_ID_4_FREQ" : 0,
+    "GCLK_ID_5_FREQ" : 12000000,
+    "GCLK_ID_6_FREQ" : 12000000,
+    "GCLK_ID_7_FREQ" : 12000000,
+    "GCLK_ID_8_FREQ" : 12000000,
+    "GCLK_ID_9_FREQ" : 12000000,
+    "GCLK_ID_10_FREQ" : 12000000,
+    "GCLK_ID_11_FREQ" : 12000000,
+    "GCLK_ID_12_FREQ" : 12000000,
+    "GCLK_ID_13_FREQ" : 12000000,
+    "GCLK_ID_14_FREQ" : 12000000,
+    "GCLK_ID_15_FREQ" : 12000000,
+    "GCLK_ID_16_FREQ" : 12000000,
+    "GCLK_ID_17_FREQ" : 1000000,
+    "GCLK_ID_18_FREQ" : 12000000,
+    "GCLK_ID_19_FREQ" : 12000000,
+    "GCLK_ID_20_FREQ" : 12000000,
+    "GCLK_ID_21_FREQ" : 12000000,
+    "GCLK_ID_22_FREQ" : 12000000,
+    "GCLK_ID_23_FREQ" : 12000000,
+    "GCLK_ID_24_FREQ" : 12000000,
+    "GCLK_ID_25_FREQ" : 24000000,
+    "GCLK_ID_26_FREQ" : 12000000,
+    "GCLK_ID_27_FREQ" : 12000000,
+    "GCLK_ID_28_FREQ" : 12000000,
+    "GCLK_ID_29_FREQ" : 12000000,
+    "GCLK_ID_30_FREQ" : 12000000,
+    "GCLK_ID_31_FREQ" : 12000000,
+    "GCLK_ID_32_FREQ" : 12000000,
+    "GCLK_ID_33_FREQ" : 12000000,
+    "GCLK_ID_34_FREQ" : 12000000,
+    "GCLK_ID_35_FREQ" : 12000000,
+    "GCLK_0_FREQ" : 24000000,
+    "GCLK_1_FREQ" : 24000000,
+    "GCLK_2_FREQ" : 24000000,
+    "GCLK_3_FREQ" : 24000000,
+    "GCLK_4_FREQ" : 24000000,
+    "GCLK_5_FREQ" : 24000000,
+    "GCLK_6_FREQ" : 24000000,
+    "GCLK_7_FREQ" : 24000000,
+    "GCLK_8_FREQ" : 24000000
+}
+global maxFrequencyPl2
+maxFrequencyPl2 = {
+    "CPU_CLOCK_FREQUENCY" : 48000000,
+    "BACKUP_CLOCK_FREQUENCY" : 6000000,
+    "LOWPOWER_CLOCK_FREQUENCY" : 48000000,
+    "GCLK_ID_0_FREQ" : 33000,
+    "GCLK_ID_1_FREQ" : 2000000,
+    "GCLK_ID_2_FREQ" : 100000,
+    "GCLK_ID_3_FREQ" : 48000000,
+    "GCLK_ID_4_FREQ" : 60000000,
+    "GCLK_ID_5_FREQ" : 48000000,
+    "GCLK_ID_6_FREQ" : 48000000,
+    "GCLK_ID_7_FREQ" : 48000000,
+    "GCLK_ID_8_FREQ" : 48000000,
+    "GCLK_ID_9_FREQ" : 48000000,
+    "GCLK_ID_10_FREQ" : 48000000,
+    "GCLK_ID_11_FREQ" : 48000000,
+    "GCLK_ID_12_FREQ" : 48000000,
+    "GCLK_ID_13_FREQ" : 48000000,
+    "GCLK_ID_14_FREQ" : 48000000,
+    "GCLK_ID_15_FREQ" : 48000000,
+    "GCLK_ID_16_FREQ" : 48000000,
+    "GCLK_ID_17_FREQ" : 5000000,
+    "GCLK_ID_18_FREQ" : 48000000,
+    "GCLK_ID_19_FREQ" : 48000000,
+    "GCLK_ID_20_FREQ" : 48000000,
+    "GCLK_ID_21_FREQ" : 48000000,
+    "GCLK_ID_22_FREQ" : 48000000,
+    "GCLK_ID_23_FREQ" : 48000000,
+    "GCLK_ID_24_FREQ" : 48000000,
+    "GCLK_ID_25_FREQ" : 48000000,
+    "GCLK_ID_25_FREQ" : 96000000,
+    "GCLK_ID_26_FREQ" : 48000000,
+    "GCLK_ID_27_FREQ" : 48000000,
+    "GCLK_ID_28_FREQ" : 48000000,
+    "GCLK_ID_29_FREQ" : 48000000,
+    "GCLK_ID_30_FREQ" : 48000000,
+    "GCLK_ID_31_FREQ" : 48000000,
+    "GCLK_ID_32_FREQ" : 48000000,
+    "GCLK_ID_33_FREQ" : 48000000,
+    "GCLK_ID_34_FREQ" : 48000000,
+    "GCLK_ID_35_FREQ" : 48000000,
+    "GCLK_0_FREQ" : 48000000,
+    "GCLK_1_FREQ" : 48000000,
+    "GCLK_2_FREQ" : 48000000,
+    "GCLK_3_FREQ" : 48000000,
+    "GCLK_4_FREQ" : 48000000,
+    "GCLK_5_FREQ" : 48000000,
+    "GCLK_6_FREQ" : 48000000,
+    "GCLK_7_FREQ" : 48000000,
+    "GCLK_8_FREQ" : 48000000
+}
+
 from os.path import join
 from xml.etree import ElementTree
 from collections import defaultdict
@@ -32,6 +163,9 @@ global topsort
 clkMenu = coreComponent.createMenuSymbol("SAML21_CLK_MENU", None)
 clkMenu.setLabel("Clock")
 clkMenu.setDescription("Configuration for Clock System Service")
+
+deviceConfiguration = coreComponent.createMenuSymbol("DEVICE_CONFIGURATION", clkMenu)
+deviceConfiguration.setLabel("Device Configuration")
 
 # Clock Source Configuration
 clkSourceMenu = coreComponent.createMenuSymbol("CLOCK_SOURCE", clkMenu)
@@ -81,6 +215,26 @@ calculatedFreq_Menu.setLabel("Calculated Clock Frequencies")
 ################################################################################
 ##########              Callback Functions            ##########################
 ################################################################################
+
+################################################################################
+
+voltageSelection = coreComponent.createKeyValueSetSymbol("DEVICE_PERFORMANCE_LEVEL", deviceConfiguration)
+voltageSelection.setLabel("Performance Level")
+voltageSelection.setDescription("This selection is used to determine which Performance level the device may operate in")
+voltageSelection.addKey("PL0", "0", "Performance Level 0")
+voltageSelection.addKey("PL2", "1", "Performance Level 2")
+voltageSelection.setDefaultValue(1)
+voltageSelection.setOutputMode("Value")
+voltageSelection.setDisplayMode("Description")
+
+plSelection = coreComponent.createKeyValueSetSymbol("DEVICE_VOLTAGE", deviceConfiguration)
+plSelection.setLabel("Supply Voltage")
+plSelection.setDescription("Voltage Being Supplied to device")
+plSelection.addKey("1.6", "0", "VDDIN > 1.6V")
+plSelection.addKey("2.7", "1", "VDDIN > 2.7V")
+plSelection.setDefaultValue(1)
+plSelection.setOutputMode("Value")
+plSelection.setDisplayMode("Description")
 
 ####    XOSC Configuration callback functions    ###############################
 
@@ -170,28 +324,32 @@ def setDPLL96MClockFreq(symbol, event):
         prescalar = int(Database.getSymbolValue("core","CONFIG_CLOCK_DPLL_PRESCALAR"))
 
         dpllFreq = int(srcFreq * (ldr + 1.0 + (ldrFrac/16.0)) * (1.0 / float(2**prescalar)))
-
-        symbol.setValue(dpllFreq, 1)
+        if symbol.getValue() != dpllFreq:
+            symbol.setValue(dpllFreq, 1)
     else:
-        symbol.setValue(0, 1)
+        if symbol.getValue() > 0:
+            symbol.setValue(0, 1)
 
 
 def calcDpllMultiplier(symbol, event):
     ldr = int(Database.getSymbolValue("core","CONFIG_CLOCK_DPLL_LDR_INTEGER"))
     ldrFrac = int(Database.getSymbolValue("core","CONFIG_CLOCK_DPLL_LDRFRAC_FRACTION"))
     multiplier = (ldr + 1.0 + (ldrFrac/16.0))
-    symbol.setValue(multiplier,2)
+    if symbol.getValue() != multiplier:
+        symbol.setValue(multiplier,2)
 
 def calcDpllXoscDivider(symbol, event):
     divisor = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_DIVIDER"))
     div_value = (2 * (divisor + 1))
-    symbol.setValue(div_value,2)
+    if symbol.getValue() != div_value:
+        symbol.setValue(div_value,2)
 
 ################################################################################
 #######          OSCCTRL Database Components      ##############################
 ################################################################################
 ############################   OSC16M Components  ##############################
 global osc16MFreqSel
+
 
 osc16MEnable = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC16M_ENABLE", oscctrlosc16_Menu)
 osc16MEnable.setLabel("Enable 16MHz RC Oscillator")
@@ -912,7 +1070,7 @@ def setGClockFreq(symbol, event):
         elif divSel == 1:
             gclk_freq = int(srcFreq / float(2**(div + 1)))
 
-        if symbol.getValue != gclk_freq:
+        if symbol.getValue() != gclk_freq:
             symbol.setValue(gclk_freq, 1)
 
     else:
@@ -1024,17 +1182,19 @@ def clkSetup(symbol, event):
             status = status | Database.getSymbolValue("core", i + "_CLOCK_ENABLE")
         Database.setSymbolValue("core", symbolKey + "_CHEN", status, 2)
         if event["value"]:
-            freq = Database.getSymbolValue("core", symbolKey + "_FREQ")
-            Database.setSymbolValue("core", event["id"].split("_CLOCK_ENABLE")[0] + "_CLOCK_FREQUENCY", freq , 2)
+            freq = int(Database.getSymbolValue("core", symbolKey + "_FREQ"))
+            if int( Database.getSymbolValue("core", event["id"].split("_CLOCK_ENABLE")[0] + "_CLOCK_FREQUENCY")) != freq:
+                Database.setSymbolValue("core", event["id"].split("_CLOCK_ENABLE")[0] + "_CLOCK_FREQUENCY", freq , 2)
         else :
-            Database.setSymbolValue("core", event["id"].split("_CLOCK_ENABLE")[0] + "_CLOCK_FREQUENCY", 0, 2)
+            if int( Database.getSymbolValue("core", event["id"].split("_CLOCK_ENABLE")[0] + "_CLOCK_FREQUENCY")) > 0:
+                Database.setSymbolValue("core", event["id"].split("_CLOCK_ENABLE")[0] + "_CLOCK_FREQUENCY", 0, 2)
 
     if "_FREQ" in event["id"]:
         symbolKey = event["id"].split("_FREQ")[0]
         symbolValues = indexSymbolMap.get(symbolKey)
         for i in symbolValues:
             if Database.getSymbolValue("core", i + "_CLOCK_ENABLE"):
-                freq = Database.getSymbolValue("core", symbolKey + "_FREQ")
+                freq = int(Database.getSymbolValue("core", symbolKey + "_FREQ"))
                 Database.setSymbolValue("core", i + "_CLOCK_FREQUENCY", freq , 2)
 
 def calcGclkDivider(symbol, event):
@@ -1050,16 +1210,18 @@ def calcGclkDivider(symbol, event):
 
     elif divSel == 1:
         divider = 2**(div + 1)
-
-    symbol.setValue(divider,2)
+    if symbol.getValue != divider:
+        symbol.setValue(divider,2)
 
 def setGCLKIOFreq(symbol, event):
     index = int(symbol.getID().split("GCLK_IO_")[1].split("_FREQ")[0])
     enable = Database.getSymbolValue("core", "GCLK_" + str(index) + "_OUTPUTENABLE" )
     if enable:
-        symbol.setValue(int (Database.getSymbolValue("core", "GCLK_" + str(index) + "_FREQ" )), 2)
+        if symbol.getValue() != int (Database.getSymbolValue("core", "GCLK_" + str(index) + "_FREQ" )):
+            symbol.setValue(int (Database.getSymbolValue("core", "GCLK_" + str(index) + "_FREQ" )), 2)
     else:
-        symbol.setValue(0, 2)
+        if symbol.getValue() > 2:
+            symbol.setValue(0, 2)
 
 def gclkMaxset(symbol, event):
     global gclkSym_GENCTRL_DIV
@@ -1080,6 +1242,40 @@ def gclkMaxset(symbol, event):
 #######          GCLK Database Components            ###########################
 ################################################################################
 
+
+################################Peripheral Clock Max Value Callbacks#################################
+def freqExceedWarning(symbol, event):
+    if "_MAX" in event["id"]:
+        Freq = int(Database.getSymbolValue("core", event["id"].replace("_MAX","")))
+        if Freq > event["value"]:
+            if symbol.getValue() != True:
+                symbol.setValue(True, 2)
+        else:
+            if symbol.getValue() != False:
+                symbol.setValue(False, 2)
+    else:
+        maxFreq = int(Database.getSymbolValue("core", event["id"] + "_MAX"))
+        if event["value"] > maxFreq:
+            if symbol.getValue() != True:
+                symbol.setValue(True, 2)
+        else:
+            if symbol.getValue() != False:
+                symbol.setValue(False, 2)
+
+def updateMaxFrequency(symbol, event):
+    global maxFrequencyPl0
+    global maxFrequencyPl2
+    
+    if int(event["value"]) == 0:
+        for keys in maxFrequencyPl0:
+            Database.setSymbolValue("core", keys + "_MAX", maxFrequencyPl0.get(keys), 1)
+    else:
+        for keys in maxFrequencyPl2:
+            Database.setSymbolValue("core", keys + "_MAX", maxFrequencyPl2.get(keys), 1)
+        
+def peripheralFreqWarning(symbol, event):
+    symbol.setValue(event["value"], 2)
+#######################################################################################
 gclkDependencyList = []
 
 global gclkSym_num,gclkSym_GENCTRL_DIVSEL,gclkSym_GENCTRL_DIV
@@ -1260,6 +1456,18 @@ for gclknumber in range(0,9):
     else:
         gclkSym_Freq[gclknumber].setDefaultValue(0)
 
+    gclkSym_FreqMax = coreComponent.createIntegerSymbol("GCLK_" + str(gclknumber) + "_FREQ_MAX", gclkSym_num[gclknumber])
+    gclkSym_FreqMax.setLabel("Maximum Clock Frequency")
+    gclkSym_FreqMax.setDefaultValue(maxFrequencyPl2.get(("GCLK_" + str(gclknumber) + "_FREQ")))
+    gclkSym_FreqMax.setReadOnly(True)
+
+    gclkSym_FreqMaxWarning = coreComponent.createBooleanSymbol("GCLK_" + str(gclknumber) + "_WARNING", gclkSym_num[gclknumber])
+    gclkSym_FreqMaxWarning.setLabel("Max Clock Exceeded")
+    gclkSym_FreqMaxWarning.setDefaultValue(False)
+    gclkSym_FreqMaxWarning.setDependencies(freqExceedWarning, ["GCLK_" + str(gclknumber) + "_FREQ", "GCLK_" + str(gclknumber) + "_FREQ_MAX"])
+    gclkSym_FreqMaxWarning.setReadOnly(True)
+
+
     depList = [ "GCLK_" + str(gclknumber) + "_DIVSEL",
                 "GCLK_" + str(gclknumber) + "_DIV",
                 "GCLK_" + str(gclknumber) + "_SRC",
@@ -1288,6 +1496,7 @@ maxGCLKId = 0
 cycleFormed = coreComponent.createBooleanSymbol("GCLK_CYCLE_FORMED", clkMenu)
 cycleFormed.setDefaultValue(False)
 cycleFormed.setVisible(False)
+
 
 atdfFilePath = join(Variables.get("__DFP_PACK_DIR") , "atdf" , Variables.get("__PROCESSOR") + ".atdf")
 
@@ -1370,14 +1579,34 @@ for index in sorted(channelMap.iterkeys()):
     gclkSym_PCHCTRL_FREQ.setDependencies(setPCHCTRLFREQVisibleProperty, [key + "_CHEN",key + "_GENSEL", "GCLK_0_FREQ", "GCLK_1_FREQ", "GCLK_2_FREQ", "GCLK_3_FREQ", "GCLK_4_FREQ",
                                                                                     "GCLK_5_FREQ", "GCLK_6_FREQ", "GCLK_7_FREQ", "GCLK_8_FREQ"])
     triggerdepList.append(key + "_FREQ")
+
+    
+    gclkMaxFreq = coreComponent.createIntegerSymbol(key + "_FREQ_MAX", clkSymPeripheral)
+    gclkMaxFreq.setLabel("Maximum Clock Frequency")
+    gclkMaxFreq.setDefaultValue(maxFrequencyPl2.get((key + "_FREQ")))
+    gclkMaxFreq.setReadOnly(True)
+
+    gclkMaxFreqWarning = coreComponent.createBooleanSymbol(key + "_WARNING", clkSymPeripheral)
+    gclkMaxFreqWarning.setLabel("Max Clock Exceeded")
+    gclkMaxFreqWarning.setDefaultValue(False)
+    gclkMaxFreqWarning.setDependencies(freqExceedWarning, [key + "_FREQ", key + "_FREQ_MAX"])
+    gclkMaxFreqWarning.setReadOnly(True)
+
+
     #GCLK Peripheral Channel Lock
     gclkSym_PCHCTRL_WRTLOCK = coreComponent.createBooleanSymbol(key + "_WRITELOCK", clkSymPeripheral)
     gclkSym_PCHCTRL_WRTLOCK.setLabel("Write Lock")
 
+maxFrequencyUpdate = coreComponent.createBooleanSymbol("DUMMY_UPDATE_SYMBOL", clkSymPeripheral)
+maxFrequencyUpdate.setVisible(False)
+maxFrequencyUpdate.setDependencies(updateMaxFrequency, ["DEVICE_PERFORMANCE_LEVEL"])
+
 peripheralList = []
-for value in indexSymbolMap.values():
-    for i in range (0,len(value)):
-        peripheralList.append(value[i])
+symbolIndexMapinverse = {}
+for key in indexSymbolMap.keys():
+    for i in range (0,len(indexSymbolMap.get(key))):
+        peripheralList.append(indexSymbolMap.get(key)[i])
+        symbolIndexMapinverse[indexSymbolMap.get(key)[i]] = key
 
 peripheralList.sort()
 
@@ -1388,10 +1617,16 @@ for name in peripheralList:
     clkSymExtPeripheral.setDefaultValue(False)
     triggerdepList.append(name + "_CLOCK_ENABLE")
 
-    clkSymExtPeripheral = coreComponent.createIntegerSymbol(name + "_CLOCK_FREQUENCY", clkSymExtPeripheral)
-    clkSymExtPeripheral.setLabel(name + " Clock Frequency")
-    clkSymExtPeripheral.setReadOnly(True)
+    clkSymExtPeripheralFreq = coreComponent.createIntegerSymbol(name + "_CLOCK_FREQUENCY", clkSymExtPeripheral)
+    clkSymExtPeripheralFreq.setLabel(name + " Clock Frequency")
+    clkSymExtPeripheralFreq.setReadOnly(True)
+
+    clkSymExtPeripheralFreqWarning = coreComponent.createBooleanSymbol(name + "_CLOCK_FREQUENCY_WARNING", clkSymExtPeripheral)
+    clkSymExtPeripheralFreqWarning.setLabel(name + " Clock Frequency Warning")
+    clkSymExtPeripheralFreqWarning.setReadOnly(True)
+    clkSymExtPeripheralFreqWarning.setDependencies(peripheralFreqWarning, [symbolIndexMapinverse.get(name) + "_WARNING"])
     gclkDependencyList.append(name + "_CLOCK_ENABLE")
+
 
 clockTrigger = coreComponent.createBooleanSymbol("TRIGGER_LOGIC", None)
 clockTrigger.setVisible(False)
@@ -1561,27 +1796,71 @@ mclkSym_CPUDIV_CPUDIV.setDefaultValue(mclkcpudivDefaultValue)
 mclkSym_CPUDIV_CPUDIV.setOutputMode("Value")
 mclkSym_CPUDIV_CPUDIV.setDisplayMode("Key")
 
-# Flash Read Wait State (RWS). Values given in  'NVM Characteristics'
-nvm_rws = coreComponent.createStringSymbol("NVM_RWS", mclkSym_Menu)
-nvm_rws.setReadOnly(True)
-nvm_rws.setDefaultValue("NVMCTRL_CTRLB_RWS_DUAL_Val")
-nvm_rws.setVisible(False)
+#Low Power Domain Division
+mclkSym_LPDIV_LPDIV = coreComponent.createKeyValueSetSymbol("CONF_LP_CLOCK_DIVIDER",mclkSym_Menu)
+mclkSym_LPDIV_LPDIV.setLabel("Low Power Domain Division Factor")
+mclklpdivNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"MCLK\"]/value-group@[name=\"MCLK_LPDIV__LPDIV\"]")
+mclklpdivNodeValues = []
+mclklpdivNodeValues = mclklpdivNode.getChildren()
+mclklpdivDefaultValue = 0
+
+for index in range(0, len(mclklpdivNodeValues)):
+    mclklpdivKeyName= mclklpdivNodeValues[index].getAttribute("name")
+
+    if (mclklpdivKeyName == "DIV1"):
+        mclklpdivDefaultValue = index
+
+    mclklpdivKeyDescription = mclklpdivNodeValues[index].getAttribute("caption")
+    mclklpdivKeyValue = mclklpdivNodeValues[index].getAttribute("value")
+    mclkSym_LPDIV_LPDIV.addKey(mclklpdivKeyName, mclklpdivKeyValue , mclklpdivKeyDescription)
+
+mclkSym_LPDIV_LPDIV.setDefaultValue(mclklpdivDefaultValue)
+mclkSym_LPDIV_LPDIV.setOutputMode("Value")
+mclkSym_LPDIV_LPDIV.setDisplayMode("Key")
+
+#Backup domain Division
+mclkSym_BUPDIV_BUPDIV = coreComponent.createKeyValueSetSymbol("CONF_BUP_CLOCK_DIVIDER",mclkSym_Menu)
+mclkSym_BUPDIV_BUPDIV.setLabel("Backup Domain Division Factor")
+mclkbupdivNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"MCLK\"]/value-group@[name=\"MCLK_BUPDIV__BUPDIV\"]")
+mclkbupdivNodeValues = []
+mclkbupdivNodeValues = mclkbupdivNode.getChildren()
+mclkbupdivDefaultValue = 0
+
+for index in range(0, len(mclkbupdivNodeValues)):
+    mclkbupdivKeyName= mclkbupdivNodeValues[index].getAttribute("name")
+
+    if (mclkbupdivKeyName == "DIV8"):
+        mclkbupdivDefaultValue = index
+
+    mclkbupdivKeyDescription = mclkbupdivNodeValues[index].getAttribute("caption")
+    mclkbupdivKeyValue = mclkbupdivNodeValues[index].getAttribute("value")
+    mclkSym_BUPDIV_BUPDIV.addKey(mclkbupdivKeyName, mclkbupdivKeyValue , mclkbupdivKeyDescription)
+
+mclkSym_BUPDIV_BUPDIV.setDefaultValue(mclkbupdivDefaultValue)
+mclkSym_BUPDIV_BUPDIV.setOutputMode("Value")
+mclkSym_BUPDIV_BUPDIV.setDisplayMode("Key")
+
 
 ################################################################################
 #######          Calculated Clock Frequencies        ###########################
 ################################################################################
 
+def waitStateUpdate(symbol, event):
+    global nvmWaitStateMap
+    cpuFreq = int(Database.getSymbolValue("core","CPU_CLOCK_FREQUENCY"))
+    performanceLevel = int(Database.getSymbolValue("core","DEVICE_PERFORMANCE_LEVEL"))
+    voltage = int(Database.getSymbolValue("core","DEVICE_VOLTAGE"))
+    waitstateDictionary =  dict(nvmWaitStateMap[performanceLevel][voltage])
+    for key in sorted(waitstateDictionary.keys()):
+        if cpuFreq <= key:
+            symbol.setValue(waitstateDictionary.get(key), 2)
+            break
+
 def setMainClockFreq(symbol, event):
     divider = int(Database.getSymbolValue("core","CONF_CPU_CLOCK_DIVIDER"))
     gclk0_freq = int(Database.getSymbolValue("core","GCLK_0_FREQ"))
 
-    symbol.setValue(gclk0_freq / (divider + 1), 1)
-    if (gclk0_freq > 19000000 and gclk0_freq < 38000000):
-        Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_HALF_Val", 2)
-    elif (gclk0_freq >= 38000000):
-        Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_DUAL_Val", 2)
-    else:
-        Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_SINGLE_Val", 2)
+    symbol.setValue(gclk0_freq / (1 << divider), 1)
 
 
 
@@ -1605,17 +1884,80 @@ def setFreq(symbol, event):
 
     symbol.setValue(freq, 2)
 
+def lowPowerFreq(symbol, event):
+    divider = int(Database.getSymbolValue("core","CONF_LP_CLOCK_DIVIDER"))
+    gclk0_freq = int(Database.getSymbolValue("core","GCLK_0_FREQ"))
+
+    symbol.setValue(gclk0_freq / (1 << divider), 1)
+
+def bkupFreq(symbol, event):
+    divider = int(Database.getSymbolValue("core","CONF_BUP_CLOCK_DIVIDER"))
+    gclk0_freq = int(Database.getSymbolValue("core","GCLK_0_FREQ"))
+
+    symbol.setValue(gclk0_freq / (1 << divider), 1)
+######################################################################################################
 clkSym_MAIN_CLK_FREQ = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY", calculatedFreq_Menu)
 clkSym_MAIN_CLK_FREQ.setLabel("Main Clock Frequency")
 clkSym_MAIN_CLK_FREQ.setReadOnly(True)
 clkSym_MAIN_CLK_FREQ.setDependencies(setMainClockFreq, ["GCLK_0_FREQ", "CONF_CPU_CLOCK_DIVIDER"])
 
+clkSym_MAIN_CLK_FREQMAX = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY_MAX", mclkSym_Menu)
+clkSym_MAIN_CLK_FREQMAX.setLabel("CPU Maximum Clock Frequency")
+clkSym_MAIN_CLK_FREQMAX.setDefaultValue(maxFrequencyPl2.get(("CPU_CLOCK_FREQUENCY")))
+clkSym_MAIN_CLK_FREQMAX.setReadOnly(True)
+
+clkSym_MAIN_CLK_FREQWarning = coreComponent.createBooleanSymbol("CPU_CLOCK_FREQUENCY_WARNING", mclkSym_Menu)
+clkSym_MAIN_CLK_FREQWarning.setLabel("CPU Max Clock Exceeded")
+clkSym_MAIN_CLK_FREQWarning.setDefaultValue(False)
+clkSym_MAIN_CLK_FREQWarning.setDependencies(freqExceedWarning, ["CPU_CLOCK_FREQUENCY", "CPU_CLOCK_FREQUENCY_MAX" ])
+clkSym_MAIN_CLK_FREQWarning.setReadOnly(True)
+
+
+# Flash Read Wait State (RWS). Values given in  'NVM Characteristics'
+nvm_rws = coreComponent.createIntegerSymbol("NVM_RWS", mclkSym_Menu)
+nvm_rws.setReadOnly(True)
+nvm_rws.setDefaultValue(2)
+nvm_rws.setVisible(True)
+nvm_rws.setDependencies(waitStateUpdate, ["CPU_CLOCK_FREQUENCY", "DEVICE_PERFORMANCE_LEVEL", "DEVICE_VOLTAGE"])
+
+lowpowerFreq = coreComponent.createIntegerSymbol("LOWPOWER_CLOCK_FREQUENCY", calculatedFreq_Menu)
+lowpowerFreq.setLabel("Low Power Domain Frequency")
+lowpowerFreq.setDependencies(lowPowerFreq, ["CPU_CLOCK_FREQUENCY", "CONF_LP_CLOCK_DIVIDER"])
+lowpowerFreq.setReadOnly(True)
+
+lowpowerFreqMAX = coreComponent.createIntegerSymbol("LOWPOWER_CLOCK_FREQUENCY_MAX", mclkSym_Menu)
+lowpowerFreqMAX.setLabel("LOWPOWER Maximum Clock Frequency")
+lowpowerFreqMAX.setDefaultValue(maxFrequencyPl2.get(("LOWPOWER_CLOCK_FREQUENCY")))
+lowpowerFreqMAX.setReadOnly(True)
+
+lowpowerFreqWarning = coreComponent.createBooleanSymbol("LOWPOWER_CLOCK_FREQUENCY_WARNING", mclkSym_Menu)
+lowpowerFreqWarning.setLabel("LOWPOWER Max Clock Exceeded")
+lowpowerFreqWarning.setDefaultValue(False)
+lowpowerFreqWarning.setDependencies(freqExceedWarning, ["LOWPOWER_CLOCK_FREQUENCY", "LOWPOWER_CLOCK_FREQUENCY_MAX"])
+lowpowerFreqWarning.setReadOnly(True)
+
+
+backupFreq = coreComponent.createIntegerSymbol("BACKUP_CLOCK_FREQUENCY", calculatedFreq_Menu)
+backupFreq.setLabel("BACKUP Domain Frequency")
+backupFreq.setDependencies(bkupFreq, ["CPU_CLOCK_FREQUENCY", "CONF_BUP_CLOCK_DIVIDER"])
+backupFreq.setReadOnly(True)
+
+backupFreqMAX = coreComponent.createIntegerSymbol("BACKUP_CLOCK_FREQUENCY_MAX", mclkSym_Menu)
+backupFreqMAX.setLabel("BACKUP Maximum Clock Frequency")
+backupFreqMAX.setDefaultValue(maxFrequencyPl2.get(("BACKUP_CLOCK_FREQUENCY")))
+backupFreqMAX.setReadOnly(True)
+
+backupFreqWarning = coreComponent.createBooleanSymbol("BACKUP_CLOCK_FREQUENCY_WARNING", mclkSym_Menu)
+backupFreqWarning.setLabel("BACKUP Max Clock Exceeded")
+backupFreqWarning.setDefaultValue(False)
+backupFreqWarning.setDependencies(freqExceedWarning, ["BACKUP_CLOCK_FREQUENCY", "BACKUP_CLOCK_FREQUENCY_MAX"])
+backupFreqWarning.setReadOnly(True)
+
+
+
 divider = mclkSym_CPUDIV_CPUDIV.getValue()
 gclk0_freq = int(gclkSym_Freq[0].getValue())
 clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)
-
-peripherals = ATDF.getNode("/avr-tools-device-file/devices/device@[name=\"" + Variables.get("__PROCESSOR") + "\"]/peripherals")
-module_list = peripherals.getChildren()
 
 clkSym_WDT_CLK_FREQ = coreComponent.createIntegerSymbol("WDT_CLOCK_FREQUENCY", calculatedFreq_Menu)
 clkSym_WDT_CLK_FREQ.setLabel("WDT Clock Frequency")
