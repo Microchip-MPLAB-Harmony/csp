@@ -104,6 +104,25 @@ def getCorePeripheralsInterruptDataStructure():
 
     return corePeripherals
 
+global getWaitStates
+
+def getWaitStates():
+
+    sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+    ws = 3
+
+    if sysclk <= 120000000:
+        ws = 3
+    if sysclk <= 80000000:
+        ws = 2
+    if sysclk <= 60000000:
+        ws = 1
+
+    return ws
+
+def calcWaitStates(symbol, event):
+
+    symbol.setValue(getWaitStates(), 2)
 
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
@@ -169,9 +188,27 @@ mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
 mipsMenu.setLabel("MIPS Configuration")
 mipsMenu.setDescription("Configuration for MIPS processor")
 
+prefetchMenu = coreComponent.createMenuSymbol("PREFETCH_MENU", None)
+prefetchMenu.setLabel("Prefetch and Flash Configuration")
+prefetchMenu.setDescription("Configure Prefetch and Flash")
+
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mk/config/clk.py")
 coreComponent.addPlugin("../peripheral/clk_pic32mk/plugin/clockmanager.jar")
+
+SYM_REFEN = coreComponent.createKeyValueSetSymbol("CONFIG_CHECON_PREFEN", prefetchMenu)
+SYM_REFEN.setLabel("Predictive Prefetch Configuration")
+SYM_REFEN.addKey("OPTION1", "0", "Disable predictive prefetch")
+SYM_REFEN.addKey("OPTION2", "1", "Enable predictive prefetch for CPU instructions only")
+SYM_REFEN.setOutputMode("Value")
+SYM_REFEN.setDisplayMode("Description")
+SYM_REFEN.setDefaultValue(1)
+
+SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_CHECON_PFMWS", prefetchMenu)
+SYM_PFMWS.setLabel("Program Flash memory Wait states")
+SYM_PFMWS.setDefaultValue(getWaitStates())
+SYM_PFMWS.setReadOnly(True)
+SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY"])
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
@@ -189,12 +226,9 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmt_01520/config/dmt.py")
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")
 
-
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_01500/config/dmac.py")
 coreComponent.addPlugin("../peripheral/dmac_01500/plugin/dmamanager.jar")
-
-
 
 devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
 devconSystemInitFile.setType("STRING")
@@ -202,3 +236,8 @@ devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALI
 devconSystemInitFile.setSourcePath("mips/templates/PIC32MK.c.ftl")
 devconSystemInitFile.setMarkup(True)
 
+devconInitFile = coreComponent.createFileSymbol("DEVCON_INIT", None)
+devconInitFile.setType("STRING")
+devconInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+devconInitFile.setSourcePath("mips/templates/PIC32MK_DEVCON.c.ftl")
+devconInitFile.setMarkup(True)
