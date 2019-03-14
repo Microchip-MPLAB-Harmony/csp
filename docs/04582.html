@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>SPIx_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04583.html" target="topic">SSC Peripheral Library Help</a> &gt; <a href="04582.html" target="topic">Introduction</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04531.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="04532.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04582.html" target="topic">SPIx_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04583.html" target="topic">Previous</a> | <a href="04583.html" target="topic">Up</a> | <a href="04580.html" target="topic">Next</a></div>
+<a href="04601.html" target="topic">Previous</a> | <a href="04532.html" target="topic">Up</a> | <a href="04615.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SSC 6078 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_CALLBACK Topic Title: SPIx_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+SPIx_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,42 +49,68 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The SSC module implements an I2S (Inter-IC Sound) interface, for connection between an MCU and an audio peripheral such as a codec or Bluetooth module. The SSC hardware also provides for other protocols, which can be configured manually.&nbsp;</p>
+SPI Callback Function Pointer&nbsp;</p>
 <p class="Element10">
-The SSC module provides support to the audio protocol functionality via four standard I/O pins. The four pins that make up the audio protocol interface modes are:</p>
-<ul class="Element630">
-<li class="Element600"><strong>RD:</strong> Serial Data Input for receiving sample digital audio data (ADCDAT)</li>
-<li class="Element600"><strong>TD: </strong>Serial Data Output for transmitting digital audio data (DACDAT)</li>
-<li class="Element600"><strong>TK/RK:</strong> Transmit/Receive Serial Clock, also known as bit clock (BCLK)</li>
-<li class="Element600"><strong>TF/RF: </strong>Transmit/Receive Frame Clock, also known as Left/Right Channel Clock (LRCK)</li>
-</ul><p class="Element10">
-BCLK provides the clock required to drive the data out or into the module, while LRCK provides the synchronization of the frame based on the protocol mode selected.&nbsp;</p>
+This data type defines the required function signature for the SPI callback function. Application must register a pointer to a callback function whose function signature (parameter and return value types) match the types specified by this function pointer in order to receive callback from the PLIB.&nbsp;</p>
 <p class="Element10">
-In Master mode, the module generates both the BCLK on the TK pin and the LRCK on the TF pin. In certain devices, while in Slave mode, the module receives these two clocks from its I2S partner, which is operating in Master mode.&nbsp;</p>
+The parameters and return values are described here and a partial example implementation is provided.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">SPIx_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Value identifying the context of the application that registered the callback function&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-When configured in Master mode, the leading edge of BCLK and the LRCK are driven out within one SCK period of starting the audio protocol. Serial data is shifted in or out with timings determined by the protocol mode set.&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-In Slave mode, the peripheral drives zeros out TD, but does not transmit the contents of the transmit FIFO until it sees the leading edge of the LRCK, after which time it starts receiving data.</p><div class="Element15">
-Master Mode</div>
-<p class="Element10" style="text-align: center;">
-<strong>Master Generating its Own Clock – Output BCLK and LRCK</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="MaterMode.png" border="0" alt="" title=""></p><div class="Element15">
-Slave Mode</div>
-<p class="Element10" style="text-align: center;">
-<strong>Codec Device as Master Derives MCLK from MCU Reference Clock Out</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="SlaveMode.png" border="0" alt="" title=""></p><p class="Element10">
-<strong>Audio Formats</strong>&nbsp;</p>
+The context parameter contains the a handle to the client context, provided at the time the callback function was registered using the <a href="04583.html" target="topic">SPIx_CallbackRegister</a> function. This context handle value is passed back to the client as the &quot;context&quot; parameter. It can be any value (such as a pointer to the client's data) necessary to identify the client context or instance of the client that made the data transfer request.&nbsp;</p>
 <p class="Element10">
-The SSC Module supports two audio formats, I2S and Left Justified, which are selectable via MHC.</p></div>
+The callback function executes in the PLIB's interrupt context. It is recommended of the application to not perform process intensive or blocking operations with in this function.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">SPI1_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
+<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
+{
+    <i><span style="color: #008000">//Transfer was completed without error, do something else now.</span></i>
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04583.html" target="topic">SSC Peripheral Library Help</a> &gt; <a href="04582.html" target="topic">Introduction</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04531.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="04532.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04582.html" target="topic">SPIx_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -92,13 +118,13 @@ The SSC Module supports two audio formats, I2S and Left Justified, which are sel
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04583.html" target="topic">Previous</a> | <a href="04583.html" target="topic">Up</a> | <a href="04580.html" target="topic">Next</a></div>
+<a href="04601.html" target="topic">Previous</a> | <a href="04532.html" target="topic">Up</a> | <a href="04615.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SSC 6078 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_CALLBACK Topic Title: SPIx_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

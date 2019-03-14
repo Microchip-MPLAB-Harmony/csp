@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>SPIx_WriteRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="04599.html" target="topic">SUPC Applications</a> &gt; <a href="04601.html" target="topic">supc_wakeup_rtt</a> &gt; <a href="04610.html" target="topic">Running The Application</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04531.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="04532.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04610.html" target="topic">SPIx_WriteRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04608.html" target="topic">Previous</a> | <a href="04601.html" target="topic">Up</a> | <a href="04602.html" target="topic">Next</a></div>
+<a href="04609.html" target="topic">Previous</a> | <a href="04532.html" target="topic">Up</a> | <a href="04601.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC supc_wakeup_rtt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_WriteRead@void*@size_t@void*@size_t Topic Title: SPIx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+SPIx_WriteRead Function</div>
 </div>
 </div>
 
@@ -48,55 +48,101 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="4" class="Element600">See the following message in the console. The LED is blinked continuously using the SysTick Timer.</li>
-</ol><p class="Element10" style="text-align: center;">
-<img src="supc_wakeup_rtt_output.png" border="0" alt="" title=""></p><p class="Element10">
-The following table provides the LED name. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="84%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="16%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="84%">
-<div class="Element68">
-SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="16%">
-<div class="Element68">
-LED3&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="84%">
-<div class="Element68">
-SAM V71 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="16%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
+This function should be used to write &quot;txSize&quot; number of bytes and read &quot;rxSize&quot; number of bytes on SPI x module. Data pointed by pTransmitData is transmitted and received data is saved in the location pointed by pReceiveData.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SPIx_WriteRead</span></strong>(
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
+    size_t <strong><span style="color: #000000">txSize</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pReceiveData</span></strong>, 
+    size_t <strong><span style="color: #000000">rxSize</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The <a href="04600.html" target="topic">SPIx_Initialize</a> function must have been called.&nbsp;</p>
+<p class="Element10">
+Callback has to be registered using <a href="04583.html" target="topic">SPIx_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+*pTransmitData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the data which has to be transmitted. if it is NULL, that means only data receiving is expected. For 9 to 15bit mode, data should be right aligned in the 16 bit memory location.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+txSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be transmitted. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be transmitted, the transmit size should be 10 bytes.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+*pReceiveData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the location where received data has to be stored. It is user's responsibility to ensure pointed location has sufficient memory to store the read data. if it is NULL, that means only data transmission is expected. For 9 to 15bit mode, received data will be right aligned in the 16 bit memory location.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+rxSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be received. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be received, the receive size should be 10 bytes. if &quot;n&quot; number of bytes has to be received AFTER transmitting &quot;m&quot; number of bytes, then &quot;rxSize&quot; should be set as &quot;m+n&quot;.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">In Blocking mode, API returns True once the transfer is complete. It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.</li>
+</ul><p class="Element10">
 &nbsp;</p>
 
-<ol class="Element630">
-<li value="5" class="Element600">Select the option to enter the required Low power mode. The LED is turned off when the device enters low power mode.</li>
-</ol><p class="Element10">
-The RTT timer runs in low power mode. When the device wakes up on RTT alarm, the LED starts blinking and the console displays the following message </p><p class="Element10" style="text-align: center;">
-<img src="supc_wakeup_rtc_output2.png" border="0" alt="" title=""></p></div>
+<ul class="Element630">
+<li class="Element600">In interrupt mode, if previous buffer request is not completed and a new transfer request comes, then this API will reject the new request and will return &quot;False&quot;. Also, Same as blocking mode, It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Non-blocking interrupt mode configuration implementation of this function. will be used by Harmony driver implementation APIs.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     txBuffer[4];
+uint8_t     rxBuffer[10];
+size_t      txSize = 4;
+size_t      rxSize = 10;
+<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
+
+reqAccepted = SPI1_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="04599.html" target="topic">SUPC Applications</a> &gt; <a href="04601.html" target="topic">supc_wakeup_rtt</a> &gt; <a href="04610.html" target="topic">Running The Application</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04531.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="04532.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04610.html" target="topic">SPIx_WriteRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +150,13 @@ The RTT timer runs in low power mode. When the device wakes up on RTT alarm, the
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04608.html" target="topic">Previous</a> | <a href="04601.html" target="topic">Up</a> | <a href="04602.html" target="topic">Next</a></div>
+<a href="04609.html" target="topic">Previous</a> | <a href="04532.html" target="topic">Up</a> | <a href="04601.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC supc_wakeup_rtt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_WriteRead@void*@size_t@void*@size_t Topic Title: SPIx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_Timer32CompareSet Function</title>
+<title>RTC_PERIODIC_INT_MASK Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="03725.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03726.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="03731.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03963.html" target="topic">RTC_Timer32CompareSet Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03797.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03798.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="03803.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03963.html" target="topic">RTC_PERIODIC_INT_MASK Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03964.html" target="topic">Previous</a> | <a href="03731.html" target="topic">Up</a> | <a href="03970.html" target="topic">Next</a></div>
+<a href="04016.html" target="topic">Previous</a> | <a href="03803.html" target="topic">Up</a> | <a href="03808.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32CompareSet@uint32_t Topic Title: RTC_Timer32CompareSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_PERIODIC_INT_MASK Topic Title: RTC_PERIODIC_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_Timer32CompareSet Function</div>
+RTC_PERIODIC_INT_MASK Enumeration</div>
 </div>
 </div>
 
@@ -49,72 +49,90 @@ RTC_Timer32CompareSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the 32-bit timer compare value. The counter value will be compared against the compare value and a compare match event will occur when the counter matches the compare value. If the library is configured for interrupt mode and if a event handler function has been set through the <a href="03957.html" target="topic">RTC_Timer32CallbackRegister</a>() function, the event handling function will be called. When the match occurs, the counter can optionally be reset if clear on compare is enabled to generate periodic interrupt.</p></div>
+RTC Periodic Interrupt Mask&nbsp;</p>
+<p class="Element10">
+This enumeration defines the possible periodic interrupt mask.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer32CompareSet</span></strong>(
-    uint32_t <strong><span style="color: #000000">compare</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">RTC_PER0_MASK</span></strong>,
+  <strong><span style="color: #000000">RTC_PER1_MASK</span></strong>,
+  <strong><span style="color: #000000">RTC_PER2_MASK</span></strong>,
+  <strong><span style="color: #000000">RTC_PER3_MASK</span></strong>,
+  <strong><span style="color: #000000">RTC_PER4_MASK</span></strong>,
+  <strong><span style="color: #000000">RTC_PER5_MASK</span></strong>,
+  <strong><span style="color: #000000">RTC_PER6_MASK</span></strong>,
+  <strong><span style="color: #000000">RTC_PER7_MASK</span></strong>
+} RTC_PERIODIC_INT_MASK;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="03890.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit Timer Counter mode.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-compare&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Compare value&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_PER0_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Periodic Interrupt at 128 Hz (RTC Clock Frequency/8) - Prescaler Bit 0&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_PER1_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Periodic Interrupt at 64 Hz (RTC Clock Frequency/16) - Prescaler Bit 1&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_PER2_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Periodic Interrupt at 32 Hz (RTC Clock Frequency/32) - Prescaler Bit 2&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_PER3_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Periodic Interrupt at 16 Hz (RTC Clock Frequency/64) - Prescaler Bit 3&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_PER4_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Periodic Interrupt at 8 Hz (RTC Clock Frequency/128) - Prescaler Bit 4&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_PER5_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Periodic Interrupt at 4 Hz (RTC Clock Frequency/256) - Prescaler Bit 5&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_PER6_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Periodic Interrupt at 2 Hz (RTC Clock Frequency/512) - Prescaler Bit 6&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_PER7_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Periodic Interrupt at 1 Hz (RTC Clock Frequency/1024) - Prescaler Bit 7&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is available for devices that have only one compare register in 32-bit mode.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t period = 0x00000FFF;
-    <a href="03890.html" target="topic">RTC_Initialize</a>();
-    RTC_Timer32CompareSet(period);
-    <a href="03966.html" target="topic">RTC_Timer32CounterSet</a>(0);
-    <a href="03971.html" target="topic">RTC_Timer32Start</a>();
-    <strong><span style="color: #000080">while</span></strong>(!<a href="03962.html" target="topic">RTC_Timer32CompareHasMatched</a>());</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="03725.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03726.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="03731.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03963.html" target="topic">RTC_Timer32CompareSet Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03797.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03798.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="03803.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03963.html" target="topic">RTC_PERIODIC_INT_MASK Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -122,13 +140,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03964.html" target="topic">Previous</a> | <a href="03731.html" target="topic">Up</a> | <a href="03970.html" target="topic">Next</a></div>
+<a href="04016.html" target="topic">Previous</a> | <a href="03803.html" target="topic">Up</a> | <a href="03808.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32CompareSet@uint32_t Topic Title: RTC_Timer32CompareSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_PERIODIC_INT_MASK Topic Title: RTC_PERIODIC_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

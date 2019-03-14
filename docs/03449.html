@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>qspi_command_xfer_t Structure</title>
+<title>PWM_CHANNEL_MASK Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="03423.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="03424.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="03449.html" target="topic">qspi_command_xfer_t Structure</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03433.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="03434.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03449.html" target="topic">PWM_CHANNEL_MASK Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03475.html" target="topic">Previous</a> | <a href="03424.html" target="topic">Up</a> | <a href="03480.html" target="topic">Next</a></div>
+<a href="03446.html" target="topic">Previous</a> | <a href="03434.html" target="topic">Up</a> | <a href="03454.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qspi_command_xfer_t Topic Title: qspi_command_xfer_t Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PWM_CHANNEL_MASK Topic Title: PWM_CHANNEL_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-qspi_command_xfer_t Structure</div>
+PWM_CHANNEL_MASK Enumeration</div>
 </div>
 </div>
 
@@ -49,18 +49,18 @@ qspi_command_xfer_t Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-QSPI Command Transfer structure&nbsp;</p>
+PWM channel number mask&nbsp;</p>
 <p class="Element10">
-This data type should be used to send the QSPI instruction code register and instruction frame register information for sending a command to QSPI slave.</p></div>
+This enumeration identifies PWM channel mask. This can be ORed together to start/stop channels together.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  uint8_t <strong><span style="color: #000000">instruction</span></strong>;
-  <a href="03456.html" target="topic">QSPI_LANE_WIDTH</a> <strong><span style="color: #000000">width</span></strong>;
-  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">addr_en</span></strong>;
-  <a href="03446.html" target="topic">QSPI_ADDRESS_LENGTH</a> <strong><span style="color: #000000">addr_len</span></strong>;
-} qspi_command_xfer_t;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">PWM_CHANNEL_0_MASK</span></strong>,
+  <strong><span style="color: #000000">PWM_CHANNEL_1_MASK</span></strong>,
+  <strong><span style="color: #000000">PWM_CHANNEL_2_MASK</span></strong>,
+  <strong><span style="color: #000000">PWM_CHANNEL_3_MASK</span></strong>
+} PWM_CHANNEL_MASK;</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
@@ -73,7 +73,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="03423.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="03424.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="03449.html" target="topic">qspi_command_xfer_t Structure</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03433.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="03434.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03449.html" target="topic">PWM_CHANNEL_MASK Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -81,13 +81,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03475.html" target="topic">Previous</a> | <a href="03424.html" target="topic">Up</a> | <a href="03480.html" target="topic">Next</a></div>
+<a href="03446.html" target="topic">Previous</a> | <a href="03434.html" target="topic">Up</a> | <a href="03454.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qspi_command_xfer_t Topic Title: qspi_command_xfer_t Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PWM_CHANNEL_MASK Topic Title: PWM_CHANNEL_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

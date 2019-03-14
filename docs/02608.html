@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>OCMPx_Enable Function</title>
+<title>NVMCTRL_DisableMainFlashInterruptSource Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="02585.html" target="topic">OCMP Peripheral Library Help</a> &gt; <a href="02586.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02608.html" target="topic">OCMPx_Enable Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02570.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="02571.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02608.html" target="topic">NVMCTRL_DisableMainFlashInterruptSource Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02607.html" target="topic">Previous</a> | <a href="02586.html" target="topic">Up</a> | <a href="02609.html" target="topic">Next</a></div>
+<a href="02606.html" target="topic">Previous</a> | <a href="02571.html" target="topic">Up</a> | <a href="02609.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ocmp_00749::OCMPx_Enable Topic Title: OCMPx_Enable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_DisableMainFlashInterruptSource@NVMCTRL_INTERRUPT0_SOURCE Topic Title: NVMCTRL_DisableMainFlashInterruptSource Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-OCMPx_Enable Function</div>
+NVMCTRL_DisableMainFlashInterruptSource Function</div>
 </div>
 </div>
 
@@ -49,17 +49,39 @@ OCMPx_Enable Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function enables the OCMPx peripheral. This function starts the waveform generation based on the mode.</p></div>
+There are multiple interrupt sources supported by the NVMCTRL peripheral. It supports two interrupt vectors, one for interrupts from the SmartEEPROM and another for all other interrupts of the NVMCTRL. This function disables the given interrupt for the first vector which is used by all interrupts except the ones from SmartEEPROM.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">OCMPx_Enable</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">NVMCTRL_DisableMainFlashInterruptSource</span></strong>(
+    <a href="02619.html" target="topic">NVMCTRL_INTERRUPT0_SOURCE</a> <strong><span style="color: #000000">int_source</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="02610.html" target="topic">OCMPx_Initialize</a>() function must have been called first.</p></div>
+Interrupt option in MHC should have been enabled.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+int_source&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Refer to enum <a href="02619.html" target="topic">NVMCTRL_INTERRUPT0_SOURCE</a> for possible values.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -73,14 +95,15 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Selected Timer source module must be enabled for functioning of OCMP peripheral.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">OCMP1_Initialize();
-OCMP1_Enable();</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">
+NVMCTRL_DisableMainFlashInterruptSource(NVMCTRL_INT_LOCKE);
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -88,7 +111,7 @@ OCMP1_Enable();</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="02585.html" target="topic">OCMP Peripheral Library Help</a> &gt; <a href="02586.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02608.html" target="topic">OCMPx_Enable Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02570.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="02571.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02608.html" target="topic">NVMCTRL_DisableMainFlashInterruptSource Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -96,13 +119,13 @@ OCMP1_Enable();</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02607.html" target="topic">Previous</a> | <a href="02586.html" target="topic">Up</a> | <a href="02609.html" target="topic">Next</a></div>
+<a href="02606.html" target="topic">Previous</a> | <a href="02571.html" target="topic">Up</a> | <a href="02609.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ocmp_00749::OCMPx_Enable Topic Title: OCMPx_Enable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_DisableMainFlashInterruptSource@NVMCTRL_INTERRUPT0_SOURCE Topic Title: NVMCTRL_DisableMainFlashInterruptSource Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
