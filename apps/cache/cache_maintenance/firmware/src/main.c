@@ -116,7 +116,7 @@ int main ( void )
     /* Clean cache lines having source buffer before submitting a transfer
      * request to XDMAC to load the latest data in the cache to the actual
      * memory */
-    SCB_CleanDCache_by_Addr((uint32_t *)writeBuffer, sizeof(writeBuffer));
+    DCACHE_CLEAN_BY_ADDR((uint32_t *)writeBuffer, sizeof(writeBuffer));
     XDMAC_ChannelTransfer(XDMAC_CHANNEL_0, writeBuffer, (const void *)USART1_TRANSMIT_ADDRESS, sizeof(writeBuffer));
 
     while ( true )
@@ -131,17 +131,13 @@ int main ( void )
         else if(readStatus == true)
         {
             /* Echo back received buffer and Toggle LED */
-            readStatus = false;
-
-            /* Invalidate cache lines having received buffer before using it
-             * to load the latest data in the actual memory to the cache */
-            SCB_InvalidateDCache_by_Addr((uint32_t *)readBuffer, sizeof(readBuffer));
+            readStatus = false;            
             
             memcpy(echoBuffer, readBuffer, READ_SIZE);
             echoBuffer[READ_SIZE] = '\r';
             echoBuffer[(READ_SIZE + 1)] = '\n';
 
-            SCB_CleanDCache_by_Addr((uint32_t *)echoBuffer, sizeof(echoBuffer));
+            DCACHE_CLEAN_BY_ADDR((uint32_t *)echoBuffer, sizeof(echoBuffer));
             XDMAC_ChannelTransfer(XDMAC_CHANNEL_0, echoBuffer, (const void *)USART1_TRANSMIT_ADDRESS, (READ_SIZE+2));
             LED_Toggle();
         }
@@ -149,6 +145,10 @@ int main ( void )
         {
             /* Submit buffer to read user data */
             writeStatus = false;
+            
+            /* Invalidate the cache lines before submitting the request */
+            DCACHE_INVALIDATE_BY_ADDR((uint32_t *)readBuffer, sizeof(readBuffer));
+            
             XDMAC_ChannelTransfer(XDMAC_CHANNEL_1, (const void *)USART1_RECEIVE_ADDRESS, readBuffer, READ_SIZE);
         }
         else
