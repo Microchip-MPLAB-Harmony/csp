@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SUPC_BODVDD_CALLBACK Type</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04619.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="04620.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="04665.html" target="topic">SUPC_BODVDD_CALLBACK Type</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04666.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="04665.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04666.html" target="topic">Previous</a> | <a href="04620.html" target="topic">Up</a> | <a href="04627.html" target="topic">Next</a></div>
+<a href="04666.html" target="topic">Previous</a> | <a href="04666.html" target="topic">Up</a> | <a href="04662.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_u2117::SUPC_BODVDD_CALLBACK Topic Title: SUPC_BODVDD_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC 6452 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SUPC_BODVDD_CALLBACK Type</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,72 +49,34 @@ SUPC_BODVDD_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Callback function structure&nbsp;</p>
+The Supply Controller controls the Embedded Voltage Regulators used by the Core Power Supply and Backup Low Power Mode.&nbsp;</p>
 <p class="Element10">
-This data type defines the function signature for the SUPC peripheral callback function. The SUPC peripheral will call back the client's function with this signature when a Brown Out event has been detected. This function will be called only if the BODVDD action in the NVM user row is set to interrupt.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">SUPC_BODVDD_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+In Backup Low Power Mode the current consumption is reduced to a few microamps for Backup power retention. Exit from this mode can be achieved via multiple wake-up sources.&nbsp;</p>
 <p class="Element10">
-<a href="04667.html" target="topic">SUPC_Initialize</a>() must have been called for the given supc peripheral instance and <a href="04666.html" target="topic">SUPC_BODVDDCallbackRegister</a>() must have been called to set the function to be called.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+The Supply Controller also generates the Slow Clock (SCLK) by selecting either the 22-42kHz Low Power RC oscillator or the 32kHz Low Power Crystal oscillator.&nbsp;</p>
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  <strong><span style="color: #000080">void</span></strong> APP_BrownOutEventHandler( uintptr_t context )
-  {
-       <i><span style="color: #008000">// do something</span></i>
-  }
-
-  <a href="04666.html" target="topic">SUPC_BODVDDCallbackRegister</a>(APP_BrownOutEventHandler, 0);</pre></div></div>
-</div>
+The purpose of Backup Low Power Mode is to achieve the lowest power consumption possible in a system that wakes up periodically in order to perform tasks that do not require a fast startup time.&nbsp;</p>
+<p class="Element10">
+The supply controller, zero-power power-on reset, RTT, RTC, backup registers, and 32kHz oscillator (RC or crystal oscillator selected by software) are all running whilst the regulator and core supply are off.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+Following wakeup sources can wakeup the device from backup mode.</p>
+<ul class="Element630">
+<li class="Element600">14 Wakeup Inputs with Programmable De-bouncing</li>
+<li class="Element600">Real-Time Clock Alarm</li>
+<li class="Element600">Real-Time Timer Alarm</li>
+<li class="Element600">Supply Monitor Detection on VDDIO, with Programmable Scan Period and Voltage Threshold</li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04619.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="04620.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="04665.html" target="topic">SUPC_BODVDD_CALLBACK Type</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04666.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="04665.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -122,13 +84,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04666.html" target="topic">Previous</a> | <a href="04620.html" target="topic">Up</a> | <a href="04627.html" target="topic">Next</a></div>
+<a href="04666.html" target="topic">Previous</a> | <a href="04666.html" target="topic">Up</a> | <a href="04662.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_u2117::SUPC_BODVDD_CALLBACK Topic Title: SUPC_BODVDD_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC 6452 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

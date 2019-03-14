@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04691.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="04692.html" target="topic">Library Interface</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04691.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="04692.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04700.html" target="topic">Previous</a> | <a href="04691.html" target="topic">Up</a> | <a href="04709.html" target="topic">Next</a></div>
+<a href="04694.html" target="topic">Previous</a> | <a href="04691.html" target="topic">Up</a> | <a href="04739.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2117 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Library Interface</div>
 </div>
@@ -46,6 +46,10 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+</div>
+</div>
 <a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
 a) Initialization Function</div>
 <div class="Element11">
@@ -65,9 +69,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="04709.html" target="topic">SYSTICK_TimerInitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="04739.html" target="topic">SUPC_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Initializes SysTick.&nbsp;</div></td></tr></table></div></div>
+Initializes given instance of SUPC peripheral.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
@@ -89,110 +93,13 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="04706.html" target="topic">SYSTICK_TimerCallbackSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="04738.html" target="topic">SUPC_BODVDDCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sets the pointer to the function (and it's context) to be called when the given systick reaches 0.&nbsp;</div></td></tr></table></div></div>
+Registers the function to be called when a Brown Out Event has occurred.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
-c) Transaction Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04707.html" target="topic">SYSTICK_TimerCounterGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the SysTick current Value&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04708.html" target="topic">SYSTICK_TimerFrequencyGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the SysTick frequency Value&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04710.html" target="topic">SYSTICK_TimerPeriodGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the SysTick Load Value&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04714.html" target="topic">SYSTICK_TimerStart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Starts System Timer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04715.html" target="topic">SYSTICK_TimerStop</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Stops System Timer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04712.html" target="topic">SYSTICK_TimerPeriodSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the SysTick Load Value&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04713.html" target="topic">SYSTICK_TimerRestart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Restarts SysTick.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04702.html" target="topic">SYSTICK_DelayMs</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Blocking function to generate delay in milliseconds&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
-d) Status Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04711.html" target="topic">SYSTICK_TimerPeriodHasExpired</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current status of the systick&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-e) Data Types and Constants</div>
+<a name="6329204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+c) Data Types and Constants</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
@@ -210,16 +117,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="04701.html" target="topic">SYSTICK_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="04737.html" target="topic">SUPC_BODVDD_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the data type and function signature for the SysTick callback function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04703.html" target="topic">SYSTICK_OBJECT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type for the SYSTICK OBJECT.&nbsp;</div></td></tr></table></div></div>
+Defines the data type and function signature for the SUPC peripheral callback function.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -227,7 +127,7 @@ Defines the data type for the SYSTICK OBJECT.&nbsp;</div></td></tr></table></div
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04691.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="04692.html" target="topic">Library Interface</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04691.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="04692.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -235,13 +135,13 @@ Defines the data type for the SYSTICK OBJECT.&nbsp;</div></td></tr></table></div
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04700.html" target="topic">Previous</a> | <a href="04691.html" target="topic">Up</a> | <a href="04709.html" target="topic">Next</a></div>
+<a href="04694.html" target="topic">Previous</a> | <a href="04691.html" target="topic">Up</a> | <a href="04739.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2117 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

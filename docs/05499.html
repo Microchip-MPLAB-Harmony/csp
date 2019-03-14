@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>UARTx_WriteCallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="05496.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="05499.html" target="topic">Using the Library</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05381.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="05382.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05499.html" target="topic">UARTx_WriteCallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05494.html" target="topic">Previous</a> | <a href="05496.html" target="topic">Up</a> | <a href="05497.html" target="topic">Next</a></div>
+<a href="05491.html" target="topic">Previous</a> | <a href="05382.html" target="topic">Up</a> | <a href="05489.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT 02674 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UARTx_WriteCallbackRegister@UART_CALLBACK@uintptr_t Topic Title: UARTx_WriteCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+UARTx_WriteCallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,24 +49,90 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Watchdog Timer (WDT) runs independent of the rest of the system, causing system resets whenever it times out. However, the application software should ensure that the timeout never occurs by resetting the WDT periodically as long as the software is in a known healthy state. If the system hangs or program execution is corrupted, the WDT will not receive its periodic reset, and will eventually time out and cause a system reset.&nbsp;</p>
+This function sets the pointer to a client function to be called &quot;back&quot; when the given UART's write events occur. It also passes a context value (usually a pointer to a context structure) that is passed into the function when it is called.&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
+This function is available only in interrupt mode of operation.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">UARTx_WriteCallbackRegister</span></strong>(
+    <a href="05472.html" target="topic">UART_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-In many systems, there is an obvious upper boundary to the amount of time each iteration of the main application loop can be expected to run, before a malfunction can be assumed (either due to a deadlock waiting on hardware or software, or due to other means). When the Watchdog is configured with a timeout period equal to this upper boundary, a malfunction in the system will force a full system reset to allow for a graceful recovery.&nbsp;</p>
+<a href="05488.html" target="topic">UARTx_Initialize</a> must have been called for the associated UART instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A pointer to a function with a calling signature defined by the <a href="05472.html" target="topic">UART_CALLBACK</a> data type.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">True - Callback registration was successful</li>
+<li class="Element600">False - Callback registration failed</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Window Mode</strong>&nbsp;</p>
-<p class="Element10">
-In many system, there is also lower boundary to the amount of time each iteration of the main application loop can be expected to run. To guard against a system failure resetting the Watchdog in a tight loop (or a failure in the system application causing the main loop to run faster than expected) a &quot;Window&quot; mode can be enabled to disallow resetting of the Watchdog counter before a certain period of time. If the Watchdog is not reset after the window opens but not before the Watchdog expires, the system will reset.</p></div>
+The context parameter is ignored if the pointer passed is NULL. To disable the callback function, pass a NULL for the callback parameter. See the <a href="05472.html" target="topic">UART_CALLBACK</a> type definition for additional information.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> MyUartCallback(uintptr_t context)
+{
+    <strong><span style="color: #000080">if</span></strong>(UART1_ErrorGet() != UART_ERROR_NONE)
+    {
+        <i><span style="color: #008000">//Handle error case</span></i>
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">//Transfer completed successfully</span></i>
+    }
+}
+
+UART1_WriteCallbackRegister(MyUartCallback, (uintptr_t)NULL);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="05496.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="05499.html" target="topic">Using the Library</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05381.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="05382.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05499.html" target="topic">UARTx_WriteCallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -74,13 +140,13 @@ In many system, there is also lower boundary to the amount of time each iteratio
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05494.html" target="topic">Previous</a> | <a href="05496.html" target="topic">Up</a> | <a href="05497.html" target="topic">Next</a></div>
+<a href="05491.html" target="topic">Previous</a> | <a href="05382.html" target="topic">Up</a> | <a href="05489.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT 02674 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UARTx_WriteCallbackRegister@UART_CALLBACK@uintptr_t Topic Title: UARTx_WriteCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

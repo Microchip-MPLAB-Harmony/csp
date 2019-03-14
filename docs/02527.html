@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NVMCTRL_RWWEEPROM_PageWrite Function</title>
+<title>NVM_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="02489.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="02490.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02527.html" target="topic">NVMCTRL_RWWEEPROM_PageWrite Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02527.html" target="topic">NVM_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02521.html" target="topic">Previous</a> | <a href="02490.html" target="topic">Up</a> | <a href="02520.html" target="topic">Next</a></div>
+<a href="02529.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02560.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2207::NVMCTRL_RWWEEPROM_PageWrite@uint32_t*@uint32_t Topic Title: NVMCTRL_RWWEEPROM_PageWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02819::NVM_CALLBACK Topic Title: NVM_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NVMCTRL_RWWEEPROM_PageWrite Function</div>
+NVM_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,27 +49,13 @@ NVMCTRL_RWWEEPROM_PageWrite Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will write one page of data to the RWWEEPROM address specified by the address parameter. The size of the input buffer should be one NVM page. The address should be aligned on a page boundary. Unlike the <a href="02521.html" target="topic">NVMCTRL_PageWrite</a> function, calling this function will not cause the CPU execution to stall. If the interrupt operation was enabled and if a callback was registered, then the callback function will be called. The <a href="02520.html" target="topic">NVMCTRL_IsBusy</a>() function can be used to poll for completion of the operation. The application should ensure that there are no other operations in progress before calling this function. This can be checked by calling the <a href="02520.html" target="topic">NVMCTRL_IsBusy</a>() function.&nbsp;</p>
+Callback Function Pointer&nbsp;</p>
 <p class="Element10">
-This function is blocking if the library was generated (in MHC) with the interrupt option disabled. If blocking, the function will exit only after write operation has completed. This function is not blocking if the library was generated with the interrupt option enabled. In this mode, the function initiates the operation and then exits. The application can either register a callback function or call the <a href="02520.html" target="topic">NVMCTRL_IsBusy</a>() function periodically to check for completion of the operation.&nbsp;</p>
-<p class="Element10">
-Once the operation is complete, the <a href="02514.html" target="topic">NVMCTRL_ErrorGet</a>() function can be called to check operation success.&nbsp;</p>
-<p class="Element10">
-This API is generated if the RWWEEPROM API option (in MHC) is selected.</p></div>
+This data type defines the function signature for the NVM peripheral callback function. The NVM peripheral library will call back the client's function with this signature when an on-going erase or write operation has completed and the NVM is ready to accept a new operation request. A function of this should be registered by calling the <a href="02528.html" target="topic">NVM_CallbackRegister</a> function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NVMCTRL_RWWEEPROM_PageWrite</span></strong>(
-    uint32_t* <strong><span style="color: #000000">data</span></strong>, 
-    uint32_t <strong><span style="color: #000000">address</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The <a href="02519.html" target="topic">NVMCTRL_Initialize</a>() function should have been called once. Also validate if NVM controller is ready to accept new request by calling <a href="02520.html" target="topic">NVMCTRL_IsBusy</a>(). The row containing the page should be erased before any page in that row can be written. The size of the RWWEEPROM memory should have been configured in the NVM User Configuration.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">NVM_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
 <div class="Element11">
@@ -85,14 +71,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-RWW EEPROM address to be modified.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to data buffer.&nbsp;</div></td></tr></table></div></div>
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -100,41 +81,47 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Always return true.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-RWWEEPROM API generation option will appear in the MHC if the device supports it.&nbsp;</p>
-<p class="Element10">
-This function will clear any existing module errors before initiating the operation.</p></div>
+The callback feature is only available when the library was generated with interrupt option (in MHC) enabled.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element13"><div class="Element12"><pre class="Element12">
-<i><span style="color: #008000">// This code snippet shows how the NVMCTRL_RWWEEPROM_PageWrite function is</span></i>
-<i><span style="color: #008000">// called and how the NVMCTRL_IsBusy function is used to poll for</span></i>
-<i><span style="color: #008000">// completion. This assumes the library was generated for interrupt (and</span></i>
-<i><span style="color: #008000">// hence non-blocking) operation.</span></i>
-
-<a href="02519.html" target="topic">NVMCTRL_Initialize</a>();
-
-<i><span style="color: #008000">// Erase the row. This will erase all the pages in the row.</span></i>
-<a href="02528.html" target="topic">NVMCTRL_RWWEEPROM_RowErase</a>(RWWEEPROM_ROW_ADDRESS);
-<strong><span style="color: #000080">while</span></strong>(<a href="02520.html" target="topic">NVMCTRL_IsBusy</a>());
-
-<i><span style="color: #008000">// Now write the page.</span></i>
-NVMCTRL_RWWEEPROM_PageWrite((uint32_t *)buffer, RWWEEPROM_PAGE_ADDRESS);
-<strong><span style="color: #000080">while</span></strong>(<a href="02520.html" target="topic">NVMCTRL_IsBusy</a>());
-
-<strong><span style="color: #000080">if</span></strong>(<a href="02514.html" target="topic">NVMCTRL_ErrorGet</a>() == NVMCTRL_ERROR_NONE)
+<strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong>
 {
-    <i><span style="color: #008000">// Operation was successful.</span></i>
-}</pre></div></div>
+    <strong><span style="color: #000080">bool</span></strong> operationComplete;
+
+} APP_DATA;
+
+<i><span style="color: #008000">// Callback is called when an operation completes.</span></i>
+<strong><span style="color: #000080">void</span></strong> APP_NVMCallback(uintptr_t context)
+{
+    APP_DATA * appdata = (APP_DATA *)context;
+    appData-&gt;operationComplete = <strong><span style="color: #000080">true</span></strong>;
+}
+
+<i><span style="color: #008000">// Function calls in main thread.</span></i>
+APP_DATA  myAppData;
+myAppData.operationComplete = <strong><span style="color: #000080">false</span></strong>;
+NVM_Initialize();
+
+<i><span style="color: #008000">// Register the callback</span></i>
+<a href="02528.html" target="topic">NVM_CallbackRegister</a>(APP_NVMCallback, &amp;myAppData);
+
+<i><span style="color: #008000">// Perform some operation.</span></i>
+<a href="02535.html" target="topic">NVM_PageErase</a>(0x9D100000);
+
+<i><span style="color: #008000">// Now wait for the operation to complete.</span></i>
+<strong><span style="color: #000080">while</span></strong>(!myAppData.operationComplete);
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -142,7 +129,7 @@ NVMCTRL_RWWEEPROM_PageWrite((uint32_t *)buffer, RWWEEPROM_PAGE_ADDRESS);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="02489.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="02490.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02527.html" target="topic">NVMCTRL_RWWEEPROM_PageWrite Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02527.html" target="topic">NVM_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -150,13 +137,13 @@ NVMCTRL_RWWEEPROM_PageWrite((uint32_t *)buffer, RWWEEPROM_PAGE_ADDRESS);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02521.html" target="topic">Previous</a> | <a href="02490.html" target="topic">Up</a> | <a href="02520.html" target="topic">Next</a></div>
+<a href="02529.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02560.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2207::NVMCTRL_RWWEEPROM_PageWrite@uint32_t*@uint32_t Topic Title: NVMCTRL_RWWEEPROM_PageWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02819::NVM_CALLBACK Topic Title: NVM_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_USART_SerialSetup Function</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04297.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04308.html" target="topic">USART</a> &gt; <a href="04312.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04379.html" target="topic">SERCOMx_USART_SerialSetup Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04370.html" target="topic">SPI</a> &gt; <a href="04379.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04372.html" target="topic">Previous</a> | <a href="04312.html" target="topic">Up</a> | <a href="04383.html" target="topic">Next</a></div>
+<a href="04371.html" target="topic">Previous</a> | <a href="04370.html" target="topic">Up</a> | <a href="04375.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_SerialSetup@USARTx_SERIAL_SETUP *@uint32_t Topic Title: SERCOMx_USART_SerialSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 SPI Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_USART_SerialSetup Function</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,82 +49,81 @@ SERCOMx_USART_SerialSetup Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets all the serial configurations of the peripheral. It provides run-time interface to configure the baud, parity, stop bits and data character size parameters of the serial connection.&nbsp;</p>
-<p class="Element10">
-Calling this function when a serial communication is in progress can disrupt the communication. The caller should be ensure that there is no serial communication in progress.&nbsp;</p>
-<p class="Element10">
-In case of success, the function will update all parameters specified in the serialSetup parameter, even if some parameter may have not changed since a previous call to this function. In case of failure, all parameter stay unchanged.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_USART_SerialSetup</span></strong>(
-    <a href="04403.html" target="topic">USARTx_SERIAL_SETUP</a> * <strong><span style="color: #000000">serialSetup</span></strong>, 
-    uint32_t <strong><span style="color: #000000">clkFrequency</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="04372.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-clkFrequency&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Input clock frequency to the Baud Rate Generator.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-serialSetup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer with serial configuration details.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-
+The SERCOM SPI peripheral library supports following SPI transfers:</p>
 <ul class="Element630">
-<li class="Element600">true - if serial configuration was successful.</li>
-<li class="Element600">false - if the specified serial configuration could not be supported. This, for example, could happen if the requested baud is not supported.</li>
-</ul></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+<li class="Element600"><strong>Master Write:</strong> The master writes a block of data to the slave</li>
+<li class="Element600"><strong>Master Read: </strong>The master reads a block of data from the slave</li>
+<li class="Element600"><strong>Master Write/Read:</strong> The master writes and then reads back a block of data from slave.</li>
+</ul><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    USART_SERIAL_SETUP setup;
-    setup.baudRate = 1000000;
-    setup.dataWidth = USART_DATA_8_BIT;
-    setup.parity = USART_PARITY_EVEN;
-    setup.stopBits = USART_STOP_2_BIT;
+The buffer model can process a block of data in a blocking and non-blocking manner.</p>
+<ul class="Element630">
+<li class="Element600">With blocking, the read/write APIs will block until all of the data is transferred. The CPU polls the peripheral register continuously to manage the transfer.</li>
+<li class="Element600">With non-blocking, the read/write APIs will return immediately. The peripheral interrupt is used to manage the transfer. The user application can either use polling or callback method to indicate the transfer status.
+<ul class="Element631">
+<li class="Element601">With polling, the application will need to continuously poll to check if the transfer is completed.</li>
+<li class="Element601">With callback, the registered callback function will be called once the transfer is completed. This means the application do not have to poll continuously.</li>
+</ul></li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Blocking Transfer</strong>&nbsp;</p>
+<p class="Element10">
+The below example shows the blocking transfer. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> TX_NUM_BYTES     4
+<strong><span style="color: #000080">#define</span></strong> RX_NUM_BYTES     10
 
-    <i><span style="color: #008000">// Assuming 20 MHz as peripheral Master clock frequency</span></i>
-    <strong><span style="color: #000080">if</span></strong> (SERCOM0_USART_SerialSetup (&amp;setup, 20000000) == <strong><span style="color: #000080">false</span></strong>)
-    {
-        <i><span style="color: #008000">// this means setup could not be done, debug the reason.</span></i>
-    }</pre></div></div>
+uint8_t txBuffer[TX_NUM_BYTES];
+uint8_t rxBuffer[RX_NUM_BYTES];
+
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+    SERCOM0_SPI_WriteRead(&amp;txBuffer, TX_NUM_BYTES, &amp;rxBuffer, RX_NUM_BYTES);
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Non-blocking Transfer with polling</strong>&nbsp;</p>
+<p class="Element10">
+The example code demonstrates polling method. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> TX_NUM_BYTES     4
+<strong><span style="color: #000080">#define</span></strong> RX_NUM_BYTES     10
+
+uint8_t txBuffer[TX_NUM_BYTES];
+uint8_t rxBuffer[RX_NUM_BYTES];
+
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+    <i><span style="color: #008000">/* Submit Write-Read Request */</span></i>
+    SERCOM0_SPI_WriteRead(&amp;txBuffer, TX_NUM_BYTES, &amp;rxBuffer, RX_NUM_BYTES);
+
+    <i><span style="color: #008000">/* Poll and wait for the transfer to complete */</span></i>
+    <strong><span style="color: #000080">while</span></strong>(SERCOM0_SPI_IsBusy());
+
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Non-blocking Transfer with callback</strong>&nbsp;</p>
+<p class="Element10">
+The example code demonstrates callback method. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> TX_NUM_BYTES     4
+<strong><span style="color: #000080">#define</span></strong> RX_NUM_BYTES     10
+
+uint8_t txBuffer[TX_NUM_BYTES];
+uint8_t rxBuffer[RX_NUM_BYTES];
+
+<strong><span style="color: #000080">void</span></strong> SERCOM0_SPI_Callback(uintptr_t context)
+{
+    <i><span style="color: #008000">// Transfer is completed successfully</span></i>
+}
+
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+    <i><span style="color: #008000">/* Register Callback function */</span></i>
+    SERCOM0_SPI_CallbackRegister(SERCOM0_SPI_Callback, (uintptr_t)NULL );
+
+    <i><span style="color: #008000">/* Submit Write Request */</span></i>
+    SERCOM0_SPI_WriteRead(&amp;txBuffer, TX_NUM_BYTES, &amp;rxBuffer, RX_NUM_BYTES);
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -132,7 +131,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04297.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04308.html" target="topic">USART</a> &gt; <a href="04312.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04379.html" target="topic">SERCOMx_USART_SerialSetup Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04370.html" target="topic">SPI</a> &gt; <a href="04379.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,13 +139,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04372.html" target="topic">Previous</a> | <a href="04312.html" target="topic">Up</a> | <a href="04383.html" target="topic">Next</a></div>
+<a href="04371.html" target="topic">Previous</a> | <a href="04370.html" target="topic">Up</a> | <a href="04375.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_SerialSetup@USARTx_SERIAL_SETUP *@uint32_t Topic Title: SERCOMx_USART_SerialSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 SPI Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

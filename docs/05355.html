@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UARTx_ReceiverIsReady Function</title>
+<title>TWIHSx_Write Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="05289.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="05290.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05355.html" target="topic">UARTx_ReceiverIsReady Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05334.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="05335.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05355.html" target="topic">TWIHSx_Write Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05362.html" target="topic">Previous</a> | <a href="05290.html" target="topic">Up</a> | <a href="05357.html" target="topic">Next</a></div>
+<a href="05354.html" target="topic">Previous</a> | <a href="05335.html" target="topic">Up</a> | <a href="05356.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UARTx_ReceiverIsReady Topic Title: UARTx_ReceiverIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHSx_Write@uint16_t@uint8_t *@size_t Topic Title: TWIHSx_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UARTx_ReceiverIsReady Function</div>
+TWIHSx_Write Function</div>
 </div>
 </div>
 
@@ -49,21 +49,51 @@ UARTx_ReceiverIsReady Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the hardware status associated with the Receive hardware FIFO of the given UART peripheral instance.&nbsp;</p>
-<p class="Element10">
-When Receiver is ready, user can read the available data.&nbsp;</p>
-<p class="Element10">
-This function is available only in non-interrupt mode of operation and it should be used to check receiver readiness before calling UART1_ReadByte function.</p></div>
+This function writes the data from pdata buffer of size in bytes equal to length onto the slave with given address. Master will generate Stop condition after completion of the write.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">UARTx_ReceiverIsReady</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TWIHSx_Write</span></strong>(
+    uint16_t <strong><span style="color: #000000">address</span></strong>, 
+    uint8_t * <strong><span style="color: #000000">pdata</span></strong>, 
+    size_t <strong><span style="color: #000000">length</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05349.html" target="topic">UARTx_Initialize</a> must have been called for the associated UART instance.</p></div>
+<a href="05352.html" target="topic">TWIHSx_Initialize</a> must have been called for the associated TWIHS instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+7-bit / 10-bit slave address.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pdata&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to source data buffer&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+length of data buffer in number of bytes.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -71,8 +101,8 @@ Returns</div>
 <div class="Element10">
 
 <ul class="Element630">
-<li class="Element600">true - Receive hardware FIFO has at least one data available to read.</li>
-<li class="Element600">false - Receive hardware FIFO is empty.</li>
+<li class="Element600">True - Write request was submitted successfully.</li>
+<li class="Element600">False - Failed while submitting the write request.</li>
 </ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -86,15 +116,11 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> rxData;
-<strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == UART1_ReceiverIsReady())
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
+
+<strong><span style="color: #000080">if</span></strong>(!TWIHS1_Write( SLAVE_ADDR, &amp;myData[0], NUM_BYTES ))
 {
-    <i><span style="color: #008000">// At least one data is available in Receive FIFO, hence can read a byte</span></i>
-    rxData = UART1_ReadByte();
-}
-<strong><span style="color: #000080">else</span></strong>
-{
-    <i><span style="color: #008000">//Receiver is empty</span></i>
+    <i><span style="color: #008000">// error handling</span></i>
 }</pre></div></div>
 </div>
 </div>
@@ -103,7 +129,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="05289.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="05290.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05355.html" target="topic">UARTx_ReceiverIsReady Function</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05334.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="05335.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05355.html" target="topic">TWIHSx_Write Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -111,13 +137,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05362.html" target="topic">Previous</a> | <a href="05290.html" target="topic">Up</a> | <a href="05357.html" target="topic">Next</a></div>
+<a href="05354.html" target="topic">Previous</a> | <a href="05335.html" target="topic">Up</a> | <a href="05356.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UARTx_ReceiverIsReady Topic Title: UARTx_ReceiverIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHSx_Write@uint16_t@uint8_t *@size_t Topic Title: TWIHSx_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

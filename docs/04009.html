@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>RTC_Timer16InterruptEnable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04005.html" target="topic">RTT Peripheral Library Help</a> &gt; <a href="04009.html" target="topic">Using the Library</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03797.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03808.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="03814.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04009.html" target="topic">RTC_Timer16InterruptEnable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04001.html" target="topic">Previous</a> | <a href="04005.html" target="topic">Up</a> | <a href="04006.html" target="topic">Next</a></div>
+<a href="04010.html" target="topic">Previous</a> | <a href="03814.html" target="topic">Up</a> | <a href="04008.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTT 6081 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16InterruptEnable@RTC_TIMER16_INT_MASK Topic Title: RTC_Timer16InterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+RTC_Timer16InterruptEnable Function</div>
 </div>
 </div>
 
@@ -49,74 +49,60 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The RTT peripheral generates a periodic interrupt and/or triggers an alarm on a programmed value.</p>
-<ul class="Element630">
-<li class="Element600">Periodic interrupt is generated when the prescaler roll-over generates the clock to increment real-time timer counter</li>
-<li class="Element600">Alarm interrupt is generated when the time value matches the programmed alarm value</li>
-</ul><p class="Element10">
-The RTT continues to run in the device's low-power sleep modes, and it can be used as a source to wake up the system using the alarm function.&nbsp;</p>
+This function allows the application to enable period match, compare match and periodic event interrupt</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer16InterruptEnable</span></strong>(
+    <a href="03980.html" target="topic">RTC_TIMER16_INT_MASK</a> <strong><span style="color: #000000">interrupt</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+<a href="03962.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The Interrupt option in MHC should have been enabled. The RTC peripheral should have been configured for 16-bit timer counter operation. A valid event handling callback function should have been registered by calling the <a href="03995.html" target="topic">RTC_Timer16CallbackRegister</a>() function.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+InterruptMask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Specifies interrupt source to be enabled&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>Periodic Interrupt</strong>&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-This example below demonstrates how to use RTT for periodic interrupt generation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> Timeout_Handler (RTT_INTERRUPT_TYPE type, uintptr_t context)
-{
-    <strong><span style="color: #000080">if</span></strong>(type == RTT_PERIODIC)
-    {
-        LED_Toggle();
-    }
-}
-
-<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
-{
-
-    <i><span style="color: #008000">/* Register Callback */</span></i>
-    RTT0_CallbackRegister(Timeout_Handler, (uintptr_t) NULL);
-
-    <i><span style="color: #008000">/* Enable RTT */</span></i>
-    RTT0_Enable();
-
-
-    <strong><span style="color: #000080">while</span></strong> ( <strong><span style="color: #000080">true</span></strong> )
-    {
-
-    }
-
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The below example demonstrates how to set alarm and watch it being triggered when the timer reaches the corresponding value.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> Timeout_Handler (RTT_INTERRUPT_TYPE type, uintptr_t context)
-{
-    <strong><span style="color: #000080">if</span></strong>(type == RTT_ALARM)
-    {
-        <i><span style="color: #008000">// Alarm has occurred</span></i>
-    }
-}
-
-<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
-{
-
-    <i><span style="color: #008000">/* Register Callback */</span></i>
-    RTT0_CallbackRegister(Timeout_Handler, (uintptr_t) NULL);
-
-    <i><span style="color: #008000">/* Set Alarm Value */</span></i>
-    RTT_AlarmValueSet(10);
-
-    <i><span style="color: #008000">/* Enable RTT */</span></i>
-    RTT0_Enable();
-
-    <strong><span style="color: #000080">while</span></strong> ( <strong><span style="color: #000080">true</span></strong> )
-    {
-
-    }
-
-}</pre></div></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+RTC_Timer16InterruptEnable(RTC_TIMER16_INT_MASK_PERIOD_MATCH);</pre></div></div>
 </div>
 </div>
 </div>
@@ -124,7 +110,7 @@ The below example demonstrates how to set alarm and watch it being triggered whe
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04005.html" target="topic">RTT Peripheral Library Help</a> &gt; <a href="04009.html" target="topic">Using the Library</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03797.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03808.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="03814.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04009.html" target="topic">RTC_Timer16InterruptEnable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -132,13 +118,13 @@ The below example demonstrates how to set alarm and watch it being triggered whe
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04001.html" target="topic">Previous</a> | <a href="04005.html" target="topic">Up</a> | <a href="04006.html" target="topic">Next</a></div>
+<a href="04010.html" target="topic">Previous</a> | <a href="03814.html" target="topic">Up</a> | <a href="04008.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTT 6081 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16InterruptEnable@RTC_TIMER16_INT_MASK Topic Title: RTC_Timer16InterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

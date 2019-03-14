@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>gpio_led_on_off_polling</title>
+<title>FLEXCOM_USART_STOP Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="01804.html" target="topic">GPIO Applications</a> &gt; <a href="01803.html" target="topic">gpio_led_on_off_polling</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01697.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="01708.html" target="topic">USART</a> &gt; <a href="01713.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="01803.html" target="topic">FLEXCOM_USART_STOP Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01808.html" target="topic">Previous</a> | <a href="01804.html" target="topic">Up</a> | <a href="01809.html" target="topic">Next</a></div>
+<a href="01798.html" target="topic">Previous</a> | <a href="01713.html" target="topic">Up</a> | <a href="01698.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: GPIO Applications gpio_led_on_off_polling Topic Title: gpio_led_on_off_polling)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM_USART_STOP Topic Title: FLEXCOM_USART_STOP Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-gpio_led_on_off_polling</div>
+FLEXCOM_USART_STOP Enumeration</div>
 </div>
 </div>
 
@@ -49,41 +49,34 @@ gpio_led_on_off_polling</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<span style="color: #000000">This application uses the GPIO Peripheral library to read the GPIO pin connected to the switch, and drives the GPIO pin connected to the LED to indicate the switch status. </span>The LED is turned ON when the switch is pressed and turned OFF when the switch is released.</p></div>
+This is type FLEXCOM_USART_STOP.</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">FLEXCOM_USART_STOP_1_BIT</span></strong> = FLEX_US_MR_NBSTOP_1_BIT,
+  <strong><span style="color: #000000">FLEXCOM_USART_STOP_1_5_BIT</span></strong> = FLEX_US_MR_NBSTOP_1_5_BIT,
+  <strong><span style="color: #000000">FLEXCOM_USART_STOP_2_BIT</span></strong> = FLEX_US_MR_NBSTOP_2_BIT,
+  <strong><span style="color: #000000">FLEXCOM_USART_STOP_INVALID</span></strong> = 0xFFFFFFFF
+} FLEXCOM_USART_STOP;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01809.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on how to build the application using the MPLAB X IDE.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01811.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on the MHC configuration used to create this application.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01810.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01812.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on how to run the application using the MPLAB X IDE.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_USART_STOP_INVALID = 0xFFFFFFFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Force the compiler to reserve 32-bit memory for each enum&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -91,7 +84,7 @@ This section provides information on how to run the application using the MPLAB 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="01804.html" target="topic">GPIO Applications</a> &gt; <a href="01803.html" target="topic">gpio_led_on_off_polling</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01697.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="01708.html" target="topic">USART</a> &gt; <a href="01713.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="01803.html" target="topic">FLEXCOM_USART_STOP Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +92,13 @@ This section provides information on how to run the application using the MPLAB 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01808.html" target="topic">Previous</a> | <a href="01804.html" target="topic">Up</a> | <a href="01809.html" target="topic">Next</a></div>
+<a href="01798.html" target="topic">Previous</a> | <a href="01713.html" target="topic">Up</a> | <a href="01698.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: GPIO Applications gpio_led_on_off_polling Topic Title: gpio_led_on_off_polling)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM_USART_STOP Topic Title: FLEXCOM_USART_STOP Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

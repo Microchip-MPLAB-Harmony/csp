@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>sqi_dma_desc_t Structure</title>
+<title>SPIx_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04543.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="04544.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04560.html" target="topic">sqi_dma_desc_t Structure</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04521.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="04522.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04560.html" target="topic">SPIx_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04572.html" target="topic">Previous</a> | <a href="04544.html" target="topic">Up</a> | <a href="04583.html" target="topic">Next</a></div>
+<a href="04571.html" target="topic">Previous</a> | <a href="04522.html" target="topic">Up</a> | <a href="04579.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sqi_00206::sqi_dma_desc_t Topic Title: sqi_dma_desc_t Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_CallbackRegister@SPIx_CALLBACK*@uintptr_t Topic Title: SPIx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-sqi_dma_desc_t Structure</div>
+SPIx_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,66 +49,80 @@ sqi_dma_desc_t Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SQI DMA Descriptor structure should be used to to create the dma descriptors for SQI DMA based transfers.&nbsp;</p>
+This function allows application to register a callback function for the PLIB to call back when requested data transfer operation has completed. The callback should be registered before the client performs transfer operation.&nbsp;</p>
 <p class="Element10">
-Multiple descriptor object of this type can be chained and used with a single request to <a href="04576.html" target="topic">SQIx_DMATransfer</a>().</p></div>
+At any point if application wants to stop the callback, it can call this function with &quot;callback&quot; value as NULL.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">sqi_dma_desc</span></strong> {
-  uint32_t <strong><span style="color: #000000">bd_ctrl</span></strong>;
-  uint32_t <strong><span style="color: #000000">bd_stat</span></strong>;
-  uint32_t * <strong><span style="color: #000000">bd_bufaddr</span></strong>;
-  <strong><span style="color: #000080">struct</span></strong> sqi_dma_desc * <strong><span style="color: #000000">bd_nxtptr</span></strong>;
-} sqi_dma_desc_t;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SPIx_CallbackRegister</span></strong>(
+    <a href="04559.html" target="topic">SPIx_CALLBACK</a>* <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t bd_ctrl;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Holds the value to be written in the Buffer Descriptor Control Word (BD_CTRL) register.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t bd_stat;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Holds the values to be written in the Buffer Descriptor Status Word (BD_STAT) register.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t * bd_bufaddr;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Holds the address of the buffer in system memory to be written in the Buffer Descriptor Current Buffer Address Word (BD_BUFFADDR) register.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-struct sqi_dma_desc * bd_nxtptr;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Holds the next buffer descriptor address to be written in Buffer Descriptor Next Buffer Descriptor Address Word (BD_NXTPTR) register.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The <a href="04571.html" target="topic">SPIx_Initialize</a> function must have been called.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the callback function implemented by the user<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The value of parameter will be passed back to the application unchanged, when the callback function is called. It can be used to identify any application specific value that identifies the instance of the client module (for example, it may be a pointer to the client module's state structure).&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+If the client does not want to be notified when the queued operation has completed, it does not need to register a callback.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">SPI1_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
+
+<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
+{
+    <i><span style="color: #008000">//Transfer was completed without error, do something else now.</span></i>
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03143.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02763.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03142.html" target="topic">Peripheral Libraries</a> &gt; <a href="04543.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="04544.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04560.html" target="topic">sqi_dma_desc_t Structure</a></div>
+<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04521.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="04522.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04560.html" target="topic">SPIx_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +130,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03143.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04572.html" target="topic">Previous</a> | <a href="04544.html" target="topic">Up</a> | <a href="04583.html" target="topic">Next</a></div>
+<a href="04571.html" target="topic">Previous</a> | <a href="04522.html" target="topic">Up</a> | <a href="04579.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sqi_00206::sqi_dma_desc_t Topic Title: sqi_dma_desc_t Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_CallbackRegister@SPIx_CALLBACK*@uintptr_t Topic Title: SPIx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
