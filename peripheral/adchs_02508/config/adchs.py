@@ -462,35 +462,41 @@ def adchsCalcADCIMCON4(symbol, event):
     adcimcon4 = sign + diff
     symbol.setValue(adcimcon4, 2)
 
-def adchsCalcADCTRG1(symbol, value):
-    adctrg1 = 0x0
+def adchsCalcADCTRG(symbol, event):
+    adctrg = 0x0
     trgsrc = 0x0
     component = symbol.getComponent()
-    for channelID in range(0, 4):
-        if (component.getSymbolValue("ADCTRG1__TRGSRC" + str(channelID)) != None):
-            trgsrc = trgsrc + (component.getSymbolValue("ADCTRG1__TRGSRC" + str(channelID)) << ((channelID * 8)))
-    adctrg1 = trgsrc
-    symbol.setValue(adctrg1, 2)
+    if(event["id"][:7] == "ADCTRG1"):
+        for channelID in range(0, 4):
+            if (component.getSymbolValue("ADCTRG1__TRGSRC" + str(channelID)) != None):
+                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG1__TRGSRC" + str(channelID)) << ((channelID * 8)))
+    elif(event["id"][:7] == "ADCTRG2"):
+        for channelID in range(4, 8):
+            if (component.getSymbolValue("ADCTRG2__TRGSRC" + str(channelID)) != None):
+                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG2__TRGSRC" + str(channelID)) << ((channelID - 4) * 8))
+    elif(event["id"][:7] == "ADCTRG3"):
+        for channelID in range(8, 12):
+            if (component.getSymbolValue("ADCTRG3__TRGSRC" + str(channelID)) != None):
+                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG3__TRGSRC" + str(channelID)) << ((channelID - 8) * 8))
+    elif(event["id"][:7] == "ADCTRG4"):
+        for channelID in range(12, 16):
+            if (component.getSymbolValue("ADCTRG4__TRGSRC" + str(channelID)) != None):
+                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG4__TRGSRC" + str(channelID)) << ((channelID - 12) * 8))
+    elif(event["id"][:7] == "ADCTRG5"):
+        for channelID in range(16, 20):
+            if (component.getSymbolValue("ADCTRG5__TRGSRC" + str(channelID)) != None):
+                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG5__TRGSRC" + str(channelID)) << ((channelID - 16) * 8))
+    elif(event["id"][:7] == "ADCTRG6"):
+        for channelID in range(20, 24):
+            if (component.getSymbolValue("ADCTRG6__TRGSRC" + str(channelID)) != None):
+                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG6__TRGSRC" + str(channelID)) << ((channelID - 20) * 8))
+    elif(event["id"][:7] == "ADCTRG7"):
+        for channelID in range(24, ADC_Max_Class_1and2):
+            if (component.getSymbolValue("ADCTRG7__TRGSRC" + str(channelID)) != None):
+                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG7__TRGSRC" + str(channelID)) << ((channelID - 24) * 8))
 
-def adchsCalcADCTRG2(symbol, value):
-    adctrg2 = 0x0
-    trgsrc = 0x0
-    component = symbol.getComponent()
-    for channelID in range(4, 8):
-        if (component.getSymbolValue("ADCTRG2__TRGSRC" + str(channelID)) != None):
-            trgsrc = trgsrc + (component.getSymbolValue("ADCTRG2__TRGSRC" + str(channelID)) << ((channelID - 4) * 8))
-    adctrg2 = trgsrc
-    symbol.setValue(adctrg2, 2)
-
-def adchsCalcADCTRG3(symbol, value):
-    adctrg3 = 0x0
-    trgsrc = 0x0
-    component = symbol.getComponent()
-    for channelID in range(8, ADC_Max_Class_1and2):
-        if (component.getSymbolValue("ADCTRG3__TRGSRC" + str(channelID)) != None):
-            trgsrc = trgsrc + (component.getSymbolValue("ADCTRG3__TRGSRC" + str(channelID)) << ((channelID - 8) * 8))
-    adctrg3 = trgsrc
-    symbol.setValue(adctrg3, 2)
+    adctrg = trgsrc
+    symbol.setValue(adctrg, 2)
 
 def adchsCalcADCTIME(symbol, event):
     adctime = [ADC_Max_Class_1]
@@ -1191,20 +1197,39 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCIMCON4.setVisible(False)
         adchsSym_ADCIMCON4.setDependencies(adchsCalcADCIMCON4, adcimcon_deplist[3])
 
-    adchsSym_ADCTRG1 = adchsComponent.createHexSymbol("ADCHS_ADCTRG1", None)
-    adchsSym_ADCTRG1.setLabel("ADCTRG1 Register")
-    adchsSym_ADCTRG1.setVisible(False)
-    adchsSym_ADCTRG1.setDependencies(adchsCalcADCTRG1, adctrg_deplist[0])
+    ADCTRG_NUM = 0
+    ModuleName = "ADCHS"
 
-    adchsSym_ADCTRG2 = adchsComponent.createHexSymbol("ADCHS_ADCTRG2", None)
-    adchsSym_ADCTRG2.setLabel("ADCTRG2 Register")
-    adchsSym_ADCTRG2.setVisible(False)
-    adchsSym_ADCTRG2.setDependencies(adchsCalcADCTRG2, adctrg_deplist[1])
+    ADCTRG_childrens = ATDF.getNode('/avr-tools-device-file/modules/module@[name="' +
+        ModuleName + '"]/register-group@[name="' + ModuleName + '"]').getChildren()
 
-    adchsSym_ADCTRG3 = adchsComponent.createHexSymbol("ADCHS_ADCTRG3", None)
-    adchsSym_ADCTRG3.setLabel("ADCTRG3 Register")
-    adchsSym_ADCTRG3.setVisible(False)
-    adchsSym_ADCTRG3.setDependencies(adchsCalcADCTRG3, adctrg_deplist[2])
+    for register in ADCTRG_childrens:
+        if("ADC Trigger Source" in register.getAttribute("caption")):
+           ADCTRG_NUM += 1
+
+    #adchsSym_ADCTRG1 = adchsComponent.createHexSymbol("ADCHS_ADCTRG1", None)
+    #adchsSym_ADCTRG1.setLabel("ADCTRG1 Register")
+    #adchsSym_ADCTRG1.setVisible(False)
+    #adchsSym_ADCTRG1.setDependencies(adchsCalcADCTRG1, adctrg_deplist[0])
+    #
+    #adchsSym_ADCTRG2 = adchsComponent.createHexSymbol("ADCHS_ADCTRG2", None)
+    #adchsSym_ADCTRG2.setLabel("ADCTRG2 Register")
+    #adchsSym_ADCTRG2.setVisible(False)
+    #adchsSym_ADCTRG2.setDependencies(adchsCalcADCTRG2, adctrg_deplist[1])
+    #
+    #adchsSym_ADCTRG3 = adchsComponent.createHexSymbol("ADCHS_ADCTRG3", None)
+    #adchsSym_ADCTRG3.setLabel("ADCTRG3 Register")
+    #adchsSym_ADCTRG3.setVisible(False)
+    #adchsSym_ADCTRG3.setDependencies(adchsCalcADCTRG3, adctrg_deplist[2])
+    global adchsSym_ADCTRG
+    adchsSym_ADCTRG = [None]
+
+    for ctrg_id in range(1,ADCTRG_NUM+1):
+        adchsSym_ADCTRG.append(ctrg_id)
+        adchsSym_ADCTRG[ctrg_id] = adchsComponent.createHexSymbol("ADCHS_ADCTRG" + str(ctrg_id), None)
+        adchsSym_ADCTRG[ctrg_id].setLabel("ADCTRG" + str(ctrg_id) + "Register")
+        adchsSym_ADCTRG[ctrg_id].setVisible(False)
+        adchsSym_ADCTRG[ctrg_id].setDependencies(adchsCalcADCTRG,adctrg_deplist[ctrg_id - 1])
 
     adchsSym_ADCTGSNS = adchsComponent.createHexSymbol("ADCHS_ADCTRGSNS", None)
     adchsSym_ADCTGSNS.setLabel("ADCTRGSNS Register")
