@@ -126,36 +126,6 @@ def getIRQnumber(string):
 def timerInterruptSet(symbol, event):
     if (event["id"] == "TMR_INTERRUPT_MODE"):
         setTMRInterruptData(event["value"])
-    else:
-        component = symbol.getComponent()
-        mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
-        tmrPrevIrq = ""
-        if (mode_32 == 0):
-            tmrPrevIrq = "TIMER_" + str(int(instanceNum) + 1)
-            tmrIrq = "TIMER_" + str(instanceNum)
-        else:
-            tmrIrq = "TIMER_" + str(int(instanceNum) + 1)
-
-        if tmrPrevIrq != "":
-            #clear interrupt settings of previous irq
-            Database.setSymbolValue("core", tmrPrevIrq + "_INTERRUPT_ENABLE", False, 1)
-            Database.setSymbolValue("core", tmrPrevIrq + "_INTERRUPT_HANDLER_LOCK", False, 1)
-            Database.setSymbolValue("core", tmrPrevIrq + "_INTERRUPT_HANDLER", tmrPrevIrq + "_Handler", 1)
-
-        #set interrupt settings based on 16 or 32 bit mode
-        tmrInterruptVector = tmrIrq + "_INTERRUPT_ENABLE"
-        tmrInterruptHandler = tmrIrq + "_INTERRUPT_HANDLER"
-        tmrInterruptHandlerLock = tmrIrq + "_INTERRUPT_HANDLER_LOCK"
-        tmrInterruptVectorUpdate = tmrIrq + "_INTERRUPT_ENABLE_UPDATE"
-
-        status = component.getSymbolValue("TMR_INTERRUPT_MODE")
-        Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE", status, 2)
-        Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER_LOCK", status, 2)
-        if(status == True):
-            Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER", tmrIrq + "_InterruptHandler", 2)
-        else:
-            Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER", tmrIrq + "_Handler", 2)
-
 
 def setTMRInterruptData(status):
     Database.setSymbolValue("core", tmrInterruptVector, status, 2)
@@ -168,7 +138,6 @@ def setTMRInterruptData(status):
 
 def updateTMRInterruptData(symbol, event):
     component = symbol.getComponent()
-    mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
     tmrIrq = "TIMER_" + str(instanceNum)
     tmrInterruptVectorUpdate = tmrIrq + "_INTERRUPT_ENABLE_UPDATE"
     if tmrSymInterruptMode.getValue() == True and Database.getSymbolValue("core", tmrInterruptVectorUpdate) == True:
@@ -177,19 +146,13 @@ def updateTMRInterruptData(symbol, event):
         symbol.setVisible(False)
 
 def IECRegName(symbol, event):
-    if(event["value"] == 0):  #32-bit mode
-        tmrIrq = "TIMER_" + str(int(instanceNum) + 1)
-    else:
-        tmrIrq = "TIMER_" + str(int(instanceNum))
+    tmrIrq = "TIMER_" + str(int(instanceNum))
     tmrIrq_index = int(getIRQnumber(tmrIrq))
     enblRegName = _get_enblReg_parms(tmrIrq_index)
     symbol.setValue(enblRegName, 2)
 
 def IFSRegName(symbol, event):
-    if(event["value"] == 0):  #32-bit mode
-        tmrIrq = "TIMER_" + str(int(instanceNum) + 1)
-    else:
-        tmrIrq = "TIMER_" + str(int(instanceNum))
+    tmrIrq = "TIMER_" + str(int(instanceNum))
     tmrIrq_index = int(getIRQnumber(tmrIrq))
     statRegName = _get_statReg_parms(tmrIrq_index)
     symbol.setValue(statRegName, 2)
@@ -234,12 +197,8 @@ def PreScaler_ValueUpdate(symbol, event):
 def tmr1TsyncVisible(symbol, event):
     component = symbol.getComponent()
     src = component.getSymbolValue("TIMER_SRC_SEL")
-    slave = component.getSymbolValue("TIMER_SLAVE")
     if (src == 0):
-        if(slave == False):
-            symbol.setVisible(True)
-        else:
-            symbol.setVisible(False)
+        symbol.setVisible(False)
     else:
         symbol.setVisible(False)
 
@@ -252,8 +211,6 @@ def calcTimerFreq(symbol, event):
         clock = Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")
     prescaler = component.getSymbolValue("TMR_PRESCALER_VALUE")
     symbol.setValue(int(clock)/int(prescaler), 2)
-    slave = component.getSymbolValue("TIMER_SLAVE")
-    symbol.setVisible(not bool(slave))
 
 def timerMaxValue(symbol, event):
     component = symbol.getComponent()
@@ -270,8 +227,6 @@ def timerMaxValue(symbol, event):
         symbol.setMax(4294967295.0 * resolution)
     else:
         symbol.setMax(65535.0 * resolution)
-    slave = component.getSymbolValue("TIMER_SLAVE")
-    symbol.setVisible(not bool(slave))
 
 def timerPeriodCalc(symbol, event):
     component = symbol.getComponent()
@@ -281,33 +236,11 @@ def timerPeriodCalc(symbol, event):
     resolution = 1000.0/clock
     period = component.getSymbolValue("TIMER_TIME_PERIOD_MS") / resolution
     symbol.setValue(long(period), 2)
-    slave = component.getSymbolValue("TIMER_SLAVE")
-    symbol.setVisible(not bool(slave))
     mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
     if(mode_32 == 0):
         symbol.setMax(4294967295)
     else:
         symbol.setMax(65535)
-
-def timerSlaveMode(symbol, event):
-    if (event["value"] == 0):
-        symbol.setValue(True, 2)
-    else:
-        symbol.setValue(False, 2)
-
-def slaveModeComment(symbol, event):
-    symbol.setVisible(event["value"])
-
-def timerConfigurationsVisible(symbol, event):
-    symbol.setVisible(not event["value"])
-
-def updateCodeGeneration(symbol, event):
-    component = symbol.getComponent()
-    component.getSymbolByID("TMR_SOURCE").setEnabled(False)
-    component.getSymbolByID("TMR_HEADER1").setEnabled(False)
-    if (event["value"] == False):
-        component.getSymbolByID("TMR_SOURCE").setEnabled(True)
-        component.getSymbolByID("TMR_HEADER1").setEnabled(True)
 
 def tmrTgateVisible(symbol, event):
     symbol.setVisible(bool(event["value"]))
@@ -367,34 +300,9 @@ def instantiateComponent(tmrComponent):
     instanceNum = filter(str.isdigit,str(tmrComponent.getID()))
     tmrInstanceNum.setDefaultValue(instanceNum)
 
-    slave = False
-    #for odd numbered timer instance
-    if (int(instanceNum) % 2 == 1):
-        activeComponentList = Database.getActiveComponentIDs()
-        masterComponentID = "tmr" + str(int(instanceNum) - 1)
-        if masterComponentID in activeComponentList:
-            mode = Database.getSymbolValue(masterComponentID, "TIMER_32BIT_MODE_SEL")
-            if (mode == 0):
-                slave = True
-            else:
-                slave = False
-
-    tmrSym_SLAVE = tmrComponent.createBooleanSymbol("TIMER_SLAVE", None)
-    tmrSym_SLAVE.setVisible(False)
-    tmrSym_SLAVE.setDefaultValue(bool(slave))
-    tmrSym_SLAVE.setDependencies(timerSlaveMode,  ["tmr" + str(int(instanceNum) - 1) + ".TIMER_32BIT_MODE_SEL"])
-
-    tmrSym_SLAVE_COMMENT = tmrComponent.createCommentSymbol("TMR_SLAVE_COMMENT", None)
-    tmrSym_SLAVE_COMMENT.setLabel("TIMER is configured in SLAVE mode to support 32-bit operation")
-    tmrSym_SLAVE_COMMENT.setVisible(bool(slave))
-    if (int(instanceNum) % 2 == 1):
-        tmrSym_SLAVE_COMMENT.setDependencies(slaveModeComment, ["TIMER_SLAVE"])
-
     tmrSymInterruptMode = tmrComponent.createBooleanSymbol("TMR_INTERRUPT_MODE", None)
     tmrSymInterruptMode.setLabel("Enable Interrrupts ?")
     tmrSymInterruptMode.setDefaultValue(True)
-    tmrSymInterruptMode.setDependencies(timerConfigurationsVisible, ["TIMER_SLAVE"])
-    tmrSymInterruptMode.setVisible(not bool(slave))
 
     #prescaler configuration
     prescale_names = []
@@ -406,8 +314,6 @@ def instantiateComponent(tmrComponent):
     for ii in prescale_names:
         tmrSym_T2CON_PRESCALER.addKey( ii['desc'], ii['value'], ii['key'] )
     tmrSym_T2CON_PRESCALER.setDefaultValue(7)
-    tmrSym_T2CON_PRESCALER.setVisible(not bool(slave))
-    tmrSym_T2CON_PRESCALER.setDependencies(timerConfigurationsVisible, ["TIMER_SLAVE"])
 
     #Prescaler Value
     tmrPrescalerValue = tmrComponent.createIntegerSymbol("TMR_PRESCALER_VALUE", None)
@@ -428,10 +334,6 @@ def instantiateComponent(tmrComponent):
     for ii in t32_names:
         tmrSym_T2CON_32BIT_MODE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
     tmrSym_T2CON_32BIT_MODE_SEL.setDefaultValue(1)
-    if (int(instanceNum) % 2 == 0):
-        tmrSym_T2CON_32BIT_MODE_SEL.setVisible(True)
-    else:
-        tmrSym_T2CON_32BIT_MODE_SEL.setVisible(False)
 
     #Timer clock Source Slection configuration
     tcs_names = []
@@ -443,8 +345,6 @@ def instantiateComponent(tmrComponent):
     for ii in tcs_names:
         tmrSym_T2CON_SOURCE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
     tmrSym_T2CON_SOURCE_SEL.setDefaultValue(1)
-    tmrSym_T2CON_SOURCE_SEL.setDependencies(timerConfigurationsVisible, ["TIMER_SLAVE"])
-    tmrSym_T2CON_SOURCE_SEL.setVisible(not bool(slave))
 
 
     # TGATE, Timer Gated Time Accumulation Enable bit
@@ -471,21 +371,19 @@ def instantiateComponent(tmrComponent):
         tmrSym_T2CON_SYNC.addKey( ii['key'],ii['value'], ii['desc'] )
     tmrSym_T2CON_SYNC.setDefaultValue(find_key_value(0,sync_names))
     tmrSym_T2CON_SYNC.setVisible(True)
-    tmrSym_T2CON_SYNC.setDependencies(timerConfigurationsVisible, ["TIMER_SLAVE"])
 
     tmrSym_EXT_CLOCK_FREQ = tmrComponent.createIntegerSymbol("TIMER_EXT_CLOCK_FREQ", tmrSym_T2CON_SOURCE_SEL)
     tmrSym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
     tmrSym_EXT_CLOCK_FREQ.setVisible(False)
     tmrSym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
-    tmrSym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER_SRC_SEL", "TIMER_SLAVE"])
+    tmrSym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER_SRC_SEL"])
 
     tmrSym_CLOCK_FREQ = tmrComponent.createIntegerSymbol("TIMER_CLOCK_FREQ", None)
     tmrSym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
-    tmrSym_CLOCK_FREQ.setVisible(not bool(slave))
     tmrSym_CLOCK_FREQ.setReadOnly(True)
     tmrSym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")))
     tmrSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core.CONFIG_SYS_CLK_PBCLK2_FREQ","TMR_PRESCALER_VALUE",
-        "TIMER_SRC_SEL", "TIMER_EXT_CLOCK_FREQ", "TIMER_SLAVE"])
+        "TIMER_SRC_SEL", "TIMER_EXT_CLOCK_FREQ"])
 
     clock = Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")
     if(clock == 0):
@@ -499,8 +397,7 @@ def instantiateComponent(tmrComponent):
     tmrSym_PERIOD_MS.setMin(0.0)
     tmrSym_PERIOD_MS.setMax(max)
     tmrSym_PERIOD_MS.setDependencies(timerMaxValue, ["core.CONFIG_SYS_CLK_PBCLK2_FREQ", "TIMER_CLOCK_FREQ",
-        "TIMER_SLAVE", "TIMER_32BIT_MODE_SEL"])
-    tmrSym_PERIOD_MS.setVisible(not bool(slave))
+        "TIMER_32BIT_MODE_SEL"])
 
     #Timer1 Period Register
     tmrSym_PR2 = tmrComponent.createLongSymbol("TIMER_PERIOD", tmrSym_PERIOD_MS)
@@ -509,9 +406,8 @@ def instantiateComponent(tmrComponent):
     tmrSym_PR2.setReadOnly(True)
     tmrSym_PR2.setMin(0)
     tmrSym_PR2.setMax(65535)
-    tmrSym_PR2.setVisible(not bool(slave))
     tmrSym_PR2.setDependencies(timerPeriodCalc, ["core.CONFIG_SYS_CLK_PBCLK2_FREQ", "TIMER_TIME_PERIOD_MS",
-        "TIMER_CLOCK_FREQ", "TIMER_SLAVE", "TIMER_32BIT_MODE_SEL"])
+        "TIMER_CLOCK_FREQ", "TIMER_32BIT_MODE_SEL"])
 
     #timer SIDL configuration
     sidl_names = []
@@ -520,11 +416,9 @@ def instantiateComponent(tmrComponent):
     tmrSymField_T2CON_SIDL.setLabel(tmrBitField_T2CON_SIDL.getAttribute("caption"))
     tmrSymField_T2CON_SIDL.setOutputMode( "Value" )
     tmrSymField_T2CON_SIDL.setDisplayMode( "Description" )
-    tmrSymField_T2CON_SIDL.setVisible(not bool(slave))
     for ii in sidl_names:
         tmrSymField_T2CON_SIDL.addKey( ii['key'],ii['value'], ii['desc'] )
     tmrSymField_T2CON_SIDL.setDefaultValue(1)
-    tmrSymField_T2CON_SIDL.setDependencies(timerConfigurationsVisible, ["TIMER_SLAVE"])
 
     #Timer TxCON Reg Value
     tmrSym_T2CON_Value = tmrComponent.createHexSymbol("TCON_REG_VALUE",None)
@@ -534,7 +428,6 @@ def instantiateComponent(tmrComponent):
     tmrSym_T2CON_Value.setVisible(False)
     tmrSym_T2CON_Value.setDependencies(T2CONcombineValues,["TIMER_SIDL", "TIMER_SYNC", "TIMER_TGATE", "TIMER_PRE_SCALER", "TIMER_32BIT_MODE_SEL", "TIMER_SRC_SEL"])
 
-    tmrInstanceName.setDependencies(updateCodeGeneration, ["TIMER_SLAVE"])
     ############################################################################
     #### Dependency ####
     ############################################################################
@@ -551,7 +444,7 @@ def instantiateComponent(tmrComponent):
 
     tmrSym_irq = tmrComponent.createStringSymbol("TIMER_IRQ", None)
     tmrSym_irq.setVisible(False)
-    tmrSym_irq.setDependencies(timerInterruptSet, ["TMR_INTERRUPT_MODE", "TIMER_32BIT_MODE_SEL"])
+    tmrSym_irq.setDependencies(timerInterruptSet, ["TMR_INTERRUPT_MODE"])
 
     enblRegName = _get_enblReg_parms(tmrIrq_index)
     statRegName = _get_statReg_parms(tmrIrq_index)
@@ -560,14 +453,11 @@ def instantiateComponent(tmrComponent):
     tmrIEC = tmrComponent.createStringSymbol("TMR_IEC_REG", None)
     tmrIEC.setDefaultValue(enblRegName)
     tmrIEC.setVisible(False)
-    tmrIEC.setDependencies(IECRegName, ["TIMER_32BIT_MODE_SEL"])
 
     #IFS REG
     tmrIFS = tmrComponent.createStringSymbol("TMR_IFS_REG", None)
     tmrIFS.setDefaultValue(statRegName)
     tmrIFS.setVisible(False)
-    tmrIFS.setDependencies(IFSRegName, ["TIMER_32BIT_MODE_SEL"])
-
 
     ## EVIC Interrupt Dynamic settings
     setTMRInterruptData(tmrSymInterruptMode.getValue())
