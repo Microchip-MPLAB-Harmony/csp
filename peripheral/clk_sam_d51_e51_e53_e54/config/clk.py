@@ -1423,8 +1423,8 @@ for gclknumber in range(0, 12):
                "XOSC1_FREQ",
                "OSC48M_CLOCK_FREQ",
                "DPLL0_CLOCK_FREQ",
-               "DPLL1_CLOCK_FREQ"
-               "DFLL_CLOCK_FREQ"
+               "DPLL1_CLOCK_FREQ",
+               "DFLL_CLOCK_FREQ",
                "XOSC32K_FREQ",
                "GCLK_IN_0_FREQ",
                "GCLK_IN_1_FREQ",
@@ -1759,10 +1759,13 @@ def setQspiFreq(symbol, event):
         symbol.setValue(0, 2)
 
 ################Peripheral which donot have a GCLKID but have MCLKID######################
-trngClock = coreComponent.createBooleanSymbol(
-    "TRNG_CLOCK_ENABLE", peripheralClockMenu)
-trngClock.setLabel("TRNG Clock Enable")
-trngClock.setDefaultValue(False)
+peripheralsWithoutGclk = ["TRNG", "AES", "ICM", "PUKCC"]
+for i in range(0,len(peripheralsWithoutGclk)):
+    peripheralClock = coreComponent.createBooleanSymbol(
+        peripheralsWithoutGclk[i] + "_CLOCK_ENABLE", peripheralClockMenu)
+    peripheralClock.setLabel(peripheralsWithoutGclk[i] + " Clock Enable")
+    peripheralClock.setDefaultValue(False)
+    gclkDependencyList.append( peripheralsWithoutGclk[i] + "_CLOCK_ENABLE")
 
 qspiClock = coreComponent.createBooleanSymbol(
     "QSPI_CLOCK_ENABLE", peripheralClockMenu)
@@ -1776,7 +1779,6 @@ qspiClockFrequency.setReadOnly(True)
 qspiClockFrequency.setDependencies(setQspiFreq, ["QSPI_CLOCK_ENABLE", "MAIN_CLOCK_FREQUENCY"])
 
 #########################################################################################
-gclkDependencyList.append("TRNG_CLOCK_ENABLE")
 gclkDependencyList.append("QSPI_CLOCK_ENABLE")
 mclk_Clock_Value.setDependencies(apbValue, gclkDependencyList)
 
