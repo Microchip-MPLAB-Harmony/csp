@@ -173,8 +173,8 @@ mipsMenu.setDescription("Configuration for MIPS processor")
 #coreComponent.addPlugin("../peripheral/clk_pic32mk/plugin/clockmanager.jar")
 
 # load device specific pin manager information
-#  execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
-#  coreComponent.addPlugin("../peripheral/gpio_02467/plugin/gpio_02467.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_01618/config/gpio.py")
+coreComponent.addPlugin("../peripheral/gpio_01618/plugin/gpio_01618.jar")
 
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("(no additional MIPS configuration)")
