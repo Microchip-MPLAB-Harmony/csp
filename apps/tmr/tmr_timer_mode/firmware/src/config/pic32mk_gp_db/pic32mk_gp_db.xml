@@ -788,7 +788,6 @@
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tmr2" priority="1" value="false"/>
-              <Value dnOrder="1" id="tmr3" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
@@ -803,7 +802,6 @@
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tmr2" priority="1" value="TIMER_3_Handler"/>
-              <Value dnOrder="1" id="tmr3" priority="2" value="TIMER_3_InterruptHandler"/>
             </Dynamic>
           </Values>
         </String>
@@ -811,7 +809,6 @@
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tmr2" priority="1" value="false"/>
-              <Value dnOrder="1" id="tmr3" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
@@ -896,17 +893,15 @@
         </Integer>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="3" id="tmr3"/>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="tmr2" x="33" y="77"/>
-        <ElementPosition dnOrder="3" id="tmr3" x="340" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

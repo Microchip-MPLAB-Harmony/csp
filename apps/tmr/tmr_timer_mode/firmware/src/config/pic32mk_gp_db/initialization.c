@@ -176,8 +176,6 @@ void SYS_Initialize ( void* data )
 
     TMR2_Initialize();
 
-    TMR3_Initialize();
-
 
 
 
