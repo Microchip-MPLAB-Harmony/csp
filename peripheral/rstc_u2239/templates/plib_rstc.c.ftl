@@ -60,21 +60,26 @@
 // Section: ${RSTC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
+<#if RSTC_WAKEUP_PIN_NUMBER??>
+void RSTC_Initialize(void)
+{
+    <#if RSTC_DEBOUNCE != "0x00">
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_WKDBCNT = RSTC_WKDBCONF_WKDBCNT(${RSTC_DEBOUNCE});
+    </#if>
+    <#if WAKEUP_ENABLE_VALUE != "0">
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_WKPOL = RSTC_WKPOL_WKPOL(0x${WAKEUP_ENABLE_VALUE});
+    </#if>
+    <#if WAKEUP_POLARITY_VALUE != "0">
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_WKEN = RSTC_WKEN_WKEN(0x${WAKEUP_POLARITY_VALUE});
+    </#if>
+}
 
-// *****************************************************************************
-/* Function:
-    RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void);
+RSTC_WAKEUP_CAUSE RSTC_WakeupCauseGet (void)
+{
+    return (RSTC_WAKEUP_CAUSE) (${RSTC_INSTANCE_NAME}_REGS->RSTC_WKCAUSE);
+}
 
-  Summary:
-    Reports the cause of the last reset.
-
-  Description:
-    This function is used to know the cause of the last reset.
-
-  Remarks:
-    plib_${RSTC_INSTANCE_NAME?lower_case}.h for usage information.
-*/
-
+</#if>
 RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet( void )
 {
     return ( RSTC_RESET_CAUSE ) ${RSTC_INSTANCE_NAME}_REGS->RSTC_RCAUSE;

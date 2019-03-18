@@ -112,6 +112,21 @@ typedef enum
 </#list>
 } RSTC_BKUPEXIT_CAUSE;
 
+<#if RSTC_WAKEUP_PIN_NUMBER??>
+typedef enum
+{
+
+<#list 0..(RSTC_WAKEUP_PIN_NUMBER - 1) as i>
+    RSTC_WAKEUP_CAUSE_${i} = ${i},
+
+</#list>
+} RSTC_WAKEUP_CAUSE;
+
+void RSTC_Initialize(void);
+
+RSTC_WAKEUP_CAUSE RSTC_WakeupCauseGet (void);
+
+</#if>
 RSTC_BKUPEXIT_CAUSE RSTC_BackupExitCauseGet (void);
 
 </#if>
