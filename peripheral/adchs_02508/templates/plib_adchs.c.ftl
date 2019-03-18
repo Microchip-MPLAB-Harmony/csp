@@ -235,7 +235,7 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 /* Read the conversion result */
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
-    return (*((&ADCDATA0) + channel));
+    return (uint16_t) (*((&ADCDATA0) + (channel << 2)));
 }
 
 <#if ADCHS_INTERRUPT == true>
