@@ -25,8 +25,22 @@
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
+def wakeupEnableCalculate(symbol, event):
+    wakeupId = int(event["id"].split("_")[1])
+    if event["value"]:
+        symbol.setValue((symbol.getValue() | 1 << wakeupId), 2)
+    else:
+        symbol.setValue((symbol.getValue() & ~(1 << wakeupId)), 2)
+
+def wakeupPolarityCalculate(symbol, event):
+    wakeupId = int(event["id"].split("_")[1])
+    if event["value"] == 1:
+        symbol.setValue((symbol.getValue() | 1 << wakeupId), 2)
+    else:
+        symbol.setValue((symbol.getValue() & ~(1 << wakeupId)), 2)
 
 def instantiateComponent(rstcComponent):
+    rstcWakeupNum = None
     rstcInstanceName = rstcComponent.createStringSymbol("RSTC_INSTANCE_NAME", None)
     rstcInstanceName.setVisible(False)
     rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
@@ -64,7 +78,58 @@ def instantiateComponent(rstcComponent):
             rstcSym_BKUPEXIT.setDisplayMode("Description")
             rstcSym_BKUPEXIT.setVisible(False)
 
+    rstcWakeup = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="RSTC"]/instance/parameters')
+    for id in range(0,len(rstcWakeup.getChildren())):
+        if rstcWakeup.getChildren()[id].getAttribute("name") == "NUMBER_OF_EXTWAKE":
+            if int(rstcWakeup.getChildren()[id].getAttribute("value")) > 0:
+                wakeupEnableDependencyList = []
+                wakeupPolarityDependencyList = []
+                rstcWakeupNum = rstcComponent.createIntegerSymbol("RSTC_WAKEUP_PIN_NUMBER", None)
+                rstcWakeupNum.setVisible(False)
+                rstcWakeupNum.setDefaultValue(int(rstcWakeup.getChildren()[id].getAttribute("value")))
 
+                rstcwakeupMenu = rstcComponent.createMenuSymbol("RSTC_WAKEUP_MENU", None)
+                rstcwakeupMenu.setLabel("Wakeup Configuration")
+
+                
+                node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/value-group@[name="RSTC_WKDBCONF__WKDBCNT"]')
+                nodeValues = node.getChildren()
+                rstcDebounce = rstcComponent.createKeyValueSetSymbol("RSTC_DEBOUNCE", rstcwakeupMenu)
+                rstcDebounce.setLabel("Wakeup Debounce Counter Value")
+                for index in range(0, len(nodeValues)):
+                    key =  nodeValues[index].getAttribute("name")
+                    value =  nodeValues[index].getAttribute("value")
+                    description =  nodeValues[index].getAttribute("caption")
+                    rstcDebounce.addKey(key, value, description)
+                rstcDebounce.setDefaultValue(0)
+                rstcDebounce.setOutputMode("Value")
+                rstcDebounce.setDisplayMode("Description")
+
+                for i in range(0, rstcWakeupNum.getValue()):
+                    wakeupEnable = rstcComponent.createBooleanSymbol("WAKEUP_" + str(i) + "_ENABLE" , rstcwakeupMenu)
+                    wakeupEnable.setLabel("Enable Wakeup " + str(i))
+                    wakeupEnable.setDefaultValue(False)
+                    wakeupEnableDependencyList.append("WAKEUP_" + str(i) + "_ENABLE")
+
+                    wakeupPolarity = rstcComponent.createKeyValueSetSymbol("WAKEUP_" + str(i) + "_POLARITY", wakeupEnable)
+                    wakeupPolarity.setLabel("Wakeup Polarity")
+                    wakeupPolarity.addKey("Active Low", "0", "Input pin x is active low.")
+                    wakeupPolarity.addKey("Active High", "1", "Input pin x is active High.")
+                    wakeupPolarity.setDefaultValue(0)
+                    wakeupPolarity.setOutputMode("Value")
+                    wakeupPolarity.setDisplayMode("Key")
+                    wakeupPolarityDependencyList.append("WAKEUP_" + str(i) + "_POLARITY")
+                
+                wakeupEnableValue = rstcComponent.createHexSymbol("WAKEUP_ENABLE_VALUE", rstcwakeupMenu)
+                wakeupEnableValue.setVisible(True)
+                wakeupEnableValue.setDefaultValue(0)
+                wakeupEnableValue.setDependencies(wakeupEnableCalculate, wakeupEnableDependencyList)
+
+                wakeupPolarityValue = rstcComponent.createHexSymbol("WAKEUP_POLARITY_VALUE", rstcwakeupMenu)
+                wakeupPolarityValue.setVisible(True)
+                wakeupPolarityValue.setDefaultValue(0)
+                wakeupPolarityValue.setDependencies(wakeupPolarityCalculate, wakeupPolarityDependencyList)
+            
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
@@ -95,3 +160,10 @@ def instantiateComponent(rstcComponent):
     rstcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     rstcSym_SystemDefFile.setSourcePath("../peripheral/rstc_u2239/templates/system/definitions.h.ftl")
     rstcSym_SystemDefFile.setMarkup(True)
+
+    if rstcWakeupNum != None:
+        RSTCSystemInitFile = rstcComponent.createFileSymbol("RSTC_INIT", None)
+        RSTCSystemInitFile.setType("STRING")
+        RSTCSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        RSTCSystemInitFile.setSourcePath("../peripheral/rstc_u2239/templates/system/initialization.c.ftl")
+        RSTCSystemInitFile.setMarkup(True)
