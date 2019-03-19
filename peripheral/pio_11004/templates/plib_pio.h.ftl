@@ -216,11 +216,7 @@ typedef enum
 
 } PIO_PIN;
 
-<#if PIO_A_INTERRUPT_USED == true ||
-     PIO_B_INTERRUPT_USED == true ||
-     PIO_C_INTERRUPT_USED == true ||
-     PIO_D_INTERRUPT_USED == true ||
-     PIO_E_INTERRUPT_USED == true >
+<#if INTERRUPT_ACTIVE >
 typedef  void (*PIO_PIN_CALLBACK) ( PIO_PIN pin, uintptr_t context);
 </#if>
 
@@ -248,11 +244,7 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask);
 
 void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask);
 
-<#if PIO_A_INTERRUPT_USED == true ||
-     PIO_B_INTERRUPT_USED == true ||
-     PIO_C_INTERRUPT_USED == true ||
-     PIO_D_INTERRUPT_USED == true ||
-     PIO_E_INTERRUPT_USED == true >
+<#if INTERRUPT_ACTIVE >
 void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask);
 
 void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask);
@@ -323,11 +315,7 @@ static inline void PIO_PinOutputEnable(PIO_PIN pin)
     PIO_PortOutputEnable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
 }
 
-<#if PIO_A_INTERRUPT_USED == true ||
-     PIO_B_INTERRUPT_USED == true ||
-     PIO_C_INTERRUPT_USED == true ||
-     PIO_D_INTERRUPT_USED == true ||
-     PIO_E_INTERRUPT_USED == true >
+<#if INTERRUPT_ACTIVE >
 static inline void PIO_PinInterruptEnable(PIO_PIN pin)
 {
     PIO_PortInterruptEnable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
