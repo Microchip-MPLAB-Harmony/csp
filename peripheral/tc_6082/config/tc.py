@@ -866,7 +866,7 @@ def instantiateComponent(tcComponent):
     global extClock
     extClock = [False, False, False] #array to save if ext clock pin is available
 
-    pinout = "LQFP144"
+    pinout = ""
     val = ATDF.getNode("/avr-tools-device-file/variants")
     children = val.getChildren()
     for index in range(0, len(children)):
@@ -883,20 +883,21 @@ def instantiateComponent(tcComponent):
     #Find available channels and available external clock pins
     tc_signals = []
     tc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/signals")
-    tc_signals = tc.getChildren()
-    for pad in range(0, len(tc_signals)):
-        if "TIOA" in tc_signals[pad].getAttribute("group"):
-            padSignal = tc_signals[pad].getAttribute("pad")
-            if padSignal in availablePins:
-                channel[int(tc_signals[pad].getAttribute("index"))%3] = True
-            else:
-                channel[int(tc_signals[pad].getAttribute("index"))%3] = False
-        if "TCLK" in tc_signals[pad].getAttribute("group"):
-            padSignal = tc_signals[pad].getAttribute("pad")
-            if padSignal in availablePins:
-                extClock[int(tc_signals[pad].getAttribute("index"))%3] = True
-            else:
-                extClock[int(tc_signals[pad].getAttribute("index"))%3] = False
+    if tc != None:
+        tc_signals = tc.getChildren()
+        for pad in range(0, len(tc_signals)):
+            if "TIOA" in tc_signals[pad].getAttribute("group"):
+                padSignal = tc_signals[pad].getAttribute("pad")
+                if padSignal in availablePins:
+                    channel[int(tc_signals[pad].getAttribute("index"))%3] = True
+                else:
+                    channel[int(tc_signals[pad].getAttribute("index"))%3] = False
+            if "TCLK" in tc_signals[pad].getAttribute("group"):
+                padSignal = tc_signals[pad].getAttribute("pad")
+                if padSignal in availablePins:
+                    extClock[int(tc_signals[pad].getAttribute("index"))%3] = True
+                else:
+                    extClock[int(tc_signals[pad].getAttribute("index"))%3] = False
 
     sysTimeChannel_Sym = tcComponent.createKeyValueSetSymbol("SYS_TIME_TC_CHANNEL", None)
     sysTimeChannel_Sym.setLabel("Select TC Channel for Time System Service")
