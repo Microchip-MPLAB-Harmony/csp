@@ -376,9 +376,6 @@ pioEnable.setLabel("Use PIO PLIB?")
 pioEnable.setDefaultValue(True)
 pioEnable.setReadOnly(True)
 
-pinConfiguration = coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION", pioEnable)
-pinConfiguration.setLabel("Pin Configuration")
-pinConfiguration.setDescription("Configuration for PIO Pins")
 
 # Needed to map port system APIs to PLIB APIs
 pioSymAPI_Prefix = coreComponent.createStringSymbol("PORT_API_PREFIX", None)
@@ -427,6 +424,10 @@ uniquePinout = len(set(package.values()))
 global packagePinCount
 packagePinCount = int(re.findall(r'\d+', package.keys()[0])[0])
 
+pinConfiguration = coreComponent.createMenuSymbol("PIO_PIN_CONFIGURATION", pioEnable)
+pinConfiguration.setLabel("Pin Configuration")
+pinConfiguration.setDescription("Configuration for PIO Pins")
+
 pinTotalPins = coreComponent.createIntegerSymbol("PIO_PIN_TOTAL" , pinConfiguration)
 pinTotalPins.setVisible(False)
 pinTotalPins.setDefaultValue(packagePinCount)
@@ -443,6 +444,9 @@ if "BGA" in pioPackage.getValue():
     pin_position = sort_alphanumeric(pin_map.keys())
 else:
     pin_position = sorted(pin_map.keys())
+
+
+
 
 # Note that all the lists below starts from 0th index and goes till "packagePinCount-1"
 # But actual pin numbers on the device starts from 1 (not from 0) and goes till "packagePinCount"
@@ -543,6 +547,16 @@ for pinNumber in range(1, packagePinCount + 1):
 ################################# PORT Configuration related code #################################
 ###################################################################################################
 
+def activateInterrupt(symbol, event):
+    global interruptDependncy
+    active = False
+    for i in range(0, len(interruptDependncy)):
+        if Database.getSymbolValue("core", interruptDependncy[i]):
+            active = True
+            break
+    if active != symbol.getValue():
+        symbol.setValue(active, 2)
+
 portConfiguration = coreComponent.createMenuSymbol("PIO_CONFIGURATION", pioEnable)
 portConfiguration.setLabel("PIO Registers Configuration")
 
@@ -592,8 +606,12 @@ pioSymInterruptVectorUpdate = []
 pioSymClkEnComment = []
 global pioSymIntEnComment
 pioSymIntEnComment = []
+global interruptDependncy
+node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]")
+values = node.getChildren()
+interruptDependncy = []
 
-for portNumber in range(0, len(pioSymChannel)):
+for portNumber in range(0, len(values)):
 
     #Enable Peripheral clock for all the PORT Channels in Clock Manager
     Database.setSymbolValue("core", "PIO" + str(pioSymChannel[portNumber]) + "_CLOCK_ENABLE", True, 1)
@@ -615,6 +633,7 @@ for portNumber in range(0, len(pioSymChannel)):
     portInterrupt[portNumber].setDefaultValue(False)
     portInterrupt[portNumber].setVisible(True)
     portInterrupt[portNumber].setReadOnly(True)
+    interruptDependncy.append("PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED")
 
     #list created only for dependency
     portInterruptList.append(portNumber)
@@ -721,7 +740,11 @@ for portNumber in range(0, len(pioSymChannel)):
     pioSymClkEnComment[portNumber].setVisible(False)
     pioSymClkEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
     pioSymClkEnComment[portNumber].setDependencies(ClockStatusWarning, ["core.PIO" + str(pioSymChannel[portNumber]) + "_CLOCK_ENABLE"])
-
+ 
+interruptActive = coreComponent.createBooleanSymbol("INTERRUPT_ACTIVE", portConfiguration)
+interruptActive.setDefaultValue(False)
+interruptActive.setVisible(False)
+interruptActive.setDependencies(activateInterrupt, interruptDependncy)
 # Interrupt Dynamic settings
 pioSymInterruptControl = coreComponent.createBooleanSymbol("NVIC_PIO_ENABLE", None)
 pioSymInterruptControl.setDependencies(pioInterruptControl, portInterruptList)

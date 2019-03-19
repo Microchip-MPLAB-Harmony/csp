@@ -46,11 +46,11 @@
 <#compress> <#-- To remove unwanted new lines -->
 
 <#-- Find out which all port exists in the device -->
-<#assign PORTA_EXISTS = false>
-<#assign PORTB_EXISTS = false>
-<#assign PORTC_EXISTS = false>
-<#assign PORTD_EXISTS = false>
-<#assign PORTE_EXISTS = false>
+<#assign PORTA_EXISTS = PIO_A_INTERRUPT_USED??>
+<#assign PORTB_EXISTS = PIO_B_INTERRUPT_USED??>
+<#assign PORTC_EXISTS = PIO_C_INTERRUPT_USED??>
+<#assign PORTD_EXISTS = PIO_D_INTERRUPT_USED??>
+<#assign PORTE_EXISTS = PIO_E_INTERRUPT_USED??>
 
 <#assign PIO_A_NUM_INT_PINS = 0>
 <#assign PIO_B_NUM_INT_PINS = 0>
@@ -61,19 +61,6 @@
 <#list 1..PIO_PIN_TOTAL as i>
     <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
     <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
-    <#if .vars[pinchannel]?has_content>
-        <#if .vars[pinchannel] == "A">
-            <#assign PORTA_EXISTS = true>
-        <#elseif .vars[pinchannel] == "B">
-            <#assign PORTB_EXISTS = true>
-        <#elseif .vars[pinchannel] == "C">
-            <#assign PORTC_EXISTS = true>
-        <#elseif .vars[pinchannel] == "D">
-            <#assign PORTD_EXISTS = true>
-        <#elseif .vars[pinchannel] == "E">
-            <#assign PORTE_EXISTS = true>
-        </#if>
-    </#if>
     <#if .vars[intConfig]?has_content>
         <#if (.vars[intConfig] != "Disabled")>
             <#if (.vars[pinchannel] == "A")>
@@ -171,11 +158,8 @@
     </#if>
 
 </#macro>
-<#if PIO_A_INTERRUPT_USED == true ||
-     PIO_B_INTERRUPT_USED == true ||
-     PIO_C_INTERRUPT_USED == true ||
-     PIO_D_INTERRUPT_USED == true ||
-     PIO_E_INTERRUPT_USED == true >
+
+<#if INTERRUPT_ACTIVE == true >
 #define PIO_MAX_NUM_OF_CHANNELS     5
     <#assign numOfIntInA = PIO_A_NUM_INT_PINS>
     <#assign numOfIntInAB = PIO_A_NUM_INT_PINS + PIO_B_NUM_INT_PINS>
@@ -307,7 +291,7 @@ void PIO_Initialize ( void )
             PIO_SCDR = PIOE_SCDR_VALUE
         />
     </#if>
-    <#if (PIO_A_INTERRUPT_USED == true) || (PIO_B_INTERRUPT_USED == true) || (PIO_C_INTERRUPT_USED == true) || (PIO_D_INTERRUPT_USED == true) || (PIO_E_INTERRUPT_USED == true) >
+    <#if INTERRUPT_ACTIVE >
     uint32_t i;
     /* Initialize Interrupt Pin data structures */
         <#assign portCurNumCb_A = 0>
@@ -486,11 +470,7 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
     ((pio_registers_t*)port)->PIO_OER = mask;
 }
 
-<#if PIO_A_INTERRUPT_USED == true ||
-     PIO_B_INTERRUPT_USED == true ||
-     PIO_C_INTERRUPT_USED == true ||
-     PIO_D_INTERRUPT_USED == true ||
-     PIO_E_INTERRUPT_USED == true >
+<#if INTERRUPT_ACTIVE >
 // *****************************************************************************
 /* Function:
     void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
@@ -563,11 +543,7 @@ bool PIO_PinInterruptCallbackRegister(
     }
     return false;
 }
-<#if PIO_A_INTERRUPT_USED == true ||
-     PIO_B_INTERRUPT_USED == true ||
-     PIO_C_INTERRUPT_USED == true ||
-     PIO_D_INTERRUPT_USED == true ||
-     PIO_E_INTERRUPT_USED == true >
+<#if INTERRUPT_ACTIVE >
 // *****************************************************************************
 // *****************************************************************************
 // Section: Local Function Implementation
@@ -615,33 +591,44 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
 // *****************************************************************************
 // *****************************************************************************
 </#if>
-
+<#if PIO_A_INTERRUPT_USED??>
 <#if PIO_A_INTERRUPT_USED == true>
     <@PIO_ISR_HANDLER
         PIO_CHANNEL="A"
     />
 </#if>
+</#if>
+<#if PIO_B_INTERRUPT_USED??>
 <#if PIO_B_INTERRUPT_USED == true>
     <@PIO_ISR_HANDLER
         PIO_CHANNEL="B"
     />
 </#if>
+</#if>
+
+<#if PIO_C_INTERRUPT_USED??>
 <#if PIO_C_INTERRUPT_USED == true>
     <@PIO_ISR_HANDLER
         PIO_CHANNEL="C"
     />
 </#if>
+</#if>
+
+<#if PIO_C_INTERRUPT_USED??>
 <#if PIO_D_INTERRUPT_USED == true>
     <@PIO_ISR_HANDLER
         PIO_CHANNEL="D"
     />
 </#if>
+</#if>
+
+<#if PIO_E_INTERRUPT_USED??>
 <#if PIO_E_INTERRUPT_USED == true>
     <@PIO_ISR_HANDLER
         PIO_CHANNEL="E"
     />
 </#if>
-
+</#if>
 
 
 <#macro PIO_ISR_HANDLER PIO_CHANNEL>
