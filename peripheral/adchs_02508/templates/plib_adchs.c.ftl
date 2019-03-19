@@ -235,7 +235,12 @@ bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 /* Read the conversion result */
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
+<#if __PROCESSOR?contains("PIC32MZ")>
+    return (*((&ADCDATA0) + channel));
+</#if>
+<#if __PROCESSOR?contains("PIC32MK")>
     return (uint16_t) (*((&ADCDATA0) + (channel << 2)));
+</#if>
 }
 
 <#if ADCHS_INTERRUPT == true>
