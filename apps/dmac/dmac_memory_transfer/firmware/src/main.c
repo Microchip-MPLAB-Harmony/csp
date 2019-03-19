@@ -73,7 +73,8 @@ void APP_Callback(DMAC_TRANSFER_EVENT status, uintptr_t context)
 {
     transfersDone++;
     timeStamp=timeStamp-SYSTICK_TimerCounterGet();
-
+    
+    printf("%d", status);
     if(status == DMAC_TRANSFER_EVENT_COMPLETE)
     {
         completeStatus = true;
