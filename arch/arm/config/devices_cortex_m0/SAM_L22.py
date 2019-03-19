@@ -82,6 +82,73 @@ systickExternal.setLabel("External Clock Source for SysTick Available")
 systickExternal.setDefaultValue(False)
 systickExternal.setVisible(False)
 
+def getMaxValue(mask):
+    if mask == 0 :
+        return hex(0)
+
+    mask = int(mask, 16)
+    while (mask % 2) == 0:
+        mask = mask >> 1
+
+    return mask
+
+fuseMenu = coreComponent.createMenuSymbol("FUSE_MENU", devCfgMenu)
+fuseMenu.setLabel("Fuse Settings")
+
+registerGroup = "USER_FUSES"
+registerNames = ["USER_WORD_0", "USER_WORD_1"]
+
+default = [0x0, 0x0, 0x6 , 0, 1, 0, 0, 11, 11, 11, 0, 0, 0, 0xFFFF ]
+numfuses = 0
+
+for i in range(0, len(registerNames)):
+    path = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/register-group@[name=\"" + registerGroup + "\"]/register@[name=\"" + registerNames[i] + "\"]"
+    fuseNode = ATDF.getNode(path)
+    fuseNodeValues = fuseNode.getChildren()
+    for index in range(0, len(fuseNodeValues)):
+        key = fuseNodeValues[index].getAttribute("name")
+        caption=fuseNodeValues[index].getAttribute("caption")
+        valueGroup = fuseNodeValues[index].getAttribute("values")
+        stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseMenu)
+        stringSymbol.setDefaultValue(key)
+        stringSymbol.setVisible(False)
+        if valueGroup == None:
+            mask = fuseNodeValues[index].getAttribute("mask")
+            count = bin((int(mask, 16))).count("1")
+            if count == 1:
+                keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseMenu)
+                keyValueSymbol.setLabel(caption)
+                keyValueSymbol.addKey("CLEAR", "0", "CLEAR")
+                keyValueSymbol.addKey("SET", "1", "SET")
+                keyValueSymbol.setDefaultValue(default[numfuses])
+                keyValueSymbol.setOutputMode("Key")
+                keyValueSymbol.setDisplayMode("Description")
+            else:
+                hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseMenu)
+                hexSymbol.setLabel(caption)
+                hexSymbol.setMin(0)
+                hexSymbol.setMax(getMaxValue(mask))
+                hexSymbol.setDefaultValue(default[numfuses])
+        else:
+            valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/value-group@[name=\"" + valueGroup + "\"]"
+            valueGroupNode = ATDF.getNode(valueGroupPath)
+            valueGroupChildren = valueGroupNode.getChildren()
+            keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseMenu)
+            keyValueSymbol.setLabel(caption)
+            for j in range(0, len(valueGroupChildren)):
+                name = valueGroupChildren[j].getAttribute("name")
+                value = valueGroupChildren[j].getAttribute("value")
+                caption = valueGroupChildren[j].getAttribute("caption")
+                keyValueSymbol.addKey(name, str(value), caption)
+            keyValueSymbol.setDefaultValue(default[numfuses])
+            keyValueSymbol.setOutputMode("Value")
+            keyValueSymbol.setDisplayMode("Description")
+
+        numfuses = numfuses + 1
+
+fuse = coreComponent.createIntegerSymbol("NUMBER_OF_FUSES", fuseMenu)
+fuse.setDefaultValue(numfuses)
+fuse.setVisible(False)
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
@@ -147,5 +214,11 @@ armLibCSourceFile.setDestPath("")
 armLibCSourceFile.setProjectPath("config/" + configName + "/")
 armLibCSourceFile.setType("SOURCE")
 armLibCSourceFile.setDependencies(genSysSourceFile, ["CoreSysCallsFile", "CoreSysFiles"])
+
+devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
+devconSystemInitFile.setType("STRING")
+devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
+devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_L22.c.ftl")
+devconSystemInitFile.setMarkup(True)
 
 compilerSpecifics = [armSysStartSourceFile]
