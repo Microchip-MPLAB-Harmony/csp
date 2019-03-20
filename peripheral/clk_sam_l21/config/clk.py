@@ -475,7 +475,7 @@ clkSym_XOSC_Freq.setDependencies(setXOSCFreq, ["CONFIG_CLOCK_XOSC_ENABLE", "CONF
 dfllEnable = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_ENABLE", dfll_Menu)
 dfllEnable.setLabel("Enable DFLL")
 dfllEnable.setDescription("Enable DFLL")
-dfllEnable.setDefaultValue(True)
+dfllEnable.setDefaultValue(False)
 
 dfllOpmode = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_DFLL_OPMODE", dfll_Menu)
 dfllOpmode.setLabel("DFLL operation mode")
@@ -555,7 +555,7 @@ dfllMul.setLabel("DFLL Multiply Factor")
 
 dfllFreq = coreComponent.createIntegerSymbol("DFLL_CLOCK_FREQ", calculatedFreq_Menu)
 dfllFreq.setReadOnly(True)
-dfllFreq.setDefaultValue(48000000)
+dfllFreq.setDefaultValue(0)
 dfllFreq.setLabel("DFLL Clock Frequency")
 dfllFreq.setDependencies(setDfllFreq, ["CONFIG_CLOCK_DFLL_ENABLE",
                                        "CONFIG_CLOCK_DFLL_OPMODE",
@@ -1147,7 +1147,7 @@ def codeGen(symbol, event):
 
     for i in range(0, 9):
         if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)):
-           if gclkSym_GENCTRL_SRC[i].getSelectedKey() in ["FDPLL", "GCLK1"]:
+           if gclkSym_GENCTRL_SRC[i].getSelectedKey() in ["FDPLL", "GCLK1", "DFLL"]:
                 sourceDestmap[gclkSym_GENCTRL_SRC[i].getSelectedKey()].append("GCLK"+str(i))
 
     codeList = topsort(sourceDestmap)
@@ -1373,7 +1373,7 @@ for gclknumber in range(0,9):
     if gclknumber !=1:
         gclkSym_GENCTRL_SRC[gclknumber].addKey("GCLK1", "2", "GCLK Generator 1")
 
-    gclkSym_GENCTRL_SRC[gclknumber].setDefaultValue(3)
+    gclkSym_GENCTRL_SRC[gclknumber].setDefaultValue(0)
     gclkSym_GENCTRL_SRC[gclknumber].setOutputMode("Value")
     gclkSym_GENCTRL_SRC[gclknumber].setDisplayMode("Key")
 
@@ -1451,10 +1451,7 @@ for gclknumber in range(0,9):
     gclkSym_Freq[gclknumber]=coreComponent.createIntegerSymbol("GCLK_" + str(gclknumber) + "_FREQ", gclkSym_num[gclknumber])
     gclkSym_Freq[gclknumber].setLabel("GCLK" + str(gclknumber) + " Clock Frequency")
     gclkSym_Freq[gclknumber].setReadOnly(True)
-    if(gclknumber == 0):
-        gclkSym_Freq[gclknumber].setDefaultValue(dfllFreq.getValue())
-    else:
-        gclkSym_Freq[gclknumber].setDefaultValue(0)
+    gclkSym_Freq[gclknumber].setDefaultValue(0)
 
     gclkSym_FreqMax = coreComponent.createIntegerSymbol("GCLK_" + str(gclknumber) + "_FREQ_MAX", gclkSym_num[gclknumber])
     gclkSym_FreqMax.setLabel("Maximum Clock Frequency")
@@ -1646,6 +1643,8 @@ codeGenerationDep.append("CONFIG_CLOCK_DPLL_ENABLE")
 codeGenerationDep.append("CONFIG_CLOCK_DFLL_ENABLE")
 codeGenerationDep.append("CONFIG_CLOCK_DFLL_OPMODE")
 codeGenerationDep.append("GCLK_ID_1_GENSEL")
+codeGenerationDep.append("GCLK_ID_0_CHEN")
+codeGenerationDep.append("GCLK_ID_1_CHEN")
 codeGenerationList.setDependencies(codeGen, codeGenerationDep)
 codeGenerationList.addValue("    DFLL_Initialize();")
 codeGenerationList.addValue("    GCLK0_Initialize();")
@@ -1840,7 +1839,14 @@ mclkSym_BUPDIV_BUPDIV.setDefaultValue(mclkbupdivDefaultValue)
 mclkSym_BUPDIV_BUPDIV.setOutputMode("Value")
 mclkSym_BUPDIV_BUPDIV.setDisplayMode("Key")
 
+############################Default clock Settings######################
+#Enable DFLL
+dfllEnable.setValue(True, 1)
 
+#Select DFLL as default clock source
+gclkSym_GENCTRL_SRC[0].setValue(3, 1)
+
+################################################################################
 ################################################################################
 #######          Calculated Clock Frequencies        ###########################
 ################################################################################
