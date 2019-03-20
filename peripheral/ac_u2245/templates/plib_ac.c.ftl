@@ -63,19 +63,23 @@
         </#if>
     </#if>
 </#if>
-<#if AC_WINCTRL_WIN1 == true>
-    <#if AC_WINCTRL_VAL != "">
-        <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WEN1_Msk">
-    <#else>
-        <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WEN1_Msk">
+<#if AC_WINCTRL_WIN1 ?has_content >
+    <#if AC_WINCTRL_WIN1 == true>
+        <#if AC_WINCTRL_VAL != "">
+            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WEN1_Msk">
+        <#else>
+            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WEN1_Msk">
+        </#if>
     </#if>
 </#if>
-<#if AC_WINCTRL_WIN1 == true>
-    <#if AC_WINTSEL1 ?has_content >
-        <#if AC_WINCTRL_VAL != "">
-            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL1(${AC_WINTSEL1})">
-        <#else>
-            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL1(${AC_WINTSEL1})">
+<#if AC_WINCTRL_WIN1 ?has_content >
+    <#if AC_WINCTRL_WIN1 == true>
+        <#if AC_WINTSEL1 ?has_content >
+            <#if AC_WINCTRL_VAL != "">
+                <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL1(${AC_WINTSEL1})">
+            <#else>
+                <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL1(${AC_WINTSEL1})">
+            </#if>
         </#if>
     </#if>
 </#if>
@@ -113,11 +117,13 @@
                 <#assign AC_EVCTRL_VAL = "AC_EVCTRL_WINEO0_Msk">
                 </#if>
             </#if>
-            <#if AC_EVCTRL_WINEO1 == true>
-                <#if AC_EVCTRL_VAL != "">
-                <#assign AC_EVCTRL_VAL = AC_EVCTRL_VAL + " | AC_EVCTRL_WINEO1_Msk">
-                <#else>
-                <#assign AC_EVCTRL_VAL = "AC_EVCTRL_WINEO1_Msk">
+            <#if AC_WINCTRL_WIN1 ?has_content >
+                <#if AC_EVCTRL_WINEO1 == true>
+                    <#if AC_EVCTRL_VAL != "">
+                    <#assign AC_EVCTRL_VAL = AC_EVCTRL_VAL + " | AC_EVCTRL_WINEO1_Msk">
+                    <#else>
+                    <#assign AC_EVCTRL_VAL = "AC_EVCTRL_WINEO1_Msk">
+                    </#if>
                 </#if>
             </#if>
         </#if>
