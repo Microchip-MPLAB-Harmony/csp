@@ -1075,7 +1075,7 @@ def codeGen(symbol, event):
 
     for i in range(0, 5):
         if Database.getSymbolValue("core", "GCLK_INST_NUM" + str(i)):
-           if gclkSym_GENCTRL_SRC[i].getSelectedKey() in ["FDPLL", "GCLK1"]:
+           if gclkSym_GENCTRL_SRC[i].getSelectedKey() in ["FDPLL", "GCLK1", "DFLL"]:
                 sourceDestmap[gclkSym_GENCTRL_SRC[i].getSelectedKey()].append("GCLK"+str(i))
 
     codeList = topsort(sourceDestmap)
