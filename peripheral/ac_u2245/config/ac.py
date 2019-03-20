@@ -274,6 +274,32 @@ def instantiateComponent(acComponent):
         #Should not be shown when single-shot is selected.
         acSym_COMPCTRL_HYST.setDependencies(setacHystVisibility,["AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE"])
         
+        #Hysteresis level
+        acSym_COMPCTRL_HYST_LEVEL = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYS_LVL", acSym_COMPCTRL_HYST)
+        acSym_COMPCTRL_HYST_LEVEL.setLabel("Hysteresis Level")
+        
+        acSym_COMPCTRL_HYST_LEVEL_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]")
+        acSym_COMPCTRL_HYST_Values = []
+        acSym_COMPCTRL_HYST_Values = acSym_COMPCTRL_HYST_LEVEL_node.getChildren()       
+        
+        acSym_COMPCTRL_HYST_Default_Val = 0
+        
+        for id in range(len(acSym_COMPCTRL_HYST_Values)):
+            acSym_COMPCTRL_HYST_Key_Name = acSym_COMPCTRL_HYST_Values[id].getAttribute("name")
+
+            if(acSym_COMPCTRL_HYST_Key_Name == "HYST50"):
+                acSym_COMPCTRL_HYST_Default_Val = id       
+           
+            acSym_COMPCTRL_HYST_Key_Description = acSym_COMPCTRL_HYST_Values[id].getAttribute("caption")
+            acSym_COMPCTRL_HYST_Key_Value = acSym_COMPCTRL_HYST_Values[id].getAttribute("value")
+            acSym_COMPCTRL_HYST_LEVEL.addKey(acSym_COMPCTRL_HYST_Key_Name, acSym_COMPCTRL_HYST_Key_Value, acSym_COMPCTRL_HYST_Key_Description)        
+        
+        acSym_COMPCTRL_HYST_LEVEL.setDefaultValue(acSym_COMPCTRL_HYST_Default_Val)
+        acSym_COMPCTRL_HYST_LEVEL.setOutputMode("Value")
+        acSym_COMPCTRL_HYST_LEVEL.setDisplayMode("Description")
+        acSym_COMPCTRL_HYST_LEVEL.setVisible(False)
+        acSym_COMPCTRL_HYST_LEVEL.setDependencies(setacSymbolVisibility,["AC" + str(comparatorID) + "_HYSTEN"])
+        
         #Speed selection
         acSym_COMPCTRL_SPEED = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_SPEED", acSym_AdvConf)
         acSym_COMPCTRL_SPEED.setLabel("Speed Selection")
@@ -314,82 +340,73 @@ def instantiateComponent(acComponent):
         acSym_EVCTRL_COMPEO.setVisible(False)
         acSym_EVCTRL_COMPEO.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
     
+    node1 = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AC\"]/instance@[name=\"AC""\"]/parameters")
+    numOfWindowMonitors = 0
+    parameters1 = []
+    parameters1 = node1.getChildren()
+    for param in range (0, len(parameters1)):
+        if(parameters[param].getAttribute("name") == "PAIRS"):
+            numOfWindowMonitors = int(parameters[param].getAttribute("value"))
+    
     #Menu item for window configurations
     acSym_WindowConf = acComponent.createMenuSymbol("WINDOW_CONFIGURATION", None)
     acSym_WindowConf.setLabel("Comparator Window Configurations")
     
-    #Window 0 configuration
-    acSym_WINCTRL0 = acComponent.createBooleanSymbol("AC_WINCTRL_WIN0", acSym_WindowConf)
-    acSym_WINCTRL0.setLabel("Window 0 Enable")
-    acSym_WINCTRL0.setDefaultValue(False)
+    acSym_WINCTRL = []
+    acSym_INTENSET_WIN = []
+    acSym_WNCTRL_WINT = []
+    acSym_WINCTRL_EVENT_OUT = []
+    acSym_WNCTRL_WINT_node = []
     
-    #Window 0 Interrupt Enable
-    acSym_INTENSET_WIN0 = acComponent.createBooleanSymbol("AC_INTENSET_WIN0", acSym_WINCTRL0)
-    acSym_INTENSET_WIN0.setLabel("Window 0 Interrupt Enable")
-    acSym_INTENSET_WIN0.setDefaultValue(False)
-    
-    #Window 0 interrupt configuration
-    acSym_WNCTRL_WINT0 = acComponent.createKeyValueSetSymbol("AC_WINTSEL0", acSym_WINCTRL0)
-    acSym_WNCTRL_WINT0.setLabel("AC Window 0 Interrupt Selection")
-    
-    acSym_WNCTRL_WINT0_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_WINCTRL__WINTSEL0\"]")
-    acSym_WNCTRL_WINT0_Values = []
-    acSym_WNCTRL_WINT0_Values = acSym_WNCTRL_WINT0_node.getChildren()
+    for num in range (0, numOfWindowMonitors):
 
-    acSym_WNCTRL_WINT0_Default_Val = 0
-
-    for id in range(len(acSym_WNCTRL_WINT0_Values)):
-        acSym_WNCTRL_WINT0_Key_Name = acSym_WNCTRL_WINT0_Values[id].getAttribute("name")
-
-        if(acSym_WNCTRL_WINT0_Key_Name == "ABOVE"):
-            acSym_WNCTRL_WINT0_Default_Val = id
-
-        acSym_WNCTRL_WINT0_Key_Description = acSym_WNCTRL_WINT0_Values[id].getAttribute("caption")
-        acSym_WNCTRL_WINT0_Key_Value = acSym_WNCTRL_WINT0_Values[id].getAttribute("value")
-        acSym_WNCTRL_WINT0.addKey(acSym_WNCTRL_WINT0_Key_Name, acSym_WNCTRL_WINT0_Key_Value, acSym_WNCTRL_WINT0_Key_Description)
-
-    acSym_WNCTRL_WINT0.setDefaultValue(acSym_WNCTRL_WINT0_Default_Val)
-    acSym_WNCTRL_WINT0.setOutputMode("Value")
-    acSym_WNCTRL_WINT0.setDisplayMode("Description")
-    
-    #Window 0 Event Output
-    acSym_WINCTRL_EVENT_OUT0 = acComponent.createBooleanSymbol("AC_EVCTRL_WINEO0", acSym_WINCTRL0)
-    acSym_WINCTRL_EVENT_OUT0.setLabel("Enable Window 0 Event Output")
-    acSym_WINCTRL_EVENT_OUT0.setDefaultValue(False)
-    
-    #Window 1 configuration
-    acSym_WINCTRL1 = acComponent.createBooleanSymbol("AC_WINCTRL_WIN1", acSym_WindowConf)
-    acSym_WINCTRL1.setLabel("Window 1 Enable")
-    acSym_WINCTRL1.setDefaultValue(False)
-    
-    #Window 1 Interrupt Enable
-    acSym_INTENSET_WIN1 = acComponent.createBooleanSymbol("AC_INTENSET_WIN1", acSym_WINCTRL1)
-    acSym_INTENSET_WIN1.setLabel("Window 1 Interrupt Enable")
-    acSym_INTENSET_WIN1.setDefaultValue(False)
-    
-    #Window 1 interrupt configuration
-    acSym_WNCTRL_WINT1 = acComponent.createKeyValueSetSymbol("AC_WINTSEL1", acSym_WINCTRL1)
-    acSym_WNCTRL_WINT1.setLabel("AC Window 1 Interrupt Selection")
-    
-    #Use the information already paresed from atdf and fill key values for Window 1
-    for id in range(len(acSym_WNCTRL_WINT0_Values)):
-        acSym_WNCTRL_WINT0_Key_Name = acSym_WNCTRL_WINT0_Values[id].getAttribute("name")
-
-        if(acSym_WNCTRL_WINT0_Key_Name == "ABOVE"):
-            acSym_WNCTRL_WINT1_Default_Val = id
-
-        acSym_WNCTRL_WINT0_Key_Description = acSym_WNCTRL_WINT0_Values[id].getAttribute("caption")
-        acSym_WNCTRL_WINT0_Key_Value = acSym_WNCTRL_WINT0_Values[id].getAttribute("value")
-        acSym_WNCTRL_WINT1.addKey(acSym_WNCTRL_WINT0_Key_Name, acSym_WNCTRL_WINT0_Key_Value, acSym_WNCTRL_WINT0_Key_Description)
+        #Window 0 configuration
+        acSym_WINCTRL.append(num)
+        acSym_WINCTRL[num] = acComponent.createBooleanSymbol("AC_WINCTRL_WIN"+str(num), acSym_WindowConf)
+        acSym_WINCTRL[num].setLabel("Window "+ str(num) +" Enable")
+        acSym_WINCTRL[num].setDefaultValue(False)
         
-    acSym_WNCTRL_WINT1.setDefaultValue(acSym_WNCTRL_WINT1_Default_Val)
-    acSym_WNCTRL_WINT1.setOutputMode("Value")
-    acSym_WNCTRL_WINT1.setDisplayMode("Description")
-    
-    #Window 1 Event Output
-    acSym_WINCTRL_EVENT_OUT1 = acComponent.createBooleanSymbol("AC_EVCTRL_WINEO1", acSym_WINCTRL1)
-    acSym_WINCTRL_EVENT_OUT1.setLabel("Enable Window 1 Event Output")
-    acSym_WINCTRL_EVENT_OUT1.setDefaultValue(False)
+        #Window 0 Interrupt Enable
+        acSym_INTENSET_WIN.append(num)
+        acSym_INTENSET_WIN[num] = acComponent.createBooleanSymbol("AC_INTENSET_WIN"+str(num), acSym_WINCTRL[num])
+        acSym_INTENSET_WIN[num].setLabel("Window Interrupt Enable")
+        acSym_INTENSET_WIN[num].setDefaultValue(False)
+        acSym_INTENSET_WIN[num].setVisible(False)
+        acSym_INTENSET_WIN[num].setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN"+str(num)])
+        
+        #Window 0 interrupt configuration
+        acSym_WNCTRL_WINT.append(num)
+        acSym_WNCTRL_WINT[num] = acComponent.createKeyValueSetSymbol("AC_WINTSEL"+str(num), acSym_WINCTRL[num])
+        acSym_WNCTRL_WINT[num].setLabel("AC Window Interrupt Selection")
+
+        acSym_WNCTRL_WINT_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_WINCTRL__WINTSEL0\"]")
+        acSym_WNCTRL_WINT_Values = []
+        acSym_WNCTRL_WINT_Values = acSym_WNCTRL_WINT_node.getChildren()
+        acSym_WNCTRL_WINT0_Default_Val = 0
+
+        for id in range(len(acSym_WNCTRL_WINT_Values)):
+            acSym_WNCTRL_WINT0_Key_Name = acSym_WNCTRL_WINT_Values[id].getAttribute("name")
+
+            if(acSym_WNCTRL_WINT0_Key_Name == "ABOVE"):
+                acSym_WNCTRL_WINT0_Default_Val = id
+
+            acSym_WNCTRL_WINT0_Key_Description = acSym_WNCTRL_WINT_Values[id].getAttribute("caption")
+            acSym_WNCTRL_WINT0_Key_Value = acSym_WNCTRL_WINT_Values[id].getAttribute("value")
+            acSym_WNCTRL_WINT[num].addKey(acSym_WNCTRL_WINT0_Key_Name, acSym_WNCTRL_WINT0_Key_Value, acSym_WNCTRL_WINT0_Key_Description)
+
+        acSym_WNCTRL_WINT[num].setDefaultValue(acSym_WNCTRL_WINT0_Default_Val)
+        acSym_WNCTRL_WINT[num].setOutputMode("Value")
+        acSym_WNCTRL_WINT[num].setDisplayMode("Description")
+        acSym_WNCTRL_WINT[num].setVisible(False)
+        acSym_WNCTRL_WINT[num].setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN"+str(num)])
+        
+        #Window 0 Event Output
+        acSym_WINCTRL_EVENT_OUT.append(num)
+        acSym_WINCTRL_EVENT_OUT[num] = acComponent.createBooleanSymbol("AC_EVCTRL_WINEO"+str(num), acSym_WINCTRL[num])
+        acSym_WINCTRL_EVENT_OUT[num].setLabel("Enable Window Event Output")
+        acSym_WINCTRL_EVENT_OUT[num].setDefaultValue(False)
+        acSym_WINCTRL_EVENT_OUT[num].setVisible(False)
+        acSym_WINCTRL_EVENT_OUT[num].setDependencies(setacSymbolVisibility,["AC_WINCTRL_WIN"+str(num)])        
     
     ############################################################################
     #### Dependency ####
