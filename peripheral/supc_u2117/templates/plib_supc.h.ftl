@@ -22,7 +22,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -67,14 +67,37 @@
 #endif
 // DOM-IGNORE-END
 
-<#if SUPC_INTERRRUPT_MODE>
-typedef void (*SUPC_BODVDD_CALLBACK)( uintptr_t context );
+<#if HAS_BKOUT_REG??>
+typedef enum
+{
+    SUPC_OUTPIN_OUT0 = 0,
+    SUPC_OUTPIN_OUT1 = 1
+}SUPC_OUTPIN;
+
+void ${SUPC_INSTANCE_NAME}_SetOutputPin( SUPC_OUTPIN pin );
+
+void ${SUPC_INSTANCE_NAME}_ClearOutputPin( SUPC_OUTPIN pin );
+
+</#if>
+<#if HAS_SEL_BIT??>
+typedef enum
+{
+    SUPC_VREGSEL_LDO = 0,
+    SUPC_VREGSEL_BUCK = 1
+}SUPC_VREGSEL;
+
+void ${SUPC_INSTANCE_NAME}_SelectVoltageRegulator(SUPC_VREGSEL regsel);
+
 </#if>
 
+<#if SUPC_INTERRUPT_ENABLE>
+typedef void (*SUPC_${SUPC_BOD_NAME}_CALLBACK)( uintptr_t context );
+
+</#if>
 void ${SUPC_INSTANCE_NAME}_Initialize( void );
 
-<#if SUPC_INTERRRUPT_MODE>
-void ${SUPC_INSTANCE_NAME}_BODVDDCallbackRegister( SUPC_BODVDD_CALLBACK callback, uintptr_t context );
+<#if SUPC_INTERRUPT_ENABLE>
+void ${SUPC_INSTANCE_NAME}_${SUPC_BOD_NAME}CallbackRegister( SUPC_${SUPC_BOD_NAME}_CALLBACK callback, uintptr_t context );
 </#if>
 
 // DOM-IGNORE-BEGIN
