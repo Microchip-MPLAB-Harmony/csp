@@ -22,7 +22,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -69,25 +69,29 @@
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Data Types
-// *****************************************************************************
-
-typedef enum
-{
-    PM_SLEEP_MODE_IDLE = 0x2,
-    PM_SLEEP_MODE_STANDBY = 0x4
-} PM_SLEEP_MODE;
-
-// *****************************************************************************
-// *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
 void ${PM_INSTANCE_NAME}_Initialize( void );
 
-void ${PM_INSTANCE_NAME}_SleepModeEnter( PM_SLEEP_MODE sleepMode );
+void ${PM_INSTANCE_NAME}_IdleModeEnter( void );
 
+void ${PM_INSTANCE_NAME}_StandbyModeEnter( void );
+
+<#if HAS_BACKUP_SLEEP??>
+void ${PM_INSTANCE_NAME}_BackupModeEnter( void );
+
+</#if>
+<#if HAS_OFF_SLEEP??>
+void ${PM_INSTANCE_NAME}_OffModeEnter( void );
+
+</#if>
+<#if HAS_IORET_BIT??>
+void ${PM_INSTANCE_NAME}_IO_RetentionSet( void );
+
+void ${PM_INSTANCE_NAME}_IO_RetentionClear( void );
+</#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
