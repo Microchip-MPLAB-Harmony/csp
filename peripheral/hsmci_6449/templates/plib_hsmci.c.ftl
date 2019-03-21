@@ -209,6 +209,8 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
 {
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_DMA = HSMCI_DMA_DMAEN_Msk;
 
+    ${XDMAC_INSTANCE_NAME}_ChannelDisable(${HSMCI_INSTANCE_NAME}_DMA_CHANNEL);
+
     if (operation == HSMCI_DATA_TRANSFER_DIR_READ)
     {
         ${XDMAC_INSTANCE_NAME}_ChannelSettingsSet(${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
@@ -466,6 +468,9 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
 
 void ${HSMCI_INSTANCE_NAME}_ModuleInit ( void )
 {
+    /* Disable write protection */
+    ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_WPMR = 0x4D434900;
+
     /* Set the Data Timeout Register to 2 Mega Cycles */
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_DTOR = HSMCI_DTOR_DTOMUL_1048576 | HSMCI_DTOR_DTOCYC(2);
 
