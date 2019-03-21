@@ -100,7 +100,7 @@ maxFrequencyPl2 = {
     "GCLK_ID_3_FREQ" : 48000000,
     "GCLK_ID_4_FREQ" : 48000000,
     "GCLK_ID_5_FREQ" : 48000000,
-    "GCLK_ID_6_FREQ" : 0,
+    "GCLK_ID_6_FREQ" : 48000000,
     "GCLK_ID_7_FREQ" : 48000000,
     "GCLK_ID_8_FREQ" : 48000000,
     "GCLK_ID_9_FREQ" : 48000000,
@@ -1918,3 +1918,5 @@ clockSystemDefFile.setType("STRING")
 clockSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 clockSystemDefFile.setSourcePath("../peripheral/clk_sam_l22/templates/system/definitions.h.ftl")
 clockSystemDefFile.setMarkup(True)
+
+coreComponent.addPlugin("../peripheral/clk_sam_l22/plugin/clk_sam_l22.jar")
