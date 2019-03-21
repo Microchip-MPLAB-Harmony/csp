@@ -63,21 +63,13 @@ def instantiateComponent(sdhcComponent):
 
     sdhcCD = sdhcComponent.createBooleanSymbol("SDHC_SDCDEN", None)
     sdhcCD.setLabel("Use SD Card Detect (SDCD#) Pin")
-    sdhcCD.setDefaultValue(True)
-
-    sdhcCDComment = sdhcComponent.createCommentSymbol("SDHC_SDCDEN_COMMENT", sdhcCD)
-    sdhcCDComment.setLabel("!!!Configure SDCD pin in Pin Configuration!!!")
-    sdhcCDComment.setVisible(sdhcCD.getValue())
-    sdhcCDComment.setDependencies(updateSDCDENCommentVisibility, ["SDHC_SDCDEN"])
+    sdhcCD.setDefaultValue(False)
+    sdhcCD.setVisible(False)
 
     sdhcWP = sdhcComponent.createBooleanSymbol("SDHC_SDWPEN", None)
     sdhcWP.setLabel("Use SD Write Protect (SDWP#) Pin")
-    sdhcWP.setDefaultValue(True)
-
-    sdhcWPComment = sdhcComponent.createCommentSymbol("SDHC_SDWPEN_COMMENT", sdhcWP)
-    sdhcWPComment.setLabel("!!!Configure SDWP pin in Pin Configuration!!!")
-    sdhcWPComment.setVisible(sdhcWP.getValue())
-    sdhcWPComment.setDependencies(updateSDWPENCommentVisibility, ["SDHC_SDWPEN"])
+    sdhcWP.setDefaultValue(False)
+    sdhcWP.setVisible(False)
 
     sdhcDescLines = sdhcComponent.createIntegerSymbol("SDHC_NUM_DESCRIPTOR_LINES", None)
     sdhcDescLines.setLabel("Number of ADMA2 Descriptor Lines")
