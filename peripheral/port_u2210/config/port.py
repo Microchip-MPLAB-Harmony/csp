@@ -53,7 +53,8 @@ def packageChange(symbol, pinout):
     global pin_map
     global pin
     global pin_position
-
+    global portGroupName
+    global pinGroupNum
     ### No need to process if the device has only one pinout but multiple packages eg: TQFP, LQFP and QFN
     if uniquePinout > 1:
         cur_package = package.get(pinout["value"])
@@ -64,12 +65,12 @@ def packageChange(symbol, pinout):
             pin_position = []
             portBitPositionNode = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(pinout["value"])) + "\"]")
             for id in range(0,len(portBitPositionNode.getChildren())):
-                if "BGA" in pinout["value"]:
+                if "BGA" in pinout["value"] or "WLCSP" in pinout["value"]:
                     pin_map[portBitPositionNode.getChildren()[id].getAttribute("position")] = portBitPositionNode.getChildren()[id].getAttribute("pad")
                 else:
                     pin_map[int(portBitPositionNode.getChildren()[id].getAttribute("position"))] = portBitPositionNode.getChildren()[id].getAttribute("pad")
 
-            if "BGA" in pinout["value"]:
+            if "BGA" in pinout["value"] or "WLCSP" in pinout["value"]:
                 ## BGA package ID's are alphanumeric unlike TQFP special sorting required
                 pin_position = sort_alphanumeric(pin_map.keys())
             else:
@@ -80,6 +81,7 @@ def packageChange(symbol, pinout):
                 if not pin[index - 1].getVisible():
                     pin[index - 1].setVisible(True)
                 pin[index - 1].setLabel("Pin " + str(pin_position[index - 1]))
+                pinGroupNum[index-1].setValue(portGroupName.index(str(pin_map.get(pin_position[index-1]))[1]), 2)
                 if pin_map.get(pin_position[index-1]).startswith("P"):
                     Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_PIN", int(re.findall('\d+', pin_map.get(pin_position[index - 1]))[0]), 2)
                     Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_GROUP", pin_map.get(pin_position[index - 1])[1], 2)
@@ -230,9 +232,14 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
             Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)), 1)
 
         portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(portPackage.getValue())) + "\"]/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
-
-        if portPositionNodePin != None:
-            Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , str(portPositionNodePin.getAttribute("pad")), 1)
+        position = str(event["id"].split("_")[1])
+        bitposition = Database.getSymbolValue("core", "PIN_" + position + "_PORT_PIN")
+        if bitPosition < 10:
+            bitPositionstr = "0" + str(bitposition)
+        else:
+            bitPositionstr = str(bitposition)
+        padName = "P" + groupName + bitPositionstr
+        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , padName, 1)
 
     prevID = event["id"]
     prevVal = event["value"]
@@ -317,6 +324,7 @@ pinInputEnable = []
 pinDirList = []
 pinLatchList = []
 pinPinMuxList = []
+global pinGroupNum
 pinGroupNum = []
 portSym_PIN_PINCFG = []
 
