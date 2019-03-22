@@ -103,8 +103,8 @@ def getCorePeripheralsInterruptDataStructure():
     }
     return corePeripherals
 
-
-print("Loading System Services for " + Variables.get("__PROCESSOR"))
+processor = Variables.get("__PROCESSOR")
+print("Loading System Services for " + processor)
 
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
 
@@ -169,12 +169,14 @@ mipsMenu.setLabel("MIPS Configuration")
 mipsMenu.setDescription("Configuration for MIPS processor")
 
 # load clock manager information
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mx/config/clk.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mx/config/clk.py")
 #coreComponent.addPlugin("../peripheral/clk_pic32mk/plugin/clockmanager.jar")
 
-# load device specific pin manager information
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_01618/config/gpio.py")
-coreComponent.addPlugin("../peripheral/gpio_01618/plugin/gpio_01618.jar")
+# load device specific pin manager information - only applies to subset of supported devices of PIC32MX family
+if(("PIC32MX330F" in processor) or ("PIC32MX350F" in processor) or ("PIC32MX370F" in processor) or
+   ("PIC32MX430F" in processor) or ("PIC32MX450F" in processor) or ("PIC32MX470F" in processor)):
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_01618/config/gpio.py")
+    coreComponent.addPlugin("../peripheral/gpio_01618/plugin/gpio_01618.jar")
 
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("(no additional MIPS configuration)")
