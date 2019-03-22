@@ -553,7 +553,7 @@ for portNumber in range(0, len(group)):
         portEVSYS = coreComponent.createMenuSymbol("PORT_MENU_EVSYS" + str(portNumber), port[portNumber])
         portEVSYS.setLabel("EVENT System Configuraiton")
 
-        for i in range(0,len(group)):
+        for i in range(0, 4):
             portEVSYSEnable = coreComponent.createBooleanSymbol("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE", portEVSYS)
             portEVSYSEnable.setLabel("Enable Event" + str(i) + " Input")
             evsysDep.append("PORT_" + str(portNumber) + "_EVACT" + str(i) + "_ENABLE")
