@@ -69,6 +69,16 @@
 
 typedef enum
 {
+<#if EVIC_IRQ_MIN != -1 && EVIC_IRQ_MAX != -1>
+<#list EVIC_IRQ_MIN..EVIC_IRQ_MAX as i>
+    <#assign INT_NAME = "EVIC_" + i + "_IRQ_NAME">
+    <#assign IRQ_NAME = "EVIC_" + i + "_IRQ">
+    <#if .vars[INT_NAME]?? && .vars[IRQ_NAME]?? && .vars[INT_NAME] != "None" && .vars[IRQ_NAME] != "None">
+        <#lt>    INT_SOURCE_${.vars[INT_NAME]} = ${.vars[IRQ_NAME]},
+
+    </#if>
+</#list>
+<#else>
 <#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
     <#assign INT_NAME = "EVIC_" + i + "_NAME">
     <#assign VECT_NAME = "EVIC_" + i + "_VECTOR">
@@ -77,6 +87,7 @@ typedef enum
 
     </#if>
 </#list>
+</#if>
 } INT_SOURCE;
 
 // *****************************************************************************

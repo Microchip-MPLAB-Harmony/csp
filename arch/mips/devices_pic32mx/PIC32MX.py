@@ -70,8 +70,8 @@ def _process_valuegroup_entry(node):
 
 def getCorePeripheralsInterruptDataStructure():
 
-    dmacVectName = ["DMA0", "DMA1", "DMA2", "DMA3", "DMA4", "DMA5", "DMA6", "DMA7"]
-    dmacIntSrc = ["CHANNEL0", "CHANNEL1", "CHANNEL2", "CHANNEL3", "CHANNEL4", "CHANNEL5", "CHANNEL6", "CHANNEL7"]
+    dmacVectName = ["DMA0", "DMA1", "DMA2", "DMA3"]
+    dmacIntSrc = ["CHANNEL0", "CHANNEL1", "CHANNEL2", "CHANNEL3"]
     uartIntSrc = ["USART_ERROR", "USART_RX", "USART_TX_COMPLETE"]
     spiIntSrc = ["SPI_ERROR", "SPI_RX", "SPI_TX_COMPLETE"]
     i2cIntSrc = ["I2C_0", "I2C_1"]
@@ -80,27 +80,22 @@ def getCorePeripheralsInterruptDataStructure():
 
             "DMAC" : {"name":dmacVectName, "INT_SRC":dmacIntSrc},
 
-            "UART1" : {"name":["UART1_FAULT", "UART1_RX", "UART1_TX"], "INT_SRC":uartIntSrc},
-            "UART2" : {"name":["UART2_FAULT", "UART2_RX", "UART2_TX"], "INT_SRC":uartIntSrc},
-            "UART3" : {"name":["UART3_FAULT", "UART3_RX", "UART3_TX"], "INT_SRC":uartIntSrc},
-            "UART4" : {"name":["UART4_FAULT", "UART4_RX", "UART4_TX"], "INT_SRC":uartIntSrc},
-            "UART5" : {"name":["UART5_FAULT", "UART5_RX", "UART5_TX"], "INT_SRC":uartIntSrc},
-            "UART6" : {"name":["UART6_FAULT", "UART6_RX", "UART6_TX"], "INT_SRC":uartIntSrc},
+            "UART1" : {"name":["UART1_ERR", "UART1_RX", "UART1_TX"], "INT_SRC":uartIntSrc},
+            "UART2" : {"name":["UART2_ERR", "UART2_RX", "UART2_TX"], "INT_SRC":uartIntSrc},
+            "UART3" : {"name":["UART3_ERR", "UART3_RX", "UART3_TX"], "INT_SRC":uartIntSrc},
+            "UART4" : {"name":["UART4_ERR", "UART4_RX", "UART4_TX"], "INT_SRC":uartIntSrc},
+            "UART5" : {"name":["UART5_ERR", "UART5_RX", "UART5_TX"], "INT_SRC":uartIntSrc},
 
-            "SPI1" : {"name":["SPI1_FAULT", "SPI1_RX", "SPI1_TX"], "INT_SRC":spiIntSrc},
-            "SPI2" : {"name":["SPI2_FAULT", "SPI2_RX", "SPI2_TX"], "INT_SRC":spiIntSrc},
-            "SPI3" : {"name":["SPI3_FAULT", "SPI3_RX", "SPI3_TX"], "INT_SRC":spiIntSrc},
-            "SPI4" : {"name":["SPI4_FAULT", "SPI4_RX", "SPI4_TX"], "INT_SRC":spiIntSrc},
-            "SPI5" : {"name":["SPI5_FAULT", "SPI5_RX", "SPI5_TX"], "INT_SRC":spiIntSrc},
-            "SPI6" : {"name":["SPI6_FAULT", "SPI6_RX", "SPI6_TX"], "INT_SRC":spiIntSrc},
+            "SPI1" : {"name":["SPI1_ERR", "SPI1_RX", "SPI1_TX"], "INT_SRC":spiIntSrc},
+            "SPI2" : {"name":["SPI2_ERR", "SPI2_RX", "SPI2_TX"], "INT_SRC":spiIntSrc},
+            "SPI3" : {"name":["SPI3_ERR", "SPI3_RX", "SPI3_TX"], "INT_SRC":spiIntSrc},
+            "SPI4" : {"name":["SPI4_ERR", "SPI4_RX", "SPI4_TX"], "INT_SRC":spiIntSrc},
 
             "I2C1" : {"name":["I2C1_BUS", "I2C1_MASTER"], "INT_SRC":i2cIntSrc},
-            "I2C2" : {"name":["I2C2_BUS", "I2C2_MASTER"], "INT_SRC":i2cIntSrc},
-            "I2C3" : {"name":["I2C3_BUS", "I2C3_MASTER"], "INT_SRC":i2cIntSrc},
-            "I2C4" : {"name":["I2C4_BUS", "I2C4_MASTER"], "INT_SRC":i2cIntSrc},
-            "I2C5" : {"name":["I2C5_BUS", "I2C5_MASTER"], "INT_SRC":i2cIntSrc}
+            "I2C2" : {"name":["I2C2_BUS", "I2C2_MASTER"], "INT_SRC":i2cIntSrc}
 
     }
+
     return corePeripherals
 
 processor = Variables.get("__PROCESSOR")
@@ -181,8 +176,8 @@ if(("PIC32MX330F" in processor) or ("PIC32MX350F" in processor) or ("PIC32MX370F
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("(no additional MIPS configuration)")
 
-#  execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
-#  coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
+coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
 
 # load dmt
 #  execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmt_01520/config/dmt.py")

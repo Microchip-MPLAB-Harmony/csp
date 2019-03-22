@@ -83,7 +83,6 @@ evicVectorSettings = {
     "CORE_SOFTWARE_0" : [True, True, False, str(min(evicPriorityGroup)), True, False, str(min(evicSubPriorityGroup)), True, False, True],  # Specific to FreeRTOS
     "TIMER_1"         : [False, True, False, str(min(evicPriorityGroup)), True, False, str(min(evicSubPriorityGroup)), True, False, True],  # With RTOS
     "Peripheral"      : [False, False, True, str(min(evicPriorityGroup)), False, True, str(min(evicSubPriorityGroup)), False, True, False]  # With Baremetal
-
 }
 
 ################################################################################
@@ -109,8 +108,6 @@ def updateInterruptPriorityAndSubpriorityValue(symbol, event):
     global prioShift
     global subprioShift
 
-    found = False
-
     # pick off interrupt index number embedded within event ID
     index = event["id"].replace("EVIC_", "")
 
@@ -120,52 +117,47 @@ def updateInterruptPriorityAndSubpriorityValue(symbol, event):
         if len(prioList) != 0:
             shiftval = prioList[0].get("priorityBit")
             symbol.setValue(int(event["value"]) << shiftval, 2)
-            found = True
     elif "_SUBPRIORITY" in event["id"]:
         index = index.replace("_SUBPRIORITY", "")
         subPrioList = [dict for dict in subprioShift if index == dict["index"]]
         if len(subPrioList) != 0:
             shiftval = subPrioList[0].get("subPriorityBit")
             symbol.setValue(int(event["value"]) << shiftval, 2)
-            found = True
-
-    if found == False:
-        Log.writeErrorMessage("***********prioShift: cannot find anything ***************index ", index)
 
 def generateEVICVectorDataStructure():
 
     interruptsChildrenList = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
-    for interrupt in range (0, len(interruptsChildrenList)):
+    for interrupt in range (len(interruptsChildrenList)):
 
         vectorDict = {}
-        vCaption = ""
-        vModuleInstance = ""
-        vIndex = int(interruptsChildrenList[interrupt].getAttribute("index"))
+        irqCaption = ""
+        irqIndex = -1
+        irqName = ""
 
-        if "module-instance" in interruptsChildrenList[interrupt].getAttributeList():
-            vModuleInstance = str(interruptsChildrenList[interrupt].getAttribute("module-instance"))
+        vecIndex = int(interruptsChildrenList[interrupt].getAttribute("index"))
+        vecName = str(interruptsChildrenList[interrupt].getAttribute("name"))
+        vecCaption = str(interruptsChildrenList[interrupt].getAttribute("caption"))
 
-        if "header:alternate-name" in interruptsChildrenList[interrupt].getAttributeList():
-            vName = str(interruptsChildrenList[interrupt].getAttribute("header:alternate-name"))
+        if "irq-index" in interruptsChildrenList[interrupt].getAttributeList():
+            irqIndex = int(interruptsChildrenList[interrupt].getAttribute("irq-index"))
+
+        if "irq-name" in interruptsChildrenList[interrupt].getAttributeList():
+            irqName = str(interruptsChildrenList[interrupt].getAttribute("irq-name"))
         else:
-            vName = str(interruptsChildrenList[interrupt].getAttribute("name"))
+            irqName = vecName
 
-        if "header:alternate-caption" in interruptsChildrenList[interrupt].getAttributeList():
-            if str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption")) == "None":
-                vCaption = vName
-            else:
-                vCaption = str(interruptsChildrenList[interrupt].getAttribute("header:alternate-caption"))
+        if "irq-caption" in interruptsChildrenList[interrupt].getAttributeList():
+            irqCaption = str(interruptsChildrenList[interrupt].getAttribute("irq-caption"))
         else:
-            if str(interruptsChildrenList[interrupt].getAttribute("caption")) == "None":
-                vCaption = vName
-            else:
-                vCaption = str(interruptsChildrenList[interrupt].getAttribute("caption"))
+            irqCaption = vecCaption
 
-        vectorDict["index"] = vIndex
-        vectorDict["name"] = vName
-        vectorDict["caption"] = vCaption
-        vectorDict["module-instance"] = vModuleInstance
+        vectorDict["index"] = vecIndex
+        vectorDict["name"] = vecName
+        vectorDict["caption"] = vecCaption
+        vectorDict["irq-index"] = irqIndex
+        vectorDict["irq-name"] = irqName
+        vectorDict["irq-caption"] = irqCaption
 
         evicVectorDataStructure.append(vectorDict)
 
@@ -204,8 +196,11 @@ def updateEVICVectorSettings(symbol, event):
 
 generateEVICVectorDataStructure()
 
-lowestID = min([vectIndex["index"] for vectIndex in evicVectorDataStructure])
-highestID = max([vectIndex["index"] for vectIndex in evicVectorDataStructure])
+vecLowestID = min([vectIndex["index"] for vectIndex in evicVectorDataStructure])
+vecHighestID = max([vectIndex["index"] for vectIndex in evicVectorDataStructure])
+
+irqLowestID = min([vectIndex["irq-index"] for vectIndex in evicVectorDataStructure])
+irqHighestID = max([vectIndex["irq-index"] for vectIndex in evicVectorDataStructure])
 
 deviceSeriesNode = ATDF.getNode("/avr-tools-device-file/devices/device@[architecture=\"MIPS\"]")
 deviceSeries = deviceSeriesNode.getAttribute("series")
@@ -215,12 +210,20 @@ evicMenu.setLabel(deviceSeries + " Interrupts")
 evicMenu.setDescription("Configuration for " + deviceSeries + " Interrupts")
 
 evicVectorMax = coreComponent.createIntegerSymbol("EVIC_VECTOR_MAX", evicMenu)
-evicVectorMax.setDefaultValue(highestID)
+evicVectorMax.setDefaultValue(vecHighestID)
 evicVectorMax.setVisible(False)
 
 evicVectorMin = coreComponent.createIntegerSymbol("EVIC_VECTOR_MIN", evicMenu)
-evicVectorMin.setDefaultValue(lowestID)
+evicVectorMin.setDefaultValue(vecLowestID)
 evicVectorMin.setVisible(False)
+
+evicIRQMax = coreComponent.createIntegerSymbol("EVIC_IRQ_MAX", evicMenu)
+evicIRQMax.setDefaultValue(irqHighestID)
+evicIRQMax.setVisible(True)
+
+evicIRQMin = coreComponent.createIntegerSymbol("EVIC_IRQ_MIN", evicMenu)
+evicIRQMin.setDefaultValue(irqLowestID)
+evicIRQMin.setVisible(True)
 
 global prioShift
 global subprioShift
@@ -228,140 +231,164 @@ global subprioShift
 prioShift = []
 subprioShift = []
 
+vectorIndexList = []
+
 for vectorDict in evicVectorDataStructure:
 
-    vModuleInstance = vectorDict.get("module-instance")
     vIndex = vectorDict.get("index")
     vName = vectorDict.get("name")
     vDescription = vectorDict.get("caption")
 
-    evicVectorPeriEnable = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE", evicMenu)
-    evicVectorPeriEnable.setLabel("Vector Peripheral Enable")
-    evicVectorPeriEnable.setVisible(False)
+    irqIndex = vectorDict.get("irq-index")
+    irqName = vectorDict.get("irq-name")
+    irqDescription = vectorDict.get("irq-caption")
 
-    evicVectorPeriHandler = coreComponent.createStringSymbol(vName + "_INTERRUPT_HANDLER", evicMenu)
-    evicVectorPeriHandler.setLabel("Vector Peripheral Handler")
-    evicVectorPeriHandler.setVisible(False)
-    evicVectorPeriHandler.setDefaultValue(vName + "_Handler")
+    # Check weather IRQ support is there or not
+    if irqIndex != -1:
 
-    evicVectorPeriHandlerLock = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_HANDLER_LOCK", evicMenu)
-    evicVectorPeriHandlerLock.setLabel("Vector Peripheral Handler Lock")
-    evicVectorPeriHandlerLock.setVisible(False)
+        #IRQ symbol name:  xc32 toolchain expects underscore as leading character for the IRQ symbol name
+        evicIRQ = coreComponent.createStringSymbol("EVIC_" + str(irqIndex) + "_IRQ", None)
+        evicIRQ.setDefaultValue("_" + irqName + "_IRQ")
+        evicIRQ.setVisible(False)
 
-    evicVectorEnable = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE", evicMenu)
-    evicVectorEnable.setLabel("Enable " + vDescription + " Interrupt")
-    evicVectorEnable.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_ENABLE"])
+        evicIRQName = coreComponent.createStringSymbol("EVIC_" + str(irqIndex) + "_IRQ_NAME", None)
+        evicIRQName.setDefaultValue(irqName)
+        evicIRQName.setVisible(False)
 
-    #Vector symbol name:  xc32 toolchain expects underscore as leading character for the vector symbol name
-    evicInterruptVector = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_VECTOR", evicVectorEnable)
-    evicInterruptVector.setDefaultValue("_" + vName + "_VECTOR")
-    evicInterruptVector.setVisible(False)
+        evicIRQNumber = coreComponent.createIntegerSymbol("EVIC_" + str(irqIndex) + "_IRQ_NUMBER", None)
+        evicIRQNumber.setDefaultValue(irqIndex)
+        evicIRQNumber.setVisible(False)
 
-    evicInterruptName = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_NAME", evicVectorEnable)
-    evicInterruptName.setLabel("Vector Name")
-    evicInterruptName.setDefaultValue(vName)
-    evicInterruptName.setVisible(False)
+    if vIndex not in vectorIndexList:            #Skip duplicate vector entry
+        vectorIndexList.append(vIndex)
 
-    evicVectorNumber = coreComponent.createIntegerSymbol("EVIC_" + str(vIndex) + "_NUMBER", evicVectorEnable)
-    evicVectorNumber.setLabel("Vector Number")
-    evicVectorNumber.setDefaultValue(vIndex)
-    evicVectorNumber.setVisible(False)
+        evicVectorPeriEnable = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE", evicMenu)
+        evicVectorPeriEnable.setLabel("Vector Peripheral Enable")
+        evicVectorPeriEnable.setVisible(False)
 
-    evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
-    evicVectorPriority.setLabel("Priority")
-    evicVectorPriority.setDefaultValue(min(evicPriorityGroup))     #Setting default priority to 1
+        evicVectorPeriHandler = coreComponent.createStringSymbol(vName + "_INTERRUPT_HANDLER", evicMenu)
+        evicVectorPeriHandler.setLabel("Vector Peripheral Handler")
+        evicVectorPeriHandler.setVisible(False)
+        evicVectorPeriHandler.setDefaultValue(vName + "_Handler")
 
-    evicVectorSubPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY", evicVectorEnable, evicSubPriorityGroup)
-    evicVectorSubPriority.setLabel("Subpriority")
-    evicVectorSubPriority.setDefaultValue(min(evicSubPriorityGroup))
+        evicVectorPeriHandlerLock = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_HANDLER_LOCK", evicMenu)
+        evicVectorPeriHandlerLock.setLabel("Vector Peripheral Handler Lock")
+        evicVectorPeriHandlerLock.setVisible(False)
 
-    evicVectorHandler = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_HANDLER", evicVectorEnable)
-    evicVectorHandler.setLabel("Handler")
-    evicVectorHandler.setDefaultValue(vName + "_Handler")
+        evicVectorEnable = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE", evicMenu)
+        evicVectorEnable.setLabel("Enable " + vDescription + " Interrupt")
+        evicVectorEnable.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_ENABLE"])
 
-    # Used for mapping plib defined handler
-    evicInterruptHandler = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_INTERRUPT_HANDLER", evicVectorEnable)
-    evicInterruptHandler.setDefaultValue(vName + "_Handler")
-    evicInterruptHandler.setVisible(False)
-    evicInterruptHandler.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER"])
+        #Vector symbol name:  xc32 toolchain expects underscore as leading character for the vector symbol name
+        evicInterruptVector = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_VECTOR", evicVectorEnable)
+        evicInterruptVector.setDefaultValue("_" + vName + "_VECTOR")
+        evicInterruptVector.setVisible(False)
 
-    evicVectorHandlerLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_HANDLER_LOCK", evicVectorEnable)
-    evicVectorHandlerLock.setVisible(False)
-    evicVectorHandlerLock.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER_LOCK"])
+        evicInterruptName = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_NAME", evicVectorEnable)
+        evicInterruptName.setLabel("Vector Name")
+        evicInterruptName.setDefaultValue(vName)
+        evicInterruptName.setVisible(False)
 
-    evicVectorEnableUpdate = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE_UPDATE", evicVectorEnable)
-    evicVectorEnableUpdate.setVisible(False)
-    evicVectorEnableUpdate.setDependencies(updateEVICVectorEnableUpdateValue, ["EVIC_" + str(vIndex) + "_ENABLE"])
+        evicVectorNumber = coreComponent.createIntegerSymbol("EVIC_" + str(vIndex) + "_NUMBER", evicVectorEnable)
+        evicVectorNumber.setLabel("Vector Number")
+        evicVectorNumber.setDefaultValue(vIndex)
+        evicVectorNumber.setVisible(False)
 
-    #Only created for vector used by RTOS
-    if vName in evicVectorSettings:
+        evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
+        evicVectorPriority.setLabel("Priority")
+        evicVectorPriority.setDefaultValue(min(evicPriorityGroup))     #Setting default priority to 1
 
-        if evicVectorSettings[vName][0] == True:
-            evicVectorEnable.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+        evicVectorSubPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY", evicVectorEnable, evicSubPriorityGroup)
+        evicVectorSubPriority.setLabel("Subpriority")
+        evicVectorSubPriority.setDefaultValue(min(evicSubPriorityGroup))
 
-        vector = "Peripheral"
+        evicVectorHandler = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_HANDLER", evicVectorEnable)
+        evicVectorHandler.setLabel("Handler")
+        evicVectorHandler.setDefaultValue(vName + "_Handler")
 
-        evicVectorHandlerLock.setDefaultValue(evicVectorSettings[vector][9])
-        evicVectorHandlerLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+        # Used for mapping plib defined handler
+        evicInterruptHandler = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_INTERRUPT_HANDLER", evicVectorEnable)
+        evicInterruptHandler.setDefaultValue(vName + "_Handler")
+        evicInterruptHandler.setVisible(False)
+        evicInterruptHandler.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER"])
 
-        evicVectorEnableLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE_LOCK", evicVectorEnable)
-        evicVectorEnableLock.setVisible(False)
-        evicVectorEnableLock.setDefaultValue(evicVectorSettings[vector][1])
-        evicVectorEnableLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+        evicVectorHandlerLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_HANDLER_LOCK", evicVectorEnable)
+        evicVectorHandlerLock.setVisible(False)
+        evicVectorHandlerLock.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER_LOCK"])
 
-        evicVectorEnableGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE_GENERATE", evicVectorEnable)
-        evicVectorEnableGenerate.setVisible(False)
-        evicVectorEnableGenerate.setDefaultValue(evicVectorSettings[vector][2])
-        evicVectorEnableGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+        evicVectorEnableUpdate = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE_UPDATE", evicVectorEnable)
+        evicVectorEnableUpdate.setVisible(False)
+        evicVectorEnableUpdate.setDependencies(updateEVICVectorEnableUpdateValue, ["EVIC_" + str(vIndex) + "_ENABLE"])
 
-        evicVectorPriorityLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_PRIORITY_LOCK", evicVectorEnable)
-        evicVectorPriorityLock.setVisible(False)
-        evicVectorPriorityLock.setDefaultValue(evicVectorSettings[vector][4])
-        evicVectorPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+        #Only created for vector used by RTOS
+        if vName in evicVectorSettings:
 
-        evicVectorPriorityGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_PRIORITY_GENERATE", evicVectorEnable)
-        evicVectorPriorityGenerate.setVisible(False)
-        evicVectorPriorityGenerate.setDefaultValue(evicVectorSettings[vector][5])
-        evicVectorPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            if evicVectorSettings[vName][0] == True:
+                evicVectorEnable.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
 
-        evicVectorSubPriorityLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY_LOCK", evicVectorEnable)
-        evicVectorSubPriorityLock.setVisible(False)
-        evicVectorSubPriorityLock.setDefaultValue(evicVectorSettings[vector][7])
-        evicVectorSubPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            vector = "Peripheral"
 
-        evicVectorSubPriorityGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY_GENERATE", evicVectorEnable)
-        evicVectorSubPriorityGenerate.setVisible(False)
-        evicVectorSubPriorityGenerate.setDefaultValue(evicVectorSettings[vector][8])
-        evicVectorSubPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            evicVectorHandlerLock.setDefaultValue(evicVectorSettings[vector][9])
+            evicVectorHandlerLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
 
-    regName, prioBit, prioMask, subPrioBit, subPrioMask = _get_sub_priority_parms(vIndex)
+            evicVectorEnableLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE_LOCK", evicVectorEnable)
+            evicVectorEnableLock.setVisible(False)
+            evicVectorEnableLock.setDefaultValue(evicVectorSettings[vector][1])
+            evicVectorEnableLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
 
-    # IPCx register name for this interrupt
-    evicVectorRegName = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_REGNAME", evicVectorEnable)
-    evicVectorRegName.setDefaultValue(regName)
-    evicVectorRegName.setVisible(False)
+            evicVectorEnableGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE_GENERATE", evicVectorEnable)
+            evicVectorEnableGenerate.setVisible(False)
+            evicVectorEnableGenerate.setDefaultValue(evicVectorSettings[vector][2])
+            evicVectorEnableGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
 
-    prioShiftDict = {}
-    prioShiftDict["index"] = str(vIndex)
-    prioShiftDict["priorityBit"] = int(prioBit)
-    prioShift.append(prioShiftDict)
+            evicVectorPriorityLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_PRIORITY_LOCK", evicVectorEnable)
+            evicVectorPriorityLock.setVisible(False)
+            evicVectorPriorityLock.setDefaultValue(evicVectorSettings[vector][4])
+            evicVectorPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
 
-    subPrioShiftDict = {}
-    subPrioShiftDict["index"] = str(vIndex)
-    subPrioShiftDict["subPriorityBit"] = int(subPrioBit)
-    subprioShift.append(subPrioShiftDict)
+            evicVectorPriorityGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_PRIORITY_GENERATE", evicVectorEnable)
+            evicVectorPriorityGenerate.setVisible(False)
+            evicVectorPriorityGenerate.setDefaultValue(evicVectorSettings[vector][5])
+            evicVectorPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
 
-    # priority value, shifted to correct bit position, for this interrupt
-    evicVectorPriorityValue = coreComponent.createHexSymbol("EVIC_" + str(vIndex) + "_PRIVALUE", evicVectorEnable)
-    evicVectorPriorityValue.setDefaultValue(int(evicVectorPriority.getValue()) << int(prioBit))
-    evicVectorPriorityValue.setVisible(False)
-    evicVectorPriorityValue.setDependencies(updateInterruptPriorityAndSubpriorityValue, ["EVIC_" + str(vIndex) + "_PRIORITY"])
+            evicVectorSubPriorityLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY_LOCK", evicVectorEnable)
+            evicVectorSubPriorityLock.setVisible(False)
+            evicVectorSubPriorityLock.setDefaultValue(evicVectorSettings[vector][7])
+            evicVectorSubPriorityLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
 
-    # subpriority, shifted to correct bit position, for this interrupt
-    evicVectorSubPriorityValue = coreComponent.createHexSymbol("EVIC_" + str(vIndex) + "_SUBPRIVALUE", evicVectorEnable)
-    evicVectorSubPriorityValue.setDefaultValue(int(evicVectorSubPriority.getValue()) << int(subPrioBit))
-    evicVectorSubPriorityValue.setVisible(False)
-    evicVectorSubPriorityValue.setDependencies(updateInterruptPriorityAndSubpriorityValue, ["EVIC_" + str(vIndex) + "_SUBPRIORITY"])
+            evicVectorSubPriorityGenerate = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_SUBPRIORITY_GENERATE", evicVectorEnable)
+            evicVectorSubPriorityGenerate.setVisible(False)
+            evicVectorSubPriorityGenerate.setDefaultValue(evicVectorSettings[vector][8])
+            evicVectorSubPriorityGenerate.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+
+        regName, prioBit, prioMask, subPrioBit, subPrioMask = _get_sub_priority_parms(vIndex)
+
+        # IPCx register name for this interrupt
+        evicVectorRegName = coreComponent.createStringSymbol("EVIC_" + str(vIndex) + "_REGNAME", evicVectorEnable)
+        evicVectorRegName.setDefaultValue(regName)
+        evicVectorRegName.setVisible(False)
+
+        prioShiftDict = {}
+        prioShiftDict["index"] = str(vIndex)
+        prioShiftDict["priorityBit"] = int(prioBit)
+        prioShift.append(prioShiftDict)
+
+        subPrioShiftDict = {}
+        subPrioShiftDict["index"] = str(vIndex)
+        subPrioShiftDict["subPriorityBit"] = int(subPrioBit)
+        subprioShift.append(subPrioShiftDict)
+
+        # priority value, shifted to correct bit position, for this interrupt
+        evicVectorPriorityValue = coreComponent.createHexSymbol("EVIC_" + str(vIndex) + "_PRIVALUE", evicVectorEnable)
+        evicVectorPriorityValue.setDefaultValue(int(evicVectorPriority.getValue()) << int(prioBit))
+        evicVectorPriorityValue.setVisible(False)
+        evicVectorPriorityValue.setDependencies(updateInterruptPriorityAndSubpriorityValue, ["EVIC_" + str(vIndex) + "_PRIORITY"])
+
+        # subpriority, shifted to correct bit position, for this interrupt
+        evicVectorSubPriorityValue = coreComponent.createHexSymbol("EVIC_" + str(vIndex) + "_SUBPRIVALUE", evicVectorEnable)
+        evicVectorSubPriorityValue.setDefaultValue(int(evicVectorSubPriority.getValue()) << int(subPrioBit))
+        evicVectorSubPriorityValue.setVisible(False)
+        evicVectorSubPriorityValue.setDependencies(updateInterruptPriorityAndSubpriorityValue, ["EVIC_" + str(vIndex) + "_SUBPRIORITY"])
 
 ###################################################################################################
 ####################################### Driver Symbols ############################################
@@ -387,7 +414,11 @@ for moduleInstance in corePeripherals:
 
         for intSrc in range(len(vectIntSrc)):
 
-            name = "_" + vectName[intSrc] + "_VECTOR"
+            # Check weather IRQ support is there or not
+            if irqLowestID != -1 and irqHighestID != -1:
+                name = "_" + vectName[intSrc] + "_IRQ"
+            else:
+                name = "_" + vectName[intSrc] + "_VECTOR"
 
             # Symbol to get individual interrupt vector of peripheral containing multi vector
             evicVectorNumber = coreComponent.createStringSymbol(moduleInstance + "_" + vectIntSrc[intSrc] + "_INT_SRC", None)
