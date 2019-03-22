@@ -81,7 +81,20 @@ fuseMenu.setLabel("Fuse Settings")
 registerGroup = "USER_FUSES"
 registerNames = ["USER_WORD_0", "USER_WORD_1"]
 
-default = [0x0, 0x0, 0x6 , 0, 1, 0 , 0, 0, 11, 11, 11, 0, 0, 0, 0xFFFF ]
+default = [0x7,  #NVMCTRL_BOOTPROT
+            0x7, #NVMCTRL_EEPROM_SIZE
+            0x6, #BOD33USERLEVEL
+            0,   #BOD33_DIS
+            0,   #BOD33_ACTION
+            0,   #WDT_ENABLE
+            0,   #WDT_ALWAYSON
+            11,  #WDT_PER
+            11,  #WDT_WINDOW
+            11,  #WDT_EWOFFSET
+            0,   #WDT_WEN
+            0,   #BOD33_HYST
+            0xFFFF#NVMCTRL_REGION_LOCKS
+            ]
 numfuses = 0
 
 for i in range(0, len(registerNames)):
