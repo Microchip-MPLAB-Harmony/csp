@@ -143,15 +143,32 @@ def _get_bitfield_names(node, outputList):
             dict["value"] = str(tempint)
             outputList.append(dict)
 
-def getIRQnumber(string):
+def getIRQIndex(string):
+
+    irq_index = "-1"
 
     for param in interruptsChildren:
-        name = param.getAttribute("name")
-        if string == name:
-            irq_index = param.getAttribute("index")
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("irq-name"))
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
             break
 
     return irq_index
+
+def getVectorIndex(string):
+
+    vector_index = "-1"
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
 
 # Calculates BRG value
 def baudRateCalc(clk, baud):
@@ -182,9 +199,7 @@ def baudRateCalc(clk, baud):
 
 def baudRateTrigger(symbol, event):
 
-    global uartInstanceName
-
-    clk = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ"))
+    clk = int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     baud = int(Database.getSymbolValue(uartInstanceName.getValue().lower(), "BAUD_RATE"))
 
     brgVal = baudRateCalc(clk, baud)
@@ -200,7 +215,7 @@ def baudRateTrigger(symbol, event):
 
 def clockSourceFreq(symbol, event):
 
-    symbol.setValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")),2)
+    symbol.setValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")),2)
 
 def u1ModecombineValues(symbol, event):
 
@@ -260,13 +275,67 @@ def instantiateComponent(uartComponent):
     uartSymInterruptMode.setLabel("Enable Interrrupts ?")
     uartSymInterruptMode.setDefaultValue(True)
 
-    ## Fault Interrrupt Setup
-    uartIrqFault = uartInstanceName.getValue() + "_FAULT"
-    InterruptVector.append(uartIrqFault + "_INTERRUPT_ENABLE")
-    InterruptHandler.append(uartIrqFault + "_INTERRUPT_HANDLER")
-    InterruptHandlerLock.append(uartIrqFault + "_INTERRUPT_HANDLER_LOCK")
-    InterruptVectorUpdate.append("core." + uartIrqFault + "_INTERRUPT_ENABLE_UPDATE")
-    uartFaultVectorNum = int(getIRQnumber(uartIrqFault))
+    uartIrq = "UART_" + uartInstanceNum.getValue()
+    uartVectorNum = getVectorIndex(uartIrq)
+
+    if uartVectorNum != "-1":
+        InterruptVector.append(uartIrq + "_INTERRUPT_ENABLE")
+        InterruptHandler.append(uartIrq + "_INTERRUPT_HANDLER")
+        InterruptHandlerLock.append(uartIrq + "_INTERRUPT_HANDLER_LOCK")
+        InterruptVectorUpdate.append("core." + uartIrq + "_INTERRUPT_ENABLE_UPDATE")
+
+        ## UART Error IRQ
+        uartIrqFault = uartInstanceName.getValue() + "_ERR"
+        uartFaultVectorNum = int(getIRQIndex(uartIrqFault))
+
+        ## UART RX IRQ
+        uartIrqrRx = uartInstanceName.getValue() + "_RX"
+        uartRxVectorNum = int(getIRQIndex(uartIrqrRx))
+
+        ## UART TX IRQ
+        uartIrqTx = uartInstanceName.getValue() + "_TX"
+        uartTxVectorNum = int(getIRQIndex(uartIrqTx))
+    else:
+        ## UART Fault Interrrupt
+        uartIrqFault = uartInstanceName.getValue() + "_FAULT"
+        InterruptVector.append(uartIrqFault + "_INTERRUPT_ENABLE")
+        InterruptHandler.append(uartIrqFault + "_INTERRUPT_HANDLER")
+        InterruptHandlerLock.append(uartIrqFault + "_INTERRUPT_HANDLER_LOCK")
+        InterruptVectorUpdate.append("core." + uartIrqFault + "_INTERRUPT_ENABLE_UPDATE")
+        uartFaultVectorNum = int(getVectorIndex(uartIrqFault))
+
+        ## UART RX Interrupt
+        uartIrqrRx = uartInstanceName.getValue() + "_RX"
+        InterruptVector.append(uartIrqrRx + "_INTERRUPT_ENABLE")
+        InterruptHandler.append(uartIrqrRx + "_INTERRUPT_HANDLER")
+        InterruptHandlerLock.append(uartIrqrRx + "_INTERRUPT_HANDLER_LOCK")
+        InterruptVectorUpdate.append("core." + uartIrqrRx + "_INTERRUPT_ENABLE_UPDATE")
+        uartRxVectorNum = int(getVectorIndex(uartIrqrRx))
+
+        ## UART TX Interrupt
+        uartIrqTx = uartInstanceName.getValue() + "_TX"
+        InterruptVector.append(uartIrqTx + "_INTERRUPT_ENABLE")
+        InterruptHandler.append(uartIrqTx + "_INTERRUPT_HANDLER")
+        InterruptHandlerLock.append(uartIrqTx + "_INTERRUPT_HANDLER_LOCK")
+        InterruptVectorUpdate.append("core." + uartIrqTx + "_INTERRUPT_ENABLE_UPDATE")
+        uartTxVectorNum = int(getVectorIndex(uartIrqTx))
+
+    uartInterruptCount = uartComponent.createIntegerSymbol("UART_INTERRUPT_COUNT", None)
+    uartInterruptCount.setDefaultValue(len(InterruptVector))
+    uartInterruptCount.setVisible(False)
+
+    urxenblRegName = _get_enblReg_parms(uartRxVectorNum)
+    urxstatRegName = _get_statReg_parms(uartRxVectorNum)
+
+    #IEC REG
+    uartRXIEC = uartComponent.createStringSymbol("UART_RX_IEC_REG", None)
+    uartRXIEC.setDefaultValue(urxenblRegName)
+    uartRXIEC.setVisible(False)
+
+    #IFS REG
+    uartRXIFS = uartComponent.createStringSymbol("UART_RX_IFS_REG", None)
+    uartRXIFS.setDefaultValue(urxstatRegName)
+    uartRXIFS.setVisible(False)
 
     enblRegName = _get_enblReg_parms(uartFaultVectorNum)
     statRegName = _get_statReg_parms(uartFaultVectorNum)
@@ -281,33 +350,6 @@ def instantiateComponent(uartComponent):
     uartFaultIFS.setDefaultValue(statRegName)
     uartFaultIFS.setVisible(False)
 
-    ## UART RX Interrupt
-    uartIrqrRx = uartInstanceName.getValue() + "_RX"
-    InterruptVector.append(uartIrqrRx + "_INTERRUPT_ENABLE")
-    InterruptHandler.append(uartIrqrRx + "_INTERRUPT_HANDLER")
-    InterruptHandlerLock.append(uartIrqrRx + "_INTERRUPT_HANDLER_LOCK")
-    InterruptVectorUpdate.append("core." + uartIrqrRx + "_INTERRUPT_ENABLE_UPDATE")
-    uartRxVectorNum = int(getIRQnumber(uartIrqrRx))
-    urxenblRegName = _get_enblReg_parms(uartRxVectorNum)
-    urxstatRegName = _get_statReg_parms(uartRxVectorNum)
-
-    #IEC REG
-    uartRXIEC = uartComponent.createStringSymbol("UART_RX_IEC_REG", None)
-    uartRXIEC.setDefaultValue(urxenblRegName)
-    uartRXIEC.setVisible(False)
-
-    #IFS REG
-    uartRXIFS = uartComponent.createStringSymbol("UART_RX_IFS_REG", None)
-    uartRXIFS.setDefaultValue(urxstatRegName)
-    uartRXIFS.setVisible(False)
-
-    ##UART TX Interrupt
-    uartIrqTx = uartInstanceName.getValue() + "_TX"
-    InterruptVector.append(uartIrqTx + "_INTERRUPT_ENABLE")
-    InterruptHandler.append(uartIrqTx + "_INTERRUPT_HANDLER")
-    InterruptHandlerLock.append(uartIrqTx + "_INTERRUPT_HANDLER_LOCK")
-    InterruptVectorUpdate.append("core." + uartIrqTx + "_INTERRUPT_ENABLE_UPDATE")
-    uartTxVectorNum = int(getIRQnumber(uartIrqTx))
     utxenblRegName = _get_enblReg_parms(uartTxVectorNum)
     utxstatRegName = _get_statReg_parms(uartTxVectorNum)
 
@@ -364,8 +406,8 @@ def instantiateComponent(uartComponent):
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
     uartClkValue.setLabel("Clock Frequency")
     uartClkValue.setReadOnly(True)
-    uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")))
-    uartClkValue.setDependencies(clockSourceFreq, ["core." + "CONFIG_SYS_CLK_PBCLK2_FREQ"])
+    uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    uartClkValue.setDependencies(clockSourceFreq, ["core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     ## Baud Rate setting
     uartBaud = uartComponent.createIntegerSymbol("BAUD_RATE", None)
@@ -376,9 +418,11 @@ def instantiateComponent(uartComponent):
 
     ## Baud Rate Frequency dependency
     uartBRGValue = uartComponent.createIntegerSymbol("BRG_VALUE", None)
-    uartBRGValue.setDefaultValue(brgVal)
     uartBRGValue.setVisible(False)
-    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + "CONFIG_SYS_CLK_PBCLK2_FREQ"])
+    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + "CONFIG_SYS_CLK_PBCLK_FREQ"])
+
+    #Use setValue instead of setDefaultValue to store symbol value in default.xml
+    uartBRGValue.setValue(brgVal, 1)
 
     ############################################################################
     #### Dependency ####
@@ -460,7 +504,6 @@ def instantiateComponent(uartComponent):
     uartSym_RxRegister = uartComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
     uartSym_RxRegister.setDefaultValue("&(U" + uartInstanceNum.getValue() + "RXREG)")
     uartSym_RxRegister.setVisible(False)
-
 
     ############################################################################
     #### Code Generation ####
