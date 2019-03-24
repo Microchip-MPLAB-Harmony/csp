@@ -164,9 +164,8 @@ gclk_dependency_map = {
     "I2SMCC" : "SOME_SYMBOL",
     "PIT64B" : "SGCLK",
     "CLASSD" : "SOME_SYMBOL",
-    "DBGU" : "SOME_SYMBOL"
+    "DBGU" : "NO_SYMBOL"
 }
-
 
 def generic_gclk_update_freq(symbol, event):
     global gclk_dependency_map
@@ -182,6 +181,10 @@ def generic_gclk_update_freq(symbol, event):
     else:
         symbol.setValue(gclk.getValue(), 0)
 
+def update_dbgu_clock_frequency(symbol, event):
+    instance_name = symbol.getID().split("_")[0]
+    gclk = event['source'].getSymbolByID(instance_name + "_GCLK_FREQUENCY")
+    symbol.setValue(gclk.getValue(), 0)
 
 #map of gclk capable peripherals to their update functions
 gclk_update_map = {
@@ -193,7 +196,7 @@ gclk_update_map = {
     "I2SMCC" : generic_gclk_update_freq,
     "PIT64B" : generic_gclk_update_freq,
     "CLASSD" : generic_gclk_update_freq,
-    "DBGU" : generic_gclk_update_freq
+    "DBGU" : update_dbgu_clock_frequency
 }
 
 #instantiateComponent of core Component
@@ -620,7 +623,8 @@ for module_node in peripherals_node.getChildren():
                     'CLK_'+instance_name+'_GCLKCSS', 'CLK_'+instance_name+'_GCLKDIV',
                     'MD_SLOW_CLK_FREQUENCY', 'TD_SLOW_CLOCK_FREQUENCY', 'MAINCK_FREQUENCY',
                     'MCK_FREQUENCY', 'PLLA_FREQUENCY', 'UPLL_FREQUENCY'])
-
+            if module_node.getAttribute("name") == "DBGU":
+                pcr_freq.setDefaultValue(gclk_freq.getValue())
 
 sys_clk_menu = coreComponent.createMenuSymbol("CLK_SYSTEM_CLK_MENU", menu)
 sys_clk_menu.setLabel("System Clocks")
