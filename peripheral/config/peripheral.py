@@ -62,6 +62,7 @@ peripherals = {
                 "SDHC_U2011"    : ["SDHC"],
                 "HSMCI_6449"    : ["SDHC"],
                 "SDHC_00187"    : ["SDHC"],
+                "DBGU_6059"     : ["UART"]
 }
 
 if ("PIC32M" in Variables.get("__PROCESSOR")):
