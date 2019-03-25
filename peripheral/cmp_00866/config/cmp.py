@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -25,6 +25,8 @@
 #### Register Information ####
 ################################################################################
 
+cmpRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]').getChildren()
+
 cmpValGrp_CM1CON_CCH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CCH"]')
 cmpValGrp_CM1CON_CREF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CREF"]')
 cmpValGrp_CM1CON_EVPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__EVPOL"]')
@@ -37,12 +39,6 @@ cmpBitFld_CM1CON_CREF = ATDF.getNode('/avr-tools-device-file/modules/module@[nam
 cmpBitFld_CM1CON_EVPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM1CON"]/bitfield@[name="EVPOL"]')
 cmpBitFld_CM1CON_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM1CON"]/bitfield@[name="CPOL"]')
 cmpBitFld_CM1CON_COE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM1CON"]/bitfield@[name="COE"]')
-
-cmpBitFld_CM2CON_CCH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM2CON"]/bitfield@[name="CCH"]')
-cmpBitFld_CM2CON_CREF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM2CON"]/bitfield@[name="CREF"]')
-cmpBitFld_CM2CON_EVPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM2CON"]/bitfield@[name="EVPOL"]')
-cmpBitFld_CM2CON_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM2CON"]/bitfield@[name="CPOL"]')
-cmpBitFld_CM2CON_COE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CM2CON"]/bitfield@[name="COE"]')
 
 cmpBitFld_CMSTAT_SIDL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]/register@[name="CMSTAT"]/bitfield@[name="SIDL"]')
 
@@ -57,50 +53,29 @@ interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interru
 #### Business Logic ####
 ################################################################################
 
-def setCMP1InterruptData(status):
+def setCMPxInterruptData(status, index):
 
-    Database.setSymbolValue("core", cmp1InterruptVector, status, 1)
-    Database.setSymbolValue("core", cmp1InterruptHandlerLock, status, 1)
+    Database.setSymbolValue("core", InterruptVector[index - 1], status, 1)
+    Database.setSymbolValue("core", InterruptHandlerLock[index - 1], status, 1)
 
-    interruptName = cmp1InterruptHandler.split("_INTERRUPT_HANDLER")[0]
-
-    if status == True:
-        Database.setSymbolValue("core", cmp1InterruptHandler, interruptName + "_InterruptHandler", 1)
-    else:
-        Database.setSymbolValue("core", cmp1InterruptHandler, interruptName + "_Handler", 1)
-
-def setCMP2InterruptData(status):
-
-    Database.setSymbolValue("core", cmp2InterruptVector, status, 1)
-    Database.setSymbolValue("core", cmp2InterruptHandlerLock, status, 1)
-
-    interruptName = cmp2InterruptHandler.split("_INTERRUPT_HANDLER")[0]
+    interruptName = InterruptHandler[index - 1].split("_INTERRUPT_HANDLER")[0]
 
     if status == True:
-        Database.setSymbolValue("core", cmp2InterruptHandler, interruptName + "_InterruptHandler", 1)
+        Database.setSymbolValue("core", InterruptHandler[index - 1], interruptName + "_InterruptHandler", 1)
     else:
-        Database.setSymbolValue("core", cmp2InterruptHandler, interruptName + "_Handler", 1)
+        Database.setSymbolValue("core", InterruptHandler[index - 1], interruptName + "_Handler", 1)
 
-def updateCMP1InterruptData(symbol, event):
+def updateCMPxInterruptData(symbol, event):
 
-    status = int(cmpSym_CM1CON_EVPOL.getSelectedValue()) != 0
+    symbolId = symbol.getID()
+    cmp_id = int((symbolId.replace("CMP", "")).replace("_INTERRUPT_ENABLE_COMMENT", ""))
 
-    if event["id"] == "CMP_CM1CON_EVPOL":
-        setCMP1InterruptData(status)
+    status = int(cmpSym_CMxCON_EVPOL[cmp_id - 1].getSelectedValue()) != 0
 
-    if Database.getSymbolValue("core", cmp1InterruptVectorUpdate) == True and status == True:
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
+    if event["id"] == "CMP_CM" + str(cmp_id) + "CON_EVPOL":
+        setCMPxInterruptData(status, cmp_id)
 
-def updateCMP2InterruptData(symbol, event):
-
-    status = int(cmpSym_CM2CON_EVPOL.getSelectedValue()) != 0
-
-    if event["id"] == "CMP_CM2CON_EVPOL":
-        setCMP2InterruptData(status)
-
-    if Database.getSymbolValue("core", cmp2InterruptVectorUpdate) == True and status == True:
+    if Database.getSymbolValue("core", InterruptVectorUpdate[cmp_id - 1].replace("core.", "")) == True and status == True:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -143,36 +118,47 @@ def _get_bitfield_names(node, outputList):
             dict["value"] = str(tempint)
             outputList.append(dict)
 
-def combine1Values(symbol, event):
+def combineValues(symbol, event):
 
-    cchValue   = cmpSym_CM1CON_CCH.getValue() << 0
-    crefValue  = cmpSym_CM1CON_CREF.getValue() << 4
-    evpolValue = cmpSym_CM1CON_EVPOL.getValue() << 6
-    cpolValue  = cmpSym_CM1CON_CPOL.getValue() << 13
-    coeValue   = cmpSym_CM1CON_COE.getValue() << 14
+    symbolId = symbol.getID()
+    cmp_id = int((symbolId.replace("CM", "")).replace("CON_VALUE", "")) - 1
+
+    cchValue   = cmpSym_CMxCON_CCH[cmp_id].getValue() << 0
+    crefValue  = cmpSym_CMxCON_CREF[cmp_id].getValue() << 4
+    evpolValue = cmpSym_CMxCON_EVPOL[cmp_id].getValue() << 6
+    cpolValue  = cmpSym_CMxCON_CPOL[cmp_id].getValue() << 13
+    coeValue   = cmpSym_CMxCON_COE[cmp_id].getValue() << 14
     cmconValue = crefValue + cchValue + evpolValue + cpolValue + coeValue
 
     symbol.setValue(cmconValue, 2)
 
-def combine2Values(symbol, event):
+def getIRQIndex(string):
 
-    cchValue   = cmpSym_CM2CON_CCH.getValue() << 0
-    crefValue  = cmpSym_CM2CON_CREF.getValue() << 4
-    evpolValue = cmpSym_CM2CON_EVPOL.getValue() << 6
-    cpolValue  = cmpSym_CM2CON_CPOL.getValue() << 13
-    coeValue   = cmpSym_CM2CON_COE.getValue() << 14
-    cmconValue = crefValue + cchValue + evpolValue + cpolValue + coeValue
-
-    symbol.setValue(cmconValue, 2)
-
-def getIRQnumber(string):
+    irq_index = "-1"
 
     for param in interruptsChildren:
-        modInst = param.getAttribute("name")
-        if string == modInst:
-            irq_index = param.getAttribute("index")
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("name"))
+
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
+            break
 
     return irq_index
+
+def getVectorIndex(string):
+
+    vector_index = "-1"
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
 
 ################################################################################
 #### Component ####
@@ -181,200 +167,143 @@ def getIRQnumber(string):
 def instantiateComponent(cmpComponent):
 
     global cmpInstanceName
-    global cmp1InterruptVector
-    global cmp1InterruptHandlerLock
-    global cmp1InterruptHandler
-    global cmp1InterruptVectorUpdate
-    global cmp2InterruptVector
-    global cmp2InterruptHandlerLock
-    global cmp2InterruptHandler
-    global cmp2InterruptVectorUpdate
-    global cmpSym_CM1CON_CREF
-    global cmpSym_CM1CON_CCH
-    global cmpSym_CM1CON_EVPOL
-    global cmpSym_CM1CON_CPOL
-    global cmpSym_CM1CON_COE
-    global cmpSym_CM2CON_CREF
-    global cmpSym_CM2CON_CCH
-    global cmpSym_CM2CON_EVPOL
-    global cmpSym_CM2CON_CPOL
-    global cmpSym_CM2CON_COE
+    global InterruptVector
+    global InterruptHandlerLock
+    global InterruptHandler
+    global InterruptVectorUpdate
+    global cmpSym_CMxCON_CREF
+    global cmpSym_CMxCON_CCH
+    global cmpSym_CMxCON_EVPOL
+    global cmpSym_CMxCON_CPOL
+    global cmpSym_CMxCON_COE
+
+    InterruptVector = []
+    InterruptHandler = []
+    InterruptHandlerLock = []
+    InterruptVectorUpdate = []
+
+    cmpSym_CMxCON_CREF = []
+    cmpSym_CMxCON_CCH = []
+    cmpSym_CMxCON_EVPOL = []
+    cmpSym_CMxCON_CPOL = []
+    cmpSym_CMxCON_COE = []
 
     cmpInstanceName = cmpComponent.createStringSymbol("CMP_INSTANCE_NAME", None)
     cmpInstanceName.setVisible(False)
     cmpInstanceName.setDefaultValue(cmpComponent.getID().upper())
-    print("Running " + cmpInstanceName.getValue())
 
     #Stop in Idle mode
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and (("DA" in Variables.get("__PROCESSOR"))) ):
+    if cmpBitFld_CMSTAT_SIDL != None:
         cmpSym_CMSTAT_SIDL = cmpComponent.createBooleanSymbol("CMP_CMSTAT_SIDL", None)
         cmpSym_CMSTAT_SIDL.setLabel(cmpBitFld_CMSTAT_SIDL.getAttribute("caption"))
         cmpSym_CMSTAT_SIDL.setDefaultValue(False)
-    
-    cmpSym_CM1CON_STRING = cmpComponent.createCommentSymbol("CMP1_STRING", None)
-    cmpSym_CM1CON_STRING.setLabel("Comparator 1")
 
-    #Positive input of Comparator 1
-    cmp1CREF_names = []
-    _get_bitfield_names(cmpValGrp_CM1CON_CREF, cmp1CREF_names)
-    cmpSym_CM1CON_CREF = cmpComponent.createKeyValueSetSymbol("CMP_CM1CON_CREF", cmpSym_CM1CON_STRING)
-    cmpSym_CM1CON_CREF.setLabel(cmpBitFld_CM1CON_CREF.getAttribute("caption"))
-    cmpSym_CM1CON_CREF.setDefaultValue(0)
-    cmpSym_CM1CON_CREF.setOutputMode("Value")
-    cmpSym_CM1CON_CREF.setDisplayMode("Description")
-    for ii in cmp1CREF_names:
-        cmpSym_CM1CON_CREF.addKey( ii['desc'], ii['value'], ii['key'] )
+    index = 1
 
-    #Negative input of Comparator 1
-    cmp1CCH_names = []
-    _get_bitfield_names(cmpValGrp_CM1CON_CCH, cmp1CCH_names)
-    cmpSym_CM1CON_CCH = cmpComponent.createKeyValueSetSymbol("CMP_CM1CON_CCH", cmpSym_CM1CON_STRING)
-    cmpSym_CM1CON_CCH.setLabel(cmpBitFld_CM1CON_CCH.getAttribute("caption"))
-    cmpSym_CM1CON_CCH.setDefaultValue(0)
-    cmpSym_CM1CON_CCH.setOutputMode("Value")
-    cmpSym_CM1CON_CCH.setDisplayMode("Description")
-    for ii in cmp1CCH_names:
-        cmpSym_CM1CON_CCH.addKey( ii['desc'], ii['value'], ii['key'] )
+    for register in cmpRegGroup:
+        regName = str(register.getAttribute("name"))
+        if regName.startswith("CM") and regName.endswith("CON"):
+            index = int((regName.replace("CM", "")).replace("CON", ""))
 
-    #Edge selection for interrupt generation
-    cmp1EVPOL_names = []
-    _get_bitfield_names(cmpValGrp_CM1CON_EVPOL, cmp1EVPOL_names)
-    cmpSym_CM1CON_EVPOL = cmpComponent.createKeyValueSetSymbol("CMP_CM1CON_EVPOL", cmpSym_CM1CON_STRING)
-    cmpSym_CM1CON_EVPOL.setLabel(cmpBitFld_CM1CON_EVPOL.getAttribute("caption"))
-    cmpSym_CM1CON_EVPOL.setDefaultValue(0)
-    cmpSym_CM1CON_EVPOL.setOutputMode("Value")
-    cmpSym_CM1CON_EVPOL.setDisplayMode("Description")
-    for ii in cmp1EVPOL_names:
-        cmpSym_CM1CON_EVPOL.addKey( ii['desc'], ii['value'], ii['key'] )
+            cmpSym_Menu = cmpComponent.createMenuSymbol("CMP" + str(index) + "_MENU", None)
+            cmpSym_Menu.setLabel("Comparator " + str(index))
 
-    #Comparator output invert
-    cmpSym_CM1CON_CPOL = cmpComponent.createBooleanSymbol("CMP_CM1CON_CPOL", cmpSym_CM1CON_STRING)
-    cmpSym_CM1CON_CPOL.setLabel(cmpBitFld_CM1CON_CPOL.getAttribute("caption"))
+            #Positive input of Comparator
+            cmp1CREF_names = []
+            _get_bitfield_names(cmpValGrp_CM1CON_CREF, cmp1CREF_names)
+            cmpSym_CMxCON_CREF.append(index)
+            cmpSym_CMxCON_CREF[index - 1] = cmpComponent.createKeyValueSetSymbol("CMP_CM" + str(index) + "CON_CREF", cmpSym_Menu)
+            cmpSym_CMxCON_CREF[index - 1].setLabel(cmpBitFld_CM1CON_CREF.getAttribute("caption"))
+            cmpSym_CMxCON_CREF[index - 1].setDefaultValue(0)
+            cmpSym_CMxCON_CREF[index - 1].setOutputMode("Value")
+            cmpSym_CMxCON_CREF[index - 1].setDisplayMode("Description")
+            for ii in cmp1CREF_names:
+                cmpSym_CMxCON_CREF[index - 1].addKey( ii['desc'], ii['value'], ii['key'] )
 
-    #Comparator output on pin
-    cmpSym_CM1CON_COE = cmpComponent.createBooleanSymbol("CMP_CM1CON_COE", cmpSym_CM1CON_STRING)
-    cmpSym_CM1CON_COE.setLabel(cmpBitFld_CM1CON_COE.getAttribute("caption"))
-    cmpSym_CM1CON_COE.setDefaultValue(False)
+            #Negative input of Comparator
+            cmp1CCH_names = []
+            _get_bitfield_names(cmpValGrp_CM1CON_CCH, cmp1CCH_names)
+            cmpSym_CMxCON_CCH.append(index)
+            cmpSym_CMxCON_CCH[index - 1] = cmpComponent.createKeyValueSetSymbol("CMP_CM" + str(index) + "CON_CCH", cmpSym_Menu)
+            cmpSym_CMxCON_CCH[index - 1].setLabel(cmpBitFld_CM1CON_CCH.getAttribute("caption"))
+            cmpSym_CMxCON_CCH[index - 1].setDefaultValue(0)
+            cmpSym_CMxCON_CCH[index - 1].setOutputMode("Value")
+            cmpSym_CMxCON_CCH[index - 1].setDisplayMode("Description")
+            for ii in cmp1CCH_names:
+                cmpSym_CMxCON_CCH[index - 1].addKey( ii['desc'], ii['value'], ii['key'] )
 
-    cmpSym_CM2CON_STRING = cmpComponent.createCommentSymbol("CMP2_STRING", None)
-    cmpSym_CM2CON_STRING.setLabel("Comparator 2")
+            #Edge selection for interrupt generation
+            cmp1EVPOL_names = []
+            _get_bitfield_names(cmpValGrp_CM1CON_EVPOL, cmp1EVPOL_names)
+            cmpSym_CMxCON_EVPOL.append(index)
+            cmpSym_CMxCON_EVPOL[index - 1] = cmpComponent.createKeyValueSetSymbol("CMP_CM" + str(index) + "CON_EVPOL", cmpSym_Menu)
+            cmpSym_CMxCON_EVPOL[index - 1].setLabel(cmpBitFld_CM1CON_EVPOL.getAttribute("caption"))
+            cmpSym_CMxCON_EVPOL[index - 1].setDefaultValue(0)
+            cmpSym_CMxCON_EVPOL[index - 1].setOutputMode("Value")
+            cmpSym_CMxCON_EVPOL[index - 1].setDisplayMode("Description")
+            for ii in cmp1EVPOL_names:
+                cmpSym_CMxCON_EVPOL[index - 1].addKey( ii['desc'], ii['value'], ii['key'] )
 
-    #Positive input of Comparator 2
-    cmp2CREF_names = []
-    _get_bitfield_names(cmpValGrp_CM2CON_CREF, cmp2CREF_names)
-    cmpSym_CM2CON_CREF = cmpComponent.createKeyValueSetSymbol("CMP_CM2CON_CREF", cmpSym_CM2CON_STRING)
-    cmpSym_CM2CON_CREF.setLabel(cmpBitFld_CM2CON_CREF.getAttribute("caption"))
-    cmpSym_CM2CON_CREF.setDefaultValue(0)
-    cmpSym_CM2CON_CREF.setOutputMode("Value")
-    cmpSym_CM2CON_CREF.setDisplayMode("Description")
-    for ii in cmp2CREF_names:
-        cmpSym_CM2CON_CREF.addKey( ii['desc'], ii['value'], ii['key'] )
+            #Comparator output invert
+            cmpSym_CMxCON_CPOL.append(index)
+            cmpSym_CMxCON_CPOL[index - 1] = cmpComponent.createBooleanSymbol("CMP_CM" + str(index) + "CON_CPOL", cmpSym_Menu)
+            cmpSym_CMxCON_CPOL[index - 1].setLabel(cmpBitFld_CM1CON_CPOL.getAttribute("caption"))
 
-    #Negative input of Comparator 2
-    cmp2CCH_names = []
-    _get_bitfield_names(cmpValGrp_CM2CON_CCH, cmp2CCH_names)
-    cmpSym_CM2CON_CCH = cmpComponent.createKeyValueSetSymbol("CMP_CM2CON_CCH", cmpSym_CM2CON_STRING)
-    cmpSym_CM2CON_CCH.setLabel(cmpBitFld_CM2CON_CCH.getAttribute("caption"))
-    cmpSym_CM2CON_CCH.setDefaultValue(0)
-    cmpSym_CM2CON_CCH.setOutputMode("Value")
-    cmpSym_CM2CON_CCH.setDisplayMode("Description")
-    for ii in cmp2CCH_names:
-        cmpSym_CM2CON_CCH.addKey( ii['desc'], ii['value'], ii['key'] )
+            #Comparator output on pin
+            cmpSym_CMxCON_COE.append(index)
+            cmpSym_CMxCON_COE[index - 1] = cmpComponent.createBooleanSymbol("CMP_CM" + str(index) + "CON_COE", cmpSym_Menu)
+            cmpSym_CMxCON_COE[index - 1].setLabel(cmpBitFld_CM1CON_COE.getAttribute("caption"))
 
-    #Edge selection for interrupt generation
-    cmp2EVPOL_names = []
-    _get_bitfield_names(cmpValGrp_CM2CON_EVPOL, cmp2EVPOL_names)
-    cmpSym_CM2CON_EVPOL = cmpComponent.createKeyValueSetSymbol("CMP_CM2CON_EVPOL", cmpSym_CM2CON_STRING)
-    cmpSym_CM2CON_EVPOL.setLabel(cmpBitFld_CM2CON_EVPOL.getAttribute("caption"))
-    cmpSym_CM2CON_EVPOL.setDefaultValue(0)
-    cmpSym_CM2CON_EVPOL.setOutputMode("Value")
-    cmpSym_CM2CON_EVPOL.setDisplayMode("Description")
-    for ii in cmp2EVPOL_names:
-        cmpSym_CM2CON_EVPOL.addKey( ii['desc'], ii['value'], ii['key'] )
+            #Collecting user input to combine into CMPxCON register
+            #CMPxCON is updated every time a user selection changes
+            cmpSym_CMP1CON = cmpComponent.createHexSymbol("CM" + str(index) + "CON_VALUE", None)
+            cmpSym_CMP1CON.setDefaultValue(0)
+            cmpSym_CMP1CON.setVisible(False)
+            cmpSym_CMP1CON.setDependencies(combineValues, ["CMP_CM" + str(index) + "CON_CREF", "CMP_CM" + str(index) + "CON_CCH", "CMP_CM" + str(index) + "CON_EVPOL", "CMP_CM" + str(index) + "CON_CPOL", "CMP_CM" + str(index) + "CON_COE"])
 
-    #Comparator output invert
-    cmpSym_CM2CON_CPOL = cmpComponent.createBooleanSymbol("CMP_CM2CON_CPOL", cmpSym_CM2CON_STRING)
-    cmpSym_CM2CON_CPOL.setLabel(cmpBitFld_CM2CON_CPOL.getAttribute("caption"))
-    cmpSym_CM2CON_CPOL.setDefaultValue(False)
+            #Calculate the proper interrupt registers using IRQ#
+            cmpxIrq = "COMPARATOR_" + str(index)
+            InterruptVector.append(cmpxIrq + "_INTERRUPT_ENABLE")
+            InterruptHandler.append(cmpxIrq + "_INTERRUPT_HANDLER")
+            InterruptHandlerLock.append(cmpxIrq + "_INTERRUPT_HANDLER_LOCK")
+            InterruptVectorUpdate.append("core." + cmpxIrq + "_INTERRUPT_ENABLE_UPDATE")
 
-    #Comparator output on pin
-    cmpSym_CM2CON_COE = cmpComponent.createBooleanSymbol("CMP_CM2CON_COE", cmpSym_CM2CON_STRING)
-    cmpSym_CM2CON_COE.setLabel(cmpBitFld_CM2CON_COE.getAttribute("caption"))
-    cmpSym_CM2CON_COE.setDefaultValue(False)
+            cmpxIrq_index = int(getIRQIndex(cmpxIrq))
 
-    #Collecting user input to combine into CMPxCON register
-    #CMPxCON is updated every time a user selection changes
-    cmpSym_CMP1CON = cmpComponent.createHexSymbol("CM1CON_VALUE", None)
-    cmpSym_CMP1CON.setDefaultValue(0)
-    cmpSym_CMP1CON.setVisible(False)
-    cmpSym_CMP1CON.setDependencies(combine1Values, ["CMP_CM1CON_CREF", "CMP_CM1CON_CCH", "CMP_CM1CON_EVPOL", "CMP_CM1CON_CPOL", "CMP_CM1CON_COE"])
+            if cmpxIrq_index == -1:
+                cmpxIrq_index = int(getVectorIndex(cmpxIrq))
 
-    cmpSym_CMP2CON = cmpComponent.createHexSymbol("CM2CON_VALUE", None)
-    cmpSym_CMP2CON.setDefaultValue(0)
-    cmpSym_CMP2CON.setVisible(False)
-    cmpSym_CMP2CON.setDependencies(combine2Values, ["CMP_CM2CON_CREF", "CMP_CM2CON_CCH", "CMP_CM2CON_EVPOL", "CMP_CM2CON_CPOL", "CMP_CM2CON_COE"])
+            cmpxEnblRegName = _get_enblReg_parms(cmpxIrq_index)
+            cmpxStatRegName = _get_statReg_parms(cmpxIrq_index)
 
-    #Calculate the proper interrupt registers using IRQ#
-    cmp1Irq = "COMPARATOR_1"
-    cmp1InterruptVector = cmp1Irq + "_INTERRUPT_ENABLE"
-    cmp1InterruptHandler = cmp1Irq + "_INTERRUPT_HANDLER"
-    cmp1InterruptHandlerLock = cmp1Irq + "_INTERRUPT_HANDLER_LOCK"
-    cmp1InterruptVectorUpdate = cmp1Irq + "_INTERRUPT_ENABLE_UPDATE"
-    cmp1Irq_index = int(getIRQnumber(cmp1Irq))
+            #CMPx IEC REG
+            cmpxIEC = cmpComponent.createStringSymbol("CMP" + str(index) + "_IEC_REG", None)
+            cmpxIEC.setDefaultValue(cmpxEnblRegName)
+            cmpxIEC.setVisible(False)
 
-    cmp1EnblRegName = _get_enblReg_parms(cmp1Irq_index)
-    cmp1StatRegName = _get_statReg_parms(cmp1Irq_index)
+            #CMPx IFS REG
+            cmpxIFS = cmpComponent.createStringSymbol("CMP" + str(index) + "_IFS_REG", None)
+            cmpxIFS.setDefaultValue(cmpxStatRegName)
+            cmpxIFS.setVisible(False)
 
-    #CMP1 IEC REG
-    cmp1IEC = cmpComponent.createStringSymbol("CMP1_IEC_REG", None)
-    cmp1IEC.setDefaultValue(cmp1EnblRegName)
-    cmp1IEC.setVisible(False)
+            ############################################################################
+            #### Dependency ####
+            ############################################################################
 
-    #CMP1 IFS REG
-    cmp1IFS = cmpComponent.createStringSymbol("CMP1_IFS_REG", None)
-    cmp1IFS.setDefaultValue(cmp1StatRegName)
-    cmp1IFS.setVisible(False)
+            # EVIC Dynamic settings
+            # Dependency Status
+            cmpSymIntxEnComment = cmpComponent.createCommentSymbol("CMP" + str(index) + "_INTERRUPT_ENABLE_COMMENT", cmpSym_Menu)
+            cmpSymIntxEnComment.setVisible(False)
+            cmpSymIntxEnComment.setLabel("Warning!!! Comparator " + str(index) + " Interrupt is Disabled in Interrupt Manager")
+            cmpSymIntxEnComment.setDependencies(updateCMPxInterruptData, ["CMP_CM" + str(index) + "CON_EVPOL", InterruptVectorUpdate[index - 1]])
 
-    #Calculate the proper interrupt registers using IRQ#
-    cmp2Irq = "COMPARATOR_2"
-    cmp2InterruptVector = cmp2Irq + "_INTERRUPT_ENABLE"
-    cmp2InterruptHandler = cmp2Irq + "_INTERRUPT_HANDLER"
-    cmp2InterruptHandlerLock = cmp2Irq + "_INTERRUPT_HANDLER_LOCK"
-    cmp2InterruptVectorUpdate = cmp2Irq + "_INTERRUPT_ENABLE_UPDATE"
-    cmp2Irq_index = int(getIRQnumber(cmp2Irq))
+    cmpSym_Count = cmpComponent.createIntegerSymbol("CMP_COUNT", cmpSym_Menu)
+    cmpSym_Count.setDefaultValue(index)
+    cmpSym_Count.setVisible(False)
 
-    cmp2EnblRegName = _get_enblReg_parms(cmp2Irq_index)
-    cmp2StatRegName = _get_statReg_parms(cmp2Irq_index)
-
-    #CMP2 IEC REG
-    cmp2IEC = cmpComponent.createStringSymbol("CMP2_IEC_REG", None)
-    cmp2IEC.setDefaultValue(cmp2EnblRegName)
-    cmp2IEC.setVisible(False)
-
-    #CMP2 IFS REG
-    cmp2IFS = cmpComponent.createStringSymbol("CMP2_IFS_REG", None)
-    cmp2IFS.setDefaultValue(cmp2StatRegName)
-    cmp2IFS.setVisible(False)
-
-############################################################################
-#### Dependency ####
-############################################################################
-
-    # EVIC Dynamic settings
-    # Dependency Status
-    cmpSymInt1EnComment = cmpComponent.createCommentSymbol("CMP1_INTERRUPT_ENABLE_COMMENT", cmpSym_CM1CON_STRING)
-    cmpSymInt1EnComment.setVisible(False)
-    cmpSymInt1EnComment.setLabel("Warning!!! Comparator 1 Interrupt is Disabled in Interrupt Manager")
-    cmpSymInt1EnComment.setDependencies(updateCMP1InterruptData, ["CMP_CM1CON_EVPOL", "core." + cmp1InterruptVectorUpdate])
-
-    cmpSymInt2EnComment = cmpComponent.createCommentSymbol("CMP2_INTERRUPT_ENABLE_COMMENT", cmpSym_CM2CON_STRING)
-    cmpSymInt2EnComment.setVisible(False)
-    cmpSymInt2EnComment.setLabel("Warning!!! Comparator 2 Interrupt is Disabled in Interrupt Manager")
-    cmpSymInt2EnComment.setDependencies(updateCMP2InterruptData, ["CMP_CM2CON_EVPOL", "core." + cmp2InterruptVectorUpdate])
-
-############################################################################
-#### Code Generation ####
-############################################################################
+    ############################################################################
+    #### Code Generation ####
+    ############################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
