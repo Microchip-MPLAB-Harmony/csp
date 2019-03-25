@@ -142,15 +142,32 @@ def _get_bitfield_names(node, outputList):
             dict["value"] = str(tempint)
             outputList.append(dict)
 
-def getIRQnumber(string):
+def getIRQIndex(string):
+
+    irq_index = "-1"
 
     for param in interruptsChildren:
-        name = param.getAttribute("name")
-        if string == name:
-            irq_index = param.getAttribute("index")
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("irq-name"))
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
             break
 
     return irq_index
+
+def getVectorIndex(string):
+
+    vector_index = "-1"
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
 
 ##  Dependency Function to show or hide the warning message depending on Clock enable/disable status
 def ClockStatusWarning(symbol, event):
@@ -254,9 +271,50 @@ def instantiateComponent(spiComponent):
     spiSymInterruptMode.setLabel("Enable Interrrupts ?")
     spiSymInterruptMode.setDefaultValue(True)
 
-    ## Fault Interrrupt Setup
-    spiIrqFault = spiInstanceName.getValue() + "_FAULT"
-    spiFaultVectorNum = int(getIRQnumber(spiIrqFault))
+    spiIrq = "SPI_" + spiInstanceNum.getValue()
+    spiVectorNum = getVectorIndex(spiIrq)
+
+    if spiVectorNum != "-1":
+        InterruptVector.append(spiIrq + "_INTERRUPT_ENABLE")
+        InterruptHandler.append(spiIrq + "_INTERRUPT_HANDLER")
+        InterruptHandlerLock.append(spiIrq + "_INTERRUPT_HANDLER_LOCK")
+        InterruptVectorUpdate.append("core." + spiIrq + "_INTERRUPT_ENABLE_UPDATE")
+
+        ## SPI Error IRQ
+        spiIrqFault = spiInstanceName.getValue() + "_ERR"
+        spiFaultVectorNum = int(getIRQIndex(spiIrqFault))
+
+        ## SPI RX IRQ
+        spiIrqrRx = spiInstanceName.getValue() + "_RX"
+        spiRxVectorNum = int(getIRQIndex(spiIrqrRx))
+
+        ## SPI TX IRQ
+        spiIrqTx = spiInstanceName.getValue() + "_TX"
+        spiTxVectorNum = int(getIRQIndex(spiIrqTx))
+    else:
+        ## SPI Fault Interrrupt
+        spiIrqFault = spiInstanceName.getValue() + "_FAULT"
+        spiFaultVectorNum = int(getVectorIndex(spiIrqFault))
+
+        ## SPI RX Interrupt
+        spiIrqrRx = spiInstanceName.getValue() + "_RX"
+        InterruptVector.append(spiIrqrRx + "_INTERRUPT_ENABLE")
+        InterruptHandler.append(spiIrqrRx + "_INTERRUPT_HANDLER")
+        InterruptHandlerLock.append(spiIrqrRx + "_INTERRUPT_HANDLER_LOCK")
+        InterruptVectorUpdate.append("core." + spiIrqrRx + "_INTERRUPT_ENABLE_UPDATE")
+        spiRxVectorNum = int(getVectorIndex(spiIrqrRx))
+
+        ## SPI TX Interrupt
+        spiIrqTx = spiInstanceName.getValue() + "_TX"
+        InterruptVector.append(spiIrqTx + "_INTERRUPT_ENABLE")
+        InterruptHandler.append(spiIrqTx + "_INTERRUPT_HANDLER")
+        InterruptHandlerLock.append(spiIrqTx + "_INTERRUPT_HANDLER_LOCK")
+        InterruptVectorUpdate.append("core." + spiIrqTx + "_INTERRUPT_ENABLE_UPDATE")
+        spiTxVectorNum = int(getVectorIndex(spiIrqTx))
+
+    spiInterruptCount = spiComponent.createIntegerSymbol("SPI_INTERRUPT_COUNT", None)
+    spiInterruptCount.setDefaultValue(len(InterruptVector))
+    spiInterruptCount.setVisible(False)
 
     enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(spiFaultVectorNum)
     statRegName, statBitPosn, statMask = _get_statReg_parms(spiFaultVectorNum)
@@ -281,14 +339,6 @@ def instantiateComponent(spiComponent):
     spiIFSMask.setDefaultValue(statMask)
     spiIFSMask.setVisible(False)
 
-    ## SPI RX Interrupt
-    spiIrqrRx = spiInstanceName.getValue() + "_RX"
-    InterruptVector.append(spiIrqrRx + "_INTERRUPT_ENABLE")
-    InterruptHandler.append(spiIrqrRx + "_INTERRUPT_HANDLER")
-    InterruptHandlerLock.append(spiIrqrRx + "_INTERRUPT_HANDLER_LOCK")
-    InterruptVectorUpdate.append("core." + spiIrqrRx + "_INTERRUPT_ENABLE_UPDATE")
-    spiRxVectorNum = int(getIRQnumber(spiIrqrRx))
-
     enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(spiRxVectorNum)
     statRegName, statBitPosn, statMask = _get_statReg_parms(spiRxVectorNum)
 
@@ -311,14 +361,6 @@ def instantiateComponent(spiComponent):
     spiRXIFSMask = spiComponent.createStringSymbol("SPI_RX_IFS_REG_MASK", None)
     spiRXIFSMask.setDefaultValue(statMask)
     spiRXIFSMask.setVisible(False)
-
-    ##SPI TX Interrupt
-    spiIrqTx = spiInstanceName.getValue() + "_TX"
-    InterruptVector.append(spiIrqTx + "_INTERRUPT_ENABLE")
-    InterruptHandler.append(spiIrqTx + "_INTERRUPT_HANDLER")
-    InterruptHandlerLock.append(spiIrqTx + "_INTERRUPT_HANDLER_LOCK")
-    InterruptVectorUpdate.append("core." + spiIrqTx + "_INTERRUPT_ENABLE_UPDATE")
-    spiTxVectorNum = int(getIRQnumber(spiIrqTx))
 
     enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(spiTxVectorNum)
     statRegName, statBitPosn, statMask = _get_statReg_parms(spiTxVectorNum)
@@ -422,10 +464,11 @@ def instantiateComponent(spiComponent):
     defaultSPIBR = calculateBRGValue(spiDefaultMasterFreq, spiSym_Baud_Rate.getValue())
 
     spiSym_SPIBRG_VALUE = spiComponent.createIntegerSymbol("SPI_BRG_VALUE", None)
-    spiSym_SPIBRG_VALUE.setDefaultValue(defaultSPIBR)
     spiSym_SPIBRG_VALUE.setVisible(False)
     spiSym_SPIBRG_VALUE.setDependencies(SPIBRG_ValueUpdate, ["SPI_BAUD_RATE", "core." + spiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
+    #Use setValue instead of setDefaultValue to store symbol value in default.xml
+    spiSym_SPIBRG_VALUE.setValue(defaultSPIBR, 1)
 
     spiSymDummyData = spiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
     spiSymDummyData.setLabel("Dummy Data")
