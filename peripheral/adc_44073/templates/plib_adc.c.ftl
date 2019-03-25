@@ -150,6 +150,18 @@
 <#elseif ADC_EMR_OSR_VALUE == "4">
     <#assign ADC_OSR = "ADC_EMR_OSR_OSR16">
     <#assign ADC_ASTE = "">
+<#elseif ADC_EMR_OSR_VALUE == "5">
+    <#assign ADC_OSR = "ADC_EMR_OSR_OSR64">
+    <#assign ADC_ASTE = "| ADC_EMR_ASTE_Msk">
+<#elseif ADC_EMR_OSR_VALUE == "6">
+    <#assign ADC_OSR = "ADC_EMR_OSR_OSR64">
+    <#assign ADC_ASTE = "">
+<#elseif ADC_EMR_OSR_VALUE == "7">
+    <#assign ADC_OSR = "ADC_EMR_OSR_OSR256">
+    <#assign ADC_ASTE = "| ADC_EMR_ASTE_Msk">
+<#elseif ADC_EMR_OSR_VALUE == "8">
+    <#assign ADC_OSR = "ADC_EMR_OSR_OSR256">
+    <#assign ADC_ASTE = "">
 </#if>
 
 </#compress>

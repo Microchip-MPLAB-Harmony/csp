@@ -105,6 +105,12 @@ extern "C" {
                 <#elseif (ADC_EMR_OSR_VALUE == "3" || ADC_EMR_OSR_VALUE == "4")>
                     #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
                     #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (ADC_EMR_OSR_VALUE == "5" || ADC_EMR_OSR_VALUE == "6")>
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (ADC_EMR_OSR_VALUE == "7" || ADC_EMR_OSR_VALUE == "8")>
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 </#if>
             </#if>
             <#if ((ADC_EMR_SIGNMODE_VALUE == "ALL_SIGNED") || (ADC_EMR_SIGNMODE_VALUE == "SE_UNSG_DF_SIGN")) >
@@ -117,6 +123,12 @@ extern "C" {
                 <#elseif (ADC_EMR_OSR_VALUE == "3" || ADC_EMR_OSR_VALUE == "4")>
                     #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (8191)
                     #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
+                <#elseif (ADC_EMR_OSR_VALUE == "5" || ADC_EMR_OSR_VALUE == "6")>
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (16383)
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
+                <#elseif (ADC_EMR_OSR_VALUE == "7" || ADC_EMR_OSR_VALUE == "8")>
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (32767)
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
                 </#if>
             </#if>
         <#else>
@@ -130,6 +142,12 @@ extern "C" {
                 <#elseif (ADC_EMR_OSR_VALUE == "3" || ADC_EMR_OSR_VALUE == "4")>
                     #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (16383U)
                     #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (ADC_EMR_OSR_VALUE == "5" || ADC_EMR_OSR_VALUE == "6")>
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (32767U)
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
+                <#elseif (ADC_EMR_OSR_VALUE == "7" || ADC_EMR_OSR_VALUE == "8")>
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (65535U)
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (0U)
                 </#if>
             </#if>
             <#if ((ADC_EMR_SIGNMODE_VALUE == "ALL_SIGNED") || (ADC_EMR_SIGNMODE_VALUE == "SE_SIGN_DF_UNSG")) >
@@ -142,6 +160,12 @@ extern "C" {
                 <#elseif (ADC_EMR_OSR_VALUE == "3" || ADC_EMR_OSR_VALUE == "4")>
                     #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (8191)
                     #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-8192)
+                <#elseif (ADC_EMR_OSR_VALUE == "5" || ADC_EMR_OSR_VALUE == "6")>
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (16383)
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-16384)
+                <#elseif (ADC_EMR_OSR_VALUE == "7" || ADC_EMR_OSR_VALUE == "8")>
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MAX_OUTPUT  (32767)
+                    #define ${ADC_INSTANCE_NAME}_CH${CH_NUM}_MIN_OUTPUT  (-32768)
                 </#if>
             </#if>
         </#if>

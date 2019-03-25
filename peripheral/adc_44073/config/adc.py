@@ -134,10 +134,14 @@ def adcCalcConversionTime(adcSym_CONV_TIME, event):
     multiplier = 1
     if (over_sampling_rate == "NO_AVERAGE"):
         multiplier = 1
-    if (over_sampling_rate == "OSR4"):
+    elif (over_sampling_rate == "OSR4_SIN") or (over_sampling_rate == "OSR4_MUL"):
         multiplier = 4
-    if (over_sampling_rate == "OSR16"):
+    elif (over_sampling_rate == "OSR16_SIN") or (over_sampling_rate == "OSR16_MUL"):
         multiplier = 16
+    elif (over_sampling_rate == "OSR64_SIN") or (over_sampling_rate == "OSR64_MUL"):
+        multiplier = 64
+    elif (over_sampling_rate == "OSR256_SIN") or (over_sampling_rate == "OSR256_MUL"):
+        multiplier = 256
     conv_time = ((2 * prescaler) * 21.0 * 1000000.0 * multiplier) / clock
     adcSym_CONV_TIME.setLabel("**** Conversion Time is "+str(conv_time)+" us ****")
 
@@ -309,11 +313,24 @@ def instantiateComponent(adcComponent):
     adcSym_EMR_OSR_VALUE.setDefaultValue(0)
     adcSym_EMR_OSR_VALUE.setOutputMode("Value")
     adcSym_EMR_OSR_VALUE.setDisplayMode("Description")
-    adcSym_EMR_OSR_VALUE.addKey("NO_AVERAGE", "0", "12-bit")
-    adcSym_EMR_OSR_VALUE.addKey("OSR4_SIN", "1", "13-bit - single trigger averaging")
-    adcSym_EMR_OSR_VALUE.addKey("OSR4_MUL", "2", "13-bit - multi trigger averaging")
-    adcSym_EMR_OSR_VALUE.addKey("OSR16_SIN", "3", "14-bit - single trigger averaging")
-    adcSym_EMR_OSR_VALUE.addKey("OSR16_MUL", "4", "14-bit - multi trigger averaging")
+    valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_EMR__OSR\"]")
+    if valueGroup is not None:
+        osrValues = valueGroup.getChildren()
+        for index in range(len(osrValues)):
+            if osrValues[index].getAttribute("name") == "NO_AVERAGE":
+                adcSym_EMR_OSR_VALUE.addKey("NO_AVERAGE", "0", "12-bit")
+            elif osrValues[index].getAttribute("name") == "OSR4":
+                adcSym_EMR_OSR_VALUE.addKey("OSR4_SIN", "1", "13-bit - single trigger averaging")
+                adcSym_EMR_OSR_VALUE.addKey("OSR4_MUL", "2", "13-bit - multi trigger averaging")
+            elif osrValues[index].getAttribute("name") == "OSR16":
+                adcSym_EMR_OSR_VALUE.addKey("OSR16_SIN", "3", "14-bit - single trigger averaging")
+                adcSym_EMR_OSR_VALUE.addKey("OSR16_MUL", "4", "14-bit - multi trigger averaging")
+            elif osrValues[index].getAttribute("name") == "OSR64":
+                adcSym_EMR_OSR_VALUE.addKey("OSR64_SIN", "5", "15-bit - single trigger averaging")
+                adcSym_EMR_OSR_VALUE.addKey("OSR64_MUL", "6", "15-bit - multi trigger averaging")
+            elif osrValues[index].getAttribute("name") == "OSR256":
+                adcSym_EMR_OSR_VALUE.addKey("OSR256_SIN", "7", "16-bit - single trigger averaging")
+                adcSym_EMR_OSR_VALUE.addKey("OSR256_MUL", "8", "16-bit - multi trigger averaging")
 
     #Conversion time
     adcSym_CONV_TIME = adcComponent.createCommentSymbol("ADC_CONV_TIME", adcMenu)
