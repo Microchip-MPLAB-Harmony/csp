@@ -81,11 +81,9 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size );
 bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size );
 
 <#if USART_INTERRUPT_MODE == false>
-uint8_t ${FLEXCOM_INSTANCE_NAME}_ReadByte(void);
+uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadByte(void);
 
-void ${FLEXCOM_INSTANCE_NAME}_WriteByte(uint8_t data);
-
-void ${FLEXCOM_INSTANCE_NAME}_Sync(void);
+void ${FLEXCOM_INSTANCE_NAME}_USART_WriteByte(uint8_t data);
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void );
 
@@ -104,13 +102,6 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet( void );
 void ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
 
 void ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
-
 </#if>
 
 // DOM-IGNORE-BEGIN

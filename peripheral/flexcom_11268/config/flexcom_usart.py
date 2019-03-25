@@ -134,7 +134,7 @@ flexcomSym_UsartClkValue.setDependencies(clockSourceFreq, ["FLEXCOM_MODE", "FLEX
 
 flexcomSym_UsartBaud = flexcomComponent.createIntegerSymbol("BAUD_RATE", flexcomSym_OperatingMode)
 flexcomSym_UsartBaud.setLabel("Baud Rate")
-flexcomSym_UsartBaud.setDefaultValue(9600)
+flexcomSym_UsartBaud.setDefaultValue(115200)
 flexcomSym_UsartBaud.setVisible(False)
 flexcomSym_UsartBaud.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
