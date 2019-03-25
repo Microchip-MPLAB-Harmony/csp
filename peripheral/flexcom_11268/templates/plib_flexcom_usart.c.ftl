@@ -437,44 +437,25 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet( void )
 
 </#if>
 <#if USART_INTERRUPT_MODE == false>
-uint8_t ${FLEXCOM_INSTANCE_NAME}_ReadByte(void)
+uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadByte(void)
 {
     return(${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR & FLEX_US_RHR_RXCHR_Msk);
 }
 
-void ${FLEXCOM_INSTANCE_NAME}_WriteByte(uint8_t data)
+void ${FLEXCOM_INSTANCE_NAME}_USART_WriteByte(uint8_t data)
 {
-    while ((FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk)) == 0);
+    while (FLEX_US_CSR_TXEMPTY_Msk != (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk));
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR = (FLEX_US_THR_TXCHR(data) & FLEX_US_THR_TXCHR_Msk);
-}
-
-void inline ${FLEXCOM_INSTANCE_NAME}_Sync(void)
-{
-    while ((FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk)) == 0);
 }
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void )
 {
-    bool status = false;
-
-    if(FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_TXEMPTY_Msk))
-    {
-        status = true;
-    }
-
-    return status;
+    return (FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_TXEMPTY_Msk));
 }
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_ReceiverIsReady( void )
 {
-    bool status = false;
-
-    if(FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_RXRDY_Msk))
-    {
-        status = true;
-    }
-
-    return status;
+    return (FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_RXRDY_Msk));
 }
 
 </#if>
