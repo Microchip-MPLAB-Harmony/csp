@@ -139,6 +139,47 @@ def update_gclk_freq(symbol, event):
     else:
         symbol.setValue(0, 0)
 
+def update_tc_enable(symbol, event):
+    instance_num = symbol.getID()[2]
+    enable_clock = False
+    for channel in range(3):
+        symbol_id = "TC" + str(instance_num) + "_CHANNEL" + str(channel) + "_CLOCK_ENABLE"
+        if (Database.getSymbolValue("core", symbol_id) == True):
+            enable_clock = True
+            break
+    symbol.setValue(enable_clock, 2)
+
+def update_tc_freq(symbol, event):
+    # symbol is named as "TC{instance_number}_CH{channel_number}_CLOCK_FREQUENCY.
+    # Extract the instance number
+    instance_num = symbol.getID().split("TC")[1].split("_")[0]
+    # extract the channel number
+    channel_num = symbol.getID().split("_CH")[1].split("_")[0]
+
+    # check if the relevant channel is enabled
+    if (Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_ENABLE") == True):
+        # Find the current clock source for the channel
+        clk_src = Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_CMR_TCCLKS")
+        # if clock source is processor independent GCLK
+        if (clk_src == 1):
+            clk_frequency = Database.getSymbolValue("core", "TC" + str(instance_num) + "_GCLK_FREQUENCY")
+        # if clock  source is MCK/8
+        elif (clk_src == 2):
+            clk_frequency = Database.getSymbolValue("core", "MCK_FREQUENCY") / 8
+        # if clock  source is MCK/32
+        elif (clk_src == 3):
+            clk_frequency = Database.getSymbolValue("core", "MCK_FREQUENCY") / 32
+        # if clock  source is MCK/128
+        elif (clk_src == 4):
+            clk_frequency = Database.getSymbolValue("core", "MCK_FREQUENCY") / 128
+        # if clock  source is SLOW CLOCK
+        elif (clk_src == 5):
+            clk_frequency = Database.getSymbolValue("core", "MD_SLOW_CLK_FREQUENCY")
+        # default  clock source is MCK (Enabled through extended registers of TC)
+        else:
+            clk_frequency = Database.getSymbolValue("core", "MCK_FREQUENCY")
+        symbol.setValue(clk_frequency, 2)
+
 #This maps the instance name to the symbol in that instance that determines if we use the peripheral clock or the generic clock.  For the
 #generic handler we assume it is a keyvalueset and 0 maps to the peripheral clock.  Peripherals that don't match this assumption will need
 #to use their own update function and map it in gclk_update_map
@@ -628,6 +669,33 @@ for module_node in peripherals_node.getChildren():
                     'MCK_FREQUENCY', 'PLLA_FREQUENCY', 'UPLL_FREQUENCY'])
             if module_node.getAttribute("name") == "DBGU":
                 pcr_freq.setDefaultValue(gclk_freq.getValue())
+
+        # TC plib expects frequency and enable bits per channel. Create dummy symbols to support this
+        if module_node.getAttribute("name") == "TC":
+            tc_ch_en_dep_list = []
+            #  create a dummy symbol per channel. TC has 3 channels. We create three ENABLE symbols( one per channel )
+            #  and four FREQUENCY symbols (one per channel + one additional symbol for quadrature mode )
+            for channel in range(4):
+                if channel < 3:
+                    tc_ch_en_name = instance_name + "_CHANNEL" + str(channel) + "_CLOCK_ENABLE"
+                    tc_ch_en = coreComponent.createBooleanSymbol(tc_ch_en_name, pcr_menu)
+                    tc_ch_en.setVisible(False)
+                    tc_ch_en.setReadOnly(True)
+                    tc_ch_en_dep_list.append(tc_ch_en_name)
+
+                tc_ch_freq = coreComponent.createIntegerSymbol(
+                    instance_name + "_CH" + str(channel) + "_CLOCK_FREQUENCY", pcr_menu)
+                tc_ch_freq.setVisible(False)
+                tc_ch_freq.setReadOnly(True)
+                tc_ch_freq.setDefaultValue(Database.getSymbolValue("core", "MCK_FREQUENCY"))
+                tc_ch_freq.setDependencies(update_tc_freq,
+                                           ["MCK_FREQUENCY",
+                                            "MD_SLOW_CLK_FREQUENCY",
+                                            instance_name + "_GCLK_FREQUENCY",
+                                            instance_name.lower() + ".TC" + str(channel) + "_CMR_TCCLKS",
+                                            instance_name.lower() + ".TC" + str(channel) + "_ENABLE"])
+
+            pcr_en.setDependencies(update_tc_enable, tc_ch_en_dep_list)
 
 sys_clk_menu = coreComponent.createMenuSymbol("CLK_SYSTEM_CLK_MENU", menu)
 sys_clk_menu.setLabel("System Clocks")
