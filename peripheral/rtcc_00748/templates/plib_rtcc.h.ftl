@@ -16,9 +16,10 @@
     instance.
 
 *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -44,12 +45,17 @@
 #ifndef PLIB_${RTCC_INSTANCE_NAME}_H
 #define PLIB_${RTCC_INSTANCE_NAME}_H
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
 #include <time.h>
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -61,7 +67,7 @@
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: type definitions
+// Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
 
@@ -81,10 +87,10 @@ typedef enum
 
 } RTC_ALARM_MASK;	
 
-
 typedef enum
 {
     RTC_INT_ALARM = ${RTCC_ENBLREG_ENABLE_VALUE}
+
 } RTC_INT_MASK;
 
 typedef void (*RTC_CALLBACK)(uintptr_t context);
@@ -95,11 +101,11 @@ typedef void (*RTC_CALLBACK)(uintptr_t context);
 // *****************************************************************************
 // *****************************************************************************
 
-void ${RTCC_INSTANCE_NAME}_Initialize ( void );
+void ${RTCC_INSTANCE_NAME}_Initialize( void );
 
-bool ${RTCC_INSTANCE_NAME}_TimeSet ( struct tm *Time );
+bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time );
 
-void ${RTCC_INSTANCE_NAME}_TimeGet (struct tm  *Time );
+void ${RTCC_INSTANCE_NAME}_TimeGet(struct tm  *Time );
 
 bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq );
 
@@ -119,4 +125,4 @@ void ${RTCC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt);
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_${RTCC_INSTANCE_NAME}_H */
+#endif // PLIB_${RTCC_INSTANCE_NAME}_H

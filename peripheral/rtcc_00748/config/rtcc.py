@@ -1,5 +1,5 @@
 """*****************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -22,6 +22,9 @@
 *****************************************************************************"""
 
 global rtccSym_SOSCEN_warn
+
+global interruptsChildren
+interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 
 ################################################################################
 #### Business Logic ####
@@ -52,7 +55,7 @@ def updateSymbolVisblity(symbol, event):
     symbol.setVisible(event["value"])
 
 def toggleMenu(menu, event):
-	menu.setVisible(not(event["value"]))
+    menu.setVisible(not(event["value"]))
 
 def updateAlarmMenuVisiblity(symbol, event):
     '''
@@ -125,17 +128,34 @@ def _get_statReg_parms(vectorNumber):
     bitPosn = int(32.0 * bit)
     return regName, str(bitPosn)
 
-def getIRQnumber(string):
-    
-    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+def getIRQIndex(string):
+
+    irq_index = "-1"
 
     for param in interruptsChildren:
-        modInst = param.getAttribute("name")
-        if string == modInst:
-            irq_index = param.getAttribute("index")
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("name"))
+
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
+            break
 
     return irq_index
-    
+
+def getVectorIndex(string):
+
+    vector_index = "-1"
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
+
 def instantiateComponent(rtccComponent):
 
     global rtccInstanceName
@@ -145,7 +165,7 @@ def instantiateComponent(rtccComponent):
     global rtccInterruptVectorUpdate
     global rtccSymInterruptMode
     global rtccSym_SOSCEN_warn
-    
+
     rtcBitField_RTCCON_RTCCLKSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTCC"]/register-group@[name="RTCC"]/register@[name="RTCCON"]/bitfield@[name="RTCCLKSEL"]')
     rtcValGrp_RTCCON_RTCCLKSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTCC"]/value-group@[name="RTCCON__RTCCLKSEL"]')
 
@@ -154,6 +174,9 @@ def instantiateComponent(rtccComponent):
 
     rtcBitField_RTCCON_RTCOUTSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTCC"]/register-group@[name="RTCC"]/register@[name="RTCCON"]/bitfield@[name="RTCOUTSEL"]')
     rtcValGrp_RTCCON_RTCOUTSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTCC"]/value-group@[name="RTCCON__RTCOUTSEL"]')
+
+    rtcBitField_RTCCON_RTSECSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTCC"]/register-group@[name="RTCC"]/register@[name="RTCCON"]/bitfield@[name="RTSECSEL"]')
+    rtcValGrp_RTCCON_RTSECSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTCC"]/value-group@[name="RTCCON__RTSECSEL"]')
 
     rtcBitField_RTCALRM_AMASK = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTCC"]/register-group@[name="RTCC"]/register@[name="RTCALRM"]/bitfield@[name="AMASK"]')
     rtcValGrp_RTCALRM_AMASK = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTCC"]/value-group@[name="RTCALRM__AMASK"]')
@@ -173,7 +196,11 @@ def instantiateComponent(rtccComponent):
     rtccInterruptHandler = rtccInstanceName.getValue() + "_INTERRUPT_HANDLER"
     rtccInterruptHandlerLock = rtccInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     rtccInterruptVectorUpdate = rtccInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
-    rtcIrq_index = int(getIRQnumber(rtccInstanceName.getValue()))
+
+    rtcIrq_index = int(getIRQIndex(rtccInstanceName.getValue()))
+
+    if rtcIrq_index == -1:
+        rtcIrq_index = int(getVectorIndex(rtccInstanceName.getValue()))
 
     enblRegName, enblBitPosn = _get_enblReg_parms(rtcIrq_index)
     statRegName, statBitPosn = _get_statReg_parms(rtcIrq_index)
@@ -192,48 +219,62 @@ def instantiateComponent(rtccComponent):
     rtcStatRegRd.setVisible(False)
 
     rtcStatRegShiftVal = rtccComponent.createStringSymbol("RTCC_STATREG_SHIFT_VALUE", None)
-    rtcStatRegShiftVal.setDefaultValue(str(hex(1<<int(statBitPosn))))
+    rtcStatRegShiftVal.setDefaultValue(str(hex(1 << int(statBitPosn))))
     rtcStatRegShiftVal.setVisible(False)
 
     rtcVectorNum = rtccComponent.createIntegerSymbol("RTCC_VECTOR_NUMBER", None)
     rtcVectorNum.setDefaultValue(rtcIrq_index)
     rtcVectorNum.setVisible(False)
 
-    # clock source
-    clkSel_names = []
-    _get_bitfield_names(rtcValGrp_RTCCON_RTCCLKSEL, clkSel_names)
-    rtccSym_RTCCON_RTCCLKSEL = rtccComponent.createKeyValueSetSymbol("RTCC_CLOCK_SOURCE", None )
-    rtccSym_RTCCON_RTCCLKSEL.setLabel(rtcBitField_RTCCON_RTCCLKSEL.getAttribute("caption"))
-    rtccSym_RTCCON_RTCCLKSEL.setOutputMode( "Value" )
-    rtccSym_RTCCON_RTCCLKSEL.setDisplayMode( "Description" )
-    for ii in clkSel_names:
-        rtccSym_RTCCON_RTCCLKSEL.addKey( ii['desc'], ii['value'], ii['key'] )
-    rtccSym_RTCCON_RTCCLKSEL.setDefaultValue(1)
-    rtccSym_RTCCON_RTCCLKSEL.setDependencies(checkSoscSetting,["RTCC_CLOCK_SOURCE"])
+    if rtcValGrp_RTCCON_RTCCLKSEL != None:
+        # clock source
+        clkSel_names = []
+        _get_bitfield_names(rtcValGrp_RTCCON_RTCCLKSEL, clkSel_names)
+        rtccSym_RTCCON_RTCCLKSEL = rtccComponent.createKeyValueSetSymbol("RTCC_CLOCK_SOURCE", None )
+        rtccSym_RTCCON_RTCCLKSEL.setLabel(rtcBitField_RTCCON_RTCCLKSEL.getAttribute("caption"))
+        rtccSym_RTCCON_RTCCLKSEL.setOutputMode( "Value" )
+        rtccSym_RTCCON_RTCCLKSEL.setDisplayMode( "Description" )
+        for ii in clkSel_names:
+            rtccSym_RTCCON_RTCCLKSEL.addKey( ii['desc'], ii['value'], ii['key'] )
+        rtccSym_RTCCON_RTCCLKSEL.setDefaultValue(1)
+        rtccSym_RTCCON_RTCCLKSEL.setDependencies(checkSoscSetting,["RTCC_CLOCK_SOURCE"])
 
-    # Create warning menu for when user selects external source but SOSCEN not set in clock module
-    rtccSym_SOSCEN_warn = rtccComponent.createMenuSymbol("SOSCEN_WARN", rtccSym_RTCCON_RTCCLKSEL)
-    rtccSym_SOSCEN_warn.setLabel("*** Warning: set secondary oscillator enable to ON in clock configurator settings ***")
-    rtccSym_SOSCEN_warn.setVisible(False)
+        # Create warning menu for when user selects external source but SOSCEN not set in clock module
+        rtccSym_SOSCEN_warn = rtccComponent.createMenuSymbol("SOSCEN_WARN", rtccSym_RTCCON_RTCCLKSEL)
+        rtccSym_SOSCEN_warn.setLabel("*** Warning: set secondary oscillator enable to ON in clock configurator settings ***")
+        rtccSym_SOSCEN_warn.setVisible(False)
 
     # RTCC output enable
     rtccSym_RTCCON_RTCOE = rtccComponent.createBooleanSymbol("RTCC_OUTPUT_ENABLE", None)
-    rtccSym_RTCCON_RTCOE.setVisible(True)
     rtccSym_RTCCON_RTCOE.setLabel(rtcBitField_RTCCON_RTCOE.getAttribute("caption"))
-    rtccSym_RTCCON_RTCOE.setDefaultValue(False)
 
     # output select
     rtcOutSel_names = []
-    _get_bitfield_names(rtcValGrp_RTCCON_RTCOUTSEL, rtcOutSel_names)
-    rtccSym_RTCCON_RTCOUTSEL = rtccComponent.createKeyValueSetSymbol( "RTCC_OUTPUT_SELECT", rtccSym_RTCCON_RTCOE )
-    rtccSym_RTCCON_RTCOUTSEL.setLabel(rtcBitField_RTCCON_RTCOUTSEL.getAttribute("caption"))
+    rtccOutputLabel = ""
+    rtccOutputBitName = ""
+
+    if rtcValGrp_RTCCON_RTCOUTSEL != None:
+        _get_bitfield_names(rtcValGrp_RTCCON_RTCOUTSEL, rtcOutSel_names)
+        rtccOutputLabel = rtcBitField_RTCCON_RTCOUTSEL.getAttribute("caption")
+        rtccOutputBitName = "RTCOUTSEL"
+    else:
+        _get_bitfield_names(rtcValGrp_RTCCON_RTSECSEL, rtcOutSel_names)
+        rtccOutputLabel = rtcValGrp_RTCCON_RTSECSEL.getAttribute("caption")
+        rtccOutputBitName = "RTSECSEL"
+
+    rtccSym_RTCCON_RTCOUTSEL = rtccComponent.createKeyValueSetSymbol("RTCC_OUTPUT_SELECT", rtccSym_RTCCON_RTCOE)
+    rtccSym_RTCCON_RTCOUTSEL.setLabel(rtccOutputLabel)
     rtccSym_RTCCON_RTCOUTSEL.setOutputMode( "Value" )
     rtccSym_RTCCON_RTCOUTSEL.setDisplayMode( "Description" )
     for ii in rtcOutSel_names:
         rtccSym_RTCCON_RTCOUTSEL.addKey( ii['desc'], ii['value'], ii['key'] )
     rtccSym_RTCCON_RTCOUTSEL.setDefaultValue(0)
     rtccSym_RTCCON_RTCOUTSEL.setVisible(False)
-    rtccSym_RTCCON_RTCOUTSEL.setDependencies(updateSymbolVisblity,["RTCC_OUTPUT_ENABLE"])
+    rtccSym_RTCCON_RTCOUTSEL.setDependencies(updateSymbolVisblity, ["RTCC_OUTPUT_ENABLE"])
+
+    rtccSym_OutputSelectBit = rtccComponent.createStringSymbol("RTCC_OUTPUT_SELECT_BITNAME", rtccSym_RTCCON_RTCOE)
+    rtccSym_OutputSelectBit.setDefaultValue(rtccOutputBitName)
+    rtccSym_OutputSelectBit.setVisible(False)
 
     rtccSym_RTCCON_TIMEDATE = rtccComponent.createMenuSymbol("RTC_TIMEANDDATE", None)
     rtccSym_RTCCON_TIMEDATE.setLabel("Time & Date")
