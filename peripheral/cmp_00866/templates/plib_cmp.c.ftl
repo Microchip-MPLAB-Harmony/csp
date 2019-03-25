@@ -15,8 +15,9 @@
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -37,131 +38,88 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
 #include "plib_${CMP_INSTANCE_NAME?lower_case}.h"
 
-<#--Implementation-->
 // *****************************************************************************
-
 // *****************************************************************************
-// Section: CMP Implementation
+// Section: ${CMP_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
 
-void ${CMP_INSTANCE_NAME}_Initialize (void)
+void ${CMP_INSTANCE_NAME}_Initialize(void)
 {
-    /*  Setup CM1CON    */
-    /*  CCH     = ${CMP_CM1CON_CCH}     */
-    /*  CREF    = ${CMP_CM1CON_CREF}        */
-    /*  EVPOL   = ${CMP_CM1CON_EVPOL}       */
-    /*  CPOL    = ${CMP_CM1CON_CPOL?then('true', 'false')}  */
-    /*  COE     = ${CMP_CM1CON_COE?then('true', 'false')}   */
+<#list 1..CMP_COUNT as i>
+    /*  Setup CM${i}CON    */
+    <#assign CMP_CMxCON_CCH = "CMP_CM" + i + "CON_CCH">
+    <#assign CMP_CMxCON_CREF = "CMP_CM" + i + "CON_CREF">
+    <#assign CMP_CMxCON_EVPOL = "CMP_CM" + i + "CON_EVPOL">
+    <#assign CMP_CMxCON_CPOL = "CMP_CM" + i + "CON_CPOL">
+    <#assign CMP_CMxCON_COE = "CMP_CM" + i + "CON_COE">
+    <#assign CMP_CMxCON_VALUE = "CM" + i + "CON_VALUE">
+    <#assign CMP_IEC_REG = "CMP" + i + "_IEC_REG">
+    /*  CCH     = ${.vars[CMP_CMxCON_CCH]}    */
+    /*  CREF    = ${.vars[CMP_CMxCON_CREF]}    */
+    /*  EVPOL   = ${.vars[CMP_CMxCON_EVPOL]}    */
+    /*  CPOL    = ${.vars[CMP_CMxCON_CPOL]?then('true', 'false')}    */
+    /*  COE     = ${.vars[CMP_CMxCON_COE]?then('true', 'false')}    */
+    CM${i}CON = 0x${.vars[CMP_CMxCON_VALUE]};
 
-    CM1CON = 0x${CM1CON_VALUE};
-<#if CMP_CM1CON_EVPOL != "0">
+    <#if .vars[CMP_CMxCON_EVPOL] != "0">
+        <#lt>    /* Enable Comparator ${i} Interrupt */
+        <#lt>    ${.vars[CMP_IEC_REG]}SET = _${.vars[CMP_IEC_REG]}_${CMP_INSTANCE_NAME}${i}IE_MASK;
 
-    ${CMP1_IEC_REG}SET = _${CMP1_IEC_REG}_${CMP_INSTANCE_NAME}1IE_MASK;
-</#if>
-
-    /*  Setup CM2CON    */
-    /*  CCH     = ${CMP_CM2CON_CCH}     */
-    /*  CREF    = ${CMP_CM2CON_CREF}        */
-    /*  EVPOL   = ${CMP_CM2CON_EVPOL}       */
-    /*  CPOL    = ${CMP_CM2CON_CPOL?then('true', 'false')}  */
-    /*  COE     = ${CMP_CM2CON_COE?then('true', 'false')}   */
-
-    CM2CON = 0x${CM2CON_VALUE};
-    <#if CMP_CMSTAT_SIDL?has_content >
-    
-    /*  Setup CMSTAT    */
-    /*  SIDL     = ${CMP_CMSTAT_SIDL?then('true', 'false')}   */
-    
-    <#if CMP_CMSTAT_SIDL == true>
+    </#if>
+</#list>
+<#if CMP_CMSTAT_SIDL??>
+<#if CMP_CMSTAT_SIDL == true>
+    /* Set Idle Control */
     CMSTATSET = _CMSTAT_SIDL_MASK;
-    <#else>
+<#else>
+    /* Clear Idle Control */
     CMSTATCLR = _CMSTAT_SIDL_MASK;
-    </#if>
-    </#if>
-    
-<#if CMP_CM2CON_EVPOL != "0">
-
-    ${CMP2_IEC_REG}SET = _${CMP2_IEC_REG}_${CMP_INSTANCE_NAME}2IE_MASK;
+</#if>
 </#if>
 }
 
-void ${CMP_INSTANCE_NAME}_1_CompareEnable (void)
-{
-    CM1CONSET = _CM1CON_ON_MASK;
-}
-
-void ${CMP_INSTANCE_NAME}_1_CompareDisable (void)
-{
-    CM1CONCLR = _CM1CON_ON_MASK;
-}
-
-void ${CMP_INSTANCE_NAME}_2_CompareEnable (void)
-{
-    CM2CONSET = _CM2CON_ON_MASK;
-}
-
-void ${CMP_INSTANCE_NAME}_2_CompareDisable (void)
-{
-    CM2CONCLR = _CM2CON_ON_MASK;
-}
-
-bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE ch_status)
+bool ${CMP_INSTANCE_NAME}_StatusGet(CMP_STATUS_SOURCE ch_status)
 {
     return ((CMSTAT & ch_status)?true:false);
 }
 
-<#if CMP_CM1CON_EVPOL != "0">
-
-CMP_OBJECT cmp1Obj;
-
-void ${CMP_INSTANCE_NAME}_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
+<#list 1..CMP_COUNT as i>
+<#assign CMP_CMxCON_EVPOL = "CMP_CM" + i + "CON_EVPOL">
+<#assign CMP_IFS_REG = "CMP" + i + "_IFS_REG">
+void ${CMP_INSTANCE_NAME}_${i}_CompareEnable(void)
 {
-    cmp1Obj.callback = callback;
-
-    cmp1Obj.context = context;
+    CM${i}CONSET = _CM${i}CON_ON_MASK;
 }
 
-void COMPARATOR_1_InterruptHandler(void)
+void ${CMP_INSTANCE_NAME}_${i}_CompareDisable(void)
 {
-    ${CMP1_IFS_REG}CLR = _${CMP1_IFS_REG}_${CMP_INSTANCE_NAME}1IF_MASK; //Clear IRQ flag
+    CM${i}CONCLR = _CM${i}CON_ON_MASK;
+}
 
-    if(cmp1Obj.callback != NULL)
+<#if CMP_CMxCON_EVPOL != "0">
+CMP_OBJECT cmp${i}Obj;
+
+void ${CMP_INSTANCE_NAME}_${i}_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
+{
+    cmp${i}Obj.callback = callback;
+
+    cmp${i}Obj.context = context;
+}
+
+void COMPARATOR_${i}_InterruptHandler(void)
+{
+    ${.vars[CMP_IFS_REG]}CLR = _${.vars[CMP_IFS_REG]}_${CMP_INSTANCE_NAME}1IF_MASK; //Clear IRQ flag
+
+    if(cmp${i}Obj.callback != NULL)
     {
-        cmp1Obj.callback(cmp1Obj.context);
+        cmp${i}Obj.callback(cmp${i}Obj.context);
     }
 }
 
 </#if>
-
-<#if CMP_CM2CON_EVPOL != "0">
-
-CMP_OBJECT cmp2Obj;
-
-void ${CMP_INSTANCE_NAME}_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
-{
-    cmp2Obj.callback = callback;
-
-    cmp2Obj.context = context;
-}
-
-void COMPARATOR_2_InterruptHandler(void)
-{
-    ${CMP2_IFS_REG}CLR = _${CMP2_IFS_REG}_${CMP_INSTANCE_NAME}2IF_MASK; //Clear IRQ flag
-
-    if(cmp2Obj.callback != NULL)
-    {
-        cmp2Obj.callback(cmp2Obj.context);
-    }
-}
-</#if>
-
-<#--
-/*******************************************************************************
- End of File
-*/
--->
-
+</#list>

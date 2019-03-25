@@ -15,8 +15,9 @@
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -37,9 +38,16 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef _PLIB_${CMP_INSTANCE_NAME}_H
-#define _PLIB_${CMP_INSTANCE_NAME}_H
+#ifndef PLIB_${CMP_INSTANCE_NAME}_H
+#define PLIB_${CMP_INSTANCE_NAME}_H
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -48,7 +56,9 @@
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     extern "C" {
+
 #endif
 // DOM-IGNORE-END
 
@@ -60,52 +70,52 @@
 
 typedef enum
 {
-    /*CMP Output*/
-    CMP1_OUTPUT_STATUS = _CMSTAT_C1OUT_MASK,      
+<#list 1..CMP_COUNT as i>
+    /* CMP${i} Output */
+    CMP${i}_OUTPUT_STATUS = _CMSTAT_C${i}OUT_MASK,
 
-    CMP2_OUTPUT_STATUS = _CMSTAT_C2OUT_MASK  
-
+</#list>
 } CMP_STATUS_SOURCE;
 
 typedef void (*CMP_CALLBACK) (uintptr_t context);
 
 typedef struct
-{    
+{
     CMP_CALLBACK callback;
-	uintptr_t    context;
-	
-} CMP_OBJECT ;
 
+    uintptr_t    context;
+
+} CMP_OBJECT;
+
+// *****************************************************************************
 // *****************************************************************************
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
 
-void ${CMP_INSTANCE_NAME}_Initialize (void);
+void ${CMP_INSTANCE_NAME}_Initialize(void);
 
-void ${CMP_INSTANCE_NAME}_1_CompareEnable (void);
+bool ${CMP_INSTANCE_NAME}_StatusGet(CMP_STATUS_SOURCE source);
 
-void ${CMP_INSTANCE_NAME}_1_CompareDisable (void);
+<#list 1..CMP_COUNT as i>
+<#assign CMP_CMxCON_EVPOL = "CMP_CM" + i + "CON_EVPOL">
+<#assign CMP_IFS_REG = "CMP" + i + "_IFS_REG">
+void ${CMP_INSTANCE_NAME}_${i}_CompareEnable(void);
 
-void ${CMP_INSTANCE_NAME}_2_CompareEnable (void);
+void ${CMP_INSTANCE_NAME}_${i}_CompareDisable(void);
 
-void ${CMP_INSTANCE_NAME}_2_CompareDisable (void);
+<#if CMP_CMxCON_EVPOL != "0">
+void ${CMP_INSTANCE_NAME}_${i}_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 
-bool ${CMP_INSTANCE_NAME}_StatusGet (CMP_STATUS_SOURCE source);
-
-<#if CMP_CM1CON_EVPOL != "0">
-
-void ${CMP_INSTANCE_NAME}_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 </#if>
-<#if CMP_CM2CON_EVPOL != "0">
-
-void ${CMP_INSTANCE_NAME}_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
-</#if>
+</#list>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-    }
-#endif
 
+    }
+
+#endif
 // DOM-IGNORE-END
-#endif // _PLIB_${CMP_INSTANCE_NAME}_H
+
+#endif // PLIB_${CMP_INSTANCE_NAME}_H
