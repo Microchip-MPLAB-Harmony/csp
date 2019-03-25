@@ -159,7 +159,7 @@ gclk_dependency_map = {
     "SDMMC1" : "SOME_SYMBOL",
     "TC0" : "SOME_SYMBOL",
     "TC1" : "SOME_SYMBOL",
-    "ADC" : "SOME_SYMBOL",
+    "ADC" : "ADC_CLK_SRC",
     "LCDC" : "SOME_SYMBOL",
     "I2SMCC" : "SOME_SYMBOL",
     "PIT64B" : "SGCLK",
