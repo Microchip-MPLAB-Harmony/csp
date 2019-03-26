@@ -22,7 +22,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -69,24 +69,15 @@
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Data Types
-// *****************************************************************************
-
-typedef enum
-{
-    PM_SLEEP_MODE_IDLE = 0x2,
-    PM_SLEEP_MODE_STANDBY = 0x4
-} PM_SLEEP_MODE;
-
-// *****************************************************************************
-// *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
 void PM_Initialize( void );
 
-void PM_SleepModeEnter( PM_SLEEP_MODE sleepMode );
+void PM_IdleModeEnter( void );
+
+void PM_StandbyModeEnter( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

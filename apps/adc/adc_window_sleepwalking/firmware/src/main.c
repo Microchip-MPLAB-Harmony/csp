@@ -85,7 +85,7 @@ int main ( void )
 
     while ( true )
     {
-        PM_SleepModeEnter(PM_SLEEPCFG_SLEEPMODE_STANDBY);
+        PM_StandbyModeEnter();
         
         if(adc_window_det == true)
         {
