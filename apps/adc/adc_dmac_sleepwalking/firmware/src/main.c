@@ -104,8 +104,7 @@ int main ( void )
     
     while ( true )
     {
-        PM_SleepModeEnter(PM_SLEEPCFG_SLEEPMODE_STANDBY);
-
+        PM_StandbyModeEnter();
         if(dma_ch0Done == true)
         {
             printf("\r\nTransferred 16 results to array in SRAM\r\n");
