@@ -92,7 +92,7 @@ int main ( void )
 
     while ( true )
     {
-        PM_SleepModeEnter(PM_SLEEPCFG_SLEEPMODE_STANDBY);
+        PM_StandbyModeEnter();
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
         if(ac_comparison_done)
