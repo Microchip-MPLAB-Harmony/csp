@@ -80,9 +80,20 @@
     The objective is to eliminate the user's need to be knowledgeable in the function of
     the 'configuration bits' to configure the system oscillators.
 */
-<#assign DS60001404 = "DS60001404_SERIES">
+
+<#if DS60001404_SERIES = true>
+    <#assign REFOTRIMreg = "REFO1TRIM">
+    <#assign REFOCONreg = "REFO1CON">
+<#else>
+    <#assign REFOTRIMreg = "REFOTRIM">
+    <#assign REFOCONreg = "REFOCON">
+</#if>
+
 void CLK_Initialize( void )
 {
+<#if (CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT) ||
+     ((USB_PART = true) && (CONFIG_SYS_CLK_UFRCEN == "ON")) ||
+     ((CONFIG_SYS_CLK_REFCLK_ENABLE?has_content) && (CONFIG_SYS_CLK_REFCLK_ENABLE == true))>
     bool int_flag = false;
 
     int_flag = (bool)__builtin_disable_interrupts();
@@ -94,60 +105,38 @@ void CLK_Initialize( void )
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
-    
-    /* FRCDIV  = ${CONFIG_SYS_CLK_FRCDIV} */
-    <#if .vars[DS60001404] = true>
-    /* DRMEN   = ${CONFIG_SYS_CLK_DRMEN} */
-    /* SLP2SPD = ${CONFIG_SYS_CLK_SLP2SPD} */
-    <#else>
-    /* PLLODIV = ${CONFIG_SYS_CLK_PLLODIV} */
-    </#if>
-    /* SOSCEN  = ${CONFIG_SYS_CLK_SOSCEN} */
-    /* NOSC    = ${CONFIG_SYS_CLK_NOSC} */
-    /* OSWEN   = ${CONFIG_SYS_CLK_OSWEN} */
-    <#if .vars[DS60001404] = false>
-    /* PBDIV   = ${CONFIG_SYS_CLK_PBDIV} */
-    /* PLLMULT = ${CONFIG_SYS_CLK_PLLMULT} */
-    </#if>
-    OSCCON = 0x${OSCCON_VALUE};
-    
-    /* TUN = ${CONFIG_SYS_CLK_OSCTUN} */
-    OSCTUN = 0x${OSCTUN_VALUE};
-    
-    /* RODIV   = ${CONFIG_SYS_CLK_RODIV} */
-    /* ON      = ${CONFIG_SYS_CLK_ON} */
-    /* OE      = ${CONFIG_SYS_CLK_OE} */
-    /* ROSEL   = ${CONFIG_SYS_CLK_ROSEL} */
-    <#if .vars[DS60001404] = false>
-    REFOCON = 0x${REFOCON_VALUE};
-    <#else>
-    REFO1CON = 0x${REFOCON_VALUE};
-    </#if>
-    
-    /* ROTRIM  = ${CONFIG_SYS_CLK_ROTRIM} */
-    <#if .vars[DS60001404] = false>
-    REFOTRIM = 0x${REFOTRIM_VALUE};
-    <#else>
-    REFO1TRIM = 0x${REFOTRIM_VALUE};
-    </#if>
-    
 
-    <#if .vars[DS60001404] = true>
-    /* PLLODIV  = ${CONFIG_SYS_CLK_PLLODIV} */
-    /* PLLMULT  = ${CONFIG_SYS_CLK_PLLMULT} */
-    /* PLLIDIV  = ${CONFIG_SYS_CLK_PLLIDIV} */
-    /* PLLICLK  = ${CONFIG_SYS_CLK_PLLICLK} */
-    SPLLCON = 0x${SPLLCON_VALUE};
-    
-    /* PLLODIV  = ${CONFIG_SYS_CLK_UPLLODIV} */
-    /* PLLMULT  = ${CONFIG_SYS_CLK_UPLLMULT} */
-    /* PLLIDIV  = ${CONFIG_SYS_CLK_UPLLIDIV} */
-    UPLLCON = 0x${UPLLCON_VALUE};
-    
-    /* PBDIV    = ${CONFIG_SYS_CLK_PBDIV} */
-    PB1DIV = 0x${PBDIV_VALUE};
+    <#if CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT>
+    OSCCONbits.FRCDIV = ${CONFIG_SYS_CLK_FRCDIV};
     </#if>
-    
+
+    <#if USB_PART = true && CONFIG_SYS_CLK_UFRCEN == "ON">
+    /* Make FRC as the input clock for USB */
+    OSCCONSET = _OSCCON_UFRCEN_MASK;
+    </#if>
+
+<#if CONFIG_SYS_CLK_REFCLK_ENABLE?has_content>
+    <#if CONFIG_SYS_CLK_REFCLK_ENABLE == true>
+        <#if REFOCON_VALUE != REFOCON_DEFAULT>
+            <#lt>    /* Set up Reference Clock */
+            <#lt>    /* ROSEL =  ${CONFIG_SYS_CLK_ROSEL} */
+            <#lt>    /* RODIV = ${CONFIG_SYS_CLK_RODIV} */
+            <#lt>    ${REFOCONreg} = ${REFOCON_VALUE};
+        </#if>
+        <#if REFOTRIM_VALUE != "0">
+            <#lt>    /* ROTRIM  = ${CONFIG_SYS_CLK_ROTRIM} */
+            <#lt>    ${REFOTRIMreg} = 0x${REFOTRIM_VALUE};
+        </#if>
+        <#if (CONFIG_SYS_CLK_OE?has_content) && (CONFIG_SYS_CLK_OE == true)>
+            <#lt>    /* Enable Reference Oscillator (ON bit) and Enable its Output (OE bit) */
+            <#lt>    ${REFOCONreg}SET = ${OE_MASK} | ${ON_MASK};
+        <#else>
+            <#lt>    /* Enable Reference Oscillator (ON bit) */
+            <#lt>    ${REFOCONreg}SET = ${ON_MASK};
+        </#if>
+    </#if>
+</#if>
+
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
     SYSKEY = 0x33333333;
@@ -155,6 +144,10 @@ void CLK_Initialize( void )
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001));
     }
+<#else>
+    /* Default clock setting is used, hence no code is generated */
+    /* Code for fuse settings can be found in "initialization.c" */
+</#if>
 }
 
 

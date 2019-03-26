@@ -170,7 +170,7 @@ mipsMenu.setDescription("Configuration for MIPS processor")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mx/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_pic32mk/plugin/clockmanager.jar")
+coreComponent.addPlugin("../peripheral/clk_pic32mx/plugin/clockmanager.jar")
 
 # load device specific pin manager information - only applies to subset of supported devices of PIC32MX family
 if(("PIC32MX330F" in processor) or ("PIC32MX350F" in processor) or ("PIC32MX370F" in processor) or
