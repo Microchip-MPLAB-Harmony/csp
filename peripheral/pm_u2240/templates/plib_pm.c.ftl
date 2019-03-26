@@ -128,8 +128,12 @@ void ${PM_INSTANCE_NAME}_IdleModeEnter( void )
     /* Configure Idle Sleep mode */
     <#if HAS_IDLE2_SLEEP??>
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE_Val;
+    /* Ensure that SLEEPMODE bits are configured with the given value */
+    while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_IDLE_Val));
     <#else>
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE2_Val;
+    /* Ensure that SLEEPMODE bits are configured with the given value */
+    while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_IDLE2_Val));
     </#if>
     /* Wait for interrupt instruction execution */
     __WFI();
@@ -139,6 +143,8 @@ void ${PM_INSTANCE_NAME}_StandbyModeEnter( void )
 {
     /* Configure Standby Sleep */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY_Val;
+    /* Ensure that SLEEPMODE bits are configured with the given value */
+    while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_STANDBY_Val));
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -148,6 +154,8 @@ void ${PM_INSTANCE_NAME}_BackupModeEnter( void )
 {
     /* Configure Backup Sleep */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_BACKUP_Val;
+    /* Ensure that SLEEPMODE bits are configured with the given value */
+    while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_BACKUP_Val));
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -158,6 +166,8 @@ void ${PM_INSTANCE_NAME}_OffModeEnter( void )
 {
     /* Configure Off Sleep */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_OFF_Val;
+    /* Ensure that SLEEPMODE bits are configured with the given value */
+    while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_OFF_Val));
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -176,5 +186,32 @@ void ${PM_INSTANCE_NAME}_IO_RetentionSet( void )
 void ${PM_INSTANCE_NAME}_IO_RetentionClear( void )
 {
     ${PM_INSTANCE_NAME}_REGS->PM_CTRLA &= (~PM_CTRLA_IORET_Msk);
+}
+</#if>
+
+<#if HAS_PLCFG??>
+bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel)
+{
+    bool status = false;
+    
+    /* Write the value only if Performance Level Disable is not set */
+    if (!(${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLDIS_Msk))
+    {
+        if((${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLSEL_Msk) != plsel)
+        {
+            /* Clear INTFLAG.PLRDY */
+            ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
+            /* Write PLSEL bits */
+            ${PM_INSTANCE_NAME}_REGS->PM_PLCFG  = plsel;
+            status = true;
+        }
+    }
+    
+    return status;
+}
+
+bool ${PM_INSTANCE_NAME}_PerformanceLevelReady(void)
+{
+    return(((${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk) == PM_INTFLAG_PLRDY_Msk)? true : false);
 }
 </#if>
