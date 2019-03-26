@@ -56,7 +56,6 @@
 #include "peripheral/systick/plib_systick.h"
 #include "peripheral/pm/plib_pm.h"
 #include "peripheral/sercom/usart/plib_sercom4_usart.h"
-#include "peripheral/supc/plib_supc.h"
 #include "peripheral/rtc/plib_rtc.h"
 
 // DOM-IGNORE-BEGIN

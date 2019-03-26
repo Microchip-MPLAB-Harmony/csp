@@ -22,7 +22,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -58,15 +58,24 @@
 
 void PM_Initialize( void )
 {
-    /* Configure back biasing & VREG switching mode */
-    PM_REGS->PM_STDBYCFG = PM_STDBYCFG_BBIASHS(0) | PM_STDBYCFG_VREGSMOD_LP;
+    /* Configure PM */
+    PM_REGS->PM_STDBYCFG = PM_STDBYCFG_BBIASHS(0)| PM_STDBYCFG_VREGSMOD(2);
 }
 
-void PM_SleepModeEnter( PM_SLEEP_MODE sleepMode )
+void PM_IdleModeEnter( void )
 {
-
-    PM_REGS->PM_SLEEPCFG = sleepMode;
-
+    /* Configure Idle Sleep mode */
+    PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE2_Val;
     /* Wait for interrupt instruction execution */
     __WFI();
 }
+
+void PM_StandbyModeEnter( void )
+{
+    /* Configure Standby Sleep */
+    PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY_Val;
+    /* Wait for interrupt instruction execution */
+    __WFI();
+}
+
+
