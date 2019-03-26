@@ -22,7 +22,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -69,25 +69,32 @@
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Data Types
-// *****************************************************************************
-
-typedef enum
-{
-    PM_SLEEP_MODE_IDLE = 0x2,
-    PM_SLEEP_MODE_STANDBY = 0x4
-} PM_SLEEP_MODE;
-
-// *****************************************************************************
-// *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
 void PM_Initialize( void );
 
-void PM_SleepModeEnter( PM_SLEEP_MODE sleepMode );
+void PM_IdleModeEnter( void );
 
+void PM_StandbyModeEnter( void );
+
+void PM_BackupModeEnter( void );
+
+void PM_OffModeEnter( void );
+
+void PM_IO_RetentionSet( void );
+
+void PM_IO_RetentionClear( void );
+typedef enum
+{
+    PLCFG_PLSEL0 = PM_PLCFG_PLSEL_PL0,
+    PLCFG_PLSEL2 = PM_PLCFG_PLSEL_PL2,
+}PLCFG_PLSEL;
+
+bool PM_ConfigurePerformanceLevel(PLCFG_PLSEL plsel);
+
+bool PM_PerformanceLevelReady(void);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
