@@ -92,6 +92,17 @@ void ${PM_INSTANCE_NAME}_IO_RetentionSet( void );
 
 void ${PM_INSTANCE_NAME}_IO_RetentionClear( void );
 </#if>
+<#if HAS_PLCFG??>
+typedef enum
+{
+    PLCFG_PLSEL0 = PM_PLCFG_PLSEL_PL0,
+    PLCFG_PLSEL2 = PM_PLCFG_PLSEL_PL2
+}PLCFG_PLSEL;
+
+bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel);
+
+bool ${PM_INSTANCE_NAME}_PerformanceLevelReady(void);
+</#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
