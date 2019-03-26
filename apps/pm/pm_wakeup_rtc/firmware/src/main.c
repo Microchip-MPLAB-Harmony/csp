@@ -118,7 +118,7 @@ int main ( void )
                 SYSTICK_TimerStop();
                 printf("\n\rEntering Idle Mode");
                 LED_OFF();
-                PM_SleepModeEnter(PM_SLEEP_MODE_IDLE);
+                PM_IdleModeEnter();
                 printf("\n\rRTC Compare Match triggered waking up device from Idle mode");
                 SYSTICK_TimerStart();
                 display_menu();
@@ -131,7 +131,7 @@ int main ( void )
                 SYSTICK_TimerStop();
                 printf("\n\rEntering Standby Mode");
                 LED_OFF();
-                PM_SleepModeEnter(PM_SLEEP_MODE_STANDBY);
+                PM_StandbyModeEnter();
                 printf("\n\rRTC Compare Match triggered waking up device from Standby mode");
                 SYSTICK_TimerStart();
                 display_menu();

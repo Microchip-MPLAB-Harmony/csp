@@ -127,8 +127,6 @@ void SYS_Initialize ( void* data )
 
     SERCOM4_USART_Initialize();
 
-    SUPC_Initialize();
-
     RTC_Initialize();
 
 
