@@ -114,7 +114,7 @@ int main ( void )
                 printf("\n\rPress SW0 to wakeup the device"); 
                 SYSTICK_TimerStop();
                 LED_OFF();
-                PM_SleepModeEnter(PM_SLEEP_MODE_IDLE);
+                PM_IdleModeEnter();
                 printf("\n\rSW0 Pressed exiting Sleep mode......");
                 SYSTICK_TimerStart();
                 display_menu();
@@ -126,7 +126,7 @@ int main ( void )
                 printf("\n\rPress SW0 to wakeup the device");   
                 SYSTICK_TimerStop();
                 LED_OFF();
-                PM_SleepModeEnter(PM_SLEEP_MODE_STANDBY);
+                PM_StandbyModeEnter();
                 printf("\n\rSW0 Pressed exiting Wait mode......");
                 SYSTICK_TimerStart();
                 display_menu();
