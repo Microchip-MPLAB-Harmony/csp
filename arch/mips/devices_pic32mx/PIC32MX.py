@@ -273,11 +273,11 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py
 coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
 
 # load wdt
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_01385/config/wdt.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_01385/config/wdt.py")
 
 # load dma manager information
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_00735/config/dmac.py")
-#  coreComponent.addPlugin("../peripheral/dmac_00735/plugin/dmamanager.jar")
+#  execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_01500/config/dmac.py")
+#  coreComponent.addPlugin("../peripheral/dmac_01500/plugin/dmamanager.jar")
 
 devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
 devconSystemInitFile.setType("STRING")
