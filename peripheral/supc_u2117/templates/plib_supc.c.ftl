@@ -64,11 +64,7 @@
 <#assign SUPC_BOD_PSEL = "SUPC_"+SUPC_BOD_NAME+"_PSEL">
 <#assign SUPC_BOD_VAL = "">
 <#assign SUPC_BOD_FACTORY_DATA_MASK = "SUPC_${SUPC_BOD_NAME}_ENABLE_Msk | SUPC_${SUPC_BOD_NAME}_ACTION_Msk | SUPC_${SUPC_BOD_NAME}_HYST_Msk | SUPC_${SUPC_BOD_NAME}_LEVEL_Msk">
-<#if HAS_SEL_BIT??>
-    <#assign SUPC_VREG_FACTORY_DATA_MASK = "SUPC_VREG_SEL_Msk | SUPC_VREG_ENABLE_Msk">
-<#else>
-    <#assign SUPC_VREG_FACTORY_DATA_MASK = "SUPC_VREG_ENABLE_Msk">
-</#if>
+<#assign SUPC_VREG_FACTORY_DATA_MASK = "SUPC_VREG_ENABLE_Msk">
 <#assign SUPC_BOD_RUNBKUP = "SUPC_"+SUPC_BOD_NAME+"_RUNBKUP">
 <#assign SUPC_BOD_RUNSTDBY = "SUPC_"+SUPC_BOD_NAME+"_RUNSTDBY">
 <#assign SUPC_BOD_STDBYCFG = "SUPC_"+SUPC_BOD_NAME+"_STDBYCFG">
@@ -146,6 +142,17 @@
         <#assign SUPC_BOD_VAL = SUPC_BOD_VAL + " | SUPC_${SUPC_BOD_NAME}_ACTCFG_Msk">
         <#else>
         <#assign SUPC_BOD_VAL = "SUPC_${SUPC_BOD_NAME}_ACTCFG_Msk">
+        </#if>
+    </#if>
+</#if>
+<#if SUPC_VREG_VAL??>
+    <#if SUPC_VREG_VAL?has_content >
+        <#if SUPC_VREG_VAL == true >
+            <#if SUPC_VREG_VAL != "">
+            <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_SEL_Msk">
+            <#else>
+            <#assign SUPC_VREG_VAL = " SUPC_VREG_SEL_Msk">
+            </#if>
         </#if>
     </#if>
 </#if>
@@ -259,6 +266,33 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTENSET = SUPC_INTFLAG_BOD33DET_Msk;
 </#if>
 }
+
+<#if HAS_BKOUT_REG??>
+void ${SUPC_INSTANCE_NAME}_SetOutputPin( SUPC_OUTPIN pin )
+{
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT(1 << pin);
+}
+
+void ${SUPC_INSTANCE_NAME}_ClearOutputPin( SUPC_OUTPIN pin )
+{
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1 << pin);
+}
+</#if>
+
+<#if HAS_SEL_BIT??>
+void ${SUPC_INSTANCE_NAME}_SelectVoltageRegulator(SUPC_VREGSEL regsel)
+{
+    if(SUPC_VREGSEL_BUCK == regsel)
+    {
+        ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG |= (1 << SUPC_VREG_SEL_Pos);
+    }
+    else
+    {
+        ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG &= ~(1 << SUPC_VREG_SEL_Pos);
+    }
+    while(!(${SUPC_INSTANCE_NAME}_REGS->SUPC_STATUS & SUPC_STATUS_VREGRDY_Msk));
+}
+</#if>
 
 <#if SUPC_INTERRUPT_ENABLE>
 typedef struct

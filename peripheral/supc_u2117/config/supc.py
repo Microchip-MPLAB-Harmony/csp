@@ -102,11 +102,10 @@ def instantiateComponent(supcComponent):
     supcSym_BODVDD_Menu= supcComponent.createMenuSymbol("BOD_MENU", None)
     supcSym_BODVDD_Menu.setLabel("VDD Brown-Out Detector (BOD) Configuration")
 
+    global BODname
     if "HAS_BOD33_REG_NAME" in parameters:
-        global BODname
         BODname = "BOD33"
-    elif "HAS_BODVDD_REG_NAME" in parameters:
-        global BODname
+    else:
         BODname = "BODVDD"
         
     supcBODName = supcComponent.createStringSymbol("SUPC_BOD_NAME", None)
@@ -187,6 +186,13 @@ def instantiateComponent(supcComponent):
     #VREG Menu
     supcSym_VREG_Menu= supcComponent.createMenuSymbol("VREG_MENU", None)
     supcSym_VREG_Menu.setLabel("Voltage Regulator (VREG) Configuration")
+
+    if "HAS_SEL_BIT" in parameters:    
+        #Select LDO or BUCK regulator
+        supcSym_VREG_SEL = supcComponent.createBooleanSymbol("SUPC_VREG_SEL", supcSym_VREG_Menu)
+        supcSym_VREG_SEL.setLabel("Use Buck regulator instead of LDO")
+        supcSym_VREG_SEL.setDefaultValue(0)
+        supcSym_VREG_SEL.setDescription("When this option is selected, the voltage regulator used will be the Buck Regulator. Refer schematic checklist for Inductor connection.")
 
     #VREG RUNSTDBY mode
     supcSym_VREG_RUNSTDBY = supcComponent.createKeyValueSetSymbol("SUPC_VREG_RUNSTDBY", supcSym_VREG_Menu)
