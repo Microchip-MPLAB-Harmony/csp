@@ -602,7 +602,7 @@ def instantiateComponent(ddrComponent):
     #SCL Burst Mode - text field - DDR_PHY_SCL_BURST_MODE
     ddrSym_burstString = ddrComponent.createStringSymbol("DDR_PHY_SCL_BURST_MODE", ddrSym_PHYCONFIG_STRING)
     ddrSym_burstString.setLabel("SCL Burst Mode")
-    ddrSym_burstString.setDefaultValue("DDR_PHY_SCL_BURST_MODE")
+    ddrSym_burstString.setDefaultValue("DDR_PHY_SCL_BURST_MODE_8")
     ddrSym_burstString.setVisible(True)        
     #DDR Type (for PHY configuration) - text field - DDR_PHY_DDR_TYPE
     ddrSym_burstString = ddrComponent.createStringSymbol("DDR_PHY_DDR_TYPE", ddrSym_PHYCONFIG_STRING)
