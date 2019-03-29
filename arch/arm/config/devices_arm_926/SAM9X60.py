@@ -64,6 +64,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.
 coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 
 # load wdt
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_44154/config/wdt.py")
 
 armSysStartSourceFile = coreComponent.createFileSymbol(None, None)
 armSysStartSourceFile.setSourcePath("arm/templates/iar/arm_926/SAM9X60/cstartup.s.ftl")
