@@ -81,8 +81,8 @@ fuseMenu.setLabel("Fuse Settings")
 registerGroup = "USER_FUSES"
 registerNames = ["USER_WORD_0", "USER_WORD_1"]
 
-default = [0x7,  #NVMCTRL_BOOTPROT
-            0x7, #NVMCTRL_EEPROM_SIZE
+default = [0,  #NVMCTRL_BOOTPROT
+            0, #NVMCTRL_EEPROM_SIZE
             0x6, #BOD33USERLEVEL
             0,   #BOD33_DIS
             0,   #BOD33_ACTION
