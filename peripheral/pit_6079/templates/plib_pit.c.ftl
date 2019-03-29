@@ -161,10 +161,14 @@ void ${PIT_INSTANCE_NAME}_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t cont
 
 void ${PIT_INSTANCE_NAME}_InterruptHandler(void)
 {
-    uint32_t reg = ${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
-    ${PIT_INSTANCE_NAME?lower_case}.tickCounter++;
-    if(${PIT_INSTANCE_NAME?lower_case}.callback)
-        ${PIT_INSTANCE_NAME?lower_case}.callback(${PIT_INSTANCE_NAME?lower_case}.context);
+    uint32_t interruptStatus = ${PIT_INSTANCE_NAME}_REGS->PIT_SR;
+    if( interruptStatus ) {
+        uint32_t reg = ${PIT_INSTANCE_NAME}_REGS->PIT_PIVR;
+        ${PIT_INSTANCE_NAME?lower_case}.tickCounter++;
+        if(${PIT_INSTANCE_NAME?lower_case}.callback) {
+            ${PIT_INSTANCE_NAME?lower_case}.callback(${PIT_INSTANCE_NAME?lower_case}.context);
+        }
+    }
 }
 </#if>
 /*******************************************************************************
