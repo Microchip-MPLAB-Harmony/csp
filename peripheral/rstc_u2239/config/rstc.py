@@ -121,12 +121,12 @@ def instantiateComponent(rstcComponent):
                     wakeupPolarityDependencyList.append("WAKEUP_" + str(i) + "_POLARITY")
                 
                 wakeupEnableValue = rstcComponent.createHexSymbol("WAKEUP_ENABLE_VALUE", rstcwakeupMenu)
-                wakeupEnableValue.setVisible(True)
+                wakeupEnableValue.setVisible(False)
                 wakeupEnableValue.setDefaultValue(0)
                 wakeupEnableValue.setDependencies(wakeupEnableCalculate, wakeupEnableDependencyList)
 
                 wakeupPolarityValue = rstcComponent.createHexSymbol("WAKEUP_POLARITY_VALUE", rstcwakeupMenu)
-                wakeupPolarityValue.setVisible(True)
+                wakeupPolarityValue.setVisible(False)
                 wakeupPolarityValue.setDefaultValue(0)
                 wakeupPolarityValue.setDependencies(wakeupPolarityCalculate, wakeupPolarityDependencyList)
             
