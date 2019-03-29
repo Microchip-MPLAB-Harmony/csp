@@ -203,6 +203,9 @@ bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel)
             ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
             /* Write PLSEL bits */
             ${PM_INSTANCE_NAME}_REGS->PM_PLCFG  = plsel;
+            /* Wait for performance level transition to complete */
+            while(!(${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
+            
             status = true;
         }
     }
@@ -210,8 +213,4 @@ bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel)
     return status;
 }
 
-bool ${PM_INSTANCE_NAME}_PerformanceLevelReady(void)
-{
-    return(((${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk) == PM_INTFLAG_PLRDY_Msk)? true : false);
-}
 </#if>

@@ -101,7 +101,6 @@ typedef enum
 
 bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel);
 
-bool ${PM_INSTANCE_NAME}_PerformanceLevelReady(void);
 </#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
