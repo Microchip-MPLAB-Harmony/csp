@@ -29,6 +29,13 @@ global get_val_from_str
 global set_refocon_value
 global set_refotrim_value
 
+def periphFreqCalc(symbol, event):
+    symbol.setValue(int(event["value"]), 2)
+
+global cpuFreqCalc
+def cpuFreqCalc(symbol, event):
+    symbol.setValue(event["value"], 2)
+
 global find_max_min
 def find_max_min(node):
     # Finds the maximum and minimum values from atdf file for a given <value-group >
@@ -186,6 +193,13 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     sys_clk_freq.setDefaultValue(node.getAttribute("value"))
     sys_clk_freq.setReadOnly(True)
 
+    # CPU_CLOCK_FREQUENCY symbol is needed for SYS_TIME
+    cpu_clk_freq = clk_comp.createStringSymbol("CPU_CLOCK_FREQUENCY", sym_calc_freq_menu)
+    cpu_clk_freq.setLabel("CPU Clock Frequency (HZ)")
+    cpu_clk_freq.setReadOnly(True)
+    cpu_clk_freq.setDefaultValue(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
+    cpu_clk_freq.setDependencies(cpuFreqCalc,["SYS_CLK_FREQ"])
+
     # Peripheral Bus clock frequencies
     targetName = "CONFIG_SYS_CLK_PBCLK_FREQ"
     symbolPbFreqList = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
@@ -202,6 +216,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     targetName = "CONFIG_SYS_CLK_REFCLK_FREQ"
     symbolRefoscFreqList = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
     symbolRefoscFreqList.setLabel("Reference Clock Frequency (Hz)")
+    symbolRefoscFreqList.setVisible(False)
     targetName = "CONFIG_SYS_CLK_REFCLK_ENABLE"
     symbolRefoscFreqList.setDependencies(enableMenu, [targetName])
     # get default value from atdf file
@@ -778,7 +793,7 @@ if __name__ == "__main__":
 
     enSymId = "CONFIG_SYS_CLK_REFCLK_ENABLE"
     enSymbol = coreComponent.createBooleanSymbol(enSymId, CLK_CFG_SETTINGS)
-    enSymbol.setLabel("Enable Reference Clock REFCLKO")
+    enSymbol.setLabel("Enable Reference Clock")
     enSymbol.setDescription("Sets whether to have reference clock enabled")
     enSymbol.setDefaultValue(False)
 
@@ -821,6 +836,20 @@ if __name__ == "__main__":
 
     # creates calculated frequencies menu
     calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, join, ElementTree, newPoscFreq)
+
+    peripherals = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
+    modules = peripherals.getChildren()
+    for module in range(0, len(modules)):
+        moduleName = modules[module].getAttribute("name")
+        moduleInstances = modules[module].getChildren()
+        for instanceNumber in range(0, len(moduleInstances)):
+            moduleInstanceName = moduleInstances[instanceNumber].getAttribute("name")
+            symbolID = moduleInstanceName + "_CLOCK_FREQUENCY"
+            sym_peripheral_clock_freq = coreComponent.createIntegerSymbol(symbolID, None)
+            sym_peripheral_clock_freq.setVisible(False)
+            sym_peripheral_clock_freq.setReadOnly(True)
+            sym_peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK_FREQ")))
+            sym_peripheral_clock_freq.setDependencies(periphFreqCalc, ["CONFIG_SYS_CLK_PBCLK_FREQ"])
 
     # File handling below
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
