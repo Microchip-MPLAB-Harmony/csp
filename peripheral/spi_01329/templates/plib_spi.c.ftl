@@ -122,6 +122,7 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
 
 bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
 {
+<#assign spiClockSymbol = "core." + SPI_INSTANCE_NAME + "_CLOCK_FREQUENCY">
     uint32_t t_brg;
     uint32_t baudHigh;
     uint32_t baudLow;
@@ -136,7 +137,7 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spi
     if(spiSourceClock == 0)
     {
         // Use Master Clock Frequency set in GUI
-        spiSourceClock = ${SPI_MASTER_FREQ_VALUE};
+        spiSourceClock = ${spiClockSymbol?eval};
     }
 
     t_brg = (((spiSourceClock / (setup->clockFrequency)) / 2u) - 1u);

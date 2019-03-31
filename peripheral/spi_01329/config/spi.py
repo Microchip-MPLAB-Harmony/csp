@@ -207,37 +207,17 @@ def calculateBRGValue(clkfreq, baudRate):
     return int(t_brg)
 
 def SPIBRG_ValueUpdate(symbol, event):
-
-    clkSelect = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_MASTER_CLOCK")
+    clkFreq = Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY")
     BaudRate = int (Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_BAUD_RATE"))
 
-    if event["id"] == "SPI_MASTER_CLOCK":
-        clkSelect = int(event["value"])
-    elif event["id"] == "SPI_BAUD_RATE":
+    if event["id"] == "SPI_BAUD_RATE":
         ## This means there is change in baud rate provided by user in GUI
-        BaudRate = int (event["value"])
-
-    if clkSelect == 1:
-        clkFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ"))
-    else:
-        clkFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK1_FREQ"))
+        BaudRate = int(event["value"])
+    elif "_CLOCK_FREQUENCY" in event["id"]:
+        clkFreq = int(event["value"])
 
     t_brg = calculateBRGValue(clkFreq, BaudRate)
     symbol.setValue(t_brg, 1)
-
-def SPI_MasterFreqValueUpdate(symbol,event):
-
-    clkSelect = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_MASTER_CLOCK")
-
-    if event["id"] == "SPI_MASTER_CLOCK":
-        clkSelect = int(event["value"])
-
-    if clkSelect == 1:
-        clkFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ"))
-    else:
-        clkFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK1_FREQ"))
-
-    symbol.setValue(clkFreq, 1)
 
 def DummyData_ValueUpdate(symbol, event):
 
@@ -438,22 +418,14 @@ def instantiateComponent(spiComponent):
     spiSym_Baud_Rate.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
 
     ## Baud Rate generation
-    if int(spiSym_SPI1CON_MCLKSEL.getValue()) == 1:
-        spiMasterFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ"))
-    else:
-        spiMasterFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK1_FREQ"))
-
-    defaultSPIBR = calculateBRGValue(spiMasterFreq, spiSym_Baud_Rate.getValue())
+    spiDefaultMasterFreq = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+    defaultSPIBR = calculateBRGValue(spiDefaultMasterFreq, spiSym_Baud_Rate.getValue())
 
     spiSym_SPIBRG_VALUE = spiComponent.createIntegerSymbol("SPI_BRG_VALUE", None)
     spiSym_SPIBRG_VALUE.setDefaultValue(defaultSPIBR)
     spiSym_SPIBRG_VALUE.setVisible(False)
-    spiSym_SPIBRG_VALUE.setDependencies(SPIBRG_ValueUpdate, ["SPI_BAUD_RATE", "SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK2_FREQ", "CONFIG_SYS_CLK_REFCLK1_FREQ"])
+    spiSym_SPIBRG_VALUE.setDependencies(SPIBRG_ValueUpdate, ["SPI_BAUD_RATE", "core." + spiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
-    spiSym_MasterFreq_VALUE = spiComponent.createIntegerSymbol("SPI_MASTER_FREQ_VALUE", None)
-    spiSym_MasterFreq_VALUE.setDefaultValue(spiMasterFreq)
-    spiSym_MasterFreq_VALUE.setVisible(False)
-    spiSym_MasterFreq_VALUE.setDependencies(SPI_MasterFreqValueUpdate, ["SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK2_FREQ", "CONFIG_SYS_CLK_REFCLK1_FREQ"])
 
     spiSymDummyData = spiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
     spiSymDummyData.setLabel("Dummy Data")
