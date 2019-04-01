@@ -106,6 +106,12 @@ peripheralBusDict =  {"CORE": "7", # CPU or CORE
                       "OCMP16": "3",
                       "TMR1": "2"}
 
+def updateMaxFreq(symbol, event):
+    if event["value"] == 0:
+        symbol.setValue(80000000, 2)
+    elif event["value"] == 1:
+        symbol.setValue(120000000, 2)
+
 def periphFreqCalc(symbol, event):
     symbol.setValue(int(event["value"]), 2)
 def _process_valuegroup_entry(node):
@@ -1048,6 +1054,22 @@ if __name__ == "__main__":
     CLK_CFG_SETTINGS.setDescription("Various Clock System Settings")
     CLK_CFG_SETTINGS.setVisible(True)
 
+    TEMP_RANGE = coreComponent.createKeyValueSetSymbol("CONFIG_TEMPERATURE_RANGE", CLK_CFG_SETTINGS)
+    TEMP_RANGE.setLabel("Operating Temperature Range")
+    TEMP_RANGE.setDescription("Maximum allowed System Clock Frequency will depend on selected Temperature Range")
+    TEMP_RANGE.setOutputMode("Value")
+    TEMP_RANGE.setDisplayMode("Description")
+    TEMP_RANGE.addKey("RANGE1", "0", "-40C to +125C, DC to 80 MHz")
+    TEMP_RANGE.addKey("RANGE2", "1", "-40C to +85C, DC to 120 MHz")
+    TEMP_RANGE.setDefaultValue(1)
+
+    max_clk_freq_for_selected_temp = coreComponent.createIntegerSymbol("MAX_CLK_FREQ_FOR_SELECTED_TEMP_RANGE", CLK_CFG_SETTINGS)
+    max_clk_freq_for_selected_temp.setLabel("Max System Clock Frequency (HZ) For Selected Temperature")
+    max_clk_freq_for_selected_temp.setReadOnly(True)
+    max_clk_freq_for_selected_temp.setVisible(False)
+    max_clk_freq_for_selected_temp.setDefaultValue(120000000)
+    max_clk_freq_for_selected_temp.setDependencies(updateMaxFreq, ["CONFIG_TEMPERATURE_RANGE"])
+
     frcdiv = {}
     _get_bitfield_names(clkValGrp_OSCCON__FRCDIV, frcdiv)
     FRC_CLK_SETTING = coreComponent.createComboSymbol("CONFIG_SYS_CLK_FRCDIV", CLK_CFG_SETTINGS, frcdiv.keys())
@@ -1310,10 +1332,8 @@ if __name__ == "__main__":
         if peripheralName == "ADCHS" :
             sym_peripheral_clock_freq[i].setDependencies(adchsClockFreqCalc, ["adchs.ADCCON3__ADCSEL", "CONFIG_SYS_CLK_PBCLK5_FREQ",
                                                                             "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK3_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
-        elif (peripheralName == "SPI1") or (peripheralName == "SPI2") :
-            sym_peripheral_clock_freq[i].setDependencies(spiClockFreqCalc, [peripheralName + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK2_FREQ", "CONFIG_SYS_CLK_REFCLK1_FREQ"])
-        elif peripheralName in ["SPI3", "SPI4", "SPI5", "SPI6"] :
-            sym_peripheral_clock_freq[i].setDependencies(spiClockFreqCalc, [peripheralName + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK3_FREQ", "CONFIG_SYS_CLK_REFCLK1_FREQ"])
+        elif "SPI" in peripheralName:
+            sym_peripheral_clock_freq[i].setDependencies(spiClockFreqCalc, [peripheralName + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ", "CONFIG_SYS_CLK_REFCLK1_FREQ"])
         else:
             sym_peripheral_clock_freq[i].setDependencies(periphFreqCalc, ["CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ"])
         i = i + 1
