@@ -152,6 +152,13 @@ def adcSUPCVisible(symbol, event):
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
+
+def adcMuxNegVisibility(symbol, event):
+    if (event["value"] == True):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -205,23 +212,23 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLA_SLAVEEN.setLabel("Enable Slave")
     adcSym_CTRLA_SLAVEEN.setDefaultValue(False)
     mode = "0"
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/parameters")
-    param_values = []
-    param_values = node.getChildren()
-    for index in range(0, len(param_values)):
-        if "MASTER_SLAVE_MODE" in param_values[index].getAttribute("name"):
-            mode = param_values[index].getAttribute("value")
+    parameters = [];
+    parametersNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/parameters")
+    for index in parametersNode.getChildren():
+        if "MASTER_SLAVE_MODE" in parameters:
+            mode = parameters[index].getAttribute("value")
         if (mode == "2"):
             adcSym_CTRLA_SLAVEEN.setVisible(True)
         else:
             adcSym_CTRLA_SLAVEEN.setVisible(False)
 
-    adcSym_MCU_FAMILY = adcComponent.createStringSymbol("ADC_MCU_FAMILY", None)
-    adcSym_MCU_FAMILY.setVisible(False)
-    node = ATDF.getNode("/avr-tools-device-file/devices")
-    family = node.getChildren()[0].getAttribute("family")
-    adcSym_MCU_FAMILY.setDefaultValue(node.getChildren()[0].getAttribute("family"))
-
+    for parameter in parametersNode.getChildren():
+        parameters.append(parameter.getAttribute("name"))
+    if "LOAD_CALIB" in parameters:
+        adcSym_CALIB = adcComponent.createBooleanSymbol("ADC_LOAD_CALIB", None)
+        adcSym_CALIB.setVisible(False)
+        adcSym_CALIB.setDefaultValue(True)
+    
     #prescaler configuration
     global adcSym_CTRLB_PRESCALER
     adcSym_CTRLB_PRESCALER = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_PRESCALER", None)
@@ -334,6 +341,10 @@ def instantiateComponent(adcComponent):
     adcChannelMenu = adcComponent.createMenuSymbol("ADC_CHANNEL_MENU", None)
     adcChannelMenu.setLabel("Channel Configuration")
 
+    adcSym_CTRLC_DIFFMODE = adcComponent.createBooleanSymbol("ADC_CTRLC_DIFFMODE", adcChannelMenu)
+    adcSym_CTRLC_DIFFMODE.setLabel("Enable Differential Mode")
+    adcSym_CTRLC_DIFFMODE.setDefaultValue(False)
+    
     #positive input
     adcSym_INPUTCTRL_MUXPOS = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXPOS", adcChannelMenu)
     adcSym_INPUTCTRL_MUXPOS.setLabel("Select Positive Input")
@@ -364,6 +375,7 @@ def instantiateComponent(adcComponent):
     adcSym_INPUTCTRL_MUXNEG.setLabel("Select Negative Input")
     adcSym_INPUTCTRL_MUXNEG.setOutputMode("Key")
     adcSym_INPUTCTRL_MUXNEG.setDisplayMode("Description")
+    adcSym_INPUTCTRL_MUXNEG.setVisible(False)
     defaultIndex = 0
     gndIndex = 0
     posInput = 0
@@ -391,6 +403,7 @@ def instantiateComponent(adcComponent):
             adcNagativeInputValues[index].getAttribute("caption"))
             gndIndex += 1
     adcSym_INPUTCTRL_MUXNEG.setDefaultValue(defaultIndex)
+    adcSym_INPUTCTRL_MUXNEG.setDependencies(adcMuxNegVisibility, ["ADC_CTRLC_DIFFMODE"])
 
     adcResultMenu = adcComponent.createMenuSymbol("ADC_RESULT_MENU", None)
     adcResultMenu.setLabel("Result Configuration")
