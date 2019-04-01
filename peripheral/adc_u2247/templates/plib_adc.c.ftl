@@ -173,7 +173,7 @@
 ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
-<#if ADC_MCU_FAMILY == "SAMC">
+<#if ADC_LOAD_CALIB == true >
 <#if ADC_INSTANCE_NAME = "ADC0">
 #define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
 #define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
@@ -188,6 +188,12 @@ ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 #define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (9)
 #define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
 
+<#elseif ADC_INSTANCE_NAME = "ADC">
+#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
+#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
+
+#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
+#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
 </#if>
 </#if>
 
@@ -209,7 +215,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
         /* Wait for Synchronization */
     }
 
-<#if ADC_MCU_FAMILY == "SAMC">
+<#if ADC_LOAD_CALIB == true >
     /* Write linearity calibration in BIASREFBUF and bias calibration in BIASCOMP */
     ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_BIASREFBUF(((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_LINEARITY_Msk))) \
         | ADC_CALIB_BIASCOMP((((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_BIASCAL_Msk) >> ${ADC_INSTANCE_NAME}_BIASCAL_POS));
