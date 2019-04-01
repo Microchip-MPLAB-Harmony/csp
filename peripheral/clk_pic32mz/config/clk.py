@@ -1302,17 +1302,6 @@ if __name__ == "__main__":
     # creates calculated frequencies menu
     calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, join, ElementTree, newPoscFreq)
 
-    # calculated peripheral frequencies
-    for peripheralName, peripheralBus in peripheralBusDict.items():
-        if (peripheralName in ["ADCHS", "TMR1"]) or ("SPI" in peripheralName):
-            continue
-        symbolID = peripheralName + "_CLOCK_FREQUENCY"
-        sym_peripheral_clock_freq = coreComponent.createIntegerSymbol(symbolID, None)
-        sym_peripheral_clock_freq.setVisible(False)
-        sym_peripheral_clock_freq.setReadOnly(True)
-        sym_peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ")))
-        sym_peripheral_clock_freq.setDependencies(periphFreqCalc, ["CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ"])
-
     #ADCHS Clock source
     global adchs_clock_map
     adchs_clock_map = {}
@@ -1321,23 +1310,30 @@ if __name__ == "__main__":
     adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
     adchs_clock_map[3] = "CONFIG_SYS_CLK_FRCDIV"
 
-    sym_adchs_clock_freq = coreComponent.createIntegerSymbol("ADCHS_CLOCK_FREQUENCY", None)
-    sym_adchs_clock_freq.setVisible(False)
-    sym_adchs_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK3_FREQ")))
-    sym_adchs_clock_freq.setDependencies(adchsClockFreqCalc, ["adchs.ADCCON3__ADCSEL", "CONFIG_SYS_CLK_PBCLK3_FREQ",
-        "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK3_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
-
-    #SPI clock
-    sym_spi_clock_freq = []
-    spi = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SPI\"]")
-    spi_instances = spi.getChildren()
-    for spiInstance in range(0, len(spi_instances)):
-        instanceName = spi_instances[spiInstance].getAttribute("name")
-        sym_spi_clock_freq.append(spiInstance)
-        sym_spi_clock_freq[spiInstance] = coreComponent.createIntegerSymbol(instanceName + "_CLOCK_FREQUENCY", None)
-        sym_spi_clock_freq[spiInstance].setVisible(False)
-        sym_spi_clock_freq[spiInstance].setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")))
-        sym_spi_clock_freq[spiInstance].setDependencies(spiClockFreqCalc, [instanceName + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK2_FREQ", "CONFIG_SYS_CLK_REFCLK1_FREQ"])
+    # calculated peripheral frequencies
+    sym_peripheral_clock_freq = []
+    i = 0
+    for peripheralName, peripheralBus in peripheralBusDict.items():
+        symbolID = peripheralName + "_CLOCK_FREQUENCY"
+        sym_peripheral_clock_freq.append(i)
+        sym_peripheral_clock_freq[i] = coreComponent.createIntegerSymbol(symbolID, None)
+        sym_peripheral_clock_freq[i].setVisible(False)
+        sym_peripheral_clock_freq[i].setReadOnly(True)
+        if peripheralName == "ADCHS":
+            sym_peripheral_clock_freq[i].setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ")))
+            sym_peripheral_clock_freq[i].setDependencies(adchsClockFreqCalc, ["adchs.ADCCON3__ADCSEL", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ",
+                                                                                "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK3_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
+        elif "SPI" in peripheralName :
+            sym_peripheral_clock_freq[i].setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ")))
+            sym_peripheral_clock_freq[i].setDependencies(spiClockFreqCalc, [peripheralName + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ",
+                                                                                "CONFIG_SYS_CLK_REFCLK1_FREQ"])
+        elif "SQI" in peripheralName:
+            sym_peripheral_clock_freq[i].setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK2_FREQ")))
+            sym_peripheral_clock_freq[i].setDependencies(periphFreqCalc, ["CONFIG_SYS_CLK_REFCLK2_FREQ"])
+        else :
+            sym_peripheral_clock_freq[i].setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ")))
+            sym_peripheral_clock_freq[i].setDependencies(periphFreqCalc, ["CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ"])
+        i = i+1
 
     # File handling below
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
