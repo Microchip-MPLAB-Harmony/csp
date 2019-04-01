@@ -38,7 +38,7 @@
                     <#lt>   .ent  IntVector${.vars[INT_HANDLER]}
 
                     <#lt>IntVector${.vars[INT_HANDLER]}:
-                    <#lt>    la    $26,  ${.vars[INT_HANDLER]}
+                    <#lt>    la    $26,  _${.vars[INT_HANDLER]}
                     <#lt>    jr    $26
                     <#lt>    nop
                     <#lt>    .end    IntVector${.vars[INT_HANDLER]}
