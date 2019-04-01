@@ -51,6 +51,7 @@ peripherals = {
                 "TC_U2212"      : ["TMR"],
                 "TC_U2249"      : ["TMR"],
                 "TC_6082"       : ["TMR"],
+                "TC_44162"      : ["TMR"],
                 "PIT_6079"      : ["TMR"],
                 "RTT_6081"      : ["TMR"],
                 "RTC_U2250"     : ["TMR"],
