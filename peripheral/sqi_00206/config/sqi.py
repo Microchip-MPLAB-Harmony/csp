@@ -35,7 +35,7 @@ def calculateSqiClkFreq(sqiClkDiv, refclk2_freq):
 def setClkDivComment(symbol, event):
     component = symbol.getComponent()
 
-    refclk2_freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK2_FREQ"))
+    refclk2_freq = Database.getSymbolValue("core", sqiInstanceName.getValue() + "_CLOCK_FREQUENCY")
 
     sqiClkDiv = component.getSymbolByID("SQI_CLKDIV").getSelectedValue()
 
@@ -173,14 +173,14 @@ def instantiateComponent(sqiComponent):
     sqiClkDiv.setDisplayMode("Description")
     sqiClkDiv.setDefaultValue(11)
 
-    refclk2_freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK2_FREQ"))
+    refclk2_freq = Database.getSymbolValue("core", sqiInstanceName.getValue() + "_CLOCK_FREQUENCY")
 
     sqiClkFreq = calculateSqiClkFreq(sqiClkDiv.getSelectedValue(), refclk2_freq)
 
     sqiClkDivComment = sqiComponent.createCommentSymbol("SQI_CLK_DIV_COMMENT", sqiMenu)
     sqiClkDivComment.setLabel("*** SQI Clock Frequency Is Set To " + str(sqiClkFreq) +  " for REFCLK2 Frequency At " + str(refclk2_freq))
     sqiClkDivComment.setVisible(True)
-    sqiClkDivComment.setDependencies(setClkDivComment, ["core.CONFIG_SYS_CLK_REFCLK2_FREQ", "SQI_CLKDIV"])
+    sqiClkDivComment.setDependencies(setClkDivComment, ["core." + sqiInstanceName.getValue() + "_CLOCK_FREQUENCY", "SQI_CLKDIV"])
 
     ################# Interrupt Settings ###########################
 
