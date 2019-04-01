@@ -21,6 +21,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+import re
+
 def _find_default_value(bitfieldNode, initialRegValue):
     '''
     Helper function to lookup default value for a particular bitfield within a given register from atdf node
@@ -67,7 +69,6 @@ def _process_valuegroup_entry(node):
     value = int(newstring,16)
     return str(value)
 
-
 def getCorePeripheralsInterruptDataStructure():
 
     dmacVectName = ["DMA0", "DMA1", "DMA2", "DMA3"]
@@ -98,7 +99,55 @@ def getCorePeripheralsInterruptDataStructure():
 
     return corePeripherals
 
+global calcWaitStates
+global getWaitStates
+
+def getWaitStates():
+
+    sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+
+    ws = 3
+
+    if deviceFamily.getValue() == "DS60001404":
+        if sysclk <= 72000000:
+            ws = 3
+        if sysclk <= 54000000:
+            ws = 2
+        if sysclk <= 36000000:
+            ws = 1
+        if sysclk <= 18000000:
+            ws = 0
+    else:
+        tempRange =  Database.getSymbolValue("core", "CONFIG_TEMPERATURE_RANGE")
+
+        # -40 Deg to +105 Deg: 80MHz Maximum Frequency
+        if tempRange == 0:
+            if sysclk <= 80000000:
+                ws = 2
+            if sysclk <= 60000000:
+                ws = 1
+            if sysclk <= 30000000:
+                ws = 0
+        else:
+        # 0 Deg to 70 Deg: 120 MHz Maximum Frequency
+            if sysclk <= 120000000:
+                ws = 3
+        # -40 Deg to +85 Deg: 100MHz Maximum Frequency
+            if sysclk <= 100000000:
+                ws = 2
+            if sysclk <= 80000000:
+                ws = 1
+            if sysclk <= 40000000:
+                ws = 0
+
+    return ws
+
+def calcWaitStates(symbol, event):
+
+    symbol.setValue(getWaitStates(), 2)
+
 processor = Variables.get("__PROCESSOR")
+
 print("Loading System Services for " + processor)
 
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
@@ -159,17 +208,61 @@ coreFPU.setDefaultValue(True)
 coreFPU.setReadOnly(True)
 coreFPU.setVisible(False)
 
+ds60001168Regex = re.compile(r'[12][12357]0F\d+[BCD]')  #PIC32MX1XX/2XX
+ds60001185Regex = re.compile(r'[34][357]0F')            #PIC32MX330/350/370/430/450/470
+ds60001290Regex = re.compile(r'[125][2357]0F\d+[HL]')   #PIC32MX1XX/2XX/5XX
+ds60001404Regex = re.compile(r'[12][57]4F')             #PIC32MX1XX/2XX XLP
+
+global deviceFamily
+
+deviceFamily = coreComponent.createStringSymbol("DEVICE_FAMILY", devCfgMenu)
+deviceFamily.setLabel("Device Family")
+deviceFamily.setReadOnly(True)
+deviceFamily.setVisible(False)
+
 mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
 mipsMenu.setLabel("MIPS Configuration")
 mipsMenu.setDescription("Configuration for MIPS processor")
+
+# decide on the family this processor belongs
+if  ds60001168Regex.search(processor):
+    deviceFamily.setDefaultValue("DS60001168")
+elif ds60001185Regex.search(processor):
+    deviceFamily.setDefaultValue("DS60001185")
+elif ds60001290Regex.search(processor):
+    deviceFamily.setDefaultValue("DS60001290")
+elif ds60001404Regex.search(processor):
+    deviceFamily.setDefaultValue("DS60001404")
+
+pcacheNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PCACHE"]')
+
+if pcacheNode != None:
+    prefetchMenu = coreComponent.createMenuSymbol("PREFETCH_MENU", None)
+    prefetchMenu.setLabel("Prefetch and Flash Configuration")
+    prefetchMenu.setDescription("Configure Prefetch and Flash")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mx/config/clk.py")
 coreComponent.addPlugin("../peripheral/clk_pic32mx/plugin/clockmanager.jar")
 
-# load device specific pin manager information - only applies to subset of supported devices of PIC32MX family
-if(("PIC32MX330F" in processor) or ("PIC32MX350F" in processor) or ("PIC32MX370F" in processor) or
-   ("PIC32MX430F" in processor) or ("PIC32MX450F" in processor) or ("PIC32MX470F" in processor)):
+if pcacheNode != None:
+    SYM_REFEN = coreComponent.createKeyValueSetSymbol("CONFIG_CHECON_PREFEN", prefetchMenu)
+    SYM_REFEN.setLabel("Predictive Prefetch Configuration")
+    SYM_REFEN.addKey("OPTION1", "0", "Disable predictive prefetch")
+    SYM_REFEN.addKey("OPTION2", "1", "Enable predictive prefetch for cacheable regions only")
+    SYM_REFEN.addKey("OPTION3", "2", "Enable predictive prefetch for non-cacheable regions only")
+    SYM_REFEN.addKey("OPTION4", "3", "Enable predictive prefetch for both cacheable and non-cacheable regions")
+    SYM_REFEN.setOutputMode("Value")
+    SYM_REFEN.setDisplayMode("Description")
+    SYM_REFEN.setDefaultValue(3)
+
+    SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_CHECON_PFMWS", prefetchMenu)
+    SYM_PFMWS.setLabel("Program Flash memory Wait states")
+    SYM_PFMWS.setDefaultValue(getWaitStates())
+    SYM_PFMWS.setReadOnly(True)
+    SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY", "CONFIG_TEMPERATURE_RANGE"])
+
+if deviceFamily.getValue() == "DS60001185":
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_01618/config/gpio.py")
     coreComponent.addPlugin("../peripheral/gpio_01618/plugin/gpio_01618.jar")
 
@@ -179,18 +272,12 @@ cacheMenu.setLabel("(no additional MIPS configuration)")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
 coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
 
-# load dmt
-#  execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmt_01520/config/dmt.py")
-
 # load wdt
-#  execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")
-
+# execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_01385/config/wdt.py")
 
 # load dma manager information
-#  execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_01500/config/dmac.py")
-#  coreComponent.addPlugin("../peripheral/dmac_01500/plugin/dmamanager.jar")
-
-
+# execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_00735/config/dmac.py")
+#  coreComponent.addPlugin("../peripheral/dmac_00735/plugin/dmamanager.jar")
 
 devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
 devconSystemInitFile.setType("STRING")
@@ -198,3 +285,8 @@ devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALI
 devconSystemInitFile.setSourcePath("mips/templates/PIC32MX.c.ftl")
 devconSystemInitFile.setMarkup(True)
 
+devconInitFile = coreComponent.createFileSymbol("DEVCON_INIT", None)
+devconInitFile.setType("STRING")
+devconInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+devconInitFile.setSourcePath("mips/templates/PIC32MX_DEVCON.c.ftl")
+devconInitFile.setMarkup(True)
