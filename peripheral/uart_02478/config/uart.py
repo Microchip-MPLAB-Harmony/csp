@@ -193,7 +193,7 @@ def baudRateTrigger(symbol, event):
 
     global uartInstanceName
 
-    clk = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ"))
+    clk = int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     baud = int(Database.getSymbolValue(uartInstanceName.getValue().lower(), "BAUD_RATE"))
 
     brgVal = baudRateCalc(clk, baud)
@@ -208,8 +208,8 @@ def baudRateTrigger(symbol, event):
     symbol.setValue(brgVal, 2)
 
 def clockSourceFreq(symbol, event):
-
-    symbol.setValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")),2)
+    global uartInstanceName
+    symbol.setValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")),2)
 
 def u1ModecombineValues(symbol, event):
 
@@ -586,8 +586,8 @@ def instantiateComponent(uartComponent):
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
     uartClkValue.setLabel("Clock Frequency")
     uartClkValue.setReadOnly(True)
-    uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")))
-    uartClkValue.setDependencies(clockSourceFreq, ["core." + "CONFIG_SYS_CLK_PBCLK2_FREQ"])
+    uartClkValue.setDefaultValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    uartClkValue.setDependencies(clockSourceFreq, ["core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     ## Baud Rate setting
     uartBaud = uartComponent.createIntegerSymbol("BAUD_RATE", None)
@@ -598,9 +598,11 @@ def instantiateComponent(uartComponent):
 
     ## Baud Rate Frequency dependency
     uartBRGValue = uartComponent.createIntegerSymbol("BRG_VALUE", None)
-    uartBRGValue.setDefaultValue(brgVal)
     uartBRGValue.setVisible(False)
-    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + "CONFIG_SYS_CLK_PBCLK2_FREQ"])
+    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    #Use setValue instead of setDefaultValue to store symbol value in default.xml
+    uartBRGValue.setValue(brgVal, 1)
 
     ###################################################################################################
     ####################################### Driver Symbols ############################################
