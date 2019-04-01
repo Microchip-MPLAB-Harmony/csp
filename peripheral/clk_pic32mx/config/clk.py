@@ -24,10 +24,30 @@
 """ PIC32MX Clock Configuration File. """
 from os.path import join
 from xml.etree import ElementTree
+import re
+
 global enableMenu
 global get_val_from_str
 global set_refocon_value
 global set_refotrim_value
+
+def updateMaxFreq(symbol, event):
+    global ds60001168
+    global ds60001185
+    global ds60001290
+    global ds60001404
+    if ds60001185 == True:
+        if event["value"] == 0:
+            symbol.setValue(80000000, 2)
+        elif event["value"] == 1:
+            symbol.setValue(100000000, 2)
+        elif event["value"] == 2:
+            symbol.setValue(120000000, 2)
+    elif (ds60001168 == True) or (ds60001290 == True):
+        if event["value"] == 0:
+            symbol.setValue(40000000, 2)
+        elif event["value"] == 1:
+            symbol.setValue(50000000, 2)
 
 def periphFreqCalc(symbol, event):
     symbol.setValue(int(event["value"]), 2)
@@ -691,12 +711,31 @@ if __name__ == "__main__":
     global enSymId
     global symbolEnId
 
+    global ds60001168
+    global ds60001185
+    global ds60001290
+    global ds60001404
+    ds60001168 = False  #PIC32MX110F016B series
+    ds60001185 = False  #PIC32MX330F064H series
+    ds60001290 = False  #PIC32MX120F064H series
+    ds60001404 = False  #PIC32MX154F128B series
+
     processor = Variables.get("__PROCESSOR")
-    # One subset of devices in this family has registers the other members do not.  Need to differentiate between them.
-    if(("154F128" in processor) or ("174F256" in processor) or ("254F128" in processor) or ("274F256" in processor)):
+
+    ds60001168_Regex = re.compile(r'[12][12357]0F[\d+][BCD]')
+    ds60001185_Regex = re.compile(r'[34][357]0F')
+    ds60001290_Regex = re.compile(r'[12][12357]0F[\d+][HL]')
+    ds60001404_Regex = re.compile(r'[12][57]4F')
+
+    # decide on the family this processor belongs
+    if  ds60001168_Regex.search(processor):
+        ds60001168 = True
+    elif ds60001185_Regex.search(processor):
+        ds60001185 = True
+    elif ds60001290_Regex.search(processor):
+        ds60001290 = True
+    elif ds60001404_Regex.search(processor):
         ds60001404 = True
-    else:
-        ds60001404 = False
 
     # this symbol is used in ftl files
     ds60001404Sym = coreComponent.createBooleanSymbol("DS60001404_SERIES", None)
@@ -767,6 +806,36 @@ if __name__ == "__main__":
     CLK_CFG_SETTINGS.setLabel("Clock Configurator Settings")
     CLK_CFG_SETTINGS.setDescription("Various Clock System Settings")
     CLK_CFG_SETTINGS.setVisible(True)
+
+    TEMP_RANGE = coreComponent.createKeyValueSetSymbol("CONFIG_TEMPERATURE_RANGE", CLK_CFG_SETTINGS)
+    TEMP_RANGE.setLabel("Operating Temperature Range")
+    TEMP_RANGE.setDescription("Maximum allowed System Clock Frequency will depend on selected Temperature Range")
+    TEMP_RANGE.setOutputMode("Value")
+    TEMP_RANGE.setDisplayMode("Description")
+
+    max_clk_freq_for_selected_temp = coreComponent.createIntegerSymbol("MAX_CLK_FREQ_FOR_SELECTED_TEMP_RANGE", CLK_CFG_SETTINGS)
+    max_clk_freq_for_selected_temp.setLabel("Max System Clock Frequency (HZ) For Selected Temperature")
+    max_clk_freq_for_selected_temp.setReadOnly(True)
+    max_clk_freq_for_selected_temp.setVisible(False)
+
+    if ds60001185 == True:
+        TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 80 MHz")
+        TEMP_RANGE.addKey("RANGE2", "1", "-40C to +85C, DC to 100 MHz")
+        TEMP_RANGE.addKey("RANGE3", "2", "0C to +70C, DC to 120 MHz")
+        TEMP_RANGE.setDefaultValue(2)
+        max_clk_freq_for_selected_temp.setDefaultValue(120000000)
+    elif (ds60001168 == True) or (ds60001290 == True):
+        TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 40 MHz")
+        TEMP_RANGE.addKey("RANGE2", "1", "-40C to +85C, DC to 50 MHz")
+        TEMP_RANGE.setDefaultValue(1)
+        max_clk_freq_for_selected_temp.setDefaultValue(50000000)
+    elif ds60001404 == True:
+        TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 72 MHz")
+        TEMP_RANGE.setReadOnly(True)
+        TEMP_RANGE.setDefaultValue(0)
+        max_clk_freq_for_selected_temp.setDefaultValue(72000000)
+
+    max_clk_freq_for_selected_temp.setDependencies(updateMaxFreq, ["CONFIG_TEMPERATURE_RANGE"])
 
     USB_CFG_SETTINGS = coreComponent.createMenuSymbol("UsbCfgSettings", CLK_CFG_SETTINGS)
     USB_CFG_SETTINGS.setDependencies(enableMenu, ["ClkSvcMenu"])
