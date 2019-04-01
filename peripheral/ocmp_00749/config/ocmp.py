@@ -24,9 +24,12 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
+
 ocmpValGrp_OCxCON_OCM       = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OCM"]')
 ocmpValGrp_OCxCON_OC32      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OC32"]')
 ocmpValGrp_OCxCON_SIDL      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__SIDL"]')
+
+cfgBifield_OCACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON"]/bitfield@[name="OCACLK"]')
 
 ################################################################################
 #### Global Variables ####
@@ -39,6 +42,9 @@ global ocmpSym_OCxCON_OC32
 global ocmpSym_OCxCON_SIDL
 global ocmpSym_OCxCON_OCTSEL_ALT
 global ocmpSym_CFGCON_OCACLK
+
+global interruptsChildren
+interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 
 ################################################################################
 #### Business Logic ####
@@ -104,27 +110,51 @@ def _get_bitfield_names(node, outputList):
             dict["value"] = str(tempint)
             outputList.append(dict)
 
-def getIRQnumber(string):
+def getIRQIndex(string):
 
-    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+    irq_index = "-1"
 
     for param in interruptsChildren:
-        name = param.getAttribute("name")
-        if string == name:
-            irq_index = param.getAttribute("index")
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("name"))
+            if "irq-name" in param.getAttributeList():
+                name = str(param.getAttribute("irq-name"))
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
             break
 
     return irq_index
 
+def getVectorIndex(string):
+
+    vector_index = "-1"
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
+
 def combineValues(symbol, event):
-    ocmValue    = ocmpSym_OCxCON_OCM.getValue() << 0
-    if(ocmpSym_CFGCON_OCACLK == True):
-        octselValue = ocmpSym_OCxCON_OCTSEL_ALT.getValue() << 3
+
+    ocmValue = ocmpSym_OCxCON_OCM.getValue() << 0
+
+    if cfgBifield_OCACLK != None:
+        if(ocmpSym_CFGCON_OCACLK == True):
+            octselValue = ocmpSym_OCxCON_OCTSEL_ALT.getValue() << 3
+        else:
+            octselValue = ocmpSym_OCxCON_OCTSEL.getValue() << 3
     else:
         octselValue = ocmpSym_OCxCON_OCTSEL.getValue() << 3
+
     oc32Value   = ocmpSym_OCxCON_OC32.getValue() << 5
     sidlValue   = int(ocmpSym_OCxCON_SIDL.getValue()) << 13
     ocxconValue = sidlValue + oc32Value + octselValue + ocmValue
+
     symbol.setValue(ocxconValue, 2)
 
 def ocmpSymbolVisible(symbol, event):
@@ -201,26 +231,11 @@ def instantiateComponent(ocmpComponent):
     ocmpSym_OCxCON_OCM.setDisplayMode("Description")
     for ii in ocmpxOCM_names:
         ocmpSym_OCxCON_OCM.addKey( ii['desc'], ii['value'], ii['key'] )
-    ocmpSym_OCxCON_OCM.setVisible(True)
 
-    ocmpSym_CFGCON_OCACLK = ocmpComponent.createBooleanSymbol("OCMP_CFGCON_OCACLK", None)
-    ocmpSym_CFGCON_OCACLK.setLabel("Use Alternate Timer Source")
-    ocmpSym_CFGCON_OCACLK.setDefaultValue(0)
-
-    ocmpxOCTSEL_names = []
-    ocmpSym_OCxCON_OCTSEL = ocmpComponent.createKeyValueSetSymbol("OCMP_OCxCON_OCTSEL", None)
-    ocmpSym_OCxCON_OCTSEL.setLabel("Select Timer Source")
-    ocmpSym_OCxCON_OCTSEL.setDefaultValue(0)
-    ocmpSym_OCxCON_OCTSEL.setOutputMode("Value")
-    ocmpSym_OCxCON_OCTSEL.setDisplayMode("Description")
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"OCMP\"]/instance@[name=\""+ocmpInstanceName.getValue()+"\"]/parameters")
-    ocmpxOCTSEL_names = node.getChildren()
-    for ii in range(len(ocmpxOCTSEL_names)):
-        if("TMR_SRC" in ocmpxOCTSEL_names[ii].getAttribute("name") ):
-            ocmpSym_OCxCON_OCTSEL.addKey(ocmpxOCTSEL_names[ii].getAttribute("name"),
-            ocmpxOCTSEL_names[ii].getAttribute("value"), ocmpxOCTSEL_names[ii].getAttribute("caption") )
-    ocmpSym_OCxCON_OCTSEL.setVisible(True)
-    ocmpSym_OCxCON_OCTSEL.setDependencies(ocmpTimerSourceVisibility, ["OCMP_CFGCON_OCACLK"])
+    if cfgBifield_OCACLK != None:
+        ocmpSym_CFGCON_OCACLK = ocmpComponent.createBooleanSymbol("OCMP_CFGCON_OCACLK", None)
+        ocmpSym_CFGCON_OCACLK.setLabel("Use Alternate Timer Source")
+        ocmpSym_CFGCON_OCACLK.setVisible(cfgBifield_OCACLK != None)
 
     ocmpxOCTSEL_names = []
     ocmpSym_OCxCON_OCTSEL_ALT = ocmpComponent.createKeyValueSetSymbol("OCMP_OCxCON_OCTSEL_ALT", None)
@@ -237,9 +252,22 @@ def instantiateComponent(ocmpComponent):
     ocmpSym_OCxCON_OCTSEL_ALT.setVisible(False)
     ocmpSym_OCxCON_OCTSEL_ALT.setDependencies(ocmpSymbolVisible, ["OCMP_CFGCON_OCACLK"])
 
+    ocmpxOCTSEL_names = []
+    ocmpSym_OCxCON_OCTSEL = ocmpComponent.createKeyValueSetSymbol("OCMP_OCxCON_OCTSEL", None)
+    ocmpSym_OCxCON_OCTSEL.setLabel("Select Timer Source")
+    ocmpSym_OCxCON_OCTSEL.setDefaultValue(0)
+    ocmpSym_OCxCON_OCTSEL.setOutputMode("Value")
+    ocmpSym_OCxCON_OCTSEL.setDisplayMode("Description")
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"OCMP\"]/instance@[name=\""+ocmpInstanceName.getValue()+"\"]/parameters")
+    ocmpxOCTSEL_names = node.getChildren()
+    for ii in range(len(ocmpxOCTSEL_names)):
+        if("TMR_SRC" in ocmpxOCTSEL_names[ii].getAttribute("name") ):
+            ocmpSym_OCxCON_OCTSEL.addKey(ocmpxOCTSEL_names[ii].getAttribute("name"),
+            ocmpxOCTSEL_names[ii].getAttribute("value"), ocmpxOCTSEL_names[ii].getAttribute("caption") )
+    ocmpSym_OCxCON_OCTSEL.setDependencies(ocmpTimerSourceVisibility, ["OCMP_CFGCON_OCACLK"])
+
     ocmpSym_TIMER_COMMENT = ocmpComponent.createCommentSymbol("OCMP_TIMER_COMMENT", None)
     ocmpSym_TIMER_COMMENT.setLabel("**** Configure Selected Timer Source (Timer x) in TMRx Component ****")
-    ocmpSym_TIMER_COMMENT.setVisible(True)
 
     ocmpxOC32_names = []
     _get_bitfield_names(ocmpValGrp_OCxCON_OC32, ocmpxOC32_names)
@@ -250,7 +278,6 @@ def instantiateComponent(ocmpComponent):
     ocmpSym_OCxCON_OC32.setDisplayMode("Description")
     for ii in ocmpxOC32_names:
         ocmpSym_OCxCON_OC32.addKey( ii['desc'], ii['value'], ii['key'] )
-    ocmpSym_OCxCON_OC32.setVisible(True)
 
     ocmpSym_COMPARE_VAL = ocmpComponent.createLongSymbol("OCMP_OCxR", None)
     ocmpSym_COMPARE_VAL.setLabel("Compare Value")
@@ -274,8 +301,6 @@ def instantiateComponent(ocmpComponent):
 
     ocmpSym_OCxCON_SIDL = ocmpComponent.createBooleanSymbol("OCMP_OCxCON_SIDL", None)
     ocmpSym_OCxCON_SIDL.setLabel("Stop in IDLE")
-    ocmpSym_OCxCON_SIDL.setDefaultValue(False)
-    ocmpSym_OCxCON_SIDL.setVisible(True)
 
     #Collect user input to combine into OCxCON register
     ocmpSym_ICM = ocmpComponent.createHexSymbol("OCxCON_VALUE", None)
@@ -291,7 +316,10 @@ def instantiateComponent(ocmpComponent):
     ocmpInterruptHandler = ocmpIrq + "_INTERRUPT_HANDLER"
     ocmpInterruptHandlerLock = ocmpIrq + "_INTERRUPT_HANDLER_LOCK"
     ocmpInterruptVectorUpdate = ocmpIrq + "_INTERRUPT_ENABLE_UPDATE"
-    ocmpIrq_index = int(getIRQnumber(ocmpIrq))
+    ocmpIrq_index = int(getIRQIndex(ocmpIrq))
+
+    if ocmpIrq_index == -1:
+        ocmpIrq_index = int(getVectorIndex(ocmpIrq))
 
     enblRegName = _get_enblReg_parms(ocmpIrq_index)
     statRegName = _get_statReg_parms(ocmpIrq_index)
