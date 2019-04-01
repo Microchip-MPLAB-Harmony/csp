@@ -163,6 +163,13 @@ peripheralBusDict_DA = {"CORE": "7",
                         "TMR3": "3",
                         "TMR2": "3",
                         "TMR1": "3"}
+def updateMaxFreq(symbol, event):
+
+    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" not in Variables.get("__PROCESSOR")) ):
+        if event["value"] == 0:
+            symbol.setValue(180000000, 2)
+        elif event["value"] == 1:
+            symbol.setValue(252000000, 2)
 
 def periphFreqCalc(symbol, event):
     symbol.setValue(int(event["value"]), 2)
@@ -926,6 +933,31 @@ if __name__ == "__main__":
     CLK_CFG_SETTINGS.setLabel("Clock Configurator Settings")
     CLK_CFG_SETTINGS.setDescription("Various Clock System Settings")
     CLK_CFG_SETTINGS.setVisible(True)
+
+    TEMP_RANGE = coreComponent.createKeyValueSetSymbol("CONFIG_TEMPERATURE_RANGE", CLK_CFG_SETTINGS)
+    TEMP_RANGE.setLabel("Operating Temperature Range")
+    TEMP_RANGE.setDescription("Maximum allowed System Clock Frequency will depend on selected Temperature Range")
+    TEMP_RANGE.setOutputMode("Value")
+    TEMP_RANGE.setDisplayMode("Description")
+
+    max_clk_freq_for_selected_temp = coreComponent.createIntegerSymbol("MAX_CLK_FREQ_FOR_SELECTED_TEMP_RANGE", CLK_CFG_SETTINGS)
+    max_clk_freq_for_selected_temp.setLabel("Max System Clock Frequency (HZ) For Selected Temperature")
+    max_clk_freq_for_selected_temp.setReadOnly(True)
+    max_clk_freq_for_selected_temp.setVisible(False)
+
+    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) ):
+        TEMP_RANGE.addKey("RANGE1", "1", "-40C to +85C, DC to 200 MHz")
+        TEMP_RANGE.setDefaultValue(0)
+        TEMP_RANGE.setReadOnly(True)
+        max_clk_freq_for_selected_temp.setDefaultValue(200000000)
+    else:
+        TEMP_RANGE.addKey("RANGE1", "0", "-40C to +125C, DC to 180 MHz")
+        TEMP_RANGE.addKey("RANGE2", "1", "-40C to +85C, DC to 252 MHz")
+        TEMP_RANGE.setDefaultValue(1)
+        max_clk_freq_for_selected_temp.setDefaultValue(252000000)
+
+    max_clk_freq_for_selected_temp.setDependencies(updateMaxFreq, ["CONFIG_TEMPERATURE_RANGE"])
+
 
     frcdiv = {}
     _get_bitfield_names(clkValGrp_OSCCON__FRCDIV, frcdiv)
