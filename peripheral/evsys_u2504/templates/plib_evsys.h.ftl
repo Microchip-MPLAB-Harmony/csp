@@ -57,7 +57,7 @@
 // *****************************************************************************
 
 
-<#if EVSYS_INTERRUPT_MODE0 || EVSYS_INTERRUPT_MODE1 || EVSYS_INTERRUPT_MODE2 || EVSYS_INTERRUPT_MODE3 || EVSYS_INTERRUPT_MODE_OTHER>
+<#if INTERRUPT_ACTIVE>
 	<#lt>typedef enum
 	<#lt>{
 	<#lt>	EVSYS_INT_EVD = EVSYS_CHINTENSET_EVD_Msk,
@@ -83,7 +83,7 @@
 
 /***************************** EVSYS API *******************************/
 void ${EVSYS_INSTANCE_NAME}_Initialize( void );
-<#if EVSYS_INTERRUPT_MODE0 || EVSYS_INTERRUPT_MODE1 || EVSYS_INTERRUPT_MODE2 || EVSYS_INTERRUPT_MODE3 || EVSYS_INTERRUPT_MODE_OTHER>
+<#if INTERRUPT_ACTIVE>
 	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context );
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt);
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt);

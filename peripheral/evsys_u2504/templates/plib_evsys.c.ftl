@@ -40,7 +40,7 @@
 
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
 
-<#if EVSYS_INTERRUPT_MODE0 || EVSYS_INTERRUPT_MODE1 || EVSYS_INTERRUPT_MODE2 || EVSYS_INTERRUPT_MODE3 || EVSYS_INTERRUPT_MODE_OTHER>
+<#if INTERRUPT_ACTIVE>
 	<#lt>EVSYS_OBJECT evsys[${NUM_SYNC_CHANNELS}];
 </#if>
 
@@ -91,7 +91,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 </#list>
 }
 
-<#if EVSYS_INTERRUPT_MODE0 || EVSYS_INTERRUPT_MODE1 || EVSYS_INTERRUPT_MODE2 || EVSYS_INTERRUPT_MODE3 || EVSYS_INTERRUPT_MODE_OTHER>
+<#if INTERRUPT_ACTIVE>
 
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
 	<#lt>{
@@ -111,6 +111,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 </#if>
 <#list 0..3 as x>
 <#assign INTERRUPT_MODE = "EVSYS_INTERRUPT_MODE" + x>
+<#if .vars[INTERRUPT_MODE]??>
 <#if .vars[INTERRUPT_MODE]>
 	<#lt>void ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
 	<#lt>{
@@ -122,8 +123,10 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#lt>   }
 	<#lt>}
 </#if>
+</#if>
 </#list>
 
+<#if EVSYS_INTERRUPT_MODE_OTHER??>
 <#if EVSYS_INTERRUPT_MODE_OTHER>
 void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
@@ -135,4 +138,5 @@ void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     }
     ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
 }
+</#if>
 </#if>
