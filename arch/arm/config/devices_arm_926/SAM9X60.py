@@ -45,6 +45,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_sam_9x60/config/mmu.p
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_9x60/config/clk.py")
+coreComponent.addPlugin("../peripheral/clk_sam_9x60/plugin/clk_sam_9x60.jar")
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
