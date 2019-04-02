@@ -101,24 +101,25 @@ def evsysIntset(interrupt, val):
     global numsyncChannels
 
     channel = int(interrupt.getID().split("EVSYS_INTERRUPT_MODE")[1])
-    data = "EVSYS_CHANNEL_" + str(channel) + "_EVENT"
     event = Database.getSymbolValue(
         val["namespace"], "EVSYS_CHANNEL_" + str(channel) + "_EVENT")
     overflow = Database.getSymbolValue(
         val["namespace"], "EVSYS_CHANNEL_" + str(channel) + "_OVERRUN")
     result = event or overflow
     interrupt.setValue(result, 2)
+    if Database.getSymbolValue(val["namespace"], "INTERRUPT_ACTIVE") != result:
+        Database.setSymbolValue(val["namespace"], "INTERRUPT_ACTIVE", result, 2)
 
-    Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", False, 2)
-
-    if channel >= len(InterruptVector) - 1:
-        channel = len(InterruptVector) - 1
-        for id in range(channel - 1, numsyncChannels):
+    if channel > len(InterruptVector) - 1:
+        Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", False, 2)
+        for id in range(len(InterruptVector) - 1 , numsyncChannels):
             if (Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_EVENT")
                 or Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_OVERRUN")):
-                result=True
                 Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", True, 2)
 
+    if channel > len(InterruptVector) - 1:
+        channel = len(InterruptVector) - 1
+        
     Database.setSymbolValue("core", InterruptVector[channel], result, 2)
     Database.setSymbolValue("core", InterruptHandlerLock[channel], result, 2)
     if result:
@@ -209,10 +210,6 @@ def instantiateComponent(evsysComponent):
     evsysChannelNum.setVisible(False)
     evsysChannelNum.setDefaultValue(int(channel))
     evsysChannelNum.setVisible(False)
-
-    evsysIntOther = evsysComponent.createBooleanSymbol(
-            "EVSYS_INTERRUPT_MODE_OTHER", evsysSym_Menu)
-    evsysIntOther.setVisible(False)
 
     evsysChannelNum=evsysComponent.createIntegerSymbol(
         "NUM_SYNC_CHANNELS", evsysSym_Menu)
@@ -328,7 +325,7 @@ def instantiateComponent(evsysComponent):
         evsysUserReady.setLabel("Channel" + str(id) + "Users Ready")
         evsysUserReady.setDependencies(userStatus, channelUserDependency)
 
-        if id < numsyncChannels:
+        if id <= numsyncChannels:
             evsysInterrupt=evsysComponent.createBooleanSymbol(
                 "EVSYS_INTERRUPT_MODE" + str(id),  evsysSym_Menu)
             evsysInterrupt.setVisible(False)
@@ -374,6 +371,15 @@ def instantiateComponent(evsysComponent):
     evsysSym_IntEnComment.setDependencies(
         updateEVSYSInterruptWarringStatus, InterruptVectorUpdate)
 
+    evsysInterruptMode = evsysComponent.createBooleanSymbol("INTERRUPT_ACTIVE", None)
+    evsysInterruptMode.setDefaultValue(False)
+    evsysInterruptMode.setVisible(False)
+    
+    if numsyncChannels > len(InterruptVector):
+        evsysIntOther = evsysComponent.createBooleanSymbol(
+                "EVSYS_INTERRUPT_MODE_OTHER", evsysSym_Menu)
+        evsysIntOther.setVisible(False)
+         
     # ################################################################################
     # ##########             CODE GENERATION             #############################
     # ################################################################################
