@@ -81,7 +81,7 @@
     the 'configuration bits' to configure the system oscillators.
 */
 
-<#if DS60001404_SERIES = true>
+<#if DEVICE_FAMILY == "DS60001404">
     <#assign REFOTRIMreg = "REFO1TRIM">
     <#assign REFOCONreg = "REFO1CON">
 <#else>
@@ -93,7 +93,8 @@ void CLK_Initialize( void )
 {
 <#if (CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT) ||
      ((USB_PART = true) && (CONFIG_SYS_CLK_UFRCEN == "ON")) ||
-     ((CONFIG_SYS_CLK_REFCLK_ENABLE?has_content) && (CONFIG_SYS_CLK_REFCLK_ENABLE == true))>
+     ((CONFIG_SYS_CLK_REFCLK_ENABLE?has_content) && (CONFIG_SYS_CLK_REFCLK_ENABLE == true)) ||
+     ((DEVICE_FAMILY == "DS60001404") && (UPLLCON_VALUE != UPLLCON_DEFAULT_VALUE))>
     bool int_flag = false;
 
     int_flag = (bool)__builtin_disable_interrupts();
@@ -105,11 +106,9 @@ void CLK_Initialize( void )
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
-
     <#if CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT>
     OSCCONbits.FRCDIV = ${CONFIG_SYS_CLK_FRCDIV};
     </#if>
-
     <#if USB_PART = true && CONFIG_SYS_CLK_UFRCEN == "ON">
     /* Make FRC as the input clock for USB */
     OSCCONSET = _OSCCON_UFRCEN_MASK;
@@ -135,6 +134,13 @@ void CLK_Initialize( void )
             <#lt>    ${REFOCONreg}SET = ${ON_MASK};
         </#if>
     </#if>
+</#if>
+
+<#if (DEVICE_FAMILY == "DS60001404") && (UPLLCON_VALUE != UPLLCON_DEFAULT_VALUE)>
+    /* PLLODIV  = ${CONFIG_SYS_CLK_UPLLODIV} */
+    /* PLLMULT  = ${CONFIG_SYS_CLK_UPLLMULT} */
+    /* PLLIDIV  = ${CONFIG_SYS_CLK_UPLLIDIV} */
+    UPLLCON = 0x${UPLLCON_VALUE};
 </#if>
 
     /* Lock system since done with clock configuration */
