@@ -31,6 +31,8 @@ icapValGrp_IC1CON_C32     = ATDF.getNode('/avr-tools-device-file/modules/module@
 icapValGrp_IC1CON_FEDGE   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="ICAP"]/value-group@[name="IC1CON__FEDGE"]')
 icapValGrp_IC1CON_SIDL    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="ICAP"]/value-group@[name="IC1CON__SIDL"]')
 
+cfgBifield_ICACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON"]/bitfield@[name="ICACLK"]')
+
 ################################################################################
 #### Global Variables ####
 ################################################################################
@@ -42,17 +44,28 @@ global icapSym_ICxCON_C32
 global icapSym_ICxCON_FEDGE
 global icapSym_ICxCON_SIDL
 global icapSym_CFGCON_ICACLK
+
+global interruptsChildren
+interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 ################################################################################
 #### Business Logic ####
 ################################################################################
 def dependencyStatus(symbol, event):
     component = symbol.getComponent()
-    if(component.getSymbolValue("ICAP_INTERRUPT_ENABLE") and (Database.getSymbolValue("core", captureInterruptVectorUpdate) == True)):
-        symbol.setVisible(True)
-    elif(component.getSymbolValue("ICAP_ERROR_INTERRUPT_ENABLE") and (Database.getSymbolValue("core", errorInterruptVectorUpdate) == True)):
-        symbol.setVisible(True)
+    num_int_lines = component.getSymbolValue("ICAP_NUM_INT_LINES")
+    if(num_int_lines == 1):
+        if((component.getSymbolValue("ICAP_INTERRUPT_ENABLE") or component.getSymbolValue("ICAP_ERROR_INTERRUPT_ENABLE")) \
+            and (Database.getSymbolValue("core", captureInterruptVectorUpdate) == True)):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
     else:
-        symbol.setVisible(False)
+        if(component.getSymbolValue("ICAP_INTERRUPT_ENABLE") and (Database.getSymbolValue("core", captureInterruptVectorUpdate) == True)):
+            symbol.setVisible(True)
+        elif(component.getSymbolValue("ICAP_ERROR_INTERRUPT_ENABLE") and (Database.getSymbolValue("core", errorInterruptVectorUpdate) == True)):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
 
 def _get_bitfield_names(node, outputList):
     valueNodes = node.getChildren()
@@ -70,14 +83,39 @@ def _get_bitfield_names(node, outputList):
             dict['value'] = str(tempint)
             outputList.append(dict)
 
-def getIRQnumber(string):
-    interrupts = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts')
-    interruptsChildren = interrupts.getChildren()
+def getIRQIndex(string):
+
+    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+    irq_index = "-1"
+
     for param in interruptsChildren:
-        modInst = param.getAttribute('name')
-        if(string == modInst):
-            irq_index = param.getAttribute('index')
+        name = param.getAttribute("name")
+        if string == name:
+            irq_index = param.getAttribute("index")
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("name"))
+            if "irq-name" in param.getAttributeList():
+                name = str(param.getAttribute("irq-name"))
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
+            break
+
     return irq_index
+
+def getVectorIndex(string):
+
+    vector_index = "-1"
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
+
 
 def _get_enblReg_parms(vectorNumber):
     # This takes in vector index for interrupt, and returns the IECx register name as well as
@@ -102,10 +140,13 @@ def _get_statReg_parms(vectorNumber):
 def combineValues(symbol, event):
     icmValue    = icapSym_ICxCON_ICM.getValue() << 0
     iciValue    = icapSym_ICxCON_ICI.getValue() << 5
-    if (icapSym_CFGCON_ICACLK.getValue() == False):
-        ictmrValue  = icapSym_ICxCON_ICTMR.getValue() << 7
+    if (cfgBifield_ICACLK != None):
+        if (icapSym_CFGCON_ICACLK.getValue() == False):
+            ictmrValue  = icapSym_ICxCON_ICTMR.getValue() << 7
+        else:
+            ictmrValue  = icapSym_ICxCON_ICTMR_ALT.getValue() << 7
     else:
-        ictmrValue  = icapSym_ICxCON_ICTMR_ALT.getValue() << 7
+        ictmrValue  = icapSym_ICxCON_ICTMR.getValue() << 7
     c32Value    = icapSym_ICxCON_C32.getValue() << 8
     fedgeValue  = icapSym_ICxCON_FEDGE.getValue() << 9
     sidlValue   = int(icapSym_ICxCON_SIDL.getValue()) << 13
@@ -125,22 +166,37 @@ def icapTimerSourceVisibility(symbol, event):
     symbol.setVisible(not event["value"])
 
 def icapInterruptSet(symbol, event):
-    if (event["id"] == "ICAP_INTERRUPT_ENABLE"):
-        Database.setSymbolValue("core", captureInterruptVector, event["value"], 2)
-        Database.setSymbolValue("core", captureInterruptHandlerLock, event["value"], 2)
-        interruptName = captureInterruptHandler.split("_INTERRUPT_HANDLER")[0]
-        if(event["value"] == True):
+    component = symbol.getComponent()
+    num_int_lines = component.getSymbolValue("ICAP_NUM_INT_LINES")
+    if (num_int_lines == 1):
+        if (component.getSymbolValue("ICAP_INTERRUPT_ENABLE") or component.getSymbolValue("ICAP_ERROR_INTERRUPT_ENABLE")):
+            Database.setSymbolValue("core", captureInterruptVector,True, 2)
+            Database.setSymbolValue("core", captureInterruptHandlerLock, True, 2)
+            interruptName = captureInterruptHandler.split("_INTERRUPT_HANDLER")[0]
             Database.setSymbolValue("core", captureInterruptHandler, interruptName + "_InterruptHandler", 1)
         else:
+            Database.setSymbolValue("core", captureInterruptVector,False, 2)
+            Database.setSymbolValue("core", captureInterruptHandlerLock, False, 2)
+            interruptName = captureInterruptHandler.split("_INTERRUPT_HANDLER")[0]
             Database.setSymbolValue("core", captureInterruptHandler, interruptName + "_Handler", 1)
-    if (event["id"] == "ICAP_ERROR_INTERRUPT_ENABLE"):
-        Database.setSymbolValue("core", errorInterruptVector, event["value"], 2)
-        Database.setSymbolValue("core", errorInterruptHandlerLock, event["value"], 2)
-        interruptName = errorInterruptHandler.split("_INTERRUPT_HANDLER")[0]
-        if(event["value"] == True):
-            Database.setSymbolValue("core", errorInterruptHandler, interruptName + "_InterruptHandler", 1)
-        else:
-            Database.setSymbolValue("core", errorInterruptHandler, interruptName + "_Handler", 1)
+
+    else:
+        if (event["id"] == "ICAP_INTERRUPT_ENABLE"):
+            Database.setSymbolValue("core", captureInterruptVector, event["value"], 2)
+            Database.setSymbolValue("core", captureInterruptHandlerLock, event["value"], 2)
+            interruptName = captureInterruptHandler.split("_INTERRUPT_HANDLER")[0]
+            if(event["value"] == True):
+                Database.setSymbolValue("core", captureInterruptHandler, interruptName + "_InterruptHandler", 1)
+            else:
+                Database.setSymbolValue("core", captureInterruptHandler, interruptName + "_Handler", 1)
+        if (event["id"] == "ICAP_ERROR_INTERRUPT_ENABLE"):
+            Database.setSymbolValue("core", errorInterruptVector, event["value"], 2)
+            Database.setSymbolValue("core", errorInterruptHandlerLock, event["value"], 2)
+            interruptName = errorInterruptHandler.split("_INTERRUPT_HANDLER")[0]
+            if(event["value"] == True):
+                Database.setSymbolValue("core", errorInterruptHandler, interruptName + "_InterruptHandler", 1)
+            else:
+                Database.setSymbolValue("core", errorInterruptHandler, interruptName + "_Handler", 1)
 ################################################################################
 #### Component ####
 ################################################################################
@@ -185,9 +241,10 @@ def instantiateComponent(icapComponent):
         icapSym_ICxCON_ICM.addKey( ii['desc'], ii['value'], ii['key'] )
     icapSym_ICxCON_ICM.setVisible(True)
 
-    icapSym_CFGCON_ICACLK = icapComponent.createBooleanSymbol("ICAP_CFGCON_ICACLK", None)
-    icapSym_CFGCON_ICACLK.setLabel("Use Alternate Timer Source")
-    icapSym_CFGCON_ICACLK.setDefaultValue(0)
+    if (cfgBifield_ICACLK != None):
+        icapSym_CFGCON_ICACLK = icapComponent.createBooleanSymbol("ICAP_CFGCON_ICACLK", None)
+        icapSym_CFGCON_ICACLK.setLabel("Use Alternate Timer Source")
+        icapSym_CFGCON_ICACLK.setDefaultValue(0)
 
     #Timer source
     icapxICTMR_names = []
@@ -264,9 +321,19 @@ def instantiateComponent(icapComponent):
 
     #Calculate the proper interrupt registers using IRQ#
     irqString = "INPUT_CAPTURE_" + str(instanceNum)
-    icxIrq_index = int(getIRQnumber(irqString))
+    icxIrq_index = int(getIRQIndex(irqString))
+    int_lines = 1
+
+    if icxIrq_index == -1:
+        int_lines = 2
+        icxIrq_index = int(getVectorIndex(irqString))
+
     statRegName, statBitPosn = _get_statReg_parms(icxIrq_index)
     enblRegName, enblBitPosn = _get_enblReg_parms(icxIrq_index)
+
+    icapSym_NUM_INT_LINES = icapComponent.createIntegerSymbol("ICAP_NUM_INT_LINES", None)
+    icapSym_NUM_INT_LINES.setVisible(False)
+    icapSym_NUM_INT_LINES.setDefaultValue(int_lines)
 
     #IFS REG
     icapxIFS = icapComponent.createStringSymbol("ICAPx_IFS_REG", None)
@@ -280,7 +347,9 @@ def instantiateComponent(icapComponent):
 
     #Calculate the proper interrupt registers using ERROR IRQ#
     irqString = "INPUT_CAPTURE_" + str(instanceNum) + "_ERROR"
-    icxIrq_index = int(getIRQnumber(irqString))
+    icxIrq_index = int(getIRQIndex(irqString))
+    if icxIrq_index == -1:
+        icxIrq_index = int(getVectorIndex(irqString))
     errStatRegName, statBitPosn = _get_statReg_parms(icxIrq_index)
     errEnblRegName, enblBitPosn = _get_enblReg_parms(icxIrq_index)
 
