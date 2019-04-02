@@ -85,7 +85,6 @@ def getIRQnumber(string):
         else:
             break
 
-    print(irq_index)
     return irq_index
 
 ###################################################################################################
