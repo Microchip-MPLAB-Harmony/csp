@@ -48,7 +48,11 @@ def instantiateComponent(cmsisComponent):
 
         # add core header files
         headerFileNames = ["cmsis_compiler.h", "cmsis_iccarm.h", "cmsis_gcc.h", "tz_context.h", str(eval('coreFile')), "mpu_armv7.h", "cmsis_version.h"]
-
+        #Cortex M23 has MPU v8
+        if (archNode.getChildren()[0].getAttribute("architecture") == "CORTEX-M23"):
+            headerFileNames.remove("mpu_armv7.h")
+            headerFileNames.append("mpu_armv8.h")
+            
         for headerFileName in headerFileNames:
             szSymbol = "{}_H".format(headerFileName[:-2].upper())
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
