@@ -16,7 +16,7 @@ def update_mainck(symbol, event):
     oscsel = event['source'].getSymbolByID("CLK_MOSCSEL")
     xtfreq = event['source'].getSymbolByID("CLK_MOSCXT_FREQ")
     rcen = event['source'].getSymbolByID("CLK_MOSCRCEN")
-    xten = event['source'].getSymbolByID("CLK_CLK_MOSCXTEN")
+    xten = event['source'].getSymbolByID("CLK_MOSCXTEN")
 
     value = 0
     if oscsel.getValue() == 0:
@@ -28,7 +28,7 @@ def update_mainck(symbol, event):
         if xten.getValue() == True:
             value = xtfreq.getValue()
         else:
-            value = 0;
+            value = 0
     symbol.setValue(value, 0)
 
 def update_xtal_warning(symbol, event):
@@ -42,25 +42,27 @@ def update_bypass_warning(symbol, event):
     symbol.setVisible(xten.getValue()==True and byen.getValue()==True)
 
 def update_pll_freq(symbol, event):
-    mainckf = event['source'].getSymbolByID("MAINCK_FREQUENCY")
-    mul = event['source'].getSymbolByID("CLK_PLL_MUL")
-    fracr = event['source'].getSymbolByID("CLK_PLL_FRACR")
-    divpmc = event['source'].getSymbolByID("CLK_PLL_DIVPMC")
-    enable = event['source'].getSymbolByID("CLK_PLL_EN")
-    if enable.getValue() == True:
-        symbol.setValue(mainckf.getValue() * (mul.getValue() + 1) * fracr.getValue() / pow(2,22) / (divpmc.getValue() + 1), 0)
+    mainckf = event['source'].getSymbolValue("MAINCK_FREQUENCY")
+    mul = event['source'].getSymbolValue("CLK_PLL_MUL")
+    fracr = event['source'].getSymbolValue("CLK_PLL_FRACR")
+    divpmc = event['source'].getSymbolValue("CLK_PLL_DIVPMC")
+    enable = event['source'].getSymbolValue("CLK_PLL_EN")
+    if enable is True:
+        pllcore_clk = (mainckf * (mul + 1 + (float(fracr)/pow(2, 22))))
+        symbol.setValue(int(pllcore_clk / (divpmc + 1)), 0)
     else:
-        symbol.setValue(0, 0);
+        symbol.setValue(0, 0)
 
 def update_upll_freq(symbol, event):
-    mainckf = event['source'].getSymbolByID("CLK_MOSCXT_FREQ")
-    mul = event['source'].getSymbolByID("CLK_UPLL_MUL")
-    fracr = event['source'].getSymbolByID("CLK_UPLL_FRACR")
-    enable = event['source'].getSymbolByID("CLK_UPLL_EN")
-    if enable.getValue() == True:
-        symbol.setValue(mainckf.getValue() * (mul.getValue() + 1) * fracr.getValue() / pow(2,22) / 2, 0)
+    mainckf = event['source'].getSymbolValue("CLK_MOSCXT_FREQ")
+    mul = event['source'].getSymbolValue("CLK_UPLL_MUL")
+    fracr = event['source'].getSymbolValue("CLK_UPLL_FRACR")
+    enable = event['source'].getSymbolValue("CLK_UPLL_EN")
+    if enable is True:
+        pllcore_clk = (mainckf * (mul + 1 + (float(fracr) / pow(2, 22))))
+        symbol.setValue(int(pllcore_clk / 2), 0)
     else:
-        symbol.setValue(0, 0);
+        symbol.setValue(0, 0)
 
 def update_cpu_clk_freq(symbol, event):
     md_slck = event['source'].getSymbolByID("MD_SLOW_CLK_FREQUENCY")
@@ -86,7 +88,7 @@ def update_cpu_clk_freq(symbol, event):
     symbol.setValue(input_freq / pres, 0)
 
 def update_mck_freq(symbol, event):
-    cpu_clk = event['source'].getSymbolByID("CPU_CLK_FREQUENCY")
+    cpu_clk = event['source'].getSymbolByID("CPU_CLOCK_FREQUENCY")
     cpu_mdiv = event['source'].getSymbolByID("CLK_CPU_CKR_MDIV")
     input_freq = cpu_clk.getValue()
     div = 0
@@ -100,7 +102,7 @@ def update_pck_freq(symbol, event):
     index = int(symbol.getID().split("PCK")[1].split("_")[0])
     pckx_pres = event['source'].getSymbolByID("CLK_PCK"+str(index)+"_PRES")
     pckx_css = event['source'].getSymbolByID("CLK_PCK"+str(index)+"_CSS")
-    enabled = event['source'].getSymboldValue("CLK_PCK"+str(index)+"_EN")
+    enabled = event['source'].getSymbolValue("CLK_PCK"+str(index)+"_EN")
     input_freq = 0
     if enabled == True:
         input_freq = event['source'].getSymbolValue(pckx_css.getKey(pckx_css.getValue())+"_FREQUENCY")
@@ -218,6 +220,7 @@ td_oscel.setDisplayMode("Key")
 td_oscel.setOutputMode("Key")
 for value in td_oscel_vg_node.getChildren():
     td_oscel.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
+td_oscel.setDefaultValue(1)
 
 osc32en_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SCKC"]/register-group@[name="SCKC"]/register@[name="SCKC_CR"]/bitfield@[name="OSC32EN"]')
 osc32en = coreComponent.createBooleanSymbol("CLK_OSC32EN", sckc_menu)
@@ -444,7 +447,7 @@ for value in cpu_mdiv_vg_node.getChildren():
     cpu_mdiv.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
 cpu_mdiv.setDefaultValue(3)
 
-cpu_clk = coreComponent.createIntegerSymbol("CPU_CLK_FREQUENCY", cpu_menu)
+cpu_clk = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY", cpu_menu)
 cpu_clk.setVisible(False)
 input_freq = 0
 if cpu_css.getValue() == 0:
@@ -472,7 +475,7 @@ if cpu_mdiv.getValue() != 3:
 else:
     div = 3
 mck.setDefaultValue(input_freq / div)
-mck.setDependencies(update_mck_freq, ['CPU_CLK_FREQUENCY', 'CLK_CPU_CKR_MDIV'])
+mck.setDependencies(update_mck_freq, ['CPU_CLOCK_FREQUENCY', 'CLK_CPU_CKR_MDIV'])
 
 pck_menu = coreComponent.createMenuSymbol("CLK_PCK_MENU", menu)
 pck_menu.setLabel("PCK")
@@ -639,15 +642,19 @@ if ddr.getValue() == True:
     ddr_frq.setDefaultValue(mck.getValue() * 2)
 else:
     ddr_frq.setDefaultValue(0)
-ddr_frq.setDependencies(lambda symbol, event: symbol.setValue(event['value'] if event['source'].getSymbolValue('CLK_DDR_ENABLE') == True else 0, 0), ['MCK_FREQUENCY'])
+ddr_frq.setDependencies(lambda symbol, event: symbol.setValue(((event['source'].getSymbolValue('MCK_FREQUENCY') * 2)
+                        if event['source'].getSymbolValue('CLK_DDR_ENABLE') is True else 0),0),
+                        ['MCK_FREQUENCY','CLK_DDR_ENABLE'])
 
 qspi_clk = coreComponent.createBooleanSymbol("CLK_QSPICLK_ENABLE", sys_clk_menu)
 qspi_clk.setLabel("Enbable QSPI Clock")
 
 qspi_frq = coreComponent.createIntegerSymbol("QSPICLK_FREQUENCY", sys_clk_menu)
 qspi_frq.setVisible(False)
-qspi_frq.setDefaultValue(mck.getValue() * 2)
-qspi_frq.setDependencies(lambda symbol, event: symbol.setValue(event['value'] if event['source'].getSymbolValue('CLK_QSPICLK_ENABLE') == True else 0, 0), ['MCK_FREQUENCY'])
+qspi_frq.setDefaultValue((mck.getValue() * 2) if qspi_clk.getValue() is True else 0)
+qspi_frq.setDependencies(lambda symbol, event: symbol.setValue(((event['source'].getSymbolValue('MCK_FREQUENCY') * 2)
+                         if event['source'].getSymbolValue('CLK_QSPICLK_ENABLE') is True else 0), 0),
+                         ['MCK_FREQUENCY', 'CLK_QSPICLK_ENABLE'])
 
 gen_code = coreComponent.createBooleanSymbol("CLK_GENERATOR_CODE", menu)
 gen_code.setLabel("Enable generator initialization code")
