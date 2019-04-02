@@ -32,18 +32,14 @@ global set_refocon_value
 global set_refotrim_value
 
 def updateMaxFreq(symbol, event):
-    global ds60001168
-    global ds60001185
-    global ds60001290
-    global ds60001404
-    if ds60001185 == True:
+    if (Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001185"):
         if event["value"] == 0:
             symbol.setValue(80000000, 2)
         elif event["value"] == 1:
             symbol.setValue(100000000, 2)
         elif event["value"] == 2:
             symbol.setValue(120000000, 2)
-    elif (ds60001168 == True) or (ds60001290 == True):
+    elif (Database.getSymbolValue("core", "DEVICE_FAMILY") in ["DS60001168", "DS60001290"]):
         if event["value"] == 0:
             symbol.setValue(40000000, 2)
         elif event["value"] == 1:
@@ -303,31 +299,23 @@ def updateRefotrim(symbol,event):
     symbol.setValue(tempval,1)
 
 global updateUpllcon
-def updateUpllcon(symbol,event):
-    '''
-    Callback for updating UPLLCON register value symbol whenever any of its bitfields are changed.
-    '''
-    global symbolUpllconPllmultMask
-    global symbolUpllconPllmultLsb
+def updateUpllcon(symbol, event):
+    # updates the UPLLCON register value based on any of its bitfields being changed by the user
+    global upllidiv
     global upllmult
-    global symbolUpllconPllodivMask
-    global symbolUpllconPllodivLsb
     global upllodiv
 
-    symObj = event["symbol"]       # this gets the symbol for the causing event for this dependency function call
-    if(event["id"] == "CONFIG_SYS_CLK_UPLLMULT"):
-        mask = int(symbolUpllconPllmultMask.getValue(),16)
-        lsb = symbolUpllconPllmultLsb.getValue()
-        val = int(upllmult[symObj.getValue()]) << lsb   # upllmult[] is key/value pair.  We're given the key from the symObj, but need corresponding value
-    elif(event["id"] == "CONFIG_SYS_CLK_UPLLODIV"):
-        mask = int(symbolUpllconPllodivMask.getValue(),16)
-        lsb = symbolUpllconPllodivLsb.getValue()
-        val = int(upllodiv[symObj.getValue()]) << lsb   # upllodiv[] is key/value pair.  We're given the key from the symObj, but need corresponding value
-
-    tempval = (symbol.getValue())
-    tempval &= ~mask
-    tempval |= val
-    symbol.setValue(tempval,1)
+    startVal = symbol.getValue()
+    if(event['id']=='CONFIG_SYS_CLK_UPLLIDIV'):
+        startVal &= ~int(Database.getSymbolValue("core","UPLLIDIV_MASK"),16)
+        startVal |= int(upllidiv[event['value']]) << Database.getSymbolValue("core","UPLLIDIV_MASKLSB")
+    elif(event['id']=='CONFIG_SYS_CLK_UPLLMULT'):
+        startVal &= ~int(Database.getSymbolValue("core","UPLLMULT_MASK"),16)
+        startVal |= int(upllmult[event['value']]) << Database.getSymbolValue("core","UPLLMULT_MASKLSB")
+    elif(event['id']=='CONFIG_SYS_CLK_UPLLODIV'):
+        startVal &= ~int(Database.getSymbolValue("core","UPLLODIV_MASK"),16)
+        startVal |= int(upllodiv[event['value']]) << Database.getSymbolValue("core","UPLLODIV_MASKLSB")
+    symbol.setValue(startVal,2)
 
 
 global updateRefocon
@@ -623,6 +611,10 @@ def scan_atdf_for_upllcon_fields(coreComponent, parentMenu):
     and default values for them
     '''
     global clkRegGrp_UPLLCON
+    global clkValGrp_UPLLCON__PLLIDIV
+    global upllidiv
+    global symbolUpllconPllidivMask
+    global symbolUpllconPllidivLsb
     global upllmult
     global symbolUpllconPllmultMask
     global symbolUpllconPllmultLsb
@@ -635,7 +627,32 @@ def scan_atdf_for_upllcon_fields(coreComponent, parentMenu):
     # Scan through bitfields of UPLLCON
     child = clkRegGrp_UPLLCON.getChildren()
     for upllconNode in child:
-        if(upllconNode.getAttribute("name") == "PLLMULT"):       # UPLLCON[PLLMULT] bitfield
+        if(upllconNode.getAttribute("name") == "PLLIDIV"):       # UPLLCON[PLLIDIV] bitfield
+            upllidiv = {}
+            _get_bitfield_names(clkValGrp_UPLLCON__PLLIDIV, upllidiv)
+            symbolUpllconPllidivVal = coreComponent.createComboSymbol("CONFIG_SYS_CLK_UPLLIDIV", parentMenu, upllidiv.keys())
+            symbolUpllconPllidivVal.setVisible(False)
+            symbolUpllconPllidivVal.setDescription(clkValGrp_UPLLCON__PLLIDIV.getAttribute("caption"))
+            symbolUpllconPllidivVal.setLabel(clkValGrp_UPLLCON__PLLIDIV.getAttribute("caption"))
+
+            # on reset, this field is set to DEVCFG2<10:8>, UPLLIDIV bitfield
+            targetsym = "CONFIG_UPLLIDIV"
+            upllidivVal = Database.getSymbolValue("core",targetsym)
+            for ii in upllidiv:
+                if(ii == upllidivVal):
+                    symbolUpllconPllidivVal.setDefaultValue(ii)
+            symbolUpllconPllidivVal.setDependencies(item_update, ["core."+targetsym])  # update UPLLIDIV whenever user updates DEVCFG2<10:8>
+
+            # bit mask and lsb for PLLIDIV
+            symbolUpllconPllidivMask = coreComponent.createStringSymbol("UPLLIDIV_MASK", None)
+            symbolUpllconPllidivMask.setVisible(False)
+            symbolUpllconPllidivMask.setDefaultValue(upllconNode.getAttribute("mask"))
+            symbolUpllconPllidivLsb = coreComponent.createIntegerSymbol("UPLLIDIV_MASKLSB", None)
+            symbolUpllconPllidivLsb.setVisible(False)
+            lsb = find_lsb_position(upllconNode.getAttribute("mask"))
+            symbolUpllconPllidivLsb.setDefaultValue(lsb)
+
+        elif(upllconNode.getAttribute("name") == "PLLMULT"):       # UPLLCON[PLLMULT] bitfield
             upllmult = {}
             _get_bitfield_names(clkValGrp_UPLLCON__PLLMULT, upllmult)
             symbolUpllconPllmultVal = coreComponent.createComboSymbol("CONFIG_SYS_CLK_UPLLMULT", parentMenu, upllmult.keys())
@@ -675,13 +692,23 @@ def scan_atdf_for_upllcon_fields(coreComponent, parentMenu):
     symbolUpllconValue = coreComponent.createHexSymbol("UPLLCON_VALUE", None)
     symbolUpllconValue.setVisible(False)
     initialUpllconVal = int((clkRegGrp_UPLLCON.getAttribute('initval')),16)
+
+    # make updates to initialUpllconVal due to upllidiv value being changed by DEVCFGx registers
+    initialUpllconVal &= ~int(symbolUpllconPllidivMask.getValue(),16)
+    initialUpllconVal |= int(upllidiv[symbolUpllconPllidivVal.getValue()]) << symbolUpllconPllidivLsb.getValue()
+
     symbolUpllconValue.setDefaultValue(initialUpllconVal)
-    symbolUpllconValue.setDependencies(updateUpllcon,['CONFIG_SYS_CLK_UPLLMULT','CONFIG_SYS_CLK_UPLLODIV'])
+    symbolUpllconValue.setDependencies(updateUpllcon,['CONFIG_SYS_CLK_UPLLIDIV','CONFIG_SYS_CLK_UPLLMULT','CONFIG_SYS_CLK_UPLLODIV'])
+
+    # get initial value of UPLLCON register from 'initval' field in atdf file
+    symbolUpllconDefaultValue = coreComponent.createHexSymbol("UPLLCON_DEFAULT_VALUE", None)
+    symbolUpllconDefaultValue.setVisible(False)
+    symbolUpllconDefaultValue.setDefaultValue(initialUpllconVal)
+    symbolUpllconDefaultValue.setDependencies(updateUpllcon,['CONFIG_SYS_CLK_UPLLIDIV'])
 
 
 if __name__ == "__main__":
     global atdf_content
-    global ds60001404  # subset of PIC32MX family have extra registers / bitfields others don't have.
     global clkRegGrp_OSCCON
     global clkRegGrp_OSCTUN
     global clkRegGrp_REFOCON
@@ -700,6 +727,7 @@ if __name__ == "__main__":
     global clkValGrp_REFOCON__ROSEL
     global clkValGrp_REFOTRIM__ROTRIM
     global clkValGrp_REFOTRIM__ROTRIM
+    global clkValGrp_UPLLCON__PLLIDIV
     global clkValGrp_UPLLCON__PLLMULT
     global clkValGrp_UPLLCON__PLLODIV
     global refconval
@@ -711,47 +739,13 @@ if __name__ == "__main__":
     global enSymId
     global symbolEnId
 
-    global ds60001168
-    global ds60001185
-    global ds60001290
-    global ds60001404
-    ds60001168 = False  #PIC32MX110F016B series
-    ds60001185 = False  #PIC32MX330F064H series
-    ds60001290 = False  #PIC32MX120F064H series
-    ds60001404 = False  #PIC32MX154F128B series
-
-    processor = Variables.get("__PROCESSOR")
-
-    ds60001168_Regex = re.compile(r'[12][12357]0F[\d+][BCD]')
-    ds60001185_Regex = re.compile(r'[34][357]0F')
-    ds60001290_Regex = re.compile(r'[12][12357]0F[\d+][HL]')
-    ds60001404_Regex = re.compile(r'[12][57]4F')
-
-    # decide on the family this processor belongs
-    if  ds60001168_Regex.search(processor):
-        ds60001168 = True
-    elif ds60001185_Regex.search(processor):
-        ds60001185 = True
-    elif ds60001290_Regex.search(processor):
-        ds60001290 = True
-    elif ds60001404_Regex.search(processor):
-        ds60001404 = True
-
-    # this symbol is used in ftl files
-    ds60001404Sym = coreComponent.createBooleanSymbol("DS60001404_SERIES", None)
-    if(ds60001404 == True):
-        ds60001404Sym.setDefaultValue(True)
-    else:
-        ds60001404Sym.setDefaultValue(False)
-    ds60001404Sym.setVisible(False)
-
     # this symbol is used in ftl files
     usbPartSym = coreComponent.createBooleanSymbol("USB_PART", None)
     usbPartSym.setDefaultValue(check_for_usb_part(processor))
     usbPartSym.setVisible(False)
 
     # atdf-specific areas
-    if(ds60001404 == False):
+    if(Database.getSymbolValue("core", "DEVICE_FAMILY") != "DS60001404"):
         clkValGrp_REFOCON__ROSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFOCON__ROSEL"]')
         clkValGrp_REFOCON__RODIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFOCON__RODIV"]')
         clkValGrp_REFOTRIM__ROTRIM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFOTRIM__ROTRIM"]')
@@ -766,6 +760,7 @@ if __name__ == "__main__":
         clkValGrp_REFOCON__ROSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFO1CON__ROSEL"]')
         clkValGrp_REFOCON__RODIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFO1CON__RODIV"]')
         clkValGrp_REFOTRIM__ROTRIM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFO1TRIM__ROTRIM"]')
+        clkValGrp_UPLLCON__PLLIDIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="UPLLCON__PLLIDIV"]')
         clkValGrp_UPLLCON__PLLMULT = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="UPLLCON__PLLMULT"]')
         clkValGrp_UPLLCON__PLLODIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="UPLLCON__PLLODIV"]')
         clkValGrp_REFOCON__ON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="REFO1CON__ON"]')
@@ -786,12 +781,6 @@ if __name__ == "__main__":
     atdf_file = open(atdf_file_path, "r")
     atdf_content = ElementTree.fromstring(atdf_file.read())
 
-    # Used to include family-specific code in ftl file
-    PROC_FAM_SYMBOL = coreComponent.createStringSymbol("PROC_FAMILY",None)
-    PROC_FAM_SYMBOL.setVisible(False)
-    PROC_FAM_SYMBOL.setDefaultValue('Default')              # set to nominal value
-    PROC_FAM_SYMBOL.setDefaultValue('PIC32MX')
-
     # Clock Manager Configuration Menu
     SYM_CLK_MENU = coreComponent.createMenuSymbol("CLK_MIPS32", None)
     SYM_CLK_MENU.setLabel("Clock Menu")
@@ -799,7 +788,10 @@ if __name__ == "__main__":
 
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
-    CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx:MXClockModel")
+    if(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404"):
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx_xlp:MXClockModel")
+    else:
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx1:MXClockModel")
 
     CLK_CFG_SETTINGS = coreComponent.createMenuSymbol("ClkCfgSettings", SYM_CLK_MENU)
     CLK_CFG_SETTINGS.setDependencies(enableMenu, ["ClkSvcMenu"])
@@ -818,18 +810,18 @@ if __name__ == "__main__":
     max_clk_freq_for_selected_temp.setReadOnly(True)
     max_clk_freq_for_selected_temp.setVisible(False)
 
-    if ds60001185 == True:
+    if Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001185":
         TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 80 MHz")
         TEMP_RANGE.addKey("RANGE2", "1", "-40C to +85C, DC to 100 MHz")
         TEMP_RANGE.addKey("RANGE3", "2", "0C to +70C, DC to 120 MHz")
         TEMP_RANGE.setDefaultValue(2)
         max_clk_freq_for_selected_temp.setDefaultValue(120000000)
-    elif (ds60001168 == True) or (ds60001290 == True):
+    elif Database.getSymbolValue("core", "DEVICE_FAMILY") in ["DS60001168","DS60001290"]:
         TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 40 MHz")
         TEMP_RANGE.addKey("RANGE2", "1", "-40C to +85C, DC to 50 MHz")
         TEMP_RANGE.setDefaultValue(1)
         max_clk_freq_for_selected_temp.setDefaultValue(50000000)
-    elif ds60001404 == True:
+    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404":
         TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 72 MHz")
         TEMP_RANGE.setReadOnly(True)
         TEMP_RANGE.setDefaultValue(0)
@@ -895,7 +887,7 @@ if __name__ == "__main__":
     # REFOTRIM
     scan_atdf_for_refotrim_fields(coreComponent, enSymbol)
 
-    if(ds60001404 == True):   # following registers only exist in this subset of PIC32MX family
+    if(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404"):   # following registers only exist in this subset of PIC32MX family
         symbolEnName = coreComponent.createBooleanSymbol("CONFIG_SYS_CLK_PBCLK_ENABLE", CLK_CFG_SETTINGS)
         symbolEnName.setLabel("Enable Peripheral Clock Bus")
         symbolEnName.setDefaultValue(True)
