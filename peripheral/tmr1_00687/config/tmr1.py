@@ -57,6 +57,8 @@ PrescalerDict = {
                     "1:1 prescale value"  : 1,
                 }
 
+global interruptsChildren
+interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -65,21 +67,17 @@ def _get_enblReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IECx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
-        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
-        index = int(vectorNumber / 32)
-        regName = "IEC" + str(index)
-        return regName
+    index = int(vectorNumber / 32)
+    regName = "IEC" + str(index)
+    return regName
 
 def _get_statReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IFSx register name as well as
     # mask and bit location within it for given interrupt
-    if(("PIC32MZ" in Variables.get("__PROCESSOR")) and
-        (("EF" in Variables.get("__PROCESSOR")) or ("DA" in Variables.get("__PROCESSOR")))):
-        index = int(vectorNumber / 32)
-        regName = "IFS" + str(index)
-        return regName
+    index = int(vectorNumber / 32)
+    regName = "IFS" + str(index)
+    return regName
 
 def _get_bitfield_names(node, outputList):
 
@@ -103,17 +101,34 @@ def _get_bitfield_names(node, outputList):
             dict["value"] = str(tempint)
             outputList.append(dict)
 
-def getIRQnumber(string):
+def getIRQIndex(string):
 
-    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+    irq_index = "-1"
 
     for param in interruptsChildren:
-        name = param.getAttribute("name")
-        if string == name:
-            irq_index = param.getAttribute("index")
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("name"))
+            if "irq-name" in param.getAttributeList():
+                name = str(param.getAttribute("irq-name"))
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
             break
 
     return irq_index
+
+def getVectorIndex(string):
+
+    vector_index = "-1"
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
 
 
 def find_key_value(value, keypairs):
@@ -285,7 +300,10 @@ def instantiateComponent(tmr1Component):
     tmr1InterruptHandler = tmr1Irq + "_INTERRUPT_HANDLER"
     tmr1InterruptHandlerLock = tmr1Irq + "_INTERRUPT_HANDLER_LOCK"
     tmr1InterruptVectorUpdate = tmr1Irq + "_INTERRUPT_ENABLE_UPDATE"
-    tmr1Irq_index = int(getIRQnumber(tmr1Irq))
+    tmr1Irq_index = int(getIRQIndex(tmr1Irq))
+
+    if tmr1Irq_index == -1:
+        tmr1Irq_index = int(getVectorIndex(tmr1Irq))
 
     enblRegName = _get_enblReg_parms(tmr1Irq_index)
     statRegName = _get_statReg_parms(tmr1Irq_index)
