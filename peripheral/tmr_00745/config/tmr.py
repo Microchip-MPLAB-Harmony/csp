@@ -235,7 +235,7 @@ def calcTimerFreq(symbol, event):
     if(src == 0):
         clock = component.getSymbolValue("TIMER_EXT_CLOCK_FREQ")
     else:
-        clock = Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK3_FREQ")
+        clock = Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")
     prescaler = component.getSymbolValue("TMR_PRESCALER_VALUE")
     symbol.setValue(int(clock)/int(prescaler), 2)
     slave = component.getSymbolValue("TIMER_SLAVE")
@@ -243,7 +243,7 @@ def calcTimerFreq(symbol, event):
 
 def timerMaxValue(symbol, event):
     component = symbol.getComponent()
-    clock = event["value"]
+    clock = component.getSymbolValue("TIMER_CLOCK_FREQ")
     if(clock == 0):
         clock = 1
     resolution = 1000.0/float(clock)
@@ -258,18 +258,19 @@ def timerMaxValue(symbol, event):
 def timerPeriodCalc(symbol, event):
     component = symbol.getComponent()
     clock = component.getSymbolValue("TIMER_CLOCK_FREQ")
-    if(clock == 0):
-        clock = 1
-    resolution = 1000.0/clock
-    period = component.getSymbolValue("TIMER_TIME_PERIOD_MS") / resolution
-    symbol.setValue(long(period), 2)
-    slave = component.getSymbolValue("TIMER_SLAVE")
-    symbol.setVisible(not bool(slave))
-    mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
-    if(mode_32 == 0):
-        symbol.setMax(4294967295)
+    if(clock != 0):
+        resolution = 1000.0/clock
+        period = component.getSymbolValue("TIMER_TIME_PERIOD_MS") / resolution
+        symbol.setValue(long(period), 2)
+        slave = component.getSymbolValue("TIMER_SLAVE")
+        symbol.setVisible(not bool(slave))
+        mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
+        if(mode_32 == 0):
+            symbol.setMax(4294967295)
+        else:
+            symbol.setMax(65535)
     else:
-        symbol.setMax(65535)
+        symbol.setValue(0, 2)
 
 def timerSlaveMode(symbol, event):
     if (event["value"] == 0):
@@ -403,28 +404,40 @@ def instantiateComponent(tmrComponent):
     tmrSym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
     tmrSym_CLOCK_FREQ.setVisible(not bool(slave))
     tmrSym_CLOCK_FREQ.setReadOnly(True)
-    tmrSym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK3_FREQ")))
-    tmrSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core.CONFIG_SYS_CLK_PBCLK3_FREQ","TMR_PRESCALER_VALUE",
+    tmrSym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    tmrSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core." + tmrInstanceName.getValue() + "_CLOCK_FREQUENCY","TMR_PRESCALER_VALUE",
         "TIMER_SRC_SEL", "TIMER_EXT_CLOCK_FREQ", "TIMER_SLAVE"])
+
+    clock = Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    if(clock != 0):
+        resolution = 1000.0 * tmrPrescalerValue.getValue()/float(clock)
+        max = (65535.0 * resolution)
+    else:
+        max = 0
 
     tmrSym_PERIOD_MS = tmrComponent.createFloatSymbol("TIMER_TIME_PERIOD_MS", None)
     tmrSym_PERIOD_MS.setLabel("Timer Period (Milli Sec)")
     tmrSym_PERIOD_MS.setDefaultValue(0.3)
     tmrSym_PERIOD_MS.setMin(0.0)
-    tmrSym_PERIOD_MS.setMax(0.65535)
-    tmrSym_PERIOD_MS.setDependencies(timerMaxValue, ["core.CONFIG_SYS_CLK_PBCLK3_FREQ", "TIMER_CLOCK_FREQ",
+    tmrSym_PERIOD_MS.setMax(max)
+    tmrSym_PERIOD_MS.setDependencies(timerMaxValue, ["core." + tmrInstanceName.getValue() + "_CLOCK_FREQUENCY", "TIMER_CLOCK_FREQ",
         "TIMER_SLAVE", "TIMER_32BIT_MODE_SEL"])
     tmrSym_PERIOD_MS.setVisible(not bool(slave))
+
+    if clock != 0:
+        period = tmrSym_PERIOD_MS.getValue() / resolution
+    else:
+        period = 0
 
     #Timer1 Period Register
     tmrSym_PR2 = tmrComponent.createLongSymbol("TIMER_PERIOD", tmrSym_PERIOD_MS)
     tmrSym_PR2.setLabel("Period Register")
-    tmrSym_PR2.setDefaultValue(30000)
+    tmrSym_PR2.setDefaultValue(long(period))
     tmrSym_PR2.setReadOnly(True)
     tmrSym_PR2.setMin(0)
     tmrSym_PR2.setMax(65535)
     tmrSym_PR2.setVisible(not bool(slave))
-    tmrSym_PR2.setDependencies(timerPeriodCalc, ["core.CONFIG_SYS_CLK_PBCLK3_FREQ", "TIMER_TIME_PERIOD_MS",
+    tmrSym_PR2.setDependencies(timerPeriodCalc, ["core." + tmrInstanceName.getValue() + "_CLOCK_FREQUENCY", "TIMER_TIME_PERIOD_MS",
         "TIMER_CLOCK_FREQ", "TIMER_SLAVE", "TIMER_32BIT_MODE_SEL"])
 
     #timer SIDL configuration

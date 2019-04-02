@@ -230,12 +230,13 @@ def calcTimerFreq(symbol, event):
     if(src == 0):
         clock = component.getSymbolValue("TIMER1_EXT_CLOCK_FREQ")
     else:
-        clock = Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK3_FREQ")
+        clock = Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")
     prescaler = component.getSymbolValue("TMR1_PRESCALER_VALUE")
     symbol.setValue(int(clock)/int(prescaler), 2)
 
 def timerMaxValue(symbol, event):
-    clock = event["value"]
+    component = symbol.getComponent()
+    clock = component.getSymbolValue("TIMER1_CLOCK_FREQ")
     if(clock == 0):
         clock = 1
     resolution = 1000.0/float(clock)
@@ -244,11 +245,12 @@ def timerMaxValue(symbol, event):
 def timerPeriodCalc(symbol, event):
     component = symbol.getComponent()
     clock = component.getSymbolValue("TIMER1_CLOCK_FREQ")
-    if(clock == 0):
-        clock = 1
-    resolution = 1000.0/clock
-    period = component.getSymbolValue("TIMER1_TIME_PERIOD_MS") / resolution
-    symbol.setValue(long(period), 2)
+    if(clock != 0):
+        resolution = 1000.0/clock
+        period = component.getSymbolValue("TIMER1_TIME_PERIOD_MS") / resolution
+        symbol.setValue(long(period), 2)
+    else:
+        symbol.setValue(0, 2)
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -353,25 +355,37 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
     tmr1Sym_CLOCK_FREQ.setVisible(True)
     tmr1Sym_CLOCK_FREQ.setReadOnly(True)
-    tmr1Sym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK3_FREQ")))
-    tmr1Sym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core.CONFIG_SYS_CLK_PBCLK3_FREQ",
+    tmr1Sym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    tmr1Sym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core." + tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY",
         "TMR1_PRESCALER_VALUE", "TIMER1_SRC_SEL", "TIMER1_EXT_CLOCK_FREQ"])
+
+    clock = Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")
+    if(clock != 0):
+        resolution = 1000.0 * tmr1PrescalerValue.getValue()/float(clock)
+        max = (65535.0 * resolution)
+    else:
+        max = 0
 
     tmr1Sym_PERIOD_MS = tmr1Component.createFloatSymbol("TIMER1_TIME_PERIOD_MS", None)
     tmr1Sym_PERIOD_MS.setLabel("Timer Period (Milli Sec)")
     tmr1Sym_PERIOD_MS.setDefaultValue(0.3)
     tmr1Sym_PERIOD_MS.setMin(0.0)
-    tmr1Sym_PERIOD_MS.setMax(0.65535)
-    tmr1Sym_PERIOD_MS.setDependencies(timerMaxValue, ["core.CONFIG_SYS_CLK_PBCLK3_FREQ", "TIMER1_CLOCK_FREQ"])
+    tmr1Sym_PERIOD_MS.setMax(max)
+    tmr1Sym_PERIOD_MS.setDependencies(timerMaxValue, ["core." + tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY", "TIMER1_CLOCK_FREQ"])
+
+    if clock != 0:
+        period = tmr1Sym_PERIOD_MS.getValue() / resolution
+    else:
+        period = 0
 
     #Timer1 Period Register
     tmr1Sym_PR1 = tmr1Component.createLongSymbol("TIMER1_PERIOD", tmr1Sym_PERIOD_MS)
     tmr1Sym_PR1.setLabel("Period Register")
-    tmr1Sym_PR1.setDefaultValue(30000)
+    tmr1Sym_PR1.setDefaultValue(long(period))
     tmr1Sym_PR1.setReadOnly(True)
     tmr1Sym_PR1.setMin(0)
     tmr1Sym_PR1.setMax(65535)
-    tmr1Sym_PR1.setDependencies(timerPeriodCalc, ["core.CONFIG_SYS_CLK_PBCLK3_FREQ", "TIMER1_TIME_PERIOD_MS", "TIMER1_CLOCK_FREQ"])
+    tmr1Sym_PR1.setDependencies(timerPeriodCalc, ["core." + tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY", "TIMER1_TIME_PERIOD_MS", "TIMER1_CLOCK_FREQ"])
 
     #timer SIDL configuration
     sidl_names = []
