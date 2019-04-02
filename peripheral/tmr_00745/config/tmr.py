@@ -61,6 +61,9 @@ global tmrInterruptVector
 global tmrInterruptHandlerLock
 global tmrInterruptHandler
 global tmrInterruptVectorUpdate
+
+global interruptsChildren
+interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -103,17 +106,34 @@ def _get_bitfield_names(node, outputList):
             dict["value"] = str(tempint)
             outputList.append(dict)
 
-def getIRQnumber(string):
+def getIRQIndex(string):
 
-    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+    irq_index = "-1"
 
     for param in interruptsChildren:
-        name = param.getAttribute("name")
-        if string == name:
-            irq_index = param.getAttribute("index")
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("name"))
+            if "irq-name" in param.getAttributeList():
+                name = str(param.getAttribute("irq-name"))
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
             break
 
     return irq_index
+
+def getVectorIndex(string):
+
+    vector_index = "-1"
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
 
 ###################################################################################################
 ########################################## Callbacks  #############################################
@@ -177,7 +197,9 @@ def IECRegName(symbol, event):
         tmrIrq = "TIMER_" + str(int(instanceNum) + 1)
     else:
         tmrIrq = "TIMER_" + str(int(instanceNum))
-    tmrIrq_index = int(getIRQnumber(tmrIrq))
+    tmrIrq_index = int(getIRQIndex(tmrIrq))
+    if tmrIrq_index == -1:
+        tmrIrq_index = int(getVectorIndex(tmrIrq))
     enblRegName = _get_enblReg_parms(tmrIrq_index)
     symbol.setValue(enblRegName, 2)
 
@@ -186,7 +208,9 @@ def IFSRegName(symbol, event):
         tmrIrq = "TIMER_" + str(int(instanceNum) + 1)
     else:
         tmrIrq = "TIMER_" + str(int(instanceNum))
-    tmrIrq_index = int(getIRQnumber(tmrIrq))
+    tmrIrq_index = int(getIRQIndex(tmrIrq))
+    if tmrIrq_index == -1:
+        tmrIrq_index = int(getVectorIndex(tmrIrq))
     statRegName = _get_statReg_parms(tmrIrq_index)
     symbol.setValue(statRegName, 2)
 
@@ -473,7 +497,10 @@ def instantiateComponent(tmrComponent):
     tmrInterruptHandler = tmrIrq + "_INTERRUPT_HANDLER"
     tmrInterruptHandlerLock = tmrIrq + "_INTERRUPT_HANDLER_LOCK"
     tmrInterruptVectorUpdate = tmrIrq + "_INTERRUPT_ENABLE_UPDATE"
-    tmrIrq_index = int(getIRQnumber(tmrIrq))
+    tmrIrq_index = int(getIRQIndex(tmrIrq))
+
+    if tmrIrq_index == -1:
+        tmrIrq_index = int(getVectorIndex(tmrIrq))
 
     tmrSym_irq = tmrComponent.createStringSymbol("TIMER_IRQ", None)
     tmrSym_irq.setVisible(False)
