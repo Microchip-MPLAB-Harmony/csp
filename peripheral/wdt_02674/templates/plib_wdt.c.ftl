@@ -59,28 +59,27 @@
 void ${WDT_INSTANCE_NAME}_Enable(void)
 {
     /* ON = 1 */
-    WDTCONSET = _WDTCON_ON_MASK;
+    WDTCONbits.ON = 1;
 }
 
 void ${WDT_INSTANCE_NAME}_Disable(void)
 {
-    /* Disable WDT */
     /* ON = 0 */
-    WDTCONCLR = _WDTCON_ON_MASK;
+    WDTCONbits.ON = 0;
 }
 
 </#if>
-<#if CONFIG_WINDIS == "WINDOW">
+<#if CONFIG_WINDIS == "NORMAL">
 void ${WDT_INSTANCE_NAME}_WindowEnable( void )
 {
     /* WDTWINEN = 1 */
-    WDTCONSET = _WDTCON_WDTWINEN_MASK;
+    WDTCONbits.WDTWINEN = 1;
 }
 
 void ${WDT_INSTANCE_NAME}_WindowDisable( void )
 {
     /* WDTWINEN = 0 */
-    WDTCONCLR = _WDTCON_WDTWINEN_MASK;
+    WDTCONbits.WDTWINEN = 0;
 }
 
 </#if>

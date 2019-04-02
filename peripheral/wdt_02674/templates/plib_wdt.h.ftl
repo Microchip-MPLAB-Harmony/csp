@@ -72,7 +72,7 @@ void ${WDT_INSTANCE_NAME}_Enable( void );
 void ${WDT_INSTANCE_NAME}_Disable( void );
 
 </#if>
-<#if CONFIG_WINDIS == "WINDOW">
+<#if CONFIG_WINDIS == "NORMAL">
 void ${WDT_INSTANCE_NAME}_WindowEnable( void );
 
 void ${WDT_INSTANCE_NAME}_WindowDisable( void );
