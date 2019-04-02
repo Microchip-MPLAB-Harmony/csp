@@ -40,17 +40,18 @@
 #include "plib_${ICAP_INSTANCE_NAME?lower_case}.h"
 
 <#assign INDEX = ICAP_INSTANCE_NUM>
-
-<#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
-
-ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}errObj;
+<#if ICAP_NUM_INT_LINES == 1>
+    <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true" || ICAP_INTERRUPT_ENABLE?c == "true">
+        <#lt>ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
+    </#if>
+<#else>
+    <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
+        <#lt>ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}errObj;
+    </#if>
+    <#if ICAP_INTERRUPT_ENABLE?c == "true">
+        <#lt>ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
+    </#if>
 </#if>
-
-<#if ICAP_INTERRUPT_ENABLE?c == "true">
-
-ICAP_OBJECT ${ICAP_INSTANCE_NAME?lower_case}Obj;
-</#if>
-
 <#--Implementation-->
 // *****************************************************************************
 
@@ -78,14 +79,18 @@ void ${ICAP_INSTANCE_NAME}_Initialize (void)
     /*Setup IC${INDEX}CON    */
     /*ICM     = ${ICAP_ICxCON_ICM}        */
     /*ICI     = ${ICAP_ICxCON_ICI}        */
+  <#if ICAP_CFGCON_ICACLK??>
     /*ICTMR = ${ICAP_CFGCON_ICACLK?then('${ICAP_ICxCON_ICTMR_ALT}','${ICAP_ICxCON_ICTMR}')}*/
+  <#else>
+    /*ICTMR = ${ICAP_ICxCON_ICTMR}*/
+  </#if>
     /*C32     = ${ICAP_ICxCON_C32}        */
     /*FEDGE = ${ICAP_ICxCON_FEDGE}        */
     /*SIDL     = ${ICAP_ICxCON_SIDL?then('true', 'false')}    */
 
     IC${INDEX}CON = 0x${ICxCON_VALUE};
 
-    <#if ICAP_CFGCON_ICACLK?c == 'true'>
+    <#if ICAP_CFGCON_ICACLK?? && ICAP_CFGCON_ICACLK?c == 'true'>
     CFGCON |= _CFGCON_ICACLK_MASK;
     </#if>
 
@@ -126,8 +131,16 @@ uint16_t ${ICAP_INSTANCE_NAME}_CaptureBufferRead (void)
 }
 </#if>
 
+<#assign ICAP_Interrupt = false>
+    <#if ICAP_NUM_INT_LINES == 1 && (ICAP_INTERRUPT_ENABLE?c == "true" || ICAP_ERROR_INTERRUPT_ENABLE?c == "true")>
+      <#assign ICAP_Interrupt = true>
+    <#else>
+      <#if ICAP_INTERRUPT_ENABLE?c == "true">
+        <#assign ICAP_Interrupt = true>
+      </#if>
+    </#if>
 
-<#if ICAP_INTERRUPT_ENABLE?c == "true">
+<#if ICAP_Interrupt == true>
 
 void ${ICAP_INSTANCE_NAME}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
 {
@@ -137,15 +150,27 @@ void ${ICAP_INSTANCE_NAME}_CallbackRegister(ICAP_CALLBACK callback, uintptr_t co
 
 void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
 {
+<#if ICAP_NUM_INT_LINES == 1>
+    if ((${ICAPx_IFS_REG} & _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK) && (${ICAPx_IEC_REG} & _${ICAPx_IEC_REG}_IC${INDEX}IE_MASK))
+    {
+        ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
+    }
+    if ((${ERROR_IFS_REG} & _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK) && (${ERROR_IEC_REG} & _${ERROR_IEC_REG}_IC${INDEX}EIE_MASK))
+    {
+        ${ERROR_IFS_REG}CLR = _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK;    //Clear IRQ flag
+    }
+<#else>
     ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
+</#if>
 
     if( (${ICAP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
         ${ICAP_INSTANCE_NAME?lower_case}Obj.callback(${ICAP_INSTANCE_NAME?lower_case}Obj.context);
     }
 }
+</#if>
 
-<#else>
+<#if ICAP_INTERRUPT_ENABLE?c == "false">
 
 bool ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void)
 {
@@ -154,7 +179,7 @@ bool ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void)
     return status;
 }
 </#if>
-<#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
+<#if ICAP_NUM_INT_LINES != 1 && ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
 
 void ${ICAP_INSTANCE_NAME}_ErrorCallbackRegister(ICAP_CALLBACK callback, uintptr_t context)
 {
@@ -171,7 +196,8 @@ void INPUT_CAPTURE_${INDEX}_ERROR_InterruptHandler(void)
         ${ICAP_INSTANCE_NAME?lower_case}errObj.callback(${ICAP_INSTANCE_NAME?lower_case}errObj.context);
     }
 }
-<#else>
+</#if>
+<#if ICAP_ERROR_INTERRUPT_ENABLE?c == "false">
 
 bool ${ICAP_INSTANCE_NAME}_ErrorStatusGet (void)
 {
