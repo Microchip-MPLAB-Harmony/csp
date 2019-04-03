@@ -123,7 +123,11 @@ static void initPeriphClk(void)
         <#assign DIV = .vars["CLK_"+name+"_GCLKDIV"]>
         { ID_${name}, 1, PMC_PCR_GCLKCSS_${CSS}, ${DIV} },
         <#else>
+        <#if name == "EXT_MEMORY">
+        { ID_SDRAMC, 0, 0, 0},
+        <#else>
         { ID_${name}, 0, 0, 0},
+        </#if>
         </#if>
         </#if>
         </#if>
