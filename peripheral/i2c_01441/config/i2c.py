@@ -108,7 +108,7 @@ def baudRateCalc(clk, baud):
 
 def baudRateTrigger(symbol, event):
 
-    clk = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ"))
+    clk = int(Database.getSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     baud = int(i2cSym_BAUD.getValue())
 
     brgVal = baudRateCalc(clk, baud)
@@ -116,7 +116,7 @@ def baudRateTrigger(symbol, event):
 
 def i2cSourceFreq(symbol, event):
 
-    symbol.setValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")), 2)
+    symbol.setValue(int(Database.getSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -144,8 +144,8 @@ def instantiateComponent(i2cComponent):
     i2cSym_ClkValue = i2cComponent.createIntegerSymbol("I2C_CLOCK_FREQ", None)
     i2cSym_ClkValue.setLabel("I2C Clock Frequency")
     i2cSym_ClkValue.setReadOnly(True)
-    i2cSym_ClkValue.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ")))
-    i2cSym_ClkValue.setDependencies(i2cSourceFreq, ["core." + "CONFIG_SYS_CLK_PBCLK2_FREQ"])
+    i2cSym_ClkValue.setDefaultValue(int(Database.getSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    i2cSym_ClkValue.setDependencies(i2cSourceFreq, ["core." + i2cInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     #DISSLW: Slew Rate Control Disable bit
     i2cSym_SlewRateControl = i2cComponent.createBooleanSymbol("I2C_DISSLW", None)
@@ -161,15 +161,17 @@ def instantiateComponent(i2cComponent):
 
     #Baud Rate
     i2cSym_BAUD = i2cComponent.createLongSymbol("I2C_CLOCK_SPEED", None)
-    i2cSym_BAUD.setLabel("I2C Baud Rate")
+    i2cSym_BAUD.setLabel("I2C Baud Rate (Hz)")
     i2cSym_BAUD.setDefaultValue(50000)
     i2cSym_BAUD.setMin(1)
 
     ## Baud Rate Frequency dependency
     i2cSym_BRGValue = i2cComponent.createIntegerSymbol("BRG_VALUE", None)
-    i2cSym_BRGValue.setDefaultValue(baudRateCalc(i2cSym_ClkValue.getValue(), i2cSym_BAUD.getValue()))
     i2cSym_BRGValue.setVisible(False)
-    i2cSym_BRGValue.setDependencies(baudRateTrigger, ["I2C_CLOCK_SPEED", "core." + "CONFIG_SYS_CLK_PBCLK2_FREQ"])
+    i2cSym_BRGValue.setDependencies(baudRateTrigger, ["I2C_CLOCK_SPEED", "core." + i2cInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    #Use setValue instead of setDefaultValue to store symbol value in default.xml
+    i2cSym_BRGValue.setValue(baudRateCalc(i2cSym_ClkValue.getValue(), i2cSym_BAUD.getValue()) , 1)
 
     ## Master Interrupt Setup
     i2cMasterInt = i2cInstanceName.getValue() + "_MASTER"
