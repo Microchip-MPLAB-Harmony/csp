@@ -85,7 +85,7 @@ def instantiateComponent(ddrComponent):
     #DDR Size (MB) 
     ddrSym_DDRsize = ddrComponent.createIntegerSymbol("DDR_SIZE_MB", None)
     ddrSym_DDRsize.setLabel("DDR Size (MB)")
-    ddrSym_DDRsize.setDefaultValue(128)
+    ddrSym_DDRsize.setDefaultValue(32)
     ddrSym_DDRsize.setMin(0)
     ddrSym_DDRsize.setMax(256)
     ddrSym_DDRsize.setVisible(True)  
@@ -206,7 +206,7 @@ def instantiateComponent(ddrComponent):
     #Number of Column Bits - number field
     ddrSym_ColumnBits = ddrComponent.createIntegerSymbol("DDR_COL_BITS", ddrSym_ADDRESSING_STRING)
     ddrSym_ColumnBits.setLabel("Number of Column Bits")
-    ddrSym_ColumnBits.setDefaultValue(10)
+    ddrSym_ColumnBits.setDefaultValue(9)
     ddrSym_ColumnBits.setMin(0)
     ddrSym_ColumnBits.setMax(31)
     ddrSym_ColumnBits.setVisible(True)    
@@ -220,7 +220,7 @@ def instantiateComponent(ddrComponent):
     #Number of Bank Bits - number field
     ddrSym_BankBits = ddrComponent.createIntegerSymbol("DDR_BANK_BITS", ddrSym_ADDRESSING_STRING)
     ddrSym_BankBits.setLabel("Number of Bank Bits")
-    ddrSym_BankBits.setDefaultValue(3)
+    ddrSym_BankBits.setDefaultValue(2)
     ddrSym_BankBits.setMin(0)
     ddrSym_BankBits.setMax(31)
     ddrSym_BankBits.setVisible(True)     
@@ -340,7 +340,7 @@ def instantiateComponent(ddrComponent):
     #default 0
     ddrSym_FourBankActWin = ddrComponent.createIntegerSymbol("DDR_TFAW", ddrSym_TIMING_STRING)
     ddrSym_FourBankActWin.setLabel("Four Bank Activate Window (tFAW, psec)")
-    ddrSym_FourBankActWin.setDefaultValue(45000)
+    ddrSym_FourBankActWin.setDefaultValue(35000)
     #ddrSym_FourBankActWin.setMin(0)
     #ddrSym_FourBankActWin.setMax(31)
     ddrSym_FourBankActWin.setVisible(True)     
@@ -419,7 +419,7 @@ def instantiateComponent(ddrComponent):
     #Number of Host Commands
     ddrSym_DDRCMDISSUE_NUMHOSTCMDS = ddrComponent.createHexSymbol("DDR_NUM_CMDS", ddrSym_HOSTCMD_STRING)
     ddrSym_DDRCMDISSUE_NUMHOSTCMDS.setLabel("Number of Host Commands")
-    ddrSym_DDRCMDISSUE_NUMHOSTCMDS.setDefaultValue(12)
+    ddrSym_DDRCMDISSUE_NUMHOSTCMDS.setDefaultValue(12-1)
     ddrSym_DDRCMDISSUE_NUMHOSTCMDS.setVisible(True)
     
     #On-Die Termination
@@ -450,7 +450,7 @@ def instantiateComponent(ddrComponent):
     #Enable ODT for Writes?
     ddrSym_DDRODTENCFG_ODTWEN = ddrComponent.createBooleanSymbol("DDR_ODT_WRITE_ENABLE", ddrSym_TERMINATION_STRING)
     ddrSym_DDRODTENCFG_ODTWEN.setLabel("Enable On-Die Termination for Writes")
-    ddrSym_DDRODTENCFG_ODTWEN.setDefaultValue(False)
+    ddrSym_DDRODTENCFG_ODTWEN.setDefaultValue(True)
     ddrSym_DDRODTENCFG_ODTWEN.setVisible(True)     
         #Number of Clocks ODT is Turned on for Writes
     ddrSym_DDRODTCFG_ODTWLEN = ddrComponent.createIntegerSymbol("DDR_ODT_WRITE_CLOCKS", ddrSym_DDRODTENCFG_ODTWEN)
@@ -474,14 +474,14 @@ def instantiateComponent(ddrComponent):
     #Enable PHY ODT - Boolean
     ddrSym_DDRPHYPADCON_ODTEN = ddrComponent.createBooleanSymbol("DDR_PHY_ODT_ENABLE", ddrSym_PHYCONFIG_STRING)
     ddrSym_DDRPHYPADCON_ODTEN.setLabel("On-Die Termination Enable bit")
-    ddrSym_DDRPHYPADCON_ODTEN.setDefaultValue(False)
+    ddrSym_DDRPHYPADCON_ODTEN.setDefaultValue(True)
     ddrSym_DDRPHYPADCON_ODTEN.setVisible(True)
     #ODTSEL On-Die Termination Select bit
     ddrODTSEL_names = []
     _get_bitfield_names(ddrValGrp_DDRPHYPADCON_ODTSEL, ddrODTSEL_names)
     ddrSym_DDRPHYPADCON_ODTSEL = ddrComponent.createKeyValueSetSymbol("DDR_PHY_ODT_VALUE", ddrSym_PHYCONFIG_STRING)
     ddrSym_DDRPHYPADCON_ODTSEL.setLabel("PHY On-Die Termination Value")
-    ddrSym_DDRPHYPADCON_ODTSEL.setDefaultValue(0)
+    ddrSym_DDRPHYPADCON_ODTSEL.setDefaultValue(1)
     ddrSym_DDRPHYPADCON_ODTSEL.setOutputMode("Value")
     ddrSym_DDRPHYPADCON_ODTSEL.setDisplayMode("Description")
     for ii in ddrODTSEL_names:
@@ -548,19 +548,19 @@ def instantiateComponent(ddrComponent):
     #Enable Pad Receivers on Bidirectional I/Os?
     ddrSym_DDRPHYPADCON_RCVREN = ddrComponent.createBooleanSymbol("DDR_PHY_RCVREN", ddrSym_PHYCONFIG_STRING)
     ddrSym_DDRPHYPADCON_RCVREN.setLabel("Receiver Enable bit")
-    ddrSym_DDRPHYPADCON_RCVREN.setDefaultValue(False)
+    ddrSym_DDRPHYPADCON_RCVREN.setDefaultValue(True)
     ddrSym_DDRPHYPADCON_RCVREN.setVisible(True)     
     #Enable Pad Write Command Delay?
     ddrSym_DDRPHYPADCON_WRCMDDLY = ddrComponent.createBooleanSymbol("DDR_PHY_WR_CMD_DLY", ddrSym_PHYCONFIG_STRING)
     ddrSym_DDRPHYPADCON_WRCMDDLY.setLabel("Write Command Delay bit")
-    ddrSym_DDRPHYPADCON_WRCMDDLY.setDefaultValue(False)
+    ddrSym_DDRPHYPADCON_WRCMDDLY.setDefaultValue(True)
     ddrSym_DDRPHYPADCON_WRCMDDLY.setVisible(True)     
     #Preamble Delay for Writes 
     ddrPREAMBDLY_names = []
     _get_bitfield_names(ddrValGrp_DDRPHYPADCON_PREAMBDLY, ddrPREAMBDLY_names)
     ddrSym_DDRPHYPADCON_PREAMBDLY = ddrComponent.createKeyValueSetSymbol("DDR_PHY_PRE_DLY", ddrSym_PHYCONFIG_STRING)
     ddrSym_DDRPHYPADCON_PREAMBDLY.setLabel("Preamble Delay bits")
-    ddrSym_DDRPHYPADCON_PREAMBDLY.setDefaultValue(0)
+    ddrSym_DDRPHYPADCON_PREAMBDLY.setDefaultValue(2)
     ddrSym_DDRPHYPADCON_PREAMBDLY.setOutputMode("Value")
     ddrSym_DDRPHYPADCON_PREAMBDLY.setDisplayMode("Description")
     for ii in ddrPREAMBDLY_names:
