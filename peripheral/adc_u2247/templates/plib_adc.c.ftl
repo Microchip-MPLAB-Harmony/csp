@@ -60,7 +60,7 @@
 <#assign ADC_EVCTRL_VAL = "">
 <#assign ADC_INTENSET_VAL = "">
 <#assign ADC_CTRLA_VAL = "">
-<#if ADC_INPUTCTRL_MUXNEG != "GND">
+<#if ADC_CTRLC_DIFFMODE == true>
     <#assign ADC_CTRLC_VAL = "ADC_CTRLC_DIFFMODE_Msk">
 </#if>
 <#if ADC_CTRLC_LEFTADJ == true>
@@ -173,28 +173,30 @@
 ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
-<#if ADC_LOAD_CALIB == true >
-<#if ADC_INSTANCE_NAME = "ADC0">
-#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
-#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
+<#if ADC_LOAD_CALIB? has_content>
+    <#if ADC_LOAD_CALIB == true >
+        <#if ADC_INSTANCE_NAME = "ADC0">
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
 
-#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
-#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
 
-<#elseif ADC_INSTANCE_NAME = "ADC1">
-#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (6)
-#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
+        <#elseif ADC_INSTANCE_NAME = "ADC1">
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (6)
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
 
-#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (9)
-#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (9)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
 
-<#elseif ADC_INSTANCE_NAME = "ADC">
-#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
-#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
+        <#elseif ADC_INSTANCE_NAME = "ADC">
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
 
-#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
-#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
-</#if>
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
+        </#if>
+    </#if>
 </#if>
 
 // *****************************************************************************
@@ -214,30 +216,36 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     {
         /* Wait for Synchronization */
     }
-
-<#if ADC_LOAD_CALIB == true >
-    /* Write linearity calibration in BIASREFBUF and bias calibration in BIASCOMP */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_BIASREFBUF(((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_LINEARITY_Msk))) \
-        | ADC_CALIB_BIASCOMP((((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_BIASCAL_Msk) >> ${ADC_INSTANCE_NAME}_BIASCAL_POS));
+<#if ADC_LOAD_CALIB? has_content>
+    <#if ADC_LOAD_CALIB == true >
+    <#lt>    /* Write linearity calibration in BIASREFBUF and bias calibration in BIASCOMP */
+    <#lt>    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_BIASREFBUF(((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_LINEARITY_Msk))) \
+    <#lt>        | ADC_CALIB_BIASCOMP((((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_BIASCAL_Msk) >> ${ADC_INSTANCE_NAME}_BIASCAL_POS));
+    </#if>
 </#if>
 
 <#if ADC_CTRLA_SLAVEEN == true>
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_SLAVEEN_Msk;
 <#else>
-    /* prescaler */
+    /* Prescaler */
     ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER};
 </#if>
     /* Sampling length */
     ${ADC_INSTANCE_NAME}_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(${ADC_SAMPCTRL_SAMPLEN - 1}U);
 
-    /* reference */
+    /* Reference */
     ${ADC_INSTANCE_NAME}_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_${ADC_REFCTRL_REFSEL};
 
 <#if ADC_SEQCTRL_VAL?has_content>
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQCTRL = ${ADC_SEQCTRL_VAL};
 <#else>
-    /* positive and negative input pins */
+    <#if ADC_CTRLC_DIFFMODE == true>
+    /* Positive and negative input pins */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG};
+    <#else>
+    /* Input pin */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS};
+    </#if>
 </#if>
 
     /* Resolution & Operation Mode */
