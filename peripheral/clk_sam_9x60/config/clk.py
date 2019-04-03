@@ -180,24 +180,58 @@ def update_tc_freq(symbol, event):
             clk_frequency = Database.getSymbolValue("core", "MCK_FREQUENCY")
         symbol.setValue(clk_frequency, 2)
 
+def update_flexcomm_clock_frequency(symbol, event):
+    frequency = -1
+    instance_name = symbol.getID().split("_")[0]
+    mck = event['source'].getSymbolByID("MCK_FREQUENCY")
+    gclk = event['source'].getSymbolByID(instance_name + "_GCLK_FREQUENCY")
+    op_mode = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_MODE")
+    # Flexcom is operating as USART
+    if op_mode == 1 :
+        # Get the USART mode source clock
+        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_USART_MR_USCLKS")
+        # Source clock is bus clock
+        if source_clock == 0:
+            frequency = mck.getValue()
+        # Source clock is bus clock / 8
+        elif source_clock == 1:
+            frequency = mck.getValue() / 8
+        # Source clock is GCLK
+        elif source_clock == 2:
+            frequency = gclk.getValue()
+        # Source clock is external, set the internal frequency to zero
+        else:
+            frequency = 0
+    #Flexcom is operating in SPI mode
+    elif op_mode == 2:
+        #Get the SPI mode source clock
+        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_SPI_MR_BRSRCCLK")
+        # Source clock is bus clock
+        if source_clock == 0:
+            frequency = mck.getValue()
+        # Source clock is GCLK
+        elif source_clock == 1:
+            frequency = gclk.getValue()
+    #Flexcom is operating in TWI mode
+    elif op_mode == 3:
+        #Get the SPI mode source clock
+        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_TWI_CWGR_BRSRCCLK")
+        # Source clock is bus clock
+        if source_clock == 0:
+            frequency = mck.getValue()
+        # Source clock is GCLK
+        elif source_clock == 1:
+            frequency = gclk.getValue()
+
+    # Update the frequency only if the clock selections are valid
+    if frequency >= 0:
+        symbol.setValue(frequency, 0)
+
 #This maps the instance name to the symbol in that instance that determines if we use the peripheral clock or the generic clock.  For the
 #generic handler we assume it is a keyvalueset and 0 maps to the peripheral clock.  Peripherals that don't match this assumption will need
 #to use their own update function and map it in gclk_update_map
 global gclk_dependency_map
 gclk_dependency_map = {
-    "FLEXCOM0" : "SOME_SYMBOL",
-    "FLEXCOM1" : "SOME_SYMBOL",
-    "FLEXCOM2" : "SOME_SYMBOL",
-    "FLEXCOM3" : "SOME_SYMBOL",
-    "FLEXCOM4" : "SOME_SYMBOL",
-    "FLEXCOM5" : "SOME_SYMBOL",
-    "FLEXCOM6" : "SOME_SYMBOL",
-    "FLEXCOM7" : "SOME_SYMBOL",
-    "FLEXCOM8" : "SOME_SYMBOL",
-    "FLEXCOM9" : "SOME_SYMBOL",
-    "FLEXCOM10" : "SOME_SYMBOL",
-    "FLEXCOM11" : "SOME_SYMBOL",
-    "FLEXCOM12" : "SOME_SYMBOL",
     "SDMMC0" : "SOME_SYMBOL",
     "SDMMC1" : "SOME_SYMBOL",
     "TC0" : "SOME_SYMBOL",
@@ -231,7 +265,7 @@ def update_dbgu_clock_frequency(symbol, event):
 
 #map of gclk capable peripherals to their update functions
 gclk_update_map = {
-    "FLEXCOM" : generic_gclk_update_freq,
+    "FLEXCOM" : update_flexcomm_clock_frequency,
     "SDMMC" : generic_gclk_update_freq,
     "TC" : generic_gclk_update_freq,
     "ADC" : generic_gclk_update_freq,
@@ -632,7 +666,19 @@ for module_node in peripherals_node.getChildren():
         else:
             generic_clocks_map.addKey(instance_name, clock_id_node.getAttribute("value"), "")
 
-            pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")], ['MCK_FREQUENCY', instance_name+'_GCLK_FREQUENCY', instance_name.lower()+"."+gclk_dependency_map[instance_name]])
+            if module_node.getAttribute("name") == "FLEXCOM":
+                pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")],
+                                        ['MCK_FREQUENCY',
+                                        instance_name + '_GCLK_FREQUENCY',
+                                        instance_name.lower() + "." + "FLEXCOM_MODE",
+                                        instance_name.lower() + "." + "FLEXCOM_USART_MR_USCLKS",
+                                        instance_name.lower() + "." + "FLEXCOM_SPI_MR_BRSRCCLK",
+                                        instance_name.lower() + "." + "FLEXCOM_TWI_CWGR_BRSRCCLK"])
+            else:
+                pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")],
+                                        ['MCK_FREQUENCY',
+                                        instance_name + '_GCLK_FREQUENCY',
+                                        instance_name.lower() + "." + gclk_dependency_map[instance_name]])
 
             gclk_periph = coreComponent.createMenuSymbol(None, gclk_menu)
             gclk_periph.setLabel(instance_name)
