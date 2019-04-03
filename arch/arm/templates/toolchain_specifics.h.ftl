@@ -26,6 +26,11 @@
 
 <#if CoreArchitecture?contains("ARM926")>
 
+static inline void __NOP()
+{
+    asm("nop");
+}
+
 static inline void __disable_irq( void )
 {   // read, modify and write back the CPSR
     asm("MRS r0, cpsr");
