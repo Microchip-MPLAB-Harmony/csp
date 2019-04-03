@@ -247,6 +247,11 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_MRS.setDependencies(calcMRS, ["SDRAMC_BURST_TYPE", "SDRAMC_BURST_LENGTH", "SDRAMC_CR_CAS"])
     sdramcSym_MRS.setVisible(False)
 
+    matrix = sdramcComponent.createBooleanSymbol("SET_MATRIX_CONFIGURTATION", None)
+    matrix.setVisible(False)
+    matrix.setDefaultValue(ATDF.getNode('/avr-tools-device-file/modules/module@[name="MATRIX"]/register-group@[name="MATRIX"]/register@[name="CCFG_SMCNFCS"]') != None)
+
+
     ############################################################################
     #### Dependency ####
     ############################################################################
