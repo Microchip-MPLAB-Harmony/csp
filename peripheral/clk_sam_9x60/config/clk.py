@@ -139,6 +139,13 @@ def update_gclk_freq(symbol, event):
     else:
         symbol.setValue(0, 0)
 
+def update_ext_mem_en(symbol, event):
+    mpddrc = event['source'].getSymbolValue("MPDDRC_CLOCK_ENABLE")
+    sdramc = event['source'].getSymbolValue("SDRAMC_CLOCK_ENABLE")
+    smc = event['source'].getSymbolValue("SMC_CLOCK_ENABLE")
+    symbol.setValue(mpddrc or sdramc or smc)
+
+
 def update_tc_enable(symbol, event):
     instance_num = symbol.getID()[2]
     enable_clock = False
@@ -761,6 +768,26 @@ for module_node in peripherals_node.getChildren():
                                           instance_name.lower() + "." + gclk_dependency_map[instance_name]])
 
 
+#Memory controllers all share one clock id 49
+memory_controllers = ['MPDDRC', 'SDRAMC', 'SMC']
+for instance_name in memory_controllers:
+    pcr_en = coreComponent.createBooleanSymbol(instance_name + "_CLOCK_ENABLE", pcr_menu)
+    pcr_en.setLabel(instance_name)
+
+    pcr_freq = coreComponent.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", pcr_menu)
+    pcr_freq.setVisible(False)
+    pcr_freq.setDefaultValue(mck.getValue())
+    pcr_freq.setDependencies(lambda symbol, event: symbol.setValue(event['source'].getSymbolValue("MCK_FREQUENCY"),0), ['MCK_FREQUENCY'])
+
+id_name_map = coreComponent.createStringSymbol("CLK_ID_NAME_49", pcr_menu)
+id_name_map.setVisible(False)
+id_name_map.setDefaultValue("EXT_MEMORY")
+
+pcr_en = coreComponent.createBooleanSymbol("EXT_MEMORY_CLOCK_ENABLE", pcr_menu)
+pcr_en.setVisible(False)
+pcr_en.setDependencies(update_ext_mem_en, ['MPDDR_CLOCK_ENABLE', 'SDRAMC_CLOCK_ENABLE','SMC_CLOCK_ENABLE'])
+
+#sys_clk
 sys_clk_menu = coreComponent.createMenuSymbol("CLK_SYSTEM_CLK_MENU", menu)
 sys_clk_menu.setLabel("System Clocks")
 
