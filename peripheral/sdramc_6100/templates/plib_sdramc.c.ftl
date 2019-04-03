@@ -60,8 +60,10 @@ void ${SDRAMC_INSTANCE_NAME}_Initialize( void )
     uint8_t i;
     uint16_t *pSdramBaseAddress = (uint16_t *)SDRAM_CS_ADDR;
 
+<#if SET_MATRIX_CONFIGURTATION>
     /* Enable the SDRAMC Chip Select */
     MATRIX_REGS->CCFG_SMCNFCS|= (1 << CCFG_SMCNFCS_SDRAMEN_Pos);
+</#if>
 
     /* Step 1:
      * Configure SDRAM features and timing parameters */
