@@ -254,8 +254,33 @@ def _get_default_value(register, bitfield, value_group):
     return keyDefault
     #return str((initialValue & mask) >> bitPosn)
 
+def _get_default_value_num(register, bitfield, value_group):
+    '''
+    Extracts the default value from 'initval' field of given value-group, based on register bitfield
+    Input arguments:
+        register - atdf node, register name to get the intial value
+        bitfield - the bitfield in the register we are interested in (to get mask value from)
+        value_group - atdf node, the value group from which we want
 
+    Returns:
+        default name of that bitfield
+    '''
+    initialValue = int(register.getAttribute('initval'),16)
+    childNodes = register.getChildren()
+    for ii in childNodes:  # scan over all <bitfield ..> to find right bitfield
+        if(ii.getAttribute('name') == bitfield):
+            maskval = ii.getAttribute('mask')
+            if(maskval.find('0x')!= -1):
+                mask = int(maskval,16)
+            else:
+                mask = int(maskval)
+            bitPosn = 0
+            while((mask & (1<<bitPosn)) == 0):
+                bitPosn += 1
+    value = str((initialValue & mask) >> bitPosn)  # has initial value of bitfield, shifted down to bit0
+    return value
 
+    
 def updatePoscFreq(symbol, event):
     global newPoscFreq
     newPoscFreq = event["value"]
@@ -647,30 +672,44 @@ def updateCfgMpll(symbol, event):
     global mpllodiv2
     global mpllvregdis
     global mpllintvrefcon
-
+    global MPLLDIS_BIT_VALUE
+    global MPLLIDIV_BITS_VALUE
+    global MPLLMULT_BITS_VALUE
+    global MPLLODIV1_BITS_VALUE
+    global MPLLODIV2_BITS_VALUE
+    global MPLLVREGDIS_BIT_VALUE
+    global MPLLINTVREFCON_BIT_VALUE
+    
     startVal = int(CFGMPLL_REGVALUE.getValue(),16)
     if(event["id"]=='CLK_MPLLDIS_VALUE'):
         mask = int(MPLLDIS_BITFIELDMASK.getValue())
         newValue = mpllDisable[event["value"]]
+        MPLLDIS_BIT_VALUE.setValue(newValue,1)
     elif(event["id"]=='CLK_MPLLIDIV_VALUE'):
         mask = int(MPLLIDIV_BITFIELDMASK.getValue())
         newValue = mpllidiv[event["value"]]
+        MPLLIDIV_BITS_VALUE.setValue(newValue,1)
     elif(event["id"]=='CLK_MPLLMULT_VALUE'):
         mask = int(MPLLMULT_BITFIELDMASK.getValue())
         newValue = mpllmult[event["value"]]
+        MPLLMULT_BITS_VALUE.setValue(newValue,1)
     elif(event["id"]=='CLK_MPLLODIV1_VALUE'):
         mask = int(MPLLODIV1_BITFIELDMASK.getValue())
         newValue = mpllodiv1[event["value"]]
+        MPLLODIV1_BITS_VALUE.setValue(newValue,1)
     elif(event["id"]=='CLK_MPLLODIV2_VALUE'):
         mask = int(MPLLODIV2_BITFIELDMASK.getValue())
         newValue = mpllodiv2[event["value"]]
+        MPLLODIV2_BITS_VALUE.setValue(newValue,1)
     elif(event["id"]=='CLK_MPLLVREGDIS_VALUE'):
         mask = int(MPLLVREGDIS_BITFIELDMASK.getValue())
         newValue = mpllvregdis[event["value"]]
+        MPLLVREGDIS_BIT_VALUE.setValue(newValue,1)
     elif(event["id"]=='CLK_MPLLINTVREFCON_VALUE'):
         mask = int(MPLLINTVREFCON_BITFIELDMASK.getValue())
         newValue = mpllintvrefcon[event["value"]]
-
+        MPLLINTVREFCON_BIT_VALUE.setValue(newValue,1)
+        
     bitPosn = 0  # find bitshift from mask
     while( (mask & (1<<bitPosn)) == 0):
         bitPosn += 1
@@ -771,7 +810,8 @@ if __name__ == "__main__":
             for register_tag in register_group.iter("register"):
                 #looking for PB1DIV, PB2DIV, ... (for making menu entries - further down, and ftl-related symbols)
                 if ("PB" in register_tag.attrib["name"]) and ("DIV" in register_tag.attrib["name"]):
-                    clockNum = register_tag.attrib["name"][2]  # get the clock number (char position 2 of field)                    pbList.append(clockNum)
+                    clockNum = register_tag.attrib["name"][2]  # get the clock number (char position 2 of field)
+                    pbList.append(clockNum)
                     for bitfield_tag in register_tag.iter("bitfield"):
                         if(bitfield_tag.attrib["name"] == "PBDIV"):  # PBDIV field
                             # this is for bitfield mask value - put into a symbol for ftl file retrieval
@@ -1010,7 +1050,12 @@ if __name__ == "__main__":
         MPLLDIS_VALUE.setVisible(False)
         MPLLDIS_VALUE.setDefaultValue(MPLLDIS_SYM.getValue())
         MPLLDIS_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLDIS'])
-
+        
+        global MPLLDIS_BIT_VALUE
+        MPLLDIS_BIT_VALUE =  coreComponent.createStringSymbol("CLK_MPLLDIS_BIT_VALUE",None)
+        MPLLDIS_BIT_VALUE.setVisible(False)
+        MPLLDIS_BIT_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLDIS', clkValGrp_CFGMPLL__MPLLDIS))
+        
         # MPLLIDIV bitfield
         global mpllidiv
         mpllidiv = {}
@@ -1031,7 +1076,12 @@ if __name__ == "__main__":
         MPLLIDIV_VALUE.setVisible(False)
         MPLLIDIV_VALUE.setDefaultValue(MPLLIDIV_SYM.getValue())
         MPLLIDIV_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLIDIV'])
-
+        
+        global MPLLIDIV_BITS_VALUE
+        MPLLIDIV_BITS_VALUE =  coreComponent.createStringSymbol("CLK_MPLLIDIV_BITS_VALUE",None)
+        MPLLIDIV_BITS_VALUE.setVisible(False)
+        MPLLIDIV_BITS_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLIDIV', clkValGrp_CFGMPLL__MPLLIDIV))
+        
         # MPLLMULT bitfield
         global mpllmult
         mpllmult = {}
@@ -1039,7 +1089,7 @@ if __name__ == "__main__":
         MPLLMULT_SYM = coreComponent.createComboSymbol("CLK_MPLLMULT", CLK_CFG_SETTINGS, sorted(mpllmult.keys()))
         MPLLMULT_SYM.setLabel(clkValGrp_CFGMPLL__MPLLMULT.getAttribute('caption'))
         MPLLMULT_SYM.setDescription(clkValGrp_CFGMPLL__MPLLMULT.getAttribute('caption'))
-        MPLLMULT_SYM.setDefaultValue("MUL_160")
+        MPLLMULT_SYM.setDefaultValue(_get_default_value(clkReg_CFGMPLL, 'MPLLMULT', clkValGrp_CFGMPLL__MPLLMULT))
         MPLLMULT_SYM.setVisible(True)
 
         global MPLLMULT_BITFIELDMASK
@@ -1052,7 +1102,12 @@ if __name__ == "__main__":
         MPLLMULT_VALUE.setVisible(False)
         MPLLMULT_VALUE.setDefaultValue(MPLLMULT_SYM.getValue())
         MPLLMULT_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLMULT'])
-
+        
+        global MPLLMULT_BITS_VALUE
+        MPLLMULT_BITS_VALUE =  coreComponent.createStringSymbol("CLK_MPLLMULT_BITS_VALUE",None)
+        MPLLMULT_BITS_VALUE.setVisible(False)
+        MPLLMULT_BITS_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLMULT', clkValGrp_CFGMPLL__MPLLMULT))
+        
 
         # MPLLODIV1 bitfield
         global mpllodiv1
@@ -1074,7 +1129,12 @@ if __name__ == "__main__":
         MPLLODIV1_VALUE.setVisible(False)
         MPLLODIV1_VALUE.setDefaultValue(MPLLODIV1_SYM.getValue())
         MPLLODIV1_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLODIV1'])
-
+        
+        global MPLLODIV1_BITS_VALUE
+        MPLLODIV1_BITS_VALUE =  coreComponent.createStringSymbol("CLK_MPLLODIV1_BITS_VALUE",None)
+        MPLLODIV1_BITS_VALUE.setVisible(False)
+        MPLLODIV1_BITS_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLODIV1', clkValGrp_CFGMPLL__MPLLODIV1))
+        
         # MPLLODIV2 bitfield
         global mpllodiv2
         mpllodiv2 = {}
@@ -1095,7 +1155,12 @@ if __name__ == "__main__":
         MPLLODIV2_VALUE.setVisible(False)
         MPLLODIV2_VALUE.setDefaultValue(MPLLODIV2_SYM.getValue())
         MPLLODIV2_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLODIV2'])
-
+        
+        global MPLLODIV2_BITS_VALUE
+        MPLLODIV2_BITS_VALUE =  coreComponent.createStringSymbol("CLK_MPLLODIV2_BITS_VALUE",None)
+        MPLLODIV2_BITS_VALUE.setVisible(False)
+        MPLLODIV2_BITS_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLODIV2', clkValGrp_CFGMPLL__MPLLODIV2))
+        
         # MPLLVREGDIS bitfield
         global mpllvregdis
         mpllvregdis = {}
@@ -1116,7 +1181,12 @@ if __name__ == "__main__":
         MPLLVREGDIS_VALUE.setVisible(False)
         MPLLVREGDIS_VALUE.setDefaultValue(MPLLVREGDIS_SYM.getValue())
         MPLLVREGDIS_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLVREGDIS'])
-
+        
+        global MPLLVREGDIS_BIT_VALUE
+        MPLLVREGDIS_BIT_VALUE =  coreComponent.createStringSymbol("CLK_MPLLVREGDIS_BIT_VALUE",None)
+        MPLLVREGDIS_BIT_VALUE.setVisible(False)
+        MPLLVREGDIS_BIT_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLVREGDIS', clkValGrp_CFGMPLL__MPLLVREGDIS))
+        
         #INTVREFCON bitfield
         global mpllintvrefcon
         mpllintvrefcon = {}
@@ -1137,7 +1207,12 @@ if __name__ == "__main__":
         MPLLINTVREFCON_VALUE.setVisible(False)
         MPLLINTVREFCON_VALUE.setDefaultValue(MPLLINTVREFCON_SYM.getValue())
         MPLLINTVREFCON_VALUE.setDependencies(updateMpllBitfield, ['CLK_INTVREFCON'])
-
+        
+        global MPLLINTVREFCON_BIT_VALUE
+        MPLLINTVREFCON_BIT_VALUE =  coreComponent.createStringSymbol("CLK_MPLLINTVREFCON_BIT_VALUE",None)
+        MPLLINTVREFCON_BIT_VALUE.setVisible(False)
+        MPLLINTVREFCON_BIT_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'INTVREFCON', clkValGrp_CFGMPLL__INTVREFCON))
+        
         # CFGMPLL register
         CFGMPLL_REGNAME = coreComponent.createStringSymbol("CLK_CFGMPLL_REG",None)
         CFGMPLL_REGNAME.setVisible(False)
