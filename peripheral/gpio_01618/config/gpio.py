@@ -73,19 +73,39 @@ def PPSOptionsVisibilityControlAndSpecialCase(symbol, event):
     if "USE_PPS_INPUT_" in event["id"]:
         symbol.setVisible(event["value"])
     elif "SYS_PORT_PPS_INPUT_FUNCTION_" in event["id"]:
-        # This special case is written for PIC32MX330/350/370/430/450/470 Family.
-        if (symbol.getKey(symbol.getValue()) == "RPF2"):
-            if (event["value"] in ["INT3", "T2CK", "IC3", "U1RX", "U2RX", "U5CTS", "REFCLKI"]):
-                symbol.setKeyValue("RPF2", "15")
-            elif (event["value"] in ["INT4", "T5CK", "IC4", "U3RX", "U4CTS", "SDI1", "SDI2"]):
-                symbol.setKeyValue("RPF2", "14")
-            elif (event["value"] in ["INT1", "T3CK", "IC1", "U4RX", "U3CTS", "U5RX", "SS2 (in)", "OCFA"]):
-                symbol.setKeyValue("RPF2", "11")
-        if (symbol.getKey(symbol.getValue()) == "RPB2"):
-            if (event["value"] in ["INT2", "T4CK", "IC2", "IC5", "U1CTS", "U2CTS", "SS1 (in)"]):
-                symbol.setKeyValue("RPB2", "15")
-            elif (event["value"] in ["INT1", "T3CK", "IC1", "U4RX", "U3CTS", "U5RX", "SS2 (in)", "OCFA"]):
-                symbol.setKeyValue("RPB2", "7")
+        if(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001185"):
+            # This special case is written for PIC32MX330/350/370/430/450/470 Family.
+            if (symbol.getKey(symbol.getValue()) == "RPF2"):
+                if (event["value"] in ["INT3", "T2CK", "IC3", "U1RX", "U2RX", "U5CTS", "REFCLKI"]):
+                    symbol.setKeyValue("RPF2", "15")
+                elif (event["value"] in ["INT4", "T5CK", "IC4", "U3RX", "U4CTS", "SDI1", "SDI2"]):
+                    symbol.setKeyValue("RPF2", "14")
+                elif (event["value"] in ["INT1", "T3CK", "IC1", "U4RX", "U3CTS", "U5RX", "SS2 (in)", "OCFA"]):
+                    symbol.setKeyValue("RPF2", "11")
+            if (symbol.getKey(symbol.getValue()) == "RPB2"):
+                if (event["value"] in ["INT2", "T4CK", "IC2", "IC5", "U1CTS", "U2CTS", "SS1 (in)"]):
+                    symbol.setKeyValue("RPB2", "15")
+                elif (event["value"] in ["INT1", "T3CK", "IC1", "U4RX", "U3CTS", "U5RX", "SS2 (in)", "OCFA"]):
+                    symbol.setKeyValue("RPB2", "7")
+        elif(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001290"):
+            # This special case is written for PIC32MX1XX/2XX/5XX Family.
+            if (symbol.getKey(symbol.getValue()) == "RPF2"):
+                if (event["value"] in ["INT3", "T2CK", "IC3", "U1RX", "U2RX", "U5CTS", "SDI3", "SDI4", "REFCLKI"]):
+                    symbol.setKeyValue("RPF2", "15")
+                elif (event["value"] in ["INT4", "T5CK", "IC4", "U3RX", "U4CTS", "SDI1", "SDI2", "C1RX"]):
+                    symbol.setKeyValue("RPF2", "14")
+                elif (event["value"] in ["INT1", "T3CK", "IC1", "U4RX", "U3CTS", "U5RX", "SS2 (in)", "OCFA"]):
+                    symbol.setKeyValue("RPF2", "11")
+            if (symbol.getKey(symbol.getValue()) == "RPB2"):
+                if (event["value"] in ["INT2", "T4CK", "IC2", "IC5", "U1CTS", "U2CTS", "SS1 (in)", "SS3 (in)", "SS4 (in)"]):
+                    symbol.setKeyValue("RPB2", "15")
+                elif (event["value"] in ["INT1", "T3CK", "IC1", "U4RX", "U3CTS", "U5RX", "SS2 (in)", "OCFA"]):
+                    symbol.setKeyValue("RPB2", "7")
+            if (symbol.getKey(symbol.getValue()) == "RPD14"):
+                if (event["value"] in ["INT3", "T2CK", "IC3", "U1RX", "U2RX", "U5CTS", "SDI3", "SDI4", "REFCLKI"]):
+                    symbol.setKeyValue("RPD14", "11")
+                elif (event["value"] in ["INT2", "T4CK", "IC2", "IC5", "U1CTS", "U2CTS", "SS1 (in)", "SS3 (in)", "SS4 (in)"]):
+                    symbol.setKeyValue("RPD14", "14")
 
 # Dependency Function to pass interrupt related info to Interrupt Manager.
 # This function will be entered only by internal change happening to PORT channel interrupt, never by manual

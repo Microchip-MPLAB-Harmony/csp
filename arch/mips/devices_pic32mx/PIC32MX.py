@@ -262,7 +262,7 @@ if pcacheNode != None:
     SYM_PFMWS.setReadOnly(True)
     SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY", "CONFIG_TEMPERATURE_RANGE"])
 
-if deviceFamily.getValue() == "DS60001185":
+if deviceFamily.getValue() in ["DS60001185", "DS60001290"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_01618/config/gpio.py")
     coreComponent.addPlugin("../peripheral/gpio_01618/plugin/gpio_01618.jar")
 
