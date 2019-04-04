@@ -684,7 +684,6 @@ void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t cont
 */
 void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 {
-    uint8_t dataIndex = 0;
     uint32_t interruptStatus = ${CAN_INSTANCE_NAME}_REGS->CAN_SR;
 
     /* Check if error occurred */
@@ -731,7 +730,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                             }
                             *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
                             /* Copy the data into the payload */
-                            for (; dataIndex < *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size; dataIndex++)
+                            for (uint8_t dataIndex = 0; dataIndex < *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size; dataIndex++)
                             {
                                 if (dataIndex == 0)
                                 {
