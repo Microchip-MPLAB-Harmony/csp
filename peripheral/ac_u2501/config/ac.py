@@ -403,7 +403,7 @@ def instantiateComponent(acComponent):
 
     # Interrupt Dynamic settings
     acSym_UpdateInterruptStatus = acComponent.createBooleanSymbol("AC_INTERRUPT_STATUS", None)
-    acSym_UpdateInterruptStatus.setDependencies(updateACInterruptStatus, ["COMP0INTERRUPT_ENABLE", "COMP1INTERRUPT_ENABLE", "COMP2INTERRUPT_ENABLE", "COMP3INTERRUPT_ENABLE"])
+    acSym_UpdateInterruptStatus.setDependencies(updateACInterruptStatus, ["COMP0INTERRUPT_ENABLE", "COMP1INTERRUPT_ENABLE", "COMP2INTERRUPT_ENABLE", "COMP3INTERRUPT_ENABLE", "AC_INTENSET_WIN0"])
     acSym_UpdateInterruptStatus.setVisible(False)
 
     # Interrupt Warning status
