@@ -94,7 +94,7 @@
         </#if>
     </#if>
 </#if>
-<#if SUPC_BOD33_RUNHIB == true || SUPC_BOD33_STDBYCFG == "1">
+<#if SUPC_BOD33_RUNHIB == true || SUPC_BOD33_RUNBKUP == true || SUPC_BOD33_STDBYCFG == "1">
     <#if SUPC_BOD33_PSEL?has_content >
         <#assign SUPC_BOD33_PSEL_VAL = "SUPC_BOD33_PSEL("+SUPC_BOD33_PSEL+")">
         <#assign SUPC_BOD33_VAL = SUPC_BOD33_PSEL_VAL>
@@ -106,6 +106,15 @@
         <#assign SUPC_BOD33_VAL = SUPC_BOD33_VAL + " | SUPC_BOD33_RUNHIB_Msk">
         <#else>
         <#assign SUPC_BOD33_VAL = "SUPC_BOD33_RUNHIB_Msk">
+        </#if>
+    </#if>
+</#if>
+<#if SUPC_BOD33_RUNBKUP?has_content >
+    <#if SUPC_BOD33_RUNBKUP == true>
+        <#if SUPC_BOD33_VAL != "">
+        <#assign SUPC_BOD33_VAL = SUPC_BOD33_VAL + " | SUPC_BOD33_RUNBKUP_Msk">
+        <#else>
+        <#assign SUPC_BOD33_VAL = "SUPC_BOD33_RUNBKUP_Msk">
         </#if>
     </#if>
 </#if>
