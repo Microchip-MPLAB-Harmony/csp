@@ -20,5 +20,6 @@
         <package diagram="MX_48_QFN" id="13" name="QFN48" />   
         <package diagram="MX_56_WLCSP" id="14" name="WLCSP56" />   
         <package diagram="MX_120_TFBGA" id="15" name="TFBGA120" />
+        <package diagram="MX_100_BGA" id="16" name="BGA100" />
 	</packages>
 </pinfile>
