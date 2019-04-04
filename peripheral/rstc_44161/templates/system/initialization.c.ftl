@@ -1,0 +1,1 @@
+    RSTC${INSTANCE?string}_Initialize();
