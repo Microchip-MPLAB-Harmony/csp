@@ -30,7 +30,7 @@ def updateSupcConfigVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
 
 def updateBOD33PrescalerVisibleProperty(symbol, event):
-    if supcSym_BOD33_STDBYCFG.getValue() == 1 or supcSym_BOD33_RUNHIB.getValue() == True:
+    if supcSym_BOD33_STDBYCFG.getValue() == 1 or supcSym_BOD33_RUNHIB.getValue() == True or supcSym_BOD33_RUNBKUP.getValue() == True:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -58,6 +58,7 @@ def interruptControl(symbol, event):
 def instantiateComponent(supcComponent):
     global supcSym_BOD33_STDBYCFG
     global supcSym_BOD33_RUNHIB
+    global supcSym_BOD33_RUNBKUP
     global supcSym_VREF_VREFOE
     global supcSym_VREF_ONDEMAND
     global supcInstanceName
@@ -90,6 +91,12 @@ def instantiateComponent(supcComponent):
     supcSym_BOD33_RUNHIB.setLabel("Run in Hibernate Mode")
     supcSym_BOD33_RUNHIB.setDescription("Configures BOD33 operation in Hibernate Sleep Mode")
     supcSym_BOD33_RUNHIB.setDefaultValue(False)
+    
+    #BOD33 RUNBKUP
+    supcSym_BOD33_RUNBKUP = supcComponent.createBooleanSymbol("SUPC_BOD33_RUNBKUP", supcSym_BOD33_Menu)
+    supcSym_BOD33_RUNBKUP.setLabel("Run in Backup Mode")
+    supcSym_BOD33_RUNBKUP.setDescription("Configures BOD33 operation in Backup Sleep Mode")
+    supcSym_BOD33_RUNBKUP.setDefaultValue(False)
 
     #BOD33 RUNSTDBY
     supcSym_BOD33_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_BOD33_RUNSTDBY", supcSym_BOD33_Menu)
@@ -114,13 +121,14 @@ def instantiateComponent(supcComponent):
     supcSym_BOD33_PSEL.setLabel("Select Prescaler for Sampling Clock")
     supcSym_BOD33_PSEL.setDescription("Configures the sampling clock prescaler when BOD33 is operating in sampling Mode")
     supcSym_BOD33_PSEL.setVisible(False)
-    supcSym_BOD33_PSEL.setDependencies(updateBOD33PrescalerVisibleProperty, ["SUPC_BOD33_STDBYCFG", "SUPC_BOD33_RUNHIB"])
+    supcSym_BOD33_PSEL.setDependencies(updateBOD33PrescalerVisibleProperty, ["SUPC_BOD33_STDBYCFG", "SUPC_BOD33_RUNHIB", "SUPC_BOD33_RUNBKUP"])
 
     supcBOD33PselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"SUPC_BOD33__PSEL\"]")
     supcBOD33PselValues = []
     supcBOD33PselValues = supcBOD33PselNode.getChildren()
 
-    for index in range (0, len(supcBOD33PselValues)):
+    #PSEL value 0 is not usable in sampling mode. Thus the loop starts from 1.
+    for index in range (1, len(supcBOD33PselValues)):
         supcBOD33PselKeyName = supcBOD33PselValues[index].getAttribute("name")
         supcBOD33PselKeyDescription = supcBOD33PselValues[index].getAttribute("caption")
         supcBOD33PselKeyValue =  supcBOD33PselValues[index].getAttribute("value")
@@ -129,8 +137,6 @@ def instantiateComponent(supcComponent):
     supcSym_BOD33_PSEL.setDefaultValue(0)
     supcSym_BOD33_PSEL.setOutputMode("Value")
     supcSym_BOD33_PSEL.setDisplayMode("Description")
-
-    #TODO - Check whether RUNBKUP is a valid config##################################################################################################################
 
     #VREG Menu
     supcSym_VREG_Menu= supcComponent.createMenuSymbol("VREG_MENU", None)
