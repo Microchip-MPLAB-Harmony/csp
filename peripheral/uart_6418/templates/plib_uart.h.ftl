@@ -78,6 +78,8 @@ void ${UART_INSTANCE_NAME}_WriteByte( int data );
 
 bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void );
 
+bool ${UART_INSTANCE_NAME}_TransmitComplete( void );
+
 bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void );
 
 </#if>
