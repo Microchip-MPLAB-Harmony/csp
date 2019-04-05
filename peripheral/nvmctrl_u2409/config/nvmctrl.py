@@ -150,7 +150,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_Interrupt0 = nvmctrlComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
     nvmctrlSym_Interrupt0.setLabel("Enable Interrupt")
     nvmctrlSym_Interrupt0.setDefaultValue(False)
-    nvmctrlSym_Interrupt0.setDescription("Enables interrupt for command execution complete condition. Rest of the interrupts need to be enabled via code")
+    nvmctrlSym_Interrupt0.setDescription("Enables interrupt for command execution complete (DONE) condition. Rest of the interrupts need to be enabled via code")
     
     #Menu item for SmartEEPROM configurations
     nvmctrlSymSEEP = nvmctrlComponent.createMenuSymbol("SMARTEEP_CONFIGURATION", None)
@@ -160,7 +160,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_Interrupt1 = nvmctrlComponent.createBooleanSymbol("NVM_INTERRUPT1_ENABLE", nvmctrlSymSEEP)
     nvmctrlSym_Interrupt1.setLabel("Enable Interrupt for SmartEEPROM")
     nvmctrlSym_Interrupt1.setDefaultValue(False)
-    nvmctrlSym_Interrupt1.setDescription("Enables interrupt for 'SmartEEPROM sector full' condition. Rest of the interrupts need to be enabled via code")
+    nvmctrlSym_Interrupt1.setDescription("Enables interrupt for 'SmartEEPROM sector full' (SEESFULL) condition. Rest of the interrupts need to be enabled via code")
     
     #Enable Buffered mode for SmartEEPROM
     nvmctrlSym_WMODE = nvmctrlComponent.createBooleanSymbol("NVM_WMODE_ENABLE", nvmctrlSymSEEP)
