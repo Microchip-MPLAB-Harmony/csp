@@ -83,6 +83,8 @@ void ${SERCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK 
 <#else>
 bool ${SERCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void );
 
+bool ${SERCOM_INSTANCE_NAME}_USART_TransmitComplete( void );
+
 void ${SERCOM_INSTANCE_NAME}_USART_WriteByte( int data );
 </#if>
 </#if>
