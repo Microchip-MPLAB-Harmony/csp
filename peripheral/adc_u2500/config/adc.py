@@ -281,7 +281,10 @@ def instantiateComponent(adcComponent):
     data_width = 12
     conv_time = float((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000.0) / clock_freq
 
-    component = int(adcInstanceName.getValue()[-1]) - 1
+    if adcInstanceName.getValue()[-1].isdigit():
+        component = int(adcInstanceName.getValue()[-1]) - 1
+    else:
+        component = ""
 
     #Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
@@ -300,6 +303,8 @@ def instantiateComponent(adcComponent):
     for index in range(0, len(adcReferenceValues)):
         if adcReferenceValues[index].getAttribute("caption") == "VDDANA":
             default = index
+        if "ADC1" in adcReferenceValues[index].getAttribute("caption") and adcInstanceName.getValue() == "ADC0":
+            continue
         adcSym_REFCTRL_REFSEL.addKey(adcReferenceValues[index].getAttribute("name"), adcReferenceValues[index].getAttribute("value"),
         adcReferenceValues[index].getAttribute("caption"))
     adcSym_REFCTRL_REFSEL.setDefaultValue(default)
@@ -381,6 +386,8 @@ def instantiateComponent(adcComponent):
             adcSym_MUXPOS_ENUM.setDefaultValue(adcPositiveInputValues[index].getAttribute("name"))
             adcSym_MUXPOS_ENUM.setVisible(False)
             posInput = posInput + 1
+            if "ADC0" in adcPositiveInputValues[index].getAttribute("caption") and adcInstanceName.getValue() == "ADC1":
+                continue
             adcSym_INPUTCTRL_MUXPOS.addKey(adcPositiveInputValues[index].getAttribute("name"), adcPositiveInputValues[index].getAttribute("value"),
             adcPositiveInputValues[index].getAttribute("caption"))
 
