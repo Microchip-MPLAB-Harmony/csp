@@ -1,6 +1,5 @@
-# coding: utf-8
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -38,6 +37,8 @@ qspiReg_SCR = qspiRegGroup.getRegister("QSPI_SCR")
 qspiBitField_SCR_CPOL = qspiReg_SCR.getBitfield("CPOL")
 qspiBitField_SCR_CPHA = qspiReg_SCR.getBitfield("CPHA")
 qspiBitField_SCR_SCBR = qspiReg_SCR.getBitfield("SCBR")
+
+qspiReg_ICR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="QSPI"]/register-group@[name="QSPI"]/register@[name="QSPI_ICR"]')
 
 def getMasterClkFrequency():
     return int(Database.getSymbolValue("core", qspiInstanceName.getValue() + "_CLOCK_FREQUENCY"))
@@ -152,6 +153,10 @@ def instantiateComponent(qspiComponent):
     qspiMasterClkComment.setVisible(False)
     qspiMasterClkComment.setLabel("WARNING!!! QSPI Peripheral Clock Is Disabled In Clock Manager")
     qspiMasterClkComment.setDependencies(setMasterClkDependency, ["core." + qspiInstanceName.getValue() + "_CLOCK_ENABLE"])
+
+    splitICR = qspiComponent.createBooleanSymbol("HAS_SPLIT_ICR", None)
+    splitICR.setVisible(False)
+    splitICR.setDefaultValue(qspiReg_ICR == None)
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
