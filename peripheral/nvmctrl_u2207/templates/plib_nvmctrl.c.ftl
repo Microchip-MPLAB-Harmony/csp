@@ -85,16 +85,14 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 {
     <#if (NVMCTRL_CTRLB_READMODE_SELECTION != "NO_MISS_PENALTY") ||
          (NVMCTRL_CTRLB_POWER_REDUCTION_MODE != "WAKEONACCESS") ||
-         (NVMCTRL_WRITE_POLICY == "AUTOMATIC") ||
          (NVMCTRL_CACHE_ENABLE == false)>
-        <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = ${NVMCTRL_CACHE_ENABLE?then('', 'NVMCTRL_CTRLB_CACHEDIS_Msk |')}
+        <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB |= ${NVMCTRL_CACHE_ENABLE?then('', 'NVMCTRL_CTRLB_CACHEDIS_Msk |')}
         <#lt>                       NVMCTRL_CTRLB_READMODE_${NVMCTRL_CTRLB_READMODE_SELECTION} |
-        <#lt>                       NVMCTRL_CTRLB_SLEEPPRM_${NVMCTRL_CTRLB_POWER_REDUCTION_MODE} |
-        <#if NVMCTRL_WRITE_POLICY == "AUTOMATIC">
-            <#lt>                       NVMCTRL_CTRLB_MANW(0);
-        <#else>
-            <#lt>                       NVMCTRL_CTRLB_MANW(1);
-        </#if>
+        <#lt>                       NVMCTRL_CTRLB_SLEEPPRM_${NVMCTRL_CTRLB_POWER_REDUCTION_MODE};
+    </#if>
+
+    <#if NVMCTRL_WRITE_POLICY == "AUTOMATIC">
+        <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB &= ~NVMCTRL_CTRLB_MANW_Msk;
     </#if>
 
 <#if INTERRUPT_ENABLE == true>
