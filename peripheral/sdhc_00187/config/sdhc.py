@@ -117,12 +117,22 @@ def instantiateComponent(sdhcComponent):
     sdhcInstanceName.setDefaultValue(sdhcComponent.getID().upper())
     Log.writeInfoMessage("Running " + sdhcInstanceName.getValue())
 
-    sdhcCD = sdhcComponent.createBooleanSymbol("SDHC_SDCDEN", None)
+    sdhcCDSupport = sdhcComponent.createBooleanSymbol("SDCARD_SDCD_SUPPORT", None)
+    sdhcCDSupport.setLabel("SDHC SDCD Support")
+    sdhcCDSupport.setDefaultValue(True)
+    sdhcCDSupport.setVisible(False)
+
+    sdhcWPSupport = sdhcComponent.createBooleanSymbol("SDCARD_SDWP_SUPPORT", None)
+    sdhcWPSupport.setLabel("SDHC SDWP Support")
+    sdhcWPSupport.setDefaultValue(True)
+    sdhcWPSupport.setVisible(False)
+
+    sdhcCD = sdhcComponent.createBooleanSymbol("SDCARD_SDCDEN", None)
     sdhcCD.setLabel("Use SD Card Detect (SDCD#) Pin")
     sdhcCD.setDefaultValue(False)
     sdhcCD.setVisible(False)
 
-    sdhcWP = sdhcComponent.createBooleanSymbol("SDHC_SDWPEN", None)
+    sdhcWP = sdhcComponent.createBooleanSymbol("SDCARD_SDWPEN", None)
     sdhcWP.setLabel("Use SD Write Protect (SDWP#) Pin")
     sdhcWP.setDefaultValue(False)
     sdhcWP.setVisible(False)
