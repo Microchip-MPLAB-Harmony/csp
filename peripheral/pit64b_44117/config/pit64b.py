@@ -91,10 +91,12 @@ def instantiateComponent(pit64Component):
     period_msb = pit64Component.createIntegerSymbol("PERIOD_MSB", None)
     period_msb.setVisible(False)
     period_msb.setDefaultValue((period.getValue() & 0xFFFFFFFF00000000) >> 32)
+    period_msb.setDependencies(lambda symbol, event:symbol.setValue((event['value'] & 0xFFFFFFFF00000000) >> 32), ['PERIOD'])
 
     period_lsb = pit64Component.createIntegerSymbol("PERIOD_LSB", None)
     period_lsb.setVisible(False)
     period_lsb.setDefaultValue(period.getValue() & 0xFFFFFFFF)
+    period_lsb.setDependencies(lambda symbol, event:symbol.setValue(event['value'] & 0xFFFFFFFF), ['PERIOD'])
 
     period_us = pit64Component.createFloatSymbol("PERIOD_US", None)
     period_us.setLabel("Timer Period(us)")
