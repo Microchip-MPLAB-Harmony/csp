@@ -78,6 +78,8 @@ void ${USART_INSTANCE_NAME}_WriteByte(int data);
 
 bool ${USART_INSTANCE_NAME}_TransmitterIsReady( void );
 
+bool ${USART_INSTANCE_NAME}_TransmitComplete( void );
+
 bool ${USART_INSTANCE_NAME}_ReceiverIsReady( void );
 
 </#if>

@@ -137,13 +137,13 @@ void ${USART_INSTANCE_NAME}_InterruptHandler( void )
     }
 
     /* Receiver status */
-    if(US_CSR_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_RXRDY_Msk))
+    if(US_CSR_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_RXRDY_Msk))
     {
         ${USART_INSTANCE_NAME}_ISR_RX_Handler();
     }
 
     /* Transmitter status */
-    if(US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+    if(US_CSR_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_TXRDY_Msk))
     {
         ${USART_INSTANCE_NAME}_ISR_TX_Handler();
     }
@@ -340,7 +340,7 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
 <#if USART_INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_TXRDY_Msk))
             {
                 ${USART_INSTANCE_NAME}_REGS->US_THR = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
                 processedSize++;
@@ -359,7 +359,7 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_TXRDY_Msk))
             {
                 ${USART_INSTANCE_NAME}_REGS->US_THR = (US_THR_TXCHR(*lBuffer) & US_THR_TXCHR_Msk);
                 ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
@@ -381,11 +381,22 @@ int ${USART_INSTANCE_NAME}_ReadByte(void)
 
 void ${USART_INSTANCE_NAME}_WriteByte(int data)
 {
-    while ((US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
+    while ((US_CSR_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_TXRDY_Msk)) == 0);
+
     ${USART_INSTANCE_NAME}_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
 
 bool ${USART_INSTANCE_NAME}_TransmitterIsReady( void )
+{
+    if(US_CSR_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_TXRDY_Msk))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool ${USART_INSTANCE_NAME}_TransmitComplete( void )
 {
     if(US_CSR_TXEMPTY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_TXEMPTY_Msk))
     {
