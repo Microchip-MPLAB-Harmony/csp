@@ -86,7 +86,7 @@ static inline void ${QSPI_INSTANCE_NAME?lower_case}_end_transfer( void )
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CR = QSPI_CR_LASTXFER_Msk;
 }
 
-static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t *qspi_memory_xfer, uint8_t tfr_type, uint32_t address )
+static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t *qspi_memory_xfer, QSPI_TRANSFER_TYPE tfr_type, uint32_t address )
 {
     uint32_t mask = 0;
     volatile uint32_t dummy = 0;
@@ -95,7 +95,15 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IAR = QSPI_IAR_ADDR(address);
 
     /* Set Instruction code register */
+    <#if HAS_SPLIT_ICR>
+    if (tfr_type == QSPI_REG_READ || tfr_type == QSPI_MEM_READ) {
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_RICR = (QSPI_RICR_RDINST(qspi_memory_xfer->instruction)) | (QSPI_RICR_RDOPT(qspi_memory_xfer->option));
+    } else {
+        ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = (QSPI_WICR_WRINST(qspi_memory_xfer->instruction)) | (QSPI_WICR_WROPT(qspi_memory_xfer->option));
+    }
+    <#else>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_memory_xfer->instruction)) | (QSPI_ICR_OPT(qspi_memory_xfer->option));
+    </#if>
 
     /* Set Instruction Frame register*/
 
@@ -115,7 +123,41 @@ static bool ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer_t 
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_ADDREN_Msk | QSPI_IFR_DATAEN_Msk;
 
-    mask |= QSPI_IFR_TFRTYP(tfr_type);
+    <#if HAS_SPLIT_ICR>
+    switch (tfr_type){
+        case QSPI_REG_READ:
+            mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_REGISTER_Val);
+            mask |= QSPI_IFR_APBTFRTYP(1);
+            break;
+        case QSPI_REG_WRITE:
+            mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_REGISTER_Val);
+            mask |= QSPI_IFR_APBTFRTYP(0);
+            break;
+        case QSPI_MEM_READ:
+            mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_MEMORY_Val);
+            mask |= QSPI_IFR_APBTFRTYP(1);
+            break;
+        case QSPI_MEM_WRITE:
+            mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_MEMORY_Val);
+            mask |= QSPI_IFR_APBTFRTYP(0);
+            break;
+    };
+    <#else>
+    switch (tfr_type){
+        case QSPI_REG_READ:
+            mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_READ_Val);
+            break;
+        case QSPI_REG_WRITE:
+            mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_WRITE_Val);
+            break;
+        case QSPI_MEM_READ:
+            mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY_Val);
+            break;
+        case QSPI_MEM_WRITE:
+            mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY_Val);
+            break;
+    };
+    </#if>
 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
@@ -139,12 +181,21 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
     }
 
     /* Configure instruction */
+    <#if HAS_SPLIT_ICR>
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = (QSPI_WICR_WRINST(qspi_command_xfer->instruction));
+    <#else>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_command_xfer->instruction));
+    </#if>
 
     /* Configure instruction frame */
     mask |= qspi_command_xfer->width;
     mask |= QSPI_IFR_INSTEN_Msk;
+    <#if HAS_SPLIT_ICR>
+    mask |= QSPI_IFR_TFRTYP(0);
+    mask |= QSPI_IFR_APBTFRTYP(0);
+    <#else>
     mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_READ_Val);
+    </#if>
 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
@@ -163,7 +214,11 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
     volatile uint32_t dummy = 0;
 
     /* Configure Instruction */
+    <#if HAS_SPLIT_ICR>
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_RICR = (QSPI_RICR_RDINST(qspi_register_xfer->instruction));
+    <#else>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
+    </#if>
 
     /* Configure Instruction Frame */
     mask |= qspi_register_xfer->width;
@@ -172,7 +227,12 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_DATAEN_Msk;
 
+    <#if HAS_SPLIT_ICR>
+    mask |= QSPI_IFR_TFRTYP(0);
+    mask |= QSPI_IFR_APBTFRTYP(1);
+    <#else>
     mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_READ_Val);
+    </#if>
 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
@@ -203,14 +263,23 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     volatile uint32_t dummy = 0;
 
     /* Configure Instruction */
+    <#if HAS_SPLIT_ICR>
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_WICR = (QSPI_WICR_WRINST(qspi_register_xfer->instruction));
+    <#else>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_ICR = (QSPI_ICR_INST(qspi_register_xfer->instruction));
+    </#if>
 
     /* Configure Instruction Frame */
     mask |= qspi_register_xfer->width;
 
     mask |= QSPI_IFR_INSTEN_Msk | QSPI_IFR_DATAEN_Msk;
 
+    <#if HAS_SPLIT_ICR>
+    mask |= QSPI_IFR_TFRTYP(0);
+    mask |= QSPI_IFR_TFRTYP(0);
+    <#else>
     mask |= QSPI_IFR_TFRTYP(QSPI_IFR_TFRTYP_TRSFR_WRITE_Val);
+    </#if>
 
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_IFR = mask;
 
@@ -266,7 +335,7 @@ ${QSPI_INSTANCE_NAME}_MemoryRead(
 
     ///// device preliminaries
     if( false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer( qspi_memory_xfer, 
-                            QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY_Val, 
+                            QSPI_MEM_READ, 
                             address 
                         ) ) {
         return false;
@@ -384,7 +453,7 @@ bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, ui
     uint32_t *qspi_mem = (uint32_t *)(${QSPI_INSTANCE_NAME}MEM_ADDR | address);
     uint32_t length_32bit, length_8bit;
 
-    if (false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY_Val, address))
+    if (false == ${QSPI_INSTANCE_NAME?lower_case}_setup_transfer(qspi_memory_xfer, QSPI_MEM_WRITE, address))
         return false;
 
     /* Write to serial flash memory */
