@@ -233,7 +233,7 @@ bool ${SDHC_INSTANCE_NAME}_IsDatLineBusy ( void )
 
 bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void )
 {
-<#if SDHC_SDWPEN == true>
+<#if SDCARD_SDWPEN == true>
     <#lt>   return (${SDHC_INSTANCE_NAME}_REGS->SDHC_PSR & SDHC_PSR_WRPPL_Msk) ? false : true;
 <#else>
     <#lt>   return false;
@@ -536,7 +536,7 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
     /* Set timeout control register */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_TCR = SDHC_TCR_DTCVAL(0xE);
 
-<#if SDHC_SDCDEN == false>
+<#if SDCARD_SDCDEN == false>
     /* If card detect line is not used, enable the card detect test signal */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R |= SDHC_HC1R_CARDDTL_YES | SDHC_HC1R_CARDDSEL_TEST | SDHC_HC1R_DMASEL(2);
 <#else>
