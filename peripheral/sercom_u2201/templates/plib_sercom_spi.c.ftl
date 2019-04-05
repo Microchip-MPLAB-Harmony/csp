@@ -356,7 +356,13 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
         }
 
         /* Flush out any unread data in SPI DATA Register from the previous transfer */
-        receivedData = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA;
+        while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk)
+        {
+            receivedData = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA;
+        }
+
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS |= SERCOM_SPIM_STATUS_BUFOVF_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG |= SERCOM_SPIM_INTFLAG_ERROR_Msk;
 
         if(rxSize > txSize)
         {
@@ -480,8 +486,14 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
         ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = true;
 
         /* Flush out any unread data in SPI read buffer */
-        dummyData = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA;
-        (void)dummyData;
+        while(${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk)
+        {
+            dummyData = ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_DATA;
+            (void)dummyData;
+        }
+
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS |= SERCOM_SPIM_STATUS_BUFOVF_Msk;
+        ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG |= SERCOM_SPIM_INTFLAG_ERROR_Msk;
 
         if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize > ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize)
         {
