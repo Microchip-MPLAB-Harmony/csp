@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<diagram min_x="380" min_y="380" >
+	<shape type="rect" width="160" height="160" stroke="2"/>
+	<shape type="string" line="000000" val="$DEVICE_NAME" orientation="right" size="11"/>
+	<shape type="circle" x="-75" y="-75" radius="5" stroke="1" fill="000000"/>
+	<layout type="row">
+		<row pins="1-7" x="-80" margin="5" direction="down"
+			 pin_width="7" pin_height="10" pin_name_location="left" pin_name_size="10" pin_name_margin="10"
+			 pin_number_location="right" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+		<row pins="8-14" y="72" margin="5" direction="right"
+			 pin_width="10" pin_height="7" pin_name_location="down" pin_name_size="10" pin_name_margin="10"
+			 pin_number_location="up" pin_number_size="10" pin_number_margin="5" pin_number_orientation="left" />
+		<row pins="15-21" x="72" margin="5" direction="up"
+			 pin_width="7" pin_height="10" pin_name_location="right" pin_name_size="10" pin_name_margin="10"
+			 pin_number_location="left" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+		<row pins="22-28" y="-80" margin="5" direction="left"
+			 pin_width="10" pin_height="7" pin_name_location="up" pin_name_size="10" pin_name_margin="10"
+			 pin_number_location="down" pin_number_size="10" pin_number_margin="5" pin_number_orientation="left" />				 
+	</layout>
+</diagram>
