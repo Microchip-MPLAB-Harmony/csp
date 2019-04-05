@@ -62,6 +62,8 @@ void ${PIT64B_INSTANCE_NAME}_TimerInitialize(void)
     ${PIT64B_INSTANCE_NAME}_REGS->PIT64B_MR |= PIT64B_MR_SMOD(${SMOD?string('1','0')});
 <#if ENABLE_INTERRUPT == true>
     ${PIT64B_INSTANCE_NAME?lower_case}.running = 0;
+    ${PIT64B_INSTANCE_NAME}_REGS->PIT64B_IDR = PIT64B_IDR_Msk;
+    ${PIT64B_INSTANCE_NAME}_REGS->PIT64B_IER = PIT64B_IER_PERIOD(${PERIOD_INT?string('1','0')}) | PIT64B_IER_OVRE(${OVRE_INT?string('1','0')}) | PIT64B_IER_SECE(${SECE_INT?string('1','0')});
 </#if>
 }
 
