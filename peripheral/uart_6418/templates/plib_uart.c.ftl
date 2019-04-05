@@ -87,7 +87,7 @@ void static ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
-        while((UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_TXEMPTY_Msk)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
+        while((UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
         {
             ${UART_INSTANCE_NAME}_REGS->UART_THR|= ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
         }
@@ -142,7 +142,7 @@ void ${UART_INSTANCE_NAME}_InterruptHandler( void )
     }
 
     /* Transmitter status */
-    if(UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
+    if(UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
     {
         ${UART_INSTANCE_NAME}_ISR_TX_Handler();
     }
@@ -325,7 +325,7 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
 <#if USART_INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
+            if(UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
             {
                 ${UART_INSTANCE_NAME}_REGS->UART_THR = (UART_THR_TXCHR(*lBuffer++) & UART_THR_TXCHR_Msk);
                 processedSize++;
@@ -344,7 +344,7 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
+            if(UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
             {
                 ${UART_INSTANCE_NAME}_REGS->UART_THR = (UART_THR_TXCHR(*lBuffer) & UART_THR_TXCHR_Msk);
                 ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
@@ -402,7 +402,8 @@ int ${UART_INSTANCE_NAME}_ReadByte(void)
 
 void ${UART_INSTANCE_NAME}_WriteByte(int data)
 {
-    while ((UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_TXEMPTY_Msk)) == 0);
+    while ((UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk)) == 0);
+
     ${UART_INSTANCE_NAME}_REGS->UART_THR = (UART_THR_TXCHR(data) & UART_THR_TXCHR_Msk);
 }
 
@@ -410,7 +411,19 @@ bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void )
 {
     bool status = false;
 
-    if(UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
+    if(UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
+    {
+        status = true;
+    }
+
+    return status;
+}
+
+bool ${UART_INSTANCE_NAME}_TransmitComplete( void )
+{
+    bool status = false;
+
+    if(UART_SR_TXEMPTY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXEMPTY_Msk))
     {
         status = true;
     }
@@ -422,7 +435,7 @@ bool ${UART_INSTANCE_NAME}_ReceiverIsReady( void )
 {
     bool status = false;
 
-    if(UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_RXRDY_Msk))
+    if(UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_RXRDY_Msk))
     {
         status = true;
     }
