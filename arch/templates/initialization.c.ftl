@@ -109,7 +109,6 @@ void SYS_Initialize ( void* data )
 {
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START}  <#-- global disable of interrupts before initializing anything -->
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
-    <#lt>${LIST_SYSTEM_INIT_C_BOOTLOADER_TRIGGER}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS}
     <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES}
