@@ -72,11 +72,7 @@
 <#assign ADC_INTENSET_VAL = "">
 <#assign ADC_CTRLA_VAL = "">
 <#if ADC_INPUTCTRL_MUXNEG != "GND">
-    <#if ADC_INPUTCTRL_VAL ! = "">
-        <#assign ADC_INPUTCTRL_VAL = ADC_INPUTCTRL_VAL + " | ADC_INPUTCTRL_DIFFMODE_Msk">
-    <#else>
-        <#assign ADC_INPUTCTRL_VAL = "ADC_CTRLC_DIFFMODE_Msk">
-    </#if>
+    <#assign ADC_INPUTCTRL_VAL = "ADC_INPUTCTRL_DIFFMODE_Msk">
 </#if>
 <#if ADC_CTRLB_LEFTADJ == true>
     <#if ADC_CTRLB_VAL != "">
