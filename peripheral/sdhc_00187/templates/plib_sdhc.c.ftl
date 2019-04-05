@@ -194,6 +194,26 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
     }
 }
 
+void ${SDHC_INSTANCE_NAME}_CardDetectEnable(void)
+{
+    CFGCON2bits.SDCDEN = 0x1;
+}
+
+void ${SDHC_INSTANCE_NAME}_CardDetectDisable(void)
+{
+    CFGCON2bits.SDCDEN = 0x0;
+}
+
+void ${SDHC_INSTANCE_NAME}_WriteProtectEnable(void)
+{
+    CFGCON2bits.SDWPEN = 0x1;
+}
+
+void ${SDHC_INSTANCE_NAME}_WriteProtectDisable(void)
+{
+    CFGCON2bits.SDWPEN = 0x0;
+}
+
 void ${SDHC_INSTANCE_NAME}_ErrorReset ( SDHC_RESET_TYPE resetType )
 {
     ${SDHC_INSTANCE_NAME}CON2 |= (resetType << 24);
@@ -498,7 +518,7 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
 
 void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
 {
-<#if SDHC_SDWPEN == true>
+<#if SDCARD_SDWPEN == true>
     /* Enable SDWPEN# pin */
     CFGCON2bits.SDWPEN = 0x1;
 <#else>
@@ -525,7 +545,7 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
     /* Enable ADMA2 (Check CA0R capability register first) */
     ${SDHC_INSTANCE_NAME}CON1 = ((${SDHC_INSTANCE_NAME}CON1 & ~_SDHCCON1_DMASEL_MASK) | (0x02 << _SDHCCON1_DMASEL_POSITION));
 
-<#if SDHC_SDCDEN == true>
+<#if SDCARD_SDCDEN == true>
     /* Enable the card detect line SDCD */
     CFGCON2bits.SDCDEN = 0x1;
 
@@ -545,7 +565,7 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
 
     /* Wait for the internal clock to stabilize */
     ${SDHC_INSTANCE_NAME}_Delay(1000);
-    
+
     /* Enable the SDCLK */
     SDHCCON2 |= _SDHCCON2_SDCLKEN_MASK;
 

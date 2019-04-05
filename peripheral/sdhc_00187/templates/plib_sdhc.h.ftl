@@ -69,6 +69,14 @@ bool ${SDHC_INSTANCE_NAME}_IsDatLineBusy ( void );
 
 bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void );
 
+void ${SDHC_INSTANCE_NAME}_CardDetectEnable( void );
+
+void ${SDHC_INSTANCE_NAME}_CardDetectDisable( void );
+
+void ${SDHC_INSTANCE_NAME}_WriteProtectEnable( void );
+
+void ${SDHC_INSTANCE_NAME}_WriteProtectDisable( void );
+
 bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void );
 
 bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t clock);
