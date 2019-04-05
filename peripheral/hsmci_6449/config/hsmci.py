@@ -43,7 +43,7 @@ def setVisible(symbol, event):
 
 def setValue(symbol, event):
     symbol.setValue(int(event["value"]), 2)
-    
+
 def destroyComponent(sdhcComponent):
     Database.setSymbolValue("core","DMA_CH_NEEDED_FOR_HSMCI", False, 2)
 
@@ -80,12 +80,22 @@ def instantiateComponent(hsmciComponent):
     if(int(Database.getSymbolValue("core", "DMA_CH_FOR_HSMCI")) == -2):
         sdhcDMAChannelComment.setVisible(True)
     else:
-        sdhcDMAChannelComment.setVisible(False)	
+        sdhcDMAChannelComment.setVisible(False)
 
     sdhcCLK = hsmciComponent.createIntegerSymbol("HSMCI_CLK", None)
     sdhcCLK.setVisible(False)
     sdhcCLK.setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
-    sdhcCLK.setDependencies(setValue, ["core.MASTER_CLOCK_FREQUENCY"])		
+    sdhcCLK.setDependencies(setValue, ["core.MASTER_CLOCK_FREQUENCY"])
+
+    hsmciCDSupport = hsmciComponent.createBooleanSymbol("SDCARD_SDCD_SUPPORT", None)
+    hsmciCDSupport.setLabel("HSMCI SDCD Support")
+    hsmciCDSupport.setDefaultValue(False)
+    hsmciCDSupport.setVisible(False)
+
+    hsmciWPSupport = hsmciComponent.createBooleanSymbol("SDCARD_SDWP_SUPPORT", None)
+    hsmciWPSupport.setLabel("HSMCI SDWP Support")
+    hsmciWPSupport.setDefaultValue(False)
+    hsmciWPSupport.setVisible(False)
 
     ############################################################################
     #### Dependency ####
