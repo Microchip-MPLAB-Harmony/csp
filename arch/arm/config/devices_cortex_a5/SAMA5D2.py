@@ -64,7 +64,7 @@ coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
 
 # load AIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/aic_11051/config/aic.py")
-#coreComponent.addPlugin("../peripheral/aic_11051/plugin/ARM_M7_AICmanager.jar")	# to be provided later
+coreComponent.addPlugin("../peripheral/aic_11051/plugin/aic_11051.jar")
 
 # load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
