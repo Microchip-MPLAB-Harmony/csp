@@ -350,7 +350,7 @@ def instantiateComponent( coreComponent ):
 
     iarSvcStackSize = coreComponent.createIntegerSymbol("IAR_SVC_STACK_SIZE", iarLdGeneralMenu)
     iarSvcStackSize.setLabel("Supervisor Stack Size (bytes)")
-    iarSvcStackSize.setDefaultValue(96)
+    iarSvcStackSize.setDefaultValue(4096)
     iarSvcStackSize.setVisible( iarAllStacks )
 
     iarAbtStackSize = coreComponent.createIntegerSymbol("IAR_ABT_STACK_SIZE", iarLdGeneralMenu)
