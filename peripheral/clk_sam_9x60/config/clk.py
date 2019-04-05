@@ -227,21 +227,32 @@ def update_flexcomm_clock_frequency(symbol, event):
     if frequency >= 0:
         symbol.setValue(frequency, 0)
 
+
+def update_sdmmc_clock_frequency(symbol, event):
+    sdmmc_name = symbol.getID().split("_CLOCK_FREQUENCY")[0]
+
+    # set the HCLOCK frequency
+    mck_clk_freq = event['source'].getSymbolValue("MCK_FREQUENCY")
+    symbol.setValue(mck_clk_freq, 0)
+
+    # set the base clock frequency
+    gclk_clk_freq = event['source'].getSymbolValue(sdmmc_name + "_GCLK_FREQUENCY")
+    base_clk_sym = event['source'].getSymbolByID(sdmmc_name + "_BASECLK_FREQUENCY")
+    base_clk_sym.setValue(gclk_clk_freq / 2)
+
+    # set the multiplier clock frequency
+    mult_clk_sym = event['source'].getSymbolByID(sdmmc_name + "_MULTCLK_FREQUENCY")
+    mult_clk_sym.setValue(gclk_clk_freq)
 #This maps the instance name to the symbol in that instance that determines if we use the peripheral clock or the generic clock.  For the
 #generic handler we assume it is a keyvalueset and 0 maps to the peripheral clock.  Peripherals that don't match this assumption will need
 #to use their own update function and map it in gclk_update_map
 global gclk_dependency_map
 gclk_dependency_map = {
-    "SDMMC0" : "SOME_SYMBOL",
-    "SDMMC1" : "SOME_SYMBOL",
-    "TC0" : "SOME_SYMBOL",
-    "TC1" : "SOME_SYMBOL",
     "ADC" : "ADC_CLK_SRC",
     "LCDC" : "SOME_SYMBOL",
     "I2SMCC" : "SOME_SYMBOL",
     "PIT64B" : "SGCLK",
     "CLASSD" : "SOME_SYMBOL",
-    "DBGU" : "NO_SYMBOL"
 }
 
 def generic_gclk_update_freq(symbol, event):
@@ -266,14 +277,11 @@ def update_dbgu_clock_frequency(symbol, event):
 #map of gclk capable peripherals to their update functions
 gclk_update_map = {
     "FLEXCOM" : update_flexcomm_clock_frequency,
-    "SDMMC" : generic_gclk_update_freq,
-    "TC" : generic_gclk_update_freq,
     "ADC" : generic_gclk_update_freq,
     "LCDC" : generic_gclk_update_freq,
     "I2SMCC" : generic_gclk_update_freq,
     "PIT64B" : generic_gclk_update_freq,
     "CLASSD" : generic_gclk_update_freq,
-    "DBGU" : update_dbgu_clock_frequency
 }
 
 #instantiateComponent of core Component
@@ -665,21 +673,6 @@ for module_node in peripherals_node.getChildren():
 
         else:
             generic_clocks_map.addKey(instance_name, clock_id_node.getAttribute("value"), "")
-
-            if module_node.getAttribute("name") == "FLEXCOM":
-                pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")],
-                                        ['MCK_FREQUENCY',
-                                        instance_name + '_GCLK_FREQUENCY',
-                                        instance_name.lower() + "." + "FLEXCOM_MODE",
-                                        instance_name.lower() + "." + "FLEXCOM_USART_MR_USCLKS",
-                                        instance_name.lower() + "." + "FLEXCOM_SPI_MR_BRSRCCLK",
-                                        instance_name.lower() + "." + "FLEXCOM_TWI_CWGR_BRSRCCLK"])
-            else:
-                pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")],
-                                        ['MCK_FREQUENCY',
-                                        instance_name + '_GCLK_FREQUENCY',
-                                        instance_name.lower() + "." + gclk_dependency_map[instance_name]])
-
             gclk_periph = coreComponent.createMenuSymbol(None, gclk_menu)
             gclk_periph.setLabel(instance_name)
 
@@ -713,35 +706,68 @@ for module_node in peripherals_node.getChildren():
                     'CLK_'+instance_name+'_GCLKCSS', 'CLK_'+instance_name+'_GCLKDIV',
                     'MD_SLOW_CLK_FREQUENCY', 'TD_SLOW_CLOCK_FREQUENCY', 'MAINCK_FREQUENCY',
                     'MCK_FREQUENCY', 'PLLA_FREQUENCY', 'UPLL_FREQUENCY'])
+
+            #DBGU only operates using GCLK
             if module_node.getAttribute("name") == "DBGU":
                 pcr_freq.setDefaultValue(gclk_freq.getValue())
+                pcr_freq.setDependencies(update_dbgu_clock_frequency, [instance_name + "_GCLK_FREQUENCY"])
 
-        # TC plib expects frequency and enable bits per channel. Create dummy symbols to support this
-        if module_node.getAttribute("name") == "TC":
-            tc_ch_en_dep_list = []
-            #  create a dummy symbol per channel. TC has 3 channels. We create three ENABLE symbols( one per channel )
-            #  and four FREQUENCY symbols (one per channel + one additional symbol for quadrature mode )
-            for channel in range(4):
-                if channel < 3:
-                    tc_ch_en_name = instance_name + "_CHANNEL" + str(channel) + "_CLOCK_ENABLE"
-                    tc_ch_en = coreComponent.createBooleanSymbol(tc_ch_en_name, pcr_menu)
-                    tc_ch_en.setVisible(False)
-                    tc_ch_en.setReadOnly(True)
-                    tc_ch_en_dep_list.append(tc_ch_en_name)
+            # TC plib expects frequency and enable bits per channel. Create dummy symbols to support this
+            elif module_node.getAttribute("name") == "TC":
+                tc_ch_en_dep_list = []
+                #  create a dummy symbol per channel. TC has 3 channels. We create three ENABLE symbols( one per channel )
+                #  and four FREQUENCY symbols (one per channel + one additional symbol for quadrature mode )
+                for channel in range(4):
+                    if channel < 3:
+                        tc_ch_en_name = instance_name + "_CHANNEL" + str(channel) + "_CLOCK_ENABLE"
+                        tc_ch_en = coreComponent.createBooleanSymbol(tc_ch_en_name, pcr_menu)
+                        tc_ch_en.setVisible(False)
+                        tc_ch_en.setReadOnly(True)
+                        tc_ch_en_dep_list.append(tc_ch_en_name)
 
-                tc_ch_freq = coreComponent.createIntegerSymbol(
-                    instance_name + "_CH" + str(channel) + "_CLOCK_FREQUENCY", pcr_menu)
-                tc_ch_freq.setVisible(False)
-                tc_ch_freq.setReadOnly(True)
-                tc_ch_freq.setDefaultValue(Database.getSymbolValue("core", "MCK_FREQUENCY"))
-                tc_ch_freq.setDependencies(update_tc_freq,
-                                           ["MCK_FREQUENCY",
-                                            "MD_SLOW_CLK_FREQUENCY",
-                                            instance_name + "_GCLK_FREQUENCY",
-                                            instance_name.lower() + ".TC" + str(channel) + "_CMR_TCCLKS",
-                                            instance_name.lower() + ".TC" + str(channel) + "_ENABLE"])
+                    tc_ch_freq = coreComponent.createIntegerSymbol(
+                        instance_name + "_CH" + str(channel) + "_CLOCK_FREQUENCY", pcr_menu)
+                    tc_ch_freq.setVisible(False)
+                    tc_ch_freq.setReadOnly(True)
+                    tc_ch_freq.setDefaultValue(Database.getSymbolValue("core", "MCK_FREQUENCY"))
+                    tc_ch_freq.setDependencies(update_tc_freq,
+                                               ["MCK_FREQUENCY",
+                                                "MD_SLOW_CLK_FREQUENCY",
+                                                instance_name + "_GCLK_FREQUENCY",
+                                                instance_name.lower() + ".TC" + str(channel) + "_CMR_TCCLKS",
+                                                instance_name.lower() + ".TC" + str(channel) + "_ENABLE"])
 
-            pcr_en.setDependencies(update_tc_enable, tc_ch_en_dep_list)
+                pcr_en.setDependencies(update_tc_enable, tc_ch_en_dep_list)
+
+            # SDMMC requires two additional frequency symbols for mapping to the base clock and multiplier clock
+            elif module_node.getAttribute("name") == "SDMMC":
+                sdmmc_baseclk_freq_sym = coreComponent.createIntegerSymbol(instance_name + "_BASECLK_FREQUENCY", pcr_menu)
+                sdmmc_baseclk_freq_sym.setVisible(False)
+                sdmmc_baseclk_freq_sym.setReadOnly(True)
+                sdmmc_baseclk_freq_sym.setDefaultValue(gclk_freq.getValue() / 2)
+
+                sdmmc_multclk_freq_sym = coreComponent.createIntegerSymbol(instance_name + "_MULTCLK_FREQUENCY", pcr_menu)
+                sdmmc_multclk_freq_sym.setVisible(False)
+                sdmmc_multclk_freq_sym.setReadOnly(True)
+                sdmmc_multclk_freq_sym.setDefaultValue(gclk_freq.getValue())
+
+                pcr_freq.setDependencies(update_sdmmc_clock_frequency, ['MCK_FREQUENCY', instance_name + '_GCLK_FREQUENCY'])
+
+            #Flexcomm requires additional symbol dependencies for mode selection
+            elif module_node.getAttribute("name") == "FLEXCOM":
+                pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")],
+                                         ['MCK_FREQUENCY',
+                                          instance_name + '_GCLK_FREQUENCY',
+                                          instance_name.lower() + "." + "FLEXCOM_MODE",
+                                          instance_name.lower() + "." + "FLEXCOM_USART_MR_USCLKS",
+                                          instance_name.lower() + "." + "FLEXCOM_SPI_MR_BRSRCCLK",
+                                          instance_name.lower() + "." + "FLEXCOM_TWI_CWGR_BRSRCCLK"])
+
+            else:
+                pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")],
+                                         ['MCK_FREQUENCY', instance_name + '_GCLK_FREQUENCY',
+                                          instance_name.lower() + "." + gclk_dependency_map[instance_name]])
+
 
 sys_clk_menu = coreComponent.createMenuSymbol("CLK_SYSTEM_CLK_MENU", menu)
 sys_clk_menu.setLabel("System Clocks")
