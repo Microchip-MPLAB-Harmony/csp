@@ -137,6 +137,10 @@ def instantiateComponent(supcComponent):
     supcSym_BOD33_PSEL.setDefaultValue(0)
     supcSym_BOD33_PSEL.setOutputMode("Value")
     supcSym_BOD33_PSEL.setDisplayMode("Description")
+    
+    #BOD Configuration comment
+    supcSym_BOD33_FuseComment = supcComponent.createCommentSymbol("SUPC_CONFIG_COMMENT", supcSym_BOD33_Menu)
+    supcSym_BOD33_FuseComment.setLabel("Note: Configure BOD33 Fuses using 'System' component")
 
     #VREG Menu
     supcSym_VREG_Menu= supcComponent.createMenuSymbol("VREG_MENU", None)
