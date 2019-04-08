@@ -41,6 +41,13 @@ global sort_alphanumeric
 global availablePinDictionary
 availablePinDictionary = {}
 
+node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"MATRIX\"]/register-group@[name=\"MATRIX\"]/register@[name=\"CCFG_SYSIO\"]")
+global sysioPresent
+
+sysioPresent = coreComponent.createBooleanSymbol("CCFG_SYSIO_PRESENT", None)
+sysioPresent.setVisible(False)
+if node != None:
+    sysioPresent.setDefaultValue(True)
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
@@ -130,6 +137,7 @@ def pinDirCal(pin, event):
 
 
 def pinFunctionCal(pType, pFunction):
+    global sysioPresent
     global pioSym_PIO_PDR
     global pioSym_PIO_ABCDSR1
     global pioSym_PIO_ABCDSR2
@@ -169,14 +177,14 @@ def pinFunctionCal(pType, pFunction):
             ABCDSR2_Value &= ~(1 << bit_pos)
             PDR_Value &= ~(1 << bit_pos)
 
-
-        if (portChannel == "B") and ((bit_pos == 4) or (bit_pos == 5) or (bit_pos == 6) or (bit_pos == 7) or (bit_pos == 12)):
-            CCFG_SYSIO_Value = pioMatrixSym_CCFG_SYSIO.getValue()
-            if (pType.getValue() == "ICE_TDI") or (pType.getValue() == "ICE_TDO/TRACESWO") or (pType.getValue() == "ICE_TMS/SWDIO") or (pType.getValue() == "ICE_TCK/SWDCLK") or (pType.getValue() == "EFC_ERASE") or (pFunction["value"] == ""):
-                CCFG_SYSIO_Value &= ~(1 << bit_pos)
-            else:
-                CCFG_SYSIO_Value |= (1 << bit_pos)
-            pioMatrixSym_CCFG_SYSIO.setValue(CCFG_SYSIO_Value, 2)
+        if sysioPresent.getValue():
+            if (portChannel == "B") and ((bit_pos == 4) or (bit_pos == 5) or (bit_pos == 6) or (bit_pos == 7) or (bit_pos == 12)):
+                CCFG_SYSIO_Value = pioMatrixSym_CCFG_SYSIO.getValue()
+                if (pType.getValue() == "ICE_TDI") or (pType.getValue() == "ICE_TDO/TRACESWO") or (pType.getValue() == "ICE_TMS/SWDIO") or (pType.getValue() == "ICE_TCK/SWDCLK") or (pType.getValue() == "EFC_ERASE") or (pFunction["value"] == ""):
+                    CCFG_SYSIO_Value &= ~(1 << bit_pos)
+                else:
+                    CCFG_SYSIO_Value |= (1 << bit_pos)
+                pioMatrixSym_CCFG_SYSIO.setValue(CCFG_SYSIO_Value, 2)
 
         pioSym_PIO_PDR[channelIndex].setValue(PDR_Value, 2)
         pioSym_PIO_ABCDSR1[channelIndex].setValue(ABCDSR1_Value, 2)
@@ -754,7 +762,7 @@ pioMatrixSym_CCFG_SYSIO = coreComponent.createHexSymbol("PIO_CCFG_SYSIO_VALUE", 
 pioMatrixSym_CCFG_SYSIO.setLabel("CCFG_SYSIO")
 pioMatrixSym_CCFG_SYSIO.setDescription("System Pins as GPIO")
 pioMatrixSym_CCFG_SYSIO.setDefaultValue(0x00000000)
-pioMatrixSym_CCFG_SYSIO.setReadOnly(True)
+pioMatrixSym_CCFG_SYSIO.setVisible(False)
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
