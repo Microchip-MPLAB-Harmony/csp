@@ -33,9 +33,13 @@ def updatePACCodeGenerationProperty(symbol, event):
     component.getSymbolByID("PAC_SOURCE").setEnabled(event["value"])
     component.getSymbolByID("PAC_SYS_DEF").setEnabled(event["value"])
 
+    Database.setSymbolValue("core", pacInstanceName.getValue() + "_CLOCK_ENABLE", event["value"], 1)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
+
+global pacInstanceName
 
 #PAC menu
 pacSym_Menu = coreComponent.createMenuSymbol("PAC_MENU", None)
@@ -59,14 +63,11 @@ for module in range (0, len(modules)):
     for instance in range (0, len(instances)):
         options = instances[instance].getChildren()
         periName = str(instances[instance].getAttribute("name"))
-        if moduleName == "PAC":
-            Database.setSymbolValue("core", periName + "_CLOCK_ENABLE", True, 2)
         for option in range (0, len(options)):
             parameters = options[option].getChildren()
             for parameter in range(0, len(parameters)):
                 name = str(parameters[parameter].getAttribute("name"))
-                if "INSTANCE_ID" in name:
-                    instanceId = str(parameters[parameter].getAttribute("value"))
+                if "INSTANCE_ID" in name and moduleName not in [pacInstanceName.getValue(), "HMATRIXB"]:   #Skip which can't be protected
 
                     pacSym_PeripheralName = coreComponent.createStringSymbol("PAC_" + str(pacIndex) + "_PERI_NAME", pacSym_Use)
                     pacSym_PeripheralName.setDefaultValue(periName)
@@ -83,9 +84,6 @@ pacSym_PeriCount.setVisible(False)
 ###################################################################################################
 
 configName = Variables.get("__CONFIGURATION_NAME")
-
-pacModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PAC\"]")
-pacModuleID = pacModuleNode.getAttribute("id")
 
 pacSym_HeaderFile = coreComponent.createFileSymbol("PAC_HEADER", None)
 pacSym_HeaderFile.setSourcePath("../peripheral/pac_u2211/templates/plib_pac.h.ftl")
