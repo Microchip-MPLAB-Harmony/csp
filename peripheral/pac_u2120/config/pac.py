@@ -76,11 +76,14 @@ def updatePACErrorEventVisibleProperty(symbol, event):
         component.getSymbolByID("PAC_INTERRUPT_ENABLE_COMMENT").setVisible(False)
 
 def evsysSetup(symbol, event):
+
     pacActive = Database.getSymbolValue(event["namespace"], "PAC_USE")
     eventActive = Database.getSymbolValue(event["namespace"], "PAC_ERROR_EVENT")
     prevStatus = Database.getSymbolValue("evsys", "GENERATOR_PAC_ACCERR_ACTIVE")
+
     if (prevStatus != (pacActive & eventActive)):
         Database.setSymbolValue("evsys", "GENERATOR_PAC_ACCERR_ACTIVE", (pacActive & eventActive), 2)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -130,7 +133,6 @@ for module in range (0, len(modules)):
                 name = str(parameters[parameter].getAttribute("name"))
                 if "INSTANCE_ID" in name:
                     periName = str(instances[instance].getAttribute("name"))
-                    instanceId = str(parameters[parameter].getAttribute("value"))
 
                     pacSym_PeripheralName = coreComponent.createStringSymbol("PAC_" + str(pacIndex) + "_PERI_NAME", pacSym_Use)
                     pacSym_PeripheralName.setDefaultValue(periName)
@@ -167,9 +169,6 @@ pacSym_IntEnComment.setDependencies(updatePACInterruptWarringStatus, ["core." + 
 ###################################################################################################
 
 configName = Variables.get("__CONFIGURATION_NAME")
-
-pacModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PAC\"]")
-pacModuleID = pacModuleNode.getAttribute("id")
 
 pacSym_HeaderFile = coreComponent.createFileSymbol("PAC_HEADER", None)
 pacSym_HeaderFile.setSourcePath("../peripheral/pac_u2120/templates/plib_pac.h.ftl")
