@@ -15,6 +15,7 @@
     "main" function calls the "SYS_Initialize" function to initialize the state
     machines of all modules in the system
  *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
@@ -50,9 +51,16 @@
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
+
+
 #define LED_ON LED_Clear
 #define LED_OFF LED_Set
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Main Entry Point
+// *****************************************************************************
+// *****************************************************************************
 enum
 {
   IDLE_SLEEP_MODE = 'a',
@@ -63,21 +71,9 @@ enum
 
 uint8_t cmd = 0;
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Application Callback Functions
-// *****************************************************************************
-// *****************************************************************************
 void timeout (uintptr_t context)
 {
     LED_Toggle();    
-}
-
-void configure_alarm()
-{
-    RTC_Timer32Stop();
-    RTC_Timer32CounterSet(0);
-    RTC_Timer32Start();
 }
 
 void display_menu (void)
@@ -99,77 +95,73 @@ void display_menu (void)
 
 int main ( void )
 {
-    RSTC_RESET_CAUSE reset_cause;
     RSTC_BKUPEXIT_CAUSE reset_cause_bkup;
-   
+    RSTC_RESET_CAUSE reset_cause;
+            
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+    
     SUPC_SelectVoltageRegulator(SUPC_VREGSEL_BUCK);
-
+    
     reset_cause_bkup = RSTC_BackupExitCauseGet();
     reset_cause = RSTC_ResetCauseGet();
-   
     
     printf("\n\n\r----------------------------------------------");
-    printf("\n\r             Low power demo using RTC           ");
+    printf("\n\r                 LOW power demo using EIC"               );
     printf("\n\r----------------------------------------------"); 
-          
-    if(reset_cause_bkup == RSTC_BKUPEXIT_RTC_Msk)
+    
+    if(reset_cause_bkup == RSTC_BKUPEXIT_EXTWAKE_Msk)
         printf("\n\n\rDevice exited from Backup mode\n");
     else if(reset_cause == RSTC_RCAUSE_POR_Msk)
         printf("\n\n\rDevice exited from OFF mode\n");
-
+    
     SYSTICK_TimerCallbackSet(&timeout, (uintptr_t) NULL);
     SYSTICK_TimerStart();
-    RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK_CMP0);
+    
     display_menu();
+    
     while(1)
     {
         switch(cmd)
         {
             case IDLE_SLEEP_MODE:
             {
-                printf("\n\n\rConfiguring RTC Compare Match for wake up.......");
-                configure_alarm();
+                printf("\n\rEntering IDLE SLEEP Mode");
+                printf("\n\rPress SW0 to wakeup the device"); 
                 SYSTICK_TimerStop();
-                printf("\n\rEntering Idle Mode");
                 LED_OFF();
                 PM_IdleModeEnter();
-                printf("\n\rRTC Compare Match triggered waking up device from Idle mode");
+                printf("\n\rSW0 Pressed exiting Sleep mode......");
                 SYSTICK_TimerStart();
                 display_menu();
                 break;
             }
             case STANDBY_SLEEP_MODE:
             {
-                printf("\n\n\rConfiguring RTC Compare Match for wake up.......");
-                configure_alarm();
+                printf("\n\rEntering STANDBY SLEEP Mode");
+                printf("\n\rPress SW0 to wakeup the device");   
                 SYSTICK_TimerStop();
-                printf("\n\rEntering Standby Mode");
                 LED_OFF();
                 PM_StandbyModeEnter();
-                printf("\n\rRTC Compare Match triggered waking up device from Standby mode");
+                printf("\n\rSW0 Pressed exiting Standby mode......");
                 SYSTICK_TimerStart();
                 display_menu();
                 break;
             }
             case BACKUP_SLEEP_MODE:
             {
-                printf("\n\n\rConfiguring RTC Compare Match for wake up.......");
-                configure_alarm();
+                printf("\n\rEntering BACKUP SLEEP Mode");
+                printf("\n\rPress Reset button to wakeup the device   ");   
                 SYSTICK_TimerStop();
-                printf("\n\rEntering Backup Mode   ");
                 LED_OFF();
                 PM_BackupModeEnter();
                 break;
             }
             case OFF_SLEEP_MODE:
             {
-                printf("\n\n\rConfiguring RTC Compare Match for wake up.......");
-                configure_alarm();
+                printf("\n\rEntering OFF SLEEP Mode");
+                printf("\n\rPress Reset button to wakeup the device  ");   
                 SYSTICK_TimerStop();
-                printf("\n\rEntering OFF Mode");
-                printf("\n\rPress Reset button to wakeup the device   ");   
                 LED_OFF();
                 PM_OffModeEnter();
                 break;
@@ -187,6 +179,7 @@ int main ( void )
 
     return ( EXIT_FAILURE );
 }
+
 /*******************************************************************************
  End of File
 */
