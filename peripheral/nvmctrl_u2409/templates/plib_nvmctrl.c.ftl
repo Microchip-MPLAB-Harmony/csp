@@ -131,7 +131,9 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
         <#lt>   ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & (~NVMCTRL_CTRLA_AUTOWS_Msk);
     </#if>
 <#else>
-    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA |= ${NVMCTRL_CTRLA_VAL};
+    <#if NVMCTRL_CTRLA_VAL?has_content >
+    <#lt>   ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA |= ${NVMCTRL_CTRLA_VAL};
+    </#if>
 </#if>
 <#if NVMCTRL_SEECFG_VAL?has_content >
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEECFG |= ${NVMCTRL_SEECFG_VAL};
@@ -157,10 +159,10 @@ void ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WRITEMODE mode)
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & (~NVMCTRL_CTRLA_WMODE_Msk)) | mode;
 }
 
-uint8_t ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t address)
+bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t address)
 {
     uint8_t i = 0;
-    int8_t wr_status = -1;
+    bool wr_status = false;
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
 
@@ -170,7 +172,7 @@ uint8_t ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t ad
     /* If the address is not a quad word address, return error */
     if((address & 0x03) != 0)
     {
-        wr_status = -1;
+        wr_status = false;
     }
     else
     {
@@ -184,15 +186,15 @@ uint8_t ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t ad
         }
         /* Restore the write mode */
         ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(wr_mode);
-        wr_status = 0;
+        wr_status = true;
     }
     return wr_status;
 }
 
-uint8_t ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t address)
+bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t address)
 {
     uint8_t i = 0;
-    int8_t wr_status = -1;
+    bool wr_status = false;
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
 
@@ -202,7 +204,7 @@ uint8_t ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t 
     /* If the address is not a double word address, return error */
     if((address & 0x01) != 0)
     {
-        wr_status = -1;
+        wr_status = false;
     }
     else
     {
@@ -216,7 +218,7 @@ uint8_t ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t 
         }
         /* Restore the write mode */
         ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(wr_mode);
-        wr_status = 0;
+        wr_status = true;
     }
     return wr_status;
 }
