@@ -48,42 +48,54 @@
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
+#include <string.h>
 #include "definitions.h"                // SYS function prototypes
 
 /*************************************************************************************
 FLEXCOM USART - Connect USB UART click board to mikroBUS Connector.
 *************************************************************************************/
 
-#define RX_BUFFER_SIZE 255
+#define RX_BUFFER_SIZE 10
 
 #define LED_Toggle()                       LED_GREEN_Toggle()
 
-char messageStart[] = "**** FLEXCOM USART Line Echo Demo ****\r\n\
-**** Demo uses blocking model of FLEXCOM USART PLIB. ****\r\n\
-**** Enter a line of characters, press ENTER key and observe it echo back. ****\
-\r\n**** LED toggles on each time the line is echoed ****\r\n";
-char newline[] = "\r\n";
-char errorMessage[] = "\r\n**** FLEXCOM USART error has occurred ****\r\n";
+char messageStart[] = "**** FLEXCOM USART echo interrupt demo ****\r\n\
+**** Type a buffer of 10 characters and observe it echo back ****\r\n\
+**** LED toggles on each time the buffer is echoed ****\r\n";
 char receiveBuffer[RX_BUFFER_SIZE];
-uint8_t rxCounter = 0;
-char data = 0;
+char echoBuffer[2*RX_BUFFER_SIZE];
+char messageError[] = "**** FLEXCOM USART error occurred ****\r\n";
+
+bool errorStatus = false;
+bool writeStatus = false;
+bool readStatus = false;
+
+void APP_WriteCallback(uintptr_t context)
+{
+    writeStatus = true;
+}
+
+void APP_ReadCallback(uintptr_t context)
+{
+    if(FLEXCOM5_USART_ErrorGet() != FLEXCOM_USART_ERROR_NONE)
+    {
+        /* ErrorGet clears errors, set error flag to notify console */
+        errorStatus = true;
+    }
+    else
+    {
+        readStatus = true;
+    }
+}
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
 // *****************************************************************************
 // *****************************************************************************
-//
-static void echoBuffer(void)
-{
-    FLEXCOM5_USART_Write(receiveBuffer,rxCounter);
-    FLEXCOM5_USART_Write(newline,sizeof(newline));
-    rxCounter = 0;
-}
 
 int main ( void )
 {
-
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
@@ -92,34 +104,40 @@ int main ( void )
     LED_GREEN_Clear();
     LED_BLUE_Clear();
 
-    /* Send start message */
+    /* Register callback functions and send start message */
+    FLEXCOM5_USART_WriteCallbackRegister(APP_WriteCallback, 0);
+    FLEXCOM5_USART_ReadCallbackRegister(APP_ReadCallback, 0);
     FLEXCOM5_USART_Write(&messageStart, sizeof(messageStart));
 
     while ( true )
     {
-        /* Check if there is a received character */
-        if(FLEXCOM5_USART_ReceiverIsReady() == true)
+        if(errorStatus == true)
         {
-            if(FLEXCOM5_USART_ErrorGet() == FLEXCOM_USART_ERROR_NONE)
-            {
-                FLEXCOM5_USART_Read(&data, 1);
+            /* Send error message to console */
+            errorStatus = false;
+            FLEXCOM5_USART_Write(&messageError, sizeof(messageError));
+        }
+        else if(readStatus == true)
+        {
+            /* Echo back received buffer and Toggle LED */
+            readStatus = false;
 
-                if((data == '\n') || (data == '\r'))
-                {
-                    echoBuffer();
-                    LED_Toggle();
-                }
-                else
-                {
-                    receiveBuffer[rxCounter++] = data;
-                    if(rxCounter == RX_BUFFER_SIZE)
-                      echoBuffer();
-                }
-            }
-            else
-            {
-                FLEXCOM5_USART_Write(errorMessage,sizeof(errorMessage));
-            }
+            memcpy(echoBuffer, receiveBuffer, sizeof (receiveBuffer));
+            memcpy(&echoBuffer[RX_BUFFER_SIZE], "\r\n", 2);            
+
+            FLEXCOM5_USART_Write(&echoBuffer, sizeof(echoBuffer));
+            LED_Toggle();
+        }
+        else if(writeStatus == true)
+        {
+            /* Submit buffer to read user data */
+            writeStatus = false;
+            FLEXCOM5_USART_Read(&receiveBuffer, sizeof(receiveBuffer));
+        }
+        else
+        {
+            /* Repeat the loop */
+            ;
         }
     }
 
