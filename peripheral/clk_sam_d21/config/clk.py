@@ -1226,6 +1226,11 @@ for name in peripheralList:
     clkSymExtPeripheral.setReadOnly(True)
     gclkDependencyList.append(name + "_CLOCK_ENABLE")
 
+pacEnable = coreComponent.createBooleanSymbol("PAC_CLOCK_ENABLE", peripheralClockMenu)
+pacEnable.setLabel("PAC Clock Enable")
+pacEnable.setDefaultValue(False)
+gclkDependencyList.append("PAC_CLOCK_ENABLE")
+
 clockTrigger = coreComponent.createBooleanSymbol("TRIGGER_LOGIC", None)
 clockTrigger.setVisible(False)
 clockTrigger.setDependencies(clkSetup, triggerdepList)
@@ -1297,6 +1302,9 @@ def apbValue(symbol,event):
 
     if "_DIG" in perInstance:
         return
+
+    if "PAC" in perInstance:
+        perInstance = "PAC2"
 
     if "EVSYS" in perInstance:
         perInstance = perInstance.split("_")[0]
