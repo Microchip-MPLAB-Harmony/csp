@@ -95,7 +95,7 @@ def tcClockFreqCalc(symbol, event):
                 elif (clk_src == 4):
                     symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/128, 2)
                 elif (clk_src == 5):
-                    symbol.setValue(int(Database.getSymbolValue("core", "CLK_SLOW_XTAL")), 2)
+                    symbol.setValue(int(Database.getSymbolValue("core", "SLOW_CLK_FREQ")), 2)
                 else:
                     symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
 
@@ -251,6 +251,12 @@ def __update_slow_xtal_freq_ro_prop(slow_xtal_input_freq, event):
     else:
         slow_xtal_input_freq.setReadOnly(False)
 
+def __calc_slow_clk_freq(symbol, event):
+    if event["value"] == False:
+        symbol.setValue(32000)
+    else:
+        symbol.setValue(32768)
+
 def __disable_main_xtal(main_xtal_enable, event):
     """
     Disables Main XTAL after enabling XTAL Bypass.
@@ -296,7 +302,7 @@ def __update_pcer1_value(pmc_pcer1, perip_clk):
     else:
         pmc_pcer1.setValue(pcer1 & ~(1 << (DICT_PCER1[perip_clk["id"]] % 32)), 1)
 
-def __slow_clock_menu(clk_comp, clk_menu, supc_reg_module, update_slow_xtal_freq_ro_prop):
+def __slow_clock_menu(clk_comp, clk_menu, supc_reg_module, update_slow_xtal_freq_ro_prop, calc_slow_clk_freq):
     """
     Slow Clock Menu Implementation.
 
@@ -341,6 +347,11 @@ def __slow_clock_menu(clk_comp, clk_menu, supc_reg_module, update_slow_xtal_freq
     sym_slow_xtal_freq.setDefaultValue(32768)
     sym_slow_xtal_freq.setReadOnly(True)
     sym_slow_xtal_freq.setDependencies(update_slow_xtal_freq_ro_prop, ["SUPC_MR_OSCBYPASS"])
+
+    sym_slow_clock_freq = clk_comp.createIntegerSymbol("SLOW_CLK_FREQ", sym_supc_cr_xtalsel)
+    sym_slow_clock_freq.setLabel("Slow Clock Frequency")
+    sym_slow_clock_freq.setDefaultValue(32000)
+    sym_slow_clock_freq.setDependencies(calc_slow_clk_freq, ["SUPC_CR_XTALSEL"])
 
 # Main RC/Crystal Oscillator
 def __main_clock_menu(clk_comp, clk_menu, pmc_reg_module, disable_main_xtal):
@@ -948,7 +959,7 @@ if __name__ == "__main__":
     UTMI_REGISTERS = Register.getRegisterModule("UTMI")
 
     # Creates slow clock menu
-    __slow_clock_menu(coreComponent, SYM_CLK_MENU, SUPC_REGISTERS, __update_slow_xtal_freq_ro_prop)
+    __slow_clock_menu(coreComponent, SYM_CLK_MENU, SUPC_REGISTERS, __update_slow_xtal_freq_ro_prop, __calc_slow_clk_freq)
 
     # creates main clock menu
     __main_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, __disable_main_xtal)
@@ -1032,7 +1043,7 @@ if __name__ == "__main__":
         sym_tc_ch0_clock_freq[tcInstance].setVisible(False)
         sym_tc_ch0_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_tc_ch0_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC0_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC", \
-        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC0_ENABLE", \
+        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.SLOW_CLK_FREQ", "tc"+str(tcInstance)+".TC0_ENABLE", \
         "core.TC"+str(tcInstance)+"_CHANNEL0_CLOCK_ENABLE"])
 
         sym_tc_ch1_clock_freq.append(tcInstance)
@@ -1040,7 +1051,7 @@ if __name__ == "__main__":
         sym_tc_ch1_clock_freq[tcInstance].setVisible(False)
         sym_tc_ch1_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_tc_ch1_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC1_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC", \
-        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC1_ENABLE", \
+        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.SLOW_CLK_FREQ", "tc"+str(tcInstance)+".TC1_ENABLE", \
         "core.TC"+str(tcInstance)+"_CHANNEL1_CLOCK_ENABLE"])
 
         sym_tc_ch2_clock_freq.append(tcInstance)
@@ -1048,7 +1059,7 @@ if __name__ == "__main__":
         sym_tc_ch2_clock_freq[tcInstance].setVisible(False)
         sym_tc_ch2_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_tc_ch2_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC2_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC", \
-        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC2_ENABLE", \
+        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.SLOW_CLK_FREQ", "tc"+str(tcInstance)+".TC2_ENABLE", \
         "core.TC"+str(tcInstance)+"_CHANNEL2_CLOCK_ENABLE"])
 
         #CH3 is used for quadrature speed mode
@@ -1057,7 +1068,7 @@ if __name__ == "__main__":
         sym_tc_ch3_clock_freq[tcInstance].setVisible(False)
         sym_tc_ch3_clock_freq[tcInstance].setDefaultValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")))
         sym_tc_ch3_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC3_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC", \
-        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.CLK_SLOW_XTAL", "tc"+str(tcInstance)+".TC3_ENABLE", \
+        "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.SLOW_CLK_FREQ", "tc"+str(tcInstance)+".TC3_ENABLE", \
         "core.TC"+str(tcInstance)+"_CHANNEL3_CLOCK_ENABLE"])
 
     #File handling
