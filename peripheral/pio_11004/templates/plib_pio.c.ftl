@@ -94,10 +94,16 @@
     <#if PIO_PDR != "0">
         <#lt>    /* PORT${PIO_PORT} PIO Disable and Peripheral Enable*/
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PDR = 0x${PIO_PDR};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PER = ~0x${PIO_PDR};
+    <#else>
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_PER = 0xFFFFFFFF;
     </#if>
     <#if PIO_OD != "0">
         <#lt>    /* PORT${PIO_PORT} Multi Drive or Open Drain Enable */
         <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDER = 0x${PIO_OD};
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDDR = ~0x${PIO_OD};
+    <#else>
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_MDDR = 0xFFFFFFFF;
     </#if>
     <#lt>    /* PORT${PIO_PORT} Pull Up Enable/Disable as per MHC selection */
     <#if PIO_PUEN != "0">
@@ -115,13 +121,12 @@
     </#if>
     <#lt>    /* PORT${PIO_PORT} Output Write Enable */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OWER = PIO_OWER_Msk;
-    <#if PIO_DIR != "0">
-        <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR};
-        <#if PIO_LAT_HIGH != "0">
-            <#lt>    /* PORT${PIO_PORT} Initial state High */
-            <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SODR = 0x${PIO_LAT_HIGH};
-        </#if>
+    <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
+    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR};
+    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODR = ~0x${PIO_DIR};
+    <#if PIO_LAT_HIGH != "0">
+        <#lt>    /* PORT${PIO_PORT} Initial state High */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODSR = 0x${PIO_LAT_HIGH};
     </#if>
     <#if PIO_INTERRUPT == true>
         <#if PIO_INT_TYPE != "0">
@@ -186,9 +191,11 @@
 */
 void PIO_Initialize ( void )
 {
+    <#if CCFG_SYSIO_PRESENT>
     <#if PIO_CCFG_SYSIO_VALUE != "0">
         <#lt>    /* Selected System IO pins are configured as GPIO */
         <#lt>    MATRIX_REGS->CCFG_SYSIO |= 0x${PIO_CCFG_SYSIO_VALUE};
+    </#if>
     </#if>
 
     <#if PORTA_EXISTS == true>
