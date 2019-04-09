@@ -67,6 +67,21 @@
 // *****************************************************************************
 // *****************************************************************************
 
+bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
+{
+    bool status = false;
+    uint32_t pacAddress = PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * (peripheral >> 5));
+    uint32_t periMask = PAC_WPSET_WP_Pos << (peripheral & 0x1f);
+
+    /* Check if peripheral is protected or not */
+    if((((pac_registers_t *)pacAddress)->PAC_WPSET & periMask) == periMask)
+    {
+        status = true;
+    }
+
+    return status;
+}
+
 void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation )
 {
     uint32_t pacAddress = PAC0_BASE_ADDRESS + (PAC_INSTANCE_OFFSET * (peripheral >> 5));
@@ -74,25 +89,12 @@ void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC
 
     if(operation == PAC_PROTECTION_SET)
     {
-        /* Locking an already locked peripheral will cause a hard fault
-         * exception, and terminate program execution.
-         */
-        if((((pac_registers_t *)pacAddress)->PAC_WPSET & periMask) != periMask)
-        {
-            /* Lock the Peripheral interface */
-            ((pac_registers_t *)pacAddress)->PAC_WPSET = periMask;
-        }
+        /* Lock the Peripheral interface */
+        ((pac_registers_t *)pacAddress)->PAC_WPSET = periMask;
     }
     else if(operation == PAC_PROTECTION_CLEAR)
     {
-        /* UnLocking an already locked peripheral will cause a hard fault
-         * exception, and terminate program execution.
-         */
-        if((((pac_registers_t *)pacAddress)->PAC_WPCLR & periMask) == periMask)
-        {
-            /* Unlock the Peripheral interface */
-            ((pac_registers_t *)pacAddress)->PAC_WPCLR = periMask;
-        }
+        /* Unlock the Peripheral interface */
+        ((pac_registers_t *)pacAddress)->PAC_WPCLR = periMask;
     }
 }
-

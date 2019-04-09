@@ -69,17 +69,6 @@ PAC_CALLBACK_OBJ ${PAC_INSTANCE_NAME?lower_case}CallbackObject;
 // *****************************************************************************
 // *****************************************************************************
 
-static bool PAC_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
-{
-    bool status = false;
-    uint32_t *statusRegBaseAddr = (uint32_t*) &(PAC_REGS->PAC_STATUSA);
-
-    /* Verify if the peripheral is protected or not */
-    status = (bool)((*(statusRegBaseAddr + (peripheral / 32))) & (1 << (peripheral % 32)));
-
-    return status;
-}
-
 void ${PAC_INSTANCE_NAME}_Initialize( void )
 {
 <#if PAC_INTERRRUPT_MODE == true>
@@ -93,35 +82,21 @@ void ${PAC_INSTANCE_NAME}_Initialize( void )
 </#if>
 }
 
+bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
+{
+    bool status = false;
+    uint32_t *statusRegBaseAddr = (uint32_t*) &(PAC_REGS->PAC_STATUSA);
+
+    /* Verify if the peripheral is protected or not */
+    status = (bool)((*(statusRegBaseAddr + (peripheral / 32))) & (1 << (peripheral % 32)));
+
+    return status;
+}
+
 void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation )
 {
-    if(operation == PAC_PROTECTION_CLEAR)
-    {
-        /* UnLocking an already locked peripheral will cause a hard fault
-         * exception, and terminate program execution.
-         */
-        if(PAC_PeripheralIsProtected(peripheral) == true)
-        {
-            /* Set Peripheral Access Control */
-            PAC_REGS->PAC_WRCTRL = PAC_WRCTRL_PERID(peripheral) | PAC_WRCTRL_KEY(operation);
-        }
-    }
-    else if(operation == PAC_PROTECTION_SET)
-    {
-        /* Locking an already locked peripheral will cause a hard fault
-         * exception, and terminate program execution.
-         */
-        if(PAC_PeripheralIsProtected(peripheral) == false)
-        {
-            /* Set Peripheral Access Control */
-            PAC_REGS->PAC_WRCTRL = PAC_WRCTRL_PERID(peripheral) | PAC_WRCTRL_KEY(operation);
-        }
-    }
-    else
-    {
-        /* Set Peripheral Access Control */
-        PAC_REGS->PAC_WRCTRL = PAC_WRCTRL_PERID(peripheral) | PAC_WRCTRL_KEY(operation);
-    }
+    /* Set Peripheral Access Control */
+    PAC_REGS->PAC_WRCTRL = PAC_WRCTRL_PERID(peripheral) | PAC_WRCTRL_KEY(operation);
 }
 
 <#if PAC_INTERRRUPT_MODE = true>

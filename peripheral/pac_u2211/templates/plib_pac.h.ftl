@@ -101,6 +101,8 @@ typedef enum
 // *****************************************************************************
 // *****************************************************************************
 
+bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral );
+
 void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation );
 
 // DOM-IGNORE-BEGIN
