@@ -124,6 +124,8 @@ void ${PAC_INSTANCE_NAME}_Initialize( void );
 
 void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation );
 
+bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral );
+
 <#if PAC_INTERRRUPT_MODE = true>
 void ${PAC_INSTANCE_NAME}_CallbackRegister( PAC_CALLBACK callback, uintptr_t context );
 </#if>
