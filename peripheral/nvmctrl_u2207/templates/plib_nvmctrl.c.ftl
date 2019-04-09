@@ -93,6 +93,8 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
 
     <#if NVMCTRL_WRITE_POLICY == "AUTOMATIC">
         <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB &= ~NVMCTRL_CTRLB_MANW_Msk;
+    <#else>
+        <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB |= NVMCTRL_CTRLB_MANW_Msk;
     </#if>
 
 <#if INTERRUPT_ENABLE == true>
