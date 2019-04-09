@@ -94,7 +94,7 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
+    PM_ConfigurePerformanceLevel(PLCFG_PLSEL0);
     SYSTICK_TimerCallbackSet(&timeout, (uintptr_t) NULL);
     SYSTICK_TimerStart();
     

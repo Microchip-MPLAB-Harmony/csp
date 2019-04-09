@@ -59,7 +59,7 @@
 void SUPC_Initialize( void )
 {
     /* Configure VREG. Mask the values loaded from NVM during reset.*/
-    SUPC_REGS->SUPC_VREG = (SUPC_REGS->SUPC_VREG & (SUPC_VREG_ENABLE_Msk)) | SUPC_VREG_STDBYPL0_Msk;
+    SUPC_REGS->SUPC_VREG = (SUPC_REGS->SUPC_VREG & (SUPC_VREG_ENABLE_Msk)) | SUPC_VREG_LPEFF_Msk | SUPC_VREG_STDBYPL0_Msk;
 
     /* Configure VREF */
     SUPC_REGS->SUPC_VREF = SUPC_VREF_SEL(0x0);
