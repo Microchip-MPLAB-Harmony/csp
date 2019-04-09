@@ -47,19 +47,23 @@
 <#assign AC_WINCTRL_VAL = "">
 <#assign AC_EVCTRL_VAL = "">
 <#assign AC_INTENSET_VAL = "">
-<#if AC_WINCTRL_WIN0 == true>
-    <#if AC_WINCTRL_VAL != "">
-        <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WEN0_Msk">
-    <#else>
-        <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WEN0_Msk">
+<#if AC_WINCTRL_WIN0 ?has_content >
+    <#if AC_WINCTRL_WIN0 == true>
+        <#if AC_WINCTRL_VAL != "">
+            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WEN0_Msk">
+        <#else>
+            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WEN0_Msk">
+        </#if>
     </#if>
 </#if>
-<#if AC_WINCTRL_WIN0 == true>
-    <#if AC_WINTSEL0 ?has_content >
-        <#if AC_WINCTRL_VAL != "">
-            <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
-        <#else>
-            <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
+<#if AC_WINCTRL_WIN0 ?has_content >
+    <#if AC_WINCTRL_WIN0 == true>
+        <#if AC_WINTSEL0 ?has_content >
+            <#if AC_WINCTRL_VAL != "">
+                <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
+            <#else>
+                <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
+            </#if>
         </#if>
     </#if>
 </#if>
@@ -106,29 +110,26 @@
         </#if>
     </#if>
 </#list>
-<#list 0..(AC_NUM_COMPARATORS-1) as i>
-    <#assign COMP_ENABLE = "ANALOG_COMPARATOR_ENABLE_"+i>
-    <#if COMP_ENABLE ?has_content >
-        <#if .vars[COMP_ENABLE] == true >
-            <#if AC_EVCTRL_WINEO0 == true>
-                <#if AC_EVCTRL_VAL != "">
-                <#assign AC_EVCTRL_VAL = AC_EVCTRL_VAL + " | AC_EVCTRL_WINEO0_Msk">
-                <#else>
-                <#assign AC_EVCTRL_VAL = "AC_EVCTRL_WINEO0_Msk">
-                </#if>
-            </#if>
-            <#if AC_WINCTRL_WIN1 ?has_content >
-                <#if AC_EVCTRL_WINEO1 == true>
-                    <#if AC_EVCTRL_VAL != "">
-                    <#assign AC_EVCTRL_VAL = AC_EVCTRL_VAL + " | AC_EVCTRL_WINEO1_Msk">
-                    <#else>
-                    <#assign AC_EVCTRL_VAL = "AC_EVCTRL_WINEO1_Msk">
-                    </#if>
-                </#if>
-            </#if>
+
+<#if AC_WINCTRL_WIN0 ?has_content >
+    <#if AC_EVCTRL_WINEO0 == true>
+        <#if AC_EVCTRL_VAL != "">
+        <#assign AC_EVCTRL_VAL = AC_EVCTRL_VAL + " | AC_EVCTRL_WINEO0_Msk">
+        <#else>
+        <#assign AC_EVCTRL_VAL = "AC_EVCTRL_WINEO0_Msk">
         </#if>
     </#if>
-</#list>
+</#if>
+<#if AC_WINCTRL_WIN1 ?has_content >
+    <#if AC_EVCTRL_WINEO1 == true>
+        <#if AC_EVCTRL_VAL != "">
+        <#assign AC_EVCTRL_VAL = AC_EVCTRL_VAL + " | AC_EVCTRL_WINEO1_Msk">
+        <#else>
+        <#assign AC_EVCTRL_VAL = "AC_EVCTRL_WINEO1_Msk">
+        </#if>
+    </#if>
+</#if>
+
 <#list 0..(AC_NUM_COMPARATORS-1) as i>
     <#assign COMP_ENABLE = "ANALOG_COMPARATOR_ENABLE_"+i>
     <#if COMP_ENABLE ?has_content >
@@ -189,6 +190,10 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     <#assign AC_COMPCTRL_OUTPUT_TYPE = "AC" + i + "_OUTPUT_TYPE">
     <#assign AC_COMPCTRL_INTSEL = "AC" + i + "_ISEL">
     <#assign AC_COMPCTRL_HYSTEN = "AC" + i + "_HYSTEN">
+    <#assign AC_COMPCTRL_HYS_CHECK = "AC" + i + "_HYST_LVL_PRESENT">
+<#if "AC_COMPCTRL_HYS_CHECK" ?has_content >
+    <#assign AC_COMPCTRL_HYS_LVL = "AC" + i + "_HYS_LVL">
+</#if>
     <#assign AC_COMPCTRL_RUNSTDBY = "AC" + i + "_COMPCTRL_RUNSTDBY">
     <#assign AC_COMPCTRL_SPEED = "AC" + i + "_SPEED">
     <#assign AC_SCALERn = "AC_SCALER_N_" + i>
@@ -210,8 +215,10 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   | AC_COMPCTRL_OUT_${.vars[AC_COMPCTRL_OUTPUT_TYPE]}
                                   | AC_COMPCTRL_SPEED(${.vars[AC_COMPCTRL_SPEED]})
                                   ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
-                                  ${.vars[AC_COMPCTRL_RUNSTDBY]?then(' | AC_COMPCTRL_RUNSTDBY_Msk','')}
-                                  ${.vars[AC_COMPCTRL_HYSTEN]?then(' | AC_COMPCTRL_HYSTEN_Msk','')};</@compress>
+                                  ${.vars[AC_COMPCTRL_HYSTEN]?then(' | AC_COMPCTRL_HYSTEN_Msk','')}
+                                  ${.vars[AC_COMPCTRL_HYS_CHECK]?then(' | AC_COMPCTRL_HYST(${.vars[AC_COMPCTRL_HYS_LVL]})','')}
+                                  ${.vars[AC_COMPCTRL_RUNSTDBY]?then(' | AC_COMPCTRL_RUNSTDBY_Msk','')};</@compress>
+
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[${i}] |= AC_COMPCTRL_ENABLE_Msk;
                 <#if .vars[AC_SCALERn]?has_content >
     ${AC_INSTANCE_NAME}_REGS->AC_SCALER[${i}] = ${.vars[AC_SCALERn]};
