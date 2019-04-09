@@ -688,20 +688,28 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_CLOCK_FREQ[channelID] = tcComponent.createIntegerSymbol("TC"+str(channelID)+"_CLOCK_FREQ", menu)
     tcSym_CH_CLOCK_FREQ[channelID].setLabel("Clock Frequency (Hz)")
     tcSym_CH_CLOCK_FREQ[channelID].setVisible(False)
-    tcSym_CH_CLOCK_FREQ[channelID].setDefaultValue(150000000)
+    tcSym_CH_CLOCK_FREQ[channelID].setDefaultValue(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY"))
     tcSym_CH_CLOCK_FREQ[channelID].setDependencies(tcClockFreq, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
         "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
+    if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") != 0):
+        resolution = 1000000000.0 / int(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY"))
+    else:
+        resolution = 0.0
+
     #clock resolution display
     tcSym_CH_Resolution[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_Resolution", menu)
-    tcSym_CH_Resolution[channelID].setLabel("****Timer resolution is " + str(6.66) + " nS****")
+    tcSym_CH_Resolution[channelID].setLabel("****Timer resolution is " + str(resolution) + " nS****")
     tcSym_CH_Resolution[channelID].setDependencies(tcClockResCalc, ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
         "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
     #clock source zero frequency warning
     tcSym_CH_Invalid_Source[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_Zero_Freq", menu)
     tcSym_CH_Invalid_Source[channelID].setLabel("Channel source clock frequency is zero !!! (Check if clock is enabled)")
-    tcSym_CH_Invalid_Source[channelID].setVisible(False)
+    if resolution != 0.0:
+        tcSym_CH_Invalid_Source[channelID].setVisible(False)
+    else:
+        tcSym_CH_Invalid_Source[channelID].setVisible(True)
 
 def onAttachmentConnected(source, target):
     global sysTimeChannel_Sym
@@ -865,7 +873,7 @@ def instantiateComponent(tcComponent):
     global extClock
     extClock = [False, False, False] #array to save if ext clock pin is available
 
-    pinout = "LQFP144"
+    pinout = ""
     val = ATDF.getNode("/avr-tools-device-file/variants")
     children = val.getChildren()
     for index in range(0, len(children)):
@@ -882,20 +890,21 @@ def instantiateComponent(tcComponent):
     #Find available channels and available external clock pins
     tc_signals = []
     tc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/signals")
-    tc_signals = tc.getChildren()
-    for pad in range(0, len(tc_signals)):
-        if "TIOA" in tc_signals[pad].getAttribute("group"):
-            padSignal = tc_signals[pad].getAttribute("pad")
-            if padSignal in availablePins:
-                channel[int(tc_signals[pad].getAttribute("index"))%3] = True
-            else:
-                channel[int(tc_signals[pad].getAttribute("index"))%3] = False
-        if "TCLK" in tc_signals[pad].getAttribute("group"):
-            padSignal = tc_signals[pad].getAttribute("pad")
-            if padSignal in availablePins:
-                extClock[int(tc_signals[pad].getAttribute("index"))%3] = True
-            else:
-                extClock[int(tc_signals[pad].getAttribute("index"))%3] = False
+    if tc != None:
+        tc_signals = tc.getChildren()
+        for pad in range(0, len(tc_signals)):
+            if "TIOA" in tc_signals[pad].getAttribute("group"):
+                padSignal = tc_signals[pad].getAttribute("pad")
+                if padSignal in availablePins:
+                    channel[int(tc_signals[pad].getAttribute("index"))%3] = True
+                else:
+                    channel[int(tc_signals[pad].getAttribute("index"))%3] = False
+            if "TCLK" in tc_signals[pad].getAttribute("group"):
+                padSignal = tc_signals[pad].getAttribute("pad")
+                if padSignal in availablePins:
+                    extClock[int(tc_signals[pad].getAttribute("index"))%3] = True
+                else:
+                    extClock[int(tc_signals[pad].getAttribute("index"))%3] = False
 
     sysTimeChannel_Sym = tcComponent.createKeyValueSetSymbol("SYS_TIME_TC_CHANNEL", None)
     sysTimeChannel_Sym.setLabel("Select TC Channel for Time System Service")
@@ -1054,11 +1063,16 @@ def instantiateComponent(tcComponent):
     tcSym_CH_QEI_CH2PERIOD.setMin(0)
     tcSym_CH_QEI_CH2PERIOD.setMax(tcCounterMaxValue)
 
+    if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY") != 0):
+        time_base = (1000000.0 / long(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY"))) * tcSym_CH_QEI_CH2PERIOD.getValue()
+    else:
+        time_base = 0
+
     # CH2 time in us comment
     tcSym_CH_QEI_CH2PERIOD_COMMENT = tcComponent.createCommentSymbol("TC_QEI_PERIOD_COMMENT", tcSpeedMenu)
-    tcSym_CH_QEI_CH2PERIOD_COMMENT.setLabel("**** Time Base is 100 uS  ****")
+    tcSym_CH_QEI_CH2PERIOD_COMMENT.setLabel("**** Time Base is " + str(time_base) + " uS  ****")
     tcSym_CH_QEI_CH2PERIOD_COMMENT.setDependencies(tcQuadratureTimeBaseCalculate, ["TC_QEI_PERIOD", "TC3_CMR_TCCLKS", \
-        "core."+tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY"])
+        "core."+tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY", "TC_BMR_POSEN"])
 
     # enable index interrupt
     global tcSym_CH_QIER_IDX
@@ -1168,13 +1182,18 @@ def instantiateComponent(tcComponent):
         tcTimerMenu[channelID].setLabel("Timer")
         tcTimerMenu[channelID].setDependencies(tcTimerVisible, ["TC"+str(channelID)+"_OPERATING_MODE"])
 
+        if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") != 0):
+            max =  tcCounterMaxValue * 1000.0 / int((Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") ))
+        else:
+            max = 0
+
         global tcSym_CH_TimerPeriod
         tcSym_CH_TimerPeriod.append(channelID)
         tcSym_CH_TimerPeriod[channelID] = tcComponent.createFloatSymbol("TC"+str(channelID)+"_TIMER_PERIOD_MS", tcTimerMenu[channelID])
         tcSym_CH_TimerPeriod[channelID].setLabel("Timer Period (Milli Sec)")
         tcSym_CH_TimerPeriod[channelID].setDefaultValue(0.4)
         tcSym_CH_TimerPeriod[channelID].setMin(0.0)
-        tcSym_CH_TimerPeriod[channelID].setMax(0.4369)
+        tcSym_CH_TimerPeriod[channelID].setMax(max)
         tcSym_CH_TimerPeriod[channelID].setDependencies(tcPeriodMaxVal, \
         ["TC"+str(channelID)+"_CMR_TCCLKS", "TC"+str(channelID)+"_EXT_CLOCK", \
             "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
@@ -1343,10 +1362,15 @@ def instantiateComponent(tcComponent):
         tcSym_CH_ComparePeriodCount[channelID].setMin(0)
         tcSym_CH_ComparePeriodCount[channelID].setMax(tcCounterMaxValue)
 
+        if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") != 0):
+            period =  tcSym_CH_ComparePeriodCount[channelID].getValue() * 1000000.0 / int(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") )
+        else:
+            period = 0
+
         #period time in uS
         tcSym_CH_ComparePeriod.append(channelID)
         tcSym_CH_ComparePeriod[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_COMPARE_PERIOD", tcCompareMenu[channelID])
-        tcSym_CH_ComparePeriod[channelID].setLabel("****Timer Period is 66.6 uS****")
+        tcSym_CH_ComparePeriod[channelID].setLabel("****Timer Period is " + str(period) + " uS****")
         tcSym_CH_ComparePeriod[channelID].setDependencies(tcPeriodCalc, ["TC"+str(channelID)+"_COMPARE_PERIOD_COUNT", "TC"+str(channelID)+"_CMR_TCCLKS", \
             "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
 
