@@ -273,32 +273,44 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_HYST.setVisible(True)
         #Should not be shown when single-shot is selected.
         acSym_COMPCTRL_HYST.setDependencies(setacHystVisibility,["AC_COMPCTRL_" + str(comparatorID) +"SINGLE_MODE"])
-        
-        #Hysteresis level
-        acSym_COMPCTRL_HYST_LEVEL = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYS_LVL", acSym_COMPCTRL_HYST)
-        acSym_COMPCTRL_HYST_LEVEL.setLabel("Hysteresis Level")
-        
-        acSym_COMPCTRL_HYST_LEVEL_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]")
-        acSym_COMPCTRL_HYST_Values = []
-        acSym_COMPCTRL_HYST_Values = acSym_COMPCTRL_HYST_LEVEL_node.getChildren()       
-        
-        acSym_COMPCTRL_HYST_Default_Val = 0
-        
-        for id in range(len(acSym_COMPCTRL_HYST_Values)):
-            acSym_COMPCTRL_HYST_Key_Name = acSym_COMPCTRL_HYST_Values[id].getAttribute("name")
+ 
+        acSym_COMPCTRL_HYST_LEVEL_PRESENT = acComponent.createBooleanSymbol("AC" + str(comparatorID) + "_HYST_LVL_PRESENT", acSym_COMPCTRL_HYST)
+        acSym_COMPCTRL_HYST_LEVEL_PRESENT.setVisible(False)
+        acSym_COMPCTRL_HYST_LEVEL_PRESENT.setDefaultValue(False)
+        ################################ ATDF ####################################################
+        node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AC\"]/instance@[name=\"AC""\"]/parameters")
+        parameters = []
+        parameters = node.getChildren()
+        for param in range (0, len(parameters)):
+            if(parameters[param].getAttribute("name") == "HYST_LVL_CONFIG"):
+                #Hysteresis level
+                acSym_COMPCTRL_HYST_LEVEL_PRESENT.setDefaultValue(True)
+                
+                acSym_COMPCTRL_HYST_LEVEL = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_HYS_LVL", acSym_COMPCTRL_HYST)
+                acSym_COMPCTRL_HYST_LEVEL.setLabel("Hysteresis Level")
+                
+                ################################ ATDF ####################################################
+                acSym_COMPCTRL_HYST_LEVEL_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__HYST\"]")
+                acSym_COMPCTRL_HYST_Values = []
+                acSym_COMPCTRL_HYST_Values = acSym_COMPCTRL_HYST_LEVEL_node.getChildren()       
+                
+                acSym_COMPCTRL_HYST_Default_Val = 0
+                
+                for id in range(len(acSym_COMPCTRL_HYST_Values)):
+                    acSym_COMPCTRL_HYST_Key_Name = acSym_COMPCTRL_HYST_Values[id].getAttribute("name")
 
-            if(acSym_COMPCTRL_HYST_Key_Name == "HYST50"):
-                acSym_COMPCTRL_HYST_Default_Val = id       
-           
-            acSym_COMPCTRL_HYST_Key_Description = acSym_COMPCTRL_HYST_Values[id].getAttribute("caption")
-            acSym_COMPCTRL_HYST_Key_Value = acSym_COMPCTRL_HYST_Values[id].getAttribute("value")
-            acSym_COMPCTRL_HYST_LEVEL.addKey(acSym_COMPCTRL_HYST_Key_Name, acSym_COMPCTRL_HYST_Key_Value, acSym_COMPCTRL_HYST_Key_Description)        
-        
-        acSym_COMPCTRL_HYST_LEVEL.setDefaultValue(acSym_COMPCTRL_HYST_Default_Val)
-        acSym_COMPCTRL_HYST_LEVEL.setOutputMode("Value")
-        acSym_COMPCTRL_HYST_LEVEL.setDisplayMode("Description")
-        acSym_COMPCTRL_HYST_LEVEL.setVisible(False)
-        acSym_COMPCTRL_HYST_LEVEL.setDependencies(setacSymbolVisibility,["AC" + str(comparatorID) + "_HYSTEN"])
+                    if(acSym_COMPCTRL_HYST_Key_Name == "HYST50"):
+                        acSym_COMPCTRL_HYST_Default_Val = id       
+                   
+                    acSym_COMPCTRL_HYST_Key_Description = acSym_COMPCTRL_HYST_Values[id].getAttribute("caption")
+                    acSym_COMPCTRL_HYST_Key_Value = acSym_COMPCTRL_HYST_Values[id].getAttribute("value")
+                    acSym_COMPCTRL_HYST_LEVEL.addKey(acSym_COMPCTRL_HYST_Key_Name, acSym_COMPCTRL_HYST_Key_Value, acSym_COMPCTRL_HYST_Key_Description)        
+                
+                acSym_COMPCTRL_HYST_LEVEL.setDefaultValue(acSym_COMPCTRL_HYST_Default_Val)
+                acSym_COMPCTRL_HYST_LEVEL.setOutputMode("Value")
+                acSym_COMPCTRL_HYST_LEVEL.setDisplayMode("Description")
+                acSym_COMPCTRL_HYST_LEVEL.setVisible(False)
+                acSym_COMPCTRL_HYST_LEVEL.setDependencies(setacSymbolVisibility,["AC" + str(comparatorID) + "_HYSTEN"])
         
         #Speed selection
         acSym_COMPCTRL_SPEED = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_SPEED", acSym_AdvConf)
