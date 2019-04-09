@@ -57,7 +57,8 @@
 enum
 {
     IDLE_MODE = 'a',
-    STANDBY_MODE = 'b'
+    STANDBY_MODE = 'b',
+    BACKUP_MODE = 'c'
 }SLEEP_MODES;
 
 uint8_t cmd = 0;
@@ -83,7 +84,8 @@ void display_menu (void)
 {
     printf("\n\n\n\rSelect the low power mode to enter");
     printf("\n\ra) Idle Mode");
-    printf("\n\rb) Standby Mode");   
+    printf("\n\rb) Standby Mode");
+    printf("\n\rc) Backup Mode");   
     printf("\n\rEnter your choice");    
     scanf("%c", &cmd);
 }
@@ -102,7 +104,7 @@ int main ( void )
     printf("\n\n\r----------------------------------------------");
     printf("\n\r             Low power demo using RTC           ");
     printf("\n\r----------------------------------------------"); 
-    
+    PM_ConfigurePerformanceLevel(PLCFG_PLSEL0);
     SYSTICK_TimerCallbackSet(&timeout, (uintptr_t) NULL);
     SYSTICK_TimerStart();
     RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK_CMP0);
@@ -132,6 +134,19 @@ int main ( void )
                 printf("\n\rEntering Standby Mode\r\n");
                 LED_OFF();
                 PM_StandbyModeEnter();
+                printf("\n\rRTC Compare Match triggered waking up device from Standby mode");
+                SYSTICK_TimerStart();
+                display_menu();
+                break;
+            }
+            case BACKUP_MODE:
+            {
+                printf("\n\n\rConfiguring RTC Compare Match for wake up.......");
+                configure_alarm();
+                SYSTICK_TimerStop();
+                printf("\n\rEntering BACKUP Mode\r\n");
+                LED_OFF();
+                PM_BackupModeEnter();
                 printf("\n\rRTC Compare Match triggered waking up device from Standby mode");
                 SYSTICK_TimerStart();
                 display_menu();

@@ -59,7 +59,7 @@
 void PM_Initialize( void )
 {
     /* Configure PM */
-    PM_REGS->PM_STDBYCFG = PM_STDBYCFG_BBIASHS(0)| PM_STDBYCFG_VREGSMOD(2);
+    PM_REGS->PM_STDBYCFG = PM_STDBYCFG_BBIASHS(1)| PM_STDBYCFG_VREGSMOD(2);
 }
 
 void PM_IdleModeEnter( void )
