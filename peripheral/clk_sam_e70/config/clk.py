@@ -37,9 +37,19 @@ sym_tc_ch0_clock_freq = []
 sym_tc_ch1_clock_freq = []
 sym_tc_ch2_clock_freq = []
 sym_tc_ch3_clock_freq = []
+sym_mcan_clock_freq = []
 
 def periphFreqCalc(symbol, event):
     symbol.setValue(int(event["value"]), 2)
+
+def mcanClockFreqCalc(symbol, event):
+    mcanInstance = symbol.getID()[4]
+    activeComponents = Database.getActiveComponentIDs()
+    if ("mcan" + str(mcanInstance) in activeComponents):
+        if (Database.getSymbolValue("core", "PMC_SCER_PCK5") == True):
+            symbol.setValue(int(Database.getSymbolValue("core", "PCK5_CLOCK_FREQUENCY")))
+        else:
+            symbol.setValue(0)
 
 def tcClockFreqCalc(symbol, event):
     tcInstance = symbol.getID()[2]
@@ -990,8 +1000,8 @@ if __name__ == "__main__":
     modules = peripherals.getChildren()
     for module in range(0, len(modules)):
         moduleName = modules[module].getAttribute("name")
-        #I2S, USB, TC, UART, USART clock frequencies calculated separately
-        if (moduleName == "I2SC" or moduleName == "USBHS" or moduleName == "TC" or moduleName == "UART" or moduleName == "USART"):
+        #I2S, USB, TC, UART, USART and MCAN clock frequencies calculated separately
+        if (moduleName == "I2SC" or moduleName == "USBHS" or moduleName == "TC" or moduleName == "UART" or moduleName == "USART" or moduleName == "MCAN"):
             continue
         numInstances = modules[module].getChildren()
         for moduleInstance in range(0, len(numInstances)):
@@ -1070,6 +1080,18 @@ if __name__ == "__main__":
         sym_tc_ch3_clock_freq[tcInstance].setDependencies(tcClockFreqCalc, ["tc"+str(tcInstance)+".TC3_CMR_TCCLKS", "tc"+str(tcInstance)+".TC_PCK_CLKSRC", \
         "core.MASTER_CLOCK_FREQUENCY", "core.PCK6_CLOCK_FREQUENCY", "core.PCK7_CLOCK_FREQUENCY", "core.SLOW_CLK_FREQ", "tc"+str(tcInstance)+".TC3_ENABLE", \
         "core.TC"+str(tcInstance)+"_CHANNEL3_CLOCK_ENABLE"])
+
+    #MCAN
+    global num_mcan_instances
+    num_mcan_instances = []
+    mcan = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"MCAN\"]")
+    num_mcan_instances = mcan.getChildren()
+    for mcanInstance in range(0, len(num_mcan_instances)):
+        sym_mcan_clock_freq.append(mcanInstance)
+        sym_mcan_clock_freq[mcanInstance] = coreComponent.createIntegerSymbol("MCAN" + str(mcanInstance) + "_CLOCK_FREQUENCY", None)
+        sym_mcan_clock_freq[mcanInstance].setVisible(False)
+        sym_mcan_clock_freq[mcanInstance].setDefaultValue(int(Database.getSymbolValue("core", "PCK5_CLOCK_FREQUENCY")) if (Database.getSymbolValue("core", "PMC_SCER_PCK5") == True) else 0)
+        sym_mcan_clock_freq[mcanInstance].setDependencies(mcanClockFreqCalc, ["core.PCK5_CLOCK_FREQUENCY", "core.PMC_SCER_PCK5", "core.MCAN" + str(mcanInstance) + "_CLOCK_ENABLE"])
 
     #File handling
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
