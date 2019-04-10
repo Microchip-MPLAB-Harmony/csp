@@ -536,10 +536,6 @@ def instantiateComponent(rtcComponent):
         tampMaj.addKey("Disable", "0", "Match three equal values")
         tampMaj.addKey("Enable", "1", "Match majority two of three values.")
 
-        channelActionNode = ATDF.getNode(
-            '/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_TAMPCTRL__IN0ACT"]')
-        channelActionValue = channelActionNode.getChildren()
-
         for id in range(0, tamperChannels):
             tampChannelMenu = rtcComponent.createMenuSymbol("TAMP_CHANNEL" + str(id), rtcTampMenu)
             tampChannelMenu.setLabel("Tamper Channel " + str(id) + " Configuration")
@@ -561,6 +557,9 @@ def instantiateComponent(rtcComponent):
             tampChannelAction = rtcComponent.createKeyValueSetSymbol(
                 "TAMP_CHANNEL" + str(id) + "_ACTION", tampChannelMenu)
             tampChannelAction.setLabel("Channel Action")
+            
+            channelActionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTC\"]/value-group@[name=\"" "RTC_TAMPCTRL__IN" + str(id) + "ACT""\"]")
+            channelActionValue = channelActionNode.getChildren()
             for id in range(0, len(channelActionValue)):
                 key = channelActionValue[id].getAttribute("name")
                 value = channelActionValue[id].getAttribute("value")
