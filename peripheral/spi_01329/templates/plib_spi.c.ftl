@@ -60,8 +60,6 @@ SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 #define ${SPI_INSTANCE_NAME}_CON_MCLKSEL                    (${SPI_MASTER_CLOCK} << _${SPI_INSTANCE_NAME}CON_MCLKSEL_POSITION)
 #define ${SPI_INSTANCE_NAME}_CON_MSSEN                      (${SPI_SPICON_MSSEN} << _${SPI_INSTANCE_NAME}CON_MSSEN_POSITION)
 
-
-
 void ${SPI_INSTANCE_NAME}_Initialize ( void )
 {
     uint32_t rdata;
@@ -145,7 +143,7 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spi
         t_brg++;
     }
 
-    if(t_brg > 8191)
+    if(t_brg > ${SPI_MAX_BRG})
     {
         return false;
     }
