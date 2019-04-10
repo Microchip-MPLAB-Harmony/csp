@@ -116,7 +116,7 @@ def instantiateComponent(dbguComponent):
     dbguDataWidth.setReadOnly(True)
 
     #DBGU Character Size 8 Bit Mask symbol for USART Driver
-    dbguDataWidth_8_Mask = dbguComponent.createStringSymbol("DBGU_DATA_8_BIT_MASK", None)
+    dbguDataWidth_8_Mask = dbguComponent.createStringSymbol("USART_DATA_8_BIT_MASK", None)
     dbguDataWidth_8_Mask.setDefaultValue("0x0")
     dbguDataWidth_8_Mask.setVisible(False)
 
@@ -141,27 +141,27 @@ def instantiateComponent(dbguComponent):
     receiveRegister.setVisible(False)
 
     #DBGU EVEN Parity Mask symbol for USART Driver
-    dbguSym_MR_PAR_EVEN_Mask = dbguComponent.createStringSymbol("DBGU_PARITY_EVEN_MASK", None)
+    dbguSym_MR_PAR_EVEN_Mask = dbguComponent.createStringSymbol("USART_PARITY_EVEN_MASK", None)
     dbguSym_MR_PAR_EVEN_Mask.setDefaultValue("0x0")
     dbguSym_MR_PAR_EVEN_Mask.setVisible(False)
 
     #DBGU ODD Parity Mask symbol for USART Driver
-    dbguSym_MR_PAR_ODD_Mask = dbguComponent.createStringSymbol("DBGU_PARITY_ODD_MASK", None)
+    dbguSym_MR_PAR_ODD_Mask = dbguComponent.createStringSymbol("USART_PARITY_ODD_MASK", None)
     dbguSym_MR_PAR_ODD_Mask.setDefaultValue("0x200")
     dbguSym_MR_PAR_ODD_Mask.setVisible(False)
 
     #DBGU SPACE Parity Mask symbol for USART Driver
-    dbguSym_MR_PAR_SPACE_Mask = dbguComponent.createStringSymbol("DBGU_PARITY_SPACE_MASK", None)
+    dbguSym_MR_PAR_SPACE_Mask = dbguComponent.createStringSymbol("USART_PARITY_SPACE_MASK", None)
     dbguSym_MR_PAR_SPACE_Mask.setDefaultValue("0x400")
     dbguSym_MR_PAR_SPACE_Mask.setVisible(False)
 
     #DBGU MARK Parity Mask symbol for USART Driver
-    dbguSym_MR_PAR_MARK_Mask = dbguComponent.createStringSymbol("DBGU_PARITY_MARK_MASK", None)
+    dbguSym_MR_PAR_MARK_Mask = dbguComponent.createStringSymbol("USART_PARITY_MARK_MASK", None)
     dbguSym_MR_PAR_MARK_Mask.setDefaultValue("0x600")
     dbguSym_MR_PAR_MARK_Mask.setVisible(False)
 
     #DBGU NO Parity Mask symbol for USART Driver
-    dbguSym_MR_PAR_NO_Mask = dbguComponent.createStringSymbol("DBGU_PARITY_NONE_MASK", None)
+    dbguSym_MR_PAR_NO_Mask = dbguComponent.createStringSymbol("USART_PARITY_NONE_MASK", None)
     dbguSym_MR_PAR_NO_Mask.setDefaultValue("0x800")
     dbguSym_MR_PAR_NO_Mask.setVisible(False)
 
@@ -171,7 +171,7 @@ def instantiateComponent(dbguComponent):
     dbguStopBit.setReadOnly(True)
 
     #DBGU Stop 1-bit Mask symbol for USART Driver
-    dbguStopBit_1_Mask = dbguComponent.createStringSymbol("DBGU_STOP_1_BIT_MASK", None)
+    dbguStopBit_1_Mask = dbguComponent.createStringSymbol("USART_STOP_1_BIT_MASK", None)
     dbguStopBit_1_Mask.setDefaultValue("0x0")
     dbguStopBit_1_Mask.setVisible(False)
 
@@ -180,17 +180,17 @@ def instantiateComponent(dbguComponent):
     dbguSym_MR_FILTER.setDefaultValue(False)
 
     #DBGU Overrun error Mask symbol for USART Driver
-    dbguSym_SR_OVRE_Mask = dbguComponent.createStringSymbol("DBGU_OVERRUN_ERROR_VALUE", None)
+    dbguSym_SR_OVRE_Mask = dbguComponent.createStringSymbol("USART_OVERRUN_ERROR_VALUE", None)
     dbguSym_SR_OVRE_Mask.setDefaultValue("0x20")
     dbguSym_SR_OVRE_Mask.setVisible(False)
 
     #DBGU parity error Mask symbol for USART Driver
-    dbguSym_SR_PARE_Mask = dbguComponent.createStringSymbol("DBGU_PARITY_ERROR_VALUE", None)
+    dbguSym_SR_PARE_Mask = dbguComponent.createStringSymbol("USART_PARITY_ERROR_VALUE", None)
     dbguSym_SR_PARE_Mask.setDefaultValue("0x80")
     dbguSym_SR_PARE_Mask.setVisible(False)
 
     #DBGU framing error Mask symbol for USART Driver
-    dbguSym_SR_FRAME_Mask = dbguComponent.createStringSymbol("DBGU_FRAMING_ERROR_VALUE", None)
+    dbguSym_SR_FRAME_Mask = dbguComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", None)
     dbguSym_SR_FRAME_Mask.setDefaultValue("0x40")
     dbguSym_SR_FRAME_Mask.setVisible(False)
 
