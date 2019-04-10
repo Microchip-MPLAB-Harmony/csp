@@ -165,27 +165,6 @@ def usartClockFreqCalc(symbol, event):
         else:
             symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")), 2)
 
-def __update_fws_value(flash_wait_states, event):
-    """
-    Updates Flash Wait States with change in Master Clock Frequency
-
-    flash_wait_states: flash wait states string symbol handle
-    event: callback event dictionary
-    """
-    global LIST_FWS_MAX_FREQ
-
-    min_freq = max_freq = 0
-    for fws in range(0, len(LIST_FWS_MAX_FREQ), 1):
-
-        mck_freq = int(event["value"])
-        max_freq = int(LIST_FWS_MAX_FREQ[fws])
-
-        if mck_freq <= max_freq and mck_freq > min_freq:
-            flash_wait_states.setValue(str(fws), 1)
-            return
-
-        min_freq = max_freq
-
 def __update_plla_divider_visibility(plla_divider, event):
     """
     Updates PLLA Divider Symbol visibility after enabling/disabling the PLLA
@@ -829,13 +808,12 @@ def __programmable_clock_menu(clk_comp, clk_menu, pmc_reg_module):
         sym_pmc_pck_pres.setMax(256)
         sym_pmc_pck_pres.setDefaultValue(1)
 
-def __calculated_clock_frequencies(clk_comp, clk_menu, update_fws_value, join_path, element_tree):
+def __calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree):
     """
     Calculated Clock frequencies Menu Implementation.
 
     clk_comp: Clock Component handle
     clk_menu: Clock Menu Symbol handle
-    update_fws_value: Callback calculating the Flash Wait States.
     join_path: function used to create os independent paths
     element_tree: XML parser library
     """
@@ -920,37 +898,6 @@ def __calculated_clock_frequencies(clk_comp, clk_menu, update_fws_value, join_pa
     sym_usb_hs_freq.setDefaultValue("480000000")
     sym_usb_hs_freq.setReadOnly(True)
 
-    sym_flash_wait_states = clk_comp.createStringSymbol("EEFC_FMR_FWS", sym_calc_freq_menu)
-    sym_flash_wait_states.setDependencies(update_fws_value, ["MASTER_CLOCK_FREQUENCY"])
-    sym_flash_wait_states.setVisible(False)
-
-    atdf_file_path = join_path(Variables.get("__DFP_PACK_DIR"), "atdf", Variables.get("__PROCESSOR") + ".atdf")
-
-    LIST_FWS_MAX_FREQ = []
-
-    atdf_file = open(atdf_file_path, "r")
-    atdf_content = element_tree.fromstring(atdf_file.read())
-
-    # parse atdf xml file to get Electrical Characteristics
-    # for Flash wait states
-    for property_group in atdf_content.iter("property-group"):
-        if "ELECTRICAL_CHARACTERISTICS" in property_group.attrib["name"]:
-            for property_tag in property_group.iter("property"):
-                if "CHIP_FREQ_FWS_" in property_tag.attrib["name"] and property_tag.attrib["name"] != "CHIP_FREQ_FWS_NUMBER":
-                    LIST_FWS_MAX_FREQ.append(property_tag.attrib["value"])
-
-    min_freq = max_freq = 0
-    for fws in range(0, len(LIST_FWS_MAX_FREQ), 1):
-
-        mck_freq = int(sym_master_clk_freq.getValue())
-        max_freq = int(LIST_FWS_MAX_FREQ[fws])
-
-        if mck_freq <= max_freq and mck_freq > min_freq:
-            sym_flash_wait_states.setValue(str(fws), 1)
-            return
-
-        min_freq = max_freq
-
 if __name__ == "__main__":
     # Clock Manager Configuration Menu
     SYM_CLK_MENU = coreComponent.createMenuSymbol("CLK_SAM_E70", None)
@@ -993,7 +940,7 @@ if __name__ == "__main__":
     __programmable_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS)
 
     # creates calculated frequencies menu
-    __calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, __update_fws_value, join, ElementTree)
+    __calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, join, ElementTree)
 
     # calculated peripheral frequencies
     peripherals = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")

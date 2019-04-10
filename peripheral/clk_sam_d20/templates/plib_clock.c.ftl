@@ -123,7 +123,7 @@ static void SYSCTRL_Initialize(void)
 static void DFLL_Initialize(void)
 {
     /****************** DFLL Initialization  *********************************/
-    SYSCTRL_REGS->SYSCTRL_DFLLCTRL = 0 ;
+    SYSCTRL_REGS->SYSCTRL_DFLLCTRL &= ~SYSCTRL_DFLLCTRL_ONDEMAND_Msk;
 
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLRDY_Msk) != SYSCTRL_PCLKSR_DFLLRDY_Msk)
     {
@@ -207,9 +207,6 @@ static void GCLK${i}_Initialize(void)
 </#list>
 void CLOCK_Initialize (void)
 {
-    /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLB |= NVMCTRL_CTRLB_RWS(${NVM_RWS});
-
     /* Function to Initialize the Oscillators */
     SYSCTRL_Initialize();
 

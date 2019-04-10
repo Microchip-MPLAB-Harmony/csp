@@ -50,6 +50,10 @@ static uint32_t status = 0;
     <#lt>EFC_OBJECT efc;
 </#if>
 
+void ${EFC_INSTANCE_NAME}_Initialize(void)
+{
+    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR = EEFC_FMR_FWS(${NVM_RWS}) | EEFC_FMR_CLOE_Msk;
+}
 bool ${EFC_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address )
 {
     memcpy((void *)data, (void *)address, length);

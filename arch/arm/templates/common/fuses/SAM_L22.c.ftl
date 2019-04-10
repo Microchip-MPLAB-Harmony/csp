@@ -24,7 +24,7 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 -->
-
+<#if FUSE_CONFIG_ENABLE>
 <#list 0..NUMBER_OF_FUSES-1 as i>
 <#assign name = "FUSE_SYMBOL_NAME" + i>
 <#assign value = "FUSE_SYMBOL_VALUE" + i>
@@ -34,3 +34,4 @@
 #pragma config ${.vars[name]} = ${.vars[value]}
 </#if>
 </#list>
+</#if>

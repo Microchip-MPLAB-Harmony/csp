@@ -55,11 +55,14 @@ def setFlashParams(symbol, event):
 
 # Callback for all the messages sent to core component
 def handleMessage(messageID, args):
-
+    global nvmWaitStates
     symbolDict = {}
 
     if messageID == "PIN_LIST":              # Indicates core to return available pins for device
         symbolDict = getAvailablePins()      # this API must be defined as global in every port plibs
+    
+    elif messageID == "WAIT_STATES":
+        symbolDict = nvmWaitStates
 
     return symbolDict
 

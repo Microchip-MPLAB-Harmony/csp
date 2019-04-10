@@ -1809,12 +1809,6 @@ mclkSym_CPUDIV_CPUDIV.setDefaultValue(mclkcpudivDefaultValue)
 mclkSym_CPUDIV_CPUDIV.setOutputMode("Value")
 mclkSym_CPUDIV_CPUDIV.setDisplayMode("Key")
 
-# Flash Read Wait State (RWS). Values given in  'NVM Characteristics'
-nvm_rws = coreComponent.createIntegerSymbol("NVM_RWS", mclkSym_Menu)
-nvm_rws.setReadOnly(True)
-nvm_rws.setDefaultValue(1)
-nvm_rws.setVisible(False)
-
 ################################################################################
 #######          Calculated Clock Frequencies        ###########################
 ################################################################################
@@ -1826,25 +1820,6 @@ def setMainClockFreq(symbol, event):
 
     symbol.setValue(gclk0_freq / (1 << divider), 1)
     Database.setSymbolValue(event["namespace"], "MAIN_CLOCK_FREQUENCY", gclk0_freq, 2)
-
-    if (gclk0_freq > 2400000 and gclk0_freq < 51000000):
-        Database.setSymbolValue(
-            "core", "NVM_RWS", 1, 2)
-    elif (gclk0_freq > 51000000 and gclk0_freq < 77000000):
-        Database.setSymbolValue(
-            "core", "NVM_RWS", 2, 2)
-    elif (gclk0_freq > 77000000 and gclk0_freq < 101000000):
-        Database.setSymbolValue(
-            "core", "NVM_RWS", 3, 2)
-    elif (gclk0_freq > 101000000 and gclk0_freq < 119000000):
-        Database.setSymbolValue(
-                "core", "NVM_RWS", 4, 2)
-    elif (gclk0_freq >= 119000000):
-        Database.setSymbolValue(
-            "core", "NVM_RWS", 5, 2)
-    else:
-        Database.setSymbolValue(
-            "core", "NVM_RWS", 0, 2)
 
 
 def setFreq(symbol, event):

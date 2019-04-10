@@ -1,4 +1,4 @@
-
+<#if FUSE_CONFIG_ENABLE>
 #pragma config NVMCTRL_BOOTPROT = ${DEVICE_NVMCTRL_BOOTPROT}
 #pragma config NVMCTRL_EEPROM_SIZE = ${DEVICE_NVMCTRL_EEPROM_SIZE}
 #pragma config BOD33USERLEVEL = 0x${DEVICE_BOD33USERLEVEL} // Enter Hexadecimal value
@@ -16,3 +16,4 @@
 #pragma config WDT_WINDOW_1 = 0x${DEVICE_WDT_WINDOW_1} // Enter Hexadecimal value
 #pragma config WDT_EWOFFSET = ${DEVICE_WDT_EWOFFSET}
 #pragma config WDT_WEN = ${DEVICE_WDT_WEN}
+</#if>

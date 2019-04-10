@@ -24,14 +24,5 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 -->
-<#if FUSE_CONFIG_ENABLE>
-<#list 0..NUMBER_OF_FUSES-1 as i>
-<#assign name = "FUSE_SYMBOL_NAME" + i>
-<#assign value = "FUSE_SYMBOL_VALUE" + i>
-<#if .vars[value]?matches("[a-f0-9]*") && .vars[name] != "NVMCTRL_BOOTPROT">
-#pragma config ${.vars[name]} = 0x${.vars[value]}
-<#else>
-#pragma config ${.vars[name]} = ${.vars[value]}
-</#if>
-</#list>
-</#if>
+
+    EFC_Initialize();

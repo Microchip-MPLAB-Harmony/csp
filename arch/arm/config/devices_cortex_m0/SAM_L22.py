@@ -37,7 +37,7 @@ deviceSecurity.setDisplayMode("Description")
 deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)" )
 deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR",1)
-
+deviceSecurity.setVisible(False)
 
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
@@ -94,6 +94,10 @@ def getMaxValue(mask):
 fuseMenu = coreComponent.createMenuSymbol("FUSE_MENU", devCfgMenu)
 fuseMenu.setLabel("Fuse Settings")
 
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", fuseMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
+
 registerGroup = "USER_FUSES"
 registerNames = ["USER_WORD_0", "USER_WORD_1"]
 
@@ -121,14 +125,14 @@ for i in range(0, len(registerNames)):
         key = fuseNodeValues[index].getAttribute("name")
         caption=fuseNodeValues[index].getAttribute("caption")
         valueGroup = fuseNodeValues[index].getAttribute("values")
-        stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseMenu)
+        stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseSettings)
         stringSymbol.setDefaultValue(key)
         stringSymbol.setVisible(False)
         if valueGroup == None:
             mask = fuseNodeValues[index].getAttribute("mask")
             count = bin((int(mask, 16))).count("1")
             if count == 1:
-                keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseMenu)
+                keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
                 keyValueSymbol.setLabel(caption)
                 keyValueSymbol.addKey("CLEAR", "0", "CLEAR")
                 keyValueSymbol.addKey("SET", "1", "SET")
@@ -136,7 +140,7 @@ for i in range(0, len(registerNames)):
                 keyValueSymbol.setOutputMode("Key")
                 keyValueSymbol.setDisplayMode("Description")
             else:
-                hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseMenu)
+                hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
                 hexSymbol.setLabel(caption)
                 hexSymbol.setMin(0)
                 hexSymbol.setMax(getMaxValue(mask))
@@ -145,7 +149,7 @@ for i in range(0, len(registerNames)):
             valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/value-group@[name=\"" + valueGroup + "\"]"
             valueGroupNode = ATDF.getNode(valueGroupPath)
             valueGroupChildren = valueGroupNode.getChildren()
-            keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseMenu)
+            keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
             keyValueSymbol.setLabel(caption)
             for j in range(0, len(valueGroupChildren)):
                 name = valueGroupChildren[j].getAttribute("name")
@@ -158,9 +162,22 @@ for i in range(0, len(registerNames)):
 
         numfuses = numfuses + 1
 
-fuse = coreComponent.createIntegerSymbol("NUMBER_OF_FUSES", fuseMenu)
+fuse = coreComponent.createIntegerSymbol("NUMBER_OF_FUSES", fuseSettings)
 fuse.setDefaultValue(numfuses)
 fuse.setVisible(False)
+
+global nvmWaitStates
+nvmWaitStates = { #VDD > 2.7
+                    24000000 : 0,
+                    32000000 : 1
+                }
+                
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]")
+modules = periphNode.getChildren()
+components = []
+for nvmctrl_instance in range (0, len(modules)):
+    components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")

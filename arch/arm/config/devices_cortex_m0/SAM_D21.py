@@ -34,12 +34,17 @@ deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfg
 deviceSecurity.setLabel("Security")
 deviceSecurity.setOutputMode("Key")
 deviceSecurity.setDisplayMode("Description")
-deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)" )
-deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
-deviceSecurity.setSelectedKey("CLEAR",1)
+deviceSecurity.addKey("DISABLED", "0", "Disable (Code Protection Disabled)" )
+deviceSecurity.addKey("ENABLED", "1", "Enable (Code Protection Enabled)")
+deviceSecurity.setSelectedKey("DISABLED",1)
+deviceSecurity.setVisible(False)
+
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
 
 # NVMCTRL fuse configuration
-nvmctrlFuseMenu = coreComponent.createMenuSymbol("DEVICE_NVMCTRL_FUSE_CONFIG", devCfgMenu)
+nvmctrlFuseMenu = coreComponent.createMenuSymbol("DEVICE_NVMCTRL_FUSE_CONFIG", fuseSettings)
 nvmctrlFuseMenu.setLabel("NVMCTRL Fuse Configuration")
 
 nvmctrlBootloaderSize = coreComponent.createKeyValueSetSymbol("DEVICE_NVMCTRL_BOOTPROT", nvmctrlFuseMenu)
@@ -91,7 +96,7 @@ nvmctrlRegionLock.setMax(0xFFFF)
 nvmctrlRegionLock.setMin(0x0)
 
 # BOD33 fuse configuration
-bod33FuseMenu = coreComponent.createMenuSymbol("DEVICE_BOD33_FUSE_CONFIG", devCfgMenu)
+bod33FuseMenu = coreComponent.createMenuSymbol("DEVICE_BOD33_FUSE_CONFIG", fuseSettings)
 bod33FuseMenu.setLabel("BOD33 Fuse Configuration")
 
 bod33Enable = coreComponent.createKeyValueSetSymbol("DEVICE_BOD33_EN", bod33FuseMenu)
@@ -134,7 +139,7 @@ bod33UserLevel.setMax(0x3F)
 bod33UserLevel.setMin(0x0)
 
 # WDT fuse configuration
-wdtFuseMenu = coreComponent.createMenuSymbol("DEVICE_WDT_FUSE_CONFIG", devCfgMenu)
+wdtFuseMenu = coreComponent.createMenuSymbol("DEVICE_WDT_FUSE_CONFIG", fuseSettings)
 wdtFuseMenu.setLabel("WDT Fuse Configuration")
 
 wdtEnable = coreComponent.createKeyValueSetSymbol("DEVICE_WDT_ENABLE", wdtFuseMenu)
@@ -184,9 +189,9 @@ wdtWindowModeEnable.setSelectedKey("DISABLED", 1)
 
 wdtWindow_0 = coreComponent.createKeyValueSetSymbol("DEVICE_WDT_WINDOW_0", wdtFuseMenu)
 wdtWindow_0.setLabel("WDT Window bit 0")
-wdtWindow_0.addKey("CLEAR", "0", "CLEAR")
-wdtWindow_0.addKey("SET", "1", "SET")
-wdtWindow_0.setSelectedKey("SET", 1)
+wdtWindow_0.addKey("DISABLED", "0", "DISABLED")
+wdtWindow_0.addKey("ENABLED", "1", "ENABLED")
+wdtWindow_0.setSelectedKey("ENABLED", 1)
 wdtWindow_0.setOutputMode("Key")
 wdtWindow_0.setDisplayMode("Description")
 
@@ -259,6 +264,19 @@ systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", de
 systickExternal.setLabel("External Clock Source for SysTick Available")
 systickExternal.setDefaultValue(False)
 systickExternal.setVisible(False)
+
+global nvmWaitStates
+nvmWaitStates = { #VDD > 2.7
+                    24000000 : 0,
+                    48000000 : 1
+                }
+                
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]")
+modules = periphNode.getChildren()
+components = []
+for nvmctrl_instance in range (0, len(modules)):
+    components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")

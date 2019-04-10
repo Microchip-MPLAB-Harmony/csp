@@ -28,7 +28,18 @@ global efcInstanceName
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
+global waitStates
 
+def waitStateUpdate(symbol, event):
+    global waitStates
+    cpuFreq = event["value"]
+    for key in sorted(waitStates.keys()):
+        if int(cpuFreq) <= int(key):
+            print cpuFreq
+            print key
+            symbol.setValue(waitStates.get(key), 2)
+            break
+            
 def efcSetMemoryDependency(symbol, event):
     if (event["value"] == True):
         symbol.setVisible(True)
@@ -65,6 +76,10 @@ def instantiateComponent(efcComponent):
 
     Log.writeInfoMessage("Running EEFC")
 
+    global waitStates
+    waitStates = {}
+    waitStates = Database.sendMessage("core", "WAIT_STATES", waitStates)
+
     #Create the top menu
     efcMenu = efcComponent.createMenuSymbol(None, None)
     efcMenu.setLabel("Hardware Settings ")
@@ -93,10 +108,15 @@ def instantiateComponent(efcComponent):
     efcFlashEraseSize.setVisible(False)
     efcFlashEraseSize.setDefaultValue("8192")
 
+    # Flash Read Wait State (RWS).
+    nvm_rws = efcComponent.createIntegerSymbol("NVM_RWS", efcMenu)
+    nvm_rws.setDefaultValue(6)
+    nvm_rws.setLabel("Wait States")
+    nvm_rws.setDependencies(waitStateUpdate, ["core.MASTER_CLOCK_FREQUENCY"])
+
     #Create a Checkbox to enable disable interrupts
     efcInterrupt = efcComponent.createBooleanSymbol("INTERRUPT_ENABLE", efcMenu)
     efcInterrupt.setLabel("Enable Interrupts")
-    efcInterrupt.setDefaultValue(True)
 
     efcMemoryDriver = efcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", efcMenu)
     efcMemoryDriver.setLabel("Memory Driver Connected")
@@ -156,13 +176,6 @@ def instantiateComponent(efcComponent):
     efcEraseApiName.setReadOnly(True)
     efcEraseApiName.setDefaultValue(eraseApiName)
 
-    Database.clearSymbolValue("core", interruptVector)
-    Database.setSymbolValue("core", interruptVector, True, 2)
-    Database.clearSymbolValue("core", interruptHandler)
-    Database.setSymbolValue("core", interruptHandler, efcInstanceName.getValue() + "_InterruptHandler", 2)
-    Database.clearSymbolValue("core", interruptHandlerLock)
-    Database.setSymbolValue("core", interruptHandlerLock, True, 2)
-
     # NVIC Dynamic settings
     efcinterruptControl = efcComponent.createBooleanSymbol("NVIC_EFC_ENABLE", None)
     efcinterruptControl.setDependencies(interruptControl, ["INTERRUPT_ENABLE"])
@@ -194,6 +207,12 @@ def instantiateComponent(efcComponent):
     efcSystemDefFile.setSourcePath("../peripheral/efc_6450/templates/system/definitions.h.ftl")
     efcSystemDefFile.setMarkup(True)
 
+
+    efcSystemInitFile = efcComponent.createFileSymbol("EFC_FILE_3", None)
+    efcSystemInitFile.setType("STRING")
+    efcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
+    efcSystemInitFile.setSourcePath("../peripheral/efc_6450/templates/system/initialization.c.ftl")
+    efcSystemInitFile.setMarkup(True)
 def destroyComponent(efcComponent):
 
     global efcInstanceName
