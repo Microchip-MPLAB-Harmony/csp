@@ -254,13 +254,14 @@ def instantiateComponent(supcComponent):
     supcSym_VREF_ONDEMAND.setDescription("If this option is enabled, the voltage reference is disabled when no peripheral is requesting it.")
     supcSym_VREF_ONDEMAND.setDefaultValue(False)
 
-    #VREF TSEN
-    supcSym_VREF_TSEN = supcComponent.createBooleanSymbol("SUPC_VREF_TSEN", supcSym_VREF_Menu)
-    supcSym_VREF_TSEN.setLabel("Enable Temperature Sensor")
-    supcSym_VREF_TSEN.setDescription("Enable Temperature Sensor connection to ADC")
-    supcSym_VREF_TSEN.setDefaultValue(False)
-    supcSym_VREF_TSEN.setDependencies(updateVrefVisibleProperty, ["SUPC_VREF_ONDEMAND", "SUPC_VREF_VREFOE"])
-    
+    if "HAS_NO_TSEN" not in parameters:
+        #VREF TSEN
+        supcSym_VREF_TSEN = supcComponent.createBooleanSymbol("SUPC_VREF_TSEN", supcSym_VREF_Menu)
+        supcSym_VREF_TSEN.setLabel("Enable Temperature Sensor")
+        supcSym_VREF_TSEN.setDescription("Enable Temperature Sensor connection to ADC")
+        supcSym_VREF_TSEN.setDefaultValue(False)
+        supcSym_VREF_TSEN.setDependencies(updateVrefVisibleProperty, ["SUPC_VREF_ONDEMAND", "SUPC_VREF_VREFOE"])
+  
     #VREF RUNSTDBY mode
     supcSym_VREF_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_VREF_RUNSTDBY", supcSym_VREF_Menu)
     supcSym_VREF_RUNSTDBY.setLabel("Run in Standby mode")
