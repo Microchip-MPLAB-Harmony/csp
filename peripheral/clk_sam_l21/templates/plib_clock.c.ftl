@@ -273,9 +273,6 @@ static void GCLK${i}_Initialize(void)
 </#list>
 void CLOCK_Initialize (void)
 {
-    /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLB |= NVMCTRL_CTRLB_RWS(${NVM_RWS});
-
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
 

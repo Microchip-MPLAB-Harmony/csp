@@ -107,16 +107,20 @@ def setMPUDefaultSettings():
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
+
 # load device specific configurations (fuses), temporary, to be removed once
 # XC32 updated
 devCfgComment = coreComponent.createCommentSymbol(
-    "CoreCfgComment1", devCfgMenu)
+    "CoreCfgComment1", fuseSettings)
 devCfgComment.setLabel(
     "Note: Set Device Configuration Bits via Programming Tool")
 
 # Device Configuration
 deviceSecurity = coreComponent.createKeyValueSetSymbol(
-    "DEVICE_SECURITY", devCfgMenu)
+    "DEVICE_SECURITY", fuseSettings)
 deviceSecurity.setLabel("Security")
 deviceSecurity.setOutputMode("Key")
 deviceSecurity.setDisplayMode("Description")
@@ -131,7 +135,7 @@ systickExternal.setLabel("External Clock Source for SysTick Available")
 systickExternal.setDefaultValue(True)
 systickExternal.setVisible(False)
 
-deviceBoot = coreComponent.createKeyValueSetSymbol("DEVICE_BOOT", devCfgMenu)
+deviceBoot = coreComponent.createKeyValueSetSymbol("DEVICE_BOOT", fuseSettings)
 deviceBoot.setLabel("Boot Mode")
 deviceBoot.setOutputMode("Key")
 deviceBoot.setDisplayMode("Description")
@@ -140,7 +144,7 @@ deviceBoot.addKey("SET", "1", "Boot from Flash")
 deviceBoot.setSelectedKey("SET", 1)
 
 deviceTCMsize = coreComponent.createKeyValueSetSymbol(
-    "DEVICE_TCM_SIZE", devCfgMenu)
+    "DEVICE_TCM_SIZE", fuseSettings)
 deviceTCMsize.setLabel("TCM Size")
 deviceTCMsize.setOutputMode("Value")
 deviceTCMsize.setDisplayMode("Description")
@@ -165,6 +169,24 @@ deviceFamily.setVisible(False)
 cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M7 Configuration")
 cortexMenu.setDescription("Configuration for Cortex M7")
+
+global nvmWaitStates
+nvmWaitStates = { #VDD > 2.7
+                    23000000 : 0,
+                    46000000 : 1,
+                    69000000 : 2,
+                    92000000 : 3,
+                    115000000 : 4,
+                    138000000 : 5,
+                    150000000 : 6
+                }
+                
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EFC\"]")
+modules = periphNode.getChildren()
+components = []
+for nvmctrl_instance in range (0, len(modules)):
+    components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR")

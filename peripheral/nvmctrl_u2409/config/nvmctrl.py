@@ -25,6 +25,7 @@
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+global waitStates
 
 def updateNVICFlashInterruptState(symbol, event):
     Database.setSymbolValue("core", InterruptVector[0], event["value"], 2)
@@ -52,6 +53,13 @@ def updateNVMCTRLInterruptWarringStatus(symbol, event):
 def nvmctlrSetMemoryDependency(symbol, event):
     symbol.setVisible(event["value"])
 
+def waitStateUpdate(symbol, event):
+    global waitStates
+    cpuFreq = event["value"]
+    for key in sorted(waitStates.keys()):
+        if int(cpuFreq) <= int(key):
+            symbol.setValue(waitStates.get(key), 2)
+            break
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -68,6 +76,10 @@ def instantiateComponent(nvmctrlComponent):
     InterruptVectorUpdate = []
     global nvmctrlInstanceName
     global nvmctrlSym_Interrupt0
+
+    global waitStates
+    waitStates = {}
+    waitStates = Database.sendMessage("core", "WAIT_STATES", waitStates)
 
     nvmctrlInstanceName = nvmctrlComponent.createStringSymbol("NVMCTRL_INSTANCE_NAME", None)
     nvmctrlInstanceName.setVisible(False)
@@ -124,6 +136,12 @@ def instantiateComponent(nvmctrlComponent):
 
     nvmctrlSleepPrmDefaultValue   = 0
     nvmctrlSleepPrmKeyDescription = ""
+
+    # Flash Read Wait State (RWS).
+    nvm_rws = nvmctrlComponent.createIntegerSymbol("NVM_RWS", None)
+    nvm_rws.setDefaultValue(6)
+    nvm_rws.setLabel("Wait States")
+    nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY"])
 
     for index in range (0 , len(nvmctrlSleepPrmValues)):
         nvmctrlSleepPrmKeyName = nvmctrlSleepPrmValues[index].getAttribute("name")
@@ -288,7 +306,7 @@ def instantiateComponent(nvmctrlComponent):
 
     nvmctrlSym_SystemInitFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_INIT", None)
     nvmctrlSym_SystemInitFile.setSourcePath("../peripheral/nvmctrl_u2409/templates/system/initialization.c.ftl")
-    nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
     nvmctrlSym_SystemInitFile.setType("STRING")
     nvmctrlSym_SystemInitFile.setMarkup(True)
 

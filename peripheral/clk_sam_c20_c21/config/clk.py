@@ -1362,7 +1362,7 @@ codeGenerationDep.append("GCLK_ID_0_GENSEL")
 codeGenerationDep.append("CONFIG_CLOCK_DPLL_REF_CLOCK")
 codeGenerationDep.append("CONFIG_CLOCK_DPLL_ENABLE")
 codeGenerationList.setDependencies(codeGen, codeGenerationDep)
-codeGenerationList.addValue("   GCLK0_Initialize();")
+codeGenerationList.addValue("    GCLK0_Initialize();")
 codeGenerationList.setTarget("core.CLK_INIT_LIST")
 
 
@@ -1509,12 +1509,6 @@ mclkSym_CPUDIV_CPUDIV.setDefaultValue(mclkcpudivDefaultValue)
 mclkSym_CPUDIV_CPUDIV.setOutputMode("Value")
 mclkSym_CPUDIV_CPUDIV.setDisplayMode("Key")
 
-# Flash Read Wait State (RWS). Values given in  'NVM Characteristics'
-nvm_rws = coreComponent.createStringSymbol("NVM_RWS", mclkSym_Menu)
-nvm_rws.setReadOnly(True)
-nvm_rws.setDefaultValue("NVMCTRL_CTRLB_RWS_DUAL_Val")
-nvm_rws.setVisible(False)
-
 ################################################################################
 #######          Calculated Clock Frequencies        ###########################
 ################################################################################
@@ -1524,12 +1518,6 @@ def setMainClockFreq(symbol, event):
     gclk0_freq = int(Database.getSymbolValue("core","GCLK_0_FREQ"))
 
     symbol.setValue(gclk0_freq / (1 << divider), 1)
-    if (gclk0_freq > 19000000 and gclk0_freq < 38000000):
-        Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_HALF_Val", 2)
-    elif (gclk0_freq >= 38000000):
-        Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_DUAL_Val", 2)
-    else:
-        Database.setSymbolValue("core", "NVM_RWS", "NVMCTRL_CTRLB_RWS_SINGLE_Val", 2)
 
 
 
