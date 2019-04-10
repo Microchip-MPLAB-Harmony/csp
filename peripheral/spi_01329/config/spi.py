@@ -213,12 +213,12 @@ def calculateBRGValue(clkfreq, baudRate):
     if errorHigh > errorLow:
         t_brg +=1
 
-    ## Baud rate register is a 13 bit register
+    ## Baud rate register is a 9/13 bit register
     if t_brg < 0:
         t_brg = 0
         Log.writeErrorMessage("SPI Clock source Frequency is low for the desired baud rate")
-    elif t_brg > 8191:
-        t_brg = 8191
+    elif t_brg > spiSymMaxBRG.getValue():
+        t_brg = spiSymMaxBRG.getValue()
         Log.writeErrorMessage("Desired baud rate is low for current SPI Source Clock Frequency")
 
     return int(t_brg)
@@ -250,6 +250,7 @@ def instantiateComponent(spiComponent):
     global InterruptHandler
     global InterruptVectorUpdate
     global spiSymInterruptMode
+    global spiSymMaxBRG
 
     InterruptVector = []
     InterruptHandler = []
@@ -458,6 +459,14 @@ def instantiateComponent(spiComponent):
     spiSym_Baud_Rate.setDefaultValue(1000000)
     spiSym_Baud_Rate.setMin(1)
     spiSym_Baud_Rate.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
+
+    spixBRG = spiInstanceName.getValue() + "BRG"
+    spixBRG_Bitfield = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="' + spixBRG + '"]/bitfield@[name="' + spixBRG + '"]')
+    spiMaxBRG = int(str(spixBRG_Bitfield.getAttribute("mask")), 0)
+
+    spiSymMaxBRG = spiComponent.createIntegerSymbol("SPI_MAX_BRG", None)
+    spiSymMaxBRG.setDefaultValue(spiMaxBRG)
+    spiSymMaxBRG.setVisible(False)
 
     ## Baud Rate generation
     spiDefaultMasterFreq = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))
