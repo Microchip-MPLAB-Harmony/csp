@@ -54,15 +54,29 @@
 #include <string.h>
 #include "definitions.h"                // SYS function prototypes
 
-uintptr_t adc_context;
-volatile uint16_t adc_result = 0;
-volatile bool adc_window_det = false;
+#define DMAC_TRANSFER_BYTECOUNT 32
+#define RTC_COMPARE_VAL 100
 
-void adc_cb(ADC_STATUS status, uintptr_t context )
+#define LED_OFF     LED_Set
+#define LED_ON      LED_Clear
+
+volatile bool dma_ch0Done = false;
+uint32_t myAppObj = 0;
+uint8_t adc_result_array[DMAC_TRANSFER_BYTECOUNT];
+
+void DmacCh0Cb(DMAC_TRANSFER_EVENT returned_evnt, uintptr_t MyDmacContext)
 {
-    adc_window_det = true;
-    adc_result = ADC_ConversionResultGet();
-}
+    if (DMAC_TRANSFER_EVENT_COMPLETE == returned_evnt)
+    {
+        dma_ch0Done = true;
+    }
+    else if (DMAC_TRANSFER_EVENT_ERROR == returned_evnt)
+    {
+        LED_ON();
+        printf("DMAC Error \r\n");
+        while(1);
+    }
+ }
 
 // *****************************************************************************
 // *****************************************************************************
@@ -74,25 +88,30 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    RTC_Timer32CompareSet(1500);
-    RTC_Timer32Start();
+    LED_OFF();
     
-    printf("\n\r---------------------------------------------------------");
-    printf("\n\r                    ADC Window Sleepwalking Demo          ");
-    printf("\n\r---------------------------------------------------------\n\r");
-    
-    ADC_CallbackRegister(adc_cb, adc_context);
     ADC_Enable();
+    
+    RTC_Timer32Start();
+    RTC_Timer32CompareSet(RTC_COMPARE_VAL);
+    
+    DMAC_ChannelCallbackRegister(DMAC_CHANNEL_0, DmacCh0Cb, (uintptr_t)&myAppObj);
+    DMAC_ChannelTransfer(DMAC_CHANNEL_0, (const void *)&ADC_REGS->ADC_RESULT, (const void *)adc_result_array, DMAC_TRANSFER_BYTECOUNT);
+ 
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                    ADC DMA Sleepwalking Demo                 ");
+    printf("\n\r---------------------------------------------------------\n\r");    
+    printf("\r\n\r\n Wake CPU after 16 samples are taken\r\n");
     
     while ( true )
     {
         PM_StandbyModeEnter();
-        
-        if(adc_window_det == true)
+        if(dma_ch0Done == true)
         {
-            adc_window_det = false;
-            printf("\r\nADC Window detected \r\n");
-            printf("\r\nADC result is %d\r\n", adc_result);
+            printf("\r\nTransferred 16 results to array in SRAM\r\n");
+            dma_ch0Done = false;
+            /* Configure the next transfer */
+            DMAC_ChannelTransfer(DMAC_CHANNEL_0, (const void *)&ADC_REGS->ADC_RESULT, (const void *)adc_result_array, DMAC_TRANSFER_BYTECOUNT);
         }
     }
 
@@ -105,4 +124,3 @@ int main ( void )
 /*******************************************************************************
  End of File
 */
-
