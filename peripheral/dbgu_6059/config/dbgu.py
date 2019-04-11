@@ -89,10 +89,21 @@ def instantiateComponent(dbguComponent):
     dbguInterrupt.setLabel("Interrupt Mode")
     dbguInterrupt.setDefaultValue(True)
 
+    dbguClkSrc = dbguComponent.createKeyValueSetSymbol("DBGU_CLK_SRC", None)
+    dbguClkSrc.setLabel("Select Clock Source")
+    dbgu_clock = []
+    node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DBGU"]/value-group@[name="DBGU_MR__BRSRCCK"]')
+    dbgu_clock = node.getChildren()
+    for clock in range(0, len(dbgu_clock)):
+        dbguClkSrc.addKey(dbgu_clock[clock].getAttribute("name"), dbgu_clock[clock].getAttribute("value"), dbgu_clock[clock].getAttribute("caption"))
+    dbguClkSrc.setDisplayMode("Key")
+    dbguClkSrc.setOutputMode("Value")
+    dbguClkSrc.setDefaultValue(0)
+
     dbguClkValue = dbguComponent.createIntegerSymbol("DBGU_CLOCK_FREQ", None)
     dbguClkValue.setLabel("Clock Frequency")
     dbguClkValue.setReadOnly(True)
-    dbguClkValue.setDependencies(clockSourceFreq, ["core." + dbguInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    dbguClkValue.setDependencies(clockSourceFreq, ["DBGU_CLK_SRC", "core." + dbguInstanceName.getValue() + "_CLOCK_FREQUENCY"])
     dbguClkValue.setDefaultValue(int(Database.getSymbolValue("core", dbguInstanceName.getValue() + "_CLOCK_FREQUENCY")))
 
     dbguClockInvalidSym = dbguComponent.createCommentSymbol("DBGU_CLOCK_INVALID_COMMENT", None)
