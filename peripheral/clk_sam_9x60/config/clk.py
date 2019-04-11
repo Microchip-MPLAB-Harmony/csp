@@ -253,6 +253,7 @@ gclk_dependency_map = {
     "I2SMCC" : "SOME_SYMBOL",
     "PIT64B" : "SGCLK",
     "CLASSD" : "SOME_SYMBOL",
+    "DBGU" : "DBGU_CLK_SRC"
 }
 
 def generic_gclk_update_freq(symbol, event):
@@ -269,11 +270,6 @@ def generic_gclk_update_freq(symbol, event):
     else:
         symbol.setValue(gclk.getValue(), 0)
 
-def update_dbgu_clock_frequency(symbol, event):
-    instance_name = symbol.getID().split("_")[0]
-    gclk = event['source'].getSymbolByID(instance_name + "_GCLK_FREQUENCY")
-    symbol.setValue(gclk.getValue(), 0)
-
 #map of gclk capable peripherals to their update functions
 gclk_update_map = {
     "FLEXCOM" : update_flexcomm_clock_frequency,
@@ -282,6 +278,7 @@ gclk_update_map = {
     "I2SMCC" : generic_gclk_update_freq,
     "PIT64B" : generic_gclk_update_freq,
     "CLASSD" : generic_gclk_update_freq,
+    "DBGU" : generic_gclk_update_freq
 }
 
 #instantiateComponent of core Component
@@ -707,13 +704,8 @@ for module_node in peripherals_node.getChildren():
                     'MD_SLOW_CLK_FREQUENCY', 'TD_SLOW_CLOCK_FREQUENCY', 'MAINCK_FREQUENCY',
                     'MCK_FREQUENCY', 'PLLA_FREQUENCY', 'UPLL_FREQUENCY'])
 
-            #DBGU only operates using GCLK
-            if module_node.getAttribute("name") == "DBGU":
-                pcr_freq.setDefaultValue(gclk_freq.getValue())
-                pcr_freq.setDependencies(update_dbgu_clock_frequency, [instance_name + "_GCLK_FREQUENCY"])
-
             # TC plib expects frequency and enable bits per channel. Create dummy symbols to support this
-            elif module_node.getAttribute("name") == "TC":
+            if module_node.getAttribute("name") == "TC":
                 tc_ch_en_dep_list = []
                 #  create a dummy symbol per channel. TC has 3 channels. We create three ENABLE symbols( one per channel )
                 #  and four FREQUENCY symbols (one per channel + one additional symbol for quadrature mode )
