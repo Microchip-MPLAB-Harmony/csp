@@ -99,6 +99,9 @@ static APP_TRANSFER_STATUS APP_ResetFlash(void)
     {
         return APP_TRANSFER_ERROR_UNKNOWN;
     }
+    
+    /* Enforce MX25L Tcsh */
+    PIT_DelayMs(1);
 
     qspi_command_xfer.instruction = MX25_CMD_FLASH_RESET;
     qspi_command_xfer.width = SINGLE_BIT_SPI;
@@ -107,6 +110,9 @@ static APP_TRANSFER_STATUS APP_ResetFlash(void)
     {
         return APP_TRANSFER_ERROR_UNKNOWN;
     }
+    
+    /* Enforce MX25L tReady2 */
+    PIT_DelayMs(100);
 
     return APP_TRANSFER_COMPLETED;
 }
