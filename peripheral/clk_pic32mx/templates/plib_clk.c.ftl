@@ -120,7 +120,7 @@ void CLK_Initialize( void )
             <#lt>    /* Set up Reference Clock */
             <#lt>    /* ROSEL =  ${CONFIG_SYS_CLK_ROSEL} */
             <#lt>    /* RODIV = ${CONFIG_SYS_CLK_RODIV} */
-            <#lt>    ${REFOCONreg} = ${REFOCON_VALUE};
+            <#lt>    ${REFOCONreg} = 0x${REFOCON_VALUE};
         </#if>
         <#if REFOTRIM_VALUE != "0">
             <#lt>    /* ROTRIM  = ${CONFIG_SYS_CLK_ROTRIM} */
