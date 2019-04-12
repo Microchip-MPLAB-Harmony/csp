@@ -44,10 +44,12 @@ interruptLastNameHandler =  "_INTERRUPT_HANDLER"
 interruptLastNameLock =     "_INTERRUPT_HANDLER_LOCK"
 
 ################################################################################
+global showSharedVectorsInMenu
 global numSharedVectors
 global sharedVectors
 global subVectorToSharedVector
 
+showSharedVectorsInMenu = False
 numSharedVectors = 0
 sharedVectors = {}
 subVectorToSharedVector = {}
@@ -256,6 +258,7 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
 
 
 def setupSharedVectorFtlSymbols( component, anInterrupt, aicVectorEnable ):
+    global showSharedVectorsInMenu
     global numSharedVectors
 
     interruptName = getInterruptName( anInterrupt )
@@ -265,15 +268,17 @@ def setupSharedVectorFtlSymbols( component, anInterrupt, aicVectorEnable ):
         numSharedVectors = numSharedVectors + 1
         # SHARED_VECTOR_N = "name", e.g. SHARED_VECTOR_1 = "SYSC"
         # Create a generic shared handler symbol with a value indicating the HANDLER 
-        Database.clearSymbolValue( "core", interruptName + "SHARED_VECTOR_" + str( numSharedVectors - 1 ) )
         sharedVector = component.createStringSymbol( "SHARED_VECTOR_" + str( numSharedVectors - 1 ), aicVectorEnable )
+        Database.clearSymbolValue( "core", interruptName + "SHARED_VECTOR_" + str( numSharedVectors - 1 ) )
         sharedVector.setDefaultValue( interruptName )
         sharedVector.setVisible( False )
         
-        Database.clearSymbolValue( "core", interruptName + "_NUM_SHARES" )
         sharedVectorNumShares = component.createIntegerSymbol( interruptName + "_NUM_SHARES", sharedVector )
+        sharedVectorNumShares.setMin( numShares )
+        sharedVectorNumShares.setMax( numShares )
+        Database.clearSymbolValue( "core", interruptName + "_NUM_SHARES" )
         sharedVectorNumShares.setValue( numShares, 0 )
-        sharedVectorNumShares.setVisible( False )
+        sharedVectorNumShares.setVisible( showSharedVectorsInMenu )
         # Create symbols for the shared handler names 
         # {SHARED_VECTOR_#}_HANDLER_#, e.g.
         #    SYSC_HANDLER_0 = "PMC"    ==> PMC_InterruptHandler
@@ -283,7 +288,7 @@ def setupSharedVectorFtlSymbols( component, anInterrupt, aicVectorEnable ):
         for elem in moduleInstance:
             shareName = component.createStringSymbol( interruptName + "_SHARE_" + str( ii ), aicVectorEnable )
             shareName.setDefaultValue( elem )
-            shareName.setVisible( False )
+            shareName.setVisible( showSharedVectorsInMenu )
             ii = ii + 1
 
 
@@ -296,21 +301,22 @@ def formAicPyGlobalData( theProcessor, theCoreComponent ):
     global aicPriorityChoices
     global aicSrcTypes
 
-    aicPriorityOutputMode = "Key"
+    aicPriorityOutputMode = "Value"
     aicPrioritySymbolStem = "PRIORITY"
-    # set choice defaults, in case not in the atdf
     getNameValueCaptionTuple( "AIC_SMR__" + aicPrioritySymbolStem, aicPriorityChoices )
     if not len( aicPriorityChoices ):
-        aicPriorityOutputMode = "Value"
         aicPrioritySymbolStem = "PRIOR"
-        aicPriorityChoices.append( ( "MINIMUM",    "0x0", "Minimum priority" ) )
-        aicPriorityChoices.append( ( "VERY_LOW",   "0x1", "Very low priority" ) )
-        aicPriorityChoices.append( ( "LOW",        "0x2", "Low priority" ) )
-        aicPriorityChoices.append( ( "MEDIUM_LOW", "0x3", "Medium priority" ) )
-        aicPriorityChoices.append( ( "MEDIUM_HIGH","0x4", "Medium high priority" ) )
-        aicPriorityChoices.append( ( "HIGH",       "0x5", "High priority" ) )
-        aicPriorityChoices.append( ( "VERY_HIGH",  "0x6", "Very high priority" ) )
-        aicPriorityChoices.append( ( "MAXIMUM",    "0x7", "Maximum priority" ) )
+        getNameValueCaptionTuple( "AIC_SMR__" + aicPrioritySymbolStem, aicPriorityChoices )
+        if not len( aicPriorityChoices ):
+            # still not found in the atdf; so set some defaults
+            aicPriorityChoices.append( ( "MINIMUM",    "0x0", "Minimum priority" ) )
+            aicPriorityChoices.append( ( "VERY_LOW",   "0x1", "Very low priority" ) )
+            aicPriorityChoices.append( ( "LOW",        "0x2", "Low priority" ) )
+            aicPriorityChoices.append( ( "MEDIUM_LOW", "0x3", "Medium priority" ) )
+            aicPriorityChoices.append( ( "MEDIUM_HIGH","0x4", "Medium high priority" ) )
+            aicPriorityChoices.append( ( "HIGH",       "0x5", "High priority" ) )
+            aicPriorityChoices.append( ( "VERY_HIGH",  "0x6", "Very high priority" ) )
+            aicPriorityChoices.append( ( "MAXIMUM",    "0x7", "Maximum priority" ) )
 
     aicSmrPrioritySymbol = theCoreComponent.createStringSymbol( "AIC_SMR_PRIORITY_SYMBOL", None )
     aicSmrPrioritySymbol.setDefaultValue( "AIC_SMR_" + aicPrioritySymbolStem )
@@ -394,7 +400,7 @@ for interrupt in interruptsChildren:
         vectorPreCursor = "Internal Vector: "
     aicVectorSourceGUILabel = coreComponent.createCommentSymbol( interruptName + "_INTERRUPT_VECTOR_LABEL", aicVectorEnable )
     aicVectorSourceGUILabel.setLabel( vectorPreCursor + interruptName + "_IRQn" )
-    #This is the same as aicVectorSourceGUILabel but creates a .var assignment accessible in plib_aic.c.ftl
+    # This is the same as aicVectorSourceGUILabel but creates a .var assignment accessible in plib_aic.c.ftl
     aicVectorSource = coreComponent.createStringSymbol( interruptName + interruptLastNameVector, aicVectorEnable )
     aicVectorSource.setDefaultValue( interruptName + "_IRQn" )
     aicVectorSource.setVisible( False )
@@ -448,10 +454,12 @@ for interrupt in interruptsChildren:
     aicCodeGenerationDependencies.append( interruptName + interruptLastNameMapType )  # add to dependency list for code generation symbol
 
 ###
-Database.clearSymbolValue( "core", "NUM_SHARED_VECTORS" )
 aicNumSharedVectors = coreComponent.createIntegerSymbol( "NUM_SHARED_VECTORS", aicMenu )
+aicNumSharedVectors.setMin( numSharedVectors )
+aicNumSharedVectors.setMax( numSharedVectors )
+Database.clearSymbolValue( "core", "NUM_SHARED_VECTORS" )
 aicNumSharedVectors.setValue( numSharedVectors, 1 )
-aicNumSharedVectors.setVisible( False )
+aicNumSharedVectors.setVisible( showSharedVectorsInMenu )
 ### Symbol for code generation decisions
 aicCodeGeneration = coreComponent.createComboSymbol( "AIC_CODE_GENERATION", aicMenu, [ "NONE", "AIC", "SAIC", "AICandSAIC" ] )
 aicCodeGeneration.setDefaultValue( "NONE" )

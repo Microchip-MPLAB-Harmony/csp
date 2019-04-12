@@ -93,11 +93,7 @@ IrqData irqData[] = {
             <#lt><#assign TARGET_REGISTERS_STR = ("(uint32_t) " + REG_NAME_STR + "_REGS,")?right_pad(24)>
             <#lt><#assign AIC_HANDLER_STR   = (.vars[AIC_HANDLER]  + ",")?right_pad(28) >
             <#lt><#assign AIC_SRC_TYPE_STR  = (REG_NAME_STR + "_SMR_SRCTYPE_"  + .vars[AIC_SRC_TYPE] + "_Val,")?right_pad(42) >
-            <#lt><#if AIC_SMR_PRIORITY_SYMBOL?matches(".*PRIORITY.*")>
-                <#lt><#assign AIC_PRIORITY_STR  = (REG_NAME_STR + "_SMR_PRIORITY_" + .vars[AIC_PRIORITY] + "_Val ")?right_pad(30) >
-            <#lt><#else>
-                <#lt><#assign AIC_PRIORITY_STR  = .vars[AIC_PRIORITY] >
-            <#lt></#if>
+            <#lt><#assign AIC_PRIORITY_STR  = .vars[AIC_PRIORITY] >
             <#lt>    { ${PERIPH_ID}${TARGET_REGISTERS_STR}${AIC_HANDLER_STR}${AIC_SRC_TYPE_STR}${AIC_PRIORITY_STR} }<#sep>,</#sep>
         <#lt></#if>
     <#lt></#if>
