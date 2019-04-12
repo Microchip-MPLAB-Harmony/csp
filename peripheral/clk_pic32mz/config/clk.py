@@ -33,136 +33,153 @@ global set_refotrim_value
 global peripheralBusDict
 peripheralBusDict = {}
 
-peripheralBusDict_EF =  {"CORE": "7", # CPU or CORE
-                      "SPI2": "2",
-                      "SPI3": "2",
-                      "SPI1": "2",
-                      "NVM": "1",
-                      "RTCC": "1",
-                      "RNG": "5",
-                      "SPI6": "2",
-                      "SPI4": "2",
-                      "SPI5": "2",
-                      "GPIO": "4",
-                      "WDT": "1",
-                      "CMP": "3",
-                      "ICAP5": "3",
-                      "ICAP6": "3",
-                      "ICAP7": "3",
-                      "ICAP8": "3",
-                      "ICAP1": "3",
-                      "ICAP2": "3",
-                      "ICAP3": "3",
-                      "ICAP4": "3",
-                      "CAN": "5",
-                      "ICAP9": "3",
-                      "I2C1": "2",
-                      "ADCHS": "3",
-                      "I2C3": "2",
-                      "I2C2": "2",
-                      "I2C5": "2",
-                      "I2C4": "2",
-                      "CVR": "1",
-                      "CRYPTO": "5",
-                      "SQI1": "5",
-                      "CFG": "1",
-                      "TMR9": "3",
-                      "EBI": "8",
-                      "USB": "5",
-                      "JTAG": "1",
-                      "OCMP7": "3",
-                      "OCMP8": "3",
-                      "OCMP9": "3",
-                      "OCMP1": "3",
-                      "OCMP2": "3",
-                      "OCMP3": "3",
-                      "UART6": "2",
-                      "OCMP4": "3",
-                      "OCMP5": "3",
-                      "OCMP6": "3",
-                      "UART2": "2",
-                      "UART3": "2",
-                      "DMT": "1",
-                      "UART4": "2",
-                      "UART5": "2",
-                      "UART1": "2",
-                      "PMP": "2",
-                      "ETH": "5",
-                      "TMR8": "3",
-                      "TMR7": "3",
-                      "TMR6": "3",
-                      "TMR5": "3",
-                      "TMR4": "3",
-                      "TMR3": "3",
-                      "TMR2": "3",
-                      "TMR1": "3"}
+peripheralBusDict_EF =  {
 
-peripheralBusDict_DA = {"CORE": "7",
-                        "SPI2": "2",
-                        "SPI3": "2",
-                        "SPI1": "2",
-                        "NVM": "5",
-                        "RTCC": "6",
-                        "RNG": "5",
-                        "SPI6": "2",
-                        "SPI4": "2",
-                        "SPI5": "2",
-                        "HLVD": "1",
-                        "WDT": "1",
-                        "CMP": "3",
-                        "ICAP5": "3",
-                        "ICAP6": "3",
-                        "ICAP7": "3",
-                        "SDHC": "5",
-                        "ICAP8": "3",
-                        "ICAP1": "3",
-                        "ICAP2": "3",
-                        "ICAP3": "3",
-                        "ICAP4": "3",
-                        "CAN": "5",
-                        "ICAP9": "3",
-                        "I2C1": "2",
-                        "ADCHS": "3",
-                        "I2C3": "2",
-                        "I2C2": "2",
-                        "I2C5": "2",
-                        "I2C4": "2",
-                        "CVR": "1",
-                        "CRYPTO": "5",
-                        "DSCTRL": "6",
-                        "SQI1": "5",
-                        "CFG": "1",
-                        "CTMU": "3",
-                        "TMR9": "3",
-                        "JTAG": "1",
-                        "OCMP7": "3",
-                        "OCMP8": "3",
-                        "OCMP9": "3",
-                        "OCMP1": "3",
-                        "OCMP2": "3",
-                        "OCMP3": "3",
-                        "UART6": "2",
-                        "OCMP4": "3",
-                        "USB": "5",
-                        "OCMP5": "3",
-                        "OCMP6": "3",
-                        "UART2": "2",
-                        "UART3": "2",
-                        "DMT": "7",
-                        "UART4": "2",
-                        "UART5": "2",
-                        "GPIO": "4",
-                        "UART1": "2",
-                        "PMP": "2",
-                        "ETH": "5",
-                        "TMR8": "3",
-                        "TMR7": "3",
-                        "TMR6": "3",
-                        "TMR5": "3",
-                        "TMR4": "3",
-                        "TMR3": "3",
-                        "TMR2": "3",
-                        "TMR1": "3"}
+        #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
+        # if "Peripheral bus no" == -1 then clocked by SYSCLK
+
+        "ADCHS": ["3", "1", "0"],
+        "CVR": ["1", "1", "12"],
+        "CMP1": ["3", "2", "0"],
+        "CMP2": ["3", "2", "1"],
+        "ICAP1": ["3", "3", "0"],
+        "ICAP2": ["3", "3", "1"],
+        "ICAP3": ["3", "3", "2"],
+        "ICAP4": ["3", "3", "3"],
+        "ICAP5": ["3", "3", "4"],
+        "ICAP6": ["3", "3", "5"],
+        "ICAP7": ["3", "3", "6"],
+        "ICAP8": ["3", "3", "7"],
+        "ICAP9": ["3", "3", "8"],
+        "OCMP1": ["3", "3", "16"],
+        "OCMP2": ["3", "3", "17"],
+        "OCMP3": ["3", "3", "18"],
+        "OCMP4": ["3", "3", "19"],
+        "OCMP5": ["3", "3", "20"],
+        "OCMP6": ["3", "3", "21"],
+        "OCMP7": ["3", "3", "22"],
+        "OCMP8": ["3", "3", "23"],
+        "OCMP9": ["3", "3", "24"],
+        "TMR1": ["3", "4", "0"],
+        "TMR2": ["3", "4", "1"],
+        "TMR3": ["3", "4", "2"],
+        "TMR4": ["3", "4", "3"],
+        "TMR5": ["3", "4", "4"],
+        "TMR6": ["3", "4", "5"],
+        "TMR7": ["3", "4", "6"],
+        "TMR8": ["3", "4", "7"],
+        "TMR9": ["3", "4", "8"],
+        "UART1": ["2", "5", "0"],
+        "UART2": ["2", "5", "1"],
+        "UART3": ["2", "5", "2"],
+        "UART4": ["2", "5", "3"],
+        "UART5": ["2", "5", "4"],
+        "UART6": ["2", "5", "5"],
+        "SPI1": ["2", "5", "8"],
+        "SPI2": ["2", "5", "9"],
+        "SPI3": ["2", "5", "10"],
+        "SPI4": ["2", "5", "11"],
+        "SPI5": ["2", "5", "12"],
+        "SPI6": ["2", "5", "13"],
+        "I2C1": ["2", "5", "16"],
+        "I2C2": ["2", "5", "17"],
+        "I2C3": ["2", "5", "18"],
+        "I2C4": ["2", "5", "19"],
+        "I2C5": ["2", "5", "20"],
+        "USB": ["5", "5", "24"],
+        "CAN1": ["5", "5", "28"],
+        "CAN2": ["5", "5", "29"],
+        "RTCC": ["1", "6", "0"],
+        "REFO1": ["-1", "6", "8"],
+        "REFO2": ["-1", "6", "9"],
+        "REFO3": ["-1", "6", "10"],
+        "REFO4": ["-1", "6", "11"],
+        "PMP": ["2", "6", "16"],
+        "EBI": ["8", "6", "17"],
+        "SQI1": ["5", "6", "23"],
+        "ETH": ["5", "6", "28"],
+        "DMAC": ["-1", "7", "4"],
+        "RNG": ["5", "7", "20"],
+        "CRYPTO": ["5", "7", "22"],
+}
+
+peripheralBusDict_DA =  {
+
+        #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
+        # if "Peripheral bus no" == -1 then clocked by SYSCLK
+
+        "ADCHS": ["3", "1", "0"],
+        "CTMU": ["3", "1", "8"],
+        "CVR": ["1", "1", "12"],
+        "HLVD": ["1", "1", "20"],
+        "CMP1": ["3", "2", "0"],
+        "CMP2": ["3", "2", "1"],
+        "ICAP1": ["3", "3", "0"],
+        "ICAP2": ["3", "3", "1"],
+        "ICAP3": ["3", "3", "2"],
+        "ICAP4": ["3", "3", "3"],
+        "ICAP5": ["3", "3", "4"],
+        "ICAP6": ["3", "3", "5"],
+        "ICAP7": ["3", "3", "6"],
+        "ICAP8": ["3", "3", "7"],
+        "ICAP9": ["3", "3", "8"],
+        "OCMP1": ["3", "3", "16"],
+        "OCMP2": ["3", "3", "17"],
+        "OCMP3": ["3", "3", "18"],
+        "OCMP4": ["3", "3", "19"],
+        "OCMP5": ["3", "3", "20"],
+        "OCMP6": ["3", "3", "21"],
+        "OCMP7": ["3", "3", "22"],
+        "OCMP8": ["3", "3", "23"],
+        "OCMP9": ["3", "3", "24"],
+        "TMR1": ["3", "4", "0"],
+        "TMR2": ["3", "4", "1"],
+        "TMR3": ["3", "4", "2"],
+        "TMR4": ["3", "4", "3"],
+        "TMR5": ["3", "4", "4"],
+        "TMR6": ["3", "4", "5"],
+        "TMR7": ["3", "4", "6"],
+        "TMR8": ["3", "4", "7"],
+        "TMR9": ["3", "4", "8"],
+        "UART1": ["2", "5", "0"],
+        "UART2": ["2", "5", "1"],
+        "UART3": ["2", "5", "2"],
+        "UART4": ["2", "5", "3"],
+        "UART5": ["2", "5", "4"],
+        "UART6": ["2", "5", "5"],
+        "SPI1": ["2", "5", "8"],
+        "SPI2": ["2", "5", "9"],
+        "SPI3": ["2", "5", "10"],
+        "SPI4": ["2", "5", "11"],
+        "SPI5": ["2", "5", "12"],
+        "SPI6": ["2", "5", "13"],
+        "I2C1": ["2", "5", "16"],
+        "I2C2": ["2", "5", "17"],
+        "I2C3": ["2", "5", "18"],
+        "I2C4": ["2", "5", "19"],
+        "I2C5": ["2", "5", "20"],
+        "USB": ["5", "5", "24"],
+        "CAN1": ["5", "5", "28"],
+        "CAN2": ["5", "5", "29"],
+        "REFO1": ["-1", "6", "8"],
+        "REFO2": ["-1", "6", "9"],
+        "REFO3": ["-1", "6", "10"],
+        "REFO4": ["-1", "6", "11"],
+        "REFO5": ["-1", "6", "12"],
+        "PMP": ["2", "6", "16"],
+        "EBI": ["-1", "6", "17"],
+        "GPU": ["-1", "6", "18"],
+        "GLCD": ["-1", "6", "20"],
+        "SDHC": ["5", "6", "21"],
+        "SQI1": ["5", "6", "23"],
+        "ETH": ["5", "6", "28"],
+        "DMAC": ["-1", "7", "4"],
+        "RNG": ["5", "7", "20"],
+        "CRYPTO": ["5", "7", "22"],
+        "DDR": ["-1", "7", "28"],
+        "RTCC": ["6"],
+}
+
 def updateMaxFreq(symbol, event):
 
     if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" not in Variables.get("__PROCESSOR")) ):
@@ -170,9 +187,6 @@ def updateMaxFreq(symbol, event):
             symbol.setValue(180000000, 2)
         elif event["value"] == 1:
             symbol.setValue(252000000, 2)
-
-def periphFreqCalc(symbol, event):
-    symbol.setValue(int(event["value"]), 2)
 
 def update_frc_div_value(symbol, event):
     # updates this symbol value with value from key/value pair
@@ -210,6 +224,7 @@ def get_val_from_str(stringVal):
     else:
         intVal = int(stringVal)
     return intVal
+
 def _find_key(value, keypairs):
     '''
     Helper function that finds the keyname for the given value.  Needed for setting up combo symbol value.
@@ -279,7 +294,6 @@ def _get_default_value_num(register, bitfield, value_group):
                 bitPosn += 1
     value = str((initialValue & mask) >> bitPosn)  # has initial value of bitfield, shifted down to bit0
     return value
-
 
 def updatePoscFreq(symbol, event):
     global newPoscFreq
@@ -490,9 +504,161 @@ def refotrim_update(symbol, event):
     bus = int(event["id"][-1])
     symbol.setValue(set_refotrim_value(bus),2)
 
-global calcCPUFreq
-def calcCPUFreq(symbol, event):
-    symbol.setValue(event["value"],1)
+global cpuClockFreqCalc
+
+def cpuClockFreqCalc(symbol, event):
+
+    symbol.setValue(event["value"], 1)
+
+def sysPeripheralClockFreqCalc(symbol, event):
+
+    freq = 0
+    periName = symbol.getID().split("_")[0]
+
+    if "_CLOCK_ENABLE" in event["id"] and event["value"]:
+        freq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
+    elif Database.getSymbolValue("core", periName + "_CLOCK_ENABLE"):
+        freq = int(event["value"])
+
+    symbol.setValue(freq, 1)
+
+def peripheralClockFreqCalc(symbol, event):
+
+    freq = 0
+    periName = symbol.getID().split("_")[0]
+
+    if "_CLOCK_ENABLE" in event["id"] and event["value"]:
+        freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBusDict[periName][0] + "_FREQ"))
+    elif Database.getSymbolValue("core", periName + "_CLOCK_ENABLE"):
+        freq = int(event["value"])
+
+    symbol.setValue(freq, 1)
+
+def sqiClockFreqCalc(symbol, event):
+
+    freq = 0
+    periName = symbol.getID().split("_")[0]
+
+    if "_CLOCK_ENABLE" in event["id"] and event["value"]:
+        freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK2_FREQ"))
+    elif Database.getSymbolValue("core", periName + "_CLOCK_ENABLE"):
+        freq = int(event["value"])
+
+    symbol.setValue(freq, 1)
+
+def sdhcClockFreqCalc(symbol, event):
+
+    freq = 0
+    periName = symbol.getID().split("_")[0]
+
+    if "_CLOCK_ENABLE" in event["id"] and event["value"]:
+        freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK4_FREQ"))
+    elif Database.getSymbolValue("core", periName + "_CLOCK_ENABLE"):
+        freq = int(event["value"])
+
+    symbol.setValue(freq, 1)
+
+def tmr1ClockFreqCalc(symbol, event):
+
+    freq = 0
+    tmr1ClkSrc = Database.getSymbolValue("tmr1", "TIMER1_SRC_SEL")
+    tmr1ExtClkSrc = Database.getSymbolValue("tmr1", "TIMER1_TECS")
+
+    if Database.getSymbolValue("core", "TMR1_CLOCK_ENABLE"):
+        if tmr1ClkSrc == None or tmr1ClkSrc == 1:
+            freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBusDict["TMR1"][0] + "_FREQ"))
+        else:
+            if tmr1ExtClkSrc != None:
+                if tmr1ExtClkSrc == 0:
+                    #LPRC Oscillator Frequency
+                    freq = 32768
+                elif tmr1ExtClkSrc == 2:
+                    #Secondary Oscillator Frequency
+                    freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"))
+
+    symbol.setValue(freq, 1)
+
+def rtccClockFreqCalc(symbol, event):
+
+    freq = 0
+    rtccClkSrc = Database.getSymbolValue("rtcc", "RTCC_CLOCK_SOURCE")
+
+    if Database.getSymbolValue("core", "RTCC_CLOCK_ENABLE"):
+        if rtccClkSrc != None:
+            if rtccClkSrc == 1:
+                #LPRC Oscillator Frequency
+                freq = 32768
+            else:
+                #Secondary Oscillator Frequency
+                freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"))
+        else:
+            freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBusDict["RTCC"][0] + "_FREQ"))
+
+    symbol.setValue(freq, 1)
+
+def adchsClockFreqCalc(symbol, event):
+
+    freq = 0
+    adchsClkSrc = Database.getSymbolValue("adchs", "ADCCON3__ADCSEL")
+
+    if Database.getSymbolValue("core", "ADCHS_CLOCK_ENABLE"):
+        if adchsClkSrc != None and adchsClkSrc != 3:
+            freq = int(Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]))
+
+        if adchsClkSrc == 3:
+            # calculate FRC frequency
+            freqDiv = ''.join([i for i in Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]) if i.isdigit()])
+            freq = 8000000 / int(freqDiv)
+
+    symbol.setValue(freq, 1)
+
+def uartClockFreqCalc(symbol, event):
+
+    freq = 0
+    periName = symbol.getID().split("_")[0]
+    uartClkSrc = Database.getSymbolValue(periName.lower(), "UART_CLKSEL")
+
+    if Database.getSymbolValue("core", periName + "_CLOCK_ENABLE"):
+        if uartClkSrc == None or uartClkSrc == 3 or uartClkSrc == 0:
+            freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBusDict[periName][0] + "_FREQ"))
+        elif uartClkSrc == 2:
+            freq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
+        elif uartClkSrc == 1:
+            # calculate FRC frequency
+            freqDiv = ''.join([i for i in Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]) if i.isdigit()])
+            freq = 8000000 / int(freqDiv)
+
+    symbol.setValue(freq, 1)
+
+def spiClockFreqCalc(symbol, event):
+
+    freq = 0
+    periName = symbol.getID().split("_")[0]
+    spiClkSrc = Database.getSymbolValue(periName.lower(), "SPI_MASTER_CLOCK")
+
+    if Database.getSymbolValue("core", periName + "_CLOCK_ENABLE"):
+        if spiClkSrc == 0:
+            freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK1_FREQ"))
+        else:
+            freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBusDict[periName][0] + "_FREQ"))
+
+    symbol.setValue(freq, 1)
+
+def updatePMDxRegValue(symbol, event):
+
+    periName = event["id"].replace("_CLOCK_ENABLE", "")
+
+    pmdRegId = "PMD" + peripheralBusDict[periName][1] + "_REG_VALUE"
+    bitShift = 1 << int(peripheralBusDict[periName][2])
+
+    pmdxValue = Database.getSymbolValue("core", pmdRegId)
+
+    if event["value"]:
+        pmdxValue = pmdxValue & ~bitShift
+    else:
+        pmdxValue = pmdxValue | bitShift
+
+    Database.setSymbolValue("core", pmdRegId, pmdxValue, 1)
 
 def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, new_posc_freq):
     """
@@ -522,7 +688,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     cpu_clk_freq.setLabel("CPU Clock Frequency (HZ)")
     cpu_clk_freq.setReadOnly(True)
     cpu_clk_freq.setDefaultValue(node.getAttribute("value"))
-    cpu_clk_freq.setDependencies(calcCPUFreq,["SYS_CLK_FREQ"])
+    cpu_clk_freq.setDependencies(cpuClockFreqCalc,["SYS_CLK_FREQ"])
 
     # Peripheral Bus clock frequencies
     index = 0
@@ -562,23 +728,6 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
                 symbolRefoscFreqList[index].setDefaultValue(param.getAttribute("value"))
         symbolRefoscFreqList[index].setReadOnly(True)
         index += 1
-
-def adchsClockFreqCalc(symbol, event):
-    adchsClkSrc = (Database.getSymbolValue("adchs", "ADCCON3__ADCSEL"))
-    if (adchsClkSrc != None and adchsClkSrc != 3):
-        symbol.setValue(int(Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc])), 2)
-    if adchsClkSrc == 3:
-        # calculate FRC frequency
-        symbol.setValue(8000000 / int(Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]).split("DIV_")[1]), 2)
-
-def spiClockFreqCalc(symbol, event):
-    spiInstance = symbol.getID().split("_")[0]
-    spiClkSrc = (Database.getSymbolValue(spiInstance.lower(), "SPI_MASTER_CLOCK"))
-    if spiClkSrc == 0:
-        clkFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK1_FREQ"))
-    else:
-        clkFreq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ"))
-    symbol.setValue(clkFreq)
 
 def find_lsb_position(field):
     # Take a field, and return the least significant bit position.  Range: 0-31
@@ -654,7 +803,6 @@ def updateMpllBitfield(symbol, event):
     elif(event["id"]=="CLK_INTVREFCON"):
         MPLLINTVREFCON_VALUE.setValue(event["value"],2)
 
-
 def updateCfgMpll(symbol, event):
     # updates the CFGMPLL register based on its constituent bitfields changing value
     global CFGMPLL_REGVALUE
@@ -717,7 +865,6 @@ def updateCfgMpll(symbol, event):
     startVal = startVal | (int(newValue) << bitPosn)
     CFGMPLL_REGVALUE.setValue(str(hex(startVal)),1)
 
-
 if __name__ == "__main__":
     global refOscList
     global symbolPbRegMaskLsb
@@ -743,16 +890,14 @@ if __name__ == "__main__":
     clkValGrp_REFO1CON__RODIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="REFO1CON__RODIV"]')
     clkValGrp_REFO1TRIM__ROTRIM = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRU"]/value-group@[name="REFO1TRIM__ROTRIM"]')
 
-    # MPLL, which is only in certain families of MIPS devices
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) ):
-        clkReg_CFGMPLL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGMPLL"]')
-        clkValGrp_CFGMPLL__MPLLIDIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLIDIV"]')
-        clkValGrp_CFGMPLL__MPLLMULT = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLMULT"]')
-        clkValGrp_CFGMPLL__MPLLODIV1 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLODIV1"]')
-        clkValGrp_CFGMPLL__MPLLODIV2 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLODIV2"]')
-        clkValGrp_CFGMPLL__MPLLDIS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLDIS"]')
-        clkValGrp_CFGMPLL__MPLLVREGDIS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLVREGDIS"]')
-        clkValGrp_CFGMPLL__INTVREFCON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__INTVREFCON"]')
+    clkReg_CFGMPLL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGMPLL"]')
+    clkValGrp_CFGMPLL__MPLLIDIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLIDIV"]')
+    clkValGrp_CFGMPLL__MPLLMULT = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLMULT"]')
+    clkValGrp_CFGMPLL__MPLLODIV1 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLODIV1"]')
+    clkValGrp_CFGMPLL__MPLLODIV2 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLODIV2"]')
+    clkValGrp_CFGMPLL__MPLLDIS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLDIS"]')
+    clkValGrp_CFGMPLL__MPLLVREGDIS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__MPLLVREGDIS"]')
+    clkValGrp_CFGMPLL__INTVREFCON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="CFGMPLL__INTVREFCON"]')
 
     # divider value:  get values/keys from atdf
     per_divider = {}
@@ -1000,7 +1145,6 @@ if __name__ == "__main__":
 
     max_clk_freq_for_selected_temp.setDependencies(updateMaxFreq, ["CONFIG_TEMPERATURE_RANGE"])
 
-
     frcdiv = {}
     _get_bitfield_names(clkValGrp_OSCCON__FRCDIV, frcdiv)
     FRC_CLK_SETTING = coreComponent.createComboSymbol("CONFIG_SYS_CLK_FRCDIV", CLK_CFG_SETTINGS, frcdiv.keys())
@@ -1034,6 +1178,7 @@ if __name__ == "__main__":
     deviceHasDDR2 = coreComponent.createBooleanSymbol("DEVICE_HAS_DDR2", CLK_CFG_SETTINGS)
     deviceHasDDR2.setVisible(False)
 
+    # MPLL, which is only in certain families of MIPS devices
     if clkReg_CFGMPLL is not None:
         deviceHasDDR2.setDefaultValue(True)
 
@@ -1114,7 +1259,6 @@ if __name__ == "__main__":
         MPLLMULT_BITS_VALUE =  coreComponent.createStringSymbol("CLK_MPLLMULT_BITS_VALUE",None)
         MPLLMULT_BITS_VALUE.setVisible(False)
         MPLLMULT_BITS_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLMULT', clkValGrp_CFGMPLL__MPLLMULT))
-
 
         # MPLLODIV1 bitfield
         global mpllodiv1
@@ -1241,7 +1385,6 @@ if __name__ == "__main__":
 
     else:
         deviceHasDDR2.setDefaultValue(False)
-
 
     # now create the menus for all peripheral buses present in this part
     global pbclkEnNameList
@@ -1402,7 +1545,6 @@ if __name__ == "__main__":
     POSC_IN_FREQ.setDependencies(updatePoscFreq, ["CONFIG_SYS_CLK_CONFIG_PRIMARY_XTAL"])
     node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__POSC_DEF_FREQ"]')
     POSC_IN_FREQ.setDefaultValue(int(node.getAttribute("value")))
-    POSC_IN_FREQ.setVisible(True)
 
     # secondary oscillator frequency
     SOSC_IN_FREQ = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL", CLK_CFG_SETTINGS)
@@ -1410,7 +1552,6 @@ if __name__ == "__main__":
     node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__SOSC_DEF_FREQ"]')
     newPoscFreq = node.getAttribute("value")
     SOSC_IN_FREQ.setDefaultValue(int(newPoscFreq))
-    SOSC_IN_FREQ.setVisible(True)
 
     # this is added to resolve a dependency in ftl file
     HAVE_REFCLK5 = coreComponent.createBooleanSymbol("CONFIG_HAVE_REFCLOCK5", CLK_CFG_SETTINGS)
@@ -1420,6 +1561,24 @@ if __name__ == "__main__":
     # creates calculated frequencies menu
     calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, join, ElementTree, newPoscFreq)
 
+    availablePeripherals = []
+
+    modules = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals").getChildren()
+
+    for module in range(len(modules)):
+        instances = modules[module].getChildren()
+        for instance in range(len(instances)):
+            if str(instances[instance].getAttribute("name")) == "CMP":
+                cmpRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/register-group@[name="CMP"]').getChildren()
+                index = 1
+                for register in cmpRegGroup:
+                    regName = str(register.getAttribute("name"))
+                    if regName.startswith("CM") and regName.endswith("CON"):
+                        availablePeripherals.append("CMP" + str(index))
+                        index += 1
+            else:
+                availablePeripherals.append(str(instances[instance].getAttribute("name")))
+
     #ADCHS Clock source
     global adchs_clock_map
     adchs_clock_map = {}
@@ -1428,30 +1587,92 @@ if __name__ == "__main__":
     adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
     adchs_clock_map[3] = "CONFIG_SYS_CLK_FRCDIV"
 
+    peripheralClockMenu = coreComponent.createMenuSymbol("PERIPHERAL_CLK_CONFIG", SYM_CLK_MENU)
+    peripheralClockMenu.setLabel("Peripheral Clock Configuration")
+
     # calculated peripheral frequencies
+    sym_peripheral_clock_enable = []
     sym_peripheral_clock_freq = []
-    i = 0
-    for peripheralName, peripheralBus in peripheralBusDict.items():
-        symbolID = peripheralName + "_CLOCK_FREQUENCY"
-        sym_peripheral_clock_freq.append(i)
-        sym_peripheral_clock_freq[i] = coreComponent.createIntegerSymbol(symbolID, None)
-        sym_peripheral_clock_freq[i].setVisible(False)
-        sym_peripheral_clock_freq[i].setReadOnly(True)
-        if peripheralName == "ADCHS":
-            sym_peripheral_clock_freq[i].setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ")))
-            sym_peripheral_clock_freq[i].setDependencies(adchsClockFreqCalc, ["adchs.ADCCON3__ADCSEL", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ",
-                                                                                "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK3_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
-        elif "SPI" in peripheralName :
-            sym_peripheral_clock_freq[i].setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ")))
-            sym_peripheral_clock_freq[i].setDependencies(spiClockFreqCalc, [peripheralName + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ",
-                                                                                "CONFIG_SYS_CLK_REFCLK1_FREQ"])
-        elif "SQI" in peripheralName:
-            sym_peripheral_clock_freq[i].setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK2_FREQ")))
-            sym_peripheral_clock_freq[i].setDependencies(periphFreqCalc, ["CONFIG_SYS_CLK_REFCLK2_FREQ"])
-        else :
-            sym_peripheral_clock_freq[i].setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ")))
-            sym_peripheral_clock_freq[i].setDependencies(periphFreqCalc, ["CONFIG_SYS_CLK_PBCLK" + peripheralBus + "_FREQ"])
-        i = i+1
+
+    for peripheralName, peripheralBus in sorted(peripheralBusDict.items()):
+
+        if peripheralName.startswith("REFO") or peripheralName in availablePeripherals:
+            sym_peripheral_clock_enable.append(peripheralName + "_CLOCK_ENABLE")
+            peripheral_clock_enable = coreComponent.createBooleanSymbol(peripheralName + "_CLOCK_ENABLE", peripheralClockMenu)
+            peripheral_clock_enable.setLabel(peripheralName + " Clock Enable")
+            peripheral_clock_enable.setDefaultValue(peripheralBus[0] == "-1" or len(peripheralBus) == 1)
+            peripheral_clock_enable.setReadOnly(len(peripheralBus) == 1)
+
+            sym_peripheral_clock_freq.append(peripheralName + "_CLOCK_FREQUENCY")
+            peripheral_clock_freq = coreComponent.createIntegerSymbol(peripheralName + "_CLOCK_FREQUENCY", peripheral_clock_enable)
+            peripheral_clock_freq.setLabel(peripheralName + " Clock Frequency")
+            peripheral_clock_freq.setReadOnly(True)
+
+            if peripheralBus[0] == "-1" or len(peripheralBus) == 1:
+                if peripheralName == "RTCC":
+                    sym_peripheral_clock_enable.remove("RTCC_CLOCK_ENABLE")
+                    peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ")))
+                    peripheral_clock_freq.setDependencies(rtccClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "rtcc.RTCC_CLOCK_SOURCE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
+                                                                                         "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
+                else:
+                    peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "SYS_CLK_FREQ")))
+                    peripheral_clock_freq.setDependencies(sysPeripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
+            else:
+                peripheral_clock_freq.setDefaultValue(0)
+
+                if all(x in Variables.get("__PROCESSOR") for x in ["PIC32MZ", "DA"]) and peripheralName.startswith("UART"):
+                    peripheral_clock_freq.setDependencies(uartClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".UART_CLKSEL", "CONFIG_SYS_CLK_FRCDIV",
+                                                                                         "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ"])
+                elif all(x in Variables.get("__PROCESSOR") for x in ["PIC32MZ", "DA"]) and peripheralName == "TMR1":
+                    peripheral_clock_freq.setDependencies(tmr1ClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "tmr1.TIMER1_SRC_SEL", "tmr1.TIMER1_TECS", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
+                                                                                         "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
+                elif peripheralName == "ADCHS":
+                    peripheral_clock_freq.setDependencies(adchsClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "adchs.ADCCON3__ADCSEL", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
+                                                                                        "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK3_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
+                elif peripheralName.startswith("SPI"):
+                    peripheral_clock_freq.setDependencies(spiClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
+                                                                                        "CONFIG_SYS_CLK_REFCLK1_FREQ"])
+                elif peripheralName.startswith("SQI"):
+                    peripheral_clock_freq.setDependencies(sqiClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_REFCLK2_FREQ"])
+                elif peripheralName.startswith("SDHC"):
+                    peripheral_clock_freq.setDependencies(sqiClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_REFCLK4_FREQ"])
+                elif peripheralName == "RTCC":
+                    peripheral_clock_freq.setDependencies(rtccClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "rtcc.RTCC_CLOCK_SOURCE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
+                                                                                         "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
+                else:
+                    peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ"])
+
+    cfgRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]').getChildren()
+
+    pmdCount = 0
+    for register in cfgRegGroup:
+        regName = str(register.getAttribute("name"))
+        if regName.startswith("PMD"):
+            pmdCount += 1
+
+    peripheralModuleDisableMenu = coreComponent.createMenuSymbol("PMD_CONFIG", SYM_CLK_MENU)
+    peripheralModuleDisableMenu.setLabel("Peripheral Module Disable")
+    peripheralModuleDisableMenu.setDependencies(updatePMDxRegValue, sym_peripheral_clock_enable)
+
+    pmdRegCount = coreComponent.createIntegerSymbol("PMD_COUNT", peripheralModuleDisableMenu)
+    pmdRegCount.setDefaultValue(pmdCount)
+    pmdRegCount.setVisible(False)
+
+    for i in range(1, pmdCount + 1):
+        pmdxRegMaskValue = coreComponent.createHexSymbol("PMD" + str(i) + "_REG_VALUE", peripheralModuleDisableMenu)
+        pmdxRegMaskValue.setLabel("PMD" + str(i) + " Register Value")
+        pmdxRegMaskValue.setDefaultValue(0xffffffff)
+        pmdxRegMaskValue.setReadOnly(True)
+
+    defaultPMDxEnableDict = {k: v for k, v in peripheralBusDict.items() if v[0] == "-1"}
+
+    for peripheralName, peripheralBus in defaultPMDxEnableDict.items():
+        if peripheralName.startswith("REFO") or peripheralName in availablePeripherals:
+            #Enable Peripheral from PMD
+            periPMDRegId = "PMD" + peripheralBus[1] + "_REG_VALUE"
+            pmdxValue = Database.getSymbolValue("core", periPMDRegId)
+            periPMDRegBitShift = 1 << int(peripheralBus[2])
+            Database.setSymbolValue("core", periPMDRegId, pmdxValue & ~periPMDRegBitShift, 1)
 
     # File handling below
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
