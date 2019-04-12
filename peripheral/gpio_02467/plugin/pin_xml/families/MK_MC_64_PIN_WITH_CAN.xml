@@ -2075,6 +2075,48 @@
             </constraint>
             <function name="RESERVED"/>
         </module>
+        <module name="QEI1">
+            <function name="QEA1"/>
+            <function name="QEB1"/>
+            <function name="INDX1"/>
+            <function name="HOME1"/>
+            <function name="QEICMP1"/>
+        </module>
+        <module name="QEI2">
+            <function name="QEA2"/>
+            <function name="QEB2"/>
+            <function name="INDX2"/>
+            <function name="HOME2"/>
+            <function name="QEICMP2"/>
+        </module>
+        <module name="QEI3">
+            <function name="QEA3"/>
+            <function name="QEB3"/>
+            <function name="INDX3"/>
+            <function name="HOME3"/>
+            <function name="QEICMP3"/>
+        </module>
+        <module name="QEI4">
+            <function name="QEA4"/>
+            <function name="QEB4"/>
+            <function name="INDX4"/>
+            <function name="HOME4"/>
+            <function name="QEICMP4"/>
+        </module>
+        <module name="QEI5">
+            <function name="QEA5"/>
+            <function name="QEB5"/>
+            <function name="INDX5"/>
+            <function name="HOME5"/>
+            <function name="QEICMP5"/>
+        </module>
+        <module name="QEI6">
+            <function name="QEA6"/>
+            <function name="QEB6"/>
+            <function name="INDX6"/>
+            <function name="HOME6"/>
+            <function name="QEICMP6"/>
+        </module>
     </modules>
 </family>
 
