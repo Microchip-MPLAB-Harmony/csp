@@ -226,14 +226,14 @@ def instantiateComponent(i2sComponent):
     i2sRxCLKSEL.setDefaultValue(0)
 
     #I2S Transmit data register
-    i2sTxRegister = i2sComponent.createStringSymbol("I2S_TRANSMIT_DATA_REGISTER", None)
-    i2sTxRegister.setDefaultValue("&(" + str(i2sInstanceName) + "_REGS->I2S_TXDATA)")
+    i2sTxRegister = i2sComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
+    i2sTxRegister.setDefaultValue("&(I2S_REGS->I2S_TXDATA)")
     i2sTxRegister.setVisible(False)
 
     #I2S Receive data register
-    i2sTxRegister = i2sComponent.createStringSymbol("I2S_RECEIVE_DATA_REGISTER", None)
-    i2sTxRegister.setDefaultValue("&(" + str(i2sInstanceName) + "_REGS->I2S_RXDATA)")
-    i2sTxRegister.setVisible(False)
+    i2sRxRegister = i2sComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
+    i2sRxRegister.setDefaultValue("&(I2S_REGS->I2S_RXDATA)")
+    i2sRxRegister.setVisible(False)
 
     i2sLRCPin = i2sComponent.createKeyValueSetSymbol("I2S_LRCLK_PIN_DEFINE", None)     # used for I2Sx_LRCLK_Get() macro
     i2sLRCPin.setLabel("Frame Select Pin")
