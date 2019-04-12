@@ -51,19 +51,6 @@
 
 #endif
 
-// provide temporary replacements for missing defines -- can be removed when i2s.h updated (see MH3-5156 & MH3-5183)
-#ifndef I2S_TXCTRL_SERMODE_Pos 
-#define I2S_TXCTRL_SERMODE_Pos                _U_(0)
-#define I2S_TXCTRL_SERMODE_Msk                (_U_(0x3) << I2S_TXCTRL_SERMODE_Pos)
-#define I2S_TXCTRL_SERMODE(value)             (I2S_TXCTRL_SERMODE_Msk & ((value) << I2S_TXCTRL_SERMODE_Pos))
-#define I2S_TXCTRL_SERMODE_TX_Val           _U_(0x1) 
-#endif
-#ifndef I2S_TXCTRL_CLKSEL_Pos 
-#define I2S_TXCTRL_CLKSEL_Pos                 _U_(5)
-#define I2S_TXCTRL_CLKSEL_Msk                 (_U_(0x1) << I2S_TXCTRL_CLKSEL_Pos)
-#define I2S_TXCTRL_CLKSEL(value)              (I2S_TXCTRL_CLKSEL_Msk & ((value) << I2S_TXCTRL_CLKSEL_Pos))
-#endif
-
 /****************************** ${I2S_INSTANCE_NAME} Interface *********************************/
 
 void ${I2S_INSTANCE_NAME}_Initialize ( void );

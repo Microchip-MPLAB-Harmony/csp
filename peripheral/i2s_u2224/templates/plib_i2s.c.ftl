@@ -54,8 +54,12 @@ void ${I2S_INSTANCE_NAME}_Initialize ( void )
 
     // configure clock unit 0
     ${I2S_INSTANCE_NAME}_REGS->I2S_CLKCTRL[0] =
+<#if I2S_CLKCTRL_0_MCKOUTDIV != 0>
                                             I2S_CLKCTRL_MCKOUTDIV(${I2S_CLKCTRL_0_MCKOUTDIV}-1) |
+</#if>
+<#if I2S_CLKCTRL_0_MCKDIV != 0>
                                             I2S_CLKCTRL_MCKDIV(${I2S_CLKCTRL_0_MCKDIV}-1) |
+</#if>
                                             I2S_CLKCTRL_MCKEN(1-${I2S_CLKCTRL_0_CLKMODE}) |
                                             I2S_CLKCTRL_MCKSEL(${I2S_CLKCTRL_0_CLKMODE}) |
                                             I2S_CLKCTRL_SCKSEL(${I2S_CLKCTRL_0_CLKMODE}) |
@@ -69,8 +73,12 @@ void ${I2S_INSTANCE_NAME}_Initialize ( void )
 <#if I2S_NUM_GENERIC_CLOCKS == 2>
     // configure clock unit 1
     ${I2S_INSTANCE_NAME}_REGS->I2S_CLKCTRL[1] =
+<#if I2S_CLKCTRL_1_MCKOUTDIV != 0>
                                             I2S_CLKCTRL_MCKOUTDIV(${I2S_CLKCTRL_1_MCKOUTDIV}-1) |
+</#if>
+<#if I2S_CLKCTRL_1_MCKDIV != 0>
                                             I2S_CLKCTRL_MCKDIV(${I2S_CLKCTRL_1_MCKDIV}-1) |
+</#if>
                                             I2S_CLKCTRL_MCKEN(1-${I2S_CLKCTRL_1_CLKMODE}) |
                                             I2S_CLKCTRL_MCKSEL(${I2S_CLKCTRL_1_CLKMODE}) |
                                             I2S_CLKCTRL_SCKSEL(${I2S_CLKCTRL_1_CLKMODE}) |
@@ -100,7 +108,7 @@ void ${I2S_INSTANCE_NAME}_Initialize ( void )
 
     // enable the desired components
     ${I2S_INSTANCE_NAME}_REGS->I2S_CTRLA =  I2S_CTRLA_RXEN(${I2S_RX_SERIALIZER_ENABLE?then('1', '0')}) |
-                                            I2S_CTRLA_TXEN(${I2S_RX_SERIALIZER_ENABLE?then('1', '0')}) |
+                                            I2S_CTRLA_TXEN(${I2S_TX_SERIALIZER_ENABLE?then('1', '0')}) |
                                             I2S_CTRLA_CKEN0(${I2S_CLKCTRL_0_ENABLE?then('1', '0')})
 <#if I2S_NUM_GENERIC_CLOCKS == 2>
                                           | I2S_CTRLA_CKEN1(${I2S_CLKCTRL_1_ENABLE?then('1', '0')})
