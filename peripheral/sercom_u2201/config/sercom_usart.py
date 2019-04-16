@@ -151,7 +151,9 @@ for index in range(len(usartSym_CTRLA_TXPO_Values)):
     usartSym_CTRLA_TXPO_Key_Name = usartSym_CTRLA_TXPO_Values[index].getAttribute("name")
     usartSym_CTRLA_TXPO_Key_Description = usartSym_CTRLA_TXPO_Values[index].getAttribute("caption")
     usartSym_CTRLA_TXPO_Key_Value = usartSym_CTRLA_TXPO_Values[index].getAttribute("value")
-    usartSym_CTRLA_TXPO.addKey(usartSym_CTRLA_TXPO_Key_Name, usartSym_CTRLA_TXPO_Key_Value, usartSym_CTRLA_TXPO_Key_Description)
+
+    if int(usartSym_CTRLA_TXPO_Key_Value, 0) <= 1:
+        usartSym_CTRLA_TXPO.addKey(usartSym_CTRLA_TXPO_Key_Name, usartSym_CTRLA_TXPO_Key_Value, usartSym_CTRLA_TXPO_Key_Description)
 
 usartSym_CTRLA_TXPO.setDefaultValue(0)
 usartSym_CTRLA_TXPO.setOutputMode("Key")
