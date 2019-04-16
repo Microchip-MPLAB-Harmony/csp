@@ -129,7 +129,7 @@
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
-<#if ADC_INTENSET_RESRDY = true || ADC_INTENSET_WINMON = true>
+<#if ADC_INTENSET_RESRDY = true || (ADC_WINCTRL_WINMODE != "DISABLE" && ADC_INTENSET_WINMON = true)>
 ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
@@ -263,7 +263,6 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void )
     }
 }
 
-<#if ADC_WINCTRL_WINMODE != "DISABLE">
 /* Configure window comparison threshold values */
 void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
 {
@@ -274,7 +273,16 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
         /* Wait for Synchronization */
     }
 }
-</#if>
+
+void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_WINCTRL = mode << ADC_WINCTRL_WINMODE_Pos;
+    while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+}
+
 
 /* Read the conversion result */
 uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void )
@@ -282,7 +290,7 @@ uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void )
     return (uint16_t)${ADC_INSTANCE_NAME}_REGS->ADC_RESULT;
 }
 
-<#if ADC_INTENSET_RESRDY = true || ADC_INTENSET_WINMON = true>
+<#if ADC_INTENSET_RESRDY = true || (ADC_WINCTRL_WINMODE != "DISABLE" && ADC_INTENSET_WINMON = true)>
 /* Register callback function */
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
 {

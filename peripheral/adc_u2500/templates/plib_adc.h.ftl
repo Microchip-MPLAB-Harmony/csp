@@ -100,13 +100,13 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void );
 
 uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void );
 
-<#if ADC_CTRLB_WINMODE != "0">
 void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold);
-</#if>
+
+void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode);
 
 uint16_t ${ADC_INSTANCE_NAME}_LastConversionResultGet( void );
 
-<#if ADC_INTENSET_RESRDY == true || ADC_INTENSET_WINMON == true>
+<#if ADC_INTENSET_RESRDY == true || (ADC_CTRLB_WINMODE != "0" && ADC_INTENSET_WINMON == true)>
 
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
 </#if>
