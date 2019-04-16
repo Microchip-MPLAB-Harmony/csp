@@ -167,6 +167,8 @@ def updateSERCOMInterruptData(symbol, event):
             sercomMode = "USART"
         elif sercomSym_OperationMode.getSelectedKey() == "SPIM":
             sercomMode = "SPI"
+        elif sercomSym_OperationMode.getSelectedKey() == "I2CM":
+            sercomMode = "I2C"
 
         setSERCOMInterruptData(event["value"], sercomMode)
 
