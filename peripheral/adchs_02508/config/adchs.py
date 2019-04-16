@@ -372,11 +372,12 @@ def adchsVisibilityOnEvent(symbol, event):
 
 #ADCCON1 register value
 def adchsCalcADCCON1(symbol, event):
+    global adchsSym_ADCCON1__STRGSRC
     adccon1 = 0x0
     component = symbol.getComponent()
     fract = component.getSymbolValue("ADCCON1__FRACT") << 23
     slres = component.getSymbolValue("ADCCON1__SELRES") << 21
-    strgsrc = component.getSymbolValue("ADCCON1__STRGSRC") << 16
+    strgsrc = int(adchsSym_ADCCON1__STRGSRC.getSelectedValue()) << 16
     sidl = component.getSymbolValue("ADCCON1__SIDL") << 13
     adccon1 = fract + slres + strgsrc + sidl
     symbol.setValue(adccon1, 2)
@@ -465,35 +466,36 @@ def adchsCalcADCIMCON4(symbol, event):
 def adchsCalcADCTRG(symbol, event):
     adctrg = 0x0
     trgsrc = 0x0
+    global adchsSym_ADCTRG__TRGSRC
     component = symbol.getComponent()
     if(event["id"][:7] == "ADCTRG1"):
         for channelID in range(0, 4):
             if (component.getSymbolValue("ADCTRG1__TRGSRC" + str(channelID)) != None):
-                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG1__TRGSRC" + str(channelID)) << ((channelID * 8)))
+                trgsrc = trgsrc + (int(adchsSym_ADCTRG__TRGSRC[channelID].getSelectedValue()) << (channelID * 8))
     elif(event["id"][:7] == "ADCTRG2"):
         for channelID in range(4, 8):
             if (component.getSymbolValue("ADCTRG2__TRGSRC" + str(channelID)) != None):
-                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG2__TRGSRC" + str(channelID)) << ((channelID - 4) * 8))
+                trgsrc = trgsrc + (int(adchsSym_ADCTRG__TRGSRC[channelID].getSelectedValue()) << ((channelID - 4) * 8))
     elif(event["id"][:7] == "ADCTRG3"):
         for channelID in range(8, 12):
             if (component.getSymbolValue("ADCTRG3__TRGSRC" + str(channelID)) != None):
-                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG3__TRGSRC" + str(channelID)) << ((channelID - 8) * 8))
+                trgsrc = trgsrc + (int(adchsSym_ADCTRG__TRGSRC[channelID].getSelectedValue()) << ((channelID - 8) * 8))
     elif(event["id"][:7] == "ADCTRG4"):
         for channelID in range(12, 16):
             if (component.getSymbolValue("ADCTRG4__TRGSRC" + str(channelID)) != None):
-                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG4__TRGSRC" + str(channelID)) << ((channelID - 12) * 8))
+                trgsrc = trgsrc + (int(adchsSym_ADCTRG__TRGSRC[channelID].getSelectedValue()) << ((channelID - 12) * 8))
     elif(event["id"][:7] == "ADCTRG5"):
         for channelID in range(16, 20):
             if (component.getSymbolValue("ADCTRG5__TRGSRC" + str(channelID)) != None):
-                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG5__TRGSRC" + str(channelID)) << ((channelID - 16) * 8))
+                trgsrc = trgsrc + (int(adchsSym_ADCTRG__TRGSRC[channelID].getSelectedValue()) << ((channelID - 16) * 8))
     elif(event["id"][:7] == "ADCTRG6"):
         for channelID in range(20, 24):
             if (component.getSymbolValue("ADCTRG6__TRGSRC" + str(channelID)) != None):
-                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG6__TRGSRC" + str(channelID)) << ((channelID - 20) * 8))
+                trgsrc = trgsrc + (int(adchsSym_ADCTRG__TRGSRC[channelID].getSelectedValue()) << ((channelID - 20) * 8))
     elif(event["id"][:7] == "ADCTRG7"):
         for channelID in range(24, ADC_Max_Class_1and2):
             if (component.getSymbolValue("ADCTRG7__TRGSRC" + str(channelID)) != None):
-                trgsrc = trgsrc + (component.getSymbolValue("ADCTRG7__TRGSRC" + str(channelID)) << ((channelID - 24) * 8))
+                trgsrc = trgsrc + (int(adchsSym_ADCTRG__TRGSRC[channelID].getSelectedValue()) << ((channelID - 24) * 8))
 
     adctrg = trgsrc
     symbol.setValue(adctrg, 2)
@@ -679,6 +681,8 @@ def instantiateComponent(adchsComponent):
     global Irq_index
     global adciec_depList
     global adcinterruptmode_deplist
+    global adchsSym_ADCCON1__STRGSRC
+    global adchsSym_ADCTRG__TRGSRC
 
     MAX_AVAILABLE_SIGNALS = 64
 
