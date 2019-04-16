@@ -117,39 +117,36 @@ def instantiateComponent(sdmmcComponent):
     sdmmcMultClkSrcComment.setVisible(False)
     sdmmcMultClkSrcComment.setLabel("Source clock for programmable clock mode is not enabled !!!")
 
-    cd_available = False
-    wp_available = False
+    #Parse the ATDF to find out whether the IP supports CD and WP pins on this mask
+    CDPinAvailable = False
+    WPPinAvailable = False
     signals = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SDMMC\"]/instance@[name=\""
                                 + sdmmcInstanceName.getValue() + "\"]/signals").getChildren()
     for index in range(0, len(signals)):
         if signals[index].getAttribute("group").endswith("_CD"):
-            cd_available = True
+            CDPinAvailable = True
         if signals[index].getAttribute("group").endswith("_WP"):
-            wp_available = True
+            WPPinAvailable = True
 
-    if cd_available:
-        sdmmcCD = sdmmcComponent.createBooleanSymbol("SDCARD_SDCDEN", None)
-        sdmmcCD.setLabel("Use SD Card Detect (SDCD#) Pin")
-        sdmmcCD.setReadOnly(False)
-        sdmmcCD.setVisible(True)
-        sdmmcCD.setDefaultValue(True)
+    sdmmcCDSupport = sdmmcComponent.createBooleanSymbol("SDCARD_SDCD_SUPPORT", None)
+    sdmmcCDSupport.setLabel("Card detect support available")
+    sdmmcCDSupport.setVisible(False)
+    sdmmcCDSupport.setDefaultValue(CDPinAvailable)
 
-        sdmmcCDComment = sdmmcComponent.createCommentSymbol("SDMMC_SDCDEN_COMMENT", None)
-        sdmmcCDComment.setLabel("!!!Configure SDCD pin in Pin Configuration!!!")
-        sdmmcCDComment.setVisible(sdmmcCD.getValue())
-        sdmmcCDComment.setDependencies(updateSDCDENCommentVisibility, ["SDCARD_SDCDEN"])
+    sdmmcWPSupport = sdmmcComponent.createBooleanSymbol("SDCARD_SDWP_SUPPORT", None)
+    sdmmcWPSupport.setLabel("Write protect support available")
+    sdmmcWPSupport.setVisible(False)
+    sdmmcWPSupport.setDefaultValue(WPPinAvailable)
 
-    if wp_available:
-        sdmmcWP = sdmmcComponent.createBooleanSymbol("SDCARD_SDWPEN", None)
-        sdmmcWP.setLabel("Use SD Write Protect (SDWP#) Pin")
-        sdmmcWP.setReadOnly(False)
-        sdmmcWP.setVisible(True)
-        sdmmcWP.setDefaultValue(True)
+    sdmmcUseCD = sdmmcComponent.createBooleanSymbol("SDCARD_SDCDEN", None)
+    sdmmcUseCD.setLabel("Use SD Card Detect (SDCD#) Pin")
+    sdmmcUseCD.setVisible(False)
+    sdmmcUseCD.setDefaultValue(sdmmcCDSupport.getValue())
 
-        sdmmcWPComment = sdmmcComponent.createCommentSymbol("SDMMC_SDWPEN_COMMENT", None)
-        sdmmcWPComment.setLabel("!!!Configure SDWP pin in Pin Configuration!!!")
-        sdmmcWPComment.setVisible(sdmmcWP.getValue())
-        sdmmcWPComment.setDependencies(updateSDWPENCommentVisibility, ["SDCARD_SDWPEN"])
+    sdmmcUseWP = sdmmcComponent.createBooleanSymbol("SDCARD_SDWPEN", None)
+    sdmmcUseWP.setLabel("Use SD Write Protect (SDWP#) Pin")
+    sdmmcUseWP.setVisible(False)
+    sdmmcUseWP.setDefaultValue(sdmmcWPSupport.getValue())
 
     sdmmcDescLines = sdmmcComponent.createIntegerSymbol("SDMMC_NUM_DESCRIPTOR_LINES", None)
     sdmmcDescLines.setLabel("Number of ADMA2 Descriptor Lines")

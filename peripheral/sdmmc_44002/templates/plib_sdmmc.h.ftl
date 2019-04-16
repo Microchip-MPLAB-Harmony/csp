@@ -37,7 +37,6 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-
 #ifndef PLIB_${SDMMC_INSTANCE_NAME}_H
 #define PLIB_${SDMMC_INSTANCE_NAME}_H
 
@@ -65,10 +64,14 @@ void ${SDMMC_INSTANCE_NAME}_BlockCountSet( uint16_t numBlocks );
 bool ${SDMMC_INSTANCE_NAME}_IsCmdLineBusy ( void );
 
 bool ${SDMMC_INSTANCE_NAME}_IsDatLineBusy ( void );
+<#if SDCARD_SDWP_SUPPORT == true>
 
 bool ${SDMMC_INSTANCE_NAME}_IsWriteProtected ( void );
+</#if>
+<#if SDCARD_SDCD_SUPPORT == true>
 
 bool ${SDMMC_INSTANCE_NAME}_IsCardAttached ( void );
+</#if>
 
 bool ${SDMMC_INSTANCE_NAME}_ClockSet ( uint32_t freq );
 
