@@ -98,11 +98,21 @@ typedef enum
 // *****************************************************************************
 typedef enum
 {
-    ADC_STATUS_RESRDY = ADC_INTFLAG_RESRDY_Msk, 
-    ADC_STATUS_WINMON = ADC_INTFLAG_WINMON_Msk, 
+    ADC_STATUS_RESRDY = ADC_INTFLAG_RESRDY_Msk,
+    ADC_STATUS_WINMON = ADC_INTFLAG_WINMON_Msk,
     /* Force compiler to reserve 32-bit for this enum */
     ADC_STATUS_INVALID = 0xFFFFFFFF
 }ADC_STATUS;
+
+// *****************************************************************************
+typedef enum
+{
+    ADC_WINMODE_DISABLED = ADC_WINCTRL_WINMODE_DISABLE_Val,
+    ADC_WINMODE_GREATER_THAN_WINLT = ADC_WINCTRL_WINMODE_MODE1_Val,
+    ADC_WINMODE_LESS_THAN_WINUT = ADC_WINCTRL_WINMODE_MODE2_Val,
+    ADC_WINMODE_BETWEEN_WINLT_AND_WINUT = ADC_WINCTRL_WINMODE_MODE3_Val,
+    ADC_WINMODE_OUTSIDE_WINLT_AND_WINUT = ADC_WINCTRL_WINMODE_MODE4_Val
+}ADC_WINMODE;
 
 // *****************************************************************************
 
