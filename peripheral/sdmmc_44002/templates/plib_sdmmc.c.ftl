@@ -37,19 +37,6 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-<#compress>
-<#if SDCARD_SDCDEN??>
-<#assign USE_CARD_DETECT = SDCARD_SDCDEN>
-<#else>
-<#assign USE_CARD_DETECT = false>
-</#if>
-<#if SDCARD_SDWPEN??>
-<#assign USE_WRITE_PROTECT = SDCARD_SDWPEN>
-<#else>
-<#assign USE_WRITE_PROTECT = false>
-</#if>
-</#compress>
-
 #include "device.h"
 #include "plib_${SDMMC_INSTANCE_NAME?lower_case}.h"
 
@@ -144,8 +131,7 @@ void ${SDMMC_INSTANCE_NAME}_InterruptHandler( void )
     eistr = ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_EISTR;
     /* Save the error in a global variable for later use */
     ${SDMMC_INSTANCE_NAME?lower_case}Obj.errorStatus |= eistr;
-    
-    <#if USE_CARD_DETECT == true>
+    <#if SDCARD_SDCDEN == true>
 
     if (nistr & SDMMC_NISTR_SD_SDIO_CINS_Msk)
     {
@@ -155,7 +141,6 @@ void ${SDMMC_INSTANCE_NAME}_InterruptHandler( void )
     {
         xferStatus |= SDMMC_XFER_STATUS_CARD_REMOVED;
     }
-    
     </#if>
 
     if (${SDMMC_INSTANCE_NAME?lower_case}Obj.isCmdInProgress == true)
@@ -268,25 +253,20 @@ bool ${SDMMC_INSTANCE_NAME}_IsDatLineBusy ( void )
 {
     return (((${SDMMC_INSTANCE_NAME}_REGS->SDMMC_PSR & SDMMC_PSR_CMDINHD_Msk) == SDMMC_PSR_CMDINHD_Msk)? true : false);
 }
+<#if SDCARD_SDWP_SUPPORT == true>
 
 bool ${SDMMC_INSTANCE_NAME}_IsWriteProtected ( void )
 {
-<#if USE_WRITE_PROTECT == true>
     return (${SDMMC_INSTANCE_NAME}_REGS->SDMMC_PSR & SDMMC_PSR_WRPPL_Msk) ? false : true;
-<#else>
-	return false;    
-</#if>
 }
+</#if>
+<#if SDCARD_SDCD_SUPPORT == true>
 
 bool ${SDMMC_INSTANCE_NAME}_IsCardAttached ( void )
 {
-<#if USE_CARD_DETECT == true>
     return ((${SDMMC_INSTANCE_NAME}_REGS->SDMMC_PSR & SDMMC_PSR_CARDINS_Msk) == SDMMC_PSR_CARDINS_Msk)? true : false;
-<#else>
-	return true;
-</#if>	    
 }
-
+</#if>
 
 void ${SDMMC_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
@@ -520,7 +500,7 @@ void ${SDMMC_INSTANCE_NAME}_CommandSend (
     ${SDMMC_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
     ${SDMMC_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
 
-<#if USE_CARD_DETECT == true>
+<#if SDCARD_SDCDEN == true>
     /* Keep the card insertion and removal interrupts enabled */
     normalIntSigEnable = (SDMMC_NISIER_SD_SDIO_CINS_Msk | SDMMC_NISIER_SD_SDIO_CREM_Msk);
 </#if>    
@@ -609,6 +589,11 @@ void ${SDMMC_INSTANCE_NAME}_ModuleInit( void )
 
     /* Set SD Bus Power On */
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_PCR |= SDMMC_PCR_SDBPWR_Msk;
+    <#if SDCARD_SDCD_SUPPORT == true && SDCARD_SDCDEN == false>
+    <#-- If card detection is supported but not enabled, use Force card detection to generate clock -->
+
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_MC1R |= SDMMC_MC1R_FCD_Msk;
+    </#if>
 
     /* Set initial clock to 400 KHz*/
     ${SDMMC_INSTANCE_NAME}_ClockSet (SDMMC_CLOCK_FREQ_400_KHZ);
@@ -616,7 +601,7 @@ void ${SDMMC_INSTANCE_NAME}_ModuleInit( void )
     /* Clear the high speed bit and set the data width to 1-bit mode */
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R &= ~(SDMMC_HC1R_SD_SDIO_HSEN_Msk | SDMMC_HC1R_SD_SDIO_DW_Msk);
 
-<#if USE_CARD_DETECT == true>
+<#if SDCARD_SDCDEN == true>
     /* Enable card inserted and card removed interrupt signals */
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_NISIER = (SDMMC_NISIER_SD_SDIO_CINS_Msk | SDMMC_NISIER_SD_SDIO_CREM_Msk);
 </#if>    
