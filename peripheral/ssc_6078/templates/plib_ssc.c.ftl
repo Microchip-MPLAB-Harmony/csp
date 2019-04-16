@@ -93,7 +93,7 @@ void ${SSC_INSTANCE_NAME}_Initialize ( void )
                            SSC_TFMR_FSEDGE(${SSC_TFMR_FSEDGE}) |
                            SSC_TFMR_FSLEN_EXT(${SSC_TFMR_FSLEN_EXT}) ;
 
-    ${SSC_INSTANCE_NAME}_REGS->SSC_CMR = 0x0;       // not used when SSC is in slave mode
+    ${SSC_INSTANCE_NAME}_REGS->SSC_CMR = ${SSC_CMR_DIV};       // not used when SSC is in slave mode
 
     ${SSC_INSTANCE_NAME}_REGS->SSC_CR = SSC_CR_TXEN_Msk | SSC_CR_RXEN_Msk;        
 }
