@@ -45,6 +45,7 @@ global dmacEnable
 global per_instance
 per_instance = {}
 
+
 global peridValueListSymbols
 peridValueListSymbols = []
 
@@ -222,17 +223,17 @@ def dmacEvsysControl(symbol, event):
 # And once the DMA mode is unselected, then the corresponding DMA channel will
 # be disabled and trigger source will be reset to "Software trigger"
 def dmacChannelAllocLogic(symbol, event):
-
     dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
     channelAllocated = False
-
     for i in range(0, dmaChannelCount):
         dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(i))
         dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i)))
-
+        if dmaChannelPerID == perID:
+            channelAllocated = True
+            break
         # Client requested to allocate channel
-        if event["value"] == True:
+        if event["value"]:
             # Reserve the first available free channel
             if dmaChannelEnable == False:
                 Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(i), True, 2)

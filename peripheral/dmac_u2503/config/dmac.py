@@ -253,6 +253,10 @@ def dmacChannelAllocLogic(symbol, event):
         dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(i))
         dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(i)))
 
+        if dmaChannelPerID == perID:
+            channelAllocated = True
+            break
+            
         # Client requested to allocate channel
         if event["value"] == True:
             # Reserve the first available free channel

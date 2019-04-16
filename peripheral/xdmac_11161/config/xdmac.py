@@ -244,6 +244,9 @@ def xdmacChannelAllocLogic(Sym, event):
         dmaChannelPerID = str(Database.getSymbolValue(
             "core", "XDMAC_CC" + str(i) + "_PERID"))
 
+        if dmaChannelPerID == perID:
+            channelAllocated = True
+            break
         # Client requested to allocate channel
         if event["value"] == True:
             # Reserve the first available free channel
