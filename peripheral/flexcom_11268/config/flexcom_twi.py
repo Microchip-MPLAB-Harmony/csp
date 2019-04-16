@@ -31,7 +31,6 @@ def getFlexcomTwiClockDividerValue(flexcomTwiClkSpeed):
     clockDividerMinValue = 7
 
     peripheralClockFreq = int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"))
-    flexcomTwiClkSpeed = flexcomTwiClkSpeed * 1000 # FLEXCOM TWI clock speed in Hz
     cldiv = peripheralClockFreq / ( flexcomTwiClkSpeed * 2 ) - 3
 
     if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x3:
@@ -45,7 +44,7 @@ def getFlexcomTwiClockDividerValue(flexcomTwiClkSpeed):
     return int(cldiv), int(chdiv), ckdiv
 
 def setFlexcomTwiClockDividerValue(symbol, event):
-    cldiv, chdiv, ckdiv = getFlexcomTwiClockDividerValue(Database.getSymbolValue(deviceNamespace, "FLEXCOM_TWI_CLK_SPEED"))
+    cldiv, chdiv, ckdiv = getFlexcomTwiClockDividerValue(Database.getSymbolValue(deviceNamespace, "I2C_CLOCK_SPEED"))
     # set CLDIV Value
     Database.setSymbolValue(deviceNamespace, "FLEXCOM_TWI_CWGR_CLDIV", cldiv, 1)
     # set CHDIV Value
@@ -100,11 +99,11 @@ flexcomSym_TWI_CWGR_BRSRCCLK.setVisible(False)
 flexcomSym_TWI_CWGR_BRSRCCLK.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
 # Operating speed
-flexcomSym_Twi_CLK_SPEED = flexcomComponent.createIntegerSymbol("FLEXCOM_TWI_CLK_SPEED", flexcomSym_OperatingMode)
-flexcomSym_Twi_CLK_SPEED.setLabel("Clock Speed (KHz)")
-flexcomSym_Twi_CLK_SPEED.setMin(100)
-flexcomSym_Twi_CLK_SPEED.setMax(400)
-flexcomSym_Twi_CLK_SPEED.setDefaultValue(400)
+flexcomSym_Twi_CLK_SPEED = flexcomComponent.createIntegerSymbol("I2C_CLOCK_SPEED", flexcomSym_OperatingMode)
+flexcomSym_Twi_CLK_SPEED.setLabel("Clock Speed (Hz)")
+flexcomSym_Twi_CLK_SPEED.setMin(100000)
+flexcomSym_Twi_CLK_SPEED.setMax(400000)
+flexcomSym_Twi_CLK_SPEED.setDefaultValue(400000)
 flexcomSym_Twi_CLK_SPEED.setVisible(False)
 flexcomSym_Twi_CLK_SPEED.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
@@ -127,7 +126,7 @@ flexcomSym_Twi_CWGR_CKDIV.setValue(ckdiv, 1)
 #Clock Divider
 flexcomSym_Twi_CLK_DIVIDER = flexcomComponent.createStringSymbol("FLEXCOM_TWI_CLK_DIVIDER", flexcomSym_OperatingMode)
 flexcomSym_Twi_CLK_DIVIDER.setVisible(False)
-flexcomSym_Twi_CLK_DIVIDER.setDependencies(setFlexcomTwiClockDividerValue, ["FLEXCOM_TWI_CLK_SPEED", "core." + flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+flexcomSym_Twi_CLK_DIVIDER.setDependencies(setFlexcomTwiClockDividerValue, ["I2C_CLOCK_SPEED", "core." + flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
 # Peripheral Clock Frequency
 flexcomSym_Twi_CLK_SRC_FREQ = flexcomComponent.createIntegerSymbol("FLEXCOM_TWI_CLK_SRC_FREQ", flexcomSym_OperatingMode)
@@ -136,5 +135,5 @@ flexcomSym_Twi_CLK_SRC_FREQ.setDefaultValue(int(Database.getSymbolValue("core", 
 flexcomSym_Twi_CLK_SRC_FREQ.setDependencies(setFlexcomTwiClockSourceFreq, ["core." + flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
 flexcomSym_Twi_API_Prefix = flexcomComponent.createStringSymbol("I2C_PLIB_API_PREFIX", flexcomSym_OperatingMode)
-flexcomSym_Twi_API_Prefix.setDefaultValue(flexcomInstanceName.getValue()  + "_I2C")
+flexcomSym_Twi_API_Prefix.setDefaultValue(flexcomInstanceName.getValue()  + "_TWI")
 flexcomSym_Twi_API_Prefix.setVisible(False)
