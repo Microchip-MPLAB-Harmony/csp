@@ -91,7 +91,19 @@ def customUpdate(sscAudioProtocol, event):
     sscTmtFrameModeFSLEN.setVisible(custom)     
     sscTmtFrameModeFSOS.setVisible(custom)     
     sscTmtFrameModeFSDEN.setVisible(custom)     
-    sscTmtFrameModeFSEDGE.setVisible(custom) 
+    sscTmtFrameModeFSEDGE.setVisible(custom)
+
+def customUpdate2(sscUsageMode, event):
+    global sscClkModeRegDIV
+    global sscClkModeRegDIVComment 
+
+    if event["value"]==0:
+        custom2 = True
+    else:
+        custom2 = False
+
+    sscClkModeRegDIV.setVisible(custom2)
+    sscClkModeRegDIVComment.setVisible(custom2) 
 
 def instantiateComponent(sscComponent):
     global sscRecClkModeCKS
@@ -127,8 +139,11 @@ def instantiateComponent(sscComponent):
     global sscTmtFrameModeFSEDGE
     global custom
     global sscInstanceName
+    global sscClkModeRegDIV
+    global sscClkModeRegDIVComment
     
     custom = False
+    custom2 = False
 
     sscInstanceName = sscComponent.createStringSymbol("SSC_INSTANCE_NAME", None)
     sscInstanceName.setVisible(False)
@@ -155,7 +170,7 @@ def instantiateComponent(sscComponent):
     sscUsageMode.setDisplayMode("Description")
     sscUsageMode.setOutputMode("Key")
     sscUsageMode.setDefaultValue(1)
-    sscInterrupt.setReadOnly(True)  # for now, only slave
+    sscUsageMode.setDependencies(customUpdate2, ["SSC_USAGE_MODE"])
 
     sscAudioProtocol = sscComponent.createKeyValueSetSymbol("SSC_AUDIO_PROTOCOL", None)
     sscAudioProtocol.setVisible(True)
@@ -176,7 +191,17 @@ def instantiateComponent(sscComponent):
     sscDataWidth = sscComponent.createIntegerSymbol("SSC_DATA_LENGTH", None)
     sscDataWidth.setVisible(True)
     sscDataWidth.setLabel("Data Length")
-    sscDataWidth.setDefaultValue(16)      
+    sscDataWidth.setDefaultValue(16)
+
+# SSC Clock Mode Register
+    sscClkModeRegDIV = sscComponent.createIntegerSymbol("SSC_CMR_DIV", None)
+    sscClkModeRegDIV.setLabel("Clock Divider(peripheral clock/2*DIV)")
+    sscClkModeRegDIV.setDefaultValue(0) 
+    sscClkModeRegDIV.setVisible(custom2) 
+
+    sscClkModeRegDIVComment = sscComponent.createCommentSymbol("SSC_CMR_DIV_COMMENT", None)
+    sscClkModeRegDIVComment.setLabel("e.g. if 49, 150 MHz/(2*49) = bit clock of 1.5306 MHz")
+    sscClkModeRegDIVComment.setVisible(custom2)
 
 # SSC Receive Clock Mode Register
     sscRecClkModeCKS = sscComponent.createKeyValueSetSymbol("SSC_RCMR_CKS", None)
