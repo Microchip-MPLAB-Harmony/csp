@@ -180,6 +180,10 @@ tcmMenu = coreComponent.createMenuSymbol("TCM_MENU", cortexMenu)
 tcmMenu.setLabel("TCM")
 tcmMenu.setDescription("TCM Configuration")
 
+tcmComment = coreComponent.createCommentSymbol("TCM_COMMENT", tcmMenu)
+tcmComment.setLabel("Configure the TCM using the Device Configuration Fuse Setting")
+
+
 tcmEnable = coreComponent.createBooleanSymbol("TCM_ENABLE", tcmMenu)
 tcmEnable.setLabel("Enable TCM")
 tcmEnable.setDefaultValue(False)
@@ -191,7 +195,7 @@ tcmSize.setDefaultValue("0 KB")
 tcmSize.setVisible(False)
 tcmSize.setDependencies(setTcmSize, ["DEVICE_TCM_SIZE"])
 
-stackTCM = coreComponent.createBooleanSymbol("STACK_IN_TCM", tcmMenu)
+stackTCM = coreComponent.createBooleanSymbol("STACK_IN_TCM", xc32Menu)
 stackTCM.setLabel("Locate Stack in TCM")
 stackTCM.setDefaultValue(False)
 
