@@ -233,11 +233,7 @@ bool ${SDHC_INSTANCE_NAME}_IsDatLineBusy ( void )
 
 bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void )
 {
-<#if SDCARD_SDWPEN == true>
-    <#lt>   return (${SDHC_INSTANCE_NAME}_REGS->SDHC_PSR & SDHC_PSR_WRPPL_Msk) ? false : true;
-<#else>
-    <#lt>   return false;
-</#if>
+    return (${SDHC_INSTANCE_NAME}_REGS->SDHC_PSR & SDHC_PSR_WRPPL_Msk) ? false : true;
 }
 
 bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void )
