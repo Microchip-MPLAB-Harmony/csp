@@ -341,6 +341,10 @@ def find_key_value(value, keypairs):
     print("find_key: could not find value in dictionary") # should never get here
     return ""
 
+def updateUARTClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -370,6 +374,9 @@ def instantiateComponent(uartComponent):
     componentName = str(uartComponent.getID())
     instanceNum = filter(str.isdigit,componentName)
     uartInstanceNum.setDefaultValue(instanceNum)
+
+    #Clock enable
+    Database.setSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     uartSymInterruptMode = uartComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     uartSymInterruptMode.setLabel("Enable Interrrupts ?")
@@ -602,7 +609,6 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_CLKSEL.setDefaultValue(find_key_value(0,CLKSEL_names)) # BRG clock is PBCLK2
     uartSym_U1MODE_CLKSEL.setOutputMode( "Value" )
     uartSym_U1MODE_CLKSEL.setDisplayMode( "Description" )
-    uartSym_U1MODE_CLKSEL.setVisible(False)
     for ii in CLKSEL_names:
         uartSym_U1MODE_CLKSEL.addKey( ii['key'],ii['value'], ii['desc'] )
 
@@ -725,6 +731,12 @@ def instantiateComponent(uartComponent):
     uartSymIntEnComment.setLabel("Warning!!! " + uartInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     uartSymIntEnComment.setVisible(False)
     uartSymIntEnComment.setDependencies(updateUARTInterruptData, ["USART_INTERRUPT_MODE"] + InterruptVectorUpdate)
+
+    # Clock Warning status
+    uartSym_ClkEnComment = uartComponent.createCommentSymbol("UART_CLOCK_ENABLE_COMMENT", None)
+    uartSym_ClkEnComment.setLabel("Warning!!! " + uartInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    uartSym_ClkEnComment.setVisible(False)
+    uartSym_ClkEnComment.setDependencies(updateUARTClockWarningStatus, ["core." + uartInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ############################################################################
     #### Code Generation ####

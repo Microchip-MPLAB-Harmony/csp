@@ -243,6 +243,10 @@ def DummyData_ValueUpdate(symbol, event):
 
     symbol.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
 
+def updateSPIClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
+
 def instantiateComponent(spiComponent):
     global spiSym_BaudError_Comment
     global spiInstanceName
@@ -268,6 +272,9 @@ def instantiateComponent(spiComponent):
     componentName = str(spiComponent.getID())
     instanceNum = filter(str.isdigit,componentName)
     spiInstanceNum.setDefaultValue(instanceNum)
+
+    #Clock enable
+    Database.setSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     spiSymInterruptMode = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", None)
     spiSymInterruptMode.setLabel("Enable Interrrupts ?")
@@ -508,6 +515,12 @@ def instantiateComponent(spiComponent):
     spiSymIntEnComment.setLabel("Warning!!! " + spiInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     spiSymIntEnComment.setVisible(False)
     spiSymIntEnComment.setDependencies(updateSPIInterruptData, ["SPI_INTERRUPT_MODE"] + InterruptVectorUpdate)
+
+    # Clock Warning status
+    spiSym_ClkEnComment = spiComponent.createCommentSymbol("SPI_CLOCK_ENABLE_COMMENT", None)
+    spiSym_ClkEnComment.setLabel("Warning!!! " + spiInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    spiSym_ClkEnComment.setVisible(False)
+    spiSym_ClkEnComment.setDependencies(updateSPIClockWarningStatus, ["core." + spiInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Driver Symbols ############################################

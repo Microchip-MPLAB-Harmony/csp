@@ -109,11 +109,6 @@ void ${SQI_INSTANCE_NAME}_Initialize(void)
                       ${SQI_INSTANCE_NAME}_MEMSTAT_STATTYPE_VAL | ${SQI_INSTANCE_NAME}_MEMSTAT_STATPOS_VAL;
 </#if>
 
-<#if __PROCESSOR?matches("PIC32MZ.*DA.*") == true>
-    // Disable SDHC Peripheral as SQI and SDHC share Port Pins
-    PMD6SET = _PMD6_SDHCMD_MASK;
-</#if>
-
     ${SQI_IEC_REG}SET         = ${SQI_INSTANCE_NAME}_INTERRUPT_ENABLE_MASK;
 
 }

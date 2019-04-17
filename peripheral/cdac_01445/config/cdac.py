@@ -44,6 +44,10 @@ def _get_bitfield_names(node, outputList):
             dict["value"] = str(tempint)
             outputList.append(dict)
 
+def updateCDACClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -57,6 +61,9 @@ def instantiateComponent(cdacComponent):
     cdacInstanceNumber = cdacComponent.createStringSymbol("CDAC_INSTANCE_NUMBER", None)
     cdacInstanceNumber.setVisible(False)
     cdacInstanceNumber.setDefaultValue(cdacComponent.getID()[-1:])
+
+    #Clock enable
+    Database.setSymbolValue("core", cdacInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     # Resolution
     cdacSym_Resolution = cdacComponent.createStringSymbol("CDAC_RESOLUTION", None)
@@ -92,6 +99,16 @@ def instantiateComponent(cdacComponent):
 
     for dict in cdacOutputBufferValues:
         cdacSym_DACOE.addKey(dict["key"], dict["value"], dict["desc"])
+
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    # Clock Warning status
+    cdacSym_ClkEnComment = cdacComponent.createCommentSymbol("CDAC_CLOCK_ENABLE_COMMENT", None)
+    cdacSym_ClkEnComment.setLabel("Warning!!! " + cdacInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    cdacSym_ClkEnComment.setVisible(False)
+    cdacSym_ClkEnComment.setDependencies(updateCDACClockWarningStatus, ["core." + cdacInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################

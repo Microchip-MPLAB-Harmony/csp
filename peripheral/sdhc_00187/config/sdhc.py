@@ -23,17 +23,8 @@
 *****************************************************************************"""
 
 ################################################################################
-#### Register Information ####
-################################################################################
-
-
-################################################################################
 #### Global Variables ####
 ################################################################################
-global sdhcInstanceName
-global interruptVector
-global interruptHandler
-global interruptHandlerLock
 
 global interruptsChildren
 interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
@@ -41,6 +32,7 @@ interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interru
 ################################################################################
 #### Business Logic ####
 ################################################################################
+
 def updateSDCDENCommentVisibility(symbol, event):
     symbol.setVisible(event["value"])
 
@@ -97,10 +89,28 @@ def setSDHCInterruptData(status):
         else:
             Database.setSymbolValue("core", id, interruptName + "_Handler", 1)
 
+def updateSDHCInterruptWarningStatus(symbol, event):
+
+    status = False
+
+    for id in interruptVectorUpdate:
+        id = id.replace("core.", "")
+        if Database.getSymbolValue("core", id) == True:
+            status = True
+            break
+
+    symbol.setVisible(status)
+
+def updateSDHCClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
+
 ################################################################################
 #### Component ####
 ################################################################################
+
 def instantiateComponent(sdhcComponent):
+
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
@@ -117,6 +127,9 @@ def instantiateComponent(sdhcComponent):
     sdhcInstanceName.setDefaultValue(sdhcComponent.getID().upper())
     Log.writeInfoMessage("Running " + sdhcInstanceName.getValue())
 
+    #Clock enable
+    Database.setSymbolValue("core", sdhcInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
+
     sdhcCDSupport = sdhcComponent.createBooleanSymbol("SDCARD_SDCD_SUPPORT", None)
     sdhcCDSupport.setLabel("SDHC SDCD Support")
     sdhcCDSupport.setDefaultValue(True)
@@ -129,12 +142,10 @@ def instantiateComponent(sdhcComponent):
 
     sdhcCD = sdhcComponent.createBooleanSymbol("SDCARD_SDCDEN", None)
     sdhcCD.setLabel("Use SD Card Detect (SDCD#) Pin")
-    sdhcCD.setDefaultValue(False)
     sdhcCD.setVisible(False)
 
     sdhcWP = sdhcComponent.createBooleanSymbol("SDCARD_SDWPEN", None)
     sdhcWP.setLabel("Use SD Write Protect (SDWP#) Pin")
-    sdhcWP.setDefaultValue(False)
     sdhcWP.setVisible(False)
 
     sdhcDescLines = sdhcComponent.createIntegerSymbol("SDHC_NUM_DESCRIPTOR_LINES", None)
@@ -145,8 +156,8 @@ def instantiateComponent(sdhcComponent):
 
     sdhcCLK = sdhcComponent.createIntegerSymbol("SDHC_CLK_FREQ", None)
     sdhcCLK.setVisible(False)
-    sdhcCLK.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK5_FREQ")))
-    sdhcCLK.setDependencies(updateSDHCClkFreq, ["CONFIG_SYS_CLK_PBCLK5_FREQ", "CONFIG_SYS_CLK_REFCLK4_FREQ"])
+    sdhcCLK.setDefaultValue(int(Database.getSymbolValue("core", sdhcInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+    sdhcCLK.setDependencies(updateSDHCClkFreq, ["core." + sdhcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     ############################################################################
     #### Dependency ####
@@ -185,17 +196,25 @@ def instantiateComponent(sdhcComponent):
     sdhcIFSMask.setDefaultValue(statMask)
     sdhcIFSMask.setVisible(False)
 
-
+    ## EVIC Interrupt Dynamic settings
     setSDHCInterruptData(True)
 
-
-    print("Loading System Services for " + Variables.get("__PROCESSOR"))
     # Dependency Status
+    sdhcSymIntEnComment = sdhcComponent.createCommentSymbol("SDHC_INTRRUPT_ENABLE_COMMENT", None)
+    sdhcSymIntEnComment.setLabel("Warning!!! " + sdhcInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
+    sdhcSymIntEnComment.setVisible(False)
+    sdhcSymIntEnComment.setDependencies(updateSDHCInterruptWarningStatus, interruptVectorUpdate)
 
+    # Clock Warning status
+    sdhcSym_ClkEnComment = sdhcComponent.createCommentSymbol("SDHC_CLOCK_ENABLE_COMMENT", None)
+    sdhcSym_ClkEnComment.setLabel("Warning!!! " + sdhcInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    sdhcSym_ClkEnComment.setVisible(False)
+    sdhcSym_ClkEnComment.setDependencies(updateSDHCClockWarningStatus, ["core." + sdhcInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ############################################################################
     #### Code Generation ####
     ############################################################################
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     sdhcHeaderFile = sdhcComponent.createFileSymbol("SDHC_HEADER", None)
