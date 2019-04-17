@@ -203,7 +203,7 @@ def showMasterDependencies(symbol, event):
         symbol.setVisible(False)
 
 def calculateBRGValue(clkfreq, baudRate):
-
+    global spiSym_BaudError_Comment
     t_brg = ((int(clkfreq/baudRate) / 2) - 1)
     baudHigh = int (clkfreq / (2 * (t_brg + 1)))
     baudLow = int (clkfreq / (2 * (t_brg + 2)))
@@ -213,13 +213,14 @@ def calculateBRGValue(clkfreq, baudRate):
     if errorHigh > errorLow:
         t_brg +=1
 
+    spiSym_BaudError_Comment.setVisible(False)
     ## Baud rate register is a 9/13 bit register
     if t_brg < 0:
         t_brg = 0
-        Log.writeErrorMessage("SPI Clock source Frequency is low for the desired baud rate")
+        spiSym_BaudError_Comment.setVisible(True)
     elif t_brg > spiSymMaxBRG.getValue():
         t_brg = spiSymMaxBRG.getValue()
-        Log.writeErrorMessage("Desired baud rate is low for current SPI Source Clock Frequency")
+        spiSym_BaudError_Comment.setVisible(True)
 
     return int(t_brg)
 
@@ -243,7 +244,7 @@ def DummyData_ValueUpdate(symbol, event):
     symbol.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
 
 def instantiateComponent(spiComponent):
-
+    global spiSym_BaudError_Comment
     global spiInstanceName
     global InterruptVector
     global InterruptHandlerLock
@@ -458,7 +459,13 @@ def instantiateComponent(spiComponent):
     spiSym_Baud_Rate.setLabel("Baud Rate in Hz")
     spiSym_Baud_Rate.setDefaultValue(1000000)
     spiSym_Baud_Rate.setMin(1)
+    spiSym_Baud_Rate.setMax(50000000)
     spiSym_Baud_Rate.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
+
+    #SPI Baud Rate not supported comment
+    spiSym_BaudError_Comment = spiComponent.createCommentSymbol("SPI_BAUD_ERROR_COMMENT", None)
+    spiSym_BaudError_Comment.setLabel("********** WARNING!: Baud Rate is out of range **********")
+    spiSym_BaudError_Comment.setVisible(False)
 
     spixBRG = spiInstanceName.getValue() + "BRG"
     spixBRG_Bitfield = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="' + spixBRG + '"]/bitfield@[name="' + spixBRG + '"]')
@@ -489,6 +496,7 @@ def instantiateComponent(spiComponent):
     spiSymClockModeComment = spiComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", None)
     spiSymClockModeComment.setLabel("***SPI Mode 0 Selected***")
     spiSymClockModeComment.setDependencies(ClockModeInfo, ["SPI_SPICON_CLK_POL", "SPI_SPICON_CLK_PH"])
+
 
     ############################################################################
     #### Interrupt Dependency ####
