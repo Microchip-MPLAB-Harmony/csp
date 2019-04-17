@@ -41,13 +41,22 @@ global sort_alphanumeric
 global availablePinDictionary
 availablePinDictionary = {}
 
-node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"MATRIX\"]/register-group@[name=\"MATRIX\"]/register@[name=\"CCFG_SYSIO\"]")
+registerNodeTemplate = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]"
+
 global sysioPresent
 
 sysioPresent = coreComponent.createBooleanSymbol("CCFG_SYSIO_PRESENT", None)
 sysioPresent.setVisible(False)
-if node != None:
-    sysioPresent.setDefaultValue(True)
+sysioPresent.setDefaultValue(ATDF.getNode(registerNodeTemplate.format("MATRIX", "MATRIX", "CCFG_SYSIO"))is not None)
+
+slewRateControlPresent = coreComponent.createBooleanSymbol("PIO_SLEWR_PRESENT", None)
+slewRateControlPresent.setVisible(False)
+slewRateControlPresent.setDefaultValue(ATDF.getNode(registerNodeTemplate.format("PIO", "PIO", "PIO_SLEWR")) is not None)
+
+driverControlPresent = coreComponent.createBooleanSymbol("PIO_DRIVER_PRESENT", None)
+driverControlPresent.setVisible(False)
+driverControlPresent.setDefaultValue(ATDF.getNode(registerNodeTemplate.format("PIO", "PIO", "PIO_DRIVER")) is not None)
+
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
 ###################################################################################################
@@ -329,6 +338,40 @@ def pinFilterCal(pin, event):
         pioSym_PIO_IFER[channelIndex].setValue(IFER_Value, 2)
         pioSym_PIO_IFSCER[channelIndex].setValue(IFSCER_Value, 2)
 
+
+def pinSlewRateControlCal(pin, event):
+    pinNumber = int((pin.getID()).split("_")[1])
+    portChannel = pinChannel[pinNumber - 1].getValue()
+
+    if portChannel != "":
+        channelIndex = pioSymChannel.index(portChannel)
+        bitPosition = pinBitPosition[pinNumber - 1].getValue()
+        slewRateValue = pioSym_PIO_SLEWR[channelIndex].getValue()
+
+        if event["value"] == "True":
+            slewRateValue |= 1 << bitPosition
+        else:
+            slewRateValue &= ~(1 << bitPosition)
+
+        pioSym_PIO_SLEWR[channelIndex].setValue(slewRateValue, 0)
+
+
+def pinDriverCal(pin, event):
+    pinNumber = int((pin.getID()).split("_")[1])
+    portChannel = pinChannel[pinNumber - 1].getValue()
+
+    if portChannel != "":
+        channelIndex = pioSymChannel.index(portChannel)
+        bitPosition = pinBitPosition[pinNumber - 1].getValue()
+        driverValue = pioSym_PIO_DRIVER[channelIndex].getValue()
+
+        if event["value"] == "High":
+            driverValue |= 1 << bitPosition
+        else:
+            driverValue &= ~(1 << bitPosition)
+
+        pioSym_PIO_DRIVER[channelIndex].setValue(driverValue, 0)
+
 def packageChange(pinoutSymbol, pinout):
     import re
     global uniquePinout
@@ -415,6 +458,8 @@ pinInterrupt = []
 pinGlitchFilter = []
 pinFunctionTypelList = []
 pinInterruptList = []
+pinSlewRateList =[]
+pinDriverList = []
 
 # Build package-pinout map
 packageNode = ATDF.getNode("/avr-tools-device-file/variants")
@@ -543,6 +588,20 @@ for pinNumber in range(1, packagePinCount + 1):
     pinGlitchFilter[pinNumber-1].setReadOnly(True)
     pinGlitchFilter[pinNumber-1].setDependencies(pinFilterCal, ["PIN_" + str(pinNumber) + "_PIO_FILTER"])
 
+    if slewRateControlPresent.getValue():
+        pinSlewRateList.append(pinNumber)
+        pinSlewRateList[pinNumber - 1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_SLEW_RATE", pin[pinNumber - 1])
+        pinSlewRateList[pinNumber - 1].setLabel("PIO Slew Rate Control")
+        pinSlewRateList[pinNumber - 1].setReadOnly(True)
+        pinSlewRateList[pinNumber - 1].setDependencies(pinSlewRateControlCal, ["PIN_" + str(pinNumber) + "_SLEW_RATE"])
+
+    if driverControlPresent.getValue():
+        pinDriverList.append(pinNumber)
+        pinDriverList[pinNumber - 1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_DRIVER", pin[pinNumber - 1])
+        pinDriverList[pinNumber - 1].setLabel("PIO Drive")
+        pinDriverList[pinNumber - 1].setReadOnly(True)
+        pinDriverList[pinNumber - 1].setDependencies(pinDriverCal, ["PIN_" + str(pinNumber) + "_DRIVER"])
+
     #list created only for dependency
     pinFunctionTypelList.append(pinNumber)
     pinFunctionTypelList[pinNumber-1] = "PIN_" + str(pinNumber) +"_FUNCTION_TYPE"
@@ -602,6 +661,10 @@ pioSym_PIO_IFSCER = []
 global pioSym_PIO_IFER
 pioSym_PIO_IFER = []
 pioSym_PIO_SCDR = []
+global pioSym_PIO_SLEWR
+pioSym_PIO_SLEWR = []
+global pioSym_PIO_DRIVER
+pioSym_PIO_DRIVER = []
 
 global pioSymInterruptVector
 pioSymInterruptVector = []
@@ -724,6 +787,20 @@ for portNumber in range(0, len(values)):
     pioSym_PIO_IFSCER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_IFSCER")
     pioSym_PIO_IFSCER[portNumber].setDefaultValue(0x00000000)
     pioSym_PIO_IFSCER[portNumber].setReadOnly(True)
+
+    if slewRateControlPresent.getValue():
+        pioSym_PIO_SLEWR.append(portNumber)
+        pioSym_PIO_SLEWR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_SLEWR_VALUE", port[portNumber])
+        pioSym_PIO_SLEWR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SLEWR")
+        pioSym_PIO_SLEWR[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_SLEWR[portNumber].setReadOnly(True)
+
+    if driverControlPresent.getValue():
+        pioSym_PIO_DRIVER.append(portNumber)
+        pioSym_PIO_DRIVER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_DRIVER_VALUE", port[portNumber])
+        pioSym_PIO_DRIVER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_DRIVER")
+        pioSym_PIO_DRIVER[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_DRIVER[portNumber].setReadOnly(True)
 
     #symbols and variables for interrupt handling
     pioSymInterruptVector.append(portNumber)
