@@ -160,6 +160,10 @@ def getVectorIndex(string):
 
     return vector_index
 
+def updateCMPxClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -207,6 +211,9 @@ def instantiateComponent(cmpComponent):
 
             cmpSym_Menu = cmpComponent.createMenuSymbol("CMP" + str(index) + "_MENU", None)
             cmpSym_Menu.setLabel("Comparator " + str(index))
+
+            #Clock enable
+            Database.setSymbolValue("core", "CMP" + str(index) + "_CLOCK_ENABLE", True, 1)
 
             #Positive input of Comparator
             cmp1CREF_names = []
@@ -296,6 +303,12 @@ def instantiateComponent(cmpComponent):
             cmpSymIntxEnComment.setVisible(False)
             cmpSymIntxEnComment.setLabel("Warning!!! Comparator " + str(index) + " Interrupt is Disabled in Interrupt Manager")
             cmpSymIntxEnComment.setDependencies(updateCMPxInterruptData, ["CMP_CM" + str(index) + "CON_EVPOL", InterruptVectorUpdate[index - 1]])
+
+            # Clock Warning status
+            cmpSym_ClkxEnComment = cmpComponent.createCommentSymbol("CMP" + str(index) + "_CLOCK_ENABLE_COMMENT", cmpSym_Menu)
+            cmpSym_ClkxEnComment.setLabel("Warning!!! Comparator " + str(index) + " Peripheral Clock is Disabled in Clock Manager")
+            cmpSym_ClkxEnComment.setVisible(False)
+            cmpSym_ClkxEnComment.setDependencies(updateCMPxClockWarningStatus, ["core.CMP" + str(index) + "_CLOCK_ENABLE"])
 
     cmpSym_Count = cmpComponent.createIntegerSymbol("CMP_COUNT", cmpSym_Menu)
     cmpSym_Count.setDefaultValue(index)

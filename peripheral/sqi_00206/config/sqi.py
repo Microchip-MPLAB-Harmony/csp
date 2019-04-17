@@ -102,6 +102,10 @@ def getIRQnumber(string):
 
     return irq_index
 
+def updateSQIClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
+
 def instantiateComponent(sqiComponent):
     global sqiInstanceName
     global sqiInterruptVector
@@ -115,6 +119,9 @@ def instantiateComponent(sqiComponent):
     sqiInstanceName.setDefaultValue(sqiComponent.getID().upper())
 
     print("Running " + sqiInstanceName.getValue())
+
+    #Clock enable
+    Database.setSymbolValue("core", sqiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     sqiMenu = sqiComponent.createMenuSymbol("SQI", None)
     sqiMenu.setLabel("Hardware Settings ")
@@ -200,6 +207,12 @@ def instantiateComponent(sqiComponent):
     sqiInterruptComment.setLabel("Warning!!! " + sqiInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     sqiInterruptComment.setVisible(False)
     sqiInterruptComment.setDependencies(updateSQIInterruptData, ["INTERRUPT_ENABLE", "core." + sqiInterruptVectorUpdate])
+
+    # Clock Warning status
+    sqiSym_ClkEnComment = sqiComponent.createCommentSymbol("SQI_CLOCK_ENABLE_COMMENT", None)
+    sqiSym_ClkEnComment.setLabel("Warning!!! " + sqiInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    sqiSym_ClkEnComment.setVisible(False)
+    sqiSym_ClkEnComment.setDependencies(updateSQIClockWarningStatus, ["core." + sqiInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     setSQIInterruptData(True)
 

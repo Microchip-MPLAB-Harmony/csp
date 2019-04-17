@@ -25,12 +25,14 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
+
 cvrValGrp_CVRCON_CVRSS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CVR"]/value-group@[name="CVRCON__CVRSS"]')
 cvrValGrp_CVRCON_CVRR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CVR"]/value-group@[name="CVRCON__CVRR"]')
 
 ################################################################################
 #### Global Variables ####
 ################################################################################
+
 global cmpInstanceName
 global cvrSym_CVRCON_CVR
 global cvrSym_CVRCON_CVRSS
@@ -42,6 +44,7 @@ global cvrSym_CVRCON_CVROE
 ################################################################################
 
 def _get_bitfield_names(node, outputList):
+
     valueNodes = node.getChildren()
     for ii in reversed(valueNodes):
         dict = {}
@@ -55,19 +58,25 @@ def _get_bitfield_names(node, outputList):
             else:
                 tempint = int(value)
             dict['value'] = str(tempint)
-            outputList.append(dict)  
+            outputList.append(dict)
 
 def combineValues(symbol, event):
+
     cvrValue    = cvrSym_CVRCON_CVR.getValue() << 0
-    cvrssValue  = cvrSym_CVRCON_CVRSS.getValue() << 4 
+    cvrssValue  = cvrSym_CVRCON_CVRSS.getValue() << 4
     cvrrValue   = cvrSym_CVRCON_CVRR.getValue() << 5
     cvroeValue  = cvrSym_CVRCON_CVROE.getValue() << 6
     cvrconValue = cvrValue + cvrssValue + cvrrValue + cvroeValue
     symbol.setValue(cvrconValue, 2)
-    
+
+def updateCVRClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
+
 ################################################################################
 #### Component ####
 ################################################################################
+
 def instantiateComponent(cvrComponent):
     global cvrInstanceName
     global cvrSym_CVRCON_CVR
@@ -80,24 +89,25 @@ def instantiateComponent(cvrComponent):
     cvrInstanceName.setDefaultValue(cvrComponent.getID().upper())
     print("Running " + cvrInstanceName.getValue())
 
+    #Clock enable
+    Database.setSymbolValue("core", cvrInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
+
     cvrSym_CVRCON_CVR = cvrComponent.createIntegerSymbol("CVR_CVRCON_CVR", None)
     cvrSym_CVRCON_CVR.setLabel("CVREF Value Selection")
     cvrSym_CVRCON_CVR.setDefaultValue(0)
     cvrSym_CVRCON_CVR.setMin(0)
     cvrSym_CVRCON_CVR.setMax(15)
-    cvrSym_CVRCON_CVR.setVisible(True)
-    
+
     cvrCVRSS_names = []
-    _get_bitfield_names(cvrValGrp_CVRCON_CVRSS, cvrCVRSS_names)    
+    _get_bitfield_names(cvrValGrp_CVRCON_CVRSS, cvrCVRSS_names)
     cvrSym_CVRCON_CVRSS = cvrComponent.createKeyValueSetSymbol("CVR_CVRCON_CVRSS", None)
     cvrSym_CVRCON_CVRSS.setLabel("CVREF Source Selection")
     cvrSym_CVRCON_CVRSS.setDefaultValue(0)
     cvrSym_CVRCON_CVRSS.setOutputMode("Value")
     cvrSym_CVRCON_CVRSS.setDisplayMode("Description")
     for ii in cvrCVRSS_names:
-        cvrSym_CVRCON_CVRSS.addKey( ii['desc'], ii['value'], ii['key'] ) 	
-    cvrSym_CVRCON_CVRSS.setVisible(True)
-    
+        cvrSym_CVRCON_CVRSS.addKey( ii['desc'], ii['value'], ii['key'] )
+
     cvrCVRR_names = []
     _get_bitfield_names(cvrValGrp_CVRCON_CVRR, cvrCVRR_names)
     cvrSym_CVRCON_CVRR = cvrComponent.createKeyValueSetSymbol("CVR_CVRCON_CVRR", None)
@@ -106,13 +116,10 @@ def instantiateComponent(cvrComponent):
     cvrSym_CVRCON_CVRR.setOutputMode("Value")
     cvrSym_CVRCON_CVRR.setDisplayMode("Description")
     for ii in cvrCVRR_names:
-        cvrSym_CVRCON_CVRR.addKey( ii['desc'], ii['value'], ii['key'] ) 	
-    cvrSym_CVRCON_CVRR.setVisible(True)
-    
+        cvrSym_CVRCON_CVRR.addKey( ii['desc'], ii['value'], ii['key'] )
+
     cvrSym_CVRCON_CVROE = cvrComponent.createBooleanSymbol("CVR_CVRCON_CVROE", None)
     cvrSym_CVRCON_CVROE.setLabel("CVREFOUT Enable")
-    cvrSym_CVRCON_CVROE.setDefaultValue(False)
-    cvrSym_CVRCON_CVROE.setVisible(True)
 
     #Collecting user input to combine into ICxCON register
     #ICxCON is updated every time a user selection changes
@@ -120,15 +127,20 @@ def instantiateComponent(cvrComponent):
     cvrSym_CVRCON.setDefaultValue(0)
     cvrSym_CVRCON.setVisible(False)
     cvrSym_CVRCON.setDependencies(combineValues, ["CVR_CVRCON_CVR"])
-    cvrSym_CVRCON.setDependencies(combineValues, ["CVR_CVRCON_CVRSS"])    
+    cvrSym_CVRCON.setDependencies(combineValues, ["CVR_CVRCON_CVRSS"])
     cvrSym_CVRCON.setDependencies(combineValues, ["CVR_CVRCON_CVRR"])
-    cvrSym_CVRCON.setDependencies(combineValues, ["CVR_CVRCON_CVROE"])    
+    cvrSym_CVRCON.setDependencies(combineValues, ["CVR_CVRCON_CVROE"])
 
 ############################################################################
 #### Dependency ####
 ############################################################################
- 
-    
+
+    # Clock Warning status
+    cvrSym_ClkEnComment = cvrComponent.createCommentSymbol("CVR_CLOCK_ENABLE_COMMENT", None)
+    cvrSym_ClkEnComment.setLabel("Warning!!! " + cvrInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    cvrSym_ClkEnComment.setVisible(False)
+    cvrSym_ClkEnComment.setDependencies(updateCVRClockWarningStatus, ["core." + cvrInstanceName.getValue() + "_CLOCK_ENABLE"])
+
 ############################################################################
 #### Code Generation ####
 ############################################################################
