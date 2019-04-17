@@ -166,10 +166,6 @@ int main ( void )
                             printf("Error in last received message");
                         }
                     }
-                    else
-                    {
-                        printf(" No New Message Received \r");
-                    }
                 }
                 break;
             default:
