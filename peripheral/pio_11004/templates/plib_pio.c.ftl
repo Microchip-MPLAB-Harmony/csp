@@ -58,6 +58,23 @@
 <#assign PIO_D_NUM_INT_PINS = 0>
 <#assign PIO_E_NUM_INT_PINS = 0>
 
+<#if !PIO_SLEWR_PRESENT>
+    <#assign PIOA_SLEWR_VALUE ="">
+    <#assign PIOB_SLEWR_VALUE ="">
+    <#assign PIOC_SLEWR_VALUE ="">
+    <#assign PIOD_SLEWR_VALUE ="">
+    <#assign PIOE_SLEWR_VALUE ="">
+</#if>
+
+<#if !PIO_DRIVER_PRESENT>
+    <#assign PIOA_DRIVER_VALUE ="">
+    <#assign PIOB_DRIVER_VALUE ="">
+    <#assign PIOC_DRIVER_VALUE ="">
+    <#assign PIOD_DRIVER_VALUE ="">
+    <#assign PIOE_DRIVER_VALUE ="">
+</#if>
+
+
 <#list 1..PIO_PIN_TOTAL as i>
     <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
     <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
@@ -84,7 +101,7 @@
 
 </#compress>
 <#macro PIO_INITIALIZE PIO_PORT PIO_DIR PIO_LAT_HIGH PIO_OD PIO_PUEN PIO_PDEN PIO_PDR PIO_ABCD1
-                       PIO_ABCD2 PIO_INT_TYPE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INTERRUPT PIO_IFER PIO_IFSCER PIO_SCDR>
+                       PIO_ABCD2 PIO_INT_TYPE PIO_INT_LEVEL PIO_INT_RE_HL PIO_INTERRUPT PIO_IFER PIO_IFSCER PIO_SCDR PIO_SLEWR PIO_DRIVER>
     <#lt>    /************************ PIO ${PIO_PORT} Initialization ************************/
     <#if (PIO_ABCD1 != "0" ) || (PIO_ABCD2 != "0")>
         <#lt>    /* PORT${PIO_PORT} Peripheral Function Selection */
@@ -161,6 +178,14 @@
             <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SCDR = 0x${PIO_SCDR};
         </#if>
     </#if>
+    <#if PIO_SLEWR?has_content>
+        <#lt>    /* PORT${PIO_PORT} Slew rate control */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_SLEWR = 0x${PIO_SLEWR};
+    </#if>
+    <#if PIO_DRIVER?has_content>
+        <#lt>    /* PORT${PIO_PORT} drive control */
+        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_DRIVER = 0x${PIO_DRIVER};
+    </#if>
 
 </#macro>
 
@@ -216,6 +241,8 @@ void PIO_Initialize ( void )
             PIO_IFER = PIOA_IFER_VALUE
             PIO_IFSCER = PIOA_IFSCER_VALUE
             PIO_SCDR = PIOA_SCDR_VALUE
+            PIO_SLEWR = PIOA_SLEWR_VALUE
+            PIO_DRIVER = PIOA_DRIVER_VALUE
         />
     </#if>
     <#if PORTB_EXISTS == true>
@@ -236,6 +263,8 @@ void PIO_Initialize ( void )
             PIO_IFER = PIOB_IFER_VALUE
             PIO_IFSCER = PIOB_IFSCER_VALUE
             PIO_SCDR = PIOB_SCDR_VALUE
+            PIO_SLEWR = PIOB_SLEWR_VALUE
+            PIO_DRIVER = PIOB_DRIVER_VALUE
         />
     </#if>
     <#if PORTC_EXISTS == true>
@@ -256,6 +285,8 @@ void PIO_Initialize ( void )
             PIO_IFER = PIOC_IFER_VALUE
             PIO_IFSCER = PIOC_IFSCER_VALUE
             PIO_SCDR = PIOC_SCDR_VALUE
+            PIO_SLEWR = PIOC_SLEWR_VALUE
+            PIO_DRIVER = PIOC_DRIVER_VALUE
         />
     </#if>
     <#if PORTD_EXISTS == true>
@@ -276,6 +307,8 @@ void PIO_Initialize ( void )
             PIO_IFER = PIOD_IFER_VALUE
             PIO_IFSCER = PIOD_IFSCER_VALUE
             PIO_SCDR = PIOD_SCDR_VALUE
+            PIO_SLEWR = PIOD_SLEWR_VALUE
+            PIO_DRIVER = PIOD_DRIVER_VALUE
             />
     </#if>
     <#if PORTE_EXISTS == true>
@@ -296,6 +329,8 @@ void PIO_Initialize ( void )
             PIO_IFER = PIOE_IFER_VALUE
             PIO_IFSCER = PIOE_IFSCER_VALUE
             PIO_SCDR = PIOE_SCDR_VALUE
+            PIO_SLEWR = PIOE_SLEWR_VALUE
+            PIO_DRIVER = PIOE_DRIVER_VALUE
         />
     </#if>
     <#if INTERRUPT_ACTIVE >
