@@ -205,10 +205,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 <#if CAN_TIMEOUT>
 
     /* Timeout Counter Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TOCC = ${TIMEOUT_SELECT} | CAN_TOCC_ETOC_Msk;
-
-    /* Timeout Counter Value Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TOCV = CAN_TOCV_TOC(${TIMEOUT_COUNT});
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TOCC = ${TIMEOUT_SELECT} | CAN_TOCC_ETOC_Msk | CAN_TOCC_TOP(${TIMEOUT_COUNT});
 </#if>
 
     /* Set the operation mode */
