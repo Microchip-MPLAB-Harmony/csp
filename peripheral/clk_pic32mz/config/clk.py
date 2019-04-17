@@ -280,7 +280,7 @@ def _get_default_value_num(register, bitfield, value_group):
     value = str((initialValue & mask) >> bitPosn)  # has initial value of bitfield, shifted down to bit0
     return value
 
-    
+
 def updatePoscFreq(symbol, event):
     global newPoscFreq
     newPoscFreq = event["value"]
@@ -679,7 +679,7 @@ def updateCfgMpll(symbol, event):
     global MPLLODIV2_BITS_VALUE
     global MPLLVREGDIS_BIT_VALUE
     global MPLLINTVREFCON_BIT_VALUE
-    
+
     startVal = int(CFGMPLL_REGVALUE.getValue(),16)
     if(event["id"]=='CLK_MPLLDIS_VALUE'):
         mask = int(MPLLDIS_BITFIELDMASK.getValue())
@@ -709,7 +709,7 @@ def updateCfgMpll(symbol, event):
         mask = int(MPLLINTVREFCON_BITFIELDMASK.getValue())
         newValue = mpllintvrefcon[event["value"]]
         MPLLINTVREFCON_BIT_VALUE.setValue(newValue,1)
-        
+
     bitPosn = 0  # find bitshift from mask
     while( (mask & (1<<bitPosn)) == 0):
         bitPosn += 1
@@ -1027,9 +1027,14 @@ if __name__ == "__main__":
     SOSC_EN_SETTING = coreComponent.createComboSymbol("CONFIG_SYS_CLK_CONFIG_SOSCEN", CLK_CFG_SETTINGS, sorted(soscen.keys()))
     SOSC_EN_SETTING.setLabel("Secondary oscillator enable")
     SOSC_EN_SETTING.setDescription(clkValGrp_DEVCFG1__FSOSCEN.getAttribute('caption'))
-    SOSC_EN_SETTING.setVisible(True)
+    SOSC_EN_SETTING.setVisible(False)
 
-    if( ("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR")) ):
+    deviceHasDDR2 = coreComponent.createBooleanSymbol("DEVICE_HAS_DDR2", CLK_CFG_SETTINGS)
+    deviceHasDDR2.setVisible(False)
+
+    if clkReg_CFGMPLL is not None:
+        deviceHasDDR2.setDefaultValue(True)
+
         # MPLLDIS bitfield
         global mpllDisable
         mpllDisable = {}
@@ -1050,12 +1055,12 @@ if __name__ == "__main__":
         MPLLDIS_VALUE.setVisible(False)
         MPLLDIS_VALUE.setDefaultValue(MPLLDIS_SYM.getValue())
         MPLLDIS_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLDIS'])
-        
+
         global MPLLDIS_BIT_VALUE
         MPLLDIS_BIT_VALUE =  coreComponent.createStringSymbol("CLK_MPLLDIS_BIT_VALUE",None)
         MPLLDIS_BIT_VALUE.setVisible(False)
         MPLLDIS_BIT_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLDIS', clkValGrp_CFGMPLL__MPLLDIS))
-        
+
         # MPLLIDIV bitfield
         global mpllidiv
         mpllidiv = {}
@@ -1076,12 +1081,12 @@ if __name__ == "__main__":
         MPLLIDIV_VALUE.setVisible(False)
         MPLLIDIV_VALUE.setDefaultValue(MPLLIDIV_SYM.getValue())
         MPLLIDIV_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLIDIV'])
-        
+
         global MPLLIDIV_BITS_VALUE
         MPLLIDIV_BITS_VALUE =  coreComponent.createStringSymbol("CLK_MPLLIDIV_BITS_VALUE",None)
         MPLLIDIV_BITS_VALUE.setVisible(False)
         MPLLIDIV_BITS_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLIDIV', clkValGrp_CFGMPLL__MPLLIDIV))
-        
+
         # MPLLMULT bitfield
         global mpllmult
         mpllmult = {}
@@ -1102,12 +1107,12 @@ if __name__ == "__main__":
         MPLLMULT_VALUE.setVisible(False)
         MPLLMULT_VALUE.setDefaultValue(MPLLMULT_SYM.getValue())
         MPLLMULT_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLMULT'])
-        
+
         global MPLLMULT_BITS_VALUE
         MPLLMULT_BITS_VALUE =  coreComponent.createStringSymbol("CLK_MPLLMULT_BITS_VALUE",None)
         MPLLMULT_BITS_VALUE.setVisible(False)
         MPLLMULT_BITS_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLMULT', clkValGrp_CFGMPLL__MPLLMULT))
-        
+
 
         # MPLLODIV1 bitfield
         global mpllodiv1
@@ -1129,12 +1134,12 @@ if __name__ == "__main__":
         MPLLODIV1_VALUE.setVisible(False)
         MPLLODIV1_VALUE.setDefaultValue(MPLLODIV1_SYM.getValue())
         MPLLODIV1_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLODIV1'])
-        
+
         global MPLLODIV1_BITS_VALUE
         MPLLODIV1_BITS_VALUE =  coreComponent.createStringSymbol("CLK_MPLLODIV1_BITS_VALUE",None)
         MPLLODIV1_BITS_VALUE.setVisible(False)
         MPLLODIV1_BITS_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLODIV1', clkValGrp_CFGMPLL__MPLLODIV1))
-        
+
         # MPLLODIV2 bitfield
         global mpllodiv2
         mpllodiv2 = {}
@@ -1155,12 +1160,12 @@ if __name__ == "__main__":
         MPLLODIV2_VALUE.setVisible(False)
         MPLLODIV2_VALUE.setDefaultValue(MPLLODIV2_SYM.getValue())
         MPLLODIV2_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLODIV2'])
-        
+
         global MPLLODIV2_BITS_VALUE
         MPLLODIV2_BITS_VALUE =  coreComponent.createStringSymbol("CLK_MPLLODIV2_BITS_VALUE",None)
         MPLLODIV2_BITS_VALUE.setVisible(False)
         MPLLODIV2_BITS_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLODIV2', clkValGrp_CFGMPLL__MPLLODIV2))
-        
+
         # MPLLVREGDIS bitfield
         global mpllvregdis
         mpllvregdis = {}
@@ -1181,12 +1186,12 @@ if __name__ == "__main__":
         MPLLVREGDIS_VALUE.setVisible(False)
         MPLLVREGDIS_VALUE.setDefaultValue(MPLLVREGDIS_SYM.getValue())
         MPLLVREGDIS_VALUE.setDependencies(updateMpllBitfield, ['CLK_MPLLVREGDIS'])
-        
+
         global MPLLVREGDIS_BIT_VALUE
         MPLLVREGDIS_BIT_VALUE =  coreComponent.createStringSymbol("CLK_MPLLVREGDIS_BIT_VALUE",None)
         MPLLVREGDIS_BIT_VALUE.setVisible(False)
         MPLLVREGDIS_BIT_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'MPLLVREGDIS', clkValGrp_CFGMPLL__MPLLVREGDIS))
-        
+
         #INTVREFCON bitfield
         global mpllintvrefcon
         mpllintvrefcon = {}
@@ -1207,12 +1212,12 @@ if __name__ == "__main__":
         MPLLINTVREFCON_VALUE.setVisible(False)
         MPLLINTVREFCON_VALUE.setDefaultValue(MPLLINTVREFCON_SYM.getValue())
         MPLLINTVREFCON_VALUE.setDependencies(updateMpllBitfield, ['CLK_INTVREFCON'])
-        
+
         global MPLLINTVREFCON_BIT_VALUE
         MPLLINTVREFCON_BIT_VALUE =  coreComponent.createStringSymbol("CLK_MPLLINTVREFCON_BIT_VALUE",None)
         MPLLINTVREFCON_BIT_VALUE.setVisible(False)
         MPLLINTVREFCON_BIT_VALUE.setDefaultValue(_get_default_value_num(clkReg_CFGMPLL, 'INTVREFCON', clkValGrp_CFGMPLL__INTVREFCON))
-        
+
         # CFGMPLL register
         CFGMPLL_REGNAME = coreComponent.createStringSymbol("CLK_CFGMPLL_REG",None)
         CFGMPLL_REGNAME.setVisible(False)
@@ -1231,6 +1236,10 @@ if __name__ == "__main__":
         CFGMPLL_REGVALUE.setDependencies(updateCfgMpll, ['CLK_MPLLVREGDIS_VALUE'])
         CFGMPLL_REGVALUE.setDependencies(updateCfgMpll, ['CLK_MPLLINTVREFCON_VALUE'])
         # End of PIC32MZDA-specific registers
+
+    else:
+        deviceHasDDR2.setDefaultValue(False)
+
 
     # now create the menus for all peripheral buses present in this part
     global pbclkEnNameList

@@ -95,16 +95,9 @@ void CLK_Initialize( void )
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
 
+<#if SYS_CLK_FRCDIV != "0">
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
-
-<#if CONFIG_SYS_CLK_CONFIG_SOSCEN == "1">
-    /* Enable Secondary Oscillator */
-    OSCCONSET = _OSCCON_SOSCEN_MASK;
-<#elseif CONFIG_SYS_CLK_CONFIG_SOSCEN == "0">
-    /* Disable Secondary Oscillator */
-    OSCCONCLR = _OSCCON_SOSCEN_MASK;
 </#if>
-
 <#if CONFIG_SYS_CLK_PBCLK1_ENABLE == true && CONFIG_SYS_CLK_PBDIV1 != 2>
     /* Peripheral Bus 1 is by default enabled, set its divisor */
     ${PBREGNAME1}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV1 -1};
@@ -193,14 +186,18 @@ void CLK_Initialize( void )
 <#if .vars[ENBL] = true>
 
     /* Set up Reference Clock ${i} */
-    /* REFO${i}CON register */
-    /* ROSEL =  ${.vars[ROSELVAL]} */
-    /* DIVSWEN = 1 */
-    /* RODIV = ${.vars[REFOCONRODIV]} */
-    ${.vars[REFCONREG]} = ${.vars[REFCONVAL]};
-    /* REFO${i}TRIM register */
-    /* ROTRIM = ${.vars[ROTRIMVAL]} */
-    ${.vars[REFTRIMREG]} = ${.vars[REFOTRIMVAL]};
+    <#if .vars[REFCONVAL] != "0x200">
+        <#lt>    /* REFO${i}CON register */
+        <#lt>    /* ROSEL =  ${.vars[ROSELVAL]} */
+        <#lt>    /* DIVSWEN = 1 */
+        <#lt>    /* RODIV = ${.vars[REFOCONRODIV]} */
+        <#lt>    ${.vars[REFCONREG]} = ${.vars[REFCONVAL]};
+    </#if>
+    <#if .vars[REFOTRIMVAL] != "0x0">
+        <#lt>    /* REFO${i}TRIM register */
+        <#lt>    /* ROTRIM = ${.vars[ROTRIMVAL]} */
+        <#lt>    ${.vars[REFTRIMREG]} = ${.vars[REFOTRIMVAL]};
+    </#if>
     <#if (.vars[REFCLKOE]?has_content) && (.vars[REFCLKOE] == true)>
         <#lt>    /* Enable oscillator (ON bit) and Enable Output (OE bit) */
         <#lt>    ${.vars[REFCONREG]}SET = ${.vars[OEMASK]} | ${.vars[ONMASK]};
@@ -212,7 +209,7 @@ void CLK_Initialize( void )
 </#if>
 </#list>
 <#-- Initialize MPLL registers that pertain only to certain families -->
-<#if PROC_FAMILY == "PIC32MZDA">
+<#if DEVICE_HAS_DDR2 == true && CLK_MPLLDIS_VALUE == "ENABLED" && CLK_MPLLVREGDIS_VALUE == "ENABLED">
 
     /* CFGMPLL */
     /* MPLLVREGDIS = ${CLK_MPLLVREGDIS_VALUE} */
@@ -222,17 +219,13 @@ void CLK_Initialize( void )
     /* MPLLODIV2 = ${CLK_MPLLODIV2_VALUE} */
     /* MPLLODIV1 = ${CLK_MPLLODIV1_VALUE} */
     /* MPLLDIS = ${CLK_MPLLDIS_VALUE} */
-    
+
     CFGMPLLbits.MPLLVREGDIS = ${CLK_MPLLVREGDIS_BIT_VALUE};
     while(!(CFGMPLLbits.MPLLVREGRDY));
-    CFGMPLLbits.INTVREFCON = ${CLK_MPLLINTVREFCON_BIT_VALUE};
-    CFGMPLLbits.MPLLIDIV = ${CLK_MPLLIDIV_BITS_VALUE};
-    CFGMPLLbits.MPLLMULT = ${CLK_MPLLMULT_BITS_VALUE};
-    CFGMPLLbits.MPLLODIV1 = ${CLK_MPLLODIV1_BITS_VALUE};
-    CFGMPLLbits.MPLLODIV2 = ${CLK_MPLLODIV2_BITS_VALUE};
-    CFGMPLLbits.MPLLDIS = ${CLK_MPLLDIS_BIT_VALUE};
+
+    CFGMPLL = ${CLK_CFGMPLL_REGVALUE};
     while(!(CFGMPLLbits.MPLLRDY));
-    
+
 </#if>
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
     /* Lock system since done with clock configuration */
