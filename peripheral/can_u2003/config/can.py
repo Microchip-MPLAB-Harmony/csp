@@ -689,9 +689,9 @@ def instantiateComponent(canComponent):
     canTCP = canComponent.createIntegerSymbol("TIMESTAMP_PRESCALER", None)
     canTCP.setLabel("Timestamp/Timeout Counter Prescaler (TCP):")
     canTCP.setDescription("Configures Timestamp & Timeout counter prescaler in multiples of CAN bit times.")
-    canTCP.setDefaultValue(1)
-    canTCP.setMin(1)
-    canTCP.setMax(16)
+    canTCP.setDefaultValue(0)
+    canTCP.setMin(0)
+    canTCP.setMax(15)
 
     # Interrupt Dynamic settings
     caninterruptControl = canComponent.createBooleanSymbol("CAN_INTERRUPT_ENABLE", None)
