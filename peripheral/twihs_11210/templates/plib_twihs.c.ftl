@@ -621,32 +621,22 @@ void ${TWIHS_INSTANCE_NAME}_InterruptHandler(void)
                 break;
             }
         }
-    } else {
-        // NACK is received, generate STOP condition
-        if (${TWIHS_INSTANCE_NAME?lower_case}Obj.state == TWIHS_STATE_WAIT_FOR_STOP)
+    }
+    if (${TWIHS_INSTANCE_NAME?lower_case}Obj.state == TWIHS_STATE_ERROR)
+    {
+        // NACK is received,
+        ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_IDLE;
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk | TWIHS_IDR_TXRDY_Msk | TWIHS_IDR_RXRDY_Msk;
+
+        // Disable and Enable I2C Master
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_MSDIS_Msk;
+        ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_MSEN_Msk;
+
+        if ( ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL )
         {
-            ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_IDLE;
-            ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IDR = TWIHS_IDR_TXCOMP_Msk;
-
-            // Disable and Enable I2C Master
-            ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_MSDIS_Msk;
-            ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_MSEN_Msk;
-
-
-            if ( ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback != NULL )
-            {
-                ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback( ${TWIHS_INSTANCE_NAME?lower_case}Obj.context );
-            }
-
-        } else
-        {
-            ${TWIHS_INSTANCE_NAME?lower_case}Obj.state = TWIHS_STATE_WAIT_FOR_STOP;
-            ${TWIHS_INSTANCE_NAME}_Module->TWIHS_IDR = TWIHS_IDR_TXRDY_Msk | TWIHS_IDR_RXRDY_Msk;
-            ${TWIHS_INSTANCE_NAME}_Module->TWIHS_CR = TWIHS_CR_STOP_Msk;
+            ${TWIHS_INSTANCE_NAME?lower_case}Obj.callback( ${TWIHS_INSTANCE_NAME?lower_case}Obj.context );
         }
     }
-
-
     // check for completion of transfer
     if( ${TWIHS_INSTANCE_NAME?lower_case}Obj.state == TWIHS_STATE_TRANSFER_DONE )
     {
