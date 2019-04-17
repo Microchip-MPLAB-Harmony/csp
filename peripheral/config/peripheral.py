@@ -113,9 +113,8 @@ for module in range (0, len(modules)):
                     periphComponent.addCapability(capablityId, capablity)
             else:
                 if periphName == "SMC":
-                    smcRegModule    = Register.getRegisterModule("SMC")
-                    smcRegGroup     = smcRegModule.getRegisterGroup("SMC_CS_NUMBER")
-                    smcChipSelCount = smcRegGroup.getRegisterCount()
+                    smcRegGroup = ATDF.getNode( '/avr-tools-device-file/modules/module@[name="SMC"]/register-group@[name="SMC"]/register-group@[name="SMC_CS_NUMBER"]' )
+                    smcChipSelCount = int( smcRegGroup.getAttribute( "count" ) )
                     for smcChipSel in range(0, smcChipSelCount):
                         periphComponent.addCapability("smc_cs"  + str(smcChipSel), "SMC_CS", "SMC_CS"  + str(smcChipSel), False)
     else:
