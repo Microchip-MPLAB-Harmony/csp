@@ -21,6 +21,38 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+flash_start         = 0
+flash_size          = 0
+
+addr_space          = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space")
+addr_space_children = addr_space.getChildren()
+
+for mem_idx in range(0, len(addr_space_children)):
+    mem_seg     = addr_space_children[mem_idx].getAttribute("name")
+    mem_type    = addr_space_children[mem_idx].getAttribute("type")
+
+    if (("FLASH" in mem_seg and mem_type == "flash") or ("code" in mem_seg)):
+        flash_start = int(addr_space_children[mem_idx].getAttribute("start"), 16)
+        flash_size  = int(addr_space_children[mem_idx].getAttribute("size"), 16)
+
+def getFlashParams(app_start):
+
+    if (int(app_start,16) == flash_start):
+        return ("")
+
+    app_offset  = (int(app_start,16) - flash_start)
+    app_len     = str(hex(flash_size - app_offset))
+
+    rom_origin  = "ROM_ORIGIN=0x" + app_start
+    rom_length  = "ROM_LENGTH=" + app_len
+
+    return (rom_origin + ";" + rom_length)
+
+def setFlashParams(symbol, event):
+    flashParams = getFlashParams(event["value"])
+
+    symbol.setValue(flashParams)
+
 # Callback for all the messages sent to core component
 def handleMessage(messageID, args):
 
@@ -315,6 +347,20 @@ def instantiateComponent( coreComponent ):
     xc32HeapSize = coreComponent.createIntegerSymbol("XC32_HEAP_SIZE", xc32LdGeneralMenu)
     xc32HeapSize.setLabel("Heap Size (bytes)")
     xc32HeapSize.setDefaultValue( 0 )
+
+    xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
+    xc32LdSymbolsMacrosMenu.setLabel("Symbols & Macros")
+
+    xc32LdAppStartAddress = coreComponent.createStringSymbol("APP_START_ADDRESS", xc32LdSymbolsMacrosMenu)
+    xc32LdAppStartAddress.setLabel("Application Start Address (Hex)")
+    xc32LdAppStartAddress.setDefaultValue(str(hex(flash_start))[2:])
+
+    # set XC32-LD option to Modify ROM Start address and length
+    xc32LdPreprocessroMacroSym = coreComponent.createSettingSymbol("XC32_LINKER_PREPROC_MARCOS", xc32LdSymbolsMacrosMenu)
+    xc32LdPreprocessroMacroSym.setCategory("C32-LD")
+    xc32LdPreprocessroMacroSym.setKey("preprocessor-macros")
+    xc32LdPreprocessroMacroSym.setValue(getFlashParams(xc32LdAppStartAddress.getValue()))
+    xc32LdPreprocessroMacroSym.setDependencies(setFlashParams, ["APP_START_ADDRESS"])
 
     ## iar Tool Config
     iarMenu = coreComponent.createMenuSymbol("CoreIARMenu", toolChainMenu)
