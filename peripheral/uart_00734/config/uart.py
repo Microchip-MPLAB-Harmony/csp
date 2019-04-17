@@ -419,7 +419,7 @@ def instantiateComponent(uartComponent):
     ## Baud Rate Frequency dependency
     uartBRGValue = uartComponent.createIntegerSymbol("BRG_VALUE", None)
     uartBRGValue.setVisible(False)
-    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + "CONFIG_SYS_CLK_PBCLK_FREQ"])
+    uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     #Use setValue instead of setDefaultValue to store symbol value in default.xml
     uartBRGValue.setValue(brgVal, 1)
