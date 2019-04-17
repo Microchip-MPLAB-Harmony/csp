@@ -730,9 +730,9 @@ def instantiateComponent(mcanComponent):
     mcanTCP = mcanComponent.createIntegerSymbol("TIMESTAMP_PRESCALER", None)
     mcanTCP.setLabel("Timestamp/Timeout Counter Prescaler (TCP):")
     mcanTCP.setDescription("Configures Timestamp & Timeout counter prescaler in multiples of MCAN bit times.")
-    mcanTCP.setDefaultValue(1)
-    mcanTCP.setMin(1)
-    mcanTCP.setMax(16)
+    mcanTCP.setDefaultValue(0)
+    mcanTCP.setMin(0)
+    mcanTCP.setMax(15)
 
     # Interrupt Dynamic settings
     mcaninterruptControl = mcanComponent.createBooleanSymbol("MCAN_INTERRUPT_ENABLE", None)
