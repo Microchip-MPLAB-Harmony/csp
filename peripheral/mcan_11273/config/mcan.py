@@ -44,8 +44,10 @@ def RxBufferElementSize(element, event):
     if ((event["id"] == 'MCAN_OPMODE' and event["value"] == 'CAN FD' and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "RXBUF_USE") == True)
     or (event["id"] == 'RXBUF_USE' and event["value"] == True and Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_OPMODE") == 'CAN FD')):
         element.setVisible(True)
+        element.setReadOnly(False)
     else:
         element.setVisible(False)
+        element.setReadOnly(True)
 
 # for FD. Expects keyValue symbol. Use for RX and TX
 def adornElementSize(fifo):
@@ -60,6 +62,15 @@ def adornElementSize(fifo):
     fifo.setDefaultValue(0)
     fifo.setOutputMode("Value")
     fifo.setDisplayMode("Description")
+
+# if mode is changed to NORMAL then set element size to 8 bytes
+def updateElementSize(symbol, event):
+    if event["value"] == 'CAN FD':
+        symbol.setVisible(True)
+        symbol.setReadOnly(False)
+    else:
+        symbol.setVisible(False)
+        symbol.setReadOnly(True)
 
 # for extended and standard filters
 def adornFilterType(filterType):
@@ -499,7 +510,7 @@ def instantiateComponent(mcanComponent):
     mcanRXF0elementSize.setLabel("Element Size")
     mcanRXF0elementSize.setVisible(False)
     adornElementSize(mcanRXF0elementSize)
-    mcanRXF0elementSize.setDependencies(showWhenFD, ["MCAN_OPMODE"])
+    mcanRXF0elementSize.setDependencies(updateElementSize, ["MCAN_OPMODE"])
 
     mcanRx0overwrite = mcanComponent.createBooleanSymbol("RXF0_OVERWRITE", mcanRXF0Menu)
     mcanRx0overwrite.setLabel("Use Overwrite Mode")
@@ -539,7 +550,7 @@ def instantiateComponent(mcanComponent):
     mcanRXF1elementSize.setLabel("Element Size")
     mcanRXF1elementSize.setVisible(False)
     adornElementSize(mcanRXF1elementSize)
-    mcanRXF1elementSize.setDependencies(showWhenFD, ["MCAN_OPMODE"])
+    mcanRXF1elementSize.setDependencies(updateElementSize, ["MCAN_OPMODE"])
 
     mcanRXF1overwrite = mcanComponent.createBooleanSymbol("RXF1_OVERWRITE", mcanRXF1Menu)
     mcanRXF1overwrite.setLabel("Use Overwrite Mode")
@@ -602,7 +613,7 @@ def instantiateComponent(mcanComponent):
     mcanTXElementCfg.setLabel("Element Size")
     adornElementSize(mcanTXElementCfg)
     mcanTXElementCfg.setVisible(False)
-    mcanTXElementCfg.setDependencies(showWhenFD, ["MCAN_OPMODE"])
+    mcanTXElementCfg.setDependencies(updateElementSize, ["MCAN_OPMODE"])
 
     mcanTXpause = mcanComponent.createBooleanSymbol("TX_PAUSE", None)
     mcanTXpause.setLabel("Enable TX Pause")
