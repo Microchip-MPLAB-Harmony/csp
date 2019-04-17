@@ -101,6 +101,10 @@ def baudRateCalc(clk, baud):
 
     I2CxBRG = (clk / (2 * baud) - (clk * 0.000000104) / 2)  - 1
 
+    if I2CxBRG >= 3 and I2CxBRG < 65536:
+        i2cmSym_BaudError_Comment.setVisible(False)
+    else:
+        i2cmSym_BaudError_Comment.setVisible(True)
     if I2CxBRG < 3:
         I2CxBRG = 3
 
@@ -143,7 +147,9 @@ def instantiateComponent(i2cComponent):
     ## I2C Clock Frequency
     i2cSym_ClkValue = i2cComponent.createIntegerSymbol("I2C_CLOCK_FREQ", None)
     i2cSym_ClkValue.setLabel("I2C Clock Frequency")
+    i2cSym_ClkValue.setMin(0)
     i2cSym_ClkValue.setReadOnly(True)
+    i2cSym_ClkValue.setVisible(False)
     i2cSym_ClkValue.setDefaultValue(int(Database.getSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_FREQUENCY")))
     i2cSym_ClkValue.setDependencies(i2cSourceFreq, ["core." + i2cInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
@@ -164,6 +170,13 @@ def instantiateComponent(i2cComponent):
     i2cSym_BAUD.setLabel("I2C Baud Rate (Hz)")
     i2cSym_BAUD.setDefaultValue(50000)
     i2cSym_BAUD.setMin(1)
+    i2cSym_BAUD.setMax(1000000)
+
+    #I2C Baud Rate not supported comment
+    global i2cmSym_BaudError_Comment
+    i2cmSym_BaudError_Comment = i2cComponent.createCommentSymbol("I2C_BAUD_ERROR_COMMENT", None)
+    i2cmSym_BaudError_Comment.setLabel("********** WARNING!: Baud Rate is out of range **********")
+    i2cmSym_BaudError_Comment.setVisible(False)
 
     ## Baud Rate Frequency dependency
     i2cSym_BRGValue = i2cComponent.createIntegerSymbol("BRG_VALUE", None)
