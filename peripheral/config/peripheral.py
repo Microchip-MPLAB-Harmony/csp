@@ -60,6 +60,8 @@ peripherals = {
                 "SPI_01329"     : ["SPI"],
                 "UART_00734"    : ["UART"],
                 "NVM_02819"     : ["MEMORY"],
+                "NVM_01390"     : ["MEMORY"],
+                "NVM_02629"     : ["MEMORY"],
                 "SDMMC_44002"   : ["SDHC"],
                 "SDHC_U2011"    : ["SDHC"],
                 "HSMCI_6449"    : ["SDHC"],
