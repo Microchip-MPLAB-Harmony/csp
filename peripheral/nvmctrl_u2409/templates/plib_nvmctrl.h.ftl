@@ -145,13 +145,13 @@ uint32_t ${NVMCTRL_INSTANCE_NAME}_RegionLockStatusGet (void);
 
 bool ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_IsBusy(void);
 
-uint16_t ${NVMCTRL_INSTANCE_NAME}_SmartEepromStatusGet( void );
+uint32_t ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMStatusGet( void );
 
 bool ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_IsActiveSectorFull(void);
 
-void ${NVMCTRL_INSTANCE_NAME}_SmartEepromSectorReallocate(void);
+void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMSectorReallocate(void);
 
-void ${NVMCTRL_INSTANCE_NAME}_SmartEepromFlushPageBuffer(void);
+void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMFlushPageBuffer(void);
 
 void ${NVMCTRL_INSTANCE_NAME}_BankSwap(void);
 
@@ -162,8 +162,8 @@ void ${NVMCTRL_INSTANCE_NAME}_BankSwap(void);
 </#if>
 <#if NVM_INTERRUPT1_ENABLE == true>
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMCallbackRegister( NVMCTRL_CALLBACK callback, uintptr_t context );
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_EnableSmartEepromInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source);
-    <#lt>void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEepromInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source);
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_EnableSmartEEPROMInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source);
+    <#lt>void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source);
 </#if>
 
 // DOM-IGNORE-BEGIN

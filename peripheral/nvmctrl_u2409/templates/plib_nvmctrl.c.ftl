@@ -52,7 +52,7 @@
 
 static volatile uint16_t nvm_error;
 static uint16_t nvm_status;
-static uint16_t smart_eep_status;
+static uint32_t smart_eep_status;
 
 <#assign NVMCTRL_CTRLA_VAL = "">
 <#assign NVMCTRL_SEECFG_VAL = "">
@@ -307,7 +307,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_IsBusy(void)
     return (bool)(${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEESTAT & NVMCTRL_SEESTAT_BUSY_Msk);
 }
 
-uint16_t ${NVMCTRL_INSTANCE_NAME}_SmartEepromStatusGet( void )
+uint32_t ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMStatusGet( void )
 {
     smart_eep_status = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_SEESTAT;
     
@@ -325,12 +325,12 @@ void ${NVMCTRL_INSTANCE_NAME}_BankSwap(void)
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_BKSWRST | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 
-void ${NVMCTRL_INSTANCE_NAME}_SmartEepromSectorReallocate(void)
+void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMSectorReallocate(void)
 {
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_SEERALOC | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 
-void ${NVMCTRL_INSTANCE_NAME}_SmartEepromFlushPageBuffer(void)
+void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROMFlushPageBuffer(void)
 {
     /* Clear global error flag */
     nvm_error = 0;
@@ -351,12 +351,12 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableMainFlashInterruptSource(NVMCTRL_INTERRUPT0
 </#if>
 <#if NVM_INTERRUPT1_ENABLE == true >
 
-void ${NVMCTRL_INSTANCE_NAME}_EnableSmartEepromInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source)
+void ${NVMCTRL_INSTANCE_NAME}_EnableSmartEEPROMInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source)
 {
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENSET |= int_source;
 }
 
-void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEepromInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source)
+void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUPT1_SOURCE int_source)
 {
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTENCLR |= int_source;
 }
