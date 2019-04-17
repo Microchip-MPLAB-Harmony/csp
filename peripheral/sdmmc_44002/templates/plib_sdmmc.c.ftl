@@ -56,6 +56,10 @@
 #define ${SDMMC_INSTANCE_NAME}_MAX_SUPPORTED_SDCLK_FREQUENCY    50000000UL
 #define ${SDMMC_INSTANCE_NAME}_MAX_SUPPORTED_DIVIDER            0x3FF
 
+#define ${SDMMC_INSTANCE_NAME}_MAX_ADMA2_TRANSFER_SIZE          0x10000U
+
+#define ${SDMMC_INSTANCE_NAME}_MAX_DMA_TRANSFER_SIZE            (${SDMMC_INSTANCE_NAME}_MAX_ADMA2_TRANSFER_SIZE * ${SDMMC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES)
+
 /* Absolute difference between two 32 bit integers */
 static inline uint32_t ${SDMMC_INSTANCE_NAME}_ABS_DIFF_U32(uint32_t a, uint32_t b)
 {
@@ -74,7 +78,7 @@ static inline uint32_t ${SDMMC_INSTANCE_NAME}_MIN_U32 (uint32_t a, uint32_t b)
   return a > b ? b : a;
 }
 
-static __attribute__((__aligned__(32))) SDMMC_ADMA_DESCR ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[${SDMMC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES];
+static CACHE_ALIGN SDMMC_ADMA_DESCR ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[${SDMMC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES];
 
 static SDMMC_OBJECT ${SDMMC_INSTANCE_NAME?lower_case}Obj;
 
@@ -307,7 +311,7 @@ void ${SDMMC_INSTANCE_NAME}_DmaSetup (
      * a block size of 512 bytes.
      */
 
-    if (pendingBytes > (65536 * ${SDMMC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES))
+    if (pendingBytes > ${SDMMC_INSTANCE_NAME}_MAX_DMA_TRANSFER_SIZE)
     {
         /* Too many blocks requested in one go */
         return;
@@ -315,14 +319,8 @@ void ${SDMMC_INSTANCE_NAME}_DmaSetup (
 
     for (i = 0; (i < ${SDMMC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES) && (pendingBytes > 0); i++)
     {
-        if (pendingBytes > 65536)
-        {
-            nBytes = 65536;
-        }
-        else
-        {
-            nBytes = pendingBytes;
-        }
+        nBytes = ${SDMMC_INSTANCE_NAME}_MIN_U32(pendingBytes, ${SDMMC_INSTANCE_NAME}_MAX_ADMA2_TRANSFER_SIZE);
+
         ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[i].address = (uint32_t)(buffer);
         ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[i].length = nBytes;
         ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[i].attribute = \
@@ -333,6 +331,9 @@ void ${SDMMC_INSTANCE_NAME}_DmaSetup (
 
     /* The last descriptor line must indicate the end of the descriptor list */
     ${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[i-1].attribute |= (SDMMC_DESC_TABLE_ATTR_END);
+
+    /* Clean the cache associated with the modified descriptors */
+    DCACHE_CLEAN_BY_ADDR((uint32_t*)(${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable), (i * sizeof(SDMMC_ADMA_DESCR)));
 
     /* Set the starting address of the descriptor table */
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_ASAR0 = (uint32_t)(&${SDMMC_INSTANCE_NAME?lower_case}DmaDescrTable[0]);
