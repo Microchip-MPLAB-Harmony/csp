@@ -113,7 +113,7 @@ void ${CMP_INSTANCE_NAME}_${i}_CallbackRegister(CMP_CALLBACK callback, uintptr_t
 
 void COMPARATOR_${i}_InterruptHandler(void)
 {
-    ${.vars[CMP_IFS_REG]}CLR = _${.vars[CMP_IFS_REG]}_${CMP_INSTANCE_NAME}1IF_MASK; //Clear IRQ flag
+    ${.vars[CMP_IFS_REG]}CLR = _${.vars[CMP_IFS_REG]}_${CMP_INSTANCE_NAME}${i}IF_MASK; //Clear IRQ flag
 
     if(cmp${i}Obj.callback != NULL)
     {
