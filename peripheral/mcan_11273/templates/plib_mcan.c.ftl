@@ -216,10 +216,7 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 <#if MCAN_TIMEOUT>
 
     /* Timeout Counter Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TOCC = ${TIMEOUT_SELECT} | MCAN_TOCC_ETOC_TOS_CONTROLLED;
-
-    /* Timeout Counter Value Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TOCV = MCAN_TOCV_TOC(${TIMEOUT_COUNT});
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TOCC = ${TIMEOUT_SELECT} | MCAN_TOCC_ETOC_TOS_CONTROLLED | MCAN_TOCC_TOP(${TIMEOUT_COUNT});
 </#if>
 
     /* Set the operation mode */
