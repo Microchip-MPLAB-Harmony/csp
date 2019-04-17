@@ -207,7 +207,7 @@ bool ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void);
 <#if ICAP_ERROR_INTERRUPT_ENABLE?c == "true">
 // *****************************************************************************
 /* Function:
-  void ${ICAP_INSTANCE_NAME}_Error_CallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
+  void ${ICAP_INSTANCE_NAME}_ErrorCallbackRegister( ICAP_CALLBACK callback, uintptr_t context )
 
   Summary:
     Sets the callback function for a icap error interrupt.
@@ -229,7 +229,7 @@ bool ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void);
   Returns:
     void
 */
-void ${ICAP_INSTANCE_NAME}_Error_CallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
+void ${ICAP_INSTANCE_NAME}_ErrorCallbackRegister(ICAP_CALLBACK callback, uintptr_t context);
 
 <#else>
 // *****************************************************************************
