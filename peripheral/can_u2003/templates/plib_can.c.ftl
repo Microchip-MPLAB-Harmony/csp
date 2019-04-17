@@ -743,6 +743,136 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk);
 }
 
+<#if FILTERS_STD?number gt 0>
+// *****************************************************************************
+/* Function:
+    bool ${CAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
+
+   Summary:
+    Set a standard filter element configuration.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize and ${CAN_INSTANCE_NAME}_MessageRAMConfigSet must have been called
+    for the associated CAN instance.
+
+   Parameters:
+    filterNumber          - Standard Filter number to be configured.
+    stdMsgIDFilterElement - Pointer to Standard Filter Element configuration to be set on specific filterNumber.
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool ${CAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
+{
+    if ((filterNumber > ${FILTERS_STD}) || (stdMsgIDFilterElement == NULL))
+    {
+        return false;
+    }
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1].CAN_SIDFE_0 = stdMsgIDFilterElement->CAN_SIDFE_0;
+
+    return true;
+}
+
+// *****************************************************************************
+/* Function:
+    bool ${CAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
+
+   Summary:
+    Get a standard filter element configuration.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize and ${CAN_INSTANCE_NAME}_MessageRAMConfigSet must have been called
+    for the associated CAN instance.
+
+   Parameters:
+    filterNumber          - Standard Filter number to get filter configuration.
+    stdMsgIDFilterElement - Pointer to Standard Filter Element configuration for storing filter configuration.
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool ${CAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
+{
+    if ((filterNumber > ${FILTERS_STD}) || (stdMsgIDFilterElement == NULL))
+    {
+        return false;
+    }
+    stdMsgIDFilterElement->CAN_SIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1].CAN_SIDFE_0;
+
+    return true;
+}
+</#if>
+
+<#if FILTERS_EXT?number gt 0>
+// *****************************************************************************
+/* Function:
+    bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
+
+   Summary:
+    Set a Extended filter element configuration.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize and ${CAN_INSTANCE_NAME}_MessageRAMConfigSet must have been called
+    for the associated CAN instance.
+
+   Parameters:
+    filterNumber          - Extended Filter number to be configured.
+    extMsgIDFilterElement - Pointer to Extended Filter Element configuration to be set on specific filterNumber.
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
+{
+    if ((filterNumber > ${FILTERS_EXT}) || (extMsgIDFilterElement == NULL))
+    {
+        return false;
+    }
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].CAN_XIDFE_0 = extMsgIDFilterElement->CAN_XIDFE_0;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].CAN_XIDFE_1 = extMsgIDFilterElement->CAN_XIDFE_1;
+
+    return true;
+}
+
+// *****************************************************************************
+/* Function:
+    bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
+
+   Summary:
+    Get a Extended filter element configuration.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize and ${CAN_INSTANCE_NAME}_MessageRAMConfigSet must have been called
+    for the associated CAN instance.
+
+   Parameters:
+    filterNumber          - Extended Filter number to get filter configuration.
+    extMsgIDFilterElement - Pointer to Extended Filter Element configuration for storing filter configuration.
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
+{
+    if ((filterNumber > ${FILTERS_EXT}) || (extMsgIDFilterElement == NULL))
+    {
+        return false;
+    }
+    extMsgIDFilterElement->CAN_XIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].CAN_XIDFE_0;
+    extMsgIDFilterElement->CAN_XIDFE_1 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].CAN_XIDFE_1;
+
+    return true;
+}
+</#if>
+
 <#if INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
