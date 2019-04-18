@@ -495,6 +495,30 @@ void ${LCDC_INSTANCE_NAME}_SetWindowSize(${LCDC_INSTANCE_NAME}_LAYER_ID layer, u
     }
 }
 
+void ${LCDC_INSTANCE_NAME}_SetHorizStride(${LCDC_INSTANCE_NAME}_LAYER_ID layer, uint32_t xstride)
+{
+    switch(layer)
+    {
+        case LCDC_LAYER_OVR1:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1CFG4 = ${LCDC_INSTANCE_NAME}_OVR1CFG4_XSTRIDE(xstride);
+            break;
+        case LCDC_LAYER_OVR2:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR2CFG4 = ${LCDC_INSTANCE_NAME}_OVR2CFG4_XSTRIDE(xstride);
+            break;
+        case LCDC_LAYER_BASE:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_BASECFG2 = ${LCDC_INSTANCE_NAME}_BASECFG2_XSTRIDE(xstride);
+            break;
+        case LCDC_LAYER_HEO:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOCFG5 = ${LCDC_INSTANCE_NAME}_HEOCFG5_XSTRIDE(xstride);
+            break;
+        case LCDC_LAYER_PP:
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCFG2 = ${LCDC_INSTANCE_NAME}_PPCFG2_XSTRIDE(xstride);
+            break;
+        default:
+          break;
+    }
+}
+
 void ${LCDC_INSTANCE_NAME}_SetUseDMAPathEnable(${LCDC_INSTANCE_NAME}_LAYER_ID layer, bool enable)
 {
     switch(layer)
