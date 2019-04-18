@@ -25,6 +25,15 @@ def instantiateComponent(i2sComponent):
     i2sInstanceName = i2sComponent.createStringSymbol("I2S_INSTANCE_NAME", None)
     i2sInstanceName.setVisible(False)
     i2sInstanceName.setDefaultValue(i2sComponent.getID().upper())
+
+    # PLIB is currently only supported for E54/D51 which have TX/RX serializers.  
+    # It is not supported for the D21 I2S_2224 PLIB which has two general serializers
+    # So we will do a quick check to see which version of I2S_U2224 this is
+    i2sTxDATASIZEnodeTest = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"I2S\"]/value-group@[name=\"I2S_TXCTRL__DATASIZE\"]")
+    if i2sTxDATASIZEnodeTest == None:
+        Log.writeInfoMessage("PLIB not supported for this processor")
+        return
+
     Log.writeInfoMessage("Running " + i2sInstanceName.getValue())
 
     i2sDMA = i2sComponent.createBooleanSymbol("I2S_DMA_MODE", None)
