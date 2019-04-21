@@ -1,4 +1,31 @@
 /*******************************************************************************
+  SYS CLK Static Functions for Clock System Service
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    plib_clk.c
+
+  Summary:
+    SYS CLK static function implementations for the Clock System Service.
+
+  Description:
+    The Clock System Service provides a simple interface to manage the
+    oscillators on Microchip microcontrollers. This file defines the static
+    implementation for the Clock System Service.
+
+  Remarks:
+    Static functions incorporate all system clock configuration settings as
+    determined by the user via the Microchip Harmony Configurator GUI.
+    It provides static version of the routines, eliminating the need for an
+    object ID or object handle.
+
+    Static single-open interfaces also eliminate the need for the open handle.
+
+*******************************************************************************/
+
+/*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -21,31 +48,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
- /*******************************************************************************
-  SYS CLK Static Functions for Clock System Service
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    plib_clk.c.ftl
-
-  Summary:
-    SYS CLK static function implementations for the Clock System Service.
-
-  Description:
-    The Clock System Service provides a simple interface to manage the oscillators
-    on Microchip microcontrollers. This file defines the static implementation for the
-    Clock System Service.
-
-  Remarks:
-    Static functions incorporate all system clock configuration settings as
-    determined by the user via the Microchip Harmony Configurator GUI.  It provides
-    static version of the routines, eliminating the need for an object ID or
-    object handle.
-
-    Static single-open interfaces also eliminate the need for the open handle.
-*******************************************************************************/
 // *****************************************************************************
 // *****************************************************************************
 // Section: Include Files
@@ -61,10 +63,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
 // *****************************************************************************
 /* Function:
-    void CLK_Initialize ( void )
+    void CLK_Initialize( void )
 
   Summary:
     Initializes hardware and internal data structure of the System Clock.
@@ -74,13 +75,15 @@
     Clock Service.
 
   Remarks:
-    This is configuration values for the static version of the Clock System Service
-    module is determined by the user via the Microchip Harmony Configurator GUI.
+    This is configuration values for the static version of the Clock System
+    Service module is determined by the user via the MHC GUI.
 
-    The objective is to eliminate the user's need to be knowledgeable in the function of
-    the 'configuration bits' to configure the system oscillators.
+    The objective is to eliminate the user's need to be knowledgeable in the
+    function of the 'configuration bits' to configure the system oscillators.
 */
 
+void CLK_Initialize( void )
+{
 <#if DEVICE_FAMILY == "DS60001404">
     <#assign REFOTRIMreg = "REFO1TRIM">
     <#assign REFOCONreg = "REFO1CON">
@@ -89,8 +92,6 @@
     <#assign REFOCONreg = "REFOCON">
 </#if>
 
-void CLK_Initialize( void )
-{
 <#if (CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT) ||
      ((USB_PART = true) && (CONFIG_SYS_CLK_UFRCEN == "ON")) ||
      ((CONFIG_SYS_CLK_REFCLK_ENABLE?has_content) && (CONFIG_SYS_CLK_REFCLK_ENABLE == true)) ||
@@ -98,20 +99,24 @@ void CLK_Initialize( void )
     bool int_flag = false;
 
     int_flag = (bool)__builtin_disable_interrupts();
+
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
+
     if (int_flag)
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
     <#if CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT>
     OSCCONbits.FRCDIV = ${CONFIG_SYS_CLK_FRCDIV};
+
     </#if>
     <#if USB_PART = true && CONFIG_SYS_CLK_UFRCEN == "ON">
     /* Make FRC as the input clock for USB */
     OSCCONSET = _OSCCON_UFRCEN_MASK;
+
     </#if>
 
 <#if CONFIG_SYS_CLK_REFCLK_ENABLE?has_content>
@@ -145,7 +150,9 @@ void CLK_Initialize( void )
 
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
+
     SYSKEY = 0x33333333;
+
     if (int_flag) /* if interrupts originally were enabled, re-enable them */
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001));
@@ -154,13 +161,12 @@ void CLK_Initialize( void )
     /* Default clock setting is used, hence no code is generated */
     /* Code for fuse settings can be found in "initialization.c" */
 </#if>
+
+    /* Peripheral Module Disable Configuration */
+<#list 1..PMD_COUNT + 1 as i>
+    <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
+    <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
+        <#lt>    PMD${i}SET = 0x${.vars[PMDREG_VALUE]};
+    </#if>
+</#list>
 }
-
-
-
-
-<#--
-/*******************************************************************************
- End of File
-*/
--->
