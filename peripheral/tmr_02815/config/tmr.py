@@ -485,6 +485,10 @@ def instantiateComponent(tmrComponent):
     tmrSym_ClkEnComment.setLabel("Warning!!! " + tmrInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
     tmrSym_ClkEnComment.setVisible(False)
     tmrSym_ClkEnComment.setDependencies(updateTMRClockWarningStatus, ["core." + tmrInstanceName.getValue() + "_CLOCK_ENABLE"])
+
+    irqEnumName_Sym = tmrComponent.createStringSymbol("IRQ_ENUM_NAME", None)
+    irqEnumName_Sym.setVisible(False)
+    irqEnumName_Sym.setDefaultValue(str(tmrIrq_index))
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
