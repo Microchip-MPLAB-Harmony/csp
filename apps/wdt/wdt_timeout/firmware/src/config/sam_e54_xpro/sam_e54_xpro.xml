@@ -1415,7 +1415,7 @@
         </Integer>
         <KeyValueSet dnOrder="10" id="USART_TXPO">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
+            <User dnOrder="0" value="0"/>
           </Values>
         </KeyValueSet>
       </Symbols>
