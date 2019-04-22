@@ -268,6 +268,12 @@ dmacSymAPI_Prefix.setVisible(False)
 
 instances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]").getChildren()
 
+node = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"LPRAM\"]")
+dmacLPRAMPresent = coreComponent.createBooleanSymbol("LPRAM_PRESENT", None)
+dmacLPRAMPresent.setVisible(False)
+if node != None:
+    dmacLPRAMPresent.setDefaultValue(True)
+
 # DMA_INSTANCE_NAME: Needed to map DMA system service APIs to PLIB APIs
 dmacInstanceName = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
 dmacInstanceName.setDefaultValue(instances[0].getAttribute("name"))
