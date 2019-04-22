@@ -799,9 +799,11 @@ if __name__ == "__main__":
     CLK_CFG_SETTINGS.setDescription("Various Clock System Settings")
     CLK_CFG_SETTINGS.setVisible(True)
 
+    # Hiding temperature range selection feature for now
     TEMP_RANGE = coreComponent.createKeyValueSetSymbol("CONFIG_TEMPERATURE_RANGE", CLK_CFG_SETTINGS)
     TEMP_RANGE.setLabel("Operating Temperature Range")
     TEMP_RANGE.setDescription("Maximum allowed System Clock Frequency will depend on selected Temperature Range")
+    TEMP_RANGE.setVisible(False)
     TEMP_RANGE.setOutputMode("Value")
     TEMP_RANGE.setDisplayMode("Description")
 
