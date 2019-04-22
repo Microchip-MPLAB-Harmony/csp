@@ -348,27 +348,6 @@ void ${PIT_INSTANCE_NAME}_TimerCallbackSet(${PIT_INSTANCE_NAME}_CALLBACK callbac
 
 // *****************************************************************************
 /* Function:
-    void ${PIT_INSTANCE_NAME}_InterruptHandler(void);
-
-  Summary:
-    ${PIT_INSTANCE_NAME} Interrupt Handler.
-
-  Description:
-    Internal ${PIT_INSTANCE_NAME} interrupt handler called by interrupt controller.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-  
-  Returns:
-    None.
-*/
-void ${PIT_INSTANCE_NAME}_InterruptHandler(void);
-
-// *****************************************************************************
-/* Function:
     void ${PIT_INSTANCE_NAME}_ClearInterrupt(void);
 
   Summary:
