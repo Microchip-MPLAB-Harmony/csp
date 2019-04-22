@@ -259,7 +259,7 @@ if pcacheNode != None:
     SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_CHECON_PFMWS", prefetchMenu)
     SYM_PFMWS.setLabel("Program Flash memory Wait states")
     SYM_PFMWS.setDefaultValue(getWaitStates())
-    SYM_PFMWS.setReadOnly(True)
+    SYM_PFMWS.setReadOnly(False)
     SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY", "CONFIG_TEMPERATURE_RANGE"])
 
 if deviceFamily.getValue() in ["DS60001185", "DS60001290", "DS60001404", "DS60001168"]:
