@@ -207,7 +207,7 @@ SYM_REFEN.setDefaultValue(1)
 SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_CHECON_PFMWS", prefetchMenu)
 SYM_PFMWS.setLabel("Program Flash memory Wait states")
 SYM_PFMWS.setDefaultValue(getWaitStates())
-SYM_PFMWS.setReadOnly(True)
+SYM_PFMWS.setReadOnly(False)
 SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY"])
 
 # load device specific pin manager information
