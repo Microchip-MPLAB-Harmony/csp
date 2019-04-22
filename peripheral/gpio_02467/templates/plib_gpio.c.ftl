@@ -115,7 +115,8 @@ void GPIO_Initialize ( void )
         <#if .vars["SYS_PORT_${.vars[channel]}_ODC"] != "0">
              <#lt>    ODC${.vars[channel]}SET = 0x${.vars["SYS_PORT_${.vars[channel]}_ODC"]}; /* Open Drain Enable */
         </#if>
-        <#if .vars["SYS_PORT_${.vars[channel]}_LAT"] != "0">
+        <#-- if channel has even one pin configured as output, then generate code for LAT register irrespective of LAT value '0' or '1' -->
+        <#if .vars["SYS_PORT_${.vars[channel]}_TRIS"] != "0">
              <#lt>    LAT${.vars[channel]} = 0x${.vars["SYS_PORT_${.vars[channel]}_LAT"]}; /* Initial Latch Value */
         </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_TRIS"] != "0">
