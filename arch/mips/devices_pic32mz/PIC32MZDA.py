@@ -226,9 +226,9 @@ SYM_REFEN.setDisplayMode("Description")
 SYM_REFEN.setDefaultValue(3)
 
 SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_PRECON_PFMWS", prefetchMenu)
-SYM_PFMWS.setReadOnly(True)
+SYM_PFMWS.setReadOnly(False)
 SYM_PFMWS.setDefaultValue(2)
-SYM_PFMWS.setLabel("Program Flash memory waitstates")
+SYM_PFMWS.setLabel("Program Flash memory wait states")
 SYM_PFMWS.setDependencies(calcWaitStates,["CPU_CLOCK_FREQUENCY", "CONFIG_CFGCON_ECCCON"])
 
 
