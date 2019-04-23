@@ -2374,9 +2374,6 @@
         <group>
             <name>Header Files</name>
             <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\.pit64b.h.swp</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\adc.h</name>
             </file>
             <file>

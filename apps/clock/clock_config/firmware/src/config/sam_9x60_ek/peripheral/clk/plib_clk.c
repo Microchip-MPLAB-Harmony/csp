@@ -8,6 +8,10 @@
 static void initProgrammableClk(void)
 {
     PMC_REGS->PMC_SCDR |= PMC_SCDR_PCK0_Msk | PMC_SCDR_PCK1_Msk;
+    PMC_REGS->PMC_PCK[1] = PMC_PCK_CSS_MCK |\
+                                PMC_PCK_PRES(39);
+    PMC_REGS->PMC_SCER |= PMC_SCDR_PCK1_Msk;
+    while (PMC_REGS->PMC_SR & PMC_SR_PCKRDY1_Msk != PMC_SR_PCKRDY1_Msk);
 }
 
 static void initPeriphClk(void)
@@ -37,7 +41,7 @@ static void initPeriphClk(void)
                             PMC_PCR_EN_Msk |\
                             PMC_PCR_CMD_Msk |\
                             PMC_PCR_GCLKEN(periphList[i].gclk) |\
-                            PMC_PCR_GCLKCSS(periphList[i].css) |\
+                            periphList[i].css |\
                             PMC_PCR_GCLKDIV(periphList[i].div);
     }
 
