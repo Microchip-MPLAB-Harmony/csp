@@ -362,6 +362,10 @@ global ADC_Max_Signals
 global ADC_Max_Class_1and2
 global adchsSym_ADCTIME
 
+def updateADCHSClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
+
 # Meant to be used as a dependancy callback so that a sub element of a boolean
 # symbol can become visible when the boolean becomes true.
 def adchsVisibilityOnEvent(symbol, event):
@@ -691,6 +695,9 @@ def instantiateComponent(adchsComponent):
     adchsInstanceName.setDefaultValue(adchsComponent.getID().upper())
     Module = adchsInstanceName.getValue()
     Log.writeInfoMessage("Running " + Module)
+
+    #Clock enable
+    Database.setSymbolValue("core", adchsInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     #------------------------- ATDF Read -------------------------------------
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
@@ -1292,6 +1299,12 @@ def instantiateComponent(adchsComponent):
     adchsSym_InterruptMode = adchsComponent.createBooleanSymbol("ADCHS_INTERRUPT", None)
     adchsSym_InterruptMode.setVisible(False)
     adchsSym_InterruptMode.setDependencies(adchsInterruptMode, adcinterruptmode_deplist)
+
+    # Clock Warning status
+    adchsSym_ClkEnComment = adchsComponent.createCommentSymbol("ADCHS_CLOCK_ENABLE_COMMENT", None)
+    adchsSym_ClkEnComment.setLabel("Warning!!! " + adchsInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    adchsSym_ClkEnComment.setVisible(False)
+    adchsSym_ClkEnComment.setDependencies(updateADCHSClockWarningStatus, ["core." + adchsInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
