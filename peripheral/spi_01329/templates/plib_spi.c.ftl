@@ -426,7 +426,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
 
 bool ${SPI_INSTANCE_NAME}_IsBusy (void)
 {
-    return ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy;
+    return ( (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SRMT_MASK) == 0));
 }
 
 void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
