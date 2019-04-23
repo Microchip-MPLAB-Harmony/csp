@@ -573,6 +573,16 @@ def mcpwmSpecialInterruptSet(symbol, event):
         else:
             Database.setSymbolValue("core", mcpwmInterruptHandler, interruptName + "_Handler", 1)
 
+def updateMCPWMClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
+
+def mcpwmChClockEnable(symbol, event):
+    channelID = int(filter(str.isdigit,str(symbol.getID())))
+    if(event["value"] == True):
+        #Clock enable
+        Database.setSymbolValue("core", mcpwmInstanceName.getValue() + str(channelID) + "_CLOCK_ENABLE", True, 1)
+    else:
+        Database.setSymbolValue("core", mcpwmInstanceName.getValue() + str(channelID) + "_CLOCK_ENABLE", False, 1)
 ################################################################################
 #### Component ####
 ################################################################################
@@ -685,6 +695,16 @@ def instantiateComponent(mcpwmComponent):
     for channelID in range (1, mcpwmSym_NUM_CHANNELS.getValue() + 1):
         mcpwmSym_CHANNEL_MENU = mcpwmComponent.createBooleanSymbol("MCPWM_CHANNEL"+str(channelID), None)
         mcpwmSym_CHANNEL_MENU.setLabel("Enable PWM Channel " + str(channelID))
+
+        mcpwmSym_CLOCK_ENABLE = mcpwmComponent.createStringSymbol("MCPWM_CH_CLOCK_ENABLE"+str(channelID), mcpwmSym_CHANNEL_MENU)
+        mcpwmSym_CLOCK_ENABLE.setVisible(False)
+        mcpwmSym_CLOCK_ENABLE.setDependencies(mcpwmChClockEnable, ["MCPWM_CHANNEL"+str(channelID)])
+
+        # Clock Warning status
+        mcpwmSym_ClkEnComment = mcpwmComponent.createCommentSymbol("MCPWM_CLOCK_ENABLE_COMMENT"+str(channelID), mcpwmSym_CHANNEL_MENU)
+        mcpwmSym_ClkEnComment.setLabel("Warning!!! " + mcpwmInstanceName.getValue() + str(channelID) + " Clock is Disabled in Clock Manager")
+        mcpwmSym_ClkEnComment.setVisible(False)
+        mcpwmSym_ClkEnComment.setDependencies(updateMCPWMClockWarningStatus, ["core." + mcpwmInstanceName.getValue() + str(channelID) + "_CLOCK_ENABLE"])
 
         mcpwmSym_PWMCON_MTBS = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "PWMCON"+str(channelID), "MTBS", mcpwmSym_CHANNEL_MENU, True)
         pwmconDepList[channelID - 1].append("PWMCON"+str(channelID)+"__MTBS")
