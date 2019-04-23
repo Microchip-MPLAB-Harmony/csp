@@ -46,6 +46,9 @@ def calcWaitStates(symbol, event):
 
     symbol.setValue(getWaitStates(), 2)
 
+def updateEEPROMClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -59,6 +62,9 @@ def instantiateComponent(eepromComponent):
 
     Log.writeInfoMessage("Running " + eepromInstanceName.getValue())
 
+    #Clock enable
+    Database.setSymbolValue("core", eepromInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
+
     #EEPROM Configuration Menu
     eepromMenu = eepromComponent.createMenuSymbol("EEPROM_MENU", None)
     eepromMenu.setLabel("EEPROM Memory Configuration")
@@ -70,6 +76,12 @@ def instantiateComponent(eepromComponent):
     eepromCFGCON_EEWS.setDefaultValue(getWaitStates())
     eepromCFGCON_EEWS.setReadOnly(True)
     eepromCFGCON_EEWS.setDependencies(calcWaitStates, ["core.CONFIG_SYS_CLK_PBCLK2_FREQ"])
+
+    # Clock Warning status
+    eepromSym_ClkEnComment = eepromComponent.createCommentSymbol("EPPROM_CLOCK_ENABLE_COMMENT", None)
+    eepromSym_ClkEnComment.setLabel("Warning!!! " + eepromInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    eepromSym_ClkEnComment.setVisible(False)
+    eepromSym_ClkEnComment.setDependencies(updateEEPROMClockWarningStatus, ["core." + eepromInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ############################################################################
     #### Dependency ####
