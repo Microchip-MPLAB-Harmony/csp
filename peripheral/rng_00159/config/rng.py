@@ -26,7 +26,7 @@
 ################################################################################
 rngValGrp_RNGCON_TRNGEN     = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RNG"]/value-group@[name="RNGCON__TRNGEN"]')
 rngValGrp_RNGCON_PRNGEN     = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RNG"]/value-group@[name="RNGCON__PRNGEN"]')
-rngValGrp_RNGCON_CONT 	    = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RNG"]/value-group@[name="RNGCON__CONT"]')
+rngValGrp_RNGCON_CONT       = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RNG"]/value-group@[name="RNGCON__CONT"]')
 rngValGrp_RNGCON_TRNGMODE   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RNG"]/value-group@[name="RNGCON__TRNGMODE"]')
 
 rngBitFld_RNGCON_PLEN       = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RNG"]/register-group@[name="RNG"]/register@[name="RNGCON"]/bitfield@[name="PLEN"]')
@@ -62,16 +62,19 @@ def _get_bitfield_names(node, outputList):
             else:
                 tempint = int(value)
             dict['value'] = str(tempint)
-            outputList.append(dict)        
+            outputList.append(dict)
 
 def combineValues(symbol, event):
     plenValue   = rngSym_RNGCON_PLEN.getValue() << 0
     trngenValue = rngSym_RNGCON_TRNGEN.getValue() << 8
     prngenValue = rngSym_RNGCON_PRNGEN.getValue() << 9
     contValue   = rngSym_RNGCON_CONT.getValue() << 10
-    trngValue	= rngSym_RNGCON_TRNGMODE.getValue() << 11
+    trngValue   = rngSym_RNGCON_TRNGMODE.getValue() << 11
     rngconValue = plenValue + trngenValue + prngenValue + contValue + trngValue
     symbol.setValue(rngconValue, 2)
+
+def updateRNGClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
 
 ################################################################################
 #### Component ####
@@ -89,6 +92,9 @@ def instantiateComponent(rngComponent):
     rngInstanceName.setDefaultValue(rngComponent.getID().upper())
     print("Running " + rngInstanceName.getValue())
 
+    #Clock enable
+    Database.setSymbolValue("core", rngInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
+
     rngSym_RNGCON_PLEN = rngComponent.createIntegerSymbol("RNGCON_PLEN", None)
     rngSym_RNGCON_PLEN.setLabel(rngBitFld_RNGCON_PLEN.getAttribute("caption"))
     rngSym_RNGCON_PLEN.setDefaultValue(0)
@@ -104,7 +110,7 @@ def instantiateComponent(rngComponent):
     rngSym_RNGCON_TRNGEN.setOutputMode("Value")
     rngSym_RNGCON_TRNGEN.setDisplayMode("Description")
     for ii in rngTRNGEN_names:
-        rngSym_RNGCON_TRNGEN.addKey( ii['desc'], ii['value'], ii['key'] )    
+        rngSym_RNGCON_TRNGEN.addKey( ii['desc'], ii['value'], ii['key'] )
     rngSym_RNGCON_TRNGEN.setVisible(True)
 
     rngPRNGEN_names = []
@@ -115,7 +121,7 @@ def instantiateComponent(rngComponent):
     rngSym_RNGCON_PRNGEN.setOutputMode("Value")
     rngSym_RNGCON_PRNGEN.setDisplayMode("Description")
     for ii in rngPRNGEN_names:
-        rngSym_RNGCON_PRNGEN.addKey( ii['desc'], ii['value'], ii['key'] )    
+        rngSym_RNGCON_PRNGEN.addKey( ii['desc'], ii['value'], ii['key'] )
     rngSym_RNGCON_PRNGEN.setVisible(True)
 
     rngCONT_names = []
@@ -126,7 +132,7 @@ def instantiateComponent(rngComponent):
     rngSym_RNGCON_CONT.setOutputMode("Value")
     rngSym_RNGCON_CONT.setDisplayMode("Description")
     for ii in rngCONT_names:
-        rngSym_RNGCON_CONT.addKey( ii['desc'], ii['value'], ii['key'] )    
+        rngSym_RNGCON_CONT.addKey( ii['desc'], ii['value'], ii['key'] )
     rngSym_RNGCON_CONT.setVisible(True)
 
     rngTRNGMODE_names = []
@@ -137,7 +143,7 @@ def instantiateComponent(rngComponent):
     rngSym_RNGCON_TRNGMODE.setOutputMode("Value")
     rngSym_RNGCON_TRNGMODE.setDisplayMode("Description")
     for ii in rngTRNGMODE_names:
-        rngSym_RNGCON_TRNGMODE.addKey( ii['desc'], ii['value'], ii['key'] )    
+        rngSym_RNGCON_TRNGMODE.addKey( ii['desc'], ii['value'], ii['key'] )
     rngSym_RNGCON_TRNGMODE.setVisible(True)
 
     #Collect user input to combine into RNGCON register
@@ -149,6 +155,13 @@ def instantiateComponent(rngComponent):
     rngSym_RNGCON.setDependencies(combineValues, ["RNGCON_PRNGEN"])
     rngSym_RNGCON.setDependencies(combineValues, ["RNGCON_CONT"])
     rngSym_RNGCON.setDependencies(combineValues, ["RNGCON_TRNGMODE"])
+
+    # Clock Warning status
+    rngSym_ClkEnComment = rngComponent.createCommentSymbol("RNG_CLOCK_ENABLE_COMMENT", None)
+    rngSym_ClkEnComment.setLabel("Warning!!! " + rngInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    rngSym_ClkEnComment.setVisible(False)
+    rngSym_ClkEnComment.setDependencies(updateRNGClockWarningStatus, ["core." + rngInstanceName.getValue() + "_CLOCK_ENABLE"])
+
 
 ############################################################################
 #### Dependency ####
