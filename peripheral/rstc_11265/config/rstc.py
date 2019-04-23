@@ -106,7 +106,7 @@ def instantiateComponent(rstcComponent):
     rstcCommonHeaderFile.setOverwrite(True)
 
     rstcInstanceHeaderFile = rstcComponent.createFileSymbol("RSTC_INSTANCE_HEADER", None)
-    rstcInstanceHeaderFile.setSourcePath("../peripheral/rstc_" + rstcModuleID + "/templates/plib_rstc_instance.h.ftl")
+    rstcInstanceHeaderFile.setSourcePath("../peripheral/rstc_" + rstcModuleID + "/templates/plib_rstc.h.ftl")
     rstcInstanceHeaderFile.setOutputName("plib_rstc" + instanceStr + ".h")
     rstcInstanceHeaderFile.setDestPath("peripheral/rstc/")
     rstcInstanceHeaderFile.setProjectPath("config/" + configName + "/peripheral/rstc/")
