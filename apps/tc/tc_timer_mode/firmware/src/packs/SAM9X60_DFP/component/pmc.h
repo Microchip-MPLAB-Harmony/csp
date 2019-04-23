@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-02-20T18:44:00Z */
+/* file generated from device description version 2019-04-12T22:09:26Z */
 #ifndef _SAM9X_PMC_COMPONENT_H_
 #define _SAM9X_PMC_COMPONENT_H_
 
@@ -189,6 +189,10 @@
 #define CKGR_MOR_MOSCSEL_Pos                  _U_(24)                                              /**< (CKGR_MOR) Main Clock Oscillator Selection Position */
 #define CKGR_MOR_MOSCSEL_Msk                  (_U_(0x1) << CKGR_MOR_MOSCSEL_Pos)                   /**< (CKGR_MOR) Main Clock Oscillator Selection Mask */
 #define CKGR_MOR_MOSCSEL(value)               (CKGR_MOR_MOSCSEL_Msk & ((value) << CKGR_MOR_MOSCSEL_Pos))
+#define   CKGR_MOR_MOSCSEL_RC_Val             _U_(0x0)                                             /**< (CKGR_MOR) The Main RC oscillator is selected.  */
+#define   CKGR_MOR_MOSCSEL_XT_Val             _U_(0x1)                                             /**< (CKGR_MOR) The Main crystal oscillator is selected.  */
+#define CKGR_MOR_MOSCSEL_RC                   (CKGR_MOR_MOSCSEL_RC_Val << CKGR_MOR_MOSCSEL_Pos)    /**< (CKGR_MOR) The Main RC oscillator is selected. Position  */
+#define CKGR_MOR_MOSCSEL_XT                   (CKGR_MOR_MOSCSEL_XT_Val << CKGR_MOR_MOSCSEL_Pos)    /**< (CKGR_MOR) The Main crystal oscillator is selected. Position  */
 #define CKGR_MOR_CFDEN_Pos                    _U_(25)                                              /**< (CKGR_MOR) Clock Failure Detector Enable Position */
 #define CKGR_MOR_CFDEN_Msk                    (_U_(0x1) << CKGR_MOR_CFDEN_Pos)                     /**< (CKGR_MOR) Clock Failure Detector Enable Mask */
 #define CKGR_MOR_CFDEN(value)                 (CKGR_MOR_CFDEN_Msk & ((value) << CKGR_MOR_CFDEN_Pos))

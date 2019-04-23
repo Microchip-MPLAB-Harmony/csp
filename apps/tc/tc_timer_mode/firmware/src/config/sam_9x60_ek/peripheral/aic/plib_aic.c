@@ -55,7 +55,7 @@ void DefaultInterruptHandlerForSpurious( void );
 void
 INT_Initialize( void )
 {   
-    const unsigned      MaxNumPeripherals = 0x32;           // 50
+    const unsigned      MaxNumPeripherals = 50;
     const unsigned      MaxInterruptDepth = 8;
     uint32_t            ii;
     aic_registers_t *   aicPtr;
