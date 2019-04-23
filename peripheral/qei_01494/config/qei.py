@@ -418,7 +418,8 @@ def qeiInterruptSet(symbol, event):
         Database.setSymbolValue("core", qeiInterruptHandler, interruptName + "_Handler", 1)
     symbol.setValue(int(interruptSet), 2)
 
-
+def updateQEIClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
 ################################################################################
 #### Component ####
 ################################################################################
@@ -443,6 +444,9 @@ def instantiateComponent(qeiComponent):
     qeiInstanceNum.setVisible(False)
     instanceNum = filter(str.isdigit,str(qeiComponent.getID()))
     qeiInstanceNum.setDefaultValue(instanceNum)
+
+    #Clock enable
+    Database.setSymbolValue("core", qeiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     qeiSym_QEICON_QEISIDL = qeiAddKeyValueSetFromATDFInitValue(qeiComponent, Module, "QEI"+str(instanceNum)+"CON", "QEISIDL", None, True)
     qeiconDeplist.append("QEI"+str(instanceNum)+"CON__QEISIDL")
@@ -568,6 +572,12 @@ def instantiateComponent(qeiComponent):
     qeiSym_IEC = qeiComponent.createStringSymbol("QEI_IEC_REG", None)
     qeiSym_IEC.setDefaultValue(enblRegName)
     qeiSym_IEC.setVisible(False)
+
+    # Clock Warning status
+    qeiSym_ClkEnComment = qeiComponent.createCommentSymbol("QEI_CLOCK_ENABLE_COMMENT", None)
+    qeiSym_ClkEnComment.setLabel("Warning!!! " + qeiInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    qeiSym_ClkEnComment.setVisible(False)
+    qeiSym_ClkEnComment.setDependencies(updateQEIClockWarningStatus, ["core." + qeiInstanceName.getValue() + "_CLOCK_ENABLE"])
 
 ############################################################################
 #### Code Generation ####
