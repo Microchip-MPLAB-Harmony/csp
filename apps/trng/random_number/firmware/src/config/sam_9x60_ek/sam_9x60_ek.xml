@@ -730,12 +730,32 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="143" id="XDMAC_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="143" id="WDT_EARLY_RESET_ACTION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="144" id="XDMAC_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="144" id="WDT_LEVEL_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Integer dnOrder="145" id="WDT_PERIOD_COUNT">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="146" id="WDT_PERIOD_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="147" id="XDMAC_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="148" id="XDMAC_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -754,14 +774,7 @@
             <Dynamic dnOrder="0" id="dbgu" value="200000000"/>
           </Values>
         </Integer>
-        <Comment dnOrder="2" id="DBGU_CLOCK_INVALID_COMMENT">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </Comment>
-        <Boolean dnOrder="3" id="DBGU_INTERRUPT_MODE">
+        <Boolean dnOrder="2" id="DBGU_INTERRUPT_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="false"/>
           </Values>
