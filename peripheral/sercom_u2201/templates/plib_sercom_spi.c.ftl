@@ -281,7 +281,7 @@ void ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, 
 
 bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy(void)
 {
-    return ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy;
+    return ((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == true) || ((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) == 0));
 }
 </#if>
 
