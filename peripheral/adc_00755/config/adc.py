@@ -570,7 +570,7 @@ def instantiateComponent(adcComponent):
             # symbol for enum value to be used in ftl
             adcSym_AD1CSSL__CSSL_EnumValue.append(ADC_ScanInputCount)
             adcSym_AD1CSSL__CSSL_EnumValue[ADC_ScanInputCount] = adcComponent.createHexSymbol("AD1CSSL__CSSL_ENUM_VALUE_" + str(ADC_ScanInputCount), adcSym_AD1CON2__CSCNA)
-            adcSym_AD1CSSL__CSSL_EnumValue[ADC_ScanInputCount].setDefaultValue(1 << (csslPinNumber % 32))
+            adcSym_AD1CSSL__CSSL_EnumValue[ADC_ScanInputCount].setDefaultValue(1 << csslPinNumber)
             adcSym_AD1CSSL__CSSL_EnumValue[ADC_ScanInputCount].setVisible(False)
 
             #list created only for dependency
