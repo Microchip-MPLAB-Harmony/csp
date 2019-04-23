@@ -169,11 +169,6 @@ def getVectorIndex(string):
 
     return vector_index
 
-##  Dependency Function to show or hide the warning message depending on Clock enable/disable status
-def ClockStatusWarning(symbol, event):
-
-    symbol.setVisible(not event["value"])
-
 def ClockModeInfo(symbol, event):
 
     CKEINDEX = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_SPICON_CLK_PH")
@@ -203,17 +198,21 @@ def showMasterDependencies(symbol, event):
         symbol.setVisible(False)
 
 def calculateBRGValue(clkfreq, baudRate):
-    global spiSym_BaudError_Comment
-    t_brg = ((int(clkfreq/baudRate) / 2) - 1)
-    baudHigh = int (clkfreq / (2 * (t_brg + 1)))
-    baudLow = int (clkfreq / (2 * (t_brg + 2)))
-    errorHigh = baudHigh - baudRate
-    errorLow = baudRate - baudLow
 
-    if errorHigh > errorLow:
-        t_brg +=1
+    t_brg = 0
+
+    if clkfreq != 0 and baudRate != 0:
+        t_brg = ((int(clkfreq/baudRate) / 2) - 1)
+        baudHigh = int (clkfreq / (2 * (t_brg + 1)))
+        baudLow = int (clkfreq / (2 * (t_brg + 2)))
+        errorHigh = baudHigh - baudRate
+        errorLow = baudRate - baudLow
+
+        if errorHigh > errorLow:
+            t_brg +=1
 
     spiSym_BaudError_Comment.setVisible(False)
+
     ## Baud rate register is a 9/13 bit register
     if t_brg < 0:
         t_brg = 0
@@ -225,11 +224,10 @@ def calculateBRGValue(clkfreq, baudRate):
     return int(t_brg)
 
 def SPIBRG_ValueUpdate(symbol, event):
-    clkFreq = Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    clkFreq = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     BaudRate = int (Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_BAUD_RATE"))
 
     if event["id"] == "SPI_BAUD_RATE":
-        ## This means there is change in baud rate provided by user in GUI
         BaudRate = int(event["value"])
     elif "_CLOCK_FREQUENCY" in event["id"]:
         clkFreq = int(event["value"])
@@ -248,6 +246,7 @@ def updateSPIClockWarningStatus(symbol, event):
     symbol.setVisible(not event["value"])
 
 def instantiateComponent(spiComponent):
+
     global spiSym_BaudError_Comment
     global spiInstanceName
     global InterruptVector
@@ -504,9 +503,8 @@ def instantiateComponent(spiComponent):
     spiSymClockModeComment.setLabel("***SPI Mode 0 Selected***")
     spiSymClockModeComment.setDependencies(ClockModeInfo, ["SPI_SPICON_CLK_POL", "SPI_SPICON_CLK_PH"])
 
-
     ############################################################################
-    #### Interrupt Dependency ####
+    #### Dependency ####
     ############################################################################
 
     setSPIInterruptData(spiSymInterruptMode.getValue())
