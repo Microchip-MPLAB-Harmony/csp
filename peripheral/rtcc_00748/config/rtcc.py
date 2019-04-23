@@ -156,6 +156,9 @@ def getVectorIndex(string):
 
     return vector_index
 
+def updateRTCCClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
+
 def instantiateComponent(rtccComponent):
 
     global rtccInstanceName
@@ -187,6 +190,9 @@ def instantiateComponent(rtccComponent):
     rtccInstanceName.setVisible(False)
     rtccInstanceName.setDefaultValue(rtccComponent.getID().upper())
     Log.writeInfoMessage("Running " + rtccInstanceName.getValue())
+
+    #Clock enable
+    Database.setSymbolValue("core", rtccInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     rtccSymInterruptMode = rtccComponent.createBooleanSymbol("RTCC_INTERRUPT_MODE", None)
     rtccSymInterruptMode.setLabel("Enable Interrupt ?")
@@ -341,6 +347,12 @@ def instantiateComponent(rtccComponent):
     rtccSym_RTCALRM_ARPTCNT.setMax(255)
     rtccSym_RTCALRM_ARPTCNT.setDefaultValue(0)
     rtccSym_RTCALRM_ARPTCNT.setDependencies(toggleMenu, ["RTCC_ALARM_REPEAT_FOREVER"])
+
+    # Clock Warning status
+    rtccSym_ClkEnComment = rtccComponent.createCommentSymbol("RTCC_CLOCK_ENABLE_COMMENT", None)
+    rtccSym_ClkEnComment.setLabel("Warning!!! " + rtccInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    rtccSym_ClkEnComment.setVisible(False)
+    rtccSym_ClkEnComment.setDependencies(updateRTCCClockWarningStatus, ["core." + rtccInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ############################################################################
     #### Dependency ####
