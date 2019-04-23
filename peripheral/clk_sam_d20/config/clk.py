@@ -1025,6 +1025,11 @@ for name in peripheralList:
     clkSymExtPeripheral.setReadOnly(True)
     gclkDependencyList.append(name + "_CLOCK_ENABLE")
 
+pacEnable = coreComponent.createBooleanSymbol("PAC_CLOCK_ENABLE", peripheralClockMenu)
+pacEnable.setLabel("PAC Clock Enable")
+pacEnable.setDefaultValue(False)
+gclkDependencyList.append("PAC_CLOCK_ENABLE")
+
 clockTrigger = coreComponent.createBooleanSymbol("TRIGGER_LOGIC", None)
 clockTrigger.setVisible(False)
 clockTrigger.setDependencies(clkSetup, triggerdepList)
@@ -1088,6 +1093,9 @@ def apbValue(symbol,event):
     if "_DIG" in perInstance:
         return
 
+    if "PAC" in perInstance:
+        perInstance = "PAC2"
+
     if "EVSYS" in perInstance:
         perInstance = perInstance.split("_")[0]
         for i in range (0,12):
@@ -1120,7 +1128,7 @@ ahbInit = 0x0
 global pmDic
 pmDic = {}
 global apbInit
-    
+
 ahbNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/register-group")
 for index in range(0, len(ahbNode.getChildren())):
     if ahbNode.getChildren()[index].getAttribute("name") == "AHBMASK":
