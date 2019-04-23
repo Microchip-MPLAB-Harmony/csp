@@ -780,7 +780,7 @@ def instantiateComponent(adcComponent):
 ########################### Code Generation   #################################
 ###################################################################################################
     adcHeaderFile = adcComponent.createFileSymbol("ADC_HEADER", None)
-    adcHeaderFile.setSourcePath("../peripheral/adc_00755/templates/plib_adc.h.ftl")
+    adcHeaderFile.setSourcePath("../peripheral/adc_02486/templates/plib_adc.h.ftl")
     adcHeaderFile.setOutputName("plib_"+Module.lower() + ".h")
     adcHeaderFile.setDestPath("peripheral/adc/")
     adcHeaderFile.setProjectPath("config/" + configName +"/peripheral/adc/")
@@ -788,7 +788,7 @@ def instantiateComponent(adcComponent):
     adcHeaderFile.setMarkup(True)
 
     adcSource1File = adcComponent.createFileSymbol("ADC_SOURCE", None)
-    adcSource1File.setSourcePath("../peripheral/adc_00755/templates/plib_adc.c.ftl")
+    adcSource1File.setSourcePath("../peripheral/adc_02486/templates/plib_adc.c.ftl")
     adcSource1File.setOutputName("plib_"+Module.lower()+".c")
     adcSource1File.setDestPath("peripheral/adc/")
     adcSource1File.setProjectPath("config/" + configName +"/peripheral/adc/")
@@ -798,13 +798,13 @@ def instantiateComponent(adcComponent):
     adcSystemInitFile = adcComponent.createFileSymbol("ADC_INIT", None)
     adcSystemInitFile.setType("STRING")
     adcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-    adcSystemInitFile.setSourcePath("../peripheral/adc_00755/templates/system/initialization.c.ftl")
+    adcSystemInitFile.setSourcePath("../peripheral/adc_02486/templates/system/initialization.c.ftl")
     adcSystemInitFile.setMarkup(True)
 
     adcSystemDefFile = adcComponent.createFileSymbol("ADC_DEF", None)
     adcSystemDefFile.setType("STRING")
     adcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-    adcSystemDefFile.setSourcePath("../peripheral/adc_00755/templates/system/definitions.h.ftl")
+    adcSystemDefFile.setSourcePath("../peripheral/adc_02486/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)
 
- #   adcComponent.addPlugin("../peripheral/adc_00755/plugin/adc_00755.jar")
+ #   adcComponent.addPlugin("../peripheral/adc_02486/plugin/adc_02486.jar")
