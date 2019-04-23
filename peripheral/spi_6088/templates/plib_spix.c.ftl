@@ -313,7 +313,7 @@ void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t con
 
 bool ${SPI_INSTANCE_NAME}_IsBusy()
 {
-    return ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy;
+    return ((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0));
 }
 
 void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
