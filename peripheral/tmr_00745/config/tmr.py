@@ -139,36 +139,52 @@ def getVectorIndex(string):
 ########################################## Callbacks  #############################################
 ###################################################################################################
 def timerInterruptSet(symbol, event):
-    if (event["id"] == "TMR_INTERRUPT_MODE"):
-        setTMRInterruptData(event["value"])
+    component = symbol.getComponent()
+    slaveComponent = ""
+    mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
+    if (mode_32 == 0):
+        tmrPrevIrq = "TIMER_" + str(int(instanceNum))
+        tmrIrq = "TIMER_" + str(int(instanceNum) + 1)
+        slaveComponent = "tmr" + str(int(instanceNum) + 1)
     else:
-        component = symbol.getComponent()
-        mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
-        if (mode_32 == 0):
-            tmrPrevIrq = "TIMER_" + str(instanceNum)
-            tmrIrq = "TIMER_" + str(int(instanceNum) + 1)
-        else:
-            tmrPrevIrq = "TIMER_" + str(int(instanceNum) + 1)
-            tmrIrq = "TIMER_" + str(instanceNum)
-        #clear interrupt settings of previous irq
+        tmrIrq = "TIMER_" + str(instanceNum)
+        tmrPrevIrq = "TIMER_" + str(int(instanceNum) + 1)
+
+    activeComponentList = Database.getActiveComponentIDs()
+    if (mode_32 == 0 or (mode_32 == 1 and "tmr"+str(int(instanceNum) + 1) not in activeComponentList)):
         Database.setSymbolValue("core", tmrPrevIrq + "_INTERRUPT_ENABLE", False, 1)
         Database.setSymbolValue("core", tmrPrevIrq + "_INTERRUPT_HANDLER_LOCK", False, 1)
         Database.setSymbolValue("core", tmrPrevIrq + "_INTERRUPT_HANDLER", tmrPrevIrq + "_Handler", 1)
 
-        #set interrupt settings based on 16 or 32 bit mode
-        tmrInterruptVector = tmrIrq + "_INTERRUPT_ENABLE"
-        tmrInterruptHandler = tmrIrq + "_INTERRUPT_HANDLER"
-        tmrInterruptHandlerLock = tmrIrq + "_INTERRUPT_HANDLER_LOCK"
-        tmrInterruptVectorUpdate = tmrIrq + "_INTERRUPT_ENABLE_UPDATE"
+    #set interrupt settings based on 16 or 32 bit mode
+    tmrInterruptVector = tmrIrq + "_INTERRUPT_ENABLE"
+    tmrInterruptHandler = tmrIrq + "_INTERRUPT_HANDLER"
+    tmrInterruptHandlerLock = tmrIrq + "_INTERRUPT_HANDLER_LOCK"
+    tmrInterruptVectorUpdate = tmrIrq + "_INTERRUPT_ENABLE_UPDATE"
 
-        status = component.getSymbolValue("TMR_INTERRUPT_MODE")
-        Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE", status, 1)
-        Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER_LOCK", status, 1)
-        if(status == True):
+    status = component.getSymbolValue("TMR_INTERRUPT_MODE")
+    if status == True:
+        if (Database.getSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE") == False):
+            Database.clearSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE")
+            Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE", True, 1)
+        if(Database.getSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER_LOCK") == False):
+            Database.clearSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER_LOCK")
+            Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER_LOCK", True, 1)
+        if (Database.getSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER") != tmrIrq + "_InterruptHandler"):
+            Database.clearSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER")
             Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER", tmrIrq + "_InterruptHandler", 1)
-        else:
-            Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER", tmrIrq + "_Handler", 1)
-
+    else:
+        activeComponentList = Database.getActiveComponentIDs()
+        if (slaveComponent not in activeComponentList):
+            if (Database.getSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE") == True):
+                Database.clearSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE")
+                Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE", False, 1)
+            if(Database.getSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER_LOCK") == True):
+                Database.clearSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER_LOCK")
+                Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER_LOCK", False, 1)
+            if (Database.getSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER") != tmrIrq + "_Handler"):
+                Database.clearSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER")
+                Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER", tmrIrq + "_Handler", 1)
 
 def setTMRInterruptData(status):
     Database.setSymbolValue("core", tmrInterruptVector, status, 1)

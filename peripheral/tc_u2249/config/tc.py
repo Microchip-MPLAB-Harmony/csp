@@ -90,10 +90,17 @@ def tcSlaveModeVisible(symbol, event):
 def tcSlaveClockEnable(symbol, event):
     component = int(tcInstanceName.getValue()[-1]) + 1
     if event["value"] == 2:   #COUNT32
-        #clock enable
-        Database.setSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE", True, 2)
+        if (Database.getSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE") == False):
+            #clock enable
+            Database.clearSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE")
+            Database.setSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE", True, 2)
     else:
-        Database.setSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE", False, 2)
+        if (Database.getSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE") == True):
+            activeComponentList = Database.getActiveComponentIDs()
+            if ("tc"+str(component) not in activeComponentList):
+                #clock disable
+                Database.clearSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE")
+                Database.setSymbolValue("core", "TC"+str(component)+"_CLOCK_ENABLE", False, 2)
 
 def tcSlaveModeCommentVisible(symbol, event):
     if event["value"] == 2:
@@ -241,8 +248,10 @@ def instantiateComponent(tcComponent):
 
     Log.writeInfoMessage("Running " + tcInstanceName.getValue())
 
-    #clock enable
-    Database.setSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+    if Database.getSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE") == False:
+        Database.clearSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE")
+        #clock enable
+        Database.setSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
 
     tcInstanceMasterNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters/param@[name=\"MASTER_SLAVE_MODE\"]")
     tcInstanceMasterValue = int(tcInstanceMasterNode.getAttribute("value"))
@@ -263,7 +272,10 @@ def instantiateComponent(tcComponent):
     tySym_Slave_Mode = tcComponent.createBooleanSymbol("TC_SLAVE_MODE", None)
     tySym_Slave_Mode.setLabel("Slave Mode")
     tySym_Slave_Mode.setDefaultValue(isMasterSlaveModeEnable)
-    tySym_Slave_Mode.setVisible(False)
+    if isMasterSlaveModeEnable == True:
+        tySym_Slave_Mode.setVisible(True)
+    else:
+        tySym_Slave_Mode.setVisible(False)
     tySym_Slave_Mode.setReadOnly(True)
     if (tcInstanceMasterValue == 2):
         tySym_Slave_Mode.setDependencies(tcSlaveModeSet, [masterComponentSymbolId])
@@ -288,6 +300,8 @@ def instantiateComponent(tcComponent):
     tcSym_CTRLA_MODE.setDefaultValue(tcModeDefaultValue)
     tcSym_CTRLA_MODE.setOutputMode("Key")
     tcSym_CTRLA_MODE.setDisplayMode("Description")
+    if isMasterSlaveModeEnable == True:
+        tcSym_CTRLA_MODE.setVisible(False)
     if (tcInstanceMasterValue == 2):
         tcSym_CTRLA_MODE.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
 
@@ -364,6 +378,8 @@ def instantiateComponent(tcComponent):
     tcSym_CTRLA_PRESCALER.setDefaultValue(tcPrescalerSelectionDefaultValue)
     tcSym_CTRLA_PRESCALER.setOutputMode("Key")
     tcSym_CTRLA_PRESCALER.setDisplayMode("Description")
+    if isMasterSlaveModeEnable == True:
+        tcSym_CTRLA_PRESCALER.setVisible(False)
     if (tcInstanceMasterValue == 2):
         tcSym_CTRLA_PRESCALER.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
 
@@ -371,6 +387,8 @@ def instantiateComponent(tcComponent):
     tcSym_Resolution = tcComponent.createCommentSymbol("TC_Resolution", None)
     resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
     tcSym_Resolution.setLabel("****Timer resolution is " + str(resolution) + " nS****")
+    if isMasterSlaveModeEnable == True:
+        tcSym_Resolution.setVisible(False)
     tcSym_Resolution.setDependencies(tcResolutionCalc, [masterComponentSymbolId, "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
         "TC_CTRLA_PRESCALER"])
 
@@ -387,12 +405,16 @@ def instantiateComponent(tcComponent):
     tcSym_OperationMode = tcComponent.createComboSymbol("TC_OPERATION_MODE", None, tcOperationModeList)
     tcSym_OperationMode.setLabel("Operating Mode")
     tcSym_OperationMode.setDefaultValue("Timer")
+    if isMasterSlaveModeEnable == True:
+        tcSym_OperationMode.setVisible(False)
     if (tcInstanceMasterValue == 2):
         tcSym_OperationMode.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
 
     tcSym_SlaveMode_Comment = tcComponent.createCommentSymbol("TC_SLAVE_MODE_COMMENT", None)
     tcSym_SlaveMode_Comment.setVisible(False)
     tcSym_SlaveMode_Comment.setLabel("TC is configured in Slave mode to support 32-bit operation")
+    if isMasterSlaveModeEnable == True:
+        tcSym_SlaveMode_Comment.setVisible(True)
     if (tcInstanceMasterValue == 2):
         tcSym_SlaveMode_Comment.setDependencies(tcSlaveModeCommentVisible, [masterComponentSymbolId])
 
@@ -403,6 +425,8 @@ def instantiateComponent(tcComponent):
     #sleep configuration
     tcSym_SleepConfiguration = tcComponent.createMenuSymbol("TC_SLEEP_CONFIG", None)
     tcSym_SleepConfiguration.setLabel("Sleep Configurations")
+    if isMasterSlaveModeEnable == True:
+        tcSym_SleepConfiguration.setVisible(False)
     if (tcInstanceMasterValue == 2):
         tcSym_SleepConfiguration.setDependencies(tcSlaveModeVisible, [masterComponentSymbolId])
 
