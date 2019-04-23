@@ -122,6 +122,8 @@ def i2cSourceFreq(symbol, event):
 
     symbol.setValue(int(Database.getSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
+def updateI2CClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -143,6 +145,9 @@ def instantiateComponent(i2cComponent):
     i2cInstanceName = i2cComponent.createStringSymbol("I2C_INSTANCE_NAME", None)
     i2cInstanceName.setVisible(False)
     i2cInstanceName.setDefaultValue(i2cComponent.getID().upper())
+
+    #Clock enable
+    Database.setSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     ## I2C Clock Frequency
     i2cSym_ClkValue = i2cComponent.createIntegerSymbol("I2C_CLOCK_FREQ", None)
@@ -243,6 +248,13 @@ def instantiateComponent(i2cComponent):
     i2cBusIntIFS = i2cComponent.createStringSymbol("I2C_BUS_IFS_REG", None)
     i2cBusIntIFS.setDefaultValue(statRegName)
     i2cBusIntIFS.setVisible(False)
+
+    # Clock Warning status
+    i2cSym_ClkEnComment = i2cComponent.createCommentSymbol("I2C_CLOCK_ENABLE_COMMENT", None)
+    i2cSym_ClkEnComment.setLabel("Warning!!! " + i2cInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    i2cSym_ClkEnComment.setVisible(False)
+    i2cSym_ClkEnComment.setDependencies(updateI2CClockWarningStatus, ["core." + i2cInstanceName.getValue() + "_CLOCK_ENABLE"])
+
 
     ############################################################################
     #### Dependency ####
