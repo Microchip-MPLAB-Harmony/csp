@@ -123,24 +123,13 @@ void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_IN
 	}
 }
 
-void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN *scanList, uint8_t numChannels)
+void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs)
 {
-    uint8_t channelNum;
 <#if core.DEVICE_FAMILY == "DS60001290">
-    uint64_t ad1cssl = 0;
-    for(channelNum = 0; channelNum < numChannels; channelNum++)
-    {
-        ad1cssl += scanList[channelNum];
-    }
-    AD1CSSL = (uint32_t)(ad1cssl);
-    AD1CSSL2 = (uint32_t)(ad1cssl >> 32);
+    AD1CSSL = (uint32_t)(scanInputs);
+    AD1CSSL2 = (uint32_t)(scanInputs >> 32);
 <#else>
-    uint32_t ad1cssl = 0;
-    for(channelNum = 0; channelNum < numChannels; channelNum++)
-    {
-        ad1cssl += scanList[channelNum];
-    }
-    AD1CSSL = ad1cssl;
+    AD1CSSL = scanInputs;
 </#if>
 }
 

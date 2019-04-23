@@ -155,7 +155,7 @@ void ${ADC_INSTANCE_NAME}_SamplingStart(void);
 void ${ADC_INSTANCE_NAME}_ConversionStart(void);
 
 void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_INSTANCE_NAME}_INPUT_POSITIVE positiveInput, ${ADC_INSTANCE_NAME}_INPUT_NEGATIVE negativeInput );
-void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN *scanList, uint8_t numChannels);
+void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs);
 
 bool ${ADC_INSTANCE_NAME}_ResultIsReady();
 uint32_t ${ADC_INSTANCE_NAME}_ResultGet(ADC_RESULT_BUFFER bufferNumber);
