@@ -189,6 +189,9 @@ def ocmpCommentVisible(symbol, event):
     else:
         symbol.setVisible(False)
 
+def updateOCMPClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
 ################################################################################
 #### Component ####
 ################################################################################
@@ -218,6 +221,9 @@ def instantiateComponent(ocmpComponent):
     ocmpInstanceNum.setVisible(False)
     instanceNum = filter(str.isdigit,str(ocmpComponent.getID()))
     ocmpInstanceNum.setDefaultValue(instanceNum)
+
+    #Clock enable
+    Database.setSymbolValue("core", ocmpInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     ocmpSymInterruptMode = ocmpComponent.createBooleanSymbol("OCMP_INTERRUPT_ENABLE", None)
     ocmpSymInterruptMode.setLabel("Enable Interrupt ?")
@@ -343,6 +349,11 @@ def instantiateComponent(ocmpComponent):
     ocmpSymIntEnComment.setVisible(False)
     ocmpSymIntEnComment.setDependencies(updateOCMPInterruptData, ["OCMP_INTERRUPT_ENABLE", "core." + ocmpInterruptVectorUpdate])
 
+    # Clock Warning status
+    ocmpSym_ClkEnComment = ocmpComponent.createCommentSymbol("OCMP_CLOCK_ENABLE_COMMENT", None)
+    ocmpSym_ClkEnComment.setLabel("Warning!!! " + ocmpInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    ocmpSym_ClkEnComment.setVisible(False)
+    ocmpSym_ClkEnComment.setDependencies(updateOCMPClockWarningStatus, ["core." + ocmpInstanceName.getValue() + "_CLOCK_ENABLE"])
     ############################################################################
     #### Code Generation ####
     ############################################################################
