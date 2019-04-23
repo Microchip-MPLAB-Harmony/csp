@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-02-20T18:44:00Z */
+/* file generated from device description version 2019-04-12T22:09:26Z */
 #ifndef _SAM9X_SSC_COMPONENT_H_
 #define _SAM9X_SSC_COMPONENT_H_
 
