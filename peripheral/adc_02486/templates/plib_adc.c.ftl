@@ -73,7 +73,7 @@ void ${ADC_INSTANCE_NAME}_Initialize()
     /* Input Scan */
     AD1CSSL = 0x${ADC_AD1CSSL};
 </#if>
-<#if (core.DEVICE_FAMILY == "DS60001290") && (ADC_AD1CSSL2 != "0")>
+<#if (core.DEVICE_FAMILY == "DS60001290") && ADC_AD1CSSL2?has_content && (ADC_AD1CSSL2 != "0")>
     AD1CSSL2 = 0x${ADC_AD1CSSL2};
 </#if>
 
@@ -132,8 +132,8 @@ void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN *scan
     {
         ad1cssl += scanList[channelNum];
     }
-    AD1CSSL = uint32_t(ad1cssl);
-    AD1CSSL2 = uint32_t(ad1cssl >> 32);
+    AD1CSSL = (uint32_t)(ad1cssl);
+    AD1CSSL2 = (uint32_t)(ad1cssl >> 32);
 <#else>
     uint32_t ad1cssl = 0;
     for(channelNum = 0; channelNum < numChannels; channelNum++)

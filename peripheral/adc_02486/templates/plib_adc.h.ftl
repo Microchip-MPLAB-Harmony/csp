@@ -127,7 +127,11 @@ typedef enum
     <#assign ADC_SIGNAL = "AD1CSSL__CSSL_ENUM_NAME_"+ i >
     <#assign ADC_VALUE = "AD1CSSL__CSSL_ENUM_VALUE_"+ i >
     <#if .vars[ADC_SIGNAL]?? && .vars[ADC_VALUE]??>
-        <#lt>    ${ADC_INSTANCE_NAME}_INPUT_SCAN_${.vars[ADC_SIGNAL]} = 0x${.vars[ADC_VALUE]},
+        <#if i gt 32>
+            <#lt>    ${ADC_INSTANCE_NAME}_INPUT_SCAN_${.vars[ADC_SIGNAL]} = 0x${.vars[ADC_VALUE]}00000000,
+        <#else>
+            <#lt>    ${ADC_INSTANCE_NAME}_INPUT_SCAN_${.vars[ADC_SIGNAL]} = 0x${.vars[ADC_VALUE]},
+        </#if>
     </#if>
 </#list>
 }${ADC_INSTANCE_NAME}_INPUTS_SCAN;
