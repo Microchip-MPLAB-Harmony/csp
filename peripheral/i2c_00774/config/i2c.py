@@ -135,6 +135,8 @@ def i2cSourceFreq(symbol, event):
 
     symbol.setValue(int(Database.getSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
+def updateI2CClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -162,6 +164,9 @@ def instantiateComponent(i2cComponent):
     componentName = str(i2cComponent.getID())
     instanceNum = componentName[3]
     i2cInstanceNum.setDefaultValue(instanceNum)
+
+    #Clock enable
+    Database.setSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     ## I2C Clock Frequency
     i2cSym_ClkValue = i2cComponent.createIntegerSymbol("I2C_CLOCK_FREQ", None)
@@ -270,6 +275,12 @@ def instantiateComponent(i2cComponent):
     i2cSymIntEnComment.setLabel("Warning!!! " + i2cInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     i2cSymIntEnComment.setVisible(False)
     i2cSymIntEnComment.setDependencies(updateI2CInterruptData, InterruptVectorUpdate)
+
+    # Clock Warning status
+    i2cSym_ClkEnComment = i2cComponent.createCommentSymbol("I2C_CLOCK_ENABLE_COMMENT", None)
+    i2cSym_ClkEnComment.setLabel("Warning!!! " + i2cInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    i2cSym_ClkEnComment.setVisible(False)
+    i2cSym_ClkEnComment.setDependencies(updateI2CClockWarningStatus, ["core." + i2cInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Driver Symbols ############################################
