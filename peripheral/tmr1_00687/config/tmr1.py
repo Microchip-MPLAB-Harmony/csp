@@ -267,6 +267,8 @@ def timerPeriodCalc(symbol, event):
     else:
         symbol.setValue(0, 2)
 
+def updateTMR1ClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -289,6 +291,9 @@ def instantiateComponent(tmr1Component):
     tmr1InstanceNum.setVisible(False)
     instanceNum = filter(str.isdigit,str(tmr1Component.getID()))
     tmr1InstanceNum.setDefaultValue(instanceNum)
+
+    #Clock enable
+    Database.setSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     tmr1SymInterruptMode = tmr1Component.createBooleanSymbol("TMR1_INTERRUPT_MODE", None)
     tmr1SymInterruptMode.setLabel("Enable Interrrupts ?")
@@ -461,6 +466,11 @@ def instantiateComponent(tmr1Component):
     tmr1SymIntEnComment.setVisible(False)
     tmr1SymIntEnComment.setDependencies(updateTMR1InterruptData, ["TMR1_INTERRUPT_MODE", "core." + tmr1InterruptVectorUpdate])
 
+    # Clock Warning status
+    tmr1Sym_ClkEnComment = tmr1Component.createCommentSymbol("TMR1_CLOCK_ENABLE_COMMENT", None)
+    tmr1Sym_ClkEnComment.setLabel("Warning!!! " + tmr1InstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    tmr1Sym_ClkEnComment.setVisible(False)
+    tmr1Sym_ClkEnComment.setDependencies(updateTMR1ClockWarningStatus, ["core." + tmr1InstanceName.getValue() + "_CLOCK_ENABLE"])
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################

@@ -247,7 +247,8 @@ def tmr1TsyncVisible(symbol, event):
 def calcTimerFreq(symbol, event):
     component = symbol.getComponent()
     src = component.getSymbolValue("TIMER1_SRC_SEL")
-    if(src == 0):
+    ext_src = component.getSymbolValue("TIMER1_TECS")
+    if(src == 0 and ext_src == 1):
         clock = component.getSymbolValue("TIMER1_EXT_CLOCK_FREQ")
     else:
         clock = Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")
@@ -275,6 +276,9 @@ def timerPeriodCalc(symbol, event):
 def tmr1TgateVisible(symbol, event):
     symbol.setVisible(bool(event["value"]))
 
+def updateTMR1ClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -298,6 +302,9 @@ def instantiateComponent(tmr1Component):
     tmr1InstanceNum.setVisible(False)
     instanceNum = filter(str.isdigit,str(tmr1Component.getID()))
     tmr1InstanceNum.setDefaultValue(instanceNum)
+
+    #Clock enable
+    Database.setSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     tmr1SymInterruptMode = tmr1Component.createBooleanSymbol("TMR1_INTERRUPT_MODE", None)
     tmr1SymInterruptMode.setLabel("Enable Interrrupts ?")
@@ -357,6 +364,25 @@ def instantiateComponent(tmr1Component):
         tmr1Sym_T1CON_SOURCE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
     tmr1Sym_T1CON_SOURCE_SEL.setDefaultValue(find_key_value(0,tcs_names))   # internal peripheral clock
 
+    #timer TECS configuration
+    tecs_names = []
+    _get_bitfield_names(tmr1ValGrp_T1CON_TECS, tecs_names)
+    tmr1SymField_T1CON_TECS = tmr1Component.createKeyValueSetSymbol("TIMER1_TECS", tmr1Sym_T1CON_SOURCE_SEL)
+    tmr1SymField_T1CON_TECS.setLabel(tmr1BitField_T1CON_TECS.getAttribute("caption"))
+    tmr1SymField_T1CON_TECS.setOutputMode( "Value" )
+    tmr1SymField_T1CON_TECS.setDisplayMode( "Description" )
+    tmr1SymField_T1CON_TECS.setVisible(False)
+    for ii in tecs_names:
+        tmr1SymField_T1CON_TECS.addKey( ii['key'],ii['value'], ii['desc'] )
+    tmr1SymField_T1CON_TECS.setDefaultValue(find_key_value(1,tecs_names))  # external clock comes from T1CK
+    tmr1SymField_T1CON_TECS.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
+
+    tmr1Sym_EXT_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_EXT_CLOCK_FREQ", tmr1Sym_T1CON_SOURCE_SEL)
+    tmr1Sym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
+    tmr1Sym_EXT_CLOCK_FREQ.setVisible(False)
+    tmr1Sym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
+    tmr1Sym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
+
     #TSYNC, Timer1 External Clock Input Synchronization Selection
     tsync_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_TSYNC, tsync_names)
@@ -370,19 +396,13 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_T1CON_TSYNC.setVisible(False)
     tmr1Sym_T1CON_TSYNC.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
 
-    tmr1Sym_EXT_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_EXT_CLOCK_FREQ", tmr1Sym_T1CON_SOURCE_SEL)
-    tmr1Sym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
-    tmr1Sym_EXT_CLOCK_FREQ.setVisible(False)
-    tmr1Sym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
-    tmr1Sym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
-
     tmr1Sym_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_CLOCK_FREQ", None)
     tmr1Sym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
     tmr1Sym_CLOCK_FREQ.setVisible(True)
     tmr1Sym_CLOCK_FREQ.setReadOnly(True)
     tmr1Sym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")))
     tmr1Sym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core." + tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY",
-        "TMR1_PRESCALER_VALUE", "TIMER1_SRC_SEL", "TIMER1_EXT_CLOCK_FREQ"])
+        "TMR1_PRESCALER_VALUE", "TIMER1_SRC_SEL", "TIMER1_EXT_CLOCK_FREQ", "TIMER1_TECS"])
 
     clock = Database.getSymbolValue("core", tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY")
     if(clock != 0):
@@ -434,19 +454,6 @@ def instantiateComponent(tmr1Component):
         tmr1SymField_T1CON_TWDIS.addKey( ii['key'],ii['value'], ii['desc'] )
     tmr1SymField_T1CON_TWDIS.setDefaultValue(find_key_value(0,twdis_names))  # back-to-back writes enabled
 
-    #timer TECS configuration
-    tecs_names = []
-    _get_bitfield_names(tmr1ValGrp_T1CON_TECS, tecs_names)
-    tmr1SymField_T1CON_TECS = tmr1Component.createKeyValueSetSymbol("TIMER1_TECS", tmr1Sym_T1CON_SOURCE_SEL)
-    tmr1SymField_T1CON_TECS.setLabel(tmr1BitField_T1CON_TECS.getAttribute("caption"))
-    tmr1SymField_T1CON_TECS.setOutputMode( "Value" )
-    tmr1SymField_T1CON_TECS.setDisplayMode( "Description" )
-    tmr1SymField_T1CON_TECS.setVisible(False)
-    for ii in tecs_names:
-        tmr1SymField_T1CON_TECS.addKey( ii['key'],ii['value'], ii['desc'] )
-    tmr1SymField_T1CON_TECS.setDefaultValue(find_key_value(1,tecs_names))  # external clock comes from T1CK
-    tmr1SymField_T1CON_TECS.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
-
     #timer TGATE configuration
     tgate_names = []
     _get_bitfield_names(tmr1ValGrp_T1CON_TGATE, tgate_names)
@@ -479,6 +486,12 @@ def instantiateComponent(tmr1Component):
     tmr1SymIntEnComment.setLabel("Warning!!! " + tmr1InstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     tmr1SymIntEnComment.setVisible(False)
     tmr1SymIntEnComment.setDependencies(updateTMR1InterruptData, ["TMR1_INTERRUPT_MODE", "core." + tmr1InterruptVectorUpdate])
+
+    # Clock Warning status
+    tmr1Sym_ClkEnComment = tmr1Component.createCommentSymbol("TMR1_CLOCK_ENABLE_COMMENT", None)
+    tmr1Sym_ClkEnComment.setLabel("Warning!!! " + tmr1InstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    tmr1Sym_ClkEnComment.setVisible(False)
+    tmr1Sym_ClkEnComment.setDependencies(updateTMR1ClockWarningStatus, ["core." + tmr1InstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
