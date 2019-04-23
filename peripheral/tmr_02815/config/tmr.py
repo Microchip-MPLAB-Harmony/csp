@@ -220,7 +220,7 @@ def timerMaxValue(symbol, event):
     else:
         clock = Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")
     if(clock == 0):
-        clock = 1   
+        clock = 1
     resolution = 1000.0 * component.getSymbolValue("TMR_PRESCALER_VALUE")/float(clock)
     mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
     if(mode_32 == 0):
@@ -245,6 +245,9 @@ def timerPeriodCalc(symbol, event):
 
 def tmrTgateVisible(symbol, event):
     symbol.setVisible(bool(event["value"]))
+
+def updateTMRClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
 
 def find_key_value(value, keypairs):
     '''
@@ -300,6 +303,9 @@ def instantiateComponent(tmrComponent):
     tmrInstanceNum.setVisible(False)
     instanceNum = filter(str.isdigit,str(tmrComponent.getID()))
     tmrInstanceNum.setDefaultValue(instanceNum)
+
+    #Clock enable
+    Database.setSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     tmrSymInterruptMode = tmrComponent.createBooleanSymbol("TMR_INTERRUPT_MODE", None)
     tmrSymInterruptMode.setLabel("Enable Interrrupts ?")
@@ -474,6 +480,11 @@ def instantiateComponent(tmrComponent):
     tmrSymIntEnComment.setVisible(False)
     tmrSymIntEnComment.setDependencies(updateTMRInterruptData, ["TIMER_32BIT_MODE_SEL","TMR_INTERRUPT_MODE", "core." + tmrInterruptVectorUpdate])
 
+    # Clock Warning status
+    tmrSym_ClkEnComment = tmrComponent.createCommentSymbol("TMR_CLOCK_ENABLE_COMMENT", None)
+    tmrSym_ClkEnComment.setLabel("Warning!!! " + tmrInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    tmrSym_ClkEnComment.setVisible(False)
+    tmrSym_ClkEnComment.setDependencies(updateTMRClockWarningStatus, ["core." + tmrInstanceName.getValue() + "_CLOCK_ENABLE"])
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
