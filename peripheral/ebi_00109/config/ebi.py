@@ -295,6 +295,10 @@ def shiftEBICS2_Values(symbol, event):
 def shiftEBICS3_Values(symbol, event):
     shiftedValue = ebiSym_EBICS3_CSADDR.getValue() << 16
     symbol.setValue(shiftedValue, 2)
+
+def updateEBIClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -368,6 +372,9 @@ def instantiateComponent(ebiComponent):
     ebiInstanceName.setVisible(False)
     ebiInstanceName.setDefaultValue(ebiComponent.getID().upper())
     print("Running " + ebiInstanceName.getValue())
+
+    #Clock enable
+    Database.setSymbolValue("core", ebiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     #Get Address Lines
     addressLines = 0
@@ -1057,6 +1064,12 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBISMT2_VALUE.setDefaultValue(513)
     ebiSym_EBISMT2_VALUE.setVisible(False)
     ebiSym_EBISMT2_VALUE.setDependencies(combineSMCON_Values, ["EBISMCON_SMDWIDTH0","EBISMCON_SMDWIDTH1","EBISMCON_SMDWIDTH2"])
+
+    # Clock Warning status
+    ebiSym_ClkEnComment = ebiComponent.createCommentSymbol("EBI_CLOCK_ENABLE_COMMENT", None)
+    ebiSym_ClkEnComment.setLabel("Warning!!! " + ebiInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    ebiSym_ClkEnComment.setVisible(False)
+    ebiSym_ClkEnComment.setDependencies(updateEBIClockWarningStatus, ["core." + ebiInstanceName.getValue() + "_CLOCK_ENABLE"])
 
 ############################################################################
 #### Dependency ####
