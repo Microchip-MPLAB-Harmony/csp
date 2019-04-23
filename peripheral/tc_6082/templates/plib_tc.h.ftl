@@ -124,7 +124,7 @@ void ${TC_INSTANCE_NAME}_QuadratureStart (void);
 void ${TC_INSTANCE_NAME}_QuadratureStop (void);
 
 <#if TC_INDEX_PULSE == true>
-__INLINE ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (void)
+__STATIC_INLINE ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (void)
 {
     return (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CV);
 }
@@ -132,13 +132,13 @@ __INLINE ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadratureRevolutionsGet (v
 
 <#if TC_BMR_POSEN == "SPEED">
 
-__INLINE ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadratureSpeedGet (void)
+__STATIC_INLINE ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadratureSpeedGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV;
 }
 
 <#else>
-__INLINE ${TC_SIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadraturePositionGet (void)
+__STATIC_INLINE ${TC_SIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadraturePositionGet (void)
 {
     return (${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CV);
 }
