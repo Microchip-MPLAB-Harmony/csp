@@ -197,6 +197,10 @@ def icapInterruptSet(symbol, event):
                 Database.setSymbolValue("core", errorInterruptHandler, interruptName + "_InterruptHandler", 1)
             else:
                 Database.setSymbolValue("core", errorInterruptHandler, interruptName + "_Handler", 1)
+
+def updateICAPClockWarningStatus(symbol, event):
+
+    symbol.setVisible(not event["value"])
 ################################################################################
 #### Component ####
 ################################################################################
@@ -229,6 +233,9 @@ def instantiateComponent(icapComponent):
     icapInstanceNum.setVisible(False)
     instanceNum = filter(str.isdigit,str(icapComponent.getID()))
     icapInstanceNum.setDefaultValue(instanceNum)
+
+    #Clock enable
+    Database.setSymbolValue("core", icapInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     icapxICM_names = []
     _get_bitfield_names(icapValGrp_IC1CON_ICM, icapxICM_names)
@@ -413,6 +420,11 @@ def instantiateComponent(icapComponent):
     icapSymInt1EnComment.setDependencies(dependencyStatus, ["ICAP_INTERRUPT_ENABLE", "ICAP_ERROR_INTERRUPT_ENABLE", \
         "core."+captureInterruptVectorUpdate, "core."+errorInterruptVectorUpdate])
 
+    # Clock Warning status
+    icapSym_ClkEnComment = icapComponent.createCommentSymbol("ICAP_CLOCK_ENABLE_COMMENT", None)
+    icapSym_ClkEnComment.setLabel("Warning!!! " + icapInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    icapSym_ClkEnComment.setVisible(False)
+    icapSym_ClkEnComment.setDependencies(updateICAPClockWarningStatus, ["core." + icapInstanceName.getValue() + "_CLOCK_ENABLE"])
 ############################################################################
 #### Code Generation ####
 ############################################################################
