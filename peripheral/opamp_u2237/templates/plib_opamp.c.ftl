@@ -70,17 +70,17 @@ void ${OPAMP_INSTANCE_NAME}_Initialize(void)
     <#assign OPAMP_OPAMPCTRL_POTMUX = "OPAMP_OPAMPCTRL_" + i + "_POTMUX">
     <#if (.vars[OPAMP_OPAMPCTRL_ENABLE] == true)>
     /* Configure OPAMPCTRL${i} */
-    <@compress single_line=true>${OPAMP_INSTANCE_NAME}_REGS->OPAMP_OPAMPCTRL[${i}] = OPAMP_OPAMPCTRL_MUXPOS(${.vars[OPAMP_OPAMPCTRL_MUXPOS]})
-                                  | OPAMP_OPAMPCTRL_MUXNEG(${.vars[OPAMP_OPAMPCTRL_MUXNEG]})
-                                  | OPAMP_OPAMPCTRL_BIAS(${.vars[OPAMP_OPAMPCTRL_BIAS]})
-                                  | OPAMP_OPAMPCTRL_RES1MUX(${.vars[OPAMP_OPAMPCTRL_RES1MUX]})
-                                  | OPAMP_OPAMPCTRL_POTMUX(${.vars[OPAMP_OPAMPCTRL_POTMUX]})
-                                  ${.vars[OPAMP_OPAMPCTRL_ANAOUT]?then(' | OPAMP_OPAMPCTRL_ANAOUT_Msk','')}
-                                  ${.vars[OPAMP_OPAMPCTRL_RES2OUT]?then(' | OPAMP_OPAMPCTRL_RES2OUT_Msk','')}
-                                  ${.vars[OPAMP_OPAMPCTRL_RES1EN]?then(' | OPAMP_OPAMPCTRL_RES1EN_Msk','')}
-                                  ${.vars[OPAMP_OPAMPCTRL_ONDEMAND]?then(' | OPAMP_OPAMPCTRL_ONDEMAND_Msk','')}
-                                  ${.vars[OPAMP_OPAMPCTRL_RUNSTDBY]?then(' | OPAMP_OPAMPCTRL_RUNSTDBY_Msk','')}
-                                  ${.vars[OPAMP_OPAMPCTRL_ENABLE]?then(' | OPAMP_OPAMPCTRL_ENABLE_Msk','')}
+    <@compress single_line=true>${OPAMP_INSTANCE_NAME}_REGS->OPAMP_OPAMPCTRL${i} = OPAMP_OPAMPCTRL${i}_MUXPOS(${.vars[OPAMP_OPAMPCTRL_MUXPOS]})
+                                  | OPAMP_OPAMPCTRL${i}_MUXNEG(${.vars[OPAMP_OPAMPCTRL_MUXNEG]})
+                                  | OPAMP_OPAMPCTRL${i}_BIAS(${.vars[OPAMP_OPAMPCTRL_BIAS]})
+                                  | OPAMP_OPAMPCTRL${i}_RES1MUX(${.vars[OPAMP_OPAMPCTRL_RES1MUX]})
+                                  | OPAMP_OPAMPCTRL${i}_POTMUX(${.vars[OPAMP_OPAMPCTRL_POTMUX]})
+                                  ${.vars[OPAMP_OPAMPCTRL_ANAOUT]?then(' | OPAMP_OPAMPCTRL${i}_ANAOUT_Msk','')}
+                                  ${.vars[OPAMP_OPAMPCTRL_RES2OUT]?then(' | OPAMP_OPAMPCTRL${i}_RES2OUT_Msk','')}
+                                  ${.vars[OPAMP_OPAMPCTRL_RES1EN]?then(' | OPAMP_OPAMPCTRL${i}_RES1EN_Msk','')}
+                                  ${.vars[OPAMP_OPAMPCTRL_ONDEMAND]?then(' | OPAMP_OPAMPCTRL${i}_ONDEMAND_Msk','')}
+                                  ${.vars[OPAMP_OPAMPCTRL_RUNSTDBY]?then(' | OPAMP_OPAMPCTRL${i}_RUNSTDBY_Msk','')}
+                                  ${.vars[OPAMP_OPAMPCTRL_ENABLE]?then(' | OPAMP_OPAMPCTRL${i}_ENABLE_Msk','')}
                                   ;</@compress>
     
     </#if>
