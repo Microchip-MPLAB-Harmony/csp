@@ -325,27 +325,6 @@ void ${PIT64B_INSTANCE_NAME}_TimerCallbackSet(${PIT64B_INSTANCE_NAME}_CALLBACK c
 
 // *****************************************************************************
 /* Function:
-    void ${PIT64B_INSTANCE_NAME}_InterruptHandler(void);
-
-  Summary:
-    ${PIT64B_INSTANCE_NAME} Interrupt Handler.
-
-  Description:
-    Internal ${PIT64B_INSTANCE_NAME} interrupt handler called by interrupt controller.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-  
-  Returns:
-    None.
-*/
-void ${PIT64B_INSTANCE_NAME}_InterruptHandler(void);
-
-// *****************************************************************************
-/* Function:
     void ${PIT64B_INSTANCE_NAME}_ClearInterrupt(void);
 
   Summary:
