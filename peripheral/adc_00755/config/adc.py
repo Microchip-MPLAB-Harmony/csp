@@ -181,14 +181,19 @@ def adcAddKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, BitFiel
                 initval = registerNode.getAttribute('initval')
                 if initval is not None:
                     defaultValue = _find_default_value(labelNode, initval)
+                    #first add the key which has default value to ensure two things:
+                    #1. the key with default value doesn't get missed out from symbol due to duplication of keys in ATDF
                     #2. index of the default key is always 0, so it becomes easier to assign default value later.
                     for ii in adcValGrp_names:
                         if int(ii['value']) == defaultValue:
                             Component.addKey( ii['desc'], ii['value'], ii['key'] )
                             break
+                    #add rest of the keys
                     for ii in adcValGrp_names:
                         Component.addKey( ii['desc'], ii['value'], ii['key'] )
+
                 else:
+                #if initval is not present in ATDF, add all the keys sequentially
                     for ii in adcValGrp_names:
                         Component.addKey( ii['desc'], ii['value'], ii['key'] )
 
@@ -438,6 +443,7 @@ def getTCLKValue():
     dividor = Database.getSymbolValue(adcInstanceName.getValue().lower(), "AD1CON3__ADCS")
     if (clk_freq == 0):
         Log.writeErrorMessage("Peripheral Clock Frequency should not be 0")
+        clk_freq = 40000000
     return float((dividor * 1000000000)/clk_freq)
 
 def adcTCLKCalc(symbol, event):
@@ -464,6 +470,9 @@ def InterruptStatusWarning(symbol, event):
     else:
         symbol.setVisible(False)
 
+def updateADCClockWarningStatus(symbol, event):
+    symbol.setVisible(not event["value"])
+
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################
@@ -475,6 +484,9 @@ def instantiateComponent(adcComponent):
     adcInstanceName.setDefaultValue(adcComponent.getID().upper())
     Module = adcInstanceName.getValue()
     Log.writeInfoMessage("Running " + Module)
+
+    #Clock enable
+    Database.setSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
 ################################################################################
 ########## ADC Menu ################################################
@@ -732,6 +744,15 @@ def instantiateComponent(adcComponent):
     adcSymIntEnComment.setVisible(False)
     adcSymIntEnComment.setLabel("Warning!!! ADC Interrupt is Disabled in Interrupt Manager")
     adcSymIntEnComment.setDependencies(InterruptStatusWarning, ["core.ADC_INTERRUPT_ENABLE_UPDATE", "ADC_INTERRUPT"])
+
+###################################################################################################
+
+    # Clock Warning status
+    adcSym_ClkEnComment = adcComponent.createCommentSymbol("ADC_CLOCK_ENABLE_COMMENT", None)
+    adcSym_ClkEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    adcSym_ClkEnComment.setVisible(False)
+    adcSym_ClkEnComment.setDependencies(updateADCClockWarningStatus, ["core." + adcInstanceName.getValue() + "_CLOCK_ENABLE"])
+
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
