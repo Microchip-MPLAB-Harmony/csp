@@ -121,11 +121,12 @@ uint32_t ${TMR1_INSTANCE_NAME}_FrequencyGet(void)
 <#if TMR1_INTERRUPT_MODE == true>
 void TIMER_1_InterruptHandler (void)
 {
+    uint32_t status = ${TMR1_IFS_REG}bits.T1IF;
     ${TMR1_IFS_REG}CLR = _${TMR1_IFS_REG}_T1IF_MASK;
 
     if((${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
-        ${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn(${TMR1_INSTANCE_NAME?lower_case}Obj.context);
+        ${TMR1_INSTANCE_NAME?lower_case}Obj.callback_fn(status, ${TMR1_INSTANCE_NAME?lower_case}Obj.context);
     }
 }
 
