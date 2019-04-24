@@ -99,10 +99,10 @@ def dmacChannelAllocLogic(symbol, event):
         dmaChannelEnable = Database.getSymbolValue("core", "DMAC_CHAN" + str(dmaChannel) + "_ENBL")
         dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE"))
 
-        if dmaChannelPerID == perID:
+        if dmaChannelPerID == triggerSource:
             channelAllocated = True
             break
-            
+
         # Client requested to allocate channel
         if event["value"] == True:
             # Reserve the first available free channel
@@ -186,30 +186,29 @@ def dmacPriorityCalc(symbol, event):
         symbol.setValue(int(per_priority.get(event["value"])), 2)
 
 def updateDMACChannelInterruptData(symbol, event):
+
     # Sees if the user has not enabled the particular DMAC interrupt when enabling this channel.
     # If so, will display a warning message.
 
-    if "_ENBL" in event["id"]:
-        # the "chan enable" boolean is for in/visible setting
-        channelNumber = (event["id"].replace("DMAC_CHAN", "")).replace("_ENBL", "")
+    channelNumber = ''.join([i for i in symbol.getID() if i.isdigit()])
 
-        InterruptVector = "DMA" + channelNumber + "_INTERRUPT_ENABLE"
-        InterruptHandler = "DMA" + channelNumber + "_INTERRUPT_HANDLER"
-        InterruptHandlerLock = "DMA" + channelNumber + "_INTERRUPT_HANDLER_LOCK"
-        InterruptVectorUpdate = "DMA" + channelNumber + "_INTERRUPT_ENABLE_UPDATE"
+    if "_ENBL" in event["id"]:
+        InterruptVector = dmaInterruptName + channelNumber + "_INTERRUPT_ENABLE"
+        InterruptHandler = dmaInterruptName + channelNumber + "_INTERRUPT_HANDLER"
+        InterruptHandlerLock = dmaInterruptName + channelNumber + "_INTERRUPT_HANDLER_LOCK"
+        InterruptVectorUpdate = dmaInterruptName + channelNumber + "_INTERRUPT_ENABLE_UPDATE"
 
         Database.setSymbolValue("core", InterruptVector, event["value"], 1)
         Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 1)
 
         if event["value"] == True:
-            Database.setSymbolValue("core", InterruptHandler, "DMA" + channelNumber + "_InterruptHandler", 1)
+            Database.setSymbolValue("core", InterruptHandler, dmaInterruptName + channelNumber + "_InterruptHandler", 1)
         else:
-            Database.setSymbolValue("core", InterruptHandler, "DMA" + channelNumber + "_Handler", 1)
-
+            Database.setSymbolValue("core", InterruptHandler, dmaInterruptName + channelNumber + "_Handler", 1)
     else:
         InterruptVectorUpdate = event["id"].replace("core.", "")
 
-    if event["value"] == True and Database.getSymbolValue("core", InterruptVectorUpdate) == True :
+    if Database.getSymbolValue("core", "DMAC_CHAN" + channelNumber + "_ENBL") == True and Database.getSymbolValue("core", InterruptVectorUpdate) == True :
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
