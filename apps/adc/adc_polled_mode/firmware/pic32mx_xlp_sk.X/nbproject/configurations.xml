@@ -7,21 +7,17 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="pic32mx_xlp_sk" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f6" displayName="adc" projectFiles="true">
+            <logicalFolder name="f5" displayName="adc" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/adc/plib_adc.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="clk" projectFiles="true">
+            <logicalFolder name="f2" displayName="clk" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="evic" projectFiles="true">
+            <logicalFolder name="f4" displayName="evic" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/evic/plib_evic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="gpio" projectFiles="true">
+            <logicalFolder name="f3" displayName="gpio" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/gpio/plib_gpio.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="tmr" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/tmr/plib_tmr_common.h</itemPath>
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/tmr/plib_tmr3.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="uart" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/uart/plib_uart_common.h</itemPath>
@@ -48,20 +44,17 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="pic32mx_xlp_sk" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f6" displayName="adc" projectFiles="true">
+            <logicalFolder name="f5" displayName="adc" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/adc/plib_adc.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="clk" projectFiles="true">
+            <logicalFolder name="f2" displayName="clk" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="evic" projectFiles="true">
+            <logicalFolder name="f4" displayName="evic" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/evic/plib_evic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="gpio" projectFiles="true">
+            <logicalFolder name="f3" displayName="gpio" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/gpio/plib_gpio.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="tmr" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/tmr/plib_tmr3.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="uart" projectFiles="true">
               <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/uart/plib_uart1.c</itemPath>

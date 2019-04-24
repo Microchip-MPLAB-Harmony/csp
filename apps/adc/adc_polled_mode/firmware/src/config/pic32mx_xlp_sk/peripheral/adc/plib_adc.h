@@ -165,7 +165,7 @@ void ADC_SamplingStart(void);
 void ADC_ConversionStart(void);
 
 void ADC_InputSelect(ADC_MUX muxType, ADC_INPUT_POSITIVE positiveInput, ADC_INPUT_NEGATIVE negativeInput );
-void ADC_InputScanSelect(ADC_INPUTS_SCAN *scanList, uint8_t numChannels);
+void ADC_InputScanSelect(ADC_INPUTS_SCAN scanInputs);
 
 bool ADC_ResultIsReady();
 uint32_t ADC_ResultGet(ADC_RESULT_BUFFER bufferNumber);
