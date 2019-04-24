@@ -219,11 +219,11 @@ evicVectorMin.setVisible(False)
 
 evicIRQMax = coreComponent.createIntegerSymbol("EVIC_IRQ_MAX", evicMenu)
 evicIRQMax.setDefaultValue(irqHighestID)
-evicIRQMax.setVisible(True)
+evicIRQMax.setVisible(False)
 
 evicIRQMin = coreComponent.createIntegerSymbol("EVIC_IRQ_MIN", evicMenu)
 evicIRQMin.setDefaultValue(irqLowestID)
-evicIRQMin.setVisible(True)
+evicIRQMin.setVisible(False)
 
 global prioShift
 global subprioShift
