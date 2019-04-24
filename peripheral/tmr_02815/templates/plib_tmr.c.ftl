@@ -140,11 +140,12 @@ uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void)
 <#if TMR_INTERRUPT_MODE == true>
 void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 {
+    uint32_t status = ${TMR_IFS_REG}bits.T${TMR_INSTANCE_NUM}IF;
     ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
 
     if((${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn != NULL))
     {
-        ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn(${TMR_INSTANCE_NAME?lower_case}Obj.context);
+        ${TMR_INSTANCE_NAME?lower_case}Obj.callback_fn(status, ${TMR_INSTANCE_NAME?lower_case}Obj.context);
     }
 }
 
