@@ -52,7 +52,7 @@
     <#lt>#define CORE_TIMER_INTERRUPT_PERIOD_VALUE    ${CORE_TIMER_PERIOD_VALUE}
     <#lt>#define CORE_TIMER_INTERRUPT_PERIOD_IN_US     ${CORE_TIMER_PERIOD_US}
 
-    <#lt>typedef void (*CORETIMER_CALLBACK)(uintptr_t context);
+    <#lt>typedef void (*CORETIMER_CALLBACK)(uint32_t status, uintptr_t context);
 
     <#lt>typedef struct
     <#lt>{
@@ -70,8 +70,9 @@
     <#lt>void CORETIMER_Stop();
     <#lt>void CORETIMER_DelayMs ( uint32_t delay_ms);
 </#if>
+
 <#if CORE_TIMER_INTERRUPT_MODE == true && CORE_TIMER_PERIODIC_INTERRUPT == false>
-    <#lt>typedef void (*CORETIMER_CALLBACK)(uintptr_t context);
+    <#lt>typedef void (*CORETIMER_CALLBACK)(uint32_t status, uintptr_t context);
 
     <#lt>typedef struct
     <#lt>{
