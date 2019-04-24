@@ -103,13 +103,13 @@ void ${PWM_INSTANCE_NAME}_ChannelPeriodSet (PWM_CHANNEL_NUM channel, uint32_t pe
 
 uint32_t ${PWM_INSTANCE_NAME}_ChannelPeriodGet (PWM_CHANNEL_NUM channel);
 
-void ${PWM_INSTANCE_NAME}_ChannelDutySet(PWM_CHANNEL_NUM channel, uint32_t duty);
+void ${PWM_INSTANCE_NAME}_ChannelDutySet (PWM_CHANNEL_NUM channel, uint32_t duty);
 
 uint32_t ${PWM_INSTANCE_NAME}_ChannelPeriodGet (PWM_CHANNEL_NUM channel);
 
-void ${PWM_INSTANCE_NAME}_ChannelInterruptEnable (PWM_CHANNEL_MASK channelMask);
+void ${PWM_INSTANCE_NAME}_ChannelCounterEventEnable (PWM_CHANNEL_MASK channelMask);
 
-void ${PWM_INSTANCE_NAME}_ChannelInterruptDisable (PWM_CHANNEL_MASK  channelMask);
+void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK  channelMask);
 
 <#if PWM_INTERRUPT == true>
 void ${PWM_INSTANCE_NAME}_CallbackRegister(PWM_CALLBACK callback, uintptr_t context);
