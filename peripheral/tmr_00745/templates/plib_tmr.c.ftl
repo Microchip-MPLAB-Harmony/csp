@@ -86,8 +86,6 @@ void ${TMR_INSTANCE_NAME}_Initialize(void)
     </#if>
     </#if>
 
-    /* start the TMR */
-    T${TMR_INSTANCE_NUM}CONSET = _T${TMR_INSTANCE_NUM}CON_ON_MASK;
 }
 
 
