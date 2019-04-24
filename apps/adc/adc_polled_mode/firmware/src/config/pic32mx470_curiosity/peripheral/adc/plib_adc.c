@@ -53,7 +53,7 @@ void ADC_Initialize()
 {
     AD1CON1CLR = _AD1CON1_ON_MASK;
 
-    AD1CON1 = 0x40;
+    AD1CON1 = 0x4;
     AD1CHS = 0x90000;
 
 
@@ -96,15 +96,9 @@ void ADC_InputSelect(ADC_MUX muxType, ADC_INPUT_POSITIVE positiveInput, ADC_INPU
 	}
 }
 
-void ADC_InputScanSelect(ADC_INPUTS_SCAN *scanList, uint8_t numChannels)
+void ADC_InputScanSelect(ADC_INPUTS_SCAN scanInputs)
 {
-    uint8_t channelNum;
-    uint32_t ad1cssl = 0;
-    for(channelNum = 0; channelNum < numChannels; channelNum++)
-    {
-        ad1cssl += scanList[channelNum];
-    }
-    AD1CSSL = ad1cssl;
+    AD1CSSL = scanInputs;
 }
 
 /*Check if conversion result is available */

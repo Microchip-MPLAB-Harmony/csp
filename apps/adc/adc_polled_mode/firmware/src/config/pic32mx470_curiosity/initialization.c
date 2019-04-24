@@ -160,8 +160,6 @@ void SYS_Initialize ( void* data )
 
 	UART1_Initialize();
 
-    TMR3_Initialize();
-
     ADC_Initialize();
 
 
@@ -170,8 +168,6 @@ void SYS_Initialize ( void* data )
 
     EVIC_Initialize();
 
-	/* Enable global interrupts */
-    __builtin_enable_interrupts();
 
 
 }
