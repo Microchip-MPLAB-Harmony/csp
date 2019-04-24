@@ -61,6 +61,13 @@
 
 // *************************** ${MCPWM_INSTANCE_NAME} API ***************************************/
 // *****************************************************************************
+<#assign interrupt_mode = false>
+<#list 1 .. MCPWM_NUM_CHANNELS as i>
+<#assign interrupt = "MCPWM_EVIC" + i>
+<#if .vars[interrupt] == 1>
+<#assign interrupt_mode = true>
+</#if>
+</#list>
 
 void ${MCPWM_INSTANCE_NAME}_Initialize (void);
 
@@ -88,6 +95,17 @@ void ${MCPWM_INSTANCE_NAME}_ChannelSecondaryTriggerSet(MCPWM_CH_NUM channel, uin
 
 void ${MCPWM_INSTANCE_NAME}_ChannelLeadingEdgeBlankingDelaySet(MCPWM_CH_NUM channel, uint16_t delay);
 
+<#if PTCON__SEIEN == true>
+void ${MCPWM_INSTANCE_NAME}_PrimaryEventCallbackRegister(MCPWM_CALLBACK callback, uintptr_t context);
+</#if>
+
+<#if STCON__SSEIEN == true>
+void ${MCPWM_INSTANCE_NAME}_SecondaryEventCallbackRegister(MCPWM_CALLBACK callback, uintptr_t context);
+</#if>
+
+<#if interrupt_mode == true>
+void ${MCPWM_INSTANCE_NAME}_CallbackRegister(MCPWM_CH_NUM channel, MCPWM_CH_CALLBACK callback, uintptr_t context);
+</#if>
 
 
 // DOM-IGNORE-BEGIN
