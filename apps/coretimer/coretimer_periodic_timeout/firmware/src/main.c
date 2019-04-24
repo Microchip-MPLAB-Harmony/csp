@@ -52,7 +52,7 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 
-void timeout_handler(uintptr_t context)
+void timeout_handler(uint32_t status, uintptr_t context)
 {
 	LED_Toggle();
 }
