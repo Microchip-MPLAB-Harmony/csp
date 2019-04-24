@@ -71,8 +71,7 @@ void static ${UART_INSTANCE_NAME}_ErrorClear( void )
         rxBufferLen--;
 
         /* Try to flush error bytes for one full FIFO and exit instead of
-         * blocking here if more error bytes are received
-         */
+         * blocking here if more error bytes are received */
         if(rxBufferLen == 0u)
         {
             break;
@@ -87,8 +86,7 @@ void static ${UART_INSTANCE_NAME}_ErrorClear( void )
     ${UART_FAULT_IFS_REG}CLR = _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}EIF_MASK;
 
     /* Clear up the receive interrupt flag so that RX interrupt is not
-     * triggered for error bytes
-     */
+     * triggered for error bytes */
     ${UART_FAULT_IFS_REG}CLR = _${UART_FAULT_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK;
 
 </#if>
@@ -103,7 +101,7 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
 
     U${UART_INSTANCE_NUM}MODE = 0x${UMODE_VALUE};
 
-    /* Enable U${UART_INSTANCE_NAME} Receiver and Transmitter */
+    /* Enable ${UART_INSTANCE_NAME} Receiver and Transmitter */
     U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK);
 
     /* BAUD Rate register Setup */
@@ -130,7 +128,7 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     ${UART_INSTANCE_NAME?lower_case}Obj.txCallback = NULL;
 
 </#if>
-    /* Turn ON ${UART_INSTANCE_NAME}*/
+    /* Turn ON ${UART_INSTANCE_NAME} */
     U${UART_INSTANCE_NUM}MODESET = _U${UART_INSTANCE_NUM}MODE_ON_MASK;
 }
 
@@ -381,21 +379,17 @@ static void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 </#if>
 {
+    /* Disable the fault interrupt */
+    ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
+
+    /* Clear rx status */
+    ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+
     /* Client must call UARTx_ErrorGet() function to clear the errors */
     if( ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
     {
         ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
     }
-
-    /* Clear size and rx status */
-    ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
-    ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-    ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
-
-    ${UART_INSTANCE_NAME}_ErrorClear();
-
-    /* Disable the fault interrupt */
-    ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
@@ -418,8 +412,6 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
         if(${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
 
             /* Disable the receive interrupt */
             ${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
@@ -457,8 +449,6 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
         if(${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.txSize)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
-            ${UART_INSTANCE_NAME?lower_case}Obj.txSize = 0;
-            ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = 0;
 
             /* Disable the transmit interrupt, to avoid calling ISR continuously */
             ${UART_TX_IEC_REG}CLR = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
