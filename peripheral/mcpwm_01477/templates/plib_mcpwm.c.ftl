@@ -186,6 +186,7 @@ void ${MCPWM_INSTANCE_NAME}_Initialize (void)
     <#if .vars[interrupt] == 1>
     /* Enable interrupt */
     ${.vars[iec]}SET = _${.vars[iec]}_PWM${i}IE_MASK;
+    ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i-1}].callback = NULL;
     </#if>
 </#if>
 </#list>
@@ -193,10 +194,12 @@ void ${MCPWM_INSTANCE_NAME}_Initialize (void)
     <#if PTCON__SEIEN == true>
     /* Enable primary special event interrupt */
     ${MCPWM_IEC_PRI}SET = _${MCPWM_IEC_PRI}_PWMPEVTIE_MASK;
+    ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj.callback = NULL;
     </#if>
     <#if STCON__SSEIEN == true>
     /* Enable secondary special event interrupt */
     ${MCPWM_IEC_SEC}SET = _${MCPWM_IEC_SEC}_PWMSEVTIE_MASK;
+    ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj.callback = NULL;
     </#if>
 }
 
@@ -277,6 +280,12 @@ void PWM_PRI_InterruptHandler(void)
         ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj.callback(${MCPWM_INSTANCE_NAME?lower_case}PriEventObj.context);
     }
 }
+
+void ${MCPWM_INSTANCE_NAME}_PrimaryEventCallbackRegister(MCPWM_CALLBACK callback, uintptr_t context)
+{
+    ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj.callback = callback;
+    ${MCPWM_INSTANCE_NAME?lower_case}PriEventObj.context = context;
+}
 </#if>
 
 <#if STCON__SSEIEN == true>
@@ -290,6 +299,12 @@ void PWM_SEC_InterruptHandler(void)
     {
         ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj.callback(${MCPWM_INSTANCE_NAME?lower_case}SecEventObj.context);
     }
+}
+
+void ${MCPWM_INSTANCE_NAME}_SecondaryEventCallbackRegister(MCPWM_CALLBACK callback, uintptr_t context)
+{
+    ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj.callback = callback;
+    ${MCPWM_INSTANCE_NAME?lower_case}SecEventObj.context = context;
 }
 </#if>
 
@@ -340,5 +355,14 @@ void PWM${i}_InterruptHandler(void)
         ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].callback(status, ${MCPWM_INSTANCE_NAME?lower_case}Obj[${i - 1}].context);
     }
 }
+
 </#if>
 </#list>
+
+<#if interrupt_mode == true>
+void ${MCPWM_INSTANCE_NAME}_CallbackRegister(MCPWM_CH_NUM channel, MCPWM_CH_CALLBACK callback, uintptr_t context)
+{
+    ${MCPWM_INSTANCE_NAME?lower_case}Obj[channel].callback = callback;
+    ${MCPWM_INSTANCE_NAME?lower_case}Obj[channel].context = context;
+}
+</#if>
