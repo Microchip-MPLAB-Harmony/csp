@@ -29,11 +29,18 @@
 #------------------------------------------------------------------------------
 
 # Function to convert Bitfield mask string to Integer
-def smcConvertMaskToInt(smcRegMask):
-    smcHexStr   = smcRegMask.rstrip("0")
-    smcIntValue = int(smcHexStr, 0)
-
-    return smcIntValue
+def smcConvertMaskToInt( aRegMask ):
+    """ function to convert bit field mask string to integer -- assumes mask is contiguous bits"""
+    numBits = 0;
+    aBinStr = '{0:32b}'.format(int( aRegMask, 16 )).strip().rstrip( "0" )
+    while len( aBinStr ):
+        aBinCh = aBinStr[-1]
+        aBinStr = aBinStr[0:-1]
+        if aBinCh == '1':
+            numBits += 1
+        else:
+            break
+    return ((2**numBits) - 1)       # return max value field can contain
 
 
 # Dependency function definition to enable visibility based on selection of Page Mode Enable
