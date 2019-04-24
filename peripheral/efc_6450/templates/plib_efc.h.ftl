@@ -91,6 +91,8 @@ typedef enum
     <#lt>} EFC_OBJECT ;
 </#if>
 
+void ${EFC_INSTANCE_NAME}_Initialize(void);
+
 bool ${EFC_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address );
 
 bool ${EFC_INSTANCE_NAME}_SectorErase( uint32_t address );
