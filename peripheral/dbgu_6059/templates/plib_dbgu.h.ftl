@@ -70,7 +70,7 @@ bool ${DBGU_INSTANCE_NAME}_Write(void *buffer, const size_t size);
 
 bool ${DBGU_INSTANCE_NAME}_Read(void *buffer, const size_t size);
 
-<#if DBGU_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
 uint8_t ${DBGU_INSTANCE_NAME}_ReadByte(void);
 
 void ${DBGU_INSTANCE_NAME}_WriteByte(uint8_t data);
@@ -80,7 +80,7 @@ bool ${DBGU_INSTANCE_NAME}_TransmitterIsReady(void);
 bool ${DBGU_INSTANCE_NAME}_ReceiverIsReady(void);
 
 </#if>
-<#if DBGU_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
 bool ${DBGU_INSTANCE_NAME}_WriteIsBusy(void);
 
 bool ${DBGU_INSTANCE_NAME}_ReadIsBusy(void);

@@ -52,7 +52,7 @@ def interruptControl(dbguInt, event):
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
-    if (Database.getSymbolValue(dbguInstanceName.getValue().lower(), "DBGU_INTERRUPT_MODE") == True):
+    if (Database.getSymbolValue(dbguInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
 # Calculates BRG value
@@ -85,7 +85,9 @@ def instantiateComponent(dbguComponent):
     dbguInstanceName.setVisible(False)
     dbguInstanceName.setDefaultValue(dbguComponent.getID().upper())
 
-    dbguInterrupt = dbguComponent.createBooleanSymbol("DBGU_INTERRUPT_MODE", None)
+    # The STDIO module looks for USART_INTERRUPT_MODE to disable interrupts so name our
+    # variable accordingly to inter-operate correctly
+    dbguInterrupt = dbguComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     dbguInterrupt.setLabel("Interrupt Mode")
     dbguInterrupt.setDefaultValue(True)
 
@@ -227,7 +229,7 @@ def instantiateComponent(dbguComponent):
 
     # Interrupt Dynamic settings
     dbguinterruptControl = dbguComponent.createBooleanSymbol("INTERRUPT_DBGU_ENABLE", None)
-    dbguinterruptControl.setDependencies(interruptControl, ["DBGU_INTERRUPT_MODE"])
+    dbguinterruptControl.setDependencies(interruptControl, ["USART_INTERRUPT_MODE"])
     dbguinterruptControl.setVisible(False)
 
     # Dependency Status
