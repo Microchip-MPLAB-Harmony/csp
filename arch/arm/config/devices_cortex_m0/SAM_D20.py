@@ -39,6 +39,14 @@ deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR",1)
 deviceSecurity.setVisible(False)
 
+def setWindow(symbol, event):
+    if event["value"] & 1 == 1:
+        Database.setSymbolValue("core", "DEVICE_WDT_WINDOW_0", 1)
+    else:
+        Database.setSymbolValue("core", "DEVICE_WDT_WINDOW_0", 0)
+    
+    symbol.setValue(event["value"] >> 1)
+
 fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
 fuseSettings.setLabel("Generate Fuse Settings")
 fuseSettings.setDefaultValue(True)
@@ -187,19 +195,29 @@ wdtWindowModeEnable.addKey("DISABLED", "0", "WDT window mode is disabled")
 wdtWindowModeEnable.addKey("ENABLED", "1", "WDT window mode is enabled")
 wdtWindowModeEnable.setSelectedKey("DISABLED", 1)
 
+wdtWindow = coreComponent.createHexSymbol("DEVICE_WDT_WINDOW", wdtFuseMenu)
+wdtWindow.setLabel("WDT Window")
+wdtWindow.setMax(0xf)
+wdtWindow.setMin(0x0)
+
 wdtWindow_0 = coreComponent.createKeyValueSetSymbol("DEVICE_WDT_WINDOW_0", wdtFuseMenu)
 wdtWindow_0.setLabel("WDT Window bit 0")
-wdtWindow_0.addKey("DISABLED", "0", "DISABLED")
-wdtWindow_0.addKey("ENABLED", "1", "ENABLED")
-wdtWindow_0.setSelectedKey("ENABLED", 1)
+wdtWindow_0.addKey("CLEAR", "0", "DISABLED")
+wdtWindow_0.addKey("SET", "1", "ENABLED")
+wdtWindow_0.setSelectedKey("SET", 1)
 wdtWindow_0.setOutputMode("Key")
-wdtWindow_0.setDisplayMode("Description")
+wdtWindow_0.setDisplayMode("Key")
+wdtWindow_0.setVisible(False)
 
 wdtWindow_1 = coreComponent.createHexSymbol("DEVICE_WDT_WINDOW_1", wdtFuseMenu)
 wdtWindow_1.setLabel("WDT Window bits 3:1")
 wdtWindow_1.setDefaultValue(0x4)
 wdtWindow_1.setMax(0x7)
 wdtWindow_1.setMin(0x0)
+wdtWindow_1.setDependencies(setWindow, ["DEVICE_WDT_WINDOW"])
+wdtWindow_1.setVisible(False)
+
+wdtWindow.setDefaultValue(0x9)
 
 wdtEarlyWarningOffset = coreComponent.createKeyValueSetSymbol("DEVICE_WDT_EWOFFSET", wdtFuseMenu)
 wdtEarlyWarningOffset.setLabel("WDT Early Warning Offset")
