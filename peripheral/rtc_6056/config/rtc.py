@@ -128,6 +128,7 @@ def instantiateComponent(rtcComponent):
     rtc12HrMode = rtcComponent.createBooleanSymbol("RTC_12HR_MODE", rtcMenu)
     rtc12HrMode.setLabel("Enable 12 HR Mode")
     rtc12HrMode.setDefaultValue(False)
+    rtc12HrMode.setVisible(False)
 
     if rtcBitField_MR_UTC:
         rtcSym_MR_UTC = rtcComponent.createBooleanSymbol("RTC_MR_UTC", rtcMenu)
