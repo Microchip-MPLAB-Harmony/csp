@@ -95,13 +95,13 @@ void PWM_ChannelPeriodSet (PWM_CHANNEL_NUM channel, uint32_t period);
 
 uint32_t PWM_ChannelPeriodGet (PWM_CHANNEL_NUM channel);
 
-void PWM_ChannelDutySet(PWM_CHANNEL_NUM channel, uint32_t duty);
+void PWM_ChannelDutySet (PWM_CHANNEL_NUM channel, uint32_t duty);
 
 uint32_t PWM_ChannelPeriodGet (PWM_CHANNEL_NUM channel);
 
-void PWM_ChannelInterruptEnable (PWM_CHANNEL_MASK channelMask);
+void PWM_ChannelCounterEventEnable (PWM_CHANNEL_MASK channelMask);
 
-void PWM_ChannelInterruptDisable (PWM_CHANNEL_MASK  channelMask);
+void PWM_ChannelCounterEventDisable (PWM_CHANNEL_MASK  channelMask);
 
 void PWM_CallbackRegister(PWM_CALLBACK callback, uintptr_t context);
 

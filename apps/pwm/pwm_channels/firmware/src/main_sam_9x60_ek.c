@@ -34,7 +34,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define PWM_CHANNEL_MASK_ALL (PWM_CHANNEL_0_MASK | PWM_CHANNEL_1_MASK | PWM_CHANNEL_2_MASK | PWM_CHANNEL_3_MASK)
+#define PWM_CHANNEL_MASK_ALL (PWM_CHANNEL_MASK)(PWM_CHANNEL_0_MASK | PWM_CHANNEL_1_MASK | PWM_CHANNEL_2_MASK | PWM_CHANNEL_3_MASK)
 
 volatile bool counter_event = false;
 
@@ -55,8 +55,11 @@ int main ( void )
     printf("*******Counter event: 1000ms counter overflow ****************\r\n");
     
     PWM_CallbackRegister(pwm_callback, NULL);
+   
+    PWM_ChannelCounterEventEnable(PWM_CHANNEL_3_MASK);
     
     PWM_ChannelsStart(PWM_CHANNEL_MASK_ALL);
+    
 
     while ( true )
     {
