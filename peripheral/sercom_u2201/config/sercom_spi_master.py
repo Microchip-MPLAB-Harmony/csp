@@ -252,6 +252,22 @@ if mssenSupported == True:
     spiSym_CTRLB_MSSEN.setVisible(False)
     spiSym_CTRLB_MSSEN.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+errorIntSupported = False
+
+intensetNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="SPIM",name="INTENSET"]')
+intensetValue = intensetNode.getChildren()
+
+for index in range(len(intensetValue)):
+    bitFieldName = str(intensetValue[index].getAttribute("name"))
+    if bitFieldName == "ERROR":
+        errorIntSupported = True
+        break
+
+#SPI is ERROR present
+spiSym_ERROR = sercomComponent.createBooleanSymbol("SPI_INTENSET_ERROR", None)
+spiSym_ERROR.setVisible(False)
+spiSym_ERROR.setDefaultValue(errorIntSupported)
+
 #SPI Receiver Enable
 spiSym_CTRLB_RXEN = sercomComponent.createBooleanSymbol("SPI_RECIEVER_ENABLE", sercomSym_OperationMode)
 spiSym_CTRLB_RXEN.setLabel("SPI Receiver Enable")

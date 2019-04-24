@@ -362,8 +362,11 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
         }
 
         ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS |= SERCOM_SPIM_STATUS_BUFOVF_Msk;
+
+        <#if SPI_INTENSET_ERROR = true>
         ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG |= SERCOM_SPIM_INTFLAG_ERROR_Msk;
 
+        </#if>
         if(rxSize > txSize)
         {
             dummySize = rxSize - txSize;
@@ -493,8 +496,11 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, 
         }
 
         ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_STATUS |= SERCOM_SPIM_STATUS_BUFOVF_Msk;
+
+        <#if SPI_INTENSET_ERROR = true>
         ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG |= SERCOM_SPIM_INTFLAG_ERROR_Msk;
 
+        </#if>
         if(${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize > ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize)
         {
             ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.dummySize = ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize - ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize;
