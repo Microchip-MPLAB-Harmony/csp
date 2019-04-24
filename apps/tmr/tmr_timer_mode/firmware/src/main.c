@@ -53,7 +53,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "definitions.h"                // SYS function prototypes
 
 /* This function is called after period matches in Timer 3 (32-bit timer) */
-void TIMER2_InterruptSvcRoutine(uintptr_t context)
+void TIMER2_InterruptSvcRoutine(uint32_t status, uintptr_t context)
 {
     /* Toggle LED */
     LED1_Toggle();

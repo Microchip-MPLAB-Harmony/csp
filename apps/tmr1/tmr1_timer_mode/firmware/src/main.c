@@ -53,7 +53,7 @@
 #include "definitions.h"                // SYS function prototypes
 
 
-void TIMER1_InterruptSvcRoutine(uintptr_t context)
+void TIMER1_InterruptSvcRoutine(uint32_t status, uintptr_t context)
 {
     LED1_Toggle();
 }
