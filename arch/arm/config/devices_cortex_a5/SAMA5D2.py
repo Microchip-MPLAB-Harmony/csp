@@ -28,6 +28,14 @@ def setXDMACDefaultSettings():
 
     return triggerSettings
 
+def updateLinkerScript(symbol, event):
+    if event["value"] == "DDR":
+        symbol.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_ddr.icf.ftl")
+        symbol.setOutputName("ddr.icf")
+    else:
+        symbol.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sram.icf.ftl")
+        symbol.setOutputName("sram.icf")
+
 print ("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
@@ -46,8 +54,9 @@ freeRTOSVectors.setReadOnly(True)
 freeRTOSVectors.setDefaultValue(False)
 
 #SRAM or DDR
-memory_loc = coreComponent.createComboSymbol(None, cortexMenu, ['SRAM', 'DDR'])
+memory_loc = coreComponent.createComboSymbol("EXECUTION_MEMORY", cortexMenu, ['DDR', 'SRAM'])
 memory_loc.setLabel("Execution Memory")
+memory_loc.setDefaultValue("DDR")
 memory_loc.setDescription("Generate image to run out of either SRAM or DDR")
 
 #load MMU with default 1:1 mapping so we can use cache
@@ -102,21 +111,12 @@ faultSourceFile.setDestPath("")
 faultSourceFile.setProjectPath("config/" + configName + "/")
 faultSourceFile.setType("SOURCE")
 
-if (memory_loc.getValue() == "DDR"):
-    linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
-    linkerFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_ddr.icf.ftl")
-    linkerFile.setOutputName("ddr.icf")
-    linkerFile.setMarkup(True)
-    linkerFile.setOverwrite(True)
-    linkerFile.setDestPath("")
-    linkerFile.setProjectPath("config/" + configName + "/")
-    linkerFile.setType("LINKER")
-else:
-    linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
-    linkerFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sram.icf.ftl")
-    linkerFile.setOutputName("sram.icf")
-    linkerFile.setMarkup(True)
-    linkerFile.setOverwrite(True)
-    linkerFile.setDestPath("")
-    linkerFile.setProjectPath("config/" + configName + "/")
-    linkerFile.setType("LINKER")
+linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
+linkerFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_ddr.icf.ftl")
+linkerFile.setOutputName("ddr.icf")
+linkerFile.setMarkup(True)
+linkerFile.setOverwrite(True)
+linkerFile.setDestPath("")
+linkerFile.setProjectPath("config/" + configName + "/")
+linkerFile.setType("LINKER")
+linkerFile.setDependencies(updateLinkerScript, ["EXECUTION_MEMORY"])
