@@ -280,6 +280,12 @@ def find_key_value(value, keypairs):
     print("find_key: could not find value in dictionary") # should never get here
     return ""
 
+def timer_mode_update(symbol,event):
+    if event["id"] == "TIMER_32BIT_MODE_SEL":
+        if event["value"] == 0:
+            symbol.setValue(32,2)
+        else:
+            symbol.setValue(16,2)
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -441,6 +447,45 @@ def instantiateComponent(tmrComponent):
     tmrSym_T2CON_Value.setVisible(False)
     tmrSym_T2CON_Value.setDependencies(T2CONcombineValues,["TIMER_SIDL", "TIMER_SYNC", "TIMER_TGATE", "TIMER_PRE_SCALER", "TIMER_32BIT_MODE_SEL", "TIMER_SRC_SEL"])
 
+    timerStartApiName = tmrInstanceName.getValue() +  "_Start"
+    timerStopApiName = tmrInstanceName.getValue() + "_Stop "
+    counterGetApiName = tmrInstanceName.getValue() +  "_CounterGet"
+    frequencyGetApiName = tmrInstanceName.getValue() + "_FrequencyGet"
+    callbackApiName = tmrInstanceName.getValue() + "_CallbackRegister"
+    periodSetApiName = tmrInstanceName.getValue() + "_PeriodSet"
+
+    timerWidth_Sym = tmrComponent.createIntegerSymbol("TIMER_WIDTH", None)
+    timerWidth_Sym.setVisible(False)
+    timerWidth_Sym.setValue(16)
+    timerWidth_Sym.setDependencies(timer_mode_update, ["TIMER_32BIT_MODE_SEL"])
+
+    timerPeriodMax_Sym = tmrComponent.createStringSymbol("TIMER_PERIOD_MAX", None)
+    timerPeriodMax_Sym.setVisible(False)
+    timerPeriodMax_Sym.setDefaultValue("0xFFFFFFFF")
+
+    timerStartApiName_Sym = tmrComponent.createStringSymbol("TIMER_START_API_NAME", None)
+    timerStartApiName_Sym.setVisible(False)
+    timerStartApiName_Sym.setDefaultValue(timerStartApiName)
+
+    timeStopApiName_Sym = tmrComponent.createStringSymbol("TIMER_STOP_API_NAME", None)
+    timeStopApiName_Sym.setVisible(False)
+    timeStopApiName_Sym.setDefaultValue(timerStopApiName)
+
+    counterApiName_Sym = tmrComponent.createStringSymbol("COUNTER_GET_API_NAME", None)
+    counterApiName_Sym.setVisible(False)
+    counterApiName_Sym.setDefaultValue(counterGetApiName)
+
+    frequencyGetApiName_Sym = tmrComponent.createStringSymbol("FREQUENCY_GET_API_NAME", None)
+    frequencyGetApiName_Sym.setVisible(False)
+    frequencyGetApiName_Sym.setDefaultValue(frequencyGetApiName)
+
+    callbackApiName_Sym = tmrComponent.createStringSymbol("CALLBACK_API_NAME", None)
+    callbackApiName_Sym.setVisible(False)
+    callbackApiName_Sym.setDefaultValue(callbackApiName)
+
+    periodSetApiName_Sym = tmrComponent.createStringSymbol("PERIOD_SET_API_NAME", None)
+    periodSetApiName_Sym.setVisible(False)
+    periodSetApiName_Sym.setDefaultValue(periodSetApiName);
     ############################################################################
     #### Dependency ####
     ############################################################################
