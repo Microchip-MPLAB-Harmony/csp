@@ -122,8 +122,8 @@
     <#lt>void CORE_TIMER_InterruptHandler (void)
     <#lt>{
     <#lt>    uint32_t count, newCompare;
-    <#lt>
-    <#lt>    ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
+    <#lt>    uint32_t status = ${CORE_TIMER_IFS_REG}bits.CTIF;
+    <#lt>    ${CORE_TIMER_IFS_REG}CLR = ${CORE_TIMER_IFS_REG_VALUE};
     <#lt>
     <#lt>    // Start Critical Section
     <#lt>    __builtin_disable_interrupts();
@@ -142,7 +142,7 @@
     <#lt>    coreTmr.tickCounter++;
     <#lt>    if(coreTmr.callback != NULL)
     <#lt>    {
-    <#lt>        coreTmr.callback(coreTmr.context);
+    <#lt>        coreTmr.callback(status, coreTmr.context);
     <#lt>    }
     <#lt>}
 </#if>
@@ -211,13 +211,14 @@
     <#lt>    count = _CP0_GET_COUNT();
     <#lt>    return count;
     <#lt>}
-    
+
     <#lt>void CORE_TIMER_InterruptHandler (void)
     <#lt>{
+    <#lt>    uint32_t status = ${CORE_TIMER_IFS_REG}bits.CTIF;
     <#lt>    ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
     <#lt>    if(coreTmr.callback != NULL)
     <#lt>    {
-    <#lt>        coreTmr.callback(coreTmr.context);
+    <#lt>        coreTmr.callback(status, coreTmr.context);
     <#lt>    }
     <#lt>}
 
