@@ -517,7 +517,7 @@ void UART_${UART_INSTANCE_NUM}_InterruptHandler (void)
 <#else>
 void ${UART_INSTANCE_NAME}_WriteByte(int data)
 {
-    while (!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK));
+    while ((U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK));
 
     U${UART_INSTANCE_NUM}TXREG = data;
 }
