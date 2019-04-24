@@ -225,19 +225,22 @@ def getNameValueCaptionTuple( aGroupName ):
     return tupleArray
 
 
-def smcConvertMaskToInt( smcRegMask):
-    """ function to convert bit field mask string to integer """
-    smcHexStr   = smcRegMask.rstrip( "0" )
-    smcIntValue = int( smcHexStr, 0 )
-    return smcIntValue
+def convertMaskToInt( aRegMask ):
+    """ function to convert bit field mask string to integer -- assumes mask is contiguous bits"""
+    numBits = 0;
+    aBinStr = '{0:32b}'.format(int( aRegMask, 16 )).strip().rstrip( "0" )
+    while len( aBinStr ):
+        aBinCh = aBinStr[-1]
+        aBinStr = aBinStr[0:-1]
+        if aBinCh == '1':
+            numBits += 1
+        else:
+            break
+    return ((2**numBits) - 1)       # return max value field can contain
 
 
-def smcModeTdfCyclesVisible( symbol, event ):
-    """ function to enable visibility based on selection of TDF mode """
-    if( event[ "value" ] == True ):
-        symbol.setVisible( True )
-    else:
-        symbol.setVisible( False )
+def visibilityBasedOnBoolSymbol( symbol, event ):
+    symbol.setVisible( event[ "value" ] )
 
 
 def smcModeByteWriteOrSelectAccessVisible( symbol, event ):
@@ -299,7 +302,7 @@ def instantiateComponent( smcComponent ):
     nfcDataTimeOutCycle = smcComponent.createIntegerSymbol( nfcDataTimeOutCycleName, nfcConfigurationMenu ) 
     nfcDataTimeOutCycle.setLabel( bitField_CFG_DTOCYC.getAttribute( "caption" ) )
     nfcDataTimeOutCycle.setMin( DEFAULT_NFC_MIN_VALUE )
-    nfcDataTimeOutCycle.setMax( smcConvertMaskToInt( bitField_CFG_DTOCYC.getAttribute( "mask" ) ) )
+    nfcDataTimeOutCycle.setMax( convertMaskToInt( bitField_CFG_DTOCYC.getAttribute( "mask" ) ) )
 
     nfcDataTimeOutMultiplierName = "SMC_NFC_DATA_TIMEOUT_MULTIPLIER"
     nfcDataTimeOutMuliplier = smcComponent.createKeyValueSetSymbol( nfcDataTimeOutMultiplierName, nfcConfigurationMenu )
@@ -315,19 +318,19 @@ def instantiateComponent( smcComponent ):
     nfcSpareAreaSize = smcComponent.createIntegerSymbol( nfcSpareAreaSizeName, nfcConfigurationMenu ) 
     nfcSpareAreaSize.setLabel( nfcSpareAreaSizeCaption )
     nfcSpareAreaSize.setMin( DEFAULT_NFC_MIN_VALUE )
-    nfcSpareAreaSize.setMax( smcConvertMaskToInt( bitField_CFG_NFCSPARESIZE.getAttribute( "mask" ) ) )
+    nfcSpareAreaSize.setMax( convertMaskToInt( bitField_CFG_NFCSPARESIZE.getAttribute( "mask" ) ) )
     nfcSpareAreaSize.setDefaultValue( DEFAULT_NFC_SPARE_AREA_SIZE )
     # -----     
     nfcAddressCycle0 = smcComponent.createIntegerSymbol( "SMC_NFC_ADDRESS_CYCLE_0", nandFlashControllerMenu ) 
     nfcAddressCycle0.setLabel( bitField_ADDR_ADDR_CYCLE0.getAttribute( "caption" ) ) 
     nfcAddressCycle0.setMin( DEFAULT_NFC_MIN_VALUE )
-    nfcAddressCycle0.setMax( smcConvertMaskToInt( bitField_ADDR_ADDR_CYCLE0.getAttribute( "mask" ) ) )
+    nfcAddressCycle0.setMax( convertMaskToInt( bitField_ADDR_ADDR_CYCLE0.getAttribute( "mask" ) ) )
     nfcAddressCycle0.setDefaultValue( DEFAULT_NFC_MIN_VALUE )
 
     nfcBankAddress = smcComponent.createIntegerSymbol( "SMC_NFC_BANK_ADDRESS", nandFlashControllerMenu ) 
     nfcBankAddress.setLabel( bitField_BANK_BANK.getAttribute( "caption" ) ) 
     nfcBankAddress.setMin( DEFAULT_NFC_MIN_VALUE )
-    nfcBankAddress.setMax( smcConvertMaskToInt( bitField_BANK_BANK.getAttribute( "mask" ) ) )
+    nfcBankAddress.setMax( convertMaskToInt( bitField_BANK_BANK.getAttribute( "mask" ) ) )
     nfcBankAddress.setDefaultValue( DEFAULT_NFC_MIN_VALUE )
     # ----- 
     pmeccMenu = smcComponent.createMenuSymbol( "SMC_PMECC", None ) 
@@ -372,19 +375,19 @@ def instantiateComponent( smcComponent ):
     pmeccSpareAreaSize = smcComponent.createIntegerSymbol( "SMC_PMECC_SPARE_AREA_SIZE", pmeccMenu ) 
     pmeccSpareAreaSize.setLabel( bitField_PMECCSAREA_SPARESIZE.getAttribute( "caption" ) )
     pmeccSpareAreaSize.setMin( DEFAULT_PMECC_MIN_VALUE )
-    pmeccSpareAreaSize.setMax( smcConvertMaskToInt( bitField_PMECCSAREA_SPARESIZE.getAttribute( "mask" ) ) )
+    pmeccSpareAreaSize.setMax( convertMaskToInt( bitField_PMECCSAREA_SPARESIZE.getAttribute( "mask" ) ) )
     pmeccSpareAreaSize.setDefaultValue( DEFAULT_PMECC_SPARE_AREA_SIZE )
     # ----- 
     pmeccStartAddress = smcComponent.createIntegerSymbol( "SMC_PMECC_START_ADDRESS", pmeccMenu ) 
     pmeccStartAddress.setLabel( bitField_PMECCSADDR_STARTADDR.getAttribute( "caption" ) )
     pmeccStartAddress.setMin( DEFAULT_PMECC_MIN_VALUE )
-    pmeccStartAddress.setMax( smcConvertMaskToInt( bitField_PMECCSADDR_STARTADDR.getAttribute( "mask" ) ) )
+    pmeccStartAddress.setMax( convertMaskToInt( bitField_PMECCSADDR_STARTADDR.getAttribute( "mask" ) ) )
     pmeccStartAddress.setDefaultValue( DEFAULT_PMECC_START_ADDRESS )
     # ----- 
     pmeccEndAddress = smcComponent.createIntegerSymbol( "SMC_PMECC_END_ADDRESS", pmeccMenu ) 
     pmeccEndAddress.setLabel( bitField_PMECCEADDR_ENDADDR.getAttribute( "caption" ) )
     pmeccEndAddress.setMin( DEFAULT_PMECC_MIN_VALUE )
-    pmeccEndAddress.setMax( smcConvertMaskToInt( bitField_PMECCEADDR_ENDADDR.getAttribute( "mask" ) ) )
+    pmeccEndAddress.setMax( convertMaskToInt( bitField_PMECCEADDR_ENDADDR.getAttribute( "mask" ) ) )
     pmeccEndAddress.setDefaultValue( DEFAULT_PMECC_END_ADDRESS )
     # ----- 
     pmeccErrorLocationMenu = smcComponent.createMenuSymbol( "SMC_PMECC_ERROR_LOCATION", None ) 
@@ -396,7 +399,7 @@ def instantiateComponent( smcComponent ):
     pmeccErrorLocationEnable = smcComponent.createIntegerSymbol( "SMC_PMECC_ERROR_LOCATION_ENABLE_CODEWORD", pmeccErrorLocationMenu ) 
     pmeccErrorLocationEnable.setLabel( bitField_ELEN_ENINIT.getAttribute( "caption" ) )
     pmeccErrorLocationEnable.setMin( DEFAULT_PMECC_ERROR_LOCATION_MIN_VALUE )
-    pmeccErrorLocationEnable.setMax( smcConvertMaskToInt( bitField_ELEN_ENINIT.getAttribute( "mask" ) ) )
+    pmeccErrorLocationEnable.setMax( convertMaskToInt( bitField_ELEN_ENINIT.getAttribute( "mask" ) ) )
     pmeccErrorLocationEnable.setDefaultValue( DEFAULT_PMECC_ERROR_LOCATION_CODEWORD )
     # ----- 
     pmeccErrorLocationSectorSize = smcComponent.createKeyValueSetSymbol( "SMC_PMECC_ERROR_LOCATION_SECTOR_SIZE", pmeccErrorLocationMenu ) 
@@ -433,9 +436,9 @@ def instantiateComponent( smcComponent ):
         modeTdfCycles = smcComponent.createIntegerSymbol( modeTdfCyclesName, modeSettingsMenu )
         modeTdfCycles.setLabel( bitField_MODE_TDF_CYCLES.getAttribute( "caption" ) )
         modeTdfCycles.setMin( DEFAULT_SMC_MODE_MIN_VALUE )
-        modeTdfCycles.setMax( smcConvertMaskToInt( bitField_MODE_TDF_CYCLES.getAttribute( "mask" ) ) )
+        modeTdfCycles.setMax( convertMaskToInt( bitField_MODE_TDF_CYCLES.getAttribute( "mask" ) ) )
         modeTdfCycles.setDefaultValue( DEFAULT_SMC_MODE_TDF_CYCLES_VALUE)
-        modeTdfCycles.setDependencies( smcModeTdfCyclesVisible, [modeTdfModeName] )
+        modeTdfCycles.setDependencies( visibilityBasedOnBoolSymbol, [modeTdfModeName] )
 
         modeDbwNameStem = "SMC_MODE_DBW"
         modeDbwName = modeDbwNameStem + csNum  
@@ -491,7 +494,7 @@ def instantiateComponent( smcComponent ):
         setupNCsRd = smcComponent.createIntegerSymbol( setupNCsRdName, readCycleConfiguration)
         setupNCsRd.setLabel( setupNCsRdCaption )
         setupNCsRd.setMin( DEFAULT_SMC_SETUP_MIN_VALUE )
-        setupNCsRd.setMax( smcConvertMaskToInt( bitField_SETUP_NCS_RD.getAttribute( "mask" ) ) )
+        setupNCsRd.setMax( convertMaskToInt( bitField_SETUP_NCS_RD.getAttribute( "mask" ) ) )
         setupNCsRd.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         pulseNCsRdNameStem = "SMC_PULSE_NCS_RD"
@@ -500,7 +503,7 @@ def instantiateComponent( smcComponent ):
         pulseNCsRd = smcComponent.createIntegerSymbol( pulseNCsRdName, readCycleConfiguration)
         pulseNCsRd.setLabel( pulseNCsRdCaption )
         pulseNCsRd.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
-        pulseNCsRd.setMax( smcConvertMaskToInt( bitField_PULSE_NCS_RD.getAttribute( "mask" ) ) )
+        pulseNCsRd.setMax( convertMaskToInt( bitField_PULSE_NCS_RD.getAttribute( "mask" ) ) )
         pulseNCsRd.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
 
         setupNRdNameStem = "SMC_SETUP_NRD"
@@ -509,7 +512,7 @@ def instantiateComponent( smcComponent ):
         setupNRd = smcComponent.createIntegerSymbol( setupNRdName, readCycleConfiguration)
         setupNRd.setLabel( setupNRdCaption )
         setupNRd.setMin( DEFAULT_SMC_SETUP_MIN_VALUE )
-        setupNRd.setMax( smcConvertMaskToInt( bitField_SETUP_NRD.getAttribute( "mask" ) ) )
+        setupNRd.setMax( convertMaskToInt( bitField_SETUP_NRD.getAttribute( "mask" ) ) )
         setupNRd.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         pulseNRdNameStem = "SMC_PULSE_NRD"
@@ -518,7 +521,7 @@ def instantiateComponent( smcComponent ):
         pulseNRd = smcComponent.createIntegerSymbol( pulseNRdName, readCycleConfiguration)
         pulseNRd.setLabel( pulseNRdCaption )
         pulseNRd.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
-        pulseNRd.setMax( smcConvertMaskToInt( bitField_PULSE_NRD.getAttribute( "mask" ) ) )
+        pulseNRd.setMax( convertMaskToInt( bitField_PULSE_NRD.getAttribute( "mask" ) ) )
         pulseNRd.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
 
         cycleNRdNameStem = "SMC_CYCLE_NRD"
@@ -527,7 +530,7 @@ def instantiateComponent( smcComponent ):
         cycleNRd = smcComponent.createIntegerSymbol( cycleNRdName, readCycleConfiguration )
         cycleNRd.setLabel( cycleNRdCaption )
         cycleNRd.setMin( DEFAULT_SMC_CYCLE_MIN_VALUE )
-        cycleNRd.setMax( smcConvertMaskToInt( bitField_CYCLE_NRD.getAttribute( "mask" ) ) )
+        cycleNRd.setMax( convertMaskToInt( bitField_CYCLE_NRD.getAttribute( "mask" ) ) )
         cycleNRd.setDefaultValue( DEFAULT_SMC_CYCLE_MIN_VALUE )
         #####
         modeWriteModeNameStem = "SMC_MODE_WRITE_MODE"
@@ -546,7 +549,7 @@ def instantiateComponent( smcComponent ):
         setupNCsWr = smcComponent.createIntegerSymbol( setupNCsWrName, writeCycleConfiguration)
         setupNCsWr.setLabel( setupNCsWrCaption )
         setupNCsWr.setMin( DEFAULT_SMC_SETUP_MIN_VALUE )
-        setupNCsWr.setMax( smcConvertMaskToInt( bitField_SETUP_NCS_WR.getAttribute( "mask" ) ) )
+        setupNCsWr.setMax( convertMaskToInt( bitField_SETUP_NCS_WR.getAttribute( "mask" ) ) )
         setupNCsWr.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         pulseNCsWrNameStem = "SMC_PULSE_NCS_WR"
@@ -555,7 +558,7 @@ def instantiateComponent( smcComponent ):
         pulseNCsWr = smcComponent.createIntegerSymbol( pulseNCsWrName, writeCycleConfiguration)
         pulseNCsWr.setLabel( pulseNCsWrCaption )
         pulseNCsWr.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
-        pulseNCsWr.setMax( smcConvertMaskToInt( bitField_PULSE_NCS_WR.getAttribute( "mask" ) ) )
+        pulseNCsWr.setMax( convertMaskToInt( bitField_PULSE_NCS_WR.getAttribute( "mask" ) ) )
         pulseNCsWr.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
 
         setupNWeNameStem = "SMC_SETUP_NWE"
@@ -564,7 +567,7 @@ def instantiateComponent( smcComponent ):
         setupNWe = smcComponent.createIntegerSymbol( setupNWeName, writeCycleConfiguration )
         setupNWe.setLabel( setupNWeCaption )
         setupNWe.setMin( DEFAULT_SMC_SETUP_MIN_VALUE )
-        setupNWe.setMax( smcConvertMaskToInt( bitField_SETUP_NWE.getAttribute( "mask" ) ) )
+        setupNWe.setMax( convertMaskToInt( bitField_SETUP_NWE.getAttribute( "mask" ) ) )
         setupNWe.setDefaultValue( DEFAULT_SMC_SETUP_VALUE )
 
         pulseNWeNameStem = "SMC_PULSE_NWE"
@@ -573,7 +576,7 @@ def instantiateComponent( smcComponent ):
         pulseNWe = smcComponent.createIntegerSymbol( pulseNWeName, writeCycleConfiguration )
         pulseNWe.setLabel( pulseNWeCaption )
         pulseNWe.setMin( DEFAULT_SMC_PULSE_MIN_VALUE )
-        pulseNWe.setMax( smcConvertMaskToInt( bitField_PULSE_NWE.getAttribute( "mask" ) ) )
+        pulseNWe.setMax( convertMaskToInt( bitField_PULSE_NWE.getAttribute( "mask" ) ) )
         pulseNWe.setDefaultValue( DEFAULT_SMC_PULSE_VALUE )
 
         cycleNWeNameStem = "SMC_CYCLE_NWE"
@@ -582,7 +585,7 @@ def instantiateComponent( smcComponent ):
         cycleNWe = smcComponent.createIntegerSymbol( cycleNWeName, writeCycleConfiguration)
         cycleNWe.setLabel( cycleNWeCaption )
         cycleNWe.setMin( DEFAULT_SMC_CYCLE_MIN_VALUE )
-        cycleNWe.setMax( smcConvertMaskToInt( bitField_CYCLE_NWE.getAttribute( "mask" ) ) )
+        cycleNWe.setMax( convertMaskToInt( bitField_CYCLE_NWE.getAttribute( "mask" ) ) )
         cycleNWe.setDefaultValue( DEFAULT_SMC_CYCLE_MIN_VALUE )
         # Timings register
         timingsMenu = smcComponent.createMenuSymbol( "SMC_TIMINGS" + csNum, chipSelectEnable)
@@ -600,7 +603,7 @@ def instantiateComponent( smcComponent ):
         timingsTwb = smcComponent.createIntegerSymbol( timingsTwbName, timingsMenu)
         timingsTwb.setLabel( timingsTwbCaption )
         timingsTwb.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
-        timingsTwb.setMax( smcConvertMaskToInt( bitField_TIMINGS_TWB.getAttribute( "mask" ) ) )
+        timingsTwb.setMax( convertMaskToInt( bitField_TIMINGS_TWB.getAttribute( "mask" ) ) )
         timingsTwb.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
 
         timingsTrrNameStem = "SMC_TIMINGS_TRR"
@@ -609,7 +612,7 @@ def instantiateComponent( smcComponent ):
         timingsTrr = smcComponent.createIntegerSymbol( timingsTrrName, timingsMenu)
         timingsTrr.setLabel( timingsTrrCaption )
         timingsTrr.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
-        timingsTrr.setMax( smcConvertMaskToInt( bitField_TIMINGS_TRR.getAttribute( "mask" ) ) )
+        timingsTrr.setMax( convertMaskToInt( bitField_TIMINGS_TRR.getAttribute( "mask" ) ) )
         timingsTrr.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
 
         timingsOcmsNameStem = "SMC_TIMINGS_OCMS"
@@ -624,7 +627,7 @@ def instantiateComponent( smcComponent ):
         timingsTar = smcComponent.createIntegerSymbol( timingsTarName, timingsMenu)
         timingsTar.setLabel( timingsTarCaption )
         timingsTar.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
-        timingsTar.setMax( smcConvertMaskToInt( bitField_TIMINGS_TAR.getAttribute( "mask" ) ) )
+        timingsTar.setMax( convertMaskToInt( bitField_TIMINGS_TAR.getAttribute( "mask" ) ) )
         timingsTar.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
 
         timingsTadlNameStem = "SMC_TIMINGS_TADL"
@@ -633,7 +636,7 @@ def instantiateComponent( smcComponent ):
         timingsTadl = smcComponent.createIntegerSymbol( timingsTadlName, timingsMenu )
         timingsTadl.setLabel( timingsTadlCaption )
         timingsTadl.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
-        timingsTadl.setMax( smcConvertMaskToInt( bitField_TIMINGS_TADL.getAttribute( "mask" ) ) )
+        timingsTadl.setMax( convertMaskToInt( bitField_TIMINGS_TADL.getAttribute( "mask" ) ) )
         timingsTadl.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
 
         timingsTclrNameStem = "SMC_TIMINGS_TCLR"
@@ -642,7 +645,7 @@ def instantiateComponent( smcComponent ):
         timingsTclr = smcComponent.createIntegerSymbol( timingsTclrName, timingsMenu)
         timingsTclr.setLabel( timingsTclrCaption )
         timingsTclr.setMin( DEFAULT_SMC_TIMINGS_MIN_VALUE )
-        timingsTclr.setMax( smcConvertMaskToInt( bitField_TIMINGS_TCLR.getAttribute( "mask" ) ) )
+        timingsTclr.setMax( convertMaskToInt( bitField_TIMINGS_TCLR.getAttribute( "mask" ) ) )
         timingsTclr.setDefaultValue( DEFAULT_SMC_TIMINGS_VALUE )
     # ----- 
     offChipMemoryScramblingMenu = smcComponent.createMenuSymbol( "SMC_OCMS_MENU", None )
