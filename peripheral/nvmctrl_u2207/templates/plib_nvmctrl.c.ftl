@@ -86,7 +86,7 @@ void ${NVMCTRL_INSTANCE_NAME}_Initialize(void)
     <@compress single_line=true>${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = ${NVMCTRL_CACHE_ENABLE?then('', 'NVMCTRL_CTRLB_CACHEDIS_Msk |')}
     <#lt>                       NVMCTRL_CTRLB_READMODE_${NVMCTRL_CTRLB_READMODE_SELECTION} |
     <#lt>                       NVMCTRL_CTRLB_SLEEPPRM_${NVMCTRL_CTRLB_POWER_REDUCTION_MODE} | NVMCTRL_CTRLB_RWS(${NVM_RWS})
-    <#lt>                       ${(NVMCTRL_WRITE_POLICY == "AUTOMATIC")?then('| NVMCTRL_CTRLB_MANW_Msk', ' ')};</@compress>
+    <#lt>                       ${(NVMCTRL_WRITE_POLICY == "MANUAL")?then('| NVMCTRL_CTRLB_MANW_Msk', ' ')};</@compress>
 }
 
 <#if NVMCTRL_CACHE_ENABLE == true>
