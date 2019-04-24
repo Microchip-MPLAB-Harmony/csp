@@ -46,7 +46,7 @@
 // Section: ${DBGU_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
-<#if DBGU_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
 
 DBGU_OBJECT ${DBGU_INSTANCE_NAME?lower_case}Obj;
 
@@ -182,7 +182,7 @@ void ${DBGU_INSTANCE_NAME}_Initialize(void)
 
     /* Configure ${DBGU_INSTANCE_NAME} Baud Rate */
     ${DBGU_INSTANCE_NAME}_REGS->DBGU_BRGR = DBGU_BRGR_CD(${BRG_VALUE});
-<#if DBGU_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
 
     /* Initialize instance object */
     ${DBGU_INSTANCE_NAME?lower_case}Obj.rxBuffer = NULL;
@@ -223,7 +223,7 @@ bool ${DBGU_INSTANCE_NAME}_SerialSetup(DBGU_SERIAL_SETUP *setup, uint32_t srcClk
     uint32_t brgVal = 0;
     uint32_t dbguMode;
 
-<#if DBGU_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
     if ((${DBGU_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true) || (${DBGU_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true))
     {
         /* Transaction is in progress, so return without updating settings */
@@ -257,7 +257,7 @@ bool ${DBGU_INSTANCE_NAME}_SerialSetup(DBGU_SERIAL_SETUP *setup, uint32_t srcClk
 bool ${DBGU_INSTANCE_NAME}_Read(void *buffer, const size_t size)
 {
     bool status = false;
-<#if DBGU_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
 </#if>
@@ -270,7 +270,7 @@ bool ${DBGU_INSTANCE_NAME}_Read(void *buffer, const size_t size)
          * ErrorGet clears errors internally. */
         ${DBGU_INSTANCE_NAME}_ErrorGet();
 
-<#if DBGU_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
         while (size > processedSize)
         {
             /* Error status */
@@ -314,14 +314,14 @@ bool ${DBGU_INSTANCE_NAME}_Read(void *buffer, const size_t size)
 bool ${DBGU_INSTANCE_NAME}_Write(void *buffer, const size_t size)
 {
     bool status = false;
-<#if DBGU_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
     size_t processedSize = 0;
 </#if>
     uint8_t * lBuffer = (uint8_t *)buffer;
 
     if (NULL != lBuffer)
     {
-<#if DBGU_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
         while (size > processedSize)
         {
             if (DBGU_SR_TXEMPTY_Msk == (${DBGU_INSTANCE_NAME}_REGS->DBGU_SR & DBGU_SR_TXEMPTY_Msk))
@@ -357,7 +357,7 @@ bool ${DBGU_INSTANCE_NAME}_Write(void *buffer, const size_t size)
     return status;
 }
 
-<#if DBGU_INTERRUPT_MODE == true>
+<#if USART_INTERRUPT_MODE == true>
 void ${DBGU_INSTANCE_NAME}_WriteCallbackRegister(DBGU_CALLBACK callback, uintptr_t context)
 {
     ${DBGU_INSTANCE_NAME?lower_case}Obj.txCallback = callback;
@@ -393,7 +393,7 @@ size_t ${DBGU_INSTANCE_NAME}_ReadCountGet(void)
 }
 
 </#if>
-<#if DBGU_INTERRUPT_MODE == false>
+<#if USART_INTERRUPT_MODE == false>
 uint8_t ${DBGU_INSTANCE_NAME}_ReadByte(void)
 {
     return (${DBGU_INSTANCE_NAME}_REGS->DBGU_RHR & DBGU_RHR_RXCHR_Msk);
