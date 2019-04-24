@@ -53,7 +53,7 @@
 #include "definitions.h"                // SYS function prototypes
 
 #define ADC_VREF                (3.3f)
-#define ADC_MAX_COUNT           (1023)
+#define ADC_MAX_COUNT           (1023U)
 
 uint16_t adc_count;
 float input_voltage;
@@ -68,21 +68,20 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-
+    
     printf("\n\r---------------------------------------------------------");
-    printf("\n\r                    ADC Polled Mode Demo                 ");
+    printf("\n\r                    ADC Demo                 ");
     printf("\n\r---------------------------------------------------------\n\r");
-
-    /* Timer 3 will trigger the conversion */
-    TMR3_Start();
-
-    while ( true )
+    
+    while (1)
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
 
-        /* Start sampling (this instruction is not needed if auto-sampling is enabled). */
-        ADC_SamplingStart();
+        /* Auto sampling mode is used, so no code is needed to start sampling */
+		
+        /* Start ADC conversion in software */
+        ADC_ConversionStart();
 
         /* Wait till ADC conversion result is available */
         while(!ADC_ResultIsReady())
