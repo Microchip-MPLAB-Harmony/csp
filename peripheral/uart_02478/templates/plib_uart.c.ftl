@@ -230,10 +230,10 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
     return status;
 }
 
-bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
+bool ${UART_INSTANCE_NAME}_Read(void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t* )buffer;
 <#if USART_INTERRUPT_MODE == false>
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
@@ -281,23 +281,23 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
             ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = true;
             status = true;
+
+            /* Enable ${UART_INSTANCE_NAME}_FAULT Interrupt */
+            ${UART_FAULT_IEC_REG}SET = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
+
+            /* Enable ${UART_INSTANCE_NAME}_RX Interrupt */
+            ${UART_RX_IEC_REG}SET = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
         }
-
-        /* Enable ${UART_INSTANCE_NAME}_FAULT Interrupt */
-        ${UART_FAULT_IEC_REG}SET = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
-
-        /* Enable ${UART_INSTANCE_NAME}_RX Interrupt */
-        ${UART_RX_IEC_REG}SET = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 </#if>
     }
 
     return status;
 }
 
-bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
+bool ${UART_INSTANCE_NAME}_Write( void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t*)buffer;
 <#if USART_INTERRUPT_MODE == false>
     size_t processedSize = 0;
 </#if>
@@ -357,7 +357,6 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
 }
 
 <#if USART_INTERRUPT_MODE == true>
-
 void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback = callback;
@@ -398,21 +397,17 @@ static void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 void ${UART_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 </#if>
 {
+    /* Clear size and rx status */
+    ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+
+    /* Disable the fault interrupt */
+    ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
+
     /* Client must call UARTx_ErrorGet() function to clear the errors */
     if( ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
     {
         ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
     }
-
-    /* Clear size and rx status */
-    ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
-    ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-    ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
-
-    ${UART_INSTANCE_NAME}_ErrorClear();
-
-    /* Disable the fault interrupt */
-    ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
@@ -435,8 +430,6 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
         if(${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
-            ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
 
             /* Disable the receive interrupt */
             ${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
@@ -474,8 +467,6 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
         if(${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.txSize)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
-            ${UART_INSTANCE_NAME?lower_case}Obj.txSize = 0;
-            ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize = 0;
 
             /* Disable the transmit interrupt, to avoid calling ISR continuously */
             ${UART_TX_IEC_REG}CLR = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
@@ -512,8 +503,8 @@ void UART_${UART_INSTANCE_NUM}_InterruptHandler (void)
         ${UART_INSTANCE_NAME}_FAULT_InterruptHandler();
     }
 }
-
 </#if>
+
 <#else>
 void ${UART_INSTANCE_NAME}_WriteByte(int data)
 {
