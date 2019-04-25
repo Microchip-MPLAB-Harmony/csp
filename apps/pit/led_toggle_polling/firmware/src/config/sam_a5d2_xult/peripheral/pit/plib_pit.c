@@ -58,7 +58,7 @@
 void PIT_TimerInitialize(void)
 {
     PIT_REGS->PIT_PIVR;
-    PIT_REGS->PIT_MR = PIT_MR_PIV(518750-1) | PIT_MR_PITEN(1) | PIT_MR_PITIEN(0);
+    PIT_REGS->PIT_MR = PIT_MR_PIV(259375-1) | PIT_MR_PITEN(1) | PIT_MR_PITIEN(0);
 }
 
 void PIT_TimerRestart(void)
