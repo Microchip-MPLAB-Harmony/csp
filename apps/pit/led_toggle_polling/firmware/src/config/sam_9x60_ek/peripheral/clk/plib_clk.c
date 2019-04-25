@@ -37,7 +37,7 @@ static void initPeriphClk(void)
                             PMC_PCR_EN_Msk |\
                             PMC_PCR_CMD_Msk |\
                             PMC_PCR_GCLKEN(periphList[i].gclk) |\
-                            PMC_PCR_GCLKCSS(periphList[i].css) |\
+                            periphList[i].css |\
                             PMC_PCR_GCLKDIV(periphList[i].div);
     }
 

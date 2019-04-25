@@ -2,7 +2,7 @@
 <Configuration>
   <Configurator>
     <Name dnOrder="0" value="sam_9x60_ek"/>
-    <Processor dnOrder="1" value="ATSAM9X60"/>
+    <Processor dnOrder="1" value="SAM9X60"/>
     <Harmony dnOrder="2" path="C:\Users\C50748\sand\h3"/>
     <Manifest dnOrder="3">
       <Files dnOrder="0">
