@@ -193,18 +193,18 @@ def updateDMACChannelInterruptData(symbol, event):
     channelNumber = ''.join([i for i in symbol.getID() if i.isdigit()])
 
     if "_ENBL" in event["id"]:
-        InterruptVector = dmaInterruptName + channelNumber + "_INTERRUPT_ENABLE"
-        InterruptHandler = dmaInterruptName + channelNumber + "_INTERRUPT_HANDLER"
-        InterruptHandlerLock = dmaInterruptName + channelNumber + "_INTERRUPT_HANDLER_LOCK"
-        InterruptVectorUpdate = dmaInterruptName + channelNumber + "_INTERRUPT_ENABLE_UPDATE"
+        InterruptVector = "DMA" + channelNumber + "_INTERRUPT_ENABLE"
+        InterruptHandler = "DMA" + channelNumber + "_INTERRUPT_HANDLER"
+        InterruptHandlerLock = "DMA" + channelNumber + "_INTERRUPT_HANDLER_LOCK"
+        InterruptVectorUpdate = "DMA" + channelNumber + "_INTERRUPT_ENABLE_UPDATE"
 
         Database.setSymbolValue("core", InterruptVector, event["value"], 1)
         Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 1)
 
         if event["value"] == True:
-            Database.setSymbolValue("core", InterruptHandler, dmaInterruptName + channelNumber + "_InterruptHandler", 1)
+            Database.setSymbolValue("core", InterruptHandler, "DMA" + channelNumber + "_InterruptHandler", 1)
         else:
-            Database.setSymbolValue("core", InterruptHandler, dmaInterruptName + channelNumber + "_Handler", 1)
+            Database.setSymbolValue("core", InterruptHandler, "DMA" + channelNumber + "_Handler", 1)
     else:
         InterruptVectorUpdate = event["id"].replace("core.", "")
 
