@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-03-25T04:46:27Z */
+/* file generated from device description version 2019-04-12T22:09:26Z */
 #ifndef _SAM9X_DBGU_COMPONENT_H_
 #define _SAM9X_DBGU_COMPONENT_H_
 
@@ -83,6 +83,13 @@
 #define DBGU_MR_PAR_SPACE                     (DBGU_MR_PAR_SPACE_Val << DBGU_MR_PAR_Pos)           /**< (DBGU_MR) Space: parity forced to 0 Position  */
 #define DBGU_MR_PAR_MARK                      (DBGU_MR_PAR_MARK_Val << DBGU_MR_PAR_Pos)            /**< (DBGU_MR) Mark: parity forced to 1 Position  */
 #define DBGU_MR_PAR_NO                        (DBGU_MR_PAR_NO_Val << DBGU_MR_PAR_Pos)              /**< (DBGU_MR) No parity Position  */
+#define DBGU_MR_BRSRCCK_Pos                   _U_(12)                                              /**< (DBGU_MR) Baud Rate Source Clock Position */
+#define DBGU_MR_BRSRCCK_Msk                   (_U_(0x1) << DBGU_MR_BRSRCCK_Pos)                    /**< (DBGU_MR) Baud Rate Source Clock Mask */
+#define DBGU_MR_BRSRCCK(value)                (DBGU_MR_BRSRCCK_Msk & ((value) << DBGU_MR_BRSRCCK_Pos))
+#define   DBGU_MR_BRSRCCK_PERIPH_CLK_Val      _U_(0x0)                                             /**< (DBGU_MR) The baud rate is driven by the peripheral clock  */
+#define   DBGU_MR_BRSRCCK_PMC_PCKGCLK_Val     _U_(0x1)                                             /**< (DBGU_MR) The baud rate is driven by a PMC-programmable clock PCKGCLK  */
+#define DBGU_MR_BRSRCCK_PERIPH_CLK            (DBGU_MR_BRSRCCK_PERIPH_CLK_Val << DBGU_MR_BRSRCCK_Pos) /**< (DBGU_MR) The baud rate is driven by the peripheral clock Position  */
+#define DBGU_MR_BRSRCCK_PMC_PCKGCLK           (DBGU_MR_BRSRCCK_PMC_PCKGCLK_Val << DBGU_MR_BRSRCCK_Pos) /**< (DBGU_MR) The baud rate is driven by a PMC-programmable clock PCKGCLK Position  */
 #define DBGU_MR_CHMODE_Pos                    _U_(14)                                              /**< (DBGU_MR) Channel Mode Position */
 #define DBGU_MR_CHMODE_Msk                    (_U_(0x3) << DBGU_MR_CHMODE_Pos)                     /**< (DBGU_MR) Channel Mode Mask */
 #define DBGU_MR_CHMODE(value)                 (DBGU_MR_CHMODE_Msk & ((value) << DBGU_MR_CHMODE_Pos))
@@ -94,7 +101,7 @@
 #define DBGU_MR_CHMODE_AUTOMATIC              (DBGU_MR_CHMODE_AUTOMATIC_Val << DBGU_MR_CHMODE_Pos) /**< (DBGU_MR) Automatic echo Position  */
 #define DBGU_MR_CHMODE_LOCAL_LOOPBACK         (DBGU_MR_CHMODE_LOCAL_LOOPBACK_Val << DBGU_MR_CHMODE_Pos) /**< (DBGU_MR) Local loopback Position  */
 #define DBGU_MR_CHMODE_REMOTE_LOOPBACK        (DBGU_MR_CHMODE_REMOTE_LOOPBACK_Val << DBGU_MR_CHMODE_Pos) /**< (DBGU_MR) Remote loopback Position  */
-#define DBGU_MR_Msk                           _U_(0x0000CE10)                                      /**< (DBGU_MR) Register Mask  */
+#define DBGU_MR_Msk                           _U_(0x0000DE10)                                      /**< (DBGU_MR) Register Mask  */
 
 
 /* -------- DBGU_IER : (DBGU Offset: 0x08) ( /W 32) Interrupt Enable Register -------- */
