@@ -57,25 +57,74 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
     <#assign CMP_CMxCON_EVPOL = "CMP_" + i + "_CON_EVPOL">
     <#assign CMP_CMxCON_AMPMOD = "CMP_" + i + "_CON_AMPMOD">
     <#assign CMP_CMxCON_OAO = "CMP_" + i + "_CON_OAO">
+    <#assign CMP_CMxCON_OPLPWR = "CMP_" + i + "_CON_OPLPWR">
     <#assign CMP_CMxCON_CPOL = "CMP_" + i + "_CON_CPOL">
     <#assign CMP_CMxCON_COE = "CMP_" + i + "_CON_COE">
+    <#assign CMP_CMxCON_OPAON = "CMP_" + i + "_CON_OPAON">
+    <#assign CMP_CMxCON_ENPGA = "CMP_" + i + "_CON_ENPGA">
+    <#assign CMP_CMxCON_HYSPOL = "CMP_" + i + "_CON_HYSPOL">
+    <#assign CMP_CMxCON_HYSSEL = "CMP_" + i + "_CON_HYSSEL">
+    <#assign CMP_CMxCON_CFSEL = "CMP_" + i + "_CON_CFSEL">
+    <#assign CMP_CMxCON_CFLTREN = "CMP_" + i + "_CON_CFLTREN">
+    <#assign CMP_CMxCON_CFDIV = "CMP_" + i + "_CON_CFDIV">
     <#assign CMP_CMxCON_VALUE = "CMP_" + i + "_CON_VALUE">
     <#assign CMP_IEC_REG = "CMP_" + i + "_IEC_REG">
     /*  CCH     = ${.vars[CMP_CMxCON_CCH]}    */
     /*  CREF    = ${.vars[CMP_CMxCON_CREF]}    */
     /*  EVPOL   = ${.vars[CMP_CMxCON_EVPOL]}    */
     <#if i != 4>
-    /*  AMPMOD    = ${.vars[CMP_CMxCON_AMPMOD]?then('true', 'false')}    */
-    /*  OAO    = ${.vars[CMP_CMxCON_OAO]?then('true', 'false')}    */
+    <#assign CMP_CMxCON_AMPMOD_PRESENT = "CMP_" + i + "_CON_AMPMOD_PRESENT">
+    <#if .vars[CMP_CMxCON_AMPMOD_PRESENT]? has_content >
+    /*  AMPMOD  = ${.vars[CMP_CMxCON_AMPMOD]?then('true', 'false')}    */
+    </#if>
+    <#assign CMP_CMxCON_OAO_PRESENT = "CMP_" + i + "_CON_OAO_PRESENT">
+    <#if .vars[CMP_CMxCON_OAO_PRESENT]?has_content >
+    /*  OAO     = ${.vars[CMP_CMxCON_OAO]?then('true', 'false')}    */
+    </#if>
+    </#if>
+    <#assign CMP_CMxCON_OPLPWR_PRESENT = "CMP_" + i + "_CON_OPLPWR_PRESENT">
+    <#if .vars[CMP_CMxCON_OPLPWR_PRESENT]? has_content>
+    /*  OPLPWR  = ${.vars[CMP_CMxCON_OPLPWR]?then('true', 'false')}  */
+    </#if>
+    <#assign CMP_CMxCON_ENPGA_PRESENT = "CMP_" + i + "_CON_ENPGA_PRESENT">
+    <#if .vars[CMP_CMxCON_ENPGA_PRESENT]? has_content>
+    /*  ENPGA   = ${.vars[CMP_CMxCON_ENPGA]?then('true', 'false')}  */
+    </#if>
+    <#assign CMP_CMxCON_HYSPOL_PRESENT = "CMP_" + i + "_CON_HYSPOL_PRESENT">
+    <#if .vars[CMP_CMxCON_HYSPOL_PRESENT]? has_content>
+    /*  HYSPOL  = ${.vars[CMP_CMxCON_HYSPOL]?then('true', 'false')}  */
+    </#if>
+    <#assign CMP_CMxCON_HYSSEL_PRESENT = "CMP_" + i + "_CON_HYSSEL_PRESENT">
+    <#if .vars[CMP_CMxCON_HYSSEL_PRESENT]? has_content>
+    /*  HYSSEL  = ${.vars[CMP_CMxCON_HYSSEL]}  */
+    </#if>
+    <#assign CMP_CMxCON_CFSEL_PRESENT = "CMP_" + i + "_CON_CFSEL_PRESENT">
+    <#if .vars[CMP_CMxCON_CFSEL_PRESENT]? has_content>
+    /*  CFSEL   = ${.vars[CMP_CMxCON_CFSEL]}  */
+    </#if>
+    <#assign CMP_CMxCON_CFLTREN_PRESENT = "CMP_" + i + "_CON_CFSEL_PRESENT">
+    <#if .vars[CMP_CMxCON_CFLTREN_PRESENT]? has_content>
+    /*  CFLTREN = ${.vars[CMP_CMxCON_CFLTREN]?then('true', 'false')}  */
+    </#if>
+    <#assign CMP_CMxCON_CFDIV_PRESENT = "CMP_" + i + "_CON_CFDIV_PRESENT">
+    <#if .vars[CMP_CMxCON_CFDIV_PRESENT]? has_content>
+    /*  CFDIV   = ${.vars[CMP_CMxCON_CFDIV]}  */
     </#if>
     /*  CPOL    = ${.vars[CMP_CMxCON_CPOL]?then('true', 'false')}    */
-    /*  COE     = ${.vars[CMP_CMxCON_COE]?then('true', 'false')}    */
-    CM${i}CON = 0x${.vars[CMP_CMxCON_VALUE]};
-    
+    /*  COE     = ${.vars[CMP_CMxCON_COE]?then('true', 'false')}     */
     <#if .vars[CMP_CMxCON_EVPOL] != "0">
     ${.vars[CMP_IEC_REG]}SET = _${.vars[CMP_IEC_REG]}_${CMP_INSTANCE_NAME}${i}IE_MASK;
-    
     </#if>
+    <#assign CMP_CMxCON_OPAON_PRESENT = "CMP_" + i + "_CON_OPAON_PRESENT">
+    <#if .vars[CMP_CMxCON_OPAON_PRESENT]? has_content>
+    /*  OPAON   = ${.vars[CMP_CMxCON_OPAON]?then('true', 'false')}    */
+    </#if>
+    <#assign CMP_CMxCON_ENPGA_PRESENT = "CMP_" + i + "_CON_ENPGA_PRESENT">
+    <#if .vars[CMP_CMxCON_ENPGA_PRESENT]? has_content>
+    /*  ENPGA   = ${.vars[CMP_CMxCON_ENPGA]?then('true', 'false')}    */
+    </#if>
+    CM${i}CON = 0x${.vars[CMP_CMxCON_VALUE]};
+    
     <#assign CMP_CMxMSKCON_VALUE = "CMP_" + i + "_CMxMSKCON_VALUE">
     <#if .vars[CMP_CMxMSKCON_VALUE]? has_content >
     /* Value loaded into CM${i}MSKCON is formed by combining configuration selected via MHC */
