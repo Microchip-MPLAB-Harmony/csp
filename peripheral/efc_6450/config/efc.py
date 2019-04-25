@@ -33,13 +33,13 @@ global waitStates
 def waitStateUpdate(symbol, event):
     global waitStates
     cpuFreq = event["value"]
-    for key in sorted(waitStates.keys()):
-        if int(cpuFreq) <= int(key):
-            print cpuFreq
-            print key
-            symbol.setValue(waitStates.get(key), 2)
-            break
-            
+
+    if (cpuFreq != ""):
+        for key in sorted(waitStates.keys()):
+            if int(cpuFreq) <= int(key):
+                symbol.setValue(waitStates.get(key), 2)
+                break
+
 def efcSetMemoryDependency(symbol, event):
     if (event["value"] == True):
         symbol.setVisible(True)
