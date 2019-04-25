@@ -76,7 +76,7 @@ void APP_Callback(XDMAC_TRANSFER_EVENT status, uintptr_t context)
 {
     transfersDone++;
 
-    timeStamp=timeStamp-PIT_TimerCounterGet();
+    timeStamp=PIT_TimerCounterGet()-timeStamp;
 
     if(status == XDMAC_TRANSFER_COMPLETE)
     {
