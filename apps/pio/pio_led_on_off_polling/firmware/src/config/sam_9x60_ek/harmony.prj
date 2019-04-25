@@ -2,7 +2,7 @@
 <Configuration>
   <Configurator>
     <Name dnOrder="0" value="sam_9x60_ek"/>
-    <Processor dnOrder="1" value="ATSAM9X60"/>
+    <Processor dnOrder="1" value="SAM9X60"/>
     <Harmony dnOrder="2" path="C:\Users\C50748\sand\h3"/>
     <Manifest dnOrder="3">
       <Files dnOrder="0">
@@ -538,7 +538,7 @@
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAM9X60_DFP\0.1.2\atdf\ATSAM9X60.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAM9X60_DFP\0.1.13\atdf\SAM9X60.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>

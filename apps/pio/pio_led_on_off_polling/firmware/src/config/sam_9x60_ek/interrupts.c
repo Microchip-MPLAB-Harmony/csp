@@ -57,6 +57,17 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/* Brief default interrupt handler for unused IRQs */
+void DefaultInterruptHandler( void )
+{
+    while( 1 ){
+    }
+}
+uint32_t spuriousEventCount = 0;
+void DefaultInterruptHandlerForSpurious( void )
+{
+    ++spuriousEventCount;
+}
 
 /*******************************************************************************
  End of File
