@@ -147,12 +147,13 @@ void PIT_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context)
 
 void PIT_InterruptHandler(void)
 {
-    uint32_t reg;
-    if (PIT_REGS->PIT_SR) {
-        reg = PIT_REGS->PIT_PIVR;
+    uint32_t interruptStatus = PIT_REGS->PIT_SR;
+    if( interruptStatus ) {
+        uint32_t reg = PIT_REGS->PIT_PIVR;
         pit.tickCounter++;
-        if(pit.callback)
+        if(pit.callback) {
             pit.callback(pit.context);
+        }
     }
 }
 /*******************************************************************************
