@@ -322,7 +322,7 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister (FLEXCOM_SPI_CALLBACK callbac
 
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy(void)
 {
-    return ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy;
+    return ((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy) || ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TXEMPTY_Msk) == 0));
 }
 
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
