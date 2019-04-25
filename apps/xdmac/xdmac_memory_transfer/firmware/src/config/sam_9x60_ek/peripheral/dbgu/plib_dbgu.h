@@ -70,17 +70,13 @@ bool DBGU_Write(void *buffer, const size_t size);
 
 bool DBGU_Read(void *buffer, const size_t size);
 
-bool DBGU_WriteIsBusy(void);
+uint8_t DBGU_ReadByte(void);
 
-bool DBGU_ReadIsBusy(void);
+void DBGU_WriteByte(uint8_t data);
 
-size_t DBGU_WriteCountGet(void);
+bool DBGU_TransmitterIsReady(void);
 
-size_t DBGU_ReadCountGet(void);
-
-void DBGU_WriteCallbackRegister(DBGU_CALLBACK callback, uintptr_t context);
-
-void DBGU_ReadCallbackRegister(DBGU_CALLBACK callback, uintptr_t context);
+bool DBGU_ReceiverIsReady(void);
 
 
 // DOM-IGNORE-BEGIN
