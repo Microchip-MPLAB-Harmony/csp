@@ -725,12 +725,32 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="143" id="XDMAC_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="143" id="WDT_EARLY_RESET_ACTION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="144" id="XDMAC_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="144" id="WDT_LEVEL_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Integer dnOrder="145" id="WDT_PERIOD_COUNT">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="146" id="WDT_PERIOD_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="147" id="XDMAC_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="148" id="XDMAC_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -740,27 +760,42 @@
     <UniqueComponent dnOrder="1" id="dfp"/>
     <UniqueComponent dnOrder="2" id="pit64b">
       <Symbols dnOrder="0">
-        <Boolean dnOrder="0" id="ENABLE_INTERRUPT">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="pit64b" value="true"/>
-          </Values>
-        </Boolean>
-        <Long dnOrder="1" id="PERIOD">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="200000"/>
-          </Values>
-        </Long>
-        <Boolean dnOrder="2" id="PERIOD_INT">
+        <Boolean dnOrder="0" id="CONT">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Float dnOrder="3" id="PERIOD_US">
+        <Boolean dnOrder="1" id="ENABLE_INTERRUPT">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pit64b" value="true"/>
+          </Values>
+        </Boolean>
+        <Long dnOrder="2" id="PERIOD">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="200000"/>
+          </Values>
+        </Long>
+        <Boolean dnOrder="3" id="PERIOD_INT">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="true"/>
+          </Values>
+        </Boolean>
+        <Integer dnOrder="4" id="PERIOD_LSB">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pit64b" value="200000"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="5" id="PERIOD_MSB">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pit64b" value="0"/>
+          </Values>
+        </Integer>
+        <Float dnOrder="6" id="PERIOD_US">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="pit64b" value="1000.0"/>
           </Values>
         </Float>
-        <Integer dnOrder="4" id="SRC_FREQ">
+        <Integer dnOrder="7" id="SRC_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="pit64b" value="200000000"/>
           </Values>
