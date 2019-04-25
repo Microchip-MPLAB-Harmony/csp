@@ -300,27 +300,6 @@ void PIT64B_TimerCallbackSet(PIT64B_CALLBACK callback, uintptr_t context);
 
 // *****************************************************************************
 /* Function:
-    void PIT64B_InterruptHandler(void);
-
-  Summary:
-    PIT64B Interrupt Handler.
-
-  Description:
-    Internal PIT64B interrupt handler called by interrupt controller.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-  
-  Returns:
-    None.
-*/
-void PIT64B_InterruptHandler(void);
-
-// *****************************************************************************
-/* Function:
     void PIT64B_ClearInterrupt(void);
 
   Summary:
