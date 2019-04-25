@@ -83,7 +83,6 @@ __write( int handle, const unsigned char * buffer, size_t size )
         nChars = 0;
         if( buffer ){
            nChars = DBGU_Write( (void*) buffer, size );      // "MyLowLevelPutchar"
-           while (DBGU_WriteIsBusy()){;}//spin lock
         }
     }
 

@@ -128,16 +128,16 @@ void MC_Handler( void )                  __attribute__((weak, alias("DefaultInte
 
 /* Weak definitions for sub-handlers in vectors shared by multiple interrupts */
 void PMC_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
-void WDT_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
-void SHDWC_Handler( void )               __attribute__((weak, alias("DefaultInterruptHandler")));
+void RSTC_Handler( void )                __attribute__((weak, alias("DefaultInterruptHandler")));
+void RTT_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
 void PIT_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
+void WDT_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
 void RTC_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
 void SDRAMC_Handler( void )              __attribute__((weak, alias("DefaultInterruptHandler")));
 void MPDDRC_Handler( void )              __attribute__((weak, alias("DefaultInterruptHandler")));
 void SMC_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
 
 void XDMAC_InterruptHandler(             void );
-void DBGU_InterruptHandler(              void );
 void PIT_InterruptHandler(               void );
 
 /* Handlers for vectors that are shared by multiple interrupts */
@@ -153,7 +153,6 @@ void MC_SharedHandler( void )
 IrqData irqData[] = {
     { 1,   (uint32_t) AIC_REGS,    SYSC_SharedHandler,         AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  0x0 },
     { 20,  (uint32_t) AIC_REGS,    XDMAC_InterruptHandler,     AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  0x0 },
-    { 47,  (uint32_t) AIC_REGS,    DBGU_InterruptHandler,      AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  0x0 },
 };
 
 uint32_t irqDataEntryCount = sizeof( irqData ) / sizeof( irqData[ 0 ]);
