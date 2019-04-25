@@ -203,12 +203,11 @@ def adchsAddKeyValueSetFromATDFInitValue(Parent, ModuleName, RegisterName, BitFi
                 return Component
 
             else:
-                Log.writeErrorMessage("Adding KeyValueSet: Failed!! no such node. " + value_groupPath)
-
+                Log.writeInfoMessage("Adding KeyValueSet: no such node. " + value_groupPath)
         else:
-            Log.writeErrorMessage("Adding KeyValueSet: Failed!! no such node. " + labelPath)
+            Log.writeInfoMessage("Adding KeyValueSet: no such node. " + labelPath)
     else:
-        Log.writeErrorMessage("Adding KeyValueSet: Failed!! no such node. " + registerPath)
+        Log.writeInfoMessage("Adding KeyValueSet: no such node. " + registerPath)
 
     return None
 
@@ -279,7 +278,7 @@ def adchsAddBooleanFromATDFBitfieldCaption(Parent, ModuleName, RegisterName, Bit
         Component.setVisible(Visibility)
         return Component
     else:
-        Log.writeErrorMessage("Adding Boolean: Failed!! no such node. " + labelPath)
+        Log.writeInfoMessage("Adding Boolean: no such node. " + labelPath)
     return None
 
 # This creates a Long symbol which results in a 32 bit unsigned number box
@@ -712,9 +711,19 @@ def instantiateComponent(adchsComponent):
     ADC_Input_Signals_List = [False] * MAX_AVAILABLE_SIGNALS
 
     # Each of the dedicated ADCHS SARs must have a DIGEN bit field in the
-    # ADCCON3 SFR.  So, counting them give the number of dedicated ADC
-    # channels.  Note, ADC7 should always exist as the shared SAR.
-    for ChannelNumber in range(0, 7):
+    # ADCCON3 SFR. 
+    # ATDF files can skip a channel (e.g., DIGEN6 is absent).  We therefore
+    # need to poll the ATDF file to see what channels are present.  They are
+    # set in channelList[].
+    channelList = []
+    registerPath = ATDF.getNode(adchsATDFRegisterPath(Module, "ADCCON3"))
+    bitfields = registerPath.getChildren()
+    for ii in bitfields:
+        if(("DIGEN" in ii.getAttribute("name")) and (ii.getAttribute("values")!=None)):
+            if(ii.getAttribute("values")[-1] != '7'):  # channel 7 is shared - do not include in channelList
+                channelList.append(ii.getAttribute("values")[-1]) # the last char is a digit
+ 
+    for ChannelNumber in channelList:
         labelPath = adchsATDFRegisterBitfieldPath(Module, "ADCCON3",
             "DIGEN" + str(ChannelNumber))
         labelNode = ATDF.getNode(labelPath).getAttribute("values")
@@ -903,6 +912,7 @@ def instantiateComponent(adchsComponent):
             ["ADCHS_"+str(channelID)+"_ENABLE"])
         adctrgmode_deplist.append("ADCTRGMODE__SH" + str(channelID) + "ALT")
 
+
         RegisterNameBase1 = "ADC"
         RegisterNameBase2 = "TIME"
         BitFieldBaseName_SAMC = "SAMC"
@@ -1042,13 +1052,15 @@ def instantiateComponent(adchsComponent):
         RegisterNameBase = "ADCTRG"
         BitFieldBaseName_TRGSRC = "TRGSRC"
         RegisterName = RegisterNameBase + str((channelID/4)+1)
-        adchsSym_ADCTRG__TRGSRC.append(channelID)
-        adchsSym_ADCTRG__TRGSRC[channelID] = adchsAddKeyValueSetFromATDFInitValue(
+        component = adchsAddKeyValueSetFromATDFInitValue(
             adchsComponent, Module, RegisterName, BitFieldBaseName_TRGSRC +
             str(channelID), adchsSym_class2[channelID - ADC_Max_Class_1], False)
-        adchsSym_ADCTRG__TRGSRC[channelID].setLabel("Select Trigger Source")
-        adchsSym_ADCTRG__TRGSRC[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
-        adctrg_deplist[int((channelID/4))].append(RegisterName + "__" + BitFieldBaseName_TRGSRC + str(channelID))
+        if(component != None):
+            adchsSym_ADCTRG__TRGSRC.append(channelID)
+            adchsSym_ADCTRG__TRGSRC[channelID] = component
+            adchsSym_ADCTRG__TRGSRC[channelID].setLabel("Select Trigger Source")
+            adchsSym_ADCTRG__TRGSRC[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
+            adctrg_deplist[int((channelID/4))].append(RegisterName + "__" + BitFieldBaseName_TRGSRC + str(channelID))
 
         RegisterBaseName_ADCCSS = "ADCCSS"
         BitFieldBaseName_CSS = "CSS"
@@ -1076,12 +1088,14 @@ def instantiateComponent(adchsComponent):
             RegisterBaseName_ADCCSS = "ADCCSS"
             BitFieldBaseName_CSS = "CSS"
             RegisterName = RegisterBaseName_ADCCSS + str((channelID/32)+1)
-            adchsSym_ADCCSS__CSS[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
+            component = adchsAddBooleanFromATDF1ValueValueGroup(
                 adchsComponent, Module, RegisterName, BitFieldBaseName_CSS + str(channelID),
                 adchsSym_class3, False)
-            adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
-            adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
-            adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
+            if(component != None):
+                adchsSym_ADCCSS__CSS[channelID] = component
+                adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
+                adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
+                adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
 
     #Signal Conditioning menu
     adchsSignalConditionMenu = adchsComponent.createMenuSymbol("ADCHS_SIGNAL_CONDITION_CONF", None)
@@ -1140,19 +1154,21 @@ def instantiateComponent(adchsComponent):
                 adcimcon_deplist[index].append(RegisterName + "__" + BitFieldBaseName_DIFF + str(signalID))
 
             RegisterName = RegisterBaseName_ADCGIRQEN + str((signalID/32)+1)
-            adchsSym_ADCGIRQEN__AGIEN[signalID] = adchsAddBooleanFromATDFBitfieldCaption(
+            component = adchsAddBooleanFromATDFBitfieldCaption(
                 adchsComponent, Module, RegisterName, BitFieldBaseName_AGIEN + str(signalID),
                 adchsCONMenu[signalID], False)
-            adchsSym_ADCGIRQEN__AGIEN[signalID].setDependencies(adchsVisibilityOnEvent,
-                ["AN"+str(signalID)])
-            adcinterruptmode_deplist.append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-            adcgirqen_deplist[int(signalID/32)].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-            if (signalID < (num_intrpt_in_first_iec)):
-                adciec_depList[0].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-            elif ((signalID >= (num_intrpt_in_first_iec)) and (signalID < (32 + (num_intrpt_in_first_iec)))):
-                adciec_depList[1].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-            else:
-                adciec_depList[2].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+            if(component != None):
+                adchsSym_ADCGIRQEN__AGIEN[signalID] = component
+                adchsSym_ADCGIRQEN__AGIEN[signalID].setDependencies(adchsVisibilityOnEvent,
+                    ["AN"+str(signalID)])
+                adcinterruptmode_deplist.append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+                adcgirqen_deplist[int(signalID/32)].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+                if (signalID < (num_intrpt_in_first_iec)):
+                    adciec_depList[0].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+                elif ((signalID >= (num_intrpt_in_first_iec)) and (signalID < (32 + (num_intrpt_in_first_iec)))):
+                    adciec_depList[1].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+                else:
+                    adciec_depList[2].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
 
 ###################################################################################################
 ########################### Register Values Calculation   #################################

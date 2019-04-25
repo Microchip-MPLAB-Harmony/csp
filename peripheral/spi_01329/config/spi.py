@@ -54,11 +54,15 @@ global interruptsChildren
 interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 
 global dummyDataDict
+'''
+Dictionary is based off of values in ATDF file for keynames, instead of their captions.  The values will remain the same,
+whereas the captions may vary between families that use this SPI PLIB.
+'''
 dummyDataDict = {
-                    "(AUDEN=1) 24-bit Data, 32-bit FIFO, 32-bit Channel/64-bit Frame/(AUDEN=0) 32-bit Data" : 0xFFFFFFFF,
-                    "(AUDEN=1) 32-bit Data, 32-bit FIFO, 32-bit Channel/64-bit Frame/(AUDEN=0) 32-bit Data" : 0xFFFFFFFF,
-                    "(AUDEN=1) 16-bit Data, 16-bit FIFO, 32-bit Channel/64-bit Frame/(AUDEN=0) 16-bit Data" : 0xFFFF,
-                    "(AUDEN=1) 16-bit Data, 16-bit FIFO, 16-bit Channel/32-bit Frame/(AUDEN=0) 8-bit Data"  : 0xFF,
+                    "3" : 0xFFFFFFFF,
+                    "2" : 0xFFFFFFFF,
+                    "1" : 0xFFFF,
+                    "0" : 0xFF,
                 }
 
 ################################################################################
@@ -235,11 +239,37 @@ def SPIBRG_ValueUpdate(symbol, event):
     t_brg = calculateBRGValue(clkFreq, BaudRate)
     symbol.setValue(t_brg, 1)
 
+global _find_key
+def _find_key(value, keypairs):
+    '''
+    Helper function that finds the keyname for the given value. 
+          value - the value to be looked for in the dictionary
+          keypairs - the dictionary to be searched over
+    '''
+    for ii in mode_names:
+        if(ii["key"] == str(value)):
+            return ii["value"]
+
+   
+    print("_find_key: could not find value in dictionary") # should never get here
+    return ""
+    
 def DummyData_ValueUpdate(symbol, event):
+    '''
+    Updater function based on key/value pairs from the SPIxCON__MODE32 bitfield.  
+    This sets the symbol's current value / maximum value based on the user's selection of 
+    the SPIxCON__MODE32 value. 
 
-    symbol.setValue(dummyDataDict[event["symbol"].getKey(event["value"])], 1)
-
-    symbol.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
+    We cannot simply use event["value"] to get the right value.  The values returned by doing that
+    are based on the order the bitfield values occur within the SPIxCON__MODE32 area.  What is needed
+    is the actual value in the ATDF file for the entry the user chose:
+           <value caption=... value="0x3" /> 
+    In above example, the line may be the 1st line present in this grouping.  In that case, event["value"] returns 0,
+    which is not what we want.  
+    '''
+    value = _find_key(event["symbol"].getKey(event["value"]), mode_names)  # returns the actual value field for what is being looked for
+    symbol.setValue(dummyDataDict[value], 1)
+    symbol.setMax(dummyDataDict[value])
 
 def updateSPIClockWarningStatus(symbol, event):
 
@@ -255,6 +285,7 @@ def instantiateComponent(spiComponent):
     global InterruptVectorUpdate
     global spiSymInterruptMode
     global spiSymMaxBRG
+    global mode_names
 
     InterruptVector = []
     InterruptHandler = []
@@ -324,6 +355,7 @@ def instantiateComponent(spiComponent):
     spiInterruptCount.setDefaultValue(len(InterruptVector))
     spiInterruptCount.setVisible(False)
 
+
     enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(spiFaultVectorNum)
     statRegName, statBitPosn, statMask = _get_statReg_parms(spiFaultVectorNum)
 
@@ -372,6 +404,7 @@ def instantiateComponent(spiComponent):
 
     enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(spiTxVectorNum)
     statRegName, statBitPosn, statMask = _get_statReg_parms(spiTxVectorNum)
+
 
     ## IEC REG
     spiTXIEC = spiComponent.createStringSymbol("SPI_TX_IEC_REG", None)

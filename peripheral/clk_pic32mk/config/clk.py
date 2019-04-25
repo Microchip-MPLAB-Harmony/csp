@@ -34,14 +34,14 @@ global set_refotrim_value
 global _process_valuegroup_entry
 
 global peripheralBusDict
-peripheralBusDict = {}
-
 peripheralBusDict =  {
 
         #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
         # if "Peripheral bus no" == -1 then clocked by SYSCLK
 
         "ADCHS": ["5", "1", "0"],
+        "I2C1": ["2", "5", "16"],
+        "I2C2": ["2", "5", "17"],
         "CDAC1": ["2", "1", "4"],
         "CDAC2": ["3", "1", "5"],
         "CDAC3": ["3", "1", "6"],
@@ -1402,45 +1402,58 @@ if __name__ == "__main__":
     SOSC_IN_FREQ.setDefaultValue(int(newPoscFreq))
     SOSC_IN_FREQ.setVisible(True)
 
-    # UPLL
-    UPLL_SYM = coreComponent.createMenuSymbol("CONFIG_UPLL", CLK_CFG_SETTINGS)
-    UPLL_SYM.setLabel("USB Clock Configuration")
-    UPLL_SYM.setVisible(True)
-
-    # UPOSCEN, Output Enable bit
     '''
         get key/value pairs first from atdf file
         then define the combo symbol using those pairs
+        
+        Note:  some devices don't have this register being used, so have to be careful
     '''
-    UsbClkSrcUPOSCEN = "USB Input Clock Source 1"
-    items = clkValGrp_UPLLCON__UPOSCEN.getChildren()
-    keyVals = {}
-    for ii in items:  # get all key values from atdf file for this bitfield
-        if(ii.getAttribute("name") != ""):
-            keyVals[ii.getAttribute("name")] = _process_valuegroup_entry(ii)
-    uposcenKeyvals = keyVals
-    UPOSCEN_VALSYM = coreComponent.createComboSymbol("UPOSCEN_VAL",UPLL_SYM, ["UPLL","POSC"])
-    UPOSCEN_VALSYM.setLabel(UsbClkSrcUPOSCEN)
-    UPOSCEN_VALSYM.setVisible(True)
-    UPOSCEN_VALSYM.setDefaultValue("UPLL")  # USB input clock is UPLL
+    # used in ftl file for deciding whether to use USB-specific symbols below
+    UPLL_PRESENT = coreComponent.createBooleanSymbol("UPLL_PRESENT", CLK_CFG_SETTINGS)
+    UPLL_PRESENT.setVisible(False)
+    UPLL_PRESENT.setDefaultValue(True)
+    
+    # USB is not in some members of PIC32MK family.
+    if(clkValGrp_UPLLCON__UPOSCEN != None):
+        # UPLL
+        UPLL_SYM = coreComponent.createMenuSymbol("CONFIG_UPLL", CLK_CFG_SETTINGS)
+        UPLL_SYM.setLabel("USB Clock Configuration")
+        UPLL_SYM.setVisible(True)
+        
+        # UPOSCEN, Output Enable bit
+        UsbClkSrcUPOSCEN = "USB Input Clock Source 1"
+        items = clkValGrp_UPLLCON__UPOSCEN.getChildren()
+        keyVals = {}
+        for ii in items:  # get all key values from atdf file for this bitfield
+            if(ii.getAttribute("name") != ""):
+                keyVals[ii.getAttribute("name")] = _process_valuegroup_entry(ii)
+        uposcenKeyvals = keyVals
+        UPOSCEN_VALSYM = coreComponent.createComboSymbol("UPOSCEN_VAL",UPLL_SYM, ["UPLL","POSC"])
+        UPOSCEN_VALSYM.setLabel(UsbClkSrcUPOSCEN)
+        UPOSCEN_VALSYM.setVisible(True)
+        UPOSCEN_VALSYM.setDefaultValue("UPLL")  # USB input clock is UPLL
+    
+        UFRCEN_VALSYM = coreComponent.createComboSymbol("UFRCEN_VAL", UPLL_SYM, ["FRC",UsbClkSrcUPOSCEN])
+        UFRCEN_VALSYM.setLabel("USB Input Clock Source")
+        UFRCEN_VALSYM.setVisible(True)
+        UFRCEN_VALSYM.setDefaultValue(UsbClkSrcUPOSCEN)  # USB input clock is selected from UPOSCEN
+    
+        scan_atdf_for_upll_fields(coreComponent)
+    
+    
+        # UPLLCON register value for use in ftl files
+        UPLLCON_VALSYM = coreComponent.createHexSymbol("UPLLCON_REG_VALUE",None)
+        UPLLCON_VALSYM.setVisible(False)
+        defaultValue = int(pllrangeKeyvals[Database.getSymbolValue("core","PLLRANGE_VAL")]) << 0 | \
+                    (int(pllidivKeyVals[Database.getSymbolValue("core","PLLIDIV_VAL")]) << 8) | \
+                    (int(pllmultKeyvals[Database.getSymbolValue("core","PLLMULT_VAL")]) << 16) | \
+                    (int(pllodivKeyvals[Database.getSymbolValue("core","PLLODIV_VAL")]) << 24) | \
+                    (int(uposcenKeyvals[Database.getSymbolValue("core","UPOSCEN_VAL")]) << 29)
+        UPLLCON_VALSYM.setDefaultValue(defaultValue)
+        UPLLCON_VALSYM.setDependencies(updateUpllcon, ['PLLRANGE_VAL', 'PLLIDIV_VAL', 'PLLMULT_VAL', 'PLLODIV_VAL', 'UPOSCEN_VAL'])
+    else:
+        UPLL_PRESENT.setDefaultValue(False) # prevents certain output from occurring in ftl file
 
-    UFRCEN_VALSYM = coreComponent.createComboSymbol("UFRCEN_VAL", UPLL_SYM, ["FRC",UsbClkSrcUPOSCEN])
-    UFRCEN_VALSYM.setLabel("USB Input Clock Source")
-    UFRCEN_VALSYM.setVisible(True)
-    UFRCEN_VALSYM.setDefaultValue(UsbClkSrcUPOSCEN)  # USB input clock is selected from UPOSCEN
-
-    scan_atdf_for_upll_fields(coreComponent)
-
-    # UPLLCON register value for use in ftl files
-    UPLLCON_VALSYM = coreComponent.createHexSymbol("UPLLCON_REG_VALUE",None)
-    UPLLCON_VALSYM.setVisible(False)
-    defaultValue = int(pllrangeKeyvals[Database.getSymbolValue("core","PLLRANGE_VAL")]) << 0 | \
-                   (int(pllidivKeyVals[Database.getSymbolValue("core","PLLIDIV_VAL")]) << 8) | \
-                   (int(pllmultKeyvals[Database.getSymbolValue("core","PLLMULT_VAL")]) << 16) | \
-                   (int(pllodivKeyvals[Database.getSymbolValue("core","PLLODIV_VAL")]) << 24) | \
-                   (int(uposcenKeyvals[Database.getSymbolValue("core","UPOSCEN_VAL")]) << 29)
-    UPLLCON_VALSYM.setDefaultValue(defaultValue)
-    UPLLCON_VALSYM.setDependencies(updateUpllcon, ['PLLRANGE_VAL', 'PLLIDIV_VAL', 'PLLMULT_VAL', 'PLLODIV_VAL', 'UPOSCEN_VAL'])
 
     # this is added to resolve a dependency in ftl file
     HAVE_REFCLK5 = coreComponent.createBooleanSymbol("CONFIG_HAVE_REFCLOCK5", CLK_CFG_SETTINGS)

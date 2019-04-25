@@ -99,7 +99,7 @@ void CLK_Initialize( void )
     }
 
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
-
+<#if UPLL_PRESENT == true> <#-- some devices (that use this PLIB) don't have USB in them -->
 <#if UPLL_EN == true>  <#-- UPLL_EN is dependent on DEVCFG2:UPLLEN -->
     /* Configure UPLL */
     /* UPOSCEN = ${UPOSCEN_VAL} */
@@ -108,13 +108,13 @@ void CLK_Initialize( void )
     /* PLLIDIV = ${PLLIDIV_VAL} */
     /* PLLRANGE = ${PLLRANGE_VAL} */
     ${UPLLCON_REG} = 0x${UPLLCON_REG_VALUE};
-
 </#if>
 <#if UFRCEN_VAL == "FRC">
     /* Make FRC as the input clock for USB */
     OSCCONSET = _OSCCON_UFRCEN_MASK;
-
 </#if>
+</#if>
+
 <#if CONFIG_SYS_CLK_PBCLK1_ENABLE == true && CONFIG_SYS_CLK_PBDIV1 != 2>
     /* Peripheral Bus 1 is by default enabled, set its divisor */
     ${PBREGNAME1}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV1 -1};
