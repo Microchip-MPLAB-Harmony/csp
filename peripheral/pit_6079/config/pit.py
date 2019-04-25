@@ -25,9 +25,11 @@ global instanceName
 
 def updateInterrupt(symbol, event):
     instanceName = symbol.getComponent().getSymbolByID("PIT_INSTANCE_NAME")
-    if event['value'] == True:
+    if event["source"].getSymbolValue("ENABLE_INTERRUPT") == True:
         Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE", True, 2)
-        Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER", instanceName.getValue()+"_InterruptHandler", 2)
+        rtosHandler = event["source"].getSymbolValue("RTOS_INTERRUPT_HANDLER")
+        interruptHandler = rtosHandler if rtosHandler != "" else instanceName.getValue()+"_InterruptHandler"
+        Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER", interruptHandler, 2)
     else:
         Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE", False, 2)
         Database.clearSymbolValue("core", instanceName.getValue()+"_INTERRUPT_HANDLER")
@@ -112,10 +114,14 @@ def instantiateComponent( pitComponent ):
     enable.setLabel("Enable Counter")
     enable.setDefaultValue(True)
 
+    rtosInterruptVector = pitComponent.createStringSymbol("RTOS_INTERRUPT_HANDLER", None)
+    rtosInterruptVector.setVisible(False)
+    rtosInterruptVector.setDefaultValue("")
+
     interrupt = pitComponent.createBooleanSymbol("ENABLE_INTERRUPT", None)
     interrupt.setLabel("Enable Interrupt")
     interrupt.setDefaultValue(True)
-    interrupt.setDependencies(updateInterrupt, ["ENABLE_INTERRUPT"])
+    interrupt.setDependencies(updateInterrupt, ["ENABLE_INTERRUPT", "RTOS_INTERRUPT_HANDLER"])
 
     if interrupt.getValue() == True:
         Database.setSymbolValue("core", instanceName.getValue()+"_INTERRUPT_ENABLE", True, 2)
