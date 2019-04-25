@@ -71,7 +71,7 @@ static PIT_OBJECT pit;
 void PIT_TimerInitialize(void)
 {
     PIT_REGS->PIT_PIVR;
-    PIT_REGS->PIT_MR = PIT_MR_PIV(518750-1) | PIT_MR_PITEN(1) | PIT_MR_PITIEN(1);
+    PIT_REGS->PIT_MR = PIT_MR_PIV(5187-1) | PIT_MR_PITEN(1) | PIT_MR_PITIEN(1);
 }
 
 void PIT_TimerRestart(void)
@@ -131,7 +131,7 @@ void PIT_DelayMs(uint32_t delay)
     if((PIT_REGS->PIT_MR & (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk)) == (PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk))
     {
         tickStart=pit.tickCounter;
-        delayTicks=delay/100;
+        delayTicks=delay/1;
 
         while( (pit.tickCounter-tickStart) < delayTicks ) {
             ;
@@ -147,10 +147,14 @@ void PIT_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context)
 
 void PIT_InterruptHandler(void)
 {
-    uint32_t reg = PIT_REGS->PIT_PIVR;
-    pit.tickCounter++;
-    if(pit.callback)
-        pit.callback(pit.context);
+    uint32_t interruptStatus = PIT_REGS->PIT_SR;
+    if( interruptStatus ) {
+        uint32_t reg = PIT_REGS->PIT_PIVR;
+        pit.tickCounter++;
+        if(pit.callback) {
+            pit.callback(pit.context);
+        }
+    }
 }
 /*******************************************************************************
  End of File
