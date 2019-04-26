@@ -105,26 +105,31 @@
             </Boolean>
           </Attributes>
         </String>
-        <Comment dnOrder="15" id="ADC_CLK_ENABLE_COMMENT">
+        <Integer dnOrder="15" id="ADC_CLK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="adc" value="10000000"/>
+          </Values>
+        </Integer>
+        <Comment dnOrder="16" id="ADC_CLK_ENABLE_COMMENT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Comment>
-        <Comment dnOrder="16" id="ADC_INTERRUPT_ENABLE_COMMENT">
+        <Comment dnOrder="17" id="ADC_INTERRUPT_ENABLE_COMMENT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Comment>
-        <Boolean dnOrder="17" id="ADC_MR_USEQ">
+        <Boolean dnOrder="18" id="ADC_MR_USEQ">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Combo dnOrder="18" id="ADC_SEQR1_USCH1">
+        <Combo dnOrder="19" id="ADC_SEQR1_USCH1">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -134,21 +139,21 @@
             <User dnOrder="0" value="CH2"/>
           </Values>
         </Combo>
-        <Combo dnOrder="19" id="ADC_SEQR1_USCH10">
+        <Combo dnOrder="20" id="ADC_SEQR1_USCH10">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Combo dnOrder="20" id="ADC_SEQR1_USCH11">
+        <Combo dnOrder="21" id="ADC_SEQR1_USCH11">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Combo dnOrder="21" id="ADC_SEQR1_USCH2">
+        <Combo dnOrder="22" id="ADC_SEQR1_USCH2">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -158,7 +163,7 @@
             <User dnOrder="0" value="CH0"/>
           </Values>
         </Combo>
-        <Combo dnOrder="22" id="ADC_SEQR1_USCH3">
+        <Combo dnOrder="23" id="ADC_SEQR1_USCH3">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -168,49 +173,49 @@
             <User dnOrder="0" value="CH1"/>
           </Values>
         </Combo>
-        <Combo dnOrder="23" id="ADC_SEQR1_USCH4">
+        <Combo dnOrder="24" id="ADC_SEQR1_USCH4">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Combo dnOrder="24" id="ADC_SEQR1_USCH5">
+        <Combo dnOrder="25" id="ADC_SEQR1_USCH5">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Combo dnOrder="25" id="ADC_SEQR1_USCH6">
+        <Combo dnOrder="26" id="ADC_SEQR1_USCH6">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Combo dnOrder="26" id="ADC_SEQR1_USCH7">
+        <Combo dnOrder="27" id="ADC_SEQR1_USCH7">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Combo dnOrder="27" id="ADC_SEQR1_USCH8">
+        <Combo dnOrder="28" id="ADC_SEQR1_USCH8">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Combo dnOrder="28" id="ADC_SEQR1_USCH9">
+        <Combo dnOrder="29" id="ADC_SEQR1_USCH9">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <KeyValueSet dnOrder="29" id="ADC_TRGR_MODE">
+        <KeyValueSet dnOrder="30" id="ADC_TRGR_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="0"/>
           </Values>
@@ -911,12 +916,32 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="135" id="XDMAC_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="135" id="WDT_EARLY_RESET_ACTION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="136" id="XDMAC_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="136" id="WDT_LEVEL_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Integer dnOrder="137" id="WDT_PERIOD_COUNT">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="138" id="WDT_PERIOD_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="139" id="XDMAC_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="140" id="XDMAC_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -925,26 +950,9 @@
     </UniqueComponent>
     <UniqueComponent dnOrder="2" id="dbgu">
       <Symbols dnOrder="0">
-        <Integer dnOrder="0" id="BRG_VALUE">
+        <Boolean dnOrder="0" id="USART_INTERRUPT_MODE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="dbgu" value="108"/>
-          </Values>
-        </Integer>
-        <Integer dnOrder="1" id="DBGU_CLOCK_FREQ">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="dbgu" value="200000000"/>
-          </Values>
-        </Integer>
-        <Comment dnOrder="2" id="DBGU_CLOCK_INVALID_COMMENT">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </Comment>
-        <Boolean dnOrder="3" id="DBGU_INTERRUPT_MODE">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="false"/>
+            <Dynamic dnOrder="0" id="stdio" value="false"/>
           </Values>
         </Boolean>
       </Symbols>
@@ -1029,16 +1037,16 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="adc" x="340" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="240" y="20"/>
-        <ElementPosition dnOrder="2" id="dbgu" x="30" y="60"/>
+        <ElementPosition dnOrder="2" id="dbgu" x="6" y="114"/>
         <ElementPosition dnOrder="3" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="4" id="pit" x="315" y="77"/>
-        <ElementPosition dnOrder="5" id="stdio" x="180" y="76"/>
+        <ElementPosition dnOrder="5" id="stdio" x="163" y="122"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
