@@ -96,7 +96,8 @@ void CORETIMER_DelayMs ( uint32_t delay)
 void CORE_TIMER_InterruptHandler (void)
 {
     uint32_t count, newCompare;
-    IFS0CLR=0x1;
+    uint32_t status = IFS0bits.CTIF;
+    IFS0CLR = 0x1;
     // Start Critical Section
     __builtin_disable_interrupts();
     count=_CP0_GET_COUNT();
@@ -110,7 +111,7 @@ void CORE_TIMER_InterruptHandler (void)
     coreTmr.tickCounter++;
     if(coreTmr.callback != NULL)
     {
-        coreTmr.callback(coreTmr.context);
+        coreTmr.callback(status, coreTmr.context);
     }
 }
 

@@ -1,32 +1,20 @@
 /*******************************************************************************
-  SYS CLK Static Functions for Clock System Service
-
-  Company:
-    Microchip Technology Inc.
+  System Definitions
 
   File Name:
-    plib_clk.h
+    definitions.h
 
   Summary:
-    SYS CLK static function interface for the Clock System Service.
+    project system definitions.
 
   Description:
-    The Clock System Service provides a simple interface to manage the
-    oscillators on Microchip microcontrollers. This file defines the static
-    implementation for the Clock System Service.
+    This file contains the system-wide prototypes and definitions for a project.
 
-  Remarks:
-    Static functions incorporate all system clock configuration settings as
-    determined by the user via the Microchip Harmony Configurator GUI.
-    It provides static version of the routines, eliminating the need for an
-    object ID or object handle.
+ *******************************************************************************/
 
-    Static single-open interfaces also eliminate the need for the open handle.
-
-*******************************************************************************/
-
+//DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -46,73 +34,99 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/
+ *******************************************************************************/
+//DOM-IGNORE-END
 
-#ifndef PLIB_CLK_H
-#define PLIB_CLK_H
+#ifndef DEFINITIONS_H
+#define DEFINITIONS_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
+#include <stdint.h>
 #include <stddef.h>
-#include <stdbool.h>  
+#include <stdbool.h>
+#include "peripheral/clk/plib_clk.h"
+#include "peripheral/gpio/plib_gpio.h"
+#include "peripheral/evic/plib_evic.h"
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-	extern "C" {
+extern "C" {
 
 #endif
 // DOM-IGNORE-END
- 
+
 // *****************************************************************************
 // *****************************************************************************
-// Section: CLK Module System Interface Routines
+// Section: System Functions
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
-/* Function:
-    void CLK_Initialize( void )
+/* System Initialization Function
+
+  Function:
+    void SYS_Initialize( void *data )
 
   Summary:
-    Initializes hardware of the System Clock and Peripheral Clock.
-    
+    Function that initializes all modules in the system.
+
   Description:
-    This function initializes the hardware of System Clock and Peripheral Clocks.
+    This function initializes all modules in the system, including any drivers,
+    services, middleware, and applications.
 
   Precondition:
     None.
 
   Parameters:
-    None.
+    data            - Pointer to the data structure containing any data
+                      necessary to initialize the module. This pointer may
+                      be null if no data is required and default initialization
+                      is to be used.
 
   Returns:
     None.
 
   Example:
     <code>
-    //Example 1: Do not alter the configuration bit settings
-    CLK_Initialize ( );
+    SYS_Initialize ( NULL );
 
+    while ( true )
+    {
+        SYS_Tasks ( );
+    }
     </code>
 
   Remarks:
-    None.
+    This function will only be called once, after system reset.
 */
 
-void CLK_Initialize( void );
+void SYS_Initialize( void *data );
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+/* Nullify SYS_Tasks() if only PLIBs are used. */
+#define     SYS_Tasks()
 
-    }
+// *****************************************************************************
+// *****************************************************************************
+// Section: extern declarations
+// *****************************************************************************
+// *****************************************************************************
 
+
+
+
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
 #endif
-// DOM-IGNORE-END
+//DOM-IGNORE-END
 
-#endif //PLIB_CLK_H
+#endif /* DEFINITIONS_H */
+/*******************************************************************************
+ End of File
+*/
 

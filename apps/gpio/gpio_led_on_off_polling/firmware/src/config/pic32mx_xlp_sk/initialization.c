@@ -56,63 +56,52 @@
 
 /*** DEVCFG0 ***/
 #pragma config DEBUG =      OFF
-#pragma config JTAGEN =     OFF
-#pragma config ICESEL =     ICS_PGx1
-#pragma config TRCEN =      OFF
-#pragma config BOOTISA =    MIPS32
-#pragma config FSLEEP =     OFF
-#pragma config DBGPER =     PG_ALL
+#pragma config JTAGEN =     ON
+#pragma config ICESEL =     ICS_PGx2
+#pragma config PWP =        OFF
+#pragma config BWP =        OFF
+#pragma config CP =         OFF
 #pragma config SMCLR =      MCLR_NORM
-#pragma config SOSCGAIN =   GAIN_2X
-#pragma config SOSCBOOST =  ON
-#pragma config POSCGAIN =   GAIN_LEVEL_3
-#pragma config POSCBOOST =  ON
-#pragma config EJTAGBEN =   NORMAL
+
 
 /*** DEVCFG1 ***/
 #pragma config FNOSC =      SPLL
-#pragma config DMTINTV =    WIN_127_128
+#pragma config FPBDIV =     DIV_2
 #pragma config FSOSCEN =    ON
 #pragma config IESO =       ON
 #pragma config POSCMOD =    OFF
 #pragma config OSCIOFNC =   OFF
-#pragma config FCKSM =      CSECME
+#pragma config FCKSM =      CSDCMD
 #pragma config WDTPS =      PS1048576
-#pragma config WDTSPGM =    STOP
+#pragma config WDTSPGM =    ON
 #pragma config FWDTEN =     OFF
-#pragma config WINDIS =     NORMAL
+#pragma config WINDIS =     OFF
 #pragma config FWDTWINSZ =  WINSZ_25
-#pragma config DMTCNT =     DMT31
-#pragma config FDMTEN =     OFF
+
 
 /*** DEVCFG2 ***/
-#pragma config FPLLIDIV =   DIV_1
-#pragma config FPLLRNG =    RANGE_5_10_MHZ
+#pragma config BOREN =    ON
+#pragma config FPLLIDIV =   DIV_3
 #pragma config FPLLICLK =   PLL_FRC
-#pragma config FPLLMULT =   MUL_60
-#pragma config FPLLODIV =   DIV_4
-#pragma config VBATBOREN =  ON
+#pragma config FPLLMUL =    MUL_18
+#pragma config FPLLODIV =   DIV_1
 #pragma config DSBOREN =    ON
 #pragma config DSWDTPS =    DSPS32
 #pragma config DSWDTOSC =   LPRC
 #pragma config DSWDTEN =    OFF
 #pragma config FDSEN =      ON
-#pragma config BORSEL =     HIGH
 #pragma config UPLLEN =     OFF
+#pragma config UPLLIDIV =   DIV_3
 
 /*** DEVCFG3 ***/
+#pragma config AI2C1 =      OFF
+#pragma config AI2C2 =      OFF
 #pragma config USERID =     0xffff
-#pragma config FUSBIDIO2 =   ON
-#pragma config FVBUSIO2 =  ON
-#pragma config PGL1WAY =    ON
 #pragma config PMDL1WAY =   ON
 #pragma config IOL1WAY =    ON
-#pragma config FUSBIDIO1 =   ON
-#pragma config FVBUSIO1 =  ON
+#pragma config FUSBIDIO =   ON
 
-/*** BF1SEQ ***/
-#pragma config TSEQ =       0x0
-#pragma config CSEQ =       0xffff
+
 
 
 
@@ -165,23 +154,25 @@ void SYS_Initialize ( void* data )
     CLK_Initialize();
 	GPIO_Initialize();
 
-    /* Configure CP0.K0 for optimal performance (cached instruction pre-fetch) */
+    /* Configure KSEG0 as cacheable memory. This is needed for Prefetch Buffer */
     __builtin_mtc0(16, 0,(__builtin_mfc0(16, 0) | 0x3));
 
-    /* Configure Wait States and Prefetch */
+    /* Configure Flash Wait States and Prefetch */
     CHECONbits.PFMWS = 3;
-    CHECONbits.PREFEN = 1;
+    CHECONbits.PREFEN = 3;
+
+    /* Set the SRAM wait states to zero */
+    BMXCONbits.BMXWSDRM = 0;
 
 
-    CORETIMER_Initialize();
+
+
 
 
 
 
     EVIC_Initialize();
 
-	/* Enable global interrupts */
-    __builtin_enable_interrupts();
 
 
 }
