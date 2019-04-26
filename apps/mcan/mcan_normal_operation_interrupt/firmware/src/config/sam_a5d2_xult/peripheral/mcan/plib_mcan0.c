@@ -109,7 +109,7 @@ void MCAN0_Initialize(void)
     MCAN0_REGS->MCAN_GFC = MCAN_GFC_ANFS_RX_FIFO_0 | MCAN_GFC_ANFE_RX_FIFO_0;
 
     /* Timestamp Counter Configuration Register */
-    MCAN0_REGS->MCAN_TSCC = MCAN_TSCC_TSS_TCP_INC | MCAN_TSCC_TCP(1);
+    MCAN0_REGS->MCAN_TSCC = MCAN_TSCC_TSS_TCP_INC | MCAN_TSCC_TCP(0);
 
     /* Set the operation mode */
     MCAN0_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED;
@@ -402,6 +402,8 @@ void MCAN0_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     MCAN0_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED;
     while ((MCAN0_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
 }
+
+
 
 // *****************************************************************************
 /* Function:
