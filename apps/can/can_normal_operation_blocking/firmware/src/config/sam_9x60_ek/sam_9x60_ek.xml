@@ -826,12 +826,32 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="163" id="XDMAC_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="163" id="WDT_EARLY_RESET_ACTION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="164" id="XDMAC_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="164" id="WDT_LEVEL_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Integer dnOrder="165" id="WDT_PERIOD_COUNT">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="166" id="WDT_PERIOD_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="167" id="XDMAC_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="168" id="XDMAC_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -840,26 +860,9 @@
     </UniqueComponent>
     <UniqueComponent dnOrder="2" id="dbgu">
       <Symbols dnOrder="0">
-        <Integer dnOrder="0" id="BRG_VALUE">
+        <Boolean dnOrder="0" id="USART_INTERRUPT_MODE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="dbgu" value="108"/>
-          </Values>
-        </Integer>
-        <Integer dnOrder="1" id="DBGU_CLOCK_FREQ">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="dbgu" value="200000000"/>
-          </Values>
-        </Integer>
-        <Comment dnOrder="2" id="DBGU_CLOCK_INVALID_COMMENT">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </Comment>
-        <Boolean dnOrder="3" id="DBGU_INTERRUPT_MODE">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="false"/>
+            <Dynamic dnOrder="0" id="stdio" value="false"/>
           </Values>
         </Boolean>
       </Symbols>
@@ -900,15 +903,15 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="can1" x="340" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="240" y="20"/>
-        <ElementPosition dnOrder="2" id="dbgu" x="396" y="83"/>
+        <ElementPosition dnOrder="2" id="dbgu" x="141" y="126"/>
         <ElementPosition dnOrder="3" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="4" id="stdio" x="551" y="99"/>
+        <ElementPosition dnOrder="4" id="stdio" x="332" y="150"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
