@@ -1,32 +1,24 @@
 /*******************************************************************************
-  SYS CLK Static Functions for Clock System Service
+  Main Source File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_clk.h
+    main.c
 
   Summary:
-    SYS CLK static function interface for the Clock System Service.
+    This file contains the "main" function for a project.
 
   Description:
-    The Clock System Service provides a simple interface to manage the
-    oscillators on Microchip microcontrollers. This file defines the static
-    implementation for the Clock System Service.
+    This file contains the "main" function for a project.  The
+    "main" function calls the "SYS_Initialize" function to initialize the state
+    machines of all modules in the system
+ *******************************************************************************/
 
-  Remarks:
-    Static functions incorporate all system clock configuration settings as
-    determined by the user via the Microchip Harmony Configurator GUI.
-    It provides static version of the routines, eliminating the need for an
-    object ID or object handle.
-
-    Static single-open interfaces also eliminate the need for the open handle.
-
-*******************************************************************************/
-
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -47,9 +39,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-
-#ifndef PLIB_CLK_H
-#define PLIB_CLK_H
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -57,62 +47,47 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include <stddef.h>
-#include <stdbool.h>  
+#include <stddef.h>                     // Defines NULL
+#include <stdbool.h>                    // Defines true
+#include <stdlib.h>                     // Defines EXIT_FAILURE
+#include "definitions.h"                // SYS function prototypes
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
-
-	extern "C" {
-
-#endif
-// DOM-IGNORE-END
- 
-// *****************************************************************************
-// *****************************************************************************
-// Section: CLK Module System Interface Routines
-// *****************************************************************************
-// *****************************************************************************
+#define SWITCH_PRESSED_STATE        0   // Active LOW switch
+#define LED_On()                        LED_Clear()
+#define LED_Off()                       LED_Set()
 
 // *****************************************************************************
-/* Function:
-    void CLK_Initialize( void )
+// *****************************************************************************
+// Section: Main Entry Point
+// *****************************************************************************
+// *****************************************************************************
 
-  Summary:
-    Initializes hardware of the System Clock and Peripheral Clock.
-    
-  Description:
-    This function initializes the hardware of System Clock and Peripheral Clocks.
+int main ( void )
+{
+    /* Initialize all modules */
+    SYS_Initialize ( NULL );
 
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    //Example 1: Do not alter the configuration bit settings
-    CLK_Initialize ( );
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void CLK_Initialize( void );
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
+    while ( true )
+    {
+        if(SWITCH_Get() == SWITCH_PRESSED_STATE)
+        {
+            /* Turn ON LED */
+            LED_On();
+        }
+        else
+        {
+            /* Turn OFF LED */
+            LED_Off();
+        }
     }
 
-#endif
-// DOM-IGNORE-END
+    /* Execution should not come here during normal operation */
 
-#endif //PLIB_CLK_H
+    return ( EXIT_FAILURE );
+}
+
+
+/*******************************************************************************
+ End of File
+*/
 
