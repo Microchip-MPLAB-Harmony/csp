@@ -1531,7 +1531,7 @@ for index in sorted(channelMap.iterkeys()):
         gclkSymPCHCTRLGenKeyName = gclkSymPCHCTRLGenNodeValues[i].getAttribute(
             "name")
 
-        if (gclkSymPCHCTRLGenKeyName == "GCLK0"):
+        if (gclkSymPCHCTRLGenKeyName == "GCLK1"):
             gclkSymPCHCTRLGenDefaultValue = i
 
         gclkSymPCHCTRLGenKeyDescription = gclkSymPCHCTRLGenNodeValues[i].getAttribute(
@@ -1876,7 +1876,10 @@ clkSym_RTC_CLK_FREQ.setDependencies(setFreq, [
 
 #########################Default Clock##########################################
 gclkSym_num[2].setValue(True, 2)
+gclkSym_num[1].setValue(True, 2)
 gclkSym_GENCTRL_SRC[2].setValue(6, 2)
+gclkSym_GENCTRL_SRC[1].setValue(6, 2)
+gclkSym_GENCTRL_DIV[1].setValue(2, 2)
 gclkSym_GENCTRL_DIV[2].setValue(48, 2)
 Database.setSymbolValue("core", "GCLK_ID_1_CHEN", True, 2)
 Database.setSymbolValue("core", "GCLK_ID_1_GENSEL", 2, 2)
