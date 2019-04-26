@@ -715,12 +715,32 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="141" id="XDMAC_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="141" id="WDT_EARLY_RESET_ACTION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="142" id="XDMAC_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="142" id="WDT_LEVEL_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Integer dnOrder="143" id="WDT_PERIOD_COUNT">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="144" id="WDT_PERIOD_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="145" id="XDMAC_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="146" id="XDMAC_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -893,31 +913,36 @@
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <KeyValueSet dnOrder="17" id="FLEX_USART_MR_NBSTOP">
+        <Boolean dnOrder="17" id="FLEX_USART_MR_MODE9">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="flexcom5" value="false"/>
+          </Values>
+        </Boolean>
+        <KeyValueSet dnOrder="18" id="FLEX_USART_MR_NBSTOP">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <KeyValueSet dnOrder="18" id="FLEX_USART_MR_PAR">
+        <KeyValueSet dnOrder="19" id="FLEX_USART_MR_PAR">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <String dnOrder="19" id="RECEIVE_DATA_REGISTER">
+        <String dnOrder="20" id="RECEIVE_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom5" value="&amp;(FLEXCOM5_REGS-&gt;FLEX_US_RHR)"/>
           </Values>
         </String>
-        <String dnOrder="20" id="TRANSMIT_DATA_REGISTER">
+        <String dnOrder="21" id="TRANSMIT_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom5" value="&amp;(FLEXCOM5_REGS-&gt;FLEX_US_THR)"/>
           </Values>
         </String>
-        <Boolean dnOrder="21" id="USART_INTERRUPT_MODE">
+        <Boolean dnOrder="22" id="USART_INTERRUPT_MODE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
