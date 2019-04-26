@@ -15,8 +15,9 @@
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -37,9 +38,16 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef _PLIB_CMP_H
-#define _PLIB_CMP_H
+#ifndef PLIB_CMP_H
+#define PLIB_CMP_H
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -48,7 +56,9 @@
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     extern "C" {
+
 #endif
 // DOM-IGNORE-END
 
@@ -60,46 +70,53 @@
 
 typedef enum
 {
-    /*CMP Output*/
-    CMP1_OUTPUT_STATUS = _CMSTAT_C1OUT_MASK,      
+    /* CMP1 Output */
+    CMP1_OUTPUT_STATUS = _CMSTAT_C1OUT_MASK,
 
-    CMP2_OUTPUT_STATUS = _CMSTAT_C2OUT_MASK  
+    /* CMP2 Output */
+    CMP2_OUTPUT_STATUS = _CMSTAT_C2OUT_MASK,
 
 } CMP_STATUS_SOURCE;
 
 typedef void (*CMP_CALLBACK) (uintptr_t context);
 
 typedef struct
-{    
+{
     CMP_CALLBACK callback;
-	uintptr_t    context;
-	
-} CMP_OBJECT ;
 
+    uintptr_t    context;
+
+} CMP_OBJECT;
+
+// *****************************************************************************
 // *****************************************************************************
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
 
-void CMP_Initialize (void);
+void CMP_Initialize(void);
 
-void CMP_1_CompareEnable (void);
+bool CMP_StatusGet(CMP_STATUS_SOURCE source);
 
-void CMP_1_CompareDisable (void);
+void CMP_1_CompareEnable(void);
 
-void CMP_2_CompareEnable (void);
+void CMP_1_CompareDisable(void);
 
-void CMP_2_CompareDisable (void);
+void CMP_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 
-bool CMP_StatusGet (CMP_STATUS_SOURCE source);
+void CMP_2_CompareEnable(void);
 
+void CMP_2_CompareDisable(void);
 
 void CMP_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-    }
-#endif
 
+    }
+
+#endif
 // DOM-IGNORE-END
-#endif // _PLIB_CMP_H
+
+#endif // PLIB_CMP_H
