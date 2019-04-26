@@ -106,12 +106,12 @@ void SYS_Initialize ( void* data )
 MMU_Initialize();
 
     INT_Initialize();
+    DBGU_Initialize();
+
  
     TC0_CH0_CaptureInitialize(); 
      
     
-    DBGU_Initialize();
-
     PWM_Initialize();
 
 

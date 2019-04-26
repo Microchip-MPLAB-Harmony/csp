@@ -54,8 +54,8 @@
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/aic/plib_aic.h"
-#include "peripheral/tc/plib_tc0.h"
 #include "peripheral/dbgu/plib_dbgu.h"
+#include "peripheral/tc/plib_tc0.h"
 #include "peripheral/pwm/plib_pwm.h"
 
 // DOM-IGNORE-BEGIN
