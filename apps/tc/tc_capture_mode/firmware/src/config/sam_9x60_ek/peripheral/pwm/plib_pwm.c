@@ -116,12 +116,12 @@ void PWM_ChannelDutySet(PWM_CHANNEL_NUM channel, uint32_t duty)
     }
 }
 
-void PWM_ChannelInterruptEnable (PWM_CHANNEL_MASK channelMask)
+void PWM_ChannelCounterEventEnable (PWM_CHANNEL_MASK channelMask)
 {
     PWM_REGS->PWM_IER = channelMask;
 }
 
-void PWM_ChannelInterruptDisable (PWM_CHANNEL_MASK channelMask)
+void PWM_ChannelCounterEventDisable (PWM_CHANNEL_MASK channelMask)
 {
     PWM_REGS->PWM_IDR = channelMask;
 }
