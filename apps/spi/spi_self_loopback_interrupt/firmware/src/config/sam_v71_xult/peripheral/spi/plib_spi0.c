@@ -206,7 +206,7 @@ void SPI0_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
 
 bool SPI0_IsBusy()
 {
-    return spi0Obj.transferIsBusy;
+    return ((spi0Obj.transferIsBusy) || ((SPI0_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0));
 }
 
 void SPI0_InterruptHandler(void)
