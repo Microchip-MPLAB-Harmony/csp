@@ -160,7 +160,7 @@ void SYSC_SharedHandler( void )
 
 /* data for irq register initialization */
 IrqData irqData[] = {
-    { 38,  (uint32_t) AIC_REGS,    PWM_InterruptHandler,       AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  AIC_SMR_PRIORITY_MINIMUM_Val   },
+    { 38,  (uint32_t) AIC_REGS,    PWM_InterruptHandler,       AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  0x0 },
 };
 
 uint32_t irqDataEntryCount = sizeof( irqData ) / sizeof( irqData[ 0 ]);
