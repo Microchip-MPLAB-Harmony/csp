@@ -101,7 +101,6 @@ void SYS_Initialize ( void* data )
 
 	PIO_Initialize();
 
-
     CAN1_Initialize();
 
 MMU_Initialize();
