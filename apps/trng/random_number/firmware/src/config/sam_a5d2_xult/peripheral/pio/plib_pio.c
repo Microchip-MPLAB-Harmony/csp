@@ -50,10 +50,10 @@
 uint8_t portBCurNumCb = 0;
 
 /* port B maximum number of callbacks */
-uint8_t portBMaxNumCb = 4;
+uint8_t portBMaxNumCb = 2;
 
 /* port B callback objects */
-PIO_PIN_CALLBACK_OBJ portBPinCbObj[4];
+PIO_PIN_CALLBACK_OBJ portBPinCbObj[2];
 
 
 /******************************************************************************
