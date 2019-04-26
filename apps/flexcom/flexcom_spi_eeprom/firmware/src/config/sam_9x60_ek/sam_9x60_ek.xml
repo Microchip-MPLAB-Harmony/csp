@@ -795,12 +795,32 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="157" id="XDMAC_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="157" id="WDT_EARLY_RESET_ACTION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="158" id="XDMAC_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="158" id="WDT_LEVEL_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Integer dnOrder="159" id="WDT_PERIOD_COUNT">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="160" id="WDT_PERIOD_EXPIRATION">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="161" id="XDMAC_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="162" id="XDMAC_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -927,10 +947,16 @@
         </Integer>
         <Hex dnOrder="12" id="FLEXCOM_SPI_DUMMY_DATA">
           <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
+            <Long dnOrder="0" id="max">
+              <Value dnOrder="0">255</Value>
+            </Long>
+            <Boolean dnOrder="1" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
+          <Values dnOrder="1">
+            <Dynamic dnOrder="0" id="flexcom4" value="255"/>
+          </Values>
         </Hex>
         <KeyValueSet dnOrder="13" id="FLEXCOM_SPI_MR_BRSRCCLK">
           <Attributes dnOrder="0">
@@ -1055,13 +1081,13 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="flexcom4" x="340" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

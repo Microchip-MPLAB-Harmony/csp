@@ -8,7 +8,7 @@ define block HEAP      with alignment = 4, size = 512{};
 define block CSTACK    with alignment = 8, size = 4096{};
 define block FIQ_STACK with alignment = 8, size = 96{};
 define block IRQ_STACK with alignment = 8, size = 96{};
-define block SVC_STACK with alignment = 8, size = 96{};
+define block SVC_STACK with alignment = 8, size = 4096{};
 define block ABT_STACK with alignment = 8, size = 64{};
 define block UND_STACK with alignment = 8, size = 64{};
 
