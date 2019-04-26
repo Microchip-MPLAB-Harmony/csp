@@ -74,7 +74,7 @@ void DBGU_Initialize(void)
     DBGU_REGS->DBGU_CR = (DBGU_CR_TXEN_Msk | DBGU_CR_RXEN_Msk);
 
     /* Configure DBGU mode */
-    DBGU_REGS->DBGU_MR = ((DBGU_MR_PAR_NO) | (0 << DBGU_MR_FILTER_Pos));
+    DBGU_REGS->DBGU_MR = (DBGU_MR_BRSRCCK(0x0) | (DBGU_MR_PAR_NO) | (0 << DBGU_MR_FILTER_Pos));
 
     /* Configure DBGU Baud Rate */
     DBGU_REGS->DBGU_BRGR = DBGU_BRGR_CD(108);
