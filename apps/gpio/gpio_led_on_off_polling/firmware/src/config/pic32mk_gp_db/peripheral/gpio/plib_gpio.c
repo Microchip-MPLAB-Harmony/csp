@@ -72,6 +72,7 @@ void GPIO_Initialize ( void )
     CNPUFSET = 0x2000; /* Pull-Up Enable */
 
     /* PORTG Initialization */
+    LATG = 0x0; /* Initial Latch Value */
     TRISGCLR = 0x2000; /* Direction Control */
 
 
