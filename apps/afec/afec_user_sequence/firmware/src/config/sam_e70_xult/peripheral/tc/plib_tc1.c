@@ -102,7 +102,7 @@ void TC1_CH0_CompareStop (void)
 
 uint32_t TC1_CH0_CompareFrequencyGet( void )
 {
-    return (uint32_t)(32768UL);
+    return (uint32_t)(32000UL);
 }
 
 /* Configure the period value */
