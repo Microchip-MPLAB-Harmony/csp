@@ -1,172 +1,127 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Configuration>
   <Components>
-    <UniqueComponent dnOrder="0" id="core">
+    <UniqueComponent dnOrder="0" id="cmsis"/>
+    <UniqueComponent dnOrder="1" id="core">
       <Symbols dnOrder="0">
-        <Combo dnOrder="0" id="COMPONENT_PACKAGE">
+        <KeyValueSet dnOrder="0" id="COMPILER_CHOICE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Combo dnOrder="1" id="COMPONENT_PACKAGE">
           <Values dnOrder="0">
             <User dnOrder="0" value="LQFP144"/>
           </Values>
         </Combo>
-        <KeyValueSet dnOrder="1" id="DEVICE_BOOT">
+        <KeyValueSet dnOrder="2" id="DEVICE_BOOT">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="2" id="DEVICE_SECURITY">
+        <KeyValueSet dnOrder="3" id="DEVICE_SECURITY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="3" id="DEVICE_TCM_SIZE">
+        <KeyValueSet dnOrder="4" id="DEVICE_TCM_SIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <String dnOrder="4" id="EEFC_FMR_FWS">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="6"/>
-            </Dynamic>
-          </Values>
-        </String>
         <Boolean dnOrder="5" id="NVIC_14_0_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <String dnOrder="6" id="NVIC_14_0_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="USART1_Handler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="USART1_Handler"/>
           </Values>
         </String>
         <Boolean dnOrder="7" id="NVIC_14_0_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="8" id="NVIC_4_0_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <String dnOrder="9" id="NVIC_4_0_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="WDT_Handler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="WDT_Handler"/>
           </Values>
         </String>
         <Boolean dnOrder="10" id="NVIC_4_0_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="11" id="NVIC_63_0_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <String dnOrder="12" id="NVIC_63_0_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="RSWDT_Handler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="RSWDT_Handler"/>
           </Values>
         </String>
         <Boolean dnOrder="13" id="NVIC_63_0_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <String dnOrder="14" id="PIN_100_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="15" id="PIN_100_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="16"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="16"/>
           </Values>
         </Integer>
         <String dnOrder="16" id="PIN_101_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="17" id="PIN_101_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="10"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="10"/>
           </Values>
         </Integer>
         <String dnOrder="18" id="PIN_102_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="19" id="PIN_102_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
         <String dnOrder="20" id="PIN_103_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="21" id="PIN_103_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="17"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="17"/>
           </Values>
         </Integer>
         <String dnOrder="22" id="PIN_104_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="23" id="PIN_104_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="24" id="PIN_105_FUNCTION_TYPE">
@@ -181,898 +136,642 @@
         </String>
         <String dnOrder="26" id="PIN_105_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="27" id="PIN_105_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="4"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="4"/>
           </Values>
         </Integer>
         <String dnOrder="28" id="PIN_106_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="29" id="PIN_106_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="15"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="15"/>
           </Values>
         </Integer>
         <String dnOrder="30" id="PIN_107_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="31" id="PIN_107_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="32" id="PIN_108_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="33" id="PIN_108_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="29"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="29"/>
           </Values>
         </Integer>
         <String dnOrder="34" id="PIN_109_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="35" id="PIN_109_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="5"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="5"/>
           </Values>
         </Integer>
         <String dnOrder="36" id="PIN_10_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="E"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="E"/>
           </Values>
         </String>
         <Integer dnOrder="37" id="PIN_10_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="3"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="3"/>
           </Values>
         </Integer>
         <String dnOrder="38" id="PIN_110_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="39" id="PIN_110_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="9"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="9"/>
           </Values>
         </Integer>
         <String dnOrder="40" id="PIN_111_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="41" id="PIN_111_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="18"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="18"/>
           </Values>
         </Integer>
         <String dnOrder="42" id="PIN_112_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="43" id="PIN_112_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="28"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="28"/>
           </Values>
         </Integer>
         <String dnOrder="44" id="PIN_113_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="45" id="PIN_113_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="8"/>
           </Values>
         </Integer>
         <String dnOrder="46" id="PIN_114_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="47" id="PIN_114_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="6"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="6"/>
           </Values>
         </Integer>
         <String dnOrder="48" id="PIN_115_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="49" id="PIN_115_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="50" id="PIN_116_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="51" id="PIN_116_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="30"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="30"/>
           </Values>
         </Integer>
         <String dnOrder="52" id="PIN_117_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="53" id="PIN_117_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="19"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="19"/>
           </Values>
         </Integer>
         <String dnOrder="54" id="PIN_118_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="55" id="PIN_118_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="31"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="31"/>
           </Values>
         </Integer>
         <String dnOrder="56" id="PIN_119_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="57" id="PIN_119_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="7"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="7"/>
           </Values>
         </Integer>
         <String dnOrder="58" id="PIN_11_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="59" id="PIN_11_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
         <String dnOrder="60" id="PIN_120_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="61" id="PIN_120_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="20"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="20"/>
           </Values>
         </Integer>
         <String dnOrder="62" id="PIN_121_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="63" id="PIN_121_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="6"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="6"/>
           </Values>
         </Integer>
         <String dnOrder="64" id="PIN_122_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="65" id="PIN_122_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="21"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="21"/>
           </Values>
         </Integer>
         <String dnOrder="66" id="PIN_123_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="67" id="PIN_123_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="68" id="PIN_124_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="69" id="PIN_124_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="22"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="22"/>
           </Values>
         </Integer>
         <String dnOrder="70" id="PIN_125_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="71" id="PIN_125_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="5"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="5"/>
           </Values>
         </Integer>
         <String dnOrder="72" id="PIN_126_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="73" id="PIN_126_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="4"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="4"/>
           </Values>
         </Integer>
         <String dnOrder="74" id="PIN_127_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="75" id="PIN_127_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="23"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="23"/>
           </Values>
         </Integer>
         <String dnOrder="76" id="PIN_128_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="77" id="PIN_128_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="3"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="3"/>
           </Values>
         </Integer>
         <String dnOrder="78" id="PIN_129_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="79" id="PIN_129_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="29"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="29"/>
           </Values>
         </Integer>
         <String dnOrder="80" id="PIN_12_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="81" id="PIN_12_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="27"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="27"/>
           </Values>
         </Integer>
         <String dnOrder="82" id="PIN_130_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="83" id="PIN_130_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="24"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="24"/>
           </Values>
         </Integer>
         <String dnOrder="84" id="PIN_131_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="85" id="PIN_131_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="2"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="2"/>
           </Values>
         </Integer>
         <String dnOrder="86" id="PIN_132_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="87" id="PIN_132_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </Integer>
         <String dnOrder="88" id="PIN_133_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="89" id="PIN_133_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="25"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="25"/>
           </Values>
         </Integer>
         <String dnOrder="90" id="PIN_134_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="91" id="PIN_134_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="92" id="PIN_135_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="93" id="PIN_135_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="94" id="PIN_136_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="95" id="PIN_136_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="96" id="PIN_137_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="97" id="PIN_137_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="98" id="PIN_138_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="99" id="PIN_138_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="100" id="PIN_139_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="101" id="PIN_139_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="102" id="PIN_13_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="103" id="PIN_13_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="26"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="26"/>
           </Values>
         </Integer>
         <String dnOrder="104" id="PIN_140_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="105" id="PIN_140_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="106" id="PIN_141_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="107" id="PIN_141_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="8"/>
           </Values>
         </Integer>
         <String dnOrder="108" id="PIN_142_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="109" id="PIN_142_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="9"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="9"/>
           </Values>
         </Integer>
         <String dnOrder="110" id="PIN_143_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="111" id="PIN_143_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="112" id="PIN_144_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="113" id="PIN_144_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="13"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="13"/>
           </Values>
         </Integer>
         <String dnOrder="114" id="PIN_14_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="115" id="PIN_14_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="31"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="31"/>
           </Values>
         </Integer>
         <String dnOrder="116" id="PIN_15_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="117" id="PIN_15_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="30"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="30"/>
           </Values>
         </Integer>
         <String dnOrder="118" id="PIN_16_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="119" id="PIN_16_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="29"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="29"/>
           </Values>
         </Integer>
         <String dnOrder="120" id="PIN_17_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="121" id="PIN_17_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="12"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="12"/>
           </Values>
         </Integer>
         <String dnOrder="122" id="PIN_18_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="123" id="PIN_18_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="15"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="15"/>
           </Values>
         </Integer>
         <String dnOrder="124" id="PIN_19_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="125" id="PIN_19_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="13"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="13"/>
           </Values>
         </Integer>
         <String dnOrder="126" id="PIN_1_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="127" id="PIN_1_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
         <String dnOrder="128" id="PIN_20_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="129" id="PIN_20_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </Integer>
         <String dnOrder="130" id="PIN_21_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="131" id="PIN_21_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
         <String dnOrder="132" id="PIN_22_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="133" id="PIN_22_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="20"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="20"/>
           </Values>
         </Integer>
         <String dnOrder="134" id="PIN_23_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="135" id="PIN_23_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="19"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="19"/>
           </Values>
         </Integer>
         <String dnOrder="136" id="PIN_24_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="137" id="PIN_24_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="18"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="18"/>
           </Values>
         </Integer>
         <String dnOrder="138" id="PIN_25_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="139" id="PIN_25_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="17"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="17"/>
           </Values>
         </Integer>
         <String dnOrder="140" id="PIN_26_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="141" id="PIN_26_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="2"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="2"/>
           </Values>
         </Integer>
         <String dnOrder="142" id="PIN_27_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="E"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="E"/>
           </Values>
         </String>
         <Integer dnOrder="143" id="PIN_27_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="4"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="4"/>
           </Values>
         </Integer>
         <String dnOrder="144" id="PIN_28_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="E"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="E"/>
           </Values>
         </String>
         <Integer dnOrder="145" id="PIN_28_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="5"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="5"/>
           </Values>
         </Integer>
         <String dnOrder="146" id="PIN_29_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="147" id="PIN_29_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="148" id="PIN_2_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="149" id="PIN_2_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="31"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="31"/>
           </Values>
         </Integer>
         <String dnOrder="150" id="PIN_30_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="151" id="PIN_30_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="152" id="PIN_31_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="153" id="PIN_31_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="3"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="3"/>
           </Values>
         </Integer>
         <String dnOrder="154" id="PIN_32_FUNCTION_TYPE">
@@ -1087,212 +786,152 @@
         </String>
         <String dnOrder="156" id="PIN_32_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="157" id="PIN_32_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="21"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="21"/>
           </Values>
         </Integer>
         <String dnOrder="158" id="PIN_33_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="159" id="PIN_33_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="160" id="PIN_34_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="161" id="PIN_34_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="30"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="30"/>
           </Values>
         </Integer>
         <String dnOrder="162" id="PIN_35_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="163" id="PIN_35_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="7"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="7"/>
           </Values>
         </Integer>
         <String dnOrder="164" id="PIN_36_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="165" id="PIN_36_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="8"/>
           </Values>
         </Integer>
         <String dnOrder="166" id="PIN_37_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="167" id="PIN_37_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="22"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="22"/>
           </Values>
         </Integer>
         <String dnOrder="168" id="PIN_38_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="169" id="PIN_38_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </Integer>
         <String dnOrder="170" id="PIN_39_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="171" id="PIN_39_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="2"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="2"/>
           </Values>
         </Integer>
         <String dnOrder="172" id="PIN_3_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="173" id="PIN_3_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="174" id="PIN_40_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="175" id="PIN_40_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="3"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="3"/>
           </Values>
         </Integer>
         <String dnOrder="176" id="PIN_41_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="177" id="PIN_41_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="4"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="4"/>
           </Values>
         </Integer>
         <String dnOrder="178" id="PIN_42_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="179" id="PIN_42_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="13"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="13"/>
           </Values>
         </Integer>
         <String dnOrder="180" id="PIN_43_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="181" id="PIN_43_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="182" id="PIN_44_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="183" id="PIN_44_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="184" id="PIN_45_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="185" id="PIN_45_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="16"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="16"/>
           </Values>
         </Integer>
         <String dnOrder="186" id="PIN_46_DIR">
@@ -1322,506 +961,362 @@
         </String>
         <String dnOrder="191" id="PIN_46_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="192" id="PIN_46_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="23"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="23"/>
           </Values>
         </Integer>
         <String dnOrder="193" id="PIN_47_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="194" id="PIN_47_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="27"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="27"/>
           </Values>
         </Integer>
         <String dnOrder="195" id="PIN_48_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="196" id="PIN_48_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="7"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="7"/>
           </Values>
         </Integer>
         <String dnOrder="197" id="PIN_49_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="198" id="PIN_49_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="15"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="15"/>
           </Values>
         </Integer>
         <String dnOrder="199" id="PIN_4_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="E"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="E"/>
           </Values>
         </String>
         <Integer dnOrder="200" id="PIN_4_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
         <String dnOrder="201" id="PIN_50_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="202" id="PIN_50_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="203" id="PIN_51_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="204" id="PIN_51_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="14"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="14"/>
           </Values>
         </Integer>
         <String dnOrder="205" id="PIN_52_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="206" id="PIN_52_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="25"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="25"/>
           </Values>
         </Integer>
         <String dnOrder="207" id="PIN_53_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="208" id="PIN_53_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="26"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="26"/>
           </Values>
         </Integer>
         <String dnOrder="209" id="PIN_54_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="210" id="PIN_54_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="6"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="6"/>
           </Values>
         </Integer>
         <String dnOrder="211" id="PIN_55_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="212" id="PIN_55_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="24"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="24"/>
           </Values>
         </Integer>
         <String dnOrder="213" id="PIN_56_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="214" id="PIN_56_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="24"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="24"/>
           </Values>
         </Integer>
         <String dnOrder="215" id="PIN_57_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="216" id="PIN_57_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="23"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="23"/>
           </Values>
         </Integer>
         <String dnOrder="217" id="PIN_58_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="218" id="PIN_58_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="5"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="5"/>
           </Values>
         </Integer>
         <String dnOrder="219" id="PIN_59_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="220" id="PIN_59_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="25"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="25"/>
           </Values>
         </Integer>
         <String dnOrder="221" id="PIN_5_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="222" id="PIN_5_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="223" id="PIN_60_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="224" id="PIN_60_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="22"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="22"/>
           </Values>
         </Integer>
         <String dnOrder="225" id="PIN_61_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="226" id="PIN_61_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="227" id="PIN_62_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="228" id="PIN_62_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="26"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="26"/>
           </Values>
         </Integer>
         <String dnOrder="229" id="PIN_63_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="230" id="PIN_63_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="21"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="21"/>
           </Values>
         </Integer>
         <String dnOrder="231" id="PIN_64_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="232" id="PIN_64_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="11"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="11"/>
           </Values>
         </Integer>
         <String dnOrder="233" id="PIN_65_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="234" id="PIN_65_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="20"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="20"/>
           </Values>
         </Integer>
         <String dnOrder="235" id="PIN_66_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="236" id="PIN_66_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="10"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="10"/>
           </Values>
         </Integer>
         <String dnOrder="237" id="PIN_67_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="238" id="PIN_67_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="19"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="19"/>
           </Values>
         </Integer>
         <String dnOrder="239" id="PIN_68_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="240" id="PIN_68_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="12"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="12"/>
           </Values>
         </Integer>
         <String dnOrder="241" id="PIN_69_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="242" id="PIN_69_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="18"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="18"/>
           </Values>
         </Integer>
         <String dnOrder="243" id="PIN_6_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="E"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="E"/>
           </Values>
         </String>
         <Integer dnOrder="244" id="PIN_6_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </Integer>
         <String dnOrder="245" id="PIN_70_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="246" id="PIN_70_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="27"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="27"/>
           </Values>
         </Integer>
         <String dnOrder="247" id="PIN_71_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="248" id="PIN_71_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="28"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="28"/>
           </Values>
         </Integer>
         <String dnOrder="249" id="PIN_72_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="250" id="PIN_72_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="251" id="PIN_73_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="252" id="PIN_73_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="5"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="5"/>
           </Values>
         </Integer>
         <String dnOrder="253" id="PIN_74_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="254" id="PIN_74_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="17"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="17"/>
           </Values>
         </Integer>
         <String dnOrder="255" id="PIN_75_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="256" id="PIN_75_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="9"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="9"/>
           </Values>
         </Integer>
         <String dnOrder="257" id="PIN_76_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="258" id="PIN_76_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="28"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="28"/>
           </Values>
         </Integer>
         <String dnOrder="259" id="PIN_77_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="260" id="PIN_77_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="4"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="4"/>
           </Values>
         </Integer>
         <String dnOrder="261" id="PIN_78_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="262" id="PIN_78_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="16"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="16"/>
           </Values>
         </Integer>
         <String dnOrder="263" id="PIN_79_FUNCTION_TYPE">
@@ -1836,156 +1331,112 @@
         </String>
         <String dnOrder="265" id="PIN_79_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="266" id="PIN_79_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="6"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="6"/>
           </Values>
         </Integer>
         <String dnOrder="267" id="PIN_7_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="E"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="E"/>
           </Values>
         </String>
         <Integer dnOrder="268" id="PIN_7_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="2"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="2"/>
           </Values>
         </Integer>
         <String dnOrder="269" id="PIN_80_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="270" id="PIN_80_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="271" id="PIN_81_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="272" id="PIN_81_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="273" id="PIN_82_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="274" id="PIN_82_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="8"/>
           </Values>
         </Integer>
         <String dnOrder="275" id="PIN_83_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="276" id="PIN_83_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="277" id="PIN_84_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="278" id="PIN_84_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="14"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="14"/>
           </Values>
         </Integer>
         <String dnOrder="279" id="PIN_85_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="280" id="PIN_85_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="281" id="PIN_86_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="282" id="PIN_86_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="9"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="9"/>
           </Values>
         </Integer>
         <String dnOrder="283" id="PIN_87_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="284" id="PIN_87_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="12"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="12"/>
           </Values>
         </Integer>
         <String dnOrder="285" id="PIN_88_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="286" id="PIN_88_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="13"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="13"/>
           </Values>
         </Integer>
         <String dnOrder="287" id="PIN_89_FUNCTION_TYPE">
@@ -2000,2095 +1451,1509 @@
         </String>
         <String dnOrder="289" id="PIN_89_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="B"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="B"/>
           </Values>
         </String>
         <Integer dnOrder="290" id="PIN_89_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="7"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="7"/>
           </Values>
         </Integer>
         <String dnOrder="291" id="PIN_8_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="292" id="PIN_8_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="293" id="PIN_90_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="294" id="PIN_90_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="10"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="10"/>
           </Values>
         </Integer>
         <String dnOrder="295" id="PIN_91_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="296" id="PIN_91_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="3"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="3"/>
           </Values>
         </Integer>
         <String dnOrder="297" id="PIN_92_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="298" id="PIN_92_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="12"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="12"/>
           </Values>
         </Integer>
         <String dnOrder="299" id="PIN_93_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="300" id="PIN_93_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="2"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="2"/>
           </Values>
         </Integer>
         <String dnOrder="301" id="PIN_94_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="302" id="PIN_94_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="11"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="11"/>
           </Values>
         </Integer>
         <String dnOrder="303" id="PIN_95_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="304" id="PIN_95_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="305" id="PIN_96_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="306" id="PIN_96_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <String dnOrder="307" id="PIN_97_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="C"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="C"/>
           </Values>
         </String>
         <Integer dnOrder="308" id="PIN_97_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="14"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="14"/>
           </Values>
         </Integer>
         <String dnOrder="309" id="PIN_98_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="D"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="D"/>
           </Values>
         </String>
         <Integer dnOrder="310" id="PIN_98_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="11"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="11"/>
           </Values>
         </Integer>
         <String dnOrder="311" id="PIN_99_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="A"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="A"/>
           </Values>
         </String>
         <Integer dnOrder="312" id="PIN_99_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </Integer>
         <String dnOrder="313" id="PIN_9_PIO_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value=""/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value=""/>
           </Values>
         </String>
         <Integer dnOrder="314" id="PIN_9_PIO_PIN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="-1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="-1"/>
           </Values>
         </Integer>
         <Hex dnOrder="315" id="PIOA_ABCDSR1_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Hex>
         <Hex dnOrder="316" id="PIOA_ABCDSR2_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Hex>
         <Boolean dnOrder="317" id="PIOA_CLOCK_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <Hex dnOrder="318" id="PIOA_OER_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8388608"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="8388608"/>
           </Values>
         </Hex>
         <Hex dnOrder="319" id="PIOA_PDR_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="2097152"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="2097152"/>
           </Values>
         </Hex>
         <Hex dnOrder="320" id="PIOA_SODR_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8388608"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="8388608"/>
           </Values>
         </Hex>
         <Hex dnOrder="321" id="PIOB_ABCDSR1_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="16"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="16"/>
           </Values>
         </Hex>
         <Hex dnOrder="322" id="PIOB_ABCDSR2_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="16"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="16"/>
           </Values>
         </Hex>
         <Boolean dnOrder="323" id="PIOB_CLOCK_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <Hex dnOrder="324" id="PIOB_PDR_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="16"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="16"/>
           </Values>
         </Hex>
         <Boolean dnOrder="325" id="PIOC_CLOCK_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="326" id="PIOD_CLOCK_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="327" id="PIOE_CLOCK_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <Hex dnOrder="328" id="PIO_CCFG_SYSIO_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="16"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="16"/>
           </Values>
         </Hex>
         <Hex dnOrder="329" id="PMC_PCER0">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="220160"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="220160"/>
           </Values>
         </Hex>
         <KeyValueSet dnOrder="330" id="PMC_PCR_GCLK0CSS">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
         <KeyValueSet dnOrder="331" id="PMC_PCR_GCLK1CSS">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
         <Boolean dnOrder="332" id="PMC_SCER_PCK4">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="333" id="RSWDT_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="334" id="RSWDT_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <String dnOrder="335" id="RSWDT_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="RSWDT_Handler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="RSWDT_Handler"/>
           </Values>
         </String>
         <Boolean dnOrder="336" id="RSWDT_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="337" id="USART1_CLOCK_ENABLE">
+        <Boolean dnOrder="337" id="TCM_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="usart1" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="338" id="USART1_CLOCK_FREQUENCY">
+        <String dnOrder="338" id="TCM_SIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="150000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0 KB"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="339" id="USART1_CLOCK_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="usart1" value="true"/>
+          </Values>
+        </Boolean>
+        <Integer dnOrder="340" id="USART1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="150000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="339" id="USART1_INTERRUPT_ENABLE">
+        <Boolean dnOrder="341" id="USART1_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="usart1" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="usart1" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="340" id="USART1_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="342" id="USART1_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="341" id="USART1_INTERRUPT_HANDLER">
+        <String dnOrder="343" id="USART1_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="usart1" priority="2" value="USART1_Handler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="usart1" value="USART1_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="342" id="USART1_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="344" id="USART1_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="usart1" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="usart1" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="343" id="WDT_INTERRUPT_ENABLE">
+        <Boolean dnOrder="345" id="WDT_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="344" id="WDT_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="346" id="WDT_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="345" id="WDT_INTERRUPT_HANDLER">
+        <String dnOrder="347" id="WDT_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="WDT_Handler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="WDT_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="346" id="WDT_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="348" id="WDT_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="347" id="XDMAC_CC0_CSIZE">
+        <KeyValueSet dnOrder="349" id="XDMAC_CC0_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="348" id="XDMAC_CC0_DAM">
+        <KeyValueSet dnOrder="350" id="XDMAC_CC0_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="349" id="XDMAC_CC0_DIF">
+        <KeyValueSet dnOrder="351" id="XDMAC_CC0_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="350" id="XDMAC_CC0_DSYNC">
+        <KeyValueSet dnOrder="352" id="XDMAC_CC0_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="351" id="XDMAC_CC0_DWIDTH">
+        <KeyValueSet dnOrder="353" id="XDMAC_CC0_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="352" id="XDMAC_CC0_MBSIZE">
+        <KeyValueSet dnOrder="354" id="XDMAC_CC0_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="353" id="XDMAC_CC0_SAM">
+        <KeyValueSet dnOrder="355" id="XDMAC_CC0_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="354" id="XDMAC_CC0_SIF">
+        <KeyValueSet dnOrder="356" id="XDMAC_CC0_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="355" id="XDMAC_CC0_SWREQ">
+        <KeyValueSet dnOrder="357" id="XDMAC_CC0_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="356" id="XDMAC_CC0_TYPE">
+        <KeyValueSet dnOrder="358" id="XDMAC_CC0_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="357" id="XDMAC_CC10_CSIZE">
+        <KeyValueSet dnOrder="359" id="XDMAC_CC10_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="358" id="XDMAC_CC10_DAM">
+        <KeyValueSet dnOrder="360" id="XDMAC_CC10_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="359" id="XDMAC_CC10_DIF">
+        <KeyValueSet dnOrder="361" id="XDMAC_CC10_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="360" id="XDMAC_CC10_DSYNC">
+        <KeyValueSet dnOrder="362" id="XDMAC_CC10_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="361" id="XDMAC_CC10_DWIDTH">
+        <KeyValueSet dnOrder="363" id="XDMAC_CC10_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="362" id="XDMAC_CC10_MBSIZE">
+        <KeyValueSet dnOrder="364" id="XDMAC_CC10_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="363" id="XDMAC_CC10_SAM">
+        <KeyValueSet dnOrder="365" id="XDMAC_CC10_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="364" id="XDMAC_CC10_SIF">
+        <KeyValueSet dnOrder="366" id="XDMAC_CC10_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="365" id="XDMAC_CC10_SWREQ">
+        <KeyValueSet dnOrder="367" id="XDMAC_CC10_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="366" id="XDMAC_CC10_TYPE">
+        <KeyValueSet dnOrder="368" id="XDMAC_CC10_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="367" id="XDMAC_CC11_CSIZE">
+        <KeyValueSet dnOrder="369" id="XDMAC_CC11_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="368" id="XDMAC_CC11_DAM">
+        <KeyValueSet dnOrder="370" id="XDMAC_CC11_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="369" id="XDMAC_CC11_DIF">
+        <KeyValueSet dnOrder="371" id="XDMAC_CC11_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="370" id="XDMAC_CC11_DSYNC">
+        <KeyValueSet dnOrder="372" id="XDMAC_CC11_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="371" id="XDMAC_CC11_DWIDTH">
+        <KeyValueSet dnOrder="373" id="XDMAC_CC11_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="372" id="XDMAC_CC11_MBSIZE">
+        <KeyValueSet dnOrder="374" id="XDMAC_CC11_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="373" id="XDMAC_CC11_SAM">
+        <KeyValueSet dnOrder="375" id="XDMAC_CC11_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="374" id="XDMAC_CC11_SIF">
+        <KeyValueSet dnOrder="376" id="XDMAC_CC11_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="375" id="XDMAC_CC11_SWREQ">
+        <KeyValueSet dnOrder="377" id="XDMAC_CC11_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="376" id="XDMAC_CC11_TYPE">
+        <KeyValueSet dnOrder="378" id="XDMAC_CC11_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="377" id="XDMAC_CC12_CSIZE">
+        <KeyValueSet dnOrder="379" id="XDMAC_CC12_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="378" id="XDMAC_CC12_DAM">
+        <KeyValueSet dnOrder="380" id="XDMAC_CC12_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="379" id="XDMAC_CC12_DIF">
+        <KeyValueSet dnOrder="381" id="XDMAC_CC12_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="380" id="XDMAC_CC12_DSYNC">
+        <KeyValueSet dnOrder="382" id="XDMAC_CC12_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="381" id="XDMAC_CC12_DWIDTH">
+        <KeyValueSet dnOrder="383" id="XDMAC_CC12_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="382" id="XDMAC_CC12_MBSIZE">
+        <KeyValueSet dnOrder="384" id="XDMAC_CC12_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="383" id="XDMAC_CC12_SAM">
+        <KeyValueSet dnOrder="385" id="XDMAC_CC12_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="384" id="XDMAC_CC12_SIF">
+        <KeyValueSet dnOrder="386" id="XDMAC_CC12_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="385" id="XDMAC_CC12_SWREQ">
+        <KeyValueSet dnOrder="387" id="XDMAC_CC12_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="386" id="XDMAC_CC12_TYPE">
+        <KeyValueSet dnOrder="388" id="XDMAC_CC12_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="387" id="XDMAC_CC13_CSIZE">
+        <KeyValueSet dnOrder="389" id="XDMAC_CC13_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="388" id="XDMAC_CC13_DAM">
+        <KeyValueSet dnOrder="390" id="XDMAC_CC13_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="389" id="XDMAC_CC13_DIF">
+        <KeyValueSet dnOrder="391" id="XDMAC_CC13_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="390" id="XDMAC_CC13_DSYNC">
+        <KeyValueSet dnOrder="392" id="XDMAC_CC13_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="391" id="XDMAC_CC13_DWIDTH">
+        <KeyValueSet dnOrder="393" id="XDMAC_CC13_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="392" id="XDMAC_CC13_MBSIZE">
+        <KeyValueSet dnOrder="394" id="XDMAC_CC13_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="393" id="XDMAC_CC13_SAM">
+        <KeyValueSet dnOrder="395" id="XDMAC_CC13_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="394" id="XDMAC_CC13_SIF">
+        <KeyValueSet dnOrder="396" id="XDMAC_CC13_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="395" id="XDMAC_CC13_SWREQ">
+        <KeyValueSet dnOrder="397" id="XDMAC_CC13_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="396" id="XDMAC_CC13_TYPE">
+        <KeyValueSet dnOrder="398" id="XDMAC_CC13_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="397" id="XDMAC_CC14_CSIZE">
+        <KeyValueSet dnOrder="399" id="XDMAC_CC14_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="398" id="XDMAC_CC14_DAM">
+        <KeyValueSet dnOrder="400" id="XDMAC_CC14_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="399" id="XDMAC_CC14_DIF">
+        <KeyValueSet dnOrder="401" id="XDMAC_CC14_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="400" id="XDMAC_CC14_DSYNC">
+        <KeyValueSet dnOrder="402" id="XDMAC_CC14_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="401" id="XDMAC_CC14_DWIDTH">
+        <KeyValueSet dnOrder="403" id="XDMAC_CC14_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="402" id="XDMAC_CC14_MBSIZE">
+        <KeyValueSet dnOrder="404" id="XDMAC_CC14_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="403" id="XDMAC_CC14_SAM">
+        <KeyValueSet dnOrder="405" id="XDMAC_CC14_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="404" id="XDMAC_CC14_SIF">
+        <KeyValueSet dnOrder="406" id="XDMAC_CC14_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="405" id="XDMAC_CC14_SWREQ">
+        <KeyValueSet dnOrder="407" id="XDMAC_CC14_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="406" id="XDMAC_CC14_TYPE">
+        <KeyValueSet dnOrder="408" id="XDMAC_CC14_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="407" id="XDMAC_CC15_CSIZE">
+        <KeyValueSet dnOrder="409" id="XDMAC_CC15_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="408" id="XDMAC_CC15_DAM">
+        <KeyValueSet dnOrder="410" id="XDMAC_CC15_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="409" id="XDMAC_CC15_DIF">
+        <KeyValueSet dnOrder="411" id="XDMAC_CC15_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="410" id="XDMAC_CC15_DSYNC">
+        <KeyValueSet dnOrder="412" id="XDMAC_CC15_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="411" id="XDMAC_CC15_DWIDTH">
+        <KeyValueSet dnOrder="413" id="XDMAC_CC15_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="412" id="XDMAC_CC15_MBSIZE">
+        <KeyValueSet dnOrder="414" id="XDMAC_CC15_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="413" id="XDMAC_CC15_SAM">
+        <KeyValueSet dnOrder="415" id="XDMAC_CC15_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="414" id="XDMAC_CC15_SIF">
+        <KeyValueSet dnOrder="416" id="XDMAC_CC15_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="415" id="XDMAC_CC15_SWREQ">
+        <KeyValueSet dnOrder="417" id="XDMAC_CC15_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="416" id="XDMAC_CC15_TYPE">
+        <KeyValueSet dnOrder="418" id="XDMAC_CC15_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="417" id="XDMAC_CC16_CSIZE">
+        <KeyValueSet dnOrder="419" id="XDMAC_CC16_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="418" id="XDMAC_CC16_DAM">
+        <KeyValueSet dnOrder="420" id="XDMAC_CC16_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="419" id="XDMAC_CC16_DIF">
+        <KeyValueSet dnOrder="421" id="XDMAC_CC16_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="420" id="XDMAC_CC16_DSYNC">
+        <KeyValueSet dnOrder="422" id="XDMAC_CC16_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="421" id="XDMAC_CC16_DWIDTH">
+        <KeyValueSet dnOrder="423" id="XDMAC_CC16_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="422" id="XDMAC_CC16_MBSIZE">
+        <KeyValueSet dnOrder="424" id="XDMAC_CC16_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="423" id="XDMAC_CC16_SAM">
+        <KeyValueSet dnOrder="425" id="XDMAC_CC16_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="424" id="XDMAC_CC16_SIF">
+        <KeyValueSet dnOrder="426" id="XDMAC_CC16_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="425" id="XDMAC_CC16_SWREQ">
+        <KeyValueSet dnOrder="427" id="XDMAC_CC16_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="426" id="XDMAC_CC16_TYPE">
+        <KeyValueSet dnOrder="428" id="XDMAC_CC16_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="427" id="XDMAC_CC17_CSIZE">
+        <KeyValueSet dnOrder="429" id="XDMAC_CC17_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="428" id="XDMAC_CC17_DAM">
+        <KeyValueSet dnOrder="430" id="XDMAC_CC17_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="429" id="XDMAC_CC17_DIF">
+        <KeyValueSet dnOrder="431" id="XDMAC_CC17_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="430" id="XDMAC_CC17_DSYNC">
+        <KeyValueSet dnOrder="432" id="XDMAC_CC17_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="431" id="XDMAC_CC17_DWIDTH">
+        <KeyValueSet dnOrder="433" id="XDMAC_CC17_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="432" id="XDMAC_CC17_MBSIZE">
+        <KeyValueSet dnOrder="434" id="XDMAC_CC17_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="433" id="XDMAC_CC17_SAM">
+        <KeyValueSet dnOrder="435" id="XDMAC_CC17_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="434" id="XDMAC_CC17_SIF">
+        <KeyValueSet dnOrder="436" id="XDMAC_CC17_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="435" id="XDMAC_CC17_SWREQ">
+        <KeyValueSet dnOrder="437" id="XDMAC_CC17_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="436" id="XDMAC_CC17_TYPE">
+        <KeyValueSet dnOrder="438" id="XDMAC_CC17_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="437" id="XDMAC_CC18_CSIZE">
+        <KeyValueSet dnOrder="439" id="XDMAC_CC18_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="438" id="XDMAC_CC18_DAM">
+        <KeyValueSet dnOrder="440" id="XDMAC_CC18_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="439" id="XDMAC_CC18_DIF">
+        <KeyValueSet dnOrder="441" id="XDMAC_CC18_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="440" id="XDMAC_CC18_DSYNC">
+        <KeyValueSet dnOrder="442" id="XDMAC_CC18_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="441" id="XDMAC_CC18_DWIDTH">
+        <KeyValueSet dnOrder="443" id="XDMAC_CC18_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="442" id="XDMAC_CC18_MBSIZE">
+        <KeyValueSet dnOrder="444" id="XDMAC_CC18_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="443" id="XDMAC_CC18_SAM">
+        <KeyValueSet dnOrder="445" id="XDMAC_CC18_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="444" id="XDMAC_CC18_SIF">
+        <KeyValueSet dnOrder="446" id="XDMAC_CC18_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="445" id="XDMAC_CC18_SWREQ">
+        <KeyValueSet dnOrder="447" id="XDMAC_CC18_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="446" id="XDMAC_CC18_TYPE">
+        <KeyValueSet dnOrder="448" id="XDMAC_CC18_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="447" id="XDMAC_CC19_CSIZE">
+        <KeyValueSet dnOrder="449" id="XDMAC_CC19_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="448" id="XDMAC_CC19_DAM">
+        <KeyValueSet dnOrder="450" id="XDMAC_CC19_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="449" id="XDMAC_CC19_DIF">
+        <KeyValueSet dnOrder="451" id="XDMAC_CC19_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="450" id="XDMAC_CC19_DSYNC">
+        <KeyValueSet dnOrder="452" id="XDMAC_CC19_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="451" id="XDMAC_CC19_DWIDTH">
+        <KeyValueSet dnOrder="453" id="XDMAC_CC19_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="452" id="XDMAC_CC19_MBSIZE">
+        <KeyValueSet dnOrder="454" id="XDMAC_CC19_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="453" id="XDMAC_CC19_SAM">
+        <KeyValueSet dnOrder="455" id="XDMAC_CC19_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="454" id="XDMAC_CC19_SIF">
+        <KeyValueSet dnOrder="456" id="XDMAC_CC19_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="455" id="XDMAC_CC19_SWREQ">
+        <KeyValueSet dnOrder="457" id="XDMAC_CC19_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="456" id="XDMAC_CC19_TYPE">
+        <KeyValueSet dnOrder="458" id="XDMAC_CC19_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="457" id="XDMAC_CC1_CSIZE">
+        <KeyValueSet dnOrder="459" id="XDMAC_CC1_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="458" id="XDMAC_CC1_DAM">
+        <KeyValueSet dnOrder="460" id="XDMAC_CC1_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="459" id="XDMAC_CC1_DIF">
+        <KeyValueSet dnOrder="461" id="XDMAC_CC1_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="460" id="XDMAC_CC1_DSYNC">
+        <KeyValueSet dnOrder="462" id="XDMAC_CC1_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="461" id="XDMAC_CC1_DWIDTH">
+        <KeyValueSet dnOrder="463" id="XDMAC_CC1_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="462" id="XDMAC_CC1_MBSIZE">
+        <KeyValueSet dnOrder="464" id="XDMAC_CC1_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="463" id="XDMAC_CC1_SAM">
+        <KeyValueSet dnOrder="465" id="XDMAC_CC1_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="464" id="XDMAC_CC1_SIF">
+        <KeyValueSet dnOrder="466" id="XDMAC_CC1_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="465" id="XDMAC_CC1_SWREQ">
+        <KeyValueSet dnOrder="467" id="XDMAC_CC1_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="466" id="XDMAC_CC1_TYPE">
+        <KeyValueSet dnOrder="468" id="XDMAC_CC1_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="467" id="XDMAC_CC20_CSIZE">
+        <KeyValueSet dnOrder="469" id="XDMAC_CC20_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="468" id="XDMAC_CC20_DAM">
+        <KeyValueSet dnOrder="470" id="XDMAC_CC20_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="469" id="XDMAC_CC20_DIF">
+        <KeyValueSet dnOrder="471" id="XDMAC_CC20_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="470" id="XDMAC_CC20_DSYNC">
+        <KeyValueSet dnOrder="472" id="XDMAC_CC20_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="471" id="XDMAC_CC20_DWIDTH">
+        <KeyValueSet dnOrder="473" id="XDMAC_CC20_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="472" id="XDMAC_CC20_MBSIZE">
+        <KeyValueSet dnOrder="474" id="XDMAC_CC20_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="473" id="XDMAC_CC20_SAM">
+        <KeyValueSet dnOrder="475" id="XDMAC_CC20_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="474" id="XDMAC_CC20_SIF">
+        <KeyValueSet dnOrder="476" id="XDMAC_CC20_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="475" id="XDMAC_CC20_SWREQ">
+        <KeyValueSet dnOrder="477" id="XDMAC_CC20_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="476" id="XDMAC_CC20_TYPE">
+        <KeyValueSet dnOrder="478" id="XDMAC_CC20_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="477" id="XDMAC_CC21_CSIZE">
+        <KeyValueSet dnOrder="479" id="XDMAC_CC21_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="478" id="XDMAC_CC21_DAM">
+        <KeyValueSet dnOrder="480" id="XDMAC_CC21_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="479" id="XDMAC_CC21_DIF">
+        <KeyValueSet dnOrder="481" id="XDMAC_CC21_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="480" id="XDMAC_CC21_DSYNC">
+        <KeyValueSet dnOrder="482" id="XDMAC_CC21_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="481" id="XDMAC_CC21_DWIDTH">
+        <KeyValueSet dnOrder="483" id="XDMAC_CC21_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="482" id="XDMAC_CC21_MBSIZE">
+        <KeyValueSet dnOrder="484" id="XDMAC_CC21_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="483" id="XDMAC_CC21_SAM">
+        <KeyValueSet dnOrder="485" id="XDMAC_CC21_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="484" id="XDMAC_CC21_SIF">
+        <KeyValueSet dnOrder="486" id="XDMAC_CC21_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="485" id="XDMAC_CC21_SWREQ">
+        <KeyValueSet dnOrder="487" id="XDMAC_CC21_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="486" id="XDMAC_CC21_TYPE">
+        <KeyValueSet dnOrder="488" id="XDMAC_CC21_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="487" id="XDMAC_CC22_CSIZE">
+        <KeyValueSet dnOrder="489" id="XDMAC_CC22_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="488" id="XDMAC_CC22_DAM">
+        <KeyValueSet dnOrder="490" id="XDMAC_CC22_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="489" id="XDMAC_CC22_DIF">
+        <KeyValueSet dnOrder="491" id="XDMAC_CC22_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="490" id="XDMAC_CC22_DSYNC">
+        <KeyValueSet dnOrder="492" id="XDMAC_CC22_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="491" id="XDMAC_CC22_DWIDTH">
+        <KeyValueSet dnOrder="493" id="XDMAC_CC22_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="492" id="XDMAC_CC22_MBSIZE">
+        <KeyValueSet dnOrder="494" id="XDMAC_CC22_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="493" id="XDMAC_CC22_SAM">
+        <KeyValueSet dnOrder="495" id="XDMAC_CC22_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="494" id="XDMAC_CC22_SIF">
+        <KeyValueSet dnOrder="496" id="XDMAC_CC22_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="495" id="XDMAC_CC22_SWREQ">
+        <KeyValueSet dnOrder="497" id="XDMAC_CC22_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="496" id="XDMAC_CC22_TYPE">
+        <KeyValueSet dnOrder="498" id="XDMAC_CC22_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="497" id="XDMAC_CC23_CSIZE">
+        <KeyValueSet dnOrder="499" id="XDMAC_CC23_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="498" id="XDMAC_CC23_DAM">
+        <KeyValueSet dnOrder="500" id="XDMAC_CC23_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="499" id="XDMAC_CC23_DIF">
+        <KeyValueSet dnOrder="501" id="XDMAC_CC23_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="500" id="XDMAC_CC23_DSYNC">
+        <KeyValueSet dnOrder="502" id="XDMAC_CC23_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="501" id="XDMAC_CC23_DWIDTH">
+        <KeyValueSet dnOrder="503" id="XDMAC_CC23_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="502" id="XDMAC_CC23_MBSIZE">
+        <KeyValueSet dnOrder="504" id="XDMAC_CC23_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="503" id="XDMAC_CC23_SAM">
+        <KeyValueSet dnOrder="505" id="XDMAC_CC23_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="504" id="XDMAC_CC23_SIF">
+        <KeyValueSet dnOrder="506" id="XDMAC_CC23_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="505" id="XDMAC_CC23_SWREQ">
+        <KeyValueSet dnOrder="507" id="XDMAC_CC23_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="506" id="XDMAC_CC23_TYPE">
+        <KeyValueSet dnOrder="508" id="XDMAC_CC23_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="507" id="XDMAC_CC2_CSIZE">
+        <KeyValueSet dnOrder="509" id="XDMAC_CC2_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="508" id="XDMAC_CC2_DAM">
+        <KeyValueSet dnOrder="510" id="XDMAC_CC2_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="509" id="XDMAC_CC2_DIF">
+        <KeyValueSet dnOrder="511" id="XDMAC_CC2_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="510" id="XDMAC_CC2_DSYNC">
+        <KeyValueSet dnOrder="512" id="XDMAC_CC2_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="511" id="XDMAC_CC2_DWIDTH">
+        <KeyValueSet dnOrder="513" id="XDMAC_CC2_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="512" id="XDMAC_CC2_MBSIZE">
+        <KeyValueSet dnOrder="514" id="XDMAC_CC2_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="513" id="XDMAC_CC2_SAM">
+        <KeyValueSet dnOrder="515" id="XDMAC_CC2_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="514" id="XDMAC_CC2_SIF">
+        <KeyValueSet dnOrder="516" id="XDMAC_CC2_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="515" id="XDMAC_CC2_SWREQ">
+        <KeyValueSet dnOrder="517" id="XDMAC_CC2_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="516" id="XDMAC_CC2_TYPE">
+        <KeyValueSet dnOrder="518" id="XDMAC_CC2_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="517" id="XDMAC_CC3_CSIZE">
+        <KeyValueSet dnOrder="519" id="XDMAC_CC3_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="518" id="XDMAC_CC3_DAM">
+        <KeyValueSet dnOrder="520" id="XDMAC_CC3_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="519" id="XDMAC_CC3_DIF">
+        <KeyValueSet dnOrder="521" id="XDMAC_CC3_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="520" id="XDMAC_CC3_DSYNC">
+        <KeyValueSet dnOrder="522" id="XDMAC_CC3_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="521" id="XDMAC_CC3_DWIDTH">
+        <KeyValueSet dnOrder="523" id="XDMAC_CC3_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="522" id="XDMAC_CC3_MBSIZE">
+        <KeyValueSet dnOrder="524" id="XDMAC_CC3_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="523" id="XDMAC_CC3_SAM">
+        <KeyValueSet dnOrder="525" id="XDMAC_CC3_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="524" id="XDMAC_CC3_SIF">
+        <KeyValueSet dnOrder="526" id="XDMAC_CC3_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="525" id="XDMAC_CC3_SWREQ">
+        <KeyValueSet dnOrder="527" id="XDMAC_CC3_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="526" id="XDMAC_CC3_TYPE">
+        <KeyValueSet dnOrder="528" id="XDMAC_CC3_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="527" id="XDMAC_CC4_CSIZE">
+        <KeyValueSet dnOrder="529" id="XDMAC_CC4_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="528" id="XDMAC_CC4_DAM">
+        <KeyValueSet dnOrder="530" id="XDMAC_CC4_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="529" id="XDMAC_CC4_DIF">
+        <KeyValueSet dnOrder="531" id="XDMAC_CC4_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="530" id="XDMAC_CC4_DSYNC">
+        <KeyValueSet dnOrder="532" id="XDMAC_CC4_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="531" id="XDMAC_CC4_DWIDTH">
+        <KeyValueSet dnOrder="533" id="XDMAC_CC4_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="532" id="XDMAC_CC4_MBSIZE">
+        <KeyValueSet dnOrder="534" id="XDMAC_CC4_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="533" id="XDMAC_CC4_SAM">
+        <KeyValueSet dnOrder="535" id="XDMAC_CC4_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="534" id="XDMAC_CC4_SIF">
+        <KeyValueSet dnOrder="536" id="XDMAC_CC4_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="535" id="XDMAC_CC4_SWREQ">
+        <KeyValueSet dnOrder="537" id="XDMAC_CC4_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="536" id="XDMAC_CC4_TYPE">
+        <KeyValueSet dnOrder="538" id="XDMAC_CC4_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="537" id="XDMAC_CC5_CSIZE">
+        <KeyValueSet dnOrder="539" id="XDMAC_CC5_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="538" id="XDMAC_CC5_DAM">
+        <KeyValueSet dnOrder="540" id="XDMAC_CC5_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="539" id="XDMAC_CC5_DIF">
+        <KeyValueSet dnOrder="541" id="XDMAC_CC5_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="540" id="XDMAC_CC5_DSYNC">
+        <KeyValueSet dnOrder="542" id="XDMAC_CC5_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="541" id="XDMAC_CC5_DWIDTH">
+        <KeyValueSet dnOrder="543" id="XDMAC_CC5_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="542" id="XDMAC_CC5_MBSIZE">
+        <KeyValueSet dnOrder="544" id="XDMAC_CC5_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="543" id="XDMAC_CC5_SAM">
+        <KeyValueSet dnOrder="545" id="XDMAC_CC5_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="544" id="XDMAC_CC5_SIF">
+        <KeyValueSet dnOrder="546" id="XDMAC_CC5_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="545" id="XDMAC_CC5_SWREQ">
+        <KeyValueSet dnOrder="547" id="XDMAC_CC5_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="546" id="XDMAC_CC5_TYPE">
+        <KeyValueSet dnOrder="548" id="XDMAC_CC5_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="547" id="XDMAC_CC6_CSIZE">
+        <KeyValueSet dnOrder="549" id="XDMAC_CC6_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="548" id="XDMAC_CC6_DAM">
+        <KeyValueSet dnOrder="550" id="XDMAC_CC6_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="549" id="XDMAC_CC6_DIF">
+        <KeyValueSet dnOrder="551" id="XDMAC_CC6_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="550" id="XDMAC_CC6_DSYNC">
+        <KeyValueSet dnOrder="552" id="XDMAC_CC6_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="551" id="XDMAC_CC6_DWIDTH">
+        <KeyValueSet dnOrder="553" id="XDMAC_CC6_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="552" id="XDMAC_CC6_MBSIZE">
+        <KeyValueSet dnOrder="554" id="XDMAC_CC6_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="553" id="XDMAC_CC6_SAM">
+        <KeyValueSet dnOrder="555" id="XDMAC_CC6_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="554" id="XDMAC_CC6_SIF">
+        <KeyValueSet dnOrder="556" id="XDMAC_CC6_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="555" id="XDMAC_CC6_SWREQ">
+        <KeyValueSet dnOrder="557" id="XDMAC_CC6_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="556" id="XDMAC_CC6_TYPE">
+        <KeyValueSet dnOrder="558" id="XDMAC_CC6_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="557" id="XDMAC_CC7_CSIZE">
+        <KeyValueSet dnOrder="559" id="XDMAC_CC7_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="558" id="XDMAC_CC7_DAM">
+        <KeyValueSet dnOrder="560" id="XDMAC_CC7_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="559" id="XDMAC_CC7_DIF">
+        <KeyValueSet dnOrder="561" id="XDMAC_CC7_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="560" id="XDMAC_CC7_DSYNC">
+        <KeyValueSet dnOrder="562" id="XDMAC_CC7_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="561" id="XDMAC_CC7_DWIDTH">
+        <KeyValueSet dnOrder="563" id="XDMAC_CC7_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="562" id="XDMAC_CC7_MBSIZE">
+        <KeyValueSet dnOrder="564" id="XDMAC_CC7_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="563" id="XDMAC_CC7_SAM">
+        <KeyValueSet dnOrder="565" id="XDMAC_CC7_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="564" id="XDMAC_CC7_SIF">
+        <KeyValueSet dnOrder="566" id="XDMAC_CC7_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="565" id="XDMAC_CC7_SWREQ">
+        <KeyValueSet dnOrder="567" id="XDMAC_CC7_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="566" id="XDMAC_CC7_TYPE">
+        <KeyValueSet dnOrder="568" id="XDMAC_CC7_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="567" id="XDMAC_CC8_CSIZE">
+        <KeyValueSet dnOrder="569" id="XDMAC_CC8_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="568" id="XDMAC_CC8_DAM">
+        <KeyValueSet dnOrder="570" id="XDMAC_CC8_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="569" id="XDMAC_CC8_DIF">
+        <KeyValueSet dnOrder="571" id="XDMAC_CC8_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="570" id="XDMAC_CC8_DSYNC">
+        <KeyValueSet dnOrder="572" id="XDMAC_CC8_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="571" id="XDMAC_CC8_DWIDTH">
+        <KeyValueSet dnOrder="573" id="XDMAC_CC8_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="572" id="XDMAC_CC8_MBSIZE">
+        <KeyValueSet dnOrder="574" id="XDMAC_CC8_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="573" id="XDMAC_CC8_SAM">
+        <KeyValueSet dnOrder="575" id="XDMAC_CC8_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="574" id="XDMAC_CC8_SIF">
+        <KeyValueSet dnOrder="576" id="XDMAC_CC8_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="575" id="XDMAC_CC8_SWREQ">
+        <KeyValueSet dnOrder="577" id="XDMAC_CC8_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="576" id="XDMAC_CC8_TYPE">
+        <KeyValueSet dnOrder="578" id="XDMAC_CC8_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="577" id="XDMAC_CC9_CSIZE">
+        <KeyValueSet dnOrder="579" id="XDMAC_CC9_CSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="578" id="XDMAC_CC9_DAM">
+        <KeyValueSet dnOrder="580" id="XDMAC_CC9_DAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="579" id="XDMAC_CC9_DIF">
+        <KeyValueSet dnOrder="581" id="XDMAC_CC9_DIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="580" id="XDMAC_CC9_DSYNC">
+        <KeyValueSet dnOrder="582" id="XDMAC_CC9_DSYNC">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="581" id="XDMAC_CC9_DWIDTH">
+        <KeyValueSet dnOrder="583" id="XDMAC_CC9_DWIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="582" id="XDMAC_CC9_MBSIZE">
+        <KeyValueSet dnOrder="584" id="XDMAC_CC9_MBSIZE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="583" id="XDMAC_CC9_SAM">
+        <KeyValueSet dnOrder="585" id="XDMAC_CC9_SAM">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="584" id="XDMAC_CC9_SIF">
+        <KeyValueSet dnOrder="586" id="XDMAC_CC9_SIF">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="585" id="XDMAC_CC9_SWREQ">
+        <KeyValueSet dnOrder="587" id="XDMAC_CC9_SWREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="586" id="XDMAC_CC9_TYPE">
+        <KeyValueSet dnOrder="588" id="XDMAC_CC9_TYPE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="1" id="cmsis"/>
     <UniqueComponent dnOrder="2" id="dfp"/>
-    <UniqueComponent dnOrder="3" id="usart1">
+    <UniqueComponent dnOrder="3" id="efc"/>
+    <UniqueComponent dnOrder="4" id="usart1">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="BAUD_RATE">
           <Values dnOrder="0">
@@ -4097,12 +2962,15 @@
         </Integer>
         <Integer dnOrder="1" id="BRG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="usart1" priority="2" value="81"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="usart1" value="81"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="2" id="USART_INTERRUPT_MODE">
+        <Integer dnOrder="2" id="USART_CLOCK_FREQ">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="usart1" value="150000000"/>
+          </Values>
+        </Integer>
+        <Boolean dnOrder="3" id="USART_INTERRUPT_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="false"/>
           </Values>
@@ -4111,13 +2979,14 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0" minimap="false"/>
-    <ComponentGraph dnOrder="1">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="120" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="dfp" x="30" y="60"/>
-        <ElementPosition dnOrder="3" id="usart1" x="260" y="20"/>
+        <ElementPosition dnOrder="3" id="efc" x="30" y="100"/>
+        <ElementPosition dnOrder="4" id="usart1" x="260" y="20"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>
