@@ -100,7 +100,6 @@ void SYS_Initialize ( void* data )
     CLK_Initialize();
 	PIO_Initialize();
 
-
 	UART1_Initialize();
 
 	PIT_TimerInitialize();
