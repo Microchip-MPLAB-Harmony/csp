@@ -81,6 +81,7 @@ void GPIO_Initialize ( void )
     IEC1SET = _IEC1_CNFIE_MASK;
 
     /* PORTG Initialization */
+    LATG = 0x0; /* Initial Latch Value */
     TRISGCLR = 0x2000; /* Direction Control */
 
 
