@@ -83,6 +83,7 @@ void GPIO_Initialize ( void )
     /* PORTG Initialization */
 
     /* PORTH Initialization */
+    LATH = 0x0; /* Initial Latch Value */
     TRISHCLR = 0x1; /* Direction Control */
 
     /* PORTJ Initialization */
