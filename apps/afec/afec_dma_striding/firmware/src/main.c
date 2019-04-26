@@ -105,7 +105,7 @@ typedef struct
     XDMAC_DESCRIPTOR_VIEW_3 lld_3;
     
     /* Align to the cache line (32-byte) boundary*/
-    uint8_t                 dummy[16];
+    uint8_t                 dummy[28];
 }XDMAC_DESCRIPTORS;
 
 /* View 3 linked list */
