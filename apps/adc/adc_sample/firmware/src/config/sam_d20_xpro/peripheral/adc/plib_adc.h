@@ -102,6 +102,9 @@ uint16_t ADC_ConversionResultGet( void );
 
 bool ADC_ConversionStatusGet( void );
 
+void ADC_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold);
+
+void ADC_WindowModeSet(ADC_WINMODE mode);
 
 
 bool ADC_ConversionStatusGet( void );
