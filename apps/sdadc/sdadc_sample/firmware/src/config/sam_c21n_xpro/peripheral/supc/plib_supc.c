@@ -22,7 +22,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -56,16 +56,13 @@
 #include "device.h"
 #include "plib_supc.h"
 
-
 void SUPC_Initialize( void )
 {
+    /* Configure VREF */
+    SUPC_REGS->SUPC_VREF = SUPC_VREF_SEL(0x3);
 
-    /* Configure Brown out detector prescaler & standby/active mode */
-    SUPC_REGS->SUPC_BODVDD |= SUPC_BODVDD_PSEL_DIV2 ;
-
-
-
-    /* Configure VREF reference, level, availability */
-    SUPC_REGS->SUPC_VREF = SUPC_VREF_SEL_4V096 ;
 }
+
+
+
 
