@@ -107,7 +107,7 @@ int main ( void )
         adc_count = ADC_ConversionResultGet();
         input_voltage = adc_count * ADC_VREF / 4095U;
 
-        printf("ADC Count = %d, ADC Input Voltage = %d.%02d V \r", adc_count, (int)(input_voltage/1000), (int)(input_voltage%1000));
+        printf("ADC Count = 0x%x, ADC Input Voltage = %d.%02d V \r", adc_count, (int)(input_voltage/1000), (int)(input_voltage%1000));
         
         SYSTICK_DelayMs(500);
     }
