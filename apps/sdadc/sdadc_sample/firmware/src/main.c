@@ -83,6 +83,11 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+    
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                    SDADC Sample Demo                 ");
+    printf("\n\r---------------------------------------------------------\n\r");    
+    
     SYSTICK_TimerStart();
     EIC_CallbackRegister(EIC_PIN_3, switch_handler, (uintptr_t) NULL);
     DAC_DataWrite(dac_count);
