@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-02-12T14:02:43Z */
+/* file generated from device description version 2019-04-16T20:45:33Z */
 #ifndef _SAML21J18B_GPIO_H_
 #define _SAML21J18B_GPIO_H_
 
