@@ -65,9 +65,9 @@ void PM_Initialize( void )
 void PM_IdleModeEnter( void )
 {
     /* Configure Idle Sleep mode */
-    PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE2_Val;
+    PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE_Val;
     /* Ensure that SLEEPMODE bits are configured with the given value */
-    while (!(PM_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_IDLE2_Val));
+    while (!(PM_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_IDLE_Val));
     /* Wait for interrupt instruction execution */
     __WFI();
 }
