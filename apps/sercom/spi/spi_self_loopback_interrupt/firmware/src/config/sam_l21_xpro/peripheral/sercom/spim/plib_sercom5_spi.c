@@ -241,7 +241,7 @@ void SERCOM5_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, uintptr_t contex
 
 bool SERCOM5_SPI_IsBusy(void)
 {
-    return sercom5SPIObj.transferIsBusy;
+    return ((sercom5SPIObj.transferIsBusy == true) || ((SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) == 0));
 }
 
 // *****************************************************************************
@@ -325,8 +325,15 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
         sercom5SPIObj.transferIsBusy = true;
 
         /* Flush out any unread data in SPI read buffer */
-        dummyData = SERCOM5_REGS->SPIM.SERCOM_DATA;
-        (void)dummyData;
+        while(SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk)
+        {
+            dummyData = SERCOM5_REGS->SPIM.SERCOM_DATA;
+            (void)dummyData;
+        }
+
+        SERCOM5_REGS->SPIM.SERCOM_STATUS |= SERCOM_SPIM_STATUS_BUFOVF_Msk;
+
+        SERCOM5_REGS->SPIM.SERCOM_INTFLAG |= SERCOM_SPIM_INTFLAG_ERROR_Msk;
 
         if(sercom5SPIObj.rxSize > sercom5SPIObj.txSize)
         {
