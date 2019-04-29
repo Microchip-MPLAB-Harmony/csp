@@ -215,7 +215,7 @@ void FLEXCOM2_SPI_CallbackRegister (FLEXCOM_SPI_CALLBACK callback, uintptr_t con
 
 bool FLEXCOM2_SPI_IsBusy(void)
 {
-    return flexcom2SpiObj.transferIsBusy;
+    return ((flexcom2SpiObj.transferIsBusy) || ((FLEXCOM2_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TXEMPTY_Msk) == 0));
 }
 
 void FLEXCOM2_InterruptHandler(void)
