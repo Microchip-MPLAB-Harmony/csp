@@ -91,13 +91,6 @@ void FLEXCOM0_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBACK callback, uint
 
 void FLEXCOM0_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
-
-
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
