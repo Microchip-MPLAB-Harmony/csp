@@ -255,7 +255,14 @@ bool SERCOM1_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
         }
 
         /* Flush out any unread data in SPI DATA Register from the previous transfer */
-        receivedData = SERCOM1_REGS->SPIM.SERCOM_DATA;
+        while(SERCOM1_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk)
+        {
+            receivedData = SERCOM1_REGS->SPIM.SERCOM_DATA;
+        }
+
+        SERCOM1_REGS->SPIM.SERCOM_STATUS |= SERCOM_SPIM_STATUS_BUFOVF_Msk;
+
+        SERCOM1_REGS->SPIM.SERCOM_INTFLAG |= SERCOM_SPIM_INTFLAG_ERROR_Msk;
 
         if(rxSize > txSize)
         {
