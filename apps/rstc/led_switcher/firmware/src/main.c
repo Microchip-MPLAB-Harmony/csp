@@ -73,7 +73,7 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
-    RSTC_CallbackRegister(&reset_asserted, (uintptr_t) NULL );
+    RSTC_CallbackRegister( reset_asserted, (uintptr_t) NULL );
 
     while ( true )
     {

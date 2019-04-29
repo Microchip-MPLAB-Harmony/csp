@@ -73,11 +73,6 @@
 
 /* TTB Section Descriptor: Section Base Address */
 #define TTB_SECT_ADDR(x)           ((x) & 0xFFF00000)
-/* L1 data cache line size, Number of ways and Number of sets */
-#define L1_DATA_CACHE_BYTES        32U
-#define L1_DATA_CACHE_WAYS         4U
-#define L1_DATA_CACHE_SETS         256U
-#define L1_DATA_CACHE_SETWAY(set, way) (((set) << 5) | ((way) << 30))
 
 __ALIGNED(16384) static uint32_t tlb[4096];
 
@@ -119,130 +114,6 @@ static void mmu_enable(void)
         __set_SCTLR(control | SCTLR_M_Msk);
 }
 
-void icache_InvalidateAll(void)
-{
-    __set_ICIALLU(0);
-    __ISB();
-}
-
-void icache_Enable(void)
-{
-    uint32_t sctlr = __get_SCTLR();
-    if ((sctlr & SCTLR_I_Msk) == 0)
-    {
-        icache_InvalidateAll();
-        __set_SCTLR(sctlr | SCTLR_I_Msk);
-    }
-}
-
-void icache_Disable(void)
-{
-    uint32_t sctlr = __get_SCTLR();
-    if (sctlr & SCTLR_I_Msk)
-    {
-        __set_SCTLR(sctlr & ~SCTLR_I_Msk);
-        icache_InvalidateAll();
-    }
-}
-
-void dcache_InvalidateAll(void)
-{
-    uint32_t set, way;
-
-    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
-    {
-        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
-        {
-            __set_DCISW(L1_DATA_CACHE_SETWAY(set, way));
-        }
-    }
-    __DSB();
-}
-
-void dcache_CleanAll(void)
-{
-    uint32_t set, way;
-
-    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
-    {
-        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
-        {
-            __set_DCCSW(L1_DATA_CACHE_SETWAY(set, way));
-        }
-    }
-    __DSB();
-}
-
-void dcache_CleanInvalidateAll(void)
-{
-    uint32_t set, way;
-
-    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
-    {
-        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
-        {
-            __set_DCCISW(L1_DATA_CACHE_SETWAY(set, way));
-        }
-    }
-    __DSB();
-}
-
-void dcache_InvalidateByAddr (uint32_t *addr, uint32_t size)
-{
-    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
-
-    for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
-    {
-        __set_DCIMVAC(mva);
-        __DMB();
-    }
-    __DSB();
-}
-
-void dcache_CleanByAddr (uint32_t *addr, uint32_t size)
-{
-    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
-
-    for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
-    {
-        __set_DCCMVAC(mva);
-        __DMB();
-    }
-    __DSB();
-}
-
-void dcache_CleanInvalidateByAddr (uint32_t *addr, uint32_t size)
-{
-    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
-
-    for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
-    {
-        __set_DCCIMVAC((uint32_t)mva);
-        __DMB();
-    }
-    __DSB();
-}
-
-void dcache_Enable(void)
-{
-    uint32_t sctlr = __get_SCTLR();
-    if ((sctlr & SCTLR_C_Msk) == 0)
-    {
-        dcache_InvalidateAll();
-        __set_SCTLR(sctlr | SCTLR_C_Msk);
-    }
-}
-
-void dcache_Disable(void)
-{
-    uint32_t sctlr = __get_SCTLR();
-    if (sctlr & SCTLR_C_Msk)
-    {
-        dcache_CleanAll();
-        __set_SCTLR(sctlr & ~SCTLR_C_Msk);
-        dcache_InvalidateAll();
-    }
-}
 
 
 static inline uint32_t cp15_read_sctlr(void)
@@ -505,9 +376,7 @@ void MMU_Initialize(void)
 
     /* Enable MMU, I-Cache and D-Cache */
     mmu_configure(tlb);
-    icache_Enable();
     mmu_enable();
-    dcache_Enable();
 
     // disable the processor alignment fault testing
     uint32_t sctlrValue = cp15_read_sctlr();

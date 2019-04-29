@@ -54,9 +54,9 @@ void DefaultInterruptHandlerForSpurious( void );
 void
 INT_Initialize( void )
 {   
-    const unsigned      MaxInterruptDepth = 8;
-    const unsigned      MaxNumPeripherals = 0x7F;           // 127
     const uint32_t      keyGuard = 0xb6d81c4d;
+    const unsigned      MaxNumPeripherals = 77;
+    const unsigned      MaxInterruptDepth = 8;
     uint32_t            ii;
     aic_registers_t *   aicPtr;
 
@@ -65,7 +65,7 @@ INT_Initialize( void )
     __ISB();                                                // Instruction Synchronization Barrier
     ////// secure to nonSecure redirection
     SFR_REGS->SFR_AICREDIR = (keyGuard ^ SFR_REGS->SFR_SN1) | SFR_AICREDIR_NSAIC_Msk;
-    ////// nonsecure registers
+    //////
     aicPtr = (aic_registers_t *) AIC_REGS;
     for( ii= 0; ii < MaxNumPeripherals; ++ii )
     {
