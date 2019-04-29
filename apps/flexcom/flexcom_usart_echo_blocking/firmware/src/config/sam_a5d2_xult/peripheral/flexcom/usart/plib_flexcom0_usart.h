@@ -79,11 +79,9 @@ bool FLEXCOM0_USART_Write( void *buffer, const size_t size );
 
 bool FLEXCOM0_USART_Read( void *buffer, const size_t size );
 
-uint8_t FLEXCOM0_ReadByte(void);
+uint8_t FLEXCOM0_USART_ReadByte(void);
 
-void FLEXCOM0_WriteByte(uint8_t data);
-
-void FLEXCOM0_Sync(void);
+void FLEXCOM0_USART_WriteByte(uint8_t data);
 
 bool FLEXCOM0_USART_TransmitterIsReady( void );
 
