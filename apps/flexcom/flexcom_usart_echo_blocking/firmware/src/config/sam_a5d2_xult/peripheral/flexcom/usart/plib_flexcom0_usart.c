@@ -226,43 +226,24 @@ bool FLEXCOM0_USART_Write( void *buffer, const size_t size )
     return status;
 }
 
-uint8_t FLEXCOM0_ReadByte(void)
+uint8_t FLEXCOM0_USART_ReadByte(void)
 {
     return(FLEXCOM0_REGS->FLEX_US_RHR & FLEX_US_RHR_RXCHR_Msk);
 }
 
-void FLEXCOM0_WriteByte(uint8_t data)
+void FLEXCOM0_USART_WriteByte(uint8_t data)
 {
-    while ((FLEX_US_CSR_TXEMPTY_Msk == (FLEXCOM0_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk)) == 0);
+    while (FLEX_US_CSR_TXEMPTY_Msk != (FLEXCOM0_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk));
     FLEXCOM0_REGS->FLEX_US_THR = (FLEX_US_THR_TXCHR(data) & FLEX_US_THR_TXCHR_Msk);
-}
-
-void inline FLEXCOM0_Sync(void)
-{
-    while ((FLEX_US_CSR_TXEMPTY_Msk == (FLEXCOM0_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk)) == 0);
 }
 
 bool FLEXCOM0_USART_TransmitterIsReady( void )
 {
-    bool status = false;
-
-    if(FLEX_US_CSR_TXEMPTY_Msk == (FLEXCOM0_REGS->FLEX_US_CSR& FLEX_US_CSR_TXEMPTY_Msk))
-    {
-        status = true;
-    }
-
-    return status;
+    return (FLEX_US_CSR_TXEMPTY_Msk == (FLEXCOM0_REGS->FLEX_US_CSR& FLEX_US_CSR_TXEMPTY_Msk));
 }
 
 bool FLEXCOM0_USART_ReceiverIsReady( void )
 {
-    bool status = false;
-
-    if(FLEX_US_CSR_RXRDY_Msk == (FLEXCOM0_REGS->FLEX_US_CSR& FLEX_US_CSR_RXRDY_Msk))
-    {
-        status = true;
-    }
-
-    return status;
+    return (FLEX_US_CSR_RXRDY_Msk == (FLEXCOM0_REGS->FLEX_US_CSR& FLEX_US_CSR_RXRDY_Msk));
 }
 
