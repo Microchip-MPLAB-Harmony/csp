@@ -44,6 +44,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 #include "plib_ac.h"
+
+
 AC_OBJECT acObj;
 
 // *****************************************************************************
@@ -71,7 +73,8 @@ void AC_Initialize(void)
     {
         /* Wait for Synchronization */
     }
-    AC_REGS->AC_COMPCTRL[0] = AC_COMPCTRL_MUXPOS_PIN0 | AC_COMPCTRL_MUXNEG_BANDGAP | AC_COMPCTRL_INTSEL_EOC | AC_COMPCTRL_OUT_OFF | AC_COMPCTRL_SPEED(0) | AC_COMPCTRL_SINGLE_Msk | AC_COMPCTRL_RUNSTDBY_Msk ;
+    AC_REGS->AC_COMPCTRL[0] = AC_COMPCTRL_MUXPOS_PIN0 | AC_COMPCTRL_MUXNEG_BANDGAP | AC_COMPCTRL_INTSEL_EOC | AC_COMPCTRL_OUT_OFF | AC_COMPCTRL_SPEED(0) | AC_COMPCTRL_SINGLE_Msk | AC_COMPCTRL_RUNSTDBY_Msk;
+
     AC_REGS->AC_COMPCTRL[0] |= AC_COMPCTRL_ENABLE_Msk;
     AC_REGS->AC_SCALER[0] = 0;
 
