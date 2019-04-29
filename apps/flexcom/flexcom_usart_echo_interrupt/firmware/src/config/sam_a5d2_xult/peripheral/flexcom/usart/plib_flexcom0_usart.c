@@ -72,8 +72,6 @@ void static FLEXCOM0_USART_ISR_RX_Handler( void )
         if(flexcom0UsartObj.rxProcessedSize >= flexcom0UsartObj.rxSize)
         {
             flexcom0UsartObj.rxBusyStatus = false;
-            flexcom0UsartObj.rxSize = 0;
-            flexcom0UsartObj.rxProcessedSize = 0;
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
             FLEXCOM0_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk | FLEX_US_IDR_FRAME_Msk | FLEX_US_IDR_PARE_Msk | FLEX_US_IDR_OVRE_Msk);
@@ -106,8 +104,6 @@ void static FLEXCOM0_USART_ISR_TX_Handler( void )
         if(flexcom0UsartObj.txProcessedSize >= flexcom0UsartObj.txSize)
         {
             flexcom0UsartObj.txBusyStatus = false;
-            flexcom0UsartObj.txSize = 0;
-            flexcom0UsartObj.txProcessedSize = 0;
             FLEXCOM0_REGS->FLEX_US_IDR = FLEX_US_IDR_TXEMPTY_Msk;
 
             if(flexcom0UsartObj.txCallback != NULL)
@@ -145,8 +141,6 @@ void FLEXCOM0_InterruptHandler( void )
         }
 
         flexcom0UsartObj.rxBusyStatus = false;
-        flexcom0UsartObj.rxSize = 0;
-        flexcom0UsartObj.rxProcessedSize = 0;
 
         /* Disable Read, Overrun, Parity and Framing error interrupts */
         FLEXCOM0_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk | FLEX_US_IDR_FRAME_Msk | FLEX_US_IDR_PARE_Msk | FLEX_US_IDR_OVRE_Msk);
