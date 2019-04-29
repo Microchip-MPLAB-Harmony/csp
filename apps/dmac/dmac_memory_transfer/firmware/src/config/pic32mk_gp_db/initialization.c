@@ -173,7 +173,6 @@ void SYS_Initialize ( void* data )
     CHECONbits.PREFEN = 1;
 
 
-
     DMAC_Initialize();
 
 	UART6_Initialize();
