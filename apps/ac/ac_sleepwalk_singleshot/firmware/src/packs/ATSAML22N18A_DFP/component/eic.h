@@ -1,7 +1,7 @@
 /**
  * \brief Component description for EIC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-07-02T17:30:16Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22_EIC_COMPONENT_H_
 #define _SAML22_EIC_COMPONENT_H_
 
@@ -40,6 +40,10 @@
 #define EIC_CTRLA_CKSEL_Pos                   _U_(4)                                               /**< (EIC_CTRLA) Clock Selection Position */
 #define EIC_CTRLA_CKSEL_Msk                   (_U_(0x1) << EIC_CTRLA_CKSEL_Pos)                    /**< (EIC_CTRLA) Clock Selection Mask */
 #define EIC_CTRLA_CKSEL(value)                (EIC_CTRLA_CKSEL_Msk & ((value) << EIC_CTRLA_CKSEL_Pos))
+#define   EIC_CTRLA_CKSEL_CLK_GCLK_Val        _U_(0x0)                                             /**< (EIC_CTRLA) Clocked by GCLK  */
+#define   EIC_CTRLA_CKSEL_CLK_ULP32K_Val      _U_(0x1)                                             /**< (EIC_CTRLA) Clocked by ULP32K  */
+#define EIC_CTRLA_CKSEL_CLK_GCLK              (EIC_CTRLA_CKSEL_CLK_GCLK_Val << EIC_CTRLA_CKSEL_Pos) /**< (EIC_CTRLA) Clocked by GCLK Position  */
+#define EIC_CTRLA_CKSEL_CLK_ULP32K            (EIC_CTRLA_CKSEL_CLK_ULP32K_Val << EIC_CTRLA_CKSEL_Pos) /**< (EIC_CTRLA) Clocked by ULP32K Position  */
 #define EIC_CTRLA_Msk                         _U_(0x13)                                            /**< (EIC_CTRLA) Register Mask  */
 
 
@@ -67,6 +71,10 @@
 #define EIC_NMICTRL_NMIASYNCH_Pos             _U_(4)                                               /**< (EIC_NMICTRL) NMI Asynchronous edge Detection Enable Position */
 #define EIC_NMICTRL_NMIASYNCH_Msk             (_U_(0x1) << EIC_NMICTRL_NMIASYNCH_Pos)              /**< (EIC_NMICTRL) NMI Asynchronous edge Detection Enable Mask */
 #define EIC_NMICTRL_NMIASYNCH(value)          (EIC_NMICTRL_NMIASYNCH_Msk & ((value) << EIC_NMICTRL_NMIASYNCH_Pos))
+#define   EIC_NMICTRL_NMIASYNCH_SYNC_Val      _U_(0x0)                                             /**< (EIC_NMICTRL) Edge detection is clock synchronously operated  */
+#define   EIC_NMICTRL_NMIASYNCH_ASYNC_Val     _U_(0x1)                                             /**< (EIC_NMICTRL) Edge detection is clock asynchronously operated  */
+#define EIC_NMICTRL_NMIASYNCH_SYNC            (EIC_NMICTRL_NMIASYNCH_SYNC_Val << EIC_NMICTRL_NMIASYNCH_Pos) /**< (EIC_NMICTRL) Edge detection is clock synchronously operated Position  */
+#define EIC_NMICTRL_NMIASYNCH_ASYNC           (EIC_NMICTRL_NMIASYNCH_ASYNC_Val << EIC_NMICTRL_NMIASYNCH_Pos) /**< (EIC_NMICTRL) Edge detection is clock asynchronously operated Position  */
 #define EIC_NMICTRL_Msk                       _U_(0x1F)                                            /**< (EIC_NMICTRL) Register Mask  */
 
 
@@ -112,8 +120,8 @@
 /* -------- EIC_INTENSET : (EIC Offset: 0x10) (R/W 32) Interrupt Enable Set -------- */
 #define EIC_INTENSET_RESETVALUE               _U_(0x00)                                            /**<  (EIC_INTENSET) Interrupt Enable Set  Reset Value */
 
-#define EIC_INTENSET_EXTINT_Pos               _U_(0)                                               /**< (EIC_INTENSET) External Interrupt Disable Position */
-#define EIC_INTENSET_EXTINT_Msk               (_U_(0xFFFF) << EIC_INTENSET_EXTINT_Pos)             /**< (EIC_INTENSET) External Interrupt Disable Mask */
+#define EIC_INTENSET_EXTINT_Pos               _U_(0)                                               /**< (EIC_INTENSET) External Interrupt Enable Position */
+#define EIC_INTENSET_EXTINT_Msk               (_U_(0xFFFF) << EIC_INTENSET_EXTINT_Pos)             /**< (EIC_INTENSET) External Interrupt Enable Mask */
 #define EIC_INTENSET_EXTINT(value)            (EIC_INTENSET_EXTINT_Msk & ((value) << EIC_INTENSET_EXTINT_Pos))
 #define EIC_INTENSET_Msk                      _U_(0x0000FFFF)                                      /**< (EIC_INTENSET) Register Mask  */
 
@@ -133,6 +141,10 @@
 #define EIC_ASYNCH_ASYNCH_Pos                 _U_(0)                                               /**< (EIC_ASYNCH) EIC Asynchronous edge Detection Enable Position */
 #define EIC_ASYNCH_ASYNCH_Msk                 (_U_(0xFFFF) << EIC_ASYNCH_ASYNCH_Pos)               /**< (EIC_ASYNCH) EIC Asynchronous edge Detection Enable Mask */
 #define EIC_ASYNCH_ASYNCH(value)              (EIC_ASYNCH_ASYNCH_Msk & ((value) << EIC_ASYNCH_ASYNCH_Pos))
+#define   EIC_ASYNCH_ASYNCH_SYNC_Val          _U_(0x0)                                             /**< (EIC_ASYNCH) Edge detection is clock synchronously operated  */
+#define   EIC_ASYNCH_ASYNCH_ASYNC_Val         _U_(0x1)                                             /**< (EIC_ASYNCH) Edge detection is clock asynchronously operated  */
+#define EIC_ASYNCH_ASYNCH_SYNC                (EIC_ASYNCH_ASYNCH_SYNC_Val << EIC_ASYNCH_ASYNCH_Pos) /**< (EIC_ASYNCH) Edge detection is clock synchronously operated Position  */
+#define EIC_ASYNCH_ASYNCH_ASYNC               (EIC_ASYNCH_ASYNCH_ASYNC_Val << EIC_ASYNCH_ASYNCH_Pos) /**< (EIC_ASYNCH) Edge detection is clock asynchronously operated Position  */
 #define EIC_ASYNCH_Msk                        _U_(0x0000FFFF)                                      /**< (EIC_ASYNCH) Register Mask  */
 
 

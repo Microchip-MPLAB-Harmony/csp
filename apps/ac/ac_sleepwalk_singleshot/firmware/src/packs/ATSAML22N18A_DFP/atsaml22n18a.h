@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAML22N18A
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-07-02T17:30:16Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22N18A_H_
 #define _SAML22N18A_H_
 
@@ -141,7 +141,7 @@ typedef struct _DeviceVectors
   void* pfnSysTick_Handler;                      /*  -1 System Tick Timer */
 
   /* Peripheral handlers */
-  void* pfnSYSTEM_Handler;                       /*   0  (MCLK OSCCTRL OSC32KCTRL PAC PM SUPC) */
+  void* pfnSYSTEM_Handler;                       /*   0 System peripherals shared interrupt (MCLK OSCCTRL OSC32KCTRL PAC PM SUPC) */
   void* pfnWDT_Handler;                          /*   1 Watchdog Timer (WDT) */
   void* pfnRTC_Handler;                          /*   2 Real-Time Counter (RTC) */
   void* pfnEIC_Handler;                          /*   3 External Interrupt Controller (EIC) */
@@ -439,7 +439,6 @@ void TRNG_Handler                  ( void );
 #define OTP3_SIZE                      _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
 #define OTP4_SIZE                      _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
 #define OTP5_SIZE                      _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
-#define TEMP_LOG_SIZE                  _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
 #define USER_PAGE_SIZE                 _UL_(0x00000100)    /*    0kB Memory segment type: user_page */
 #define USER_PAGE_PAGE_SIZE            _UL_(        64)
 #define USER_PAGE_NB_OF_PAGES          _UL_(         4)
@@ -464,7 +463,6 @@ void TRNG_Handler                  ( void );
 #define OTP3_ADDR                      _UL_(0x00806010)    /**< OTP3 base address (type: fuses)*/
 #define OTP4_ADDR                      _UL_(0x00806018)    /**< OTP4 base address (type: fuses)*/
 #define OTP5_ADDR                      _UL_(0x00806020)    /**< OTP5 base address (type: fuses)*/
-#define TEMP_LOG_ADDR                  _UL_(0x00806030)    /**< TEMP_LOG base address (type: fuses)*/
 #define USER_PAGE_ADDR                 _UL_(0x00804000)    /**< USER_PAGE base address (type: user_page)*/
 #define RWW_ADDR                       _UL_(0x00400000)    /**< RWW base address (type: flash)*/
 #define HSRAM_ADDR                     _UL_(0x20000000)    /**< HSRAM base address (type: ram)*/
@@ -524,22 +522,22 @@ void TRNG_Handler                  ( void );
 #define EVENT_ID_GEN_TCC0_OVF                            35 /**< ID for TCC0 event generator OVF */
 #define EVENT_ID_GEN_TCC0_TRG                            36 /**< ID for TCC0 event generator TRG */
 #define EVENT_ID_GEN_TCC0_CNT                            37 /**< ID for TCC0 event generator CNT */
-#define EVENT_ID_GEN_TCC0_MCX_0                          38 /**< ID for TCC0 event generator MCX_0 */
-#define EVENT_ID_GEN_TCC0_MCX_1                          39 /**< ID for TCC0 event generator MCX_1 */
-#define EVENT_ID_GEN_TCC0_MCX_2                          40 /**< ID for TCC0 event generator MCX_2 */
-#define EVENT_ID_GEN_TCC0_MCX_3                          41 /**< ID for TCC0 event generator MCX_3 */
+#define EVENT_ID_GEN_TCC0_MC_0                           38 /**< ID for TCC0 event generator MC_0 */
+#define EVENT_ID_GEN_TCC0_MC_1                           39 /**< ID for TCC0 event generator MC_1 */
+#define EVENT_ID_GEN_TCC0_MC_2                           40 /**< ID for TCC0 event generator MC_2 */
+#define EVENT_ID_GEN_TCC0_MC_3                           41 /**< ID for TCC0 event generator MC_3 */
 #define EVENT_ID_GEN_TC0_OVF                             42 /**< ID for TC0 event generator OVF */
-#define EVENT_ID_GEN_TC0_MCX_0                           43 /**< ID for TC0 event generator MCX_0 */
-#define EVENT_ID_GEN_TC0_MCX_1                           44 /**< ID for TC0 event generator MCX_1 */
+#define EVENT_ID_GEN_TC0_MC_0                            43 /**< ID for TC0 event generator MC_0 */
+#define EVENT_ID_GEN_TC0_MC_1                            44 /**< ID for TC0 event generator MC_1 */
 #define EVENT_ID_GEN_TC1_OVF                             45 /**< ID for TC1 event generator OVF */
-#define EVENT_ID_GEN_TC1_MCX_0                           46 /**< ID for TC1 event generator MCX_0 */
-#define EVENT_ID_GEN_TC1_MCX_1                           47 /**< ID for TC1 event generator MCX_1 */
+#define EVENT_ID_GEN_TC1_MC_0                            46 /**< ID for TC1 event generator MC_0 */
+#define EVENT_ID_GEN_TC1_MC_1                            47 /**< ID for TC1 event generator MC_1 */
 #define EVENT_ID_GEN_TC2_OVF                             48 /**< ID for TC2 event generator OVF */
-#define EVENT_ID_GEN_TC2_MCX_0                           49 /**< ID for TC2 event generator MCX_0 */
-#define EVENT_ID_GEN_TC2_MCX_1                           50 /**< ID for TC2 event generator MCX_1 */
+#define EVENT_ID_GEN_TC2_MC_0                            49 /**< ID for TC2 event generator MC_0 */
+#define EVENT_ID_GEN_TC2_MC_1                            50 /**< ID for TC2 event generator MC_1 */
 #define EVENT_ID_GEN_TC3_OVF                             51 /**< ID for TC3 event generator OVF */
-#define EVENT_ID_GEN_TC3_MCX_0                           52 /**< ID for TC3 event generator MCX_0 */
-#define EVENT_ID_GEN_TC3_MCX_1                           53 /**< ID for TC3 event generator MCX_1 */
+#define EVENT_ID_GEN_TC3_MC_0                            52 /**< ID for TC3 event generator MC_0 */
+#define EVENT_ID_GEN_TC3_MC_1                            53 /**< ID for TC3 event generator MC_1 */
 #define EVENT_ID_GEN_ADC_RESRDY                          54 /**< ID for ADC event generator RESRDY */
 #define EVENT_ID_GEN_ADC_WINMON                          55 /**< ID for ADC event generator WINMON */
 #define EVENT_ID_GEN_AC_COMP_0                           56 /**< ID for AC event generator COMP_0 */
