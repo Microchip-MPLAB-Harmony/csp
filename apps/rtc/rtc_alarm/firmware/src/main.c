@@ -53,11 +53,13 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"         		// SYS function prototypes
 
-void RTC_Callback(uint32_t int_cause, uintptr_t context )
+static bool alarmTriggered = false;
+
+void RTC_Callback( uint32_t int_cause, uintptr_t context )
 {
-	if (int_cause & RTC_INT_ALARM)
+	if( int_cause & RTC_INT_ALARM )
 	{
-		printf("\n\rAlarm Triggered !!!!!!!!\n\r");
+        alarmTriggered = true;
         LED_Toggle();
 	}
 }
@@ -92,28 +94,33 @@ int main ( void )
     alarm_time.tm_wday = 1;
 
     printf("\n\r---------------------------------------------------------");
-    printf("\n\r                    RTC Demo                 ");
+    printf("\n\r                    RTC Demo");
     printf("\n\r---------------------------------------------------------\n\r");
 
     RTC_CallbackRegister(RTC_Callback, (uintptr_t) NULL);
     
-    if (RTC_TimeSet(&sys_time) == false)
+    if( RTC_TimeSet(&sys_time) == false )
     {
         printf("\n\rError setting up time\n");
-        while(1);
+        while( true );
     }
     
-    if (RTC_AlarmSet(&alarm_time, RTC_ALARM_MASK_HHMISS)== false)
+    if( RTC_AlarmSet(&alarm_time, RTC_ALARM_MASK_HHMISS)== false )
     {
         printf("\n\rError setting up alarm\n");
-        while(1);
+        while( true );
     }
-    printf("\n\rThe Alarm will Trigger at 12:00:20\n\n\r");
+    printf( "\n\rThe alarm will occur at 12:00:20\n\n\r" );
     
-    while ( true )
+    while( true )
     {
         RTC_TimeGet(&sys_time);
         printf("System time is:   %02d:%02d:%02d\r",sys_time.tm_hour, sys_time.tm_min, sys_time.tm_sec);
+        if( alarmTriggered )
+        {
+            alarmTriggered = false;
+            printf("\n\rAlarm triggered\n\r");
+        }
     }
 
     /* Execution should not come here during normal operation */
