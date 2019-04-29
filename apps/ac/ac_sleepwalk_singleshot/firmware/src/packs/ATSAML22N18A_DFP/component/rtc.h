@@ -1,7 +1,7 @@
 /**
  * \brief Component description for RTC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,64 +20,13 @@
  *
  */
 
-/* file generated from device description version 2018-07-02T17:30:16Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22_RTC_COMPONENT_H_
 #define _SAML22_RTC_COMPONENT_H_
 
 /* ************************************************************************** */
 /*   SOFTWARE API DEFINITION FOR RTC                                          */
 /* ************************************************************************** */
-
-/* -------- RTC_MODE2_ALARM : (RTC Offset: 0x00) (R/W 32) MODE2_ALARM Alarm n Value -------- */
-#define RTC_MODE2_ALARM_RESETVALUE            _U_(0x00)                                            /**<  (RTC_MODE2_ALARM) MODE2_ALARM Alarm n Value  Reset Value */
-
-#define RTC_MODE2_ALARM_SECOND_Pos            _U_(0)                                               /**< (RTC_MODE2_ALARM) Second Position */
-#define RTC_MODE2_ALARM_SECOND_Msk            (_U_(0x3F) << RTC_MODE2_ALARM_SECOND_Pos)            /**< (RTC_MODE2_ALARM) Second Mask */
-#define RTC_MODE2_ALARM_SECOND(value)         (RTC_MODE2_ALARM_SECOND_Msk & ((value) << RTC_MODE2_ALARM_SECOND_Pos))
-#define RTC_MODE2_ALARM_MINUTE_Pos            _U_(6)                                               /**< (RTC_MODE2_ALARM) Minute Position */
-#define RTC_MODE2_ALARM_MINUTE_Msk            (_U_(0x3F) << RTC_MODE2_ALARM_MINUTE_Pos)            /**< (RTC_MODE2_ALARM) Minute Mask */
-#define RTC_MODE2_ALARM_MINUTE(value)         (RTC_MODE2_ALARM_MINUTE_Msk & ((value) << RTC_MODE2_ALARM_MINUTE_Pos))
-#define RTC_MODE2_ALARM_HOUR_Pos              _U_(12)                                              /**< (RTC_MODE2_ALARM) Hour Position */
-#define RTC_MODE2_ALARM_HOUR_Msk              (_U_(0x1F) << RTC_MODE2_ALARM_HOUR_Pos)              /**< (RTC_MODE2_ALARM) Hour Mask */
-#define RTC_MODE2_ALARM_HOUR(value)           (RTC_MODE2_ALARM_HOUR_Msk & ((value) << RTC_MODE2_ALARM_HOUR_Pos))
-#define   RTC_MODE2_ALARM_HOUR_AM_Val         _U_(0x0)                                             /**< (RTC_MODE2_ALARM) Morning hour  */
-#define   RTC_MODE2_ALARM_HOUR_PM_Val         _U_(0x10)                                            /**< (RTC_MODE2_ALARM) Afternoon hour  */
-#define RTC_MODE2_ALARM_HOUR_AM               (RTC_MODE2_ALARM_HOUR_AM_Val << RTC_MODE2_ALARM_HOUR_Pos) /**< (RTC_MODE2_ALARM) Morning hour Position  */
-#define RTC_MODE2_ALARM_HOUR_PM               (RTC_MODE2_ALARM_HOUR_PM_Val << RTC_MODE2_ALARM_HOUR_Pos) /**< (RTC_MODE2_ALARM) Afternoon hour Position  */
-#define RTC_MODE2_ALARM_DAY_Pos               _U_(17)                                              /**< (RTC_MODE2_ALARM) Day Position */
-#define RTC_MODE2_ALARM_DAY_Msk               (_U_(0x1F) << RTC_MODE2_ALARM_DAY_Pos)               /**< (RTC_MODE2_ALARM) Day Mask */
-#define RTC_MODE2_ALARM_DAY(value)            (RTC_MODE2_ALARM_DAY_Msk & ((value) << RTC_MODE2_ALARM_DAY_Pos))
-#define RTC_MODE2_ALARM_MONTH_Pos             _U_(22)                                              /**< (RTC_MODE2_ALARM) Month Position */
-#define RTC_MODE2_ALARM_MONTH_Msk             (_U_(0xF) << RTC_MODE2_ALARM_MONTH_Pos)              /**< (RTC_MODE2_ALARM) Month Mask */
-#define RTC_MODE2_ALARM_MONTH(value)          (RTC_MODE2_ALARM_MONTH_Msk & ((value) << RTC_MODE2_ALARM_MONTH_Pos))
-#define RTC_MODE2_ALARM_YEAR_Pos              _U_(26)                                              /**< (RTC_MODE2_ALARM) Year Position */
-#define RTC_MODE2_ALARM_YEAR_Msk              (_U_(0x3F) << RTC_MODE2_ALARM_YEAR_Pos)              /**< (RTC_MODE2_ALARM) Year Mask */
-#define RTC_MODE2_ALARM_YEAR(value)           (RTC_MODE2_ALARM_YEAR_Msk & ((value) << RTC_MODE2_ALARM_YEAR_Pos))
-#define RTC_MODE2_ALARM_Msk                   _U_(0xFFFFFFFF)                                      /**< (RTC_MODE2_ALARM) Register Mask  */
-
-
-/* -------- RTC_MODE2_MASK : (RTC Offset: 0x04) (R/W 8) MODE2_ALARM Alarm n Mask -------- */
-#define RTC_MODE2_MASK_RESETVALUE             _U_(0x00)                                            /**<  (RTC_MODE2_MASK) MODE2_ALARM Alarm n Mask  Reset Value */
-
-#define RTC_MODE2_MASK_SEL_Pos                _U_(0)                                               /**< (RTC_MODE2_MASK) Alarm Mask Selection Position */
-#define RTC_MODE2_MASK_SEL_Msk                (_U_(0x7) << RTC_MODE2_MASK_SEL_Pos)                 /**< (RTC_MODE2_MASK) Alarm Mask Selection Mask */
-#define RTC_MODE2_MASK_SEL(value)             (RTC_MODE2_MASK_SEL_Msk & ((value) << RTC_MODE2_MASK_SEL_Pos))
-#define   RTC_MODE2_MASK_SEL_OFF_Val          _U_(0x0)                                             /**< (RTC_MODE2_MASK) Alarm Disabled  */
-#define   RTC_MODE2_MASK_SEL_SS_Val           _U_(0x1)                                             /**< (RTC_MODE2_MASK) Match seconds only  */
-#define   RTC_MODE2_MASK_SEL_MMSS_Val         _U_(0x2)                                             /**< (RTC_MODE2_MASK) Match seconds and minutes only  */
-#define   RTC_MODE2_MASK_SEL_HHMMSS_Val       _U_(0x3)                                             /**< (RTC_MODE2_MASK) Match seconds, minutes, and hours only  */
-#define   RTC_MODE2_MASK_SEL_DDHHMMSS_Val     _U_(0x4)                                             /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, and days only  */
-#define   RTC_MODE2_MASK_SEL_MMDDHHMMSS_Val   _U_(0x5)                                             /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, days, and months only  */
-#define   RTC_MODE2_MASK_SEL_YYMMDDHHMMSS_Val _U_(0x6)                                             /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, days, months, and years  */
-#define RTC_MODE2_MASK_SEL_OFF                (RTC_MODE2_MASK_SEL_OFF_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Alarm Disabled Position  */
-#define RTC_MODE2_MASK_SEL_SS                 (RTC_MODE2_MASK_SEL_SS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds only Position  */
-#define RTC_MODE2_MASK_SEL_MMSS               (RTC_MODE2_MASK_SEL_MMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds and minutes only Position  */
-#define RTC_MODE2_MASK_SEL_HHMMSS             (RTC_MODE2_MASK_SEL_HHMMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds, minutes, and hours only Position  */
-#define RTC_MODE2_MASK_SEL_DDHHMMSS           (RTC_MODE2_MASK_SEL_DDHHMMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, and days only Position  */
-#define RTC_MODE2_MASK_SEL_MMDDHHMMSS         (RTC_MODE2_MASK_SEL_MMDDHHMMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, days, and months only Position  */
-#define RTC_MODE2_MASK_SEL_YYMMDDHHMMSS       (RTC_MODE2_MASK_SEL_YYMMDDHHMMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, days, months, and years Position  */
-#define RTC_MODE2_MASK_Msk                    _U_(0x07)                                            /**< (RTC_MODE2_MASK) Register Mask  */
-
 
 /* -------- RTC_MODE0_CTRLA : (RTC Offset: 0x00) (R/W 16) MODE0 Control A -------- */
 #define RTC_MODE0_CTRLA_RESETVALUE            _U_(0x00)                                            /**<  (RTC_MODE0_CTRLA) MODE0 Control A  Reset Value */
@@ -1211,6 +1160,57 @@
 #define RTC_MODE1_COMP_Msk                    _U_(0xFFFF)                                          /**< (RTC_MODE1_COMP) Register Mask  */
 
 
+/* -------- RTC_MODE2_ALARM : (RTC Offset: 0x20) (R/W 32) MODE2_ALARM Alarm n Value -------- */
+#define RTC_MODE2_ALARM_RESETVALUE            _U_(0x00)                                            /**<  (RTC_MODE2_ALARM) MODE2_ALARM Alarm n Value  Reset Value */
+
+#define RTC_MODE2_ALARM_SECOND_Pos            _U_(0)                                               /**< (RTC_MODE2_ALARM) Second Position */
+#define RTC_MODE2_ALARM_SECOND_Msk            (_U_(0x3F) << RTC_MODE2_ALARM_SECOND_Pos)            /**< (RTC_MODE2_ALARM) Second Mask */
+#define RTC_MODE2_ALARM_SECOND(value)         (RTC_MODE2_ALARM_SECOND_Msk & ((value) << RTC_MODE2_ALARM_SECOND_Pos))
+#define RTC_MODE2_ALARM_MINUTE_Pos            _U_(6)                                               /**< (RTC_MODE2_ALARM) Minute Position */
+#define RTC_MODE2_ALARM_MINUTE_Msk            (_U_(0x3F) << RTC_MODE2_ALARM_MINUTE_Pos)            /**< (RTC_MODE2_ALARM) Minute Mask */
+#define RTC_MODE2_ALARM_MINUTE(value)         (RTC_MODE2_ALARM_MINUTE_Msk & ((value) << RTC_MODE2_ALARM_MINUTE_Pos))
+#define RTC_MODE2_ALARM_HOUR_Pos              _U_(12)                                              /**< (RTC_MODE2_ALARM) Hour Position */
+#define RTC_MODE2_ALARM_HOUR_Msk              (_U_(0x1F) << RTC_MODE2_ALARM_HOUR_Pos)              /**< (RTC_MODE2_ALARM) Hour Mask */
+#define RTC_MODE2_ALARM_HOUR(value)           (RTC_MODE2_ALARM_HOUR_Msk & ((value) << RTC_MODE2_ALARM_HOUR_Pos))
+#define   RTC_MODE2_ALARM_HOUR_AM_Val         _U_(0x0)                                             /**< (RTC_MODE2_ALARM) Morning hour  */
+#define   RTC_MODE2_ALARM_HOUR_PM_Val         _U_(0x10)                                            /**< (RTC_MODE2_ALARM) Afternoon hour  */
+#define RTC_MODE2_ALARM_HOUR_AM               (RTC_MODE2_ALARM_HOUR_AM_Val << RTC_MODE2_ALARM_HOUR_Pos) /**< (RTC_MODE2_ALARM) Morning hour Position  */
+#define RTC_MODE2_ALARM_HOUR_PM               (RTC_MODE2_ALARM_HOUR_PM_Val << RTC_MODE2_ALARM_HOUR_Pos) /**< (RTC_MODE2_ALARM) Afternoon hour Position  */
+#define RTC_MODE2_ALARM_DAY_Pos               _U_(17)                                              /**< (RTC_MODE2_ALARM) Day Position */
+#define RTC_MODE2_ALARM_DAY_Msk               (_U_(0x1F) << RTC_MODE2_ALARM_DAY_Pos)               /**< (RTC_MODE2_ALARM) Day Mask */
+#define RTC_MODE2_ALARM_DAY(value)            (RTC_MODE2_ALARM_DAY_Msk & ((value) << RTC_MODE2_ALARM_DAY_Pos))
+#define RTC_MODE2_ALARM_MONTH_Pos             _U_(22)                                              /**< (RTC_MODE2_ALARM) Month Position */
+#define RTC_MODE2_ALARM_MONTH_Msk             (_U_(0xF) << RTC_MODE2_ALARM_MONTH_Pos)              /**< (RTC_MODE2_ALARM) Month Mask */
+#define RTC_MODE2_ALARM_MONTH(value)          (RTC_MODE2_ALARM_MONTH_Msk & ((value) << RTC_MODE2_ALARM_MONTH_Pos))
+#define RTC_MODE2_ALARM_YEAR_Pos              _U_(26)                                              /**< (RTC_MODE2_ALARM) Year Position */
+#define RTC_MODE2_ALARM_YEAR_Msk              (_U_(0x3F) << RTC_MODE2_ALARM_YEAR_Pos)              /**< (RTC_MODE2_ALARM) Year Mask */
+#define RTC_MODE2_ALARM_YEAR(value)           (RTC_MODE2_ALARM_YEAR_Msk & ((value) << RTC_MODE2_ALARM_YEAR_Pos))
+#define RTC_MODE2_ALARM_Msk                   _U_(0xFFFFFFFF)                                      /**< (RTC_MODE2_ALARM) Register Mask  */
+
+
+/* -------- RTC_MODE2_MASK : (RTC Offset: 0x24) (R/W 8) MODE2_ALARM Alarm n Mask -------- */
+#define RTC_MODE2_MASK_RESETVALUE             _U_(0x00)                                            /**<  (RTC_MODE2_MASK) MODE2_ALARM Alarm n Mask  Reset Value */
+
+#define RTC_MODE2_MASK_SEL_Pos                _U_(0)                                               /**< (RTC_MODE2_MASK) Alarm Mask Selection Position */
+#define RTC_MODE2_MASK_SEL_Msk                (_U_(0x7) << RTC_MODE2_MASK_SEL_Pos)                 /**< (RTC_MODE2_MASK) Alarm Mask Selection Mask */
+#define RTC_MODE2_MASK_SEL(value)             (RTC_MODE2_MASK_SEL_Msk & ((value) << RTC_MODE2_MASK_SEL_Pos))
+#define   RTC_MODE2_MASK_SEL_OFF_Val          _U_(0x0)                                             /**< (RTC_MODE2_MASK) Alarm Disabled  */
+#define   RTC_MODE2_MASK_SEL_SS_Val           _U_(0x1)                                             /**< (RTC_MODE2_MASK) Match seconds only  */
+#define   RTC_MODE2_MASK_SEL_MMSS_Val         _U_(0x2)                                             /**< (RTC_MODE2_MASK) Match seconds and minutes only  */
+#define   RTC_MODE2_MASK_SEL_HHMMSS_Val       _U_(0x3)                                             /**< (RTC_MODE2_MASK) Match seconds, minutes, and hours only  */
+#define   RTC_MODE2_MASK_SEL_DDHHMMSS_Val     _U_(0x4)                                             /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, and days only  */
+#define   RTC_MODE2_MASK_SEL_MMDDHHMMSS_Val   _U_(0x5)                                             /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, days, and months only  */
+#define   RTC_MODE2_MASK_SEL_YYMMDDHHMMSS_Val _U_(0x6)                                             /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, days, months, and years  */
+#define RTC_MODE2_MASK_SEL_OFF                (RTC_MODE2_MASK_SEL_OFF_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Alarm Disabled Position  */
+#define RTC_MODE2_MASK_SEL_SS                 (RTC_MODE2_MASK_SEL_SS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds only Position  */
+#define RTC_MODE2_MASK_SEL_MMSS               (RTC_MODE2_MASK_SEL_MMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds and minutes only Position  */
+#define RTC_MODE2_MASK_SEL_HHMMSS             (RTC_MODE2_MASK_SEL_HHMMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds, minutes, and hours only Position  */
+#define RTC_MODE2_MASK_SEL_DDHHMMSS           (RTC_MODE2_MASK_SEL_DDHHMMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, and days only Position  */
+#define RTC_MODE2_MASK_SEL_MMDDHHMMSS         (RTC_MODE2_MASK_SEL_MMDDHHMMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, days, and months only Position  */
+#define RTC_MODE2_MASK_SEL_YYMMDDHHMMSS       (RTC_MODE2_MASK_SEL_YYMMDDHHMMSS_Val << RTC_MODE2_MASK_SEL_Pos) /**< (RTC_MODE2_MASK) Match seconds, minutes, hours, days, months, and years Position  */
+#define RTC_MODE2_MASK_Msk                    _U_(0x07)                                            /**< (RTC_MODE2_MASK) Register Mask  */
+
+
 /* -------- RTC_GP : (RTC Offset: 0x40) (R/W 32) General Purpose -------- */
 #define RTC_GP_RESETVALUE                     _U_(0x00)                                            /**<  (RTC_GP) General Purpose  Reset Value */
 
@@ -1400,8 +1400,6 @@
 
 
 /** \brief RTC register offsets definitions */
-#define RTC_MODE2_ALARM_REG_OFST       (0x00)              /**< (RTC_MODE2_ALARM) MODE2_ALARM Alarm n Value Offset */
-#define RTC_MODE2_MASK_REG_OFST        (0x04)              /**< (RTC_MODE2_MASK) MODE2_ALARM Alarm n Mask Offset */
 #define RTC_MODE0_CTRLA_REG_OFST       (0x00)              /**< (RTC_MODE0_CTRLA) MODE0 Control A Offset */
 #define RTC_MODE1_CTRLA_REG_OFST       (0x00)              /**< (RTC_MODE1_CTRLA) MODE1 Control A Offset */
 #define RTC_MODE2_CTRLA_REG_OFST       (0x00)              /**< (RTC_MODE2_CTRLA) MODE2 Control A Offset */
@@ -1431,6 +1429,8 @@
 #define RTC_MODE1_PER_REG_OFST         (0x1C)              /**< (RTC_MODE1_PER) MODE1 Counter Period Offset */
 #define RTC_MODE0_COMP_REG_OFST        (0x20)              /**< (RTC_MODE0_COMP) MODE0 Compare n Value Offset */
 #define RTC_MODE1_COMP_REG_OFST        (0x20)              /**< (RTC_MODE1_COMP) MODE1 Compare n Value Offset */
+#define RTC_MODE2_ALARM_REG_OFST       (0x20)              /**< (RTC_MODE2_ALARM) MODE2_ALARM Alarm n Value Offset */
+#define RTC_MODE2_MASK_REG_OFST        (0x24)              /**< (RTC_MODE2_MASK) MODE2_ALARM Alarm n Mask Offset */
 #define RTC_GP_REG_OFST                (0x40)              /**< (RTC_GP) General Purpose Offset */
 #define RTC_TAMPCTRL_REG_OFST          (0x60)              /**< (RTC_TAMPCTRL) Tamper Control Offset */
 #define RTC_MODE0_TIMESTAMP_REG_OFST   (0x64)              /**< (RTC_MODE0_TIMESTAMP) MODE0 Timestamp Offset */
@@ -1440,14 +1440,6 @@
 #define RTC_BKUP_REG_OFST              (0x80)              /**< (RTC_BKUP) Backup Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
-/** \brief MODE2_ALARM register API structure */
-typedef struct
-{
-  __IO  uint32_t                       RTC_ALARM;          /**< Offset: 0x00 (R/W  32) MODE2_ALARM Alarm n Value */
-  __IO  uint8_t                        RTC_MASK;           /**< Offset: 0x04 (R/W  8) MODE2_ALARM Alarm n Mask */
-  __I   uint8_t                        Reserved1[0x03];
-} rtc_mode2_alarm_registers_t;
-
 /** \brief RTC register API structure */
 typedef struct
 {  /* Real-Time Counter */
@@ -1464,7 +1456,7 @@ typedef struct
   __I   uint8_t                        Reserved2[0x03];
   __IO  uint32_t                       RTC_COUNT;          /**< Offset: 0x18 (R/W  32) MODE0 Counter Value */
   __I   uint8_t                        Reserved3[0x04];
-  __IO  uint32_t                       RTC_COMP[1];        /**< Offset: 0x20 (R/W  32) MODE0 Compare n Value */
+  __IO  uint32_t                       RTC_COMP;           /**< Offset: 0x20 (R/W  32) MODE0 Compare n Value */
   __I   uint8_t                        Reserved4[0x1C];
   __IO  uint32_t                       RTC_GP[2];          /**< Offset: 0x40 (R/W  32) General Purpose */
   __I   uint8_t                        Reserved5[0x18];
@@ -1504,8 +1496,6 @@ typedef struct
   __IO  uint32_t                       RTC_BKUP[8];        /**< Offset: 0x80 (R/W  32) Backup */
 } rtc_mode1_registers_t;
 
-#define MODE2_ALARM_NUMBER _U_(1)
-
 /** \brief RTC register API structure */
 typedef struct
 {  /* Real-Time Counter */
@@ -1522,8 +1512,9 @@ typedef struct
   __I   uint8_t                        Reserved2[0x03];
   __IO  uint32_t                       RTC_CLOCK;          /**< Offset: 0x18 (R/W  32) MODE2 Clock Value */
   __I   uint8_t                        Reserved3[0x04];
-        rtc_mode2_alarm_registers_t    MODE2_ALARM[MODE2_ALARM_NUMBER]; /**< Offset: 0x20  */
-  __I   uint8_t                        Reserved4[0x18];
+  __IO  uint32_t                       RTC_ALARM;          /**< Offset: 0x20 (R/W  32) MODE2_ALARM Alarm n Value */
+  __IO  uint8_t                        RTC_MASK;           /**< Offset: 0x24 (R/W  8) MODE2_ALARM Alarm n Mask */
+  __I   uint8_t                        Reserved4[0x1B];
   __IO  uint32_t                       RTC_GP[2];          /**< Offset: 0x40 (R/W  32) General Purpose */
   __I   uint8_t                        Reserved5[0x18];
   __IO  uint32_t                       RTC_TAMPCTRL;       /**< Offset: 0x60 (R/W  32) Tamper Control */

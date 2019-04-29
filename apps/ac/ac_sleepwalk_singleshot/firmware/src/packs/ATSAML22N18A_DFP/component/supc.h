@@ -1,7 +1,7 @@
 /**
  * \brief Component description for SUPC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-07-02T17:30:16Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22_SUPC_COMPONENT_H_
 #define _SAML22_SUPC_COMPONENT_H_
 
@@ -349,15 +349,9 @@
 /* -------- SUPC_VREF : (SUPC Offset: 0x1C) (R/W 32) VREF Control -------- */
 #define SUPC_VREF_RESETVALUE                  _U_(0x00)                                            /**<  (SUPC_VREF) VREF Control  Reset Value */
 
-#define SUPC_VREF_TSEN_Pos                    _U_(1)                                               /**< (SUPC_VREF) Temperature Sensor Output Enable Position */
-#define SUPC_VREF_TSEN_Msk                    (_U_(0x1) << SUPC_VREF_TSEN_Pos)                     /**< (SUPC_VREF) Temperature Sensor Output Enable Mask */
-#define SUPC_VREF_TSEN(value)                 (SUPC_VREF_TSEN_Msk & ((value) << SUPC_VREF_TSEN_Pos))
 #define SUPC_VREF_VREFOE_Pos                  _U_(2)                                               /**< (SUPC_VREF) Voltage Reference Output Enable Position */
 #define SUPC_VREF_VREFOE_Msk                  (_U_(0x1) << SUPC_VREF_VREFOE_Pos)                   /**< (SUPC_VREF) Voltage Reference Output Enable Mask */
 #define SUPC_VREF_VREFOE(value)               (SUPC_VREF_VREFOE_Msk & ((value) << SUPC_VREF_VREFOE_Pos))
-#define SUPC_VREF_TSSEL_Pos                   _U_(3)                                               /**< (SUPC_VREF) Temperature Sensor Selection Position */
-#define SUPC_VREF_TSSEL_Msk                   (_U_(0x1) << SUPC_VREF_TSSEL_Pos)                    /**< (SUPC_VREF) Temperature Sensor Selection Mask */
-#define SUPC_VREF_TSSEL(value)                (SUPC_VREF_TSSEL_Msk & ((value) << SUPC_VREF_TSSEL_Pos))
 #define SUPC_VREF_RUNSTDBY_Pos                _U_(6)                                               /**< (SUPC_VREF) Run during Standby Position */
 #define SUPC_VREF_RUNSTDBY_Msk                (_U_(0x1) << SUPC_VREF_RUNSTDBY_Pos)                 /**< (SUPC_VREF) Run during Standby Mask */
 #define SUPC_VREF_RUNSTDBY(value)             (SUPC_VREF_RUNSTDBY_Msk & ((value) << SUPC_VREF_RUNSTDBY_Pos))
@@ -383,7 +377,7 @@
 #define SUPC_VREF_SEL_2V2                     (SUPC_VREF_SEL_2V2_Val << SUPC_VREF_SEL_Pos)         /**< (SUPC_VREF) 2.2V voltage reference typical value Position  */
 #define SUPC_VREF_SEL_2V4                     (SUPC_VREF_SEL_2V4_Val << SUPC_VREF_SEL_Pos)         /**< (SUPC_VREF) 2.4V voltage reference typical value Position  */
 #define SUPC_VREF_SEL_2V5                     (SUPC_VREF_SEL_2V5_Val << SUPC_VREF_SEL_Pos)         /**< (SUPC_VREF) 2.5V voltage reference typical value Position  */
-#define SUPC_VREF_Msk                         _U_(0x000F00CE)                                      /**< (SUPC_VREF) Register Mask  */
+#define SUPC_VREF_Msk                         _U_(0x000F00C4)                                      /**< (SUPC_VREF) Register Mask  */
 
 
 /* -------- SUPC_BBPS : (SUPC Offset: 0x20) (R/W 32) Battery Backup Power Switch -------- */
