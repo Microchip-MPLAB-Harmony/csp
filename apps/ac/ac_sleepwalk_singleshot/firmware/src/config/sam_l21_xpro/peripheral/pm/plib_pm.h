@@ -89,12 +89,11 @@ void PM_IO_RetentionClear( void );
 typedef enum
 {
     PLCFG_PLSEL0 = PM_PLCFG_PLSEL_PL0,
-    PLCFG_PLSEL2 = PM_PLCFG_PLSEL_PL2,
+    PLCFG_PLSEL2 = PM_PLCFG_PLSEL_PL2
 }PLCFG_PLSEL;
 
 bool PM_ConfigurePerformanceLevel(PLCFG_PLSEL plsel);
 
-bool PM_PerformanceLevelReady(void);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
