@@ -73,11 +73,9 @@ void TMR2_Initialize(void)
     TMR2 = 0x0;
 
     /*Set period */
-    PR2 = 30000U;
+    PR2 = 18000U;
 
 
-    /* start the TMR */
-    T2CONSET = _T2CON_ON_MASK;
 }
 
 

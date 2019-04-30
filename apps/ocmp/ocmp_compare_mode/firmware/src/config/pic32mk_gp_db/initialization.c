@@ -173,7 +173,6 @@ void SYS_Initialize ( void* data )
     CHECONbits.PREFEN = 1;
 
 
-
     TMR2_Initialize();
 
     OCMP1_Initialize();
