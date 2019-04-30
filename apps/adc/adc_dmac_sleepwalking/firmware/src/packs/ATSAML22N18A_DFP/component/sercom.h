@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-02-12T14:02:46Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22_SERCOM_COMPONENT_H_
 #define _SAML22_SERCOM_COMPONENT_H_
 
@@ -362,6 +362,12 @@
 #define SERCOM_USART_EXT_CTRLA_IBON_Pos       _U_(8)                                               /**< (SERCOM_USART_EXT_CTRLA) Immediate Buffer Overflow Notification Position */
 #define SERCOM_USART_EXT_CTRLA_IBON_Msk       (_U_(0x1) << SERCOM_USART_EXT_CTRLA_IBON_Pos)        /**< (SERCOM_USART_EXT_CTRLA) Immediate Buffer Overflow Notification Mask */
 #define SERCOM_USART_EXT_CTRLA_IBON(value)    (SERCOM_USART_EXT_CTRLA_IBON_Msk & ((value) << SERCOM_USART_EXT_CTRLA_IBON_Pos))
+#define SERCOM_USART_EXT_CTRLA_TXINV_Pos      _U_(9)                                               /**< (SERCOM_USART_EXT_CTRLA) Transmit Data Invert Position */
+#define SERCOM_USART_EXT_CTRLA_TXINV_Msk      (_U_(0x1) << SERCOM_USART_EXT_CTRLA_TXINV_Pos)       /**< (SERCOM_USART_EXT_CTRLA) Transmit Data Invert Mask */
+#define SERCOM_USART_EXT_CTRLA_TXINV(value)   (SERCOM_USART_EXT_CTRLA_TXINV_Msk & ((value) << SERCOM_USART_EXT_CTRLA_TXINV_Pos))
+#define SERCOM_USART_EXT_CTRLA_RXINV_Pos      _U_(10)                                              /**< (SERCOM_USART_EXT_CTRLA) Receive Data Invert Position */
+#define SERCOM_USART_EXT_CTRLA_RXINV_Msk      (_U_(0x1) << SERCOM_USART_EXT_CTRLA_RXINV_Pos)       /**< (SERCOM_USART_EXT_CTRLA) Receive Data Invert Mask */
+#define SERCOM_USART_EXT_CTRLA_RXINV(value)   (SERCOM_USART_EXT_CTRLA_RXINV_Msk & ((value) << SERCOM_USART_EXT_CTRLA_RXINV_Pos))
 #define SERCOM_USART_EXT_CTRLA_SAMPR_Pos      _U_(13)                                              /**< (SERCOM_USART_EXT_CTRLA) Sample Position */
 #define SERCOM_USART_EXT_CTRLA_SAMPR_Msk      (_U_(0x7) << SERCOM_USART_EXT_CTRLA_SAMPR_Pos)       /**< (SERCOM_USART_EXT_CTRLA) Sample Mask */
 #define SERCOM_USART_EXT_CTRLA_SAMPR(value)   (SERCOM_USART_EXT_CTRLA_SAMPR_Msk & ((value) << SERCOM_USART_EXT_CTRLA_SAMPR_Pos))
@@ -428,7 +434,7 @@
 #define   SERCOM_USART_EXT_CTRLA_DORD_LSB_Val _U_(0x1)                                             /**< (SERCOM_USART_EXT_CTRLA) LSB is transmitted first  */
 #define SERCOM_USART_EXT_CTRLA_DORD_MSB       (SERCOM_USART_EXT_CTRLA_DORD_MSB_Val << SERCOM_USART_EXT_CTRLA_DORD_Pos) /**< (SERCOM_USART_EXT_CTRLA) MSB is transmitted first Position  */
 #define SERCOM_USART_EXT_CTRLA_DORD_LSB       (SERCOM_USART_EXT_CTRLA_DORD_LSB_Val << SERCOM_USART_EXT_CTRLA_DORD_Pos) /**< (SERCOM_USART_EXT_CTRLA) LSB is transmitted first Position  */
-#define SERCOM_USART_EXT_CTRLA_Msk            _U_(0x7FF3E19F)                                      /**< (SERCOM_USART_EXT_CTRLA) Register Mask  */
+#define SERCOM_USART_EXT_CTRLA_Msk            _U_(0x7FF3E79F)                                      /**< (SERCOM_USART_EXT_CTRLA) Register Mask  */
 
 
 /* -------- SERCOM_USART_INT_CTRLA : (SERCOM Offset: 0x00) (R/W 32) USART_INT Control A -------- */
@@ -461,6 +467,12 @@
 #define SERCOM_USART_INT_CTRLA_IBON_Pos       _U_(8)                                               /**< (SERCOM_USART_INT_CTRLA) Immediate Buffer Overflow Notification Position */
 #define SERCOM_USART_INT_CTRLA_IBON_Msk       (_U_(0x1) << SERCOM_USART_INT_CTRLA_IBON_Pos)        /**< (SERCOM_USART_INT_CTRLA) Immediate Buffer Overflow Notification Mask */
 #define SERCOM_USART_INT_CTRLA_IBON(value)    (SERCOM_USART_INT_CTRLA_IBON_Msk & ((value) << SERCOM_USART_INT_CTRLA_IBON_Pos))
+#define SERCOM_USART_INT_CTRLA_TXINV_Pos      _U_(9)                                               /**< (SERCOM_USART_INT_CTRLA) Transmit Data Invert Position */
+#define SERCOM_USART_INT_CTRLA_TXINV_Msk      (_U_(0x1) << SERCOM_USART_INT_CTRLA_TXINV_Pos)       /**< (SERCOM_USART_INT_CTRLA) Transmit Data Invert Mask */
+#define SERCOM_USART_INT_CTRLA_TXINV(value)   (SERCOM_USART_INT_CTRLA_TXINV_Msk & ((value) << SERCOM_USART_INT_CTRLA_TXINV_Pos))
+#define SERCOM_USART_INT_CTRLA_RXINV_Pos      _U_(10)                                              /**< (SERCOM_USART_INT_CTRLA) Receive Data Invert Position */
+#define SERCOM_USART_INT_CTRLA_RXINV_Msk      (_U_(0x1) << SERCOM_USART_INT_CTRLA_RXINV_Pos)       /**< (SERCOM_USART_INT_CTRLA) Receive Data Invert Mask */
+#define SERCOM_USART_INT_CTRLA_RXINV(value)   (SERCOM_USART_INT_CTRLA_RXINV_Msk & ((value) << SERCOM_USART_INT_CTRLA_RXINV_Pos))
 #define SERCOM_USART_INT_CTRLA_SAMPR_Pos      _U_(13)                                              /**< (SERCOM_USART_INT_CTRLA) Sample Position */
 #define SERCOM_USART_INT_CTRLA_SAMPR_Msk      (_U_(0x7) << SERCOM_USART_INT_CTRLA_SAMPR_Pos)       /**< (SERCOM_USART_INT_CTRLA) Sample Mask */
 #define SERCOM_USART_INT_CTRLA_SAMPR(value)   (SERCOM_USART_INT_CTRLA_SAMPR_Msk & ((value) << SERCOM_USART_INT_CTRLA_SAMPR_Pos))
@@ -527,7 +539,7 @@
 #define   SERCOM_USART_INT_CTRLA_DORD_LSB_Val _U_(0x1)                                             /**< (SERCOM_USART_INT_CTRLA) LSB is transmitted first  */
 #define SERCOM_USART_INT_CTRLA_DORD_MSB       (SERCOM_USART_INT_CTRLA_DORD_MSB_Val << SERCOM_USART_INT_CTRLA_DORD_Pos) /**< (SERCOM_USART_INT_CTRLA) MSB is transmitted first Position  */
 #define SERCOM_USART_INT_CTRLA_DORD_LSB       (SERCOM_USART_INT_CTRLA_DORD_LSB_Val << SERCOM_USART_INT_CTRLA_DORD_Pos) /**< (SERCOM_USART_INT_CTRLA) LSB is transmitted first Position  */
-#define SERCOM_USART_INT_CTRLA_Msk            _U_(0x7FF3E19F)                                      /**< (SERCOM_USART_INT_CTRLA) Register Mask  */
+#define SERCOM_USART_INT_CTRLA_Msk            _U_(0x7FF3E79F)                                      /**< (SERCOM_USART_INT_CTRLA) Register Mask  */
 
 
 /* -------- SERCOM_I2CM_CTRLB : (SERCOM Offset: 0x04) (R/W 32) I2CM Control B -------- */
@@ -734,6 +746,42 @@
 #define SERCOM_USART_INT_CTRLB_RXEN_Msk       (_U_(0x1) << SERCOM_USART_INT_CTRLB_RXEN_Pos)        /**< (SERCOM_USART_INT_CTRLB) Receiver Enable Mask */
 #define SERCOM_USART_INT_CTRLB_RXEN(value)    (SERCOM_USART_INT_CTRLB_RXEN_Msk & ((value) << SERCOM_USART_INT_CTRLB_RXEN_Pos))
 #define SERCOM_USART_INT_CTRLB_Msk            _U_(0x00032747)                                      /**< (SERCOM_USART_INT_CTRLB) Register Mask  */
+
+
+/* -------- SERCOM_USART_EXT_CTRLC : (SERCOM Offset: 0x08) (R/W 32) USART_EXT Control C -------- */
+#define SERCOM_USART_EXT_CTRLC_RESETVALUE     _U_(0x00)                                            /**<  (SERCOM_USART_EXT_CTRLC) USART_EXT Control C  Reset Value */
+
+#define SERCOM_USART_EXT_CTRLC_GTIME_Pos      _U_(0)                                               /**< (SERCOM_USART_EXT_CTRLC) Guard Time Position */
+#define SERCOM_USART_EXT_CTRLC_GTIME_Msk      (_U_(0x7) << SERCOM_USART_EXT_CTRLC_GTIME_Pos)       /**< (SERCOM_USART_EXT_CTRLC) Guard Time Mask */
+#define SERCOM_USART_EXT_CTRLC_GTIME(value)   (SERCOM_USART_EXT_CTRLC_GTIME_Msk & ((value) << SERCOM_USART_EXT_CTRLC_GTIME_Pos))
+#define SERCOM_USART_EXT_CTRLC_INACK_Pos      _U_(16)                                              /**< (SERCOM_USART_EXT_CTRLC) Inhibit Not Acknowledge Position */
+#define SERCOM_USART_EXT_CTRLC_INACK_Msk      (_U_(0x1) << SERCOM_USART_EXT_CTRLC_INACK_Pos)       /**< (SERCOM_USART_EXT_CTRLC) Inhibit Not Acknowledge Mask */
+#define SERCOM_USART_EXT_CTRLC_INACK(value)   (SERCOM_USART_EXT_CTRLC_INACK_Msk & ((value) << SERCOM_USART_EXT_CTRLC_INACK_Pos))
+#define SERCOM_USART_EXT_CTRLC_DSNACK_Pos     _U_(17)                                              /**< (SERCOM_USART_EXT_CTRLC) Disable Successive NACK Position */
+#define SERCOM_USART_EXT_CTRLC_DSNACK_Msk     (_U_(0x1) << SERCOM_USART_EXT_CTRLC_DSNACK_Pos)      /**< (SERCOM_USART_EXT_CTRLC) Disable Successive NACK Mask */
+#define SERCOM_USART_EXT_CTRLC_DSNACK(value)  (SERCOM_USART_EXT_CTRLC_DSNACK_Msk & ((value) << SERCOM_USART_EXT_CTRLC_DSNACK_Pos))
+#define SERCOM_USART_EXT_CTRLC_MAXITER_Pos    _U_(20)                                              /**< (SERCOM_USART_EXT_CTRLC) Maximum Iterations Position */
+#define SERCOM_USART_EXT_CTRLC_MAXITER_Msk    (_U_(0x7) << SERCOM_USART_EXT_CTRLC_MAXITER_Pos)     /**< (SERCOM_USART_EXT_CTRLC) Maximum Iterations Mask */
+#define SERCOM_USART_EXT_CTRLC_MAXITER(value) (SERCOM_USART_EXT_CTRLC_MAXITER_Msk & ((value) << SERCOM_USART_EXT_CTRLC_MAXITER_Pos))
+#define SERCOM_USART_EXT_CTRLC_Msk            _U_(0x00730007)                                      /**< (SERCOM_USART_EXT_CTRLC) Register Mask  */
+
+
+/* -------- SERCOM_USART_INT_CTRLC : (SERCOM Offset: 0x08) (R/W 32) USART_INT Control C -------- */
+#define SERCOM_USART_INT_CTRLC_RESETVALUE     _U_(0x00)                                            /**<  (SERCOM_USART_INT_CTRLC) USART_INT Control C  Reset Value */
+
+#define SERCOM_USART_INT_CTRLC_GTIME_Pos      _U_(0)                                               /**< (SERCOM_USART_INT_CTRLC) Guard Time Position */
+#define SERCOM_USART_INT_CTRLC_GTIME_Msk      (_U_(0x7) << SERCOM_USART_INT_CTRLC_GTIME_Pos)       /**< (SERCOM_USART_INT_CTRLC) Guard Time Mask */
+#define SERCOM_USART_INT_CTRLC_GTIME(value)   (SERCOM_USART_INT_CTRLC_GTIME_Msk & ((value) << SERCOM_USART_INT_CTRLC_GTIME_Pos))
+#define SERCOM_USART_INT_CTRLC_INACK_Pos      _U_(16)                                              /**< (SERCOM_USART_INT_CTRLC) Inhibit Not Acknowledge Position */
+#define SERCOM_USART_INT_CTRLC_INACK_Msk      (_U_(0x1) << SERCOM_USART_INT_CTRLC_INACK_Pos)       /**< (SERCOM_USART_INT_CTRLC) Inhibit Not Acknowledge Mask */
+#define SERCOM_USART_INT_CTRLC_INACK(value)   (SERCOM_USART_INT_CTRLC_INACK_Msk & ((value) << SERCOM_USART_INT_CTRLC_INACK_Pos))
+#define SERCOM_USART_INT_CTRLC_DSNACK_Pos     _U_(17)                                              /**< (SERCOM_USART_INT_CTRLC) Disable Successive NACK Position */
+#define SERCOM_USART_INT_CTRLC_DSNACK_Msk     (_U_(0x1) << SERCOM_USART_INT_CTRLC_DSNACK_Pos)      /**< (SERCOM_USART_INT_CTRLC) Disable Successive NACK Mask */
+#define SERCOM_USART_INT_CTRLC_DSNACK(value)  (SERCOM_USART_INT_CTRLC_DSNACK_Msk & ((value) << SERCOM_USART_INT_CTRLC_DSNACK_Pos))
+#define SERCOM_USART_INT_CTRLC_MAXITER_Pos    _U_(20)                                              /**< (SERCOM_USART_INT_CTRLC) Maximum Iterations Position */
+#define SERCOM_USART_INT_CTRLC_MAXITER_Msk    (_U_(0x7) << SERCOM_USART_INT_CTRLC_MAXITER_Pos)     /**< (SERCOM_USART_INT_CTRLC) Maximum Iterations Mask */
+#define SERCOM_USART_INT_CTRLC_MAXITER(value) (SERCOM_USART_INT_CTRLC_MAXITER_Msk & ((value) << SERCOM_USART_INT_CTRLC_MAXITER_Pos))
+#define SERCOM_USART_INT_CTRLC_Msk            _U_(0x00730007)                                      /**< (SERCOM_USART_INT_CTRLC) Register Mask  */
 
 
 /* -------- SERCOM_I2CM_BAUD : (SERCOM Offset: 0x0C) (R/W 32) I2CM Baud Rate -------- */
@@ -1637,6 +1685,8 @@
 #define SERCOM_SPIS_CTRLB_REG_OFST     (0x04)              /**< (SERCOM_SPIS_CTRLB) SPIS Control B Offset */
 #define SERCOM_USART_EXT_CTRLB_REG_OFST (0x04)              /**< (SERCOM_USART_EXT_CTRLB) USART_EXT Control B Offset */
 #define SERCOM_USART_INT_CTRLB_REG_OFST (0x04)              /**< (SERCOM_USART_INT_CTRLB) USART_INT Control B Offset */
+#define SERCOM_USART_EXT_CTRLC_REG_OFST (0x08)              /**< (SERCOM_USART_EXT_CTRLC) USART_EXT Control C Offset */
+#define SERCOM_USART_INT_CTRLC_REG_OFST (0x08)              /**< (SERCOM_USART_INT_CTRLC) USART_INT Control C Offset */
 #define SERCOM_I2CM_BAUD_REG_OFST      (0x0C)              /**< (SERCOM_I2CM_BAUD) I2CM Baud Rate Offset */
 #define SERCOM_SPIM_BAUD_REG_OFST      (0x0C)              /**< (SERCOM_SPIM_BAUD) SPIM Baud Rate Offset */
 #define SERCOM_SPIS_BAUD_REG_OFST      (0x0C)              /**< (SERCOM_SPIS_BAUD) SPIS Baud Rate Offset */
@@ -1784,21 +1834,21 @@ typedef struct
 {  /* Serial Communication Interface */
   __IO  uint32_t                       SERCOM_CTRLA;       /**< Offset: 0x00 (R/W  32) USART_EXT Control A */
   __IO  uint32_t                       SERCOM_CTRLB;       /**< Offset: 0x04 (R/W  32) USART_EXT Control B */
-  __I   uint8_t                        Reserved1[0x04];
+  __IO  uint32_t                       SERCOM_CTRLC;       /**< Offset: 0x08 (R/W  32) USART_EXT Control C */
   __IO  uint16_t                       SERCOM_BAUD;        /**< Offset: 0x0C (R/W  16) USART_EXT Baud Rate */
   __IO  uint8_t                        SERCOM_RXPL;        /**< Offset: 0x0E (R/W  8) USART_EXT Receive Pulse Length */
-  __I   uint8_t                        Reserved2[0x05];
+  __I   uint8_t                        Reserved1[0x05];
   __IO  uint8_t                        SERCOM_INTENCLR;    /**< Offset: 0x14 (R/W  8) USART_EXT Interrupt Enable Clear */
-  __I   uint8_t                        Reserved3[0x01];
+  __I   uint8_t                        Reserved2[0x01];
   __IO  uint8_t                        SERCOM_INTENSET;    /**< Offset: 0x16 (R/W  8) USART_EXT Interrupt Enable Set */
-  __I   uint8_t                        Reserved4[0x01];
+  __I   uint8_t                        Reserved3[0x01];
   __IO  uint8_t                        SERCOM_INTFLAG;     /**< Offset: 0x18 (R/W  8) USART_EXT Interrupt Flag Status and Clear */
-  __I   uint8_t                        Reserved5[0x01];
+  __I   uint8_t                        Reserved4[0x01];
   __IO  uint16_t                       SERCOM_STATUS;      /**< Offset: 0x1A (R/W  16) USART_EXT Status */
   __I   uint32_t                       SERCOM_SYNCBUSY;    /**< Offset: 0x1C (R/   32) USART_EXT Synchronization Busy */
-  __I   uint8_t                        Reserved6[0x08];
+  __I   uint8_t                        Reserved5[0x08];
   __IO  uint16_t                       SERCOM_DATA;        /**< Offset: 0x28 (R/W  16) USART_EXT Data */
-  __I   uint8_t                        Reserved7[0x06];
+  __I   uint8_t                        Reserved6[0x06];
   __IO  uint8_t                        SERCOM_DBGCTRL;     /**< Offset: 0x30 (R/W  8) USART_EXT Debug Control */
 } sercom_usart_ext_registers_t;
 
@@ -1807,21 +1857,21 @@ typedef struct
 {  /* Serial Communication Interface */
   __IO  uint32_t                       SERCOM_CTRLA;       /**< Offset: 0x00 (R/W  32) USART_INT Control A */
   __IO  uint32_t                       SERCOM_CTRLB;       /**< Offset: 0x04 (R/W  32) USART_INT Control B */
-  __I   uint8_t                        Reserved1[0x04];
+  __IO  uint32_t                       SERCOM_CTRLC;       /**< Offset: 0x08 (R/W  32) USART_INT Control C */
   __IO  uint16_t                       SERCOM_BAUD;        /**< Offset: 0x0C (R/W  16) USART_INT Baud Rate */
   __IO  uint8_t                        SERCOM_RXPL;        /**< Offset: 0x0E (R/W  8) USART_INT Receive Pulse Length */
-  __I   uint8_t                        Reserved2[0x05];
+  __I   uint8_t                        Reserved1[0x05];
   __IO  uint8_t                        SERCOM_INTENCLR;    /**< Offset: 0x14 (R/W  8) USART_INT Interrupt Enable Clear */
-  __I   uint8_t                        Reserved3[0x01];
+  __I   uint8_t                        Reserved2[0x01];
   __IO  uint8_t                        SERCOM_INTENSET;    /**< Offset: 0x16 (R/W  8) USART_INT Interrupt Enable Set */
-  __I   uint8_t                        Reserved4[0x01];
+  __I   uint8_t                        Reserved3[0x01];
   __IO  uint8_t                        SERCOM_INTFLAG;     /**< Offset: 0x18 (R/W  8) USART_INT Interrupt Flag Status and Clear */
-  __I   uint8_t                        Reserved5[0x01];
+  __I   uint8_t                        Reserved4[0x01];
   __IO  uint16_t                       SERCOM_STATUS;      /**< Offset: 0x1A (R/W  16) USART_INT Status */
   __I   uint32_t                       SERCOM_SYNCBUSY;    /**< Offset: 0x1C (R/   32) USART_INT Synchronization Busy */
-  __I   uint8_t                        Reserved6[0x08];
+  __I   uint8_t                        Reserved5[0x08];
   __IO  uint16_t                       SERCOM_DATA;        /**< Offset: 0x28 (R/W  16) USART_INT Data */
-  __I   uint8_t                        Reserved7[0x06];
+  __I   uint8_t                        Reserved6[0x06];
   __IO  uint8_t                        SERCOM_DBGCTRL;     /**< Offset: 0x30 (R/W  8) USART_INT Debug Control */
 } sercom_usart_int_registers_t;
 
