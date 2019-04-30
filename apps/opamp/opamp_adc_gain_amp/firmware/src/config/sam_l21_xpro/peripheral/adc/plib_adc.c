@@ -62,11 +62,6 @@
 // *****************************************************************************
 ADC_CALLBACK_OBJ ADC_CallbackObject;
 
-#define ADC_LINEARITY_POS  (0)
-#define ADC_LINEARITY_Msk   (0x7 << ADC_LINEARITY_POS)
-
-#define ADC_BIASCAL_POS  (3)
-#define ADC_BIASCAL_Msk   (0x7 << ADC_BIASCAL_POS)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -85,9 +80,6 @@ void ADC_Initialize( void )
     {
         /* Wait for Synchronization */
     }
-    /* Write linearity calibration in BIASREFBUF and bias calibration in BIASCOMP */
-    ADC_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_BIASREFBUF(((*(uint64_t*)OTP5_ADDR) & ADC_LINEARITY_Msk))) \
-        | ADC_CALIB_BIASCOMP((((*(uint64_t*)OTP5_ADDR) & ADC_BIASCAL_Msk) >> ADC_BIASCAL_POS));
 
     /* Prescaler */
     ADC_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_DIV8;
@@ -98,7 +90,7 @@ void ADC_Initialize( void )
     ADC_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_INTVCC2;
 
     /* Input pin */
-    ADC_REGS->ADC_INPUTCTRL = ADC_INPUTCTRL_MUXPOS(0x1f) ;
+    ADC_REGS->ADC_INPUTCTRL = ADC_POSINPUT_OPAMP2;
 
     /* Resolution & Operation Mode */
     ADC_REGS->ADC_CTRLC = ADC_CTRLC_RESSEL_12BIT | ADC_CTRLC_WINMODE(0) ;
@@ -170,6 +162,26 @@ bool ADC_ConversionSequenceIsFinished(void)
     return seq_status;
 }
 
+/* Configure window comparison threshold values */
+void ADC_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
+{
+    ADC_REGS->ADC_WINLT = low_threshold;
+    ADC_REGS->ADC_WINUT = high_threshold;
+    while((ADC_REGS->ADC_SYNCBUSY))
+    {
+        /* Wait for Synchronization */
+    }
+}
+
+void ADC_WindowModeSet(ADC_WINMODE mode)
+{
+    ADC_REGS->ADC_CTRLC &= ~ADC_CTRLC_WINMODE_Msk;
+    ADC_REGS->ADC_CTRLC |= (mode << ADC_CTRLC_WINMODE_Pos);
+    while((ADC_REGS->ADC_SYNCBUSY))
+    {
+        /* Wait for Synchronization */
+    }
+}
 
 /* Read the conversion result */
 uint16_t ADC_ConversionResultGet( void )
