@@ -165,7 +165,6 @@ void SYS_Initialize ( void* data )
     CFGCONbits.ECCCON = 3;
 
 
-
     TMR2_Initialize();
 
     OCMP1_Initialize();
