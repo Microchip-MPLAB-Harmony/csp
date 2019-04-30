@@ -1,7 +1,7 @@
 /**
  * \brief Component description for PM
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-07-02T17:30:16Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22_PM_COMPONENT_H_
 #define _SAML22_PM_COMPONENT_H_
 
@@ -43,15 +43,11 @@
 #define PM_SLEEPCFG_SLEEPMODE_Pos             _U_(0)                                               /**< (PM_SLEEPCFG) Sleep Mode Position */
 #define PM_SLEEPCFG_SLEEPMODE_Msk             (_U_(0x7) << PM_SLEEPCFG_SLEEPMODE_Pos)              /**< (PM_SLEEPCFG) Sleep Mode Mask */
 #define PM_SLEEPCFG_SLEEPMODE(value)          (PM_SLEEPCFG_SLEEPMODE_Msk & ((value) << PM_SLEEPCFG_SLEEPMODE_Pos))
-#define   PM_SLEEPCFG_SLEEPMODE_IDLE0_Val     _U_(0x0)                                             /**< (PM_SLEEPCFG) CPU clock is OFF  */
-#define   PM_SLEEPCFG_SLEEPMODE_IDLE1_Val     _U_(0x1)                                             /**< (PM_SLEEPCFG) AHB clock is OFF  */
-#define   PM_SLEEPCFG_SLEEPMODE_IDLE2_Val     _U_(0x2)                                             /**< (PM_SLEEPCFG) APB clock are OFF  */
+#define   PM_SLEEPCFG_SLEEPMODE_IDLE_Val      _U_(0x2)                                             /**< (PM_SLEEPCFG) CPU, AHBx, and APBx clocks are OFF  */
 #define   PM_SLEEPCFG_SLEEPMODE_STANDBY_Val   _U_(0x4)                                             /**< (PM_SLEEPCFG) All Clocks are OFF  */
 #define   PM_SLEEPCFG_SLEEPMODE_BACKUP_Val    _U_(0x5)                                             /**< (PM_SLEEPCFG) Only Backup domain is powered ON  */
 #define   PM_SLEEPCFG_SLEEPMODE_OFF_Val       _U_(0x6)                                             /**< (PM_SLEEPCFG) All power domains are powered OFF  */
-#define PM_SLEEPCFG_SLEEPMODE_IDLE0           (PM_SLEEPCFG_SLEEPMODE_IDLE0_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) CPU clock is OFF Position  */
-#define PM_SLEEPCFG_SLEEPMODE_IDLE1           (PM_SLEEPCFG_SLEEPMODE_IDLE1_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) AHB clock is OFF Position  */
-#define PM_SLEEPCFG_SLEEPMODE_IDLE2           (PM_SLEEPCFG_SLEEPMODE_IDLE2_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) APB clock are OFF Position  */
+#define PM_SLEEPCFG_SLEEPMODE_IDLE            (PM_SLEEPCFG_SLEEPMODE_IDLE_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) CPU, AHBx, and APBx clocks are OFF Position  */
 #define PM_SLEEPCFG_SLEEPMODE_STANDBY         (PM_SLEEPCFG_SLEEPMODE_STANDBY_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) All Clocks are OFF Position  */
 #define PM_SLEEPCFG_SLEEPMODE_BACKUP          (PM_SLEEPCFG_SLEEPMODE_BACKUP_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) Only Backup domain is powered ON Position  */
 #define PM_SLEEPCFG_SLEEPMODE_OFF             (PM_SLEEPCFG_SLEEPMODE_OFF_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) All power domains are powered OFF Position  */
@@ -118,6 +114,14 @@
 #define PM_STDBYCFG_BBIASHS_Pos               _U_(10)                                              /**< (PM_STDBYCFG) Back Bias for HMCRAMCHS Position */
 #define PM_STDBYCFG_BBIASHS_Msk               (_U_(0x3) << PM_STDBYCFG_BBIASHS_Pos)                /**< (PM_STDBYCFG) Back Bias for HMCRAMCHS Mask */
 #define PM_STDBYCFG_BBIASHS(value)            (PM_STDBYCFG_BBIASHS_Msk & ((value) << PM_STDBYCFG_BBIASHS_Pos))
+#define   PM_STDBYCFG_BBIASHS_RETBB_Val       _U_(0x0)                                             /**< (PM_STDBYCFG) Retention Back Biasing mode  */
+#define   PM_STDBYCFG_BBIASHS_STDBYBB_Val     _U_(0x1)                                             /**< (PM_STDBYCFG) Standby Back Biasing mode  */
+#define   PM_STDBYCFG_BBIASHS_STDBYOFF_Val    _U_(0x2)                                             /**< (PM_STDBYCFG) Standby OFF mode  */
+#define   PM_STDBYCFG_BBIASHS_OFF_Val         _U_(0x3)                                             /**< (PM_STDBYCFG) Always OFF mode  */
+#define PM_STDBYCFG_BBIASHS_RETBB             (PM_STDBYCFG_BBIASHS_RETBB_Val << PM_STDBYCFG_BBIASHS_Pos) /**< (PM_STDBYCFG) Retention Back Biasing mode Position  */
+#define PM_STDBYCFG_BBIASHS_STDBYBB           (PM_STDBYCFG_BBIASHS_STDBYBB_Val << PM_STDBYCFG_BBIASHS_Pos) /**< (PM_STDBYCFG) Standby Back Biasing mode Position  */
+#define PM_STDBYCFG_BBIASHS_STDBYOFF          (PM_STDBYCFG_BBIASHS_STDBYOFF_Val << PM_STDBYCFG_BBIASHS_Pos) /**< (PM_STDBYCFG) Standby OFF mode Position  */
+#define PM_STDBYCFG_BBIASHS_OFF               (PM_STDBYCFG_BBIASHS_OFF_Val << PM_STDBYCFG_BBIASHS_Pos) /**< (PM_STDBYCFG) Always OFF mode Position  */
 #define PM_STDBYCFG_Msk                       _U_(0x0CC0)                                          /**< (PM_STDBYCFG) Register Mask  */
 
 

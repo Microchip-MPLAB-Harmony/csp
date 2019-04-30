@@ -1,7 +1,7 @@
 /**
  * \brief Component description for DMAC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-07-02T17:30:16Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22_DMAC_COMPONENT_H_
 #define _SAML22_DMAC_COMPONENT_H_
 
@@ -329,6 +329,10 @@
 #define DMAC_PRICTRL0_RRLVLEN0_Pos            _U_(7)                                               /**< (DMAC_PRICTRL0) Level 0 Round-Robin Scheduling Enable Position */
 #define DMAC_PRICTRL0_RRLVLEN0_Msk            (_U_(0x1) << DMAC_PRICTRL0_RRLVLEN0_Pos)             /**< (DMAC_PRICTRL0) Level 0 Round-Robin Scheduling Enable Mask */
 #define DMAC_PRICTRL0_RRLVLEN0(value)         (DMAC_PRICTRL0_RRLVLEN0_Msk & ((value) << DMAC_PRICTRL0_RRLVLEN0_Pos))
+#define   DMAC_PRICTRL0_RRLVLEN0_STATIC_LVL_Val _U_(0x0)                                             /**< (DMAC_PRICTRL0) Static arbitration scheme for channels with level 3 priority  */
+#define   DMAC_PRICTRL0_RRLVLEN0_ROUND_ROBIN_LVL_Val _U_(0x1)                                             /**< (DMAC_PRICTRL0) Round-robin arbitration scheme for channels with level 3 priority  */
+#define DMAC_PRICTRL0_RRLVLEN0_STATIC_LVL     (DMAC_PRICTRL0_RRLVLEN0_STATIC_LVL_Val << DMAC_PRICTRL0_RRLVLEN0_Pos) /**< (DMAC_PRICTRL0) Static arbitration scheme for channels with level 3 priority Position  */
+#define DMAC_PRICTRL0_RRLVLEN0_ROUND_ROBIN_LVL (DMAC_PRICTRL0_RRLVLEN0_ROUND_ROBIN_LVL_Val << DMAC_PRICTRL0_RRLVLEN0_Pos) /**< (DMAC_PRICTRL0) Round-robin arbitration scheme for channels with level 3 priority Position  */
 #define DMAC_PRICTRL0_LVLPRI1_Pos             _U_(8)                                               /**< (DMAC_PRICTRL0) Level 1 Channel Priority Number Position */
 #define DMAC_PRICTRL0_LVLPRI1_Msk             (_U_(0xF) << DMAC_PRICTRL0_LVLPRI1_Pos)              /**< (DMAC_PRICTRL0) Level 1 Channel Priority Number Mask */
 #define DMAC_PRICTRL0_LVLPRI1(value)          (DMAC_PRICTRL0_LVLPRI1_Msk & ((value) << DMAC_PRICTRL0_LVLPRI1_Pos))
@@ -649,6 +653,14 @@
 #define DMAC_CHCTRLB_LVL_Pos                  _U_(5)                                               /**< (DMAC_CHCTRLB) Channel Arbitration Level Position */
 #define DMAC_CHCTRLB_LVL_Msk                  (_U_(0x3) << DMAC_CHCTRLB_LVL_Pos)                   /**< (DMAC_CHCTRLB) Channel Arbitration Level Mask */
 #define DMAC_CHCTRLB_LVL(value)               (DMAC_CHCTRLB_LVL_Msk & ((value) << DMAC_CHCTRLB_LVL_Pos))
+#define   DMAC_CHCTRLB_LVL_LVL0_Val           _U_(0x0)                                             /**< (DMAC_CHCTRLB) Channel Priority Level 0  */
+#define   DMAC_CHCTRLB_LVL_LVL1_Val           _U_(0x1)                                             /**< (DMAC_CHCTRLB) Channel Priority Level 1  */
+#define   DMAC_CHCTRLB_LVL_LVL2_Val           _U_(0x2)                                             /**< (DMAC_CHCTRLB) Channel Priority Level 2  */
+#define   DMAC_CHCTRLB_LVL_LVL3_Val           _U_(0x3)                                             /**< (DMAC_CHCTRLB) Channel Priority Level 3  */
+#define DMAC_CHCTRLB_LVL_LVL0                 (DMAC_CHCTRLB_LVL_LVL0_Val << DMAC_CHCTRLB_LVL_Pos)  /**< (DMAC_CHCTRLB) Channel Priority Level 0 Position  */
+#define DMAC_CHCTRLB_LVL_LVL1                 (DMAC_CHCTRLB_LVL_LVL1_Val << DMAC_CHCTRLB_LVL_Pos)  /**< (DMAC_CHCTRLB) Channel Priority Level 1 Position  */
+#define DMAC_CHCTRLB_LVL_LVL2                 (DMAC_CHCTRLB_LVL_LVL2_Val << DMAC_CHCTRLB_LVL_Pos)  /**< (DMAC_CHCTRLB) Channel Priority Level 2 Position  */
+#define DMAC_CHCTRLB_LVL_LVL3                 (DMAC_CHCTRLB_LVL_LVL3_Val << DMAC_CHCTRLB_LVL_Pos)  /**< (DMAC_CHCTRLB) Channel Priority Level 3 Position  */
 #define DMAC_CHCTRLB_TRIGSRC_Pos              _U_(8)                                               /**< (DMAC_CHCTRLB) Trigger Source Position */
 #define DMAC_CHCTRLB_TRIGSRC_Msk              (_U_(0x3F) << DMAC_CHCTRLB_TRIGSRC_Pos)              /**< (DMAC_CHCTRLB) Trigger Source Mask */
 #define DMAC_CHCTRLB_TRIGSRC(value)           (DMAC_CHCTRLB_TRIGSRC_Msk & ((value) << DMAC_CHCTRLB_TRIGSRC_Pos))
