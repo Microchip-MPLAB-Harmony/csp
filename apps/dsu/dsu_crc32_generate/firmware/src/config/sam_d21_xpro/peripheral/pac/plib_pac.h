@@ -107,9 +107,6 @@ typedef enum
     /* Instance Id for Peripheral GCLK */
     PAC_PERIPHERAL_GCLK = ID_GCLK,
 
-    /* Instance Id for Peripheral SBMATRIX */
-    PAC_PERIPHERAL_SBMATRIX = ID_SBMATRIX,
-
     /* Instance Id for Peripheral I2S */
     PAC_PERIPHERAL_I2S = ID_I2S,
 
@@ -118,15 +115,6 @@ typedef enum
 
     /* Instance Id for Peripheral NVMCTRL */
     PAC_PERIPHERAL_NVMCTRL = ID_NVMCTRL,
-
-    /* Instance Id for Peripheral PAC0 */
-    PAC_PERIPHERAL_PAC0 = ID_PAC0,
-
-    /* Instance Id for Peripheral PAC1 */
-    PAC_PERIPHERAL_PAC1 = ID_PAC1,
-
-    /* Instance Id for Peripheral PAC2 */
-    PAC_PERIPHERAL_PAC2 = ID_PAC2,
 
     /* Instance Id for Peripheral PM */
     PAC_PERIPHERAL_PM = ID_PM,
@@ -200,6 +188,8 @@ typedef enum
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
+
+bool PAC_PeripheralIsProtected( PAC_PERIPHERAL peripheral );
 
 void PAC_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation );
 
