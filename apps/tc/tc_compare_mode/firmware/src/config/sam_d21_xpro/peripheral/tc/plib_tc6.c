@@ -118,7 +118,7 @@ void TC6_CompareStop( void )
 
 uint32_t TC6_CompareFrequencyGet( void )
 {
-    return (uint32_t)(749568UL);
+    return (uint32_t)(750000UL);
 }
 
 /* Get the current counter value */
