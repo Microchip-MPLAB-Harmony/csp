@@ -119,7 +119,7 @@ void TC3_CompareStop( void )
 
 uint32_t TC3_CompareFrequencyGet( void )
 {
-    return (uint32_t)(47972352UL);
+    return (uint32_t)(48000000UL);
 }
 
 /* Get the current counter value */
