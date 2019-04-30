@@ -21,7 +21,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-
 #ifndef PLIB_CLK_H
 #define PLIB_CLK_H
 
