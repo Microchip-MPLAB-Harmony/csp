@@ -50,13 +50,19 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 
+#define ADC_VREF                (3.3f)
+
 uint32_t  adc_seq_regs[4] = {0x1804, 0x1805, 0x1806, 0x1807};
 volatile uint16_t     adc_res[4]      = {0};
 volatile bool         adc_dma_done    = 0;
+float input_voltage;
 
 void adc_sram_dma_callback(DMAC_TRANSFER_EVENT event, uintptr_t contextHandle)
 {
-	adc_dma_done = true;
+	if (event == DMAC_TRANSFER_EVENT_COMPLETE)
+    {
+        adc_dma_done = true;
+    }
 }
 
 
@@ -86,10 +92,18 @@ int main ( void )
         if (adc_dma_done) {
 			adc_dma_done = false;
 			printf("\r\n ADC conversion of 4 inputs done \r\n");
-			printf("\r\n AIN4: 0x%x\r\n\r\n", adc_res[0]);
-			printf("\r\n AIN5: 0x%x\r\n\r\n", adc_res[1]);
-            printf("\r\n AIN6: 0x%x\r\n\r\n", adc_res[2]);
-            printf("\r\n AIN7: 0x%x\r\n\r\n", adc_res[3]);
+            input_voltage = (float)adc_res[0] * ADC_VREF / 4095U;
+			printf("\r\n AIN4: ADC Count: 0x%03x, ADC Input Voltage = %d.%02d V \r\n\r\n", 
+                    adc_res[0], (int)input_voltage, (int)((input_voltage - (int)input_voltage)*100.0));
+			input_voltage = (float)adc_res[1] * ADC_VREF / 4095U;
+            printf("\r\n AIN5: ADC Count: 0x%03x, ADC Input Voltage = %d.%02d V \r\n\r\n", 
+                    adc_res[1], (int)input_voltage, (int)((input_voltage - (int)input_voltage)*100.0));
+            input_voltage = (float)adc_res[2] * ADC_VREF / 4095U;
+            printf("\r\n AIN6: ADC Count: 0x%03x, ADC Input Voltage = %d.%02d V \r\n\r\n", 
+                    adc_res[2], (int)input_voltage, (int)((input_voltage - (int)input_voltage)*100.0));
+            input_voltage = (float)adc_res[3] * ADC_VREF / 4095U;
+            printf("\r\n AIN7: ADC Count: 0x%03x, ADC Input Voltage = %d.%02d V \r\n\r\n", 
+                    adc_res[3], (int)input_voltage, (int)((input_voltage - (int)input_voltage)*100.0));
 		}
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
