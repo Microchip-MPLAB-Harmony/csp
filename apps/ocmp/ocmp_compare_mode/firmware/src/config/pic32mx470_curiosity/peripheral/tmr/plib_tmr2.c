@@ -1,4 +1,24 @@
 /*******************************************************************************
+  TMR Peripheral Library Interface Source File
+
+  Company
+    Microchip Technology Inc.
+
+  File Name
+    plib_tmr2.c
+
+  Summary
+    TMR2 peripheral library source file.
+
+  Description
+    This file implements the interface to the TMR peripheral library.  This
+    library provides access to and control of the associated peripheral
+    instance.
+
+*******************************************************************************/
+
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -20,61 +40,72 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef PLIB_CLK_H
-#define PLIB_CLK_H
 
-#include <stddef.h>
-#include <stdbool.h>  
-#include <device.h>
-
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    extern "C" {
-
-#endif
- 
 // *****************************************************************************
 // *****************************************************************************
-// Section: CLK Module System Interface Routines
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 
-// *****************************************************************************
-/* Function:
-    void CLK_Initialize ( void )
+#include "device.h"
+#include "plib_tmr2.h"
 
-  Summary:
-    Initializes hardware of the System Clock and Peripheral Clock.
-    
-  Description:
-    This function initializes the hardware of System Clock and Peripheral Clocks.
 
-  Precondition:
-    None.
 
-  Parameters:
-    None.
+void TMR2_Initialize(void)
+{
+    /* Disable Timer */
+    T2CONCLR = _T2CON_ON_MASK;
 
-  Returns:
-    None.
+    /*
+    SIDL = 0
+    TCKPS =0
+    T32   = 0
+    TCS = 0
+    */
+    T2CONSET = 0x0;
 
-  Example:
-    <code>
-    //Example 1: Do not alter the configuration bit settings
-    CLK_Initialize ( );
+    /* Clear counter */
+    TMR2 = 0x0;
 
-    </code>
+    /*Set period */
+    PR2 = 48000U;
 
-  Remarks:
-    None.
-*/
 
-void CLK_Initialize ( void );
-
-#ifdef __cplusplus
 }
-#endif
 
-#endif //PLIB_CLK_H
+
+void TMR2_Start(void)
+{
+    T2CONSET = _T2CON_ON_MASK;
+}
+
+
+void TMR2_Stop (void)
+{
+    T2CONCLR = _T2CON_ON_MASK;
+}
+
+void TMR2_PeriodSet(uint16_t period)
+{
+    PR2  = period;
+}
+
+uint16_t TMR2_PeriodGet(void)
+{
+    return (uint16_t)PR2;
+}
+
+uint16_t TMR2_CounterGet(void)
+{
+    return (uint16_t)(TMR2);
+}
+
+
+uint32_t TMR2_FrequencyGet(void)
+{
+    return (48000000);
+}
 
