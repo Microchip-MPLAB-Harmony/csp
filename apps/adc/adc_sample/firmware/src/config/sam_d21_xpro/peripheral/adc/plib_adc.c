@@ -162,6 +162,26 @@ void ADC_ConversionStart( void )
     }
 }
 
+/* Configure window comparison threshold values */
+void ADC_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
+{
+    ADC_REGS->ADC_WINLT = low_threshold;
+    ADC_REGS->ADC_WINUT = high_threshold;
+    while(ADC_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+}
+
+void ADC_WindowModeSet(ADC_WINMODE mode)
+{
+    ADC_REGS->ADC_WINCTRL = mode << ADC_WINCTRL_WINMODE_Pos;
+    while(ADC_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+}
+
 
 /* Read the conversion result */
 uint16_t ADC_ConversionResultGet( void )
