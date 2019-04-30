@@ -1600,8 +1600,14 @@ if __name__ == "__main__":
             sym_peripheral_clock_enable.append(peripheralName + "_CLOCK_ENABLE")
             peripheral_clock_enable = coreComponent.createBooleanSymbol(peripheralName + "_CLOCK_ENABLE", peripheralClockMenu)
             peripheral_clock_enable.setLabel(peripheralName + " Clock Enable")
-            peripheral_clock_enable.setDefaultValue(peripheralBus[0] == "-1" or len(peripheralBus) == 1)
             peripheral_clock_enable.setReadOnly(len(peripheralBus) == 1)
+
+            if ((peripheralBus[0] == "-1" or len(peripheralBus) == 1) and peripheralName != "DDR"):
+                peripheral_clock_enable.setDefaultValue(True)
+            elif peripheralName == "USB":
+                peripheral_clock_enable.setDefaultValue(True)
+            else:
+                peripheral_clock_enable.setDefaultValue(False)
 
             sym_peripheral_clock_freq.append(peripheralName + "_CLOCK_FREQUENCY")
             peripheral_clock_freq = coreComponent.createIntegerSymbol(peripheralName + "_CLOCK_FREQUENCY", peripheral_clock_enable)
@@ -1614,9 +1620,15 @@ if __name__ == "__main__":
                     peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ")))
                     peripheral_clock_freq.setDependencies(rtccClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "rtcc.RTCC_CLOCK_SOURCE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
                                                                                          "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
+                elif peripheralName == "DDR":
+                    peripheral_clock_freq.setDefaultValue(0)
+                    peripheral_clock_freq.setDependencies(sysPeripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
                 else:
                     peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "SYS_CLK_FREQ")))
                     peripheral_clock_freq.setDependencies(sysPeripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
+            elif peripheralName == "USB":
+                peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ")))
+                peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ"])
             else:
                 peripheral_clock_freq.setDefaultValue(0)
 
@@ -1664,7 +1676,7 @@ if __name__ == "__main__":
         pmdxRegMaskValue.setDefaultValue(0xffffffff)
         pmdxRegMaskValue.setReadOnly(True)
 
-    defaultPMDxEnableDict = {k: v for k, v in peripheralBusDict.items() if v[0] == "-1"}
+    defaultPMDxEnableDict = {k: v for k, v in peripheralBusDict.items() if((v[0] == "-1" and k != "DDR") or k == "USB")}
 
     for peripheralName, peripheralBus in defaultPMDxEnableDict.items():
         if peripheralName.startswith("REFO") or peripheralName in availablePeripherals:

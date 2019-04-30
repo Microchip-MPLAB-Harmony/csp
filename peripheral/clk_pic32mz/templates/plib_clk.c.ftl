@@ -254,7 +254,7 @@ void CLK_Initialize( void )
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
     <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
-        <#lt>    PMD${i}SET = 0x${.vars[PMDREG_VALUE]};
+        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]};
     </#if>
 </#list>
 
