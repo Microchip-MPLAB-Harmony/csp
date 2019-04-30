@@ -91,8 +91,8 @@ int main ( void )
         if(adc_window_det)
         {
             adc_window_det = false;
-            printf("\r\nADC Window detected \r\n");
-            printf("\r\nADC result is %d\r\n", adc_result);
+            printf("\r\n\n ADC Window detected \r\n");
+            printf("\r\n ADC result is %d\r\n\n", adc_result);
         }
     }
 
