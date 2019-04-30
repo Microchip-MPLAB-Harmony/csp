@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-03-25T04:46:27Z */
+/* file generated from device description version 2019-04-23T19:01:17Z */
 #ifndef _SAM9X60_H_
 #define _SAM9X60_H_
 
@@ -77,11 +77,12 @@ typedef enum IRQn
 /******  ARM926EJS Processor Exceptions Numbers ******************************/
 /******  SAM9X60 specific Interrupt Numbers ***********************************/
   EXT_FIQ_IRQn              =   0, /**< 0   Advanced Interrupt Controller (AIC) */
-  PMC_IRQn                  =   1, /**< 1   Shared between PMC WDT SHDWC PIT RTC (PMC) */
-  WDT_IRQn                  =   1, /**< 1   Shared between PMC WDT SHDWC PIT RTC (WDT) */
-  SHDWC_IRQn                =   1, /**< 1   Shared between PMC WDT SHDWC PIT RTC (SHDWC) */
-  PIT_IRQn                  =   1, /**< 1   Shared between PMC WDT SHDWC PIT RTC (PIT) */
-  RTC_IRQn                  =   1, /**< 1   Shared between PMC WDT SHDWC PIT RTC (RTC) */
+  PMC_IRQn                  =   1, /**< 1   Shared between PMC RSTC RTT PIT WDT RTC (PMC) */
+  RSTC_IRQn                 =   1, /**< 1   Shared between PMC RSTC RTT PIT WDT RTC (RSTC) */
+  RTT_IRQn                  =   1, /**< 1   Shared between PMC RSTC RTT PIT WDT RTC (RTT) */
+  PIT_IRQn                  =   1, /**< 1   Shared between PMC RSTC RTT PIT WDT RTC (PIT) */
+  WDT_IRQn                  =   1, /**< 1   Shared between PMC RSTC RTT PIT WDT RTC (WDT) */
+  RTC_IRQn                  =   1, /**< 1   Shared between PMC RSTC RTT PIT WDT RTC (RTC) */
   PIOA_IRQn                 =   2, /**< 2   Parallel Input/Output Controller (PIOA) */
   PIOB_IRQn                 =   3, /**< 3   Parallel Input/Output Controller (PIOB) */
   PIOC_IRQn                 =   4, /**< 4   Parallel Input/Output Controller (PIOC) */
@@ -124,10 +125,11 @@ typedef enum IRQn
   CLASSD_IRQn               =  42, /**< 42  Audio Class D Amplifier (CLASSD) (CLASSD) */
   ISI_IRQn                  =  43, /**< 43  Image Sensor Interface (ISI)        */
   PIOD_IRQn                 =  44, /**< 44  Parallel Input/Output Controller (PIOD) */
-  TC1_IRQn                  =  45, /**< 45  Timer Counter (TC0)                 */
+  TC1_IRQn                  =  45, /**< 45  Timer Counter (TC1)                 */
   OTPC_IRQn                 =  46, /**< 46  OTP Memory Controller (OTPC)        */
   DBGU_IRQn                 =  47, /**< 47  Debug Unit (DBGU)                   */
-  PMECC_IRQn                =  48, /**< 48  Programmable Multibit Error Correction Code Controller (PMECC) */
+  PMECC_IRQn                =  48, /**< 48  Shared between PMECC PMERRLOC (PMECC) */
+  PMERRLOC_IRQn             =  48, /**< 48  Shared between PMECC PMERRLOC (PMERRLOC) */
   SDRAMC_IRQn               =  49, /**< 49  Shared between SDRAMC MPDDRC SMC (SDRAMC) */
   MPDDRC_IRQn               =  49, /**< 49  Shared between SDRAMC MPDDRC SMC (MPDDRC) */
   SMC_IRQn                  =  49, /**< 49  Shared between SDRAMC MPDDRC SMC (SMC) */
@@ -160,7 +162,7 @@ typedef struct _DeviceVectors
 
   /* Peripheral handlers */
   void* pfnEXT_FIQ_Handler;                      /*   0 Advanced Interrupt Controller (AIC) */
-  void* pfnSYSC_Handler;                         /*   1 System Controller Interrupt (PMC WDT SHDWC PIT RTC) */
+  void* pfnSYSC_Handler;                         /*   1 System Controller Interrupt (PMC RSTC RTT PIT WDT RTC) */
   void* pfnPIOA_Handler;                         /*   2 Parallel Input/Output Controller (PIOA) */
   void* pfnPIOB_Handler;                         /*   3 Parallel Input/Output Controller (PIOB) */
   void* pfnPIOC_Handler;                         /*   4 Parallel Input/Output Controller (PIOC) */
@@ -204,10 +206,10 @@ typedef struct _DeviceVectors
   void* pfnCLASSD_Handler;                       /*  42 Audio Class D Amplifier (CLASSD) (CLASSD) */
   void* pfnISI_Handler;                          /*  43 Image Sensor Interface (ISI) */
   void* pfnPIOD_Handler;                         /*  44 Parallel Input/Output Controller (PIOD) */
-  void* pfnTC1_Handler;                          /*  45 Timer Counter (TC0) */
+  void* pfnTC1_Handler;                          /*  45 Timer Counter (TC1) */
   void* pfnOTPC_Handler;                         /*  46 OTP Memory Controller (OTPC) */
   void* pfnDBGU_Handler;                         /*  47 Debug Unit (DBGU) */
-  void* pfnPMECC_Handler;                        /*  48 Programmable Multibit Error Correction Code Controller (PMECC) */
+  void* pfnECC_Handler;                          /*  48 ECC Controller (PMECC PMERRLOC) */
   void* pfnMC_Handler;                           /*  49 Memory Controller (SDRAMC MPDDRC SMC) */
 } DeviceVectors;
 
@@ -267,7 +269,7 @@ void PIOD_Handler                  ( void );
 void TC1_Handler                   ( void );
 void OTPC_Handler                  ( void );
 void DBGU_Handler                  ( void );
-void PMECC_Handler                 ( void );
+void ECC_Handler                   ( void );
 void MC_Handler                    ( void );
 #endif /* DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS */
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -276,20 +278,17 @@ void MC_Handler                    ( void );
  * \brief Configuration of the ARM926EJS Processor and Core Peripherals
  */
 
-#if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
+/*
+ * \brief CMSIS includes
+ */
 #ifdef __cplusplus
-  #define   __I     volatile             /*!< \brief Defines 'read only' permissions */
+  #define __I  volatile       /**< Defines 'read-only'  permissions */
 #else
-  #define   __I     volatile const       /*!< \brief Defines 'read only' permissions */
+  #define __I  volatile const /**< Defines 'read-only'  permissions */
 #endif
-#define     __O     volatile             /*!< \brief Defines 'write only' permissions */
-#define     __IO    volatile             /*!< \brief Defines 'read / write' permissions */
+#define   __O  volatile       /**< Defines 'write-only' permissions */
+#define   __IO volatile       /**< Defines 'read/write' permissions */
 
-/* following defines should be used for structure members */
-#define     __IM     volatile const      /*!< \brief Defines 'read only' structure member permissions */
-#define     __OM     volatile            /*!< \brief Defines 'write only' structure member permissions */
-#define     __IOM    volatile            /*!< \brief Defines 'read / write' structure member permissions */
-#endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 /** \defgroup SAM9X60_api Peripheral Software API
  *  @{
  */
@@ -566,6 +565,7 @@ void MC_Handler                    ( void );
 
 #define EBI_CS0_SIZE                   _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define EBI_CS1_SIZE                   _UL_(0x10000000)    /* 262144kB Memory segment type: other */
+#define SDRAM_CS_SIZE                  _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define EBI_CS2_SIZE                   _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define EBI_CS3_SIZE                   _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define EBI_NF_SIZE                    _UL_(0x10000000)    /* 262144kB Memory segment type: other */
@@ -583,6 +583,7 @@ void MC_Handler                    ( void );
 
 #define EBI_CS0_ADDR                   _UL_(0x10000000)    /**< EBI_CS0 base address (type: other)*/
 #define EBI_CS1_ADDR                   _UL_(0x20000000)    /**< EBI_CS1 base address (type: other)*/
+#define SDRAM_CS_ADDR                  _UL_(0x20000000)    /**< SDRAM_CS base address (type: other)*/
 #define EBI_CS2_ADDR                   _UL_(0x30000000)    /**< EBI_CS2 base address (type: other)*/
 #define EBI_CS3_ADDR                   _UL_(0x40000000)    /**< EBI_CS3 base address (type: other)*/
 #define EBI_NF_ADDR                    _UL_(0x40000000)    /**< EBI_NF base address (type: other)*/

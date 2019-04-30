@@ -196,13 +196,7 @@ void showMsg( void )
 // *****************************************************************************
 int main( void )
 {
-    volatile bool   workToDo = true;    // avoid unreachable code warning
-    uint32_t        pitMs = 500;
-    
-    while( !workToDo )
-    {                                   // possible debug entry point
-        ;   // spin lock
-    }
+    uint32_t pitMs = 500;
     /* Initialize all modules */
     SYS_Initialize( NULL );
 
@@ -224,7 +218,7 @@ int main( void )
     showMsg();
 
     // Watch dog pet and led toggle with delay for reasonable blink
-    while( workToDo )
+    while( true )
     {
         PIT_DelayMs( pitMs );
         ledUpdate();

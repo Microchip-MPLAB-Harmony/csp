@@ -153,9 +153,9 @@ void MC_SharedHandler( void )
 
 /* data for irq register initialization */
 IrqData irqData[] = {
-    { 1,   (uint32_t) AIC_REGS,    SYSC_SharedHandler,         AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  AIC_SMR_PRIORITY_MINIMUM_Val   },
-    { 44,  (uint32_t) AIC_REGS,    PIOD_InterruptHandler,      AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  AIC_SMR_PRIORITY_MINIMUM_Val   },
-    { 47,  (uint32_t) AIC_REGS,    DBGU_InterruptHandler,      AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  AIC_SMR_PRIORITY_MINIMUM_Val   },
+    { 1,   (uint32_t) AIC_REGS,    SYSC_SharedHandler,         AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  AIC_SMR_PRIOR_MINIMUM_Val   },
+    { 44,  (uint32_t) AIC_REGS,    PIOD_InterruptHandler,      AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  AIC_SMR_PRIOR_MINIMUM_Val   },
+    { 47,  (uint32_t) AIC_REGS,    DBGU_InterruptHandler,      AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val,  AIC_SMR_PRIOR_MINIMUM_Val   },
 };
 
 uint32_t irqDataEntryCount = sizeof( irqData ) / sizeof( irqData[ 0 ]);

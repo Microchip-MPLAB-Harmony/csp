@@ -85,7 +85,7 @@ INT_Initialize( void )
         aicPtr = (aic_registers_t *) irqData[ ii ].targetRegisters;
         aicPtr->AIC_SSR = AIC_SSR_INTSEL( irqData[ ii ].peripheralId );
         aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~AIC_SMR_SRCTYPE_Msk)  | AIC_SMR_SRCTYPE( irqData[ ii ].srcType );
-        aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~AIC_SMR_PRIORITY_Msk) | (irqData[ ii ].priority << AIC_SMR_PRIORITY_Pos);
+        aicPtr->AIC_SMR = (aicPtr->AIC_SMR & ~AIC_SMR_PRIOR_Msk) | (irqData[ ii ].priority << AIC_SMR_PRIOR_Pos);
         aicPtr->AIC_SPU = (uint32_t) DefaultInterruptHandlerForSpurious;
         aicPtr->AIC_SVR = (uint32_t) irqData[ ii ].handler;
         aicPtr->AIC_IECR = AIC_IECR_Msk;
