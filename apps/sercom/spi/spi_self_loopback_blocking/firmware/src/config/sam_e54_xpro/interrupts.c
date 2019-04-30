@@ -147,10 +147,7 @@ void SERCOM5_0_Handler          ( void ) __attribute__((weak, alias("Dummy_Handl
 void SERCOM5_1_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM5_2_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM5_OTHER_Handler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SERCOM6_0_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SERCOM6_1_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SERCOM6_2_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SERCOM6_OTHER_Handler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void SERCOM6_SPI_InterruptHandler ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM7_0_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM7_1_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM7_2_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -304,10 +301,10 @@ const DeviceVectors exception_table=
     .pfnSERCOM5_1_Handler          = ( void * ) SERCOM5_1_Handler,
     .pfnSERCOM5_2_Handler          = ( void * ) SERCOM5_2_Handler,
     .pfnSERCOM5_OTHER_Handler      = ( void * ) SERCOM5_OTHER_Handler,
-    .pfnSERCOM6_0_Handler          = ( void * ) SERCOM6_0_Handler,
-    .pfnSERCOM6_1_Handler          = ( void * ) SERCOM6_1_Handler,
-    .pfnSERCOM6_2_Handler          = ( void * ) SERCOM6_2_Handler,
-    .pfnSERCOM6_OTHER_Handler      = ( void * ) SERCOM6_OTHER_Handler,
+    .pfnSERCOM6_0_Handler          = ( void * ) SERCOM6_SPI_InterruptHandler,
+    .pfnSERCOM6_1_Handler          = ( void * ) SERCOM6_SPI_InterruptHandler,
+    .pfnSERCOM6_2_Handler          = ( void * ) SERCOM6_SPI_InterruptHandler,
+    .pfnSERCOM6_OTHER_Handler      = ( void * ) SERCOM6_SPI_InterruptHandler,
     .pfnSERCOM7_0_Handler          = ( void * ) SERCOM7_0_Handler,
     .pfnSERCOM7_1_Handler          = ( void * ) SERCOM7_1_Handler,
     .pfnSERCOM7_2_Handler          = ( void * ) SERCOM7_2_Handler,
