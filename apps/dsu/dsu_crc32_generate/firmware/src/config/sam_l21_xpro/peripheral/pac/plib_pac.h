@@ -225,6 +225,8 @@ void PAC_Initialize( void );
 
 void PAC_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation );
 
+bool PAC_PeripheralIsProtected( PAC_PERIPHERAL peripheral );
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
