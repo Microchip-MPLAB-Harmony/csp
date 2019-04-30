@@ -50,9 +50,9 @@
 #include <string.h>
 #include "plib_nvmctrl.h"
 
-uint16_t nvm_error;
-uint16_t nvm_status;
-uint16_t smart_eep_status;
+static volatile uint16_t nvm_error;
+static uint16_t nvm_status;
+static uint32_t smart_eep_status;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -64,7 +64,7 @@ uint16_t smart_eep_status;
 
 void NVMCTRL_Initialize(void)
 {
-    NVMCTRL_REGS->NVMCTRL_CTRLA |= NVMCTRL_CTRLA_PRM(1) | NVMCTRL_CTRLA_CACHEDIS0_Msk | NVMCTRL_CTRLA_CACHEDIS1_Msk;
+   NVMCTRL_REGS->NVMCTRL_CTRLA = NVMCTRL_CTRLA_PRM(1) | NVMCTRL_CTRLA_CACHEDIS0_Msk | NVMCTRL_CTRLA_CACHEDIS1_Msk | NVMCTRL_CTRLA_RWS(5) | NVMCTRL_CTRLA_AUTOWS_Msk;
 }
 
 bool NVMCTRL_Read( uint32_t *data, uint32_t length, const uint32_t address )
@@ -79,17 +79,20 @@ void NVMCTRL_SetWriteMode(NVMCTRL_WRITEMODE mode)
     NVMCTRL_REGS->NVMCTRL_CTRLA = (NVMCTRL_REGS->NVMCTRL_CTRLA & (~NVMCTRL_CTRLA_WMODE_Msk)) | mode;
 }
 
-uint8_t NVMCTRL_QuadWordWrite(uint32_t *data, const uint32_t address)
+bool NVMCTRL_QuadWordWrite(uint32_t *data, const uint32_t address)
 {
     uint8_t i = 0;
-    int8_t wr_status = -1;
+    bool wr_status = false;
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (NVMCTRL_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
-    
+
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* If the address is not a quad word address, return error */
     if((address & 0x03) != 0)
     {
-        wr_status = -1;
+        wr_status = false;
     }
     else
     {
@@ -103,22 +106,25 @@ uint8_t NVMCTRL_QuadWordWrite(uint32_t *data, const uint32_t address)
         }
         /* Restore the write mode */
         NVMCTRL_SetWriteMode(wr_mode);
-        wr_status = 0;
+        wr_status = true;
     }
     return wr_status;
 }
 
-uint8_t NVMCTRL_DoubleWordWrite(uint32_t *data, const uint32_t address)
+bool NVMCTRL_DoubleWordWrite(uint32_t *data, const uint32_t address)
 {
     uint8_t i = 0;
-    int8_t wr_status = -1;
+    bool wr_status = false;
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (NVMCTRL_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
-    
+
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* If the address is not a double word address, return error */
     if((address & 0x01) != 0)
     {
-        wr_status = -1;
+        wr_status = false;
     }
     else
     {
@@ -132,7 +138,7 @@ uint8_t NVMCTRL_DoubleWordWrite(uint32_t *data, const uint32_t address)
         }
         /* Restore the write mode */
         NVMCTRL_SetWriteMode(wr_mode);
-        wr_status = 0;
+        wr_status = true;
     }
     return wr_status;
 }
@@ -144,6 +150,9 @@ bool NVMCTRL_PageWrite( uint32_t *data, const uint32_t address )
 {
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
+
+    /* Clear global error flag */
+    nvm_error = 0;
 
     /* writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits */
     for (i = 0; i < (NVMCTRL_FLASH_PAGESIZE/4); i++)
@@ -163,6 +172,9 @@ bool NVMCTRL_PageWrite( uint32_t *data, const uint32_t address )
 
 bool NVMCTRL_BlockErase( uint32_t address )
 {
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* Set address and command */
     NVMCTRL_REGS->NVMCTRL_ADDR = address;
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_EB | NVMCTRL_CTRLB_CMDEX_KEY;
@@ -172,8 +184,8 @@ bool NVMCTRL_BlockErase( uint32_t address )
 
 uint16_t NVMCTRL_ErrorGet( void )
 {
-    nvm_error = NVMCTRL_REGS->NVMCTRL_INTFLAG;
-    
+    nvm_error |= NVMCTRL_REGS->NVMCTRL_INTFLAG;
+
     return nvm_error;
 }
 
@@ -215,7 +227,7 @@ bool NVMCTRL_SmartEEPROM_IsBusy(void)
     return (bool)(NVMCTRL_REGS->NVMCTRL_SEESTAT & NVMCTRL_SEESTAT_BUSY_Msk);
 }
 
-uint16_t NVMCTRL_SmartEepromStatusGet( void )
+uint32_t NVMCTRL_SmartEEPROMStatusGet( void )
 {
     smart_eep_status = NVMCTRL_REGS->NVMCTRL_SEESTAT;
     
@@ -233,13 +245,16 @@ void NVMCTRL_BankSwap(void)
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_BKSWRST | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 
-void NVMCTRL_SmartEepromSectorReallocate(void)
+void NVMCTRL_SmartEEPROMSectorReallocate(void)
 {
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_SEERALOC | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 
-void NVMCTRL_SmartEepromFlushPageBuffer(void)
+void NVMCTRL_SmartEEPROMFlushPageBuffer(void)
 {
+    /* Clear global error flag */
+    nvm_error = 0;
+
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_SEEFLUSH | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 

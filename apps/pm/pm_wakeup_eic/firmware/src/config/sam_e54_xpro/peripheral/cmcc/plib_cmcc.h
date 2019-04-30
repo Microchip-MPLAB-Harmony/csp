@@ -1,4 +1,20 @@
 /*******************************************************************************
+  Interface definition of CMCC PLIB.
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    plib_cmcc.h
+
+  Summary:
+    Interface definition of the CMCC(Cortex M Cache Controller) Peripheral Library
+
+  Description:
+    This file defines the interface for the CMCC Plib.
+*******************************************************************************/
+
+/*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -21,16 +37,34 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef TOOLCHAIN_SPECIFICS_H
-#define TOOLCHAIN_SPECIFICS_H
+#ifndef PLIB_CMCC_H    // Guards against multiple inclusion
+#define PLIB_CMCC_H
 
 
-#include <sys/types.h>
-#define NO_INIT        __attribute__((section(".no_init")))
-#define SECTION(a)     __attribute__((__section__(a)))
-
-#define CACHE_ALIGN    __ALIGNED(16)
+#ifdef __cplusplus // Provide C++ Compatibility
+	extern "C" {
+#endif
 
 
-#endif // end of header
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface
+// *****************************************************************************
+// *****************************************************************************
 
+#define CMCC_NO_OF_WAYS     4
+#define CMCC_LINE_PER_WAY   64
+#define CMCC_LINE_SIZE      16
+#define CMCC_WAY_SIZE       1024
+
+/***************************** CMCC API *******************************/
+void CMCC_Disable (void );
+void CMCC_EnableDCache (void );
+void CMCC_DisableDCache (void );
+
+void CMCC_EnableICache (void );
+void CMCC_DisableICache (void );
+
+void CMCC_InvalidateAll (void );
+
+#endif
