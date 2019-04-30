@@ -119,7 +119,7 @@ void CAN1_Initialize(void)
     CAN1_REGS->CAN_GFC = CAN_GFC_ANFS_REJECT | CAN_GFC_ANFE_REJECT;
 
     /* Timestamp Counter Configuration Register */
-    CAN1_REGS->CAN_TSCC = CAN_TSCC_TSS_INC | CAN_TSCC_TCP(1);
+    CAN1_REGS->CAN_TSCC = CAN_TSCC_TSS_INC | CAN_TSCC_TCP(0);
 
     /* Set the operation mode */
     CAN1_REGS->CAN_CCCR = (CAN1_REGS->CAN_CCCR & ~CAN_CCCR_INIT_Msk);
@@ -450,6 +450,69 @@ void CAN1_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     CAN1_REGS->CAN_CCCR = (CAN1_REGS->CAN_CCCR & ~CAN_CCCR_INIT_Msk);
     while ((CAN1_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk);
 }
+
+// *****************************************************************************
+/* Function:
+    bool CAN1_StandardFilterElementSet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
+
+   Summary:
+    Set a standard filter element configuration.
+
+   Precondition:
+    CAN1_Initialize and CAN1_MessageRAMConfigSet must have been called
+    for the associated CAN instance.
+
+   Parameters:
+    filterNumber          - Standard Filter number to be configured.
+    stdMsgIDFilterElement - Pointer to Standard Filter Element configuration to be set on specific filterNumber.
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool CAN1_StandardFilterElementSet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
+{
+    if ((filterNumber > 1) || (stdMsgIDFilterElement == NULL))
+    {
+        return false;
+    }
+    can1Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1].CAN_SIDFE_0 = stdMsgIDFilterElement->CAN_SIDFE_0;
+
+    return true;
+}
+
+// *****************************************************************************
+/* Function:
+    bool CAN1_StandardFilterElementGet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
+
+   Summary:
+    Get a standard filter element configuration.
+
+   Precondition:
+    CAN1_Initialize and CAN1_MessageRAMConfigSet must have been called
+    for the associated CAN instance.
+
+   Parameters:
+    filterNumber          - Standard Filter number to get filter configuration.
+    stdMsgIDFilterElement - Pointer to Standard Filter Element configuration for storing filter configuration.
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool CAN1_StandardFilterElementGet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
+{
+    if ((filterNumber > 1) || (stdMsgIDFilterElement == NULL))
+    {
+        return false;
+    }
+    stdMsgIDFilterElement->CAN_SIDFE_0 = can1Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1].CAN_SIDFE_0;
+
+    return true;
+}
+
 
 
 
