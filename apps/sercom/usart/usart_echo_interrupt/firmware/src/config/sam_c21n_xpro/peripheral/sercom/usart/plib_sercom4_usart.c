@@ -56,8 +56,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+
 /* SERCOM4 USART baud value for 115200 Hz baud rate */
-#define SERCOM4_USART_INT_BAUD_VALUE			(63019U)
+#define SERCOM4_USART_INT_BAUD_VALUE            (63019U)
 
 SERCOM_USART_OBJECT sercom4USARTObj;
 
@@ -67,6 +68,26 @@ SERCOM_USART_OBJECT sercom4USARTObj;
 // *****************************************************************************
 // *****************************************************************************
 
+void static SERCOM4_USART_ErrorClear( void )
+{
+    uint8_t  u8dummyData = 0;
+
+    /* Clear error flag */
+    SERCOM4_REGS->USART_INT.SERCOM_INTFLAG = SERCOM_USART_INT_INTFLAG_ERROR_Msk;
+
+    /* Clear all errors */
+    SERCOM4_REGS->USART_INT.SERCOM_STATUS = SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk;
+
+    /* Flush existing error bytes from the RX FIFO */
+    while((SERCOM4_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) == SERCOM_USART_INT_INTFLAG_RXC_Msk)
+    {
+        u8dummyData = SERCOM4_REGS->USART_INT.SERCOM_DATA;
+    }
+
+    /* Ignore the warning */
+    (void)u8dummyData;
+}
+
 void SERCOM4_USART_Initialize( void )
 {
     /*
@@ -74,10 +95,8 @@ void SERCOM4_USART_Initialize( void )
      * Configures TXPO and RXPO
      * Configures Data Order
      * Configures Standby Mode
-     * Configures sampling rate
+     * Configures Sampling rate
      * Configures IBON
-     * Configures Parity
-     * Configures Stop bits
      */
     SERCOM4_REGS->USART_INT.SERCOM_CTRLA = SERCOM_USART_INT_CTRLA_MODE_USART_INT_CLK | SERCOM_USART_INT_CTRLA_RXPO_PAD3 | SERCOM_USART_INT_CTRLA_TXPO_PAD2 | SERCOM_USART_INT_CTRLA_DORD_Msk | SERCOM_USART_INT_CTRLA_IBON_Msk | SERCOM_USART_INT_CTRLA_FORM(0x0) | SERCOM_USART_INT_CTRLA_SAMPR(0) ;
 
@@ -196,6 +215,20 @@ bool SERCOM4_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFr
     return setupStatus;
 }
 
+USART_ERROR SERCOM4_USART_ErrorGet( void )
+{
+    USART_ERROR errorStatus = USART_ERROR_NONE;
+
+    errorStatus = SERCOM4_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk);
+
+    if(errorStatus != USART_ERROR_NONE)
+    {
+        SERCOM4_USART_ErrorClear();
+    }
+
+    return errorStatus;
+}
+
 bool SERCOM4_USART_Write( void *buffer, const size_t size )
 {
     bool writeStatus      = false;
@@ -253,38 +286,23 @@ bool SERCOM4_USART_Read( void *buffer, const size_t size )
 {
     bool readStatus        = false;
     uint8_t *pu8Data       = (uint8_t*)buffer;
-    uint8_t u8dummyData    = 0;
 
     if(pu8Data != NULL)
     {
+        /* Clear errors before submitting the request.
+         * ErrorGet clears errors internally.
+         */
+        SERCOM4_USART_ErrorGet();
+
         if(sercom4USARTObj.rxBusyStatus == false)
         {
-            /* Checks for error before receiving */
-            if(SERCOM4_USART_ErrorGet() != USART_ERROR_NONE)
-            {
-                /* Clear all error flags */
-                SERCOM4_REGS->USART_INT.SERCOM_INTFLAG = SERCOM_USART_INT_INTFLAG_ERROR_Msk;
-
-                /* Clear error statuses */
-                SERCOM4_REGS->USART_INT.SERCOM_STATUS = SERCOM_USART_INT_STATUS_Msk;
-
-                /* Flush existing error bytes from the RX FIFO */
-                while((SERCOM4_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) == SERCOM_USART_INT_INTFLAG_RXC_Msk)
-                {
-                    u8dummyData = SERCOM4_REGS->USART_INT.SERCOM_DATA;
-                }
-
-                /* Ignore the warning */
-                (void)u8dummyData;
-            }
-
             sercom4USARTObj.rxBuffer = pu8Data;
             sercom4USARTObj.rxSize = size;
             sercom4USARTObj.rxProcessedSize = 0;
             sercom4USARTObj.rxBusyStatus = true;
             readStatus = true;
 
-            /* Enable error interrupts */
+            /* Enable error interrupt */
             SERCOM4_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTENSET_ERROR_Msk;
 
             /* Enable Receive Complete interrupt */
@@ -312,22 +330,9 @@ void SERCOM4_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr
     sercom4USARTObj.rxContext = context;
 }
 
-USART_ERROR SERCOM4_USART_ErrorGet( void )
-{
-    USART_ERROR errorStatus = USART_ERROR_NONE;
-
-    errorStatus = SERCOM4_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk);
-
-    /* Clear Errors */
-    SERCOM4_REGS->USART_INT.SERCOM_STATUS = SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk;
-
-    return errorStatus;
-}
-
 void static SERCOM4_USART_ISR_ERR_Handler( void )
 {
     USART_ERROR errorStatus = USART_ERROR_NONE;
-    uint8_t  u8dummyData = 0;
 
     errorStatus = (SERCOM4_REGS->USART_INT.SERCOM_STATUS &
                   (SERCOM_USART_INT_STATUS_PERR_Msk |
@@ -336,25 +341,15 @@ void static SERCOM4_USART_ISR_ERR_Handler( void )
 
     if(errorStatus != USART_ERROR_NONE)
     {
-        /* Clear all error flags */
-        SERCOM4_REGS->USART_INT.SERCOM_INTFLAG = SERCOM_USART_INT_INTFLAG_ERROR_Msk;
-
-        /* Clear error statuses */
-        SERCOM4_REGS->USART_INT.SERCOM_STATUS = SERCOM_USART_INT_STATUS_Msk;
-
-        /* Flush existing error bytes from the RX FIFO */
-        while((SERCOM4_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) == SERCOM_USART_INT_INTFLAG_RXC_Msk)
-        {
-            u8dummyData = SERCOM4_REGS->USART_INT.SERCOM_DATA;
-        }
-
-        /* Ignore the warning */
-        (void)u8dummyData;
+        SERCOM4_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk;
 
         if(sercom4USARTObj.rxCallback != NULL)
         {
             sercom4USARTObj.rxCallback(sercom4USARTObj.rxContext);
         }
+
+        /* In case of errors are not cleared by client using ErrorGet API */
+        SERCOM4_USART_ErrorClear();
     }
 }
 
