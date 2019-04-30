@@ -1,20 +1,22 @@
 /*******************************************************************************
-  NVIC PLIB Implementation
+  Non-Volatile Memory Controller(NVMCTRL) PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_nvic.c
+    plib_nvmctrl.h
 
   Summary:
-    NVIC PLIB Source File
+    Interface definition of NVMCTRL Plib.
 
   Description:
-    None
-
+    This file defines the interface for the NVMCTRL Plib.
+    It allows user to Program, Erase and lock the on-chip Non Volatile Flash
+    Memory.
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -37,30 +39,74 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
+
+#ifndef PLIB_NVMCTRL_H
+#define PLIB_NVMCTRL_H
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
 
 #include "device.h"
-#include "plib_nvic.h"
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus // Provide C++ Compatibility
+ extern "C" {
+#endif
+
+// DOM-IGNORE-END
+
+#define NVMCTRL_FLASH_START_ADDRESS        (0x00000000U)
+#define NVMCTRL_FLASH_SIZE                 (0x40000U)
+#define NVMCTRL_FLASH_PAGESIZE             (64U)
+#define NVMCTRL_FLASH_ROWSIZE              (256U)
 
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: NVIC Implementation
-// *****************************************************************************
-// *****************************************************************************
 
-void NVIC_Initialize( void )
+typedef enum
 {
+    /* No error */
+    NVMCTRL_ERROR_NONE = 0x0,
 
-    /* Enable NVIC Controller */
-    __DMB();
-    __enable_irq();
+    /* NVMCTRL invalid commands and/or bad keywords error */
+    NVMCTRL_ERROR_PROG = 0x4,
 
-    /* Enable the interrupt sources and configure the priorities as configured
-     * from within the "Interrupt Manager" of MHC. */
-    NVIC_SetPriority(SERCOM1_IRQn, 3);
-    NVIC_EnableIRQ(SERCOM1_IRQn);
+    /* NVMCTRL lock error */
+    NVMCTRL_ERROR_LOCK = 0x8,
+
+    /* NVMCTRL programming or erase error */
+    NVMCTRL_ERROR_NVM = 0x10,
+
+} NVMCTRL_ERROR;
 
 
+void NVMCTRL_Initialize(void);
 
-    return;
+bool NVMCTRL_Read( uint32_t *data, uint32_t length, uint32_t address );
+
+bool NVMCTRL_PageWrite( uint32_t* data, uint32_t address );
+
+bool NVMCTRL_RowErase( uint32_t address );
+NVMCTRL_ERROR NVMCTRL_ErrorGet( void );
+
+bool NVMCTRL_IsBusy( void );
+
+void NVMCTRL_RegionLock (uint32_t address);
+
+void NVMCTRL_RegionUnlock (uint32_t address);
+
+
+void NVMCTRL_CacheInvalidate ( void );
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus // Provide C++ Compatibility
 }
+#endif
+// DOM-IGNORE-END
+#endif // PLIB_NVMCTRL_H

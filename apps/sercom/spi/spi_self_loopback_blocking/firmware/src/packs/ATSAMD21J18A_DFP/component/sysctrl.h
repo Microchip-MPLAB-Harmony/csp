@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-11-30T03:32:41Z */
+/* file generated from device description version 2019-04-17T15:38:52Z */
 #ifndef _SAMD21_SYSCTRL_COMPONENT_H_
 #define _SAMD21_SYSCTRL_COMPONENT_H_
 
@@ -328,22 +328,22 @@
 #define SYSCTRL_XOSC32K_STARTUP_Pos           _U_(8)                                               /**< (SYSCTRL_XOSC32K) Oscillator Start-Up Time Position */
 #define SYSCTRL_XOSC32K_STARTUP_Msk           (_U_(0x7) << SYSCTRL_XOSC32K_STARTUP_Pos)            /**< (SYSCTRL_XOSC32K) Oscillator Start-Up Time Mask */
 #define SYSCTRL_XOSC32K_STARTUP(value)        (SYSCTRL_XOSC32K_STARTUP_Msk & ((value) << SYSCTRL_XOSC32K_STARTUP_Pos))
-#define   SYSCTRL_XOSC32K_STARTUP_CYCLE3_Val  _U_(0x0)                                             /**< (SYSCTRL_XOSC32K) 0.092 ms  */
-#define   SYSCTRL_XOSC32K_STARTUP_CYCLE4_Val  _U_(0x1)                                             /**< (SYSCTRL_XOSC32K) 0.122 ms  */
-#define   SYSCTRL_XOSC32K_STARTUP_CYCLE6_Val  _U_(0x2)                                             /**< (SYSCTRL_XOSC32K) 0.183 ms  */
-#define   SYSCTRL_XOSC32K_STARTUP_CYCLE10_Val _U_(0x3)                                             /**< (SYSCTRL_XOSC32K) 0.305 ms  */
-#define   SYSCTRL_XOSC32K_STARTUP_CYCLE18_Val _U_(0x4)                                             /**< (SYSCTRL_XOSC32K) 0.549 ms  */
-#define   SYSCTRL_XOSC32K_STARTUP_CYCLE34_Val _U_(0x5)                                             /**< (SYSCTRL_XOSC32K) 1.038 ms  */
-#define   SYSCTRL_XOSC32K_STARTUP_CYCLE66_Val _U_(0x6)                                             /**< (SYSCTRL_XOSC32K) 2.014 ms  */
-#define   SYSCTRL_XOSC32K_STARTUP_CYCLE130_Val _U_(0x7)                                             /**< (SYSCTRL_XOSC32K) 3.967 ms  */
-#define SYSCTRL_XOSC32K_STARTUP_CYCLE3        (SYSCTRL_XOSC32K_STARTUP_CYCLE3_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 0.092 ms Position  */
-#define SYSCTRL_XOSC32K_STARTUP_CYCLE4        (SYSCTRL_XOSC32K_STARTUP_CYCLE4_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 0.122 ms Position  */
-#define SYSCTRL_XOSC32K_STARTUP_CYCLE6        (SYSCTRL_XOSC32K_STARTUP_CYCLE6_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 0.183 ms Position  */
-#define SYSCTRL_XOSC32K_STARTUP_CYCLE10       (SYSCTRL_XOSC32K_STARTUP_CYCLE10_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 0.305 ms Position  */
-#define SYSCTRL_XOSC32K_STARTUP_CYCLE18       (SYSCTRL_XOSC32K_STARTUP_CYCLE18_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 0.549 ms Position  */
-#define SYSCTRL_XOSC32K_STARTUP_CYCLE34       (SYSCTRL_XOSC32K_STARTUP_CYCLE34_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 1.038 ms Position  */
-#define SYSCTRL_XOSC32K_STARTUP_CYCLE66       (SYSCTRL_XOSC32K_STARTUP_CYCLE66_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 2.014 ms Position  */
-#define SYSCTRL_XOSC32K_STARTUP_CYCLE130      (SYSCTRL_XOSC32K_STARTUP_CYCLE130_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 3.967 ms Position  */
+#define   SYSCTRL_XOSC32K_STARTUP_CYCLE1_Val  _U_(0x0)                                             /**< (SYSCTRL_XOSC32K) 0.112 ms  */
+#define   SYSCTRL_XOSC32K_STARTUP_CYCLE32_Val _U_(0x1)                                             /**< (SYSCTRL_XOSC32K) 1.068 ms  */
+#define   SYSCTRL_XOSC32K_STARTUP_CYCLE2048_Val _U_(0x2)                                             /**< (SYSCTRL_XOSC32K) 62.592 ms  */
+#define   SYSCTRL_XOSC32K_STARTUP_CYCLE4096_Val _U_(0x3)                                             /**< (SYSCTRL_XOSC32K) 125.092 ms  */
+#define   SYSCTRL_XOSC32K_STARTUP_CYCLE16384_Val _U_(0x4)                                             /**< (SYSCTRL_XOSC32K) 500.092 ms  */
+#define   SYSCTRL_XOSC32K_STARTUP_CYCLE32768_Val _U_(0x5)                                             /**< (SYSCTRL_XOSC32K) 1000.092 ms  */
+#define   SYSCTRL_XOSC32K_STARTUP_CYCLE65536_Val _U_(0x6)                                             /**< (SYSCTRL_XOSC32K) 2000.092 ms  */
+#define   SYSCTRL_XOSC32K_STARTUP_CYCLE131072_Val _U_(0x7)                                             /**< (SYSCTRL_XOSC32K) 4000.092 ms  */
+#define SYSCTRL_XOSC32K_STARTUP_CYCLE1        (SYSCTRL_XOSC32K_STARTUP_CYCLE1_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 0.112 ms Position  */
+#define SYSCTRL_XOSC32K_STARTUP_CYCLE32       (SYSCTRL_XOSC32K_STARTUP_CYCLE32_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 1.068 ms Position  */
+#define SYSCTRL_XOSC32K_STARTUP_CYCLE2048     (SYSCTRL_XOSC32K_STARTUP_CYCLE2048_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 62.592 ms Position  */
+#define SYSCTRL_XOSC32K_STARTUP_CYCLE4096     (SYSCTRL_XOSC32K_STARTUP_CYCLE4096_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 125.092 ms Position  */
+#define SYSCTRL_XOSC32K_STARTUP_CYCLE16384    (SYSCTRL_XOSC32K_STARTUP_CYCLE16384_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 500.092 ms Position  */
+#define SYSCTRL_XOSC32K_STARTUP_CYCLE32768    (SYSCTRL_XOSC32K_STARTUP_CYCLE32768_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 1000.092 ms Position  */
+#define SYSCTRL_XOSC32K_STARTUP_CYCLE65536    (SYSCTRL_XOSC32K_STARTUP_CYCLE65536_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 2000.092 ms Position  */
+#define SYSCTRL_XOSC32K_STARTUP_CYCLE131072   (SYSCTRL_XOSC32K_STARTUP_CYCLE131072_Val << SYSCTRL_XOSC32K_STARTUP_Pos) /**< (SYSCTRL_XOSC32K) 4000.092 ms Position  */
 #define SYSCTRL_XOSC32K_WRTLOCK_Pos           _U_(12)                                              /**< (SYSCTRL_XOSC32K) Write Lock Position */
 #define SYSCTRL_XOSC32K_WRTLOCK_Msk           (_U_(0x1) << SYSCTRL_XOSC32K_WRTLOCK_Pos)            /**< (SYSCTRL_XOSC32K) Write Lock Mask */
 #define SYSCTRL_XOSC32K_WRTLOCK(value)        (SYSCTRL_XOSC32K_WRTLOCK_Msk & ((value) << SYSCTRL_XOSC32K_WRTLOCK_Pos))
