@@ -54,6 +54,7 @@
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
 #include "peripheral/mcan/plib_mcan1.h"
+#include "peripheral/efc/plib_efc.h"
 #include "peripheral/usart/plib_usart1.h"
 
 // DOM-IGNORE-BEGIN

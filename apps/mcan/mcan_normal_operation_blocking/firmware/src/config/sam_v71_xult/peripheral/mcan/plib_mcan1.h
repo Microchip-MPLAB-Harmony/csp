@@ -99,6 +99,8 @@ MCAN_ERROR MCAN1_ErrorGet(void);
 bool MCAN1_InterruptGet(MCAN_INTERRUPT_MASK interruptMask);
 void MCAN1_InterruptClear(MCAN_INTERRUPT_MASK interruptMask);
 void MCAN1_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);
+bool MCAN1_StandardFilterElementSet(uint8_t filterNumber, mcan_sidfe_registers_t *stdMsgIDFilterElement);
+bool MCAN1_StandardFilterElementGet(uint8_t filterNumber, mcan_sidfe_registers_t *stdMsgIDFilterElement);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
