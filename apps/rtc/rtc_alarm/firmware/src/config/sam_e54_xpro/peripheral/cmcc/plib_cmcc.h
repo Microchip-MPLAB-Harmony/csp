@@ -1,22 +1,21 @@
 /*******************************************************************************
-  Interface definition of EVSYS PLIB.
+  Interface definition of CMCC PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_evsys.h
+    plib_cmcc.h
 
   Summary:
-    Interface definition of the Event System Plib (EVSYS).
+    Interface definition of the CMCC(Cortex M Cache Controller) Peripheral Library
 
   Description:
-    This file defines the interface for the EVSYS Plib.
-    It allows user to setup event generators and users.
+    This file defines the interface for the CMCC Plib.
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -38,15 +37,12 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef EVSYS_H    // Guards against multiple inclusion
-#define EVSYS_H
+#ifndef PLIB_CMCC_H    // Guards against multiple inclusion
+#define PLIB_CMCC_H
 
-#include "device.h"
-#include <stdint.h>
-#include <stddef.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
- extern "C" {
+	extern "C" {
 #endif
 
 
@@ -56,13 +52,19 @@
 // *****************************************************************************
 // *****************************************************************************
 
+#define CMCC_NO_OF_WAYS     4
+#define CMCC_LINE_PER_WAY   64
+#define CMCC_LINE_SIZE      16
+#define CMCC_WAY_SIZE       1024
 
+/***************************** CMCC API *******************************/
+void CMCC_Disable (void );
+void CMCC_EnableDCache (void );
+void CMCC_DisableDCache (void );
 
-/***************************** EVSYS API *******************************/
-void EVSYS_Initialize( void );
+void CMCC_EnableICache (void );
+void CMCC_DisableICache (void );
 
-#ifdef __cplusplus // Provide C++ Compatibility
- }
-#endif
+void CMCC_InvalidateAll (void );
 
 #endif
