@@ -70,6 +70,17 @@ void PAC_Initialize( void )
 {
 }
 
+bool PAC_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
+{
+    bool status = false;
+    uint32_t *statusRegBaseAddr = (uint32_t*) &(PAC_REGS->PAC_STATUSA);
+
+    /* Verify if the peripheral is protected or not */
+    status = (bool)((*(statusRegBaseAddr + (peripheral / 32))) & (1 << (peripheral % 32)));
+
+    return status;
+}
+
 void PAC_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation )
 {
     /* Set Peripheral Access Control */
