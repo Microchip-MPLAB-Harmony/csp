@@ -105,9 +105,6 @@ void SQI1_Initialize(void)
     SQI1MEMSTAT     = SQI1_MEMSTAT_STATCMD_VAL | SQI1_MEMSTAT_STATBYTES_VAL |
                       SQI1_MEMSTAT_STATTYPE_VAL | SQI1_MEMSTAT_STATPOS_VAL;
 
-    // Disable SDHC Peripheral as SQI and SDHC share Port Pins
-    PMD6SET = _PMD6_SDHCMD_MASK;
-
     IEC5SET         = SQI1_INTERRUPT_ENABLE_MASK;
 
 }
