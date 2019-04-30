@@ -43,15 +43,6 @@
 
 static void SYSCTRL_Initialize(void)
 {
-
-	/* Configure 8MHz Oscillator */
-    SYSCTRL_REGS->SYSCTRL_OSC8M = (SYSCTRL_REGS->SYSCTRL_OSC8M & (SYSCTRL_OSC8M_CALIB_Msk | SYSCTRL_OSC8M_FRANGE_Msk)) | SYSCTRL_OSC8M_ENABLE_Msk | SYSCTRL_OSC8M_PRESC(0x0) ;
-
-    while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC8MRDY_Msk) != SYSCTRL_PCLKSR_OSC8MRDY_Msk)
-    {
-        /* Waiting for the OSC8M Ready state */
-    }
-
     /****************** XOSC32K initialization  ******************************/
 
     /* Configure 32K External Oscillator */
@@ -69,7 +60,7 @@ static void SYSCTRL_Initialize(void)
 static void DFLL_Initialize(void)
 {
     /****************** DFLL Initialization  *********************************/
-    SYSCTRL_REGS->SYSCTRL_DFLLCTRL = 0 ;
+    SYSCTRL_REGS->SYSCTRL_DFLLCTRL &= ~SYSCTRL_DFLLCTRL_ONDEMAND_Msk;
 
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLRDY_Msk) != SYSCTRL_PCLKSR_DFLLRDY_Msk)
     {
@@ -121,9 +112,6 @@ static void GCLK1_Initialize(void)
 
 void CLOCK_Initialize (void)
 {
-    /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLB |= NVMCTRL_CTRLB_RWS(NVMCTRL_CTRLB_RWS_DUAL_Val);
-
     /* Function to Initialize the Oscillators */
     SYSCTRL_Initialize();
 
@@ -149,4 +137,7 @@ void CLOCK_Initialize (void)
     /* Configure the APBC Bridge Clocks */
     PM_REGS->PM_APBCMASK = 0x70820;
 
+
+    /*Disable RC oscillator*/
+    SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0;
 }
