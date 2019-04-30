@@ -107,7 +107,7 @@ void ADC_Initialize( void )
         | ADC_INPUTCTRL_INPUTSCAN(0) | ADC_INPUTCTRL_INPUTOFFSET(0) | ADC_INPUTCTRL_GAIN_1X;
 
     /* Prescaler, Resolution & Operation Mode */
-    ADC_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_DIV32 | ADC_CTRLB_RESSEL_12BIT ;
+    ADC_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_DIV128 | ADC_CTRLB_RESSEL_12BIT ;
 
 
     /* Window mode configurations */
@@ -184,6 +184,16 @@ void ADC_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
         /* Wait for Synchronization */
     }
 }
+
+void ADC_WindowModeSet(ADC_WINMODE mode)
+{
+    ADC_REGS->ADC_WINCTRL = mode << ADC_WINCTRL_WINMODE_Pos;
+    while(ADC_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+}
+
 
 /* Read the conversion result */
 uint16_t ADC_ConversionResultGet( void )
