@@ -75,6 +75,8 @@ bool SERCOM4_USART_Write( void *buffer, const size_t size );
 
 bool SERCOM4_USART_TransmitterIsReady( void );
 
+bool SERCOM4_USART_TransmitComplete( void );
+
 void SERCOM4_USART_WriteByte( int data );
 
 bool SERCOM4_USART_Read( void *buffer, const size_t size );
