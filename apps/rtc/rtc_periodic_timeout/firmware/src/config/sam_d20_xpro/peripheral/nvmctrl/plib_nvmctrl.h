@@ -1,21 +1,21 @@
 /*******************************************************************************
-  Real Time Counter (RTC) PLIB
+  Non-Volatile Memory Controller(NVMCTRL) PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_rtc.h
+    plib_nvmctrl.h
 
   Summary:
-    RTC PLIB Header file
+    Interface definition of NVMCTRL Plib.
 
   Description:
-    This file defines the interface to the RTC peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
-
+    This file defines the interface for the NVMCTRL Plib.
+    It allows user to Program, Erase and lock the on-chip Non Volatile Flash
+    Memory.
 *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
@@ -41,57 +41,72 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_RTC_H
-#define PLIB_RTC_H
+#ifndef PLIB_NVMCTRL_H
+#define PLIB_NVMCTRL_H
 
-#include <stddef.h>
-#include <stdbool.h>
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
+#include "device.h"
 #include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-extern "C" {
+ extern "C" {
 #endif
+
 // DOM-IGNORE-END
 
-/* Frequency of Counter Clock for RTC */
-#define RTC_COUNTER_CLOCK_FREQUENCY        (1024 / (1 << (0x0)))
+#define NVMCTRL_FLASH_START_ADDRESS        (0x00000000U)
+#define NVMCTRL_FLASH_SIZE                 (0x40000U)
+#define NVMCTRL_FLASH_PAGESIZE             (64U)
+#define NVMCTRL_FLASH_ROWSIZE              (256U)
+
+
 
 typedef enum
 {
-    RTC_TIMER32_INT_MASK_COMPARE_MATCH = 0x0001,
-    RTC_TIMER32_INT_MASK_COUNTER_OVERFLOW = 0x0080,
-} RTC_TIMER32_INT_MASK;
+    /* No error */
+    NVMCTRL_ERROR_NONE = 0x0,
 
-typedef void (*RTC_TIMER32_CALLBACK)( RTC_TIMER32_INT_MASK intCause, uintptr_t context );
+    /* NVMCTRL invalid commands and/or bad keywords error */
+    NVMCTRL_ERROR_PROG = 0x4,
+
+    /* NVMCTRL lock error */
+    NVMCTRL_ERROR_LOCK = 0x8,
+
+    /* NVMCTRL programming or erase error */
+    NVMCTRL_ERROR_NVM = 0x10,
+
+} NVMCTRL_ERROR;
 
 
-typedef struct
-{
-    /* Timer 32Bit */
-    RTC_TIMER32_CALLBACK timer32BitCallback;
-    RTC_TIMER32_INT_MASK timer32intCause;
-    uintptr_t context;
-} RTC_OBJECT;
+void NVMCTRL_Initialize(void);
 
-void RTC_Initialize(void);
+bool NVMCTRL_Read( uint32_t *data, uint32_t length, uint32_t address );
 
-void RTC_Timer32Start ( void );
-void RTC_Timer32Stop ( void );
-void RTC_Timer32CounterSet ( uint32_t count );
-uint32_t RTC_Timer32CounterGet ( void );
-uint32_t RTC_Timer32FrequencyGet ( void );
-void RTC_Timer32CompareSet ( uint32_t compareValue );
-uint32_t RTC_Timer32PeriodGet ( void );
-void RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK interrupt);
-void RTC_Timer32InterruptDisable(RTC_TIMER32_INT_MASK interrupt);
+bool NVMCTRL_PageWrite( uint32_t* data, uint32_t address );
 
-void RTC_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t context );
+bool NVMCTRL_RowErase( uint32_t address );
+NVMCTRL_ERROR NVMCTRL_ErrorGet( void );
+
+bool NVMCTRL_IsBusy( void );
+
+void NVMCTRL_RegionLock (uint32_t address);
+
+void NVMCTRL_RegionUnlock (uint32_t address);
+
+
+void NVMCTRL_CacheInvalidate ( void );
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+#ifdef __cplusplus // Provide C++ Compatibility
 }
 #endif
 // DOM-IGNORE-END
-
-#endif /* PLIB_RTC_H */
+#endif // PLIB_NVMCTRL_H
