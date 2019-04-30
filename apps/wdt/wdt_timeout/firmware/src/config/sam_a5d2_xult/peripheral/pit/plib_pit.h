@@ -323,27 +323,6 @@ void PIT_TimerCallbackSet(PIT_CALLBACK callback, uintptr_t context);
 
 // *****************************************************************************
 /* Function:
-    void PIT_InterruptHandler(void);
-
-  Summary:
-    PIT Interrupt Handler.
-
-  Description:
-    Internal PIT interrupt handler called by interrupt controller.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-  
-  Returns:
-    None.
-*/
-void PIT_InterruptHandler(void);
-
-// *****************************************************************************
-/* Function:
     void PIT_ClearInterrupt(void);
 
   Summary:

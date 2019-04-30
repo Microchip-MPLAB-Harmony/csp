@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.30.1.17146</state>
+                    <state>8.32.3.20186</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>50</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>50</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>50</state>
                 </option>
                 <option>
@@ -215,7 +215,7 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>34</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -473,6 +473,10 @@
                     <name>IccRTTI2</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OICompilerExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -621,7 +625,12 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\..\firmware\src</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -693,7 +702,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>21</version>
+                <version>22</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -774,7 +783,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$/../../firmware/src/config/sam_a5d2_xult/ddr.icf</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\ddr.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1009,6 +1018,10 @@
                     <name>IlinkTrustzoneImportLibraryOut</name>
                     <state>wdt_timeout_sam_a5d2_xult_import_lib.o</state>
                 </option>
+                <option>
+                    <name>OILinkExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1034,6 +1047,11 @@
         </settings>
         <settings>
             <name>BILINK</name>
+            <archiveVersion>0</archiveVersion>
+            <data />
+        </settings>
+        <settings>
+            <name>Coder</name>
             <archiveVersion>0</archiveVersion>
             <data />
         </settings>
@@ -1153,7 +1171,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1170,7 +1188,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1193,7 +1211,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1252,7 +1270,7 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>34</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1510,6 +1528,10 @@
                     <name>IccRTTI2</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OICompilerExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1658,7 +1680,12 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\..\firmware\src</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1730,7 +1757,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>21</version>
+                <version>22</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1811,7 +1838,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$/../../firmware/src/config/sam_a5d2_xult/ddr.icf</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\ddr.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2046,6 +2073,10 @@
                     <name>IlinkTrustzoneImportLibraryOut</name>
                     <state>###Unitialized###</state>
                 </option>
+                <option>
+                    <name>OILinkExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -2071,6 +2102,11 @@
         </settings>
         <settings>
             <name>BILINK</name>
+            <archiveVersion>0</archiveVersion>
+            <data />
+        </settings>
+        <settings>
+            <name>Coder</name>
             <archiveVersion>0</archiveVersion>
             <data />
         </settings>
