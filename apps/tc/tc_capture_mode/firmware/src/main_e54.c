@@ -52,7 +52,7 @@
 #include "definitions.h"                // SYS function prototypes
 
 /* Input waveform - compare value increment*/
-#define CMP_VAL_INCREMENT (600U)
+#define CMP_VAL_INCREMENT (375U)
 
 /* Calculated duty cycle of the input waveform in %*/
 uint32_t duty;

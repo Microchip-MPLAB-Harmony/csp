@@ -81,13 +81,13 @@ void TC0_CompareInitialize( void )
     }
 
     /* Configure counter mode & prescaler */
-    TC0_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_PRESCSYNC_PRESC ;
+    TC0_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV2 | TC_CTRLA_PRESCSYNC_PRESC ;
 
     /* Configure waveform generation mode */
     TC0_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_MPWM;
 
 
-    TC0_REGS->COUNT16.TC_CC[0] = 60000U;
+    TC0_REGS->COUNT16.TC_CC[0] = 37500U;
     TC0_REGS->COUNT16.TC_CC[1] = 0U;
 
     /* Clear all interrupt flags */
@@ -122,7 +122,7 @@ void TC0_CompareStop( void )
 
 uint32_t TC0_CompareFrequencyGet( void )
 {
-    return (uint32_t)(48000000UL);
+    return (uint32_t)(30000000UL);
 }
 
 /* Get the current counter value */
