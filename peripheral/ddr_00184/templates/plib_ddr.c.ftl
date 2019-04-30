@@ -66,26 +66,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define round_up(x,y) (((x) + (y) - 1) / (y))
 #endif
 
-static void DDR_PMD_Init(void)
-{
-	//PLIB_DEVCON_SystemUnlock(DEVCON_ID_0);
-	SYSKEY = 0x00000000;
-	SYSKEY = 0xAA996655;
-	SYSKEY = 0x556699AA;
-	
-	//PLIB_DEVCON_DeviceRegistersUnlock(DEVCON_ID_0, DEVCON_PMD_REGISTERS);
-	//*((SFR_TYPE *)(&CFGCON)) &= ~((_CFGCON_IOLOCK_MASK | _CFGCON_PMDLOCK_MASK | _CFGCON_PGLOCK_MASK ) & (DEVCON_PMD_REGISTERS << _CFGCON_PGLOCK_POSITION));
-	CFGCON &= ~((_CFGCON_IOLOCK_MASK | _CFGCON_PMDLOCK_MASK | _CFGCON_PGLOCK_MASK ) & (DEVCON_PMD_REGISTERS << _CFGCON_PGLOCK_POSITION));
-	
-	//PLIB_POWER_PeripheralModuleEnable(POWER_ID_0, POWER_MODULE_DDR2);
-    volatile uint32_t *pmdRegister = (uint32_t *)(&PMD1 + ((POWER_MODULE_DDR2/32u) * 4u));
-    uint8_t pmdPosition = POWER_MODULE_DDR2 % 32u;
-    *pmdRegister &=  ~(1u << pmdPosition);
-	
-	//PLIB_DEVCON_SystemLock(DEVCON_ID_0);
-	SYSKEY = 0x33333333;
-}
-
 static void DDR_Init(void)
 {
     uint32_t tmp;
@@ -366,7 +346,6 @@ static void DDR_PHY_Calib(void)
 
 void DDR_Initialize(void)
 {
-	DDR_PMD_Init();
     DDR_PHY_Init();
     DDR_Init();
 	DDR_PHY_Calib();
