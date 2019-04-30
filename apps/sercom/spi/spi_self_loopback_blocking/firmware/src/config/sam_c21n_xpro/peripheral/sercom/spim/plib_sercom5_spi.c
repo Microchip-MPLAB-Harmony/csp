@@ -53,11 +53,12 @@
 // *****************************************************************************
 // *****************************************************************************
 
+
 /* SERCOM5 clk freq value for the baud calculation */
 #define SERCOM5_Frequency      (uint32_t) (48000000UL)
 
 /* SERCOM5 SPI baud value for 1000000 Hz baud rate */
-#define SERCOM5_SPIM_BAUD_VALUE			(23U)
+#define SERCOM5_SPIM_BAUD_VALUE         (23U)
 
 
 // *****************************************************************************
@@ -254,7 +255,14 @@ bool SERCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveDa
         }
 
         /* Flush out any unread data in SPI DATA Register from the previous transfer */
-        receivedData = SERCOM5_REGS->SPIM.SERCOM_DATA;
+        while(SERCOM5_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_RXC_Msk)
+        {
+            receivedData = SERCOM5_REGS->SPIM.SERCOM_DATA;
+        }
+
+        SERCOM5_REGS->SPIM.SERCOM_STATUS |= SERCOM_SPIM_STATUS_BUFOVF_Msk;
+
+        SERCOM5_REGS->SPIM.SERCOM_INTFLAG |= SERCOM_SPIM_INTFLAG_ERROR_Msk;
 
         if(rxSize > txSize)
         {
