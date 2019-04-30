@@ -1,7 +1,7 @@
 /**
  * \brief Component description for ADC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-07-02T17:30:16Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22_ADC_COMPONENT_H_
 #define _SAML22_ADC_COMPONENT_H_
 
@@ -202,12 +202,10 @@
 #define   ADC_INPUTCTRL_MUXPOS_AIN17_Val      _U_(0x11)                                            /**< (ADC_INPUTCTRL) ADC AIN17 Pin  */
 #define   ADC_INPUTCTRL_MUXPOS_AIN18_Val      _U_(0x12)                                            /**< (ADC_INPUTCTRL) ADC AIN18 Pin  */
 #define   ADC_INPUTCTRL_MUXPOS_AIN19_Val      _U_(0x13)                                            /**< (ADC_INPUTCTRL) ADC AIN19 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_TEMP_Val       _U_(0x18)                                            /**< (ADC_INPUTCTRL) Temperature Sensor  */
 #define   ADC_INPUTCTRL_MUXPOS_BANDGAP_Val    _U_(0x19)                                            /**< (ADC_INPUTCTRL) Bandgap Voltage  */
 #define   ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC_Val _U_(0x1A)                                            /**< (ADC_INPUTCTRL) 1/4 Scaled Core Supply  */
 #define   ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC_Val _U_(0x1B)                                            /**< (ADC_INPUTCTRL) 1/4 Scaled I/O Supply  */
 #define   ADC_INPUTCTRL_MUXPOS_SCALEDVBAT_Val _U_(0x1D)                                            /**< (ADC_INPUTCTRL) 1/4 Scaled VBAT Supply  */
-#define   ADC_INPUTCTRL_MUXPOS_CTAT_Val       _U_(0x1E)                                            /**< (ADC_INPUTCTRL) CTAT output  */
 #define ADC_INPUTCTRL_MUXPOS_AIN0             (ADC_INPUTCTRL_MUXPOS_AIN0_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN0 Pin Position  */
 #define ADC_INPUTCTRL_MUXPOS_AIN1             (ADC_INPUTCTRL_MUXPOS_AIN1_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN1 Pin Position  */
 #define ADC_INPUTCTRL_MUXPOS_AIN2             (ADC_INPUTCTRL_MUXPOS_AIN2_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN2 Pin Position  */
@@ -228,12 +226,10 @@
 #define ADC_INPUTCTRL_MUXPOS_AIN17            (ADC_INPUTCTRL_MUXPOS_AIN17_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN17 Pin Position  */
 #define ADC_INPUTCTRL_MUXPOS_AIN18            (ADC_INPUTCTRL_MUXPOS_AIN18_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN18 Pin Position  */
 #define ADC_INPUTCTRL_MUXPOS_AIN19            (ADC_INPUTCTRL_MUXPOS_AIN19_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN19 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_TEMP             (ADC_INPUTCTRL_MUXPOS_TEMP_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) Temperature Sensor Position  */
 #define ADC_INPUTCTRL_MUXPOS_BANDGAP          (ADC_INPUTCTRL_MUXPOS_BANDGAP_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) Bandgap Voltage Position  */
 #define ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC    (ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) 1/4 Scaled Core Supply Position  */
 #define ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC      (ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) 1/4 Scaled I/O Supply Position  */
 #define ADC_INPUTCTRL_MUXPOS_SCALEDVBAT       (ADC_INPUTCTRL_MUXPOS_SCALEDVBAT_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) 1/4 Scaled VBAT Supply Position  */
-#define ADC_INPUTCTRL_MUXPOS_CTAT             (ADC_INPUTCTRL_MUXPOS_CTAT_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) CTAT output Position  */
 #define ADC_INPUTCTRL_MUXNEG_Pos              _U_(8)                                               /**< (ADC_INPUTCTRL) Negative Mux Input Selection Position */
 #define ADC_INPUTCTRL_MUXNEG_Msk              (_U_(0x1F) << ADC_INPUTCTRL_MUXNEG_Pos)              /**< (ADC_INPUTCTRL) Negative Mux Input Selection Mask */
 #define ADC_INPUTCTRL_MUXNEG(value)           (ADC_INPUTCTRL_MUXNEG_Msk & ((value) << ADC_INPUTCTRL_MUXNEG_Pos))
@@ -245,6 +241,7 @@
 #define   ADC_INPUTCTRL_MUXNEG_AIN5_Val       _U_(0x5)                                             /**< (ADC_INPUTCTRL) ADC AIN5 Pin  */
 #define   ADC_INPUTCTRL_MUXNEG_AIN6_Val       _U_(0x6)                                             /**< (ADC_INPUTCTRL) ADC AIN6 Pin  */
 #define   ADC_INPUTCTRL_MUXNEG_AIN7_Val       _U_(0x7)                                             /**< (ADC_INPUTCTRL) ADC AIN7 Pin  */
+#define   ADC_INPUTCTRL_MUXNEG_GND_Val        _U_(0x18)                                            /**< (ADC_INPUTCTRL) Internal ground  */
 #define ADC_INPUTCTRL_MUXNEG_AIN0             (ADC_INPUTCTRL_MUXNEG_AIN0_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN0 Pin Position  */
 #define ADC_INPUTCTRL_MUXNEG_AIN1             (ADC_INPUTCTRL_MUXNEG_AIN1_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN1 Pin Position  */
 #define ADC_INPUTCTRL_MUXNEG_AIN2             (ADC_INPUTCTRL_MUXNEG_AIN2_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN2 Pin Position  */
@@ -253,6 +250,7 @@
 #define ADC_INPUTCTRL_MUXNEG_AIN5             (ADC_INPUTCTRL_MUXNEG_AIN5_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN5 Pin Position  */
 #define ADC_INPUTCTRL_MUXNEG_AIN6             (ADC_INPUTCTRL_MUXNEG_AIN6_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN6 Pin Position  */
 #define ADC_INPUTCTRL_MUXNEG_AIN7             (ADC_INPUTCTRL_MUXNEG_AIN7_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN7 Pin Position  */
+#define ADC_INPUTCTRL_MUXNEG_GND              (ADC_INPUTCTRL_MUXNEG_GND_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) Internal ground Position  */
 #define ADC_INPUTCTRL_Msk                     _U_(0x1F1F)                                          /**< (ADC_INPUTCTRL) Register Mask  */
 
 
