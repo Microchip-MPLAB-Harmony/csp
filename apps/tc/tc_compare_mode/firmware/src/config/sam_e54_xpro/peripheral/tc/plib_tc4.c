@@ -87,7 +87,7 @@ void TC4_CompareInitialize( void )
     TC4_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_MPWM;
 
 
-    TC4_REGS->COUNT16.TC_CC[0] = 10000U;
+    TC4_REGS->COUNT16.TC_CC[0] = 12500U;
     TC4_REGS->COUNT16.TC_CC[1] = 3000U;
 
     /* Clear all interrupt flags */
@@ -122,7 +122,7 @@ void TC4_CompareStop( void )
 
 uint32_t TC4_CompareFrequencyGet( void )
 {
-    return (uint32_t)(750000UL);
+    return (uint32_t)(937500UL);
 }
 
 /* Get the current counter value */
