@@ -54,6 +54,7 @@
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/systick/plib_systick.h"
 #include "peripheral/supc/plib_supc.h"
+#include "peripheral/efc/plib_efc.h"
 #include "peripheral/rtc/plib_rtc.h"
 #include "peripheral/usart/plib_usart1.h"
 
