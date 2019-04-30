@@ -9,78 +9,82 @@
             <Dynamic dnOrder="0" id="core" value="8000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="1" id="BACKUP_CLOCK_FREQUENCY_WARNING">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="false"/>
-          </Values>
-        </Boolean>
-        <KeyValueSet dnOrder="2" id="COMPILER_CHOICE">
+        <KeyValueSet dnOrder="1" id="COMPILER_CHOICE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Combo dnOrder="3" id="COMPONENT_PACKAGE">
+        <Combo dnOrder="2" id="COMPONENT_PACKAGE">
           <Values dnOrder="0">
             <User dnOrder="0" value="TQFP100"/>
           </Values>
         </Combo>
-        <Boolean dnOrder="4" id="CONFIG_CLOCK_DPLL_ENABLE">
+        <Boolean dnOrder="3" id="CONFIG_CLOCK_DPLL_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="5" id="CONFIG_CLOCK_DPLL_LDR_INTEGER">
+        <Integer dnOrder="4" id="CONFIG_CLOCK_DPLL_LDR_INTEGER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="63"/>
           </Values>
         </Integer>
-        <Float dnOrder="6" id="CONFIG_CLOCK_DPLL_MULTIPLIER_VALUE">
+        <Float dnOrder="5" id="CONFIG_CLOCK_DPLL_MULTIPLIER_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="64.0"/>
           </Values>
         </Float>
-        <KeyValueSet dnOrder="7" id="CONFIG_CLOCK_DPLL_REF_CLOCK">
+        <KeyValueSet dnOrder="6" id="CONFIG_CLOCK_DPLL_REF_CLOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="2"/>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="8" id="CPU_CLOCK_FREQUENCY">
+        <Integer dnOrder="7" id="CPU_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="32000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="9" id="CPU_CLOCK_FREQUENCY_WARNING">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="false"/>
-          </Values>
-        </Boolean>
-        <KeyValueSet dnOrder="10" id="DEVICE_SECURITY">
+        <Menu dnOrder="8" id="CoreIARMenu">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Menu>
+        <KeyValueSet dnOrder="9" id="DEVICE_SECURITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Boolean dnOrder="11" id="DMAC_ENABLE_CH_0">
+        <Boolean dnOrder="10" id="DMAC_ENABLE_CH_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <File dnOrder="12" id="DMAC_HEADER">
+        <File dnOrder="11" id="DMAC_HEADER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Integer dnOrder="13" id="DMAC_HIGHEST_CHANNEL">
+        <Integer dnOrder="12" id="DMAC_HIGHEST_CHANNEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="14" id="DMAC_INTERRUPT_ENABLE">
+        <Boolean dnOrder="13" id="DMAC_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
+        <Comment dnOrder="14" id="DMAC_INTERRUPT_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
         <Boolean dnOrder="15" id="DMAC_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
@@ -182,81 +186,87 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="34" id="GCLK_CYCLE_FORMED">
+        <ListEntry dnOrder="34" id="GCLK_CODE">
+          <Attributes dnOrder="0">
+            <StringArray dnOrder="0" id="values">
+              <Values dnOrder="0">
+                <Value dnOrder="0">&amp;#160;&amp;#160;&amp;#160;&amp;#160;GCLK1_Initialize();</Value>
+                <Value dnOrder="1">&amp;#160;&amp;#160;&amp;#160;&amp;#160;FDPLL_Initialize();</Value>
+                <Value dnOrder="2">&amp;#160;&amp;#160;&amp;#160;&amp;#160;GCLK0_Initialize();</Value>
+              </Values>
+            </StringArray>
+          </Attributes>
+        </ListEntry>
+        <Boolean dnOrder="35" id="GCLK_CYCLE_FORMED">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="35" id="GCLK_ID_1_CHEN">
+        <Boolean dnOrder="36" id="GCLK_ID_1_CHEN">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="36" id="GCLK_ID_1_FREQ">
+        <Integer dnOrder="37" id="GCLK_ID_1_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1000000"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="37" id="GCLK_ID_1_GENSEL">
+        <KeyValueSet dnOrder="38" id="GCLK_ID_1_GENSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <Boolean dnOrder="38" id="GCLK_ID_20_CHEN">
+        <Boolean dnOrder="39" id="GCLK_ID_20_CHEN">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="39" id="GCLK_ID_20_FREQ">
+        <Integer dnOrder="40" id="GCLK_ID_20_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="32000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="40" id="GCLK_INST_NUM1">
+        <Boolean dnOrder="41" id="GCLK_INST_NUM1">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="41" id="MCLK_APBC_INITIAL_VALUE">
+        <String dnOrder="42" id="MCLK_APBC_INITIAL_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x7ffff"/>
           </Values>
         </String>
-        <Boolean dnOrder="42" id="NVIC_13_0_ENABLE">
+        <Boolean dnOrder="43" id="NVIC_13_0_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="43" id="NVIC_13_0_HANDLER">
+        <String dnOrder="44" id="NVIC_13_0_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="SERCOM4_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="44" id="NVIC_13_0_HANDLER_LOCK">
+        <Boolean dnOrder="45" id="NVIC_13_0_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="45" id="NVIC_7_0_ENABLE">
+        <Boolean dnOrder="46" id="NVIC_7_0_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="46" id="NVIC_7_0_HANDLER">
+        <String dnOrder="47" id="NVIC_7_0_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="DMAC_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="47" id="NVIC_7_0_HANDLER_LOCK">
+        <Boolean dnOrder="48" id="NVIC_7_0_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="48" id="NVM_RWS">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="1"/>
-          </Values>
-        </Integer>
         <Integer dnOrder="49" id="PIN_100_GROUP">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1"/>
@@ -1911,771 +1921,701 @@
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="379" id="PORT_PIN100">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Menu dnOrder="380" id="PORT_PIN11">
+        <Menu dnOrder="379" id="PORT_PIN11">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;11</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="381" id="PORT_PIN12">
+        <Menu dnOrder="380" id="PORT_PIN12">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;12</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="382" id="PORT_PIN13">
+        <Menu dnOrder="381" id="PORT_PIN13">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;13</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="383" id="PORT_PIN14">
+        <Menu dnOrder="382" id="PORT_PIN14">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;14</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="384" id="PORT_PIN15">
+        <Menu dnOrder="383" id="PORT_PIN15">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;15</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="385" id="PORT_PIN16">
+        <Menu dnOrder="384" id="PORT_PIN16">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;16</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="386" id="PORT_PIN17">
+        <Menu dnOrder="385" id="PORT_PIN17">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;17</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="387" id="PORT_PIN18">
+        <Menu dnOrder="386" id="PORT_PIN18">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;18</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="388" id="PORT_PIN19">
+        <Menu dnOrder="387" id="PORT_PIN19">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;19</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="389" id="PORT_PIN2">
+        <Menu dnOrder="388" id="PORT_PIN2">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;2</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="390" id="PORT_PIN20">
+        <Menu dnOrder="389" id="PORT_PIN20">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;20</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="391" id="PORT_PIN21">
+        <Menu dnOrder="390" id="PORT_PIN21">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;21</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="392" id="PORT_PIN22">
+        <Menu dnOrder="391" id="PORT_PIN22">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;22</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="393" id="PORT_PIN23">
+        <Menu dnOrder="392" id="PORT_PIN23">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;23</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="394" id="PORT_PIN24">
+        <Menu dnOrder="393" id="PORT_PIN24">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;24</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="395" id="PORT_PIN25">
+        <Menu dnOrder="394" id="PORT_PIN25">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;25</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="396" id="PORT_PIN26">
+        <Menu dnOrder="395" id="PORT_PIN26">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;26</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="397" id="PORT_PIN27">
+        <Menu dnOrder="396" id="PORT_PIN27">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;27</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="398" id="PORT_PIN28">
+        <Menu dnOrder="397" id="PORT_PIN28">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;28</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="399" id="PORT_PIN29">
+        <Menu dnOrder="398" id="PORT_PIN29">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;29</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="400" id="PORT_PIN3">
+        <Menu dnOrder="399" id="PORT_PIN3">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;3</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="401" id="PORT_PIN30">
+        <Menu dnOrder="400" id="PORT_PIN30">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;30</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="402" id="PORT_PIN31">
+        <Menu dnOrder="401" id="PORT_PIN31">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;31</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="403" id="PORT_PIN32">
+        <Menu dnOrder="402" id="PORT_PIN32">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;32</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="404" id="PORT_PIN33">
+        <Menu dnOrder="403" id="PORT_PIN33">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;33</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="405" id="PORT_PIN34">
+        <Menu dnOrder="404" id="PORT_PIN34">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;34</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="406" id="PORT_PIN35">
+        <Menu dnOrder="405" id="PORT_PIN35">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;35</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="407" id="PORT_PIN36">
+        <Menu dnOrder="406" id="PORT_PIN36">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;36</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="408" id="PORT_PIN37">
+        <Menu dnOrder="407" id="PORT_PIN37">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;37</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="409" id="PORT_PIN38">
+        <Menu dnOrder="408" id="PORT_PIN38">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;38</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="410" id="PORT_PIN39">
+        <Menu dnOrder="409" id="PORT_PIN39">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;39</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="411" id="PORT_PIN4">
+        <Menu dnOrder="410" id="PORT_PIN4">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;4</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="412" id="PORT_PIN40">
+        <Menu dnOrder="411" id="PORT_PIN40">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;40</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="413" id="PORT_PIN41">
+        <Menu dnOrder="412" id="PORT_PIN41">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;41</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="414" id="PORT_PIN42">
+        <Menu dnOrder="413" id="PORT_PIN42">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;42</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="415" id="PORT_PIN43">
+        <Menu dnOrder="414" id="PORT_PIN43">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;43</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="416" id="PORT_PIN44">
+        <Menu dnOrder="415" id="PORT_PIN44">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;44</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="417" id="PORT_PIN45">
+        <Menu dnOrder="416" id="PORT_PIN45">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;45</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="418" id="PORT_PIN46">
+        <Menu dnOrder="417" id="PORT_PIN46">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;46</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="419" id="PORT_PIN47">
+        <Menu dnOrder="418" id="PORT_PIN47">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;47</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="420" id="PORT_PIN48">
+        <Menu dnOrder="419" id="PORT_PIN48">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;48</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="421" id="PORT_PIN49">
+        <Menu dnOrder="420" id="PORT_PIN49">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;49</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="422" id="PORT_PIN5">
+        <Menu dnOrder="421" id="PORT_PIN5">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;5</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="423" id="PORT_PIN50">
+        <Menu dnOrder="422" id="PORT_PIN50">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;50</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="424" id="PORT_PIN51">
+        <Menu dnOrder="423" id="PORT_PIN51">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;51</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="425" id="PORT_PIN52">
+        <Menu dnOrder="424" id="PORT_PIN52">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;52</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="426" id="PORT_PIN53">
+        <Menu dnOrder="425" id="PORT_PIN53">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;53</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="427" id="PORT_PIN54">
+        <Menu dnOrder="426" id="PORT_PIN54">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;54</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="428" id="PORT_PIN55">
+        <Menu dnOrder="427" id="PORT_PIN55">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;55</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="429" id="PORT_PIN56">
+        <Menu dnOrder="428" id="PORT_PIN56">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;56</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="430" id="PORT_PIN57">
+        <Menu dnOrder="429" id="PORT_PIN57">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;57</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="431" id="PORT_PIN58">
+        <Menu dnOrder="430" id="PORT_PIN58">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;58</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="432" id="PORT_PIN59">
+        <Menu dnOrder="431" id="PORT_PIN59">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;59</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="433" id="PORT_PIN6">
+        <Menu dnOrder="432" id="PORT_PIN6">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;6</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="434" id="PORT_PIN60">
+        <Menu dnOrder="433" id="PORT_PIN60">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;60</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="435" id="PORT_PIN61">
+        <Menu dnOrder="434" id="PORT_PIN61">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;61</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="436" id="PORT_PIN62">
+        <Menu dnOrder="435" id="PORT_PIN62">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;62</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="437" id="PORT_PIN63">
+        <Menu dnOrder="436" id="PORT_PIN63">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;63</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="438" id="PORT_PIN64">
+        <Menu dnOrder="437" id="PORT_PIN64">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;64</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="439" id="PORT_PIN65">
+        <Menu dnOrder="438" id="PORT_PIN65">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;65</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="440" id="PORT_PIN66">
+        <Menu dnOrder="439" id="PORT_PIN66">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;66</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="441" id="PORT_PIN67">
+        <Menu dnOrder="440" id="PORT_PIN67">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;67</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="442" id="PORT_PIN68">
+        <Menu dnOrder="441" id="PORT_PIN68">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;68</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="443" id="PORT_PIN69">
+        <Menu dnOrder="442" id="PORT_PIN69">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;69</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="444" id="PORT_PIN7">
+        <Menu dnOrder="443" id="PORT_PIN7">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;7</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="445" id="PORT_PIN70">
+        <Menu dnOrder="444" id="PORT_PIN70">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;70</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="446" id="PORT_PIN71">
+        <Menu dnOrder="445" id="PORT_PIN71">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;71</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="447" id="PORT_PIN72">
+        <Menu dnOrder="446" id="PORT_PIN72">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;72</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="448" id="PORT_PIN73">
+        <Menu dnOrder="447" id="PORT_PIN73">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;73</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="449" id="PORT_PIN74">
+        <Menu dnOrder="448" id="PORT_PIN74">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;74</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="450" id="PORT_PIN75">
+        <Menu dnOrder="449" id="PORT_PIN75">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;75</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="451" id="PORT_PIN76">
+        <Menu dnOrder="450" id="PORT_PIN76">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;76</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="452" id="PORT_PIN77">
+        <Menu dnOrder="451" id="PORT_PIN77">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;77</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="453" id="PORT_PIN78">
+        <Menu dnOrder="452" id="PORT_PIN78">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;78</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="454" id="PORT_PIN79">
+        <Menu dnOrder="453" id="PORT_PIN79">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;79</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="455" id="PORT_PIN8">
+        <Menu dnOrder="454" id="PORT_PIN8">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;8</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="456" id="PORT_PIN80">
+        <Menu dnOrder="455" id="PORT_PIN80">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;80</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="457" id="PORT_PIN81">
+        <Menu dnOrder="456" id="PORT_PIN81">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;81</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="458" id="PORT_PIN82">
+        <Menu dnOrder="457" id="PORT_PIN82">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;82</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="459" id="PORT_PIN83">
+        <Menu dnOrder="458" id="PORT_PIN83">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;83</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="460" id="PORT_PIN84">
+        <Menu dnOrder="459" id="PORT_PIN84">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;84</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="461" id="PORT_PIN85">
+        <Menu dnOrder="460" id="PORT_PIN85">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;85</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="462" id="PORT_PIN86">
+        <Menu dnOrder="461" id="PORT_PIN86">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;86</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="463" id="PORT_PIN87">
+        <Menu dnOrder="462" id="PORT_PIN87">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;87</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="464" id="PORT_PIN88">
+        <Menu dnOrder="463" id="PORT_PIN88">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;88</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="465" id="PORT_PIN89">
+        <Menu dnOrder="464" id="PORT_PIN89">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;89</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="466" id="PORT_PIN9">
+        <Menu dnOrder="465" id="PORT_PIN9">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;9</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="467" id="PORT_PIN90">
+        <Menu dnOrder="466" id="PORT_PIN90">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Pin&amp;#160;90</Value>
             </String>
           </Attributes>
         </Menu>
-        <Menu dnOrder="468" id="PORT_PIN91">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Menu dnOrder="469" id="PORT_PIN92">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Menu dnOrder="470" id="PORT_PIN93">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Menu dnOrder="471" id="PORT_PIN94">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Menu dnOrder="472" id="PORT_PIN95">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Menu dnOrder="473" id="PORT_PIN96">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Menu dnOrder="474" id="PORT_PIN97">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Menu dnOrder="475" id="PORT_PIN98">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Menu dnOrder="476" id="PORT_PIN99">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <Boolean dnOrder="477" id="SERCOM4_CORE_CLOCK_ENABLE">
+        <Boolean dnOrder="467" id="SERCOM4_CORE_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom4" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="478" id="SERCOM4_CORE_CLOCK_FREQUENCY">
+        <Integer dnOrder="468" id="SERCOM4_CORE_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="32000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="479" id="SERCOM4_INTERRUPT_ENABLE">
+        <Boolean dnOrder="469" id="SERCOM4_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom4" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="480" id="SERCOM4_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="470" id="SERCOM4_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="481" id="SERCOM4_INTERRUPT_HANDLER">
+        <String dnOrder="471" id="SERCOM4_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom4" value="SERCOM4_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="482" id="SERCOM4_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="472" id="SERCOM4_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom4" value="false"/>
           </Values>
         </Boolean>
-        <File dnOrder="483" id="SYSTICK_FILE_0">
+        <File dnOrder="473" id="SYSTICK_FILE_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="484" id="SYSTICK_FILE_1">
+        <File dnOrder="474" id="SYSTICK_FILE_1">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="485" id="SYSTICK_FILE_2">
+        <File dnOrder="475" id="SYSTICK_FILE_2">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Menu dnOrder="486" id="SYSTICK_MENU_0">
+        <Menu dnOrder="476" id="SYSTICK_MENU_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <String dnOrder="487" id="SYSTICK_PERIOD">
+        <String dnOrder="477" id="SYSTICK_PERIOD">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x30d400"/>
           </Values>
         </String>
-        <Float dnOrder="488" id="SYSTICK_PERIOD_MS">
+        <Float dnOrder="478" id="SYSTICK_PERIOD_MS">
           <Values dnOrder="0">
             <User dnOrder="0" value="100.0"/>
           </Values>
         </Float>
-        <Integer dnOrder="489" id="SYSTICK_PERIOD_US">
+        <Integer dnOrder="479" id="SYSTICK_PERIOD_US">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="100000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="490" id="systickEnable">
+        <Boolean dnOrder="480" id="systickEnable">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <File dnOrder="491" id="systickSystemInitFile">
+        <File dnOrder="481" id="systickSystemInitFile">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
@@ -2779,7 +2719,8 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="4" id="sercom4">
+    <UniqueComponent dnOrder="4" id="nvmctrl"/>
+    <UniqueComponent dnOrder="5" id="sercom4">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="I2CM_BAUD">
           <Values dnOrder="0">
@@ -2792,12 +2733,7 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="readOnly">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
+          <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom4" value="0"/>
           </Values>
         </KeyValueSet>
@@ -2890,7 +2826,7 @@
         </DirectCapability>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="5" id="stdio">
+    <UniqueComponent dnOrder="6" id="stdio">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="DEBUG_PERIPHERAL">
           <Values dnOrder="0">
@@ -2920,8 +2856,9 @@
         <ElementPosition dnOrder="1" id="core" x="400" y="20"/>
         <ElementPosition dnOrder="2" id="dfp" x="180" y="20"/>
         <ElementPosition dnOrder="3" id="evsys" x="20" y="20"/>
-        <ElementPosition dnOrder="4" id="sercom4" x="270" y="60"/>
-        <ElementPosition dnOrder="5" id="stdio" x="407" y="62"/>
+        <ElementPosition dnOrder="4" id="nvmctrl" x="640" y="20"/>
+        <ElementPosition dnOrder="5" id="sercom4" x="270" y="60"/>
+        <ElementPosition dnOrder="6" id="stdio" x="407" y="62"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>
