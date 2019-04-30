@@ -89,7 +89,7 @@ void TC1_CompareInitialize( void )
 
     /* Configure timer one shot mode & direction */
     TC1_REGS->COUNT16.TC_DRVCTRL = TC_DRVCTRL_INVEN1_Msk;
-    TC1_REGS->COUNT16.TC_CC[0] = 10000U;
+    TC1_REGS->COUNT16.TC_CC[0] = 12500U;
     TC1_REGS->COUNT16.TC_CC[1] = 3000U;
 
     /* Clear all interrupt flags */
@@ -124,7 +124,7 @@ void TC1_CompareStop( void )
 
 uint32_t TC1_CompareFrequencyGet( void )
 {
-    return (uint32_t)(750000UL);
+    return (uint32_t)(937500UL);
 }
 
 /* Get the current counter value */
