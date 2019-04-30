@@ -50,10 +50,10 @@
 uint8_t portBCurNumCb = 0;
 
 /* port B maximum number of callbacks */
-uint8_t portBMaxNumCb = 3;
+uint8_t portBMaxNumCb = 2;
 
 /* port B callback objects */
-PIO_PIN_CALLBACK_OBJ portBPinCbObj[3];
+PIO_PIN_CALLBACK_OBJ portBPinCbObj[2];
 
 
 /******************************************************************************
@@ -68,17 +68,104 @@ PIO_PIN_CALLBACK_OBJ portBPinCbObj[3];
 */
 void PIO_Initialize ( void )
 {
+ /* Port B Peripheral function A configuration */
+	PIOB_REGS->PIO_MSKR = 0x0L;
+	PIOB_REGS->PIO_CFGR = 0x1;
+	
+ /* Port B Peripheral function B configuration */
+	PIOB_REGS->PIO_MSKR = 0x0L;
+	PIOB_REGS->PIO_CFGR = 0x2;
+	
+ /* Port B Peripheral function C configuration */
+	PIOB_REGS->PIO_MSKR = 0x0L;
+	PIOB_REGS->PIO_CFGR = 0x3;
+	
+ /* Port B Peripheral function D configuration */
+	PIOB_REGS->PIO_MSKR = 0x0L;
+	PIOB_REGS->PIO_CFGR = 0x4;
+	
+ /* Port B Peripheral function E configuration */
+	PIOB_REGS->PIO_MSKR = 0x0L;
+	PIOB_REGS->PIO_CFGR = 0x5;
+	
+ /* Port B Peripheral function F configuration */
+	PIOB_REGS->PIO_MSKR = 0x0L;
+	PIOB_REGS->PIO_CFGR = 0x6;
+	
+ /* Port B Peripheral function G configuration */
+	PIOB_REGS->PIO_MSKR = 0x0L;
+	PIOB_REGS->PIO_CFGR = 0x7;
+	
  /* Port B Pin 0 configuration */
 	PIOB_REGS->PIO_MSKR = 0x1;
-	PIOB_REGS->PIO_CFGR |= 0x100;
+	PIOB_REGS->PIO_CFGR |= 0x500;
 	
  /* Port B Pin 9 configuration */
 	PIOB_REGS->PIO_MSKR = 0x200;
 	PIOB_REGS->PIO_CFGR |= 0x200;
 	
+ /* Port B Latch configuration */
+	PIOB_REGS->PIO_SODR = 0x1;
+	
+ /* Port C Peripheral function A configuration */
+	PIOC_REGS->PIO_MSKR = 0x0L;
+	PIOC_REGS->PIO_CFGR = 0x1;
+	
+ /* Port C Peripheral function B configuration */
+	PIOC_REGS->PIO_MSKR = 0x0L;
+	PIOC_REGS->PIO_CFGR = 0x2;
+	
+ /* Port C Peripheral function C configuration */
+	PIOC_REGS->PIO_MSKR = 0x0L;
+	PIOC_REGS->PIO_CFGR = 0x3;
+	
+ /* Port C Peripheral function D configuration */
+	PIOC_REGS->PIO_MSKR = 0x0L;
+	PIOC_REGS->PIO_CFGR = 0x4;
+	
+ /* Port C Peripheral function E configuration */
+	PIOC_REGS->PIO_MSKR = 0x0L;
+	PIOC_REGS->PIO_CFGR = 0x5;
+	
+ /* Port C Peripheral function F configuration */
+	PIOC_REGS->PIO_MSKR = 0x0L;
+	PIOC_REGS->PIO_CFGR = 0x6;
+	
+ /* Port C Peripheral function G configuration */
+	PIOC_REGS->PIO_MSKR = 0x0L;
+	PIOC_REGS->PIO_CFGR = 0x7;
+	
  /* Port D Peripheral function A configuration */
-	PIOD_REGS->PIO_MSKR = 0x3cc;
+	PIOD_REGS->PIO_MSKR = 0x3c008L;
 	PIOD_REGS->PIO_CFGR = 0x1;
+	
+ /* Port D Peripheral function B configuration */
+	PIOD_REGS->PIO_MSKR = 0x0L;
+	PIOD_REGS->PIO_CFGR = 0x2;
+	
+ /* Port D Peripheral function C configuration */
+	PIOD_REGS->PIO_MSKR = 0x0L;
+	PIOD_REGS->PIO_CFGR = 0x3;
+	
+ /* Port D Peripheral function D configuration */
+	PIOD_REGS->PIO_MSKR = 0x0L;
+	PIOD_REGS->PIO_CFGR = 0x4;
+	
+ /* Port D Peripheral function E configuration */
+	PIOD_REGS->PIO_MSKR = 0x0L;
+	PIOD_REGS->PIO_CFGR = 0x5;
+	
+ /* Port D Peripheral function F configuration */
+	PIOD_REGS->PIO_MSKR = 0x0L;
+	PIOD_REGS->PIO_CFGR = 0x6;
+	
+ /* Port D Peripheral function G configuration */
+	PIOD_REGS->PIO_MSKR = 0x0L;
+	PIOD_REGS->PIO_CFGR = 0x7;
+	
+ /* Port D Pin 3 configuration */
+	PIOD_REGS->PIO_MSKR = 0x8;
+	PIOD_REGS->PIO_CFGR |= 0x400;
 	
 }
 

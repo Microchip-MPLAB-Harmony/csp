@@ -54,11 +54,11 @@
 #include <stdlib.h>                		// Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 
-volatile bool switch_pressed = false;
+volatile bool switchPressed = false;
 
-void switch_handler( PIO_PIN pin, uintptr_t context )
+void switchHandler( PIO_PIN pin, uintptr_t context )
 {
-    switch_pressed = true;
+    switchPressed = true;
 }
 // *****************************************************************************
 // *****************************************************************************
@@ -67,29 +67,32 @@ void switch_handler( PIO_PIN pin, uintptr_t context )
 // *****************************************************************************
 int main( void )
 {
-    bool workToDo = true;   // avoid unreachable code warning
-
     /* Initialize all modules */
     SYS_Initialize( NULL );
-    PIO_PinInterruptCallbackRegister( SWITCH_PIN, &switch_handler, (uintptr_t) NULL );
+    PIO_PinInterruptCallbackRegister( SWITCH_PIN, switchHandler, (uintptr_t) NULL );
     PIO_PinInterruptEnable( SWITCH_PIN );
+    PIT_DelayMs( 500 );
 
     printf( "\r\n-------------------------------------------------------------" );
-    printf( "\r\n                          WDT DEMO                           " );
+    printf( "\r\n                          WDT DEMO" );
     printf( "\r\n-------------------------------------------------------------" );
     printf( "\r\nLED process running.\r\nPress the switch to create a process starvation\r\n" );
-    
-    while( workToDo ){          // LED toggle process
+    switchPressed = false;
+    while( true )
+    {
         // watchdog pet
     	WDT_Clear();
         // Led toggle with timer for reasonable blink
         LED_Toggle();
         PIT_DelayMs( 500 );
-        if( switch_pressed )
+        if( switchPressed )
         {   
             printf( "Process starvation .................\r\n" );
             printf( "\tDevice reset will occur in 4 seconds\r\n" );
-            while( true );      // spin lock
+            while( true )
+            {
+                PIT_DelayMs( 50 );
+            }
         }
     }
 
