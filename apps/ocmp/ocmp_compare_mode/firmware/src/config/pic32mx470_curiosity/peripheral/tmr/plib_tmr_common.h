@@ -1,17 +1,17 @@
 /*******************************************************************************
-  TMR Peripheral Library Interface Source File
+  TMR Peripheral Library Interface Header File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_tmr2.c
+    plib_tmr_common.h
 
   Summary
-    TMR2 peripheral library source file.
+    TMR peripheral library interface.
 
   Description
-    This file implements the interface to the TMR peripheral library.  This
+    This file defines the interface to the TC peripheral library.  This
     library provides access to and control of the associated peripheral
     instance.
 
@@ -42,6 +42,9 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+#ifndef PLIB_TMR_COMMON_H    // Guards against multiple inclusion
+#define PLIB_TMR_COMMON_H
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -49,65 +52,69 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "device.h"
-#include "plib_tmr2.h"
+/*  This section lists the other files that are included in this file.
+*/
+#include <stddef.h>
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+extern "C" {
+
+#endif
+
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+/*  The following data type definitions are used by the functions in this
+    interface and should be considered part of it.
+*/
 
 
+// *****************************************************************************
+/* TMR_CALLBACK
 
-void TMR2_Initialize(void)
+  Summary:
+    Use to register a callback with the TMR.
+
+  Description:
+    When a match is asserted, a callback can be activated.
+    Use TMR_CALLBACK as the function pointer to register the callback
+    with the match.
+
+  Remarks:
+    The callback should look like:
+      void callback(handle, context);
+	Make sure the return value and parameters of the callback are correct.
+*/
+
+typedef void (*TMR_CALLBACK)(uint32_t status, uintptr_t context);
+
+// *****************************************************************************
+
+typedef struct
 {
-    /* Disable Timer */
-    T2CONCLR = _T2CON_ON_MASK;
+    /*TMR callback function happens on Period match*/
+    TMR_CALLBACK callback_fn;
+    /* - Client data (Event Context) that will be passed to callback */
+    uintptr_t context;
 
-    /*
-    SIDL = 0
-    TCKPS =0
-    T32   = 0
-    TCS = 0
-    */
-    T2CONSET = 0x0;
+}TMR_TIMER_OBJECT;
 
-    /* Clear counter */
-    TMR2 = 0x0;
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-    /*Set period */
-    PR2 = 48000U;
-
-
-    /* start the TMR */
-    T2CONSET = _T2CON_ON_MASK;
 }
 
+#endif
+// DOM-IGNORE-END
 
-void TMR2_Start(void)
-{
-    T2CONSET = _T2CON_ON_MASK;
-}
+#endif //_PLIB_TMR_COMMON_H
 
-
-void TMR2_Stop (void)
-{
-    T2CONCLR = _T2CON_ON_MASK;
-}
-
-void TMR2_PeriodSet(uint16_t period)
-{
-    PR2  = period;
-}
-
-uint16_t TMR2_PeriodGet(void)
-{
-    return (uint16_t)PR2;
-}
-
-uint16_t TMR2_CounterGet(void)
-{
-    return (uint16_t)(TMR2);
-}
-
-
-uint32_t TMR2_FrequencyGet(void)
-{
-    return (48000000);
-}
-
+/**
+ End of File
+*/
