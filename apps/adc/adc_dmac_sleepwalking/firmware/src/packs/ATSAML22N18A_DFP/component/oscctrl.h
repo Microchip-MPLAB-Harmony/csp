@@ -1,7 +1,7 @@
 /**
  * \brief Component description for OSCCTRL
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-07-02T17:30:16Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22_OSCCTRL_COMPONENT_H_
 #define _SAML22_OSCCTRL_COMPONENT_H_
 
@@ -223,12 +223,54 @@
 #define OSCCTRL_XOSCCTRL_GAIN_Pos             _U_(8)                                               /**< (OSCCTRL_XOSCCTRL) Oscillator Gain Position */
 #define OSCCTRL_XOSCCTRL_GAIN_Msk             (_U_(0x7) << OSCCTRL_XOSCCTRL_GAIN_Pos)              /**< (OSCCTRL_XOSCCTRL) Oscillator Gain Mask */
 #define OSCCTRL_XOSCCTRL_GAIN(value)          (OSCCTRL_XOSCCTRL_GAIN_Msk & ((value) << OSCCTRL_XOSCCTRL_GAIN_Pos))
+#define   OSCCTRL_XOSCCTRL_GAIN_GAIN2_Val     _U_(0x0)                                             /**< (OSCCTRL_XOSCCTRL) 2 MHz  */
+#define   OSCCTRL_XOSCCTRL_GAIN_GAIN4_Val     _U_(0x1)                                             /**< (OSCCTRL_XOSCCTRL) 4 MHz  */
+#define   OSCCTRL_XOSCCTRL_GAIN_GAIN8_Val     _U_(0x2)                                             /**< (OSCCTRL_XOSCCTRL) 8 MHz  */
+#define   OSCCTRL_XOSCCTRL_GAIN_GAIN16_Val    _U_(0x3)                                             /**< (OSCCTRL_XOSCCTRL) 16 MHz  */
+#define   OSCCTRL_XOSCCTRL_GAIN_GAIN30_Val    _U_(0x4)                                             /**< (OSCCTRL_XOSCCTRL) 30 MHz  */
+#define OSCCTRL_XOSCCTRL_GAIN_GAIN2           (OSCCTRL_XOSCCTRL_GAIN_GAIN2_Val << OSCCTRL_XOSCCTRL_GAIN_Pos) /**< (OSCCTRL_XOSCCTRL) 2 MHz Position  */
+#define OSCCTRL_XOSCCTRL_GAIN_GAIN4           (OSCCTRL_XOSCCTRL_GAIN_GAIN4_Val << OSCCTRL_XOSCCTRL_GAIN_Pos) /**< (OSCCTRL_XOSCCTRL) 4 MHz Position  */
+#define OSCCTRL_XOSCCTRL_GAIN_GAIN8           (OSCCTRL_XOSCCTRL_GAIN_GAIN8_Val << OSCCTRL_XOSCCTRL_GAIN_Pos) /**< (OSCCTRL_XOSCCTRL) 8 MHz Position  */
+#define OSCCTRL_XOSCCTRL_GAIN_GAIN16          (OSCCTRL_XOSCCTRL_GAIN_GAIN16_Val << OSCCTRL_XOSCCTRL_GAIN_Pos) /**< (OSCCTRL_XOSCCTRL) 16 MHz Position  */
+#define OSCCTRL_XOSCCTRL_GAIN_GAIN30          (OSCCTRL_XOSCCTRL_GAIN_GAIN30_Val << OSCCTRL_XOSCCTRL_GAIN_Pos) /**< (OSCCTRL_XOSCCTRL) 30 MHz Position  */
 #define OSCCTRL_XOSCCTRL_AMPGC_Pos            _U_(11)                                              /**< (OSCCTRL_XOSCCTRL) Automatic Amplitude Gain Control Position */
 #define OSCCTRL_XOSCCTRL_AMPGC_Msk            (_U_(0x1) << OSCCTRL_XOSCCTRL_AMPGC_Pos)             /**< (OSCCTRL_XOSCCTRL) Automatic Amplitude Gain Control Mask */
 #define OSCCTRL_XOSCCTRL_AMPGC(value)         (OSCCTRL_XOSCCTRL_AMPGC_Msk & ((value) << OSCCTRL_XOSCCTRL_AMPGC_Pos))
 #define OSCCTRL_XOSCCTRL_STARTUP_Pos          _U_(12)                                              /**< (OSCCTRL_XOSCCTRL) Start-Up Time Position */
 #define OSCCTRL_XOSCCTRL_STARTUP_Msk          (_U_(0xF) << OSCCTRL_XOSCCTRL_STARTUP_Pos)           /**< (OSCCTRL_XOSCCTRL) Start-Up Time Mask */
 #define OSCCTRL_XOSCCTRL_STARTUP(value)       (OSCCTRL_XOSCCTRL_STARTUP_Msk & ((value) << OSCCTRL_XOSCCTRL_STARTUP_Pos))
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE1_Val _U_(0x0)                                             /**< (OSCCTRL_XOSCCTRL) 31 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE2_Val _U_(0x1)                                             /**< (OSCCTRL_XOSCCTRL) 61 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE4_Val _U_(0x2)                                             /**< (OSCCTRL_XOSCCTRL) 122 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE8_Val _U_(0x3)                                             /**< (OSCCTRL_XOSCCTRL) 244 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE16_Val _U_(0x4)                                             /**< (OSCCTRL_XOSCCTRL) 488 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE32_Val _U_(0x5)                                             /**< (OSCCTRL_XOSCCTRL) 977 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE64_Val _U_(0x6)                                             /**< (OSCCTRL_XOSCCTRL) 1953 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE128_Val _U_(0x7)                                             /**< (OSCCTRL_XOSCCTRL) 3906 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE256_Val _U_(0x8)                                             /**< (OSCCTRL_XOSCCTRL) 7813 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE512_Val _U_(0x9)                                             /**< (OSCCTRL_XOSCCTRL) 15625 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE1024_Val _U_(0xA)                                             /**< (OSCCTRL_XOSCCTRL) 31250 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE2048_Val _U_(0xB)                                             /**< (OSCCTRL_XOSCCTRL) 62500 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE4096_Val _U_(0xC)                                             /**< (OSCCTRL_XOSCCTRL) 125000 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE8192_Val _U_(0xD)                                             /**< (OSCCTRL_XOSCCTRL) 250000 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE16384_Val _U_(0xE)                                             /**< (OSCCTRL_XOSCCTRL) 500000 us  */
+#define   OSCCTRL_XOSCCTRL_STARTUP_CYCLE32768_Val _U_(0xF)                                             /**< (OSCCTRL_XOSCCTRL) 1000000 us  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE1       (OSCCTRL_XOSCCTRL_STARTUP_CYCLE1_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 31 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE2       (OSCCTRL_XOSCCTRL_STARTUP_CYCLE2_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 61 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE4       (OSCCTRL_XOSCCTRL_STARTUP_CYCLE4_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 122 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE8       (OSCCTRL_XOSCCTRL_STARTUP_CYCLE8_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 244 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE16      (OSCCTRL_XOSCCTRL_STARTUP_CYCLE16_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 488 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE32      (OSCCTRL_XOSCCTRL_STARTUP_CYCLE32_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 977 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE64      (OSCCTRL_XOSCCTRL_STARTUP_CYCLE64_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 1953 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE128     (OSCCTRL_XOSCCTRL_STARTUP_CYCLE128_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 3906 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE256     (OSCCTRL_XOSCCTRL_STARTUP_CYCLE256_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 7813 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE512     (OSCCTRL_XOSCCTRL_STARTUP_CYCLE512_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 15625 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE1024    (OSCCTRL_XOSCCTRL_STARTUP_CYCLE1024_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 31250 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE2048    (OSCCTRL_XOSCCTRL_STARTUP_CYCLE2048_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 62500 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE4096    (OSCCTRL_XOSCCTRL_STARTUP_CYCLE4096_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 125000 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE8192    (OSCCTRL_XOSCCTRL_STARTUP_CYCLE8192_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 250000 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE16384   (OSCCTRL_XOSCCTRL_STARTUP_CYCLE16384_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 500000 us Position  */
+#define OSCCTRL_XOSCCTRL_STARTUP_CYCLE32768   (OSCCTRL_XOSCCTRL_STARTUP_CYCLE32768_Val << OSCCTRL_XOSCCTRL_STARTUP_Pos) /**< (OSCCTRL_XOSCCTRL) 1000000 us Position  */
 #define OSCCTRL_XOSCCTRL_Msk                  _U_(0xFFDE)                                          /**< (OSCCTRL_XOSCCTRL) Register Mask  */
 
 
@@ -238,6 +280,22 @@
 #define OSCCTRL_CFDPRESC_CFDPRESC_Pos         _U_(0)                                               /**< (OSCCTRL_CFDPRESC) Clock Failure Detector Prescaler Position */
 #define OSCCTRL_CFDPRESC_CFDPRESC_Msk         (_U_(0x7) << OSCCTRL_CFDPRESC_CFDPRESC_Pos)          /**< (OSCCTRL_CFDPRESC) Clock Failure Detector Prescaler Mask */
 #define OSCCTRL_CFDPRESC_CFDPRESC(value)      (OSCCTRL_CFDPRESC_CFDPRESC_Msk & ((value) << OSCCTRL_CFDPRESC_CFDPRESC_Pos))
+#define   OSCCTRL_CFDPRESC_CFDPRESC_DIV1_Val  _U_(0x0)                                             /**< (OSCCTRL_CFDPRESC) OSC16M/1  */
+#define   OSCCTRL_CFDPRESC_CFDPRESC_DIV2_Val  _U_(0x1)                                             /**< (OSCCTRL_CFDPRESC) OSC16M/2  */
+#define   OSCCTRL_CFDPRESC_CFDPRESC_DIV4_Val  _U_(0x2)                                             /**< (OSCCTRL_CFDPRESC) OSC16M/4  */
+#define   OSCCTRL_CFDPRESC_CFDPRESC_DIV8_Val  _U_(0x3)                                             /**< (OSCCTRL_CFDPRESC) OSC16M/8  */
+#define   OSCCTRL_CFDPRESC_CFDPRESC_DIV16_Val _U_(0x4)                                             /**< (OSCCTRL_CFDPRESC) OSC16M/16  */
+#define   OSCCTRL_CFDPRESC_CFDPRESC_DIV32_Val _U_(0x5)                                             /**< (OSCCTRL_CFDPRESC) OSC16M/32  */
+#define   OSCCTRL_CFDPRESC_CFDPRESC_DIV64_Val _U_(0x6)                                             /**< (OSCCTRL_CFDPRESC) OSC16M/64  */
+#define   OSCCTRL_CFDPRESC_CFDPRESC_DIV128_Val _U_(0x7)                                             /**< (OSCCTRL_CFDPRESC) OSC16M/128  */
+#define OSCCTRL_CFDPRESC_CFDPRESC_DIV1        (OSCCTRL_CFDPRESC_CFDPRESC_DIV1_Val << OSCCTRL_CFDPRESC_CFDPRESC_Pos) /**< (OSCCTRL_CFDPRESC) OSC16M/1 Position  */
+#define OSCCTRL_CFDPRESC_CFDPRESC_DIV2        (OSCCTRL_CFDPRESC_CFDPRESC_DIV2_Val << OSCCTRL_CFDPRESC_CFDPRESC_Pos) /**< (OSCCTRL_CFDPRESC) OSC16M/2 Position  */
+#define OSCCTRL_CFDPRESC_CFDPRESC_DIV4        (OSCCTRL_CFDPRESC_CFDPRESC_DIV4_Val << OSCCTRL_CFDPRESC_CFDPRESC_Pos) /**< (OSCCTRL_CFDPRESC) OSC16M/4 Position  */
+#define OSCCTRL_CFDPRESC_CFDPRESC_DIV8        (OSCCTRL_CFDPRESC_CFDPRESC_DIV8_Val << OSCCTRL_CFDPRESC_CFDPRESC_Pos) /**< (OSCCTRL_CFDPRESC) OSC16M/8 Position  */
+#define OSCCTRL_CFDPRESC_CFDPRESC_DIV16       (OSCCTRL_CFDPRESC_CFDPRESC_DIV16_Val << OSCCTRL_CFDPRESC_CFDPRESC_Pos) /**< (OSCCTRL_CFDPRESC) OSC16M/16 Position  */
+#define OSCCTRL_CFDPRESC_CFDPRESC_DIV32       (OSCCTRL_CFDPRESC_CFDPRESC_DIV32_Val << OSCCTRL_CFDPRESC_CFDPRESC_Pos) /**< (OSCCTRL_CFDPRESC) OSC16M/32 Position  */
+#define OSCCTRL_CFDPRESC_CFDPRESC_DIV64       (OSCCTRL_CFDPRESC_CFDPRESC_DIV64_Val << OSCCTRL_CFDPRESC_CFDPRESC_Pos) /**< (OSCCTRL_CFDPRESC) OSC16M/64 Position  */
+#define OSCCTRL_CFDPRESC_CFDPRESC_DIV128      (OSCCTRL_CFDPRESC_CFDPRESC_DIV128_Val << OSCCTRL_CFDPRESC_CFDPRESC_Pos) /**< (OSCCTRL_CFDPRESC) OSC16M/128 Position  */
 #define OSCCTRL_CFDPRESC_Msk                  _U_(0x07)                                            /**< (OSCCTRL_CFDPRESC) Register Mask  */
 
 
@@ -387,6 +445,14 @@
 #define OSCCTRL_DPLLCTRLB_FILTER_Pos          _U_(0)                                               /**< (OSCCTRL_DPLLCTRLB) Proportional Integral Filter Selection Position */
 #define OSCCTRL_DPLLCTRLB_FILTER_Msk          (_U_(0x3) << OSCCTRL_DPLLCTRLB_FILTER_Pos)           /**< (OSCCTRL_DPLLCTRLB) Proportional Integral Filter Selection Mask */
 #define OSCCTRL_DPLLCTRLB_FILTER(value)       (OSCCTRL_DPLLCTRLB_FILTER_Msk & ((value) << OSCCTRL_DPLLCTRLB_FILTER_Pos))
+#define   OSCCTRL_DPLLCTRLB_FILTER_DEFAULT_Val _U_(0x0)                                             /**< (OSCCTRL_DPLLCTRLB) Default filter mode  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_LBFILT_Val _U_(0x1)                                             /**< (OSCCTRL_DPLLCTRLB) Low bandwidth filter  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_HBFILT_Val _U_(0x2)                                             /**< (OSCCTRL_DPLLCTRLB) High bandwidth filter  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_HDFILT_Val _U_(0x3)                                             /**< (OSCCTRL_DPLLCTRLB) High damping filter  */
+#define OSCCTRL_DPLLCTRLB_FILTER_DEFAULT      (OSCCTRL_DPLLCTRLB_FILTER_DEFAULT_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Default filter mode Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_LBFILT       (OSCCTRL_DPLLCTRLB_FILTER_LBFILT_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Low bandwidth filter Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_HBFILT       (OSCCTRL_DPLLCTRLB_FILTER_HBFILT_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) High bandwidth filter Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_HDFILT       (OSCCTRL_DPLLCTRLB_FILTER_HDFILT_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) High damping filter Position  */
 #define OSCCTRL_DPLLCTRLB_LPEN_Pos            _U_(2)                                               /**< (OSCCTRL_DPLLCTRLB) Low-Power Enable Position */
 #define OSCCTRL_DPLLCTRLB_LPEN_Msk            (_U_(0x1) << OSCCTRL_DPLLCTRLB_LPEN_Pos)             /**< (OSCCTRL_DPLLCTRLB) Low-Power Enable Mask */
 #define OSCCTRL_DPLLCTRLB_LPEN(value)         (OSCCTRL_DPLLCTRLB_LPEN_Msk & ((value) << OSCCTRL_DPLLCTRLB_LPEN_Pos))
@@ -396,9 +462,25 @@
 #define OSCCTRL_DPLLCTRLB_REFCLK_Pos          _U_(4)                                               /**< (OSCCTRL_DPLLCTRLB) Reference Clock Selection Position */
 #define OSCCTRL_DPLLCTRLB_REFCLK_Msk          (_U_(0x3) << OSCCTRL_DPLLCTRLB_REFCLK_Pos)           /**< (OSCCTRL_DPLLCTRLB) Reference Clock Selection Mask */
 #define OSCCTRL_DPLLCTRLB_REFCLK(value)       (OSCCTRL_DPLLCTRLB_REFCLK_Msk & ((value) << OSCCTRL_DPLLCTRLB_REFCLK_Pos))
+#define   OSCCTRL_DPLLCTRLB_REFCLK_XOSC32K_Val _U_(0x0)                                             /**< (OSCCTRL_DPLLCTRLB) XOSC32K clock reference  */
+#define   OSCCTRL_DPLLCTRLB_REFCLK_XOSC_Val   _U_(0x1)                                             /**< (OSCCTRL_DPLLCTRLB) XOSC clock reference  */
+#define   OSCCTRL_DPLLCTRLB_REFCLK_GCLK_Val   _U_(0x2)                                             /**< (OSCCTRL_DPLLCTRLB) GCLK clock reference  */
+#define OSCCTRL_DPLLCTRLB_REFCLK_XOSC32K      (OSCCTRL_DPLLCTRLB_REFCLK_XOSC32K_Val << OSCCTRL_DPLLCTRLB_REFCLK_Pos) /**< (OSCCTRL_DPLLCTRLB) XOSC32K clock reference Position  */
+#define OSCCTRL_DPLLCTRLB_REFCLK_XOSC         (OSCCTRL_DPLLCTRLB_REFCLK_XOSC_Val << OSCCTRL_DPLLCTRLB_REFCLK_Pos) /**< (OSCCTRL_DPLLCTRLB) XOSC clock reference Position  */
+#define OSCCTRL_DPLLCTRLB_REFCLK_GCLK         (OSCCTRL_DPLLCTRLB_REFCLK_GCLK_Val << OSCCTRL_DPLLCTRLB_REFCLK_Pos) /**< (OSCCTRL_DPLLCTRLB) GCLK clock reference Position  */
 #define OSCCTRL_DPLLCTRLB_LTIME_Pos           _U_(8)                                               /**< (OSCCTRL_DPLLCTRLB) Lock Time Position */
 #define OSCCTRL_DPLLCTRLB_LTIME_Msk           (_U_(0x7) << OSCCTRL_DPLLCTRLB_LTIME_Pos)            /**< (OSCCTRL_DPLLCTRLB) Lock Time Mask */
 #define OSCCTRL_DPLLCTRLB_LTIME(value)        (OSCCTRL_DPLLCTRLB_LTIME_Msk & ((value) << OSCCTRL_DPLLCTRLB_LTIME_Pos))
+#define   OSCCTRL_DPLLCTRLB_LTIME_DEFAULT_Val _U_(0x0)                                             /**< (OSCCTRL_DPLLCTRLB) No time-out. Automatic lock.  */
+#define   OSCCTRL_DPLLCTRLB_LTIME_8MS_Val     _U_(0x4)                                             /**< (OSCCTRL_DPLLCTRLB) Time-out if no lock within 8ms  */
+#define   OSCCTRL_DPLLCTRLB_LTIME_9MS_Val     _U_(0x5)                                             /**< (OSCCTRL_DPLLCTRLB) Time-out if no lock within 9ms  */
+#define   OSCCTRL_DPLLCTRLB_LTIME_10MS_Val    _U_(0x6)                                             /**< (OSCCTRL_DPLLCTRLB) Time-out if no lock within 10ms  */
+#define   OSCCTRL_DPLLCTRLB_LTIME_11MS_Val    _U_(0x7)                                             /**< (OSCCTRL_DPLLCTRLB) Time-out if no lock within 11ms  */
+#define OSCCTRL_DPLLCTRLB_LTIME_DEFAULT       (OSCCTRL_DPLLCTRLB_LTIME_DEFAULT_Val << OSCCTRL_DPLLCTRLB_LTIME_Pos) /**< (OSCCTRL_DPLLCTRLB) No time-out. Automatic lock. Position  */
+#define OSCCTRL_DPLLCTRLB_LTIME_8MS           (OSCCTRL_DPLLCTRLB_LTIME_8MS_Val << OSCCTRL_DPLLCTRLB_LTIME_Pos) /**< (OSCCTRL_DPLLCTRLB) Time-out if no lock within 8ms Position  */
+#define OSCCTRL_DPLLCTRLB_LTIME_9MS           (OSCCTRL_DPLLCTRLB_LTIME_9MS_Val << OSCCTRL_DPLLCTRLB_LTIME_Pos) /**< (OSCCTRL_DPLLCTRLB) Time-out if no lock within 9ms Position  */
+#define OSCCTRL_DPLLCTRLB_LTIME_10MS          (OSCCTRL_DPLLCTRLB_LTIME_10MS_Val << OSCCTRL_DPLLCTRLB_LTIME_Pos) /**< (OSCCTRL_DPLLCTRLB) Time-out if no lock within 10ms Position  */
+#define OSCCTRL_DPLLCTRLB_LTIME_11MS          (OSCCTRL_DPLLCTRLB_LTIME_11MS_Val << OSCCTRL_DPLLCTRLB_LTIME_Pos) /**< (OSCCTRL_DPLLCTRLB) Time-out if no lock within 11ms Position  */
 #define OSCCTRL_DPLLCTRLB_LBYPASS_Pos         _U_(12)                                              /**< (OSCCTRL_DPLLCTRLB) Lock Bypass Position */
 #define OSCCTRL_DPLLCTRLB_LBYPASS_Msk         (_U_(0x1) << OSCCTRL_DPLLCTRLB_LBYPASS_Pos)          /**< (OSCCTRL_DPLLCTRLB) Lock Bypass Mask */
 #define OSCCTRL_DPLLCTRLB_LBYPASS(value)      (OSCCTRL_DPLLCTRLB_LBYPASS_Msk & ((value) << OSCCTRL_DPLLCTRLB_LBYPASS_Pos))

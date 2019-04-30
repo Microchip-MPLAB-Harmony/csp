@@ -1,7 +1,7 @@
 /**
  * \brief Component description for PORT
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-07-02T17:30:16Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22_PORT_COMPONENT_H_
 #define _SAML22_PORT_COMPONENT_H_
 
@@ -133,6 +133,14 @@
 #define PORT_EVCTRL_EVACT0_Pos                _U_(5)                                               /**< (PORT_EVCTRL) Port Event Action 0 Position */
 #define PORT_EVCTRL_EVACT0_Msk                (_U_(0x3) << PORT_EVCTRL_EVACT0_Pos)                 /**< (PORT_EVCTRL) Port Event Action 0 Mask */
 #define PORT_EVCTRL_EVACT0(value)             (PORT_EVCTRL_EVACT0_Msk & ((value) << PORT_EVCTRL_EVACT0_Pos))
+#define   PORT_EVCTRL_EVACT0_OUT_Val          _U_(0x0)                                             /**< (PORT_EVCTRL) Event output to pin  */
+#define   PORT_EVCTRL_EVACT0_SET_Val          _U_(0x1)                                             /**< (PORT_EVCTRL) Set output register of pin on event  */
+#define   PORT_EVCTRL_EVACT0_CLR_Val          _U_(0x2)                                             /**< (PORT_EVCTRL) Clear output register of pin on event  */
+#define   PORT_EVCTRL_EVACT0_TGL_Val          _U_(0x3)                                             /**< (PORT_EVCTRL) Toggle output register of pin on event  */
+#define PORT_EVCTRL_EVACT0_OUT                (PORT_EVCTRL_EVACT0_OUT_Val << PORT_EVCTRL_EVACT0_Pos) /**< (PORT_EVCTRL) Event output to pin Position  */
+#define PORT_EVCTRL_EVACT0_SET                (PORT_EVCTRL_EVACT0_SET_Val << PORT_EVCTRL_EVACT0_Pos) /**< (PORT_EVCTRL) Set output register of pin on event Position  */
+#define PORT_EVCTRL_EVACT0_CLR                (PORT_EVCTRL_EVACT0_CLR_Val << PORT_EVCTRL_EVACT0_Pos) /**< (PORT_EVCTRL) Clear output register of pin on event Position  */
+#define PORT_EVCTRL_EVACT0_TGL                (PORT_EVCTRL_EVACT0_TGL_Val << PORT_EVCTRL_EVACT0_Pos) /**< (PORT_EVCTRL) Toggle output register of pin on event Position  */
 #define PORT_EVCTRL_PORTEI0_Pos               _U_(7)                                               /**< (PORT_EVCTRL) Port Event Enable Input 0 Position */
 #define PORT_EVCTRL_PORTEI0_Msk               (_U_(0x1) << PORT_EVCTRL_PORTEI0_Pos)                /**< (PORT_EVCTRL) Port Event Enable Input 0 Mask */
 #define PORT_EVCTRL_PORTEI0(value)            (PORT_EVCTRL_PORTEI0_Msk & ((value) << PORT_EVCTRL_PORTEI0_Pos))
