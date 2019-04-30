@@ -65,7 +65,7 @@ void GPIO_Initialize ( void )
     CNPUDSET = 0x40; /* Pull-Up Enable */
 
     /* PORTE Initialization */
-    LATE = 0x00; /* Initial Latch Value */
+    LATE = 0x0; /* Initial Latch Value */
     TRISECLR = 0x10; /* Direction Control */
     ANSELECLR = 0x10; /* Digital Mode Enable */
 
