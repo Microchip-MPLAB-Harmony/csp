@@ -101,8 +101,6 @@ int main ( void )
     printf("\n\r                    ADC DMA Sleepwalking Demo                 ");
     printf("\n\r---------------------------------------------------------\n\r");    
     printf("\r\n\r\n Wake CPU after 16 samples are taken\r\n");
-    printf("\r\nConnect the input to be measured onto PA02 (ADC0_AIN0)\r\n");
-    printf("\n\r---------------------------------------------------------\n\r");
     
     while ( true )
     {
