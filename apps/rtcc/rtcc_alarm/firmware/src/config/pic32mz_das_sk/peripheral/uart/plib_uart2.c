@@ -50,9 +50,9 @@
 
 void static UART2_ErrorClear( void )
 {
-    uint8_t dummyData = 0u;
     /* rxBufferLen = (FIFO level + RX register) */
     uint8_t rxBufferLen = UART_RXFIFO_DEPTH;
+    uint8_t dummyData = 0u;
 
     /* If it's a overrun error then clear it to flush FIFO */
     if(U2STA & _U2STA_OERR_MASK)
@@ -68,7 +68,7 @@ void static UART2_ErrorClear( void )
 
         /* Try to flush error bytes for one full FIFO and exit instead of
          * blocking here if more error bytes are received */
-        if(0u ==  rxBufferLen)
+        if(rxBufferLen == 0u)
         {
             break;
         }
@@ -82,27 +82,27 @@ void static UART2_ErrorClear( void )
 
 void UART2_Initialize( void )
 {
-    /*Set up UxMODE bits */
-    /*STSEL  = 0*/
-    /*PDSEL = 0 */
-    /*BRGH = 1 */
-    /*RXINV = 0 */
-    /*ABAUD = 0 */
-    /*LPBACK = 0 */
-    /*WAKE = 0 */
-    /*SIDL = 0 */
-    /*RUNOVF = 0 */
-    /*CLKSEL = 0 */
-    /*SLPEN = 0 */
+    /* Set up UxMODE bits */
+    /* STSEL  = 0*/
+    /* PDSEL = 0 */
+    /* BRGH = 1 */
+    /* RXINV = 0 */
+    /* ABAUD = 0 */
+    /* LPBACK = 0 */
+    /* WAKE = 0 */
+    /* SIDL = 0 */
+    /* RUNOVF = 0 */
+    /* CLKSEL = 0 */
+    /* SLPEN = 0 */
     U2MODE = 0x8;
 
-    /*Enable UART2 Receiver and Transmitter */
+    /* Enable UART2 Receiver and Transmitter */
     U2STASET = (_U2STA_UTXEN_MASK | _U2STA_URXEN_MASK);
 
     /* BAUD Rate register Setup */
     U2BRG = 216;
 
-    /* Turn ON UART2*/
+    /* Turn ON UART2 */
     U2MODESET = _U2MODE_ON_MASK;
 }
 
@@ -117,7 +117,7 @@ bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 
     if (setup != NULL)
     {
-        /* Turn OFF UART2*/
+        /* Turn OFF UART2 */
         U2MODECLR = _U2MODE_ON_MASK;
 
         if(srcClkFreq == 0)
@@ -150,7 +150,6 @@ bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
             if(setup->parity != UART_PARITY_NONE)
             {
                return status;
-
             }
             else
             {
@@ -159,7 +158,6 @@ bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
                uartMode &= ~_U2MODE_PDSEL_MASK;
                U2MODE = uartMode | setup->dataWidth;
             }
-
         }
         else
         {
@@ -185,14 +183,14 @@ bool UART2_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
     return status;
 }
 
-bool UART2_Read( void *buffer, const size_t size )
+bool UART2_Read(void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t* )buffer;
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
 
-    if(NULL != lBuffer)
+    if(lBuffer != NULL)
     {
         /* Clear errors before submitting the request.
          * ErrorGet clears errors internally. */
@@ -208,8 +206,8 @@ bool UART2_Read( void *buffer, const size_t size )
                 break;
             }
 
-            /* Receiver buffer has data*/
-            if(_U2STA_URXDA_MASK == (U2STA & _U2STA_URXDA_MASK))
+            /* Receiver buffer has data */
+            if((U2STA & _U2STA_URXDA_MASK) == _U2STA_URXDA_MASK)
             {
                 *lBuffer++ = (U2RXREG );
                 processedSize++;
@@ -225,13 +223,13 @@ bool UART2_Read( void *buffer, const size_t size )
     return status;
 }
 
-bool UART2_Write( void *buffer, const size_t size )
+bool UART2_Write( void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t*)buffer;
     size_t processedSize = 0;
 
-    if(NULL != lBuffer)
+    if(lBuffer != NULL)
     {
         while( size > processedSize )
         {
@@ -266,7 +264,7 @@ UART_ERROR UART2_ErrorGet( void )
 
 void UART2_WriteByte(int data)
 {
-    while (!(U2STA & _U2STA_UTXBF_MASK));
+    while ((U2STA & _U2STA_UTXBF_MASK));
 
     U2TXREG = data;
 }
