@@ -50,38 +50,32 @@
 
 #define SPI3_CON_MSTEN                      (1 << _SPI3CON_MSTEN_POSITION)
 #define SPI3_CON_CKP                        (0 << _SPI3CON_CKP_POSITION)
-#define SPI3_CON_CKE                        (0 << _SPI3CON_CKE_POSITION)
+#define SPI3_CON_CKE                        (1 << _SPI3CON_CKE_POSITION)
 #define SPI3_CON_MODE_32_MODE_16            (0 << _SPI3CON_MODE16_POSITION)
 #define SPI3_CON_ENHBUF                     (1 << _SPI3CON_ENHBUF_POSITION)
 #define SPI3_CON_MCLKSEL                    (0 << _SPI3CON_MCLKSEL_POSITION)
 #define SPI3_CON_MSSEN                      (1 << _SPI3CON_MSSEN_POSITION)
 
-
-
 void SPI3_Initialize ( void )
 {
     uint32_t rdata;
 
-    /*Disable SPI3_FAULT Interrupt, */
-    /*Disable SPI3_RX Interrupt, */
-    /*Disable SPI3_TX Interrupt */
-    IEC4CLR = _IEC4_SPI3EIE_MASK;
-    IEC4CLR = _IEC4_SPI3RXIE_MASK;
-    IEC4CLR = _IEC4_SPI3TXIE_MASK;
+    /* Disable SPI3 Interrupts */
+    IEC4CLR = 0x4000000;
+    IEC4CLR = 0x8000000;
+    IEC4CLR = 0x10000000;
 
-    /* STOP and Reset the SPI*/
+    /* STOP and Reset the SPI */
     SPI3CON = 0;
 
-    /*Clear the Receiver buffer */
+    /* Clear the Receiver buffer */
     rdata = SPI3BUF;
     rdata = rdata;
 
-    /* Clear SPI3_FAULT Interrupt flag */
-    /* Clear SPI3_RX Interrupt flag */
-    /* Clear SPI3_TX Interrupt flag */
-    IFS4CLR = _IFS4_SPI3EIF_MASK;
-    IFS4CLR = _IFS4_SPI3RXIF_MASK;
-    IFS4CLR = _IFS4_SPI3TXIF_MASK;
+    /* Clear SPI3 Interrupt flags */
+    IFS4CLR = 0x4000000;
+    IFS4CLR = 0x8000000;
+    IFS4CLR = 0x10000000;
 
     /* BAUD Rate register Setup */
     SPI3BRG = 49;
@@ -92,7 +86,7 @@ void SPI3_Initialize ( void )
     /*
     MSTEN = 1
     CKP = 0
-    CKE = 0
+    CKE = 1
     MODE<32,16> = 0
     ENHBUF = 1
     MSSEN = 1
@@ -106,9 +100,7 @@ void SPI3_Initialize ( void )
 
 
     /* Enable SPI3 */
-    SPI3CONSET= _SPI3CON_ON_MASK;
-
-    return;
+    SPI3CONSET = _SPI3CON_ON_MASK;
 }
 
 bool SPI3_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
@@ -147,7 +139,8 @@ bool SPI3_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
     }
 
     SPI3BRG = t_brg;
-    SPI3CONSET = setup->clockPolarity | setup->clockPhase | setup->dataBits;
+    SPI3CON = (SPI3CON & (~(_SPI3CON_MODE16_MASK | _SPI3CON_MODE32_MASK | _SPI3CON_CKP_MASK | _SPI3CON_CKE_MASK))) |
+                            (setup->clockPolarity | setup->clockPhase | setup->dataBits);
 
     return true;
 }
@@ -183,10 +176,7 @@ bool SPI3_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
         }
 
         /* Clear the receive overflow error if any */
-        if ((SPI3STAT & _SPI3STAT_SPIROV_MASK) == _SPI3STAT_SPIROV_MASK)
-        {
-            SPI3STATCLR = _SPI3STAT_SPIROV_MASK;
-        }
+        SPI3STATCLR = _SPI3STAT_SPIROV_MASK;
 
         /* Flush out any unread data in SPI read buffer from the previous transfer */
         while ((bool)(SPI3STAT & _SPI3STAT_SPIRBE_MASK) == false)
@@ -223,20 +213,20 @@ bool SPI3_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
             {
                 if((_SPI3CON_MODE32_MASK) == (SPI3CON & (_SPI3CON_MODE32_MASK)))
                 {
-                    SPI3BUF= ((uint32_t*)pTransmitData)[txCount++];
+                    SPI3BUF = ((uint32_t*)pTransmitData)[txCount++];
                 }
                 else if((_SPI3CON_MODE16_MASK) == (SPI3CON & (_SPI3CON_MODE16_MASK)))
                 {
-                    SPI3BUF= ((uint16_t*)pTransmitData)[txCount++];
+                    SPI3BUF = ((uint16_t*)pTransmitData)[txCount++];
                 }
                 else
                 {
-                    SPI3BUF= ((uint8_t*)pTransmitData)[txCount++];
+                    SPI3BUF = ((uint8_t*)pTransmitData)[txCount++];
                 }
             }
             else if (dummySize > 0)
             {
-                SPI3BUF= 0xff;
+                SPI3BUF = 0xff;
                 dummySize--;
             }
 
