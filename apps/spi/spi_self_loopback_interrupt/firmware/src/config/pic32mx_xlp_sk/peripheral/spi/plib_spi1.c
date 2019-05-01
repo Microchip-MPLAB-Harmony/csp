@@ -305,7 +305,7 @@ bool SPI1_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
 
 bool SPI1_IsBusy (void)
 {
-    return spi1Obj.transferIsBusy;
+    return ( (spi1Obj.transferIsBusy) || ((SPI1STAT & _SPI1STAT_SRMT_MASK) == 0));
 }
 
 void SPI1_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
