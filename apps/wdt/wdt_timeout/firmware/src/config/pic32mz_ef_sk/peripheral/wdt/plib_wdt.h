@@ -70,6 +70,10 @@ void WDT_Enable( void );
 
 void WDT_Disable( void );
 
+void WDT_WindowEnable( void );
+
+void WDT_WindowDisable( void );
+
 void WDT_Clear( void );
 
 // DOM-IGNORE-BEGIN
