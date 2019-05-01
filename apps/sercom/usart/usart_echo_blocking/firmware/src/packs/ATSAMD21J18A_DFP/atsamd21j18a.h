@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-11-30T03:32:41Z */
+/* file generated from device description version 2019-04-17T15:38:52Z */
 #ifndef _SAMD21J18A_H_
 #define _SAMD21J18A_H_
 
@@ -425,6 +425,10 @@ void I2S_Handler                   ( void );
 #define FLASH_NB_OF_PAGES              _UL_(      4096)
 
 #define CAL_SIZE                       _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
+#define AUX3_SIZE                      _UL_(0x00000100)    /*    0kB Memory segment type: fuses */
+#define AUX3_PAGE_SIZE                 _UL_(        64)
+#define AUX3_NB_OF_PAGES               _UL_(         4)
+
 #define LOCKBIT_SIZE                   _UL_(0x00000004)    /*    0kB Memory segment type: fuses */
 #define OTP1_SIZE                      _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
 #define OTP2_SIZE                      _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
@@ -447,6 +451,7 @@ void I2S_Handler                   ( void );
 
 #define FLASH_ADDR                     _UL_(0x00000000)    /**< FLASH base address (type: flash)*/
 #define CAL_ADDR                       _UL_(0x00800000)    /**< CAL base address (type: fuses)*/
+#define AUX3_ADDR                      _UL_(0x0080a000)    /**< AUX3 base address (type: fuses)*/
 #define LOCKBIT_ADDR                   _UL_(0x00802000)    /**< LOCKBIT base address (type: fuses)*/
 #define OTP1_ADDR                      _UL_(0x00806000)    /**< OTP1 base address (type: fuses)*/
 #define OTP2_ADDR                      _UL_(0x00806008)    /**< OTP2 base address (type: fuses)*/
