@@ -58,14 +58,25 @@
 void WDT_Enable(void)
 {
     /* ON = 1 */
-    WDTCONSET = _WDTCON_ON_MASK;
+    WDTCONbits.ON = 1;
 }
 
 void WDT_Disable(void)
 {
-    /* Disable WDT */
     /* ON = 0 */
-    WDTCONCLR = _WDTCON_ON_MASK;
+    WDTCONbits.ON = 0;
+}
+
+void WDT_WindowEnable( void )
+{
+    /* WDTWINEN = 1 */
+    WDTCONbits.WDTWINEN = 1;
+}
+
+void WDT_WindowDisable( void )
+{
+    /* WDTWINEN = 0 */
+    WDTCONbits.WDTWINEN = 0;
 }
 
 void WDT_Clear(void)

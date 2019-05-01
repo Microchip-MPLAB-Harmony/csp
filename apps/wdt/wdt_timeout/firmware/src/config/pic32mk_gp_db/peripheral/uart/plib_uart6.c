@@ -50,9 +50,9 @@
 
 void static UART6_ErrorClear( void )
 {
-    uint8_t dummyData = 0u;
     /* rxBufferLen = (FIFO level + RX register) */
     uint8_t rxBufferLen = UART_RXFIFO_DEPTH;
+    uint8_t dummyData = 0u;
 
     /* If it's a overrun error then clear it to flush FIFO */
     if(U6STA & _U6STA_OERR_MASK)
@@ -68,7 +68,7 @@ void static UART6_ErrorClear( void )
 
         /* Try to flush error bytes for one full FIFO and exit instead of
          * blocking here if more error bytes are received */
-        if(0u ==  rxBufferLen)
+        if(rxBufferLen == 0u)
         {
             break;
         }
@@ -82,26 +82,27 @@ void static UART6_ErrorClear( void )
 
 void UART6_Initialize( void )
 {
-    /*Set up UxMODE bits */
-    /*STSEL  = 0*/
-    /*PDSEL = 0 */
-    /*BRGH = 1 */
-    /*RXINV = 0 */
-    /*ABAUD = 0 */
-    /*LPBACK = 0 */
-    /*WAKE = 0 */
-    /*SIDL = 0 */
-    /*RUNOVF = 0 */
-    /*CLKSEL = 0 */
-    /*SLPEN = 0 */
+    /* Set up UxMODE bits */
+    /* STSEL  = 0*/
+    /* PDSEL = 0 */
+    /* BRGH = 1 */
+    /* RXINV = 0 */
+    /* ABAUD = 0 */
+    /* LPBACK = 0 */
+    /* WAKE = 0 */
+    /* SIDL = 0 */
+    /* RUNOVF = 0 */
+    /* CLKSEL = 0 */
+    /* SLPEN = 0 */
     U6MODE = 0x8;
 
-    /*Enable UART6 Receiver and Transmitter*/
+    /* Enable UART6 Receiver and Transmitter */
     U6STASET = (_U6STA_UTXEN_MASK | _U6STA_URXEN_MASK);
+
     /* BAUD Rate register Setup */
     U6BRG = 129;
 
-    /* Turn ON UART6*/
+    /* Turn ON UART6 */
     U6MODESET = _U6MODE_ON_MASK;
 }
 
@@ -116,7 +117,7 @@ bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 
     if (setup != NULL)
     {
-        /* Turn OFF UART6*/
+        /* Turn OFF UART6 */
         U6MODECLR = _U6MODE_ON_MASK;
 
         if(srcClkFreq == 0)
@@ -149,7 +150,6 @@ bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
             if(setup->parity != UART_PARITY_NONE)
             {
                return status;
-
             }
             else
             {
@@ -158,7 +158,6 @@ bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
                uartMode &= ~_U6MODE_PDSEL_MASK;
                U6MODE = uartMode | setup->dataWidth;
             }
-
         }
         else
         {
@@ -184,14 +183,14 @@ bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
     return status;
 }
 
-bool UART6_Read( void *buffer, const size_t size )
+bool UART6_Read(void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t* )buffer;
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
 
-    if(NULL != lBuffer)
+    if(lBuffer != NULL)
     {
         /* Clear errors before submitting the request.
          * ErrorGet clears errors internally. */
@@ -207,8 +206,8 @@ bool UART6_Read( void *buffer, const size_t size )
                 break;
             }
 
-            /* Receiver buffer has data*/
-            if(_U6STA_URXDA_MASK == (U6STA & _U6STA_URXDA_MASK))
+            /* Receiver buffer has data */
+            if((U6STA & _U6STA_URXDA_MASK) == _U6STA_URXDA_MASK)
             {
                 *lBuffer++ = (U6RXREG );
                 processedSize++;
@@ -224,13 +223,13 @@ bool UART6_Read( void *buffer, const size_t size )
     return status;
 }
 
-bool UART6_Write( void *buffer, const size_t size )
+bool UART6_Write( void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t*)buffer;
     size_t processedSize = 0;
 
-    if(NULL != lBuffer)
+    if(lBuffer != NULL)
     {
         while( size > processedSize )
         {
@@ -265,7 +264,7 @@ UART_ERROR UART6_ErrorGet( void )
 
 void UART6_WriteByte(int data)
 {
-    while (!(U6STA & _U6STA_UTXBF_MASK));
+    while ((U6STA & _U6STA_UTXBF_MASK));
 
     U6TXREG = data;
 }
