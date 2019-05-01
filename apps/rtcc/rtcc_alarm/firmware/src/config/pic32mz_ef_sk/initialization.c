@@ -165,7 +165,6 @@ void SYS_Initialize ( void* data )
     CFGCONbits.ECCCON = 3;
 
 
-
 	UART2_Initialize();
 
     RTCC_Initialize();
