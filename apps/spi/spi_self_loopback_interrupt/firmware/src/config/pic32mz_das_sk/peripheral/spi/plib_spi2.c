@@ -52,35 +52,29 @@ SPI_OBJECT spi2Obj;
 
 #define SPI2_CON_MSTEN                      (1 << _SPI2CON_MSTEN_POSITION)
 #define SPI2_CON_CKP                        (0 << _SPI2CON_CKP_POSITION)
-#define SPI2_CON_CKE                        (0 << _SPI2CON_CKE_POSITION)
+#define SPI2_CON_CKE                        (1 << _SPI2CON_CKE_POSITION)
 #define SPI2_CON_MODE_32_MODE_16            (0 << _SPI2CON_MODE16_POSITION)
 #define SPI2_CON_ENHBUF                     (1 << _SPI2CON_ENHBUF_POSITION)
 #define SPI2_CON_MCLKSEL                    (0 << _SPI2CON_MCLKSEL_POSITION)
 #define SPI2_CON_MSSEN                      (1 << _SPI2CON_MSSEN_POSITION)
 
-
-
 void SPI2_Initialize ( void )
 {
     uint32_t rdata;
 
-    /*Disable SPI2_FAULT Interrupt, */
-    /*Disable SPI2_RX Interrupt, */
-    /*Disable SPI2_TX Interrupt */
+    /* Disable SPI2 Interrupts */
     IEC4CLR = 0x4000;
     IEC4CLR = 0x8000;
     IEC4CLR = 0x10000;
 
-    /* STOP and Reset the SPI*/
+    /* STOP and Reset the SPI */
     SPI2CON = 0;
 
-    /*Clear the Receiver buffer */
+    /* Clear the Receiver buffer */
     rdata = SPI2BUF;
     rdata = rdata;
 
-    /* Clear SPI2_FAULT Interrupt flag */
-    /* Clear SPI2_RX Interrupt flag */
-    /* Clear SPI2_TX Interrupt flag */
+    /* Clear SPI2 Interrupt flags */
     IFS4CLR = 0x4000;
     IFS4CLR = 0x8000;
     IFS4CLR = 0x10000;
@@ -94,7 +88,7 @@ void SPI2_Initialize ( void )
     /*
     MSTEN = 1
     CKP = 0
-    CKE = 0
+    CKE = 1
     MODE<32,16> = 0
     ENHBUF = 1
     MSSEN = 1
@@ -111,9 +105,7 @@ void SPI2_Initialize ( void )
     spi2Obj.callback = NULL;
 
     /* Enable SPI2 */
-    SPI2CONSET= _SPI2CON_ON_MASK;
-
-    return;
+    SPI2CONSET = _SPI2CON_ON_MASK;
 }
 
 bool SPI2_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
@@ -146,7 +138,7 @@ bool SPI2_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
         t_brg++;
     }
 
-    if(t_brg > 8191)
+    if(t_brg > 511)
     {
         return false;
     }
@@ -220,22 +212,23 @@ bool SPI2_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
         }
 
         /* Configure SPI to generate receive interrupt when receive buffer is empty (SRXISEL = '01') */
+        SPI2CONCLR = _SPI2CON_SRXISEL_MASK;
         SPI2CONSET = 0x00000001;
 
         /* Configure SPI to generate transmit interrupt when the transmit shift register is empty (STXISEL = '00')*/
         SPI2CONCLR = _SPI2CON_STXISEL_MASK;
-
-        /* Clear the receive interrupt flag */
-        IFS4CLR = 0x8000;
-
-        /* Clear the transmit interrupt flag */
-        IFS4CLR = 0x10000;
 
         /* Disable the receive interrupt */
         IEC4CLR = 0x8000;
 
         /* Disable the transmit interrupt */
         IEC4CLR = 0x10000;
+
+        /* Clear the receive interrupt flag */
+        IFS4CLR = 0x8000;
+
+        /* Clear the transmit interrupt flag */
+        IFS4CLR = 0x10000;
 
         /* Start the first write here itself, rest will happen in ISR context */
         if((_SPI2CON_MODE32_MASK) == (SPI2CON & (_SPI2CON_MODE32_MASK)))
@@ -246,12 +239,12 @@ bool SPI2_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
 
             if(spi2Obj.txCount < spi2Obj.txSize)
             {
-                SPI2BUF= *((uint32_t*)spi2Obj.txBuffer);
+                SPI2BUF = *((uint32_t*)spi2Obj.txBuffer);
                 spi2Obj.txCount++;
             }
             else if (spi2Obj.dummySize > 0)
             {
-                SPI2BUF= (uint32_t)(0xff);
+                SPI2BUF = (uint32_t)(0xff);
                 spi2Obj.dummySize--;
             }
         }
@@ -263,12 +256,12 @@ bool SPI2_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
 
             if (spi2Obj.txCount < spi2Obj.txSize)
             {
-                SPI2BUF= *((uint16_t*)spi2Obj.txBuffer);
+                SPI2BUF = *((uint16_t*)spi2Obj.txBuffer);
                 spi2Obj.txCount++;
             }
             else if (spi2Obj.dummySize > 0)
             {
-                SPI2BUF= (uint16_t)(0xff);
+                SPI2BUF = (uint16_t)(0xff);
                 spi2Obj.dummySize--;
             }
         }
@@ -276,12 +269,12 @@ bool SPI2_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
         {
             if (spi2Obj.txCount < spi2Obj.txSize)
             {
-                SPI2BUF= *((uint8_t*)spi2Obj.txBuffer);
+                SPI2BUF = *((uint8_t*)spi2Obj.txBuffer);
                 spi2Obj.txCount++;
             }
             else if (spi2Obj.dummySize > 0)
             {
-                SPI2BUF= (uint8_t)(0xff);
+                SPI2BUF = (uint8_t)(0xff);
                 spi2Obj.dummySize--;
             }
         }
@@ -312,7 +305,7 @@ bool SPI2_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
 
 bool SPI2_IsBusy (void)
 {
-    return spi2Obj.transferIsBusy;
+    return ( (spi2Obj.transferIsBusy) || ((SPI2STAT & _SPI2STAT_SRMT_MASK) == 0));
 }
 
 void SPI2_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
@@ -355,6 +348,10 @@ void SPI2_RX_InterruptHandler (void)
 
                 /* Disable the receive interrupt */
                 IEC4CLR = 0x8000;
+
+                /* Generate TX interrupt when buffer is completely empty (STXISEL = '00') */
+                SPI2CONCLR = _SPI2CON_STXISEL_MASK;
+                SPI2CONSET = 0x00000004;
 
                 /* Enable the transmit interrupt. Callback will be given from the
                  * transmit interrupt, when all bytes are shifted out. */
@@ -476,3 +473,4 @@ void SPI2_TX_InterruptHandler (void)
     /* Clear the transmit interrupt flag */
     IFS4CLR = 0x10000;
 }
+
