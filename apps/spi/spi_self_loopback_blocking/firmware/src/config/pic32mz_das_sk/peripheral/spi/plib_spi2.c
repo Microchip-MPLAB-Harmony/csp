@@ -50,35 +50,29 @@
 
 #define SPI2_CON_MSTEN                      (1 << _SPI2CON_MSTEN_POSITION)
 #define SPI2_CON_CKP                        (0 << _SPI2CON_CKP_POSITION)
-#define SPI2_CON_CKE                        (0 << _SPI2CON_CKE_POSITION)
+#define SPI2_CON_CKE                        (1 << _SPI2CON_CKE_POSITION)
 #define SPI2_CON_MODE_32_MODE_16            (0 << _SPI2CON_MODE16_POSITION)
 #define SPI2_CON_ENHBUF                     (1 << _SPI2CON_ENHBUF_POSITION)
 #define SPI2_CON_MCLKSEL                    (0 << _SPI2CON_MCLKSEL_POSITION)
 #define SPI2_CON_MSSEN                      (1 << _SPI2CON_MSSEN_POSITION)
 
-
-
 void SPI2_Initialize ( void )
 {
     uint32_t rdata;
 
-    /*Disable SPI2_FAULT Interrupt, */
-    /*Disable SPI2_RX Interrupt, */
-    /*Disable SPI2_TX Interrupt */
+    /* Disable SPI2 Interrupts */
     IEC4CLR = 0x4000;
     IEC4CLR = 0x8000;
     IEC4CLR = 0x10000;
 
-    /* STOP and Reset the SPI*/
+    /* STOP and Reset the SPI */
     SPI2CON = 0;
 
-    /*Clear the Receiver buffer */
+    /* Clear the Receiver buffer */
     rdata = SPI2BUF;
     rdata = rdata;
 
-    /* Clear SPI2_FAULT Interrupt flag */
-    /* Clear SPI2_RX Interrupt flag */
-    /* Clear SPI2_TX Interrupt flag */
+    /* Clear SPI2 Interrupt flags */
     IFS4CLR = 0x4000;
     IFS4CLR = 0x8000;
     IFS4CLR = 0x10000;
@@ -92,7 +86,7 @@ void SPI2_Initialize ( void )
     /*
     MSTEN = 1
     CKP = 0
-    CKE = 0
+    CKE = 1
     MODE<32,16> = 0
     ENHBUF = 1
     MSSEN = 1
@@ -106,9 +100,7 @@ void SPI2_Initialize ( void )
 
 
     /* Enable SPI2 */
-    SPI2CONSET= _SPI2CON_ON_MASK;
-
-    return;
+    SPI2CONSET = _SPI2CON_ON_MASK;
 }
 
 bool SPI2_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
@@ -141,7 +133,7 @@ bool SPI2_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
         t_brg++;
     }
 
-    if(t_brg > 8191)
+    if(t_brg > 511)
     {
         return false;
     }
@@ -221,20 +213,20 @@ bool SPI2_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
             {
                 if((_SPI2CON_MODE32_MASK) == (SPI2CON & (_SPI2CON_MODE32_MASK)))
                 {
-                    SPI2BUF= ((uint32_t*)pTransmitData)[txCount++];
+                    SPI2BUF = ((uint32_t*)pTransmitData)[txCount++];
                 }
                 else if((_SPI2CON_MODE16_MASK) == (SPI2CON & (_SPI2CON_MODE16_MASK)))
                 {
-                    SPI2BUF= ((uint16_t*)pTransmitData)[txCount++];
+                    SPI2BUF = ((uint16_t*)pTransmitData)[txCount++];
                 }
                 else
                 {
-                    SPI2BUF= ((uint8_t*)pTransmitData)[txCount++];
+                    SPI2BUF = ((uint8_t*)pTransmitData)[txCount++];
                 }
             }
             else if (dummySize > 0)
             {
-                SPI2BUF= 0xff;
+                SPI2BUF = 0xff;
                 dummySize--;
             }
 
