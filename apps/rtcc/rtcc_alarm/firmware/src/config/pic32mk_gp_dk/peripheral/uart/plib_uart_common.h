@@ -17,7 +17,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -58,13 +58,11 @@
 
 typedef enum
 {
-    UART_PARITY_NONE = 0x00000000,
+    UART_PARITY_NONE = 0x00,
 
-    UART_PARITY_EVEN = 0x00000002,
+    UART_PARITY_EVEN = 0x02,
 
-    UART_PARITY_ODD =  0x00000004,
-
-    UART_PARITY_NONE_DATA_9 = 0x00000006,
+    UART_PARITY_ODD =  0x04,
 
       /* Force the compiler to reserve 32-bit space for each enum */
     UART_PARITY_INVALID = 0xFFFFFFFF
@@ -72,11 +70,37 @@ typedef enum
 } UART_PARITY;
 
 
+typedef enum
+{
+    UART_DATA_8_BIT = 0x00,
+
+    UART_DATA_9_BIT = 0x06,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    UART_DATA_INVALID = 0xFFFFFFFF
+
+} UART_DATA;
+
+typedef enum
+{
+    UART_STOP_1_BIT = 0x00,
+
+    UART_STOP_2_BIT = 0x01,
+
+    /* Force the compiler to reserve 32-bit memory for each enum */
+    UART_STOP_INVALID = 0xFFFFFFFF
+
+} UART_STOP;
+
 typedef struct
 {
     uint32_t baudRate;
 
     UART_PARITY parity;
+
+    UART_DATA dataWidth;
+
+    UART_STOP stopBits;
 
 } UART_SERIAL_SETUP;
 
@@ -87,9 +111,9 @@ typedef struct
 typedef enum
 {
     UART_ERROR_NONE = 0,
-    UART_ERROR_OVERRUN = 0x00000002,
-    UART_ERROR_FRAMING = 0x00000004,
-    UART_ERROR_PARITY  = 0x00000008
+    UART_ERROR_OVERRUN = 0x02,
+    UART_ERROR_FRAMING = 0x04,
+    UART_ERROR_PARITY  = 0x08
 
 } UART_ERROR;
 
@@ -116,9 +140,6 @@ typedef struct
     UART_CALLBACK           rxCallback;
     uintptr_t               rxContext;
     bool                    rxBusyStatus;
-    
-    UART_CALLBACK           faultCallback;
-    uintptr_t               faultContext;
 
 } UART_OBJECT ;
 
