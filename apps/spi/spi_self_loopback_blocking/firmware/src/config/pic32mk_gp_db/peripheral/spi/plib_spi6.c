@@ -56,29 +56,23 @@
 #define SPI6_CON_MCLKSEL                    (0 << _SPI6CON_MCLKSEL_POSITION)
 #define SPI6_CON_MSSEN                      (0 << _SPI6CON_MSSEN_POSITION)
 
-
-
 void SPI6_Initialize ( void )
 {
     uint32_t rdata;
 
-    /*Disable SPI6_FAULT Interrupt, */
-    /*Disable SPI6_RX Interrupt, */
-    /*Disable SPI6_TX Interrupt */
+    /* Disable SPI6 Interrupts */
     IEC7CLR = 0x8;
     IEC7CLR = 0x10;
     IEC7CLR = 0x20;
 
-    /* STOP and Reset the SPI*/
+    /* STOP and Reset the SPI */
     SPI6CON = 0;
 
-    /*Clear the Receiver buffer */
+    /* Clear the Receiver buffer */
     rdata = SPI6BUF;
     rdata = rdata;
 
-    /* Clear SPI6_FAULT Interrupt flag */
-    /* Clear SPI6_RX Interrupt flag */
-    /* Clear SPI6_TX Interrupt flag */
+    /* Clear SPI6 Interrupt flags */
     IFS7CLR = 0x8;
     IFS7CLR = 0x10;
     IFS7CLR = 0x20;
@@ -106,9 +100,7 @@ void SPI6_Initialize ( void )
 
 
     /* Enable SPI6 */
-    SPI6CONSET= _SPI6CON_ON_MASK;
-
-    return;
+    SPI6CONSET = _SPI6CON_ON_MASK;
 }
 
 bool SPI6_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
@@ -221,20 +213,20 @@ bool SPI6_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
             {
                 if((_SPI6CON_MODE32_MASK) == (SPI6CON & (_SPI6CON_MODE32_MASK)))
                 {
-                    SPI6BUF= ((uint32_t*)pTransmitData)[txCount++];
+                    SPI6BUF = ((uint32_t*)pTransmitData)[txCount++];
                 }
                 else if((_SPI6CON_MODE16_MASK) == (SPI6CON & (_SPI6CON_MODE16_MASK)))
                 {
-                    SPI6BUF= ((uint16_t*)pTransmitData)[txCount++];
+                    SPI6BUF = ((uint16_t*)pTransmitData)[txCount++];
                 }
                 else
                 {
-                    SPI6BUF= ((uint8_t*)pTransmitData)[txCount++];
+                    SPI6BUF = ((uint8_t*)pTransmitData)[txCount++];
                 }
             }
             else if (dummySize > 0)
             {
-                SPI6BUF= 0xff;
+                SPI6BUF = 0xff;
                 dummySize--;
             }
 
