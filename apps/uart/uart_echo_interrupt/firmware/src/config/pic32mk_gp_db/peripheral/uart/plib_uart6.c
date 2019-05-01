@@ -51,9 +51,9 @@ UART_OBJECT uart6Obj;
 
 void static UART6_ErrorClear( void )
 {
-    uint8_t dummyData = 0u;
     /* rxBufferLen = (FIFO level + RX register) */
     uint8_t rxBufferLen = UART_RXFIFO_DEPTH;
+    uint8_t dummyData = 0u;
 
     /* If it's a overrun error then clear it to flush FIFO */
     if(U6STA & _U6STA_OERR_MASK)
@@ -69,7 +69,7 @@ void static UART6_ErrorClear( void )
 
         /* Try to flush error bytes for one full FIFO and exit instead of
          * blocking here if more error bytes are received */
-        if(0u ==  rxBufferLen)
+        if(rxBufferLen == 0u)
         {
             break;
         }
@@ -90,34 +90,31 @@ void static UART6_ErrorClear( void )
 
 void UART6_Initialize( void )
 {
-    /*Set up UxMODE bits */
-    /*STSEL  = 0*/
-    /*PDSEL = 0 */
-    /*BRGH = 1 */
-    /*RXINV = 0 */
-    /*ABAUD = 0 */
-    /*LPBACK = 0 */
-    /*WAKE = 0 */
-    /*SIDL = 0 */
-    /*RUNOVF = 0 */
-    /*CLKSEL = 0 */
-    /*SLPEN = 0 */
+    /* Set up UxMODE bits */
+    /* STSEL  = 0*/
+    /* PDSEL = 0 */
+    /* BRGH = 1 */
+    /* RXINV = 0 */
+    /* ABAUD = 0 */
+    /* LPBACK = 0 */
+    /* WAKE = 0 */
+    /* SIDL = 0 */
+    /* RUNOVF = 0 */
+    /* CLKSEL = 0 */
+    /* SLPEN = 0 */
     U6MODE = 0x8;
 
-    /*Enable UART6 Receiver, Transmitter and TX Interrupt selection */
+    /* Enable UART6 Receiver, Transmitter and TX Interrupt selection */
     U6STASET = (_U6STA_UTXEN_MASK | _U6STA_URXEN_MASK | _U6STA_UTXISEL0_MASK);
+
     /* BAUD Rate register Setup */
     U6BRG = 129;
 
-    /*Setup UART6_FAULT Interrupt*/
-    /*Disable UART6_FAULT Interrupt*/
+    /* Disable Interrupts */
     IEC5CLR = _IEC5_U6EIE_MASK;
 
-    /*Setup UART6_RX Interrupt*/
-    /*Disable UART6_RX Interrupt*/
     IEC5CLR = _IEC5_U6RXIE_MASK;
-    /*Setup UART6_TX Interrupt*/
-    /*Disable UART6_TX Interrupt*/
+
     IEC5CLR = _IEC5_U6TXIE_MASK;
 
     /* Initialize instance object */
@@ -132,7 +129,7 @@ void UART6_Initialize( void )
     uart6Obj.txBusyStatus = false;
     uart6Obj.txCallback = NULL;
 
-    /* Turn ON UART6*/
+    /* Turn ON UART6 */
     U6MODESET = _U6MODE_ON_MASK;
 }
 
@@ -153,7 +150,7 @@ bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 
     if (setup != NULL)
     {
-        /* Turn OFF UART6*/
+        /* Turn OFF UART6 */
         U6MODECLR = _U6MODE_ON_MASK;
 
         if(srcClkFreq == 0)
@@ -186,7 +183,6 @@ bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
             if(setup->parity != UART_PARITY_NONE)
             {
                return status;
-
             }
             else
             {
@@ -195,7 +191,6 @@ bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
                uartMode &= ~_U6MODE_PDSEL_MASK;
                U6MODE = uartMode | setup->dataWidth;
             }
-
         }
         else
         {
@@ -221,41 +216,43 @@ bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
     return status;
 }
 
-bool UART6_Read( void *buffer, const size_t size )
+bool UART6_Read(void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t* )buffer;
 
-    if(NULL != lBuffer)
+    if(lBuffer != NULL)
     {
-        /* Clear errors before submitting the request.
-         * ErrorGet clears errors internally. */
-        UART6_ErrorGet();
-
         /* Check if receive request is in progress */
         if(uart6Obj.rxBusyStatus == false)
         {
+            /* Clear errors before submitting the request.
+             * ErrorGet clears errors internally. */
+            UART6_ErrorGet();
+
             uart6Obj.rxBuffer = lBuffer;
             uart6Obj.rxSize = size;
             uart6Obj.rxProcessedSize = 0;
             uart6Obj.rxBusyStatus = true;
             status = true;
+
+            /* Enable UART6_FAULT Interrupt */
+            IEC5SET = _IEC5_U6EIE_MASK;
+
+            /* Enable UART6_RX Interrupt */
+            IEC5SET = _IEC5_U6RXIE_MASK;
         }
-        /*Enable UART6_FAULT Interrupt*/
-        IEC5SET = _IEC5_U6EIE_MASK;
-        /*Enable UART6_RX Interrupt*/
-        IEC5SET = _IEC5_U6RXIE_MASK;
     }
 
     return status;
 }
 
-bool UART6_Write( void *buffer, const size_t size )
+bool UART6_Write( void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t*)buffer;
 
-    if(NULL != lBuffer)
+    if(lBuffer != NULL)
     {
         /* Check if transmit request is in progress */
         if(uart6Obj.txBusyStatus == false)
@@ -272,6 +269,7 @@ bool UART6_Write( void *buffer, const size_t size )
                 U6TXREG = *lBuffer;
                 uart6Obj.txProcessedSize++;
             }
+
             IEC5SET = _IEC5_U6TXIE_MASK;
         }
     }
@@ -294,7 +292,6 @@ UART_ERROR UART6_ErrorGet( void )
     /* All errors are cleared, but send the previous error state */
     return errors;
 }
-
 
 void UART6_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
@@ -332,21 +329,17 @@ size_t UART6_WriteCountGet( void )
 
 void UART6_FAULT_InterruptHandler (void)
 {
+    /* Clear size and rx status */
+    uart6Obj.rxBusyStatus = false;
+
+    /* Disable the fault interrupt */
+    IEC5CLR = _IEC5_U6EIE_MASK;
+
     /* Client must call UARTx_ErrorGet() function to clear the errors */
     if( uart6Obj.rxCallback != NULL )
     {
         uart6Obj.rxCallback(uart6Obj.rxContext);
     }
-
-    /* Clear size and rx status */
-    uart6Obj.rxBusyStatus = false;
-    uart6Obj.rxSize = 0;
-    uart6Obj.rxProcessedSize = 0;
-
-    UART6_ErrorClear();
-
-    /* Disable the interrupt*/
-    IEC5CLR = _IEC5_U6EIE_MASK;
 }
 
 void UART6_RX_InterruptHandler (void)
@@ -365,9 +358,8 @@ void UART6_RX_InterruptHandler (void)
         if(uart6Obj.rxProcessedSize >= uart6Obj.rxSize)
         {
             uart6Obj.rxBusyStatus = false;
-            uart6Obj.rxSize = 0;
-            uart6Obj.rxProcessedSize = 0;
-            /* Disable the interrupt*/
+
+            /* Disable the receive interrupt */
             IEC5CLR = _IEC5_U6RXIE_MASK;
 
             if(uart6Obj.rxCallback != NULL)
@@ -387,7 +379,7 @@ void UART6_TX_InterruptHandler (void)
 {
     if(uart6Obj.txBusyStatus == true)
     {
-        while((!(U6STA & _U6STA_UTXBF_MASK)) && (uart6Obj.txSize > uart6Obj.txProcessedSize))
+        while((!(U6STA & _U6STA_UTXBF_MASK)) && (uart6Obj.txSize > uart6Obj.txProcessedSize) )
         {
             U6TXREG = uart6Obj.txBuffer[uart6Obj.txProcessedSize++];
         }
@@ -399,10 +391,8 @@ void UART6_TX_InterruptHandler (void)
         if(uart6Obj.txProcessedSize >= uart6Obj.txSize)
         {
             uart6Obj.txBusyStatus = false;
-            uart6Obj.txSize = 0;
-            uart6Obj.txProcessedSize = 0;
 
-            /* Disable the interrupt, to avoid calling ISR continuously*/
+            /* Disable the transmit interrupt, to avoid calling ISR continuously */
             IEC5CLR = _IEC5_U6TXIE_MASK;
 
             if(uart6Obj.txCallback != NULL)
@@ -417,3 +407,5 @@ void UART6_TX_InterruptHandler (void)
         ;
     }
 }
+
+
