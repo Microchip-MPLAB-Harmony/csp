@@ -74,7 +74,7 @@
 #pragma config DMTINTV =    WIN_127_128
 #pragma config FSOSCEN =    ON
 #pragma config IESO =       ON
-#pragma config POSCMOD =    EC
+#pragma config POSCMOD =    OFF
 #pragma config OSCIOFNC =   OFF
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
@@ -87,9 +87,9 @@
 
 /*** DEVCFG2 ***/
 #pragma config FPLLIDIV =   DIV_1
-#pragma config FPLLRNG =    RANGE_8_16_MHZ
-#pragma config FPLLICLK =   PLL_POSC
-#pragma config FPLLMULT =   MUL_40
+#pragma config FPLLRNG =    RANGE_5_10_MHZ
+#pragma config FPLLICLK =   PLL_FRC
+#pragma config FPLLMULT =   MUL_60
 #pragma config FPLLODIV =   DIV_4
 #pragma config VBATBOREN =  ON
 #pragma config DSBOREN =    ON
@@ -164,6 +164,13 @@ void SYS_Initialize ( void* data )
   
     CLK_Initialize();
 	GPIO_Initialize();
+
+    /* Configure CP0.K0 for optimal performance (cached instruction pre-fetch) */
+    __builtin_mtc0(16, 0,(__builtin_mfc0(16, 0) | 0x3));
+
+    /* Configure Wait States and Prefetch */
+    CHECONbits.PFMWS = 3;
+    CHECONbits.PREFEN = 1;
 
 
     RTCC_Initialize();

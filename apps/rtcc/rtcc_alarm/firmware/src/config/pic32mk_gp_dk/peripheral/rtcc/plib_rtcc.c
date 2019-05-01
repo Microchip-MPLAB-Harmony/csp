@@ -16,9 +16,10 @@
     instance in clock/calendar mode.
 
 *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -46,26 +47,38 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
+
 #include "plib_rtcc.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Global Data
+// *****************************************************************************
+// *****************************************************************************
 
 #define decimaltobcd(x)                 (((x/10)<<4)+((x - ((x/10)*10))))
 #define bcdtodecimal(x)                 ((x & 0xF0) >> 4) * 10 + (x & 0x0F)
 
-/* Real Time Clock System Service Object
-*/
+/* Real Time Clock System Service Object */
 typedef struct _SYS_RTCC_OBJ_STRUCT
 {
-	/* Call back function for RTCC.*/
+    /* Call back function for RTCC.*/
     RTC_CALLBACK  callback;
-	/* Client data (Event Context) that will be passed to callback */
+
+    /* Client data (Event Context) that will be passed to callback */
     uintptr_t context;
+
 } RTCC_OBJECT;
 
 static RTCC_OBJECT rtc;
 
-void RTCC_Initialize ( void )
+// *****************************************************************************
+// *****************************************************************************
+// Section: RTCC Implementation
+// *****************************************************************************
+// *****************************************************************************
+
+void RTCC_Initialize( void )
 {
     /* Unlock System */
     SYSKEY = 0x00000000;
@@ -117,7 +130,7 @@ void RTCC_InterruptDisable(RTC_INT_MASK interrupt)
     IEC0CLR = interrupt;
 }
 
-bool RTCC_TimeSet ( struct tm *Time )
+bool RTCC_TimeSet( struct tm *Time )
 {
     uint32_t timeField, dateField;
 
@@ -126,6 +139,7 @@ bool RTCC_TimeSet ( struct tm *Time )
     timeField |= (decimaltobcd(Time->tm_sec) << _RTCTIME_SEC01_POSITION) & (_RTCTIME_SEC10_MASK | _RTCTIME_SEC01_MASK);
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
+
     RTCTIME = timeField;
 
     dateField = (decimaltobcd(Time->tm_year % 100) << _RTCDATE_YEAR01_POSITION) & (_RTCDATE_YEAR01_MASK | _RTCDATE_YEAR10_MASK);
@@ -134,6 +148,7 @@ bool RTCC_TimeSet ( struct tm *Time )
     dateField |= decimaltobcd(Time->tm_wday) & _RTCDATE_WDAY01_MASK;
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
+
     RTCDATE = dateField;
 
     RTCCONSET = _RTCCON_ON_MASK;  /* Start the RTCC module */
@@ -146,6 +161,7 @@ void RTCC_TimeGet (struct tm  *Time )
     uint32_t dataTime, dataDate;
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
+
     dataTime = RTCTIME;  /* read the time from the RTC */
 
     Time->tm_hour = 10 * (bcdtodecimal((dataTime & _RTCTIME_HR10_MASK) >> _RTCTIME_HR10_POSITION)) +
@@ -156,6 +172,7 @@ void RTCC_TimeGet (struct tm  *Time )
                          bcdtodecimal((dataTime & _RTCTIME_SEC01_MASK) >> _RTCTIME_SEC01_POSITION);
 
     while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
+
     dataDate = RTCDATE;  /* read the date from the RTC */
 
     Time->tm_year = 10 * (bcdtodecimal((dataDate & _RTCDATE_YEAR10_MASK) >> _RTCDATE_YEAR10_POSITION)) +
@@ -189,8 +206,11 @@ bool RTCC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
         dataTime |= (decimaltobcd(alarmTime->tm_sec) << _RTCTIME_SEC01_POSITION) & (_RTCTIME_SEC10_MASK | _RTCTIME_SEC01_MASK);
 
         while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
+
         ALRMDATE = dataDate;
+
         while((RTCCON & _RTCCON_RTCSYNC_MASK) != 0);
+
         ALRMTIME = dataTime;
 
         /* Configure alarm repetition */
@@ -204,7 +224,9 @@ bool RTCC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
         /* ALRMEN = 0 */
         RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable the alarm */
     }
+
     RTCC_InterruptEnable(RTC_INT_ALARM);  /* Enable the interrupt to the interrupt controller */
+
     return true;  /* This PLIB has no way of indicating wrong device operation so always return true */
 }
 
@@ -216,18 +238,18 @@ void RTCC_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
         rtc.callback = NULL;
         rtc.context = (uintptr_t) NULL;
     }
+
     /* - Save callback and context in local memory */
     rtc.callback = callback;
     rtc.context = context;
 }
 
-void RTCC_InterruptHandler(void)
+void RTCC_InterruptHandler( void )
 {
     IFS0CLR = 0x40000000; /* clear the status flag */
 
-    if((rtc.callback != NULL))
+    if(rtc.callback != NULL)
     {
         rtc.callback(rtc.context);
     }
 }
-

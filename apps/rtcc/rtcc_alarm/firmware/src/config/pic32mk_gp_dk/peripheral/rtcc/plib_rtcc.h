@@ -16,9 +16,10 @@
     instance.
 
 *******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018-2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -44,12 +45,17 @@
 #ifndef PLIB_RTCC_H
 #define PLIB_RTCC_H
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include "device.h"
 #include <time.h>
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -61,7 +67,7 @@
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: type definitions
+// Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
 
@@ -81,10 +87,10 @@ typedef enum
 
 } RTC_ALARM_MASK;	
 
-
 typedef enum
 {
     RTC_INT_ALARM = 0x40000000
+
 } RTC_INT_MASK;
 
 typedef void (*RTC_CALLBACK)(uintptr_t context);
@@ -95,11 +101,11 @@ typedef void (*RTC_CALLBACK)(uintptr_t context);
 // *****************************************************************************
 // *****************************************************************************
 
-void RTCC_Initialize ( void );
+void RTCC_Initialize( void );
 
-bool RTCC_TimeSet ( struct tm *Time );
+bool RTCC_TimeSet( struct tm *Time );
 
-void RTCC_TimeGet (struct tm  *Time );
+void RTCC_TimeGet(struct tm  *Time );
 
 bool RTCC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq );
 
@@ -117,4 +123,4 @@ void RTCC_InterruptDisable(RTC_INT_MASK interrupt);
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_RTCC_H */
+#endif // PLIB_RTCC_H
