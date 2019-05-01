@@ -51,7 +51,7 @@
 #define CORE_TIMER_INTERRUPT_PERIOD_VALUE    0x36ee80
 #define CORE_TIMER_INTERRUPT_PERIOD_IN_US     100000
 
-typedef void (*CORETIMER_CALLBACK)(uintptr_t context);
+typedef void (*CORETIMER_CALLBACK)(uint32_t status, uintptr_t context);
 
 typedef struct
 {
@@ -68,6 +68,7 @@ void CORETIMER_PeriodSet ( uint32_t period );
 void CORETIMER_Start();
 void CORETIMER_Stop();
 void CORETIMER_DelayMs ( uint32_t delay_ms);
+
 
 
 #ifdef __cplusplus // Provide C++ Compatibility
