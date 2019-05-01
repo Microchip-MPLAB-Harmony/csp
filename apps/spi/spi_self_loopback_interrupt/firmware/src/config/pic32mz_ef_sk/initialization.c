@@ -165,7 +165,6 @@ void SYS_Initialize ( void* data )
     CFGCONbits.ECCCON = 3;
 
 
-
 	SPI3_Initialize();
 
 
