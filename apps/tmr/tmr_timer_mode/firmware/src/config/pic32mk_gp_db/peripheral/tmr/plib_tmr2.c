@@ -78,8 +78,6 @@ void TMR2_Initialize(void)
 
     IEC0SET = _IEC0_T2IE_MASK;
 
-    /* start the TMR */
-    T2CONSET = _T2CON_ON_MASK;
 }
 
 
@@ -117,11 +115,12 @@ uint32_t TMR2_FrequencyGet(void)
 
 void TIMER_2_InterruptHandler (void)
 {
+    uint32_t status = IFS0bits.T2IF;
     IFS0CLR = _IFS0_T2IF_MASK;
 
     if((tmr2Obj.callback_fn != NULL))
     {
-        tmr2Obj.callback_fn(tmr2Obj.context);
+        tmr2Obj.callback_fn(status, tmr2Obj.context);
     }
 }
 
