@@ -53,6 +53,7 @@
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
+#include "peripheral/efc/plib_efc.h"
 #include "peripheral/sdramc/plib_sdramc.h"
 #include "peripheral/usart/plib_usart1.h"
 
