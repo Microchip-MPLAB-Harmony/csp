@@ -78,6 +78,8 @@ typedef enum
 } EFC_ERROR;
 
 
+void EFC_Initialize(void);
+
 bool EFC_Read( uint32_t *data, uint32_t length, uint32_t address );
 
 bool EFC_SectorErase( uint32_t address );
