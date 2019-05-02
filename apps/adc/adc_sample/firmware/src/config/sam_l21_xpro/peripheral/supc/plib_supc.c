@@ -59,11 +59,34 @@
 void SUPC_Initialize( void )
 {
     /* Configure VREG. Mask the values loaded from NVM during reset.*/
-    SUPC_REGS->SUPC_VREG = (SUPC_REGS->SUPC_VREG & (SUPC_VREG_SEL_Msk | SUPC_VREG_ENABLE_Msk)) | SUPC_VREG_STDBYPL0_Msk;
+    SUPC_REGS->SUPC_VREG = (SUPC_REGS->SUPC_VREG & (SUPC_VREG_ENABLE_Msk)) | SUPC_VREG_STDBYPL0_Msk;
 
     /* Configure VREF */
     SUPC_REGS->SUPC_VREF = SUPC_VREF_SEL(0x7);
 
+}
+
+void SUPC_SetOutputPin( SUPC_OUTPIN pin )
+{
+    SUPC_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT(1 << pin);
+}
+
+void SUPC_ClearOutputPin( SUPC_OUTPIN pin )
+{
+    SUPC_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1 << pin);
+}
+
+void SUPC_SelectVoltageRegulator(SUPC_VREGSEL regsel)
+{
+    if(SUPC_VREGSEL_BUCK == regsel)
+    {
+        SUPC_REGS->SUPC_VREG |= (1 << SUPC_VREG_SEL_Pos);
+    }
+    else
+    {
+        SUPC_REGS->SUPC_VREG &= ~(1 << SUPC_VREG_SEL_Pos);
+    }
+    while(!(SUPC_REGS->SUPC_STATUS & SUPC_STATUS_VREGRDY_Msk));
 }
 
 
