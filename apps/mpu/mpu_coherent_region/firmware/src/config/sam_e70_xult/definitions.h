@@ -53,6 +53,7 @@
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
 #include "peripheral/xdmac/plib_xdmac.h"
+#include "peripheral/efc/plib_efc.h"
 #include "peripheral/usart/plib_usart1.h"
 
 // DOM-IGNORE-BEGIN
