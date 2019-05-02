@@ -116,11 +116,12 @@ uint32_t TMR1_FrequencyGet(void)
 
 void TIMER_1_InterruptHandler (void)
 {
+    uint32_t status = IFS0bits.T1IF;
     IFS0CLR = _IFS0_T1IF_MASK;
 
     if((tmr1Obj.callback_fn != NULL))
     {
-        tmr1Obj.callback_fn(tmr1Obj.context);
+        tmr1Obj.callback_fn(status, tmr1Obj.context);
     }
 }
 
