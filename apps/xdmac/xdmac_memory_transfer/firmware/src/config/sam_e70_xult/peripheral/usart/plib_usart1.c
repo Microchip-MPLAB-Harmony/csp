@@ -188,7 +188,7 @@ bool USART1_Write( void *buffer, const size_t size )
     {
         while( size > processedSize )
         {
-            if(US_CSR_TXEMPTY_Msk == (USART1_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk))
             {
                 USART1_REGS->US_THR = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
                 processedSize++;
@@ -208,11 +208,22 @@ int USART1_ReadByte(void)
 
 void USART1_WriteByte(int data)
 {
-    while ((US_CSR_TXEMPTY_Msk == (USART1_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
+    while ((US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk)) == 0);
+
     USART1_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
 
 bool USART1_TransmitterIsReady( void )
+{
+    if(US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool USART1_TransmitComplete( void )
 {
     if(US_CSR_TXEMPTY_Msk == (USART1_REGS->US_CSR & US_CSR_TXEMPTY_Msk))
     {
