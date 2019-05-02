@@ -20,8 +20,6 @@
           </logicalFolder>
           <itemPath ex="false">../src/config/sam_d21_xpro/device_cache.h</itemPath>
           <itemPath ex="false">../src/config/sam_d21_xpro/toolchain_specifics.h</itemPath>
-          <itemPath ex="false">../src/config/sam_d21_xpro/device_cache.h</itemPath>
-          <itemPath ex="false">../src/config/sam_d21_xpro/toolchain_specifics.h</itemPath>
           <itemPath ex="false">../src/config/sam_d21_xpro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
@@ -64,7 +62,6 @@
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
@@ -131,7 +128,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.15</languageToolchainVersion>
+        <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
