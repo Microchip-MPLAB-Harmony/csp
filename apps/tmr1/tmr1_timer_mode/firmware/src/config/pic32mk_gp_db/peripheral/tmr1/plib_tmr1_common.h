@@ -92,7 +92,7 @@ extern "C" {
 	Make sure the return value and parameters of the callback are correct.
 */
 
-typedef void (*TMR1_CALLBACK)(uintptr_t context);
+typedef void (*TMR1_CALLBACK)(uint32_t status, uintptr_t context);
 
 // *****************************************************************************
 
