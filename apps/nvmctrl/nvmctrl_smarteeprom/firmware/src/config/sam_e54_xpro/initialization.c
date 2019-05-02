@@ -112,14 +112,13 @@
 
 void SYS_Initialize ( void* data )
 {
+    NVMCTRL_Initialize( );
+
   
     PORT_Initialize();
 
     CLOCK_Initialize();
 
-
-
-    NVMCTRL_Initialize( );
 
     SERCOM2_USART_Initialize();
 
