@@ -82,7 +82,7 @@ void ADC_Initialize( void )
     }
 
     /* Prescaler */
-    ADC_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_DIV8;
+    ADC_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_DIV128;
     /* Sampling length */
     ADC_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(3U);
 
@@ -174,6 +174,16 @@ void ADC_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold)
 {
     ADC_REGS->ADC_WINLT = low_threshold;
     ADC_REGS->ADC_WINUT = high_threshold;
+    while((ADC_REGS->ADC_SYNCBUSY))
+    {
+        /* Wait for Synchronization */
+    }
+}
+
+void ADC_WindowModeSet(ADC_WINMODE mode)
+{
+    ADC_REGS->ADC_CTRLC &= ~ADC_CTRLC_WINMODE_Msk;
+    ADC_REGS->ADC_CTRLC |= (mode << ADC_CTRLC_WINMODE_Pos);
     while((ADC_REGS->ADC_SYNCBUSY))
     {
         /* Wait for Synchronization */

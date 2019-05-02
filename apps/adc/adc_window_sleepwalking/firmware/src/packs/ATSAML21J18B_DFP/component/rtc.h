@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-02-12T14:02:46Z */
+/* file generated from device description version 2019-04-16T20:45:34Z */
 #ifndef _SAML21_RTC_COMPONENT_H_
 #define _SAML21_RTC_COMPONENT_H_
 
@@ -893,6 +893,15 @@
 #define RTC_MODE1_COMP_Msk                    _U_(0xFFFF)                                          /**< (RTC_MODE1_COMP) Register Mask  */
 
 
+/* -------- RTC_GP : (RTC Offset: 0x40) (R/W 32) General Purpose -------- */
+#define RTC_GP_RESETVALUE                     _U_(0x00)                                            /**<  (RTC_GP) General Purpose  Reset Value */
+
+#define RTC_GP_GP_Pos                         _U_(0)                                               /**< (RTC_GP) General Purpose Position */
+#define RTC_GP_GP_Msk                         (_U_(0xFFFFFFFF) << RTC_GP_GP_Pos)                   /**< (RTC_GP) General Purpose Mask */
+#define RTC_GP_GP(value)                      (RTC_GP_GP_Msk & ((value) << RTC_GP_GP_Pos))        
+#define RTC_GP_Msk                            _U_(0xFFFFFFFF)                                      /**< (RTC_GP) Register Mask  */
+
+
 /* -------- RTC_MODE2_ALARM : (RTC Offset: 0x20) (R/W 32) MODE2_ALARM Alarm n Value -------- */
 #define RTC_MODE2_ALARM_RESETVALUE            _U_(0x00)                                            /**<  (RTC_MODE2_ALARM) MODE2_ALARM Alarm n Value  Reset Value */
 
@@ -971,6 +980,7 @@
 #define RTC_MODE1_PER_REG_OFST         (0x1C)              /**< (RTC_MODE1_PER) MODE1 Counter Period Offset */
 #define RTC_MODE0_COMP_REG_OFST        (0x20)              /**< (RTC_MODE0_COMP) MODE0 Compare n Value Offset */
 #define RTC_MODE1_COMP_REG_OFST        (0x20)              /**< (RTC_MODE1_COMP) MODE1 Compare n Value Offset */
+#define RTC_GP_REG_OFST                (0x40)              /**< (RTC_GP) General Purpose Offset */
 #define RTC_MODE2_ALARM_REG_OFST       (0x20)              /**< (RTC_MODE2_ALARM) MODE2_ALARM Alarm n Value Offset */
 #define RTC_MODE2_MASK_REG_OFST        (0x24)              /**< (RTC_MODE2_MASK) MODE2_ALARM Alarm n Mask Offset */
 
@@ -991,7 +1001,9 @@ typedef struct
   __I   uint8_t                        Reserved3[0x03];
   __IO  uint32_t                       RTC_COUNT;          /**< Offset: 0x18 (R/W  32) MODE0 Counter Value */
   __I   uint8_t                        Reserved4[0x04];
-  __IO  uint32_t                       RTC_COMP[1];        /**< Offset: 0x20 (R/W  32) MODE0 Compare n Value */
+  __IO  uint32_t                       RTC_COMP;           /**< Offset: 0x20 (R/W  32) MODE0 Compare n Value */
+  __I   uint8_t                        Reserved5[0x1C];
+  __IO  uint32_t                       RTC_GP[2];          /**< Offset: 0x40 (R/W  32) General Purpose */
 } rtc_mode0_registers_t;
 
 /** \brief RTC register API structure */
@@ -1013,6 +1025,8 @@ typedef struct
   __IO  uint16_t                       RTC_PER;            /**< Offset: 0x1C (R/W  16) MODE1 Counter Period */
   __I   uint8_t                        Reserved5[0x02];
   __IO  uint16_t                       RTC_COMP[2];        /**< Offset: 0x20 (R/W  16) MODE1 Compare n Value */
+  __I   uint8_t                        Reserved6[0x1C];
+  __IO  uint32_t                       RTC_GP[2];          /**< Offset: 0x40 (R/W  32) General Purpose */
 } rtc_mode1_registers_t;
 
 /** \brief RTC register API structure */
@@ -1033,6 +1047,8 @@ typedef struct
   __I   uint8_t                        Reserved4[0x04];
   __IO  uint32_t                       RTC_ALARM;          /**< Offset: 0x20 (R/W  32) MODE2_ALARM Alarm n Value */
   __IO  uint8_t                        RTC_MASK;           /**< Offset: 0x24 (R/W  8) MODE2_ALARM Alarm n Mask */
+  __I   uint8_t                        Reserved5[0x1B];
+  __IO  uint32_t                       RTC_GP[2];          /**< Offset: 0x40 (R/W  32) General Purpose */
 } rtc_mode2_registers_t;
 
 /** \brief RTC hardware registers */
