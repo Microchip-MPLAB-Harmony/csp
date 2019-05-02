@@ -102,14 +102,17 @@ static void GCLK0_Initialize(void)
 
 void CLOCK_Initialize (void)
 {
-    /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLB |= NVMCTRL_CTRLB_RWS(NVMCTRL_CTRLB_RWS_DUAL_Val);
-
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
 
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
+
+    /*Initialize low Power Divider*/
+    MCLK_REGS->MCLK_LPDIV = MCLK_LPDIV_LPDIV(0x01);
+
+    /*Initialize Backup Divider*/    
+    MCLK_REGS->MCLK_BUPDIV = MCLK_BUPDIV_BUPDIV(0x08);
 
     DFLL_Initialize();
     GCLK0_Initialize();
@@ -120,5 +123,5 @@ void CLOCK_Initialize (void)
 
 
     /*Disable internal RC oscillator*/
-    OSCCTRL_REGS->OSCCTRL_OSC16MCTRL = OSCCTRL_OSC16MCTRL_FSEL(0x0);
+    OSCCTRL_REGS->OSCCTRL_OSC16MCTRL = 0;
 }
