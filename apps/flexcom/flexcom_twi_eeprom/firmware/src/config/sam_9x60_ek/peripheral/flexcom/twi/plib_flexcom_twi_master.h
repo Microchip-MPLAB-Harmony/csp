@@ -87,13 +87,13 @@
 */
 
 typedef enum
-{   
+{
     /* No Error */
     FLEXCOM_TWI_ERROR_NONE,
-    
+
     /* Slave returned Nack */
-    FLEXCOM_TWI_ERROR_NACK,
-    
+    FLEXCOM_TWI_ERROR_NACK
+
 } FLEXCOM_TWI_ERROR;
 
 // *****************************************************************************
@@ -107,31 +107,31 @@ typedef enum
 
    Remarks:
     None.
-  
+
 */
 
 typedef enum {
 
     /* FLEXCOM TWI PLib Task Error State */
     FLEXCOM_TWI_STATE_ERROR = -1,
-    
+
     /* FLEXCOM TWI PLib Task Idle State */
     FLEXCOM_TWI_STATE_IDLE,
-    
+
     /* FLEXCOM TWI PLib Task Address Send State */
     FLEXCOM_TWI_STATE_ADDR_SEND,
-    
+
     /* FLEXCOM TWI PLib Task Read Transfer State */
     FLEXCOM_TWI_STATE_TRANSFER_READ,
-    
+
     /* FLEXCOM TWI PLib Task Write Transfer State */
     FLEXCOM_TWI_STATE_TRANSFER_WRITE,
-    
+
     /* FLEXCOM TWI PLib Task Transfer Complete State */
     FLEXCOM_TWI_STATE_WAIT_FOR_TXCOMP,
-    
+
     /* FLEXCOM TWI PLib Task Transfer Done State */
-    FLEXCOM_TWI_STATE_TRANSFER_DONE,
+    FLEXCOM_TWI_STATE_TRANSFER_DONE
 
 } FLEXCOM_TWI_STATE;
 
@@ -167,23 +167,23 @@ typedef struct
 {
     uint16_t address;
     uint8_t *writeBuffer;
-    uint8_t	*readBuffer;
+    uint8_t *readBuffer;
     size_t  writeSize;
-	size_t  readSize;
+    size_t  readSize;
     size_t  writeCount;
-	size_t  readCount;
+    size_t  readCount;
 
     /* State */
     FLEXCOM_TWI_STATE state;
-    
+
     /* Transfer status */
     FLEXCOM_TWI_ERROR error;
-    
+
     /* Transfer Event Callback */
     FLEXCOM_TWI_CALLBACK callback;
 
     /* Transfer context */
-    uintptr_t context;  
+    uintptr_t context;
 
 } FLEXCOM_TWI_OBJ;
 
@@ -200,7 +200,7 @@ typedef struct
     None.
 */
 
-typedef struct 
+typedef struct
 {
     /* FLEXCOM TWI Clock Speed */
     uint32_t clkSpeed;
