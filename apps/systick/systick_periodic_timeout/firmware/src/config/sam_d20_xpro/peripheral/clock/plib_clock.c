@@ -44,15 +44,6 @@
 static void SYSCTRL_Initialize(void)
 {
 
-    /* Configure 8MHz Oscillator */
-    /* Configure 8MHz Oscillator */
-    SYSCTRL_REGS->SYSCTRL_OSC8M = (SYSCTRL_REGS->SYSCTRL_OSC8M & (SYSCTRL_OSC8M_CALIB_Msk | SYSCTRL_OSC8M_FRANGE_Msk)) | SYSCTRL_OSC8M_ENABLE_Msk | SYSCTRL_OSC8M_PRESC(0x0) ;
-
-    while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC8MRDY_Msk) != SYSCTRL_PCLKSR_OSC8MRDY_Msk)
-    {
-        /* Waiting for the OSC8M Ready state */
-    }
-
 
     SYSCTRL_REGS->SYSCTRL_OSC32K = 0x0;
 }
@@ -60,7 +51,7 @@ static void SYSCTRL_Initialize(void)
 static void DFLL_Initialize(void)
 {
     /****************** DFLL Initialization  *********************************/
-    SYSCTRL_REGS->SYSCTRL_DFLLCTRL = 0 ;
+    SYSCTRL_REGS->SYSCTRL_DFLLCTRL &= ~SYSCTRL_DFLLCTRL_ONDEMAND_Msk;
 
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLRDY_Msk) != SYSCTRL_PCLKSR_DFLLRDY_Msk)
     {
@@ -89,7 +80,6 @@ static void GCLK0_Initialize(void)
 {
     GCLK_REGS->GCLK_GENCTRL = GCLK_GENCTRL_SRC(7) | GCLK_GENCTRL_GENEN_Msk | GCLK_GENCTRL_ID(0);
 
-    GCLK_REGS->GCLK_GENDIV = GCLK_GENDIV_DIV(2) | GCLK_GENDIV_ID(0);
     while((GCLK_REGS->GCLK_STATUS & GCLK_STATUS_SYNCBUSY_Msk) == GCLK_STATUS_SYNCBUSY_Msk)
     {
         /* wait for the Generator 0 synchronization */
@@ -98,9 +88,6 @@ static void GCLK0_Initialize(void)
 
 void CLOCK_Initialize (void)
 {
-    /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLB |= NVMCTRL_CTRLB_RWS(NVMCTRL_CTRLB_RWS_HALF_Val);
-
     /* Function to Initialize the Oscillators */
     SYSCTRL_Initialize();
 
@@ -108,8 +95,6 @@ void CLOCK_Initialize (void)
     GCLK0_Initialize();
 
 
-    /* selection of the CPU clock Division */
-    PM_REGS->PM_CPUSEL = PM_CPUSEL_CPUDIV(1);
 
 
     /* Configure the AHB Bridge Clocks */
@@ -119,4 +104,7 @@ void CLOCK_Initialize (void)
     /* Configure the APBB Bridge Clocks */
     PM_REGS->PM_APBBMASK = 0x1f;
 
+
+    /*Disable RC oscillator*/
+    SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0;
 }
