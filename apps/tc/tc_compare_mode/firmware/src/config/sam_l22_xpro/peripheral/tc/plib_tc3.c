@@ -89,8 +89,8 @@ void TC3_CompareInitialize( void )
 
     /* Configure timer one shot mode & direction */
     TC3_REGS->COUNT16.TC_DRVCTRL = TC_DRVCTRL_INVEN1_Msk;
-    TC3_REGS->COUNT16.TC_CC[0] = 10000U;
-    TC3_REGS->COUNT16.TC_CC[1] = 3000U;
+    TC3_REGS->COUNT16.TC_CC[0] = 6667U;
+    TC3_REGS->COUNT16.TC_CC[1] = 2000U;
 
     /* Clear all interrupt flags */
     TC3_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
