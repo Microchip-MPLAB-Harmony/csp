@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAML22N18A
  *
- * © 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-03-19T07:09:52Z */
+/* file generated from device description version 2019-04-17T13:08:53Z */
 #ifndef _SAML22N18A_H_
 #define _SAML22N18A_H_
 
@@ -82,7 +82,12 @@ typedef enum IRQn
   PendSV_IRQn               =  -2, /**< -2  Pendable request for system service */
   SysTick_IRQn              =  -1, /**< -1  System Tick Timer                   */
 /******  SAML22N18A specific Interrupt Numbers ***********************************/
-  SYSTEM_IRQn               =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (MCLK) */
+  MCLK_IRQn                 =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (MCLK) */
+  OSCCTRL_IRQn              =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (OSCCTRL) */
+  OSC32KCTRL_IRQn           =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (OSC32KCTRL) */
+  PAC_IRQn                  =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (PAC) */
+  PM_IRQn                   =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (PM) */
+  SUPC_IRQn                 =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (SUPC) */
   WDT_IRQn                  =   1, /**< 1   Watchdog Timer (WDT)                */
   RTC_IRQn                  =   2, /**< 2   Real-Time Counter (RTC)             */
   EIC_IRQn                  =   3, /**< 3   External Interrupt Controller (EIC) */
@@ -434,7 +439,6 @@ void TRNG_Handler                  ( void );
 #define OTP3_SIZE                      _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
 #define OTP4_SIZE                      _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
 #define OTP5_SIZE                      _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
-#define TEMP_LOG_SIZE                  _UL_(0x00000008)    /*    0kB Memory segment type: fuses */
 #define USER_PAGE_SIZE                 _UL_(0x00000100)    /*    0kB Memory segment type: user_page */
 #define USER_PAGE_PAGE_SIZE            _UL_(        64)
 #define USER_PAGE_NB_OF_PAGES          _UL_(         4)
@@ -459,7 +463,6 @@ void TRNG_Handler                  ( void );
 #define OTP3_ADDR                      _UL_(0x00806010)    /**< OTP3 base address (type: fuses)*/
 #define OTP4_ADDR                      _UL_(0x00806018)    /**< OTP4 base address (type: fuses)*/
 #define OTP5_ADDR                      _UL_(0x00806020)    /**< OTP5 base address (type: fuses)*/
-#define TEMP_LOG_ADDR                  _UL_(0x00806030)    /**< TEMP_LOG base address (type: fuses)*/
 #define USER_PAGE_ADDR                 _UL_(0x00804000)    /**< USER_PAGE base address (type: user_page)*/
 #define RWW_ADDR                       _UL_(0x00400000)    /**< RWW base address (type: flash)*/
 #define HSRAM_ADDR                     _UL_(0x20000000)    /**< HSRAM base address (type: ram)*/
