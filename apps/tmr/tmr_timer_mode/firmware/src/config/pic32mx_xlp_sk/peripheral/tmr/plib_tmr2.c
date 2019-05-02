@@ -77,8 +77,6 @@ void TMR2_Initialize(void)
     /* Enable TMR Interrupt of odd numbered timer in 32-bit mode */
     IEC0SET = _IEC0_T3IE_MASK;
 
-    /* start the TMR */
-    T2CONSET = _T2CON_ON_MASK;
 }
 
 
@@ -116,12 +114,13 @@ uint32_t TMR2_FrequencyGet(void)
 
 void TIMER_3_InterruptHandler (void)
 {
-    /* Enable TMR Interrupt of odd numbered timer in 32-bit mode */
+    uint32_t status;
+    status = IFS0bits.T3IF;
     IFS0CLR = _IFS0_T3IF_MASK;
 
     if((tmr2Obj.callback_fn != NULL))
     {
-        tmr2Obj.callback_fn(tmr2Obj.context);
+        tmr2Obj.callback_fn(status, tmr2Obj.context);
     }
 }
 
