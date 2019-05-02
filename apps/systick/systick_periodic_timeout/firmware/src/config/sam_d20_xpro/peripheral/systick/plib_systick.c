@@ -47,7 +47,7 @@ void SYSTICK_TimerInitialize ( void )
 {
 	SysTick->CTRL = 0;
 	SysTick->VAL = 0;
-	SysTick->LOAD = 0xb71b00 - 1;
+	SysTick->LOAD = 0xfffffe - 1;
 	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk;
 
 	systick.tickCounter = 0;
