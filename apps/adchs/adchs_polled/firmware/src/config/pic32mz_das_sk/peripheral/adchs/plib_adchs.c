@@ -57,7 +57,7 @@ void ADCHS_Initialize()
     ADCCON1bits.ON = 0;
 
     ADC3CFG = DEVADC3;
-    ADC3TIME = 0x0;
+    ADC3TIME = 0x3000001;
 
 
 
@@ -67,15 +67,20 @@ void ADCHS_Initialize()
 
     ADCTRGMODE = 0x0;
 
-    ADCTRG1 = 0x6000000;
-    ADCTRG2 = 0x0;
-    ADCTRG3 = 0x0;
+    ADCTRG1 = 0x6000000; 
+    ADCTRG2 = 0x0; 
+    ADCTRG3 = 0x0; 
+    
+    
+    
+    
 
     ADCTRGSNS = 0x0;
 
     ADCIMCON1 = 0x0;
-    ADCIMCON2 = 0x0;
-    ADCIMCON3 = 0x0;
+    ADCIMCON2 = 0x0; 
+    ADCIMCON3 = 0x0; 
+    
 
     /* Input scan */
     ADCCSS1 = 0x0;

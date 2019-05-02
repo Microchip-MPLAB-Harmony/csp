@@ -71,11 +71,9 @@ void TMR3_Initialize(void)
     TMR3 = 0x0;
 
     /*Set period */
-    PR3 = 255U;
+    PR3 = 58593U;
 
 
-    /* start the TMR */
-    T3CONSET = _T3CON_ON_MASK;
 }
 
 
