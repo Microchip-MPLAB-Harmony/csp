@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-03-25T04:46:27Z */
+/* file generated from device description version 2019-04-23T19:01:17Z */
 #ifndef _SAM9X_PWM_COMPONENT_H_
 #define _SAM9X_PWM_COMPONENT_H_
 
@@ -61,9 +61,17 @@
 #define PWM_CMR_CALG_Pos                      _U_(8)                                               /**< (PWM_CMR) Channel Alignment Position */
 #define PWM_CMR_CALG_Msk                      (_U_(0x1) << PWM_CMR_CALG_Pos)                       /**< (PWM_CMR) Channel Alignment Mask */
 #define PWM_CMR_CALG(value)                   (PWM_CMR_CALG_Msk & ((value) << PWM_CMR_CALG_Pos))  
+#define   PWM_CMR_CALG_LEFT_ALIGNED_Val       _U_(0x0)                                             /**< (PWM_CMR) Left aligned  */
+#define   PWM_CMR_CALG_CENTER_ALIGNED_Val     _U_(0x1)                                             /**< (PWM_CMR) Center aligned  */
+#define PWM_CMR_CALG_LEFT_ALIGNED             (PWM_CMR_CALG_LEFT_ALIGNED_Val << PWM_CMR_CALG_Pos)  /**< (PWM_CMR) Left aligned Position  */
+#define PWM_CMR_CALG_CENTER_ALIGNED           (PWM_CMR_CALG_CENTER_ALIGNED_Val << PWM_CMR_CALG_Pos) /**< (PWM_CMR) Center aligned Position  */
 #define PWM_CMR_CPOL_Pos                      _U_(9)                                               /**< (PWM_CMR) Channel Polarity Position */
 #define PWM_CMR_CPOL_Msk                      (_U_(0x1) << PWM_CMR_CPOL_Pos)                       /**< (PWM_CMR) Channel Polarity Mask */
 #define PWM_CMR_CPOL(value)                   (PWM_CMR_CPOL_Msk & ((value) << PWM_CMR_CPOL_Pos))  
+#define   PWM_CMR_CPOL_LOW_POLARITY_Val       _U_(0x0)                                             /**< (PWM_CMR) Waveform starts at low level  */
+#define   PWM_CMR_CPOL_HIGH_POLARITY_Val      _U_(0x1)                                             /**< (PWM_CMR) Waveform starts at high level  */
+#define PWM_CMR_CPOL_LOW_POLARITY             (PWM_CMR_CPOL_LOW_POLARITY_Val << PWM_CMR_CPOL_Pos)  /**< (PWM_CMR) Waveform starts at low level Position  */
+#define PWM_CMR_CPOL_HIGH_POLARITY            (PWM_CMR_CPOL_HIGH_POLARITY_Val << PWM_CMR_CPOL_Pos) /**< (PWM_CMR) Waveform starts at high level Position  */
 #define PWM_CMR_CPD_Pos                       _U_(10)                                              /**< (PWM_CMR) Channel Update Period Position */
 #define PWM_CMR_CPD_Msk                       (_U_(0x1) << PWM_CMR_CPD_Pos)                        /**< (PWM_CMR) Channel Update Period Mask */
 #define PWM_CMR_CPD(value)                    (PWM_CMR_CPD_Msk & ((value) << PWM_CMR_CPD_Pos))    

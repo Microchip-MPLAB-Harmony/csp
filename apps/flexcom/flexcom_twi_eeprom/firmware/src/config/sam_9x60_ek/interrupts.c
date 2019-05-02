@@ -122,16 +122,19 @@ void PIOD_Handler( void )                __attribute__((weak, alias("DefaultInte
 void TC1_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
 void OTPC_Handler( void )                __attribute__((weak, alias("DefaultInterruptHandler")));
 void DBGU_Handler( void )                __attribute__((weak, alias("DefaultInterruptHandler")));
-void PMECC_Handler( void )               __attribute__((weak, alias("DefaultInterruptHandler")));
+void ECC_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
 void MC_Handler( void )                  __attribute__((weak, alias("DefaultInterruptHandler")));
 
 
 /* Weak definitions for sub-handlers in vectors shared by multiple interrupts */
 void PMC_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
-void WDT_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
-void SHDWC_Handler( void )               __attribute__((weak, alias("DefaultInterruptHandler")));
+void RSTC_Handler( void )                __attribute__((weak, alias("DefaultInterruptHandler")));
+void RTT_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
 void PIT_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
+void WDT_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
 void RTC_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
+void PMECC_Handler( void )               __attribute__((weak, alias("DefaultInterruptHandler")));
+void PMERRLOC_Handler( void )            __attribute__((weak, alias("DefaultInterruptHandler")));
 void SDRAMC_Handler( void )              __attribute__((weak, alias("DefaultInterruptHandler")));
 void MPDDRC_Handler( void )              __attribute__((weak, alias("DefaultInterruptHandler")));
 void SMC_Handler( void )                 __attribute__((weak, alias("DefaultInterruptHandler")));
@@ -140,6 +143,9 @@ void FLEXCOM0_InterruptHandler(          void );
 
 /* Handlers for vectors that are shared by multiple interrupts */
 void SYSC_SharedHandler( void )
+{
+}
+void ECC_SharedHandler( void )
 {
 }
 void MC_SharedHandler( void )

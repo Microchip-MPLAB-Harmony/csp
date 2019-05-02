@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-03-25T04:46:27Z */
+/* file generated from device description version 2019-04-23T19:01:17Z */
 #ifndef _SAM9X_AIC_COMPONENT_H_
 #define _SAM9X_AIC_COMPONENT_H_
 
@@ -39,16 +39,32 @@
 #define AIC_SMR_PRIOR_Pos                     _U_(0)                                               /**< (AIC_SMR) Priority Level Position */
 #define AIC_SMR_PRIOR_Msk                     (_U_(0x7) << AIC_SMR_PRIOR_Pos)                      /**< (AIC_SMR) Priority Level Mask */
 #define AIC_SMR_PRIOR(value)                  (AIC_SMR_PRIOR_Msk & ((value) << AIC_SMR_PRIOR_Pos))
+#define   AIC_SMR_PRIOR_MINIMUM_Val           _U_(0x0)                                             /**< (AIC_SMR) Minimum priority  */
+#define   AIC_SMR_PRIOR_VERY_LOW_Val          _U_(0x1)                                             /**< (AIC_SMR) Very low priority  */
+#define   AIC_SMR_PRIOR_LOW_Val               _U_(0x2)                                             /**< (AIC_SMR) Low priority  */
+#define   AIC_SMR_PRIOR_MEDIUM_LOW_Val        _U_(0x3)                                             /**< (AIC_SMR) Medium priority  */
+#define   AIC_SMR_PRIOR_MEDIUM_HIGH_Val       _U_(0x4)                                             /**< (AIC_SMR) Medium-high priority  */
+#define   AIC_SMR_PRIOR_HIGH_Val              _U_(0x5)                                             /**< (AIC_SMR) High priority  */
+#define   AIC_SMR_PRIOR_VERY_HIGH_Val         _U_(0x6)                                             /**< (AIC_SMR) Very high priority  */
+#define   AIC_SMR_PRIOR_MAXIMUM_Val           _U_(0x7)                                             /**< (AIC_SMR) Maximum priority  */
+#define AIC_SMR_PRIOR_MINIMUM                 (AIC_SMR_PRIOR_MINIMUM_Val << AIC_SMR_PRIOR_Pos)     /**< (AIC_SMR) Minimum priority Position  */
+#define AIC_SMR_PRIOR_VERY_LOW                (AIC_SMR_PRIOR_VERY_LOW_Val << AIC_SMR_PRIOR_Pos)    /**< (AIC_SMR) Very low priority Position  */
+#define AIC_SMR_PRIOR_LOW                     (AIC_SMR_PRIOR_LOW_Val << AIC_SMR_PRIOR_Pos)         /**< (AIC_SMR) Low priority Position  */
+#define AIC_SMR_PRIOR_MEDIUM_LOW              (AIC_SMR_PRIOR_MEDIUM_LOW_Val << AIC_SMR_PRIOR_Pos)  /**< (AIC_SMR) Medium priority Position  */
+#define AIC_SMR_PRIOR_MEDIUM_HIGH             (AIC_SMR_PRIOR_MEDIUM_HIGH_Val << AIC_SMR_PRIOR_Pos) /**< (AIC_SMR) Medium-high priority Position  */
+#define AIC_SMR_PRIOR_HIGH                    (AIC_SMR_PRIOR_HIGH_Val << AIC_SMR_PRIOR_Pos)        /**< (AIC_SMR) High priority Position  */
+#define AIC_SMR_PRIOR_VERY_HIGH               (AIC_SMR_PRIOR_VERY_HIGH_Val << AIC_SMR_PRIOR_Pos)   /**< (AIC_SMR) Very high priority Position  */
+#define AIC_SMR_PRIOR_MAXIMUM                 (AIC_SMR_PRIOR_MAXIMUM_Val << AIC_SMR_PRIOR_Pos)     /**< (AIC_SMR) Maximum priority Position  */
 #define AIC_SMR_SRCTYPE_Pos                   _U_(5)                                               /**< (AIC_SMR) Interrupt Source Type Position */
 #define AIC_SMR_SRCTYPE_Msk                   (_U_(0x3) << AIC_SMR_SRCTYPE_Pos)                    /**< (AIC_SMR) Interrupt Source Type Mask */
 #define AIC_SMR_SRCTYPE(value)                (AIC_SMR_SRCTYPE_Msk & ((value) << AIC_SMR_SRCTYPE_Pos))
-#define   AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val _U_(0x0)                                             /**< (AIC_SMR) High-level sensitive for internal sourceLow-level sensitive for external source  */
+#define   AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val _U_(0x0)                                             /**< (AIC_SMR) High-level sensitive for internal source. Low-level sensitive for external source  */
 #define   AIC_SMR_SRCTYPE_EXT_NEGATIVE_EDGE_Val _U_(0x1)                                             /**< (AIC_SMR) Negative-edge triggered for external source  */
-#define   AIC_SMR_SRCTYPE_EXT_HIGH_LEVEL_Val  _U_(0x2)                                             /**< (AIC_SMR) High-level sensitive for internal sourceHigh-level sensitive for external source  */
+#define   AIC_SMR_SRCTYPE_EXT_HIGH_LEVEL_Val  _U_(0x2)                                             /**< (AIC_SMR) High-level sensitive for internal source. High-level sensitive for external source  */
 #define   AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE_Val _U_(0x3)                                             /**< (AIC_SMR) Positive-edge triggered for external source  */
-#define AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE   (AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val << AIC_SMR_SRCTYPE_Pos) /**< (AIC_SMR) High-level sensitive for internal sourceLow-level sensitive for external source Position  */
+#define AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE   (AIC_SMR_SRCTYPE_INT_LEVEL_SENSITIVE_Val << AIC_SMR_SRCTYPE_Pos) /**< (AIC_SMR) High-level sensitive for internal source. Low-level sensitive for external source Position  */
 #define AIC_SMR_SRCTYPE_EXT_NEGATIVE_EDGE     (AIC_SMR_SRCTYPE_EXT_NEGATIVE_EDGE_Val << AIC_SMR_SRCTYPE_Pos) /**< (AIC_SMR) Negative-edge triggered for external source Position  */
-#define AIC_SMR_SRCTYPE_EXT_HIGH_LEVEL        (AIC_SMR_SRCTYPE_EXT_HIGH_LEVEL_Val << AIC_SMR_SRCTYPE_Pos) /**< (AIC_SMR) High-level sensitive for internal sourceHigh-level sensitive for external source Position  */
+#define AIC_SMR_SRCTYPE_EXT_HIGH_LEVEL        (AIC_SMR_SRCTYPE_EXT_HIGH_LEVEL_Val << AIC_SMR_SRCTYPE_Pos) /**< (AIC_SMR) High-level sensitive for internal source. High-level sensitive for external source Position  */
 #define AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE     (AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE_Val << AIC_SMR_SRCTYPE_Pos) /**< (AIC_SMR) Positive-edge triggered for external source Position  */
 #define AIC_SMR_Msk                           _U_(0x00000067)                                      /**< (AIC_SMR) Register Mask  */
 
