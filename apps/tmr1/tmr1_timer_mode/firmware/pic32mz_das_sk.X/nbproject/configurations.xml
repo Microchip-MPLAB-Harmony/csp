@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="65">
+<configurationDescriptor version="66">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="f1" displayName="Header Files" projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="pic32mz_das_sk" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f1" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/pic32mz_das_sk/peripheral/clk/plib_clk.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mz_das_sk/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="evic" projectFiles="true">
-              <itemPath>../src/config/pic32mz_das_sk/peripheral/evic/plib_evic.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mz_das_sk/peripheral/evic/plib_evic.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="gpio" projectFiles="true">
-              <itemPath>../src/config/pic32mz_das_sk/peripheral/gpio/plib_gpio.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mz_das_sk/peripheral/gpio/plib_gpio.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="tmr1" projectFiles="true">
-              <itemPath>../src/config/pic32mz_das_sk/peripheral/tmr1/plib_tmr1_common.h</itemPath>
-              <itemPath>../src/config/pic32mz_das_sk/peripheral/tmr1/plib_tmr1.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mz_das_sk/peripheral/tmr1/plib_tmr1_common.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mz_das_sk/peripheral/tmr1/plib_tmr1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <itemPath>../src/config/pic32mz_das_sk/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/pic32mz_das_sk/definitions.h</itemPath>
+          <itemPath ex="false">../src/config/pic32mz_das_sk/toolchain_specifics.h</itemPath>
+          <itemPath ex="false">../src/config/pic32mz_das_sk/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f2" displayName="packs" projectFiles="true">
         <logicalFolder name="f1"
                        displayName="PIC32MZ2064DAS169_DFP"
                        projectFiles="true">
-          <itemPath>../src/packs/PIC32MZ2064DAS169_DFP/device.h</itemPath>
+          <itemPath ex="false">../src/packs/PIC32MZ2064DAS169_DFP/device.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
-      <itemPath>Makefile</itemPath>
+      <itemPath ex="false">Makefile</itemPath>
     </logicalFolder>
     <logicalFolder name="f2" displayName="Linker Files" projectFiles="true">
     </logicalFolder>
@@ -41,27 +41,27 @@
         <logicalFolder name="f1" displayName="pic32mz_das_sk" projectFiles="true">
           <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f1" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/pic32mz_das_sk/peripheral/clk/plib_clk.c</itemPath>
+              <itemPath ex="false">../src/config/pic32mz_das_sk/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="evic" projectFiles="true">
-              <itemPath>../src/config/pic32mz_das_sk/peripheral/evic/plib_evic.c</itemPath>
+              <itemPath ex="false">../src/config/pic32mz_das_sk/peripheral/evic/plib_evic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="gpio" projectFiles="true">
-              <itemPath>../src/config/pic32mz_das_sk/peripheral/gpio/plib_gpio.c</itemPath>
+              <itemPath ex="false">../src/config/pic32mz_das_sk/peripheral/gpio/plib_gpio.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="tmr1" projectFiles="true">
-              <itemPath>../src/config/pic32mz_das_sk/peripheral/tmr1/plib_tmr1.c</itemPath>
+              <itemPath ex="false">../src/config/pic32mz_das_sk/peripheral/tmr1/plib_tmr1.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f1" displayName="stdio" projectFiles="true">
-            <itemPath>../src/config/pic32mz_das_sk/stdio/xc32_monitor.c</itemPath>
+            <itemPath ex="false">../src/config/pic32mz_das_sk/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/pic32mz_das_sk/initialization.c</itemPath>
-          <itemPath>../src/config/pic32mz_das_sk/interrupts.c</itemPath>
-          <itemPath>../src/config/pic32mz_das_sk/exceptions.c</itemPath>
+          <itemPath ex="false">../src/config/pic32mz_das_sk/initialization.c</itemPath>
+          <itemPath ex="false">../src/config/pic32mz_das_sk/interrupts.c</itemPath>
+          <itemPath ex="false">../src/config/pic32mz_das_sk/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main.c</itemPath>
+      <itemPath ex="false">../src/main.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -75,7 +75,7 @@
         <targetDevice>PIC32MZ2064DAS169</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>PKOBSKDEPlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
