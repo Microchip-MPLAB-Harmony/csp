@@ -56,7 +56,7 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
-#define USART1_FrequencyGet()    (uint32_t)(75000000UL)
+#define USART1_FrequencyGet()    (uint32_t)(150000000UL)
 
 /****************************** USART1 API *********************************/
 
@@ -75,6 +75,8 @@ int USART1_ReadByte(void);
 void USART1_WriteByte(int data);
 
 bool USART1_TransmitterIsReady( void );
+
+bool USART1_TransmitComplete( void );
 
 bool USART1_ReceiverIsReady( void );
 

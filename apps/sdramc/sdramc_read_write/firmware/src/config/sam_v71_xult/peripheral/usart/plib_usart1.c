@@ -77,7 +77,7 @@ void USART1_Initialize( void )
     USART1_REGS->US_MR = (US_MR_USCLKS_MCK | US_MR_CHRL_8_BIT | US_MR_USART_PAR_NO | US_MR_USART_NBSTOP_1_BIT | (0 << US_MR_USART_OVER_Pos));
 
     /* Configure USART1 Baud Rate */
-    USART1_REGS->US_BRGR = US_BRGR_CD(40);
+    USART1_REGS->US_BRGR = US_BRGR_CD(81);
 
     return;
 }
@@ -188,7 +188,7 @@ bool USART1_Write( void *buffer, const size_t size )
     {
         while( size > processedSize )
         {
-            if(US_CSR_TXEMPTY_Msk == (USART1_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk))
             {
                 USART1_REGS->US_THR = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
                 processedSize++;
@@ -208,11 +208,22 @@ int USART1_ReadByte(void)
 
 void USART1_WriteByte(int data)
 {
-    while ((US_CSR_TXEMPTY_Msk == (USART1_REGS->US_CSR& US_CSR_TXEMPTY_Msk)) == 0);
+    while ((US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk)) == 0);
+
     USART1_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
 
 bool USART1_TransmitterIsReady( void )
+{
+    if(US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool USART1_TransmitComplete( void )
 {
     if(US_CSR_TXEMPTY_Msk == (USART1_REGS->US_CSR & US_CSR_TXEMPTY_Msk))
     {
