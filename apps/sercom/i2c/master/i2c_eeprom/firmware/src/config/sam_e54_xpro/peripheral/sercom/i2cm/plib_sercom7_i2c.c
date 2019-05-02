@@ -57,7 +57,11 @@
 // *****************************************************************************
 
 /* SERCOM7 I2C baud value for 400 Khz baud rate */
-#define SERCOM7_I2CM_BAUD_VALUE			(13620U)
+#define SERCOM7_I2CM_BAUD_VALUE			(67U)
+
+#define RIGHT_ALIGNED (8U)
+
+#define TEN_BIT_ADDR_MASK (0x78U)
 
 static SERCOM_I2C_OBJ sercom7I2CObj;
 
@@ -129,9 +133,23 @@ void SERCOM7_I2C_Initialize(void)
 
 static void SERCOM7_I2C_InitiateRead(uint16_t address)
 {
-    sercom7I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
+    if(address > 0x007F)
+    {
+       sercom7I2CObj.state = SERCOM_I2C_STATE_ADDR_SEND;
 
-    SERCOM7_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
+       /*
+        * Write ADDR.ADDR[10:1] with the 10-bit address.
+        * Set direction bit (ADDR.ADDR[0]) equal to 0.
+        * Set ADDR.TENBITEN equals to 1.
+        */
+       SERCOM7_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE | SERCOM_I2CM_ADDR_TENBITEN_Msk;
+    }
+    else
+    {
+       sercom7I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
+
+       SERCOM7_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
+    }
 
     /* Wait for synchronization */
     while(SERCOM7_REGS->I2CM.SERCOM_SYNCBUSY);
@@ -202,19 +220,41 @@ static void SERCOM7_I2C_InitiateTransfer(uint16_t address, bool type)
     /* Reset Error Information */
     sercom7I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
-    if(type)
+    /* Check for 10-bit address */
+    if(address > 0x007F)
     {
-        sercom7I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
+        if(type)
+        {
+            sercom7I2CObj.state = SERCOM_I2C_STATE_ADDR_SEND;
+        }
+        else
+        {
+            sercom7I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
+        }
 
-        /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
-        SERCOM7_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
+        /*
+         * Write ADDR.ADDR[10:1] with the 10-bit address.
+         * Set direction bit (ADDR.ADDR[0]) equal to 0.
+         * Set ADDR.TENBITEN equals to 1.
+         */
+        SERCOM7_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE | SERCOM_I2CM_ADDR_TENBITEN_Msk;
     }
     else
     {
-        sercom7I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
+        if(type)
+        {
+            sercom7I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
 
-        /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 0*/
-        SERCOM7_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE;
+            /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
+            SERCOM7_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
+        }
+        else
+        {
+            sercom7I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
+
+            /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 0*/
+            SERCOM7_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE;
+        }
     }
 
     /* Wait for synchronization */
@@ -476,6 +516,21 @@ void SERCOM7_I2C_InterruptHandler(void)
 
                 case SERCOM_I2C_STATE_IDLE:
                 {
+                    break;
+                }
+                case SERCOM_I2C_STATE_ADDR_SEND:
+                {
+                    /*
+                     * Write ADDR[7:0] register to "11110 address[9:8] 1"
+                     * ADDR.TENBITEN must be cleared
+                     */
+                    SERCOM7_REGS->I2CM.SERCOM_ADDR = (((sercom7I2CObj.address >> RIGHT_ALIGNED) | TEN_BIT_ADDR_MASK) << 1) | I2C_TRANSFER_READ;
+
+                    /* Wait for synchronization */
+                    while(SERCOM7_REGS->I2CM.SERCOM_SYNCBUSY);
+
+                    sercom7I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
+
                     break;
                 }
                 case SERCOM_I2C_STATE_TRANSFER_WRITE:
