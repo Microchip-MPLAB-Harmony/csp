@@ -74,8 +74,6 @@ void TMR3_Initialize(void)
     PR3 = 58593U;
 
 
-    /* start the TMR */
-    T3CONSET = _T3CON_ON_MASK;
 }
 
 
