@@ -67,8 +67,7 @@ void static UART1_ErrorClear( void )
         rxBufferLen--;
 
         /* Try to flush error bytes for one full FIFO and exit instead of
-         * blocking here if more error bytes are received
-         */
+         * blocking here if more error bytes are received */
         if(rxBufferLen == 0u)
         {
             break;
@@ -89,13 +88,13 @@ void UART1_Initialize( void )
 
     U1MODE = 0x8;
 
-    /* Enable UUART1 Receiver and Transmitter */
+    /* Enable UART1 Receiver and Transmitter */
     U1STASET = (_U1STA_UTXEN_MASK | _U1STA_URXEN_MASK);
 
     /* BAUD Rate register Setup */
     U1BRG = 103;
 
-    /* Turn ON UART1*/
+    /* Turn ON UART1 */
     U1MODESET = _U1MODE_ON_MASK;
 }
 
@@ -252,7 +251,7 @@ UART_ERROR UART1_ErrorGet( void )
 
 void UART1_WriteByte(int data)
 {
-    while (!(U1STA & _U1STA_UTXBF_MASK));
+    while ((U1STA & _U1STA_UTXBF_MASK));
 
     U1TXREG = data;
 }
