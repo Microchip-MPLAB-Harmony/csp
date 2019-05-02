@@ -135,7 +135,7 @@ void SDRAMC_Initialize( void )
 
     /* Step 10:
      * Configure the Refresh Timer Register. */
-    SDRAMC_REGS->SDRAMC_TR = 1171;
+    SDRAMC_REGS->SDRAMC_TR = 2343;
 
 } /* SDRAMC_Initialize */
 /*******************************************************************************
