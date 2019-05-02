@@ -40,6 +40,7 @@
 
 #include "plib_evsys.h"
 
+EVSYS_OBJECT evsys[12];
 
 void EVSYS_Initialize( void )
 {	/*Event Channel User Configuration*/
@@ -49,6 +50,52 @@ void EVSYS_Initialize( void )
 	EVSYS_REGS->EVSYS_CHANNEL[0] = EVSYS_CHANNEL_EVGEN(52) | EVSYS_CHANNEL_PATH(2) | EVSYS_CHANNEL_EDGSEL(1) \
 									 | EVSYS_CHANNEL_ONDEMAND_Msk;
 
+
+	/*Interrupt setting for Event System*/
+	EVSYS_REGS->EVSYS_INTENSET = 0x10000;
 }
 
 
+void EVSYS_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
+{
+	EVSYS_REGS->EVSYS_INTENSET = interrupt << channel;
+}
+
+void EVSYS_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
+{
+	EVSYS_REGS->EVSYS_INTENCLR = interrupt << channel;
+}
+
+void EVSYS_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
+{
+	evsys[channel].callback = callback;
+	evsys[channel].context = context;
+}
+
+void EVSYS_InterruptHandler( void )
+{
+    uint8_t currentChannel = 0;
+    uint32_t eventIntFlagStatus = 0;
+    uint32_t overrunIntFlagStatus = 0;
+
+    /* Find any triggered channels, run associated callback handlers */
+    for (currentChannel = 0; currentChannel < 12; currentChannel++)
+    {
+
+        /* Read the interrupt flag status */
+        overrunIntFlagStatus = EVSYS_REGS->EVSYS_INTFLAG & (EVSYS_INT_OVERRUN << currentChannel);
+        eventIntFlagStatus = EVSYS_REGS->EVSYS_INTFLAG & (EVSYS_INT_EVENT_DETECT << currentChannel);
+
+        if (eventIntFlagStatus | overrunIntFlagStatus)
+        {
+            /* Find any associated callback entries in the callback table */
+            if (evsys[currentChannel].callback != NULL)
+            {
+                evsys[currentChannel].callback((uint32_t)((eventIntFlagStatus | overrunIntFlagStatus) >> currentChannel), evsys[currentChannel].context);
+            }
+
+            /* Clear interrupt flag */
+            EVSYS_REGS->EVSYS_INTFLAG = (EVSYS_INT_OVERRUN  | EVSYS_INT_EVENT_DETECT) << currentChannel;
+        }
+    }
+}
