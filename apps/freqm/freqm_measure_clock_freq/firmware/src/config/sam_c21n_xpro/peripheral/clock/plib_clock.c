@@ -105,9 +105,6 @@ static void GCLK1_Initialize(void)
 
 void CLOCK_Initialize (void)
 {
-    /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLB |= NVMCTRL_CTRLB_RWS(NVMCTRL_CTRLB_RWS_DUAL_Val);
-
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
 
@@ -143,6 +140,7 @@ void CLOCK_Initialize (void)
 
     /* Configure the APBC Bridge Clocks */
     MCLK_REGS->MCLK_APBCMASK = 0x20;
+
 
 }
 
