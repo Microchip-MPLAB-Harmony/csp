@@ -52,13 +52,12 @@
 void OCMP3_Initialize (void)
 {
     /*Setup OC3CON        */
-    /*OCM         = 4        */
-    /*OCTSEL    = 0        */
+    /*OCM         = 5        */
+    /*OCTSEL       = 0        */
     /*OC32         = 0        */
     /*SIDL         = false    */
 
-    OC3CON = 0x4;
-
+    OC3CON = 0x5;
 
     OC3R = 2000;
     OC3RS = 4000;
