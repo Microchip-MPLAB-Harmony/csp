@@ -66,7 +66,7 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
 
     <#lt>   // ------------------------------------------------------------------------
     <#lt>   // NAND Flash Controller (NFC) Configuration
-    <#lt>   ${SMC_REGS}->HSMC_CFG = ${SMC_NFC_PAGE_SIZE}
+    <#lt>   ${SMC_REGS}->HSMC_CFG = HSMC_CFG_PAGESIZE_${SMC_NFC_PAGE_SIZE}
     <#lt><#if SMC_NFC_WRITE_SPARE>
     <#lt>                           | HSMC_CFG_WSPARE_Msk  
     <#lt></#if>
@@ -81,7 +81,7 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
     <#lt></#if>
     <#lt><#if 0 != SMC_NFC_DATA_TIMEOUT_CYCLE>
     <#lt>                           | HSMC_CFG_DTOCYC( ${SMC_NFC_DATA_TIMEOUT_CYCLE} )
-    <#lt>                           | ${SMC_NFC_DATA_TIMEOUT_MULTIPLIER}
+    <#lt>                           | HSMC_CFG_DTOMUL_${SMC_NFC_DATA_TIMEOUT_MULTIPLIER}
     <#lt></#if>
     <#lt><#if 0 != SMC_NFC_SPARE_AREA_SIZE>
     <#lt>                           | HSMC_CFG_NFCSPARESIZE( ${SMC_NFC_SPARE_AREA_SIZE} )
@@ -101,11 +101,11 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
     
     <#lt>   // ------------------------------------------------------------------------
     <#lt>   // Programmable Multi-bit Error Correction Code
-    <#lt>   ${SMC_REGS}->HSMC_PMECCFG = ${SMC_PMECC_ERROR_CORRECTION_CAPABILITY}
+    <#lt>   ${SMC_REGS}->HSMC_PMECCFG = HSMC_PMECCFG_BCH_ERR_${SMC_PMECC_ERROR_CORRECTION_CAPABILITY}
     <#lt><#if "SECTORSZ1" == SMC_PMECC_SECTOR_SIZE>
         <#lt>                               | HSMC_PMECCFG_SECTORSZ_Msk
     <#lt></#if>
-    <#lt>                               | ${SMC_PMECC_SECTORS_PER_PAGE}
+    <#lt>                               | HSMC_PMECCFG_PAGESIZE_${SMC_PMECC_SECTORS_PER_PAGE}
     <#lt><#if SMC_PMECC_NAND_WRITE_ACCESS>
         <#lt>                               | HSMC_PMECCFG_NANDWR_Msk
     <#lt></#if>
@@ -208,12 +208,12 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
                 <#lt><#if (.vars[SMC_MODE_TDF_MODE] == true)>
                     <#lt>    ${SMC_REGS}->SMC_CS_NUMBER[ ${ii} ].HSMC_MODE = HSMC_MODE_TDF_CYCLES_Msk
                     <#lt>                                           | HSMC_MODE_TDF_CYCLES( ${.vars[SMC_MODE_TDF_CYCLES]} )
-                    <#lt>                                           | ${.vars[SMC_MODE_DBW]}
+                    <#lt>                                           | HSMC_MODE_DBW_${.vars[SMC_MODE_DBW]}
                 <#lt><#else>
-                    <#lt>    ${SMC_REGS}->SMC_CS_NUMBER[ ${ii} ].HSMC_MODE = ${.vars[SMC_MODE_DBW]}
+                    <#lt>    ${SMC_REGS}->SMC_CS_NUMBER[ ${ii} ].HSMC_MODE = HSMC_MODE_DBW_${.vars[SMC_MODE_DBW]}
                 <#lt></#if>
-                <#lt>                                           | ${.vars[SMC_MODE_BAT]}
-                <#lt>                                           | ${.vars[SMC_MODE_NWAIT]}
+                <#lt>                                           | HSMC_MODE_BAT_${.vars[SMC_MODE_BAT]}
+                <#lt>                                           | HSMC_MODE_EXNW_MODE_${.vars[SMC_MODE_NWAIT]}
                 <#lt><#if (.vars[SMC_MODE_WRITE_MODE] == 'NWE_CTRL')>
                     <#lt>                                           | HSMC_MODE_WRITE_MODE_Msk
                 <#lt></#if>
