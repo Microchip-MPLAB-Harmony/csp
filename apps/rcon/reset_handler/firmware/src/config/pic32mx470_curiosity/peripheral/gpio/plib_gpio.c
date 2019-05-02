@@ -74,6 +74,7 @@ void GPIO_Initialize ( void )
     IEC1SET = _IEC1_CNDIE_MASK;
 
     /* PORTE Initialization */
+    LATE = 0x0; /* Initial Latch Value */
     TRISECLR = 0x10; /* Direction Control */
     ANSELECLR = 0x10; /* Digital Mode Enable */
 
