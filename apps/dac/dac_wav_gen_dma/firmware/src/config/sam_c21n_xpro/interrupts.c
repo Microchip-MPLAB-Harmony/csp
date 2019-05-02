@@ -81,7 +81,7 @@ void FREQM_Handler              ( void ) __attribute__((weak, alias("Dummy_Handl
 void TSENS_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void NVMCTRL_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void DMAC_InterruptHandler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void EVSYS_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void EVSYS_InterruptHandler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM0_6_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM1_7_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM2_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -93,8 +93,7 @@ void CAN1_Handler               ( void ) __attribute__((weak, alias("Dummy_Handl
 void TCC0_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TCC1_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TCC2_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TC0_TimerInterruptHandler  ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TC5_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TC0_5_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC1_6_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC2_7_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC3_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -109,11 +108,6 @@ void PTC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handl
 
 
 /* Mutiple handlers for vector */
-void TC0_5_Handler( void )
-{
-    TC0_TimerInterruptHandler();
-}
-
 
 
 
@@ -137,7 +131,7 @@ const DeviceVectors exception_table=
     .pfnTSENS_Handler              = ( void * ) TSENS_Handler,
     .pfnNVMCTRL_Handler            = ( void * ) NVMCTRL_Handler,
     .pfnDMAC_Handler               = ( void * ) DMAC_InterruptHandler,
-    .pfnEVSYS_Handler              = ( void * ) EVSYS_Handler,
+    .pfnEVSYS_Handler              = ( void * ) EVSYS_InterruptHandler,
     .pfnSERCOM0_6_Handler          = ( void * ) SERCOM0_6_Handler,
     .pfnSERCOM1_7_Handler          = ( void * ) SERCOM1_7_Handler,
     .pfnSERCOM2_Handler            = ( void * ) SERCOM2_Handler,

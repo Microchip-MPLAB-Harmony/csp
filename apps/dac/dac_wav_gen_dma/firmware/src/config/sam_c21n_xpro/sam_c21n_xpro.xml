@@ -4,534 +4,428 @@
     <UniqueComponent dnOrder="0" id="cmsis"/>
     <UniqueComponent dnOrder="1" id="core">
       <Symbols dnOrder="0">
-        <Integer dnOrder="0" id="CPU_CLOCK_FREQUENCY">
+        <KeyValueSet dnOrder="0" id="COMPILER_CHOICE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="48000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Integer dnOrder="1" id="CPU_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="1" id="DAC_CLOCK_ENABLE">
+        <Boolean dnOrder="2" id="DAC_CLOCK_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="dac" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="dac" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="2" id="DAC_CLOCK_FREQUENCY">
+        <Integer dnOrder="3" id="DAC_CLOCK_FREQUENCY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="48000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="3" id="DEVICE_BODVDD_DISABLE">
+        <KeyValueSet dnOrder="4" id="DEVICE_BODVDD_DISABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="4" id="DEVICE_BODVDD_HYST">
+        <KeyValueSet dnOrder="5" id="DEVICE_BODVDD_HYST">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="5" id="DEVICE_SECURITY">
+        <KeyValueSet dnOrder="6" id="DEVICE_SECURITY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="6" id="DEVICE_WDT_ALWAYSON">
+        <KeyValueSet dnOrder="7" id="DEVICE_WDT_ALWAYSON">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="7" id="DEVICE_WDT_ENABLE">
+        <KeyValueSet dnOrder="8" id="DEVICE_WDT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="8" id="DEVICE_WDT_WEN">
+        <KeyValueSet dnOrder="9" id="DEVICE_WDT_WEN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="9" id="DMAC_BTCTRL_BEATSIZE_CH_0">
+        <KeyValueSet dnOrder="10" id="DMAC_BTCTRL_BEATSIZE_CH_0">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
             <User dnOrder="1" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="10" id="DMAC_BTCTRL_DSTINC_CH_0">
+        <KeyValueSet dnOrder="11" id="DMAC_BTCTRL_DSTINC_CH_0">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="11" id="DMAC_BTCTRL_SRCINC_CH_0">
+        <KeyValueSet dnOrder="12" id="DMAC_BTCTRL_SRCINC_CH_0">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="12" id="DMAC_CHCTRLB_TRIGACT_CH_0">
+        <KeyValueSet dnOrder="13" id="DMAC_CHCTRLB_TRIGACT_CH_0">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
             <User dnOrder="1" value="1"/>
           </Values>
         </KeyValueSet>
-        <Combo dnOrder="13" id="DMAC_CHCTRLB_TRIGSRC_CH_0">
+        <Combo dnOrder="14" id="DMAC_CHCTRLB_TRIGSRC_CH_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="DAC_EMPTY"/>
           </Values>
         </Combo>
-        <Integer dnOrder="14" id="DMAC_CHCTRLB_TRIGSRC_CH_0_PERID_VAL">
+        <Integer dnOrder="15" id="DMAC_CHCTRLB_TRIGSRC_CH_0_PERID_VAL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="45"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="45"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="15" id="DMAC_ENABLE_CH_0">
+        <Boolean dnOrder="16" id="DMAC_ENABLE_CH_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <File dnOrder="16" id="DMAC_HEADER">
+        <File dnOrder="17" id="DMAC_HEADER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Integer dnOrder="17" id="DMAC_HIGHEST_CHANNEL">
+        <Integer dnOrder="18" id="DMAC_HIGHEST_CHANNEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="18" id="DMAC_INTERRUPT_ENABLE">
+        <Boolean dnOrder="19" id="DMAC_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="19" id="DMAC_INTERRUPT_ENABLE_UPDATE">
+        <Comment dnOrder="20" id="DMAC_INTERRUPT_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Boolean dnOrder="21" id="DMAC_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="20" id="DMAC_INTERRUPT_HANDLER">
+        <String dnOrder="22" id="DMAC_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="DMAC_InterruptHandler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="DMAC_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="21" id="DMAC_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="23" id="DMAC_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="22" id="DMAC_LL_ENABLE">
+        <Boolean dnOrder="24" id="DMAC_LL_ENABLE">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <File dnOrder="23" id="DMAC_SOURCE">
+        <File dnOrder="25" id="DMAC_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="24" id="DMAC_SYS_DEF">
+        <File dnOrder="26" id="DMAC_SYS_DEF">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="25" id="DMAC_SYS_INIT">
+        <File dnOrder="27" id="DMAC_SYS_INIT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Boolean dnOrder="26" id="DMA_ENABLE">
+        <Boolean dnOrder="28" id="DMA_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="27" id="DPLL96M_CLOCK_FREQ">
+        <Integer dnOrder="29" id="DPLL96M_CLOCK_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="28" id="EVSYS_0_CLOCK_ENABLE">
+        <Boolean dnOrder="30" id="EVSYS_0_CLOCK_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="29" id="EVSYS_0_CLOCK_FREQUENCY">
+        <Integer dnOrder="31" id="EVSYS_0_CLOCK_FREQUENCY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="48000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="30" id="EVSYS_INTERRUPT_ENABLE">
+        <Boolean dnOrder="32" id="EVSYS_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="31" id="EVSYS_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="33" id="EVSYS_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="32" id="EVSYS_INTERRUPT_HANDLER">
+        <String dnOrder="34" id="EVSYS_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="EVSYS_Handler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="EVSYS_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="33" id="EVSYS_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="35" id="EVSYS_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="34" id="GCLK_0_FREQ">
+        <Integer dnOrder="36" id="GCLK_0_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="48000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <Integer dnOrder="35" id="GCLK_1_FREQ">
+        <Integer dnOrder="37" id="GCLK_1_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="36" id="GCLK_2_FREQ">
+        <Integer dnOrder="38" id="GCLK_2_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="37" id="GCLK_3_FREQ">
+        <Integer dnOrder="39" id="GCLK_3_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="38" id="GCLK_4_FREQ">
+        <Integer dnOrder="40" id="GCLK_4_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="39" id="GCLK_5_FREQ">
+        <Integer dnOrder="41" id="GCLK_5_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="40" id="GCLK_6_FREQ">
+        <Integer dnOrder="42" id="GCLK_6_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="41" id="GCLK_7_FREQ">
+        <Integer dnOrder="43" id="GCLK_7_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="42" id="GCLK_8_FREQ">
+        <Integer dnOrder="44" id="GCLK_8_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="43" id="GCLK_ID_30_CHEN">
+        <Boolean dnOrder="45" id="GCLK_ID_30_CHEN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="44" id="GCLK_ID_30_FREQ">
+        <Integer dnOrder="46" id="GCLK_ID_30_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="48000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="45" id="GCLK_ID_36_CHEN">
+        <Boolean dnOrder="47" id="GCLK_ID_36_CHEN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="46" id="GCLK_ID_36_FREQ">
+        <Integer dnOrder="48" id="GCLK_ID_36_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="48000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="47" id="GCLK_ID_6_CHEN">
+        <Boolean dnOrder="49" id="GCLK_ID_6_CHEN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="48" id="GCLK_ID_6_FREQ">
+        <Integer dnOrder="50" id="GCLK_ID_6_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="48000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <Integer dnOrder="49" id="GCLK_IO_0_FREQ">
+        <Integer dnOrder="51" id="GCLK_IO_0_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="50" id="GCLK_IO_1_FREQ">
+        <Integer dnOrder="52" id="GCLK_IO_1_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="51" id="GCLK_IO_2_FREQ">
+        <Integer dnOrder="53" id="GCLK_IO_2_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="52" id="GCLK_IO_3_FREQ">
+        <Integer dnOrder="54" id="GCLK_IO_3_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="53" id="GCLK_IO_4_FREQ">
+        <Integer dnOrder="55" id="GCLK_IO_4_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="54" id="GCLK_IO_5_FREQ">
+        <Integer dnOrder="56" id="GCLK_IO_5_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="55" id="GCLK_IO_6_FREQ">
+        <Integer dnOrder="57" id="GCLK_IO_6_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="56" id="GCLK_IO_7_FREQ">
+        <Integer dnOrder="58" id="GCLK_IO_7_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <String dnOrder="57" id="MCLK_APBC_INITIAL_VALUE">
+        <String dnOrder="59" id="MCLK_APBC_INITIAL_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0x201001"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0x203001"/>
           </Values>
         </String>
-        <Boolean dnOrder="58" id="NVIC_20_0_ENABLE">
+        <Boolean dnOrder="60" id="NVIC_20_0_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="59" id="NVIC_20_0_HANDLER">
+        <String dnOrder="61" id="NVIC_20_0_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="TC0_TimerInterruptHandler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="TC0_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="60" id="NVIC_20_0_HANDLER_LOCK">
+        <Boolean dnOrder="62" id="NVIC_20_0_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="61" id="NVIC_7_0_ENABLE">
+        <Boolean dnOrder="63" id="NVIC_7_0_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="62" id="NVIC_7_0_HANDLER">
+        <String dnOrder="64" id="NVIC_7_0_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="DMAC_InterruptHandler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="DMAC_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="63" id="NVIC_7_0_HANDLER_LOCK">
+        <Boolean dnOrder="65" id="NVIC_7_0_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="64" id="NVIC_8_0_ENABLE">
+        <Boolean dnOrder="66" id="NVIC_8_0_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="65" id="NVIC_8_0_HANDLER">
+        <String dnOrder="67" id="NVIC_8_0_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="EVSYS_Handler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="EVSYS_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="66" id="NVIC_8_0_HANDLER_LOCK">
+        <Boolean dnOrder="68" id="NVIC_8_0_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="67" id="PORT_GROUP_0">
+        <Boolean dnOrder="69" id="PORT_GROUP_0">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="68" id="PORT_GROUP_1">
+        <Boolean dnOrder="70" id="PORT_GROUP_1">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="69" id="PORT_GROUP_2">
+        <Boolean dnOrder="71" id="PORT_GROUP_2">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="70" id="TC0_CLOCK_ENABLE">
+        <String dnOrder="72" id="SYSTICK_PERIOD">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0xbb80"/>
           </Values>
-        </Boolean>
-        <Integer dnOrder="71" id="TC0_CLOCK_FREQUENCY">
+        </String>
+        <Integer dnOrder="73" id="SYSTICK_PERIOD_US">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="48000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="1000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="72" id="TC0_INTERRUPT_ENABLE">
+        <Boolean dnOrder="74" id="TC0_CLOCK_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="73" id="TC0_INTERRUPT_ENABLE_UPDATE">
+        <Integer dnOrder="75" id="TC0_CLOCK_FREQUENCY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
+          </Values>
+        </Integer>
+        <Boolean dnOrder="76" id="TC0_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tc0" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="74" id="TC0_INTERRUPT_HANDLER">
+        <Boolean dnOrder="77" id="TC0_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="TC0_TimerInterruptHandler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="78" id="TC0_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tc0" value="TC0_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="75" id="TC0_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="79" id="TC0_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="false"/>
           </Values>
         </Boolean>
+        <Boolean dnOrder="80" id="TC1_CLOCK_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tc0" value="true"/>
+          </Values>
+        </Boolean>
+        <Integer dnOrder="81" id="TC1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
+          </Values>
+        </Integer>
       </Symbols>
     </UniqueComponent>
     <UniqueComponent dnOrder="2" id="dac">
@@ -543,9 +437,7 @@
         </Boolean>
         <Hex dnOrder="1" id="DAC_EVCTRL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="dac" priority="2" value="1"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="dac" value="1"/>
           </Values>
         </Hex>
         <KeyValueSet dnOrder="2" id="DAC_INVERSION_OUTPUT">
@@ -555,9 +447,7 @@
         </KeyValueSet>
         <KeyValueSet dnOrder="3" id="DAC_OUTPUT_MODE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="dac" priority="1" value="2"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="dac" value="2"/>
           </Values>
         </KeyValueSet>
         <Boolean dnOrder="4" id="DAC_START_CONVERSION_EVENT_INPUT">
@@ -592,9 +482,7 @@
         </KeyValueSet>
         <Boolean dnOrder="4" id="EVSYS_CHANNEL_0_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="true"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="5" id="EVSYS_CHANNEL_0_ONDEMAND">
@@ -609,253 +497,202 @@
         </KeyValueSet>
         <Boolean dnOrder="7" id="EVSYS_CHANNEL_0_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="true"/>
             <User dnOrder="1" value="true"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="8" id="EVSYS_CHANNEL_10_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="9" id="EVSYS_CHANNEL_10_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="10" id="EVSYS_CHANNEL_11_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="11" id="EVSYS_CHANNEL_11_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="12" id="EVSYS_CHANNEL_1_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="13" id="EVSYS_CHANNEL_1_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="14" id="EVSYS_CHANNEL_2_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="15" id="EVSYS_CHANNEL_2_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="16" id="EVSYS_CHANNEL_3_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="17" id="EVSYS_CHANNEL_3_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="18" id="EVSYS_CHANNEL_4_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="19" id="EVSYS_CHANNEL_4_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="20" id="EVSYS_CHANNEL_5_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="21" id="EVSYS_CHANNEL_5_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="22" id="EVSYS_CHANNEL_6_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="23" id="EVSYS_CHANNEL_6_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="24" id="EVSYS_CHANNEL_7_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="25" id="EVSYS_CHANNEL_7_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="26" id="EVSYS_CHANNEL_8_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="27" id="EVSYS_CHANNEL_8_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="28" id="EVSYS_CHANNEL_9_GENERATOR_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="29" id="EVSYS_CHANNEL_9_USER_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="30" id="EVSYS_INTERRUPT_MODE">
+        <Comment dnOrder="30" id="EVSYS_INTERRUPT_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Boolean dnOrder="31" id="EVSYS_INTERRUPT_MODE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="evsys" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="evsys" value="true"/>
           </Values>
         </Boolean>
-        <Menu dnOrder="31" id="EVSYS_MENU_0">
+        <String dnOrder="32" id="EVSYS_INTERRUPT_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="evsys" value="0x10000"/>
+          </Values>
+        </String>
+        <Menu dnOrder="33" id="EVSYS_MENU_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <KeyValueSet dnOrder="32" id="EVSYS_USER_0">
+        <KeyValueSet dnOrder="34" id="EVSYS_USER_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="33" id="EVSYS_USER_38">
+        <KeyValueSet dnOrder="35" id="EVSYS_USER_38">
           <Values dnOrder="0">
             <User dnOrder="0" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="34" id="EVSYS_USER_5">
+        <KeyValueSet dnOrder="36" id="EVSYS_USER_5">
           <Values dnOrder="0">
             <User dnOrder="0" value="0"/>
           </Values>
         </KeyValueSet>
-        <Boolean dnOrder="35" id="GENERATOR_DAC_EMPTY_ACTIVE">
+        <Boolean dnOrder="37" id="GENERATOR_DAC_EMPTY_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="dac" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="dac" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="36" id="GENERATOR_DMAC_CH_0_ACTIVE">
+        <Boolean dnOrder="38" id="GENERATOR_DMAC_CH_0_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="37" id="GENERATOR_TC0_OVF_ACTIVE">
+        <Boolean dnOrder="39" id="GENERATOR_TC0_OVF_ACTIVE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="38" id="USER_DAC_START_READY">
+        <Boolean dnOrder="40" id="USER_DAC_START_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="dac" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="dac" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="39" id="USER_DMAC_CH_0_READY">
+        <Boolean dnOrder="41" id="USER_DMAC_CH_0_READY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="5" id="tc0">
+    <UniqueComponent dnOrder="5" id="nvmctrl"/>
+    <UniqueComponent dnOrder="6" id="tc0">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="COMPARE_SET_API_NAME">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="TC0_Timer32bitCompareSet"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="TC0_Timer32bitCompareSet"/>
           </Values>
         </String>
         <String dnOrder="1" id="COUNTER_GET_API_NAME">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="TC0_Timer32bitCounterGet"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="TC0_Timer32bitCounterGet"/>
           </Values>
         </String>
         <String dnOrder="2" id="PERIOD_SET_API_NAME">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="TC0_Timer32bitPeriodSet"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="TC0_Timer32bitPeriodSet"/>
           </Values>
         </String>
         <Long dnOrder="3" id="TC_COMPARE_PERIOD">
@@ -884,9 +721,7 @@
         </KeyValueSet>
         <Integer dnOrder="7" id="TC_FREQUENCY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="48000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="48000000"/>
           </Values>
         </Integer>
         <Comment dnOrder="8" id="TC_Resolution">
@@ -908,9 +743,7 @@
         </Boolean>
         <Long dnOrder="11" id="TC_TIMER_PERIOD">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="96"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="96"/>
           </Values>
         </Long>
         <Float dnOrder="12" id="TC_TIMER_TIME_MS">
@@ -925,22 +758,15 @@
         </Float>
         <String dnOrder="13" id="TIMER_PERIOD_MAX">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="4294967296"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="4294967295"/>
           </Values>
         </String>
         <Integer dnOrder="14" id="TIMER_WIDTH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="32"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="tc0" value="32"/>
           </Values>
         </Integer>
       </Symbols>
-      <Attachments dnOrder="1">
-        <DirectCapability dnOrder="0" id="TC0_TMR"/>
-      </Attachments>
     </UniqueComponent>
   </Components>
   <UserData>
@@ -951,7 +777,8 @@
         <ElementPosition dnOrder="2" id="dac" x="15" y="50"/>
         <ElementPosition dnOrder="3" id="dfp" x="183" y="24"/>
         <ElementPosition dnOrder="4" id="evsys" x="142" y="50"/>
-        <ElementPosition dnOrder="5" id="tc0" x="12" y="91"/>
+        <ElementPosition dnOrder="5" id="nvmctrl" x="400" y="20"/>
+        <ElementPosition dnOrder="6" id="tc0" x="12" y="91"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
