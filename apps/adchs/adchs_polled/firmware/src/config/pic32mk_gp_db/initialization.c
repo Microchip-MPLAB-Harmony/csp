@@ -173,7 +173,6 @@ void SYS_Initialize ( void* data )
     CHECONbits.PREFEN = 1;
 
 
-
     ADCHS_Initialize();
 
     TMR3_Initialize();
