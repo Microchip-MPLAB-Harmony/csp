@@ -87,8 +87,8 @@ void TC2_CompareInitialize( void )
     TC2_REGS->COUNT16.TC_WAVE = TC_WAVE_WAVEGEN_MPWM;
 
 
-    TC2_REGS->COUNT16.TC_CC[0] = 10000U;
-    TC2_REGS->COUNT16.TC_CC[1] = 3000U;
+    TC2_REGS->COUNT16.TC_CC[0] = 6667U;
+    TC2_REGS->COUNT16.TC_CC[1] = 2000U;
 
     /* Clear all interrupt flags */
     TC2_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
