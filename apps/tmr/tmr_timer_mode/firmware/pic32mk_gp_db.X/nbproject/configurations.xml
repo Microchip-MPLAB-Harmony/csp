@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="65">
+<configurationDescriptor version="66">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -8,28 +8,28 @@
         <logicalFolder name="f1" displayName="pic32mk_gp_db" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f2" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gp_db/peripheral/clk/plib_clk.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mk_gp_db/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="evic" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gp_db/peripheral/evic/plib_evic.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mk_gp_db/peripheral/evic/plib_evic.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="gpio" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gp_db/peripheral/gpio/plib_gpio.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mk_gp_db/peripheral/gpio/plib_gpio.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="tmr" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gp_db/peripheral/tmr/plib_tmr_common.h</itemPath>
-              <itemPath>../src/config/pic32mk_gp_db/peripheral/tmr/plib_tmr2.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mk_gp_db/peripheral/tmr/plib_tmr_common.h</itemPath>
+              <itemPath ex="false">../src/config/pic32mk_gp_db/peripheral/tmr/plib_tmr2.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <itemPath>../src/config/pic32mk_gp_db/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/pic32mk_gp_db/definitions.h</itemPath>
+          <itemPath ex="false">../src/config/pic32mk_gp_db/toolchain_specifics.h</itemPath>
+          <itemPath ex="false">../src/config/pic32mk_gp_db/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f2" displayName="packs" projectFiles="true">
         <logicalFolder name="f1"
                        displayName="PIC32MK1024GPE100_DFP"
                        projectFiles="true">
-          <itemPath>../src/packs/PIC32MK1024GPE100_DFP/device.h</itemPath>
+          <itemPath ex="false">../src/packs/PIC32MK1024GPE100_DFP/device.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -44,32 +44,32 @@
         <logicalFolder name="f1" displayName="pic32mk_gp_db" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f2" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gp_db/peripheral/clk/plib_clk.c</itemPath>
+              <itemPath ex="false">../src/config/pic32mk_gp_db/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="evic" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gp_db/peripheral/evic/plib_evic.c</itemPath>
+              <itemPath ex="false">../src/config/pic32mk_gp_db/peripheral/evic/plib_evic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="gpio" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gp_db/peripheral/gpio/plib_gpio.c</itemPath>
+              <itemPath ex="false">../src/config/pic32mk_gp_db/peripheral/gpio/plib_gpio.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="tmr" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gp_db/peripheral/tmr/plib_tmr2.c</itemPath>
+              <itemPath ex="false">../src/config/pic32mk_gp_db/peripheral/tmr/plib_tmr2.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f2" displayName="stdio" projectFiles="true">
-            <itemPath>../src/config/pic32mk_gp_db/stdio/xc32_monitor.c</itemPath>
+            <itemPath ex="false">../src/config/pic32mk_gp_db/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/pic32mk_gp_db/initialization.c</itemPath>
-          <itemPath>../src/config/pic32mk_gp_db/interrupts.c</itemPath>
-          <itemPath>../src/config/pic32mk_gp_db/exceptions.c</itemPath>
+          <itemPath ex="false">../src/config/pic32mk_gp_db/initialization.c</itemPath>
+          <itemPath ex="false">../src/config/pic32mk_gp_db/interrupts.c</itemPath>
+          <itemPath ex="false">../src/config/pic32mk_gp_db/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main.c</itemPath>
+      <itemPath ex="false">../src/main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
-      <itemPath>Makefile</itemPath>
+      <itemPath ex="false">Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -85,7 +85,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PKOBSKDEPlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.15</languageToolchainVersion>
+        <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
