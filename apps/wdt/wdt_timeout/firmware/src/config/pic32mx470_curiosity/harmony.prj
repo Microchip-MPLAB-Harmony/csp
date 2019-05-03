@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Configuration>
   <Configurator>
-    <Name dnOrder="0" value="pic32mx_470_curiosity"/>
+    <Name dnOrder="0" value="pic32mx470_curiosity"/>
     <Processor dnOrder="1" value="PIC32MX470F512H"/>
     <Harmony dnOrder="2" path="../../../.."/>
     <Manifest dnOrder="3">
@@ -9,7 +9,7 @@
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">exceptions.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">3477C6F788508451FADB8F17D7E78273</GeneratedChecksum>
           <UserChecksum dnOrder="5">3477C6F788508451FADB8F17D7E78273</UserChecksum>
@@ -17,15 +17,15 @@
         <File dnOrder="1">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">initialization.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3DF199B83C8504B2A65EEE8A8D9D34C0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3DF199B83C8504B2A65EEE8A8D9D34C0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">CAFE03C722B3FA1F9266A107CCB98751</GeneratedChecksum>
+          <UserChecksum dnOrder="5">CAFE03C722B3FA1F9266A107CCB98751</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">interrupts.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">189DB56B301CA2C078CFA6DBA330D497</GeneratedChecksum>
           <UserChecksum dnOrder="5">189DB56B301CA2C078CFA6DBA330D497</UserChecksum>
@@ -41,23 +41,23 @@
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clk.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/clk/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9BE7E9709B8F48118709838D71620EAB</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9BE7E9709B8F48118709838D71620EAB</UserChecksum>
+          <GeneratedChecksum dnOrder="4">5B9005C26346C4C94063449E219B4FAF</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5B9005C26346C4C94063449E219B4FAF</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_coretimer.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/coretimer/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/coretimer/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/coretimer/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9D8B2C14A9460FEF3F5A075EF0E601D0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9D8B2C14A9460FEF3F5A075EF0E601D0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1C64A0CC3068C1F1EB55F6817B1579A6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1C64A0CC3068C1F1EB55F6817B1579A6</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_evic.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/evic/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">3EF1B770BBE26F55DF9FC186D1858A41</GeneratedChecksum>
           <UserChecksum dnOrder="5">3EF1B770BBE26F55DF9FC186D1858A41</UserChecksum>
@@ -65,23 +65,23 @@
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_gpio.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/gpio/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/gpio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1F3F37091DEB473395E43BA778C06A02</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1F3F37091DEB473395E43BA778C06A02</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F80FC6FA784D3D0819BE38A75AED15AE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F80FC6FA784D3D0819BE38A75AED15AE</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_uart1.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/uart/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F03C771DA04C20418F04E753A1BFE580</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F03C771DA04C20418F04E753A1BFE580</UserChecksum>
+          <GeneratedChecksum dnOrder="4">2CF4229BCF6B44A47DE7D0AFA303F247</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2CF4229BCF6B44A47DE7D0AFA303F247</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_wdt.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/wdt/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/wdt/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/wdt/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F692CD3BEAAFCAA63048D2A59DCFFBC9</GeneratedChecksum>
           <UserChecksum dnOrder="5">F692CD3BEAAFCAA63048D2A59DCFFBC9</UserChecksum>
@@ -89,7 +89,7 @@
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">xc32_monitor.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/stdio/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/stdio/</LogicalPath>
           <PhysicalPath dnOrder="3">/stdio/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">27ED4A8201F7698EF759E2EFCEAA2198</GeneratedChecksum>
           <UserChecksum dnOrder="5">27ED4A8201F7698EF759E2EFCEAA2198</UserChecksum>
@@ -97,7 +97,7 @@
         <File dnOrder="11">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">definitions.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">D99BA00E2B382205965DE4B7F2B429BD</GeneratedChecksum>
           <UserChecksum dnOrder="5">D99BA00E2B382205965DE4B7F2B429BD</UserChecksum>
@@ -113,23 +113,23 @@
         <File dnOrder="13">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_clk.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/clk/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AED8D8C760D4C814EBDD91798758ED53</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AED8D8C760D4C814EBDD91798758ED53</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_coretimer.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/coretimer/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/coretimer/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/coretimer/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">592C0E1AFBA3518C40AABE8A4B5AD075</GeneratedChecksum>
-          <UserChecksum dnOrder="5">592C0E1AFBA3518C40AABE8A4B5AD075</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A42F61629F4D7C436C5A8A53F2024B12</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A42F61629F4D7C436C5A8A53F2024B12</UserChecksum>
         </File>
         <File dnOrder="15">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_evic.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/evic/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">9E0B07134C1501D0DB9A238C57E8654B</GeneratedChecksum>
           <UserChecksum dnOrder="5">9E0B07134C1501D0DB9A238C57E8654B</UserChecksum>
@@ -137,7 +137,7 @@
         <File dnOrder="16">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_gpio.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/gpio/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/gpio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">961F082AB4DAE42EEA4700A570A56A86</GeneratedChecksum>
           <UserChecksum dnOrder="5">961F082AB4DAE42EEA4700A570A56A86</UserChecksum>
@@ -145,7 +145,7 @@
         <File dnOrder="17">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_uart1.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/uart/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">18F7F54D8135CB515EDA8E99E3B9DFFA</GeneratedChecksum>
           <UserChecksum dnOrder="5">18F7F54D8135CB515EDA8E99E3B9DFFA</UserChecksum>
@@ -153,7 +153,7 @@
         <File dnOrder="18">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_uart_common.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/uart/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">A5B40F859F555A11C166EBEE10E8B5CD</GeneratedChecksum>
           <UserChecksum dnOrder="5">A5B40F859F555A11C166EBEE10E8B5CD</UserChecksum>
@@ -161,7 +161,7 @@
         <File dnOrder="19">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_wdt.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/peripheral/wdt/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/peripheral/wdt/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/wdt/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">52646F9F1734C5AA98A212549F6FE3E3</GeneratedChecksum>
           <UserChecksum dnOrder="5">52646F9F1734C5AA98A212549F6FE3E3</UserChecksum>
@@ -169,21 +169,22 @@
         <File dnOrder="20">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">toolchain_specifics.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_470_curiosity/</LogicalPath>
+          <LogicalPath dnOrder="2">config/pic32mx470_curiosity/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">5F0B87C955FBF569CBD67F4861B6B7AD</GeneratedChecksum>
           <UserChecksum dnOrder="5">5F0B87C955FBF569CBD67F4861B6B7AD</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
-        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mx_470_curiosity;../src/packs/PIC32MX470F512H_DFP;;../src/mips"/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mx470_curiosity;../src/packs/PIC32MX470F512H_DFP;;../src/mips"/>
         <Setting category="C32-LD" dnOrder="1" key="heap-size" value="0"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
+        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\0.1\PIC32MX\atdf\PIC32MX470F512H.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.0.49\atdf\PIC32MX470F512H.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
