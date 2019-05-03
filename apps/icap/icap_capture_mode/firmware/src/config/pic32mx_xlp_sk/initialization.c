@@ -169,9 +169,9 @@ void SYS_Initialize ( void* data )
 
 	UART1_Initialize();
 
-    TMR2_Initialize();
-
     ICAP2_Initialize();
+
+    TMR2_Initialize();
 
     OCMP2_Initialize();
 
