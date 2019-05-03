@@ -60,21 +60,6 @@
 // Section: RSTC Implementation
 // *****************************************************************************
 // *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    RSTC_RESET_CAUSE RSTC_ResetCauseGet (void);
-
-  Summary:
-    Reports the cause of the last reset.
-
-  Description:
-    This function is used to know the cause of the last reset.
-
-  Remarks:
-    plib_rstc.h for usage information.
-*/
-
 RSTC_RESET_CAUSE RSTC_ResetCauseGet( void )
 {
     return ( RSTC_RESET_CAUSE ) RSTC_REGS->RSTC_RCAUSE;
