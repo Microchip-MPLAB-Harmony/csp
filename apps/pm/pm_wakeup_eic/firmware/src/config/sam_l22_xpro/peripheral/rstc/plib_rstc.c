@@ -1,19 +1,26 @@
 /*******************************************************************************
-  Interface definition of SYSTICK PLIB.
+  Reset Controller(RSTC) PLIB
 
-  Company:
+  Company
     Microchip Technology Inc.
 
-  File Name:
-    plib_systick.h
+  File Name
+    plib_rstc.c
 
-  Summary:
-    Interface definition of the System Timer Plib (SYSTICK).
+  Summary
+    RSTC PLIB Implementation File.
 
-  Description:
-    This file defines the interface for the SYSTICK Plib.
+  Description
+    This file defines the interface to the RSTC peripheral library.
+    This library provides access to and control of the associated
+    Reset Controller.
+
+  Remarks:
+    None.
+
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -36,50 +43,29 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-
-#ifndef PLIB_SYSTICK_H    // Guards against multiple inclusion
-#define PLIB_SYSTICK_H
-
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-
-#ifdef __cplusplus // Provide C++ Compatibility
-	extern "C" {
-#endif
-
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Interface
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
+/* This section lists the other files that are included in this file.
+*/
 
-#define SYSTICK_FREQ	8000000
+#include "plib_rstc.h"
 
-#define SYSTICK_INTERRUPT_PERIOD_IN_US  (200000)
-	
-typedef void (*SYSTICK_CALLBACK)(uintptr_t context);
-
-typedef struct
+// *****************************************************************************
+// *****************************************************************************
+// Section: RSTC Implementation
+// *****************************************************************************
+// *****************************************************************************
+RSTC_RESET_CAUSE RSTC_ResetCauseGet( void )
 {
-	SYSTICK_CALLBACK          callback;
-	uintptr_t                 context;
-	volatile uint32_t         tickCounter;
-} SYSTICK_OBJECT ;
-/***************************** SYSTICK API *******************************/
-void SYSTICK_TimerInitialize ( void );
-void SYSTICK_TimerRestart ( void );
-void SYSTICK_TimerStart ( void );
-void SYSTICK_TimerStop ( void );
-void SYSTICK_TimerPeriodSet ( uint32_t period );
-uint32_t SYSTICK_TimerPeriodGet ( void );
-uint32_t SYSTICK_TimerCounterGet ( void );
-uint32_t SYSTICK_TimerFrequencyGet ( void );
-void SYSTICK_DelayMs ( uint32_t ms );
-void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
-#ifdef __cplusplus // Provide C++ Compatibility
- }
-#endif
+    return ( RSTC_RESET_CAUSE ) RSTC_REGS->RSTC_RCAUSE;
+}
 
-#endif
+RSTC_BKUPEXIT_CAUSE RSTC_BackupExitCauseGet (void)
+{
+    return ( RSTC_BKUPEXIT_CAUSE ) RSTC_REGS->RSTC_BKUPEXIT;
+}
