@@ -24,7 +24,6 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
-
 ocmpValGrp_OCxCON_OCM       = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OCM"]')
 ocmpValGrp_OCxCON_OC32      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OC32"]')
 ocmpValGrp_OCxCON_SIDL      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__SIDL"]')
@@ -140,11 +139,10 @@ def getVectorIndex(string):
     return vector_index
 
 def combineValues(symbol, event):
-
     ocmValue = ocmpSym_OCxCON_OCM.getValue() << 0
 
     if cfgBifield_OCACLK != None:
-        if(ocmpSym_CFGCON_OCACLK == True):
+        if(ocmpSym_CFGCON_OCACLK.getValue() == True):
             octselValue = ocmpSym_OCxCON_OCTSEL_ALT.getValue() << 3
         else:
             octselValue = ocmpSym_OCxCON_OCTSEL.getValue() << 3
