@@ -68,8 +68,7 @@ void static UART1_ErrorClear( void )
         rxBufferLen--;
 
         /* Try to flush error bytes for one full FIFO and exit instead of
-         * blocking here if more error bytes are received
-         */
+         * blocking here if more error bytes are received */
         if(rxBufferLen == 0u)
         {
             break;
@@ -83,8 +82,7 @@ void static UART1_ErrorClear( void )
     IFS1CLR = _IFS1_U1EIF_MASK;
 
     /* Clear up the receive interrupt flag so that RX interrupt is not
-     * triggered for error bytes
-     */
+     * triggered for error bytes */
     IFS1CLR = _IFS1_U1RXIF_MASK;
 
     return;
@@ -98,7 +96,7 @@ void UART1_Initialize( void )
 
     U1MODE = 0x8;
 
-    /* Enable UUART1 Receiver and Transmitter */
+    /* Enable UART1 Receiver and Transmitter */
     U1STASET = (_U1STA_UTXEN_MASK | _U1STA_URXEN_MASK);
 
     /* BAUD Rate register Setup */
@@ -123,7 +121,7 @@ void UART1_Initialize( void )
     uart1Obj.txBusyStatus = false;
     uart1Obj.txCallback = NULL;
 
-    /* Turn ON UART1*/
+    /* Turn ON UART1 */
     U1MODESET = _U1MODE_ON_MASK;
 }
 
@@ -318,21 +316,17 @@ size_t UART1_WriteCountGet( void )
 
 static void UART1_FAULT_InterruptHandler (void)
 {
+    /* Disable the fault interrupt */
+    IEC1CLR = _IEC1_U1EIE_MASK;
+
+    /* Clear rx status */
+    uart1Obj.rxBusyStatus = false;
+
     /* Client must call UARTx_ErrorGet() function to clear the errors */
     if( uart1Obj.rxCallback != NULL )
     {
         uart1Obj.rxCallback(uart1Obj.rxContext);
     }
-
-    /* Clear size and rx status */
-    uart1Obj.rxBusyStatus = false;
-    uart1Obj.rxSize = 0;
-    uart1Obj.rxProcessedSize = 0;
-
-    UART1_ErrorClear();
-
-    /* Disable the fault interrupt */
-    IEC1CLR = _IEC1_U1EIE_MASK;
 }
 
 static void UART1_RX_InterruptHandler (void)
@@ -351,8 +345,6 @@ static void UART1_RX_InterruptHandler (void)
         if(uart1Obj.rxProcessedSize >= uart1Obj.rxSize)
         {
             uart1Obj.rxBusyStatus = false;
-            uart1Obj.rxSize = 0;
-            uart1Obj.rxProcessedSize = 0;
 
             /* Disable the receive interrupt */
             IEC1CLR = _IEC1_U1RXIE_MASK;
@@ -386,8 +378,6 @@ static void UART1_TX_InterruptHandler (void)
         if(uart1Obj.txProcessedSize >= uart1Obj.txSize)
         {
             uart1Obj.txBusyStatus = false;
-            uart1Obj.txSize = 0;
-            uart1Obj.txProcessedSize = 0;
 
             /* Disable the transmit interrupt, to avoid calling ISR continuously */
             IEC1CLR = _IEC1_U1TXIE_MASK;
