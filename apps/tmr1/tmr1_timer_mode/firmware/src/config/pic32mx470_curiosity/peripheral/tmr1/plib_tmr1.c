@@ -1,17 +1,17 @@
 /*******************************************************************************
-  TMR1 Peripheral Library Interface Header File
+  TMR1 Peripheral Library Interface Source File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_tmr1_common.h
+    plib_tmr1.c
 
   Summary
-    TMR1 peripheral library interface.
+    TMR1 peripheral library source file.
 
   Description
-    This file defines the interface to the TC peripheral library.  This
+    This file implements the interface to the TMR1 peripheral library.  This
     library provides access to and control of the associated peripheral
     instance.
 
@@ -42,79 +42,104 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TMR1_COMMON_H    // Guards against multiple inclusion
-#define PLIB_TMR1_COMMON_H
-
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 
-/*  This section lists the other files that are included in this file.
-*/
-#include <stddef.h>
+#include "device.h"
+#include "plib_tmr1.h"
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+static TMR1_TIMER_OBJECT tmr1Obj;
 
-extern "C" {
-
-#endif
-
-// DOM-IGNORE-END
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Data Types
-// *****************************************************************************
-// *****************************************************************************
-/*  The following data type definitions are used by the functions in this
-    interface and should be considered part of it.
-*/
-
-
-// *****************************************************************************
-/* TMR1_CALLBACK
-
-  Summary:
-    Use to register a callback with the TMR1.
-
-  Description:
-    When a match is asserted, a callback can be activated.
-    Use TMR1_CALLBACK as the function pointer to register the callback
-    with the match.
-
-  Remarks:
-    The callback should look like:
-      void callback(handle, context);
-	Make sure the return value and parameters of the callback are correct.
-*/
-
-typedef void (*TMR1_CALLBACK)(uintptr_t context);
-
-// *****************************************************************************
-
-typedef struct
+void TMR1_Initialize(void)
 {
-    /*TMR1 callback function happens on Period match*/
-    TMR1_CALLBACK callback_fn;
-    /* - Client data (Event Context) that will be passed to callback */
-    uintptr_t context;
+    /* Disable Timer */
+    T1CONCLR = _T1CON_ON_MASK;
 
-}TMR1_TIMER_OBJECT;
+    /*
+    SIDL = 0
+    TWDIS = 0
+    TGATE = 0
+    TCKPS = 3
+    TSYNC = 0
+    TCS = 0
+    */
+    T1CONSET = 0x34;
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+    /* Clear counter */
+    TMR1 = 0x0;
 
+    /*Set period */
+    PR1 = 18750;
+
+    /* Setup TMR1 Interrupt */
+    TMR1_InterruptEnable();  /* Enable interrupt on the way out */
 }
 
-#endif
-// DOM-IGNORE-END
 
-#endif //_PLIB_TMR1_COMMON_H
+void TMR1_Start (void)
+{
+    T1CONSET = _T1CON_ON_MASK;
+}
 
-/**
- End of File
-*/
+
+void TMR1_Stop (void)
+{
+    T1CONCLR = _T1CON_ON_MASK;
+}
+
+
+void TMR1_PeriodSet(uint16_t period)
+{
+    PR1 = period;
+}
+
+
+uint16_t TMR1_PeriodGet(void)
+{
+    return (uint16_t)PR1;
+}
+
+
+uint16_t TMR1_CounterGet(void)
+{
+    return(TMR1);
+}
+
+uint32_t TMR1_FrequencyGet(void)
+{
+    return (187500);
+}
+
+void TIMER_1_InterruptHandler (void)
+{
+    uint32_t status = IFS0bits.T1IF;
+    IFS0CLR = _IFS0_T1IF_MASK;
+
+    if((tmr1Obj.callback_fn != NULL))
+    {
+        tmr1Obj.callback_fn(status, tmr1Obj.context);
+    }
+}
+
+
+void TMR1_InterruptEnable(void)
+{
+    IEC0SET = _IEC0_T1IE_MASK;
+}
+
+
+void TMR1_InterruptDisable(void)
+{
+    IEC0CLR = _IEC0_T1IE_MASK;
+}
+
+
+void TMR1_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_t context )
+{
+    /* - Save callback_fn and context in local memory */
+    tmr1Obj.callback_fn = callback_fn;
+    tmr1Obj.context = context;
+}
