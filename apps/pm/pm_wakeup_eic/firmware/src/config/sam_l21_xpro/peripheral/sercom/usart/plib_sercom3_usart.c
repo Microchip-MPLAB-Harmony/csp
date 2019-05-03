@@ -58,7 +58,7 @@
 
 
 /* SERCOM3 USART baud value for 115200 Hz baud rate */
-#define SERCOM3_USART_INT_BAUD_VALUE            (50436U)
+#define SERCOM3_USART_INT_BAUD_VALUE            (63019U)
 
 
 // *****************************************************************************
@@ -123,7 +123,7 @@ void SERCOM3_USART_Initialize( void )
 
 uint32_t SERCOM3_USART_FrequencyGet( void )
 {
-    return (uint32_t) (8000000UL);
+    return (uint32_t) (48000000UL);
 }
 
 bool SERCOM3_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency )
@@ -244,6 +244,18 @@ bool SERCOM3_USART_TransmitterIsReady( void )
     }
 
     return transmitterStatus;
+}
+
+bool SERCOM3_USART_TransmitComplete( void )
+{
+    bool transmitComplete = false;
+
+    if((SERCOM3_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_TXC_Msk) == SERCOM_USART_INT_INTFLAG_TXC_Msk)
+    {
+        transmitComplete = true;
+    }
+
+    return transmitComplete;
 }
 
 void SERCOM3_USART_WriteByte( int data )
