@@ -121,14 +121,27 @@ void ${PM_INSTANCE_NAME}_Initialize( void )
     /* Configure PM */
     ${PM_INSTANCE_NAME}_REGS->PM_STDBYCFG = ${PM_STDBYCFG_VAL};
 </#if>
+
+<#if HAS_PLCFG??>
+    /* Clear INTFLAG.PLRDY */
+    ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
+
+    /* Configure performance level */
+    ${PM_INSTANCE_NAME}_REGS->PM_PLCFG = PM_PLCFG_PLSEL_${PM_PLCFG_PLSEL};
+
+    /* Wait for performance level transition to complete */
+    while(!(${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
+</#if>
 }
 
 void ${PM_INSTANCE_NAME}_IdleModeEnter( void )
 {
     /* Configure Idle Sleep mode */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE_Val;
+
     /* Ensure that SLEEPMODE bits are configured with the given value */
     while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_IDLE_Val));
+
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -137,8 +150,10 @@ void ${PM_INSTANCE_NAME}_StandbyModeEnter( void )
 {
     /* Configure Standby Sleep */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY_Val;
+
     /* Ensure that SLEEPMODE bits are configured with the given value */
     while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_STANDBY_Val));
+
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -148,8 +163,10 @@ void ${PM_INSTANCE_NAME}_BackupModeEnter( void )
 {
     /* Configure Backup Sleep */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_BACKUP_Val;
+
     /* Ensure that SLEEPMODE bits are configured with the given value */
     while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_BACKUP_Val));
+
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -160,13 +177,16 @@ void ${PM_INSTANCE_NAME}_OffModeEnter( void )
 {
     /* Configure Off Sleep */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_OFF_Val;
+
     /* Ensure that SLEEPMODE bits are configured with the given value */
     while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_OFF_Val));
+
     /* Wait for interrupt instruction execution */
     __WFI();
 }
 </#if>
 <#if HAS_IORET_BIT??>
+
 /* ********Important Note********
  * When IORET is enabled, SWD access to the device will not be
  * available after waking up from Backup sleep until
@@ -187,7 +207,7 @@ void ${PM_INSTANCE_NAME}_IO_RetentionClear( void )
 bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel)
 {
     bool status = false;
-    
+
     /* Write the value only if Performance Level Disable is not set */
     if (!(${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLDIS_Msk))
     {
@@ -195,15 +215,17 @@ bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel)
         {
             /* Clear INTFLAG.PLRDY */
             ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
+
             /* Write PLSEL bits */
             ${PM_INSTANCE_NAME}_REGS->PM_PLCFG  = plsel;
+
             /* Wait for performance level transition to complete */
             while(!(${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
-            
+
             status = true;
         }
     }
-    
+
     return status;
 }
 
