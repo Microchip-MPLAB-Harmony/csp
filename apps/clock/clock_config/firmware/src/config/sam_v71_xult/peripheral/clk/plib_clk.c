@@ -21,7 +21,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-
 #include "device.h"
 #include "plib_clk.h"
 
@@ -100,8 +99,6 @@ Clock Initialize
 *********************************************************************************/
 void CLK_Initialize( void )
 {
-    /* Set Flash Wait States and  Enable Code Loop Optimization */
-    EFC_REGS->EEFC_FMR = EEFC_FMR_FWS(6) | EEFC_FMR_CLOE_Msk;
 
 
 
