@@ -56,8 +56,6 @@
 #define SPI1_CON_MCLKSEL                    (0 << _SPI1CON_MCLKSEL_POSITION)
 #define SPI1_CON_MSSEN                      (1 << _SPI1CON_MSSEN_POSITION)
 
-
-
 void SPI1_Initialize ( void )
 {
     uint32_t rdata;
@@ -135,7 +133,7 @@ bool SPI1_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
         t_brg++;
     }
 
-    if(t_brg > 8191)
+    if(t_brg > 511)
     {
         return false;
     }
