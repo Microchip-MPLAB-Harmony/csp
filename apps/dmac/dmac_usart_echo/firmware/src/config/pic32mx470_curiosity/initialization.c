@@ -56,7 +56,7 @@
 
 /*** DEVCFG0 ***/
 #pragma config DEBUG =      OFF
-#pragma config JTAGEN =     ON
+#pragma config JTAGEN =     OFF
 #pragma config ICESEL =     ICS_PGx2
 #pragma config PWP =        OFF
 #pragma config BWP =        OFF
@@ -154,7 +154,6 @@ void SYS_Initialize ( void* data )
 
     /* Set the SRAM wait states to zero */
     BMXCONbits.BMXWSDRM = 0;
-
 
 
 
