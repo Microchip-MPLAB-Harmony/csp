@@ -82,7 +82,7 @@ void ${OCMP_INSTANCE_NAME}_Initialize (void)
     </#if>
 
 <#if OCMP_INTERRUPT_ENABLE == true>
-    ${IEC_REG} = _${IEC_REG}_OC${INDEX}IE_MASK;
+    ${IEC_REG}SET = _${IEC_REG}_OC${INDEX}IE_MASK;
 </#if>
 }
 
@@ -164,7 +164,7 @@ void ${OCMP_INSTANCE_NAME}_CallbackRegister(OCMP_CALLBACK callback, uintptr_t co
 
 void OUTPUT_COMPARE_${INDEX}_InterruptHandler (void)
 {
-    ${IFS_REG}CLR = _${IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
+    ${IFS_REG}CLR = _${IFS_REG}_OC${INDEX}IF_MASK;    //Clear IRQ flag
 
     if( (${OCMP_INSTANCE_NAME?lower_case}Obj.callback != NULL))
     {
