@@ -108,10 +108,19 @@ def instantiateComponent(efcComponent):
     efcFlashEraseSize.setVisible(False)
     efcFlashEraseSize.setDefaultValue("8192")
 
+    waitState = 6
+    cpuClkFreq = Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")
+
+    if cpuClkFreq != "" and cpuClkFreq != None:
+        for key in sorted(waitStates.keys()):
+            if int(cpuClkFreq) <= int(key):
+                waitState = waitStates.get(key)
+                break
+
     # Flash Read Wait State (RWS).
     nvm_rws = efcComponent.createIntegerSymbol("NVM_RWS", efcMenu)
-    nvm_rws.setDefaultValue(6)
     nvm_rws.setLabel("Wait States")
+    nvm_rws.setDefaultValue(waitState)
     nvm_rws.setDependencies(waitStateUpdate, ["core.MASTER_CLOCK_FREQUENCY"])
 
     #Create a Checkbox to enable disable interrupts
