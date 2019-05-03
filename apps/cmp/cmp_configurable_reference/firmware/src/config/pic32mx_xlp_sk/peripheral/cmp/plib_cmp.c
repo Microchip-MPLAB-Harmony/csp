@@ -136,7 +136,7 @@ void CMP_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
 
 void COMPARATOR_2_InterruptHandler(void)
 {
-    IFS1CLR = _IFS1_CMP3IF_MASK; //Clear IRQ flag
+    IFS1CLR = _IFS1_CMP2IF_MASK; //Clear IRQ flag
 
     if(cmp2Obj.callback != NULL)
     {
