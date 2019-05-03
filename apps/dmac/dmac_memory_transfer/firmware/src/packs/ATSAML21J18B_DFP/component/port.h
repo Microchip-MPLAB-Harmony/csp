@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-02-12T14:02:46Z */
+/* file generated from device description version 2019-04-16T20:45:34Z */
 #ifndef _SAML21_PORT_COMPONENT_H_
 #define _SAML21_PORT_COMPONENT_H_
 
@@ -160,6 +160,14 @@
 #define PORT_EVCTRL_EVACT0_Pos                _U_(5)                                               /**< (PORT_EVCTRL) Port Event Action 0 Position */
 #define PORT_EVCTRL_EVACT0_Msk                (_U_(0x3) << PORT_EVCTRL_EVACT0_Pos)                 /**< (PORT_EVCTRL) Port Event Action 0 Mask */
 #define PORT_EVCTRL_EVACT0(value)             (PORT_EVCTRL_EVACT0_Msk & ((value) << PORT_EVCTRL_EVACT0_Pos))
+#define   PORT_EVCTRL_EVACT0_OUT_Val          _U_(0x0)                                             /**< (PORT_EVCTRL) Event output to pin  */
+#define   PORT_EVCTRL_EVACT0_SET_Val          _U_(0x1)                                             /**< (PORT_EVCTRL) Set output register of pin on event  */
+#define   PORT_EVCTRL_EVACT0_CLR_Val          _U_(0x2)                                             /**< (PORT_EVCTRL) Clear output register of pin on event  */
+#define   PORT_EVCTRL_EVACT0_TGL_Val          _U_(0x3)                                             /**< (PORT_EVCTRL) Toggle output register of pin on event  */
+#define PORT_EVCTRL_EVACT0_OUT                (PORT_EVCTRL_EVACT0_OUT_Val << PORT_EVCTRL_EVACT0_Pos) /**< (PORT_EVCTRL) Event output to pin Position  */
+#define PORT_EVCTRL_EVACT0_SET                (PORT_EVCTRL_EVACT0_SET_Val << PORT_EVCTRL_EVACT0_Pos) /**< (PORT_EVCTRL) Set output register of pin on event Position  */
+#define PORT_EVCTRL_EVACT0_CLR                (PORT_EVCTRL_EVACT0_CLR_Val << PORT_EVCTRL_EVACT0_Pos) /**< (PORT_EVCTRL) Clear output register of pin on event Position  */
+#define PORT_EVCTRL_EVACT0_TGL                (PORT_EVCTRL_EVACT0_TGL_Val << PORT_EVCTRL_EVACT0_Pos) /**< (PORT_EVCTRL) Toggle output register of pin on event Position  */
 #define PORT_EVCTRL_PORTEI0_Pos               _U_(7)                                               /**< (PORT_EVCTRL) Port Event Enable Input 0 Position */
 #define PORT_EVCTRL_PORTEI0_Msk               (_U_(0x1) << PORT_EVCTRL_PORTEI0_Pos)                /**< (PORT_EVCTRL) Port Event Enable Input 0 Mask */
 #define PORT_EVCTRL_PORTEI0(value)            (PORT_EVCTRL_PORTEI0_Msk & ((value) << PORT_EVCTRL_PORTEI0_Pos))
