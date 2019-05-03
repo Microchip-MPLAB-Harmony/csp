@@ -151,7 +151,7 @@ int main ( void )
             case BACKUP_SLEEP_MODE:
             {
                 printf("\n\rEntering BACKUP SLEEP Mode");
-                printf("\n\rPress Reset button to wakeup the device   ");   
+                printf("\n\rPress SW0 button to wakeup the device   ");   
                 SYSTICK_TimerStop();
                 LED_OFF();
                 PM_BackupModeEnter();
