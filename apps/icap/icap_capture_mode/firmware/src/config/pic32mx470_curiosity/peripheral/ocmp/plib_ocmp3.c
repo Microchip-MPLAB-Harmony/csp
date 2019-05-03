@@ -1,4 +1,21 @@
 /*******************************************************************************
+  Output Compare OCMP3 Peripheral Library (PLIB)
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    plib_ocmp3.c
+
+  Summary:
+    OCMP3 Source File
+
+  Description:
+    None
+
+*******************************************************************************/
+
+/*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -20,61 +37,61 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+#include "plib_ocmp3.h"
 
-#ifndef PLIB_CLK_H
-#define PLIB_CLK_H
-
-#include <stddef.h>
-#include <stdbool.h>  
-#include <device.h>
-
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    extern "C" {
-
-#endif
- 
 // *****************************************************************************
+
 // *****************************************************************************
-// Section: CLK Module System Interface Routines
+// Section: OCMP3 Implementation
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
-/* Function:
-    void CLK_Initialize ( void )
 
-  Summary:
-    Initializes hardware of the System Clock and Peripheral Clock.
-    
-  Description:
-    This function initializes the hardware of System Clock and Peripheral Clocks.
 
-  Precondition:
-    None.
+void OCMP3_Initialize (void)
+{
+    /*Setup OC3CON        */
+    /*OCM         = 5        */
+    /*OCTSEL       = 0        */
+    /*OC32         = 0        */
+    /*SIDL         = false    */
 
-  Parameters:
-    None.
+    OC3CON = 0x5;
 
-  Returns:
-    None.
+    OC3R = 2000;
+    OC3RS = 4000;
 
-  Example:
-    <code>
-    //Example 1: Do not alter the configuration bit settings
-    CLK_Initialize ( );
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-void CLK_Initialize ( void );
-
-#ifdef __cplusplus
 }
-#endif
 
-#endif //PLIB_CLK_H
+void OCMP3_Enable (void)
+{
+    OC3CONSET = _OC3CON_ON_MASK;
+}
+
+void OCMP3_Disable (void)
+{
+    OC3CONCLR = _OC3CON_ON_MASK;
+}
+
+
+void OCMP3_CompareValueSet (uint16_t value)
+{
+    OC3R = value;
+}
+
+uint16_t OCMP3_CompareValueGet (void)
+{
+    return (uint16_t)OC3R;
+}
+
+void OCMP3_CompareSecondaryValueSet (uint16_t value)
+{
+    OC3RS = value;
+}
+
+uint16_t OCMP3_CompareSecondaryValueGet (void)
+{
+    return (uint16_t)OC3RS;
+}
 
