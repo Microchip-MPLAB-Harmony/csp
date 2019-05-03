@@ -120,12 +120,12 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_FLASH_ERASE_SIZE = nvmctrlComponent.createIntegerSymbol("FLASH_ERASE_SIZE", None)
     nvmctrlSym_FLASH_ERASE_SIZE.setVisible(False)
     nvmctrlSym_FLASH_ERASE_SIZE.setDefaultValue(nvmBlockSize)
-        
+
     #Configures AUTOWS
     nvmctrlSym_CTRLA_AUTOWS = nvmctrlComponent.createBooleanSymbol("NVMCTRL_AUTOWS_ENABLE", None)
     nvmctrlSym_CTRLA_AUTOWS.setLabel("Enable Automatic Read-Wait-State for Flash")
     nvmctrlSym_CTRLA_AUTOWS.setDefaultValue(True)
-    
+
     #Configures NVM power reduction mode
     nvmctrlSym_CTRLA_SLEEPPRM = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLA_POWER_REDUCTION_MODE", None)
     nvmctrlSym_CTRLA_SLEEPPRM.setLabel("Power Reduction Mode During Sleep")
@@ -137,10 +137,19 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSleepPrmDefaultValue   = 0
     nvmctrlSleepPrmKeyDescription = ""
 
+    waitState = 6
+    cpuClkFreq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+
+    if cpuClkFreq != None:
+        for key in sorted(waitStates.keys()):
+            if int(cpuClkFreq) <= int(key):
+                waitState = waitStates.get(key)
+                break
+
     # Flash Read Wait State (RWS).
     nvm_rws = nvmctrlComponent.createIntegerSymbol("NVM_RWS", None)
-    nvm_rws.setDefaultValue(6)
     nvm_rws.setLabel("Wait States")
+    nvm_rws.setDefaultValue(waitState)
     nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY"])
 
     for index in range (0 , len(nvmctrlSleepPrmValues)):
@@ -163,33 +172,33 @@ def instantiateComponent(nvmctrlComponent):
     #Disable AHB1 cache
     nvmctrlSym_CTRLA_CACHEDIS1 = nvmctrlComponent.createBooleanSymbol("NVMCTRL_AHB1_CACHE_DISABLE", None)
     nvmctrlSym_CTRLA_CACHEDIS1.setLabel("Disable NVM Line Cache for AHB1")
-    
+
     #Enable interrupt for Flash operations
     nvmctrlSym_Interrupt0 = nvmctrlComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
     nvmctrlSym_Interrupt0.setLabel("Enable Interrupt")
     nvmctrlSym_Interrupt0.setDefaultValue(False)
     nvmctrlSym_Interrupt0.setDescription("Enables interrupt for command execution complete (DONE) condition. Rest of the interrupts need to be enabled via code")
-    
+
     #Menu item for SmartEEPROM configurations
     nvmctrlSymSEEP = nvmctrlComponent.createMenuSymbol("SMARTEEP_CONFIGURATION", None)
     nvmctrlSymSEEP.setLabel("SmartEEPROM Configurations")
-    
+
     #Enable interrupt for SmartEEPROM operations
     nvmctrlSym_Interrupt1 = nvmctrlComponent.createBooleanSymbol("NVM_INTERRUPT1_ENABLE", nvmctrlSymSEEP)
     nvmctrlSym_Interrupt1.setLabel("Enable Interrupt for SmartEEPROM")
     nvmctrlSym_Interrupt1.setDefaultValue(False)
     nvmctrlSym_Interrupt1.setDescription("Enables interrupt for 'SmartEEPROM sector full' (SEESFULL) condition. Rest of the interrupts need to be enabled via code")
-    
+
     #Enable Buffered mode for SmartEEPROM
     nvmctrlSym_WMODE = nvmctrlComponent.createBooleanSymbol("NVM_WMODE_ENABLE", nvmctrlSymSEEP)
     nvmctrlSym_WMODE.setLabel("Enable Buffered Mode")
     nvmctrlSym_WMODE.setDefaultValue(False)
-    
+
     #Automatic Page Reallocation Disable
     nvmctrlSym_APRDIS = nvmctrlComponent.createBooleanSymbol("NVM_APRDIS_ENABLE", nvmctrlSymSEEP)
     nvmctrlSym_APRDIS.setLabel("Disable Automatic Page Reallocation")
     nvmctrlSym_APRDIS.setDefaultValue(False)
-    
+
     #WDT Configuration comment
     nvmctrlSym_FuseComment = nvmctrlComponent.createCommentSymbol("NVM_CONFIG_COMMENT", nvmctrlSymSEEP)
     nvmctrlSym_FuseComment.setLabel("Note: Configure SBLK and PSZ Fuses for SmartEEPROM using 'System' component")
@@ -197,7 +206,7 @@ def instantiateComponent(nvmctrlComponent):
     ############################################################################
     #### Configuration for Memory Driver ####
     ############################################################################
-    
+
     #Configuration when interfaced with memory driver
     nvmctrlSym_MemoryDriver = nvmctrlComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", None)
     nvmctrlSym_MemoryDriver.setLabel("Memory Driver Connected")
@@ -260,7 +269,7 @@ def instantiateComponent(nvmctrlComponent):
     InterruptHandler.append(nvmctrlInstanceName.getValue()+"_0_INTERRUPT_HANDLER")
     InterruptHandlerLock.append(nvmctrlInstanceName.getValue()+"_0_INTERRUPT_HANDLER_LOCK")
     InterruptVectorUpdate.append(nvmctrlInstanceName.getValue()+"_0_INTERRUPT_ENABLE_UPDATE")
-    
+
     InterruptVector.append(nvmctrlInstanceName.getValue()+"_1_INTERRUPT_ENABLE")
     InterruptHandler.append(nvmctrlInstanceName.getValue()+"_1_INTERRUPT_HANDLER")
     InterruptHandlerLock.append(nvmctrlInstanceName.getValue()+"_1_INTERRUPT_HANDLER_LOCK")
@@ -275,7 +284,7 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_UpdateInterrupt1Status = nvmctrlComponent.createBooleanSymbol("NVMCTRL_INTERRUPT1_STATUS", None)
     nvmctrlSym_UpdateInterrupt1Status.setDependencies(updateNVICSmartEEPInterruptState, ["NVM_INTERRUPT1_ENABLE"])
     nvmctrlSym_UpdateInterrupt1Status.setVisible(False)
-    
+
     # Interrupt Warning status
     nvmctrlSym_IntEnComment = nvmctrlComponent.createCommentSymbol("NVMCTRL_NVM_INTERRUPT0_ENABLE_COMMENT", None)
     nvmctrlSym_IntEnComment.setVisible(False)

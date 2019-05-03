@@ -148,10 +148,19 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlReadModeValues = []
     nvmctrlReadModeValues = nvmctrlReadModeNode.getChildren()
 
+    waitState = 6
+    cpuClkFreq = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
+
+    if cpuClkFreq != None:
+        for key in sorted(waitStates.keys()):
+            if int(cpuClkFreq) <= int(key):
+                waitState = waitStates.get(key)
+                break
+
     # Flash Read Wait State (RWS).
     nvm_rws = nvmctrlComponent.createIntegerSymbol("NVM_RWS", None)
     nvm_rws.setLabel("Wait States")
-    nvm_rws.setDefaultValue(6)
+    nvm_rws.setDefaultValue(waitState)
     nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY"])
 
     nvmctrlReadModeDefaultValue   = 0
