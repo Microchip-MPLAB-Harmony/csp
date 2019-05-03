@@ -1,20 +1,26 @@
 /*******************************************************************************
- CLOCK PLIB
+  Reset Controller(RSTC) PLIB
 
-  Company:
+  Company
     Microchip Technology Inc.
 
-  File Name:
-    plib_clock.c
+  File Name
+    plib_rstc.c
 
-  Summary:
-    CLOCK PLIB Implementation File.
+  Summary
+    RSTC PLIB Implementation File.
 
-  Description:
-    None
+  Description
+    This file defines the interface to the RSTC peripheral library.
+    This library provides access to and control of the associated
+    Reset Controller.
+
+  Remarks:
+    None.
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -37,57 +43,29 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#include "plib_clock.h"
-#include "device.h"
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+/* This section lists the other files that are included in this file.
+*/
 
-static void OSCCTRL_Initialize(void)
+#include "plib_rstc.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: RSTC Implementation
+// *****************************************************************************
+// *****************************************************************************
+RSTC_RESET_CAUSE RSTC_ResetCauseGet( void )
 {
-    /**************** OSC16M IniTialization *************/
-    OSCCTRL_REGS->OSCCTRL_OSC16MCTRL = OSCCTRL_OSC16MCTRL_FSEL(0x1) | OSCCTRL_OSC16MCTRL_ENABLE_Msk;
+    return ( RSTC_RESET_CAUSE ) RSTC_REGS->RSTC_RCAUSE;
 }
 
-static void OSC32KCTRL_Initialize(void)
+RSTC_BKUPEXIT_CAUSE RSTC_BackupExitCauseGet (void)
 {
-	OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(0);
-	OSC32KCTRL_REGS->OSC32KCTRL_SLCDCTRL = 0;
-}
-
-
-
-
-static void GCLK0_Initialize(void)
-{
-    GCLK_REGS->GCLK_GENCTRL[0] = GCLK_GENCTRL_DIV(1) | GCLK_GENCTRL_SRC(5) | GCLK_GENCTRL_GENEN_Msk;
-
-    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL0_Msk) == GCLK_SYNCBUSY_GENCTRL0_Msk)
-    {
-        /* wait for the Generator 0 synchronization */
-    }
-}
-
-void CLOCK_Initialize (void)
-{
-    /* Function to Initialize the Oscillators */
-    OSCCTRL_Initialize();
-
-    /* Function to Initialize the 32KHz Oscillators */
-    OSC32KCTRL_Initialize();
-
-    /*Initialize Backup Divider*/    
-    MCLK_REGS->MCLK_BUPDIV = MCLK_BUPDIV_BUPDIV(0x04);
-
-    GCLK0_Initialize();
-
-
-
-	/* Selection of the Generator and write Lock for SERCOM4_CORE */
-    GCLK_REGS->GCLK_PCHCTRL[20] = GCLK_PCHCTRL_GEN(0x0)  | GCLK_PCHCTRL_CHEN_Msk;
-
-    while ((GCLK_REGS->GCLK_PCHCTRL[20] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
-    {
-        /* Wait for synchronization */
-    }
-
-
+    return ( RSTC_BKUPEXIT_CAUSE ) RSTC_REGS->RSTC_BKUPEXIT;
 }

@@ -98,16 +98,25 @@ void display_menu (void)
 
 int main ( void )
 {
+    RSTC_BKUPEXIT_CAUSE reset_cause_bkup;
+    
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
+    reset_cause_bkup = RSTC_BackupExitCauseGet();
+    
     printf("\n\n\r----------------------------------------------");
     printf("\n\r             Low power demo using RTC           ");
     printf("\n\r----------------------------------------------"); 
     PM_ConfigurePerformanceLevel(PLCFG_PLSEL0);
+    
+    if(reset_cause_bkup == RSTC_BKUPEXIT_RTC_Msk)
+        printf("\n\n\rDevice exited from Backup mode\n");
+    
     SYSTICK_TimerCallbackSet(&timeout, (uintptr_t) NULL);
     SYSTICK_TimerStart();
     RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK_CMP0);
+    
     display_menu();
     while(1)
     {
@@ -147,7 +156,7 @@ int main ( void )
                 printf("\n\rEntering BACKUP Mode\r\n");
                 LED_OFF();
                 PM_BackupModeEnter();
-                printf("\n\rRTC Compare Match triggered waking up device from Standby mode");
+                printf("\n\rRTC Compare Match triggered waking up device from Backup mode");
                 SYSTICK_TimerStart();
                 display_menu();
                 break;
