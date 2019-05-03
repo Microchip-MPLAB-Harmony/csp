@@ -58,8 +58,6 @@ SPI_OBJECT spi1Obj;
 #define SPI1_CON_MCLKSEL                    (0 << _SPI1CON_MCLKSEL_POSITION)
 #define SPI1_CON_MSSEN                      (1 << _SPI1CON_MSSEN_POSITION)
 
-
-
 void SPI1_Initialize ( void )
 {
     uint32_t rdata;
@@ -140,7 +138,7 @@ bool SPI1_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
         t_brg++;
     }
 
-    if(t_brg > 8191)
+    if(t_brg > 511)
     {
         return false;
     }
@@ -307,7 +305,7 @@ bool SPI1_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
 
 bool SPI1_IsBusy (void)
 {
-    return spi1Obj.transferIsBusy;
+    return ( (spi1Obj.transferIsBusy) || ((SPI1STAT & _SPI1STAT_SRMT_MASK) == 0));
 }
 
 void SPI1_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
