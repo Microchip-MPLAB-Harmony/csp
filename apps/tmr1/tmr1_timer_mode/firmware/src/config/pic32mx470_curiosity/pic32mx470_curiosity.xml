@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Configuration>
+  <Components>
+    <UniqueComponent dnOrder="0" id="core">
+      <Symbols dnOrder="0">
+        <String dnOrder="0" id="BSP_PIN_31_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="1" id="BSP_PIN_32_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="2" id="BSP_PIN_33_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="3" id="BSP_PIN_34_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="4" id="BSP_PIN_42_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="5" id="BSP_PIN_43_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="6" id="BSP_PIN_44_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="7" id="BSP_PIN_45_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="8" id="BSP_PIN_46_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="9" id="BSP_PIN_52_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="10" id="BSP_PIN_53_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="11" id="BSP_PIN_54_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="12" id="BSP_PIN_55_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="13" id="BSP_PIN_58_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="14" id="BSP_PIN_59_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="15" id="BSP_PIN_60_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="16" id="BSP_PIN_61_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="17" id="BSP_PIN_63_DIR">
+          <Values dnOrder="0">
+            <User dnOrder="0" value=""/>
+          </Values>
+        </String>
+        <String dnOrder="18" id="BSP_PIN_63_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="19" id="BSP_PIN_64_DIR">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="Out"/>
+          </Values>
+        </String>
+        <String dnOrder="20" id="BSP_PIN_64_FUNCTION_NAME">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="LED1"/>
+          </Values>
+        </String>
+        <String dnOrder="21" id="BSP_PIN_64_FUNCTION_TYPE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="GPIO"/>
+          </Values>
+        </String>
+        <String dnOrder="22" id="BSP_PIN_64_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="23" id="BSP_PIN_7_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <KeyValueSet dnOrder="24" id="COMPILER_CHOICE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Combo dnOrder="25" id="CONFIG_ICESEL">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="ICS_PGx2"/>
+          </Values>
+        </Combo>
+        <Boolean dnOrder="26" id="EVIC_4_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="27" id="EVIC_4_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="28" id="EVIC_4_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="TIMER_1_InterruptHandler"/>
+          </Values>
+        </String>
+        <File dnOrder="29" id="EVIC_INT_ASM">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <Hex dnOrder="30" id="PMD4_REG_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4294967294"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="31" id="PMD6_REG_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4294967293"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="32" id="SYS_PORT_E_ANSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="16"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="33" id="SYS_PORT_E_TRIS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="16"/>
+          </Values>
+        </Hex>
+        <Boolean dnOrder="34" id="TIMER_1_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr1" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="35" id="TIMER_1_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="36" id="TIMER_1_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr1" value="TIMER_1_InterruptHandler"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="37" id="TIMER_1_INTERRUPT_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr1" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="38" id="TMR1_CLOCK_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr1" value="true"/>
+          </Values>
+        </Boolean>
+        <Integer dnOrder="39" id="TMR1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="40" id="clkSvcMode">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="1" id="dfp"/>
+    <UniqueComponent dnOrder="2" id="tmr1">
+      <Symbols dnOrder="0">
+        <Hex dnOrder="0" id="TCON_REG_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr1" value="52"/>
+          </Values>
+        </Hex>
+        <Integer dnOrder="1" id="TIMER1_CLOCK_FREQ">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr1" value="187500"/>
+          </Values>
+        </Integer>
+        <Long dnOrder="2" id="TIMER1_PERIOD">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr1" value="18750"/>
+          </Values>
+        </Long>
+        <KeyValueSet dnOrder="3" id="TIMER1_PRE_SCALER">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Float dnOrder="4" id="TIMER1_TIME_PERIOD_MS">
+          <Attributes dnOrder="0">
+            <Float dnOrder="0" id="max">
+              <Value dnOrder="0">349.52</Value>
+            </Float>
+          </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="100.0"/>
+          </Values>
+        </Float>
+        <Integer dnOrder="5" id="TMR1_PRESCALER_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr1" value="256"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
+  </Components>
+  <UserData>
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
+        <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
+        <ElementPosition dnOrder="2" id="tmr1" x="341" y="17"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
+  </UserData>
+</Configuration>
